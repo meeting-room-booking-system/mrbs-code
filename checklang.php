@@ -40,7 +40,7 @@ else {
 }
 
 include "$langs$ref_lang";
-$ref = $lang;
+$ref = $vocab;
 
 reset($check);
 while (list(,$l) = each($check))
