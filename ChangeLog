@@ -1,3 +1,64 @@
+2003-12-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* INSTALL (1.17), README (1.11), tables.pg.73and_above.sql (1.1): 
+	  ° Updated documentation about new authentication features.  
+	  ° Updated documentation to add warnings about mrbs not working with
+	    postegreSQL version 7.3 and above.
+
+	  Mrbs does not work anymore with postgreSQL dbms since pgsql
+	  version 7.3.	This is because the following changes :     - An
+	  empty string ('') is no longer allowed as the input into an
+	  integer field. Formerly, it was silently interpreted as 0. If you
+	  want	     a field to be 0 then explicitly use 0, if you want it
+	  to be undefined	then use NULL.	    - "INSERT" statements
+	  with column lists must specify all values;	    e.g., INSERT
+	  INTO tab (col1, col2) VALUES ('val1') is now invalid.
+
+	  This is a problem since we have to change all sql logic that
+	  works fine with mysql just to be compliant with postGreSQL. Since
+	  nobody reported this error, I can thinks mrbs users using pgsql
+	  are very few.  Currently the new tables.pg.73and_above.sql file
+	  allow to create mrbs tables with new postgreSQL versions, but is
+	  experimental.  You can still browse existing mrbs tables with new
+	  versions, but you cannot add/edit entries/rooms/areas any more.
+
+2003-12-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* pgsql.before_php42.inc (1.1): Updated the postgreSql driver
+	  (pgsql.inc) to remove deprecated functions. People which still
+	  use a php version less than 4.2 will have to replace the existing
+	  pgsql.inc file with pgsql.before_php42.inc file and rename it to
+	  pgsql.inc
+
+2003-12-01  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* AUTHENTICATION (1.19): Complete rewrite of the file in html.
+	  Converted to text using detagger
+	  (http://www.jafsoft.com/detagger/)
+
+2003-11-22  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* ROXEN (1.4): This file described how to operate the old cookie
+	  authentication module.
+
+2003-11-22  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* auth_cookie_ext.inc (1.4): As Thierry pointed-out, this file is
+	  now useless, as there is a more general implementation in
+	  web/session_cookie.inc.
+
+2003-11-18  John Beranek <jberanek@users.sourceforge.net>
+
+	* convert_db_to_utf8.php (1.1):
+	  * Added utility to convert text in the database to UTF8, to  use
+	  MRBS with $unicode_encoding set to 1. The administrator  should
+	  copy it into the web directory, run it (choosing  the encoding to
+	  convert from) ONCE, and then move it back out of  the web
+	  directory.
+
+	  * Added comment to my usage of $vocab["charset"] in style.inc, as
+	   ist doesn't match the general usage of get_vocab().
+
 2003-11-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* README (1.10): Added warning about using php accelerators with

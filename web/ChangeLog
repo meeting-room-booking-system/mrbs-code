@@ -1,3 +1,21 @@
+2003-12-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* pgsql.inc (1.5): Updated the postgreSql driver (pgsql.inc) to
+	  remove deprecated functions. People which still use a php version
+	  less than 4.2 will have to replace the existing pgsql.inc file
+	  with pgsql.before_php42.inc file and rename it to pgsql.inc
+
+2003-11-24  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* edit_entry.php (1.21): Displays "Edit Series" or "Edit Entry" at
+	  top of page when editing a series or entry respectively.
+
+2003-11-21  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.11), help.php (1.12): Since we always forgot
+	  for each release to update mrbs version in help.php (this is not
+	  a file we open often), I moved the variable to config.inc.php.
+
 2003-11-21  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* session_cookie.inc (1.4): - fixed not working with error level
