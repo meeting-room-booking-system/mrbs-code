@@ -22,6 +22,9 @@ $db_database = "mrbs";
 $db_login = "mrbs";
 # Database login password:
 $db_password = "mrbs-password";
+# Prefix for table names.  This will allow multiple installations where only
+# one database is available
+$db_tbl_prefix = "mrbs_";
 # Uncomment this to NOT use PHP persistent (pooled) database connections:
 # $db_nopersist = 1;
 
@@ -272,6 +275,15 @@ set_magic_quotes_runtime(0);
 
 # Make sure notice errors are not reported, they can break mrbs code:
 error_reporting (E_ALL ^ E_NOTICE);
+
+# These variables specify the names of the tables in the database
+# These should not need to be changed.  Please change $db_tbl_prefix
+# in the database section above.
+$tbl_area   = $db_tbl_prefix . "area";
+$tbl_entry  = $db_tbl_prefix . "entry";
+$tbl_repeat = $db_tbl_prefix . "repeat";
+$tbl_room   = $db_tbl_prefix . "room";
+$tbl_users  = $db_tbl_prefix . "users";
 
 # MRBS developers, make sure to update this string before each release:
 $mrbs_version = "MRBS 1.2-pre3";
