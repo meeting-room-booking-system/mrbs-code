@@ -1,6 +1,11 @@
+CVS (Fri Apr 18 02:21:56  GMT 2003)
+   - Fixed bug : in week view, allow non 'internet explorer' browsers to see
+     links to the corresponding days in column titles
+     (Johan.Schonning@uab.ericsson.se).
+
 CVS (Thu Apr 17           GMT 2003)
    + Entries in monthly view can be shown as start/end slot or brief description
-    (Matt Payton (mpayton@hunterdonhealth.com))
+     (Matt Payton (mpayton@hunterdonhealth.com))
 
 CVS (Tue Apr 15           GMT 2003)
    + replaced the column titles in the week view to be links to the
