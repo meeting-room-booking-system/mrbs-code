@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*****************************************************************************\
 *									      *
 *   File name       auth_db.inc						      *
@@ -35,6 +35,7 @@ $user_link = "edit_users.php";
 function authValidateUser($user, $pass)
 {
    $user=strtolower($user);
+   $pass = md5($pass);
    return sql_query1("select count(*) from mrbs_users where name='$user' and password='$pass';");
 }
 

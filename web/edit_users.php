@@ -42,7 +42,7 @@ CREATE TABLE mrbs_users
   /* The first three fields are required. Don't remove or reorder. */
   id        int DEFAULT '0' NOT NULL auto_increment,
   name      varchar(30),
-  password  varchar(30),
+  password  varchar(32),
 
   /* The following fields are application-specific. However only int and varchar are editable. */
   email     varchar(50),
@@ -218,7 +218,7 @@ if (isset($Action) && ($Action == "Update"))
         {
         if ($field_name[$i]=="id") $Field[$i] = $Id;
         if ($field_name[$i]=="name") $Field[$i] = strtolower($Field[$i]);
-        if (($field_name[$i]=="password") && ($password0!="")) $Field[$i]=$password0;
+        if (($field_name[$i]=="password") && ($password0!="")) $Field[$i]=md5($password0);
         /* print "$field_name[$i] = $Field[$i]<br>"; */
         if ($i > 0) $operation = $operation . ", ";
         if (stristr($field_type[$i], "char")) $operation .= "'";
