@@ -142,6 +142,14 @@ when trying connecting to MRBS.  If you would rather use non-persistent
 database connections, uncomment the line in "config.inc" which sets the
 $db_nopersist variable.
 
+With newer versions of PHP the "register_globals" option must be set to
+"on". This can be done in the php.ini file. I set it by adding this to
+my Apache httpd.conf:
+
+  <Directory />
+    php_flag register_globals on
+  </Directory>
+
 
 2. Site Identification:
 
