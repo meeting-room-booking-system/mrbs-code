@@ -121,7 +121,7 @@ $repeat_key = "rep_type_" . $rep_type;
    </tr>
    <tr>
     <td><b><? echo $lang["duration"]            ?></b></td>
-    <td><?    echo $duration . " " . $dur_units ?></td>
+    <td><?    echo $duration . " " . $lang[$dur_units] ?></td>
    </tr>
    <tr>
     <td><b><? echo $lang["end_date"] ?></b></td>
@@ -150,13 +150,17 @@ if($rep_type != 0)
 	switch($rep_type)
 	{
 		case 2:
-			$opt  = $rep_opt[0] ? "Sunday " : "";
-			$opt .= $rep_opt[1] ? "Monday " : "";
-			$opt .= $rep_opt[2] ? "Tuesday " : "";
-			$opt .= $rep_opt[3] ? "Wednesday " : "";
-			$opt .= $rep_opt[4] ? "Thursday " : "";
-			$opt .= $rep_opt[5] ? "Friday " : "";
-			$opt .= $rep_opt[6] ? "Saturday " : "";
+//			$opt  = $rep_opt[0] ? "Sunday " : "";
+//			$opt .= $rep_opt[1] ? "Monday " : "";
+//			$opt .= $rep_opt[2] ? "Tuesday " : "";
+//			$opt .= $rep_opt[3] ? "Wednesday " : "";
+//			$opt .= $rep_opt[4] ? "Thursday " : "";
+//			$opt .= $rep_opt[5] ? "Friday " : "";
+//			$opt .= $rep_opt[6] ? "Saturday " : "";
+// Display day names according to language and use preferred weekday to start week
+			for ($opt = "", $i = 0 + ($weekstarts == 1); $i <= 6 + ($weekstarts == 1); $i++) {
+				$opt .= $rep_opt[$i%7] ? strftime("%A", mktime(0,0,0,1,2+$i))." " : "";
+			}
 			break;
 		
 		default:

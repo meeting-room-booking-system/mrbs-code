@@ -33,20 +33,26 @@ if(($morningstarts < 0) || ($morningstarts > 23) ||
   exit;
 }
 
+# Start of week Sunday=0, Monday=1 (anything else same as 0)
+$weekstarts = 0;
+
+# Show dates as "Jul 10" (default) or "10 Jul" ($dateformat = 1)
+$dateformat = 0;
+
 # Searching parameters
-$search["count"] = 20;
+$search[count] = 20;
 
 # Authentication settings - read AUTHENTICATION
-$auth["realm"]  = "";
-$auth["type"]   = "ip";
-$auth["prog"]   = "";
-$auth["params"] = "";
+$auth[realm]  = "";
+$auth[type]   = "ip";
+$auth[prog]   = "";
+$auth[params] = "";
 
 # The various level two users (can modify other peoples settings)
-$auth["admin"][] = "10.10.10.1";
-$auth["admin"][] = "10.10.10.2";
-$auth["admin"][] = "10.10.10.3";
-$auth["admin"][] = "10.10.10.4";
+$auth[admin][] = "10.10.10.1";
+$auth[admin][] = "10.10.10.2";
+$auth[admin][] = "10.10.10.3";
+$auth[admin][] = "10.10.10.4";
 
 # 'auth_ldap' configuration settings
 # Where is the LDAP server
@@ -85,8 +91,16 @@ setlocale('LC_ALL','C');
 # We attempt to make up a sensible locale from
 # the HTTP_ACCEPT_LANGUAGE environment variable
 # comment this out to disable it
-$locale = $HTTP_ACCEPT_LANGUAGE;
+
+# This won't work if multiple languages are selected. Every language is then
+# separated by ", ".
+#$locale = $HTTP_ACCEPT_LANGUAGE;
+
+# This will get the primary selected language
+list ($locale, $not_used) = split(",", $HTTP_ACCEPT_LANGUAGE, 2);
+
 if (strlen($locale) == 2) {
+# This will set locale for Sweden to "sv_SV" whereas it should be "sv" or "sv_SE"... 
    $locale = strtolower($locale)."_".strtoupper($locale);
 } else {
    $locale = strtolower(substr($locale,0,2))."_".strtoupper(substr($locale,3,2));

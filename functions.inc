@@ -362,4 +362,12 @@ function genDateSelector($prefix, $day, $month, $year)
 	echo "</SELECT>";
 }
 
+
+# Get the local day name based on language
+
+function day_name($daynumber) {
+  return strftime("%A", mktime(0,0,0,1,2+$daynumber));
+}
+
+
 ?>

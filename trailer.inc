@@ -16,7 +16,8 @@ for($i = -7; $i <= 7; $i++)
 {
 	$ctime = mktime(0, 0, 0, $month, $day + $i, $year);
 	
-	$str = strftime("%b %d", $ctime);
+#	$str = strftime("%b %d", $ctime);
+	$str = ($dateformat == 1) ? strftime("%d %b", $ctime) : strftime("%b %d", $ctime);
 	
 	$cyear  = date("Y", $ctime);
 	$cmonth = date("m", $ctime);

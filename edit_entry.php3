@@ -238,6 +238,7 @@ for($i = 0; isset($lang["rep_type_$i"]); $i++)
 <TR>
  <TD><B><? echo $lang["rep_rep_day"]?></B> <? echo $lang["rep_for_weekly"]?></TD>
  <TD>
+<!-- Clean up after a while. This is fixed with a loop
   <INPUT NAME="rep_day[0]" TYPE="CHECKBOX"<? echo ($rep_day[0] ? "CHECKED" : "")?>>Sunday
   <INPUT NAME="rep_day[1]" TYPE="CHECKBOX"<? echo ($rep_day[1] ? "CHECKED" : "")?>>Monday
   <INPUT NAME="rep_day[2]" TYPE="CHECKBOX"<? echo ($rep_day[2] ? "CHECKED" : "")?>>Tuesday
@@ -245,6 +246,13 @@ for($i = 0; isset($lang["rep_type_$i"]); $i++)
   <INPUT NAME="rep_day[4]" TYPE="CHECKBOX"<? echo ($rep_day[4] ? "CHECKED" : "")?>>Thursday
   <INPUT NAME="rep_day[5]" TYPE="CHECKBOX"<? echo ($rep_day[5] ? "CHECKED" : "")?>>Friday
   <INPUT NAME="rep_day[6]" TYPE="CHECKBOX"<? echo ($rep_day[6] ? "CHECKED" : "")?>>Saturday
+-->
+<?php 
+// Output name of day for selected language and start week on preferred weekday (Sunday or Monday)
+  for ($wday = 0 + ($weekstarts == 1); $wday <= 6 + ($weekstarts == 1); $wday++) {
+?>
+  <INPUT NAME="rep_day[<? echo $wday%7 ?>]" TYPE="CHECKBOX"<? echo ($rep_day[$wday%7] ? "CHECKED" : "")?>><? echo day_name($wday%7)."\n"?>
+<?php } ?>
  </TD>
 </TR>
 
@@ -261,13 +269,17 @@ else
 		switch($rep_type)
 		{
 			case 2:
-				$opt .= $rep_opt[0] ? "Sunday " : "";
-				$opt .= $rep_opt[1] ? "Monday " : "";
-				$opt .= $rep_opt[2] ? "Tuesday " : "";
-				$opt .= $rep_opt[3] ? "Wednesday " : "";
-				$opt .= $rep_opt[4] ? "Thursday " : "";
-				$opt .= $rep_opt[5] ? "Friday " : "";
-				$opt .= $rep_opt[6] ? "Saturday " : "";
+//				$opt .= $rep_opt[0] ? "Sunday " : "";
+//				$opt .= $rep_opt[1] ? "Monday " : "";
+//				$opt .= $rep_opt[2] ? "Tuesday " : "";
+//				$opt .= $rep_opt[3] ? "Wednesday " : "";
+//				$opt .= $rep_opt[4] ? "Thursday " : "";
+//				$opt .= $rep_opt[5] ? "Friday " : "";
+//				$opt .= $rep_opt[6] ? "Saturday " : "";
+// Make day names according to language and use preferred weekday to start week
+			for ($opt = "", $i = 0 + ($weekstarts == 1); $i <= 6 + ($weekstarts == 1); $i++) {
+				$opt .= $rep_opt[$i%7] ? day_name($i)." " : "";
+			}
 				break;
 			
 			default:
