@@ -21,14 +21,16 @@ Level 1 users can only change their own.  Admistrators also have the ability to
 add and remove rooms and areas.
 
 Administrators are defined in config.inc. This is done by specifying:
-   $auth[admin][] = "username";
-   $auth[admin][] = "username2";
+   $auth["admin"][] = "username";
+   $auth["admin"][] = "username2";
    etc
+If IP authentication is used, for "username" use the IP address.
 
 You can have as many administrators as you want.
 
-The default configuration has a few 10.10. IP addresses as administrators -
-you may want to change these.
+The default configuration uses IP address for authentication, and defines
+the local host (127.0.0.1) as the only administrator. You will almost
+surely want to change these.
 
 Different Auth Schemes
 ----------------------
@@ -57,18 +59,18 @@ use this in a production environment - it's just to demonstrate.
 In the config.inc file there is a section that says:
 
 # Authentication settings - read AUTHENTICATION
-$auth[realm]  = "";
-$auth[type]   = "ip";
-$auth[prog]   = "";
-$auth[params] = "";
+$auth["realm"]  = "";
+$auth["type"]   = "ip";
+$auth["prog"]   = "";
+$auth["params"] = "";
 
 Change this to:
 
 # Authentication settings - read AUTHENTICATION
-$auth[realm]  = "MRBS";
-$auth[type]   = "ext";
-$auth[prog]   = "./badpw.pl";
-$auth[params] = "#USERNAME# #PASSWORD#";
+$auth["realm"]  = "MRBS";
+$auth["type"]   = "ext";
+$auth["prog"]   = "./badpw.pl";
+$auth["params"] = "#USERNAME# #PASSWORD#";
 
 NOTE: The last line are parameters that will get passed to the 'badpw.pl' script,
 at runtime "#USERNAME#" and "#PASSWORD" will get replaced with the username and
@@ -80,7 +82,7 @@ username and password. Check badpw.pl for the valid combinations.
 
 To try out an "admin" user, add an appropriate username to the section that
 says:
-   $auth[admin][] = "....";
+   $auth["admin"][] = "....";
 
 SMB Authentication
 ------------------
@@ -113,10 +115,10 @@ domain used for the name checks.
 The config.inc entries he supplied were:
 
 # Authentication settings - read AUTHENTICATION
-$auth[realm]  = "MRBS";
-$auth[type]   = "ext";
-$auth[prog]   = "/usr/bin/smb_auth";
-$auth[params] = "#USERNAME# #PASSWORD# SERVER BACKUP DOMAIN";
+$auth["realm"]  = "MRBS";
+$auth["type"]   = "ext";
+$auth["prog"]   = "/usr/bin/smb_auth";
+$auth["params"] = "#USERNAME# #PASSWORD# SERVER BACKUP DOMAIN";
 
 The [params] are:
    * #USERNAME# is replaced by the actual username presented
@@ -138,13 +140,7 @@ You can get it from ftp://platan.vc.cvut.cz/pub/linux/ncpfs/
 
 I've only tested this with ncpfs-2.2.0.18
 
-The appropriate settings for config.inc are:
-
-# Authentication settings - read AUTHENTICATION
-$auth[realm]  = "MRBS";
-$auth[type]   = "ext";
-$auth[prog]   = "/usr/bin/nwauth";
-$auth[params] = "-S MYSERVER -U #USERNAME# -P #PASSWORD#";
+Please see README.nwauth for more information on Netware authentication.
 
 
 LDAP Authentication
@@ -158,10 +154,10 @@ password pair with all the "$ldap_base_dn" entrys until one matches.
 e.g.
 
 # Authentication settings - read AUTHENTICATION
-$auth[realm]  = "MRBS";
-$auth[type]   = "ldap";
-$auth[prog]   = "";
-$auth[params] = "";
+$auth["realm"]  = "MRBS";
+$auth["type"]   = "ldap";
+$auth["prog"]   = "";
+$auth["params"] = "";
 
 # The LDAP server is local
 $ldap_host = "localhost";
@@ -184,10 +180,10 @@ It expects the full thing to be passed in - eg
 In my case, I can pass just the cn and it works. My config.inc settings are:
 
 # Authentication settings - read AUTHENTICATION
-$auth[realm]  = "MRBS";
-$auth[type]   = "ext";
-$auth[prog]   = "/home/httpd/html/mrbs/auth_ldap.pl";
-$auth[params] = "LDAPSERVER cn=#USERNAME# #PASSWORD#";
+$auth["realm"]  = "MRBS";
+$auth["type"]   = "ext";
+$auth["prog"]   = "/home/httpd/html/mrbs/auth_ldap.pl";
+$auth["params"] = "LDAPSERVER cn=#USERNAME# #PASSWORD#";
 
 
 The third also uses a perl script that simply calls ldapsearch.
@@ -197,11 +193,11 @@ LDAP configuration.  NOTE, the script disallows any usernames which
 contain uppercase or space characters in them, for the reason behind
 this please see the script its self.
 
-$auth[realm]  = "MRBS";
-$auth[type]   = "ext";
-$auth[prog]   = "/home/httpd/html/mrbs/auth_ldapsearch.pl";
-$auth[params] = "LDAPSERVER cn=#USERNAME# #PASSWORD#";
-$auth[params] = "YourServer \"Your search root\" \"#USERNAME#\" \"#PASSWORD#\"";
+$auth["realm"]  = "MRBS";
+$auth["type"]   = "ext";
+$auth["prog"]   = "/home/httpd/html/mrbs/auth_ldapsearch.pl";
+$auth["params"] = "LDAPSERVER cn=#USERNAME# #PASSWORD#";
+$auth["params"] = "YourServer \"Your search root\" \"#USERNAME#\" \"#PASSWORD#\"";
 
 Creating a new authentication scheme
 ------------------------------------
@@ -237,14 +233,14 @@ username, password and server name as parameters, and returned 0 for
 The config.inc entries for this might look like:
 
 # Authentication settings - read AUTHENTICATION
-$auth[realm]  = "MRBS";
-$auth[type]   = "ext";
-$auth[prog]   = "/usr/bin/ldap_auth";
-$auth[params] = "#USERNAME# #PASSWORD# LDAP_SERVER";
+$auth["realm"]  = "MRBS";
+$auth["type"]   = "ext";
+$auth["prog"]   = "/usr/bin/ldap_auth";
+$auth["params"] = "#USERNAME# #PASSWORD# LDAP_SERVER";
 
 "auth_ext.inc" constructs a command line to execute like:
 
-   $cmd = $auth[prog] . ' ' . $auth[params];
+   $cmd = $auth["prog"] . ' ' . $auth["params"];
    $cmd = preg_replace('/#USERNAME#/',$user,$cmd);
    $cmd = preg_replace('/#PASSWORD#/',$pass,$cmd);
 
