@@ -136,7 +136,7 @@ if ( $pview != 1 ) {
     echo "</td>\n";
     
     #Draw the three month calendars
-    minicals($year, $month, $day, $area, 'month');
+    minicals($year, $month, $day, $area, $room, 'month');
     echo "</tr></table>\n";
 }
 
