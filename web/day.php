@@ -199,9 +199,10 @@ else
 
 	if ( $pview != 1 ) {
 		#Show Go to day before and after links
-		echo "<table width=\"100%\"><tr><td><a href=\"day.php?year=$yy&month=$ym&day=$yd&area=$area\">&lt;&lt;".get_vocab("daybefore")."</a></td>
-		<td align=center><a href=\"day.php?area=$area\">".get_vocab("gototoday")."</a></td>
-		<td align=right><a href=\"day.php?year=$ty&month=$tm&day=$td&area=$area\">".get_vocab("dayafter")."&gt;&gt;</a></td></tr></table>\n";
+        $output = "<table width=\"100%\"><tr><td><a href=\"day.php?year=$yy&month=$ym&day=$yd&area=$area\">&lt;&lt;".get_vocab("daybefore")."</a></td>
+        <td align=center><a href=\"day.php?area=$area\">".get_vocab("gototoday")."</a></td>
+        <td align=right><a href=\"day.php?year=$ty&month=$tm&day=$td&area=$area\">".get_vocab("dayafter")."&gt;&gt;</a></td></tr></table>\n";
+        print $output;
 	}
 
 	// Include the active cell content management routines.
@@ -363,8 +364,9 @@ else
 		reset($rooms);
 	}
 	echo "</table>\n";
+    (isset($output)) ? print $output : '';
 	show_colour_key();
 }
 
-include "trailer.inc"; 
+include "trailer.inc";
 ?>
