@@ -24,6 +24,18 @@ function print_header($day, $month, $year, $area)
 	if (empty($search_str))
 		$search_str = "";
 
+	if ($unicode_encoding)
+	{
+		header("Content-Type: text/html; charset=utf-8");
+	}
+	else
+	{
+		# We use $vocab directly instead of get_vocab() because we have
+		# no requirement to convert the vocab text, we just output
+		# the charset
+		header("Content-Type: text/html; charset=".$vocab["charset"]);
+	}
+
 	header("Pragma: no-cache");                          // HTTP 1.0
 	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
 
