@@ -698,7 +698,7 @@ class MDB_oci8 extends MDB_Common {
             return($this->raiseError(MDB_ERROR, NULL, NULL,
                 'End of result: attempted to check the end of an unknown result'));
         }
-        if (isset($this->results[$result_value]) && end($this->results[$result_value]) === false) {
+        if (isset($this->results[$result_value]) && end($this->results[$result_value]) === FALSE) {
             return($this->highest_fetched_row[$result_value] >= $this->current_row[$result_value]-1);
         }
         if (isset($this->row_buffer[$result_value])) {
@@ -877,7 +877,7 @@ class MDB_oci8 extends MDB_Common {
                 'Number of rows: attemped to obtain the number of rows contained in an unknown query result'));
         }
         if (!isset($this->results[$result_value][$this->highest_fetched_row[$result_value]])
-            || $this->results[$result_value][$this->highest_fetched_row[$result_value]] !== false
+            || $this->results[$result_value][$this->highest_fetched_row[$result_value]] !== FALSE
         ) {
             if (isset($this->limits[$result_value])) {
                 if (MDB::isError($skipfirstrow = $this->_skipLimitOffset($result))) {
@@ -891,7 +891,7 @@ class MDB_oci8 extends MDB_Common {
                 unset($this->row_buffer[$result_value]);
             }
             if (!isset($this->results[$result_value][$this->highest_fetched_row[$result_value]])
-                || $this->results[$result_value][$this->highest_fetched_row[$result_value]] !== false
+                || $this->results[$result_value][$this->highest_fetched_row[$result_value]] !== FALSE
             ) {
                 while((!isset($this->limits[$result_value])
                     || $this->highest_fetched_row[$result_value] >= $this->limits[$result_value][1]
@@ -902,7 +902,7 @@ class MDB_oci8 extends MDB_Common {
                     $this->results[$result_value][$this->highest_fetched_row[$result_value]] = $buffer;
                 }
                 ++$this->highest_fetched_row[$result_value];
-                $this->results[$result_value][$this->highest_fetched_row[$result_value]] = false;
+                $this->results[$result_value][$this->highest_fetched_row[$result_value]] = FALSE;
             }
         }
         return(max(0, $this->highest_fetched_row[$result_value]));
@@ -1533,22 +1533,48 @@ class MDB_oci8 extends MDB_Common {
         if (is_null($rownum)) {
             $rownum = $this->current_row[$result_value] + 1;
         }
-        if (!isset($this->results[$result_value][$rownum])) {
+        if (!isset($this->results[$result_value][$rownum])
+            && (!isset($this->results[$result_value][$this->highest_fetched_row[$result_value]])
+                || $this->results[$result_value][$this->highest_fetched_row[$result_value]] !== FALSE)
+        ) {
             if (isset($this->limits[$result_value])) {
+                // upper limit
                 if ($rownum >= $this->limits[$result_value][1]) {
+                    // are all previous rows fetched so that we can set the end
+                    // of the result set and not have any "holes" in between?
+                    if ($rownum == 0
+                        || (isset($this->results[$result_value])
+                            && count($this->results[$result_value]) == $rownum
+                        )
+                    ) {
+                        $this->highest_fetched_row[$result_value] = $rownum;
+                        $this->current_row[$result_value] = $rownum;
+                        $this->results[$result_value][$rownum] = FALSE;
+                    }
+                    if($this->options['autofree']) {
+                        $this->freeResult($result);
+                    }
                     return(NULL);
                 }
+                // offset skipping
                 if (MDB::isError($this->_skipLimitOffset($result))) {
+                    $this->current_row[$result_value] = 0;
+                    $this->results[$result_value] = array(FALSE);
+                    if($this->options['autofree']) {
+                        $this->freeResult($result);
+                    }
                     return(NULL);
                 }
             }
             if (isset($this->row_buffer[$result_value])) {
                 $this->current_row[$result_value]++;
-                $this->results[$result_value][$this->current_row[$result_value]] = $this->row_buffer[$result_value];
+                $this->results[$result_value][$this->current_row[$result_value]] =
+                    $this->row_buffer[$result_value];
                 unset($this->row_buffer[$result_value]);
             }
-            if (!isset($this->results[$result_value][$this->current_row[$result_value]])
-                || end($this->results[$result_value]) !== false
+            if (!isset($this->results[$result_value][$rownum])
+                && (!isset($this->results[$result_value][$this->highest_fetched_row[$result_value]])
+                    || $this->results[$result_value][$this->highest_fetched_row[$result_value]] !== FALSE)
             ) {
                 while($this->current_row[$result_value] < $rownum
                     && @OCIFetchInto($result, $buffer, OCI_RETURN_NULLS)
@@ -1556,23 +1582,23 @@ class MDB_oci8 extends MDB_Common {
                     $this->current_row[$result_value]++;
                     $this->results[$result_value][$this->current_row[$result_value]] = $buffer;
                 }
-                if ($this->current_row[$result_value] > $rownum) {
+                // end of result set reached
+                if ($this->current_row[$result_value] < $rownum) {
                     $this->current_row[$result_value]++;
-                    $this->results[$result_value][$this->current_row[$result_value]] = false;
+                    $this->results[$result_value][$this->current_row[$result_value]] = FALSE;
                 }
             }
             $this->highest_fetched_row[$result_value] =
                 max($this->highest_fetched_row[$result_value],
                     $this->current_row[$result_value]);
+        } else {
+            $this->current_row[$result_value]++;
         }
-        if (isset($this->results[$result_value][$rownum])) {
-            $this->highest_fetched_row[$result_value] =
-                max($this->highest_fetched_row[$result_value], $rownum);
+        if (isset($this->results[$result_value][$rownum])
+            && $this->results[$result_value][$rownum]
+        ) {
             $row = $this->results[$result_value][$rownum];
         } else {
-            return(NULL);
-        }
-        if (!$row) {
             if($this->options['autofree']) {
                 $this->freeResult($result);
             }
