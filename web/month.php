@@ -311,7 +311,7 @@ if ($javascript_cursor) // If authorized in config.inc.php, include the javascri
        . ");</SCRIPT>\n";
     }
 
-echo "<table border=2 width=\"100%\">\n<tr>";
+echo "<table border=\"1\" cellspacing=\"0\" width=\"100%\">\n<tr>";
 # Weekday name header row:
 for ($weekcol = 0; $weekcol < 7; $weekcol++)
 {
