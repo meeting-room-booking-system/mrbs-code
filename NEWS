@@ -7,6 +7,37 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.2.1 (Fri Dec 10 10:00:00 GMT 2004):
+
+[-] MySQL tables fixed for MySQL 4.0, namely to remove DEFAULT from
+      auto_increment columns.
+[-] Bug 1027328 fixed, sendMail function now provides the correct parameters
+      and headers for each type of backend (mail, sendmail or smtp). (Thekk)
+[*] RFE 1000967 - enhanced email notifications. (Neil Hawes, Stuart
+      Chalmers)
+[-] Bug 1068522 fixed, changed "" around $db_password value in
+      config.inc.php to '' so that special characters are not interpeted.
+      (Matt Schuler)
+[-] Bug 1035790 fixed, can now book series with pgsql. (Thekk)
+[-] Bug 994056 fixed, emails are sent when they should be now to who they
+      should be sent to.
+[-] Bug 1040185 fixed, AM and PM generation no longer causes
+      "Negative timestamps are not supported under any known
+      version of Windows" PHP error on Windows MRBS installations in far
+      eastern time zones.
+[-] Fixed lang/locale selection for Czech language. Czech country code is
+      "cs", not "cz".
+[-] Fix added for the ChangeOptionDays JavaScript function in some older
+      browser.
+[-] Fix for page refresh functionality. If a refresh time is configured,
+      only do it for day.php, week.php and month.php
+[*] Updated Netherlands translation (Marc ter Horst)
+[-] MRBS now sends content-type and charset in an HTTP header, which can
+      fix some Apache installations where a charset if forced in the
+      config. 
+
+
+-------------------------------------------------------------------------------
 Version 1.2 (Thu Sep 9 14:00:00 BST 2004):
 
 [-] Notification emails are now RFC2045 compliant. Mail body can contain non
