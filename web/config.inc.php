@@ -192,18 +192,20 @@ $auth["params"] = "";
 # 'auth_ldap' configuration settings
 # Where is the LDAP server
 #$ldap_host = "localhost";
-# LDAP base distinguish names
-#$ldap_base_dn[] = "ou=organizationalunit1,o=organization,c=MY";
-#$ldap_base_dn[] = "ou=organizationalunit2,o=organization,c=MY";
-#$ldap_base_dn[] = "ou=organizationalunit3,o=organization,c=MY";
+# LDAP base distinguish name
+# See AUTHENTICATION for details of how check against multiple base dn's
+#$ldap_base_dn = "ou=organizationalunit,dc=my-domain,dc=com";
+# Attribute within the base dn that contains the username
+#$ldap_user_attrib = "uid";
 
 # 'auth_ldap' extra configuration for ldap configuration of who can use
 # the system
-# If it's set, the $ldap_filter will be combined with the uid like this:
-#   (&(uid=username)($ldap_filter))
+# If it's set, the $ldap_filter will be combined with the value of
+# $ldap_user_attrib like this:
+#   (&($ldap_user_attrib=username)($ldap_filter))
 # After binding to check the password, this check is used to see that
 # they are a valid user of mrbs.
-$ldap_filter = "mrbsuser=y";
+#$ldap_user_filter = "mrbsuser=y";
 
 # 'auth_imap' configuration settings
 # See AUTHENTICATION for details of how check against multiple servers
