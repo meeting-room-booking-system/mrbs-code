@@ -46,8 +46,8 @@ if (isset($area))
 
 <table border=1>
 <tr>
-<th><center><b>Areas</b></center></th>
-<th><center><b>Rooms <? if(isset($area)) { echo "in " .
+<th><center><b><? echo $lang[areas] ?></b></center></th>
+<th><center><b><? echo $lang[rooms] ?> <? if(isset($area)) { echo $lang[in] . " " .
   htmlspecialchars($area_name); }?></b></center></th>
 </tr>
 
@@ -59,13 +59,13 @@ $res = sql_query("select id, area_name from mrbs_area order by area_name");
 if (! $res) fatal_error(0, sql_error());
 
 if (sql_count($res) == 0) {
-	echo "No Areas";
+	echo $lang[noareas];
 } else {
 	echo "<ul>";
 	for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 		$area_name_q = urlencode($row[1]);
 		echo "<li><a href=\"admin.php?area=$row[0]&area_name=$area_name_q\">"
-			. htmlspecialchars($row[1]) . "</a> (<a href=\"edit_area_room.php?area=$row[0]\">Edit</a>) (<a href=\"del.php?type=area&area=$row[0]\">Delete</a>)\n";
+			. htmlspecialchars($row[1]) . "</a> (<a href=\"edit_area_room.php?area=$row[0]\">" . $lang[edit] . "</a>) (<a href=\"del.php?type=area&area=$row[0]\">" .  $lang[delete] . "</a>)\n";
 	}
 	echo "</ul>";
 }
@@ -78,17 +78,17 @@ if(isset($area)) {
 	$res = sql_query("select id, room_name, description, capacity from mrbs_room where area_id=$area order by room_name");
 	if (! $res) fatal_error(0, sql_error());
 	if (sql_count($res) == 0) {
-		echo "No rooms";
+		echo $lang[norooms];
 	} else {
 		echo "<ul>";
 		for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 			echo "<li>" . htmlspecialchars($row[1]) . "(" . htmlspecialchars($row[2])
-			. ", $row[3]) (<a href=\"edit_area_room.php?room=$row[0]\">Edit</a>) (<a href=\"del.php?type=room&room=$row[0]\">Delete</a>)\n";
+			. ", $row[3]) (<a href=\"edit_area_room.php?room=$row[0]\">" .  $lang[edit] . "</a>) (<a href=\"del.php?type=room&room=$row[0]\">" .  $lang[delete] . "</a>)\n";
 		}
 		echo "</ul>";
 	}
 } else {
-	echo "No area selected";
+	echo $lang[noarea];
 }
 
 ?>
@@ -96,30 +96,30 @@ if(isset($area)) {
 </tr>
 <tr>
 <td>
-<h3 ALIGN=CENTER>Add Area</h3>
+<h3 ALIGN=CENTER><? echo $lang[addarea] ?></h3>
 <form action=add.php method=post>
 <input type=hidden name=type value=area>
 
 <TABLE>
-<TR><TD>Name:       </TD><TD><input type=text name=name></TD></TR>
+<TR><TD><? echo $lang[name] ?>:       </TD><TD><input type=text name=name></TD></TR>
 </TABLE>
-<input type=submit value="Add Area">
+<input type=submit value="<? echo $lang[addarea] ?>">
 </form>
 </td>
 
 <td>
 <? if(isset($area)) { ?>
-<h3 ALIGN=CENTER>Add Room</h3>
+<h3 ALIGN=CENTER><? echo $lang[addroom] ?></h3>
 <form action=add.php method=post>
 <input type=hidden name=type value=room>
 <input type=hidden name=area value=<? echo $area; ?>>
 
 <TABLE>
-<TR><TD>Name:       </TD><TD><input type=text name=name></TD></TR>
-<TR><TD>Description:</TD><TD><input type=text name=description></TD></TR>
-<TR><TD>Capacity:   </TD><TD><input type=text name=capacity></TD></TR>
+<TR><TD><? echo $lang[name] ?>:       </TD><TD><input type=text name=name></TD></TR>
+<TR><TD><? echo $lang[description] ?></TD><TD><input type=text name=description></TD></TR>
+<TR><TD><? echo $lang[capacity] ?>:   </TD><TD><input type=text name=capacity></TD></TR>
 </TABLE>
-<input type=submit value="Add Room">
+<input type=submit value="<? echo $lang[addroom] ?>">
 </form>
 <? } else { echo "&nbsp;"; }?>
 </td>
@@ -127,5 +127,6 @@ if(isset($area)) {
 </table>
 
 <br>
-Your browser is set to use "<b><?echo $HTTP_ACCEPT_LANGUAGE?></b>" language.
+<? echo $lang[browserlang] . " " . $HTTP_ACCEPT_LANGUAGE . " " . $lang[postbrowserlang] ; ?>
+
 <? include "trailer.inc" ?>

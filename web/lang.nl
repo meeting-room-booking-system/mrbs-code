@@ -4,7 +4,7 @@
 # This file contains PHP code that specifies language specific strings
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is an NL Dutch file.
-#
+# Translations provided by: Marc ter Horst
 #
 # This file is PHP code. Treat it as such.
 
@@ -15,10 +15,10 @@ $lang["charset"]            = "iso-8859-1";
 $lang["mrbs"]               = "Vergaderruimte Boekingssysteem";
 
 # Used in functions.inc
-$lang["search_label"]       = "Zoek:";
 $lang["report"]             = "Rapportage";
 $lang["admin"]              = "Admin";
 $lang["help"]               = "Help";
+$lang["search"]             = "Zoek:";
 
 # Used in day.php
 $lang["bookingsfor"]        = "Boekingen voor";
@@ -33,7 +33,7 @@ $lang["goto"]               = "ga naar";
 $lang["viewday"]            = "Bekijk Dag";
 $lang["viewweek"]           = "Bekijk Week";
 $lang["viewmonth"]          = "Bekijk Maand";
-$lang["ppreview"]           = "Print Preview";
+$lang["ppreview"]           = "Afdruk Voorbeeld";
 
 # Used in edit_entry.php
 $lang["addentry"]           = "Boeking Toevoegen";
@@ -64,13 +64,13 @@ $lang["rep_type_2"]         = "Wekelijks";
 $lang["rep_type_3"]         = "Maandelijks";
 $lang["rep_type_4"]         = "Jaarlijks";
 $lang["rep_type_5"]         = "Maandelijks, Overeenkomstige dag";
-$lang["rep_type_6"]         = "n-Weekly";
+$lang["rep_type_6"]         = "n-wekelijks";
 $lang["rep_end_date"]       = "Einde herhaling datum:";
 $lang["rep_rep_day"]        = "Herhalingsdag:";
 $lang["rep_for_weekly"]     = "(t.b.v. wekelijks)";
 $lang["rep_freq"]           = "Frequentie:";
-$lang["rep_num_weeks"]      = "Number of weeks";
-$lang["rep_for_nweekly"]    = "(for n-weekly)";
+$lang["rep_num_weeks"]      = "Aantal weken";
+$lang["rep_for_nweekly"]    = "(Voor n-wekelijks)";
 
 # Used in view_entry.php
 $lang["description"]        = "Omschrijving:";
@@ -124,6 +124,7 @@ $lang["entry_found"]        = "boeking gevonden";
 $lang["entries_found"]      = "boekingen gevonden";
 $lang["summary_header"]     = "Totaal aan (geboekte) uren";
 $lang["total"]              = "Totaal";
+$lang["submitquery"]        = "Run Report";
 
 # Used in week.php
 $lang["weekbefore"]         = "Ga naar vorige week";
@@ -137,5 +138,33 @@ $lang["gotothismonth"]      = "Ga naar deze maand";
 
 # Used in {day week month}.php
 $lang["no_rooms_for_area"]  = "Nog geen kamers gedefiniëerd voor dit gebouw";
+
+# Used in admin.php
+$lang["edit"]               = "Edit";
+$lang["delete"]             = "Delete";
+$lang["rooms"]              = "Rooms";
+$lang["in"]                 = "in";
+$lang["noareas"]            = "No Areas";
+$lang["addarea"]            = "Add Area";
+$lang["name"]               = "Name";
+$lang["noarea"]             = "No area selected";
+$lang["browserlang"]        = "Your browser is set to use";
+$lang["postbrowserlang"]    = "language.";
+$lang["addroom"]            = "Add Room";
+$lang["capacity"]           = "Capacity";
+$lang["norooms"]            = "No rooms.";
+
+# Used in edit_area_room.php
+$lang["editarea"]           = "Edit Area";
+$lang["change"]             = "Change";
+$lang["backadmin"]          = "Back to Admin";
+$lang["editroomarea"]       = "Edit Area or Room Description";
+$lang["editroom"]           = "Edit Room";
+
+# Used in del.php
+$lang["deletefollowing"]    = "This will delete the following bookings";
+$lang["sure"]               = "Are you sure?";
+$lang["YES"]                = "YES";
+$lang["NO"]                 = "NO";
 
 ?>

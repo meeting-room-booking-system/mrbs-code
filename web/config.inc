@@ -105,6 +105,12 @@ $auth["admin"][] = "127.0.0.1";
 # they are a valid user of mrbs.
 $ldap_filter = "mrbsuser=y";
 
+# 'auth_imap' configuration settings
+# Where is the IMAP server
+$imap_host = "imap-server-name";
+# The IMAP server port
+$imap_port = "143"; 
+
 ##########
 # Language
 ##########
@@ -120,13 +126,11 @@ include 'lang.en';
 # locales on your system do "locale -a"
 setlocale('LC_ALL','C');
 
-global $HTTP_ACCEPT_LANGUAGE;
-
 # We attempt to make up a sensible locale from the HTTP_ACCEPT_LANGUAGE
 # environment variable. If this doesn't work for you, comment it out
 # and assign locale directly.
 # If HTTP_ACCEPT_LANGUAGE is a comma-separated list, take the first one.
-$locale = ereg_replace(",.*", "", $HTTP_ACCEPT_LANGUAGE);
+$locale = ereg_replace(",.*", "", getenv('HTTP_ACCEPT_LANGUAGE'));
 
 # These two lines import a language based on what the client
 # is using. Comment them out to disable this.

@@ -1,3 +1,21 @@
+CVS (Thu Feb 7 13:12:00 GMT 2002)
+    Added instructions into UPGRADE readme for upgrade2.[my|pg].ql scripts
+     that are required to upgrade from an older MRBS installation.
+    Added new language tokens, using patch supplied by Michael Redinger.
+    Added new or updated translations for:
+        Italy (Gianni)
+        Netherlands  (Marc ter Horst)
+        Norway (Rune Johansen)
+        Sweden (Hakan Nilsson)
+        German (Michael Redinger)
+    Added auth_imap.inc, an authentication scheme that uses IMAP,
+     this includes a few more (commented out) lines in config.inc
+    Changed datatype of 'rep_num_weeks' in 'mrbs_repeat' table for
+     PostgreSQL installs.  We now use smallint instead of tinyint,
+     as tinyint isn't available.
+    Changed config.inc to use getenv('HTTP_ACCEPT_LANGUAGE') instead
+     of $HTTP_ACCEPT_LANGUAGE...much tidier.
+
 CVS (Fri Nov  2 12:47:45 GMT 2001)
     Fixed problem in config.inc, $HTTP_ACCEPT_LANGUAGE wasn't working for
      me unless I put a global specification for it.  This should improve
@@ -11,7 +29,7 @@ Version 1.0-pre2 (Sun Jul  8 13:43:53 BST 2001)
      time for roombooker web pages.  Set config variable $refresh_rate to the
      number of seconds to refresh after, or set to 0 to disable.
     Implemented "n-weekly" repeat type. Not sure I like the way it's phrased in
-     the lang files, but the code works fine.  You can now a meeting that is
+     the lang files, but the code works fine.  You can now have a meeting that is
      repeated every 'n' weeks. e.g. every 5th Monday.  This required a database
      change, which I've made available in upgrade2.my.sql and upgrade2.pg.sql
     Tidied lang files, and ensured every file has all the required tokens.

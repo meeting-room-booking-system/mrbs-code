@@ -4,7 +4,7 @@
 # This file contains PHP code that specifies language specific strings
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is a German file.
-#
+# Translations provided by: Michael Redinger
 #
 # This file is PHP code. Treat it as such.
 
@@ -15,10 +15,10 @@ $lang["charset"]            = "iso-8859-1";
 $lang["mrbs"]               = "Raumbuchungssystem MRBS";
 
 # Used in functions.inc
-$lang["search_label"]       = "Search:";
-$lang["report"]             = "Report";
+$lang["report"]             = "Bericht";
 $lang["admin"]              = "Admin";
-$lang["help"]               = "Help";
+$lang["help"]               = "Hilfe";
+$lang["search"]             = "Suche:";
 
 # Used in day.php
 $lang["bookingsfor"]        = "Einträge für";
@@ -124,6 +124,7 @@ $lang["entry_found"]        = "Eintrag gefunden";
 $lang["entries_found"]      = "Einträge gefunden";
 $lang["summary_header"]     = "Stundenzusammenfassung der Einträge";
 $lang["total"]              = "Gesamt";
+$lang["submitquery"]        = "Bericht erstellen";
 
 # Used in week.php
 $lang["weekbefore"]         = "gehe zur vorigen Woche";
@@ -137,5 +138,33 @@ $lang["gotothismonth"]      = "gehe zu diesen Monat";
 
 # Used in {day week month}.php
 $lang["no_rooms_for_area"]  = "Der Bereich enthält keinen Raum";
+
+# Used in admin.php
+$lang["edit"]               = "Bearbeiten";
+$lang["delete"]             = "Löschen";
+$lang["rooms"]              = "Räume";
+$lang["in"]                 = "in";
+$lang["noareas"]            = "Keine Bereiche";
+$lang["addarea"]            = "Bereich hinzufügen";
+$lang["name"]               = "Name";
+$lang["noarea"]             = "Kein Bereich ausgewählt";
+$lang["browserlang"]        = "Die Spracheinstellung Ihres Browsers ist";
+$lang["postbrowserlang"]    = ".";
+$lang["addroom"]            = "Raum hinzufügen";
+$lang["capacity"]           = "Kapazität";
+$lang["norooms"]            = "Keine Räume vorhanden.";
+
+# Used in edit_area_room.php
+$lang["editarea"]           = "Bereich bearbeiten";
+$lang["change"]             = "Ändern";
+$lang["backadmin"]          = "Zurück zu Admin";
+$lang["editroomarea"]       = "Raum- oder Bereichsbeschreibung bearbeiten";
+$lang["editroom"]           = "Raum bearbeiten";
+
+# Used in del.php
+$lang["deletefollowing"]    = "Dadurch werden die folgenden Einträge gelöscht";
+$lang["sure"]               = "Sind Sie sicher?";
+$lang["YES"]                = "JA";
+$lang["NO"]                 = "NEIN";
 
 ?>

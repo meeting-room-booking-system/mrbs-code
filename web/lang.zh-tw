@@ -15,10 +15,10 @@ $lang["charset"]            = "Big5";
 $lang["mrbs"]               = "會議室預約系統";
 
 # Used in functions.inc
-$lang["search_label"]       = "Search:";
 $lang["report"]             = "Report";
 $lang["admin"]              = "Admin";
 $lang["help"]               = "Help";
+$lang["search"]             = "Search:";
 
 # Used in day.php
 $lang["bookingsfor"]        = "Bookings for";
@@ -124,6 +124,7 @@ $lang["entry_found"]        = "entry found";
 $lang["entries_found"]      = "entries found";
 $lang["summary_header"]     = "Summary of (Entries) Hours";
 $lang["total"]              = "Total";
+$lang["submitquery"]        = "Run Report";
 
 # Used in week.php
 $lang["weekbefore"]         = "Go To Week Before";
@@ -137,5 +138,33 @@ $lang["gotothismonth"]      = "Go To This Month";
 
 # Used in {day week month}.php
 $lang["no_rooms_for_area"]  = "No rooms defined for this area";
+
+# Used in admin.php
+$lang["edit"]               = "Edit";
+$lang["delete"]             = "Delete";
+$lang["rooms"]              = "Rooms";
+$lang["in"]                 = "in";
+$lang["noareas"]            = "No Areas";
+$lang["addarea"]            = "Add Area";
+$lang["name"]               = "Name";
+$lang["noarea"]             = "No area selected";
+$lang["browserlang"]        = "Your browser is set to use";
+$lang["postbrowserlang"]    = "language.";
+$lang["addroom"]            = "Add Room";
+$lang["capacity"]           = "Capacity";
+$lang["norooms"]            = "No rooms.";
+
+# Used in edit_area_room.php
+$lang["editarea"]           = "Edit Area";
+$lang["change"]             = "Change";
+$lang["backadmin"]          = "Back to Admin";
+$lang["editroomarea"]       = "Edit Area or Room Description";
+$lang["editroom"]           = "Edit Room";
+
+# Used in del.php
+$lang["deletefollowing"]    = "This will delete the following bookings";
+$lang["sure"]               = "Are you sure?";
+$lang["YES"]                = "YES";
+$lang["NO"]                 = "NO";
 
 ?>

@@ -18,4 +18,12 @@ descriptions, it is because these are in actually your database.  You can
 edit the entries in MRBS or directly with your database SQL tool, or just
 ignore them.
 
+Upgrading from prior to mrbs 1.0 final
+======================================
+
+Please apply the upgrade2.my.sql (if using MySQL) or the
+the upgrade2.my.sql (if using PostgreSQL) script, which
+adds a new column to the 'mrbs_repeat' table to support
+"n-weekly" repeats.
+
 $Id$

@@ -60,7 +60,7 @@ function print_header($day, $month, $year, $area)
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
           <FORM METHOD=GET ACTION="search.php">
-           <FONT SIZE=2>Search: </FONT>
+           <FONT SIZE=2><? echo $lang["search"] ?> </FONT>
            <INPUT TYPE=TEXT   NAME="search_str" VALUE="<? echo $search_str ?>" SIZE=10>
            <INPUT TYPE=HIDDEN NAME=day        VALUE="<? echo $day        ?>"        >
            <INPUT TYPE=HIDDEN NAME=month      VALUE="<? echo $month      ?>"        >

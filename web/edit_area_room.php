@@ -35,7 +35,7 @@ print_header($day, $month, $year, isset($area) ? $area : "");
 
 ?>
 
-<h2>Edit Area or Room Description</h2>
+<h2><? echo $lang[editroomarea] ?></h2>
 
 <table border=1>
 
@@ -56,21 +56,21 @@ if(!empty($room)) {
 	$row = sql_row_keyed($res, 0);
 	sql_free($res);
 ?>
-<h3 ALIGN=CENTER>Edit Room</h3>
+<h3 ALIGN=CENTER><? echo $lang[editroom] ?></h3>
 <form action="edit_area_room.php" method="post">
 <input type=hidden name="room" value="<?php echo $row["id"]?>">
 <CENTER>
 <TABLE>
-<TR><TD>Name:       </TD><TD><input type=text name="room_name" value="<?php
+<TR><TD><? echo $lang[name] ?>:       </TD><TD><input type=text name="room_name" value="<?php
 echo htmlspecialchars($row["room_name"]); ?>"></TD></TR>
-<TR><TD>Description:</TD><TD><input type=text name=description value="<?php
+<TR><TD><? echo $lang[description] ?></TD><TD><input type=text name=description value="<?php
 echo htmlspecialchars($row["description"]); ?>"></TD></TR>
-<TR><TD>Capacity:   </TD><TD><input type=text name=capacity value="<?php
+<TR><TD><? echo $lang[capacity] ?>:   </TD><TD><input type=text name=capacity value="<?php
 echo $row["capacity"]; ?>"></TD></TR>
 </TABLE>
 <input type=submit name="change_room"
-value="Change">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type=submit name="change_done" value="Back to Admin">
+value="<? echo $lang[change] ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=submit name="change_done" value="<? echo $lang[backadmin] ?>">
 </CENTER>
 </form>
 <?php } ?>
@@ -91,17 +91,17 @@ if(!empty($area))
 	$row = sql_row_keyed($res, 0);
 	sql_free($res);
 ?>
-<h3 ALIGN=CENTER>Edit Area</h3>
+<h3 ALIGN=CENTER><? echo $lang[editarea] ?></h3>
 <form action="edit_area_room.php" method="post">
 <input type=hidden name="area" value="<?php echo $row["id"]?>">
 <CENTER>
 <TABLE>
-<TR><TD>Name:       </TD><TD><input type=text name="area_name" value="<?php
+<TR><TD><? echo $lang[name] ?>:       </TD><TD><input type=text name="area_name" value="<?php
 echo htmlspecialchars($row["area_name"]); ?>"></TD></TR>
 </TABLE>
 <input type=submit name="change_area"
-value="Change">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type=submit name="change_done" value="Back to Admin">
+value="<? echo $lang[change] ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=submit name="change_done" value="<? echo $lang[backadmin] ?>">
 </CENTER>
 </form>
 <?php } ?>

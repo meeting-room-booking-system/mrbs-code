@@ -1,0 +1,170 @@
+<?
+# $Id$
+
+# This file contains PHP code that specifies language specific strings
+# The default strings come from lang.en, and anything in a locale
+# specific file will overwrite the default. This is a US/UK English file.
+# Translations provided by: Gianni
+#
+# This file is PHP code. Treat it as such.
+
+# The charset to use in "Content-type" header
+$lang["charset"]            = "iso-8859-1";
+
+# Used in style.inc
+$lang["mrbs"]               = "Sistema di Prenotazione Sale";
+
+# Used in functions.inc
+$lang["report"]             = "Report";
+$lang["admin"]              = "Admin";
+$lang["help"]               = "Aiuto";
+$lang["search"]             = "Ricerca:";
+
+# Used in day.php
+$lang["bookingsfor"]        = "Prenotazioni per";
+$lang["bookingsforpost"]    = ""; # Goes after the date
+$lang["areas"]              = "Aree";
+$lang["daybefore"]          = "Vai al Giorno Prima";
+$lang["dayafter"]           = "Vai al Giorno Dopo";
+$lang["gototoday"]          = "Vai a oggi";
+$lang["goto"]               = "Vai a";
+
+# Used in trailer.inc
+$lang["viewday"]            = "Vedi Giorno";
+$lang["viewweek"]           = "Vedi Settimana";
+$lang["viewmonth"]          = "Vedi Mese";
+$lang["ppreview"]           = "Anteprima Stampa";
+
+# Used in edit_entry.php
+$lang["addentry"]           = "Aggiungi";
+$lang["editentry"]          = "Modifica";
+$lang["editseries"]         = "Modifica Serie";
+$lang["namebooker"]         = "Breve Descrizione:";
+$lang["fulldescription"]    = "Descrizione Completa:<br>&nbsp;&nbsp;(Numero di persone,<br>&nbsp;&nbsp;Interno/Esterno ecc..)";
+$lang["date"]               = "Data:";
+$lang["start_date"]         = "Ora Inizio:";
+$lang["end_date"]           = "Ora Fine:";
+$lang["time"]               = "Ora:";
+$lang["duration"]           = "Durata:";
+$lang["seconds"]            = "secondi";
+$lang["minutes"]            = "minuti";
+$lang["hours"]              = "ora";
+$lang["days"]               = "giorni";
+$lang["weeks"]              = "settimane";
+$lang["years"]              = "anni";
+$lang["all_day"]            = "Tutto il giorno";
+$lang["type"]               = "Tipo:";
+$lang["internal"]           = "Interno";
+$lang["external"]           = "Esterno";
+$lang["save"]               = "Salva";
+$lang["rep_type"]           = "Ripeti Tipo:";
+$lang["rep_type_0"]         = "Nessuno";
+$lang["rep_type_1"]         = "Giornaliero";
+$lang["rep_type_2"]         = "Settimanale";
+$lang["rep_type_3"]         = "Mensile";
+$lang["rep_type_4"]         = "Annuale";
+$lang["rep_type_5"]         = "Mensile, giorno corrispondente";
+$lang["rep_type_6"]         = "nSettimanale";
+$lang["rep_end_date"]       = "Ripeti data di Fine:";
+$lang["rep_rep_day"]        = "Ripeti Girno:";
+$lang["rep_for_weekly"]     = "(per (n-)settimanale)";
+$lang["rep_freq"]           = "Frequenza:";
+$lang["rep_num_weeks"]      = "Numero di settimane";
+$lang["rep_for_nweekly"]    = "(per n-settimanale)";
+
+# Used in view_entry.php
+$lang["description"]        = "Descrizione:";
+$lang["room"]               = "Sala:";
+$lang["createdby"]          = "Creato da:";
+$lang["lastupdate"]         = "Ultima Modifica:";
+$lang["deleteentry"]        = "Cancella";
+$lang["deleteseries"]       = "Cancella Series";
+$lang["confirmdel"]         = "Sei sicuro\\nche vuoi\\ncancellare l'elemento?\\n\\n";
+$lang["returnprev"]         = "Ritorna alla Pagina Precedente";
+
+# Used in edit_entry_handler.php
+$lang["error"]              = "Errore";
+$lang["sched_conflict"]     = "Conflitto di Prenotazione";
+$lang["conflict"]           = "La nuova prenotazione sarà in conflitto con questa(e):";
+$lang["too_may_entrys"]     = "L'opzione selezionata crea troppe entità.<BR>Per favore usa una opzione differente!";
+$lang["returncal"]          = "Ritorna al calendario";
+
+# Authentication stuff
+$lang["accessdenied"]       = "Accesso Negato";
+$lang["norights"]           = "Non hai i diritti per modificare questo oggetto.";
+
+# Used in search.php
+$lang["invalid_search"]     = "Valore di Ricerca vuoto o sbagliato.";
+$lang["search_results"]     = "Risultati ricerca per:";
+$lang["nothing_found"]      = "Nessun risultato trovato.";
+$lang["records"]            = "Trovati ";
+$lang["through"]            = " attraverso ";
+$lang["of"]                 = " di ";
+$lang["previous"]           = "Precedente";
+$lang["next"]               = "Successivo";
+$lang["entry"]              = "Valore";
+$lang["view"]               = "Vista";
+
+# Used in report.php
+$lang["report_on"]          = "Report su Meetings:";
+$lang["report_start"]       = "Report su data inizio:";
+$lang["report_end"]         = "Report su data fine:";
+$lang["match_area"]         = "Trovata area:";
+$lang["match_room"]         = "Trovata stanza:";
+$lang["match_entry"]        = "Trovata descrizione breve:";
+$lang["match_descr"]        = "Trovata descrizione completa:";
+$lang["include"]            = "Includi:";
+$lang["report_only"]        = "Solo Report";
+$lang["summary_only"]       = "Solo Raggruppamento";
+$lang["report_and_summary"] = "Report e Raggruppamento";
+$lang["summarize_by"]       = "Raggruppa per:";
+$lang["sum_by_descrip"]     = "Breve descrizione";
+$lang["sum_by_creator"]     = "Creatore";
+$lang["entry_found"]        = "trovato valore";
+$lang["entries_found"]      = "trovati valori";
+$lang["summary_header"]     = "Gruppo di (Valori) Ore";
+$lang["total"]              = "Totale";
+$lang["submitquery"]        = "Run Report";
+
+# Used in week.php
+$lang["weekbefore"]         = "Vai alla Settimana Precedente";
+$lang["weekafter"]          = "Vai alla Settimana Successiva";
+$lang["gotothisweek"]       = "Vai alla Settimana Corrente";
+
+# Used in month.php
+$lang["monthbefore"]        = "Vai al Mese Precedente";
+$lang["monthafter"]         = "Vai al Mese Successivo";
+$lang["gotothismonth"]      = "Vai al Mese Corrente";
+
+# Used in {day week month}.php
+$lang["no_rooms_for_area"]  = "Non ci sono sale per questa Area";
+
+# Used in admin.php
+$lang["edit"]               = "Edit";
+$lang["delete"]             = "Delete";
+$lang["rooms"]              = "Rooms";
+$lang["in"]                 = "in";
+$lang["noareas"]            = "No Areas";
+$lang["addarea"]            = "Add Area";
+$lang["name"]               = "Name";
+$lang["noarea"]             = "No area selected";
+$lang["browserlang"]        = "Your browser is set to use";
+$lang["postbrowserlang"]    = "language.";
+$lang["addroom"]            = "Add Room";
+$lang["capacity"]           = "Capacity";
+$lang["norooms"]            = "No rooms.";
+
+# Used in edit_area_room.php
+$lang["editarea"]           = "Edit Area";
+$lang["change"]             = "Change";
+$lang["backadmin"]          = "Back to Admin";
+$lang["editroomarea"]       = "Edit Area or Room Description";
+$lang["editroom"]           = "Edit Room";
+
+# Used in del.php
+$lang["deletefollowing"]    = "This will delete the following bookings";
+$lang["sure"]               = "Are you sure?";
+$lang["YES"]                = "YES";
+$lang["NO"]                 = "NO";
+
+?>
