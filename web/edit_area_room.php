@@ -42,13 +42,15 @@ print_header($day, $month, $year, isset($area) ? $area : "");
 
 <?php
 if(!empty($room)) {
-    include_once "functions_mail.inc";
+    include_once 'Mail/RFC822.php';
     (!isset($room_admin_email)) ? $room_admin_email = '': '';
     $email_adresses = explode(',', $room_admin_email);
     $valid_email = TRUE;
+    $email_validator = new Mail_RFC822();
     foreach ($email_adresses as $email_adress)
     {
-        (!isValidInetAddress($email_adress, $strict = FALSE)) ? $valid_email = FALSE : '';
+        (!$email_validator->isValidInetAddress($email_adress, $strict = FALSE))
+            ? $valid_email = FALSE : '';
     }
     // However if no email adress is entered, this is OK
     ("" == $room_admin_email) ? $valid_email = TRUE : '';
@@ -96,13 +98,15 @@ value="<?php echo get_vocab("change") ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n
 <?php
 if(!empty($area))
 {
-    include_once "functions_mail.inc";
+    include_once 'Mail/RFC822.php';
     (!isset($area_admin_email)) ? $area_admin_email = '': '';
     $email_adresses = explode(',', $area_admin_email);
     $valid_email = TRUE;
+    $email_validator = new Mail_RFC822();
     foreach ($email_adresses as $email_adress)
     {
-        (!isValidInetAddress($email_adress, $strict = FALSE)) ? $valid_email = FALSE : '';
+        (!$email_validator->isValidInetAddress($email_adress, $strict = FALSE))
+            ? $valid_email = FALSE : '';
     }
     // However if no email adress is entered, this is OK
     ("" == $area_admin_email) ? $valid_email = TRUE : '';

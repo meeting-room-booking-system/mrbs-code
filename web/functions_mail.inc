@@ -544,31 +544,4 @@ function unHtmlEntities($string)
 }
 
 // }}}
-// {{{ isValidInetAddress()
-
-/**
- * This is an email validating function.
- * It simply validates whether an email is of the common internet form:
- * <user>@<domain>. This can be sufficient for most people. Optional stricter
- * mode can be utilised which restricts mailbox characters allowed to
- * alphanumeric, full stop, hyphen and underscore.
- *
- * @param  string  $data   Address to check
- * @param  boolean $strict Optional stricter mode
- * @return mixed           False if it fails, an indexed array
- *                         username/domain if it matches
- */
-function isValidInetAddress($data, $strict = false)
-{
-    $regex = $strict ? '/^([.0-9a-z_-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,4})$/i'
-        : '/^([*+!.&#$|\'\\%\/0-9a-z^_`{}=?~:-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,4})$/i';
-    if (preg_match($regex, trim($data), $matches))
-    {
-        return array($matches[1], $matches[2]);
-    }
-    else
-    {
-        return false;
-    }
-}
 ?>
