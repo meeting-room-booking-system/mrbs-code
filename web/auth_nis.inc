@@ -61,7 +61,7 @@ function authValidateUser($user, $pass)
         $rs = yp_match (yp_get_default_domain(), "passwd.byname", $user);
 	if ( ! empty ( $rs ) ) {
           $rs = explode ( ":", $rs );
-          if ( $rs[1] == crypt ( $password, substr ( $rs[1], 0, 2 ) ) ) {
+	  if ( $rs[1] == crypt ( $pass, substr ( $rs[1], 0, 2 ) ) ) { 
             return 1;
           } else {
             return 0;
