@@ -23,8 +23,10 @@ global $vocab; # outside of scope; needs to be denote as global
 <?php
 
 global $refresh_rate;
+global $PHP_SELF;
 
-if ($refresh_rate != 0)
+if (($refresh_rate != 0) &&
+    preg_match("/(day|week|month)\.php/",$PHP_SELF))
 {
   echo "  <META HTTP-EQUIV=\"Refresh\" CONTENT=\"$refresh_rate\">\n";
 }

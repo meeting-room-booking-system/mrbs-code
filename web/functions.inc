@@ -85,9 +85,29 @@ function ChangeOptionDays(formObj, prefix)
   var MonthObject = eval("formObj." + prefix + "month");
   var YearObject = eval("formObj." + prefix + "year");
 
-  var DaySelIdx = DaysObject.selectedIndex;
-  Month = parseInt(MonthObject[MonthObject.selectedIndex].value);
-  Year = parseInt(YearObject[YearObject.selectedIndex].value);
+  if (DaysObject.selectedIndex && DaysObject.options)
+    { // The DOM2 standard way
+    // alert("The DOM2 standard way");
+    var DaySelIdx = DaysObject.selectedIndex;
+    var Month = parseInt(MonthObject.options[MonthObject.selectedIndex].value);
+    var Year = parseInt(YearObject.options[YearObject.selectedIndex].value);
+    }
+  else if (DaysObject.selectedIndex && DaysObject[DaysObject.selectedIndex])
+    { // The legacy MRBS way
+    // alert("The legacy MRBS way");
+    var DaySelIdx = DaysObject.selectedIndex;
+    var Month = parseInt(MonthObject[MonthObject.selectedIndex].value);
+    var Year = parseInt(YearObject[YearObject.selectedIndex].value);
+    }
+  else if (DaysObject.value)
+    { // Opera 6 stores the selectedIndex in property 'value'.
+    // alert("The Opera 6 way");
+    var DaySelIdx = parseInt(DaysObject.value);
+    var Month = parseInt(MonthObject.options[MonthObject.value].value);
+    var Year = parseInt(YearObject.options[YearObject.value].value);
+    }
+
+  // alert("Day="+(DaySelIdx+1)+" Month="+Month+" Year="+Year);
 
   var DaysForThisSelection = DaysInMonth(Month, Year);
   var CurrentDaysInSelection = DaysObject.length;
@@ -139,7 +159,7 @@ function ChangeOptionDays(formObj, prefix)
           <FORM ACTION="day.php" METHOD=GET name="Form1">
            <FONT SIZE=2>
 <?php
-   genDateSelector("", $day, $month, $year);
+   genDateSelector("", $day, $month, $year); // Note: The 1st arg must match the last arg in the call to ChangeOptionDays below.
    if (!empty($area))
         echo "<INPUT TYPE=HIDDEN NAME=area VALUE=$area>"
  
@@ -147,7 +167,7 @@ function ChangeOptionDays(formObj, prefix)
 	    <SCRIPT LANGUAGE="JavaScript">
 	    <!--
 	    // fix number of days for the $month/$year that you start with
-	    ChangeOptionDays(document.Form1, '');
+	    ChangeOptionDays(document.Form1, ''); // Note: The 2nd arg must match the first in the call to genDateSelector above.
 	    // -->
 	    </SCRIPT>
 	    <INPUT TYPE=SUBMIT VALUE="<?php echo get_vocab("goto") ?>">
