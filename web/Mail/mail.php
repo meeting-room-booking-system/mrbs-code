@@ -60,7 +60,7 @@ class Mail_mail extends Mail
 	/**
      * Implements Mail_mail::send() function using php's built-in mail()
      * command.
-     * 
+     *
      * @param mixed $recipients Either a comma-seperated list of recipients
      *              (RFC822 compliant), or an array of recipients,
      *              each RFC822 valid. This may contain recipients not
@@ -82,7 +82,7 @@ class Mail_mail extends Mail
      *               failure.
      *
      * @access public
-     */	
+     */
     function send($recipients, $headers, $body)
     {
         // If we're passed an array of recipients, implode it.
@@ -117,10 +117,10 @@ class Mail_mail extends Mail
          * PEAR_Error object and return it instead of the boolean result.
          */
         if ($result === false) {
-            $result = PEAR::raiseError('mail() returned failure',
-                                       PEAR_MAIL_FAILED);
+            $result = PEAR::raiseError('mail() returned failure');
         }
 
         return $result;
     }
+
 }
