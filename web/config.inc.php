@@ -21,7 +21,7 @@ $db_database = "mrbs";
 # Database login user name:
 $db_login = "mrbs";
 # Database login password:
-$db_password = "mrbs-password";
+$db_password = 'mrbs-password';
 # Prefix for table names.  This will allow multiple installations where only
 # one database is available
 $db_tbl_prefix = "mrbs_";
