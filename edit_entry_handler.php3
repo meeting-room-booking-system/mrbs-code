@@ -4,6 +4,7 @@ include "config.inc";
 include "functions.inc";
 include "connect.inc";
 include "mrbs_auth.inc";
+include "mrbs_sql.inc";
 
 function add_duration ( $time, $duration ) {
   $list = split ( ":", $time );
@@ -17,31 +18,44 @@ function add_duration ( $time, $duration ) {
   return $ret;
 }
 
-// check to see if two events overlap
-function times_overlap ( $time1, $duration1, $time2, $duration2 ) {
-  //echo "times_overlap ( $time1, $duration1, $time2, $duration2 )<BR>";
-  $list1 = split ( ":", $time1 );
-  $hour1 = $list1[0];
-  $min1 = $list1[1];
-  $list2 = split ( ":", $time2 );
-  $hour2 = $list2[0];
-  $min2 = $list2[1];
-  // convert to minutes since midnight
-  $tmins1start = ($hour1 * 60 + $min1) * 60;
-  $tmins1end = $tmins1start + ($duration1 * 60) - 1;
-  $tmins2start = ($hour2 * 60 + $min2) * 60;
-  $tmins2end = $tmins2start + ($duration2 * 60) - 1;
-  //echo "tmins1start=$tmins1start, tmins1end=$tmins1end, tmins2start=$tmins2start, tmins2end=$tmins2end<BR>";
-  if ( $tmins1start >= $tmins2start && $tmins1start <= $tmins2end )
-    return true;
-  if ( $tmins1end >= $tmins2start && $tmins1end <= $tmins2end )
-    return true;
-  if ( $tmins2start >= $tmins1start && $tmins2start <= $tmins1end )
-    return true;
-  if ( $tmins2end >= $tmins1start && $tmins2end <= $tmins1end )
-    return true;
-  return false;
+if(!getAuthorised(getUserName(), getUserPassword()))
+{
+?>
+<HTML>
+ <HEAD>
+  <META HTTP-EQUIV="REFRESH" CONTENT="5; URL=index.php3">
+  <TITLE><?echo $lang[mrbs]?></TITLE>
+  <?include "config.inc"?>
+  <?include "style.inc"?>
+ <BODY>
+  <H1><?echo $lang[accessdenied]?></H1>
+  <P>
+   <?echo $lang[unandpw]?>
+  </P>
+  <P>
+   <a href=<? echo $HTTP_REFERER; ?>><? echo $lang[returnprev]; ?></a>
+  </P>
+</HTML>
+<?
+	exit;
 }
+
+if(!getWritable($create_by, getUserName())) { ?>
+<HTML>
+<HEAD>
+<TITLE><?echo $lang[mrbs]?></TITLE>
+<?include "style.inc"?>
+
+<H1><?echo $lang[accessdenied]?></H1>
+<P>
+  <?echo $lang[norights]?>
+</P>
+<P>
+  <a href=<?echo $HTTP_REFERER?>><?echo $lang[returnprev]?></a>
+</P>
+</BODY>
+</HTML>
+<? exit; }
 
 // Units start in seconds
 $units = 1.0;
@@ -88,7 +102,24 @@ if($all_day == "yes")
 	}	
 }
 
-$endtime1  = $endtime - 1;
+// Get the repeat entry settings
+$rep_enddate = mktime(0, 0, 0, $rep_end_month, $rep_end_day, $rep_end_year);
+
+switch($rep_type)
+{
+	case 2:
+		$rep_opt  = $rep_day[0] ? "1" : "0";
+		$rep_opt .= $rep_day[1] ? "1" : "0";
+		$rep_opt .= $rep_day[2] ? "1" : "0";
+		$rep_opt .= $rep_day[3] ? "1" : "0";
+		$rep_opt .= $rep_day[4] ? "1" : "0";
+		$rep_opt .= $rep_day[5] ? "1" : "0";
+		$rep_opt .= $rep_day[6] ? "1" : "0";
+		break;
+	
+	default:
+		$rep_opt = "";
+}
 
 # first check for any schedule conflicts
 # we ask the db if there is anything which
@@ -96,57 +127,63 @@ $endtime1  = $endtime - 1;
 #   or starts between the times this starts and ends
 #   where the room is the same
 
-$sql = "select id, name from mrbs_entry where 
-(
-  (start_time between '$starttime' and $endtime1)
-  or
-  ('$starttime' between start_time and date_sub(end_time, interval 1 second))
-)
-and room_id = $room_id
-";
-# if this is a replacement then dont conflict with itself
-if ($id) {$sql = "$sql and id <> $id";}
-
-
-$res = mysql_query($sql);
-echo mysql_error();
-
-# Make sure we remember which appointments overlap the one were trying to add
-if (mysql_num_rows($res) > 0) {
-	$error = $lang[conflict];
-	while ($row = mysql_fetch_row($res)) {
-		$error = "$error<br><a href=view_entry.php3?id=$row[0]>$row[1]</a>";
+$reps = mrbsGetRepeatEntryList($starttime, $rep_enddate, $rep_type, $rep_opt, $max_rep_entrys);
+if(!empty($reps))
+{
+	if(count($reps) <= $max_rep_entrys)
+	{
+		$diff = $endtime - $starttime;
+		$good = 0;
+		
+		for($i = 0; $i < count($reps); $i++)
+		{
+			$err = mrbsCheckFree($room_id, $reps[$i], $reps[$i] + $diff, $id);
+			
+			if(empty($err))
+				$good += 1;
+		}
+		
+		$err = (($good / $i) > 0.75) ? "" : $lang[conflict];
 	}
+	else
+		$err = $lang[too_may_entrys];
 }
+else
+	$err = mrbsCheckFree($room_id, $starttime, $endtime-1, $id);
 
-
-if (strlen($error) == 0) {
-	# now add the entries
-	if ($id) {
-		# This is to replace an existing entry
-		mysql_query("delete from mrbs_entry where id=$id");
+if(empty($err))
+{
+	if($edit_type == "series")
+	{
+		mrbsCreateRepeatingEntrys($starttime, $endtime,   $rep_type, $rep_enddate, $rep_opt, 
+		                          $room_id,   $create_by, $name,     $type,        $description);
 	}
-	#actually do some adding
-	$name_q        = addslashes($name);
-	$description_q = addslashes($description);
-	$sql = "insert into mrbs_entry (room_id, create_by, start_time, end_time, type, name, description) values (
-	        '$room_id',
-			  '".getUserName()."',
-			  '$starttime',
-			  '$endtime',
-			  '$type',
-			  '$name_q',
-			  '$description_q'
-			  )";
+	else
+	{
+		$res = mysql_query("SELECT repeat_id FROM mrbs_entry WHERE id='$id'");
+		if(mysql_num_rows($res) > 0)
+		{
+			$row = mysql_fetch_row($res);
+			$repeat_id  = $row[0];
+			$entry_type = 2;
+		}
+		else
+			$repeat_id = $entry_type = 0;
+		
+		// Create the entrys, ignoring any errors at the moment
+		if(mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $room_id,
+		                         $create_by, $name, $type, $description))
+		{
+			
+		}
+	}
 	
-#	echo "$sql<p>";
-	mysql_query($sql);
-	echo mysql_error();
+	# Delete the original entry
+	if($id)
+		mrbsDelEntry(getUserName(), $id, ($edit_type == "series"));
+	
 	# Now its all done go back to the day view
-	if (strlen($returl) == 0) {
-		$returl = "day.php3?year=$year&month=$month";
-	}
-	Header ( "Location: $returl" );
+	Header("Location: day.php3?year=$year&month=$month&day=$day");
 	exit;
 }
 
@@ -175,10 +212,10 @@ Your suggested time of <B>
 <?php } else { ?>
 <H2><FONT COLOR="<?php echo $H2COLOR;?>"><?echo $lang[error]?></H2></FONT>
 <BLOCKQUOTE>
-<?php echo $error; ?>
+<?php echo $err; ?>
 </BLOCKQUOTE>
 
-<?php } 
+<?php }
 
 echo "<a href=$returl>$lang[returncal]</a><p>";
 

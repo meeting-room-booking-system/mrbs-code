@@ -41,7 +41,7 @@ Out of the box MRBS is configured using the traditional "IP address"
 authentication.
 
 The other auth provider which ships with MRBS is the "external" one. This
-uses Basic Authorisation to get usernames and passwords, and an external
+uses Basic Authorization to get usernames and passwords, and an external
 program to decide if the username/password combination is valid.
 
 The external program must take the username, password and possibly other
@@ -226,3 +226,6 @@ If you do create some new authentication provider, then please send it to
 me and I'll include it in the main distribution.
 
 Daniel <daniel@pl14759.demon.co.uk>
+
+Now maintained by.
+  Sam Mason <smason@mtc.ricardo.com>

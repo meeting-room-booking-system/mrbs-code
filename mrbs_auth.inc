@@ -30,18 +30,19 @@ function getAuthorised($user, $pass)
  *   0        - The user does not have the required access
  *   non-zero - The user has the required access
  */
-function getWritable($creator, $user, $lev1_admin)
+function getWritable($creator, $user)
 {
+	global $auth;
+	
 	// Always allowed to modify your own stuff
 	if($creator == $user)
 		return 1;
 	
-	if(authGetUserLevel($user, $lev1_admin) >= 2)
+	if(authGetUserLevel($user, $auth[admin]) >= 2)
 		return 1;
 	
 	// Unathorised access
 	return 0;
 }
-
 
 ?>

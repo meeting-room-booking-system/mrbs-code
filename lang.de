@@ -9,8 +9,8 @@
 $lang[charset]            = "iso-8859-1";
 
 # Used in style.inc
-$lang[mrbs]               = "Meeting Room Booking System";
-#$lang[mrbs]               = "Besprechungsraum Buchungssystem";
+#$lang[mrbs]              = "Meeting Room Booking System";
+$lang[mrbs]               = "Raum Buchungssystem MRBS ´OK CCA´";
 
 # Used in day.php3
 $lang[bookingsfor]        = "Buchungen für";
@@ -29,6 +29,8 @@ $lang[editentry]          = "Eintrag ändern";
 $lang[namebooker]         = "Buchung von";
 $lang[fulldescription]    = "Volständige Beschreibung:<br>&nbsp;&nbsp;(Anzahl der Teilnehmer,<br>&nbsp;&nbsp;Intern/Extern etc)";
 $lang[date]               = "Tag:";
+$lang[begin_date]         = "Anfangsdatum:";
+$lang[end_date]           = "Enddatum:";
 $lang[time]               = "Zeit:";
 $lang[duration]           = "Dauer:";
 $lans[seconds]            = "Sekunden";
@@ -37,7 +39,8 @@ $lang[hours]              = "Stunden";
 $lang[days]               = "Tage";
 $lang[weeks]              = "Wochen";
 $lang[years]              = "Jahre";
-$lang[type]               = "Typ:";
+$lang[all_day]            = "Ganztägig";
+$lang[type]               = "Art:";
 $lang[internal]           = "Intern";
 $lang[external]           = "Extern";
 $lang[save]               = "Speichern";

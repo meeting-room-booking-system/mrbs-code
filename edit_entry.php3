@@ -36,17 +36,17 @@ if(!getAuthorised(getUserName(), getUserPassword()))
 #  Duration
 #  Internal/External
 
-
 # Firstly we need to know if this is a new booking or modifying an old one
 # and if its a modification we need to get all the old data from the db.
 # If we had $id passed in then its a modification
-if ($id) {
-	#We split the start date into all its constituant parts with mySQL
+if ($id)
+{
 	$sql = "select name, create_by, description, start_time, end_time - start_time,
-	        type, room_id from mrbs_entry where id=$id";
+	        type, room_id, entry_type, repeat_id from mrbs_entry where id=$id";
 	
 	$res = mysql_query($sql);
 	echo mysql_error();
+	
 	$row = mysql_fetch_row($res);
 	$name        = $row[0];
 	$create_by   = $row[1];
@@ -59,8 +59,56 @@ if ($id) {
 	$duration    = $row[4];
 	$type        = $row[5];
 	$room_id     = $row[6];
-} else {
+	$entry_type  = $row[7];
+	$rep_id      = $row[8];
+	
+	if($entry_type >= 1)
+	{
+		$sql = "SELECT rep_type, end_date, rep_opt
+		        FROM mrbs_repeat WHERE id=$rep_id";
+		
+		$res = mysql_query($sql);
+		echo mysql_error();
+		
+		$row = mysql_fetch_row($res);
+		
+		$rep_type = $row[0];
+		
+		if($edit_type == "series")
+		{
+			$rep_end_day   = (int)strftime('%d', $row[1]);
+			$rep_end_month = (int)strftime('%m', $row[1]);
+			$rep_end_year  = (int)strftime('%Y', $row[1]);
+			
+			switch($rep_type)
+			{
+				case 2:
+					$rep_day[0] = $row[2][0] != "0";
+					$rep_day[1] = $row[2][1] != "0";
+					$rep_day[2] = $row[2][2] != "0";
+					$rep_day[3] = $row[2][3] != "0";
+					$rep_day[4] = $row[2][4] != "0";
+					$rep_day[5] = $row[2][5] != "0";
+					$rep_day[6] = $row[2][6] != "0";
+					
+					break;
+				
+				default:
+					$rep_day = array(0, 0, 0, 0, 0, 0, 0);
+			}
+		}
+		else
+		{
+			$rep_type     = $row[0];
+			$rep_end_date = strftime('%A %d %B %Y',$row[1]);
+			$rep_opt      = $row[2];			
+		}
+	}
+}
+else
+{
 	# It is a new booking. The data comes from whichever button the user clicked
+	$edit_type   = "series";
 	$name        = "";
 	$create_by   = getUserName();
 	$description = "";
@@ -72,6 +120,13 @@ if ($id) {
 	$duration    = 60 * 60;
 	$type        = "I";
 	$room_id     = $room;
+	
+	$rep_id        = 0;
+	$rep_type      = 0;
+	$rep_end_day   = $day;
+	$rep_end_month = $month;
+	$rep_end_year  = $year;
+	$rep_day       = array(0, 0, 0, 0, 0, 0, 0);
 }
 
 toTimeString($duration, $dur_units);
@@ -84,7 +139,7 @@ toTimeString($duration, $dur_units);
 <TITLE><?echo $lang[mrbs]?></TITLE>
 <?include "style.inc"?>
 
-<? if(!getWritable($create_by, getUserName(), $auth[admin])) { ?>
+<? if(!getWritable($create_by, getUserName())) { ?>
 
 <H1><?echo $lang[accessdenied]?></H1>
 <P>
@@ -122,8 +177,6 @@ function validate_and_submit () {
 
 <FORM ACTION="edit_entry_handler.php3" METHOD="GET">
 
-<? if ( $id ) echo "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n"; ?>
-
 <TABLE BORDER=0>
 
 <TR><TD><B><?echo $lang[namebooker]?></B></TD>
@@ -133,34 +186,10 @@ function validate_and_submit () {
   <TD><TEXTAREA NAME="description" ROWS=8 COLS=40 WRAP="virtual"><?php echo htmlentities ( $description ); ?></TEXTAREA></TD></TR>
 
 <TR><TD><B><?echo $lang[date]?></B></TD>
-  <TD><SELECT NAME="day">
-<?php
-  if ( $start_day == 0 )
-    $start_day = date ( "d" );
-  for ( $i = 1; $i <= 31; $i++ ) echo "<OPTION " . ( $i == $start_day ? " SELECTED" : "" ) . ">$i";
-?>
-  </SELECT>
-  <SELECT NAME="month">
-<?php
-  if ( $start_month == 0 )
-    $start_month = date ( "m" );
-  if ( $start_year == 0 )
-    $start_year = date ( "Y" );
-  for ( $i = 1; $i <= 12; $i++ ) {
-    $m = strftime ( "%b", mktime ( 0, 0, 0, $i, 1, $start_year ) );
-    print "<OPTION VALUE=\"$i\"" . ( $i == $start_month ? " SELECTED" : "" ) . ">$m";
-  }
-?>
-  </SELECT>
-  <SELECT NAME="year">
-<?php
-  for ( $i = -1; $i < 5; $i++ ) {
-    $y = $start_year + $i;
-    print "<OPTION VALUE=\"$y\"" . ( $y == $start_year ? " SELECTED" : "" ) . ">$y";
-  }
-?>
-  </SELECT>
-</TD></TR>
+ <TD>
+  <?php genDateSelector("", $start_day, $start_month, $start_year) ?>
+ </TD>
+</TR>
 
 <TR><TD><B><?echo $lang[time]?></B></TD>
 <?php
@@ -189,14 +218,14 @@ if ( $TIME_FORMAT == "12" ) {
 <TR><TD><B><?echo $lang[duration]?></B></TD>
   <TD><INPUT NAME="duration" SIZE=7 VALUE="<?php echo $duration;?>">
     <SELECT NAME="dur_units">
-<!--     <OPTION VALUE="seconds" <? echo ($dur_units == "seconds") ? "SELECTED" : ""; ?>>seconds -->
-     <OPTION VALUE="minutes" <? echo ($dur_units == "minutes") ? "SELECTED" : ""; ?>>minutes
-     <OPTION VALUE="hours"   <? echo ($dur_units == "hours"  ) ? "SELECTED" : ""; ?>>hours
-     <OPTION VALUE="days"    <? echo ($dur_units == "days"   ) ? "SELECTED" : ""; ?>>days
-     <OPTION VALUE="weeks"   <? echo ($dur_units == "weeks"  ) ? "SELECTED" : ""; ?>>weeks
-<!--     <OPTION VALUE="years"   <? echo ($dur_units == "years"  ) ? "SELECTED" : ""; ?>>years -->
+<!--     <OPTION VALUE="seconds" <? echo ($dur_units == "seconds") ? "SELECTED" : ""; ?>><? echo $lang[seconds]; ?> -->
+     <OPTION VALUE="minutes" <? echo ($dur_units == "minutes") ? "SELECTED" : ""; ?>><? echo $lang[minutes]; ?>
+     <OPTION VALUE="hours"   <? echo ($dur_units == "hours"  ) ? "SELECTED" : ""; ?>><? echo $lang[hours]; ?>
+     <OPTION VALUE="days"    <? echo ($dur_units == "days"   ) ? "SELECTED" : ""; ?>><? echo $lang[days]; ?>
+     <OPTION VALUE="weeks"   <? echo ($dur_units == "weeks"  ) ? "SELECTED" : ""; ?>><? echo $lang[weeks]; ?>
+<!--     <OPTION VALUE="years"   <? echo ($dur_units == "years"  ) ? "SELECTED" : ""; ?>><? echo $lang[years]; ?> -->
     </SELECT>
-    <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes"> All day
+    <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes"> <? echo $lang[all_day]; ?>
 </TD></TR>
 
 <TR><TD><B><?echo $lang[type]?></B></TD>
@@ -205,21 +234,99 @@ if ( $TIME_FORMAT == "12" ) {
     <OPTION VALUE="E"<?php if ( $type == "E" ) echo " SELECTED";?>><?echo $lang[external]?>
   </SELECT></TD></TR>
 
+<?php if($edit_type == "series") { ?>
+
+<TR>
+ <TD><B><?echo $lang[rep_type]?></B></TD>
+ <TD>
 <?
-print "<input type=hidden name=returl value=\"$HTTP_REFERER\">\n";
-print "<input type=hidden name=room_id value = \"$room_id\">";
+
+for($i = 0; $lang["rep_type_$i"]; $i++)
+{
+	echo "<INPUT NAME=\"rep_type\" TYPE=\"RADIO\" VALUE=\"" . $i . "\"";
+	
+	if($i == $rep_type)
+		echo " CHECKED";
+	
+	echo ">" . $lang["rep_type_$i"] . "\n";
+}
+
+?>
+ </TD>
+</TR>
+
+<TR>
+ <TD><B><?echo $lang[rep_end_date]?></B></TD>
+ <TD><?php genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year) ?></TD>
+</TR>
+
+<TR>
+ <TD><B><?echo $lang[rep_rep_day]?></B> <?echo $lang[rep_for_weekly]?></TD>
+ <TD>
+  <INPUT NAME="rep_day[6]" TYPE="CHECKBOX"<?echo ($rep_day[0] ? "CHECKED" : "")?>>Sunday
+  <INPUT NAME="rep_day[0]" TYPE="CHECKBOX"<?echo ($rep_day[1] ? "CHECKED" : "")?>>Monday
+  <INPUT NAME="rep_day[1]" TYPE="CHECKBOX"<?echo ($rep_day[2] ? "CHECKED" : "")?>>Tuesday
+  <INPUT NAME="rep_day[2]" TYPE="CHECKBOX"<?echo ($rep_day[3] ? "CHECKED" : "")?>>Wednesday
+  <INPUT NAME="rep_day[3]" TYPE="CHECKBOX"<?echo ($rep_day[4] ? "CHECKED" : "")?>>Thursday
+  <INPUT NAME="rep_day[4]" TYPE="CHECKBOX"<?echo ($rep_day[5] ? "CHECKED" : "")?>>Friday
+  <INPUT NAME="rep_day[5]" TYPE="CHECKBOX"<?echo ($rep_day[6] ? "CHECKED" : "")?>>Saturday
+ </TD>
+</TR>
+
+<?php
+}
+else
+{
+	$key = "rep_type_" . ($rep_type ? $rep_type : "0");
+	
+	echo "<tr><td><b>$lang[rep_type]</b></td><td>$lang[$key]</td></tr>\n";
+	
+	if($rep_type != 0)
+	{
+		switch($rep_type)
+		{
+			case 2:
+				$opt .= $rep_opt[0] ? "Sunday " : "";
+				$opt  = $rep_opt[1] ? "Monday " : "";
+				$opt .= $rep_opt[2] ? "Tuesday " : "";
+				$opt .= $rep_opt[3] ? "Wednesday " : "";
+				$opt .= $rep_opt[4] ? "Thursday " : "";
+				$opt .= $rep_opt[5] ? "Friday " : "";
+				$opt .= $rep_opt[6] ? "Saturday " : "";
+				break;
+			
+			default:
+				$opt = "";
+		}
+		
+		if($opt)
+			echo "<tr><td><b>$lang[rep_rep_day]</b></td><td>$opt</td></tr>\n";
+		
+		echo "<tr><td><b>$lang[rep_end_date]</b></td><td>$rep_end_date</td></tr>\n";
+	}
+}
 ?>
 
+<TR>
+ <TD></TD>
+ <TD><BR>
+  <SCRIPT LANGUAGE="JavaScript">
+   document.writeln ( '<INPUT TYPE="button" VALUE="<?echo $lang[save]?>" ONCLICK="validate_and_submit()">' );
+  </SCRIPT>
+  <NOSCRIPT>
+   <INPUT TYPE="submit" VALUE="Save">
+  </NOSCRIPT>
+ </TD></TR>
 </TABLE>
 
-<SCRIPT LANGUAGE="JavaScript">
-  document.writeln ( '<INPUT TYPE="button" VALUE="<?echo $lang[save]?>" ONCLICK="validate_and_submit()">' );
-</SCRIPT>
-<NOSCRIPT>
-<INPUT TYPE="submit" VALUE="Save">
-</NOSCRIPT>
-</FORM>
+<INPUT TYPE=HIDDEN NAME="returl"    VALUE="<?echo $HTTP_REFERER?>">
+<INPUT TYPE=HIDDEN NAME="room_id"   VALUE="<?echo $room_id?>">
+<INPUT TYPE=HIDDEN NAME="create_by" VALUE="<?echo $create_by?>">
+<INPUT TYPE=HIDDEN NAME="rep_id"    VALUE="<?echo $rep_id?>">
+<INPUT TYPE=HIDDEN NAME="edit_type" VALUE="<?echo $edit_type?>">
+<? if ( $id ) echo "<INPUT TYPE=HIDDEN NAME=\"id\"        VALUE=\"$id\">\n"; ?>
 
+</FORM>
 
 <?php include "trailer.inc" ?>
 </BODY>

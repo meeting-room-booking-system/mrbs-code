@@ -18,6 +18,7 @@ $lang[areas]              = "Areas";
 $lang[daybefore]          = "Go To Day Before";
 $lang[dayafter]           = "Go To Day After";
 $lang[gototoday]          = "Go To Today";
+$lang[goto]               = "goto";
 
 # Used in trailer.inc
 $lang[viewday]            = "View Day";
@@ -25,9 +26,12 @@ $lang[viewday]            = "View Day";
 # Used in edit_entry.php3
 $lang[addentry]           = "Add Entry";
 $lang[editentry]          = "Edit Entry";
+$lang[editseries]         = "Edit Series";
 $lang[namebooker]         = "Booker's Name:";
 $lang[fulldescription]    = "Full Description:<br>&nbsp;&nbsp;(Number of people,<br>&nbsp;&nbsp;Internal/External etc)";
 $lang[date]               = "Date:";
+$lang[start_date]         = "Start Time:";
+$lang[end_date]           = "End Time:";
 $lang[time]               = "Time:";
 $lang[duration]           = "Duration:";
 $lans[seconds]            = "seconds";
@@ -36,22 +40,35 @@ $lang[hours]              = "hours";
 $lang[days]               = "days";
 $lang[weeks]              = "weeks";
 $lang[years]              = "years";
+$lang[all_day]            = "All day";
 $lang[type]               = "Type:";
 $lang[internal]           = "Internal";
 $lang[external]           = "External";
 $lang[save]               = "Save";
+$lang[rep_type]           = "Repeat Type:";
+$lang[rep_type_0]         = "None";
+$lang[rep_type_1]         = "Daily";
+$lang[rep_type_2]         = "Weekly";
+$lang[rep_type_3]         = "Monthly";
+$lang[rep_type_4]         = "Yearly";
+$lang[rep_end_date]       = "Repeat End Date:";
+$lang[rep_rep_day]        = "Repeat Day:";
+$lang[rep_for_weekly]     = "(for weekly)";
+$lang[rep_freq]           = "Frequency:";
 
 # Used in view_entry.php3
 $lang[description]        = "Description:";
 $lang[createdby]          = "Created By:";
 $lang[lastupdate]         = "Last Updated:";
 $lang[deleteentry]        = "Delete Entry";
+$lang[deleteseries]       = "Delete Series";
 $lang[confirmdel]         = "Are you sure\\nyou want to\\ndelete this entry?\\n\\n";
 $lang[returnprev]         = "Return to previous page";
 
 # Used in edit_entry_handler.php3
 $lang[error]              = "Error";
 $lang[conflict]           = "There are conflicts";
+$lang[too_may_entrys]     = "The selected options will create too many entries.<BR>Please use different options!";
 $lang[returncal]          = "Return to calendar view";
 
 # Authentication stuff

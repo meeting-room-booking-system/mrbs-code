@@ -233,15 +233,15 @@ function toTimeString(&$dur, &$units)
 		{
 			$dur /= 60;
 			
-			if($dur >= 24)
+			if(($dur >= 24) && ($dur % 24 == 0))
 			{
 				$dur /= 24;
 				
-				if($dur >= 7)
+				if(($dur >= 7) && ($dur % 7 == 0))
 				{
 					$dur /= 7;
 					
-					if($dur >= 52)
+					if(($dur >= 52) && ($dur % 52 == 0))
 					{
 						$dur  /= 52;
 						$units = "years";
@@ -261,4 +261,39 @@ function toTimeString(&$dur, &$units)
 	else
 		$units = "seconds";
 }
+
+function genDateSelector($prefix, $day, $month, $year)
+{
+	if($day   == 0) $day = date("d");
+	if($month == 0) $month = date("m");
+	if($year  == 0) $year = date("Y");
+	
+	echo "<SELECT NAME=\"${prefix}day\">\n";
+	
+	for($i = 1; $i <= 31; $i++)
+		echo "<OPTION" . ($i == $day ? " SELECTED" : "") . ">$i\n";
+	
+	echo "</SELECT>\n";
+	echo "<SELECT NAME=\"${prefix}month\">\n";
+	
+	for($i = 1; $i <= 12; $i++)
+	{
+		$m = strftime("%b", mktime(0, 0, 0, $i, 1, $year));
+		
+		print "<OPTION VALUE=\"$i\"" . ($i == $month ? " SELECTED" : "") . ">$m\n";
+	}
+	
+	echo "</SELECT>\n";
+	echo "<SELECT NAME=\"${prefix}year\">\n";
+	
+	for($i = -1; $i < 5; $i++)
+	{
+		$y = $year + $i;
+		
+		print "<OPTION" . ($y == $year ? " SELECTED" : "") . ">$y\n";
+	}
+	
+	echo "</SELECT>\n";
+}
+
 ?>

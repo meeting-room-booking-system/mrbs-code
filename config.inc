@@ -6,13 +6,11 @@
 //
 /////////////////////////////////////////////////////////////////
 
-
 # MySQL settings
 $mysql_host = "localhost";
 $mysql_login = "root";
 $mysql_password = "secret";
 $mysql_database = "mrbs";
-
 
 # Start and end of day (default is 7-19)
 $morningstarts = 7;
@@ -33,6 +31,9 @@ $auth[admin][] = "10.10.10.4";
 # Resolution - ie what blocks can be booked.
 # Default is half an hour - 1800 seconds
 $resolution = 1800;
+
+# Maximum repeating entrys
+$max_rep_entrys = 365;
 
 # Language
 

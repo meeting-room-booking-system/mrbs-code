@@ -105,13 +105,13 @@ class Calendar
     	
     	$s .= "<table class=calendar>\n";
     	$s .= "<tr>\n";
-    	$s .= "<td align=center valign=top>" . (($prevMonth == "") ? "&nbsp;" : "<a href=\"$prevMonth\">&lt;&lt;</a>")  . "</td>\n";
-    	$s .= "<td align=center valign=top class=calendarHeader colspan=5>$monthName $this->year</td>\n"; 
-    	$s .= "<td align=center valign=top>" . (($nextMonth == "") ? "&nbsp;" : "<a href=\"$nextMonth\">&gt;&gt;</a>")  . "</td>\n";
+    	//$s .= "<td align=center valign=top>" . (($prevMonth == "") ? "&nbsp;" : "<a href=\"$prevMonth\">&lt;&lt;</a>")  . "</td>\n";
+    	$s .= "<td align=center valign=top class=calendarHeader colspan=7>$monthName&nbsp;$this->year</td>\n"; 
+    	//$s .= "<td align=center valign=top>" . (($nextMonth == "") ? "&nbsp;" : "<a href=\"$nextMonth\">&gt;&gt;</a>")  . "</td>\n";
     	$s .= "</tr>\n";
     	
     	$s .= "<tr>\n";
-      $s .= $this->getFirstDays();
+        $s .= $this->getFirstDays();
     	$s .= "</tr>\n";
     	
     	$d = 1 - $first;
@@ -145,9 +145,9 @@ class Calendar
     }
 }
 
-$lastmonth = mktime(0, 0, 0, $month-1, 1, $year);
+$lastmonth = mktime(0, 0, 0, $month-1, $day, $year);
 $thismonth = mktime(0, 0, 0, $month, $day, $year);
-$nextmonth = mktime(0, 0, 0, $month+1, 1, $year);
+$nextmonth = mktime(0, 0, 0, $month+1, $day, $year);
 
 echo "<td>";
 $cal = new Calendar(date("d",$lastmonth), date("m",$lastmonth), date("Y",$lastmonth), 0, $area);

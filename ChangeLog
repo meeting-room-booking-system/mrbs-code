@@ -1,6 +1,10 @@
-CVS:
-	Fixed bug in mincal.inc (Thanks to Mark Belanger)
-	
+Version 0.8-pre4 (Wed July 12 11:00 2000)
+	Added repeat entrys
+	Added French language file
+	Updated German language file
+	Made the "view_entry" screen nicer
+	General page updates
+
 Version 0.8-pre3 (Wed Jun 21 13:42:42 GMT 2000)
 	Added Perl script for LDAP auth
 

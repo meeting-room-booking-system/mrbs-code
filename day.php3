@@ -32,8 +32,12 @@ $pm7=mktime($eveningends,0,0,$month,$day,$year);
 
 #Let the user know what date they chose
 echo "<table><tr><td width=\"100%\">";
-echo "<H2>$lang[bookingsfor] " . strftime('%A, %B %d',$am7) . " $lang[bookingsforpost]</h2>";
-echo "</td><td><center>";
+
+echo "<form action=\"day.php3\" method=get>";
+	echo "<H2>$lang[bookingsfor]: ";
+	genDateSelector("", $day, $month, $year);
+	echo "<INPUT TYPE=submit Value=\"" . $lang[goto] . "\">";
+echo "</H2></form></td><td><center>";
 
 #Find out which rooms a user wants to see
 #If we havent had $area passed in then for now default to area "1" - in the
