@@ -183,7 +183,7 @@ if ($debug_flag)
 # pull the data from the db and store it. Convienently we can print the room
 # headings and capacities at the same time
 
-$sql = "select room_name, capacity, id from mrbs_room where area_id=$area order by 1";
+$sql = "select room_name, capacity, id, description from mrbs_room where area_id=$area order by 1";
 $res = sql_query($sql);
 
 # It might be that there are no rooms defined for this area.
@@ -206,7 +206,7 @@ else
 	{
         echo "<th width=\"$room_column_width%\">
             <a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[2]\"
-            title=\"" . get_vocab("viewweek") . "\">"
+            title=\"" . get_vocab("viewweek") . " \n\n$row[3]\">"
             . htmlspecialchars($row[0]) . "($row[1])</a></th>";
 		$rooms[] = $row[2];
 	}

@@ -108,12 +108,12 @@ echo "<td width=\"30%\"><u>".get_vocab("room")."</u><br>";
   if ($area_list_format == "select") {
 	echo make_room_select_html('week.php', $area, $room, $year, $month, $day); # from functions.inc
   } else {
-	$sql = "select id, room_name from mrbs_room where area_id=$area order by room_name";
+    $sql = "select id, room_name, description from mrbs_room where area_id=$area order by room_name";
 	$res = sql_query($sql);
 	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	{
 		if ( $pview != 1 )
-			echo "<a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[0]\">";
+			echo "<a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[0]\" title=\"$row[2]\">";
 		if ($row[0] == $room)
 		{
 			$this_room_name = htmlspecialchars($row[1]);
