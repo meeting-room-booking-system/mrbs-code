@@ -133,17 +133,14 @@ if(!empty($reps))
 	if(count($reps) <= $max_rep_entrys)
 	{
 		$diff = $endtime - $starttime;
-		$good = 0;
 		
 		for($i = 0; $i < count($reps); $i++)
 		{
-			$err = mrbsCheckFree($room_id, $reps[$i], $reps[$i] + $diff, $id);
+			$tmp = mrbsCheckFree($room_id, $reps[$i], $reps[$i] + $diff, $id);
 			
-			if(empty($err))
-				$good += 1;
+			if(!empty($tmp))
+				$err = $err . $tmp;
 		}
-		
-		$err = (($good / $i) > 0.75) ? "" : $lang[conflict];
 	}
 	else
 		$err = $lang[too_may_entrys];
