@@ -73,7 +73,10 @@ if(isset($rep_type) && isset($rep_end_month) && isset($rep_end_day) && isset($re
 }
 else
 	$rep_type = 0;
-	
+
+if(!isset($rep_day))
+	$rep_day = "";
+
 switch($rep_type)
 {
 	case 2:

@@ -26,7 +26,7 @@ mysql_select_db($mysql_database);
 
 if(!$search_str)
 {
-   echo "<H3>" . $lang[invalid_search] . "</H3>";
+   echo "<H3>" . $lang["invalid_search"] . "</H3>";
    include "trailer.inc";
    echo "</BODY>";
    echo "</HTML>";
