@@ -280,5 +280,5 @@ class MDB_Manager_mssql extends MDB_Manager_Common
     }
 }
 
-}
+};
 ?>

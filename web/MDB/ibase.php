@@ -778,12 +778,35 @@ class MDB_ibase extends MDB_Common
         if (is_null($rownum)) {
             $rownum = $this->current_row[$result_value] + 1;
         }
-        if (!isset($this->results[$result_value][$rownum])) {
+        if (!isset($this->results[$result_value][$rownum])
+            && (!isset($this->results[$result_value][$this->highest_fetched_row[$result_value]])
+                || $this->results[$result_value][$this->highest_fetched_row[$result_value]] !== false)
+        ) {
             if (isset($this->limits[$result_value])) {
+                //upper limit
                 if ($rownum >= $this->limits[$result_value][1]) {
+                    // are all previous rows fetched so that we can set the end
+                    // of the result set and not have any "holes" in between?
+                    if ($rownum == 0
+                        || (isset($this->results[$result_value])
+                            && count($this->results[$result_value]) == $rownum)
+                    ) {
+                        $this->highest_fetched_row[$result_value] = $rownum;
+                        $this->current_row[$result_value] = $rownum;
+                        $this->results[$result_value][$rownum] = false;
+                    }
+                    if ($this->options['autofree']) {
+                        $this->freeResult($result);
+                    }
                     return null;
                 }
+                // offset skipping
                 if (MDB::isError($this->_skipLimitOffset($result))) {
+                    $this->current_row[$result_value] = 0;
+                    $this->results[$result_value] = array(false);
+                    if ($this->options['autofree']) {
+                        $this->freeResult($result);
+                    }
                     return null;
                 }
             }
@@ -793,8 +816,9 @@ class MDB_ibase extends MDB_Common
                     $this->row_buffer[$result_value];
                 unset($this->row_buffer[$result_value]);
             }
-            if (!isset($this->results[$result_value][$this->current_row[$result_value]])
-                || end($this->results[$result_value]) !== false
+            if (!isset($this->results[$result_value][$rownum])
+                && (!isset($this->results[$result_value][$this->highest_fetched_row[$result_value]])
+                    || $this->results[$result_value][$this->highest_fetched_row[$result_value]] !== false)
             ) {
                 while ($this->current_row[$result_value] < $rownum
                     && is_array($buffer = @ibase_fetch_row($result))
@@ -802,7 +826,8 @@ class MDB_ibase extends MDB_Common
                     $this->current_row[$result_value]++;
                     $this->results[$result_value][$this->current_row[$result_value]] = $buffer;
                 }
-                if ($this->current_row[$result_value] > $rownum) {
+                // end of result set reached
+                if ($this->current_row[$result_value] < $rownum) {
                     $this->current_row[$result_value]++;
                     $this->results[$result_value][$this->current_row[$result_value]] = false;
                 }
@@ -810,15 +835,14 @@ class MDB_ibase extends MDB_Common
             $this->highest_fetched_row[$result_value] =
                 max($this->highest_fetched_row[$result_value],
                     $this->current_row[$result_value]);
+        } else {
+            $this->current_row[$result_value]++;
         }
-        if (isset($this->results[$result_value][$rownum])) {
-            $this->highest_fetched_row[$result_value] =
-                max($this->highest_fetched_row[$result_value], $rownum);
+        if (isset($this->results[$result_value][$rownum])
+            && $this->results[$result_value][$rownum]
+        ) {
             $row = $this->results[$result_value][$rownum];
         } else {
-            return null;
-        }
-        if (!$row) {
             if ($this->options['autofree']) {
                 $this->freeResult($result);
             }

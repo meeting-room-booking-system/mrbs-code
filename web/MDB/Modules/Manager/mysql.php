@@ -703,8 +703,11 @@ class MDB_Manager_mysql extends MDB_Manager_Common
                         return($indexes);
                     }
                     $is_primary = FALSE;
+                    if (!$db->options['optimize'] == 'portability') {
+                        array_change_key_case($indexes);
+                    }
                     foreach($indexes as $index) {
-                        if ($index['Key_name'] == 'PRIMARY' && $index['Column_name'] == $field_name) {
+                        if ($index['key_name'] == 'PRIMARY' && $index['column_name'] == $field_name) {
                             $is_primary = TRUE;
                             break;
                         }
@@ -816,7 +819,11 @@ class MDB_Manager_mysql extends MDB_Manager_Common
         if(MDB::isError($result = $db->query("SHOW INDEX FROM $table"))) {
             return($result);
         }
-        $indexes_all = $db->fetchCol($result, 'Key_name');
+        $key_name = 'Key_name';
+        if (!$db->options['optimize'] == 'portability') {
+            $key_name = strtolower($key_name);
+        }
+        $indexes_all = $db->fetchCol($result, $key_name);
         for($found = $indexes = array(), $index = 0, $indexes_all_cnt = count($indexes_all);
             $index < $indexes_all_cnt;
             $index++)
@@ -853,15 +860,18 @@ class MDB_Manager_mysql extends MDB_Manager_Common
         }
         $definition = array();
         while (is_array($row = $db->fetchInto($result, MDB_FETCHMODE_ASSOC))) {
-            $key_name = $row['Key_name'];
+            if (!$db->options['optimize'] == 'portability') {
+                $row = array_change_key_case($row);
+            }
+            $key_name = $row['key_name'];
             if(!strcmp($index_name, $key_name)) {
-                if(!$row['Non_unique']) {
+                if(!$row['non_unique']) {
                     $definition[$index_name]['unique'] = 1;
                 }
-                $column_name = $row['Column_name'];
+                $column_name = $row['column_name'];
                 $definition['FIELDS'][$column_name] = array();
-                if(isset($row['Collation'])) {
-                    $definition['FIELDS'][$column_name]['sorting'] = ($row['Collation'] == 'A' ? 'ascending' : 'descending');
+                if(isset($row['collation'])) {
+                    $definition['FIELDS'][$column_name]['sorting'] = ($row['collation'] == 'A' ? 'ascending' : 'descending');
                 }
             }
         }
