@@ -216,7 +216,7 @@ else
 			elseif ($descr != "")
 			{
 				#if it is booked then show 
-				echo " <a href=\"view_entry.php?id=$id&day=$day&month=$month&year=$year\">$descr</a>";
+				echo " <a href=\"view_entry.php?id=$id&area=$area&day=$day&month=$month&year=$year\">$descr</a>";
 			}
 			else
 				echo "&nbsp;\"&nbsp;";

@@ -303,7 +303,7 @@ for ($slot = $first_slot; $slot <= $last_slot; $slot++)
 			$minute  = date("i",$wt);
 			echo "<center>";
 			if ( $pview != 1 ) {
-				echo "<a href=\"edit_entry.php?room=$room"
+				echo "<a href=\"edit_entry.php?room=$room&area=$area"
 				. "&hour=$hour&minute=$minute&year=$wyear&month=$wmonth"
 				. "&day=$wday\"><img src=new.gif width=10 height=10 border=0>";
 			} else echo '&nbsp;';
@@ -315,7 +315,7 @@ for ($slot = $first_slot; $slot <= $last_slot; $slot++)
 				echo "&nbsp;\"&nbsp;";
 			} else {
 				echo " <a href=\"view_entry.php?id=" . $d[$weekday][$slot]["id"]
-					. "&day=$wday&month=$wmonth&year=$wyear\">"
+					. "&area=$area&day=$wday&month=$wmonth&year=$wyear\">"
 					. htmlspecialchars($d[$weekday][$slot]["data"]) . "</a>";
 			}
 		}
