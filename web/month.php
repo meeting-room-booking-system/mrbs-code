@@ -164,7 +164,7 @@ $sql = "SELECT start_time, end_time, id, name
 # Build an array of information about each day in the month.
 # The information is stored as:
 #  d[monthday]["id"][] = ID of each entry, for linking.
-#  d[monthday]["data"][] = "start-stop" times of each entry.
+#  d[monthday]["data"][] = "start-stop" times or "name" of each entry.
 
 $res = sql_query($sql);
 if (! $res) echo sql_error();
@@ -284,14 +284,16 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
             if ($_MRBS_monthly_view_brief_description == 1)
             {
                 echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-                    . "&day=$cday&month=$month&year=$year\">"
+                    . "&day=$cday&month=$month&year=$year\" title=\""
+                    . $d[$cday]["data"][$i] . "\">"
                     . substr($d[$cday]["shortdescrip"][$i], 0, 17)
                     . "<br>" . "</a>";
             }
             else
             {
                 echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-                    . "&day=$cday&month=$month&year=$year\">"
+                    . "&day=$cday&month=$month&year=$year\" title=\""
+                    . substr($d[$cday]["shortdescrip"][$i], 0, 17) . "\">"
                     . $d[$cday]["data"][$i] . "</a>";
             }
         }

@@ -157,19 +157,20 @@ if ( $pview != 1 ) {
 # row[2] = Entry type
 # row[3] = Entry name (brief description)
 # row[4] = Entry ID
+# row[5] = Complete description
 # The range predicate (starts <= week_end && ends > week_start) is
 # equivalent but more efficient than the original 3-BETWEEN clauses.
-$sql = "SELECT start_time, end_time, type, name, id
+$sql = "SELECT start_time, end_time, type, name, id, description
    FROM mrbs_entry
    WHERE room_id=$room
    AND start_time <= $week_end AND end_time > $week_start";
 
 # Each row returned from the query is a meeting. Build an array of the
-# form:  d[weekday][slot][x], where x = id, color, data.
+# form:  d[weekday][slot][x], where x = id, color, data, long_descr.
 # [slot] is based at 0 for midnight, but only slots within the hours of
 # interest (morningstarts : eveningends) are filled in.
-# [id] and [data] are only filled in when the meeting should be labeled,
-# which is once for each meeting on each weekday.
+# [id], [data] and [long_descr] are only filled in when the meeting should
+# be labeled, which is once for each meeting on each weekday.
 # Note: weekday here is relative to the $weekstarts configuration variable.
 # If 0, then weekday=0 means Sunday. If 1, weekday=0 means Monday.
 
@@ -228,6 +229,7 @@ else for ($i = 0; ($row = sql_row($res, $i)); $i++)
 				$prev_weekday = $weekday;
 				$d[$weekday][$slot]["data"] = $row[3];
 				$d[$weekday][$slot]["id"] = $row[4];
+                $d[$weekday][$slot]["long_descr"] = $row[5];
 			}
 		}
 		# Step to next time period and slot:
@@ -328,7 +330,10 @@ for ($slot = $first_slot; $slot <= $last_slot; $slot++)
 				echo "&nbsp;\"&nbsp;";
 			} else {
 				echo " <a href=\"view_entry.php?id=" . $d[$weekday][$slot]["id"]
-					. "&area=$area&day=$wday&month=$wmonth&year=$wyear\">"
+					. "&area=$area&day=$wday&month=$wmonth&year=$wyear\"
+                       title=\""
+                    . htmlspecialchars($d[$weekday][$slot]["long_descr"])
+                    . "\">"
 					. htmlspecialchars($d[$weekday][$slot]["data"]) . "</a>";
 			}
 		}

@@ -86,10 +86,11 @@ if ( $pview != 1 ) {
 #Note: The predicate clause 'start_time <= ...' is an equivalent but simpler
 #form of the original which had 3 BETWEEN parts. It selects all entries which
 #occur on or cross the current day.
-$sql = "SELECT mrbs_room.id, start_time, end_time, name, mrbs_entry.id, type
+$sql = "SELECT mrbs_room.id, start_time, end_time, name, mrbs_entry.id, type,
+        mrbs_entry.description
    FROM mrbs_entry, mrbs_room
    WHERE mrbs_entry.room_id = mrbs_room.id
-   AND area_id = $area 
+   AND area_id = $area
    AND start_time <= $pm7 AND end_time > $am7";
 
 $res = sql_query($sql);
@@ -102,12 +103,14 @@ for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 	#row[3] = short description
 	#row[4] = id of this booking
 	#row[5] = type (internal/external)
+    #row[6] = description
 
 	# $today is a map of the screen that will be displayed
 	# It looks like:
 	#     $today[Room ID][Time][id]
 	#                          [color]
 	#                          [data]
+    #                          [long_descr]
 
 	# Fill in the map for this meeting. Start at the meeting start time,
 	# or the day start time, whichever is later. End one slot before the
@@ -123,18 +126,25 @@ for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 		$today[$row[0]][$t]["id"]    = $row[4];
 		$today[$row[0]][$t]["color"] = $row[5];
 		$today[$row[0]][$t]["data"]  = "";
+        $today[$row[0]][$t]["long_descr"]  = "";
 	}
 
 	# Show the name of the booker in the first segment that the booking
 	# happens in, or at the start of the day if it started before today.
 	if ($row[1] < $am7)
+    {
 		$today[$row[0]][$am7]["data"] = $row[3];
+        $today[$row[0]][$am7]["long_descr"] = $row[6];
+    }
 	else
+    {
 		$today[$row[0]][$start_t]["data"] = $row[3];
+        $today[$row[0]][$start_t]["long_descr"] = $row[6];
+    }
 }
 
 # We need to know what all the rooms area called, so we can show them all
-# pull the data from the db and store it. Convienently we can print the room 
+# pull the data from the db and store it. Convienently we can print the room
 # headings and capacities at the same time
 
 $sql = "select room_name, capacity, id from mrbs_room where area_id=$area order by 1";
@@ -163,7 +173,7 @@ else
 		$rooms[] = $row[2];
 	}
 	echo "</tr>\n";
-	
+
 	# URL for highlighting a time. Don't use REQUEST_URI or you will get
 	# the timetohighlight parameter duplicated each time you click.
 	$hilite_url="day.php?year=$year&month=$month&day=$day&area=$area&timetohighlight";
@@ -186,11 +196,12 @@ else
 				$id    = $today[$room][$t]["id"];
 				$color = $today[$room][$t]["color"];
 				$descr = htmlspecialchars($today[$room][$t]["data"]);
+                $long_descr = $today[$room][$t]["long_descr"];
 			}
 			else
 				unset($id);
-			
-			# $c is the colour of the cell that the browser sees. White normally, 
+
+			# $c is the colour of the cell that the browser sees. White normally,
 			# red if were hightlighting that line and a nice attractive green if the room is booked.
 			# We tell if its booked by $id having something in it
 			if (isset($id))
@@ -216,8 +227,8 @@ else
 			}
 			elseif ($descr != "")
 			{
-				#if it is booked then show 
-				echo " <a href=\"view_entry.php?id=$id&area=$area&day=$day&month=$month&year=$year\">$descr</a>";
+				#if it is booked then show
+				echo " <a href=\"view_entry.php?id=$id&area=$area&day=$day&month=$month&year=$year\" title=\"$long_descr\">$descr</a>";
 			}
 			else
 				echo "&nbsp;\"&nbsp;";
