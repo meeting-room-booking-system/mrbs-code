@@ -323,16 +323,20 @@ function make_area_select_html( $link, $current, $year, $month, $day )
    	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
    	{
 		$selected = ($row[0] == $current) ? "selected" : "";
-		$link = "$link?year=$year&month=$month&day=$day&area=$row[0]";
+		$link = "$row[0]";
 		$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars($row[1]);
    	}
 	$out_html .= "</select>
+           <INPUT TYPE=HIDDEN NAME=day        VALUE=\"$day\"        >
+           <INPUT TYPE=HIDDEN NAME=month      VALUE=\"$month\"        >
+           <INPUT TYPE=HIDDEN NAME=year       VALUE=\"$year\"      >
 	   <SCRIPT language=\"JavaScript\">
 	   <!--
 	   function area_go()
 	    {
 		box = document.forms[\"area\"].area;
-		destination = box.options[box.selectedIndex].value;
+                destination = \"http://\" + location.host + location.pathname + ";
+                $out_html .= "\"?day=$day&month=$month&year=$year&area=\" + box.options[box.selectedIndex].value;
 		if (destination) location.href = destination;
 	    }
 	    // -->
@@ -354,16 +358,21 @@ function make_room_select_html( $link, $area, $current, $year, $month, $day )
    	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
    	{
 		$selected = ($row[0] == $current) ? "selected" : "";
-		$link = "$link?year=$year&month=$month&day=$day&area=$area&room=$row[0]";
+		$link = "$row[0]";
 		$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars($row[1]);
    	}
 	$out_html .= "</select>
+           <INPUT TYPE=HIDDEN NAME=day        VALUE=\"$day\"        >
+           <INPUT TYPE=HIDDEN NAME=month      VALUE=\"$month\"        >
+           <INPUT TYPE=HIDDEN NAME=year       VALUE=\"$year\"      >
+           <INPUT TYPE=HIDDEN NAME=area       VALUE=\"$area\"         >
 	   <SCRIPT language=\"JavaScript\">
 	   <!--
 	   function room_go()
 	    {
 		box = document.forms[\"room\"].room;
-		destination = box.options[box.selectedIndex].value;
+                destination = \"http://\" + location.host + location.pathname + ";
+                $out_html .= "\"?day=$day&month=$month&year=$year&area=$area&room=\" + box.options[box.selectedIndex].value;
 		if (destination) location.href = destination;
 	    }
 	    // -->
