@@ -255,7 +255,9 @@ if (empty($dateformat))
 else
 	$dformat = "%a<br>%d %b";
 for ($t = $week_start; $t < $week_end; $t += 86400)
-	echo "<th width=\"14%\">" . strftime($dformat, $t) . "</th>\n";
+	echo "<th width=\"14%\"><a href=\"day.php?year=" . strftime("%Y", $t) . 
+	"&month=" . strftime("%m", $t) . "&day=" . strftime("%d", $t) . 
+	"&area=$area\"</a>" . strftime($dformat, $t) . "</th>\n";
 echo "</tr>\n";
 
 
