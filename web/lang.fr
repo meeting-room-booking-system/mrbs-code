@@ -109,7 +109,7 @@ $vocab["user_password"]      = "Mot de passe";
 $vocab["unknown_user"]       = "Utilisateur non identifié";
 $vocab["you_are"]            = "Vous êtes";
 $vocab["login"]              = "S'identifier";
-$vocab["logoff"]             = "Partir";
+$vocab["logoff"]             = "Se déconnecter";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Recherche non valide.";
