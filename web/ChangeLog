@@ -1,3 +1,7 @@
+2004-05-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* edit_area_room.php (1.14):  enhanced email validation
+
 2004-05-05  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* edit_area_room.php (1.13), functions_mail.inc (1.3): * removed

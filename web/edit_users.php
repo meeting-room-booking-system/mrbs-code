@@ -39,13 +39,14 @@ if ($nusers == -1)	/* If the table does not exist */
     $cmd = "
 CREATE TABLE $tbl_users
 (
-  /* The first three fields are required. Don't remove or reorder. */
+  /* The first four fields are required. Don't remove or reorder. */
   id        int DEFAULT '0' NOT NULL auto_increment,
   name      varchar(30),
   password  varchar(32),
+  email     varchar(75),
 
   /* The following fields are application-specific. However only int and varchar are editable. */
-  email     varchar(50),
+
 
   PRIMARY KEY (id)
 );";
@@ -154,7 +155,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 
     print "<form method=post action=\"" . basename($PHP_SELF) . "\">\n";
     print "  <table>\n";
-    
+
     for ($i=0; $i<$nfields; $i++)
         {
         /* The ID field cannot change; The password field must not be shown. */
@@ -173,6 +174,12 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
         print "      <td align=right valign=bottom>" . get_loc_field_name($i) . "</td>\n";
         print "      <td><input type=text name=\"".htmlspecialchars("Field[$i]").
                           "\" value=\"".htmlspecialchars($data[$i])."\" /></td>\n";
+        // Display message about invalid email
+        (!isset($invalid_email)) ? $invalid_email = '' : '' ;
+        if ( ($field_name[$i] == "email") && (1 == $invalid_email) )
+        {
+            print ("<td><STRONG>" . get_vocab('invalid_email') . "<STRONG></td>\n");
+        }
         print "    </tr>\n";
         }
     print "  </table>\n";
@@ -200,21 +207,39 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 \*---------------------------------------------------------------------------*/
 
 if (isset($Action) && ($Action == "Update"))
-    {
+{
     /* To do: Add JavaScript to verify passwords _before_ sending the form here */
     if ($password0 != $password1)
         {
 	print_header(0, 0, 0, "");
 
         print get_vocab("passwords_not_eq") . "<br>\n";
-        
+
         print "<form method=post action=\"" . basename($PHP_SELF) . "\">\n";
         print "  <input type=submit value=\" " . get_vocab("ok") . " \" /> <br />\n";
         print "</form>\n</body>\n</html>\n";
 
         exit();
         }
-    
+    //
+    // Verify email adresses
+    include_once 'Mail/RFC822.php';
+    (!isset($Field[3])) ? $Field[3] = '': '';
+    $emails = explode(',', $Field[3]);
+    $valid_email = new Mail_RFC822();
+    foreach ($emails as $email)
+    {
+        // if no email address is entered, this is OK, even if isValidInetAddress
+        // does not return TRUE
+        if ( !$valid_email->isValidInetAddress($email, $strict = FALSE)
+            && ('' != $Field[3]) )
+        {
+            // Now display this form again with an error message
+            Header("Location: edit_users.php?Action=Edit&Id=$Id&invalid_email=1");
+            exit;
+        }
+    }
+    //
     if ($Id >= 0)
     	{
         $operation = "replace into $tbl_users values (";
