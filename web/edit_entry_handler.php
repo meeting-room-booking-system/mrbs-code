@@ -54,8 +54,8 @@ switch($dur_units)
 
 if(isset($all_day) && ($all_day == "yes"))
 {
-    $starttime = mktime(0, 0, 0, $month, $day  , $year);
-    $endtime   = mktime(0, 0, 0, $month, $day+1, $year);
+    $starttime = mktime(0, 0, 0, $month, $day  , $year, is_dst($month, $day  , $year));
+    $endtime   = mktime(0, 0, 0, $month, $day+1, $year, is_dst($month, $day+1, $year));
 }
 else
 {
@@ -70,14 +70,16 @@ else
         $hour -= 12;
       }
     }
-    $starttime = mktime($hour, $minute, 0, $month, $day, $year);
-    $endtime   = mktime($hour, $minute, 0, $month, $day, $year) + ($units * $duration);
+    $starttime = mktime($hour, $minute, 0, $month, $day, $year, is_dst($month, $day, $year, $hour));
+    $endtime   = mktime($hour, $minute, 0, $month, $day, $year, is_dst($month, $day, $year, $hour)) + ($units * $duration);
     
     # Round up the duration to the next whole resolution unit.
     # If they asked for 0 minutes, push that up to 1 resolution unit.
     $diff = $endtime - $starttime;
     if (($tmp = $diff % $resolution) != 0 || $diff == 0)
         $endtime += $resolution - $tmp;
+
+    $endtime += cross_dst( $starttime, $endtime );
 }
 
 if(isset($rep_type) && isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
@@ -126,11 +128,15 @@ foreach ( $rooms as $room_id ) {
   {
     if(count($reps) < $max_rep_entrys)
     {
-        $diff = $endtime - $starttime;
         
         for($i = 0; $i < count($reps); $i++)
         {
-            $tmp = mrbsCheckFree($room_id, $reps[$i], $reps[$i] + $diff, $ignore_id, $repeat_id);
+	    # calculate diff each time and correct where events
+	    # cross DST
+            $diff = $endtime - $starttime;
+            $diff += cross_dst($reps[$i], $reps[$i] + $diff);
+	    
+	    $tmp = mrbsCheckFree($room_id, $reps[$i], $reps[$i] + $diff, $ignore_id, $repeat_id);
 
             if(!empty($tmp))
                 $err = $err . $tmp;

@@ -42,7 +42,7 @@ if(!getAuthorised(getUserName(), getUserPassword(), 1))
 # If we had $id passed in then it's a modification.
 if (isset($id))
 {
-	$sql = "select name, create_by, description, start_time, end_time - start_time,
+	$sql = "select name, create_by, description, start_time, end_time,
 	        type, room_id, entry_type, repeat_id from mrbs_entry where id=$id";
 	
 	$res = sql_query($sql);
@@ -63,7 +63,7 @@ if (isset($id))
 	$start_year  = strftime('%Y', $row[3]);
 	$start_hour  = strftime('%H', $row[3]);
 	$start_min   = strftime('%M', $row[3]);
-	$duration    = $row[4];
+	$duration    = $row[4] - $row[3] - cross_dst($row[3], $row[4]);
 	$type        = $row[5];
 	$room_id     = $row[6];
 	$entry_type  = $row[7];

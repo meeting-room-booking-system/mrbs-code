@@ -8,6 +8,8 @@ include "$dbsys.inc";
 include "mrbs_auth.inc";
 include "mincals.inc";
 
+if (empty($debug_flag)) $debug_flag = 0;
+
 #If we dont know the right date then make it up 
 if (!isset($day) or !isset($month) or !isset($year))
 {
@@ -25,9 +27,15 @@ if (empty($area))
 # print the page header
 print_header($day, $month, $year, $area);
 
-# Define the start and end of the day.
-$am7=mktime($morningstarts,0,0,$month,$day,$year);
-$pm7=mktime($eveningends,$eveningends_minutes,0,$month,$day,$year);
+# Define the start and end of each day in a way which is not affected by
+# daylight saving...
+# dst_change:
+# -1 => no change
+#  0 => entering DST
+#  1 => leaving DST
+$dst_change = is_dst($month,$day,$year);
+$am7=mktime($morningstarts,0,0,$month,$day,$year,is_dst($month,$day,$year,$morningstarts));
+$pm7=mktime($eveningends,$eveningends_minutes,0,$month,$day,$year,is_dst($month,$day,$year,$eveningends));
 
 if ( $pview != 1 ) {
    echo "<table><tr><td width=\"100%\">";
@@ -60,12 +68,12 @@ if ( $pview != 1 ) {
 #y? are year, month and day of yesterday
 #t? are year, month and day of tomorrow
 
-$i= mktime(0,0,0,$month,$day-1,$year);
+$i= mktime(12,0,0,$month,$day-1,$year);
 $yy = date("Y",$i);
 $ym = date("m",$i);
 $yd = date("d",$i);
 
-$i= mktime(0,0,0,$month,$day+1,$year);
+$i= mktime(12,0,0,$month,$day+1,$year);
 $ty = date("Y",$i);
 $tm = date("m",$i);
 $td = date("d",$i);
@@ -104,19 +112,21 @@ for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 	#row[3] = short description
 	#row[4] = id of this booking
 	#row[5] = type (internal/external)
-    #row[6] = description
+	#row[6] = description
 
 	# $today is a map of the screen that will be displayed
 	# It looks like:
 	#     $today[Room ID][Time][id]
 	#                          [color]
 	#                          [data]
-    #                          [long_descr]
+	#                          [long_descr]
 
 	# Fill in the map for this meeting. Start at the meeting start time,
 	# or the day start time, whichever is later. End one slot before the
 	# meeting end time (since the next slot is for meetings which start then),
 	# or at the last slot in the day, whichever is earlier.
+	# Time is of the format HHMM without leading zeros.
+	#
 	# Note: int casts on database rows for max may be needed for PHP3.
 	# Adjust the starting and ending times so that bookings which don't
 	# start or end at a recognized time still appear.
@@ -124,24 +134,39 @@ for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 	$end_t = min(round_t_up($row[2], $resolution, $am7) - $resolution, $pm7);
 	for ($t = $start_t; $t <= $end_t; $t += $resolution)
 	{
-		$today[$row[0]][$t]["id"]    = $row[4];
-		$today[$row[0]][$t]["color"] = $row[5];
-		$today[$row[0]][$t]["data"]  = "";
-        $today[$row[0]][$t]["long_descr"]  = "";
+		$today[$row[0]][date("Gi",$t)]["id"]    = $row[4];
+		$today[$row[0]][date("Gi",$t)]["color"] = $row[5];
+		$today[$row[0]][date("Gi",$t)]["data"]  = "";
+		$today[$row[0]][date("Gi",$t)]["long_descr"]  = "";
 	}
 
 	# Show the name of the booker in the first segment that the booking
 	# happens in, or at the start of the day if it started before today.
 	if ($row[1] < $am7)
-    {
-		$today[$row[0]][$am7]["data"] = $row[3];
-        $today[$row[0]][$am7]["long_descr"] = $row[6];
-    }
+	{
+		$today[$row[0]][date("Gi",$am7)]["data"] = $row[3];
+		$today[$row[0]][date("Gi",$am7)]["long_descr"] = $row[6];
+	}
 	else
-    {
-		$today[$row[0]][$start_t]["data"] = $row[3];
-        $today[$row[0]][$start_t]["long_descr"] = $row[6];
-    }
+	{
+		$today[$row[0]][date("Gi",$start_t)]["data"] = $row[3];
+		$today[$row[0]][date("Gi",$start_t)]["long_descr"] = $row[6];
+	}
+}
+
+if ($debug_flag) 
+{
+	echo "<p>DEBUG:<pre>\n";
+	echo "\$dst_change = $dst_change\n";
+	echo "\$am7 = $am7 or " . date("Gi",$am7) . "\n";
+	echo "\$pm7 = $pm7 or " . date("Gi",$pm7) . "\n";
+	if (gettype($today) == "array")
+	while (list($w_k, $w_v) = each($today))
+		while (list($t_k, $t_v) = each($w_v))
+			while (list($k_k, $k_v) = each($t_v))
+				echo "d[$w_k][$t_k][$k_k] = '$k_v'\n";
+	else echo "today is not an array!\n";
+	echo "</pre><p>\n";
 }
 
 # We need to know what all the rooms area called, so we can show them all
@@ -180,24 +205,36 @@ else
 	$hilite_url="day.php?year=$year&month=$month&day=$day&area=$area&timetohighlight";
 
 	# This is the main bit of the display
-	# We loop through unixtime and then the rooms we just got
+	# We loop through time and then the rooms we just got
 
-	for ($t = $am7; $t <= $pm7; $t += $resolution)
+	# if the today is a day which includes a DST change then use
+	# the day after to generate timesteps through the day as this
+	# will ensure a constant time step
+	( $dst_change != -1 ) ? $j = 1 : $j = 0;
+	
+	for (
+		$t = mktime($morningstarts, 0, 0, $month, $day+$j, $year);
+		$t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
+		$t += $resolution
+	)
 	{
+		# convert timestamps to HHMM format without leading zeros
+		$time_t = date("Gi", $t);
+
 		# Show the time linked to the URL for highlighting that time
 		echo "<tr>";
 		tdcell("red");
-		echo "<a href=\"$hilite_url=$t\">" . utf8_date(hour_min_format(),$t) . "</a></td>";
+		echo "<a href=\"$hilite_url=$time_t\">" . utf8_date(hour_min_format(),$t) . "</a></td>";
 
 		# Loop through the list of rooms we have for this area
 		while (list($key, $room) = each($rooms))
 		{
-			if(isset($today[$room][$t]["id"]))
+			if(isset($today[$room][$time_t]["id"]))
 			{
-				$id    = $today[$room][$t]["id"];
-				$color = $today[$room][$t]["color"];
-				$descr = htmlspecialchars($today[$room][$t]["data"]);
-                $long_descr = $today[$room][$t]["long_descr"];
+				$id    = $today[$room][$time_t]["id"];
+				$color = $today[$room][$time_t]["color"];
+				$descr = htmlspecialchars($today[$room][$time_t]["data"]);
+				$long_descr = $today[$room][$time_t]["long_descr"];
 			}
 			else
 				unset($id);
@@ -207,7 +244,7 @@ else
 			# We tell if its booked by $id having something in it
 			if (isset($id))
 				$c = $color;
-			elseif (isset($timetohighlight) && ($t == $timetohighlight))
+			elseif (isset($timetohighlight) && ($time_t == $timetohighlight))
 				$c = "red";
 			else
 				$c = "white";

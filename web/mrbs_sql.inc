@@ -130,6 +130,10 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $r
 	$name        = slashes($name);
 	$description = slashes($description);
 	
+	# make sure that any entry is of a positive duration
+	# this is to trap potential negative duration created when DST comes
+	# into effect
+	if( $endtime > $starttime )
 	$sql = "INSERT INTO mrbs_entry (  start_time,   end_time,   entry_type,    repeat_id,   room_id,
 	                                  create_by,    name,       type,          description)
 	                        VALUES ($starttime, $endtime, $entry_type, $repeat_id, $room_id,
@@ -347,11 +351,17 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type, $rep_enddate
 	$ent = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate, $rep_opt, $room_id, $owner, $name, $type, $description, $rep_num_weeks);
 	if($ent)
 	{
-		$diff = $endtime - $starttime;
 	
 		for($i = 0; $i < count($reps); $i++)
+		{
+			# calculate diff each time and correct where events
+			# cross DST
+			$diff = $endtime - $starttime;
+			$diff += cross_dst($reps[$i], $reps[$i] + $diff);
+	    
 			mrbsCreateSingleEntry($reps[$i], $reps[$i] + $diff, 1, $ent,
 				 $room_id, $owner, $name, $type, $description);
+		}
 	}
 	return $ent;
 }

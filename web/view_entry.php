@@ -59,7 +59,9 @@ $type         = $row[5];
 $room_id      = $row[6];
 $repeat_id    = $row[7];
 $updated      = time_date_string($row[8]);
-$duration     = $row[9];
+# need to make DST correct in opposite direction to entry creation
+# so that user see what he expects to see
+$duration     = $row[9] - cross_dst($row[10], $row[11]);
 
 $start_date = time_date_string($row[10]);
 $end_date = time_date_string($row[11]);

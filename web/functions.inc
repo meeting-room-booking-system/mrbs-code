@@ -388,4 +388,47 @@ function make_room_select_html( $link, $area, $current, $year, $month, $day )
 
 	return $out_html;
 } # end make_area_select_html
+
+
+# This will return the appropriate value for isdst for mktime().
+# The order of the arguments was chosen to match those of mktime.
+# hour is added so that this function can when necessary only be
+# run if the time is between midnight and 3am (all DST changes
+# occur in this period.
+function is_dst ( $month, $day, $year, $hour="-1" )
+{
+	
+	if( $hour != -1  && $hour > 3)
+		return( -1 );
+	
+	# entering DST
+	if( !date( "I", mktime(12, 0, 0, $month, $day-1, $year)) && 
+	    date( "I", mktime(12, 0, 0, $month, $day, $year)))
+		return( 0 ); 
+
+	# leaving DST
+	elseif( date( "I", mktime(12, 0, 0, $month, $day-1, $year)) && 
+	    !date( "I", mktime(12, 0, 0, $month, $day, $year)))
+		return( 1 );
+	else
+		return( -1 );
+}
+
+# if crossing dst determine if you need to make a modification
+# of 3600 seconds (1 hour) in either direction
+function cross_dst ( $start, $end )
+{
+	
+	# entering DST
+	if( !date( "I", $start) &&  date( "I", $end))
+		$modification = -3600;
+
+	# leaving DST
+	elseif(  date( "I", $start) && !date( "I", $end))
+		$modification = 3600;
+	else	
+		$modification = 0;
+
+	return $modification;
+}
 ?>

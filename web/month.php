@@ -46,6 +46,19 @@ $days_in_month = date("t", $month_start);
 
 $month_end = mktime(23, 59, 59, $month, $days_in_month, $year);
 
+# Define the start and end of each day of the month in a way which is not
+# affected by daylight saving...
+for ($j = 1; $j<=$days_in_month; $j++) {
+	# are we entering or leaving daylight saving
+	# dst_change:
+	# -1 => no change
+	#  0 => entering DST
+	#  1 => leaving DST
+	$dst_change[$j] = is_dst($month,$j,$year);
+	$midnight[$j]=mktime(0,0,0,$month,$j,$year, is_dst($month,$j,$year, 0));
+	$midnight_tonight[$j]=mktime(23,59,59,$month,$j,$year, is_dst($month,$j,$year, 23));
+}
+
 if ( $pview != 1 ) {
     # Table with areas, rooms, minicals.
     echo "<table width=\"100%\"><tr>";
@@ -129,11 +142,11 @@ echo "<h2 align=center>" . utf8_strftime("%B %Y", $month_start)
 #y? are year and month of the previous month.
 #t? are year and month of the next month.
 
-$i= mktime(0,0,0,$month-1,1,$year);
+$i= mktime(12,0,0,$month-1,1,$year);
 $yy = date("Y",$i);
 $ym = date("n",$i);
 
-$i= mktime(0,0,0,$month+1,1,$year);
+$i= mktime(12,0,0,$month+1,1,$year);
 $ty = date("Y",$i);
 $tm = date("n",$i);
 if ( $pview != 1 ) {
@@ -155,79 +168,67 @@ $all_day = ereg_replace(" ", "&nbsp;", get_vocab("all_day"));
 # row[0] = Start time
 # row[1] = End time
 # row[2] = Entry ID
-$sql = "SELECT start_time, end_time, id, name
-   FROM mrbs_entry
-   WHERE room_id=$room
-   AND start_time <= $month_end AND end_time > $month_start
-   ORDER by 1";
+# This data will be retrieved day-by-day fo the whole month
+for ($day_num = 1; $day_num<=$days_in_month; $day_num++) {
+	$sql = "SELECT start_time, end_time, id, name
+	   FROM mrbs_entry
+	   WHERE room_id=$room
+	   AND start_time <= $midnight_tonight[$day_num] AND end_time > $midnight[$day_num]
+	   ORDER by 1";
 
-# Build an array of information about each day in the month.
-# The information is stored as:
-#  d[monthday]["id"][] = ID of each entry, for linking.
-#  d[monthday]["data"][] = "start-stop" times or "name" of each entry.
+	# Build an array of information about each day in the month.
+	# The information is stored as:
+	#  d[monthday]["id"][] = ID of each entry, for linking.
+	#  d[monthday]["data"][] = "start-stop" times or "name" of each entry.
 
-$res = sql_query($sql);
-if (! $res) echo sql_error();
-else for ($i = 0; ($row = sql_row($res, $i)); $i++)
-{
-    if ($debug_flag)
-        echo "<br>DEBUG: result $i, id $row[2], starts $row[0], ends $row[1]\n";
+	$res = sql_query($sql);
+	if (! $res) echo sql_error();
+	else for ($i = 0; ($row = sql_row($res, $i)); $i++)
+	{
+	    if ($debug_flag)
+        	echo "<br>DEBUG: result $i, id $row[2], starts $row[0], ends $row[1]\n";
 
-    # Fill in data for each day during the month that this meeting covers.
-    # Note: int casts on database rows for min and max is needed for PHP3.
-    $t = max((int)$row[0], $month_start);
-    $end_t = min((int)$row[1], $month_end);
-    $day_num = date("j", $t);
-    $midnight = mktime(0, 0, 0, $month, $day_num, $year);
-    while ($t < $end_t)
-    {
-        if ($debug_flag) echo "<br>DEBUG: Entry $row[2] day $day_num\n";
-        $d[$day_num]["id"][] = $row[2];
-        $d[$day_num]["shortdescrip"][] = $row[3];
+            if ($debug_flag) echo "<br>DEBUG: Entry $row[2] day $day_num\n";
+            $d[$day_num]["id"][] = $row[2];
+            $d[$day_num]["shortdescrip"][] = $row[3];
 
-        $midnight_tonight = $midnight + 86400;
+            # Describe the start and end time, accounting for "all day"
+            # and for entries starting before/ending after today.
+            # There are 9 cases, for start time < = or > midnight this morning,
+            # and end time < = or > midnight tonight.
+            # Use ~ (not -) to separate the start and stop times, because MSIE
+            # will incorrectly line break after a -.
 
-        # Describe the start and end time, accounting for "all day"
-        # and for entries starting before/ending after today.
-        # There are 9 cases, for start time < = or > midnight this morning,
-        # and end time < = or > midnight tonight.
-        # Use ~ (not -) to separate the start and stop times, because MSIE
-        # will incorrectly line break after a -.
+            switch (cmp3($row[0], $midnight[$day_num]) . cmp3($row[1], $midnight_tonight[$day_num] + 1))
+            {
+        	case "> < ":         # Starts after midnight, ends before midnight
+        	case "= < ":         # Starts at midnight, ends before midnight
+                    $d[$day_num]["data"][] = date(hour_min_format(), $row[0]) . "~" . date(hour_min_format(), $row[1]);
+                    break;
+        	case "> = ":         # Starts after midnight, ends at midnight
+                    $d[$day_num]["data"][] = date(hour_min_format(), $row[0]) . "~24:00";
+                    break;
+        	case "> > ":         # Starts after midnight, continues tomorrow
+                    $d[$day_num]["data"][] = date(hour_min_format(), $row[0]) . "~====&gt;";
+                    break;
+        	case "= = ":         # Starts at midnight, ends at midnight
+                    $d[$day_num]["data"][] = $all_day;
+                    break;
+        	case "= > ":         # Starts at midnight, continues tomorrow
+                    $d[$day_num]["data"][] = $all_day . "====&gt;";
+                    break;
+        	case "< < ":         # Starts before today, ends before midnight
+                    $d[$day_num]["data"][] = "&lt;====~" . date(hour_min_format(), $row[1]);
+                    break;
+        	case "< = ":         # Starts before today, ends at midnight
+                    $d[$day_num]["data"][] = "&lt;====" . $all_day;
+                    break;
+        	case "< > ":         # Starts before today, continues tomorrow
+                    $d[$day_num]["data"][] = "&lt;====" . $all_day . "====&gt;";
+                    break;
+            }
 
-        switch (cmp3($row[0], $midnight) . cmp3($row[1], $midnight_tonight))
-        {
-            case "> < ":         # Starts after midnight, ends before midnight
-            case "= < ":         # Starts at midnight, ends before midnight
-                $d[$day_num]["data"][] = date(hour_min_format(), $row[0]) . "~" . date(hour_min_format(), $row[1]);
-                break;
-            case "> = ":         # Starts after midnight, ends at midnight
-                $d[$day_num]["data"][] = date(hour_min_format(), $row[0]) . "~24:00";
-                break;
-            case "> > ":         # Starts after midnight, continues tomorrow
-                $d[$day_num]["data"][] = date(hour_min_format(), $row[0]) . "~====&gt;";
-                break;
-            case "= = ":         # Starts at midnight, ends at midnight
-                $d[$day_num]["data"][] = $all_day;
-                break;
-            case "= > ":         # Starts at midnight, continues tomorrow
-                $d[$day_num]["data"][] = $all_day . "====&gt;";
-                break;
-            case "< < ":         # Starts before today, ends before midnight
-                $d[$day_num]["data"][] = "&lt;====~" . date(hour_min_format(), $row[1]);
-                break;
-            case "< = ":         # Starts before today, ends at midnight
-                $d[$day_num]["data"][] = "&lt;====" . $all_day;
-                break;
-            case "< > ":         # Starts before today, continues tomorrow
-                $d[$day_num]["data"][] = "&lt;====" . $all_day . "====&gt;";
-                break;
-        }
-
-        # Only if end time > midnight does the loop continue for the next day.
-        if ($row[1] <= $midnight_tonight) break;
-        $day_num++;
-        $t = $midnight = $midnight_tonight;
-    }
+	}
 }
 if ($debug_flag) 
 {
