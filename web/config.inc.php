@@ -117,9 +117,10 @@ $refresh_rate = 0;
 $area_list_format = "list";
 #$area_list_format = "select";
 
-# Entries in monthly view can be shown as start/end slot or brief description
-# Set to TRUE for brief description, FALSE for time slot
-$monthly_view_brief_description = TRUE;
+# Entries in monthly view can be shown as start/end slot, brief description or
+# both. Set to "description" for brief description, "slot" for time slot and
+# "both" for both. Default is "description"
+$monthly_view_entries_details = "both";
 
 # To view weeks in the bottom (trailer.inc) as week numbers (42) instead of
 # 'first day of the week' (13 Oct), set this to TRUE

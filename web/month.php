@@ -335,26 +335,52 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
         # If there are 12 or fewer, show them, else show 11 and "...".
         for ($i = 0; $i < $n; $i++)
         {
-            if ($i == 11 && $n > 12)
+            if ( ($i == 11 && $n > 12 && $monthly_view_entries_details != "both") or
+                 ($i == 6 && $n > 6 && $monthly_view_entries_details == "both") )
             {
                 echo " ...\n";
                 break;
             }
-            if ($i > 0 && $i % 2 == 0) echo "<br>"; else echo " ";
-            if ( FALSE != $monthly_view_brief_description )
+            if ( ($i > 0 && $i % 2 == 0) or
+                ($monthly_view_entries_details == "both"  && $i > 0) )
             {
-                echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-                    . "&day=$cday&month=$month&year=$year\" title=\""
-                    . $d[$cday]["data"][$i] . "\">"
-                    . substr($d[$cday]["shortdescrip"][$i], 0, 17)
-                    . "</a>";
+                echo "<br>";
             }
             else
             {
-                echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-                    . "&day=$cday&month=$month&year=$year\" title=\""
-                    . substr($d[$cday]["shortdescrip"][$i], 0, 17) . "\">"
-                    . $d[$cday]["data"][$i] . "</a>";
+                echo " ";
+            }
+            switch ($monthly_view_entries_details)
+            {
+                case "description":
+                {
+                    echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
+                        . "&day=$cday&month=$month&year=$year\" title=\""
+                        . $d[$cday]["data"][$i] . "\">"
+                        . substr($d[$cday]["shortdescrip"][$i], 0, 17)
+                        . "</a>";
+                    break;
+                }
+                case "slot":
+                {
+                    echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
+                        . "&day=$cday&month=$month&year=$year\" title=\""
+                        . substr($d[$cday]["shortdescrip"][$i], 0, 17) . "\">"
+                        . $d[$cday]["data"][$i] . "</a>";
+                    break;
+                }
+                case "both":
+                {
+                    echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
+                        . "&day=$cday&month=$month&year=$year\">"
+                        . $d[$cday]["data"][$i] . " "
+                        . substr($d[$cday]["shortdescrip"][$i], 0, 6) . "</a>";
+                    break;
+                }
+                default:
+                {
+                    echo "error: unknown parameter";
+                }
             }
         }
         echo "</font>";
