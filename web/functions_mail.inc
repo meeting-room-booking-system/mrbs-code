@@ -120,7 +120,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
     }
     else
     {
-        $url = explode(basename($returl), $returl);
+        ('' != $returl) ? $url = explode(basename($returl), $returl) : '';
         $body .= $url[0] . "view_entry.php?id=$new_id\n";
     }
     // Displays/don't displays entry details
@@ -200,7 +200,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
                 $mail_vocab["rep_type_$temp"], $new_entry) . "\n";
         }
     }
-    $recipients = "";
+    $recipients = '';
     (MAIL_ADMIN_ON_BOOKINGS) ? $recipients = MAIL_RECIPIENTS : '';
     if (MAIL_AREA_ADMIN_ON_BOOKINGS)
     {
@@ -228,8 +228,14 @@ function notifyAdminOnBooking($new_entry , $new_id)
         sql_free($res);
         $recipients .= $row[0];
     }
-    $result = sendMail($recipients, $subject, $body, MAIL_CC);
-    return $result;
+    // In case mail is allowed but someone forgot to supply email addresses...
+    if ('' != $recipients)
+    {
+        $result = sendMail($recipients, $subject, $body, MAIL_CC);
+        return $result;
+    }
+    // If no $recipients, return FALSE (instead of error)
+    return FALSE;
 }
 
 // }}}
@@ -248,25 +254,25 @@ function notifyAdminOnDelete($mail_previous)
     $subject = $mail_vocab["mail_subject_delete"];
     $body = $mail_vocab["mail_body_del_entry"] . "\n\n";
     // Displays deleted entry details
-    $body .= "\n" . $mail_vocab["namebooker"] . " ";
+    $body .= "\n" . $mail_vocab["namebooker"] . ' ';
     $body .= removeMailUnicode($mail_previous['namebooker']) . "\n";
     $body .= $mail_vocab["description"] . " ";
     $body .= removeMailUnicode($mail_previous['description']) . "\n";
     $body .= $mail_vocab["room"] . ": ";
     $body .= removeMailUnicode($mail_previous['area_name']);
     $body .= " - " . removeMailUnicode($mail_previous['room_name']) . "\n";
-    $body .= $mail_vocab["start_date"] . " ";
+    $body .= $mail_vocab["start_date"] . ' ';
     if ( $enable_periods )
     {
-        $body .= $mail_previous['start_period'] . " - ";
+        $body .= $mail_previous['start_period'] . ' - ';
         $body .= unHtmlEntities($mail_previous['start_date']) . "\n";
     }
     else
     {
-        $body .= $mail_vocab["start_date"] . " ";
+        $body .= $mail_vocab["start_date"] . ' ';
         $body .= $mail_previous['start_date'] . "\n";
     }
-    $body .= $mail_vocab["duration"] . " " . $mail_previous['duration'] . " ";
+    $body .= $mail_vocab["duration"] . ' ' . $mail_previous['duration'] . ' ';
     $body .= $mail_previous['dur_units'] . "\n";
     if ( $enable_periods )
     {
@@ -289,34 +295,26 @@ function notifyAdminOnDelete($mail_previous)
     $temp = $mail_previous['rep_type'];
     $body .=  " " . $mail_vocab["rep_type_$temp"] . "\n";
     // End of mail details
-    $recipients = "";
+    $recipients = '';
     (MAIL_ADMIN_ON_BOOKINGS) ? $recipients = MAIL_RECIPIENTS : '';
     if (MAIL_AREA_ADMIN_ON_BOOKINGS)
     {
         empty($recipients) ? '' : $recipients .= ",";
-        $sql = "SELECT a.area_admin_email ";
-        $sql .= "FROM $tbl_room r, $tbl_area a, $tbl_entry e ";
-        $sql .= "WHERE e.id=$new_id AND r.id=e.room_id AND a.id=r.area_id";
-        $res = sql_query($sql);
-        (! $res) ? fatal_error(1, sql_error()) : '';
-        $row = sql_row($res, 0);
-        sql_free($res);
-        $recipients .= $row[0];
+        $recipients .= $mail_previous['area_admin_email'];
     }
     if (MAIL_ROOM_ADMIN_ON_BOOKINGS)
     {
         empty($recipients) ? '' : $recipients .= ",";
-        $sql = "SELECT r.room_admin_email ";
-        $sql .= "FROM $tbl_room r, $tbl_entry e ";
-        $sql .= "WHERE e.id=$new_id AND r.id=e.room_id";
-        $res = sql_query($sql);
-        (! $res) ? fatal_error(1, sql_error()) : '';
-        $row = sql_row($res, 0);
-        sql_free($res);
-        $recipients .= $row[0];
+        $recipients .= $mail_previous['room_admin_email'];
     }
-    $result = sendMail($recipients, $subject, $body, MAIL_CC);
-    return $result;
+    // In case mail is allowed but someone forgot to supply email addresses...
+    if ('' != $recipients)
+    {
+        $result = sendMail($recipients, $subject, $body, MAIL_CC);
+        return $result;
+    }
+    // If no $recipients, return FALSE (instead of error)
+    return FALSE;
 }
 
 // }}}
@@ -335,34 +333,36 @@ function getPreviousEntryData($id, $series)
     global $tbl_area, $tbl_entry, $tbl_repeat, $tbl_room, $enable_periods;
     //
     $sql = "
-    SELECT  $tbl_entry.name,
-            $tbl_entry.description,
-            $tbl_entry.create_by,
-            $tbl_room.room_name,
-            $tbl_area.area_name,
-            $tbl_entry.type,
-            $tbl_entry.room_id,
-            $tbl_entry.repeat_id, " .
-            sql_syntax_timestamp_to_unix("$tbl_entry.timestamp") . ",
-            ($tbl_entry.end_time - $tbl_entry.start_time) AS tbl_e_duration,
-            $tbl_entry.start_time AS tbl_e_start_time,
-            $tbl_entry.end_time AS tbl_e_end_time";
+    SELECT  e.name,
+            e.description,
+            e.create_by,
+            r.room_name,
+            a.area_name,
+            e.type,
+            e.room_id,
+            e.repeat_id, " .
+            sql_syntax_timestamp_to_unix("e.timestamp") . ",
+            (e.end_time - e.start_time) AS tbl_e_duration,
+            e.start_time AS tbl_e_start_time,
+            e.end_time AS tbl_e_end_time,
+            a.area_admin_email,
+            r.room_admin_email";
     // Here we could just use $tbl_repeat.start_time, and not use alias,
     // as the last column will take precedence using mysql_fetch_array,
     // but for portability purpose I will not use it.
     if (1 == $series)
     {
-        $sql .= ", $tbl_repeat.rep_type, ($tbl_repeat.end_time -
-            $tbl_repeat.start_time) AS tbl_r_duration,
-            $tbl_repeat.start_time AS tbl_r_start_time,
-            $tbl_repeat.end_date AS tbl_r_end_date";
+        $sql .= ", re.rep_type, (re.end_time -
+            re.start_time) AS tbl_r_duration,
+            re.start_time AS tbl_r_start_time,
+            re.end_date AS tbl_r_end_date";
     }
     $sql .= "
-    FROM $tbl_entry, $tbl_room, $tbl_area, $tbl_repeat
-    WHERE $tbl_entry.room_id = $tbl_room.id
-    AND $tbl_room.area_id = $tbl_area.id
-    AND $tbl_entry.id=$id";
-    (1 == $series) ? $sql .= " AND $tbl_entry.repeat_id = $tbl_repeat.id" : '';
+    FROM $tbl_entry e, $tbl_room r, $tbl_area a, $tbl_repeat re
+    WHERE e.room_id = r.id
+    AND r.area_id = a.id
+    AND e.id=$id";
+    (1 == $series) ? $sql .= " AND e.repeat_id = re.id" : '';
     //
     $res = sql_query($sql);
     (! $res) ? fatal_error(0, sql_error()) : '';
@@ -380,6 +380,8 @@ function getPreviousEntryData($id, $series)
     $mail_previous['room_id']       = $row['room_id'];
     $mail_previous['repeat_id']     = $row['repeat_id'];
     $mail_previous['updated']       = getMailTimeDateString($row[8]);
+    $mail_previous['area_admin_email'] = $row['area_admin_email'];
+    $mail_previous['room_admin_email'] = $row['room_admin_email'];
     // If we use periods
     if ( $enable_periods )
     {
