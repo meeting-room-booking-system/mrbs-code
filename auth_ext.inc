@@ -36,7 +36,6 @@ function authValidateUser($user, $pass)
 		return 0;
 	}
 	
-	
 	// Generate the command line
 	$cmd = $auth["prog"] . ' ' . $auth["params"];
 	$cmd = preg_replace('/#USERNAME#/',$user,$cmd);
@@ -50,7 +49,8 @@ function authValidateUser($user, $pass)
 		return 1;
 	
 	// If we failed prompt for username/password
-	authGet($realm);
+	if($user || $pass)
+		authGet($auth["realm"]);
 	
 	// return failure
 	return 0;
