@@ -1,8 +1,19 @@
-Because this is a beta release, it is un-likely you will be using this for
-anything mission critical, I have therefore removed the upgrade code, as
-it would no longer work.
+Upgrade Information for previous releases of MRBS:
+--------------------------------------------------
 
-There have been no database changes from at least version 0.8, so your
-current database should work just fine. although, naturally, you should
-back up any data you have before using a new version.
+There was a change to the database schema at version 0.7. See the
+information in INSTALL on using the upgrade.my.sql script.
 
+There have been no database changes from at version 0.7, so your current
+database should work just fine. Although, naturally, you should back up
+any data you have before using a new version.
+
+A change in version 1.0-pre1 might affect the appearance of entries in your
+existing database. Prior versions of MRBS did an extra and unnecessary
+level of backslash-escaping on room, area, and entry names and
+descriptions. This applied to certain characters such as single quote
+mark(') and backslash(\). As of version 1.0-pre1, these characters are
+handled correctly. If you see extra backslashes when MRBS displays names or
+descriptions, it is because these are in actually your database, a result
+of this bug in previous versions. You can edit the entries in MRBS or
+directly with your database SQL tool, or just ignore them.
