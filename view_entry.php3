@@ -59,7 +59,7 @@ echo "<tr><td><b>$lang[date]</b></td><td>$start_date</td></tr>";
 echo "<tr><td><b>$lang[time]</b></td><td>$start_time</td></tr>";
 echo "<tr><td><b>$lang[duration]</b></td><td>$duration</td></tr>";
 echo "<tr><td><b>$lang[type]</b></td><td>$typel[$type]</td></tr>";
-echo "<tr><td><b>$lang[createdby]</b></td><td>$create_by</td></tr>";
+echo "<tr><td><b>$lang[createdby]</b></td><td>".gethostbyaddr($create_by)."</td></tr>";
 echo "<tr><td><b>$lang[lastupdate]</b></td><td>$updated</td></tr>";
 
 echo "</table><br><p>";

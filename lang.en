@@ -10,6 +10,7 @@ $lang[mrbs]               = "Meeting Room Booking System";
 
 # Used in day.php3
 $lang[bookingsfor]        = "Bookings for";
+$lang[bookingsforpost]    = ""; # Goes after the date
 $lang[areas]              = "Areas";
 $lang[daybefore]          = "Go To Day Before";
 $lang[dayafter]           = "Go To Day After";
