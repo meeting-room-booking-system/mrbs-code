@@ -61,15 +61,16 @@ echo "</center></tr></table>";
 
 #y? are year, month and day of yesterday
 #t? are year, month and day of tomorrow
-$todaytime = mktime(0,0,0,$month,$day,$year);
-$yy = date("Y",$todaytime-(24*60*60));
-$ym = date("m",$todaytime-(24*60*60));
-$yd = date("d",$todaytime-(24*60*60));
-$ty = date("Y",$todaytime+(24*60*60));
-$tm = date("m",$todaytime+(24*60*60));
-$td = date("d",$todaytime+(24*60*60));
-$tf = date("Y-m-d",$todaytime+(24*60*60));
 
+$i= mktime(0,0,0,$month,$day-1,$year);
+$yy = date("Y",$i);
+$ym = date("m",$i);
+$yd = date("d",$i);
+
+$i= mktime(0,0,0,$month,$day+1,$year);
+$ty = date("Y",$i);
+$tm = date("m",$i);
+$td = date("d",$i);
 
 #Show colour key
 echo "<table border=0><tr><td class=\"I\">$lang[internal]</td><td class=\"E\">$lang[external]</td></tr></table>";

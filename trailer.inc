@@ -3,25 +3,28 @@
 <B><?echo $lang[viewday]?></B>
 <?php
 
-if ($year && $month && $day) {
-	$btime = mktime(0, 0, 0, $month, $day, $year);
-	$thisyear=$year; $thismonth=$month; $thisday=$day;
-} else {
-	$btime = time();
-}
+if(!isset($year))
+	$year = strftime("%Y");
 
-$stime = $btime - (7*24*60*60);
-$etime = $btime + (7*24*60*60);
+if(!isset($month))
+	$year = strftime("%m");
 
-for ($i = $stime; $i <= $etime; $i=$i+(24*60*60)) {
-	$cyear  = date("Y",$i);
-	$cmonth = date("m",$i);
-	$ddate  = strftime("%b %d",$i);
-	$cday   = date("d",$i);
-	echo "<a href=day.php3?year=$cyear&month=$cmonth&day=$cday>$ddate</a>, \n";
+if(!isset($day))
+	$year = strftime("%d");
+
+for($i = -7; $i <= 7; $i++)
+{
+	$ctime = mktime(0, 0, 0, $month, $day + $i, $year);
+	
+	$str = strftime("%b %d", $ctime);
+	
+	$cyear  = date("Y", $ctime);
+	$cmonth = date("m", $ctime);
+	$cday   = date("d", $ctime);
+	
+	echo "<a href=day.php3?year=$cyear&month=$cmonth&day=$cday>$str</a>, \n";
 }
 
 ?>
 <HR>
 </P>
-
