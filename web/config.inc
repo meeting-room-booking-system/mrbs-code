@@ -120,6 +120,8 @@ include 'lang.en';
 # locales on your system do "locale -a"
 setlocale('LC_ALL','C');
 
+global $HTTP_ACCEPT_LANGUAGE;
+
 # We attempt to make up a sensible locale from the HTTP_ACCEPT_LANGUAGE
 # environment variable. If this doesn't work for you, comment it out
 # and assign locale directly.

@@ -1,3 +1,8 @@
+CVS (Fri Nov  2 12:47:45 GMT 2001)
+    Fixed problem in config.inc, $HTTP_ACCEPT_LANGUAGE wasn't working for
+     me unless I put a global specification for it.  This should improve
+     internationalisation.
+
 Version 1.0 (Thu Aug 30 22:26:54 BST 2001)
     Added two upgrade.xx.sql files which should have been in -pre2
 
