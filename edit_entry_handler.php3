@@ -10,11 +10,10 @@ function add_duration ( $time, $duration ) {
   $list = split ( ":", $time );
   $hour = $list[0];
   $min = $list[1];
-  $minutes = $hour * 60 + $min + $duration;
+  $minutes = $hour * 60 + $min + ($duration / 60);
   $h = $minutes / 60;
   $m = $minutes % 60;
   $ret = sprintf ( "%d:%02d", $h, $m );
-  //echo "add_duration ( $time, $duration ) = $ret <BR>";
   return $ret;
 }
 
@@ -146,7 +145,10 @@ if(!empty($reps))
 		$err = $lang[too_may_entrys];
 }
 else
+{
 	$err = mrbsCheckFree($room_id, $starttime, $endtime-1, $id);
+	$overlap = $err;
+}
 
 if(empty($err))
 {
@@ -198,8 +200,8 @@ Your suggested time of <B>
 <?php
   $time = sprintf ( "%d:%02d", $hour, $minute );
   echo display_time ( $time );
-  if ( $duration > 0 )
-    echo "-" . display_time ( add_duration ( $time, $duration ) );
+  if($duration > 0)
+    echo "-" . display_time ( add_duration ( $time, $duration * $units) );
 ?>
 </B> conflicts with the following existing calendar entries:
 <UL>
