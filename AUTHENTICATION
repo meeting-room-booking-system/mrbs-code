@@ -531,7 +531,7 @@ $pop3_host[] = "myisp.co.uk";
 $pop3_port[] = "110";
 $pop3_port[] = "110";
 
-Note: if you use the later configuration then an equal number of hosts
+Note: if you use the latter configuration then an equal number of hosts
 and ports must be specified or authentication will fail.
 
 
@@ -577,40 +577,68 @@ $imap_host[] = "myisp.co.uk";
 $imap_port[] = "143";
 $imap_port[] = "143";
 
-Note: if you use the later configuration then an equal number of hosts
+Note: if you use the latter configuration then an equal number of hosts
 and ports must be specified or authentication will fail.
 
 
 LDAP Authentication
 -------------------
 
-There are three methods for doing LDAP authentication currently, the preferable
-method uses the LDAP functionality built into PHP.
+There are currently three methods for doing LDAP authentication, auth_ldap,
+auth_ldap.pl, auth_ldapsearch.pl.  The preferred method, auth_ldap, uses
+the LDAP functionality built into PHP and is described here.  The other
+methods use the 'ext' authentication method and described further on in
+this file.
 
-To enable this change the "$auth[type]" to "ldap" and check the the
-"$ldap_host" and "$ldap_base_dn" entries are correct in config.inc.php.
-
-The program will check the username and password pair with all the
-"$ldap_base_dn" entrys until one matches.
-
-e.g.
-
-# Authentication settings - read AUTHENTICATION
+This method can be used by setting config.inc.php as follows:
 
 $auth["type"] = "ldap";
 
-# The LDAP server is local
+Also you will need to change the section:
 
+# 'auth_ldap' configuration settings
+# Where is the LDAP server
 $ldap_host = "localhost";
+# LDAP base distinguish name
+# See AUTHENTICATION for details of how check against multiple base dn's
+$ldap_base_dn = "ou=organizationalunit,dc=my-domain,dc=com";
+# Attribute within the base dn that contains the username
+$ldap_user_attrib = "uid";
 
-# First search in the "People" then "Administrators" dn.
+This method will attempt an authenticated bind to the ldap server using
+the supplied password and a distinguished name, which is formed from the
+base distinguished name, the user attribute and the user name. 
 
+This method supports multiple $ldap_base_dn entries and $ldap_user_attrib
+values.  The authentication is attempted with each base dn in turn until it
+succeeds or it fails to authenticate the user.
+
+Multiple base distinguished names with the same user attribute for each
+base dn:
+# 'auth_ldap' configuration settings
+# Where is the LDAP server
+$ldap_host = "localhost";
+# LDAP base distinguish names
 $ldap_base_dn[] = "ou=People, o=myCompany, c=US";
 $ldap_base_dn[] = "ou=Administrators, o=myCompany, c=US";
+#
+$ldap_user_attrib = "uid";
 
-Note: There are two other alternative LDAP authentication methods, based on
-external programs, and described further down. This one is the recommended on
-though.
+Multiple base distinguished names with the option of different user attributes
+for each base dn:
+# 'auth_ldap' configuration settings
+# Where is the LDAP server
+$ldap_host = "localhost";
+# LDAP base distinguish names
+$ldap_base_dn[] = "ou=People, o=myCompany, c=US";
+$ldap_base_dn[] = "ou=Administrators, o=myCompany, c=US";
+#
+$ldap_user_attrib[] = "uid";
+$ldap_user_attrib[] = "cn";
+
+Note: if you use the latter configuration then an equal number of base dn's
+and user attributes must be specified or authentication will fail.
+
 
 NIS Authentication
 ------------------
@@ -618,6 +646,7 @@ NIS Authentication
 $auth["type"] = "nis";
 
 Details?
+
 
 NT Authentication
 -----------------
@@ -680,6 +709,7 @@ that 'Basic authentication' transmit passwords in an unencrypted form.
 
 All this was tested against IIS 5.0 on Windows 2000 server and Windows 2000
 workstations using Internet Explorer 6.0, but this should work from IIS 4.0.
+
 
 OMNI Authentication
 --------------------
