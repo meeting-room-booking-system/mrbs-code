@@ -1,5 +1,6 @@
 CVS (Thu Jan  9 17:26:41 GMT 2003)
    + New POP3 authentication scheme (Daniel Gardner)
+   - Updated Spanish translation
 
 CVS (Thu Nov 28 10:20:00 GMT 2002)
    - Fix for edit entry page. We now determine the area id

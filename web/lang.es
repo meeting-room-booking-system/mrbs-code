@@ -1,10 +1,9 @@
-<?php
+<?
 # $Id$
 
 # This file contains PHP code that specifies language specific strings
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is a Spanish file.
-#
 #
 #
 # This file is PHP code. Treat it as such.
@@ -16,15 +15,15 @@ $vocab["charset"]            = "iso-8859-1";
 $vocab["mrbs"]               = "Sistema de Reservas de Salas de Reuni&oacute;n";
 
 # Used in functions.inc
-$vocab["report"]             = "Informe";
-$vocab["admin"]              = "Admin";
+$vocab["report"]             = "Reportes";
+$vocab["admin"]              = "Administraci&oacute;n";
 $vocab["help"]               = "Ayuda";
 $vocab["search"]             = "B&uacute;squeda:";
 
 # Used in day.php
 $vocab["bookingsfor"]        = "Reservas para el";
-$vocab["bookingsforpost"]    = "";
-$vocab["areas"]              = "Areas";
+$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["areas"]              = "Edificios";
 $vocab["daybefore"]          = "D&iacute;a Anterior";
 $vocab["dayafter"]           = "D&iacute;a Siguiente";
 $vocab["gototoday"]          = "D&iacute;a Actual";
@@ -32,8 +31,8 @@ $vocab["goto"]               = "Ir a";
 
 # Used in trailer.inc
 $vocab["viewday"]            = "Ver D&iacute;a";
-$vocab["viewweek"]           = "View Week";
-$vocab["viewmonth"]          = "View Month";
+$vocab["viewweek"]           = "Ver Semana";
+$vocab["viewmonth"]          = "Ver Mes";
 $vocab["ppreview"]           = "Print Preview";
 
 # Used in edit_entry.php
@@ -44,7 +43,7 @@ $vocab["namebooker"]         = "Nombre Titular:";
 $vocab["fulldescription"]    = "Descripci&oacute;n Completa:<br>&nbsp;&nbsp;(N&uacute;mero de personas,<br>&nbsp;&nbsp;Interna/Externa etc)";
 $vocab["date"]               = "Fecha:";
 $vocab["start_date"]         = "Fecha Comienzo:";
-$vocab["end_date"]           = "Fecha FinalTime:";
+$vocab["end_date"]           = "Fecha Final:";
 $vocab["time"]               = "Hora:";
 $vocab["duration"]           = "Duraci&oacute;n:";
 $vocab["seconds"]            = "segundos";
@@ -70,9 +69,8 @@ $vocab["rep_end_date"]       = "Fecha tope Repetici&oacute;n:";
 $vocab["rep_rep_day"]        = "D&iacute;a Repetici&oacute;n:";
 $vocab["rep_for_weekly"]     = "(para semanal)";
 $vocab["rep_freq"]           = "Frecuencia:";
-$vocab["rep_num_weeks"]      = "Number of weeks";
-$vocab["rep_for_nweekly"]    = "(for n-weekly)";
-$vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
+$vocab["rep_num_weeks"]      = "N&uacute;mero de semanas";
+$vocab["rep_for_nweekly"]    = "(n-semanas)";
 
 # Used in view_entry.php
 $vocab["description"]        = "Descripci&oacute;n:";
@@ -93,7 +91,7 @@ $vocab["returncal"]          = "Volver a vista de calendario";
 
 # Authentication stuff
 $vocab["accessdenied"]       = "Acceso Denegado";
-$vocab["norights"]           = "No tiene autorizacioacute;n para modificar este dato.";
+$vocab["norights"]           = "No tiene autorizaci&oacute;n para modificar este dato.";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Cadena de b&uacute;squeda vac&iacute;a o incorrecta.";
@@ -112,65 +110,65 @@ $vocab["search_for"]         = "Search For";
 $vocab["from"]               = "From";
 
 # Used in report.php
-$vocab["report_on"]          = "Report on Meetings:";
-$vocab["report_start"]       = "Report start date:";
-$vocab["report_end"]         = "Report end date:";
-$vocab["match_area"]         = "Match area:";
-$vocab["match_room"]         = "Match room:";
-$vocab["match_entry"]        = "Match brief description:";
-$vocab["match_descr"]        = "Match full description:";
-$vocab["include"]            = "Include:";
-$vocab["report_only"]        = "Report only";
-$vocab["summary_only"]       = "Summary only";
-$vocab["report_and_summary"] = "Report and Summary";
-$vocab["summarize_by"]       = "Summarize by:";
-$vocab["sum_by_descrip"]     = "Brief description";
-$vocab["sum_by_creator"]     = "Creator";
-$vocab["entry_found"]        = "entry found";
-$vocab["entries_found"]      = "entries found";
-$vocab["summary_header"]     = "Summary of (Entries) Hours";
+$vocab["report_on"]          = "Reporte de Reuniones:";
+$vocab["report_start"]       = "Fecha desde:";
+$vocab["report_end"]         = "Fecha hasta:";
+$vocab["match_area"]         = "Encontrar edificio:";
+$vocab["match_room"]         = "Encontar sala:";
+$vocab["match_entry"]        = "Encontar descripci&oacute;n breve:";
+$vocab["match_descr"]        = "Encontar descripci&oacute;n completa:";
+$vocab["include"]            = "Incluir:";
+$vocab["report_only"]        = "Solamente Reporte";
+$vocab["summary_only"]       = "Solamente Resumen";
+$vocab["report_and_summary"] = "Reporte y Resumen";
+$vocab["summarize_by"]       = "Resumir por:";
+$vocab["sum_by_descrip"]     = "Descripci&oacute;n breve";
+$vocab["sum_by_creator"]     = "Creador";
+$vocab["entry_found"]        = "registro encontrado";
+$vocab["entries_found"]      = "registros encontrados";
+$vocab["summary_header"]     = "Resumen de (Registros) Horas";
 $vocab["total"]              = "Total";
-$vocab["submitquery"]        = "Run Report";
+$vocab["submitquery"]        = "Correr Reporte";
 
 # Used in week.php
-$vocab["weekbefore"]         = "Go To Week Before";
-$vocab["weekafter"]          = "Go To Week After";
-$vocab["gotothisweek"]       = "Go To This Week";
+$vocab["weekbefore"]         = "Ir a Semana Anterior";
+$vocab["weekafter"]          = "Ir a Semana Posteriorl";
+$vocab["gotothisweek"]       = "Ir a Semana Corriente";
 
 # Used in month.php
-$vocab["monthbefore"]        = "Go To Month Before";
-$vocab["monthafter"]         = "Go To Month After";
-$vocab["gotothismonth"]      = "Go To This Month";
+$vocab["monthbefore"]        = "Ir a Mes Anterior";
+$vocab["monthafter"]         = "Ir a Mes Posterior";
+$vocab["gotothismonth"]      = "Ir a Mes Corriente";
 
 # Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "No rooms defined for this area";
+$vocab["no_rooms_for_area"]  = "No hay salas definidas para este edificio";
 
 # Used in admin.php
-$vocab["edit"]               = "Edit";
-$vocab["delete"]             = "Delete";
-$vocab["rooms"]              = "Rooms";
-$vocab["in"]                 = "in";
-$vocab["noareas"]            = "No Areas";
-$vocab["addarea"]            = "Add Area";
-$vocab["name"]               = "Name";
-$vocab["noarea"]             = "No area selected";
-$vocab["browserlang"]        = "Your browser is set to use";
-$vocab["postbrowserlang"]    = "language.";
-$vocab["addroom"]            = "Add Room";
-$vocab["capacity"]           = "Capacity";
-$vocab["norooms"]            = "No rooms.";
+$vocab["edit"]               = "Editar";
+$vocab["delete"]             = "Borrar";
+$vocab["rooms"]              = "Salas";
+$vocab["in"]                 = "en";
+$vocab["noareas"]            = "No hay Edificios";
+$vocab["addarea"]            = "Agregar Edificio";
+$vocab["name"]               = "Nombre";
+$vocab["noarea"]             = "No se seleccion&oacute; edificio";
+$vocab["browserlang"]        = "Su visor esta configurado para usar lenguajes:";
+$vocab["postbrowserlang"]    = ".";
+$vocab["addroom"]            = "Agregar sala";
+$vocab["capacity"]           = "Capacidad (personas)";
+$vocab["norooms"]            = "No hay salas.";
 
 # Used in edit_area_room.php
-$vocab["editarea"]           = "Edit Area";
-$vocab["change"]             = "Change";
-$vocab["backadmin"]          = "Back to Admin";
-$vocab["editroomarea"]       = "Edit Area or Room Description";
-$vocab["editroom"]           = "Edit Room";
+$vocab["editarea"]           = "Editar Edificio";
+$vocab["change"]             = "Cambiar";
+$vocab["backadmin"]          = "Volver a Admin";
+$vocab["editroomarea"]       = "Editar Descripci&oacute;n de Edificio o Sala";
+$vocab["editroom"]           = "Editar Sala";
 
 # Used in del.php
-$vocab["deletefollowing"]    = "This will delete the following bookings";
-$vocab["sure"]               = "Are you sure?";
-$vocab["YES"]                = "YES";
+$vocab["deletefollowing"]    = "Esto borara las siguientes agendas";
+$vocab["sure"]               = "ESTA SEGURO?";
+$vocab["YES"]                = "SI";
 $vocab["NO"]                 = "NO";
 
 ?>
