@@ -190,15 +190,15 @@ else for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	# Note: int casts on database rows for min and max is needed for PHP3.
 
 	$t = max(round_t_down($row[0], $resolution, $am7), $week_start);
-	// Here we take are of daylight savings time for slot start time
+	// Here we take care of daylight savings time for slot start time
     if ( !date( "I", $t ) && date( "I", $week_midnight ) )
     {
         $t -= 3600;
     }
 	$end_t = min((int)round_t_up((int)$row[1],
-				     (int)$resolution, $am7), 
+				     (int)$resolution, $am7),
 		                     (int)$week_end+1);
-    // Here we take are of daylight savings time for slot end time
+    // Here we take care of daylight savings time for slot end time
     if ( !date( "I", $end_t ) && date( "I", $week_midnight ) )
     {
         $end_t -= 3600;
