@@ -44,7 +44,7 @@ function getWritable($creator, $user)
 	if($creator == $user)
 		return 1;
 	
-	if(authGetUserLevel($user, $auth[admin]) >= 2)
+	if(authGetUserLevel($user, $auth["admin"]) >= 2)
 		return 1;
 	
 	// Unathorised access
