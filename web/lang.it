@@ -88,7 +88,7 @@ $vocab["createdby"]          = "Creato da:";
 $vocab["lastupdate"]         = "Ultima Modifica:";
 $vocab["deleteentry"]        = "Cancella";
 $vocab["deleteseries"]       = "Cancella Series";
-$vocab["confirmdel"]         = "Sei sicuro\\nche vuoi\\ncancellare l'elemento?\\n\\n";
+$vocab["confirmdel"]         = "Sei sicuro\\nche vuoi\\ncancellare l\'elemento?\\n\\n";
 $vocab["returnprev"]         = "Ritorna alla Pagina Precedente";
 $vocab["invalid_entry_id"]   = "Invalid entry id.";
 
