@@ -75,7 +75,7 @@ $lang["room"]               = "Raum:";
 $lang["createdby"]          = "Erstellt von:";
 $lang["lastupdate"]         = "Letzte Änderung:";
 $lang["deleteentry"]        = "Eintrag löschen";
-$lang["deleteseries"]       = "Alle Eintrag löschen";
+$lang["deleteseries"]       = "Alle Einträge löschen";
 $lang["confirmdel"]         = "Sind Sie sicher,\\ndass Sie diesen Eintrag\\nlöschen wollen?\\n\\n";
 $lang["returnprev"]         = "Zurück zur vorigen Seite";
 

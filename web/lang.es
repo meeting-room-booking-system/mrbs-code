@@ -14,10 +14,10 @@ $lang["charset"]            = "iso-8859-1";
 $lang["mrbs"]               = "Sistema de Reservas de Salas de Reuni&oacute;n";
 
 # Used in functions.inc
-$lang["search_label"]       = "Search:";
-$lang["report"]             = "Report";
+$lang["search_label"]       = "B&uacute;squeda:";
+$lang["report"]             = "Informe";
 $lang["admin"]              = "Admin";
-$lang["help"]               = "Help";
+$lang["help"]               = "Ayuda";
 
 # Used in day.php3
 $lang["bookingsfor"]        = "Reservas para el";
@@ -38,6 +38,8 @@ $lang["namebooker"]         = "Nombre Titular:";
 $lang["fulldescription"]    = "Descripci&oacute;n Completa:<br>&nbsp;&nbsp;(N&uacute;mero de
 personas,<br>&nbsp;&nbsp;Interna/Externa etc)";
 $lang["date"]               = "Fecha:";
+$lang["start_date"]         = "Fecha Comienzo:";
+$lang["end_date"]           = "Fecha FinalTime:";
 $lang["time"]               = "Hora:";
 $lang["duration"]           = "Duraci&oacute;n:";
 $lang["seconds"]            = "segundos";
@@ -46,6 +48,7 @@ $lang["hours"]              = "horas";
 $lang["days"]               = "d&iacute;as";
 $lang["weeks"]              = "semanas";
 $lang["years"]              = "a&ntilde;os";
+$lang["all_day"]            = "D&iacute;a completo";
 $lang["type"]               = "Tipo:";
 $lang["internal"]           = "Interna";
 $lang["external"]           = "Externa";
@@ -63,6 +66,7 @@ $lang["rep_freq"]           = "Frecuencia:";
 
 # Used in view_entry.php3
 $lang["description"]        = "Descripci&oacute;n:";
+$lang["room"]               = "Sala:";
 $lang["createdby"]          = "Creada Por:";
 $lang["lastupdate"]         = "Ultima Actualizaci&oacute;n:";
 $lang["deleteentry"]        = "Borrar Reserva";
