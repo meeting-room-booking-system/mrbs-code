@@ -187,12 +187,14 @@ $auth["params"] = "";
 $ldap_filter = "mrbsuser=y";
 
 # 'auth_imap' configuration settings
+# See AUTHENTICATION for details of how check against multiple servers
 # Where is the IMAP server
 $imap_host = "imap-server-name";
 # The IMAP server port
-$imap_port = "143"; 
+$imap_port = "143";
 
 # 'auth_pop3' configuration settings
+# See AUTHENTICATION for details of how check against multiple servers
 # Where is the POP3 server
 $pop3_host = "pop3-server-name";
 # The POP3 server port

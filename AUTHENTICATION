@@ -385,16 +385,15 @@ If you want to use an external authentication program, set $auth["type"] =
 "ext"; and set the additional parameters:
 
     - The name of the selected program in $auth["prog"].
-    Don't forget to prefix it with "./" under Unix.
+    Don't forget to prefix it with "./" under Unix and ensure that the
+    program is executable by the "user" that the webserver runs as.
     Example:
     $auth["prog"] = "./smb_auth";
 
-    -
-
-    The arguments to pass to the above program in $auth["params"].
+    - The arguments to pass to the above program in $auth["params"].
 
     $auth["params"] = "#USERNAME# #PASSWORD#";
-    At runtime "#USERNAME#" and "#PASSWORD" will get replaced with the username
+    At runtime "#USERNAME#" and "#PASSWORD#" will get replaced with the username
     and password that the user entered to login. The string can contain other
     arguments in addition to the above two.
 
@@ -484,11 +483,9 @@ Authentication method, usable on the Internet.
 POP3 Authentication
 -------------------
 
-MRBS has POP3 Authentication support. This can be used by setting
-config.inc.php as follows:
-
-This provider will first try to authenticate using APOP, and fall back to
-standard USER/PASS if that fails.
+MRBS has POP3 Authentication support.  This method will first try to
+authenticate using APOP, and fall back to standard USER/PASS if that
+fails.  This can be used by setting config.inc.php as follows:
 
 $auth["type"] = "pop3";
 
@@ -503,12 +500,75 @@ $pop3_port = "110";
 
 You will almost certainly not need to change the POP3 port number.
 
+This method supports authentication against multiple servers using
+the syntax below:
+
+Multiple servers all using the same port:
+# 'auth_pop3' configuration settings
+# Where is the POP3 server
+$pop3_host[] = "localhost";
+$pop3_host[] = "myisp.co.uk";
+# The POP3 server port
+$pop3_port = "110";
+
+Multiple servers with the option of different ports for each server:
+# 'auth_pop3' configuration settings
+# Where is the POP3 server
+$pop3_host[] = "localhost";
+$pop3_host[] = "myisp.co.uk";
+# The POP3 server ports in the same order as the hosts
+$pop3_port[] = "110";
+$pop3_port[] = "110";
+
+Note: if you use the later configuration then an equal number of hosts
+and ports must be specified or authentication will fail.
+
+
 IMAP Authentication
 --------------------
 
 Very similar in principle to the pop3 authentication.
 
+MRBS has IMAP Authentication support. This can be used by setting
+config.inc.php as follows:
+
 $auth["type"] = "imap";
+
+Also you will need to change the section:
+
+# 'auth_imap' configuration settings
+
+# Where is the IMAP server
+$imap_host = "imap-server-name";
+# The IMAP server port
+$imap_port = "143";
+
+You will almost certainly not need to change the IMAP port number.
+
+This method supports authentication against multiple servers using
+the syntax below.  It will try all the servers until a match is found
+or it fails to authenticate the user.
+
+Multiple servers all using the same port:
+# 'auth_imap' configuration settings
+# Where is the IMAP server
+$imap_host[] = "localhost";
+$imap_host[] = "myisp.co.uk";
+# The IMAP server port
+$imap_port = "143";
+
+Multiple servers with the option of different ports for each server:
+# 'auth_imap' configuration settings
+# Where is the IMAP server
+$imap_host[] = "localhost";
+$imap_host[] = "myisp.co.uk";
+# The IMAP server ports in the same order as the hosts
+$imap_port[] = "143";
+$imap_port[] = "143";
+
+Note: if you use the later configuration then an equal number of hosts
+and ports must be specified or authentication will fail.
+
 
 LDAP Authentication
 -------------------
