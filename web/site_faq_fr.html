@@ -1,0 +1,163 @@
+<p>
+
+<b><a name=top>Authentification</a></b>
+<menu>
+<a href="#authenticate"><u>Comment est-on identifié ?</u></a><br>
+<a href="#meeting_delete"><u>Pourquoi ne puis-je pas supprimer ou modifier une
+réservation ?</u></a><br>
+</menu>
+<b>Créer / Modifier les Réservations</b>
+<menu>
+<a href="#repeating"><u>Comment créer une réservation qui se répète ?</u></a><br>
+<a href="#repeating_delete"><u>Comment supprimer une seule réservation faisant
+partie d'une répétition ?</u></a><br>
+<a href="#multiple_sites"><u>Comment réserver simultanément des salles sur
+différents sites ?</u></a><br>
+<a href="#too_many"><u>Je ne peux pas créer la réservation, j'ai le message
+&quot;<i>trop de réservations</i>"!</u></a><br>
+<a href="#multiple_users"><u>Que se passe-t'il si plusieurs personnes
+enregistrent la même réunion ?</u></a><br>
+</menu>
+<b>Divers</b>
+<menu>
+<a href="#internal_external"><u>Quelle différence entre &quot;Interne&quot; et
+&quot;Externe&quot; ?</u></a><br>
+</menu>
+<b>A propos de l'application Système de Réservation de Salles de Réunion</b>
+<menu>
+<a href="#how_much"><u>Combien cela coûte-il ?</u></a><br>
+<a href="#about"><u>Comment cela fonctionne t'il et qui l'a développé ?</u></a><br>
+</menu>
+
+
+<hr>
+<p>
+<a name=authenticate><b>Comment est-on identifié ?</b>
+<menu>
+L'application peut utiliser plusieurs méthodes d'authentification dont LDAP, Netware,
+et SMB. Contactez votre administrateur système si vous avez des problèmes pour
+entrer dans l'application. Certaines fonctionnalités sont réservées à
+certains utilisateurs, d'autres utilisateurs auront le message <i>Vous n'avez pas les droits suffisants pour faire une modification</i>.
+Voyez votre administrateur système si cela ne fonctionne pas bien pour vous. Si
+l'application utilise l'authentification LDAP, vous devez vous connecter en
+utilisant le même identifiant et mot de passe que vous utilisez pour
+récupérer votre courrier électronique, par exemple "Mark Belanger" &quot;MonMotDePasse&quot;.
+</menu>
+<a href="#top">Haut de page</a><hr>
+<p><a name="meeting_delete"><b>Pourquoi ne puis-je pas supprimer ou modifier une
+réservation ?</b></a>
+<menu>
+Pour pouvoir supprimer ou modifier une réservation, vous devez être
+authentifié comme étant la même personne qui a créé la réservation.
+Contactez soit un des administrateurs où la personne qui a créé la
+réservation pour la supprimer ou la modifier.
+</menu>
+<a href="#top">Haut de page</a><hr>
+<p><a name=repeating><b>Comment créer une réservation qui se répète ?</b></a>
+<menu>
+Après avoir cliqué sur l'heure désirée, l'écran de réservation s'affiche.
+Choisissez le <b>Type de Répétition</b> approprié. La salle sera réservée
+à la même heure, jusqu'à la <b>Date de Fin de Répétition</b>, et seulement
+pour les jours spécifiés par le <b>Type de Répétition</b>.<p>Le type <i>Jour</i>
+crée une réservation chaque jour. Le type <i>Semaine</i> répète la
+réservation pour les jours de la semaine que vous avez coché sur la ligne <b>Jour</b>.
+Par exemple, pour une répétition hebdomadaire programmée pour chaque lundi,
+jeudi et vendredi, cochez ces jours sur la ligne Jour. Si vous ne cochez pas de
+jours, la répétition aura lieu chaque semaine le même jour que celui
+initialement choisi. Le type <i>Mois</i> crée une répétition le même jour
+chaque mois, par exemple le 15 de chaque mois. Le type <i>Année</i> crée une
+répétition le même jour du même mois, par exemple chaque 15 mars. Le type <i>Mois,
+même jour semaine</i> crée une répétition un jour par mois, le même jour de
+la semaine et avec la même position ordinale de la semaine dans le mois.
+Utilisez ce type pour créer des répétitions du type le premier lundi, le
+second jeudi ou le quatrième vendredi de chaque mois par exemple. N'utilisez
+pas ce type pour des réservations après le 28ème jour du mois. Enfin le type <i>tous
+les n Semaines</i> est le même type que le type semaine mais permet de
+spécifier un intervalle de semaines, par exemple tous les mardi et jeudi toutes
+les 3 semaines.
+</menu>
+<a href="#top">Haut de page</a><hr>
+<p><a name="repeating_delete"><b>Comment supprimer une seule réservation
+faisant partie d'une répétition ?</b></a>
+<menu>
+Choisissez la salle/jour/heure que vous voulez supprimer et choisissez <b>Effacer
+une réservation</b>. Attention si vous modifiez ensuite la répétition les
+réservations supprimées individuellement reviendront.
+</menu>
+<a href="#top">Haut de page</a><hr>
+<p><a name="multiple_sites"><b>Comment réserver simultanément des salles sur
+différents sites ?</b></a>
+<menu>
+Ce n'est pas possible. Pour le moment, l'application ne peut pas enregistrer
+simultanément une réservation pour 2 salles différentes. Vous devez créer
+les réservations séparément. Assurez vous que les salles sont disponibles aux
+même périodes avant de faire la réservation.
+</menu>
+<a href="#top">Haut de page</a><hr>
+
+<p>
+<a name="too_many"><b>Je ne peux pas créer la réservation, j'ai le message
+&quot;trop de réservations&quot;!</b></a>
+<menu>
+Il est impossible de créer plus de 365 réservations pour une réunion. Cette
+limitation est nécessaire pour des raisons de sécurité. Il est possible en
+cas de besoin d'augmenter cette limite.
+</menu>
+<a href="#top">Haut de page</a><hr>
+<p><a name="multiple_users"><b>Que se passe t'il si plusieurs personnes
+enregistrent la même réunion ?</b></a>
+<menu>
+ Réponse rapide : la première personne qui clique le bouton <b>Enregistrer</b>
+ gagne.<br>
+ En fait, techniquement l'application utilise une base de donnée relationnelle
+ multi-threaded, Multi-Utilisateurs qui peut gérer plusieurs milliers
+ d'utilisateurs simultanés.
+</menu>
+<a href="#top">Haut de page</a><hr>
+
+<p>
+<a name="internal_external"><b>Quelle différence entre &quot;Interne&quot; et
+&quot;Externe&quot; ?</b></a>
+<menu>
+Par défaut, MRBS utilise deux types de réunions. <b>&quot;Interne&quot;</b> 
+correspond à des réunions d'employés. <b>&quot;Externe&quot;</b>  correspond
+à tout autre type, des clients, des vendeurs, des investisseurs, etc. Selon vos
+besoins, il est possible de créer jusqu'à 10 types de réunion. Sur la vue
+principale du calendrier, les réunions sont surlignées par une couleur
+correspondante à leur type, et une légende de tous les types définis figure
+en bas de la vue principale du calendrier.
+</menu>
+<a href="#top">Haut de page</a><hr>
+<p><a name="how_much"><b>Combien cela coûte-il ?</b></a>
+<menu>
+Rien du tout. Voir la section suivante pour plus d'informations.
+</menu>
+<a href="#top">Haut de page</a><hr>
+<p><b>C</b><a name=about><b>omment cela fonctionne t'il et qui l'a développé ?</b></a>
+<menu>
+L'application <a href="http://sourceforge.net/project/?group_id=5113">Meeting Room Booking System</a>
+ est un logiciel libre de droits dont les sources sont disponibles, qui est
+distribué selon la Gnu Public License(GPL). Cela signifie que que vous pouvez
+modifier, distribuer et utiliser ce logiciel gratuitement.<p>Cette application
+est écrite principalement dans le langage <a href="http://www.php.net">PHP</a>,
+qui est un langage de programmation libre qui peut être mixé dans les pages
+webs de façon similaire au concept des &quot;active server pages&quot; de
+Microsoft.  PHP est particulièrement bon dans l'accès aux bases de données.<p>La
+base de donnée utilisée par l'application est soit
+<a href="http://www.mysql.com">MySQL</a>, soit <a href="http://www.postgresql.org">PostgreSQL</a>.
+MySQL est un serveur de base base de données SQL (Structured Query Language)
+robuste, Multi-Utilisateurs, multi-threaded et très rapide qui est aussi sous
+licence GPL. PostgreSQL est un serveur de base de données relationnelle SQL
+libre à base d'objets, doté de nombreuses caractéristiques et
+multi-utilisateurs.<p>L'application peut fonctionner sur de nombreuses plate-formes,
+y compris sur des architectures PC utilisant le système d'exploitation <a href="http://www.linux.com">Linux</a>.&nbsp;
+Linux est un système d'exploitation libre et gratuit, similaire à unix.<p>Le
+serveur web utilisé est encore un autre logiciel libre et gratuit. Le serveur
+web <a href="http://www.apache.org">Apache</a>  est le serveur web le plus
+populaire au monde.<p>En conclusion :<br>
+<b>Chaque composant de ce système, du système d'exploitation à l'application,
+est complètement gratuit et libre, y compris le code source</b>.
+
+
+</menu>
+<a href="#top">Haut de page</a><hr>
