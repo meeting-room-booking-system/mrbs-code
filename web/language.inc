@@ -234,7 +234,7 @@ else
       # dependent on the machine's installed locales
       $locale = strtolower(substr($locale,0,2))."_".strtoupper(substr($locale,3));
     }
-    if ($lang_map_unix[$locale])
+    if (isset($lang_map_unix[$locale]) && ($lang_map_unix[$locale]))
     {
       $locale = $lang_map_unix[$locale];
     }
