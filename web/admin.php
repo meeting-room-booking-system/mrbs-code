@@ -16,6 +16,11 @@ if(!isset($day) or !isset($month) or !isset($year))
 	$year  = date("Y");
 }
 
+if (empty($area))
+{
+    $area = get_default_area();
+}
+
 if(!getAuthorised(getUserName(), getUserPassword(), 2))
 {
 	showAccessDenied($day, $month, $year, $area);
@@ -48,7 +53,7 @@ if (isset($area))
 <table border=1>
 <tr>
 <th><center><b><?php echo get_vocab("areas") ?></b></center></th>
-<th><center><b><?php echo get_vocab("rooms") ?> <?php if(isset($area)) { echo get_vocab("in") . " " .
+<th><center><b><?php echo get_vocab("rooms") ?> <?php if(isset($area_name)) { echo get_vocab("in") . " " .
   htmlspecialchars($area_name); }?></b></center></th>
 </tr>
 
