@@ -184,17 +184,15 @@ if (mysql_num_rows($res) == 0) {
 			}
 			echo "<td class=\"$c\">";
 			#If the room isnt booked then allow it to be booked
-			if (!$id) {
+			if (!$id)
+			{
 				$hour = date("H",$t); $minute  = date("i",$t);
 
-				if (($REMOTE_ADDR <> '137.40.98.5') or ($login <> 'guest')) {
-					echo "<center><a href=edit_entry.php3?room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day><img
-					src=new.gif border=0></a></center>";
-				} else {
-					echo "&nbsp;";
-				}
-			} else {
-			#if it is booked then show 
+				echo "<center><a href=edit_entry.php3?room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day><img src=new.gif border=0></a></center>";
+			}
+			else
+			{
+				#if it is booked then show 
 				echo " <a href=view_entry.php3?id=$id>$descr&nbsp;</a>";
 			}
 
