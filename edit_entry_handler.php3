@@ -69,7 +69,7 @@ else
 if(isset($rep_type) && isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
 {
 	// Get the repeat entry settings
-	$rep_enddate = mktime(0, 0, 0, $rep_end_month, $rep_end_day, $rep_end_year);
+	$rep_enddate = mktime($hour, $minute, 0, $rep_end_month, $rep_end_day, $rep_end_year);
 }
 else
 	$rep_type = 0;
