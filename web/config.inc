@@ -115,6 +115,12 @@ $imap_host = "imap-server-name";
 # The IMAP server port
 $imap_port = "143"; 
 
+# 'auth_pop3' configuration settings
+# Where is the POP3 server
+$pop3_host = "pop3-server-name";
+# The POP3 server port
+$pop3_port = "110";
+
 ##########
 # Language
 ##########

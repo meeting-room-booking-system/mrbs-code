@@ -237,6 +237,27 @@ Note that this has been oly tested with Red Hat 7.x. Feedback on whether
 this works on other  systems ( eg. Solaris) is appreciated.
 
 
+POP3 Authentication
+-------------------
+
+MRBS has POP3 Authentication support. This can be used by setting config.inc as follows:
+
+$auth["realm"]  = "MY REALM";
+$auth["type"]   = "pop3";
+$auth["prog"]   = "";
+$auth["params"] = "";
+
+Also you will need to change the section:
+
+# 'auth_pop3' configuration settings
+# Where is the POP3 server
+$pop3_host = "pop3-server-name";
+# The POP3 server port
+$pop3_port = "110";
+
+You will almost certainly not need to change the POP3 port number.
+
+
 
 Creating a new authentication scheme
 ------------------------------------
@@ -292,6 +313,6 @@ The "auth_ip.inc" shows how it is possible to use any arbitrary value as the
 If you do create some new authentication provider, then please send it to
 me and I'll include it in the main distribution.
 
-Daniel <daniel@pl14759.demon.co.uk>
+Daniel Gardner <daniel@danielgardner.org>
 
 $Id$
