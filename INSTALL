@@ -408,6 +408,12 @@ scheme other than 'auth_db', you need to provide the mail domain that will
 be appended to the username to produce a valid email address (ie.
 "@domain.com").
 
+MAIL_USERNAME_SUFFIX
+
+If you use MAIL_DOMAIN above and username returned by mrbs contains extra
+strings appended like domain name ('username.domain'), you need to provide
+this extra string here so that it will be removed from the username.
+
 MAIL_ADMIN_BACKEND
 
 Set the name of the backend to use to transport your mails. Either "mail",

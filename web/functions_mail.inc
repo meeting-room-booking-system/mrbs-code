@@ -118,26 +118,26 @@ function notifyAdminOnBooking($new_entry , $new_id)
             (! $res) ? fatal_error(0, sql_error()) : '';
             $row = sql_row($res, 0);
             sql_free($res);
-            if ( empty($recipients) && (NULL != $row[0]) )
+            if ( !empty($recipients) && (NULL != $row[0]) )
+            {
+                $recipients .= ',';
+            }
+            if (NULL != $row[0])
             {
                 $recipients .= $row[0];
-            }
-            elseif ( !empty($recipients) && (NULL != $row[0]) )
-            {
-                $recipients .= ',' . $row[0];
             }
         }
         else
         // if this is an edited entry, we already have area_admin_email,
         // avoiding a database hit.
         {
-           if ( empty($recipients) && ('' != $mail_previous['area_admin_email']) )
+           if ( !empty($recipients) && ('' != $mail_previous['area_admin_email']) )
+           {
+               $recipients .= ',';
+           }
+           if ('' != $mail_previous['area_admin_email'])
            {
                $recipients .= $mail_previous['area_admin_email'];
-           }
-           elseif ( !empty($recipients) && ('' != $mail_previous['area_admin_email']) )
-           {
-               $recipients .= ',' . $mail_previous['area_admin_email'];
            }
         }
     }
@@ -153,26 +153,26 @@ function notifyAdminOnBooking($new_entry , $new_id)
             (! $res) ? fatal_error(0, sql_error()) : '';
             $row = sql_row($res, 0);
             sql_free($res);
-            if ( empty($recipients) && (NULL != $row[0]) )
+            if ( !empty($recipients) && (NULL != $row[0]) )
+            {
+                $recipients .= ',';
+            }
+            if (NULL != $row[0])
             {
                 $recipients .= $row[0];
-            }
-            elseif ( !empty($recipients) && (NULL != $row[0]) )
-            {
-                $recipients .= ',' . $row[0];
             }
         }
         else
         // if this is an edited entry, we already have room_admin_email,
         // avoiding a database hit.
         {
-           if ( empty($recipients) && ('' != $mail_previous['room_admin_email']) )
+           if ( !empty($recipients) && ('' != $mail_previous['room_admin_email']) )
+           {
+               $recipients .= ',';
+           }
+           if ('' != $mail_previous['room_admin_email'])
            {
                $recipients .= $mail_previous['room_admin_email'];
-           }
-           elseif ( !empty($recipients) && ('' != $mail_previous['room_admin_email']) )
-           {
-               $recipients .= ',' . $mail_previous['room_admin_email'];
            }
         }
     }
@@ -192,38 +192,39 @@ function notifyAdminOnBooking($new_entry , $new_id)
             $res = sql_query($sql);
             (! $res) ? fatal_error(0, sql_error()) : '';
             $row = sql_row($res, 0);
-            if ( empty($recipients) && (NULL != $row[0]) )
+            if ( !empty($recipients) && (NULL != $row[0]) )
+            {
+                $recipients .= ',';
+            }
+            if (NULL != $row[0])
             {
                 $recipients .= $row[0];
-            }
-            elseif ( !empty($recipients) && (NULL != $row[0]) )
-            {
-                $recipients .= ',' . $row[0];
             }
         }
         else
         {
             if ($new_entry)
             {
-                if ( empty($recipients) && ('' != $create_by) )
+                if ( !empty($recipients) && ('' != $create_by) )
                 {
-                    $recipients .= $create_by . MAIL_DOMAIN;
+                    $recipients .= ',';
                 }
-                elseif ( !empty($recipients) && ('' != $create_by) )
+                if ('' != $create_by)
                 {
-                    $recipients .= ',' . $create_by . MAIL_DOMAIN;
+                    $recipients .= str_replace(MAIL_USERNAME_SUFFIX, '',
+                        $create_by) . MAIL_DOMAIN;
                 }
             }
             else
             {
-                if ( empty($recipients) && ('' != $mail_previous['createdby']) )
+                if ( !empty($recipients) && ('' != $mail_previous['createdby']) )
                 {
-                    $recipients .= $mail_previous['createdby'] . MAIL_DOMAIN;
+                    $recipients .= ',';
                 }
-                elseif ( !empty($recipients) && ('' != $mail_previous['createdby']) )
+                if ('' != $mail_previous['createdby'])
                 {
-                    $recipients .= ',' . $mail_previous['createdby'] .
-                        MAIL_DOMAIN;
+                    $recipients .= str_replace(MAIL_USERNAME_SUFFIX, '',
+                        $mail_previous['createdby']) . MAIL_DOMAIN;
                 }
             }
         }
@@ -351,24 +352,24 @@ function notifyAdminOnDelete($mail_previous)
     (MAIL_ADMIN_ON_BOOKINGS) ? $recipients = MAIL_RECIPIENTS : '';
     if (MAIL_AREA_ADMIN_ON_BOOKINGS)
     {
-        if ( empty($recipients) && ('' != $mail_previous['area_admin_email']) )
+        if ( !empty($recipients) && ('' != $mail_previous['area_admin_email']) )
+        {
+            $recipients .= ',';
+        }
+        if ('' != $mail_previous['area_admin_email'])
         {
             $recipients .= $mail_previous['area_admin_email'];
-        }
-        elseif ( !empty($recipients) && ('' != $mail_previous['area_admin_email']) )
-        {
-            $recipients .= ',' . $mail_previous['area_admin_email'];
         }
     }
     if (MAIL_ROOM_ADMIN_ON_BOOKINGS)
     {
-        if ( empty($recipients) && ('' != $mail_previous['room_admin_email']) )
+        if ( !empty($recipients) && ('' != $mail_previous['room_admin_email']) )
+        {
+            $recipients .= ',';
+        }
+        if ('' != $mail_previous['room_admin_email'])
         {
             $recipients .= $mail_previous['room_admin_email'];
-        }
-        elseif ( !empty($recipients) && ('' != $mail_previous['room_admin_email']) )
-        {
-            $recipients .= ',' . $mail_previous['room_admin_email'];
         }
     }
     if (MAIL_BOOKER)
@@ -387,25 +388,25 @@ function notifyAdminOnDelete($mail_previous)
             $res = sql_query($sql);
             (! $res) ? fatal_error(0, sql_error()) : '';
             $row = sql_row($res, 0);
-            if ( empty($recipients) && (NULL != $row[0]) )
+            if ( !empty($recipients) && (NULL != $row[0]) )
+            {
+                $recipients .= ',';
+            }
+            if (NULL != $row[0])
             {
                 $recipients .= $row[0];
-            }
-            elseif ( !empty($recipients) && (NULL != $row[0]) )
-            {
-                $recipients .= ',' . $row[0];
             }
         }
         else
         {
-            if ( empty($recipients) && ('' != $mail_previous['createdby']) )
+            if ( !empty($recipients) && ('' != $mail_previous['createdby']) )
             {
-                $recipients .= $mail_previous['createdby'] . MAIL_DOMAIN;
+                $recipients .= ',';
             }
-            elseif ( !empty($recipients) && ('' != $mail_previous['createdby']) )
+            if ('' != $mail_previous['createdby'])
             {
-                $recipients .= ',' . $mail_previous['createdby'] .
-                    MAIL_DOMAIN;
+                $recipients .= str_replace(MAIL_USERNAME_SUFFIX, '',
+                    $mail_previous['createdby']) . MAIL_DOMAIN;
             }
         }
     }
