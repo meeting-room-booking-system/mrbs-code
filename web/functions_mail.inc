@@ -4,7 +4,7 @@
 // +---------------------------------------------------------------------------+
 // | Functions dedicated to emails handling.                                   |
 // |---------------------------------------------------------------------------+
-// | I keeped these finctions in s separated file to avoid burden the main     |
+// | I keeped these functions in a separated file to avoid burden the main     |
 // | function.inc files if emails are not used.                                |
 // |                                                                           |
 // | USE : This file should be included in all files where emails functions    |
