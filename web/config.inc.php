@@ -416,6 +416,6 @@ $tbl_room   = $db_tbl_prefix . "room";
 $tbl_users  = $db_tbl_prefix . "users";
 
 # MRBS developers, make sure to update this string before each release:
-$mrbs_version = "MRBS 1.2-pre3";
+$mrbs_version = "MRBS 1.2";
 
 ?>
