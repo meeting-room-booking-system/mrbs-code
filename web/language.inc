@@ -131,7 +131,7 @@ setlocale(LC_ALL,'C');
 # environment variable. If this doesn't work for you, comment it out
 # and assign locale directly.
 # If HTTP_ACCEPT_LANGUAGE is a comma-separated list, take the first one.
-$locale = ereg_replace(",.*", "", getenv('HTTP_ACCEPT_LANGUAGE'));
+$locale = ereg_replace(",.*", "", $HTTP_ACCEPT_LANGUAGE);
 
 
 # The following attempts to import a language based on what the client
