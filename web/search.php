@@ -65,6 +65,11 @@ $sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_text)
         . " OR " . sql_syntax_caseless_contains("E.description", $search_text)
         . ") AND E.end_time > $now";
 
+if ($debug_flag)
+{
+    echo "<p>DEBUG: SQL: <tt> SELECT count(*) FROM mrbs_entry E WHERE $sql_pred </tt><BR>";
+}
+
 // The first time the search is called, we get the total
 // number of matches.  This is passed along to subsequent
 // searches so that we don't have to run it for each page.
@@ -97,6 +102,11 @@ $sql = "SELECT E.id, E.create_by, E.name, E.description, E.start_time, R.area_id
         WHERE $sql_pred
         AND E.room_id = R.id
         ORDER BY E.start_time asc";
+
+if ($debug_flag)
+{
+    echo "<p>DEBUG: SQL: <tt> $sql </tt><BR>";
+}
 
 // this is a flag to tell us not to display a "Next" link
 $types = array('integer', 'text', 'text', 'text', 'integer', 'integer');
