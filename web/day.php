@@ -3,9 +3,9 @@
 
 require_once "grab_globals.inc.php";
 include "config.inc.php";
-include "mrbs_auth.inc";
 include "functions.inc";
 include "$dbsys.inc";
+include "mrbs_auth.inc";
 include "mincals.inc";
 
 #If we dont know the right date then make it up 
