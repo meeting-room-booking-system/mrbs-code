@@ -1,438 +1,1106 @@
-CVS (Mon May 12           GMT 2003)
-   - Changed mrbs_sql.inc so that when a 5th week "Monthly repeat, same day of 
-     the week" is selected, subsequent repeated meetings switch to the 5th
-     week when possible after falling back to the 4th week.
+2003-08-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-CVS (Sat May 10           GMT 2003)
-   - Fixed bug : when selecting a "Monthly repeat, same day of the week" repeat 
-     type in the 5th week, repeated meetings are not properly scheduled. Now if 
-     no 5th week exist, the 4th week is selected instead for all subsequent
-     repeated meetings.
+	* NEWS (1.1): * Added a NEWS file which contains a list of
+	  user-visible changes worth mentioning (as per GNU Coding
+	  Standards). Content pasted from the previous ChangeLog file which
+	  was a NEWS file in fact, except last CVS entries which should go
+	  to the ChangeLog file.
 
-CVS (Thu May 08           GMT 2003)
-   - Fixed bug : when you press on print preview in report.php page, all but 
-     the submission form is visible but not the actual report 
-     (<sQuare>mrbs@synapse.plus.com). 
+2003-01-09  Daniel <nambit@users.sourceforge.net>
 
-CVS (Fri Apr 25           GMT 2003)
-   + in the minicalendar week view, the full week is highlighted instead of
-     the first day of the week (<sQuare>mrbs@synapse.plus.com).
+	* AUTHENTICATION (1.14, mrbs-1-1): add a note about using APOP
 
-CVS (Fri Apr 18 02:21:56  GMT 2003)
-   - Fixed bug : in week view, allow non 'internet explorer' browsers to see
-     links to the corresponding days in column titles
-     (Johan.Schonning@uab.ericsson.se).
+2003-01-09  Daniel <nambit@users.sourceforge.net>
 
-CVS (Thu Apr 17           GMT 2003)
-   + Entries in monthly view can be shown as start/end slot or brief description
-     (Matt Payton (mpayton@hunterdonhealth.com))
+	* AUTHENTICATION (1.13): New authentication provider which uses a
+	  POP3 mail server.
 
-CVS (Tue Apr 15           GMT 2003)
-   + replaced the column titles in the week view to be links to the
-     corresponding days. This makes it easier for users to access the day view
-     from the week view without having to scroll down to the bottom of the page.
-     (<sQuare>mrbs@synapse.plus.com)
+	  Can authenticate using APOP or standard USER/PASS
 
-CVS (Wed Apr 09           GMT 2003)
-   - Fixed bug : if AM/PM hour format is used, bookings between
-     12:00 AM and 12:59 AM are stored with a wrong start date.
+2002-10-08  John Beranek <jberanek@users.sourceforge.net>
 
-CVS (Mon Mar 31           GMT 2003)
-   - bug fix : italian vocab with one character not properly escaped prevents 
-     deleting entries and/or prevent javascript popup to works (Pietro donatini)
+	* smb_auth.c (1.2, mrbs-1-1):
+	     - Changed all uses of <? to <?php.
 
-CVS (Fri Mar 28           GMT 2003)
-   - Fixed bug in escaping of username and password for
-     all authentication schemes that use HTTP authentication.
+	     - Merged change from John Beranek for an Advanced search
+	  function,
+	       requires 3 more translation tokens, which have been added to
+	       each language file, "search_button" should be OK, as I took
+	       the text from each language's "search" token.
 
-CVS (Thu Mar 27           GMT 2003)
-   - Fixed bug : if AM/PM hour format is used, bookings between
-     12:00 PM and 12:59 PM are stored with a wrong start date.
+	     - Fixed 2 problems in edit_entry.php as submitted on the
+	  mailing list.
 
-CVS (Tue Mar 11           GMT 2003)
-   + Added translation:     Danish (Claes Bolvig Pedersen (cp@dhi.dk))
-   - changed mrbs_version in help.php to "MRBS 1.1"
+	     - Added small enchancement to smb_auth.c, if you pass a
+	  username
+	       as group/user, it will change the NT group that is used for
+	       authentication.
 
-CVS (Wed Mar 05           GMT 2003)
-   + Make MRBS compliant to the 'register_globals = off' directive
-   + added translation:     Portuguese (Lopo Pizarro)	
+	     - Improved shell escaping in auth_ext.inc. It now uses
+	       escapeshellarg() instead of escapeshellcmd(). If your PHP
+	       version is less than 4.0.3, then it includes
+	  escapeshellarg.inc
+	       which is a local implementation of that function.
 
-CVS (Thu Jan 30           GMT 2003)
-   + added translation:     Finnish (Vesa Palmu)
+	     - Added updated Frech translation, as provided by Thierry
+	  Wehr.
 
-CVS (Wed Jan 29           GMT 2003)
-   - Minor translations updates in lang.fr, lang.no (Tobias)
-   - 1 vocab added in functions.inc
-   - Bug fix : if "select" is choosen in config.inc to show areas/rooms as a
-     drop-down select box, an sql error occurs when the "change" button is 
-     clicked (mostly used for non javascript users).
+	     - Tided all language files again, they all have the same
+	  format
+	       and number of lines now, and are all missing at least 2
+	  translations
+	       because of the new advanced search functionality.
 
-Version 1.1 (Tue Jan 14 10:00:00 GMT 2003)
-   + Added configuration option ($twentyfourhour_format) to allow time
-     formats to be changed to 12 hour format.
-   - Updated all language files to be consistant
-   - Changed minicals so they point to week when on week view and month on
-     month view, rather than always pointing at day view
-   - Changed occurences of "<?=" to "<?php echo" which means we still
-     use the long tag form everywhere.
-   - Removed all remainings english strings to make MRBS 100% translatable
-     * Added new $vocab to del.php, edit_area_room.php, edit_entry.php,
-       edit_entry_handler.php, help.php, mysql.inc, pgsql.inc, view_entry.php,
-       functions.inc
-   - Modified config.inc language section to choose a site_faq.html file
-       translated in another language.
-     * Modified help.php to take these changes into account.
-     * Added site_faq_fr.html (french)
-   + Added auth_name.inc, a auth_ip.inc variant using DNS name instead of ip.
-   + Added auth_omni.inc for use with OmniHTTPd web server security features
-   - Change search.php to remove warnings introduced with PHP 4.3.0
-   - Change trailer.inc to make print preview more likely to work on
-     windows and non-apache servers
+	     - Fixed a number of bugs to make the Taiwanese translation
+	  work.
+	       The code to include language files based on
+	  HTTP_ACCEPT_LANGUAGE
+	       has been improved, which ensures lang.zh-tw is included.
+	       Additionally, mincals.inc not longer does a substr() on the
+	       abbreviated weekday names, as this breaks terribly for any
+	       multibyte encoding, as it was only taking the first byte
+	       of a multibyte encoding. This has the impact that you now
+	       get Mon,Tue,Wed etc instead of M,T,W (using glibc's en_GB
+	       locale).
 
-Version 1.1-pre2 (Thu Jan  9 17:50:00 GMT 2003)
+	     - print_header() now outputs a DOCTYPE identifier as well as
+	       sending Pragma: no-cache and an Expires: header in the
+	       past. This should help ensure the calendar pages don't get
+	  cached.
 
-   + New POP3 authentication scheme (Daniel Gardner)
-   - Updated Spanish translation
-   - Fix for edit entry page. We now determine the area id
-     of the room the meeting we're editting is in before
-     getting a list of the rooms in that area. This solves
-     a number of errors that occur when editting/creating
-     bookings.
-   - Fixes submitted/suggested by Jean-François Larvoire:
-    * Added closing ?> to index.php
-    * Added "global $refresh_rate;" to style.inc
-    * Fixed all occurences (hopefully) of $vocab[] indices
-      written without surrounding quotes.
-   - Changed all uses of <? to <?php.
-   - Merged change from John Beranek for an Advanced search function,
-     requires 3 more translation tokens, which have been added to
-     each language file, "search_button" should be OK, as I took
-     the text from each language's "search" token.
-   - Fixed 2 problems in edit_entry.php as submitted on the mailing list.
-   - Added small enchancement to smb_auth.c, if you pass a username
-     as group/user, it will change the NT group that is used for
-     authentication.
-   - Improved shell escaping in auth_ext.inc. It now uses
-     escapeshellarg() instead of escapeshellcmd(). If your PHP
-     version is less than 4.0.3, then it includes escapeshellarg.inc
-     which is a local implementation of that function.
-   - Added updated Frech translation, as provided by Thierry Wehr.
-   - Tided all language files again, they all have the same format
-     and number of lines now, and are all missing at least 2 translations
-     because of the new advanced search functionality.
-   - Fixed a number of bugs to make the Taiwanese translation work.
-     The code to include language files based on HTTP_ACCEPT_LANGUAGE
-     has been improved, which ensures lang.zh-tw is included.
-     Additionally, mincals.inc not longer does a substr() on the
-     abbreviated weekday names, as this breaks terribly for any
-     multibyte encoding, as it was only taking the first byte
-     of a multibyte encoding. This has the impact that you now
-     get Mon,Tue,Wed etc instead of M,T,W (using glibc's en_GB
-     locale).
-   - print_header() now outputs a DOCTYPE identifier as well as
-     sending Pragma no-cache and an Expires header in the
-     past. This should help ensure the web pages don't get cached.
+2002-05-11  Daniel <nambit@users.sourceforge.net>
 
-Version 1.1-pre1 (Thu May 30 12:41:02 BST 2002)
-   + add config option for drop-down boxes to select area and room
-          (Thanks to sponsorship of LTC Corporation)
-   + allow multiple rooms to be booked at the same time
-          (Thanks to sponsorship of the City of Wayne and LAEP)
-   + document need for register_globals() with new PHP versions
-   + add auth_nis.inc from Jeff Hoover (jberanek)
-   + add auth_imap.inc
-   + add warning about PHP3 not working
-   + new language tokens
+	* INSTALL (1.12), README (1.8) (utags: mrbs-1-1): stop saying that
+	  PHP3 will work
 
-   - Stop problem where all strings turn to "N"
-   - Fixes a problem where $resolution is an odd amount
-   - extra javascript validation around n-weekly bookings
-   - extra array index quoting to stop newer php warnings
-   - Commented all authentication schemes (jberanek)
-   - Change mrbs_repeat schema for postgres (mrbs_repeat.rep_num_weeks => smallint)
-   - replace poxix_uname with php_uname function for portability
-   - Declare $HTTP_ACCEPT_LANGUAGE global in config.inc
-   - some int casts to fix a bug from sourceforge
-   - language files normalised
+2002-05-11  Daniel <nambit@users.sourceforge.net>
 
-   - update translations: Norway, Rune Johansen
-                          France,
-			  Italy, Gianni
-			  Netherlands, Marc ter Horst
-			  Sweden, Hakan Nilsson
-			  Germany, Michael Redinger
+	* checklang.php (1.4, mrbs-1-1): change last $lang to $vocab
 
-   + add translation:     Czech, SmEjDiL
+2002-05-09  Daniel <nambit@users.sourceforge.net>
 
-Version 1.0 (Thu Aug 30 22:26:54 BST 2001)
-    Added two upgrade.xx.sql files which should have been in -pre2
+	* LANGUAGE (1.9, mrbs-1-1), auth_cookie_ext.inc (1.3, mrbs-1-1),
+	  checklang.php (1.3):	   Change every $lang to $vocab to stop
+	  conflicts with other software
+	      that's used $lang (lots of people have seen "N" appear
+	  everywhere
+	      $lang variables should be)
 
-Version 1.0-pre2 (Sun Jul  8 13:43:53 BST 2001)
-    Incorporated diff from Scott Leonard that allows you to configure a refresh
-     time for roombooker web pages.  Set config variable $refresh_rate to the
-     number of seconds to refresh after, or set to 0 to disable.
-    Implemented "n-weekly" repeat type. Not sure I like the way it's phrased in
-     the lang files, but the code works fine.  You can now have a meeting that is
-     repeated every 'n' weeks. e.g. every 5th Monday.  This required a database
-     change, which I've made available in upgrade2.my.sql and upgrade2.pg.sql
-    Tidied lang files, and ensured every file has all the required tokens.
-     'wc -l lang.*' now shows all the files as having the same line count.
-     Quite a few languages now have English bits in them though.
-    Incorporated diffs from Tim Bell that allow you to configure a filter
-     for LDAP authentication.
-    Incorporated diffs from Tim Bell that solve problems with bookings made
-     for times that have smaller granularity that the configured booking
-     resolution.
+2002-05-08  Daniel <nambit@users.sourceforge.net>
 
-    Fixed config.inc so that the correct lang.xx is included if
-     HTTP_ACCEPT_LANGUAGE is a comma-seperated list like "sv, en".
+	* INSTALL (1.11): document need for register_globals
 
-    Copied "rep_type_5" language token into Swedish and Spanish language
-     files from English file.  Swedish and Spanish users were not able
-     to use "monthly, corresponding day" repeats without the token being
-     present.
+2002-02-07  John Beranek <jberanek@users.sourceforge.net>
 
-    Checked in updates to lang.es (received from Pablo Gomez) and lang.de
-    (received by Bernd Oeggl).
+	* UPGRADE (1.5), tables.pg.sql (1.4), upgrade2.pg.sql (1.2) (utags:
+	  mrbs-1-1): * Added instructions into UPGRADE readme for
+	  upgrade2.[my|pg].ql scripts  that are required to upgrade from an
+	  older MRBS installation.
 
-    Update lang.nl file (marc ter horst)
+	  * Added new language tokens, using patch supplied by Michael
+	  Redinger.
 
-Version 1.0-pre1 (Sun Mar  4 23:26:43 GMT 2001)
-    Internationalised functions.inc. "Help", "Admin" and "Search:" are now lang
-    strings. Also, fixed an error in lang.fr, $vocab["mrbs"] was defined twice.
-    (jberanek)
+	  * Added new or updated translations for:     Italy (Gianni)
+	  Netherlands  (Marc ter Horst)     Norway (Rune Johansen)
+	  Sweden (Hakan Nilsson)     German (Michael Redinger)
 
-    Added double quotes around all uses of color and class attributes, as HTML
-    dictates. (jberanek)
+	  * Added auth_imap.inc, an authentication scheme that uses IMAP,
+	  this includes a few more (commented out) lines in config.inc
 
-    On conflict, show start time and link to day/week/month views (redinger)
-    Link each search result start time to entry's day view (bernd, beranak)
+	  * Changed datatype of 'rep_num_weeks' in 'mrbs_repeat' table for
+	  PostgreSQL installs.	We now use smallint instead of tinyint,  as
+	  tinyint isn't available.
 
-    Branch Merge (2001-02-24 ljb):
-    Incorporated all changes from branch mrbs-0-9-1xp into CVS trunk.
-    Undoes post-branch change (0.9.2) to remove "weekstarts" function.
-    Fix undefined variable warning $edit_type in edit_entry.php
+	  * Changed config.inc to use getenv('HTTP_ACCEPT_LANGUAGE')
+	  instead  of $HTTP_ACCEPT_LANGUAGE...much tidier.
 
-Version 0.9.2 (Fri Feb  9 20:09:42 GMT 2001)
-	Remove "weekstarts" functionality
+2001-07-16  John Beranek <jberanek@users.sourceforge.net>
 
-Branch mrbs-0-9-1xp (2001-02-13 daniel):
-    Added $I d$ tags to all files.
+	* upgrade2.my.sql (1.1, mrbs-1-1), upgrade2.pg.sql (1.1) (utags:
+	  mrbs-1-0-final):
+	   * Added these upgrade SQL files.  Don't know how I forgot to add
+	  them!
 
-Branch mrbs-0-9-1xp (2001-02-10 ljb):
-    For PHP4, rename *.php3 to *.php and changed all links.
-    Major changes for database support for PostgreSQL:
-        Original tables.sql renamed tables.my.sql for MySQL.
-        Move sample data from tables.sql to sample-data.sql.
-        New tables.pg.sql to build tables for PostgreSQL.
-        New destroy.pg.sql to delete PostgreSQL tables and sequences.
-        New grant.pg.sql - edit this and run to grant PostgreSQL rights.
-        Replaced connect.inc with mysql.inc and pgsql.inc.
-        New variable in config.inc "$dbsys" selects "mysql" or "pgsql".
-        Renamed variables in config.inc to replace "mysql_" prefix with "db_".
-        New wrapper funtions (see README.sqlapi) to encapsulate database calls.
-        New pgsql.inc provides PostgreSQL implementation, and connects.
-        New mysql.inc provides MySQL implementation, and connects.
-        Rewrote all database calls to use wrapper functions.
-        Rewrote all SQL statements to be standards-compliant, where possible.
-            Used new wrapper routines where non-standard SQL is needed.
-            Replace LEFT JOIN sequence with predicate-based joins.
-        Changes to all error handling to ensure errors are properly reported.
-    New week.php for Week View. (Experimental)
-    New month.php for Month View. (Experimental)
-    Added rows of links in trailer.inc to new month and week views.
-    Changed Entry Type from 2 values (I=Internal, E=External) to 10 values.
-        By default only the same 2 are defined in config.inc.
-        Style sheet contains colors for 10 types.
-        Selection box for type in edit/add entry form is dynamically built.
-        Color key in day view dynamically built from defined types.
-        Color key in day view moved to bottom of page.
-    New Report function, linked from new button in the header. This makes
-        a report on entries selected by date range and match strings.
-    Add config.inc option db_nopersist to not use peristent DB connections.
-    Add missing args to print_header call in del.php.
-    Add config option eveningends_minutes to allow full 24 hour display with
-        more resolution than 1 hour; also allows better control over the
-        displayed hours, for example the last slot can now be 16:30-17:00.
-    Removed unused functions from functions.inc: get_sunday_before()
-        print_date_entries() display_unapproved_events() display_time()
-        mysql_date_to_str() get_webrowser() hextoint() decode_str() encode_str()
-        Also removed load_user_preferences code and calls to it.
-    Remove redundant includes: functions.inc now assumes config.inc was
-        included and does not include it again; search.php and view_entry.php do
-        not need authentication so they don't need to include mrbs_auth.inc.
-        Removed redundant connect to datbase in search.php.
-    New error function fatal_error() to ensure errors are in a proper HTML page.
-    Added new repeat type 5: Montly repeat, corresponding weekday and week.
-    New authentication for Netware: auth_nw.inc (see README.nwauth). This is
-        needed because nwauth takes the password on stdin, not cmdline.
-    Used weblint to validate output pages and corrected HTML where needed.
-        Quote all attribute values, fix bad attributes, balance tags.
-    Moved HTML end tags into trailer.inc.
-    Changed trailer to put " | " between dates, instead of ", " after each.
-    In print_header, fix bad position of style.inc; must be in <HEAD> block.
-    Fix syntax error when adding room if no capacity given (use 0).
-    Change day.php to output equal-width room columns with centered headers.
-    search.php: Use COUNT(*) and no ORDER BY when just getting match count.
-    Fixed typo in view_entry.php on building up per-day repeat option string.
-    Redesign loop for adding repeat dates to prevent it from scheduling 1 past
-        the end date if the end date wasn't a date to schedule.
-    Add "about" section to help.php to display viersion, system, database.
-    Patch from BoK: fix "2 Decembers displayed if you pick "31 Nov" and Go.
-        This makes sure the selected date is a valid date.
-    Patch from robc: Fix to prevent edit entry to make it overlap another.
-    New feature from Bo: Edit area and room names (new edit_area_room.php).
-    Sort (order) the room names alphabetically in the main display (day.php).
-    Changes found in CVS source:
-    Changed "Booker's Name" to "Brief Description" (was in post-0.9pre1 CVS)
-    View_entry uses multi-table query to show room description too (was in CVS)
-    If no area is supplied, don't use 1 (or 0) since there might not be such
-        an area (if it was deleted). Instead, use new get_default_area() which
-        gets the lowest-numbered area.  In print_header(), don't pass along
-        area as a hidden parameter if it wasn't supplied in the first place.
-    Patch from BoK: Booking repeat Sat/Sun, only entered first Sun.
-    Fixes to PHP magic quoting. We now turn of magic_quotes_runtime always,
-        and use new slashes() and unslashes() to conditionaly deal with
-        backslack-quotes depending on value of PHP's magic_quotes_gpc setting.
-        NOTE: Possibly slightly incompatible change. Prior versions may have
-        put pre-quoted values (area name, room name, booking name, booking
-        description) into the database tables. This was wrong. If so, you
-        will see funny \'s in the value displays.
-        MRBS now should properly quote and unquote all values behind the scenes.
-    Admin.php gets the area name from the database if it only has the ID.
-    Patch from BoK: fix duplicate bookings from failure to delete caused by
-        bad entry_type change to 2.
-    Updates to site_faq.html - describe repeats, generalize Authentication info.
-    Use a mutual exclusion lock (mutex) when adding an entry to prevent races.
-    New maintenance SQL scripts: purge.my.sql and purge.pg.sql to delete old
-        entries from your database (default 30 days old).
-    Fixed field alignment in Add/Edit Entry form to right-justify labels.
-    Security: Use EscapeShellCmd() on username and password in auth_ext.inc
-    Fixed function toTimeString() to use lang[] for time units (I18N).
-    Streamlined main query in day.php: omit unused columns, improve predicate
-        to select by times from 6 compares to 2.
-    In day.php, only fill in map entries during the day hours of interest.
-    In lang.* language files, fixed quoting (found in CVS), comments, strip
-        CRs and fixed some typos.
-    Use double quotes around all string array indexes except inside strings.
-        This avoids a PHP notice-level warning on each array reference.
-    Fix undefined variable references to avoid notice-level PHP warnings.
-    Bug fix: round meeting times up to $resolution units, not 30 minutes, and
-        don't allow 0 minute meetings - make them 1 resolution unit instead.
-    When using the footer to change dates, remember the current area.
-    Changed view_entry to always show both time and date for start and end time;
-        the CVS version was buggy and quirky in suppressing the date or time if
-        it thought they were not important. Better to show too much info.
-    New weekstarts and dateformat (Jan 01 vs 01 Jan) config (from BoK),
-        generalized to show the week starting on any day.
-    Add inline colors for non-CSS browsers (based on patch from John Beranek).
-    Added current date header above day display (from John Beranek).
+2001-07-02  John Beranek <jberanek@users.sourceforge.net>
 
-Version 0.9.1 (Sun Feb  4 21:56:09 GMT 2001)
-	Fixed bug in mincals (sourceforge 'nobody') 
+	* tables.my.sql (1.3, mrbs-1-1), tables.pg.sql (1.3) (utags:
+	  mrbs-1-0-final):  * Incorporated diff from Scott Leonard that
+	  allows you to configure a refresh
+	      time for roombooker web pages.  Set config variable
+	  $refresh_rate to the
+	      number of seconds to refresh after, or set to 0 to disable.
 
-Version 0.9 (Sun Feb  4 21:40:16 GMT 2001)
-	Release.
+	   * Implemented "n-weekly" repeat type. Not sure I like the way
+	  it's phrased in
+	      the lang files, but the code works fine.	You can now a
+	  meeting that is
+	      repeated every 'n' weeks. e.g. every 5th Monday.	This
+	  required a database
+	      change, which I've made available in upgrade2.my.sql and
+	  upgrade2.pg.sql
 
-Version 0.9-pre2: (2001-01-27)
-    Some stuff for Roxen from Claus Jeppesen (jeppesen@mrl.ucsb.edu)
-    Add control over start of weekday (Sunday or Monday) (bokleve)
-    Change how days are presented (Jul 19 or 19 Jul) (bokleve)
-    Day names in selected language (bokleve)
-    Sweedish language file (bokleve)
-    Can now change room and area descriptions (bokleve)
-    Fix for all day bookings (bokleve)
-    Escape characters in text (day.php3) (bokleve)
-    Rooms sorted by name (bokleve)
-    Fix duplicate entries when changing a booking (bokleve)
-    Modifying an entry allowed intrusion on other bookings (bokleve)
-    Weekly bookings could not be made for Sunday if Saturday also booked
-    view_entry.php3 Fix escape characters showing in text (bokleve)
+	   * Tidied lang files, and ensured every file has all the required
+	  tokens.
+	      'wc -l lang.*' now shows all the files as having the same
+	  line count.
+	      Quite a few languages now have English bits in them though.
 
-Version 0.9-pre1 (13:00 Fri August 2000)
-	A few minor bug fixes.
-	Authentication is finally in properly
-	Big UI change, provides a toolbar at the top, help, the the ability
-	to search and other usefull stuff.
-	A help file for the users.
-	Another LDAP authentication method, this one uses `ldapsearch'
-	Thanks to Mark Belanger <mark_belanger@ltx.com> for most of this.
+	   * Incorporated diffs from Tim Bell that allow you to configure a
+	  filter
+	      for LDAP authentication.
 
-Version 0.8.1 (Thurs July 27 11:00 2000)
-	Better "Area" handling
+	   * Incorporated diffs from Tim Bell that solve problems with
+	  bookings made
+	      for times that have smaller granularity that the configured
+	  booking
+	      resolution.
 
-Version 0.8 (Wed July 26 17:50 2000)
-	General improvements in the "Repeat Booking" code.
-	Better year selection handling
+2001-03-02  Michael Redinger <mred@users.sourceforge.net>
 
-Version 0.8-pre6 (Thurs July 20 10:00 2000)
-	Lots of little bug fixes.
-	Additional LDAP authentication method
-	Better compatibility with old versions of PHP
+	* AUTHENTICATION (1.12), auth_pam.pl (1.1, mrbs-1-1) (utags:
+	  mrbs-1-0-final, mrbs-1-0-pre1):
+	  mred: added auth_pam, updated AUTHENTIFICATION
 
-Version 0.8-pre5 (Thurs July 13 11:50 2000)
-	Improved "Conflict detection" code
-	Lots of date/time handling improvements
-	
-Version 0.8-pre4 (Wed July 12 11:00 2000)
-	Added repeat entrys
-	Added French language file
-	Updated German language file
-	Made the "view_entry" screen nicer
-	General page updates
+2001-02-25  L J Bayuk <lbayuk@users.sourceforge.net>
 
-Version 0.8-pre3 (Wed Jun 21 13:42:42 GMT 2000)
-	Added Perl script for LDAP auth
+	* .htaccess (1.2), AUTHENTICATION (1.11, mrbs-1-0-pre2), INSTALL
+	  (1.10, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), LANGUAGE
+	  (1.8, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), README (1.7,
+	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), README.nwauth
+	  (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2),
+	  README.sqlapi (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), ROXEN (1.2, mrbs-1-1, mrbs-1-0-final,
+	  mrbs-1-0-pre1, mrbs-1-0-pre2), UPGRADE (1.4, mrbs-1-0-final,
+	  mrbs-1-0-pre1, mrbs-1-0-pre2), add.php3 (1.3), admin.php3 (1.7),
+	  auth_cookie_ext.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), auth_ext.inc (1.6), auth_ip.inc (1.3),
+	  auth_ldap.inc (1.4), auth_ldap.pl (1.2, mrbs-1-1, mrbs-1-0-final,
+	  mrbs-1-0-pre1, mrbs-1-0-pre2), auth_ldapsearch.pl (1.3, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), badpw.pl (1.3,
+	  mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2),
+	  checklang.php (1.2, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), config.inc (1.17), connect.inc (1.2), day.php3
+	  (1.22), del.php3 (1.4), del_entry.php3 (1.10), destroy.pg.sql
+	  (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2),
+	  edit_area_room.php3 (1.2), edit_entry.php3 (1.19),
+	  edit_entry_handler.php3 (1.22), functions.inc (1.11),
+	  grant.pg.sql (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), help.php3 (1.5), index.php3 (1.2), lang.de (1.3),
+	  lang.en (1.14), lang.es (1.3), lang.fr (1.2), lang.ja (1.4),
+	  lang.nl (1.2), lang.sv (1.2), lang.zh-tw (1.3), mincals.inc
+	  (1.12), mrbs.css (1.8), mrbs_auth.inc (1.7), mrbs_sql.inc (1.12),
+	  new.gif (1.2), purge.my.sql (1.2, mrbs-1-1, mrbs-1-0-final,
+	  mrbs-1-0-pre1, mrbs-1-0-pre2), purge.pg.sql (1.2, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), sample-data.sql
+	  (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2),
+	  search.php3 (1.8), site_faq.html (1.3), style.inc (1.6),
+	  tables.my.sql (1.2, mrbs-1-0-pre1, mrbs-1-0-pre2), tables.pg.sql
+	  (1.2, mrbs-1-0-pre1, mrbs-1-0-pre2), tables.sql (1.5),
+	  testdata.php (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), testdata.php3 (1.4), trailer.inc (1.9),
+	  upgrade.my.sql (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), upgrade.sql (1.2), view_entry.php3 (1.18): Merge
+	  branch mrbs-0-9-1xp into trunk
 
-Version 0.8-pre2 (Wed Jun 21 11:34:20 GMT 2000)
-	Added docs about netware authentication
-	Rename auth.inc -> mrbs_auth.inc to stop phplib conflicts
-	Added Spanish language file
-	Added Dutch language file
-	Added German language file
-	Added Traditional Chinese language file
-	Explicity set charset (from language file)
-	
-Version 0.8-pre1 (Fri Jun 16 08:22:19 GMT 2000)
-	User-based authentication supported (see AUTHENTICATION)
-	Better support for bookings spanning multiple days
-	User can specify "Whole Day" bookings
-	Units other than "Hours" are supported (Mins, Hours, Days, Weeks)
-	Thanks to Sam Mason <smason@mtc.ricardo.com> for much of this
+2001-02-19  L J Bayuk <lbayuk@users.sourceforge.net>
 
-Version 0.7 (Mon Jun 12 12:42:50 GMT 2000)
-	Changed DB to use unixtime, not mysql date/time
-	Changed date strings to use locale
-	Replaced code for three small calendars
-	  (thanks to David Wilkinson - davidw@cascade.org.uk)
-	Internal/External meetings different colours
-	"Resolution" moved to config file
-	Added Japanese support
-	Moved language into extenal file
-	Added more documentation
-	Areas with no rooms don't cause an error
+	* README (mrbs-0-9-1xp.3): Noted that PHP3 seems to work too.
 
-Version 0.6 (Sat May 27 09:09:11 BST 2000)
-	Fixed bug in edit_entry_handler.php3 which made any
-	 booking made between the 1st and 9th of the month
-	 actually happen on the 1st of Jan for that year
-	Fixed bug in day.php3 where any booking past
-	 midnight would not show up
-	Related bug which meant that bookings longer than
-	 one day wouldn't be displayed.
-	Fixed bug where editing a booking would default to
-	 today's date, not the booking's date
-	Added .htaccess to protect .inc files
-	Moved start and end of day config variables to
-	 config.inc
+2001-02-19  L J Bayuk <lbayuk@users.sourceforge.net>
 
-Version 0.5 (Mon May 22 12:07:14 BST 2000)
-	Added admin.php3 so areas/rooms can be done
-	 by web rather than by SQL
+	* INSTALL (mrbs-0-9-1xp.3): Note reports of working with PHP3.
+	  Change caution on MySQL 3.23 to reports of success.  Add note if
+	  using PHP3 to configure it to send *.php files to PHP.
 
-Version 0.2 (Sun May 21 22:35:33 BST 2000)
-	Working OK from user perspective
-	All admin done by SQL
+2001-02-19  L J Bayuk <lbayuk@users.sourceforge.net>
 
-Version 0.1 (Sun Apr 30 16:03:26 BST 2000)
-	Initial starting
+	* checklang.php (mrbs-0-9-1xp.1): New maintenance script to check
+	  language files.
+
+2001-02-12  Daniel <nambit@users.sourceforge.net>
+
+	* AUTHENTICATION, INSTALL, LANGUAGE, README, README.nwauth,
+	  README.sqlapi, ROXEN, UPGRADE, auth_cookie_ext.inc, auth_ldap.pl,
+	  auth_ldapsearch.pl, badpw.pl, destroy.pg.sql, grant.pg.sql,
+	  purge.my.sql, purge.pg.sql, sample-data.sql, tables.my.sql,
+	  tables.pg.sql, testdata.php, upgrade.my.sql
+	  (mrbs-0-9-1xp.[2,2,2,2,2,2,1,2,1,1,1,1,2,2,2,2,2,2,2,2,2]): added
+	  $Id$ tags
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* tables.pg.sql (mrbs-0-9-1xp.1): SQL script for PostgreSQL to
+	  create the MRBS tables.
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* tables.my.sql (mrbs-0-9-1xp.1): SQL script for MySQL to create
+	  the MRBS tables.
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* sample-data.sql (mrbs-0-9-1xp.1): A few sample buildings and
+	  rooms for testing. (This used to be in the table creation
+	  script.)
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* purge.pg.sql (mrbs-0-9-1xp.1): SQL script for PostgreSQL to purge
+	  old entries from the MRBS tables.
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* purge.my.sql (mrbs-0-9-1xp.1): SQL script for MySQL to purge old
+	  entries from the MRBS tables.
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* grant.pg.sql (mrbs-0-9-1xp.1): SQL script template for PostgreSQL
+	  to set protection on MRBS tables.
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* destroy.pg.sql (mrbs-0-9-1xp.1): SQL script for PostgreSQL to
+	  destroy the database tables and sequences.
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* README.sqlapi (mrbs-0-9-1xp.1): Documents database issues and the
+	  calls written for MRBS to support MySQL and PostgreSQL databases.
+	  Mostly for program maintainers, or for anyone brave enough to try
+	  porting MRBS to yet another database system.
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* README.nwauth (mrbs-0-9-1xp.1): This file has additional
+	  information about authentication with Netware, using the ncpfs
+	  tools and a new plug-in auth_nw.inc.
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* testdata.php (mrbs-0-9-1xp.1): renamed from testdata.php3, Use
+	  new database calls
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* testdata.php3 (mrbs-0-9-1xp.1): renamed to testdata.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* upgrade.my.sql (mrbs-0-9-1xp.1): renamed from upgrade.sql
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* upgrade.sql (mrbs-0-9-1xp.1): renamed to upgrade.my.sql
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* view_entry.php3 (mrbs-0-9-1xp.1): Moved to web/view_entry.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* trailer.inc (mrbs-0-9-1xp.1): Moved to web/trailer.inc
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* site_faq.html (mrbs-0-9-1xp.1): Moved to web/site_faq.html
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* search.php3 (mrbs-0-9-1xp.1): Moved to web/search.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* mrbs_sql.inc (mrbs-0-9-1xp.1): Moved to web/mrbs_sql.inc
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* mrbs_auth.inc (mrbs-0-9-1xp.1): Moved to web/mrbs_auth.inc
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* mrbs.css (mrbs-0-9-1xp.1): Moved to web/mrbs.css
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* mincals.inc (mrbs-0-9-1xp.1): Moved to web/mincals.inc
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* lang.zh-tw (mrbs-0-9-1xp.1): Moved to web/lang.zh-tw
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* lang.nl (mrbs-0-9-1xp.1): Moved to web/lang.nl
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* lang.ja (mrbs-0-9-1xp.1): Moved to web/lang.ja
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* lang.fr (mrbs-0-9-1xp.1): Moved to web/lang.fr
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* lang.es (mrbs-0-9-1xp.1): Moved to web/lang.es
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* lang.en (mrbs-0-9-1xp.1): Moved to web/lang.en
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* lang.de (mrbs-0-9-1xp.1): Moved to web/lang.de
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* index.php3 (mrbs-0-9-1xp.1): Moved to web/index.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* help.php3 (mrbs-0-9-1xp.1): Moved to web/help.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* functions.inc (mrbs-0-9-1xp.1): Moved to web/functions.inc
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* edit_entry_handler.php3 (mrbs-0-9-1xp.1): Moved to
+	  web/edit_entry_handler.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* edit_entry.php3 (mrbs-0-9-1xp.1): Moved to web/edit_entry.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* edit_area_room.php3 (mrbs-0-9-1xp.1): Moved to
+	  web/edit_area_room.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* del_entry.php3 (mrbs-0-9-1xp.1): Moved to web/del_entry.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* del.php3 (mrbs-0-9-1xp.1): Moved to web/del.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* day.php3 (mrbs-0-9-1xp.1): Moved to web/day.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* admin.php3 (mrbs-0-9-1xp.1): Moved to web/admin.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* add.php3 (mrbs-0-9-1xp.1): Moved to web/add.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* tables.sql (mrbs-0-9-1xp.1): Replaced with tables.pg.sql and
+	  tables.my.sql
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* connect.inc (mrbs-0-9-1xp.1): Replaced with per-database system
+	  connect script
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* config.inc (mrbs-0-9-1xp.1): Moved to web/config.inc
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* auth_ext.inc (mrbs-0-9-1xp.1): Moved to web/auth_ext.inc
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* auth_ldap.inc (mrbs-0-9-1xp.1): Moved to web/auth_ldap.inc
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* UPGRADE (mrbs-0-9-1xp.1): Remove beta release remark, add info on
+	  changes to database quoting.
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* README (mrbs-0-9-1xp.1): Editorial changes and updates to reflect
+	  new packaging and support for PostgreSQL.
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* LANGUAGE (mrbs-0-9-1xp.1): Changes to reflect file renames from
+	  *.php3 to *.php.
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* INSTALL (mrbs-0-9-1xp.1): Updated with information on PostgreSQL
+	  database, versions tested with, connection pooling and database
+	  server limits.  Changes to describe new web/ subdirectory; don't
+	  unpack into web doc root.  Add info on preserving config.inc
+	  before upgrade.  Minor editorial changes.  Added info on database
+	  maintenance.	Updated information on changes to config.inc
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* AUTHENTICATION (mrbs-0-9-1xp.1): Quote strings used as array
+	  subscripts, except within quoted strings.  Explain IP address as
+	  "username".  Explain new defaults: only localhost is admin.
+	  Reference to additional Netware authentication info in new
+	  README.nwauth.
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* .htaccess, new.gif, auth_ip.inc, lang.sv, style.inc
+	  (mrbs-0-9-1xp.[1,1,1,1,1]): Moved to web/
+
+2001-02-08  Daniel <nambit@users.sourceforge.net>
+
+	* config.inc (1.16), mincals.inc (1.11) (utags: mrbs-0-9-2): remove
+	  'weekstarts' functionality
+
+2001-02-04  Daniel <nambit@users.sourceforge.net>
+
+	* mincals.inc (1.10, mrbs-0-9-1): Fixed bug where days displayed
+	  wrong in mincals
+
+2001-01-28  Daniel <nambit@users.sourceforge.net>
+
+	* UPGRADE (1.3, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2):
+	  small note to say no db changes since 0.8
+
+2001-01-24  Bo Kleve <bokleve@users.sourceforge.net>
+
+	* config.inc (1.15, mrbs-0-9-1), edit_entry.php3 (1.18, mrbs-0-9-2,
+	  mrbs-0-9-1), functions.inc (1.10, mrbs-0-9-2, mrbs-0-9-1),
+	  mincals.inc (1.9), trailer.inc (1.8, mrbs-0-9-2, mrbs-0-9-1),
+	  view_entry.php3 (1.17, mrbs-0-9-2, mrbs-0-9-1) (utags: mrbs-0-9,
+	  mrbs-0-9-pre2): Add control over start of week day (Sunday or
+	  Monday) and how the days are presented (Jul 19 or 19 Jul).
+	  Defaults are Sunday and month date.  Also fix so that day names
+	  are shown in selected language and that the translation of hours,
+	  minutes, ... are according to the lang file.
+
+2001-01-24  Bo Kleve <bokleve@users.sourceforge.net>
+
+	* admin.php3 (1.6, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2), day.php3 (1.21, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2), edit_area_room.php3 (1.1, mrbs-0-9-2, mrbs-0-9-1,
+	  mrbs-0-9, mrbs-0-9-pre2), edit_entry.php3 (1.17),
+	  edit_entry_handler.php3 (1.21, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2), lang.sv (1.1, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2), mrbs_sql.inc (1.11, mrbs-0-9-2, mrbs-0-9-1,
+	  mrbs-0-9, mrbs-0-9-pre2), view_entry.php3 (1.16): Added Swedish
+	  language file. Modifications to admin.php3 Add possibility to
+	  edit area and room descriptions edit_area_room.php3 used with
+	  modified admin.php3 lang.sv Added Swedish language file day.php3
+	  Fix all day bookings, escape characters in text and duplicate
+	  mini-    calendars when nonexistent date is selected. Show rooms
+	  sorted by names.  edit_entry.php3 Fix escape characters showing
+	  in text edit_entry_handler.php3 Fix duplicate entries when
+	  changing a booking mrbs_sql.inc Modifying an entry allowed for
+	  intruding on other bookings.	   Weekly bookings could not be
+	  made for Sundays if Saturdays also booked.  view_entry.php3 Fix
+	  escape characters showing in text
+
+2000-11-29  Daniel <nambit@users.sourceforge.net>
+
+	* ROXEN (1.1), auth_cookie_ext.inc (1.1), mrbs.css (1.7) (utags:
+	  mrbs-0-9, mrbs-0-9-1, mrbs-0-9-2, mrbs-0-9-pre2): Claus
+	  Jeppesen's roxen stuff
+
+2000-09-13  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* lang.en (RBS-MAIN.2), lang.en (1.13, mrbs-0-9-2, mrbs-0-9-1,
+	  mrbs-0-9, mrbs-0-9-pre2): Better text
+
+2000-09-13  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* search.php3 (RBS-MAIN.1), search.php3 (1.7, mrbs-0-9-2,
+	  mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2): Better searching
+
+2000-09-08  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* view_entry.php3 (1.15): Now displays the room + area
+
+2000-09-08  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* auth_ext.inc (1.5, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2), lang.en (1.12): Added a "room" entry
+
+2000-09-08  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* edit_entry_handler.php3 (RBS-MAIN.1), edit_entry_handler.php3
+	  (1.20), mrbs_sql.inc (1.10): Another bug in the repeat entry code
+
+2000-09-06  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* lang.en, view_entry.php3 (RBS-MAIN.[1,1]): Added the room to the
+	  view entry screen
+
+2000-09-06  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* mrbs_sql.inc (RBS-MAIN.1): Doesn't get the extra booking we got
+	  before
+
+2000-09-05  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* view_entry.php3 (1.14, rbs-branch): Language updates
+
+2000-09-05  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* mrbs_auth.inc (1.6, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2, rbs-branch): One less warning
+
+2000-09-04  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* lang.es (1.2, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2,
+	  rbs-branch): Updated by "Dised Sistemas <dised@arrakis.es>"
+
+2000-09-04  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* config.inc (1.14, rbs-branch): Added some sanity checks
+
+2000-08-18  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* mrbs_sql.inc (1.9, rbs-branch): Should work now
+
+2000-08-18  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* help.php3 (1.4, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2,
+	  rbs-branch): Why did I take this outls
+
+2000-08-18  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* edit_entry.php3 (1.15), functions.inc (1.8), edit_entry.php3
+	  (1.16, rbs-branch), functions.inc (1.9, rbs-branch): Put "<?="
+	  back to "<? echo" for compatibility
+
+2000-08-18  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* auth_ip.inc (1.2, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2, rbs-branch): More PHP warning fixes
+
+2000-08-17  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* edit_entry.php3 (1.14), edit_entry_handler.php3 (1.18),
+	  auth_ext.inc (1.4, rbs-branch), search.php3 (1.5),
+	  edit_entry_handler.php3 (1.19, rbs-branch), search.php3 (1.6,
+	  rbs-branch), view_entry.php3 (1.13), admin.php3 (1.5,
+	  rbs-branch): More PHP warning fixes
+
+2000-08-17  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* edit_entry.php3 (1.13): More PHP waning fixes
+
+2000-08-17  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* admin.php3 (1.4), auth_ext.inc (1.3), config.inc (1.13), day.php3
+	  (1.20, rbs-branch), del.php3 (1.3, mrbs-0-9-2, mrbs-0-9-1,
+	  mrbs-0-9, mrbs-0-9-pre2, rbs-branch), del_entry.php3 (1.9,
+	  mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2, rbs-branch),
+	  edit_entry.php3 (1.12), edit_entry_handler.php3 (1.17),
+	  functions.inc (1.7), help.php3 (1.3), lang.en (1.11, rbs-branch),
+	  mincals.inc (1.8, rbs-branch), mrbs_auth.inc (1.5), mrbs_sql.inc
+	  (1.8), search.php3 (1.4), style.inc (1.5, mrbs-0-9-2, mrbs-0-9-1,
+	  mrbs-0-9, mrbs-0-9-pre2, rbs-branch), trailer.inc (1.7,
+	  rbs-branch), view_entry.php3 (1.12): Major change to remove most
+	  of the warnings from the code
+
+2000-08-10  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* AUTHENTICATION (1.10), auth_ldapsearch.pl (1.2) (utags: mrbs-0-9,
+	  mrbs-0-9-1, mrbs-0-9-2, mrbs-0-9-pre2, rbs-branch): better
+	  ldapsearch support
+
+2000-08-10  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* lang.en (1.10), search.php3 (1.3): Better language support
+
+2000-08-10  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* help.php3 (1.2): Put "Meeting room booking system" into the
+	  subject line automagically
+
+2000-08-10  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* search.php3 (1.2): Get it to behave nicely at the beginning and
+	  end of the search
+
+2000-08-10  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* site_faq.html (1.2, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2, rbs-branch): get the links all working
+
+2000-08-09  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* AUTHENTICATION (1.9), README (1.6, mrbs-0-9-2, mrbs-0-9-1,
+	  mrbs-0-9, mrbs-0-9-pre2, rbs-branch): a few final updates
+
+2000-08-09  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* mrbs_auth.inc (1.4): the ultimate one liner
+
+2000-08-09  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* head.gif (1.2): We have a nice banner now, no need for this
+
+2000-08-09  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* mrbs.css (1.6, rbs-branch): looks better now
+
+2000-08-09  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* help.php3 (1.1): added help finally
+
+2000-08-09  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* AUTHENTICATION (1.8), INSTALL (1.9, mrbs-0-9-2, mrbs-0-9-1,
+	  mrbs-0-9, mrbs-0-9-pre2, rbs-branch), add.php3 (1.2, mrbs-0-9-2,
+	  mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2, rbs-branch), admin.php3
+	  (1.3), auth_ldapsearch.pl (1.1), config.inc (1.12), day.php3
+	  (1.19), del.php3 (1.2), del_entry.php3 (1.8), edit_entry.php3
+	  (1.11), edit_entry_handler.php3 (1.16), functions.inc (1.6),
+	  lang.en (1.9), mrbs_auth.inc (1.3), search.php3 (1.1),
+	  site_faq.html (1.1), style.inc (1.4), view_entry.php3 (1.11)
+	  (utags: mrbs-0-9-a): A big change of most things
+
+2000-08-03  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* AUTHENTICATION (1.7), badpw.pl (1.2, mrbs-0-9-2, mrbs-0-9-1,
+	  mrbs-0-9, mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a): Improved the
+	  documentation a bit
+
+2000-08-01  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* day.php3 (1.18), functions.inc (1.5): UI updates
+
+2000-08-01  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* edit_entry_handler.php3 (1.15): Was not passing the correct
+	  number of paremeters
+
+2000-07-27  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* del_entry.php3 (1.7), edit_entry_handler.php3 (1.14),
+	  mrbs_sql.inc (1.7, mrbs-0-9-a), day.php3 (1.17) (utags:
+	  mrbs-0-8-1): Better handling of areas
+
+2000-07-26  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* mrbs_sql.inc (1.6): removed unused parameter
+
+2000-07-26  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* config.inc (1.11, mrbs-0-8-1), edit_entry_handler.php3 (1.13):
+	  Brings up an error if you try and create too many options
+
+2000-07-26  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* del_entry.php3 (1.6), mrbs_sql.inc (1.5) (utags: mrbs-0-8):
+	  Better repeat entry handling
+
+2000-07-26  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* edit_entry.php3 (1.10, mrbs-0-8-1, mrbs-0-8): "Edit Series" works
+	  even if you did not modify the first entry
+
+2000-07-26  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* mrbs_sql.inc (1.4): Allow "Edit Series" to work.
+
+2000-07-21  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* functions.inc (1.4, mrbs-0-8-1, mrbs-0-8): Better year chooser.
+
+2000-07-20  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* view_entry.php3 (1.10, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6): Keep
+	  it in sync with the creation in "edit_entry_handler"
+
+2000-07-20  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* mrbs_sql.inc (1.3, mrbs-0-8-pre6): Nicer listing of conflicting
+	  entrys
+
+2000-07-20  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* lang.en (1.8, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6): Keeping in
+	  sync with the rest of the code
+
+2000-07-20  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* edit_entry_handler.php3 (1.12, mrbs-0-8, mrbs-0-8-pre6): Various
+	  date/time handling improvements
+
+2000-07-19  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* view_entry.php3 (1.9): Handle HTML chars in the users fields
+	  better
+
+2000-07-19  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* trailer.inc (1.6, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8,
+	  mrbs-0-8-pre6): a few "copy+paste" problems
+
+2000-07-19  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* day.php3 (1.16, mrbs-0-8, mrbs-0-8-pre6): Make small (0 hours)
+	  entrys work
+
+2000-07-19  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* edit_entry.php3 (1.9, mrbs-0-8-pre6): Stop the repeat days from
+	  getting muddled up.
+
+2000-07-18  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* auth_ldap.inc (1.3, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8,
+	  mrbs-0-8-pre6): CRLF conversion done
+
+2000-07-18  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* auth_ldap.inc (1.2): Better cleanup
+
+2000-07-18  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* edit_entry_handler.php3 (1.11): Nicer page displayed when there
+	  is a conflicting entry
+
+2000-07-18  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* day.php3 (1.15): removed some old debugging code
+
+2000-07-17  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* AUTHENTICATION (1.6, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6),
+	  auth_ldap.inc (1.1), config.inc (1.10, mrbs-0-8, mrbs-0-8-pre6):
+	  Added a new LDAP authenticatication method.
+
+2000-07-17  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* mrbs_sql.inc (1.2): Fix for older versions of PHP (PRE 4)
+
+2000-07-13  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* edit_entry_handler.php3 (1.10): Better colision detection.
+
+2000-07-13  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* mrbs_sql.inc (1.1): Beginning of database independence
+
+2000-07-13  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* day.php3 (1.14), mincals.inc (1.7, mrbs-0-9-a, mrbs-0-8-1,
+	  mrbs-0-8, mrbs-0-8-pre6), trailer.inc (1.5): General time/date
+	  handling updates.
+
+2000-07-12  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* AUTHENTICATION (1.5), LANGUAGE (1.7, mrbs-0-9-2, mrbs-0-9-1,
+	  mrbs-0-9, mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a, mrbs-0-8-1,
+	  mrbs-0-8, mrbs-0-8-pre6), README (1.5, mrbs-0-9-a, mrbs-0-8-1,
+	  mrbs-0-8, mrbs-0-8-pre6), UPGRADE (1.2, rbs-branch, mrbs-0-9-a,
+	  mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6), config.inc (1.9), day.php3
+	  (1.13), del_entry.php3 (1.5, mrbs-0-8-pre6), edit_entry.php3
+	  (1.8), edit_entry_handler.php3 (1.9), functions.inc (1.3,
+	  mrbs-0-8-pre6), lang.de (1.2, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8,
+	  mrbs-0-8-pre6), lang.en (1.7), lang.fr (1.1, mrbs-0-9-2,
+	  mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a,
+	  mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6), mincals.inc (1.6),
+	  mrbs_auth.inc (1.2, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6),
+	  tables.sql (1.4, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2,
+	  rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6),
+	  view_entry.php3 (1.8) (utags: mrbs-0-8-pre4): A nice big change
+	  to implement "Repeat bookings".
+
+	  + a few other minor changes.
+
+2000-06-22  Daniel <nambit@users.sourceforge.net>
+
+	* mincals.inc (1.5): Fixed bug where the wrong months would be
+	  shown sometimes
+
+2000-06-21  Daniel <nambit@users.sourceforge.net>
+
+	* AUTHENTICATION (1.4), auth_ldap.pl (1.1, mrbs-0-9-2, mrbs-0-9-1,
+	  mrbs-0-9, mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a, mrbs-0-8-1,
+	  mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4) (utags: mrbs-0-8-pre3):
+	  LDAP Auth
+
+2000-06-21  Daniel <nambit@users.sourceforge.net>
+
+	* AUTHENTICATION (1.3), auth_ext.inc (1.2, mrbs-0-9-a, mrbs-0-8-1,
+	  mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3) (utags:
+	  mrbs-0-8-pre2): Changes for netware auth
+
+2000-06-21  Daniel <nambit@users.sourceforge.net>
+
+	* lang.zh-tw (1.2, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2,
+	  rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6,
+	  mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2): Updated for
+	  0.8-pre1
+
+2000-06-21  Daniel <nambit@users.sourceforge.net>
+
+	* LANGUAGE (1.6), lang.es (1.1, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8,
+	  mrbs-0-8-pre6, mrbs-0-8-pre4) (utags: mrbs-0-8-pre2,
+	  mrbs-0-8-pre3): Added Spanish language file
+
+2000-06-21  Daniel <nambit@users.sourceforge.net>
+
+	* lang.nl (1.1, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2,
+	  rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6,
+	  mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2), LANGUAGE (1.5):
+	  Added Dutch language file
+
+2000-06-20  Daniel <nambit@users.sourceforge.net>
+
+	* AUTHENTICATION (1.2), auth.inc (1.2), del_entry.php3 (1.4,
+	  mrbs-0-8-pre3, mrbs-0-8-pre2), edit_entry.php3 (1.7,
+	  mrbs-0-8-pre3, mrbs-0-8-pre2), edit_entry_handler.php3 (1.8,
+	  mrbs-0-8-pre3, mrbs-0-8-pre2), mrbs_auth.inc (1.1, mrbs-0-8-pre3,
+	  mrbs-0-8-pre2), view_entry.php3 (1.7, mrbs-0-8-pre3,
+	  mrbs-0-8-pre2): Rename auth.inc to mrbs_auth.inc to stop
+	  conflicts with phplib
+
+2000-06-19  Daniel <nambit@users.sourceforge.net>
+
+	* LANGUAGE (1.4), lang.de (1.1, mrbs-0-8-pre3, mrbs-0-8-pre2):
+	  Added German language
+
+2000-06-16  Daniel <nambit@users.sourceforge.net>
+
+	* LANGUAGE (1.3), lang.en (1.6, mrbs-0-8-pre3, mrbs-0-8-pre2),
+	  lang.ja (1.3, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2,
+	  rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6,
+	  mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2), lang.zh-tw (1.1),
+	  style.inc (1.3, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6,
+	  mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2): Added Chinese
+	  language file
+
+2000-06-16  Daniel <nambit@users.sourceforge.net>
+
+	* AUTHENTICATION (1.1), FAQ (1.2), INSTALL (1.8, mrbs-0-8-1,
+	  mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3,
+	  mrbs-0-8-pre2), README (1.4, mrbs-0-8-pre3, mrbs-0-8-pre2),
+	  auth_ext.inc (1.1), auth_ip.inc (1.1, mrbs-0-9-a, mrbs-0-8-1,
+	  mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3,
+	  mrbs-0-8-pre2), badpw.pl (1.1, mrbs-0-8-1, mrbs-0-8,
+	  mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2),
+	  config.inc (1.8, mrbs-0-8-pre3, mrbs-0-8-pre2), del_entry.php3
+	  (1.3), edit_entry.php3 (1.6), edit_entry_handler.php3 (1.7),
+	  functions.inc (1.2, mrbs-0-8-pre3, mrbs-0-8-pre2),
+	  help_trailer.inc (1.2), lang.en (1.5), lang.ja (1.2), smb_auth.c
+	  (1.1, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2, mrbs-0-9-2,
+	  mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a,
+	  mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4,
+	  mrbs-0-8-pre3, mrbs-0-8-pre2), trailer.inc (1.4, mrbs-0-8-pre4,
+	  mrbs-0-8-pre3, mrbs-0-8-pre2), view_entry.php3 (1.6), auth.inc
+	  (1.1): User-based authentication supported (see AUTHENTICATION)
+	  Better support for bookings spanning multiple days User can
+	  specify "Whole Day" bookings Units other than "Hours" are
+	  supported (Mins, Hours, Days, Weeks) Thanks to Sam Mason
+	  <smason@mtc.ricardo.com> for much of this
+
+2000-06-14  Daniel <nambit@users.sourceforge.net>
+
+	* day.php3 (1.12, mrbs-0-8-pre3, mrbs-0-8-pre2): Meetings longer
+	  than one day show the name on following days
+
+2000-06-13  Daniel <nambit@users.sourceforge.net>
+
+	* circle.gif (1.2): Removed unused circle.gif
+
+2000-06-13  Daniel <nambit@users.sourceforge.net>
+
+	* login.php3 (1.2): Removed unused login.php3
+
+2000-06-12  Daniel <nambit@users.sourceforge.net>
+
+	* INSTALL (1.7), UPGRADE (1.1, mrbs-0-8-pre3, mrbs-0-8-pre2),
+	  day.php3 (1.11), edit_entry.php3 (1.5), edit_entry_handler.php3
+	  (1.6), tables.sql (1.3, mrbs-0-8-pre3, mrbs-0-8-pre2),
+	  testdata.php3 (1.3, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8,
+	  mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2),
+	  upgrade.sql (1.1, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8,
+	  mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2),
+	  view_entry.php3 (1.5) (utags: mrbs0-7): Changed DB to use
+	  unixtime rather than mysql date/time datatype.
+
+2000-06-12  Daniel <nambit@users.sourceforge.net>
+
+	* INSTALL (1.6), LANGUAGE (1.2, mrbs0-7), config.inc (1.7,
+	  mrbs0-7), day.php3 (1.10), lang.en (1.4, mrbs0-7), mincals.inc
+	  (1.4, mrbs-0-8-pre3, mrbs-0-8-pre2, mrbs0-7), trailer.inc (1.3,
+	  mrbs0-7), view_entry.php3 (1.4): Changes to strftime() rather
+	  than date() for some strings, so that locale support can be used.
+
+2000-06-09  Daniel <nambit@users.sourceforge.net>
+
+	* config.inc (1.6), day.php3 (1.9), mincals.inc (1.3): start move
+	  to locale-based time strings (strftime)
+
+2000-06-06  Daniel <nambit@users.sourceforge.net>
+
+	* mrbs.css (1.5, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6,
+	  mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2, mrbs0-7): Change
+	  external meeting colour to something darker. The old one can only
+	  just be seen on an LCD panel
+
+2000-06-05  Daniel <nambit@users.sourceforge.net>
+
+	* mincals.inc (1.2), mrbs.css (1.4): New code for three month
+	  calendars. Thanks to David Wilkinson, see
+	  http://www.cascade.org.uk/software/php/calendar/
+
+2000-06-05  Daniel <nambit@users.sourceforge.net>
+
+	* day.php3 (1.8), mrbs.css (1.3): Fixed a couple of small bugs with
+	  the Internal/External colour support
+
+2000-06-03  Daniel <nambit@users.sourceforge.net>
+
+	* day.php3 (1.7), mrbs.css (1.2): Internal and External meetings
+	  show in different colours
+
+2000-05-31  Daniel <nambit@users.sourceforge.net>
+
+	* lang.en (1.3): Update [time]
+
+2000-05-30  Daniel <nambit@users.sourceforge.net>
+
+	* lang.ja (1.1, mrbs0-7): Japanese support
+
+2000-05-30  Daniel <nambit@users.sourceforge.net>
+
+	* config.inc (1.5), day.php3 (1.6): Moved "resolution" to config
+	  file - so length of booking displayed can be varied
+
+2000-05-30  Daniel <nambit@users.sourceforge.net>
+
+	* lang.en (1.2), view_entry.php3 (1.3): Updates for Japanese
+
+2000-05-29  Daniel <nambit@users.sourceforge.net>
+
+	* INSTALL (1.5), LANGUAGE (1.1), admin.php3 (1.2, mrbs-0-8-1,
+	  mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3,
+	  mrbs-0-8-pre2, mrbs0-7), config.inc (1.4), day.php3 (1.5),
+	  edit_entry.php3 (1.4), edit_entry_handler.php3 (1.5), lang.en
+	  (1.1), style.inc (1.2, mrbs0-7), trailer.inc (1.2),
+	  view_entry.php3 (1.2): Moved language-specific strings into
+	  external file.
+
+2000-05-28  Daniel <nambit@users.sourceforge.net>
+
+	* INSTALL (1.4): Added stuff about mySQL 3.23 not working
+
+2000-05-28  Daniel <nambit@users.sourceforge.net>
+
+	* TODO (1.2): Removed useless TODO file
+
+2000-05-28  Daniel <nambit@users.sourceforge.net>
+
+	* day.php3 (1.4): Fixed areas with no rooms causing major error
+	  messages
+
+2000-05-28  Daniel <nambit@users.sourceforge.net>
+
+	* FAQ (1.1), README (1.3) (utags: mrbs0-7): Documentation update
+
+2000-05-27  Daniel <nambit@users.sourceforge.net>
+
+	* .htaccess (1.1, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2,
+	  rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6,
+	  mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2, mrbs0-7, mrbs0-6),
+	  INSTALL (1.3, mrbs0-6), config.inc (1.3, mrbs0-6), day.php3 (1.3,
+	  mrbs0-6), edit_entry.php3 (1.3, mrbs0-6), edit_entry_handler.php3
+	  (1.4, mrbs0-6), needed_files (1.2):	 Fixed bug in
+	  edit_entry_handler.php3 which made any
+		   booking made between the 1st and 9th of the month
+		   actually happen on the 1st of Jan for that year
+		  Fixed bug in day.php3 where any booking past
+		   midnight would not show up
+		  Related bug which meant that bookings longer than
+		   one day wouldn't be displayed.
+		  Fixed bug where editing a booking would default to
+		   today's date, not the booking's date
+		  Added .htaccess to protect .inc files
+	     Moved start and end of day config variables to
+		   config.inc
+
+2000-05-21  Daniel <nambit@users.sourceforge.net>
+
+	* add.php3 (1.1), del.php3 (1.1) (utags: mrbs-0-8, mrbs-0-8-1,
+	  mrbs-0-8-pre2, mrbs-0-8-pre3, mrbs-0-8-pre4, mrbs-0-8-pre6,
+	  mrbs0-5, mrbs0-6, mrbs0-7): First version of files needed for
+	  admin
+
+2000-05-21  Daniel <nambit@users.sourceforge.net>
+
+	* INSTALL (1.2, mrbs0-5), README (1.2, mrbs0-6, mrbs0-5),
+	  admin.php3 (1.1, mrbs0-6, mrbs0-5), edit_entry_handler.php3 (1.3,
+	  mrbs0-5), meetingroomsystem.gif (1.2), tables.sql (1.2, mrbs0-6,
+	  mrbs0-5), testdata.php3 (1.2, mrbs0-6, mrbs0-5): Various fixes
+	  and doc updates
+
+2000-05-20  Daniel <nambit@users.sourceforge.net>
+
+	* TODO (1.1, mrbs0-6, mrbs0-5), config.inc (1.2, mrbs0-5), day.php3
+	  (1.2, mrbs0-5), del_entry.php3 (1.2, mrbs0-7, mrbs0-6, mrbs0-5),
+	  edit_entry.php3 (1.2, mrbs0-5), edit_entry_handler.php3 (1.2):
+	  The system now works! There's no administration stuff, but the
+	  user pages are OK
+
+2000-05-03  Daniel <nambit@users.sourceforge.net>
+
+	* circle.gif (1.1.1.1, mrbs0-7, mrbs0-6, mrbs0-5), needed_files
+	  (1.1.1.1, mrbs0-5), day.php3 (1.1.1.1), del_entry.php3 (1.1.1.1),
+	  edit_entry_handler.php3 (1.1.1.1), edit_entry.php3 (1.1.1.1),
+	  index.php3 (1.1.1.1, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8,
+	  mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2,
+	  mrbs0-7, mrbs0-6, mrbs0-5), login.php3 (1.1.1.1, mrbs0-7,
+	  mrbs0-6, mrbs0-5), config.inc (1.1.1.1), meetingroomsystem.gif
+	  (1.1.1.1), new.gif (1.1.1.1, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8,
+	  mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2,
+	  mrbs0-7, mrbs0-6, mrbs0-5), view_entry.php3 (1.1.1.1, mrbs0-6,
+	  mrbs0-5), connect.inc (1.1.1.1, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
+	  mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8,
+	  mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2,
+	  mrbs0-7, mrbs0-6, mrbs0-5), functions.inc (1.1.1.1, mrbs0-7,
+	  mrbs0-6, mrbs0-5), help_trailer.inc (1.1.1.1, mrbs0-7, mrbs0-6,
+	  mrbs0-5), mincals.inc (1.1.1.1, mrbs0-6, mrbs0-5), style.inc
+	  (1.1.1.1, mrbs0-6, mrbs0-5), trailer.inc (1.1.1.1, mrbs0-6,
+	  mrbs0-5), tables.sql (1.1.1.1), COPYING (1.1.1.1, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2, mrbs-0-9-2,
+	  mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a,
+	  mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4,
+	  mrbs-0-8-pre3, mrbs-0-8-pre2, mrbs0-7, mrbs0-6, mrbs0-5), INSTALL
+	  (1.1.1.1), README (1.1.1.1), mrbs.css (1.1.1.1, mrbs0-6,
+	  mrbs0-5), head.gif (1.1.1.1, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8,
+	  mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2,
+	  mrbs0-7, mrbs0-6, mrbs0-5), testdata.php3 (1.1.1.1) (utags:
+	  start): Initial Import
+
+2000-05-03  Daniel <nambit@users.sourceforge.net>
+
+	* circle.gif (1.1), needed_files (1.1), day.php3 (1.1),
+	  del_entry.php3 (1.1), edit_entry_handler.php3 (1.1),
+	  edit_entry.php3 (1.1), index.php3 (1.1), login.php3 (1.1),
+	  config.inc (1.1), meetingroomsystem.gif (1.1), new.gif (1.1),
+	  view_entry.php3 (1.1), connect.inc (1.1), functions.inc (1.1),
+	  help_trailer.inc (1.1), mincals.inc (1.1), style.inc (1.1),
+	  trailer.inc (1.1), tables.sql (1.1), COPYING (1.1), INSTALL
+	  (1.1), README (1.1), mrbs.css (1.1), head.gif (1.1),
+	  testdata.php3 (1.1): Initial revision
+
