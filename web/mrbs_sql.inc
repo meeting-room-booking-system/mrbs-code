@@ -240,7 +240,7 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate, $r
                         $mdb->getTextValue($owner) . ", " . 
                         $mdb->getTextValue($type) . ", " . 
                         $mdb->getTextValue($name) . ", " .
-                        $mdb->getTextValue($description) . ", '$rep_num_weeks')";
+                        $mdb->getTextValue($description) . ", $rep_num_weeks)";
 
     $res = $mdb->query($sql);
     if (MDB::isError($res)) 
