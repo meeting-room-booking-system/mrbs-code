@@ -88,17 +88,25 @@ of 'lynx' as the name for their command line browser. If this is the case for
 you, you need to change the above line correspondingly.
 
 
-On Windows, go-pear uses stdin for user input, so you must download go-pear
-script first from go-pear.org and then run the following command:
+Under windows:
 
-> php go-pear (or whatever you named the file)
+Windows users with PHP 4.3.0 must run this command:
+
+> cli\php -n -r `include http://go-pear.org;'
+
+If you have an earlier version, go-pear uses stdin for user input, so you must
+first open go-pear.org in your browser, save the file somewhere and then run
+the following command:
+
+> php go-pear.php (or whatever you named the file)
 
 Note: In PHP 4.2.0-4.2.3, the PHP CLI binary is named php-cli.exe while
 since PHP 4.3.0, it's simply named php.exe in the cli/ folder of your PHP
 directory. The CGI is also named php.exe but it sits directly in your PHP
 directory.
+
 > cli/php -r 'readfile("http://pear.php.net/go-pear");' > go-pear
-> cli/php go-pear
+> cli/php go-pear.php
 
 Installation: Notes
 - If using the CGI version of PHP, append the -q option to suppress headers
@@ -183,5 +191,4 @@ process of installing the packages. One way to go is to install the pear
 command on your desktop and copy the files over to the server. Don't forget
 you can use set_include_path() to make the directory where you copied the
 PEAR files available across your site.
-
 
