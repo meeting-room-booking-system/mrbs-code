@@ -146,6 +146,30 @@ $auth[prog]   = "/usr/bin/nwauth";
 $auth[params] = "-S MYSERVER -U #USERNAME# -P #PASSWORD#";
 
 
+LDAP Authentication
+-------------------
+There is a very small Perl program - ldap_auth.pl - included with this
+distribution.
+
+It requires the Net::LDAP module be installed and working. For me this simply
+meant doing:
+
+   perl -MCPAN -e"install Net::LDAP"
+
+The script simply attemps to bind to a server using a supplied dn and password.
+It expects the full thing to be passed in - eg 
+
+   cn=root, o=University of Michigan, c=us
+
+In my case, I can pass just the cn and it works. My config.inc settings are:
+
+# Authentication settings - read AUTHENTICATION
+$auth[realm]  = "MRBS";
+$auth[type]   = "ext";
+$auth[prog]   = "/home/httpd/html/mrbs/auth_ldap.pl";
+$auth[params] = "LDAPSERVER cn=#USERNAME# #PASSWORD#";
+
+
 
 Creating a new authentication scheme
 ------------------------------------
