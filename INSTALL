@@ -110,6 +110,23 @@ format of your data do:
 (This does not apply to PostgreSQL, which was not supported then.)
 Also see the file UPGRADE in the distribution.
 
+For a second installation or to use different table names:
+
+If you have table name conflicts or want to do a second installation
+and only have access to one database, then you can modify the 'mrbs_'
+prefix for the table names.
+
+In tables.*.sql you will need to change the table names and then follow
+the instructions above for creating the tables in your database.
+
+When editting config.inc.php, you need to change the table name prefix
+from "mrbs_" to the value you chose using the variable $db_tbl_prefix.
+
+WARNING: All of the .sql files are setup to use the 'mrbs_' prefix
+         therefore you will have to edit them before you use them if you
+         change the prefix for your tables.
+
+
 Maintenance:
 
 Be sure to back up your database regularly.
@@ -156,6 +173,10 @@ process may keep a connection open. Then, users will randomly get errors
 when trying connecting to MRBS.  If you would rather use non-persistent
 database connections, uncomment the line in "config.inc.php" which sets the
 $db_nopersist variable.
+
+If you have changed the prefix of "mrbs_" for the tables in your database
+then you will need to set the value of:
+    $db_tbl_prefix = The table name prefix
 
 
 2. Site Identification:
