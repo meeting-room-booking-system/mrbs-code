@@ -1,4 +1,4 @@
-CVS:
+Version 0.8-pre2 (Wed Jun 21 11:34:20 GMT 2000)
 	Added docs about netware authentication
 	Rename auth.inc -> mrbs_auth.inc to stop phplib conflicts
 	Added Spanish language file
