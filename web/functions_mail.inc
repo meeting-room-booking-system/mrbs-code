@@ -273,8 +273,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
             list( $start_period, $start_date) =
                 getMailPeriodDateString($starttime);
             $body .= $mail_vocab["start_date"] . " ";
-            $body .= compareEntries($start_period, $mail_previous['start_period'], $new_entry)
-                . " - " . compareEntries(unHtmlEntities($start_date),
+            $body .= compareEntries(unHtmlEntities($start_date),
                 unHtmlEntities($mail_previous['start_date']), $new_entry) . "\n";
         }
         else
@@ -290,11 +289,16 @@ function notifyAdminOnBooking($new_entry , $new_id)
         if ( $enable_periods )
         {
             // If this is a serie, $endtime = serie end_date
-            $rep_type > 0 ? $myendtime = $rep_enddate : $myendtime = $endtime;
-            list($end_period, $end_date) =  getMailPeriodDateString($myendtime);
+            if ($rep_type > 0) {
+                $myendtime = $rep_enddate;
+                $mod_time = 0;
+            } else {
+                $myendtime = $endtime;
+                $mod_time = -1;
+            }
+            list($end_period, $end_date) =  getMailPeriodDateString($myendtime, $mod_time);
             $body .= $mail_vocab["end_date"] . " ";
-            $body .= compareEntries($end_period, $mail_previous['end_period'], $new_entry)
-                . " - " . compareEntries(unHtmlEntities($end_date),
+            $body .= compareEntries(unHtmlEntities($end_date),
                 unHtmlEntities($mail_previous['end_date']), $new_entry) ."\n";
         }
         else
@@ -429,12 +433,10 @@ function notifyAdminOnDelete($mail_previous)
     $body .= $mail_vocab["start_date"] . ' ';
     if ( $enable_periods )
     {
-        $body .= $mail_previous['start_period'] . ' - ';
         $body .= unHtmlEntities($mail_previous['start_date']) . "\n";
     }
     else
     {
-        $body .= $mail_vocab["start_date"] . ' ';
         $body .= $mail_previous['start_date'] . "\n";
     }
     $body .= $mail_vocab["duration"] . ' ' . $mail_previous['duration'] . ' ';
@@ -442,7 +444,6 @@ function notifyAdminOnDelete($mail_previous)
     if ( $enable_periods )
     {
         $body .= $mail_vocab["end_date"] . " ";
-        $body .= $mail_previous['end_period'] . " - ";
         $body .= unHtmlEntities($mail_previous['end_date']) ."\n";
     }
     else
@@ -543,7 +544,7 @@ function getPreviousEntryData($id, $series)
             list( $mail_previous['start_period'], $mail_previous['start_date'])
                 =  getMailPeriodDateString($row['tbl_e_start_time']);
             list( $mail_previous['end_period'] , $mail_previous['end_date']) =
-                getMailPeriodDateString($row['tbl_e_end_time'], 0);
+                getMailPeriodDateString($row['tbl_e_end_time'], -1);
             // need to make DST correct in opposite direction to entry creation
             // so that user see what he expects to see
             $mail_previous['duration'] = $row['tbl_e_duration'] -
