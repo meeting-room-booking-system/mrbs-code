@@ -100,6 +100,9 @@ class Calendar
     function getHTML()
     {
         global $weekstarts;
+        global $PHP_SELF;
+        global $day;
+        global $month;
 
         if (!isset($weekstarts)) $weekstarts = 0;
         $s = "";
@@ -126,31 +129,50 @@ class Calendar
         
         $d = 1 - $first;
             
+        # this is used to highlight days in upcoming month
+        $days_to_highlight = ($d + 7);
+
         while ($d <= $daysInMonth)
         {
-            $s .= "<tr>\n";       
-            
+            $s .= "<tr>\n";
+
             for ($i = 0; $i < 7; $i++)
             {
-                $s .= "<td class=\"calendar\" align=right valign=top>";       
+                $s .= "<td class=\"calendar\" align=\"center\" valign=\"top\">";
                 if ($d > 0 && $d <= $daysInMonth)
                 {
                     $link = $this->getDateLink($d, $this->month, $this->year);
+                    $d_week = ($d - 7);
+
                     if ($link == "")
                         $s .= $d;
-                    elseif (($d == $this->day) and ($this->h))
-                        $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
-                    else
+                    elseif (preg_match("/day/i", $PHP_SELF))
+                    {
+                        if (($d == $this->day) and ($this->h))
+                            $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
+                        else
+                            $s .= "<a href=\"$link\">$d</a>";
+                    }
+                    elseif (preg_match("/week/i", $PHP_SELF))
+                    {
+                        if (($this->day <= $d) && ($this->day > $d_week) && ($this->h))
+                            $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
+                        elseif (($this->day < $days_to_highlight) && ($d < $days_to_highlight) && (($day - $daysInMonth) > (-6)) && ($this->month == ($month + 1)) && ($first != 0))
+                            $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
+                        else
+                            $s .= "<a href=\"$link\">$d</a>";
+                    }
+                    elseif (preg_match("/month/i", $PHP_SELF))
                         $s .= "<a href=\"$link\">$d</a>";
                 }
                 else
                 {
                     $s .= "&nbsp;";
                 }
-                $s .= "</td>\n";       
+                $s .= "</td>\n";
                 $d++;
             }
-            $s .= "</tr>\n";    
+            $s .= "</tr>\n";
         }
         
         $s .= "</table>\n";
