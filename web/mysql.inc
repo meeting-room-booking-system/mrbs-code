@@ -42,7 +42,7 @@ function sql_version()
 {
     global $mdb;
     $v = $mdb->queryOne("select version()");
-    return "$v";
+    return "Mysql $v";
 }
 
 /**
