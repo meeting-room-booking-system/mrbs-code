@@ -128,9 +128,13 @@ $view_week_number = FALSE;
 # To display times on right side in day and week view, set to TRUE;
 $times_right_side = FALSE;
 
-# Color class to use for horizontal stripes on the day view; 
+# Color class to use for horizontal stripes on the day view;
 # Default="white"=no stripes. "A" to "J": See color classes further down.
 $stripe_color = "white";
+
+# Define default starting view (month, week or day)
+# Default is day
+$default_view = "day";
 
 ###############################################
 # Authentication settings - read AUTHENTICATION
