@@ -4,7 +4,13 @@
 // +---------------------------------------------------------------------------+
 // | MRBS Database Installation script
 // |---------------------------------------------------------------------------+
-// | Copy mrbs_create.php into your web site and run it.
+// | How to use this script. Either:
+// | - Run the following command on your shell: $ php mrbs_create.php
+// | or
+// | - Copy mrbs_create.php and mrbs.schema.xml in the same web server 
+// |   directory as mrbs and run it.
+// | Note: in either case, mrbs_create.php and mrbs.schema.xml must be in the 
+// |       same directory.
 // +---------------------------------------------------------------------------+
 // | @author    thierry_bo.
 // | @version   $Revision$.

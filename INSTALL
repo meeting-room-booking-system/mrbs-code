@@ -98,7 +98,7 @@ fbsql   -> FrontBase
 $db_host : this is the host name of the database server. If the database
 server and web server are the same machine, use $db_host="localhost".
 
-$db_port : leave empty if the databse server use its defaukt port.
+$db_port : leave empty if the database server use its default port.
 
 $db_database : Database name to create. Default to "mrbs", but you can use any
 name.
@@ -125,6 +125,8 @@ $ php mrbs_create.php
 This will create the database and the tables for you. Alternately you can copy
 mrbs_create.php and mrbs.schema.xml in the same web server directory as mrbs
 and run the command from your browser.
+Note: in either case, mrbs_create.php and mrbs.schema.xml must be in the 
+      same directory.
 If you get an error message "Error: Could not copy the new database 
 definition file to the current file" or something like that, check that the 
 account running php (cgi) or your web server have sufficient rights to write
