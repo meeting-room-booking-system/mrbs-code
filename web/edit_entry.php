@@ -139,7 +139,7 @@ else
 	$duration    = 60 * 60;
 	$type        = "I";
 	$room_id     = $room;
-        $id = 0;
+    unset($id);
 	
 	$rep_id        = 0;
 	$rep_type      = 0;
