@@ -131,7 +131,7 @@ echo "<td width=\"30%\"><u>".get_vocab("room")."</u><br>";
   if ($area_list_format == "select") {
 	echo make_room_select_html('week.php', $area, $room, $year, $month, $day); # from functions.inc
   } else {
-    $sql = "SELECT      id, room_name 
+    $sql = "SELECT      id, room_name, description
             FROM        mrbs_room 
             WHERE       area_id=$area 
             ORDER BY    room_name";
@@ -143,7 +143,7 @@ echo "<td width=\"30%\"><u>".get_vocab("room")."</u><br>";
         {
             if ( $pview != 1 )
             {
-                echo "<a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[0]\">";
+                echo "<a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[0]\" title=\"$row[2]\">";
             }
             if ($row[0] == $room)
             {

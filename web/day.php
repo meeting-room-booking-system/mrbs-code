@@ -203,7 +203,7 @@ if ($debug_flag)
 # pull the data from the db and store it. Convienently we can print the room
 # headings and capacities at the same time
 
-$sql = "SELECT      room_name, capacity, id 
+$sql = "SELECT      room_name, capacity, id, description
         FROM        mrbs_room 
         WHERE       area_id=$area 
         ORDER BY    1";
@@ -233,7 +233,7 @@ else
     {
         echo "<th width=\"$room_column_width%\">
             <a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[2]\"
-            title=\"" . get_vocab("viewweek") . "\">"
+            title=\"" . get_vocab("viewweek") . " \n\n$row[3]\">"
             . htmlspecialchars($row[0]) . "($row[1])</a></th>";
 		$rooms[] = $row[2];
 	}
