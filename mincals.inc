@@ -145,9 +145,9 @@ class Calendar
     }
 }
 
-$lastmonth = mktime(0, 0, 0, $month-1, $day, $year);
+$lastmonth = mktime(0, 0, 0, $month-1, 1, $year);
 $thismonth = mktime(0, 0, 0, $month, $day, $year);
-$nextmonth = mktime(0, 0, 0, $month+1, $day, $year);
+$nextmonth = mktime(0, 0, 0, $month+1, 1, $year);
 
 echo "<td>";
 $cal = new Calendar(date("d",$lastmonth), date("m",$lastmonth), date("Y",$lastmonth), 0, $area);
