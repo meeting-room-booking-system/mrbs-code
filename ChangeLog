@@ -1,4 +1,4 @@
-Version 0.7 (CVS)
+Version 0.7 (Mon Jun 12 12:42:50 GMT 2000)
 	Changed DB to use unixtime, not mysql date/time
 	Changed date strings to use locale
 	Replaced code for three small calendars
