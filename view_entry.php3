@@ -33,11 +33,11 @@ $row = mysql_fetch_row($res);
 
 $display_time = strftime('%X',$row[3]) != "01:00:00";
 
-$name        = $row[0];
-$description = $row[1];
 $duration    = $row[4];
 $type        = $row[5];
-$create_by   = $row[6];
+$name        = htmlspecialchars($row[0]);
+$description = htmlspecialchars($row[1]);
+$create_by   = htmlspecialchars($row[6]);
 $updated     = strftime('%X - %A %d %B %Y', $row[7]);
 
 if($display_time)
