@@ -1,3 +1,6 @@
+CVS:
+    Update lang.nl file (marc ter horst)
+
 Version 1.0-pre1 (Sun Mar  4 23:26:43 GMT 2001)
     Internationalised functions.inc. "Help", "Admin" and "Search:" are now lang
     strings. Also, fixed an error in lang.fr, $lang["mrbs"] was defined twice.
