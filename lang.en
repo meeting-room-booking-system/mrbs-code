@@ -76,4 +76,16 @@ $lang[returncal]          = "Return to calendar view";
 $lang[accessdenied]       = "Access Denied";
 $lang[norights]           = "You do not have access rights to modify this item.";
 
+# Used in search.php3
+$lang[invalid_search]     = "Empty or invalid search string.";
+$lang[search_results]     = "Search Results for:";
+$lang[nothing_found]      = "No matching entries found.";
+$lang[records]            = "Records ";
+$lang[through]            = " through ";
+$lang[of]                 = " of ";
+$lang[previous]           = "Previous";
+$lang[next]               = "Next";
+$lang[entry]              = "Entry";
+$lang[view]               = "View";
+
 ?>

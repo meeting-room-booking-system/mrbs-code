@@ -15,7 +15,7 @@ mysql_select_db($mysql_database);
 
 if(!$search_str)
 {
-   echo("<H3>Empty or invalid search string.</H3>");
+   echo "<H3>" . $lang[invalid_search] . "</H3>";
    include "trailer.inc";
    echo "</BODY>";
    echo "</HTML>";
@@ -23,7 +23,7 @@ if(!$search_str)
 }
 
 # now is used so that we only display entries newer than the current time
-echo("<H4>Search Results for: \"<font color=\"blue\">$search_str</font>\"</H4>\n");
+echo "<H4>" . $lang[search_results] . " \"<font color=\"blue\">$search_str</font>\"</H4>\n";
 
 $now = time();
 
@@ -46,7 +46,7 @@ if(!isset($total))
 
 if($total == 0)
 {
-   echo("<b>No matching entries found</b>\n");
+   echo "<B>" . $lang[nothing_found] . "</B>\n";
    include "trailer.inc";
    echo "</BODY>";
    echo "</HTML>";
@@ -80,7 +80,7 @@ $has_next = $search_pos < ($total-$search[count]);
 
 if($has_prev || $has_next)
 {
-  echo "<B>Records " . ($search_pos+1) . " through " . ($search_pos+$num_records) . " of " . $total . "<BR>";
+  echo "<B>" . $lang[records] . ($search_pos+1) . $lang[through] . ($search_pos+$num_records) . $lang[of] . $total . "<BR>";
   
   # display a "Previous" button if necessary
   if($has_prev)
@@ -90,7 +90,7 @@ if($has_prev || $has_next)
     echo "&total=$total&year=$year&month=$month&day=$day\">";
   }
   
-  echo "<B>Previous</B>";
+  echo "<B>" . $lang[previous] . "</B>";
   
   if($has_prev)
     echo "</A>";
@@ -106,7 +106,7 @@ if($has_prev || $has_next)
     echo "&total=$total&year=$year&month=$month&day=$day\">";
   }
   
-  echo "<B>Next</B>";
+  echo "<B>". $lang[next] ."</B>";
   
   if($has_next)
     echo "</A>";
@@ -115,18 +115,18 @@ if($has_prev || $has_next)
   <P>
   <TABLE BORDER=2 BORDERCOLOR="#000000" CELLSPACING=0 CELLPADDING=3>
    <TR>
-    <TH BGCOLOR="#000000">Entry</TH>
-    <TH BGCOLOR="#000000">Created By</TH>
-    <TH BGCOLOR="#000000">Name</TH>
-    <TH BGCOLOR="#000000">Description</TH>
-    <TH BGCOLOR="#000000">Start Time</TH>
+    <TH BGCOLOR="#000000"><? echo $lang[entry]       ?></TH>
+    <TH BGCOLOR="#000000"><? echo $lang[createdby]   ?></TH>
+    <TH BGCOLOR="#000000"><? echo $lang[namebooker]  ?></TH>
+    <TH BGCOLOR="#000000"><? echo $lang[description] ?></TH>
+    <TH BGCOLOR="#000000"><? echo $lang[start_date]  ?></TH>
    </TR>
 <?
 while($row = mysql_fetch_row($result))
 {
 ?>
    <TR>
-    <TD><A HREF="view_entry.php3?id=<? echo $row[0] ?>">View</A></TD>
+    <TD><A HREF="view_entry.php3?id=<? echo $row[0] . "\">" . $lang[view] ?></A></TD>
     <TD><? echo $row[1] ?></TD>
     <TD><? echo $row[2] ?></TD>
     <TD><? echo $row[3] ?></TD>
