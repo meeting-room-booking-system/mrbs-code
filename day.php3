@@ -36,7 +36,8 @@ echo "<table><tr><td width=\"100%\">";
 echo "<form action=\"day.php3\" method=get>";
 	echo "<H2>$lang[bookingsfor]: ";
 	genDateSelector("", $day, $month, $year);
-	echo "<INPUT TYPE=submit Value=\"" . $lang[goto] . "\">";
+	echo "<INPUT TYPE=hidden NAME=area VALUE=$area>";
+	echo "<INPUT TYPE=submit VALUE=\"" . $lang[goto] . "\">";
 echo "</H2></form></td><td><center>";
 
 #Find out which rooms a user wants to see
