@@ -19,7 +19,7 @@
 $vocab["charset"]            = "iso-8859-1";
 
 # Used in style.inc
-$vocab["mrbs"]               = "MRBS varausj‰rjestelm‰";
+$vocab["mrbs"]               = "Huonetilojen varausj‰rjestelm‰";
 
 # Used in functions.inc
 $vocab["report"]             = "Raportit";
@@ -51,11 +51,11 @@ $vocab["editseries"]         = "Muokkaa varaussarjaa";
 $vocab["namebooker"]         = "Lyhyt kuvaus:";
 $vocab["fulldescription"]    = "T‰ydellinen kuvaus:<br>&nbsp;&nbsp;(Montako ihmist‰,<br>&nbsp;&nbsp;sis‰inen/ulkoinen jne)";
 $vocab["date"]               = "P‰iv‰m‰‰r‰:";
-$vocab["start_date"]         = "Aloitus aika:";
-$vocab["end_date"]           = "Lopetus aika:";
+$vocab["start_date"]         = "Aloitusaika:";
+$vocab["end_date"]           = "Lopetusaika:";
 $vocab["time"]               = "Aika:";
 $vocab["duration"]           = "Kesto:";
-$vocab["seconds"]            = "sekunttia";
+$vocab["seconds"]            = "sekuntia";
 $vocab["minutes"]            = "minuuttia";
 $vocab["hours"]              = "tuntia";
 $vocab["days"]               = "p‰iv‰‰";
@@ -84,18 +84,18 @@ $vocab["ctrl_click"]         = "Pid‰ CTRL-nappi pohjassa valitaksesi useita huon
 $vocab["entryid"]            = "Varauksen ID ";
 $vocab["repeat_id"]          = "Toiston ID "; 
 $vocab["you_have_not_entered"] = "Et ole antanut seuraavaa pakollista tietoa:";
-$vocab["valid_time_of_day"]  = "valid time of day.";
+$vocab["valid_time_of_day"]  = "Ajankohta ei ole kelpaa.";
 $vocab["brief_description"]  = "Lyhyt kuvaus";
 $vocab["useful_n-weekly_value"] = "M‰‰r‰aikaisen viikottaisen varauksen viikkom‰‰r‰.";
 
 # Used in view_entry.php
 $vocab["description"]        = "Kuvaus:";
-$vocab["room"]               = "Huone";
-$vocab["createdby"]          = "Varaaja:";
+$vocab["room"]               = "Huone:";
+$vocab["createdby"]          = "Varauksen tekij‰:";
 $vocab["lastupdate"]         = "P‰ivitetty:";
 $vocab["deleteentry"]        = "Poista varaus";
 $vocab["deleteseries"]       = "Poista varaussarja";
-$vocab["confirmdel"]         = "Oletko varma ett‰ haluat poistaa\\nt‰m‰n varaukse n?\\n\\n";
+$vocab["confirmdel"]         = "Oletko varma ett‰ haluat poistaa\\nt‰m‰n varauksen?\\n\\n";
 $vocab["returnprev"]         = "Takaisin edelliselle sivulle";
 $vocab["invalid_entry_id"]   = "Virheellinen varauksen ID.";
 
@@ -105,18 +105,18 @@ $vocab["sched_conflict"]     = "P‰‰llekk‰inen varaus";
 $vocab["conflict"]           = "Uusi varaus menee p‰‰llekk‰in seuraavien varausten kanssa:";
 $vocab["too_may_entrys"]     = "Valituilla ehdoilla tulisi liian monta varausta.<br>Valittuja ehtoja on muutettava.";
 $vocab["returncal"]          = "Paluu kalenterin‰kym‰‰n";
-$vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access"; 
+$vocab["failed_to_acquire"]  = "Tietokantaan ei saatu (varauksetonta) yhteytt‰."; 
 
 # Authentication stuff
-$vocab["accessdenied"]       = "Riitt‰m‰ttˆm‰t oikeudet";
+$vocab["accessdenied"]       = "P‰‰sy kielletty";
 $vocab["norights"]           = "Sinulla ei ole riitt‰v‰sti oikeuksia yritt‰m‰si toiminnon suorittamiseen.";
-$vocab["please_login"]       = "Please log in";
-$vocab["user_name"]          = "Name";
-$vocab["user_password"]      = "Password";
-$vocab["unknown_user"]       = "Unknown user";
-$vocab["you_are"]            = "You are";
-$vocab["login"]              = "Log in";
-$vocab["logoff"]             = "Log Off";
+$vocab["please_login"]       = "Ole hyv‰ ja kirjaudu sis‰‰n";
+$vocab["user_name"]          = "K‰ytt‰j‰tunnus";
+$vocab["user_password"]      = "Salasana";
+$vocab["unknown_user"]       = "Tuntematon k‰ytt‰j‰";
+$vocab["you_are"]            = "Olet";
+$vocab["login"]              = "Kirjaudu sis‰‰n";
+$vocab["logoff"]             = "Kirjaudu ulos";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Tyhj‰ tai kelpaamaton haku.";
