@@ -7,6 +7,7 @@ require_once "grab_globals.inc.php";
 include "config.inc.php";
 include "functions.inc";
 include "$dbsys.inc";
+include "mrbs_auth.inc";
 include "mincals.inc";
 
 # 3-value compare: Returns result of compare as "< " "= " or "> ".
