@@ -115,8 +115,8 @@ for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 	# Note: int casts on database rows for max may be needed for PHP3.
 	# Adjust the starting and ending times so that bookings which don't
 	# start or end at a recognized time still appear.
-	$start_t = max(round_t_down($row[1], $resolution), $am7);
-	$end_t = min(round_t_up($row[2], $resolution) - $resolution, $pm7);
+	$start_t = max(round_t_down($row[1], $resolution, $am7), $am7);
+	$end_t = min(round_t_up($row[2], $resolution, $am7) - $resolution, $pm7);
 	for ($t = $start_t; $t <= $end_t; $t += $resolution)
 	{
 		$today[$row[0]][$t]["id"]    = $row[4];

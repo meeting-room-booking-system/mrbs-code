@@ -256,22 +256,24 @@ function show_colour_key()
 }
 
 # Round time down to the nearest resolution
-function round_t_down($t, $resolution)
+function round_t_down($t, $resolution, $am7)
 {
-       return (int)$t - (int)$t % $resolution;
+        return (int)$t - (int)abs(((int)$t-(int)$am7)
+				  % $resolution); 
 }
 
 # Round time up to the nearest resolution
-function round_t_up($t, $resolution)
+function round_t_up($t, $resolution, $am7)
 {
-       if ($t % $resolution != 0)
-       {
-               return $t + $resolution - $t % $resolution;
-       }
-       else
-       {
-               return $t;
-       }
+	if (($t-$am7) % $resolution != 0)
+	{
+		return $t + $resolution - abs(((int)$t-(int)
+					       $am7) % $resolution);
+	}
+	else
+	{
+		return $t;
+	} 
 }
 
 # generates some html that can be used to select which area should be
