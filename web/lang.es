@@ -102,6 +102,13 @@ $vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access";
 # Authentication stuff
 $vocab["accessdenied"]       = "Acceso Denegado";
 $vocab["norights"]           = "No tiene autorizaci&oacute;n para modificar este dato.";
+$vocab["please_login"]       = "Please log in";
+$vocab["user_name"]          = "Name";
+$vocab["user_password"]      = "Password";
+$vocab["unknown_user"]       = "Unknown user";
+$vocab["you_are"]            = "You are";
+$vocab["login"]              = "Log in";
+$vocab["logoff"]             = "Log Off";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Cadena de b&uacute;squeda vac&iacute;a o incorrecta.";

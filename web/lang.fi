@@ -109,7 +109,14 @@ $vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access";
 # Authentication stuff
 $vocab["accessdenied"]       = "Riittämättömät oikeudet";
 $vocab["norights"]           = "Sinulla ei ole riittävästi oikeuksia yrittämäsi toiminnon suorittamiseen.";
- 
+$vocab["please_login"]       = "Please log in";
+$vocab["user_name"]          = "Name";
+$vocab["user_password"]      = "Password";
+$vocab["unknown_user"]       = "Unknown user";
+$vocab["you_are"]            = "You are";
+$vocab["login"]              = "Log in";
+$vocab["logoff"]             = "Log Off";
+
 # Used in search.php
 $vocab["invalid_search"]     = "Tyhjä tai kelpaamaton haku.";
 $vocab["search_results"]     = "Hakutulokset:";

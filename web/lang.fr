@@ -103,6 +103,13 @@ $vocab["failed_to_acquire"]  = "Erreur, impossible d'obtenir l'accès exclusif à 
 # Authentication stuff
 $vocab["accessdenied"]       = "Accès refusé";
 $vocab["norights"]           = "Vous n'avez pas les droits suffisants pour faire une modification.";
+$vocab["please_login"]       = "Veuillez vous identifier";
+$vocab["user_name"]          = "Nom";
+$vocab["user_password"]      = "Mot de passe";
+$vocab["unknown_user"]       = "Utilisateur non identifié";
+$vocab["you_are"]            = "Vous êtes";
+$vocab["login"]              = "S'identifier";
+$vocab["logoff"]             = "Partir";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Recherche non valide.";

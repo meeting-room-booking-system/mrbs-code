@@ -103,6 +103,13 @@ $vocab["failed_to_acquire"]  = "Kunne ikke oppnå eksklusiv databasetilgang";
 # Authentication stuff
 $vocab["accessdenied"]       = "Ingen adgang";
 $vocab["norights"]           = "Du har ingen rettigheter til å endre bookingen.";
+$vocab["please_login"]       = "Please log in";
+$vocab["user_name"]          = "Name";
+$vocab["user_password"]      = "Password";
+$vocab["unknown_user"]       = "Unknown user";
+$vocab["you_are"]            = "You are";
+$vocab["login"]              = "Log in";
+$vocab["logoff"]             = "Log Off";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Tom eller ugyldig søkestreng.";
