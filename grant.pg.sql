@@ -2,7 +2,7 @@
 --
 -- grant.pg.sql - Edit this to grant rights on PostgreSQL MRBS tables.
 -- You should not need to use this file if you create the tables (using the
--- mrbs_create.php script) while connected to the database as the same user
+-- tables.pg.sql script) while connected to the database as the same user
 -- MRBS will use (the one in config.inc.php), because that account will own the
 -- tables and have all rights.  However if you create the tables with another
 -- account, such as the superuser account, you need to use this script to

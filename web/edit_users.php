@@ -25,6 +25,7 @@
 require_once "grab_globals.inc.php";
 include "config.inc.php";
 include "functions.inc";
+require_once("database.inc.php");
 include "$dbsys.inc";
 include "mrbs_auth.inc";
 
@@ -39,43 +40,75 @@ if(!getAuthorised(getUserName(), getUserPassword(), 1))
 |                     Create the users database if needed                     |
 \*---------------------------------------------------------------------------*/
 
-$nusers = sql_query1("select count(*) from mrbs_users");
+//   If the table does not exist, then create it
 
-if ($nusers == -1)	/* If the table does not exist */
-    {			/* Then create it */
-    $cmd = "
-CREATE TABLE mrbs_users
-(
-  /* The first three fields are required. Don't remove or reorder. */
-  id        int DEFAULT '0' NOT NULL auto_increment,
-  name      varchar(30),
-  password  varchar(30),
-
-  /* The following fields are application-specific. However only int and varchar are editable. */
-  email     varchar(50),
-
-  PRIMARY KEY (id)
-);";
-    $r = sql_command($cmd);
-    if ($r == -1)
-        { // No need to localize this: Only the admin running this for the first time would see it.
-        print "Error creating the mrbs_users table.<br>\n";
-        print sql_error() . "<br>\n";
-        exit();
-        }
-    $nusers = 0;
-    }
-
-/* Get the list of fields actually in the table. (Allows the addition of new fields later on) */
-$result = sql_query("show fields from mrbs_users");
-$nfields = sql_count($result);
-for ($i=0; $i<$nfields; $i++)
+if (!is_array($nusers = $mdb->queryRow("SELECT count(*) FROM mrbs_users")))
+{   /*
+       The first three fields are required (id, name, password). Don't remove
+       or reorder.
+       The following fields are application-specific. However only int and
+       varchar are editable.
+    */
+    $fields = array(
+   		'id'		=> array(
+			'type'		=> 'integer',
+           	'notnull' 	=> 1,
+            'default' 	=> 0
+   	        ),
+       	'name'		=> array(
+       		'type'		=> 'text',
+            'length' 	=> 30
+   	        ),
+       	'password'	=> array(
+       		'type'		=> 'text',
+            'length'	=> 30
+            ),
+   	    'email'		=> array(
+       		'type'		=> 'text',
+           	'length'	=> 50
+            )
+   	);
+    $r = $mdb->createTable('mrbs_users', $fields);
+    /* No need to localize the following error messages: Only the admin
+       running this for the first time would see it.
+    */
+    if (MDB::isError($r))
     {
-    $line = sql_row($result, $i);
-    $field_name[$i] = $line[0]; /* OK with MySQL. Is this portable to other SQL versions? */
-    $field_type[$i] = $line[1]; /* OK with MySQL. Is this portable to other SQL versions? */
+        fatal_error(1, "<p>Error creating the mrbs_users table.<br>\n"
+        	. $r->getMessage() . "<br>" . $r->getUserInfo());
+    	exit();
     }
-sql_free($result);
+    $properties = array(
+    	'FIELDS' => array(
+        	'id'	=> array(
+            	'unique'	=> 1
+            )
+        )
+    );
+    $r = $mdb->createIndex('mrbs_users', 'mrbs_users_pkey', $properties);
+    if (MDB::isError($r))
+    {
+        fatal_error(1, "<p>Error creating the mrbs_users table indexes.<br>\n"
+        	. $r->getMessage() . "<br>" . $r->getUserInfo());
+        exit();
+    }
+    $r = $mdb->createSequence('mrbs_users_id');
+    if (MDB::isError($r))
+    {
+        fatal_error(1, "<p>Error creating the mrbs_users sequence.<br>\n"
+        	. $r->getMessage() . "<br>" . $r->getUserInfo());
+        exit();
+    }
+    $nusers = 0;
+}
+/* Get the list of fields actually in the table. (Allows the addition of new fields later on) */
+$nfields = $mdb->listTableFields('mrbs_users');
+for ($i=0; $i<sizeof($nfields); $i++)
+{
+	$field_name[$i] = $nfields[$i];
+    $types = $mdb->getTableFieldDefinition('mrbs_users', $nfields[$i]);
+    $field_type[$i] = $types[0][0]['type'];
+}
 
 /* Get localized field name */
 function get_loc_field_name($i)
@@ -111,11 +144,10 @@ else /* We've just created the table. Assume the person doing this IS the admini
 if (isset($Action) && ($Action == "Edit"))
     {
     if ($Id >= 0) /* -1 for new users, or >=0 for existing ones */
-        {
-        $result = sql_query("select * from mrbs_users where id=$Id");
-        $data = sql_row($result, 0);
-        sql_free($result);
-        }
+    	{
+        $data = $mdb->queryRow(
+        	"SELECT * FROM mrbs_users WHERE id=$Id", $field_type);
+    	}
     if (($Id == -1) || (!$data)) /* Set blank data for undefined entries */
     	{
     	for ($i=0; $i<$nfields; $i++) $data[$i] = "";
@@ -143,7 +175,7 @@ if (isset($Action) && ($Action == "Edit"))
 
     print "<form method=post action=\"" . basename($PHP_SELF) . "\">\n";
     print "  <table>\n";
-    
+
     for ($i=0; $i<$nfields; $i++)
         {
         /* The ID field cannot change; The password field must not be shown. */
@@ -196,49 +228,69 @@ if (isset($Action) && ($Action == "Update"))
 	print_header(0, 0, 0, "");
 
         print get_vocab("passwords_not_eq") . "<br>\n";
-        
+
         print "<form method=post action=\"" . basename($PHP_SELF) . "\">\n";
         print "  <input type=submit value=\" " . get_vocab("ok") . " \" /> <br />\n";
         print "</form>\n</body>\n</html>\n";
 
         exit();
         }
-    
-    if ($Id >= 0)
-    	{
-        $operation = "replace into mrbs_users values (";
-        }
-    else
-        {
-        $operation = "insert into mrbs_users values (";
-        $Id = sql_query1("select max(id) from mrbs_users;") + 1; /* Use the last index + 1 */
-        /* Note: If the table is empty, sql_query1 returns -1. So use index 0. */
-        }
 
-    for ($i=0; $i<$nfields; $i++)
+    if ($Id >= 0)
+    {
+        // This is a REPLACE
+        $replaced_fields = array();
+        for ($i=0; $i<$nfields; $i++)
         {
-        if ($field_name[$i]=="id") $Field[$i] = $Id;
-        if ($field_name[$i]=="name") $Field[$i] = strtolower($Field[$i]);
-        if (($field_name[$i]=="password") && ($password0!="")) $Field[$i]=$password0;
-        /* print "$field_name[$i] = $Field[$i]<br>"; */
-        if ($i > 0) $operation = $operation . ", ";
-        if (stristr($field_type[$i], "char")) $operation .= "'";
-        if ((stristr($field_type[$i], "int")) && ($Field[$i] == "")) $Field[$i] = "0";
-        $operation = $operation . $Field[$i];
-        if (stristr($field_type[$i], "char")) $operation .= "'";
+            if ($field_name[$i]=="id") $Field[$i] = $Id;
+            if ($field_name[$i]=="name") $Field[$i] = strtolower($Field[$i]);
+            if (($field_name[$i]=="password") && ($password0!="")) $Field[$i]=$password0;
+            if ((stristr($field_type[$i], "integer")) && ($Field[$i] == "")) $Field[$i] = "0";
+            if (stristr($field_type[$i], "text"))
+
+        	$replaced_fields[$fields_name[$i]] = array(
+            	'Value' => $Field[$i],
+                'Type'  => $field_type[$i]
+                	)
         }
-    $operation = $operation . ");";
+        $r = $mdb->replace('mrbs_users', $replaced_fields);
+    }
+    else
+    {
+        $operation = "INSERT INTO mrbs_users VALUES (";
+        $Id = $mdb->nextId('mrbs_users_id');
+    	for ($i=0; $i<$nfields; $i++)
+        {
+        	if ($field_name[$i]=="id") $Field[$i] = $Id;
+        	if ($field_name[$i]=="name") $Field[$i] = strtolower($Field[$i]);
+        	if (($field_name[$i]=="password") && ($password0!="")) $Field[$i]=$password0;
+        	/* print "$field_name[$i] = $Field[$i]<br>"; */
+        	if ($i > 0) $operation = $operation . ", ";
+        	//if (stristr($field_type[$i], "char")) $operation .= "'";
+        	if ((stristr($field_type[$i], "integer")) && ($Field[$i] == "")) $Field[$i] = "0";
+        	//$operation = $operation . $Field[$i];
+        	if (stristr($field_type[$i], "text"))
+            {
+            	$operation .= $mdb->getTextValue($Field[$i]);
+            }
+            else
+            {
+            	$operation .= $Field[$i];
+            }
+    	}
+    	$operation = $operation . ");";
+        $r = $mdb->query($operation);
+    }
 
     /* print $operation . "<br>\n"; */
-    $r = sql_command($operation);
-    if ($r == -1)
+    if (MDB::isError($r))
         {
-	print_header(0, 0, 0, "");
+    print_header(0, 0, 0, "");
 
-	// This is unlikely to happen in normal  operation. Do not translate.
+    // This is unlikely to happen in normal  operation. Do not translate.
         print "Error updating the mrbs_users table.<br>\n";
-        print sql_error() . "<br>\n";
-        
+        print $r->getMessage() . "<br>" . $r->getUserInfo() . "<br>\n";
+
         print "<form method=post action=\"" . basename($PHP_SELF) . "\">\n";
         print "  <input type=submit value=\" " . get_vocab("ok") . " \" /> <br />\n";
         print "</form>\n</body>\n</html>\n";
@@ -261,15 +313,15 @@ if (isset($Action) && ($Action == "Delete"))
         exit();
         }
 
-    $r = sql_command("delete from mrbs_users where id=$Id;");
-    if ($r == -1)
+    $r = $mdb->query("DELETE FROM mrbs_users WHERE id=$Id;");
+    if (MDB::isError($r))
         {
 	print_header(0, 0, 0, "");
 
 	// This is unlikely to happen in normal  operation. Do not translate.
         print "Error deleting entry $Id from the mrbs_users table.<br>\n";
-        print sql_error() . "<br>\n";
-        
+        print $r->getMessage() . "<br>" . $r->getUserInfo() . "<br>\n";
+
         print "<form method=post action=\"" . basename($PHP_SELF) . "\">\n";
         print "  <input type=submit value=\" " . get_vocab("ok") . " \" /> <br />\n";
         print "</form>\n</body>\n</html>\n";
@@ -299,7 +351,7 @@ if ($level == 2) /* Administrators get the right to add new users */
     print "</form></p>\n";
     }
 
-$list = sql_query("select * from mrbs_users order by name");
+$list = $mdb->query("SELECT * FROM mrbs_users ORDER BY name", $field_type);
 print "<table border=1>\n";
 print "<tr>";
 // The first 2 columns are the user rights and uaser name.
@@ -309,7 +361,7 @@ for ($i=3; $i<$nfields; $i++) print "<th>" . get_loc_field_name($i) . "</th>";
 print "<th>" . get_vocab("action") . "</th>";
 print "</tr>\n";
 $i = 0; 
-while ($line = sql_row($list, $i++))
+while ($line = $mdb->fetchInto($list))
     {
     print "\t<tr>\n";
     $j = -1;
@@ -359,6 +411,7 @@ while ($line = sql_row($list, $i++))
     print "\t\t</td>\n";
     print "\t</tr>\n";
     }
+    $mdb->freeResult($list);
 print "</table>\n";
 
 include "trailer.inc";

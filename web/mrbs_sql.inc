@@ -9,32 +9,27 @@
  * $starttime - The start of period
  * $endtime   - The end of the period
  * $ignore    - An entry ID to ignore, 0 to ignore no entries
- * $repignore - A repeat ID to ignore everything in the series, 0 to ignore no
- *              series
- *
+ * $repignore - A repeat ID to ignore everything in the series, 0 to ignore no series
+ * 
  * Returns:
  *   nothing   - The area is free
  *   something - An error occured, the return value is human readable
  */
 function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 {
-    global $vocab, $mdb;
-    // Select any meetings which overlap ($starttime,$endtime) for this room:
+    global $mdb, $enable_periods, $periods;
+    # Select any meetings which overlap ($starttime,$endtime) for this room:
     $sql = "SELECT  id, name, start_time 
             FROM    mrbs_entry 
             WHERE   start_time < $endtime 
             AND     end_time > $starttime
             AND     room_id = $room_id";
 
-    if ($ignore > 0)
-    {
-        $sql .= " AND id <> $ignore";
-    }
-    if ($repignore > 0)
-    {
-        $sql .= " AND repeat_id <> $repignore";
-    }
-    $sql .= " ORDER BY start_time";
+	if ($ignore > 0)
+		$sql .= " AND id <> $ignore";
+	if ($repignore > 0)
+		$sql .= " AND repeat_id <> $repignore";
+	$sql .= " ORDER BY start_time";
 
     $types = array('integer', 'text', 'integer');
     $res = $mdb->query($sql, $types);
@@ -47,32 +42,40 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
         $mdb->freeResult($res);
         return "";
     }
-    // Get the room's area ID for linking to day, week, and month views:
-    $area = mrbsGetRoomArea($room_id);
+	# Get the room's area ID for linking to day, week, and month views:
+	$area = mrbsGetRoomArea($room_id);
 
-    // Build a string listing all the conflicts:
-    $err = "";
+	# Build a string listing all the conflicts:
+	$err = "";
     while ($row = $mdb->fetchInto($res))
-    {
-        $starts = getdate($row[2]);
-        $param_ym = "area=$area&year=$starts[year]&month=$starts[mon]";
-        $param_ymd = $param_ym . "&day=$starts[mday]";
+	{
+		$starts = getdate($row[2]);
+		$param_ym = "area=$area&year=$starts[year]&month=$starts[mon]";
+		$param_ymd = $param_ym . "&day=$starts[mday]";
+
+
+		if( $enable_periods ) {
+        	$p_num =$starts[minutes];
+        	$startstr = utf8_strftime('%A %d %B %Y, ', $row[2]) . $periods[$p_num];
+        }
+		else
+        	$startstr = utf8_strftime('%A %d %B %Y %H:%M:%S', $row[2]);
 
         $err .= "<LI><A HREF=\"view_entry.php?id=$row[0]\">$row[1]</A>"
-        . " ( " . strftime('%A %d %B %Y %T', $row[2]) . ") "
-        . "(<A HREF=\"day.php?$param_ymd\">$vocab[viewday]</a>"
-        . " | <A HREF=\"week.php?room=$room_id&$param_ymd\">$vocab[viewweek]</a>"
-        . " | <A HREF=\"month.php?room=$room_id&$param_ym\">$vocab[viewmonth]</a>)";
-    }
-
-    return $err;
+		. " ( " . $startstr . ") "
+		. "(<A HREF=\"day.php?$param_ymd\">".get_vocab("viewday")."</a>"
+		. " | <A HREF=\"week.php?room=$room_id&$param_ymd\">".get_vocab("viewweek")."</a>"
+		. " | <A HREF=\"month.php?room=$room_id&$param_ym\">".get_vocab("viewmonth")."</a>)";
+	}
+	
+	return $err;
     $mdb->freeResult($res);
 }
 
 /** mrbsDelEntry()
- *
+ * 
  * Delete an entry, or optionally all entrys.
- *
+ * 
  * $user   - Who's making the request
  * $id     - The entry to delete
  * $series - If set, delete the series, except user modified entrys
@@ -97,19 +100,16 @@ function mrbsDelEntry($user, $id, $series, $all)
             FROM    mrbs_entry 
             WHERE ";
 
-    if ($series)
-    {
-        $sql .= "repeat_id=$repeat_id";
-    }
-    else
-    {
-        $sql .= "id=$id";
-    }
-
+	if($series)
+		$sql .= "repeat_id=$repeat_id";
+	else
+		$sql .= "id=$id";
+	
     $types = array('text', 'integer', 'integer');
     $res = $mdb->query($sql, $types);
-
-    $removed = 0;
+	
+	$removed = 0;
+	
 
     $query = "DELETE 
               FROM      mrbs_entry 
@@ -152,9 +152,9 @@ function mrbsDelEntry($user, $id, $series, $all)
 }
 
 /** mrbsCreateSingleEntry()
- *
+ * 
  * Create a single (non-repeating) entry in the database
- *
+ * 
  * $starttime   - Start time of entry
  * $endtime     - End time of entry
  * $entry_type  - Entry type
@@ -164,31 +164,35 @@ function mrbsDelEntry($user, $id, $series, $all)
  * $name        - Name
  * $type        - Type (Internal/External)
  * $description - Description
- *
+ * 
  * Returns:
  *   0        - An error occured while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
-                               $room_id, $owner, $name, $type, $description)
+function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $room_id,
+                               $owner, $name, $type, $description)
 {
     global $mdb;
     $name        = unslashes($name);
     $description = unslashes($description);
-
+	
+	# make sure that any entry is of a positive duration
+	# this is to trap potential negative duration created when DST comes
+	# into effect
+	if( $endtime > $starttime )
     $id = $mdb->nextId('mrbs_entry_id');
     $sql = "INSERT INTO mrbs_entry ( id, start_time, end_time, entry_type,
-                                    repeat_id, room_id, timestamp, create_by, 
+                                    repeat_id, room_id, timestamp, create_by,
                                     name, type, description)
             VALUES      ($id, $starttime, $endtime, $entry_type, $repeat_id,
                         $room_id, " . $mdb->getTimestampValue(MDB_Date::mdbNow())
-                        . ", " . $mdb->getTextValue($owner) . ", " . 
-                        $mdb->getTextValue($name) . ", " . 
-                        $mdb->getTextValue($type) . ", " . 
+                        . ", " . $mdb->getTextValue($owner) . ", " .
+                        $mdb->getTextValue($name) . ", " .
+                        $mdb->getTextValue($type) . ", " .
                         $mdb->getTextValue($description) . ")";
 
     $res = $mdb->query($sql);
-    if (MDB::isError($res)) 
+    if (MDB::isError($res))
     {
         return 0;
     }
@@ -197,9 +201,9 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
 }
 
 /** mrbsCreateRepeatEntry()
- *
+ * 
  * Creates a repeat entry in the data base
- *
+ * 
  * $starttime   - Start time of entry
  * $endtime     - End time of entry
  * $rep_type    - The repeat type
@@ -210,13 +214,13 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
  * $name        - Name
  * $type        - Type (Internal/External)
  * $description - Description
- *
+ * 
  * Returns:
  *   0        - An error occured while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
-         $rep_opt, $room_id, $owner, $name, $type, $description, $rep_num_weeks)
+function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate, $rep_opt,
+                               $room_id, $owner, $name, $type, $description, $rep_num_weeks)
 {
     global $mdb;
     $name        = unslashes($name);
@@ -247,25 +251,27 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
 }
 
 /** same_day_next_month()
- * Find the same day of the week in next month, same week number.
- *
- * Return the number of days to step forward for a "monthly repeat,
- * corresponding day" serie - same week number and day of week next month.
- * This function always returns either 28 or 35.
- * For dates in the 5th week of a month, the resulting day will be in the 4th
- * week of the next month if no 5th week corresponding day exist.
- *
- * @param    integer     $time           timestamp of the day from which we want to find
- *                                       the same day of the week in next month, same
- *                                       week number
- * @return   integer     $days_jump      number of days to step forward to find the next occurence (28 or 35)
- * @var      integer     $days_in_month  number of days in month
- * @var      integer     $day            day of the month (01 to 31)
- * @var      integer     $weeknumber     week number for each occurence ($time)
- * @var      boolean     $temp1          first step to compute $days_jump
- * @var      integer     $next_month     intermediate next month number (1 to 12)
- * @global   integer     $_initial_weeknumber    used only for 5th weeks repeat type
- * @todo     We need a new "monthly repeat, corresponding day, last week of the month" type.
+* Find the same day of the week in next month, same week number.
+*
+* Return the number of days to step forward for a "monthly repeat,
+* corresponding day" serie - same week number and day of week next month.
+* This function always returns either 28 or 35.
+* For dates in the 5th week of a month, the resulting day will be in the 4th
+* week of the next month if no 5th week corresponding day exist.
+* :TODO: thierry_bo 030510: repeat 5th week entries only if 5th week exist.
+* If we want a 5th week repeat type, only 5th weeks have to be booked. We need
+* also a new "monthly repeat, corresponding day, last week of the month" type.
+*
+* @param    integer     $time           timestamp of the day from which we want to find
+*                                       the same day of the week in next month, same
+*                                       week number
+* @return   integer     $days_jump      number of days to step forward to find the next occurence (28 or 35)
+* @var      integer     $days_in_month  number of days in month
+* @var      integer     $day            day of the month (01 to 31)
+* @var      integer     $weeknumber     week number for each occurence ($time)
+* @var      boolean     $temp1          first step to compute $days_jump
+* @var      integer     $next_month     intermediate next month number (1 to 12)
+* @global   integer     $_initial_weeknumber    used only for 5th weeks repeat type
  */
 function same_day_next_month($time)
 {
@@ -276,29 +282,22 @@ function same_day_next_month($time)
     $weeknumber = (int)(($day - 1) / 7) + 1;
     $temp1 = ($day + 7 * (5 - $weeknumber) <= $days_in_month);
 
-    // keep month number > 12 for the test purpose in line beginning with
-    // "days_jump = 28 +..."
-    $next_month = date("n", mktime(11, 0 ,0, date("n", $time), $day +35,
-        date("Y", $time))) + (date("n", mktime(11, 0 ,0, date("n", $time),
-        $day +35, date("Y", $time))) < date("n", $time)) * 12;
+    // keep month number > 12 for the test purpose in line beginning with "days_jump = 28 +..."
+    $next_month = date("n", mktime(11, 0 ,0, date("n", $time), $day +35, date("Y", $time))) + (date("n", mktime(11, 0 ,0, date("n", $time), $day +35, date("Y", $time))) < date("n", $time)) * 12;
 
     // prevent 2 months jumps if $time is in 5th week
     $days_jump = 28 + (($temp1 && !($next_month - date("n", $time) - 1)) * 7);
 
-    /* if initial week number is 5 and the new occurence month number ($time +
-     * $days_jump) is not changed if we add 7 days, then we can add 7 days to
-     * $days_jump to come back to the 5th week (yuh!)
-     */
-    $days_jump += 7 * ((5 == $_initial_weeknumber) && (date("n",
-        mktime(11, 0 ,0, date("n", $time), $day + $days_jump,
-        date("Y", $time))) == date("n", mktime(11, 0 ,0, date("n", $time),
-        $day + $days_jump + 7, date("Y", $time)))));
+    /* if initial week number is 5 and the new occurence month number ($time + $days_jump)
+     * is not changed if we add 7 days, then we can add 7 days to $days_jump to come
+     * back to the 5th week (yuh!) */
+    $days_jump += 7 * (($_initial_weeknumber == 5) && (date("n", mktime(11, 0 ,0, date("n", $time), $day + $days_jump, date("Y", $time))) == date("n", mktime(11, 0 ,0, date("n", $time), $day + $days_jump + 7, date("Y", $time)))));
 
     return $days_jump;
 }
 
 /** mrbsGetRepeatEntryList
- *
+ * 
  * Returns a list of the repeating entrys
  * 
  * $time     - The start time
@@ -314,80 +313,76 @@ function same_day_next_month($time)
  */
 function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr, $rep_num_weeks)
 {
-    $sec   = date("s", $time);
-    $min   = date("i", $time);
-    $hour  = date("G", $time);
-    $day   = date("d", $time);
-    $month = date("m", $time);
-    $year  = date("Y", $time);
+	$sec   = date("s", $time);
+	$min   = date("i", $time);
+	$hour  = date("G", $time);
+	$day   = date("d", $time);
+	$month = date("m", $time);
+	$year  = date("Y", $time);
 
-    global $_initial_weeknumber;
-    $_initial_weeknumber = (int)(($day - 1) / 7) + 1;
+	global $_initial_weeknumber;
+	$_initial_weeknumber = (int)(($day - 1) / 7) + 1;
 
-    $entrys = "";
-    for ($i = 0; $i < $max_ittr; $i++)
-    {
-        $time = mktime($hour, $min, $sec, $month, $day, $year);
-        if ($time > $enddate)
-        {
-            break;
-        }
+	$entrys = "";
+	for($i = 0; $i < $max_ittr; $i++)
+	{
+		$time = mktime($hour, $min, $sec, $month, $day, $year);
+		if ($time > $enddate)
+			break;
 
-        $entrys[$i] = $time;
-        
-        switch ($rep_type)
-        {
-            // Daily repeat
-            case 1:
-                $day += 1;
-                break;
-            
-            // Weekly repeat
-            case 2:
-                $j = $cur_day = date("w", $entrys[$i]);
-                // Skip over days of the week which are not enabled:
-                while (($j = ($j + 1) % 7) != $cur_day && !$rep_opt[$j])
-                {
-                    $day += 1;
-                }
+		$entrys[$i] = $time;
+		
+		switch($rep_type)
+		{
+			// Daily repeat
+			case 1:
+				$day += 1;
+				break;
+			
+			// Weekly repeat
+			case 2:
+				$j = $cur_day = date("w", $entrys[$i]);
+				// Skip over days of the week which are not enabled:
+				while (($j = ($j + 1) % 7) != $cur_day && !$rep_opt[$j])
+					$day += 1;
 
-                $day += 1;
-                break;
-            
-            // Monthly repeat
-            case 3:
-                $month += 1;
-                break;
-            
-            // Yearly repeat
-            case 4:
-                $year += 1;
-                break;
-            
-            // Monthly repeat on same week number and day of week
-            case 5:
-                $day += same_day_next_month($time);
-                break;
+				$day += 1;
+				break;
+			
+			// Monthly repeat
+			case 3:
+				$month += 1;
+				break;
+			
+			// Yearly repeat
+			case 4:
+				$year += 1;
+				break;
+			
+			// Monthly repeat on same week number and day of week
+			case 5:
+				$day += same_day_next_month($time);
+				break;
 
-            // n Weekly repeat
-            case 6:
-                $j = $cur_day = date("w", $entrys[$i]);
-                // Skip over days of the week which are not enabled:
-                while (($j = ($j + 1) % (7*$rep_num_weeks)) != $cur_day && !$rep_opt[$j])
-                {
-                    $day += 1;
-                }
+			// n Weekly repeat
+			case 6:
+				$j = $cur_day = date("w", $entrys[$i]);
+				// Skip over days of the week which are not enabled:
+				while (($j = ($j + 1) % (7*$rep_num_weeks)) != $cur_day && !$rep_opt[$j])
+				{
+					$day += 1;
+				}
 
-                $day += 1;
-                break;  
-                
-            // Unknown repeat option
-            default:
-                return;
-        }
-    }
+				$day += 1;
+				break;	
+				
+			// Unknown repeat option
+			default:
+				return;
+		}
+	}
 
-    return $entrys;
+	return $entrys;
 }
 
 /** mrbsCreateRepeatingEntrys()
@@ -409,48 +404,45 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr,
  *   0        - An error occured while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
-         $rep_enddate, $rep_opt, $room_id, $owner, $name, $type, $description,
-         $rep_num_weeks)
+function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type, $rep_enddate, $rep_opt,
+                                   $room_id, $owner, $name, $type, $description, $rep_num_weeks)
 {
-    global $max_rep_entrys;
-
-    $reps = mrbsGetRepeatEntryList($starttime, $rep_enddate, $rep_type,
-                                   $rep_opt, $max_rep_entrys, $rep_num_weeks);
-    if (count($reps) > $max_rep_entrys)
-    {
-        return 0;
-    }
-
-    if (empty($reps))
-    {
-        mrbsCreateSingleEntry($starttime, $endtime, 0, 0, $room_id, $owner,
-                              $name, $type, $description);
-        return;
-    }
-
-    $ent = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type,
-                                 $rep_enddate, $rep_opt, $room_id, $owner,
-                                 $name, $type, $description, $rep_num_weeks);
-    if ($ent)
-    {
-        $diff = $endtime - $starttime;
-
-        for ($i = 0; $i < count($reps); $i++)
-        {
-            mrbsCreateSingleEntry($reps[$i], $reps[$i] + $diff, 1, $ent,
-                 $room_id, $owner, $name, $type, $description);
-        }
-    }
-    return $ent;
+	global $max_rep_entrys;
+	
+	$reps = mrbsGetRepeatEntryList($starttime, $rep_enddate, $rep_type, $rep_opt, $max_rep_entrys, $rep_num_weeks);
+	if(count($reps) > $max_rep_entrys)
+		return 0;
+	
+	if(empty($reps))
+	{
+		mrbsCreateSingleEntry($starttime, $endtime, 0, 0, $room_id, $owner, $name, $type, $description);
+		return;
+	}
+	
+	$ent = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate, $rep_opt, $room_id, $owner, $name, $type, $description, $rep_num_weeks);
+	if($ent)
+	{
+	
+		for($i = 0; $i < count($reps); $i++)
+		{
+			# calculate diff each time and correct where events
+			# cross DST
+			$diff = $endtime - $starttime;
+			$diff += cross_dst($reps[$i], $reps[$i] + $diff);
+	    
+			mrbsCreateSingleEntry($reps[$i], $reps[$i] + $diff, 1, $ent,
+				 $room_id, $owner, $name, $type, $description);
+		}
+	}
+	return $ent;
 }
 
 /* mrbsGetEntryInfo()
  *
  * Get the booking's entrys
- *
+ * 
  * $id = The ID for which to get the info for.
- *
+ * 
  * Returns:
  *    nothing = The ID does not exist
  *    array   = The bookings info

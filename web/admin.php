@@ -1,6 +1,6 @@
 <?php
 
-// $Id$
+# $Id$
 
 require_once "grab_globals.inc.php";
 include "config.inc.php";
@@ -9,12 +9,12 @@ require_once("database.inc.php");
 include "$dbsys.inc";
 include "mrbs_auth.inc";
 
-// If we dont know the right date then make it up
-if (!isset($day) or !isset($month) or !isset($year))
+#If we dont know the right date then make it up 
+if(!isset($day) or !isset($month) or !isset($year))
 {
-    $day   = date("d");
-    $month = date("m");
-    $year  = date("Y");
+	$day   = date("d");
+	$month = date("m");
+	$year  = date("Y");
 }
 
 if (empty($area))
@@ -22,10 +22,10 @@ if (empty($area))
     $area = get_default_area();
 }
 
-if (!getAuthorised(getUserName(), getUserPassword(), 2))
+if(!getAuthorised(getUserName(), getUserPassword(), 2))
 {
-    showAccessDenied($day, $month, $year, $area);
-    exit();
+	showAccessDenied($day, $month, $year, $area);
+	exit();
 }
 
 print_header($day, $month, $year, isset($area) ? $area : "");
@@ -50,21 +50,21 @@ if (isset($area))
 }
 ?>
 
-<h2><?php echo $vocab['administration'] ?></h2>
+<h2><?php echo get_vocab("administration") ?></h2>
 
 <table border=1>
 <tr>
-<th><center><b><?php echo $vocab['areas'] ?></b></center></th>
-<th><center><b><?php echo $vocab['rooms'] ?> <?php if(isset($area_name)) { echo $vocab['in'] . " " .
+<th><center><b><?php echo get_vocab("areas") ?></b></center></th>
+<th><center><b><?php echo get_vocab("rooms") ?> <?php if(isset($area_name)) { echo get_vocab("in") . " " .
   htmlspecialchars($area_name); }?></b></center></th>
 </tr>
 
 <tr>
 <td>
-<?php
-// This cell has the areas
+<?php 
+# This cell has the areas
 $types = array('integer', 'text');
-$res = $mdb->query("SELECT  id, area_name
+$res = $mdb->query("SELECT  id, area_name 
                     FROM    mrbs_area 
                     ORDER   by area_name", $types);
 if (MDB::isError($res))
@@ -74,7 +74,7 @@ if (MDB::isError($res))
 $row = $mdb->fetchInto($res);
 if (!$row)
 {
-	echo $vocab['noareas'];
+    echo get_vocab("noareas");
 }
 else
 {
@@ -83,26 +83,23 @@ else
     {
         $area_name_q = urlencode($row[1]);
         echo "<li><a href=\"admin.php?area=$row[0]&area_name=$area_name_q\">"
-            . htmlspecialchars($row[1]) . "</a>
-            (<a href=\"edit_area_room.php?area=$row[0]\">" . $vocab['edit'] .
-            "</a>) (<a href=\"del.php?type=area&area=$row[0]\">" .
-            $vocab['delete'] . "</a>)\n";
-    }
+			. htmlspecialchars($row[1]) . "</a> (<a href=\"edit_area_room.php?area=$row[0]\">" . get_vocab("edit") . "</a>) (<a href=\"del.php?type=area&area=$row[0]\">" .  get_vocab("delete") . "</a>)\n";
+	}
     while ($row = $mdb->fetchInto($res));
-    echo "</ul>";
+	echo "</ul>";
 }
 $mdb->freeResult($res);
 ?>
 </td>
 <td>
 <?php
-// This one has the rooms
+# This one has the rooms
 if (isset($area))
 {
     $types = array('integer', 'text', 'text', 'integer');
     $res = $mdb->query("SELECT  id, room_name, description, capacity
-                        FROM    mrbs_room
-                        WHERE   area_id=$area
+                        FROM    mrbs_room 
+                        WHERE   area_id=$area 
                         ORDER   by room_name", $types);
     if (MDB::isError($res))
     {
@@ -111,7 +108,7 @@ if (isset($area))
     $row = $mdb->fetchInto($res);
     if (!$row)
     {
-        echo $vocab['norooms'];
+        echo get_vocab("norooms");
     }
     else
     {
@@ -119,48 +116,47 @@ if (isset($area))
         do
         {
             echo "<li>" . htmlspecialchars($row[1]) . "(" . htmlspecialchars($row[2])
-            . ", $row[3]) (<a href=\"edit_area_room.php?room=$row[0]\">" .
-            $vocab['edit'] . "</a>) (<a href=\"del.php?type=room&room=$row[0]\">"
-            .  $vocab['delete'] . "</a>)\n";
-        }
-        while ($row = $mdb->fetchInto($res));
+			. ", $row[3]) (<a href=\"edit_area_room.php?room=$row[0]\">" . get_vocab("edit") . "</a>) (<a href=\"del.php?type=room&room=$row[0]\">" . get_vocab("delete") . "</a>)\n";
+		}
+		while ($row = $mdb->fetchInto($res));
         echo "</ul>";
-    }
+	}
     $mdb->freeResult($res);
 }
 else
 {
-    echo $vocab['noarea'];
+    echo get_vocab("noarea");
 }
+
 ?>
 
 </tr>
 <tr>
 <td>
-<h3 ALIGN=CENTER><?php echo $vocab['addarea'] ?></h3>
+<h3 ALIGN=CENTER><?php echo get_vocab("addarea") ?></h3>
 <form action=add.php method=post>
 <input type=hidden name=type value=area>
 
 <TABLE>
-<TR><TD><?php echo $vocab['name'] ?>:       </TD><TD><input type=text name=name></TD></TR>
+<TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name=name></TD></TR>
 </TABLE>
-<input type=submit value="<?php echo $vocab['addarea'] ?>">
+<input type=submit value="<?php echo get_vocab("addarea") ?>">
 </form>
 </td>
 
 <td>
-<?php if (isset($area)) { ?>
-<h3 ALIGN=CENTER><?php echo $vocab['addroom'] ?></h3>
+<?php if (0 != $area) { ?>
+<h3 ALIGN=CENTER><?php echo get_vocab("addroom") ?></h3>
 <form action=add.php method=post>
 <input type=hidden name=type value=room>
 <input type=hidden name=area value=<?php echo $area; ?>>
 
 <TABLE>
-<TR><TD><?php echo $vocab['name'] ?>:       </TD><TD><input type=text name=name></TD></TR>
-<TR><TD><?php echo $vocab['description'] ?></TD><TD><input type=text name=description></TD></TR>
-<TR><TD><?php echo $vocab['capacity'] ?>:   </TD><TD><input type=text name=capacity></TD></TR>
+<TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name=name></TD></TR>
+<TR><TD><?php echo get_vocab("description") ?></TD><TD><input type=text name=description></TD></TR>
+<TR><TD><?php echo get_vocab("capacity") ?>:   </TD><TD><input type=text name=capacity></TD></TR>
 </TABLE>
-<input type=submit value="<?php echo $vocab['addroom'] ?>">
+<input type=submit value="<?php echo get_vocab("addroom") ?>">
 </form>
 <?php } else { echo "&nbsp;"; }?>
 </td>
@@ -168,6 +164,6 @@ else
 </table>
 
 <br>
-<?php echo $vocab['browserlang'] . " " . $HTTP_ACCEPT_LANGUAGE . " " . $vocab['postbrowserlang'] ; ?>
+<?php echo get_vocab("browserlang") . " " . $HTTP_ACCEPT_LANGUAGE . " " . get_vocab("postbrowserlang") ; ?>
 
 <?php include "trailer.inc" ?>

@@ -91,7 +91,7 @@ class Calendar
       for ($i = 0, $s = ""; $i < 7; $i++)
       {
          $show = $basetime + ($i * 24 * 60 * 60);
-         $fl = strftime('%a',$show);
+         $fl = utf8_strftime('%a',$show);
          $s .= "<td align=center valign=top class=\"calendarHeader\">$fl</td>\n";
       }
       return $s;
@@ -104,17 +104,14 @@ class Calendar
         global $day;
         global $month;
 
-        if (!isset($weekstarts)) 
-        {
-            $weekstarts = 0;
-        }
+        if (!isset($weekstarts)) $weekstarts = 0;
         $s = "";
         
         $daysInMonth = $this->getDaysInMonth($this->month, $this->year);
         $date = mktime(12, 0, 0, $this->month, 1, $this->year);
         
         $first = (strftime("%w",$date) + 7 - $weekstarts) % 7;
-        $monthName = strftime("%B",$date);
+        $monthName = utf8_strftime("%B",$date);
         
         $prevMonth = $this->getCalendarLink($this->month - 1 >   0 ? $this->month - 1 : 12, $this->month - 1 >   0 ? $this->year : $this->year - 1);
         $nextMonth = $this->getCalendarLink($this->month + 1 <= 12 ? $this->month + 1 :  1, $this->month + 1 <= 12 ? $this->year : $this->year + 1);
@@ -148,39 +145,25 @@ class Calendar
                     $d_week = ($d - 7);
 
                     if ($link == "")
-                    {
                         $s .= $d;
-                    }
-                    elseif (preg_match("/day/i", $PHP_SELF))
+                    elseif (preg_match("/day/i", basename($PHP_SELF)))
                     {
                         if (($d == $this->day) and ($this->h))
-                        {
                             $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
-                        }
                         else
-                        {
                             $s .= "<a href=\"$link\">$d</a>";
-                        }
                     }
-                    elseif (preg_match("/week/i", $PHP_SELF))
+                    elseif (preg_match("/week/i", basename($PHP_SELF)))
                     {
                         if (($this->day <= $d) && ($this->day > $d_week) && ($this->h))
-                        {
                             $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
-                        }
                         elseif (($this->day < $days_to_highlight) && ($d < $days_to_highlight) && (($day - $daysInMonth) > (-6)) && ($this->month == ($month + 1)) && ($first != 0))
-                        {
                             $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
-                        }
                         else
-                        {
                             $s .= "<a href=\"$link\">$d</a>";
-                        }
                     }
-                    elseif (preg_match("/month/i", $PHP_SELF))
-                    {
+                    elseif (preg_match("/month/i", basename($PHP_SELF)))
                         $s .= "<a href=\"$link\">$d</a>";
-                    }
                 }
                 else
                 {

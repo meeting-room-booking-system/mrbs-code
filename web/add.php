@@ -1,6 +1,6 @@
 <?php
 
-// $Id$
+# $Id$
 
 require_once("grab_globals.inc.php");
 require "config.inc.php";
@@ -9,18 +9,18 @@ require_once("database.inc.php");
 require "$dbsys.inc";
 require "mrbs_auth.inc";
 
-if (!getAuthorised(getUserName(), getUserPassword(), 2))
+if(!getAuthorised(getUserName(), getUserPassword(), 2))
 {
-    showAccessDenied($day, $month, $year, $area);
-    exit();
+	showAccessDenied($day, $month, $year, $area);
+	exit();
 }
 
-// This file is for adding new areas/rooms
+# This file is for adding new areas/rooms
 
-// we need to do different things depending on if its a room
-// or an area
+# we need to do different things depending on if its a room
+# or an area
 
-if ("area" == $type)
+if ($type == "area")
 {
     $area_name_q = unslashes($name);
     $id = $mdb->nextId('mrbs_area_id');
@@ -38,14 +38,11 @@ if ("area" == $type)
     $area = $mdb->currId('mrbs_area_id');
 }
 
-if ("room" == $type)
+if ($type == "room")
 {
     $room_name_q = unslashes($name);
     $description_q = unslashes($description);
-    if (empty($capacity))
-    {
-        $capacity = 0;
-    }
+	if (empty($capacity)) $capacity = 0;
     $id = $mdb->nextId('mrbs_room_id');
     $sql = "INSERT INTO mrbs_room (id, room_name, area_id, description, capacity)
             VALUES      ($id, " . $mdb->getTextValue($room_name_q) . ", $area, "

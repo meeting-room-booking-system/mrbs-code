@@ -18,19 +18,8 @@
  *
  */
 
-/* getAuth($realm)
- * 
- * Request that the username/password be given for the specified realm
- * 
- * $realm - Which username/password do we want.
- * 
- * Nothing
- */
-function authGet($realm)
-{
-    Header("WWW-Authenticate: Basic realm=\"$realm\"");
-    Header("HTTP/1.0 401 Unauthorized");
-}
+/* ~~JFL 2003/11/12 By default, use the http session mechanism */
+if (!isset($auth['session'])) $auth['session']='http';
 
 /* authValidateUser($user, $pass)
  * 
@@ -47,35 +36,28 @@ function authValidateUser($user, $pass)
 {
         global $auth;
 
-    // Check if we do not have a username/password
-    if (!isset($user) || !isset($pass))
-    {
-        authGet($auth["realm"]);
-        return 0;
-    }
+	// Check if we do not have a username/password
+	if(!isset($user) || !isset($pass))
+	{
+		return 0;
+	}
 
         // untaint $user
         //preg_match("/(^\w+).*/",$user,$regs);
         //$user = $regs[1];
 
         $rs = yp_match (yp_get_default_domain(), "passwd.byname", $user);
-    if ( ! empty ( $rs ) ) {
+	if ( ! empty ( $rs ) ) {
           $rs = explode ( ":", $rs );
-      if ( $rs[1] == crypt ( $pass, substr ( $rs[1], 0, 2 ) ) ) { 
+	  if ( $rs[1] == crypt ( $pass, substr ( $rs[1], 0, 2 ) ) ) { 
             return 1;
           } else {
             return 0;
           }
         }
 
-       // If we failed prompt for username/password
-    if ($user || $pass)
-    {
-        authGet($auth["realm"]);
-    }
-
-    // return failure
-    return 0;
+	// return failure
+	return 0;
 }
 
 /* authGetUserLevel($user)
@@ -89,33 +71,19 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user, $lev1_admin)
 {
-    // User not logged in, user level '0'
-    if (!isset($user))
-    {
-        return 0;
-    }
+	// User not logged in, user level '0'
+	if(!isset($user))
+		return 0;
 
-    // Check if the user is can modify
-    for ($i = 0; $lev1_admin[$i]; $i++)
-    {
-        if (strcasecmp($user, $lev1_admin[$i]) == 0)
-        {
-            return 2;
-        }
-    }
-    
-    // Everybody else is access level '1'
-    return 1;
-}
-
-function getUserName()
-{
-    return getAuthUserName();
-}
-
-function getUserPassword()
-{
-    return getAuthUserPassword();
+	// Check if the user is can modify
+	for($i = 0; $lev1_admin[$i]; $i++)
+	{
+		if(strcasecmp($user, $lev1_admin[$i]) == 0)
+			return 2;
+	}
+	
+	// Everybody else is access level '1'
+	return 1;
 }
 
 ?>

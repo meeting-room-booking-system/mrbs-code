@@ -19,6 +19,8 @@ TD.BL { vertical-align: baseline; text-align: left}
 TD.TR { vertical-align: top; text-align: right}
 TD.TL { vertical-align: top; text-align: left}
 
+td form { margin:0; } // Prevent IE from displaying margins around forms in tables.
+
 TD.unallocated {color:gray}
 TD.allocated {color:black}
 A:link.unallocated {color:#9BA9E6}

@@ -2,19 +2,8 @@
 
 // $Id$
 
-/* getAuth($realm)
- * 
- * Request that the username/password be given for the specified realm
- * 
- * $realm - Which username/password do we want.
- * 
- * Nothing
- */
-function authGet($realm)
-{
-    Header("WWW-Authenticate: Basic realm=\"$realm\"");
-    Header("HTTP/1.0 401 Unauthorized");
-}
+/* ~~JFL 2003/11/12 By default, use the http session mechanism */
+if (!isset($auth['session'])) $auth['session']='http';
 
 /* authValidateUser($user, $pass)
  * 
@@ -33,25 +22,45 @@ function authValidateUser($user, $pass)
     global $ldap_host;
     global $ldap_base_dn;
     global $ldap_filter;
-    
+
     // Check if we do not have a username/password
     // User can always bind to LDAP anonymously with empty password,
     // therefore we need to block empty password here...
-    if (!isset($user) || !isset($pass) || strlen($pass)==0)
+    if(!isset($user) || !isset($pass) || strlen($pass)==0)
     {
-        authGet($auth["realm"]);
         return 0;
     }
-    
-    // Check if $pass equal to "userPassword" attribute in $dn  
+
+    // Check if $pass equal to "userPassword" attribute in $dn
     $ldap=@ldap_connect($ldap_host);
-    if ($ldap)
+    if($ldap)
     {
-        for ($i = 0; $ldap_base_dn[$i]; $i++)
+        for($i = 0; $ldap_base_dn[$i]; $i++)
         {
-            $dn = "cn=" . $user . "," . $ldap_base_dn[$i];
-            
-            if (@ldap_bind($ldap, $dn, $pass))
+            // get dn for user $user: (anonymous bind first)
+            if (@ldap_bind($ldap))
+            {
+                $attributes = array( "uid", "dn" );
+                $dn_res = ldap_search($ldap, $ldap_base_dn[$i], "uid=$user", $attributes);
+                $dn_entries = ldap_get_entries($ldap, $dn_res);
+                if ($dn_entries['count'] > 0)
+                {
+                    // found a valid DN:
+                    $dn = $dn_entries[0]['dn'];
+                }
+                else
+                {
+                    // no DN found -> unknown user
+                    authGet($auth["realm"]);
+                    return 0;
+                }
+            }
+            else   // anonymous bind did not work
+            {
+                $dn = "cn=" . $user . "," . $ldap_base_dn[$i];
+            }
+
+            if(@ldap_bind($ldap, $dn, $pass))
             {
                 if (! $ldap_filter)
                 {
@@ -60,10 +69,8 @@ function authValidateUser($user, $pass)
                 }
                 else
                 {
-                    $res = @ldap_search($ldap,
-                        $ldap_base_dn[$i],
-                        "(&(uid=$user)($ldap_filter))",
-                        array());
+                    $res = @ldap_search($ldap, $ldap_base_dn[$i],
+                           "(&(uid=$user)($ldap_filter))", array());
                     if (@ldap_count_entries($ldap, $res) > 0)
                     {
                         @ldap_unbind($ldap);
@@ -73,19 +80,15 @@ function authValidateUser($user, $pass)
             }
         }
         @ldap_unbind($ldap);
-    }       
-
-    // If we failed prompt for username/password
-    authGet($realm);
-    
+    }
     // return failure
     return 0;
 }
 
 /* authGetUserLevel($user)
- * 
+ *
  * Determines the users access level
- * 
+ *
  * $user - The user name
  *
  * Returns:
@@ -94,33 +97,18 @@ function authValidateUser($user, $pass)
 function authGetUserLevel($user, $lev1_admin)
 {
     // User not logged in, user level '0'
-    if (!isset($user))
-    {
+    if(!isset($user))
         return 0;
-    }
     
     // Check if the user is can modify
-    for ($i = 0; $lev1_admin[$i]; $i++)
+    for($i = 0; $lev1_admin[$i]; $i++)
     {
-        if (strcasecmp($user, $lev1_admin[$i]) == 0)
-        {
+        if(strcasecmp($user, $lev1_admin[$i]) == 0)
             return 2;
-        }
     }
     
     // Everybody else is access level '1'
     return 1;
-}
-
-
-function getUserName()
-{
-    return getAuthUserName();
-}
-
-function getUserPassword()
-{
-    return getAuthUserPassword();
 }
 
 ?>

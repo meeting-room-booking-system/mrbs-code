@@ -120,11 +120,21 @@ else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['HTTP_REFERER']))
     $HTTP_REFERER = $HTTP_SERVER_VARS['HTTP_REFERER'];
 }
 
+// -- HTTP_HOST --
+if (!empty($_SERVER) && isset($_SERVER['HTTP_HOST']))
+{
+    $HTTP_HOST = $_SERVER['HTTP_HOST'];
+}
+else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['HTTP_HOST']))
+{
+    $HTTP_HOST = $HTTP_SERVER_VARS['HTTP_HOST'];
+}
+
 // +---------------------------------------------------------------------------+
 /* Changes to this file :
  * $Log$
- * Revision 1.1  2003/08/14 04:08:37  T. BOTHOREL
- * 1er commit pour développement MRBS_MDB basée sur situation CVS 14 08 2003.
+ * Revision 1.2  2003/11/14 21:47:20  jflarvoire
+ * Added the setting of $HTTP_HOST.
  *
  * Revision 1.1  2003/03/05 05:12:31  thierry_bo
  * + Make MRBS compliant to the 'register_globals = off' directive

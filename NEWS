@@ -6,28 +6,58 @@
 [ - Bug fixed (we hope)      ]
 [============================]
 
+-------------------------------------------------------------------------------
+Version 1.2-pre2 (Sun Dec 07 00:00:00 GMT 2003):
+
+[+] Completely revamped authentication logic.
+    Now MRBS make use of sessions to store temporary user informations,
+    ability to log on/off, and so on.. This is now the default mode. 
+    See AUTHENTICATION for more details.
+[+] Revamped localisation. 
+      Automatic language determination made much better, works for
+	  Windows and Unix servers now
+[+] Added utility to convert text in the database to UTF8.
+[+] Revamped internationalisation. MRBS can now be called  fulled Unicode. 
+      MRBS serves all of it's pages in UTF-8 and stores everything in the 
+      database in UTF-8. This means that all languages work together.
+[+] Bubbles are displayed when mouse hover entries in day, week and month 
+      view, showing a more complete description.
+[+] Allow to view weeks in the bottom of the web pages as week numbers 
+      instead of 'first day of the week' (Per Wermelin - SKIOLD Sæby A/S"
+	  <ela@skiold.dk>).
+[*] Added a new script for the "ext" authentication scheme that
+	  allows you to use a password file with usernames and their
+	  crypted passwords.
+[-] Fixed bug #853410: When changing a non n-weekly entry, field "Number of 
+      weeks (for n-weekly)" appear...
+[-] Fixed bug #846337: We can create rooms with no area
+[-] Fixed bug #413175, #831310: Daylight savings time shift entries one hour 
+[-] Fixed bug: Always displays "Edit Entry" instead of "Edit Series" at top 
+      of page when editing a serie.
+[-] Fixed bug in pop3 auth scheme.
+[-] and several other minor bug fixes.
+[*] Warning: MRBS does not work with postgreSQL 7.3 and above. 
 
 -------------------------------------------------------------------------------
-Branch mrbs_MDB-branch (2003-09-16):
+Version 1.2-pre1 (Tue Sep 23 06:00:00 GMT 2003):
 
-[+] Add support for Oracle, FrontBase, Interbase/Firebird and Microsoft SQL
-      Server database systems.
+[*] Renamed coonfig.inc to config.inc.php
 [-] Fixed bug #748934, do not allow booking descriptions with only spaces.
 [+] Added Windows NT / IIS authentication scheme.
 [-] Fixed bug : Always displays "edit entry" instead of "Add Entry" even when
-      adding an entry. (<Ian Duncan>)
+      adding an entry. (Ian Duncan)
 [-] Fixed bug: repeated meetings selecting a "Monthly repeat, same day of the
       week" repeat type in the 5th week were not properly scheduled.
 [-] Fixed bug: when you press on print preview
       in report.php page, all but the submission form is visible but
-      not the actual report  (<sQuare>).
+      not the actual report  (sQuare).
 [*] In the minicalendar week view, the full week is highlighted instead of
-      the first day of the week (<sQuare>).
+      the first day of the week (sQuare).
 [-] Bug fix: in week view, allow non 'internet explorer' browsers to see links
       to the corresponding days in column titles (Johan.Schonning).
 [+] Entries in monthly view can be shown as start/end slot or brief description
 [*] Replaced the column titles in the week view to  be links to the
-	  corresponding days (<sQuare>).
+	  corresponding days (sQuare).
 [-] Bug fix : italian vocab with character not properly escaped prevents
       deleting entries and/or prevent jcript popup to works (Pietro donatini)
 [-] Fixed bug in escaping of username and password for all
@@ -42,7 +72,7 @@ Branch mrbs_MDB-branch (2003-09-16):
 [-] Bug fix if drop-down select box is choosen to show areas/rooms
 [*] Changed the tiny size of numbers in calendar to
       a larger one.
-
+      
 -------------------------------------------------------------------------------
 Version 1.1 (Tue Jan 14 10:00:00 GMT 2003)
 

@@ -26,26 +26,15 @@
  *
  */
 
-/* getAuth($realm)
- * 
- * Request that the username/password be given for the specified realm
- * 
- * $realm - Which username/password do we want.
- * 
- * Nothing
- */
-function authGet($realm)
-{
-    Header("WWW-Authenticate: Basic realm=\"$realm\"");
-    Header("HTTP/1.0 401 Unauthorized");
-}
+/* ~~JFL 2003/11/12 By default, use the http session mechanism */
+if (!isset($auth['session'])) $auth['session']='http';
 
 function version_check($vercheck)
 {
   $minver = str_replace(".","", $vercheck);
   $curver = str_replace(".","", phpversion());
 
-  if ($curver >= $minver)
+  if($curver >= $minver)
   {
     return true;
   }
@@ -75,7 +64,6 @@ function authValidateUser($user, $pass)
     // Check if we do not have a username/password
     if (!isset($user) || !isset($pass))
     {
-        authGet($auth["realm"]);
         return 0;
     }
     
@@ -89,13 +77,7 @@ function authValidateUser($user, $pass)
     
     // If it succeeded, return success
     if ($ret == 0)
-    {
         return 1;
-    }
-    
-    // If we failed prompt for username/password
-    if ($user || $pass)
-        authGet($auth["realm"]);
     
     // return failure
     return 0;
@@ -112,35 +94,19 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user, $lev1_admin)
 {
-    // User not logged in, user level '0'
-    if (!isset($user))
-    {
-        return 0;
-    }
-    
-    // Check if the user is can modify
-    for($i = 0; $lev1_admin[$i]; $i++)
-    {
-        if (strcasecmp($user, $lev1_admin[$i]) == 0)
-        {
-            return 2;
-        }
-    }
-    
-    // Everybody else is access level '1'
-    return 1;
-}
-
-function getUserName()
-{
-    global $PHP_AUTH_USER;
-    return $PHP_AUTH_USER;
-}
-
-function getUserPassword()
-{
-    global $PHP_AUTH_PW;
-    return $PHP_AUTH_PW;
+	// User not logged in, user level '0'
+	if(!isset($user))
+		return 0;
+	
+	// Check if the user is can modify
+	for($i = 0; $lev1_admin[$i]; $i++)
+	{
+		if(strcasecmp($user, $lev1_admin[$i]) == 0)
+			return 2;
+	}
+	
+	// Everybody else is access level '1'
+	return 1;
 }
 
 ?>

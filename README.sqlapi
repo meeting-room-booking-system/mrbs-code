@@ -140,6 +140,7 @@ the above variables plus:
      $dbsys = "pgsql";  //  or "mysql" , "oci8" and so on.
 Then, each PHP script which wants to connect to the database starts with:
      include "config.inc.php";
+     require_once("database.inc.php");
      include "$dbsys.inc";
 
 

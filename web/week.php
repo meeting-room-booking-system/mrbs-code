@@ -1,7 +1,7 @@
 <?php
-// $Id$
+# $Id$
 
-// mrbs/week.php - Week-at-a-time view
+# mrbs/week.php - Week-at-a-time view
 
 require_once "grab_globals.inc.php";
 include "config.inc.php";
@@ -10,86 +10,87 @@ require_once("database.inc.php");
 include "$dbsys.inc";
 include "mincals.inc";
 
-if (empty($debug_flag))
-{
-    $debug_flag = 0;
-}
+if (empty($debug_flag)) $debug_flag = 0;
 
-// If we don't know the right date then use today:
+$num_of_days=7; #could also pass this in as a parameter or whatever
+
+# If we don't know the right date then use today:
 if (!isset($day) or !isset($month) or !isset($year))
 {
-    $day   = date("d");
-    $month = date("m");
-    $year  = date("Y");
-}
-else
-{
-    // Make the date valid if day is more then number of days in month:
-    while (!checkdate($month, $day, $year))
-    {
-        $day--;
-    }
+	$day   = date("d");
+	$month = date("m");
+	$year  = date("Y");
+} else {
+# Make the date valid if day is more then number of days in month:
+	while (!checkdate($month, $day, $year))
+		$day--;
 }
 
-// Set the date back to the previous $weekstarts day (Sunday, if 0):
-$time = mktime(0, 0, 0, $month, $day, $year);
+# Set the date back to the previous $weekstarts day (Sunday, if 0):
+$time = mktime(12, 0, 0, $month, $day, $year);
 if (($weekday = (date("w", $time) - $weekstarts + 7) % 7) > 0)
 {
-    $time -= $weekday * 86400;
-    $day   = date("d", $time);
-    $month = date("m", $time);
-    $year  = date("Y", $time);
+	$time -= $weekday * 86400;
+	$day   = date("d", $time);
+	$month = date("m", $time);
+	$year  = date("Y", $time);
 }
 
 if (empty($area))
-{
-    $area = get_default_area();
-}
+	$area = get_default_area();
 if (empty($room))
 {
     $room = $mdb->queryOne("SELECT  min(id) 
                             FROM    mrbs_room 
                             WHERE   area_id=$area", 'integer');
 }
-// Note $room will be -1 if there are no rooms; this is checked for below.
+# Note $room will be -1 if there are no rooms; this is checked for below.
 
-// print the page header
+# print the page header
 print_header($day, $month, $year, $area);
 
-// Define the start of day and end of day (default is 7-7)
-$am7=mktime($morningstarts,00,0,$month,$day,$year);
-$pm7=mktime($eveningends,$eveningends_minutes,0,$month,$day,$year);
+$format = "Gi";
+if( $enable_periods ) {
+	$format = "i";
+	$resolution = 60;
+	$morningstarts = 12;
+	$eveningends = 12;
+	$eveningends_minutes = count($periods)-1;
 
-// Start and end of week:
-$week_midnight = mktime(0, 0, 0, $month, $day, $year);
-$week_start = $am7;
-$week_end = mktime($eveningends, $eveningends_minutes, 0, $month, $day+6, $year);
-
-if ( $pview != 1 )
-{
-    // Table with areas, rooms, minicals.
-    echo "<table width=\"100%\"><tr>";
-    $this_area_name = "";
-    $this_room_name = "";
-
-    // Show all areas
-    echo "<td width=\"30%\"><u>$vocab[areas]</u><br>";
+}
+# Define the start and end of each day of the week in a way which is not
+# affected by daylight saving...
+for ($j = 0; $j<=($num_of_days-1); $j++) {
+	# are we entering or leaving daylight saving
+	# dst_change:
+	# -1 => no change
+	#  0 => entering DST
+	#  1 => leaving DST
+	$dst_change[$j] = is_dst($month,$day+$j,$year);
+	$am7[$j]=mktime($morningstarts,0,0,$month,$day+$j,$year,is_dst($month,$day+$j,$year,$morningstarts));
+	$pm7[$j]=mktime($eveningends,$eveningends_minutes,0,$month,$day+$j,$year,is_dst($month,$day+$j,$year,$eveningends));
 }
 
-// show either a select box or the normal html list
-if ($area_list_format == "select")
-{
-    // from functions.inc
-    echo make_area_select_html('week.php', $area, $year, $month, $day); 
+if ( $pview != 1 ) {
+	# Table with areas, rooms, minicals.
+	echo "<table width=\"100%\"><tr>";
+	$this_area_name = "";
+	$this_room_name = "";
+
+	# Show all areas
+	echo "<td width=\"30%\"><u>".get_vocab("areas")."</u><br>";
+}
+
+  # show either a select box or the normal html list
+  if ($area_list_format == "select") {
+	echo make_area_select_html('week.php', $area, $year, $month, $day); # from functions.inc
     $this_area_name = $mdb->queryOne("SELECT    area_name 
                                       FROM      mrbs_area
                                       WHERE     id=$area", 'text');
     $this_room_name = $mdb->queryOne("SELECT    room_name 
                                       FROM      mrbs_room
                                       WHERE     id=$room", 'text');
-}
-else
-{
+  } else {
     $sql = "SELECT      id, area_name 
             FROM        mrbs_area 
             ORDER BY    area_name";
@@ -119,21 +120,17 @@ else
     }
 } // end area display if
 
-if ( $pview != 1)
-{
-    echo "</td>\n";
+if ( $pview != 1) {
+	echo "</td>\n";
 
-    // Show all rooms in the current area
-    echo "<td width=\"30%\"><u>$vocab[room]</u><br>";
+	# Show all rooms in the current area
+echo "<td width=\"30%\"><u>".get_vocab("room")."</u><br>";
 }
 
-// should we show a drop-down for the room list, or not?
-if ($area_list_format == "select")
-{
-    echo make_room_select_html('week.php', $area, $room, $year, $month, $day); // from functions.inc
-}
-else
-{
+  # should we show a drop-down for the room list, or not?
+  if ($area_list_format == "select") {
+	echo make_room_select_html('week.php', $area, $room, $year, $month, $day); # from functions.inc
+  } else {
     $sql = "SELECT      id, room_name 
             FROM        mrbs_room 
             WHERE       area_id=$area 
@@ -161,284 +158,319 @@ else
                 echo htmlspecialchars($row[1]) . "</a><br>\n";
             }
         }
-    }
-} // end select if
+	}
+} # end select if
 
-if ( $pview != 1 )
-{
-    echo "</td>\n";
+if ( $pview != 1 ) {
+	echo "</td>\n";
 
-    //Draw the three month calendars
-    minicals($year, $month, $day, $area, 'week');
-    echo "</tr></table>\n";
+	#Draw the three month calendars
+	minicals($year, $month, $day, $area, 'week');
+	echo "</tr></table>\n";
 
-    // Don't continue if this area has no rooms:
-    if ($room <= 0)
-    {
-        echo "<h1>$vocab[no_rooms_for_area]</h1>";
-        include "trailer.inc";
-        exit;
-    }
+	# Don't continue if this area has no rooms:
+	if ($room <= 0)
+	{
+		echo "<h1>".get_vocab("no_rooms_for_area")."</h1>";
+		include "trailer.inc";
+		exit;
+	}
 }
 
-// Show area and room:
+# Show area and room:
 echo "<h2 align=center>$this_area_name - $this_room_name</h2>\n";
 
-//y? are year, month and day of the previous week.
-//t? are year, month and day of the next week.
+#y? are year, month and day of the previous week.
+#t? are year, month and day of the next week.
 
-$i  = mktime(0,0,0,$month,$day-7,$year);
+$i= mktime(12,0,0,$month,$day-7,$year);
 $yy = date("Y",$i);
 $ym = date("m",$i);
 $yd = date("d",$i);
 
-$i  = mktime(0,0,0,$month,$day+7,$year);
+$i= mktime(12,0,0,$month,$day+7,$year);
 $ty = date("Y",$i);
 $tm = date("m",$i);
 $td = date("d",$i);
 
-if ( $pview != 1 )
-{
-    //Show Go to week before and after links
-    echo "<table width=\"100%\"><tr><td>
-      <a href=\"week.php?year=$yy&month=$ym&day=$yd&area=$area&room=$room\">
-      &lt;&lt; $vocab[weekbefore]</a></td>
-      <td align=center><a href=\"week.php?area=$area&room=$room\">$vocab[gotothisweek]</a></td>
-      <td align=right><a href=\"week.php?year=$ty&month=$tm&day=$td&area=$area&room=$room\">
-      $vocab[weekafter] &gt;&gt;</a></td></tr></table>";
+if ( $pview != 1 ) {
+	#Show Go to week before and after links
+	echo "<table width=\"100%\"><tr><td>
+	  <a href=\"week.php?year=$yy&month=$ym&day=$yd&area=$area&room=$room\">
+	  &lt;&lt; ".get_vocab("weekbefore")."</a></td>
+	  <td align=center><a href=\"week.php?area=$area&room=$room\">".get_vocab("gotothisweek")."</a></td>
+	  <td align=right><a href=\"week.php?year=$ty&month=$tm&day=$td&area=$area&room=$room\">
+	  ".get_vocab("weekafter")."&gt;&gt;</a></td></tr></table>";
 }
 
-/*Get all appointments for this week in the room that we care about
-   row[0] = Start time
-   row[1] = End time
-   row[2] = Entry type
-   row[3] = Entry name (brief description)
-   row[4] = Entry ID
-   The range predicate (starts <= week_end && ends > week_start) is
-   equivalent but more efficient than the original 3-BETWEEN clauses.
- */
-$sql = "SELECT  start_time, end_time, type, name, id
+#Get all appointments for this week in the room that we care about
+# row[0] = Start time
+# row[1] = End time
+# row[2] = Entry type
+# row[3] = Entry name (brief description)
+# row[4] = Entry ID
+# row[5] = Complete description
+# This data will be retrieved day-by-day
+for ($j = 0; $j<=($num_of_days-1) ; $j++) {
+
+$sql = "SELECT  start_time, end_time, type, name, id, description
         FROM    mrbs_entry
         WHERE   room_id=$room
-        AND     start_time <= $week_end 
-        AND     end_time > $week_start";
+        AND     start_time <= $pm7[$j] 
+        AND     end_time > $am7[$j]";
 
-/* Each row returned from the query is a meeting. Build an array of the
-   form:  d[weekday][slot][x], where x = id, color, data.
-   [slot] is based at 0 for midnight, but only slots within the hours of
-   interest (morningstarts : eveningends) are filled in.
-   [id] and [data] are only filled in when the meeting should be labeled,
-   which is once for each meeting on each weekday.
-   Note: weekday here is relative to the $weekstarts configuration variable.
-   If 0, then weekday=0 means Sunday. If 1, weekday=0 means Monday.
- */
-$first_slot = $morningstarts * 3600 / $resolution;
-$last_slot = ($eveningends * 3600 + $eveningends_minutes * 60) / $resolution;
+	# Each row returned from the query is a meeting. Build an array of the
+	# form:  d[weekday][slot][x], where x = id, color, data, long_desc.
+	# [slot] is based at 000 (HHMM) for midnight, but only slots within
+	# the hours of interest (morningstarts : eveningends) are filled in.
+	# [id], [data] and [long_desc] are only filled in when the meeting
+	# should be labeled,  which is once for each meeting on each weekday.
+	# Note: weekday here is relative to the $weekstarts configuration variable.
+	# If 0, then weekday=0 means Sunday. If 1, weekday=0 means Monday.
 
-if ($debug_flag)
-{
-    echo "<br>DEBUG: query=$sql <br>slots=$first_slot:$last_slot\n";
-}
-$types = array('integer', 'integer', 'text', 'text', 'integer');
-$res = $mdb->query($sql, $types);
-if (MDB::isError($res))
-{
-    echo $res->getMessage() . "<br>" . $res->getUserInfo() . "<br>";
-}
-else
-{
-    while ($row = $mdb->fetchInto($res))
-    {
-        if ($debug_flag)
-        {
-            echo "<br>DEBUG: result $i, id $row[4], starts $row[0], ends $row[1]\n";
-        }
 
-        // Fill in slots for the meeting. Start at the meeting start time or
-        // week start (which ever is later), and end one slot before the meeting
-        // end time or week end (which ever is earlier).
-        // Note: int casts on database rows for min and max is needed for PHP3.
+	if ($debug_flag) echo "<br>DEBUG: query=$sql\n";
+	$types = array('integer', 'integer', 'text', 'text', 'integer');
+	$res = $mdb->query($sql, $types);
+	if (MDB::isError($res))
+	{
+    	echo $res->getMessage() . "<br>" . $res->getUserInfo() . "<br>";
+	}
+	else
+	{
+    	while ($row = $mdb->fetchInto($res))
+    	{
+			if ($debug_flag)
+				echo "<br>DEBUG: result $i, id $row[4], starts $row[0], ends $row[1]\n";
 
-        $t = max(round_t_down($row[0], $resolution, $am7), $week_start);
-        $end_t = min((int)round_t_up((int)$row[1], (int)$resolution, $am7),
-                 (int)$week_end+1);
-        $weekday = (date("w", $t) + 7 - $weekstarts) % 7;
-        $prev_weekday = -1; // Invalid value to force initial label.
-        $slot = ($t - $week_midnight) % 86400 / $resolution;
-        do
-        {
-            if ($debug_flag)
-            {
-                echo "<br>DEBUG: t=$t, weekday=$weekday, slot=$slot\n";
-            }
+			# $d is a map of the screen that will be displayed
+ 			# It looks like:
+ 			#     $d[Day][Time][id]
+ 			#                  [color]
+ 			#                  [data]
+ 			# where Day is in the range 0 to $num_of_days. 
+ 	
+	 		# Fill in the map for this meeting. Start at the meeting start time,
+ 			# or the day start time, whichever is later. End one slot before the
+ 			# meeting end time (since the next slot is for meetings which start then),
+ 			# or at the last slot in the day, whichever is earlier.
+ 			# Note: int casts on database rows for max may be needed for PHP3.
+ 			# Adjust the starting and ending times so that bookings which don't
+	 		# start or end at a recognized time still appear.
+ 
+			$start_t = max(round_t_down($row[0], $resolution, $am7[$j]), $am7[$j]);
+ 			$end_t = min(round_t_up($row[1], $resolution, $am7[$j]) - $resolution, $pm7[$j]);
 
-            if ($slot < $first_slot)
-            {
-                // This is before the start of the displayed day; skip to first slot.
-                $slot = $first_slot;
-                $t = $weekday * 86400 + $am7;
-                continue;
-            }
-
-            if ($slot <= $last_slot)
-            {
-                // This is within the working day; color it.
-                $d[$weekday][$slot]["color"] = $row[2];
-                // Only label it if it is the first time on this day:
-                if ($prev_weekday != $weekday)
-                {
-                    $prev_weekday = $weekday;
-                    $d[$weekday][$slot]["data"] = $row[3];
-                    $d[$weekday][$slot]["id"] = $row[4];
-                }
-            }
-            // Step to next time period and slot:
-            $t += $resolution;
-            $slot++;
-
-            if ($slot > $last_slot)
-            {
-                // Skip to first slot of next day:
-                $weekday++;
-                $slot = $first_slot;
-                $t = $weekday * 86400 + $am7;
-            }
-        }
-        while ($t < $end_t);
-    }
-}
-if ($debug_flag)
-{
-    echo "<p>DEBUG:<p><pre>\n";
-    if (gettype($d) == "array")
-    {
-        while (list($w_k, $w_v) = each($d))
-        {
-            while (list($t_k, $t_v) = each($w_v))
-            {
-                while (list($k_k, $k_v) = each($t_v))
-                {
-                    echo "d[$w_k][$t_k][$k_k] = '$k_v'\n";
-                }
-            }
-        }
-    }
-    else
-    {
-        echo "d is not an array!\n";
-    }
-    echo "</pre><p>\n";
+	 		for ($t = $start_t; $t <= $end_t; $t += $resolution)
+ 			{
+				$d[$j][date($format,$t)]["id"]    = $row[4];
+ 				$d[$j][date($format,$t)]["color"] = $row[2];
+ 				$d[$j][date($format,$t)]["data"]  = "";
+ 				$d[$j][date($format,$t)]["long_descr"]  = "";
+ 			}
+ 
+ 			# Show the name of the booker in the first segment that the booking
+ 			# happens in, or at the start of the day if it started before today.
+ 			if ($row[1] < $am7[$j])
+			{
+ 				$d[$j][date($format,$am7[$j])]["data"] = $row[3];
+ 				$d[$j][date($format,$am7[$j])]["long_descr"] = $row[5];
+			}
+ 			else
+			{
+ 				$d[$j][date($format,$start_t)]["data"] = $row[3];
+ 				$d[$j][date($format,$start_t)]["long_descr"] = $row[5];
+			}
+		}
+	}
 }
 
-//This is where we start displaying stuff
+if ($debug_flag) 
+{
+	echo "<p>DEBUG:<pre>\n";
+	echo "\$dst_change = ";
+	print_r( $dst_change );
+	print "\n";
+	print "\$am7 =\n";
+	foreach( $am7 as $am7_val)
+		print "$am7_val - " . date("r", $am7_val) . "\n";
+	print "\$pm7 =\n";
+	foreach( $pm7 as $pm7_val)
+		print "$pm7_val - " . date("r", $pm7_val) . "\n";
+
+	echo "<p>\$d =\n";
+	if (gettype($d) == "array")
+	while (list($w_k, $w_v) = each($d))
+		while (list($t_k, $t_v) = each($w_v))
+			while (list($k_k, $k_v) = each($t_v))
+				echo "d[$w_k][$t_k][$k_k] = '$k_v'\n";
+	else echo "d is not an array!\n";
+	echo "</pre><p>\n";
+}
+
+#This is where we start displaying stuff
 echo "<table cellspacing=0 border=1 width=\"100%\">";
 
-// The header row contains the weekday names and short dates.
-echo "<tr><th width=\"1%\"><br>$vocab[time]</th>";
+# The header row contains the weekday names and short dates.
+echo "<tr><th width=\"1%\"><br>".($enable_periods ? get_vocab("period") : get_vocab("time"))."</th>";
 if (empty($dateformat))
-{
-    $dformat = "%a<br>%b %d";
-}
+	$dformat = "%a<br>%b %d";
 else
+	$dformat = "%a<br>%d %b";
+for ($j = 0; $j<=($num_of_days-1) ; $j++)
 {
-    $dformat = "%a<br>%d %b";
+	$t = mktime( 12, 0, 0, $month, $day+$j, $year); 
+	echo "<th width=\"14%\"><a href=\"day.php?year=" . strftime("%Y", $t) . 
+	"&month=" . strftime("%m", $t) . "&day=" . strftime("%d", $t) . 
+	"&area=$area\" title=\"" . get_vocab("viewday") . "\">"
+    . utf8_strftime($dformat, $t) . "</a></th>\n";
 }
-for ($t = $week_start; $t < $week_end; $t += 86400)
+# next line to display times on right side
+if ( FALSE != $times_right_side )
 {
-    echo "<th width=\"14%\"><a href=\"day.php?year=" . strftime("%Y", $t) .
-    "&month=" . strftime("%m", $t) . "&day=" . strftime("%d", $t) .
-    "&area=$area\">" . strftime($dformat, $t) . "</a></th>\n";
+    echo "<th width=\"1%\"><br>"
+    . ( $enable_periods  ? get_vocab("period") : get_vocab("time") )
+    . "</th>";
 }
+
 echo "</tr>\n";
 
 
-// This is the main bit of the display. Outer loop is for the time slots,
-// inner loop is for days of the week.
+# This is the main bit of the display. Outer loop is for the time slots,
+# inner loop is for days of the week.
 
-// URL for highlighting a time. Don't use REQUEST_URI or you will get
-// the timetohighlight parameter duplicated each time you click.
+# URL for highlighting a time. Don't use REQUEST_URI or you will get
+# the timetohighlight parameter duplicated each time you click.
 $hilite_url="week.php?year=$year&month=$month&day=$day&area=$area&room=$room&timetohighlight";
 
-// $t is the date/time for the first day of the week (Sunday, if $weekstarts=0).
-// $wt is for the weekday in the inner loop.
-$t = $am7;
-for ($slot = $first_slot; $slot <= $last_slot; $slot++)
+# if the first day of the week to be displayed contains as DST change then
+# move to the next day to get the hours in the day.
+( $dst_change[0] != -1 ) ? $j = 1 : $j = 0;
+
+for (
+	$t = mktime($morningstarts, 0, 0, $month, $day+$j, $year);
+	$t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
+	$t += $resolution
+)
 {
-    // Show the time linked to the URL for highlighting that time:
-    echo "<tr>";
-    tdcell("red");
-    echo "<a href=\"$hilite_url=$t\">" . date(hour_min_format(),$t) . "</a></td>";
+	# use hour:minute format
+	$time_t = date($format, $t);
+	# Show the time linked to the URL for highlighting that time:
+	echo "<tr>";
+	tdcell("red");
+	if( $enable_periods ){
+		$time_t_stripped = preg_replace( "/^0/", "", $time_t );
+		echo "<a href=\"$hilite_url=$time_t\"  title=\""
+        . get_vocab("highlight_line") . "\">"
+        . $periods[$time_t_stripped] . "</a></td>";
+	} else {
+		echo "<a href=\"$hilite_url=$time_t\" title=\""
+        . get_vocab("highlight_line") . "\">"
+        . utf8_date(hour_min_format(),$t) . "</a></td>";
+	}
 
-    $wt = $t;
+	# Color to use for empty cells: white, unless highlighting this row:
+	if (isset($timetohighlight) && $timetohighlight == $time_t)
+		$empty_color = "red";
+	else
+		$empty_color = "white";
 
-    // Color to use for empty cells: white, unless highlighting this row:
-    if (isset($timetohighlight) && $timetohighlight == $t)
+	# See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
+	for ($thisday = 0; $thisday<=($num_of_days-1) ; $thisday++)
+	{
+		# Three cases:
+		# color:  id:   Slot is:   Color:    Link to:
+		# -----   ----- --------   --------- -----------------------
+		# unset   -     empty      white,red add new entry
+		# set     unset used       by type   none (unlabelled slot)
+		# set     set   used       by type   view entry
+
+		$wt = mktime( 12, 0, 0, $month, $day+$thisday, $year );
+		$wday = date("d", $wt);
+		$wmonth = date("m", $wt);
+		$wyear = date("Y", $wt);
+
+ 		if(isset($d[$thisday][$time_t]["id"]))
+ 		{
+ 			$id    = $d[$thisday][$time_t]["id"];
+ 			$color = $d[$thisday][$time_t]["color"];
+ 			$descr = htmlspecialchars($d[$thisday][$time_t]["data"]);
+ 			$long_descr = htmlspecialchars($d[$thisday][$time_t]["long_descr"]);
+ 		}
+ 		else
+ 			unset($id);
+ 		
+ 		# $c is the colour of the cell that the browser sees. White normally, 
+ 		# red if were hightlighting that line and a nice attractive green if the room is booked.
+ 		# We tell if its booked by $id having something in it
+ 		if (isset($id))
+ 			$c = $color;
+ 		elseif (isset($timetohighlight) && ($time_t == $timetohighlight))
+ 			$c = "red";
+ 		else
+ 			$c = "white";
+ 	
+		tdcell($c);
+ 	
+		# If the room isnt booked then allow it to be booked
+ 		if(!isset($id))
+ 		{
+ 			$hour = date("H",$t);
+ 			$minute  = date("i",$t);
+ 
+  			echo "<center>";
+ 			if ( $pview != 1 ) {
+				if( $enable_periods ) {
+					echo "<a href=\"edit_entry.php?room=$room&area=$area"
+					. "&period=$time_t_stripped&year=$wyear&month=$wmonth"
+					. "&day=$wday\"><img src=new.gif width=10 height=10 border=0></a>";
+				} else {
+					echo "<a href=\"edit_entry.php?room=$room&area=$area"
+					. "&hour=$hour&minute=$minute&year=$wyear&month=$wmonth"
+					. "&day=$wday\"><img src=new.gif width=10 height=10 border=0></a>";
+				}
+ 			} else
+				echo '&nbsp;';
+ 			echo "</center>";
+ 		}
+ 		elseif ($descr != "")
+ 		{
+ 			#if it is booked then show 
+			echo " <a href=\"view_entry.php?id=$id"
+				. "&area=$area&day=$wday&month=$wmonth&year=$wyear\" "
+                       		. "title=\"$long_descr\">$descr</a>";
+		}
+ 		else
+			echo "&nbsp;\"&nbsp;";
+ 
+		echo "</td>\n";
+	}
+
+	# next lines to display times on right side
+    if ( FALSE != $times_right_side )
     {
-        $empty_color = "red";
-    }
-    else
-    {
-        $empty_color = "white";
-    }
-
-    // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
-    for ($weekday = 0; $weekday < 7; $weekday++)
-    {
-        // Three cases:
-        // color:  id:   Slot is:   Color:    Link to:
-        // -----   ----- --------   --------- -----------------------
-        // unset   -     empty      white,red add new entry
-        // set     unset used       by type   none (unlabelled slot)
-        // set     set   used       by type   view entry
-
-        $wday = date("d", $wt);
-        $wmonth = date("m", $wt);
-        $wyear = date("Y", $wt);
-        if (!isset($d[$weekday][$slot]["color"]))
+        if( $enable_periods )
         {
-            tdcell($empty_color);
-            $hour = date("H",$wt);
-            $minute  = date("i",$wt);
-            echo "<center>";
-            if ( $pview != 1 )
-            {
-                echo "<a href=\"edit_entry.php?room=$room&area=$area"
-                . "&hour=$hour&minute=$minute&year=$wyear&month=$wmonth"
-                . "&day=$wday\"><img src=new.gif width=10 height=10 border=0>";
-            }
-            else
-            {
-                echo '&nbsp;';
-            }
-            echo "</a></center>";
-
+            tdcell("red");
+            $time_t_stripped = preg_replace( "/^0/", "", $time_t );
+            echo "<a href=\"$hilite_url=$time_t\"  title=\""
+            . get_vocab("highlight_line") . "\">"
+            . $periods[$time_t_stripped] . "</a></td>";
         }
         else
         {
-            tdcell($d[$weekday][$slot]["color"]);
-            if (!isset($d[$weekday][$slot]["id"]))
-            {
-                echo "&nbsp;\"&nbsp;";
-            }
-            else
-            {
-                echo " <a href=\"view_entry.php?id=" . $d[$weekday][$slot]["id"]
-                    . "&area=$area&day=$wday&month=$wmonth&year=$wyear\">"
-                    . htmlspecialchars($d[$weekday][$slot]["data"]) . "</a>";
-            }
+            tdcell("red");
+            echo "<a href=\"$hilite_url=$time_t\" title=\""
+            . get_vocab("highlight_line") . "\">"
+            . utf8_date(hour_min_format(),$t) . "</a></td>";
         }
-        echo "</td>\n";
-        $wt += 86400;
     }
-    echo "</tr>\n";
-    $t += $resolution;
+
+	echo "</tr>\n";
 }
 echo "</table>";
 
-if ( $pview != 1 )
-{
-    show_colour_key();
-}
+if ( $pview != 1 ) show_colour_key();
 
-include "trailer.inc";
+include "trailer.inc"; 
 ?>
