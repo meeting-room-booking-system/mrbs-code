@@ -47,6 +47,8 @@ function authValidateUser($user, $pass)
    global $auth;
    global $pop3_host;
    global $pop3_port;
+   $match= array();
+   $shared_secret = "";
 
    // Check if we do not have a username/password
    if(!isset($user) || !isset($pass) || strlen($pass)==0)
@@ -65,8 +67,10 @@ function authValidateUser($user, $pass)
    // first we try to use APOP, and then if that fails we fall back to traditional stuff
 
    // get the shared secret ( something on the greeting line that looks like <XXXX> )
-   preg_match( '/(<[^>]*>)/', $response, $match );
-   $shared_secret = $match[0];
+   if ( preg_match( '/(<[^>]*>)/', $response, $match ) )
+   {
+       $shared_secret = $match[0];
+   }
 
    // if we have a shared secret then try APOP
    if ($shared_secret) {
