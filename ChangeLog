@@ -1,4 +1,8 @@
 CVS:
+    Changed "loginfo" in CVSROOT to email the list with CVS commit log
+    messages. (jberanek)
+
+CVS:
     Internationalised functions.inc. "Help", "Admin" and "Search:" are now lang
     strings. Also, fixed an error in lang.fr, $lang["mrbs"] was defined twice.
     (jberanek)
