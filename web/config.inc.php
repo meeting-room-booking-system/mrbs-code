@@ -89,6 +89,10 @@ $area_list_format = "list";
 # Set to 1 for brief description, 0 for time slot
 $_MRBS_monthly_view_brief_description = 0;
 
+# To view weeks in the bottom (trailer.inc) as week numbers (42) instead of
+# 'first day of the week' (13 Oct), set this to TRUE
+$view_week_number = FALSE;
+
 ###############################################
 # Authentication settings - read AUTHENTICATION
 ###############################################
