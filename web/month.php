@@ -46,6 +46,14 @@ $days_in_month = date("t", $month_start);
 
 $month_end = mktime(23, 59, 59, $month, $days_in_month, $year);
 
+if( $enable_periods ) {
+	$resolution = 60;
+	$morningstarts = 12;
+	$eveningends = 12;
+	$eveningends_minutes = count($periods)-1;
+}
+
+
 # Define the start and end of each day of the month in a way which is not
 # affected by daylight saving...
 for ($j = 1; $j<=$days_in_month; $j++) {
@@ -55,8 +63,14 @@ for ($j = 1; $j<=$days_in_month; $j++) {
 	#  0 => entering DST
 	#  1 => leaving DST
 	$dst_change[$j] = is_dst($month,$j,$year);
-	$midnight[$j]=mktime(0,0,0,$month,$j,$year, is_dst($month,$j,$year, 0));
-	$midnight_tonight[$j]=mktime(23,59,59,$month,$j,$year, is_dst($month,$j,$year, 23));
+        if(empty( $enable_periods )){
+		$midnight[$j]=mktime(0,0,0,$month,$j,$year, is_dst($month,$j,$year, 0));
+		$midnight_tonight[$j]=mktime(23,59,59,$month,$j,$year, is_dst($month,$j,$year, 23));
+	}
+        else {
+		$midnight[$j]=mktime(12,0,0,$month,$j,$year, is_dst($month,$j,$year, 0));
+		$midnight_tonight[$j]=mktime(12,count($periods),59,$month,$j,$year, is_dst($month,$j,$year, 23));
+        }
 }
 
 if ( $pview != 1 ) {
@@ -199,8 +213,9 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++) {
             # Use ~ (not -) to separate the start and stop times, because MSIE
             # will incorrectly line break after a -.
 
-            switch (cmp3($row[0], $midnight[$day_num]) . cmp3($row[1], $midnight_tonight[$day_num] + 1))
-            {
+            if(empty( $enable_periods ) ){
+              switch (cmp3($row[0], $midnight[$day_num]) . cmp3($row[1], $midnight_tonight[$day_num] + 1))
+              {
         	case "> < ":         # Starts after midnight, ends before midnight
         	case "= < ":         # Starts at midnight, ends before midnight
                     $d[$day_num]["data"][] = date(hour_min_format(), $row[0]) . "~" . date(hour_min_format(), $row[1]);
@@ -226,11 +241,45 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++) {
         	case "< > ":         # Starts before today, continues tomorrow
                     $d[$day_num]["data"][] = "&lt;====" . $all_day . "====&gt;";
                     break;
+              }
+	    }
+            else
+            {
+              $start_str = ereg_replace(" ", "&nbsp;", period_time_string($row[0]));
+              $end_str   = ereg_replace(" ", "&nbsp;", period_time_string($row[1], -1));
+              switch (cmp3($row[0], $midnight[$day_num]) . cmp3($row[1], $midnight_tonight[$day_num] + 1))
+              {
+        	case "> < ":         # Starts after midnight, ends before midnight
+        	case "= < ":         # Starts at midnight, ends before midnight
+                    $d[$day_num]["data"][] = $start_str . "~" . $end_str;
+                    break;
+        	case "> = ":         # Starts after midnight, ends at midnight
+                    $d[$day_num]["data"][] = $start_str . "~24:00";
+                    break;
+        	case "> > ":         # Starts after midnight, continues tomorrow
+                    $d[$day_num]["data"][] = $start_str . "~====&gt;";
+                    break;
+        	case "= = ":         # Starts at midnight, ends at midnight
+                    $d[$day_num]["data"][] = $all_day;
+                    break;
+        	case "= > ":         # Starts at midnight, continues tomorrow
+                    $d[$day_num]["data"][] = $all_day . "====&gt;";
+                    break;
+        	case "< < ":         # Starts before today, ends before midnight
+                    $d[$day_num]["data"][] = "&lt;====~" . $end_str;
+                    break;
+        	case "< = ":         # Starts before today, ends at midnight
+                    $d[$day_num]["data"][] = "&lt;====" . $all_day;
+                    break;
+        	case "< > ":         # Starts before today, continues tomorrow
+                    $d[$day_num]["data"][] = "&lt;====" . $all_day . "====&gt;";
+                    break;
+              }
             }
 
 	}
 }
-if ($debug_flag) 
+if ($debug_flag)
 {
     echo "<p>DEBUG: Array of month day data:<p><pre>\n";
     for ($i = 1; $i <= $days_in_month; $i++)

@@ -44,6 +44,15 @@ if (empty($room))
 # print the page header
 print_header($day, $month, $year, $area);
 
+$format = "Gi";
+if( $enable_periods ) {
+	$format = "i";
+	$resolution = 60;
+	$morningstarts = 12;
+	$eveningends = 12;
+	$eveningends_minutes = count($periods)-1;
+
+}
 # Define the start and end of each day of the week in a way which is not
 # affected by daylight saving...
 for ($j = 0; $j<=($num_of_days-1); $j++) {
@@ -209,23 +218,23 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++) {
 
  		for ($t = $start_t; $t <= $end_t; $t += $resolution)
  		{
-			$d[$j][date("Gi",$t)]["id"]    = $row[4];
- 			$d[$j][date("Gi",$t)]["color"] = $row[2];
- 			$d[$j][date("Gi",$t)]["data"]  = "";
- 			$d[$j][date("Gi",$t)]["long_descr"]  = "";
+			$d[$j][date($format,$t)]["id"]    = $row[4];
+ 			$d[$j][date($format,$t)]["color"] = $row[2];
+ 			$d[$j][date($format,$t)]["data"]  = "";
+ 			$d[$j][date($format,$t)]["long_descr"]  = "";
  		}
  
  		# Show the name of the booker in the first segment that the booking
  		# happens in, or at the start of the day if it started before today.
  		if ($row[1] < $am7[$j])
 		{
- 			$d[$j][date("Gi",$am7[$j])]["data"] = $row[3];
- 			$d[$j][date("Gi",$am7[$j])]["long_descr"] = $row[5];
+ 			$d[$j][date($format,$am7[$j])]["data"] = $row[3];
+ 			$d[$j][date($format,$am7[$j])]["long_descr"] = $row[5];
 		}
  		else
 		{
- 			$d[$j][date("Gi",$start_t)]["data"] = $row[3];
- 			$d[$j][date("Gi",$start_t)]["long_descr"] = $row[5];
+ 			$d[$j][date($format,$start_t)]["data"] = $row[3];
+ 			$d[$j][date($format,$start_t)]["long_descr"] = $row[5];
 		}
 	}
 } 
@@ -257,7 +266,7 @@ if ($debug_flag)
 echo "<table cellspacing=0 border=1 width=\"100%\">";
 
 # The header row contains the weekday names and short dates.
-echo "<tr><th width=\"1%\"><br>".get_vocab("time")."</th>";
+echo "<tr><th width=\"1%\"><br>".($enable_periods ? get_vocab("period") : get_vocab("time"))."</th>";
 if (empty($dateformat))
 	$dformat = "%a<br>%b %d";
 else
@@ -290,11 +299,16 @@ for (
 )
 {
 	# use hour:minute format
-	$time_t = date("Gi", $t);
+	$time_t = date($format, $t);
 	# Show the time linked to the URL for highlighting that time:
 	echo "<tr>";
 	tdcell("red");
-	echo "<a href=\"$hilite_url=$time_t\">" . utf8_date(hour_min_format(),$t) . "</a></td>";
+	if( $enable_periods ){
+		$time_t_stripped = preg_replace( "/^0/", "", $time_t );
+		echo "<a href=\"$hilite_url=$time_t\">" . $periods[$time_t_stripped] . "</a></td>";
+	} else {
+		echo "<a href=\"$hilite_url=$time_t\">" . utf8_date(hour_min_format(),$t) . "</a></td>";
+	}
 
 	# Color to use for empty cells: white, unless highlighting this row:
 	if (isset($timetohighlight) && $timetohighlight == $time_t)
@@ -347,9 +361,15 @@ for (
  
   			echo "<center>";
  			if ( $pview != 1 ) {
-				echo "<a href=\"edit_entry.php?room=$room&area=$area"
-				. "&hour=$hour&minute=$minute&year=$wyear&month=$wmonth"
-				. "&day=$wday\"><img src=new.gif width=10 height=10 border=0></a>";
+				if( $enable_periods ) {
+					echo "<a href=\"edit_entry.php?room=$room&area=$area"
+					. "&period=$time_t_stripped&year=$wyear&month=$wmonth"
+					. "&day=$wday\"><img src=new.gif width=10 height=10 border=0></a>";
+				} else {
+					echo "<a href=\"edit_entry.php?room=$room&area=$area"
+					. "&hour=$hour&minute=$minute&year=$wyear&month=$wmonth"
+					. "&day=$wday\"><img src=new.gif width=10 height=10 border=0></a>";
+				}
  			} else
 				echo '&nbsp;';
  			echo "</center>";

@@ -218,6 +218,46 @@ function toTimeString(&$dur, &$units)
 		$units = get_vocab("seconds");
 }
 
+
+function toPeriodString($start_period, &$dur, &$units)
+{
+	global $enable_periods;
+        global $periods;
+
+        $max_periods = count($periods);
+
+	$dur /= 60;
+
+        if( $dur >= $max_periods || $start_period == 0 )
+        {
+                if( $start_period == 0 && $dur == $max_periods )
+                {
+                        $units = get_vocab("days");
+                        $dur = 1;
+                        return;
+                }
+
+                $dur /= 60;
+                if(($dur >= 24) && is_int($dur))
+                {
+                	$dur /= 24;
+			$units = get_vocab("days");
+                        return;
+                }
+                else
+                {
+			$dur *= 60;
+                        $dur = ($dur % $max_periods) + floor( $dur/(24*60) ) * $max_periods;
+                        $units = get_vocab("periods");
+                        return;
+		}
+        }
+        else
+		$units = get_vocab("periods");
+}
+
+
+
 function genDateSelector($prefix, $day, $month, $year)
 {
 	if($day   == 0) $day = date("d");
@@ -228,7 +268,7 @@ function genDateSelector($prefix, $day, $month, $year)
 	
 	for($i = 1; $i <= 31; $i++)
 		echo "<OPTION" . ($i == $day ? " SELECTED" : "") . ">$i\n";
-	
+
 	echo "</SELECT>";
 	echo "<SELECT NAME=\"${prefix}month\" onchange=\"ChangeOptionDays(this.form, '')\">\n";
 
@@ -309,6 +349,28 @@ function hour_min_format()
 	{
 		return "h:ia";
 	}
+}
+
+function period_date_string($t, $mod_time=0)
+{
+        global $periods;
+
+	$time = getdate($t);
+        $p_num = $time[minutes] + $mod_time;
+        if( $p_num < 0 ) $p_num = 0;
+        if( $p_num >= count($periods) - 1 ) $p_num = count($periods ) - 1;
+        return array($p_num, $periods[$p_num] . utf8_strftime(" - %A %d %B %Y",$t));
+}
+
+function period_time_string($t, $mod_time=0)
+{
+        global $periods;
+
+	$time = getdate($t);
+        $p_num = $time[minutes] + $mod_time;
+        if( $p_num < 0 ) $p_num = 0;
+        if( $p_num >= count($periods) - 1 ) $p_num = count($periods ) - 1;
+        return $periods[$p_num];
 }
 
 function time_date_string($t)

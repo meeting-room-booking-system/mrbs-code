@@ -17,7 +17,10 @@
  */
 function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 {
-	# Select any meetings which overlap ($starttime,$endtime) for this room:
+	global $enable_periods;
+    global $periods;
+
+    # Select any meetings which overlap ($starttime,$endtime) for this room:
 	$sql = "SELECT id, name, start_time FROM mrbs_entry WHERE
 		start_time < $endtime AND end_time > $starttime
 		AND room_id = $room_id";
@@ -47,8 +50,16 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 		$param_ym = "area=$area&year=$starts[year]&month=$starts[mon]";
 		$param_ymd = $param_ym . "&day=$starts[mday]";
 
-		$err .= "<LI><A HREF=\"view_entry.php?id=$row[0]\">$row[1]</A>"
-		. " ( " . utf8_strftime('%A %d %B %Y %T', $row[2]) . ") "
+
+		if( $enable_period ) {
+        	$p_num =$starts[minutes];
+        	$startstr = utf8_strftime('%A %d %B %Y, ', $row[2]) . $periods[$p_num];
+        }
+		else
+        	$startstr = utf8_strftime('%A %d %B %Y %T', $row[2]);
+
+        $err .= "<LI><A HREF=\"view_entry.php?id=$row[0]\">$row[1]</A>"
+		. " ( " . $startstr . ") "
 		. "(<A HREF=\"day.php?$param_ymd\">".get_vocab("viewday")."</a>"
 		. " | <A HREF=\"week.php?room=$room_id&$param_ymd\">".get_vocab("viewweek")."</a>"
 		. " | <A HREF=\"month.php?room=$room_id&$param_ym\">".get_vocab("viewmonth")."</a>)";

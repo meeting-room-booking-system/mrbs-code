@@ -63,8 +63,16 @@ $updated      = time_date_string($row[8]);
 # so that user see what he expects to see
 $duration     = $row[9] - cross_dst($row[10], $row[11]);
 
-$start_date = time_date_string($row[10]);
-$end_date = time_date_string($row[11]);
+if( $enable_periods )
+	list( $start_period, $start_date) =  period_date_string($row[10]);
+else
+        $start_date = time_date_string($row[10]);
+
+if( $enable_periods )
+	list( , $end_date) =  period_date_string($row[11], -1);
+else
+        $end_date = time_date_string($row[11]);
+
 
 $rep_type = 0;
 
@@ -86,7 +94,7 @@ if($repeat_id != 0)
 	sql_free($res);
 }
 
-toTimeString($duration, $dur_units);
+$enable_periods ? toPeriodString($start_period, $duration, $dur_units) : toTimeString($duration, $dur_units);
 
 $repeat_key = "rep_type_" . $rep_type;
 

@@ -136,7 +136,7 @@ else
 	$start_year  = $year;
 	$start_hour  = $hour;
 	$start_min   = $minute;
-	$duration    = 60 * 60;
+	$duration    = ($enable_periods ? 60 : 60 * 60);
 	$type        = "I";
 	$room_id     = $room;
     unset($id);
@@ -169,7 +169,7 @@ if( empty( $start_hour ) && $morningstarts < 10 )
 if( empty( $start_hour ) )
 	$start_hour = "$morningstarts";
 
-if( empty( $start_minute ) )
+if( empty( $start_min ) )
 	$start_min = "00";
 
 // Remove "Undefined variable" notice
@@ -178,7 +178,7 @@ if (!isset($rep_num_weeks))
     $rep_num_weeks = "";
 }
 
-toTimeString($duration, $dur_units);
+$enable_periods ? toPeriodString($start_min, $duration, $dur_units) : toTimeString($duration, $dur_units);
 
 #now that we know all the data to fill the form with we start drawing it
 
@@ -202,16 +202,18 @@ function validate_and_submit ()
     alert ( "<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("brief_description") ?>");
     return false;
   }
-  
+  <?php if( ! $enable_periods ) { ?>
+
   h = parseInt(document.forms["main"].hour.value);
   m = parseInt(document.forms["main"].minute.value);
-  
+
   if(h > 23 || m > 59)
   {
     alert ("<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("valid_time_of_day") ?>");
     return false;
   }
-  
+  <?php } ?>
+
   // check form element exist before trying to access it
   if( document.forms["main"].id )
     i1 = parseInt(document.forms["main"].id.value);
@@ -264,6 +266,7 @@ htmlspecialchars ( $description ); ?></TEXTAREA></TD></TR>
  </TD>
 </TR>
 
+<?php if(! $enable_periods ) { ?>
 <TR><TD CLASS=CR><B><?php echo get_vocab("time")?></B></TD>
   <TD CLASS=CL><INPUT NAME="hour" SIZE=2 VALUE="<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>" MAXLENGTH=2>:<INPUT NAME="minute" SIZE=2 VALUE="<?php echo $start_min;?>" MAXLENGTH=2>
 <?php
@@ -276,12 +279,33 @@ if (!$twentyfourhour_format)
 }
 ?>
 </TD></TR>
+<?php } else { ?>
+<TR><TD CLASS=CR><B><?php echo get_vocab("period")?></B></TD>
+  <TD CLASS=CL>
+    <SELECT NAME="period">
+<?php
+foreach ($periods as $p_num => $p_val)
+{
+	echo "<OPTION VALUE=$p_num";
+	if( ( isset( $period ) && $period == $p_num ) || $p_num == $start_min)
+        	echo " SELECTED";
+	echo ">$p_val";
+}
+?>
+    </SELECT>
 
+</TD></TR>
+
+<?php } ?>
 <TR><TD CLASS=CR><B><?php echo get_vocab("duration");?></B></TD>
   <TD CLASS=CL><INPUT NAME="duration" SIZE=7 VALUE="<?php echo $duration;?>">
     <SELECT NAME="dur_units">
 <?php
-$units = array("minutes", "hours", "days", "weeks");
+if( $enable_periods )
+	$units = array("periods", "days");
+else
+	$units = array("minutes", "hours", "days", "weeks");
+
 while (list(,$unit) = each($units))
 {
 	echo "<OPTION VALUE=$unit";

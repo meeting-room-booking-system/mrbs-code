@@ -49,6 +49,12 @@ $url_base = "";
 # Note: Be careful to avoid specify options that displays blocks overlaping
 # the next day, since it is not properly handled.
 
+# This setting controls whether to use "clock" based intervals (FALSE and
+# the default) or user defined periods (TRUE).  If user-defined periods
+# are used then $resolution, $morningstarts, $eveningends,
+# $eveningends_minutes and $twentyfourhour_format are ignored.
+$enable_periods = FALSE;
+
 # Resolution - what blocks can be booked, in seconds.
 # Default is half an hour: 1800 seconds.
 $resolution = 1800;
@@ -65,10 +71,26 @@ $eveningends   = 19;
 # eveningends_minutes=45; and resolution=900.
 $eveningends_minutes = 0;
 
+# Define the name or description for your periods in chronological order
+# For example:
+# $periods[] = "Period&nbsp;1"
+# $periods[] = "Period&nbsp;2"
+# ...
+# or
+# $periods[] = "09:15&nbsp;-&nbsp;09:50"
+# $periods[] = "09:55&nbsp;-&nbsp;10:35"
+# ...
+# &nbsp; is used to ensure that the name or description is not wrapped
+# when the browser determines the column widths to use in day and week
+# views
+
+$periods[] = "Period&nbsp;1";
+$periods[] = "Period&nbsp;2";
+
 # Start of week: 0 for Sunday, 1 for Monday, etc.
 $weekstarts = 0;
 
-# Trailer date format: 0 to show dates as "Jul 10", 1 for "10 Jul" 
+# Trailer date format: 0 to show dates as "Jul 10", 1 for "10 Jul"
 $dateformat = 0;
 
 # Time format in pages. 0 to show dates in 12 hour format, 1 to show them

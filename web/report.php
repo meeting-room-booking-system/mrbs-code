@@ -49,11 +49,24 @@ function describe_span($starts, $ends)
 	return $start_date . " " . $start_time . " - " . $duration . " " . $dur_units;
 }
 
+# Convert a start period and end period to a plain language description.
+# This is similar but different from the way it is done in view_entry.
+function describe_period_span($starts, $ends)
+{
+	list( $start_period, $start_date) =  period_date_string($starts);
+	#$start_date = utf8_strftime('%A %d %B %Y', $starts);
+	list( , $end_date) =  period_date_string($ends, -1);
+	$duration = $ends - $starts;
+	toPeriodString($start_period, $duration, $dur_units);
+	return $start_date . " " . $start_time . " - " . $duration . " " . $dur_units;
+}
+
 # Report on one entry. See below for columns in $row[].
 # $last_area_room remembers the current area/room.
 function reporton(&$row, &$last_area_room)
 {
 	global $typel;
+        global $enable_periods;
 	# Display Area/Room, but only when it changes:
 	$area_room = htmlspecialchars($row[8]) . " - " . htmlspecialchars($row[9]);
 	if ($area_room != $last_area_room)
@@ -69,7 +82,7 @@ function reporton(&$row, &$last_area_room)
 		. htmlspecialchars($row[3]) . "</a></td>\n";
 
 	# From date-time and duration:
-	echo "<td class=\"BR\" align=right>" . describe_span($row[1], $row[2]) . "</td></tr>\n";
+	echo "<td class=\"BR\" align=right>" . (empty($enable_periods) ? describe_span($row[1], $row[2]) : describe_period_span($row[1], $row[2])) . "</td></tr>\n";
 	# Description:
 	echo "<tr><td class=\"BL\" colspan=2><b>".get_vocab("description")."</b> " .
 		nl2br(htmlspecialchars($row[4])) . "</td></tr>\n";
@@ -106,6 +119,26 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
 	$name_hash[$name] = 1;
 }
 
+function accumulate_periods(&$row, &$count, &$hours, $report_start, $report_end,
+	&$room_hash, &$name_hash)
+{
+	global $sumby;
+        global $periods;
+        $max_periods = count($periods);
+
+	# Use brief description or created by as the name:
+	$name = htmlspecialchars($row[($sumby == "d" ? 3 : 6)]);
+    # Area and room separated by break:
+	$room = htmlspecialchars($row[8]) . "<br>" . htmlspecialchars($row[9]);
+	# Accumulate the number of bookings for this room and name:
+	@$count[$room][$name]++;
+	# Accumulate hours used, clipped to report range dates:
+        $dur = (min((int)$row[2], $report_end) - max((int)$row[1], $report_start))/60;
+	@$hours[$room][$name] += ($dur % $max_periods) + floor( $dur/(24*60) ) * $max_periods;
+        $room_hash[$room] = 1;
+	$name_hash[$name] = 1;
+}
+
 # Output a table cell containing a count (integer) and hours (float):
 function cell($count, $hours)
 {
@@ -118,7 +151,9 @@ function cell($count, $hours)
 # $room_hash & $name_hash are arrays with indexes naming unique rooms and names.
 function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 {
-	# Make a sorted array of area/rooms, and of names, to use for column
+	global $enable_periods;
+        
+        # Make a sorted array of area/rooms, and of names, to use for column
 	# and row indexes. Use the rooms and names hashes built by accumulate().
 	# At PHP4 we could use array_keys().
 	reset($room_hash);
@@ -130,7 +165,9 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 	$n_rooms = sizeof($rooms);
 	$n_names = sizeof($names);
 
-	echo "<hr><h1>".get_vocab("summary_header")."</h1><table border=2 cellspacing=4>\n";
+	echo "<hr><h1>".
+             (empty($enable_periods) ? get_vocab("summary_header") : get_vocab("summary_header_per")).
+             "</h1><table border=2 cellspacing=4>\n";
 	echo "<tr><td>&nbsp;</td>\n";
 	for ($c = 0; $c < $n_rooms; $c++)
 	{
@@ -346,8 +383,12 @@ if (isset($areamatch))
 				reporton($row, $last_area_room);
 
 			if ($summarize & 2)
-				accumulate($row, $count, $hours, $report_start, $report_end,
-					$room_hash, $name_hash);
+				(empty($enable_periods) ?
+                                 accumulate($row, $count, $hours, $report_start, $report_end,
+					$room_hash, $name_hash) :
+                                 accumulate_periods($row, $count, $hours, $report_start, $report_end,
+					$room_hash, $name_hash)
+                                );
 		}
 		if ($summarize & 2)
 			do_summary($count, $hours, $room_hash, $name_hash);

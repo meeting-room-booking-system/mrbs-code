@@ -27,6 +27,15 @@ if (empty($area))
 # print the page header
 print_header($day, $month, $year, $area);
 
+$format = "Gi";
+if( $enable_periods ) {
+	$format = "i";
+	$resolution = 60;
+	$morningstarts = 12;
+	$eveningends = 12;
+	$eveningends_minutes = count($periods)-1;
+
+}
 # Define the start and end of each day in a way which is not affected by
 # daylight saving...
 # dst_change:
@@ -135,23 +144,23 @@ for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 	$end_t = min(round_t_up($row[2], $resolution, $am7) - $resolution, $pm7);
 	for ($t = $start_t; $t <= $end_t; $t += $resolution)
 	{
-		$today[$row[0]][date("Gi",$t)]["id"]    = $row[4];
-		$today[$row[0]][date("Gi",$t)]["color"] = $row[5];
-		$today[$row[0]][date("Gi",$t)]["data"]  = "";
-		$today[$row[0]][date("Gi",$t)]["long_descr"]  = "";
+		$today[$row[0]][date($format,$t)]["id"]    = $row[4];
+		$today[$row[0]][date($format,$t)]["color"] = $row[5];
+		$today[$row[0]][date($format,$t)]["data"]  = "";
+		$today[$row[0]][date($format,$t)]["long_descr"]  = "";
 	}
 
 	# Show the name of the booker in the first segment that the booking
 	# happens in, or at the start of the day if it started before today.
 	if ($row[1] < $am7)
 	{
-		$today[$row[0]][date("Gi",$am7)]["data"] = $row[3];
-		$today[$row[0]][date("Gi",$am7)]["long_descr"] = $row[6];
+		$today[$row[0]][date($format,$am7)]["data"] = $row[3];
+		$today[$row[0]][date($format,$am7)]["long_descr"] = $row[6];
 	}
 	else
 	{
-		$today[$row[0]][date("Gi",$start_t)]["data"] = $row[3];
-		$today[$row[0]][date("Gi",$start_t)]["long_descr"] = $row[6];
+		$today[$row[0]][date($format,$start_t)]["data"] = $row[3];
+		$today[$row[0]][date($format,$start_t)]["long_descr"] = $row[6];
 	}
 }
 
@@ -159,8 +168,8 @@ if ($debug_flag)
 {
 	echo "<p>DEBUG:<pre>\n";
 	echo "\$dst_change = $dst_change\n";
-	echo "\$am7 = $am7 or " . date("Gi",$am7) . "\n";
-	echo "\$pm7 = $pm7 or " . date("Gi",$pm7) . "\n";
+	echo "\$am7 = $am7 or " . date($format,$am7) . "\n";
+	echo "\$pm7 = $pm7 or " . date($format,$pm7) . "\n";
 	if (gettype($today) == "array")
 	while (list($w_k, $w_v) = each($today))
 		while (list($t_k, $t_v) = each($w_v))
@@ -190,7 +199,7 @@ else
 {
 	#This is where we start displaying stuff
 	echo "<table cellspacing=0 border=1 width=\"100%\">";
-	echo "<tr><th width=\"1%\">".get_vocab("time")."</th>";
+	echo "<tr><th width=\"1%\">".($enable_periods ? get_vocab("period") : get_vocab("time"))."</th>";
 
 	$room_column_width = (int)(95 / sql_count($res));
 	for ($i = 0; ($row = sql_row($res, $i)); $i++)
@@ -220,12 +229,17 @@ else
 	)
 	{
 		# convert timestamps to HHMM format without leading zeros
-		$time_t = date("Gi", $t);
+		$time_t = date($format, $t);
 
 		# Show the time linked to the URL for highlighting that time
 		echo "<tr>";
 		tdcell("red");
-		echo "<a href=\"$hilite_url=$time_t\">" . utf8_date(hour_min_format(),$t) . "</a></td>";
+		if( $enable_periods ){
+			$time_t_stripped = preg_replace( "/^0/", "", $time_t );
+			echo "<a href=\"$hilite_url=$time_t\">" . $periods[$time_t_stripped] . "</a></td>";
+		} else {
+			echo "<a href=\"$hilite_url=$time_t\">" . utf8_date(hour_min_format(),$t) . "</a></td>";
+		}
 
 		# Loop through the list of rooms we have for this area
 		while (list($key, $room) = each($rooms))
@@ -260,7 +274,11 @@ else
 
 				echo "<center>";
 				if ( $pview != 1 ) {
-					echo "<a href=\"edit_entry.php?area=$area&room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day\"><img src=new.gif width=10 height=10 border=0></a>";
+					if( $enable_periods ) {
+						echo "<a href=\"edit_entry.php?area=$area&room=$room&period=$time_t_stripped&year=$year&month=$month&day=$day\"><img src=new.gif width=10 height=10 border=0></a>";
+					} else {
+						echo "<a href=\"edit_entry.php?area=$area&room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day\"><img src=new.gif width=10 height=10 border=0></a>";
+					}
 				} else echo '&nbsp;';
 				echo "</center>";
 			}

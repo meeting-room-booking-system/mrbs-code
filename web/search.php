@@ -148,8 +148,14 @@ for ($i = 0; ($row = sql_row($result, $i)); $i++)
 	echo "<TD>" . htmlspecialchars($row[3]) . "</TD>\n";
 	// generate a link to the day.php
 	$link = getdate($row[4]);
-	echo "<TD><A HREF=\"day.php?day=$link[mday]&month=$link[mon]&year=$link[year]&area=$row[5]\">"
-	.  time_date_string($row[4]) . "</A></TD>";
+	echo "<TD><A HREF=\"day.php?day=$link[mday]&month=$link[mon]&year=$link[year]&area=$row[5]\">";
+	if(empty($enable_periods)){
+        	$link_str = time_date_string($row[4]);
+        }
+        else {
+        	list(,$link_str) = period_date_string($row[4]);
+        }
+        echo "$link_str</A></TD>";
 	echo "</TR>\n";
 }
 

@@ -31,6 +31,22 @@ if(!getWritable($create_by, getUserName()))
     exit;
 }
 
+if( $enable_periods ) {
+	$resolution = 60;
+	$hour = 12;
+	$minute = $period;
+        $max_periods = count($periods);
+        if( $dur_units == "periods" && ($minute + $duration) > $max_periods )
+        {
+            $duration = (24*60*floor($duration/$max_periods)) + ($duration%$max_periods);
+        }
+        if( $dur_units == "days" && $minute == 0 )
+        {
+		$dur_units = "periods";
+                $duration = $max_periods + ($duration-1)*60*24;
+        }
+    }
+
 // Units start in seconds
 $units = 1.0;
 
@@ -44,6 +60,7 @@ switch($dur_units)
         $units *= 24;
     case "hours":
         $units *= 60;
+    case "periods":
     case "minutes":
         $units *= 60;
     case "seconds":
@@ -52,10 +69,19 @@ switch($dur_units)
 
 // Units are now in "$dur_units" numbers of seconds
 
+
 if(isset($all_day) && ($all_day == "yes"))
 {
-    $starttime = mktime(0, 0, 0, $month, $day  , $year, is_dst($month, $day  , $year));
-    $endtime   = mktime(0, 0, 0, $month, $day+1, $year, is_dst($month, $day+1, $year));
+    if( $enable_periods )
+    {
+        $starttime = mktime(12, 0, 0, $month, $day, $year);
+        $endtime   = mktime(12, $max_periods, 0, $month, $day, $year);
+    }
+    else
+    {
+        $starttime = mktime(0, 0, 0, $month, $day  , $year, is_dst($month, $day  , $year));
+        $endtime   = mktime(0, 0, 0, $month, $day+1, $year, is_dst($month, $day+1, $year));
+    }
 }
 else
 {
@@ -70,9 +96,10 @@ else
         $hour -= 12;
       }
     }
+
     $starttime = mktime($hour, $minute, 0, $month, $day, $year, is_dst($month, $day, $year, $hour));
     $endtime   = mktime($hour, $minute, 0, $month, $day, $year, is_dst($month, $day, $year, $hour)) + ($units * $duration);
-    
+
     # Round up the duration to the next whole resolution unit.
     # If they asked for 0 minutes, push that up to 1 resolution unit.
     $diff = $endtime - $starttime;
