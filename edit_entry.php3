@@ -263,13 +263,13 @@ for($i = 0; $lang["rep_type_$i"]; $i++)
 <TR>
  <TD><B><?echo $lang[rep_rep_day]?></B> <?echo $lang[rep_for_weekly]?></TD>
  <TD>
-  <INPUT NAME="rep_day[6]" TYPE="CHECKBOX"<?echo ($rep_day[0] ? "CHECKED" : "")?>>Sunday
-  <INPUT NAME="rep_day[0]" TYPE="CHECKBOX"<?echo ($rep_day[1] ? "CHECKED" : "")?>>Monday
-  <INPUT NAME="rep_day[1]" TYPE="CHECKBOX"<?echo ($rep_day[2] ? "CHECKED" : "")?>>Tuesday
-  <INPUT NAME="rep_day[2]" TYPE="CHECKBOX"<?echo ($rep_day[3] ? "CHECKED" : "")?>>Wednesday
-  <INPUT NAME="rep_day[3]" TYPE="CHECKBOX"<?echo ($rep_day[4] ? "CHECKED" : "")?>>Thursday
-  <INPUT NAME="rep_day[4]" TYPE="CHECKBOX"<?echo ($rep_day[5] ? "CHECKED" : "")?>>Friday
-  <INPUT NAME="rep_day[5]" TYPE="CHECKBOX"<?echo ($rep_day[6] ? "CHECKED" : "")?>>Saturday
+  <INPUT NAME="rep_day[0]" TYPE="CHECKBOX"<?echo ($rep_day[0] ? "CHECKED" : "")?>>Sunday
+  <INPUT NAME="rep_day[1]" TYPE="CHECKBOX"<?echo ($rep_day[1] ? "CHECKED" : "")?>>Monday
+  <INPUT NAME="rep_day[2]" TYPE="CHECKBOX"<?echo ($rep_day[2] ? "CHECKED" : "")?>>Tuesday
+  <INPUT NAME="rep_day[3]" TYPE="CHECKBOX"<?echo ($rep_day[3] ? "CHECKED" : "")?>>Wednesday
+  <INPUT NAME="rep_day[4]" TYPE="CHECKBOX"<?echo ($rep_day[4] ? "CHECKED" : "")?>>Thursday
+  <INPUT NAME="rep_day[5]" TYPE="CHECKBOX"<?echo ($rep_day[5] ? "CHECKED" : "")?>>Friday
+  <INPUT NAME="rep_day[6]" TYPE="CHECKBOX"<?echo ($rep_day[6] ? "CHECKED" : "")?>>Saturday
  </TD>
 </TR>
 
