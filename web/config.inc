@@ -1,5 +1,7 @@
 <?php
 
+# $Id$
+
 ###########################################################################
 #   MRBS Configuration File
 #   Configure this file for your site.

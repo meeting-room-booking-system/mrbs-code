@@ -1,4 +1,7 @@
 <?
+
+# $Id$
+
 include "config.inc";
 include "$dbsys.inc";
 include "functions.inc";

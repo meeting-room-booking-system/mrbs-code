@@ -1,4 +1,7 @@
 <?
+
+# $Id$
+
 #Index is just a stub to redirect to the appropriate day view
 
 $day   = date("d");

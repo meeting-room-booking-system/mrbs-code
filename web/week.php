@@ -1,4 +1,5 @@
 <?php
+# $Id$
 
 # mrbs/week.php - Week-at-a-time view
 

@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 // pgsql.inc - Simple PHP database support for PostgreSQL.
 // Include this file after defining the following variables:

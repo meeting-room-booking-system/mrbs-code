@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 function minicals($year, $month, $day, $area) {
 
 // PHP Calendar Class

@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 // include the authentification wrappers
 include "auth_$auth[type].inc";

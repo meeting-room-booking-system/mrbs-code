@@ -1,4 +1,5 @@
 <?php
+# $Id$
 
 # mrbs/month.php - Month-at-a-time view
 

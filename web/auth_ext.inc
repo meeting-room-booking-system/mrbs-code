@@ -1,5 +1,7 @@
 <?php
 
+// $Id$
+
 /* getAuth($realm)
  * 
  * Request that the username/password be given for the specified realm

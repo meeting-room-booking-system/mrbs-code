@@ -1,4 +1,6 @@
 <?
+# $Id$
+
 # This file contains PHP code that specifies language specific strings
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is a German file.

@@ -1,5 +1,7 @@
 <?php
 
+# $Id$
+
 # No need to perform authentication - ip address always there
 function authGet($realm) { }
 

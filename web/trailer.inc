@@ -1,4 +1,6 @@
 <?php
+# $Id$
+
 echo "<P><HR><B>$lang[viewday]:</B>\n";
 
 if(!isset($year))

@@ -1,5 +1,7 @@
 <?php
 
+# $Id$
+
 function print_header($day, $month, $year, $area)
 {
 	global $lang, $mrbs_company, $search_str;

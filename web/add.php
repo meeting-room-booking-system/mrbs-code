@@ -1,4 +1,7 @@
 <?php
+
+# $Id$
+
 include "config.inc";
 include "functions.inc";
 include "$dbsys.inc";

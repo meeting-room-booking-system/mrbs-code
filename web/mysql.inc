@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 // mysql.inc - Simple PHP database support for MySQL.
 // Include this file after defining the following variables:
