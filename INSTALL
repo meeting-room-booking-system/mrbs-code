@@ -153,13 +153,14 @@ tables, see "destroy.php".
 
 The tables are now empty and ready for use, but don't leave the files 
 mrbs_create.php and mrbs.schema.xml in you web directory. If you want to add 
-a few sample areas and rooms without going through the Admin function, use 
+a few sample areas and rooms without going through the Admin function, use
 this script:
 
-[MySQL]         $ mysql mrbs < sample-data.sql
-[PostgreSQL]    $ psql -a -f sample-data.sql mrbs
+Copy the file sample-data.php into you mrbs web server directory, then type:
 
-Substitute the database name you used for "mrbs".
+$ php sample-data.php
+
+or open it with your browser.
 
 WARNING:
 This script is only for use in a newly initialized database! (It will not
