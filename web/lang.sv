@@ -14,6 +14,12 @@ $lang["charset"]            = "iso-8859-1";
 # Used in style.inc
 $lang["mrbs"]               = "MRBS rumsbokningssystem";
 
+# Used in functions.inc
+$lang["search_label"]       = "Search:";
+$lang["report"]             = "Report";
+$lang["admin"]              = "Admin";
+$lang["help"]               = "Help";
+
 # Used in day.php3
 $lang["bookingsfor"]        = "Bokningar för";
 $lang["bookingsforpost"]    = ""; # Goes after the date

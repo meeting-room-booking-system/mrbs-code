@@ -49,13 +49,13 @@ function print_header($day, $month, $year, $area)
           </FORM>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="help.php?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>">Help</A>
+          <A HREF="help.php?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>"><? echo $lang["help"] ?></A>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="admin.php?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>">Admin</A>
+          <A HREF="admin.php?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>"><? echo $lang["admin"] ?></A>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="report.php">Report</A>
+          <A HREF="report.php"><? echo $lang["report"] ?></A>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
           <FORM METHOD=GET ACTION="search.php">

@@ -1,4 +1,9 @@
 CVS:
+    Internationalised functions.inc. "Help", "Admin" and "Search:" are now lang
+    strings. Also, fixed an error in lang.fr, $lang["mrbs"] was defined twice.
+    (jberanek)
+
+CVS:
     Added double quotes around all uses of color and class attributes, as HTML
     dictates. (jberanek)
 

@@ -11,8 +11,13 @@
 $lang["charset"]            = "iso-8859-1";
 
 # Used in style.inc
-$lang["mrbs"]               = "Meeting Room Booking System";    
 $lang["mrbs"]               = "Système de Réservation de Ressources";
+
+# Used in functions.inc
+$lang["search_label"]       = "Search:";
+$lang["report"]             = "Report";
+$lang["admin"]              = "Admin";
+$lang["help"]               = "Help";
 
 # Used in day.php
 $lang["bookingsfor"]        = "Réservation pour<br>";

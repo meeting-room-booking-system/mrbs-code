@@ -13,6 +13,12 @@ $lang["charset"]            = "Big5";
 # Used in style.inc
 $lang["mrbs"]               = "會議室預約系統";
 
+# Used in functions.inc
+$lang["search_label"]       = "Search:";
+$lang["report"]             = "Report";
+$lang["admin"]              = "Admin";
+$lang["help"]               = "Help";
+
 # Used in day.php
 $lang["bookingsfor"]        = "Bookings for";
 $lang["bookingsforpost"]    = ""; # Goes after the date
