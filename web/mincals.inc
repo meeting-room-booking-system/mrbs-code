@@ -164,17 +164,17 @@ $thismonth = mktime(0, 0, 0, $month,   $day, $year);
 $nextmonth = mktime(0, 0, 0, $month+1, 1, $year);
 
 echo "<td>";
-$cal = new Calendar(date("d",$lastmonth), date("m",$lastmonth), date("Y",$lastmonth), 0, $area);
+$cal = new Calendar(date("d",$lastmonth), date("m",$lastmonth), date("Y",$lastmonth), 0, $area, $dmy);
 echo $cal->getHTML();
 echo "</td>";
 
 echo "<td>";
-$cal = new Calendar(date("d",$thismonth), date("m",$thismonth), date("Y",$thismonth), 1, $area);
+$cal = new Calendar(date("d",$thismonth), date("m",$thismonth), date("Y",$thismonth), 1, $area, $dmy);
 echo $cal->getHTML();
 echo "</td>";
 
 echo "<td>";
-$cal = new Calendar(date("d",$nextmonth), date("m",$nextmonth), date("Y",$nextmonth), 0, $area);
+$cal = new Calendar(date("d",$nextmonth), date("m",$nextmonth), date("Y",$nextmonth), 0, $area, $dmy);
 echo $cal->getHTML();
 echo "</td>";
 }
