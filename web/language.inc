@@ -6,6 +6,9 @@
 # locale specifier for Windows
 $lang_map_windows = array
 (
+  'cs' => 'csy',
+  'cs-cs' => 'csy',
+  'cs-cz' => 'csy',
   'cz' => 'csy',
   'cz-cz' => 'csy',
   'da' => 'dan',
@@ -110,6 +113,7 @@ $winlocale_codepage_map = array
 # language specifier to a locale specifier without a map
 $lang_map_unix = array
 (
+  'cs_CS' => 'cs_CZ',
   'da_DA' => 'da_DK',
   'el_EL' => 'el_GR',
   'en_EN' => 'en_GB',
