@@ -26,7 +26,7 @@
    </field>
 
    <index>
-    <name>id</name>
+    <name>mrbs_area_pkey</name>
     <unique>1</unique>
     <field>
      <name>id</name>
