@@ -236,9 +236,17 @@ while (list(,$unit) = each($units))
 
 <tr><td class=CR><b><?php echo $vocab["rooms"] ?></b></td>
   <td class=CL valign=top><table><tr><td><select name="rooms[]" multiple>
-  <?php 
-	$sql = "select id, room_name from mrbs_room where area_id=$area order by room_name";
+  <?php
+        # Determine the area id of the room in question first
+        $sql = "select area_id from mrbs_room where id=$room_id";
+        $res = sql_query($sql);
+        $row = sql_row($res, 0);
+        $area_id = $row[0];
+        # then select the rooms in that area
+	$sql = "select id, room_name from mrbs_room where area_id=$area_id order by room_name";
    	$res = sql_query($sql);
+
+   
    	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
    	{
 		$selected = "";

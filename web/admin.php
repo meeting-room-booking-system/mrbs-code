@@ -46,8 +46,8 @@ if (isset($area))
 
 <table border=1>
 <tr>
-<th><center><b><?php echo $vocab["areas"] ?></b></center></th>
-<th><center><b><?php echo $vocab["rooms"] ?> <?php if(isset($area)) { echo $vocab["in"] . " " .
+<th><center><b><?php echo $vocab['areas'] ?></b></center></th>
+<th><center><b><?php echo $vocab['rooms'] ?> <?php if(isset($area)) { echo $vocab['in'] . " " .
   htmlspecialchars($area_name); }?></b></center></th>
 </tr>
 
@@ -59,7 +59,7 @@ $res = sql_query("select id, area_name from mrbs_area order by area_name");
 if (! $res) fatal_error(0, sql_error());
 
 if (sql_count($res) == 0) {
-	echo $vocab["noareas"];
+	echo $vocab['noareas'];
 } else {
 	echo "<ul>";
 	for ($i = 0; ($row = sql_row($res, $i)); $i++) {
@@ -78,17 +78,17 @@ if(isset($area)) {
 	$res = sql_query("select id, room_name, description, capacity from mrbs_room where area_id=$area order by room_name");
 	if (! $res) fatal_error(0, sql_error());
 	if (sql_count($res) == 0) {
-		echo $vocab["norooms"];
+		echo $vocab['norooms'];
 	} else {
 		echo "<ul>";
 		for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 			echo "<li>" . htmlspecialchars($row[1]) . "(" . htmlspecialchars($row[2])
-			. ", $row[3]) (<a href=\"edit_area_room.php?room=$row[0]\">" .  $vocab["edit"] . "</a>) (<a href=\"del.php?type=room&room=$row[0]\">" .  $vocab["delete"] . "</a>)\n";
+			. ", $row[3]) (<a href=\"edit_area_room.php?room=$row[0]\">" .  $vocab['edit'] . "</a>) (<a href=\"del.php?type=room&room=$row[0]\">" .  $vocab['delete'] . "</a>)\n";
 		}
 		echo "</ul>";
 	}
 } else {
-	echo $vocab["noarea"];
+	echo $vocab['noarea'];
 }
 
 ?>
