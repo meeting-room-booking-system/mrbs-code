@@ -89,7 +89,7 @@ echo "</tr></table>\n";
 # Don't continue if this area has no rooms:
 if ($room <= 0)
 {
-	echo "<h1>No rooms defined for this area</h1>";
+	echo "<h1>$lang[no_rooms_for_area]</h1>";
 	include "trailer.inc";
 	exit;
 }
@@ -111,10 +111,10 @@ $ty = date("Y",$i);
 $tm = date("n",$i);
 echo "<table width=\"100%\"><tr><td>
   <a href=\"month.php?year=$yy&month=$ym&area=$area&room=$room\">
-  &lt;&lt; Go to Month Before</a></td>
-  <td align=center><a href=\"month.php?area=$area&room=$room\">Go to This Month</a></td>
+  &lt;&lt; $lang[monthbefore]</a></td>
+  <td align=center><a href=\"month.php?area=$area&room=$room\">$lang[gotothismonth]</a></td>
   <td align=right><a href=\"month.php?year=$ty&month=$tm&area=$area&room=$room\">
-  Go to Month After &gt;&gt;</a></td></tr></table>";
+  $lang[monthafter] &gt;&gt;</a></td></tr></table>";
 
 if ($debug_flag)
 	echo "<p>DEBUG: month=$month year=$year start=$weekday_start range=$month_start:$month_end\n";
@@ -145,8 +145,9 @@ else for ($i = 0; ($row = sql_row($res, $i)); $i++)
 		echo "<br>DEBUG: result $i, id $row[2], starts $row[0], ends $row[1]\n";
 
 	# Fill in data for each day during the month that this meeting covers.
-	$t = max($row[0], $month_start);
-	$end_t = min($row[1], $month_end);
+	# Note: int casts on database rows for min and max is needed for PHP3.
+	$t = max((int)$row[0], $month_start);
+	$end_t = min((int)$row[1], $month_end);
  	$day_num = date("j", $t);
 	$midnight = mktime(0, 0, 0, $month, $day_num, $year);
 	while ($t < $end_t)
@@ -203,7 +204,7 @@ if ($debug_flag)
 	echo "<p>DEBUG: Array of month day data:<p><pre>\n";
 	for ($i = 1; $i <= $days_in_month; $i++)
 	{
-		if (gettype($d[$i]["id"]) == "array")
+		if (isset($d[$i]["id"]))
 		{
 			$n = count($d[$i]["id"]);
 			echo "Day $i has $n entries:\n";
