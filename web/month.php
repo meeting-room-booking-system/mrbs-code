@@ -86,10 +86,10 @@ if ( $pview != 1 ) {
   # show either a select box or the normal html list
   if ($area_list_format == "select") {
     echo make_area_select_html('month.php', $area, $year, $month, $day); # from functions.inc
-    $this_area_name = sql_query1("select area_name from mrbs_area where id=$area");
-    $this_room_name = sql_query1("select room_name from mrbs_room where id=$room");
+    $this_area_name = sql_query1("select area_name from $tbl_area where id=$area");
+    $this_room_name = sql_query1("select room_name from $tbl_room where id=$room");
   } else {
-    $sql = "select id, area_name from mrbs_area order by area_name";
+    $sql = "select id, area_name from $tbl_area order by area_name";
     $res = sql_query($sql);
     if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
     {
@@ -117,7 +117,7 @@ if ( $pview != 1 ) {
   if ($area_list_format == "select") {
     echo make_room_select_html('month.php', $area, $room, $year, $month, $day); # from functions.inc
   } else {
-    $sql = "select id, room_name from mrbs_room where area_id=$area order by room_name";
+    $sql = "select id, room_name from $tbl_room where area_id=$area order by room_name";
     $res = sql_query($sql);
     if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
     {
@@ -185,7 +185,7 @@ $all_day = ereg_replace(" ", "&nbsp;", get_vocab("all_day"));
 # This data will be retrieved day-by-day fo the whole month
 for ($day_num = 1; $day_num<=$days_in_month; $day_num++) {
 	$sql = "SELECT start_time, end_time, id, name
-	   FROM mrbs_entry
+	   FROM $tbl_entry
 	   WHERE room_id=$room
 	   AND start_time <= $midnight_tonight[$day_num] AND end_time > $midnight[$day_num]
 	   ORDER by 1";

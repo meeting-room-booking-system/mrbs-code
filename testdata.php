@@ -26,11 +26,11 @@ for ($day = date("d") - 5; $day < date("d")+55; $day++) {
  $dayt = date("D",mktime(0,0,0,$month,$day,$year));
  if ($dayt <> "Sat" and $dayt <> "Sun") {
 
-  $sql = "select id from mrbs_area";
+  $sql = "select id from $tbl_area";
   $area_res = sql_query($sql);
   for ($i = 0; (list($area) = sql_row($area_res, $i)); $i++) {
 	  # We know the area we want to add appointments in
-	  $sql = "select id from mrbs_room where area_id = $area";
+	  $sql = "select id from $tbl_room where area_id = $area";
 	  $room_res = sql_query($sql);
 	  if (!$room_res) echo sql_error();
 	  for ($j = 0; (list($room) = sql_row($room_res, $j)); $j++) {
@@ -45,7 +45,7 @@ for ($day = date("d") - 5; $day < date("d")+55; $day++) {
 			  $endtime   = mktime($starthour, $length, 0, $month, $day, $year);
 
 			  #Check that this isnt going to overlap
-			  $sql = "select count(*) from mrbs_entry where room_id=$room and ((start_time between $starttime and $endtime) or (end_time between $starttime and $endtime) or (start_time = $starttime and end_time = $endtime))";
+			  $sql = "select count(*) from $tbl_entry where room_id=$room and ((start_time between $starttime and $endtime) or (end_time between $starttime and $endtime) or (start_time = $starttime and end_time = $endtime))";
 			  $counte = sql_query1($sql);
 			  if ($counte == 0) {
 				  #There are no overlaps
@@ -55,7 +55,7 @@ for ($day = date("d") - 5; $day < date("d")+55; $day++) {
 					  $name = $ennames[mt_rand(1,count($ennames)-1)];
 				  }
 				  $type = $intext[mt_rand(1,2)];
-				  $sql = "insert into mrbs_entry (room_id, create_by, start_time, end_time, type, name, description) values ($room, '$REMOTE_ADDR', $starttime, $endtime,'$type','$name','A meeting')";
+				  $sql = "insert into $tbl_entry (room_id, create_by, start_time, end_time, type, name, description) values ($room, '$REMOTE_ADDR', $starttime, $endtime,'$type','$name','A meeting')";
 				  sql_command($sql);
 			  }
 			  echo "$area - $room ($starthour,$length), $type<br>";

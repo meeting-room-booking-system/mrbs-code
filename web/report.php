@@ -471,7 +471,7 @@ if (isset($areamatch))
 		. "e.type, e.create_by, "
 		.  sql_syntax_timestamp_to_unix("e.timestamp")
 		. ", a.area_name, r.room_name"
-		. " FROM mrbs_entry e, mrbs_area a, mrbs_room r"
+		. " FROM $tbl_entry e, $tbl_area a, $tbl_room r"
 		. " WHERE e.room_id = r.id AND r.area_id = a.id"
 		. " AND e.start_time < $report_end AND e.end_time > $report_start";
 

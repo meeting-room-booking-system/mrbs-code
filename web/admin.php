@@ -34,7 +34,7 @@ if (isset($area))
 {
 	if (empty($area_name))
 	{
-		$res = sql_query("select area_name from mrbs_area where id=$area");
+		$res = sql_query("select area_name from $tbl_area where id=$area");
     	if (! $res) fatal_error(0, sql_error());
 		if (sql_count($res) == 1)
 		{
@@ -61,7 +61,7 @@ if (isset($area))
 <td>
 <?php 
 # This cell has the areas
-$res = sql_query("select id, area_name from mrbs_area order by area_name");
+$res = sql_query("select id, area_name from $tbl_area order by area_name");
 if (! $res) fatal_error(0, sql_error());
 
 if (sql_count($res) == 0) {
@@ -81,7 +81,7 @@ if (sql_count($res) == 0) {
 <?php
 # This one has the rooms
 if(isset($area)) {
-	$res = sql_query("select id, room_name, description, capacity from mrbs_room where area_id=$area order by room_name");
+	$res = sql_query("select id, room_name, description, capacity from $tbl_room where area_id=$area order by room_name");
 	if (! $res) fatal_error(0, sql_error());
 	if (sql_count($res) == 0) {
 		echo get_vocab("norooms");

@@ -58,7 +58,7 @@ if ( $pview != 1 ) {
 	echo make_area_select_html('day.php', $area, $year, $month, $day); # from functions.inc
    } else {
 	# show the standard html list
-	$sql = "select id, area_name from mrbs_area order by area_name";
+	$sql = "select id, area_name from $tbl_area order by area_name";
    	$res = sql_query($sql);
    	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
    	{
@@ -105,10 +105,10 @@ if ( $pview != 1 ) {
 #Note: The predicate clause 'start_time <= ...' is an equivalent but simpler
 #form of the original which had 3 BETWEEN parts. It selects all entries which
 #occur on or cross the current day.
-$sql = "SELECT mrbs_room.id, start_time, end_time, name, mrbs_entry.id, type,
-        mrbs_entry.description
-   FROM mrbs_entry, mrbs_room
-   WHERE mrbs_entry.room_id = mrbs_room.id
+$sql = "SELECT $tbl_room.id, start_time, end_time, name, $tbl_entry.id, type,
+        $tbl_entry.description
+   FROM $tbl_entry, $tbl_room
+   WHERE $tbl_entry.room_id = $tbl_room.id
    AND area_id = $area
    AND start_time <= $pm7 AND end_time > $am7";
 
@@ -183,7 +183,8 @@ if ($debug_flag)
 # pull the data from the db and store it. Convienently we can print the room
 # headings and capacities at the same time
 
-$sql = "select room_name, capacity, id, description from mrbs_room where area_id=$area order by capacity";
+$sql = "select room_name, capacity, id, description from $tbl_room where area_id=$area order by capacity";
+
 $res = sql_query($sql);
 
 # It might be that there are no rooms defined for this area.

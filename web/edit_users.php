@@ -32,12 +32,12 @@ include "mrbs_auth.inc";
 |                     Create the users database if needed                     |
 \*---------------------------------------------------------------------------*/
 
-$nusers = sql_query1("select count(*) from mrbs_users");
+$nusers = sql_query1("select count(*) from $tbl_users");
 
 if ($nusers == -1)	/* If the table does not exist */
     {			/* Then create it */
     $cmd = "
-CREATE TABLE mrbs_users
+CREATE TABLE $tbl_users
 (
   /* The first three fields are required. Don't remove or reorder. */
   id        int DEFAULT '0' NOT NULL auto_increment,
@@ -52,7 +52,7 @@ CREATE TABLE mrbs_users
     $r = sql_command($cmd);
     if ($r == -1)
         { // No need to localize this: Only the admin running this for the first time would see it.
-        print "Error creating the mrbs_users table.<br>\n";
+        print "Error creating the $tbl_users table.<br>\n";
         print sql_error() . "<br>\n";
         exit();
         }
@@ -60,7 +60,7 @@ CREATE TABLE mrbs_users
     }
 
 /* Get the list of fields actually in the table. (Allows the addition of new fields later on) */
-$result = sql_query("show fields from mrbs_users");
+$result = sql_query("show fields from $tbl_users");
 $nfields = sql_count($result);
 for ($i=0; $i<$nfields; $i++)
     {
@@ -111,7 +111,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
     {
     if ($Id >= 0) /* -1 for new users, or >=0 for existing ones */
         {
-        $result = sql_query("select * from mrbs_users where id=$Id");
+        $result = sql_query("select * from $tbl_users where id=$Id");
         $data = sql_row($result, 0);
         sql_free($result);
         }
@@ -212,12 +212,12 @@ if (isset($Action) && ($Action == "Update"))
     
     if ($Id >= 0)
     	{
-        $operation = "replace into mrbs_users values (";
+        $operation = "replace into $tbl_users values (";
         }
     else
         {
-        $operation = "insert into mrbs_users values (";
-        $Id = sql_query1("select max(id) from mrbs_users;") + 1; /* Use the last index + 1 */
+        $operation = "insert into $tbl_users values (";
+        $Id = sql_query1("select max(id) from $tbl_users;") + 1; /* Use the last index + 1 */
         /* Note: If the table is empty, sql_query1 returns -1. So use index 0. */
         }
 
@@ -242,7 +242,7 @@ if (isset($Action) && ($Action == "Update"))
 	print_header(0, 0, 0, "");
 
 	// This is unlikely to happen in normal  operation. Do not translate.
-        print "Error updating the mrbs_users table.<br>\n";
+        print "Error updating the $tbl_users table.<br>\n";
         print sql_error() . "<br>\n";
         
         print "<form method=post action=\"" . basename($PHP_SELF) . "\">\n";
@@ -267,13 +267,13 @@ if (isset($Action) && ($Action == "Delete"))
         exit();
         }
 
-    $r = sql_command("delete from mrbs_users where id=$Id;");
+    $r = sql_command("delete from $tbl_users where id=$Id;");
     if ($r == -1)
         {
 	print_header(0, 0, 0, "");
 
 	// This is unlikely to happen in normal  operation. Do not translate.
-        print "Error deleting entry $Id from the mrbs_users table.<br>\n";
+        print "Error deleting entry $Id from the $tbl_users table.<br>\n";
         print sql_error() . "<br>\n";
         
         print "<form method=post action=\"" . basename($PHP_SELF) . "\">\n";
@@ -305,7 +305,7 @@ if ($level == 2) /* Administrators get the right to add new users */
     print "</form></p>\n";
     }
 
-$list = sql_query("select * from mrbs_users order by name");
+$list = sql_query("select * from $tbl_users order by name");
 print "<table border=1>\n";
 print "<tr>";
 // The first 2 columns are the user rights and uaser name.

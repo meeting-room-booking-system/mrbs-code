@@ -79,10 +79,10 @@ if ( $pview != 1 ) {
   # show either a select box or the normal html list
   if ($area_list_format == "select") {
 	echo make_area_select_html('week.php', $area, $year, $month, $day); # from functions.inc
-	$this_area_name = sql_query1("select area_name from mrbs_area where id=$area");
-	$this_room_name = sql_query1("select room_name from mrbs_room where id=$room");
+	$this_area_name = sql_query1("select area_name from $tbl_area where id=$area");
+	$this_room_name = sql_query1("select room_name from $tbl_room where id=$room");
   } else {
-	$sql = "select id, area_name from mrbs_area order by area_name";
+	$sql = "select id, area_name from $tbl_area order by area_name";
 	$res = sql_query($sql);
 	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	{
@@ -108,7 +108,7 @@ echo "<td width=\"30%\"><u>".get_vocab("rooms")."</u><br>";
   if ($area_list_format == "select") {
 	echo make_room_select_html('week.php', $area, $room, $year, $month, $day); # from functions.inc
   } else {
-	$sql = "select id, room_name, description from mrbs_room where area_id=$area order by room_name";
+	$sql = "select id, room_name, description from $tbl_room where area_id=$area order by room_name";
 	$res = sql_query($sql);
 	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	{
@@ -177,7 +177,7 @@ if ( $pview != 1 ) {
 for ($j = 0; $j<=($num_of_days-1) ; $j++) {
 
 	$sql = "SELECT start_time, end_time, type, name, id, description
-	        FROM mrbs_entry
+	        FROM $tbl_entry
 	        WHERE room_id = $room
 	        AND start_time <= $pm7[$j] AND end_time > $am7[$j]";
 

@@ -136,7 +136,7 @@ $repeat_id = 0;
 if (isset($id))
 {
     $ignore_id = $id;
-    $repeat_id = sql_query1("SELECT repeat_id FROM mrbs_entry WHERE id=$id");
+    $repeat_id = sql_query1("SELECT repeat_id FROM $tbl_entry WHERE id=$id");
     if ($repeat_id < 0)
         $repeat_id = 0;
 }
@@ -144,7 +144,7 @@ else
     $ignore_id = 0;
 
 # Acquire mutex to lock out others trying to book the same slot(s).
-if (!sql_mutex_lock('mrbs_entry'))
+if (!sql_mutex_lock("$tbl_entry"))
     fatal_error(1, get_vocab("failed_to_acquire"));
     
 # Check for any schedule conflicts in each room we're going to try and
@@ -207,7 +207,7 @@ if(empty($err))
     if(isset($id))
         mrbsDelEntry(getUserName(), $id, ($edit_type == "series"), 1);
 
-    sql_mutex_unlock('mrbs_entry');
+    sql_mutex_unlock("$tbl_entry");
     
     $area = mrbsGetRoomArea($room_id);
     
@@ -217,7 +217,7 @@ if(empty($err))
 }
 
 # The room was not free.
-sql_mutex_unlock('mrbs_entry');
+sql_mutex_unlock("$tbl_entry");
 
 if(strlen($err))
 {

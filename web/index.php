@@ -30,7 +30,7 @@ switch ($default_view)
 if( ! empty($default_room) )
 {
 
-	$sql = "select area_id from mrbs_room where id=$default_room";
+	$sql = "select area_id from $tbl_room where id=$default_room";
 	$res = sql_query($sql);
 	if( $res )
 	{

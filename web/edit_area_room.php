@@ -26,7 +26,7 @@ if (isset($change_done))
 {
 	if (!empty($room)) // Get the area the room is in
 	{
-		$area = sql_query1("SELECT area_id from mrbs_room where id=$room");
+		$area = sql_query1("SELECT area_id from $tbl_room where id=$room");
 	}
 	Header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
 	exit();
@@ -45,14 +45,14 @@ if(!empty($room)) {
 	if (isset($change_room))
 	{
 		if (empty($capacity)) $capacity = 0;
-		$sql = "UPDATE mrbs_room SET room_name='" . slashes($room_name)
+		$sql = "UPDATE $tbl_room SET room_name='" . slashes($room_name)
 			. "', description='" . slashes($description)
 			. "', capacity=$capacity WHERE id=$room";
 		if (sql_command($sql) < 0)
 			fatal_error(0, get_vocab("update_room_failed") . sql_error());
 	}
 
-	$res = sql_query("SELECT * FROM mrbs_room WHERE id=$room");
+	$res = sql_query("SELECT * FROM $tbl_room WHERE id=$room");
 	if (! $res) fatal_error(0, get_vocab("error_room") . $room . get_vocab("not_found"));
 	$row = sql_row_keyed($res, 0);
 	sql_free($res);
@@ -81,13 +81,13 @@ if(!empty($area))
 {
 	if (isset($change_area))
 	{
-		$sql = "UPDATE mrbs_area SET area_name='" . slashes($area_name)
+		$sql = "UPDATE $tbl_area SET area_name='" . slashes($area_name)
 			. "' WHERE id=$area";
 		if (sql_command($sql) < 0)
 			fatal_error(0, get_vocab("update_area_failed") . sql_error());
 	}
 
-	$res = sql_query("SELECT * FROM mrbs_area WHERE id=$area");
+	$res = sql_query("SELECT * FROM $tbl_area WHERE id=$area");
 	if (! $res) fatal_error(0, get_vocab("error_area") . $area . get_vocab("not_found"));
 	$row = sql_row_keyed($res, 0);
 	sql_free($res);

@@ -65,7 +65,7 @@ $sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_text)
 # number of matches.  This is passed along to subsequent
 # searches so that we don't have to run it for each page.
 if(!isset($total))
-	$total = sql_query1("SELECT count(*) FROM mrbs_entry E WHERE $sql_pred");
+	$total = sql_query1("SELECT count(*) FROM $tbl_entry E WHERE $sql_pred");
 
 if($total <= 0)
 {
@@ -81,7 +81,7 @@ elseif($search_pos >= $total)
 
 # Now we set up the "real" query using LIMIT to just get the stuff we want.
 $sql = "SELECT E.id, E.create_by, E.name, E.description, E.start_time, R.area_id
-        FROM mrbs_entry E, mrbs_room R
+        FROM $tbl_entry E, $tbl_room R
         WHERE $sql_pred
         AND E.room_id = R.id
         ORDER BY E.start_time asc "

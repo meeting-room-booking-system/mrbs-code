@@ -17,11 +17,12 @@
  */
 function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 {
+	global $tbl_entry;
 	global $enable_periods;
     global $periods;
 
     # Select any meetings which overlap ($starttime,$endtime) for this room:
-	$sql = "SELECT id, name, start_time FROM mrbs_entry WHERE
+	$sql = "SELECT id, name, start_time FROM $tbl_entry WHERE
 		start_time < $endtime AND end_time > $starttime
 		AND room_id = $room_id";
 
@@ -83,11 +84,13 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
  */
 function mrbsDelEntry($user, $id, $series, $all)
 {
-	$repeat_id = sql_query1("SELECT repeat_id FROM mrbs_entry WHERE id=$id");
+	global $tbl_entry, $tbl_repeat;
+
+	$repeat_id = sql_query1("SELECT repeat_id FROM $tbl_entry WHERE id=$id");
 	if ($repeat_id < 0)
 		return 0;
 	
-	$sql = "SELECT create_by, id, entry_type FROM mrbs_entry WHERE ";
+	$sql = "SELECT create_by, id, entry_type FROM $tbl_entry WHERE ";
 	
 	if($series)
 		$sql .= "repeat_id=$repeat_id";
@@ -106,13 +109,13 @@ function mrbsDelEntry($user, $id, $series, $all)
 		if($series && $row[2] == 2 && !$all)
 			continue;
 		
-		if (sql_command("DELETE FROM mrbs_entry WHERE id=" . $row[1]) > 0)
+		if (sql_command("DELETE FROM $tbl_entry WHERE id=" . $row[1]) > 0)
 			$removed++;
 	}
 	
 	if ($repeat_id > 0 &&
-            sql_query1("SELECT count(*) FROM mrbs_entry WHERE repeat_id=$repeat_id") == 0)
-		sql_command("DELETE FROM mrbs_repeat WHERE id=$repeat_id");
+            sql_query1("SELECT count(*) FROM $tbl_entry WHERE repeat_id=$repeat_id") == 0)
+		sql_command("DELETE FROM $tbl_repeat WHERE id=$repeat_id");
 	
 	return $removed > 0;
 }
@@ -138,6 +141,8 @@ function mrbsDelEntry($user, $id, $series, $all)
 function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $room_id,
                                $owner, $name, $type, $description)
 {
+	global $tbl_entry;
+
 	$name        = slashes($name);
 	$description = slashes($description);
 	
@@ -145,14 +150,14 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $r
 	# this is to trap potential negative duration created when DST comes
 	# into effect
 	if( $endtime > $starttime )
-	$sql = "INSERT INTO mrbs_entry (  start_time,   end_time,   entry_type,    repeat_id,   room_id,
+	$sql = "INSERT INTO $tbl_entry (  start_time,   end_time,   entry_type,    repeat_id,   room_id,
 	                                  create_by,    name,       type,          description)
 	                        VALUES ($starttime, $endtime, $entry_type, $repeat_id, $room_id,
 	                                '$owner',     '$name',    '$type',       '$description')";
 	
 	if (sql_command($sql) < 0) return 0;
 	
-	return sql_insert_id("mrbs_entry", "id");
+	return sql_insert_id("$tbl_entry", "id");
 }
 
 /** mrbsCreateRepeatEntry()
@@ -177,17 +182,19 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $r
 function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate, $rep_opt,
                                $room_id, $owner, $name, $type, $description, $rep_num_weeks)
 {
+	global $tbl_repeat;
+
 	$name        = slashes($name);
 	$description = slashes($description);
 	
-	$sql = "INSERT INTO mrbs_repeat (  start_time,   end_time,    rep_type,    end_date,       rep_opt,
+	$sql = "INSERT INTO $tbl_repeat (  start_time,   end_time,    rep_type,    end_date,       rep_opt,
 	                                   room_id,      create_by,   type,        name,           description, rep_num_weeks)
 	                         VALUES ($starttime, $endtime,  $rep_type, $rep_enddate, '$rep_opt',
 	                                 $room_id,   '$owner',    '$type',     '$name',        '$description', '$rep_num_weeks')";
 	
 	if (sql_command($sql) < 0) return 0;
 	
-	return sql_insert_id("mrbs_repeat", "id");
+	return sql_insert_id("$tbl_repeat", "id");
 }
 
 /** same_day_next_month()
@@ -389,9 +396,11 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type, $rep_enddate
  */
 function mrbsGetEntryInfo($id)
 {
+	global $tbl_entry;
+
 	$sql = "SELECT start_time, end_time, entry_type, repeat_id, room_id,
 	               timestamp, create_by, name, type, description
-                FROM mrbs_entry WHERE (ID = $id)";
+                FROM $tbl_entry WHERE (ID = $id)";
 	
 	$res = sql_query($sql);
 	if (! $res) return;
@@ -419,7 +428,9 @@ function mrbsGetEntryInfo($id)
 
 function mrbsGetRoomArea($id)
 {
-	$id = sql_query1("SELECT area_id FROM mrbs_room WHERE (id = $id)");
+	global $tbl_room;
+
+	$id = sql_query1("SELECT area_id FROM $tbl_room WHERE (id = $id)");
 	if ($id <= 0) return 0;
 	return $id;
 }

@@ -327,7 +327,8 @@ function unslashes($s)
 # This could be changed to implement something like per-user defaults.
 function get_default_area()
 {
-	$area = sql_query1("SELECT id FROM mrbs_area ORDER BY area_name LIMIT 1");
+	global $tbl_area;
+	$area = sql_query1("SELECT id FROM $tbl_area ORDER BY area_name LIMIT 1");
 	return ($area < 0 ? 0 : $area);
 }
 
@@ -336,7 +337,8 @@ function get_default_area()
 # This could be changed to implement something like per-user defaults.
 function get_default_room($area)
 {
-	$room = sql_query1("SELECT id FROM mrbs_room WHERE area_id=$area ORDER BY room_name LIMIT 1");
+	global $tbl_room;
+	$room = sql_query1("SELECT id FROM $tbl_room WHERE area_id=$area ORDER BY room_name LIMIT 1");
 	return ($room < 0 ? 0 : $room);
 }
 
@@ -465,11 +467,12 @@ function round_t_up($t, $resolution, $am7)
 # displayed.
 function make_area_select_html( $link, $current, $year, $month, $day )
 {
+	global $tbl_area;
 	$out_html = "
 <form name=\"areaChangeForm\" method=get action=\"$link\">
   <select name=\"area\" onChange=\"document.areaChangeForm.submit()\">";
 
-	$sql = "select id, area_name from mrbs_area order by area_name";
+	$sql = "select id, area_name from $tbl_area order by area_name";
    	$res = sql_query($sql);
    	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
    	{
@@ -491,11 +494,12 @@ function make_area_select_html( $link, $current, $year, $month, $day )
 
 function make_room_select_html( $link, $area, $current, $year, $month, $day )
 {
+	global $tbl_room;
 	$out_html = "
 <form name=\"roomChangeForm\" method=get action=\"$link\">
   <select name=\"room\" onChange=\"document.roomChangeForm.submit()\">";
 
-	$sql = "select id, room_name from mrbs_room where area_id=$area order by room_name";
+	$sql = "select id, room_name from $tbl_room where area_id=$area order by room_name";
    	$res = sql_query($sql);
    	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
    	{

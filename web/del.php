@@ -34,10 +34,10 @@ if($type == "room")
 		# They have confirmed it already, so go blast!
 		sql_begin();
 		# First take out all appointments for this room
-		sql_command("delete from mrbs_entry where room_id=$room");
+		sql_command("delete from $tbl_entry where room_id=$room");
 		
 		# Now take out the room itself
-		sql_command("delete from mrbs_room where id=$room");
+		sql_command("delete from $tbl_room where id=$room");
 		sql_commit();
 		
 		# Go back to the admin page
@@ -50,7 +50,7 @@ if($type == "room")
 		# We tell them how bad what theyre about to do is
 		# Find out how many appointments would be deleted
 		
-		$sql = "select name, start_time, end_time from mrbs_entry where room_id=$room";
+		$sql = "select name, start_time, end_time from $tbl_entry where room_id=$room";
 		$res = sql_query($sql);
 		if (! $res) echo sql_error();
 		elseif (sql_count($res) > 0)
@@ -79,11 +79,11 @@ if($type == "area")
 {
 	# We are only going to let them delete an area if there are
 	# no rooms. its easier
-    $n = sql_query1("select count(*) from mrbs_room where area_id=$area");
+    $n = sql_query1("select count(*) from $tbl_room where area_id=$area");
 	if ($n == 0)
 	{
 		# OK, nothing there, lets blast it away
-		sql_command("delete from mrbs_area where id=$area");
+		sql_command("delete from $tbl_area where id=$area");
 		
 		# Redirect back to the admin page
 		header("Location: admin.php");

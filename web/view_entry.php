@@ -19,23 +19,23 @@ if(empty($area))
 print_header($day, $month, $year, $area);
 
 $sql = "
-SELECT mrbs_entry.name,
-       mrbs_entry.description,
-       mrbs_entry.create_by,
-       mrbs_room.room_name,
-       mrbs_area.area_name,
-       mrbs_entry.type,
-       mrbs_entry.room_id,
-       mrbs_entry.repeat_id,
-    " . sql_syntax_timestamp_to_unix("mrbs_entry.timestamp") . ",
-       (mrbs_entry.end_time - mrbs_entry.start_time),
-       mrbs_entry.start_time,
-       mrbs_entry.end_time
+SELECT $tbl_entry.name,
+       $tbl_entry.description,
+       $tbl_entry.create_by,
+       $tbl_room.room_name,
+       $tbl_area.area_name,
+       $tbl_entry.type,
+       $tbl_entry.room_id,
+       $tbl_entry.repeat_id,
+    " . sql_syntax_timestamp_to_unix("$tbl_entry.timestamp") . ",
+       ($tbl_entry.end_time - $tbl_entry.start_time),
+       $tbl_entry.start_time,
+       $tbl_entry.end_time
 
-FROM mrbs_entry, mrbs_room, mrbs_area
-WHERE mrbs_entry.room_id = mrbs_room.id
-  AND mrbs_room.area_id = mrbs_area.id
-  AND mrbs_entry.id=$id
+FROM $tbl_entry, $tbl_room, $tbl_area
+WHERE $tbl_entry.room_id = $tbl_room.id
+  AND $tbl_room.area_id = $tbl_area.id
+  AND $tbl_entry.id=$id
 ";
 
 $res = sql_query($sql);
@@ -79,7 +79,7 @@ $rep_type = 0;
 if($repeat_id != 0)
 {
 	$res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks
-	                    FROM mrbs_repeat WHERE id=$repeat_id");
+	                    FROM $tbl_repeat WHERE id=$repeat_id");
 	if (! $res) fatal_error(0, sql_error());
 
 	if (sql_count($res) == 1)

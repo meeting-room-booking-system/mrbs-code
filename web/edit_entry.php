@@ -43,7 +43,7 @@ if(!getAuthorised(getUserName(), getUserPassword(), 1))
 if (isset($id))
 {
 	$sql = "select name, create_by, description, start_time, end_time,
-	        type, room_id, entry_type, repeat_id from mrbs_entry where id=$id";
+	        type, room_id, entry_type, repeat_id from $tbl_entry where id=$id";
 	
 	$res = sql_query($sql);
 	if (! $res) fatal_error(1, sql_error());
@@ -72,7 +72,7 @@ if (isset($id))
 	if($entry_type >= 1)
 	{
 		$sql = "SELECT rep_type, start_time, end_date, rep_opt, rep_num_weeks
-		        FROM mrbs_repeat WHERE id=$rep_id";
+		        FROM $tbl_repeat WHERE id=$rep_id";
 		
 		$res = sql_query($sql);
 		if (! $res) fatal_error(1, sql_error());
@@ -155,7 +155,7 @@ else
 # If we have not been provided with a room_id
 if( empty( $room_id ) )
 {
-	$sql = "select id from mrbs_room limit 1";
+	$sql = "select id from $tbl_room limit 1";
 	$res = sql_query($sql);
 	$row = sql_row($res, 0);
 	$room_id = $row[0];
@@ -336,12 +336,12 @@ while (list(,$unit) = each($units))
 
 <?php
       # Determine the area id of the room in question first
-      $sql = "select area_id from mrbs_room where id=$room_id";
+      $sql = "select area_id from $tbl_room where id=$room_id";
       $res = sql_query($sql);
       $row = sql_row($res, 0);
       $area_id = $row[0];
       # determine if there is more than one area
-      $sql = "select id from mrbs_area";
+      $sql = "select id from $tbl_area";
       $res = sql_query($sql);
       $num_areas = sql_count($res);
       # if there is more than one area then give the option
@@ -367,14 +367,14 @@ function changeRooms( formObj )
     switch (area){
 <?php
         # get the area id for case statement
-	$sql = "select id, area_name from mrbs_area order by area_name";
+	$sql = "select id, area_name from $tbl_area order by area_name";
         $res = sql_query($sql);
 	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	{
 
                 print "      case \"".$row[0]."\":\n";
         	# get rooms for this area
-		$sql2 = "select id, room_name from mrbs_room where area_id='".$row[0]."' order by room_name";
+		$sql2 = "select id, room_name from $tbl_room where area_id='".$row[0]."' order by room_name";
         	$res2 = sql_query($sql2);
 		if ($res2) for ($j = 0; ($row2 = sql_row($res2, $j)); $j++)
 		{
@@ -395,7 +395,7 @@ this.document.writeln("<tr><td class=CR><b><?php echo get_vocab("areas") ?>:</b>
 this.document.writeln("          <select name=\"areas\" onChange=\"changeRooms(this.form)\">");
 <?php
 # get list of areas
-$sql = "select id, area_name from mrbs_area order by area_name";
+$sql = "select id, area_name from $tbl_area order by area_name";
 $res = sql_query($sql);
 if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 {
@@ -417,7 +417,7 @@ this.document.writeln("</td></tr>");
   <td class=CL valign=top><table><tr><td><select name="rooms[]" multiple="yes">
   <?php
         # select the rooms in the area determined above
-	$sql = "select id, room_name from mrbs_room where area_id=$area_id order by room_name";
+	$sql = "select id, room_name from $tbl_room where area_id=$area_id order by room_name";
    	$res = sql_query($sql);
 
 
