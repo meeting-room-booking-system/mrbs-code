@@ -42,7 +42,7 @@ function print_header($day, $month, $year, $area)
 
    <?php # show a warning if this is using a low version of php
        if (substr(phpversion(), 0, 1) == 3)
-	       echo "<H1>WARNING: This probably doesn't work with PHP3</H1>";
+	       echo $vocab['not_php3'];
    ?>
 
    <TABLE WIDTH="100%">
