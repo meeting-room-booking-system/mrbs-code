@@ -36,7 +36,7 @@ print_header($day, $month, $year, isset($area) ? $area : "");
 
 ?>
 
-<h2><?php echo $vocab["editroomarea"] ?></h2>
+<h2><?php echo get_vocab("editroomarea") ?></h2>
 
 <table border=1>
 
@@ -49,29 +49,29 @@ if(!empty($room)) {
 			. "', description='" . slashes($description)
 			. "', capacity=$capacity WHERE id=$room";
 		if (sql_command($sql) < 0)
-			fatal_error(0, $vocab['update_room_failed'] . sql_error());
+			fatal_error(0, get_vocab("update_room_failed") . sql_error());
 	}
 
 	$res = sql_query("SELECT * FROM mrbs_room WHERE id=$room");
-	if (! $res) fatal_error(0, $vocab['error_room'] . $room . $vocab['not_found']);
+	if (! $res) fatal_error(0, get_vocab("error_room") . $room . get_vocab("not_found"));
 	$row = sql_row_keyed($res, 0);
 	sql_free($res);
 ?>
-<h3 ALIGN=CENTER><?php echo $vocab["editroom"] ?></h3>
+<h3 ALIGN=CENTER><?php echo get_vocab("editroom") ?></h3>
 <form action="edit_area_room.php" method="post">
 <input type=hidden name="room" value="<?php echo $row["id"]?>">
 <CENTER>
 <TABLE>
-<TR><TD><?php echo $vocab["name"] ?>:       </TD><TD><input type=text name="room_name" value="<?php
+<TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name="room_name" value="<?php
 echo htmlspecialchars($row["room_name"]); ?>"></TD></TR>
-<TR><TD><?php echo $vocab["description"] ?></TD><TD><input type=text name=description value="<?php
+<TR><TD><?php echo get_vocab("description") ?></TD><TD><input type=text name=description value="<?php
 echo htmlspecialchars($row["description"]); ?>"></TD></TR>
-<TR><TD><?php echo $vocab["capacity"] ?>:   </TD><TD><input type=text name=capacity value="<?php
+<TR><TD><?php echo get_vocab("capacity") ?>:   </TD><TD><input type=text name=capacity value="<?php
 echo $row["capacity"]; ?>"></TD></TR>
 </TABLE>
 <input type=submit name="change_room"
-value="<?php echo $vocab["change"] ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type=submit name="change_done" value="<?php echo $vocab["backadmin"] ?>">
+value="<?php echo get_vocab("change") ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=submit name="change_done" value="<?php echo get_vocab("backadmin") ?>">
 </CENTER>
 </form>
 <?php } ?>
@@ -84,25 +84,25 @@ if(!empty($area))
 		$sql = "UPDATE mrbs_area SET area_name='" . slashes($area_name)
 			. "' WHERE id=$area";
 		if (sql_command($sql) < 0)
-			fatal_error(0, $vocab['update_area_failed'] . sql_error());
+			fatal_error(0, get_vocab("update_area_failed") . sql_error());
 	}
 
 	$res = sql_query("SELECT * FROM mrbs_area WHERE id=$area");
-	if (! $res) fatal_error(0, $vocab['error_area'] . $area . $vocab['not_found']);
+	if (! $res) fatal_error(0, get_vocab("error_area") . $area . get_vocab("not_found"));
 	$row = sql_row_keyed($res, 0);
 	sql_free($res);
 ?>
-<h3 ALIGN=CENTER><?php echo $vocab["editarea"] ?></h3>
+<h3 ALIGN=CENTER><?php echo get_vocab("editarea") ?></h3>
 <form action="edit_area_room.php" method="post">
 <input type=hidden name="area" value="<?php echo $row["id"]?>">
 <CENTER>
 <TABLE>
-<TR><TD><?php echo $vocab["name"] ?>:       </TD><TD><input type=text name="area_name" value="<?php
+<TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name="area_name" value="<?php
 echo htmlspecialchars($row["area_name"]); ?>"></TD></TR>
 </TABLE>
 <input type=submit name="change_area"
-value="<?php echo $vocab["change"] ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type=submit name="change_done" value="<?php echo $vocab["backadmin"] ?>">
+value="<?php echo get_vocab("change") ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=submit name="change_done" value="<?php echo get_vocab("backadmin") ?>">
 </CENTER>
 </form>
 <?php } ?>

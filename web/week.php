@@ -58,7 +58,7 @@ if ( $pview != 1 ) {
 	$this_room_name = "";
 
 	# Show all areas
-	echo "<td width=\"30%\"><u>$vocab[areas]</u><br>";
+	echo "<td width=\"30%\"><u>".get_vocab("areas")."</u><br>";
 }
 
   # show either a select box or the normal html list
@@ -86,7 +86,7 @@ if ( $pview != 1) {
 	echo "</td>\n";
 
 	# Show all rooms in the current area
-echo "<td width=\"30%\"><u>$vocab[room]</u><br>";
+echo "<td width=\"30%\"><u>".get_vocab("room")."</u><br>";
 }
 
   # should we show a drop-down for the room list, or not?
@@ -119,7 +119,7 @@ if ( $pview != 1 ) {
 	# Don't continue if this area has no rooms:
 	if ($room <= 0)
 	{
-		echo "<h1>$vocab[no_rooms_for_area]</h1>";
+		echo "<h1>".get_vocab("no_rooms_for_area")."</h1>";
 		include "trailer.inc";
 		exit;
 	}
@@ -145,10 +145,10 @@ if ( $pview != 1 ) {
 	#Show Go to week before and after links
 	echo "<table width=\"100%\"><tr><td>
 	  <a href=\"week.php?year=$yy&month=$ym&day=$yd&area=$area&room=$room\">
-	  &lt;&lt; $vocab[weekbefore]</a></td>
-	  <td align=center><a href=\"week.php?area=$area&room=$room\">$vocab[gotothisweek]</a></td>
+	  &lt;&lt; ".get_vocab("weekbefore")."</a></td>
+	  <td align=center><a href=\"week.php?area=$area&room=$room\">".get_vocab("gotothisweek")."</a></td>
 	  <td align=right><a href=\"week.php?year=$ty&month=$tm&day=$td&area=$area&room=$room\">
-	  $vocab[weekafter] &gt;&gt;</a></td></tr></table>";
+	  ".get_vocab("weekafter")."&gt;&gt;</a></td></tr></table>";
 }
 
 #Get all appointments for this week in the room that we care about
@@ -249,7 +249,7 @@ if ($debug_flag)
 echo "<table cellspacing=0 border=1 width=\"100%\">";
 
 # The header row contains the weekday names and short dates.
-echo "<tr><th width=\"1%\"><br>$vocab[time]</th>";
+echo "<tr><th width=\"1%\"><br>".get_vocab("time")."</th>";
 if (empty($dateformat))
 	$dformat = "%a<br>%b %d";
 else
@@ -257,7 +257,7 @@ else
 for ($t = $week_start; $t < $week_end; $t += 86400)
 	echo "<th width=\"14%\"><a href=\"day.php?year=" . strftime("%Y", $t) . 
 	"&month=" . strftime("%m", $t) . "&day=" . strftime("%d", $t) . 
-	"&area=$area\">" . strftime($dformat, $t) . "</a></th>\n";
+	"&area=$area\">" . utf8_strftime($dformat, $t) . "</a></th>\n";
 echo "</tr>\n";
 
 
@@ -276,7 +276,7 @@ for ($slot = $first_slot; $slot <= $last_slot; $slot++)
 	# Show the time linked to the URL for highlighting that time:
 	echo "<tr>";
 	tdcell("red");
-	echo "<a href=\"$hilite_url=$t\">" . date(hour_min_format(),$t) . "</a></td>";
+	echo "<a href=\"$hilite_url=$t\">" . utf8_date(hour_min_format(),$t) . "</a></td>";
 
 	$wt = $t;
 

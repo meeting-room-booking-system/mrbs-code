@@ -47,7 +47,7 @@ if (isset($id))
 	
 	$res = sql_query($sql);
 	if (! $res) fatal_error(1, sql_error());
-	if (sql_count($res) != 1) fatal_error(1, $vocab['entryid'] . $id . $vocab['not_found']);
+	if (sql_count($res) != 1) fatal_error(1, get_vocab("entryid") . $id . get_vocab("not_found"));
 	
 	$row = sql_row($res, 0);
 	sql_free($res);
@@ -76,7 +76,7 @@ if (isset($id))
 		
 		$res = sql_query($sql);
 		if (! $res) fatal_error(1, sql_error());
-		if (sql_count($res) != 1) fatal_error(1, $vocab['repeat_id'] . $rep_id . $vocab['not_found']);
+		if (sql_count($res) != 1) fatal_error(1, get_vocab("repeat_id") . $rep_id . get_vocab("not_found"));
 		
 		$row = sql_row($res, 0);
 		sql_free($res);
@@ -119,7 +119,7 @@ if (isset($id))
 		else
 		{
 			$rep_type     = $row[0];
-			$rep_end_date = strftime('%A %d %B %Y',$row[2]);
+			$rep_end_date = utf8_strftime('%A %d %B %Y',$row[2]);
 			$rep_opt      = $row[3];
 		}
 	}
@@ -176,7 +176,7 @@ function validate_and_submit ()
   // null strings and spaces only strings not allowed
   if(/(^$)|(^\s+$)/.test(document.forms["main"].name.value))
   {
-    alert ( "<?php echo $vocab['you_have_not_entered'] . '\n' . $vocab['brief_description'] ?>");
+    alert ( "<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("brief_description") ?>");
     return false;
   }
   
@@ -185,7 +185,7 @@ function validate_and_submit ()
   
   if(h > 23 || m > 59)
   {
-    alert ("<?php echo $vocab['you_have_not_entered'] . '\n' . $vocab['valid_time_of_day'] ?>");
+    alert ("<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("valid_time_of_day") ?>");
     return false;
   }
   
@@ -194,7 +194,7 @@ function validate_and_submit ()
   n = parseInt(document.forms["main"].rep_num_weeks.value);
   if ((!i1 || (i1 && i2)) && document.forms["main"].rep_type && document.forms["main"].rep_type[6].checked && (!n || n < 2))
   {
-    alert("<?php echo $vocab['you_have_not_entered'] . '\n' . $vocab['useful_n-weekly_value'] ?>");
+    alert("<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("useful_n-weekly_value") ?>");
     return false;
   }
   
@@ -205,38 +205,39 @@ function validate_and_submit ()
 }
 </SCRIPT>
 
-<h2><?php echo isset($id) ? $vocab["editentry"] : $vocab["addentry"]; ?></H2>
+<h2><?php echo isset($id) ? get_vocab("editentry") : get_vocab("addentry"); ?></H2>
 
 <FORM NAME="main" ACTION="edit_entry_handler.php" METHOD="GET">
 
 <TABLE BORDER=0>
 
-<TR><TD CLASS=CR><B><?php echo $vocab["namebooker"]?></B></TD>
-  <TD CLASS=CL><INPUT NAME="name" SIZE=40 VALUE="<?php echo htmlentities($name) ?>"></TD></TR>
+<TR><TD CLASS=CR><B><?php echo get_vocab("namebooker")?></B></TD>
+  <TD CLASS=CL><INPUT NAME="name" SIZE=40 VALUE="<?php echo htmlspecialchars($name,ENT_NOQUOTES) ?>"></TD></TR>
 
-<TR><TD CLASS=TR><B><?php echo $vocab["fulldescription"]?></B></TD>
-  <TD CLASS=TL><TEXTAREA NAME="description" ROWS=8 COLS=40 WRAP="virtual"><?php echo htmlentities ( $description ); ?></TEXTAREA></TD></TR>
+<TR><TD CLASS=TR><B><?php echo get_vocab("fulldescription")?></B></TD>
+  <TD CLASS=TL><TEXTAREA NAME="description" ROWS=8 COLS=40 WRAP="virtual"><?php echo
+htmlspecialchars ( $description ); ?></TEXTAREA></TD></TR>
 
-<TR><TD CLASS=CR><B><?php echo $vocab["date"]?></B></TD>
+<TR><TD CLASS=CR><B><?php echo get_vocab("date")?></B></TD>
  <TD CLASS=CL>
   <?php genDateSelector("", $start_day, $start_month, $start_year) ?>
  </TD>
 </TR>
 
-<TR><TD CLASS=CR><B><?php echo $vocab["time"]?></B></TD>
+<TR><TD CLASS=CR><B><?php echo get_vocab("time")?></B></TD>
   <TD CLASS=CL><INPUT NAME="hour" SIZE=2 VALUE="<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>" MAXLENGTH=2>:<INPUT NAME="minute" SIZE=2 VALUE="<?php echo $start_min;?>" MAXLENGTH=2>
 <?php
 if (!$twentyfourhour_format)
 {
   $checked = ($start_hour < 12) ? "checked" : "";
-  echo "<INPUT NAME=\"ampm\" type=\"radio\" value=\"am\" $checked>".date("a",mktime(1,0,0,1,1,1970));
+  echo "<INPUT NAME=\"ampm\" type=\"radio\" value=\"am\" $checked>".utf8_date("a",mktime(1,0,0,1,1,1970));
   $checked = ($start_hour >= 12) ? "checked" : "";
-  echo "<INPUT NAME=\"ampm\" type=\"radio\" value=\"pm\" $checked>".date("a",mktime(13,0,0,1,1,1970));
+  echo "<INPUT NAME=\"ampm\" type=\"radio\" value=\"pm\" $checked>".utf8_date("a",mktime(13,0,0,1,1,1970));
 }
 ?>
 </TD></TR>
 
-<TR><TD CLASS=CR><B><?php echo $vocab["duration"];?></B></TD>
+<TR><TD CLASS=CR><B><?php echo get_vocab("duration");?></B></TD>
   <TD CLASS=CL><INPUT NAME="duration" SIZE=7 VALUE="<?php echo $duration;?>">
     <SELECT NAME="dur_units">
 <?php
@@ -244,16 +245,16 @@ $units = array("minutes", "hours", "days", "weeks");
 while (list(,$unit) = each($units))
 {
 	echo "<OPTION VALUE=$unit";
-	if ($dur_units == $vocab[$unit]) echo " SELECTED";
-	echo ">$vocab[$unit]";
+	if ($dur_units == get_vocab($unit)) echo " SELECTED";
+	echo ">".get_vocab($unit);
 }
 ?>
     </SELECT>
-    <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes"> <?php echo $vocab["all_day"]; ?>
+    <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes"> <?php echo get_vocab("all_day"); ?>
 </TD></TR>
 
 
-<tr><td class=CR><b><?php echo $vocab["rooms"] ?></b></td>
+<tr><td class=CR><b><?php echo get_vocab("rooms") ?></b></td>
   <td class=CL valign=top><table><tr><td><select name="rooms[]" multiple>
   <?php
         # Determine the area id of the room in question first
@@ -275,10 +276,10 @@ while (list(,$unit) = each($units))
 		echo "<option $selected value=\"".$row[0]."\">".$row[1];
    	}
   ?>
-  </select></td><td><?php echo $vocab["ctrl_click"] ?></td></tr></table>
+  </select></td><td><?php echo get_vocab("ctrl_click") ?></td></tr></table>
     </td></tr>
 
-<TR><TD CLASS=CR><B><?php echo $vocab["type"]?></B></TD>
+<TR><TD CLASS=CR><B><?php echo get_vocab("type")?></B></TD>
   <TD CLASS=CL><SELECT NAME="type">
 <?php
 for ($c = "A"; $c <= "J"; $c++)
@@ -291,7 +292,7 @@ for ($c = "A"; $c <= "J"; $c++)
 <?php if($edit_type == "series") { ?>
 
 <TR>
- <TD CLASS=CR><B><?php echo $vocab["rep_type"]?></B></TD>
+ <TD CLASS=CR><B><?php echo get_vocab("rep_type")?></B></TD>
  <TD CLASS=CL>
 <?php
 
@@ -302,7 +303,7 @@ for($i = 0; isset($vocab["rep_type_$i"]); $i++)
 	if($i == $rep_type)
 		echo " CHECKED";
 	
-	echo ">" . $vocab["rep_type_$i"] . "\n";
+	echo ">" . get_vocab("rep_type_$i") . "\n";
 }
 
 ?>
@@ -310,12 +311,12 @@ for($i = 0; isset($vocab["rep_type_$i"]); $i++)
 </TR>
 
 <TR>
- <TD CLASS=CR><B><?php echo $vocab["rep_end_date"]?></B></TD>
+ <TD CLASS=CR><B><?php echo get_vocab("rep_end_date")?></B></TD>
  <TD CLASS=CL><?php genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year) ?></TD>
 </TR>
 
 <TR>
- <TD CLASS=CR><B><?php echo $vocab["rep_rep_day"]?></B> <?php echo $vocab["rep_for_weekly"]?></TD>
+ <TD CLASS=CR><B><?php echo get_vocab("rep_rep_day")?></B> <?php echo get_vocab("rep_for_weekly")?></TD>
  <TD CLASS=CL>
 <?php
 # Display day name checkboxes according to language and preferred weekday start.
@@ -336,7 +337,7 @@ else
 {
 	$key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
 	
-	echo "<tr><td class=\"CR\"><b>$vocab[rep_type]</b></td><td class=\"CL\">$vocab[$key]</td></tr>\n";
+	echo "<tr><td class=\"CR\"><b>".get_vocab("rep_type")."</b></td><td class=\"CL\">".get_vocab($key)."</td></tr>\n";
 	
 	if(isset($rep_type) && ($rep_type != 0))
 	{
@@ -351,25 +352,25 @@ else
 			}
 		}
 		if($opt)
-			echo "<tr><td class=\"CR\"><b>$vocab[rep_rep_day]</b></td><td class=\"CL\">$opt</td></tr>\n";
+			echo "<tr><td class=\"CR\"><b>".get_vocab("rep_rep_day")."</b></td><td class=\"CL\">$opt</td></tr>\n";
 		
-		echo "<tr><td class=\"CR\"><b>$vocab[rep_end_date]</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
+		echo "<tr><td class=\"CR\"><b>".get_vocab("rep_end_date")."</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
 	}
 }
 ?>
 
 <TR>
- <TD CLASS=CR><B><?php echo $vocab["rep_num_weeks"]?></B> <?php echo $vocab["rep_for_nweekly"]?></TD>
+ <TD CLASS=CR><B><?php echo get_vocab("rep_num_weeks")?></B> <?php echo get_vocab("rep_for_nweekly")?></TD>
  <TD CLASS=CL><INPUT TYPE=TEXT NAME="rep_num_weeks" VALUE="<?php echo $rep_num_weeks?>">
 </TR>
 
 <TR>
  <TD colspan=2 align=center>
   <SCRIPT LANGUAGE="JavaScript">
-   document.writeln ( '<INPUT TYPE="button" VALUE="<?php echo $vocab["save"]?>" ONCLICK="validate_and_submit()">' );
+   document.writeln ( '<INPUT TYPE="button" VALUE="<?php echo get_vocab("save")?>" ONCLICK="validate_and_submit()">' );
   </SCRIPT>
   <NOSCRIPT>
-   <INPUT TYPE="submit" VALUE="<?php echo $vocab["save"]?>">
+   <INPUT TYPE="submit" VALUE="<?php echo get_vocab("save")?>">
   </NOSCRIPT>
  </TD></TR>
 </TABLE>

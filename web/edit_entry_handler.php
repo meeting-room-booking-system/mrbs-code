@@ -116,7 +116,7 @@ else
 
 # Acquire mutex to lock out others trying to book the same slot(s).
 if (!sql_mutex_lock('mrbs_entry'))
-    fatal_error(1, $vocab['failed_to_acquire']);
+    fatal_error(1, get_vocab("failed_to_acquire"));
     
 # Check for any schedule conflicts in each room we're going to try and
 # book in
@@ -138,7 +138,7 @@ foreach ( $rooms as $room_id ) {
     }
     else
     {
-        $err        .= $vocab["too_may_entrys"] . "<P>";
+        $err        .= get_vocab("too_may_entrys") . "<P>";
         $hide_title  = 1;
     }
   }
@@ -189,10 +189,10 @@ if(strlen($err))
 {
     print_header($day, $month, $year, $area);
     
-    echo "<H2>" . $vocab["sched_conflict"] . "</H2>";
+    echo "<H2>" . get_vocab("sched_conflict") . "</H2>";
     if(!isset($hide_title))
     {
-        echo $vocab["conflict"];
+        echo get_vocab("conflict");
         echo "<UL>";
     }
     
@@ -202,6 +202,6 @@ if(strlen($err))
         echo "</UL>";
 }
 
-echo "<a href=\"$returl\">$vocab[returncal]</a><p>";
+echo "<a href=\"$returl\">".get_vocab("returncal")."</a><p>";
 
 include "trailer.inc"; ?>

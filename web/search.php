@@ -31,12 +31,12 @@ print_header($day, $month, $year, $area);
 
 if (!empty($advanced))
 {
-	echo "<H3>" . $vocab["advanced_search"] . "</H3>";
+	echo "<H3>" . get_vocab("advanced_search") . "</H3>";
 	echo "<FORM METHOD=GET ACTION=\"search.php\">";
-	echo $vocab["search_for"] . " <INPUT TYPE=TEXT SIZE=25 NAME=\"search_str\"><br>";
-	echo $vocab["from"]. " ";
+	echo get_vocab("search_for") . " <INPUT TYPE=TEXT SIZE=25 NAME=\"search_str\"><br>";
+	echo get_vocab("from"). " ";
 	genDateSelector ("", $day, $month, $year);
-	echo "<br><INPUT TYPE=SUBMIT VALUE=\"" . $vocab["search_button"] ."\">";
+	echo "<br><INPUT TYPE=SUBMIT VALUE=\"" . get_vocab("search_button") ."\">";
 	include "trailer.inc";
 	echo "</BODY>";
 	echo "</HTML>";
@@ -45,13 +45,13 @@ if (!empty($advanced))
 
 if (!$search_str)
 {
-	echo "<H3>" . $vocab["invalid_search"] . "</H3>";
+	echo "<H3>" . get_vocab("invalid_search") . "</H3>";
 	include "trailer.inc";
 	exit;
 }
 
 # now is used so that we only display entries newer than the current time
-echo "<H3>" . $vocab["search_results"] . " \"<font color=\"blue\">$search_str</font>\"</H3>\n";
+echo "<H3>" . get_vocab("search_results") . " \"<font color=\"blue\">$search_str</font>\"</H3>\n";
 
 $now = mktime(0, 0, 0, $month, $day, $year);
 
@@ -69,7 +69,7 @@ if(!isset($total))
 
 if($total <= 0)
 {
-	echo "<B>" . $vocab["nothing_found"] . "</B>\n";
+	echo "<B>" . get_vocab("nothing_found") . "</B>\n";
 	include "trailer.inc";
 	exit;
 }
@@ -97,7 +97,7 @@ $has_next = $search_pos < ($total-$search["count"]);
 
 if($has_prev || $has_next)
 {
-	echo "<B>" . $vocab["records"] . ($search_pos+1) . $vocab["through"] . ($search_pos+$num_records) . $vocab["of"] . $total . "</B><BR>";
+	echo "<B>" . get_vocab("records") . ($search_pos+1) . get_vocab("through") . ($search_pos+$num_records) . get_vocab("of") . $total . "</B><BR>";
 
 	# display a "Previous" button if necessary
 	if($has_prev)
@@ -107,7 +107,7 @@ if($has_prev || $has_next)
 		echo "&total=$total&year=$year&month=$month&day=$day\">";
 	}
 
-	echo "<B>" . $vocab["previous"] . "</B>";
+	echo "<B>" . get_vocab("previous") . "</B>";
 
 	if($has_prev)
 		echo "</A>";
@@ -123,7 +123,7 @@ if($has_prev || $has_next)
 		echo "&total=$total&year=$year&month=$month&day=$day\">";
 	}
 
-	echo "<B>". $vocab["next"] ."</B>";
+	echo "<B>". get_vocab("next") ."</B>";
 
 	if($has_next)
 		echo "</A>";
@@ -132,17 +132,17 @@ if($has_prev || $has_next)
   <P>
   <TABLE BORDER=2 CELLSPACING=0 CELLPADDING=3>
    <TR>
-    <TH><?php echo $vocab["entry"]       ?></TH>
-    <TH><?php echo $vocab["createdby"]   ?></TH>
-    <TH><?php echo $vocab["namebooker"]  ?></TH>
-    <TH><?php echo $vocab["description"] ?></TH>
-    <TH><?php echo $vocab["start_date"]  ?></TH>
+    <TH><?php echo get_vocab("entry") ?></TH>
+    <TH><?php echo get_vocab("createdby") ?></TH>
+    <TH><?php echo get_vocab("namebooker") ?></TH>
+    <TH><?php echo get_vocab("description") ?></TH>
+    <TH><?php echo get_vocab("start_date") ?></TH>
    </TR>
 <?php
 for ($i = 0; ($row = sql_row($result, $i)); $i++)
 {
 	echo "<TR>";
-	echo "<TD><A HREF=\"view_entry.php?id=$row[0]\">$vocab[view]</A></TD>\n";
+	echo "<TD><A HREF=\"view_entry.php?id=$row[0]\">".get_vocab("view")."</A></TD>\n";
 	echo "<TD>" . htmlspecialchars($row[1]) . "</TD>\n";
 	echo "<TD>" . htmlspecialchars($row[2]) . "</TD>\n";
 	echo "<TD>" . htmlspecialchars($row[3]) . "</TD>\n";

@@ -48,12 +48,12 @@ if (isset($area))
 }
 ?>
 
-<h2><?php echo $vocab['administration'] ?></h2>
+<h2><?php echo get_vocab("administration") ?></h2>
 
 <table border=1>
 <tr>
-<th><center><b><?php echo $vocab['areas'] ?></b></center></th>
-<th><center><b><?php echo $vocab['rooms'] ?> <?php if(isset($area)) { echo $vocab['in'] . " " .
+<th><center><b><?php echo get_vocab("areas") ?></b></center></th>
+<th><center><b><?php echo get_vocab("rooms") ?> <?php if(isset($area)) { echo get_vocab("in") . " " .
   htmlspecialchars($area_name); }?></b></center></th>
 </tr>
 
@@ -65,13 +65,13 @@ $res = sql_query("select id, area_name from mrbs_area order by area_name");
 if (! $res) fatal_error(0, sql_error());
 
 if (sql_count($res) == 0) {
-	echo $vocab['noareas'];
+	echo get_vocab("noareas");
 } else {
 	echo "<ul>";
 	for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 		$area_name_q = urlencode($row[1]);
 		echo "<li><a href=\"admin.php?area=$row[0]&area_name=$area_name_q\">"
-			. htmlspecialchars($row[1]) . "</a> (<a href=\"edit_area_room.php?area=$row[0]\">" . $vocab['edit'] . "</a>) (<a href=\"del.php?type=area&area=$row[0]\">" .  $vocab['delete'] . "</a>)\n";
+			. htmlspecialchars($row[1]) . "</a> (<a href=\"edit_area_room.php?area=$row[0]\">" . get_vocab("edit") . "</a>) (<a href=\"del.php?type=area&area=$row[0]\">" .  get_vocab("delete") . "</a>)\n";
 	}
 	echo "</ul>";
 }
@@ -84,17 +84,17 @@ if(isset($area)) {
 	$res = sql_query("select id, room_name, description, capacity from mrbs_room where area_id=$area order by room_name");
 	if (! $res) fatal_error(0, sql_error());
 	if (sql_count($res) == 0) {
-		echo $vocab['norooms'];
+		echo get_vocab("norooms");
 	} else {
 		echo "<ul>";
 		for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 			echo "<li>" . htmlspecialchars($row[1]) . "(" . htmlspecialchars($row[2])
-			. ", $row[3]) (<a href=\"edit_area_room.php?room=$row[0]\">" .  $vocab['edit'] . "</a>) (<a href=\"del.php?type=room&room=$row[0]\">" .  $vocab['delete'] . "</a>)\n";
+			. ", $row[3]) (<a href=\"edit_area_room.php?room=$row[0]\">" . get_vocab("edit") . "</a>) (<a href=\"del.php?type=room&room=$row[0]\">" . get_vocab("delete") . "</a>)\n";
 		}
 		echo "</ul>";
 	}
 } else {
-	echo $vocab['noarea'];
+	echo get_vocab("noarea");
 }
 
 ?>
@@ -102,30 +102,30 @@ if(isset($area)) {
 </tr>
 <tr>
 <td>
-<h3 ALIGN=CENTER><?php echo $vocab['addarea'] ?></h3>
+<h3 ALIGN=CENTER><?php echo get_vocab("addarea") ?></h3>
 <form action=add.php method=post>
 <input type=hidden name=type value=area>
 
 <TABLE>
-<TR><TD><?php echo $vocab['name'] ?>:       </TD><TD><input type=text name=name></TD></TR>
+<TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name=name></TD></TR>
 </TABLE>
-<input type=submit value="<?php echo $vocab['addarea'] ?>">
+<input type=submit value="<?php echo get_vocab("addarea") ?>">
 </form>
 </td>
 
 <td>
 <?php if(isset($area)) { ?>
-<h3 ALIGN=CENTER><?php echo $vocab['addroom'] ?></h3>
+<h3 ALIGN=CENTER><?php echo get_vocab("addroom") ?></h3>
 <form action=add.php method=post>
 <input type=hidden name=type value=room>
 <input type=hidden name=area value=<?php echo $area; ?>>
 
 <TABLE>
-<TR><TD><?php echo $vocab['name'] ?>:       </TD><TD><input type=text name=name></TD></TR>
-<TR><TD><?php echo $vocab['description'] ?></TD><TD><input type=text name=description></TD></TR>
-<TR><TD><?php echo $vocab['capacity'] ?>:   </TD><TD><input type=text name=capacity></TD></TR>
+<TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name=name></TD></TR>
+<TR><TD><?php echo get_vocab("description") ?></TD><TD><input type=text name=description></TD></TR>
+<TR><TD><?php echo get_vocab("capacity") ?>:   </TD><TD><input type=text name=capacity></TD></TR>
 </TABLE>
-<input type=submit value="<?php echo $vocab['addroom'] ?>">
+<input type=submit value="<?php echo get_vocab("addroom") ?>">
 </form>
 <?php } else { echo "&nbsp;"; }?>
 </td>
@@ -133,6 +133,6 @@ if(isset($area)) {
 </table>
 
 <br>
-<?php echo $vocab['browserlang'] . " " . $HTTP_ACCEPT_LANGUAGE . " " . $vocab['postbrowserlang'] ; ?>
+<?php echo get_vocab("browserlang") . " " . $HTTP_ACCEPT_LANGUAGE . " " . get_vocab("postbrowserlang") ; ?>
 
 <?php include "trailer.inc" ?>

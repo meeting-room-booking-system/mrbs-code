@@ -17,7 +17,6 @@
  */
 function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 {
-	global $vocab;
 	# Select any meetings which overlap ($starttime,$endtime) for this room:
 	$sql = "SELECT id, name, start_time FROM mrbs_entry WHERE
 		start_time < $endtime AND end_time > $starttime
@@ -50,9 +49,9 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 
 		$err .= "<LI><A HREF=\"view_entry.php?id=$row[0]\">$row[1]</A>"
 		. " ( " . strftime('%A %d %B %Y %T', $row[2]) . ") "
-		. "(<A HREF=\"day.php?$param_ymd\">$vocab[viewday]</a>"
-		. " | <A HREF=\"week.php?room=$room_id&$param_ymd\">$vocab[viewweek]</a>"
-		. " | <A HREF=\"month.php?room=$room_id&$param_ym\">$vocab[viewmonth]</a>)";
+		. "(<A HREF=\"day.php?$param_ymd\">".get_vocab("viewday")."</a>"
+		. " | <A HREF=\"week.php?room=$room_id&$param_ymd\">".get_vocab("viewweek")."</a>"
+		. " | <A HREF=\"month.php?room=$room_id&$param_ym\">".get_vocab("viewmonth")."</a>)";
 	}
 	
 	return $err;

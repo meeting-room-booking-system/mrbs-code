@@ -3,7 +3,7 @@
 
 if ( $pview != 1 ) {
 
-echo "<P><HR><B>$vocab[viewday]:</B>\n";
+echo "<P><HR><B>".get_vocab("viewday").":</B>\n";
 
 if(!isset($year))
 	$year = strftime("%Y");
@@ -23,7 +23,7 @@ for($i = -6; $i <= 7; $i++)
 {
 	$ctime = mktime(0, 0, 0, $month, $day + $i, $year);
 
-	$str = strftime(empty($dateformat)? "%b %d" : "%d %b", $ctime);
+	$str = utf8_strftime(empty($dateformat)? "%b %d" : "%d %b", $ctime);
 
 	$cyear  = date("Y", $ctime);
 	$cmonth = date("m", $ctime);
@@ -32,7 +32,7 @@ for($i = -6; $i <= 7; $i++)
 	echo "<a href=\"day.php?year=$cyear&month=$cmonth&day=$cday$params\">$str</a>\n";
 }
 
-echo "<BR><B>$vocab[viewweek]:</B>\n";
+echo "<BR><B>".get_vocab("viewweek").":</B>\n";
 
 if (!empty($room)) $params .= "&room=$room";
 
@@ -49,15 +49,15 @@ for ($i = -4; $i <= 4; $i++)
 	$cmonth = date("m", $ctime);
 	$cyear  = date("Y", $ctime);
 	if ($i != -4) echo " | ";
-    ($view_week_number) ? $str = $cweek : $str = strftime(empty($dateformat)? "%b %d" : "%d %b", $ctime);
+    ($view_week_number) ? $str = $cweek : $str = utf8_strftime(empty($dateformat)? "%b %d" : "%d %b", $ctime);
     echo "<a href=\"week.php?year=$cyear&month=$cmonth&day=$cday$params\">$str</a>\n";
 }
 
-echo "<BR><B>$vocab[viewmonth]:</B>\n";
+echo "<BR><B>".get_vocab("viewmonth").":</B>\n";
 for ($i = -2; $i <= 6; $i++)
 {
 	$ctime = mktime(0, 0, 0, $month + $i, 1, $year);
-	$str = strftime("%b %Y", $ctime);
+	$str = utf8_strftime("%b %Y", $ctime);
 	
 	$cmonth = date("m", $ctime);
 	$cyear  = date("Y", $ctime);
@@ -66,7 +66,7 @@ for ($i = -2; $i <= 6; $i++)
 }
 
 echo "<HR>";
-echo '<p><center><a href="' . $PHP_SELF . '?' . $QUERY_STRING . '&pview=1">' . $vocab['ppreview'] . '</a></center><p>';
+echo '<p><center><a href="' . $PHP_SELF . '?' . $QUERY_STRING . '&pview=1">' . get_vocab("ppreview") . '</a></center><p>';
 
 }
 ?>

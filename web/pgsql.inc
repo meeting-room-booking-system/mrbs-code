@@ -232,7 +232,7 @@ unset($conninfo);
 
 if (!$db_c)
 {
-	echo "\n<p>\n" . $vocab['failed_connect_db'] . "\n";
+	echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n";
 	exit;
 }
 

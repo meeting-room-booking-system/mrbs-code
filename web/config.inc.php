@@ -89,10 +89,6 @@ $area_list_format = "list";
 # Set to 1 for brief description, 0 for time slot
 $_MRBS_monthly_view_brief_description = 0;
 
-# To view weeks in the bottom (trailer.inc) as week numbers (42) instead of
-# 'first day of the week' (13 Oct), set this to TRUE
-$view_week_number = FALSE;
-
 ###############################################
 # Authentication settings - read AUTHENTICATION
 ###############################################
@@ -141,69 +137,37 @@ $pop3_port = "110";
 # Language
 ##########
 
-# Change the en below to the code for your language - if 
-# there is a language file for it.
-include 'lang.en';
+# Set this to 1 to use UTF-8 in all pages and in the database, otherwise
+# text gets enterered in the database in different encodings, dependent
+# on the users' language
+$unicode_encoding = 1;
 
-# We also want to do locales for Dates/Times etc.
-# Use the setlocale() function for this.
+# Set this to a different language specifier to default to different
+# language tokens. This must equate to a lang.* file in MRBS.
+# e.g. use "fr" to use the translations in "lang.fr" as the default
+# translations
+$default_language_tokens = "en";
 
-# Define the default locale here. For a list of supported
-# locales on your system do "locale -a"
-setlocale(LC_ALL,'C');
+# Set this to 1 to disable the automatic language changing MRBS performs
+# based on the user's browser language settings. It will ensure that
+# the language displayed is always the value of $default_language_tokens,
+# as specified above
+$disable_automatic_language_changing = 0;
 
-# We attempt to make up a sensible locale from the HTTP_ACCEPT_LANGUAGE
-# environment variable. If this doesn't work for you, comment it out
-# and assign locale directly.
-# If HTTP_ACCEPT_LANGUAGE is a comma-separated list, take the first one.
-$locale = ereg_replace(",.*", "", getenv('HTTP_ACCEPT_LANGUAGE'));
-
-
-# The following attempts to import a language based on what the client
-# is using. Comment it out to disable this.
-
-$lang_file = "lang." . $locale;
-if (file_exists($lang_file))
-{
-    include $lang_file;
-}
-else
-{
-    $lang_file = "lang." . preg_replace("/(\w+)_(\w+)/", "\\1-\\2", $locale);
-    if (file_exists($lang_file))
-    {
-        include $lang_file;
-    }
-    else
-    {
-        $lang_file = "lang.". strtolower(substr($locale,0,2));
-        if (file_exists($lang_file))
-        {
-            include $lang_file;
-        }
-    }
-}
-
-# Try to generate an appropriate locale string from the browser locale
-if (strlen($locale) == 2)
-{
-    # Convert locale=xx to xx_XX; this is not correct for some locales???
-    $locale = strtolower($locale)."_".strtoupper($locale);
-}
-else
-{
-    # Convert locale=xx-xX or xx_Xx or xx_XxXx (etc.) to xx_XX[XX]; this is highly
-    # dependent on the machine's installed locales
-    $locale = strtolower(substr($locale,0,2))."_".strtoupper(substr($locale,3));
-}
-
-setlocale(LC_ALL,$locale);
+# Set this to a valid locale (for the OS you run the MRBS server on)
+# if you want to override the automatic locale determination MRBS
+# performs
+$override_locale = "";
 
 # faq file language selection. IF not set, use the default english file.
 # IF your language faq file is available, set $faqfilelang to match the
 # end of the file name, including the underscore (ie. for site_faq_fr.html
 # use "_fr"
 $faqfilelang = ""; 
+
+# This next require must be done after the definitions above, as the definitions
+# are used in the included file
+require_once "language.inc";
 
 #############
 # Entry Types
@@ -223,11 +187,11 @@ $faqfilelang = "";
 # $typel["B"] = "B";
 # $typel["C"] = "C";
 # $typel["D"] = "D";
-$typel["E"] = $vocab["external"];
+$typel["E"] = get_vocab("external");
 # $typel["F"] = "F";
 # $typel["G"] = "G";
 # $typel["H"] = "H";
-$typel["I"] = $vocab["internal"];
+$typel["I"] = get_vocab("internal");
 # $typel["J"] = "J";
 
 ##########################################

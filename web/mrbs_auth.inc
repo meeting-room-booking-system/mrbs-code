@@ -97,16 +97,16 @@ function getWritable($creator, $user)
  */
 function showAccessDenied($day, $month, $year, $area)
 {
-	global $vocab, $HTTP_REFERER;
+	global $HTTP_REFERER;
 	
 	print_header($day, $month, $year, $area);
 ?>
-  <H1><?php echo $vocab["accessdenied"]?></H1>
+  <H1><?php echo get_vocab("accessdenied")?></H1>
   <P>
-   <?php echo $vocab["norights"]?>
+   <?php echo get_vocab("norights")?>
   </P>
   <P>
-   <A HREF="<?php echo $HTTP_REFERER; ?>"><?php echo $vocab["returnprev"]; ?></A>
+   <A HREF="<?php echo $HTTP_REFERER; ?>"><?php echo get_vocab("returnprev"); ?></A>
   </P>
  </BODY>
 </HTML>

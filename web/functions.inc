@@ -12,7 +12,7 @@ if (!isset($pview)) {
 
 function print_header($day, $month, $year, $area)
 {
-	global $vocab, $mrbs_company, $search_str;
+	global $mrbs_company, $search_str;
 
 	# If we dont know the right date then make it up 
 	if(!$day)
@@ -32,7 +32,7 @@ function print_header($day, $month, $year, $area)
                       "http://www.w3.org/TR/html4/loose.dtd">
 <HTML>
  <HEAD>
-  <TITLE><?php echo $vocab["mrbs"] ?></TITLE>
+  <TITLE><?php echo get_vocab("mrbs") ?></TITLE>
 <?php
    include "style.inc";
 ?>
@@ -42,7 +42,7 @@ function print_header($day, $month, $year, $area)
 
    <?php # show a warning if this is using a low version of php
        if (substr(phpversion(), 0, 1) == 3)
-	       echo $vocab['not_php3'];
+	       echo get_vocab("not_php3");
    ?>
 
    <TABLE WIDTH="100%">
@@ -52,7 +52,7 @@ function print_header($day, $month, $year, $area)
         <TR>
          <TD CLASS="banner" BGCOLOR="#C0E0FF">
           <FONT SIZE=4><B><?php echo $mrbs_company ?></B><BR>
-           <A HREF="index.php"><?php echo $vocab["mrbs"] ?></A>
+           <A HREF="index.php"><?php echo get_vocab("mrbs") ?></A>
           </FONT>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF">
@@ -64,22 +64,22 @@ function print_header($day, $month, $year, $area)
         echo "<INPUT TYPE=HIDDEN NAME=area VALUE=$area>"
  
 ?>
-	    <INPUT TYPE=SUBMIT VALUE="<?php echo $vocab["goto"] ?>">
+	    <INPUT TYPE=SUBMIT VALUE="<?php echo get_vocab("goto") ?>">
            </FONT>
           </FORM>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="help.php?day=<?php echo $day ?>&month=<?php echo $month ?>&year=<?php echo $year ?>"><?php echo $vocab["help"] ?></A>
+          <A HREF="help.php?day=<?php echo $day ?>&month=<?php echo $month ?>&year=<?php echo $year ?>"><?php echo get_vocab("help") ?></A>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="admin.php?day=<?php echo $day ?>&month=<?php echo $month ?>&year=<?php echo $year ?>"><?php echo $vocab["admin"] ?></A>
+          <A HREF="admin.php?day=<?php echo $day ?>&month=<?php echo $month ?>&year=<?php echo $year ?>"><?php echo get_vocab("admin") ?></A>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="report.php"><?php echo $vocab["report"] ?></A>
+          <A HREF="report.php"><?php echo get_vocab("report") ?></A>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
           <FORM METHOD=GET ACTION="search.php">
-           <FONT SIZE=2><A HREF="search.php?advanced=1"><?php echo $vocab["search"] ?></A> </FONT>
+           <FONT SIZE=2><A HREF="search.php?advanced=1"><?php echo get_vocab("search") ?></A> </FONT>
            <INPUT TYPE=TEXT   NAME="search_str" VALUE="<?php echo $search_str ?>" SIZE=10>
            <INPUT TYPE=HIDDEN NAME=day        VALUE="<?php echo $day        ?>"        >
            <INPUT TYPE=HIDDEN NAME=month      VALUE="<?php echo $month      ?>"        >
@@ -101,7 +101,6 @@ function print_header($day, $month, $year, $area)
 
 function toTimeString(&$dur, &$units)
 {
-	global $vocab;
 	if($dur >= 60)
 	{
 		$dur /= 60;
@@ -121,22 +120,22 @@ function toTimeString(&$dur, &$units)
 					if(($dur >= 52) && ($dur % 52 == 0))
 					{
 						$dur  /= 52;
-						$units = $vocab["years"];
+						$units = get_vocab("years");
 					}
 					else
-						$units = $vocab["weeks"];
+						$units = get_vocab("weeks");
 				}
 				else
-					$units = $vocab["days"];
+					$units = get_vocab("days");
 			}
 			else
-				$units = $vocab["hours"];
+				$units = get_vocab("hours");
 		}
 		else
-			$units = $vocab["minutes"];
+			$units = get_vocab("minutes");
 	}
 	else
-		$units = $vocab["seconds"];
+		$units = get_vocab("seconds");
 }
 
 function genDateSelector($prefix, $day, $month, $year)
@@ -155,7 +154,7 @@ function genDateSelector($prefix, $day, $month, $year)
 	
 	for($i = 1; $i <= 12; $i++)
 	{
-		$m = strftime("%b", mktime(0, 0, 0, $i, 1, $year));
+		$m = utf8_strftime("%b", mktime(0, 0, 0, $i, 1, $year));
 		
 		print "<OPTION VALUE=\"$i\"" . ($i == $month ? " SELECTED" : "") . ">$m\n";
 	}
@@ -179,7 +178,6 @@ function genDateSelector($prefix, $day, $month, $year)
 # caller did that. Alway outputs the bottom of the page and exits.
 function fatal_error($need_header, $message)
 {
-	global $vocab;
 	if ($need_header) print_header(0, 0, 0, 0);
 	echo $message;
 	include "trailer.inc";
@@ -217,7 +215,7 @@ function get_default_area()
 # Get the local day name based on language. Note 2000-01-02 is a Sunday.
 function day_name($daynumber)
 {
-	return strftime("%A", mktime(0,0,0,1,2+$daynumber,2000));
+	return utf8_strftime("%A", mktime(0,0,0,1,2+$daynumber,2000));
 }
 
 function hour_min_format()
@@ -238,14 +236,14 @@ function time_date_string($t)
         global $twentyfourhour_format;
         # This bit's necessary, because it seems %p in strftime format
         # strings doesn't work
-        $ampm = date("a",$t);
+        $ampm = utf8_date("a",$t);
         if ($twentyfourhour_format)
 	{
-  	        return strftime("%H:%M:%S - %A %d %B %Y",$t);
+  	        return utf8_strftime("%H:%M:%S - %A %d %B %Y",$t);
 	}
 	else
 	{
-	        return strftime("%I:%M:%S$ampm - %A %d %B %Y",$t);
+	        return utf8_strftime("%I:%M:%S$ampm - %A %d %B %Y",$t);
 	}
 }
 
@@ -315,7 +313,6 @@ function round_t_up($t, $resolution, $am7)
 # displayed.
 function make_area_select_html( $link, $current, $year, $month, $day )
 {
-	global $vocab;
 	$out_html = "<form name=\"area\">
 	             <select name=\"area\" onChange=\"area_go()\">";
 
@@ -344,14 +341,13 @@ function make_area_select_html( $link, $current, $year, $month, $day )
 	    </SCRIPT>
  
 	    
-	    <input type=submit value=\"$vocab[change]\"></form>";
+	    <input type=submit value=\"".get_vocab("change")."\"></form>";
 
 	return $out_html;
 } # end make_area_select_html
 
 function make_room_select_html( $link, $area, $current, $year, $month, $day )
 {
-	global $vocab;
 	$out_html = "<form name=\"room\">
 	             <select name=\"room\" onChange=\"room_go()\">";
 
@@ -381,7 +377,7 @@ function make_room_select_html( $link, $area, $current, $year, $month, $day )
 	    </SCRIPT>
  
 	    
-	    <input type=submit value=\"$vocab[change]\"></form>";
+	    <input type=submit value=\"".get_vocab("change")."\"></form>";
 
 	return $out_html;
 } # end make_area_select_html
