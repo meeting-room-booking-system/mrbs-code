@@ -1,7 +1,8 @@
 Version 0.7 (CVS)
+	Changed DB to use unixtime, not mysql date/time
 	Changed date strings to use locale
 	Replaced code for three small calendars
-    (thanks to David Wilkinson - davidw@cascade.org.uk)
+	  (thanks to David Wilkinson - davidw@cascade.org.uk)
 	Internal/External meetings different colours
 	"Resolution" moved to config file
 	Added Japanese support
