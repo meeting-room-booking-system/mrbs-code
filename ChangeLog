@@ -39,8 +39,10 @@ Version 1.1-pre2 (Thu Jan  9 17:50:00 GMT 2002)
      get Mon,Tue,Wed etc instead of M,T,W (using glibc's en_GB
      locale).
    - print_header() now outputs a DOCTYPE identifier as well as
-     sending Pragma: no-cache and an Expires: header in the
+     sending Pragma no-cache and an Expires header in the
      past. This should help ensure the web pages don't get cached.
+   - Change trailer.inc to make print preview more likely to work on
+     windows and non-apache servers
 
 Version 1.1-pre1 (Thu May 30 12:41:02 BST 2002)
    + add config option for drop-down boxes to select area and room
