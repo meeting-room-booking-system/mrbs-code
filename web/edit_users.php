@@ -42,7 +42,12 @@ if(!getAuthorised(getUserName(), getUserPassword(), 1))
 
 //   If the table does not exist, then create it
 
-if (!is_array($nusers = $mdb->queryRow("SELECT count(*) FROM mrbs_users", 'integer')))
+$nusers = $mdb->listTables();
+if (MDB::isError($nusers))
+{
+    fatal_error(1, $nusers->getMessage() . "<br>" . $nusers->getUserInfo());
+}
+if (!in_array("mrbs_users", $nusers))
 {   /*
        The first three fields are required (id, name, password). Don't remove
        or reorder.
@@ -76,7 +81,6 @@ if (!is_array($nusers = $mdb->queryRow("SELECT count(*) FROM mrbs_users", 'integ
     {
         fatal_error(1, "<p>Error creating the mrbs_users table.<br>\n"
         	. $r->getMessage() . "<br>" . $r->getUserInfo());
-    	exit();
     }
     $properties = array(
         'FIELDS' => array(
@@ -89,23 +93,29 @@ if (!is_array($nusers = $mdb->queryRow("SELECT count(*) FROM mrbs_users", 'integ
     {
         fatal_error(1, "<p>Error creating the mrbs_users table indexes.<br>\n"
         	. $r->getMessage() . "<br>" . $r->getUserInfo());
-        exit();
     }
     $r = $mdb->createSequence('mrbs_users_id');
     if (MDB::isError($r))
     {
         fatal_error(1, "<p>Error creating the mrbs_users sequence.<br>\n"
         	. $r->getMessage() . "<br>" . $r->getUserInfo());
-        exit();
     }
     $nusers = 0;
 }
 /* Get the list of fields actually in the table. (Allows the addition of new fields later on) */
 $field_name = $mdb->listTableFields('mrbs_users');
+if (MDB::isError($field_name))
+{
+    fatal_error(1, $field_name->getMessage() . "<br>" . $field_name->getUserInfo());
+}
 $nfields = sizeof($field_name);
 for ($i=0; $i<$nfields; $i++)
 {
     $types = $mdb->getTableFieldDefinition('mrbs_users', $field_name[$i]);
+    if (MDB::isError($types))
+	{
+    fatal_error(1, $types->getMessage() . "<br>" . $types->getUserInfo());
+	}
     $field_type[$i] = $types[0][0]['type'];
 }
 
@@ -146,6 +156,10 @@ if (isset($Action) && ($Action == "Edit"))
     	{
         $data = $mdb->queryRow(
         	"SELECT * FROM mrbs_users WHERE id=$Id", $field_type);
+        if (MDB::isError($data))
+    	{
+    		fatal_error(1, $data->getMessage() . "<br>" . $data->getUserInfo());
+    	}
     	}
     if (($Id == -1) || (!$data)) /* Set blank data for undefined entries */
     	{
@@ -256,11 +270,19 @@ if (isset($Action) && ($Action == "Update"))
 			}
         }
         $r = $mdb->replace('mrbs_users', $replaced_fields);
+        if (MDB::isError($r))
+		{
+    		fatal_error(1, $r->getMessage() . "<br>" . $r->getUserInfo());
+		}
     }
     else
     {
         $operation = "INSERT INTO mrbs_users VALUES (";
         $Id = $mdb->nextId('mrbs_users_id');
+        if (MDB::isError($Id))
+        {
+            fatal_error(1, $Id->getMessage() . "<br>" . $Id->getUserInfo());
+        }
     	for ($i=0; $i<$nfields; $i++)
         {
         	if ($field_name[$i]=="id") $Field[$i] = $Id;
@@ -282,6 +304,10 @@ if (isset($Action) && ($Action == "Update"))
     	}
     	$operation = $operation . ");";
         $r = $mdb->query($operation);
+        if (MDB::isError($r))
+        {
+            fatal_error(1, $r->getMessage() . "<br>" . $r->getUserInfo());
+        }
     }
 
     /* print $operation . "<br>\n"; */
@@ -354,6 +380,10 @@ if ($level == 2) /* Administrators get the right to add new users */
     }
 
 $list = $mdb->query("SELECT * FROM mrbs_users ORDER BY name", $field_type);
+if (MDB::isError($list))
+{
+    fatal_error(0, $list->getMessage() . "<br>" . $list->getUserInfo());
+}
 print "<table border=1>\n";
 print "<tr>";
 // The first 2 columns are the user rights and uaser name.
