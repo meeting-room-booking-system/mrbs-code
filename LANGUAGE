@@ -9,11 +9,11 @@ Traditional Chinese: lang.zh-tw (thanks to Linda Hu)
 
 To port MRBS to another language is relativly easy.
 
-Look it admin.php3 - it says near the bottom "Your browser is set to use
+Look it admin.php - it says near the bottom "Your browser is set to use
 "xx" language".
 
 Copy "lang.en" to "lang.xx" (replace xx with the code you found in
-admin.php3) and then edit the file to change the English strings to your
+admin.php) and then edit the file to change the English strings to your
 language.
 
 You will then find that MRBS starts to use your language file
