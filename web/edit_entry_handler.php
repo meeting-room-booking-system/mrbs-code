@@ -61,7 +61,7 @@ else
 {
 	if (!$twentyfourhour_format)
 	{
-	  if (isset($ampm) && ($ampm == "pm"))
+	  if (isset($ampm) && ($ampm == "pm") && ($hour<12))
 	  {
 	    $hour += 12;
 	  }
