@@ -52,7 +52,7 @@ function sql_version()
 {
     global $mdb;
     $v = $mdb->queryOne('SELECT version FROM V$INSTANCE');
-    return $v;
+    return "Oracle $v";
 }
 
 
