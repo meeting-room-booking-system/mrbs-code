@@ -147,17 +147,18 @@ function getUserPassword()
 // Print the logon entry on the top banner.
 function PrintLogonBox()
 {
-    global $PHP_SELF, $QUERY_STRING;
+    global $PHP_SELF, $QUERY_STRING, $user_list_link, $user_link;
 
     $TargetURL = basename($PHP_SELF);
     if (isset($url_base) && ($url_base != "")) $TargetURL = $url_base . '/' . $TargetURL;
     if (isset($QUERY_STRING)) $TargetURL = $TargetURL . "?" . $QUERY_STRING;
+    if (!isset($user_link)) $user_link = "";
     $user=getUserName();
     if (isset($user))
     {
 ?>
 	<TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-	  <A name="logonBox" href=""><?php echo get_vocab('you_are')." ".$user ?></A><br>
+	  <A name="logonBox" href="<?php echo "$user_link\">" . get_vocab('you_are')." ".$user ?></A><br>
           <FORM METHOD=POST ACTION="admin.php">
 	    <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" />
 	    <input type="hidden" name="Action" value="SetName" />
@@ -165,6 +166,9 @@ function PrintLogonBox()
 	    <input type="hidden" name="UserPassword" value="" />
 	    <input type="submit" value=" <?php echo get_vocab('logoff') ?> " />
 	  </FORM>
+<?php if (isset($user_list_link)) print "	  <br>\n	  " .
+	    "<A href=\"$user_list_link\">" . get_vocab('user_list') . "</A><br>\n" ;
+?>
 	</TD>
 <?php
     }
@@ -178,6 +182,9 @@ else
 	    <input type="hidden" name="Action" value="QueryName" />
 	    <input type="submit" value=" <?php echo get_vocab('login') ?> " />
 	  </FORM>
+<?php if (isset($user_list_link)) print "	  <br>\n	  " .
+	    "<A href=\"$user_list_link\">" . get_vocab('user_list') . "</A><br>\n" ;
+?>
 	</TD>
 <?php
     }

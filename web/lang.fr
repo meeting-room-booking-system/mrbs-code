@@ -111,6 +111,23 @@ $vocab["you_are"]            = "Vous êtes";
 $vocab["login"]              = "S'identifier";
 $vocab["logoff"]             = "Se déconnecter";
 
+# Authentication database
+$vocab["user_list"]          = "Liste des utilisateurs";
+$vocab["edit_user"]          = "Modification de l'utilisateur";
+$vocab["delete_user"]        = "Supprimer cet utilisateur";
+#$vocab["user_name"]         = Use the same as above, for consistency.
+#$vocab["user_password"]     = Use the same as above, for consistency.
+$vocab["user_email"]         = "Adresse mél";
+$vocab["password_twice"]     = "Pour changer le mot de passe, tapez le nouveau mot de passe ici deux fois";
+$vocab["passwords_not_eq"]   = "Erreur: Les mots de passe ne sont pas identiques.";
+$vocab["add_new_user"]       = "Ajouter un nouvel utilisateur";
+$vocab["rights"]             = "Droits";
+$vocab["action"]             = "Action";
+$vocab["user"]               = "Utilisateur";
+$vocab["administrator"]      = "Administrateur";
+$vocab["unknown"]            = "Inconnu";
+$vocab["ok"]                 = "OK";
+
 # Used in search.php
 $vocab["invalid_search"]     = "Recherche non valide.";
 $vocab["search_results"]     = "Résultats de la recherche pour :";

@@ -112,6 +112,23 @@ $vocab["you_are"]            = "You are";
 $vocab["login"]              = "Log in";
 $vocab["logoff"]             = "Log Off";
 
+# Authentication database
+$vocab["user_list"]          = "User list";
+$vocab["edit_user"]          = "Edit user";
+$vocab["delete_user"]        = "Delete this user";
+#$vocab["user_name"]         = Use the same as above, for consistency.
+#$vocab["user_password"]     = Use the same as above, for consistency.
+$vocab["user_email"]         = "Email address";
+$vocab["password_twice"]     = "If you wish to change the password, please type the new password twice";
+$vocab["passwords_not_eq"]   = "Error: The passwords do not match.";
+$vocab["add_new_user"]       = "Add a new user";
+$vocab["rights"]             = "Rights";
+$vocab["action"]             = "Action";
+$vocab["user"]               = "User";
+$vocab["administrator"]      = "Administrator";
+$vocab["unknown"]            = "Unknown";
+$vocab["ok"]                 = "OK";
+
 # Used in search.php
 $vocab["invalid_search"]     = "Empty or invalid search string.";
 $vocab["search_results"]     = "Search Results for:";
