@@ -1,3 +1,9 @@
+2003-10-31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* INSTALL (1.16): Added warning to avoid specify calendar settings
+	  that displays blocks overlaping the next day, since it is not
+	  properly handled.
+	  
 2003-10-11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* testdata.php (1.4): - bug fix: Make testdata compliant to

@@ -1,3 +1,37 @@
+2003-11-01  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* day.php (1.17), month.php (1.14), week.php (1.21): + Time slots
+	  with an entry now display bubbles when mouse over, showing
+	  complete description in day view and week view, and either the
+	  short name or start-stop time in month view in accordance with
+	  $_MRBS_monthly_view_brief_description value in config.inc.php.
+
+2003-11-01  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* week.php (1.20): Fixing typos
+
+2003-10-31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.6): Added warning to avoid specify calendar
+	  settings that displays blocks overlaping the next day, since it
+	  is not properly handled.
+
+2003-10-31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* language.inc (1.3): - Fixing a bug if we override local in
+	  config.inc.php. Variable name was called $override_locale in
+	  config file and $locale_override in language.inc.
+
+2003-10-31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* week.php (1.19): - Fixing The Daylight Savings Time bug (thanks
+	  to Tony Fugere (tonyfugere at users.sourceforge.net)).
+
+2003-10-31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* auth_pop3.inc (1.4): - getting auth_pop3 working even in
+	  error_reporting(ALL).
+
 2003-10-10  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* language.inc (1.2): - Changed getenv('HTTP_ACCEPT_LANGUAGE') to
