@@ -13,7 +13,7 @@
  *   nothing   - The area is free
  *   something - An error occured, the return value is human readable
  */
-function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $rep_ignore)
+function mrbsCheckFree($room_id, $starttime, $endtime, $ignore)
 {
 	$sql = "SELECT id, name FROM mrbs_entry WHERE 
 	(
