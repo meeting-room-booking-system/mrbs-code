@@ -94,7 +94,7 @@ echo "</tr></table>\n";
 # Don't continue if this area has no rooms:
 if ($room <= 0)
 {
-	echo "<h1>No rooms defined for this area</h1>";
+	echo "<h1>$lang[no_rooms_for_area]</h1>";
 	include "trailer.inc";
 	exit;
 }
@@ -118,10 +118,10 @@ $td = date("d",$i);
 #Show Go to week before and after links
 echo "<table width=\"100%\"><tr><td>
   <a href=\"week.php?year=$yy&month=$ym&day=$yd&area=$area&room=$room\">
-  &lt;&lt; Go to Week Before</a></td>
-  <td align=center><a href=\"week.php?area=$area&room=$room\">Go to This Week</a></td>
+  &lt;&lt; $lang[weekbefore]</a></td>
+  <td align=center><a href=\"week.php?area=$area&room=$room\">$lang[thisweek]</a></td>
   <td align=right><a href=\"week.php?year=$ty&month=$tm&day=$td&area=$area&room=$room\">
-  Go to Week After &gt;&gt;</a></td></tr></table>";
+  $lang[weekafter] &gt;&gt;</a></td></tr></table>";
 
 #Get all appointments for this week in the room that we care about
 # row[0] = Start time

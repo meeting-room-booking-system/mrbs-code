@@ -101,4 +101,11 @@ $lang["match_room"]         = "Match room:";
 $lang["match_entry"]        = "Match brief description:";
 $lang["match_descr"]        = "Match full description:";
 
+# Used in week.php
+$lang["no_rooms_for_area"]  = "No rooms defined for this area";
+$lang["weekbefore"]         = "Go to week before";
+$lang["thisweek"]           = "Go to this week";
+$lang["weekafter"]          = "Go to week after";
+
+
 ?>
