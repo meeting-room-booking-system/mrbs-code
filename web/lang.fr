@@ -74,7 +74,7 @@ $vocab["rep_for_weekly"]     = "(pour n-semaines)";
 $vocab["rep_freq"]           = "Fréquence :";
 $vocab["rep_num_weeks"]      = "Intervalle de semaines";
 $vocab["rep_for_nweekly"]    = "(pour n-semaines)";
-$vocab["ctrl_click"]         = "CTRL + clic souris pour sélectionner plus d'une salle";
+$vocab["ctrl_click"]         = "CTRL + clic souris pour sélectionner plusieurs salles";
 $vocab["entryid"]            = "Réservation N° ";
 $vocab["repeat_id"]          = "périodicité N° ";
 $vocab["you_have_not_entered"] = "Vous n'avez pas saisi";
@@ -128,6 +128,7 @@ $vocab["user"]               = "Utilisateur";
 $vocab["administrator"]      = "Administrateur";
 $vocab["unknown"]            = "Inconnu";
 $vocab["ok"]                 = "OK";
+$vocab["show_my_entries"]    = "Afficher mes réservations à venir";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Recherche non valide.";
@@ -151,6 +152,8 @@ $vocab["report_start"]       = "Date de début du rapport :";
 $vocab["report_end"]         = "Date de fin du rapport :";
 $vocab["match_area"]         = "Lieu :";
 $vocab["match_room"]         = "Salle :";
+$vocab["match_type"]         = "Type :";
+$vocab["ctrl_click_type"]    = "CTRL + clic souris pour sélectionner plusieurs types";
 $vocab["match_entry"]        = "Brève description :";
 $vocab["match_descr"]        = "Description complète :";
 $vocab["include"]            = "Inclure :";

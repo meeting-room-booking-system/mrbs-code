@@ -150,7 +150,8 @@ function getUserPassword()
 // Print the logon entry on the top banner.
 function PrintLogonBox()
 {
-    global $PHP_SELF, $QUERY_STRING, $user_list_link, $user_link;
+    global $PHP_SELF, $QUERY_STRING, $user_list_link, $user_link, $day, $month;
+    global $year, $auth;
 
     $TargetURL = basename($PHP_SELF);
     if (isset($url_base) && ($url_base != "")) $TargetURL = $url_base . '/' . $TargetURL;
@@ -159,9 +160,28 @@ function PrintLogonBox()
     $user=getUserName();
     if (isset($user))
     {
+        $search_string = "";
+        // if auth type = 'db', words 'you are xxxx' becomes a link to the
+        // report page with only entries created by xxx. Past entries are not
+        // displayed but this can be changed
+        if ($auth["type"] == "db")
+        {
+        	$search_string = "From_day=$day&From_month=$month&From_year=$year&
+    			To_day=1&To_month=12&To_year=2030&areamatch=&roommatch=&
+                namematch=&descrmatch=&summarize=1&sortby=r&display=d&sumby=d
+                &creatormatch=$user"; ?>
+    <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
+      <A name="logonBox" href="<?php echo "$user_link$search_string\" title=\"" . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." ".$user ?></A><br>
+        	<?php
+        }
+        else
+        {
+        	?>
+    <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
+      <?php echo get_vocab('you_are')." <B>".$user . "</B>" ?><br>
+        	<?php
+        }
 ?>
-	<TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-	  <A name="logonBox" href="<?php echo "$user_link\">" . get_vocab('you_are')." ".$user ?></A><br>
           <FORM METHOD=POST ACTION="admin.php">
 	    <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" />
 	    <input type="hidden" name="Action" value="SetName" />

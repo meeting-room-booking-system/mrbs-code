@@ -491,6 +491,8 @@ if (isset($areamatch))
 		$sql .= " AND" .  sql_syntax_caseless_contains("e.name", $namematch);
 	if (!empty($descrmatch))
 		$sql .= " AND" .  sql_syntax_caseless_contains("e.description", $descrmatch);
+    if (!empty($creatormatch))
+        $sql .= " AND" .  sql_syntax_caseless_contains("e.create_by", $creatormatch);
 
 	
 	if( $sortby == "r" )

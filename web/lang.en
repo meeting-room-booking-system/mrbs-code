@@ -131,6 +131,7 @@ $vocab["user"]               = "User";
 $vocab["administrator"]      = "Administrator";
 $vocab["unknown"]            = "Unknown";
 $vocab["ok"]                 = "OK";
+$vocab["show_my_entries"]    = "Click to display all my upcoming entries";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Empty or invalid search string.";
