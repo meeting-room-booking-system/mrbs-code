@@ -1,22 +1,17 @@
-CVS (Thu Jan  9 17:26:41 GMT 2003)
+Version 1.1-pre2 (Thu Jan  9 17:50:00 GMT 2002)
+
    + New POP3 authentication scheme (Daniel Gardner)
    - Updated Spanish translation
-
-CVS (Thu Nov 28 10:20:00 GMT 2002)
    - Fix for edit entry page. We now determine the area id
      of the room the meeting we're editting is in before
      getting a list of the rooms in that area. This solves
      a number of errors that occur when editting/creating
      bookings.
-
-CVS (Mon Oct 14 16:42:00 BST 2002)
-   Fixes submitted/suggested by Jean-François Larvoire:
-   - Added closing ?> to index.php
-   - Added "global $refresh_rate;" to style.inc
-   - Fixed all occurences (hopefully) of $vocab[] indices
-     written without surrounding quotes.
-
-CVS (Tue Oct  8 13:30:00 BST 2002)
+   - Fixes submitted/suggested by Jean-François Larvoire:
+    * Added closing ?> to index.php
+    * Added "global $refresh_rate;" to style.inc
+    * Fixed all occurences (hopefully) of $vocab[] indices
+      written without surrounding quotes.
    - Changed all uses of <? to <?php.
    - Merged change from John Beranek for an Advanced search function,
      requires 3 more translation tokens, which have been added to
