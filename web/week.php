@@ -131,14 +131,14 @@ if ( $pview != 1 ) {
 	#Draw the three month calendars
 	minicals($year, $month, $day, $area, $room, 'week');
 	echo "</tr></table>\n";
+}
 
-	# Don't continue if this area has no rooms:
-	if ($room <= 0)
-	{
-		echo "<h1>".get_vocab("no_rooms_for_area")."</h1>";
-		include "trailer.inc";
-		exit;
-	}
+# Don't continue if this area has no rooms:
+if ($room <= 0)
+{
+	echo "<h1>".get_vocab("no_rooms_for_area")."</h1>";
+	include "trailer.inc";
+	exit;
 }
 
 # Show area and room:
