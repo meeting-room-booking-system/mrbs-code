@@ -15,6 +15,8 @@ if(!isset($day) or !isset($month) or !isset($year))
 }
 if(empty($area))
 	$area = get_default_area();
+if(!isset($edit_type))
+	$edit_type = "";
 
 if(!getAuthorised(getUserName(), getUserPassword(), 1))
 {
@@ -78,7 +80,7 @@ if (isset($id))
 		
 		$rep_type = $row[0];
 		
-		if(isset($edit_type) && ($edit_type == "series"))
+		if($edit_type == "series")
 		{
 			$start_day   = (int)strftime('%d', $row[1]);
 			$start_month = (int)strftime('%m', $row[1]);
@@ -225,7 +227,7 @@ for ($c = "A"; $c <= "J"; $c++)
 }
 ?></SELECT></TD></TR>
 
-<? if(isset($edit_type) && $edit_type == "series") { ?>
+<? if($edit_type == "series") { ?>
 
 <TR>
  <TD CLASS=CR><B><?echo $lang["rep_type"]?></B></TD>
