@@ -17,8 +17,9 @@
  */
 function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 {
+	global $lang;
 	# Select any meetings which overlap ($starttime,$endtime) for this room:
-	$sql = "SELECT id, name FROM mrbs_entry WHERE
+	$sql = "SELECT id, name, start_time FROM mrbs_entry WHERE
 		start_time < $endtime AND end_time > $starttime
 		AND room_id = $room_id";
 
@@ -26,16 +27,33 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 		$sql .= " AND id <> $ignore";
 	if ($repignore > 0)
 		$sql .= " AND repeat_id <> $repignore";
+	$sql .= " ORDER BY start_time";
 
 	$res = sql_query($sql);
-	
 	if(! $res)
 		return sql_error();
+	if (sql_count($res) == 0)
+	{
+		sql_free($res);
+		return "";
+	}
+	# Get the room's area ID for linking to day, week, and month views:
+	$area = mrbsGetRoomArea($room_id);
 	
+	# Build a string listing all the conflicts:
 	$err = "";
-
 	for ($i = 0; ($row = sql_row($res, $i)); $i++)
-		$err .= "<LI><A HREF=\"view_entry.php?id=$row[0]\">$row[1]</A>";
+	{
+		$starts = getdate($row[2]);
+		$param_ym = "area=$area&year=$starts[year]&month=$starts[mon]";
+		$param_ymd = $param_ym . "&day=$starts[mday]";
+
+		$err .= "<LI><A HREF=\"view_entry.php?id=$row[0]\">$row[1]</A>"
+		. " ( " . strftime('%A %d %B %Y %T', $row[2]) . ") "
+		. "(<A HREF=\"day.php?$param_ymd\">$lang[viewday]</a>"
+		. " | <A HREF=\"week.php?room=$room_id&$param_ymd\">$lang[viewweek]</a>"
+		. " | <A HREF=\"month.php?room=$room_id&$param_ym\">$lang[viewmonth]</a>)";
+	}
 	
 	return $err;
 }
