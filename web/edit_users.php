@@ -28,6 +28,13 @@ include "functions.inc";
 include "$dbsys.inc";
 include "mrbs_auth.inc";
 
+// Do not allow unidentified people to browse the list.
+if(!getAuthorised(getUserName(), getUserPassword(), 1))
+    {
+    showAccessDenied($day, $month, $year, $area);
+    exit;
+    }
+
 /*---------------------------------------------------------------------------*\
 |                     Create the users database if needed                     |
 \*---------------------------------------------------------------------------*/
