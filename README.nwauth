@@ -1,0 +1,46 @@
+Notes on MRBS with Netware Authentication                2000-01-03
+-----------------------------------------
+This updates and expands on the information in the AUTHENTICATION file on
+how to get MRBS to authenticate to a Netware server.
+This is only going to work on Linux.
+
+There's a program called "nwauth" which is included with ncpfs. To use it
+you'll need to have IPX support compiled in your kernel, and you must have
+configured an IPX interface. If you can attach to Netware volumes using
+ncpmount, you are all set. Otherwise, read the documentation which comes
+with ncpfs.
+
+Previous version of MRBS included the following information in
+AUTHENTICATION on using Netware:
+> $auth["realm"]  = "MRBS";
+> $auth["type"]   = "ext";
+> $auth["prog"]   = "/usr/bin/nwauth";
+> $auth["params"] = "-S MYSERVER -U #USERNAME# -P #PASSWORD#";
+
+Although the nwauth manual page describes a -P option for the password,
+it does not seem to work (it is not implemente in ncpfs-2.2.0), and
+this would be insecure anyway. So you cannot use "ext" (external program)
+MRBS authentication.  Instead, the password must be sent through
+a pipe to nwauth. (It must not be followed by return, either.) To make
+this work, a new module auth_nw.inc was created.
+
+The appropriate settings for config.inc are:
+
+# Authentication settings - read AUTHENTICATION
+$auth["realm"]  = "MRBS";
+$auth["type"]   = "nw";
+$auth["prog"]   = "/usr/bin/nwauth";
+$auth["params"] = "MYSERVER";
+
+Edit tha above. Change the path in ["prog"] to the actual path to your
+nwauth program. Change the value in ["params"] to the Netware server
+name. The auth_nw.inc module does the rest.
+You can set "realm" to anything you want; this is a hint to the user
+as to what they are logging in to.
+
+You must also list the names of your administrator-level users in config.inc.
+
+NOTE: nwauth must be able to find nwsfind in the PATH (which is the
+web server PATH). If authentication fails, and your Apache error log
+contains messages about nwsfind, try creating a link from /bin/nwsfind
+to the actual path of nwsfind.
