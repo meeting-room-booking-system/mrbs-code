@@ -19,13 +19,16 @@ if(empty($area))
 # Need all these different versions with different escaping.
 # search_str must be left as the html-escaped version because this is
 # used as the default value for the search box in the header.
-$search_text = unslashes($search_str);
-$search_url = urlencode($search_text);
-$search_str = htmlspecialchars($search_text);
+if (!empty($search_str)) 
+{
+	$search_text = unslashes($search_str);
+	$search_url = urlencode($search_text);
+	$search_str = htmlspecialchars($search_text);
+}
 
 print_header($day, $month, $year, $area);
 
-if ($advanced)
+if (!empty($advanced))
 {
 	echo "<H3>" . $vocab["advanced_search"] . "</H3>";
 	echo "<FORM METHOD=GET ACTION=\"search.php\">";

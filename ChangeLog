@@ -43,6 +43,7 @@ Version 1.1-pre2 (Thu Jan  9 17:50:00 GMT 2002)
      past. This should help ensure the web pages don't get cached.
    - Change trailer.inc to make print preview more likely to work on
      windows and non-apache servers
+   - Change search.php to remove warnings introduced with PHP 4.3.0
 
 Version 1.1-pre1 (Thu May 30 12:41:02 BST 2002)
    + add config option for drop-down boxes to select area and room
