@@ -48,7 +48,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 		$param_ymd = $param_ym . "&day=$starts[mday]";
 
 		$err .= "<LI><A HREF=\"view_entry.php?id=$row[0]\">$row[1]</A>"
-		. " ( " . strftime('%A %d %B %Y %T', $row[2]) . ") "
+		. " ( " . utf8_strftime('%A %d %B %Y %T', $row[2]) . ") "
 		. "(<A HREF=\"day.php?$param_ymd\">".get_vocab("viewday")."</a>"
 		. " | <A HREF=\"week.php?room=$room_id&$param_ymd\">".get_vocab("viewweek")."</a>"
 		. " | <A HREF=\"month.php?room=$room_id&$param_ym\">".get_vocab("viewmonth")."</a>)";
