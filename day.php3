@@ -105,12 +105,21 @@ while ($row = mysql_fetch_row($res)) {
 	#row[7] = id of this booking
 	#row[8] = type (internal/external)
 	
+	# $today is a map of the screen that will be displayed
+	# It looks like:
+	#     $today[Room Name][Time][id]
+	#                            [color]
+	#                            [description]
+	
 	for ($t = $row[2]; $t < $row[3]; $t = $t + $resolution) {
 		$today[$row[1]][$t][id]     = $row[7];
 		$today[$row[1]][$t][color]  = $row[8];
 	}
+	# show the name of the booker in the first segment that the
+	# booking happens in, or at the start of the day if it started
+	# before today
 	$today[$row[1]][$row[2]][data] = $row[5];
-	
+	if ($row[2] < $am7) { $today[$row[1]][$am7][data] = $row[5]; }
 }
 
 
