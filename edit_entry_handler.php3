@@ -6,17 +6,6 @@ include "connect.inc";
 include "mrbs_auth.inc";
 include "mrbs_sql.inc";
 
-function add_duration ( $time, $duration ) {
-  $list = split ( ":", $time );
-  $hour = $list[0];
-  $min = $list[1];
-  $minutes = $hour * 60 + $min + ($duration / 60);
-  $h = $minutes / 60;
-  $m = $minutes % 60;
-  $ret = sprintf ( "%d:%02d", $h, $m );
-  return $ret;
-}
-
 if(!getAuthorised(getUserName(), getUserPassword()))
 {
 ?>
@@ -77,28 +66,21 @@ switch($dur_units)
 
 // Units are now in "$dur_units" numbers of seconds
 
-$starttime = mktime($hour, $minute, 0, $month, $day, $year);
-$endtime   = mktime($hour, $minute, 0, $month, $day, $year) + ($units * $duration);
-
-if($all_day == "yes")
-	$round_up = 60 * 60 * 24;
-else
-	$round_up = 30 * 60;
-
-$diff = $endtime - $starttime;
-
-if($tmp = $diff % $round_up)
-	$endtime += $round_up - $tmp;
-
 if($all_day == "yes")
 {
-	$diff = $endtime - $starttime;
+	$starttime = mktime(0, 0, 0, $month, $day  , $year);
+	$endtime   = mktime(0, 0, 0, $month, $day+1, $year);
+}
+else
+{
+	$starttime = mktime($hour, $minute, 0, $month, $day, $year);
+	$endtime   = mktime($hour, $minute, 0, $month, $day, $year) + ($units * $duration);
 	
-	if($tmp = $starttime % (60 * 60 * 24))
-	{
-		$starttime -= $tmp;
-		$endtime    = $starttime + $diff;
-	}	
+	$round_up = 30 * 60;
+	$diff     = $endtime - $starttime;
+	
+	if($tmp = $diff % $round_up)
+		$endtime += $round_up - $tmp;
 }
 
 // Get the repeat entry settings
@@ -145,10 +127,7 @@ if(!empty($reps))
 		$err = $lang[too_may_entrys];
 }
 else
-{
 	$err = mrbsCheckFree($room_id, $starttime, $endtime-1, $id);
-	$overlap = $err;
-}
 
 if(empty($err))
 {
@@ -193,28 +172,16 @@ if(empty($err))
 </HEAD>
 <BODY>
 
-<?php if ( strlen ( $overlap ) ) { ?>
-<H2><FONT COLOR="<?php echo $H2COLOR;?>">Scheduling Conflict</H2></FONT>
-
-Your suggested time of <B>
 <?php
-  $time = sprintf ( "%d:%02d", $hour, $minute );
-  echo display_time ( $time );
-  if($duration > 0)
-    echo "-" . display_time ( add_duration ( $time, $duration * $units) );
-?>
-</B> conflicts with the following existing calendar entries:
-<UL>
-<?php echo $overlap; ?>
-</UL>
 
-<?php } else { ?>
-<H2><FONT COLOR="<?php echo $H2COLOR;?>"><?echo $lang[error]?></H2></FONT>
-<BLOCKQUOTE>
-<?php echo $err; ?>
-</BLOCKQUOTE>
-
-<?php }
+if(strlen($err))
+{
+	echo "<H2>" . $lang[sched_conflict] . "</H2>";
+	echo $lang[conflict];
+	echo "<UL>";
+	echo $err;
+	echo "</UL>";
+}
 
 echo "<a href=$returl>$lang[returncal]</a><p>";
 
