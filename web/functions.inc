@@ -90,6 +90,13 @@ function print_header($day, $month, $year, $area)
 ?>
           </FORM>
          </TD>
+<?php
+    # For session protocols that define their own logon box...
+    if (function_exists('PrintLogonBox'))
+   	{
+   	PrintLogonBox();
+   	}
+?>
         </TR>
        </TABLE>
       </TD>

@@ -3,6 +3,7 @@
 
 require_once "grab_globals.inc.php";
 include "config.inc.php";
+include "mrbs_auth.inc";
 include "functions.inc";
 include "$dbsys.inc";
 include "mincals.inc";

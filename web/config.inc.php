@@ -99,18 +99,29 @@ $view_week_number = FALSE;
 ###############################################
 # Authentication settings - read AUTHENTICATION
 ###############################################
-# IP authentication allows any user to create bookings.
-$auth["realm"]  = "";
-$auth["type"]   = "ip";
-$auth["prog"]   = "";
-$auth["params"] = "";
+$auth["session"] = "php"; # How to get and keep the user ID. One of "http" "php" "cookie" "ip" "dns".
+$auth["type"] = "config"; # How to validate the user/password. One of "none" "config" "db" "pop3" "ldap" "imap"
 
 # The various level two users (can modify other peoples settings)
 # By default, only localhost is an administrator.
 $auth["admin"][] = "127.0.0.1";
+#$auth["admin"][] = "administrator";
 #$auth["admin"][] = "10.0.0.1";
 #$auth["admin"][] = "10.0.0.2";
 #$auth["admin"][] = "10.0.0.3";
+
+# 'auth_config' user database
+# Format: $auth["user"]["name"] = "password";
+$auth["user"]["administrator"] = "secret";
+$auth["user"]["alice"] = "a";
+$auth["user"]["bob"] = "b";
+
+# 'session_http' configuration settings
+$auth["realm"]  = "mrbs";
+
+# 'auth_ext' configuration settings
+$auth["prog"]   = "";
+$auth["params"] = "";
 
 # 'auth_ldap' configuration settings
 # Where is the LDAP server

@@ -3,6 +3,7 @@
 
 // include the authentification wrappers
 include "auth_$auth[type].inc";
+if (isset($auth['session'])) include "session_$auth[session].inc";
 
 function getAuthUserName()
 {
