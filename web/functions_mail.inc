@@ -821,22 +821,31 @@ function sendMail($recipients, $subject, $body, $charset = 'us-ascii',
     $username = SMTP_USERNAME, $password = SMTP_PASSWORD)
 {
     require_once "Mail.php";
+
     // Headers part
     $headers['From']         = $from;
-    $headers['To']           = $recipients;
+    if( $backend != 'mail' ) {
+        $headers['To']           = $recipients;
+    }
     (NULL != $cc) ? $headers['Cc'] = $cc : '';
     (NULL != $bcc) ? $headers['Bcc'] = $bcc : '';
     $headers['Subject']      = $subject;
     $headers['MIME-Version'] = '1.0';
     $headers['Content-Type'] = 'text/plain; charset=' . $charset;
+
     // Parameters part
-    $params['sendmail_path'] = $sendmail_path;
-    $params['sendmail_args'] = $sendmail_args;
-    $params['host']          = $host;
-    $params['port']          = $port;
-    $params['auth']          = $auth;
-    $params['username']      = $username;
-    $params['password']      = $password;
+    if( $backend == 'sendmail' ) {
+        $params['sendmail_path'] = $sendmail_path;
+        $params['sendmail_args'] = $sendmail_args;
+    }
+    if( $backend == "smtp" ) {
+        $params['host']          = $host;
+        $params['port']          = $port;
+        $params['auth']          = $auth;
+        $params['username']      = $username;
+        $params['password']      = $password;
+    }
+
     // Call to the PEAR::Mail class
     $mail_object =& Mail::factory($backend, $params);
     $result = $mail_object->send($recipients, $headers, $body);
