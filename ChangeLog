@@ -1,6 +1,7 @@
 Version 0.7
+   Added Japanese support
 	Moved language into extenal file
-   Added documentation
+   Added more documentation
 	Areas with no rooms don't cause an error
 
 Version 0.6 (Sat May 27 09:09:11 BST 2000)
