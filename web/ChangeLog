@@ -1,3 +1,161 @@
+2004-08-24  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* mrbs.css (1.11), xbLib.js (1.4) (utags: mrbs-1-2): Minor bug fix:
+	  The hidden active cell was sized differently from the main table
+	  cell.  This generated extra mouse events, causing flicker on the
+	  status line.
+
+2004-08-05  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* functions_mail.inc (1.14, mrbs-1-2): Removed sql_free()
+	  statements as they are not required when using sql_row.  Fixed
+	  bug 994056
+
+2004-07-30  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* functions_mail.inc (1.13): Added missing ampersand for URL in
+	  emails when a series is involved.
+
+2004-07-28  John Beranek <jberanek@users.sourceforge.net>
+
+	* lang.cz (1.10, mrbs-1-2): * Updated lang.cz from David Krotil.
+	  Only required one token  to be translated.
+
+2004-07-28  John Beranek <jberanek@users.sourceforge.net>
+
+	* lang.cz (1.9), lang.da (1.5, mrbs-1-2), lang.de (1.18, mrbs-1-2),
+	  lang.el (1.4, mrbs-1-2), lang.en (1.26, mrbs-1-2), lang.es (1.18,
+	  mrbs-1-2), lang.fi (1.9, mrbs-1-2), lang.fr (1.23, mrbs-1-2),
+	  lang.it (1.11, mrbs-1-2), lang.ja (1.15, mrbs-1-2), lang.nl
+	  (1.16, mrbs-1-2), lang.no (1.13, mrbs-1-2), lang.pt (1.5,
+	  mrbs-1-2), lang.sv (1.17, mrbs-1-2), lang.zh-tw (1.15, mrbs-1-2),
+	  language.inc (1.13, mrbs-1-2): * Language tokens synchronised.
+	  All files now have the same number  of lines, and the same number
+	  of tokens. Some languages are now  missing quite a few
+	  translations.
+
+	  * Integrated fix for Windows locale selection contained in  bug
+	  #992390 (Huey). Browser language "en-ie" is now translated to
+	  the correct Windows locale.
+
+2004-06-29  John Beranek <jberanek@users.sourceforge.net>
+
+	* functions.inc (1.34, mrbs-1-2), language.inc (1.12): * locale
+	  setting fixes. Added ability to print warning at the top of the
+	  screen if MRBS fails to set a locale. Added mapping into Windows
+	  locale map of 'sv-se' to 'sve', this handles browsers set to send
+	  'sv-se'. Added mapping into Unix locale map of 'en_EN' to
+	  'en_GB' to  fix incorrect locale of 'en_EN' (I could have used
+	  en_US instead).   Added support for OS X into locale setting
+	  code. OS X is treated   as "unix".
+
+2004-06-23  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* functions_mail.inc (1.12), lang.en (1.25), view_entry.php (1.16,
+	  mrbs-1-2): Changed view_entry.php so that it could handle the
+	  situation where an id for a series is passed to it.  A series is
+	  identified by series=1 in the url.
+
+	  Changed functions_mail.inc to generate urls with series=1 in the
+	  email messages where the message relates to a series.
+
+	  Changed lang.en to have an error message for when an invalid
+	  series id is passed to view_entry.php.
+
+	  Fixes bug 972194
+
+	  Fixed bug
+
+2004-06-23  John Beranek <jberanek@users.sourceforge.net>
+
+	* functions.inc (1.33): * Fixes SF request 934394, namely
+	  JavaScript errors on changing  Start/End dates in the form. Form
+	  prefix wasn't being passed  from PHP function genDateSelector()
+	  to JavaScript function  ChangeOptionDays().
+
+2004-06-15  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* functions_mail.inc (1.11): Fixed bug 972293 so that periods are
+	  handled correctly in email notifications Removed duplicate
+	  $mail_vocab["start_date"] when deleting a "time" entry.
+
+2004-06-15  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* month.php (1.31, mrbs-1-2): Changed so that '+' sign and
+	  javascript are not included in month "print preview"
+
+2004-06-15  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* month.php (1.30): Changed main table formatting to match day and
+	  week view tables.
+
+2004-06-15  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* mrbs.css (1.10): Changed background-color and border-color for TH
+	  elements so that in day and week view the links in the header
+	  cells of the tables are more readable.
+
+2004-06-15  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* mrbs.css (1.9): Changed default colour for odd row (TD.odd_row)
+	  so that it is not the same as the default colour for TD.J
+
+2004-06-14  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* session_cookie.inc (1.9, mrbs-1-2): Fixes problem identifed by
+	  Dane where an invalid user will appear to be logged in.  This was
+	  caused by the cookie being set and no validation of the user
+	  being done because the wrong variables were being used.  This is
+	  not a security issue.
+
+2004-06-14  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* config.inc.php (1.39, mrbs-1-2): Changed comment about $url_base
+	  to recommend setting this if email notifications are to be used.
+
+	  Fixed Bug 972186
+
+2004-06-13  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* functions_mail.inc (1.10): - $endtime is declared as a global in
+	  notifyAdminOnBooking but it is   modified by being used as a
+	  "local" variable - renamed the "local" variable   Fixes bug
+	  #968682
+
+	  - use rep_type as more accurate indication of series or not, so
+	  that	 $myendtime can be set the most appropriate value.
+
+2004-06-12  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* day.php (1.38, mrbs-1-2): Changing ordering of rooms in day view
+	  back to "by room name" as "by capacity" was specific to
+	  Jean-François' implementation.
+
+2004-06-12  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* auth_ldap.inc (1.7, mrbs-1-2), config.inc.php (1.38): Update
+	  auth_ldap.inc and config.inc.php.  - LDAP servers may not allow
+	  anon. bind so this broke the previous version of auth_ldap.inc.
+	  I have removed the attempt at an anon. bind and have given the
+	  admin more control over the dn that an auth. bind is attempted
+	  with.
+
+	  - the user attribute can be defined individually for each base dn
+	  if reequired.
+
+	  - $ldap_base_dn and $ldap_usesr_attrib are handled in a similar
+	  way to imap and pop3, server and port, definitions, and
+	  config.inic.php has been updated to reflect this.
+
+2004-05-27  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* lang.cz (1.8): Updated Czech lang file ("David Krotil"
+	  David.Krotil@mu-sokolov.cz)
+
+2004-05-26  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* lang.de (1.17): Updating lang.de (thanks Andreas Moroder)
+
 2004-05-20  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* config.inc.php (1.37): Updating mrbs version to next 1.2.
@@ -17,9 +175,9 @@
 
 2004-05-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* edit_entry_handler.php (1.22), functions_mail.inc (1.8) (utags:
-	  mrbs-1-2-pre3): + If MAIL_DOMAIN is used and username returned by
-	  mrbs contains extra strings appended like domain name
+	* edit_entry_handler.php (1.22, mrbs-1-2), functions_mail.inc (1.8)
+	  (utags: mrbs-1-2-pre3): + If MAIL_DOMAIN is used and username
+	  returned by mrbs contains extra strings appended like domain name
 	  ('username.domain'), need to provide this extra string so that it
 	  will be removed from the username.  - Fixed bug: if MAIL_BOOKER
 	  is enabled, previous booker was empty if MAIL_DETAILS was not
@@ -59,8 +217,8 @@
 
 2004-05-08  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* edit_entry.php (1.30, mrbs-1-2-pre3): Replaced submit button
-	  hiding by 'disabled'.
+	* edit_entry.php (1.30, mrbs-1-2, mrbs-1-2-pre3): Replaced submit
+	  button hiding by 'disabled'.
 
 2004-05-08  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -73,7 +231,7 @@
 
 2004-05-06  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* config.inc.php (1.34), day.php (1.36), week.php (1.37,
+	* config.inc.php (1.34), day.php (1.36), week.php (1.37, mrbs-1-2,
 	  mrbs-1-2-pre3): Added $morningstarts_minutes to allow for a day
 	  to start at say 8:30 am.  Default value is 0.
 
@@ -101,13 +259,13 @@
 
 2004-05-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* edit_users.php (1.9, mrbs-1-2-pre3): + added email address
-	  validation
+	* edit_users.php (1.9, mrbs-1-2, mrbs-1-2-pre3): + added email
+	  address validation
 
 2004-05-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* edit_area_room.php (1.14, mrbs-1-2-pre3):  enhanced email
-	  validation
+	* edit_area_room.php (1.14, mrbs-1-2, mrbs-1-2-pre3):  enhanced
+	  email validation
 
 2004-05-05  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -121,30 +279,31 @@
 
 2004-05-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* config.inc.php (1.33), del_entry.php (1.5, mrbs-1-2-pre3),
-	  edit_area_room.php (1.12), edit_entry.php (1.29),
+	* config.inc.php (1.33), del_entry.php (1.5, mrbs-1-2,
+	  mrbs-1-2-pre3), edit_area_room.php (1.12), edit_entry.php (1.29),
 	  edit_entry_handler.php (1.19), functions.inc (1.32,
 	  mrbs-1-2-pre3), functions_mail.inc (1.1), lang.en (1.24,
 	  mrbs-1-2-pre3), lang.fr (1.22, mrbs-1-2-pre3), language.inc
-	  (1.9), mrbs_sql.inc (1.18, mrbs-1-2-pre3), Net/Socket.php (1.2,
-	  mrbs-1-2-pre3): + Added/changed features to email support:  -
-	  Room and/or area administrators. An email field has been added to
-	  room	  and area administration page. Each room/area can have
-	  multiple emails.   - Configurable options to send emails to these
-	  administrators.     Emails can be send to MRBS admin and/or area
-	  admins and/or room admins.   - Configurable options to set what
-	  is emailed (either a link to	   the view page as before or full
-	  details)   - Configurable option to decide the lang used in
-	  emails and the text of     subject and body.	 - Configurable
-	  options to decide which events cause an email to be sent
-	  (whether only new entries, new and edited entries, or deleted
-	  entries)   - Full diffing informations between the new state of
-	  an edited entry     and its previous settings (only if we choose
-	  to show details in emails)   - Optionale recipients can receives
-	  mails in carbon copy	 - Configurable option to send mails using
-	  three mail backends:	   either the php mail function, an
-	  external smtp server (with or without     authentication) or unix
-	  sendmail program.   - upgraded Net::Socket from 1.0.1 to 1.0.2
+	  (1.9), mrbs_sql.inc (1.18, mrbs-1-2, mrbs-1-2-pre3),
+	  Net/Socket.php (1.2, mrbs-1-2, mrbs-1-2-pre3): + Added/changed
+	  features to email support:  - Room and/or area administrators. An
+	  email field has been added to room	and area administration
+	  page. Each room/area can have multiple emails.   - Configurable
+	  options to send emails to these administrators.     Emails can be
+	  send to MRBS admin and/or area admins and/or room admins.   -
+	  Configurable options to set what is emailed (either a link to
+	  the view page as before or full details)   - Configurable option
+	  to decide the lang used in emails and the text of	subject and
+	  body.   - Configurable options to decide which events cause an
+	  email to be sent     (whether only new entries, new and edited
+	  entries, or deleted entries)	 - Full diffing informations
+	  between the new state of an edited entry     and its previous
+	  settings (only if we choose to show details in emails)   -
+	  Optionale recipients can receives mails in carbon copy   -
+	  Configurable option to send mails using three mail backends:
+	  either the php mail function, an external smtp server (with or
+	  without     authentication) or unix sendmail program.   -
+	  upgraded Net::Socket from 1.0.1 to 1.0.2
 
 2004-04-29  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -164,13 +323,13 @@
 
 2004-04-25  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* edit_users.php (1.8), mysql.inc (1.5, mrbs-1-2-pre3), pgsql.inc
-	  (1.6, mrbs-1-2-pre3): Modified the way edit_users.php gets the
-	  user table fields names and types.  It now uses the three new
-	  routines sql_field_name, sql_field_type, sql_num_fields, defined
-	  in mysql.inc and pgsql.inc, which in turn call their
-	  corresponding database-specific eponym.  Still not tested with
-	  PostgreSQL, but much more likely to work.
+	* edit_users.php (1.8), mysql.inc (1.5, mrbs-1-2, mrbs-1-2-pre3),
+	  pgsql.inc (1.6, mrbs-1-2, mrbs-1-2-pre3): Modified the way
+	  edit_users.php gets the user table fields names and types.  It
+	  now uses the three new routines sql_field_name, sql_field_type,
+	  sql_num_fields, defined in mysql.inc and pgsql.inc, which in turn
+	  call their corresponding database-specific eponym.  Still not
+	  tested with PostgreSQL, but much more likely to work.
 
 2004-04-25  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
@@ -199,8 +358,8 @@
 
 2004-04-17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* report.php (1.22, mrbs-1-2-pre3): - fixed bug $typematch,
-	  variable undefined
+	* report.php (1.22, mrbs-1-2, mrbs-1-2-pre3): - fixed bug
+	  $typematch, variable undefined
 
 2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -221,41 +380,42 @@
 
 2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* Mail/mail.php (1.2, mrbs-1-2-pre3): - Removed PEAR_MAIL constants
-	  (never had).
+	* Mail/mail.php (1.2, mrbs-1-2, mrbs-1-2-pre3): - Removed PEAR_MAIL
+	  constants (never had).
 
 2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* Mail.php (1.1, mrbs-1-2-pre3), PEAR.php (1.2, mrbs-1-2-pre3),
-	  config.inc.php (1.31), edit_entry_handler.php (1.18),
-	  functions.inc (1.30), lang.en (1.22), mrbs_sql.inc (1.17),
-	  view_entry.php (1.15, mrbs-1-2-pre3), Mail/RFC822.php (1.1,
-	  mrbs-1-2-pre3), Mail/mail.php (1.1), Mail/null.php (1.1,
-	  mrbs-1-2-pre3), Mail/sendmail.php (1.1, mrbs-1-2-pre3),
-	  Mail/smtp.php (1.1, mrbs-1-2-pre3), Net/SMTP.php (1.1,
-	  mrbs-1-2-pre3), Net/Socket.php (1.1): + Added email support to
-	  MRBS (using PEAR::Mail class for that).  MRBS developers, use
-	  function sendMail(), with at least the minimal parameters
-	  ($recipients, $subject and $body) to send mail from MRBS.  +
-	  Added the option to notify the administrator (or someone else)
-	  with an email on each new entry or new and changed entries)
+	* Mail.php (1.1, mrbs-1-2, mrbs-1-2-pre3), PEAR.php (1.2, mrbs-1-2,
+	  mrbs-1-2-pre3), config.inc.php (1.31), edit_entry_handler.php
+	  (1.18), functions.inc (1.30), lang.en (1.22), mrbs_sql.inc
+	  (1.17), view_entry.php (1.15, mrbs-1-2-pre3), Mail/RFC822.php
+	  (1.1, mrbs-1-2, mrbs-1-2-pre3), Mail/mail.php (1.1),
+	  Mail/null.php (1.1, mrbs-1-2, mrbs-1-2-pre3), Mail/sendmail.php
+	  (1.1, mrbs-1-2, mrbs-1-2-pre3), Mail/smtp.php (1.1, mrbs-1-2,
+	  mrbs-1-2-pre3), Net/SMTP.php (1.1, mrbs-1-2, mrbs-1-2-pre3),
+	  Net/Socket.php (1.1): + Added email support to MRBS (using
+	  PEAR::Mail class for that).  MRBS developers, use function
+	  sendMail(), with at least the minimal parameters ($recipients,
+	  $subject and $body) to send mail from MRBS.  + Added the option
+	  to notify the administrator (or someone else) with an email on
+	  each new entry or new and changed entries)
 
 2004-04-15  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* auth_db.inc (1.6, mrbs-1-2-pre3): - (authValidateUser): add
-	  global $tbl_users;
+	* auth_db.inc (1.6, mrbs-1-2, mrbs-1-2-pre3): - (authValidateUser):
+	  add global $tbl_users;
 
 2004-04-14  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* add.php (1.5, mrbs-1-2-pre3), admin.php (1.16, mrbs-1-2-pre3),
-	  auth_db.inc (1.5), day.php (1.30), del.php (1.11, mrbs-1-2-pre3),
-	  edit_area_room.php (1.11), edit_entry.php (1.27),
-	  edit_entry_handler.php (1.17), edit_users.php (1.7),
-	  functions.inc (1.29), index.php (1.8, mrbs-1-2-pre3), month.php
-	  (1.26), mrbs_sql.inc (1.16), report.php (1.21), search.php (1.12,
-	  mrbs-1-2-pre3), view_entry.php (1.14), week.php (1.31): Changed
-	  the fixed table names to variables.  The variables are defined in
-	  config.inc.php.
+	* add.php (1.5, mrbs-1-2, mrbs-1-2-pre3), admin.php (1.16,
+	  mrbs-1-2, mrbs-1-2-pre3), auth_db.inc (1.5), day.php (1.30),
+	  del.php (1.11, mrbs-1-2, mrbs-1-2-pre3), edit_area_room.php
+	  (1.11), edit_entry.php (1.27), edit_entry_handler.php (1.17),
+	  edit_users.php (1.7), functions.inc (1.29), index.php (1.8,
+	  mrbs-1-2, mrbs-1-2-pre3), month.php (1.26), mrbs_sql.inc (1.16),
+	  report.php (1.21), search.php (1.12, mrbs-1-2, mrbs-1-2-pre3),
+	  view_entry.php (1.14), week.php (1.31): Changed the fixed table
+	  names to variables.  The variables are defined in config.inc.php.
 
 2004-04-14  Gavin Walker <gwalker@users.sourceforge.net>
 
@@ -335,20 +495,21 @@
 
 2004-04-12  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* mincals.inc (1.11, mrbs-1-2-pre3): mincal changes: - correct week
-	  highlight code to correctly highlight where a week crosses   into
-	  a new month.	The problem was when crossing the year boundary,
-	  and	where only the last day of the week was in the new month
-	  and the number   of days in the current month was < 31.  - week
-	  and month now include room in the link thus maintaining the same
-	  room when using the calendars for navigation - highlights whole
-	  month in month view - highlight colour moved to mrbs.css
+	* mincals.inc (1.11, mrbs-1-2, mrbs-1-2-pre3): mincal changes: -
+	  correct week highlight code to correctly highlight where a week
+	  crosses   into a new month.  The problem was when crossing the
+	  year boundary, and   where only the last day of the week was in
+	  the new month and the number	 of days in the current month was <
+	  31.  - week and month now include room in the link thus
+	  maintaining the same	 room when using the calendars for
+	  navigation - highlights whole month in month view - highlight
+	  colour moved to mrbs.css
 
 2004-04-11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* auth_db.inc (1.4), session_cookie.inc (1.8, mrbs-1-2-pre3),
-	  session_php.inc (1.8, mrbs-1-2-pre3): + Add link to user entries
-	  for all auth schemes, not only db (thanks Gavin!).
+	  session_php.inc (1.8, mrbs-1-2, mrbs-1-2-pre3): + Add link to
+	  user entries for all auth schemes, not only db (thanks Gavin!).
 
 2004-04-11  Gavin Walker <gwalker@users.sourceforge.net>
 
@@ -395,9 +556,10 @@
 
 2004-04-09  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* auth_imap.inc (1.6, mrbs-1-2-pre3), auth_pop3.inc (1.6,
-	  mrbs-1-2-pre3), config.inc.php (1.25): This change allows
-	  multiple pop3 or imap server to be used for authentication.
+	* auth_imap.inc (1.6, mrbs-1-2, mrbs-1-2-pre3), auth_pop3.inc (1.6,
+	  mrbs-1-2, mrbs-1-2-pre3), config.inc.php (1.25): This change
+	  allows multiple pop3 or imap server to be used for
+	  authentication.
 
 	  AUTHENTICATION has been updated to explain this and users are
 	  referred to AUTHENTICATION from config.inc.php if they wish to
@@ -431,7 +593,7 @@
 
 2004-04-05  John Beranek <jberanek@users.sourceforge.net>
 
-	* lang.el (1.1), style.inc (1.10, mrbs-1-2-pre3):
+	* lang.el (1.1), style.inc (1.10, mrbs-1-2, mrbs-1-2-pre3):
 	  * Added Greek translation, lang.el
 
 	  * Fixed global variable problem in style.inc, $vocab wasn't
@@ -599,14 +761,14 @@
 2004-01-15  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* config.inc.php (1.16), session_cookie.inc (1.5), session_php.inc
-	  (1.5), trailer.inc (1.10, mrbs-1-2-pre3): Changed absolute paths
-	  in anchor hrefs and redirection headers from absolute to
-	  relative.  This should fix the link failures seen by some users,
-	  in environments where a proxy makes the user-visible root
-	  different from the web-server-visible root.  In the unlikely case
-	  where some users have a very old browser not supporting relative
-	  HTTP relocation headers, then they can use the $url_base in
-	  config.inc.php as a workaround: In this case, put in this
+	  (1.5), trailer.inc (1.10, mrbs-1-2, mrbs-1-2-pre3): Changed
+	  absolute paths in anchor hrefs and redirection headers from
+	  absolute to relative.  This should fix the link failures seen by
+	  some users, in environments where a proxy makes the user-visible
+	  root different from the web-server-visible root.  In the unlikely
+	  case where some users have a very old browser not supporting
+	  relative HTTP relocation headers, then they can use the $url_base
+	  in config.inc.php as a workaround: In this case, put in this
 	  variable the full URL of the MRBS root, as seen by the users
 	  through the proxy.
 
@@ -780,7 +942,7 @@
 
 2003-11-21  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* config.inc.php (1.11), help.php (1.12, mrbs-1-2-pre3,
+	* config.inc.php (1.11), help.php (1.12, mrbs-1-2, mrbs-1-2-pre3,
 	  mrbs-1-2-pre2): Since we always forgot for each release to update
 	  mrbs version in help.php (this is not a file we open often), I
 	  moved the variable to config.inc.php.
@@ -800,13 +962,14 @@
 
 2003-11-19  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* auth_none.inc (1.1, mrbs-1-2-pre3, mrbs-1-2-pre2), config.inc.php
-	  (1.10), session_host.inc (1.1, mrbs-1-2-pre3, mrbs-1-2-pre2),
-	  session_ip.inc (1.1, mrbs-1-2-pre3, mrbs-1-2-pre2),
-	  session_nt.inc (1.1, mrbs-1-2-pre3, mrbs-1-2-pre2),
-	  session_omni.inc (1.1, mrbs-1-2-pre3, mrbs-1-2-pre2): Created an
-	  auth_none.inc authentication, which validates any user.  Moved
-	  session management code from the old auth_ip, auth_name, auth_nt,
+	* auth_none.inc (1.1, mrbs-1-2, mrbs-1-2-pre3, mrbs-1-2-pre2),
+	  config.inc.php (1.10), session_host.inc (1.1, mrbs-1-2,
+	  mrbs-1-2-pre3, mrbs-1-2-pre2), session_ip.inc (1.1, mrbs-1-2,
+	  mrbs-1-2-pre3, mrbs-1-2-pre2), session_nt.inc (1.1, mrbs-1-2,
+	  mrbs-1-2-pre3, mrbs-1-2-pre2), session_omni.inc (1.1, mrbs-1-2,
+	  mrbs-1-2-pre3, mrbs-1-2-pre2): Created an auth_none.inc
+	  authentication, which validates any user.  Moved session
+	  management code from the old auth_ip, auth_name, auth_nt,
 	  auth_omni to the new session_ip, session_host, session_nt,
 	  session_omni respectively.  Updated config.inc.php comments to
 	  reflect the possible choices for session name and authentication
@@ -879,16 +1042,17 @@
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* auth_config.inc (1.2, mrbs-1-2-pre3, mrbs-1-2-pre2): Function
-	  authValidateUser() must not call authGet() anymore. In case of
-	  failure it just returns 0 as specified in its header comment.
+	* auth_config.inc (1.2, mrbs-1-2, mrbs-1-2-pre3, mrbs-1-2-pre2):
+	  Function authValidateUser() must not call authGet() anymore. In
+	  case of failure it just returns 0 as specified in its header
+	  comment.
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* auth_ext.inc (1.6, mrbs-1-2-pre3), auth_imap.inc (1.5),
-	  auth_ldap.inc (1.5), auth_nis.inc (1.5, mrbs-1-2-pre3),
-	  auth_nw.inc (1.4, mrbs-1-2-pre3), auth_pop3.inc (1.5) (utags:
-	  mrbs-1-2-pre2): Set $auth['session']='http' if it is not
+	* auth_ext.inc (1.6, mrbs-1-2, mrbs-1-2-pre3), auth_imap.inc (1.5),
+	  auth_ldap.inc (1.5), auth_nis.inc (1.5, mrbs-1-2, mrbs-1-2-pre3),
+	  auth_nw.inc (1.4, mrbs-1-2, mrbs-1-2-pre3), auth_pop3.inc (1.5)
+	  (utags: mrbs-1-2-pre2): Set $auth['session']='http' if it is not
 	  specified. This allows to get the same behaviour as before
 	  without changing config.inc.php.  Moved routines authGet(),
 	  getUserName() and getUserPassword() to the new session_http.inc
@@ -903,10 +1067,10 @@
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* mrbs_auth.inc (1.8, mrbs-1-2-pre3, mrbs-1-2-pre2): Moved routines
-	  getAuthUserName() and getAuthUserPassword() to the new
-	  session_http.inc module.  Function getAuthorized() must not call
-	  authGet() anymore. In case of failure it just returns 0 as
+	* mrbs_auth.inc (1.8, mrbs-1-2, mrbs-1-2-pre3, mrbs-1-2-pre2):
+	  Moved routines getAuthUserName() and getAuthUserPassword() to the
+	  new session_http.inc module.	Function getAuthorized() must not
+	  call authGet() anymore. In case of failure it just returns 0 as
 	  specified in its header comment.
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
@@ -919,13 +1083,13 @@
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* session_http.inc (1.1, mrbs-1-2-pre3, mrbs-1-2-pre2): Get the
-	  user/password using the HTTP basic authentication.
+	* session_http.inc (1.1, mrbs-1-2, mrbs-1-2-pre3, mrbs-1-2-pre2):
+	  Get the user/password using the HTTP basic authentication.
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* grab_globals.inc.php (1.2, mrbs-1-2-pre3, mrbs-1-2-pre2): Added
-	  the setting of $HTTP_HOST.
+	* grab_globals.inc.php (1.2, mrbs-1-2, mrbs-1-2-pre3,
+	  mrbs-1-2-pre2): Added the setting of $HTTP_HOST.
 
 2003-11-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -1318,6 +1482,11 @@
 	  - Changed occurences of "<?=" to "<?php echo" which means we
 	  still  use the long tag form everywhere.
 
+2003-01-13  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* edit_entry.php (1.12): Added new $vocab in order to remove the
+	  last plain english strings in the code.
+
 2003-01-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* auth_omni.inc (1.1, Root-of-mrbs_MDB, mrbs-1-1): Authentification
@@ -1335,7 +1504,7 @@
 
 2003-01-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* site_faq_fr.html (1.2, mrbs-1-2-pre3, mrbs-1-2-pre2,
+	* site_faq_fr.html (1.2, mrbs-1-2, mrbs-1-2-pre3, mrbs-1-2-pre2,
 	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1): Minor translation
 	  corrections
 
@@ -1455,7 +1624,7 @@
 
 	* admin.php (1.6), auth_ext.inc (1.4, Root-of-mrbs_MDB, mrbs-1-1),
 	  config.inc (1.9), edit_area_room.php (1.5), edit_entry.php (1.8),
-	  escapeshellarg.inc (1.1, mrbs-1-2-pre3, mrbs-1-2-pre2,
+	  escapeshellarg.inc (1.1, mrbs-1-2, mrbs-1-2-pre3, mrbs-1-2-pre2,
 	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1), functions.inc (1.13),
 	  help.php (1.5), index.php (1.3), lang.cz (1.2), lang.de (1.10),
 	  lang.en (1.9), lang.es (1.11), lang.fr (1.10), lang.it (1.4),
@@ -1794,503 +1963,32 @@
 
 2001-02-25  L J Bayuk <lbayuk@users.sourceforge.net>
 
-	* .htaccess (1.2, mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1,
-	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1),
-	  add.php (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), admin.php
-	  (1.2, mrbs-1-0-final, mrbs-1-0-pre1), auth_ext.inc (1.2,
-	  mrbs-1-0-final, mrbs-1-0-pre1), auth_ip.inc (1.2, mrbs-1-0-final,
-	  mrbs-1-0-pre1), auth_ldap.inc (1.2, mrbs-1-0-pre1), auth_nw.inc
-	  (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), config.inc (1.2,
-	  mrbs-1-0-pre1), day.php (1.2), del.php (1.2, mrbs-1-0-final,
-	  mrbs-1-0-pre1), del_entry.php (1.2, mrbs-1-1, mrbs-1-0-final,
-	  mrbs-1-0-pre1), edit_area_room.php (1.2, mrbs-1-0-final,
-	  mrbs-1-0-pre1), edit_entry.php (1.2), edit_entry_handler.php
-	  (1.2, mrbs-1-0-pre1), functions.inc (1.2), help.php (1.2,
-	  mrbs-1-0-final, mrbs-1-0-pre1), index.php (1.2, mrbs-1-0-final,
-	  mrbs-1-0-pre1), lang.de (1.2), lang.en (1.2), lang.es (1.2),
-	  lang.fr (1.2), lang.ja (1.2), lang.nl (1.2), lang.sv (1.2),
-	  lang.zh-tw (1.2), mincals.inc (1.2), month.php (1.2), mrbs.css
-	  (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), mrbs_auth.inc
-	  (1.2, mrbs-1-0-final, mrbs-1-0-pre1), mrbs_sql.inc (1.2),
-	  mysql.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1), new.gif (1.2,
-	  mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB,
-	  mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), pgsql.inc (1.2,
-	  mrbs-1-0-final, mrbs-1-0-pre1), report.php (1.2), search.php
-	  (1.2), site_faq.html (1.2, mrbs-1-2-pre3, mrbs-1-2-pre2,
+	* .htaccess (1.2, mrbs-1-2, mrbs-1-2-pre3, mrbs-1-2-pre2,
 	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final,
-	  mrbs-1-0-pre1), style.inc (1.2, mrbs-1-0-pre1), trailer.inc (1.2,
-	  mrbs-1-0-pre1), view_entry.php (1.2, mrbs-1-0-pre1), week.php
-	  (1.2) (utags: mrbs-1-0-pre2): Merge branch mrbs-0-9-1xp into
-	  trunk
-
-2001-02-22  Daniel <nambit@users.sourceforge.net>
-
-	* lang.de (mrbs-0-9-1xp.3): new -xp tags
-
-2001-02-20  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* edit_entry.php (mrbs-0-9-1xp.3): Bug fix: be sure edit_type is
-	  defined
-
-2001-02-19  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* week.php (mrbs-0-9-1xp.4): Use lang[] strings for
-	  Next/This/Previous goto week link labels.  Cast min() and max()
-	  args to int if they come from the database - fix for PHP3.
-	  Implement fallback colors for entry types for non-CSS browsers.
-	  Move color key to new function, shared with day.php, including
-	  fallback colors.  Move "no rooms" message to language file.
-
-2001-02-19  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* trailer.inc (mrbs-0-9-1xp.3): Use lang[] strings for "View Week"
-	  and "View Month" labels in trailer.
-
-2001-02-19  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* report.php (mrbs-0-9-1xp.3): Change prompts and behavior of date
-	  range for report. Instead of reporting on meetings starting on or
-	  between the 2 dates, report on meetings with any booked hours
-	  between the two dates.
-
-	  Added new cross-tab summary report, new controls on form, moved
-	  report and summary processing to functions inside this script.
-
-2001-02-19  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* month.php (mrbs-0-9-1xp.3): Use lang[] strings for
-	  Next/This/Previous goto month link labels.  Cast min() and max()
-	  args to int if they come from the database - fix for PHP3.  Fix
-	  use of uninitialized variable d[]["id"] inside debug code.  Move
-	  "no rooms" message to language file.
-
-2001-02-19  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* lang.en (mrbs-0-9-1xp.4): New strings for trailer (viewweek
-	  viewmonth).  New strings for week view (weekbefore weekafter
-	  gotothisweek).  New strings for month view (monthbefore
-	  monthafter gotothismonth).  New string for day/month/week
-	  (no_rooms_for_area).	Changes string indexes and values for
-	  report date range.  New strings for report summary function
-	  (include report_only summary_only    report_and_summary
-	  summarize_by sum_by_descrip sum_by_creator entry_found
-	  entries_found summary_header total).
-
-2001-02-19  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* help.php (mrbs-0-9-1xp.3): Add PHP version display.
-
-2001-02-19  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* functions.inc (mrbs-0-9-1xp.3): Fix possible use of uninitialized
-	  $search_str in print_header().  New function tdcell($type) to
-	  implement entry type colors for non-CSS browsers.  New function
-	  show_colour_key(), used by week and day views.
-
-2001-02-19  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* day.php (mrbs-0-9-1xp.3): Implement fallback colors for entry
-	  types for non-CSS browsers.  Move color key to new function,
-	  shared with week.php, including fallback colors.  Move "no rooms"
-	  message to language file.  Bug fix: If no rooms in area,
-	  unmatched </table> was being output.
-
-2001-02-16  Daniel <nambit@users.sourceforge.net>
-
-	* lang.en, week.php (mrbs-0-9-1xp.[3,3]): move strings from
-	  week.php to lang.en
-
-2001-02-12  Daniel <nambit@users.sourceforge.net>
-
-	* add.php, admin.php, auth_ext.inc, auth_ip.inc, auth_ldap.inc,
-	  auth_nw.inc, config.inc, day.php, del.php, del_entry.php,
-	  edit_area_room.php, edit_entry.php, edit_entry_handler.php,
-	  functions.inc, help.php, index.php, lang.de, lang.en, lang.es,
-	  lang.fr, lang.ja, lang.nl, lang.sv, lang.zh-tw, mincals.inc,
-	  month.php, mrbs_auth.inc, mrbs_sql.inc, mysql.inc, pgsql.inc,
-	  report.php, search.php, site_faq.html, style.inc, trailer.inc,
-	  view_entry.php, week.php
-	  (mrbs-0-9-1xp.[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]):
-	  Added Id tag
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* auth_nw.inc (mrbs-0-9-1xp.1): New authentication plug-in for
-	  Netware; copied from auth_ext but writes the password over a pipe
-	  to nwauth rather than using the command line, since the command
-	  line is insecure and anyway doesn't work with this version of
-	  nwauth.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* week.php (mrbs-0-9-1xp.1): New script to implement weekly view of
-	  1 room.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* report.php (mrbs-0-9-1xp.1): New script to implement the Report
-	  function - select entries based on start date, area name match,
-	  room name match, brief description match, and full description
-	  match; report results in list format.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* pgsql.inc (mrbs-0-9-1xp.1): New module to implement database
-	  calls for PostgreSQL. See README.sqlapi.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* mysql.inc (mrbs-0-9-1xp.1): New module to implement database
-	  calls for MySQL. See README.sqlapi.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* month.php (mrbs-0-9-1xp.1): New script to implement monthly view
-	  of 1 room.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* view_entry.php (mrbs-0-9-1xp.1): Renamed to *.php from *.php3 per
-	  recommendations for PHP4.  Changes to support new database API
-	  for MySQL and PostgreSQL support.  SQL change, reword left join
-	  as predicate-based join.  Don't assume area 1 exists, and don't
-	  force area to 0.  Better SQL error handling; always present full
-	  HTML pages on errors.  Don't quote numeric values in SQL.
-	  Different but equivalent fix as 0.9pre2 for I18 time units and
-	  weekday names.  Enhancements to support up to 10 site-configured
-	  meeting types.  Enhancement to 0.0pre2 fix so week can start on
-	  any day.  HTML fixups: quote tag attributes where needed by HTML
-	  standard.
-
-	  Don't use stripslashes on database records; the extra backslashes
-	  this was meant to remove should not have been in there in the
-	  first place.
-
-	  Remove code which tried to intelligently report start and end
-	  date and time based on duration.  Sometimes it omitted the end
-	  date when it should have been there, for example a 4 hour meeting
-	  which crossed midnight.  Now, always report both date and time
-	  for both start and end.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* trailer.inc (mrbs-0-9-1xp.1): If $area is supplied to the script,
-	  pass it on to the day.php script, so that date changes using the
-	  footer do not switch to the first area.  Changed to display 14
-	  rather than 15 days (6 back rather than 7), which seems to fit on
-	  the screen better.  Separate the days with " | " rather than
-	  comma, and don't put one after the last date.  Moved end of HTML
-	  tags into this script instead of all those which include it.
-	  Added 2 new rows of links, to new weekly and monthly views.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* site_faq.html (mrbs-0-9-1xp.1): HTML fixups: quote tag attributes
-	  where needed by HTML standard.  Fix other HTML syntax errors as
-	  reported by weblint.	Rewrote authentication section, since not
-	  everyone will use LDAP.  Add full explanation of repeat types,
-	  including new "Monthly, corresponding day" which is not at all
-	  obvious.  Generalize text on Internal/External to include
-	  configurable types.  Remove "why are room columns different
-	  widths" because they no longer are.  Add PostgreSQL info to
-	  existing MySQL info.	Generalize platform text: might not be
-	  running on Linux.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* search.php (mrbs-0-9-1xp.1): Renamed to *.php from *.php3 per
-	  recommendations for PHP4.  Changes to support new database API
-	  for MySQL and PostgreSQL support.  Remove unneeded mrbs_auth.inc
-	  - this module does not authenticate.	Don't assume area 1 exists.
-	  Remove unused load_user_preferences().  Use new
-	  slashes/unslashes calls to fix escaping independent of
-	  magic_quoting.  When search_str is used in next/previous links,
-	  use URL encoding.  Do HTML escaping on Name and Description in
-	  results.  Removed extra database connection calls.  To just get
-	  the match count, use SQL COUNT(*); don't need all the rows and
-	  don't need to sort them.  HTML syntax fixes (weblint).  Let
-	  trailer.inc output the end HTML tags.  Quote strings used as
-	  array subscripts, except within quoted strings.  Remove bgcolor
-	  from table headers so it is readable without CSS (John Beranek).
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* mrbs_sql.inc (mrbs-0-9-1xp.1): Added $repignore argument to
-	  mrbsCheckFree, for the Repeat ID to ignore if checking a
-	  replacement for a series. This avoids mrbsCheckFree from having
-	  to look up the repeat id for each entry it checks, when it is
-	  asked to check each entry in a proposed series, saving a lot of
-	  database queries.
-
-	  Optimize query predicate for checking for overlap, from:
-	  ($starttime <= start_time AND $endtime   > start_time)     OR
-	  ($endtime   >= end_time   AND $starttime < end_time  )     OR
-	  ($starttime >= start_time AND $endtime  <= end_time  ) to:
-	  start_time < $endtime AND end_time > $starttime This can be
-	  proven equivalent except for the regressive case where all four
-	  values are equal.
-
-	  Changes to support new database API for MySQL and PostgreSQL
-	  support.  HTML fixups: quote tag attributes where needed by HTML
-	  standard.  Use new slashes/unslashes calls to fix escaping
-	  independent of magic_quoting.  Don't quote numeric values in SQL.
-	   New same_day_next_month() for new "monthly, corresponding day"
-	  repeat.  Added new repeat type 5 for monthly repeat on same
-	  weekday and week number.  Fix for weekly repeat starting Sat
-	  (equivalent but different fix was in 0.9pre2).
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* mrbs_auth.inc (mrbs-0-9-1xp.1): Quote HTML tag attributes where
-	  needed by HTML standard.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* mrbs.css (mrbs-0-9-1xp.1): Strip CRs (fromdos).  Minor syntax
-	  fixes (unneeded ;'s removed) Added new styles for table cells
-	  with alternate justification to make better-looking forms: TD.CR
-	  TD.CL TD.BR TD.BL TD.TR TD.TL for Center/Bottom/Top+Left/Right.
-	  Added new styles for new entry types: TD.A through TD.J for types
-	  A-J, (I and E were there before), with new colors chosen from Web
-	  Palette.  Added generic font family "sans-serif" as alternative
-	  to Arial, Verdana.  New styles for monthly view; because styles
-	  seem to override <big> etc.?
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* mincals.inc (mrbs-0-9-1xp.1): Changes for other files being
-	  renamed *.php3 to *.php.  Generalize $weekstarts (added in
-	  0.9pre2) to allow week to start with any day.  Fix invalid HTML
-	  with <font> not closed on current day's number.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* lang.sv, style.inc (mrbs-0-9-1xp.[1,1]): Moved to web/
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* lang.es (mrbs-0-9-1xp.1): Quote strings used as array subscripts,
-	  except within quoted strings.  Comments changed per renaming from
-	  *.php3 to *.php.  Fix typo "lans" => "lang".	Fix typos: missing
-	  quotes on a few of the value strings, e.g. rep_type_1.  Strip CRs
-	  (fromdos).
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* lang.en (mrbs-0-9-1xp.1): Quote strings used as array subscripts,
-	  except within quoted strings.  Comments changed per renaming from
-	  *.php3 to *.php.  New entry: rep_type_5 for new repeat type
-	  "Monthly, corresponding day".  New entries for new Report
-	  function.  Strip CRs (fromdos).
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* lang.de, lang.fr, lang.ja, lang.nl, lang.zh-tw
-	  (mrbs-0-9-1xp.[1,1,1,1,1]): Quote strings used as array
-	  subscripts, except within quoted strings.  Comments changed per
-	  renaming from *.php3 to *.php.  Fix typo "lans" => "lang".  Strip
-	  CRs (fromdos).
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* index.php (mrbs-0-9-1xp.1): Account for files renamed from *.php3
-	  to *.php.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* help.php (mrbs-0-9-1xp.1): Renamed to *.php from *.php3 per
-	  recommendations for PHP4.  Changes to support new database API
-	  for MySQL and PostgreSQL support.  Remove unused
-	  load_user_preferences().  New string variable for MRBS version,
-	  for display. No, it doesn't belong in config.inc because that has
-	  site customization.  Don't assume area 1 exists.  Add new "About"
-	  section to report MRBS version, database system and version, and
-	  host system type.  Remove non-standard "subject=" param from
-	  mailto: URL.	Trailer now does HTML end tags.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* functions.inc (mrbs-0-9-1xp.1): Remove include of config.inc,
-	  since all main scripts already include it.  Account for file
-	  renames from *.php3 to *.php.  In <TD> valign=center is not
-	  legal; removed.  HTML fixups: quote tag attributes where needed
-	  by HTML standard.  Fix other HTML syntax errors as reported by
-	  weblint.  In print_header:   Style sheet must go inside HTML
-	  head.    Don't pass area ID along if it wasn't supplied in the
-	  first place.	  Add "Report" button.	Removed unused functions:
-	  get_sunday_before print_date_entries display_unapproved_events
-	  display_time mysql_date_to_str hextoint decode_string
-	  encode_string   load_user_preferences get_web_browser In
-	  toTimeString, internationalize time units.  Fix to day_name()
-	  added at 0.9pre2 - year was missing.	New function fatal_error()
-	  to report errors in a properly-formed HTML document; this is used
-	  only with unexpected errors like bad DBMS returns.  New functions
-	  slashes() and unslashes(); these are wrappers for addslashes()
-	  and stripslashes() which account for PHP magic quoting config.
-	  New function get_default_area because there might not be an area
-	  with ID 1.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* edit_entry_handler.php (mrbs-0-9-1xp.1): Renamed to *.php from
-	  *.php3 per recommendations for PHP4.	Changes to support new
-	  database API for MySQL and PostgreSQL support.  If area isn't
-	  defined; don't use 0, get a real area ID.  Quote strings used as
-	  array subscripts, except within quoted strings.  Round up
-	  duration to next multiple of $resolution, not 30, minutes.  Don't
-	  allow 0-minute bookings; make them $resolution minutes.  Recode
-	  building repeat day list to avoid PHP undefined variable
-	  warnings.  HTML fixups: quote tag attributes where needed by HTML
-	  standard.  Trailer now outputs end HTML tags, so remove them.
-
-	  Supply repeat_id to mrbsCheckFree so it doesn't have to do a
-	  query for each requested slot in the series.
-
-	  Acquire and hold a mutex database lock while checking that the
-	  requested slots are free and then booking them, to prevent
-	  double-booking from races.
-
-	  Always set "$all" flag to mrbsDelEntry() to have it delete
-	  modified entries in the series too. This fixes one of the
-	  "duplicate entry after modification" bugs.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* edit_entry.php (mrbs-0-9-1xp.1): Renamed to *.php from *.php3 per
-	  recommendations for PHP4.  Changes to support new database API
-	  for MySQL and PostgreSQL support.  Don't assume area 1 exists,
-	  and don't force area to 0.  Don't use stripslashes on database
-	  records.  Better SQL error handling; always present full HTML
-	  pages on errors.  Account for toTimeString now returning
-	  dur_units already I18N.  Improve form appearance by justifying
-	  labels right, entry boxes left.  Enhancements to support up to 10
-	  site-configured meeting types.  For weekly repeat, honor
-	  $weekstarts and display I18N day names (2 places).  Trailer now
-	  outputs end HTML tags, so remove them.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* edit_area_room.php (mrbs-0-9-1xp.1): Renamed to *.php from *.php3
-	  per recommendations for PHP4.  Changes to support new database
-	  API for MySQL and PostgreSQL support.  Don't quote numeric values
-	  in SQL.  Remove unused load_user_preferences().  Use isset() and
-	  empty() to avoid PHP info warnings on undefined vars.  If
-	  capacity is missing, use zero, to avoid an SQL syntax error.	Use
-	  new slashes/unslashes calls to fix escaping independent of
-	  magic_quoting.  Don't assume area 1 exists.  HTML fixups: quote
-	  tag attributes where needed by HTML standard.  Fix other HTML
-	  syntax errors as reported by weblint.  Use htmlspecialchars to
-	  properly handle HTML special chars in names and descriptions.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* del_entry.php (mrbs-0-9-1xp.1): Renamed to *.php from *.php3 per
-	  recommendations for PHP4.  Call mrbsDelEntry inside an SQL
-	  transaction (if the database supports it) to improve PostgreSQL
-	  performance when deleting a series.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* del.php (mrbs-0-9-1xp.1): Renamed to *.php from *.php3 per
-	  recommendations for PHP4.  Changes to support new database API
-	  for MySQL and PostgreSQL support.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* day.php (mrbs-0-9-1xp.1): Renamed to *.php from *.php3 per
-	  recommendations for PHP4.  Remove unused load_user_preferences().
-	   Changes to support new database API for MySQL and PostgreSQL
-	  support.  Better SQL error handling; always present full HTML
-	  pages on errors.  Don't assume area 1 exists; get a real area ID
-	  if needed.  Order area names alphabetically in the link list.
-	  Quote strings used as array subscripts, except within quoted
-	  strings.  Do HTML escaping of area names in link list to allow
-	  special chars.  Do HTML escaping of room names in table headers.
-	  HTML fixups: quote tag attributes where needed by HTML standard.
-	  Fix other HTML syntax errors as reported by weblint.	Don't use
-	  stripslashes on records read from database.  Don't fill in slots
-	  in the map before start of day or after end of day.  Make room
-	  columns equal width.	Don't just append timetohighlight to
-	  REQUEST_URI or it gets longer each time.  Add width & height to
-	  new.gif icon, works better with images off (John Beranek).  Added
-	  current date header above calendar (John Beranek).
-
-	  After the first slot, put a double quote (") ditto mark in all
-	  cells below, where the entry continues, to help if colors are off
-	  or invisible.
-
-	  Use new config variable $eveningends_minutes to calculate end of
-	  day; this also allows full 24-hour days with < 1 hr resolution.
-
-	  Move entry type color key to the bottom. Expand it to allow for
-	  up to 10 types, putting no more than 5 on one line.
-
-	  Rewrote the main SQL query (note: baseline was 0.9pre1, not
-	  0.9pre2).  Don't ask for fields we aren't going to use.  Replace
-	  left join with better-supported predicate-based join.  Rewrote
-	  the predicate to select entries based on date range, from:   <
-	  start_time BETWEEN $am7	AND $pm7 OR   <  end_time   BETWEEN
-	  $am7	     AND $pm7 OR   <  $am7	 BETWEEN start_time AND
-	  end_time to:	 >  start_time <= $pm7 AND end_time > $am7 which is
-	  equivalent but faster.
-
-	  Trailer now outputs end HTML tags, so remove them.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* auth_ip.inc (mrbs-0-9-1xp.1): Moved to web/
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* admin.php (mrbs-0-9-1xp.1): Renamed to *.php from *.php3 per
-	  recommendations for PHP4.  Changes to support new database API
-	  for MySQL and PostgreSQL support.  Remove unused
-	  load_user_preferences().  Get area name from database if an area
-	  is selected but name isn't know.  Do HTML quoting on area names,
-	  room names, room description.  Better SQL error handling; always
-	  present full HTML pages on errors.  Use new unslashes call to fix
-	  escaping independent of magic_quoting.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* add.php (mrbs-0-9-1xp.1): Renamed to *.php from *.php3 per
-	  recommendations for PHP4.  Changes to support new database API
-	  for MySQL and PostgreSQL support.  Use new slashes/unslashes
-	  calls to fix escaping independent of magic_quoting.  If capacity
-	  is missing, use zero, to avoid an SQL syntax error.  Better SQL
-	  error handling; always present full HTML pages on errors.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* config.inc (mrbs-0-9-1xp.1): Reorganize into logical sections,
-	  marked out my comment blocks.  Renamed database parameters from
-	  mysql_{host,login,password,database} to
-	  db_{host,login,password,database} to generalize, since they are
-	  not MySQL specific.  Added optional db_nopersist, for persistent
-	  connections.	Removed unneeded block of code to check range on
-	  morningstarts/eveningends.  Added eveningends_minutes with
-	  comments, needed for full 24 hour view or to end with a slot
-	  which does not start at an exact hour.  Changed comments on
-	  $weekstarts; it now works for any day 0-6.  Quote strings used as
-	  array subscripts, except within quoted strings.  Added
-	  default_report_days for default report function date range.
-	  Changed default authentication parameters so only localhost is
-	  Administrator.  Comment out inactive LDAP parameters.  Bug fix
-	  taking first language from HTTP_ACCEPT_LANGUAGE if only had 1.
-	  Add comments and 10 entry types A-J with only E and I available
-	  by default.  Be sure PHP magic_quotes_runtime isn't on.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* auth_ext.inc (mrbs-0-9-1xp.1): Use escapeshellcmd() on username
-	  and password to prevent exec fraud.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* auth_ldap.inc (mrbs-0-9-1xp.1): Quote strings used as array
-	  subscripts, except within quoted strings.
-
-2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
-
-	* .htaccess, new.gif (mrbs-0-9-1xp.[1,1]): Moved to web/
+	  mrbs-1-0-pre1), add.php (1.2, mrbs-1-1, mrbs-1-0-final,
+	  mrbs-1-0-pre1), admin.php (1.2, mrbs-1-0-final, mrbs-1-0-pre1),
+	  auth_ext.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1), auth_ip.inc
+	  (1.2, mrbs-1-0-final, mrbs-1-0-pre1), auth_ldap.inc (1.2,
+	  mrbs-1-0-pre1), auth_nw.inc (1.2, mrbs-1-1, mrbs-1-0-final,
+	  mrbs-1-0-pre1), config.inc (1.2, mrbs-1-0-pre1), day.php (1.2),
+	  del.php (1.2, mrbs-1-0-final, mrbs-1-0-pre1), del_entry.php (1.2,
+	  mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), edit_area_room.php
+	  (1.2, mrbs-1-0-final, mrbs-1-0-pre1), edit_entry.php (1.2),
+	  edit_entry_handler.php (1.2, mrbs-1-0-pre1), functions.inc (1.2),
+	  help.php (1.2, mrbs-1-0-final, mrbs-1-0-pre1), index.php (1.2,
+	  mrbs-1-0-final, mrbs-1-0-pre1), lang.de (1.2), lang.en (1.2),
+	  lang.es (1.2), lang.fr (1.2), lang.ja (1.2), lang.nl (1.2),
+	  lang.sv (1.2), lang.zh-tw (1.2), mincals.inc (1.2), month.php
+	  (1.2), mrbs.css (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1),
+	  mrbs_auth.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1), mrbs_sql.inc
+	  (1.2), mysql.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1), new.gif
+	  (1.2, mrbs-1-2, mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1),
+	  pgsql.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1), report.php (1.2),
+	  search.php (1.2), site_faq.html (1.2, mrbs-1-2, mrbs-1-2-pre3,
+	  mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1), style.inc (1.2, mrbs-1-0-pre1),
+	  trailer.inc (1.2, mrbs-1-0-pre1), view_entry.php (1.2,
+	  mrbs-1-0-pre1), week.php (1.2) (utags: mrbs-1-0-pre2): Merge
+	  branch mrbs-0-9-1xp into trunk
 
