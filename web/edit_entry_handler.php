@@ -106,10 +106,12 @@ else
 if (!sql_mutex_lock('mrbs_entry'))
 	fatal_error(1, "Failed to acquire exclusive database access");
 
-# Check for any schedule conflicts
+# Check for any schedule conflicts in each room we're going to try and
+# book in
 $err = "";
-if ($rep_type != 0 && !empty($reps))
-{
+foreach ( $rooms as $room_id ) {
+  if ($rep_type != 0 && !empty($reps))
+  {
 	if(count($reps) < $max_rep_entrys)
 	{
 		$diff = $endtime - $starttime;
@@ -124,33 +126,37 @@ if ($rep_type != 0 && !empty($reps))
 	}
 	else
 	{
-		$err        = $vocab["too_may_entrys"] . "<P>";
-		$hide_title = 1;
+		$err        .= $vocab["too_may_entrys"] . "<P>";
+		$hide_title  = 1;
 	}
-}
-else
-	$err = mrbsCheckFree($room_id, $starttime, $endtime-1, $ignore_id, 0);
+  }
+  else
+	$err .= mrbsCheckFree($room_id, $starttime, $endtime-1, $ignore_id, 0);
+
+} # end foreach rooms
 
 if(empty($err))
 {
-	if($edit_type == "series")
-	{
-		mrbsCreateRepeatingEntrys($starttime, $endtime,   $rep_type, $rep_enddate, $rep_opt, 
-		                          $room_id,   $create_by, $name,     $type,        $description, $rep_num_weeks);
-	}
-	else
-	{
-		# Mark changed entry in a series with entry_type 2:
-		if ($repeat_id > 0)
-			$entry_type = 2;
+	foreach ( $rooms as $room_id ) {
+		if($edit_type == "series")
+		{
+			mrbsCreateRepeatingEntrys($starttime, $endtime,   $rep_type, $rep_enddate, $rep_opt, 
+			                          $room_id,   $create_by, $name,     $type,        $description, $rep_num_weeks);
+		}
 		else
-			$entry_type = 0;
-		
-		# Create the entry:
-		mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $room_id,
-		                         $create_by, $name, $type, $description);
-	}
-	
+		{
+			# Mark changed entry in a series with entry_type 2:
+			if ($repeat_id > 0)
+				$entry_type = 2;
+			else
+				$entry_type = 0;
+			
+			# Create the entry:
+			mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $room_id,
+			                         $create_by, $name, $type, $description);
+		}
+	} # end foreach $rooms
+
 	# Delete the original entry
 	if(isset($id))
 		mrbsDelEntry(getUserName(), $id, ($edit_type == "series"), 1);

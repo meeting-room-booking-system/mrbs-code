@@ -1,3 +1,6 @@
+CVS (Fri May 10 16:48:52 BST 2002)
+    Allow meetings to be scheduled in multiple rooms at the same time
+
 CVS (Thu May  9 13:36:44 BST 2002)
     Change every $lang to $vocab to stop conflicts with other software
     that's used $lang (lots of people have seen "N" appear everywhere

@@ -223,6 +223,24 @@ while (list(,$unit) = each($units))
     <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes"> <? echo $vocab["all_day"]; ?>
 </TD></TR>
 
+
+<tr><td class=CR><b><? echo $vocab["rooms"] ?></b></td>
+  <td class=CL valign=top><table><tr><td><select name="rooms[]" multiple>
+  <? 
+	$sql = "select id, room_name from mrbs_room where area_id=$area order by room_name";
+   	$res = sql_query($sql);
+   	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+   	{
+		$selected = "";
+		if ($row[0] == $room) {
+			$selected = "SELECTED";
+		}
+		echo "<option $selected value=\"".$row[0]."\">".$row[1];
+   	}
+  ?>
+  </select></td><td><? echo $vocab["ctrl_click"] ?></td></tr></table>
+    </td></tr>
+
 <TR><TD CLASS=CR><B><?echo $vocab["type"]?></B></TD>
   <TD CLASS=CL><SELECT NAME="type">
 <?
@@ -320,7 +338,7 @@ else
 </TABLE>
 
 <INPUT TYPE=HIDDEN NAME="returl"    VALUE="<? echo $HTTP_REFERER?>">
-<INPUT TYPE=HIDDEN NAME="room_id"   VALUE="<? echo $room_id?>">
+<!--INPUT TYPE=HIDDEN NAME="room_id"   VALUE="<? echo $room_id?>"-->
 <INPUT TYPE=HIDDEN NAME="create_by" VALUE="<? echo $create_by?>">
 <INPUT TYPE=HIDDEN NAME="rep_id"    VALUE="<? echo $rep_id?>">
 <INPUT TYPE=HIDDEN NAME="edit_type" VALUE="<? echo $edit_type?>">
