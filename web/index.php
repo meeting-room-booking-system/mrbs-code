@@ -3,6 +3,7 @@
 # $Id$
 
 #Index is just a stub to redirect to the appropriate day view
+require_once "grab_globals.inc.php";
 include("config.inc.php");
 
 $day   = date("d");
