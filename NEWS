@@ -7,7 +7,7 @@
 [============================]
 
 -------------------------------------------------------------------------------
-Version 1.2-pre3 ():
+Version 1.2-pre3 (Fri May 14 04:00:00 GMT 2004):
 
 [+] Added long awaited "periods" support. Calendar can displays 'periods'
       instead of classic time of the day.
