@@ -55,7 +55,7 @@ Then you can delete mdb.tgz.
 
 Note 1: Windows users, make sure mdb.tgz extract in the *same* directory and
 		not in a sub directory.
-Note 2: You can use an alternate installation method for the databse wrapper
+Note 2: You can use an alternate installation method for the database wrapper
 	   using the PEAR installer. See PEAR file for more on this.
 
 If you are upgrading from a previous version of MRBS, you should save your
@@ -78,6 +78,15 @@ skip to the Application Setup section.
 
 Database and tables creation
 ----------------------------
+
+DATABASE ACCOUNT GENERAL NOTE
+
+Most relational databases need an account to connect to. 
+    - install/upgrade : you need to supply an account than can create tables
+      and databases, often known as 'superuser'. If you can't use one, then 
+      ask you administrator to run the installation script with such account
+    - production : you need an account that only have rights on the mrbs 
+      database
 
 For a new install:
 
@@ -107,12 +116,16 @@ $db_login/$db_password : here you need to supply a username that has enough
 rights to create a database. See you DBMS documentation.
 If the DBMS driver does not support database creation or if this operation
 requires special database administrator permissions that may not be available
-to you, you have to set $db_create flag to FALSE (see below). In this case,
-supply a username that have enough rights to create tables on the mrbs
-database.
+to you, you have to set $db_create flag to 0 (see below). In this case,
+ask your administrator to create an account that have enough rights to create 
+tables on the mrbs database.
 
 $db_create : if you have to use an existing database, or need to ask someone
-else to create the database, you should set this flag to FALSE.
+else to create the database, you should set this flag to 0.
+
+    DATABASE ISSUES
+    - Oracle. Currently Oracle driver does not support Database creation, so
+      you have to set this flag to 0.
 
 $db_protocol :  default 'tcp'. With PostgreSQL, you can use 'unix' to
 use Unix Domain Sockets to connect to the database server on the same machine.
@@ -125,8 +138,10 @@ $ php mrbs_create.php
 This will create the database and the tables for you. Alternately you can copy
 mrbs_create.php and mrbs.schema.xml in the same web server directory as mrbs
 and run the command from your browser.
+
 Note: in either case, mrbs_create.php and mrbs.schema.xml must be in the 
       same directory.
+
 If you get an error message "Error: Could not copy the new database 
 definition file to the current file" or something like that, check that the 
 account running php (cgi) or your web server have sufficient rights to write
@@ -138,7 +153,7 @@ We advise to keep this file somewhere. In the case we may need to update the
 schema of the database (ie. change the name of one table, add a field), all
 we need to do after editing the xml schema file is executing the same script
 we used to install the database. Provided the script find the previously 
-installed schema file (mrbs.schema.xml.before), it will attemps to install the
+installed schema file (mrbs.schema.xml.before), it will attempts to install the
 requested changes without affecting the data that was stored in the database
 after the database was installed for the first time.
 
@@ -162,9 +177,6 @@ $ php sample-data.php
 
 or open it with your browser.
 
-WARNING:
-This script is only for use in a newly initialized database! (It will not
-work properly in a database where the ID counters are greater than 0.)
 Also see the description of testdata.php in the README file.
 
 

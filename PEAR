@@ -26,10 +26,15 @@ You have not, but you may, if :
 - You would like to easily maintain your classes up to date, upgrade only once
   for all your scripts,
 
+Why should I NOT use PEAR ?
+-----------------------------------------------------------
+
 You may not use PEAR if :
 
 - you don't care,
 - you can't use it (you have no control over the server),
+- you may experience incompatibilities / bugs using PEAR packages with
+  different version (either newer or older) than the ones provided with MRBS.
 
 Introduction
 ------------
