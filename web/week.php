@@ -119,7 +119,7 @@ $td = date("d",$i);
 echo "<table width=\"100%\"><tr><td>
   <a href=\"week.php?year=$yy&month=$ym&day=$yd&area=$area&room=$room\">
   &lt;&lt; $lang[weekbefore]</a></td>
-  <td align=center><a href=\"week.php?area=$area&room=$room\">$lang[thisweek]</a></td>
+  <td align=center><a href=\"week.php?area=$area&room=$room\">$lang[gotothisweek]</a></td>
   <td align=right><a href=\"week.php?year=$ty&month=$tm&day=$td&area=$area&room=$room\">
   $lang[weekafter] &gt;&gt;</a></td></tr></table>";
 
@@ -159,9 +159,10 @@ else for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	# Fill in slots for the meeting. Start at the meeting start time or
 	# week start (which ever is later), and end one slot before the meeting
 	# end time or week end (which ever is earlier).
+	# Note: int casts on database rows for min and max is needed for PHP3.
 
-	$t = max($row[0], $week_start);
-	$end_t = min($row[1], $week_end+1);
+	$t = max((int)$row[0], $week_start);
+	$end_t = min((int)$row[1], $week_end+1);
 	$weekday = (date("w", $t) + 7 - $weekstarts) % 7;
 	$prev_weekday = -1; # Invalid value to force initial label.
 	$slot = ($t - $week_midnight) % 86400 / $resolution;
@@ -241,7 +242,9 @@ $t = $am7;
 for ($slot = $first_slot; $slot <= $last_slot; $slot++)
 {
 	# Show the time linked to the URL for highlighting that time:
-	echo "<tr><td class=red><a href=\"$hilite_url=$t\">" . date("H:i",$t) . "</a></td>";
+	echo "<tr>";
+	tdcell("red");
+	echo "<a href=\"$hilite_url=$t\">" . date("H:i",$t) . "</a></td>";
 
 	$wt = $t;
 
@@ -266,7 +269,7 @@ for ($slot = $first_slot; $slot <= $last_slot; $slot++)
 		$wyear = date("Y", $wt);
 		if(!isset($d[$weekday][$slot]["color"]))
 		{
-			echo "<td class=$empty_color>";
+			tdcell($empty_color);
 			$hour = date("H",$wt);
 			$minute  = date("i",$wt);
 			echo "<center><a href=\"edit_entry.php?room=$room"
@@ -274,7 +277,7 @@ for ($slot = $first_slot; $slot <= $last_slot; $slot++)
 				. "&day=$wday\"><img src=new.gif width=10 height=10 border=0></a></center>";
 
 		} else {
-			echo "<td class=" . $d[$weekday][$slot]["color"] . ">";
+			tdcell($d[$weekday][$slot]["color"]);
 			if (!isset($d[$weekday][$slot]["id"])) {
 				echo "&nbsp;\"&nbsp;";
 			} else {
@@ -291,22 +294,7 @@ for ($slot = $first_slot; $slot <= $last_slot; $slot++)
 }
 echo "</table>";
 
-#Show colour key
-echo "<table border=0><tr>\n";
-$nct = 0;
-for ($ct = "A"; $ct <= "J"; $ct++)
-{
-	if (!empty($typel[$ct]))
-	{
-		if (++$nct > 5)
-		{
-			$nct = 0;
-			echo "</tr><tr>";
-		}
-		echo "<td class=$ct>$typel[$ct]</td>\n";
-	}
-}
-echo "</tr></table>\n";
+show_colour_key();
 
 include "trailer.inc"; 
 ?>
