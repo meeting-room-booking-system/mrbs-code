@@ -1,3 +1,13 @@
+2004-05-20  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.37): Updating mrbs version to next 1.2.
+
+2004-05-19  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* functions_mail.inc (1.9): - Bug fix: emails are not RFC2045
+	  compliant. Mail body can contain non us-ascii characters, then
+	  header should have MIME-Version and Content-Type headers.
+
 2004-05-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* config.inc.php (1.36, mrbs-1-2-pre3): + If MAIL_DOMAIN is used

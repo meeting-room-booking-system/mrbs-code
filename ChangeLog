@@ -1,7 +1,11 @@
 2004-05-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* AUTHENTICATION (1.27), INSTALL (1.35), NEWS (1.5) (utags:
-	  mrbs-1-2-pre3): Dox fix: Documentation update
+	* NEWS (1.6, mrbs-1-2-pre3): Doc fix.
+
+2004-05-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* AUTHENTICATION (1.27, mrbs-1-2-pre3), INSTALL (1.35,
+	  mrbs-1-2-pre3), NEWS (1.5): Dox fix: Documentation update
 
 2004-05-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
