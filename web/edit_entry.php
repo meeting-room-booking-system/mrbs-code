@@ -296,9 +296,9 @@ htmlspecialchars ( $description ); ?></TEXTAREA></TD></TR>
 if (!$twentyfourhour_format)
 {
   $checked = ($start_hour < 12) ? "checked" : "";
-  echo "<INPUT NAME=\"ampm\" type=\"radio\" value=\"am\" $checked>".utf8_date("a",mktime(1,0,0,1,1,1970));
+  echo "<INPUT NAME=\"ampm\" type=\"radio\" value=\"am\" $checked>".utf8_date("a",mktime(1,0,0,1,1,2000));
   $checked = ($start_hour >= 12) ? "checked" : "";
-  echo "<INPUT NAME=\"ampm\" type=\"radio\" value=\"pm\" $checked>".utf8_date("a",mktime(13,0,0,1,1,1970));
+  echo "<INPUT NAME=\"ampm\" type=\"radio\" value=\"pm\" $checked>".utf8_date("a",mktime(13,0,0,1,1,2000));
 }
 ?>
 </TD></TR>
