@@ -168,6 +168,7 @@ $vocab["postbrowserlang"]    = ".";
 $vocab["addroom"]            = "Raum hinzufügen";
 $vocab["capacity"]           = "Kapazität";
 $vocab["norooms"]            = "Keine Räume vorhanden.";
+$vocab["administration"]     = "Administration";
 
 # Used in edit_area_room.php
 $vocab["editarea"]           = "Bereich bearbeiten";
@@ -187,7 +188,6 @@ $vocab["sure"]               = "Sind Sie sicher?";
 $vocab["YES"]                = "JA";
 $vocab["NO"]                 = "NEIN";
 $vocab["delarea"]            = "You must delete all rooms in this area before you can delete it<p>";
-$vocab["backadmin"]          = "Go back to Admin page";
 
 # Used in help.php
 $vocab["about_mrbs"]         = "About MRBS";

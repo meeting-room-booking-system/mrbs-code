@@ -5,7 +5,7 @@
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is a French file.
 #
-# Translations provided by: Thierry Wehr
+# Translations provided by: Thierry Wehr, thierry_bo
 #
 # This file is PHP code. Treat it as such.
 
@@ -168,6 +168,7 @@ $vocab["postbrowserlang"]    = ".";
 $vocab["addroom"]            = "Ajouter une salle";
 $vocab["capacity"]           = "Maximum de personnes";
 $vocab["norooms"]            = "Aucune salle n'est créée pour cette zone.";
+$vocab["administration"]     = "Administration";
 
 # Used in edit_area_room.php
 $vocab["editarea"]           = "Modifier la zone";
@@ -187,7 +188,6 @@ $vocab["sure"]               = "Etes-vous certains ?";
 $vocab["YES"]                = "OUI";
 $vocab["NO"]                 = "NON";
 $vocab["delarea"]            = "Vous devez supprimer toutes les salles de cette zone avant de pouvoir la supprimer<p>";
-$vocab["backadmin"]          = "Go back to Admin page";
 
 # Used in help.php
 $vocab["about_mrbs"]         = "A propos de MRBS (Meeting Room Booking System)";

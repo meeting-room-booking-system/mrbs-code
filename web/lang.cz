@@ -168,6 +168,7 @@ $vocab["postbrowserlang"]    = "Jazkyk.";
 $vocab["addroom"]            = "Pridej mistnost";
 $vocab["capacity"]           = "Kapacita";
 $vocab["norooms"]            = "Zadna mistnost.";
+$vocab["administration"]     = "Administration";
 
 # Used in edit_area_room.php
 $vocab["editarea"]           = "Editovat oblast";
@@ -187,7 +188,6 @@ $vocab["sure"]               = "Jsi si jisty?";
 $vocab["YES"]                = "ANO";
 $vocab["NO"]                 = "NE";
 $vocab["delarea"]            = "You must delete all rooms in this area before you can delete it<p>";
-$vocab["backadmin"]          = "Go back to Admin page";
 
 # Used in help.php
 $vocab["about_mrbs"]         = "About MRBS";

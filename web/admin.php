@@ -42,7 +42,7 @@ if (isset($area))
 }
 ?>
 
-<h2>Administration</h2>
+<h2><?php echo $vocab['administration'] ?></h2>
 
 <table border=1>
 <tr>
