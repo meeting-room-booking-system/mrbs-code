@@ -70,8 +70,7 @@ if(!empty($room)) {
     {
         fatal_error(0, get_vocab("error_room") . $room . get_vocab("not_found"));
     }
-    $row = $mdb->fetchInto($res, MDB_FETCHMODE_ASSOC);
-    $mdb->freeResult($res);
+    $row = $mdb->fetchRow($res, MDB_FETCHMODE_ASSOC);
 ?>
 <h3 ALIGN=CENTER><?php echo get_vocab("editroom") ?></h3>
 <form action="edit_area_room.php" method="post">
@@ -115,8 +114,7 @@ if(!empty($area))
     {
         fatal_error(0, get_vocab("error_area") . $area . get_vocab("not_found"));
     }
-    $row = $mdb->fetchInto($res, MDB_FETCHMODE_ASSOC);
-    $mdb->freeResult($res);
+    $row = $mdb->fetchRow($res, MDB_FETCHMODE_ASSOC);
 ?>
 <h3 ALIGN=CENTER><?php echo get_vocab("editarea") ?></h3>
 <form action="edit_area_room.php" method="post">
