@@ -13,6 +13,9 @@ global $unicode_encoding;
    }
    else
    {
+     # We use $vocab directly instead of get_vocab() because we have
+     # no requirement to convert the vocab text, we just output
+     # the charset
      echo $vocab["charset"];
    }
 ?>">
