@@ -27,7 +27,7 @@
 // ("mysql"=MySQL,...) and valid strings.
 $dbsys = "mysql";
 
-// Hostname of database server  :
+// Hostname of database server (SID for Oracle) :
 $db_host = "localhost";
 
 // Port of database server. Leave empty to use default for the database
@@ -56,6 +56,17 @@ $db_create = 1;
 $db_protocol = "tcp";
 
 /**************************
+* DBMS specific options
+***************************/
+
+//****ORACLE*****
+
+// Home directory path when Oracle is installed if it is running in the local machine.
+// Default value: value of the environment variable ORACLE_HOME
+$oci8_home = "";
+
+
+/**************************
 * End of database settings
 ***************************/
 
@@ -65,12 +76,12 @@ MDB::loadFile("Manager");
 $schema_file = "mrbs.schema.xml";
 $variables = array
 (
-	"database_name"   => $db_database,
+    "database_name"   => $db_database,
     "database_create" => $db_create
 );
 $dsn = array
 (
-	"phptype"  => $dbsys,
+    "phptype"  => $dbsys,
     "username" => $db_login,
     "password" => $db_password,
     "hostspec" => $db_host,
@@ -79,6 +90,7 @@ $dsn = array
 );
 $options = array
 (
+    "HOME"       => $oci8_home,
     "optimize"   => 'portability'
 );
 $manager = new MDB_manager;
@@ -86,7 +98,7 @@ $manager->connect($dsn, $options);
 $success = $manager->updateDatabase($schema_file, $schema_file . ".before", $variables);
 if (MDB::isError($success))
 {
-	echo "Error: " . $success->getMessage() . "<BR>";
+    echo "Error: " . $success->getMessage() . "<BR>";
     echo "Error: " . $success->getUserInfo() . "<BR>";
 }
 if (count($manager->warnings)>0)
