@@ -266,8 +266,6 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr,
 				}
 
 				$day += 1;
-
-                                $out[$i] = "$day";
 				break;	
 				
 			// Unknown repeat option
