@@ -55,6 +55,7 @@ TD.white {background-color:#FFFFFF}
 
 TD.calendar {border:0px; font-size: 8pt}
 TD.calendarHeader {border:0px; font-size: 10pt}
+FONT.calendarHighlight {color: red}
 
 .sitename
 {font-size: 18px;
