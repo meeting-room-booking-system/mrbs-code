@@ -1,20 +1,126 @@
-Version 0.9.1 (Sun Feb  4 21:56:09 GMT 2001)
-	Fixed bug in mincals (sourceforge 'nobody') 
-	
-Version 0.9 (Sun Feb  4 21:40:16 GMT 2001)
-	Some stuff for Roxen from Claus Jeppesen (jeppesen@mrl.ucsb.edu)
-	Add control over start of weekday (Sunday or Monday) (bokleve)
-	Change how days are presented (Jul 19 or 19 Jul) (bokleve)
-	Day names in selected language (bokleve)
-	Sweedish language file (bokleve)
-	Can now change room and area descriptions (bokleve)
-	Fix for all day bookings (bokleve)
-	Escape characters in text (day.php3) (bokleve)
-	Rooms sorted by name (bokleve)
-	Fix duplicate entries when changing a booking (bokleve)
-	Modifying an entry allowed intrusion on other bookings (bokleve)
-	Weekly bookings could not be made for Sunday if Saturday also booked
-	view_entry.php3 Fix escape characters showing in text (bokleve)
+Branch mrbs-0-9-1xp (2001-02-10):
+    For PHP4, rename *.php3 to *.php and changed all links.
+    Major changes for database support for PostgreSQL:
+        Original tables.sql renamed tables.my.sql for MySQL.
+        Move sample data from tables.sql to sample-data.sql.
+        New tables.pg.sql to build tables for PostgreSQL.
+        New destroy.pg.sql to delete PostgreSQL tables and sequences.
+        New grant.pg.sql - edit this and run to grant PostgreSQL rights.
+        Replaced connect.inc with mysql.inc and pgsql.inc.
+        New variable in config.inc "$dbsys" selects "mysql" or "pgsql".
+        Renamed variables in config.inc to replace "mysql_" prefix with "db_".
+        New wrapper funtions (see README.sqlapi) to encapsulate database calls.
+        New pgsql.inc provides PostgreSQL implementation, and connects.
+        New mysql.inc provides MySQL implementation, and connects.
+        Rewrote all database calls to use wrapper functions.
+        Rewrote all SQL statements to be standards-compliant, where possible.
+            Used new wrapper routines where non-standard SQL is needed.
+            Replace LEFT JOIN sequence with predicate-based joins.
+        Changes to all error handling to ensure errors are properly reported.
+    New week.php for Week View. (Experimental)
+    New month.php for Month View. (Experimental)
+    Added rows of links in trailer.inc to new month and week views.
+    Changed Entry Type from 2 values (I=Internal, E=External) to 10 values.
+        By default only the same 2 are defined in config.inc.
+        Style sheet contains colors for 10 types.
+        Selection box for type in edit/add entry form is dynamically built.
+        Color key in day view dynamically built from defined types.
+        Color key in day view moved to bottom of page.
+    New Report function, linked from new button in the header. This makes
+        a report on entries selected by date range and match strings.
+    Add config.inc option db_nopersist to not use peristent DB connections.
+    Add missing args to print_header call in del.php.
+    Add config option eveningends_minutes to allow full 24 hour display with
+        more resolution than 1 hour; also allows better control over the
+        displayed hours, for example the last slot can now be 16:30-17:00.
+    Removed unused functions from functions.inc: get_sunday_before()
+        print_date_entries() display_unapproved_events() display_time()
+        mysql_date_to_str() get_webrowser() hextoint() decode_str() encode_str()
+        Also removed load_user_preferences code and calls to it.
+    Remove redundant includes: functions.inc now assumes config.inc was
+        included and does not include it again; search.php and view_entry.php do
+        not need authentication so they don't need to include mrbs_auth.inc.
+        Removed redundant connect to datbase in search.php.
+    New error function fatal_error() to ensure errors are in a proper HTML page.
+    Added new repeat type 5: Montly repeat, corresponding weekday and week.
+    New authentication for Netware: auth_nw.inc (see README.nwauth). This is
+        needed because nwauth takes the password on stdin, not cmdline.
+    Used weblint to validate output pages and corrected HTML where needed.
+        Quote all attribute values, fix bad attributes, balance tags.
+    Moved HTML end tags into trailer.inc.
+    Changed trailer to put " | " between dates, instead of ", " after each.
+    In print_header, fix bad position of style.inc; must be in <HEAD> block.
+    Fix syntax error when adding room if no capacity given (use 0).
+    Change day.php to output equal-width room columns with centered headers.
+    search.php: Use COUNT(*) and no ORDER BY when just getting match count.
+    Fixed typo in view_entry.php on building up per-day repeat option string.
+    Redesign loop for adding repeat dates to prevent it from scheduling 1 past
+        the end date if the end date wasn't a date to schedule.
+    Add "about" section to help.php to display viersion, system, database.
+    Patch from BoK: fix "2 Decembers displayed if you pick "31 Nov" and Go.
+        This makes sure the selected date is a valid date.
+    Patch from robc: Fix to prevent edit entry to make it overlap another.
+    New feature from Bo: Edit area and room names (new edit_area_room.php).
+    Sort (order) the room names alphabetically in the main display (day.php).
+    Changes found in CVS source:
+    Changed "Booker's Name" to "Brief Description" (was in post-0.9pre1 CVS)
+    View_entry uses multi-table query to show room description too (was in CVS)
+    If no area is supplied, don't use 1 (or 0) since there might not be such
+        an area (if it was deleted). Instead, use new get_default_area() which
+        gets the lowest-numbered area.  In print_header(), don't pass along
+        area as a hidden parameter if it wasn't supplied in the first place.
+    Patch from BoK: Booking repeat Sat/Sun, only entered first Sun.
+    Fixes to PHP magic quoting. We now turn of magic_quotes_runtime always,
+        and use new slashes() and unslashes() to conditionaly deal with
+        backslack-quotes depending on value of PHP's magic_quotes_gpc setting.
+        NOTE: Possibly slightly incompatible change. Prior versions may have
+        put pre-quoted values (area name, room name, booking name, booking
+        description) into the database tables. This was wrong. If so, you
+        will see funny \'s in the value displays.
+        MRBS now should properly quote and unquote all values behind the scenes.
+    Admin.php gets the area name from the database if it only has the ID.
+    Patch from BoK: fix duplicate bookings from failure to delete caused by
+        bad entry_type change to 2.
+    Updates to site_faq.html - describe repeats, generalize Authentication info.
+    Use a mutual exclusion lock (mutex) when adding an entry to prevent races.
+    New maintenance SQL scripts: purge.my.sql and purge.pg.sql to delete old
+        entries from your database (default 30 days old).
+    Fixed field alignment in Add/Edit Entry form to right-justify labels.
+    Security: Use EscapeShellCmd() on username and password in auth_ext.inc
+    Fixed function toTimeString() to use lang[] for time units (I18N).
+    Streamlined main query in day.php: omit unused columns, improve predicate
+        to select by times from 6 compares to 2.
+    In day.php, only fill in map entries during the day hours of interest.
+    In lang.* language files, fixed quoting (found in CVS), comments, strip
+        CRs and fixed some typos.
+    Use double quotes around all string array indexes except inside strings.
+        This avoids a PHP notice-level warning on each array reference.
+    Fix undefined variable references to avoid notice-level PHP warnings.
+    Bug fix: round meeting times up to $resolution units, not 30 minutes, and
+        don't allow 0 minute meetings - make them 1 resolution unit instead.
+    When using the footer to change dates, remember the current area.
+    Changed view_entry to always show both time and date for start and end time;
+        the CVS version was buggy and quirky in suppressing the date or time if
+        it thought they were not important. Better to show too much info.
+    New weekstarts and dateformat (Jan 01 vs 01 Jan) config (from BoK),
+        generalized to show the week starting on any day.
+    Add inline colors for non-CSS browsers (based on patch from John Beranek).
+    Added current date header above day display (from John Beranek).
+
+Version 0.9-pre2: (2001-01-27)
+    Some stuff for Roxen from Claus Jeppesen (jeppesen@mrl.ucsb.edu)
+    Add control over start of weekday (Sunday or Monday) (bokleve)
+    Change how days are presented (Jul 19 or 19 Jul) (bokleve)
+    Day names in selected language (bokleve)
+    Sweedish language file (bokleve)
+    Can now change room and area descriptions (bokleve)
+    Fix for all day bookings (bokleve)
+    Escape characters in text (day.php3) (bokleve)
+    Rooms sorted by name (bokleve)
+    Fix duplicate entries when changing a booking (bokleve)
+    Modifying an entry allowed intrusion on other bookings (bokleve)
+    Weekly bookings could not be made for Sunday if Saturday also booked
+    view_entry.php3 Fix escape characters showing in text (bokleve)
 
 Version 0.9-pre1 (13:00 Fri August 2000)
 	A few minor bug fixes.
