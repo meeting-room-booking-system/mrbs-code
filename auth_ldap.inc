@@ -49,8 +49,13 @@ function authValidateUser($user, $pass)
 		        $dn = "cn=" . $user . "," . $ldap_base_dn[$i];
 			
 			if(@ldap_bind($ldap, $dn, $pass))
+			{
+				@ldap_unbind($ldap);
 				return 1;
+			}
 		}
+		
+		@ldap_unbind($ldap);
 	}
 	
 	// If we failed prompt for username/password
