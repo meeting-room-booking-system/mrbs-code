@@ -29,7 +29,7 @@ print_header($day, $month, $year, isset($area) ? $area : 1);
 <table border=1>
 <tr>
 <th><center><b>Areas</b></center></th>
-<th><center><b>Rooms <? if ($area) { echo "in $area_name"; }?></b></center></th>
+<th><center><b>Rooms <? if(isset($area)) { echo "in $area_name"; }?></b></center></th>
 </tr>
 
 <tr>
@@ -54,7 +54,7 @@ if (mysql_num_rows($res) == 0) {
 <td>
 <?
 # This one has the rooms
-if ($area) {
+if(isset($area)) {
 	$res = mysql_query("select id, room_name, description, capacity from mrbs_room where area_id=$area order by room_name");
 	if (mysql_num_rows($res) == 0) {
 		echo "No rooms";
@@ -86,7 +86,7 @@ if ($area) {
 </td>
 
 <td>
-<? if ($area) { ?>
+<? if(isset($area)) { ?>
 <h3 ALIGN=CENTER>Add Room</h3>
 <form action=add.php3 method=post>
 <input type=hidden name=type value=room>

@@ -105,8 +105,8 @@ if($rep_type != 0)
 	switch($rep_type)
 	{
 		case 2:
-			$opt .= $rep_opt[0] ? "Sunday " : "";
-			$opt  = $rep_opt[1] ? "Monday " : "";
+			$opt  = $rep_opt[0] ? "Sunday " : "";
+			$opt .= $rep_opt[1] ? "Monday " : "";
 			$opt .= $rep_opt[2] ? "Tuesday " : "";
 			$opt .= $rep_opt[3] ? "Wednesday " : "";
 			$opt .= $rep_opt[4] ? "Thursday " : "";

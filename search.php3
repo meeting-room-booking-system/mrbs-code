@@ -36,7 +36,7 @@ if(!$search_str)
 # now is used so that we only display entries newer than the current time
 echo "<H4>" . $lang["search_results"] . " \"<font color=\"blue\">$search_str</font>\"</H4>\n";
 
-$now = time();
+$now = mktime(0, 0, 0, $month, $day, $year);
 
 # the first time the search is called, we get the total
 # number of matches.  This is passed along to subsequent
