@@ -58,6 +58,7 @@ $lang_map_windows = array
   'pt-br' => 'ptb',
   'pt-pt' => 'ptg',
   'sv' => 'sve',
+  'sv-se' => 'sve',
   'sv-sv' => 'sve',
   'zh' => 'chinese',
   'zh-tw' => 'cht',
@@ -110,6 +111,7 @@ $lang_map_unix = array
 (
   'da_DA' => 'da_DK',
   'el_EL' => 'el_GR',
+  'en_EN' => 'en_GB',
   'ja_JA' => 'ja_JP',
   'ko_KO' => 'ko_KR',
   'sv_SV' => 'sv_SE',
@@ -206,7 +208,11 @@ host, then this may be your only option.</P></LI>
 
 if ($override_locale != "")
 {
-  setlocale(LC_ALL,$override_locale);
+  if (setlocale(LC_ALL,$override_locale) == FALSE)
+  {
+    $locale_warning = "Server failed to set locale to
+ \"".$override_locale."\" (Override locale)";
+  }
   $windows_locale = $override_locale;
 }
 else
@@ -217,8 +223,17 @@ else
   {
     if ($lang_map_windows[strtolower($locale)])
     {
-      setlocale(LC_ALL, $lang_map_windows[strtolower($locale)]);
+      if (setlocale(LC_ALL, $lang_map_windows[strtolower($locale)]) == FALSE)
+      {
+        $locale_warning = "Server failed to set locale to
+ \"".$lang_map_windows[strtolower($locale)]."\" (Windows)";
+      }
       $windows_locale = $lang_map_windows[strtolower($locale)];
+    }
+    else
+    {
+      $locale_warning = "Server failed to map browser language
+ \"".$locale."\" to a Windows locale specifier";
     }
   }
   else if ($server_os == "unix")
@@ -242,13 +257,21 @@ else
     {
       $locale .= ".utf-8";
     }
-    setlocale(LC_ALL, $locale);
+    if (setlocale(LC_ALL, $locale) == FALSE)
+    {
+      $locale_warning = "Server failed to set locale to \"".$locale."\"
+(Unix)";
+    }
   }
 }
 
 function get_server_os()
 {
-  if (stristr(PHP_OS, "WIN"))
+  if (stristr(PHP_OS,"Darwin"))
+  {
+    return "unix";
+  }
+  else if (stristr(PHP_OS, "WIN"))
   {
     return "windows";
   }
@@ -256,9 +279,9 @@ function get_server_os()
   {
     return "unix";
   }
-  else if (stristr(PHP_OS, "Mac"))
+  else
   {
-    return "mac";
+    return "unsupported";
   }
 }
 

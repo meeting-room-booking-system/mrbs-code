@@ -12,7 +12,7 @@ if (!isset($pview)) {
 
 function print_header($day, $month, $year, $area)
 {
-	global $mrbs_company, $search_str;
+	global $mrbs_company, $search_str, $locale_warning;
 
 	# If we dont know the right date then make it up 
 	if(!$day)
@@ -109,6 +109,8 @@ function ChangeOptionDays(formObj, prefix)
    <?php # show a warning if this is using a low version of php
        if (substr(phpversion(), 0, 1) == 3)
 	       echo get_vocab("not_php3");
+       if (!empty($locale_warning))
+               echo "[Warning: ".$locale_warning."]";
    ?>
 
    <TABLE WIDTH="100%">
