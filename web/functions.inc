@@ -2,6 +2,14 @@
 
 # $Id$
 
+# probably a bad place to put this, but for error reporting purposes
+# $pview must be defined. if it's not then there's errors generated all
+# over the place. so we test to see if it is set, and if not then set
+# it.
+if (!isset($pview)) {
+	$pview = 0;
+}
+
 function print_header($day, $month, $year, $area)
 {
 	global $lang, $mrbs_company, $search_str;
@@ -259,5 +267,38 @@ function round_t_up($t, $resolution)
                return $t;
        }
 }
+
+# generates some html that can be used to select which area should be
+# displayed.
+function make_area_select_html( $current, $year, $month, $day )
+{
+	$out_html = "<form name=\"area\">
+	             <select name=\"area\" onChange=\"go()\">";
+
+	$sql = "select id, area_name from mrbs_area order by area_name";
+   	$res = sql_query($sql);
+   	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+   	{
+		$selected = ($row[0] == $current) ? "selected" : "";
+		$link = "day.php?year=$year&month=$month&day=$day&area=$row[0]";
+		$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars($row[1]);
+   	}
+	$out_html .= "</select>
+	   <SCRIPT language=\"JavaScript\">
+	   <!--
+	   function go()
+	    {
+		box = document.forms[\"area\"].area;
+		destination = box.options[box.selectedIndex].value;
+		if (destination) location.href = destination;
+	    }
+	    // -->
+	    </SCRIPT>
+ 
+	    
+	    <input type=submit value=\"Change\"></form>";
+
+	return $out_html;
+} # end make_area_select_html
 
 ?>

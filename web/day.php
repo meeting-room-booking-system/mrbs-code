@@ -32,14 +32,22 @@ if ( $pview != 1 ) {
 
    #Show all avaliable areas
    echo "<u>$lang[areas]</u><br>";
-   $sql = "select id, area_name from mrbs_area order by area_name";
-   $res = sql_query($sql);
-   if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
-   {
-	echo "<a href=\"day.php?year=$year&month=$month&day=$day&area=$row[0]\">";
-	if ($row[0] == $area)
-		echo "<font color=\"red\">" . htmlspecialchars($row[1]) . "</font></a><br>\n";
-	else echo htmlspecialchars($row[1]) . "</a><br>\n";
+
+   # need to show either a select box or a normal html list,
+   # depending on the settings in config.inc
+   if ($area_list_format == "select") {
+	echo make_area_select_html($area, $year, $month, $day); # from functions.inc
+   } else {
+	# show the standard html list
+	$sql = "select id, area_name from mrbs_area order by area_name";
+   	$res = sql_query($sql);
+   	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+   	{
+		echo "<a href=\"day.php?year=$year&month=$month&day=$day&area=$row[0]\">";
+		if ($row[0] == $area)
+			echo "<font color=\"red\">" . htmlspecialchars($row[1]) . "</font></a><br>\n";
+		else echo htmlspecialchars($row[1]) . "</a><br>\n";
+   	}
    }
 
    #Draw the three month calendars

@@ -73,6 +73,10 @@ $search["count"] = 20;
 # Page refresh time (in seconds). Set to 0 to disable
 $refresh_rate = 0;
 
+# should areas be shown as a list or a drop-down select box?
+$area_list_format = "list";
+#$area_list_format = "select";
+
 ###############################################
 # Authentication settings - read AUTHENTICATION
 ###############################################
