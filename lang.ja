@@ -1,6 +1,6 @@
 <?
 # This file contains PHP code that specifies language specific strings
-# The default strings come from lang.def, and anything in a locale
+# The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is a Japanese file.
 #
 # This file is PHP code. Treat it as such.
@@ -14,7 +14,7 @@ $lang[bookingsforpost]    = "の予約です";
 $lang[areas]              = "場所";
 $lang[daybefore]          = "前日へ戻る";
 $lang[dayafter]           = "次の日へ進む";
-$lang[time]               = "時間";
+$lang[gototoday]          = "当日の予約を見る";
 
 # Used in trailer.inc
 $lang[viewday]            = "予約状況閲覧";
@@ -27,7 +27,12 @@ $lang[fulldescription]    = "予約詳細(人数,内部会議/外部会議 等):";
 $lang[date]               = "日:";
 $lang[time]               = "時間:";
 $lang[duration]           = "会議に必要な時間:";
+$lans[seconds]            = "秒";
+$lang[minutes]            = "分";
 $lang[hours]              = "時間";
+$lang[days]               = "日";
+$lang[weeks]              = "週";
+$lang[years]              = "年";
 $lang[type]               = "会議の種類:";
 $lang[internal]           = "内部会議";
 $lang[external]           = "外部会議";
@@ -45,5 +50,10 @@ $lang[returnprev]         = "前ページに戻る";
 $lang[error]              = "エラー";
 $lang[conflict]           = "既に他の予約が入っています";
 $lang[returncal]          = "カレンダー表示画面に戻る";
+
+# Authentication stuff
+$lang[accessdenied]       = "アクセスが拒否されました";
+$lang[unandpw]            = "ユーザーネームとパスワードを入力してください.";
+$lang[norights]           = "編集機能にアクセスする権利がありません.";
 
 ?>

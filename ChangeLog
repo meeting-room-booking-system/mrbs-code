@@ -1,6 +1,10 @@
-CVS:
-	Fix for meetings longer than one day only showing
-	 a link on the first day
+Version 0.8-pre1 (Fri Jun 16 08:22:19 GMT 2000)
+	User-based authentication supported (see AUTHENTICATION)
+	Better support for bookings spanning multiple days
+	User can specify "Whole Day" bookings
+	Units other than "Hours" are supported (Mins, Hours, Days, Weeks)
+	Thanks to Sam Mason <smason@mtc.ricardo.com> for much of this
+
 Version 0.7 (Mon Jun 12 12:42:50 GMT 2000)
 	Changed DB to use unixtime, not mysql date/time
 	Changed date strings to use locale
@@ -14,7 +18,7 @@ Version 0.7 (Mon Jun 12 12:42:50 GMT 2000)
 	Areas with no rooms don't cause an error
 
 Version 0.6 (Sat May 27 09:09:11 BST 2000)
-   Fixed bug in edit_entry_handler.php3 which made any
+	Fixed bug in edit_entry_handler.php3 which made any
 	 booking made between the 1st and 9th of the month
 	 actually happen on the 1st of Jan for that year
 	Fixed bug in day.php3 where any booking past
@@ -24,7 +28,7 @@ Version 0.6 (Sat May 27 09:09:11 BST 2000)
 	Fixed bug where editing a booking would default to
 	 today's date, not the booking's date
 	Added .htaccess to protect .inc files
-   Moved start and end of day config variables to
+	Moved start and end of day config variables to
 	 config.inc
 
 Version 0.5 (Mon May 22 12:07:14 BST 2000)

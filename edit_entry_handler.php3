@@ -3,7 +3,7 @@
 include "config.inc";
 include "functions.inc";
 include "connect.inc";
-
+include "auth.inc";
 
 function add_duration ( $time, $duration ) {
   $list = split ( ":", $time );
@@ -43,16 +43,58 @@ function times_overlap ( $time1, $duration1, $time2, $duration2 ) {
   return false;
 }
 
+// Units start in seconds
+$units = 1.0;
+
+switch($dur_units)
+{
+	case "years":
+		$units *= 52;
+	case "weeks":
+		$units *= 7;
+	case "days":
+		$units *= 24;
+	case "hours":
+		$units *= 60;
+	case "minutes":
+		$units *= 60;
+	case "seconds":
+		break;
+}
+
+// Units are now in "$dur_units" numbers of seconds
+
+$starttime = mktime($hour, $minute, 0, $month, $day, $year);
+$endtime   = mktime($hour, $minute, 0, $month, $day, $year) + ($units * $duration);
+
+if($all_day == "yes")
+	$round_up = 60 * 60 * 24;
+else
+	$round_up = 30 * 60;
+
+$diff = $endtime - $starttime;
+
+if($tmp = $diff % $round_up)
+	$endtime += $round_up - $tmp;
+
+if($all_day == "yes")
+{
+	$diff = $endtime - $starttime;
+	
+	if($tmp = $starttime % (60 * 60 * 24))
+	{
+		$starttime -= $tmp;
+		$endtime    = $starttime + $diff;
+	}	
+}
+
+$endtime1  = $endtime - 1;
 
 # first check for any schedule conflicts
 # we ask the db if there is anything which
 #   starts before this and ends after the start
 #   or starts between the times this starts and ends
 #   where the room is the same
-
-$starttime = mktime($hour, $minute, 0, $month, $day, $year);
-$endtime   = mktime($hour, $minute + ($duration * 60), 0, $month, $day, $year);
-$endtime1  = $endtime - 1;
 
 $sql = "select id, name from mrbs_entry where 
 (
@@ -89,7 +131,7 @@ if (strlen($error) == 0) {
 	$description_q = addslashes($description);
 	$sql = "insert into mrbs_entry (room_id, create_by, start_time, end_time, type, name, description) values (
 	        '$room_id',
-			  '$REMOTE_ADDR',
+			  '".getUserName()."',
 			  '$starttime',
 			  '$endtime',
 			  '$type',

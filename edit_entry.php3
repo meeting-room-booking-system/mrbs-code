@@ -2,7 +2,29 @@
 include "config.inc";
 include "functions.inc";
 include "connect.inc";
+include "auth.inc";
 
+if(!getAuthorised(getUserName(), getUserPassword()))
+{
+?>
+<HTML>
+ <HEAD>
+  <META HTTP-EQUIV="REFRESH" CONTENT="5; URL=index.php3">
+  <TITLE><?echo $lang[mrbs]?></TITLE>
+  <?include "config.inc"?>
+  <?include "style.inc"?>
+ <BODY>
+  <H1><?echo $lang[accessdenied]?></H1>
+  <P>
+   <?echo $lang[unandpw]?>
+  </P>
+  <P>
+   <a href=<? echo $HTTP_REFERER; ?>><? echo $lang[returnprev]; ?></a>
+  </P>
+</HTML>
+<?
+	exit;
+}
 
 # This page will either add or modify a booking
 
@@ -20,45 +42,60 @@ include "connect.inc";
 # If we had $id passed in then its a modification
 if ($id) {
 	#We split the start date into all its constituant parts with mySQL
-	$sql = "select name, description, date_format(start_time, '%e'), date_format(start_time, '%c'),
-	        date_format(start_time, '%Y'), date_format(start_time, '%H'), date_format(start_time, '%i'),
-			  (end_time - start_time)/60/60, type, room_id
-			  from mrbs_entry where id=$id";
-#echo $sql;
+	$sql = "select name, create_by, description, start_time, end_time - start_time,
+	        type, room_id from mrbs_entry where id=$id";
+	
 	$res = mysql_query($sql);
 	echo mysql_error();
 	$row = mysql_fetch_row($res);
 	$name        = $row[0];
-	$description = $row[1];
-	$start_day   = $row[2];
-	$start_month = $row[3];
-	$start_year  = $row[4];
-	$start_hour  = $row[5];
-	$start_min   = $row[6];
-	$duration    = $row[7];
-	$type        = $row[8];
-	$room_id     = $row[9];
+	$create_by   = $row[1];
+	$description = $row[2];
+	$start_day   = strftime('%d', $row[3]);
+	$start_month = strftime('%m', $row[3]);
+	$start_year  = strftime('%Y', $row[3]);
+	$start_hour  = strftime('%H', $row[3]);
+	$start_min   = strftime('%M', $row[3]);
+	$duration    = $row[4];
+	$type        = $row[5];
+	$room_id     = $row[6];
 } else {
 	# It is a new booking. The data comes from whichever button the user clicked
 	$name        = "";
+	$create_by   = getUserName();
 	$description = "";
 	$start_day   = $day;
 	$start_month = $month;
 	$start_year  = $year;
 	$start_hour  = $hour;
 	$start_min   = $minute;
-	$duration    = 1;
+	$duration    = 60 * 60;
 	$type        = "I";
 	$room_id     = $room;
 }
+
+toTimeString($duration, $dur_units);
 
 #now that we know all the data to fill the form with we start drawing it
 
 ?>
 <HTML>
 <HEAD>
-<TITLE>WebCalendar</TITLE>
+<TITLE><?echo $lang[mrbs]?></TITLE>
 <?include "style.inc"?>
+
+<? if(!getWritable($create_by, getUserName(), $auth[admin])) { ?>
+
+<H1><?echo $lang[accessdenied]?></H1>
+<P>
+  <?echo $lang[norights]?>
+</P>
+<P>
+  <a href=<? echo $HTTP_REFERER; ?>><? echo $lang[returnprev]; ?></a>
+</P>
+</BODY>
+</HTML>
+<? exit; } ?>
 
 <SCRIPT LANGUAGE="JavaScript">
 // do a little form verifying
@@ -90,10 +127,10 @@ function validate_and_submit () {
 <TABLE BORDER=0>
 
 <TR><TD><B><?echo $lang[namebooker]?></B></TD>
-  <TD><INPUT NAME="name" SIZE=25 VALUE="<?php echo htmlentities ( $name ); ?>"></TD></TR>
+  <TD><INPUT NAME="name" SIZE=40 VALUE="<?php echo $name ?>"></TD></TR>
 
 <TR><TD VALIGN="top"><B><?echo $lang[fulldescription]?></B></TD>
-  <TD><TEXTAREA NAME="description" ROWS=5 COLS=40 WRAP="virtual"><?php echo htmlentities ( $description ); ?></TEXTAREA></TD></TR>
+  <TD><TEXTAREA NAME="description" ROWS=8 COLS=40 WRAP="virtual"><?php echo htmlentities ( $description ); ?></TEXTAREA></TD></TR>
 
 <TR><TD><B><?echo $lang[date]?></B></TD>
   <TD><SELECT NAME="day">
@@ -150,7 +187,17 @@ if ( $TIME_FORMAT == "12" ) {
 </TD></TR>
 
 <TR><TD><B><?echo $lang[duration]?></B></TD>
-  <TD><INPUT NAME="duration" SIZE=3 VALUE="<?php echo $duration;?>"> <?echo $lang[hours]?></TD></TR>
+  <TD><INPUT NAME="duration" SIZE=7 VALUE="<?php echo $duration;?>">
+    <SELECT NAME="dur_units">
+<!--     <OPTION VALUE="seconds" <? echo ($dur_units == "seconds") ? "SELECTED" : ""; ?>>seconds -->
+     <OPTION VALUE="minutes" <? echo ($dur_units == "minutes") ? "SELECTED" : ""; ?>>minutes
+     <OPTION VALUE="hours"   <? echo ($dur_units == "hours"  ) ? "SELECTED" : ""; ?>>hours
+     <OPTION VALUE="days"    <? echo ($dur_units == "days"   ) ? "SELECTED" : ""; ?>>days
+     <OPTION VALUE="weeks"   <? echo ($dur_units == "weeks"  ) ? "SELECTED" : ""; ?>>weeks
+<!--     <OPTION VALUE="years"   <? echo ($dur_units == "years"  ) ? "SELECTED" : ""; ?>>years -->
+    </SELECT>
+    <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes"> All day
+</TD></TR>
 
 <TR><TD><B><?echo $lang[type]?></B></TD>
   <TD><SELECT NAME="type">
@@ -172,11 +219,7 @@ print "<input type=hidden name=room_id value = \"$room_id\">";
 <INPUT TYPE="submit" VALUE="Save">
 </NOSCRIPT>
 </FORM>
-<!--
-<?php if ( $id > 0 ) { ?>
-<A HREF="del_entry.php3?id=<?php echo $id;?>" onClick="return confirm('Are you sure\nyou want to\ndelete this entry?');">Delete entry</A><BR>
--->
-<?php } ?>
+
 
 <?php include "trailer.inc" ?>
 </BODY>

@@ -18,6 +18,18 @@ $mysql_database = "mrbs";
 $morningstarts = 7;
 $eveningends   = 19;
 
+# Authentication settings - read AUTHENTICATION
+$auth[realm]  = "";
+$auth[type]   = "ip";
+$auth[prog]   = "";
+$auth[params] = "";
+
+# The various level two users (can modify other peoples settings)
+$auth[admin][] = "10.10.10.1";
+$auth[admin][] = "10.10.10.2";
+$auth[admin][] = "10.10.10.3";
+$auth[admin][] = "10.10.10.4";
+
 # Resolution - ie what blocks can be booked.
 # Default is half an hour - 1800 seconds
 $resolution = 1800;

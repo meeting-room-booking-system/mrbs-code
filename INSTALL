@@ -69,6 +69,8 @@ of the environment variables supplied to PHP is $HTTP_ACCEPT_LANGUAGE,
 which we use to choose a language file. You can specify the default in
 config.inc. See the file called LANGUAGE for more info.
 
+Read the file AUTHENTICATION for information about the Auth section
+
 MRBS also uses your OS locale support for certain date/time strings.
 There is some code that tries to figure out what locale should be used
 based on your browser. Use "locale -a" on your system to find out what

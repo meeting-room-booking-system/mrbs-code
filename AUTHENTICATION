@@ -1,0 +1,179 @@
+Originally MRBS did not have username/password support. Each booking that was
+made had the IP address of the client machine logged as the "creator" of
+the booking.
+
+In this case the IP address functions as the "username".
+
+This works well in my case, where all IPs are static, and everyone is
+allowed access to the system, although in the wider world there are
+occasions where this is a little too liberal.
+
+To combat this MRBS 0.8 introduced authentication, initially provided by Sam
+Mason <smason@mtc.ricardo.com>.
+
+There are three levels of access in MRBS:
+   Level 0 - not logged in
+   Level 1 - Authenticated
+   Level 2 - Administrator
+
+The administrators are allowed to modify other people's bookings, whereas
+Level 1 users can only change their own.
+
+Administrators are defined in config.inc. This is done by specifying:
+   $auth[admin][] = "username";
+   $auth[admin][] = "username2";
+   etc
+
+You can have as many administrators as you want.
+
+The default configuration has a few 10.10. IP addresses as administrators -
+you may want to change these.
+
+
+Different Auth Schemes
+----------------------
+
+The Authentication scheme is designed to be flexible, with "plug-in" auth
+modules. Sam Mason originally provided code for authenticating to a SMB server
+(NT Domain stuff).
+
+Out of the box MRBS is configured using the traditional "IP address"
+authentication.
+
+The other auth provider which ships with MRBS is the "external" one. This
+uses Basic Authorisation to get usernames and passwords, and an external
+program to decide if the username/password combination is valid.
+
+The external program must take the username, password and possibly other
+values as parameters - it's exit code must be a zero for "OK" and anything
+else for "not OK".
+
+I have included a short piece of Perl which can quickly be used to
+demonstrate how the "external" provider works.
+
+"badpw.pl" has usernames and passwords hard coded. I don't expect anyone to
+use this in a production environment - it's just to demonstrate.
+
+In the config.inc file there is a section that says:
+
+# Authentication settings - read AUTHENTICATION
+$auth[realm]  = "";
+$auth[type]   = "ip";
+$auth[prog]   = "";
+$auth[params] = "";
+
+Change this to:
+
+# Authentication settings - read AUTHENTICATION
+$auth[realm]  = "MRBS";
+$auth[type]   = "ext";
+$auth[prog]   = "/home/httpd/html/mrbs/badpw.pl";
+$auth[params] = "";
+
+Obviously, you need to put an appropriate path.
+
+Once you have changed this then look at the /mrbs/ page through your
+browser. When you click one of the (+) buttons, you will be asked for a
+username and password. Check badpw.pl for the valid combinations.
+
+To try out an "admin" user, add an appropriate username to the section that
+says:
+   $auth[admin][] = "....";
+
+   
+SMB Authentication
+------------------
+
+I haven't tried this method, so here are Sam Mason's instructions for using
+his SMB authentication:
+
+-------
+As I said in the last mail, it uses an external program to do the
+authentication, this is a very simple program, that returns "true" if the
+username/password are valid and "false" otherwise.
+
+Included is the source (smb_auth.c) to compile it download the "pam_smb"
+library from some where that mirrors samba
+(http://www.mirror.ac.uk/sites/ftp.samba.org/pam_smb/) copy the source into
+the main source directory, and compile (having made the PAM library its
+self) with something like.
+
+gcc -o smb_auth smb_auth.c smbval/smbvalid.a
+
+and copy the binary to somewhere useful I chose "/usr/bin/smb_auth"
+
+[snip]
+
+It requires the "smb_auth" program to be installed and working see
+"config.inc" to use a different authentication program + set the servers +
+domain used for the name checks.
+-------
+
+The config.inc entries he supplied were:
+
+# Authentication settings - read AUTHENTICATION
+$auth[realm]  = "MRBS";
+$auth[type]   = "ext";
+$auth[prog]   = "/usr/bin/smb_auth";
+$auth[params] = "SERVER BACKUP DOMAIN";
+
+The [params] are:
+   * Primary Server used for password validation
+   * Secondary server used for password validation
+   * NT domain under which the user is registered
+
+
+Creating a new authentication scheme
+------------------------------------
+
+There are generic authentication functions in "auth.inc", with functions
+specific to a particular scheme in "auth_xxx.inc"
+
+The "auth_xxx.inc" file needs to define certain functions:
+   getAuth($realm)
+      Request that the username/password be given for the specified realm
+
+   authValidateUser($user, $pass)
+      Checks if the specified username/password pair are valid
+
+   authGetUserLevel($user)
+      Determines the users access level
+
+   getUserName()
+      Returns the current user name
+      
+   getUserPassword()
+      Retuens the current password
+      
+The "auth_ext.inc" file shows good examples of the use of these functions.
+
+I think that the "ext" provider will be the most useful, because it can use
+any external program to do the authentication.
+
+For instance, to authenticate to an LDAP server, it would be relatively easy
+to write a small program in [insert language of choice] which took
+username, password and server name as parameters, and returned 0 for
+"yes, this username/password is OK", and something else for "no, it's not".
+The config.inc entries for this might look like:
+
+# Authentication settings - read AUTHENTICATION
+$auth[realm]  = "MRBS";
+$auth[type]   = "ext";
+$auth[prog]   = "/usr/bin/ldap_auth";
+$auth[params] = "LDAP_SERVER";
+
+"auth_ext.inc" constructs a command line to execute like:
+
+   $cmd = $auth[prog] . ' "' . $user . '" "' . $pass . '" ' . $auth[params];
+
+
+This should allow a lot of flexibility with different authenticators.
+
+The "auth_ip.inc" shows how it is possible to use any arbitrary value as the
+"username" (in this case the value of $REMOTE_ADDR)
+
+
+If you do create some new authentication provider, then please send it to
+me and I'll include it in the main distribution.
+
+Daniel <daniel@pl14759.demon.co.uk>

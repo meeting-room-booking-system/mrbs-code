@@ -223,4 +223,42 @@ function encode_string ( $instr ) {
 }
 
 
+function toTimeString(&$dur, &$units)
+{
+	if($dur >= 60)
+	{
+		$dur /= 60;
+		
+		if($dur >= 60)
+		{
+			$dur /= 60;
+			
+			if($dur >= 24)
+			{
+				$dur /= 24;
+				
+				if($dur >= 7)
+				{
+					$dur /= 7;
+					
+					if($dur >= 52)
+					{
+						$dur  /= 52;
+						$units = "years";
+					}
+					else
+						$units = "weeks";
+				}
+				else
+					$units = "days";
+			}
+			else
+				$units = "hours";
+		}
+		else
+			$units = "minutes";
+	}
+	else
+		$units = "seconds";
+}
 ?>

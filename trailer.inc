@@ -1,5 +1,4 @@
-
-<BR CLEAR="all">
+<P>
 <HR CLEAR="all">
 <B><?echo $lang[viewday]?></B>
 <?php
@@ -19,14 +18,10 @@ for ($i = $stime; $i <= $etime; $i=$i+(24*60*60)) {
 	$cmonth = date("m",$i);
 	$ddate  = strftime("%b %d",$i);
 	$cday   = date("d",$i);
-	echo "<a href=day.php3?year=$cyear&month=$cmonth&day=$cday>$ddate</a>, ";
+	echo "<a href=day.php3?year=$cyear&month=$cmonth&day=$cday>$ddate</a>, \n";
 }
 
 ?>
-<br>
-<BR>
-
-<hr>
-<p>
-
+<HR>
+</P>
 

@@ -1,6 +1,6 @@
 <?
 # This file contains PHP code that specifies language specific strings
-# The default strings come from lang.def, and anything in a locale
+# The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is a UK English file.
 #
 # This file is PHP code. Treat it as such.
@@ -27,7 +27,12 @@ $lang[fulldescription]    = "Full Description:<br>&nbsp;&nbsp;(Number of people,
 $lang[date]               = "Date:";
 $lang[time]               = "Time:";
 $lang[duration]           = "Duration:";
+$lans[seconds]            = "seconds";
+$lang[minutes]            = "minutes";
 $lang[hours]              = "hours";
+$lang[days]               = "days";
+$lang[weeks]              = "weeks";
+$lang[years]              = "years";
 $lang[type]               = "Type:";
 $lang[internal]           = "Internal";
 $lang[external]           = "External";
@@ -45,5 +50,10 @@ $lang[returnprev]         = "Return to previous page";
 $lang[error]              = "Error";
 $lang[conflict]           = "There are conflicts";
 $lang[returncal]          = "Return to calendar view";
+
+# Authentication stuff
+$lang[accessdenied]       = "Access Denied";
+$lang[unandpw]            = "Please enter your username + password.";
+$lang[norights]           = "You do not have access rights to modify this item.";
 
 ?>
