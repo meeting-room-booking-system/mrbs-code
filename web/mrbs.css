@@ -34,8 +34,8 @@ A:visited.blue {color:blue}
 A:hover.blue {color:red}
 
 TH {color:#eeeeee; font-size:10pt; font-family:verdana,sans-serif;
-background-color:#333333;
-border-width:1; border-color:black; vertical-align:top}
+background-color:#999999;
+border-width:1; border-color:#999999; vertical-align:top}
 TD.banner {vertical-align:middle; background-color:#C0E0FF}
 
 TD.blue {background-color:#F0F0FF}
