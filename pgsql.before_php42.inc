@@ -22,7 +22,7 @@
 // handle when you finish reading the rows.
 function sql_free ($r)
 {
-	pg_free_result($r);
+	pg_freeresult($r);
 }
 
 // Execute a non-SELECT SQL command (insert/update/delete).
@@ -32,11 +32,11 @@ function sql_command ($sql)
 {
 	global $db_c;
 	$e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
-	$r = pg_query($db_c, $sql);
+	$r = pg_exec($db_c, $sql);
 	error_reporting($e);
 	if (! $r) return -1;
-	$n = pg_affected_rows($r);
-	pg_free_result($r);
+	$n = pg_cmdtuples($r);
+	pg_freeresult($r);
 	return $n;
 }
 
@@ -50,12 +50,12 @@ function sql_query1 ($sql)
 {
 	global $db_c;
 	$e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
-	$r = pg_query($db_c, $sql);
+	$r = pg_exec($db_c, $sql);
 	error_reporting($e);
 	if (! $r) return -1;
-	if (pg_num_rows($r) != 1 || pg_num_fields($r) != 1
-		|| ($result = pg_fetch_result($r, 0, 0)) == "") $result = -1;
-	pg_free_result($r);
+	if (pg_numrows($r) != 1 || pg_numfields($r) != 1
+		|| ($result = pg_result($r, 0, 0)) == "") $result = -1;
+	pg_freeresult($r);
 	return $result;
 }
 
@@ -66,7 +66,7 @@ function sql_query ($sql)
 {
 	global $db_c;
 	$e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
-	$r = pg_query($db_c, $sql);
+	$r = pg_exec($db_c, $sql);
 	error_reporting($e);
 	return $r;
 }
@@ -78,9 +78,9 @@ function sql_query ($sql)
 // Typical usage: $i = 0; while ((a = sql_row($r, $i++))) { ... }
 function sql_row ($r, $i)
 {
-	if ($i >= pg_num_rows($r))
+	if ($i >= pg_numrows($r))
 	{
-		pg_free_result($r);
+		pg_freeresult($r);
 		return 0;
 	}
 	return pg_fetch_row($r, $i);
@@ -94,9 +94,9 @@ function sql_row ($r, $i)
 // the query and returns 0.
 function sql_row_keyed ($r, $i)
 {
-	if ($i >= pg_num_rows($r))
+	if ($i >= pg_numrows($r))
 	{
-		pg_free_result($r);
+		pg_freeresult($r);
 		return 0;
 	}
 	return pg_fetch_array($r, $i);
@@ -105,7 +105,7 @@ function sql_row_keyed ($r, $i)
 // Return the number of rows returned by a result handle from sql_query.
 function sql_count ($r)
 {
-	return pg_num_rows($r);
+	return pg_numrows($r);
 }
 
 // Return the value of an autoincrement field from the last insert.
@@ -120,7 +120,7 @@ function sql_insert_id($table, $field)
 function sql_error()
 {
 	global $db_c;
-	return pg_last_error($db_c);
+	return pg_errormessage($db_c);
 }
 
 // Begin a transaction, if the database supports it. This is used to
