@@ -1,7 +1,5 @@
 BODY {color:black; font-size: 10pt; font-family:arial;
-background-color:#ffffed;  background-image:
-url(head.gif); background-position: top left;
-background-repeat: no-repeat; margin-top: 70px}
+background-color:#ffffed;}
 
 A:link {color:#5B69A6; font-weight: bold; text-decoration: none}
 A:visited {color:#5B69A6; font-weight: bold; text-decoration: none}
@@ -28,6 +26,7 @@ A:hover.blue {color:red;}
 
 TH {color:#eeeeee; font-size:10pt; font-family:verdana; background-color:#333333;
 border-width:1; border-color:black; vertical-align:top;}
+TD.banner {vertical-align:middle; background-color:#C0E0FF;}
 
 TD.blue {background-color:#F0F0FF;}
 TD.red  {background-color:#FFF0F0;}
