@@ -38,7 +38,7 @@ $am7=mktime($morningstarts,0,0,$month,$day,$year,is_dst($month,$day,$year,$morni
 $pm7=mktime($eveningends,$eveningends_minutes,0,$month,$day,$year,is_dst($month,$day,$year,$eveningends));
 
 if ( $pview != 1 ) {
-   echo "<table><tr><td width=\"100%\">";
+   echo "<table width=\"100%\"><tr><td width=\"60%\">";
 
    #Show all avaliable areas
    echo "<u>".get_vocab("areas")."</u><br>";
@@ -59,6 +59,7 @@ if ( $pview != 1 ) {
 		else echo htmlspecialchars($row[1]) . "</a><br>\n";
    	}
    }
+   echo "</td>\n";
 
    #Draw the three month calendars
    minicals($year, $month, $day, $area, 'day');
