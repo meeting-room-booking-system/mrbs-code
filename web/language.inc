@@ -167,6 +167,22 @@ if (!$disable_automatic_language_changing)
 
 $windows_locale = "eng";
 
+# 2003/11/09 JF Larvoire: Help new admins understand what to do in case the iconv error occurs...
+if (!function_exists('iconv'))
+{
+  exit('
+<P>
+  <B>Error:</B> MRBS requires the optional PHP package "iconv".
+</P>
+<P>
+  On a Windows server, enable php_iconv.dll in your %windir%\php.ini;<br>
+  Make sure both %phpdir%\dlls\iconv.dll and %phpdir%\extensions\php_iconv.dll are in the path<br>
+    &nbsp;(possibly by copying them to %windir%);<br>
+  and try again.
+</P>
+');
+}
+
 if ($override_locale != "")
 {
   setlocale(LC_ALL,$override_locale);
