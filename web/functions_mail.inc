@@ -117,7 +117,6 @@ function notifyAdminOnBooking($new_entry , $new_id)
             $res = sql_query($sql);
             (! $res) ? fatal_error(0, sql_error()) : '';
             $row = sql_row($res, 0);
-            sql_free($res);
             if ( !empty($recipients) && (NULL != $row[0]) )
             {
                 $recipients .= ',';
@@ -152,7 +151,6 @@ function notifyAdminOnBooking($new_entry , $new_id)
             $res = sql_query($sql);
             (! $res) ? fatal_error(0, sql_error()) : '';
             $row = sql_row($res, 0);
-            sql_free($res);
             if ( !empty($recipients) && (NULL != $row[0]) )
             {
                 $recipients .= ',';
