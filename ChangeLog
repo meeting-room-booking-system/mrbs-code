@@ -1,3 +1,19 @@
+2004-03-24  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* INSTALL (1.25): Doc fix
+
+2004-01-22  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* INSTALL (1.24): Previous commit truncated file - adding back in
+	  missing lines
+
+2004-01-21  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* INSTALL (1.23): This update contains all of the code and
+	  documentation to support "periods" within mrbs.
+
+
+
 2004-01-11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* INSTALL (1.22): Doc fix: unlike Apache on Windows, you HAVE to

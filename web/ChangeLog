@@ -1,3 +1,150 @@
+2004-04-05  John Beranek <jberanek@users.sourceforge.net>
+
+	* lang.el (1.1), style.inc (1.10):
+	  * Added Greek translation, lang.el
+
+	  * Fixed global variable problem in style.inc, $vocab wasn't
+	  being declared as a global.
+
+	  [Translation and fix provided by Stavros Papadakis]
+
+2004-03-15  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* month.php (1.20), functions.inc (1.26), week.php (1.26): This
+	  change means that the default room in an area, if none is
+	  specified or when changing areas will be the first listed rather
+	  than the room with the lowest id.
+
+	  This also affects the choice of area if no room or area is
+	  specified then the first listed area will be chosen rather than
+	  the one with the lowest id.
+
+2004-03-15  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* index.php (1.7), config.inc.php (1.22): Added configuration
+	  option to allow index.php to redirect to a specific room.
+
+2004-03-10  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* day.php (1.26), week.php (1.25): Added specific Room Description
+	  showing with a pop up/hover title for each room  on the week view
+	  link in day.php and room link in week.php. (Valeria
+	  Montesi/Gareth T).
+
+2004-03-08  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* edit_users.php (1.4): The last change, to restrict access to the
+	  page to identified users, broke the ability to initially enter
+	  the first user! Fixed this by avoiding to do this test if the
+	  user list is empty. Actually moved the code to a branch that
+	  already ran only if the user list was not empty.
+
+2004-02-27  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* mrbs_sql.inc (1.15): (mrbsCheckFree): - corrected 'undefined
+	  variable' bug (typo on variable name line 54, $enable_period
+	  instead of $enable_periods)
+
+2004-02-11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* index.php (1.6): - included grab_globals.inc.php at the top of
+	  the file otherwise  $HTTP_ACCEPT_LANGUAGE is undefined
+
+2004-02-04  John Beranek <jberanek@users.sourceforge.net>
+
+	* mrbs_sql.inc (1.14), report.php (1.16):
+	  * Removed 3 uses of %T format specifier in strftime() calls,	as
+	  it seems Windows strftime() doesn't support %T. Tested  on a
+	  Windows MRBS (Apache + MySQL) installation. Problem  reported by
+	  Reinhold Petrich on the mailing list, and fix  also confirmed.
+
+2004-02-04  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* mincals.inc (1.10): Use basename($PHP_SELF) to avoid false hits,
+	  if the substrings "day" or "week" or "month" appear in the full
+	  URL.
+
+2004-02-02  John Beranek <jberanek@users.sourceforge.net>
+
+	* functions.inc (1.25):
+	  * Fixed JavaScript in functions.inc (for area and room  drop-down
+	  menus in day/week/month view) to use relative  URLs, and better
+	  "onChange" handling.
+
+2004-01-31  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* language.inc (1.7): Updated the iconv error message, based on the
+	  suggestion by David Watts.
+
+2004-01-31  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* edit_users.php (1.3): Make sure the user is authenticated before
+	  giving him access to the list.
+
+2004-01-28  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* index.php (1.5), config.inc.php (1.21): Added $default_view as
+	  suggested by Warren Turkal This can be used to determine the
+	  default starting view, i.e. month, week or day, as used by
+	  index.php.
+
+2004-01-27  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* report.php (1.15): BUG 885333 - fixed - added check to ensure
+	  that $typematch_default is an array.
+
+2004-01-26  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* edit_entry.php (1.26): When the user clicks on the "All day"
+	  checkbox, use JavaScript to immediately change the time to 00:00
+	  and the duration to 1 day.  (Designed for support of periods too,
+	  but not tested)
+
+2004-01-22  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* edit_users.php (1.2): Removed the paragliding-specific weight
+	  field :-)
+
+2004-01-22  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* config.inc.php (1.20), day.php (1.25): Added the ability to
+	  display horizontal bands of color in the background of the day
+	  view, to make the table more readable.  This is enabled by
+	  changing the new setting $stripe_color in config.inc.php. This
+	  value sets the color class for the bands.  "white"= no bands
+	  (default) For example changing it to "J" display light gray
+	  bands.
+
+2004-01-22  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.19), day.php (1.24), lang.cz (1.6), lang.da
+	  (1.3), lang.de (1.14), lang.en (1.18), lang.es (1.16), lang.fi
+	  (1.6), lang.fr (1.18), lang.it (1.9), lang.ja (1.13), lang.nl
+	  (1.14), lang.no (1.11), lang.pt (1.3), lang.sv (1.14), lang.zh-tw
+	  (1.13), week.php (1.24): + Option to display times on right side
+	  in day and week view.  + pop-up messages
+
+2004-01-21  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* lang.en (1.17), report.php (1.14): Allows reports to be limited
+	  to certain reservation types (eg just 'external').  This is
+	  multiple select box.	If all are selected or none are selected
+	  then all reservation types are included in the report.
+
+2004-01-21  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* config.inc.php (1.18), day.php (1.23), edit_entry.php (1.25),
+	  edit_entry_handler.php (1.16), functions.inc (1.24), lang.en
+	  (1.16), month.php (1.19), mrbs_sql.inc (1.13), report.php (1.13),
+	  search.php (1.11), view_entry.php (1.12), week.php (1.23): This
+	  update contains all of the code and documentation to support
+	  "periods" within mrbs.
+
+2004-01-20  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* day.php (1.22): + Added link to rooms heading to display the
+	  weekly view for that room.
+
 2004-01-19  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* auth_db.inc (1.1), config.inc.php (1.17), edit_users.php (1.1),

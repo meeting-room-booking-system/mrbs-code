@@ -39,7 +39,7 @@ if (empty($area))
 	$area = get_default_area();
 if (empty($room))
 	$room = get_default_room($area);
-# Note $room will be -1 if there are no rooms; this is checked for below.
+# Note $room will be 0 if there are no rooms; this is checked for below.
 
 # print the page header
 print_header($day, $month, $year, $area);
