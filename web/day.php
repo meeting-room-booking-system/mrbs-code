@@ -195,8 +195,8 @@ else
 	$room_column_width = (int)(95 / sql_count($res));
 	for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	{
-		echo "<th width=\"$room_column_width%\">" . htmlspecialchars($row[0])
-			. "($row[1])</th>";
+        echo "<th width=\"$room_column_width%\"><a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[2]\">"
+            . htmlspecialchars($row[0]) . "($row[1])</a></th>";
 		$rooms[] = $row[2];
 	}
 	echo "</tr>\n";
