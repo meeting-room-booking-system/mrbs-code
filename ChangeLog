@@ -1,4 +1,5 @@
 Version 0.7 (CVS)
+	Changed date strings to use locale
 	Replaced code for three small calendars
     (thanks to David Wilkinson - davidw@cascade.org.uk)
 	Internal/External meetings different colours
