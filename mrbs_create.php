@@ -42,14 +42,14 @@ $db_login = "mrbs";
 // Database login password:
 $db_password = "mrbs-password";
 
-// Boolean flag that indicates whether the database should be created or use a
+// Flag that indicates whether the database should be created or use a
 // previously installed database of the same name. Another circumstance on
-// which this flag may have to be set to FALSE is when the DBMS driver does
+// which this flag may have to be set to 0 is when the DBMS driver does
 // not support database creation or if this operation requires special
 // database administrator permissions that may not be available to the
 // database user.
 // Set $db_create to 0 to NOT create the database.
-$db_create = 0;
+$db_create = 1;
 
 // Communication protocol tu use. For pgsql, you can use 'unix' instead of
 // 'tcp' to use Unix Domain Sockets instead of TCP/IP.
@@ -77,17 +77,21 @@ $dsn = array
     "protocol" => $db_protocol,
     "port"	   => $db_port
 );
+$options = array
+(
+    "optimize"   => 'portability'
+);
 $manager = new MDB_manager;
-$manager->connect($dsn);
+$manager->connect($dsn, $options);
 $success = $manager->updateDatabase($schema_file, $schema_file . ".before", $variables);
 if (MDB::isError($success))
 {
-	echo "Error: " . $success->getMessage() . "\n";
-    echo "Error: " . $success->getUserInfo() . "\n";
+	echo "Error: " . $success->getMessage() . "<BR>";
+    echo "Error: " . $success->getUserInfo() . "<BR>";
 }
 if (count($manager->warnings)>0)
 {
-	echo "WARNING:\n",implode($manager->getWarnings(),"!\n"),"\n";
+	echo "WARNING:<BR>",implode($manager->getWarnings(),"!\n"),"\n";
 }
 
 ?>
