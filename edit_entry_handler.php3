@@ -111,7 +111,7 @@ switch($rep_type)
 $reps = mrbsGetRepeatEntryList($starttime, $rep_enddate, $rep_type, $rep_opt, $max_rep_entrys);
 if(!empty($reps))
 {
-	if(count($reps) <= $max_rep_entrys)
+	if(count($reps) < $max_rep_entrys)
 	{
 		$diff = $endtime - $starttime;
 		
@@ -124,7 +124,10 @@ if(!empty($reps))
 		}
 	}
 	else
-		$err = $lang[too_may_entrys];
+	{
+		$err        = $lang[too_may_entrys] . "<P>";
+		$hide_title = 1;
+	}
 }
 else
 	$err = mrbsCheckFree($room_id, $starttime, $endtime-1, $id);
@@ -177,10 +180,16 @@ if(empty($err))
 if(strlen($err))
 {
 	echo "<H2>" . $lang[sched_conflict] . "</H2>";
-	echo $lang[conflict];
-	echo "<UL>";
+	if(!$hide_title)
+	{
+		echo $lang[conflict];
+		echo "<UL>";
+	}
+	
 	echo $err;
-	echo "</UL>";
+	
+	if(!$hide_title)
+		echo "</UL>";
 }
 
 echo "<a href=$returl>$lang[returncal]</a><p>";

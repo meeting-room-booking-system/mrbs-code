@@ -40,8 +40,8 @@ $ldap_base_dn[] = "ou=organizationalunit3,o=organization,c=MY";
 # Default is half an hour - 1800 seconds
 $resolution = 1800;
 
-# Maximum repeating entrys
-$max_rep_entrys = 365;
+# Maximum repeating entrys (max needed +1)
+$max_rep_entrys = 365 + 1;
 
 # Language
 
