@@ -190,7 +190,7 @@ if(empty($err))
                                       isset($rep_num_weeks) ? $rep_num_weeks : 0);
             // Send a mail to the Administrator
             if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
-                MAIL_ROOM_ADMIN_ON_BOOKINGS)
+                MAIL_ROOM_ADMIN_ON_BOOKINGS or MAIL_BOOKER)
             {
                 include_once "functions_mail.inc";
                 // Send a mail only if this a new entry, or if this is an
@@ -234,7 +234,7 @@ if(empty($err))
                                      $create_by, $name, $type, $description);
             // Send a mail to the Administrator
             if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
-                MAIL_ROOM_ADMIN_ON_BOOKINGS)
+                MAIL_ROOM_ADMIN_ON_BOOKINGS or MAIL_BOOKER)
             {
                 include_once "functions_mail.inc";
                 // Send a mail only if this a new entry, or if this is an

@@ -326,9 +326,32 @@ to administer the system. Demo users are "alice" and "bob" (passwords "a" and
 
 6. Email support:
 
-MRBS can send emails to the administrator (or any adress) to notify a new or
-changed entry. You must set the following parameters if you want to send
-Emails from MRBS:
+MRBS can send emails to various recipients and in accordance with events.
+
+There are four recipients types:
+
+- MRBS administrator
+- Area administrators
+- Room administrators
+- Bookers
+
+With settings described below, you can decide that MRBS sends emails to all
+these recipients, or any combination of them. Each one can be selected
+individually. Note that the word 'administrator' is used here only for mail
+purposes, it is not related to any approval workflow.
+
+There are three events types:
+
+- entry creation
+- entry change
+- entry deletion
+
+As for recipients, you can choose to send mails for any of these three events.
+
+There are many other settings, including mail transport agent (php mail, smtp
+server, unix sendmail), content of the mail subject and body, either a link to
+the entries or full description (with changes between edited entry and its
+previous state). Read the following parameters for detailed informations:
 
 MAIL_ADMIN_ON_BOOKINGS
 
@@ -348,7 +371,8 @@ Default is FALSE. Room admin emails are set in room_area admin page.
 MAIL_ADMIN_ON_DELETE
 
 Set to TRUE if you want ADMIN to be notified when entries are deleted. Email
-will be sent to mrbs admin, area admin and room admin as per above settings.
+will be sent to mrbs admin, area admin and room admin as per above settings,
+as well as to booker if MAIL_BOOKER is TRUE (see below).
 
 MAIL_ADMIN_ALL
 
@@ -360,12 +384,33 @@ fields in brackets after the new value if MAIL_DETAILS is set to TRUE
 MAIL_DETAILS
 
 Set to TRUE is you want to show entry details in email, otherwise only a
-link to view_entry is provided. Irrelevant for deleted entries. Default is
-FALSE.
+link to view_entry is provided. Irrelevant for deleted entries, as email body
+will always have entry details, since there is no possibility to provide a
+link. Default is FALSE.
+
+MAIL_BOOKER
+
+Set to TRUE if you want the entry booker to receive a copy of his entry as
+well as any future changes (depends of MAIL_ADMIN_ALL, see below). Default
+is FALSE. MRBS can turn some of your user databases to advantage, as there
+are several authentication schemes where the username is the same as
+the email address username .For example, if your mrbs users come from an
+ldap directory and mrbs use this authentication scheme, it is likely your
+organisation emails addresses will use this username with '@domain'. If
+this is the case, you just have to set MAIL_BOOKER to TRUE and provide your
+domain below. This setting is available too if you use MRBS own user
+database (auth_db).
+
+MAIL_DOMAIN
+
+If MAIL_BOOKER is set to TRUE (see above) and you use an authentication
+scheme other than 'auth_db', you need to provide the mail domain that will
+be appended to the username to produce a valid email address (ie.
+"@domain.com").
 
 MAIL_ADMIN_BACKEND
 
-Set the name of the Backend use to transport your mails. Either "mail",
+Set the name of the backend to use to transport your mails. Either "mail",
 "smtp" or "sendmail":
 
 ·   mail
@@ -379,7 +424,7 @@ settings in php.ini :
 Sends a mail using a sendmail unix program.
 
 ·   smtp
-Sends a mail directly connecting to a smtp server.
+Sends a mail connecting directly to an smtp server.
 
 # Sendmail settings
 
@@ -410,17 +455,19 @@ Set whether or not to use SMTP authentication. Default is 'FALSE'
 
 SMTP_USERNAME
 
-Set the username to use for SMTP authentication. Default is ''
+Set the username to use for SMTP authentication. Use only if SMTP_AUTH is
+set to TRUE. Default is ''
 
 SMTP_PASSWORD
 
-Set the password to use for SMTP authentication. Default is ''
+Set the password to use for SMTP authentication. Use only if SMTP_AUTH is
+set to TRUE. Default is ''
 
 # Miscellaneous settings
 
 MAIL_ADMIN_LANG
 
-Set the language used for emails (choose an available lang.* file).
+Set the language used for emails (chooses from an available lang.* file).
 Default is 'en'.
 
 MAIL_FROM

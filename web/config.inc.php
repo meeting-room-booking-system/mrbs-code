@@ -237,7 +237,8 @@ define ("MAIL_AREA_ADMIN_ON_BOOKINGS", FALSE);
 define ("MAIL_ROOM_ADMIN_ON_BOOKINGS", FALSE);
 
 # Set to TRUE if you want ADMIN to be notified when entries are deleted. Email
-# will be sent to mrbs admin, area admin and room admin as per above settings.
+# will be sent to mrbs admin, area admin and room admin as per above settings,
+# as well as to booker if MAIL_BOOKER is TRUE (see below).
 define ("MAIL_ADMIN_ON_DELETE", FALSE);
 
 # Set to TRUE if you want to be notified on every change (i.e, on new entries)
@@ -249,7 +250,18 @@ define ("MAIL_ADMIN_ALL", FALSE);
 # FALSE.
 define ("MAIL_DETAILS", FALSE);
 
-# Set the name of the Backend use to transport your mails. Either "mail",
+# Set to TRUE if you want BOOKER to receive a copy of his entries as well any
+# changes (depends of MAIL_ADMIN_ALL, see below). Default is FALSE. To know
+# how to set mrbs to send emails to users/bookers, see INSTALL.
+define ("MAIL_BOOKER", FALSE);
+
+# If MAIL_BOOKER is set to TRUE (see above) and you use an authentication
+# scheme other than 'auth_db', you need to provide the mail domain that will
+# be appended to the username to produce a valid email address (ie.
+# "@domain.com").
+define ("MAIL_DOMAIN", '');
+
+# Set the name of the backend to use to transport your mails. Either "mail",
 # "smtp" or "sendmail". Default is 'mail'. See INSTALL for more details.
 define ("MAIL_ADMIN_BACKEND", "mail");
 
@@ -262,7 +274,7 @@ define ("SENDMAIL_PATH", "/usr/bin/sendmail");
 
 # Set additional Sendmail parameters (only used with "sendmail" backend).
 # (example "-t -i"). Default is ""
-define ("SENDMAIL_ARGS", "");
+define ("SENDMAIL_ARGS", '');
 
 #*******************
 # SMTP settings

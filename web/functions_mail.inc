@@ -102,7 +102,137 @@ function notifyAdminOnBooking($new_entry , $new_id)
     global $url_base, $returl, $mail_vocab, $name, $description, $area_name;
     global $room_name, $starttime, $duration, $dur_units, $end_date, $endtime;
     global $rep_enddate, $typel, $type, $create_by, $rep_type, $enable_periods;
-    global $tbl_room, $tbl_area, $tbl_entry, $mail_previous;
+    global $tbl_room, $tbl_area, $tbl_entry, $tbl_users, $mail_previous, $auth;
+    //
+    $recipients = '';
+    (MAIL_ADMIN_ON_BOOKINGS) ? $recipients = MAIL_RECIPIENTS : '';
+    if (MAIL_AREA_ADMIN_ON_BOOKINGS)
+    {
+        // Look for list of area admins emails addresses
+        if ($new_entry)
+        {
+            $sql = "SELECT a.area_admin_email ";
+            $sql .= "FROM $tbl_room r, $tbl_area a, $tbl_entry e ";
+            $sql .= "WHERE e.id=$new_id AND r.id=e.room_id AND a.id=r.area_id";
+            $res = sql_query($sql);
+            (! $res) ? fatal_error(0, sql_error()) : '';
+            $row = sql_row($res, 0);
+            sql_free($res);
+            if ( empty($recipients) && (NULL != $row[0]) )
+            {
+                $recipients .= $row[0];
+            }
+            elseif ( !empty($recipients) && (NULL != $row[0]) )
+            {
+                $recipients .= ',' . $row[0];
+            }
+        }
+        else
+        // if this is an edited entry, we already have area_admin_email,
+        // avoiding a database hit.
+        {
+           if ( empty($recipients) && ('' != $mail_previous['area_admin_email']) )
+           {
+               $recipients .= $mail_previous['area_admin_email'];
+           }
+           elseif ( !empty($recipients) && ('' != $mail_previous['area_admin_email']) )
+           {
+               $recipients .= ',' . $mail_previous['area_admin_email'];
+           }
+        }
+    }
+    if (MAIL_ROOM_ADMIN_ON_BOOKINGS)
+    {
+        // Look for list of room admins emails addresses
+        if ($new_entry)
+        {
+            $sql = "SELECT r.room_admin_email ";
+            $sql .= "FROM $tbl_room r, $tbl_entry e ";
+            $sql .= "WHERE e.id=$new_id AND r.id=e.room_id";
+            $res = sql_query($sql);
+            (! $res) ? fatal_error(0, sql_error()) : '';
+            $row = sql_row($res, 0);
+            sql_free($res);
+            if ( empty($recipients) && (NULL != $row[0]) )
+            {
+                $recipients .= $row[0];
+            }
+            elseif ( !empty($recipients) && (NULL != $row[0]) )
+            {
+                $recipients .= ',' . $row[0];
+            }
+        }
+        else
+        // if this is an edited entry, we already have room_admin_email,
+        // avoiding a database hit.
+        {
+           if ( empty($recipients) && ('' != $mail_previous['room_admin_email']) )
+           {
+               $recipients .= $mail_previous['room_admin_email'];
+           }
+           elseif ( !empty($recipients) && ('' != $mail_previous['room_admin_email']) )
+           {
+               $recipients .= ',' . $mail_previous['room_admin_email'];
+           }
+        }
+    }
+    if (MAIL_BOOKER)
+    {
+        if ('db' == $auth['type'])
+        {
+            /* It would be possible to move this query within the query in
+               getPreviousEntryData to have all in one central place and to
+               reduce database hits by one. However this is a bad idea. If a
+               user is deleted from your user database, this will prevent all
+               mails to admins when this user previously booked entries will
+               be changed, as no user name will match the booker name */
+            $sql = "SELECT email FROM $tbl_users WHERE name='";
+            $sql .= ($new_entry) ? $create_by : $mail_previous['createdby'];
+            $sql .= "'";
+            $res = sql_query($sql);
+            (! $res) ? fatal_error(0, sql_error()) : '';
+            $row = sql_row($res, 0);
+            if ( empty($recipients) && (NULL != $row[0]) )
+            {
+                $recipients .= $row[0];
+            }
+            elseif ( !empty($recipients) && (NULL != $row[0]) )
+            {
+                $recipients .= ',' . $row[0];
+            }
+        }
+        else
+        {
+            if ($new_entry)
+            {
+                if ( empty($recipients) && ('' != $create_by) )
+                {
+                    $recipients .= $create_by . MAIL_DOMAIN;
+                }
+                elseif ( !empty($recipients) && ('' != $create_by) )
+                {
+                    $recipients .= ',' . $create_by . MAIL_DOMAIN;
+                }
+            }
+            else
+            {
+                if ( empty($recipients) && ('' != $mail_previous['createdby']) )
+                {
+                    $recipients .= $mail_previous['createdby'] . MAIL_DOMAIN;
+                }
+                elseif ( !empty($recipients) && ('' != $mail_previous['createdby']) )
+                {
+                    $recipients .= ',' . $mail_previous['createdby'] .
+                        MAIL_DOMAIN;
+                }
+            }
+        }
+    }
+    // In case $recipients is empty, no need to go further
+    if ('' == $recipients)
+    {
+        return FALSE;
+    }
     //
     $subject = $mail_vocab["mail_subject_entry"];
     if ($new_entry)
@@ -200,42 +330,8 @@ function notifyAdminOnBooking($new_entry , $new_id)
                 $mail_vocab["rep_type_$temp"], $new_entry) . "\n";
         }
     }
-    $recipients = '';
-    (MAIL_ADMIN_ON_BOOKINGS) ? $recipients = MAIL_RECIPIENTS : '';
-    if (MAIL_AREA_ADMIN_ON_BOOKINGS)
-    {
-        empty($recipients) ? '' : $recipients .= ",";
-        // Look for list of area admins emails addresses
-        $sql = "SELECT a.area_admin_email ";
-        $sql .= "FROM $tbl_room r, $tbl_area a, $tbl_entry e ";
-        $sql .= "WHERE e.id=$new_id AND r.id=e.room_id AND a.id=r.area_id";
-        $res = sql_query($sql);
-        (! $res) ? fatal_error(1, sql_error()) : '';
-        $row = sql_row($res, 0);
-        sql_free($res);
-        $recipients .= $row[0];
-    }
-    if (MAIL_ROOM_ADMIN_ON_BOOKINGS)
-    {
-        // Look for list of room admins emails addresses
-        empty($recipients) ? '' : $recipients .= ",";
-        $sql = "SELECT r.room_admin_email ";
-        $sql .= "FROM $tbl_room r, $tbl_entry e ";
-        $sql .= "WHERE e.id=$new_id AND r.id=e.room_id";
-        $res = sql_query($sql);
-        (! $res) ? fatal_error(1, sql_error()) : '';
-        $row = sql_row($res, 0);
-        sql_free($res);
-        $recipients .= $row[0];
-    }
-    // In case mail is allowed but someone forgot to supply email addresses...
-    if ('' != $recipients)
-    {
-        $result = sendMail($recipients, $subject, $body, MAIL_CC);
-        return $result;
-    }
-    // If no $recipients, return FALSE (instead of error)
-    return FALSE;
+    $result = sendMail($recipients, $subject, $body, MAIL_CC);
+    return $result;
 }
 
 // }}}
@@ -249,7 +345,75 @@ function notifyAdminOnBooking($new_entry , $new_id)
  */
 function notifyAdminOnDelete($mail_previous)
 {
-    global $mail_vocab, $typel, $enable_periods;
+    global $mail_vocab, $typel, $enable_periods, $auth, $tbl_users;
+    //
+    $recipients = '';
+    (MAIL_ADMIN_ON_BOOKINGS) ? $recipients = MAIL_RECIPIENTS : '';
+    if (MAIL_AREA_ADMIN_ON_BOOKINGS)
+    {
+        if ( empty($recipients) && ('' != $mail_previous['area_admin_email']) )
+        {
+            $recipients .= $mail_previous['area_admin_email'];
+        }
+        elseif ( !empty($recipients) && ('' != $mail_previous['area_admin_email']) )
+        {
+            $recipients .= ',' . $mail_previous['area_admin_email'];
+        }
+    }
+    if (MAIL_ROOM_ADMIN_ON_BOOKINGS)
+    {
+        if ( empty($recipients) && ('' != $mail_previous['room_admin_email']) )
+        {
+            $recipients .= $mail_previous['room_admin_email'];
+        }
+        elseif ( !empty($recipients) && ('' != $mail_previous['room_admin_email']) )
+        {
+            $recipients .= ',' . $mail_previous['room_admin_email'];
+        }
+    }
+    if (MAIL_BOOKER)
+    {
+        if ('db' == $auth['type'])
+        {
+            /* It would be possible to move this query within the query in
+               getPreviousEntryData to have all in one central place and to
+               reduce database hits by one. However this is a bad idea. If a
+               user is deleted from your user database, this will prevent all
+               mails to admins when this user previously booked entries will
+               be changed, as no user name will match the booker name */
+            $sql = "SELECT email
+                    FROM $tbl_users
+                    WHERE name='" . $mail_previous['createdby'] . "'";
+            $res = sql_query($sql);
+            (! $res) ? fatal_error(0, sql_error()) : '';
+            $row = sql_row($res, 0);
+            if ( empty($recipients) && (NULL != $row[0]) )
+            {
+                $recipients .= $row[0];
+            }
+            elseif ( !empty($recipients) && (NULL != $row[0]) )
+            {
+                $recipients .= ',' . $row[0];
+            }
+        }
+        else
+        {
+            if ( empty($recipients) && ('' != $mail_previous['createdby']) )
+            {
+                $recipients .= $mail_previous['createdby'] . MAIL_DOMAIN;
+            }
+            elseif ( !empty($recipients) && ('' != $mail_previous['createdby']) )
+            {
+                $recipients .= ',' . $mail_previous['createdby'] .
+                    MAIL_DOMAIN;
+            }
+        }
+    }
+    // In case mail is allowed but someone forgot to supply email addresses...
+    if ('' == $recipients)
+    {
+        return FALSE;
+    }
     //
     $subject = $mail_vocab["mail_subject_delete"];
     $body = $mail_vocab["mail_body_del_entry"] . "\n\n";
@@ -295,26 +459,8 @@ function notifyAdminOnDelete($mail_previous)
     $temp = $mail_previous['rep_type'];
     $body .=  " " . $mail_vocab["rep_type_$temp"] . "\n";
     // End of mail details
-    $recipients = '';
-    (MAIL_ADMIN_ON_BOOKINGS) ? $recipients = MAIL_RECIPIENTS : '';
-    if (MAIL_AREA_ADMIN_ON_BOOKINGS)
-    {
-        empty($recipients) ? '' : $recipients .= ",";
-        $recipients .= $mail_previous['area_admin_email'];
-    }
-    if (MAIL_ROOM_ADMIN_ON_BOOKINGS)
-    {
-        empty($recipients) ? '' : $recipients .= ",";
-        $recipients .= $mail_previous['room_admin_email'];
-    }
-    // In case mail is allowed but someone forgot to supply email addresses...
-    if ('' != $recipients)
-    {
-        $result = sendMail($recipients, $subject, $body, MAIL_CC);
-        return $result;
-    }
-    // If no $recipients, return FALSE (instead of error)
-    return FALSE;
+    $result = sendMail($recipients, $subject, $body, MAIL_CC);
+    return $result;
 }
 
 // }}}

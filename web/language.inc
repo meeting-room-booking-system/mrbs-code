@@ -122,7 +122,7 @@ $lang_map_unix = array
 
 // Get first default set of language tokens for emails.
 if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
-    MAIL_ROOM_ADMIN_ON_BOOKINGS)
+    MAIL_ROOM_ADMIN_ON_BOOKINGS or MAIL_BOOKER)
 {
     include "lang." . $default_language_tokens;
     include "lang." . MAIL_ADMIN_LANG;

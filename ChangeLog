@@ -1,3 +1,7 @@
+2004-05-06  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* INSTALL (1.32): Added details about $morningstarts_minutes
+
 2004-05-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* INSTALL (1.31), UPGRADE (1.7), tables.my.sql (1.5),

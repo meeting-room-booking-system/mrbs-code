@@ -1,3 +1,31 @@
+2004-05-06  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* config.inc.php (1.34), day.php (1.36), week.php (1.37): Added
+	  $morningstarts_minutes to allow for a day to start at say 8:30
+	  am.  Default value is 0.
+
+2004-05-06  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* day.php (1.35): Modified so that capacity is not displayed in
+	  brackets next to room name if capacity is 0.	This helps where
+	  the "room" is a piece of equipment or a person.  Thanks to
+	  Michael Hellwig.
+
+2004-05-06  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* day.php (1.34), week.php (1.36): Modified week and day to be
+	  consistent in the way that they are displayed normally and in
+	  print preview if no area/room is defined.
+
+2004-05-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* lang.de (1.16): lang fix (Michael Glaessel)
+
+2004-05-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* functions_mail.inc (1.4): - Fixed bug #948246 :SQL syntax error
+	  when sending emails for deleted entries.
+
 2004-05-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* edit_users.php (1.9): + added email address validation
