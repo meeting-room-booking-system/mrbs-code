@@ -300,4 +300,74 @@ locale support is installed.
 
 From mrbs-1.2-pre2, MRBS can be called  fulled Unicode, as long as the 
 config variable $unicode_encoding is set to 1 (this is a default setting now). 
-If this is set, then MRBS serves a                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+If this is set, then MRBS serves all of it's pages in UTF-8 and stores
+everything in the database in UTF-8. This means that all languages work
+together. So, the Japanese one may use "Shift JIS", European ones "iso-8859-1"
+(or perhaps "iso-8859-15", etc). So, MRBS translates all these different
+encodings into an encoding that can represent all of them, UTF-8. Then,
+all pages are displayed in UTF-8, and all text in the database is encoded
+in UTF-8 too.
+
+IF THIS DOES NOT WORK for you (your server may not have unicode support),
+just set $unicode_encoding to 0. MRBS will run the old way, with each
+language string stored using its own character set.
+
+To  use Unicode, php should be built with 'iconv' support ('--with-iconv'
+directive). On Windows, three things are needed :
+
+- iconv.dll file in in the system path. Either copy it from your
+  \%phpdir%\dlls\ directory into \%windir%\system32\ directory,
+  or add your \%phpdir%\dlls\ directory to your PATH environment variable.
+  (Note: for Microsoft IIS, you HAVE to copy iconv.dll into \%windir%\system32\)
+- uncomment php_iconv.dll in php.ini.
+- extension directory in php.ini have to be properly set to your actual
+  \%phpdir%\extensions\
+
+
+Note: Upgrading mysql database from previous charsets to Unicode :
+
+	  You can use convert_db_to_utf8.php script to convert text in the
+	  database to UTF8, to use MRBS with $unicode_encoding set to 1. The
+	  administrator should copy it into the web directory, run it (choosing
+	  the encoding to convert from) ONCE, and then move it back out of the
+	  web directory. We recommend you backup your database before running
+	  this script if you are at all worried.
+
+
+7. Entry Types:
+
+By default, MRBS defines two "meeting types" - internal and external. There
+are a total of 10 types ready to be used, if you assign names to them in
+your config.inc.php file. Each type has a color, defined in the style sheet.
+
+
+HELP/FAQ File:
+
+Customize site_faq.html if desired.  It contains help that can be tailored
+to your environment. Currently this help is available in english and in french.
+
+
+SECURITY NOTES!
+---------------------------------------------------------------------------
+You can configure your web server so that users can not obtain the ".inc"
+files but this is not essential, since critical files containing your
+database login and password use a ".php" extension like config.inc.php.
+See your web server documentation on how to do this.
+
+There is an Apache .htaccess file included, but Apache might ignore it because
+of the "AllowOverride None" in your httpd.conf. Either change "AllowOverride
+None" to "AllowOverride Limit", create a new <Directory> entry with the
+contents of the .htaccess file in it, or add the contents of the .htaccess
+to httpd.conf where it says "<Files ~ "^\.ht">". And then read the Apache
+docs five or six times, until you know what you just did.
+
+You may protect "config.inc.php" to only allow the web server to read it.
+For example:   # chown httpd config.inc.php; chmod 400 config.inc.php
+
+The script "testdata.php" is for testing only.  Do not leave it in a
+directory accessible to your web server. Anyone running this will add a
+large number of test entries to your database, regardless of
+authentication, and book all your rooms to people you've never heard of.
+
+$Id$
+
