@@ -232,5 +232,8 @@ $typel["I"] = $vocab["internal"];
 # Disable magic quoting on database returns:
 set_magic_quotes_runtime(0);
 
+# Make sure notice errors are not reported, they can break mrbs code:
+#------------------------------------------------------------------------
+error_reporting (E_ALL ^ E_NOTICE);
 
 ?>
