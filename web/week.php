@@ -50,10 +50,16 @@ if( $enable_periods ) {
 	$format = "i";
 	$resolution = 60;
 	$morningstarts = 12;
+	$morningstarts_minutes = 0;
 	$eveningends = 12;
 	$eveningends_minutes = count($periods)-1;
 
 }
+
+# ensure that $morningstarts_minutes defaults to zero if not set
+if( empty( $morningstarts_minutes ) )
+	$morningstarts_minutes=0;
+
 # Define the start and end of each day of the week in a way which is not
 # affected by daylight saving...
 for ($j = 0; $j<=($num_of_days-1); $j++) {
@@ -63,7 +69,7 @@ for ($j = 0; $j<=($num_of_days-1); $j++) {
 	#  0 => entering DST
 	#  1 => leaving DST
 	$dst_change[$j] = is_dst($month,$day+$j,$year);
-	$am7[$j]=mktime($morningstarts,0,0,$month,$day+$j,$year,is_dst($month,$day+$j,$year,$morningstarts));
+	$am7[$j]=mktime($morningstarts,$morningstarts_minutes,0,$month,$day+$j,$year,is_dst($month,$day+$j,$year,$morningstarts));
 	$pm7[$j]=mktime($eveningends,$eveningends_minutes,0,$month,$day+$j,$year,is_dst($month,$day+$j,$year,$eveningends));
 }
 
@@ -318,7 +324,7 @@ $hilite_url="week.php?year=$year&month=$month&day=$day&area=$area&room=$room&tim
 
 $row_class = "even_row";
 for (
-	$t = mktime($morningstarts, 0, 0, $month, $day+$j, $year);
+	$t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
 	$t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
 	$t += $resolution, $row_class = ($row_class == "even_row")?"odd_row":"even_row"
 )

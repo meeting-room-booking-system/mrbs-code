@@ -68,6 +68,15 @@ $resolution = 1800;
 $morningstarts = 7;
 $eveningends   = 19;
 
+# Minutes to add to $morningstarts to get to the real start of the day.
+# Be sure to consider the value of $eveningends_minutes if you change
+# this, so that you do not cause a day to finish before the start of
+# the last period.  For example if resolution=3600 (1 hour)
+# morningstarts = 8 and morningstarts_minutes = 30 then for the last
+# period to start at say 4:30pm you would need to set eveningends = 16
+# and eveningends_minutes = 30
+$morningstarts_minutes = 0;
+
 # Minutes to add to $eveningends hours to get the real end of the day.
 # Examples: To get the last slot on the calendar to be 16:30-17:00, set
 # eveningends=16 and eveningends_minutes=30. To get a full 24 hour display
