@@ -1,7 +1,21 @@
+Version 0.6 (Sat May 27 09:09:11 BST 2000)
+   Fixed bug in edit_entry_handler.php3 which made any
+	 booking made between the 1st and 9th of the month
+	 actually happen on the 1st of Jan for that year
+	Fixed bug in day.php3 where any booking past
+	 midnight would not show up
+	Related bug which meant that bookings longer than
+	 one day wouldn't be displayed.
+	Fixed bug where editing a booking would default to
+	 today's date, not the booking's date
+	Added .htaccess to protect .inc files
+   Moved start and end of day config variables to
+	 config.inc
+
 Version 0.5 (Mon May 22 12:07:14 BST 2000)
 	Added admin.php3 so areas/rooms can be done
 	 by web rather than by SQL
-	 
+
 Version 0.2 (Sun May 21 22:35:33 BST 2000)
 	Working OK from user perspective
 	All admin done by SQL

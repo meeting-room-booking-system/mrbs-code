@@ -14,4 +14,8 @@ $mysql_password = "secret";
 $mysql_database = "mrbs";
 
 
+# Start and end of day (default is 7-19)
+$morningstarts = 7;
+$eveningends   = 19;
+
 ?>

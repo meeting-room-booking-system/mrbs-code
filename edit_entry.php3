@@ -98,28 +98,28 @@ function validate_and_submit () {
 <TR><TD><B>Date:</B></TD>
   <TD><SELECT NAME="day">
 <?php
-  if ( $day == 0 )
-    $day = date ( "d" );
-  for ( $i = 1; $i <= 31; $i++ ) echo "<OPTION " . ( $i == $day ? " SELECTED" : "" ) . ">$i";
+  if ( $start_day == 0 )
+    $start_day = date ( "d" );
+  for ( $i = 1; $i <= 31; $i++ ) echo "<OPTION " . ( $i == $start_day ? " SELECTED" : "" ) . ">$i";
 ?>
   </SELECT>
   <SELECT NAME="month">
 <?php
-  if ( $month == 0 )
-    $month = date ( "m" );
-  if ( $year == 0 )
-    $year = date ( "Y" );
+  if ( $start_month == 0 )
+    $start_month = date ( "m" );
+  if ( $start_year == 0 )
+    $start_year = date ( "Y" );
   for ( $i = 1; $i <= 12; $i++ ) {
-    $m = strftime ( "%b", mktime ( 0, 0, 0, $i, 1, $year ) );
-    print "<OPTION VALUE=\"$i\"" . ( $i == $month ? " SELECTED" : "" ) . ">$m";
+    $m = strftime ( "%b", mktime ( 0, 0, 0, $i, 1, $start_year ) );
+    print "<OPTION VALUE=\"$i\"" . ( $i == $start_month ? " SELECTED" : "" ) . ">$m";
   }
 ?>
   </SELECT>
   <SELECT NAME="year">
 <?php
   for ( $i = -1; $i < 5; $i++ ) {
-    $y = date ( "Y" ) + $i;
-    print "<OPTION VALUE=\"$y\"" . ( $y == $year ? " SELECTED" : "" ) . ">$y";
+    $y = $start_year + $i;
+    print "<OPTION VALUE=\"$y\"" . ( $y == $start_year ? " SELECTED" : "" ) . ">$y";
   }
 ?>
   </SELECT>

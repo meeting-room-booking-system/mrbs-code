@@ -60,9 +60,4 @@ the ".inc" files.  For example, if a user typed in the URL for the
 which is not a good thing.  See your web server documentation on how to
 do this.
 
-
-RUN WITH IT
----------------------------------------------------------------------------
-You can place the calendar db tables in an existing database or
-Hey, you're done...  Give it a try by going to http://wherever/mrbs/
-
+There is an Apache .htaccess file included, but Apache might ignore it because of the "AllowOverride None" in your httpd.conf. Either change "AllowOverride None" to "AllowOverride Limit", create a new <Directory> entry with the contents of the .htaccess file in it, or add the contents of the .htaccess to httpd.conf where it says "<Files ~ "^\.ht">". And then read the Apache docs five or six times, until you know what you just did.

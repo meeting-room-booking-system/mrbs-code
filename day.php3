@@ -26,8 +26,8 @@ if (!$day or !$month or !$year) {
 }
 
 # Define the start of day and end of day (default is 7-7)
-$am7=mktime(7,00,0,$month,$day,$year);
-$pm7=mktime(19,0,0,$month,$day,$year);
+$am7=mktime($morningstarts,00,0,$month,$day,$year);
+$pm7=mktime($eveningends,0,0,$month,$day,$year);
 
 #Let the user know what date they chose
 echo "<table><tr><td width=\"100%\">";
@@ -82,8 +82,9 @@ $sql = "select create_by, mrbs_room.id, unix_timestamp(start_time), unix_timesta
 from mrbs_entry left join mrbs_room on mrbs_entry.room_id = mrbs_room.id
 
 where area_id = $area 
-      and start_time > '$year-$month-$day' 
-		and end_time < '$tf'
+      and (date_format(start_time,'Y-m-d') = '$year-$month-$day' 
+		or date_format(end_time,'Y-m-d') = '$year-$month-$day'
+		or '$year-$month-$day' between start_time and end_time)
 ";
 
 $res = mysql_query($sql);

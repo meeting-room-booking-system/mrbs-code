@@ -51,8 +51,8 @@ function times_overlap ( $time1, $duration1, $time2, $duration2 ) {
 #   where the room is the same
 
 # Make the start time in mysql format
-if (strlen($month) == 1) { $month = "0$month";}
-if (strlen($day)   == 1) { $month = "0$day";}
+if (strlen($month) == 1) { $month = "0".$month;}
+if (strlen($day)   == 1) { $day   = "0".$day;  }
 $starttime = "$year-$month-$day $hour:$minute";
 $duration_min = $duration * 60;
 
