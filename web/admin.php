@@ -114,7 +114,7 @@ if(isset($area)) {
 </td>
 
 <td>
-<?php if(isset($area)) { ?>
+<?php if (0 != $area) { ?>
 <h3 ALIGN=CENTER><?php echo get_vocab("addroom") ?></h3>
 <form action=add.php method=post>
 <input type=hidden name=type value=room>
