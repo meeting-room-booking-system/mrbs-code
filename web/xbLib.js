@@ -494,7 +494,7 @@ function BeginActiveCell()
 {
     if (useJS)
         {
-        document.write("<table class=\"naked\" width=\"100%\" height=\"100%\" onMouseOver=\"ActivateCell(this)\" onMouseOut=\"UnactivateCell(this)\" onClick=\"GotoLink(this)\">\n<td class=\"naked\">\n");
+        document.write("<table class=\"naked\" width=\"100%\" cellSpacing=\"0\" onMouseOver=\"ActivateCell(this)\" onMouseOut=\"UnactivateCell(this)\" onClick=\"GotoLink(this)\">\n<td class=\"naked\">\n");
 	// Note: The &nbsp; below is necessary to fill-up the cell. Empty cells behave badly in some browsers.
         if (!show_plus_link) document.write("&nbsp;<div style=\"display:none\">\n"); // This will hide the (+) link.
         }
