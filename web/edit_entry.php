@@ -178,6 +178,15 @@ function validate_and_submit ()
     return false;
   }
   
+  i1 = parseInt(document.forms["main"].id.value);
+  i2 = parseInt(document.forms["main"].rep_id.value);
+  n = parseInt(document.forms["main"].rep_num_weeks.value);
+  if ((!i1 || (i1 && i2)) && document.forms["main"].rep_type && document.forms["main"].rep_type[6].checked && (!n || n < 2))
+  {
+    alert("You have not entered a\nuseful n-weekly value.");
+    return false;
+  }
+  
   // would be nice to also check date to not allow Feb 31, etc...
   document.forms["main"].submit();
   
