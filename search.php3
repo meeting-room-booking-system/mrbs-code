@@ -53,14 +53,13 @@ if($total == 0)
    exit;
 }
 
-$first = (!$search_pos || $search_pos <= 0);
-$last  = ( $search_pos && $search_pos > ($total - $search[count]));
-
-if($first)
+if(!$search_pos || $search_pos <= 0)
 	$search_pos = 0;
-
-if($last)
-	$search_pos = $total - $search[count];
+else
+{
+	if($search_pos >= $total)
+		$search_pos = $total - ($total % $search[count]);
+}
 
 # Now we set up the "real" query using LIMIT to just get the stuff we want
 $sql = "SELECT id, create_by, name, description, start_time
