@@ -366,7 +366,7 @@ function period_date_string($t, $mod_time=0)
         global $periods;
 
 	$time = getdate($t);
-        $p_num = $time[minutes] + $mod_time;
+        $p_num = $time["minutes"] + $mod_time;
         if( $p_num < 0 ) $p_num = 0;
         if( $p_num >= count($periods) - 1 ) $p_num = count($periods ) - 1;
 	# I have made the separater a ',' as a '-' leads to an ambiguious
@@ -379,7 +379,7 @@ function period_time_string($t, $mod_time=0)
         global $periods;
 
 	$time = getdate($t);
-        $p_num = $time[minutes] + $mod_time;
+        $p_num = $time["minutes"] + $mod_time;
         if( $p_num < 0 ) $p_num = 0;
         if( $p_num >= count($periods) - 1 ) $p_num = count($periods ) - 1;
         return $periods[$p_num];
