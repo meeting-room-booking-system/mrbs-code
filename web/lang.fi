@@ -1,5 +1,5 @@
 <?php
-# $Id
+# $Id : lang.fi,v 1.1 Thu Jan 30 2003 thierry_bo Exp $
 
 # This file contains PHP code that specifies language specific strings
 # The default strings come from lang.en, and anything in a locale
@@ -69,7 +69,7 @@ $vocab["rep_type_6"]         = "Määräaikainen viikoittainen";
 $vocab["rep_end_date"]       = "Toiston loppupäivämäärä:";
 $vocab["rep_rep_day"]        = "Toiston viikonpäivä:";
 $vocab["rep_for_weekly"]     = "(viikottaiselle toistolle)";
-$vocab["rep_freq"]           = "Tiheys:";viikkoa";
+$vocab["rep_freq"]           = "Tiheys:";
 $vocab["rep_num_weeks"]      = "Montako viikkoa";
 $vocab["rep_for_nweekly"]    = "(määräaikaiselle viikottaiselle)";
 $vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
