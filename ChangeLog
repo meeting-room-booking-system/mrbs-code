@@ -2,6 +2,10 @@ CVS (Fri Mar 28 2003)
    - Fixed bug in escaping of username and password for
      all authentication schemes that use HTTP authentication.
 
+CVS (Thu Mar 27 2003)
+   - Fixed bug : if AM/PM hour format is used, bookings between
+     12:00 PM and 12:59 PM are stored with a wrong start date.
+
 CVS (Tue Mar 11           GMT 2003)
    + Added translation:     Danish (Claes Bolvig Pedersen (cp@dhi.dk))
    - changed mrbs_version in help.php to "MRBS 1.1"
