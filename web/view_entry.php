@@ -40,7 +40,7 @@ WHERE mrbs_entry.room_id = mrbs_room.id
 $res = sql_query($sql);
 if (! $res) fatal_error(0, sql_error());
 
-if(sql_count($res) < 1) fatal_error(0, "Invalid entry id.");
+if(sql_count($res) < 1) fatal_error(0, $vocab['invalid_entry_id']);
 
 $row = sql_row($res, 0);
 sql_free($res);
