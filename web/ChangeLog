@@ -1,5 +1,14 @@
 2004-05-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
+	* edit_entry_handler.php (1.22), functions_mail.inc (1.8): + If
+	  MAIL_DOMAIN is used and username returned by mrbs contains extra
+	  strings appended like domain name ('username.domain'), need to
+	  provide this extra string so that it will be removed from the
+	  username.  - Fixed bug: if MAIL_BOOKER is enabled, previous
+	  booker was empty if MAIL_DETAILS was not set.
+
+2004-05-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
 	* functions_mail.inc (1.7): - (sendMail()): forgot to add the 'To'
 	  header to mails. Some smtp servers and sendmail may display
 	  'undisclosed-recipients: <undisclosed-recipients:>' instead of

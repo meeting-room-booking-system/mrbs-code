@@ -261,7 +261,12 @@ define ("MAIL_BOOKER", FALSE);
 # "@domain.com").
 define ("MAIL_DOMAIN", '');
 
-# Set the name of the backend to use to transport your mails. Either "mail",
+# If you use MAIL_DOMAIN above and username returned by mrbs contains extra
+# strings appended like domain name ('username.domain'), you need to provide
+# this extra string here so that it will be removed from the username.
+define ("MAIL_USERNAME_SUFFIX", '');
+
+# Set the name of the Backend used to transport your mails. Either "mail",
 # "smtp" or "sendmail". Default is 'mail'. See INSTALL for more details.
 define ("MAIL_ADMIN_BACKEND", "mail");
 
