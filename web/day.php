@@ -101,8 +101,9 @@ for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 	# or the day start time, whichever is later. End one slot before the
 	# meeting end time (since the next slot is for meetings which start then),
 	# or at the last slot in the day, whichever is earlier.
+	# Note: int casts on database rows for max may be needed for PHP3.
 	$end_t = min($row[2] - $resolution, $pm7);
-	for ($t = max($row[1], $am7); $t <= $end_t; $t += $resolution)
+	for ($t = max((int)$row[1], $am7); $t <= $end_t; $t += $resolution)
 	{
 		$today[$row[0]][$t]["id"]    = $row[4];
 		$today[$row[0]][$t]["color"] = $row[5];
@@ -130,7 +131,7 @@ $res = sql_query($sql);
 if (! $res) fatal_error(0, sql_error());
 if (sql_count($res) == 0)
 {
-	echo "<h1>No rooms defined for this area</h1>";
+	echo "<h1>$lang[no_rooms_for_area]</h1>";
 	sql_free($res);
 }
 else
@@ -158,7 +159,9 @@ else
 	for ($t = $am7; $t <= $pm7; $t += $resolution)
 	{
 		# Show the time linked to the URL for highlighting that time
-		echo "<tr><td class=red><a href=\"$hilite_url=$t\">" . date("H:i",$t) . "</a></td>";
+		echo "<tr>";
+		tdcell("red");
+		echo "<a href=\"$hilite_url=$t\">" . date("H:i",$t) . "</a></td>";
 
 		# Loop through the list of rooms we have for this area
 		while (list($key, $room) = each($rooms))
@@ -182,7 +185,7 @@ else
 			else
 				$c = "white";
 
-			echo "<td class=" . $c . ">";
+			tdcell($c);
 
 			# If the room isnt booked then allow it to be booked
 			if(!isset($id))
@@ -205,25 +208,9 @@ else
 		echo "</tr>\n";
 		reset($rooms);
 	}
+	echo "</table>";
+	show_colour_key();
 }
-echo "</table>";
-
-#Show colour key
-echo "<table border=0><tr>\n";
-$nct = 0;
-for ($ct = "A"; $ct <= "J"; $ct++)
-{
-	if (!empty($typel[$ct]))
-	{
-		if (++$nct > 5)
-		{
-			$nct = 0;
-			echo "</tr><tr>";
-		}
-		echo "<td class=$ct>$typel[$ct]</td>\n";
-	}
-}
-echo "</tr></table>\n";
 
 include "trailer.inc"; 
 ?>
