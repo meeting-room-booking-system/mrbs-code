@@ -7,6 +7,7 @@
 #
 # Translations provided by: Michael Redinger
 #
+#
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
@@ -31,6 +32,7 @@ $vocab["dayafter"]           = "gehe zum nächsten Tag";
 $vocab["gototoday"]          = "gehe zum heutigen Tag";
 $vocab["goto"]               = "Start";
 $vocab["highlight_line"]     = "Markieren Sie diese Zeile";
+$vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 
 # Used in trailer.inc
 $vocab["viewday"]            = "Zeige Tag";
@@ -48,6 +50,7 @@ $vocab["date"]               = "Tag:";
 $vocab["start_date"]         = "Anfangsdatum:";
 $vocab["end_date"]           = "Enddatum:";
 $vocab["time"]               = "Zeit:";
+$vocab["period"]             = "Period:";
 $vocab["duration"]           = "Dauer:";
 $vocab["seconds"]            = "Sekunden";
 $vocab["minutes"]            = "Minuten";
@@ -55,6 +58,7 @@ $vocab["hours"]              = "Stunden";
 $vocab["days"]               = "Tage";
 $vocab["weeks"]              = "Wochen";
 $vocab["years"]              = "Jahre";
+$vocab["periods"]            = "periods";
 $vocab["all_day"]            = "Ganztägig";
 $vocab["type"]               = "Art:";
 $vocab["internal"]           = "Intern";
@@ -78,6 +82,8 @@ $vocab["ctrl_click"]         = "Strg-Click um mehr als einen Raum auszuwählen";
 $vocab["entryid"]            = "Entry ID ";
 $vocab["repeat_id"]          = "Repeat ID "; 
 $vocab["you_have_not_entered"] = "Sie haben folgendes Feld nicht ausgefüllt :";
+$vocab["you_have_not_selected"] = "You have not selected a";
+$vocab["valid_room"]         = "room.";
 $vocab["valid_time_of_day"]  = "Gültige Uhrzeit.";
 $vocab["brief_description"]  = "Kurzbeschreibung.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
@@ -92,6 +98,7 @@ $vocab["deleteseries"]       = "Alle Einträge löschen";
 $vocab["confirmdel"]         = "Sind Sie sicher,\\ndass Sie diesen Eintrag\\nlöschen wollen?\\n\\n";
 $vocab["returnprev"]         = "Zurück zur vorigen Seite";
 $vocab["invalid_entry_id"]   = "Invalid entry id.";
+$vocab["invalid_series_id"]  = "Invalid series id.";
 
 # Used in edit_entry_handler.php
 $vocab["error"]              = "Fehler";
@@ -100,6 +107,11 @@ $vocab["conflict"]           = "Der neue Eintrag hat einen Konflikt mit folgende
 $vocab["too_may_entrys"]     = "Die gewählten Optionen würden zu viele Einträge erzeugen.<BR>Ändern Sie bitte die Optionen!";
 $vocab["returncal"]          = "Zurück zur Kalenderansicht";
 $vocab["failed_to_acquire"]  = "Konnte nicht exclusiv auf die Datenbank zugreifen"; 
+$vocab["mail_subject_entry"] = $mail["subject"];
+$vocab["mail_body_new_entry"] = $mail["new_entry"];
+$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
+$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
+$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 # Authentication stuff
 $vocab["accessdenied"]       = "Zugang verweigert";
@@ -116,6 +128,8 @@ $vocab["logoff"]             = "Ausloggen";
 $vocab["user_list"]          = "Benutzerliste";
 $vocab["edit_user"]          = "Bearbeite Benutzer";
 $vocab["delete_user"]        = "Lösche diesen Benutzer";
+#$vocab["user_name"]         = Use the same as above, for consistency.
+#$vocab["user_password"]     = Use the same as above, for consistency.
 $vocab["user_email"]         = "Email Addresse";
 $vocab["password_twice"]     = "Falls Sie Ihr Passwort ändern wollen, geben Sie das neue Passwort zwei mal ein.";
 $vocab["passwords_not_eq"]   = "Fehler: Die Passwörter stimmen nicht überein.";
@@ -164,6 +178,7 @@ $vocab["sum_by_creator"]     = "Ersteller";
 $vocab["entry_found"]        = "Eintrag gefunden";
 $vocab["entries_found"]      = "Einträge gefunden";
 $vocab["summary_header"]     = "Stundenzusammenfassung der Einträge";
+$vocab["summary_header_per"] = "Summary of (Entries) Periods";
 $vocab["total"]              = "Gesamt";
 $vocab["submitquery"]        = "Bericht erstellen";
 $vocab["sort_rep"]           = "Sortiere Report nach:";
@@ -211,10 +226,10 @@ $vocab["update_room_failed"] = "Raum aktualisieren gescheitert: ";
 $vocab["error_room"]         = "Error: Raum ";
 $vocab["not_found"]          = " nicht gefunden";
 $vocab["update_area_failed"] = "Update area failed: ";
+$vocab["error_area"]         = "Fehler: Bereich ";
 $vocab["room_admin_email"]   = "E-mail des Raumadministrators";
 $vocab["area_admin_email"]   = "E-mail des Bereichsadministrators";
 $vocab["invalid_email"]      = "Ungültige e-mail Adresse !";
-$vocab["error_area"]         = "Fehler: Bereich ";
 
 # Used in del.php
 $vocab["deletefollowing"]    = "Dadurch werden die folgenden Einträge gelöscht";

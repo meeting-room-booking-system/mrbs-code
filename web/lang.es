@@ -6,6 +6,8 @@
 # specific file will overwrite the default. This is a Spanish file.
 #
 #
+#
+#
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
@@ -30,6 +32,7 @@ $vocab["dayafter"]           = "D&iacute;a Siguiente";
 $vocab["gototoday"]          = "D&iacute;a Actual";
 $vocab["goto"]               = "Ir a";
 $vocab["highlight_line"]     = "Highlight this line";
+$vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 
 # Used in trailer.inc
 $vocab["viewday"]            = "Ver D&iacute;a";
@@ -47,6 +50,7 @@ $vocab["date"]               = "Fecha:";
 $vocab["start_date"]         = "Fecha Comienzo:";
 $vocab["end_date"]           = "Fecha Final:";
 $vocab["time"]               = "Hora:";
+$vocab["period"]             = "Period:";
 $vocab["duration"]           = "Duraci&oacute;n:";
 $vocab["seconds"]            = "segundos";
 $vocab["minutes"]            = "minutos";
@@ -54,6 +58,7 @@ $vocab["hours"]              = "horas";
 $vocab["days"]               = "d&iacute;as";
 $vocab["weeks"]              = "semanas";
 $vocab["years"]              = "a&ntilde;os";
+$vocab["periods"]            = "periods";
 $vocab["all_day"]            = "D&iacute;a completo";
 $vocab["type"]               = "Tipo:";
 $vocab["internal"]           = "Interna";
@@ -77,6 +82,8 @@ $vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
 $vocab["entryid"]            = "Entry ID ";
 $vocab["repeat_id"]          = "Repeat ID "; 
 $vocab["you_have_not_entered"] = "You have not entered a";
+$vocab["you_have_not_selected"] = "You have not selected a";
+$vocab["valid_room"]         = "room.";$vocab["valid_time_of_day"]  = "valid time of day.";
 $vocab["valid_time_of_day"]  = "valid time of day.";
 $vocab["brief_description"]  = "Brief Description.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
@@ -91,6 +98,7 @@ $vocab["deleteseries"]       = "Borrar Serie";
 $vocab["confirmdel"]         = "Seguro que\\ndesea borrar\\nesta reserva?\\n\\n";
 $vocab["returnprev"]         = "Volver a p&aacute;gina anterior";
 $vocab["invalid_entry_id"]   = "Invalid entry id.";
+$vocab["invalid_series_id"]  = "Invalid series id.";
 
 # Used in edit_entry_handler.php
 $vocab["error"]              = "Error";
@@ -99,6 +107,11 @@ $vocab["conflict"]           = "La nueva reserva entra en conflicto con la(s) si
 $vocab["too_may_entrys"]     = "Las opciones seleccionadas crear&aacute;n demasiadas entradas.<BR>Por favor, revise las opciones";
 $vocab["returncal"]          = "Volver a vista de calendario";
 $vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access"; 
+$vocab["mail_subject_entry"] = $mail["subject"];
+$vocab["mail_body_new_entry"] = $mail["new_entry"];
+$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
+$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
+$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 # Authentication stuff
 $vocab["accessdenied"]       = "Acceso Denegado";
@@ -110,6 +123,24 @@ $vocab["unknown_user"]       = "Unknown user";
 $vocab["you_are"]            = "You are";
 $vocab["login"]              = "Log in";
 $vocab["logoff"]             = "Log Off";
+
+# Authentication database
+$vocab["user_list"]          = "User list";
+$vocab["edit_user"]          = "Edit user";
+$vocab["delete_user"]        = "Delete this user";
+#$vocab["user_name"]         = Use the same as above, for consistency.
+#$vocab["user_password"]     = Use the same as above, for consistency.
+$vocab["user_email"]         = "Email address";
+$vocab["password_twice"]     = "If you wish to change the password, please type the new password twice";
+$vocab["passwords_not_eq"]   = "Error: The passwords do not match.";
+$vocab["add_new_user"]       = "Add a new user";
+$vocab["rights"]             = "Rights";
+$vocab["action"]             = "Action";
+$vocab["user"]               = "User";
+$vocab["administrator"]      = "Administrator";
+$vocab["unknown"]            = "Unknown";
+$vocab["ok"]                 = "OK";
+$vocab["show_my_entries"]    = "Click to display all my upcoming entries";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Cadena de b&uacute;squeda vac&iacute;a o incorrecta.";
@@ -133,6 +164,8 @@ $vocab["report_start"]       = "Fecha desde:";
 $vocab["report_end"]         = "Fecha hasta:";
 $vocab["match_area"]         = "Encontrar edificio:";
 $vocab["match_room"]         = "Encontar sala:";
+$vocab["match_type"]         = "Match type:";
+$vocab["ctrl_click_type"]    = "Use Control-Click to select more than one type";
 $vocab["match_entry"]        = "Encontar descripci&oacute;n breve:";
 $vocab["match_descr"]        = "Encontar descripci&oacute;n completa:";
 $vocab["include"]            = "Incluir:";
@@ -145,8 +178,14 @@ $vocab["sum_by_creator"]     = "Creador";
 $vocab["entry_found"]        = "registro encontrado";
 $vocab["entries_found"]      = "registros encontrados";
 $vocab["summary_header"]     = "Resumen de (Registros) Horas";
+$vocab["summary_header_per"] = "Summary of (Entries) Periods";
 $vocab["total"]              = "Total";
 $vocab["submitquery"]        = "Correr Reporte";
+$vocab["sort_rep"]           = "Sort Report by:";
+$vocab["sort_rep_time"]      = "Start Date/Time";
+$vocab["rep_dsp"]            = "Display in report:";
+$vocab["rep_dsp_dur"]        = "Duration";
+$vocab["rep_dsp_end"]        = "End Time";
 
 # Used in week.php
 $vocab["weekbefore"]         = "Ir a Semana Anterior";
@@ -188,6 +227,9 @@ $vocab["error_room"]         = "Error: room ";
 $vocab["not_found"]          = " not found";
 $vocab["update_area_failed"] = "Update area failed: ";
 $vocab["error_area"]         = "Error: area ";
+$vocab["room_admin_email"]   = "Room admin email:";
+$vocab["area_admin_email"]   = "Area admin email:";
+$vocab["invalid_email"]      = "Invalid email!";
 
 # Used in del.php
 $vocab["deletefollowing"]    = "Esto borara las siguientes agendas";

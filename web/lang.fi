@@ -4,14 +4,9 @@
 # This file contains PHP code that specifies language specific strings
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is the Finnish version.
+#
 # Translation by Vesa Palmu ( vesa.palmu@no... ), Tom Ingberg 
 # (tom.ingberg@edu.vantaa.fi)
-#
-# Muuta myˆs seuraavat asetukset config.inc.php-tiedoston
-# Language-osioon, jotta k‰‰nnˆs olisi mahdollisimman t‰ydellinen:
-# include 'lang.fi';
-# setlocale(LC_ALL,'fi');
-# Testattu toimivaksi: PHP 4.3.1, Apache 2.0.45 (win32)
 #
 # This file is PHP code. Treat it as such.
 
@@ -37,6 +32,7 @@ $vocab["dayafter"]           = "Seuraavaan p‰iv‰‰n";
 $vocab["gototoday"]          = "T‰h‰n p‰iv‰‰n";
 $vocab["goto"]               = "mene";
 $vocab["highlight_line"]     = "Highlight this line";
+$vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 
 # Used in trailer.inc
 $vocab["viewday"]            = "N‰yt‰ p‰iv‰";
@@ -54,6 +50,7 @@ $vocab["date"]               = "P‰iv‰m‰‰r‰:";
 $vocab["start_date"]         = "Aloitusaika:";
 $vocab["end_date"]           = "Lopetusaika:";
 $vocab["time"]               = "Aika:";
+$vocab["period"]             = "Period:";
 $vocab["duration"]           = "Kesto:";
 $vocab["seconds"]            = "sekuntia";
 $vocab["minutes"]            = "minuuttia";
@@ -61,6 +58,7 @@ $vocab["hours"]              = "tuntia";
 $vocab["days"]               = "p‰iv‰‰";
 $vocab["weeks"]              = "viikkoa";
 $vocab["years"]              = "vuotta";
+$vocab["periods"]            = "periods";
 $vocab["all_day"]            = "Koko p‰iv‰n";
 $vocab["type"]               = "Tyyppi:";
 $vocab["internal"]           = "Sis‰inen";
@@ -84,6 +82,8 @@ $vocab["ctrl_click"]         = "Pid‰ CTRL-nappi pohjassa valitaksesi useita huon
 $vocab["entryid"]            = "Varauksen ID ";
 $vocab["repeat_id"]          = "Toiston ID "; 
 $vocab["you_have_not_entered"] = "Et ole antanut seuraavaa pakollista tietoa:";
+vocab["you_have_not_selected"] = "You have not selected a";
+$vocab["valid_room"]         = "room.";
 $vocab["valid_time_of_day"]  = "Ajankohta ei ole kelpaa.";
 $vocab["brief_description"]  = "Lyhyt kuvaus";
 $vocab["useful_n-weekly_value"] = "M‰‰r‰aikaisen viikottaisen varauksen viikkom‰‰r‰.";
@@ -98,6 +98,7 @@ $vocab["deleteseries"]       = "Poista varaussarja";
 $vocab["confirmdel"]         = "Oletko varma ett‰ haluat poistaa\\nt‰m‰n varauksen?\\n\\n";
 $vocab["returnprev"]         = "Takaisin edelliselle sivulle";
 $vocab["invalid_entry_id"]   = "Virheellinen varauksen ID.";
+$vocab["invalid_series_id"]  = "Invalid series id.";
 
 # Used in edit_entry_handler.php
 $vocab["error"]              = "Virhe";
@@ -106,6 +107,11 @@ $vocab["conflict"]           = "Uusi varaus menee p‰‰llekk‰in seuraavien varaust
 $vocab["too_may_entrys"]     = "Valituilla ehdoilla tulisi liian monta varausta.<br>Valittuja ehtoja on muutettava.";
 $vocab["returncal"]          = "Paluu kalenterin‰kym‰‰n";
 $vocab["failed_to_acquire"]  = "Tietokantaan ei saatu (varauksetonta) yhteytt‰."; 
+$vocab["mail_subject_entry"] = $mail["subject"];
+$vocab["mail_body_new_entry"] = $mail["new_entry"];
+$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
+$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
+$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 # Authentication stuff
 $vocab["accessdenied"]       = "P‰‰sy kielletty";
@@ -117,6 +123,24 @@ $vocab["unknown_user"]       = "Tuntematon k‰ytt‰j‰";
 $vocab["you_are"]            = "Olet";
 $vocab["login"]              = "Kirjaudu sis‰‰n";
 $vocab["logoff"]             = "Kirjaudu ulos";
+
+# Authentication database
+$vocab["user_list"]          = "User list";
+$vocab["edit_user"]          = "Edit user";
+$vocab["delete_user"]        = "Delete this user";
+#$vocab["user_name"]         = Use the same as above, for consistency.
+#$vocab["user_password"]     = Use the same as above, for consistency.
+$vocab["user_email"]         = "Email address";
+$vocab["password_twice"]     = "If you wish to change the password, please type the new password twice";
+$vocab["passwords_not_eq"]   = "Error: The passwords do not match.";
+$vocab["add_new_user"]       = "Add a new user";
+$vocab["rights"]             = "Rights";
+$vocab["action"]             = "Action";
+$vocab["user"]               = "User";
+$vocab["administrator"]      = "Administrator";
+$vocab["unknown"]            = "Unknown";
+$vocab["ok"]                 = "OK";
+$vocab["show_my_entries"]    = "Click to display all my upcoming entries";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Tyhj‰ tai kelpaamaton haku.";
@@ -140,6 +164,8 @@ $vocab["report_start"]       = "Raportin alkup‰iv‰m‰‰r‰:";
 $vocab["report_end"]         = "Raportin loppup‰iv‰m‰‰r‰:";
 $vocab["match_area"]         = "Alue:";
 $vocab["match_room"]         = "Huone::";
+$vocab["match_type"]         = "Match type:";
+$vocab["ctrl_click_type"]    = "Use Control-Click to select more than one type";
 $vocab["match_entry"]        = "Lyhyt kuvaus:";
 $vocab["match_descr"]        = "T‰ydellinen kuvaus:";
 $vocab["include"]            = "Sis‰lt‰en:";
@@ -152,8 +178,14 @@ $vocab["sum_by_creator"]     = "Varaaja";
 $vocab["entry_found"]        = "varaus lˆytyi";
 $vocab["entries_found"]      = "varausta lˆytyi";
 $vocab["summary_header"]     = "Varausten tunnit yhteens‰";
+$vocab["summary_header_per"] = "Summary of (Entries) Periods";
 $vocab["total"]              = "Kaikkiaan";
 $vocab["submitquery"]        = "Tee raportti";
+$vocab["sort_rep"]           = "Sort Report by:";
+$vocab["sort_rep_time"]      = "Start Date/Time";
+$vocab["rep_dsp"]            = "Display in report:";
+$vocab["rep_dsp_dur"]        = "Duration";
+$vocab["rep_dsp_end"]        = "End Time";
  
 # Used in week.php
 $vocab["weekbefore"]         = "Edelliseen viikkoon";
@@ -195,6 +227,9 @@ $vocab["error_room"]         = "Virhe: huonetta ";
 $vocab["not_found"]          = " ei lˆytynyt";
 $vocab["update_area_failed"] = "Alueen tietojen p‰ivitys ep‰onnistui: ";
 $vocab["error_area"]         = "Virhe: aluetta ";
+$vocab["room_admin_email"]   = "Room admin email:";
+$vocab["area_admin_email"]   = "Area admin email:";
+$vocab["invalid_email"]      = "Invalid email!";
 
 # Used in del.php
 $vocab["deletefollowing"]    = "Seuraavat varaukset poistetaan";

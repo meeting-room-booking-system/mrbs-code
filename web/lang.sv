@@ -7,6 +7,7 @@
 #
 # Translated provede by: Bo Kleve (bok@unit.liu.se), MissterX
 #
+#
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
@@ -31,6 +32,7 @@ $vocab["dayafter"]           = "Gå till nästa dag";
 $vocab["gototoday"]          = "Gå till idag";
 $vocab["goto"]               = "gå till";
 $vocab["highlight_line"]     = "Highlight this line";
+$vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 
 # Used in trailer.inc
 $vocab["viewday"]            = "Visa dag";
@@ -48,6 +50,7 @@ $vocab["date"]               = "Datum:";
 $vocab["start_date"]         = "Starttid:";
 $vocab["end_date"]           = "Sluttid:";
 $vocab["time"]               = "Tid:";
+$vocab["period"]             = "Period:";
 $vocab["duration"]           = "Längd:";
 $vocab["seconds"]            = "sekunder";
 $vocab["minutes"]            = "minuter";
@@ -55,6 +58,7 @@ $vocab["hours"]              = "timmar";
 $vocab["days"]               = "dagar";
 $vocab["weeks"]              = "veckor";
 $vocab["years"]              = "år";
+$vocab["periods"]            = "periods";
 $vocab["all_day"]            = "hela dagen";
 $vocab["type"]               = "Typ:";
 $vocab["internal"]           = "Internt";
@@ -78,6 +82,8 @@ $vocab["ctrl_click"]         = "Kontroll-Klicka för att markera mer än ett rum";
 $vocab["entryid"]            = "Antecknings ID ";
 $vocab["repeat_id"]          = "Repetions ID "; 
 $vocab["you_have_not_entered"] = "Du har inte angivit ";
+$vocab["you_have_not_selected"] = "You have not selected a";
+$vocab["valid_room"]         = "room.";
 $vocab["valid_time_of_day"]  = "giltig tidpunkt på dage.";
 $vocab["brief_description"]  = "Kort beskrivningBrief Description.";
 $vocab["useful_n-weekly_value"] = "användbar n-veckovist värde.";
@@ -100,6 +106,11 @@ $vocab["conflict"]           = "Den nya bokningen krockar med följande bokning(a
 $vocab["too_may_entrys"]     = "De valda inställningarna skapar för många bokningar.<BR>V.G. använd andra inställningar!";
 $vocab["returncal"]          = "Återgå till kalendervy";
 $vocab["failed_to_acquire"]  = "Kunde ej få exclusiv databas åtkomst"; 
+$vocab["mail_subject_entry"] = $mail["subject"];
+$vocab["mail_body_new_entry"] = $mail["new_entry"];
+$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
+$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
+$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 # Authentication stuff
 $vocab["accessdenied"]       = "Åtkomst nekad";
@@ -111,6 +122,24 @@ $vocab["unknown_user"]       = "Unknown user";
 $vocab["you_are"]            = "You are";
 $vocab["login"]              = "Log in";
 $vocab["logoff"]             = "Log Off";
+
+# Authentication database
+$vocab["user_list"]          = "User list";
+$vocab["edit_user"]          = "Edit user";
+$vocab["delete_user"]        = "Delete this user";
+#$vocab["user_name"]         = Use the same as above, for consistency.
+#$vocab["user_password"]     = Use the same as above, for consistency.
+$vocab["user_email"]         = "Email address";
+$vocab["password_twice"]     = "If you wish to change the password, please type the new password twice";
+$vocab["passwords_not_eq"]   = "Error: The passwords do not match.";
+$vocab["add_new_user"]       = "Add a new user";
+$vocab["rights"]             = "Rights";
+$vocab["action"]             = "Action";
+$vocab["user"]               = "User";
+$vocab["administrator"]      = "Administrator";
+$vocab["unknown"]            = "Unknown";
+$vocab["ok"]                 = "OK";
+$vocab["show_my_entries"]    = "Click to display all my upcoming entries";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Tom eller ogiltig söksträng.";
@@ -134,6 +163,8 @@ $vocab["report_start"]       = "Rapport start datum:";
 $vocab["report_end"]         = "Rapport slut datum:";
 $vocab["match_area"]         = "Sök på plats:";
 $vocab["match_room"]         = "Sök på rum:";
+$vocab["match_type"]         = "Match type:";
+$vocab["ctrl_click_type"]    = "Use Control-Click to select more than one type";
 $vocab["match_entry"]        = "Sök på kort beskrivning:";
 $vocab["match_descr"]        = "Sök på  full beskrivning:";
 $vocab["include"]            = "Inkludera:";
@@ -146,8 +177,14 @@ $vocab["sum_by_creator"]     = "Skapare";
 $vocab["entry_found"]        = "Post hittad";
 $vocab["entries_found"]      = "Poster hittade";
 $vocab["summary_header"]     = "Sammanställning över (Poster) Timmar";
+$vocab["summary_header_per"] = "Summary of (Entries) Periods";
 $vocab["total"]              = "Total";
 $vocab["submitquery"]        = "Run Report";
+$vocab["sort_rep"]           = "Sort Report by:";
+$vocab["sort_rep_time"]      = "Start Date/Time";
+$vocab["rep_dsp"]            = "Display in report:";
+$vocab["rep_dsp_dur"]        = "Duration";
+$vocab["rep_dsp_end"]        = "End Time";
 
 # Used in week.php
 $vocab["weekbefore"]         = "Föregående vecka";
@@ -189,6 +226,9 @@ $vocab["error_room"]         = "Fel: rum ";
 $vocab["not_found"]          = " ej hittat";
 $vocab["update_area_failed"] = "Uppdatering av område misslyckades: ";
 $vocab["error_area"]         = "Fel: område";
+$vocab["room_admin_email"]   = "Room admin email:";
+$vocab["area_admin_email"]   = "Area admin email:";
+$vocab["invalid_email"]      = "Invalid email!";
 
 # Used in del.php
 $vocab["deletefollowing"]    = "Detta raderar följande bokningar";

@@ -21,6 +21,7 @@ $lang_map_windows = array
   'en-au' => 'ena',
   'en-ca' => 'enc',
   'en-en' => 'eng',
+  'en-ie' => 'eng',
   'en-nz' => 'enz',
   'en-gb' => 'eng',
   'en-us' => 'usa',

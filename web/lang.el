@@ -6,6 +6,8 @@
 # specific file will overwrite the default. This is a Greek file.
 #
 #
+#
+#
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
@@ -29,6 +31,8 @@ $vocab["daybefore"]          = "Μετάβαση στην προηγούμενη μέρα";
 $vocab["dayafter"]           = "Μετάβαση στην επόμενη μέρα";
 $vocab["gototoday"]          = "Μετάβαση στη σημερινή μέρα";
 $vocab["goto"]               = "Μετάβαση";
+$vocab["highlight_line"]     = "Highlight this line";
+$vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 
 # Used in trailer.inc
 $vocab["viewday"]            = "Προβολή ανά ημέρα";
@@ -46,6 +50,7 @@ $vocab["date"]               = "Ημερομηνία:";
 $vocab["start_date"]         = "Ώρα έναρξης:";
 $vocab["end_date"]           = "Ώρα λήξης:";
 $vocab["time"]               = "Ώρα:";
+$vocab["period"]             = "Period:";
 $vocab["duration"]           = "Διάρκεια:";
 $vocab["seconds"]            = "δευτερόλεπτα";
 $vocab["minutes"]            = "λεπτά";
@@ -53,6 +58,7 @@ $vocab["hours"]              = "ώρες";
 $vocab["days"]               = "ημέρες";
 $vocab["weeks"]              = "εβδομάδες";
 $vocab["years"]              = "χρόνια";
+$vocab["periods"]            = "periods";
 $vocab["all_day"]            = "Ολόκληρη μέρα";
 $vocab["type"]               = "Τύπος:";
 $vocab["internal"]           = "Εσωτερικά";
@@ -76,6 +82,8 @@ $vocab["ctrl_click"]         = "Χρησιμοποιήστε Control-Click για να επιλέξετε πε
 $vocab["entryid"]            = "Αναγνωριστικός αριθμός εγγραφής ";
 $vocab["repeat_id"]          = "Αναγνωριστικός αριθμός επανάληψης "; 
 $vocab["you_have_not_entered"] = "Δεν εισάγατε το (τα)";
+$vocab["you_have_not_selected"] = "You have not selected a";
+$vocab["valid_room"]         = "room.";
 $vocab["valid_time_of_day"]  = "έγκυρη ώρα.";
 $vocab["brief_description"]  = "Σύντομη Περιγραφή.";
 $vocab["useful_n-weekly_value"] = "χρήσιμη n-εβδομαδιαία τιμή.";
@@ -90,6 +98,7 @@ $vocab["deleteseries"]       = "Διαγραφή σειράς επανάληψης";
 $vocab["confirmdel"]         = "Είστε βέβαιοι\\nότι θέλετε να\\nδιαγράψετε αυτή την εγγραφή;\\n\\n";
 $vocab["returnprev"]         = "Επιστροφή στην προηγούμενη σελίδα";
 $vocab["invalid_entry_id"]   = "Λάθος αναγνωριστικός αριθμός αίτησης.";
+$vocab["invalid_series_id"]  = "Invalid series id.";
 
 # Used in edit_entry_handler.php
 $vocab["error"]              = "Σφάλμα";
@@ -98,6 +107,11 @@ $vocab["conflict"]           = "Η νέα κράτηση αντικρούει με τις ακόλουθες εγγραφ
 $vocab["too_may_entrys"]     = "Οι επιλογές θα δημιουργήσουν υπερβολικό αριθμό εγγραφών.<BR>Παρακαλώ χρησιμοποιείστε διαφορετικές επιλογές!";
 $vocab["returncal"]          = "Επιστροφή σε προβολή ημερολογίου";
 $vocab["failed_to_acquire"]  = "Αποτυχία εξασφάλισης αποκλειστικής πρόσβασης στην βάση δεδομένων"; 
+$vocab["mail_subject_entry"] = $mail["subject"];
+$vocab["mail_body_new_entry"] = $mail["new_entry"];
+$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
+$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
+$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 # Authentication stuff
 $vocab["accessdenied"]       = "Απαγορεύεται η πρόσβαση";
@@ -109,6 +123,24 @@ $vocab["unknown_user"]       = "Αγνωστος χρήστης";
 $vocab["you_are"]            = "Είστε";
 $vocab["login"]              = "Εισαγωγή (Log in)";
 $vocab["logoff"]             = "Έξοδος (Log Off)";
+
+# Authentication database
+$vocab["user_list"]          = "User list";
+$vocab["edit_user"]          = "Edit user";
+$vocab["delete_user"]        = "Delete this user";
+#$vocab["user_name"]         = Use the same as above, for consistency.
+#$vocab["user_password"]     = Use the same as above, for consistency.
+$vocab["user_email"]         = "Email address";
+$vocab["password_twice"]     = "If you wish to change the password, please type the new password twice";
+$vocab["passwords_not_eq"]   = "Error: The passwords do not match.";
+$vocab["add_new_user"]       = "Add a new user";
+$vocab["rights"]             = "Rights";
+$vocab["action"]             = "Action";
+$vocab["user"]               = "User";
+$vocab["administrator"]      = "Administrator";
+$vocab["unknown"]            = "Unknown";
+$vocab["ok"]                 = "OK";
+$vocab["show_my_entries"]    = "Click to display all my upcoming entries";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Κενό ή λανθασμένο κείμενο αναζήτησης.";
@@ -132,6 +164,8 @@ $vocab["report_start"]       = "Ημερομηνία έναρξης αναφοράς:";
 $vocab["report_end"]         = "Ημερομηνία λήξης αναφοράς:";
 $vocab["match_area"]         = "Ταίριασμα περιοχής:";
 $vocab["match_room"]         = "Ταίριασμα αίθουσας:";
+$vocab["match_type"]         = "Match type:";
+$vocab["ctrl_click_type"]    = "Use Control-Click to select more than one type";
 $vocab["match_entry"]        = "Ταίριασμα σύντομης περιγραφής:";
 $vocab["match_descr"]        = "Ταίριασμα αναλυτικής περιγραφής:";
 $vocab["include"]            = "Να συμπεριληφθούν:";
@@ -144,8 +178,14 @@ $vocab["sum_by_creator"]     = "Δημιουργός";
 $vocab["entry_found"]        = "καταχώρηση βρέθηκε";
 $vocab["entries_found"]      = "καταχωρήσεις βρέθηκαν";
 $vocab["summary_header"]     = "Περίληψη ωρών εγγραφών";
+$vocab["summary_header_per"] = "Summary of (Entries) Periods";
 $vocab["total"]              = "Σύνολο";
 $vocab["submitquery"]        = "Εκτέλεση αναφοράς";
+$vocab["sort_rep"]           = "Sort Report by:";
+$vocab["sort_rep_time"]      = "Start Date/Time";
+$vocab["rep_dsp"]            = "Display in report:";
+$vocab["rep_dsp_dur"]        = "Duration";
+$vocab["rep_dsp_end"]        = "End Time";
 
 # Used in week.php
 $vocab["weekbefore"]         = "Μετάβαση στην προηγούμενη εβδομάδα";
@@ -187,6 +227,9 @@ $vocab["error_room"]         = "Σφάλμα: Η αίθουσα ";
 $vocab["not_found"]          = " δεν βρέθηκε";
 $vocab["update_area_failed"] = "Η ενημέρωση της πειοχής απέτυχε: ";
 $vocab["error_area"]         = "Σφάλμα: Η περιοχή ";
+$vocab["room_admin_email"]   = "Room admin email:";
+$vocab["area_admin_email"]   = "Area admin email:";
+$vocab["invalid_email"]      = "Invalid email!";
 
 # Used in del.php
 $vocab["deletefollowing"]    = "Η ενέργεια αυτή θα διαγράψει τις ακόλουθες κρατήσεις";

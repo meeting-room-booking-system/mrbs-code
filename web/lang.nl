@@ -7,6 +7,7 @@
 #
 # Translations provided by: Marc ter Horst
 #
+#
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
@@ -31,6 +32,7 @@ $vocab["dayafter"]           = "Naar Volgende Dag";
 $vocab["gototoday"]          = "Naar Vandaag";
 $vocab["goto"]               = "ga naar";
 $vocab["highlight_line"]     = "Highlight this line";
+$vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 
 # Used in trailer.inc
 $vocab["viewday"]            = "Bekijk Dag";
@@ -48,6 +50,7 @@ $vocab["date"]               = "Datum:";
 $vocab["start_date"]         = "Start Tijd:";
 $vocab["end_date"]           = "Eind Tijd:";
 $vocab["time"]               = "Tijd:";
+$vocab["period"]             = "Period:";
 $vocab["duration"]           = "Tijdsduur:";
 $vocab["seconds"]            = "seconden";
 $vocab["minutes"]            = "minuten";
@@ -55,6 +58,7 @@ $vocab["hours"]              = "uren";
 $vocab["days"]               = "dagen";
 $vocab["weeks"]              = "weken";
 $vocab["years"]              = "jaren";
+$vocab["periods"]            = "periods";
 $vocab["all_day"]            = "Hele Dag";
 $vocab["type"]               = "Soort:";
 $vocab["internal"]           = "Intern";
@@ -78,6 +82,8 @@ $vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
 $vocab["entryid"]            = "Entry ID ";
 $vocab["repeat_id"]          = "Repeat ID "; 
 $vocab["you_have_not_entered"] = "You have not entered a";
+$vocab["you_have_not_selected"] = "You have not selected a";
+$vocab["valid_room"]         = "room.";
 $vocab["valid_time_of_day"]  = "valid time of day.";
 $vocab["brief_description"]  = "Brief Description.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
@@ -92,6 +98,7 @@ $vocab["deleteseries"]       = "Herhalingen verwijderen";
 $vocab["confirmdel"]         = "Weet U zeker\\ndat U deze\\nBoeking wilt verwijderen?\\n\\n";
 $vocab["returnprev"]         = "Terug naar vorige pagina";
 $vocab["invalid_entry_id"]   = "Invalid entry id.";
+$vocab["invalid_series_id"]  = "Invalid series id.";
 
 # Used in edit_entry_handler.php
 $vocab["error"]              = "Fout";
@@ -100,6 +107,11 @@ $vocab["conflict"]           = "Er zijn overlappende boekingen";
 $vocab["too_may_entrys"]     = "De door U geselecteerde opties zullen teveel boekingen genereren.<BR>Pas A.U.B. uw opties aan !";
 $vocab["returncal"]          = "Terug naar kalender overzicht";
 $vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access"; 
+$vocab["mail_subject_entry"] = $mail["subject"];
+$vocab["mail_body_new_entry"] = $mail["new_entry"];
+$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
+$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
+$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 # Authentication stuff
 $vocab["accessdenied"]       = "Geen Toegang";
@@ -111,6 +123,24 @@ $vocab["unknown_user"]       = "Unknown user";
 $vocab["you_are"]            = "You are";
 $vocab["login"]              = "Log in";
 $vocab["logoff"]             = "Log Off";
+
+# Authentication database
+$vocab["user_list"]          = "User list";
+$vocab["edit_user"]          = "Edit user";
+$vocab["delete_user"]        = "Delete this user";
+#$vocab["user_name"]         = Use the same as above, for consistency.
+#$vocab["user_password"]     = Use the same as above, for consistency.
+$vocab["user_email"]         = "Email address";
+$vocab["password_twice"]     = "If you wish to change the password, please type the new password twice";
+$vocab["passwords_not_eq"]   = "Error: The passwords do not match.";
+$vocab["add_new_user"]       = "Add a new user";
+$vocab["rights"]             = "Rights";
+$vocab["action"]             = "Action";
+$vocab["user"]               = "User";
+$vocab["administrator"]      = "Administrator";
+$vocab["unknown"]            = "Unknown";
+$vocab["ok"]                 = "OK";
+$vocab["show_my_entries"]    = "Click to display all my upcoming entries";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Niet bestaand of ongeldig zoek argument.";
@@ -134,6 +164,8 @@ $vocab["report_start"]       = "Start datum overzicht:";
 $vocab["report_end"]         = "Eind datum overzicht:";
 $vocab["match_area"]         = "Gebied als:";
 $vocab["match_room"]         = "Kamer als:";
+$vocab["match_type"]         = "Match type:";
+$vocab["ctrl_click_type"]    = "Use Control-Click to select more than one type";
 $vocab["match_entry"]        = "Korte omschrijving als:";
 $vocab["match_descr"]        = "Volledige omschrijving als:";
 $vocab["include"]            = "Neem mee:";
@@ -146,8 +178,14 @@ $vocab["sum_by_creator"]     = "Boeker";
 $vocab["entry_found"]        = "boeking gevonden";
 $vocab["entries_found"]      = "boekingen gevonden";
 $vocab["summary_header"]     = "Totaal aan (geboekte) uren";
+$vocab["summary_header_per"] = "Summary of (Entries) Periods";
 $vocab["total"]              = "Totaal";
 $vocab["submitquery"]        = "Run Report";
+$vocab["sort_rep"]           = "Sort Report by:";
+$vocab["sort_rep_time"]      = "Start Date/Time";
+$vocab["rep_dsp"]            = "Display in report:";
+$vocab["rep_dsp_dur"]        = "Duration";
+$vocab["rep_dsp_end"]        = "End Time";
 
 # Used in week.php
 $vocab["weekbefore"]         = "Ga naar vorige week";
@@ -189,6 +227,9 @@ $vocab["error_room"]         = "Error: room ";
 $vocab["not_found"]          = " not found";
 $vocab["update_area_failed"] = "Update area failed: ";
 $vocab["error_area"]         = "Error: area ";
+$vocab["room_admin_email"]   = "Room admin email:";
+$vocab["area_admin_email"]   = "Area admin email:";
+$vocab["invalid_email"]      = "Invalid email!";
 
 # Used in del.php
 $vocab["deletefollowing"]    = "This will delete the following bookings";
