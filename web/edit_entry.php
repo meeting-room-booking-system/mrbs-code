@@ -148,6 +148,12 @@ else
 	$rep_day       = array(0, 0, 0, 0, 0, 0, 0);
 }
 
+// Remove "Undefined variable" notice
+if (!isset($rep_num_weeks))
+{
+    $rep_num_weeks = "";
+}
+
 toTimeString($duration, $dur_units);
 
 #now that we know all the data to fill the form with we start drawing it

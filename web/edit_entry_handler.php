@@ -58,7 +58,7 @@ if(isset($all_day) && ($all_day == "yes"))
 }
 else
 {
-	if (!$twentyfourhourformat)
+	if (!$twentyfourhour_format)
 	{
 	  if (isset($ampm) && ($ampm == "pm"))
 	  {
@@ -84,7 +84,7 @@ else
 	$rep_type = 0;
 
 if(!isset($rep_day))
-	$rep_day = "";
+	$rep_day = array();
 
 # For weekly repeat(2), build string of weekdays to repeat on:
 $rep_opt = "";
