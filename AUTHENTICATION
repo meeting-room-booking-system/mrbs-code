@@ -126,7 +126,7 @@ The [params] are:
 Creating a new authentication scheme
 ------------------------------------
 
-There are generic authentication functions in "auth.inc", with functions
+There are generic authentication functions in "mrbs_auth.inc", with functions
 specific to a particular scheme in "auth_xxx.inc"
 
 The "auth_xxx.inc" file needs to define certain functions:

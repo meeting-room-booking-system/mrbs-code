@@ -3,7 +3,7 @@
 include "config.inc";
 include "functions.inc";
 include "connect.inc";
-include "auth.inc";
+include "mrbs_auth.inc";
 
 if(!getAuthorised(getUserName(), getUserPassword()))
 {

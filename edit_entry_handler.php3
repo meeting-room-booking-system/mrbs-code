@@ -3,7 +3,7 @@
 include "config.inc";
 include "functions.inc";
 include "connect.inc";
-include "auth.inc";
+include "mrbs_auth.inc";
 
 function add_duration ( $time, $duration ) {
   $list = split ( ":", $time );
