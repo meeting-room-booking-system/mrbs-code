@@ -136,6 +136,7 @@ else
 	$duration    = 60 * 60;
 	$type        = "I";
 	$room_id     = $room;
+        $id = 0;
 	
 	$rep_id        = 0;
 	$rep_type      = 0;
@@ -194,32 +195,32 @@ function validate_and_submit ()
 }
 </SCRIPT>
 
-<h2><? echo isset($id) ? $vocab["editentry"] : $vocab["addentry"]; ?></H2>
+<h2><?php echo isset($id) ? $vocab["editentry"] : $vocab["addentry"]; ?></H2>
 
 <FORM NAME="main" ACTION="edit_entry_handler.php" METHOD="GET">
 
 <TABLE BORDER=0>
 
-<TR><TD CLASS=CR><B><? echo $vocab["namebooker"]?></B></TD>
-  <TD CLASS=CL><INPUT NAME="name" SIZE=40 VALUE="<? echo htmlentities($name) ?>"></TD></TR>
+<TR><TD CLASS=CR><B><?php echo $vocab["namebooker"]?></B></TD>
+  <TD CLASS=CL><INPUT NAME="name" SIZE=40 VALUE="<?php echo htmlentities($name) ?>"></TD></TR>
 
-<TR><TD CLASS=TR><B><?echo $vocab["fulldescription"]?></B></TD>
-  <TD CLASS=TL><TEXTAREA NAME="description" ROWS=8 COLS=40 WRAP="virtual"><? echo htmlentities ( $description ); ?></TEXTAREA></TD></TR>
+<TR><TD CLASS=TR><B><?php echo $vocab["fulldescription"]?></B></TD>
+  <TD CLASS=TL><TEXTAREA NAME="description" ROWS=8 COLS=40 WRAP="virtual"><?php echo htmlentities ( $description ); ?></TEXTAREA></TD></TR>
 
-<TR><TD CLASS=CR><B><? echo $vocab["date"]?></B></TD>
+<TR><TD CLASS=CR><B><?php echo $vocab["date"]?></B></TD>
  <TD CLASS=CL>
-  <? genDateSelector("", $start_day, $start_month, $start_year) ?>
+  <?php genDateSelector("", $start_day, $start_month, $start_year) ?>
  </TD>
 </TR>
 
-<TR><TD CLASS=CR><B><?echo $vocab["time"]?></B></TD>
-<TD CLASS=CL><INPUT NAME="hour" SIZE=2 VALUE="<? echo $start_hour;?>" MAXLENGTH=2>:<INPUT NAME="minute" SIZE=2 VALUE="<? echo $start_min;?>" MAXLENGTH=2>
+<TR><TD CLASS=CR><B><?php echo $vocab["time"]?></B></TD>
+<TD CLASS=CL><INPUT NAME="hour" SIZE=2 VALUE="<?php echo $start_hour;?>" MAXLENGTH=2>:<INPUT NAME="minute" SIZE=2 VALUE="<?php echo $start_min;?>" MAXLENGTH=2>
 </TD></TR>
 
-<TR><TD CLASS=CR><B><? echo $vocab["duration"];?></B></TD>
-  <TD CLASS=CL><INPUT NAME="duration" SIZE=7 VALUE="<? echo $duration;?>">
+<TR><TD CLASS=CR><B><?php echo $vocab["duration"];?></B></TD>
+  <TD CLASS=CL><INPUT NAME="duration" SIZE=7 VALUE="<?php echo $duration;?>">
     <SELECT NAME="dur_units">
-<?
+<?php
 $units = array("minutes", "hours", "days", "weeks");
 while (list(,$unit) = each($units))
 {
@@ -229,30 +230,30 @@ while (list(,$unit) = each($units))
 }
 ?>
     </SELECT>
-    <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes"> <? echo $vocab["all_day"]; ?>
+    <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes"> <?php echo $vocab["all_day"]; ?>
 </TD></TR>
 
 
-<tr><td class=CR><b><? echo $vocab["rooms"] ?></b></td>
+<tr><td class=CR><b><?php echo $vocab["rooms"] ?></b></td>
   <td class=CL valign=top><table><tr><td><select name="rooms[]" multiple>
-  <? 
+  <?php 
 	$sql = "select id, room_name from mrbs_room where area_id=$area order by room_name";
    	$res = sql_query($sql);
    	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
    	{
 		$selected = "";
-		if ($row[0] == $room) {
+		if ($row[0] == $room_id) {
 			$selected = "SELECTED";
 		}
 		echo "<option $selected value=\"".$row[0]."\">".$row[1];
    	}
   ?>
-  </select></td><td><? echo $vocab["ctrl_click"] ?></td></tr></table>
+  </select></td><td><?php echo $vocab["ctrl_click"] ?></td></tr></table>
     </td></tr>
 
-<TR><TD CLASS=CR><B><?echo $vocab["type"]?></B></TD>
+<TR><TD CLASS=CR><B><?php echo $vocab["type"]?></B></TD>
   <TD CLASS=CL><SELECT NAME="type">
-<?
+<?php
 for ($c = "A"; $c <= "J"; $c++)
 {
 	if (!empty($typel[$c]))
@@ -260,12 +261,12 @@ for ($c = "A"; $c <= "J"; $c++)
 }
 ?></SELECT></TD></TR>
 
-<? if($edit_type == "series") { ?>
+<?php if($edit_type == "series") { ?>
 
 <TR>
- <TD CLASS=CR><B><?echo $vocab["rep_type"]?></B></TD>
+ <TD CLASS=CR><B><?php echo $vocab["rep_type"]?></B></TD>
  <TD CLASS=CL>
-<?
+<?php
 
 for($i = 0; isset($vocab["rep_type_$i"]); $i++)
 {
@@ -282,12 +283,12 @@ for($i = 0; isset($vocab["rep_type_$i"]); $i++)
 </TR>
 
 <TR>
- <TD CLASS=CR><B><?echo $vocab["rep_end_date"]?></B></TD>
- <TD CLASS=CL><? genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year) ?></TD>
+ <TD CLASS=CR><B><?php echo $vocab["rep_end_date"]?></B></TD>
+ <TD CLASS=CL><?php genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year) ?></TD>
 </TR>
 
 <TR>
- <TD CLASS=CR><B><? echo $vocab["rep_rep_day"]?></B> <? echo $vocab["rep_for_weekly"]?></TD>
+ <TD CLASS=CR><B><?php echo $vocab["rep_rep_day"]?></B> <?php echo $vocab["rep_for_weekly"]?></TD>
  <TD CLASS=CL>
 <?php
 # Display day name checkboxes according to language and preferred weekday start.
@@ -302,7 +303,7 @@ for ($i = 0; $i < 7; $i++)
  </TD>
 </TR>
 
-<?
+<?php
 }
 else
 {
@@ -331,28 +332,28 @@ else
 ?>
 
 <TR>
- <TD CLASS=CR><B><? echo $vocab["rep_num_weeks"]?></B> <? echo $vocab["rep_for_nweekly"]?></TD>
- <TD CLASS=CL><INPUT TYPE=TEXT NAME="rep_num_weeks" VALUE="<? echo $rep_num_weeks?>">
+ <TD CLASS=CR><B><?php echo $vocab["rep_num_weeks"]?></B> <?php echo $vocab["rep_for_nweekly"]?></TD>
+ <TD CLASS=CL><INPUT TYPE=TEXT NAME="rep_num_weeks" VALUE="<?php echo $rep_num_weeks?>">
 </TR>
 
 <TR>
  <TD colspan=2 align=center>
   <SCRIPT LANGUAGE="JavaScript">
-   document.writeln ( '<INPUT TYPE="button" VALUE="<?echo $vocab["save"]?>" ONCLICK="validate_and_submit()">' );
+   document.writeln ( '<INPUT TYPE="button" VALUE="<?php echo $vocab["save"]?>" ONCLICK="validate_and_submit()">' );
   </SCRIPT>
   <NOSCRIPT>
-   <INPUT TYPE="submit" VALUE="<? echo $vocab["save"]?>">
+   <INPUT TYPE="submit" VALUE="<?php echo $vocab["save"]?>">
   </NOSCRIPT>
  </TD></TR>
 </TABLE>
 
-<INPUT TYPE=HIDDEN NAME="returl"    VALUE="<? echo $HTTP_REFERER?>">
-<!--INPUT TYPE=HIDDEN NAME="room_id"   VALUE="<? echo $room_id?>"-->
-<INPUT TYPE=HIDDEN NAME="create_by" VALUE="<? echo $create_by?>">
-<INPUT TYPE=HIDDEN NAME="rep_id"    VALUE="<? echo $rep_id?>">
-<INPUT TYPE=HIDDEN NAME="edit_type" VALUE="<? echo $edit_type?>">
-<? if(isset($id)) echo "<INPUT TYPE=HIDDEN NAME=\"id\"        VALUE=\"$id\">\n"; ?>
+<INPUT TYPE=HIDDEN NAME="returl"    VALUE="<?php echo $HTTP_REFERER?>">
+<!--INPUT TYPE=HIDDEN NAME="room_id"   VALUE="<?php echo $room_id?>"-->
+<INPUT TYPE=HIDDEN NAME="create_by" VALUE="<?php echo $create_by?>">
+<INPUT TYPE=HIDDEN NAME="rep_id"    VALUE="<?php echo $rep_id?>">
+<INPUT TYPE=HIDDEN NAME="edit_type" VALUE="<?php echo $edit_type?>">
+<?php if(isset($id)) echo "<INPUT TYPE=HIDDEN NAME=\"id\"        VALUE=\"$id\">\n"; ?>
 
 </FORM>
 
-<? include "trailer.inc" ?>
+<?php include "trailer.inc" ?>

@@ -136,19 +136,45 @@ setlocale(LC_ALL,'C');
 # If HTTP_ACCEPT_LANGUAGE is a comma-separated list, take the first one.
 $locale = ereg_replace(",.*", "", getenv('HTTP_ACCEPT_LANGUAGE'));
 
-# These two lines import a language based on what the client
-# is using. Comment them out to disable this.
 
-$lang_file = "lang.". strtolower(substr($locale,0,2));
-if (file_exists($lang_file)) {include $lang_file;}
+# The following attempts to import a language based on what the client
+# is using. Comment it out to disable this.
 
-#
-# Convert locale=xx to xx_XX; this is not correct for some locales???
-if (strlen($locale) == 2) {
-   $locale = strtolower($locale)."_".strtoupper($locale);
-} else {
-   $locale = strtolower(substr($locale,0,2))."_".strtoupper(substr($locale,3,2));
+$lang_file = "lang." . $locale;
+if (file_exists($lang_file))
+{
+    include $lang_file;
 }
+else
+{
+    $lang_file = "lang." . preg_replace("/(\w+)_(\w+)/", "\\1-\\2", $locale);
+    if (file_exists($lang_file))
+    {
+        include $lang_file;
+    }
+    else
+    {
+        $lang_file = "lang.". strtolower(substr($locale,0,2));
+        if (file_exists($lang_file))
+        {
+            include $lang_file;
+        }
+    }
+}
+
+# Try to generate an appropriate locale string from the browser locale
+if (strlen($locale) == 2)
+{
+    # Convert locale=xx to xx_XX; this is not correct for some locales???
+    $locale = strtolower($locale)."_".strtoupper($locale);
+}
+else
+{
+    # Convert locale=xx-xX or xx_Xx or xx_XxXx (etc.) to xx_XX[XX]; this is highly
+    # dependent on the machine's installed locales
+    $locale = strtolower(substr($locale,0,2))."_".strtoupper(substr($locale,3));
+}
+
 setlocale(LC_ALL,$locale);
 
 #############
@@ -181,5 +207,6 @@ $typel["I"] = $vocab["internal"];
 ##########################################
 # Disable magic quoting on database returns:
 set_magic_quotes_runtime(0);
+
 
 ?>

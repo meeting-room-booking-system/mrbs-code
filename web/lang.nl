@@ -1,9 +1,10 @@
-<?
+<?php
 # $Id$
 
 # This file contains PHP code that specifies language specific strings
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is an NL Dutch file.
+#
 # Translations provided by: Marc ter Horst
 #
 # This file is PHP code. Treat it as such.
@@ -105,6 +106,10 @@ $vocab["previous"]           = "Vorige";
 $vocab["next"]               = "Volgende";
 $vocab["entry"]              = "Boeking";
 $vocab["view"]               = "Overzicht";
+$vocab["advanced_search"]    = "Advanced search";
+$vocab["search_button"]      = "Zoek";
+$vocab["search_for"]         = "Search For";
+$vocab["from"]               = "From";
 
 # Used in report.php
 $vocab["report_on"]          = "Boekingsoverzicht:";

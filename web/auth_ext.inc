@@ -40,6 +40,23 @@ function authGet($realm)
 	Header("HTTP/1.0 401 Unauthorized");
 }
 
+function version_check($vercheck)
+{
+  $minver = str_replace(".","", $vercheck);
+  $curver = str_replace(".","", phpversion());
+
+  if($curver >= $minver)
+  {
+    return true;
+  }
+  return false;
+}
+
+if (version_check("4.0.3") == false)
+{
+    include "escapeshellarg.inc";
+}
+
 /* authValidateUser($user, $pass)
  * 
  * Checks if the specified username/password pair are valid
@@ -64,8 +81,8 @@ function authValidateUser($user, $pass)
 	
 	// Generate the command line
 	$cmd = $auth["prog"] . ' ' . $auth["params"];
-	$cmd = preg_replace('/#USERNAME#/',escapeshellcmd($user),$cmd);
-	$cmd = preg_replace('/#PASSWORD#/',escapeshellcmd($pass),$cmd);
+	$cmd = preg_replace('/#USERNAME#/',escapeshellarg($user),$cmd);
+	$cmd = preg_replace('/#PASSWORD#/',escapeshellarg($pass),$cmd);
 	
 	// Run the program
 	exec($cmd, $output, $ret);

@@ -25,7 +25,21 @@ $search_str = htmlspecialchars($search_text);
 
 print_header($day, $month, $year, $area);
 
-if(!$search_str)
+if ($advanced)
+{
+	echo "<H3>" . $vocab["advanced_search"] . "</H3>";
+	echo "<FORM METHOD=GET ACTION=\"search.php\">";
+	echo $vocab["search_for"] . " <INPUT TYPE=TEXT SIZE=25 NAME=\"search_str\"><br>";
+	echo $vocab["from"]. " ";
+	genDateSelector ("", $day, $month, $year);
+	echo "<br><INPUT TYPE=SUBMIT VALUE=\"" . $vocab["search_button"] ."\">";
+	include "trailer.inc";
+	echo "</BODY>";
+	echo "</HTML>";
+	exit;
+}
+
+if (!$search_str)
 {
 	echo "<H3>" . $vocab["invalid_search"] . "</H3>";
 	include "trailer.inc";
@@ -114,13 +128,13 @@ if($has_prev || $has_next)
   <P>
   <TABLE BORDER=2 CELLSPACING=0 CELLPADDING=3>
    <TR>
-    <TH><? echo $vocab["entry"]       ?></TH>
-    <TH><? echo $vocab["createdby"]   ?></TH>
-    <TH><? echo $vocab["namebooker"]  ?></TH>
-    <TH><? echo $vocab["description"] ?></TH>
-    <TH><? echo $vocab["start_date"]  ?></TH>
+    <TH><?php echo $vocab["entry"]       ?></TH>
+    <TH><?php echo $vocab["createdby"]   ?></TH>
+    <TH><?php echo $vocab["namebooker"]  ?></TH>
+    <TH><?php echo $vocab["description"] ?></TH>
+    <TH><?php echo $vocab["start_date"]  ?></TH>
    </TR>
-<?
+<?php
 for ($i = 0; ($row = sql_row($result, $i)); $i++)
 {
 	echo "<TR>";

@@ -1,9 +1,10 @@
-<?
+<?php
 # $Id$
 
 # This file contains PHP code that specifies language specific strings
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is a Chinese (zh-tw Big5) file.
+#
 #
 #
 # This file is PHP code. Treat it as such.
@@ -105,6 +106,10 @@ $vocab["previous"]           = "Previous";
 $vocab["next"]               = "Next";
 $vocab["entry"]              = "Entry";
 $vocab["view"]               = "View";
+$vocab["advanced_search"]    = "Advanced search";
+$vocab["search_button"]      = "Search";
+$vocab["search_for"]         = "Search For";
+$vocab["from"]               = "From";
 
 # Used in report.php
 $vocab["report_on"]          = "Report on Meetings:";
@@ -169,4 +174,3 @@ $vocab["YES"]                = "YES";
 $vocab["NO"]                 = "NO";
 
 ?>
-done

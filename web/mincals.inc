@@ -89,7 +89,7 @@ class Calendar
       for ($i = 0, $s = ""; $i < 7; $i++)
       {
          $show = $basetime + ($i * 24 * 60 * 60);
-         $fl = substr(strftime('%a',$show),0,1);
+         $fl = strftime('%a',$show);
          $s .= "<td align=center valign=top class=\"calendarHeader\">$fl</td>\n";
       }
       return $s;

@@ -91,45 +91,45 @@ $repeat_key = "rep_type_" . $rep_type;
 
 ?>
 
-<H3><? echo $name ?></H3>
+<H3><?php echo $name ?></H3>
  <table border=0>
    <tr>
-    <td><b><? echo $vocab["description"] ?></b></td>
-    <td><?    echo nl2br($description)  ?></td>
+    <td><b><?php echo $vocab["description"] ?></b></td>
+    <td><?php    echo nl2br($description)  ?></td>
    </tr>
    <tr>
-    <td><b><? echo $vocab["room"]                           ?></b></td>
-    <td><?    echo  nl2br($area_name . " - " . $room_name) ?></td>
+    <td><b><?php echo $vocab["room"]                           ?></b></td>
+    <td><?php    echo  nl2br($area_name . " - " . $room_name) ?></td>
    </tr>
    <tr>
-    <td><b><? echo $vocab["start_date"] ?></b></td>
-    <td><?    echo $start_date         ?></td>
+    <td><b><?php echo $vocab["start_date"] ?></b></td>
+    <td><?php    echo $start_date         ?></td>
    </tr>
    <tr>
-    <td><b><? echo $vocab["duration"]            ?></b></td>
-    <td><?    echo $duration . " " . $dur_units ?></td>
+    <td><b><?php echo $vocab["duration"]            ?></b></td>
+    <td><?php    echo $duration . " " . $dur_units ?></td>
    </tr>
    <tr>
-    <td><b><? echo $vocab["end_date"] ?></b></td>
-    <td><?    echo $end_date         ?></td>
+    <td><b><?php echo $vocab["end_date"] ?></b></td>
+    <td><?php    echo $end_date         ?></td>
    </tr>
    <tr>
-    <td><b><? echo $vocab["type"]   ?></b></td>
-    <td><?    echo empty($typel[$type]) ? "?$type?" : $typel[$type]  ?></td>
+    <td><b><?php echo $vocab["type"]   ?></b></td>
+    <td><?php    echo empty($typel[$type]) ? "?$type?" : $typel[$type]  ?></td>
    </tr>
    <tr>
-    <td><b><? echo $vocab["createdby"] ?></b></td>
-    <td><?    echo $create_by         ?></td>
+    <td><b><?php echo $vocab["createdby"] ?></b></td>
+    <td><?php    echo $create_by         ?></td>
    </tr>
    <tr>
-    <td><b><? echo $vocab["lastupdate"] ?></b></td>
-    <td><?    echo $updated            ?></td>
+    <td><b><?php echo $vocab["lastupdate"] ?></b></td>
+    <td><?php    echo $updated            ?></td>
    </tr>
    <tr>
-    <td><b><? echo $vocab["rep_type"]  ?></b></td>
-    <td><?    echo $vocab[$repeat_key] ?></td>
+    <td><b><?php echo $vocab["rep_type"]  ?></b></td>
+    <td><?php    echo $vocab[$repeat_key] ?></td>
    </tr>
-<?
+<?php
 
 if($rep_type != 0)
 {
@@ -158,21 +158,21 @@ if($rep_type != 0)
 </table>
 <br>
 <p>
-<a href="edit_entry.php?id=<? echo $id ?>"><? echo $vocab["editentry"] ?></a>
-<?
+<a href="edit_entry.php?id=<?php echo $id ?>"><?php echo $vocab["editentry"] ?></a>
+<?php
 
 if($repeat_id)
 	echo " - <a href=\"edit_entry.php?id=$id&edit_type=series&day=$day&month=$month&year=$year\">$vocab[editseries]</a>";
 
 ?>
 <BR>
-<A HREF="del_entry.php?id=<? echo $id ?>&series=0" onClick="return confirm('<? echo $vocab["confirmdel"] ?>');"><? echo $vocab["deleteentry"] ?></A>
-<?
+<A HREF="del_entry.php?id=<?php echo $id ?>&series=0" onClick="return confirm('<?php echo $vocab["confirmdel"] ?>');"><?php echo $vocab["deleteentry"] ?></A>
+<?php
 
 if($repeat_id)
 	echo " - <A HREF=\"del_entry.php?id=$id&series=1&day=$day&month=$month&year=$year\" onClick=\"return confirm('$vocab[confirmdel]');\">$vocab[deleteseries]</A>";
 
 ?>
 <BR>
-<a href="<? echo $HTTP_REFERER ?>"><? echo $vocab["returnprev"] ?></a>
-<? include "trailer.inc"; ?>
+<a href="<?php echo $HTTP_REFERER ?>"><?php echo $vocab["returnprev"] ?></a>
+<?php include "trailer.inc"; ?>

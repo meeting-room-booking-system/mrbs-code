@@ -1,3 +1,34 @@
+CVS (Tue Oct  8 13:30:00 BST 2002)
+   - Changed all uses of <? to <?php.
+   - Merged change from John Beranek for an Advanced search function,
+     requires 3 more translation tokens, which have been added to
+     each language file, "search_button" should be OK, as I took
+     the text from each language's "search" token.
+   - Fixed 2 problems in edit_entry.php as submitted on the mailing list.
+   - Added small enchancement to smb_auth.c, if you pass a username
+     as group/user, it will change the NT group that is used for
+     authentication.
+   - Improved shell escaping in auth_ext.inc. It now uses
+     escapeshellarg() instead of escapeshellcmd(). If your PHP
+     version is less than 4.0.3, then it includes escapeshellarg.inc
+     which is a local implementation of that function.
+   - Added updated Frech translation, as provided by Thierry Wehr.
+   - Tided all language files again, they all have the same format
+     and number of lines now, and are all missing at least 2 translations
+     because of the new advanced search functionality.
+   - Fixed a number of bugs to make the Taiwanese translation work.
+     The code to include language files based on HTTP_ACCEPT_LANGUAGE
+     has been improved, which ensures lang.zh-tw is included.
+     Additionally, mincals.inc not longer does a substr() on the
+     abbreviated weekday names, as this breaks terribly for any
+     multibyte encoding, as it was only taking the first byte
+     of a multibyte encoding. This has the impact that you now
+     get Mon,Tue,Wed etc instead of M,T,W (using glibc's en_GB
+     locale).
+   - print_header() now outputs a DOCTYPE identifier as well as
+     sending Pragma: no-cache and an Expires: header in the
+     past. This should help ensure the calendar pages don't get cached.
+	
 Version 1.1-pre1 (Thu May 30 12:41:02 BST 2002)
    + add config option for drop-down boxes to select area and room
           (Thanks to sponsorship of LTC Corporation)

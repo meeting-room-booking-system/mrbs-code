@@ -1,15 +1,13 @@
-<?
+<?php
 # $Id$
 
 # This file contains PHP code that specifies vocabuage specific strings
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is a Czech file.
 #
+# Translations provided by: SmEjDiL malyl@col.cz
 #
 # This file is PHP code. Treat it as such.
-#
-# Translate SmEjDiL malyl@col.cz
-#
 
 # The charset to use in "Content-type" header
 $vocab["charset"]            = "iso-8859-2";
@@ -108,6 +106,10 @@ $vocab["previous"]           = "Pøedchozi";
 $vocab["next"]               = "Dal¹í";
 $vocab["entry"]              = "Záznam";
 $vocab["view"]               = "Náhled";
+$vocab["advanced_search"]    = "Advanced search";
+$vocab["search_button"]      = "Hledat";
+$vocab["search_for"]         = "Search For";
+$vocab["from"]               = "From";
 
 # Used in report.php
 $vocab["report_on"]          = "Výpis setkání:";

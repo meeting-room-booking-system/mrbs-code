@@ -24,18 +24,23 @@ function print_header($day, $month, $year, $area)
 	if (empty($search_str))
 		$search_str = "";
 
+	header("Pragma: no-cache");                          // HTTP 1.0
+	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
+
 ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                      "http://www.w3.org/TR/html4/loose.dtd">
 <HTML>
  <HEAD>
-  <TITLE><? echo $vocab["mrbs"] ?></TITLE>
-<?
+  <TITLE><?php echo $vocab["mrbs"] ?></TITLE>
+<?php
    include "style.inc";
 ?>
  </HEAD>
  <BODY BGCOLOR="#ffffed" TEXT=black LINK="#5B69A6" VLINK="#5B69A6" ALINK=red>
-	   <? if ( $GLOBALS["pview"] != 1 ) { ?>
+	   <?php if ( $GLOBALS["pview"] != 1 ) { ?>
 
-   <? # show a warning if this is using a low version of php
+   <?php # show a warning if this is using a low version of php
        if (substr(phpversion(), 0, 1) == 3)
 	       echo "<H1>WARNING: This probably doesn't work with PHP3</H1>";
    ?>
@@ -46,40 +51,40 @@ function print_header($day, $month, $year, $area)
        <TABLE WIDTH="100%" BORDER=0>
         <TR>
          <TD CLASS="banner" BGCOLOR="#C0E0FF">
-          <FONT SIZE=4><B><? echo $mrbs_company ?></B><BR>
-           <A HREF="index.php"><? echo $vocab["mrbs"] ?></A>
+          <FONT SIZE=4><B><?php echo $mrbs_company ?></B><BR>
+           <A HREF="index.php"><?php echo $vocab["mrbs"] ?></A>
           </FONT>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF">
           <FORM ACTION="day.php" METHOD=GET>
            <FONT SIZE=2>
-<?
+<?php
    genDateSelector("", $day, $month, $year);
    if (!empty($area))
         echo "<INPUT TYPE=HIDDEN NAME=area VALUE=$area>"
  
 ?>
-	    <INPUT TYPE=SUBMIT VALUE="<? echo $vocab["goto"] ?>">
+	    <INPUT TYPE=SUBMIT VALUE="<?php echo $vocab["goto"] ?>">
            </FONT>
           </FORM>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="help.php?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>"><? echo $vocab["help"] ?></A>
+          <A HREF="help.php?day=<?php echo $day ?>&month=<?php echo $month ?>&year=<?php echo $year ?>"><?php echo $vocab["help"] ?></A>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="admin.php?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>"><? echo $vocab["admin"] ?></A>
+          <A HREF="admin.php?day=<?php echo $day ?>&month=<?php echo $month ?>&year=<?php echo $year ?>"><?php echo $vocab["admin"] ?></A>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="report.php"><? echo $vocab["report"] ?></A>
+          <A HREF="report.php"><?php echo $vocab["report"] ?></A>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
           <FORM METHOD=GET ACTION="search.php">
-           <FONT SIZE=2><? echo $vocab["search"] ?> </FONT>
-           <INPUT TYPE=TEXT   NAME="search_str" VALUE="<? echo $search_str ?>" SIZE=10>
-           <INPUT TYPE=HIDDEN NAME=day        VALUE="<? echo $day        ?>"        >
-           <INPUT TYPE=HIDDEN NAME=month      VALUE="<? echo $month      ?>"        >
-           <INPUT TYPE=HIDDEN NAME=year       VALUE="<? echo $year       ?>"        >
-<?
+           <FONT SIZE=2><A HREF="search.php?advanced=1"><?php echo $vocab["search"] ?></A> </FONT>
+           <INPUT TYPE=TEXT   NAME="search_str" VALUE="<?php echo $search_str ?>" SIZE=10>
+           <INPUT TYPE=HIDDEN NAME=day        VALUE="<?php echo $day        ?>"        >
+           <INPUT TYPE=HIDDEN NAME=month      VALUE="<?php echo $month      ?>"        >
+           <INPUT TYPE=HIDDEN NAME=year       VALUE="<?php echo $year       ?>"        >
+<?php
    if (!empty($area))
         echo "<INPUT TYPE=HIDDEN NAME=area VALUE=$area>"
 ?>
@@ -90,8 +95,8 @@ function print_header($day, $month, $year, $area)
       </TD>
      </TR>
     </TABLE>
-<? } ?>
-<?
+<?php } ?>
+<?php
 }
 
 function toTimeString(&$dur, &$units)

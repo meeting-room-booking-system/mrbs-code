@@ -198,55 +198,55 @@ if (empty($sumby)) $sumby = "d";
 
 # Upper part: The form.
 ?>
-<h1><? echo $vocab["report_on"];?></h1>
+<h1><?php echo $vocab["report_on"];?></h1>
 <form method=post action=report.php>
 <table>
-<tr><td class="CR"><? echo $vocab["report_start"];?></td>
+<tr><td class="CR"><?php echo $vocab["report_start"];?></td>
     <td class="CL"> <font size="-1">
-    <? genDateSelector("From_", $From_day, $From_month, $From_year); ?>
+    <?php genDateSelector("From_", $From_day, $From_month, $From_year); ?>
     </font></td></tr>
-<tr><td class="CR"><? echo $vocab["report_end"];?></td>
+<tr><td class="CR"><?php echo $vocab["report_end"];?></td>
     <td class="CL"> <font size="-1">
-    <? genDateSelector("To_", $To_day, $To_month, $To_year); ?>
+    <?php genDateSelector("To_", $To_day, $To_month, $To_year); ?>
     </font></td></tr>
-<tr><td class="CR"><? echo $vocab["match_area"];?></td>
+<tr><td class="CR"><?php echo $vocab["match_area"];?></td>
     <td class="CL"><input type=text name=areamatch size=18
-    value="<? echo $areamatch_default; ?>">
+    value="<?php echo $areamatch_default; ?>">
     </td></tr>
-<tr><td class="CR"><? echo $vocab["match_room"];?></td>
+<tr><td class="CR"><?php echo $vocab["match_room"];?></td>
     <td class="CL"><input type=text name=roommatch size=18
-    value="<? echo $roommatch_default; ?>">
+    value="<?php echo $roommatch_default; ?>">
     </td></tr>
-<tr><td class="CR"><? echo $vocab["match_entry"];?></td>
+<tr><td class="CR"><?php echo $vocab["match_entry"];?></td>
     <td class="CL"><input type=text name=namematch size=18
-    value="<? echo $namematch_default; ?>">
+    value="<?php echo $namematch_default; ?>">
     </td></tr>
-<tr><td class="CR"><? echo $vocab["match_descr"];?></td>
+<tr><td class="CR"><?php echo $vocab["match_descr"];?></td>
     <td class="CL"><input type=text name=descrmatch size=18
-    value="<? echo $descrmatch_default; ?>">
+    value="<?php echo $descrmatch_default; ?>">
     </td></tr>
-<tr><td class="CR"><? echo $vocab["include"];?></td>
+<tr><td class="CR"><?php echo $vocab["include"];?></td>
     <td class="CL">
-      <input type=radio name=summarize value=1<? if ($summarize==1) echo " checked";
+      <input type=radio name=summarize value=1<?php if ($summarize==1) echo " checked";
         echo ">" . $vocab["report_only"];?>
-      <input type=radio name=summarize value=2<? if ($summarize==2) echo " checked";
+      <input type=radio name=summarize value=2<?php if ($summarize==2) echo " checked";
         echo ">" . $vocab["summary_only"];?>
-      <input type=radio name=summarize value=3<? if ($summarize==3) echo " checked";
+      <input type=radio name=summarize value=3<?php if ($summarize==3) echo " checked";
         echo ">" . $vocab["report_and_summary"];?>
     </td></tr>
-<tr><td class="CR"><? echo $vocab["summarize_by"];?></td>
+<tr><td class="CR"><?php echo $vocab["summarize_by"];?></td>
     <td class="CL">
-      <input type=radio name=sumby value=d<? if ($sumby=="d") echo " checked";
+      <input type=radio name=sumby value=d<?php if ($sumby=="d") echo " checked";
         echo ">" . $vocab["sum_by_descrip"];?>
-      <input type=radio name=sumby value=c<? if ($sumby=="c") echo " checked";
+      <input type=radio name=sumby value=c<?php if ($sumby=="c") echo " checked";
         echo ">" . $vocab["sum_by_creator"];?>
     </td></tr>
-<tr><td colspan=2 align=center><input type=submit value="<? echo $vocab['submitquery'] ?>">
+<tr><td colspan=2 align=center><input type=submit value="<?php echo $vocab['submitquery'] ?>">
 </td></tr>
 </table>
 </form>
 
-<?
+<?php
 
 # Lower part: Results, if called with parameters:
 if (isset($areamatch))
