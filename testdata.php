@@ -3,6 +3,7 @@
 # $Id$
 
 # This script initialises the database with some random data
+require_once "grab_globals.inc.php";
 include "config.inc.php";
 include "$dbsys.inc";
 
