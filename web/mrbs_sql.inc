@@ -176,20 +176,36 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate, $r
 	return sql_insert_id("mrbs_repeat", "id");
 }
 
-
-/** same_day_next_month
+/** 
+* Find the same day of the week in next month, same week number.
+*
  *  Return the number of days to step forward for a "monthly repeat,
  *  corresponding day" series - same week number and day of week next month.
  *  This function always returns either 28 or 35.
- *  For dates after the 28th day of a month, the results are undefined.
+* For dates in the 5th week of a month, the resulting day will be in the 4th
+* week of the next month, and all subsequent months.
+* :TODO: thierry_bo 030510: repeat 5th week entries only if 5th week exist.
+* If we want a 5th week repeat type, only 5th weeks have to be booked. We need
+* also a new "monthly repeat, corresponding day, last week of the month" type.
+*
+* @param    integer     $time   timestamp of the day from which we want to find
+*                               the same day of the week in next month, same
+*                               week number
+* @return   integer     35 or 28 number of days to step forward
  */
 function same_day_next_month($time)
 {
-	$days_in_month = date("t", $time);
-	$day = date("d", $time);
-	$weeknumber = (int)(($day - 1) / 7) + 1;
-	if ($day + 7 * (5 - $weeknumber) <= $days_in_month) return 35;
-	else return 28;
+    $days_in_month = date("t", $time);
+    $day = date("d", $time);
+    $weeknumber = (int)(($day - 1) / 7) + 1;
+    $temp1 = ($day + 7 * (5 - $weeknumber) <= $days_in_month);
+    // prevent 2 months jumps if $time is in 5th week
+    $temp2 = date("n", mktime(11, 0 ,0, date("n", $time), $day +35, date("Y", $time)));
+    if ($temp2 < date("n", $time)) $temp2 += 12;
+    $temp2 -= (date("n", $time) - 1);
+    
+    if ($temp1 && !$temp2) return 35;
+    else return 28;
 }
 
 /** mrbsGetRepeatEntryList

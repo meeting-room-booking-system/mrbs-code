@@ -1,3 +1,9 @@
+CVS (Sat May 10           GMT 2003)
+   - Fixed bug : when selecting a "Monthly repeat, same day of the week" repeat 
+     type in the 5th week, repeated meetings are not properly scheduled. Now if 
+     no 5th week exist, the 4th week is selected instead for all subsequent
+     repeated meetings.
+
 CVS (Thu May 08           GMT 2003)
    - Fixed bug : when you press on print preview in report.php page, all but 
      the submission form is visible but not the actual report 
