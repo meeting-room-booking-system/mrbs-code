@@ -17,6 +17,8 @@ include "auth_$auth[type].inc";
  */
 function getAuthorised($user, $pass, $level)
 {
+	global $auth;
+	
 	if(!authValidateUser($user, $pass))
 		return 0;
 	
