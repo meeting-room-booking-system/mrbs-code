@@ -50,10 +50,8 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore)
 	if(mysql_num_rows($res) == 0)
 		return;
 	
-	$err = $lang[conflict];
-	
 	while($row = mysql_fetch_row($res))
-		$err .= "<br><a href=view_entry.php3?id=$row[0]>$row[1]</a>";
+		$err .= "<LI><A HREF=view_entry.php3?id=$row[0]>$row[1]</A>";
 	
 	return $err;
 }
