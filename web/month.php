@@ -196,13 +196,13 @@ else for ($i = 0; ($row = sql_row($res, $i)); $i++)
 		{
 			case "> < ":         # Starts after midnight, ends before midnight
 			case "= < ":         # Starts at midnight, ends before midnight
-				$d[$day_num]["data"][] = date("H:i", $row[0]) . "~" . date("H:i", $row[1]);
+				$d[$day_num]["data"][] = date(hour_min_format(), $row[0]) . "~" . date(hour_min_format(), $row[1]);
 				break;
 			case "> = ":         # Starts after midnight, ends at midnight
-				$d[$day_num]["data"][] = date("H:i", $row[0]) . "~24:00";
+				$d[$day_num]["data"][] = date(hour_min_format(), $row[0]) . "~24:00";
 				break;
 			case "> > ":         # Starts after midnight, continues tomorrow
-				$d[$day_num]["data"][] = date("H:i", $row[0]) . "~====&gt;";
+				$d[$day_num]["data"][] = date(hour_min_format(), $row[0]) . "~====&gt;";
 				break;
 			case "= = ":         # Starts at midnight, ends at midnight
 				$d[$day_num]["data"][] = $all_day;
@@ -211,7 +211,7 @@ else for ($i = 0; ($row = sql_row($res, $i)); $i++)
 				$d[$day_num]["data"][] = $all_day . "====&gt;";
 				break;
 			case "< < ":         # Starts before today, ends before midnight
-				$d[$day_num]["data"][] = "&lt;====~" . date("H:i", $row[1]);
+				$d[$day_num]["data"][] = "&lt;====~" . date(hour_min_format(), $row[1]);
 				break;
 			case "< = ":         # Starts before today, ends at midnight
 				$d[$day_num]["data"][] = "&lt;====" . $all_day;

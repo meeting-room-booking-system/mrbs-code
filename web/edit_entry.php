@@ -6,6 +6,8 @@ include "functions.inc";
 include "$dbsys.inc";
 include "mrbs_auth.inc";
 
+global $twentyfourhour_format;
+
 #If we dont know the right date then make it up
 if(!isset($day) or !isset($month) or !isset($year))
 {
@@ -214,7 +216,16 @@ function validate_and_submit ()
 </TR>
 
 <TR><TD CLASS=CR><B><?php echo $vocab["time"]?></B></TD>
-<TD CLASS=CL><INPUT NAME="hour" SIZE=2 VALUE="<?php echo $start_hour;?>" MAXLENGTH=2>:<INPUT NAME="minute" SIZE=2 VALUE="<?php echo $start_min;?>" MAXLENGTH=2>
+  <TD CLASS=CL><INPUT NAME="hour" SIZE=2 VALUE="<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>" MAXLENGTH=2>:<INPUT NAME="minute" SIZE=2 VALUE="<?php echo $start_min;?>" MAXLENGTH=2>
+<?php
+if (!$twentyfourhour_format)
+{
+  $checked = ($start_hour < 12) ? "checked" : "";
+  echo "<INPUT NAME=\"ampm\" type=\"radio\" value=\"am\" $checked>".date("a",mktime(1,0,0,1,1,1970));
+  $checked = ($start_hour >= 12) ? "checked" : "";
+  echo "<INPUT NAME=\"ampm\" type=\"radio\" value=\"pm\" $checked>".date("a",mktime(13,0,0,1,1,1970));
+}
+?>
 </TD></TR>
 
 <TR><TD CLASS=CR><B><?php echo $vocab["duration"];?></B></TD>

@@ -220,6 +220,36 @@ function day_name($daynumber)
 	return strftime("%A", mktime(0,0,0,1,2+$daynumber,2000));
 }
 
+function hour_min_format()
+{
+        global $twentyfourhour_format;
+        if ($twentyfourhour_format)
+	{
+  	        return "H:i";
+	}
+	else
+	{
+		return "h:ia";
+	}
+}
+
+function time_date_string($t)
+{
+        global $twentyfourhour_format;
+        # This bit's necessary, because it seems %p in strftime format
+        # strings doesn't work
+        $ampm = date("a",$t);
+        if ($twentyfourhour_format)
+	{
+  	        return strftime("%H:%M:%S - %A %d %B %Y",$t);
+	}
+	else
+	{
+	        return strftime("%I:%M:%S$ampm - %A %d %B %Y",$t);
+	}
+}
+
+
 # Output a start table cell tag <td> with color class and fallback color.
 # $colclass is an entry type (A-J), "white" for empty, or "red" for highlighted.
 # The colors for CSS browsers can be found in the style sheet. The colors

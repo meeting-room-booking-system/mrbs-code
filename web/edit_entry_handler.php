@@ -58,6 +58,13 @@ if(isset($all_day) && ($all_day == "yes"))
 }
 else
 {
+	if (!$twentyfourhourformat)
+	{
+	  if (isset($ampm) && ($ampm == "pm"))
+	  {
+	    $hour += 12;
+	  }
+	}
 	$starttime = mktime($hour, $minute, 0, $month, $day, $year);
 	$endtime   = mktime($hour, $minute, 0, $month, $day, $year) + ($units * $duration);
 	

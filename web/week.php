@@ -273,7 +273,7 @@ for ($slot = $first_slot; $slot <= $last_slot; $slot++)
 	# Show the time linked to the URL for highlighting that time:
 	echo "<tr>";
 	tdcell("red");
-	echo "<a href=\"$hilite_url=$t\">" . date("H:i",$t) . "</a></td>";
+	echo "<a href=\"$hilite_url=$t\">" . date(hour_min_format(),$t) . "</a></td>";
 
 	$wt = $t;
 

@@ -175,7 +175,7 @@ else
 		# Show the time linked to the URL for highlighting that time
 		echo "<tr>";
 		tdcell("red");
-		echo "<a href=\"$hilite_url=$t\">" . date("H:i",$t) . "</a></td>";
+		echo "<a href=\"$hilite_url=$t\">" . date(hour_min_format(),$t) . "</a></td>";
 
 		# Loop through the list of rooms we have for this area
 		while (list($key, $room) = each($rooms))

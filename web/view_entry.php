@@ -57,11 +57,11 @@ $area_name    = htmlspecialchars($row[4]);
 $type         = $row[5];
 $room_id      = $row[6];
 $repeat_id    = $row[7];
-$updated      = strftime('%X - %A %d %B %Y', $row[8]);
+$updated      = time_date_string($row[8]);
 $duration     = $row[9];
 
-$start_date = strftime('%X - %A %d %B %Y', $row[10]);
-$end_date = strftime('%X - %A %d %B %Y', $row[11]);
+$start_date = time_date_string($row[10]);
+$end_date = time_date_string($row[11]);
 
 $rep_type = 0;
 

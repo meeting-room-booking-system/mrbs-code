@@ -1,15 +1,11 @@
-CVS (Tue Jan 14 00:38:06 GMT 2003)
+Version 1.1 (Tue Jan 14 10:00:00 GMT 2003)
+   + Added configuration option ($twentyfourhour_format) to allow time
+     formats to be changed to 12 hour format.
    - Updated all language files to be consistant
-
-CVS (Mon Jan 13 21:38:23 GMT 2003)
    - Changed minicals so they point to week when on week view and month on
      month view, rather than always pointing at day view
-
-CVS (Mon Jan 13 14:36:00 GMT 2003)
    - Changed occurences of "<?=" to "<?php echo" which means we still
      use the long tag form everywhere.
-
-CVS (Sun Jan 12 20:15:56 GMT 2003)
    - Removed all remainings english strings to make MRBS 100% translatable
      * Added new $vocab to del.php, edit_area_room.php, edit_entry.php,
        edit_entry_handler.php, help.php, mysql.inc, pgsql.inc, view_entry.php,
@@ -18,13 +14,9 @@ CVS (Sun Jan 12 20:15:56 GMT 2003)
        translated in another language.
      * Modified help.php to take these changes into account.
      * Added site_faq_fr.html (french)
-   - Added auth_name.inc, a auth_ip.inc variant using DNS name instead of ip.
-   - Added auth_omni.inc for use with OmniHTTPd web server security features
-
-CVS (Fri Jan 10 11:33:43 GMT 2003)
+   + Added auth_name.inc, a auth_ip.inc variant using DNS name instead of ip.
+   + Added auth_omni.inc for use with OmniHTTPd web server security features
    - Change search.php to remove warnings introduced with PHP 4.3.0
-
-CVS (Thu Jan  9 18:05:23 GMT 2003)
    - Change trailer.inc to make print preview more likely to work on
      windows and non-apache servers
 

@@ -5,13 +5,42 @@ include "config.inc";
 include "functions.inc";
 include "$dbsys.inc";
 
+
+function date_time_string($t)
+{
+        global $twentyfourhour_format;
+        if ($twentyfourhour_format)
+	{
+                $timeformat = "%T";
+	}
+	else
+	{
+                # This bit's necessary, because it seems %p in strftime format
+                # strings doesn't work
+                $ampm = date("a",$t);
+                $timeformat = "%I:%M:%S$ampm";
+	}
+	return strftime("%A %d %B %Y ".$timeformat, $t);
+}
+
 # Convert a start time and end time to a plain language description.
 # This is similar but different from the way it is done in view_entry.
 function describe_span($starts, $ends)
 {
-	global $vocab;
+	global $vocab, $twentyfourhour_format;
 	$start_date = strftime('%A %d %B %Y', $starts);
-	$start_time = strftime("%T", $starts);
+        if ($twentyfourhour_format)
+	{
+                $timeformat = "%T";
+	}
+	else
+	{
+                # This bit's necessary, because it seems %p in strftime format
+                # strings doesn't work
+                $ampm = date("a",$starts);
+                $timeformat = "%I:%M:%S$ampm";
+	}
+	$start_time = strftime($timeformat, $starts);
 	$duration = $ends - $starts;
 	if ($start_time == "00:00:00" && $duration == 60*60*24)
 		return $start_date . " - " . $vocab["all_day"];
@@ -50,7 +79,7 @@ function reporton(&$row, &$last_area_room)
 	# Created by and last update timestamp:
 	echo "<tr><td class=\"BL\" colspan=2><small><b>$vocab[createdby]</b> " .
 		htmlspecialchars($row[6]) . ", <b>$vocab[lastupdate]</b> " .
-		strftime("%A %d %B %Y %T", $row[7]) . "</small></td></tr>\n";
+		date_time_string($row[7]) . "</small></td></tr>\n";
 
 	echo "</table>\n";
 }

@@ -59,8 +59,8 @@ if($type == "room")
 			for ($i = 0; ($row = sql_row($res, $i)); $i++)
 			{
 				echo "<li>$row[0] (";
-				echo strftime("%I:%H %a %d %b %Y",  $row[1]) . " -> ";
-				echo strftime("%I:%H %A %d %B %Y",  $row[2]) . ")";
+				echo time_date_string($row[1]) . " -> ";
+				echo time_date_string($row[2]) . ")";
 			}
 			
 			echo "</ul>";

@@ -148,7 +148,7 @@ for ($i = 0; ($row = sql_row($result, $i)); $i++)
 	// generate a link to the day.php
 	$link = getdate($row[4]);
 	echo "<TD><A HREF=\"day.php?day=$link[mday]&month=$link[mon]&year=$link[year]&area=$row[5]\">"
-	.  strftime('%X - %A %d %B %Y', $row[4]) . "</A></TD>";
+	.  time_date_string($row[4]) . "</A></TD>";
 	echo "</TR>\n";
 }
 
