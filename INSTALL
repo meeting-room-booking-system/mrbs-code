@@ -302,10 +302,114 @@ These settings control:
 - display of times on right and left side in day and week view,
 - display of horizontal stripes on the day view,
 - the default starting view (month, week or day),
-- the default room to start with. 
+- the default room to start with.
 
 
-5. Authentication:
+5. Email support:
+
+MRBS can send emails to the administrator (or any adress) to notify a new or
+changed entry. You must set the following parameters if you want to send
+Emails from MRBS:
+
+MAIL_ADMIN_ON_BOOKINGS
+
+Set to TRUE if you want to be notified when entries are booked. Default is
+FALSE
+
+MAIL_ADMIN_BACKEND
+
+Set the name of the Backend use to transport your mails. Either "mail",
+"smtp" or "sendmail":
+
+·   mail
+Sends a mail using PHPs build-in mail()-function. This means this function
+must not be disabled and you have a minimal control over your server and
+settings in php.ini :
+    'SMTP' and 'smtp_port' for Windows and 'sendmail_from' and 'sendmail_path'
+    for Unix
+
+·   sendmail
+Sends a mail using a sendmail unix program.
+
+·   smtp
+Sends a mail directly connecting to a smtp server.
+
+# Sendmail settings
+
+SENDMAIL_PATH
+
+Set the path of the Sendmail program (only used with "sendmail" backend).
+Default is "/usr/bin/sendmail"
+
+SENDMAIL_ARGS
+
+Set additional Sendmail parameters (only used with "sendmail" backend).
+(example "-t -i"). Default is ""
+
+# SMTP settings
+
+SMTP_HOST
+
+Set smtp server to connect. Default is 'localhost' (only used with "smtp"
+backend).
+
+SMTP_PORT
+
+Set smtp port to connect. Default is '25' (only used with "smtp" backend).
+
+SMTP_AUTH
+
+Set whether or not to use SMTP authentication. Default is 'FALSE'
+
+SMTP_USERNAME
+
+Set the username to use for SMTP authentication. Default is ""
+
+SMTP_PASSWORD
+
+Set the password to use for SMTP authentication. Default is ""
+
+# Miscellaneous settings
+
+MAIL_ADMIN_ALL
+
+Set to TRUE if you want to be notified on every change (i.e, on new entries)
+but also each time they are edited. Default is FALSE (only new entries)
+
+MAIL_FROM
+
+Set the email address of the From field. Default is the $mrbs_admin_email
+variable.
+
+MAIL_RECIPIENTS
+
+Set the recipient email. Default is $mrbs_admin_email. You can define
+more than one recipient like this "john@doe.com,scott@tiger.com"
+
+MAIL_CC
+
+Set the name of the Carbon Copy field. Default is "". You can define
+more than one recipient (see MAIL_RECIPIENTS)
+
+$mail["subject"]
+
+Set the content of the Subject field. Default is
+"Entry added/changed for $mrbs_company MRBS"
+
+$mail["new_entry"]
+
+Set the content of the message when a new entry is booked. What you type
+here will be added at the top of the message body. Default is:
+"A new entry has been booked, here is the details:"
+
+$mail["changed_entry"]
+
+Set the content of the message when an entry is modified. What you type
+here will be added at the top of the message body. Default is:
+"An entry has been modified, here is the details:"
+
+
+6. Authentication:
 
 Read the file AUTHENTICATION for information about this section. By default, 
 config.inc.php uses "php" session management and "config" authentication 
@@ -314,7 +418,7 @@ to administer the system. Demo users are "alice" and "bob" (passwords "a" and
 "b") and "administrator" (password 'secret') is administrator.
 
 
-6. Language:
+7. Language:
 
 MRBS supports multiple languages, which can be used at the same time, based on 
 what the client is using. One of the environment variables supplied to PHP is 
@@ -365,7 +469,7 @@ Note: Upgrading mysql database from previous charsets to Unicode :
 	  this script if you are at all worried.
 
 
-7. Entry Types:
+8. Entry Types:
 
 By default, MRBS defines two "meeting types" - internal and external. There
 are a total of 10 types ready to be used, if you assign names to them in

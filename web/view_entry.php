@@ -185,5 +185,9 @@ if($repeat_id)
 
 ?>
 <BR>
+<?php if (isset($HTTP_REFERER)) //remove the link if displayed from an email
+{ ?>
 <a href="<?php echo $HTTP_REFERER ?>"><?php echo get_vocab("returnprev") ?></a>
-<?php include "trailer.inc"; ?>
+<?php
+}
+include "trailer.inc"; ?>

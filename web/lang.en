@@ -102,7 +102,10 @@ $vocab["sched_conflict"]     = "Scheduling Conflict";
 $vocab["conflict"]           = "The new booking will conflict with the following entry(s):";
 $vocab["too_may_entrys"]     = "The selected options will create too many entries.<BR>Please use different options!";
 $vocab["returncal"]          = "Return to calendar view";
-$vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access"; 
+$vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access";
+$vocab["mail_subject_entry"] = $mail["subject"];
+$vocab["mail_body_new_entry"] = $mail["new_entry"];
+$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
 
 # Authentication stuff
 $vocab["accessdenied"]       = "Access Denied";

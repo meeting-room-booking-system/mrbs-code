@@ -36,7 +36,8 @@ $mrbs_admin_email = "admin_email@your.org";
 
 # This is the text displayed in the upper left corner of every page. Either
 # type the name of your organization, or you can put your logo like this :
-# $mrbs_company = "<a href=http://www.your_organisation.com/><img src=your_logo.gif border=0></a>";
+# $mrbs_company = "<a href=http://www.your_organisation.com/>
+# <img src=your_logo.gif border=0></a>";
 $mrbs_company = "Your Company";
 
 # This is to fix URL problems when using a proxy in the environment.
@@ -134,8 +135,10 @@ $view_week_number = FALSE;
 $times_right_side = FALSE;
 
 # Control the active cursor in day/week/month views.
-$javascript_cursor = true; # Change to false if clients have old browsers incompatible with JavaScript.
-$show_plus_link = true; # Change to true to always show the (+) link as in MRBS 1.1.
+$javascript_cursor = true; # Change to false if clients have old browsers
+                           # incompatible with JavaScript.
+$show_plus_link = true; # Change to true to always show the (+) link as in
+                        # MRBS 1.1.
 $highlight_method = "hybrid"; # One of "bgcolor", "class", "hybrid".
 
 # Define default starting view (month, week or day)
@@ -149,6 +152,77 @@ $default_view = "day";
 $default_room = 0;
 
 ###############################################
+# Email settings
+###############################################
+
+# Set to TRUE if you want to be notified when entries are booked. Default is
+# FALSE
+define ("MAIL_ADMIN_ON_BOOKINGS", FALSE);
+
+# Set the name of the Backend use to transport your mails. Either "mail",
+# "smtp" or "sendmail". Default is 'mail'. See INSTALL for more details.
+define ("MAIL_ADMIN_BACKEND", "mail");
+
+#*******************
+# Sendmail settings
+
+# Set the path of the Sendmail program (only used with "sendmail" backend).
+# Default is "/usr/bin/sendmail"
+define ("SENDMAIL_PATH", "/usr/bin/sendmail");
+
+# Set additional Sendmail parameters (only used with "sendmail" backend).
+# (example "-t -i"). Default is ""
+define ("SENDMAIL_ARGS", "");
+
+#*******************
+# SMTP settings
+
+# Set smtp server to connect. Default is 'localhost' (only used with "smtp"
+# backend).
+define ("SMTP_HOST", "localhost");
+
+# Set smtp port to connect. Default is '25' (only used with "smtp" backend).
+define ("SMTP_PORT", 25);
+
+# Set whether or not to use SMTP authentication. Default is 'FALSE'
+define ("SMTP_AUTH", FALSE);
+
+# Set the username to use for SMTP authentication. Default is ""
+define ("SMTP_USERNAME", "");
+
+# Set the password to use for SMTP authentication. Default is ""
+define ("SMTP_PASSWORD", "");
+
+#****************************
+# Miscellaneous settings
+
+# Set to TRUE if you want to be notified on every change (i.e, on new entries)
+# but also each time they are edited. Default is FALSE (only new entries)
+define ("MAIL_ADMIN_ALL", FALSE);
+
+# Set the email address of the From field. Default is $mrbs_admin_email
+define ("MAIL_FROM", $mrbs_admin_email);
+
+# Set the recipient email. Default is $mrbs_admin_email. You can define
+# more than one recipient like this "john@doe.com,scott@tiger.com"
+define ("MAIL_RECIPIENTS", $mrbs_admin_email);
+
+# Set the name of the Carbon Copy field. Default is "". You can define
+# more than one recipient (see MAIL_RECIPIENTS)
+define ("MAIL_CC", "");
+
+# Set the content of the Subject field.
+$mail["subject"] = "Entry added/changed for $mrbs_company MRBS";
+
+# Set the content of the message when a new entry is booked. What you type
+# here will be added at the top of the message body.
+$mail["new_entry"] = "A new entry has been booked, here is the details:";
+
+# Set the content of the message when an entry is modified. What you type
+# here will be added at the top of the message body.
+$mail["changed_entry"] = "An entry has been modified, here is the details:";
+
+###############################################
 # Authentication settings - read AUTHENTICATION
 ###############################################
 $auth["session"] = "php"; # How to get and keep the user ID. One of
@@ -157,8 +231,9 @@ $auth["type"] = "config"; # How to validate the user/password. One of "none"
                           # "config" "db" "pop3" "imap" "ldap" "nis" "nw" "ext".
 
 # The list of administrators (can modify other peoples settings)
-$auth["admin"][] = "127.0.0.1";		# localhost IP address. Useful with IP sessions.
-$auth["admin"][] = "administrator";	# A user name from the user list. Useful with most other session schemes.
+$auth["admin"][] = "127.0.0.1";	# localhost IP address. Useful with IP sessions.
+$auth["admin"][] = "administrator";	# A user name from the user list. Useful 
+                                    #with most other session schemes.
 #$auth["admin"][] = "10.0.0.1";
 #$auth["admin"][] = "10.0.0.2";
 #$auth["admin"][] = "10.0.0.3";

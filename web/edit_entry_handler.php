@@ -185,9 +185,17 @@ if(empty($err))
     foreach ( $rooms as $room_id ) {
         if($edit_type == "series")
         {
-            mrbsCreateRepeatingEntrys($starttime, $endtime,   $rep_type, $rep_enddate, $rep_opt, 
+            $new_id = mrbsCreateRepeatingEntrys($starttime, $endtime,   $rep_type, $rep_enddate, $rep_opt,
                                       $room_id,   $create_by, $name,     $type,        $description,
                                       isset($rep_num_weeks) ? $rep_num_weeks : 0);
+            # Send a mail to the Administrator
+            if (MAIL_ADMIN_ON_BOOKINGS)
+            {
+                if ( ( (isset($id) && MAIL_ADMIN_ALL) or !isset($id) ) && (0 != $new_id) )
+                {
+                    $result = notifyAdminOnBooking(!isset($id), $new_id);
+                }
+            }
         }
         else
         {
@@ -198,8 +206,16 @@ if(empty($err))
                 $entry_type = 0;
             
             # Create the entry:
-            mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $room_id,
+            $new_id = mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $room_id,
                                      $create_by, $name, $type, $description);
+            # Send a mail to the Administrator
+            if (MAIL_ADMIN_ON_BOOKINGS)
+            {
+                if ( ( (isset($id) && MAIL_ADMIN_ALL) or !isset($id) ) && (0 != $new_id) )
+                {
+                    $result = notifyAdminOnBooking(!isset($id), $new_id);
+                }
+            }
         }
     } # end foreach $rooms
 
