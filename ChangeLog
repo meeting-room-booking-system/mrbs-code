@@ -1,3 +1,6 @@
+Version 0.9.1 (Sun Feb  4 21:56:09 GMT 2001)
+	Fixed bug in mincals (sourceforge 'nobody') 
+	
 Version 0.9 (Sun Feb  4 21:40:16 GMT 2001)
 	Some stuff for Roxen from Claus Jeppesen (jeppesen@mrl.ucsb.edu)
 	Add control over start of weekday (Sunday or Monday) (bokleve)
