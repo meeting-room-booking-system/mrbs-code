@@ -289,10 +289,12 @@ if ( $pview != 1 ) {
     <td CLASS=CL valign=top><table><tr><td>
         <select name="typematch[]" multiple="yes">
 <?php
-for ($c = "A"; $c <= "J"; $c++)
+foreach( $typel as $key => $val )
 {
-	if (!empty($typel[$c]))
-		echo "<option value=$c" . (in_array ( $c, $typematch_default ) ? " selected" : "") . ">$typel[$c]\n";
+	if (!empty($val) )
+		echo "<option value=\"$key\"" .
+		     (is_array($typematch_default) && in_array ( $key, $typematch_default ) ? " selected" : "") .
+		     ">$val\n";
 }
 ?></select></td><td><?php echo get_vocab("ctrl_click_type") ?></td></tr></table>
 </td></tr>
