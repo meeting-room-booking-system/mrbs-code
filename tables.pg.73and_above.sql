@@ -27,17 +27,19 @@
 
 CREATE TABLE mrbs_area
 (
-  id        serial primary key,
-  area_name varchar(30)
+  id                serial primary key,
+  area_name         varchar(30),
+  area_admin_email  text
 );
 
 CREATE TABLE mrbs_room
 (
-  id          serial primary key,
-  area_id     int DEFAULT 0 NOT NULL,
-  room_name   varchar(25) NOT NULL,
-  description varchar(60),
-  capacity    int DEFAULT 0 NOT NULL
+  id                serial primary key,
+  area_id           int DEFAULT 0 NOT NULL,
+  room_name         varchar(25) NOT NULL,
+  description       varchar(60),
+  capacity          int DEFAULT 0 NOT NULL,
+  room_admin_email  text
 );
 
 CREATE TABLE mrbs_entry
