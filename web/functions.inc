@@ -32,11 +32,11 @@ function print_header($day, $month, $year, $area)
                       "http://www.w3.org/TR/html4/loose.dtd">
 <HTML>
  <HEAD>
-  <TITLE><?php echo get_vocab("mrbs") ?></TITLE>
 <?php
    include "style.inc";
 ?>
-<SCRIPT LANGUAGE="JavaScript">
+ <TITLE><?php echo get_vocab("mrbs") ?></TITLE>
+ <SCRIPT LANGUAGE="JavaScript">
 
 <!-- Begin
 
@@ -100,9 +100,8 @@ function ChangeOptionDays(formObj, prefix)
     DaysObject.selectedIndex = DaySelIdx;
 }
 
-//  End -->
-</SCRIPT>
-
+  //  End -->
+  </SCRIPT>
  </HEAD>
  <BODY BGCOLOR="#ffffed" TEXT=black LINK="#5B69A6" VLINK="#5B69A6" ALINK=red>
 	   <?php if ( $GLOBALS["pview"] != 1 ) { ?>
