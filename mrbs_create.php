@@ -48,8 +48,8 @@ $db_password = "mrbs-password";
 // not support database creation or if this operation requires special
 // database administrator permissions that may not be available to the
 // database user.
-// Set $db_create to FALSE to NOT create the database.
-$db_create = TRUE;
+// Set $db_create to 0 to NOT create the database.
+$db_create = 0;
 
 // Communication protocol tu use. For pgsql, you can use 'unix' instead of
 // 'tcp' to use Unix Domain Sockets instead of TCP/IP.
