@@ -40,7 +40,7 @@ function sql_mutex_lock($name)
 function sql_version()
 {
     global $mdb;
-    $v = $mdb->getCol("EXECUTE sp_server_info @attribute_id = 2",,,, 2);
+    $v = $mdb->getCol("EXECUTE sp_server_info @attribute_id = 2", "", "", "", 2);
     return "$v[0]";
 }
 
