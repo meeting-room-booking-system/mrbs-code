@@ -12,8 +12,10 @@ You need to know how to install, secure, run, maintain, and back up your
 chosen database system.
 
 No optional PHP packages (other than the database system) are required for
-this application. This version of MRBS was tested with PHP 4.0.4. It was
-not tested with PHP3, but it might still work.
+this application. This version of MRBS was tested with PHP 4.0.4, and there
+are reports of it working with PHP 3.0.12 and higher. (If you use PHP3,
+you must configure your web server to process *.php files (as well as the
+default *.php3 files) using PHP.)
 
 You can run PHP either as a CGI or an Apache module.  You'll get better
 performance with PHP setup as a module.  Not only will you not have to
@@ -27,12 +29,11 @@ If you are using PHP as an Apache module, you probably want to ensure that
 the Apache MaxRequestsPerChild is not set to 0, in case of undetected memory
 leaks in PHP or MRBS.
 
-I'm not 100% sure at this time but mySQL version 3.22, rather than 3.23 
-might also be a requirement. I've had one person who cannot get mrbs to
-work with 3.23, although YMMV. I'd like to hear from you if it does work
-with 3.23 for you.
+If you use MySQL, versions 3.22.32 and 3.23.23 have been tested and reported
+to work.
 
-If you use PostgreSQL, you need at least version 7.0.
+If you use PostgreSQL, you need at least version 7.0, and version 7.0.3 has
+been tested and reported to work.
 
 FILE UNPACKING
 ---------------------------------------------------------------------------
