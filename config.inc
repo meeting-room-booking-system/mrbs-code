@@ -17,9 +17,21 @@ $mrbs_admin = "Your Administrator";
 $mrbs_admin_email = "admin_email@your.org";
 $mrbs_company = "Your Company";
 
-# Start and end of day (default is 7-19)
+# Start and end of day, NOTE: this is an hour value only (0-23).
 $morningstarts = 7;
 $eveningends   = 19;
+
+# This in in here as a sanity check only, please feel free to remove if the
+# lines above are valid
+if(($morningstarts < 0) || ($morningstarts > 23) ||
+   ($eveningends   < 0) || ($eveningends   > 23)   )
+{
+?>
+  Please ensure that <CODE>$morningstarts</CODE> and <CODE>$eveningends</CODE>
+  in <CODE>config.inc</CODE> are valid.
+<?
+  exit;
+}
 
 # Searching parameters
 $search["count"] = 20;
