@@ -222,7 +222,7 @@ else
         echo "<th width=\"$room_column_width%\">
             <a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[2]\"
             title=\"" . get_vocab("viewweek") . " &#10;&#10;$row[3]\">"
-            . htmlspecialchars($row[0]) . "($row[1])</a></th>";
+            . htmlspecialchars($row[0]) . ($row[1] > 0 ? "($row[1])" : "") . "</a></th>";
 		$rooms[] = $row[2];
 	}
 
