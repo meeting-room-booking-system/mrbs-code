@@ -101,11 +101,11 @@ if (!is_array($nusers = $mdb->queryRow("SELECT count(*) FROM mrbs_users", 'integ
     $nusers = 0;
 }
 /* Get the list of fields actually in the table. (Allows the addition of new fields later on) */
-$nfields = $mdb->listTableFields('mrbs_users');
-for ($i=0; $i<sizeof($nfields); $i++)
+$field_name = $mdb->listTableFields('mrbs_users');
+$nfields = sizeof($field_name);
+for ($i=0; $i<$nfields; $i++)
 {
-	$field_name[$i] = $nfields[$i];
-    $types = $mdb->getTableFieldDefinition('mrbs_users', $nfields[$i]);
+    $types = $mdb->getTableFieldDefinition('mrbs_users', $field_name[$i]);
     $field_type[$i] = $types[0][0]['type'];
 }
 
@@ -149,7 +149,7 @@ if (isset($Action) && ($Action == "Edit"))
     	}
     if (($Id == -1) || (!$data)) /* Set blank data for undefined entries */
     	{
-    	for ($i=0; $i<sizeof($nfields); $i++) $data[$i] = "";
+    	for ($i=0; $i<$nfields; $i++) $data[$i] = "";
     	}
 
     /* First make sure the user is authorized */
@@ -174,8 +174,8 @@ if (isset($Action) && ($Action == "Edit"))
 
     print "<form method=post action=\"" . basename($PHP_SELF) . "\">\n";
     print "  <table>\n";
-
-    for ($i=0; $i<sizeof($nfields); $i++)
+    
+    for ($i=0; $i<$nfields; $i++)
         {
         /* The ID field cannot change; The password field must not be shown. */
         if ($field_name[$i] == "id")
@@ -227,19 +227,19 @@ if (isset($Action) && ($Action == "Update"))
 	print_header(0, 0, 0, "");
 
         print get_vocab("passwords_not_eq") . "<br>\n";
-
+        
         print "<form method=post action=\"" . basename($PHP_SELF) . "\">\n";
         print "  <input type=submit value=\" " . get_vocab("ok") . " \" /> <br />\n";
         print "</form>\n</body>\n</html>\n";
 
         exit();
         }
-
+    
     if ($Id >= 0)
     {
         // This is a REPLACE
         $replaced_fields = array();
-        for ($i=0; $i<sizeof($nfields); $i++)
+        for ($i=0; $i<$nfields; $i++)
         {
             if ($field_name[$i]=="id") $Field[$i] = $Id;
             if ($field_name[$i]=="name") $Field[$i] = strtolower($Field[$i]);
@@ -261,7 +261,7 @@ if (isset($Action) && ($Action == "Update"))
     {
         $operation = "INSERT INTO mrbs_users VALUES (";
         $Id = $mdb->nextId('mrbs_users_id');
-    	for ($i=0; $i<sizeof($nfields); $i++)
+    	for ($i=0; $i<$nfields; $i++)
         {
         	if ($field_name[$i]=="id") $Field[$i] = $Id;
         	if ($field_name[$i]=="name") $Field[$i] = strtolower($Field[$i]);
@@ -359,7 +359,7 @@ print "<tr>";
 // The first 2 columns are the user rights and uaser name.
 print "<th>" . get_vocab("rights") . "</th><th>" . get_vocab("user_name") . "</th>";
 // The remaining columns are all the columns from the database, past the initial 3 (id, name, password).
-for ($i=3; $i<sizeof($nfields); $i++) print "<th>" . get_loc_field_name($i) . "</th>";
+for ($i=3; $i<$nfields; $i++) print "<th>" . get_loc_field_name($i) . "</th>";
 print "<th>" . get_vocab("action") . "</th>";
 print "</tr>\n";
 $i = 0; 
