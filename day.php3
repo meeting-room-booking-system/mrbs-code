@@ -6,6 +6,7 @@ include "connect.inc";
 include "mincals.inc";
 
 load_user_preferences ();
+
 ?>
 
 <HTML>
@@ -31,7 +32,7 @@ $pm7=mktime($eveningends,0,0,$month,$day,$year);
 
 #Let the user know what date they chose
 echo "<table><tr><td width=\"100%\">";
-echo "<H2>$lang[bookingsfor] " . date("D jS F Y",$am7) . "</h2>";
+echo "<H2>$lang[bookingsfor] " . strftime('%A, %B %d',$am7) . "</h2>";
 echo "</td><td><center>";
 
 #Find out which rooms a user wants to see

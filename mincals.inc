@@ -85,10 +85,10 @@ class Calendar
         $s = "";
         
     	$daysInMonth = $this->getDaysInMonth($this->month, $this->year);
-    	$date = getdate(mktime(12, 0, 0, $this->month, 1, $this->year));
+    	$date = mktime(12, 0, 0, $this->month, 1, $this->year);
     	
-    	$first = $date["wday"];
-    	$monthName = $date["month"];
+    	$first = strftime("%w",$date);
+    	$monthName = strftime("%B",$date);
     	
     	$prevMonth = $this->getCalendarLink($this->month - 1 >   0 ? $this->month - 1 : 12, $this->month - 1 >   0 ? $this->year : $this->year - 1);
     	$nextMonth = $this->getCalendarLink($this->month + 1 <= 12 ? $this->month + 1 :  1, $this->month + 1 <= 12 ? $this->year : $this->year + 1);
