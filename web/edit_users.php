@@ -29,13 +29,6 @@ require_once("database.inc.php");
 include "$dbsys.inc";
 include "mrbs_auth.inc";
 
-// Do not allow unidentified people to browse the list.
-if(!getAuthorised(getUserName(), getUserPassword(), 1))
-    {
-    showAccessDenied($day, $month, $year, $area);
-    exit;
-    }
-
 /*---------------------------------------------------------------------------*\
 |                     Create the users database if needed                     |
 \*---------------------------------------------------------------------------*/
@@ -102,6 +95,7 @@ if (!in_array("mrbs_users", $nusers))
     }
     $nusers = 0;
 }
+
 /* Get the list of fields actually in the table. (Allows the addition of new fields later on) */
 $field_name = $mdb->listTableFields('mrbs_users');
 if (MDB::isError($field_name))
@@ -139,6 +133,12 @@ if ($nusers > 0)
     {
     $user = getUserName();
     $level = authGetUserLevel($user, $auth["admin"]);
+    // Do not allow unidentified people to browse the list.
+    if(!getAuthorised($user, getUserPassword(), 1))
+        {
+        showAccessDenied($day, $month, $year, $area);
+        exit;
+        }
     }
 else /* We've just created the table. Assume the person doing this IS the administrator. */
     {
@@ -153,14 +153,14 @@ else /* We've just created the table. Assume the person doing this IS the admini
 if (isset($Action) && ($Action == "Edit"))
     {
     if ($Id >= 0) /* -1 for new users, or >=0 for existing ones */
-    	{
+    {
         $data = $mdb->queryRow(
         	"SELECT * FROM mrbs_users WHERE id=$Id", $field_type);
         if (MDB::isError($data))
-    	{
+        {
     		fatal_error(1, $data->getMessage() . "<br>" . $data->getUserInfo());
     	}
-    	}
+    }
     if (($Id == -1) || (!$data)) /* Set blank data for undefined entries */
     	{
     	for ($i=0; $i<$nfields; $i++) $data[$i] = "";
