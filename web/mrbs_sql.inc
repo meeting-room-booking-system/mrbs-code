@@ -19,7 +19,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 {
     global $mdb, $enable_periods, $periods;
     # Select any meetings which overlap ($starttime,$endtime) for this room:
-    $sql = "SELECT  id, name, start_time 
+    $sql = "SELECT  id, name, start_time
             FROM    mrbs_entry 
             WHERE   start_time < $endtime 
             AND     end_time > $starttime
@@ -37,7 +37,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
     {
         return $res->getMessage() . "<br>" . $res->getUserInfo();
     }
-    if (0 == $mdb->numRows($res))
+    if (!$row = $mdb->fetchInto($res))
     {
         $mdb->freeResult($res);
         return "";
@@ -47,7 +47,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 
 	# Build a string listing all the conflicts:
 	$err = "";
-    while ($row = $mdb->fetchInto($res))
+    do
 	{
 		$starts = getdate($row[2]);
 		$param_ym = "area=$area&year=$starts[year]&month=$starts[mon]";
@@ -67,9 +67,10 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 		. " | <A HREF=\"week.php?room=$room_id&$param_ymd\">".get_vocab("viewweek")."</a>"
 		. " | <A HREF=\"month.php?room=$room_id&$param_ym\">".get_vocab("viewmonth")."</a>)";
 	}
-	
-	return $err;
+    while ($row = $mdb->fetchInto($res));
+
     $mdb->freeResult($res);
+	return $err;
 }
 
 /** mrbsDelEntry()

@@ -332,15 +332,14 @@ function get_default_area()
 
     $res = $mdb->query("SELECT  MIN(id)
                         FROM    mrbs_area", 'integer');
-    if ( (MDB::isError($res)) or (1 <> $mdb->numRows($res)) )
+    if ( (MDB::isError($res)) or (!$default_area = $mdb->fetchOne($res)) )
     {
         $mdb->freeResult($res);
         return 0;
     }
     else
     {
-        $default_area = $mdb->fetchOne($res);
-        return (NULL == $default_area ? 0 : $default_area);
+        return $default_area;
     }
 }
 

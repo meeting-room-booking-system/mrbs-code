@@ -64,16 +64,17 @@ if($type == "room")
         {
             echo($res->getMessage() . "<BR>" . $res->getUserInfo() . "<BR>");
         }
-        elseif ($mdb->numRows($res) > 0)
+        elseif ($row = $mdb->fetchInto($res))
         {
             echo get_vocab("deletefollowing") . ":<ul>";
 
-            while ($row = $mdb->fetchInto($res))
+            do
             {
                 echo "<li>$row[0] (";
                 echo time_date_string($row[1]) . " -> ";
                 echo time_date_string($row[2]) . ")";
             }
+            while ($row = $mdb->fetchInto($res));
 
             echo "</ul>";
         }
