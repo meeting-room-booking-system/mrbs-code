@@ -199,6 +199,45 @@ $auth["prog"]   = "/home/httpd/html/mrbs/auth_ldapsearch.pl";
 $auth["params"] = "LDAPSERVER cn=#USERNAME# #PASSWORD#";
 $auth["params"] = "YourServer \"Your search root\" \"#USERNAME#\" \"#PASSWORD#\"";
 
+PAM Authentification
+----------------------
+
+In case your Unix system uses PAM (especially Linux, but also SUN Solaris)
+you might try the script auth_pam.pl. This script takes two two parameters -
+the user name  and the user password.
+
+This perl script requires Authen::PAM.
+
+The script has to be run as SUID. Therefore you should take some precautions
+to not undermine your system's security. Change the group of the script to that
+of your Web Server (for Apache this is normally nobody or apache) and don't
+make it readable and executeable to anybody else, eg.:
+
+chgrp nobody auth_pam.pl
+
+The script has to be run SUID and has to be executed by sperl:
+
+chmod 4750 auth_pam.pl
+
+The first line (#!/usr/bin/sperl5.6.0) says where sperl is located on
+your system. Please adapt this for your needs.
+
+Now add the configuration to web/config.inc in your MRBS directory.
+This looks as follows (adapt the path to auth_pam.pl according to your
+your configuration):
+
+$auth["realm"]  = "MY REALM";
+$auth["type"]   = "ext";
+$auth["prog"]   = "/var/www/html/mrbs/auth_pam.pl";
+$auth["params"] = "#USERNAME# #PASSWORD#";
+
+That's it.
+
+Note that this has been oly tested with Red Hat 7.x. Feedback on whether
+this works on other  systems ( eg. Solaris) is appreciated.
+
+
+
 Creating a new authentication scheme
 ------------------------------------
 
