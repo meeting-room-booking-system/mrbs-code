@@ -1,12 +1,26 @@
-CVS (Mon Mar 31 2003)
+CVS (Thu Apr 17           GMT 2003)
+   + Entries in monthly view can be shown as start/end slot or brief description
+    (Matt Payton (mpayton@hunterdonhealth.com))
+
+CVS (Tue Apr 15           GMT 2003)
+   + replaced the column titles in the week view to be links to the
+     corresponding days. This makes it easier for users to access the day view
+     from the week view without having to scroll down to the bottom of the page.
+     (<sQuare>mrbs@synapse.plus.com)
+
+CVS (Wed Apr 09           GMT 2003)
+   - Fixed bug : if AM/PM hour format is used, bookings between
+     12:00 AM and 12:59 AM are stored with a wrong start date.
+
+CVS (Mon Mar 31           GMT 2003)
    - bug fix : italian vocab with one character not properly escaped prevents 
      deleting entries and/or prevent javascript popup to works (Pietro donatini)
 
-CVS (Fri Mar 28 2003)
+CVS (Fri Mar 28           GMT 2003)
    - Fixed bug in escaping of username and password for
      all authentication schemes that use HTTP authentication.
 
-CVS (Thu Mar 27 2003)
+CVS (Thu Mar 27           GMT 2003)
    - Fixed bug : if AM/PM hour format is used, bookings between
      12:00 PM and 12:59 PM are stored with a wrong start date.
 

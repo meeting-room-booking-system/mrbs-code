@@ -81,6 +81,10 @@ $refresh_rate = 0;
 $area_list_format = "list";
 #$area_list_format = "select";
 
+# Entries in monthly view can be shown as start/end slot or brief description
+# Set to 1 for brief description, 0 for time slot
+$_MRBS_monthly_view_brief_description = 0;
+
 ###############################################
 # Authentication settings - read AUTHENTICATION
 ###############################################
