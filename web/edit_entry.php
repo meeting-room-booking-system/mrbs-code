@@ -378,7 +378,7 @@ function changeRooms( formObj )
         	$res2 = sql_query($sql2);
 		if ($res2) for ($j = 0; ($row2 = sql_row($res2, $j)); $j++)
 		{
-                	print "        roomsObj.options[$j] = new Option(\"".$row2[1]."\",".$row2[0] .")\n";
+                	print "        roomsObj.options[$j] = new Option(\"".str_replace('"','\\"',$row2[1])."\",".$row2[0] .")\n";
                 }
 		# select the first entry by default to ensure
 		# that one room is selected to begin with
