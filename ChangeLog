@@ -1,4 +1,11 @@
-Version 1.1-pre2 (Thu Jan  9 17:50:00 GMT 2002)
+CVS (Fri Jan 10 11:33:43 GMT 2003)
+   - Change search.php to remove warnings introduced with PHP 4.3.0
+
+CVS (Thu Jan  9 18:05:23 GMT 2003)
+   - Change trailer.inc to make print preview more likely to work on
+     windows and non-apache servers
+
+Version 1.1-pre2 (Thu Jan  9 17:50:00 GMT 2003)
 
    + New POP3 authentication scheme (Daniel Gardner)
    - Updated Spanish translation
@@ -41,9 +48,6 @@ Version 1.1-pre2 (Thu Jan  9 17:50:00 GMT 2002)
    - print_header() now outputs a DOCTYPE identifier as well as
      sending Pragma no-cache and an Expires header in the
      past. This should help ensure the web pages don't get cached.
-   - Change trailer.inc to make print preview more likely to work on
-     windows and non-apache servers
-   - Change search.php to remove warnings introduced with PHP 4.3.0
 
 Version 1.1-pre1 (Thu May 30 12:41:02 BST 2002)
    + add config option for drop-down boxes to select area and room
