@@ -33,17 +33,23 @@ include 'lang.en';
 $lang_file = "lang.$HTTP_ACCEPT_LANGUAGE";
 if (file_exists($lang_file)) {include $lang_file;}
 
+
 # We also want to do locales for Dates/Times etc.
 # Use the setlocale() function for this.
+
+# Define the default locale here. For a list of supported
+# locales on your system do "locale -a"
+setlocale('LC_ALL','C');
+
 # We attempt to make up a sensible locale from
 # the HTTP_ACCEPT_LANGUAGE environment variable
-
+# comment this out to disable it
 $locale = $HTTP_ACCEPT_LANGUAGE;
 if (strlen($locale) == 2) {
    $locale = strtolower($locale)."_".strtoupper($locale);
 } else {
    $locale = strtolower(substr($locale,0,2))."_".strtoupper(substr($locale,3,2));
 }
-setlocale('LC_TIME',$locale);
+setlocale('LC_ALL',$locale);
 
 ?>

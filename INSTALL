@@ -63,6 +63,10 @@ of the environment variables supplied to PHP is $HTTP_ACCEPT_LANGUAGE,
 which we use to choose a language file. You can specify the default in
 config.inc. See the file called LANGUAGE for more info.
 
+MRBS also uses your OS locale support for certain date/time strings.
+There is some code that tries to figure out what locale should be used
+based on your browser. Use "locale -a" on your system to find out what
+locale support is installed.
 
 OPTIONAL!
 ---------------------------------------------------------------------------
@@ -72,4 +76,10 @@ the ".inc" files.  For example, if a user typed in the URL for the
 which is not a good thing.  See your web server documentation on how to
 do this.
 
-There is an Apache .htaccess file included, but Apache might ignore it because of the "AllowOverride None" in your httpd.conf. Either change "AllowOverride None" to "AllowOverride Limit", create a new <Directory> entry with the contents of the .htaccess file in it, or add the contents of the .htaccess to httpd.conf where it says "<Files ~ "^\.ht">". And then read the Apache docs five or six times, until you know what you just did.
+There is an Apache .htaccess file included, but Apache might ignore it because 
+of the "AllowOverride None" in your httpd.conf. Either change "AllowOverride None" 
+to "AllowOverride Limit", create a new <Directory> entry with the contents of 
+the .htaccess file in it, or add the contents of the .htaccess to httpd.conf 
+where it says "<Files ~ "^\.ht">". And then read the Apache docs five or six 
+times, until you know what you just did.
+

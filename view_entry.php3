@@ -20,10 +20,10 @@ if ( $id < 1 ) {
 }
 
 
-#We do all of our date formatting with mySQL, because its nice like that
-$sql = "select name, description, date_format(start_time, '%W, %M %D, %Y'), date_format(start_time, '%k:%i'),
-		  sec_to_time((unix_timestamp(end_time) - unix_timestamp(start_time))), type, create_by, 
-		  date_format(timestamp, '%W, %M %D, %Y')
+#Find all the data about our booking
+$sql = "select name, description, unix_timestamp(start_time), unix_timestamp(start_time),
+		  (unix_timestamp(end_time) - unix_timestamp(start_time)), type, create_by, 
+		  unix_timestamp(timestamp)
 		  from mrbs_entry where id='$id'";
 
 $res = mysql_query($sql);
@@ -36,12 +36,12 @@ if (mysql_error()) {
 
 $name        = $row[0];
 $description = $row[1];
-$start_date  = $row[2];
-$start_time  = $row[3];
-$duration    = $row[4];
+$start_date  = strftime('%c',$row[2]);
+$start_time  = strftime('%X',$row[3]);
+$duration    = $row[4]/60/60 . " $lang[hours]";
 $type        = $row[5];
 $create_by   = $row[6];
-$updated     = $row[7];
+$updated     = strftime('%c',$row[7]);
 
 #make a nice little array so we can write the type in english easily
 $typel[I] = "Internal";

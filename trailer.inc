@@ -17,7 +17,7 @@ $etime = $btime + (7*24*60*60);
 for ($i = $stime; $i <= $etime; $i=$i+(24*60*60)) {
 	$cyear  = date("Y",$i);
 	$cmonth = date("m",$i);
-	$ddate  = date("M d",$i);
+	$ddate  = strftime("%b %d",$i);
 	$cday   = date("d",$i);
 	echo "<a href=day.php3?year=$cyear&month=$cmonth&day=$cday>$ddate</a>, ";
 }

@@ -1,17 +1,22 @@
 Currently supported MRBS languages are:
 
-English: lang.en
-
+English:  lang.en
+Japanese: lang.ja
 
 To port MRBS to another language is relativly easy.
 
-Look it admin.php3 - it says near the bottom "Your browser is set to use "xx" language".
+Look it admin.php3 - it says near the bottom "Your browser is set to use
+"xx" language".
 
-Copy "lang.en" to "lang.xx" (replace xx with the code you found in admin.php3) and then edit the file to change the English strings to your language.
+Copy "lang.en" to "lang.xx" (replace xx with the code you found in
+admin.php3) and then edit the file to change the English strings to your
+language.
 
-You will then find that MRBS starts to use your language file automatically.
+You will then find that MRBS starts to use your language file
+automatically.
 
-If you do create a language file then please send it to me so I can include it in future releases.
+If you do create a language file then please send it to me so I can include
+it in future releases.
 
 Daniel
 daniel@pl14759.demon.co.uk

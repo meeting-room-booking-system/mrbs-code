@@ -32,7 +32,7 @@ $pm7=mktime($eveningends,0,0,$month,$day,$year);
 
 #Let the user know what date they chose
 echo "<table><tr><td width=\"100%\">";
-echo "<H2>$lang[bookingsfor] " . strftime('%A, %B %d',$am7) . "</h2>";
+echo "<H2>$lang[bookingsfor] " . strftime('%A, %B %d',$am7) . " $lang[bookingsforpost]</h2>";
 echo "</td><td><center>";
 
 #Find out which rooms a user wants to see
@@ -71,8 +71,9 @@ $tf = date("Y-m-d",$todaytime+(24*60*60));
 echo "<table border=0><tr><td class=\"I\">$lang[internal]</td><td class=\"E\">$lang[external]</td></tr></table>";
 
 #Show Go to day before and after links
-echo "<table width=100%><tr><td><a href=day.php3?year=$yy&month=$ym&day=$yd&area=$area>&lt;&lt; $lang[daybefore]</a></td><td
-align=right><a href=day.php3?year=$ty&month=$tm&day=$td&area=$area>$lang[dayafter] &gt;&gt;</a></td></tr></table>";
+echo "<table width=100%><tr><td><a href=day.php3?year=$yy&month=$ym&day=$yd&area=$area>&lt;&lt; $lang[daybefore]</a></td>
+      <td align=center><a href=day.php3?area=$area>$lang[gototoday]</a></td>
+      <td align=right><a href=day.php3?year=$ty&month=$tm&day=$td&area=$area>$lang[dayafter] &gt;&gt;</a></td></tr></table>";
 
 
 #We want to build an array containing all the data we want to show

@@ -14,6 +14,7 @@ $lang[bookingsforpost]    = ""; # Goes after the date
 $lang[areas]              = "Areas";
 $lang[daybefore]          = "Go To Day Before";
 $lang[dayafter]           = "Go To Day After";
+$lang[gototoday]          = "Go To Today";
 
 # Used in trailer.inc
 $lang[viewday]            = "View Day";

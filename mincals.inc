@@ -79,6 +79,16 @@ class Calendar
         return $d;
     }
 
+    function getFirstDays()
+    {
+      $basetime = mktime(12,0,0,6,11,2000);
+      for ($i = 0; $i < 7; $i++) {
+         $show = $basetime + ($i * 24 * 60 * 60);
+         $fl = substr(strftime('%a',$show),0,1);
+        	$s .= "<td align=center valign=top class=calendarHeader>$fl</td>\n";
+      }
+      return $s;
+    }
 
     function getHTML()
     {
@@ -101,13 +111,7 @@ class Calendar
     	$s .= "</tr>\n";
     	
     	$s .= "<tr>\n";
-    	$s .= "<td align=center valign=top class=calendarHeader>S</td>\n";
-    	$s .= "<td align=center valign=top class=calendarHeader>M</td>\n";
-    	$s .= "<td align=center valign=top class=calendarHeader>T</td>\n";
-    	$s .= "<td align=center valign=top class=calendarHeader>W</td>\n";
-    	$s .= "<td align=center valign=top class=calendarHeader>T</td>\n";
-    	$s .= "<td align=center valign=top class=calendarHeader>F</td>\n";
-    	$s .= "<td align=center valign=top class=calendarHeader>S</td>\n";
+      $s .= $this->getFirstDays();
     	$s .= "</tr>\n";
     	
     	$d = 1 - $first;
