@@ -196,6 +196,9 @@ with 30 minute intervals:
     $eveningends = 23;
     $eveningends_minutes = 30;
 
+Note: Be careful to avoid specify options that displays blocks overlaping
+the next day, since it is not properly handled.
+
 To control international preferences for the calendar displays, use
 $weekstarts to change the first day of the week from the default of
 Sunday; use $dateformat to show dates as "Month Day" or "Day Month"

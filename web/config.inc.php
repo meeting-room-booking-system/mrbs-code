@@ -39,6 +39,9 @@ $mrbs_company = "Your Company";
 ###################
 # Calendar settings
 ###################
+# Note: Be careful to avoid specify options that displays blocks overlaping
+# the next day, since it is not properly handled.
+
 # Resolution - what blocks can be booked, in seconds.
 # Default is half an hour: 1800 seconds.
 $resolution = 1800;
