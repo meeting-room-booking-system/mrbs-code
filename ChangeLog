@@ -1,3 +1,10 @@
+2004-05-08  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* INSTALL (1.33): + Enhancements to email support: added the option
+	  to send a copy of entries details to the 'booker'. Will retrieve
+	  users emails from the used auth scheme : email field for auth_db,
+	  username + provided domain for all other schemes.
+
 2004-05-06  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* INSTALL (1.32): Added details about $morningstarts_minutes

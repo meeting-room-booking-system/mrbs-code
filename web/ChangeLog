@@ -1,3 +1,17 @@
+2004-05-08  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* edit_entry.php (1.30): Replaced submit button hiding by
+	  'disabled'.
+
+2004-05-08  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.35), edit_entry_handler.php (1.20),
+	  functions_mail.inc (1.5), language.inc (1.10): + Enhancements to
+	  email support: added the option to send a copy of entries details
+	  to the 'booker'. Will retrieve users emails from the used auth
+	  scheme : email field for auth_db, username + provided domain for
+	  all other schemes.
+
 2004-05-06  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* config.inc.php (1.34), day.php (1.36), week.php (1.37): Added
