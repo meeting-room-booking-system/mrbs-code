@@ -60,6 +60,7 @@ $lang["rep_type_1"]         = "Diaria";
 $lang["rep_type_2"]         = "Semanal";
 $lang["rep_type_3"]         = "Mensual";
 $lang["rep_type_4"]         = "Anual";
+$lang["rep_type_5"]         = "Monthly, corresponding day";
 $lang["rep_end_date"]       = "Fecha tope Repetici&oacute;n:";
 $lang["rep_rep_day"]        = "D&iacute;a Repetici&oacute;n:";
 $lang["rep_for_weekly"]     = "(para semanal)";

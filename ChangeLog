@@ -1,3 +1,9 @@
+CVS: (2001-03-26 15:00 UTC jberanek)
+    Copied "rep_type_5" language token into Swedish and Spanish language
+     files from English file.  Swedish and Spanish users were not able
+     to use "monthly, corresponding day" repeats without the token being
+     present.
+
 CVS: (2001-03-07 13:49 UTC jberanek)
     Checked in updates to lang.es (received from Pablo Gomez) and lang.de
     (received by Bernd Oeggl).

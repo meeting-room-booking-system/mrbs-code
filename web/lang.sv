@@ -61,6 +61,7 @@ $lang["rep_type_1"]         = "dagligen";
 $lang["rep_type_2"]         = "varje vecka";
 $lang["rep_type_3"]         = "månatligen";
 $lang["rep_type_4"]         = "årligen";
+$lang["rep_type_5"]         = "Monthly, corresponding day";
 $lang["rep_end_date"]       = "Repetition slutdatum:";
 $lang["rep_rep_day"]        = "Repetitionsdag:";
 $lang["rep_for_weekly"]     = "(vid varje vecka)";
