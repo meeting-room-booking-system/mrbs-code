@@ -43,13 +43,14 @@ $skipback = (date("w", $ctime) - $weekstarts + 7) % 7;
 for ($i = -4; $i <= 4; $i++)
 {
 	$ctime = mktime(0, 0, 0, $month, $day + 7 * $i - $skipback, $year);
-	$str = strftime(empty($dateformat)? "%b %d" : "%d %b", $ctime);
-	
+
+	$cweek  = date("W", $ctime);
 	$cday   = date("d", $ctime);
 	$cmonth = date("m", $ctime);
 	$cyear  = date("Y", $ctime);
 	if ($i != -4) echo " | ";
-	echo "<a href=\"week.php?year=$cyear&month=$cmonth&day=$cday$params\">$str</a>\n";
+    ($view_week_number) ? $str = $cweek : $str = strftime(empty($dateformat)? "%b %d" : "%d %b", $ctime);
+    echo "<a href=\"week.php?year=$cyear&month=$cmonth&day=$cday$params\">$str</a>\n";
 }
 
 echo "<BR><B>$vocab[viewmonth]:</B>\n";

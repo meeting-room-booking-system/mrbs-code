@@ -1,3 +1,9 @@
+2003-10-02  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.3), trailer.inc (1.8): + Allow to view weeks in the 
+	  bottom (trailer.inc) as week numbers (ie. 42) instead of 'first day of 
+	  the week' (13 Oct) (Per Wermelin - SKIOLD Sæby A/S" <ela@skiold.dk>).
+
 2003-09-25  John Beranek <jberanek@users.sourceforge.net>
 
 	* auth_pop3.inc (1.3): Bug fix provided by Jean-Baptiste

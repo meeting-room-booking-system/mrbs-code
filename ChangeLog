@@ -1,3 +1,9 @@
+2003-10-02  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* INSTALL (1.15): + Allow to view weeks in the bottom (trailer.inc) as 
+	  week numbers (ie. 42) instead of 'first day of the week' (13 Oct)
+	  (Per Wermelin - SKIOLD Sæby A/S" <ela@skiold.dk>).
+
 2003-09-26  John Beranek <jberanek@users.sourceforge.net>
 
 	* AUTHENTICATION (1.18), crypt_passwd.pl (1.1),

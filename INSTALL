@@ -215,6 +215,8 @@ These settings control:
 - the way area/rooms are selected (html list or a drop-down select box),
 - the way entries are displayed in monthly view (start/end slot or brief 
   description).
+- the way weeks are displayed in the bottom of the page (as week numbers (ie. 
+  42) instead of 'first day of the week' (13 Oct)).
 
 
 5. Authentication:
