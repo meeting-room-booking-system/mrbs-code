@@ -245,6 +245,22 @@ function validate_and_submit ()
 
   return true;
 }
+function OnAllDayClick(allday) // Executed when the user clicks on the all_day checkbox.
+{
+  form = document.forms["main"];
+  if (allday.checked) // If checking the box...
+  {
+    <?php if( ! $enable_periods ) { ?>
+      form.hour.value = "00";
+      form.minute.value = "00";
+    <?php } ?>
+    if (form.dur_units.value!="days") // Don't change it if the user already did.
+    {
+      form.duration.value = "1";
+      form.dur_units.value = "days";
+    }
+  }
+}
 </SCRIPT>
 
 <h2><?php echo isset($id) ? ($edit_type == "series" ? get_vocab("editseries") : get_vocab("editentry")) : get_vocab("addentry"); ?></H2>
@@ -314,7 +330,7 @@ while (list(,$unit) = each($units))
 }
 ?>
     </SELECT>
-    <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes"> <?php echo get_vocab("all_day"); ?>
+    <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes" onClick="OnAllDayClick(this)"> <?php echo get_vocab("all_day"); ?>
 </TD></TR>
 
 
