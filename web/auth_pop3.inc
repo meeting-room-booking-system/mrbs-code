@@ -88,7 +88,7 @@ function authValidateUser($user, $pass)
    // if we've still not authenticated then try using traditional methods
    // need to reconnect if we tried APOP
    if ($shared_secret) {
-      $stream = fsockopen( $host, '110', $error_number, $error_string, 15 );
+      $stream = fsockopen( $pop3_host, '110', $error_number, $error_string, 15 );
       $response = fgets( $stream, 1024 );
    }
 

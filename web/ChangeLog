@@ -1,3 +1,8 @@
+2003-09-25  John Beranek <jberanek@users.sourceforge.net>
+
+	* auth_pop3.inc (1.3): Bug fix provided by Jean-Baptiste
+	  Lehucher.
+
 2003-09-23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* help.php (1.10): Doc fixes.
