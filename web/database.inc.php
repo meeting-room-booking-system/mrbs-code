@@ -31,7 +31,12 @@ $mdb=&MDB::connect(array
     "port"     => $db_port,
     "database" => $db_database
 )
-, !$db_nopersist);
+, array
+(
+    'persistent' => !$db_nopersist,
+    'optimize'   => 'portability' 
+)    
+);
 
 if (MDB::isError($mdb))
 {
