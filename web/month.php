@@ -393,27 +393,31 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
     }
 
     echo "<br>";
-    if ($javascript_cursor)
-	{
-	echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
-	echo "BeginActiveCell();\n";
-	echo "// -->\n</SCRIPT>";
-	}
-    if( $enable_periods ) {
-	echo "<a href=\"edit_entry.php?room=$room&area=$area"
-	. "&period=0&year=$year&month=$month"
-	. "&day=$cday\"><img src=new.gif width=10 height=10 border=0></a>";
-    } else {
-	echo "<a href=\"edit_entry.php?room=$room&area=$area"
-	. "&hour=$morningstarts&minute=0&year=$year&month=$month"
-	. "&day=$cday\"><img src=new.gif width=10 height=10 border=0></a>";
+    if ( $pview != 1 ) {
+        if ($javascript_cursor)
+	    {
+            echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+            echo "BeginActiveCell();\n";
+            echo "// -->\n</SCRIPT>";
+            }
+        if( $enable_periods ) {
+            echo "<a href=\"edit_entry.php?room=$room&area=$area"
+            . "&period=0&year=$year&month=$month"
+            . "&day=$cday\"><img src=new.gif width=10 height=10 border=0></a>";
+        } else {
+            echo "<a href=\"edit_entry.php?room=$room&area=$area"
+            . "&hour=$morningstarts&minute=0&year=$year&month=$month"
+            . "&day=$cday\"><img src=new.gif width=10 height=10 border=0></a>";
+        }
+        if ($javascript_cursor)
+            {
+            echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+            echo "EndActiveCell();\n";
+            echo "// -->\n</SCRIPT>";
+            }
     }
-    if ($javascript_cursor)
-	{
-	echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
-	echo "EndActiveCell();\n";
-	echo "// -->\n</SCRIPT>";
-	}
+    else
+        echo '&nbsp;';
     echo "</td>\n";
     if (++$weekcol == 7) $weekcol = 0;
 }
