@@ -102,11 +102,6 @@ $auth["admin"][] = "127.0.0.1";
 # there is a language file for it.
 include 'lang.en';
 
-# These two lines import a language based on what the client
-# is using. Comment them out to disable this.
-$lang_file = "lang.$HTTP_ACCEPT_LANGUAGE";
-if (file_exists($lang_file)) {include $lang_file;}
-
 # We also want to do locales for Dates/Times etc.
 # Use the setlocale() function for this.
 
@@ -119,6 +114,13 @@ setlocale('LC_ALL','C');
 # and assign locale directly.
 # If HTTP_ACCEPT_LANGUAGE is a comma-separated list, take the first one.
 $locale = ereg_replace(",.*", "", $HTTP_ACCEPT_LANGUAGE);
+
+# These two lines import a language based on what the client
+# is using. Comment them out to disable this.
+
+$lang_file = "lang.". strtolower(substr($locale,0,2));
+if (file_exists($lang_file)) {include $lang_file;}
+
 #
 # Convert locale=xx to xx_XX; this is not correct for some locales???
 if (strlen($locale) == 2) {
