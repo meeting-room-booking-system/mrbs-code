@@ -24,6 +24,10 @@ if ("area" == $type)
 {
     $area_name_q = unslashes($name);
     $id = $mdb->nextId('mrbs_area_id');
+    if (MDB::isError($id))
+    {
+        fatal_error(1, "<p>" . $id->getMessage() . "<br>" . $id->getUserInfo());
+    }
     $sql = "INSERT INTO mrbs_area (id, area_name) 
             VALUES      ($id, " . $mdb->getTextValue($area_name_q) . ")";
     $res = $mdb->query($sql);
