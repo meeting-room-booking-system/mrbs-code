@@ -12,7 +12,7 @@ if(getAuthorised(getUserName(), getUserPassword()) && ($info = mrbsGetEntryInfo(
 	$month = strftime("%m", $info[start_time]);
 	$year  = strftime("%Y", $info[start_time]);
 	
-	if(mrbsDelEntry(getUserName(), $id, $series))
+	if(mrbsDelEntry(getUserName(), $id, $series, 1))
 	{
 		Header("Location: day.php3?day=$day&month=$month&year=$year");
 		exit;

@@ -61,15 +61,16 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $rep_ignore)
  * 
  * Delete an entry, or optionally all entrys.
  * 
- * $user - Who's making the request
- * $id   - The entry to delete
- * $all  - If set, delete all entrys
+ * $user   - Who's making the request
+ * $id     - The entry to delete
+ * $series - If set, delete the series, except user modified entrys
+ * $all    - If set, include user modified entrys in the series delete
  *
  * Returns:
  *   0        - An error occured
  *   non-zero - The entry was deleted
  */
-function mrbsDelEntry($user, $id, $all)
+function mrbsDelEntry($user, $id, $series, $all)
 {
 	$res = mysql_query("SELECT repeat_id FROM mrbs_entry WHERE id=$id");
 	if(mysql_num_rows($res) < 1)
@@ -80,7 +81,7 @@ function mrbsDelEntry($user, $id, $all)
 	
 	$sql = "SELECT create_by, id, entry_type FROM mrbs_entry WHERE ";
 	
-	if($all)
+	if($series)
 		$sql .= "repeat_id=$repeat_id";
 	else
 		$sql .= "id=$id";
@@ -94,7 +95,7 @@ function mrbsDelEntry($user, $id, $all)
 		if(!getWritable($row[0], $user))
 			continue;
 		
-		if(($row[2] == 2) && $all)
+		if(($row[2] == 2) && !$all)
 			continue;
 		
 		$del_res = mysql_query("DELETE FROM mrbs_entry WHERE id=" . $row[1]);
