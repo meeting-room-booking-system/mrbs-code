@@ -14,6 +14,7 @@ $pw = shift;
 
 exit 1 if (!$un || !$pw);
 
+# The list of valid username and password pairs
 $users{user1} = "pass1";
 $users{user2} = "pass2";
 $users{admin} = "secret";

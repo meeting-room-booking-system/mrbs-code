@@ -67,10 +67,12 @@ Change this to:
 # Authentication settings - read AUTHENTICATION
 $auth[realm]  = "MRBS";
 $auth[type]   = "ext";
-$auth[prog]   = "/home/httpd/html/mrbs/badpw.pl";
+$auth[prog]   = "./badpw.pl";
 $auth[params] = "#USERNAME# #PASSWORD#";
 
-Obviously, you need to put an appropriate path.
+NOTE: The last line are parameters that will get passed to the 'badpw.pl' script,
+at runtime "#USERNAME#" and "#PASSWORD" will get replaced with the username and
+password that the user entered to login.
 
 Once you have changed this then look at the /mrbs/ page through your
 browser. When you click one of the (+) buttons, you will be asked for a
@@ -80,7 +82,6 @@ To try out an "admin" user, add an appropriate username to the section that
 says:
    $auth[admin][] = "....";
 
-   
 SMB Authentication
 ------------------
 
