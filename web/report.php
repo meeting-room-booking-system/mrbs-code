@@ -95,7 +95,7 @@ function reporton(&$row, &$last_area_room)
 	# Created by and last update timestamp:
 	echo "<tr><td class=\"BL\" colspan=2><small><b>".get_vocab("createdby")."</b> " .
 		htmlspecialchars($row[6]) . ", <b>".get_vocab("lastupdate")."</b> " .
-		date_time_string($row[7]) . "</small></td></tr>\n";
+		date_time_string(MDB_Date::mdbstamp2Unix($row[7])) . "</small></td></tr>\n";
 
 	echo "</table>\n";
 }
@@ -357,7 +357,7 @@ if (isset($areamatch))
 #   9  [8]   Area name, must be HTML escaped
 #  10  [9]   Room name, must be HTML escaped
 
-    $sql = "SELECT e.id, e.start_time, e.end_time, e.name, e.description, 
+    $sql = "SELECT e.id, e.start_time, e.end_time, e.name, e.description,
             e.type, e.create_by, e.timestamp, a.area_name, r.room_name
             FROM mrbs_entry e, mrbs_area a, mrbs_room r
             WHERE e.room_id = r.id 
