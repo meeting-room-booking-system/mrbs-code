@@ -79,11 +79,10 @@ if (!is_array($nusers = $mdb->queryRow("SELECT count(*) FROM mrbs_users", 'integ
     	exit();
     }
     $properties = array(
-    	'FIELDS' => array(
-        	'id'	=> array(
-            	'unique'	=> 1
-            )
-        )
+        'FIELDS' => array(
+        	'id'	=> array()
+            ),
+        'unique' => 1
     );
     $r = $mdb->createIndex('mrbs_users', 'mrbs_users_pkey', $properties);
     if (MDB::isError($r))
