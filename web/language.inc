@@ -169,8 +169,8 @@ $windows_locale = "eng";
 
 if ($override_locale != "")
 {
-  setlocale(LC_ALL,$locale_override);
-  $windows_locale = $locale_override;
+  setlocale(LC_ALL,$override_locale);
+  $windows_locale = $override_locale;
 }
 else
 {
