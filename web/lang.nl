@@ -21,7 +21,7 @@ $vocab["report"]             = "Rapportage";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Help";
 $vocab["search"]             = "Zoek:";
-$vocab["not_php3"]             = "<H1>WARNING: This probably doesn't work with PHP3</H1>";
+$vocab["not_php3"]             = "<H1>Waarschuwing: Werkt waarschijnlijk niet met PHP3</H1>";
 
 # Used in day.php
 $vocab["bookingsfor"]        = "Boekingen voor";
@@ -31,8 +31,8 @@ $vocab["daybefore"]          = "Naar Vorige Dag";
 $vocab["dayafter"]           = "Naar Volgende Dag";
 $vocab["gototoday"]          = "Naar Vandaag";
 $vocab["goto"]               = "ga naar";
-$vocab["highlight_line"]     = "Highlight this line";
-$vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
+$vocab["highlight_line"]     = "Markeer deze regel";
+$vocab["click_to_reserve"]   = "Klik op dit vak om een reservering te maken.";
 
 # Used in trailer.inc
 $vocab["viewday"]            = "Bekijk Dag";
@@ -78,15 +78,15 @@ $vocab["rep_for_weekly"]     = "(t.b.v. wekelijks)";
 $vocab["rep_freq"]           = "Frequentie:";
 $vocab["rep_num_weeks"]      = "Aantal weken";
 $vocab["rep_for_nweekly"]    = "(Voor n-wekelijks)";
-$vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
-$vocab["entryid"]            = "Entry ID ";
-$vocab["repeat_id"]          = "Repeat ID "; 
-$vocab["you_have_not_entered"] = "You have not entered a";
-$vocab["you_have_not_selected"] = "You have not selected a";
-$vocab["valid_room"]         = "room.";
-$vocab["valid_time_of_day"]  = "valid time of day.";
-$vocab["brief_description"]  = "Brief Description.";
-$vocab["useful_n-weekly_value"] = "useful n-weekly value.";
+$vocab["ctrl_click"]         = "Gebruik Control-Linker muis klik om meer dan 1 ruimte te reserveren";
+$vocab["entryid"]            = "Boeking-ID ";
+$vocab["repeat_id"]          = "Herhalings-ID "; 
+$vocab["you_have_not_entered"] = "U heeft het volgende niet ingevoerd : ";
+$vocab["you_have_not_selected"] = "U heeft het volgende niet geselecteerd : ";
+$vocab["valid_room"]         = "kamer.";
+$vocab["valid_time_of_day"]  = "geldige tijd.";
+$vocab["brief_description"]  = "Korte Omschrijving.";
+$vocab["useful_n-weekly_value"] = "bruikbaar n-wekelijks aantal.";
 
 # Used in view_entry.php
 $vocab["description"]        = "Omschrijving:";
@@ -97,16 +97,16 @@ $vocab["deleteentry"]        = "Boeking verwijderen";
 $vocab["deleteseries"]       = "Herhalingen verwijderen";
 $vocab["confirmdel"]         = "Weet U zeker\\ndat U deze\\nBoeking wilt verwijderen?\\n\\n";
 $vocab["returnprev"]         = "Terug naar vorige pagina";
-$vocab["invalid_entry_id"]   = "Invalid entry id.";
-$vocab["invalid_series_id"]  = "Invalid series id.";
+$vocab["invalid_entry_id"]   = "Ongeldig Boeking-ID.";
+$vocab["invalid_series_id"]  = "Ongeldig Herhalings-ID.";
 
 # Used in edit_entry_handler.php
 $vocab["error"]              = "Fout";
 $vocab["sched_conflict"]     = "Overlappende Boeking";
-$vocab["conflict"]           = "Er zijn overlappende boekingen";
+$vocab["conflict"]           = "De nieuwe boeking overlapt de volgende boeking(en):";
 $vocab["too_may_entrys"]     = "De door U geselecteerde opties zullen teveel boekingen genereren.<BR>Pas A.U.B. uw opties aan !";
 $vocab["returncal"]          = "Terug naar kalender overzicht";
-$vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access"; 
+$vocab["failed_to_acquire"]  = "Het is niet gelukt om exclusive toegang tot de database te verkrijgen"; 
 $vocab["mail_subject_entry"] = $mail["subject"];
 $vocab["mail_body_new_entry"] = $mail["new_entry"];
 $vocab["mail_body_del_entry"] = $mail["deleted_entry"];
@@ -116,31 +116,31 @@ $vocab["mail_subject_delete"] = $mail["subject_delete"];
 # Authentication stuff
 $vocab["accessdenied"]       = "Geen Toegang";
 $vocab["norights"]           = "U heeft geen rechten om deze boeking aan te passen.";
-$vocab["please_login"]       = "Please log in";
-$vocab["user_name"]          = "Name";
-$vocab["user_password"]      = "Password";
-$vocab["unknown_user"]       = "Unknown user";
-$vocab["you_are"]            = "You are";
-$vocab["login"]              = "Log in";
-$vocab["logoff"]             = "Log Off";
+$vocab["please_login"]       = "Inloggen A.U.B";
+$vocab["user_name"]          = "Naam";
+$vocab["user_password"]      = "Wachtwoord";
+$vocab["unknown_user"]       = "Onbekende gebruiker";
+$vocab["you_are"]            = "U bent";
+$vocab["login"]              = "Inloggen";
+$vocab["logoff"]             = "Uitloggen";
 
 # Authentication database
-$vocab["user_list"]          = "User list";
-$vocab["edit_user"]          = "Edit user";
-$vocab["delete_user"]        = "Delete this user";
+$vocab["user_list"]          = "Gebruikerslijst";
+$vocab["edit_user"]          = "Gebruiker aanpassen";
+$vocab["delete_user"]        = "Deze gebruiker verwijderen";
 #$vocab["user_name"]         = Use the same as above, for consistency.
 #$vocab["user_password"]     = Use the same as above, for consistency.
-$vocab["user_email"]         = "Email address";
-$vocab["password_twice"]     = "If you wish to change the password, please type the new password twice";
-$vocab["passwords_not_eq"]   = "Error: The passwords do not match.";
-$vocab["add_new_user"]       = "Add a new user";
-$vocab["rights"]             = "Rights";
-$vocab["action"]             = "Action";
-$vocab["user"]               = "User";
-$vocab["administrator"]      = "Administrator";
-$vocab["unknown"]            = "Unknown";
+$vocab["user_email"]         = "Email adres";
+$vocab["password_twice"]     = "Als u het wachtwoord wilt wijzigen dient u het nieuwe wachtwoord tweemaal in te voeren.";
+$vocab["passwords_not_eq"]   = "Fout: De wachtwoorden komen niet overeen.";
+$vocab["add_new_user"]       = "Nieuwe gebruiker toevoegen";
+$vocab["rights"]             = "Rechten";
+$vocab["action"]             = "Handelingen";
+$vocab["user"]               = "Gebruiker";
+$vocab["administrator"]      = "Beheerder";
+$vocab["unknown"]            = "Onbekend";
 $vocab["ok"]                 = "OK";
-$vocab["show_my_entries"]    = "Click to display all my upcoming entries";
+$vocab["show_my_entries"]    = "Klikken om al mijn aankomende boekingen te tonen.";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Niet bestaand of ongeldig zoek argument.";
@@ -155,8 +155,8 @@ $vocab["entry"]              = "Boeking";
 $vocab["view"]               = "Overzicht";
 $vocab["advanced_search"]    = "Advanced search";
 $vocab["search_button"]      = "Zoek";
-$vocab["search_for"]         = "Search For";
-$vocab["from"]               = "From";
+$vocab["search_for"]         = "Zoeken naar";
+$vocab["from"]               = "Van";
 
 # Used in report.php
 $vocab["report_on"]          = "Boekingsoverzicht:";
@@ -165,7 +165,7 @@ $vocab["report_end"]         = "Eind datum overzicht:";
 $vocab["match_area"]         = "Gebied als:";
 $vocab["match_room"]         = "Kamer als:";
 $vocab["match_type"]         = "Match type:";
-$vocab["ctrl_click_type"]    = "Use Control-Click to select more than one type";
+$vocab["ctrl_click_type"]    = "Gebruik Control-Linker muis klik om meer dan 1 type te selekteren";
 $vocab["match_entry"]        = "Korte omschrijving als:";
 $vocab["match_descr"]        = "Volledige omschrijving als:";
 $vocab["include"]            = "Neem mee:";
@@ -180,12 +180,12 @@ $vocab["entries_found"]      = "boekingen gevonden";
 $vocab["summary_header"]     = "Totaal aan (geboekte) uren";
 $vocab["summary_header_per"] = "Summary of (Entries) Periods";
 $vocab["total"]              = "Totaal";
-$vocab["submitquery"]        = "Run Report";
-$vocab["sort_rep"]           = "Sort Report by:";
-$vocab["sort_rep_time"]      = "Start Date/Time";
-$vocab["rep_dsp"]            = "Display in report:";
-$vocab["rep_dsp_dur"]        = "Duration";
-$vocab["rep_dsp_end"]        = "End Time";
+$vocab["submitquery"]        = "Rapport uitvoeren";
+$vocab["sort_rep"]           = "Rapport sorteren op:";
+$vocab["sort_rep_time"]      = "Start Datum/Tijd";
+$vocab["rep_dsp"]            = "Weergeven in rapport:";
+$vocab["rep_dsp_dur"]        = "Duur";
+$vocab["rep_dsp_end"]        = "Eind Tijd";
 
 # Used in week.php
 $vocab["weekbefore"]         = "Ga naar vorige week";
@@ -201,51 +201,51 @@ $vocab["gotothismonth"]      = "Ga naar deze maand";
 $vocab["no_rooms_for_area"]  = "Nog geen kamers gedefiniëerd voor dit gebouw";
 
 # Used in admin.php
-$vocab["edit"]               = "Edit";
-$vocab["delete"]             = "Delete";
-$vocab["rooms"]              = "Rooms";
+$vocab["edit"]               = "Wijzig";
+$vocab["delete"]             = "Wis";
+$vocab["rooms"]              = "Kamers";
 $vocab["in"]                 = "in";
-$vocab["noareas"]            = "No Areas";
-$vocab["addarea"]            = "Add Area";
-$vocab["name"]               = "Name";
-$vocab["noarea"]             = "No area selected";
-$vocab["browserlang"]        = "Your browser is set to use";
-$vocab["postbrowserlang"]    = "language.";
-$vocab["addroom"]            = "Add Room";
-$vocab["capacity"]           = "Capacity";
-$vocab["norooms"]            = "No rooms.";
-$vocab["administration"]     = "Administration";
+$vocab["noareas"]            = "Gebouwen";
+$vocab["addarea"]            = "Gebouw toevoegen";
+$vocab["name"]               = "Naam";
+$vocab["noarea"]             = "Geen gebouw geselecteerd";
+$vocab["browserlang"]        = "Uw browser is ingesteld op ";
+$vocab["postbrowserlang"]    = "Nederlands.";
+$vocab["addroom"]            = "Kamer toevoegen";
+$vocab["capacity"]           = "Zitplaatsen";
+$vocab["norooms"]            = "Geen Kamers.";
+$vocab["administration"]     = "Beheer";
 
 # Used in edit_area_room.php
-$vocab["editarea"]           = "Edit Area";
-$vocab["change"]             = "Change";
-$vocab["backadmin"]          = "Back to Admin";
-$vocab["editroomarea"]       = "Edit Area or Room Description";
-$vocab["editroom"]           = "Edit Room";
-$vocab["update_room_failed"] = "Update room failed: ";
-$vocab["error_room"]         = "Error: room ";
-$vocab["not_found"]          = " not found";
-$vocab["update_area_failed"] = "Update area failed: ";
-$vocab["error_area"]         = "Error: area ";
-$vocab["room_admin_email"]   = "Room admin email:";
-$vocab["area_admin_email"]   = "Area admin email:";
-$vocab["invalid_email"]      = "Invalid email!";
+$vocab["editarea"]           = "Gebouw Wijzigen";
+$vocab["change"]             = "Wijzig";
+$vocab["backadmin"]          = "Terug naar Beheer";
+$vocab["editroomarea"]       = "Gebouw of Kamer wijzigen";
+$vocab["editroom"]           = "Kamer wijzigen";
+$vocab["update_room_failed"] = "Wijzigen kamer mislukt: ";
+$vocab["error_room"]         = "Fout: kamer ";
+$vocab["not_found"]          = " niet gevonden";
+$vocab["update_area_failed"] = "Wijzigen gebouw mislukt: ";
+$vocab["error_area"]         = "Fout: gebouw ";
+$vocab["room_admin_email"]   = "Kamer beheer email:";
+$vocab["area_admin_email"]   = "Gebouw beheer email:";
+$vocab["invalid_email"]      = "Ongeldig email adres !";
 
 # Used in del.php
-$vocab["deletefollowing"]    = "This will delete the following bookings";
-$vocab["sure"]               = "Are you sure?";
-$vocab["YES"]                = "YES";
-$vocab["NO"]                 = "NO";
-$vocab["delarea"]            = "You must delete all rooms in this area before you can delete it<p>";
+$vocab["deletefollowing"]    = "U gaat hiermee de volgende boekingen verwijderen";
+$vocab["sure"]               = "Weet U het zeker?";
+$vocab["YES"]                = "JA";
+$vocab["NO"]                 = "NEE";
+$vocab["delarea"]            = "U moet alle kamers in dit gebouw verwijderen voordat U het kunt verwijderen<p>";
 
 # Used in help.php
-$vocab["about_mrbs"]         = "About MRBS";
+$vocab["about_mrbs"]         = "Over MRBS";
 $vocab["database"]           = "Database: ";
-$vocab["system"]             = "System: ";
-$vocab["please_contact"]     = "Please contact ";
-$vocab["for_any_questions"]  = "for any questions that aren't answered here.";
+$vocab["system"]             = "Systeem: ";
+$vocab["please_contact"]     = "Neem contact op met ";
+$vocab["for_any_questions"]  = "Voor alle vragen die hier niet worden beantwoord.";
 
 # Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Fatal Error: Failed to connect to database";
+$vocab["failed_connect_db"]  = "Fatale Fout: Verbinding naar database server mislukt";
 
 ?>
