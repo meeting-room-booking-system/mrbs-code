@@ -46,8 +46,6 @@ CREATE TABLE mrbs_users
 
   /* The following fields are application-specific. However only int and varchar are editable. */
   email     varchar(50),
-  telephone varchar(15),
-  weight    int DEFAULT '0',
 
   PRIMARY KEY (id)
 );";
