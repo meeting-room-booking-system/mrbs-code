@@ -290,8 +290,8 @@ function notifyAdminOnBooking($new_entry , $new_id)
         if ( $enable_periods )
         {
             // If this is a serie, $endtime = serie end_date
-            isset($rep_enddate) ? $endtime = $rep_enddate : '';
-            list($end_period, $end_date) =  getMailPeriodDateString($endtime);
+            $rep_type > 0 ? $myendtime = $rep_enddate : $myendtime = $endtime;
+            list($end_period, $end_date) =  getMailPeriodDateString($myendtime);
             $body .= $mail_vocab["end_date"] . " ";
             $body .= compareEntries($end_period, $mail_previous['end_period'], $new_entry)
                 . " - " . compareEntries(unHtmlEntities($end_date),
@@ -300,8 +300,8 @@ function notifyAdminOnBooking($new_entry , $new_id)
         else
         {
             // If this is a serie, $endtime = serie end_date
-            isset($rep_enddate) ? $endtime = $rep_enddate : '';
-            $end_date = getMailTimeDateString($endtime);
+            $rep_type > 0 ? $myendtime = $rep_enddate : $myendtime = $endtime;
+            $end_date = getMailTimeDateString($myendtime);
             $body .= $mail_vocab["end_date"] . " " .
                 compareEntries($end_date, $mail_previous['end_date'], $new_entry) . "\n";
         }
