@@ -1,3 +1,7 @@
+CVS (Mon Jan 13 14:36:00 GMT 2003)
+   - Changed occurences of "<?=" to "<?php echo" which means we still
+     use the long tag form everywhere.
+
 CVS (Sun Jan 12 20:15:56 GMT 2003)
    - Removed all remainings english strings to make MRBS 100% translatable
      * Added new $vocab to del.php, edit_area_room.php, edit_entry.php,

@@ -166,7 +166,7 @@ function validate_and_submit ()
 {
   if(document.forms["main"].name.value == "")
   {
-    alert ( "<?= $vocab['you_have_not_entered'] . '\n' . $vocab['brief_description'] ?>");
+    alert ( "<?php echo $vocab['you_have_not_entered'] . '\n' . $vocab['brief_description'] ?>");
     return false;
   }
   
@@ -175,7 +175,7 @@ function validate_and_submit ()
   
   if(h > 23 || m > 59)
   {
-    alert ("<?= $vocab['you_have_not_entered'] . '\n' . $vocab['valid_time_of_day'] ?>");
+    alert ("<?php echo $vocab['you_have_not_entered'] . '\n' . $vocab['valid_time_of_day'] ?>");
     return false;
   }
   
@@ -184,7 +184,7 @@ function validate_and_submit ()
   n = parseInt(document.forms["main"].rep_num_weeks.value);
   if ((!i1 || (i1 && i2)) && document.forms["main"].rep_type && document.forms["main"].rep_type[6].checked && (!n || n < 2))
   {
-    alert("<?= $vocab['you_have_not_entered'] . '\n' . $vocab['useful_n-weekly_value'] ?>");
+    alert("<?php echo $vocab['you_have_not_entered'] . '\n' . $vocab['useful_n-weekly_value'] ?>");
     return false;
   }
   
