@@ -81,7 +81,7 @@ function validate_and_submit () {
 </HEAD>
 <BODY>
 
-<h2><? if ($id) echo "Edit Entry"; else echo "Add Entry"; ?></H2>
+<h2><? if ($id) echo $lang[editentry]; else echo $lang[addentry]; ?></H2>
 
 <FORM ACTION="edit_entry_handler.php3" METHOD="GET">
 
@@ -89,13 +89,13 @@ function validate_and_submit () {
 
 <TABLE BORDER=0>
 
-<TR><TD><B>Name of Booker:</B></TD>
+<TR><TD><B><?echo $lang[namebooker]?></B></TD>
   <TD><INPUT NAME="name" SIZE=25 VALUE="<?php echo htmlentities ( $name ); ?>"></TD></TR>
 
-<TR><TD VALIGN="top"><B>Full Description:<br>&nbsp;&nbsp;(Number of people,<br>&nbsp;&nbsp;Internal/External etc)</B></TD>
+<TR><TD VALIGN="top"><B><?echo $lang[fulldescription]?></B></TD>
   <TD><TEXTAREA NAME="description" ROWS=5 COLS=40 WRAP="virtual"><?php echo htmlentities ( $description ); ?></TEXTAREA></TD></TR>
 
-<TR><TD><B>Date:</B></TD>
+<TR><TD><B><?echo $lang[date]?></B></TD>
   <TD><SELECT NAME="day">
 <?php
   if ( $start_day == 0 )
@@ -125,7 +125,7 @@ function validate_and_submit () {
   </SELECT>
 </TD></TR>
 
-<TR><TD><B>Time:</B></TD>
+<TR><TD><B><?echo $lang[time]?></B></TD>
 <?php
 $h12 = $hour;
 $amsel = "CHECKED"; $pmsel = "";
@@ -149,13 +149,13 @@ if ( $TIME_FORMAT == "12" ) {
 ?>
 </TD></TR>
 
-<TR><TD><B>Duration:</B></TD>
-  <TD><INPUT NAME="duration" SIZE=3 VALUE="<?php echo $duration;?>"> hours</TD></TR>
+<TR><TD><B><?echo $lang[duration]?></B></TD>
+  <TD><INPUT NAME="duration" SIZE=3 VALUE="<?php echo $duration;?>"> <?echo $lang[hours]?></TD></TR>
 
-<TR><TD><B>Type:</B></TD>
+<TR><TD><B><?echo $lang[type]?></B></TD>
   <TD><SELECT NAME="type">
-    <OPTION VALUE="I"<?php if ( $type == "I" || ! strlen ( $type ) ) echo " SELECTED";?>>Internal
-    <OPTION VALUE="E"<?php if ( $type == "E" ) echo " SELECTED";?>>External
+    <OPTION VALUE="I"<?php if ( $type == "I" || ! strlen ( $type ) ) echo " SELECTED";?>><?echo $lang[internal]?>
+    <OPTION VALUE="E"<?php if ( $type == "E" ) echo " SELECTED";?>><?echo $lang[external]?>
   </SELECT></TD></TR>
 
 <?
@@ -166,15 +166,16 @@ print "<input type=hidden name=room_id value = \"$room_id\">";
 </TABLE>
 
 <SCRIPT LANGUAGE="JavaScript">
-  document.writeln ( '<INPUT TYPE="button" VALUE="Save" ONCLICK="validate_and_submit()">' );
+  document.writeln ( '<INPUT TYPE="button" VALUE="<?echo $lang[save]?>" ONCLICK="validate_and_submit()">' );
 </SCRIPT>
 <NOSCRIPT>
 <INPUT TYPE="submit" VALUE="Save">
 </NOSCRIPT>
 </FORM>
-
+<!--
 <?php if ( $id > 0 ) { ?>
 <A HREF="del_entry.php3?id=<?php echo $id;?>" onClick="return confirm('Are you sure\nyou want to\ndelete this entry?');">Delete entry</A><BR>
+-->
 <?php } ?>
 
 <?php include "trailer.inc" ?>

@@ -73,7 +73,7 @@ echo mysql_error();
 
 # Make sure we remember which appointments overlap the one were trying to add
 if (mysql_num_rows($res) > 0) {
-	$error = "There are conflicts:";
+	$error = $lang[conflict];
 	while ($row = mysql_fetch_row($res)) {
 		$error = "$error<br><a href=view_entry.php3?id=$row[0]>$row[1]</a>";
 	}
@@ -112,7 +112,7 @@ if (strlen($error) == 0) {
 
 ?>
 <HTML>
-<HEAD><TITLE>WebCalendar</TITLE>
+<HEAD><TITLE><?echo $lang[mrbs]?></TITLE>
 <?include "style.inc"?>
 </HEAD>
 <BODY>
@@ -133,14 +133,14 @@ Your suggested time of <B>
 </UL>
 
 <?php } else { ?>
-<H2><FONT COLOR="<?php echo $H2COLOR;?>">Error</H2></FONT>
+<H2><FONT COLOR="<?php echo $H2COLOR;?>"><?echo $lang[error]?></H2></FONT>
 <BLOCKQUOTE>
 <?php echo $error; ?>
 </BLOCKQUOTE>
 
 <?php } 
 
-echo "<a href=$returl>Return to Calendar View</a><p>";
+echo "<a href=$returl>$lang[returncal]</a><p>";
 
 include "trailer.inc"; ?>
 

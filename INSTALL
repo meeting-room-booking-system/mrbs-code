@@ -55,6 +55,14 @@ To configure your MySQL access.  Set the values for:
 			tables reside in.  ("mrbs" in the example
 			above.)
 
+Specify the start and end of day in 24 hour notation.
+
+There's also a section about Language. MRBS supports multiple languages,
+which can be used at the same time, based on what the client is using. One
+of the environment variables supplied to PHP is $HTTP_ACCEPT_LANGUAGE,
+which we use to choose a language file. You can specify the default in
+config.inc. See the file called LANGUAGE for more info.
+
 
 OPTIONAL!
 ---------------------------------------------------------------------------

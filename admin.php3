@@ -5,7 +5,7 @@ include "connect.inc";
 ?>
 
 <HTML>
-<HEAD><TITLE>WebCalendar</TITLE>
+<HEAD><TITLE><?echo $lang[mrbs]?></TITLE>
 <?include "style.inc"?>
 </HEAD>
 <BODY>
@@ -84,7 +84,8 @@ Capacity:    <input type=text name=capacity><br>
 </tr>
 </table>
 
-
+<br>
+Your browser is set to use "<b><?echo $HTTP_ACCEPT_LANGUAGE?></b>" language.
 <? include "trailer.inc" ?>
 
 </html>

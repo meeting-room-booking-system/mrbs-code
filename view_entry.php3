@@ -7,7 +7,7 @@ include "connect.inc";
 ?>
 <HTML>
 <HEAD>
-<TITLE>Meeting Room Booking System</TITLE>
+<TITLE><?echo $lang[mrbs]?></TITLE>
 <?include "style.inc"?>
 </HEAD>
 <BODY>
@@ -54,13 +54,13 @@ echo "<h3>$name</h3>";
 #keep everything nicely formatted by slipping a table in here
 echo "<table>";
 
-echo "<tr><td><b>Description:</b></td><td>" . nl2br($description) . "</td></tr>";
-echo "<tr><td><b>Date:</b></td><td>$start_date</td></tr>";
-echo "<tr><td><b>Time:</b></td><td>$start_time</td></tr>";
-echo "<tr><td><b>Duration:</b></td><td>$duration</td></tr>";
-echo "<tr><td><b>Type:</b></td><td>$typel[$type]</td></tr>";
-echo "<tr><td><b>Created By:</b></td><td>$create_by</td></tr>";
-echo "<tr><td><b>Last Updated:</b></td><td>$updated</td></tr>";
+echo "<tr><td><b>$lang[description]</b></td><td>" . nl2br($description) . "</td></tr>";
+echo "<tr><td><b>$lang[date]</b></td><td>$start_date</td></tr>";
+echo "<tr><td><b>$lang[time]</b></td><td>$start_time</td></tr>";
+echo "<tr><td><b>$lang[duration]</b></td><td>$duration</td></tr>";
+echo "<tr><td><b>$lang[type]</b></td><td>$typel[$type]</td></tr>";
+echo "<tr><td><b>$lang[createdby]</b></td><td>$create_by</td></tr>";
+echo "<tr><td><b>$lang[lastupdate]</b></td><td>$updated</td></tr>";
 
 echo "</table><br><p>";
 
@@ -69,12 +69,12 @@ echo "</table><br><p>";
 # so check $REMOTE_ADDR against $create_by and allow modification if they match
 
 if ($REMOTE_ADDR == $create_by) {
-	echo "<a href=\"edit_entry.php3?id=$id\">Edit Entry</a><br>";
-	echo "<A HREF=\"del_entry.php3?id=$id\" onClick=\"return confirm('Are you sure\\nyou want to\\ndelete this entry?\\n\\n');\">Delete entry</A><BR>\n";
+	echo "<a href=\"edit_entry.php3?id=$id\">$lang[editentry]</a><br>";
+	echo "<A HREF=\"del_entry.php3?id=$id\" onClick=\"return confirm('$lang[confirmdel]');\">$lang[deleteentry]</A><BR>\n";
 
 }
 
-echo "<a href=$HTTP_REFERER>Return to previous page</a>";
+echo "<a href=$HTTP_REFERER>$lang[returnprev]</a>";
 
 
 include "trailer.inc"; ?>

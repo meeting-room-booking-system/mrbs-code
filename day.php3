@@ -10,7 +10,7 @@ load_user_preferences ();
 
 <HTML>
 <HEAD>
-<TITLE>WebCalendar</TITLE>
+<TITLE><?echo $lang[mrbs]?></TITLE>
 <?include "style.inc"?>
 
 </HEAD>
@@ -31,7 +31,7 @@ $pm7=mktime($eveningends,0,0,$month,$day,$year);
 
 #Let the user know what date they chose
 echo "<table><tr><td width=\"100%\">";
-echo "<H2>Bookings for " . date("D jS F Y",$am7) . "</h2>";
+echo "<H2>$lang[bookingsfor] " . date("D jS F Y",$am7) . "</h2>";
 echo "</td><td><center>";
 
 #Find out which rooms a user wants to see
@@ -41,7 +41,7 @@ echo "</td><td><center>";
 if (!$area) { $area = 1; };
 
 #Show all avaliable areas
-echo "<u>Areas</u><br>";
+echo "<u>$lang[areas]</u><br>";
 $sql = "select id, area_name from mrbs_area";
 $res = mysql_query($sql);
 while ($row = mysql_fetch_row($res)) {
@@ -67,8 +67,8 @@ $tf = date("Y-m-d",$todaytime+(24*60*60));
 
 
 #Show Go to day before and after links
-echo "<table width=100%><tr><td><a href=day.php3?year=$yy&month=$ym&day=$yd&area=$area>&lt;&lt; Go To Day Before</a></td><td
-align=right><a href=day.php3?year=$ty&month=$tm&day=$td&area=$area>Go To Day After &gt;&gt;</a></td></tr></table>";
+echo "<table width=100%><tr><td><a href=day.php3?year=$yy&month=$ym&day=$yd&area=$area>&lt;&lt; $lang[daybefore]</a></td><td
+align=right><a href=day.php3?year=$ty&month=$tm&day=$td&area=$area>$lang[dayafter] &gt;&gt;</a></td></tr></table>";
 
 
 #We want to build an array containing all the data we want to show
@@ -123,7 +123,7 @@ if (mysql_num_rows($res) == 0) {
 } else {
 	#This is where we start displaying stuff
 	echo "<table cellspacing=0 border=1 width=100%>";
-	echo "<tr><th>Time</th>";
+	echo "<tr><th>$lang[time]</th>";
 
 	while ($row = mysql_fetch_row($res)) {
 		echo "<th align=top>$row[0] ($row[1])</th>";

@@ -1,7 +1,7 @@
 
 <BR CLEAR="all">
 <HR CLEAR="all">
-<B>View Day:</B>
+<B><?echo $lang[viewday]?></B>
 <?php
 
 if ($year && $month && $day) {

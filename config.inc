@@ -18,4 +18,17 @@ $mysql_database = "mrbs";
 $morningstarts = 7;
 $eveningends   = 19;
 
+
+
+# Language
+
+# Change the en below to the code for your language - if 
+# there is a language file for it.
+include 'lang.en';
+
+# These two lines import a language based on what the client
+# is using. Comment them out to disable this.
+$lang_file = "lang.$HTTP_ACCEPT_LANGUAGE";
+if (file_exists($lang_file)) {include $lang_file;}
+
 ?>
