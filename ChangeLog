@@ -1,4 +1,4 @@
-CVS: (2001-07-02 15:55 UTC jberanek)
+Version 1.0-pre2 (Sun Jul  8 13:43:53 BST 2001)
     Incorporated diff from Scott Leonard that allows you to configure a refresh
      time for roombooker web pages.  Set config variable $refresh_rate to the
      number of seconds to refresh after, or set to 0 to disable.
@@ -15,21 +15,17 @@ CVS: (2001-07-02 15:55 UTC jberanek)
      for times that have smaller granularity that the configured booking
      resolution.
 
-CVS: (2001-03-26 15:36 UTC jberanek)
     Fixed config.inc so that the correct lang.xx is included if
      HTTP_ACCEPT_LANGUAGE is a comma-seperated list like "sv, en".
 
-CVS: (2001-03-26 15:00 UTC jberanek)
     Copied "rep_type_5" language token into Swedish and Spanish language
      files from English file.  Swedish and Spanish users were not able
      to use "monthly, corresponding day" repeats without the token being
      present.
 
-CVS: (2001-03-07 13:49 UTC jberanek)
     Checked in updates to lang.es (received from Pablo Gomez) and lang.de
     (received by Bernd Oeggl).
 
-CVS:
     Update lang.nl file (marc ter horst)
 
 Version 1.0-pre1 (Sun Mar  4 23:26:43 GMT 2001)
