@@ -28,7 +28,7 @@
  * 
  * @param   string  $realm - Which username/password do we want.
  */
-function authGet($realm) { }
+function authGet() { }
 
 /** 
  * Checks if the specified username/password pair are valid.

@@ -20,7 +20,7 @@
 
 # No need to perform authentication - if no DNSname is returned, ip address
 # is used
-function authGet($realm) { }
+function authGet() { }
 
 # Always validates
 function authValidateUser($user, $pass) { return 1; }

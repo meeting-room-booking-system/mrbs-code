@@ -18,7 +18,7 @@
  */
 
 # No need to perform authentication - ip address always there
-function authGet($realm) { }
+function authGet() { }
 
 # Always validates
 function authValidateUser($user, $pass) { return 1; }

@@ -41,7 +41,7 @@
  *  No need to perform authentication - this is done by the server
  *  Always validates
  */
-function authGet($realm) { }
+function authGet() { }
 
 /* authValidateUser($user, $pass)
  * 
