@@ -204,11 +204,20 @@ else
 	$room_column_width = (int)(95 / sql_count($res));
 	for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	{
-        echo "<th width=\"$room_column_width%\"><a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[2]\">"
+        echo "<th width=\"$room_column_width%\">
+            <a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[2]\"
+            title=\"" . get_vocab("viewweek") . "\">"
             . htmlspecialchars($row[0]) . "($row[1])</a></th>";
 		$rooms[] = $row[2];
 	}
-	echo "</tr>\n";
+
+    # next line to display times on right side
+    if ( FALSE != $times_right_side )
+    {
+        echo "<th width=\"1%\">". ( $enable_periods  ? get_vocab("period") : get_vocab("time") )
+        ."</th>";
+    }
+    echo "</tr>\n";
 
 	# URL for highlighting a time. Don't use REQUEST_URI or you will get
 	# the timetohighlight parameter duplicated each time you click.
@@ -236,9 +245,13 @@ else
 		tdcell("red");
 		if( $enable_periods ){
 			$time_t_stripped = preg_replace( "/^0/", "", $time_t );
-			echo "<a href=\"$hilite_url=$time_t\">" . $periods[$time_t_stripped] . "</a></td>";
+			echo "<a href=\"$hilite_url=$time_t\"  title=\""
+            . get_vocab("highlight_line") . "\">"
+            . $periods[$time_t_stripped] . "</a></td>";
 		} else {
-			echo "<a href=\"$hilite_url=$time_t\">" . utf8_date(hour_min_format(),$t) . "</a></td>";
+			echo "<a href=\"$hilite_url=$time_t\" title=\""
+            . get_vocab("highlight_line") . "\">"
+            . utf8_date(hour_min_format(),$t) . "</a></td>";
 		}
 
 		# Loop through the list of rooms we have for this area
@@ -292,6 +305,26 @@ else
 
 			echo "</td>\n";
 		}
+        # next lines to display times on right side
+        if ( FALSE != $times_right_side )
+        {
+            if( $enable_periods )
+            {
+                tdcell("red");
+                $time_t_stripped = preg_replace( "/^0/", "", $time_t );
+                echo "<a href=\"$hilite_url=$time_t\"  title=\""
+                . get_vocab("highlight_line") . "\">"
+                . $periods[$time_t_stripped] . "</a></td>";
+            }
+            else
+            {
+                tdcell("red");
+		        echo "<a href=\"$hilite_url=$time_t\" title=\""
+                . get_vocab("highlight_line") . "\">"
+                . utf8_date(hour_min_format(),$t) . "</a></td>";
+            }
+        }
+
 		echo "</tr>\n";
 		reset($rooms);
 	}

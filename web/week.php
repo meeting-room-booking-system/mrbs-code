@@ -276,8 +276,17 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
 	$t = mktime( 12, 0, 0, $month, $day+$j, $year); 
 	echo "<th width=\"14%\"><a href=\"day.php?year=" . strftime("%Y", $t) . 
 	"&month=" . strftime("%m", $t) . "&day=" . strftime("%d", $t) . 
-	"&area=$area\">" . utf8_strftime($dformat, $t) . "</a></th>\n";
+	"&area=$area\" title=\"" . get_vocab("viewday") . "\">"
+    . utf8_strftime($dformat, $t) . "</a></th>\n";
 }
+# next line to display times on right side
+if ( FALSE != $times_right_side )
+{
+    echo "<th width=\"1%\"><br>"
+    . ( $enable_periods  ? get_vocab("period") : get_vocab("time") )
+    . "</th>";
+}
+
 echo "</tr>\n";
 
 
@@ -305,9 +314,13 @@ for (
 	tdcell("red");
 	if( $enable_periods ){
 		$time_t_stripped = preg_replace( "/^0/", "", $time_t );
-		echo "<a href=\"$hilite_url=$time_t\">" . $periods[$time_t_stripped] . "</a></td>";
+		echo "<a href=\"$hilite_url=$time_t\"  title=\""
+        . get_vocab("highlight_line") . "\">"
+        . $periods[$time_t_stripped] . "</a></td>";
 	} else {
-		echo "<a href=\"$hilite_url=$time_t\">" . utf8_date(hour_min_format(),$t) . "</a></td>";
+		echo "<a href=\"$hilite_url=$time_t\" title=\""
+        . get_vocab("highlight_line") . "\">"
+        . utf8_date(hour_min_format(),$t) . "</a></td>";
 	}
 
 	# Color to use for empty cells: white, unless highlighting this row:
@@ -386,6 +399,27 @@ for (
  
 		echo "</td>\n";
 	}
+
+	# next lines to display times on right side
+    if ( FALSE != $times_right_side )
+    {
+        if( $enable_periods )
+        {
+            tdcell("red");
+            $time_t_stripped = preg_replace( "/^0/", "", $time_t );
+            echo "<a href=\"$hilite_url=$time_t\"  title=\""
+            . get_vocab("highlight_line") . "\">"
+            . $periods[$time_t_stripped] . "</a></td>";
+        }
+        else
+        {
+            tdcell("red");
+            echo "<a href=\"$hilite_url=$time_t\" title=\""
+            . get_vocab("highlight_line") . "\">"
+            . utf8_date(hour_min_format(),$t) . "</a></td>";
+        }
+    }
+
 	echo "</tr>\n";
 }
 echo "</table>";

@@ -29,6 +29,7 @@ $vocab["daybefore"]          = "‘O“ú‚Ö–ß‚é";
 $vocab["dayafter"]           = "Ÿ‚Ì“ú‚Öi‚Ş";
 $vocab["gototoday"]          = "“–“ú‚Ì—\–ñ‚ğŒ©‚é";
 $vocab["goto"]               = "goto";
+$vocab["highlight_line"]     = "Highlight this line";
 
 # Used in trailer.inc
 $vocab["viewday"]            = "—\–ñó‹µ‰{——";

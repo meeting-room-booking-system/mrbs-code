@@ -125,6 +125,9 @@ $monthly_view_brief_description = TRUE;
 # 'first day of the week' (13 Oct), set this to TRUE
 $view_week_number = FALSE;
 
+# To display times on right side in day and week view, set to TRUE;
+$times_right_side = FALSE;
+
 ###############################################
 # Authentication settings - read AUTHENTICATION
 ###############################################

@@ -30,6 +30,7 @@ $vocab["daybefore"]          = "Gå til forrige dag";
 $vocab["dayafter"]           = "Gå til næste dag";
 $vocab["gototoday"]          = "Gå til idag";
 $vocab["goto"]               = "gå til";
+$vocab["highlight_line"]     = "Highlight this line";
 
 # Used in trailer.inc
 $vocab["viewday"]            = "Vis dag";

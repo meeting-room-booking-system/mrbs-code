@@ -29,6 +29,7 @@ $vocab["daybefore"]          = "Ir para Dia Anterior";
 $vocab["dayafter"]           = "Ir para Dia Seguinte";
 $vocab["gototoday"]          = "Ir para hoje";
 $vocab["goto"]               = "ir para";
+$vocab["highlight_line"]     = "Highlight this line";
 
 # Used in trailer.inc
 $vocab["viewday"]            = "Ver Dia";
@@ -206,4 +207,3 @@ $vocab["for_any_questions"]  = "for any questions that aren't answered here.";
 $vocab["failed_connect_db"]  = "Erro: Failha ao ligar à base de dados";
 
 ?>
-
