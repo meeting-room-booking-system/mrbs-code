@@ -1,5 +1,6 @@
 <?
 include "config.inc";
+include "connect.inc";
 include "functions.inc";
 
 load_user_preferences ();
