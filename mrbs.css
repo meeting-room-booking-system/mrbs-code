@@ -31,8 +31,9 @@ border-width:1; border-color:black; vertical-align:top;}
 
 TD.blue {background-color:#F0F0FF;}
 TD.red  {background-color:#FFF0F0;}
-TD.green {background-color:#E1E4ED;}
-
+TD.green {background-color:#DDFFDD;}
+TD.I {background-color:#DDFFDD;}
+TD.E {background-color:#F0F0FF;}
 
 .sitename
 {font-size: 18px;

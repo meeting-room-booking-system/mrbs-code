@@ -1,8 +1,9 @@
 Version 0.7
+	Internal/External meetings different colours
 	"Resolution" moved to config file
-   Added Japanese support
+	Added Japanese support
 	Moved language into extenal file
-   Added more documentation
+	Added more documentation
 	Areas with no rooms don't cause an error
 
 Version 0.6 (Sat May 27 09:09:11 BST 2000)

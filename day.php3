@@ -66,6 +66,9 @@ $td = date("d",$todaytime+(24*60*60));
 $tf = date("Y-m-d",$todaytime+(24*60*60));
 
 
+#Show colour key
+echo "<table border=0><tr><td class=\"I\">$lang[internal]</td><td class=\"E\">$lang[external]</td></tr></table>";
+
 #Show Go to day before and after links
 echo "<table width=100%><tr><td><a href=day.php3?year=$yy&month=$ym&day=$yd&area=$area>&lt;&lt; $lang[daybefore]</a></td><td
 align=right><a href=day.php3?year=$ty&month=$tm&day=$td&area=$area>$lang[dayafter] &gt;&gt;</a></td></tr></table>";
@@ -77,14 +80,13 @@ align=right><a href=day.php3?year=$ty&month=$tm&day=$td&area=$area>$lang[dayafte
 #In PHP we dont need to define an array before using it
 
 #Get all appointments for today in the area that we care about
-$sql = "select create_by, mrbs_room.id, unix_timestamp(start_time), unix_timestamp(end_time), type, name, mrbs_entry.description, mrbs_entry.id
+$sql = "select create_by, mrbs_room.id, unix_timestamp(start_time), unix_timestamp(end_time), type, name, mrbs_entry.description, mrbs_entry.id, mrbs_entry.type
 
 from mrbs_entry left join mrbs_room on mrbs_entry.room_id = mrbs_room.id
 
 where area_id = $area 
-      and (date_format(start_time,'Y-m-d') = '$year-$month-$day' 
-		or date_format(end_time,'Y-m-d') = '$year-$month-$day'
-		or '$year-$month-$day' between start_time and end_time)
+      and (start_time between from_unixtime($am7) and from_unixtime($pm7)
+		or end_time between from_unixtime($am7) and from_unixtime($pm7))
 ";
 
 $res = mysql_query($sql);
@@ -98,11 +100,13 @@ while ($row = mysql_fetch_row($res)) {
 	#row[3] = end time
 	#row[5] = short description
 	#row[7] = id of this booking
+	#row[8] = type (internal/external)
+	
 	for ($t = $row[2]; $t < $row[3]; $t = $t + $resolution) {
-		$today[$row[1]][$t][id] = $row[7];
+		$today[$row[1]][$t][id]     = $row[7];
+		$today[$row[1]][$t][color]  = $row[8];
 	}
 	$today[$row[1]][$row[2]][data] = $row[5];
-
 	
 }
 
@@ -147,12 +151,13 @@ if (mysql_num_rows($res) == 0) {
 		while (list($key, $room) = each($rooms)) {
 			$id    = $today[$room][$t][id];
 			$descr = $today[$room][$t][data];
-
+         $color = $today[$room][$t][color];
+			
 			# $c is the colour of the cell that the browser sees. White normally, 
 			# red if were hightlighting that line and a nice attractive green if the room is booked.
 			# We tell if its booked by $id having something in it
 			if ($id) {
-				$c = "#ddffdd";
+				$c = $color;
 			} else {
 				if ($t == $timetohighlight) {
 					$c = "red";
@@ -160,7 +165,7 @@ if (mysql_num_rows($res) == 0) {
 					$c = "white";
 				}
 			}
-			echo "<td bgcolor=$c>";
+			echo "<td class=\"$c\">";
 			#If the room isnt booked then allow it to be booked
 			if (!$id) {
 				$hour = date("H",$t); $minute  = date("i",$t);
