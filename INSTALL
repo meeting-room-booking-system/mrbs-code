@@ -1,7 +1,6 @@
         MRBS Installation Instructions
 
 
-
 REQUIREMENTS
 ---------------------------------------------------------------------------
 MRBS works with MySQL, PostgreSQL, Oracle, FrontBase, Interbase/Firebird and
@@ -21,6 +20,7 @@ database connection pooling. However, be careful that you don't exceed
 the maximum number of connections allowed to your database; with connection
 pooling PHP/Apache can potentially create a connection from each Apache
 child server to the database.
+
 Also many mrbs authentication schemes use basic http authentication. These
 don't work if you run PHP as a CGI.
 
