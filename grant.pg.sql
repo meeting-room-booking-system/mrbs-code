@@ -7,7 +7,13 @@
 -- tables and have all rights.  However if you create the tables with another
 -- account, such as the superuser account, you need to use this script to
 -- grant rights to the user found in your config.inc.php file.
+--
+-- If you have decided to change the prefix of your tables from 'mrbs_'
+-- to something else then you must change each reference to 'mrbs_' in the
+-- lines below.
+--
 -- Copy and edit this file as needed- Change the user name, then run it.
+
 
 grant all on
    mrbs_area,mrbs_area_id_seq,

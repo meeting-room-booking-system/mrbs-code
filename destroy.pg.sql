@@ -3,6 +3,11 @@
 -- MRBS table destruction script for PostgreSQL 7.0 or higher
 -- This exists because I can never remember the sequence name magic.
 --
+-- If you have decided to change the prefix of your tables from 'mrbs_'
+-- to something else then you must change each reference to 'mrbs_' in the
+-- lines below.
+--
+
 
 DROP TABLE mrbs_area;
 DROP SEQUENCE mrbs_area_id_seq;

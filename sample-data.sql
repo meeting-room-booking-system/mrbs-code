@@ -3,6 +3,11 @@
 -- Sample data - make some areas and rooms. (This used to be in tables.sql)
 -- This is meant to go into an empty database only!
 
+--
+-- If you have decided to change the prefix of your tables from 'mrbs_'
+-- to something else then you must edit each 'INSERT INTO' line below.
+--
+
 -- Generate some default areas
 INSERT INTO mrbs_area ( area_name ) VALUES ('Building 1');
 INSERT INTO mrbs_area ( area_name ) VALUES ('Building 2');

@@ -17,6 +17,10 @@
 -- This tables creation script now works with 7.3, but the second issue above
 -- is already there, so currently mrbs does NOT work with pgsql 7.3 and above
 -- (thierry_bo 2003-12-03)
+--
+-- If you have decided to change the prefix of your tables from 'mrbs_'
+-- to something else then you must edit each 'CREATE TABLE' and 'create index'
+-- line below.
 
 
 

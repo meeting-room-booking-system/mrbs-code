@@ -6,6 +6,10 @@
 -- MySQL inserts the current date/time into any timestamp field which is not
 -- specified on insert. To get the same effect, use PostgreSQL default
 -- value current_timestamp.
+--
+-- If you have decided to change the prefix of your tables from 'mrbs_'
+-- to something else then you must edit each 'CREATE TABLE' and 'create index'
+-- line below.
 
 CREATE TABLE mrbs_area
 (

@@ -2,6 +2,12 @@
 # MySQL MRBS table creation script
 #
 # $Id$
+#
+# Notes:
+# If you have decided to change the prefix of your tables from 'mrbs_'
+# to something else then you must edit each 'CREATE TABLE' line
+# below.
+#
 
 CREATE TABLE mrbs_area
 (

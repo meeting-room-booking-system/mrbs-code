@@ -11,7 +11,10 @@
 -- the form. Fixing this would require changing the start_time and end_time
 -- in the repeat record to match oldest undeleted entry; this is left as an
 -- exercise to the reader.
--- 
+--
+-- If you have decided to change the prefix of your tables from 'mrbs_'
+-- to something else then you must edit each 'DELETE FROM' line below.
+--
 -- MySQL Notes:
 -- To change the number of days, edit BOTH places below.
 --
