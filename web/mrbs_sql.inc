@@ -176,34 +176,50 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate, $r
 	return sql_insert_id("mrbs_repeat", "id");
 }
 
-/** 
+/** same_day_next_month()
 * Find the same day of the week in next month, same week number.
 *
- *  Return the number of days to step forward for a "monthly repeat,
- *  corresponding day" series - same week number and day of week next month.
- *  This function always returns either 28 or 35.
+* Return the number of days to step forward for a "monthly repeat,
+* corresponding day" serie - same week number and day of week next month.
+* This function always returns either 28 or 35.
 * For dates in the 5th week of a month, the resulting day will be in the 4th
-* week of the next month, and all subsequent months.
+* week of the next month if no 5th week corresponding day exist.
 * :TODO: thierry_bo 030510: repeat 5th week entries only if 5th week exist.
 * If we want a 5th week repeat type, only 5th weeks have to be booked. We need
 * also a new "monthly repeat, corresponding day, last week of the month" type.
 *
-* @param    integer     $time   timestamp of the day from which we want to find
-*                               the same day of the week in next month, same
-*                               week number
-* @return   integer     35 or 28 number of days to step forward
+* @param    integer     $time           timestamp of the day from which we want to find
+*                                       the same day of the week in next month, same
+*                                       week number
+* @return   integer     $days_jump      number of days to step forward to find the next occurence (28 or 35)
+* @var      integer     $days_in_month  number of days in month
+* @var      integer     $day            day of the month (01 to 31)
+* @var      integer     $weeknumber     week number for each occurence ($time)
+* @var      boolean     $temp1          first step to compute $days_jump
+* @var      integer     $next_month     intermediate next month number (1 to 12)
+* @global   integer     $_initial_weeknumber    used only for 5th weeks repeat type
  */
 function same_day_next_month($time)
 {
+    global $_initial_weeknumber;
+
     $days_in_month = date("t", $time);
     $day = date("d", $time);
     $weeknumber = (int)(($day - 1) / 7) + 1;
     $temp1 = ($day + 7 * (5 - $weeknumber) <= $days_in_month);
+
+    // keep month number > 12 for the test purpose in line beginning with "days_jump = 28 +..."
+    $next_month = date("n", mktime(11, 0 ,0, date("n", $time), $day +35, date("Y", $time))) + (date("n", mktime(11, 0 ,0, date("n", $time), $day +35, date("Y", $time))) < date("n", $time)) * 12;
+
     // prevent 2 months jumps if $time is in 5th week
-    $temp2 = date("n", mktime(11, 0 ,0, date("n", $time), $day +35, date("Y", $time)));
-    if ($temp2 < date("n", $time)) $temp2 += 12;
-    if ($temp1 && !($temp2 - date("n", $time) - 1)) return 35;
-    else return 28;
+    $days_jump = 28 + (($temp1 && !($next_month - date("n", $time) - 1)) * 7);
+
+    /* if initial week number is 5 and the new occurence month number ($time + $days_jump)
+     * is not changed if we add 7 days, then we can add 7 days to $days_jump to come
+     * back to the 5th week (yuh!) */
+    $days_jump += 7 * (($_initial_weeknumber == 5) && (date("n", mktime(11, 0 ,0, date("n", $time), $day + $days_jump, date("Y", $time))) == date("n", mktime(11, 0 ,0, date("n", $time), $day + $days_jump + 7, date("Y", $time)))));
+
+    return $days_jump;
 }
 
 /** mrbsGetRepeatEntryList
@@ -215,6 +231,7 @@ function same_day_next_month($time)
  * $rep_type - What type of repeat is it
  * $rep_opt  - The repeat entrys
  * $max_ittr - After going through this many entrys assume an error has occured
+ * $_initial_weeknumber - Save initial week number for use in 'monthly repeat same week number' case
  * 
  * Returns:
  *   empty     - The entry does not repeat
@@ -228,6 +245,9 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr,
 	$day   = date("d", $time);
 	$month = date("m", $time);
 	$year  = date("Y", $time);
+
+	global $_initial_weeknumber;
+	$_initial_weeknumber = (int)(($day - 1) / 7) + 1;
 
 	$entrys = "";
 	for($i = 0; $i < $max_ittr; $i++)

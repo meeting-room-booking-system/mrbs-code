@@ -1,3 +1,8 @@
+CVS (Mon May 12           GMT 2003)
+   - Changed mrbs_sql.inc so that when a 5th week "Monthly repeat, same day of 
+     the week" is selected, subsequent repeated meetings switch to the 5th
+     week when possible after falling back to the 4th week.
+
 CVS (Sat May 10           GMT 2003)
    - Fixed bug : when selecting a "Monthly repeat, same day of the week" repeat 
      type in the 5th week, repeated meetings are not properly scheduled. Now if 
