@@ -46,8 +46,8 @@ if (isset($area))
 
 <table border=1>
 <tr>
-<th><center><b><? echo $vocab[areas] ?></b></center></th>
-<th><center><b><? echo $vocab[rooms] ?> <? if(isset($area)) { echo $vocab[in] . " " .
+<th><center><b><? echo $vocab['areas'] ?></b></center></th>
+<th><center><b><? echo $vocab['rooms'] ?> <? if(isset($area)) { echo $vocab['in'] . " " .
   htmlspecialchars($area_name); }?></b></center></th>
 </tr>
 
@@ -65,7 +65,7 @@ if (sql_count($res) == 0) {
 	for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 		$area_name_q = urlencode($row[1]);
 		echo "<li><a href=\"admin.php?area=$row[0]&area_name=$area_name_q\">"
-			. htmlspecialchars($row[1]) . "</a> (<a href=\"edit_area_room.php?area=$row[0]\">" . $vocab[edit] . "</a>) (<a href=\"del.php?type=area&area=$row[0]\">" .  $vocab[delete] . "</a>)\n";
+			. htmlspecialchars($row[1]) . "</a> (<a href=\"edit_area_room.php?area=$row[0]\">" . $vocab['edit'] . "</a>) (<a href=\"del.php?type=area&area=$row[0]\">" .  $vocab['delete'] . "</a>)\n";
 	}
 	echo "</ul>";
 }
@@ -96,30 +96,30 @@ if(isset($area)) {
 </tr>
 <tr>
 <td>
-<h3 ALIGN=CENTER><? echo $vocab[addarea] ?></h3>
+<h3 ALIGN=CENTER><? echo $vocab['addarea'] ?></h3>
 <form action=add.php method=post>
 <input type=hidden name=type value=area>
 
 <TABLE>
-<TR><TD><? echo $vocab[name] ?>:       </TD><TD><input type=text name=name></TD></TR>
+<TR><TD><? echo $vocab['name'] ?>:       </TD><TD><input type=text name=name></TD></TR>
 </TABLE>
-<input type=submit value="<? echo $vocab[addarea] ?>">
+<input type=submit value="<? echo $vocab['addarea'] ?>">
 </form>
 </td>
 
 <td>
 <? if(isset($area)) { ?>
-<h3 ALIGN=CENTER><? echo $vocab[addroom] ?></h3>
+<h3 ALIGN=CENTER><? echo $vocab['addroom'] ?></h3>
 <form action=add.php method=post>
 <input type=hidden name=type value=room>
 <input type=hidden name=area value=<? echo $area; ?>>
 
 <TABLE>
-<TR><TD><? echo $vocab[name] ?>:       </TD><TD><input type=text name=name></TD></TR>
-<TR><TD><? echo $vocab[description] ?></TD><TD><input type=text name=description></TD></TR>
-<TR><TD><? echo $vocab[capacity] ?>:   </TD><TD><input type=text name=capacity></TD></TR>
+<TR><TD><? echo $vocab['name'] ?>:       </TD><TD><input type=text name=name></TD></TR>
+<TR><TD><? echo $vocab['description'] ?></TD><TD><input type=text name=description></TD></TR>
+<TR><TD><? echo $vocab['capacity'] ?>:   </TD><TD><input type=text name=capacity></TD></TR>
 </TABLE>
-<input type=submit value="<? echo $vocab[addroom] ?>">
+<input type=submit value="<? echo $vocab['addroom'] ?>">
 </form>
 <? } else { echo "&nbsp;"; }?>
 </td>
@@ -127,6 +127,6 @@ if(isset($area)) {
 </table>
 
 <br>
-<? echo $vocab[browserlang] . " " . $HTTP_ACCEPT_LANGUAGE . " " . $vocab[postbrowserlang] ; ?>
+<? echo $vocab['browserlang'] . " " . $HTTP_ACCEPT_LANGUAGE . " " . $vocab['postbrowserlang'] ; ?>
 
 <? include "trailer.inc" ?>

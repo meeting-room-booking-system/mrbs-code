@@ -241,7 +241,7 @@ if (empty($sumby)) $sumby = "d";
       <input type=radio name=sumby value=c<? if ($sumby=="c") echo " checked";
         echo ">" . $vocab["sum_by_creator"];?>
     </td></tr>
-<tr><td colspan=2 align=center><input type=submit value="<? echo $vocab[submitquery] ?>">
+<tr><td colspan=2 align=center><input type=submit value="<? echo $vocab['submitquery'] ?>">
 </td></tr>
 </table>
 </form>
