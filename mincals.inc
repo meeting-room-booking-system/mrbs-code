@@ -123,7 +123,7 @@ class Calendar
     	$s .= "</tr>\n";
     	
 //    	$d = 1 - $first;
-    	$d = ((($weekstarts == 1) ? -6 : -7 ) - $first) % 7 + 1;
+    	$d = ((($weekstarts == 1) ? -6 : -7 ) - $first) % 7 + 2;
     	   	
     	while ($d <= $daysInMonth)
     	{
