@@ -1,4 +1,6 @@
-Version 0.7
+Version 0.7 (CVS)
+	Replaced code for three small calendars
+    (thanks to David Wilkinson - davidw@cascade.org.uk)
 	Internal/External meetings different colours
 	"Resolution" moved to config file
 	Added Japanese support

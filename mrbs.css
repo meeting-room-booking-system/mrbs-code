@@ -36,6 +36,9 @@ TD.I {background-color:#DDFFDD;}
 TD.E {background-color:#F0F0FF;}
 TD.white {background-color:#FFFFFF;}
 
+TD.calendar {border:0px; font-size: 6pt;}
+TD.calendarHeader {border:0px; font-size: 10pt}
+
 .sitename
 {font-size: 18px;
 font-style: normal;
