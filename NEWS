@@ -7,6 +7,44 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.2 (Thu Sep 9 14:00:00 BST 2004):
+
+[-] Notification emails are now RFC2045 compliant. Mail body can contain non
+      us-ascii characters, content-type is specified correctly.
+[*] Updated German translation (Andreas Moroder)
+[*] Updated Czech translation (David Krotil)
+[*] LDAP authentication scheme is now more flexible. Base DN and
+      user attribute can be configured in config.inc.php
+[*] Room ordering of day view back to "by room name".
+[-] Fixed bug in admin notification emails, bug #968682.
+[-] Changed comment about $url_base to recommend setting this if email
+      notifications are to be used. Fixes bug 972186.
+[-] Fixes problem where an invalid user will appear to be logged in.
+[*] Changes default colour for odd row to not conflict with colour for
+      type 'J'.
+[*] Changed colours for header cells in day and week view to make them
+      more readable.
+[*] Change so that '+' sign and Javascript are not included in print
+      preview.
+[-] Fixed bug in notification emails so that periods are handled correctly.
+      Fixes bug #972293
+[-] Fixed JavaScript error on changing Start/End dates on add/edit page.
+      Fixes bug #934394
+[-] View entry page can now be passed a series ID, and mail notifications
+      will point people at this version of the page for messages
+      related to series. Fixes bug #972194.
+[*] Locale settings improvements. Warning is shown at top of the page if
+      MRBS is unable to set a locale. Added Windows locale mapping for
+      Swedish (sv-se) language. Fixed Unix locale mapping for English locale,
+      en_GB is used by default if the browser passes "en". OS X locale
+      support added.
+[-] Locale setting fix for Windows servers, browser language "en-ie" is now
+      handled correctly.
+[-] Fixed SQL usage in email notifications.  Fixes bug #994056
+[-] Fix for mouse hover highlighting on grid.
+
+
+-------------------------------------------------------------------------------
 Version 1.2-pre3 (Fri May 14 04:00:00 GMT 2004):
 
 [+] Added long awaited "periods" support. Calendar can displays 'periods'
