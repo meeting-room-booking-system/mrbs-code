@@ -92,8 +92,8 @@ if($type == "area")
 		# There are rooms left in the area
 		print_header($day, $month, $year, $area);
 		
-		echo "You must delete all rooms in this area before you can delete it<p>";
-		echo "<a href=admin.php>Go back to Admin page</a>";
+		echo $vocab['delarea'];
+		echo "<a href=admin.php>" . $vocab['backadmin'] . "</a>";
 		include "trailer.inc";
 	}
 }
