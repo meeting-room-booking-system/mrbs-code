@@ -21,18 +21,18 @@ mt_srand((double)microtime()*1000000);
 
 // Lets do stuff for days 5 days in the past to 55 days in the future
 
-$sql_1 = "select id from mrbs_area";
+$sql_1 = "SELECT id FROM mrbs_area";
 $prepared_query_1 = $mdb->prepareQuery($sql_1);
-$sql_2 = "select id from mrbs_room where area_id = ?";
+$sql_2 = "SELECT id FROM mrbs_room WHERE area_id = ?";
 $prepared_query_2 = $mdb->prepareQuery($sql_2);
-$sql_3 = "select count(*) from mrbs_entry where room_id = ?
-         and ((start_time between ? and ?)
-         or (end_time between ? and ?)
-         or (start_time = ? and end_time = ?))";
+$sql_3 = "SELECT count(*) FROM mrbs_entry WHERE room_id = ?
+         AND ((start_time between ? and ?)
+         OR (end_time between ? and ?)
+         OR (start_time = ? and end_time = ?))";
 $prepared_query_3 = $mdb->prepareQuery($sql_3);
-$sql_4 = "insert into mrbs_entry (id, room_id, create_by, start_time,
+$sql_4 = "INSERT INTO mrbs_entry (id, room_id, create_by, start_time,
 		 end_time, type, name, description, timestamp)
-         values (?, ?, ? , ?, ?, ?, ?, ?, ?)";
+         VALUES (?, ?, ? , ?, ?, ?, ?, ?, ?)";
 $prepared_query_4 = $mdb->prepareQuery($sql_4);
 for ($day = date("d") - 5; $day < date("d")+55; $day++)
 {
