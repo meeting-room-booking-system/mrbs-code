@@ -331,7 +331,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
                 $mail_vocab["rep_type_$temp"], $new_entry) . "\n";
         }
     }
-    $result = sendMail($recipients, $subject, $body, MAIL_CC);
+    $result = sendMail($recipients, $subject, $body, $mail_vocab['charset'] ,MAIL_CC);
     return $result;
 }
 
@@ -460,7 +460,7 @@ function notifyAdminOnDelete($mail_previous)
     $temp = $mail_previous['rep_type'];
     $body .=  " " . $mail_vocab["rep_type_$temp"] . "\n";
     // End of mail details
-    $result = sendMail($recipients, $subject, $body, MAIL_CC);
+    $result = sendMail($recipients, $subject, $body, $mail_vocab['charset'], MAIL_CC);
     return $result;
 }
 
@@ -637,6 +637,7 @@ function compareEntries($new_value, $previous_value, $new_entry)
  * @param string  $recipients       comma separated list of recipients or array
  * @param string  $subject          email subject
  * @param string  $body             text message
+ * @param string  $charset          character set used in body
  * @param string  $cc               Carbon Copy
  * @param string  $bcc              Blind Carbon Copy
  * @param string  $from             from field
@@ -650,19 +651,22 @@ function compareEntries($new_value, $previous_value, $new_entry)
  * @param string  $password         smtp server password
  * @return bool                     TRUE or PEAR error object if fails
  */
-function sendMail($recipients, $subject, $body, $cc = NULL, $bcc = NULL,
-    $from = MAIL_FROM, $backend = MAIL_ADMIN_BACKEND, $sendmail_path =
-    SENDMAIL_PATH, $sendmail_args = SENDMAIL_ARGS, $host = SMTP_HOST, $port =
-    SMTP_PORT, $auth = SMTP_AUTH, $username = SMTP_USERNAME, $password =
-    SMTP_PASSWORD)
+function sendMail($recipients, $subject, $body, $charset = 'us-ascii',
+    $cc = NULL, $bcc = NULL, $from = MAIL_FROM, $backend = MAIL_ADMIN_BACKEND,
+    $sendmail_path = SENDMAIL_PATH, $sendmail_args = SENDMAIL_ARGS,
+    $host = SMTP_HOST, $port = SMTP_PORT, $auth = SMTP_AUTH,
+    $username = SMTP_USERNAME, $password = SMTP_PASSWORD)
 {
     require_once "Mail.php";
-    //
+    // Headers part
     $headers['From']         = $from;
     $headers['To']           = $recipients;
     (NULL != $cc) ? $headers['Cc'] = $cc : '';
     (NULL != $bcc) ? $headers['Bcc'] = $bcc : '';
     $headers['Subject']      = $subject;
+    $headers['MIME-Version'] = '1.0';
+    $headers['Content-Type'] = 'text/plain; charset=' . $charset;
+    // Parameters part
     $params['sendmail_path'] = $sendmail_path;
     $params['sendmail_args'] = $sendmail_args;
     $params['host']          = $host;
@@ -670,7 +674,7 @@ function sendMail($recipients, $subject, $body, $cc = NULL, $bcc = NULL,
     $params['auth']          = $auth;
     $params['username']      = $username;
     $params['password']      = $password;
-    //
+    // Call to the PEAR::Mail class
     $mail_object =& Mail::factory($backend, $params);
     $result = $mail_object->send($recipients, $headers, $body);
     return $result;
