@@ -3,7 +3,7 @@
 drop table mrbs_entry_tmp;
 
 CREATE TABLE mrbs_entry_tmp (
-  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  id int(11) NOT NULL auto_increment,
   room_id int(11) DEFAULT '1' NOT NULL,
   create_by varchar(25) DEFAULT '' NOT NULL,
   start_time int(11) NOT NULL,
@@ -26,7 +26,7 @@ from mrbs_entry;
 drop table mrbs_entry;
 
 CREATE TABLE mrbs_entry (
-  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  id int(11) NOT NULL auto_increment,
   room_id int(11) DEFAULT '1' NOT NULL,
   create_by varchar(25) DEFAULT '' NOT NULL,
   start_time int(11) NOT NULL,

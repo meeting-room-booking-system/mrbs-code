@@ -11,7 +11,7 @@
 
 CREATE TABLE mrbs_area
 (
-  id               int DEFAULT '0' NOT NULL auto_increment,
+  id               int NOT NULL auto_increment,
   area_name        varchar(30),
   area_admin_email text,
 
@@ -20,7 +20,7 @@ CREATE TABLE mrbs_area
 
 CREATE TABLE mrbs_room
 (
-  id               int DEFAULT '0' NOT NULL auto_increment,
+  id               int NOT NULL auto_increment,
   area_id          int DEFAULT '0' NOT NULL,
   room_name        varchar(25) DEFAULT '' NOT NULL,
   description      varchar(60),
@@ -32,7 +32,7 @@ CREATE TABLE mrbs_room
 
 CREATE TABLE mrbs_entry
 (
-  id          int DEFAULT '0' NOT NULL auto_increment,
+  id          int NOT NULL auto_increment,
   start_time  int DEFAULT '0' NOT NULL,
   end_time    int DEFAULT '0' NOT NULL,
   entry_type  int DEFAULT '0' NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE mrbs_entry
 
 CREATE TABLE mrbs_repeat
 (
-  id          int DEFAULT '0' NOT NULL auto_increment,
+  id          int NOT NULL auto_increment,
   start_time  int DEFAULT '0' NOT NULL,
   end_time    int DEFAULT '0' NOT NULL,
   rep_type    int DEFAULT '0' NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE mrbs_repeat
   name        varchar(80) DEFAULT '' NOT NULL,
   type        char DEFAULT 'E' NOT NULL,
   description text,
-  rep_num_weeks tinyint DEFAULT '' NULL,
+  rep_num_weeks smallint NULL,
   
   PRIMARY KEY (id)
 );
