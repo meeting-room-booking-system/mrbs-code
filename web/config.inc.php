@@ -136,6 +136,12 @@ $stripe_color = "white";
 # Default is day
 $default_view = "day";
 
+# Define default room to start with (used by index.php)
+# Room numbers can be determined by looking at the Edit or Delete URL for a
+# room on the admin page.
+# Default is 0
+$default_room = 0;
+
 ###############################################
 # Authentication settings - read AUTHENTICATION
 ###############################################
