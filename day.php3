@@ -86,7 +86,8 @@ from mrbs_entry left join mrbs_room on mrbs_entry.room_id = mrbs_room.id
 
 where area_id = $area 
       and (start_time between from_unixtime($am7) and from_unixtime($pm7)
-		or end_time between from_unixtime($am7) and from_unixtime($pm7))
+		or end_time between from_unixtime($am7) and from_unixtime($pm7)
+      or from_unixtime($am7) between start_time and end_time)
 ";
 
 $res = mysql_query($sql);
