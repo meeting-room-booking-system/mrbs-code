@@ -1,21 +1,15 @@
-CVS:
-    Changed "loginfo" in CVSROOT to email the list with CVS commit log
-    messages. (jberanek)
-
-CVS:
+Version 1.0-pre1 (Sun Mar  4 23:26:43 GMT 2001)
     Internationalised functions.inc. "Help", "Admin" and "Search:" are now lang
     strings. Also, fixed an error in lang.fr, $lang["mrbs"] was defined twice.
     (jberanek)
 
-CVS:
     Added double quotes around all uses of color and class attributes, as HTML
     dictates. (jberanek)
 
-CVS:
     On conflict, show start time and link to day/week/month views (redinger)
     Link each search result start time to entry's day view (bernd, beranak)
 
-CVS: Branch Merge (2001-02-24 ljb):
+    Branch Merge (2001-02-24 ljb):
     Incorporated all changes from branch mrbs-0-9-1xp into CVS trunk.
     Undoes post-branch change (0.9.2) to remove "weekstarts" function.
     Fix undefined variable warning $edit_type in edit_entry.php
@@ -24,7 +18,7 @@ Version 0.9.2 (Fri Feb  9 20:09:42 GMT 2001)
 	Remove "weekstarts" functionality
 
 Branch mrbs-0-9-1xp (2001-02-13 daniel):
-    Added $Id$ tags to all files.
+    Added $I d$ tags to all files.
 
 Branch mrbs-0-9-1xp (2001-02-10 ljb):
     For PHP4, rename *.php3 to *.php and changed all links.
