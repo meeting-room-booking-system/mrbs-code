@@ -148,11 +148,30 @@ $auth[params] = "-S MYSERVER -U #USERNAME# -P #PASSWORD#";
 
 LDAP Authentication
 -------------------
-There is a very small Perl program - ldap_auth.pl - included with this
-distribution.
+There are two methods for doing LDAP authentication currently, the preferable
+method uses the LDAP functionalty built into PHP, to enable this change the
+"$auth[type]" to "ldap" and check the the "$ldap_host" and "$ldap_base_dn"
+entrys are correct in config.inc.  The program will check the username and
+password pair with all the "$ldap_base_dn" entrys until one matches.
 
-It requires the Net::LDAP module be installed and working. For me this simply
-meant doing:
+e.g.
+
+# Authentication settings - read AUTHENTICATION
+$auth[realm]  = "MRBS";
+$auth[type]   = "ldap";
+$auth[prog]   = "";
+$auth[params] = "";
+
+# The LDAP server is local
+$ldap_host = "localhost";
+
+# First search in the "People" then "Administrators" dn.
+$ldap_base_dn[] = "ou=People, o=myCompany, c=US";
+$ldap_base_dn[] = "ou=Administrators, o=myCompany, c=US";
+
+The second LDAP authentication method uses a very small Perl program
+ - ldap_auth.pl - It requires the Net::LDAP module be installed and working.
+For me this simply meant doing:
 
    perl -MCPAN -e"install Net::LDAP"
 

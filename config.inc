@@ -28,6 +28,14 @@ $auth[admin][] = "10.10.10.2";
 $auth[admin][] = "10.10.10.3";
 $auth[admin][] = "10.10.10.4";
 
+# 'auth_ldap' configuration settings
+# Where is the LDAP server
+$ldap_host = "localhost";
+# LDAP base distinguish names
+$ldap_base_dn[] = "ou=organizationalunit1,o=organization,c=MY";
+$ldap_base_dn[] = "ou=organizationalunit2,o=organization,c=MY";
+$ldap_base_dn[] = "ou=organizationalunit3,o=organization,c=MY";
+
 # Resolution - ie what blocks can be booked.
 # Default is half an hour - 1800 seconds
 $resolution = 1800;
