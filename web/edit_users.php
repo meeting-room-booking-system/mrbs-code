@@ -28,13 +28,6 @@ include "functions.inc";
 include "$dbsys.inc";
 include "mrbs_auth.inc";
 
-// Do not allow unidentified people to browse the list.
-if(!getAuthorised(getUserName(), getUserPassword(), 1))
-    {
-    showAccessDenied($day, $month, $year, $area);
-    exit;
-    }
-
 /*---------------------------------------------------------------------------*\
 |                     Create the users database if needed                     |
 \*---------------------------------------------------------------------------*/
@@ -97,6 +90,12 @@ if ($nusers > 0)
     {
     $user = getUserName();
     $level = authGetUserLevel($user, $auth["admin"]);
+    // Do not allow unidentified people to browse the list.
+    if(!getAuthorised($user, getUserPassword(), 1))
+        {
+        showAccessDenied($day, $month, $year, $area);
+        exit;
+        }
     }
 else /* We've just created the table. Assume the person doing this IS the administrator. */
     {
