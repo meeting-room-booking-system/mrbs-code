@@ -3,7 +3,7 @@
 
 # This file contains PHP code that specifies language specific strings
 # The default strings come from lang.en, and anything in a locale
-# specific file will overwrite the default. This is a US/UK English file.
+# specific file will overwrite the default. This is a Greek file.
 #
 #
 # This file is PHP code. Treat it as such.
