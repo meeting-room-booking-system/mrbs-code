@@ -205,7 +205,7 @@ function validate_and_submit ()
 }
 </SCRIPT>
 
-<h2><?php echo isset($id) ? get_vocab("editentry") : get_vocab("addentry"); ?></H2>
+<h2><?php echo isset($id) ? ($edit_type == "series" ? get_vocab("editseries") : get_vocab("editentry")) : get_vocab("addentry"); ?></H2>
 
 <FORM NAME="main" ACTION="edit_entry_handler.php" METHOD="GET">
 
