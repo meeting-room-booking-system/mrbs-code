@@ -247,13 +247,18 @@ function notifyAdminOnBooking($new_entry , $new_id)
     // Set the link to view entry page
     if (isset($url_base) && ($url_base != ""))
     {
-        $body .= "$url_base/view_entry.php?id=$new_id\n";
+        $body .= "$url_base/view_entry.php?id=$new_id";
     }
     else
     {
         ('' != $returl) ? $url = explode(basename($returl), $returl) : '';
-        $body .= $url[0] . "view_entry.php?id=$new_id\n";
+        $body .= $url[0] . "view_entry.php?id=$new_id";
     }
+    if ($rep_type > 0)
+    {
+        $body .= "series=1";
+    }
+    $body .= "\n";
     // Displays/don't displays entry details
     if (MAIL_DETAILS)
     {

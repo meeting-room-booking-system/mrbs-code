@@ -96,6 +96,7 @@ $vocab["deleteseries"]       = "Delete Series";
 $vocab["confirmdel"]         = "Are you sure\\nyou want to\\ndelete this entry?\\n\\n";
 $vocab["returnprev"]         = "Return to previous page";
 $vocab["invalid_entry_id"]   = "Invalid entry id.";
+$vocab["invalid_series_id"]  = "Invalid series id.";
 
 # Used in edit_entry_handler.php
 $vocab["error"]              = "Error";
