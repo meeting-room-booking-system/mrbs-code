@@ -77,7 +77,7 @@ align=right><a href=day.php3?year=$ty&month=$tm&day=$td&area=$area>Go To Day Aft
 #In PHP we dont need to define an array before using it
 
 #Get all appointments for today in the area that we care about
-$sql = "select create_by, mrbs_room.room_name, unix_timestamp(start_time), unix_timestamp(end_time), type, name, mrbs_entry.description, mrbs_entry.id
+$sql = "select create_by, mrbs_room.id, unix_timestamp(start_time), unix_timestamp(end_time), type, name, mrbs_entry.description, mrbs_entry.id
 
 from mrbs_entry left join mrbs_room on mrbs_entry.room_id = mrbs_room.id
 
@@ -114,11 +114,11 @@ echo "<tr><th>Time</th>";
 #pull the data from the db and store it. Convienently we can print the room 
 #headings and capacities at the same time
 
-$sql = "select room_name, capacity from mrbs_room where area_id=$area";
+$sql = "select room_name, capacity, id from mrbs_room where area_id=$area";
 $res = mysql_query($sql);
 while ($row = mysql_fetch_row($res)) {
 	echo "<th align=top>$row[0] ($row[1])</th>";
-	$rooms[] = $row[0];
+	$rooms[] = $row[2];
 }
 echo "</tr>\n";
 
