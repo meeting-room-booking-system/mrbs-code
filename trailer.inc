@@ -7,10 +7,10 @@ if(!isset($year))
 	$year = strftime("%Y");
 
 if(!isset($month))
-	$year = strftime("%m");
+	$month = strftime("%m");
 
 if(!isset($day))
-	$year = strftime("%d");
+	$day = strftime("%d");
 
 for($i = -7; $i <= 7; $i++)
 {
