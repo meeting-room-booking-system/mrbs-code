@@ -51,7 +51,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 		$param_ymd = $param_ym . "&day=$starts[mday]";
 
 
-		if( $enable_period ) {
+		if( $enable_periods ) {
         	$p_num =$starts[minutes];
         	$startstr = utf8_strftime('%A %d %B %Y, ', $row[2]) . $periods[$p_num];
         }
