@@ -1,4 +1,4 @@
-CVS: (2001-03-26 15:00 UTC jberanek)
+CVS: (2001-03-26 15:36 UTC jberanek)
     Fixed config.inc so that the correct lang.xx is included if
      HTTP_ACCEPT_LANGUAGE is a comma-seperated list like "sv, en".
 
