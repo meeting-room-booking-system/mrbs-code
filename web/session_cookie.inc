@@ -38,6 +38,11 @@ if (isset($Action) && ($Action == "SetName"))
         printLoginForm($TargetURL);
         exit();
     }
+    else
+    {
+        $UserName     = $NewUserName;
+        $UserPassword = $NewUserPassword;
+    }
 
     setcookie("UserName", $UserName);
     setcookie("UserPassword", $UserPassword);
@@ -68,11 +73,11 @@ function printLoginForm($TargetURL)
   <table>
     <tr>
       <td align="right"><?php echo get_vocab("user_name") ?></td>
-      <td><input type="text" name="UserName" /></td>
+      <td><input type="text" name="NewUserName" /></td>
     </tr>
     <tr>
       <td align="right"><?php echo get_vocab("user_password") ?></td>
-      <td><input type="password" name="UserPassword" /></td>
+      <td><input type="password" name="NewUserPassword" /></td>
     </tr>
   </table>
   <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" /> <br />
