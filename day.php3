@@ -116,17 +116,20 @@ while ($row = mysql_fetch_row($res)) {
 	#                            [color]
 	#                            [description]
 	
-	for ($t = $row[2]; $t < $row[3]; $t = $t + $resolution) {
+	for($t = $row[2]; ($t < $row[3]) || ($t == $row[2]); $t = $t + $resolution)
+	{
 		$today[$row[1]][$t][id]     = $row[7];
 		$today[$row[1]][$t][color]  = $row[8];
 	}
+	
 	# show the name of the booker in the first segment that the
 	# booking happens in, or at the start of the day if it started
 	# before today
 	$today[$row[1]][$row[2]][data] = $row[5];
-	if ($row[2] < $am7) { $today[$row[1]][$am7][data] = $row[5]; }
+	
+	if($row[2] < $am7)
+		$today[$row[1]][$am7][data] = $row[5];
 }
-
 
 #We need to know what all the rooms area called, so we can show them all
 #pull the data from the db and store it. Convienently we can print the room 
@@ -151,9 +154,9 @@ if (mysql_num_rows($res) == 0) {
 		$rooms[] = $row[2];
 	}
 	echo "</tr>\n";
-
-
-
+	
+	$REQUEST_URI = basename($REQUEST_URI);
+	
 	#This is the main bit of the display
 	#We loop through unixtime and then the rooms we just got
 
@@ -167,8 +170,8 @@ if (mysql_num_rows($res) == 0) {
 		#Loop through the list of rooms we have for this area
 		while (list($key, $room) = each($rooms)) {
 			$id    = $today[$room][$t][id];
-			$descr = $today[$room][$t][data];
-         $color = $today[$room][$t][color];
+			$descr = htmlspecialchars($today[$room][$t][data]);
+			$color = $today[$room][$t][color];
 			
 			# $c is the colour of the cell that the browser sees. White normally, 
 			# red if were hightlighting that line and a nice attractive green if the room is booked.
