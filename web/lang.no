@@ -20,7 +20,7 @@ $vocab["report"]             = "Rapport";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Hjelp";
 $vocab["search"]             = "Søk:";
-$vocab["not_php3"]           = "H1>NB: Dette virker sannsynligvis ikke med PHP3</H1>";
+$vocab["not_php3"]           = "<H1>NB: Dette virker sannsynligvis ikke med PHP3</H1>";
 
 # Used in day.php
 $vocab["bookingsfor"]        = "Booking for";
