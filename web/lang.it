@@ -3,7 +3,7 @@
 
 # This file contains PHP code that specifies language specific strings
 # The default strings come from lang.en, and anything in a locale
-# specific file will overwrite the default. This is a US/UK English file.
+# specific file will overwrite the default. This is an Italian file.
 #
 # Translations provided by: Gianni
 #
@@ -20,6 +20,7 @@ $vocab["report"]             = "Report";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Aiuto";
 $vocab["search"]             = "Ricerca:";
+$vocab["not_php3"]             = "<H1>WARNING: This probably doesn't work with PHP3</H1>";
 
 # Used in day.php
 $vocab["bookingsfor"]        = "Prenotazioni per";
@@ -73,6 +74,12 @@ $vocab["rep_freq"]           = "Frequenza:";
 $vocab["rep_num_weeks"]      = "Numero di settimane";
 $vocab["rep_for_nweekly"]    = "(per n-settimanale)";
 $vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
+$vocab["entryid"]            = "Entry ID ";
+$vocab["repeat_id"]          = "Repeat ID "; 
+$vocab["you_have_not_entered"] = "You have not entered a";
+$vocab["valid_time_of_day"]  = "valid time of day.";
+$vocab["brief_description"]  = "Brief Description.";
+$vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 
 # Used in view_entry.php
 $vocab["description"]        = "Descrizione:";
@@ -83,6 +90,7 @@ $vocab["deleteentry"]        = "Cancella";
 $vocab["deleteseries"]       = "Cancella Series";
 $vocab["confirmdel"]         = "Sei sicuro\\nche vuoi\\ncancellare l'elemento?\\n\\n";
 $vocab["returnprev"]         = "Ritorna alla Pagina Precedente";
+$vocab["invalid_entry_id"]   = "Invalid entry id.";
 
 # Used in edit_entry_handler.php
 $vocab["error"]              = "Errore";
@@ -90,6 +98,7 @@ $vocab["sched_conflict"]     = "Conflitto di Prenotazione";
 $vocab["conflict"]           = "La nuova prenotazione sarà in conflitto con questa(e):";
 $vocab["too_may_entrys"]     = "L'opzione selezionata crea troppe entità.<BR>Per favore usa una opzione differente!";
 $vocab["returncal"]          = "Ritorna al calendario";
+$vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access"; 
 
 # Authentication stuff
 $vocab["accessdenied"]       = "Accesso Negato";
@@ -166,11 +175,28 @@ $vocab["change"]             = "Change";
 $vocab["backadmin"]          = "Back to Admin";
 $vocab["editroomarea"]       = "Edit Area or Room Description";
 $vocab["editroom"]           = "Edit Room";
+$vocab["update_room_failed"] = "Update room failed: ";
+$vocab["error_room"]         = "Error: room ";
+$vocab["not_found"]          = " not found";
+$vocab["update_area_failed"] = "Update area failed: ";
+$vocab["error_area"]         = "Error: area ";
 
 # Used in del.php
 $vocab["deletefollowing"]    = "This will delete the following bookings";
 $vocab["sure"]               = "Are you sure?";
 $vocab["YES"]                = "YES";
 $vocab["NO"]                 = "NO";
+$vocab["delarea"]            = "You must delete all rooms in this area before you can delete it<p>";
+$vocab["backadmin"]          = "Go back to Admin page";
+
+# Used in help.php
+$vocab["about_mrbs"]         = "About MRBS";
+$vocab["database"]           = "Database: ";
+$vocab["system"]             = "System: ";
+$vocab["please_contact"]     = "Please contact ";
+$vocab["for_any_questions"]  = "for any questions that aren't answered here.";
+
+# Used in mysql.inc AND pgsql.inc
+$vocab["failed_connect_db"]  = "Fatal Error: Failed to connect to database";
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 # $Id$
 
-# This file contains PHP code that specifies vocabuage specific strings
+# This file contains PHP code that specifies language specific strings
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is a Czech file.
 #
@@ -20,6 +20,7 @@ $vocab["report"]             = "Výpis";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Pomoc";
 $vocab["search"]             = "Hledat:";
+$vocab["not_php3"]             = "<H1>WARNING: This probably doesn't work with PHP3</H1>";
 
 # Used in day.php
 $vocab["bookingsfor"]        = "Zajednáno pro";
@@ -73,6 +74,12 @@ $vocab["rep_freq"]           = "Frekvence:";
 $vocab["rep_num_weeks"]      = "Èislo týdne";
 $vocab["rep_for_nweekly"]    = "(pro n-týdnù)";
 $vocab["ctrl_click"]         = "Uzij Control-Klic pro vyber vice mistnosti";
+$vocab["entryid"]            = "Entry ID ";
+$vocab["repeat_id"]          = "Repeat ID "; 
+$vocab["you_have_not_entered"] = "You have not entered a";
+$vocab["valid_time_of_day"]  = "valid time of day.";
+$vocab["brief_description"]  = "Brief Description.";
+$vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 
 # Used in view_entry.php
 $vocab["description"]        = "Popis:";
@@ -83,6 +90,7 @@ $vocab["deleteentry"]        = "Smazat záznam";
 $vocab["deleteseries"]       = "Smazat sérii";
 $vocab["confirmdel"]         = "Jsi si jistý\\nsmazáním tohoto záznamu?\\n\\n";
 $vocab["returnprev"]         = "Návrat na pøedchozí stránku";
+$vocab["invalid_entry_id"]   = "Invalid entry id.";
 
 # Used in edit_entry_handler.php
 $vocab["error"]              = "Chyba";
@@ -90,6 +98,7 @@ $vocab["sched_conflict"]     = "Konflikt pøi plánování";
 $vocab["conflict"]           = "Nová rezervace je v konfliktu s jiným záznamem:";
 $vocab["too_may_entrys"]     = "Vybraná volba byla vytvoøena pro jiné záznamy.<BR>Prosím vyberte jinou volbu!";
 $vocab["returncal"]          = "Návrat do kalendáøe";
+$vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access"; 
 
 # Authentication stuff
 $vocab["accessdenied"]       = "Pøistup zamítnut";
@@ -166,11 +175,28 @@ $vocab["change"]             = "Zmena";
 $vocab["backadmin"]          = "Navrat do Admina";
 $vocab["editroomarea"]       = "Editovat popis oblasti nebo mistnosti";
 $vocab["editroom"]           = "Editovat mistnost";
+$vocab["update_room_failed"] = "Update room failed: ";
+$vocab["error_room"]         = "Error: room ";
+$vocab["not_found"]          = " not found";
+$vocab["update_area_failed"] = "Update area failed: ";
+$vocab["error_area"]         = "Error: area ";
 
 # Used in del.php
 $vocab["deletefollowing"]    = "Bylo smazano rezervovani";
 $vocab["sure"]               = "Jsi si jisty?";
 $vocab["YES"]                = "ANO";
 $vocab["NO"]                 = "NE";
+$vocab["delarea"]            = "You must delete all rooms in this area before you can delete it<p>";
+$vocab["backadmin"]          = "Go back to Admin page";
+
+# Used in help.php
+$vocab["about_mrbs"]         = "About MRBS";
+$vocab["database"]           = "Database: ";
+$vocab["system"]             = "System: ";
+$vocab["please_contact"]     = "Please contact ";
+$vocab["for_any_questions"]  = "for any questions that aren't answered here.";
+
+# Used in mysql.inc AND pgsql.inc
+$vocab["failed_connect_db"]  = "Fatal Error: Failed to connect to database";
 
 ?>

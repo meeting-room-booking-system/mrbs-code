@@ -20,7 +20,6 @@ $vocab["report"]             = "Rapport";
 $vocab["admin"]              = "Gestion";
 $vocab["help"]               = "Aide";
 $vocab["search"]             = "Recherche:";
-
 $vocab["not_php3"]             = "<H1>ATTENTION: Cette application peut ne pas fonctionner correctement avec PHP3</H1>";
 
 # Used in day.php
@@ -121,7 +120,6 @@ $vocab["search_button"]      = "Recherche";
 $vocab["search_for"]         = "Rechercher"; 
 $vocab["from"]               = "A partir de"; 
 
-
 # Used in report.php
 $vocab["report_on"]          = "Rapport des réservations :";
 $vocab["report_start"]       = "Date de début du rapport :";
@@ -189,6 +187,7 @@ $vocab["sure"]               = "Etes-vous certains ?";
 $vocab["YES"]                = "OUI";
 $vocab["NO"]                 = "NON";
 $vocab["delarea"]            = "Vous devez supprimer toutes les salles de cette zone avant de pouvoir la supprimer<p>";
+$vocab["backadmin"]          = "Go back to Admin page";
 
 # Used in help.php
 $vocab["about_mrbs"]         = "A propos de MRBS (Meeting Room Booking System)";

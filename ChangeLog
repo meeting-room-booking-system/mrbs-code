@@ -1,3 +1,6 @@
+CVS (Tue Jan 14 00:38:06 GMT 2003)
+   - Updated all language files to be consistant
+
 CVS (Mon Jan 13 21:38:23 GMT 2003)
    - Changed minicals so they point to week when on week view and month on
      month view, rather than always pointing at day view
