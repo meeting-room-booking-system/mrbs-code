@@ -119,6 +119,19 @@ $ pear upgrade PEAR
 Installing PEAR::MDB
 --------------------
 
+[NOTE: 2003-10-10 :
+
+Current mrbs_MDB use MDB 1.x. MDB release announcement says the behavior of 
+some functions will change with MDB 2. The result from this is if you intall 
+upgrade MDB to 2.x version, current code will not work. Solution :
+
+- either do not install MDB with PEAR, use the default method
+- either, if you use PEAR, use the 'semi-automatic' installation below after
+  downloaded the latest 1.x version from PEAR web site
+- either, if you use PEAR 1.3+, use '$ pear install MDB-1.x' to install the 
+  last 1.x version
+NOTE END]
+
 MRBS relies on PEAR::MDB class to connect to DBMS. Therefore you have to
 install the PEAR framework before and then PEAR::MDB package.
 
