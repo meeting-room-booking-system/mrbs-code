@@ -56,6 +56,7 @@ else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['HTTP_HOST']))
 */
 function printLoginForm($TargetURL)
 {
+    global $PHP_SELF;
 ?>
 <p>
   <?php echo get_vocab("please_login") ?>
