@@ -44,6 +44,9 @@ $mrbs_company = "Your Company";
 # If links inside MRBS appear broken, then specify here the URL of
 # your MRBS root directory, as seen by the users. For example:
 # $url_base =  "http://webtools.uab.ericsson.se/oam";
+# It is also recommended that you set this if you intend to use email
+# notifications, to ensure that the correct URL is displayed in the
+# notification.
 $url_base = "";
 
 
