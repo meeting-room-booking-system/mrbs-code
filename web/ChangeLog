@@ -1,3 +1,30 @@
+2003-11-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* session_php.inc (1.2): - (printLoginForm): make session_php.inc
+	  working with error level E_ALL.
+
+2003-11-11  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* lang.cz (1.5), lang.da (1.2), lang.de (1.13), lang.es (1.15),
+	  lang.fi (1.5), lang.fr (1.15), lang.it (1.8), lang.ja (1.12),
+	  lang.nl (1.13), lang.no (1.10), lang.pt (1.2), lang.sv (1.13),
+	  lang.zh-tw (1.12): Added messages for session handling.
+
+2003-11-09  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* auth_config.inc (1.1), config.inc.php (1.7), day.php (1.18),
+	  functions.inc (1.19), lang.en (1.13), mrbs_auth.inc (1.7),
+	  session_cookie.inc (1.1), session_php.inc (1.1): Added support
+	  for session handling.
+
+2003-11-09  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* language.inc (1.4): Display an error message when the iconv
+	  function is not defined.  This message explains what to do to fix
+	  the problem on the PHP server.  It will help administrators who
+	  are likely to encounter the problem the first time they install
+	  mrbs.
+
 2003-11-01  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* day.php (1.17), month.php (1.14), week.php (1.21): + Time slots
