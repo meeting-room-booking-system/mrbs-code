@@ -204,7 +204,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr)
 	$month = date("m", $time);
 	$year  = date("Y", $time);
 	
-	for($entrys = null, $i = 0; ($time < $enddate) && ($i < $max_ittr); $i++)
+	for($entrys = "", $i = 0; ($time < $enddate) && ($i < $max_ittr); $i++)
 	{
 		$time = $entrys[$i] = mktime($hour, $min, $sec, $month, $day, $year);
 		
@@ -218,7 +218,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr)
 			// Weekly repeat
 			case 2:
 				$cur_day = date("w", $entrys[$i]);
-
+				
 				for($j = $cur_day + 1; ($j != $cur_day) && !$rep_opt[$j]; $j = ($j + 1) % 7)
 					$day += 1;
 				
