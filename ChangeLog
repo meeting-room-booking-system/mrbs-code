@@ -1,3 +1,13 @@
+CVS (Thu Jan 30           GMT 2003)
+   + add translation:     Finnish, Vesa Palmu 
+
+CVS (Wed Jan 29           GMT 2003)
+   - Minor translations updates in lang.fr, lang.no (Tobias)
+   - 1 vocab added in functions.inc
+   - Bug fix : if "select" is choosen in config.inc to show areas/rooms as a
+     drop-down select box, an sql error occurs when the "change" button is 
+     clicked (mostly used for non javascript users).
+
 Version 1.1 (Tue Jan 14 10:00:00 GMT 2003)
    + Added configuration option ($twentyfourhour_format) to allow time
      formats to be changed to 12 hour format.
