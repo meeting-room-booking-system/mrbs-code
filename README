@@ -1,0 +1,51 @@
+WebCalender 0.9.4 - 14 Jan 2000
+http://www.radix.net/~cknudsen/webcalendar/
+Craig Knudsen, cknudsen@radix.net, http://www.radix.net/~cknudsen/
+
+WebCalender = PHP/MySQL-based multi-user calendar
+
+I don't have a good name for this application yet, so for now, it's
+"WebCalender."  I'm sure that's probably trademarked by someone, so let
+me know if you have a good name for this application.
+
+See the INSTALL file for installation instructions.
+
+See the UPGRADING file for instructions on upgrading from a previous release.
+
+See COPYING for licensing info.
+
+See ChangeLog for a history of changes.
+
+Features:
+- Multi-user support
+- View month-at-glance
+- View week-at-glance
+- View another user's calendar
+- Add/Edit/Delete users
+- Add/Edit/Delete events
+- User-configurable preferences for colors, 12/24 time format
+- Online help
+- Checks for scheduling conflicts
+
+Requirements:
+- PHP3/4 (w/MySQL support)
+- MySQL
+
+Recommended:
+- JavaScript-enabled browser
+- CSS-enabled browser
+
+Planned features for Release 1.0:
+- PostgreSQL support
+- Search interface for calendar entries
+- Day-at-a-glance view
+- Generate repeating events
+- Admin specifies which users can add events to which other users
+
+Possible features for future releases:
+- Add comments to entries that will show up on the view page
+- Data export
+- Data import (from Netscape Calendar's tab-delimted export)
+- Activity log
+- Some form of reminder
+- Java client?

@@ -1,0 +1,45 @@
+BODY {color:black; font-size: 10pt; font-family:arial;
+background-color:#ffffed;  background-image:
+url(head.gif); background-position: top left;
+background-repeat: no-repeat; margin-top: 70px}
+
+A:link {color:#5B69A6; font-weight: bold; text-decoration: none}
+A:visited {color:#5B69A6; font-weight: bold; text-decoration: none}
+A:hover {color:red; text-decoration:underline}
+H1 {color:black; font-family:verdana; font-size:16pt; }
+H2 {color:black; font-family:verdana; font-size:14pt; }
+H3 {font-family:verdana;}
+
+TD {font-size:10pt; font-family:Arial; border-width:1;
+vertical-align:top;}
+TD.header {color:black; font-family:verdana; border-width:0; background-color:#ffffdd; font-size:26pt;}
+
+TD.unallocated {color:gray;}
+TD.allocated {color:black;}
+A:link.unallocated {color:#9BA9E6;}
+A:link.allocated {color:#5B69A6;}
+
+A:hover.unallocated {color:red;}
+A:hover.allocated {color:red;}
+
+A.blue {color:blue;}
+A:visited.blue {color:blue;}
+A:hover.blue {color:red;}
+
+TH {color:#eeeeee; font-size:10pt; font-family:verdana; background-color:#333333;
+border-width:1; border-color:black; vertical-align:top;}
+
+TD.blue {background-color:#F0F0FF;}
+TD.red  {background-color:#FFF0F0;}
+TD.green {background-color:#E1E4ED;}
+
+
+.sitename
+{font-size: 18px;
+font-style: normal;
+font-weight: bold;
+text-transform: none;
+color:#ffffff;
+position: absolute;
+left:30;
+top:12}
