@@ -6,7 +6,7 @@ include "auth_$auth[type].inc";
 
 function getAuthUserName()
 {
-	global $PHP_AUTH_USER;
+    global $PHP_AUTH_USER;
         if (isset($PHP_AUTH_USER))
         {
             $user = $PHP_AUTH_USER;
@@ -24,7 +24,7 @@ function getAuthUserName()
 
 function getAuthUserPassword()
 {
-	global $PHP_AUTH_PW;
+    global $PHP_AUTH_PW;
 
         if (isset($PHP_AUTH_PW))
         {
@@ -55,12 +55,14 @@ function getAuthUserPassword()
  */
 function getAuthorised($user, $pass, $level)
 {
-	global $auth;
-	
-	if(!authValidateUser($user, $pass))
-		return 0;
-	
-	return authGetUserLevel($user, $auth["admin"]) >= $level;
+    global $auth;
+    
+    if (!authValidateUser($user, $pass))
+    {
+        return 0;
+    }
+    
+    return authGetUserLevel($user, $auth["admin"]) >= $level;
 }
 
 /* getWritable($creator, $user)
@@ -76,17 +78,21 @@ function getAuthorised($user, $pass, $level)
  */
 function getWritable($creator, $user)
 {
-	global $auth;
-	
-	// Always allowed to modify your own stuff
-	if($creator == $user)
-		return 1;
-	
-	if(authGetUserLevel($user, $auth["admin"]) >= 2)
-		return 1;
-	
-	// Unathorised access
-	return 0;
+    global $auth;
+    
+    // Always allowed to modify your own stuff
+    if ($creator == $user)
+    {
+        return 1;
+    }
+    
+    if (authGetUserLevel($user, $auth["admin"]) >= 2)
+    {
+        return 1;
+    }
+    
+    // Unathorised access
+    return 0;
 }
 
 /* showAccessDenied()
@@ -97,9 +103,9 @@ function getWritable($creator, $user)
  */
 function showAccessDenied($day, $month, $year, $area)
 {
-	global $vocab, $HTTP_REFERER;
-	
-	print_header($day, $month, $year, $area);
+    global $vocab, $HTTP_REFERER;
+    
+    print_header($day, $month, $year, $area);
 ?>
   <H1><?php echo $vocab["accessdenied"]?></H1>
   <P>

@@ -7,7 +7,7 @@
  * make bookings etc.
  *
  * To use this authentication scheme set the following
- * things in config.inc:
+ * things in config.inc.php:
  *
  * $auth["type"]  = "ip";
  *
@@ -17,11 +17,16 @@
  * $auth["admin"][] = "192.168.0.1";
  */
 
-# No need to perform authentication - ip address always there
-function authGet($realm) { }
+// No need to perform authentication - ip address always there
+function authGet($realm) 
+{
+}
 
-# Always validates
-function authValidateUser($user, $pass) { return 1; }
+// Always validates
+function authValidateUser($user, $pass) 
+{ 
+    return 1; 
+}
 
 /* authGetUserLevel($user)
  * 
@@ -34,30 +39,34 @@ function authValidateUser($user, $pass) { return 1; }
  */
 function authGetUserLevel($user, $lev1_admin)
 {
-	// User not logged in, user level '0'
-	if(!isset($user))
-		return 0;
-	
-	// Check if the user is can modify
-	for($i = 0; isset($lev1_admin[$i]); $i++)
-	{
-		if(strcasecmp($user, $lev1_admin[$i]) == 0)
-			return 2;
-	}
-	
-	// Everybody else is access level '1'
-	return 1;
+    // User not logged in, user level '0'
+    if (!isset($user))
+    {
+        return 0;
+    }
+    
+    // Check if the user is can modify
+    for ($i = 0; isset($lev1_admin[$i]); $i++)
+    {
+        if (strcasecmp($user, $lev1_admin[$i]) == 0)
+        {
+            return 2;
+        }
+    }
+    
+    // Everybody else is access level '1'
+    return 1;
 }
 
 function getUserName()
 {
-	global $REMOTE_ADDR;
-	return $REMOTE_ADDR;
+    global $REMOTE_ADDR;
+    return $REMOTE_ADDR;
 }
 
 function getUserPassword()
 {
-	return "dummy";
+    return "dummy";
 }
 
 ?>

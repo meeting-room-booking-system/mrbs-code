@@ -1,6 +1,6 @@
 <?php
 
-# $Id$
+// $Id$
 
 ?>
   <LINK REL="stylesheet" href="mrbs.css" type="text/css">
@@ -11,6 +11,6 @@ global $refresh_rate;
 
 if ($refresh_rate != 0)
 {
-  echo "  <META HTTP-EQUIV=\"Refresh\" CONTENT=\"$refresh_rate\">\n";
+    echo "  <META HTTP-EQUIV=\"Refresh\" CONTENT=\"$refresh_rate\">\n";
 }
 ?>

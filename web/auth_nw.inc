@@ -32,7 +32,7 @@ function authValidateUser($user, $pass)
         global $auth;
     
     // Check if we do not have a username/password
-    if(empty($user) || empty($pass))
+    if (empty($user) || empty($pass))
     {
         authGet($auth["realm"]);
         return 0;
@@ -50,8 +50,10 @@ function authValidateUser($user, $pass)
         return 1;
     
     // If we failed prompt for username/password - WHY?
-    if($user || $pass)
+    if ($user || $pass)
+    {
         authGet($auth["realm"]);
+    }
     
     // return failure
     return 0;
@@ -69,14 +71,18 @@ function authValidateUser($user, $pass)
 function authGetUserLevel($user, $lev1_admin)
 {
     // User not logged in, user level '0'
-    if(!isset($user))
+    if (!isset($user))
+    {
         return 0;
+    }
     
     // Check if the user is can modify
-    for($i = 0; $lev1_admin[$i]; $i++)
+    for ($i = 0; $lev1_admin[$i]; $i++)
     {
-        if(strcasecmp($user, $lev1_admin[$i]) == 0)
+        if (strcasecmp($user, $lev1_admin[$i]) == 0)
+        {
             return 2;
+        }
     }
     
     // Everybody else is access level '1'

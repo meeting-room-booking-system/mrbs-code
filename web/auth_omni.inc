@@ -25,7 +25,7 @@
  * each user. 
  *
  * 
- * in config.inc:
+ * in config.inc.php:
  *
  * $auth["realm"] = "MRBS";    # Or any other string
  * $auth["type"]  = "omni";
@@ -60,33 +60,37 @@ function authValidateUser($user, $pass) { return 1; }
  */
 function authGetUserLevel($user, $lev1_admin)
 {
-	// User not logged in, user level '0'
-	if(!isset($user))
-		return 0;
-	
-	// Check if the user can modify
-		for($i = 0; isset($lev1_admin[$i]); $i++)
-	{
-		if(strcasecmp($user, $lev1_admin[$i]) == 0)
-			return 2;
-	}
-	
-	// Everybody else is access level '1'
-	return 1;
+    // User not logged in, user level '0'
+    if (!isset($user))
+    {
+        return 0;
+    }
+    
+    // Check if the user can modify
+    for($i = 0; isset($lev1_admin[$i]); $i++)
+    {
+        if (strcasecmp($user, $lev1_admin[$i]) == 0)
+        {
+            return 2;
+        }
+    }
+    
+    // Everybody else is access level '1'
+    return 1;
 }
 
 function getUserName()
 {
-	global $REMOTE_USER;
-	return $REMOTE_USER;
+    global $REMOTE_USER;
+    return $REMOTE_USER;
 }
 
 
 # NOT used :
 function getUserPassword()
 {
-	global $PHP_AUTH_PW;
-	return $PHP_AUTH_PW;
+    global $PHP_AUTH_PW;
+    return $PHP_AUTH_PW;
 }
 
 ?>

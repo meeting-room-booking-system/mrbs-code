@@ -1,3 +1,6 @@
+WARNING : this is a development package, don't use it for a production site.
+Some features are still not working. Please see the TODO file for contributors.
+
 Meeting Room Booking System
 http://mrbs.sourceforge.net/
 -------------------------------
@@ -35,8 +38,9 @@ appointments to fill up the calendar and let you play around. (Don't leave
 testdata.php in your web site, though.)
 
 The latest version was tested with PHP 4.3.2, Apache 1.3.28, and either
-MySQL 4.0.14 or PostgreSQL 7.0.3. It should work on just about anything
-that's got PHP4 with MySQL or PostgreSQL support.
+MySQL 4.3.2 or PostgreSQL 7.0.3. It should work on just about anything
+that's got PHP 4.1 with MySQL, PostgreSQL, Oracle, FrontBase,
+Interbase/Firebird and Microsoft SQL Server support.
 
 It should be pretty easy to adjust it to your corporate colours - the file
 mrbs.css is used on every page, as is style.inc. Just fiddle with these until
@@ -51,17 +55,20 @@ See AUTHENTICATION for information about user authentication/passwords.
 -------------
 Requirements:
 -------------
-- PHP4 with MySQL and/or PostgreSQL support
-- MySQL or PostgreSQL
+- PHP 4.1 with MySQL and/or PostgreSQL support
+- base installation of PEAR framework
+- Any database supported by PEAR::MDB database abstraction layer package
+  (currently MySQL, PostgreSQL, Oracle, FrontBase, Interbase/Firebird,
+   Microsoft SQL Server)
 - Any web server that is supported by PHP
 
 Recommended:
 - JavaScript-enabled browser
 - CSS-enabled browser
+- PHP 4.3 (4.3.2 for windows) which already include the complete PEAR base
+  framework
 - PHP module connection to the server (also called SAPI) if you want to use any
   of the basic http authentication schemes provided.
-
-(If you are considering porting MRBS to another database, see README.sqlapi)
 
 ------
 Usage:

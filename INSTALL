@@ -4,39 +4,39 @@
 
 REQUIREMENTS
 ---------------------------------------------------------------------------
-MRBS works with both MySQL and PostgreSQL database systems. You must
-have PHP with support for your chosen database system installed and working
-for this application. See the PHP (www.php.net), MySQL (www.mysql.com), and
-PostgreSQL (www.postgresql.org) sites for more info on setting these up.
-You need to know how to install, secure, run, maintain, and back up your
+MRBS works with MySQL, PostgreSQL, Oracle, FrontBase, Interbase/Firebird and
+Microsoft SQL Server database systems. You must have PHP with support for your
+chosen database system installed and working for this application. See the
+PHP (www.php.net) and your database web site for more info on setting these
+up. You need to know how to install, secure, run, maintain, and back up your
 chosen database system.
 
-No optional PHP packages (other than the database system) are required for
-this application. This version of MRBS was tested with PHP 4.3.2. Older
-versions of PHP4 may work, but PHP3 likely won't.
-
-You can run PHP either as a CGI or with a direct module interface (also called 
-SAPI). These servers include Apache, Microsoft Internet Information Server, 
-Netscape and iPlanet servers. Many other servers have support for ISAPI, the 
+You can run PHP either as a CGI or with a direct module interface (also called
+SAPI). These servers include Apache, Microsoft Internet Information Server,
+Netscape and iPlanet servers. Many other servers have support for ISAPI, the
 Microsoft module interface.
-You'll get better performance with PHP setup as a module.  Not only will you 
+You'll get better performance with PHP setup as a module.  Not only will you
 not have to deal with the CGI performance hit, but you'll be able to use PHP's
 database connection pooling. However, be careful that you don't exceed
 the maximum number of connections allowed to your database; with connection
 pooling PHP/Apache can potentially create a connection from each Apache
-child server to the database. 
-Also many mrbs authentication schemes use basic http authentication. These 
+child server to the database.
+Also many mrbs authentication schemes use basic http authentication. These
 don't work if you run PHP as a CGI.
 
 If you are using PHP as an Apache module, you probably want to ensure that
 the Apache MaxRequestsPerChild is not set to 0, in case of undetected memory
 leaks in PHP or MRBS.
 
-If you use MySQL, versions 3.22.32, 3.23.23, 3.23.53, 4.0.13 and 4.0.14 have 
+This version of MRBS was tested with PHP 4.3.2. Older versions of PHP4 may
+work, but PHP3 won't.
+
+If you use MySQL, versions 3.22.32, 3.23.23, 3.23.53, 4.0.13 and 4.0.14 have
 been tested and reported to work.
 
 If you use PostgreSQL, you need at least version 7.0, and version 7.0.3 has
 been tested and reported to work.
+
 
 FILE UNPACKING
 ---------------------------------------------------------------------------
@@ -49,12 +49,21 @@ For example:
 Unpack the software into a new temporary directory, something like this:
     $ tar -xvzf ~/download/mrbs-1.0.tgz       (or whatever version)
     $ cd mrbs-1.0                             (or whatever version)
+    $ cd web
+    $ tar -xvzf mdb.tgz                       (database wrapper)
+Then you can delete mdb.tgz.
+
+Note 1: Windows users, make sure mdb.tgz extract in the *same* directory and
+		not in a sub directory.
+Note 2: You can use an alternate installation method for the databse wrapper
+	   using the PEAR installer. See PEAR file for more on this.
 
 If you are upgrading from a previous version of MRBS, you should save your
-"config.inc" file so you can compare and update the new file with your
-site-specific changes. Then rename your existing MRBS web server directory.
+"config.inc.php" or "config.inc" file so you can compare and update the new
+file with your site-specific changes. Then rename your existing MRBS web
+server directory.
 For example:
-    $ cp /var/lib/apache/htdocs/mrbs/config.inc config.site.inc
+    $ cp /var/lib/apache/htdocs/mrbs/config.inc.php config.site.inc
     $ mv /var/lib/apache/htdocs/mrbs /var/lib/apache/htdocs/mrbs.old
 
 Now install MRBS by copying the contents of the "web" subdirectory of the
@@ -62,89 +71,131 @@ distribution somewhere your web server can find it.  For example:
     $ cp -r web /var/lib/apache/htdocs/mrbs
 
 DATABASE SETUP
----------------------------------------------------------------------------
-If you are upgrading from MRBS version 0.7 or later, and continuing to
-use MySQL, your database is already set up, so you can skip to the
-Application Setup section.
+
+If you are upgrading from MRBS version already using the the MDB class, and
+continuing to use the same DBMS, your database is already set up, so you can
+skip to the Application Setup section.
+
+Database and tables creation
+----------------------------
 
 For a new install:
 
-You can place the MRBS database tables in an existing database or
-create a new database with the following:
+Before running the installation script, you need to edit the first section of
+mrbs-create.php file ("Database settings") so that the script knows how to
+connect to your database. Here is a list of these settings:
 
-[MySQL]         $ mysqladmin create mrbs
-[PostgreSQL]    $ createdb mrbs
+$dbsys : this is the type of your database. Default is 'mysql', but you can
+use any of the following types:
 
-(This will create a database named "mrbs", but you can use any name.)
+mysql   -> MySQL
+pgsql   -> PostgreSQL
+ibase   -> Interbase/Firebird
+mssql   -> Microsoft SQL Server
+oci8    -> Oracle
+fbsql   -> FrontBase
 
-Create the MRBS tables using the supplied tables.*.sql file:
+$db_host : this is the host name of the database server. If the database
+server and web server are the same machine, use $db_host="localhost".
 
-[MySQL]         $ mysql mrbs < tables.my.sql
-[PostgreSQL]    $ psql -a -f tables.pg.sql mrbs
+$db_port : leave empty if the databse server use its defaukt port.
 
-where "mrbs" is the name of your database (mentioned above).
-This will create all the needed tables.
-You may need to set rights on the tables; for PostgreSQL see "grant.pg.sql".
-If you need to delete the tables, for PostgreSQL see "destroy.pg.sql".
+$db_database : Database name to create. Default to "mrbs", but you can use any
+name.
 
-The tables are now empty and ready for use. If you want to add a few sample
-areas and rooms without going through the Admin function, use this script:
+$db_login/$db_password : here you need to supply a username that has enough
+rights to create a database. See you DBMS documentation.
+If the DBMS driver does not support database creation or if this operation
+requires special database administrator permissions that may not be available
+to you, you have to set $db_create flag to FALSE (see below). In this case,
+supply a username that have enough rights to create tables on the mrbs
+database.
+
+$db_create : if you have to use an existing database, or need to ask someone
+else to create the database, you should set this flag to FALSE.
+
+$db_protocol :  default 'tcp'. With PostgreSQL, you can use 'unix' to
+use Unix Domain Sockets to connect to the database server on the same machine.
+
+
+Now this is as simple as running the following command on your shell:
+
+$ php mrbs_create.php
+
+This will create the database and the tables for you. Alternately you can copy
+mrbs_create.php and mrbs.schema.xml in the same web server directory as mrbs
+and run the command from your browser.
+If you get an error message "Error: Could not copy the new database 
+definition file to the current file" or something like that, check that the 
+account running php (cgi) or your web server have sufficient rights to write
+in mrbs directory. Then delete the mrbs database before running the script
+again.
+
+[NOTE]: The database creation script will create a file mrbs.schema.xml.before. 
+We advise to keep this file somewhere. In the case we may need to update the 
+schema of the database (ie. change the name of one table, add a field), all
+we need to do after editing the xml schema file is executing the same script
+we used to install the database. Provided the script find the previously 
+installed schema file (mrbs.schema.xml.before), it will attemps to install the
+requested changes without affecting the data that was stored in the database
+after the database was installed for the first time.
+
+Note : On some DBMS you may need to set rights on the tables. You should not
+need to do that if you create the tables while connected to the database as
+the same user MRBS will use (the one in config.inc.php), because that account
+will own the tables and have all rights.  However if you create the tables
+with another account, you need to grant rights to the user found in your
+config.inc.php file. Use your DBMS tools to do that or ask for an
+administrator. For PostgreSQL, see "grant.pg.sql". If you need to delete the
+tables, see "destroy.php".
+
+The tables are now empty and ready for use, but don't leave the files 
+mrbs_create.php and mrbs.schema.xml in you web directory. If you want to add 
+a few sample areas and rooms without going through the Admin function, use 
+this script:
 
 [MySQL]         $ mysql mrbs < sample-data.sql
 [PostgreSQL]    $ psql -a -f sample-data.sql mrbs
 
 Substitute the database name you used for "mrbs".
+
+WARNING:
 This script is only for use in a newly initialized database! (It will not
 work properly in a database where the ID counters are greater than 0.)
 Also see the description of testdata.php in the README file.
 
+
 For an upgrade:
 
-The database format changed slightly between 0.6 and 0.7. To change the
-format of your data do:
-
-[MySQL]         $ mysql mrbs < upgrade.my.sql
-
-(This does not apply to PostgreSQL, which was not supported then.)
-Also see the file UPGRADE in the distribution.
+See the file UPGRADE in the distribution.
 
 Maintenance:
 
 Be sure to back up your database regularly.
 For PostgreSQL, be sure to run the "vacuum" command regularly.
-You can clean out old entries from your database using the supplied SQL
-scripts purge.my.sql (for MySQL) and purge.pg.sql (for PostgreSQL). Read
-the comments at the top of the scripts before using them.
+You can clean out old entries from your database using the supplied PHP
+scripts purge.php. Copy purge.php into your web site, run it with
+http://yourhost/mrbs/purge.php - Note : with some browser/OS, you need to
+refresh the page to effectively run the script. (Don't leave purge.php
+in your web site, though). Read the comments at the top of the scripts before
+using them.
 
 APPLICATION SETUP
 ---------------------------------------------------------------------------
-Next, you will need to customize the file "config.inc"...
+Next, you will need to customize the file "config.inc.php"...
 
 If you are upgrading from a previous version of MRBS, use your saved
-copy of "config.inc" as a reference. Do not just use your old config.inc
-file, however, because there changes and new settings.
+copy of "config.inc.php" as a reference. Do not just use your old
+config.inc.php file, however, because there are changes and new settings.
 
-Refer to the comments in the supplied config.inc file for more details.
+Refer to the comments in the supplied config.inc.php file for more details.
 The following sections can be configured:
 
 
 1. Database Settings:
 
-First, select your database system. Define either:
-    $dbsys = "mysql";
-or,
-    $dbsys = "pgsql";
-
-Then define your database connection parameters. Set the values for:
-
-    $db_host =      The hostname that the database server is running on.
-    $db_database =  The name of the database containing the MRBS tables.
-    $db_login =     The database login username
-    $db_password =  The database login password for the above login username
-
-If the database server and web server are the same machine, use 
-$db_host="localhost". Or, with PostgreSQL only, you can use $db_host="" to
-use Unix Domain Sockets to connect to the database server on the same machine.
+Basically, see the section "New install" above, as it is the same settings,
+except for these :
 
 By default, MRBS will use PHP persistent (pooled) database connections,
 for better performance. Depending on your web server and database server
@@ -152,8 +203,7 @@ configuration, it is possible that this will cause MRBS to reach the maximum
 number of connections allowed to your database, since each Apache child
 process may keep a connection open. Then, users will randomly get errors
 when trying connecting to MRBS.  If you would rather use non-persistent
-database connections, uncomment the line in "config.inc" which sets the
-$db_nopersist variable.
+database connections, sets the $db_nopersist variable to TRUE.
 
 
 2. Site Identification:
@@ -166,7 +216,7 @@ displayed in the help file.
     $mrbs_admin_email = "admin_email@your.org";
     $mrbs_company = "Your Company";
 
-Alternately, if you want to display your organization logo, replace the 
+Alternately, if you want to display your organization logo, replace the
 $mrbs_company line like this :
 
 $mrbs_company = "<a href=http://www.your_organization.com/><img src=your_logo.gif border=0></a>";
@@ -199,7 +249,7 @@ with 30 minute intervals:
 To control international preferences for the calendar displays, use
 $weekstarts to change the first day of the week from the default of
 Sunday; use $dateformat to show dates as "Month Day" or "Day Month"
-in the page footers; use $twentyfourhour_format to show dates in 12 or 24 hour 
+in the page footers; use $twentyfourhour_format to show dates in 12 or 24 hour
 format.
 
 
@@ -207,30 +257,30 @@ format.
 
 These settings control:
 
-- the maximum number of repeat entries which can be created at once (a safety 
+- the maximum number of repeat entries which can be created at once (a safety
   feature),
 - the default report time period,
 - the number of search results to return per page,
 - the page refresh rate,
 - the way area/rooms are selected (html list or a drop-down select box),
-- the way entries are displayed in monthly view (start/end slot or brief 
+- the way entries are displayed in monthly view (start/end slot or brief
   description).
 
 
 5. Authentication:
 
 Read the file AUTHENTICATION for information about this section.  By
-default, config.inc uses "ip" authentication, allowing anyone who
+default, config.inc.php uses "ip" authentication, allowing anyone who
 can connect to book rooms, and only allowing localhost to administer
 the system.
 
 
 6. Language:
 
-MRBS supports multiple languages, which can be used at the same time, based on 
-what the client is using. One of the environment variables supplied to PHP is 
-$HTTP_ACCEPT_LANGUAGE, which we use to choose a language file. You can specify 
-the default in config.inc. See the file called LANGUAGE for more info.
+MRBS supports multiple languages, which can be used at the same time, based on
+what the client is using. One of the environment variables supplied to PHP is
+$HTTP_ACCEPT_LANGUAGE, which we use to choose a language file. You can specify
+the default in config.inc.php. See the file called LANGUAGE for more info.
 
 MRBS also uses your OS locale support for certain date/time strings.
 There is some code that tries to figure out what locale should be used
@@ -242,36 +292,37 @@ locale support is installed.
 
 By default, MRBS defines two "meeting types" - internal and external. There
 are a total of 10 types ready to be used, if you assign names to them in
-your config.inc file. Each type has a color, defined in the style sheet.
+your config.inc.php file. Each type has a color, defined in the style sheet.
 
 
 HELP/FAQ File:
 
 Customize site_faq.html if desired.  It contains help that can be tailored
-to your environment. Currently this help is available in english and in french.
+to your environment. Currently this help is available in english and in
+french.
 
 
 SECURITY NOTES!
 ---------------------------------------------------------------------------
-Configure your web server so that users can not obtain the ".inc" files. 
-For example, if a user typed in the URL for the "config.inc" file, they
-would be able to see your database login and password, which is not a good
-thing.  See your web server documentation on how to do this.
+You can configure your web server so that users can not obtain the ".inc"
+files but not essential, since critical files containing your database login
+and password use a ".php" extension like config.inc.php.
+See your web server documentation on how to do this.
 
-There is an Apache .htaccess file included, but Apache might ignore it because 
+There is an Apache .htaccess file included, but Apache might ignore it because
 of the "AllowOverride None" in your httpd.conf. Either change "AllowOverride
 None" to "AllowOverride Limit", create a new <Directory> entry with the
 contents of the .htaccess file in it, or add the contents of the .htaccess
 to httpd.conf where it says "<Files ~ "^\.ht">". And then read the Apache
 docs five or six times, until you know what you just did.
 
-You should protect "config.inc" to only allow the web server to read it.
-For example:   # chown httpd config.inc; chmod 400 config.inc
+You may protect ".inc" files to only allow the web server to read it.
+For example:   # chown httpd auth_nt.inc; chmod 400 auth_nt.inc
 
-The script "testdata.php" is for testing only.  Do not leave it in a
+The script "destroy.php" ,"mrbs_create.php", "purge.php" and
+"testdata.php" are for maintenance/testing only.  Do not leave them in a
 directory accessible to your web server. Anyone running this will add a
-large number of test entries to your database, regardless of
+large number of test entries to your database, destroy entries, regardless of
 authentication, and book all your rooms to people you've never heard of.
 
 $Id$
-

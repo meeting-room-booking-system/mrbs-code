@@ -6,7 +6,7 @@
  * Information Server as the source for user authentication.
  *
  * To use this authentication scheme set the following
- * things in config.inc:
+ * things in config.inc.php:
  *
  *      $auth["realm"]  = "";
  *      $auth["type"]   = "nt";
@@ -55,32 +55,36 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user, $lev1_admin)
 {
-	// User not logged in, user level '0'
-	if(!isset($user))
-		return 0;
-	
-	// Check if the user is can modify
-	for($i = 0; isset($lev1_admin[$i]); $i++)
-	{
-		if(strcasecmp($user, $lev1_admin[$i]) == 0)
-			return 2;
-	}
-	
-	// Everybody else is access level '1'
-	return 1;
+    // User not logged in, user level '0'
+    if (!isset($user))
+    {
+        return 0;
+    }
+    
+    // Check if the user is can modify
+    for($i = 0; isset($lev1_admin[$i]); $i++)
+    {
+        if (strcasecmp($user, $lev1_admin[$i]) == 0)
+        {
+            return 2;
+        }
+    }
+    
+    // Everybody else is access level '1'
+    return 1;
 }
 
 function getUserName()
 {
-	global $AUTH_USER;
-	$AUTH_USER = get_current_user();  
-	return $AUTH_USER;
+    global $AUTH_USER;
+    $AUTH_USER = get_current_user();  
+    return $AUTH_USER;
 
 }
 
 function getUserPassword()
 {
-	return "dummy";
+    return "dummy";
 }
 
 ?>

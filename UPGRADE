@@ -1,12 +1,16 @@
 Upgrade Information for previous releases of MRBS:
 --------------------------------------------------
 
-There was a change to the database schema at version 0.7. See the
-information in INSTALL on using the upgrade.my.sql script.
+There is a change to the database schema in this version of MRBS, this is a
+side effect of the change of database wrapper. Although, naturally, you
+should back up any data you have before using a new version.
 
-There have been no database changes from version 0.7, so your current
-database should work just fine. Although, naturally, you should back up
-any data you have before using a new version.
+Currently this version of mrbs allow to upgrade from a previous version
+starting with mrbs-1-0-final. Previous versions can't be upgraded with this
+script. To change the format of your data do:
+
+[MySQL]         $ mysql mrbs < upgrade.my.sql
++++++++++++++++++++++TODO : upgrade pgsql----------------------------
 
 A change in version 1.0-pre1 might affect the appearance of entries in your
 existing database. Prior versions of MRBS did an extra and unnecessary
@@ -25,5 +29,7 @@ Please apply the upgrade2.my.sql (if using MySQL) or the
 the upgrade2.my.sql (if using PostgreSQL) script, which
 adds a new column to the 'mrbs_repeat' table to support
 "n-weekly" repeats.
+
+Thereafter you can run the upgrade.xx.sql patch.
 
 $Id$

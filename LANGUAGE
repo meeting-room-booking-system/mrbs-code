@@ -15,7 +15,7 @@ change: $vocab["gototoday"] = "Go To Today";
 
 You will then find that MRBS starts to use your language file
 automatically. If you are having trouble getting this to work, see the
-language section of config.inc.
+language section of config.inc.php.
 
 If you would like to complete or improve an existing language file, the
 "checklang.php" script included in the distribution can help. Copy this

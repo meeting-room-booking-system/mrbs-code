@@ -6,7 +6,7 @@
  * authentication.
  *
  * To use this authentication scheme set the following
- * things in config.inc:
+ * things in config.inc.php:
  *
  * $auth["realm"] = "MRBS";    # Or any other string
  * $auth["type"]  = "imap";
@@ -41,8 +41,8 @@ function quoteIMAP($str)
  */
 function authGet($realm)
 {
-	Header("WWW-Authenticate: Basic realm=\"$realm\"");
-	Header("HTTP/1.0 401 Unauthorized");
+    Header("WWW-Authenticate: Basic realm=\"$realm\"");
+    Header("HTTP/1.0 401 Unauthorized");
 }
 
 /* authValidateUser($user, $pass)
@@ -58,40 +58,42 @@ function authGet($realm)
  */
 function authValidateUser($user, $pass)
 {
-	global $auth;
-	global $imap_host;
-	global $imap_port;
-	
-	// Check if we do not have a username/password
-	if(!isset($user) || !isset($pass) || strlen($pass)==0)
-	{
-		authGet($auth["realm"]);
-		return 0;
-	}
-	
-	$error_number = "";
-	$error_string = "";
-	
-	// Connect to IMAP-server
-	$stream = fsockopen( $imap_host, $imap_port, $error_number, $error_string, 15 );
-	$response = fgets( $stream, 1024 );
-	if( $stream ) {
-		$logon_str = "a001 LOGIN \"" . quoteIMAP( $user ) . "\" \"" . quoteIMAP( $pass ) . "\"\r\n";
-		fputs( $stream, $logon_str );
-		$response = fgets( $stream, 1024 );
-		if( substr( $response, 5, 2 ) == 'OK' ) {
-			fputs( $stream, "a001 LOGOUT\r\n" );
-			$response = fgets( $stream, 1024 );
-			return 1;
-		}
-		fputs( $stream, "a001 LOGOUT\r\n" );
-	}
-	
-	// If we failed prompt for username/password
-	authGet($realm);
-	
-	// return failure
-	return 0;
+    global $auth;
+    global $imap_host;
+    global $imap_port;
+    
+    // Check if we do not have a username/password
+    if (!isset($user) || !isset($pass) || strlen($pass)==0)
+    {
+        authGet($auth["realm"]);
+        return 0;
+    }
+    
+    $error_number = "";
+    $error_string = "";
+    
+    // Connect to IMAP-server
+    $stream = fsockopen( $imap_host, $imap_port, $error_number, $error_string, 15 );
+    $response = fgets( $stream, 1024 );
+    if ( $stream ) 
+    {
+        $logon_str = "a001 LOGIN \"" . quoteIMAP( $user ) . "\" \"" . quoteIMAP( $pass ) . "\"\r\n";
+        fputs( $stream, $logon_str );
+        $response = fgets( $stream, 1024 );
+        if ( substr( $response, 5, 2 ) == 'OK' ) 
+        {
+            fputs( $stream, "a001 LOGOUT\r\n" );
+            $response = fgets( $stream, 1024 );
+            return 1;
+        }
+        fputs( $stream, "a001 LOGOUT\r\n" );
+    }
+    
+    // If we failed prompt for username/password
+    authGet($realm);
+    
+    // return failure
+    return 0;
 }
 
 /* authGetUserLevel($user)
@@ -105,19 +107,23 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user, $lev1_admin)
 {
-	// User not logged in, user level '0'
-	if(!isset($user))
-		return 0;
-	
-	// Check if the user is can modify
-	for($i = 0; $lev1_admin[$i]; $i++)
-	{
-		if(strcasecmp($user, $lev1_admin[$i]) == 0)
-			return 2;
-	}
-	
-	// Everybody else is access level '1'
-	return 1;
+    // User not logged in, user level '0'
+    if (!isset($user))
+    {
+        return 0;
+    }
+    
+    // Check if the user is can modify
+    for ($i = 0; $lev1_admin[$i]; $i++)
+    {
+        if (strcasecmp($user, $lev1_admin[$i]) == 0)
+        {
+            return 2;
+        }
+    }
+    
+    // Everybody else is access level '1'
+    return 1;
 }
 
 

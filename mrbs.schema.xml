@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- $Id$ -->
+
+<database>
+
+ <name><variable>database_name</variable></name>
+ <create><variable>database_create</variable></create>
+
+ <table>
+
+  <name>mrbs_area</name>
+
+  <declaration>
+
+   <field>
+    <name>id</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>area_name</name>
+    <type>text</type>
+    <length>30</length>
+   </field>
+
+   <index>
+    <name>id</name>
+    <unique>1</unique>
+    <field>
+     <name>id</name>
+    </field>
+   </index>
+
+  </declaration>
+
+ </table>
+
+ <sequence>
+  <name>mrbs_area_id</name>
+  <start>1</start>
+  <on>
+   <table>mrbs_area</table>
+   <field>id</field>
+  </on>
+ </sequence>
+
+ <table>
+
+  <name>mrbs_entry</name>
+
+  <declaration>
+
+   <field>
+    <name>id</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>start_time</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>end_time</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>entry_type</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>repeat_id</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>room_id</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>1</default>
+   </field>
+
+   <field>
+    <name>timestamp</name>
+    <type>timestamp</type>
+   </field>
+
+   <field>
+    <name>create_by</name>
+    <type>text</type>
+    <length>25</length>
+    <notnull>1</notnull>
+    <default></default>
+   </field>
+
+   <field>
+    <name>name</name>
+    <type>text</type>
+    <length>80</length>
+    <notnull>1</notnull>
+    <default></default>
+   </field>
+
+   <field>
+    <name>type</name>
+    <type>text</type>
+    <length>1</length>
+    <notnull>1</notnull>
+    <default>E</default>
+   </field>
+
+   <field>
+    <name>description</name>
+    <type>text</type>
+   </field>
+
+   <index>
+    <name>id</name>
+    <unique>1</unique>
+    <field>
+     <name>id</name>
+    </field>
+   </index>
+
+   <index>
+    <name>idxStartTime</name>
+    <field>
+     <name>start_time</name>
+     <sorting>ascending</sorting>
+    </field>
+   </index>
+
+   <index>
+    <name>idxEndTime</name>
+    <field>
+     <name>end_time</name>
+     <sorting>ascending</sorting>
+    </field>
+   </index>
+
+  </declaration>
+
+ </table>
+
+ <sequence>
+  <name>mrbs_entry_id</name>
+  <start>1</start>
+  <on>
+   <table>mrbs_entry</table>
+   <field>id</field>
+  </on>
+ </sequence>
+
+ <table>
+
+  <name>mrbs_repeat</name>
+
+  <declaration>
+
+   <field>
+    <name>id</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>start_time</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>end_time</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>rep_type</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>end_date</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>rep_opt</name>
+    <type>text</type>
+    <length>32</length>
+    <notnull>1</notnull>
+    <default></default>
+   </field>
+
+   <field>
+    <name>room_id</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>1</default>
+   </field>
+
+   <field>
+    <name>timestamp</name>
+    <type>timestamp</type>
+   </field>
+
+   <field>
+    <name>create_by</name>
+    <type>text</type>
+    <length>25</length>
+    <notnull>1</notnull>
+    <default></default>
+   </field>
+
+   <field>
+    <name>name</name>
+    <type>text</type>
+    <length>80</length>
+    <notnull>1</notnull>
+    <default></default>
+   </field>
+
+   <field>
+    <name>type</name>
+    <type>text</type>
+    <length>1</length>
+    <notnull>1</notnull>
+    <default>E</default>
+   </field>
+
+   <field>
+    <name>description</name>
+    <type>text</type>
+   </field>
+
+   <field>
+    <name>rep_num_weeks</name>
+    <type>integer</type>
+    <default>0</default>
+   </field>
+
+   <index>
+    <name>id</name>
+    <unique>1</unique>
+    <field>
+     <name>id</name>
+    </field>
+   </index>
+
+  </declaration>
+
+ </table>
+
+ <sequence>
+  <name>mrbs_repeat_id</name>
+  <start>1</start>
+  <on>
+   <table>mrbs_repeat</table>
+   <field>id</field>
+  </on>
+ </sequence>
+
+ <table>
+
+  <name>mrbs_room</name>
+
+  <declaration>
+
+   <field>
+    <name>id</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>area_id</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <field>
+    <name>room_name</name>
+    <type>text</type>
+    <length>25</length>
+    <notnull>1</notnull>
+    <default></default>
+   </field>
+
+   <field>
+    <name>description</name>
+    <type>text</type>
+    <length>60</length>
+   </field>
+
+   <field>
+    <name>capacity</name>
+    <type>integer</type>
+    <notnull>1</notnull>
+    <default>0</default>
+   </field>
+
+   <index>
+    <name>id</name>
+    <unique>1</unique>
+    <field>
+     <name>id</name>
+    </field>
+   </index>
+
+  </declaration>
+
+ </table>
+
+ <sequence>
+  <name>mrbs_room_id</name>
+  <start>1</start>
+  <on>
+   <table>mrbs_room</table>
+   <field>id</field>
+  </on>
+ </sequence>
+
+</database>

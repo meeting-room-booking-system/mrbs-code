@@ -1,28 +1,28 @@
 <?php
-# $Id$
+// $Id$
 
-# This file contains PHP code that specifies language specific strings
-# The default strings come from lang.en, and anything in a locale
-# specific file will overwrite the default. This is an NL Dutch file.
-#
-# Translations provided by: Marc ter Horst
-#
-# This file is PHP code. Treat it as such.
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.en, and anything in a locale
+// specific file will overwrite the default. This is an NL Dutch file.
+//
+// Translations provided by: Marc ter Horst
+//
+// This file is PHP code. Treat it as such.
 
-# The charset to use in "Content-type" header
+// The charset to use in "Content-type" header
 $vocab["charset"]            = "iso-8859-1";
 
-# Used in style.inc
+// Used in style.inc
 $vocab["mrbs"]               = "Vergaderruimte Boekingssysteem";
 
-# Used in functions.inc
+// Used in functions.inc
 $vocab["report"]             = "Rapportage";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Help";
 $vocab["search"]             = "Zoek:";
 $vocab["not_php3"]             = "<H1>WARNING: This probably doesn't work with PHP3</H1>";
 
-# Used in day.php
+// Used in day.php
 $vocab["bookingsfor"]        = "Boekingen voor";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Gebouwen";
@@ -31,13 +31,13 @@ $vocab["dayafter"]           = "Naar Volgende Dag";
 $vocab["gototoday"]          = "Naar Vandaag";
 $vocab["goto"]               = "ga naar";
 
-# Used in trailer.inc
+// Used in trailer.inc
 $vocab["viewday"]            = "Bekijk Dag";
 $vocab["viewweek"]           = "Bekijk Week";
 $vocab["viewmonth"]          = "Bekijk Maand";
 $vocab["ppreview"]           = "Afdruk Voorbeeld";
 
-# Used in edit_entry.php
+// Used in edit_entry.php
 $vocab["addentry"]           = "Boeking Toevoegen";
 $vocab["editentry"]          = "Boeking Wijzigen";
 $vocab["editseries"]         = "Wijzig Reeks";
@@ -81,7 +81,7 @@ $vocab["valid_time_of_day"]  = "valid time of day.";
 $vocab["brief_description"]  = "Brief Description.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 
-# Used in view_entry.php
+// Used in view_entry.php
 $vocab["description"]        = "Omschrijving:";
 $vocab["room"]               = "Kamer:";
 $vocab["createdby"]          = "Aangemaakt door:";
@@ -92,7 +92,7 @@ $vocab["confirmdel"]         = "Weet U zeker\\ndat U deze\\nBoeking wilt verwijd
 $vocab["returnprev"]         = "Terug naar vorige pagina";
 $vocab["invalid_entry_id"]   = "Invalid entry id.";
 
-# Used in edit_entry_handler.php
+// Used in edit_entry_handler.php
 $vocab["error"]              = "Fout";
 $vocab["sched_conflict"]     = "Overlappende Boeking";
 $vocab["conflict"]           = "Er zijn overlappende boekingen";
@@ -100,11 +100,11 @@ $vocab["too_may_entrys"]     = "De door U geselecteerde opties zullen teveel boe
 $vocab["returncal"]          = "Terug naar kalender overzicht";
 $vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access"; 
 
-# Authentication stuff
+// Authentication stuff
 $vocab["accessdenied"]       = "Geen Toegang";
 $vocab["norights"]           = "U heeft geen rechten om deze boeking aan te passen.";
 
-# Used in search.php
+// Used in search.php
 $vocab["invalid_search"]     = "Niet bestaand of ongeldig zoek argument.";
 $vocab["search_results"]     = "Zoek resultaten voor:";
 $vocab["nothing_found"]      = "Geen resultaten voor uw zoek opdracht gevonden.";
@@ -120,7 +120,7 @@ $vocab["search_button"]      = "Zoek";
 $vocab["search_for"]         = "Search For";
 $vocab["from"]               = "From";
 
-# Used in report.php
+// Used in report.php
 $vocab["report_on"]          = "Boekingsoverzicht:";
 $vocab["report_start"]       = "Start datum overzicht:";
 $vocab["report_end"]         = "Eind datum overzicht:";
@@ -141,20 +141,20 @@ $vocab["summary_header"]     = "Totaal aan (geboekte) uren";
 $vocab["total"]              = "Totaal";
 $vocab["submitquery"]        = "Run Report";
 
-# Used in week.php
+// Used in week.php
 $vocab["weekbefore"]         = "Ga naar vorige week";
 $vocab["weekafter"]          = "Ga naar volgende week";
 $vocab["gotothisweek"]       = "Ga naar deze week";
 
-# Used in month.php
+// Used in month.php
 $vocab["monthbefore"]        = "Ga naar vorige maand";
 $vocab["monthafter"]         = "Ga naar volgende maand";
 $vocab["gotothismonth"]      = "Ga naar deze maand";
 
-# Used in {day week month}.php
+// Used in {day week month}.php
 $vocab["no_rooms_for_area"]  = "Nog geen kamers gedefiniëerd voor dit gebouw";
 
-# Used in admin.php
+// Used in admin.php
 $vocab["edit"]               = "Edit";
 $vocab["delete"]             = "Delete";
 $vocab["rooms"]              = "Rooms";
@@ -170,7 +170,7 @@ $vocab["capacity"]           = "Capacity";
 $vocab["norooms"]            = "No rooms.";
 $vocab["administration"]     = "Administration";
 
-# Used in edit_area_room.php
+// Used in edit_area_room.php
 $vocab["editarea"]           = "Edit Area";
 $vocab["change"]             = "Change";
 $vocab["backadmin"]          = "Back to Admin";
@@ -182,21 +182,21 @@ $vocab["not_found"]          = " not found";
 $vocab["update_area_failed"] = "Update area failed: ";
 $vocab["error_area"]         = "Error: area ";
 
-# Used in del.php
+// Used in del.php
 $vocab["deletefollowing"]    = "This will delete the following bookings";
 $vocab["sure"]               = "Are you sure?";
 $vocab["YES"]                = "YES";
 $vocab["NO"]                 = "NO";
 $vocab["delarea"]            = "You must delete all rooms in this area before you can delete it<p>";
 
-# Used in help.php
+// Used in help.php
 $vocab["about_mrbs"]         = "About MRBS";
 $vocab["database"]           = "Database: ";
 $vocab["system"]             = "System: ";
 $vocab["please_contact"]     = "Please contact ";
 $vocab["for_any_questions"]  = "for any questions that aren't answered here.";
 
-# Used in mysql.inc AND pgsql.inc
+// Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatal Error: Failed to connect to database";
 
 ?>

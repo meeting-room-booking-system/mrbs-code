@@ -17,9 +17,9 @@ Bo Kleve has been VERY active lately fixing a lot of bugs.
 Since I'm using the Roxen webserver, I could only get PHP to work as a
 cgi interpreter (for now). Thus authentification cannot be done the
 usual way. I thus wrote a "auth_ext_cookie.ext" module (attached to this
-e-mail) - the "config.inc" and "mrbs.css"  files need the following:
+e-mail) - the "config.inc.php" and "mrbs.css"  files need the following:
 
-config.inc:
+config.inc.php:
 
 $auth[CJ_cookie_name] = "CJ_mrbs_auth_cookie";
 $auth[CJ_cookie_life_time] = 600;

@@ -104,7 +104,10 @@ class Calendar
         global $day;
         global $month;
 
-        if (!isset($weekstarts)) $weekstarts = 0;
+        if (!isset($weekstarts)) 
+        {
+            $weekstarts = 0;
+        }
         $s = "";
         
         $daysInMonth = $this->getDaysInMonth($this->month, $this->year);
@@ -145,25 +148,39 @@ class Calendar
                     $d_week = ($d - 7);
 
                     if ($link == "")
+                    {
                         $s .= $d;
+                    }
                     elseif (preg_match("/day/i", $PHP_SELF))
                     {
                         if (($d == $this->day) and ($this->h))
+                        {
                             $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
+                        }
                         else
+                        {
                             $s .= "<a href=\"$link\">$d</a>";
+                        }
                     }
                     elseif (preg_match("/week/i", $PHP_SELF))
                     {
                         if (($this->day <= $d) && ($this->day > $d_week) && ($this->h))
+                        {
                             $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
+                        }
                         elseif (($this->day < $days_to_highlight) && ($d < $days_to_highlight) && (($day - $daysInMonth) > (-6)) && ($this->month == ($month + 1)) && ($first != 0))
+                        {
                             $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
+                        }
                         else
+                        {
                             $s .= "<a href=\"$link\">$d</a>";
+                        }
                     }
                     elseif (preg_match("/month/i", $PHP_SELF))
+                    {
                         $s .= "<a href=\"$link\">$d</a>";
+                    }
                 }
                 else
                 {

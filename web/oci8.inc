@@ -1,24 +1,32 @@
 <?php
 // $Id$
 
-/* pgsql.inc - Simple PHP database support for PostgreSQL.
+/* oci8.inc.php - Simple PHP database support for Oracle.
    Include this file after database.inc.php.
    This file contains specific DBMS features/commands not handled by MDB
    database wrapper.
  */
 
 
-// Acquire a mutual-exclusion lock on the named table. For portability:
+// Acquire a mutual-exclusion lock on the named table.
+// Prerequisites : The table or view must be in your own schema or you must
+// have the LOCK ANY TABLE system privilege, or you must have any object
+// privilege on the table or view.
+// For portability:
 // This will not lock out SELECTs.
-// It may lock out DELETE/UPDATE/INSERT or not, depending on the implementation.
+// It lock out DELETE/UPDATE/INSERT.
+// A locked table remains locked until you either commit your transaction or
+// roll it back, either entirely or to a savepoint before you locked the table.
 // It will lock out other callers of this routine with the same name argument.
-// It may timeout in 20 seconds and return 0, or may wait forever.
+// Oracle waits until the table is available, locks it, and returns control
+// to you.
 // It returns 1 when the lock has been acquired.
 // Caller must release the lock with sql_mutex_unlock().
 // Caller must not have more than one mutex at any time.
-// Do not mix this with sql_begin()/sql_end() calls.
+// Do not mix this with $mdb->autoCommit()/$mdb->commit() calls.
 //
-// In PostgreSQL, the EXCLUSIVE mode lock excludes all but SELECT.
+// In Oracle, the EXCLUSIVE allows queries on the locked table but
+// prohibits any other activity on it.
 // It does not timeout, but waits forever for the lock.
 function sql_mutex_lock($name)
 {
@@ -43,7 +51,7 @@ function sql_mutex_lock($name)
 function sql_version()
 {
     global $mdb;
-    $v = $mdb->queryOne("select version()");
+    $v = $mdb->queryOne('SELECT version FROM V$INSTANCE');
     return $v;
 }
 
@@ -53,19 +61,24 @@ function sql_version()
  *
  * Generate non-standard SQL to match a string anywhere in a field's value
  * in a case insensitive manner.
- * In PostgreSQL, we can do case insensitive regexp with ~*, but not case
- * insensitive LIKE matching.
- * Quotemeta escapes everything we need except for single quotes.
+ * In Oracle, case is significant in all conditions comparing character
+ * expressions including the LIKE and equality (=) operators. You can use the
+ * UPPER function to perform a case-insensitive match, as in this condition:
+ * UPPER(ename) LIKE 'SM%'
  *
  * @param    string    $fieldname    field to apply regexp
  * @param    string    $s            un-escaped/un-slashed string to search for
  * @return   string    fieldname and escaped/slashed string
+ * @todo     This function have not been tested
  */
 function sql_syntax_caseless_contains($fieldname, $s)
 {
-    $s = quotemeta($s);
+    $s = strtoupper($s);
+    $s = str_replace("\\", "\\\\", $s);
+    $s = str_replace("%", "\\%", $s);
+    $s = str_replace("_", "\\_", $s);
     $s = str_replace("'", "''", $s);
-    return " $fieldname ~* '$s' ";
+    return " UPPER($fieldname) LIKE '%$s%' ESCAPE '\'";
 }
 
 ?>

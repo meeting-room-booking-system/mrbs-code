@@ -1,8 +1,102 @@
-README.sqlapi     - Database wrappers for MRBS                     2001-01-15
+README.sqlapi     - Database wrappers for MRBS                     2003-09-13
 -----------------------------------------------------------------------------
-This is a simple set of PHP database call wrapper routines, currently
-implemented for MySQL (>= 3.22) and PostgreSQL (>= 7.0). It was written
-for MRBS but may be useful in other applications.
+MRBS use PEAR::MDB 1.1.3, an external database abstraction layer.
+
+PEAR MDB is a merge of the PEAR DB and Metabase php database abstraction layers.
+
+It provides a common API for all support RDBMS. The main difference to most
+other DB abstraction packages is that MDB goes much further to ensure
+portability. Among other things MDB features:
+
+* An OO-style query API
+* A DSN (data source name) or array format for specifying database servers
+* Datatype abstraction and on demand datatype conversion
+* Portable error codes
+* Sequential and non sequential row fetching as well as bulk fetching
+* Ordered array and associative array for the fetched rows
+* Prepare/execute (bind) emulation
+* Sequence emulation
+* Replace emulation
+* Limited Subselect emulation
+* Row limit support
+* Transactions support
+* Large Object support
+* Index/Unique support
+* Module Framework to load advanced functionality on demand
+* Table information interface
+* RDBMS management methods (creating, dropping, altering)
+* RDBMS independent xml based schema definition management
+* Altering of a DB from a changed xml schema
+* Reverse engineering of xml schemas from an existing DB (currently only MySQL)
+* Full integration into the PEAR Framework
+* Wrappers for the PEAR DB and Metabase APIs
+* PHPDoc API documentation
+
+Currently supported RDBMS:
+MySQL
+PostGreSQL
+Oracle
+Frontbase
+Querysim
+Interbase
+Firebird
+MSSQL
+Other soon to follow.
+
+MDB is a package that allows the developers to write database applications in
+PHP that are independent of the DBMS (DataBase Management System).
+The steps that developers have to take to write MDB based applications are
+identical to those that are taken while using the set of native commands that
+are used to talk to each DBMS directly. The main advantage of MDB is that
+developers only need to learn and use one set of commands to implement
+applications that may run with many different DBMS.
+
+Why another database class?
+Often, web projects are added to existing IT infrastructures, where the client
+already made a choice of what RDBMS (relational database management system)
+to work with. Even if that is not the case different budgets might affect
+what database you chose for deployment. Finally, you as the developer simply
+might prefer not to lock yourself in with a specific vendor. So far this
+meant to keep multiple versions for each supported database or giving up more
+performance and ease of use than necessary: Enter PEAR MDB.
+MDB is a database abstraction layer that aims to make writing RDBMS
+independent PHP application development a straightforward process. Most other
+so called database abstraction layers for PHP only provide a common API for
+all supported databases and only very limited abstraction (mostly only for
+sequences). MDB on the other hand can be used to abstract all data being send
+and received from the database. Even database schemas can be defined in a
+RDBMS independent format. But it does this while retaining a high level of
+performance and ease of use. This was achieved by closely examining two
+popular database abstraction layers, PEAR DB and Metabase, and merging them.
+But during the merging the opportunity was also used to clean up their merged
+APIs as well as any performance hindering design patterns
+
+What does MDB do for you?
+MDB combines most of the features of PEAR DB and Metabase. Actually, the only 
+feature that is missing is PEAR DB's feature of returning an object as a 
+result set. This feature was dropped because the feature's usage never became 
+abundant but the performance penalty was quite apparent. A lot of development 
+time was spend on making the API as intuitive as possible as well. Finally, 
+MDB provides this functionality at a very high level of performance that is at 
+least as fast as PEAR DB and much faster than Metabase. Here is the list of 
+the most important features: 
+
+- OO-style API
+- prepared queries emulation
+- full data type abstraction for all data passed to and from the database 
+  (including LOB support)
+- transaction support
+- database/table/index/sequence creation/dropping/altering
+- RDBMS independent database schema management
+- Integrated into the PEAR framework (PEAR Installer, PEAR error handling etc.)
+
+----------------------------------------------------------------------------
+Any contibutor/developer having to add/change MRBS code dealing with the
+database, either for the official code or for personal use should use this
+API for consistency. Documentation can be found at:
+http://pear.php.net/manual/en/package.database.mdb.php
+More information available at: http://www.backendmedia.com/MDB/docs/
+Unfortunately you will have to read both, as neither is complete.
 
 This package supports one single connection to a database, because the
 database connection handle is stored in a global variable. It supports
@@ -22,35 +116,51 @@ connections, set $db_nopersist as described below.
 
 -----------------------------------------------------------------------------
 
-To use this package, include either "mysql.inc" or "pgsql.inc" after
+As this database wrapper does not handled all functions used in mrbs, to use
+this package you have to include your database specific phptype.inc file after
 defining the following variables:
      $db_host = The hostname of the database server, or "localhost"
+     $db_port = The port of the database server if not the default port
      $db_login = The username to use when connecting to the database
      $db_password = The database account password
      $db_database = The database name
+     $db_nopersist = FALSE to use persistent connections
+     $db_protocol = The communication protocol to use (i.e tcp, unix etc.)
 Optionally, you can define:
-     $db_nopersist = 1;
+     $db_nopersist = TRUE;
 if you do not want to use persistent connections.
-
-If using PostgreSQL, and the database server is on the same host as the web
-server, you can specify $db_host="localhost" to use TCP, or $db_host="" to
-use Unix Domain Sockets. Generally this won't make much difference, but if
-your server runs without the -i option, it will only accept Unix Domain
-Socket connections, so you must use $db_host="".
 
 After your script includes the file, it will be connected to the database.
 If an error occurs while trying to connect, a message will be output
 followed by a PHP exit. (Failure to connect to the database is the only
 reason the functions defined here will output an error message and exit.)
 
-The way MRBS uses this is to define a configuration file config.inc with
+The way MRBS uses this is to define a configuration file config.inc.php with
 the above variables plus:
-     $dbsys = "pgsql";  //  or:     $dbsys = "mysql";
+     $dbsys = "pgsql";  //  or "mysql" , "oci8" and so on.
 Then, each PHP script which wants to connect to the database starts with:
-     include "config.inc";
+     include "config.inc.php";
      include "$dbsys.inc";
-If you do this, be sure the web server will not serve config.inc to
-clients, for security reasons.
+
+
+-----------------------------------------------------------------------------
+
+Note for MRBS developer to create the mdb.tgz file.
+
+The MDB package is not designed to be unpacked in an application directory,
+but through the PEAR Package Manager (PPM) to install it into the PEAR 
+framework. These packages are installed under the PEAR directory into the PHP
+directory. Then they are available for all others php scripts.
+Even if the installation through PPM is easy, some users may find the 
+installation overload to install PEAR successfully a pain, so this is not the
+default installation.
+To build the mdb.tgz with all needed files, you have to install MDB through PPM
+before. Then in /php/PEAR/ directory, you have to pack :
+
+- PEAR.php
+- MDB.php
+- MDB directory
+- XML directory
 
 -----------------------------------------------------------------------------
 Notes on improving SQL portability:
@@ -66,7 +176,7 @@ Notes on improving SQL portability:
 SQL-92 standard things to avoid because they cause trouble in MySQL:
   + Double quoted identifiers: SELECT "MY COLUMN" from "MY TABLE"...
   + The string concatenation operator ||
-  + Subselects
+  + Subselects (although MDB provide an emulation function for this)
 
 SQL-92 standard things to avoid because they cause trouble in PostgreSQL:
   + Outer joins.
@@ -87,111 +197,19 @@ database system):
     if double-quoted in SQL statements, but MySQL doesn't like that.
     Changing the column name would break existing databases, and it turns
     out both PostgreSQL and MySQL accept this, so it has been kept.
-  + Auto-commit is assumed. The database wrappers have begin/end calls to
+  + Auto-commit is assumed. The database wrappers have
+    autoCommit(FALSE)/commit() calls to
     bracket transactions, but MRBS generally uses them only to improve
     performance with grouped inserts/deletes/updates. It is assumed that
     a single insert/delete/update SQL statement commits right away. If
-    a database doesn't implement this, it may be possible to incorporate
-    this into sql_command(), which is used for all data modification.
+    a database doesn't implement this, the MDB wrapper take care of it.
   + Portable use of auto-incrementing fields (PostgreSQL SERIAL, MySQL
-    AUTO_INCREMENT) requires that:
-      * Only one auto-increment field allowed per table; must be primary key.
-      * Use sql_insert_id() to retrieve the value after INSERT.
-      * Don't assume the value will either be MAX(field)+1, like MySQL,
-        or always incremented, like PostgreSQL. These can be different
-        when records have been deleted.
+    AUTO_INCREMENT) does not requires anything, as MDB handle sequence
+    automatically.
 
 -----------------------------------------------------------------------------
 
 The database-independent wrapper functions are documented here:
-
-sql_command($sql)
-  Execute a non-SELECT SQL command (for example: insert, update, delete).
-  Returns the number of tuples affected if OK (a number >= 0).
-  Returns -1 on error; use sql_error() to get the error message.
-
-sql_query($sql)
-  Execute an SQL query. Returns a database-dependent result handle, which
-  should be passed back to sql_row() or sql_row_keyed() to get the results.
-  If sql_row() or sql_row_keyed() isn't used to read all rows (plus 1), you
-  must call sql_free() to free the result structure.
-  Returns 0 on error; use sql_error() to get the error message.
-
-sql_row($result, $rownumber)
-  Return a row from a result. The first row is row number 0.
-  The row is returned as an array with index 0=first column, etc.
-  When called with i >= number of rows in the result, this frees up the
-  results structure and returns 0. This is designed to be used in a loop
-  like this to retrieve all the rows:
-
-    for ($i = 0; (($row = sql_row($r, $i)); $i++) { ... process the row ... }
-
-  When used this way, there is no need to call sql_free($result). But if
-  rows are accessed in other way, sql_free() must be called when you are
-  done with the result handle.
-
-sql_row_keyed($result, $rownumber)
-  Return a row from a result. The first row is row number 0.
-  The row is returned as an associative array with column (field) names as
-  the indexes. (PHP also makes numeric indexes for the same data.)
-  When called with i >= number of rows in the result, this frees up the
-  results structure and returns 0. This is designed to be used in a loop
-  like this to retrieve all the rows:
-
-    for ($i = 0; (($row = sql_row_keyed($r, $i)); $i++) { ... }
-
-  When used this way, there is no need to call sql_free($result). But if
-  rows are accessed in other ways, sql_free() must be called when you are
-  done with the result handle.
-  NOTE: You should explicitly name each column in your SQL statement which
-  is not a simple field name, because databases differ in how they assume
-  a default name. For example, don't use sql_row_keyed() on a query
-  like: SELECT name, COUNT(*) FROM ...
-  Instead use: SELECT name, COUNT(*) AS totals FROM ...
-  so you can reliably refer to the count as row["totals"].
-
-sql_count($result)
-  Return the number of rows returned by a result handle from sql_query().
-
-sql_query1($sql)
-  Execute an SQL query which should return a single non-negative number value.
-  Returns the value of the single column in the single row of the query
-  result, or -1 on error.
-  This is a short-cut alternative to sql_query(), good for use with count(*)
-  and similar queries. Error checking is limited (caller cannot tell if
-  an error occurred or no values were returned), but it is easier to use.
-
-sql_free($result)
-  Free a result handle $result, returned by a previous call to sql_query().
-  You must call this if you do not use sql_row() or sql_row_keyed() to fetch
-  all rows of the query result and then call it once more. See sql_row() for
-  more information.
-
-sql_insert_id($table, $fieldname)
-  Return the value of an autoincrement/serial field from the last insert.
-  This must be called right after the insert on that table. The $fieldname
-  is the name of the autoincrement or serial field in the table. The
-  return result will be correct even if other processes are updating the
-  database at the same time.
-  NOTE: To make this work with different DBMS's, the field name must be
-  specified, and it must name the only autoincrement/serial field in the
-  row inserted by the most recent INSERT.
-
-sql_error()
-  Return the text of the last error message. Only call this after an
-  error return from sql_query() or sql_command() - it is not reliable
-  as an indicator if an error did in fact occur.
-
-sql_begin()
-  Begin a transaction, if the database supports it. This is used to
-  improve performance for multiple insert/delete/updates on databases
-  which support transactions, and using it is not required. There is
-  no support for rollback, because not all databases can do it. Do
-  not attempt to have both sql_begin() and sql_mutex_lock() active since
-  then both may be implemented with a shared underlying mechanism.
-
-sql_commit()
-  Commit (end) a transaction. See sql_begin().
 
 sql_mutex_lock($name)
   Acquire a mutual-exclusion lock on the named table. For portability:
@@ -226,14 +244,6 @@ statements using non-standard features. Each returns a portion of SQL (with
 leading and trailing spaces) which implements the named non-standard feature
 for the selected database.
 
-sql_syntax_limit($count, $offset)
-  Generate non-standard SQL for LIMIT clauses, to make the query return
-  no more than $count records, starting at position $offset (basis 0).
-
-sql_syntax_timestamp_to_unix($fieldname)
-  Generate non-standard SQL to output a TIMESTAMP as a Unix time_t. The
-  argument must be the name of a timestamp field.
-
 sql_syntax_caseless_contains($fieldname, $s)
   Generate a non-standard SQL predicate clause which will be true if the
   string $s is contained anywhere in the named field, using case insensitive
@@ -241,13 +251,6 @@ sql_syntax_caseless_contains($fieldname, $s)
   on the database system. It handles all quoting on the $s argument of the
   characters needed by the selected method, so don't call this with an
   argument which has already been "magic quoted".
-
-Example usage:
-  $sql = "SELECT * FROM mytable ORDER BY id" . sql_syntax_limit(100,20);
-With PostgreSQL this gives you:
-  $sql = "SELECT * FROM mytable ORDER BY id LIMIT 100 OFFSET 20";
-With MySQL this gives you:
-  $sql = "SELECT * FROM mytable ORDER BY id LIMIT 20,100";
 
 -----------------------------------------------------------------------------
 

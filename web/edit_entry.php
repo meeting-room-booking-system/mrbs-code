@@ -1,152 +1,171 @@
 <?php
-# $Id$
+// $Id$
 
 require_once('grab_globals.inc.php');
-include "config.inc";
+include "config.inc.php";
 include "functions.inc";
+require_once("database.inc.php");
 include "$dbsys.inc";
 include "mrbs_auth.inc";
 
 global $twentyfourhour_format;
 
-#If we dont know the right date then make it up
-if(!isset($day) or !isset($month) or !isset($year))
+//If we dont know the right date then make it up
+if (!isset($day) or !isset($month) or !isset($year))
 {
-	$day   = date("d");
-	$month = date("m");
-	$year  = date("Y");
+    $day   = date("d");
+    $month = date("m");
+    $year  = date("Y");
 }
-if(empty($area))
-	$area = get_default_area();
-if(!isset($edit_type))
-	$edit_type = "";
-
-if(!getAuthorised(getUserName(), getUserPassword(), 1))
+if (empty($area))
 {
-	showAccessDenied($day, $month, $year, $area);
-	exit;
+    $area = get_default_area();
+}
+if (!isset($edit_type))
+{
+    $edit_type = "";
+}
+if (!getAuthorised(getUserName(), getUserPassword(), 1))
+{
+    showAccessDenied($day, $month, $year, $area);
+    exit;
 }
 
-# This page will either add or modify a booking
+/* This page will either add or modify a booking
 
-# We need to know:
-#  Name of booker
-#  Description of meeting
-#  Date (option select box for day, month, year)
-#  Time
-#  Duration
-#  Internal/External
+   We need to know:
+    Name of booker
+    Description of meeting
+    Date (option select box for day, month, year)
+    Time
+    Duration
+    Internal/External
 
-# Firstly we need to know if this is a new booking or modifying an old one
-# and if it's a modification we need to get all the old data from the db.
-# If we had $id passed in then it's a modification.
+   Firstly we need to know if this is a new booking or modifying an old one
+   and if it's a modification we need to get all the old data from the db.
+   If we had $id passed in then it's a modification.
+*/
 if (isset($id))
 {
-	$sql = "select name, create_by, description, start_time, end_time - start_time,
-	        type, room_id, entry_type, repeat_id from mrbs_entry where id=$id";
-	
-	$res = sql_query($sql);
-	if (! $res) fatal_error(1, sql_error());
-	if (sql_count($res) != 1) fatal_error(1, $vocab['entryid'] . $id . $vocab['not_found']);
-	
-	$row = sql_row($res, 0);
-	sql_free($res);
-# Note: Removed stripslashes() calls from name and description. Previous
-# versions of MRBS mistakenly had the backslash-escapes in the actual database
-# records because of an extra addslashes going on. Fix your database and
-# leave this code alone, please.
-	$name        = $row[0];
-	$create_by   = $row[1];
-	$description = $row[2];
-	$start_day   = strftime('%d', $row[3]);
-	$start_month = strftime('%m', $row[3]);
-	$start_year  = strftime('%Y', $row[3]);
-	$start_hour  = strftime('%H', $row[3]);
-	$start_min   = strftime('%M', $row[3]);
-	$duration    = $row[4];
-	$type        = $row[5];
-	$room_id     = $row[6];
-	$entry_type  = $row[7];
-	$rep_id      = $row[8];
-	
-	if($entry_type >= 1)
-	{
-		$sql = "SELECT rep_type, start_time, end_date, rep_opt, rep_num_weeks
-		        FROM mrbs_repeat WHERE id=$rep_id";
-		
-		$res = sql_query($sql);
-		if (! $res) fatal_error(1, sql_error());
-		if (sql_count($res) != 1) fatal_error(1, $vocab['repeat_id'] . $rep_id . $vocab['not_found']);
-		
-		$row = sql_row($res, 0);
-		sql_free($res);
-		
-		$rep_type = $row[0];
-		
-		if($edit_type == "series")
-		{
-			$start_day   = (int)strftime('%d', $row[1]);
-			$start_month = (int)strftime('%m', $row[1]);
-			$start_year  = (int)strftime('%Y', $row[1]);
-			
-			$rep_end_day   = (int)strftime('%d', $row[2]);
-			$rep_end_month = (int)strftime('%m', $row[2]);
-			$rep_end_year  = (int)strftime('%Y', $row[2]);
-			
-			switch($rep_type)
-			{
-				case 2:
-				case 6:
-					$rep_day[0] = $row[3][0] != "0";
-					$rep_day[1] = $row[3][1] != "0";
-					$rep_day[2] = $row[3][2] != "0";
-					$rep_day[3] = $row[3][3] != "0";
-					$rep_day[4] = $row[3][4] != "0";
-					$rep_day[5] = $row[3][5] != "0";
-					$rep_day[6] = $row[3][6] != "0";
+    $sql = "SELECT  name, create_by, description, start_time, end_time -
+                    start_time, type, room_id, entry_type, repeat_id 
+            FROM    mrbs_entry
+            WHERE   id=$id";
 
-					if ($rep_type == 6)
-					{
-						$rep_num_weeks = $row[4];
-					}
-					
-					break;
-				
-				default:
-					$rep_day = array(0, 0, 0, 0, 0, 0, 0);
-			}
-		}
-		else
-		{
-			$rep_type     = $row[0];
-			$rep_end_date = strftime('%A %d %B %Y',$row[2]);
-			$rep_opt      = $row[3];
-		}
-	}
+    $types = array('text', 'text', 'text', 'integer', 'integer', 'text',
+                   'integer', 'integer', 'integer');
+    $row = $mdb->queryRow($sql, $types);
+    if (MDB::isError($row))
+    {
+        fatal_error(1, $row->getMessage() . "\n" . $row->getUserInfo() . "\n");
+    }
+    if (NULL == $row)
+    {
+        fatal_error(1, $vocab['entryid'] . $id . $vocab['not_found']);
+    }
+    
+/* Note: Removed stripslashes() calls from name and description. Previous
+   versions of MRBS mistakenly had the backslash-escapes in the actual database
+   records because of an extra addslashes going on. Fix your database and
+   leave this code alone, please.
+*/
+    $name        = $row[0];
+    $create_by   = $row[1];
+    $description = $row[2];
+    $start_day   = strftime('%d', $row[3]);
+    $start_month = strftime('%m', $row[3]);
+    $start_year  = strftime('%Y', $row[3]);
+    $start_hour  = strftime('%H', $row[3]);
+    $start_min   = strftime('%M', $row[3]);
+    $duration    = $row[4];
+    $type        = $row[5];
+    $room_id     = $row[6];
+    $entry_type  = $row[7];
+    $rep_id      = $row[8];
+
+    if ($entry_type >= 1)
+    {
+        $sql = "SELECT  rep_type, start_time, end_date, rep_opt, rep_num_weeks
+                FROM    mrbs_repeat 
+                WHERE   id=$rep_id";
+
+        $types = array('integer', 'integer', 'integer', 'text', 'integer');
+        $row = $mdb->queryRow($sql, $types);
+        if (MDB::isError($row))
+        {
+            fatal_error(1, $row->getMessage() . "\n" . $row->getUserInfo() . "\n");
+        }
+        if (NULL == $row)
+        {
+            fatal_error(1, $vocab['entryid'] . $id . $vocab['not_found']);
+        }
+
+        $rep_type = $row[0];
+
+        if ($edit_type == "series")
+        {
+            $start_day   = (int)strftime('%d', $row[1]);
+            $start_month = (int)strftime('%m', $row[1]);
+            $start_year  = (int)strftime('%Y', $row[1]);
+
+            $rep_end_day   = (int)strftime('%d', $row[2]);
+            $rep_end_month = (int)strftime('%m', $row[2]);
+            $rep_end_year  = (int)strftime('%Y', $row[2]);
+
+            switch ($rep_type)
+            {
+                case 2:
+                case 6:
+                    $rep_day[0] = $row[3][0] != "0";
+                    $rep_day[1] = $row[3][1] != "0";
+                    $rep_day[2] = $row[3][2] != "0";
+                    $rep_day[3] = $row[3][3] != "0";
+                    $rep_day[4] = $row[3][4] != "0";
+                    $rep_day[5] = $row[3][5] != "0";
+                    $rep_day[6] = $row[3][6] != "0";
+
+                    if ($rep_type == 6)
+                    {
+                        $rep_num_weeks = $row[4];
+                    }
+
+                    break;
+
+                default:
+                    $rep_day = array(0, 0, 0, 0, 0, 0, 0);
+            }
+        }
+        else
+        {
+            $rep_type     = $row[0];
+            $rep_end_date = strftime('%A %d %B %Y',$row[2]);
+            $rep_opt      = $row[3];
+        }
+    }
 }
 else
 {
-	# It is a new booking. The data comes from whichever button the user clicked
-	$edit_type   = "series";
-	$name        = "";
-	$create_by   = getUserName();
-	$description = "";
-	$start_day   = $day;
-	$start_month = $month;
-	$start_year  = $year;
-	$start_hour  = $hour;
-	$start_min   = $minute;
-	$duration    = 60 * 60;
-	$type        = "I";
-	$room_id     = $room;
+    // It is a new booking. The data comes from whichever button the user clicked
+    $edit_type   = "series";
+    $name        = "";
+    $create_by   = getUserName();
+    $description = "";
+    $start_day   = $day;
+    $start_month = $month;
+    $start_year  = $year;
+    $start_hour  = $hour;
+    $start_min   = $minute;
+    $duration    = 60 * 60;
+    $type        = "I";
+    $room_id     = $room;
     unset($id);
-	
-	$rep_id        = 0;
-	$rep_type      = 0;
-	$rep_end_day   = $day;
-	$rep_end_month = $month;
-	$rep_end_year  = $year;
-	$rep_day       = array(0, 0, 0, 0, 0, 0, 0);
+
+    $rep_id        = 0;
+    $rep_type      = 0;
+    $rep_end_day   = $day;
+    $rep_end_month = $month;
+    $rep_end_year  = $year;
+    $rep_day       = array(0, 0, 0, 0, 0, 0, 0);
 }
 
 // Remove "Undefined variable" notice
@@ -157,12 +176,12 @@ if (!isset($rep_num_weeks))
 
 toTimeString($duration, $dur_units);
 
-#now that we know all the data to fill the form with we start drawing it
+//now that we know all the data to fill the form with we start drawing it
 
-if(!getWritable($create_by, getUserName()))
+if (!getWritable($create_by, getUserName()))
 {
-	showAccessDenied($day, $month, $year, $area);
-	exit;
+    showAccessDenied($day, $month, $year, $area);
+    exit;
 }
 
 print_header($day, $month, $year, $area);
@@ -173,22 +192,22 @@ print_header($day, $month, $year, $area);
 // do a little form verifying
 function validate_and_submit ()
 {
-  // null strings and spaces only strings not allowed
-  if(/(^$)|(^\s+$)/.test(document.forms["main"].name.value))
+  // null strings and 'spaces only' strings not allowed
+  if (/(^$)|(^\s+$)/.test(document.forms["main"].name.value))
   {
-    alert ( "<?php echo $vocab['you_have_not_entered'] . '\n' . $vocab['brief_description'] ?>");
+    alert ("<?php echo $vocab['you_have_not_entered'] . '\n' . $vocab['brief_description'] ?>");
     return false;
   }
-  
+
   h = parseInt(document.forms["main"].hour.value);
   m = parseInt(document.forms["main"].minute.value);
-  
-  if(h > 23 || m > 59)
+
+  if (h > 23 || m > 59)
   {
     alert ("<?php echo $vocab['you_have_not_entered'] . '\n' . $vocab['valid_time_of_day'] ?>");
     return false;
   }
-  
+
   i1 = parseInt(document.forms["main"].id.value);
   i2 = parseInt(document.forms["main"].rep_id.value);
   n = parseInt(document.forms["main"].rep_num_weeks.value);
@@ -197,10 +216,10 @@ function validate_and_submit ()
     alert("<?php echo $vocab['you_have_not_entered'] . '\n' . $vocab['useful_n-weekly_value'] ?>");
     return false;
   }
-  
+
   // would be nice to also check date to not allow Feb 31, etc...
   document.forms["main"].submit();
-  
+
   return true;
 }
 </SCRIPT>
@@ -243,9 +262,9 @@ if (!$twentyfourhour_format)
 $units = array("minutes", "hours", "days", "weeks");
 while (list(,$unit) = each($units))
 {
-	echo "<OPTION VALUE=$unit";
-	if ($dur_units == $vocab[$unit]) echo " SELECTED";
-	echo ">$vocab[$unit]";
+    echo "<OPTION VALUE=$unit";
+    if ($dur_units == $vocab[$unit]) echo " SELECTED";
+    echo ">$vocab[$unit]";
 }
 ?>
     </SELECT>
@@ -256,24 +275,29 @@ while (list(,$unit) = each($units))
 <tr><td class=CR><b><?php echo $vocab["rooms"] ?></b></td>
   <td class=CL valign=top><table><tr><td><select name="rooms[]" multiple>
   <?php
-        # Determine the area id of the room in question first
-        $sql = "select area_id from mrbs_room where id=$room_id";
-        $res = sql_query($sql);
-        $row = sql_row($res, 0);
-        $area_id = $row[0];
-        # then select the rooms in that area
-	$sql = "select id, room_name from mrbs_room where area_id=$area_id order by room_name";
-   	$res = sql_query($sql);
+        // Determine the area id of the room in question first
+        $sql = "SELECT  area_id 
+                FROM    mrbs_room 
+                WHERE   id=$room_id";
+        $area_id = $mdb->getOne($sql, 'integer');
+        // then select the rooms in that area
+    $sql = "SELECT      id, room_name 
+            FROM        mrbs_room 
+            WHERE       area_id=$area_id 
+            ORDER BY    room_name";
+    $types = array('integer', 'text');
+    $res = $mdb->query($sql, $types);
 
-   
-   	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
-   	{
-		$selected = "";
-		if ($row[0] == $room_id) {
-			$selected = "SELECTED";
-		}
-		echo "<option $selected value=\"".$row[0]."\">".$row[1];
-   	}
+    while ($row = $mdb->fetchInto($res))
+    {
+        $selected = "";
+        if ($row[0] == $room_id) 
+        {
+            $selected = "SELECTED";
+        }
+        echo "<option $selected value=\"".$row[0]."\">".$row[1];
+    }
+    $mdb->freeResult($res);
   ?>
   </select></td><td><?php echo $vocab["ctrl_click"] ?></td></tr></table>
     </td></tr>
@@ -283,26 +307,31 @@ while (list(,$unit) = each($units))
 <?php
 for ($c = "A"; $c <= "J"; $c++)
 {
-	if (!empty($typel[$c]))
-		echo "<OPTION VALUE=$c" . ($type == $c ? " SELECTED" : "") . ">$typel[$c]\n";
+    if (!empty($typel[$c]))
+    {
+        echo "<OPTION VALUE=$c" . ($type == $c ? " SELECTED" : "") . ">$typel[$c]\n";
+    }
 }
 ?></SELECT></TD></TR>
 
-<?php if($edit_type == "series") { ?>
+<?php if ($edit_type == "series") 
+{ ?>
 
 <TR>
  <TD CLASS=CR><B><?php echo $vocab["rep_type"]?></B></TD>
  <TD CLASS=CL>
 <?php
 
-for($i = 0; isset($vocab["rep_type_$i"]); $i++)
+for ($i = 0; isset($vocab["rep_type_$i"]); $i++)
 {
-	echo "<INPUT NAME=\"rep_type\" TYPE=\"RADIO\" VALUE=\"" . $i . "\"";
-	
-	if($i == $rep_type)
-		echo " CHECKED";
-	
-	echo ">" . $vocab["rep_type_$i"] . "\n";
+    echo "<INPUT NAME=\"rep_type\" TYPE=\"RADIO\" VALUE=\"" . $i . "\"";
+
+    if ($i == $rep_type)
+    {
+        echo " CHECKED";
+    }
+
+    echo ">" . $vocab["rep_type_$i"] . "\n";
 }
 
 ?>
@@ -318,13 +347,16 @@ for($i = 0; isset($vocab["rep_type_$i"]); $i++)
  <TD CLASS=CR><B><?php echo $vocab["rep_rep_day"]?></B> <?php echo $vocab["rep_for_weekly"]?></TD>
  <TD CLASS=CL>
 <?php
-# Display day name checkboxes according to language and preferred weekday start.
+// Display day name checkboxes according to language and preferred weekday start.
 for ($i = 0; $i < 7; $i++)
 {
-	$wday = ($i + $weekstarts) % 7;
-	echo "<INPUT NAME=\"rep_day[$wday]\" TYPE=CHECKBOX";
-	if ($rep_day[$wday]) echo " CHECKED";
-	echo ">" . day_name($wday) . "\n";
+    $wday = ($i + $weekstarts) % 7;
+    echo "<INPUT NAME=\"rep_day[$wday]\" TYPE=CHECKBOX";
+    if ($rep_day[$wday]) 
+    {
+        echo " CHECKED";
+    }
+    echo ">" . day_name($wday) . "\n";
 }
 ?>
  </TD>
@@ -334,27 +366,32 @@ for ($i = 0; $i < 7; $i++)
 }
 else
 {
-	$key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
-	
-	echo "<tr><td class=\"CR\"><b>$vocab[rep_type]</b></td><td class=\"CL\">$vocab[$key]</td></tr>\n";
-	
-	if(isset($rep_type) && ($rep_type != 0))
-	{
-		$opt = "";
-		if ($rep_type == 2)
-		{
-			# Display day names according to language and preferred weekday start.
-			for ($i = 0; $i < 7; $i++)
-			{
-				$wday = ($i + $weekstarts) % 7;
-				if ($rep_opt[$wday]) $opt .= day_name($wday) . " ";
-			}
-		}
-		if($opt)
-			echo "<tr><td class=\"CR\"><b>$vocab[rep_rep_day]</b></td><td class=\"CL\">$opt</td></tr>\n";
-		
-		echo "<tr><td class=\"CR\"><b>$vocab[rep_end_date]</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
-	}
+    $key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
+
+    echo "<tr><td class=\"CR\"><b>$vocab[rep_type]</b></td><td class=\"CL\">$vocab[$key]</td></tr>\n";
+
+    if (isset($rep_type) && ($rep_type != 0))
+    {
+        $opt = "";
+        if ($rep_type == 2)
+        {
+            // Display day names according to language and preferred weekday start.
+            for ($i = 0; $i < 7; $i++)
+            {
+                $wday = ($i + $weekstarts) % 7;
+                if ($rep_opt[$wday]) 
+                {
+                    $opt .= day_name($wday) . " ";
+                }
+            }
+        }
+        if ($opt)
+        {
+            echo "<tr><td class=\"CR\"><b>$vocab[rep_rep_day]</b></td><td class=\"CL\">$opt</td></tr>\n";
+        }
+        
+        echo "<tr><td class=\"CR\"><b>$vocab[rep_end_date]</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
+    }
 }
 ?>
 
@@ -379,7 +416,11 @@ else
 <INPUT TYPE=HIDDEN NAME="create_by" VALUE="<?php echo $create_by?>">
 <INPUT TYPE=HIDDEN NAME="rep_id"    VALUE="<?php echo $rep_id?>">
 <INPUT TYPE=HIDDEN NAME="edit_type" VALUE="<?php echo $edit_type?>">
-<?php if(isset($id)) echo "<INPUT TYPE=HIDDEN NAME=\"id\"        VALUE=\"$id\">\n"; ?>
+<?php if (isset($id)) 
+{
+    echo "<INPUT TYPE=HIDDEN NAME=\"id\"        VALUE=\"$id\">\n";
+}
+?>
 
 </FORM>
 

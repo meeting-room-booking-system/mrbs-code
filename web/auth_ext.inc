@@ -6,7 +6,7 @@
  * for user authentication.
  *
  * To use this authentication scheme set the following
- * things in config.inc:
+ * things in config.inc.php:
  *
  * $auth["realm"]  = "MRBS";    # Or any other string
  * $auth["type"]   = "ext";
@@ -36,8 +36,8 @@
  */
 function authGet($realm)
 {
-	Header("WWW-Authenticate: Basic realm=\"$realm\"");
-	Header("HTTP/1.0 401 Unauthorized");
+    Header("WWW-Authenticate: Basic realm=\"$realm\"");
+    Header("HTTP/1.0 401 Unauthorized");
 }
 
 function version_check($vercheck)
@@ -45,7 +45,7 @@ function version_check($vercheck)
   $minver = str_replace(".","", $vercheck);
   $curver = str_replace(".","", phpversion());
 
-  if($curver >= $minver)
+  if ($curver >= $minver)
   {
     return true;
   }
@@ -70,33 +70,35 @@ if (version_check("4.0.3") == false)
  */
 function authValidateUser($user, $pass)
 {
-        global $auth;
-	
-	// Check if we do not have a username/password
-	if(!isset($user) || !isset($pass))
-	{
-		authGet($auth["realm"]);
-		return 0;
-	}
-	
-	// Generate the command line
-	$cmd = $auth["prog"] . ' ' . $auth["params"];
-	$cmd = preg_replace('/#USERNAME#/',escapeshellarg($user),$cmd);
-	$cmd = preg_replace('/#PASSWORD#/',escapeshellarg($pass),$cmd);
-	
-	// Run the program
-	exec($cmd, $output, $ret);
-	
-	// If it succeeded, return success
-	if($ret == 0)
-		return 1;
-	
-	// If we failed prompt for username/password
-	if($user || $pass)
-		authGet($auth["realm"]);
-	
-	// return failure
-	return 0;
+    global $auth;
+    
+    // Check if we do not have a username/password
+    if (!isset($user) || !isset($pass))
+    {
+        authGet($auth["realm"]);
+        return 0;
+    }
+    
+    // Generate the command line
+    $cmd = $auth["prog"] . ' ' . $auth["params"];
+    $cmd = preg_replace('/#USERNAME#/',escapeshellarg($user),$cmd);
+    $cmd = preg_replace('/#PASSWORD#/',escapeshellarg($pass),$cmd);
+    
+    // Run the program
+    exec($cmd, $output, $ret);
+    
+    // If it succeeded, return success
+    if ($ret == 0)
+    {
+        return 1;
+    }
+    
+    // If we failed prompt for username/password
+    if ($user || $pass)
+        authGet($auth["realm"]);
+    
+    // return failure
+    return 0;
 }
 
 /* authGetUserLevel($user)
@@ -110,31 +112,35 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user, $lev1_admin)
 {
-	// User not logged in, user level '0'
-	if(!isset($user))
-		return 0;
-	
-	// Check if the user is can modify
-	for($i = 0; $lev1_admin[$i]; $i++)
-	{
-		if(strcasecmp($user, $lev1_admin[$i]) == 0)
-			return 2;
-	}
-	
-	// Everybody else is access level '1'
-	return 1;
+    // User not logged in, user level '0'
+    if (!isset($user))
+    {
+        return 0;
+    }
+    
+    // Check if the user is can modify
+    for($i = 0; $lev1_admin[$i]; $i++)
+    {
+        if (strcasecmp($user, $lev1_admin[$i]) == 0)
+        {
+            return 2;
+        }
+    }
+    
+    // Everybody else is access level '1'
+    return 1;
 }
 
 function getUserName()
 {
-	global $PHP_AUTH_USER;
-	return $PHP_AUTH_USER;
+    global $PHP_AUTH_USER;
+    return $PHP_AUTH_USER;
 }
 
 function getUserPassword()
 {
-	global $PHP_AUTH_PW;
-	return $PHP_AUTH_PW;
+    global $PHP_AUTH_PW;
+    return $PHP_AUTH_PW;
 }
 
 ?>

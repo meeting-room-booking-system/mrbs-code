@@ -1,0 +1,174 @@
+                          PEAR Installation
+
+What is PEAR?
+-------------
+
+
+PEAR is short for "PHP Extension and Application Repository" and is pronounced
+just like the fruit. The purpose of PEAR is to provide:
+
+·	A structured library of open-sourced code for PHP users
+·	A system for code distribution and package maintenance
+·	A standard style for code written in PHP,
+·	The PHP Foundation Classes (PFC),
+·	The PHP Extension Code Library (PECL),
+·	A web site, mailing lists and download mirrors to support the PHP/PEAR community
+
+Why should I use PEAR instead of the standard installation?
+-----------------------------------------------------------
+
+You have not, but you may, if :
+
+- You already use PEAR,
+- You would like to know what is PEAR and how it works,
+- You would like to install classes in only one place and have them available
+  for all your php scripts,
+- You would like to easily maintain your classes up to date, upgrade only once
+  for all your scripts,
+
+You may not use PEAR if :
+
+- you don't care,
+- you can't use it (you have no control over the server),
+
+Introduction
+------------
+
+The base installation that comes with the PHP distribution as part of the PFC
+(PEAR Foundation Classes) contains all the stuff that is needed to run the
+PEAR installation tools etc. If you have a recent installation of PHP 4, you
+can relax: The PEAR base installation is already installed on your system,
+unless you have compiled your PHP with the ./configure flag '--without-pear'.
+(Note : on Windows systems we recommend upgrading to PHP 4.3.2, as PEAR
+support for windows in previous versions is a bit flaky).
+
+The packages that are not part of the PFC can be installed with the PEAR
+package manager. The manager is comparable to Debian's "apt-get". Again: If
+you are running a recent version of PHP (> 4.3.0) you can skip this
+paragraph. But if you are running PHP 4.2.* or earlier, you need to manually
+install the manager.
+
+Apart from installing packages, the PEAR package manager also handles some
+other tasks: It can create new packages on your machine, manage a registry of
+installed packages, check dependencies and it can interact with an XML-RPC
+service on pear.php.net to serve some other tasks.
+
+Getting the PEAR package manager:
+---------------------------------
+
+Linux: From PHP 4.3.0 and newer, PEAR Package Manager is installed if no
+./configure --without-pear was specified.
+
+Windows: From PHP 4.3.2 and newer, go-pear script is bundled. Please execute
+(double click on under Windows Explorer and the like):
+
+> drive:path\to\php\go-pear.bat
+
+Answer all relevant questions. This should install the PEAR Package Manager
+in the path you specified. Add this path to your PATH environment (start >
+control panel > system > environment), type pear in a prompt and the magic
+should operate.
+
+For all of you who are not using the latest version of PHP (> 4.3.0) or wish
+to reinstall the Package Manager a provisional way is provided. You can
+execute the following command that automatically download all the files
+needed to run the "pear" command (the PEAR package installer). Requires
+PHP 4.1.0 or newer.
+
+Under linux:
+
+This script can either be directly launched or passed via lynx like this.
+
+$ lynx -source http://go-pear.org | php
+
+The above assumes your php binary is named php and that it's executable
+through your PATH.
+Note: Some Linux distributions (e.g. Redhat) seem to be using 'links' instead
+of 'lynx' as the name for their command line browser. If this is the case for
+you, you need to change the above line correspondingly.
+
+
+On Windows, go-pear uses stdin for user input, so you must download go-pear
+script first from go-pear.org and then run the following command:
+
+> php go-pear (or whatever you named the file)
+
+Note: In PHP 4.2.0-4.2.3, the PHP CLI binary is named php-cli.exe while
+since PHP 4.3.0, it's simply named php.exe in the cli/ folder of your PHP
+directory. The CGI is also named php.exe but it sits directly in your PHP
+directory.
+> cli/php -r 'readfile("http://pear.php.net/go-pear");' > go-pear
+> cli/php go-pear
+
+Installation: Notes
+- If using the CGI version of PHP, append the -q option to suppress headers
+in the output.
+- Once the go-pear script is initiated, you will see instructions on how to
+continue installing PEAR. The first thing you should see is:
+
+Welcome to go-pear!
+
+Updating PEAR Foundation Classes
+--------------------------------
+
+We recommand that you update your PEAR base classes to the latest version :
+
+$ pear upgrade PEAR
+
+
+Installing PEAR::MDB
+--------------------
+
+MRBS relies on PEAR::MDB class to connect to DBMS. Therefore you have to
+install the PEAR framework before and then PEAR::MDB package.
+
+Note : If you use the PEAR framework, you should not unpack the mdb.tgz file
+as specified in the INSTALL notes, because these files will be used instead.
+If you have already unpacked it, then delete :
+  - MDB.php
+  - PEAR.php
+  - MDB directory
+  - XML directory
+
+The command line installer is the easiest way to install MDB package on your
+system. It connects to the PEAR package server via a simple HTTP connection,
+loads the package on your system and installs it in the desired location.
+
+Fully-automatic installation:
+
+Using the command line installer is pretty straightforward and easy to use.
+Simply run the following line on your shell:
+
+$ pear install XML_Parser
+$ pear install MDB
+
+Note: if any of these packages are already installed, just run 'pear upgrade'
+instead of 'pear install' in order to use the latest packages. To see which
+packages are installed, run '$ pear list'.
+
+Semi-automatic installation:
+
+This is not the recommended installation method, but you can download MDB
+package from http://www.pear.php.net/get/MDB and XML_Parser package from
+http://www.pear.php.net/get/XML_Parser as gzipped tar archives, and
+install them locally. To do this, run the following line on your shell:
+
+$ pear install XML_Parser-x.x.x.tgz
+$ pear install MDB-x.x.x.tgz
+
+This command will automatically install the packages and does not require an
+online connection.
+
+
+Webhosting
+----------
+
+For those of you wondering if you can install pear on your webhost you will
+not be able to use the pear command (unless you have an ssh access to the
+server). Not all is lost though. The PEAR package manager just simplifies the
+process of installing the packages. One way to go is to install the pear
+command on your desktop and copy the files over to the server. Don't forget
+you can use set_include_path() to make the directory where you copied the
+PEAR files available across your site.
+
+

@@ -24,7 +24,7 @@ MRBS authentication.  Instead, the password must be sent through
 a pipe to nwauth. (It must not be followed by return, either.) To make
 this work, a new module auth_nw.inc was created.
 
-The appropriate settings for config.inc are:
+The appropriate settings for config.inc.php are:
 
 # Authentication settings - read AUTHENTICATION
 $auth["realm"]  = "MRBS";
@@ -38,7 +38,7 @@ name. The auth_nw.inc module does the rest.
 You can set "realm" to anything you want; this is a hint to the user
 as to what they are logging in to.
 
-You must also list the names of your administrator-level users in config.inc.
+You must also list the names of your administrator-level users in config.inc.php.
 
 NOTE: nwauth must be able to find nwsfind in the PATH (which is the
 web server PATH). If authentication fails, and your Apache error log
