@@ -48,7 +48,7 @@ for ($day = date("d") - 5; $day < date("d")+55; $day++) {
 				  } else {
 					  $name = $ennames[mt_rand(1,count($ennames)-1)];
 				  }
-				  $sql = "insert into mrbs_entry (room_id, create_by, start_time, end_time, type, name, description) values ($room, '127.0.0.1', from_unixtime($starttime), from_unixtime($endtime),'I','$name','A meeting')";
+				  $sql = "insert into mrbs_entry (room_id, create_by, start_time, end_time, type, name, description) values ($room, '$REMOTE_ADDR', from_unixtime($starttime), from_unixtime($endtime),'I','$name','A meeting')";
 				  mysql_query($sql);
 			  }
 			  echo "$area - $room ($starthour,$length)<br>";

@@ -1,31 +1,51 @@
-WebCalender 0.9.4 - 14 Jan 2000
-http://www.radix.net/~cknudsen/webcalendar/
-Craig Knudsen, cknudsen@radix.net, http://www.radix.net/~cknudsen/
+Meeting Room Booking System 0.5
+http://mrbs.sourceforge.net/
+-------------------------------
 
-WebCalender = PHP/MySQL-based multi-user calendar
+The Meeting Room Booking System (MRBS) is a PHP/MySQL-based application for
+booking meeting rooms (surprisingly!). I got annoyed with the piles of books
+which were being used to book meetings. They were slow, hard to edit and only at
+the reception desk. I thought that a nice web-based system would be much nicer.
 
-I don't have a good name for this application yet, so for now, it's
-"WebCalender."  I'm sure that's probably trademarked by someone, so let
-me know if you have a good name for this application.
+Some parts of this are based on WebCalender 0.9.4 by Craig Knudsen 
+(http://www.radix.net/~cknudsen/webcalendar/) but there is now very little which
+is similar. There are fundamental design goal differences between WebCalendar
+and MRBS - WC is for individuals, MRBS is for meeting rooms.
 
+--
+To Use
+------
 See the INSTALL file for installation instructions.
 
-See the UPGRADING file for instructions on upgrading from a previous release.
+Once it's installed try going to http://wherever/mrbs/ - this should give you
+a view of the default "Building 1" meeting rooms for today. The (+) symbol means
+you can add new meetings by clicking here. Try it - it should all be pretty
+obvious.
+
+Try viewing http://wherever/mrbs/testdata.php3 - it will generate a whole load
+of random appointments to fill up the calendar and let you play around.
+
+When used for real all bookings have the originating IP address logged against
+them. This is used as a poor man's security device as only the IP Address that
+made a booking can change or delete it. I plan to do some sort of plug-in
+security thing for the future. With the testdata.php3 script all bookings are
+made against $REMOTE_ADDR.
+
+Administration is done from admin.php3 - you can add or delete rooms and areas.
+There is no security for this, but if you really care that much you can use your
+webserver to add some.
+
+I've only tested this using PHP 3.0.16, Apache 1.3.12, mySQL 3.22.32 and Linux
+2.2.14, although it should work on just about anything that's got mySQL and
+PHP with mySQL support - let me know.
+
+Right now it seems really rather stable, but there could be some more features.
+
+It should be pretty easy to adjust it to your corporate colours - the file mrbs.css is used on every page, as is style.inc. Just fiddle with these until you get the result you like. If it's really funky then please send it to me, and I'll start some sort of 'skin' collection!
 
 See COPYING for licensing info.
 
 See ChangeLog for a history of changes.
-
-Features:
-- Multi-user support
-- View month-at-glance
-- View week-at-glance
-- View another user's calendar
-- Add/Edit/Delete users
-- Add/Edit/Delete events
-- User-configurable preferences for colors, 12/24 time format
-- Online help
-- Checks for scheduling conflicts
 
 Requirements:
 - PHP3/4 (w/MySQL support)
@@ -35,17 +55,3 @@ Recommended:
 - JavaScript-enabled browser
 - CSS-enabled browser
 
-Planned features for Release 1.0:
-- PostgreSQL support
-- Search interface for calendar entries
-- Day-at-a-glance view
-- Generate repeating events
-- Admin specifies which users can add events to which other users
-
-Possible features for future releases:
-- Add comments to entries that will show up on the view page
-- Data export
-- Data import (from Netscape Calendar's tab-delimted export)
-- Activity log
-- Some form of reminder
-- Java client?

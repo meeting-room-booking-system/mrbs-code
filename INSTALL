@@ -1,8 +1,5 @@
-		WebCalendar Installation Instructions
+		MRBS Installation Instructions
 
-
-NOTE: If updagrading a previous from a previous version, see the file
-UPGRADING first.
 
 
 REQUIREMENTS
@@ -30,15 +27,13 @@ DATABASE SETUP
 ---------------------------------------------------------------------------
 You can place the calendar db tables in an existing database or
 create a new database with the following:
-	mysqladmin create intranet
-(This will create a database named "intranet".)
+	mysqladmin create mrbs
+(This will create a database named "mrbs".)
 
 Create the calendar tables using the supplied tables.sql file:
-	mysql intranet < tables.sql
-where "intranet" is the name of your database (mentioned above).
-This will create all the needed tables and setup one user account
-with the login "admin" and password "admin", which you are encouraged
-to use to create your own account.
+	mysql mrbs < tables.sql
+where "mrbs" is the name of your database (mentioned above).
+This will create all the needed tables.
 
 
 APPLICATION SETUP
@@ -53,20 +48,8 @@ To configure your MySQL access.  Set the values for:
   - $mysql_login	The MySQL login
   - $mysql_password	The MySQL password for the above login
   - $mysql_database	The name of the MySQL database that the calendar
-			tables reside in.  ("intranet" in the example
+			tables reside in.  ("mrbs" in the example
 			above.)
-
-You can configure the calendar to run in single-user mode or multi-user mode.
-If this is your first time using the calendar, it's easier to try single-user.
-You can always switch to multi-user later.  Leave the $single_user_login
-variable commented out (the default) for multi-user, or remove the
-"//" comment tags to set the system to single-user mode.  (And be sure
-to set the value of $single_user_login to the login that you would choose
-if you decide to switch to multi-user mode some day.)
-
-Note: If you do decide to switch from single-user mode to multi-user mode,
-make sure you add in a user to the system for the login you set the
-$single_user_login variable to.
 
 
 OPTIONAL!
@@ -81,7 +64,5 @@ do this.
 RUN WITH IT
 ---------------------------------------------------------------------------
 You can place the calendar db tables in an existing database or
-Hey, you're done...  Give it a try by logging in using the default
-"admin" account (if you're setup for multi-user) or just go to index.php3
-if you're setup for single-user mode.
+Hey, you're done...  Give it a try by going to http://wherever/mrbs/
 

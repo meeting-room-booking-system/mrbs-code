@@ -5,45 +5,6 @@
 # Server version	3.22.32
 
 #
-# Table structure for table '__KmysqlFields'
-#
-CREATE TABLE __KmysqlFields (
-  Ref int(11) DEFAULT '0' NOT NULL auto_increment,
-  FormRef int(11) DEFAULT '0' NOT NULL,
-  Name varchar(255) DEFAULT '' NOT NULL,
-  Type varchar(63) DEFAULT '' NOT NULL,
-  X int(11) DEFAULT '0' NOT NULL,
-  Y int(11) DEFAULT '0' NOT NULL,
-  Width int(11) DEFAULT '0' NOT NULL,
-  Height int(11) DEFAULT '0' NOT NULL,
-  Extra text NOT NULL,
-  PRIMARY KEY (Ref)
-);
-
-#
-# Dumping data for table '__KmysqlFields'
-#
-
-
-#
-# Table structure for table '__KmysqlForms'
-#
-CREATE TABLE __KmysqlForms (
-  Ref int(11) DEFAULT '0' NOT NULL auto_increment,
-  Name varchar(255) DEFAULT '' NOT NULL,
-  Query text NOT NULL,
-  Help text NOT NULL,
-  Width int(11) DEFAULT '0' NOT NULL,
-  Height int(11) DEFAULT '0' NOT NULL,
-  PRIMARY KEY (Ref)
-);
-
-#
-# Dumping data for table '__KmysqlForms'
-#
-
-
-#
 # Table structure for table 'mrbs_area'
 #
 CREATE TABLE mrbs_area (

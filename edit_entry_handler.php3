@@ -54,16 +54,17 @@ function times_overlap ( $time1, $duration1, $time2, $duration2 ) {
 if (strlen($month) == 1) { $month = "0$month";}
 if (strlen($day)   == 1) { $month = "0$day";}
 $starttime = "$year-$month-$day $hour:$minute";
+$duration_min = $duration * 60;
 
 $sql = "select id, name from mrbs_entry where 
 (
-  (start_time between '$starttime' and date_add('$starttime',interval $duration hour))
+  (start_time between '$starttime' and date_sub(date_add('$starttime',interval $duration_min minute),interval 1 second))
   or
-  ('$starttime' between start_time and end_time)
+  ('$starttime' between start_time and date_sub(end_time, interval 1 second))
 )
 and room_id = $room_id
 ";
-#if this is a replacement then dont conflict with itself
+# if this is a replacement then dont conflict with itself
 if ($id) {$sql = "$sql and id <> $id";}
 
 
@@ -74,7 +75,7 @@ echo mysql_error();
 if (mysql_num_rows($res) > 0) {
 	$error = "There are conflicts:";
 	while ($row = mysql_fetch_row($res)) {
-		$error = "$error<br><a href=view_entry.php3?id=$row[0]>$name</a>";
+		$error = "$error<br><a href=view_entry.php3?id=$row[0]>$row[1]</a>";
 	}
 }
 
@@ -88,12 +89,11 @@ if (strlen($error) == 0) {
 	#actually do some adding
 	$name_q        = addslashes($name);
 	$description_q = addslashes($description);
-#	$sql = "insert into mrbs_entry (room_id, create_by, start_time, end_time, type, name, description) values (	        '$room_id',			  '$REMOTE_ADDR'			  '$starttime',			  date_add('$starttime', interval $duration hour),			  '$type',			  '$name_q',			  '$description_q'			  )			  ";
 	$sql = "insert into mrbs_entry (room_id, create_by, start_time, end_time, type, name, description) values (
 	        '$room_id',
 			  '$REMOTE_ADDR',
 			  '$starttime',
-			  date_add('$starttime', interval $duration hour),
+			  date_add('$starttime', interval $duration_min minute),
 			  '$type',
 			  '$name_q',
 			  '$description_q'
@@ -115,7 +115,7 @@ if (strlen($error) == 0) {
 <HEAD><TITLE>WebCalendar</TITLE>
 <?include "style.inc"?>
 </HEAD>
-<BODY BGCOLOR="<?php echo $BGCOLOR; ?>">
+<BODY>
 
 <?php if ( strlen ( $overlap ) ) { ?>
 <H2><FONT COLOR="<?php echo $H2COLOR;?>">Scheduling Conflict</H2></FONT>
