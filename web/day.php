@@ -116,15 +116,15 @@ if ( $pview != 1 ) {
 
 #id aliases only needed for Oracle, otherwise ony one id column is returned 
 
-$sql = "SELECT  mrbs_room.id AS id, start_time, end_time, name, 
-				mrbs_entry.id AS id2, type, mrbs_entry.description
+$sql = "SELECT  mrbs_room.id AS ID, start_time, end_time, name,
+				mrbs_entry.id AS ID2, type, mrbs_entry.description
         FROM    mrbs_entry, mrbs_room
         WHERE   mrbs_entry.room_id = mrbs_room.id
         AND     area_id = $area
         AND     start_time <= $pm7 
         AND     end_time > $am7";
 
-$types = array('integer', 'integer', 'integer', 'text', 'integer', 'text');
+$types = array('integer', 'integer', 'integer', 'text', 'integer', 'text', 'text');
 $res = $mdb->query($sql, $types);
 if (MDB::isError($res))
 {
@@ -221,7 +221,6 @@ $counte = $mdb->numRows($res);
 if (0 == $counte)
 {
     echo "<h1>".get_vocab("no_rooms_for_area")."</h1>";
-    $mdb->freeResult($res);
 }
 else
 {
@@ -359,8 +358,8 @@ else
 	}
 	echo "</table>";
 	if ( $pview != 1 ) show_colour_key();
-    $mdb->freeResult($res); 
 }
+$mdb->freeResult($res);
 
 include "trailer.inc"; 
 ?>
