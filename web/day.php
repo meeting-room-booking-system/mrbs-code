@@ -36,7 +36,7 @@ if ( $pview != 1 ) {
    # need to show either a select box or a normal html list,
    # depending on the settings in config.inc
    if ($area_list_format == "select") {
-	echo make_area_select_html($area, $year, $month, $day); # from functions.inc
+	echo make_area_select_html('day.php', $area, $year, $month, $day); # from functions.inc
    } else {
 	# show the standard html list
 	$sql = "select id, area_name from mrbs_area order by area_name";

@@ -55,20 +55,25 @@ if ( $pview != 1 ) {
 	echo "<td width=\"30%\"><u>$vocab[areas]</u><br>";
 }
 
-$sql = "select id, area_name from mrbs_area order by area_name";
-$res = sql_query($sql);
-if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
-{
-	if ( $pview != 1 )
-		echo "<a href=\"month.php?year=$year&month=$month&area=$row[0]\">";
-	if ($row[0] == $area)
+  # show either a select box or the normal html list
+  if ($area_list_format == "select") {
+	echo make_area_select_html('month.php', $area, $year, $month, $day); # from functions.inc
+  } else {
+	$sql = "select id, area_name from mrbs_area order by area_name";
+	$res = sql_query($sql);
+	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	{
-		$this_area_name = htmlspecialchars($row[1]);
 		if ( $pview != 1 )
-			echo "<font color=\"red\">$this_area_name</font></a><br>\n";
+			echo "<a href=\"month.php?year=$year&month=$month&area=$row[0]\">";
+		if ($row[0] == $area)
+		{
+			$this_area_name = htmlspecialchars($row[1]);
+			if ( $pview != 1 )
+				echo "<font color=\"red\">$this_area_name</font></a><br>\n";
+		}
+		else if ( $pview !=1 ) echo htmlspecialchars($row[1]) . "</a><br>\n";
 	}
-	else if ( $pview !=1 ) echo htmlspecialchars($row[1]) . "</a><br>\n";
-}
+  } # end select if
 
 if ( $pview != 1 ) {
 	echo "</td>\n";
@@ -77,19 +82,25 @@ if ( $pview != 1 ) {
 	echo "<td width=\"30%\"><u>$vocab[room]</u><br>";
 }
 
-$sql = "select id, room_name from mrbs_room where area_id=$area order by room_name";
-$res = sql_query($sql);
-if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
-{
-	echo "<a href=\"month.php?year=$year&month=$month&area=$area&room=$row[0]\">";
-	if ($row[0] == $room)
+
+  # should we show a drop-down for the room list, or not?
+  if ($area_list_format == "select") {
+	echo make_room_select_html('month.php', $area, $room, $year, $month, $day); # from functions.inc
+  } else {
+	$sql = "select id, room_name from mrbs_room where area_id=$area order by room_name";
+	$res = sql_query($sql);
+	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	{
-		$this_room_name = htmlspecialchars($row[1]);
-		if ( $pview != 1 )
-			echo "<font color=\"red\">$this_room_name</font></a><br>\n";
+		echo "<a href=\"month.php?year=$year&month=$month&area=$area&room=$row[0]\">";
+		if ($row[0] == $room)
+		{
+			$this_room_name = htmlspecialchars($row[1]);
+			if ( $pview != 1 )
+				echo "<font color=\"red\">$this_room_name</font></a><br>\n";
+		}
+		else if ( $pview != 1 ) echo htmlspecialchars($row[1]) . "</a><br>\n";
 	}
-	else if ( $pview != 1 ) echo htmlspecialchars($row[1]) . "</a><br>\n";
-}
+  } # end select if
 
 if ( $pview != 1 ) {
 	echo "</td>\n";

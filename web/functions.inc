@@ -270,23 +270,23 @@ function round_t_up($t, $resolution)
 
 # generates some html that can be used to select which area should be
 # displayed.
-function make_area_select_html( $current, $year, $month, $day )
+function make_area_select_html( $link, $current, $year, $month, $day )
 {
 	$out_html = "<form name=\"area\">
-	             <select name=\"area\" onChange=\"go()\">";
+	             <select name=\"area\" onChange=\"area_go()\">";
 
 	$sql = "select id, area_name from mrbs_area order by area_name";
    	$res = sql_query($sql);
    	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
    	{
 		$selected = ($row[0] == $current) ? "selected" : "";
-		$link = "day.php?year=$year&month=$month&day=$day&area=$row[0]";
+		$link = "$link?year=$year&month=$month&day=$day&area=$row[0]";
 		$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars($row[1]);
    	}
 	$out_html .= "</select>
 	   <SCRIPT language=\"JavaScript\">
 	   <!--
-	   function go()
+	   function area_go()
 	    {
 		box = document.forms[\"area\"].area;
 		destination = box.options[box.selectedIndex].value;
@@ -301,4 +301,34 @@ function make_area_select_html( $current, $year, $month, $day )
 	return $out_html;
 } # end make_area_select_html
 
+function make_room_select_html( $link, $area, $current, $year, $month, $day )
+{
+	$out_html = "<form name=\"room\">
+	             <select name=\"room\" onChange=\"room_go()\">";
+
+	$sql = "select id, room_name from mrbs_room where area_id=$area order by room_name";
+   	$res = sql_query($sql);
+   	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+   	{
+		$selected = ($row[0] == $current) ? "selected" : "";
+		$link = "$link?year=$year&month=$month&day=$day&area=$area&room=$row[0]";
+		$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars($row[1]);
+   	}
+	$out_html .= "</select>
+	   <SCRIPT language=\"JavaScript\">
+	   <!--
+	   function room_go()
+	    {
+		box = document.forms[\"room\"].room;
+		destination = box.options[box.selectedIndex].value;
+		if (destination) location.href = destination;
+	    }
+	    // -->
+	    </SCRIPT>
+ 
+	    
+	    <input type=submit value=\"Change\"></form>";
+
+	return $out_html;
+} # end make_area_select_html
 ?>
