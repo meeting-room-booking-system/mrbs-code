@@ -3,7 +3,7 @@
 # $Id$
 
 require_once "grab_globals.inc.php";
-include "config.inc";
+include "config.inc.php";
 include "$dbsys.inc";
 include "functions.inc";
 

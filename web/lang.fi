@@ -7,7 +7,7 @@
 # Translation by Vesa Palmu ( vesa.palmu@no... ), Tom Ingberg 
 # (tom.ingberg@edu.vantaa.fi)
 #
-# Muuta myös seuraavat asetukset config.inc-tiedoston
+# Muuta myös seuraavat asetukset config.inc.php-tiedoston
 # Language-osioon, jotta käännös olisi mahdollisimman täydellinen:
 # include 'lang.fi';
 # setlocale(LC_ALL,'fi');

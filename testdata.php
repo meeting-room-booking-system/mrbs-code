@@ -3,7 +3,7 @@
 # $Id$
 
 # This script initialises the database with some random data
-include "config.inc";
+include "config.inc.php";
 include "$dbsys.inc";
 
 # The sample data has an office in Tokyo. We have an array of Japanese

@@ -2,7 +2,7 @@
 // $Id$
 
 require_once "grab_globals.inc.php";
-include "config.inc";
+include "config.inc.php";
 include "functions.inc";
 include "$dbsys.inc";
 include "mrbs_auth.inc";

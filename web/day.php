@@ -2,7 +2,7 @@
 # $Id$
 
 require_once "grab_globals.inc.php";
-include "config.inc";
+include "config.inc.php";
 include "functions.inc";
 include "$dbsys.inc";
 include "mincals.inc";
@@ -35,7 +35,7 @@ if ( $pview != 1 ) {
    echo "<u>$vocab[areas]</u><br>";
 
    # need to show either a select box or a normal html list,
-   # depending on the settings in config.inc
+   # depending on the settings in config.inc.php
    if ($area_list_format == "select") {
 	echo make_area_select_html('day.php', $area, $year, $month, $day); # from functions.inc
    } else {

@@ -6,7 +6,7 @@
  * for user authentication.
  *
  * To use this authentication scheme set the following
- * things in config.inc:
+ * things in config.inc.php:
  *
  * $auth["realm"]  = "MRBS";    # Or any other string
  * $auth["type"]   = "ext";

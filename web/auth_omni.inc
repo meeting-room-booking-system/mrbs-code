@@ -25,7 +25,7 @@
  * each user. 
  *
  * 
- * in config.inc:
+ * in config.inc.php:
  *
  * $auth["realm"] = "MRBS";    # Or any other string
  * $auth["type"]  = "omni";

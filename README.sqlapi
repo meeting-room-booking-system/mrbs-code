@@ -43,13 +43,13 @@ If an error occurs while trying to connect, a message will be output
 followed by a PHP exit. (Failure to connect to the database is the only
 reason the functions defined here will output an error message and exit.)
 
-The way MRBS uses this is to define a configuration file config.inc with
+The way MRBS uses this is to define a configuration file config.inc.php with
 the above variables plus:
      $dbsys = "pgsql";  //  or:     $dbsys = "mysql";
 Then, each PHP script which wants to connect to the database starts with:
-     include "config.inc";
+     include "config.inc.php";
      include "$dbsys.inc";
-If you do this, be sure the web server will not serve config.inc to
+If you do this, be sure the web server will not serve config.inc.php to
 clients, for security reasons.
 
 -----------------------------------------------------------------------------

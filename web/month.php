@@ -4,7 +4,7 @@
 # mrbs/month.php - Month-at-a-time view
 
 require_once "grab_globals.inc.php";
-include "config.inc";
+include "config.inc.php";
 include "functions.inc";
 include "$dbsys.inc";
 include "mincals.inc";

@@ -20,7 +20,7 @@ The administrators are allowed to modify other people's bookings, whereas
 Level 1 users can only change their own.  Admistrators also have the ability to
 add and remove rooms and areas.
 
-Administrators are defined in config.inc. This is done by specifying:
+Administrators are defined in config.inc.php. This is done by specifying:
    $auth["admin"][] = "username";
    $auth["admin"][] = "username2";
    etc
@@ -56,7 +56,7 @@ demonstrate how the "external" provider works.
 "badpw.pl" has usernames and passwords hard coded. I don't expect anyone to
 use this in a production environment - it's just to demonstrate.
 
-In the config.inc file there is a section that says:
+In the config.inc.php file there is a section that says:
 
 # Authentication settings - read AUTHENTICATION
 $auth["realm"]  = "";
@@ -108,11 +108,11 @@ and copy the binary to somewhere useful I chose "/usr/bin/smb_auth"
 [snip]
 
 It requires the "smb_auth" program to be installed and working see
-"config.inc" to use a different authentication program + set the servers +
+"config.inc.php" to use a different authentication program + set the servers +
 domain used for the name checks.
 -------
 
-The config.inc entries he supplied were:
+The config.inc.php entries he supplied were:
 
 # Authentication settings - read AUTHENTICATION
 $auth["realm"]  = "MRBS";
@@ -148,7 +148,7 @@ LDAP Authentication
 There are three methods for doing LDAP authentication currently, the preferable
 method uses the LDAP functionalty built into PHP, to enable this change the
 "$auth[type]" to "ldap" and check the the "$ldap_host" and "$ldap_base_dn"
-entrys are correct in config.inc.  The program will check the username and
+entrys are correct in config.inc.php.  The program will check the username and
 password pair with all the "$ldap_base_dn" entrys until one matches.
 
 e.g.
@@ -177,7 +177,7 @@ It expects the full thing to be passed in - eg
 
    cn=root, o=University of Michigan, c=us
 
-In my case, I can pass just the cn and it works. My config.inc settings are:
+In my case, I can pass just the cn and it works. My config.inc.php settings are:
 
 # Authentication settings - read AUTHENTICATION
 $auth["realm"]  = "MRBS";
@@ -222,7 +222,7 @@ chmod 4750 auth_pam.pl
 The first line (#!/usr/bin/sperl5.6.0) says where sperl is located on
 your system. Please adapt this for your needs.
 
-Now add the configuration to web/config.inc in your MRBS directory.
+Now add the configuration to web/config.inc.php in your MRBS directory.
 This looks as follows (adapt the path to auth_pam.pl according to your
 your configuration):
 
@@ -241,7 +241,7 @@ POP3 Authentication
 -------------------
 
 MRBS has POP3 Authentication support. This can be used by setting
-config.inc as follows:
+config.inc.php as follows:
 
 This provider will first try to authenticate using APOP, and fall back to
 standard USER/PASS if that fails.
@@ -266,7 +266,7 @@ NT Authentication
 -------------------
 
 MRBS has Microsoft Windows NT authentication support. This can be used by 
-setting config.inc as follows:
+setting config.inc.php as follows:
 
 $auth["realm"]  = "";
 $auth["type"]   = "nt";
@@ -370,7 +370,7 @@ For instance, to authenticate to an LDAP server, it would be relatively easy
 to write a small program in [insert language of choice] which took
 username, password and server name as parameters, and returned 0 for
 "yes, this username/password is OK", and something else for "no, it's not".
-The config.inc entries for this might look like:
+The config.inc.php entries for this might look like:
 
 # Authentication settings - read AUTHENTICATION
 $auth["realm"]  = "MRBS";

@@ -8,7 +8,7 @@
  *  the server can make bookings etc.
  *
  * To use this authentication scheme set the following
- * things in config.inc:
+ * things in config.inc.php:
  *
  * $auth["type"]  = "name";
  *
