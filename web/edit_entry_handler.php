@@ -19,7 +19,7 @@ if(!isset($day) or !isset($month) or !isset($year))
 if(empty($area))
     $area = get_default_area();
 
-if(!getAuthorised(getUserName(), getUserPassword(), 1))
+if(!getAuthorised(1))
 {
     showAccessDenied($day, $month, $year, $area);
     exit;

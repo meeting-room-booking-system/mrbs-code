@@ -8,7 +8,7 @@ include "$dbsys.inc";
 include "mrbs_auth.inc";
 include "mrbs_sql.inc";
 
-if(getAuthorised(getUserName(), getUserPassword(), 1) && ($info = mrbsGetEntryInfo($id)))
+if(getAuthorised(1) && ($info = mrbsGetEntryInfo($id)))
 {
 	$day   = strftime("%d", $info["start_time"]);
 	$month = strftime("%m", $info["start_time"]);

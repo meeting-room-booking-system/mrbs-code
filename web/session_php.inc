@@ -1,20 +1,27 @@
 <?php
 /*****************************************************************************\
-*									      *
-*   File name       session_php.inc					      *
-*									      *
-*   Description	    Use PHP built-in sessions handling                        *
-*									      *
-*   Notes	    To use this authentication scheme, set in config.inc.php: *
-*			$auth["session"]  = "php";			      *
-*									      *
-*   History								      *
-*    2003/11/09 JFL Created this file					      *
-*									      *
+*                                                                            *
+*   File name       session_php.inc                                          *
+*                                                                            *
+*   Description	    Use PHP built-in sessions handling                       *
+*                                                                            *
+*   Notes	        To use this authentication scheme, set in                *
+*                   config.inc.php:                                          *
+*                     $auth["session"]  = "php";                             *
+*                                                                            *
+*                                                                            *
+*   History                                                                  *
+*    2003/11/09 JFL Created this file                                        *
+*                                                                            *
 \*****************************************************************************/
 
 // $Id$
 
+global $PHP_SELF;
+
+$cookie_path = $PHP_SELF;
+$cookie_path = ereg_replace('[^/]*$', '', $cookie_path);
+session_set_cookie_params(0, $cookie_path);
 session_start();
 
 /*
@@ -24,24 +31,29 @@ session_start();
 if (isset($Action) && ($Action == "SetName"))
 {
     /* First make sure the password is valid */
-    if (($NewUserName != "") && (!authValidateUser($NewUserName, $NewUserPassword)))
-    {
-        print_header(0, 0, 0, 0);
-        echo "<P>".get_vocab('unknown_user')."</P>\n";
-        printLoginForm($TargetURL);
-        exit();
-    }
+    if ($NewUserName == "") {
 
-    if (isset($_SESSION))
-    {
-        $_SESSION["UserName"] = $NewUserName;
-        $_SESSION["UserPassword"] = $NewUserPassword;
-    }
-    else
-    {
-        global $HTTP_SESSION_VARS;
-        $HTTP_SESSION_VARS["UserName"] = $NewUserName;
-        $HTTP_SESSION_VARS["UserPassword"] = $NewUserPassword;
+        // Unset the session variables
+        if (isset($_SESSION)) {
+            $_SESSION = array();
+        } else {
+            global $HTTP_SESSION_VARS;
+            $HTTP_SESSION_VARS = array();
+        }
+    } else {
+        if (!authValidateUser($NewUserName, $NewUserPassword)) {
+            print_header(0, 0, 0, 0);
+            echo "<P>".get_vocab('unknown_user')."</P>\n";
+            printLoginForm($TargetURL);
+            exit();
+        }
+
+        if (isset($_SESSION)) {
+            $_SESSION["UserName"] = $NewUserName;
+        } else {
+            global $HTTP_SESSION_VARS;
+            $HTTP_SESSION_VARS["UserName"] = $NewUserName;
+        }
     }
 
     header ("Location: $TargetURL"); /* Redirect browser to initial page */
@@ -130,20 +142,6 @@ function getUserName()
         global $HTTP_SESSION_VARS;
         if (isset($HTTP_SESSION_VARS["UserName"]) && ($HTTP_SESSION_VARS["UserName"] != ""))
             return $HTTP_SESSION_VARS["UserName"];
-    }
-}
-
-function getUserPassword()
-{
-    if (isset($_SESSION) && isset($_SESSION["UserPassword"]) && ($_SESSION["UserPassword"] != ""))
-    {
-        return $_SESSION["UserPassword"];
-    }
-    else
-    {
-        global $HTTP_SESSION_VARS;
-        if (isset($HTTP_SESSION_VARS["UserPassword"]) && ($HTTP_SESSION_VARS["UserPassword"] != ""))
-            return $HTTP_SESSION_VARS["UserPassword"];
     }
 }
 

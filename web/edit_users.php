@@ -97,7 +97,7 @@ if ($nusers > 0)
     $user = getUserName();
     $level = authGetUserLevel($user, $auth["admin"]);
     // Do not allow unidentified people to browse the list.
-    if(!getAuthorised($user, getUserPassword(), 1))
+    if(!getAuthorised(1))
         {
         showAccessDenied($day, $month, $year, $area);
         exit;

@@ -17,17 +17,17 @@ if (isset($auth['session'])) include "session_$auth[session].inc";
  *   0        - The user does not have the required access
  *   non-zero - The user has the required access
  */
-function getAuthorised($user, $pass, $level)
+function getAuthorised($level)
 {
-	global $auth;
-	
-	if(!authValidateUser($user, $pass))
-	{
-	        authGet();
-		return 0;
-	}
+    global $auth;
 
-	return authGetUserLevel($user, $auth["admin"]) >= $level;
+    $user = getUserName();
+    if(isset($user) == FALSE) {
+        authGet();
+        return 0;
+    }
+
+    return authGetUserLevel($user, $auth["admin"]) >= $level;
 }
 
 /* getWritable($creator, $user)
@@ -43,17 +43,17 @@ function getAuthorised($user, $pass, $level)
  */
 function getWritable($creator, $user)
 {
-	global $auth;
-	
-	// Always allowed to modify your own stuff
-	if($creator == $user)
-		return 1;
-	
-	if(authGetUserLevel($user, $auth["admin"]) >= 2)
-		return 1;
-	
-	// Unathorised access
-	return 0;
+    global $auth;
+
+    // Always allowed to modify your own stuff
+    if(strcasecmp($creator, $user) == 0)
+        return 1;
+
+    if(authGetUserLevel($user, $auth["admin"]) >= 2)
+        return 1;
+
+    // Unathorised access
+    return 0;
 }
 
 /* showAccessDenied()
@@ -64,9 +64,9 @@ function getWritable($creator, $user)
  */
 function showAccessDenied($day, $month, $year, $area)
 {
-	global $HTTP_REFERER;
-	
-	print_header($day, $month, $year, $area);
+    global $HTTP_REFERER;
+
+    print_header($day, $month, $year, $area);
 ?>
   <H1><?php echo get_vocab("accessdenied")?></H1>
   <P>

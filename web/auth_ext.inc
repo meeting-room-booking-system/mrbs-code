@@ -101,7 +101,7 @@ function authGetUserLevel($user, $lev1_admin)
 	// Check if the user is can modify
 	for($i = 0; $lev1_admin[$i]; $i++)
 	{
-		if(strcmp($user, $lev1_admin[$i]) == 0)
+		if(strcasecmp($user, $lev1_admin[$i]) == 0)
 			return 2;
 	}
 	

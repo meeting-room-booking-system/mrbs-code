@@ -34,9 +34,4 @@ function getUserName()
 
 }
 
-function getUserPassword()
-{
-	return "dummy";
-}
-
 ?>

@@ -21,7 +21,7 @@ if(empty($area))
 if(!isset($edit_type))
 	$edit_type = "";
 
-if(!getAuthorised(getUserName(), getUserPassword(), 1))
+if(!getAuthorised(1))
 {
 	showAccessDenied($day, $month, $year, $area);
 	exit;

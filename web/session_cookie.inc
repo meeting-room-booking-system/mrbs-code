@@ -31,21 +31,26 @@ if (isset($Action) && ($Action == "SetName"))
     	$NewUserName = "";
     }
     /* First make sure the password is valid */
-    if (($NewUserName != "") && (!authValidateUser($NewUserName, $NewUserPassword)))
-    {
-        print_header(0, 0, 0, 0);
-        echo "<P>".get_vocab('unknown_user')."</P>\n";
-        printLoginForm($TargetURL);
-        exit();
-    }
-    else
-    {
-        $UserName     = $NewUserName;
-        $UserPassword = $NewUserPassword;
-    }
+    if ($NewUserName == "") {
+        // Delete cookie
 
-    setcookie("UserName", $UserName);
-    setcookie("UserPassword", $UserPassword);
+        setcookie("UserName", '', time()-42000);
+    } else {
+        if (!authValidateUser($NewUserName, $NewUserPassword))
+        {
+            print_header(0, 0, 0, 0);
+            echo "<P>".get_vocab('unknown_user')."</P>\n";
+            printLoginForm($TargetURL);
+            exit();
+        }
+        else
+        {
+            $UserName     = $NewUserName;
+            $UserPassword = $NewUserPassword;
+        }
+
+        setcookie("UserName", $UserName);
+    }
     header ("Location: $TargetURL"); /* Redirect browser to initial page */
     /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
         which allows to work around problems with DNS inconsistencies in the server name.
@@ -132,20 +137,6 @@ function getUserName()
         global $HTTP_COOKIE_VARS;
 	if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["UserName"]))
 	    return $HTTP_COOKIE_VARS["UserName"];
-    }
-}
-
-function getUserPassword()
-{
-    if (!empty($_COOKIE) && isset($_COOKIE["UserPassword"]))
-    {
-	return $_COOKIE["UserPassword"];
-    }
-    else
-    {
-        global $HTTP_COOKIE_VARS;
-        if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["UserPassword"]))
-	    return $HTTP_COOKIE_VARS["UserPassword"];
     }
 }
 

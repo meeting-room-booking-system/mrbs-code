@@ -40,10 +40,15 @@ function authValidateUser($user, $pass)
       return 0;
    }
 
-   if (   isset($auth["user"][$user])
-       && ($auth["user"][$user] == $pass)
-      )
-	return 1; // User validated
+   if ((isset($auth["user"][$user])
+        && ($auth["user"][$user] == $pass)
+       ) ||
+       (isset($auth["user"][strtolower($user)])
+        && ($auth["user"][strtolower($user)] == $pass)
+       ))
+   {
+      return 1; // User validated
+   }
 
    return 0;		// User unknown or password invalid
 }
@@ -66,7 +71,7 @@ function authGetUserLevel($user, $lev1_admin)
    // Check if the user is can modify
    for($i = 0; isset($lev1_admin[$i]); $i++)
    {
-      if(strcmp($user, $lev1_admin[$i]) == 0)
+      if(strcasecmp($user, $lev1_admin[$i]) == 0)
 	 return 2;
    }
 

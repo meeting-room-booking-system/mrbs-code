@@ -21,7 +21,7 @@ if (empty($area))
     $area = get_default_area();
 }
 
-if(!getAuthorised(getUserName(), getUserPassword(), 2))
+if(!getAuthorised(2))
 {
 	showAccessDenied($day, $month, $year, $area);
 	exit();

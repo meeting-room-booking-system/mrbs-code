@@ -27,9 +27,4 @@ function getUserName()
 	return $REMOTE_ADDR;
 }
 
-function getUserPassword()
-{
-	return "dummy";
-}
-
 ?>

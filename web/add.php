@@ -8,7 +8,7 @@ include "functions.inc";
 include "$dbsys.inc";
 include "mrbs_auth.inc";
 
-if(!getAuthorised(getUserName(), getUserPassword(), 2))
+if(!getAuthorised(2))
 {
 	showAccessDenied($day, $month, $year, $area);
 	exit();

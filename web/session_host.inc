@@ -30,10 +30,4 @@ function getUserName()
         return $remotehostname;
 }
 
-# NOT used :
-function getUserPassword()
-{
-	return "dummy";
-}
-
 ?>

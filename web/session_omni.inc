@@ -48,12 +48,4 @@ function getUserName()
 	return $REMOTE_USER;
 }
 
-
-# NOT used :
-function getUserPassword()
-{
-	global $PHP_AUTH_PW;
-	return $PHP_AUTH_PW;
-}
-
 ?>

@@ -15,7 +15,7 @@ if(!isset($day) or !isset($month) or !isset($year))
 	$year  = date("Y");
 }
 
-if(!getAuthorised(getUserName(), getUserPassword(), 2))
+if(!getAuthorised(2))
 {
 	showAccessDenied($day, $month, $year, $area);
 	exit();
