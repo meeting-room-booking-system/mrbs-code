@@ -163,8 +163,10 @@ if(empty($err))
 	if($id)
 		mrbsDelEntry(getUserName(), $id, ($edit_type == "series"));
 	
+	$area = mrbsGetRoomArea($room_id);
+	
 	# Now its all done go back to the day view
-	Header("Location: day.php3?year=$year&month=$month&day=$day");
+	Header("Location: day.php3?year=$year&month=$month&day=$day&area=$area");
 	exit;
 }
 

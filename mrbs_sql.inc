@@ -326,4 +326,20 @@ function mrbsGetEntryInfo($id)
 	return $ret;
 }
 
+function mrbsGetRoomArea($id)
+{
+	$sql = "SELECT area_id FROM mrbs_room WHERE (id = $id)";
+	
+	$res = mysql_query($sql);
+	
+	if(mysql_num_rows($res) > 0)
+	{
+		$row = mysql_fetch_row($res);
+		
+		return $row[0];
+	}
+	
+	return 0;
+}
+
 ?>

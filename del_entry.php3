@@ -11,10 +11,11 @@ if(getAuthorised(getUserName(), getUserPassword()) && ($info = mrbsGetEntryInfo(
 	$day   = strftime("%d", $info[start_time]);
 	$month = strftime("%m", $info[start_time]);
 	$year  = strftime("%Y", $info[start_time]);
+	$area  = mrbsGetRoomArea($info[room_id]);
 	
 	if(mrbsDelEntry(getUserName(), $id, $series, 1))
 	{
-		Header("Location: day.php3?day=$day&month=$month&year=$year");
+		Header("Location: day.php3?day=$day&month=$month&year=$year&area=$area");
 		exit;
 	}
 }
