@@ -274,9 +274,9 @@ These settings control:
 - the number of search results to return per page,
 - the page refresh rate,
 - the way area/rooms are selected (html list or a drop-down select box),
-- the way entries are displayed in monthly view (start/end slot or brief 
-  description),
-- the way weeks are displayed in the bottom of the page (as week numbers (ie. 
+- the way entries are displayed in monthly view (start/end slot, brief
+  description or both),
+- the way weeks are displayed in the bottom of the page (as week numbers (ie.
   42) instead of 'first day of the week' (13 Oct)),
 - display of times on right and left side in day and week view,
 - display of horizontal stripes on the day view,
@@ -380,4 +380,3 @@ large number of test entries to your database, regardless of
 authentication, and book all your rooms to people you've never heard of.
 
 $Id$
-

@@ -119,7 +119,8 @@ $area_list_format = "list";
 
 # Entries in monthly view can be shown as start/end slot, brief description or
 # both. Set to "description" for brief description, "slot" for time slot and
-# "both" for both. Default is "description"
+# "both" for both. Default is "both", but 6 entries per day are shown instead
+# of 12.
 $monthly_view_entries_details = "both";
 
 # To view weeks in the bottom (trailer.inc) as week numbers (42) instead of
