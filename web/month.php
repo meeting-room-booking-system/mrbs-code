@@ -31,7 +31,7 @@ print_header($day, $month, $year, $area);
 if (empty($area))
     $area = get_default_area();
 if (empty($room))
-    $room = sql_query1("select min(id) from mrbs_room where area_id=$area");
+    $room = get_default_room($area);
 # Note $room will be -1 if there are no rooms; this is checked for below.
 
 # Month view start time. This ignores morningstarts/eveningends because it

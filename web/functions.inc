@@ -328,8 +328,17 @@ function unslashes($s)
 # This could be changed to implement something like per-user defaults.
 function get_default_area()
 {
-	$area = sql_query1("SELECT MIN(id) FROM mrbs_area");
+	$area = sql_query1("SELECT id FROM mrbs_area ORDER BY area_name LIMIT 1");
 	return ($area < 0 ? 0 : $area);
+}
+
+# Return a default room given a valid area; used if no room is already known.
+# This returns the first room in alphbetic order in the database.
+# This could be changed to implement something like per-user defaults.
+function get_default_room($area)
+{
+	$room = sql_query1("SELECT id FROM mrbs_room WHERE area_id=$area ORDER BY room_name LIMIT 1");
+	return ($room < 0 ? 0 : $room);
 }
 
 # Get the local day name based on language. Note 2000-01-02 is a Sunday.
