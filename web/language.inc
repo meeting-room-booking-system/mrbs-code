@@ -168,7 +168,7 @@ if (!$disable_automatic_language_changing)
 $windows_locale = "eng";
 
 # 2003/11/09 JF Larvoire: Help new admins understand what to do in case the iconv error occurs...
-if (!function_exists('iconv'))
+if (($unicode_encoding) && (!function_exists('iconv')))
 {
   exit('
 <P>
