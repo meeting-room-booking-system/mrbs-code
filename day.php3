@@ -5,14 +5,18 @@ include "functions.inc";
 include "connect.inc";
 include "mincals.inc";
 
-load_user_preferences ();
+load_user_preferences();
 
 #If we dont know the right date then make it up 
-if (!$day or !$month or !$year) {
+if(!isset($day) or !isset($month) or !isset($year))
+{
 	$day   = date("d");
 	$month = date("m");
 	$year  = date("Y");
 }
+
+if(!isset($area))
+	$area = 1;
 
 # print the page header
 print_header($day, $month, $year, $area);
@@ -35,7 +39,8 @@ if (!$area) { $area = 1; };
 echo "<u>$lang[areas]</u><br>";
 $sql = "select id, area_name from mrbs_area";
 $res = mysql_query($sql);
-while ($row = mysql_fetch_row($res)) {
+while($row = mysql_fetch_row($res))
+{
 	echo "<a href=day.php3?year=$year&month=$month&day=$day&area=$row[0]>";
 	if ($row[0] == $area) { echo "<font color=red>";}
 	echo "$row[1]</a><br>";
@@ -70,56 +75,60 @@ echo "<table width=100%><tr><td><a href=day.php3?year=$yy&month=$ym&day=$yd&area
 #We want to build an array containing all the data we want to show
 #and then spit it out. 
 
-#In PHP we dont need to define an array before using it
-
 #Get all appointments for today in the area that we care about
-$sql = "select create_by, mrbs_room.id, start_time, end_time, type, name, mrbs_entry.description, mrbs_entry.id, mrbs_entry.type
+$sql = "SELECT room_id, start_time, end_time, mrbs_entry.id, type, name, mrbs_entry.description
 
-from mrbs_entry left join mrbs_room on mrbs_entry.room_id = mrbs_room.id
+FROM mrbs_entry LEFT JOIN mrbs_room ON (mrbs_entry.room_id = mrbs_room.id)
 
-where area_id = $area 
-      and (start_time between $am7 and $pm7
-		or end_time between $am7 and $pm7
-      or $am7 between start_time and end_time)
-";
+WHERE area_id = $area AND
+(
+ start_time BETWEEN $am7       AND $pm7 OR
+ end_time   BETWEEN $am7       AND $pm7 OR
+ $am7       BETWEEN start_time AND end_time
+)";
 
 $res = mysql_query($sql);
 echo mysql_error();
 
-while ($row = mysql_fetch_row($res)) {
-	#Each row weve got here is an appointment. add the details to the array
-	#Loop from the start of the booking to the end, adding to the array
-	#Row[1] = Room
-	#row[2] = start time
-	#row[3] = end time
-	#row[5] = short description
-	#row[7] = id of this booking
-	#row[8] = type (internal/external)
+while($row = mysql_fetch_row($res))
+{
+	# Each row weve got here is an appointment. add the details to the array
+	# Loop from the start of the booking to the end, adding to the array
+	# 
+	# $row[0] = Room ID
+	# $row[1] = Start time
+	# $row[2] = End time
+	# $row[3] = Entry ID
+	# $row[4] = Booking type
+	# $row[5] = Booked for
+	# $row[6] = Description
 	
 	# $today is a map of the screen that will be displayed
 	# It looks like:
-	#     $today[Room Name][Time][id]
-	#                            [color]
-	#                            [description]
+	#     $today[Room ID][Time][0] = The rooms ID
+	#                          [1] = The rooms type (Internal, External)
+	#                          [2] = The text to display
 	
-	for($t = $row[2]; ($t < $row[3]) || ($t == $row[2]); $t = $t + $resolution)
+	for($t = $row[1]; ($t < $row[2]) || ($t == $row[1]); $t += $resolution)
 	{
-		$today[$row[1]][$t][id]     = $row[7];
-		$today[$row[1]][$t][color]  = $row[8];
+		$today[$row[0]][$t][0] = $row[3];
+		$today[$row[0]][$t][1] = $row[4];
+		$today[$row[0]][$t][2] = "";
 	}
 	
 	# show the name of the booker in the first segment that the
 	# booking happens in, or at the start of the day if it started
 	# before today
-	$today[$row[1]][$row[2]][data] = $row[5];
 	
-	if($row[2] < $am7)
-		$today[$row[1]][$am7][data] = $row[5];
+	if($row[2] > $am7)
+		$today[$row[0]][$row[1]][2] = $row[5];
+	else
+		$today[$row[0]][$am7][2] = $row[5];
 }
 
-#We need to know what all the rooms area called, so we can show them all
-#pull the data from the db and store it. Convienently we can print the room 
-#headings and capacities at the same time
+# We need to know what all the rooms area called, so we can show them all
+# pull the data from the db and store it. Convienently we can print the room 
+# headings and capacities at the same time
 
 $sql = "select room_name, capacity, id from mrbs_room where area_id=$area";
 $res = mysql_query($sql);
@@ -128,66 +137,87 @@ $res = mysql_query($sql);
 # If there are none then show an error and dont bother doing anything
 # else
 
-if (mysql_num_rows($res) == 0) {
+if(mysql_num_rows($res) == 0)
+{
 	echo "<h1>No rooms defined for this area</h1>";
-} else {
+}
+else
+{
 	#This is where we start displaying stuff
 	echo "<table cellspacing=0 border=1 width=100%>";
 	echo "<tr><th>$lang[time]</th>";
-
-	while ($row = mysql_fetch_row($res)) {
+	
+	while ($row = mysql_fetch_row($res))
+	{
 		echo "<th align=top>$row[0] ($row[1])</th>";
 		$rooms[] = $row[2];
 	}
+	
 	echo "</tr>\n";
 	
 	$REQUEST_URI = basename($REQUEST_URI);
 	
-	#This is the main bit of the display
-	#We loop through unixtime and then the rooms we just got
-
-	for ($t=$am7; $t<=$pm7; $t=$t+$resolution) {
+	# This is the main bit of the display
+	# We loop through unixtime and then the rooms we just got
+	
+	for($t = $am7; $t <= $pm7; $t += $resolution)
+	{
 		$nw = date("Y-m-d H:i",$t+$resolution);
 		echo "<tr>";
-
-		#Show the time linked to the URL for highlighting that time
+		
+		# Show the time linked to the URL for highlighting that time
 		echo "<td width=1% class=\"red\"><a href=$REQUEST_URI&timetohighlight=$t>" . date("H:i",$t) . "</a></td>";
-
-		#Loop through the list of rooms we have for this area
-		while (list($key, $room) = each($rooms)) {
-			$id    = $today[$room][$t][id];
-			$descr = htmlspecialchars($today[$room][$t][data]);
-			$color = $today[$room][$t][color];
+		
+		# Loop through the list of rooms we have for this area
+		while(list($key, $room) = each($rooms))
+		{
+			if(isset($today[$room][$t][0]))
+			{
+				$id    = $today[$room][$t][0];
+				$color = $today[$room][$t][1];
+				$descr = htmlspecialchars($today[$room][$t][2]);
+			}
+			else
+				unset($id);
 			
 			# $c is the colour of the cell that the browser sees. White normally, 
 			# red if were hightlighting that line and a nice attractive green if the room is booked.
 			# We tell if its booked by $id having something in it
-			if ($id) {
+			if(isset($id))
 				$c = $color;
-			} else {
-				if ($t == $timetohighlight) {
+			else
+			{
+				if(isset($timetohighlight) && ($t == $timetohighlight))
 					$c = "red";
-				} else {
+				else
 					$c = "white";
-				}
 			}
-			echo "<td class=\"$c\">";
+			
+			echo "<td class=\"" . $c . "\">";
+			
 			#If the room isnt booked then allow it to be booked
-			if (!$id)
+			if(!isset($id))
 			{
 				$hour = date("H",$t); $minute  = date("i",$t);
-
+				
 				echo "<center><a href=edit_entry.php3?room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day><img src=new.gif border=0></a></center>";
 			}
 			else
 			{
-				#if it is booked then show 
-				echo " <a href=view_entry.php3?id=$id&day=$day&month=$month&year=$year>$descr&nbsp;</a>";
+				if($descr != "")
+				{
+					#if it is booked then show 
+					echo "<a href=view_entry.php3?id=$id&day=$day&month=$month&year=$year>$descr&nbsp;</a>";
+				}
+				else
+					echo "&nbsp;";
 			}
-
+			
 			echo "</td>\n";
 		}
+		
 		echo "</tr>\n";
+		
 		reset($rooms);
 	}
 }

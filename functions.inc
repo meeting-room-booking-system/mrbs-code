@@ -21,7 +21,7 @@ function print_header($day, $month, $year, $area)
 ?>
 <HTML>
  <HEAD>
-  <TITLE><? echo $lang[mrbs] ?></TITLE>
+  <TITLE><?= $lang["mrbs"] ?></TITLE>
  </HEAD>
  <BODY>
    <TABLE WIDTH="100%">
@@ -30,8 +30,8 @@ function print_header($day, $month, $year, $area)
        <TABLE WIDTH="100%" BORDER=0>
         <TR>
          <TD CLASS=banner>
-          <FONT SIZE=4><B><? echo $mrbs_company ?></B><BR>
-           <A HREF="index.php3"><? echo $lang[mrbs] ?></A>
+          <FONT SIZE=4><B><?= $mrbs_company ?></B><BR>
+           <A HREF="index.php3"><?= $lang["mrbs"] ?></A>
           </FONT>
          </TD>
          <TD CLASS=banner VALIGN=CENTER>
@@ -40,25 +40,25 @@ function print_header($day, $month, $year, $area)
 <?
    genDateSelector("", $day, $month, $year);
 ?>
-            <INPUT TYPE=HIDDEN NAME=area VALUE=<? echo $area ?>>
-	    <INPUT TYPE=SUBMIT VALUE="<? echo $lang[goto] ?>">
+            <INPUT TYPE=HIDDEN NAME=area VALUE=<?= $area ?>>
+	    <INPUT TYPE=SUBMIT VALUE="<?= $lang["goto"] ?>">
            </FONT>
           </FORM>
          </TD>
          <TD CLASS=banner VALIGN=CENTER ALIGN=CENTER>
-          <A HREF="help.php3?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>">Help</A>
+          <A HREF="help.php3?day=<?= $day ?>&month=<?= $month ?>&year=<?= $year ?>">Help</A>
          </TD>
          <TD CLASS=banner VALIGN=CENTER ALIGN=CENTER>
-          <A HREF="admin.php3?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>">Admin</A>
+          <A HREF="admin.php3?day=<?= $day ?>&month=<?= $month ?>&year=<?= $year ?>">Admin</A>
          </TD>
          <TD CLASS=banner VALIGN=CENTER ALIGN=CENTER>
           <FORM METHOD=GET ACTION="search.php3">
            <FONT SIZE=2>Search: </FONT>
-           <INPUT TYPE=TEXT   NAME=search_str VALUE="<? echo $search_str ?>" SIZE=10>
-           <INPUT TYPE=HIDDEN NAME=day        VALUE="<? echo $day        ?>"        >
-           <INPUT TYPE=HIDDEN NAME=month      VALUE="<? echo $month      ?>"        >
-           <INPUT TYPE=HIDDEN NAME=year       VALUE="<? echo $year       ?>"        >
-           <INPUT TYPE=HIDDEN NAME=area       VALUE="<? echo $area       ?>"        >
+           <INPUT TYPE=TEXT   NAME=search_str VALUE="<?= $search_str ?>" SIZE=10>
+           <INPUT TYPE=HIDDEN NAME=day        VALUE="<?= $day        ?>"        >
+           <INPUT TYPE=HIDDEN NAME=month      VALUE="<?= $month      ?>"        >
+           <INPUT TYPE=HIDDEN NAME=year       VALUE="<?= $year       ?>"        >
+           <INPUT TYPE=HIDDEN NAME=area       VALUE="<?= $area       ?>"        >
           </FORM>
          </TD>
         </TR>

@@ -1,6 +1,6 @@
 <P>
 <HR CLEAR="all">
-<B><?echo $lang[viewday]?></B>
+<B><?echo $lang["viewday"]?></B>
 <?php
 
 if(!isset($year))

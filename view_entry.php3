@@ -5,6 +5,17 @@ include "functions.inc";
 include "connect.inc";
 include "mrbs_auth.inc";
 
+#If we dont know the right date then make it up 
+if(!isset($day) or !isset($month) or !isset($year))
+{
+        $day   = date("d");
+        $month = date("m");
+        $year  = date("Y");
+}
+
+if(!isset($area))
+        $area = 0;
+
 print_header($day, $month, $year, $area);
 
 # Find all the data about our booking
@@ -68,8 +79,8 @@ if($repeat_id != 0)
 toTimeString($duration, $dur_units);
 
 # Make a nice little array so we can write the type in english easily
-$typel[I] = "Internal";
-$typel[E] = "External";
+$typel["I"] = "Internal";
+$typel["E"] = "External";
 
 #now that we know all the data we start drawing it
 echo "<H3>$name</H3>\n";

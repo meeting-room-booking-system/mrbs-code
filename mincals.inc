@@ -82,7 +82,8 @@ class Calendar
     function getFirstDays()
     {
       $basetime = mktime(12,0,0,6,11,2000);
-      for ($i = 0; $i < 7; $i++) {
+      for($i = 0, $s = ""; $i < 7; $i++)
+      {
          $show = $basetime + ($i * 24 * 60 * 60);
          $fl = substr(strftime('%a',$show),0,1);
         	$s .= "<td align=center valign=top class=calendarHeader>$fl</td>\n";

@@ -22,7 +22,7 @@ function getAuthorised($user, $pass, $level)
 	if(!authValidateUser($user, $pass))
 		return 0;
 	
-	return (authGetUserLevel($user, $auth[admin]) >= $level);
+	return authGetUserLevel($user, $auth["admin"]) >= $level;
 }
 
 /* getWritable($creator, $user)
@@ -59,16 +59,16 @@ function getWritable($creator, $user)
  */
 function showAccessDenied($day, $month, $year, $area)
 {
-	global $lang;
+	global $lang, $HTTP_REFERER;
 	
 	print_header($day, $month, $year, $area);
 ?>
-  <H1><?echo $lang[accessdenied]?></H1>
+  <H1><?echo $lang["accessdenied"]?></H1>
   <P>
-   <?echo $lang[norights]?>
+   <?echo $lang["norights"]?>
   </P>
   <P>
-   <A HREF=<? echo $HTTP_REFERER; ?>><? echo $lang[returnprev]; ?></A>
+   <A HREF=<? echo $HTTP_REFERER; ?>><? echo $lang["returnprev"]; ?></A>
   </P>
  </BODY>
 </HTML>

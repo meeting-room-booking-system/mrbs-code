@@ -4,6 +4,17 @@ include "functions.inc";
 include "connect.inc";
 include "mrbs_auth.inc";
 
+#If we dont know the right date then make it up 
+if(!isset($day) or !isset($month) or !isset($year))
+{
+        $day   = date("d");
+        $month = date("m");
+        $year  = date("Y");
+}
+
+if(!isset($area))
+        $area = 1;
+
 if(!getAuthorised(getUserName(), getUserPassword(), 2))
 {
         showAccessDenied($day, $month, $year, $area);
@@ -16,7 +27,7 @@ if(!getAuthorised(getUserName(), getUserPassword(), 2))
 if($type == "room")
 {
 	# We are sposed to delete a room
-	if($confirm)
+	if(isset($confirm))
 	{
 		# They have confirmed it already, so go blast!
 		# First take out all appointments for this room
@@ -30,7 +41,7 @@ if($type == "room")
 	}
 	else
 	{
-		print_header();
+		print_header($day, $month, $year, $area);
 		
 		# We tell them how bad what theyre about to do is
 		# Find out how many appointments would be deleted
@@ -78,7 +89,7 @@ if($type == "area")
 	else
 	{
 		# There are rooms left in the area
-		print_header();
+		print_header($day, $month, $year, $area);
 		
 		echo "You must delete all rooms in this area before you can delete it<p>";
 		echo "<a href=admin.php3>Go back to Admin page</a>";

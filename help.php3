@@ -3,7 +3,19 @@ include "config.inc";
 include "functions.inc";
 
 load_user_preferences ();
-print_header($day,$month,$year, $area);
+
+#If we dont know the right date then make it up 
+if(!isset($day) or !isset($month) or !isset($year))
+{
+        $day   = date("d");
+        $month = date("m");
+        $year  = date("Y");
+}
+
+if(!isset($area))
+        $area = 1;
+
+print_header($day, $month, $year, $area);
 
 ?>
 <h3>Help</h3>

@@ -4,6 +4,17 @@ include "functions.inc";
 include "connect.inc";
 include "mrbs_auth.inc";
 
+#If we dont know the right date then make it up 
+if(!isset($day) or !isset($month) or !isset($year))
+{
+        $day   = date("d");
+        $month = date("m");
+        $year  = date("Y");
+}
+
+if(!isset($area))
+        $area = 1;
+
 load_user_preferences();
 
 $search_str = stripSlashes($search_str);
@@ -23,7 +34,7 @@ if(!$search_str)
 }
 
 # now is used so that we only display entries newer than the current time
-echo "<H4>" . $lang[search_results] . " \"<font color=\"blue\">$search_str</font>\"</H4>\n";
+echo "<H4>" . $lang["search_results"] . " \"<font color=\"blue\">$search_str</font>\"</H4>\n";
 
 $now = time();
 
@@ -46,14 +57,14 @@ if(!isset($total))
 
 if($total == 0)
 {
-   echo "<B>" . $lang[nothing_found] . "</B>\n";
+   echo "<B>" . $lang["nothing_found"] . "</B>\n";
    include "trailer.inc";
    echo "</BODY>";
    echo "</HTML>";
    exit;
 }
 
-if(!$search_pos || $search_pos <= 0)
+if(!isset($search_pos) || ($search_pos <= 0))
 	$search_pos = 0;
 else
 {
@@ -69,28 +80,28 @@ $sql = "SELECT id, create_by, name, description, start_time
                 description LIKE '%$search_str%'    )AND
                 start_time > '$now'
        ORDER BY start_time asc
-       LIMIT " . $search_pos . ", " . $search[count];
+       LIMIT " . $search_pos . ", " . $search["count"];
 
 # this is a flag to tell us not to display a "Next" link
 $result = mysql_query($sql);
 $num_records = mysql_num_rows($result);
 
 $has_prev = $search_pos > 0;
-$has_next = $search_pos < ($total-$search[count]);
+$has_next = $search_pos < ($total-$search["count"]);
 
 if($has_prev || $has_next)
 {
-  echo "<B>" . $lang[records] . ($search_pos+1) . $lang[through] . ($search_pos+$num_records) . $lang[of] . $total . "<BR>";
+  echo "<B>" . $lang["records"] . ($search_pos+1) . $lang["through"] . ($search_pos+$num_records) . $lang["of"] . $total . "<BR>";
   
   # display a "Previous" button if necessary
   if($has_prev)
   {
     echo "<A HREF=\"search.php3?search_str=$search_str&search_pos=";
-    echo max(0, $search_pos-$search[count]);
+    echo max(0, $search_pos-$search["count"]);
     echo "&total=$total&year=$year&month=$month&day=$day\">";
   }
   
-  echo "<B>" . $lang[previous] . "</B>";
+  echo "<B>" . $lang["previous"] . "</B>";
   
   if($has_prev)
     echo "</A>";
@@ -102,11 +113,11 @@ if($has_prev || $has_next)
   if($has_next)
   {
     echo "<A HREF=\"search.php3?search_str=$search_str&search_pos=";
-    echo max(0, $search_pos+$search[count]);
+    echo max(0, $search_pos+$search["count"]);
     echo "&total=$total&year=$year&month=$month&day=$day\">";
   }
   
-  echo "<B>". $lang[next] ."</B>";
+  echo "<B>". $lang["next"] ."</B>";
   
   if($has_next)
     echo "</A>";
@@ -115,18 +126,18 @@ if($has_prev || $has_next)
   <P>
   <TABLE BORDER=2 BORDERCOLOR="#000000" CELLSPACING=0 CELLPADDING=3>
    <TR>
-    <TH BGCOLOR="#000000"><? echo $lang[entry]       ?></TH>
-    <TH BGCOLOR="#000000"><? echo $lang[createdby]   ?></TH>
-    <TH BGCOLOR="#000000"><? echo $lang[namebooker]  ?></TH>
-    <TH BGCOLOR="#000000"><? echo $lang[description] ?></TH>
-    <TH BGCOLOR="#000000"><? echo $lang[start_date]  ?></TH>
+    <TH BGCOLOR="#000000"><? echo $lang["entry"]       ?></TH>
+    <TH BGCOLOR="#000000"><? echo $lang["createdby"]   ?></TH>
+    <TH BGCOLOR="#000000"><? echo $lang["namebooker"]  ?></TH>
+    <TH BGCOLOR="#000000"><? echo $lang["description"] ?></TH>
+    <TH BGCOLOR="#000000"><? echo $lang["start_date"]  ?></TH>
    </TR>
 <?
 while($row = mysql_fetch_row($result))
 {
 ?>
    <TR>
-    <TD><A HREF="view_entry.php3?id=<? echo $row[0] . "\">" . $lang[view] ?></A></TD>
+    <TD><A HREF="view_entry.php3?id=<? echo $row[0] . "\">" . $lang["view"] ?></A></TD>
     <TD><? echo $row[1] ?></TD>
     <TD><? echo $row[2] ?></TD>
     <TD><? echo $row[3] ?></TD>

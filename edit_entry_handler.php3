@@ -1,10 +1,20 @@
 <?php
-
 include "config.inc";
 include "functions.inc";
 include "connect.inc";
 include "mrbs_auth.inc";
 include "mrbs_sql.inc";
+
+#If we dont know the right date then make it up 
+if(!isset($day) or !isset($month) or !isset($year))
+{
+        $day   = date("d");
+        $month = date("m");
+        $year  = date("Y");
+}
+
+if(!isset($area))
+        $area = 0;
 
 if(!getAuthorised(getUserName(), getUserPassword(), 1))
 {
@@ -39,7 +49,7 @@ switch($dur_units)
 
 // Units are now in "$dur_units" numbers of seconds
 
-if($all_day == "yes")
+if(isset($all_day) && ($all_day == "yes"))
 {
 	$starttime = mktime(0, 0, 0, $month, $day  , $year);
 	$endtime   = mktime(0, 0, 0, $month, $day+1, $year);
@@ -90,7 +100,7 @@ if(!empty($reps))
 		
 		for($i = 0; $i < count($reps); $i++)
 		{
-			$tmp = mrbsCheckFree($room_id, $reps[$i], $reps[$i] + $diff, $id);
+			$tmp = mrbsCheckFree($room_id, $reps[$i], $reps[$i] + $diff, isset($id) ? $id : -1);
 			
 			if(!empty($tmp))
 				$err = $err . $tmp;
@@ -103,7 +113,7 @@ if(!empty($reps))
 	}
 }
 else
-	$err = mrbsCheckFree($room_id, $starttime, $endtime-1, $id);
+	$err = mrbsCheckFree($room_id, $starttime, $endtime-1, isset($id) ? $id : -1);
 
 if(empty($err))
 {
@@ -133,7 +143,7 @@ if(empty($err))
 	}
 	
 	# Delete the original entry
-	if($id)
+	if(isset($id))
 		mrbsDelEntry(getUserName(), $id, ($edit_type == "series"), 0);
 	
 	$area = mrbsGetRoomArea($room_id);
@@ -147,16 +157,16 @@ if(strlen($err))
 {
 	print_header($day, $month, $year, $area);
 	
-	echo "<H2>" . $lang[sched_conflict] . "</H2>";
-	if(!$hide_title)
+	echo "<H2>" . $lang["sched_conflict"] . "</H2>";
+	if(!isset($hide_title))
 	{
-		echo $lang[conflict];
+		echo $lang["conflict"];
 		echo "<UL>";
 	}
 	
 	echo $err;
 	
-	if(!$hide_title)
+	if(!isset($hide_title))
 		echo "</UL>";
 }
 

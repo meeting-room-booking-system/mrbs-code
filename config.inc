@@ -22,19 +22,19 @@ $morningstarts = 7;
 $eveningends   = 19;
 
 # Searching parameters
-$search[count] = 20;
+$search["count"] = 20;
 
 # Authentication settings - read AUTHENTICATION
-$auth[realm]  = "";
-$auth[type]   = "ip";
-$auth[prog]   = "";
-$auth[params] = "";
+$auth["realm"]  = "";
+$auth["type"]   = "ip";
+$auth["prog"]   = "";
+$auth["params"] = "";
 
 # The various level two users (can modify other peoples settings)
-$auth[admin][] = "10.10.10.1";
-$auth[admin][] = "10.10.10.2";
-$auth[admin][] = "10.10.10.3";
-$auth[admin][] = "10.10.10.4";
+$auth["admin"][] = "10.10.10.1";
+$auth["admin"][] = "10.10.10.2";
+$auth["admin"][] = "10.10.10.3";
+$auth["admin"][] = "10.10.10.4";
 
 # 'auth_ldap' configuration settings
 # Where is the LDAP server

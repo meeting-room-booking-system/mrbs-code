@@ -4,6 +4,14 @@ include "functions.inc";
 include "connect.inc";
 include "mrbs_auth.inc";
 
+#If we dont know the right date then make it up 
+if(!isset($day) or !isset($month) or !isset($year))
+{
+        $day   = date("d");
+        $month = date("m");
+        $year  = date("Y");
+}
+
 load_user_preferences();
 
 if(!getAuthorised(getUserName(), getUserPassword(), 2))
@@ -12,7 +20,7 @@ if(!getAuthorised(getUserName(), getUserPassword(), 2))
 	exit();
 }
 
-print_header($day, $month, $year, $area);
+print_header($day, $month, $year, isset($area) ? $area : 1);
 
 ?>
 

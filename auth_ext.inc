@@ -32,13 +32,13 @@ function authValidateUser($user, $pass)
 	// Check if we do not have a username/password
 	if(!isset($user) || !isset($pass))
 	{
-		authGet($auth[realm]);
+		authGet($auth["realm"]);
 		return 0;
 	}
 	
 	
 	// Generate the command line
-	$cmd = $auth[prog] . ' ' . $auth[params];
+	$cmd = $auth["prog"] . ' ' . $auth["params"];
 	$cmd = preg_replace('/#USERNAME#/',$user,$cmd);
 	$cmd = preg_replace('/#PASSWORD#/',$pass,$cmd);
 	

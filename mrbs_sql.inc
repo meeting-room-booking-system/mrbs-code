@@ -51,6 +51,8 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore)
 	if(mysql_num_rows($res) == 0)
 		return;
 	
+	$err = "";
+	
 	while($row = mysql_fetch_row($res))
 		$err .= "<LI><A HREF=view_entry.php3?id=$row[0]>$row[1]</A>";
 	
@@ -202,7 +204,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr)
 	$month = date("m", $time);
 	$year  = date("Y", $time);
 	
-	for($i = 0; ($time < $enddate) && ($i < $max_ittr); $i++)
+	for($entrys = null, $i = 0; ($time < $enddate) && ($i < $max_ittr); $i++)
 	{
 		$time = $entrys[$i] = mktime($hour, $min, $sec, $month, $day, $year);
 		
@@ -307,21 +309,21 @@ function mrbsGetEntryInfo($id)
 	
 	$res = mysql_query($sql);
 	
-	if(mysql_num_rows($res) > 0)
-	{
-		$row = mysql_fetch_row($res);
-		
-		$ret[start_time]  = $row[0];
-		$ret[end_time]    = $row[1];
-		$ret[entry_type]  = $row[2];
-		$ret[repeat_id]   = $row[3];
-		$ret[room_id]     = $row[4];
-		$ret[timestamp]   = $row[5];
-		$ret[create_by]   = $row[6];
-		$ret[name]        = $row[7];
-		$ret[type]        = $row[8];
-		$ret[description] = $row[9];
-	}
+	if(mysql_num_rows($res) < 0)
+		return;
+	
+	$row = mysql_fetch_row($res);
+	
+	$ret["start_time"]  = $row[0];
+	$ret["end_time"]    = $row[1];
+	$ret["entry_type"]  = $row[2];
+	$ret["repeat_id"]   = $row[3];
+	$ret["room_id"]     = $row[4];
+	$ret["timestamp"]   = $row[5];
+	$ret["create_by"]   = $row[6];
+	$ret["name"]        = $row[7];
+	$ret["type"]        = $row[8];
+	$ret["description"] = $row[9];
 	
 	return $ret;
 }
@@ -331,6 +333,9 @@ function mrbsGetRoomArea($id)
 	$sql = "SELECT area_id FROM mrbs_room WHERE (id = $id)";
 	
 	$res = mysql_query($sql);
+	
+	if(mysql_error())
+		return 0;
 	
 	if(mysql_num_rows($res) > 0)
 	{
