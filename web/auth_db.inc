@@ -33,6 +33,8 @@ $user_list_link = "edit_users.php";
 
 function authValidateUser($user, $pass)
 {
+   global $tbl_users;
+
    $user=strtolower($user);
    $pass = md5($pass);
    return sql_query1("select count(*) from $tbl_users where name='$user' and password='$pass';");
