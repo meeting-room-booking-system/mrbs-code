@@ -102,9 +102,12 @@ function notifyAdminOnBooking($new_entry , $new_id)
     global $url_base, $returl, $mail_vocab, $name, $description, $area_name;
     global $room_name, $starttime, $duration, $dur_units, $end_date, $endtime;
     global $rep_enddate, $typel, $type, $create_by, $rep_type, $enable_periods;
-    global $tbl_room, $tbl_area, $tbl_entry, $tbl_users, $mail_previous, $auth;
+    global $tbl_room, $tbl_area, $tbl_entry, $tbl_users, $tbl_repeat;
+    global $mail_previous, $auth;
+    
     //
     $recipients = '';
+    $id_table = ($rep_type > 0 ? "rep" : "e");
     (MAIL_ADMIN_ON_BOOKINGS) ? $recipients = MAIL_RECIPIENTS : '';
     if (MAIL_AREA_ADMIN_ON_BOOKINGS)
     {
@@ -112,8 +115,8 @@ function notifyAdminOnBooking($new_entry , $new_id)
         if ($new_entry)
         {
             $sql = "SELECT a.area_admin_email ";
-            $sql .= "FROM $tbl_room r, $tbl_area a, $tbl_entry e ";
-            $sql .= "WHERE e.id=$new_id AND r.id=e.room_id AND a.id=r.area_id";
+            $sql .= "FROM $tbl_room r, $tbl_area a, $tbl_entry e, $tbl_repeat rep ";
+            $sql .= "WHERE ${id_table}.id=$new_id AND r.id=${id_table}.room_id AND a.id=r.area_id";
             $res = sql_query($sql);
             (! $res) ? fatal_error(0, sql_error()) : '';
             $row = sql_row($res, 0);
@@ -146,8 +149,8 @@ function notifyAdminOnBooking($new_entry , $new_id)
         if ($new_entry)
         {
             $sql = "SELECT r.room_admin_email ";
-            $sql .= "FROM $tbl_room r, $tbl_entry e ";
-            $sql .= "WHERE e.id=$new_id AND r.id=e.room_id";
+            $sql .= "FROM $tbl_room r, $tbl_entry e, $tbl_repeat rep ";
+            $sql .= "WHERE ${id_table}.id=$new_id AND r.id=${id_table}.room_id";
             $res = sql_query($sql);
             (! $res) ? fatal_error(0, sql_error()) : '';
             $row = sql_row($res, 0);

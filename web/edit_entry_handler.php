@@ -218,7 +218,7 @@ if(empty($err))
                     // comparison. If MAIL_BOOKER is set, we also need
                     // previous entry data to send mail to the room booker,
                     // even if we do not need entry details
-                    if ( (MAIL_DETAILS || MAIL_BOOKER) && isset($id) )
+                    if ( isset($id) )
                     {
                         $mail_previous = getPreviousEntryData($id, 1);
                     }
@@ -265,7 +265,7 @@ if(empty($err))
                     // comparison. If MAIL_BOOKER is set, we also need
                     // previous entry data to send mail to the room booker,
                     // even if we do not need entry details
-                    if ( (MAIL_DETAILS || MAIL_BOOKER) && isset($id) )
+                    if ( isset($id) )
                     {
                         $mail_previous = getPreviousEntryData($id, 0);
                     }
