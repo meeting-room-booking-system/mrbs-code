@@ -23,8 +23,6 @@ session_start();
 */
 if (isset($Action) && ($Action == "SetName"))
 {
-    global $HTTP_HOST;
-
     /* First make sure the password is valid */
     if (($NewUserName != "") && (!authValidateUser($NewUserName, $NewUserPassword)))
     {
@@ -46,7 +44,10 @@ if (isset($Action) && ($Action == "SetName"))
         $HTTP_SESSION_VARS["UserPassword"] = $NewUserPassword;
     }
 
-    header ("Location: http://$HTTP_HOST$TargetURL"); /* Redirect browser to initial page */
+    header ("Location: $TargetURL"); /* Redirect browser to initial page */
+    /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
+        which allows to work around problems with DNS inconsistencies in the server name.
+        Anyway, if the browser cannot redirect automatically, the manual link below will work. */
     print_header(0, 0, 0, 0);
     echo "<br />\n";
     echo "<p>Please click <a href=\"$TargetURL\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
@@ -66,7 +67,7 @@ function printLoginForm($TargetURL)
 <p>
   <?php echo get_vocab("please_login") ?>
 </p>
-<form method="post" action="<?php echo $PHP_SELF ?>">
+<form method="post" action="<?php echo basename($PHP_SELF) ?>">
   <table>
     <tr>
       <td align="right"><?php echo get_vocab("user_name") ?></td>
@@ -111,7 +112,7 @@ function authGet()
 
     echo "<p>".get_vocab("norights")."</p>\n";
 
-    $TargetURL = $PHP_SELF;
+    $TargetURL = basename($PHP_SELF);
     if (isset($QUERY_STRING)) $TargetURL = $TargetURL . "?" . $QUERY_STRING;
     printLoginForm($TargetURL);
 
@@ -151,7 +152,8 @@ function PrintLogonBox()
 {
     global $PHP_SELF, $QUERY_STRING;
 
-    $TargetURL = $PHP_SELF;
+    $TargetURL = basename($PHP_SELF);
+    if (isset($url_base) && ($url_base != "")) $TargetURL = $url_base . '/' . $TargetURL;
     if (isset($QUERY_STRING)) $TargetURL = $TargetURL . "?" . $QUERY_STRING;
     $user=getUserName();
     if (isset($user))

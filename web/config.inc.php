@@ -36,11 +36,11 @@ $mrbs_admin_email = "admin_email@your.org";
 # $mrbs_company = "<a href=http://www.your_organisation.com/><img src=your_logo.gif border=0></a>";
 $mrbs_company = "Your Company";
 
-# This is to fix URL problems when using a proxy in the environment
-# Then specify the real path before your mrbs directory like this:
+# This is to fix URL problems when using a proxy in the environment.
+# If links inside MRBS appear broken, then specify here the URL of
+# your MRBS root directory, as seen by the users. For example:
 # $url_base =  "http://webtools.uab.ericsson.se/oam";
 $url_base = "";
-$PHP_SELF = $url_base . $PHP_SELF;
 
 
 ###################

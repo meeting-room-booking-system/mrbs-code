@@ -66,7 +66,7 @@ for ($i = -2; $i <= 6; $i++)
 }
 
 echo "<HR>";
-echo '<p><center><a href="' . $PHP_SELF . '?' . $QUERY_STRING . '&pview=1">' . get_vocab("ppreview") . '</a></center><p>';
+echo '<p><center><a href="' . basename($PHP_SELF) . '?' . $QUERY_STRING . '&pview=1">' . get_vocab("ppreview") . '</a></center><p>';
 
 }
 ?>
