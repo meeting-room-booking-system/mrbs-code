@@ -18,7 +18,9 @@ $mysql_database = "mrbs";
 $morningstarts = 7;
 $eveningends   = 19;
 
-
+# Resolution - ie what blocks can be booked.
+# Default is half an hour - 1800 seconds
+$resolution = 1800;
 
 # Language
 

@@ -98,7 +98,7 @@ while ($row = mysql_fetch_row($res)) {
 	#row[3] = end time
 	#row[5] = short description
 	#row[7] = id of this booking
-	for ($t = $row[2]; $t < $row[3]; $t = $t + 1800) {
+	for ($t = $row[2]; $t < $row[3]; $t = $t + $resolution) {
 		$today[$row[1]][$t][id] = $row[7];
 	}
 	$today[$row[1]][$row[2]][data] = $row[5];
@@ -136,8 +136,8 @@ if (mysql_num_rows($res) == 0) {
 	#This is the main bit of the display
 	#We loop through unixtime and then the rooms we just got
 
-	for ($t=$am7; $t<=$pm7; $t=$t+1800) {
-		$nw = date("Y-m-d H:i",$t+1800);
+	for ($t=$am7; $t<=$pm7; $t=$t+$resolution) {
+		$nw = date("Y-m-d H:i",$t+$resolution);
 		echo "<tr>";
 
 		#Show the time linked to the URL for highlighting that time
