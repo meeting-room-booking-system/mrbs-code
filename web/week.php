@@ -448,7 +448,7 @@ for (
 }
 echo "</table>";
 
-if ( $pview != 1 ) show_colour_key();
+show_colour_key();
 
 include "trailer.inc"; 
 ?>
