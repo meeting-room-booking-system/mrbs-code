@@ -273,6 +273,7 @@ directive). On Windows, three things are needed :
 - iconv.dll file in in the system path. Either copy it from your 
   \%phpdir%\dlls\ directory into \%windir%\system32\ directory,
   or add your \%phpdir%\dlls\ directory to your PATH environment variable. 
+  (Note: for Microsoft IIS, you HAVE to copy iconv.dll into \%windir%\system32\)
 - uncomment php_iconv.dll in php.ini.
 - extension directory in php.ini have to be properly set to your actual 
   \%phpdir%\extensions\
