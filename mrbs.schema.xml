@@ -210,7 +210,6 @@
     <name>rep_opt</name>
     <type>text</type>
     <length>32</length>
-    <notnull>1</notnull>
     <default></default>
    </field>
 
