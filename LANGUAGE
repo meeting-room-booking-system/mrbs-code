@@ -1,8 +1,9 @@
 Currently supported MRBS languages are:
 
+German:              lang.de (thanks to Erik Wenzel)
 English:             lang.en
 Japanese:            lang.ja
-Traditional Chinese: lang.zh-tw
+Traditional Chinese: lang.zh-tw (thanks to Linda Hu)
 
 To port MRBS to another language is relativly easy.
 

@@ -1,4 +1,5 @@
 CVS:
+	Added German language file
 	Added Traditional Chinese language file
 	Explicity set charset (from language file)
 	
