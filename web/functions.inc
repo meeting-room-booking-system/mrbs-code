@@ -13,6 +13,8 @@ function print_header($day, $month, $year, $area)
 		$month = date("m");
 	if(!$year)
 		$year  = date("Y");
+	if (empty($search_str))
+		$search_str = "";
 
 ?>
 <HTML>
@@ -192,8 +194,49 @@ function get_default_area()
 }
 
 # Get the local day name based on language. Note 2000-01-02 is a Sunday.
-function day_name($daynumber) {
+function day_name($daynumber)
+{
 	return strftime("%A", mktime(0,0,0,1,2+$daynumber,2000));
+}
+
+# Output a start table cell tag <td> with color class and fallback color.
+# $colclass is an entry type (A-J), "white" for empty, or "red" for highlighted.
+# The colors for CSS browsers can be found in the style sheet. The colors
+# in the array below are fallback for non-CSS browsers only.
+function tdcell($colclass)
+{
+	# This should be 'static $ecolors = array(...)' but that crashes PHP3.0.12!
+	static $ecolors;
+	if (!isset($ecolors)) $ecolors = array("A"=>"#FFCCFF", "B"=>"#99CCCC",
+		"C"=>"#FF9999", "D"=>"#FFFF99", "E"=>"#C0E0FF", "F"=>"#FFCC99",
+		"G"=>"#FF6666", "H"=>"#66FFFF", "I"=>"#DDFFDD", "J"=>"#CCCCCC",
+		"red"=>"#FFF0F0", "white"=>"#FFFFFF");
+	if (isset($ecolors[$colclass]))
+		echo "<td class=$colclass bgcolor=\"$ecolors[$colclass]\">";
+	else
+		echo "<td class=$colclass>";
+}
+
+# Display the entry-type color key. This has up to 2 rows, up to 5 columns.
+function show_colour_key()
+{
+	global $typel;
+	echo "<table border=0><tr>\n";
+	$nct = 0;
+	for ($ct = "A"; $ct <= "J"; $ct++)
+	{
+		if (!empty($typel[$ct]))
+		{
+			if (++$nct > 5)
+			{
+				$nct = 0;
+				echo "</tr><tr>";
+			}
+			tdcell($ct);
+			echo "$typel[$ct]</td>\n";
+		}
+	}
+	echo "</tr></table>\n";
 }
 
 ?>
