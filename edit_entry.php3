@@ -168,51 +168,51 @@ function validate_and_submit ()
 }
 </SCRIPT>
 
-<h2><?= isset($id) ? $lang["editentry"] : $lang["addentry"] ?></H2>
+<h2><? echo isset($id) ? $lang["editentry"] : $lang["addentry"] ?></H2>
 
 <FORM NAME="main" ACTION="edit_entry_handler.php3" METHOD="GET">
 
 <TABLE BORDER=0>
 
-<TR><TD><B><?= $lang["namebooker"]?></B></TD>
+<TR><TD><B><? echo $lang["namebooker"]?></B></TD>
   <TD><INPUT NAME="name" SIZE=40 VALUE="<?php echo $name ?>"></TD></TR>
 
-<TR><TD VALIGN="top"><B><?= $lang["fulldescription"]?></B></TD>
+<TR><TD VALIGN="top"><B><? echo $lang["fulldescription"]?></B></TD>
   <TD><TEXTAREA NAME="description" ROWS=8 COLS=40 WRAP="virtual"><?php echo htmlentities ( $description ); ?></TEXTAREA></TD></TR>
 
-<TR><TD><B><?= $lang["date"]?></B></TD>
+<TR><TD><B><? echo $lang["date"]?></B></TD>
  <TD>
   <?php genDateSelector("", $start_day, $start_month, $start_year) ?>
  </TD>
 </TR>
 
-<TR><TD><B><?= $lang["time"]?></B></TD>
+<TR><TD><B><? echo $lang["time"]?></B></TD>
   <TD><INPUT NAME="hour" SIZE=2 VALUE="<?php echo $start_hour;?>" MAXLENGTH=2>:<INPUT NAME="minute" SIZE=2 VALUE="<?php echo $start_min;?>" MAXLENGTH=2>
 </TD></TR>
 
 <TR><TD><B><? $lang["duration"]?></B></TD>
-  <TD><INPUT NAME="duration" SIZE=7 VALUE="<?= $duration;?>">
+  <TD><INPUT NAME="duration" SIZE=7 VALUE="<? echo $duration;?>">
     <SELECT NAME="dur_units">
-<!--     <OPTION VALUE="seconds" <?= ($dur_units == "seconds") ? "SELECTED" : ""; ?>><?= $lang["seconds"]; ?> -->
-     <OPTION VALUE="minutes" <?= ($dur_units == "minutes") ? "SELECTED" : ""; ?>><?= $lang["minutes"]; ?>
-     <OPTION VALUE="hours"   <?= ($dur_units == "hours"  ) ? "SELECTED" : ""; ?>><?= $lang["hours"]; ?>
-     <OPTION VALUE="days"    <?= ($dur_units == "days"   ) ? "SELECTED" : ""; ?>><?= $lang["days"]; ?>
-     <OPTION VALUE="weeks"   <?= ($dur_units == "weeks"  ) ? "SELECTED" : ""; ?>><?= $lang["weeks"]; ?>
-<!--     <OPTION VALUE="years"   <?= ($dur_units == "years"  ) ? "SELECTED" : ""; ?>><?= $lang["years"]; ?> -->
+<!--     <OPTION VALUE="seconds" <? echo ($dur_units == "seconds") ? "SELECTED" : ""; ?>><?= $lang["seconds"]; ?> -->
+     <OPTION VALUE="minutes" <? echo ($dur_units == "minutes") ? "SELECTED" : ""; ?>><?= $lang["minutes"]; ?>
+     <OPTION VALUE="hours"   <? echo ($dur_units == "hours"  ) ? "SELECTED" : ""; ?>><?= $lang["hours"]; ?>
+     <OPTION VALUE="days"    <? echo ($dur_units == "days"   ) ? "SELECTED" : ""; ?>><?= $lang["days"]; ?>
+     <OPTION VALUE="weeks"   <? echo ($dur_units == "weeks"  ) ? "SELECTED" : ""; ?>><?= $lang["weeks"]; ?>
+<!--     <OPTION VALUE="years"   <? echo ($dur_units == "years"  ) ? "SELECTED" : ""; ?>><?= $lang["years"]; ?> -->
     </SELECT>
     <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes"> <? echo $lang["all_day"]; ?>
 </TD></TR>
 
-<TR><TD><B><?= $lang["type"]?></B></TD>
+<TR><TD><B><? echo $lang["type"]?></B></TD>
   <TD><SELECT NAME="type">
-    <OPTION VALUE="I"<?php if ( $type == "I" || ! strlen ( $type ) ) echo " SELECTED";?>><?= $lang["internal"]?>
-    <OPTION VALUE="E"<?php if ( $type == "E" ) echo " SELECTED";?>><?= $lang["external"]?>
+    <OPTION VALUE="I"<?php if ( $type == "I" || ! strlen ( $type ) ) echo " SELECTED";?>><? echo $lang["internal"]?>
+    <OPTION VALUE="E"<?php if ( $type == "E" ) echo " SELECTED";?>><? echo $lang["external"]?>
   </SELECT></TD></TR>
 
 <?php if(isset($edit_type) && $edit_type == "series") { ?>
 
 <TR>
- <TD><B><?= $lang["rep_type"]?></B></TD>
+ <TD><B><? echo $lang["rep_type"]?></B></TD>
  <TD>
 <?
 
@@ -231,20 +231,20 @@ for($i = 0; isset($lang["rep_type_$i"]); $i++)
 </TR>
 
 <TR>
- <TD><B><?= $lang["rep_end_date"]?></B></TD>
+ <TD><B><? echo $lang["rep_end_date"]?></B></TD>
  <TD><?php genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year) ?></TD>
 </TR>
 
 <TR>
- <TD><B><?= $lang["rep_rep_day"]?></B> <?= $lang["rep_for_weekly"]?></TD>
+ <TD><B><? echo $lang["rep_rep_day"]?></B> <?= $lang["rep_for_weekly"]?></TD>
  <TD>
-  <INPUT NAME="rep_day[0]" TYPE="CHECKBOX"<?= ($rep_day[0] ? "CHECKED" : "")?>>Sunday
-  <INPUT NAME="rep_day[1]" TYPE="CHECKBOX"<?= ($rep_day[1] ? "CHECKED" : "")?>>Monday
-  <INPUT NAME="rep_day[2]" TYPE="CHECKBOX"<?= ($rep_day[2] ? "CHECKED" : "")?>>Tuesday
-  <INPUT NAME="rep_day[3]" TYPE="CHECKBOX"<?= ($rep_day[3] ? "CHECKED" : "")?>>Wednesday
-  <INPUT NAME="rep_day[4]" TYPE="CHECKBOX"<?= ($rep_day[4] ? "CHECKED" : "")?>>Thursday
-  <INPUT NAME="rep_day[5]" TYPE="CHECKBOX"<?= ($rep_day[5] ? "CHECKED" : "")?>>Friday
-  <INPUT NAME="rep_day[6]" TYPE="CHECKBOX"<?= ($rep_day[6] ? "CHECKED" : "")?>>Saturday
+  <INPUT NAME="rep_day[0]" TYPE="CHECKBOX"<? echo ($rep_day[0] ? "CHECKED" : "")?>>Sunday
+  <INPUT NAME="rep_day[1]" TYPE="CHECKBOX"<? echo ($rep_day[1] ? "CHECKED" : "")?>>Monday
+  <INPUT NAME="rep_day[2]" TYPE="CHECKBOX"<? echo ($rep_day[2] ? "CHECKED" : "")?>>Tuesday
+  <INPUT NAME="rep_day[3]" TYPE="CHECKBOX"<? echo ($rep_day[3] ? "CHECKED" : "")?>>Wednesday
+  <INPUT NAME="rep_day[4]" TYPE="CHECKBOX"<? echo ($rep_day[4] ? "CHECKED" : "")?>>Thursday
+  <INPUT NAME="rep_day[5]" TYPE="CHECKBOX"<? echo ($rep_day[5] ? "CHECKED" : "")?>>Friday
+  <INPUT NAME="rep_day[6]" TYPE="CHECKBOX"<? echo ($rep_day[6] ? "CHECKED" : "")?>>Saturday
  </TD>
 </TR>
 
@@ -286,19 +286,19 @@ else
  <TD></TD>
  <TD><BR>
   <SCRIPT LANGUAGE="JavaScript">
-   document.writeln ( '<INPUT TYPE="button" VALUE="<?= $lang["save"]?>" ONCLICK="validate_and_submit()">' );
+   document.writeln ( '<INPUT TYPE="button" VALUE="<? echo $lang["save"]?>" ONCLICK="validate_and_submit()">' );
   </SCRIPT>
   <NOSCRIPT>
-   <INPUT TYPE="submit" VALUE="<?= $lang["save"]?>">
+   <INPUT TYPE="submit" VALUE="<? echo $lang["save"]?>">
   </NOSCRIPT>
  </TD></TR>
 </TABLE>
 
-<INPUT TYPE=HIDDEN NAME="returl"    VALUE="<?= $HTTP_REFERER?>">
-<INPUT TYPE=HIDDEN NAME="room_id"   VALUE="<?= $room_id?>">
-<INPUT TYPE=HIDDEN NAME="create_by" VALUE="<?= $create_by?>">
-<INPUT TYPE=HIDDEN NAME="rep_id"    VALUE="<?= $rep_id?>">
-<INPUT TYPE=HIDDEN NAME="edit_type" VALUE="<?= $edit_type?>">
+<INPUT TYPE=HIDDEN NAME="returl"    VALUE="<? echo $HTTP_REFERER?>">
+<INPUT TYPE=HIDDEN NAME="room_id"   VALUE="<? echo $room_id?>">
+<INPUT TYPE=HIDDEN NAME="create_by" VALUE="<? echo $create_by?>">
+<INPUT TYPE=HIDDEN NAME="rep_id"    VALUE="<? echo $rep_id?>">
+<INPUT TYPE=HIDDEN NAME="edit_type" VALUE="<? echo $edit_type?>">
 <? if(isset($id)) echo "<INPUT TYPE=HIDDEN NAME=\"id\"        VALUE=\"$id\">\n"; ?>
 
 </FORM>
