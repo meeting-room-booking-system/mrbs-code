@@ -4,7 +4,7 @@
 
 REQUIREMENTS
 ---------------------------------------------------------------------------
-MRBS works with both MySQL and PostgreSQL database systems. You must
+MRBS works with both MySQL and PostgreSQL 6.5 to 7.2 database systems. You must
 have PHP with support for your chosen database system installed and working
 for this application. See the PHP (www.php.net), MySQL (www.mysql.com), and
 PostgreSQL (www.postgresql.org) sites for more info on setting these up.
@@ -36,7 +36,7 @@ If you use MySQL, versions 3.22.32, 3.23.23, 3.23.53, 4.0.13 and 4.0.14 have
 been tested and reported to work.
 
 If you use PostgreSQL, you need at least version 7.0, and version 7.0.3 has
-been tested and reported to work.
+been tested and reported to work. Versions 7.3 and above do not work .
 
 FILE UNPACKING
 ---------------------------------------------------------------------------
@@ -85,6 +85,8 @@ Create the MRBS tables using the supplied tables.*.sql file:
 where "mrbs" is the name of your database (mentioned above).
 This will create all the needed tables.
 You may need to set rights on the tables; for PostgreSQL see "grant.pg.sql".
+If you use a PHP version less than 4.2, you will also need to replace the pgsql
+driver file pgsql.inc with pgsql.before_php42.inc, and rename it to pgsql.inc.
 If you need to delete the tables, for PostgreSQL see "destroy.pg.sql".
 
 The tables are now empty and ready for use. If you want to add a few sample

@@ -24,10 +24,12 @@ for today. The (+) symbol means you can add new meetings by clicking
 there. Try it - it should all be pretty obvious. If you haven't loaded the
 sample data, start by clicking on Admin to add your Areas and Rooms.
 
-By default, anyone who can connect can add new meetings, and only connections
-from localhost are administrators. Only administrators can add rooms and
-areas, and modify any other users' meetings.  See AUTHENTICATION for a more
-complete description of the authentication system and how to configure it.
+By default, anyone can connect and only demo users "alice" and "bob" can add 
+new meetings (passwords "a" and "b"), and only connections
+from user "administrator"/"secret" are administrators. Only administrators 
+can add rooms and areas, and modify any other users' meetings.  See 
+AUTHENTICATION for a more complete description of the authentication 
+system and how to configure it.
 
 If you copy testdata.php into your web site, you can view
 http://yourhost/mrbs/testdata.php - it will generate a whole load of random
@@ -35,8 +37,8 @@ appointments to fill up the calendar and let you play around. (Don't leave
 testdata.php in your web site, though.)
 
 The latest version was tested with PHP 4.3.2, Apache 1.3.28, and either
-MySQL 4.0.14 or PostgreSQL 7.0.3. It should work on just about anything
-that's got PHP4 with MySQL or PostgreSQL support.
+MySQL 4.0.14 or PostgreSQL 7.2. It should work on just about anything
+that's got PHP4 with MySQL or PostgreSQL support but PostgreSQL 7.3 and above.
 
 It should be pretty easy to adjust it to your corporate colours - the file
 mrbs.css is used on every page, as is style.inc. Just fiddle with these until
