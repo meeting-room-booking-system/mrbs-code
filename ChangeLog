@@ -1,5 +1,10 @@
+Version 0.5 (Mon May 22 12:07:14 BST 2000)
+	Added admin.php3 so areas/rooms can be done
+	 by web rather than by SQL
+	 
 Version 0.2 (Sun May 21 22:35:33 BST 2000)
 	Working OK from user perspective
 	All admin done by SQL
+
 Version 0.1 (Sun Apr 30 16:03:26 BST 2000)
 	Initial starting
