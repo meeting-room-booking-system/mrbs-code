@@ -245,7 +245,6 @@ if (isset($Action) && ($Action == "Update"))
             if ($field_name[$i]=="name") $Field[$i] = strtolower($Field[$i]);
             if (($field_name[$i]=="password") && ($password0!="")) $Field[$i]=$password0;
             if ((stristr($field_type[$i], "integer")) && ($Field[$i] == "")) $Field[$i] = "0";
-            if (stristr($field_type[$i], "text"))
 
         	$replaced_fields[$field_name[$i]] = array(
             	'Value' => $Field[$i],
