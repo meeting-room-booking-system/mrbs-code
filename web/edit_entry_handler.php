@@ -159,7 +159,8 @@ if(empty($err))
         if($edit_type == "series")
         {
             mrbsCreateRepeatingEntrys($starttime, $endtime,   $rep_type, $rep_enddate, $rep_opt, 
-                                      $room_id,   $create_by, $name,     $type,        $description, $rep_num_weeks);
+                                      $room_id,   $create_by, $name,     $type,        $description,
+                                      isset($rep_num_weeks) ? $rep_num_weeks : 0);
         }
         else
         {

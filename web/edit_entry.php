@@ -191,16 +191,19 @@ function validate_and_submit ()
   
   i1 = parseInt(document.forms["main"].id.value);
   i2 = parseInt(document.forms["main"].rep_id.value);
-  n = parseInt(document.forms["main"].rep_num_weeks.value);
+  if ( document.forms["main"].rep_num_weeks)
+  {
+  	n = parseInt(document.forms["main"].rep_num_weeks.value);
+  }
   if ((!i1 || (i1 && i2)) && document.forms["main"].rep_type && document.forms["main"].rep_type[6].checked && (!n || n < 2))
   {
     alert("<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("useful_n-weekly_value") ?>");
     return false;
   }
-  
+
   // would be nice to also check date to not allow Feb 31, etc...
   document.forms["main"].submit();
-  
+
   return true;
 }
 </SCRIPT>
@@ -266,7 +269,7 @@ while (list(,$unit) = each($units))
 	$sql = "select id, room_name from mrbs_room where area_id=$area_id order by room_name";
    	$res = sql_query($sql);
 
-   
+
    	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
    	{
 		$selected = "";
@@ -299,10 +302,10 @@ for ($c = "A"; $c <= "J"; $c++)
 for($i = 0; isset($vocab["rep_type_$i"]); $i++)
 {
 	echo "<INPUT NAME=\"rep_type\" TYPE=\"RADIO\" VALUE=\"" . $i . "\"";
-	
+
 	if($i == $rep_type)
 		echo " CHECKED";
-	
+
 	echo ">" . get_vocab("rep_type_$i") . "\n";
 }
 
@@ -336,9 +339,9 @@ for ($i = 0; $i < 7; $i++)
 else
 {
 	$key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
-	
+
 	echo "<tr><td class=\"CR\"><b>".get_vocab("rep_type")."</b></td><td class=\"CL\">".get_vocab($key)."</td></tr>\n";
-	
+
 	if(isset($rep_type) && ($rep_type != 0))
 	{
 		$opt = "";
@@ -353,16 +356,25 @@ else
 		}
 		if($opt)
 			echo "<tr><td class=\"CR\"><b>".get_vocab("rep_rep_day")."</b></td><td class=\"CL\">$opt</td></tr>\n";
-		
+
 		echo "<tr><td class=\"CR\"><b>".get_vocab("rep_end_date")."</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
 	}
 }
+/* We display the rep_num_weeks box only if:
+   - this is a new entry ($id is not set)
+   Xor
+   - we are editing an existing repeating entry ($rep_type is set and
+     $rep_type != 0 and $edit_type == "series" )
+*/
+if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) && ( "series" == $edit_type ) ) )
+{
 ?>
 
 <TR>
  <TD CLASS=CR><B><?php echo get_vocab("rep_num_weeks")?></B> <?php echo get_vocab("rep_for_nweekly")?></TD>
  <TD CLASS=CL><INPUT TYPE=TEXT NAME="rep_num_weeks" VALUE="<?php echo $rep_num_weeks?>">
 </TR>
+<?php } ?>
 
 <TR>
  <TD colspan=2 align=center>
