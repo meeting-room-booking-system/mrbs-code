@@ -53,7 +53,7 @@ See AUTHENTICATION for information about user authentication/passwords.
 -------------
 Requirements:
 -------------
-- PHP4 (w/MySQL and/or PostgreSQL support) - (might still work with PHP3)
+- PHP4 with MySQL and/or PostgreSQL support (PHP3 seems to work too)
 - MySQL or PostgreSQL
 
 Recommended:
