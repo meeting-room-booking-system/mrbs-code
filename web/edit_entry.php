@@ -184,7 +184,7 @@ function validate_and_submit ()
   n = parseInt(document.forms["main"].rep_num_weeks.value);
   if ((!i1 || (i1 && i2)) && document.forms["main"].rep_type && document.forms["main"].rep_type[6].checked && (!n || n < 2))
   {
-    alert("You have not entered a\nuseful n-weekly value.");
+    alert("<?= $vocab['you_have_not_entered'] . '\n' . $vocab['useful_n-weekly_value'] ?>");
     return false;
   }
   
