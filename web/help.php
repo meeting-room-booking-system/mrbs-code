@@ -20,18 +20,18 @@ if(empty($area))
 
 print_header($day, $month, $year, $area);
 
-echo "<H3>About MRBS</H3>\n";
+echo "<H3>" . $vocab['about_mrbs'] . "</H3>\n";
 echo "<P><a href=\"http://mrbs.sourceforge.net\">$vocab[mrbs]</a> - $mrbs_version\n";
-echo "<BR>Database: " . sql_version() . "\n";
-echo "<BR>System: " . php_uname() . "\n";
+echo "<BR>" . $vocab['database'] . sql_version() . "\n";
+echo "<BR>" . $vocab['system'] . php_uname() . "\n";
 echo "<BR>PHP: " . phpversion() . "\n";
 
-echo "<H3>Help</H3>\n";
-echo 'Please contact <a href="mailto:' . $mrbs_admin_email
+echo "<H3>" . $vocab['help'] . "</H3>\n";
+echo $vocab['please_contact'] . '<a href="mailto:' . $mrbs_admin_email
 	. '">' . $mrbs_admin
-	. "</a> for any questions that aren't answered here.\n";
+	. "</a> " . $vocab['for_any_questions'] . "\n";
  
-include "site_faq.html";
+include "site_faq" . $faqfilelang . ".html";
 
 include "trailer.inc";
 ?>
