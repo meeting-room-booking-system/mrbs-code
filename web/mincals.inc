@@ -34,7 +34,7 @@ class Calendar
         $this->year  = $year;
         $this->h     = $h;
         $this->area  = $area;
-	$this->dmy   = $dmy;
+    $this->dmy   = $dmy;
     }
    
     
@@ -104,58 +104,58 @@ class Calendar
         if (!isset($weekstarts)) $weekstarts = 0;
         $s = "";
         
-    	$daysInMonth = $this->getDaysInMonth($this->month, $this->year);
-    	$date = mktime(12, 0, 0, $this->month, 1, $this->year);
-    	
-    	$first = (strftime("%w",$date) + 7 - $weekstarts) % 7;
-    	$monthName = strftime("%B",$date);
-    	
-    	$prevMonth = $this->getCalendarLink($this->month - 1 >   0 ? $this->month - 1 : 12, $this->month - 1 >   0 ? $this->year : $this->year - 1);
-    	$nextMonth = $this->getCalendarLink($this->month + 1 <= 12 ? $this->month + 1 :  1, $this->month + 1 <= 12 ? $this->year : $this->year + 1);
-    	
-    	$s .= "<table class=\"calendar\">\n";
-    	$s .= "<tr>\n";
-    	//$s .= "<td align=center valign=top>" . (($prevMonth == "") ? "&nbsp;" : "<a href=\"$prevMonth\">&lt;&lt;</a>")  . "</td>\n";
-    	$s .= "<td align=center valign=top class=\"calendarHeader\" colspan=7>$monthName&nbsp;$this->year</td>\n"; 
-    	//$s .= "<td align=center valign=top>" . (($nextMonth == "") ? "&nbsp;" : "<a href=\"$nextMonth\">&gt;&gt;</a>")  . "</td>\n";
-    	$s .= "</tr>\n";
-    	
-    	$s .= "<tr>\n";
+        $daysInMonth = $this->getDaysInMonth($this->month, $this->year);
+        $date = mktime(12, 0, 0, $this->month, 1, $this->year);
+        
+        $first = (strftime("%w",$date) + 7 - $weekstarts) % 7;
+        $monthName = strftime("%B",$date);
+        
+        $prevMonth = $this->getCalendarLink($this->month - 1 >   0 ? $this->month - 1 : 12, $this->month - 1 >   0 ? $this->year : $this->year - 1);
+        $nextMonth = $this->getCalendarLink($this->month + 1 <= 12 ? $this->month + 1 :  1, $this->month + 1 <= 12 ? $this->year : $this->year + 1);
+        
+        $s .= "<table class=\"calendar\">\n";
+        $s .= "<tr>\n";
+        //$s .= "<td align=center valign=top>" . (($prevMonth == "") ? "&nbsp;" : "<a href=\"$prevMonth\">&lt;&lt;</a>")  . "</td>\n";
+        $s .= "<td align=center valign=top class=\"calendarHeader\" colspan=7>$monthName&nbsp;$this->year</td>\n"; 
+        //$s .= "<td align=center valign=top>" . (($nextMonth == "") ? "&nbsp;" : "<a href=\"$nextMonth\">&gt;&gt;</a>")  . "</td>\n";
+        $s .= "</tr>\n";
+        
+        $s .= "<tr>\n";
         $s .= $this->getFirstDays();
-    	$s .= "</tr>\n";
-    	
-    	$d = 1 - $first;
-    	   	
-    	while ($d <= $daysInMonth)
-    	{
-    	    $s .= "<tr>\n";       
-    	    
-    	    for ($i = 0; $i < 7; $i++)
-    	    {
-    	        $s .= "<td class=\"calendar\" align=right valign=top>";       
-    	        if ($d > 0 && $d <= $daysInMonth)
-    	        {
-    	            $link = $this->getDateLink($d, $this->month, $this->year);
+        $s .= "</tr>\n";
+        
+        $d = 1 - $first;
+            
+        while ($d <= $daysInMonth)
+        {
+            $s .= "<tr>\n";       
+            
+            for ($i = 0; $i < 7; $i++)
+            {
+                $s .= "<td class=\"calendar\" align=right valign=top>";       
+                if ($d > 0 && $d <= $daysInMonth)
+                {
+                    $link = $this->getDateLink($d, $this->month, $this->year);
                     if ($link == "")
                         $s .= $d;
                     elseif (($d == $this->day) and ($this->h))
                         $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
                     else
                         $s .= "<a href=\"$link\">$d</a>";
-    	        }
-    	        else
-    	        {
-    	            $s .= "&nbsp;";
-    	        }
-      	        $s .= "</td>\n";       
-        	    $d++;
-    	    }
-    	    $s .= "</tr>\n";    
-    	}
-    	
-    	$s .= "</table>\n";
-    	
-    	return $s;
+                }
+                else
+                {
+                    $s .= "&nbsp;";
+                }
+                $s .= "</td>\n";       
+                $d++;
+            }
+            $s .= "</tr>\n";    
+        }
+        
+        $s .= "</table>\n";
+        
+        return $s;
     }
 }
 
