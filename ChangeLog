@@ -1,3 +1,8 @@
+2003-11-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* README (1.10): Added warning about using php accelerators with
+	  mrbs.
+
 2003-10-31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* INSTALL (1.16): Added warning to avoid specify calendar settings

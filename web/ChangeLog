@@ -1,3 +1,43 @@
+2003-11-17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.9): Removed unnecessary comment.
+
+2003-11-17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* admin.php (1.14): - make admin.php working with error level E_ALL
+	  with no area/room defined (previous fix causes an error in case
+	  http authentication fail).
+
+2003-11-17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* lang.fr (1.16): Changing $vocab language string.
+
+2003-11-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* session_cookie.inc (1.3), session_php.inc (1.4): - Removed
+	  remainings plain text strings by get_vocab() function.
+
+2003-11-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* month.php (1.16): - fixed remainings non unicode compliant php
+	  functions.
+
+2003-11-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* mrbs_sql.inc (1.11): - (mrbsCheckFree): fixed remainings non
+	  unicode php functions.
+
+2003-11-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* admin.php (1.13): - make admin.php working with error level E_ALL
+	  with no area/room defined.
+
+2003-11-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.8), month.php (1.15): Changed my stupid
+	  $_MRBS_monthly_view_brief_description variable name to
+	  $monthly_view_brief_description
+
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* day.php (1.19): Moved inclusion of mrbs_auth.inc after that of
