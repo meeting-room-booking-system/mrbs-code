@@ -173,7 +173,8 @@ print_header($day, $month, $year, $area);
 // do a little form verifying
 function validate_and_submit ()
 {
-  if(document.forms["main"].name.value == "")
+  // null strings and spaces only strings not allowed
+  if(/(^$)|(^\s+$)/.test(document.forms["main"].name.value))
   {
     alert ( "<?php echo $vocab['you_have_not_entered'] . '\n' . $vocab['brief_description'] ?>");
     return false;
