@@ -41,7 +41,7 @@ function sql_version()
 {
     global $mdb;
     $v = $mdb->getCol("EXECUTE sp_server_info @attribute_id = 2",,,, 2);
-    return "$v";
+    return "$v[0]";
 }
 
 /**
@@ -51,7 +51,7 @@ function sql_version()
  * in a case insensitive manner.
  * In SQL Server, case may or may not be significant, depending on
  * installation options. Since mrbs create low case table names, we switch
- * params an table name to lower.
+ * params and table name to lower.
  *
  * @param   string  $fieldname  field to apply regexp
  * @param   string  $s          un-escaped/un-slashed string to search for
