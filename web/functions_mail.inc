@@ -256,7 +256,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
     }
     if ($rep_type > 0)
     {
-        $body .= "series=1";
+        $body .= "&series=1";
     }
     $body .= "\n";
     // Displays/don't displays entry details
