@@ -281,7 +281,7 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
                 break;
             }
             if ($i > 0 && $i % 2 == 0) echo "<br>"; else echo " ";
-            if ($_MRBS_monthly_view_brief_description == 1)
+            if ( FALSE != $monthly_view_brief_description )
             {
                 echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
                     . "&day=$cday&month=$month&year=$year\" title=\""

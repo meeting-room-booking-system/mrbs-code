@@ -89,8 +89,8 @@ $area_list_format = "list";
 #$area_list_format = "select";
 
 # Entries in monthly view can be shown as start/end slot or brief description
-# Set to 1 for brief description, 0 for time slot
-$_MRBS_monthly_view_brief_description = 0;
+# Set to TRUE for brief description, FALSE for time slot
+$monthly_view_brief_description = TRUE;
 
 # To view weeks in the bottom (trailer.inc) as week numbers (42) instead of
 # 'first day of the week' (13 Oct), set this to TRUE
