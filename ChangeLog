@@ -27,8 +27,8 @@ CVS (Tue Oct  8 13:30:00 BST 2002)
      locale).
    - print_header() now outputs a DOCTYPE identifier as well as
      sending Pragma: no-cache and an Expires: header in the
-     past. This should help ensure the calendar pages don't get cached.
-	
+     past. This should help ensure the web pages don't get cached.
+
 Version 1.1-pre1 (Thu May 30 12:41:02 BST 2002)
    + add config option for drop-down boxes to select area and room
           (Thanks to sponsorship of LTC Corporation)
