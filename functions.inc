@@ -273,7 +273,7 @@ function genDateSelector($prefix, $day, $month, $year)
 	for($i = 1; $i <= 31; $i++)
 		echo "<OPTION" . ($i == $day ? " SELECTED" : "") . ">$i\n";
 	
-	echo "</SELECT>\n";
+	echo "</SELECT>";
 	echo "<SELECT NAME=\"${prefix}month\">\n";
 	
 	for($i = 1; $i <= 12; $i++)
@@ -283,7 +283,7 @@ function genDateSelector($prefix, $day, $month, $year)
 		print "<OPTION VALUE=\"$i\"" . ($i == $month ? " SELECTED" : "") . ">$m\n";
 	}
 	
-	echo "</SELECT>\n";
+	echo "</SELECT>";
 	echo "<SELECT NAME=\"${prefix}year\">\n";
 	
 	$min = min($year, date("Y")) - 5;
@@ -292,7 +292,7 @@ function genDateSelector($prefix, $day, $month, $year)
 	for($i = $min; $i <= $max; $i++)
 		print "<OPTION" . ($i == $year ? " SELECTED" : "") . ">$i\n";
 	
-	echo "</SELECT>\n";
+	echo "</SELECT>";
 }
 
 ?>

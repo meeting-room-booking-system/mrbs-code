@@ -34,11 +34,11 @@ $pm7=mktime($eveningends,0,0,$month,$day,$year);
 echo "<table><tr><td width=\"100%\">";
 
 echo "<form action=\"day.php3\" method=get>";
-	echo "<H2>$lang[bookingsfor]: ";
+	echo "<H2>$lang[bookingsfor]: <FONT SIZE=NORMAL>";
 	genDateSelector("", $day, $month, $year);
 	echo "<INPUT TYPE=hidden NAME=area VALUE=$area>";
 	echo "<INPUT TYPE=submit VALUE=\"" . $lang[goto] . "\">";
-echo "</H2></form></td><td><center>";
+echo "</FONT></H2></form></td><td><center>";
 
 #Find out which rooms a user wants to see
 #If we havent had $area passed in then for now default to area "1" - in the
