@@ -50,8 +50,8 @@ if(mysql_num_rows($res) < 1)
 
 $row = mysql_fetch_row($res);
 
-$name         = htmlspecialchars($row[0]);
-$description  = htmlspecialchars($row[1]);
+$name         = htmlspecialchars(stripslashes($row[0]));
+$description  = htmlspecialchars(stripslashes($row[1]));
 $create_by    = htmlspecialchars($row[2]);
 $room_name    = htmlspecialchars($row[3]);
 $area_name    = htmlspecialchars($row[4]);

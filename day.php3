@@ -18,6 +18,10 @@ if(!isset($day) or !isset($month) or !isset($year))
 if(!isset($area))
 	$area = 1;
 
+# Make the date valid if day is more then number of days in month
+while (!checkdate($month, $day, $year))
+	$day--;
+
 # print the page header
 print_header($day, $month, $year, $area);
 
@@ -120,17 +124,17 @@ while($row = mysql_fetch_row($res))
 	# booking happens in, or at the start of the day if it started
 	# before today
 	
-	if($row[2] > $am7)
-		$today[$row[0]][$row[1]][2] = $row[5];
+	if($row[1] > $am7)
+		$today[$row[0]][$row[1]][2] = stripslashes($row[5]);
 	else
-		$today[$row[0]][$am7][2] = $row[5];
+		$today[$row[0]][$am7][2] = stripslashes($row[5]);
 }
 
 # We need to know what all the rooms area called, so we can show them all
 # pull the data from the db and store it. Convienently we can print the room 
 # headings and capacities at the same time
 
-$sql = "select room_name, capacity, id from mrbs_room where area_id=$area";
+$sql = "SELECT room_name, capacity, id FROM mrbs_room WHERE area_id=$area ORDER BY room_name";
 $res = mysql_query($sql);
 
 # It might be that there are no rooms defined for this area.

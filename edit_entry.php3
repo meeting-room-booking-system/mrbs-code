@@ -43,9 +43,9 @@ if(isset($id))
 	echo mysql_error();
 	
 	$row = mysql_fetch_row($res);
-	$name        = $row[0];
+	$name        = stripslashes($row[0]);
 	$create_by   = $row[1];
-	$description = $row[2];
+	$description = stripslashes($row[2]);
 	$start_day   = strftime('%d', $row[3]);
 	$start_month = strftime('%m', $row[3]);
 	$start_year  = strftime('%Y', $row[3]);
@@ -175,7 +175,7 @@ function validate_and_submit ()
 <TABLE BORDER=0>
 
 <TR><TD><B><? echo $lang["namebooker"]?></B></TD>
-  <TD><INPUT NAME="name" SIZE=40 VALUE="<?php echo $name ?>"></TD></TR>
+  <TD><INPUT NAME="name" SIZE=40 VALUE="<?php echo htmlentities($name) ?>"></TD></TR>
 
 <TR><TD VALIGN="top"><B><? echo $lang["fulldescription"]?></B></TD>
   <TD><TEXTAREA NAME="description" ROWS=8 COLS=40 WRAP="virtual"><?php echo htmlentities ( $description ); ?></TEXTAREA></TD></TR>

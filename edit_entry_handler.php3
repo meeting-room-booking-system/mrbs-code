@@ -133,14 +133,15 @@ if(empty($err))
 	else
 	{
 		$res = mysql_query("SELECT repeat_id FROM mrbs_entry WHERE id='$id'");
+		$repeat_id = $entry_type = 0; // preset repeat_id and entry_type to 0
 		if(mysql_num_rows($res) > 0)
 		{
-			$row = mysql_fetch_row($res);
-			$repeat_id  = $row[0];
-			$entry_type = 2;
+			$row = mysql_fetch_array($res);
+			if (($repeat_id = $row["repeat_id"]) > 0)
+				$entry_type = 2;  // This is a changed repeat booking entry
 		}
-		else
-			$repeat_id = $entry_type = 0;
+//		else
+//			$repeat_id = $entry_type = 0;
 		
 		// Create the entrys, ignoring any errors at the moment
 		if(mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $room_id,

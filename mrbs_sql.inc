@@ -38,7 +38,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore)
 		{
 			$row = mysql_fetch_row($res);
 			
-			if($row)
+			if($row[0] > 0)
 				$sql .= " AND (repeat_id <> " . $row[0]. ")";
 		}
 	}
@@ -223,7 +223,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr)
 			case 2:
 				$cur_day = date("w", $entrys[$i]);
 				
-				for($j = $cur_day + 1; ($j != $cur_day) && !$rep_opt[$j]; $j = ($j + 1) % 7)
+				for($j = ($cur_day + 1) % 7; ($j != $cur_day) && !$rep_opt[$j]; $j = ($j + 1) % 7)
 					$day += 1;
 				
 				$day += 1;

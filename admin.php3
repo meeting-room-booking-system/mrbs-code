@@ -45,7 +45,7 @@ if (mysql_num_rows($res) == 0) {
 	echo "<ul>";
 	while ($row = mysql_fetch_row($res)) {
 		$area_name_q = urlencode($row[1]);
-		echo "<li><a href=admin.php3?area=$row[0]&area_name=$area_name_q>$row[1]</a> (<a href=del.php3?type=area&area=$row[0]>Delete</a>)";
+		echo "<li><a href=admin.php3?area=$row[0]&area_name=$area_name_q>$row[1]</a> (<a href=edit_area_room.php3?area=$row[0]>Edit</a>) (<a href=del.php3?type=area&area=$row[0]>Delete</a>)";
 	}
 	echo "</ul>";
 }
@@ -61,7 +61,7 @@ if(isset($area)) {
 	} else {
 		echo "<ul>";
 		while ($row = mysql_fetch_row($res)) {
-			echo "<li>$row[1] ($row[2], $row[3]) (<a href=del.php3?type=room&room=$row[0]>Delete</a>)";
+			echo "<li>$row[1] ($row[2], $row[3]) (<a href=edit_area_room.php3?room=$row[0]>Edit</a>) (<a href=del.php3?type=room&room=$row[0]>Delete</a>)";
 		}
 		echo "</ul>";
 	}
@@ -81,7 +81,7 @@ if(isset($area)) {
 <TABLE>
 <TR><TD>Name:       </TD><TD><input type=text name=name></TD></TR>
 </TABLE>
-<input type=submit>
+<input type=submit value="Add Area">
 </form>
 </td>
 
@@ -97,7 +97,7 @@ if(isset($area)) {
 <TR><TD>Description:</TD><TD><input type=text name=description></TD></TR>
 <TR><TD>Capacity:   </TD><TD><input type=text name=capacity></TD></TR>
 </TABLE>
-<input type=submit>
+<input type=submit value="Add Room">
 </form>
 <? } else { echo "&nbsp;"; }?>
 </td>
