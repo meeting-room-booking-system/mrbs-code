@@ -240,7 +240,11 @@ this works on other  systems ( eg. Solaris) is appreciated.
 POP3 Authentication
 -------------------
 
-MRBS has POP3 Authentication support. This can be used by setting config.inc as follows:
+MRBS has POP3 Authentication support. This can be used by setting
+config.inc as follows:
+
+This provider will first try to authenticate using APOP, and fall back to
+standard USER/PASS if that fails.
 
 $auth["realm"]  = "MY REALM";
 $auth["type"]   = "pop3";
