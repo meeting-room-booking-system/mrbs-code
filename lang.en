@@ -5,6 +5,9 @@
 #
 # This file is PHP code. Treat it as such.
 
+# The charset to use in "Content-type" header
+$lang[charset]            = "iso-8859-1";
+
 # Used in style.inc
 $lang[mrbs]               = "Meeting Room Booking System";
 

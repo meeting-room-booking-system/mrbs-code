@@ -1,0 +1,52 @@
+<?
+# This file contains PHP code that specifies language specific strings
+# The default strings come from lang.def, and anything in a locale
+# specific file will overwrite the default. This is a UK English file.
+#
+# This file is PHP code. Treat it as such.
+
+# The charset to use in "Content-type" header
+$lang[charset]            = "Big5";
+
+# Used in style.inc
+$lang[mrbs]               = "會議室訂位系船";
+
+# Used in day.php3
+$lang[bookingsfor]        = "Bookings for";
+$lang[bookingsforpost]    = ""; # Goes after the date
+$lang[areas]              = "地點";
+$lang[daybefore]          = "查看前一天";
+$lang[dayafter]           = "查看後一天";
+$lang[gototoday]          = "查看今天";
+
+# Used in trailer.inc
+$lang[viewday]            = "查看日期";
+
+# Used in edit_entry.php3
+$lang[addentry]           = "新增";
+$lang[editentry]          = "修改";
+$lang[namebooker]         = "訂位初:";
+$lang[fulldescription]    = "說明:<br>&nbsp;&nbsp;(與會人數,會議主題,<br>&nbsp;&nbsp;內部會議/外部會議 等)";
+$lang[date]               = "日期:";
+$lang[time]               = "時間:";
+$lang[duration]           = "期間:";
+$lang[hours]              = "小時";
+$lang[type]               = "種類:";
+$lang[internal]           = "內部會議";
+$lang[external]           = "外部會議";
+$lang[save]               = "儲存";
+
+# Used in view_entry.php3
+$lang[description]        = "說明:";
+$lang[createdby]          = "Created By:";
+$lang[lastupdate]         = "喬後更新:";
+$lang[deleteentry]        = "刪除";
+$lang[confirmdel]         = "你確定要刪除此記錄??\\n";
+$lang[returnprev]         = "回前一頁";
+
+# Used in edit_entry_handler.php3
+$lang[error]              = "錯誤";
+$lang[conflict]           = "此時段已被訂位";
+$lang[returncal]          = "查看日程表";
+
+?>
