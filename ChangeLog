@@ -1,5 +1,17 @@
 CVS:
     Some stuff for Roxen from Claus Jeppesen (jeppesen@mrl.ucsb.edu)
+    Add control over start of weekday (Sunday or Monday) (bokleve)
+    Change how days are presented (Jul 19 or 19 Jul) (bokleve)
+    Day names in selected language (bokleve)
+    Sweedish language file (bokleve)
+    Can now change room and area descriptions (bokleve)
+    Fix for all day bookings (bokleve)
+    Escape characters in text (day.php3) (bokleve)
+    Rooms sorted by name (bokleve)
+    Fix duplicate entries when changing a booking (bokleve)
+    Modifying an entry allowed intrusion on other bookings (bokleve)
+    Weekly bookings could not be made for Sunday if Saturday also booked
+    view_entry.php3 Fix escape characters showing in text (bokleve)
 
 Version 0.9-pre1 (13:00 Fri August 2000)
 	A few minor bug fixes.
