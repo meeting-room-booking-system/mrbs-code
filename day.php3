@@ -107,72 +107,81 @@ while ($row = mysql_fetch_row($res)) {
 }
 
 
-#This is where we start displaying stuff
-echo "<table cellspacing=0 border=1 width=100%>";
-echo "<tr><th>Time</th>";
-
 #We need to know what all the rooms area called, so we can show them all
 #pull the data from the db and store it. Convienently we can print the room 
 #headings and capacities at the same time
 
 $sql = "select room_name, capacity, id from mrbs_room where area_id=$area";
 $res = mysql_query($sql);
-while ($row = mysql_fetch_row($res)) {
-	echo "<th align=top>$row[0] ($row[1])</th>";
-	$rooms[] = $row[2];
-}
-echo "</tr>\n";
 
+# It might be that there are no rooms defined for this area.
+# If there are none then show an error and dont bother doing anything
+# else
 
-#This is the main bit of the display
-#We loop through unixtime and then the rooms we just got
+if (mysql_num_rows($res) == 0) {
+	echo "<h1>No rooms defined for this area</h1>";
+} else {
+	#This is where we start displaying stuff
+	echo "<table cellspacing=0 border=1 width=100%>";
+	echo "<tr><th>Time</th>";
 
-for ($t=$am7; $t<=$pm7; $t=$t+1800) {
-	$nw = date("Y-m-d H:i",$t+1800);
-	echo "<tr>";
-	
-	#Show the time linked to the URL for highlighting that time
-	echo "<td width=1% class=\"red\"><a href=$REQUEST_URI&timetohighlight=$t>" . date("H:i",$t) . "</a></td>";
-
-	#Loop through the list of rooms we have for this area
-	while (list($key, $room) = each($rooms)) {
-		$id    = $today[$room][$t][id];
-		$descr = $today[$room][$t][data];
-		
-		# $c is the colour of the cell that the browser sees. White normally, 
-		# red if were hightlighting that line and a nice attractive green if the room is booked.
-		# We tell if its booked by $id having something in it
-		if ($id) {
-			$c = "#ddffdd";
-		} else {
-			if ($t == $timetohighlight) {
-				$c = "red";
-			} else {
-				$c = "white";
-			}
-		}
-		echo "<td bgcolor=$c>";
-		#If the room isnt booked then allow it to be booked
-		if (!$id) {
-			$hour = date("H",$t); $minute  = date("i",$t);
-
-			if (($REMOTE_ADDR <> '137.40.98.5') or ($login <> 'guest')) {
-				echo "<center><a href=edit_entry.php3?room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day><img
-				src=new.gif border=0></a></center>";
-			} else {
-				echo "&nbsp;";
-			}
-		} else {
-		#if it is booked then show 
-			echo " <a href=view_entry.php3?id=$id>$descr&nbsp;</a>";
-		}
-		
-		echo "</td>\n";
+	while ($row = mysql_fetch_row($res)) {
+		echo "<th align=top>$row[0] ($row[1])</th>";
+		$rooms[] = $row[2];
 	}
 	echo "</tr>\n";
-	reset($rooms);
-}
 
+
+
+	#This is the main bit of the display
+	#We loop through unixtime and then the rooms we just got
+
+	for ($t=$am7; $t<=$pm7; $t=$t+1800) {
+		$nw = date("Y-m-d H:i",$t+1800);
+		echo "<tr>";
+
+		#Show the time linked to the URL for highlighting that time
+		echo "<td width=1% class=\"red\"><a href=$REQUEST_URI&timetohighlight=$t>" . date("H:i",$t) . "</a></td>";
+
+		#Loop through the list of rooms we have for this area
+		while (list($key, $room) = each($rooms)) {
+			$id    = $today[$room][$t][id];
+			$descr = $today[$room][$t][data];
+
+			# $c is the colour of the cell that the browser sees. White normally, 
+			# red if were hightlighting that line and a nice attractive green if the room is booked.
+			# We tell if its booked by $id having something in it
+			if ($id) {
+				$c = "#ddffdd";
+			} else {
+				if ($t == $timetohighlight) {
+					$c = "red";
+				} else {
+					$c = "white";
+				}
+			}
+			echo "<td bgcolor=$c>";
+			#If the room isnt booked then allow it to be booked
+			if (!$id) {
+				$hour = date("H",$t); $minute  = date("i",$t);
+
+				if (($REMOTE_ADDR <> '137.40.98.5') or ($login <> 'guest')) {
+					echo "<center><a href=edit_entry.php3?room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day><img
+					src=new.gif border=0></a></center>";
+				} else {
+					echo "&nbsp;";
+				}
+			} else {
+			#if it is booked then show 
+				echo " <a href=view_entry.php3?id=$id>$descr&nbsp;</a>";
+			}
+
+			echo "</td>\n";
+		}
+		echo "</tr>\n";
+		reset($rooms);
+	}
+}
 echo "</table>";
 
 

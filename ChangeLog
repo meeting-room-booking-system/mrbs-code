@@ -1,3 +1,7 @@
+Version 0.7
+   Added documentation
+	Areas with no rooms don't cause an error
+
 Version 0.6 (Sat May 27 09:09:11 BST 2000)
    Fixed bug in edit_entry_handler.php3 which made any
 	 booking made between the 1st and 9th of the month
