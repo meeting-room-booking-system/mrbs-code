@@ -122,7 +122,7 @@ if ($room <= 0)
 }
 
 # Show Month, Year, Area, Room header:
-echo "<h2 align=center>" . strftime("%B %Y", $month_start)
+echo "<h2 align=center>" . utf8_strftime("%B %Y", $month_start)
   . " - $this_area_name - $this_room_name</h2>\n";
 
 # Show Go to month before and after links
