@@ -173,6 +173,12 @@ $mrbs_company line like this :
 
 $mrbs_company = "<a href=http://www.your_organization.com/><img src=your_logo.gif border=0></a>";
 
+$url_base = "";
+
+This is to fix URL problems when using a proxy in the environment
+Then specify the real path before your mrbs directory like this:
+$url_base =  "http://webtools.uab.ericsson.se/oam";
+
 
 3. Calendar Settings:
 
@@ -228,10 +234,9 @@ These settings control:
 
 Read the file AUTHENTICATION for information about this section. By default, 
 config.inc.php uses "php" session management and "config" authentication 
-method, allowing only demo users to book rooms, and no administrator defined 
+method, allowing only demo users to book rooms, and "administrator" is defined 
 to administer the system. Demo users are "alice" and "bob" (passwords "a" and 
-"b"). You have to uncomment admin "administrator" (password 'secret') if you
-want to administer mrbs.
+"b") and "administrator" (password 'secret') is administrator.
 
 
 6. Language:

@@ -664,7 +664,7 @@ this can be deleted after you have copied smb_auth to another location.
 
 - Now move/copy smb_auth to somewhere that the web server can access it and
 specify the path in config.inc.php. For example : $ cp smb_auth /usr/bin
-and verifi smb_auth has enough execute rights.
+and verify smb_auth has enough execute rights.
 
 USAGE: smb_auth [username] [password] [server] [backup] [domain]
 

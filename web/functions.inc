@@ -46,12 +46,6 @@ function print_header($day, $month, $year, $area)
      Tested with Windows IE 6.0
      Tested with Linux Opera 7.21, Mozilla 1.3, Konqueror 3.1.0
      
-     WARNING: little bug in Mozilla 1.3. If a month with less than 31 days is
-     selected, the max days number is updated correctly, but if you select 
-     a 31 days month again, then max days number is not updated (ie. stays at
-     30 or 28). Goto a 31 days month to have the 31 days back. Since Mozilla
-     1.3 is rather not up to date (1.6b current at 2003-11-15), this may be 
-     corrected in newer releases.
 */
 
 function daysInFebruary (year){

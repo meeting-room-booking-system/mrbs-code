@@ -25,10 +25,10 @@ there. Try it - it should all be pretty obvious. If you haven't loaded the
 sample data, start by clicking on Admin to add your Areas and Rooms.
 
 By default, anyone can connect and only demo users "alice" and "bob" can add 
-new meetings (passwords "a" and "b"), and there is no administrator. Only 
-administrators can add rooms and areas, and modify any other users' meetings.  
-See AUTHENTICATION for a more complete description of the authentication 
-system and how to configure it.
+new meetings (passwords "a" and "b"), and only connections
+from user "administrator"/"secret" are administrators. Only administrators 
+can add rooms and areas, and modify any other users' meetings.  See 
+AUTHENTICATION for a more complete description of the authentication.
 
 If you copy testdata.php into your web site, you can view
 http://yourhost/mrbs/testdata.php - it will generate a whole load of random
