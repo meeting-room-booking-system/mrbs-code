@@ -66,9 +66,14 @@ else
 		$endtime += $round_up - $tmp;
 }
 
-// Get the repeat entry settings
-$rep_enddate = mktime(0, 0, 0, $rep_end_month, $rep_end_day, $rep_end_year);
-
+if(isset($rep_type) && isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
+{
+	// Get the repeat entry settings
+	$rep_enddate = mktime(0, 0, 0, $rep_end_month, $rep_end_day, $rep_end_year);
+}
+else
+	$rep_type = 0;
+	
 switch($rep_type)
 {
 	case 2:
@@ -91,7 +96,7 @@ switch($rep_type)
 #   or starts between the times this starts and ends
 #   where the room is the same
 
-$reps = mrbsGetRepeatEntryList($starttime, $rep_enddate, $rep_type, $rep_opt, $max_rep_entrys);
+$reps = mrbsGetRepeatEntryList($starttime, isset($rep_enddate) ? $rep_enddate : 0, $rep_type, $rep_opt, $max_rep_entrys);
 if(!empty($reps))
 {
 	if(count($reps) < $max_rep_entrys)

@@ -69,7 +69,7 @@ if(isset($id))
 		
 		$rep_type = $row[0];
 		
-		if($edit_type == "series")
+		if(isset($edit_type) && ($edit_type == "series"))
 		{
 			$start_day   = (int)strftime('%d', $row[1]);
 			$start_month = (int)strftime('%m', $row[1]);
