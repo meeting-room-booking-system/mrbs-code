@@ -171,6 +171,12 @@ $vocab["summary_header"]     = "Summary of (Entries) Hours";
 $vocab["summary_header_per"] = "Summary of (Entries) Periods";
 $vocab["total"]              = "Total";
 $vocab["submitquery"]        = "Run Report";
+$vocab["sort_rep"]           = "Sort Report by:";
+$vocab["sort_rep_room"]      = "Room";
+$vocab["sort_rep_time"]      = "Start Date/Time";
+$vocab["rep_dsp"]            = "Display in report:";
+$vocab["rep_dsp_dur"]        = "Duration";
+$vocab["rep_dsp_end"]        = "End Time";
 
 # Used in week.php
 $vocab["weekbefore"]         = "Go To Week Before";

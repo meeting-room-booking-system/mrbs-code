@@ -54,25 +54,98 @@ function describe_span($starts, $ends)
 function describe_period_span($starts, $ends)
 {
 	list( $start_period, $start_date) =  period_date_string($starts);
-	#$start_date = utf8_strftime('%A %d %B %Y', $starts);
 	list( , $end_date) =  period_date_string($ends, -1);
 	$duration = $ends - $starts;
 	toPeriodString($start_period, $duration, $dur_units);
-	return $start_date . " " . $start_time . " - " . $duration . " " . $dur_units;
+	return $start_date . " - " . $duration . " " . $dur_units;
+}
+
+# this is based on describe_span but it displays the start and end
+# date/time of an entry
+function start_to_end($starts, $ends)
+{
+	global $twentyfourhour_format;
+	$start_date = utf8_strftime('%A %d %B %Y', $starts);
+        if ($twentyfourhour_format)
+	{
+                $timeformat = "%H:%M:%S";
+	}
+	else
+	{
+                # This bit's necessary, because it seems %p in strftime format
+                # strings doesn't work
+                $ampm = utf8_date("a",$starts);
+                $timeformat = "%I:%M:%S$ampm";
+	}
+	$start_time = utf8_strftime($timeformat, $starts);
+
+	$end_date = utf8_strftime('%A %d %B %Y', $ends);
+        if ($twentyfourhour_format)
+	{
+                $timeformat = "%H:%M:%S";
+	}
+	else
+	{
+                # This bit's necessary, because it seems %p in strftime format
+                # strings doesn't work
+                $ampm = utf8_date("a",$ends);
+                $timeformat = "%I:%M:%S$ampm";
+	}
+	$end_time = utf8_strftime($timeformat, $ends);
+	return $start_date . " " . $start_time . " - " . $end_date . " " . $end_time;
+}
+
+
+# this is based on describe_period_span but it displays the start and end
+# date/period of an entry
+function start_to_end_period($starts, $ends)
+{
+	list( , $start_date) =  period_date_string($starts);
+	list( , $end_date) =  period_date_string($ends, -1);
+	return $start_date . " - " . $end_date;
 }
 
 # Report on one entry. See below for columns in $row[].
 # $last_area_room remembers the current area/room.
-function reporton(&$row, &$last_area_room)
+# $last_date remembers the current date.
+function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
 {
 	global $typel;
         global $enable_periods;
 	# Display Area/Room, but only when it changes:
 	$area_room = htmlspecialchars($row[8]) . " - " . htmlspecialchars($row[9]);
-	if ($area_room != $last_area_room)
+	$date = utf8_strftime("%d-%b-%Y", $row[2]);
+	# entries to be sorted on area/room
+	if( $sortby == "r" )
 	{
-		echo "<hr><h2>".get_vocab("room") . $area_room . "</h2>\n";
-		$last_area_room = $area_room;
+		if ($area_room != $last_area_room)
+			echo "<hr><h2>". get_vocab("room") . " " . $area_room . "</h2>\n";
+		if ($date != $last_date || $area_room != $last_area_room)
+		{
+			echo "<hr noshade=\"true\"><h3>". get_vocab("date") . " " . $date . "</h3>\n";
+			$last_date = $date;
+		}
+		# remember current area/room that is being processed.
+		# this is done here as the if statement above needs the old
+		# values
+		if ($area_room != $last_area_room)
+			$last_area_room = $area_room;
+	}
+	else
+	# entries to be sorted on start date
+	{
+		if ($date != $last_date)
+			echo "<hr><h2>". get_vocab("date") . " " . $date . "</h2>\n";
+		if ($area_room != $last_area_room  || $date != $last_date)
+		{
+			echo "<hr noshade=\"true\"><h3>". get_vocab("room") . " " . $area_room . "</h3>\n";
+			$last_area_room = $area_room;
+		}
+		# remember current date that is being processed.
+		# this is done here as the if statement above needs the old
+		# values
+		if ($date != $last_date)
+			$last_date = $date;
 	}
 
 	echo "<hr><table width=\"100%\">\n";
@@ -81,8 +154,22 @@ function reporton(&$row, &$last_area_room)
 	echo "<tr><td class=\"BL\"><a href=\"view_entry.php?id=$row[0]\">"
 		. htmlspecialchars($row[3]) . "</a></td>\n";
 
-	# From date-time and duration:
-	echo "<td class=\"BR\" align=right>" . (empty($enable_periods) ? describe_span($row[1], $row[2]) : describe_period_span($row[1], $row[2])) . "</td></tr>\n";
+	# what do you want to display duration or end date/time
+	if( $display == "d" )
+		# Start date/time and duration:
+		echo "<td class=\"BR\" align=right>" .
+			(empty($enable_periods) ?
+				describe_span($row[1], $row[2]) :
+				describe_period_span($row[1], $row[2])) .
+			"</td></tr>\n";
+	else
+		# Start date/time and End date/time:
+		echo "<td class=\"BR\" align=right>" .
+			(empty($enable_periods) ?
+				start_to_end($row[1], $row[2]) :
+				start_to_end_period($row[1], $row[2])) .
+			"</td></tr>\n";
+
 	# Description:
 	echo "<tr><td class=\"BL\" colspan=2><b>".get_vocab("description")."</b> " .
 		nl2br(htmlspecialchars($row[4])) . "</td></tr>\n";
@@ -262,6 +349,10 @@ if (isset($areamatch))
 if (empty($summarize)) $summarize = 1;
 # $sumby: d=by brief description, c=by creator.
 if (empty($sumby)) $sumby = "d";
+# $sortby: r=room, s=start date/time.
+if (empty($sortby)) $sortby = "r";
+# $display: d=duration, e=start date/time and end date/time.
+if (empty($display)) $display = "d";
 
 # Upper part: The form.
 if ( $pview != 1 ) {
@@ -314,6 +405,20 @@ foreach( $typel as $key => $val )
         echo ">" . get_vocab("summary_only");?>
       <input type=radio name=summarize value=3<?php if ($summarize==3) echo " checked";
         echo ">" . get_vocab("report_and_summary");?>
+    </td></tr>
+<tr><td class="CR"><?php echo get_vocab("sort_rep");?></td>
+    <td class="CL">
+      <input type=radio name=sortby value=r<?php if ($sortby=="r") echo " checked";
+        echo ">". get_vocab("sort_rep_room");?>
+      <input type=radio name=sortby value=s<?php if ($sortby=="s") echo " checked";
+        echo ">". get_vocab("sort_rep_time");?>
+    </td></tr>
+<tr><td class="CR"><?php echo get_vocab("rep_dsp");?></td>
+    <td class="CL">
+      <input type=radio name=display value=d<?php if ($display=="d") echo " checked";
+        echo ">". get_vocab("rep_dsp_dur");?>
+      <input type=radio name=display value=e<?php if ($display=="e") echo " checked";
+        echo ">". get_vocab("rep_dsp_end");?>
     </td></tr>
 <tr><td class="CR"><?php echo get_vocab("summarize_by");?></td>
     <td class="CL">
@@ -387,8 +492,13 @@ if (isset($areamatch))
 	if (!empty($descrmatch))
 		$sql .= " AND" .  sql_syntax_caseless_contains("e.description", $descrmatch);
 
-	# Order by Area, Room, Start date/time:
-	$sql .= " ORDER BY 9,10,2";
+	
+	if( $sortby == "r" )
+		# Order by Area, Room, Start date/time
+		$sql .= " ORDER BY 9,10,2";
+	else
+		# Order by Start date/time, Area, Room
+		$sql .= " ORDER BY 2,9,10";
 
 	# echo "<p>DEBUG: SQL: <tt> $sql </tt>\n";
 
@@ -403,6 +513,7 @@ if (isset($areamatch))
 	else
 	{
 		$last_area_room = "";
+		$last_date = "";
 		echo "<P><B>" . $nmatch . " "
 		. ($nmatch == 1 ? get_vocab("entry_found") : get_vocab("entries_found"))
 		.  "</B>\n";
@@ -410,7 +521,7 @@ if (isset($areamatch))
 		for ($i = 0; ($row = sql_row($res, $i)); $i++)
 		{
 			if ($summarize & 1)
-				reporton($row, $last_area_room);
+				reporton($row, $last_area_room, $last_date, $sortby, $display);
 
 			if ($summarize & 2)
 				(empty($enable_periods) ?

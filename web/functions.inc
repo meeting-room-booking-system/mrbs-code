@@ -368,7 +368,9 @@ function period_date_string($t, $mod_time=0)
         $p_num = $time[minutes] + $mod_time;
         if( $p_num < 0 ) $p_num = 0;
         if( $p_num >= count($periods) - 1 ) $p_num = count($periods ) - 1;
-        return array($p_num, $periods[$p_num] . utf8_strftime(" - %A %d %B %Y",$t));
+	# I have made the separater a ',' as a '-' leads to an ambiguious
+	# display in report.php when showing end times.
+        return array($p_num, $periods[$p_num] . utf8_strftime(", %A %d %B %Y",$t));
 }
 
 function period_time_string($t, $mod_time=0)
