@@ -208,10 +208,6 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr)
 		
 		switch($rep_type)
 		{
-			// Unknown repeat option
-			default:
-				return;
-			
 			// Daily repeat
 			case 1:
 				$day += 1;
@@ -237,6 +233,10 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr)
 			case 4:
 				$year += 1;
 				break;
+			
+			// Unknown repeat option
+			default:
+				return;
 		}
 	}
 	
