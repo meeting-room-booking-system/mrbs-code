@@ -131,8 +131,10 @@ setlocale(LC_ALL,'C');
 # environment variable. If this doesn't work for you, comment it out
 # and assign locale directly.
 # If HTTP_ACCEPT_LANGUAGE is a comma-separated list, take the first one.
-$locale = ereg_replace(",.*", "", $HTTP_ACCEPT_LANGUAGE);
-
+if (isset($HTTP_ACCEPT_LANGUAGE)) // Attempt to use $HTTP_ACCEPT_LANGUAGE only when defined.
+   $locale = ereg_replace(",.*", "", $HTTP_ACCEPT_LANGUAGE);
+else // Else use the value from config.inc.php.
+   $locale = $default_language_tokens;
 
 # The following attempts to import a language based on what the client
 # is using.
