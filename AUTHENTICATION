@@ -68,7 +68,7 @@ Change this to:
 $auth[realm]  = "MRBS";
 $auth[type]   = "ext";
 $auth[prog]   = "/home/httpd/html/mrbs/badpw.pl";
-$auth[params] = "";
+$auth[params] = "#USERNAME# #PASSWORD#";
 
 Obviously, you need to put an appropriate path.
 
@@ -115,12 +115,36 @@ The config.inc entries he supplied were:
 $auth[realm]  = "MRBS";
 $auth[type]   = "ext";
 $auth[prog]   = "/usr/bin/smb_auth";
-$auth[params] = "SERVER BACKUP DOMAIN";
+$auth[params] = "#USERNAME# #PASSWORD# SERVER BACKUP DOMAIN";
 
 The [params] are:
+   * #USERNAME# is replaced by the actual username presented
+   * #PASSWORD# is replaced by the user's password
    * Primary Server used for password validation
    * Secondary server used for password validation
    * NT domain under which the user is registered
+
+
+Netware Authentication
+----------------------
+This is only going to work on Linux.
+
+There's a program called "nwauth" which is included with ncpfs. To use it you'll
+need to have IPX support compiled in your kernel. There might be other requirements as
+well - see the stuff that comes with ncpfs.
+
+You can get it from ftp://platan.vc.cvut.cz/pub/linux/ncpfs/
+
+I've only tested this with ncpfs-2.2.0.18
+
+The appropriate settings for config.inc are:
+
+# Authentication settings - read AUTHENTICATION
+$auth[realm]  = "MRBS";
+$auth[type]   = "ext";
+$auth[prog]   = "/usr/bin/nwauth";
+$auth[params] = "-S MYSERVER -U #USERNAME# -P #PASSWORD#";
+
 
 
 Creating a new authentication scheme
@@ -160,12 +184,13 @@ The config.inc entries for this might look like:
 $auth[realm]  = "MRBS";
 $auth[type]   = "ext";
 $auth[prog]   = "/usr/bin/ldap_auth";
-$auth[params] = "LDAP_SERVER";
+$auth[params] = "#USERNAME# #PASSWORD# LDAP_SERVER";
 
 "auth_ext.inc" constructs a command line to execute like:
 
-   $cmd = $auth[prog] . ' "' . $user . '" "' . $pass . '" ' . $auth[params];
-
+   $cmd = $auth[prog] . ' ' . $auth[params];
+   $cmd = preg_replace('/#USERNAME#/',$user,$cmd);
+   $cmd = preg_replace('/#PASSWORD#/',$pass,$cmd);
 
 This should allow a lot of flexibility with different authenticators.
 

@@ -1,4 +1,5 @@
 CVS:
+	Added docs about netware authentication
 	Rename auth.inc -> mrbs_auth.inc to stop phplib conflicts
 	Added Spanish language file
 	Added Dutch language file
