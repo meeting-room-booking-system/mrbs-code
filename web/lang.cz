@@ -1,0 +1,174 @@
+<?
+# $Id$
+
+# This file contains PHP code that specifies vocabuage specific strings
+# The default strings come from lang.en, and anything in a locale
+# specific file will overwrite the default. This is a Czech file.
+#
+#
+# This file is PHP code. Treat it as such.
+#
+# Translate SmEjDiL malyl@col.cz
+#
+
+# The charset to use in "Content-type" header
+$vocab["charset"]            = "iso-8859-2";
+
+# Used in style.inc
+$vocab["mrbs"]               = "Meeting Room Booking System";
+
+# Used in functions.inc
+$vocab["report"]             = "Výpis";
+$vocab["admin"]              = "Admin";
+$vocab["help"]               = "Pomoc";
+$vocab["search"]             = "Hledat:";
+
+# Used in day.php
+$vocab["bookingsfor"]        = "Zajednáno pro";
+$vocab["bookingsforpost"]    = "";
+$vocab["areas"]              = "Oblasti";
+$vocab["daybefore"]          = "Den vzad";
+$vocab["dayafter"]           = "Den vpøed";
+$vocab["gototoday"]          = "Dnes";
+$vocab["goto"]               = "be¾ na";
+
+# Used in trailer.inc
+$vocab["viewday"]            = "Dny";
+$vocab["viewweek"]           = "Týdny";
+$vocab["viewmonth"]          = "Mìsíce ";
+$vocab["ppreview"]           = "Pro tisk";
+
+# Used in edit_entry.php
+$vocab["addentry"]           = "Pøidat záznam";
+$vocab["editentry"]          = "Edit záznam";
+$vocab["editseries"]         = "Edit sérii";
+$vocab["namebooker"]         = "Popis instrukce:";
+$vocab["fulldescription"]    = "Celkový popis:<br>&nbsp;&nbsp;(Èíslo èloveka,<br>&nbsp;&nbsp;Internal/External atd)";
+$vocab["date"]               = "Datum:";
+$vocab["start_date"]         = "Zaèátek:";
+$vocab["end_date"]           = "Konec:";
+$vocab["time"]               = "Èas:";
+$vocab["duration"]           = "Doba trvání:";
+$vocab["seconds"]            = "sekundy";
+$vocab["minutes"]            = "minuty";
+$vocab["hours"]              = "hodiny";
+$vocab["days"]               = "dny";
+$vocab["weeks"]              = "víkendy";
+$vocab["years"]              = "roky";
+$vocab["all_day"]            = "V¹echny dny";
+$vocab["type"]               = "Typ:";
+$vocab["internal"]           = "Interní";
+$vocab["external"]           = "Externí";
+$vocab["save"]               = "Ulo¾it";
+$vocab["rep_type"]           = "Opakovat Typ:";
+$vocab["rep_type_0"]         = "Nikdo";
+$vocab["rep_type_1"]         = "Dennì";
+$vocab["rep_type_2"]         = "Tydnì";
+$vocab["rep_type_3"]         = "Mìsíènì";
+$vocab["rep_type_4"]         = "Roènì";
+$vocab["rep_type_5"]         = "Monthly, korespondenèní den";
+$vocab["rep_type_6"]         = "n-týdnù";
+$vocab["rep_end_date"]       = "Konec opakování:";
+$vocab["rep_rep_day"]        = "Opakovat v den:";
+$vocab["rep_for_weekly"]     = "(pro (n-)týdnù)";
+$vocab["rep_freq"]           = "Frekvence:";
+$vocab["rep_num_weeks"]      = "Èislo týdne";
+$vocab["rep_for_nweekly"]    = "(pro n-týdnù)";
+$vocab["ctrl_click"]         = "Uzij Control-Klic pro vyber vice mistnosti";
+
+# Used in view_entry.php
+$vocab["description"]        = "Popis:";
+$vocab["room"]               = "Místnost:";
+$vocab["createdby"]          = "Vytvoøílo IP:";
+$vocab["lastupdate"]         = "Poslední zmìna:";
+$vocab["deleteentry"]        = "Smazat záznam";
+$vocab["deleteseries"]       = "Smazat sérii";
+$vocab["confirmdel"]         = "Jsi si jistý\\nsmazáním tohoto záznamu?\\n\\n";
+$vocab["returnprev"]         = "Návrat na pøedchozí stránku";
+
+# Used in edit_entry_handler.php
+$vocab["error"]              = "Chyba";
+$vocab["sched_conflict"]     = "Konflikt pøi plánování";
+$vocab["conflict"]           = "Nová rezervace je v konfliktu s jiným záznamem:";
+$vocab["too_may_entrys"]     = "Vybraná volba byla vytvoøena pro jiné záznamy.<BR>Prosím vyberte jinou volbu!";
+$vocab["returncal"]          = "Návrat do kalendáøe";
+
+# Authentication stuff
+$vocab["accessdenied"]       = "Pøistup zamítnut";
+$vocab["norights"]           = "Nemáte pøístupové právo pro zmìnu této polo¾ky.";
+
+# Used in search.php
+$vocab["invalid_search"]     = "Prázdný nebo neplatný hledaný øetìzec.";
+$vocab["search_results"]     = "Vysledek hledání pro:";
+$vocab["nothing_found"]      = "Nic nenalezeno";
+$vocab["records"]            = "Záznam";
+$vocab["through"]            = " through ";
+$vocab["of"]                 = " of ";
+$vocab["previous"]           = "Pøedchozi";
+$vocab["next"]               = "Dal¹í";
+$vocab["entry"]              = "Záznam";
+$vocab["view"]               = "Náhled";
+
+# Used in report.php
+$vocab["report_on"]          = "Výpis setkání:";
+$vocab["report_start"]       = "Výpis zaèátkù:";
+$vocab["report_end"]         = "Výpis koncù:";
+$vocab["match_area"]         = "Hledaná oblast:";
+$vocab["match_room"]         = "Hledaná místnost:";
+$vocab["match_entry"]        = "Hledat v popisu:";
+$vocab["match_descr"]        = "Hledat v celém popisu:";
+$vocab["include"]            = "Zahrnovat:";
+$vocab["report_only"]        = "Jen výpis";
+$vocab["summary_only"]       = "Jen pøehled";
+$vocab["report_and_summary"] = "Výpis a pøehled";
+$vocab["summarize_by"]       = "Pøehled od:";
+$vocab["sum_by_descrip"]     = "Popis instrukce";
+$vocab["sum_by_creator"]     = "Tvùrce";
+$vocab["entry_found"]        = "nalezeno";
+$vocab["entries_found"]      = "nalezeno";
+$vocab["summary_header"]     = "Pøehled  (zaznamu) hodiny";
+$vocab["total"]              = "Celkem";
+$vocab["submitquery"]        = "Proved Vypis";
+
+# Used in week.php
+$vocab["weekbefore"]         = "Týden dozadu";
+$vocab["weekafter"]          = "Týden dopøedu";
+$vocab["gotothisweek"]       = "Tento týden";
+
+# Used in month.php
+$vocab["monthbefore"]        = "Mìsíc dozadu";
+$vocab["monthafter"]         = "Mìsic dopøedu";
+$vocab["gotothismonth"]      = "Tento mìsíc";
+
+# Used in {day week month}.php
+$vocab["no_rooms_for_area"]  = "Pro tuto místnost není definována ¾adná oblast!";
+
+# Used in admin.php
+$vocab["edit"]               = "Editovat";
+$vocab["delete"]             = "Smazat";
+$vocab["rooms"]              = "Mistnosti";
+$vocab["in"]                 = "v";
+$vocab["noareas"]            = "Zadne oblasti";
+$vocab["addarea"]            = "Pridej oblast";
+$vocab["name"]               = "Jmeno";
+$vocab["noarea"]             = "Neni vybrana zadna oblast";
+$vocab["browserlang"]        = "Prohlizec je nastaven k pouziti";
+$vocab["postbrowserlang"]    = "Jazkyk.";
+$vocab["addroom"]            = "Pridej mistnost";
+$vocab["capacity"]           = "Kapacita";
+$vocab["norooms"]            = "Zadna mistnost.";
+
+# Used in edit_area_room.php
+$vocab["editarea"]           = "Editovat oblast";
+$vocab["change"]             = "Zmena";
+$vocab["backadmin"]          = "Navrat do Admina";
+$vocab["editroomarea"]       = "Editovat popis oblasti nebo mistnosti";
+$vocab["editroom"]           = "Editovat mistnost";
+
+# Used in del.php
+$vocab["deletefollowing"]    = "Bylo smazano rezervovani";
+$vocab["sure"]               = "Jsi si jisty?";
+$vocab["YES"]                = "ANO";
+$vocab["NO"]                 = "NE";
+
+?>
