@@ -601,29 +601,66 @@ for an example password file.
 SMB Authentication
 ------------------
 
-Here are Sam Mason's instructions for using his SMB authentication:
+Here are instructions gathered from several users for using  SMB authentication:
 
-As I said in the last mail, it uses an external program to do the
-authentication, this is a very simple program, that returns "true" if the
-username/password are valid and "false" otherwise.
+Included is the source (smb_auth.c), this is a very simple program, that 
+returns "true" if the username/password are valid and "false" otherwise.
 
-Included is the source (smb_auth.c) to compile it download the "pam_smb"
-library from some where that mirrors samba (
-http://www.mirror.ac.uk/sites/ftp.samba.org/pam_smb/) copy the source into the
-main source directory, and compile (having made the PAM library its self) with
-something like.
+FOLLOW THESE STEPS TO INSTALL/
 
-gcc -o smb_auth smb_auth.c smbval/smbvalid.a
+- download PAM library from
+  http://www.mirror.ac.uk/sites/ftp.samba.org/pam_smb/ (current one is 1.1.7)
+  or type:
+  $ wget http://www.mirror.ac.uk/sites/ftp.samba.org/pam_smb/pam_smb-1.1.7.tar.gz
 
-and copy the binary to somewhere useful I chose "/usr/bin/smb_auth"
+- $ tar -xvzf pam_smb-1.1.7.tar.gz
+  or gtar -xvzf pam_smb-1.1.7.tar.gz
 
-[snip]
+- $ cd pam_smb
 
-It requires the "smb_auth" program to be installed and working see
-"config.inc.php" to use a different authentication program + set the servers +
-domain used for the name checks.
+- $ ./configure
+  [or if you want to disable encrypted passwords you can run
+   $ ./configure --disable-encrypt-pass
+  ]
 
-The config.inc.php entries he supplied were:
+- $ make
+  [ or maybe on Solaris
+  $ gmake ]
+  
+  You can ignore any errors/warnings after the line
+  make[1]: Leaving directory `...../pam_smb/smbval'
+  any problems before this need to be fixed as smbvalid.a needs to be
+  created.
+  
+- copy smb_auth.c that come with the MRBS package in /pam_smb/ directory:
+  $ cp /<wherever>/smb_auth.c .
+
+- $ gcc -o smb_auth smb_auth.c smbval/smbvalid.a
+  [ or on Solaris :
+  $ gcc -o smb_auth smb_auth.c smbval/smbvalid.a -lsocket -lnsl
+  
+  The extra libraries (-lsocket -lnsl) are not mentioned in the
+  documentation but this might just be a Solaris thing ]
+
+  This creates a binary that does not rely on anything in the pam_smb
+  release. So this can be deleted after you have copied smb_auth to
+  another location.
+
+- [ $ strip smb_auth ] (shrink the file, optional)
+
+- Now move/copy smb_auth to somewhere that the web server can access it
+  and specify the path in config.inc.php. For example :
+  $ cp smb_auth /usr/bin
+  and verifi smb_auth has enough execute rights.
+  
+  USAGE: smb_auth [username] [password] [server] [backup] [domain]
+  You can bypass domain if you specify username like [domain/username]
+  
+  returns 0 on success
+  returns 1 on failure
+
+- then set config.inc.php as follows:
+
 
 # Authentication settings - read AUTHENTICATION
 
@@ -638,6 +675,8 @@ The [params] are:
 * Primary Server used for password validation
 * Secondary server used for password validation
 * NT domain under which the user is registered
+
+
 
 Netware Authentication
 ----------------------
