@@ -26,6 +26,11 @@
 if (isset($Action) && ($Action == "SetName"))
 {
     global $HTTP_HOST;
+    // Avoid errors with error level ALL
+    if ( !isset( $NewUserName ) )
+    {
+    	$NewUserName = "";
+    }
     /* First make sure the password is valid */
     if (($NewUserName != "") && (!authValidateUser($NewUserName, $NewUserPassword)))
     {
