@@ -1,29 +1,34 @@
-Currently supported MRBS languages are:
+        MRBS Language Support
 
-German:              lang.de (thanks to Erik Wenzel)
-English:             lang.en
-Spanish:             lang.es (thanks to Pablo Gomez)
-Japanese:            lang.ja
-Dutch:               lang.nl (thanks to Marc ter Horst)
-Traditional Chinese: lang.zh-tw (thanks to Linda Hu)
+Each "lang.*" file (in the web/ directory) contains the text strings for
+a language.  Not all of these files are complete.  Note that MRBS always
+reads the reference file "lang.en" first, before reading another language
+file.
 
-To port MRBS to another language is relativly easy.
-
-Look it admin.php3 - it says near the bottom "Your browser is set to use
-"xx" language".
-
-Copy "lang.en" to "lang.xx" (replace xx with the code you found in
-admin.php3) and then edit the file to change the English strings to your
-language.
+Porting MRBS to another language is relatively easy. From the Admin page,
+you will see "Your browser is set to use "xx" language". If no "lang.xx"
+file is available, copy "lang.en" to "lang.xx" (replace xx with the code
+you found in Admin), and then edit the file to change the English strings
+to your language.  For example, you might
+change: $lang["gototoday"] = "Go To Today";
+    to: $lang["gototoday"] = "gehe zum heutigen Tag";
 
 You will then find that MRBS starts to use your language file
-automatically.
+automatically. If you are having trouble getting this to work, see the
+language section of config.inc.
 
-If you do create a language file then please send it to me so I can include
-it in future releases.
+If you would like to complete or improve an existing language file, the
+"checklang.php" script included in the distribution can help. Copy this
+to your web server area, into the same directory as the MRBS lang.* files.
+Now use your browser to access:
+         http://your-host-and-dir/checklang.php?lang=xx
+(where "xx" is the code of the language file you want to check). This
+will report missing or untranslated strings in "lang.xx" compared to
+"lang.en". If you omit the parameter and access:
+         http://your-host-and-dir/checklang.php
+you will see the results of checking all available language files.
 
-Daniel
-daniel@pl14759.demon.co.uk
+If you do create or improve a language file, please post a message about
+it on the mailing list, so it can be included in future releases. Thanks!
 
-Now maintained by.
-  Sam Mason <smason@mtc.ricardo.com>
+$Id$

@@ -1,0 +1,254 @@
+README.sqlapi     - Database wrappers for MRBS                     2001-01-15
+-----------------------------------------------------------------------------
+This is a simple set of PHP database call wrapper routines, currently
+implemented for MySQL (>= 3.22) and PostgreSQL (>= 7.0). It was written
+for MRBS but may be useful in other applications.
+
+This package supports one single connection to a database, because the
+database connection handle is stored in a global variable. It supports
+multiple pending results for each connection. It can be configured to
+use PHP persistent (pooled) database connections, or normal (single use)
+connections.
+
+CAUTION: Before using PHP persistent database connections with PostgreSQL,
+be sure your PostgreSQL postmaster can support enough backends. In theory,
+and to be completely safe, it needs to be able to support at least as many
+concurrent connections as your Apache "MaxClients" setting times the number
+of unique persistent connection strings (PostgreSQL conninfo's, unique
+combinations of user/password/database) implemented on your site. Note that
+the default for PostgreSQL is a maximum of 32 connections, and the default
+for Apache MaxClients is 150. If you do not want to use persistent
+connections, set $db_nopersist as described below.
+
+-----------------------------------------------------------------------------
+
+To use this package, include either "mysql.inc" or "pgsql.inc" after
+defining the following variables:
+     $db_host = The hostname of the database server, or "localhost"
+     $db_login = The username to use when connecting to the database
+     $db_password = The database account password
+     $db_database = The database name
+Optionally, you can define:
+     $db_nopersist = 1;
+if you do not want to use persistent connections.
+
+If using PostgreSQL, and the database server is on the same host as the web
+server, you can specify $db_host="localhost" to use TCP, or $db_host="" to
+use Unix Domain Sockets. Generally this won't make much difference, but if
+your server runs without the -i option, it will only accept Unix Domain
+Socket connections, so you must use $db_host="".
+
+After your script includes the file, it will be connected to the database.
+If an error occurs while trying to connect, a message will be output
+followed by a PHP exit. (Failure to connect to the database is the only
+reason the functions defined here will output an error message and exit.)
+
+The way MRBS uses this is to define a configuration file config.inc with
+the above variables plus:
+     $dbsys = "pgsql";  //  or:     $dbsys = "mysql";
+Then, each PHP script which wants to connect to the database starts with:
+     include "config.inc";
+     include "$dbsys.inc";
+If you do this, be sure the web server will not serve config.inc to
+clients, for security reasons.
+
+-----------------------------------------------------------------------------
+Notes on improving SQL portability:
+
+  + Use standard SQL-92 as much as possible.
+  + Where it is not possible to use SQL-92, use or implement an sql_syntax_*
+    function which hides the database differences (see below).
+  + Don't use SQL-92 reserved words as column or table names.
+  + Use PHP functions rather than database functions where practical.
+  + Don't reply on specific formats for output of DATETIME types.
+  + Don't quote numeric type values in SQL statements.
+
+SQL-92 standard things to avoid because they cause trouble in MySQL:
+  + Double quoted identifiers: SELECT "MY COLUMN" from "MY TABLE"...
+  + The string concatenation operator ||
+  + Subselects
+
+SQL-92 standard things to avoid because they cause trouble in PostgreSQL:
+  + Outer joins.
+  + "table1 JOIN table2" syntax; use WHERE clause joins instead.
+
+Non-standard features used, available in both PostgreSQL and MySQL (this
+information is provided for anyone attempting to port MRBS to another
+database system):
+  + Escaping quoted strings. The SQL-92 standard says to double embedded
+    single quotes, and that's the only escaping used or defined. So:
+               insert into mytable values ('CAN''T');
+    But both MySQL and PostgreSQL support backslash-escaping, which is
+    easier to do in PHP, so I have not attempted to wrap database string
+    quoting.
+  + MySQL implicitly assigns "DEFAULT current_timestamp" to a timestamp
+    column; this must be done explicitly in other database systems.
+  + The column called TIMESTAMP is not legal in SQL-92. It would be legal
+    if double-quoted in SQL statements, but MySQL doesn't like that.
+    Changing the column name would break existing databases, and it turns
+    out both PostgreSQL and MySQL accept this, so it has been kept.
+  + Auto-commit is assumed. The database wrappers have begin/end calls to
+    bracket transactions, but MRBS generally uses them only to improve
+    performance with grouped inserts/deletes/updates. It is assumed that
+    a single insert/delete/update SQL statement commits right away. If
+    a database doesn't implement this, it may be possible to incorporate
+    this into sql_command(), which is used for all data modification.
+  + Portable use of auto-incrementing fields (PostgreSQL SERIAL, MySQL
+    AUTO_INCREMENT) requires that:
+      * Only one auto-increment field allowed per table; must be primary key.
+      * Use sql_insert_id() to retrieve the value after INSERT.
+      * Don't assume the value will either be MAX(field)+1, like MySQL,
+        or always incremented, like PostgreSQL. These can be different
+        when records have been deleted.
+
+-----------------------------------------------------------------------------
+
+The database-independent wrapper functions are documented here:
+
+sql_command($sql)
+  Execute a non-SELECT SQL command (for example: insert, update, delete).
+  Returns the number of tuples affected if OK (a number >= 0).
+  Returns -1 on error; use sql_error() to get the error message.
+
+sql_query($sql)
+  Execute an SQL query. Returns a database-dependent result handle, which
+  should be passed back to sql_row() or sql_row_keyed() to get the results.
+  If sql_row() or sql_row_keyed() isn't used to read all rows (plus 1), you
+  must call sql_free() to free the result structure.
+  Returns 0 on error; use sql_error() to get the error message.
+
+sql_row($result, $rownumber)
+  Return a row from a result. The first row is row number 0.
+  The row is returned as an array with index 0=first column, etc.
+  When called with i >= number of rows in the result, this frees up the
+  results structure and returns 0. This is designed to be used in a loop
+  like this to retrieve all the rows:
+
+    for ($i = 0; (($row = sql_row($r, $i)); $i++) { ... process the row ... }
+
+  When used this way, there is no need to call sql_free($result). But if
+  rows are accessed in other way, sql_free() must be called when you are
+  done with the result handle.
+
+sql_row_keyed($result, $rownumber)
+  Return a row from a result. The first row is row number 0.
+  The row is returned as an associative array with column (field) names as
+  the indexes. (PHP also makes numeric indexes for the same data.)
+  When called with i >= number of rows in the result, this frees up the
+  results structure and returns 0. This is designed to be used in a loop
+  like this to retrieve all the rows:
+
+    for ($i = 0; (($row = sql_row_keyed($r, $i)); $i++) { ... }
+
+  When used this way, there is no need to call sql_free($result). But if
+  rows are accessed in other ways, sql_free() must be called when you are
+  done with the result handle.
+  NOTE: You should explicitly name each column in your SQL statement which
+  is not a simple field name, because databases differ in how they assume
+  a default name. For example, don't use sql_row_keyed() on a query
+  like: SELECT name, COUNT(*) FROM ...
+  Instead use: SELECT name, COUNT(*) AS totals FROM ...
+  so you can reliably refer to the count as row["totals"].
+
+sql_count($result)
+  Return the number of rows returned by a result handle from sql_query().
+
+sql_query1($sql)
+  Execute an SQL query which should return a single non-negative number value.
+  Returns the value of the single column in the single row of the query
+  result, or -1 on error.
+  This is a short-cut alternative to sql_query(), good for use with count(*)
+  and similar queries. Error checking is limited (caller cannot tell if
+  an error occurred or no values were returned), but it is easier to use.
+
+sql_free($result)
+  Free a result handle $result, returned by a previous call to sql_query().
+  You must call this if you do not use sql_row() or sql_row_keyed() to fetch
+  all rows of the query result and then call it once more. See sql_row() for
+  more information.
+
+sql_insert_id($table, $fieldname)
+  Return the value of an autoincrement/serial field from the last insert.
+  This must be called right after the insert on that table. The $fieldname
+  is the name of the autoincrement or serial field in the table. The
+  return result will be correct even if other processes are updating the
+  database at the same time.
+  NOTE: To make this work with different DBMS's, the field name must be
+  specified, and it must name the only autoincrement/serial field in the
+  row inserted by the most recent INSERT.
+
+sql_error()
+  Return the text of the last error message. Only call this after an
+  error return from sql_query() or sql_command() - it is not reliable
+  as an indicator if an error did in fact occur.
+
+sql_begin()
+  Begin a transaction, if the database supports it. This is used to
+  improve performance for multiple insert/delete/updates on databases
+  which support transactions, and using it is not required. There is
+  no support for rollback, because not all databases can do it. Do
+  not attempt to have both sql_begin() and sql_mutex_lock() active since
+  then both may be implemented with a shared underlying mechanism.
+
+sql_commit()
+  Commit (end) a transaction. See sql_begin().
+
+sql_mutex_lock($name)
+  Acquire a mutual-exclusion lock on the named table. For portability:
+  * This will not lock out SELECTs.
+  * It may lock out DELETE/UPDATE/INSERT or it may not.
+  * It will lock out other callers of this routine with the same name
+    argument (which is the main reason for using it).
+  * It may timeout in 20 seconds and return 0, or may wait forever.
+  * It returns 1 when the lock has been acquired.
+  * Caller must release the lock with sql_mutex_unlock().
+  * Caller must not have more than one mutex lock at any time.
+  You should be sure to release the lock with sql_mutex_unlock() before the
+  script exits, although this function also establishes a shutdown handler to
+  automatically release the lock if the script exits.  (With persistent
+  connections, the locks would not otherwise be released on exit, and a
+  deadlock will occur.)
+  This call effectively calls sql_begin(), so do not use it inside an
+  sql_begin()/sql_end() block, nor use sql_begin() between calls to
+  sql_mutex_lock() and sql_mutex_unlock().
+
+sql_mutex_unlock($name)
+  Release a mutual-exclusion lock on the named table. See sql_mutex_lock().
+  This also effectively calls sql_commit().
+
+sql_version()
+  Return a string identifying the database system and version.
+
+-----------------------------------------------------------------------------
+
+The following sql_syntax_* routines are intended to help you build up SQL
+statements using non-standard features. Each returns a portion of SQL (with
+leading and trailing spaces) which implements the named non-standard feature
+for the selected database.
+
+sql_syntax_limit($count, $offset)
+  Generate non-standard SQL for LIMIT clauses, to make the query return
+  no more than $count records, starting at position $offset (basis 0).
+
+sql_syntax_timestamp_to_unix($fieldname)
+  Generate non-standard SQL to output a TIMESTAMP as a Unix time_t. The
+  argument must be the name of a timestamp field.
+
+sql_syntax_caseless_contains($fieldname, $s)
+  Generate a non-standard SQL predicate clause which will be true if the
+  string $s is contained anywhere in the named field, using case insensitive
+  string compare. This uses LIKE or Regular Expression matching, depending
+  on the database system. It handles all quoting on the $s argument of the
+  characters needed by the selected method, so don't call this with an
+  argument which has already been "magic quoted".
+
+Example usage:
+  $sql = "SELECT * FROM mytable ORDER BY id" . sql_syntax_limit(100,20);
+With PostgreSQL this gives you:
+  $sql = "SELECT * FROM mytable ORDER BY id LIMIT 100 OFFSET 20";
+With MySQL this gives you:
+  $sql = "SELECT * FROM mytable ORDER BY id LIMIT 20,100";
+
+-----------------------------------------------------------------------------
+
+$Id$
