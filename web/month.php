@@ -288,7 +288,7 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
                     . "&day=$cday&month=$month&year=$year\" title=\""
                     . $d[$cday]["data"][$i] . "\">"
                     . substr($d[$cday]["shortdescrip"][$i], 0, 17)
-                    . "<br>" . "</a>";
+                    . "</a>";
             }
             else
             {
