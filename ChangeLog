@@ -1,3 +1,13 @@
+2004-11-29  John Beranek <jberanek@users.sourceforge.net>
+
+	* tables.my.sql, upgrade.my.sql, upgrade2.my.sql, upgrade3.my.sql
+	  (mrbs-1_2-branch.[1,1,1,1]):
+	  * MySQL tables fixed for MySQL 4.0, namely to remove DEFAULT from
+	   auto_increment columns.
+
+	  * Also synced the various upgrade MySQL files, including changing
+	   the rep_num_weeks column to smallint with no default throughout.
+
 2004-06-14  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* INSTALL (1.36, mrbs-1-2): Changed comment about $url_base to

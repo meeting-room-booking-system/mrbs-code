@@ -1,3 +1,81 @@
+2004-11-21  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* functions_mail.inc (mrbs-1_2-branch.3): Bug 1027328 - fixed
+	  sendMail function so that it provides the correct parameters and
+	  headers for each type of backend (mail, sendmail or smtp).
+	  Thanks to Thekk.
+
+2004-11-20  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* functions_mail.inc (mrbs-1_2-branch.2): RFE 1000967 - enhance
+	  email notifications.	Also reference Neil Hawes' emails to the
+	  list:
+	  http://sourceforge.net/mailarchive/message.php?msg_id=9550429
+
+	  Updated functions_mail.inc so that email notifications include
+	  repeat information for new/change/delete and the output for start
+	  and end times are the same as that shown when viewing an entry.
+
+	  Thanks to Neil Hawes and Stuart Chalmers.
+
+2004-11-19  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* config.inc.php (mrbs-1_2-branch.2): Bug 1068522 - changed ""
+	  around $db_password value to '' so that special characters are
+	  not interpeted. Thanks to Matt Schuler
+
+2004-11-19  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* mrbs_sql.inc (mrbs-1_2-branch.1): Bug 1035790 - unable to book
+	  series with pgsql.  Fixed INSERT command in mrbsCreateRepeatEntry
+	  as per suggestion of Thekk.
+
+2004-11-09  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* edit_entry_handler.php, functions_mail.inc
+	  (mrbs-1_2-branch.[1,1]): Bug 994056 - fixed emailing so that
+	  emails are sent to mrbs_admin, area and room admins under all
+	  conditions if configured to do so.
+
+2004-10-28  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* edit_entry.php (mrbs-1_2-branch.1): Bug 1040185 - changed mktime
+	  so that am and pm generation is not affected by timezone and the
+	  fact that "Negative timestamps are not supported under any known
+	  version of Windows" (from php manual).
+
+2004-09-21  John Beranek <jberanek@users.sourceforge.net>
+
+	* lang.cs, language.inc (mrbs-1_2-branch.[1,1]):
+	  * Fixed lang/locale selection for Czech language. Czech country
+	  code is "cs", not "cz".
+
+2004-09-17  John Beranek <jberanek@users.sourceforge.net>
+
+	* functions.inc, style.inc (mrbs-1_2-branch.[2,1]): * Merged a
+	  functions.inc change from the trunk, namely a fix for the
+	  ChangeOptionDays JavaScript function.
+
+	  * Fix for page refresh functionality. If a refresh time is
+	  configured,  only do it for day.php, week.php and month.php
+
+2004-09-14  John Beranek <jberanek@users.sourceforge.net>
+
+	* lang.nl (mrbs-1_2-branch.1): * Updated lang.nl from Marc ter
+	  Horst
+
+2004-09-13  John Beranek <jberanek@users.sourceforge.net>
+
+	* functions.inc (mrbs-1_2-branch.1):
+	  * Merged a "post-1.2 release" fix from the trunk onto the 1.2
+	  branch.
+
+2004-09-13  John Beranek <jberanek@users.sourceforge.net>
+
+	* config.inc.php (mrbs-1_2-branch.1):
+	  * Created branch (mrbs-1_2-branch) for MRBS 1.2 fixes/minor
+	  updates. Changed version number to 1.2.1
+
 2004-08-24  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* mrbs.css (1.11), xbLib.js (1.4) (utags: mrbs-1-2): Minor bug fix:
