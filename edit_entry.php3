@@ -64,7 +64,7 @@ if ($id)
 	
 	if($entry_type >= 1)
 	{
-		$sql = "SELECT rep_type, end_date, rep_opt
+		$sql = "SELECT rep_type, start_time, end_date, rep_opt
 		        FROM mrbs_repeat WHERE id=$rep_id";
 		
 		$res = mysql_query($sql);
@@ -76,20 +76,24 @@ if ($id)
 		
 		if($edit_type == "series")
 		{
-			$rep_end_day   = (int)strftime('%d', $row[1]);
-			$rep_end_month = (int)strftime('%m', $row[1]);
-			$rep_end_year  = (int)strftime('%Y', $row[1]);
+			$start_day   = (int)strftime('%d', $row[1]);
+			$start_month = (int)strftime('%m', $row[1]);
+			$start_year  = (int)strftime('%Y', $row[1]);
+			
+			$rep_end_day   = (int)strftime('%d', $row[2]);
+			$rep_end_month = (int)strftime('%m', $row[2]);
+			$rep_end_year  = (int)strftime('%Y', $row[2]);
 			
 			switch($rep_type)
 			{
 				case 2:
-					$rep_day[0] = $row[2][0] != "0";
-					$rep_day[1] = $row[2][1] != "0";
-					$rep_day[2] = $row[2][2] != "0";
-					$rep_day[3] = $row[2][3] != "0";
-					$rep_day[4] = $row[2][4] != "0";
-					$rep_day[5] = $row[2][5] != "0";
-					$rep_day[6] = $row[2][6] != "0";
+					$rep_day[0] = $row[3][0] != "0";
+					$rep_day[1] = $row[3][1] != "0";
+					$rep_day[2] = $row[3][2] != "0";
+					$rep_day[3] = $row[3][3] != "0";
+					$rep_day[4] = $row[3][4] != "0";
+					$rep_day[5] = $row[3][5] != "0";
+					$rep_day[6] = $row[3][6] != "0";
 					
 					break;
 				
@@ -100,8 +104,8 @@ if ($id)
 		else
 		{
 			$rep_type     = $row[0];
-			$rep_end_date = strftime('%A %d %B %Y',$row[1]);
-			$rep_opt      = $row[2];			
+			$rep_end_date = strftime('%A %d %B %Y',$row[2]);
+			$rep_opt      = $row[3];
 		}
 	}
 }
@@ -287,7 +291,7 @@ else
 		{
 			case 2:
 				$opt .= $rep_opt[0] ? "Sunday " : "";
-				$opt  = $rep_opt[1] ? "Monday " : "";
+				$opt .= $rep_opt[1] ? "Monday " : "";
 				$opt .= $rep_opt[2] ? "Tuesday " : "";
 				$opt .= $rep_opt[3] ? "Wednesday " : "";
 				$opt .= $rep_opt[4] ? "Thursday " : "";
