@@ -36,6 +36,74 @@ function print_header($day, $month, $year, $area)
 <?php
    include "style.inc";
 ?>
+<SCRIPT LANGUAGE="JavaScript1.3">
+
+<!-- Begin
+
+/*   Script inspired by "True Date Selector"
+     Created by: Lee Hinder, lee.hinder@ntlworld.com 
+     
+     Tested with Windows IE 6.0
+     Tested with Linux Opera 7.21, Mozilla 1.3, Konqueror 3.1.0
+     
+     WARNING: little bug in Mozilla 1.3. If a month with less than 31 days is
+     selected, the max days number is updated correctly, but if you select 
+     a 31 days month again, then max days number is not updated (ie. stays at
+     30 or 28). Goto a 31 days month to have the 31 days back. Since Mozilla
+     1.3 is rather not up to date (1.6b current at 2003-11-15), this may be 
+     corrected in newer releases.
+*/
+
+//set todays date
+Now = new Date();
+NowDay = Now.getDate();
+NowMonth = Now.getMonth();
+// getFullYear() need JavaScript1.3 (IE4, Netscape 4.06, Mozilla 1, Opera 6)
+NowYear = Now.getFullYear();
+
+//function for returning how many days there are in a month including leap years
+function DaysInMonth(WhichMonth, WhichYear)
+{
+  var DaysInMonth = 31;
+  if (WhichMonth == "Apr" || WhichMonth == "Jun" || WhichMonth == "Sep" || WhichMonth == "Nov") DaysInMonth = 30;
+  if (WhichMonth == "Feb" && (WhichYear/4) != Math.floor(WhichYear/4))    DaysInMonth = 28;
+  if (WhichMonth == "Feb" && (WhichYear/4) == Math.floor(WhichYear/4))    DaysInMonth = 29;
+  return DaysInMonth;
+}
+
+//function to change the available days in a months
+function ChangeOptionDays(Which)
+{
+  DaysObject = eval("document.Form1." + Which + "day");
+  MonthObject = eval("document.Form1." + Which + "month");
+  YearObject = eval("document.Form1." + Which + "year");
+
+  Month = MonthObject[MonthObject.selectedIndex].text;
+  Year = YearObject[YearObject.selectedIndex].text;
+
+  DaysForThisSelection = DaysInMonth(Month, Year);
+  CurrentDaysInSelection = DaysObject.length;
+  if (CurrentDaysInSelection > DaysForThisSelection)
+  {
+    for (i=0; i<(CurrentDaysInSelection-DaysForThisSelection); i++)
+    {
+      DaysObject.options[DaysObject.options.length - 1] = null
+    }
+  }
+  if (DaysForThisSelection > CurrentDaysInSelection)
+  {
+    for (i=0; i<(DaysForThisSelection-CurrentDaysInSelection); i++)
+    {
+      NewOption = new Option(DaysObject.options.length + 1);
+      DaysObject.add(NewOption);
+    }
+  }
+    if (DaysObject.selectedIndex < 0) DaysObject.selectedIndex == 0;
+}
+
+//  End -->
+</SCRIPT>
+
  </HEAD>
  <BODY BGCOLOR="#ffffed" TEXT=black LINK="#5B69A6" VLINK="#5B69A6" ALINK=red>
 	   <?php if ( $GLOBALS["pview"] != 1 ) { ?>
@@ -56,7 +124,7 @@ function print_header($day, $month, $year, $area)
           </FONT>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF">
-          <FORM ACTION="day.php" METHOD=GET>
+          <FORM ACTION="day.php" METHOD=GET name="Form1">
            <FONT SIZE=2>
 <?php
    genDateSelector("", $day, $month, $year);
@@ -111,19 +179,19 @@ function toTimeString(&$dur, &$units)
 	if($dur >= 60)
 	{
 		$dur /= 60;
-		
+
 		if($dur >= 60)
 		{
 			$dur /= 60;
-			
+
 			if(($dur >= 24) && ($dur % 24 == 0))
 			{
 				$dur /= 24;
-				
+
 				if(($dur >= 7) && ($dur % 7 == 0))
 				{
 					$dur /= 7;
-					
+
 					if(($dur >= 52) && ($dur % 52 == 0))
 					{
 						$dur  /= 52;
@@ -157,24 +225,24 @@ function genDateSelector($prefix, $day, $month, $year)
 		echo "<OPTION" . ($i == $day ? " SELECTED" : "") . ">$i\n";
 	
 	echo "</SELECT>";
-	echo "<SELECT NAME=\"${prefix}month\">\n";
-	
+	echo "<SELECT NAME=\"${prefix}month\" onchange=\"ChangeOptionDays('')\">\n";
+
 	for($i = 1; $i <= 12; $i++)
 	{
 		$m = utf8_strftime("%b", mktime(0, 0, 0, $i, 1, $year));
 		
 		print "<OPTION VALUE=\"$i\"" . ($i == $month ? " SELECTED" : "") . ">$m\n";
 	}
-	
+
 	echo "</SELECT>";
-	echo "<SELECT NAME=\"${prefix}year\">\n";
-	
+	echo "<SELECT NAME=\"${prefix}year\" onchange=\"ChangeOptionDays('')\">\n";
+
 	$min = min($year, date("Y")) - 5;
 	$max = max($year, date("Y")) + 5;
-	
+
 	for($i = $min; $i <= $max; $i++)
 		print "<OPTION" . ($i == $year ? " SELECTED" : "") . ">$i\n";
-	
+
 	echo "</SELECT>";
 }
 
