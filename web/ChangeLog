@@ -1,3 +1,56 @@
+2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* day.php (1.19): Moved inclusion of mrbs_auth.inc after that of
+	  function.inc and $dbsys.inc, as mrbs_auth.inc now uses
+	  definitions of the first one, and will use those of the second
+	  one eventually.
+
+2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* auth_config.inc (1.2): Function authValidateUser() must not call
+	  authGet() anymore. In case of failure it just returns 0 as
+	  specified in its header comment.
+
+2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* auth_ext.inc (1.6), auth_imap.inc (1.5), auth_ldap.inc (1.5),
+	  auth_nis.inc (1.5), auth_nw.inc (1.4), auth_pop3.inc (1.5): Set
+	  $auth['session']='http' if it is not specified. This allows to
+	  get the same behaviour as before without changing config.inc.php.
+	  Moved routines authGet(), getUserName() and getUserPassword() to
+	  the new session_http.inc module.  Function authValidateUser()
+	  must not call authGet() anymore. In case of failure it just
+	  returns 0 as specified in its header comment.
+
+2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* auth_ip.inc (1.5), auth_name.inc (1.3), auth_nt.inc (1.3),
+	  auth_omni.inc (1.3): Removed the argument to authGet().
+
+2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* mrbs_auth.inc (1.8): Moved routines getAuthUserName() and
+	  getAuthUserPassword() to the new session_http.inc module.
+	  Function getAuthorized() must not call authGet() anymore. In case
+	  of failure it just returns 0 as specified in its header comment.
+
+2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* session_cookie.inc (1.2), session_php.inc (1.3): Moved $HTTP_HOST
+	  setting to grab_globals.inc.	Added missing globals declarations.
+	  Removed the argument to authGet().  Action "SetName" now
+	  validates the user/password pair. This avoids loging on
+	  unauthorized users, which would rejected later on.
+
+2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* session_http.inc (1.1): Get the user/password using the HTTP
+	  basic authentication.
+
+2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* grab_globals.inc.php (1.2): Added the setting of $HTTP_HOST.
+
 2003-11-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* session_php.inc (1.2): - (printLoginForm): make session_php.inc
@@ -127,25 +180,32 @@
 
 2003-09-25  John Beranek <jberanek@users.sourceforge.net>
 
-	* auth_pop3.inc (1.3): Bug fix provided by Jean-Baptiste
+	* auth_pop3.inc (1.3):
+	  Bug fix for POP3 authentication scheme provided by Jean-Baptiste
 	  Lehucher.
 
 2003-09-23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* help.php (1.10): Doc fixes.
+	* help.php (1.10, mrbs-1-2-pre1): Doc fixes.
 
 2003-09-23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* add.php (1.4), admin.php (1.11), auth_ext.inc (1.5),
-	  auth_imap.inc (1.4), auth_ip.inc (1.4), auth_name.inc (1.2),
-	  auth_nis.inc (1.4), auth_nt.inc (1.2), auth_omni.inc (1.2),
-	  auth_pop3.inc (1.2), config.inc (1.17), config.inc.php (1.2),
-	  day.php (1.15), del.php (1.9), del_entry.php (1.4),
-	  edit_area_room.php (1.9), edit_entry.php (1.19),
-	  edit_entry_handler.php (1.12), help.php (1.9), lang.fi (1.4),
-	  month.php (1.12), report.php (1.11), search.php (1.9),
-	  view_entry.php (1.9), week.php (1.17): Finally we changed
-	  config.inc to config.inc.php for "security" reasons.
+	* add.php (1.4, mrbs-1-2-pre1), admin.php (1.11, mrbs-1-2-pre1),
+	  auth_ext.inc (1.5, mrbs-1-2-pre1), auth_imap.inc (1.4,
+	  mrbs-1-2-pre1), auth_ip.inc (1.4, mrbs-1-2-pre1), auth_name.inc
+	  (1.2, mrbs-1-2-pre1), auth_nis.inc (1.4, mrbs-1-2-pre1),
+	  auth_nt.inc (1.2, mrbs-1-2-pre1), auth_omni.inc (1.2,
+	  mrbs-1-2-pre1), auth_pop3.inc (1.2, mrbs-1-2-pre1), config.inc
+	  (1.17), config.inc.php (1.2, mrbs-1-2-pre1), day.php (1.15,
+	  mrbs-1-2-pre1), del.php (1.9, mrbs-1-2-pre1), del_entry.php (1.4,
+	  mrbs-1-2-pre1), edit_area_room.php (1.9, mrbs-1-2-pre1),
+	  edit_entry.php (1.19, mrbs-1-2-pre1), edit_entry_handler.php
+	  (1.12, mrbs-1-2-pre1), help.php (1.9), lang.fi (1.4,
+	  mrbs-1-2-pre1), month.php (1.12, mrbs-1-2-pre1), report.php
+	  (1.11, mrbs-1-2-pre1), search.php (1.9, mrbs-1-2-pre1),
+	  view_entry.php (1.9, mrbs-1-2-pre1), week.php (1.17,
+	  mrbs-1-2-pre1): Finally we changed config.inc to config.inc.php
+	  for "security" reasons.
 
 2003-09-23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -180,10 +240,10 @@
 
 2003-05-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* mrbs_sql.inc (1.9): - Changed mrbs_sql.inc so that when a 5th
-	  week "Monthly repeat, same day  of the week" is selected,
-	  subsequent repeated meetings switch to the 5th week when possible
-	  after falling back to the 4th week.
+	* mrbs_sql.inc (1.9, mrbs-1-2-pre1, Root-of-mrbs_MDB): - Changed
+	  mrbs_sql.inc so that when a 5th week "Monthly repeat, same day
+	  of the week" is selected, subsequent repeated meetings switch to
+	  the 5th week when possible after falling back to the 4th week.
 
 2003-05-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -205,9 +265,9 @@
 
 2003-04-25  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* mincals.inc (1.8): + in the minicalendar week view, the full week
-	  is highlighted instead of the first day of the week
-	  (<sQuare>mrbs@synapse.plus.com).
+	* mincals.inc (1.8, mrbs-1-2-pre1, Root-of-mrbs_MDB): + in the
+	  minicalendar week view, the full week is highlighted instead of
+	  the first day of the week (<sQuare>mrbs@synapse.plus.com).
 
 2003-04-25  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -241,14 +301,16 @@
 
 2003-03-31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* lang.it (1.7): - bug fix : italian vocab with character not
-	  properly escaped prevents deleting entries and/or prevent
-	  javascript popup to works (Pietro donatini)
+	* lang.it (1.7, mrbs-1-2-pre1, Root-of-mrbs_MDB): - bug fix :
+	  italian vocab with character not properly escaped prevents
+	  deleting entries and/or prevent javascript popup to works (Pietro
+	  donatini)
 
 2003-03-28  John Beranek <jberanek@users.sourceforge.net>
 
-	* auth_imap.inc (1.3), auth_ldap.inc (1.4), auth_nis.inc (1.3),
-	  auth_nw.inc (1.3), mrbs_auth.inc (1.5):
+	* auth_imap.inc (1.3), auth_ldap.inc (1.4, mrbs-1-2-pre1),
+	  auth_nis.inc (1.3), auth_nw.inc (1.3, mrbs-1-2-pre1),
+	  mrbs_auth.inc (1.5, mrbs-1-2-pre1) (utags: Root-of-mrbs_MDB):
 	  * Fixed bug in escaping of username and password for	all
 	  authentication schemes that use HTTP authentication.
 
@@ -260,9 +322,9 @@
 
 2003-03-11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* help.php (1.8), lang.da (1.1): + Added translation:	  Danish
-	  (Claes Bolvig Pedersen (cp@dhi.dk)) - Changed mrbs_version in
-	  help.php to "MRBS 1.1"
+	* help.php (1.8), lang.da (1.1, mrbs-1-2-pre1) (utags:
+	  Root-of-mrbs_MDB): + Added translation:     Danish (Claes Bolvig
+	  Pedersen (cp@dhi.dk)) - Changed mrbs_version in help.php to "MRBS
 
 2003-03-05  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
