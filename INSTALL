@@ -16,6 +16,10 @@ performance with PHP setup as a module.  Not only will you not have to
 deal with the CGI performance hit, but you'll be able to use PHP's
 database connection pooling.
 
+I'm not 100% sure at this time but mySQL version 3.22, rather than 3.23 
+might also be a requirement. I've had one person who cannot get mrbs to
+work with 3.23, although YMMV. I'd like to hear from you if it does work
+with 3.23 for you.
 
 FILE UNPACKING
 ---------------------------------------------------------------------------
