@@ -55,6 +55,10 @@ demonstrate how the "external" provider works.
 
 "badpw.pl" has usernames and passwords hard coded. I don't expect anyone to
 use this in a production environment - it's just to demonstrate.
+Also provided is crypt_passwd.pl, which works in the same way as badpw.pl
+but allows you to use a file which contains usernames and their
+crypted passwords. This is described after the badpw.pl description
+below.
 
 In the config.inc.php file there is a section that says:
 
@@ -83,6 +87,28 @@ username and password. Check badpw.pl for the valid combinations.
 To try out an "admin" user, add an appropriate username to the section that
 says:
    $auth["admin"][] = "....";
+
+Crypted password Authentication
+-------------------------------
+
+This is like the badpw.pl method above but uses a file containing
+usernames and their crypted passwords
+
+config.inc.php should be changed to have a section that reads 
+something like:
+
+$auth["realm"]  = "MRBS";
+$auth["type"]   = "ext";
+$auth["prog"]   = "../crypt_passwd.pl";
+$auth["params"] = "/etc/httpd/mrbs_passwd #USERNAME# #PASSWORD#";
+
+As you can see the crypt_passwd.pl script takes 3 parameters.
+The first parameter is the filename of the password file.
+It must be readable by the user which PHP is running as, which
+is usually the user the web server is running as. The password
+file must consist of pairs of username and crypted password,
+seperated by a colon. See crypt_passwd.example for an
+example password file.
 
 SMB Authentication
 ------------------
