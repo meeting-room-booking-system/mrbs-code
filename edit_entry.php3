@@ -187,32 +187,7 @@ function validate_and_submit ()
 </TR>
 
 <TR><TD><B><?= $lang["time"]?></B></TD>
-<?php
-$h12 = $hour;
-$amsel = "CHECKED"; $pmsel = "";
-
-if(isset($TIME_FORMAT) && ($TIME_FORMAT == "12"))
-{
-  if($h12 < 12)
-  {
-    $amsel = "CHECKED"; $pmsel = "";
-  } else {
-    $amsel = ""; $pmsel = "CHECKED";
-  }
-  $h12 %= 12;
-  if ( $h12 == 0 && $hour ) $h12 = 12;
-  if ( $h12 == 0 && ! $hour ) $h12 = "";
-}
-
-?>
   <TD><INPUT NAME="hour" SIZE=2 VALUE="<?php echo $start_hour;?>" MAXLENGTH=2>:<INPUT NAME="minute" SIZE=2 VALUE="<?php echo $start_min;?>" MAXLENGTH=2>
-<?php
-if(isset($TIME_FORMAT) && ($TIME_FORMAT == "12"))
-{
-  echo "<INPUT TYPE=radio NAME=ampm VALUE=\"am\" $amsel>am\n";
-  echo "<INPUT TYPE=radio NAME=ampm VALUE=\"pm\" $pmsel>pm\n";
-}
-?>
 </TD></TR>
 
 <TR><TD><B><? $lang["duration"]?></B></TD>
@@ -234,7 +209,7 @@ if(isset($TIME_FORMAT) && ($TIME_FORMAT == "12"))
     <OPTION VALUE="E"<?php if ( $type == "E" ) echo " SELECTED";?>><?= $lang["external"]?>
   </SELECT></TD></TR>
 
-<?php if($edit_type == "series") { ?>
+<?php if(isset($edit_type) && $edit_type == "series") { ?>
 
 <TR>
  <TD><B><?= $lang["rep_type"]?></B></TD>
@@ -277,11 +252,11 @@ for($i = 0; isset($lang["rep_type_$i"]); $i++)
 }
 else
 {
-	$key = "rep_type_" . ($rep_type ? $rep_type : "0");
+	$key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
 	
 	echo "<tr><td><b>$lang[rep_type]</b></td><td>$lang[$key]</td></tr>\n";
 	
-	if($rep_type != 0)
+	if(isset($rep_type) && ($rep_type != 0))
 	{
 		switch($rep_type)
 		{
