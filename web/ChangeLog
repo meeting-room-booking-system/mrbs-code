@@ -1,3 +1,45 @@
+2003-11-21  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* session_cookie.inc (1.4): - fixed not working with error level
+	  all.
+
+2003-11-19  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* auth_ip.inc (1.6), auth_name.inc (1.4), auth_nt.inc (1.4),
+	  auth_omni.inc (1.4): Removed auth_ip.inc, auth_name.inc,
+	  auth_nt.inc, auth_omni.inc, now superseeded by session_ip.inc,
+	  session_host.inc, session_nt.inc, and session_omni.inc
+	  respectively.
+
+2003-11-19  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* auth_none.inc (1.1), config.inc.php (1.10), session_host.inc
+	  (1.1), session_ip.inc (1.1), session_nt.inc (1.1),
+	  session_omni.inc (1.1): Created an auth_none.inc authentication,
+	  which validates any user.  Moved session management code from the
+	  old auth_ip, auth_name, auth_nt, auth_omni to the new session_ip,
+	  session_host, session_nt, session_omni respectively.	Updated
+	  config.inc.php comments to reflect the possible choices for
+	  session name and authentication types.
+
+2003-11-18  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* language.inc (1.5): Updated the administrator warning message
+	  about the iconv package requirement, to fire only if
+	  $unicode_encoding is true.
+
+2003-11-18  John Beranek <jberanek@users.sourceforge.net>
+
+	* style.inc (1.9):
+	  * Added utility to convert text in the database to UTF8, to  use
+	  MRBS with $unicode_encoding set to 1. The administrator  should
+	  copy it into the web directory, run it (choosing  the encoding to
+	  convert from) ONCE, and then move it back out of  the web
+	  directory.
+
+	  * Added comment to my usage of $vocab["charset"] in style.inc, as
+	   ist doesn't match the general usage of get_vocab().
+
 2003-11-17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* config.inc.php (1.9): Removed unnecessary comment.
