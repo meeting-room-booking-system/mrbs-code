@@ -67,7 +67,8 @@ $lang[returnprev]         = "Return to previous page";
 
 # Used in edit_entry_handler.php3
 $lang[error]              = "Error";
-$lang[conflict]           = "There are conflicts";
+$lang[sched_conflict]     = "Scheduling Conflict";
+$lang[conflict]           = "The new booking will conflict with the following entry(s):";
 $lang[too_may_entrys]     = "The selected options will create too many entries.<BR>Please use different options!";
 $lang[returncal]          = "Return to calendar view";
 
