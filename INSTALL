@@ -305,7 +305,16 @@ These settings control:
 - the default room to start with.
 
 
-5. Email support:
+5. Authentication:
+
+Read the file AUTHENTICATION for information about this section. By default, 
+config.inc.php uses "php" session management and "config" authentication 
+method, allowing only demo users to book rooms, and "administrator" is defined 
+to administer the system. Demo users are "alice" and "bob" (passwords "a" and 
+"b") and "administrator" (password 'secret') is administrator.
+
+
+6. Email support:
 
 MRBS can send emails to the administrator (or any adress) to notify a new or
 changed entry. You must set the following parameters if you want to send
@@ -388,7 +397,7 @@ more than one recipient like this "john@doe.com,scott@tiger.com"
 
 MAIL_CC
 
-Set the name of the Carbon Copy field. Default is "". You can define
+Set email address of the Carbon Copy field. Default is "". You can define
 more than one recipient (see MAIL_RECIPIENTS)
 
 $mail["subject"]
@@ -407,15 +416,6 @@ $mail["changed_entry"]
 Set the content of the message when an entry is modified. What you type
 here will be added at the top of the message body. Default is:
 "An entry has been modified, here is the details:"
-
-
-6. Authentication:
-
-Read the file AUTHENTICATION for information about this section. By default, 
-config.inc.php uses "php" session management and "config" authentication 
-method, allowing only demo users to book rooms, and "administrator" is defined 
-to administer the system. Demo users are "alice" and "bob" (passwords "a" and 
-"b") and "administrator" (password 'secret') is administrator.
 
 
 7. Language:
