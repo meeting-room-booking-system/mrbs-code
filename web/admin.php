@@ -64,22 +64,22 @@ if (isset($area))
 <?php
 // This cell has the areas
 $types = array('integer', 'text');
-$res = $mdb->query("SELECT  id, area_name 
+$res = $mdb->query("SELECT  id, area_name
                     FROM    mrbs_area 
                     ORDER   by area_name", $types);
 if (MDB::isError($res))
 {
     fatal_error(0, $res->getMessage() . "<br>" . $res->getUserInfo());
 }
-
-if (0 == $mdb->numRows($res))
+$row = $mdb->fetchInto($res);
+if (!$row)
 {
-    echo $vocab['noareas'];
+	echo $vocab['noareas'];
 }
 else
 {
     echo "<ul>";
-    while ($row = $mdb->fetchInto($res))
+    do
     {
         $area_name_q = urlencode($row[1]);
         echo "<li><a href=\"admin.php?area=$row[0]&area_name=$area_name_q\">"
@@ -88,6 +88,7 @@ else
             "</a>) (<a href=\"del.php?type=area&area=$row[0]\">" .
             $vocab['delete'] . "</a>)\n";
     }
+    while ($row = $mdb->fetchInto($res));
     echo "</ul>";
 }
 $mdb->freeResult($res);
@@ -100,27 +101,29 @@ if (isset($area))
 {
     $types = array('integer', 'text', 'text', 'integer');
     $res = $mdb->query("SELECT  id, room_name, description, capacity
-                        FROM    mrbs_room 
-                        WHERE   area_id=$area 
+                        FROM    mrbs_room
+                        WHERE   area_id=$area
                         ORDER   by room_name", $types);
     if (MDB::isError($res))
     {
         fatal_error(0, $res->getMessage() . "<br>" . $res->getUserInfo());
     }
-    if (0 == $mdb->numRows($res))
+    $row = $mdb->fetchInto($res);
+    if (!$row)
     {
         echo $vocab['norooms'];
     }
     else
     {
         echo "<ul>";
-        while ($row = $mdb->fetchInto($res))
+        do
         {
             echo "<li>" . htmlspecialchars($row[1]) . "(" . htmlspecialchars($row[2])
             . ", $row[3]) (<a href=\"edit_area_room.php?room=$row[0]\">" .
             $vocab['edit'] . "</a>) (<a href=\"del.php?type=room&room=$row[0]\">"
             .  $vocab['delete'] . "</a>)\n";
         }
+        while ($row = $mdb->fetchInto($res));
         echo "</ul>";
     }
     $mdb->freeResult($res);
