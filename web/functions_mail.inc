@@ -504,7 +504,9 @@ function getPreviousEntryData($id, $series)
             re.end_date AS tbl_r_end_date";
     }
     $sql .= "
-    FROM $tbl_entry e, $tbl_room r, $tbl_area a, $tbl_repeat re
+    FROM $tbl_entry e, $tbl_room r, $tbl_area a ";
+    (1 == $series) ? $sql .= ', ' . $tbl_repeat . ' re ' : '';
+    $sql .= "
     WHERE e.room_id = r.id
     AND r.area_id = a.id
     AND e.id=$id";
