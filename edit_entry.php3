@@ -4,25 +4,9 @@ include "functions.inc";
 include "connect.inc";
 include "mrbs_auth.inc";
 
-if(!getAuthorised(getUserName(), getUserPassword()))
+if(!getAuthorised(getUserName(), getUserPassword(), 1))
 {
-?>
-<HTML>
- <HEAD>
-  <META HTTP-EQUIV="REFRESH" CONTENT="5; URL=index.php3">
-  <TITLE><?echo $lang[mrbs]?></TITLE>
-  <?include "config.inc"?>
-  <?include "style.inc"?>
- <BODY>
-  <H1><?echo $lang[accessdenied]?></H1>
-  <P>
-   <?echo $lang[unandpw]?>
-  </P>
-  <P>
-   <a href=<? echo $HTTP_REFERER; ?>><? echo $lang[returnprev]; ?></a>
-  </P>
-</HTML>
-<?
+	showAccessDenied($day, $month, $year, $area);
 	exit;
 }
 
@@ -137,49 +121,45 @@ toTimeString($duration, $dur_units);
 
 #now that we know all the data to fill the form with we start drawing it
 
+if(!getWritable($create_by, getUserName()))
+{
+	showAccessDenied($day, $month, $year, $area);
+	exit;
+}
+
+print_header($day, $month, $year, $area);
+
 ?>
-<HTML>
-<HEAD>
-<TITLE><?echo $lang[mrbs]?></TITLE>
-<?include "style.inc"?>
-
-<? if(!getWritable($create_by, getUserName())) { ?>
-
-<H1><?echo $lang[accessdenied]?></H1>
-<P>
-  <?echo $lang[norights]?>
-</P>
-<P>
-  <a href=<? echo $HTTP_REFERER; ?>><? echo $lang[returnprev]; ?></a>
-</P>
-</BODY>
-</HTML>
-<? exit; } ?>
 
 <SCRIPT LANGUAGE="JavaScript">
 // do a little form verifying
-function validate_and_submit () {
-  if ( document.forms[0].name.value == "" ) {
+function validate_and_submit ()
+{
+  if(document.forms["main"].name.value == "")
+  {
     alert ( "You have not entered a\nBrief Description." );
     return false;
   }
-  h = parseInt ( document.forms[0].hour.value );
-  m = parseInt ( document.forms[0].minute.value );
-  if ( h > 23 || m > 59 ) {
-    alert ( "You have not entered a\nvalid time of day." );
+  
+  h = parseInt(document.forms["main"].hour.value);
+  m = parseInt(document.forms["main"].minute.value);
+  
+  if(h > 23 || m > 59)
+  {
+    alert("You have not entered a\nvalid time of day.");
     return false;
   }
+  
   // would be nice to also check date to not allow Feb 31, etc...
-  document.forms[0].submit ();
+  document.forms["main"].submit();
+  
   return true;
 }
 </SCRIPT>
-</HEAD>
-<BODY>
 
 <h2><? if ($id) echo $lang[editentry]; else echo $lang[addentry]; ?></H2>
 
-<FORM ACTION="edit_entry_handler.php3" METHOD="GET">
+<FORM NAME="main" ACTION="edit_entry_handler.php3" METHOD="GET">
 
 <TABLE BORDER=0>
 

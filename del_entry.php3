@@ -6,7 +6,7 @@ include "connect.inc";
 include "mrbs_auth.inc";
 include "mrbs_sql.inc";
 
-if(getAuthorised(getUserName(), getUserPassword()) && ($info = mrbsGetEntryInfo($id)))
+if(getAuthorised(getUserName(), getUserPassword(), 1) && ($info = mrbsGetEntryInfo($id)))
 {
 	$day   = strftime("%d", $info[start_time]);
 	$month = strftime("%m", $info[start_time]);
@@ -16,21 +16,10 @@ if(getAuthorised(getUserName(), getUserPassword()) && ($info = mrbsGetEntryInfo(
 	if(mrbsDelEntry(getUserName(), $id, $series, 1))
 	{
 		Header("Location: day.php3?day=$day&month=$month&year=$year&area=$area");
-		exit;
+		exit();
 	}
 }
 
 // If you got this far then we got an access denied.
+showAccessDenied($day, $month, $year, $area);
 ?>
-
-<HTML>
-<HEAD>
-<TITLE><?echo $lang[mrbs]?></TITLE>
-<?include "style.inc"?>
-<H1><?echo $lang[accessdenied]?></H1>
-<P>
-  <?echo $lang[norights]?>
-</P>
-<P>
-  <a href=<? echo $HTTP_REFERER; ?>><? echo $lang[returnprev]; ?></a>
-</P>

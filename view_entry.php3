@@ -5,15 +5,7 @@ include "functions.inc";
 include "connect.inc";
 include "mrbs_auth.inc";
 
-?>
-<HTML>
-<HEAD>
-<TITLE><?echo $lang[mrbs]?></TITLE>
-<?include "style.inc"?>
-</HEAD>
-<BODY>
-
-<?
+print_header($day, $month, $year, $area);
 
 # Find all the data about our booking
 $sql = "select name, description, start_time, start_time,
@@ -123,14 +115,14 @@ if($rep_type != 0)
 
 echo "</table><br><p>\n\n";
 
-echo "<a href=\"edit_entry.php3?id=$id\">$lang[editentry]</a>";
+echo "<a href=\"edit_entry.php3?id=$id&day=$day&month=$month&year=$year\">$lang[editentry]</a>";
 if($repeat_id)
-	echo " - <a href=\"edit_entry.php3?id=$id&edit_type=series\">$lang[editseries]</a>";
+	echo " - <a href=\"edit_entry.php3?id=$id&edit_type=series&day=$day&month=$month&year=$year\">$lang[editseries]</a>";
 echo "<BR>\n";
 
-echo "<A HREF=\"del_entry.php3?id=$id&series=0\" onClick=\"return confirm('$lang[confirmdel]');\">$lang[deleteentry]</A>";
+echo "<A HREF=\"del_entry.php3?id=$id&series=0&day=$day&month=$month&year=$year\" onClick=\"return confirm('$lang[confirmdel]');\">$lang[deleteentry]</A>";
 if($repeat_id)
-	echo " - <A HREF=\"del_entry.php3?id=$id&series=1\" onClick=\"return confirm('$lang[confirmdel]');\">$lang[deleteseries]</A>";
+	echo " - <A HREF=\"del_entry.php3?id=$id&series=1&day=$day&month=$month&year=$year\" onClick=\"return confirm('$lang[confirmdel]');\">$lang[deleteseries]</A>";
 echo "<BR>\n";
 
 echo "<a href=$HTTP_REFERER>$lang[returnprev]</a>";

@@ -74,7 +74,6 @@ $lang[returncal]          = "Return to calendar view";
 
 # Authentication stuff
 $lang[accessdenied]       = "Access Denied";
-$lang[unandpw]            = "Please enter your username + password.";
 $lang[norights]           = "You do not have access rights to modify this item.";
 
 ?>

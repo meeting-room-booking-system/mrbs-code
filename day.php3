@@ -7,18 +7,6 @@ include "mincals.inc";
 
 load_user_preferences ();
 
-?>
-
-<HTML>
-<HEAD>
-<TITLE><?echo $lang[mrbs]?></TITLE>
-<?include "style.inc"?>
-
-</HEAD>
-<BODY>
-
-<?
-
 #If we dont know the right date then make it up 
 if (!$day or !$month or !$year) {
 	$day   = date("d");
@@ -26,19 +14,16 @@ if (!$day or !$month or !$year) {
 	$year  = date("Y");
 }
 
+# print the page header
+print_header($day, $month, $year, $area);
+
 # Define the start of day and end of day (default is 7-7)
 $am7=mktime($morningstarts,00,0,$month,$day,$year);
 $pm7=mktime($eveningends,0,0,$month,$day,$year);
 
-#Let the user know what date they chose
+
 echo "<table><tr><td width=\"100%\">";
 
-echo "<form action=\"day.php3\" method=get>";
-	echo "<H2>$lang[bookingsfor]: <FONT SIZE=NORMAL>";
-	genDateSelector("", $day, $month, $year);
-	echo "<INPUT TYPE=hidden NAME=area VALUE=$area>";
-	echo "<INPUT TYPE=submit VALUE=\"" . $lang[goto] . "\">";
-echo "</FONT></H2></form></td><td><center>";
 
 #Find out which rooms a user wants to see
 #If we havent had $area passed in then for now default to area "1" - in the
@@ -58,7 +43,7 @@ while ($row = mysql_fetch_row($res)) {
 
 #Draw the three month calendars
 minicals($year, $month, $day, $area);
-echo "</center></tr></table>";
+echo "</tr></table>";
 
 #y? are year, month and day of yesterday
 #t? are year, month and day of tomorrow
@@ -197,7 +182,7 @@ if (mysql_num_rows($res) == 0) {
 			else
 			{
 				#if it is booked then show 
-				echo " <a href=view_entry.php3?id=$id>$descr&nbsp;</a>";
+				echo " <a href=view_entry.php3?id=$id&day=$day&month=$month&year=$year>$descr&nbsp;</a>";
 			}
 
 			echo "</td>\n";

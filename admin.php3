@@ -2,20 +2,26 @@
 include "config.inc";
 include "functions.inc";
 include "connect.inc";
-?>
+include "mrbs_auth.inc";
 
-<HTML>
-<HEAD><TITLE><?echo $lang[mrbs]?></TITLE>
-<?include "style.inc"?>
-</HEAD>
-<BODY>
+load_user_preferences();
+
+if(!getAuthorised(getUserName(), getUserPassword(), 2))
+{
+	showAccessDenied($day, $month, $year, $area);
+	exit();
+}
+
+print_header($day, $month, $year, $area);
+
+?>
 
 <h2>Administration</h2>
 
 <table border=1>
 <tr>
 <th><center><b>Areas</b></center></th>
-<th><center><b>Rooms <? if ($area) { echo "in $area_name";}?></b></center></th>
+<th><center><b>Rooms <? if ($area) { echo "in $area_name"; }?></b></center></th>
 </tr>
 
 <tr>
@@ -60,23 +66,29 @@ if ($area) {
 </tr>
 <tr>
 <td>
-<h3>Add Area</h3>
+<h3 ALIGN=CENTER>Add Area</h3>
 <form action=add.php3 method=post>
 <input type=hidden name=type value=area>
-<input type=text name=name><br>
+
+<TABLE>
+<TR><TD>Name:       </TD><TD><input type=text name=name></TD></TR>
+</TABLE>
 <input type=submit>
 </form>
 </td>
 
 <td>
 <? if ($area) { ?>
-<h3>Add Room</h3>
+<h3 ALIGN=CENTER>Add Room</h3>
 <form action=add.php3 method=post>
 <input type=hidden name=type value=room>
 <input type=hidden name=area value=<? echo $area; ?>>
-Name:        <input type=text name=name><br>
-Description: <input type=text name=description><br>
-Capacity:    <input type=text name=capacity><br>
+
+<TABLE>
+<TR><TD>Name:       </TD><TD><input type=text name=name></TD></TR>
+<TR><TD>Description:</TD><TD><input type=text name=description></TD></TR>
+<TR><TD>Capacity:   </TD><TD><input type=text name=capacity></TD></TR>
+</TABLE>
 <input type=submit>
 </form>
 <? } else { echo "&nbsp;"; }?>

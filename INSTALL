@@ -76,6 +76,10 @@ There is some code that tries to figure out what locale should be used
 based on your browser. Use "locale -a" on your system to find out what
 locale support is installed.
 
+Customize site_faq.html if desired.  It contains help that can
+be tailored to your environment.
+
+
 OPTIONAL!
 ---------------------------------------------------------------------------
 You might want to configure your web server so that users can not obtain

@@ -12,9 +12,17 @@ $mysql_login = "root";
 $mysql_password = "secret";
 $mysql_database = "mrbs";
 
+# Site information
+$mrbs_admin = "Your Administrator";
+$mrbs_admin_email = "admin_email@your.org";
+$mrbs_company = "Your Company";
+
 # Start and end of day (default is 7-19)
 $morningstarts = 7;
 $eveningends   = 19;
+
+# Searching parameters
+$search[count] = 20;
 
 # Authentication settings - read AUTHENTICATION
 $auth[realm]  = "";

@@ -6,44 +6,17 @@ include "connect.inc";
 include "mrbs_auth.inc";
 include "mrbs_sql.inc";
 
-if(!getAuthorised(getUserName(), getUserPassword()))
+if(!getAuthorised(getUserName(), getUserPassword(), 1))
 {
-?>
-<HTML>
- <HEAD>
-  <META HTTP-EQUIV="REFRESH" CONTENT="5; URL=index.php3">
-  <TITLE><?echo $lang[mrbs]?></TITLE>
-  <?include "config.inc"?>
-  <?include "style.inc"?>
- <BODY>
-  <H1><?echo $lang[accessdenied]?></H1>
-  <P>
-   <?echo $lang[unandpw]?>
-  </P>
-  <P>
-   <a href=<? echo $HTTP_REFERER; ?>><? echo $lang[returnprev]; ?></a>
-  </P>
-</HTML>
-<?
+	showAccessDenied($day, $month, $year, $area);
 	exit;
 }
 
-if(!getWritable($create_by, getUserName())) { ?>
-<HTML>
-<HEAD>
-<TITLE><?echo $lang[mrbs]?></TITLE>
-<?include "style.inc"?>
-
-<H1><?echo $lang[accessdenied]?></H1>
-<P>
-  <?echo $lang[norights]?>
-</P>
-<P>
-  <a href=<?echo $HTTP_REFERER?>><?echo $lang[returnprev]?></a>
-</P>
-</BODY>
-</HTML>
-<? exit; }
+if(!getWritable($create_by, getUserName()))
+{
+	showAccessDenied($day, $month, $year, $area);
+	exit;
+}
 
 // Units start in seconds
 $units = 1.0;
@@ -170,17 +143,10 @@ if(empty($err))
 	exit;
 }
 
-?>
-<HTML>
-<HEAD><TITLE><?echo $lang[mrbs]?></TITLE>
-<?include "style.inc"?>
-</HEAD>
-<BODY>
-
-<?php
-
 if(strlen($err))
 {
+	print_header($day, $month, $year, $area);
+	
 	echo "<H2>" . $lang[sched_conflict] . "</H2>";
 	if(!$hide_title)
 	{
