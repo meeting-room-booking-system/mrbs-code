@@ -1,3 +1,27 @@
+2004-05-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* AUTHENTICATION (1.27), INSTALL (1.35), NEWS (1.5) (utags:
+	  mrbs-1-2-pre3): Dox fix: Documentation update
+
+2004-05-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* upgrade3.my.sql (1.2, mrbs-1-2-pre3): Dox fix: This script can be
+	  used with both mysql and postgresql
+
+2004-05-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* upgrade2.my.sql (1.2, mrbs-1-2-pre3): Sync with tables.my.sql
+
+2004-05-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* upgrade2.pg.sql (1.3, mrbs-1-2-pre3): Sync. sql statement with
+	  tables.pg.73and_above.sql
+
+2004-05-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* tables.pg.73and_above.sql (1.3), tables.pg.sql (1.6) (utags:
+	  mrbs-1-2-pre3): Added new fields for emails.
+
 2004-05-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* INSTALL (1.34): + If MAIL_DOMAIN is used and username returned by
@@ -20,25 +44,26 @@
 
 2004-05-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* INSTALL (1.31), UPGRADE (1.7), tables.my.sql (1.5),
-	  upgrade3.my.sql (1.1): + Added/changed features to email support:
-	  - Room and/or area administrators. An email field has been added
-	  to room    and area administration page. Each room/area can have
-	  multiple emails.   - Configurable options to send emails to these
-	  administrators.     Emails can be send to MRBS admin and/or area
-	  admins and/or room admins.   - Configurable options to set what
-	  is emailed (either a link to	   the view page as before or full
-	  details)   - Configurable option to decide the lang used in
-	  emails and the text of     subject and body.	 - Configurable
-	  options to decide which events cause an email to be sent
-	  (whether only new entries, new and edited entries, or deleted
-	  entries)   - Full diffing informations between the new state of
-	  an edited entry     and its previous settings (only if we choose
-	  to show details in emails)   - Optionale recipients can receives
-	  mails in carbon copy	 - Configurable option to send mails using
-	  three mail backends:	   either the php mail function, an
-	  external smtp server (with or without     authentication) or unix
-	  sendmail program.   - upgraded Net::Socket from 1.0.1 to 1.0.2
+	* INSTALL (1.31), UPGRADE (1.7, mrbs-1-2-pre3), tables.my.sql (1.5,
+	  mrbs-1-2-pre3), upgrade3.my.sql (1.1): + Added/changed features
+	  to email support:  - Room and/or area administrators. An email
+	  field has been added to room	  and area administration page.
+	  Each room/area can have multiple emails.   - Configurable options
+	  to send emails to these administrators.     Emails can be send to
+	  MRBS admin and/or area admins and/or room admins.   -
+	  Configurable options to set what is emailed (either a link to
+	  the view page as before or full details)   - Configurable option
+	  to decide the lang used in emails and the text of	subject and
+	  body.   - Configurable options to decide which events cause an
+	  email to be sent     (whether only new entries, new and edited
+	  entries, or deleted entries)	 - Full diffing informations
+	  between the new state of an edited entry     and its previous
+	  settings (only if we choose to show details in emails)   -
+	  Optionale recipients can receives mails in carbon copy   -
+	  Configurable option to send mails using three mail backends:
+	  either the php mail function, an external smtp server (with or
+	  without     authentication) or unix sendmail program.   -
+	  upgraded Net::Socket from 1.0.1 to 1.0.2
 
 2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -60,16 +85,17 @@
 
 2004-04-14  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* destroy.pg.sql (1.3), grant.pg.sql (1.4), purge.my.sql (1.3),
-	  purge.pg.sql (1.3), sample-data.sql (1.3), tables.my.sql (1.4),
-	  tables.pg.73and_above.sql (1.2), tables.pg.sql (1.5): Added
-	  comment that user needs to fix table names if they have changed
-	  the prefix that they wish to use.
+	* destroy.pg.sql (1.3, mrbs-1-2-pre3), grant.pg.sql (1.4,
+	  mrbs-1-2-pre3), purge.my.sql (1.3, mrbs-1-2-pre3), purge.pg.sql
+	  (1.3, mrbs-1-2-pre3), sample-data.sql (1.3, mrbs-1-2-pre3),
+	  tables.my.sql (1.4), tables.pg.73and_above.sql (1.2),
+	  tables.pg.sql (1.5): Added comment that user needs to fix table
+	  names if they have changed the prefix that they wish to use.
 
 2004-04-14  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* testdata.php (1.5): Changed the fixed table names to variables.
-	  The variables are defined in config.inc.php.
+	* testdata.php (1.5, mrbs-1-2-pre3): Changed the fixed table names
+	  to variables.  The variables are defined in config.inc.php.
 
 2004-04-13  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -112,10 +138,10 @@
 
 2003-12-21  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* AUTHENTICATION (1.24), INSTALL (1.21), README (1.13): Doc fix: -
-	  Updated other doc areas about default administrator since JFL
-	  change.  - Removed warning in function.inc since it works now
-	  with Gavin changes
+	* AUTHENTICATION (1.24), INSTALL (1.21), README (1.13,
+	  mrbs-1-2-pre3): Doc fix: - Updated other doc areas about default
+	  administrator since JFL change.  - Removed warning in
+	  function.inc since it works now with Gavin changes
 
 2003-12-21  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
@@ -144,8 +170,11 @@
 
 2003-12-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* README.nwauth (1.4), UPGRADE (1.6) (utags: mrbs-1-2-pre2): Doc
-	  fix.
+	* UPGRADE (1.6, mrbs-1-2-pre2): Doc fix.
+
+2003-12-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* README.nwauth (1.4, mrbs-1-2-pre3, mrbs-1-2-pre2): Doc fix.
 
 2003-12-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -208,7 +237,7 @@
 
 2003-11-18  John Beranek <jberanek@users.sourceforge.net>
 
-	* convert_db_to_utf8.php (1.1, mrbs-1-2-pre2):
+	* convert_db_to_utf8.php (1.1, mrbs-1-2-pre3, mrbs-1-2-pre2):
 	  * Added utility to convert text in the database to UTF8, to  use
 	  MRBS with $unicode_encoding set to 1. The administrator  should
 	  copy it into the web directory, run it (choosing  the encoding to
@@ -242,8 +271,9 @@
 
 2003-09-25  John Beranek <jberanek@users.sourceforge.net>
 
-	* AUTHENTICATION (1.18), crypt_passwd.example (1.1, mrbs-1-2-pre2),
-	  crypt_passwd.pl (1.1, mrbs-1-2-pre2):
+	* AUTHENTICATION (1.18), crypt_passwd.example (1.1, mrbs-1-2-pre3,
+	  mrbs-1-2-pre2), crypt_passwd.pl (1.1, mrbs-1-2-pre3,
+	  mrbs-1-2-pre2):
 	  Added a new script for the "ext" authentication scheme that
 	  allows you to use a password file with usernames and their
 	  crypted passwords.
@@ -255,10 +285,11 @@
 2003-09-23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* AUTHENTICATION (1.17), INSTALL (1.14), LANGUAGE (1.10,
-	  mrbs-1-2-pre2), README.nwauth (1.3), README.sqlapi (1.3,
-	  mrbs-1-2-pre2), ROXEN (1.3), grant.pg.sql (1.3, mrbs-1-2-pre2),
-	  testdata.php (1.3) (utags: mrbs-1-2-pre1): Finally we changed
-	  config.inc to config.inc.php for "security" reasons.
+	  mrbs-1-2-pre3, mrbs-1-2-pre2), README.nwauth (1.3), README.sqlapi
+	  (1.3, mrbs-1-2-pre3, mrbs-1-2-pre2), ROXEN (1.3), grant.pg.sql
+	  (1.3, mrbs-1-2-pre2), testdata.php (1.3) (utags: mrbs-1-2-pre1):
+	  Finally we changed config.inc to config.inc.php for "security"
+	  reasons.
 
 2003-08-09  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -297,8 +328,8 @@
 
 2002-10-08  John Beranek <jberanek@users.sourceforge.net>
 
-	* smb_auth.c (1.2, mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB,
-	  mrbs-1-1):
+	* smb_auth.c (1.2, mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB, mrbs-1-1):
 	     - Changed all uses of <? to <?php.
 
 	     - Merged change from John Beranek for an Advanced search
@@ -354,7 +385,7 @@
 
 2002-05-11  Daniel <nambit@users.sourceforge.net>
 
-	* checklang.php (1.4, mrbs-1-2-pre2, mrbs-1-2-pre1,
+	* checklang.php (1.4, mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1,
 	  Root-of-mrbs_MDB, mrbs-1-1): change last $lang to $vocab
 
 2002-05-09  Daniel <nambit@users.sourceforge.net>
@@ -441,8 +472,8 @@
 
 2001-03-02  Michael Redinger <mred@users.sourceforge.net>
 
-	* AUTHENTICATION (1.12), auth_pam.pl (1.1, mrbs-1-2-pre2,
-	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1) (utags:
+	* AUTHENTICATION (1.12), auth_pam.pl (1.1, mrbs-1-2-pre3,
+	  mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1) (utags:
 	  mrbs-1-0-final, mrbs-1-0-pre1):
 	  mred: added auth_pam, updated AUTHENTIFICATION
 
@@ -460,15 +491,16 @@
 	  mrbs-1-0-pre2), add.php3 (1.3), admin.php3 (1.7),
 	  auth_cookie_ext.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1,
 	  mrbs-1-0-pre2), auth_ext.inc (1.6), auth_ip.inc (1.3),
-	  auth_ldap.inc (1.4), auth_ldap.pl (1.2, mrbs-1-2-pre2,
+	  auth_ldap.inc (1.4), auth_ldap.pl (1.2, mrbs-1-2-pre3,
+	  mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), auth_ldapsearch.pl
+	  (1.3, mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), badpw.pl (1.3, mrbs-1-2-pre3, mrbs-1-2-pre2,
 	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final,
-	  mrbs-1-0-pre1, mrbs-1-0-pre2), auth_ldapsearch.pl (1.3,
-	  mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1,
-	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), badpw.pl (1.3,
-	  mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1,
-	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), checklang.php
-	  (1.2, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), config.inc
-	  (1.17), connect.inc (1.2), day.php3 (1.22), del.php3 (1.4),
+	  mrbs-1-0-pre1, mrbs-1-0-pre2), checklang.php (1.2,
+	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), config.inc (1.17),
+	  connect.inc (1.2), day.php3 (1.22), del.php3 (1.4),
 	  del_entry.php3 (1.10), destroy.pg.sql (1.2, mrbs-1-2-pre2,
 	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final,
 	  mrbs-1-0-pre1, mrbs-1-0-pre2), edit_area_room.php3 (1.2),
@@ -491,7 +523,7 @@
 	  mrbs-1-0-pre2), tables.sql (1.5), testdata.php (1.2,
 	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
 	  mrbs-1-0-pre2), testdata.php3 (1.4), trailer.inc (1.9),
-	  upgrade.my.sql (1.2, mrbs-1-2-pre2, mrbs-1-2-pre1,
+	  upgrade.my.sql (1.2, mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1,
 	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
 	  mrbs-1-0-pre2), upgrade.sql (1.2), view_entry.php3 (1.18): Merge
 	  branch mrbs-0-9-1xp into trunk
@@ -625,6 +657,10 @@
 
 2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
 
+	* lang.sv, style.inc (mrbs-0-9-1xp.[1,1]): Moved to web/
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
 	* lang.nl (mrbs-0-9-1xp.1): Moved to web/lang.nl
 
 2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
@@ -684,6 +720,10 @@
 2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
 
 	* day.php3 (mrbs-0-9-1xp.1): Moved to web/day.php
+
+2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
+
+	* auth_ip.inc (mrbs-0-9-1xp.1): Moved to web/
 
 2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
 
@@ -749,8 +789,7 @@
 
 2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
 
-	* .htaccess, new.gif, auth_ip.inc, lang.sv, style.inc
-	  (mrbs-0-9-1xp.[1,1,1,1,1]): Moved to web/
+	* .htaccess, new.gif (mrbs-0-9-1xp.[1,1]): Moved to web/
 
 2001-02-08  Daniel <nambit@users.sourceforge.net>
 
@@ -823,13 +862,22 @@
 
 2000-09-08  Sam Mason <sam_mason@users.sourceforge.net>
 
+	* mrbs_sql.inc (1.10): Another bug in the repeat entry code
+
+2000-09-08  Sam Mason <sam_mason@users.sourceforge.net>
+
 	* auth_ext.inc (1.5, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
 	  mrbs-0-9-pre2), lang.en (1.12): Added a "room" entry
 
 2000-09-08  Sam Mason <sam_mason@users.sourceforge.net>
 
-	* edit_entry_handler.php3 (RBS-MAIN.1), edit_entry_handler.php3
-	  (1.20), mrbs_sql.inc (1.10): Another bug in the repeat entry code
+	* edit_entry_handler.php3 (1.20): Another bug in the repeat entry
+	  code
+
+2000-09-08  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* edit_entry_handler.php3 (RBS-MAIN.1): Another bug in the repeat
+	  entry code
 
 2000-09-06  Sam Mason <sam_mason@users.sourceforge.net>
 
@@ -870,9 +918,13 @@
 
 2000-08-18  Sam Mason <sam_mason@users.sourceforge.net>
 
-	* edit_entry.php3 (1.15), functions.inc (1.8), edit_entry.php3
-	  (1.16, rbs-branch), functions.inc (1.9, rbs-branch): Put "<?="
-	  back to "<? echo" for compatibility
+	* edit_entry.php3 (1.16), functions.inc (1.9) (utags: rbs-branch):
+	  Put "<?=" back to "<? echo" for compatibility
+
+2000-08-18  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* edit_entry.php3 (1.15), functions.inc (1.8): Put "<?=" back to
+	  "<? echo" for compatibility
 
 2000-08-18  Sam Mason <sam_mason@users.sourceforge.net>
 
@@ -881,11 +933,22 @@
 
 2000-08-17  Sam Mason <sam_mason@users.sourceforge.net>
 
-	* edit_entry.php3 (1.14), edit_entry_handler.php3 (1.18),
-	  auth_ext.inc (1.4, rbs-branch), search.php3 (1.5),
-	  edit_entry_handler.php3 (1.19, rbs-branch), search.php3 (1.6,
+	* edit_entry_handler.php3 (1.19, rbs-branch), search.php3 (1.6,
 	  rbs-branch), view_entry.php3 (1.13), admin.php3 (1.5,
 	  rbs-branch): More PHP warning fixes
+
+2000-08-17  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* search.php3 (1.5): More PHP warning fixes
+
+2000-08-17  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* auth_ext.inc (1.4, rbs-branch): More PHP warning fixes
+
+2000-08-17  Sam Mason <sam_mason@users.sourceforge.net>
+
+	* edit_entry.php3 (1.14), edit_entry_handler.php3 (1.18): More PHP
+	  warning fixes
 
 2000-08-17  Sam Mason <sam_mason@users.sourceforge.net>
 
@@ -980,9 +1043,13 @@
 
 2000-07-27  Sam Mason <sam_mason@users.sourceforge.net>
 
+	* day.php3 (1.17, mrbs-0-8-1): Better handling of areas
+
+2000-07-27  Sam Mason <sam_mason@users.sourceforge.net>
+
 	* del_entry.php3 (1.7), edit_entry_handler.php3 (1.14),
-	  mrbs_sql.inc (1.7, mrbs-0-9-a), day.php3 (1.17) (utags:
-	  mrbs-0-8-1): Better handling of areas
+	  mrbs_sql.inc (1.7, mrbs-0-9-a) (utags: mrbs-0-8-1): Better
+	  handling of areas
 
 2000-07-26  Sam Mason <sam_mason@users.sourceforge.net>
 
@@ -1181,6 +1248,14 @@
 
 2000-06-16  Daniel <nambit@users.sourceforge.net>
 
+	* auth.inc (1.1): User-based authentication supported (see
+	  AUTHENTICATION) Better support for bookings spanning multiple
+	  days User can specify "Whole Day" bookings Units other than
+	  "Hours" are supported (Mins, Hours, Days, Weeks) Thanks to Sam
+	  Mason <smason@mtc.ricardo.com> for much of this
+
+2000-06-16  Daniel <nambit@users.sourceforge.net>
+
 	* AUTHENTICATION (1.1), FAQ (1.2), INSTALL (1.8, mrbs-0-8-1,
 	  mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3,
 	  mrbs-0-8-pre2), README (1.4, mrbs-0-8-pre3, mrbs-0-8-pre2),
@@ -1196,12 +1271,12 @@
 	  mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a,
 	  mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4,
 	  mrbs-0-8-pre3, mrbs-0-8-pre2), trailer.inc (1.4, mrbs-0-8-pre4,
-	  mrbs-0-8-pre3, mrbs-0-8-pre2), view_entry.php3 (1.6), auth.inc
-	  (1.1): User-based authentication supported (see AUTHENTICATION)
-	  Better support for bookings spanning multiple days User can
-	  specify "Whole Day" bookings Units other than "Hours" are
-	  supported (Mins, Hours, Days, Weeks) Thanks to Sam Mason
-	  <smason@mtc.ricardo.com> for much of this
+	  mrbs-0-8-pre3, mrbs-0-8-pre2), view_entry.php3 (1.6): User-based
+	  authentication supported (see AUTHENTICATION) Better support for
+	  bookings spanning multiple days User can specify "Whole Day"
+	  bookings Units other than "Hours" are supported (Mins, Hours,
+	  Days, Weeks) Thanks to Sam Mason <smason@mtc.ricardo.com> for
+	  much of this
 
 2000-06-14  Daniel <nambit@users.sourceforge.net>
 
@@ -1375,16 +1450,17 @@
 	  mrbs0-6, mrbs0-5), help_trailer.inc (1.1.1.1, mrbs0-7, mrbs0-6,
 	  mrbs0-5), mincals.inc (1.1.1.1, mrbs0-6, mrbs0-5), style.inc
 	  (1.1.1.1, mrbs0-6, mrbs0-5), trailer.inc (1.1.1.1, mrbs0-6,
-	  mrbs0-5), tables.sql (1.1.1.1), COPYING (1.1.1.1, mrbs-1-2-pre2,
-	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final,
-	  mrbs-1-0-pre1, mrbs-1-0-pre2, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9,
-	  mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8,
+	  mrbs0-5), tables.sql (1.1.1.1), COPYING (1.1.1.1, mrbs-1-2-pre3,
+	  mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2, mrbs-0-9-2,
+	  mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a,
+	  mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4,
+	  mrbs-0-8-pre3, mrbs-0-8-pre2, mrbs0-7, mrbs0-6, mrbs0-5), INSTALL
+	  (1.1.1.1), README (1.1.1.1), mrbs.css (1.1.1.1, mrbs0-6,
+	  mrbs0-5), head.gif (1.1.1.1, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8,
 	  mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2,
-	  mrbs0-7, mrbs0-6, mrbs0-5), INSTALL (1.1.1.1), README (1.1.1.1),
-	  mrbs.css (1.1.1.1, mrbs0-6, mrbs0-5), head.gif (1.1.1.1,
-	  mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4,
-	  mrbs-0-8-pre3, mrbs-0-8-pre2, mrbs0-7, mrbs0-6, mrbs0-5),
-	  testdata.php3 (1.1.1.1) (utags: start): Initial Import
+	  mrbs0-7, mrbs0-6, mrbs0-5), testdata.php3 (1.1.1.1) (utags:
+	  start): Initial Import
 
 2000-05-03  Daniel <nambit@users.sourceforge.net>
 
@@ -1397,3 +1473,4 @@
 	  trailer.inc (1.1), tables.sql (1.1), COPYING (1.1), INSTALL
 	  (1.1), README (1.1), mrbs.css (1.1), head.gif (1.1),
 	  testdata.php3 (1.1): Initial revision
+
