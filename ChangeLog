@@ -1,3 +1,6 @@
+Version 1.0 (Thu Aug 30 22:26:54 BST 2001)
+    Added two upgrade.xx.sql files which should have been in -pre2
+
 Version 1.0-pre2 (Sun Jul  8 13:43:53 BST 2001)
     Incorporated diff from Scott Leonard that allows you to configure a refresh
      time for roombooker web pages.  Set config variable $refresh_rate to the
