@@ -202,9 +202,7 @@ function same_day_next_month($time)
     // prevent 2 months jumps if $time is in 5th week
     $temp2 = date("n", mktime(11, 0 ,0, date("n", $time), $day +35, date("Y", $time)));
     if ($temp2 < date("n", $time)) $temp2 += 12;
-    $temp2 -= (date("n", $time) - 1);
-    
-    if ($temp1 && !$temp2) return 35;
+    if ($temp1 && !($temp2 - date("n", $time) - 1)) return 35;
     else return 28;
 }
 
