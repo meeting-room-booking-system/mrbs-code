@@ -233,9 +233,19 @@ The settings for each option are described below:
         $morningstarts = 7;   # First block is 7 AM.
         $eveningends = 19;    # Last block starts at 7 PM.
 
-    There is also $eveningends_minutes to give you more control over the last
-    block displayed for each day. For example, to display full 24 hour days
-    with 30 minute intervals:
+    For additional control there are $morningstarts_minutes and
+    $eveningends_minutes.
+
+    $morningstarts_minutes gives you more control over the starting block
+    displayed for each day.  For example, to start a day at
+    8:30 am:
+
+        $morningstarts = 8;
+        $morningstarts_minutes = 30;
+
+    $eveningends_minutes gives you more control over the last block displayed
+    for each day. For example, to display full 24 hour days with 30 minute
+    intervals:
 
         $resolution = 1800;
         $morningstarts = 0;
