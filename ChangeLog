@@ -1,3 +1,7 @@
+CVS (Mon Jan 13 21:38:23 GMT 2003)
+   - Changed minicals so they point to week when on week view and month on
+     month view, rather than always pointing at day view
+
 CVS (Mon Jan 13 14:36:00 GMT 2003)
    - Changed occurences of "<?=" to "<?php echo" which means we still
      use the long tag form everywhere.

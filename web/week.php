@@ -111,8 +111,8 @@ echo "<td width=\"30%\"><u>$vocab[room]</u><br>";
 if ( $pview != 1 ) {
 	echo "</td>\n";
 
-	#Draw the three month calendars - Note they link to day view, not week.
-	minicals($year, $month, $day, $area);
+	#Draw the three month calendars
+	minicals($year, $month, $day, $area, 'week');
 	echo "</tr></table>\n";
 
 	# Don't continue if this area has no rooms:

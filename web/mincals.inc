@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-function minicals($year, $month, $day, $area) {
+function minicals($year, $month, $day, $area, $dmy) {
 
 // PHP Calendar Class
 //  
@@ -25,14 +25,16 @@ class Calendar
     var $day;
     var $h;
     var $area;
+    var $dmy;
     
-    function Calendar($day, $month, $year, $h, $area)
+    function Calendar($day, $month, $year, $h, $area, $dmy)
     {
         $this->day   = $day;
         $this->month = $month;
         $this->year  = $year;
         $this->h     = $h;
         $this->area  = $area;
+	$this->dmy   = $dmy;
     }
    
     
@@ -42,7 +44,7 @@ class Calendar
     }
     
    function getDateLink($day, $month, $year) {
-      return "day.php?year=$year&month=$month&day=$day&area=".$this->area;
+      return $this->dmy.".php?year=$year&month=$month&day=$day&area=".$this->area;
    }
     
 
