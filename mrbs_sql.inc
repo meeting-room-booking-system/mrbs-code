@@ -13,7 +13,7 @@
  *   nothing   - The area is free
  *   something - An error occured, the return value is human readable
  */
-function mrbsCheckFree($room_id, $starttime, $endtime, $ignore)
+function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $rep_ignore)
 {
 	$sql = "SELECT id, name FROM mrbs_entry WHERE 
 	(
@@ -23,23 +23,24 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore)
 	 OR
 	  ($starttime >= start_time AND $endtime  <= end_time  )
 	)
-	AND room_id = $room_id";
+	AND (room_id = $room_id)";
 	
 	if(isset($ignore))
 	{
-		if(gettype($ignore) == "array")
+		$sql .= " AND id <> $ignore";
+		
+		$res = mysql_query("SELECT repeat_id FROM mrbs_entry WHERE (id = $ignore)");
+		
+		if(mysql_error())
+			return mysql_error();
+		
+		if(mysql_num_rows($res) > 0)
 		{
-			$sql .= " AND id NOT IN (";
-			for($i = 0; $i < $ignore.count(); $i++)
-			{
-				if($i) $sql .= ", ";
-				
-				$sql .= $ignore[i];
-			}
-			$sql .= ")";
+			$row = mysql_fetch_row($res);
+			
+			if($row)
+				$sql .= " AND (repeat_id <> " . $row[0]. ")";
 		}
-		else
-			$sql .= " AND id <> $ignore";
 	}
 	
 	$res = mysql_query($sql);
