@@ -1,3 +1,7 @@
+CVS (Mon Mar 31 2003)
+   - bug fix : italian vocab with one character not properly escaped prevents 
+     deleting entries and/or prevent javascript popup to works (Pietro donatini)
+
 CVS (Fri Mar 28 2003)
    - Fixed bug in escaping of username and password for
      all authentication schemes that use HTTP authentication.
