@@ -262,6 +262,15 @@ If this does not work for you (your server may not have unicode support),
 just set $unicode_encoding to 0. MRBS will run the old way, with each 
 language string stored using its own character set.
 
+To  use Unicode, php should be compile with 'iconv' support ('--with-iconv' 
+directive). On Windows, two things are needed :
+
+- iconv.dll file in in the system path. Either copy it from your 
+  \%phpdir%\dlls\ directory into \%windir%\system32\ directory,
+  or add your \%phpdir%\dlls\ directory to your PATH environment variable. 
+- uncomment php_iconv.dll in php.ini.
+
+
 Note: Upgrading mysql database from previous charsets to Unicode :
 
 	  You can use convert_db_to_utf8.php script to convert text in the 
