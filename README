@@ -1,4 +1,4 @@
-Meeting Room Booking System 0.5
+Meeting Room Booking System
 http://mrbs.sourceforge.net/
 -------------------------------
 
@@ -12,7 +12,7 @@ Some parts of this are based on WebCalender 0.9.4 by Craig Knudsen
 is similar. There are fundamental design goal differences between WebCalendar
 and MRBS - WC is for individuals, MRBS is for meeting rooms.
 
---
+------
 To Use
 ------
 See the INSTALL file for installation instructions.
@@ -47,11 +47,18 @@ See COPYING for licensing info.
 
 See ChangeLog for a history of changes.
 
+-------------
 Requirements:
+-------------
 - PHP3/4 (w/MySQL support)
 - MySQL
 
 Recommended:
 - JavaScript-enabled browser
 - CSS-enabled browser
+
+------
+Usage:
+------
+I don't really know if this is being used by anyone in any real environment. I'm using it at work, with about 150 clients, but that's all I know. If you do start using it can you drop me a note to let me know how you've got on.
 
