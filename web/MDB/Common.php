@@ -141,6 +141,7 @@ class MDB_Common extends PEAR
             'lob_buffer_length' => 8192,
             'log_line_break' => "\n",
             'seqname_format' => '%s_seq',
+            'sequence_col_name' => 'sequence',
             'includelob' => FALSE,
             'includemanager' => FALSE,
             'UseTransactions' => FALSE,
@@ -305,15 +306,15 @@ class MDB_Common extends PEAR
     }
 
     // }}}
-    // {{{ _toString()
+    // {{{ __toString()
 
     /**
      * String conversation
      *
      * @return string
-     * @access private
+     * @access public
      */
-    function _toString()
+    function __toString()
     {
         $info = get_class($this);
         $info .= ': (phptype = ' . $this->phptype . ', dbsyntax = ' . $this->dbsyntax . ')';

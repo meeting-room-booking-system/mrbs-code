@@ -1325,7 +1325,7 @@ class MDB_mysql extends MDB_Common
     {
         $sequence_name = $this->getSequenceName($seq_name);
         $this->expectError(MDB_ERROR_NOSUCHTABLE);
-        $result = $this->query("INSERT INTO $sequence_name (sequence) VALUES (NULL)");
+        $result = $this->query("INSERT INTO $sequence_name VALUES (NULL)");
         $this->popExpect();
         if ($ondemand && MDB::isError($result) &&
             $result->getCode() == MDB_ERROR_NOSUCHTABLE)
@@ -1343,7 +1343,7 @@ class MDB_mysql extends MDB_Common
             }
         }
         $value = intval(@mysql_insert_id($this->connection));
-        $res = $this->query("DELETE FROM $sequence_name WHERE sequence < $value");
+        $res = $this->query("DELETE FROM $sequence_name WHERE ".$this->options['sequence_col_name']." < $value");
         if (MDB::isError($res)) {
             $this->warnings[] = 'Next ID: could not delete previous sequence table values';
         }
@@ -1364,7 +1364,7 @@ class MDB_mysql extends MDB_Common
     function currId($seq_name)
     {
         $sequence_name = $this->getSequenceName($seq_name);
-        $result = $this->query("SELECT MAX(sequence) FROM $sequence_name", 'integer');
+        $result = $this->query("SELECT MAX(".$this->options['sequence_col_name'].") FROM $sequence_name", 'integer');
         if (MDB::isError($result)) {
             return($result);
         }

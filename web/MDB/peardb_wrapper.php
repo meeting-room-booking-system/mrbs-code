@@ -297,7 +297,7 @@ class MDB_PEAR_PROXY
     function MDB_PEAR_PROXY($MDB_object)
     {
         $this->MDB_object = $MDB_object;
-        $this->MDB_object->sequence_prefix = '_seq_';
+        $this->MDB_object->option['sequence_col_name'] = 'id';
     }
 
     function connect($dsninfo, $persistent = FALSE)

@@ -828,7 +828,7 @@ class MDB_Manager_fbsql extends MDB_Manager_Common
     {
         $sequence_name = $db->getSequenceName($seq_name);
         $res = $db->query("CREATE TABLE $sequence_name
-            (sequence INTEGER DEFAULT UNIQUE, dummy int, PRIMARY KEY(sequence))");
+            (".$db->options['sequence_col_name']." INTEGER DEFAULT UNIQUE, PRIMARY KEY(".$db->options['sequence_col_name']."))");
         $res = $db->query("set unique = 1 for $sequence_name");
         if (MDB::isError($res)) {
             return($res);
@@ -836,7 +836,7 @@ class MDB_Manager_fbsql extends MDB_Manager_Common
         if ($start == 1) {
             return(MDB_OK);
         }
-        $res = $db->query("INSERT INTO $sequence_name (sequence) VALUES (".($start-1).')');
+        $res = $db->query("INSERT INTO $sequence_name VALUES (".($start-1).')');
         if (!MDB::isError($res)) {
             return(MDB_OK);
         }

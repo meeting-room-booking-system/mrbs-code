@@ -703,10 +703,10 @@ class MDB_Manager_mysql extends MDB_Manager_Common
                         return($indexes);
                     }
                     $is_primary = FALSE;
-                    if (!$db->options['optimize'] == 'portability') {
-                        array_change_key_case($indexes);
-                    }
                     foreach($indexes as $index) {
+                        if ($db->options['optimize'] != 'portability') {
+                            array_change_key_case($index);
+                        }
                         if ($index['key_name'] == 'PRIMARY' && $index['column_name'] == $field_name) {
                             $is_primary = TRUE;
                             break;
@@ -860,7 +860,7 @@ class MDB_Manager_mysql extends MDB_Manager_Common
         }
         $definition = array();
         while (is_array($row = $db->fetchInto($result, MDB_FETCHMODE_ASSOC))) {
-            if (!$db->options['optimize'] == 'portability') {
+            if ($db->options['optimize'] != 'portability') {
                 $row = array_change_key_case($row);
             }
             $key_name = $row['key_name'];
@@ -898,14 +898,14 @@ class MDB_Manager_mysql extends MDB_Manager_Common
     {
         $sequence_name = $db->getSequenceName($seq_name);
         $res = $db->query("CREATE TABLE $sequence_name
-            (sequence INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (sequence))");
+            (".$db->options['sequence_col_name']." INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (".$db->options['sequence_col_name']."))");
         if (MDB::isError($res)) {
             return($res);
         }
         if ($start == 1) {
             return(MDB_OK);
         }
-        $res = $db->query("INSERT INTO $sequence_name (sequence) VALUES (".($start-1).')');
+        $res = $db->query("INSERT INTO $sequence_name VALUES (".($start-1).')');
         if (!MDB::isError($res)) {
             return(MDB_OK);
         }

@@ -310,7 +310,7 @@ class MDB_Manager_mssql extends MDB_Manager_Common
     function createSequence(&$db, $seq_name, $start)
     {
         $sequence_name = $db->getSequenceName($seq_name);
-        $query = "CREATE TABLE $sequence_name (sequence INT NOT NULL IDENTITY($start,1) PRIMARY KEY CLUSTERED)";
+        $query = "CREATE TABLE $sequence_name (".$db->options['sequence_col_name']." INT NOT NULL IDENTITY($start,1) PRIMARY KEY CLUSTERED)";
         return($db->query($query));
     }
 

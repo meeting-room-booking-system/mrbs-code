@@ -1201,7 +1201,7 @@ class MDB_mssql extends MDB_Common
         if (MDB::isError($value)) {
             return($value);
         }
-        $result = $this->query("DELETE FROM $sequence_name WHERE sequence < $value");
+        $result = $this->query("DELETE FROM $sequence_name WHERE ".$this->options['sequence_col_name']." < $value");
         if (MDB::isError($result)) {
             $this->warnings[] = 'nextID: could not delete previous sequence table values';
         }
