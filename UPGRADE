@@ -1,6 +1,8 @@
-Because this is a beta release, it is un-lightly you will be using this for
+Because this is a beta release, it is un-likely you will be using this for
 anything mission critical, I have therefore removed the upgrade code, as
 it would no longer work.
 
-If you need this to work, either write it your self or get in contact with me.
-  Sam Mason <smason@mtc.ricardo.com>
+There have been no database changes from at least version 0.8, so your
+current database should work just fine. although, naturally, you should
+back up any data you have before using a new version.
+
