@@ -46,10 +46,10 @@ function print_header($day, $month, $year, $area)
           </FORM>
          </TD>
          <TD CLASS=banner VALIGN=CENTER ALIGN=CENTER>
-          <A HREF="help.php3?day=<? echo $day ?>&month=<?= $month ?>&year=<?= $year ?>">Help</A>
+          <A HREF="help.php3?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>">Help</A>
          </TD>
          <TD CLASS=banner VALIGN=CENTER ALIGN=CENTER>
-          <A HREF="admin.php3?day=<? echo $day ?>&month=<?= $month ?>&year=<?= $year ?>">Admin</A>
+          <A HREF="admin.php3?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>">Admin</A>
          </TD>
          <TD CLASS=banner VALIGN=CENTER ALIGN=CENTER>
           <FORM METHOD=GET ACTION="search.php3">

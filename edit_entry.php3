@@ -193,12 +193,12 @@ function validate_and_submit ()
 <TR><TD><B><? $lang["duration"]?></B></TD>
   <TD><INPUT NAME="duration" SIZE=7 VALUE="<? echo $duration;?>">
     <SELECT NAME="dur_units">
-<!--     <OPTION VALUE="seconds" <? echo ($dur_units == "seconds") ? "SELECTED" : ""; ?>><?= $lang["seconds"]; ?> -->
-     <OPTION VALUE="minutes" <? echo ($dur_units == "minutes") ? "SELECTED" : ""; ?>><?= $lang["minutes"]; ?>
-     <OPTION VALUE="hours"   <? echo ($dur_units == "hours"  ) ? "SELECTED" : ""; ?>><?= $lang["hours"]; ?>
-     <OPTION VALUE="days"    <? echo ($dur_units == "days"   ) ? "SELECTED" : ""; ?>><?= $lang["days"]; ?>
-     <OPTION VALUE="weeks"   <? echo ($dur_units == "weeks"  ) ? "SELECTED" : ""; ?>><?= $lang["weeks"]; ?>
-<!--     <OPTION VALUE="years"   <? echo ($dur_units == "years"  ) ? "SELECTED" : ""; ?>><?= $lang["years"]; ?> -->
+<!--     <OPTION VALUE="seconds" <? echo ($dur_units == "seconds") ? "SELECTED" : ""; ?>><? echo $lang["seconds"]; ?> -->
+     <OPTION VALUE="minutes" <? echo ($dur_units == "minutes") ? "SELECTED" : ""; ?>><? echo $lang["minutes"]; ?>
+     <OPTION VALUE="hours"   <? echo ($dur_units == "hours"  ) ? "SELECTED" : ""; ?>><? echo $lang["hours"]; ?>
+     <OPTION VALUE="days"    <? echo ($dur_units == "days"   ) ? "SELECTED" : ""; ?>><? echo $lang["days"]; ?>
+     <OPTION VALUE="weeks"   <? echo ($dur_units == "weeks"  ) ? "SELECTED" : ""; ?>><? echo $lang["weeks"]; ?>
+<!--     <OPTION VALUE="years"   <? echo ($dur_units == "years"  ) ? "SELECTED" : ""; ?>><? echo $lang["years"]; ?> -->
     </SELECT>
     <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes"> <? echo $lang["all_day"]; ?>
 </TD></TR>
@@ -236,7 +236,7 @@ for($i = 0; isset($lang["rep_type_$i"]); $i++)
 </TR>
 
 <TR>
- <TD><B><? echo $lang["rep_rep_day"]?></B> <?= $lang["rep_for_weekly"]?></TD>
+ <TD><B><? echo $lang["rep_rep_day"]?></B> <? echo $lang["rep_for_weekly"]?></TD>
  <TD>
   <INPUT NAME="rep_day[0]" TYPE="CHECKBOX"<? echo ($rep_day[0] ? "CHECKED" : "")?>>Sunday
   <INPUT NAME="rep_day[1]" TYPE="CHECKBOX"<? echo ($rep_day[1] ? "CHECKED" : "")?>>Monday
