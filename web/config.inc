@@ -183,6 +183,12 @@ else
 
 setlocale(LC_ALL,$locale);
 
+# faq file language selection. IF not set, use the default english file.
+# IF your language faq file is available, set $faqfilelang to match the
+# end of the filename, including the underscore (ie. for site_faq_fr.html
+# use "_fr"
+$faqfilelang = ""; 
+
 #############
 # Entry Types
 #############
