@@ -149,6 +149,29 @@ else
 	$rep_day       = array(0, 0, 0, 0, 0, 0, 0);
 }
 
+# These next 4 if statements handle the situation where
+# this page has been accessed directly and no arguments have
+# been passed to it.
+# If we have not been provided with a room_id
+if( empty( $room_id ) )
+{
+	$sql = "select id from mrbs_room limit 1";
+	$res = sql_query($sql);
+	$row = sql_row($res, 0);
+	$room_id = $row[0];
+
+}
+
+# If we have not been provided with starting time
+if( empty( $start_hour ) && $morningstarts < 10 )
+	$start_hour = "0$morningstarts";
+
+if( empty( $start_hour ) )
+	$start_hour = "$morningstarts";
+
+if( empty( $start_minute ) )
+	$start_min = "00";
+
 // Remove "Undefined variable" notice
 if (!isset($rep_num_weeks))
 {
@@ -189,7 +212,12 @@ function validate_and_submit ()
     return false;
   }
   
-  i1 = parseInt(document.forms["main"].id.value);
+  // check form element exist before trying to access it
+  if( document.forms["main"].id )
+    i1 = parseInt(document.forms["main"].id.value);
+  else
+    i1 = 0;
+
   i2 = parseInt(document.forms["main"].rep_id.value);
   if ( document.forms["main"].rep_num_weeks)
   {
@@ -198,6 +226,15 @@ function validate_and_submit ()
   if ((!i1 || (i1 && i2)) && document.forms["main"].rep_type && document.forms["main"].rep_type[6].checked && (!n || n < 2))
   {
     alert("<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("useful_n-weekly_value") ?>");
+    return false;
+  }
+
+  // check that a room(s) has been selected
+  // this is needed as edit_entry_handler does not check that a room(s)
+  // has been chosen
+  if( document.forms["main"].elements['rooms[]'].selectedIndex == -1 )
+  {
+    alert("<?php echo get_vocab("you_have_not_selected") . '\n' . get_vocab("valid_room") ?>");
     return false;
   }
 
@@ -257,15 +294,89 @@ while (list(,$unit) = each($units))
 </TD></TR>
 
 
-<tr><td class=CR><b><?php echo get_vocab("rooms") ?></b></td>
-  <td class=CL valign=top><table><tr><td><select name="rooms[]" multiple>
-  <?php
-        # Determine the area id of the room in question first
-        $sql = "select area_id from mrbs_room where id=$room_id";
+<?php
+      # Determine the area id of the room in question first
+      $sql = "select area_id from mrbs_room where id=$room_id";
+      $res = sql_query($sql);
+      $row = sql_row($res, 0);
+      $area_id = $row[0];
+      # determine if there is more than one area
+      $sql = "select id from mrbs_area";
+      $res = sql_query($sql);
+      $num_areas = sql_count($res);
+      # if there is more than one area then give the option
+      # to choose areas.
+      if( $num_areas > 1 ) {
+
+?>
+<script language="JavaScript">
+<!--
+function changeRooms( formObj )
+{
+    areasObj = eval( "formObj.areas" );
+
+    area = areasObj[areasObj.selectedIndex].value
+    roomsObj = eval( "formObj.elements['rooms[]']" )
+
+    // remove all entries
+    for (i=0; i < (roomsObj.length); i++)
+    {
+      roomsObj.options[i] = null
+    }
+    // add entries based on area selected
+    switch (area){
+<?php
+        # get the area id for case statement
+	$sql = "select id, area_name from mrbs_area order by area_name";
         $res = sql_query($sql);
-        $row = sql_row($res, 0);
-        $area_id = $row[0];
-        # then select the rooms in that area
+	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+	{
+
+                print "      case \"".$row[0]."\":\n";
+        	# get rooms for this area
+		$sql2 = "select id, room_name from mrbs_room where area_id='".$row[0]."' order by room_name";
+        	$res2 = sql_query($sql2);
+		if ($res2) for ($j = 0; ($row2 = sql_row($res2, $j)); $j++)
+		{
+                	print "        roomsObj.options[$j] = new Option(\"".$row2[1]."\",".$row2[0] .")\n";
+                }
+		# select the first entry by default to ensure
+		# that one room is selected to begin with
+		print "        roomsObj.options[0].selected = true\n";
+		print "        break\n";
+	}
+?>
+    } //switch
+}
+
+// create area selector if javascript is enabled as this is required
+// if the room selector is to be updated.
+this.document.writeln("<tr><td class=CR><b><?php echo get_vocab("areas") ?>:</b></td><td class=CL valign=top>");
+this.document.writeln("          <select name=\"areas\" onChange=\"changeRooms(this.form)\">");
+<?php
+# get list of areas
+$sql = "select id, area_name from mrbs_area order by area_name";
+$res = sql_query($sql);
+if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+{
+	$selected = "";
+	if ($row[0] == $area_id) {
+		$selected = "SELECTED";
+	}
+	print "this.document.writeln(\"            <option $selected value=\\\"".$row[0]."\\\">".$row[1]."\")\n";
+}
+?>
+this.document.writeln("          </select>");
+this.document.writeln("</td></tr>");
+// -->
+</script>
+<?php
+} # if $num_areas
+?>
+<tr><td class=CR><b><?php echo get_vocab("rooms") ?>:</b></td>
+  <td class=CL valign=top><table><tr><td><select name="rooms[]" multiple="yes">
+  <?php
+        # select the rooms in the area determined above
 	$sql = "select id, room_name from mrbs_room where area_id=$area_id order by room_name";
    	$res = sql_query($sql);
 
