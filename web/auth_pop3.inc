@@ -17,19 +17,8 @@
  * $auth["admin"][] = "pop3user2";
  */
 
-/* getAuth($realm)
- * 
- * Request that the username/password be given for the specified realm
- * 
- * $realm - Which username/password do we want.
- * 
- * Nothing
- */
-function authGet($realm)
-{
-   Header("WWW-Authenticate: Basic realm=\"$realm\"");
-   Header("HTTP/1.0 401 Unauthorized");
-}
+/* ~~JFL 2003/11/12 By default, use the http session mechanism */
+if (!isset($auth['session'])) $auth['session']='http';
 
 /* authValidateUser($user, $pass)
  * 
@@ -53,7 +42,6 @@ function authValidateUser($user, $pass)
    // Check if we do not have a username/password
    if(!isset($user) || !isset($pass) || strlen($pass)==0)
    {
-      authGet($auth["realm"]);
       return 0;
    }
 
@@ -110,10 +98,6 @@ function authValidateUser($user, $pass)
       fputs( $stream, "QUIT\r\n" );
    }
 
-
-   // If we failed prompt for username/password
-   authGet($realm);
-
    // return failure
    return 0;
 }
@@ -142,19 +126,6 @@ function authGetUserLevel($user, $lev1_admin)
 
    // Everybody else is access level '1'
    return 1;
-}
-
-
-function getUserName()
-{
-   global $PHP_AUTH_USER;
-   return $PHP_AUTH_USER;
-}
-
-function getUserPassword()
-{
-   global $PHP_AUTH_PW;
-   return $PHP_AUTH_PW;
 }
 
 ?>

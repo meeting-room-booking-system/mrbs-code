@@ -17,6 +17,9 @@
  * $auth["admin"][] = "imapuser2";
  */
 
+/* ~~JFL 2003/11/12 By default, use the http session mechanism */
+if (!isset($auth['session'])) $auth['session']='http';
+
 /* quoteIMAP($str)
  *
  * quote char's into valid IMAP string
@@ -29,20 +32,6 @@
 function quoteIMAP($str)
 {
     return ereg_replace('(["\\])', '\\\\1', $str);
-}
-
-/* getAuth($realm)
- * 
- * Request that the username/password be given for the specified realm
- * 
- * $realm - Which username/password do we want.
- * 
- * Nothing
- */
-function authGet($realm)
-{
-	Header("WWW-Authenticate: Basic realm=\"$realm\"");
-	Header("HTTP/1.0 401 Unauthorized");
 }
 
 /* authValidateUser($user, $pass)
@@ -65,7 +54,6 @@ function authValidateUser($user, $pass)
 	// Check if we do not have a username/password
 	if(!isset($user) || !isset($pass) || strlen($pass)==0)
 	{
-		authGet($auth["realm"]);
 		return 0;
 	}
 	
@@ -86,9 +74,6 @@ function authValidateUser($user, $pass)
 		}
 		fputs( $stream, "a001 LOGOUT\r\n" );
 	}
-	
-	// If we failed prompt for username/password
-	authGet($realm);
 	
 	// return failure
 	return 0;
@@ -118,17 +103,6 @@ function authGetUserLevel($user, $lev1_admin)
 	
 	// Everybody else is access level '1'
 	return 1;
-}
-
-
-function getUserName()
-{
-    return getAuthUserName();
-}
-
-function getUserPassword()
-{
-    return getAuthUserPassword();
 }
 
 ?>

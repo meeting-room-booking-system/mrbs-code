@@ -2,19 +2,8 @@
 
 // $Id$
 
-/* getAuth($realm)
- * 
- * Request that the username/password be given for the specified realm
- * 
- * $realm - Which username/password do we want.
- * 
- * Nothing
- */
-function authGet($realm)
-{
-    Header("WWW-Authenticate: Basic realm=\"$realm\"");
-    Header("HTTP/1.0 401 Unauthorized");
-}
+/* ~~JFL 2003/11/12 By default, use the http session mechanism */
+if (!isset($auth['session'])) $auth['session']='http';
 
 /* authValidateUser($user, $pass)
  * 
@@ -34,7 +23,6 @@ function authValidateUser($user, $pass)
     // Check if we do not have a username/password
     if(empty($user) || empty($pass))
     {
-        authGet($auth["realm"]);
         return 0;
     }
     
@@ -48,10 +36,6 @@ function authValidateUser($user, $pass)
     fputs($p, $pass);
     if (pclose($p) == 0)
         return 1;
-    
-    // If we failed prompt for username/password - WHY?
-    if($user || $pass)
-        authGet($auth["realm"]);
     
     // return failure
     return 0;
@@ -81,16 +65,6 @@ function authGetUserLevel($user, $lev1_admin)
     
     // Everybody else is access level '1'
     return 1;
-}
-
-function getUserName()
-{
-    return getAuthUserName();
-}
-
-function getUserPassword()
-{
-    return getAuthUserPassword();
 }
 
 ?>
