@@ -48,7 +48,7 @@ if(!isset($total))
            WHERE ( create_by   LIKE '%$search_str%' OR
                    name        LIKE '%$search_str%' OR
                    description LIKE '%$search_str%'    ) AND
-                   start_time > '$now'
+                   end_time >= '$now'
            ORDER BY start_time desc";
 
    $res   = mysql_query($sql);
@@ -78,7 +78,7 @@ $sql = "SELECT id, create_by, name, description, start_time
         WHERE ( create_by   LIKE '%$search_str%' OR
                 name        LIKE '%$search_str%' OR
                 description LIKE '%$search_str%'    )AND
-                start_time > '$now'
+                end_time >= '$now'
        ORDER BY start_time asc
        LIMIT " . $search_pos . ", " . $search["count"];
 
