@@ -314,7 +314,17 @@ for ($weekcol = 0; $weekcol < $weekday_start; $weekcol++)
 for ($cday = 1; $cday <= $days_in_month; $cday++)
 {
     if ($weekcol == 0) echo "</tr><tr>\n";
-    echo "<td valign=top height=100 class=\"month\"><div class=\"monthday\"><a href=\"day.php?year=$year&month=$month&day=$cday&area=$area\">$cday</a></div>\n";
+    echo "<td valign=top height=100 class=\"month\"><div class=\"monthday\"><a href=\"day.php?year=$year&month=$month&day=$cday&area=$area\">$cday</a>&nbsp;\n";
+    if( $enable_periods ) {
+	echo "<a href=\"edit_entry.php?room=$room&area=$area"
+	. "&period=0&year=$year&month=$month"
+	. "&day=$cday\"><img src=new.gif width=10 height=10 border=0></a>";
+    } else {
+	echo "<a href=\"edit_entry.php?room=$room&area=$area"
+	. "&hour=$morningstarts&minute=0&year=$year&month=$month"
+	. "&day=$cday\"><img src=new.gif width=10 height=10 border=0></a>";
+    }
+    echo "</div>";
 
     # Anything to display for this day?
     if (isset($d[$cday]["id"][0]))
