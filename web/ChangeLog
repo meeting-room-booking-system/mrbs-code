@@ -1,3 +1,47 @@
+2003-10-09  John Beranek <jberanek@users.sourceforge.net>
+
+	* admin.php (1.12), config.inc.php (1.4), day.php (1.16), del.php
+	  (1.10), edit_area_room.php (1.10), edit_entry.php (1.20),
+	  edit_entry_handler.php (1.13), functions.inc (1.18), help.php
+	  (1.11), language.inc (1.1), mincals.inc (1.9), month.php (1.13),
+	  mrbs_auth.inc (1.6), mrbs_sql.inc (1.10), mysql.inc (1.4),
+	  pgsql.inc (1.4), report.php (1.12), search.php (1.10), style.inc
+	  (1.8), trailer.inc (1.9), view_entry.php (1.10), week.php (1.18):
+
+	  * Revamped localisation/internationalisation. MRBS can now be
+	  called  fulled Unicode, as long as the config variable
+	  $unicode_encoding is	set to 1. If this is set, then MRBS serves
+	  all of it's pages in UTF-8  and stores everything in the database
+	  in UTF-8. This means that  all languages work together. Other
+	  things fixed:
+
+	   - Automatic language determination made much better, works for
+	    Windows and Unix servers now, by using different code for each.
+
+	   - There are new configuration variables in config.inc.php now,
+	  to
+	    configure language/locale settings with much more flexibility.
+
+	    Tested on a Windows+Apache machine, and on a Linux+Apache
+	  machine
+
+	    NOTE FOR DEVELOPERS:
+
+	    Whenever you want to access the translations you MUST now use:
+	      get_vocab('token')
+	    instead of
+	      $vocab[token]
+
+	    Additionally, if you use a call to date() or strftime() that
+	  could
+	    return text, as opposed to just numbers, you MUST use
+	  utf8_date()
+	    and utf8_strftime() instead.
+
+	    Note: Not filled out ChangeLog, because I don't know how (or
+	  if)
+		  Thierry does it automatically, and I wasn't gonna do it
+		  by hand with all the files I changed :)
 
 2003-10-02  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
