@@ -98,7 +98,7 @@ $vocab["deleteseries"]       = "Smazat sérii";
 $vocab["confirmdel"]         = "Jste si jistý\\nsmazáním tohoto záznamu?\\n\\n";
 $vocab["returnprev"]         = "Návrat na pøedchozí stránku";
 $vocab["invalid_entry_id"]   = "Špatné ID záznamu.";
-$vocab["invalid_series_id"]  = "Invalid series id.";
+$vocab["invalid_series_id"]  = "Špatné ID skupiny.";
 
 # Used in edit_entry_handler.php
 $vocab["error"]              = "Chyba";
