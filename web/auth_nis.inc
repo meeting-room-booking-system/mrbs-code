@@ -2,27 +2,19 @@
 
 /* $Id$
  *
- * Authentication scheme that uses an external script as the source
- * for user authentication.
+ * Authentication scheme that uses NIS as the source for user
+ * authentication.
  *
  * To use this authentication scheme set the following
  * things in config.inc:
  *
- * $auth["realm"]  = "MRBS";    # Or any other string
- * $auth["type"]   = "ext";
- * $auth["prog"]   = "authenticationprogram";  # The full path to the external
- *                                             # script
- * $auth["params"] = "#USERNAME# #PASSWORD# other-params" # Parameters to pass to
- *                                                        # the script, #USERNAME#
- *                                                        # and #PASSWORD#
- *                                                        # will be expanded to
- *                                                        # the values typed by
- *                                                        # the user.
+ * $auth["realm"] = "MRBS";    # Or any other string
+ * $auth["type"]  = "nis";
  *
  * Then, you may configure admin users:
  *
- * $auth["admin"][] = "username1";
- * $auth["admin"][] = "username2";
+ * $auth["admin"][] = "nisuser1";
+ * $auth["admin"][] = "nisuser2";
  *
  */
 
@@ -54,38 +46,40 @@ function authGet($realm)
 function authValidateUser($user, $pass)
 {
         global $auth;
-	
+
 	// Check if we do not have a username/password
 	if(!isset($user) || !isset($pass))
 	{
 		authGet($auth["realm"]);
 		return 0;
 	}
-	
-	// Generate the command line
-	$cmd = $auth["prog"] . ' ' . $auth["params"];
-	$cmd = preg_replace('/#USERNAME#/',escapeshellcmd($user),$cmd);
-	$cmd = preg_replace('/#PASSWORD#/',escapeshellcmd($pass),$cmd);
-	
-	// Run the program
-	exec($cmd, $output, $ret);
-	
-	// If it succeeded, return success
-	if($ret == 0)
-		return 1;
-	
-	// If we failed prompt for username/password
+
+        // untaint $user
+        //preg_match("/(^\w+).*/",$user,$regs);
+        //$user = $regs[1];
+
+        $rs = yp_match (yp_get_default_domain(), "passwd.byname", $user);
+	if ( ! empty ( $rs ) ) {
+          $rs = explode ( ":", $rs );
+          if ( $rs[1] == crypt ( $password, substr ( $rs[1], 0, 2 ) ) ) {
+            return 1;
+          } else {
+            return 0;
+          }
+        }
+
+       // If we failed prompt for username/password
 	if($user || $pass)
 		authGet($auth["realm"]);
-	
+
 	// return failure
 	return 0;
 }
 
 /* authGetUserLevel($user)
- * 
+ *
  * Determines the users access level
- * 
+ *
  * $user - The user name
  *
  * Returns:
@@ -96,7 +90,7 @@ function authGetUserLevel($user, $lev1_admin)
 	// User not logged in, user level '0'
 	if(!isset($user))
 		return 0;
-	
+
 	// Check if the user is can modify
 	for($i = 0; $lev1_admin[$i]; $i++)
 	{

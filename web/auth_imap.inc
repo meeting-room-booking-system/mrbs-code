@@ -1,9 +1,20 @@
 <?php
 
-/*
- * auth_imap.inc
+/* $Id$
  *
- * authentication-scheme which uses IMAP as the source for user authentication.
+ * Authentication scheme that uses IMAP as the source for user
+ * authentication.
+ *
+ * To use this authentication scheme set the following
+ * things in config.inc:
+ *
+ * $auth["realm"] = "MRBS";    # Or any other string
+ * $auth["type"]  = "imap";
+ *
+ * Then, you may configure admin users:
+ *
+ * $auth["admin"][] = "imapuser1";
+ * $auth["admin"][] = "imapuser2";
  */
 
 /* quoteIMAP($str)

@@ -1,3 +1,10 @@
+CVS (Thur Mar 7 15:26:00 GMT 2002)
+    Added comments to the top of all the authentication schemes (I
+     understand) that describes how to change config.inc to use
+     them.  This should help new installers.
+    Added auth_nis.inc, as provided by Jeff Hoover.  This is an
+     authentication scheme that uses NIS.
+
 CVS (Thu Feb 7 13:12:00 GMT 2002)
     Added instructions into UPGRADE readme for upgrade2.[my|pg].ql scripts
      that are required to upgrade from an older MRBS installation.

@@ -1,6 +1,21 @@
 <?php
 
-# $Id$
+/* $Id$
+ *
+ * Authentication scheme that uses IP addresses to determine
+ * admin privileges. Anyone who can access the server can
+ * make bookings etc.
+ *
+ * To use this authentication scheme set the following
+ * things in config.inc:
+ *
+ * $auth["type"]  = "ip";
+ *
+ * Then, you may configure admin users:
+ *
+ * $auth["admin"][] = "127.0.0.1";
+ * $auth["admin"][] = "192.168.0.1";
+ */
 
 # No need to perform authentication - ip address always there
 function authGet($realm) { }
