@@ -30,6 +30,7 @@ $lang["goto"]               = "Ir a";
 
 # Used in trailer.inc
 $lang["viewday"]            = "Ver D&iacute;a";
+$lang["ppreview"]           = "Print Preview";
 
 # Used in edit_entry.php3
 $lang["addentry"]           = "Nueva Reserva";

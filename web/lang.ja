@@ -29,6 +29,7 @@ $lang["gototoday"]          = "“–“ú‚Ì—\–ñ‚ğŒ©‚é";
 
 # Used in trailer.inc
 $lang["viewday"]            = "—\–ñó‹µ‰{——";
+$lang["ppreview"]           = "Print Preview";
 
 # Used in edit_entry.php
 $lang["addentry"]           = "—\–ñ“o˜^";

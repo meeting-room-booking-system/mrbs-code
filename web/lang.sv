@@ -31,6 +31,7 @@ $lang["goto"]               = "gå till";
 
 # Used in trailer.inc
 $lang["viewday"]            = "Visa dag";
+$lang["ppreview"]           = "Print Preview";
 
 # Used in edit_entry.php3
 $lang["addentry"]           = "Gör bokning";

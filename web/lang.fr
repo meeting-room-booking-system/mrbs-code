@@ -29,6 +29,7 @@ $lang["gototoday"]          = "Aujourd'hui";
 
 # Used in trailer.inc
 $lang["viewday"]            = "Voir le";
+$lang["ppreview"]           = "Print Preview";
 
 # Used in edit_entry.php
 $lang["addentry"]           = "Ajouter une entrée";

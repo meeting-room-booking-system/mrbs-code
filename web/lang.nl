@@ -32,6 +32,7 @@ $lang["goto"]               = "ga naar";
 $lang["viewday"]            = "Bekijk Dag";
 $lang["viewweek"]           = "Bekijk Week";
 $lang["viewmonth"]          = "Bekijk Maand";
+$lang["ppreview"]           = "Print Preview";
 
 # Used in edit_entry.php
 $lang["addentry"]           = "Boeking Toevoegen";

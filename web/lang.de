@@ -32,6 +32,7 @@ $lang["goto"]               = "Start";
 $lang["viewday"]            = "Zeige Tag";
 $lang["viewweek"]           = "Zeige Woche";
 $lang["viewmonth"]          = "Zeige Monat";
+$lang["ppreview"]           = "Druckansicht";
 
 
 # Used in edit_entry.php

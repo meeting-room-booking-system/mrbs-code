@@ -65,7 +65,7 @@ for ($i = -2; $i <= 6; $i++)
 }
 
 echo "<HR>";
-echo '<p><center><a href="' . $REQUEST_URI . '&pview=1">Print Preview</a></center><p>';
+echo '<p><center><a href="' . $REQUEST_URI . '&pview=1">' . $lang[ppreview] . '</a></center><p>';
 
 }
 ?>
