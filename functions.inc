@@ -286,12 +286,11 @@ function genDateSelector($prefix, $day, $month, $year)
 	echo "</SELECT>\n";
 	echo "<SELECT NAME=\"${prefix}year\">\n";
 	
-	for($i = -1; $i < 5; $i++)
-	{
-		$y = $year + $i;
-		
-		print "<OPTION" . ($y == $year ? " SELECTED" : "") . ">$y\n";
-	}
+	$min = min($year, date("Y")) - 5;
+	$max = max($year, date("Y")) + 5;
+	
+	for($i = $min; $i <= $max; $i++)
+		print "<OPTION" . ($i == $year ? " SELECTED" : "") . ">$i\n";
 	
 	echo "</SELECT>\n";
 }
