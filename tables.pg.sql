@@ -37,7 +37,7 @@ CREATE TABLE mrbs_entry
   repeat_id   int DEFAULT 0 NOT NULL,
   room_id     int DEFAULT 1 NOT NULL,
   timestamp   timestamp DEFAULT current_timestamp,
-  create_by   varchar(25) DEFAULT '' NOT NULL,
+  create_by   varchar(80) DEFAULT '' NOT NULL,
   name        varchar(80) DEFAULT '' NOT NULL,
   type        char DEFAULT 'E' NOT NULL,
   description text
@@ -55,7 +55,7 @@ CREATE TABLE mrbs_repeat
   rep_opt     varchar(32) DEFAULT '' NOT NULL,
   room_id     int DEFAULT 1 NOT NULL,
   timestamp   timestamp DEFAULT current_timestamp,
-  create_by   varchar(25) DEFAULT '' NOT NULL,
+  create_by   varchar(80) DEFAULT '' NOT NULL,
   name        varchar(80) DEFAULT '' NOT NULL,
   type        char DEFAULT 'E' NOT NULL,
   description text,
