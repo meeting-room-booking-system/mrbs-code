@@ -34,7 +34,8 @@ $mdb=&MDB::connect(array
 , array
 (
     'persistent' => !$db_nopersist,
-    'optimize'   => 'portability' 
+    'optimize'   => 'portability',
+    'HOME'       => $oci8_home 
 )    
 );
 
@@ -42,12 +43,12 @@ if (MDB::isError($mdb))
 {
     if ($debug_flag)
     {
-        echo "Error: " . $mdb->getMessage() . "\n";
-        die ("Error: " . $mdb->getUserInfo() . "\n");
+        echo "Error: " . $mdb->getMessage() . "<BR>";
+        die ("Error: " . $mdb->getUserInfo() . "<BR>");
     }
     else
     {
-        die ("\n<p>\n" . $vocab['failed_connect_db'] . "\n");
+        die ("<BR><p><BR>" . $vocab['failed_connect_db'] . "<BR>");
     }
 }
 
