@@ -1,3 +1,13 @@
+2003-08-09  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* auth_nt.inc (1.1): + Added Windows NT / IIS authentication
+	  scheme.
+
+2003-08-09  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc (1.15): Doc fixes. Update documentation and comments
+	  to the current cvs situation.
+
 2003-05-29  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* edit_entry.php (1.17): - Fixed bug : Always displays "edit entry"

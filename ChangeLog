@@ -1,3 +1,17 @@
+2003-08-09  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* AUTHENTICATION (1.16): + Added Windows NT / IIS authentication
+	  scheme.
+
+2003-08-09  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* AUTHENTICATION (1.15), INSTALL (1.13), README (1.9): Dox fixes.
+	  Update documentation and comments to the current cvs situation.
+
+2003-08-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* NEWS (1.2): * Doc fixes: updated to have a consistent layout.
+
 2003-08-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* NEWS (1.1): * Added a NEWS file which contains a list of
