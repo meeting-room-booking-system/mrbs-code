@@ -245,6 +245,57 @@ class MDB_Manager_mssql extends MDB_Manager_Common
     }
 
     // }}}
+    // {{{ listTables()
+
+    /**
+     * list all tables in the current database
+     *
+     * @param object    $db        database object that is extended by this class
+     * @return mixed data array on success, a MDB error on failure
+     * @access public
+     **/
+    function listTables(&$db)
+    {
+        $query = 'EXECUTE sp_tables @table_type = "\'TABLE\'"';
+        $table_names = $db->queryCol($query, null, 2);
+        if (MDB::isError($table_names)) {
+            return($table_names);
+        }
+        $tables = array();
+        for ($i = 0, $j = count($table_names); $i <$j; ++$i) {
+            if (!$this->_isSequenceName($db, $table_names[$i])) {
+                $tables[] = $table_names[$i];
+            }
+        }
+        return($tables);
+    }
+
+    // }}}
+    // {{{ listTableFields()
+
+    /**
+     * list all fields in a tables in the current database
+     *
+     * @param object    $db        database object that is extended by this class
+     * @param string $table name of table that should be used in method
+     * @return mixed data array on success, a MDB error on failure
+     * @access public
+     */
+    function listTableFields(&$db, $table)
+    {
+        $result = $db->query("SELECT * FROM $table");
+        if( MDB::isError($result)) {
+            return($result);
+        }
+        $columns = $db->getColumnNames($result);
+        if (MDB::isError($columns)) {
+            $db->freeResult($columns);
+            return $columns;
+        }
+        return(array_flip($columns));
+    }
+
+    // }}}
     // {{{ createSequence()
 
     /**
@@ -259,7 +310,8 @@ class MDB_Manager_mssql extends MDB_Manager_Common
     function createSequence(&$db, $seq_name, $start)
     {
         $sequence_name = $db->getSequenceName($seq_name);
-        return($db->query("CREATE TABLE $sequence_name (sequence INT NOT NULL IDENTITY($start,1) PRIMARY KEY CLUSTERED)"));
+        $query = "CREATE TABLE $sequence_name (sequence INT NOT NULL IDENTITY($start,1) PRIMARY KEY CLUSTERED)";
+        return($db->query($query));
     }
 
     // }}}

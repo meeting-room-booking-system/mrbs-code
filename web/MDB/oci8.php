@@ -114,6 +114,7 @@ class MDB_oci8 extends MDB_Common {
         $this->supported['Indexes'] = 1;
         $this->supported['SummaryFunctions'] = 1;
         $this->supported['OrderByText'] = 1;
+        $this->supported['CurrId'] = 1;
         $this->supported["AffectedRows"]= 1;
         $this->supported['Transactions'] = 1;
         $this->supported['SelectRowRanges'] = 1;
@@ -132,6 +133,8 @@ class MDB_oci8 extends MDB_Common {
             923 => MDB_ERROR_SYNTAX,
             942 => MDB_ERROR_NOSUCHTABLE,
             955 => MDB_ERROR_ALREADY_EXISTS,
+            1400 => MDB_ERROR_CONSTRAINT_NOT_NULL,
+            1407 => MDB_ERROR_CONSTRAINT_NOT_NULL,
             1476 => MDB_ERROR_DIVZERO,
             1722 => MDB_ERROR_INVALID_NUMBER,
             2289 => MDB_ERROR_NOSUCHTABLE,
@@ -172,6 +175,7 @@ class MDB_oci8 extends MDB_Common {
      * that checks for native error msgs.
      * 
      * @param integer $errno error code
+     * @param string  $message userinfo message
      * @return object a PEAR error object
      * @access public 
      * @see PEAR_Error
@@ -179,13 +183,17 @@ class MDB_oci8 extends MDB_Common {
     function oci8RaiseError($errno = NULL, $message = NULL)
     {
         if ($errno === NULL) {
-            $error = @OCIError($this->connection);
+            if ($this->connection) {
+                $error = @OCIError($this->connection);
+            } else {
+                $error = @OCIError();
+            }
             return($this->raiseError($this->errorCode($error['code']),
-                NULL, NULL, NULL, $error['message']));
+                NULL, NULL, $message, $error['message']));
         } elseif (is_resource($errno)) {
             $error = @OCIError($errno);
             return($this->raiseError($this->errorCode($error['code']),
-                NULL, NULL, NULL, $error['message']));
+                NULL, NULL, $message, $error['message']));
         }
         return($this->raiseError($this->errorCode($errno), NULL, NULL, $message));
     }
@@ -699,17 +707,14 @@ class MDB_oci8 extends MDB_Common {
                 'End of result: attempted to check the end of an unknown result'));
         }
         if (isset($this->results[$result_value]) && end($this->results[$result_value]) === FALSE) {
-            return($this->highest_fetched_row[$result_value] >= $this->current_row[$result_value]-1);
+            return(($this->highest_fetched_row[$result_value]-1) <= $this->current_row[$result_value]);
         }
         if (isset($this->row_buffer[$result_value])) {
-            if ($this->row_buffer[$result_value]) {
-                return(FALSE);
-            }
-            return(TRUE);
+            return(!$this->row_buffer[$result_value]);
         }
         if (isset($this->limits[$result_value])) {
             if (MDB::isError($this->_skipLimitOffset($result))
-                || $this->current_row[$result_value] > $this->limits[$result_value][1]
+                || ($this->current_row[$result_value]) > $this->limits[$result_value][1]
             ) {
                 return(TRUE);
             }
@@ -885,7 +890,7 @@ class MDB_oci8 extends MDB_Common {
                 }
             }
             if (isset($this->row_buffer[$result_value])) {
-                $this->highest_fetched_row[$result_value]++;
+                ++$this->highest_fetched_row[$result_value];
                 $this->results[$result_value][$this->highest_fetched_row[$result_value]]
                     = $this->row_buffer[$result_value];
                 unset($this->row_buffer[$result_value]);
@@ -894,8 +899,8 @@ class MDB_oci8 extends MDB_Common {
                 || $this->results[$result_value][$this->highest_fetched_row[$result_value]] !== FALSE
             ) {
                 while((!isset($this->limits[$result_value])
-                    || $this->highest_fetched_row[$result_value] >= $this->limits[$result_value][1]
-                )
+                        || ($this->highest_fetched_row[$result_value]+1) < $this->limits[$result_value][1]
+                    )
                     && @OCIFetchInto($result, $buffer, OCI_RETURN_NULLS)
                 ) {
                     ++$this->highest_fetched_row[$result_value];
@@ -1539,7 +1544,7 @@ class MDB_oci8 extends MDB_Common {
         ) {
             if (isset($this->limits[$result_value])) {
                 // upper limit
-                if ($rownum >= $this->limits[$result_value][1]) {
+                if ($rownum > $this->limits[$result_value][1]) {
                     // are all previous rows fetched so that we can set the end
                     // of the result set and not have any "holes" in between?
                     if ($rownum == 0
@@ -1567,7 +1572,7 @@ class MDB_oci8 extends MDB_Common {
                 }
             }
             if (isset($this->row_buffer[$result_value])) {
-                $this->current_row[$result_value]++;
+                ++$this->current_row[$result_value];
                 $this->results[$result_value][$this->current_row[$result_value]] =
                     $this->row_buffer[$result_value];
                 unset($this->row_buffer[$result_value]);
@@ -1579,12 +1584,12 @@ class MDB_oci8 extends MDB_Common {
                 while($this->current_row[$result_value] < $rownum
                     && @OCIFetchInto($result, $buffer, OCI_RETURN_NULLS)
                 ) {
-                    $this->current_row[$result_value]++;
+                    ++$this->current_row[$result_value];
                     $this->results[$result_value][$this->current_row[$result_value]] = $buffer;
                 }
                 // end of result set reached
                 if ($this->current_row[$result_value] < $rownum) {
-                    $this->current_row[$result_value]++;
+                    ++$this->current_row[$result_value];
                     $this->results[$result_value][$this->current_row[$result_value]] = FALSE;
                 }
             }
@@ -1592,7 +1597,7 @@ class MDB_oci8 extends MDB_Common {
                 max($this->highest_fetched_row[$result_value],
                     $this->current_row[$result_value]);
         } else {
-            $this->current_row[$result_value]++;
+            ++$this->current_row[$result_value];
         }
         if (isset($this->results[$result_value][$rownum])
             && $this->results[$result_value][$rownum]

@@ -186,24 +186,43 @@ class MDB_ibase extends MDB_Common
      */
     function errorCode($errormsg)
     {
-        static $error_regexps;
-        if (empty($error_regexps)) {
-            $error_regexps = array(
-                '/[tT]able not found/' => MDB_ERROR_NOSUCHTABLE,
-                '/[tT]able .* already exists/' => MDB_ERROR_ALREADY_EXISTS,
-                '/validation error for column .* value "\*\*\* null/' => MDB_ERROR_CONSTRAINT_NOT_NULL,
-                '/violation of [\w ]+ constraint/' => MDB_ERROR_CONSTRAINT,
-                '/conversion error from string/' => MDB_ERROR_INVALID_NUMBER,
-                '/no permission for/' => MDB_ERROR_ACCESS_VIOLATION,
-                '/arithmetic exception, numeric overflow, or string truncation/' => MDB_ERROR_DIVZERO,
-                '/deadlock/' => MDB_ERROR_DEADLOCK,
-                '/attempt to store duplicate value/' => MDB_ERROR_CONSTRAINT
-            );
+        // memo for the interbase php module hackers: we need something similar
+        // to mysql_errno() to retrieve error codes instead of this ugly hack
+        if (preg_match('/^([^0-9\-]+)([0-9\-]+)\s+(.*)$/', $errormsg, $match)) {
+            $errno = (int)$match[2];
+        } else {
+            $errno = NULL;
         }
-        foreach ($error_regexps as $regexp => $code) {
-            if (preg_match($regexp, $errormsg)) {
-                return $code;
-            }
+        switch ($errno) {
+            case -204:
+                if (is_int(strpos($match[3], 'Table unknown'))) {
+                    return MDB_ERROR_NOSUCHTABLE;
+                }
+            break;
+            default:
+                if (isset($this->errorcode_map[$errno])) {
+                    return($this->errorcode_map[$errno]);
+                }
+                static $error_regexps;
+                if (empty($error_regexps)) {
+                    $error_regexps = array(
+                        '/[tT]able not found/' => MDB_ERROR_NOSUCHTABLE,
+                        '/[tT]able unknown/' => MDB_ERROR_NOSUCHTABLE,
+                        '/[tT]able .* already exists/' => MDB_ERROR_ALREADY_EXISTS,
+                        '/validation error for column .* value "\*\*\* null/' => MDB_ERROR_CONSTRAINT_NOT_NULL,
+                        '/violation of [\w ]+ constraint/' => MDB_ERROR_CONSTRAINT,
+                        '/conversion error from string/' => MDB_ERROR_INVALID_NUMBER,
+                        '/no permission for/' => MDB_ERROR_ACCESS_VIOLATION,
+                        '/arithmetic exception, numeric overflow, or string truncation/' => MDB_ERROR_DIVZERO,
+                        '/deadlock/' => MDB_ERROR_DEADLOCK,
+                        '/attempt to store duplicate value/' => MDB_ERROR_CONSTRAINT
+                    );
+                }
+                foreach ($error_regexps as $regexp => $code) {
+                    if (preg_match($regexp, $errormsg)) {
+                        return $code;
+                    }
+                }
         }
         // Fall back to MDB_ERROR if there was no mapping.
         return MDB_ERROR;
@@ -217,40 +236,17 @@ class MDB_ibase extends MDB_Common
      * callbacks etc.  Basically a wrapper for MDB::raiseError
      * that checks for native error msgs.
      *
-     * @param integer $db_errno error code
+     * @param integer $errno error code
+     * @param string  $message userinfo message
      * @return object a PEAR error object
      * @access public
      * @see PEAR_Error
      */
-    function ibaseRaiseError($db_errno = NULL)
+    function ibaseRaiseError($errno = NULL, $message = NULL)
     {
-        $native_errmsg = $this->errorNative();
-        // memo for the interbase php module hackers: we need something similar
-        // to mysql_errno() to retrieve error codes instead of this ugly hack
-        if (preg_match('/^([^0-9\-]+)([0-9\-]+)\s+(.*)$/', $native_errmsg, $m)) {
-            $native_errno = (int)$m[2];
-        } else {
-            $native_errno = NULL;
-        }
-        // try to map the native error to the DB one
-        if (is_null($db_errno)) {
-            if ($native_errno) {
-                // try to interpret Interbase error code (that's why we need ibase_errno()
-                // in the interbase module to return the real error code)
-                switch ($native_errno) {
-                    case -204:
-                        if (is_int(strpos($m[3], 'Table unknown'))) {
-                            $db_errno = MDB_ERROR_NOSUCHTABLE;
-                        }
-                    break;
-                    default:
-                        $db_errno = $this->errorCode($native_errno);
-                }
-            } else {
-                $db_errno = $this->errorCode($native_errmsg);
-            }
-        }
-        return $this->raiseError($db_errno, NULL, NULL, NULL, $native_errmsg);
+        $error = $this->errorNative();
+        return($this->raiseError($this->errorCode($error), NULL, NULL,
+            $message, $error));
     }
 
     // }}}
@@ -532,7 +528,7 @@ class MDB_ibase extends MDB_Common
                 $this->affected_rows = -1;
             }
         } else {
-            return($this->raiseError(MDB_ERROR, NULL, NULL,
+            return ($this->raiseError(MDB_ERROR, NULL, NULL,
                 '_doQuery: Could not execute query ("'.$query.'"): ' . @ibase_errmsg()));
         }
         return $result;
@@ -706,17 +702,14 @@ class MDB_ibase extends MDB_Common
                 'End of result: attempted to check the end of an unknown result'));
         }
         if (isset($this->results[$result_value]) && end($this->results[$result_value]) === false) {
-            return($this->highest_fetched_row[$result_value] >= $this->current_row[$result_value]-1);
+            return(($this->highest_fetched_row[$result_value]-1) <= $this->current_row[$result_value]);
         }
         if (isset($this->row_buffer[$result_value])) {
-            if ($this->row_buffer[$result_value]) {
-                return false;
-            }
-            return true;
+            return(!$this->row_buffer[$result_value]);
         }
         if (isset($this->limits[$result_value])) {
             if (MDB::isError($this->_skipLimitOffset($result))
-                || $this->current_row[$result_value] + 1 >= $this->limits[$result_value][1]
+                || ($this->current_row[$result_value]) > $this->limits[$result_value][1]
             ) {
                 return true;
             }
@@ -784,7 +777,7 @@ class MDB_ibase extends MDB_Common
         ) {
             if (isset($this->limits[$result_value])) {
                 //upper limit
-                if ($rownum >= $this->limits[$result_value][1]) {
+                if ($rownum > $this->limits[$result_value][1]) {
                     // are all previous rows fetched so that we can set the end
                     // of the result set and not have any "holes" in between?
                     if ($rownum == 0
@@ -811,7 +804,7 @@ class MDB_ibase extends MDB_Common
                 }
             }
             if (isset($this->row_buffer[$result_value])) {
-                $this->current_row[$result_value]++;
+                ++$this->current_row[$result_value];
                 $this->results[$result_value][$this->current_row[$result_value]] =
                     $this->row_buffer[$result_value];
                 unset($this->row_buffer[$result_value]);
@@ -823,12 +816,12 @@ class MDB_ibase extends MDB_Common
                 while ($this->current_row[$result_value] < $rownum
                     && is_array($buffer = @ibase_fetch_row($result))
                 ) {
-                    $this->current_row[$result_value]++;
+                    ++$this->current_row[$result_value];
                     $this->results[$result_value][$this->current_row[$result_value]] = $buffer;
                 }
                 // end of result set reached
                 if ($this->current_row[$result_value] < $rownum) {
-                    $this->current_row[$result_value]++;
+                    ++$this->current_row[$result_value];
                     $this->results[$result_value][$this->current_row[$result_value]] = false;
                 }
             }
@@ -836,7 +829,7 @@ class MDB_ibase extends MDB_Common
                 max($this->highest_fetched_row[$result_value],
                     $this->current_row[$result_value]);
         } else {
-            $this->current_row[$result_value]++;
+            ++$this->current_row[$result_value];
         }
         if (isset($this->results[$result_value][$rownum])
             && $this->results[$result_value][$rownum]
@@ -1073,7 +1066,7 @@ class MDB_ibase extends MDB_Common
                 }
             }
             if (isset($this->row_buffer[$result_value])) {
-                $this->highest_fetched_row[$result_value]++;
+                ++$this->highest_fetched_row[$result_value];
                 $this->results[$result_value][$this->highest_fetched_row[$result_value]]
                     = $this->row_buffer[$result_value];
                 unset($this->row_buffer[$result_value]);
@@ -1082,7 +1075,7 @@ class MDB_ibase extends MDB_Common
                 || $this->results[$result_value][$this->highest_fetched_row[$result_value]] !== false
             ) {
                 while((!isset($this->limits[$result_value])
-                    || $this->highest_fetched_row[$result_value] >= $this->limits[$result_value][1]
+                    || ($this->highest_fetched_row[$result_value]+1) < $this->limits[$result_value][1]
                 )
                     && (is_array($buffer = @ibase_fetch_row($result)))
                 ) {

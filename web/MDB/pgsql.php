@@ -145,6 +145,7 @@ class MDB_pgsql extends MDB_Common
         // Fall back to MDB_ERROR if there was no mapping.
         return(MDB_ERROR);
     }
+
     // }}}
     // {{{ pgsqlRaiseError()
 
@@ -154,20 +155,19 @@ class MDB_pgsql extends MDB_Common
      * that checks for native error msgs.
      *
      * @param integer $errno error code
+     * @param string  $message userinfo message
      * @return object a PEAR error object
      * @access public
      * @see PEAR_Error
      */
-
-    function pgsqlRaiseError($errno = NULL)
+    function pgsqlRaiseError($errno = NULL, $message = NULL)
     {
-        $native = $this->errorNative();
-        if ($errno === NULL) {
-            $err = $this->errorCode($native);
+        if ($this->connection) {
+            $error = @pg_errormessage($this->connection);
         } else {
-            $err = $errno;
+            $error = @pg_errormessage();
         }
-        return($this->raiseError($err, NULL, NULL, NULL, $native));
+        return($this->raiseError($this->errorCode($error), NULL, NULL, $message, $error));
     }
 
     // }}}
@@ -595,7 +595,7 @@ class MDB_pgsql extends MDB_Common
     {
         $result_value = intval($result);
         if (!isset($this->highest_fetched_row[$result_value])) {
-            return($this->RaiseError(MDB_ERROR, NULL, NULL, 'End of result attempted to check the end of an unknown result'));
+            return($this->raiseError(MDB_ERROR, NULL, NULL, 'End of result attempted to check the end of an unknown result'));
         }
         return($this->highest_fetched_row[$result_value] >= $this->numRows($result) - 1);
     }
@@ -1208,7 +1208,7 @@ class MDB_pgsql extends MDB_Common
                 $repeat = 1;
                 $result = $this->createSequence($seq_name);
                 if (MDB::isError($result)) {
-                    return($this->pgsqlRaiseError($result));
+                    return($this->raiseError($result));
                 }
             } else {
                 $repeat = 0;
@@ -1269,7 +1269,7 @@ class MDB_pgsql extends MDB_Common
         }
 
         if ($fetchmode & MDB_FETCHMODE_ASSOC) {
-            $row = @pg_fetch_assoc($result, $rownum, PGSQL_ASSOC);
+            $row = @pg_fetch_array($result, $rownum, PGSQL_ASSOC);
             if (is_array($row) && $this->options['optimize'] == 'portability') {
                 $row = array_change_key_case($row, CASE_LOWER);
             }

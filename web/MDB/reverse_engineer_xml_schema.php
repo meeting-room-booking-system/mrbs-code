@@ -95,11 +95,6 @@ echo ('
                         $dump_what = MDB_MANAGER_DUMP_ALL;
                         break;
                 }
-                if (class_exists('Var_Dump')) {
-                    Var_Dump::display($manager->updateDatabase($_REQUEST['file']));
-                } else {
-                    var_dump($manager->updateDatabase($_REQUEST['file']));
-                }
                 $dump_config = array(
                     'Output_Mode' => 'file',
                     'Output' => $_REQUEST['file']

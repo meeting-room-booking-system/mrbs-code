@@ -392,7 +392,13 @@ class MDB_Common extends PEAR
     {
         // The error is yet a MDB error object
         if (is_object($code)) {
-            $err = PEAR::raiseError($code, NULL, NULL, NULL, NULL, NULL, TRUE);
+            // because we the static PEAR::raiseError, our global
+            // handler should be used if it is set
+            if ($mode === null && !empty($this->_default_error_mode)) {
+                $mode    = $this->_default_error_mode;
+                $options = $this->_default_error_options;
+            }
+            $err = PEAR::raiseError($code, NULL, $mode, $options, NULL, NULL, TRUE);
             return($err);
         }
 
@@ -401,7 +407,7 @@ class MDB_Common extends PEAR
         }
 
         if ($nativecode) {
-            $userinfo .= " [nativecode = $nativecode]";
+            $userinfo .= ' [nativecode=' . trim($nativecode) . ']';
         }
 
         $err = PEAR::raiseError(NULL, $code, $mode, $options, $userinfo, 'MDB_Error', TRUE);
@@ -634,6 +640,50 @@ class MDB_Common extends PEAR
             $text = str_replace($this->escape_quotes, $this->escape_quotes . $this->escape_quotes, $text);
         }
         return str_replace("'", $this->escape_quotes . "'", $text);
+    }
+
+    // }}}
+    // {{{ quoteIdentifier()
+
+    /**
+     * Quote a string so it can be safely used as a table or column name
+     *
+     * Delimiting style depends on which database driver is being used.
+     *
+     * NOTE: just because you CAN use delimited identifiers doesn't mean
+     * you SHOULD use them.  In general, they end up causing way more
+     * problems than they solve.
+     *
+     * Portability is broken by using the following characters inside
+     * delimited identifiers:
+     *   + backtick (<kbd>`</kbd>) -- due to MySQL
+     *   + double quote (<kbd>"</kbd>) -- due to Oracle
+     *   + brackets (<kbd>[</kbd> or <kbd>]</kbd>) -- due to Access
+     *
+     * Delimited identifiers are known to generally work correctly under
+     * the following drivers:
+     *   + mssql
+     *   + mysql
+     *   + mysqli
+     *   + oci8
+     *   + odbc(access)
+     *   + odbc(db2)
+     *   + pgsql
+     *   + sqlite
+     *   + sybase
+     *
+     * InterBase doesn't seem to be able to use delimited identifiers
+     * via PHP 4.  They work fine under PHP 5.
+     *
+     * @param string $str  identifier name to be quoted
+     *
+     * @return string  quoted identifier string
+     *
+     * @access public
+     */
+    function quoteIdentifier($str)
+    {
+        return '"' . str_replace('"', '""', $str) . '"';
     }
 
     // }}}
@@ -3810,7 +3860,6 @@ class MDB_Common extends PEAR
         if ($type != NULL) {
             $type = array($type);
         }
-        $this->setSelectedRowRange(0, 1);
         $result = $this->query($query, $type);
         if (MDB::isError($result)) {
             return($result);
@@ -3837,7 +3886,6 @@ class MDB_Common extends PEAR
      */
     function queryRow($query, $types = NULL, $fetchmode = MDB_FETCHMODE_DEFAULT)
     {
-        $this->setSelectedRowRange(0, 1);
         $result = $this->query($query, $types);
         if (MDB::isError($result)) {
             return($result);
@@ -3931,7 +3979,6 @@ class MDB_Common extends PEAR
             $type = array($type);
         }
         settype($params, 'array');
-        $this->setSelectedRowRange(0, 1);
         if (count($params) > 0) {
             $prepared_query = $this->prepareQuery($query);
             if (MDB::isError($prepared_query)) {
@@ -3983,7 +4030,6 @@ class MDB_Common extends PEAR
     function getRow($query, $types = NULL, $params = array(), $param_types = NULL, $fetchmode = MDB_FETCHMODE_DEFAULT)
     {
         settype($params, 'array');
-        $this->setSelectedRowRange(0, 1);
         if (count($params) > 0) {
             $prepared_query = $this->prepareQuery($query);
             if (MDB::isError($prepared_query)) {

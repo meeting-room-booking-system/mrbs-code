@@ -156,16 +156,50 @@ class MDB_mysql extends MDB_Common
      * that checks for native error msgs.
      *
      * @param integer $errno error code
+     * @param string  $message userinfo message
      * @return object a PEAR error object
      * @access public
      * @see PEAR_Error
      */
-    function mysqlRaiseError($errno = NULL)
+    function mysqlRaiseError($errno = NULL, $message = NULL)
     {
         if ($errno == NULL) {
-            $errno = $this->errorCode(@mysql_errno($this->connection));
+            if ($this->connection) {
+                $errno = @mysql_errno($this->connection);
+            } else {
+                $errno = @mysql_errno();
+            }
         }
-        return($this->raiseError($errno, NULL, NULL, NULL, @mysql_error($this->connection)));
+        if ($this->connection) {
+            $error = @mysql_errno($this->connection);
+        } else {
+            $error = @mysql_error();
+        }
+        return($this->raiseError($this->errorCode($errno), NULL, NULL,
+            $message, $error));
+    }
+
+    // }}}
+    // {{{ quoteIdentifier()
+
+    /**
+     * Quote a string so it can be safely used as a table or column name
+     *
+     * Quoting style depends on which database driver is being used.
+     *
+     * MySQL can't handle the backtick character (<kbd>`</kbd>) in
+     * table or column names.
+     *
+     * @param string $str  identifier name to be quoted
+     *
+     * @return string  quoted identifier string
+     *
+     * @access public
+     * @internal
+     */
+    function quoteIdentifier($str)
+    {
+        return '`' . $str . '`';
     }
 
     // }}}
@@ -741,7 +775,7 @@ class MDB_mysql extends MDB_Common
             max($this->highest_fetched_row[$result_value], $row);
         $res = @mysql_result($result, $row, $field);
         if ($res === FALSE && $res != NULL) {
-            return($this->mysqlRaiseError($errno));
+            return($this->mysqlRaiseError());
         }
         return($res);
     }

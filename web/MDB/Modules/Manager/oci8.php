@@ -311,7 +311,8 @@ class MDB_Manager_oci8 extends MDB_Manager_Common {
                         $change .= ' '.$db->getTypeDeclaration($fields[$current_name]['Definition']);
                     }
                     if ($change_default) {
-                        $change .= ' DEFAULT '.(isset($fields[$current_name]['Definition']['default']) ? $db->getFieldValue($fields[$current_name]['Definition']['type'], $fields[$current_name]['Definition']['default']) : 'NULL');
+                        $change .= ' DEFAULT '.(isset($fields[$current_name]['Definition']['default'])
+                            ? $db->getFieldValue($fields[$current_name]['Definition']['type'], $fields[$current_name]['Definition']['default']) : 'NULL');
                     }
                     if (isset($fields[$current_name]['ChangedNotNull'])) {
                         $change .= (isset($fields[$current_name]['notnull']) ? ' NOT' : '').' NULL';
@@ -341,7 +342,51 @@ class MDB_Manager_oci8 extends MDB_Manager_Common {
      */
     function listDatabases(&$db)
     {
-        return($db->queryCol("SELECT table_name, tablespace_name FROM user_tables"));
+        $query = "SELECT table_name, tablespace_name FROM user_tables";
+        return($db->queryCol($query));
+    }
+
+    // }}}
+    // {{{ listTables()
+
+    /**
+     * list all tables in the current database
+     *
+     * @param object    $db        database object that is extended by this class
+     * @return mixed data array on success, a MDB error on failure
+     * @access public
+     **/
+    function listTables(&$db)
+    {
+        $query = 'SELECT table_name FROM sys.user_tables';
+        return($db->queryCol($sql));
+    }
+
+    // }}}
+    // {{{ listTableFields()
+
+    /**
+     * list all fields in a tables in the current database
+     *
+     * @param object    $db        database object that is extended by this class
+     * @param string $table name of table that should be used in method
+     * @return mixed data array on success, a MDB error on failure
+     * @access public
+     */
+    function listTableFields(&$db, $table)
+    {
+        $table = strtoupper($table);
+        $query = "SELECT column_name FROM user_tab_columns WHERE table_name='$table' ORDER BY column_id";
+        $columns = $db->queryCol($query);
+        if (MDB::isError($result)) {
+            return($result);
+        }
+        if ($db->options['optimize'] == 'portability') {
+            $columns = array_flip($columns);
+            $columns = array_change_key_case($columns, CASE_LOWER);
+            $columns = array_flip($columns);
+        }
+        return($columns);
     }
 
     // }}}
@@ -359,7 +404,8 @@ class MDB_Manager_oci8 extends MDB_Manager_Common {
     function createSequence(&$db, $seq_name, $start)
     {
         $sequence_name = $db->getSequenceName($seq_name);
-        return($db->query("CREATE SEQUENCE $sequence_name START WITH $start INCREMENT BY 1".($start < 1 ? " MINVALUE $start" : '')));
+        return $db->query("CREATE SEQUENCE $sequence_name START WITH $start INCREMENT BY 1".
+            ($start < 1 ? " MINVALUE $start" : ''));
     }
 
     // }}}

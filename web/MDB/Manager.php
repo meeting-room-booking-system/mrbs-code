@@ -1820,7 +1820,10 @@ class MDB_Manager extends PEAR
                 return($this->raiseError(MDB_ERROR_NODBSELECTED,
                     NULL, NULL, 'please connect to a RDBMS first'));
             }
-            $this->getDefinitionFromDatabase();
+            $error = $this->getDefinitionFromDatabase();
+            if(MDB::isError($error)) {
+                return($error);
+            }
             $dump_definition = FALSE;
         }
         if(isset($arguments['Output'])) {

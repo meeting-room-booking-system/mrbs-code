@@ -95,7 +95,7 @@ class MDB_fbsql extends MDB_Common
         $this->supported['AffectedRows'] = 1;
         $this->supported['Summaryfunctions'] = 1;
         $this->supported['OrderByText'] = 1;
-        $this->supported['CurrId'] = 1;
+        $this->supported['CurrId'] = 0;
         $this->supported['SelectRowRanges'] = 1;
         $this->supported['LOBs'] = 1;
         $this->supported['Replace'] = 1;
@@ -146,16 +146,27 @@ class MDB_fbsql extends MDB_Common
      * that checks for native error msgs.
      *
      * @param integer $errno error code
+     * @param string  $message userinfo message
      * @return object a PEAR error object
      * @access public
      * @see PEAR_Error
      */
-    function fbsqlRaiseError($errno = NULL)
+    function fbsqlRaiseError($errno = NULL, $message = NULL)
     {
         if ($errno == NULL) {
-            $errno = $this->errorCode(@fbsql_errno($this->connection));
+            if ($this->connection) {
+                $errno = @fbsql_errno($this->connection);
+            } else {
+                $errno = @fbsql_errno();
+            }
         }
-        return($this->raiseError($errno, NULL, NULL, NULL, @fbsql_error($this->connection)));
+        if ($this->connection) {
+            $error = @fbsql_errno($this->connection);
+        } else {
+            $error = @fbsql_error();
+        }
+        return($this->raiseError($this->errorCode($errno), NULL, NULL,
+            $message, $error));
     }
 
     // }}}
@@ -520,7 +531,7 @@ class MDB_fbsql extends MDB_Common
         }
         $res = @fbsql_result($result, $row, $field);
         if ($res === FALSE && $res != NULL) {
-            return($this->fbsqlRaiseError($errno));
+            return($this->fbsqlRaiseError());
         }
         return($res);
     }
@@ -1195,27 +1206,6 @@ class MDB_fbsql extends MDB_Common
             $this->warnings[] = 'Next ID: could not delete previous sequence table values';
         }
         return($value);
-    }
-
-    // }}}
-    // {{{ currId()
-
-    /**
-     * returns the current id of a sequence
-     *
-     * @param string  $seq_name name of the sequence
-     * @return mixed MDB_Error or id
-     * @access public
-     */
-    function currId($seq_name)
-    {
-        $sequence_name = $this->getSequenceName($seq_name);
-        $result = $this->query("SELECT MAX(sequence) FROM $sequence_name", 'integer');
-        if (MDB::isError($result)) {
-            return($result);
-        }
-
-        return($this->fetchOne($result));
     }
 
     // }}}
