@@ -63,6 +63,11 @@ Recommended:
 
 (If you are considering porting MRBS to another database, see README.sqlapi)
 
+Warning:
+- Some users reported errors using some accelerators (APC, PHP Accelerator).
+  IF you get messages like this : "Internal Zend error - Missing class
+  information for ...", your accelerator is the cause.
+
 ------
 Usage:
 ------
