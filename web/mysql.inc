@@ -195,6 +195,26 @@ function sql_syntax_caseless_contains($fieldname, $s)
 	return " $fieldname LIKE '%$s%' ";
 }
 
+// Returns the name of a field.
+function sql_field_name($result, $index)
+{
+	return mysql_field_name($result, $index);
+}
+
+// Returns the type of a field. (one of "int", "real", "string", "blob", etc...)
+function sql_field_type($result, $index)
+{
+	return mysql_field_type($result, $index);
+}
+
+// Returns the number of fields in a result.
+function sql_num_fields($result)
+{
+	return mysql_num_fields($result);
+}
+
+
+
 // Establish a database connection.
 // On connection error, the message will be output without a proper HTML
 // header. There is no way I can see around this; if track_errors isn't on
@@ -210,4 +230,5 @@ if (!$db_c || !mysql_select_db ($db_database))
 	echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n";
 	exit;
 }
+
 ?>

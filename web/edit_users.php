@@ -60,13 +60,18 @@ CREATE TABLE $tbl_users
     }
 
 /* Get the list of fields actually in the table. (Allows the addition of new fields later on) */
-$result = sql_query("show fields from $tbl_users");
-$nfields = sql_count($result);
-for ($i=0; $i<$nfields; $i++)
+$result = sql_query("select * from $tbl_users limit 1");
+$nfields = sql_num_fields($result);
+for ($i=0; $i<$nfields ;$i++)
     {
-    $line = sql_row($result, $i);
-    $field_name[$i] = $line[0]; /* OK with MySQL. Is this portable to other SQL versions? */
-    $field_type[$i] = $line[1]; /* OK with MySQL. Is this portable to other SQL versions? */
+    $field_name[$i] = sql_field_name($result, $i);
+// print "<p>field_name[$i] = $field_name[$i]</p>\n";
+    $field_type[$i] = sql_field_type($result, $i);
+// print "<p>field_type[$i] = $field_type[$i]</p>\n";
+    $field_istext[$i] = ((stristr($field_type[$i], "char")) || (stristr($field_type[$i], "string"))) ? true : false;
+// print "<p>field_istext[$i] = $field_istext[$i]</p>\n";
+    $field_isnum[$i] = ((stristr($field_type[$i], "int")) || (stristr($field_type[$i], "real"))) ? true : false;
+// print "<p>field_isnum[$i] = $field_isnum[$i]</p>\n";
     }
 sql_free($result);
 
@@ -228,10 +233,10 @@ if (isset($Action) && ($Action == "Update"))
         if (($field_name[$i]=="password") && ($password0!="")) $Field[$i]=md5($password0);
         /* print "$field_name[$i] = $Field[$i]<br>"; */
         if ($i > 0) $operation = $operation . ", ";
-        if (stristr($field_type[$i], "char")) $operation .= "'";
-        if ((stristr($field_type[$i], "int")) && ($Field[$i] == "")) $Field[$i] = "0";
+        if ($field_istext[$i]) $operation .= "'";
+        if ($field_isnum[$i] && ($Field[$i] == "")) $Field[$i] = "0";
         $operation = $operation . $Field[$i];
-        if (stristr($field_type[$i], "char")) $operation .= "'";
+        if ($field_istext[$i]) $operation .= "'";
         }
     $operation = $operation . ");";
 
