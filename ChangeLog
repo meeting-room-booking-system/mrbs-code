@@ -1,3 +1,10 @@
+CVS (Mon Oct 14 16:42:00 BST 2002)
+   Fixes submitted/suggested by Jean-François Larvoire:
+   - Added closing ?> to index.php
+   - Added "global $refresh_rate;" to style.inc
+   - Fixed all occurences (hopefully) of $vocab[] indices
+     written without surrounding quotes.
+
 CVS (Tue Oct  8 13:30:00 BST 2002)
    - Changed all uses of <? to <?php.
    - Merged change from John Beranek for an Advanced search function,

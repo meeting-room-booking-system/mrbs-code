@@ -35,7 +35,7 @@ print_header($day, $month, $year, isset($area) ? $area : "");
 
 ?>
 
-<h2><?php echo $vocab[editroomarea] ?></h2>
+<h2><?php echo $vocab["editroomarea"] ?></h2>
 
 <table border=1>
 
@@ -56,21 +56,21 @@ if(!empty($room)) {
 	$row = sql_row_keyed($res, 0);
 	sql_free($res);
 ?>
-<h3 ALIGN=CENTER><?php echo $vocab[editroom] ?></h3>
+<h3 ALIGN=CENTER><?php echo $vocab["editroom"] ?></h3>
 <form action="edit_area_room.php" method="post">
 <input type=hidden name="room" value="<?php echo $row["id"]?>">
 <CENTER>
 <TABLE>
-<TR><TD><?php echo $vocab[name] ?>:       </TD><TD><input type=text name="room_name" value="<?php
+<TR><TD><?php echo $vocab["name"] ?>:       </TD><TD><input type=text name="room_name" value="<?php
 echo htmlspecialchars($row["room_name"]); ?>"></TD></TR>
-<TR><TD><?php echo $vocab[description] ?></TD><TD><input type=text name=description value="<?php
+<TR><TD><?php echo $vocab["description"] ?></TD><TD><input type=text name=description value="<?php
 echo htmlspecialchars($row["description"]); ?>"></TD></TR>
-<TR><TD><?php echo $vocab[capacity] ?>:   </TD><TD><input type=text name=capacity value="<?php
+<TR><TD><?php echo $vocab["capacity"] ?>:   </TD><TD><input type=text name=capacity value="<?php
 echo $row["capacity"]; ?>"></TD></TR>
 </TABLE>
 <input type=submit name="change_room"
-value="<?php echo $vocab[change] ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type=submit name="change_done" value="<?php echo $vocab[backadmin] ?>">
+value="<?php echo $vocab["change"] ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=submit name="change_done" value="<?php echo $vocab["backadmin"] ?>">
 </CENTER>
 </form>
 <?php } ?>
@@ -91,17 +91,17 @@ if(!empty($area))
 	$row = sql_row_keyed($res, 0);
 	sql_free($res);
 ?>
-<h3 ALIGN=CENTER><?php echo $vocab[editarea] ?></h3>
+<h3 ALIGN=CENTER><?php echo $vocab["editarea"] ?></h3>
 <form action="edit_area_room.php" method="post">
 <input type=hidden name="area" value="<?php echo $row["id"]?>">
 <CENTER>
 <TABLE>
-<TR><TD><?php echo $vocab[name] ?>:       </TD><TD><input type=text name="area_name" value="<?php
+<TR><TD><?php echo $vocab["name"] ?>:       </TD><TD><input type=text name="area_name" value="<?php
 echo htmlspecialchars($row["area_name"]); ?>"></TD></TR>
 </TABLE>
 <input type=submit name="change_area"
-value="<?php echo $vocab[change] ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type=submit name="change_done" value="<?php echo $vocab[backadmin] ?>">
+value="<?php echo $vocab["change"] ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=submit name="change_done" value="<?php echo $vocab["backadmin"] ?>">
 </CENTER>
 </form>
 <?php } ?>

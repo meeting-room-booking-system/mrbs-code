@@ -10,3 +10,4 @@ $year  = date("Y");
 
 header("Location: day.php?day=$day&month=$month&year=$year");
 
+?>
