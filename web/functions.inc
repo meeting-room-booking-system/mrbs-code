@@ -34,6 +34,12 @@ function print_header($day, $month, $year, $area)
  </HEAD>
  <BODY BGCOLOR="#ffffed" TEXT=black LINK="#5B69A6" VLINK="#5B69A6" ALINK=red>
 	   <? if ( $GLOBALS["pview"] != 1 ) { ?>
+
+   <? # show a warning if this is using a low version of php
+       if (substr(phpversion(), 0, 1) == 3)
+	       echo "<H1>WARNING: This probably doesn't work with PHP3</H1>";
+   ?>
+
    <TABLE WIDTH="100%">
     <TR>
       <TD BGCOLOR="#5B69A6">
