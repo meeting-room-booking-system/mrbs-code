@@ -12,7 +12,7 @@ function date_time_string($t)
         global $twentyfourhour_format;
         if ($twentyfourhour_format)
 	{
-                $timeformat = "%T";
+                $timeformat = "%H:%M:%S";
 	}
 	else
 	{
@@ -32,7 +32,7 @@ function describe_span($starts, $ends)
 	$start_date = utf8_strftime('%A %d %B %Y', $starts);
         if ($twentyfourhour_format)
 	{
-                $timeformat = "%T";
+                $timeformat = "%H:%M:%S";
 	}
 	else
 	{

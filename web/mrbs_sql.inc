@@ -56,7 +56,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
         	$startstr = utf8_strftime('%A %d %B %Y, ', $row[2]) . $periods[$p_num];
         }
 		else
-        	$startstr = utf8_strftime('%A %d %B %Y %T', $row[2]);
+        	$startstr = utf8_strftime('%A %d %B %Y %H:%M:%S', $row[2]);
 
         $err .= "<LI><A HREF=\"view_entry.php?id=$row[0]\">$row[1]</A>"
 		. " ( " . $startstr . ") "
