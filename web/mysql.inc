@@ -207,7 +207,7 @@ else
 
 if (!$db_c || !mysql_select_db ($db_database))
 {
-	echo "\n<p>\nFatal Error: Failed to connect to database\n";
+	echo "\n<p>\n" . $vocab['failed_connect_db'] . "\n";
 	exit;
 }
 ?>
