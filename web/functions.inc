@@ -30,12 +30,12 @@ function print_header($day, $month, $year, $area)
       <TD BGCOLOR="#5B69A6">
        <TABLE WIDTH="100%" BORDER=0>
         <TR>
-         <TD CLASS=banner BGCOLOR="#C0E0FF">
+         <TD CLASS="banner" BGCOLOR="#C0E0FF">
           <FONT SIZE=4><B><? echo $mrbs_company ?></B><BR>
            <A HREF="index.php"><? echo $lang["mrbs"] ?></A>
           </FONT>
          </TD>
-         <TD CLASS=banner BGCOLOR="#C0E0FF">
+         <TD CLASS="banner" BGCOLOR="#C0E0FF">
           <FORM ACTION="day.php" METHOD=GET>
            <FONT SIZE=2>
 <?
@@ -48,16 +48,16 @@ function print_header($day, $month, $year, $area)
            </FONT>
           </FORM>
          </TD>
-         <TD CLASS=banner BGCOLOR="#C0E0FF" ALIGN=CENTER>
+         <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
           <A HREF="help.php?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>">Help</A>
          </TD>
-         <TD CLASS=banner BGCOLOR="#C0E0FF" ALIGN=CENTER>
+         <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
           <A HREF="admin.php?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>">Admin</A>
          </TD>
-         <TD CLASS=banner BGCOLOR="#C0E0FF" ALIGN=CENTER>
+         <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
           <A HREF="report.php">Report</A>
          </TD>
-         <TD CLASS=banner BGCOLOR="#C0E0FF" ALIGN=CENTER>
+         <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
           <FORM METHOD=GET ACTION="search.php">
            <FONT SIZE=2>Search: </FONT>
            <INPUT TYPE=TEXT   NAME="search_str" VALUE="<? echo $search_str ?>" SIZE=10>
@@ -212,9 +212,9 @@ function tdcell($colclass)
 		"G"=>"#FF6666", "H"=>"#66FFFF", "I"=>"#DDFFDD", "J"=>"#CCCCCC",
 		"red"=>"#FFF0F0", "white"=>"#FFFFFF");
 	if (isset($ecolors[$colclass]))
-		echo "<td class=$colclass bgcolor=\"$ecolors[$colclass]\">";
+		echo "<td class=\"$colclass\" bgcolor=\"$ecolors[$colclass]\">";
 	else
-		echo "<td class=$colclass>";
+		echo "<td class=\"$colclass\">";
 }
 
 # Display the entry-type color key. This has up to 2 rows, up to 5 columns.

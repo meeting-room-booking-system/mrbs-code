@@ -35,20 +35,20 @@ function reporton(&$row, &$last_area_room)
 	echo "<hr><table width=\"100%\">\n";
 
 	# Brief Description (title), linked to view_entry:
-	echo "<tr><td class=BL><a href=\"view_entry.php?id=$row[0]\">"
+	echo "<tr><td class=\"BL\"><a href=\"view_entry.php?id=$row[0]\">"
 		. htmlspecialchars($row[3]) . "</a></td>\n";
 
 	# From date-time and duration:
-	echo "<td class=BR align=right>" . describe_span($row[1], $row[2]) . "</td></tr>\n";
+	echo "<td class=\"BR\" align=right>" . describe_span($row[1], $row[2]) . "</td></tr>\n";
 	# Description:
-	echo "<tr><td class=BL colspan=2><b>$lang[description]</b> " .
+	echo "<tr><td class=\"BL\" colspan=2><b>$lang[description]</b> " .
 		nl2br(htmlspecialchars($row[4])) . "</td></tr>\n";
 
 	# Entry Type:
 	$et = empty($typel[$row[5]]) ? "?$row[5]?" : $typel[$row[5]];
-	echo "<tr><td class=BL colspan=2><b>$lang[type]</b> $et</td></tr>\n";
+	echo "<tr><td class=\"BL\" colspan=2><b>$lang[type]</b> $et</td></tr>\n";
 	# Created by and last update timestamp:
-	echo "<tr><td class=BL colspan=2><small><b>$lang[createdby]</b> " .
+	echo "<tr><td class=\"BL\" colspan=2><small><b>$lang[createdby]</b> " .
 		htmlspecialchars($row[6]) . ", <b>$lang[lastupdate]</b> " .
 		strftime("%A %d %B %Y %T", $row[7]) . "</small></td></tr>\n";
 
@@ -79,7 +79,7 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
 # Output a table cell containing a count (integer) and hours (float):
 function cell($count, $hours)
 {
-	echo "<td class=BR align=right>($count) "
+	echo "<td class=\"BR\" align=right>($count) "
 	. sprintf("%.2f", $hours) . "</td>\n";
 }
 
@@ -106,11 +106,11 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 	echo "<tr><td>&nbsp;</td>\n";
 	for ($c = 0; $c < $n_rooms; $c++)
 	{
-		echo "<td class=BL align=left><b>$rooms[$c]</b></td>\n";
+		echo "<td class=\"BL\" align=left><b>$rooms[$c]</b></td>\n";
 		$col_count_total[$c] = 0;
 		$col_hours_total[$c] = 0.0;
 	}
-	echo "<td class=BR align=right><br><b>$lang[total]</b></td></tr>\n";
+	echo "<td class=\"BR\" align=right><br><b>$lang[total]</b></td></tr>\n";
 	$grand_count_total = 0;
 	$grand_hours_total = 0;
 
@@ -119,7 +119,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 		$row_count_total = 0;
 		$row_hours_total = 0.0;
 		$name = $names[$r];
-		echo "<tr><td class=BR align=right><b>$name</b></td>\n";
+		echo "<tr><td class=\"BR\" align=right><b>$name</b></td>\n";
 		for ($c = 0; $c < $n_rooms; $c++)
 		{
 			$room = $rooms[$c];
@@ -141,7 +141,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 		$grand_count_total += $row_count_total;
 		$grand_hours_total += $row_hours_total;
 	}
-	echo "<tr><td class=BR align=right><b>$lang[total]</b></td>\n";
+	echo "<tr><td class=\"BR\" align=right><b>$lang[total]</b></td>\n";
 	for ($c = 0; $c < $n_rooms; $c++)
 		cell($col_count_total[$c], $col_hours_total[$c]);
 	cell($grand_count_total, $grand_hours_total);
@@ -201,32 +201,32 @@ if (empty($sumby)) $sumby = "d";
 <h1><? echo $lang["report_on"];?></h1>
 <form method=post action=report.php>
 <table>
-<tr><td class=CR><? echo $lang["report_start"];?></td>
-    <td class=CL> <font size="-1">
+<tr><td class="CR"><? echo $lang["report_start"];?></td>
+    <td class="CL"> <font size="-1">
     <? genDateSelector("From_", $From_day, $From_month, $From_year); ?>
     </font></td></tr>
-<tr><td class=CR><? echo $lang["report_end"];?></td>
-    <td class=CL> <font size="-1">
+<tr><td class="CR"><? echo $lang["report_end"];?></td>
+    <td class="CL"> <font size="-1">
     <? genDateSelector("To_", $To_day, $To_month, $To_year); ?>
     </font></td></tr>
-<tr><td class=CR><? echo $lang["match_area"];?></td>
-    <td class=CL><input type=text name=areamatch size=18
+<tr><td class="CR"><? echo $lang["match_area"];?></td>
+    <td class="CL"><input type=text name=areamatch size=18
     value="<? echo $areamatch_default; ?>">
     </td></tr>
-<tr><td class=CR><? echo $lang["match_room"];?></td>
-    <td class=CL><input type=text name=roommatch size=18
+<tr><td class="CR"><? echo $lang["match_room"];?></td>
+    <td class="CL"><input type=text name=roommatch size=18
     value="<? echo $roommatch_default; ?>">
     </td></tr>
-<tr><td class=CR><? echo $lang["match_entry"];?></td>
-    <td class=CL><input type=text name=namematch size=18
+<tr><td class="CR"><? echo $lang["match_entry"];?></td>
+    <td class="CL"><input type=text name=namematch size=18
     value="<? echo $namematch_default; ?>">
     </td></tr>
-<tr><td class=CR><? echo $lang["match_descr"];?></td>
-    <td class=CL><input type=text name=descrmatch size=18
+<tr><td class="CR"><? echo $lang["match_descr"];?></td>
+    <td class="CL"><input type=text name=descrmatch size=18
     value="<? echo $descrmatch_default; ?>">
     </td></tr>
-<tr><td class=CR><? echo $lang["include"];?></td>
-    <td class=CL>
+<tr><td class="CR"><? echo $lang["include"];?></td>
+    <td class="CL">
       <input type=radio name=summarize value=1<? if ($summarize==1) echo " checked";
         echo ">" . $lang["report_only"];?>
       <input type=radio name=summarize value=2<? if ($summarize==2) echo " checked";
@@ -234,8 +234,8 @@ if (empty($sumby)) $sumby = "d";
       <input type=radio name=summarize value=3<? if ($summarize==3) echo " checked";
         echo ">" . $lang["report_and_summary"];?>
     </td></tr>
-<tr><td class=CR><? echo $lang["summarize_by"];?></td>
-    <td class=CL>
+<tr><td class="CR"><? echo $lang["summarize_by"];?></td>
+    <td class="CL">
       <input type=radio name=sumby value=d<? if ($sumby=="d") echo " checked";
         echo ">" . $lang["sum_by_descrip"];?>
       <input type=radio name=sumby value=c<? if ($sumby=="c") echo " checked";

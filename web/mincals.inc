@@ -90,7 +90,7 @@ class Calendar
       {
          $show = $basetime + ($i * 24 * 60 * 60);
          $fl = substr(strftime('%a',$show),0,1);
-         $s .= "<td align=center valign=top class=calendarHeader>$fl</td>\n";
+         $s .= "<td align=center valign=top class=\"calendarHeader\">$fl</td>\n";
       }
       return $s;
     }
@@ -111,10 +111,10 @@ class Calendar
     	$prevMonth = $this->getCalendarLink($this->month - 1 >   0 ? $this->month - 1 : 12, $this->month - 1 >   0 ? $this->year : $this->year - 1);
     	$nextMonth = $this->getCalendarLink($this->month + 1 <= 12 ? $this->month + 1 :  1, $this->month + 1 <= 12 ? $this->year : $this->year + 1);
     	
-    	$s .= "<table class=calendar>\n";
+    	$s .= "<table class=\"calendar\">\n";
     	$s .= "<tr>\n";
     	//$s .= "<td align=center valign=top>" . (($prevMonth == "") ? "&nbsp;" : "<a href=\"$prevMonth\">&lt;&lt;</a>")  . "</td>\n";
-    	$s .= "<td align=center valign=top class=calendarHeader colspan=7>$monthName&nbsp;$this->year</td>\n"; 
+    	$s .= "<td align=center valign=top class=\"calendarHeader\" colspan=7>$monthName&nbsp;$this->year</td>\n"; 
     	//$s .= "<td align=center valign=top>" . (($nextMonth == "") ? "&nbsp;" : "<a href=\"$nextMonth\">&gt;&gt;</a>")  . "</td>\n";
     	$s .= "</tr>\n";
     	
@@ -130,14 +130,14 @@ class Calendar
     	    
     	    for ($i = 0; $i < 7; $i++)
     	    {
-    	        $s .= "<td class=calendar align=right valign=top>";       
+    	        $s .= "<td class=\"calendar\" align=right valign=top>";       
     	        if ($d > 0 && $d <= $daysInMonth)
     	        {
     	            $link = $this->getDateLink($d, $this->month, $this->year);
                     if ($link == "")
                         $s .= $d;
                     elseif (($d == $this->day) and ($this->h))
-                        $s .= "<a href=\"$link\"><font color=red>$d</font></a>";
+                        $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
                     else
                         $s .= "<a href=\"$link\">$d</a>";
     	        }

@@ -275,7 +275,7 @@ else
 {
 	$key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
 	
-	echo "<tr><td class=CR><b>$lang[rep_type]</b></td><td class=CL>$lang[$key]</td></tr>\n";
+	echo "<tr><td class=\"CR\"><b>$lang[rep_type]</b></td><td class=\"CL\">$lang[$key]</td></tr>\n";
 	
 	if(isset($rep_type) && ($rep_type != 0))
 	{
@@ -290,9 +290,9 @@ else
 			}
 		}
 		if($opt)
-			echo "<tr><td class=CR><b>$lang[rep_rep_day]</b></td><td class=CL>$opt</td></tr>\n";
+			echo "<tr><td class=\"CR\"><b>$lang[rep_rep_day]</b></td><td class=\"CL\">$opt</td></tr>\n";
 		
-		echo "<tr><td class=CR><b>$lang[rep_end_date]</b></td><td class=CL>$rep_end_date</td></tr>\n";
+		echo "<tr><td class=\"CR\"><b>$lang[rep_end_date]</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
 	}
 }
 ?>

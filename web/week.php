@@ -65,7 +65,7 @@ if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	if ($row[0] == $area)
 	{
 		$this_area_name = htmlspecialchars($row[1]);
-		echo "<font color=red>$this_area_name</font></a><br>\n";
+		echo "<font color=\"red\">$this_area_name</font></a><br>\n";
 	}
 	else echo htmlspecialchars($row[1]) . "</a><br>\n";
 }
@@ -81,7 +81,7 @@ if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	if ($row[0] == $room)
 	{
 		$this_room_name = htmlspecialchars($row[1]);
-		echo "<font color=red>$this_room_name</font></a><br>\n";
+		echo "<font color=\"red\">$this_room_name</font></a><br>\n";
 	}
 	else echo htmlspecialchars($row[1]) . "</a><br>\n";
 }

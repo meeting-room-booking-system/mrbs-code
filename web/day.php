@@ -37,7 +37,7 @@ if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 {
 	echo "<a href=\"day.php?year=$year&month=$month&day=$day&area=$row[0]\">";
 	if ($row[0] == $area)
-		echo "<font color=red>" . htmlspecialchars($row[1]) . "</font></a><br>\n";
+		echo "<font color=\"red\">" . htmlspecialchars($row[1]) . "</font></a><br>\n";
 	else echo htmlspecialchars($row[1]) . "</a><br>\n";
 }
 

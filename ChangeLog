@@ -1,4 +1,8 @@
 CVS:
+    Added double quotes around all uses of color and class attributes, as HTML
+    dictates. (jberanek)
+
+CVS:
     On conflict, show start time and link to day/week/month views (redinger)
     Link each search result start time to entry's day view (bernd, beranak)
 
