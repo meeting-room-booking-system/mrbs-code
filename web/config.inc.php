@@ -213,12 +213,13 @@ $typel["I"] = get_vocab("internal");
 # $typel["J"] = "J";
 
 ##########################################
-# PHP System Configuration - do not change
+# PHP System Configuration - internal use, do not change
 ##########################################
 # Disable magic quoting on database returns:
 set_magic_quotes_runtime(0);
 
 # Make sure notice errors are not reported, they can break mrbs code:
 error_reporting (E_ALL ^ E_NOTICE);
+$mrbs_version = "MRBS 1.2-pre1";
 
 ?>

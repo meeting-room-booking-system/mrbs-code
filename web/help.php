@@ -7,8 +7,6 @@ include "config.inc.php";
 include "$dbsys.inc";
 include "functions.inc";
 
-$mrbs_version = "MRBS 1.2-pre1";
-
 #If we dont know the right date then make it up
 if(!isset($day) or !isset($month) or !isset($year))
 {
