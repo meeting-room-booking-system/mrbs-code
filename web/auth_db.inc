@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*****************************************************************************\
 *									      *
 *   File name       auth_db.inc						      *
@@ -34,8 +34,13 @@ $user_link = "edit_users.php";
 
 function authValidateUser($user, $pass)
 {
+   global $mdb;
    $user=strtolower($user);
-   return sql_query1("select count(*) from mrbs_users where name='$user' and password='$pass';");
+   //return sql_query1("select count(*) from mrbs_users where name='$user' and password='$pass';");
+   return $mdb->queryOne("SELECT count(*)
+   						  FROM   mrbs_users
+                          WHERE  name=" . $mdb->getTextValue("$user") . "
+                          AND    password=" . $mdb->getTextValue("$pass"), 'integer');
 }
 
 /* authGetUserLevel($user)
