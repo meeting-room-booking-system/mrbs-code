@@ -37,17 +37,17 @@ echo "<H3>" . $lang["search_results"] . " \"<font color=\"blue\">$search_str</fo
 
 $now = mktime(0, 0, 0, $month, $day, $year);
 
-# This is the main part of the query predicate:
-$sql_pred = "( " . sql_syntax_caseless_contains("create_by", $search_text)
-		. " OR " . sql_syntax_caseless_contains("name", $search_text)
-		. " OR " . sql_syntax_caseless_contains("description", $search_text)
-		. ") AND end_time > $now";
+# This is the main part of the query predicate, used in both queries:
+$sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_text)
+		. " OR " . sql_syntax_caseless_contains("E.name", $search_text)
+		. " OR " . sql_syntax_caseless_contains("E.description", $search_text)
+		. ") AND E.end_time > $now";
 
 # The first time the search is called, we get the total
 # number of matches.  This is passed along to subsequent
 # searches so that we don't have to run it for each page.
 if(!isset($total))
-	$total = sql_query1("SELECT count(*) FROM mrbs_entry WHERE $sql_pred");
+	$total = sql_query1("SELECT count(*) FROM mrbs_entry E WHERE $sql_pred");
 
 if($total <= 0)
 {
@@ -62,10 +62,11 @@ elseif($search_pos >= $total)
 	$search_pos = $total - ($total % $search["count"]);
 
 # Now we set up the "real" query using LIMIT to just get the stuff we want.
-$sql = "SELECT id, create_by, name, description, start_time
-        FROM mrbs_entry
+$sql = "SELECT E.id, E.create_by, E.name, E.description, E.start_time, R.area_id
+        FROM mrbs_entry E, mrbs_room R
         WHERE $sql_pred
-        ORDER BY start_time asc "
+        AND E.room_id = R.id
+        ORDER BY E.start_time asc "
     . sql_syntax_limit($search["count"], $search_pos);
 
 # this is a flag to tell us not to display a "Next" link
@@ -122,18 +123,18 @@ if($has_prev || $has_next)
 <?
 for ($i = 0; ($row = sql_row($result, $i)); $i++)
 {
-?>
-   <TR>
-    <TD><A HREF="view_entry.php?id=<? echo $row[0] . "\">" . $lang["view"] ?></A></TD>
-    <TD><? echo $row[1] ?></TD>
-    <TD><? echo htmlspecialchars($row[2]) ?></TD>
-    <TD><? echo htmlspecialchars($row[3]) ?></TD>
-    <TD><? echo strftime('%X - %A %d %B %Y', $row[4]) ?></TD>
-   </TR>
-<?
+	echo "<TR>";
+	echo "<TD><A HREF=\"view_entry.php?id=$row[0]\">$lang[view]</A></TD>\n";
+	echo "<TD>" . htmlspecialchars($row[1]) . "</TD>\n";
+	echo "<TD>" . htmlspecialchars($row[2]) . "</TD>\n";
+	echo "<TD>" . htmlspecialchars($row[3]) . "</TD>\n";
+	// generate a link to the day.php
+	$link = getdate($row[4]);
+	echo "<TD><A HREF=\"day.php?day=$link[mday]&month=$link[mon]&year=$link[year]&area=$row[5]\">"
+	.  strftime('%X - %A %d %B %Y', $row[4]) . "</A></TD>";
+	echo "</TR>\n";
 }
-?>
-  </TABLE>
-<?
+
+echo "</TABLE>\n";
 include "trailer.inc";
 ?>
