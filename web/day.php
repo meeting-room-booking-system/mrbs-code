@@ -209,7 +209,7 @@ else
 
 				echo "<center>";
 				if ( $pview != 1 ) {
-					echo "<a href=\"edit_entry.php?room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day\"><img src=new.gif width=10 height=10 border=0></a>";
+					echo "<a href=\"edit_entry.php?area=$area&room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day\"><img src=new.gif width=10 height=10 border=0></a>";
 				} else echo '&nbsp;';
 				echo "</center>";
 			}
