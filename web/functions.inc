@@ -455,71 +455,52 @@ function round_t_up($t, $resolution, $am7)
 # displayed.
 function make_area_select_html( $link, $current, $year, $month, $day )
 {
-	$out_html = "<form name=\"area\">
-	             <select name=\"area\" onChange=\"area_go()\">";
+	$out_html = "
+<form name=\"areaChangeForm\" method=get action=\"$link\">
+  <select name=\"area\" onChange=\"document.areaChangeForm.submit()\">";
 
 	$sql = "select id, area_name from mrbs_area order by area_name";
    	$res = sql_query($sql);
    	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
    	{
 		$selected = ($row[0] == $current) ? "selected" : "";
-		$link = "$row[0]";
-		$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars($row[1]);
+		$out_html .= "
+    <option $selected value=\"".$row[0]."\">" . htmlspecialchars($row[1]);
    	}
-	$out_html .= "</select>
-           <INPUT TYPE=HIDDEN NAME=day        VALUE=\"$day\"        >
-           <INPUT TYPE=HIDDEN NAME=month      VALUE=\"$month\"        >
-           <INPUT TYPE=HIDDEN NAME=year       VALUE=\"$year\"      >
-	   <SCRIPT language=\"JavaScript\">
-	   <!--
-	   function area_go()
-	    {
-		box = document.forms[\"area\"].area;
-                destination = \"http://\" + location.host + location.pathname + ";
-                $out_html .= "\"?day=$day&month=$month&year=$year&area=\" + box.options[box.selectedIndex].value;
-		if (destination) location.href = destination;
-	    }
-	    // -->
-	    </SCRIPT>
- 
-	    
-	    <input type=submit value=\"".get_vocab("change")."\"></form>";
+	$out_html .= "
+  </select>
+
+  <INPUT TYPE=HIDDEN NAME=day        VALUE=\"$day\">
+  <INPUT TYPE=HIDDEN NAME=month      VALUE=\"$month\">
+  <INPUT TYPE=HIDDEN NAME=year       VALUE=\"$year\">
+  <input type=submit value=\"".get_vocab("change")."\">
+</form>\n";
 
 	return $out_html;
 } # end make_area_select_html
 
 function make_room_select_html( $link, $area, $current, $year, $month, $day )
 {
-	$out_html = "<form name=\"room\">
-	             <select name=\"room\" onChange=\"room_go()\">";
+	$out_html = "
+<form name=\"roomChangeForm\" method=get action=\"$link\">
+  <select name=\"room\" onChange=\"document.roomChangeForm.submit()\">";
 
 	$sql = "select id, room_name from mrbs_room where area_id=$area order by room_name";
    	$res = sql_query($sql);
    	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
    	{
 		$selected = ($row[0] == $current) ? "selected" : "";
-		$link = "$row[0]";
-		$out_html .= "<option $selected value=\"$link\">" . htmlspecialchars($row[1]);
+		$out_html .= "
+    <option $selected value=\"".$row[0]."\">" . htmlspecialchars($row[1]);
    	}
-	$out_html .= "</select>
-           <INPUT TYPE=HIDDEN NAME=day        VALUE=\"$day\"        >
-           <INPUT TYPE=HIDDEN NAME=month      VALUE=\"$month\"        >
-           <INPUT TYPE=HIDDEN NAME=year       VALUE=\"$year\"      >
-           <INPUT TYPE=HIDDEN NAME=area       VALUE=\"$area\"         >
-	   <SCRIPT language=\"JavaScript\">
-	   <!--
-	   function room_go()
-	    {
-		box = document.forms[\"room\"].room;
-                destination = \"http://\" + location.host + location.pathname + ";
-                $out_html .= "\"?day=$day&month=$month&year=$year&area=$area&room=\" + box.options[box.selectedIndex].value;
-		if (destination) location.href = destination;
-	    }
-	    // -->
-	    </SCRIPT>
- 
-	    
-	    <input type=submit value=\"".get_vocab("change")."\"></form>";
+	$out_html .= "
+  </select>
+  <INPUT TYPE=HIDDEN NAME=day        VALUE=\"$day\"        >
+  <INPUT TYPE=HIDDEN NAME=month      VALUE=\"$month\"        >
+  <INPUT TYPE=HIDDEN NAME=year       VALUE=\"$year\"      >
+  <INPUT TYPE=HIDDEN NAME=area       VALUE=\"$area\"         >
+  <input type=submit value=\"".get_vocab("change")."\">
+</form>\n";
 
 	return $out_html;
 } # end make_area_select_html
