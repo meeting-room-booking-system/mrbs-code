@@ -245,7 +245,7 @@ function validate_and_submit ()
   // there are more than one recipient. To avoid users doing weird things
   // like clicking more than one time on submit button, we hide it as soon
   // it is clicked.
-  document.forms["main"].save_button.style.visibility="hidden";
+  document.forms["main"].save_button.disabled="true";
 
   // would be nice to also check date to not allow Feb 31, etc...
   document.forms["main"].submit();
