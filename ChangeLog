@@ -1,5 +1,9 @@
+CVS (Wed Mar 05           GMT 2003)
+   + Make MRBS compliant to the 'register_globals = off' directive
+   + added translation:     Portuguese (Lopo Pizarro)	
+
 CVS (Thu Jan 30           GMT 2003)
-   + add translation:     Finnish, Vesa Palmu 
+   + added translation:     Finnish (Vesa Palmu)
 
 CVS (Wed Jan 29           GMT 2003)
    - Minor translations updates in lang.fr, lang.no (Tobias)

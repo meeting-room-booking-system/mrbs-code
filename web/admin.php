@@ -2,6 +2,7 @@
 
 # $Id$
 
+require_once "grab_globals.inc.php";
 include "config.inc";
 include "functions.inc";
 include "$dbsys.inc";
@@ -13,6 +14,11 @@ if(!isset($day) or !isset($month) or !isset($year))
 	$day   = date("d");
 	$month = date("m");
 	$year  = date("Y");
+}
+
+if (empty($area))
+{
+    $area = get_default_area();
 }
 
 if(!getAuthorised(getUserName(), getUserPassword(), 2))

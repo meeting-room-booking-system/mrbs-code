@@ -2,6 +2,7 @@
 
 # $Id$
 
+require_once "grab_globals.inc.php";
 include "config.inc";
 include "$dbsys.inc";
 include "functions.inc";
