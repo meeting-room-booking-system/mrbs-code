@@ -48,11 +48,11 @@ if(!empty($room)) {
 			. "', description='" . slashes($description)
 			. "', capacity=$capacity WHERE id=$room";
 		if (sql_command($sql) < 0)
-			fatal_error(0, "Update room failed: " . sql_error());
+			fatal_error(0, $vocab['update_room_failed'] . sql_error());
 	}
 
 	$res = sql_query("SELECT * FROM mrbs_room WHERE id=$room");
-	if (! $res) fatal_error(0, "Error: room $room not found");
+	if (! $res) fatal_error(0, $vocab['error_room'] . $room . $vocab['not_found']);
 	$row = sql_row_keyed($res, 0);
 	sql_free($res);
 ?>
@@ -83,11 +83,11 @@ if(!empty($area))
 		$sql = "UPDATE mrbs_area SET area_name='" . slashes($area_name)
 			. "' WHERE id=$area";
 		if (sql_command($sql) < 0)
-			fatal_error(0, "Update area failed: " . sql_error());
+			fatal_error(0, $vocab['update_area_failed'] . sql_error());
 	}
 
 	$res = sql_query("SELECT * FROM mrbs_area WHERE id=$area");
-	if (! $res) fatal_error(0, "Error: area $area not found");
+	if (! $res) fatal_error(0, $vocab['error_area'] . $area . $vocab['not_found']);
 	$row = sql_row_keyed($res, 0);
 	sql_free($res);
 ?>
