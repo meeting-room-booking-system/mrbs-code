@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*****************************************************************************\
 *									      *
 *   File name       session_cookie.inc					      *
@@ -70,7 +70,7 @@ function printLoginForm($TargetURL)
   </table>
   <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" /> <br />
   <input type="hidden" name="Action" value="SetName" /> <br />
-  <input type="submit" value=" Log in " /> <br />
+  <input type="submit" value="<?php echo get_vocab('login') ?> " /> <br />
 </form>
 </body>
 </html>
