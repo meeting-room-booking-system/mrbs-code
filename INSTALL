@@ -4,7 +4,7 @@
 
 REQUIREMENTS
 ---------------------------------------------------------------------------
-MRBS now works with both MySQL and PostgreSQL database systems. You must
+MRBS works with both MySQL and PostgreSQL database systems. You must
 have PHP with support for your chosen database system installed and working
 for this application. See the PHP (www.php.net), MySQL (www.mysql.com), and
 PostgreSQL (www.postgresql.org) sites for more info on setting these up.
@@ -12,23 +12,28 @@ You need to know how to install, secure, run, maintain, and back up your
 chosen database system.
 
 No optional PHP packages (other than the database system) are required for
-this application. This version of MRBS was tested with PHP 4.2.0. Older
+this application. This version of MRBS was tested with PHP 4.3.2. Older
 versions of PHP4 may work, but PHP3 likely won't.
 
-You can run PHP either as a CGI or an Apache module.  You'll get better
-performance with PHP setup as a module.  Not only will you not have to
-deal with the CGI performance hit, but you'll be able to use PHP's
+You can run PHP either as a CGI or with a direct module interface (also called 
+SAPI). These servers include Apache, Microsoft Internet Information Server, 
+Netscape and iPlanet servers. Many other servers have support for ISAPI, the 
+Microsoft module interface.
+You'll get better performance with PHP setup as a module.  Not only will you 
+not have to deal with the CGI performance hit, but you'll be able to use PHP's
 database connection pooling. However, be careful that you don't exceed
 the maximum number of connections allowed to your database; with connection
 pooling PHP/Apache can potentially create a connection from each Apache
-child server to the database.
+child server to the database. 
+Also many mrbs authentication schemes use basic http authentication. These 
+don't work if you run PHP as a CGI.
 
 If you are using PHP as an Apache module, you probably want to ensure that
 the Apache MaxRequestsPerChild is not set to 0, in case of undetected memory
 leaks in PHP or MRBS.
 
-If you use MySQL, versions 3.22.32 and 3.23.23 have been tested and reported
-to work.
+If you use MySQL, versions 3.22.32, 3.23.23, 3.23.53, 4.0.13 and 4.0.14 have 
+been tested and reported to work.
 
 If you use PostgreSQL, you need at least version 7.0, and version 7.0.3 has
 been tested and reported to work.
@@ -42,15 +47,15 @@ your web server can find them.
 For example:
 
 Unpack the software into a new temporary directory, something like this:
-	$ tar -xvzf ~/download/mrbs-1.0.tgz       (or whatever version)
-	$ cd mrbs-1.0                             (or whatever version)
+    $ tar -xvzf ~/download/mrbs-1.0.tgz       (or whatever version)
+    $ cd mrbs-1.0                             (or whatever version)
 
 If you are upgrading from a previous version of MRBS, you should save your
 "config.inc" file so you can compare and update the new file with your
 site-specific changes. Then rename your existing MRBS web server directory.
 For example:
-	$ cp /var/lib/apache/htdocs/mrbs/config.inc config.site.inc
-	$ mv /var/lib/apache/htdocs/mrbs /var/lib/apache/htdocs/mrbs.old
+    $ cp /var/lib/apache/htdocs/mrbs/config.inc config.site.inc
+    $ mv /var/lib/apache/htdocs/mrbs /var/lib/apache/htdocs/mrbs.old
 
 Now install MRBS by copying the contents of the "web" subdirectory of the
 distribution somewhere your web server can find it.  For example:
@@ -66,13 +71,17 @@ For a new install:
 
 You can place the MRBS database tables in an existing database or
 create a new database with the following:
+
 [MySQL]         $ mysqladmin create mrbs
 [PostgreSQL]    $ createdb mrbs
+
 (This will create a database named "mrbs", but you can use any name.)
 
 Create the MRBS tables using the supplied tables.*.sql file:
+
 [MySQL]         $ mysql mrbs < tables.my.sql
 [PostgreSQL]    $ psql -a -f tables.pg.sql mrbs
+
 where "mrbs" is the name of your database (mentioned above).
 This will create all the needed tables.
 You may need to set rights on the tables; for PostgreSQL see "grant.pg.sql".
@@ -80,21 +89,27 @@ If you need to delete the tables, for PostgreSQL see "destroy.pg.sql".
 
 The tables are now empty and ready for use. If you want to add a few sample
 areas and rooms without going through the Admin function, use this script:
+
 [MySQL]         $ mysql mrbs < sample-data.sql
 [PostgreSQL]    $ psql -a -f sample-data.sql mrbs
+
 Substitute the database name you used for "mrbs".
 This script is only for use in a newly initialized database! (It will not
 work properly in a database where the ID counters are greater than 0.)
 Also see the description of testdata.php in the README file.
 
 For an upgrade:
+
 The database format changed slightly between 0.6 and 0.7. To change the
 format of your data do:
+
 [MySQL]         $ mysql mrbs < upgrade.my.sql
+
 (This does not apply to PostgreSQL, which was not supported then.)
 Also see the file UPGRADE in the distribution.
 
 Maintenance:
+
 Be sure to back up your database regularly.
 For PostgreSQL, be sure to run the "vacuum" command regularly.
 You can clean out old entries from your database using the supplied SQL
@@ -140,23 +155,21 @@ when trying connecting to MRBS.  If you would rather use non-persistent
 database connections, uncomment the line in "config.inc" which sets the
 $db_nopersist variable.
 
-With newer versions of PHP the "register_globals" option must be set to
-"on". This can be done in the php.ini file, or in other ways supported
-by PHP. I set it by adding this to my Apache httpd.conf:
-
-  <Directory />
-    php_flag register_globals on
-  </Directory>
-
 
 2. Site Identification:
 
 Specify your company or site name, and contact information. The company name
 is displayed at the top of each page, and the contact information is
 displayed in the help file.
-	$mrbs_admin = "Your Administrator";
-	$mrbs_admin_email = "admin_email@your.org";
-	$mrbs_company = "Your Company";
+
+    $mrbs_admin = "Your Administrator";
+    $mrbs_admin_email = "admin_email@your.org";
+    $mrbs_company = "Your Company";
+
+Alternately, if you want to display your organization logo, replace the 
+$mrbs_company line like this :
+
+$mrbs_company = "<a href=http://www.your_organization.com/><img src=your_logo.gif border=0></a>";
 
 
 3. Calendar Settings:
@@ -164,38 +177,44 @@ displayed in the help file.
 Specify the resolution in minutes. MRBS will display blocks of this size,
 and will round up all entries to an even multiple of this many minutes.
 Specify a number which divides evenly into hours, for example one of:
-	$resolution =  900;   # 15 minutes
-	$resolution = 1800;   # Half hour
-	$resolution = 3600;   # Whole hours
+
+    $resolution =  900;   # 15 minutes
+    $resolution = 1800;   # Half hour
+    $resolution = 3600;   # Whole hours
 
 Specify the start and end of the day in 24 hour notation, using whole hours.
-	$morningstarts = 7;   # First block is 7 AM.
-	$eveningends = 19;    # Last block starts at 7 PM.
+
+    $morningstarts = 7;   # First block is 7 AM.
+    $eveningends = 19;    # Last block starts at 7 PM.
+
 There is also $eveningends_minutes to give you more control over the last
 block displayed for each day. For example, to display full 24 hour days
 with 30 minute intervals:
-	$resolution = 1800;
-	$morningstarts = 0;
-	$eveningends = 23;
-	$eveningends_minutes = 30;
+
+    $resolution = 1800;
+    $morningstarts = 0;
+    $eveningends = 23;
+    $eveningends_minutes = 30;
 
 To control international preferences for the calendar displays, use
 $weekstarts to change the first day of the week from the default of
 Sunday; use $dateformat to show dates as "Month Day" or "Day Month"
-in the page footers.
-
-There's also a section about Language. MRBS supports multiple languages,
-which can be used at the same time, based on what the client is using. One
-of the environment variables supplied to PHP is $HTTP_ACCEPT_LANGUAGE,
-which we use to choose a language file. You can specify the default in
-config.inc. See the file called LANGUAGE for more info.
+in the page footers; use $twentyfourhour_format to show dates in 12 or 24 hour 
+format.
 
 
 4. Miscellaneous Settings:
 
-These settings control the maximum number of repeat entries which can
-be created at once (a safety feature), the default report time period,
-and the number of search results to return per page.
+These settings control:
+
+- the maximum number of repeat entries which can be created at once (a safety 
+  feature),
+- the default report time period,
+- the number of search results to return per page,
+- the page refresh rate,
+- the way area/rooms are selected (html list or a drop-down select box),
+- the way entries are displayed in monthly view (start/end slot or brief 
+  description).
 
 
 5. Authentication:
@@ -208,9 +227,14 @@ the system.
 
 6. Language:
 
+MRBS supports multiple languages, which can be used at the same time, based on 
+what the client is using. One of the environment variables supplied to PHP is 
+$HTTP_ACCEPT_LANGUAGE, which we use to choose a language file. You can specify 
+the default in config.inc. See the file called LANGUAGE for more info.
+
 MRBS also uses your OS locale support for certain date/time strings.
 There is some code that tries to figure out what locale should be used
-based on your browser. Use "locale -a" on your system to find out what
+based on your browser. Use "locale -a" on your unix system to find out what
 locale support is installed.
 
 
@@ -224,7 +248,7 @@ your config.inc file. Each type has a color, defined in the style sheet.
 HELP/FAQ File:
 
 Customize site_faq.html if desired.  It contains help that can be tailored
-to your environment.
+to your environment. Currently this help is available in english and in french.
 
 
 SECURITY NOTES!

@@ -261,6 +261,15 @@ $pop3_port = "110";
 
 You will almost certainly not need to change the POP3 port number.
 
+OTHERS Authentication schemes provided
+--------------------------------------
+
+- IMAP Authentication.
+- NAME Authentication is a slight variant of auth_ip. It tries to use the DNS 
+  name to determine admin privileges instead of ip.
+- NIS Authentication.
+- OMNI Authentication using Omnicron OmniHTTPd web server security features.
+- COOKIE Authentication for use with ROXEN web server.
 
 
 Creating a new authentication scheme

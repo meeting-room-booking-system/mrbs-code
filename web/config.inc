@@ -30,6 +30,10 @@ $db_password = "mrbs-password";
 #################################
 $mrbs_admin = "Your Administrator";
 $mrbs_admin_email = "admin_email@your.org";
+
+# This is the text displayed in the upper left corner of every page. Either
+# type the name of your organization, or you can put your logo like this :
+# $mrbs_company = "<a href=http://www.your_organisation.com/><img src=your_logo.gif border=0></a>";
 $mrbs_company = "Your Company";
 
 ###################
@@ -193,7 +197,7 @@ setlocale(LC_ALL,$locale);
 
 # faq file language selection. IF not set, use the default english file.
 # IF your language faq file is available, set $faqfilelang to match the
-# end of the filename, including the underscore (ie. for site_faq_fr.html
+# end of the file name, including the underscore (ie. for site_faq_fr.html
 # use "_fr"
 $faqfilelang = ""; 
 
