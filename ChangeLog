@@ -1,9 +1,26 @@
+2003-12-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* INSTALL (1.19): Doc fix (Unicode support).
+
+2003-12-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* README.nwauth (1.4), UPGRADE (1.6): Doc fix.
+
+2003-12-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* AUTHENTICATION (1.21), INSTALL (1.18): Fixing typos.	Addding
+	  some documentation about Unicode.
+
+2003-12-04  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* AUTHENTICATION (1.20), README (1.12): Fixing typos; doc update.
+
 2003-12-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* INSTALL (1.17), README (1.11), tables.pg.73and_above.sql (1.1): 
 	  ° Updated documentation about new authentication features.  
 	  ° Updated documentation to add warnings about mrbs not working with
-	    postegreSQL version 7.3 and above.
+	  postegreSQL version 7.3 and above.
 
 	  Mrbs does not work anymore with postgreSQL dbms since pgsql
 	  version 7.3.	This is because the following changes :     - An
@@ -69,63 +86,53 @@
 	* INSTALL (1.16): Added warning to avoid specify calendar settings
 	  that displays blocks overlaping the next day, since it is not
 	  properly handled.
-	  
+
 2003-10-11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* testdata.php (1.4): - bug fix: Make testdata compliant to
 	  register_global=off (samples entries had no authors)
-	  
-2003-10-02  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* INSTALL (1.15): + Allow to view weeks in the bottom (trailer.inc) as 
-	  week numbers (ie. 42) instead of 'first day of the week' (13 Oct)
-	  (Per Wermelin - SKIOLD Sæby A/S" <ela@skiold.dk>).
+2003-10-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-2003-09-26  John Beranek <jberanek@users.sourceforge.net>
+	* INSTALL (1.15): + Allow to view weeks in the bottom (trailer.inc)
+	  as week numbers (ie. 42) instead of 'first day of the week' (13
+	  Oct) (Per Wermelin - SKIOLD Sæby A/S" <ela@skiold.dk>).
 
-	* AUTHENTICATION (1.18), crypt_passwd.pl (1.1),
-	  crypt_passwd.example (1.1): Added a new script
-	  for the "ext" authentication scheme that allows
-	  you to use a password file with usernames and
-	  their crypted passwords.
+2003-09-25  John Beranek <jberanek@users.sourceforge.net>
+
+	* AUTHENTICATION (1.18), crypt_passwd.example (1.1),
+	  crypt_passwd.pl (1.1):
+	  Added a new script for the "ext" authentication scheme that
+	  allows you to use a password file with usernames and their
+	  crypted passwords.
 
 2003-09-23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* NEWS (1.3): Doc fixes.
+	* NEWS (1.3, mrbs-1-2-pre1): Doc fixes.
 
 2003-09-23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* AUTHENTICATION (1.17), INSTALL (1.14), LANGUAGE (1.10),
 	  README.nwauth (1.3), README.sqlapi (1.3), ROXEN (1.3),
-	  grant.pg.sql (1.3), testdata.php (1.3): Finally we changed
-	  config.inc to config.inc.php for "security" reasons.
-
-2003-09-17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
-
-	* AUTHENTICATION, INSTALL, LANGUAGE, NEWS, PEAR, README,
-	  README.nwauth, README.sqlapi, ROXEN, TODO, UPGRADE,
-	  auth_cookie_ext.inc, auth_ldap.pl, auth_ldapsearch.pl, badpw.pl,
-	  destroy.pg.sql, destroy.php, grant.pg.sql, mrbs.schema.xml,
-	  mrbs_create.php, purge.my.sql, purge.pg.sql, purge.php,
-	  sample-data.sql, tables.my.sql, tables.pg.sql, testdata.php,
-	  upgrade.my.sql, upgrade2.my.sql, upgrade2.pg.sql
-	  (mrbs_MDB-branch.[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]):
-	  1st commit mrbs_MDB-branch (Files removes, added, modified from
-	  the existing cvs).
-	  
-2003-08-09  Thierry Bothorel <thierry_bo@users.sourceforge.net>
-
-	* AUTHENTICATION (1.16): + Added Windows NT / IIS authentication
-	  scheme.
+	  grant.pg.sql (1.3), testdata.php (1.3) (utags: mrbs-1-2-pre1):
+	  Finally we changed config.inc to config.inc.php for "security"
+	  reasons.
 
 2003-08-09  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* AUTHENTICATION (1.15), INSTALL (1.13), README (1.9): Dox fixes.
-	  Update documentation and comments to the current cvs situation.
+	* AUTHENTICATION (1.16, Root-of-mrbs_MDB): + Added Windows NT / IIS
+	  authentication scheme.
+
+2003-08-09  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* AUTHENTICATION (1.15), INSTALL (1.13, Root-of-mrbs_MDB), README
+	  (1.9, mrbs-1-2-pre1, Root-of-mrbs_MDB): Dox fixes. Update
+	  documentation and comments to the current cvs situation.
 
 2003-08-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* NEWS (1.2): * Doc fixes: updated to have a consistent layout.
+	* NEWS (1.2, Root-of-mrbs_MDB): * Doc fixes: updated to have a
+	  consistent layout.
 
 2003-08-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -148,7 +155,7 @@
 
 2002-10-08  John Beranek <jberanek@users.sourceforge.net>
 
-	* smb_auth.c (1.2, mrbs-1-1):
+	* smb_auth.c (1.2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1):
 	     - Changed all uses of <? to <?php.
 
 	     - Merged change from John Beranek for an Advanced search
@@ -204,13 +211,15 @@
 
 2002-05-11  Daniel <nambit@users.sourceforge.net>
 
-	* checklang.php (1.4, mrbs-1-1): change last $lang to $vocab
+	* checklang.php (1.4, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1):
+	  change last $lang to $vocab
 
 2002-05-09  Daniel <nambit@users.sourceforge.net>
 
-	* LANGUAGE (1.9, mrbs-1-1), auth_cookie_ext.inc (1.3, mrbs-1-1),
-	  checklang.php (1.3):	   Change every $lang to $vocab to stop
-	  conflicts with other software
+	* LANGUAGE (1.9, Root-of-mrbs_MDB, mrbs-1-1), auth_cookie_ext.inc
+	  (1.3, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1), checklang.php
+	  (1.3):     Change every $lang to $vocab to stop conflicts with
+	  other software
 	      that's used $lang (lots of people have seen "N" appear
 	  everywhere
 	      $lang variables should be)
@@ -222,9 +231,9 @@
 2002-02-07  John Beranek <jberanek@users.sourceforge.net>
 
 	* UPGRADE (1.5), tables.pg.sql (1.4), upgrade2.pg.sql (1.2) (utags:
-	  mrbs-1-1): * Added instructions into UPGRADE readme for
-	  upgrade2.[my|pg].ql scripts  that are required to upgrade from an
-	  older MRBS installation.
+	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-2-pre1): * Added instructions
+	  into UPGRADE readme for upgrade2.[my|pg].ql scripts  that are
+	  required to upgrade from an older MRBS installation.
 
 	  * Added new language tokens, using patch supplied by Michael
 	  Redinger.
@@ -245,16 +254,16 @@
 
 2001-07-16  John Beranek <jberanek@users.sourceforge.net>
 
-	* upgrade2.my.sql (1.1, mrbs-1-1), upgrade2.pg.sql (1.1) (utags:
-	  mrbs-1-0-final):
+	* upgrade2.my.sql (1.1, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1),
+	  upgrade2.pg.sql (1.1) (utags: mrbs-1-0-final):
 	   * Added these upgrade SQL files.  Don't know how I forgot to add
 	  them!
 
 2001-07-02  John Beranek <jberanek@users.sourceforge.net>
 
-	* tables.my.sql (1.3, mrbs-1-1), tables.pg.sql (1.3) (utags:
-	  mrbs-1-0-final):  * Incorporated diff from Scott Leonard that
-	  allows you to configure a refresh
+	* tables.my.sql (1.3, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1),
+	  tables.pg.sql (1.3) (utags: mrbs-1-0-final):	* Incorporated diff
+	  from Scott Leonard that allows you to configure a refresh
 	      time for roombooker web pages.  Set config variable
 	  $refresh_rate to the
 	      number of seconds to refresh after, or set to 0 to disable.
@@ -286,8 +295,9 @@
 
 2001-03-02  Michael Redinger <mred@users.sourceforge.net>
 
-	* AUTHENTICATION (1.12), auth_pam.pl (1.1, mrbs-1-1) (utags:
-	  mrbs-1-0-final, mrbs-1-0-pre1):
+	* AUTHENTICATION (1.12), auth_pam.pl (1.1, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB, mrbs-1-1) (utags: mrbs-1-0-final,
+	  mrbs-1-0-pre1):
 	  mred: added auth_pam, updated AUTHENTIFICATION
 
 2001-02-25  L J Bayuk <lbayuk@users.sourceforge.net>
@@ -296,40 +306,46 @@
 	  (1.10, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), LANGUAGE
 	  (1.8, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), README (1.7,
 	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), README.nwauth
-	  (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2),
-	  README.sqlapi (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
-	  mrbs-1-0-pre2), ROXEN (1.2, mrbs-1-1, mrbs-1-0-final,
-	  mrbs-1-0-pre1, mrbs-1-0-pre2), UPGRADE (1.4, mrbs-1-0-final,
-	  mrbs-1-0-pre1, mrbs-1-0-pre2), add.php3 (1.3), admin.php3 (1.7),
+	  (1.2, Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), README.sqlapi (1.2, Root-of-mrbs_MDB, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), ROXEN (1.2,
+	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), UPGRADE (1.4, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), add.php3 (1.3), admin.php3 (1.7),
 	  auth_cookie_ext.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1,
 	  mrbs-1-0-pre2), auth_ext.inc (1.6), auth_ip.inc (1.3),
-	  auth_ldap.inc (1.4), auth_ldap.pl (1.2, mrbs-1-1, mrbs-1-0-final,
-	  mrbs-1-0-pre1, mrbs-1-0-pre2), auth_ldapsearch.pl (1.3, mrbs-1-1,
-	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), badpw.pl (1.3,
+	  auth_ldap.inc (1.4), auth_ldap.pl (1.2, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), auth_ldapsearch.pl (1.3, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), badpw.pl (1.3, mrbs-1-2-pre1, Root-of-mrbs_MDB,
 	  mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2),
 	  checklang.php (1.2, mrbs-1-0-final, mrbs-1-0-pre1,
 	  mrbs-1-0-pre2), config.inc (1.17), connect.inc (1.2), day.php3
 	  (1.22), del.php3 (1.4), del_entry.php3 (1.10), destroy.pg.sql
-	  (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2),
-	  edit_area_room.php3 (1.2), edit_entry.php3 (1.19),
-	  edit_entry_handler.php3 (1.22), functions.inc (1.11),
-	  grant.pg.sql (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
-	  mrbs-1-0-pre2), help.php3 (1.5), index.php3 (1.2), lang.de (1.3),
-	  lang.en (1.14), lang.es (1.3), lang.fr (1.2), lang.ja (1.4),
-	  lang.nl (1.2), lang.sv (1.2), lang.zh-tw (1.3), mincals.inc
-	  (1.12), mrbs.css (1.8), mrbs_auth.inc (1.7), mrbs_sql.inc (1.12),
-	  new.gif (1.2), purge.my.sql (1.2, mrbs-1-1, mrbs-1-0-final,
-	  mrbs-1-0-pre1, mrbs-1-0-pre2), purge.pg.sql (1.2, mrbs-1-1,
-	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), sample-data.sql
-	  (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2),
-	  search.php3 (1.8), site_faq.html (1.3), style.inc (1.6),
-	  tables.my.sql (1.2, mrbs-1-0-pre1, mrbs-1-0-pre2), tables.pg.sql
-	  (1.2, mrbs-1-0-pre1, mrbs-1-0-pre2), tables.sql (1.5),
-	  testdata.php (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
+	  (1.2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final,
+	  mrbs-1-0-pre1, mrbs-1-0-pre2), edit_area_room.php3 (1.2),
+	  edit_entry.php3 (1.19), edit_entry_handler.php3 (1.22),
+	  functions.inc (1.11), grant.pg.sql (1.2, Root-of-mrbs_MDB,
+	  mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2),
+	  help.php3 (1.5), index.php3 (1.2), lang.de (1.3), lang.en (1.14),
+	  lang.es (1.3), lang.fr (1.2), lang.ja (1.4), lang.nl (1.2),
+	  lang.sv (1.2), lang.zh-tw (1.3), mincals.inc (1.12), mrbs.css
+	  (1.8), mrbs_auth.inc (1.7), mrbs_sql.inc (1.12), new.gif (1.2),
+	  purge.my.sql (1.2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), purge.pg.sql (1.2,
+	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final,
+	  mrbs-1-0-pre1, mrbs-1-0-pre2), sample-data.sql (1.2,
+	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final,
+	  mrbs-1-0-pre1, mrbs-1-0-pre2), search.php3 (1.8), site_faq.html
+	  (1.3), style.inc (1.6), tables.my.sql (1.2, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), tables.pg.sql (1.2, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2), tables.sql (1.5), testdata.php (1.2,
+	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
 	  mrbs-1-0-pre2), testdata.php3 (1.4), trailer.inc (1.9),
-	  upgrade.my.sql (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
-	  mrbs-1-0-pre2), upgrade.sql (1.2), view_entry.php3 (1.18): Merge
-	  branch mrbs-0-9-1xp into trunk
+	  upgrade.my.sql (1.2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2), upgrade.sql (1.2),
+	  view_entry.php3 (1.18): Merge branch mrbs-0-9-1xp into trunk
 
 2001-02-19  L J Bayuk <lbayuk@users.sourceforge.net>
 
@@ -1210,16 +1226,16 @@
 	  mrbs0-6, mrbs0-5), help_trailer.inc (1.1.1.1, mrbs0-7, mrbs0-6,
 	  mrbs0-5), mincals.inc (1.1.1.1, mrbs0-6, mrbs0-5), style.inc
 	  (1.1.1.1, mrbs0-6, mrbs0-5), trailer.inc (1.1.1.1, mrbs0-6,
-	  mrbs0-5), tables.sql (1.1.1.1), COPYING (1.1.1.1, mrbs-1-1,
-	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2, mrbs-0-9-2,
-	  mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a,
-	  mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4,
-	  mrbs-0-8-pre3, mrbs-0-8-pre2, mrbs0-7, mrbs0-6, mrbs0-5), INSTALL
-	  (1.1.1.1), README (1.1.1.1), mrbs.css (1.1.1.1, mrbs0-6,
-	  mrbs0-5), head.gif (1.1.1.1, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8,
-	  mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2,
-	  mrbs0-7, mrbs0-6, mrbs0-5), testdata.php3 (1.1.1.1) (utags:
-	  start): Initial Import
+	  mrbs0-5), tables.sql (1.1.1.1), COPYING (1.1.1.1, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2,
+	  rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6,
+	  mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2, mrbs0-7, mrbs0-6,
+	  mrbs0-5), INSTALL (1.1.1.1), README (1.1.1.1), mrbs.css (1.1.1.1,
+	  mrbs0-6, mrbs0-5), head.gif (1.1.1.1, mrbs-0-9-a, mrbs-0-8-1,
+	  mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4, mrbs-0-8-pre3,
+	  mrbs-0-8-pre2, mrbs0-7, mrbs0-6, mrbs0-5), testdata.php3
+	  (1.1.1.1) (utags: start): Initial Import
 
 2000-05-03  Daniel <nambit@users.sourceforge.net>
 

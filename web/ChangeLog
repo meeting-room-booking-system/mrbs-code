@@ -1,3 +1,59 @@
+2003-12-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* edit_entry.php (1.23), edit_entry_handler.php (1.15): - Fixed bug
+	  [ 853410 ]: when changing a non n-weekly entry, field "Number of
+	  weeks (for n-weekly)" appear...
+
+2003-12-04  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* admin.php (1.15): - Fixed bug #846337: We can create rooms with
+	  no area
+
+2003-12-03  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* day.php (1.20), edit_entry.php (1.22), edit_entry_handler.php
+	  (1.14), functions.inc (1.20), month.php (1.17), mrbs_sql.inc
+	  (1.12), view_entry.php (1.11), week.php (1.22): Daylight Saving
+	  Time fixes.
+
+	  This has involved modifying month.php, week.php and day.php,
+	  view_entry.php, edit_entry.php, edit_entry_handler.php,
+	  mbs_sql.inc and functions.inc
+
+	  For month.php and week.php, I have changed them to handle each
+	  week/month on a day by day basis.  They and day.php make DST
+	  corrections for the start and end of each day.  The intervals of
+	  time are handled by using the format HHMM with no leading zeros.
+	  Events are read in to an array using this format of time as the
+	  one of the indices.  A day which does not include a DST change is
+	  used to loop through all valid hours for that day.
+
+	  The view_entry.php has been altered to modify times that cross
+	  DST back to what the user would expect 9pm to 3am is 6 hours but
+	  it is stored as either 5 or 7 hours.
+
+	  The edit_entry.php, edit_entry_handler.php and mrbs_sql.inc have
+	  been changed to correctly calculate the difference between two
+	  timestamps and correct the end time for checking the following:
+	  free time, all day events and repeating events.
+
+	  functions.inc includes two new functions: one to check for DST
+	  and one to correct for DST.  These are used in the fixes above.
+
+	  Where possible, calculations that used to use midnight have been
+	  changed to use midday to avoid DST problems.
+
+	  You may still see some "strange" but correct behaviour when
+	  scheduling meetings which start and/or end between midnight and 3
+	  am on a day of DST.  These may look wrong but should actually be
+	  correct if you consider how DST works on that day, i.e in the UK
+	  the hour from 1am to 2pm does not exist when entering DST.
+
+	  Backward compatibility: There may be a one hour error for events
+	  that start or end between midnight and 3am on the day that DST
+	  changes but these can be fixed by editting the entry/series and
+	  saving it.
+
 2003-12-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* pgsql.inc (1.5): Updated the postgreSql driver (pgsql.inc) to
