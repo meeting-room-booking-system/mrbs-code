@@ -146,14 +146,14 @@ class Calendar
 
                     if ($link == "")
                         $s .= $d;
-                    elseif (preg_match("/day/i", $PHP_SELF))
+                    elseif (preg_match("/day/i", basename($PHP_SELF)))
                     {
                         if (($d == $this->day) and ($this->h))
                             $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
                         else
                             $s .= "<a href=\"$link\">$d</a>";
                     }
-                    elseif (preg_match("/week/i", $PHP_SELF))
+                    elseif (preg_match("/week/i", basename($PHP_SELF)))
                     {
                         if (($this->day <= $d) && ($this->day > $d_week) && ($this->h))
                             $s .= "<a href=\"$link\"><font color=\"red\">$d</font></a>";
@@ -162,7 +162,7 @@ class Calendar
                         else
                             $s .= "<a href=\"$link\">$d</a>";
                     }
-                    elseif (preg_match("/month/i", $PHP_SELF))
+                    elseif (preg_match("/month/i", basename($PHP_SELF)))
                         $s .= "<a href=\"$link\">$d</a>";
                 }
                 else
