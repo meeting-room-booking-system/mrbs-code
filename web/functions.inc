@@ -269,7 +269,7 @@ function genDateSelector($prefix, $day, $month, $year)
 		echo "<OPTION" . ($i == $day ? " SELECTED" : "") . ">$i\n";
 
 	echo "</SELECT>";
-	echo "<SELECT NAME=\"${prefix}month\" onchange=\"ChangeOptionDays(this.form, '')\">\n";
+	echo "<SELECT NAME=\"${prefix}month\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">\n";
 
 	for($i = 1; $i <= 12; $i++)
 	{
@@ -279,7 +279,7 @@ function genDateSelector($prefix, $day, $month, $year)
 	}
 
 	echo "</SELECT>";
-	echo "<SELECT NAME=\"${prefix}year\" onchange=\"ChangeOptionDays(this.form, '')\">\n";
+	echo "<SELECT NAME=\"${prefix}year\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">\n";
 
 	$min = min($year, date("Y")) - 5;
 	$max = max($year, date("Y")) + 5;
