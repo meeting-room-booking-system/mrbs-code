@@ -44,7 +44,7 @@ if (isset($id))
 	
 	$res = sql_query($sql);
 	if (! $res) fatal_error(1, sql_error());
-	if (sql_count($res) != 1) fatal_error(1, "Entry ID $id not found");
+	if (sql_count($res) != 1) fatal_error(1, $vocab['entryid'] . $id . $vocab['not_found']);
 	
 	$row = sql_row($res, 0);
 	sql_free($res);
@@ -73,7 +73,7 @@ if (isset($id))
 		
 		$res = sql_query($sql);
 		if (! $res) fatal_error(1, sql_error());
-		if (sql_count($res) != 1) fatal_error(1, "Repeat ID $rep_id not found");
+		if (sql_count($res) != 1) fatal_error(1, $vocab['repeat_id'] . $rep_id . $vocab['not_found']);
 		
 		$row = sql_row($res, 0);
 		sql_free($res);
@@ -166,7 +166,7 @@ function validate_and_submit ()
 {
   if(document.forms["main"].name.value == "")
   {
-    alert ( "You have not entered a\nBrief Description." );
+    alert ( "<?php= $vocab['you_have_not_entered'] . '\n' . $vocab['brief_description'] ?>");
     return false;
   }
   
@@ -175,7 +175,7 @@ function validate_and_submit ()
   
   if(h > 23 || m > 59)
   {
-    alert("You have not entered a\nvalid time of day.");
+    alert ("<?php= $vocab['you_have_not_entered'] . '\n' . $vocab['valid_time_of_day'] ?>");
     return false;
   }
   
