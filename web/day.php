@@ -112,8 +112,10 @@ if ( $pview != 1 )
   Note: The predicate clause 'start_time <= ...' is an equivalent but simpler
   form of the original which had 3 BETWEEN parts. It selects all entries which
   occur on or cross the current day.
+
+  id aliases only needed for Oracle, otherwise ony one id column is returned
 */
-$sql = "SELECT  mrbs_room.id, start_time, end_time, name, mrbs_entry.id, type
+$sql = "SELECT  mrbs_room.id AS id, start_time, end_time, name, mrbs_entry.id AS id2, type
         FROM    mrbs_entry, mrbs_room
         WHERE   mrbs_entry.room_id = mrbs_room.id
         AND     area_id = $area
