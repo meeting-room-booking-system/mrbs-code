@@ -107,7 +107,7 @@ else /* We've just created the table. Assume the person doing this IS the admini
 |             Edit a given entry - 1st phase: Get the user input.             |
 \*---------------------------------------------------------------------------*/
 
-if (isset($Action) && ($Action == "Edit"))
+if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
     {
     if ($Id >= 0) /* -1 for new users, or >=0 for existing ones */
         {
@@ -129,7 +129,14 @@ if (isset($Action) && ($Action == "Edit"))
 
     print_header(0, 0, 0, 0);
 
-    print "<h2>" . get_vocab("edit_user") . "</h2>\n";
+    if ($Action == "Edit")
+    {
+        print "<h2>" . get_vocab("edit_user") . "</h2>\n";
+    }
+    else
+    {
+        print "<h2>" . get_vocab("add_new_user") . "</h2>\n";
+    }
 
     if (($Id >= 0) && ($level == 2)) /* Administrators get the right to delete users */
         {
@@ -292,7 +299,7 @@ print "<h2>" . get_vocab("user_list") . "</h2>\n";
 if ($level == 2) /* Administrators get the right to add new users */
     {
     print "<p><form method=post action=\"" . basename($PHP_SELF) . "\">\n";
-    print "\t<input type=hidden name=Action value=Edit />\n";
+    print "\t<input type=hidden name=Action value=Add />\n";
     print "\t<input type=hidden name=Id value=\"-1\" />\n";
     print "\t<input style=\"margin:0\" type=submit value=\"" . get_vocab("add_new_user") . "\" />\n";
     print "</form></p>\n";
