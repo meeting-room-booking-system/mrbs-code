@@ -84,7 +84,7 @@ $vocab["useful_n-weekly_value"] = "un intervalle de semaines valide.";
 
 # Used in view_entry.php
 $vocab["description"]        = "Description :";
-$vocab["room"]               = "Salle :";
+$vocab["room"]               = "Salle ";
 $vocab["createdby"]          = "Créée par :";
 $vocab["lastupdate"]         = "Dernière mise à jour :";
 $vocab["deleteentry"]        = "Effacer une réservation";
@@ -165,6 +165,11 @@ $vocab["entries_found"]      = "réservations trouvées";
 $vocab["summary_header"]     = "Décompte des Heures Réservées";
 $vocab["total"]              = "Total";
 $vocab["submitquery"]        = "Afficher le rapport";
+$vocab["sort_rep"]           = "Trier par :";
+$vocab["sort_rep_time"]      = "Date/Heure";
+$vocab["rep_dsp"]            = "Afficher :";
+$vocab["rep_dsp_dur"]        = "la durée";
+$vocab["rep_dsp_end"]        = "l'heure de fin";
 
 # Used in week.php
 $vocab["weekbefore"]         = "Voir la semaine précédente";

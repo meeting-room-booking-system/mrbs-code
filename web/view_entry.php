@@ -109,7 +109,7 @@ $repeat_key = "rep_type_" . $rep_type;
     <td><?php    echo nl2br($description) ?></td>
    </tr>
    <tr>
-    <td><b><?php echo get_vocab("room") ?></b></td>
+    <td><b><?php echo get_vocab("room").":" ?></b></td>
     <td><?php    echo  nl2br($area_name . " - " . $room_name) ?></td>
    </tr>
    <tr>

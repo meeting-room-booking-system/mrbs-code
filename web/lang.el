@@ -82,7 +82,7 @@ $vocab["useful_n-weekly_value"] = "χρήσιμη n-εβδομαδιαία τιμή.";
 
 # Used in view_entry.php
 $vocab["description"]        = "Περιγραφή:";
-$vocab["room"]               = "Αίθουσα:";
+$vocab["room"]               = "Αίθουσα";
 $vocab["createdby"]          = "Δημιουργήθηκε από:";
 $vocab["lastupdate"]         = "Τελευταία ενημέρωση:";
 $vocab["deleteentry"]        = "Διαγραφή εγγραφής";

@@ -84,7 +84,7 @@ $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 
 # Used in view_entry.php
 $vocab["description"]        = "Beskrivning:";
-$vocab["room"]               = "Rum:";
+$vocab["room"]               = "Rum";
 $vocab["createdby"]          = "Skapad av:";
 $vocab["lastupdate"]         = "Senast uppdaterad:";
 $vocab["deleteentry"]        = "Radera bokningen";

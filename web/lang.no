@@ -84,7 +84,7 @@ $vocab["useful_n-weekly_value"] = "gyldig verdi for antall uker.";
 
 # Used in view_entry.php
 $vocab["description"]        = "Beskrivelse:";
-$vocab["room"]               = "Rom:";
+$vocab["room"]               = "Rom";
 $vocab["createdby"]          = "Laget av:";
 $vocab["lastupdate"]         = "Senest oppdatert:";
 $vocab["deleteentry"]        = "Slett booking";

@@ -90,7 +90,7 @@ $vocab["useful_n-weekly_value"] = "M‰‰r‰aikaisen viikottaisen varauksen viikkom‰
 
 # Used in view_entry.php
 $vocab["description"]        = "Kuvaus:";
-$vocab["room"]               = "Huone:";
+$vocab["room"]               = "Huone";
 $vocab["createdby"]          = "Varaaja:";
 $vocab["lastupdate"]         = "P‰ivitetty:";
 $vocab["deleteentry"]        = "Poista varaus";

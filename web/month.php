@@ -109,7 +109,7 @@ if ( $pview != 1 ) {
     echo "</td>\n";
     
     # Show all rooms in the current area:
-    echo "<td width=\"30%\"><u>".get_vocab("room")."</u><br>";
+    echo "<td width=\"30%\"><u>".get_vocab("rooms")."</u><br>";
 }
 
 
