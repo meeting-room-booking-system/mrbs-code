@@ -193,7 +193,10 @@ $auth[params] = "LDAPSERVER cn=#USERNAME# #PASSWORD#";
 The third also uses a perl script that simply calls ldapsearch.
 You will need specify the path to ldapsearch in auth_ldapsearch.pl
 You might try this as a last resort if your site has an unusual
-LDAP configuration
+LDAP configuration.  NOTE, the script disallows any usernames which
+contain uppercase or space characters in them, for the reason behind
+this please see the script its self.
+
 $auth[realm]  = "MRBS";
 $auth[type]   = "ext";
 $auth[prog]   = "/home/httpd/html/mrbs/auth_ldapsearch.pl";
