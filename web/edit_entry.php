@@ -166,7 +166,7 @@ function validate_and_submit ()
 {
   if(document.forms["main"].name.value == "")
   {
-    alert ( "<?php= $vocab['you_have_not_entered'] . '\n' . $vocab['brief_description'] ?>");
+    alert ( "<?= $vocab['you_have_not_entered'] . '\n' . $vocab['brief_description'] ?>");
     return false;
   }
   
@@ -175,7 +175,7 @@ function validate_and_submit ()
   
   if(h > 23 || m > 59)
   {
-    alert ("<?php= $vocab['you_have_not_entered'] . '\n' . $vocab['valid_time_of_day'] ?>");
+    alert ("<?= $vocab['you_have_not_entered'] . '\n' . $vocab['valid_time_of_day'] ?>");
     return false;
   }
   
