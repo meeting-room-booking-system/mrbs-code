@@ -34,15 +34,13 @@ http://yourhost/mrbs/testdata.php - it will generate a whole load of random
 appointments to fill up the calendar and let you play around. (Don't leave
 testdata.php in your web site, though.)
 
-Originally this was tested with PHP 3.0.16, Apache 1.3.12, MySQL 3.22.32 and
-Linux 2.2.14. The latest version was tested with PHP 4.0.4, Apache 1.3.12,
-and either MySQL 3.22.32 or PostgreSQL 7.0.3. It should work on just about
-anything that's got PHP with MySQL or PostgreSQL support.
+The latest version was tested with PHP 4.2.0, Apache 1.3.20, and either
+MySQL 3.22.32 or PostgreSQL 7.0.3. It should work on just about anything
+that's got PHP4 with MySQL or PostgreSQL support.
 
 It should be pretty easy to adjust it to your corporate colours - the file
 mrbs.css is used on every page, as is style.inc. Just fiddle with these until
-you get the result you like. If it's really funky then you can tell the
-mailing list; perhaps we'll start some sort of 'skin' collection!
+you get the result you like. 
 
 See COPYING for licensing info.
 
@@ -53,7 +51,7 @@ See AUTHENTICATION for information about user authentication/passwords.
 -------------
 Requirements:
 -------------
-- PHP4 with MySQL and/or PostgreSQL support (PHP3 seems to work too)
+- PHP4 with MySQL and/or PostgreSQL support
 - MySQL or PostgreSQL
 
 Recommended:

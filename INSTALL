@@ -12,10 +12,8 @@ You need to know how to install, secure, run, maintain, and back up your
 chosen database system.
 
 No optional PHP packages (other than the database system) are required for
-this application. This version of MRBS was tested with PHP 4.0.4, and there
-are reports of it working with PHP 3.0.12 and higher. (If you use PHP3,
-you must configure your web server to process *.php files (as well as the
-default *.php3 files) using PHP.)
+this application. This version of MRBS was tested with PHP 4.2.0. Older
+versions of PHP4 may work, but PHP3 likely won't.
 
 You can run PHP either as a CGI or an Apache module.  You'll get better
 performance with PHP setup as a module.  Not only will you not have to
@@ -143,8 +141,8 @@ database connections, uncomment the line in "config.inc" which sets the
 $db_nopersist variable.
 
 With newer versions of PHP the "register_globals" option must be set to
-"on". This can be done in the php.ini file. I set it by adding this to
-my Apache httpd.conf:
+"on". This can be done in the php.ini file, or in other ways supported
+by PHP. I set it by adding this to my Apache httpd.conf:
 
   <Directory />
     php_flag register_globals on
