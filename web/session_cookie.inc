@@ -19,21 +19,21 @@
 
 // $Id$
 
-$auth_cookie_included = 1;	// Prevent infinite inclusion loop.
-
-require_once "grab_globals.inc.php";
-
 /*
   Target of the form with sets the URL argument "Action=SetName".
   Will eventually return to URL argument "TargetURL=whatever".
 */
 if (isset($Action) && ($Action == "SetName"))
 {
-// -- HTTP_HOST --
-if (!empty($_SERVER) && isset($_SERVER['HTTP_HOST']))
-    $HTTP_HOST = $_SERVER['HTTP_HOST'];
-else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['HTTP_HOST']))
-    $HTTP_HOST = $HTTP_SERVER_VARS['HTTP_HOST'];
+    global $HTTP_HOST;
+    /* First make sure the password is valid */
+    if (($NewUserName != "") && (!authValidateUser($NewUserName, $NewUserPassword)))
+    {
+        print_header(0, 0, 0, 0);
+        echo "<P>".get_vocab('unknown_user')."</P>\n";
+        printLoginForm($TargetURL);
+        exit();
+    }
 
     setcookie("UserName", $UserName);
     setcookie("UserPassword", $UserPassword);
@@ -52,6 +52,7 @@ else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['HTTP_HOST']))
 */
 function printLoginForm($TargetURL)
 {
+    global $PHP_SELF;
 ?>
 <p>
   <?php echo get_vocab("please_login") ?>
@@ -82,22 +83,18 @@ function printLoginForm($TargetURL)
 */
 if (isset($Action) && ($Action == "QueryName"))
 {
-    global $PHP_SELF, $QUERY_STRING;
-
     print_header(0, 0, 0, 0);
     printLoginForm($TargetURL);
     exit();
 }
 
-/* getAuth($realm)
+/* authGet()
  * 
- * Request that the username/password be given for the specified realm
+ * Request the user name/password
  * 
- * $realm - Which username/password do we want.
- * 
- * Nothing
+ * Returns: Nothing
  */
-function authGet($realm)
+function authGet()
 {
     global $PHP_SELF, $QUERY_STRING;
 
@@ -115,17 +112,29 @@ function authGet($realm)
 function getUserName()
 {
     if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
+    {
 	return $_COOKIE["UserName"];
-    else if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["UserName"]))
-	return $HTTP_COOKIE_VARS["UserName"];
+    }
+    else
+    {
+        global $HTTP_COOKIE_VARS;
+	if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["UserName"]))
+	    return $HTTP_COOKIE_VARS["UserName"];
+    }
 }
 
 function getUserPassword()
 {
     if (!empty($_COOKIE) && isset($_COOKIE["UserPassword"]))
+    {
 	return $_COOKIE["UserPassword"];
-    else if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["UserPassword"]))
-	return $HTTP_COOKIE_VARS["UserPassword"];
+    }
+    else
+    {
+        global $HTTP_COOKIE_VARS;
+        if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["UserPassword"]))
+	    return $HTTP_COOKIE_VARS["UserPassword"];
+    }
 }
 
 // Print the logon entry on the top banner.
@@ -140,7 +149,7 @@ function PrintLogonBox()
     {
 ?>
 	<TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-	  <A name="logonBox" href="#logonBox"><?php echo get_vocab('you_are')." ".$user ?></A>
+	  <A name="logonBox" href=""><?php echo get_vocab('you_are')." ".$user ?></A><br>
           <FORM METHOD=POST ACTION="admin.php">
 	    <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" />
 	    <input type="hidden" name="Action" value="SetName" />
@@ -155,7 +164,7 @@ else
     {
 ?>
 	<TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-	  <?php echo get_vocab('unknown_user'); ?><br>
+	  <A name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></A><br>
           <FORM METHOD=POST ACTION="admin.php">
 	    <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" />
 	    <input type="hidden" name="Action" value="QueryName" />
