@@ -1,10 +1,17 @@
 2003-10-10  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* config.inc.php (1.5): + Allow to view weeks in
-	  the bottom (trailer.inc) as week numbers (ie. 42) instead of
-	  'first day of the week' (13 Oct). Committing again since John
-	  previous commit erased my changes :-)
-	  
+	* language.inc (1.2): - Changed getenv('HTTP_ACCEPT_LANGUAGE') to
+	  $HTTP_ACCEPT_LANGUAGE.  getenv() does not work in ISAPI mode, so
+	  getenv('HTTP_ACCEPT_LANGUAGE') is always NULL with ISAPI. Global
+	  variable seems more reliable.
+
+2003-10-10  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.5): + Allow to view weeks in the bottom
+	  (trailer.inc) as week numbers (ie. 42) instead of 'first day of
+	  the week' (13 Oct). Committing again since John previous commit
+	  erased my changes :-)
+
 2003-10-09  John Beranek <jberanek@users.sourceforge.net>
 
 	* admin.php (1.12), config.inc.php (1.4), day.php (1.16), del.php
