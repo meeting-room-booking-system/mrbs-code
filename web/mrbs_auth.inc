@@ -5,43 +5,6 @@
 include "auth_$auth[type].inc";
 if (isset($auth['session'])) include "session_$auth[session].inc";
 
-function getAuthUserName()
-{
-	global $PHP_AUTH_USER;
-        if (isset($PHP_AUTH_USER))
-        {
-            $user = $PHP_AUTH_USER;
-            if (get_magic_quotes_gpc())
-            {
-               $user = stripslashes($user);
-            }
-            return $user;
-        }
-        else
-        {
-            return null;
-        }
-}
-
-function getAuthUserPassword()
-{
-	global $PHP_AUTH_PW;
-
-        if (isset($PHP_AUTH_PW))
-        {
-            $pw = $PHP_AUTH_PW;
-            if (get_magic_quotes_gpc())
-            {
-                $pw = stripslashes($pw);
-            }
-            return $pw;
-        }
-        else
-        {
-            return null;
-        }
-}
-
 /* getAuthorised($user, $pass, $level)
  * 
  * Check to see if the user name/password is valid
@@ -59,8 +22,11 @@ function getAuthorised($user, $pass, $level)
 	global $auth;
 	
 	if(!authValidateUser($user, $pass))
+	{
+	        authGet();
 		return 0;
-	
+	}
+
 	return authGetUserLevel($user, $auth["admin"]) >= $level;
 }
 
