@@ -238,6 +238,7 @@ if (isset($areamatch))
 	# Make default values when the form is reused.
 	$areamatch_default = htmlspecialchars($areamatch);
 	$roommatch_default = htmlspecialchars($roommatch);
+	$typematch_default = $typematch;
 	$namematch_default = htmlspecialchars($namematch);
 	$descrmatch_default = htmlspecialchars($descrmatch);
 
@@ -246,6 +247,7 @@ if (isset($areamatch))
 	# New report - use defaults.
 	$areamatch_default = "";
 	$roommatch_default = "";
+	$typematch_default = array();
 	$namematch_default = "";
 	$descrmatch_default = "";
 	$From_day = $day;
@@ -283,6 +285,17 @@ if ( $pview != 1 ) {
     <td class="CL"><input type=text name=roommatch size=18
     value="<?php echo $roommatch_default; ?>">
     </td></tr>
+<tr><td CLASS=CR><?php echo get_vocab("match_type")?></td>
+    <td CLASS=CL valign=top><table><tr><td>
+        <select name="typematch[]" multiple="yes">
+<?php
+for ($c = "A"; $c <= "J"; $c++)
+{
+	if (!empty($typel[$c]))
+		echo "<option value=$c" . (in_array ( $c, $typematch_default ) ? " selected" : "") . ">$typel[$c]\n";
+}
+?></select></td><td><?php echo get_vocab("ctrl_click_type") ?></td></tr></table>
+</td></tr>
 <tr><td class="CR"><?php echo get_vocab("match_entry");?></td>
     <td class="CL"><input type=text name=namematch size=18
     value="<?php echo $namematch_default; ?>">
@@ -352,6 +365,21 @@ if (isset($areamatch))
 		$sql .= " AND" .  sql_syntax_caseless_contains("a.area_name", $areamatch);
 	if (!empty($roommatch))
 		$sql .= " AND" .  sql_syntax_caseless_contains("r.room_name", $roommatch);
+	if (!empty($typematch)) {
+		$sql .= " AND ";
+		if( count( $typematch ) > 1 )
+		{
+			$or_array = array();
+			foreach ( $typematch as $type ){
+				$or_array[] = "e.type = '$type'";
+			}
+			$sql .= "(". implode( " OR ", $or_array ) .")";
+		}
+		else
+		{
+			$sql .= "e.type = '".$typematch[0]."'";
+		}
+	}
 	if (!empty($namematch))
 		$sql .= " AND" .  sql_syntax_caseless_contains("e.name", $namematch);
 	if (!empty($descrmatch))
