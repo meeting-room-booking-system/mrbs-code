@@ -3,6 +3,7 @@
 # $Id$
 
 global $unicode_encoding;
+global $vocab; # outside of scope; needs to be denote as global
 
 ?>
   <LINK REL="stylesheet" href="mrbs.css" type="text/css">
