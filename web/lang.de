@@ -11,27 +11,31 @@
 $lang["charset"]            = "iso-8859-1";
 
 # Used in style.inc
-#$lang["mrbs"]              = "Meeting Room Booking System";
-$lang["mrbs"]               = "Raum Buchungssystem MRBS ´OK CCA´";
+$lang["mrbs"]               = "Raumbuchungssystem MRBS";
 
 # Used in day.php
-$lang["bookingsfor"]        = "Buchungen für";
+$lang["bookingsfor"]        = "Einträge für";
 $lang["bookingsforpost"]    = ""; # Goes after the date
-$lang["areas"]              = "Areas";
+$lang["areas"]              = "Bereiche";
 $lang["daybefore"]          = "gehe zum vorherigen Tag";
 $lang["dayafter"]           = "gehe zum nächsten Tag";
 $lang["gototoday"]          = "gehe zum heutigen Tag";
+$lang["goto"]               = "Start";
 
 # Used in trailer.inc
 $lang["viewday"]            = "Zeige Tag";
+$lang["viewweek"]           = "Zeige Woche";
+$lang["viewmonth"]          = "Zeige Monat";
+
 
 # Used in edit_entry.php
 $lang["addentry"]           = "Eintrag hinzufügen";
 $lang["editentry"]          = "Eintrag ändern";
-$lang["namebooker"]         = "Buchung von";
+$lang["editseries"]         = "Alle Einträge ändern";
+$lang["namebooker"]         = "Eintrag von";
 $lang["fulldescription"]    = "Volständige Beschreibung:<br>&nbsp;&nbsp;(Anzahl der Teilnehmer,<br>&nbsp;&nbsp;Intern/Extern etc)";
 $lang["date"]               = "Tag:";
-$lang["begin_date"]         = "Anfangsdatum:";
+$lang["start_date"]         = "Anfangsdatum:";
 $lang["end_date"]           = "Enddatum:";
 $lang["time"]               = "Zeit:";
 $lang["duration"]           = "Dauer:";
@@ -46,23 +50,84 @@ $lang["type"]               = "Art:";
 $lang["internal"]           = "Intern";
 $lang["external"]           = "Extern";
 $lang["save"]               = "Speichern";
+$lang["rep_type"]           = "Art der Wiederholung:";
+$lang["rep_type_0"]         = "Keine";
+$lang["rep_type_1"]         = "täglich";
+$lang["rep_type_2"]         = "wöchentlich";
+$lang["rep_type_3"]         = "monatlich";
+$lang["rep_type_4"]         = "jährlich";
+$lang["rep_type_5"]         = "monatlich, entsprechender Tag";
+$lang["rep_end_date"]       = "Ende der Wiederholung:";
+$lang["rep_rep_day"]        = "Tag der Wiederholung:";
+$lang["rep_for_weekly"]     = "(für wöchentlich)";
+$lang["rep_freq"]           = "Häufigkeit:";
+
 
 # Used in view_entry.php
 $lang["description"]        = "Beschreibung:";
+$lang["room"]               = "Raum:";
 $lang["createdby"]          = "Erstellt von:";
 $lang["lastupdate"]         = "Letzte Änderung:";
 $lang["deleteentry"]        = "Eintrag löschen";
-$lang["confirmdel"]         = "Sind Sie sicher,\\ndaß Sie diesen Eintrag\\nlöschen wollen?\\n\\n";
-$lang["returnprev"]         = "Zurück zur letzten Seite";
+$lang["deleteseries"]       = "Alle Eintrag löschen";
+$lang["confirmdel"]         = "Sind Sie sicher,\\ndass Sie diesen Eintrag\\nlöschen wollen?\\n\\n";
+$lang["returnprev"]         = "Zurück zur vorigen Seite";
 
 # Used in edit_entry_handler.php
 $lang["error"]              = "Fehler";
-$lang["conflict"]           = "Es gibt Konflikte";
+$lang["sched_conflict"]     = "Konflikt in der Planung";
+$lang["conflict"]           = "Der neue Eintrag hat einen Konflikt mit folgenden Einträgen:";
+$lang["too_may_entrys"]     = "Die gewählten Optionen würden zu viele Einträge erzeugen.<BR>Ändern Sie bitte die Optionen!";
 $lang["returncal"]          = "Zurück zur Kalenderansicht";
 
 # Authentication stuff
 $lang["accessdenied"]       = "Zugang verweigert";
-$lang["unandpw"]            = "Bitte geben Sie ihren Benutzernamen und Passwort ein";
-$lang["norights"]           = "Sie haben keine Berechtigung diesen Eintrag zu ändern";
+$lang["norights"]           = "Sie haben keine Berechtigung, diesen Eintrag zu ändern";
+
+# Used in search.php
+$lang["invalid_search"]     = "Leerer oder ungültiger Suchbegriff.";
+$lang["search_results"]     = "Suchergebnis für:";
+$lang["nothing_found"]      = "Keine passenden Suchergebnisse gefunden.";
+$lang["records"]            = "Ergebnisse ";
+$lang["through"]            = " bis ";
+$lang["of"]                 = " von ";
+$lang["previous"]           = "Vorige";
+$lang["next"]               = "Nächste";
+$lang["entry"]              = "Eintrag";
+$lang["view"]               = "Öffnen";
+
+# Used in report.php
+$lang["report_on"]          = "Bericht über Termine:";
+$lang["report_start"]       = "Bericht Beginn:";
+$lang["report_end"]         = "Bericht Ende:";
+$lang["match_area"]         = "Suche Bereich:";
+$lang["match_room"]         = "Suche Raum:";
+$lang["match_entry"]        = "Suche Kurzbeschreibung:";
+$lang["match_descr"]        = "Suche Beschreibung:";
+$lang["include"]            = "Generiere:";
+$lang["report_only"]        = "nur Bericht";
+$lang["summary_only"]       = "nur Zusammenfassung";
+$lang["report_and_summary"] = "Bericht und Zusammenfassung";
+$lang["summarize_by"]       = "Zusammenfassung nach:";
+$lang["sum_by_descrip"]     = "Kurzbeschreibung";
+$lang["sum_by_creator"]     = "Ersteller";
+$lang["entry_found"]        = "Eintrag gefunden";
+$lang["entries_found"]      = "Einträge gefunden";
+$lang["summary_header"]     = "Stundenzusammenfassung der Einträge";
+$lang["total"]              = "Gesamt";
+
+# Used in week.php
+$lang["weekbefore"]         = "gehe zur vorigen Woche";
+$lang["weekafter"]          = "gehe zur nächsten Woche";
+$lang["gotothisweek"]       = "gehe zu dieser Woche";
+
+# Used in month.php
+$lang["monthbefore"]        = "gehe zum vorigen Monat";
+$lang["monthafter"]         = "gehe zum nächsten Monat";
+$lang["gotothismonth"]      = "gehe zu diesen Monat";
+
+# Used in {day week month}.php
+$lang["no_rooms_for_area"]  = "Der Bereich enthält keinen Raum";
+
 
 ?>
