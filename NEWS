@@ -7,6 +7,38 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.2-pre2 (Sun Dec 07 00:00:00 GMT 2003):
+
+[+] Completely revamped authentication logic.
+    Now MRBS make use of sessions to store temporary user informations,
+    ability to log on/off, and so on.. This is now the default mode. 
+    See AUTHENTICATION for more details.
+[+] Revamped localisation. 
+      Automatic language determination made much better, works for
+	  Windows and Unix servers now
+[+] Added utility to convert text in the database to UTF8.
+[+] Revamped internationalisation. MRBS can now be called  fulled Unicode. 
+      MRBS serves all of it's pages in UTF-8 and stores everything in the 
+      database in UTF-8. This means that all languages work together.
+[+] Bubbles are displayed when mouse hover entries in day, week and month 
+      view, showing a more complete description.
+[+] Allow to view weeks in the bottom of the web pages as week numbers 
+      instead of 'first day of the week' (Per Wermelin - SKIOLD Sæby A/S"
+	  <ela@skiold.dk>).
+[*] Added a new script for the "ext" authentication scheme that
+	  allows you to use a password file with usernames and their
+	  crypted passwords.
+[-] Fixed bug #853410: When changing a non n-weekly entry, field "Number of 
+      weeks (for n-weekly)" appear...
+[-] Fixed bug #846337: We can create rooms with no area
+[-] Fixed bug #413175, #831310: Daylight savings time shift entries one hour 
+[-] Fixed bug: Always displays "Edit Entry" instead of "Edit Series" at top 
+      of page when editing a serie.
+[-] Fixed bug in pop3 auth scheme.
+[-] and several other minor bug fixes.
+[*] Warning: MRBS does not work with postgreSQL 7.3 and above. 
+
+-------------------------------------------------------------------------------
 Version 1.2-pre1 (Tue Sep 23 06:00:00 GMT 2003):
 
 [*] Renamed coonfig.inc to config.inc.php
