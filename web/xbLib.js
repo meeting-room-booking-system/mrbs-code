@@ -9,12 +9,14 @@
 var doAlert = false;
 var xbDump = function(string, tag) {return;} // If indeed not defined, define as a dummy routine.
 
+// var xbDump = function(string, tag) {alert(string);} // If indeed not defined, define as a dummy routine.
+
 if (doAlert) alert("Started xbLib.js v4");
 xbDump("Started xbLib.js v4");
 
-/************************************************\
-* Part 1: Generic Cross-Browser Library routines *
-\************************************************/
+/*****************************************************************************\
+*		Part 1: Generic Cross-Browser Library routines		      *
+\*****************************************************************************/
 
 // Browser-independant background color management
 function xblGetNodeBgColor(node)
@@ -212,21 +214,21 @@ function ForEachDescendant(obj, callback, ref)
   return result;
   }
 
-/*******************************************************\
-* Part 2: MRBS-specific Active Cell Management routines *
-\*******************************************************/
+/*****************************************************************************\
+*            Part 2: MRBS-specific Active Cell Management routines            *
+\*****************************************************************************/
 
 // Define global variables that control the behaviour of the Active Cells.
 // Set conservative defaults, to get the "classic" behaviour if JavaScript is half broken.
 
 var useJS = false;	// If true, use JavaScript for cell user interface. If null, use a plain Anchor link.
+var highlight_left_column = false;
+var highlight_right_column = false;
+var highlightColor = "#999999"; // Default highlight color, if we don't find the one in the CSS.
 
 // Duplicate at JavaScript level the relevant PHP configuration variables.
 var show_plus_link = true;
-var times_right_side = false;
 var highlight_method = "hybrid";
-
-var highlightColor = "#999999"; // Default highlight color, if we don't find the one in the CSS.
 
 var GetNodeColorClass = function(node)
     {
@@ -282,23 +284,65 @@ function SearchTdHighlight(rule, ref)	// Callback called by the CSS scan routine
     return null;
     }
 
-function InitActiveCell(show, right, highlight)
+/*---------------------------------------------------------------------------*\
+*									      *
+|   Function:       InitActiveCell					      |
+|									      |
+|   Description:    Initialize the active cell management.		      |
+|									      |
+|   Parameters:     Boolean show	Whether to show the (+) link.	      |
+|                   Boolean left	Whether to highlight the left column. |
+|                   Boolean right	Whether to highlight the right column.|
+|                   String method	One of "bgcolor", "class", "hybrid".  |
+|									      |
+|   Returns:        Nothing.						      |
+|									      |
+|   Support:        NS4           No. Returns null.                           |
+|                   IE5+, NS6+    Yes.                                        |
+|                   Opera 6       Yes.                                        |
+|									      |
+|   Notes:          This code implements 3 methods for highlighting cells:    |
+|		    highlight_method="bgcolor"				      |
+|			Dynamically changes the cell background color.	      |
+|			Advantage: Works with most javascript-capable browsers.
+|			Drawback: The color is hardwired in this module.(grey)|
+|		    highlight_method="class"				      |
+|			Highlights active cells by changing their color class.|
+|			The highlight color is the background-color defined   |
+|			 in class td.highlight in the CSS.		      |
+|			Advantage: The class definition in the CSS can set    |
+|			 anything, not just the color.			      |
+|			Drawback: Slooow on Internet Explorer 6 on slow PCs.  |
+|		    highlight_method="hybrid"				      |
+|			Extracts the color from the CSS DOM if possible, and  |
+|			 uses it it like in the bgcolor method.		      |
+|			Advantage: Fast on all machines; color defined in CSS.|
+|			Drawback: Not as powerful as the class method.	      |
+|									      |
+|   History:                                                                  |
+|									      |
+|    2004/03/01 JFL Initial implementation.				      |
+*									      *
+\*---------------------------------------------------------------------------*/
+
+function InitActiveCell(show, left, right, method)
     {
-    // Copy the PHP configuration settings.
     show_plus_link = show;
-    times_right_side = right;
-    highlight_method = highlight;
+    highlight_method = method;
+    highlight_left_column = left;
+    highlight_right_column = right;
 
     xbDump("show_plus_link = " + show_plus_link);
-    xbDump("times_right_side = " + times_right_side);
     xbDump("highlight_method = " + highlight_method);
+    xbDump("highlight_left_column = " + highlight_left_column);
+    xbDump("highlight_right_column = " + highlight_right_column);
 
     // Javascript feature detection: Check if a click handler can be called by the browser for a table.
     // For example Netscape 4 only supports onClick for forms.
     // For that, create a hidden table, and check if it has an onClick handler.
     // document.write("<table id=\"test_table\" onClick=\"return true\" border=0 style=\"display:none\"><tr><td id=\"test_td\" class=\"highlight\">&nbsp;</td></tr></table>\n");
     // Note: The previous line, also technically correct, silently breaks JavaScript on Netscape 4.
-    //       (The processing of this file completes succesfully, but the next script is not processed.)
+    //       (The processing of this file completes successfully, but the next script is not processed.)
     //       The next line, with the bare minimum content for our purpose, works on all browsers I've tested, included NS4.
     document.write("<table id=\"test_table\" onClick=\"return true\" border=0></table>\n");
     var test_table = xblGetElementById("test_table"); // Use this test table to detect the browser capabilities.
@@ -308,25 +352,7 @@ function InitActiveCell(show, right, highlight)
 
     //----------------------------------------------------//
 
-    // mrbs.css active cell management: Select a method for highlighting the cell under the mouse pointer.
-
-    // This code implements 3 methods for doing so:
-    // highlight_method="bgcolor"
-    //	Dynamically change the cell background color.
-    //		Advantage: Works with most javascript-capable browsers.
-    //		Drawback: The color is defined in this module. (dark grey)
-    // highlight_method="class"
-    //	Highlighs the active cells by changing their color class. 
-    //	The highlight color is the background-color defined in class td.highlight in the CSS.
-    //		Advantage: The class definition in the CSS can set anything, not just the color.
-    //		Drawback: This is slooow on Internet Explorer 6 on slow PCs.
-    // highlight_method="hybrid"
-    //	Extracts the color from the CSS DOM if possible, and uses it it like in the bgcolor method.
-    //		Advantage: Fast on all machines; color defined in the CSS
-    //		Drawback: Not as powerful as the class method.
-
-    // Alternative for non-DOM-compliant browsers: Dynamically change the background color.
-    //	Feature detection: Check if the browser supports dynamically setting style properties.
+    //	Javascript feature detection: Check if the browser supports dynamically setting style properties.
     var useCssClass = ((highlight_method=="class") && test_table && test_table.style
                        && (test_table.style.setProperty || test_table.style.setAttribute) && true);
     if (useCssClass)			// DOM-compliant browsers
@@ -335,6 +361,8 @@ function InitActiveCell(show, right, highlight)
         GetNodeColorClass = function(node) { return xblGetNodeBgColor(node); } // Can't get class, so get color.
 
     xbDump("JavaScript feature detection: Table class setting supported = " + useCssClass);
+
+    //----------------------------------------------------//
 
     // Now search in the CSS objects the background color of the TD.highlight class.
     // This is done as a performance optimization for IE6: Only change the TD background color, but not its class.
@@ -350,18 +378,25 @@ function InitActiveCell(show, right, highlight)
         xbDump("Found CSS highlight color = " + highlightColor);
         }
 
+    //----------------------------------------------------//
+
+    // Finally combine the last 2 results to generate the SetNodeColorClass function.
     if (useCssClass)			 // DOM-compliant browsers
         SetNodeColorClass = function(node, colorClass) 
             { 
+            xbDump("SetNodeColorClass(" + colorClass + ")");
             node.className = colorClass;  // Use the TD.highlight color from mrbs.css.
             }
     else				 // Pre-DOM browsers like Opera 6
         SetNodeColorClass = function(node, colorClass) 
             {
+            xbDump("SetNodeColorClass(" + colorClass + ")");
             if (colorClass == "highlight") colorClass = highlightColor; // Cannot use the CSS color class. Use the color computed above.
             xblSetNodeBgColor(node, colorClass);
             }
     }
+
+//----------------------------------------------------//
 
 // Cell activation
 function HighlightNode(node)	// Change one TD cell color class
@@ -369,7 +404,7 @@ function HighlightNode(node)	// Change one TD cell color class
     node.oldColorClass = GetNodeColorClass(node);
     SetNodeColorClass(node, "highlight");
     }
-function ActivateCell(cell)	// Activate the TD cell under the mouse, and the corresponding hour cells on both sides of the table.
+function ActivateCell(cell)	// Activate the TD cell under the mouse, and optionally the corresponding hour cells on both sides of the table.
     {
     if (cell.isActive) return;	// Prevent problems with reentrancy. (It happens on slow systems)
     cell.isActive = true;
@@ -379,11 +414,13 @@ function ActivateCell(cell)	// Activate the TD cell under the mouse, and the cor
 	{ if (tdCell.tagName == "TD") break; }
     if (!tdCell) return;
     HighlightNode(tdCell);
-    // Locate the head node for the current row.
-    var leftMostCell = xblFirstSibling(tdCell);
-    if (leftMostCell) HighlightNode(leftMostCell);
-
-    if (times_right_side)
+    if (highlight_left_column)
+        {
+        // Locate the head node for the current row.
+        var leftMostCell = xblFirstSibling(tdCell);
+        if (leftMostCell) HighlightNode(leftMostCell);
+        }
+    if (highlight_right_column)
         {
         // Locate the last node for the current row. (Only when configured to display times at right too.)
         var rightMostCell = xblLastSibling(tdCell);
@@ -403,10 +440,13 @@ function UnactivateCell(cell)
 	{ if (tdCell.tagName == "TD") break; }
     if (!tdCell) return;
     SetNodeColorClass(tdCell, tdCell.oldColorClass);
-    // Locate the head node for the current row.
-    var leftMostCell= xblFirstSibling(tdCell);
-    if (leftMostCell) SetNodeColorClass(leftMostCell, leftMostCell.oldColorClass);
-    if (times_right_side)
+    if (highlight_left_column)
+        {
+        // Locate the head node for the current row.
+        var leftMostCell= xblFirstSibling(tdCell);
+        if (leftMostCell) SetNodeColorClass(leftMostCell, leftMostCell.oldColorClass);
+        }
+    if (highlight_right_column)
         {
         // Locate the last node for the current row. (Only when configured to display times at right too.)
         var rightMostCell = xblLastSibling(tdCell);
@@ -425,8 +465,9 @@ xbDump("Cell activation routines defined.");
 // Callback used to find the A link inside the cell clicked.
 function GotoLinkCB(node, ref)
 {
-    if (node.tagName) var tag = node.tagName;		// DOM-compliant tag name.
-    else if (node.nodeName) var tag = node.nodeName;	// Implicit nodes, such as #text.
+    var tag = null;
+    if (node.tagName) tag = node.tagName;		// DOM-compliant tag name.
+    else if (node.nodeName) tag = node.nodeName;	// Implicit nodes, such as #text.
     if (tag && (tag.toUpperCase() == "A")) return node;
     return null;
 }
@@ -449,8 +490,9 @@ function BeginActiveCell()
 {
     if (useJS)
         {
-        document.write("<table class=\"naked\" width=\"100%\" height=\"100%\" onMouseOver=\"ActivateCell(this)\" onMouseOut=\"UnactivateCell(this)\" onClick=\"GotoLink(this)\">\n<td class=\"naked\"><center>&nbsp;\n");
-        if (!show_plus_link) document.write("<div style=\"display:none\">\n"); // This will hide the (+) link.
+        document.write("<table class=\"naked\" width=\"100%\" height=\"100%\" onMouseOver=\"ActivateCell(this)\" onMouseOut=\"UnactivateCell(this)\" onClick=\"GotoLink(this)\">\n<td class=\"naked\">\n");
+	// Note: The &nbsp; below is necessary to fill-up the cell. Empty cells behave badly in some browsers.
+        if (!show_plus_link) document.write("&nbsp;<div style=\"display:none\">\n"); // This will hide the (+) link.
         }
 }
 
@@ -459,7 +501,7 @@ function EndActiveCell()
     if (useJS)
         {
         if (!show_plus_link) document.write("</div>");
-        document.write("&nbsp;</center></td></table>\n");
+        document.write("</td></table>\n");
         }
 }
 

@@ -297,6 +297,18 @@ if ($debug_flag)
     echo "</pre>\n";
 }
 
+// Include the active cell content management routines. 
+// Must be included before the beginnning of the main table.
+if ($javascript_cursor) // If authorized in config.inc.php, include the javascript cursor management.
+    {
+    echo "<SCRIPT language=\"JavaScript\" type=\"text/javascript\" src=\"xbLib.js\"></SCRIPT>\n";
+    echo "<SCRIPT language=\"JavaScript\">InitActiveCell("
+       . ($show_plus_link ? "true" : "false") . ", "
+       . "false, "
+       . "false, "
+       . "\"$highlight_method\" );</SCRIPT>\n";
+    }
+
 echo "<table border=2 width=\"100%\">\n<tr>";
 # Weekday name header row:
 for ($weekcol = 0; $weekcol < 7; $weekcol++)
@@ -316,15 +328,6 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
 {
     if ($weekcol == 0) echo "</tr><tr>\n";
     echo "<td valign=top height=100 class=\"month\"><div class=\"monthday\"><a href=\"day.php?year=$year&month=$month&day=$cday&area=$area\">$cday</a>&nbsp;\n";
-    if( $enable_periods ) {
-	echo "<a href=\"edit_entry.php?room=$room&area=$area"
-	. "&period=0&year=$year&month=$month"
-	. "&day=$cday\"><img src=new.gif width=10 height=10 border=0></a>";
-    } else {
-	echo "<a href=\"edit_entry.php?room=$room&area=$area"
-	. "&hour=$morningstarts&minute=0&year=$year&month=$month"
-	. "&day=$cday\"><img src=new.gif width=10 height=10 border=0></a>";
-    }
     echo "</div>";
 
     # Anything to display for this day?
@@ -386,6 +389,29 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
         }
         echo "</font>";
     }
+
+    echo "<br>";
+    if ($javascript_cursor)
+	{
+	echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+	echo "BeginActiveCell();\n";
+	echo "// -->\n</SCRIPT>";
+	}
+    if( $enable_periods ) {
+	echo "<a href=\"edit_entry.php?room=$room&area=$area"
+	. "&period=0&year=$year&month=$month"
+	. "&day=$cday\"><img src=new.gif width=10 height=10 border=0></a>";
+    } else {
+	echo "<a href=\"edit_entry.php?room=$room&area=$area"
+	. "&hour=$morningstarts&minute=0&year=$year&month=$month"
+	. "&day=$cday\"><img src=new.gif width=10 height=10 border=0></a>";
+    }
+    if ($javascript_cursor)
+	{
+	echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+	echo "EndActiveCell();\n";
+	echo "// -->\n</SCRIPT>";
+	}
     echo "</td>\n";
     if (++$weekcol == 7) $weekcol = 0;
 }

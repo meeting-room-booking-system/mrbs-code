@@ -205,6 +205,7 @@ else
 	    echo "<SCRIPT language=\"JavaScript\" type=\"text/javascript\" src=\"xbLib.js\"></SCRIPT>\n";
             echo "<SCRIPT language=\"JavaScript\">InitActiveCell("
                . ($show_plus_link ? "true" : "false") . ", "
+               . "true, "
                . ((FALSE != $times_right_side) ? "true" : "false") . ", "
                . "\"$highlight_method\" );</SCRIPT>\n";
             }
@@ -298,7 +299,6 @@ else
 				$hour = date("H",$t);
 				$minute  = date("i",$t);
 
-				echo "<center>";
 				if ( $pview != 1 ) {
 					if ($javascript_cursor)
 					{
@@ -306,11 +306,13 @@ else
 						echo "BeginActiveCell();\n";
 						echo "// -->\n</SCRIPT>";
 					}
+					echo "<center>";
 					if( $enable_periods ) {
 						echo "<a href=\"edit_entry.php?area=$area&room=$room&period=$time_t_stripped&year=$year&month=$month&day=$day\"><img src=new.gif width=10 height=10 border=0></a>";
 					} else {
 						echo "<a href=\"edit_entry.php?area=$area&room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day\"><img src=new.gif width=10 height=10 border=0></a>";
 					}
+					echo "</center>";
 					if ($javascript_cursor)
 					{
 						echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
@@ -318,7 +320,6 @@ else
 						echo "// -->\n</SCRIPT>";
 					}
 				} else echo '&nbsp;';
-				echo "</center>";
 			}
 			elseif ($descr != "")
 			{

@@ -73,5 +73,5 @@ position: absolute;
 left:30;
 top:12}
 
-TD.month {font-size: 8pt}
-.monthday {font-size: 12pt}
+TD.month {font-size: 8pt; background-color:#FFFFFF}
+.monthday {font-size: 12pt; vertical-align: top; text-align: left}
