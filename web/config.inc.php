@@ -99,8 +99,8 @@ $view_week_number = FALSE;
 ###############################################
 # Authentication settings - read AUTHENTICATION
 ###############################################
-$auth["session"] = "php"; # How to get and keep the user ID. One of "http" "php" "cookie" "ip" "dns".
-$auth["type"] = "config"; # How to validate the user/password. One of "none" "config" "db" "pop3" "ldap" "imap"
+$auth["session"] = "php"; # How to get and keep the user ID. One of "http" "php" "cookie" "ip" "host" "nt" "omni".
+$auth["type"] = "config"; # How to validate the user/password. One of "none" "config" "pop3" "imap" "ldap".
 
 # The various level two users (can modify other peoples settings)
 # By default, only localhost is an administrator.
