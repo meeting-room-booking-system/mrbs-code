@@ -104,8 +104,8 @@ else
 
 # Acquire mutex to lock out others trying to book the same slot(s).
 if (!sql_mutex_lock('mrbs_entry'))
-	fatal_error(1, "Failed to acquire exclusive database access");
-
+	fatal_error(1, $vocab['failed_to_acquire']);
+	
 # Check for any schedule conflicts in each room we're going to try and
 # book in
 $err = "";
