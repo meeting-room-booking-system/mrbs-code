@@ -315,6 +315,7 @@ function round_t_up($t, $resolution, $am7)
 # displayed.
 function make_area_select_html( $link, $current, $year, $month, $day )
 {
+	global $vocab;
 	$out_html = "<form name=\"area\">
 	             <select name=\"area\" onChange=\"area_go()\">";
 
@@ -343,13 +344,14 @@ function make_area_select_html( $link, $current, $year, $month, $day )
 	    </SCRIPT>
  
 	    
-	    <input type=submit value=\"Change\"></form>";
+	    <input type=submit value=\"$vocab[change]\"></form>";
 
 	return $out_html;
 } # end make_area_select_html
 
 function make_room_select_html( $link, $area, $current, $year, $month, $day )
 {
+	global $vocab;
 	$out_html = "<form name=\"room\">
 	             <select name=\"room\" onChange=\"room_go()\">";
 
@@ -379,7 +381,7 @@ function make_room_select_html( $link, $area, $current, $year, $month, $day )
 	    </SCRIPT>
  
 	    
-	    <input type=submit value=\"Change\"></form>";
+	    <input type=submit value=\"$vocab[change]\"></form>";
 
 	return $out_html;
 } # end make_area_select_html
