@@ -1,3 +1,7 @@
+Version 0.8-pre5 (Thurs July 13 11:50 2000)
+	Improved "Conflict detection" code
+	Lots of date/time handling improvements
+	
 Version 0.8-pre4 (Wed July 12 11:00 2000)
 	Added repeat entrys
 	Added French language file
