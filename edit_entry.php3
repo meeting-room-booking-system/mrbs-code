@@ -22,7 +22,7 @@ if ($id) {
 	#We split the start date into all its constituant parts with mySQL
 	$sql = "select name, description, date_format(start_time, '%e'), date_format(start_time, '%c'),
 	        date_format(start_time, '%Y'), date_format(start_time, '%H'), date_format(start_time, '%i'),
-			  (unix_timestamp(end_time) - unix_timestamp(start_time))/60/60, type, room_id
+			  (end_time - start_time)/60/60, type, room_id
 			  from mrbs_entry where id=$id";
 #echo $sql;
 	$res = mysql_query($sql);

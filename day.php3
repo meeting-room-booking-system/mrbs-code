@@ -82,14 +82,14 @@ echo "<table width=100%><tr><td><a href=day.php3?year=$yy&month=$ym&day=$yd&area
 #In PHP we dont need to define an array before using it
 
 #Get all appointments for today in the area that we care about
-$sql = "select create_by, mrbs_room.id, unix_timestamp(start_time), unix_timestamp(end_time), type, name, mrbs_entry.description, mrbs_entry.id, mrbs_entry.type
+$sql = "select create_by, mrbs_room.id, start_time, end_time, type, name, mrbs_entry.description, mrbs_entry.id, mrbs_entry.type
 
 from mrbs_entry left join mrbs_room on mrbs_entry.room_id = mrbs_room.id
 
 where area_id = $area 
-      and (start_time between from_unixtime($am7) and from_unixtime($pm7)
-		or end_time between from_unixtime($am7) and from_unixtime($pm7)
-      or from_unixtime($am7) between start_time and end_time)
+      and (start_time between $am7 and $pm7
+		or end_time between $am7 and $pm7
+      or $am7 between start_time and end_time)
 ";
 
 $res = mysql_query($sql);

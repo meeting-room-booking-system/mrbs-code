@@ -1,8 +1,8 @@
-# MySQL dump 7.1
+# MySQL dump 6.4
 #
 # Host: localhost    Database: mrbs
 #--------------------------------------------------------
-# Server version	3.22.32
+# Server version	3.22.27
 
 #
 # Table structure for table 'mrbs_area'
@@ -29,14 +29,15 @@ CREATE TABLE mrbs_entry (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
   room_id int(11) DEFAULT '1' NOT NULL,
   create_by varchar(25) DEFAULT '' NOT NULL,
-  start_time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-  end_time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  start_time int(11) DEFAULT '0' NOT NULL,
+  end_time int(11) DEFAULT '0' NOT NULL,
   timestamp timestamp(14),
   type char(1) DEFAULT 'E' NOT NULL,
   name varchar(80) DEFAULT '' NOT NULL,
   description text,
   PRIMARY KEY (id),
-  KEY idxDate (start_time)
+  KEY idxStartTime (start_time),
+  KEY idxEndTime (end_time)
 );
 
 #

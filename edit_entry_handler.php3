@@ -50,15 +50,13 @@ function times_overlap ( $time1, $duration1, $time2, $duration2 ) {
 #   or starts between the times this starts and ends
 #   where the room is the same
 
-# Make the start time in mysql format
-if (strlen($month) == 1) { $month = "0".$month;}
-if (strlen($day)   == 1) { $day   = "0".$day;  }
-$starttime = "$year-$month-$day $hour:$minute";
-$duration_min = $duration * 60;
+$starttime = mktime($hour, $minute, 0, $month, $day, $year);
+$endtime   = mktime($hour, $minute + ($duration * 60), 0, $month, $day, $year);
+$endtime1  = $endtime - 1;
 
 $sql = "select id, name from mrbs_entry where 
 (
-  (start_time between '$starttime' and date_sub(date_add('$starttime',interval $duration_min minute),interval 1 second))
+  (start_time between '$starttime' and $endtime1)
   or
   ('$starttime' between start_time and date_sub(end_time, interval 1 second))
 )
@@ -93,7 +91,7 @@ if (strlen($error) == 0) {
 	        '$room_id',
 			  '$REMOTE_ADDR',
 			  '$starttime',
-			  date_add('$starttime', interval $duration_min minute),
+			  '$endtime',
 			  '$type',
 			  '$name_q',
 			  '$description_q'

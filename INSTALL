@@ -29,6 +29,8 @@ your web server will find it.  (See your web server docs for info.)
 
 DATABASE SETUP
 ---------------------------------------------------------------------------
+For a new install:
+
 You can place the calendar db tables in an existing database or
 create a new database with the following:
 	mysqladmin create mrbs
@@ -39,6 +41,10 @@ Create the calendar tables using the supplied tables.sql file:
 where "mrbs" is the name of your database (mentioned above).
 This will create all the needed tables.
 
+For an upgrade:
+The database format changed slightly between 0.6 and 0.7. To change the
+format of your data do:
+	mysql mrbs < upgrade.sql
 
 APPLICATION SETUP
 ---------------------------------------------------------------------------

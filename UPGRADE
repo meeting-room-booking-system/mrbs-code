@@ -1,0 +1,7 @@
+The database format changed slightly in version 0.7
+
+To upgrade from a version previous to 0.7 do the following:
+
+	mysql mrbs < upgrade.sql
+	
+There are also some new options in config.inc which you may want to change.

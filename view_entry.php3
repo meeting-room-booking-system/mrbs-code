@@ -21,8 +21,8 @@ if ( $id < 1 ) {
 
 
 #Find all the data about our booking
-$sql = "select name, description, unix_timestamp(start_time), unix_timestamp(start_time),
-		  (unix_timestamp(end_time) - unix_timestamp(start_time)), type, create_by, 
+$sql = "select name, description, start_time, start_time,
+		  (end_time - start_time), type, create_by, 
 		  unix_timestamp(timestamp)
 		  from mrbs_entry where id='$id'";
 
