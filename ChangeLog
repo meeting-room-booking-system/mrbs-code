@@ -1,5 +1,6 @@
 CVS:
 	Rename auth.inc -> mrbs_auth.inc to stop phplib conflicts
+	Added Dutch language file
 	Added German language file
 	Added Traditional Chinese language file
 	Explicity set charset (from language file)
