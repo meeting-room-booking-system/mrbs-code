@@ -179,7 +179,7 @@ if ($debug_flag)
 # pull the data from the db and store it. Convienently we can print the room
 # headings and capacities at the same time
 
-$sql = "select room_name, capacity, id, description from $tbl_room where area_id=$area order by capacity";
+$sql = "select room_name, capacity, id, description from $tbl_room where area_id=$area order by 1";
 
 $res = sql_query($sql);
 
