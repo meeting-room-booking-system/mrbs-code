@@ -134,7 +134,7 @@ Installing PEAR::MDB
 
 [NOTE: 2003-10-10 :
 
-Current mrbs_MDB use MDB 1.x. MDB release announcement says the behavior of 
+Current mrbs_MDB use MDB 1.x. MDB release announcement says the behavior of
 some functions will change with MDB 2. The result from this is if you intall 
 upgrade MDB to 2.x version, current code will not work. Solution :
 
@@ -143,18 +143,11 @@ upgrade MDB to 2.x version, current code will not work. Solution :
   downloaded the latest 1.x version from PEAR web site
 - either, if you use PEAR 1.3+, use '$ pear install MDB-1.x' to install the 
   last 1.x version
+
 NOTE END]
 
 MRBS relies on PEAR::MDB class to connect to DBMS. Therefore you have to
 install the PEAR framework before and then PEAR::MDB package.
-
-Note : If you use the PEAR framework, you should not unpack the mdb.tgz file
-as specified in the INSTALL notes, because these files will be used instead.
-If you have already unpacked it, then delete :
-  - MDB.php
-  - PEAR.php
-  - MDB directory
-  - XML directory
 
 The command line installer is the easiest way to install MDB package on your
 system. It connects to the PEAR package server via a simple HTTP connection,
@@ -185,6 +178,14 @@ $ pear install MDB-x.x.x.tgz
 This command will automatically install the packages and does not require an
 online connection.
 
+[NOTE: 2004-02-28 :
+
+Latest MDB version from the stable branch (1.2) still lacks some features and
+contains some bugs that prevent use of MRBS with Oracle. As this driver is
+heavily patched since, we need to use the current files from MDB1 branch from
+CVS.
+
+NOTE END]
 
 Webhosting
 ----------
@@ -196,4 +197,3 @@ process of installing the packages. One way to go is to install the pear
 command on your desktop and copy the files over to the server. Don't forget
 you can use set_include_path() to make the directory where you copied the
 PEAR files available across your site.
-

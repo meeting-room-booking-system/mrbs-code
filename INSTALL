@@ -49,14 +49,6 @@ For example:
 Unpack the software into a new temporary directory, something like this:
     $ tar -xvzf ~/download/mrbs-1.0.tgz       (or whatever version)
     $ cd mrbs-1.0                             (or whatever version)
-    $ cd web
-    $ tar -xvzf mdb.tgz                       (database wrapper)
-Then you can delete mdb.tgz.
-
-Note 1: Windows users, make sure mdb.tgz extract in the *same* directory and
-		not in a sub directory.
-Note 2: You can use an alternate installation method for the database wrapper
-	   using the PEAR installer. See PEAR file for more on this.
 
 If you are upgrading from a previous version of MRBS, you should save your
 "config.inc.php" or "config.inc" file so you can compare and update the new
@@ -73,8 +65,8 @@ distribution somewhere your web server can find it.  For example:
 DATABASE SETUP
 
 If you are upgrading from MRBS version already using the MDB class, and
-you are continuing to use the same DBMS, your database is already set up, so you can
-skip to the Application Setup section.
+you are continuing to use the same DBMS, your database is already set up, so
+you can skip to the Application Setup section.
 
 Database and tables creation
 ----------------------------
@@ -106,6 +98,7 @@ fbsql   -> FrontBase
 
 $db_host : this is the host name of the database server. If the database
 server and web server are the same machine, use $db_host="localhost".
+If you use Oracle, enter your Oracle SID here instead.
 
 $db_port : leave empty if the database server use its default port.
 
@@ -130,7 +123,13 @@ else to create the database, you should set this flag to 0.
 $db_protocol :  default 'tcp'. With PostgreSQL, you can use 'unix' to
 use Unix Domain Sockets to connect to the database server on the same machine.
 
+* DBMS specific options *
 
+$oci8_home : Home directory path where Oracle is installed if it is running
+on the local machine. (i.e. /usr/local/oracle/8i  or C:\oracle\ora81).
+Default value: value of the environment variable ORACLE_HOME.
+
+---
 Now this is as simple as running the following command on your shell:
 
 $ php mrbs_create.php
@@ -434,4 +433,3 @@ large number of test entries to your database, destroy entries, regardless of
 authentication, and book all your rooms to people you've never heard of.
 
 $Id$
-

@@ -61,7 +61,7 @@ $db_protocol = "tcp";
 
 //****ORACLE*****
 
-// Home directory path when Oracle is installed if it is running in the local machine.
+// Home directory path where Oracle is installed if it is running in the local machine.
 // Default value: value of the environment variable ORACLE_HOME
 $oci8_home = "";
 

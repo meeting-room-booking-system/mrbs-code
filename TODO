@@ -15,7 +15,7 @@ its own database field types.
 
 During the move, my goal was to adhere strictly to the previous code. If a 
 previous sql command did not check for error, so I do. This is exactly the
-same MRBS version as you know, base on the august current cvs snapshot, so 
+same MRBS version as you know, base on the 2004-02-26 cvs snapshot, so
 there is no change to other mrbs features.
    
 We release this mrbs-dev package so that people can test it. Right now 
@@ -23,7 +23,8 @@ mrbs-dev **should** run with MySQL, PostgreSQL, Oracle, FrontBase,
 Interbase/Firebird and Microsoft SQL Server database systems. Other DBMS
 may be supported in the future. 
 I say **should**, because although the new database wrapper claims to works
-with these DBMS, I tested it only against MySQL. In fact I need :
+with these DBMS, I tested it only against MySQL, PostgreSQL, MS SQL server
+and Oracle. In fact I need :
 
 - Tests against other databases.
 
