@@ -68,22 +68,30 @@ function getMailPeriodDateString($t, $mod_time=0)
 /**
  * Format a timestamp in non-unicode output (for emails).
  *
- * @param   timestamp   $t  timestamp to format
- * @return  string          formated string
+ * @param   timestamp   $t         timestamp to format
+ * @param   boolean     $inc_time  include time in return string
+ * @return  string                 formated string
  */
-function getMailTimeDateString($t)
+function getMailTimeDateString($t, $inc_time=TRUE)
 {
     global $twentyfourhour_format;
     // This bit's necessary, because it seems %p in strftime format
     // strings doesn't work
     $ampm = date("a",$t);
-    if ($twentyfourhour_format)
+    if ($inc_time)
     {
-        return strftime("%H:%M:%S - %A %d %B %Y",$t);
+        if ($twentyfourhour_format)
+        {
+            return strftime("%H:%M:%S - %A %d %B %Y",$t);
+        }
+        else
+        {
+            return strftime("%I:%M:%S$ampm - %A %d %B %Y",$t);
+        }
     }
     else
     {
-        return strftime("%I:%M:%S$ampm - %A %d %B %Y",$t);
+        return strftime("%A %d %B %Y",$t);
     }
 }
 
@@ -102,6 +110,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
     global $url_base, $returl, $mail_vocab, $name, $description, $area_name;
     global $room_name, $starttime, $duration, $dur_units, $end_date, $endtime;
     global $rep_enddate, $typel, $type, $create_by, $rep_type, $enable_periods;
+    global $rep_opt, $rep_num_weeks;
     global $tbl_room, $tbl_area, $tbl_entry, $tbl_users, $tbl_repeat;
     global $mail_previous, $auth;
     
@@ -266,14 +275,20 @@ function notifyAdminOnBooking($new_entry , $new_id)
         $body .= "\n" . $mail_vocab["namebooker"] . " ";
         $body .= compareEntries(removeMailUnicode($name),
             removeMailUnicode($mail_previous['namebooker']), $new_entry)  . "\n";
+        
+        // Description:
         $body .= $mail_vocab["description"] . " ";
         $body .= compareEntries(removeMailUnicode($description),
             removeMailUnicode($mail_previous['description']), $new_entry) . "\n";
+        
+        // Room:
         $body .= $mail_vocab["room"] . ": " .
             compareEntries(removeMailUnicode($area_name),
             removeMailUnicode($mail_previous['area_name']), $new_entry);
         $body .= " - " . compareEntries(removeMailUnicode($room_name),
             removeMailUnicode($mail_previous['room_name']), $new_entry) . "\n";
+        
+        // Start time
         if ( $enable_periods )
         {
             list( $start_period, $start_date) =
@@ -288,20 +303,18 @@ function notifyAdminOnBooking($new_entry , $new_id)
             $body .= $mail_vocab["start_date"] . " " .
                 compareEntries($start_date, $mail_previous['start_date'], $new_entry) . "\n";
         }
+        
+        // Duration
         $body .= $mail_vocab["duration"] . " " .
             compareEntries($duration, $mail_previous['duration'], $new_entry);
         $body .= " " . compareEntries($mail_vocab["$dur_units"],
             $mail_previous['dur_units'], $new_entry) . "\n";
+        
+        // End time
         if ( $enable_periods )
         {
-            // If this is a serie, $endtime = serie end_date
-            if ($rep_type > 0) {
-                $myendtime = $rep_enddate;
-                $mod_time = 0;
-            } else {
-                $myendtime = $endtime;
-                $mod_time = -1;
-            }
+            $myendtime = $endtime;
+            $mod_time = -1;
             list($end_period, $end_date) =  getMailPeriodDateString($myendtime, $mod_time);
             $body .= $mail_vocab["end_date"] . " ";
             $body .= compareEntries(unHtmlEntities($end_date),
@@ -309,12 +322,13 @@ function notifyAdminOnBooking($new_entry , $new_id)
         }
         else
         {
-            // If this is a serie, $endtime = serie end_date
-            $rep_type > 0 ? $myendtime = $rep_enddate : $myendtime = $endtime;
+            $myendtime = $endtime;
             $end_date = getMailTimeDateString($myendtime);
             $body .= $mail_vocab["end_date"] . " " .
                 compareEntries($end_date, $mail_previous['end_date'], $new_entry) . "\n";
         }
+        
+        // Type of booking
         $body .= $mail_vocab["type"] . " ";
         if ($new_entry)
         {
@@ -325,10 +339,16 @@ function notifyAdminOnBooking($new_entry , $new_id)
             $temp = $mail_previous['type'];
             $body .= compareEntries($typel[$type], $typel[$temp], $new_entry);
         }
+        
+        // Created by
         $body .= "\n" . $mail_vocab["createdby"] . " " .
             compareEntries($create_by, $mail_previous['createdby'], $new_entry) . "\n";
+        
+        // Last updated
         $body .= $mail_vocab["lastupdate"] . " " .
             compareEntries(getMailTimeDateString(time()), $mail_previous['updated'], $new_entry);
+        
+        // Repeat Type
         $body .= "\n" . $mail_vocab["rep_type"];
         if ($new_entry)
         {
@@ -338,8 +358,47 @@ function notifyAdminOnBooking($new_entry , $new_id)
         {
             $temp = $mail_previous['rep_type'];
             $body .=  " " . compareEntries($mail_vocab["rep_type_$rep_type"],
-                $mail_vocab["rep_type_$temp"], $new_entry) . "\n";
+                $mail_vocab["rep_type_$temp"], $new_entry);
         }
+        
+        // Details if a series
+        if ($rep_type > 0)
+        {
+	    $opt = "";
+	    if (($rep_type == 2) || ($rep_type == 6))
+	    {
+		# Display day names according to language and preferred weekday start.
+		for ($i = 0; $i < 7; $i++)
+		{
+			$daynum = ($i + $weekstarts) % 7;
+			if ($rep_opt[$daynum]) $opt .= day_name($daynum) . " ";
+		}
+	    }
+	    if ($rep_type == 6)
+	    {
+		$body .= "\n" . $mail_vocab["rep_num_weeks"];
+		$body .=  ": " . compareEntries($rep_num_weeks, $mail_previous["rep_num_weeks"], $new_entry);
+	    }
+	
+	    if($opt || $mail_previous["rep_opt"])
+	    {
+		$body .= "\n" . $mail_vocab["rep_rep_day"];
+		$body .=  " " . compareEntries($opt, $mail_previous["rep_opt"], $new_entry);
+	    }
+
+            $body .= "\n" . $mail_vocab["rep_end_date"];
+            if ($new_entry)
+            {
+                $body .= " " . utf8_strftime('%A %d %B %Y',$rep_enddate);
+            }
+            else
+            {
+                $temp = utf8_strftime('%A %d %B %Y',$rep_enddate);
+                $body .=  " " . 
+                    compareEntries($temp, $mail_previous['rep_end_date'], $new_entry) . "\n";
+            }
+        }
+	$body .= "\n";
     }
     $result = sendMail($recipients, $subject, $body, $mail_vocab['charset'] ,MAIL_CC);
     return $result;
@@ -465,7 +524,25 @@ function notifyAdminOnDelete($mail_previous)
     $body .= $mail_vocab["lastupdate"] . " " . $mail_previous['updated'];
     $body .= "\n" . $mail_vocab["rep_type"];
     $temp = $mail_previous['rep_type'];
-    $body .=  " " . $mail_vocab["rep_type_$temp"] . "\n";
+    $body .=  " " . $mail_vocab["rep_type_$temp"];
+    if ($mail_previous['rep_type'] > 0)
+    {
+        if ($mail_previous['rep_type'] == 6)
+        {
+           $body .= "\n" . $mail_vocab["rep_num_weeks"];
+           $body .=  ": " . $mail_previous["rep_num_weeks"];
+        }
+   
+        if($mail_previous["rep_opt"])
+        {
+           $body .= "\n" . $mail_vocab["rep_rep_day"];
+           $body .=  " " . $mail_previous["rep_opt"];
+        }
+
+        $body .= "\n" . $mail_vocab["rep_end_date"];
+        $body .=  " " . $mail_previous['rep_end_date'] . "\n";
+    }
+    $body .= "\n";
     // End of mail details
     $result = sendMail($recipients, $subject, $body, $mail_vocab['charset'], MAIL_CC);
     return $result;
@@ -506,9 +583,10 @@ function getPreviousEntryData($id, $series)
     // but for portability purpose I will not use it.
     if (1 == $series)
     {
-        $sql .= ", re.rep_type, (re.end_time -
-            re.start_time) AS tbl_r_duration,
+        $sql .= ", re.rep_type, re.rep_opt, re.rep_num_weeks,
+            (re.end_time - re.start_time) AS tbl_r_duration,
             re.start_time AS tbl_r_start_time,
+            re.end_time AS tbl_r_end_time,
             re.end_date AS tbl_r_end_date";
     }
     $sql .= "
@@ -562,11 +640,50 @@ function getPreviousEntryData($id, $series)
             list( $mail_previous['start_period'], $mail_previous['start_date'])
                 =  getMailPeriodDateString($row['tbl_r_start_time']);
             list( $mail_previous['end_period'] , $mail_previous['end_date']) =
-                getMailPeriodDateString($row['tbl_r_end_date'], 0);
+                getMailPeriodDateString($row['tbl_r_end_time'], 0);
+            // use getMailTimeDateString as all I want is the date
+	    $mail_previous['rep_end_date'] =
+                getMailTimeDateString($row['tbl_r_end_date'], FALSE);
             // need to make DST correct in opposite direction to entry creation
             // so that user see what he expects to see
             $mail_previous['duration'] = $row['tbl_r_duration'] -
-                cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_date']);
+                cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_time']);
+	    
+	    $mail_previous['rep_opt'] = "";
+	    switch($row['rep_type'])
+	    {
+		case 2:
+		case 6:
+			$rep_day[0] = $row['rep_opt'][0] != "0";
+			$rep_day[1] = $row['rep_opt'][1] != "0";
+			$rep_day[2] = $row['rep_opt'][2] != "0";
+			$rep_day[3] = $row['rep_opt'][3] != "0";
+			$rep_day[4] = $row['rep_opt'][4] != "0";
+			$rep_day[5] = $row['rep_opt'][5] != "0";
+			$rep_day[6] = $row['rep_opt'][6] != "0";
+
+			if ($row['rep_type'] == 6)
+			{
+				$mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
+			}
+			else
+			{
+				$mail_previous['rep_num_weeks'] = "";
+			}
+			
+			break;
+		
+		default:
+			$rep_day = array(0, 0, 0, 0, 0, 0, 0);
+	    }
+	    for ($i = 0; $i < 7; $i++)
+	    {
+		$wday = ($i + $weekstarts) % 7;
+		if ($rep_day[$wday])
+		    $mail_previous['rep_opt'] .= day_name($wday) . " ";
+	    }
+	    
+	    $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
         }
         toPeriodString($mail_previous['start_period'],
             $mail_previous['duration'], $mail_previous['dur_units']);
@@ -592,11 +709,50 @@ function getPreviousEntryData($id, $series)
             $mail_previous['start_date'] =
                 getMailTimeDateString($row['tbl_r_start_time']);
             $mail_previous['end_date'] =
-                getMailTimeDateString($row['tbl_r_end_date']);
+                getMailTimeDateString($row['tbl_r_end_time']);
+            // use getMailTimeDateString as all I want is the date
+	    $mail_previous['rep_end_date'] =
+                getMailTimeDateString($row['tbl_r_end_date'], FALSE);
             // need to make DST correct in opposite direction to entry creation
             // so that user see what he expects to see
             $mail_previous['duration'] = $row['tbl_r_duration'] -
-                cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_date']);
+                cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_time']);
+            
+	    $mail_previous['rep_opt'] = "";
+	    switch($row['rep_type'])
+	    {
+		case 2:
+		case 6:
+			$rep_day[0] = $row['rep_opt'][0] != "0";
+			$rep_day[1] = $row['rep_opt'][1] != "0";
+			$rep_day[2] = $row['rep_opt'][2] != "0";
+			$rep_day[3] = $row['rep_opt'][3] != "0";
+			$rep_day[4] = $row['rep_opt'][4] != "0";
+			$rep_day[5] = $row['rep_opt'][5] != "0";
+			$rep_day[6] = $row['rep_opt'][6] != "0";
+
+			if ($row['rep_type'] == 6)
+			{
+				$mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
+			}
+			else
+			{
+				$mail_previous['rep_num_weeks'] = "";
+			}
+			
+			break;
+		
+		default:
+			$rep_day = array(0, 0, 0, 0, 0, 0, 0);
+	    }
+	    for ($i = 0; $i < 7; $i++)
+	    {
+		$wday = ($i + $weekstarts) % 7;
+		if ($rep_day[$wday])
+		    $mail_previous['rep_opt'] .= day_name($wday) . " ";
+	    }
+	    
+	    $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
         }
         toTimeString($mail_previous['duration'], $mail_previous['dur_units']);
     }
