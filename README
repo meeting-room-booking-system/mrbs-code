@@ -26,12 +26,9 @@ Try viewing http://wherever/mrbs/testdata.php3 - it will generate a whole load
 of random appointments to fill up the calendar and let you play around.
 
 Administration is done from admin.php3 - you can add or delete rooms and areas.
-There is no security for this, but if you really care that much you can use
-your webserver to add some.
-
-There has been quite a few features added recently, including user
-authentication and repeat bookings, so this code may not be all that stable.
-If you have any problems, please contact me.
+I have just changed this to use the main user authentication, any level "2"
+users can now add/remove rooms/areas.  See AUTHENTICATION for a better
+description.
 
 I've only tested this using PHP 3.0.16, Apache 1.3.12, mySQL 3.22.32 and Linux
 2.2.14, although it should work on just about anything that's got mySQL and

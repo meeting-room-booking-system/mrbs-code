@@ -1,8 +1,8 @@
 Version 0.9-pre1 (13:00 Fri August 2000)
 	A few minor bug fixes.
 	Authentication is finally in properly
-	Big UI change, provides a toolbar at the top, help, the beginnings of
-	the ability to search and other stuff.
+	Big UI change, provides a toolbar at the top, help, the the ability
+	to search and other usefull stuff.
 	A help file for the users.
 	Another LDAP authentication method, this one uses `ldapsearch'
 	Thanks to Mark Belanger <mark_belanger@ltx.com> for most of this.

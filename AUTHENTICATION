@@ -17,7 +17,8 @@ There are three levels of access in MRBS:
    Level 2 - Administrator
 
 The administrators are allowed to modify other people's bookings, whereas
-Level 1 users can only change their own.
+Level 1 users can only change their own.  Admistrators also have the ability to
+add and remove rooms and areas.
 
 Administrators are defined in config.inc. This is done by specifying:
    $auth[admin][] = "username";
@@ -28,7 +29,6 @@ You can have as many administrators as you want.
 
 The default configuration has a few 10.10. IP addresses as administrators -
 you may want to change these.
-
 
 Different Auth Schemes
 ----------------------
