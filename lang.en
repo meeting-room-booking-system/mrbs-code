@@ -58,6 +58,7 @@ $lang["rep_freq"]           = "Frequency:";
 
 # Used in view_entry.php3
 $lang["description"]        = "Description:";
+$lang["room"]               = "Room:";
 $lang["createdby"]          = "Created By:";
 $lang["lastupdate"]         = "Last Updated:";
 $lang["deleteentry"]        = "Delete Entry";
