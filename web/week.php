@@ -63,6 +63,8 @@ if ( $pview != 1 ) {
   # show either a select box or the normal html list
   if ($area_list_format == "select") {
 	echo make_area_select_html('week.php', $area, $year, $month, $day); # from functions.inc
+	$this_area_name = sql_query1("select area_name from mrbs_area where id=$area");
+	$this_room_name = sql_query1("select room_name from mrbs_room where id=$room");
   } else {
 	$sql = "select id, area_name from mrbs_area order by area_name";
 	$res = sql_query($sql);
