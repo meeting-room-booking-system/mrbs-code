@@ -109,10 +109,9 @@ $view_week_number = FALSE;
 $auth["session"] = "php"; # How to get and keep the user ID. One of "http" "php" "cookie" "ip" "host" "nt" "omni".
 $auth["type"] = "config"; # How to validate the user/password. One of "none" "config" "pop3" "imap" "ldap".
 
-# The various level two users (can modify other peoples settings)
-# By default, only localhost is an administrator.
-$auth["admin"][] = "127.0.0.1";
-#$auth["admin"][] = "administrator";
+# The list of administrators (can modify other peoples settings)
+$auth["admin"][] = "127.0.0.1";		# localhost IP address. Useful with IP sessions.
+$auth["admin"][] = "administrator";	# A user name from the user list. Useful with most other session schemes.
 #$auth["admin"][] = "10.0.0.1";
 #$auth["admin"][] = "10.0.0.2";
 #$auth["admin"][] = "10.0.0.3";
