@@ -161,7 +161,7 @@ if(empty($err))
 	
 	# Delete the original entry
 	if($id)
-		mrbsDelEntry(getUserName(), $id, ($edit_type == "series"));
+		mrbsDelEntry(getUserName(), $id, ($edit_type == "series"), 0);
 	
 	$area = mrbsGetRoomArea($room_id);
 	
