@@ -31,6 +31,7 @@ $vocab["dayafter"]           = "Aller au jour suivant";
 $vocab["gototoday"]          = "Aujourd'hui";
 $vocab["goto"]               = " Afficher";
 $vocab["highlight_line"]     = "Surligner cette ligne";
+$vocab["click_to_reserve"]   = "Cliquer sur la case pour réserver.";
 
 # Used in trailer.inc
 $vocab["viewday"]            = "Voir la journée";

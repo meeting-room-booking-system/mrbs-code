@@ -225,6 +225,7 @@ var useJS = false;	// If true, use JavaScript for cell user interface. If null, 
 var highlight_left_column = false;
 var highlight_right_column = false;
 var highlightColor = "#999999"; // Default highlight color, if we don't find the one in the CSS.
+var statusBarMsg = "Click on the cell to make a reservation."; // Message to write on the status bar when activating a cell.
 
 // Duplicate at JavaScript level the relevant PHP configuration variables.
 var show_plus_link = true;
@@ -294,6 +295,7 @@ function SearchTdHighlight(rule, ref)	// Callback called by the CSS scan routine
 |                   Boolean left	Whether to highlight the left column. |
 |                   Boolean right	Whether to highlight the right column.|
 |                   String method	One of "bgcolor", "class", "hybrid".  |
+|                   String message      The message to put on the status bar. |
 |									      |
 |   Returns:        Nothing.						      |
 |									      |
@@ -325,17 +327,19 @@ function SearchTdHighlight(rule, ref)	// Callback called by the CSS scan routine
 *									      *
 \*---------------------------------------------------------------------------*/
 
-function InitActiveCell(show, left, right, method)
+function InitActiveCell(show, left, right, method, message)
     {
     show_plus_link = show;
     highlight_method = method;
     highlight_left_column = left;
     highlight_right_column = right;
+    statusBarMsg = message;
 
     xbDump("show_plus_link = " + show_plus_link);
     xbDump("highlight_method = " + highlight_method);
     xbDump("highlight_left_column = " + highlight_left_column);
     xbDump("highlight_right_column = " + highlight_right_column);
+    xbDump("statusBarMsg = " + statusBarMsg);
 
     // Javascript feature detection: Check if a click handler can be called by the browser for a table.
     // For example Netscape 4 only supports onClick for forms.
@@ -408,7 +412,7 @@ function ActivateCell(cell)	// Activate the TD cell under the mouse, and optiona
     {
     if (cell.isActive) return;	// Prevent problems with reentrancy. (It happens on slow systems)
     cell.isActive = true;
-    window.status = "Click on the cell to make a reservation."; // Write into the status bar.
+    if (statusBarMsg) window.status = statusBarMsg; // Write into the status bar.
     // First find the enclosing table data cell.
     for (var tdCell=cell.parentNode; tdCell; tdCell=tdCell.parentNode)
 	{ if (tdCell.tagName == "TD") break; }

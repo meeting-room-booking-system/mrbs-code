@@ -272,7 +272,9 @@ if ($debug_flag)
                . ($show_plus_link ? "true" : "false") . ", "
                . "true, "
                . ((FALSE != $times_right_side) ? "true" : "false") . ", "
-               . "\"$highlight_method\" );</SCRIPT>\n";
+               . "\"$highlight_method\", "
+               . "\"" . get_vocab("click_to_reserve") . "\""
+               . ");</SCRIPT>\n";
             }
 
 #This is where we start displaying stuff

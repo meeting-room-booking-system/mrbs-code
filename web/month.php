@@ -306,7 +306,9 @@ if ($javascript_cursor) // If authorized in config.inc.php, include the javascri
        . ($show_plus_link ? "true" : "false") . ", "
        . "false, "
        . "false, "
-       . "\"$highlight_method\" );</SCRIPT>\n";
+       . "\"$highlight_method\", "
+       . "\"" . get_vocab("click_to_reserve") . "\""
+       . ");</SCRIPT>\n";
     }
 
 echo "<table border=2 width=\"100%\">\n<tr>";

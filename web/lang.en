@@ -30,6 +30,7 @@ $vocab["dayafter"]           = "Go To Day After";
 $vocab["gototoday"]          = "Go To Today";
 $vocab["goto"]               = "goto";
 $vocab["highlight_line"]     = "Highlight this line";
+$vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 
 # Used in trailer.inc
 $vocab["viewday"]            = "View Day";
