@@ -104,14 +104,12 @@ function authGetUserLevel($user, $lev1_admin)
 
 function getUserName()
 {
-	global $PHP_AUTH_USER;
-	return $PHP_AUTH_USER;
+    return getAuthUserName();
 }
 
 function getUserPassword()
 {
-	global $PHP_AUTH_PW;
-	return $PHP_AUTH_PW;
+    return getAuthUserPassword();
 }
 
 ?>

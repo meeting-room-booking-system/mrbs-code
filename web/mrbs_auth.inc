@@ -4,6 +4,43 @@
 // include the authentification wrappers
 include "auth_$auth[type].inc";
 
+function getAuthUserName()
+{
+	global $PHP_AUTH_USER;
+        if (isset($PHP_AUTH_USER))
+        {
+            $user = $PHP_AUTH_USER;
+            if (get_magic_quotes_gpc())
+            {
+               $user = stripslashes($user);
+            }
+            return $user;
+        }
+        else
+        {
+            return null;
+        }
+}
+
+function getAuthUserPassword()
+{
+	global $PHP_AUTH_PW;
+
+        if (isset($PHP_AUTH_PW))
+        {
+            $pw = $PHP_AUTH_PW;
+            if (get_magic_quotes_gpc())
+            {
+                $pw = stripslashes($pw);
+            }
+            return $pw;
+        }
+        else
+        {
+            return null;
+        }
+}
+
 /* getAuthorised($user, $pass, $level)
  * 
  * Check to see if the user name/password is valid
