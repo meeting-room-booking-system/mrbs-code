@@ -79,8 +79,8 @@ if($repeat_id != 0)
 toTimeString($duration, $dur_units);
 
 # Make a nice little array so we can write the type in english easily
-$typel["I"] = "Internal";
-$typel["E"] = "External";
+$typel["I"] = $lang["internal"];
+$typel["E"] = $lang["external"];
 
 #now that we know all the data we start drawing it
 echo "<H3>$name</H3>\n";
