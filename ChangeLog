@@ -1,3 +1,15 @@
+CVS (Sun Jan 12 20:15:56 GMT 2003)
+   - Removed all remainings english strings to make MRBS 100% translatable
+     * Added new $vocab to del.php, edit_area_room.php, edit_entry.php,
+       edit_entry_handler.php, help.php, mysql.inc, pgsql.inc, view_entry.php,
+       functions.inc
+   - Modified config.inc language section to choose a site_faq.html file
+       translated in another language.
+     * Modified help.php to take these changes into account.
+     * Added site_faq_fr.html (french)
+   - Added auth_name.inc, a auth_ip.inc variant using DNS name instead of ip.
+   - Added auth_omni.inc for use with OmniHTTPd web server security features
+
 CVS (Fri Jan 10 11:33:43 GMT 2003)
    - Change search.php to remove warnings introduced with PHP 4.3.0
 
