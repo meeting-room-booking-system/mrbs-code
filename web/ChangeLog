@@ -1,3 +1,220 @@
+2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* lang.el (1.3): Doc fix (it is a greek file, not english)
+
+2004-04-16  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* day.php (1.31), week.php (1.32): I have changed the day and week
+	  view so that the colour key is shown in both the "web page" view
+	  and "print preview".	I believe that it makes sense to include
+	  the key in the "print preview" version so that you can understand
+	  the colours on a hardcopy.
+
+2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.32): Doc fixes
+
+2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* Mail/mail.php (1.2): - Removed PEAR_MAIL constants (never had).
+
+2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* Mail.php (1.1), PEAR.php (1.2), config.inc.php (1.31),
+	  edit_entry_handler.php (1.18), functions.inc (1.30), lang.en
+	  (1.22), mrbs_sql.inc (1.17), view_entry.php (1.15),
+	  Mail/RFC822.php (1.1), Mail/mail.php (1.1), Mail/null.php (1.1),
+	  Mail/sendmail.php (1.1), Mail/smtp.php (1.1), Net/SMTP.php (1.1),
+	  Net/Socket.php (1.1): + Added email support to MRBS (using
+	  PEAR::Mail class for that).  MRBS developers, use function
+	  sendMail(), with at least the minimal parameters ($recipients,
+	  $subject and $body) to send mail from MRBS.  + Added the option
+	  to notify the administrator (or someone else) with an email on
+	  each new entry or new and changed entries)
+
+2004-04-15  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* auth_db.inc (1.6): - (authValidateUser): add global $tbl_users;
+
+2004-04-14  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* add.php (1.5), admin.php (1.16), auth_db.inc (1.5), day.php
+	  (1.30), del.php (1.11), edit_area_room.php (1.11), edit_entry.php
+	  (1.27), edit_entry_handler.php (1.17), edit_users.php (1.7),
+	  functions.inc (1.29), index.php (1.8), month.php (1.26),
+	  mrbs_sql.inc (1.16), report.php (1.21), search.php (1.12),
+	  view_entry.php (1.14), week.php (1.31): Changed the fixed table
+	  names to variables.  The variables are defined in config.inc.php.
+
+2004-04-14  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* config.inc.php (1.30): Added variables to allow the 'mrbs_'
+	  prefix on table names to be changed.	This will allow the user to
+	  do a second installation when only one database is available or
+	  resolve table name conflicts.
+
+2004-04-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* day.php (1.29): - Correct the \\n new line character in tooltips
+	  to &#10; . Currently it changes nothing but the HTML spec says
+	  \\n in titles should be converted to spaces. So, the current
+	  thoughts of the Mozilla developers is that &#10; would insert a
+	  line break in a title, and a literal \\n would not, but they've
+	  not implemented it yet though.  However, IE _does_ currently work
+	  with &#10; and that method seems to fit the specs much more
+	  closely. (John Beranek)
+
+2004-04-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* config.inc.php (1.29): Corrected the errors pointed out by
+	  Thierry.  (Missing change from his last commit, and
+	  authentication default changed by mistake)
+
+2004-04-14  John Beranek <jberanek@users.sourceforge.net>
+
+	* functions.inc (1.28):
+	  * Slight Unicode fix. Move page title specifier to _after_  page
+	  encoding specifier. That way the browser knows what  encoding the
+	  title is in before it gets to it.
+
+2004-04-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* config.inc.php (1.28), day.php (1.28), mrbs.css (1.7), week.php
+	  (1.30), xbLib.js (1.1): Added an optional active cell
+	  highlighting, and the ability to make a reservation by clicking
+	  anywhere in a cell.  The control is done in config.inc.php.
+	  Default is highlighting enabled; + signs left in.  The highligth
+	  color is defined in mrbs.css.
+
+	  Changed the background stripe generation method. Now defined be
+	  classes in mrbs.css.
+
+2004-04-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* language.inc (1.8): Fixed error when the server does not define
+	  $HTTP_ACCEPT_LANGUAGE.
+
+2004-04-13  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.27): + Doc fix.
+
+2004-04-13  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.26), month.php (1.25): + Added the option to
+	  show both time slots and brief description.
+
+2004-04-13  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* report.php (1.20): + Added the 'creator' search criteria.
+
+2004-04-12  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* day.php (1.27): added '' to minicals function call for room
+	  parameter as room is not relevant in day context
+
+2004-04-12  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* month.php (1.24), week.php (1.29): added $room to minicals
+	  function call
+
+2004-04-12  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* mrbs.css (1.6): added class for highlighting current
+	  month/week/day in calendars, used in mincals.inc
+
+2004-04-12  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* mincals.inc (1.11): mincal changes: - correct week highlight code
+	  to correctly highlight where a week crosses	into a new month.
+	  The problem was when crossing the year boundary, and	 where only
+	  the last day of the week was in the new month and the number	 of
+	  days in the current month was < 31.  - week and month now include
+	  room in the link thus maintaining the same   room when using the
+	  calendars for navigation - highlights whole month in month view -
+	  highlight colour moved to mrbs.css
+
+2004-04-11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* auth_db.inc (1.4), session_cookie.inc (1.8), session_php.inc
+	  (1.8): + Add link to user entries for all auth schemes, not only
+	  db (thanks Gavin!).
+
+2004-04-11  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* month.php (1.23): Added 'plus sign' next to date in month view.
+
+	  This will take the user to an add entry page for that day of the
+	  month.
+
+2004-04-11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* auth_db.inc (1.3), lang.en (1.21), lang.fr (1.20), report.php
+	  (1.19), session_cookie.inc (1.7), session_php.inc (1.7): + If
+	  auth_db is used with session_cookie or session_php, the message
+	  "you are XXXX" becomes a link to all upcoming entries belonging
+	  to XXXX (report page). If auth_db is not used, the previous empty
+	  HREF link "you are XXXX" is useless and is now a simple text
+	  message.
+
+2004-04-10  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* edit_users.php (1.6): - Changed the title displayed when adding
+	  new user from 'Edit user' to 'Add a new user'.
+
+2004-04-10  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* auth_db.inc (1.2), edit_users.php (1.5): + Hashes passwords in
+	  dababase (auth_db). Update 'password' field for this purpose.
+
+2004-04-10  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* lang.cz (1.7), lang.da (1.4), lang.de (1.15), lang.el (1.2),
+	  lang.en (1.20), lang.es (1.17), lang.fi (1.7), lang.fr (1.19),
+	  lang.it (1.10), lang.ja (1.14), lang.nl (1.15), lang.no (1.12),
+	  lang.pt (1.4), lang.sv (1.15), lang.zh-tw (1.14), month.php
+	  (1.22), report.php (1.18), view_entry.php (1.13), week.php
+	  (1.28): Removed punctuation from $vocab["room"]  string so that
+	  this vocab can be used more often and lessen the number of vocabs
+	  (replace $vocab["sort_rep_room"]). This could be done in all
+	  vocabs too, as a general rule we should not use punctuation and
+	  other things not related to translation in these strings.
+
+2004-04-09  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* auth_imap.inc (1.6), auth_pop3.inc (1.6), config.inc.php (1.25):
+	  This change allows multiple pop3 or imap server to be used for
+	  authentication.
+
+	  AUTHENTICATION has been updated to explain this and users are
+	  referred to AUTHENTICATION from config.inc.php if they wish to
+	  use multiple servers.
+
+2004-04-08  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* functions.inc (1.27), lang.en (1.19), report.php (1.17): This
+	  includes an update to reporting to allow reports to be sorted by
+	  Area/Room then Start Date/Time or Start Date/Time then Area/Room.
+
+	  There is also now the option to display Start and End date/time
+	  instead of start date/time and duration.
+
+	  A modification has been made to period_date_string in
+	  functions.inc to make the display start/end dates and periods
+	  clearer.
+
+2004-04-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.24): Doc fixes (added DB doc)
+
+2004-04-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.23): Updating mrbs version number before next
+	  release :-)
+
+2004-04-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* month.php (1.21), week.php (1.27): ChangeLog update Doc fixes.
+
 2004-04-05  John Beranek <jberanek@users.sourceforge.net>
 
 	* lang.el (1.1), style.inc (1.10):
@@ -1818,4 +2035,3 @@
 
 	* .htaccess, new.gif, auth_ip.inc, lang.sv, style.inc
 	  (mrbs-0-9-1xp.[1,1,1,1,1]): Moved to web/
-

@@ -1,3 +1,51 @@
+2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* INSTALL (1.30): Doc fixes
+
+2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* INSTALL (1.29): + Added email support to MRBS (using PEAR::Mail
+	  class for that).  MRBS developers, use function sendMail(), with
+	  at least the minimal parameters ($recipients, $subject and $body)
+	  to send mail from MRBS.  + Added the option to notify the
+	  administrator (or someone else) with an email on each new entry
+	  or new and changed entries)
+
+2004-04-14  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* INSTALL (1.28): Added instructions about using table name prefix
+	  to allow second installations or resolve table name conflicts.
+
+2004-04-14  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* destroy.pg.sql (1.3), grant.pg.sql (1.4), purge.my.sql (1.3),
+	  purge.pg.sql (1.3), sample-data.sql (1.3), tables.my.sql (1.4),
+	  tables.pg.73and_above.sql (1.2), tables.pg.sql (1.5): Added
+	  comment that user needs to fix table names if they have changed
+	  the prefix that they wish to use.
+
+2004-04-14  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* testdata.php (1.5): Changed the fixed table names to variables.
+	  The variables are defined in config.inc.php.
+
+2004-04-13  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* INSTALL (1.27): + Doc fix.
+
+2004-04-09  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* AUTHENTICATION (1.26): This change allows multiple pop3 or imap
+	  server to be used for authentication.
+
+	  AUTHENTICATION has been updated to explain this and users are
+	  referred to AUTHENTICATION from config.inc.php if they wish to
+	  use multiple servers.
+
+2004-04-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* AUTHENTICATION (1.25), INSTALL (1.26): Doc fixes (added DB doc)
+
 2004-03-24  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* INSTALL (1.25): Doc fix
@@ -1307,4 +1355,3 @@
 	  trailer.inc (1.1), tables.sql (1.1), COPYING (1.1), INSTALL
 	  (1.1), README (1.1), mrbs.css (1.1), head.gif (1.1),
 	  testdata.php3 (1.1): Initial revision
-
