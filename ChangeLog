@@ -1,3 +1,25 @@
+2004-05-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* INSTALL (1.31), UPGRADE (1.7), tables.my.sql (1.5),
+	  upgrade3.my.sql (1.1): + Added/changed features to email support:
+	  - Room and/or area administrators. An email field has been added
+	  to room    and area administration page. Each room/area can have
+	  multiple emails.   - Configurable options to send emails to these
+	  administrators.     Emails can be send to MRBS admin and/or area
+	  admins and/or room admins.   - Configurable options to set what
+	  is emailed (either a link to	   the view page as before or full
+	  details)   - Configurable option to decide the lang used in
+	  emails and the text of     subject and body.	 - Configurable
+	  options to decide which events cause an email to be sent
+	  (whether only new entries, new and edited entries, or deleted
+	  entries)   - Full diffing informations between the new state of
+	  an edited entry     and its previous settings (only if we choose
+	  to show details in emails)   - Optionale recipients can receives
+	  mails in carbon copy	 - Configurable option to send mails using
+	  three mail backends:	   either the php mail function, an
+	  external smtp server (with or without     authentication) or unix
+	  sendmail program.   - upgraded Net::Socket from 1.0.1 to 1.0.2
+
 2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* INSTALL (1.30): Doc fixes

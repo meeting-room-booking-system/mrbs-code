@@ -1,3 +1,38 @@
+2004-05-05  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* edit_area_room.php (1.13), functions_mail.inc (1.3): * removed
+	  duplicated email validation function from function_mail.php.	Use
+	  one in RFC822.php instead.
+
+2004-05-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* functions_mail.inc (1.2): Typos fix
+
+2004-05-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.33), del_entry.php (1.5), edit_area_room.php
+	  (1.12), edit_entry.php (1.29), edit_entry_handler.php (1.19),
+	  functions.inc (1.32), functions_mail.inc (1.1), lang.en (1.24),
+	  lang.fr (1.22), language.inc (1.9), mrbs_sql.inc (1.18),
+	  Net/Socket.php (1.2): + Added/changed features to email support:
+	  - Room and/or area administrators. An email field has been added
+	  to room    and area administration page. Each room/area can have
+	  multiple emails.   - Configurable options to send emails to these
+	  administrators.     Emails can be send to MRBS admin and/or area
+	  admins and/or room admins.   - Configurable options to set what
+	  is emailed (either a link to	   the view page as before or full
+	  details)   - Configurable option to decide the lang used in
+	  emails and the text of     subject and body.	 - Configurable
+	  options to decide which events cause an email to be sent
+	  (whether only new entries, new and edited entries, or deleted
+	  entries)   - Full diffing informations between the new state of
+	  an edited entry     and its previous settings (only if we choose
+	  to show details in emails)   - Optionale recipients can receives
+	  mails in carbon copy	 - Configurable option to send mails using
+	  three mail backends:	   either the php mail function, an
+	  external smtp server (with or without     authentication) or unix
+	  sendmail program.   - upgraded Net::Socket from 1.0.1 to 1.0.2
+
 2004-04-29  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* lang.fi (1.8): Updated lang.fi (thanks Tom Ingberg

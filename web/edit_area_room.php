@@ -44,16 +44,19 @@ print_header($day, $month, $year, isset($area) ? $area : "");
 if(!empty($room)) {
     include_once 'Mail/RFC822.php';
     (!isset($room_admin_email)) ? $room_admin_email = '': '';
-    $email_adresses = explode(',', $room_admin_email);
+    $emails = explode(',', $room_admin_email);
     $valid_email = TRUE;
     $email_validator = new Mail_RFC822();
-    foreach ($email_adresses as $email_adress)
+    foreach ($emails as $email)
     {
-        (!$email_validator->isValidInetAddress($email_adress, $strict = FALSE))
-            ? $valid_email = FALSE : '';
+        // if no email address is entered, this is OK, even if isValidInetAddress
+        // does not return TRUE
+        if ( !$email_validator->isValidInetAddress($email, $strict = FALSE)
+            && ('' != $room_admin_email) )
+        {
+            $valid_email = FALSE;
+        }
     }
-    // However if no email adress is entered, this is OK
-    ("" == $room_admin_email) ? $valid_email = TRUE : '';
     //
 	if ( isset($change_room) && (FALSE != $valid_email) )
 	{
@@ -83,10 +86,10 @@ echo htmlspecialchars($row["description"]); ?>"></TD></TR>
 <TR><TD><?php echo get_vocab("capacity") ?>:   </TD><TD><input type=text name=capacity value="<?php
 echo $row["capacity"]; ?>"></TD></TR>
 <TR><TD><?php echo get_vocab("room_admin_email") ?></TD><TD><input type=text name=room_admin_email MAXLENGTH=75 value="<?php
-echo htmlspecialchars($row["room_admin_email"]); ?>"></TD></TR>
+echo htmlspecialchars($row["room_admin_email"]); ?>"></TD>
 <?php if (FALSE == $valid_email) {
-    echo ("<TR><TD>&nbsp;</TD><TD><STRONG>" . get_vocab('invalid_email') . "<STRONG></TD></TR>");
-} ?>
+    echo ("<TD>&nbsp;</TD><TD><STRONG>" . get_vocab('invalid_email') . "<STRONG></TD>");
+} ?></TR>
 </TABLE>
 <input type=submit name="change_room"
 value="<?php echo get_vocab("change") ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -100,16 +103,19 @@ if(!empty($area))
 {
     include_once 'Mail/RFC822.php';
     (!isset($area_admin_email)) ? $area_admin_email = '': '';
-    $email_adresses = explode(',', $area_admin_email);
+    $emails = explode(',', $area_admin_email);
     $valid_email = TRUE;
     $email_validator = new Mail_RFC822();
-    foreach ($email_adresses as $email_adress)
+    foreach ($emails as $email)
     {
-        (!$email_validator->isValidInetAddress($email_adress, $strict = FALSE))
-            ? $valid_email = FALSE : '';
+        // if no email address is entered, this is OK, even if isValidInetAddress
+        // does not return TRUE
+        if ( !$email_validator->isValidInetAddress($email, $strict = FALSE)
+            && ('' != $area_admin_email) )
+        {
+            $valid_email = FALSE;
+        }
     }
-    // However if no email adress is entered, this is OK
-    ("" == $area_admin_email) ? $valid_email = TRUE : '';
     //
     if ( isset($change_area) && (FALSE != $valid_email) )
 	{
@@ -133,10 +139,10 @@ if(!empty($area))
 <TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name="area_name" value="<?php
 echo htmlspecialchars($row["area_name"]); ?>"></TD></TR>
 <TR><TD><?php echo get_vocab("area_admin_email") ?>:       </TD><TD><input type=text name="area_admin_email" MAXLENGTH=75 value="<?php
-echo htmlspecialchars($row["area_admin_email"]); ?>"></TD></TR>
+echo htmlspecialchars($row["area_admin_email"]); ?>"></TD>
 <?php if (FALSE == $valid_email) {
-    echo ("<TR><TD>&nbsp;</TD><TD><STRONG>" . get_vocab('invalid_email') . "</STRONG></TD></TR>");
-} ?>
+    echo ("<TD>&nbsp;</TD><TD><STRONG>" . get_vocab('invalid_email') . "</STRONG></TD>");
+} ?></TR>
 </TABLE>
 <input type=submit name="change_area"
 value="<?php echo get_vocab("change") ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
