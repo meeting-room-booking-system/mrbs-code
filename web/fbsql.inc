@@ -74,7 +74,7 @@ function sql_syntax_caseless_contains($fieldname, $s)
     $s = str_replace("%", "\\%", $s);
     $s = str_replace("_", "\\_", $s);
     $s = str_replace("'", "''", $s);
-    return " UPPER($fieldname) LIKE '%$s%' ";
+    return " UPPER($fieldname) LIKE " . $mdb->getTextValue("%$s%") . " ";
 }
 
 ?>

@@ -66,7 +66,7 @@ function sql_syntax_caseless_contains($fieldname, $s)
     $s = str_replace("%", "\\%", $s);
     $s = str_replace("_", "\\_", $s);
     $s = str_replace("'", "''", $s);
-    return " $fieldname CONTAINING '%$s%' ESCAPE '\'";
+    return " $fieldname CONTAINING " . $mdb->getTextValue("%$s%") . " ESCAPE '\'";
 }
 
 ?>

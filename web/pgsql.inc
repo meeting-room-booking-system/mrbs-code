@@ -65,7 +65,7 @@ function sql_syntax_caseless_contains($fieldname, $s)
 {
     $s = quotemeta($s);
     $s = str_replace("'", "''", $s);
-    return " $fieldname ~* '$s' ";
+    return " $fieldname ~* " . $mdb->getTextValue("$s") . " ";
 }
 
 ?>
