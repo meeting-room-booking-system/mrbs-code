@@ -37,7 +37,6 @@ function authValidateUser($user, $pass)
    // Check if we do not have a username/password
    if(!isset($user) || !isset($pass) || strlen($pass)==0)
    {
-      authGet($auth["realm"]); // Prompt for name/password
       return 0;
    }
 
