@@ -176,7 +176,9 @@ $mrbs_company = "<a href=http://www.your_organization.com/><img src=your_logo.gi
 $url_base = "";
 
 This is to fix URL problems when using a proxy in the environment
-Then specify the real path before your mrbs directory like this:
+If links inside MRBS appear broken, then specify here the URL of
+your MRBS root directory, as seen by the users. For example:
+
 $url_base =  "http://webtools.uab.ericsson.se/oam";
 
 
@@ -252,10 +254,13 @@ The settings for each option are described below:
     2) The periods bear no relation to clock time during a day.
 
 
-To control international preferences for the calendar displays, use
-$weekstarts to change the first day of the week from the default of
-Sunday; use $dateformat to show dates as "Month Day" or "Day Month"
-in the page footers; use $twentyfourhour_format to show dates in 12 or 24 hour
+To control international preferences for the calendar displays, 
+
+- use $weekstarts to change the first day of the week from the default of
+Sunday; 
+- use $dateformat to show dates as "Month Day" or "Day Month"
+in the page footers;
+- use $twentyfourhour_format to show dates in 12 or 24 hour
 format.
 
 
@@ -270,9 +275,13 @@ These settings control:
 - the page refresh rate,
 - the way area/rooms are selected (html list or a drop-down select box),
 - the way entries are displayed in monthly view (start/end slot or brief 
-  description).
+  description),
 - the way weeks are displayed in the bottom of the page (as week numbers (ie. 
-  42) instead of 'first day of the week' (13 Oct)).
+  42) instead of 'first day of the week' (13 Oct)),
+- display of times on right and left side in day and week view,
+- display of horizontal stripes on the day view,
+- the default starting view (month, week or day),
+- the default room to start with. 
 
 
 5. Authentication:

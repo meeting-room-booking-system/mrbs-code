@@ -55,8 +55,9 @@ module. There are two general categories:
     special "ext" PHP authentication module.
 
 Internal PHP modules support the following kinds of authentication servers:
-LDAP servers; POP3 email servers; IMAP email servers; NIS servers. In addition,
-two special internal modules support a local list of users for one; and
+LDAP servers; POP3 email servers; IMAP email servers; NIS servers ; NW servers.
+In addition, three special internal modules support a local list of users for 
+one; a local list of users stored in databse for tthe second; and 
 authenticating anybody for the other.
 
 External programs support: NT Domain controllers; Netware servers; PAM servers.
@@ -94,6 +95,16 @@ PHP authentication modules
 |      |                        |  on the Internet. |  confidentiality rules.|
 |      |                        |                   |                        |
 +------+------------------------+-------------------+------------------------+
+|db    |Users validated using   |                   |                        |
+|      |web-based authentication|  - Simple to setup|                        |
+|      |based on a table in mrbs|                   |  - Does not use        |
+|      |database                |  - Built in MRBS  |  existing directory    |
+|      |                        |  but more secure  |                        |
+|      |                        |  than 'config'    |                        |
+|      |                        |                   |                        |
+|      |                        |  - easy to        |                        |
+|      |                        |  configure        |                        |
++------+------------------------+-------------------+------------------------+
 |ldap  |Users validated using   |                   |                        |
 |      |LDAP directory services.|                   |                        |
 |      |                        |  - For corporate  |  - Does not work on the|
@@ -122,9 +133,14 @@ PHP authentication modules
 |      |                        |                   |  same mail server.     |
 |      |                        |                   |                        |
 +------+------------------------+-------------------+------------------------+
-|nis   |Users validated by NIS  |                   |                        |
-|      |server (?)              |                   |                        |
-|      |                        |  - ?              |  - ?                   |
+|nis   |Users validated by NIS  |                   |  - This extension is   |
+|      |server (user contrib.)  |                   |  not available on      |
+|      |                        |  - ?              |  Windows platforms.    |
+|      |                        |                   |                        |
++------+------------------------+-------------------+------------------------+
+|nw    |Users validated by      |                   |  - TThis is only going |
+|      |Netware server          |                   |   to work on Linux.    |
+|      |(user contrib.)         |  - ?              |                        |
 |      |                        |                   |                        |
 +------+------------------------+-------------------+------------------------+
 |ext   |Validation is delegated |                   |                        |
@@ -294,6 +310,7 @@ for historical reasons:
 |       |"config".                     |                    |  computer.     |
 |       |                              |                    |                |
 +-------+------------------------------+--------------------+----------------+
+
 How to configure authentication
 ===============================
 
@@ -303,12 +320,14 @@ Users
 You don't configure users in MRBS. Users (and their password) are configured in
 an external authentication server.
 
-Exception:
+Exceptions:
 
-The "config" authentication is managed by MRBS, using a list of names and
+- The "config" authentication is managed by MRBS, using a list of names and
 passwords in config.inc.php. This is done by specifying: $auth["user"][
 "username1"] = "password1"; $auth["user"]["username2"] = "password2";
 etc
+- The "db" authentication is managed by MRBS, using a list of names and 
+passwords stored in mrbs database.
 
 Administrators
 --------------
@@ -406,6 +425,61 @@ Finally put at least one of the users in the administrator's list.
 $auth["admin"][] = "username2";
 
 etc
+
+
+DB Authentication
+-------------------
+
+Authentication method, usable on the Internet.
+
+ It works by storing the list of users in a new table called mrbs_users in
+ the mrbs database.
+ 
+ The authentication is done by the new module auth_db.inc.
+ Enable it by setting $auth["type"]="db" in config.inc.php.
+ This works only with session_php.inc or session_cookie.inc.
+ 
+ Note: The names of administrators are still defined as usual by the
+ $auth["admin"][] list in config.inc.php.
+ 
+ The list of users is displayed by clicking on the new "User list" link in
+ the logon box in the top banner.
+ This list is managed by module edit_users.php.
+ Administrators have the right to edit every entry, and add or remove users.
+ Simple users only have the right to edit their own entry.
+ 
+ The first time it is accessed, the mrbs_users table is automatically
+ created.
+ Whoever is doing the initial edition is assumed to have administrator
+ rights.
+ The first user he creates MUST be an administrator, already defined in
+ config.inc.php. Note: There are two predefined ones, called "administrator"
+ and "127.0.0.1".
+ Once this initial user/administrator is defined, it's necessary to log on
+ using its name to create more users.
+ 
+ Experimental:
+
+ It's possible, and very simple, to add new application-specific fields in
+ the mrbs_users table.
+ No change is needed in edit_users.php editor code.
+ Edit_users.php will automatically detect the new fields and add columns for
+ them.
+ The new fields can either be added beforehand in the code that creates the
+ table in the beginning of edit_users.php (See comments there);
+ Or they can be added afterwards using mysql.exe or phpMyAdmin, or the
+ equivalent for other databases. Note: The first three fields (id, name,
+ password) must not be tampered with. All others are modifiable at will.
+ 
+ Important: does not work with PosgreSql.
+ 
+ Future improvements
+ - Manage the user rights (user/admin) in the mrbs_users table too.
+ - Have a second level of administrators (level 3 users), with only such
+ level 3 users allowed to edit the user database. This would be similar to
+ all other authentications in mrbs, which delegate the user accounts
+ management to an external authority.
+
 
 POP3 Authentication
 -------------------

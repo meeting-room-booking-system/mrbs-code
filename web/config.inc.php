@@ -145,8 +145,10 @@ $default_room = 0;
 ###############################################
 # Authentication settings - read AUTHENTICATION
 ###############################################
-$auth["session"] = "php"; # How to get and keep the user ID. One of "http" "php" "cookie" "ip" "host" "nt" "omni".
-$auth["type"] = "config"; # How to validate the user/password. One of "none" "config" "db" "pop3" "imap" "ldap".
+$auth["session"] = "php"; # How to get and keep the user ID. One of "http"
+                          # "php" "cookie" "ip" "host" "nt" "omni".
+$auth["type"] = "config"; # How to validate the user/password. One of "none"
+                          # "config" "db" "pop3" "imap" "ldap" "nis" "nw" "ext".
 
 # The list of administrators (can modify other peoples settings)
 $auth["admin"][] = "127.0.0.1";		# localhost IP address. Useful with IP sessions.
