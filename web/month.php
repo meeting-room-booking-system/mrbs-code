@@ -45,29 +45,38 @@ $days_in_month = date("t", $month_start);
 
 $month_end = mktime(23, 59, 59, $month, $days_in_month, $year);
 
-# Table with areas, rooms, minicals.
-echo "<table width=\"100%\"><tr>";
-$this_area_name = "";
-$this_room_name = "";
+if ( $pview != 1 ) {
+	# Table with areas, rooms, minicals.
+	echo "<table width=\"100%\"><tr>";
+	$this_area_name = "";
+	$this_room_name = "";
 
-# Show all areas
-echo "<td width=\"30%\"><u>$lang[areas]</u><br>";
+	# Show all areas
+	echo "<td width=\"30%\"><u>$lang[areas]</u><br>";
+}
+
 $sql = "select id, area_name from mrbs_area order by area_name";
 $res = sql_query($sql);
 if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 {
-	echo "<a href=\"month.php?year=$year&month=$month&area=$row[0]\">";
+	if ( $pview != 1 )
+		echo "<a href=\"month.php?year=$year&month=$month&area=$row[0]\">";
 	if ($row[0] == $area)
 	{
 		$this_area_name = htmlspecialchars($row[1]);
-		echo "<font color=\"red\">$this_area_name</font></a><br>\n";
+		if ( $pview != 1 )
+			echo "<font color=\"red\">$this_area_name</font></a><br>\n";
 	}
-	else echo htmlspecialchars($row[1]) . "</a><br>\n";
+	else if ( $pview !=1 ) echo htmlspecialchars($row[1]) . "</a><br>\n";
 }
-echo "</td>\n";
 
-# Show all rooms in the current area:
-echo "<td width=\"30%\"><u>$lang[room]</u><br>";
+if ( $pview != 1 ) {
+	echo "</td>\n";
+	
+	# Show all rooms in the current area:
+	echo "<td width=\"30%\"><u>$lang[room]</u><br>";
+}
+
 $sql = "select id, room_name from mrbs_room where area_id=$area order by room_name";
 $res = sql_query($sql);
 if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
@@ -76,15 +85,19 @@ if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	if ($row[0] == $room)
 	{
 		$this_room_name = htmlspecialchars($row[1]);
-		echo "<font color=\"red\">$this_room_name</font></a><br>\n";
+		if ( $pview != 1 )
+			echo "<font color=\"red\">$this_room_name</font></a><br>\n";
 	}
-	else echo htmlspecialchars($row[1]) . "</a><br>\n";
+	else if ( $pview != 1 ) echo htmlspecialchars($row[1]) . "</a><br>\n";
 }
-echo "</td>\n";
 
-#Draw the three month calendars - Note they link to day view.
-minicals($year, $month, $day, $area);
-echo "</tr></table>\n";
+if ( $pview != 1 ) {
+	echo "</td>\n";
+	
+	#Draw the three month calendars - Note they link to day view.
+	minicals($year, $month, $day, $area);
+	echo "</tr></table>\n";
+}
 
 # Don't continue if this area has no rooms:
 if ($room <= 0)
@@ -109,12 +122,14 @@ $ym = date("n",$i);
 $i= mktime(0,0,0,$month+1,1,$year);
 $ty = date("Y",$i);
 $tm = date("n",$i);
-echo "<table width=\"100%\"><tr><td>
-  <a href=\"month.php?year=$yy&month=$ym&area=$area&room=$room\">
-  &lt;&lt; $lang[monthbefore]</a></td>
-  <td align=center><a href=\"month.php?area=$area&room=$room\">$lang[gotothismonth]</a></td>
-  <td align=right><a href=\"month.php?year=$ty&month=$tm&area=$area&room=$room\">
-  $lang[monthafter] &gt;&gt;</a></td></tr></table>";
+if ( $pview != 1 ) {
+	echo "<table width=\"100%\"><tr><td>
+	  <a href=\"month.php?year=$yy&month=$ym&area=$area&room=$room\">
+	  &lt;&lt; $lang[monthbefore]</a></td>
+	  <td align=center><a href=\"month.php?area=$area&room=$room\">$lang[gotothismonth]</a></td>
+	  <td align=right><a href=\"month.php?year=$ty&month=$tm&area=$area&room=$room\">
+	  $lang[monthafter] &gt;&gt;</a></td></tr></table>";
+}
 
 if ($debug_flag)
 	echo "<p>DEBUG: month=$month year=$year start=$weekday_start range=$month_start:$month_end\n";

@@ -25,6 +25,7 @@ function print_header($day, $month, $year, $area)
 ?>
  </HEAD>
  <BODY BGCOLOR="#ffffed" TEXT=black LINK="#5B69A6" VLINK="#5B69A6" ALINK=red>
+	   <? if ( $GLOBALS["pview"] != 1 ) { ?>
    <TABLE WIDTH="100%">
     <TR>
       <TD BGCOLOR="#5B69A6">
@@ -75,6 +76,7 @@ function print_header($day, $month, $year, $area)
       </TD>
      </TR>
     </TABLE>
+<? } ?>
 <?
 }
 

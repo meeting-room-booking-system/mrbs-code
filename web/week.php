@@ -50,53 +50,66 @@ $week_midnight = mktime(0, 0, 0, $month, $day, $year);
 $week_start = $am7;
 $week_end = mktime($eveningends, $eveningends_minutes, 0, $month, $day+6, $year);
 
-# Table with areas, rooms, minicals.
-echo "<table width=\"100%\"><tr>";
-$this_area_name = "";
-$this_room_name = "";
+if ( $pview != 1 ) {
+	# Table with areas, rooms, minicals.
+	echo "<table width=\"100%\"><tr>";
+	$this_area_name = "";
+	$this_room_name = "";
 
-# Show all areas
-echo "<td width=\"30%\"><u>$lang[areas]</u><br>";
+	# Show all areas
+	echo "<td width=\"30%\"><u>$lang[areas]</u><br>";
+}
+
 $sql = "select id, area_name from mrbs_area order by area_name";
 $res = sql_query($sql);
 if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 {
-	echo "<a href=\"week.php?year=$year&month=$month&day=$day&area=$row[0]\">";
+	if ( $pview != 1 )
+		echo "<a href=\"week.php?year=$year&month=$month&day=$day&area=$row[0]\">";
 	if ($row[0] == $area)
 	{
 		$this_area_name = htmlspecialchars($row[1]);
-		echo "<font color=\"red\">$this_area_name</font></a><br>\n";
+		if ( $pview != 1 )
+			echo "<font color=\"red\">$this_area_name</font></a><br>\n";
 	}
-	else echo htmlspecialchars($row[1]) . "</a><br>\n";
+	else if ( $pview != 1 ) echo htmlspecialchars($row[1]) . "</a><br>\n";
 }
-echo "</td>\n";
+if ( $pview != 1) {
+	echo "</td>\n";
 
-# Show all rooms in the current area
+	# Show all rooms in the current area
 echo "<td width=\"30%\"><u>$lang[room]</u><br>";
+}
+
 $sql = "select id, room_name from mrbs_room where area_id=$area order by room_name";
 $res = sql_query($sql);
 if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 {
-	echo "<a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[0]\">";
+	if ( $pview != 1 )
+		echo "<a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[0]\">";
 	if ($row[0] == $room)
 	{
 		$this_room_name = htmlspecialchars($row[1]);
-		echo "<font color=\"red\">$this_room_name</font></a><br>\n";
+		if ( $pview != 1 )
+			echo "<font color=\"red\">$this_room_name</font></a><br>\n";
 	}
-	else echo htmlspecialchars($row[1]) . "</a><br>\n";
+	else if ( $pview != 1 ) echo htmlspecialchars($row[1]) . "</a><br>\n";
 }
-echo "</td>\n";
 
-#Draw the three month calendars - Note they link to day view, not week.
-minicals($year, $month, $day, $area);
-echo "</tr></table>\n";
+if ( $pview != 1 ) {
+	echo "</td>\n";
 
-# Don't continue if this area has no rooms:
-if ($room <= 0)
-{
-	echo "<h1>$lang[no_rooms_for_area]</h1>";
-	include "trailer.inc";
-	exit;
+	#Draw the three month calendars - Note they link to day view, not week.
+	minicals($year, $month, $day, $area);
+	echo "</tr></table>\n";
+
+	# Don't continue if this area has no rooms:
+	if ($room <= 0)
+	{
+		echo "<h1>$lang[no_rooms_for_area]</h1>";
+		include "trailer.inc";
+		exit;
+	}
 }
 
 # Show area and room:
@@ -115,13 +128,15 @@ $ty = date("Y",$i);
 $tm = date("m",$i);
 $td = date("d",$i);
 
-#Show Go to week before and after links
-echo "<table width=\"100%\"><tr><td>
-  <a href=\"week.php?year=$yy&month=$ym&day=$yd&area=$area&room=$room\">
-  &lt;&lt; $lang[weekbefore]</a></td>
-  <td align=center><a href=\"week.php?area=$area&room=$room\">$lang[gotothisweek]</a></td>
-  <td align=right><a href=\"week.php?year=$ty&month=$tm&day=$td&area=$area&room=$room\">
-  $lang[weekafter] &gt;&gt;</a></td></tr></table>";
+if ( $pview != 1 ) {
+	#Show Go to week before and after links
+	echo "<table width=\"100%\"><tr><td>
+	  <a href=\"week.php?year=$yy&month=$ym&day=$yd&area=$area&room=$room\">
+	  &lt;&lt; $lang[weekbefore]</a></td>
+	  <td align=center><a href=\"week.php?area=$area&room=$room\">$lang[gotothisweek]</a></td>
+	  <td align=right><a href=\"week.php?year=$ty&month=$tm&day=$td&area=$area&room=$room\">
+	  $lang[weekafter] &gt;&gt;</a></td></tr></table>";
+}
 
 #Get all appointments for this week in the room that we care about
 # row[0] = Start time
@@ -272,9 +287,13 @@ for ($slot = $first_slot; $slot <= $last_slot; $slot++)
 			tdcell($empty_color);
 			$hour = date("H",$wt);
 			$minute  = date("i",$wt);
-			echo "<center><a href=\"edit_entry.php?room=$room"
+			echo "<center>";
+			if ( $pview != 1 ) {
+				echo "<a href=\"edit_entry.php?room=$room"
 				. "&hour=$hour&minute=$minute&year=$wyear&month=$wmonth"
-				. "&day=$wday\"><img src=new.gif width=10 height=10 border=0></a></center>";
+				. "&day=$wday\"><img src=new.gif width=10 height=10 border=0>";
+			} else echo '&nbsp;';
+			echo "</a></center>";
 
 		} else {
 			tdcell($d[$weekday][$slot]["color"]);
@@ -294,7 +313,7 @@ for ($slot = $first_slot; $slot <= $last_slot; $slot++)
 }
 echo "</table>";
 
-show_colour_key();
+if ( $pview != 1 ) show_colour_key();
 
 include "trailer.inc"; 
 ?>

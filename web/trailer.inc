@@ -1,6 +1,8 @@
 <?php
 # $Id$
 
+if ( $pview != 1 ) {
+
 echo "<P><HR><B>$lang[viewday]:</B>\n";
 
 if(!isset($year))
@@ -62,7 +64,12 @@ for ($i = -2; $i <= 6; $i++)
 	echo "<a href=\"month.php?year=$cyear&month=$cmonth$params\">$str</a>\n";
 }
 
+echo "<HR>";
+echo '<p><center><a href="' . $REQUEST_URI . '&pview=1">Print Preview</a></center><p>';
+
+}
 ?>
+
 <HR>
 </BODY>
 </HTML>

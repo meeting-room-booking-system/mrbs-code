@@ -27,23 +27,25 @@ print_header($day, $month, $year, $area);
 $am7=mktime($morningstarts,0,0,$month,$day,$year);
 $pm7=mktime($eveningends,$eveningends_minutes,0,$month,$day,$year);
 
-echo "<table><tr><td width=\"100%\">";
+if ( $pview != 1 ) {
+   echo "<table><tr><td width=\"100%\">";
 
-#Show all avaliable areas
-echo "<u>$lang[areas]</u><br>";
-$sql = "select id, area_name from mrbs_area order by area_name";
-$res = sql_query($sql);
-if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
-{
+   #Show all avaliable areas
+   echo "<u>$lang[areas]</u><br>";
+   $sql = "select id, area_name from mrbs_area order by area_name";
+   $res = sql_query($sql);
+   if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+   {
 	echo "<a href=\"day.php?year=$year&month=$month&day=$day&area=$row[0]\">";
 	if ($row[0] == $area)
 		echo "<font color=\"red\">" . htmlspecialchars($row[1]) . "</font></a><br>\n";
 	else echo htmlspecialchars($row[1]) . "</a><br>\n";
-}
+   }
 
-#Draw the three month calendars
-minicals($year, $month, $day, $area);
-echo "</tr></table>";
+   #Draw the three month calendars
+   minicals($year, $month, $day, $area);
+   echo "</tr></table>";
+}
 
 #y? are year, month and day of yesterday
 #t? are year, month and day of tomorrow
@@ -61,11 +63,12 @@ $td = date("d",$i);
 #Show current date
 echo "<h2 align=center>" . strftime("%A %d %B %Y", $am7) . "</h2>\n";
 
-#Show Go to day before and after links
-echo "<table width=\"100%\"><tr><td><a href=\"day.php?year=$yy&month=$ym&day=$yd&area=$area\">&lt;&lt; $lang[daybefore]</a></td>
-      <td align=center><a href=\"day.php?area=$area\">$lang[gototoday]</a></td>
-      <td align=right><a href=\"day.php?year=$ty&month=$tm&day=$td&area=$area\">$lang[dayafter] &gt;&gt;</a></td></tr></table>";
-
+if ( $pview != 1 ) {
+	#Show Go to day before and after links
+	echo "<table width=\"100%\"><tr><td><a href=\"day.php?year=$yy&month=$ym&day=$yd&area=$area\">&lt;&lt; $lang[daybefore]</a></td>
+	      <td align=center><a href=\"day.php?area=$area\">$lang[gototoday]</a></td>
+	      <td align=right><a href=\"day.php?year=$ty&month=$tm&day=$td&area=$area\">$lang[dayafter] &gt;&gt;</a></td></tr></table>";
+}
 
 #We want to build an array containing all the data we want to show
 #and then spit it out. 
@@ -193,7 +196,11 @@ else
 				$hour = date("H",$t);
 				$minute  = date("i",$t);
 
-				echo "<center><a href=\"edit_entry.php?room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day\"><img src=new.gif width=10 height=10 border=0></a></center>";
+				echo "<center>";
+				if ( $pview != 1 ) {
+					echo "<a href=\"edit_entry.php?room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day\"><img src=new.gif width=10 height=10 border=0></a>";
+				} else echo '&nbsp;';
+				echo "</center>";
 			}
 			elseif ($descr != "")
 			{
@@ -209,7 +216,7 @@ else
 		reset($rooms);
 	}
 	echo "</table>";
-	show_colour_key();
+	if ( $pview != 1 ) show_colour_key();
 }
 
 include "trailer.inc"; 
