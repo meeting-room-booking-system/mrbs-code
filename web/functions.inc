@@ -330,17 +330,21 @@ function get_default_area()
 {
     global $mdb;
 
-    $res = $mdb->query("SELECT  MIN(id)
-                        FROM    mrbs_area", 'integer');
-    if ( (MDB::isError($res)) or (!$default_area = $mdb->fetchOne($res)) )
-    {
-        $mdb->freeResult($res);
-        return 0;
-    }
-    else
-    {
-        return $default_area;
-    }
+    $default_area = $mdb->queryOne("SELECT id FROM mrbs_area ORDER BY area_name"
+    	   	, 'integer');
+    return ((MDB::isError($default_area) or ($default_area == NULL)) ? 0 : $default_area );
+}
+
+# Return a default room given a valid area; used if no room is already known.
+# This returns the first room in alphbetic order in the database.
+# This could be changed to implement something like per-user defaults.
+function get_default_room($area)
+{
+    global $mdb;
+
+    $room = $mdb->queryOne("SELECT id FROM mrbs_room WHERE area_id=$area
+    						ORDER BY room_name", 'integer');
+    return ( ( MDB::isError($room) or ($room == NULL) ) ? 0 : $room );
 }
 
 # Get the local day name based on language. Note 2000-01-02 is a Sunday.
