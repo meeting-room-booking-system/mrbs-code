@@ -33,9 +33,6 @@ if(($morningstarts < 0) || ($morningstarts > 23) ||
   exit;
 }
 
-# Start of week Sunday=0, Monday=1 (anything else same as 0)
-$weekstarts = 0;
-
 # Show dates as "Jul 10" (default) or "10 Jul" ($dateformat = 1)
 $dateformat = 0;
 

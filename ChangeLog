@@ -1,3 +1,6 @@
+Version 0.9.2 (Thu Feb  8 22:44:32 GMT 2001)
+	Remove "weekstarts" functionality
+
 Version 0.9.1 (Sun Feb  4 21:56:09 GMT 2001)
 	Fixed bug in mincals (sourceforge 'nobody') 
 	

@@ -83,8 +83,8 @@ class Calendar
     {
       global $weekstarts;
 
-//      $basetime = mktime(12,0,0,6,11,2000);
-      $basetime = mktime(12,0,0,6,11 + ($weekstarts == 1),2000);
+      $basetime = mktime(12,0,0,6,11,2000);
+//      $basetime = mktime(12,0,0,6,11 + ($weekstarts == 1),2000);
 
       for($i = 0, $s = ""; $i < 7; $i++)
       {
@@ -103,8 +103,8 @@ class Calendar
     	$daysInMonth = $this->getDaysInMonth($this->month, $this->year);
     	$date = mktime(12, 0, 0, $this->month, 1, $this->year);
     	
-//    	$first = strftime("%w",$date);
-    	$first = strftime("%u",$date);
+    	$first = strftime("%w",$date);
+//    	$first = strftime("%u",$date);
 
     	$monthName = strftime("%B",$date);
     	
@@ -122,8 +122,8 @@ class Calendar
         $s .= $this->getFirstDays();
     	$s .= "</tr>\n";
     	
-//    	$d = 1 - $first;
-    	$d = ((($weekstarts == 1) ? -6 : -7 ) - $first) % 7 + 2;
+    	$d = 1 - $first;
+//    	$d = ((($weekstarts == 1) ? -6 : -7 ) - $first) % 7 + 2;
     	   	
     	while ($d <= $daysInMonth)
     	{
