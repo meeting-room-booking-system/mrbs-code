@@ -1,4 +1,7 @@
 <?
+
+# $Id$
+
 # This script initialises the database with some random data
 include "config.inc";
 include "$dbsys.inc";

@@ -1,3 +1,5 @@
+-- $Id$
+--
 -- mrbs/purge.my.sql 2001-01-13 : Purge old MRBS entries, for MySQL
 --
 -- This SQL script will delete old entries from your MRBS database.

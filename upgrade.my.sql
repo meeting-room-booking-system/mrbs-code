@@ -1,3 +1,5 @@
+# $Id$
+
 drop table mrbs_entry_tmp;
 
 CREATE TABLE mrbs_entry_tmp (

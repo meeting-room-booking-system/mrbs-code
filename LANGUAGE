@@ -1,12 +1,5 @@
 Currently supported MRBS languages are:
 
-German:              lang.de (thanks to Erik Wenzel)
-English:             lang.en
-Spanish:             lang.es (thanks to Pablo Gomez)
-Japanese:            lang.ja
-Dutch:               lang.nl (thanks to Marc ter Horst)
-Traditional Chinese: lang.zh-tw (thanks to Linda Hu)
-
 To port MRBS to another language is relativly easy.
 
 Look it admin.php - it says near the bottom "Your browser is set to use
@@ -25,5 +18,4 @@ it in future releases.
 Daniel
 daniel@pl14759.demon.co.uk
 
-Now maintained by.
-  Sam Mason <smason@mtc.ricardo.com>
+$Id$

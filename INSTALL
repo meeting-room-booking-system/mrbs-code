@@ -241,3 +241,6 @@ The script "testdata.php" is for testing only.  Do not leave it in a
 directory accessible to your web server. Anyone running this will add a
 large number of test entries to your database, regardless of
 authentication, and book all your rooms to people you've never heard of.
+
+$Id$
+

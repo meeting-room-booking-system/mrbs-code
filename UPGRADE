@@ -17,3 +17,5 @@ handled correctly. If you see extra backslashes when MRBS displays names or
 descriptions, it is because these are in actually your database, a result
 of this bug in previous versions. You can edit the entries in MRBS or
 directly with your database SQL tool, or just ignore them.
+
+$Id$

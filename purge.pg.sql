@@ -1,3 +1,5 @@
+-- $Id$
+--
 -- mrbs/purge.pg.sql 2001-01-13 : Purge old MRBS entries, for PostgreSQL
 --
 -- This SQL script will delete old entries from your MRBS database.

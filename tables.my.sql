@@ -1,6 +1,7 @@
 #
 # MySQL MRBS table creation script
 #
+# $Id$
 
 CREATE TABLE mrbs_area
 (

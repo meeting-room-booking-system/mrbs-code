@@ -250,3 +250,5 @@ With MySQL this gives you:
   $sql = "SELECT * FROM mytable ORDER BY id LIMIT 20,100";
 
 -----------------------------------------------------------------------------
+
+$Id$

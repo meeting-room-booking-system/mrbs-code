@@ -44,3 +44,5 @@ NOTE: nwauth must be able to find nwsfind in the PATH (which is the
 web server PATH). If authentication fails, and your Apache error log
 contains messages about nwsfind, try creating a link from /bin/nwsfind
 to the actual path of nwsfind.
+
+$Id$

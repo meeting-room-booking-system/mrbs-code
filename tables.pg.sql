@@ -1,3 +1,4 @@
+-- $Id$
 --
 -- MRBS table creation script - for PostgreSQL
 --

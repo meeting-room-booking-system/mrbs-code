@@ -1,3 +1,4 @@
+-- $Id$
 --
 -- MRBS table destruction script for PostgreSQL 7.0 or higher
 -- This exists because I can never remember the sequence name magic.
