@@ -1,20 +1,25 @@
 2003-12-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* edit_entry.php (1.23), edit_entry_handler.php (1.15): - Fixed bug
-	  [ 853410 ]: when changing a non n-weekly entry, field "Number of
-	  weeks (for n-weekly)" appear...
+	* config.inc.php (1.12, mrbs-1-2-pre2): Doc fixes
+
+2003-12-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* edit_entry.php (1.23), edit_entry_handler.php (1.15) (utags:
+	  mrbs-1-2-pre2): - Fixed bug [ 853410 ]: when changing a non
+	  n-weekly entry, field "Number of weeks (for n-weekly)" appear...
 
 2003-12-04  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* admin.php (1.15): - Fixed bug #846337: We can create rooms with
-	  no area
+	* admin.php (1.15, mrbs-1-2-pre2): - Fixed bug #846337: We can
+	  create rooms with no area
 
 2003-12-03  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* day.php (1.20), edit_entry.php (1.22), edit_entry_handler.php
-	  (1.14), functions.inc (1.20), month.php (1.17), mrbs_sql.inc
-	  (1.12), view_entry.php (1.11), week.php (1.22): Daylight Saving
-	  Time fixes.
+	* day.php (1.20, mrbs-1-2-pre2), edit_entry.php (1.22),
+	  edit_entry_handler.php (1.14), functions.inc (1.20,
+	  mrbs-1-2-pre2), month.php (1.17, mrbs-1-2-pre2), mrbs_sql.inc
+	  (1.12, mrbs-1-2-pre2), view_entry.php (1.11, mrbs-1-2-pre2),
+	  week.php (1.22, mrbs-1-2-pre2): Daylight Saving Time fixes.
 
 	  This has involved modifying month.php, week.php and day.php,
 	  view_entry.php, edit_entry.php, edit_entry_handler.php,
@@ -56,10 +61,11 @@
 
 2003-12-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* pgsql.inc (1.5): Updated the postgreSql driver (pgsql.inc) to
-	  remove deprecated functions. People which still use a php version
-	  less than 4.2 will have to replace the existing pgsql.inc file
-	  with pgsql.before_php42.inc file and rename it to pgsql.inc
+	* pgsql.inc (1.5, mrbs-1-2-pre2): Updated the postgreSql driver
+	  (pgsql.inc) to remove deprecated functions. People which still
+	  use a php version less than 4.2 will have to replace the existing
+	  pgsql.inc file with pgsql.before_php42.inc file and rename it to
+	  pgsql.inc
 
 2003-11-24  Gavin Walker <gwalker@users.sourceforge.net>
 
@@ -68,14 +74,15 @@
 
 2003-11-21  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* config.inc.php (1.11), help.php (1.12): Since we always forgot
-	  for each release to update mrbs version in help.php (this is not
-	  a file we open often), I moved the variable to config.inc.php.
+	* config.inc.php (1.11), help.php (1.12, mrbs-1-2-pre2): Since we
+	  always forgot for each release to update mrbs version in help.php
+	  (this is not a file we open often), I moved the variable to
+	  config.inc.php.
 
 2003-11-21  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* session_cookie.inc (1.4): - fixed not working with error level
-	  all.
+	* session_cookie.inc (1.4, mrbs-1-2-pre2): - fixed not working with
+	  error level all.
 
 2003-11-19  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
@@ -87,24 +94,26 @@
 
 2003-11-19  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* auth_none.inc (1.1), config.inc.php (1.10), session_host.inc
-	  (1.1), session_ip.inc (1.1), session_nt.inc (1.1),
-	  session_omni.inc (1.1): Created an auth_none.inc authentication,
-	  which validates any user.  Moved session management code from the
-	  old auth_ip, auth_name, auth_nt, auth_omni to the new session_ip,
-	  session_host, session_nt, session_omni respectively.	Updated
-	  config.inc.php comments to reflect the possible choices for
-	  session name and authentication types.
+	* auth_none.inc (1.1, mrbs-1-2-pre2), config.inc.php (1.10),
+	  session_host.inc (1.1, mrbs-1-2-pre2), session_ip.inc (1.1,
+	  mrbs-1-2-pre2), session_nt.inc (1.1, mrbs-1-2-pre2),
+	  session_omni.inc (1.1, mrbs-1-2-pre2): Created an auth_none.inc
+	  authentication, which validates any user.  Moved session
+	  management code from the old auth_ip, auth_name, auth_nt,
+	  auth_omni to the new session_ip, session_host, session_nt,
+	  session_omni respectively.  Updated config.inc.php comments to
+	  reflect the possible choices for session name and authentication
+	  types.
 
 2003-11-18  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* language.inc (1.5): Updated the administrator warning message
-	  about the iconv package requirement, to fire only if
-	  $unicode_encoding is true.
+	* language.inc (1.5, mrbs-1-2-pre2): Updated the administrator
+	  warning message about the iconv package requirement, to fire only
+	  if $unicode_encoding is true.
 
 2003-11-18  John Beranek <jberanek@users.sourceforge.net>
 
-	* style.inc (1.9):
+	* style.inc (1.9, mrbs-1-2-pre2):
 	  * Added utility to convert text in the database to UTF8, to  use
 	  MRBS with $unicode_encoding set to 1. The administrator  should
 	  copy it into the web directory, run it (choosing  the encoding to
@@ -126,12 +135,12 @@
 
 2003-11-17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* lang.fr (1.16): Changing $vocab language string.
+	* lang.fr (1.16, mrbs-1-2-pre2): Changing $vocab language string.
 
 2003-11-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* session_cookie.inc (1.3), session_php.inc (1.4): - Removed
-	  remainings plain text strings by get_vocab() function.
+	* session_cookie.inc (1.3), session_php.inc (1.4, mrbs-1-2-pre2): -
+	  Removed remainings plain text strings by get_vocab() function.
 
 2003-11-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -163,20 +172,21 @@
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* auth_config.inc (1.2): Function authValidateUser() must not call
-	  authGet() anymore. In case of failure it just returns 0 as
-	  specified in its header comment.
+	* auth_config.inc (1.2, mrbs-1-2-pre2): Function authValidateUser()
+	  must not call authGet() anymore. In case of failure it just
+	  returns 0 as specified in its header comment.
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* auth_ext.inc (1.6), auth_imap.inc (1.5), auth_ldap.inc (1.5),
-	  auth_nis.inc (1.5), auth_nw.inc (1.4), auth_pop3.inc (1.5): Set
-	  $auth['session']='http' if it is not specified. This allows to
-	  get the same behaviour as before without changing config.inc.php.
-	  Moved routines authGet(), getUserName() and getUserPassword() to
-	  the new session_http.inc module.  Function authValidateUser()
-	  must not call authGet() anymore. In case of failure it just
-	  returns 0 as specified in its header comment.
+	  auth_nis.inc (1.5), auth_nw.inc (1.4), auth_pop3.inc (1.5)
+	  (utags: mrbs-1-2-pre2): Set $auth['session']='http' if it is not
+	  specified. This allows to get the same behaviour as before
+	  without changing config.inc.php.  Moved routines authGet(),
+	  getUserName() and getUserPassword() to the new session_http.inc
+	  module.  Function authValidateUser() must not call authGet()
+	  anymore. In case of failure it just returns 0 as specified in its
+	  header comment.
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
@@ -185,10 +195,11 @@
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* mrbs_auth.inc (1.8): Moved routines getAuthUserName() and
-	  getAuthUserPassword() to the new session_http.inc module.
-	  Function getAuthorized() must not call authGet() anymore. In case
-	  of failure it just returns 0 as specified in its header comment.
+	* mrbs_auth.inc (1.8, mrbs-1-2-pre2): Moved routines
+	  getAuthUserName() and getAuthUserPassword() to the new
+	  session_http.inc module.  Function getAuthorized() must not call
+	  authGet() anymore. In case of failure it just returns 0 as
+	  specified in its header comment.
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
@@ -200,12 +211,13 @@
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* session_http.inc (1.1): Get the user/password using the HTTP
-	  basic authentication.
+	* session_http.inc (1.1, mrbs-1-2-pre2): Get the user/password
+	  using the HTTP basic authentication.
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* grab_globals.inc.php (1.2): Added the setting of $HTTP_HOST.
+	* grab_globals.inc.php (1.2, mrbs-1-2-pre2): Added the setting of
+	  $HTTP_HOST.
 
 2003-11-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -214,17 +226,20 @@
 
 2003-11-11  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* lang.cz (1.5), lang.da (1.2), lang.de (1.13), lang.es (1.15),
-	  lang.fi (1.5), lang.fr (1.15), lang.it (1.8), lang.ja (1.12),
-	  lang.nl (1.13), lang.no (1.10), lang.pt (1.2), lang.sv (1.13),
-	  lang.zh-tw (1.12): Added messages for session handling.
+	* lang.cz (1.5, mrbs-1-2-pre2), lang.da (1.2, mrbs-1-2-pre2),
+	  lang.de (1.13, mrbs-1-2-pre2), lang.es (1.15, mrbs-1-2-pre2),
+	  lang.fi (1.5, mrbs-1-2-pre2), lang.fr (1.15), lang.it (1.8,
+	  mrbs-1-2-pre2), lang.ja (1.12, mrbs-1-2-pre2), lang.nl (1.13,
+	  mrbs-1-2-pre2), lang.no (1.10, mrbs-1-2-pre2), lang.pt (1.2,
+	  mrbs-1-2-pre2), lang.sv (1.13, mrbs-1-2-pre2), lang.zh-tw (1.12,
+	  mrbs-1-2-pre2): Added messages for session handling.
 
 2003-11-09  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* auth_config.inc (1.1), config.inc.php (1.7), day.php (1.18),
-	  functions.inc (1.19), lang.en (1.13), mrbs_auth.inc (1.7),
-	  session_cookie.inc (1.1), session_php.inc (1.1): Added support
-	  for session handling.
+	  functions.inc (1.19), lang.en (1.13, mrbs-1-2-pre2),
+	  mrbs_auth.inc (1.7), session_cookie.inc (1.1), session_php.inc
+	  (1.1): Added support for session handling.
 
 2003-11-09  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
@@ -285,13 +300,14 @@
 2003-10-09  John Beranek <jberanek@users.sourceforge.net>
 
 	* admin.php (1.12), config.inc.php (1.4), day.php (1.16), del.php
-	  (1.10), edit_area_room.php (1.10), edit_entry.php (1.20),
-	  edit_entry_handler.php (1.13), functions.inc (1.18), help.php
-	  (1.11), language.inc (1.1), mincals.inc (1.9), month.php (1.13),
-	  mrbs_auth.inc (1.6), mrbs_sql.inc (1.10), mysql.inc (1.4),
-	  pgsql.inc (1.4), report.php (1.12), search.php (1.10), style.inc
-	  (1.8), trailer.inc (1.9), view_entry.php (1.10), week.php (1.18):
-
+	  (1.10, mrbs-1-2-pre2), edit_area_room.php (1.10, mrbs-1-2-pre2),
+	  edit_entry.php (1.20), edit_entry_handler.php (1.13),
+	  functions.inc (1.18), help.php (1.11), language.inc (1.1),
+	  mincals.inc (1.9, mrbs-1-2-pre2), month.php (1.13), mrbs_auth.inc
+	  (1.6), mrbs_sql.inc (1.10), mysql.inc (1.4, mrbs-1-2-pre2),
+	  pgsql.inc (1.4), report.php (1.12, mrbs-1-2-pre2), search.php
+	  (1.10, mrbs-1-2-pre2), style.inc (1.8), trailer.inc (1.9,
+	  mrbs-1-2-pre2), view_entry.php (1.10), week.php (1.18):
 	  * Revamped localisation/internationalisation. MRBS can now be
 	  called  fulled Unicode, as long as the config variable
 	  $unicode_encoding is	set to 1. If this is set, then MRBS serves
@@ -346,47 +362,48 @@
 
 2003-09-23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* add.php (1.4, mrbs-1-2-pre1), admin.php (1.11, mrbs-1-2-pre1),
-	  auth_ext.inc (1.5, mrbs-1-2-pre1), auth_imap.inc (1.4,
-	  mrbs-1-2-pre1), auth_ip.inc (1.4, mrbs-1-2-pre1), auth_name.inc
-	  (1.2, mrbs-1-2-pre1), auth_nis.inc (1.4, mrbs-1-2-pre1),
-	  auth_nt.inc (1.2, mrbs-1-2-pre1), auth_omni.inc (1.2,
-	  mrbs-1-2-pre1), auth_pop3.inc (1.2, mrbs-1-2-pre1), config.inc
-	  (1.17), config.inc.php (1.2, mrbs-1-2-pre1), day.php (1.15,
-	  mrbs-1-2-pre1), del.php (1.9, mrbs-1-2-pre1), del_entry.php (1.4,
-	  mrbs-1-2-pre1), edit_area_room.php (1.9, mrbs-1-2-pre1),
-	  edit_entry.php (1.19, mrbs-1-2-pre1), edit_entry_handler.php
-	  (1.12, mrbs-1-2-pre1), help.php (1.9), lang.fi (1.4,
-	  mrbs-1-2-pre1), month.php (1.12, mrbs-1-2-pre1), report.php
-	  (1.11, mrbs-1-2-pre1), search.php (1.9, mrbs-1-2-pre1),
-	  view_entry.php (1.9, mrbs-1-2-pre1), week.php (1.17,
-	  mrbs-1-2-pre1): Finally we changed config.inc to config.inc.php
-	  for "security" reasons.
+	* add.php (1.4, mrbs-1-2-pre2, mrbs-1-2-pre1), admin.php (1.11,
+	  mrbs-1-2-pre1), auth_ext.inc (1.5, mrbs-1-2-pre1), auth_imap.inc
+	  (1.4, mrbs-1-2-pre1), auth_ip.inc (1.4, mrbs-1-2-pre1),
+	  auth_name.inc (1.2, mrbs-1-2-pre1), auth_nis.inc (1.4,
+	  mrbs-1-2-pre1), auth_nt.inc (1.2, mrbs-1-2-pre1), auth_omni.inc
+	  (1.2, mrbs-1-2-pre1), auth_pop3.inc (1.2, mrbs-1-2-pre1),
+	  config.inc (1.17), config.inc.php (1.2, mrbs-1-2-pre1), day.php
+	  (1.15, mrbs-1-2-pre1), del.php (1.9, mrbs-1-2-pre1),
+	  del_entry.php (1.4, mrbs-1-2-pre2, mrbs-1-2-pre1),
+	  edit_area_room.php (1.9, mrbs-1-2-pre1), edit_entry.php (1.19,
+	  mrbs-1-2-pre1), edit_entry_handler.php (1.12, mrbs-1-2-pre1),
+	  help.php (1.9), lang.fi (1.4, mrbs-1-2-pre1), month.php (1.12,
+	  mrbs-1-2-pre1), report.php (1.11, mrbs-1-2-pre1), search.php
+	  (1.9, mrbs-1-2-pre1), view_entry.php (1.9, mrbs-1-2-pre1),
+	  week.php (1.17, mrbs-1-2-pre1): Finally we changed config.inc to
+	  config.inc.php for "security" reasons.
 
 2003-09-23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* config.inc (1.16): Make sure notice errors are not reported,
-	  they can break mrbs code.
+	* config.inc (1.16): Make sure notice errors are not reported, they
+	  can break mrbs code.
 
 2003-09-11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* lang.fi (1.3): Updating finish lang file (Tom Ingberg 
-	  (tom.ingberg@edu.vantaa.fi)).
+	* lang.fi (1.3, Root-of-mrbs_MDB): Updating finish lang file (Tom
+	  Ingberg (tom.ingberg@edu.vantaa.fi)).
 
 2003-08-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* edit_entry.php (1.18): - Fixed bug #748934, do not allow booking
-	  descriptions with only spaces (cannot click the slot).
+	* edit_entry.php (1.18, Root-of-mrbs_MDB): - Fixed bug #748934, do
+	  not allow booking descriptions with only spaces (cannot click the
+	  slot).
 
 2003-08-09  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* auth_nt.inc (1.1): + Added Windows NT / IIS authentication
-	  scheme.
+	* auth_nt.inc (1.1, Root-of-mrbs_MDB): + Added Windows NT / IIS
+	  authentication scheme.
 
 2003-08-09  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* config.inc (1.15): Doc fixes. Update documentation and comments
-	  to the current cvs situation.
+	* config.inc (1.15, Root-of-mrbs_MDB): Dox fixes. Update
+	  documentation and comments to the current cvs situation.
 
 2003-05-29  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -415,9 +432,10 @@
 
 2003-05-08  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* report.php (1.10): - Fixed bug : when you press on print preview
-	  in report.php page, all but the submission form is visible but
-	  not the actual report  (<sQuare>mrbs@synapse.plus.com).
+	* report.php (1.10, Root-of-mrbs_MDB): - Fixed bug : when you press
+	  on print preview in report.php page, all but the submission form
+	  is visible but not the actual report
+	  (<sQuare>mrbs@synapse.plus.com).
 
 2003-04-25  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -432,14 +450,16 @@
 
 2003-04-18  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* week.php (1.16): - Corrected bug : in week view, allow non
-	  'internet explorer' browsers to see links to the corresponding
-	  days in column titles (Johan.Schonning@uab.ericsson.se).
+	* week.php (1.16, Root-of-mrbs_MDB): - Corrected bug : in week
+	  view, allow non 'internet explorer' browsers to see links to the
+	  corresponding days in column titles
+	  (Johan.Schonning@uab.ericsson.se).
 
 2003-04-17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* config.inc (1.14), month.php (1.11): + Entries in monthly view
-	  can be shown as start/end slot or brief description
+	* config.inc (1.14), month.php (1.11, Root-of-mrbs_MDB): + Entries
+	  in monthly view can be shown as start/end slot or brief
+	  description
 
 2003-04-15  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -451,9 +471,9 @@
 
 2003-04-09  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* edit_entry_handler.php (1.11): - Fixed bug : if AM/PM hour format
-	  is used, bookings between 12:00 AM and 12:59 AM are stored with a
-	  wrong start date.
+	* edit_entry_handler.php (1.11, Root-of-mrbs_MDB): - Fixed bug : if
+	  AM/PM hour format is used, bookings between 12:00 AM and 12:59 AM
+	  are stored with a wrong start date.
 
 2003-03-31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -481,19 +501,25 @@
 	* help.php (1.8), lang.da (1.1, mrbs-1-2-pre1) (utags:
 	  Root-of-mrbs_MDB): + Added translation:     Danish (Claes Bolvig
 	  Pedersen (cp@dhi.dk)) - Changed mrbs_version in help.php to "MRBS
+	  1.1"
 
 2003-03-05  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* add.php (1.3), admin.php (1.10), day.php (1.14), del.php (1.8),
-	  del_entry.php (1.3), edit_area_room.php (1.8), edit_entry.php
+	* add.php (1.3, Root-of-mrbs_MDB), admin.php (1.10,
+	  Root-of-mrbs_MDB), day.php (1.14, Root-of-mrbs_MDB), del.php
+	  (1.8, Root-of-mrbs_MDB), del_entry.php (1.3, Root-of-mrbs_MDB),
+	  edit_area_room.php (1.8, Root-of-mrbs_MDB), edit_entry.php
 	  (1.16), edit_entry_handler.php (1.9), help.php (1.7), month.php
-	  (1.10), grab_globals.inc.php (1.1), report.php (1.9), search.php
-	  (1.8), view_entry.php (1.8), week.php (1.14): + Make MRBS
-	  compliant to the 'register_globals = off' directive
+	  (1.10), grab_globals.inc.php (1.1, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB), report.php (1.9), search.php (1.8,
+	  Root-of-mrbs_MDB), view_entry.php (1.8, Root-of-mrbs_MDB),
+	  week.php (1.14): + Make MRBS compliant to the 'register_globals =
+	  off' directive
 
 2003-03-05  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* lang.pt (1.1): + added translation:	  Portuguese (Lopo Pizarro)
+	* lang.pt (1.1, mrbs-1-2-pre1, Root-of-mrbs_MDB): + added
+	  translation:	   Portuguese (Lopo Pizarro)
 
 2003-02-09  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -510,11 +536,13 @@
 
 2003-01-29  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* lang.no (1.9): - minor translation update
+	* lang.no (1.9, mrbs-1-2-pre1, Root-of-mrbs_MDB): - minor
+	  translation update
 
 2003-01-29  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* functions.inc (1.17), lang.fr (1.14), lang.no (1.8): - Minor
+	* functions.inc (1.17, mrbs-1-2-pre1, Root-of-mrbs_MDB), lang.fr
+	  (1.14, mrbs-1-2-pre1, Root-of-mrbs_MDB), lang.no (1.8): - Minor
 	  translations updates in lang.fr, lang.no (Tobias), 1 vocab added
 	  in functions.inc
 
@@ -527,18 +555,23 @@
 
 2003-01-15  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* mrbs.css (1.3): - Changed the tiny size of numbers in calendar to
-	  a larger one. There is more room to do this since week day names
-	  are displayed with 3 characters now instead of one.
+	* mrbs.css (1.3, mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB): -
+	  Changed the tiny size of numbers in calendar to a larger one.
+	  There is more room to do this since week day names are displayed
+	  with 3 characters now instead of one.
 
 2003-01-15  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* admin.php (1.9), lang.cz (1.4), lang.de (1.12), lang.en (1.12),
-	  lang.es (1.14), lang.fr (1.13), lang.it (1.6), lang.ja (1.11),
-	  lang.nl (1.12), lang.no (1.7), lang.sv (1.12), lang.zh-tw (1.11):
-	  - Fixed an error in all lang files, $vocab["backadmin"] was
-	  defined twice since a recent update.	- Added one (hopefully
-	  last) missing $vocab (administration).
+	* admin.php (1.9), lang.cz (1.4, mrbs-1-2-pre1, Root-of-mrbs_MDB),
+	  lang.de (1.12, mrbs-1-2-pre1, Root-of-mrbs_MDB), lang.en (1.12,
+	  mrbs-1-2-pre1, Root-of-mrbs_MDB), lang.es (1.14, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB), lang.fr (1.13), lang.it (1.6), lang.ja (1.11,
+	  mrbs-1-2-pre1, Root-of-mrbs_MDB), lang.nl (1.12, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB), lang.no (1.7), lang.sv (1.12, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB), lang.zh-tw (1.11, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB): - Fixed an error in all lang files,
+	  $vocab["backadmin"] was defined twice since a recent update.	-
+	  Added one (hopefully last) missing $vocab (administration).
 
 2003-01-14  John Beranek <jberanek@users.sourceforge.net>
 
@@ -579,17 +612,18 @@
 
 2003-01-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* auth_omni.inc (1.1, mrbs-1-1): Authentification scheme using own
-	  Omnicron OmniHTTPd web server security features.
+	* auth_omni.inc (1.1, Root-of-mrbs_MDB, mrbs-1-1): Authentification
+	  scheme using own Omnicron OmniHTTPd web server security features.
 
 2003-01-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* auth_name.inc (1.1, mrbs-1-1): Variant of auth_ip.inc that try to
-	  use DNS name instead of IP.
+	* auth_name.inc (1.1, Root-of-mrbs_MDB, mrbs-1-1): Variant of
+	  auth_ip.inc that try to use DNS name instead of IP.
 
 2003-01-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* site_faq_fr.html (1.2, mrbs-1-1): Minor translation corrections
+	* site_faq_fr.html (1.2, mrbs-1-2-pre2, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB, mrbs-1-1): Minor translation corrections
 
 2003-01-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -627,7 +661,8 @@
 
 	* lang.en (1.10), del.php (1.6), edit_area_room.php (1.7,
 	  mrbs-1-1), edit_entry.php (1.10), edit_entry_handler.php (1.6),
-	  mysql.inc (1.3, mrbs-1-1), pgsql.inc (1.3, mrbs-1-1),
+	  mysql.inc (1.3, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1),
+	  pgsql.inc (1.3, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1),
 	  view_entry.php (1.6), functions.inc (1.14), edit_entry.php
 	  (1.12): Added new $vocab in order to remove the last plain
 	  english strings in the code.
@@ -638,8 +673,9 @@
 
 2003-01-09  Daniel <nambit@users.sourceforge.net>
 
-	* trailer.inc (1.7, mrbs-1-1): Change trailer.inc to make print
-	  preview more likely to work on windows and non-apache servers
+	* trailer.inc (1.7, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1):
+	  Change trailer.inc to make print preview more likely to work on
+	  windows and non-apache servers
 
 2003-01-09  Daniel <nambit@users.sourceforge.net>
 
@@ -647,8 +683,9 @@
 
 2003-01-09  Daniel <nambit@users.sourceforge.net>
 
-	* auth_pop3.inc (1.1, mrbs-1-1), config.inc (1.10): New
-	  authentication provider which uses a POP3 mail server.
+	* auth_pop3.inc (1.1, Root-of-mrbs_MDB, mrbs-1-1), config.inc
+	  (1.10): New authentication provider which uses a POP3 mail
+	  server.
 
 	  Can authenticate using APOP or standard USER/PASS
 
@@ -664,8 +701,10 @@
 2002-10-14  John Beranek <jberanek@users.sourceforge.net>
 
 	* admin.php (1.7), del.php (1.5), edit_area_room.php (1.6),
-	  index.php (1.4, mrbs-1-1), style.inc (1.7, mrbs-1-1):    Fixes
-	  submitted/suggested by Jean-François Larvoire:
+	  index.php (1.4, mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB,
+	  mrbs-1-1), style.inc (1.7, mrbs-1-2-pre1, Root-of-mrbs_MDB,
+	  mrbs-1-1):	Fixes submitted/suggested by Jean-François
+	  Larvoire:
 
 	     - Added closing ?> to index.php
 	     - Added "global $refresh_rate;" to style.inc
@@ -674,14 +713,15 @@
 
 2002-10-08  John Beranek <jberanek@users.sourceforge.net>
 
-	* admin.php (1.6), auth_ext.inc (1.4, mrbs-1-1), config.inc (1.9),
-	  edit_area_room.php (1.5), edit_entry.php (1.8),
-	  escapeshellarg.inc (1.1, mrbs-1-1), functions.inc (1.13),
-	  help.php (1.5), index.php (1.3), lang.cz (1.2), lang.de (1.10),
-	  lang.en (1.9), lang.es (1.11), lang.fr (1.10), lang.it (1.4),
-	  lang.ja (1.9), lang.nl (1.10), lang.no (1.5), lang.sv (1.10),
-	  lang.zh-tw (1.9), mincals.inc (1.4), mrbs_auth.inc (1.4,
-	  mrbs-1-1), report.php (1.7), search.php (1.5), style.inc (1.6),
+	* admin.php (1.6), auth_ext.inc (1.4, Root-of-mrbs_MDB, mrbs-1-1),
+	  config.inc (1.9), edit_area_room.php (1.5), edit_entry.php (1.8),
+	  escapeshellarg.inc (1.1, mrbs-1-2-pre2, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB, mrbs-1-1), functions.inc (1.13), help.php
+	  (1.5), index.php (1.3), lang.cz (1.2), lang.de (1.10), lang.en
+	  (1.9), lang.es (1.11), lang.fr (1.10), lang.it (1.4), lang.ja
+	  (1.9), lang.nl (1.10), lang.no (1.5), lang.sv (1.10), lang.zh-tw
+	  (1.9), mincals.inc (1.4), mrbs_auth.inc (1.4, mrbs-1-1),
+	  report.php (1.7), search.php (1.5), style.inc (1.6),
 	  view_entry.php (1.5):
 	     - Changed all uses of <? to <?php.
 
@@ -840,7 +880,7 @@
 2002-03-07  John Beranek <jberanek@users.sourceforge.net>
 
 	* auth_ext.inc (1.3), auth_imap.inc (1.2, mrbs-1-1), auth_ip.inc
-	  (1.3, mrbs-1-1), auth_nis.inc (1.1):
+	  (1.3, Root-of-mrbs_MDB, mrbs-1-1), auth_nis.inc (1.1):
 	  * Added comments to the top of all the authentication schemes
 	  (that I understand) that describes how to change config.inc to
 	  use  them.  This should help new installers.
@@ -1014,17 +1054,18 @@
 
 2001-02-25  L J Bayuk <lbayuk@users.sourceforge.net>
 
-	* .htaccess (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), add.php
-	  (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), admin.php (1.2,
-	  mrbs-1-0-final, mrbs-1-0-pre1), auth_ext.inc (1.2,
-	  mrbs-1-0-final, mrbs-1-0-pre1), auth_ip.inc (1.2, mrbs-1-0-final,
-	  mrbs-1-0-pre1), auth_ldap.inc (1.2, mrbs-1-0-pre1), auth_nw.inc
-	  (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), config.inc (1.2,
-	  mrbs-1-0-pre1), day.php (1.2), del.php (1.2, mrbs-1-0-final,
-	  mrbs-1-0-pre1), del_entry.php (1.2, mrbs-1-1, mrbs-1-0-final,
-	  mrbs-1-0-pre1), edit_area_room.php (1.2, mrbs-1-0-final,
-	  mrbs-1-0-pre1), edit_entry.php (1.2), edit_entry_handler.php
-	  (1.2, mrbs-1-0-pre1), functions.inc (1.2), help.php (1.2,
+	* .htaccess (1.2, mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB,
+	  mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), add.php (1.2, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1), admin.php (1.2, mrbs-1-0-final,
+	  mrbs-1-0-pre1), auth_ext.inc (1.2, mrbs-1-0-final,
+	  mrbs-1-0-pre1), auth_ip.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1),
+	  auth_ldap.inc (1.2, mrbs-1-0-pre1), auth_nw.inc (1.2, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1), config.inc (1.2, mrbs-1-0-pre1),
+	  day.php (1.2), del.php (1.2, mrbs-1-0-final, mrbs-1-0-pre1),
+	  del_entry.php (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1),
+	  edit_area_room.php (1.2, mrbs-1-0-final, mrbs-1-0-pre1),
+	  edit_entry.php (1.2), edit_entry_handler.php (1.2,
+	  mrbs-1-0-pre1), functions.inc (1.2), help.php (1.2,
 	  mrbs-1-0-final, mrbs-1-0-pre1), index.php (1.2, mrbs-1-0-final,
 	  mrbs-1-0-pre1), lang.de (1.2), lang.en (1.2), lang.es (1.2),
 	  lang.fr (1.2), lang.ja (1.2), lang.nl (1.2), lang.sv (1.2),
@@ -1032,13 +1073,14 @@
 	  (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), mrbs_auth.inc
 	  (1.2, mrbs-1-0-final, mrbs-1-0-pre1), mrbs_sql.inc (1.2),
 	  mysql.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1), new.gif (1.2,
-	  mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), pgsql.inc (1.2,
-	  mrbs-1-0-final, mrbs-1-0-pre1), report.php (1.2), search.php
-	  (1.2), site_faq.html (1.2, mrbs-1-1, mrbs-1-0-final,
-	  mrbs-1-0-pre1), style.inc (1.2, mrbs-1-0-pre1), trailer.inc (1.2,
-	  mrbs-1-0-pre1), view_entry.php (1.2, mrbs-1-0-pre1), week.php
-	  (1.2) (utags: mrbs-1-0-pre2): Merge branch mrbs-0-9-1xp into
-	  trunk
+	  mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1), pgsql.inc (1.2, mrbs-1-0-final,
+	  mrbs-1-0-pre1), report.php (1.2), search.php (1.2), site_faq.html
+	  (1.2, mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1), style.inc (1.2, mrbs-1-0-pre1),
+	  trailer.inc (1.2, mrbs-1-0-pre1), view_entry.php (1.2,
+	  mrbs-1-0-pre1), week.php (1.2) (utags: mrbs-1-0-pre2): Merge
+	  branch mrbs-0-9-1xp into trunk
 
 2001-02-22  Daniel <nambit@users.sourceforge.net>
 
@@ -1128,7 +1170,7 @@
 	  report.php, search.php, site_faq.html, style.inc, trailer.inc,
 	  view_entry.php, week.php
 	  (mrbs-0-9-1xp.[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]):
-	  Added $Id$ tag
+	  Added Id tag
 
 2001-02-10  L J Bayuk <lbayuk@users.sourceforge.net>
 
