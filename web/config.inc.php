@@ -267,6 +267,6 @@ set_magic_quotes_runtime(0);
 error_reporting (E_ALL ^ E_NOTICE);
 
 # MRBS developers, make sure to update this string before each release:
-$mrbs_version = "MRBS 1.2-pre2";
+$mrbs_version = "MRBS 1.2-pre3";
 
 ?>
