@@ -1,3 +1,12 @@
+CVS (Thu May 08           GMT 2003)
+   - Fixed bug : when you press on print preview in report.php page, all but 
+     the submission form is visible but not the actual report 
+     (<sQuare>mrbs@synapse.plus.com). 
+
+CVS (Fri Apr 25           GMT 2003)
+   + in the minicalendar week view, the full week is highlighted instead of
+     the first day of the week (<sQuare>mrbs@synapse.plus.com).
+
 CVS (Fri Apr 18 02:21:56  GMT 2003)
    - Fixed bug : in week view, allow non 'internet explorer' browsers to see
      links to the corresponding days in column titles

@@ -227,9 +227,10 @@ if (empty($summarize)) $summarize = 1;
 if (empty($sumby)) $sumby = "d";
 
 # Upper part: The form.
+if ( $pview != 1 ) {
 ?>
 <h1><?php echo $vocab["report_on"];?></h1>
-<form method=post action=report.php>
+<form method=get action=report.php>
 <table>
 <tr><td class="CR"><?php echo $vocab["report_start"];?></td>
     <td class="CL"> <font size="-1">
@@ -277,7 +278,7 @@ if (empty($sumby)) $sumby = "d";
 </form>
 
 <?php
-
+}
 # Lower part: Results, if called with parameters:
 if (isset($areamatch))
 {
