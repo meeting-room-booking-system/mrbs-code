@@ -108,7 +108,7 @@ echo "<td width=\"30%\"><u>".get_vocab("rooms")."</u><br>";
   if ($area_list_format == "select") {
 	echo make_room_select_html('week.php', $area, $room, $year, $month, $day); # from functions.inc
   } else {
-    $sql = "select id, room_name, description from mrbs_room where area_id=$area order by room_name";
+	$sql = "select id, room_name, description from mrbs_room where area_id=$area order by room_name";
 	$res = sql_query($sql);
 	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	{
@@ -262,6 +262,17 @@ if ($debug_flag)
 	echo "</pre><p>\n";
 }
 
+// Include the active cell content management routines. 
+// Must be included before the beginnning of the main table.
+	if ($javascript_cursor) // If authorized in config.inc.php, include the javascript cursor management.
+            {
+	    echo "<SCRIPT language=\"JavaScript\" type=\"text/javascript\" src=\"xbLib.js\"></SCRIPT>\n";
+            echo "<SCRIPT language=\"JavaScript\">InitActiveCell("
+               . ($show_plus_link ? "true" : "false") . ", "
+               . ((FALSE != $times_right_side) ? "true" : "false") . ", "
+               . "\"$highlight_method\" );</SCRIPT>\n";
+            }
+
 #This is where we start displaying stuff
 echo "<table cellspacing=0 border=1 width=\"100%\">";
 
@@ -301,10 +312,11 @@ $hilite_url="week.php?year=$year&month=$month&day=$day&area=$area&room=$room&tim
 # move to the next day to get the hours in the day.
 ( $dst_change[0] != -1 ) ? $j = 1 : $j = 0;
 
+$row_class = "even_row";
 for (
 	$t = mktime($morningstarts, 0, 0, $month, $day+$j, $year);
 	$t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
-	$t += $resolution
+	$t += $resolution, $row_class = ($row_class == "even_row")?"odd_row":"even_row"
 )
 {
 	# use hour:minute format
@@ -362,7 +374,7 @@ for (
  		elseif (isset($timetohighlight) && ($time_t == $timetohighlight))
  			$c = "red";
  		else
- 			$c = "white";
+ 			$c = $row_class;
  	
 		tdcell($c);
  	
@@ -374,14 +386,26 @@ for (
  
   			echo "<center>";
  			if ( $pview != 1 ) {
+				if ($javascript_cursor)
+				{
+					echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+					echo "BeginActiveCell();\n";
+					echo "// -->\n</SCRIPT>";
+				}
 				if( $enable_periods ) {
 					echo "<a href=\"edit_entry.php?room=$room&area=$area"
-					. "&period=$time_t_stripped&year=$wyear&month=$wmonth"
-					. "&day=$wday\"><img src=new.gif width=10 height=10 border=0></a>";
+						. "&period=$time_t_stripped&year=$wyear&month=$wmonth"
+						. "&day=$wday\"><img src=new.gif width=10 height=10 border=0></a>";
 				} else {
 					echo "<a href=\"edit_entry.php?room=$room&area=$area"
-					. "&hour=$hour&minute=$minute&year=$wyear&month=$wmonth"
-					. "&day=$wday\"><img src=new.gif width=10 height=10 border=0></a>";
+						. "&hour=$hour&minute=$minute&year=$wyear&month=$wmonth"
+						. "&day=$wday\"><img src=new.gif width=10 height=10 border=0></a>";
+				}
+				if ($javascript_cursor)
+				{
+					echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+					echo "EndActiveCell();\n";
+					echo "// -->\n</SCRIPT>";
 				}
  			} else
 				echo '&nbsp;';

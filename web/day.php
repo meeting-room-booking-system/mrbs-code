@@ -95,7 +95,7 @@ if ( $pview != 1 ) {
 	#Show Go to day before and after links
 	echo "<table width=\"100%\"><tr><td><a href=\"day.php?year=$yy&month=$ym&day=$yd&area=$area\">&lt;&lt;".get_vocab("daybefore")."</a></td>
 	      <td align=center><a href=\"day.php?area=$area\">".get_vocab("gototoday")."</a></td>
-	      <td align=right><a href=\"day.php?year=$ty&month=$tm&day=$td&area=$area\">".get_vocab("dayafter")."&gt;&gt;</a></td></tr></table>";
+	      <td align=right><a href=\"day.php?year=$ty&month=$tm&day=$td&area=$area\">".get_vocab("dayafter")."&gt;&gt;</a></td></tr></table>\n";
 }
 
 #We want to build an array containing all the data we want to show
@@ -183,7 +183,7 @@ if ($debug_flag)
 # pull the data from the db and store it. Convienently we can print the room
 # headings and capacities at the same time
 
-$sql = "select room_name, capacity, id, description from mrbs_room where area_id=$area order by 1";
+$sql = "select room_name, capacity, id, description from mrbs_room where area_id=$area order by capacity";
 $res = sql_query($sql);
 
 # It might be that there are no rooms defined for this area.
@@ -197,6 +197,17 @@ if (sql_count($res) == 0)
 }
 else
 {
+	// Include the active cell content management routines. 
+	// Must be included before the beginnning of the main table.
+	if ($javascript_cursor) // If authorized in config.inc.php, include the javascript cursor management.
+            {
+	    echo "<SCRIPT language=\"JavaScript\" type=\"text/javascript\" src=\"xbLib.js\"></SCRIPT>\n";
+            echo "<SCRIPT language=\"JavaScript\">InitActiveCell("
+               . ($show_plus_link ? "true" : "false") . ", "
+               . ((FALSE != $times_right_side) ? "true" : "false") . ", "
+               . "\"$highlight_method\" );</SCRIPT>\n";
+            }
+
 	#This is where we start displaying stuff
 	echo "<table cellspacing=0 border=1 width=\"100%\">";
 	echo "<tr><th width=\"1%\">".($enable_periods ? get_vocab("period") : get_vocab("time"))."</th>";
@@ -218,7 +229,7 @@ else
         ."</th>";
     }
     echo "</tr>\n";
-
+  
 	# URL for highlighting a time. Don't use REQUEST_URI or you will get
 	# the timetohighlight parameter duplicated each time you click.
 	$hilite_url="day.php?year=$year&month=$month&day=$day&area=$area&timetohighlight";
@@ -231,11 +242,11 @@ else
 	# will ensure a constant time step
 	( $dst_change != -1 ) ? $j = 1 : $j = 0;
 	
-	$row_color = "white";
+	$row_class = "even_row";
 	for (
 		$t = mktime($morningstarts, 0, 0, $month, $day+$j, $year);
 		$t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
-		$t += $resolution, $row_color=($row_color=="white")?$stripe_color:"white"
+		$t += $resolution, $row_class = ($row_class == "even_row")?"odd_row":"even_row"
 	)
 	{
 		# convert timestamps to HHMM format without leading zeros
@@ -248,11 +259,11 @@ else
 			$time_t_stripped = preg_replace( "/^0/", "", $time_t );
 			echo "<a href=\"$hilite_url=$time_t\"  title=\""
             . get_vocab("highlight_line") . "\">"
-            . $periods[$time_t_stripped] . "</a></td>";
+            . $periods[$time_t_stripped] . "</a></td>\n";
 		} else {
 			echo "<a href=\"$hilite_url=$time_t\" title=\""
             . get_vocab("highlight_line") . "\">"
-            . utf8_date(hour_min_format(),$t) . "</a></td>";
+            . utf8_date(hour_min_format(),$t) . "</a></td>\n";
 		}
 
 		# Loop through the list of rooms we have for this area
@@ -276,7 +287,7 @@ else
 			elseif (isset($timetohighlight) && ($time_t == $timetohighlight))
 				$c = "red";
 			else
-				$c = $row_color;
+				$c = $row_class; # Use the default color class for the row.
 
 			tdcell($c);
 
@@ -288,10 +299,22 @@ else
 
 				echo "<center>";
 				if ( $pview != 1 ) {
+					if ($javascript_cursor)
+					{
+						echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+						echo "BeginActiveCell();\n";
+						echo "// -->\n</SCRIPT>";
+					}
 					if( $enable_periods ) {
 						echo "<a href=\"edit_entry.php?area=$area&room=$room&period=$time_t_stripped&year=$year&month=$month&day=$day\"><img src=new.gif width=10 height=10 border=0></a>";
 					} else {
 						echo "<a href=\"edit_entry.php?area=$area&room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day\"><img src=new.gif width=10 height=10 border=0></a>";
+					}
+					if ($javascript_cursor)
+					{
+						echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+						echo "EndActiveCell();\n";
+						echo "// -->\n</SCRIPT>";
 					}
 				} else echo '&nbsp;';
 				echo "</center>";
@@ -315,21 +338,21 @@ else
                 $time_t_stripped = preg_replace( "/^0/", "", $time_t );
                 echo "<a href=\"$hilite_url=$time_t\"  title=\""
                 . get_vocab("highlight_line") . "\">"
-                . $periods[$time_t_stripped] . "</a></td>";
+                . $periods[$time_t_stripped] . "</a></td>\n";
             }
             else
             {
                 tdcell("red");
 		        echo "<a href=\"$hilite_url=$time_t\" title=\""
                 . get_vocab("highlight_line") . "\">"
-                . utf8_date(hour_min_format(),$t) . "</a></td>";
+                . utf8_date(hour_min_format(),$t) . "</a></td>\n";
             }
         }
 
 		echo "</tr>\n";
 		reset($rooms);
 	}
-	echo "</table>";
+	echo "</table>\n";
 	if ( $pview != 1 ) show_colour_key();
 }
 
