@@ -12,7 +12,7 @@ if (!isset($pview)) {
 
 function print_header($day, $month, $year, $area)
 {
-	global $lang, $mrbs_company, $search_str;
+	global $vocab, $mrbs_company, $search_str;
 
 	# If we dont know the right date then make it up 
 	if(!$day)
@@ -27,7 +27,7 @@ function print_header($day, $month, $year, $area)
 ?>
 <HTML>
  <HEAD>
-  <TITLE><? echo $lang["mrbs"] ?></TITLE>
+  <TITLE><? echo $vocab["mrbs"] ?></TITLE>
 <?
    include "style.inc";
 ?>
@@ -41,7 +41,7 @@ function print_header($day, $month, $year, $area)
         <TR>
          <TD CLASS="banner" BGCOLOR="#C0E0FF">
           <FONT SIZE=4><B><? echo $mrbs_company ?></B><BR>
-           <A HREF="index.php"><? echo $lang["mrbs"] ?></A>
+           <A HREF="index.php"><? echo $vocab["mrbs"] ?></A>
           </FONT>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF">
@@ -53,22 +53,22 @@ function print_header($day, $month, $year, $area)
         echo "<INPUT TYPE=HIDDEN NAME=area VALUE=$area>"
  
 ?>
-	    <INPUT TYPE=SUBMIT VALUE="<? echo $lang["goto"] ?>">
+	    <INPUT TYPE=SUBMIT VALUE="<? echo $vocab["goto"] ?>">
            </FONT>
           </FORM>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="help.php?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>"><? echo $lang["help"] ?></A>
+          <A HREF="help.php?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>"><? echo $vocab["help"] ?></A>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="admin.php?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>"><? echo $lang["admin"] ?></A>
+          <A HREF="admin.php?day=<? echo $day ?>&month=<? echo $month ?>&year=<? echo $year ?>"><? echo $vocab["admin"] ?></A>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="report.php"><? echo $lang["report"] ?></A>
+          <A HREF="report.php"><? echo $vocab["report"] ?></A>
          </TD>
          <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
           <FORM METHOD=GET ACTION="search.php">
-           <FONT SIZE=2><? echo $lang["search"] ?> </FONT>
+           <FONT SIZE=2><? echo $vocab["search"] ?> </FONT>
            <INPUT TYPE=TEXT   NAME="search_str" VALUE="<? echo $search_str ?>" SIZE=10>
            <INPUT TYPE=HIDDEN NAME=day        VALUE="<? echo $day        ?>"        >
            <INPUT TYPE=HIDDEN NAME=month      VALUE="<? echo $month      ?>"        >
@@ -90,7 +90,7 @@ function print_header($day, $month, $year, $area)
 
 function toTimeString(&$dur, &$units)
 {
-	global $lang;
+	global $vocab;
 	if($dur >= 60)
 	{
 		$dur /= 60;
@@ -110,22 +110,22 @@ function toTimeString(&$dur, &$units)
 					if(($dur >= 52) && ($dur % 52 == 0))
 					{
 						$dur  /= 52;
-						$units = $lang["years"];
+						$units = $vocab["years"];
 					}
 					else
-						$units = $lang["weeks"];
+						$units = $vocab["weeks"];
 				}
 				else
-					$units = $lang["days"];
+					$units = $vocab["days"];
 			}
 			else
-				$units = $lang["hours"];
+				$units = $vocab["hours"];
 		}
 		else
-			$units = $lang["minutes"];
+			$units = $vocab["minutes"];
 	}
 	else
-		$units = $lang["seconds"];
+		$units = $vocab["seconds"];
 }
 
 function genDateSelector($prefix, $day, $month, $year)
@@ -168,7 +168,7 @@ function genDateSelector($prefix, $day, $month, $year)
 # caller did that. Alway outputs the bottom of the page and exits.
 function fatal_error($need_header, $message)
 {
-	global $lang;
+	global $vocab;
 	if ($need_header) print_header(0, 0, 0, 0);
 	echo $message;
 	include "trailer.inc";

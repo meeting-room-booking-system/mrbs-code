@@ -128,7 +128,7 @@ include 'lang.en';
 
 # Define the default locale here. For a list of supported
 # locales on your system do "locale -a"
-setlocale('LC_ALL','C');
+setlocale(LC_ALL,'C');
 
 # We attempt to make up a sensible locale from the HTTP_ACCEPT_LANGUAGE
 # environment variable. If this doesn't work for you, comment it out
@@ -149,7 +149,7 @@ if (strlen($locale) == 2) {
 } else {
    $locale = strtolower(substr($locale,0,2))."_".strtoupper(substr($locale,3,2));
 }
-setlocale('LC_ALL',$locale);
+setlocale(LC_ALL,$locale);
 
 #############
 # Entry Types
@@ -169,11 +169,11 @@ setlocale('LC_ALL',$locale);
 # $typel["B"] = "B";
 # $typel["C"] = "C";
 # $typel["D"] = "D";
-$typel["E"] = $lang["external"];
+$typel["E"] = $vocab["external"];
 # $typel["F"] = "F";
 # $typel["G"] = "G";
 # $typel["H"] = "H";
-$typel["I"] = $lang["internal"];
+$typel["I"] = $vocab["internal"];
 # $typel["J"] = "J";
 
 ##########################################

@@ -124,7 +124,7 @@ if ($rep_type != 0 && !empty($reps))
 	}
 	else
 	{
-		$err        = $lang["too_may_entrys"] . "<P>";
+		$err        = $vocab["too_may_entrys"] . "<P>";
 		$hide_title = 1;
 	}
 }
@@ -171,10 +171,10 @@ if(strlen($err))
 {
 	print_header($day, $month, $year, $area);
 	
-	echo "<H2>" . $lang["sched_conflict"] . "</H2>";
+	echo "<H2>" . $vocab["sched_conflict"] . "</H2>";
 	if(!isset($hide_title))
 	{
-		echo $lang["conflict"];
+		echo $vocab["conflict"];
 		echo "<UL>";
 	}
 	
@@ -184,6 +184,6 @@ if(strlen($err))
 		echo "</UL>";
 }
 
-echo "<a href=\"$returl\">$lang[returncal]</a><p>";
+echo "<a href=\"$returl\">$vocab[returncal]</a><p>";
 
 include "trailer.inc"; ?>

@@ -9,162 +9,162 @@
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
-$lang["charset"]            = "iso-8859-1";
+$vocab["charset"]            = "iso-8859-1";
 
 # Used in style.inc
-$lang["mrbs"]               = "MRBS Møterom booking";
+$vocab["mrbs"]               = "MRBS Møterom booking";
 
 # Used in functions.inc
-$lang["report"]             = "Rapport";
-$lang["admin"]              = "Admin";
-$lang["help"]               = "Hjelp";
-$lang["search"]             = "Søk:";
+$vocab["report"]             = "Rapport";
+$vocab["admin"]              = "Admin";
+$vocab["help"]               = "Hjelp";
+$vocab["search"]             = "Søk:";
 
 # Used in day.php3
-$lang["bookingsfor"]        = "Booking for";
-$lang["bookingsforpost"]    = ""; # Goes after the date
-$lang["areas"]              = "Område";
-$lang["daybefore"]          = "Gå til forrige dag";
-$lang["dayafter"]           = "Gå til neste dag";
-$lang["gototoday"]          = "Gå til idag";
-$lang["goto"]               = "gå til";
+$vocab["bookingsfor"]        = "Booking for";
+$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["areas"]              = "Område";
+$vocab["daybefore"]          = "Gå til forrige dag";
+$vocab["dayafter"]           = "Gå til neste dag";
+$vocab["gototoday"]          = "Gå til idag";
+$vocab["goto"]               = "gå til";
 
 # Used in trailer.inc
-$lang["viewday"]            = "Vis dag";
-$lang["viewweek"]           = "Vis Uke";
-$lang["viewmonth"]          = "Vis Måned";
-$lang["ppreview"]           = "Forhåndsvisning";
+$vocab["viewday"]            = "Vis dag";
+$vocab["viewweek"]           = "Vis Uke";
+$vocab["viewmonth"]          = "Vis Måned";
+$vocab["ppreview"]           = "Forhåndsvisning";
 
 # Used in edit_entry.php3
-$lang["addentry"]           = "Booking";
-$lang["editentry"]          = "Endre booking";
-$lang["editseries"]         = "Endre serie";
-$lang["namebooker"]         = "Kort beskrivelse:";
-$lang["fulldescription"]    = "Lang beskrivelse:<br>&nbsp;&nbsp;(Antall personer,<br>&nbsp;&nbsp;Internt/Externt etc)";
-$lang["date"]               = "Dato:";
-$lang["start_date"]         = "Starttid:";
-$lang["end_date"]           = "Sluttid:";
-$lang["time"]               = "Tid:";
-$lang["duration"]           = "Lengde:";
-$lang["seconds"]            = "sekunder";
-$lang["minutes"]            = "minutter";
-$lang["hours"]              = "timer";
-$lang["days"]               = "dager";
-$lang["weeks"]              = "uker";
-$lang["years"]              = "år";
-$lang["all_day"]            = "hele dagen";
-$lang["type"]               = "Type:";
-$lang["internal"]           = "Internt";
-$lang["external"]           = "Externt";
-$lang["save"]               = "Lagre";
-$lang["rep_type"]           = "Repetitionstype:";
-$lang["rep_type_0"]         = "ingen";
-$lang["rep_type_1"]         = "daglig";
-$lang["rep_type_2"]         = "hver uke";
-$lang["rep_type_3"]         = "månedlig";
-$lang["rep_type_4"]         = "årlig";
-$lang["rep_type_5"]         = "Månedlig, neste dag";
-$lang["rep_type_6"]         = "n-ukentlig";
-$lang["rep_end_date"]       = "Repetisjon sluttdato:";
-$lang["rep_rep_day"]        = "Repetisjonsdag:";
-$lang["rep_for_weekly"]     = "(ved hver uke)";
-$lang["rep_freq"]           = "Frekvens:";
-$lang["rep_num_weeks"]      = "Antall uker";
-$lang["rep_for_nweekly"]    = "(for n-uker)";
+$vocab["addentry"]           = "Booking";
+$vocab["editentry"]          = "Endre booking";
+$vocab["editseries"]         = "Endre serie";
+$vocab["namebooker"]         = "Kort beskrivelse:";
+$vocab["fulldescription"]    = "Lang beskrivelse:<br>&nbsp;&nbsp;(Antall personer,<br>&nbsp;&nbsp;Internt/Externt etc)";
+$vocab["date"]               = "Dato:";
+$vocab["start_date"]         = "Starttid:";
+$vocab["end_date"]           = "Sluttid:";
+$vocab["time"]               = "Tid:";
+$vocab["duration"]           = "Lengde:";
+$vocab["seconds"]            = "sekunder";
+$vocab["minutes"]            = "minutter";
+$vocab["hours"]              = "timer";
+$vocab["days"]               = "dager";
+$vocab["weeks"]              = "uker";
+$vocab["years"]              = "år";
+$vocab["all_day"]            = "hele dagen";
+$vocab["type"]               = "Type:";
+$vocab["internal"]           = "Internt";
+$vocab["external"]           = "Externt";
+$vocab["save"]               = "Lagre";
+$vocab["rep_type"]           = "Repetitionstype:";
+$vocab["rep_type_0"]         = "ingen";
+$vocab["rep_type_1"]         = "daglig";
+$vocab["rep_type_2"]         = "hver uke";
+$vocab["rep_type_3"]         = "månedlig";
+$vocab["rep_type_4"]         = "årlig";
+$vocab["rep_type_5"]         = "Månedlig, neste dag";
+$vocab["rep_type_6"]         = "n-ukentlig";
+$vocab["rep_end_date"]       = "Repetisjon sluttdato:";
+$vocab["rep_rep_day"]        = "Repetisjonsdag:";
+$vocab["rep_for_weekly"]     = "(ved hver uke)";
+$vocab["rep_freq"]           = "Frekvens:";
+$vocab["rep_num_weeks"]      = "Antall uker";
+$vocab["rep_for_nweekly"]    = "(for n-uker)";
 
 # Used in view_entry.php3
-$lang["description"]        = "Beskrivelse:";
-$lang["room"]               = "Rom:";
-$lang["createdby"]          = "Laget av:";
-$lang["lastupdate"]         = "Senest oppdatert:";
-$lang["deleteentry"]        = "Slett booking";
-$lang["deleteseries"]       = "Slett serie";
-$lang["confirmdel"]         = "Er du sikker på att\\ndu vill slette\\nden her bookingen?\\n\\n";
-$lang["returnprev"]         = "Tilbake til forrige side";
+$vocab["description"]        = "Beskrivelse:";
+$vocab["room"]               = "Rom:";
+$vocab["createdby"]          = "Laget av:";
+$vocab["lastupdate"]         = "Senest oppdatert:";
+$vocab["deleteentry"]        = "Slett booking";
+$vocab["deleteseries"]       = "Slett serie";
+$vocab["confirmdel"]         = "Er du sikker på att\\ndu vill slette\\nden her bookingen?\\n\\n";
+$vocab["returnprev"]         = "Tilbake til forrige side";
 
 # Used in edit_entry_handler.php3
-$lang["error"]              = "Feil";
-$lang["sched_conflict"]     = "Bookingskonflikt";
-$lang["conflict"]           = "Den nya bookingen kræsjer med følgende booking(er):";
-$lang["too_may_entrys"]     = "De valgte instillinger skaper for mange bookinger.<BR>V.G. bruk andre instillinger!";
-$lang["returncal"]          = "Tilbake til kalender";
+$vocab["error"]              = "Feil";
+$vocab["sched_conflict"]     = "Bookingskonflikt";
+$vocab["conflict"]           = "Den nya bookingen kræsjer med følgende booking(er):";
+$vocab["too_may_entrys"]     = "De valgte instillinger skaper for mange bookinger.<BR>V.G. bruk andre instillinger!";
+$vocab["returncal"]          = "Tilbake til kalender";
 
 # Authentication stuff
-$lang["accessdenied"]       = "Adgang nektes";
-$lang["norights"]           = "Du har ingen rettigheter til å endre bookingen.";
+$vocab["accessdenied"]       = "Adgang nektes";
+$vocab["norights"]           = "Du har ingen rettigheter til å endre bookingen.";
 
 # Used in search.php3
-$lang["invalid_search"]     = "Tom eller ugyldig søkestreng.";
-$lang["search_results"]     = "Søkeresultat for:";
-$lang["nothing_found"]      = "Inga matchende treff fantes.";
-$lang["records"]            = "Booking ";
-$lang["through"]            = " t.o.m. ";
-$lang["of"]                 = " av ";
-$lang["previous"]           = "Forrige";
-$lang["next"]               = "Neste";
-$lang["entry"]              = "Post";
-$lang["view"]               = "Vis";
+$vocab["invalid_search"]     = "Tom eller ugyldig søkestreng.";
+$vocab["search_results"]     = "Søkeresultat for:";
+$vocab["nothing_found"]      = "Inga matchende treff fantes.";
+$vocab["records"]            = "Booking ";
+$vocab["through"]            = " t.o.m. ";
+$vocab["of"]                 = " av ";
+$vocab["previous"]           = "Forrige";
+$vocab["next"]               = "Neste";
+$vocab["entry"]              = "Post";
+$vocab["view"]               = "Vis";
 
 # Used in report.php
-$lang["report_on"]          = "Rapport:";
-$lang["report_start"]       = "Rapport start dato:";
-$lang["report_end"]         = "Rapport slutt dato:";
-$lang["match_area"]         = "Område:";
-$lang["match_room"]         = "Rom:";
-$lang["match_entry"]        = "Kort beskrivelse:";
-$lang["match_descr"]        = "Lang beskrivelse:";
-$lang["include"]            = "Hva?:";
-$lang["report_only"]        = "Bare rapport";
-$lang["summary_only"]       = "Sum";
-$lang["report_and_summary"] = "Rapport og Sum";
-$lang["summarize_by"]       = "Rapport etter:";
-$lang["sum_by_descrip"]     = "Beskrivelse";
-$lang["sum_by_creator"]     = "Hvem som booket";
-$lang["entry_found"]        = "post funnet";
-$lang["entries_found"]      = "poster funnet";
-$lang["summary_header"]     = "Sum timer";
-$lang["total"]              = "Total";
-$lang["submitquery"]        = "Run Report";
+$vocab["report_on"]          = "Rapport:";
+$vocab["report_start"]       = "Rapport start dato:";
+$vocab["report_end"]         = "Rapport slutt dato:";
+$vocab["match_area"]         = "Område:";
+$vocab["match_room"]         = "Rom:";
+$vocab["match_entry"]        = "Kort beskrivelse:";
+$vocab["match_descr"]        = "Lang beskrivelse:";
+$vocab["include"]            = "Hva?:";
+$vocab["report_only"]        = "Bare rapport";
+$vocab["summary_only"]       = "Sum";
+$vocab["report_and_summary"] = "Rapport og Sum";
+$vocab["summarize_by"]       = "Rapport etter:";
+$vocab["sum_by_descrip"]     = "Beskrivelse";
+$vocab["sum_by_creator"]     = "Hvem som booket";
+$vocab["entry_found"]        = "post funnet";
+$vocab["entries_found"]      = "poster funnet";
+$vocab["summary_header"]     = "Sum timer";
+$vocab["total"]              = "Total";
+$vocab["submitquery"]        = "Run Report";
 
 # Used in week.php
-$lang["weekbefore"]         = "Gå til uken før";
-$lang["weekafter"]          = "Gå til uken etter";
-$lang["gotothisweek"]       = "Gå til denne uken";
+$vocab["weekbefore"]         = "Gå til uken før";
+$vocab["weekafter"]          = "Gå til uken etter";
+$vocab["gotothisweek"]       = "Gå til denne uken";
 
 # Used in month.php
-$lang["monthbefore"]        = "Gå til forrige måned";
-$lang["monthafter"]         = "Gå til neste måned";
-$lang["gotothismonth"]      = "Gå til denne måneden";
+$vocab["monthbefore"]        = "Gå til forrige måned";
+$vocab["monthafter"]         = "Gå til neste måned";
+$vocab["gotothismonth"]      = "Gå til denne måneden";
 
 # Used in {day week month}.php
-$lang["no_rooms_for_area"]  = "Ingen rom definert for dette området";
+$vocab["no_rooms_for_area"]  = "Ingen rom definert for dette området";
 
 # Used in admin.php
-$lang["edit"]               = "Edit";
-$lang["delete"]             = "Delete";
-$lang["rooms"]              = "Rooms";
-$lang["in"]                 = "in";
-$lang["noareas"]            = "No Areas";
-$lang["addarea"]            = "Add Area";
-$lang["name"]               = "Name";
-$lang["noarea"]             = "No area selected";
-$lang["browserlang"]        = "Your browser is set to use";
-$lang["postbrowserlang"]    = "language.";
-$lang["addroom"]            = "Add Room";
-$lang["capacity"]           = "Capacity";
-$lang["norooms"]            = "No rooms.";
+$vocab["edit"]               = "Edit";
+$vocab["delete"]             = "Delete";
+$vocab["rooms"]              = "Rooms";
+$vocab["in"]                 = "in";
+$vocab["noareas"]            = "No Areas";
+$vocab["addarea"]            = "Add Area";
+$vocab["name"]               = "Name";
+$vocab["noarea"]             = "No area selected";
+$vocab["browserlang"]        = "Your browser is set to use";
+$vocab["postbrowserlang"]    = "language.";
+$vocab["addroom"]            = "Add Room";
+$vocab["capacity"]           = "Capacity";
+$vocab["norooms"]            = "No rooms.";
 
 # Used in edit_area_room.php
-$lang["editarea"]           = "Edit Area";
-$lang["change"]             = "Change";
-$lang["backadmin"]          = "Back to Admin";
-$lang["editroomarea"]       = "Edit Area or Room Description";
-$lang["editroom"]           = "Edit Room";
+$vocab["editarea"]           = "Edit Area";
+$vocab["change"]             = "Change";
+$vocab["backadmin"]          = "Back to Admin";
+$vocab["editroomarea"]       = "Edit Area or Room Description";
+$vocab["editroom"]           = "Edit Room";
 
 # Used in del.php
-$lang["deletefollowing"]    = "This will delete the following bookings";
-$lang["sure"]               = "Are you sure?";
-$lang["YES"]                = "YES";
-$lang["NO"]                 = "NO";
+$vocab["deletefollowing"]    = "This will delete the following bookings";
+$vocab["sure"]               = "Are you sure?";
+$vocab["YES"]                = "YES";
+$vocab["NO"]                 = "NO";
 
 ?>

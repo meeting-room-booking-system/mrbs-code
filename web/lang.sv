@@ -9,162 +9,162 @@
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
-$lang["charset"]            = "iso-8859-1";
+$vocab["charset"]            = "iso-8859-1";
 
 # Used in style.inc
-$lang["mrbs"]               = "MRBS rumsbokningssystem";
+$vocab["mrbs"]               = "MRBS rumsbokningssystem";
 
 # Used in functions.inc
-$lang["report"]             = "Rapport";
-$lang["admin"]              = "Administration";
-$lang["help"]               = "Hjälp";
-$lang["search"]             = "Sök:";
+$vocab["report"]             = "Rapport";
+$vocab["admin"]              = "Administration";
+$vocab["help"]               = "Hjälp";
+$vocab["search"]             = "Sök:";
 
 # Used in day.php3
-$lang["bookingsfor"]        = "Bokningar för";
-$lang["bookingsforpost"]    = ""; # Goes after the date
-$lang["areas"]              = "Områden";
-$lang["daybefore"]          = "Gå till föregående dag";
-$lang["dayafter"]           = "Gå till nästa dag";
-$lang["gototoday"]          = "Gå till idag";
-$lang["goto"]               = "gå till";
+$vocab["bookingsfor"]        = "Bokningar för";
+$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["areas"]              = "Områden";
+$vocab["daybefore"]          = "Gå till föregående dag";
+$vocab["dayafter"]           = "Gå till nästa dag";
+$vocab["gototoday"]          = "Gå till idag";
+$vocab["goto"]               = "gå till";
 
 # Used in trailer.inc
-$lang["viewday"]            = "Visa dag";
-$lang["viewweek"]           = "Visa vecka";
-$lang["viewmonth"]          = "Visa Månad";
-$lang["ppreview"]           = "Förhandsgranska";
+$vocab["viewday"]            = "Visa dag";
+$vocab["viewweek"]           = "Visa vecka";
+$vocab["viewmonth"]          = "Visa Månad";
+$vocab["ppreview"]           = "Förhandsgranska";
 
 # Used in edit_entry.php3
-$lang["addentry"]           = "Boka !";
-$lang["editentry"]          = "Ändra bokningen";
-$lang["editseries"]         = "Ändra serie";
-$lang["namebooker"]         = "Kort beskrivning:";
-$lang["fulldescription"]    = "Full beskrivning:<br>&nbsp;&nbsp;(Antal personer,<br>&nbsp;&nbsp;Internt/Externt etc)";
-$lang["date"]               = "Datum:";
-$lang["start_date"]         = "Starttid:";
-$lang["end_date"]           = "Sluttid:";
-$lang["time"]               = "Tid:";
-$lang["duration"]           = "Längd:";
-$lang["seconds"]            = "sekunder";
-$lang["minutes"]            = "minuter";
-$lang["hours"]              = "timmar";
-$lang["days"]               = "dagar";
-$lang["weeks"]              = "veckor";
-$lang["years"]              = "år";
-$lang["all_day"]            = "hela dagen";
-$lang["type"]               = "Typ:";
-$lang["internal"]           = "Internt";
-$lang["external"]           = "Externt";
-$lang["save"]               = "Spara";
-$lang["rep_type"]           = "Repetitionstyp:";
-$lang["rep_type_0"]         = "ingen";
-$lang["rep_type_1"]         = "dagligen";
-$lang["rep_type_2"]         = "varje vecka";
-$lang["rep_type_3"]         = "månatligen";
-$lang["rep_type_4"]         = "årligen";
-$lang["rep_type_5"]         = "Månadsvis, samma dag";
-$lang["rep_type_6"]         = "Vecko vis";
-$lang["rep_end_date"]       = "Repetition slutdatum:";
-$lang["rep_rep_day"]        = "Repetitionsdag:";
-$lang["rep_for_weekly"]     = "(vid varje vecka)";
-$lang["rep_freq"]           = "Frekvens:";
-$lang["rep_num_weeks"]      = "Antal veckor";
-$lang["rep_for_nweekly"]    = "(För x-veckor)";
+$vocab["addentry"]           = "Boka !";
+$vocab["editentry"]          = "Ändra bokningen";
+$vocab["editseries"]         = "Ändra serie";
+$vocab["namebooker"]         = "Kort beskrivning:";
+$vocab["fulldescription"]    = "Full beskrivning:<br>&nbsp;&nbsp;(Antal personer,<br>&nbsp;&nbsp;Internt/Externt etc)";
+$vocab["date"]               = "Datum:";
+$vocab["start_date"]         = "Starttid:";
+$vocab["end_date"]           = "Sluttid:";
+$vocab["time"]               = "Tid:";
+$vocab["duration"]           = "Längd:";
+$vocab["seconds"]            = "sekunder";
+$vocab["minutes"]            = "minuter";
+$vocab["hours"]              = "timmar";
+$vocab["days"]               = "dagar";
+$vocab["weeks"]              = "veckor";
+$vocab["years"]              = "år";
+$vocab["all_day"]            = "hela dagen";
+$vocab["type"]               = "Typ:";
+$vocab["internal"]           = "Internt";
+$vocab["external"]           = "Externt";
+$vocab["save"]               = "Spara";
+$vocab["rep_type"]           = "Repetitionstyp:";
+$vocab["rep_type_0"]         = "ingen";
+$vocab["rep_type_1"]         = "dagligen";
+$vocab["rep_type_2"]         = "varje vecka";
+$vocab["rep_type_3"]         = "månatligen";
+$vocab["rep_type_4"]         = "årligen";
+$vocab["rep_type_5"]         = "Månadsvis, samma dag";
+$vocab["rep_type_6"]         = "Vecko vis";
+$vocab["rep_end_date"]       = "Repetition slutdatum:";
+$vocab["rep_rep_day"]        = "Repetitionsdag:";
+$vocab["rep_for_weekly"]     = "(vid varje vecka)";
+$vocab["rep_freq"]           = "Frekvens:";
+$vocab["rep_num_weeks"]      = "Antal veckor";
+$vocab["rep_for_nweekly"]    = "(För x-veckor)";
 
 # Used in view_entry.php3
-$lang["description"]        = "Beskrivning:";
-$lang["room"]               = "Rum:";
-$lang["createdby"]          = "Skapad av:";
-$lang["lastupdate"]         = "Senast uppdaterad:";
-$lang["deleteentry"]        = "Radera bokningen";
-$lang["deleteseries"]       = "Radera serie";
-$lang["confirmdel"]         = "Är du säker att\\ndu vill radera\\nden här bokningen?\\n\\n";
-$lang["returnprev"]         = "Åter till föregående sida";
+$vocab["description"]        = "Beskrivning:";
+$vocab["room"]               = "Rum:";
+$vocab["createdby"]          = "Skapad av:";
+$vocab["lastupdate"]         = "Senast uppdaterad:";
+$vocab["deleteentry"]        = "Radera bokningen";
+$vocab["deleteseries"]       = "Radera serie";
+$vocab["confirmdel"]         = "Är du säker att\\ndu vill radera\\nden här bokningen?\\n\\n";
+$vocab["returnprev"]         = "Åter till föregående sida";
 
 # Used in edit_entry_handler.php3
-$lang["error"]              = "Fel";
-$lang["sched_conflict"]     = "Bokningskonflikt";
-$lang["conflict"]           = "Den nya bokningen krockar med följande bokning(ar):";
-$lang["too_may_entrys"]     = "De valda inställningarna skapar för många bokningar.<BR>V.G. använd andra inställningar!";
-$lang["returncal"]          = "Återgå till kalendervy";
+$vocab["error"]              = "Fel";
+$vocab["sched_conflict"]     = "Bokningskonflikt";
+$vocab["conflict"]           = "Den nya bokningen krockar med följande bokning(ar):";
+$vocab["too_may_entrys"]     = "De valda inställningarna skapar för många bokningar.<BR>V.G. använd andra inställningar!";
+$vocab["returncal"]          = "Återgå till kalendervy";
 
 # Authentication stuff
-$lang["accessdenied"]       = "Åtkomst nekad";
-$lang["norights"]           = "Du har inte rättighet att ändra bokningen.";
+$vocab["accessdenied"]       = "Åtkomst nekad";
+$vocab["norights"]           = "Du har inte rättighet att ändra bokningen.";
 
 # Used in search.php3
-$lang["invalid_search"]     = "Tom eller ogiltig söksträng.";
-$lang["search_results"]     = "Sökresultat för:";
-$lang["nothing_found"]      = "Inga matchande träffar hittade.";
-$lang["records"]            = "Bokning ";
-$lang["through"]            = " t.o.m. ";
-$lang["of"]                 = " av ";
-$lang["previous"]           = "Föregående";
-$lang["next"]               = "Nästa";
-$lang["entry"]              = "Post";
-$lang["view"]               = "Visa";
+$vocab["invalid_search"]     = "Tom eller ogiltig söksträng.";
+$vocab["search_results"]     = "Sökresultat för:";
+$vocab["nothing_found"]      = "Inga matchande träffar hittade.";
+$vocab["records"]            = "Bokning ";
+$vocab["through"]            = " t.o.m. ";
+$vocab["of"]                 = " av ";
+$vocab["previous"]           = "Föregående";
+$vocab["next"]               = "Nästa";
+$vocab["entry"]              = "Post";
+$vocab["view"]               = "Visa";
 
 # Used in report.php
-$lang["report_on"]          = "Rapport över Möten:";
-$lang["report_start"]       = "Rapport start datum:";
-$lang["report_end"]         = "Rapport slut datum:";
-$lang["match_area"]         = "Sök på plats:";
-$lang["match_room"]         = "Sök på rum:";
-$lang["match_entry"]        = "Sök på kort beskrivning:";
-$lang["match_descr"]        = "Sök på  full beskrivning:";
-$lang["include"]            = "Inkludera:";
-$lang["report_only"]        = "Rapport  enbart";
-$lang["summary_only"]       = "Sammanställning endast";
-$lang["report_and_summary"] = "Rapport och Sammanställning";
-$lang["summarize_by"]       = "Sammanställ på:";
-$lang["sum_by_descrip"]     = "Kort beskrivning";
-$lang["sum_by_creator"]     = "Skapare";
-$lang["entry_found"]        = "Post hittad";
-$lang["entries_found"]      = "Poster hittade";
-$lang["summary_header"]     = "Sammanställning över (Poster) Timmar";
-$lang["total"]              = "Total";
-$lang["submitquery"]        = "Run Report";
+$vocab["report_on"]          = "Rapport över Möten:";
+$vocab["report_start"]       = "Rapport start datum:";
+$vocab["report_end"]         = "Rapport slut datum:";
+$vocab["match_area"]         = "Sök på plats:";
+$vocab["match_room"]         = "Sök på rum:";
+$vocab["match_entry"]        = "Sök på kort beskrivning:";
+$vocab["match_descr"]        = "Sök på  full beskrivning:";
+$vocab["include"]            = "Inkludera:";
+$vocab["report_only"]        = "Rapport  enbart";
+$vocab["summary_only"]       = "Sammanställning endast";
+$vocab["report_and_summary"] = "Rapport och Sammanställning";
+$vocab["summarize_by"]       = "Sammanställ på:";
+$vocab["sum_by_descrip"]     = "Kort beskrivning";
+$vocab["sum_by_creator"]     = "Skapare";
+$vocab["entry_found"]        = "Post hittad";
+$vocab["entries_found"]      = "Poster hittade";
+$vocab["summary_header"]     = "Sammanställning över (Poster) Timmar";
+$vocab["total"]              = "Total";
+$vocab["submitquery"]        = "Run Report";
 
 # Used in week.php
-$lang["weekbefore"]         = "Föregående vecka";
-$lang["weekafter"]          = "Nästa vecka";
-$lang["gotothisweek"]       = "Denna vecka";
+$vocab["weekbefore"]         = "Föregående vecka";
+$vocab["weekafter"]          = "Nästa vecka";
+$vocab["gotothisweek"]       = "Denna vecka";
 
 # Used in month.php
-$lang["monthbefore"]        = "Föregående månad";
-$lang["monthafter"]         = "Nästa månad";
-$lang["gotothismonth"]      = "Denna månad";
+$vocab["monthbefore"]        = "Föregående månad";
+$vocab["monthafter"]         = "Nästa månad";
+$vocab["gotothismonth"]      = "Denna månad";
 
 # Used in {day week month}.php
-$lang["no_rooms_for_area"]  = "Rum saknas för denna plats";
+$vocab["no_rooms_for_area"]  = "Rum saknas för denna plats";
 
 # Used in admin.php
-$lang["edit"]               = "Edit";
-$lang["delete"]             = "Delete";
-$lang["rooms"]              = "Rooms";
-$lang["in"]                 = "in";
-$lang["noareas"]            = "No Areas";
-$lang["addarea"]            = "Add Area";
-$lang["name"]               = "Name";
-$lang["noarea"]             = "No area selected";
-$lang["browserlang"]        = "Your browser is set to use";
-$lang["postbrowserlang"]    = "language.";
-$lang["addroom"]            = "Add Room";
-$lang["capacity"]           = "Capacity";
-$lang["norooms"]            = "No rooms.";
+$vocab["edit"]               = "Edit";
+$vocab["delete"]             = "Delete";
+$vocab["rooms"]              = "Rooms";
+$vocab["in"]                 = "in";
+$vocab["noareas"]            = "No Areas";
+$vocab["addarea"]            = "Add Area";
+$vocab["name"]               = "Name";
+$vocab["noarea"]             = "No area selected";
+$vocab["browserlang"]        = "Your browser is set to use";
+$vocab["postbrowserlang"]    = "language.";
+$vocab["addroom"]            = "Add Room";
+$vocab["capacity"]           = "Capacity";
+$vocab["norooms"]            = "No rooms.";
 
 # Used in edit_area_room.php
-$lang["editarea"]           = "Edit Area";
-$lang["change"]             = "Change";
-$lang["backadmin"]          = "Back to Admin";
-$lang["editroomarea"]       = "Edit Area or Room Description";
-$lang["editroom"]           = "Edit Room";
+$vocab["editarea"]           = "Edit Area";
+$vocab["change"]             = "Change";
+$vocab["backadmin"]          = "Back to Admin";
+$vocab["editroomarea"]       = "Edit Area or Room Description";
+$vocab["editroom"]           = "Edit Room";
 
 # Used in del.php
-$lang["deletefollowing"]    = "This will delete the following bookings";
-$lang["sure"]               = "Are you sure?";
-$lang["YES"]                = "YES";
-$lang["NO"]                 = "NO";
+$vocab["deletefollowing"]    = "This will delete the following bookings";
+$vocab["sure"]               = "Are you sure?";
+$vocab["YES"]                = "YES";
+$vocab["NO"]                 = "NO";
 
 ?>

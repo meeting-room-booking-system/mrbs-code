@@ -21,7 +21,7 @@ if(empty($area))
 print_header($day, $month, $year, $area);
 
 echo "<H3>About MRBS</H3>\n";
-echo "<P><a href=\"http://mrbs.sourceforge.net\">$lang[mrbs]</a> - $mrbs_version\n";
+echo "<P><a href=\"http://mrbs.sourceforge.net\">$vocab[mrbs]</a> - $mrbs_version\n";
 echo "<BR>Database: " . sql_version() . "\n";
 $uname = posix_uname();
 echo "<BR>System: $uname[sysname] $uname[release] $uname[machine]\n";

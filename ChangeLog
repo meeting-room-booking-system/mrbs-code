@@ -1,3 +1,12 @@
+CVS (Thu May  9 13:36:44 BST 2002)
+    Change every $lang to $vocab to stop conflicts with other software
+    that's used $lang (lots of people have seen "N" appear everywhere
+    $lang variables should be)
+
+CVS (Wed May  8 13:23:46 BST 2002)
+    Update french translation (Jean-Max Redonnet)
+    Add option to display area list as a select box
+
 CVS (Thur Mar 7 15:26:00 GMT 2002)
     Added comments to the top of all the authentication schemes (I
      understand) that describes how to change config.inc to use
@@ -63,7 +72,7 @@ Version 1.0-pre2 (Sun Jul  8 13:43:53 BST 2001)
 
 Version 1.0-pre1 (Sun Mar  4 23:26:43 GMT 2001)
     Internationalised functions.inc. "Help", "Admin" and "Search:" are now lang
-    strings. Also, fixed an error in lang.fr, $lang["mrbs"] was defined twice.
+    strings. Also, fixed an error in lang.fr, $vocab["mrbs"] was defined twice.
     (jberanek)
 
     Added double quotes around all uses of color and class attributes, as HTML

@@ -9,162 +9,162 @@
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
-$lang["charset"]            = "iso-8859-1";
+$vocab["charset"]            = "iso-8859-1";
 
 # Used in style.inc
-$lang["mrbs"]               = "Vergaderruimte Boekingssysteem";
+$vocab["mrbs"]               = "Vergaderruimte Boekingssysteem";
 
 # Used in functions.inc
-$lang["report"]             = "Rapportage";
-$lang["admin"]              = "Admin";
-$lang["help"]               = "Help";
-$lang["search"]             = "Zoek:";
+$vocab["report"]             = "Rapportage";
+$vocab["admin"]              = "Admin";
+$vocab["help"]               = "Help";
+$vocab["search"]             = "Zoek:";
 
 # Used in day.php
-$lang["bookingsfor"]        = "Boekingen voor";
-$lang["bookingsforpost"]    = ""; # Goes after the date
-$lang["areas"]              = "Gebouwen";
-$lang["daybefore"]          = "Naar Vorige Dag";
-$lang["dayafter"]           = "Naar Volgende Dag";
-$lang["gototoday"]          = "Naar Vandaag";
-$lang["goto"]               = "ga naar";
+$vocab["bookingsfor"]        = "Boekingen voor";
+$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["areas"]              = "Gebouwen";
+$vocab["daybefore"]          = "Naar Vorige Dag";
+$vocab["dayafter"]           = "Naar Volgende Dag";
+$vocab["gototoday"]          = "Naar Vandaag";
+$vocab["goto"]               = "ga naar";
 
 # Used in trailer.inc
-$lang["viewday"]            = "Bekijk Dag";
-$lang["viewweek"]           = "Bekijk Week";
-$lang["viewmonth"]          = "Bekijk Maand";
-$lang["ppreview"]           = "Afdruk Voorbeeld";
+$vocab["viewday"]            = "Bekijk Dag";
+$vocab["viewweek"]           = "Bekijk Week";
+$vocab["viewmonth"]          = "Bekijk Maand";
+$vocab["ppreview"]           = "Afdruk Voorbeeld";
 
 # Used in edit_entry.php
-$lang["addentry"]           = "Boeking Toevoegen";
-$lang["editentry"]          = "Boeking Wijzigen";
-$lang["editseries"]         = "Wijzig Reeks";
-$lang["namebooker"]         = "Korte Omschrijving:";
-$lang["fulldescription"]    = "Volledige Omschrijving:<br>&nbsp;&nbsp;(Aantal mensen,<br>&nbsp;&nbsp;Intern/Extern etc)";
-$lang["date"]               = "Datum:";
-$lang["start_date"]         = "Start Tijd:";
-$lang["end_date"]           = "Eind Tijd:";
-$lang["time"]               = "Tijd:";
-$lang["duration"]           = "Tijdsduur:";
-$lang["seconds"]            = "seconden";
-$lang["minutes"]            = "minuten";
-$lang["hours"]              = "uren";
-$lang["days"]               = "dagen";
-$lang["weeks"]              = "weken";
-$lang["years"]              = "jaren";
-$lang["all_day"]            = "Hele Dag";
-$lang["type"]               = "Soort:";
-$lang["internal"]           = "Intern";
-$lang["external"]           = "Extern";
-$lang["save"]               = "Opslaan";
-$lang["rep_type"]           = "Soort Herhaling:";
-$lang["rep_type_0"]         = "Geen";
-$lang["rep_type_1"]         = "Dagelijks";
-$lang["rep_type_2"]         = "Wekelijks";
-$lang["rep_type_3"]         = "Maandelijks";
-$lang["rep_type_4"]         = "Jaarlijks";
-$lang["rep_type_5"]         = "Maandelijks, Overeenkomstige dag";
-$lang["rep_type_6"]         = "n-wekelijks";
-$lang["rep_end_date"]       = "Einde herhaling datum:";
-$lang["rep_rep_day"]        = "Herhalingsdag:";
-$lang["rep_for_weekly"]     = "(t.b.v. wekelijks)";
-$lang["rep_freq"]           = "Frequentie:";
-$lang["rep_num_weeks"]      = "Aantal weken";
-$lang["rep_for_nweekly"]    = "(Voor n-wekelijks)";
+$vocab["addentry"]           = "Boeking Toevoegen";
+$vocab["editentry"]          = "Boeking Wijzigen";
+$vocab["editseries"]         = "Wijzig Reeks";
+$vocab["namebooker"]         = "Korte Omschrijving:";
+$vocab["fulldescription"]    = "Volledige Omschrijving:<br>&nbsp;&nbsp;(Aantal mensen,<br>&nbsp;&nbsp;Intern/Extern etc)";
+$vocab["date"]               = "Datum:";
+$vocab["start_date"]         = "Start Tijd:";
+$vocab["end_date"]           = "Eind Tijd:";
+$vocab["time"]               = "Tijd:";
+$vocab["duration"]           = "Tijdsduur:";
+$vocab["seconds"]            = "seconden";
+$vocab["minutes"]            = "minuten";
+$vocab["hours"]              = "uren";
+$vocab["days"]               = "dagen";
+$vocab["weeks"]              = "weken";
+$vocab["years"]              = "jaren";
+$vocab["all_day"]            = "Hele Dag";
+$vocab["type"]               = "Soort:";
+$vocab["internal"]           = "Intern";
+$vocab["external"]           = "Extern";
+$vocab["save"]               = "Opslaan";
+$vocab["rep_type"]           = "Soort Herhaling:";
+$vocab["rep_type_0"]         = "Geen";
+$vocab["rep_type_1"]         = "Dagelijks";
+$vocab["rep_type_2"]         = "Wekelijks";
+$vocab["rep_type_3"]         = "Maandelijks";
+$vocab["rep_type_4"]         = "Jaarlijks";
+$vocab["rep_type_5"]         = "Maandelijks, Overeenkomstige dag";
+$vocab["rep_type_6"]         = "n-wekelijks";
+$vocab["rep_end_date"]       = "Einde herhaling datum:";
+$vocab["rep_rep_day"]        = "Herhalingsdag:";
+$vocab["rep_for_weekly"]     = "(t.b.v. wekelijks)";
+$vocab["rep_freq"]           = "Frequentie:";
+$vocab["rep_num_weeks"]      = "Aantal weken";
+$vocab["rep_for_nweekly"]    = "(Voor n-wekelijks)";
 
 # Used in view_entry.php
-$lang["description"]        = "Omschrijving:";
-$lang["room"]               = "Kamer:";
-$lang["createdby"]          = "Aangemaakt door:";
-$lang["lastupdate"]         = "Laatste aanpassing:";
-$lang["deleteentry"]        = "Boeking verwijderen";
-$lang["deleteseries"]       = "Herhalingen verwijderen";
-$lang["confirmdel"]         = "Weet U zeker\\ndat U deze\\nBoeking wilt verwijderen?\\n\\n";
-$lang["returnprev"]         = "Terug naar vorige pagina";
+$vocab["description"]        = "Omschrijving:";
+$vocab["room"]               = "Kamer:";
+$vocab["createdby"]          = "Aangemaakt door:";
+$vocab["lastupdate"]         = "Laatste aanpassing:";
+$vocab["deleteentry"]        = "Boeking verwijderen";
+$vocab["deleteseries"]       = "Herhalingen verwijderen";
+$vocab["confirmdel"]         = "Weet U zeker\\ndat U deze\\nBoeking wilt verwijderen?\\n\\n";
+$vocab["returnprev"]         = "Terug naar vorige pagina";
 
 # Used in edit_entry_handler.php
-$lang["error"]              = "Fout";
-$lang["sched_conflict"]     = "Overlappende Boeking";
-$lang["conflict"]           = "Er zijn overlappende boekingen";
-$lang["too_may_entrys"]     = "De door U geselecteerde opties zullen teveel boekingen genereren.<BR>Pas A.U.B. uw opties aan !";
-$lang["returncal"]          = "Terug naar kalender overzicht";
+$vocab["error"]              = "Fout";
+$vocab["sched_conflict"]     = "Overlappende Boeking";
+$vocab["conflict"]           = "Er zijn overlappende boekingen";
+$vocab["too_may_entrys"]     = "De door U geselecteerde opties zullen teveel boekingen genereren.<BR>Pas A.U.B. uw opties aan !";
+$vocab["returncal"]          = "Terug naar kalender overzicht";
 
 # Authentication stuff
-$lang["accessdenied"]       = "Geen Toegang";
-$lang["norights"]           = "U heeft geen rechten om deze boeking aan te passen.";
+$vocab["accessdenied"]       = "Geen Toegang";
+$vocab["norights"]           = "U heeft geen rechten om deze boeking aan te passen.";
 
 # Used in search.php
-$lang["invalid_search"]     = "Niet bestaand of ongeldig zoek argument.";
-$lang["search_results"]     = "Zoek resultaten voor:";
-$lang["nothing_found"]      = "Geen resultaten voor uw zoek opdracht gevonden.";
-$lang["records"]            = "Boekingregels ";
-$lang["through"]            = " tot en met ";
-$lang["of"]                 = " van ";
-$lang["previous"]           = "Vorige";
-$lang["next"]               = "Volgende";
-$lang["entry"]              = "Boeking";
-$lang["view"]               = "Overzicht";
+$vocab["invalid_search"]     = "Niet bestaand of ongeldig zoek argument.";
+$vocab["search_results"]     = "Zoek resultaten voor:";
+$vocab["nothing_found"]      = "Geen resultaten voor uw zoek opdracht gevonden.";
+$vocab["records"]            = "Boekingregels ";
+$vocab["through"]            = " tot en met ";
+$vocab["of"]                 = " van ";
+$vocab["previous"]           = "Vorige";
+$vocab["next"]               = "Volgende";
+$vocab["entry"]              = "Boeking";
+$vocab["view"]               = "Overzicht";
 
 # Used in report.php
-$lang["report_on"]          = "Boekingsoverzicht:";
-$lang["report_start"]       = "Start datum overzicht:";
-$lang["report_end"]         = "Eind datum overzicht:";
-$lang["match_area"]         = "Gebied als:";
-$lang["match_room"]         = "Kamer als:";
-$lang["match_entry"]        = "Korte omschrijving als:";
-$lang["match_descr"]        = "Volledige omschrijving als:";
-$lang["include"]            = "Neem mee:";
-$lang["report_only"]        = "Alleen overzicht";
-$lang["summary_only"]       = "Alleen samenvatting";
-$lang["report_and_summary"] = "Overzicht en samenvatting";
-$lang["summarize_by"]       = "Samenvatten volgens:";
-$lang["sum_by_descrip"]     = "Korte omschrijving";
-$lang["sum_by_creator"]     = "Boeker";
-$lang["entry_found"]        = "boeking gevonden";
-$lang["entries_found"]      = "boekingen gevonden";
-$lang["summary_header"]     = "Totaal aan (geboekte) uren";
-$lang["total"]              = "Totaal";
-$lang["submitquery"]        = "Run Report";
+$vocab["report_on"]          = "Boekingsoverzicht:";
+$vocab["report_start"]       = "Start datum overzicht:";
+$vocab["report_end"]         = "Eind datum overzicht:";
+$vocab["match_area"]         = "Gebied als:";
+$vocab["match_room"]         = "Kamer als:";
+$vocab["match_entry"]        = "Korte omschrijving als:";
+$vocab["match_descr"]        = "Volledige omschrijving als:";
+$vocab["include"]            = "Neem mee:";
+$vocab["report_only"]        = "Alleen overzicht";
+$vocab["summary_only"]       = "Alleen samenvatting";
+$vocab["report_and_summary"] = "Overzicht en samenvatting";
+$vocab["summarize_by"]       = "Samenvatten volgens:";
+$vocab["sum_by_descrip"]     = "Korte omschrijving";
+$vocab["sum_by_creator"]     = "Boeker";
+$vocab["entry_found"]        = "boeking gevonden";
+$vocab["entries_found"]      = "boekingen gevonden";
+$vocab["summary_header"]     = "Totaal aan (geboekte) uren";
+$vocab["total"]              = "Totaal";
+$vocab["submitquery"]        = "Run Report";
 
 # Used in week.php
-$lang["weekbefore"]         = "Ga naar vorige week";
-$lang["weekafter"]          = "Ga naar volgende week";
-$lang["gotothisweek"]       = "Ga naar deze week";
+$vocab["weekbefore"]         = "Ga naar vorige week";
+$vocab["weekafter"]          = "Ga naar volgende week";
+$vocab["gotothisweek"]       = "Ga naar deze week";
 
 # Used in month.php
-$lang["monthbefore"]        = "Ga naar vorige maand";
-$lang["monthafter"]         = "Ga naar volgende maand";
-$lang["gotothismonth"]      = "Ga naar deze maand";
+$vocab["monthbefore"]        = "Ga naar vorige maand";
+$vocab["monthafter"]         = "Ga naar volgende maand";
+$vocab["gotothismonth"]      = "Ga naar deze maand";
 
 # Used in {day week month}.php
-$lang["no_rooms_for_area"]  = "Nog geen kamers gedefiniëerd voor dit gebouw";
+$vocab["no_rooms_for_area"]  = "Nog geen kamers gedefiniëerd voor dit gebouw";
 
 # Used in admin.php
-$lang["edit"]               = "Edit";
-$lang["delete"]             = "Delete";
-$lang["rooms"]              = "Rooms";
-$lang["in"]                 = "in";
-$lang["noareas"]            = "No Areas";
-$lang["addarea"]            = "Add Area";
-$lang["name"]               = "Name";
-$lang["noarea"]             = "No area selected";
-$lang["browserlang"]        = "Your browser is set to use";
-$lang["postbrowserlang"]    = "language.";
-$lang["addroom"]            = "Add Room";
-$lang["capacity"]           = "Capacity";
-$lang["norooms"]            = "No rooms.";
+$vocab["edit"]               = "Edit";
+$vocab["delete"]             = "Delete";
+$vocab["rooms"]              = "Rooms";
+$vocab["in"]                 = "in";
+$vocab["noareas"]            = "No Areas";
+$vocab["addarea"]            = "Add Area";
+$vocab["name"]               = "Name";
+$vocab["noarea"]             = "No area selected";
+$vocab["browserlang"]        = "Your browser is set to use";
+$vocab["postbrowserlang"]    = "language.";
+$vocab["addroom"]            = "Add Room";
+$vocab["capacity"]           = "Capacity";
+$vocab["norooms"]            = "No rooms.";
 
 # Used in edit_area_room.php
-$lang["editarea"]           = "Edit Area";
-$lang["change"]             = "Change";
-$lang["backadmin"]          = "Back to Admin";
-$lang["editroomarea"]       = "Edit Area or Room Description";
-$lang["editroom"]           = "Edit Room";
+$vocab["editarea"]           = "Edit Area";
+$vocab["change"]             = "Change";
+$vocab["backadmin"]          = "Back to Admin";
+$vocab["editroomarea"]       = "Edit Area or Room Description";
+$vocab["editroom"]           = "Edit Room";
 
 # Used in del.php
-$lang["deletefollowing"]    = "This will delete the following bookings";
-$lang["sure"]               = "Are you sure?";
-$lang["YES"]                = "YES";
-$lang["NO"]                 = "NO";
+$vocab["deletefollowing"]    = "This will delete the following bookings";
+$vocab["sure"]               = "Are you sure?";
+$vocab["YES"]                = "YES";
+$vocab["NO"]                 = "NO";
 
 ?>

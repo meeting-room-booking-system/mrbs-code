@@ -185,29 +185,29 @@ function validate_and_submit ()
 }
 </SCRIPT>
 
-<h2><? echo isset($id) ? $lang["editentry"] : $lang["addentry"]; ?></H2>
+<h2><? echo isset($id) ? $vocab["editentry"] : $vocab["addentry"]; ?></H2>
 
 <FORM NAME="main" ACTION="edit_entry_handler.php" METHOD="GET">
 
 <TABLE BORDER=0>
 
-<TR><TD CLASS=CR><B><? echo $lang["namebooker"]?></B></TD>
+<TR><TD CLASS=CR><B><? echo $vocab["namebooker"]?></B></TD>
   <TD CLASS=CL><INPUT NAME="name" SIZE=40 VALUE="<? echo htmlentities($name) ?>"></TD></TR>
 
-<TR><TD CLASS=TR><B><?echo $lang["fulldescription"]?></B></TD>
+<TR><TD CLASS=TR><B><?echo $vocab["fulldescription"]?></B></TD>
   <TD CLASS=TL><TEXTAREA NAME="description" ROWS=8 COLS=40 WRAP="virtual"><? echo htmlentities ( $description ); ?></TEXTAREA></TD></TR>
 
-<TR><TD CLASS=CR><B><? echo $lang["date"]?></B></TD>
+<TR><TD CLASS=CR><B><? echo $vocab["date"]?></B></TD>
  <TD CLASS=CL>
   <? genDateSelector("", $start_day, $start_month, $start_year) ?>
  </TD>
 </TR>
 
-<TR><TD CLASS=CR><B><?echo $lang["time"]?></B></TD>
+<TR><TD CLASS=CR><B><?echo $vocab["time"]?></B></TD>
 <TD CLASS=CL><INPUT NAME="hour" SIZE=2 VALUE="<? echo $start_hour;?>" MAXLENGTH=2>:<INPUT NAME="minute" SIZE=2 VALUE="<? echo $start_min;?>" MAXLENGTH=2>
 </TD></TR>
 
-<TR><TD CLASS=CR><B><? echo $lang["duration"];?></B></TD>
+<TR><TD CLASS=CR><B><? echo $vocab["duration"];?></B></TD>
   <TD CLASS=CL><INPUT NAME="duration" SIZE=7 VALUE="<? echo $duration;?>">
     <SELECT NAME="dur_units">
 <?
@@ -215,15 +215,15 @@ $units = array("minutes", "hours", "days", "weeks");
 while (list(,$unit) = each($units))
 {
 	echo "<OPTION VALUE=$unit";
-	if ($dur_units == $lang[$unit]) echo " SELECTED";
-	echo ">$lang[$unit]";
+	if ($dur_units == $vocab[$unit]) echo " SELECTED";
+	echo ">$vocab[$unit]";
 }
 ?>
     </SELECT>
-    <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes"> <? echo $lang["all_day"]; ?>
+    <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes"> <? echo $vocab["all_day"]; ?>
 </TD></TR>
 
-<TR><TD CLASS=CR><B><?echo $lang["type"]?></B></TD>
+<TR><TD CLASS=CR><B><?echo $vocab["type"]?></B></TD>
   <TD CLASS=CL><SELECT NAME="type">
 <?
 for ($c = "A"; $c <= "J"; $c++)
@@ -236,18 +236,18 @@ for ($c = "A"; $c <= "J"; $c++)
 <? if($edit_type == "series") { ?>
 
 <TR>
- <TD CLASS=CR><B><?echo $lang["rep_type"]?></B></TD>
+ <TD CLASS=CR><B><?echo $vocab["rep_type"]?></B></TD>
  <TD CLASS=CL>
 <?
 
-for($i = 0; isset($lang["rep_type_$i"]); $i++)
+for($i = 0; isset($vocab["rep_type_$i"]); $i++)
 {
 	echo "<INPUT NAME=\"rep_type\" TYPE=\"RADIO\" VALUE=\"" . $i . "\"";
 	
 	if($i == $rep_type)
 		echo " CHECKED";
 	
-	echo ">" . $lang["rep_type_$i"] . "\n";
+	echo ">" . $vocab["rep_type_$i"] . "\n";
 }
 
 ?>
@@ -255,12 +255,12 @@ for($i = 0; isset($lang["rep_type_$i"]); $i++)
 </TR>
 
 <TR>
- <TD CLASS=CR><B><?echo $lang["rep_end_date"]?></B></TD>
+ <TD CLASS=CR><B><?echo $vocab["rep_end_date"]?></B></TD>
  <TD CLASS=CL><? genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year) ?></TD>
 </TR>
 
 <TR>
- <TD CLASS=CR><B><? echo $lang["rep_rep_day"]?></B> <? echo $lang["rep_for_weekly"]?></TD>
+ <TD CLASS=CR><B><? echo $vocab["rep_rep_day"]?></B> <? echo $vocab["rep_for_weekly"]?></TD>
  <TD CLASS=CL>
 <?php
 # Display day name checkboxes according to language and preferred weekday start.
@@ -281,7 +281,7 @@ else
 {
 	$key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
 	
-	echo "<tr><td class=\"CR\"><b>$lang[rep_type]</b></td><td class=\"CL\">$lang[$key]</td></tr>\n";
+	echo "<tr><td class=\"CR\"><b>$vocab[rep_type]</b></td><td class=\"CL\">$vocab[$key]</td></tr>\n";
 	
 	if(isset($rep_type) && ($rep_type != 0))
 	{
@@ -296,25 +296,25 @@ else
 			}
 		}
 		if($opt)
-			echo "<tr><td class=\"CR\"><b>$lang[rep_rep_day]</b></td><td class=\"CL\">$opt</td></tr>\n";
+			echo "<tr><td class=\"CR\"><b>$vocab[rep_rep_day]</b></td><td class=\"CL\">$opt</td></tr>\n";
 		
-		echo "<tr><td class=\"CR\"><b>$lang[rep_end_date]</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
+		echo "<tr><td class=\"CR\"><b>$vocab[rep_end_date]</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
 	}
 }
 ?>
 
 <TR>
- <TD CLASS=CR><B><? echo $lang["rep_num_weeks"]?></B> <? echo $lang["rep_for_nweekly"]?></TD>
+ <TD CLASS=CR><B><? echo $vocab["rep_num_weeks"]?></B> <? echo $vocab["rep_for_nweekly"]?></TD>
  <TD CLASS=CL><INPUT TYPE=TEXT NAME="rep_num_weeks" VALUE="<? echo $rep_num_weeks?>">
 </TR>
 
 <TR>
  <TD colspan=2 align=center>
   <SCRIPT LANGUAGE="JavaScript">
-   document.writeln ( '<INPUT TYPE="button" VALUE="<?echo $lang["save"]?>" ONCLICK="validate_and_submit()">' );
+   document.writeln ( '<INPUT TYPE="button" VALUE="<?echo $vocab["save"]?>" ONCLICK="validate_and_submit()">' );
   </SCRIPT>
   <NOSCRIPT>
-   <INPUT TYPE="submit" VALUE="<? echo $lang["save"]?>">
+   <INPUT TYPE="submit" VALUE="<? echo $vocab["save"]?>">
   </NOSCRIPT>
  </TD></TR>
 </TABLE>

@@ -3,7 +3,7 @@
 
 if ( $pview != 1 ) {
 
-echo "<P><HR><B>$lang[viewday]:</B>\n";
+echo "<P><HR><B>$vocab[viewday]:</B>\n";
 
 if(!isset($year))
 	$year = strftime("%Y");
@@ -32,7 +32,7 @@ for($i = -6; $i <= 7; $i++)
 	echo "<a href=\"day.php?year=$cyear&month=$cmonth&day=$cday$params\">$str</a>\n";
 }
 
-echo "<BR><B>$lang[viewweek]:</B>\n";
+echo "<BR><B>$vocab[viewweek]:</B>\n";
 
 if (!empty($room)) $params .= "&room=$room";
 
@@ -52,7 +52,7 @@ for ($i = -4; $i <= 4; $i++)
 	echo "<a href=\"week.php?year=$cyear&month=$cmonth&day=$cday$params\">$str</a>\n";
 }
 
-echo "<BR><B>$lang[viewmonth]:</B>\n";
+echo "<BR><B>$vocab[viewmonth]:</B>\n";
 for ($i = -2; $i <= 6; $i++)
 {
 	$ctime = mktime(0, 0, 0, $month + $i, 1, $year);
@@ -65,7 +65,7 @@ for ($i = -2; $i <= 6; $i++)
 }
 
 echo "<HR>";
-echo '<p><center><a href="' . $REQUEST_URI . '&pview=1">' . $lang[ppreview] . '</a></center><p>';
+echo '<p><center><a href="' . $REQUEST_URI . '&pview=1">' . $vocab[ppreview] . '</a></center><p>';
 
 }
 ?>

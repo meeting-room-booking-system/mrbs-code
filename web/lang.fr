@@ -9,133 +9,133 @@
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
-$lang["charset"]            = "iso-8859-1";
+$vocab["charset"]            = "iso-8859-1";
 
 # Used in style.inc
-$lang["mrbs"]               = "Système de Réservation de Ressources";
+$vocab["mrbs"]               = "Système de Réservation de Ressources";
 
 # Used in functions.inc
-$lang["search_label"]       = "Chercher :";
-$lang["report"]             = "Rapport";
-$lang["admin"]              = "Admin";
-$lang["help"]               = "Aide";
+$vocab["search_label"]       = "Chercher :";
+$vocab["report"]             = "Rapport";
+$vocab["admin"]              = "Admin";
+$vocab["help"]               = "Aide";
 
 # Used in day.php
-$lang["bookingsfor"]        = "Réservation pour<br>";
-$lang["bookingsforpost"]    = ""; # Goes after the date
-$lang["areas"]              = "Zones";
-$lang["daybefore"]          = "Aller au jour précédent";
-$lang["dayafter"]           = "Aller au jour suivant";
-$lang["gototoday"]          = "Aujourd'hui";
-$lang["goto"]               = " : y aller...";
+$vocab["bookingsfor"]        = "Réservation pour<br>";
+$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["areas"]              = "Zones";
+$vocab["daybefore"]          = "Aller au jour précédent";
+$vocab["dayafter"]           = "Aller au jour suivant";
+$vocab["gototoday"]          = "Aujourd'hui";
+$vocab["goto"]               = " : y aller...";
 
 # Used in trailer.inc
-$lang["viewday"]            = "Voir le";
-$lang["viewweek"]           = "Voir la Semaine";
-$lang["viewmonth"]          = "Voir le Mois";
-$lang["ppreview"]           = "Format Imprimable";
+$vocab["viewday"]            = "Voir le";
+$vocab["viewweek"]           = "Voir la Semaine";
+$vocab["viewmonth"]          = "Voir le Mois";
+$vocab["ppreview"]           = "Format Imprimable";
 
 # Used in edit_entry.php
-$lang["addentry"]           = "Ajouter une entrée";
-$lang["editentry"]          = "Editer une entrée";
-$lang["editseries"]         = "Editer une série";
-$lang["namebooker"]         = "Brève description :";
-$lang["fulldescription"]    = "Description complète:<br>&nbsp;&nbsp;(Nombre de personnes,<br>&nbsp;&nbsp;Interne/Externe etc)";
-$lang["date"]               = "Date :";
-$lang["start_date"]         = "Date de Début :";
-$lang["end_date"]           = "Date de Fin :";
-$lang["time"]               = "Heure :";
-$lang["duration"]           = "Durée :";
-$lang["seconds"]            = "secondes";
-$lang["minutes"]            = "minutes";
-$lang["hours"]              = "heures";
-$lang["days"]               = "jours";
-$lang["weeks"]              = "semaines";
-$lang["years"]              = "années";
-$lang["all_day"]            = "Journée entière";
-$lang["type"]               = "Type :";
-$lang["internal"]           = "Interne";
-$lang["external"]           = "Externe";
-$lang["save"]               = "Enregistrer";
-$lang["rep_type"]           = "Type de Série :";
-$lang["rep_type_0"]         = "Aucune";
-$lang["rep_type_1"]         = "Jour";
-$lang["rep_type_2"]         = "Semaine";
-$lang["rep_type_3"]         = "Mois";
-$lang["rep_type_4"]         = "Année";
-$lang["rep_type_5"]         = "Mois, jour correpondant";
-$lang["rep_type_6"]         = "n-Semaines";
-$lang["rep_end_date"]       = "Date de Fin de Série :";
-$lang["rep_rep_day"]        = "Jour :";
-$lang["rep_for_weekly"]     = "(pour n-semaines)";
-$lang["rep_freq"]           = "Fréquence :";
-$lang["rep_num_weeks"]      = "Nombre de semaines";
-$lang["rep_for_nweekly"]    = "(pour n-semaines)";
+$vocab["addentry"]           = "Ajouter une entrée";
+$vocab["editentry"]          = "Editer une entrée";
+$vocab["editseries"]         = "Editer une série";
+$vocab["namebooker"]         = "Brève description :";
+$vocab["fulldescription"]    = "Description complète:<br>&nbsp;&nbsp;(Nombre de personnes,<br>&nbsp;&nbsp;Interne/Externe etc)";
+$vocab["date"]               = "Date :";
+$vocab["start_date"]         = "Date de Début :";
+$vocab["end_date"]           = "Date de Fin :";
+$vocab["time"]               = "Heure :";
+$vocab["duration"]           = "Durée :";
+$vocab["seconds"]            = "secondes";
+$vocab["minutes"]            = "minutes";
+$vocab["hours"]              = "heures";
+$vocab["days"]               = "jours";
+$vocab["weeks"]              = "semaines";
+$vocab["years"]              = "années";
+$vocab["all_day"]            = "Journée entière";
+$vocab["type"]               = "Type :";
+$vocab["internal"]           = "Interne";
+$vocab["external"]           = "Externe";
+$vocab["save"]               = "Enregistrer";
+$vocab["rep_type"]           = "Type de Série :";
+$vocab["rep_type_0"]         = "Aucune";
+$vocab["rep_type_1"]         = "Jour";
+$vocab["rep_type_2"]         = "Semaine";
+$vocab["rep_type_3"]         = "Mois";
+$vocab["rep_type_4"]         = "Année";
+$vocab["rep_type_5"]         = "Mois, jour correpondant";
+$vocab["rep_type_6"]         = "n-Semaines";
+$vocab["rep_end_date"]       = "Date de Fin de Série :";
+$vocab["rep_rep_day"]        = "Jour :";
+$vocab["rep_for_weekly"]     = "(pour n-semaines)";
+$vocab["rep_freq"]           = "Fréquence :";
+$vocab["rep_num_weeks"]      = "Nombre de semaines";
+$vocab["rep_for_nweekly"]    = "(pour n-semaines)";
 
 # Used in view_entry.php
-$lang["description"]        = "Description :";
-$lang["room"]               = "Salle :";
-$lang["createdby"]          = "Créé Par :";
-$lang["lastupdate"]         = "Dernière MAJ :";
-$lang["deleteentry"]        = "Effacer une entrée";
-$lang["deleteseries"]       = "Effacer une série";
-$lang["confirmdel"]         = "Etes-vous sur\\nque vous voulez\\neffacer cette entrée?\\n\\n";
-$lang["returnprev"]         = "Retour à la page précédente";
+$vocab["description"]        = "Description :";
+$vocab["room"]               = "Salle :";
+$vocab["createdby"]          = "Créé Par :";
+$vocab["lastupdate"]         = "Dernière MAJ :";
+$vocab["deleteentry"]        = "Effacer une entrée";
+$vocab["deleteseries"]       = "Effacer une série";
+$vocab["confirmdel"]         = "Etes-vous sur\\nque vous voulez\\neffacer cette entrée?\\n\\n";
+$vocab["returnprev"]         = "Retour à la page précédente";
 
 # Used in edit_entry_handler.php
-$lang["error"]              = "Erreur";
-$lang["sched_conflict"]     = "Conflit entre Réservations ";
-$lang["conflict"]           = "La nouvelle réservaton entre en conflit avec la(les) réservation(s) suivante(s) :";
-$lang["too_may_entrys"]     = "The selected options will create too many entries.<BR>Please use different options!";
-$lang["returncal"]          = "Retour au calendrier";
+$vocab["error"]              = "Erreur";
+$vocab["sched_conflict"]     = "Conflit entre Réservations ";
+$vocab["conflict"]           = "La nouvelle réservaton entre en conflit avec la(les) réservation(s) suivante(s) :";
+$vocab["too_may_entrys"]     = "The selected options will create too many entries.<BR>Please use different options!";
+$vocab["returncal"]          = "Retour au calendrier";
 
 # Authentication stuff
-$lang["accessdenied"]       = "Acces Refusé";
-$lang["norights"]           = "Vous n'avez pas les droits suffisants pour modifier cet item.";
+$vocab["accessdenied"]       = "Acces Refusé";
+$vocab["norights"]           = "Vous n'avez pas les droits suffisants pour modifier cet item.";
 
 # Used in search.php
-$lang["invalid_search"]     = "Recherche invalide.";
-$lang["search_results"]     = "Résultats de la recherche pour :";
-$lang["nothing_found"]      = "Aucune réservation n'a été trouvée.";
-$lang["records"]            = "Enregistrements ";
-$lang["through"]            = " à ";
-$lang["of"]                 = " sur ";
-$lang["previous"]           = "Précédent";
-$lang["next"]               = "Suivant";
-$lang["entry"]              = "Réservation";
-$lang["view"]               = "Voir";
+$vocab["invalid_search"]     = "Recherche invalide.";
+$vocab["search_results"]     = "Résultats de la recherche pour :";
+$vocab["nothing_found"]      = "Aucune réservation n'a été trouvée.";
+$vocab["records"]            = "Enregistrements ";
+$vocab["through"]            = " à ";
+$vocab["of"]                 = " sur ";
+$vocab["previous"]           = "Précédent";
+$vocab["next"]               = "Suivant";
+$vocab["entry"]              = "Réservation";
+$vocab["view"]               = "Voir";
 
 # Used in report.php
-$lang["report_on"]          = "Rapport des réservations :";
-$lang["report_start"]       = "Date de début du rapport :";
-$lang["report_end"]         = "Date de fin du rapport :";
-$lang["match_area"]         = "Zone :";
-$lang["match_room"]         = "Salle :";
-$lang["match_entry"]        = "Brève description :";
-$lang["match_descr"]        = "Description complète :";
-$lang["include"]            = "Inclure :";
-$lang["report_only"]        = "le rappport seulement";
-$lang["summary_only"]       = "le résumé seulement";
-$lang["report_and_summary"] = "le rapport et le résumé";
-$lang["summarize_by"]       = "Résumé par :";
-$lang["sum_by_descrip"]     = "Brève description";
-$lang["sum_by_creator"]     = "Créateur";
-$lang["entry_found"]        = "entrée trouvée";
-$lang["entries_found"]      = "entrées trouvées";
-$lang["summary_header"]     = "Décompte des Heures Réservées";
-$lang["total"]              = "Total";
+$vocab["report_on"]          = "Rapport des réservations :";
+$vocab["report_start"]       = "Date de début du rapport :";
+$vocab["report_end"]         = "Date de fin du rapport :";
+$vocab["match_area"]         = "Zone :";
+$vocab["match_room"]         = "Salle :";
+$vocab["match_entry"]        = "Brève description :";
+$vocab["match_descr"]        = "Description complète :";
+$vocab["include"]            = "Inclure :";
+$vocab["report_only"]        = "le rappport seulement";
+$vocab["summary_only"]       = "le résumé seulement";
+$vocab["report_and_summary"] = "le rapport et le résumé";
+$vocab["summarize_by"]       = "Résumé par :";
+$vocab["sum_by_descrip"]     = "Brève description";
+$vocab["sum_by_creator"]     = "Créateur";
+$vocab["entry_found"]        = "entrée trouvée";
+$vocab["entries_found"]      = "entrées trouvées";
+$vocab["summary_header"]     = "Décompte des Heures Réservées";
+$vocab["total"]              = "Total";
 
 # Used in week.php
-$lang["weekbefore"]         = "Voir la semaine Précédente";
-$lang["weekafter"]          = "Voir la semaine Suivante";
-$lang["gotothisweek"]       = "Voir cette semaine-ci";
+$vocab["weekbefore"]         = "Voir la semaine Précédente";
+$vocab["weekafter"]          = "Voir la semaine Suivante";
+$vocab["gotothisweek"]       = "Voir cette semaine-ci";
 
 # Used in month.php
-$lang["monthbefore"]        = "Voir le mois Précédent";
-$lang["monthafter"]         = "Voir le mois Suivant";
-$lang["gotothismonth"]      = "Voir ce mois-ci";
+$vocab["monthbefore"]        = "Voir le mois Précédent";
+$vocab["monthafter"]         = "Voir le mois Suivant";
+$vocab["gotothismonth"]      = "Voir ce mois-ci";
 
 # Used in {day week month}.php
-$lang["no_rooms_for_area"]  = "Aucune salle définie pour cette zone";
+$vocab["no_rooms_for_area"]  = "Aucune salle définie pour cette zone";
 
 ?>

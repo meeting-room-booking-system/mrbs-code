@@ -218,7 +218,7 @@ function CJ_Create_Login_Screen ($CJ_Login_text,$CJ_call_url)
   ?>
      <HTML>
      <HEAD>
-     <TITLE><?echo $lang[mrbs]?></TITLE>
+     <TITLE><?echo $vocab[mrbs]?></TITLE>
      <?include "style.inc"?>
 
      </HEAD>

@@ -10,8 +10,8 @@ you will see "Your browser is set to use "xx" language". If no "lang.xx"
 file is available, copy "lang.en" to "lang.xx" (replace xx with the code
 you found in Admin), and then edit the file to change the English strings
 to your language.  For example, you might
-change: $lang["gototoday"] = "Go To Today";
-    to: $lang["gototoday"] = "gehe zum heutigen Tag";
+change: $vocab["gototoday"] = "Go To Today";
+    to: $vocab["gototoday"] = "gehe zum heutigen Tag";
 
 You will then find that MRBS starts to use your language file
 automatically. If you are having trouble getting this to work, see the

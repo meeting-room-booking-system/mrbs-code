@@ -9,162 +9,162 @@
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
-$lang["charset"]            = "iso-8859-1";
+$vocab["charset"]            = "iso-8859-1";
 
 # Used in style.inc
-$lang["mrbs"]               = "Raumbuchungssystem MRBS";
+$vocab["mrbs"]               = "Raumbuchungssystem MRBS";
 
 # Used in functions.inc
-$lang["report"]             = "Bericht";
-$lang["admin"]              = "Admin";
-$lang["help"]               = "Hilfe";
-$lang["search"]             = "Suche:";
+$vocab["report"]             = "Bericht";
+$vocab["admin"]              = "Admin";
+$vocab["help"]               = "Hilfe";
+$vocab["search"]             = "Suche:";
 
 # Used in day.php
-$lang["bookingsfor"]        = "Einträge für";
-$lang["bookingsforpost"]    = ""; # Goes after the date
-$lang["areas"]              = "Bereiche";
-$lang["daybefore"]          = "gehe zum vorherigen Tag";
-$lang["dayafter"]           = "gehe zum nächsten Tag";
-$lang["gototoday"]          = "gehe zum heutigen Tag";
-$lang["goto"]               = "Start";
+$vocab["bookingsfor"]        = "Einträge für";
+$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["areas"]              = "Bereiche";
+$vocab["daybefore"]          = "gehe zum vorherigen Tag";
+$vocab["dayafter"]           = "gehe zum nächsten Tag";
+$vocab["gototoday"]          = "gehe zum heutigen Tag";
+$vocab["goto"]               = "Start";
 
 # Used in trailer.inc
-$lang["viewday"]            = "Zeige Tag";
-$lang["viewweek"]           = "Zeige Woche";
-$lang["viewmonth"]          = "Zeige Monat";
-$lang["ppreview"]           = "Druckansicht";
+$vocab["viewday"]            = "Zeige Tag";
+$vocab["viewweek"]           = "Zeige Woche";
+$vocab["viewmonth"]          = "Zeige Monat";
+$vocab["ppreview"]           = "Druckansicht";
 
 # Used in edit_entry.php
-$lang["addentry"]           = "Eintrag hinzufügen";
-$lang["editentry"]          = "Eintrag ändern";
-$lang["editseries"]         = "Alle Einträge ändern";
-$lang["namebooker"]         = "Eintrag von";
-$lang["fulldescription"]    = "Volständige Beschreibung:<br>&nbsp;&nbsp;(Anzahl der Teilnehmer,<br>&nbsp;&nbsp;Intern/Extern etc)";
-$lang["date"]               = "Tag:";
-$lang["start_date"]         = "Anfangsdatum:";
-$lang["end_date"]           = "Enddatum:";
-$lang["time"]               = "Zeit:";
-$lang["duration"]           = "Dauer:";
-$lang["seconds"]            = "Sekunden";
-$lang["minutes"]            = "Minuten";
-$lang["hours"]              = "Stunden";
-$lang["days"]               = "Tage";
-$lang["weeks"]              = "Wochen";
-$lang["years"]              = "Jahre";
-$lang["all_day"]            = "Ganztägig";
-$lang["type"]               = "Art:";
-$lang["internal"]           = "Intern";
-$lang["external"]           = "Extern";
-$lang["save"]               = "Speichern";
-$lang["rep_type"]           = "Art der Wiederholung:";
-$lang["rep_type_0"]         = "Keine";
-$lang["rep_type_1"]         = "täglich";
-$lang["rep_type_2"]         = "wöchentlich";
-$lang["rep_type_3"]         = "monatlich";
-$lang["rep_type_4"]         = "jährlich";
-$lang["rep_type_5"]         = "monatlich, entsprechender Tag";
-$lang["rep_type_6"]         = "n-Weekly";
-$lang["rep_end_date"]       = "Ende der Wiederholung:";
-$lang["rep_rep_day"]        = "Tag der Wiederholung:";
-$lang["rep_for_weekly"]     = "(für wöchentlich)";
-$lang["rep_freq"]           = "Häufigkeit:";
-$lang["rep_num_weeks"]      = "Number of weeks";
-$lang["rep_for_nweekly"]    = "(for n-weekly)";
+$vocab["addentry"]           = "Eintrag hinzufügen";
+$vocab["editentry"]          = "Eintrag ändern";
+$vocab["editseries"]         = "Alle Einträge ändern";
+$vocab["namebooker"]         = "Eintrag von";
+$vocab["fulldescription"]    = "Volständige Beschreibung:<br>&nbsp;&nbsp;(Anzahl der Teilnehmer,<br>&nbsp;&nbsp;Intern/Extern etc)";
+$vocab["date"]               = "Tag:";
+$vocab["start_date"]         = "Anfangsdatum:";
+$vocab["end_date"]           = "Enddatum:";
+$vocab["time"]               = "Zeit:";
+$vocab["duration"]           = "Dauer:";
+$vocab["seconds"]            = "Sekunden";
+$vocab["minutes"]            = "Minuten";
+$vocab["hours"]              = "Stunden";
+$vocab["days"]               = "Tage";
+$vocab["weeks"]              = "Wochen";
+$vocab["years"]              = "Jahre";
+$vocab["all_day"]            = "Ganztägig";
+$vocab["type"]               = "Art:";
+$vocab["internal"]           = "Intern";
+$vocab["external"]           = "Extern";
+$vocab["save"]               = "Speichern";
+$vocab["rep_type"]           = "Art der Wiederholung:";
+$vocab["rep_type_0"]         = "Keine";
+$vocab["rep_type_1"]         = "täglich";
+$vocab["rep_type_2"]         = "wöchentlich";
+$vocab["rep_type_3"]         = "monatlich";
+$vocab["rep_type_4"]         = "jährlich";
+$vocab["rep_type_5"]         = "monatlich, entsprechender Tag";
+$vocab["rep_type_6"]         = "n-Weekly";
+$vocab["rep_end_date"]       = "Ende der Wiederholung:";
+$vocab["rep_rep_day"]        = "Tag der Wiederholung:";
+$vocab["rep_for_weekly"]     = "(für wöchentlich)";
+$vocab["rep_freq"]           = "Häufigkeit:";
+$vocab["rep_num_weeks"]      = "Number of weeks";
+$vocab["rep_for_nweekly"]    = "(for n-weekly)";
 
 # Used in view_entry.php
-$lang["description"]        = "Beschreibung:";
-$lang["room"]               = "Raum:";
-$lang["createdby"]          = "Erstellt von:";
-$lang["lastupdate"]         = "Letzte Änderung:";
-$lang["deleteentry"]        = "Eintrag löschen";
-$lang["deleteseries"]       = "Alle Einträge löschen";
-$lang["confirmdel"]         = "Sind Sie sicher,\\ndass Sie diesen Eintrag\\nlöschen wollen?\\n\\n";
-$lang["returnprev"]         = "Zurück zur vorigen Seite";
+$vocab["description"]        = "Beschreibung:";
+$vocab["room"]               = "Raum:";
+$vocab["createdby"]          = "Erstellt von:";
+$vocab["lastupdate"]         = "Letzte Änderung:";
+$vocab["deleteentry"]        = "Eintrag löschen";
+$vocab["deleteseries"]       = "Alle Einträge löschen";
+$vocab["confirmdel"]         = "Sind Sie sicher,\\ndass Sie diesen Eintrag\\nlöschen wollen?\\n\\n";
+$vocab["returnprev"]         = "Zurück zur vorigen Seite";
 
 # Used in edit_entry_handler.php
-$lang["error"]              = "Fehler";
-$lang["sched_conflict"]     = "Konflikt in der Planung";
-$lang["conflict"]           = "Der neue Eintrag hat einen Konflikt mit folgenden Einträgen:";
-$lang["too_may_entrys"]     = "Die gewählten Optionen würden zu viele Einträge erzeugen.<BR>Ändern Sie bitte die Optionen!";
-$lang["returncal"]          = "Zurück zur Kalenderansicht";
+$vocab["error"]              = "Fehler";
+$vocab["sched_conflict"]     = "Konflikt in der Planung";
+$vocab["conflict"]           = "Der neue Eintrag hat einen Konflikt mit folgenden Einträgen:";
+$vocab["too_may_entrys"]     = "Die gewählten Optionen würden zu viele Einträge erzeugen.<BR>Ändern Sie bitte die Optionen!";
+$vocab["returncal"]          = "Zurück zur Kalenderansicht";
 
 # Authentication stuff
-$lang["accessdenied"]       = "Zugang verweigert";
-$lang["norights"]           = "Sie haben keine Berechtigung, diesen Eintrag zu ändern";
+$vocab["accessdenied"]       = "Zugang verweigert";
+$vocab["norights"]           = "Sie haben keine Berechtigung, diesen Eintrag zu ändern";
 
 # Used in search.php
-$lang["invalid_search"]     = "Leerer oder ungültiger Suchbegriff.";
-$lang["search_results"]     = "Suchergebnis für:";
-$lang["nothing_found"]      = "Keine passenden Suchergebnisse gefunden.";
-$lang["records"]            = "Ergebnisse ";
-$lang["through"]            = " bis ";
-$lang["of"]                 = " von ";
-$lang["previous"]           = "Vorige";
-$lang["next"]               = "Nächste";
-$lang["entry"]              = "Eintrag";
-$lang["view"]               = "Öffnen";
+$vocab["invalid_search"]     = "Leerer oder ungültiger Suchbegriff.";
+$vocab["search_results"]     = "Suchergebnis für:";
+$vocab["nothing_found"]      = "Keine passenden Suchergebnisse gefunden.";
+$vocab["records"]            = "Ergebnisse ";
+$vocab["through"]            = " bis ";
+$vocab["of"]                 = " von ";
+$vocab["previous"]           = "Vorige";
+$vocab["next"]               = "Nächste";
+$vocab["entry"]              = "Eintrag";
+$vocab["view"]               = "Öffnen";
 
 # Used in report.php
-$lang["report_on"]          = "Bericht über Termine:";
-$lang["report_start"]       = "Bericht Beginn:";
-$lang["report_end"]         = "Bericht Ende:";
-$lang["match_area"]         = "Suche Bereich:";
-$lang["match_room"]         = "Suche Raum:";
-$lang["match_entry"]        = "Suche Kurzbeschreibung:";
-$lang["match_descr"]        = "Suche Beschreibung:";
-$lang["include"]            = "Generiere:";
-$lang["report_only"]        = "nur Bericht";
-$lang["summary_only"]       = "nur Zusammenfassung";
-$lang["report_and_summary"] = "Bericht und Zusammenfassung";
-$lang["summarize_by"]       = "Zusammenfassung nach:";
-$lang["sum_by_descrip"]     = "Kurzbeschreibung";
-$lang["sum_by_creator"]     = "Ersteller";
-$lang["entry_found"]        = "Eintrag gefunden";
-$lang["entries_found"]      = "Einträge gefunden";
-$lang["summary_header"]     = "Stundenzusammenfassung der Einträge";
-$lang["total"]              = "Gesamt";
-$lang["submitquery"]        = "Bericht erstellen";
+$vocab["report_on"]          = "Bericht über Termine:";
+$vocab["report_start"]       = "Bericht Beginn:";
+$vocab["report_end"]         = "Bericht Ende:";
+$vocab["match_area"]         = "Suche Bereich:";
+$vocab["match_room"]         = "Suche Raum:";
+$vocab["match_entry"]        = "Suche Kurzbeschreibung:";
+$vocab["match_descr"]        = "Suche Beschreibung:";
+$vocab["include"]            = "Generiere:";
+$vocab["report_only"]        = "nur Bericht";
+$vocab["summary_only"]       = "nur Zusammenfassung";
+$vocab["report_and_summary"] = "Bericht und Zusammenfassung";
+$vocab["summarize_by"]       = "Zusammenfassung nach:";
+$vocab["sum_by_descrip"]     = "Kurzbeschreibung";
+$vocab["sum_by_creator"]     = "Ersteller";
+$vocab["entry_found"]        = "Eintrag gefunden";
+$vocab["entries_found"]      = "Einträge gefunden";
+$vocab["summary_header"]     = "Stundenzusammenfassung der Einträge";
+$vocab["total"]              = "Gesamt";
+$vocab["submitquery"]        = "Bericht erstellen";
 
 # Used in week.php
-$lang["weekbefore"]         = "gehe zur vorigen Woche";
-$lang["weekafter"]          = "gehe zur nächsten Woche";
-$lang["gotothisweek"]       = "gehe zu dieser Woche";
+$vocab["weekbefore"]         = "gehe zur vorigen Woche";
+$vocab["weekafter"]          = "gehe zur nächsten Woche";
+$vocab["gotothisweek"]       = "gehe zu dieser Woche";
 
 # Used in month.php
-$lang["monthbefore"]        = "gehe zum vorigen Monat";
-$lang["monthafter"]         = "gehe zum nächsten Monat";
-$lang["gotothismonth"]      = "gehe zu diesen Monat";
+$vocab["monthbefore"]        = "gehe zum vorigen Monat";
+$vocab["monthafter"]         = "gehe zum nächsten Monat";
+$vocab["gotothismonth"]      = "gehe zu diesen Monat";
 
 # Used in {day week month}.php
-$lang["no_rooms_for_area"]  = "Der Bereich enthält keinen Raum";
+$vocab["no_rooms_for_area"]  = "Der Bereich enthält keinen Raum";
 
 # Used in admin.php
-$lang["edit"]               = "Bearbeiten";
-$lang["delete"]             = "Löschen";
-$lang["rooms"]              = "Räume";
-$lang["in"]                 = "in";
-$lang["noareas"]            = "Keine Bereiche";
-$lang["addarea"]            = "Bereich hinzufügen";
-$lang["name"]               = "Name";
-$lang["noarea"]             = "Kein Bereich ausgewählt";
-$lang["browserlang"]        = "Die Spracheinstellung Ihres Browsers ist";
-$lang["postbrowserlang"]    = ".";
-$lang["addroom"]            = "Raum hinzufügen";
-$lang["capacity"]           = "Kapazität";
-$lang["norooms"]            = "Keine Räume vorhanden.";
+$vocab["edit"]               = "Bearbeiten";
+$vocab["delete"]             = "Löschen";
+$vocab["rooms"]              = "Räume";
+$vocab["in"]                 = "in";
+$vocab["noareas"]            = "Keine Bereiche";
+$vocab["addarea"]            = "Bereich hinzufügen";
+$vocab["name"]               = "Name";
+$vocab["noarea"]             = "Kein Bereich ausgewählt";
+$vocab["browserlang"]        = "Die Spracheinstellung Ihres Browsers ist";
+$vocab["postbrowserlang"]    = ".";
+$vocab["addroom"]            = "Raum hinzufügen";
+$vocab["capacity"]           = "Kapazität";
+$vocab["norooms"]            = "Keine Räume vorhanden.";
 
 # Used in edit_area_room.php
-$lang["editarea"]           = "Bereich bearbeiten";
-$lang["change"]             = "Ändern";
-$lang["backadmin"]          = "Zurück zu Admin";
-$lang["editroomarea"]       = "Raum- oder Bereichsbeschreibung bearbeiten";
-$lang["editroom"]           = "Raum bearbeiten";
+$vocab["editarea"]           = "Bereich bearbeiten";
+$vocab["change"]             = "Ändern";
+$vocab["backadmin"]          = "Zurück zu Admin";
+$vocab["editroomarea"]       = "Raum- oder Bereichsbeschreibung bearbeiten";
+$vocab["editroom"]           = "Raum bearbeiten";
 
 # Used in del.php
-$lang["deletefollowing"]    = "Dadurch werden die folgenden Einträge gelöscht";
-$lang["sure"]               = "Sind Sie sicher?";
-$lang["YES"]                = "JA";
-$lang["NO"]                 = "NEIN";
+$vocab["deletefollowing"]    = "Dadurch werden die folgenden Einträge gelöscht";
+$vocab["sure"]               = "Sind Sie sicher?";
+$vocab["YES"]                = "JA";
+$vocab["NO"]                 = "NEIN";
 
 ?>

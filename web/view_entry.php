@@ -94,40 +94,40 @@ $repeat_key = "rep_type_" . $rep_type;
 <H3><? echo $name ?></H3>
  <table border=0>
    <tr>
-    <td><b><? echo $lang["description"] ?></b></td>
+    <td><b><? echo $vocab["description"] ?></b></td>
     <td><?    echo nl2br($description)  ?></td>
    </tr>
    <tr>
-    <td><b><? echo $lang["room"]                           ?></b></td>
+    <td><b><? echo $vocab["room"]                           ?></b></td>
     <td><?    echo  nl2br($area_name . " - " . $room_name) ?></td>
    </tr>
    <tr>
-    <td><b><? echo $lang["start_date"] ?></b></td>
+    <td><b><? echo $vocab["start_date"] ?></b></td>
     <td><?    echo $start_date         ?></td>
    </tr>
    <tr>
-    <td><b><? echo $lang["duration"]            ?></b></td>
+    <td><b><? echo $vocab["duration"]            ?></b></td>
     <td><?    echo $duration . " " . $dur_units ?></td>
    </tr>
    <tr>
-    <td><b><? echo $lang["end_date"] ?></b></td>
+    <td><b><? echo $vocab["end_date"] ?></b></td>
     <td><?    echo $end_date         ?></td>
    </tr>
    <tr>
-    <td><b><? echo $lang["type"]   ?></b></td>
+    <td><b><? echo $vocab["type"]   ?></b></td>
     <td><?    echo empty($typel[$type]) ? "?$type?" : $typel[$type]  ?></td>
    </tr>
    <tr>
-    <td><b><? echo $lang["createdby"] ?></b></td>
+    <td><b><? echo $vocab["createdby"] ?></b></td>
     <td><?    echo $create_by         ?></td>
    </tr>
    <tr>
-    <td><b><? echo $lang["lastupdate"] ?></b></td>
+    <td><b><? echo $vocab["lastupdate"] ?></b></td>
     <td><?    echo $updated            ?></td>
    </tr>
    <tr>
-    <td><b><? echo $lang["rep_type"]  ?></b></td>
-    <td><?    echo $lang[$repeat_key] ?></td>
+    <td><b><? echo $vocab["rep_type"]  ?></b></td>
+    <td><?    echo $vocab[$repeat_key] ?></td>
    </tr>
 <?
 
@@ -145,34 +145,34 @@ if($rep_type != 0)
 	}
 	if ($rep_type == 6)
 	{
-		echo "<tr><td><b>$lang[rep_num_weeks]$lang[rep_for_nweekly]</b></td><td>$rep_num_weeks</td></tr>\n";
+		echo "<tr><td><b>$vocab[rep_num_weeks]$vocab[rep_for_nweekly]</b></td><td>$rep_num_weeks</td></tr>\n";
 	}
 	
 	if($opt)
-		echo "<tr><td><b>$lang[rep_rep_day]</b></td><td>$opt</td></tr>\n";
+		echo "<tr><td><b>$vocab[rep_rep_day]</b></td><td>$opt</td></tr>\n";
 	
-	echo "<tr><td><b>$lang[rep_end_date]</b></td><td>$rep_end_date</td></tr>\n";
+	echo "<tr><td><b>$vocab[rep_end_date]</b></td><td>$rep_end_date</td></tr>\n";
 }
 
 ?>
 </table>
 <br>
 <p>
-<a href="edit_entry.php?id=<? echo $id ?>"><? echo $lang["editentry"] ?></a>
+<a href="edit_entry.php?id=<? echo $id ?>"><? echo $vocab["editentry"] ?></a>
 <?
 
 if($repeat_id)
-	echo " - <a href=\"edit_entry.php?id=$id&edit_type=series&day=$day&month=$month&year=$year\">$lang[editseries]</a>";
+	echo " - <a href=\"edit_entry.php?id=$id&edit_type=series&day=$day&month=$month&year=$year\">$vocab[editseries]</a>";
 
 ?>
 <BR>
-<A HREF="del_entry.php?id=<? echo $id ?>&series=0" onClick="return confirm('<? echo $lang["confirmdel"] ?>');"><? echo $lang["deleteentry"] ?></A>
+<A HREF="del_entry.php?id=<? echo $id ?>&series=0" onClick="return confirm('<? echo $vocab["confirmdel"] ?>');"><? echo $vocab["deleteentry"] ?></A>
 <?
 
 if($repeat_id)
-	echo " - <A HREF=\"del_entry.php?id=$id&series=1&day=$day&month=$month&year=$year\" onClick=\"return confirm('$lang[confirmdel]');\">$lang[deleteseries]</A>";
+	echo " - <A HREF=\"del_entry.php?id=$id&series=1&day=$day&month=$month&year=$year\" onClick=\"return confirm('$vocab[confirmdel]');\">$vocab[deleteseries]</A>";
 
 ?>
 <BR>
-<a href="<? echo $HTTP_REFERER ?>"><? echo $lang["returnprev"] ?></a>
+<a href="<? echo $HTTP_REFERER ?>"><? echo $vocab["returnprev"] ?></a>
 <? include "trailer.inc"; ?>

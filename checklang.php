@@ -57,19 +57,19 @@ while (list(,$l) = each($check))
 	{
 		$ntotal++;
 		$status = "";
-		if (!isset($lang[$key]))
+		if (!isset($vocab[$key]))
 		{
 			$nmissing++;
 			$status = "Missing";
 
-		} elseif ($lang[$key] == $ref[$key] && $ref[$key] != "")
+		} elseif ($vocab[$key] == $ref[$key] && $ref[$key] != "")
 		{
 			$status = "Untranslated";
 			$nunxlate++;
 		}
 		if ($status != "")
 		{
-			echo '$lang["' . htmlspecialchars($key) . '"]  =  "'
+			echo '$vocab["' . htmlspecialchars($key) . '"]  =  "'
 				. htmlspecialchars($ref[$key]) . "\"; # $status\n";
 		}
 	}

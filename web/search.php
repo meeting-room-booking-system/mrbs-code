@@ -27,13 +27,13 @@ print_header($day, $month, $year, $area);
 
 if(!$search_str)
 {
-	echo "<H3>" . $lang["invalid_search"] . "</H3>";
+	echo "<H3>" . $vocab["invalid_search"] . "</H3>";
 	include "trailer.inc";
 	exit;
 }
 
 # now is used so that we only display entries newer than the current time
-echo "<H3>" . $lang["search_results"] . " \"<font color=\"blue\">$search_str</font>\"</H3>\n";
+echo "<H3>" . $vocab["search_results"] . " \"<font color=\"blue\">$search_str</font>\"</H3>\n";
 
 $now = mktime(0, 0, 0, $month, $day, $year);
 
@@ -51,7 +51,7 @@ if(!isset($total))
 
 if($total <= 0)
 {
-	echo "<B>" . $lang["nothing_found"] . "</B>\n";
+	echo "<B>" . $vocab["nothing_found"] . "</B>\n";
 	include "trailer.inc";
 	exit;
 }
@@ -79,7 +79,7 @@ $has_next = $search_pos < ($total-$search["count"]);
 
 if($has_prev || $has_next)
 {
-	echo "<B>" . $lang["records"] . ($search_pos+1) . $lang["through"] . ($search_pos+$num_records) . $lang["of"] . $total . "</B><BR>";
+	echo "<B>" . $vocab["records"] . ($search_pos+1) . $vocab["through"] . ($search_pos+$num_records) . $vocab["of"] . $total . "</B><BR>";
 
 	# display a "Previous" button if necessary
 	if($has_prev)
@@ -89,7 +89,7 @@ if($has_prev || $has_next)
 		echo "&total=$total&year=$year&month=$month&day=$day\">";
 	}
 
-	echo "<B>" . $lang["previous"] . "</B>";
+	echo "<B>" . $vocab["previous"] . "</B>";
 
 	if($has_prev)
 		echo "</A>";
@@ -105,7 +105,7 @@ if($has_prev || $has_next)
 		echo "&total=$total&year=$year&month=$month&day=$day\">";
 	}
 
-	echo "<B>". $lang["next"] ."</B>";
+	echo "<B>". $vocab["next"] ."</B>";
 
 	if($has_next)
 		echo "</A>";
@@ -114,17 +114,17 @@ if($has_prev || $has_next)
   <P>
   <TABLE BORDER=2 CELLSPACING=0 CELLPADDING=3>
    <TR>
-    <TH><? echo $lang["entry"]       ?></TH>
-    <TH><? echo $lang["createdby"]   ?></TH>
-    <TH><? echo $lang["namebooker"]  ?></TH>
-    <TH><? echo $lang["description"] ?></TH>
-    <TH><? echo $lang["start_date"]  ?></TH>
+    <TH><? echo $vocab["entry"]       ?></TH>
+    <TH><? echo $vocab["createdby"]   ?></TH>
+    <TH><? echo $vocab["namebooker"]  ?></TH>
+    <TH><? echo $vocab["description"] ?></TH>
+    <TH><? echo $vocab["start_date"]  ?></TH>
    </TR>
 <?
 for ($i = 0; ($row = sql_row($result, $i)); $i++)
 {
 	echo "<TR>";
-	echo "<TD><A HREF=\"view_entry.php?id=$row[0]\">$lang[view]</A></TD>\n";
+	echo "<TD><A HREF=\"view_entry.php?id=$row[0]\">$vocab[view]</A></TD>\n";
 	echo "<TD>" . htmlspecialchars($row[1]) . "</TD>\n";
 	echo "<TD>" . htmlspecialchars($row[2]) . "</TD>\n";
 	echo "<TD>" . htmlspecialchars($row[3]) . "</TD>\n";

@@ -52,7 +52,7 @@ if ( $pview != 1 ) {
 	$this_room_name = "";
 
 	# Show all areas
-	echo "<td width=\"30%\"><u>$lang[areas]</u><br>";
+	echo "<td width=\"30%\"><u>$vocab[areas]</u><br>";
 }
 
 $sql = "select id, area_name from mrbs_area order by area_name";
@@ -74,7 +74,7 @@ if ( $pview != 1 ) {
 	echo "</td>\n";
 	
 	# Show all rooms in the current area:
-	echo "<td width=\"30%\"><u>$lang[room]</u><br>";
+	echo "<td width=\"30%\"><u>$vocab[room]</u><br>";
 }
 
 $sql = "select id, room_name from mrbs_room where area_id=$area order by room_name";
@@ -102,7 +102,7 @@ if ( $pview != 1 ) {
 # Don't continue if this area has no rooms:
 if ($room <= 0)
 {
-	echo "<h1>$lang[no_rooms_for_area]</h1>";
+	echo "<h1>$vocab[no_rooms_for_area]</h1>";
 	include "trailer.inc";
 	exit;
 }
@@ -125,17 +125,17 @@ $tm = date("n",$i);
 if ( $pview != 1 ) {
 	echo "<table width=\"100%\"><tr><td>
 	  <a href=\"month.php?year=$yy&month=$ym&area=$area&room=$room\">
-	  &lt;&lt; $lang[monthbefore]</a></td>
-	  <td align=center><a href=\"month.php?area=$area&room=$room\">$lang[gotothismonth]</a></td>
+	  &lt;&lt; $vocab[monthbefore]</a></td>
+	  <td align=center><a href=\"month.php?area=$area&room=$room\">$vocab[gotothismonth]</a></td>
 	  <td align=right><a href=\"month.php?year=$ty&month=$tm&area=$area&room=$room\">
-	  $lang[monthafter] &gt;&gt;</a></td></tr></table>";
+	  $vocab[monthafter] &gt;&gt;</a></td></tr></table>";
 }
 
 if ($debug_flag)
 	echo "<p>DEBUG: month=$month year=$year start=$weekday_start range=$month_start:$month_end\n";
 
 # Used below: localized "all day" text but with non-breaking spaces:
-$all_day = ereg_replace(" ", "&nbsp;", $lang["all_day"]);
+$all_day = ereg_replace(" ", "&nbsp;", $vocab["all_day"]);
 
 #Get all meetings for this month in the room that we care about
 # row[0] = Start time

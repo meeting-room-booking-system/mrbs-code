@@ -9,12 +9,12 @@ include "$dbsys.inc";
 # This is similar but different from the way it is done in view_entry.
 function describe_span($starts, $ends)
 {
-	global $lang;
+	global $vocab;
 	$start_date = strftime('%A %d %B %Y', $starts);
 	$start_time = strftime("%T", $starts);
 	$duration = $ends - $starts;
 	if ($start_time == "00:00:00" && $duration == 60*60*24)
-		return $start_date . " - " . $lang["all_day"];
+		return $start_date . " - " . $vocab["all_day"];
 	toTimeString($duration, $dur_units);
 	return $start_date . " " . $start_time . " - " . $duration . " " . $dur_units;
 }
@@ -23,12 +23,12 @@ function describe_span($starts, $ends)
 # $last_area_room remembers the current area/room.
 function reporton(&$row, &$last_area_room)
 {
-	global $lang, $typel;
+	global $vocab, $typel;
 	# Display Area/Room, but only when it changes:
 	$area_room = htmlspecialchars($row[8]) . " - " . htmlspecialchars($row[9]);
 	if ($area_room != $last_area_room)
 	{
-		echo "<hr><h2>$lang[room] $area_room</h2>\n";
+		echo "<hr><h2>$vocab[room] $area_room</h2>\n";
 		$last_area_room = $area_room;
 	}
 
@@ -41,15 +41,15 @@ function reporton(&$row, &$last_area_room)
 	# From date-time and duration:
 	echo "<td class=\"BR\" align=right>" . describe_span($row[1], $row[2]) . "</td></tr>\n";
 	# Description:
-	echo "<tr><td class=\"BL\" colspan=2><b>$lang[description]</b> " .
+	echo "<tr><td class=\"BL\" colspan=2><b>$vocab[description]</b> " .
 		nl2br(htmlspecialchars($row[4])) . "</td></tr>\n";
 
 	# Entry Type:
 	$et = empty($typel[$row[5]]) ? "?$row[5]?" : $typel[$row[5]];
-	echo "<tr><td class=\"BL\" colspan=2><b>$lang[type]</b> $et</td></tr>\n";
+	echo "<tr><td class=\"BL\" colspan=2><b>$vocab[type]</b> $et</td></tr>\n";
 	# Created by and last update timestamp:
-	echo "<tr><td class=\"BL\" colspan=2><small><b>$lang[createdby]</b> " .
-		htmlspecialchars($row[6]) . ", <b>$lang[lastupdate]</b> " .
+	echo "<tr><td class=\"BL\" colspan=2><small><b>$vocab[createdby]</b> " .
+		htmlspecialchars($row[6]) . ", <b>$vocab[lastupdate]</b> " .
 		strftime("%A %d %B %Y %T", $row[7]) . "</small></td></tr>\n";
 
 	echo "</table>\n";
@@ -88,7 +88,7 @@ function cell($count, $hours)
 # $room_hash & $name_hash are arrays with indexes naming unique rooms and names.
 function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 {
-	global $lang;
+	global $vocab;
 
 	# Make a sorted array of area/rooms, and of names, to use for column
 	# and row indexes. Use the rooms and names hashes built by accumulate().
@@ -102,7 +102,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 	$n_rooms = sizeof($rooms);
 	$n_names = sizeof($names);
 
-	echo "<hr><h1>$lang[summary_header]</h1><table border=2 cellspacing=4>\n";
+	echo "<hr><h1>$vocab[summary_header]</h1><table border=2 cellspacing=4>\n";
 	echo "<tr><td>&nbsp;</td>\n";
 	for ($c = 0; $c < $n_rooms; $c++)
 	{
@@ -110,7 +110,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 		$col_count_total[$c] = 0;
 		$col_hours_total[$c] = 0.0;
 	}
-	echo "<td class=\"BR\" align=right><br><b>$lang[total]</b></td></tr>\n";
+	echo "<td class=\"BR\" align=right><br><b>$vocab[total]</b></td></tr>\n";
 	$grand_count_total = 0;
 	$grand_hours_total = 0;
 
@@ -141,7 +141,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 		$grand_count_total += $row_count_total;
 		$grand_hours_total += $row_hours_total;
 	}
-	echo "<tr><td class=\"BR\" align=right><b>$lang[total]</b></td>\n";
+	echo "<tr><td class=\"BR\" align=right><b>$vocab[total]</b></td>\n";
 	for ($c = 0; $c < $n_rooms; $c++)
 		cell($col_count_total[$c], $col_hours_total[$c]);
 	cell($grand_count_total, $grand_hours_total);
@@ -198,50 +198,50 @@ if (empty($sumby)) $sumby = "d";
 
 # Upper part: The form.
 ?>
-<h1><? echo $lang["report_on"];?></h1>
+<h1><? echo $vocab["report_on"];?></h1>
 <form method=post action=report.php>
 <table>
-<tr><td class="CR"><? echo $lang["report_start"];?></td>
+<tr><td class="CR"><? echo $vocab["report_start"];?></td>
     <td class="CL"> <font size="-1">
     <? genDateSelector("From_", $From_day, $From_month, $From_year); ?>
     </font></td></tr>
-<tr><td class="CR"><? echo $lang["report_end"];?></td>
+<tr><td class="CR"><? echo $vocab["report_end"];?></td>
     <td class="CL"> <font size="-1">
     <? genDateSelector("To_", $To_day, $To_month, $To_year); ?>
     </font></td></tr>
-<tr><td class="CR"><? echo $lang["match_area"];?></td>
+<tr><td class="CR"><? echo $vocab["match_area"];?></td>
     <td class="CL"><input type=text name=areamatch size=18
     value="<? echo $areamatch_default; ?>">
     </td></tr>
-<tr><td class="CR"><? echo $lang["match_room"];?></td>
+<tr><td class="CR"><? echo $vocab["match_room"];?></td>
     <td class="CL"><input type=text name=roommatch size=18
     value="<? echo $roommatch_default; ?>">
     </td></tr>
-<tr><td class="CR"><? echo $lang["match_entry"];?></td>
+<tr><td class="CR"><? echo $vocab["match_entry"];?></td>
     <td class="CL"><input type=text name=namematch size=18
     value="<? echo $namematch_default; ?>">
     </td></tr>
-<tr><td class="CR"><? echo $lang["match_descr"];?></td>
+<tr><td class="CR"><? echo $vocab["match_descr"];?></td>
     <td class="CL"><input type=text name=descrmatch size=18
     value="<? echo $descrmatch_default; ?>">
     </td></tr>
-<tr><td class="CR"><? echo $lang["include"];?></td>
+<tr><td class="CR"><? echo $vocab["include"];?></td>
     <td class="CL">
       <input type=radio name=summarize value=1<? if ($summarize==1) echo " checked";
-        echo ">" . $lang["report_only"];?>
+        echo ">" . $vocab["report_only"];?>
       <input type=radio name=summarize value=2<? if ($summarize==2) echo " checked";
-        echo ">" . $lang["summary_only"];?>
+        echo ">" . $vocab["summary_only"];?>
       <input type=radio name=summarize value=3<? if ($summarize==3) echo " checked";
-        echo ">" . $lang["report_and_summary"];?>
+        echo ">" . $vocab["report_and_summary"];?>
     </td></tr>
-<tr><td class="CR"><? echo $lang["summarize_by"];?></td>
+<tr><td class="CR"><? echo $vocab["summarize_by"];?></td>
     <td class="CL">
       <input type=radio name=sumby value=d<? if ($sumby=="d") echo " checked";
-        echo ">" . $lang["sum_by_descrip"];?>
+        echo ">" . $vocab["sum_by_descrip"];?>
       <input type=radio name=sumby value=c<? if ($sumby=="c") echo " checked";
-        echo ">" . $lang["sum_by_creator"];?>
+        echo ">" . $vocab["sum_by_creator"];?>
     </td></tr>
-<tr><td colspan=2 align=center><input type=submit value="<? echo $lang[submitquery] ?>">
+<tr><td colspan=2 align=center><input type=submit value="<? echo $vocab[submitquery] ?>">
 </td></tr>
 </table>
 </form>
@@ -301,14 +301,14 @@ if (isset($areamatch))
 	$nmatch = sql_count($res);
 	if ($nmatch == 0)
 	{
-		echo "<P><B>" . $lang["nothing_found"] . "</B>\n";
+		echo "<P><B>" . $vocab["nothing_found"] . "</B>\n";
 		sql_free($res);
 	}
 	else
 	{
 		$last_area_room = "";
 		echo "<P><B>" . $nmatch . " "
-		. ($nmatch == 1 ? $lang["entry_found"] : $lang["entries_found"])
+		. ($nmatch == 1 ? $vocab["entry_found"] : $vocab["entries_found"])
 		.  "</B>\n";
 
 		for ($i = 0; ($row = sql_row($res, $i)); $i++)

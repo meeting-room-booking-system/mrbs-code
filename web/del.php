@@ -54,7 +54,7 @@ if($type == "room")
 		if (! $res) echo sql_error();
 		elseif (sql_count($res) > 0)
 		{
-			echo $lang[deletefollowing] . ":<ul>";
+			echo $vocab[deletefollowing] . ":<ul>";
 			
 			for ($i = 0; ($row = sql_row($res, $i)); $i++)
 			{
@@ -67,8 +67,8 @@ if($type == "room")
 		}
 		
 		echo "<center>";
-		echo "<H1>" .  $lang[sure] . "</h1>";
-		echo "<H1><a href=\"del.php?type=room&room=$room&confirm=Y\">" . $lang[YES] . "!</a> &nbsp;&nbsp;&nbsp; <a href=admin.php>" . $lang[NO] . "!</a></h1>";
+		echo "<H1>" .  $vocab[sure] . "</h1>";
+		echo "<H1><a href=\"del.php?type=room&room=$room&confirm=Y\">" . $vocab[YES] . "!</a> &nbsp;&nbsp;&nbsp; <a href=admin.php>" . $vocab[NO] . "!</a></h1>";
 		echo "</center>";
 		include "trailer.inc";
 	}

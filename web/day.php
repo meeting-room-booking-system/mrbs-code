@@ -31,7 +31,7 @@ if ( $pview != 1 ) {
    echo "<table><tr><td width=\"100%\">";
 
    #Show all avaliable areas
-   echo "<u>$lang[areas]</u><br>";
+   echo "<u>$vocab[areas]</u><br>";
 
    # need to show either a select box or a normal html list,
    # depending on the settings in config.inc
@@ -73,9 +73,9 @@ echo "<h2 align=center>" . strftime("%A %d %B %Y", $am7) . "</h2>\n";
 
 if ( $pview != 1 ) {
 	#Show Go to day before and after links
-	echo "<table width=\"100%\"><tr><td><a href=\"day.php?year=$yy&month=$ym&day=$yd&area=$area\">&lt;&lt; $lang[daybefore]</a></td>
-	      <td align=center><a href=\"day.php?area=$area\">$lang[gototoday]</a></td>
-	      <td align=right><a href=\"day.php?year=$ty&month=$tm&day=$td&area=$area\">$lang[dayafter] &gt;&gt;</a></td></tr></table>";
+	echo "<table width=\"100%\"><tr><td><a href=\"day.php?year=$yy&month=$ym&day=$yd&area=$area\">&lt;&lt; $vocab[daybefore]</a></td>
+	      <td align=center><a href=\"day.php?area=$area\">$vocab[gototoday]</a></td>
+	      <td align=right><a href=\"day.php?year=$ty&month=$tm&day=$td&area=$area\">$vocab[dayafter] &gt;&gt;</a></td></tr></table>";
 }
 
 #We want to build an array containing all the data we want to show
@@ -145,14 +145,14 @@ $res = sql_query($sql);
 if (! $res) fatal_error(0, sql_error());
 if (sql_count($res) == 0)
 {
-	echo "<h1>$lang[no_rooms_for_area]</h1>";
+	echo "<h1>$vocab[no_rooms_for_area]</h1>";
 	sql_free($res);
 }
 else
 {
 	#This is where we start displaying stuff
 	echo "<table cellspacing=0 border=1 width=\"100%\">";
-	echo "<tr><th width=\"1%\">$lang[time]</th>";
+	echo "<tr><th width=\"1%\">$vocab[time]</th>";
 
 	$room_column_width = (int)(95 / sql_count($res));
 	for ($i = 0; ($row = sql_row($res, $i)); $i++)
