@@ -1,5 +1,5 @@
-			MRBS Users Authentication
-			=========================
+MRBS Users Authentication
+=========================
 
 Principles
 ==========
@@ -25,7 +25,7 @@ areas.
 Before accessing a restricted page, MRBS prompts the user for a name and
 password. Then it connects to an authentication server, which is responsible
 for deciding if the user/password pair is valid. If it is, MRBS then checks if
-the name is in its administrators list. Finally MRBS grants access to the
+the name is in its list of administrators. Finally MRBS grants access to the
 page at the right level. The name and password are recorded for the duration of
 the session, and won't be asked for again.
 
@@ -60,7 +60,6 @@ two special internal modules support a local list of users for one; and
 authenticating anybody for the other.
 
 External programs support: NT Domain controllers; Netware servers; PAM servers.
-
 
 Which authentication scheme to choose
 =====================================
@@ -209,7 +208,6 @@ External authentication programs
 |                  |                  |                 |                   |
 +------------------+------------------+-----------------+-------------------+
 
-
 Which session scheme to choose
 ==============================
 
@@ -259,8 +257,11 @@ for historical reasons:
 |       |Use in combination with       |                    |  work on the   |
 |       |authentication "none", as the |                    |  Internet.     |
 |       |authentication is already done|                    |                |
-|       |by IIS during the session     |                    |                |
-|       |initiation.                   |                    |                |
+|       |by IIS during the session     |                    |  - Does not    |
+|       |initiation.                   |                    |  allow         |
+|       |                              |                    |  anonymous     |
+|       |                              |                    |  browsing.     |
+|       |                              |                    |                |
 +-------+------------------------------+--------------------+----------------+
 |omni   |The users identity is queried |                    |                |
 |       |AND validated by an Omnicron  |                    |                |
@@ -293,8 +294,6 @@ for historical reasons:
 |       |"config".                     |                    |  computer.     |
 |       |                              |                    |                |
 +-------+------------------------------+--------------------+----------------+
-
-
 How to configure authentication
 ===============================
 
@@ -323,14 +322,18 @@ $auth["admin"][] = "username1";
 $auth["admin"][] = "username2";
 etc
 
-You can have as many administrators as you want.
+You can have as many administrators as you want in this list.
+
+The default MRBS configuration uses PHP sessions, and a user list in
+config.inc.php for authentication. It defines three demo users 'alice' 'bob'
+and 'administrator'. The 'administrator' user is also in the administrators
+list by default. You will almost surely want to change these.
 
 If IP authentication is used, for "username" use the IP address.
 
-The default configuration uses PHP sessions for authentication, and defines 
-three demo users 'alice' 'bob'and 'administrator'. Note that 'administrator' 
-user is not an administrator by default. You will almost surely want
-to change these.
+In this case, make sure to define the local host (127.0.0.1) as an
+administrator. This allows to conveniently administer the reservation system
+locally on the server.
 
 Session type
 ------------
@@ -376,7 +379,6 @@ If you want to use an external authentication program, set $auth["type"] =
     and password that the user entered to login. The string can contain other
     arguments in addition to the above two.
 
-
 Internal PHP Authentication Modules Configuration
 =================================================
 
@@ -394,6 +396,10 @@ $auth["user"]["username1"] = "password1";
 
 $auth["user"]["username2"] = "password2";
 etc
+
+Note: If the password contains the characters \ or $, then it's necessary to
+prefix them with a \. For example for password pa$$word, use the string =
+"pa\$\$word".
 
 Finally put at least one of the users in the administrator's list.
 
@@ -543,7 +549,6 @@ $auth["type"] = "none";
 Note that technically Omni authentication is actually an MRBS session scheme.
 We put it in this list as it is related with authentication anyway.
 
-
 External Authentication Programs Configuration
 ==============================================
 
@@ -567,6 +572,8 @@ $auth["params"] = "#USERNAME# #PASSWORD#";
 NOTE: The last line are parameters that will get passed to the 'badpw.pl'
 script. At runtime "#USERNAME#" and "#PASSWORD" will get replaced with the
 username and password that the user entered to login.
+
+NOTE: Under Unix, make sure badpw.pl has execution rights: 'chmod +x badpw.pl'
 
 Once you have changed this then look at the /mrbs/ page through your browser.
 When you click one of the (+) buttons, you will be asked for a username and
@@ -598,69 +605,76 @@ user the web server is running as. The password file must consist of pairs of
 username and crypted password, seperated by a colon. See crypt_passwd.example
 for an example password file.
 
+NOTE: Under Unix, make sure crypt_passwd.pl has execution rights: 'chmod +x
+crypt_passwd.pl'
+
 SMB Authentication
 ------------------
 
-Here are instructions gathered from several users for using  SMB authentication:
+Here are instructions gathered from several users for using SMB authentication:
 
-Included is the source (smb_auth.c), this is a very simple program, that 
+Included is the source (smb_auth.c). This is a very simple program, that
 returns "true" if the username/password are valid and "false" otherwise.
 
-FOLLOW THESE STEPS TO INSTALL/
+FOLLOW THESE STEPS TO INSTALL
 
-- download PAM library from
-  http://www.mirror.ac.uk/sites/ftp.samba.org/pam_smb/ (current one is 1.1.7)
-  or type:
-  $ wget http://www.mirror.ac.uk/sites/ftp.samba.org/pam_smb/pam_smb-1.1.7.tar.gz
+- Download the PAM library from
+
+http://www.mirror.ac.uk/sites/ftp.samba.org/pam_smb/ (current one is 1.1.7)
+or type:
+
+$ wget http://www.mirror.ac.uk/sites/ftp.samba.org/pam_smb/pam_smb-1.1.7.tar.gz
 
 - $ tar -xvzf pam_smb-1.1.7.tar.gz
-  or gtar -xvzf pam_smb-1.1.7.tar.gz
+
+or gtar -xvzf pam_smb-1.1.7.tar.gz
 
 - $ cd pam_smb
 
 - $ ./configure
-  [or if you want to disable encrypted passwords you can run
-   $ ./configure --disable-encrypt-pass
-  ]
+
+[or if you want to disable encrypted passwords you can run
+$ ./configure --disable-encrypt-pass
+]
 
 - $ make
-  [ or maybe on Solaris
-  $ gmake ]
-  
-  You can ignore any errors/warnings after the line
-  make[1]: Leaving directory `...../pam_smb/smbval'
-  any problems before this need to be fixed as smbvalid.a needs to be
-  created.
-  
+
+[ or maybe on Solaris
+$ gmake ]
+
+You can ignore any errors/warnings after the line
+
+make[1]: Leaving directory `...../pam_smb/smbval'
+any problems before this need to be fixed as smbvalid.a needs to be created.
+
 - copy smb_auth.c that come with the MRBS package in /pam_smb/ directory:
-  $ cp /<wherever>/smb_auth.c .
+$ cp /<wherever>/smb_auth.c .
 
 - $ gcc -o smb_auth smb_auth.c smbval/smbvalid.a
-  [ or on Solaris :
-  $ gcc -o smb_auth smb_auth.c smbval/smbvalid.a -lsocket -lnsl
-  
-  The extra libraries (-lsocket -lnsl) are not mentioned in the
-  documentation but this might just be a Solaris thing ]
 
-  This creates a binary that does not rely on anything in the pam_smb
-  release. So this can be deleted after you have copied smb_auth to
-  another location.
+[ or on Solaris :
+$ gcc -o smb_auth smb_auth.c smbval/smbvalid.a -lsocket -lnsl
+The extra libraries (-lsocket -lnsl) are not mentioned in the documentation but
+this might just be a Solaris thing ]
+
+This creates a binary that does not rely on anything in the pam_smb release. So
+this can be deleted after you have copied smb_auth to another location.
 
 - [ $ strip smb_auth ] (shrink the file, optional)
 
-- Now move/copy smb_auth to somewhere that the web server can access it
-  and specify the path in config.inc.php. For example :
-  $ cp smb_auth /usr/bin
-  and verifi smb_auth has enough execute rights.
-  
-  USAGE: smb_auth [username] [password] [server] [backup] [domain]
-  You can bypass domain if you specify username like [domain/username]
-  
-  returns 0 on success
-  returns 1 on failure
+- Now move/copy smb_auth to somewhere that the web server can access it and
+specify the path in config.inc.php. For example : $ cp smb_auth /usr/bin
+and verifi smb_auth has enough execute rights.
 
-- then set config.inc.php as follows:
+USAGE: smb_auth [username] [password] [server] [backup] [domain]
 
+You can bypass domain if you specify username like [domain/username]
+
+returns 0 on success
+
+returns 1 on failure
+
+- Then set config.inc.php as follows:
 
 # Authentication settings - read AUTHENTICATION
 
@@ -675,8 +689,6 @@ The [params] are:
 * Primary Server used for password validation
 * Secondary server used for password validation
 * NT domain under which the user is registered
-
-
 
 Netware Authentication
 ----------------------
@@ -719,6 +731,9 @@ $auth["type"] = "ext";
 $auth["prog"] = "/home/httpd/html/mrbs/auth_ldap.pl";
 $auth["params"] = "LDAPSERVER cn=#USERNAME# #PASSWORD#";
 
+NOTE: Under Unix, make sure auth_ldap.pl has execution rights: 'chmod +x
+auth_ldap.pl'
+
 The third also uses a perl script that simply calls ldapsearch.
 
 You will need specify the path to ldapsearch in auth_ldapsearch.pl
@@ -734,6 +749,9 @@ $auth["prog"] = "/home/httpd/html/mrbs/auth_ldapsearch.pl";
 $auth["params"] = "LDAPSERVER cn=#USERNAME# #PASSWORD#";
 $auth["params"] = "YourServer \"Your search root\" \"#USERNAME#\"
 \"#PASSWORD#\"";
+
+NOTE: Under Unix, make sure auth_ldapsearch.pl has execution rights: 'chmod +x
+auth_ldapsearch.pl'
 
 PAM Authentification
 --------------------
@@ -772,7 +790,6 @@ That's it.
 
 Note that this has been only tested with Red Hat 7.x. Feedback on whether this
 works on other systems ( eg. Solaris) is appreciated.
-
 
 Creating a new authentication scheme
 ====================================
@@ -838,7 +855,6 @@ $cmd = preg_replace('/#PASSWORD#/',$pass,$cmd);
 
 This should allow a lot of flexibility with different authenticators.
 
-
 Creating a new session scheme
 ==============================
 
@@ -879,7 +895,6 @@ its own session and authentication management. See the session_nt.inc and
 session session_omni.inc files as examples. In this case, use in combination
 with authentication "none", as the real authentication is already done during
 the session initiation, and needs not be done again inside MRBS.
-
 
 A little bit of history
 =======================
