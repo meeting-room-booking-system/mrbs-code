@@ -313,7 +313,8 @@ just set $unicode_encoding to 0. MRBS will run the old way, with each
 language string stored using its own character set.
 
 To  use Unicode, php should be built with 'iconv' support ('--with-iconv'
-directive). On Windows, three things are needed :
+directive). On Windows, if you are using PHP 5, iconv support is built-in.
+For PHP 4, three things are needed :
 
 - iconv.dll file in in the system path. Either copy it from your
   \%phpdir%\dlls\ directory into \%windir%\system32\ directory,
