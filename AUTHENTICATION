@@ -327,7 +327,7 @@ You can have as many administrators as you want.
 
 If IP authentication is used, for "username" use the IP address.
 
-The default configuration uses PHP sessionss for authentication, and defines 
+The default configuration uses PHP sessions for authentication, and defines 
 three demo users 'alice' 'bob'and 'administrator'. Note that 'administrator' 
 user is not an administrator by default. You will almost surely want
 to change these.

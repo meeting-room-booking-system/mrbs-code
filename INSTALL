@@ -226,10 +226,12 @@ These settings control:
 
 5. Authentication:
 
-Read the file AUTHENTICATION for information about this section.  By
-default, config.inc.php uses "ip" authentication, allowing anyone who
-can connect to book rooms, and only allowing localhost to administer
-the system.
+Read the file AUTHENTICATION for information about this section. By default, 
+config.inc.php uses "php" session management and "config" authentication 
+method, allowing only demo users to book rooms, and no administrator defined 
+to administer the system. Demo users are "alice" and "bob" (passwords "a" and 
+"b"). You have to uncomment admin "administrator" (password 'secret') if you
+want to administer mrbs.
 
 
 6. Language:
@@ -243,6 +245,31 @@ MRBS also uses your OS locale support for certain date/time strings.
 There is some code that tries to figure out what locale should be used
 based on your browser. Use "locale -a" on your unix system to find out what
 locale support is installed.
+
+* Revamped localisation/internationalisation. 
+
+From mrbs-1.2, MRBS can now be called  fulled Unicode, as long as the 
+config variable $unicode_encoding is set to 1 (this is a default setting now). 
+If this is set, then MRBS serves all of it's pages in UTF-8 and stores 
+everything in the database in UTF-8. This means that all languages work 
+together. So, the Japanese one may use "Shift JIS", European ones "iso-8859-1" 
+(or perhaps "iso-8859-15", etc). So, MRBS translates all these different 
+encodings into an encoding that can represent all of them, UTF-8. Then, 
+all pages are displayed in UTF-8, and all text in the database is encoded 
+in UTF-8 too.
+
+If this does not work for you (your server may not have unicode support),
+just set $unicode_encoding to 0. MRBS will run the old way, with each 
+language string stored using its own character set.
+
+Note: Upgrading mysql database from previous charsets to Unicode :
+
+	  You can use convert_db_to_utf8.php script to convert text in the 
+	  database to UTF8, to use MRBS with $unicode_encoding set to 1. The 
+	  administrator should copy it into the web directory, run it (choosing  
+	  the encoding to convert from) ONCE, and then move it back out of the 
+	  web directory. We recommend you backup your database before running 
+	  this script if you are at all worried.
 
 
 7. Entry Types:
