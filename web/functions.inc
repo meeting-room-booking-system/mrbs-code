@@ -36,7 +36,7 @@ function print_header($day, $month, $year, $area)
 <?php
    include "style.inc";
 ?>
-<SCRIPT LANGUAGE="JavaScript1.3">
+<SCRIPT LANGUAGE="JavaScript">
 
 <!-- Begin
 
@@ -54,35 +54,37 @@ function print_header($day, $month, $year, $area)
      corrected in newer releases.
 */
 
-//set todays date
-Now = new Date();
-NowDay = Now.getDate();
-NowMonth = Now.getMonth();
-// getFullYear() need JavaScript1.3 (IE4, Netscape 4.06, Mozilla 1, Opera 6)
-NowYear = Now.getFullYear();
+function daysInFebruary (year){
+  // February has 28 days unless the year is divisible by four,
+  // and if it is the turn of the century then the century year
+  // must also be divisible by 400 when it has 29 days
+  return (((year % 4 == 0) && ( (!(year % 100 == 0)) || (year % 400 == 0))) ? 29 : 28 );
+}
 
 //function for returning how many days there are in a month including leap years
 function DaysInMonth(WhichMonth, WhichYear)
 {
   var DaysInMonth = 31;
-  if (WhichMonth == "Apr" || WhichMonth == "Jun" || WhichMonth == "Sep" || WhichMonth == "Nov") DaysInMonth = 30;
-  if (WhichMonth == "Feb" && (WhichYear/4) != Math.floor(WhichYear/4))    DaysInMonth = 28;
-  if (WhichMonth == "Feb" && (WhichYear/4) == Math.floor(WhichYear/4))    DaysInMonth = 29;
+  if (WhichMonth == "4" || WhichMonth == "6" || WhichMonth == "9" || WhichMonth == "11")
+    DaysInMonth = 30;
+  if (WhichMonth == "2")
+    DaysInMonth = daysInFebruary( WhichYear );
   return DaysInMonth;
 }
 
 //function to change the available days in a months
-function ChangeOptionDays(Which)
+function ChangeOptionDays(formObj, prefix)
 {
-  DaysObject = eval("document.Form1." + Which + "day");
-  MonthObject = eval("document.Form1." + Which + "month");
-  YearObject = eval("document.Form1." + Which + "year");
+  var DaysObject = eval("formObj." + prefix + "day");
+  var MonthObject = eval("formObj." + prefix + "month");
+  var YearObject = eval("formObj." + prefix + "year");
 
-  Month = MonthObject[MonthObject.selectedIndex].text;
-  Year = YearObject[YearObject.selectedIndex].text;
+  var DaySelIdx = DaysObject.selectedIndex;
+  Month = parseInt(MonthObject[MonthObject.selectedIndex].value);
+  Year = parseInt(YearObject[YearObject.selectedIndex].value);
 
-  DaysForThisSelection = DaysInMonth(Month, Year);
-  CurrentDaysInSelection = DaysObject.length;
+  var DaysForThisSelection = DaysInMonth(Month, Year);
+  var CurrentDaysInSelection = DaysObject.length;
   if (CurrentDaysInSelection > DaysForThisSelection)
   {
     for (i=0; i<(CurrentDaysInSelection-DaysForThisSelection); i++)
@@ -92,13 +94,16 @@ function ChangeOptionDays(Which)
   }
   if (DaysForThisSelection > CurrentDaysInSelection)
   {
-    for (i=0; i<(DaysForThisSelection-CurrentDaysInSelection); i++)
+    for (i=0; i<DaysForThisSelection; i++)
     {
-      NewOption = new Option(DaysObject.options.length + 1);
-      DaysObject.add(NewOption);
+      DaysObject.options[i] = new Option(eval(i + 1));
     }
   }
-    if (DaysObject.selectedIndex < 0) DaysObject.selectedIndex == 0;
+  if (DaysObject.selectedIndex < 0) DaysObject.selectedIndex = 0;
+  if (DaySelIdx >= DaysForThisSelection)
+    DaysObject.selectedIndex = DaysForThisSelection-1;
+  else
+    DaysObject.selectedIndex = DaySelIdx;
 }
 
 //  End -->
@@ -132,6 +137,12 @@ function ChangeOptionDays(Which)
         echo "<INPUT TYPE=HIDDEN NAME=area VALUE=$area>"
  
 ?>
+	    <SCRIPT LANGUAGE="JavaScript">
+	    <!--
+	    // fix number of days for the $month/$year that you start with
+	    ChangeOptionDays(document.Form1, '');
+	    // -->
+	    </SCRIPT>
 	    <INPUT TYPE=SUBMIT VALUE="<?php echo get_vocab("goto") ?>">
            </FONT>
           </FORM>
@@ -225,7 +236,7 @@ function genDateSelector($prefix, $day, $month, $year)
 		echo "<OPTION" . ($i == $day ? " SELECTED" : "") . ">$i\n";
 	
 	echo "</SELECT>";
-	echo "<SELECT NAME=\"${prefix}month\" onchange=\"ChangeOptionDays('')\">\n";
+	echo "<SELECT NAME=\"${prefix}month\" onchange=\"ChangeOptionDays(this.form, '')\">\n";
 
 	for($i = 1; $i <= 12; $i++)
 	{
@@ -235,13 +246,13 @@ function genDateSelector($prefix, $day, $month, $year)
 	}
 
 	echo "</SELECT>";
-	echo "<SELECT NAME=\"${prefix}year\" onchange=\"ChangeOptionDays('')\">\n";
+	echo "<SELECT NAME=\"${prefix}year\" onchange=\"ChangeOptionDays(this.form, '')\">\n";
 
 	$min = min($year, date("Y")) - 5;
 	$max = max($year, date("Y")) + 5;
 
 	for($i = $min; $i <= $max; $i++)
-		print "<OPTION" . ($i == $year ? " SELECTED" : "") . ">$i\n";
+		print "<OPTION VALUE=\"$i\"" . ($i == $year ? " SELECTED" : "") . ">$i\n";
 
 	echo "</SELECT>";
 }
