@@ -20,9 +20,9 @@ $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Ayuda";
 $vocab["search"]             = "B&uacute;squeda:";
 
-# Used in day.php3
+# Used in day.php
 $vocab["bookingsfor"]        = "Reservas para el";
-$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Areas";
 $vocab["daybefore"]          = "D&iacute;a Anterior";
 $vocab["dayafter"]           = "D&iacute;a Siguiente";
@@ -35,7 +35,7 @@ $vocab["viewweek"]           = "View Week";
 $vocab["viewmonth"]          = "View Month";
 $vocab["ppreview"]           = "Print Preview";
 
-# Used in edit_entry.php3
+# Used in edit_entry.php
 $vocab["addentry"]           = "Nueva Reserva";
 $vocab["editentry"]          = "Editar Reserva";
 $vocab["editseries"]         = "Edit Series";
@@ -71,8 +71,9 @@ $vocab["rep_for_weekly"]     = "(para semanal)";
 $vocab["rep_freq"]           = "Frecuencia:";
 $vocab["rep_num_weeks"]      = "Number of weeks";
 $vocab["rep_for_nweekly"]    = "(for n-weekly)";
+$vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
 
-# Used in view_entry.php3
+# Used in view_entry.php
 $vocab["description"]        = "Descripci&oacute;n:";
 $vocab["room"]               = "Sala:";
 $vocab["createdby"]          = "Creada Por:";
@@ -82,7 +83,7 @@ $vocab["deleteseries"]       = "Borrar Serie";
 $vocab["confirmdel"]         = "Seguro que\\ndesea borrar\\nesta reserva?\\n\\n";
 $vocab["returnprev"]         = "Volver a p&aacute;gina anterior";
 
-# Used in edit_entry_handler.php3
+# Used in edit_entry_handler.php
 $vocab["error"]              = "Error";
 $vocab["sched_conflict"]     = "Conflicto de Planificaci&oacute;n";
 $vocab["conflict"]           = "La nueva reserva entra en conflicto con la(s) siguiente(s) entrada(s):";
@@ -93,7 +94,7 @@ $vocab["returncal"]          = "Volver a vista de calendario";
 $vocab["accessdenied"]       = "Acceso Denegado";
 $vocab["norights"]           = "No tiene autorizacioacute;n para modificar este dato.";
 
-# Used in search.php3
+# Used in search.php
 $vocab["invalid_search"]     = "Cadena de b&uacute;squeda vac&iacute;a o incorrecta.";
 $vocab["search_results"]     = "Buscar resultados de:";
 $vocab["nothing_found"]      = "No se encontraron coincidencias.";

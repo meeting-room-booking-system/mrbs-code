@@ -22,7 +22,7 @@ $vocab["search"]             = "Ricerca:";
 
 # Used in day.php
 $vocab["bookingsfor"]        = "Prenotazioni per";
-$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Aree";
 $vocab["daybefore"]          = "Vai al Giorno Prima";
 $vocab["dayafter"]           = "Vai al Giorno Dopo";
@@ -71,6 +71,7 @@ $vocab["rep_for_weekly"]     = "(per (n-)settimanale)";
 $vocab["rep_freq"]           = "Frequenza:";
 $vocab["rep_num_weeks"]      = "Numero di settimane";
 $vocab["rep_for_nweekly"]    = "(per n-settimanale)";
+$vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
 
 # Used in view_entry.php
 $vocab["description"]        = "Descrizione:";

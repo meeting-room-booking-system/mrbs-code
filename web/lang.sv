@@ -20,9 +20,9 @@ $vocab["admin"]              = "Administration";
 $vocab["help"]               = "Hjälp";
 $vocab["search"]             = "Sök:";
 
-# Used in day.php3
+# Used in day.php
 $vocab["bookingsfor"]        = "Bokningar för";
-$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Områden";
 $vocab["daybefore"]          = "Gå till föregående dag";
 $vocab["dayafter"]           = "Gå till nästa dag";
@@ -35,7 +35,7 @@ $vocab["viewweek"]           = "Visa vecka";
 $vocab["viewmonth"]          = "Visa Månad";
 $vocab["ppreview"]           = "Förhandsgranska";
 
-# Used in edit_entry.php3
+# Used in edit_entry.php
 $vocab["addentry"]           = "Boka !";
 $vocab["editentry"]          = "Ändra bokningen";
 $vocab["editseries"]         = "Ändra serie";
@@ -71,8 +71,9 @@ $vocab["rep_for_weekly"]     = "(vid varje vecka)";
 $vocab["rep_freq"]           = "Frekvens:";
 $vocab["rep_num_weeks"]      = "Antal veckor";
 $vocab["rep_for_nweekly"]    = "(För x-veckor)";
+$vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
 
-# Used in view_entry.php3
+# Used in view_entry.php
 $vocab["description"]        = "Beskrivning:";
 $vocab["room"]               = "Rum:";
 $vocab["createdby"]          = "Skapad av:";
@@ -82,7 +83,7 @@ $vocab["deleteseries"]       = "Radera serie";
 $vocab["confirmdel"]         = "Är du säker att\\ndu vill radera\\nden här bokningen?\\n\\n";
 $vocab["returnprev"]         = "Åter till föregående sida";
 
-# Used in edit_entry_handler.php3
+# Used in edit_entry_handler.php
 $vocab["error"]              = "Fel";
 $vocab["sched_conflict"]     = "Bokningskonflikt";
 $vocab["conflict"]           = "Den nya bokningen krockar med följande bokning(ar):";
@@ -93,7 +94,7 @@ $vocab["returncal"]          = "Återgå till kalendervy";
 $vocab["accessdenied"]       = "Åtkomst nekad";
 $vocab["norights"]           = "Du har inte rättighet att ändra bokningen.";
 
-# Used in search.php3
+# Used in search.php
 $vocab["invalid_search"]     = "Tom eller ogiltig söksträng.";
 $vocab["search_results"]     = "Sökresultat för:";
 $vocab["nothing_found"]      = "Inga matchande träffar hittade.";

@@ -15,14 +15,14 @@ $vocab["charset"]            = "iso-8859-1";
 $vocab["mrbs"]               = "Système de Réservation de Ressources";
 
 # Used in functions.inc
-$vocab["search_label"]       = "Chercher :";
 $vocab["report"]             = "Rapport";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Aide";
+$vocab["search"]             = "Search:";
 
 # Used in day.php
 $vocab["bookingsfor"]        = "Réservation pour<br>";
-$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Zones";
 $vocab["daybefore"]          = "Aller au jour précédent";
 $vocab["dayafter"]           = "Aller au jour suivant";
@@ -71,6 +71,7 @@ $vocab["rep_for_weekly"]     = "(pour n-semaines)";
 $vocab["rep_freq"]           = "Fréquence :";
 $vocab["rep_num_weeks"]      = "Nombre de semaines";
 $vocab["rep_for_nweekly"]    = "(pour n-semaines)";
+$vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
 
 # Used in view_entry.php
 $vocab["description"]        = "Description :";
@@ -124,6 +125,7 @@ $vocab["entry_found"]        = "entrée trouvée";
 $vocab["entries_found"]      = "entrées trouvées";
 $vocab["summary_header"]     = "Décompte des Heures Réservées";
 $vocab["total"]              = "Total";
+$vocab["submitquery"]        = "Run Report";
 
 # Used in week.php
 $vocab["weekbefore"]         = "Voir la semaine Précédente";
@@ -137,5 +139,33 @@ $vocab["gotothismonth"]      = "Voir ce mois-ci";
 
 # Used in {day week month}.php
 $vocab["no_rooms_for_area"]  = "Aucune salle définie pour cette zone";
+
+# Used in admin.php
+$vocab["edit"]               = "Edit";
+$vocab["delete"]             = "Delete";
+$vocab["rooms"]              = "Rooms";
+$vocab["in"]                 = "in";
+$vocab["noareas"]            = "No Areas";
+$vocab["addarea"]            = "Add Area";
+$vocab["name"]               = "Name";
+$vocab["noarea"]             = "No area selected";
+$vocab["browserlang"]        = "Your browser is set to use";
+$vocab["postbrowserlang"]    = "language.";
+$vocab["addroom"]            = "Add Room";
+$vocab["capacity"]           = "Capacity";
+$vocab["norooms"]            = "No rooms.";
+
+# Used in edit_area_room.php
+$vocab["editarea"]           = "Edit Area";
+$vocab["change"]             = "Change";
+$vocab["backadmin"]          = "Back to Admin";
+$vocab["editroomarea"]       = "Edit Area or Room Description";
+$vocab["editroom"]           = "Edit Room";
+
+# Used in del.php
+$vocab["deletefollowing"]    = "This will delete the following bookings";
+$vocab["sure"]               = "Are you sure?";
+$vocab["YES"]                = "YES";
+$vocab["NO"]                 = "NO";
 
 ?>

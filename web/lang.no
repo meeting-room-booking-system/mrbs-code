@@ -20,9 +20,9 @@ $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Hjelp";
 $vocab["search"]             = "Søk:";
 
-# Used in day.php3
+# Used in day.php
 $vocab["bookingsfor"]        = "Booking for";
-$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Område";
 $vocab["daybefore"]          = "Gå til forrige dag";
 $vocab["dayafter"]           = "Gå til neste dag";
@@ -35,7 +35,7 @@ $vocab["viewweek"]           = "Vis Uke";
 $vocab["viewmonth"]          = "Vis Måned";
 $vocab["ppreview"]           = "Forhåndsvisning";
 
-# Used in edit_entry.php3
+# Used in edit_entry.php
 $vocab["addentry"]           = "Booking";
 $vocab["editentry"]          = "Endre booking";
 $vocab["editseries"]         = "Endre serie";
@@ -71,8 +71,9 @@ $vocab["rep_for_weekly"]     = "(ved hver uke)";
 $vocab["rep_freq"]           = "Frekvens:";
 $vocab["rep_num_weeks"]      = "Antall uker";
 $vocab["rep_for_nweekly"]    = "(for n-uker)";
+$vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
 
-# Used in view_entry.php3
+# Used in view_entry.php
 $vocab["description"]        = "Beskrivelse:";
 $vocab["room"]               = "Rom:";
 $vocab["createdby"]          = "Laget av:";
@@ -82,7 +83,7 @@ $vocab["deleteseries"]       = "Slett serie";
 $vocab["confirmdel"]         = "Er du sikker på att\\ndu vill slette\\nden her bookingen?\\n\\n";
 $vocab["returnprev"]         = "Tilbake til forrige side";
 
-# Used in edit_entry_handler.php3
+# Used in edit_entry_handler.php
 $vocab["error"]              = "Feil";
 $vocab["sched_conflict"]     = "Bookingskonflikt";
 $vocab["conflict"]           = "Den nya bookingen kræsjer med følgende booking(er):";
@@ -93,7 +94,7 @@ $vocab["returncal"]          = "Tilbake til kalender";
 $vocab["accessdenied"]       = "Adgang nektes";
 $vocab["norights"]           = "Du har ingen rettigheter til å endre bookingen.";
 
-# Used in search.php3
+# Used in search.php
 $vocab["invalid_search"]     = "Tom eller ugyldig søkestreng.";
 $vocab["search_results"]     = "Søkeresultat for:";
 $vocab["nothing_found"]      = "Inga matchende treff fantes.";

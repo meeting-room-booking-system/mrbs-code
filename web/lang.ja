@@ -21,7 +21,7 @@ $vocab["help"]               = "Help";
 $vocab["search"]             = "Search:";
 
 # Used in day.php
-$vocab["bookingsfor"]        = "";
+$vocab["bookingsfor"]        = "Bookings for";
 $vocab["bookingsforpost"]    = "ÇÃó\ñÒÇ≈Ç∑";
 $vocab["areas"]              = "èÍèä";
 $vocab["daybefore"]          = "ëOì˙Ç÷ñﬂÇÈ";
@@ -71,6 +71,7 @@ $vocab["rep_for_weekly"]     = "(for (n-)weekly)";
 $vocab["rep_freq"]           = "Frequency:";
 $vocab["rep_num_weeks"]      = "Number of weeks";
 $vocab["rep_for_nweekly"]    = "(for n-weekly)";
+$vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
 
 # Used in view_entry.php
 $vocab["description"]        = "âÔãcñº:";
