@@ -106,7 +106,9 @@ $vocab["returncal"]          = "Return to calendar view";
 $vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access";
 $vocab["mail_subject_entry"] = $mail["subject"];
 $vocab["mail_body_new_entry"] = $mail["new_entry"];
+$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
 $vocab["mail_body_changed_entry"] = $mail["changed_entry"];
+$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 # Authentication stuff
 $vocab["accessdenied"]       = "Access Denied";
@@ -222,6 +224,9 @@ $vocab["error_room"]         = "Error: room ";
 $vocab["not_found"]          = " not found";
 $vocab["update_area_failed"] = "Update area failed: ";
 $vocab["error_area"]         = "Error: area ";
+$vocab["room_admin_email"]   = "Room admin email:";
+$vocab["area_admin_email"]   = "Area admin email:";
+$vocab["invalid_email"]      = "Invalid email!";
 
 # Used in del.php
 $vocab["deletefollowing"]    = "This will delete the following bookings";

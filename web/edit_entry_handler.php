@@ -188,11 +188,35 @@ if(empty($err))
             $new_id = mrbsCreateRepeatingEntrys($starttime, $endtime,   $rep_type, $rep_enddate, $rep_opt,
                                       $room_id,   $create_by, $name,     $type,        $description,
                                       isset($rep_num_weeks) ? $rep_num_weeks : 0);
-            # Send a mail to the Administrator
-            if (MAIL_ADMIN_ON_BOOKINGS)
+            // Send a mail to the Administrator
+            if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
+                MAIL_ROOM_ADMIN_ON_BOOKINGS)
             {
+                include_once "functions_mail.inc";
+                // Send a mail only if this a new entry, or if this is an
+                // edited entry but we have to send mail on every change,
+                // and if mrbsCreateRepeatingEntrys is successful
                 if ( ( (isset($id) && MAIL_ADMIN_ALL) or !isset($id) ) && (0 != $new_id) )
                 {
+                    // Get room name and area name. Would be better to avoid
+                    // a database access just for that. Ran only if we need
+                    // details
+                    if (MAIL_DETAILS)
+                    {
+                        $sql = "SELECT r.id, r.room_name, r.area_id, a.area_name ";
+                        $sql .= "FROM $tbl_room r, $tbl_area a ";
+                        $sql .= "WHERE r.id=$room_id AND r.area_id = a.id";
+                        $res = sql_query($sql);
+                        $row = sql_row($res, 0);
+                        $room_name = $row[1];
+                        $area_name = $row[3];
+                    }
+                    // If this is a modified entry and MAIL_DETAILS is true, then
+                    // call getPreviousEntryData to prepare entry comparison
+                    if ( MAIL_DETAILS and isset($id) )
+                    {
+                        $mail_previous = getPreviousEntryData($id, 1);
+                    }
                     $result = notifyAdminOnBooking(!isset($id), $new_id);
                 }
             }
@@ -204,15 +228,39 @@ if(empty($err))
                 $entry_type = 2;
             else
                 $entry_type = 0;
-            
+
             # Create the entry:
             $new_id = mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $room_id,
                                      $create_by, $name, $type, $description);
-            # Send a mail to the Administrator
-            if (MAIL_ADMIN_ON_BOOKINGS)
+            // Send a mail to the Administrator
+            if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
+                MAIL_ROOM_ADMIN_ON_BOOKINGS)
             {
+                include_once "functions_mail.inc";
+                // Send a mail only if this a new entry, or if this is an
+                // edited entry but we have to send mail on every change,
+                // and if mrbsCreateRepeatingEntrys is successful
                 if ( ( (isset($id) && MAIL_ADMIN_ALL) or !isset($id) ) && (0 != $new_id) )
                 {
+                    // Get room name and are name. Would be better to avoid
+                    // a database access just for that. Ran only if we need
+                    // details.
+                    if (MAIL_DETAILS)
+                    {
+                        $sql = "SELECT r.id, r.room_name, r.area_id, a.area_name ";
+                        $sql .= "FROM $tbl_room r, $tbl_area a ";
+                        $sql .= "WHERE r.id=$room_id AND r.area_id = a.id";
+                        $res = sql_query($sql);
+                        $row = sql_row($res, 0);
+                        $room_name = $row[1];
+                        $area_name = $row[3];
+                    }
+                    // If this is a modified entry and MAIL_DETAILS is true, then
+                    // call getPreviousEntryData to prepare entry comparison
+                    if ( MAIL_DETAILS and isset($id) )
+                    {
+                        $mail_previous = getPreviousEntryData($id, 0);
+                    }
                     $result = notifyAdminOnBooking(!isset($id), $new_id);
                 }
             }

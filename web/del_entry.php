@@ -14,13 +14,21 @@ if(getAuthorised(getUserName(), getUserPassword(), 1) && ($info = mrbsGetEntryIn
 	$month = strftime("%m", $info["start_time"]);
 	$year  = strftime("%Y", $info["start_time"]);
 	$area  = mrbsGetRoomArea($info["room_id"]);
-	
-	sql_begin();
+
+    if (MAIL_ADMIN_ON_DELETE)
+    {
+        include_once "functions_mail.inc";
+        // Gather all fields values for use in emails.
+        $mail_previous = getPreviousEntryData($id, $series);
+    }
+    sql_begin();
 	$result = mrbsDelEntry(getUserName(), $id, $series, 1);
 	sql_commit();
 	if ($result)
 	{
-		Header("Location: day.php?day=$day&month=$month&year=$year&area=$area");
+        // Send a mail to the Administrator
+        (MAIL_ADMIN_ON_DELETE) ? $result = notifyAdminOnDelete($mail_previous) : '';
+        Header("Location: day.php?day=$day&month=$month&year=$year&area=$area");
 		exit();
 	}
 }

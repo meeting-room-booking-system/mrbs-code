@@ -401,7 +401,6 @@ function time_date_string($t)
 	}
 }
 
-
 # Output a start table cell tag <td> with color class and fallback color.
 # $colclass is an entry type (A-J), "white" for empty, or "red" for highlighted.
 # The colors for CSS browsers can be found in the style sheet. The colors
@@ -446,7 +445,7 @@ function show_colour_key()
 function round_t_down($t, $resolution, $am7)
 {
         return (int)$t - (int)abs(((int)$t-(int)$am7)
-				  % $resolution); 
+				  % $resolution);
 }
 
 # Round time up to the nearest resolution
@@ -460,7 +459,7 @@ function round_t_up($t, $resolution, $am7)
 	else
 	{
 		return $t;
-	} 
+	}
 }
 
 # generates some html that can be used to select which area should be
@@ -527,7 +526,7 @@ function make_room_select_html( $link, $area, $current, $year, $month, $day )
 # occur in this period.
 function is_dst ( $month, $day, $year, $hour="-1" )
 {
-	
+
 	if( $hour != -1  && $hour > 3)
 		return( -1 );
 	
@@ -556,104 +555,9 @@ function cross_dst ( $start, $end )
 	# leaving DST
 	elseif(  date( "I", $start) && !date( "I", $end))
 		$modification = 3600;
-	else	
+	else
 		$modification = 0;
 
 	return $modification;
 }
-
-// {{{ notifyAdminOnBooking()
-
-/**
- * Send email to administrator to notify a new/changed entry to the recipient.
- *
- * @param bool    $new_entry   to know if this is a new entry or not
- * @param int     $new_id      used for create a link to the new entry
- *
- * @return bool   TRUE or error message if fails
- */
-function notifyAdminOnBooking($new_entry , $new_id)
-{
-    global $url_base, $returl;
-
-    $subject = get_vocab("mail_subject_entry");
-    if ($new_entry)
-    {
-    	$body = get_vocab("mail_body_new_entry") . "\n\n";
-    }
-    else
-    {
-    	$body = get_vocab("mail_body_changed_entry") . "\n\n";
-    }
-    if (isset($url_base) && ($url_base != ""))
-    {
-    	$body .= "$url_base/view_entry.php?id=$new_id";
-    }
-    else
-    {
-        $url = explode(basename($returl), $returl);
-        $body .= "$url[0]view_entry.php?id=$new_id";
-    }
-    $result = sendMail(MAIL_RECIPIENTS, $subject, $body, MAIL_CC);
-    return $result;
-}
-
-// }}}
-// {{{ sendMail()
-
-/**
- * Send emails using PEAR::Mail class.
- * To use this class -> http://www.pear.php.net/package/Mail then link
- * "View documentation".
- *
- * @param string  $recipients       comma separated list of recipients or array
- * @param string  $subject
- * @param string  $body
- * @param string  $cc               Carbon Copy
- * @param string  $bcc              Blind Carbon Copy
- * @param string  $from
- * @param string  $backend          'mail', 'smtp' or 'sendmail'
- * @param string  $sendmail_path    ie. "/usr/bin/sendmail"
- * @param string  $sendmail_args    ie. "-t -i"
- * @param string  $host             smtp server hostname
- * @param string  $port             smtp server port
- * @param string  $auth             smtp server authentication, TRUE/FALSE
- * @param string  $username         smtp server username
- * @param string  $password         smtp server password
- *
- * @return bool   TRUE or error message if fails
- */
-function sendMail($recipients, $subject, $body, $cc = NULL, $bcc = NULL,
-    $from = MAIL_FROM, $backend = MAIL_ADMIN_BACKEND, $sendmail_path =
-    SENDMAIL_PATH, $sendmail_args = SENDMAIL_ARGS, $host = SMTP_HOST, $port =
-    SMTP_PORT, $auth = SMTP_AUTH, $username = SMTP_USERNAME, $password =
-    SMTP_PASSWORD)
-{
-    require_once("Mail.php");
-
-    $headers['From']         = $from;
-    if (NULL != $cc)
-    {
-    	$headers['Cc']       = $cc;
-    }
-    if (NULL != $bcc)
-    {
-        $headers['Bcc']      = $bcc;
-    }
-    $headers['Subject']      = $subject;
-    $params['sendmail_path'] = $sendmail_path;
-    $params['sendmail_args'] = $sendmail_args;
-    $params['host']          = $host;
-    $params['port']          = $port;
-    $params['auth']          = $auth;
-    $params['username']      = $username;
-    $params['password']      = $password;
-
-    $mail_object =& Mail::factory($backend, $params);
-    $result = $mail_object->send($recipients, $headers, $body);
-    return $result;
-}
-
-// }}}
-
 ?>

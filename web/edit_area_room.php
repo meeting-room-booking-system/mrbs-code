@@ -42,12 +42,24 @@ print_header($day, $month, $year, isset($area) ? $area : "");
 
 <?php
 if(!empty($room)) {
-	if (isset($change_room))
+    include_once "functions_mail.inc";
+    (!isset($room_admin_email)) ? $room_admin_email = '': '';
+    $email_adresses = explode(',', $room_admin_email);
+    $valid_email = TRUE;
+    foreach ($email_adresses as $email_adress)
+    {
+        (!isValidInetAddress($email_adress, $strict = FALSE)) ? $valid_email = FALSE : '';
+    }
+    // However if no email adress is entered, this is OK
+    ("" == $room_admin_email) ? $valid_email = TRUE : '';
+    //
+	if ( isset($change_room) && (FALSE != $valid_email) )
 	{
-		if (empty($capacity)) $capacity = 0;
+        if (empty($capacity)) $capacity = 0;
 		$sql = "UPDATE $tbl_room SET room_name='" . slashes($room_name)
 			. "', description='" . slashes($description)
-			. "', capacity=$capacity WHERE id=$room";
+			. "', capacity=$capacity, room_admin_email='"
+            . slashes($room_admin_email) . "' WHERE id=$room";
 		if (sql_command($sql) < 0)
 			fatal_error(0, get_vocab("update_room_failed") . sql_error());
 	}
@@ -68,6 +80,11 @@ echo htmlspecialchars($row["room_name"]); ?>"></TD></TR>
 echo htmlspecialchars($row["description"]); ?>"></TD></TR>
 <TR><TD><?php echo get_vocab("capacity") ?>:   </TD><TD><input type=text name=capacity value="<?php
 echo $row["capacity"]; ?>"></TD></TR>
+<TR><TD><?php echo get_vocab("room_admin_email") ?></TD><TD><input type=text name=room_admin_email MAXLENGTH=75 value="<?php
+echo htmlspecialchars($row["room_admin_email"]); ?>"></TD></TR>
+<?php if (FALSE == $valid_email) {
+    echo ("<TR><TD>&nbsp;</TD><TD><STRONG>" . get_vocab('invalid_email') . "<STRONG></TD></TR>");
+} ?>
 </TABLE>
 <input type=submit name="change_room"
 value="<?php echo get_vocab("change") ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -79,10 +96,22 @@ value="<?php echo get_vocab("change") ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n
 <?php
 if(!empty($area))
 {
-	if (isset($change_area))
+    include_once "functions_mail.inc";
+    (!isset($area_admin_email)) ? $area_admin_email = '': '';
+    $email_adresses = explode(',', $area_admin_email);
+    $valid_email = TRUE;
+    foreach ($email_adresses as $email_adress)
+    {
+        (!isValidInetAddress($email_adress, $strict = FALSE)) ? $valid_email = FALSE : '';
+    }
+    // However if no email adress is entered, this is OK
+    ("" == $area_admin_email) ? $valid_email = TRUE : '';
+    //
+    if ( isset($change_area) && (FALSE != $valid_email) )
 	{
 		$sql = "UPDATE $tbl_area SET area_name='" . slashes($area_name)
-			. "' WHERE id=$area";
+			. "', area_admin_email='" . slashes($area_admin_email)
+            . "' WHERE id=$area";
 		if (sql_command($sql) < 0)
 			fatal_error(0, get_vocab("update_area_failed") . sql_error());
 	}
@@ -99,6 +128,11 @@ if(!empty($area))
 <TABLE>
 <TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name="area_name" value="<?php
 echo htmlspecialchars($row["area_name"]); ?>"></TD></TR>
+<TR><TD><?php echo get_vocab("area_admin_email") ?>:       </TD><TD><input type=text name="area_admin_email" MAXLENGTH=75 value="<?php
+echo htmlspecialchars($row["area_admin_email"]); ?>"></TD></TR>
+<?php if (FALSE == $valid_email) {
+    echo ("<TR><TD>&nbsp;</TD><TD><STRONG>" . get_vocab('invalid_email') . "</STRONG></TD></TR>");
+} ?>
 </TABLE>
 <input type=submit name="change_area"
 value="<?php echo get_vocab("change") ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

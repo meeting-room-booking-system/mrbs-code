@@ -219,6 +219,27 @@ $pop3_port = "110";
 # FALSE
 define ("MAIL_ADMIN_ON_BOOKINGS", FALSE);
 
+# Set to TRUE if you want AREA ADMIN to be notified when entries are booked.
+# Default is FALSE. Area admin emails are set in room_area admin page.
+define ("MAIL_AREA_ADMIN_ON_BOOKINGS", FALSE);
+
+# Set to TRUE if you want ROOM ADMIN to be notified when entries are booked.
+# Default is FALSE. Room admin emails are set in room_area admin page.
+define ("MAIL_ROOM_ADMIN_ON_BOOKINGS", FALSE);
+
+# Set to TRUE if you want ADMIN to be notified when entries are deleted. Email
+# will be sent to mrbs admin, area admin and room admin as per above settings.
+define ("MAIL_ADMIN_ON_DELETE", FALSE);
+
+# Set to TRUE if you want to be notified on every change (i.e, on new entries)
+# but also each time they are edited. Default is FALSE (only new entries)
+define ("MAIL_ADMIN_ALL", FALSE);
+
+# Set to TRUE is you want to show entry details in email, otherwise only a
+# link to view_entry is provided. Irrelevant for deleted entries. Default is
+# FALSE.
+define ("MAIL_DETAILS", FALSE);
+
 # Set the name of the Backend use to transport your mails. Either "mail",
 # "smtp" or "sendmail". Default is 'mail'. See INSTALL for more details.
 define ("MAIL_ADMIN_BACKEND", "mail");
@@ -248,17 +269,17 @@ define ("SMTP_PORT", 25);
 define ("SMTP_AUTH", FALSE);
 
 # Set the username to use for SMTP authentication. Default is ""
-define ("SMTP_USERNAME", "");
+define ("SMTP_USERNAME", '');
 
 # Set the password to use for SMTP authentication. Default is ""
-define ("SMTP_PASSWORD", "");
+define ("SMTP_PASSWORD", '');
 
 #****************************
 # Miscellaneous settings
 
-# Set to TRUE if you want to be notified on every change (i.e, on new entries)
-# but also each time they are edited. Default is FALSE (only new entries)
-define ("MAIL_ADMIN_ALL", FALSE);
+# Set the language used for emails (choose an available lang.* file).
+# Default is 'en'.
+define ("MAIL_ADMIN_LANG", 'en');
 
 # Set the email address of the From field. Default is $mrbs_admin_email
 define ("MAIL_FROM", $mrbs_admin_email);
@@ -267,20 +288,27 @@ define ("MAIL_FROM", $mrbs_admin_email);
 # more than one recipient like this "john@doe.com,scott@tiger.com"
 define ("MAIL_RECIPIENTS", $mrbs_admin_email);
 
-# Set email address of the Carbon Copy field. Default is "". You can define
+# Set email address of the Carbon Copy field. Default is ''. You can define
 # more than one recipient (see MAIL_RECIPIENTS)
-define ("MAIL_CC", "");
+define ("MAIL_CC", '');
 
-# Set the content of the Subject field.
+# Set the content of the Subject field for added/changed entries.
 $mail["subject"] = "Entry added/changed for $mrbs_company MRBS";
+
+# Set the content of the Subject field for deleted fields.
+$mail["subject_delete"] = "Entry deleted for $mrbs_company MRBS";
 
 # Set the content of the message when a new entry is booked. What you type
 # here will be added at the top of the message body.
-$mail["new_entry"] = "A new entry has been booked, here is the details:";
+$mail["new_entry"] = "A new entry has been booked, here are the details:";
 
 # Set the content of the message when an entry is modified. What you type
 # here will be added at the top of the message body.
-$mail["changed_entry"] = "An entry has been modified, here is the details:";
+$mail["changed_entry"] = "An entry has been modified, here are the details:";
+
+# Set the content of the message when an entry is deleted. What you type
+# here will be added at the top of the message body.
+$mail["deleted_entry"] = "An entry has been deleted, here are the details:";
 
 ##########
 # Language

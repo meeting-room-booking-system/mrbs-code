@@ -82,7 +82,7 @@ if (isset($id))
 		sql_free($res);
 		
 		$rep_type = $row[0];
-		
+
 		if($edit_type == "series")
 		{
 			$start_day   = (int)strftime('%d', $row[1]);
@@ -134,13 +134,14 @@ else
 	$start_day   = $day;
 	$start_month = $month;
 	$start_year  = $year;
-	$start_hour  = $hour;
-	$start_min   = $minute;
+    // Avoid notices for $hour and $minute if periods is enabled
+    (isset($hour)) ? $start_hour = $hour : '';
+	(isset($minute)) ? $start_min = $minute : '';
 	$duration    = ($enable_periods ? 60 : 60 * 60);
 	$type        = "I";
 	$room_id     = $room;
     unset($id);
-	
+
 	$rep_id        = 0;
 	$rep_type      = 0;
 	$rep_end_day   = $day;
@@ -239,6 +240,12 @@ function validate_and_submit ()
     alert("<?php echo get_vocab("you_have_not_selected") . '\n' . get_vocab("valid_room") ?>");
     return false;
   }
+
+  // Form submit can take some times, especially if mails are enabled and
+  // there are more than one recipient. To avoid users doing weird things
+  // like clicking more than one time on submit button, we hide it as soon
+  // it is clicked.
+  document.forms["main"].save_button.style.visibility="hidden";
 
   // would be nice to also check date to not allow Feb 31, etc...
   document.forms["main"].submit();
@@ -428,6 +435,8 @@ this.document.writeln("</td></tr>");
 			$selected = "SELECTED";
 		}
 		echo "<option $selected value=\"".$row[0]."\">".$row[1];
+        // store room names for emails
+        $room_names[$i] = $row[1];
    	}
   ?>
   </select></td><td><?php echo get_vocab("ctrl_click") ?></td></tr></table>
@@ -530,7 +539,7 @@ if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) && ( "seri
 <TR>
  <TD colspan=2 align=center>
   <SCRIPT LANGUAGE="JavaScript">
-   document.writeln ( '<INPUT TYPE="button" VALUE="<?php echo get_vocab("save")?>" ONCLICK="validate_and_submit()">' );
+   document.writeln ( '<INPUT TYPE="button" NAME="save_button" VALUE="<?php echo get_vocab("save")?>" ONCLICK="validate_and_submit()">' );
   </SCRIPT>
   <NOSCRIPT>
    <INPUT TYPE="submit" VALUE="<?php echo get_vocab("save")?>">
@@ -543,7 +552,8 @@ if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) && ( "seri
 <INPUT TYPE=HIDDEN NAME="create_by" VALUE="<?php echo $create_by?>">
 <INPUT TYPE=HIDDEN NAME="rep_id"    VALUE="<?php echo $rep_id?>">
 <INPUT TYPE=HIDDEN NAME="edit_type" VALUE="<?php echo $edit_type?>">
-<?php if(isset($id)) echo "<INPUT TYPE=HIDDEN NAME=\"id\"        VALUE=\"$id\">\n"; ?>
+<?php if(isset($id)) echo "<INPUT TYPE=HIDDEN NAME=\"id\"        VALUE=\"$id\">\n";
+?>
 
 </FORM>
 

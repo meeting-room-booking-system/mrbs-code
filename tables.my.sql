@@ -11,19 +11,21 @@
 
 CREATE TABLE mrbs_area
 (
-  id        int DEFAULT '0' NOT NULL auto_increment,
-  area_name varchar(30),
+  id               int DEFAULT '0' NOT NULL auto_increment,
+  area_name        varchar(30),
+  area_admin_email text,
 
   PRIMARY KEY (id)
 );
 
 CREATE TABLE mrbs_room
 (
-  id          int DEFAULT '0' NOT NULL auto_increment,
-  area_id     int DEFAULT '0' NOT NULL,
-  room_name   varchar(25) DEFAULT '' NOT NULL,
-  description varchar(60),
-  capacity    int DEFAULT '0' NOT NULL,
+  id               int DEFAULT '0' NOT NULL auto_increment,
+  area_id          int DEFAULT '0' NOT NULL,
+  room_name        varchar(25) DEFAULT '' NOT NULL,
+  description      varchar(60),
+  capacity         int DEFAULT '0' NOT NULL,
+  room_admin_email text,
 
   PRIMARY KEY (id)
 );

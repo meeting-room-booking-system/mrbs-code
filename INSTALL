@@ -325,6 +325,34 @@ MAIL_ADMIN_ON_BOOKINGS
 Set to TRUE if you want to be notified when entries are booked. Default is
 FALSE
 
+MAIL_AREA_ADMIN_ON_BOOKINGS
+
+Set to TRUE if you want AREA ADMIN to be notified when entries are booked.
+Default is FALSE. Area admin emails are set in room_area admin page.
+
+MAIL_ROOM_ADMIN_ON_BOOKINGS
+
+Set to TRUE if you want ROOM ADMIN to be notified when entries are booked.
+Default is FALSE. Room admin emails are set in room_area admin page.
+
+MAIL_ADMIN_ON_DELETE
+
+Set to TRUE if you want ADMIN to be notified when entries are deleted. Email
+will be sent to mrbs admin, area admin and room admin as per above settings.
+
+MAIL_ADMIN_ALL
+
+Set to TRUE if you want to be notified on every change (i.e, on new entries)
+but also each time they are edited. Edited entries will display the modified
+fields in brackets after the new value if MAIL_DETAILS is set to TRUE
+(see below). Default is FALSE (only new entries).
+
+MAIL_DETAILS
+
+Set to TRUE is you want to show entry details in email, otherwise only a
+link to view_entry is provided. Irrelevant for deleted entries. Default is
+FALSE.
+
 MAIL_ADMIN_BACKEND
 
 Set the name of the Backend use to transport your mails. Either "mail",
@@ -372,18 +400,18 @@ Set whether or not to use SMTP authentication. Default is 'FALSE'
 
 SMTP_USERNAME
 
-Set the username to use for SMTP authentication. Default is ""
+Set the username to use for SMTP authentication. Default is ''
 
 SMTP_PASSWORD
 
-Set the password to use for SMTP authentication. Default is ""
+Set the password to use for SMTP authentication. Default is ''
 
 # Miscellaneous settings
 
-MAIL_ADMIN_ALL
+MAIL_ADMIN_LANG
 
-Set to TRUE if you want to be notified on every change (i.e, on new entries)
-but also each time they are edited. Default is FALSE (only new entries)
+Set the language used for emails (choose an available lang.* file).
+Default is 'en'.
 
 MAIL_FROM
 
@@ -397,7 +425,7 @@ more than one recipient like this "john@doe.com,scott@tiger.com"
 
 MAIL_CC
 
-Set email address of the Carbon Copy field. Default is "". You can define
+Set email address of the Carbon Copy field. Default is ''. You can define
 more than one recipient (see MAIL_RECIPIENTS)
 
 $mail["subject"]
@@ -405,17 +433,28 @@ $mail["subject"]
 Set the content of the Subject field. Default is
 "Entry added/changed for $mrbs_company MRBS"
 
+$mail["subject_delete"]
+
+Set the content of the Subject field for deleted fields. Default is
+"Entry deleted for $mrbs_company MRBS";
+
 $mail["new_entry"]
 
 Set the content of the message when a new entry is booked. What you type
 here will be added at the top of the message body. Default is:
-"A new entry has been booked, here is the details:"
+"A new entry has been booked, here are the details:"
 
 $mail["changed_entry"]
 
 Set the content of the message when an entry is modified. What you type
 here will be added at the top of the message body. Default is:
-"An entry has been modified, here is the details:"
+"An entry has been modified, here are the details:"
+
+$mail["deleted_entry"]
+
+Set the content of the message when an entry is deleted. What you type
+here will be added at the top of the message body. Default is
+"An entry has been deleted, here are the details:"
 
 
 7. Language:

@@ -120,6 +120,16 @@ $lang_map_unix = array
 ##############################################################################
 # Language token handling
 
+// Get first default set of language tokens for emails.
+if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
+    MAIL_ROOM_ADMIN_ON_BOOKINGS)
+{
+    include "lang." . $default_language_tokens;
+    include "lang." . MAIL_ADMIN_LANG;
+    $mail_vocab = $vocab;
+    unset ($vocab);
+}
+
 # Get a default set of language tokens, you can change this if you like
 include "lang." . $default_language_tokens;
 
@@ -257,7 +267,7 @@ function get_server_os()
 function get_vocab($tag)
 {
   global $vocab, $unicode_encoding;
-  
+
   if ($unicode_encoding)
   {
     return iconv($vocab["charset"],"utf-8",$vocab[$tag]);
@@ -271,7 +281,7 @@ function get_vocab($tag)
 function utf8_convert($string)
 {
   global $windows_locale, $unicode_encoding, $winlocale_codepage_map;
-  
+
   if ($unicode_encoding && (get_server_os() == "windows"))
   {
     if ($winlocale_codepage_map[$windows_locale])

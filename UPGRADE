@@ -40,4 +40,12 @@ Upgrading mysql database from previous charsets to Unicode :
 	  Running it more than once will make a right mess of any non-ASCII 
 	  text in the database. 
 	  
+Upgrading from prior mrbs 1.2-pre3
+==================================
+
+mrbs 1.2-pre3 introduced area and room administrator email fields.
+
+Please apply the upgrade3.my.sql to add these fields. This file should work 
+both with mysql and pgsql.
+	  
 $Id$

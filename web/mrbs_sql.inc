@@ -53,7 +53,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 
 
 		if( $enable_periods ) {
-        	$p_num =$starts[minutes];
+        	$p_num =$starts['minutes'];
         	$startstr = utf8_strftime('%A %d %B %Y, ', $row[2]) . $periods[$p_num];
         }
 		else

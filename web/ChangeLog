@@ -1,3 +1,58 @@
+2004-04-29  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* lang.fi (1.8): Updated lang.fi (thanks Tom Ingberg
+	  (tom.ingberg@edu.vantaa.fi))
+
+2004-04-27  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* edit_entry.php (1.28): Need to escape double-quotes in room names
+	  Thanks to Klavs Bryld
+
+2004-04-27  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* functions.inc (1.31): added double-quotes around minutes as: "You
+	  should always use quotes around a string literal array index" -
+	  quote from PHP manual.  Thanks Thierry
+
+2004-04-25  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* edit_users.php (1.8), mysql.inc (1.5), pgsql.inc (1.6): Modified
+	  the way edit_users.php gets the user table fields names and
+	  types.  It now uses the three new routines sql_field_name,
+	  sql_field_type, sql_num_fields, defined in mysql.inc and
+	  pgsql.inc, which in turn call their corresponding
+	  database-specific eponym.  Still not tested with PostgreSQL, but
+	  much more likely to work.
+
+2004-04-25  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* day.php (1.33), lang.en (1.23), lang.fr (1.21), month.php (1.29),
+	  week.php (1.35), xbLib.js (1.3): Localize the message displayed
+	  on the status bar when a cell is activated under the cursor.	The
+	  string is defined as $vocab["click_to_reserve"] in lang.xx.  It
+	  is passed from PHP to JavaScript as an additional argument to
+	  routine InitActiveCell().
+
+2004-04-18  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* day.php (1.32), month.php (1.28), mrbs.css (1.8), week.php
+	  (1.34), xbLib.js (1.2): Added active highlighting of the month
+	  view cells.  This required an additional parameter in
+	  InitActiveCell(), hence the minor changes in the day and week
+	  views.  Side effect of this change: The (+) sign in the month
+	  view is moved after the list of reservations, instead of before.
+	  This was necessary, else the list itself was moved to the bottom
+	  of the cell, which did not look good.
+
+2004-04-18  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* month.php (1.27), week.php (1.33): Include mrbs_auth.inc to allow
+	  the display of the logon box in the MRBS top banner.
+
+2004-04-17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* report.php (1.22): - fixed bug $typematch, variable undefined
+
 2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* lang.el (1.3): Doc fix (it is a greek file, not english)
