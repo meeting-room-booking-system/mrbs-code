@@ -7,6 +7,41 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.2-pre1 (Tue Sep 23 06:00:00 GMT 2003):
+
+[*] Renamed coonfig.inc to config.inc.php
+[-] Fixed bug #748934, do not allow booking descriptions with only spaces.
+[+] Added Windows NT / IIS authentication scheme.
+[-] Fixed bug : Always displays "edit entry" instead of "Add Entry" even when
+      adding an entry. (Ian Duncan)
+[-] Fixed bug: repeated meetings selecting a "Monthly repeat, same day of the
+      week" repeat type in the 5th week were not properly scheduled.
+[-] Fixed bug: when you press on print preview
+      in report.php page, all but the submission form is visible but
+      not the actual report  (sQuare).
+[*] In the minicalendar week view, the full week is highlighted instead of
+      the first day of the week (sQuare).
+[-] Bug fix: in week view, allow non 'internet explorer' browsers to see links
+      to the corresponding days in column titles (Johan.Schonning).
+[+] Entries in monthly view can be shown as start/end slot or brief description
+[*] Replaced the column titles in the week view to  be links to the
+	  corresponding days (sQuare).
+[-] Bug fix : italian vocab with character not properly escaped prevents
+      deleting entries and/or prevent jcript popup to works (Pietro donatini)
+[-] Fixed bug in escaping of username and password for all
+      authentication schemes that use HTTP authentication.
+[-] Fixed bug in bookings between 12:00 AM/PM and 12:59 AM/PM (AM/PM hour
+    format)
+[+] MRBS become compliant to the 'register_globals = off' directive
+[-] Minor bug fixes
+[+] Added translation: Finnish (Vesa Palmu), Portuguese (Lopo Pizarro),
+    Danish (Claes Bolvig Pedersen).
+[*] Minor translations updates an bug fixes
+[-] Bug fix if drop-down select box is choosen to show areas/rooms
+[*] Changed the tiny size of numbers in calendar to
+      a larger one.
+      
+-------------------------------------------------------------------------------
 Version 1.1 (Tue Jan 14 10:00:00 GMT 2003)
 
 [+] Added configuration option ($twentyfourhour_format) to allow time
