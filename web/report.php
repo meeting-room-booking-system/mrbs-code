@@ -321,6 +321,7 @@ if (isset($areamatch))
 	$roommatch = unslashes($roommatch);
 	$namematch = unslashes($namematch);
 	$descrmatch = unslashes($descrmatch);
+    $creatormatch = unslashes($creatormatch);
 
 	# Make default values when the form is reused.
 	$areamatch_default = htmlspecialchars($areamatch);
@@ -328,6 +329,7 @@ if (isset($areamatch))
 	$typematch_default = $typematch;
 	$namematch_default = htmlspecialchars($namematch);
 	$descrmatch_default = htmlspecialchars($descrmatch);
+    $creatormatch_default = htmlspecialchars($creatormatch);
 
 
 } else {
@@ -337,6 +339,7 @@ if (isset($areamatch))
 	$typematch_default = array();
 	$namematch_default = "";
 	$descrmatch_default = "";
+    $creatormatch_default = "";
 	$From_day = $day;
 	$From_month = $month;
 	$From_year = $year;
@@ -396,6 +399,10 @@ foreach( $typel as $key => $val )
 <tr><td class="CR"><?php echo get_vocab("match_descr");?></td>
     <td class="CL"><input type=text name=descrmatch size=18
     value="<?php echo $descrmatch_default; ?>">
+    </td></tr>
+<tr><td class="CR"><?php echo get_vocab("createdby");?></td>
+    <td class="CL"><input type=text name=creatormatch size=18
+    value="<?php echo $creatormatch_default; ?>">
     </td></tr>
 <tr><td class="CR"><?php echo get_vocab("include");?></td>
     <td class="CL">
