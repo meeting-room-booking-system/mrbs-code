@@ -1,0 +1,62 @@
+<?
+# This file contains PHP code that specifies language specific strings
+# The default strings come from lang.en, and anything in a locale
+# specific file will overwrite the default. This is a Japanese file.
+#
+# This file is PHP code. Treat it as such.
+
+# The charset to use in "Content-type" header
+$lang["charset"]            = "Shift-JIS";
+
+# Used in style.inc
+$lang["mrbs"]               = "‰ï‹cŽº—\–ñƒVƒXƒeƒ€";
+
+# Used in day.php
+$lang["bookingsfor"]        = "";
+$lang["bookingsforpost"]    = "‚Ì—\–ñ‚Å‚·";
+$lang["areas"]              = "êŠ";
+$lang["daybefore"]          = "‘O“ú‚Ö–ß‚é";
+$lang["dayafter"]           = "ŽŸ‚Ì“ú‚Öi‚Þ";
+$lang["gototoday"]          = "“–“ú‚Ì—\–ñ‚ðŒ©‚é";
+
+# Used in trailer.inc
+$lang["viewday"]            = "—\–ñó‹µ‰{——";
+
+# Used in edit_entry.php
+$lang["addentry"]           = "—\–ñ“o˜^";
+$lang["editentry"]          = "—\–ñ’Ç‰ÁC³";
+$lang["namebooker"]         = "—\–ñŽÒ–¼:";
+$lang["fulldescription"]    = "—\–ñÚ×(l”,“à•”‰ï‹c/ŠO•”‰ï‹c “™):";
+$lang["date"]               = "“ú:";
+$lang["time"]               = "ŽžŠÔ:";
+$lang["duration"]           = "‰ï‹c‚É•K—v‚ÈŽžŠÔ:";
+$lang["seconds"]            = "•b";
+$lang["minutes"]            = "•ª";
+$lang["hours"]              = "ŽžŠÔ";
+$lang["days"]               = "“ú";
+$lang["weeks"]              = "T";
+$lang["years"]              = "”N";
+$lang["type"]               = "‰ï‹c‚ÌŽí—Þ:";
+$lang["internal"]           = "“à•”‰ï‹c";
+$lang["external"]           = "ŠO•”‰ï‹c";
+$lang["save"]               = "•Û‘¶";
+
+# Used in view_entry.php
+$lang["description"]        = "‰ï‹c–¼:";
+$lang["createdby"]          = "—\–ñŽÒ:";
+$lang["lastupdate"]         = "ÅŒã‚ÉXV‚µ‚½“ú:";
+$lang["deleteentry"]        = "—\–ñŽæÁ";
+$lang["confirmdel"]         = "–{“–‚É‚±‚Ì—\–ñ‚ðŽæ‚èÁ‚µ‚µ‚Ä‚à‚¢‚¢‚Å‚·‚©H";
+$lang["returnprev"]         = "‘Oƒy[ƒW‚É–ß‚é";
+
+# Used in edit_entry_handler.php
+$lang["error"]              = "ƒGƒ‰";
+$lang["conflict"]           = "Šù‚É‘¼‚Ì—\–ñ‚ª“ü‚Á‚Ä‚¢‚Ü‚·";
+$lang["returncal"]          = "ƒJƒŒƒ“ƒ_[•\Ž¦‰æ–Ê‚É–ß‚é";
+
+# Authentication stuff
+$lang["accessdenied"]       = "ƒAƒNƒZƒX‚ª‹‘”Û‚³‚ê‚Ü‚µ‚½";
+$lang["unandpw"]            = "ƒ†[ƒU[ƒl[ƒ€‚ÆƒpƒXƒ[ƒh‚ð“ü—Í‚µ‚Ä‚­‚¾‚³‚¢.";
+$lang["norights"]           = "•ÒW‹@”\‚ÉƒAƒNƒZƒX‚·‚éŒ —˜‚ª‚ ‚è‚Ü‚¹‚ñ.";
+
+?>
