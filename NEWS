@@ -7,13 +7,67 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.2-pre3 ():
+
+[+] Added long awaited "periods" support. Calendar can displays 'periods'
+      instead of classic time of the day.
+[+] New authentication scheme 'auth_db'. This is a web-based authentication,
+      based on a user table in the mrbs database. User administration page has
+      a special feature to automatically display fields that admin may add to
+      the user table, no need to edit the code. This new authentication is not
+      yet implemented for Postgresql.
+      PLEASE READ RELEVANT SECTION IN "AUTHENTICATION" BEFORE THE FIRST USE.
+[+] Added email support. Emails can be sent to MRBS administrator, area or
+      room administrators, or bookers and for each entry creation, change or
+      deletion. Emails for changed entries display the value of previous
+      settings. Added emails fields to room/area admin and edit_users pages.
+[+] Added option to retrieve users emails from other authentication
+      schemes as auth_db (if ldap is used, user email will be username plus
+      domain name)
+[+] Added option to allow for a day to start at say 8:30 am.
+[+] Database tables names are now variables defined in config.inc.php. This
+will allow users to install multiple sets of mrbs tables when only one
+SQL database is available, or resolve table name conflicts.
+[+] Booking is now possible from the month view by clicking a new 'plus sign',
+      taking the user to an add entry page for that day of the month.
+[+] Using auth_db, the link "you are XXXX" becomes a link to all upcoming
+      entries belonging to XXXX (report page).
+[+] Added support for multiple pop3 or imap server to be used for
+      authentication (in case of failure).
+[+] Added greek language (Stavros Papadakis), updated finish (Tom Ingberg),
+      german (Michael Glaessel) and swedish (MissterX) languages.
+[+] Added option to determine the default starting view, i.e. month, week or
+      day (Warren Turkal) and the starting room.
+[+] Added support for changing area/room in Add/Edit entry form.
+[*] Capacity is not displayed in brackets next to room name if capacity is 0
+[*] Preview page now displays the color key.
+[*] Added option to display both time and descriptions in month view.
+[*] Various enhancements to display/navigation (added pop-up messages in
+      various places, added direct links between room headings and week
+      view, highlighting of cells on mouse-over, highlighting of current
+      month/week/day in mini calendars, ability to book a room by clicking
+      anywhere in cells, navigation link duplicated under the calendar...)
+[*] Added option to display time on right side in day and week view
+[*] Enhancements to report page: added 'type', 'creator' and various sorting
+      options.
+[*] LDAP servers login processes, does an anonymous bind first
+[*] Fixed bug/enhancements to avoid url problems when using a proxy in
+      the environment. Although breaking HTTP specs, use of relative paths
+      allows to run mrbs with https (ssl).
+[*] Added some javascript code to control user inputs mainly in edit_entry.php
+      (avoid selecting february 30,...)
+
+and several other minor bug fixes and minor changes. To see details, please
+read /web/Changelog file from Dec 07 2003.
+
+-------------------------------------------------------------------------------
 Version 1.2-pre2 (Sun Dec 07 00:00:00 GMT 2003):
 
 [+] Completely revamped authentication logic.
     Now MRBS make use of sessions to store temporary user informations,
-    ability to log on/off, and so on.. This is now the default mode. 
+    ability to log on/off, and so on.. This is now the default mode.
     See AUTHENTICATION for more details.
-[+] Revamped localisation. 
+[+] Revamped localisation.
       Automatic language determination made much better, works for
 	  Windows and Unix servers now
 [+] Added utility to convert text in the database to UTF8.

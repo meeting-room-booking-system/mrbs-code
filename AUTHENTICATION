@@ -326,7 +326,7 @@ Exceptions:
 passwords in config.inc.php. This is done by specifying: $auth["user"][
 "username1"] = "password1"; $auth["user"]["username2"] = "password2";
 etc
-- The "db" authentication is managed by MRBS, using a list of names and 
+- The "db" authentication is managed by MRBS, using a list of names and
 passwords stored in mrbs database.
 
 Administrators
@@ -431,26 +431,37 @@ DB Authentication
 
 Authentication method, usable on the Internet.
 
+ Works only with Mysql, will be implemented for Postgresql in an upcoming
+ release.
+
  It works by storing the list of users in a new table called mrbs_users in
  the mrbs database.
- 
+
  The authentication is done by the new module auth_db.inc.
  Enable it by setting $auth["type"]="db" in config.inc.php.
  This works only with session_php.inc or session_cookie.inc.
- 
+
  Note: The names of administrators are still defined as usual by the
  $auth["admin"][] list in config.inc.php.
- 
+
  The list of users is displayed by clicking on the new "User list" link in
  the logon box in the top banner.
  This list is managed by module edit_users.php.
  Administrators have the right to edit every entry, and add or remove users.
  Simple users only have the right to edit their own entry.
- 
+
  The first time it is accessed, the mrbs_users table is automatically
  created.
+
+ *** WARNING ***
+
  Whoever is doing the initial edition is assumed to have administrator
- rights.
+ rights AND MRBS USE "administrator" username. BE CAREFUL TO HAVE THIS
+ ADMINISTRATOR DEFINED IN CONFIG.INC.PHP, OTHERWISE YOU WON'T BE ALLOWED
+ TO ENTER THE FIRST ADMINISTRATOR BELOW. After this step, you can remove
+ the 'administrator' in config.inc.php.
+ *** END OF WARNING ***
+
  The first user he creates MUST be an administrator, already defined in
  config.inc.php. Note: There are two predefined ones, called "administrator"
  and "127.0.0.1".

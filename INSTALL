@@ -174,8 +174,11 @@ when trying connecting to MRBS.  If you would rather use non-persistent
 database connections, uncomment the line in "config.inc.php" which sets the
 $db_nopersist variable.
 
-If you have changed the prefix of "mrbs_" for the tables in your database
+If you want to install multiple sets of mrbs tables when only one
+SQL database is available, or resolve table name conflicts, you have
+to change the prefix of "mrbs_" for the tables in your database,
 then you will need to set the value of:
+
     $db_tbl_prefix = The table name prefix
 
 
@@ -311,6 +314,7 @@ These settings control:
   42) instead of 'first day of the week' (13 Oct)),
 - display of times on right and left side in day and week view,
 - display of horizontal stripes on the day view,
+- cells highlighting options,
 - the default starting view (month, week or day),
 - the default room to start with.
 
