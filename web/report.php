@@ -326,7 +326,8 @@ if (isset($areamatch))
 	# Make default values when the form is reused.
 	$areamatch_default = htmlspecialchars($areamatch);
 	$roommatch_default = htmlspecialchars($roommatch);
-	$typematch_default = $typematch;
+    (isset($typematch)) ? $typematch_default = $typematch :
+    	$typematch_default = "";
 	$namematch_default = htmlspecialchars($namematch);
 	$descrmatch_default = htmlspecialchars($descrmatch);
     $creatormatch_default = htmlspecialchars($creatormatch);
