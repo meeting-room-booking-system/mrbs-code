@@ -15,77 +15,77 @@ $lang["charset"]            = "iso-8859-1";
 $lang["mrbs"]               = "Système de Réservation de Ressources";
 
 # Used in functions.inc
-$lang["report"]             = "Report";
+$lang["search_label"]       = "Chercher :";
+$lang["report"]             = "Rapport";
 $lang["admin"]              = "Admin";
-$lang["help"]               = "Help";
-$lang["search"]             = "Search:";
+$lang["help"]               = "Aide";
 
 # Used in day.php
 $lang["bookingsfor"]        = "Réservation pour<br>";
 $lang["bookingsforpost"]    = ""; # Goes after the date
-$lang["areas"]              = "Lieux";
+$lang["areas"]              = "Zones";
 $lang["daybefore"]          = "Aller au jour précédent";
 $lang["dayafter"]           = "Aller au jour suivant";
 $lang["gototoday"]          = "Aujourd'hui";
-$lang["goto"]               = "goto";
+$lang["goto"]               = " : y aller...";
 
 # Used in trailer.inc
 $lang["viewday"]            = "Voir le";
-$lang["viewweek"]           = "View Week";
-$lang["viewmonth"]          = "View Month";
-$lang["ppreview"]           = "Print Preview";
+$lang["viewweek"]           = "Voir la Semaine";
+$lang["viewmonth"]          = "Voir le Mois";
+$lang["ppreview"]           = "Format Imprimable";
 
 # Used in edit_entry.php
 $lang["addentry"]           = "Ajouter une entrée";
 $lang["editentry"]          = "Editer une entrée";
-$lang["editseries"]         = "Edit Series";
-$lang["namebooker"]         = "Nom du demandeur:";
+$lang["editseries"]         = "Editer une série";
+$lang["namebooker"]         = "Brève description :";
 $lang["fulldescription"]    = "Description complète:<br>&nbsp;&nbsp;(Nombre de personnes,<br>&nbsp;&nbsp;Interne/Externe etc)";
-$lang["date"]               = "Date:";
-$lang["start_date"]         = "Start Time:";
-$lang["end_date"]           = "End Time:";
-$lang["time"]               = "Heure:";
-$lang["duration"]           = "Durée:";
-$lang["seconds"]            = "seconds";
+$lang["date"]               = "Date :";
+$lang["start_date"]         = "Date de Début :";
+$lang["end_date"]           = "Date de Fin :";
+$lang["time"]               = "Heure :";
+$lang["duration"]           = "Durée :";
+$lang["seconds"]            = "secondes";
 $lang["minutes"]            = "minutes";
 $lang["hours"]              = "heures";
 $lang["days"]               = "jours";
 $lang["weeks"]              = "semaines";
 $lang["years"]              = "années";
-$lang["all_day"]            = "All day";
-$lang["type"]               = "Type:";
+$lang["all_day"]            = "Journée entière";
+$lang["type"]               = "Type :";
 $lang["internal"]           = "Interne";
 $lang["external"]           = "Externe";
-$lang["save"]               = "Sauver";
-$lang["rep_type"]           = "Repeat Type:";
-$lang["rep_type_0"]         = "None";
-$lang["rep_type_1"]         = "Daily";
-$lang["rep_type_2"]         = "Weekly";
-$lang["rep_type_3"]         = "Monthly";
-$lang["rep_type_4"]         = "Yearly";
-$lang["rep_type_5"]         = "Monthly, corresponding day";
-$lang["rep_type_6"]         = "n-Weekly";
-$lang["rep_end_date"]       = "Repeat End Date:";
-$lang["rep_rep_day"]        = "Repeat Day:";
-$lang["rep_for_weekly"]     = "(for (n-)weekly)";
-$lang["rep_freq"]           = "Frequency:";
-$lang["rep_num_weeks"]      = "Number of weeks";
-$lang["rep_for_nweekly"]    = "(for n-weekly)";
+$lang["save"]               = "Enregistrer";
+$lang["rep_type"]           = "Type de Série :";
+$lang["rep_type_0"]         = "Aucune";
+$lang["rep_type_1"]         = "Jour";
+$lang["rep_type_2"]         = "Semaine";
+$lang["rep_type_3"]         = "Mois";
+$lang["rep_type_4"]         = "Année";
+$lang["rep_type_5"]         = "Mois, jour correpondant";
+$lang["rep_type_6"]         = "n-Semaines";
+$lang["rep_end_date"]       = "Date de Fin de Série :";
+$lang["rep_rep_day"]        = "Jour :";
+$lang["rep_for_weekly"]     = "(pour n-semaines)";
+$lang["rep_freq"]           = "Fréquence :";
+$lang["rep_num_weeks"]      = "Nombre de semaines";
+$lang["rep_for_nweekly"]    = "(pour n-semaines)";
 
 # Used in view_entry.php
-$lang["description"]        = "Description:";
-$lang["room"]               = "Room:";
-$lang["createdby"]          = "Créé Par:";
-$lang["lastupdate"]         = "Dernière MAJ:";
+$lang["description"]        = "Description :";
+$lang["room"]               = "Salle :";
+$lang["createdby"]          = "Créé Par :";
+$lang["lastupdate"]         = "Dernière MAJ :";
 $lang["deleteentry"]        = "Effacer une entrée";
-$lang["deleteseries"]       = "Delete Series";
+$lang["deleteseries"]       = "Effacer une série";
 $lang["confirmdel"]         = "Etes-vous sur\\nque vous voulez\\neffacer cette entrée?\\n\\n";
 $lang["returnprev"]         = "Retour à la page précédente";
 
 # Used in edit_entry_handler.php
 $lang["error"]              = "Erreur";
-$lang["sched_conflict"]     = "Scheduling Conflict";
-$lang["conflict"]           = "Il y a des conflits";
+$lang["sched_conflict"]     = "Conflit entre Réservations ";
+$lang["conflict"]           = "La nouvelle réservaton entre en conflit avec la(les) réservation(s) suivante(s) :";
 $lang["too_may_entrys"]     = "The selected options will create too many entries.<BR>Please use different options!";
 $lang["returncal"]          = "Retour au calendrier";
 
@@ -94,77 +94,48 @@ $lang["accessdenied"]       = "Acces Refusé";
 $lang["norights"]           = "Vous n'avez pas les droits suffisants pour modifier cet item.";
 
 # Used in search.php
-$lang["invalid_search"]     = "Empty or invalid search string.";
-$lang["search_results"]     = "Search Results for:";
-$lang["nothing_found"]      = "No matching entries found.";
-$lang["records"]            = "Records ";
-$lang["through"]            = " through ";
-$lang["of"]                 = " of ";
-$lang["previous"]           = "Previous";
-$lang["next"]               = "Next";
-$lang["entry"]              = "Entry";
-$lang["view"]               = "View";
+$lang["invalid_search"]     = "Recherche invalide.";
+$lang["search_results"]     = "Résultats de la recherche pour :";
+$lang["nothing_found"]      = "Aucune réservation n'a été trouvée.";
+$lang["records"]            = "Enregistrements ";
+$lang["through"]            = " à ";
+$lang["of"]                 = " sur ";
+$lang["previous"]           = "Précédent";
+$lang["next"]               = "Suivant";
+$lang["entry"]              = "Réservation";
+$lang["view"]               = "Voir";
 
 # Used in report.php
-$lang["report_on"]          = "Report on Meetings:";
-$lang["report_start"]       = "Report start date:";
-$lang["report_end"]         = "Report end date:";
-$lang["match_area"]         = "Match area:";
-$lang["match_room"]         = "Match room:";
-$lang["match_entry"]        = "Match brief description:";
-$lang["match_descr"]        = "Match full description:";
-$lang["include"]            = "Include:";
-$lang["report_only"]        = "Report only";
-$lang["summary_only"]       = "Summary only";
-$lang["report_and_summary"] = "Report and Summary";
-$lang["summarize_by"]       = "Summarize by:";
-$lang["sum_by_descrip"]     = "Brief description";
-$lang["sum_by_creator"]     = "Creator";
-$lang["entry_found"]        = "entry found";
-$lang["entries_found"]      = "entries found";
-$lang["summary_header"]     = "Summary of (Entries) Hours";
+$lang["report_on"]          = "Rapport des réservations :";
+$lang["report_start"]       = "Date de début du rapport :";
+$lang["report_end"]         = "Date de fin du rapport :";
+$lang["match_area"]         = "Zone :";
+$lang["match_room"]         = "Salle :";
+$lang["match_entry"]        = "Brève description :";
+$lang["match_descr"]        = "Description complète :";
+$lang["include"]            = "Inclure :";
+$lang["report_only"]        = "le rappport seulement";
+$lang["summary_only"]       = "le résumé seulement";
+$lang["report_and_summary"] = "le rapport et le résumé";
+$lang["summarize_by"]       = "Résumé par :";
+$lang["sum_by_descrip"]     = "Brève description";
+$lang["sum_by_creator"]     = "Créateur";
+$lang["entry_found"]        = "entrée trouvée";
+$lang["entries_found"]      = "entrées trouvées";
+$lang["summary_header"]     = "Décompte des Heures Réservées";
 $lang["total"]              = "Total";
-$lang["submitquery"]        = "Run Report";
 
 # Used in week.php
-$lang["weekbefore"]         = "Go To Week Before";
-$lang["weekafter"]          = "Go To Week After";
-$lang["gotothisweek"]       = "Go To This Week";
+$lang["weekbefore"]         = "Voir la semaine Précédente";
+$lang["weekafter"]          = "Voir la semaine Suivante";
+$lang["gotothisweek"]       = "Voir cette semaine-ci";
 
 # Used in month.php
-$lang["monthbefore"]        = "Go To Month Before";
-$lang["monthafter"]         = "Go To Month After";
-$lang["gotothismonth"]      = "Go To This Month";
+$lang["monthbefore"]        = "Voir le mois Précédent";
+$lang["monthafter"]         = "Voir le mois Suivant";
+$lang["gotothismonth"]      = "Voir ce mois-ci";
 
 # Used in {day week month}.php
-$lang["no_rooms_for_area"]  = "No rooms defined for this area";
-
-# Used in admin.php
-$lang["edit"]               = "Edit";
-$lang["delete"]             = "Delete";
-$lang["rooms"]              = "Rooms";
-$lang["in"]                 = "in";
-$lang["noareas"]            = "No Areas";
-$lang["addarea"]            = "Add Area";
-$lang["name"]               = "Name";
-$lang["noarea"]             = "No area selected";
-$lang["browserlang"]        = "Your browser is set to use";
-$lang["postbrowserlang"]    = "language.";
-$lang["addroom"]            = "Add Room";
-$lang["capacity"]           = "Capacity";
-$lang["norooms"]            = "No rooms.";
-
-# Used in edit_area_room.php
-$lang["editarea"]           = "Edit Area";
-$lang["change"]             = "Change";
-$lang["backadmin"]          = "Back to Admin";
-$lang["editroomarea"]       = "Edit Area or Room Description";
-$lang["editroom"]           = "Edit Room";
-
-# Used in del.php
-$lang["deletefollowing"]    = "This will delete the following bookings";
-$lang["sure"]               = "Are you sure?";
-$lang["YES"]                = "YES";
-$lang["NO"]                 = "NO";
+$lang["no_rooms_for_area"]  = "Aucune salle définie pour cette zone";
 
 ?>
