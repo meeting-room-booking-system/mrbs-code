@@ -187,11 +187,33 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate, $r
 	$name        = slashes($name);
 	$description = slashes($description);
 	
-	$sql = "INSERT INTO $tbl_repeat (  start_time,   end_time,    rep_type,    end_date,       rep_opt,
-	                                   room_id,      create_by,   type,        name,           description, rep_num_weeks)
-	                         VALUES ($starttime, $endtime,  $rep_type, $rep_enddate, '$rep_opt',
-	                                 $room_id,   '$owner',    '$type',     '$name',        '$description', '$rep_num_weeks')";
-	
+	// Let's construct the sql statement:
+	$sql_coln = array(); $sql_val = array();
+
+        // Mandatory things:
+	$sql_coln[] = 'start_time'; 	$sql_val[] = $starttime;
+	$sql_coln[] = 'end_time'; 	$sql_val[] = $endtime;
+	$sql_coln[] = 'rep_type'; 	$sql_val[] = $rep_type;
+	$sql_coln[] = 'end_date';	$sql_val[] = $rep_enddate;
+	$sql_coln[] = 'room_id';	$sql_val[] = $room_id;
+	$sql_coln[] = 'create_by';	$sql_val[] = '\''.$owner.'\'';
+	$sql_coln[] = 'type';		$sql_val[] = '\''.$type.'\'';
+	$sql_coln[] = 'name';		$sql_val[] = '\''.$name.'\'';
+
+	// Optional things, pgsql doesn't like empty strings!
+	if (!empty($rep_opt))
+		{$sql_coln[] = 'rep_opt';	$sql_val[] = '\''.$rep_opt.'\'';}
+	else
+		{$sql_coln[] = 'rep_opt';	$sql_val[] = '\'0\'';}
+	if (!empty($description))
+		{$sql_coln[] = 'description';	$sql_val[] = '\''.$description.'\'';}
+	if (!empty($rep_num_weeks))
+		{$sql_coln[] = 'rep_num_weeks';	$sql_val[] = $rep_num_weeks;}
+
+	$sql = 'INSERT INTO ' . $tbl_repeat .
+	       ' (' . implode(', ',$sql_coln) . ') '.
+	       'VALUES (' . implode(', ',$sql_val) . ')';
+
 	if (sql_command($sql) < 0) return 0;
 	
 	return sql_insert_id("$tbl_repeat", "id");
