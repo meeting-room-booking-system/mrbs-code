@@ -658,6 +658,7 @@ function sendMail($recipients, $subject, $body, $cc = NULL, $bcc = NULL,
     require_once "Mail.php";
     //
     $headers['From']         = $from;
+    $headers['To']           = $recipients;
     (NULL != $cc) ? $headers['Cc'] = $cc : '';
     (NULL != $bcc) ? $headers['Bcc'] = $bcc : '';
     $headers['Subject']      = $subject;
