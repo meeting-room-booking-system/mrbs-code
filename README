@@ -2,7 +2,7 @@ Meeting Room Booking System
 http://mrbs.sourceforge.net/
 -------------------------------
 
-The Meeting Room Booking System (MRBS) is a PHP/MySQL-based application for
+The Meeting Room Booking System (MRBS) is a PHP-based application for
 booking meeting rooms (surprisingly!). I got annoyed with the piles of books
 which were being used to book meetings. They were slow, hard to edit and only
 at the reception desk. I thought that a nice web-based system would be much
@@ -18,21 +18,26 @@ To Use
 ------
 See the INSTALL file for installation instructions.
 
-Once it's installed try going to http://wherever/mrbs/ - this should give you
-a view of the default "Building 1" meeting rooms for today. The (+) symbol
-means you can add new meetings by clicking here. Try it - it should all be pretty obvious.
+Once it's installed try going to http://yourhost/mrbs/ - if you loaded the
+sample data, this should give you a view of the first area meeting rooms
+for today. The (+) symbol means you can add new meetings by clicking
+there. Try it - it should all be pretty obvious. If you haven't loaded the
+sample data, start by clicking on Admin to add your Areas and Rooms.
 
-Try viewing http://wherever/mrbs/testdata.php3 - it will generate a whole load
-of random appointments to fill up the calendar and let you play around.
+By default, anyone who can connect can add new meetings, and only connections
+from localhost are administrators. Only administrators can add rooms and
+areas, and modify any other users' meetings.  See AUTHENTICATION for a more
+complete description of the authentication system and how to configure it.
 
-Administration is done from admin.php3 - you can add or delete rooms and areas.
-I have just changed this to use the main user authentication, any level "2"
-users can now add/remove rooms/areas.  See AUTHENTICATION for a better
-description.
+If you copy testdata.php into your web site, you can view
+http://yourhost/mrbs/testdata.php - it will generate a whole load of random
+appointments to fill up the calendar and let you play around. (Don't leave
+testdata.php in your web site, though.)
 
-I've only tested this using PHP 3.0.16, Apache 1.3.12, mySQL 3.22.32 and Linux
-2.2.14, although it should work on just about anything that's got mySQL and
-PHP with mySQL support - let me know.
+Originally this was tested with PHP 3.0.16, Apache 1.3.12, MySQL 3.22.32 and
+Linux 2.2.14. The latest version was tested with PHP 4.0.4, Apache 1.3.12,
+and either MySQL 3.22.32 or PostgreSQL 7.0.3. It should work on just about
+anything that's got PHP with MySQL or PostgreSQL support - let me know.
 
 It should be pretty easy to adjust it to your corporate colours - the file
 mrbs.css is used on every page, as is style.inc. Just fiddle with these until
@@ -48,16 +53,18 @@ See AUTHENTICATION for information about user authentication/passwords.
 -------------
 Requirements:
 -------------
-- PHP3/4 (w/MySQL support)
-- MySQL
+- PHP4 (w/MySQL and/or PostgreSQL support) - (might still work with PHP3)
+- MySQL or PostgreSQL
 
 Recommended:
 - JavaScript-enabled browser
 - CSS-enabled browser
 
+(If you are considering porting MRBS to another database, see README.sqlapi)
+
 ------
 Usage:
 ------
-I don't really know if this is being used by anyone in any real environment.
-I'm using it at work, with about 150 clients, but that's all I know. If you
-do start using it can you drop me a note to let me know how you've got on.
+I'm using it at work, with about 150 clients, and other reports of successful
+use have been seen on the mailing list.  If you do start using it can you
+drop me a note to let me know how you've got on.
