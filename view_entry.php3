@@ -19,10 +19,26 @@ if(!isset($area))
 print_header($day, $month, $year, $area);
 
 # Find all the data about our booking
-$sql = "select name, description, start_time, start_time,
-		  (end_time - start_time), type, create_by, 
-		  unix_timestamp(timestamp), end_time, repeat_id
-		  from mrbs_entry where id='$id'";
+$sql = "
+SELECT mrbs_entry.name,
+       mrbs_entry.description,
+       mrbs_entry.create_by,
+       mrbs_room.room_name,
+       mrbs_area.area_name,
+       mrbs_entry.type,
+       mrbs_entry.room_id,
+       mrbs_entry.repeat_id,
+       unix_timestamp(mrbs_entry.timestamp),
+       (mrbs_entry.end_time - mrbs_entry.start_time),
+       mrbs_entry.start_time,
+       mrbs_entry.end_time
+
+FROM mrbs_entry
+  LEFT JOIN mrbs_room ON (mrbs_entry.room_id = mrbs_room.id)
+  LEFT JOIN mrbs_area ON (mrbs_room.area_id  = mrbs_area.id)
+
+WHERE mrbs_entry.id='$id'
+";
 
 $res = mysql_query($sql);
 
@@ -34,32 +50,33 @@ if(mysql_num_rows($res) < 1)
 
 $row = mysql_fetch_row($res);
 
-$display_time = strftime('%X',$row[3]) != "00:00:00";
+$name         = htmlspecialchars($row[0]);
+$description  = htmlspecialchars($row[1]);
+$create_by    = htmlspecialchars($row[2]);
+$room_name    = htmlspecialchars($row[3]);
+$area_name    = htmlspecialchars($row[4]);
+$type         = $row[5];
+$room_id      = $row[6];
+$repeat_id    = $row[7];
+$updated      = strftime('%X - %A %d %B %Y', $row[8]);
+$duration     = $row[9];
 
-$duration    = $row[4];
-$type        = $row[5];
-$name        = htmlspecialchars($row[0]);
-$description = htmlspecialchars($row[1]);
-$create_by   = htmlspecialchars($row[6]);
-$updated     = strftime('%X - %A %d %B %Y', $row[7]);
-
-if($display_time)
+if($display_time = strftime('%X', $duration) != "00:00:00")
 {
-	$start_date = strftime('%X - %A %d %B %Y', $row[2]);
+	$start_date = strftime('%X - %A %d %B %Y', $row[10]);
 	
 	if($duration <= (60 * 60 * 12))
-		$end_date = strftime('%X', $row[8]);
+		$end_date = strftime('%X', $row[11]);
 	else
-		$end_date = strftime('%X - %A %d %B %Y', $row[8]);
+		$end_date = strftime('%X - %A %d %B %Y', $row[11]);
 }
 else
 {
-	$start_date = strftime('%A %d %B %Y', $row[2]);
-	$end_date   = strftime('%A %d %B %Y', $row[8]);
+	$start_date = strftime('%A %d %B %Y', $row[10]);
+	$end_date   = strftime('%A %d %B %Y', $row[11]);
 }
 
-$repeat_id   = $row[9];
-$rep_type    = 0;
+$rep_type = 0;
 
 if($repeat_id != 0)
 {
@@ -82,23 +99,51 @@ toTimeString($duration, $dur_units);
 $typel["I"] = $lang["internal"];
 $typel["E"] = $lang["external"];
 
-#now that we know all the data we start drawing it
-echo "<H3>$name</H3>\n";
+$repeat_key = "rep_type_" . $rep_type;
 
-#keep everything nicely formatted by slipping a table in here
-echo "<table border=0>\n";
+# Now that we know all the data we start drawing it
 
-echo "<tr><td><b>$lang[description]</b></td><td>" . nl2br($description) . "</td></tr>\n";
-echo "<tr><td><b>$lang[start_date]</b></td><td>$start_date</td></tr>\n";
-echo "<tr><td><b>$lang[duration]</b></td><td>$duration $dur_units</td></tr>\n";
-echo "<tr><td><b>$lang[end_date]</b></td><td>$end_date</td></tr>\n";
+?>
 
-echo "<tr><td><b>$lang[type]</b></td><td>$typel[$type]</td></tr>\n";
-echo "<tr><td><b>$lang[createdby]</b></td><td>$create_by</td></tr>\n";
-echo "<tr><td><b>$lang[lastupdate]</b></td><td>$updated</td></tr>\n";
-
-$key = "rep_type_".$rep_type;
-echo "<tr><td><b>$lang[rep_type]</b></td><td>$lang[$key]</td></tr>\n";
+<H3><? echo $name ?></H3>
+ <table border=0>
+   <tr>
+    <td><b><? echo $lang["description"] ?></b></td>
+    <td><?    echo nl2br($description)  ?></td>
+   </tr>
+   <tr>
+    <td><b><? echo $lang["room"]                           ?></b></td>
+    <td><?    echo  nl2br($area_name . " - " . $room_name) ?></td>
+   </tr>
+   <tr>
+    <td><b><? echo $lang["start_date"] ?></b></td>
+    <td><?    echo $start_date         ?></td>
+   </tr>
+   <tr>
+    <td><b><? echo $lang["duration"]            ?></b></td>
+    <td><?    echo $duration . " " . $dur_units ?></td>
+   </tr>
+   <tr>
+    <td><b><? echo $lang["end_date"] ?></b></td>
+    <td><?    echo $end_date         ?></td>
+   </tr>
+   <tr>
+    <td><b><? echo $lang["type"]   ?></b></td>
+    <td><?    echo $typel[$type]   ?></td>
+   </tr>
+   <tr>
+    <td><b><? echo $lang["createdby"] ?></b></td>
+    <td><?    echo $create_by         ?></td>
+   </tr>
+   <tr>
+    <td><b><? echo $lang["lastupdate"] ?></b></td>
+    <td><?    echo $updated            ?></td>
+   </tr>
+   <tr>
+    <td><b><? echo $lang["rep_type"]  ?></b></td>
+    <td><?    echo $lang[$repeat_key] ?></td>
+   </tr>
+<?
 
 if($rep_type != 0)
 {
@@ -124,21 +169,27 @@ if($rep_type != 0)
 	echo "<tr><td><b>$lang[rep_end_date]</b></td><td>$rep_end_date</td></tr>\n";
 }
 
-echo "</table><br><p>\n\n";
+?>
+</table>
+<br>
+<p>
+<a href="edit_entry.php3?id=<? echo $id ?>"><? echo $lang["editentry"] ?></a>
+<?
 
-echo "<a href=\"edit_entry.php3?id=$id&day=$day&month=$month&year=$year\">$lang[editentry]</a>";
 if($repeat_id)
 	echo " - <a href=\"edit_entry.php3?id=$id&edit_type=series&day=$day&month=$month&year=$year\">$lang[editseries]</a>";
-echo "<BR>\n";
 
-echo "<A HREF=\"del_entry.php3?id=$id&series=0&day=$day&month=$month&year=$year\" onClick=\"return confirm('$lang[confirmdel]');\">$lang[deleteentry]</A>";
+?>
+<BR>
+<A HREF="del_entry.php3?id=<? echo $id ?>&series=0" onClick="return confirm('<? echo $lang["confirmdel"] ?>');"><? echo $lang["deleteentry"] ?></A>
+<?
+
 if($repeat_id)
 	echo " - <A HREF=\"del_entry.php3?id=$id&series=1&day=$day&month=$month&year=$year\" onClick=\"return confirm('$lang[confirmdel]');\">$lang[deleteseries]</A>";
-echo "<BR>\n";
 
-echo "<a href=$HTTP_REFERER>$lang[returnprev]</a>";
-
-include "trailer.inc"; ?>
-
+?>
+<BR>
+<a href=<? echo $HTTP_REFERER ?>><? echo $lang["returnprev"] ?></a>
+<? include "trailer.inc"; ?>
 </BODY>
 </HTML>
