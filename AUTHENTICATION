@@ -7,7 +7,7 @@ Principles
 User interface
 --------------
 
-MRBS pages can be accessed an used, depending on the user's access level.
+MRBS pages can be accessed and used, depending on the user's access level.
 
 There are three levels of access in MRBS:
 
@@ -25,7 +25,7 @@ areas.
 Before accessing a restricted page, MRBS prompts the user for a name and
 password. Then it connects to an authentication server, which is responsible
 for deciding if the user/password pair is valid. If it is, MRBS then checks if
-the name is in its list of administrators. Finally MRBS grants access to the
+the name is in its administrators list. Finally MRBS grants access to the
 page at the right level. The name and password are recorded for the duration of
 the session, and won't be asked for again.
 
@@ -327,8 +327,9 @@ You can have as many administrators as you want.
 
 If IP authentication is used, for "username" use the IP address.
 
-The default configuration uses IP address for authentication, and defines the
-local host (127.0.0.1) as the only administrator. You will almost surely want
+The default configuration uses PHP sessionss for authentication, and defines 
+three demo users 'alice' 'bob'and 'administrator'. Note that 'administrator' 
+user is not an administrator by default. You will almost surely want
 to change these.
 
 Session type
