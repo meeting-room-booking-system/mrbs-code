@@ -5,6 +5,7 @@
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is a Japanese file.
 #
+#
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
@@ -26,17 +27,23 @@ $lang["areas"]              = "êŠ";
 $lang["daybefore"]          = "‘O“ú‚Ö–ß‚é";
 $lang["dayafter"]           = "Ÿ‚Ì“ú‚Öi‚Ş";
 $lang["gototoday"]          = "“–“ú‚Ì—\–ñ‚ğŒ©‚é";
+$lang["goto"]               = "goto";
 
 # Used in trailer.inc
 $lang["viewday"]            = "—\–ñó‹µ‰{——";
+$lang["viewweek"]           = "View Week";
+$lang["viewmonth"]          = "View Month";
 $lang["ppreview"]           = "Print Preview";
 
 # Used in edit_entry.php
 $lang["addentry"]           = "—\–ñ“o˜^";
 $lang["editentry"]          = "—\–ñ’Ç‰ÁC³";
+$lang["editseries"]         = "Edit Series";
 $lang["namebooker"]         = "—\–ñÒ–¼:";
 $lang["fulldescription"]    = "—\–ñÚ×(l”,“à•”‰ï‹c/ŠO•”‰ï‹c “™):";
 $lang["date"]               = "“ú:";
+$lang["start_date"]         = "Start Time:";
+$lang["end_date"]           = "End Time:";
 $lang["time"]               = "ŠÔ:";
 $lang["duration"]           = "‰ï‹c‚É•K—v‚ÈŠÔ:";
 $lang["seconds"]            = "•b";
@@ -45,27 +52,90 @@ $lang["hours"]              = "ŠÔ";
 $lang["days"]               = "“ú";
 $lang["weeks"]              = "T";
 $lang["years"]              = "”N";
+$lang["all_day"]            = "All day";
 $lang["type"]               = "‰ï‹c‚Ìí—Ş:";
 $lang["internal"]           = "“à•”‰ï‹c";
 $lang["external"]           = "ŠO•”‰ï‹c";
 $lang["save"]               = "•Û‘¶";
+$lang["rep_type"]           = "Repeat Type:";
+$lang["rep_type_0"]         = "None";
+$lang["rep_type_1"]         = "Daily";
+$lang["rep_type_2"]         = "Weekly";
+$lang["rep_type_3"]         = "Monthly";
+$lang["rep_type_4"]         = "Yearly";
+$lang["rep_type_5"]         = "Monthly, corresponding day";
+$lang["rep_type_6"]         = "n-Weekly";
+$lang["rep_end_date"]       = "Repeat End Date:";
+$lang["rep_rep_day"]        = "Repeat Day:";
+$lang["rep_for_weekly"]     = "(for (n-)weekly)";
+$lang["rep_freq"]           = "Frequency:";
+$lang["rep_num_weeks"]      = "Number of weeks";
+$lang["rep_for_nweekly"]    = "(for n-weekly)";
 
 # Used in view_entry.php
 $lang["description"]        = "‰ï‹c–¼:";
+$lang["room"]               = "Room:";
 $lang["createdby"]          = "—\–ñÒ:";
 $lang["lastupdate"]         = "ÅŒã‚ÉXV‚µ‚½“ú:";
 $lang["deleteentry"]        = "—\–ñæÁ";
+$lang["deleteseries"]       = "Delete Series";
 $lang["confirmdel"]         = "–{“–‚É‚±‚Ì—\–ñ‚ğæ‚èÁ‚µ‚µ‚Ä‚à‚¢‚¢‚Å‚·‚©H";
 $lang["returnprev"]         = "‘Oƒy[ƒW‚É–ß‚é";
 
 # Used in edit_entry_handler.php
 $lang["error"]              = "ƒGƒ‰";
+$lang["sched_conflict"]     = "Scheduling Conflict";
 $lang["conflict"]           = "Šù‚É‘¼‚Ì—\–ñ‚ª“ü‚Á‚Ä‚¢‚Ü‚·";
+$lang["too_may_entrys"]     = "The selected options will create too many entries.<BR>Please use different options!";
 $lang["returncal"]          = "ƒJƒŒƒ“ƒ_[•\¦‰æ–Ê‚É–ß‚é";
 
 # Authentication stuff
 $lang["accessdenied"]       = "ƒAƒNƒZƒX‚ª‹‘”Û‚³‚ê‚Ü‚µ‚½";
-$lang["unandpw"]            = "ƒ†[ƒU[ƒl[ƒ€‚ÆƒpƒXƒ[ƒh‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢.";
 $lang["norights"]           = "•ÒW‹@”\‚ÉƒAƒNƒZƒX‚·‚éŒ —˜‚ª‚ ‚è‚Ü‚¹‚ñ.";
+
+# Used in search.php
+$lang["invalid_search"]     = "Empty or invalid search string.";
+$lang["search_results"]     = "Search Results for:";
+$lang["nothing_found"]      = "No matching entries found.";
+$lang["records"]            = "Records ";
+$lang["through"]            = " through ";
+$lang["of"]                 = " of ";
+$lang["previous"]           = "Previous";
+$lang["next"]               = "Next";
+$lang["entry"]              = "Entry";
+$lang["view"]               = "View";
+
+# Used in report.php
+$lang["report_on"]          = "Report on Meetings:";
+$lang["report_start"]       = "Report start date:";
+$lang["report_end"]         = "Report end date:";
+$lang["match_area"]         = "Match area:";
+$lang["match_room"]         = "Match room:";
+$lang["match_entry"]        = "Match brief description:";
+$lang["match_descr"]        = "Match full description:";
+$lang["include"]            = "Include:";
+$lang["report_only"]        = "Report only";
+$lang["summary_only"]       = "Summary only";
+$lang["report_and_summary"] = "Report and Summary";
+$lang["summarize_by"]       = "Summarize by:";
+$lang["sum_by_descrip"]     = "Brief description";
+$lang["sum_by_creator"]     = "Creator";
+$lang["entry_found"]        = "entry found";
+$lang["entries_found"]      = "entries found";
+$lang["summary_header"]     = "Summary of (Entries) Hours";
+$lang["total"]              = "Total";
+
+# Used in week.php
+$lang["weekbefore"]         = "Go To Week Before";
+$lang["weekafter"]          = "Go To Week After";
+$lang["gotothisweek"]       = "Go To This Week";
+
+# Used in month.php
+$lang["monthbefore"]        = "Go To Month Before";
+$lang["monthafter"]         = "Go To Month After";
+$lang["gotothismonth"]      = "Go To This Month";
+
+# Used in {day week month}.php
+$lang["no_rooms_for_area"]  = "No rooms defined for this area";
 
 ?>

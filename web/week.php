@@ -176,8 +176,8 @@ else for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	# end time or week end (which ever is earlier).
 	# Note: int casts on database rows for min and max is needed for PHP3.
 
-	$t = max((int)$row[0], $week_start);
-	$end_t = min((int)$row[1], $week_end+1);
+	$t = max(round_t_down($row[0], $resolution), $week_start);
+	$end_t = min(round_t_up($row[1], $resolution), $week_end+1);
 	$weekday = (date("w", $t) + 7 - $weekstarts) % 7;
 	$prev_weekday = -1; # Invalid value to force initial label.
 	$slot = ($t - $week_midnight) % 86400 / $resolution;

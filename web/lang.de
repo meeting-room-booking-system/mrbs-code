@@ -5,6 +5,7 @@
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is a German file.
 #
+#
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
@@ -33,7 +34,6 @@ $lang["viewday"]            = "Zeige Tag";
 $lang["viewweek"]           = "Zeige Woche";
 $lang["viewmonth"]          = "Zeige Monat";
 $lang["ppreview"]           = "Druckansicht";
-
 
 # Used in edit_entry.php
 $lang["addentry"]           = "Eintrag hinzufügen";
@@ -64,11 +64,13 @@ $lang["rep_type_2"]         = "wöchentlich";
 $lang["rep_type_3"]         = "monatlich";
 $lang["rep_type_4"]         = "jährlich";
 $lang["rep_type_5"]         = "monatlich, entsprechender Tag";
+$lang["rep_type_6"]         = "n-Weekly";
 $lang["rep_end_date"]       = "Ende der Wiederholung:";
 $lang["rep_rep_day"]        = "Tag der Wiederholung:";
 $lang["rep_for_weekly"]     = "(für wöchentlich)";
 $lang["rep_freq"]           = "Häufigkeit:";
-
+$lang["rep_num_weeks"]      = "Number of weeks";
+$lang["rep_for_nweekly"]    = "(for n-weekly)";
 
 # Used in view_entry.php
 $lang["description"]        = "Beschreibung:";
@@ -135,6 +137,5 @@ $lang["gotothismonth"]      = "gehe zu diesen Monat";
 
 # Used in {day week month}.php
 $lang["no_rooms_for_area"]  = "Der Bereich enthält keinen Raum";
-
 
 ?>

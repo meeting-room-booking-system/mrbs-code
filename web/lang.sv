@@ -31,6 +31,8 @@ $lang["goto"]               = "gå till";
 
 # Used in trailer.inc
 $lang["viewday"]            = "Visa dag";
+$lang["viewweek"]           = "View Week";
+$lang["viewmonth"]          = "View Month";
 $lang["ppreview"]           = "Print Preview";
 
 # Used in edit_entry.php3
@@ -62,10 +64,13 @@ $lang["rep_type_2"]         = "varje vecka";
 $lang["rep_type_3"]         = "månatligen";
 $lang["rep_type_4"]         = "årligen";
 $lang["rep_type_5"]         = "Monthly, corresponding day";
+$lang["rep_type_6"]         = "n-Weekly";
 $lang["rep_end_date"]       = "Repetition slutdatum:";
 $lang["rep_rep_day"]        = "Repetitionsdag:";
 $lang["rep_for_weekly"]     = "(vid varje vecka)";
 $lang["rep_freq"]           = "Frekvens:";
+$lang["rep_num_weeks"]      = "Number of weeks";
+$lang["rep_for_nweekly"]    = "(for n-weekly)";
 
 # Used in view_entry.php3
 $lang["description"]        = "Beskrivning:";
@@ -99,5 +104,38 @@ $lang["previous"]           = "Föregående";
 $lang["next"]               = "Nästa";
 $lang["entry"]              = "Post";
 $lang["view"]               = "Visa";
+
+# Used in report.php
+$lang["report_on"]          = "Report on Meetings:";
+$lang["report_start"]       = "Report start date:";
+$lang["report_end"]         = "Report end date:";
+$lang["match_area"]         = "Match area:";
+$lang["match_room"]         = "Match room:";
+$lang["match_entry"]        = "Match brief description:";
+$lang["match_descr"]        = "Match full description:";
+$lang["include"]            = "Include:";
+$lang["report_only"]        = "Report only";
+$lang["summary_only"]       = "Summary only";
+$lang["report_and_summary"] = "Report and Summary";
+$lang["summarize_by"]       = "Summarize by:";
+$lang["sum_by_descrip"]     = "Brief description";
+$lang["sum_by_creator"]     = "Creator";
+$lang["entry_found"]        = "entry found";
+$lang["entries_found"]      = "entries found";
+$lang["summary_header"]     = "Summary of (Entries) Hours";
+$lang["total"]              = "Total";
+
+# Used in week.php
+$lang["weekbefore"]         = "Go To Week Before";
+$lang["weekafter"]          = "Go To Week After";
+$lang["gotothisweek"]       = "Go To This Week";
+
+# Used in month.php
+$lang["monthbefore"]        = "Go To Month Before";
+$lang["monthafter"]         = "Go To Month After";
+$lang["gotothismonth"]      = "Go To This Month";
+
+# Used in {day week month}.php
+$lang["no_rooms_for_area"]  = "No rooms defined for this area";
 
 ?>

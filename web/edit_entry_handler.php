@@ -81,14 +81,14 @@ if(!isset($rep_day))
 
 # For weekly repeat(2), build string of weekdays to repeat on:
 $rep_opt = "";
-if ($rep_type == 2)
+if (($rep_type == 2) || ($rep_type == 6))
 	for ($i = 0; $i < 7; $i++) $rep_opt .= empty($rep_day[$i]) ? "0" : "1";
 
 
 # Expand a series into a list of start times:
 if ($rep_type != 0)
 	$reps = mrbsGetRepeatEntryList($starttime, isset($rep_enddate) ? $rep_enddate : 0,
-		$rep_type, $rep_opt, $max_rep_entrys);
+		$rep_type, $rep_opt, $max_rep_entrys, $rep_num_weeks);
 
 # When checking for overlaps, for Edit (not New), ignore this entry and series:
 $repeat_id = 0;
@@ -136,7 +136,7 @@ if(empty($err))
 	if($edit_type == "series")
 	{
 		mrbsCreateRepeatingEntrys($starttime, $endtime,   $rep_type, $rep_enddate, $rep_opt, 
-		                          $room_id,   $create_by, $name,     $type,        $description);
+		                          $room_id,   $create_by, $name,     $type,        $description, $rep_num_weeks);
 	}
 	else
 	{

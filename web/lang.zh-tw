@@ -5,6 +5,7 @@
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is a Chinese (zh-tw Big5) file.
 #
+#
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
@@ -26,17 +27,23 @@ $lang["areas"]              = "地點";
 $lang["daybefore"]          = "查看前一天";
 $lang["dayafter"]           = "查看後一天";
 $lang["gototoday"]          = "查看今天";
+$lang["goto"]               = "goto";
 
 # Used in trailer.inc
 $lang["viewday"]            = "查看日期 ";
+$lang["viewweek"]           = "View Week";
+$lang["viewmonth"]          = "View Month";
 $lang["ppreview"]           = "Print Preview";
 
 # Used in edit_entry.php
 $lang["addentry"]           = "新增";
 $lang["editentry"]          = "修改";
+$lang["editseries"]         = "Edit Series";
 $lang["namebooker"]         = "訂位者:";
 $lang["fulldescription"]    = "說明:<br>&nbsp;&nbsp;(部門,與會人數,<br>&nbsp;&nbsp;會議主題 等)";
 $lang["date"]               = "日期:";
+$lang["start_date"]         = "Start Time:";
+$lang["end_date"]           = "End Time:";
 $lang["time"]               = "時間:";
 $lang["duration"]           = "期間:";
 $lang["seconds"]            = "秒";
@@ -45,27 +52,90 @@ $lang["hours"]              = "小時";
 $lang["days"]               = "天";
 $lang["weeks"]              = "星期";
 $lang["years"]              = "年";
+$lang["all_day"]            = "All day";
 $lang["type"]               = "種類:";
 $lang["internal"]           = "內部會議";
 $lang["external"]           = "外部會議";
 $lang["save"]               = "儲存";
+$lang["rep_type"]           = "Repeat Type:";
+$lang["rep_type_0"]         = "None";
+$lang["rep_type_1"]         = "Daily";
+$lang["rep_type_2"]         = "Weekly";
+$lang["rep_type_3"]         = "Monthly";
+$lang["rep_type_4"]         = "Yearly";
+$lang["rep_type_5"]         = "Monthly, corresponding day";
+$lang["rep_type_6"]         = "n-Weekly";
+$lang["rep_end_date"]       = "Repeat End Date:";
+$lang["rep_rep_day"]        = "Repeat Day:";
+$lang["rep_for_weekly"]     = "(for (n-)weekly)";
+$lang["rep_freq"]           = "Frequency:";
+$lang["rep_num_weeks"]      = "Number of weeks";
+$lang["rep_for_nweekly"]    = "(for n-weekly)";
 
 # Used in view_entry.php
 $lang["description"]        = "說明:";
+$lang["room"]               = "Room:";
 $lang["createdby"]          = "訂位來源:";
 $lang["lastupdate"]         = "最後更新:";
 $lang["deleteentry"]        = "刪除";
+$lang["deleteseries"]       = "Delete Series";
 $lang["confirmdel"]         = "你確定要刪除此記錄??\\n";
 $lang["returnprev"]         = "回前一頁";
 
 # Used in edit_entry_handler.php
 $lang["error"]              = "錯誤";
+$lang["sched_conflict"]     = "Scheduling Conflict";
 $lang["conflict"]           = "此時段已被訂位";
+$lang["too_may_entrys"]     = "The selected options will create too many entries.<BR>Please use different options!";
 $lang["returncal"]          = "查看日程表";
 
 # Authentication stuff
 $lang["accessdenied"]       = "Access Denied";
-$lang["unandpw"]            = "請輸入您的 username + password.";
 $lang["norights"]           = "您無權利修改此筆訂位記錄!!";
+
+# Used in search.php
+$lang["invalid_search"]     = "Empty or invalid search string.";
+$lang["search_results"]     = "Search Results for:";
+$lang["nothing_found"]      = "No matching entries found.";
+$lang["records"]            = "Records ";
+$lang["through"]            = " through ";
+$lang["of"]                 = " of ";
+$lang["previous"]           = "Previous";
+$lang["next"]               = "Next";
+$lang["entry"]              = "Entry";
+$lang["view"]               = "View";
+
+# Used in report.php
+$lang["report_on"]          = "Report on Meetings:";
+$lang["report_start"]       = "Report start date:";
+$lang["report_end"]         = "Report end date:";
+$lang["match_area"]         = "Match area:";
+$lang["match_room"]         = "Match room:";
+$lang["match_entry"]        = "Match brief description:";
+$lang["match_descr"]        = "Match full description:";
+$lang["include"]            = "Include:";
+$lang["report_only"]        = "Report only";
+$lang["summary_only"]       = "Summary only";
+$lang["report_and_summary"] = "Report and Summary";
+$lang["summarize_by"]       = "Summarize by:";
+$lang["sum_by_descrip"]     = "Brief description";
+$lang["sum_by_creator"]     = "Creator";
+$lang["entry_found"]        = "entry found";
+$lang["entries_found"]      = "entries found";
+$lang["summary_header"]     = "Summary of (Entries) Hours";
+$lang["total"]              = "Total";
+
+# Used in week.php
+$lang["weekbefore"]         = "Go To Week Before";
+$lang["weekafter"]          = "Go To Week After";
+$lang["gotothisweek"]       = "Go To This Week";
+
+# Used in month.php
+$lang["monthbefore"]        = "Go To Month Before";
+$lang["monthafter"]         = "Go To Month After";
+$lang["gotothismonth"]      = "Go To This Month";
+
+# Used in {day week month}.php
+$lang["no_rooms_for_area"]  = "No rooms defined for this area";
 
 ?>

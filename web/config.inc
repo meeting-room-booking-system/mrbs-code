@@ -70,6 +70,9 @@ $default_report_days = 60;
 # Results per page for searching:
 $search["count"] = 20;
 
+# Page refresh time (in seconds). Set to 0 to disable
+$refresh_rate = 0;
+
 ###############################################
 # Authentication settings - read AUTHENTICATION
 ###############################################
@@ -93,6 +96,14 @@ $auth["admin"][] = "127.0.0.1";
 #$ldap_base_dn[] = "ou=organizationalunit1,o=organization,c=MY";
 #$ldap_base_dn[] = "ou=organizationalunit2,o=organization,c=MY";
 #$ldap_base_dn[] = "ou=organizationalunit3,o=organization,c=MY";
+
+# 'auth_ldap' extra configuration for ldap configuration of who can use
+# the system
+# If it's set, the $ldap_filter will be combined with the uid like this:
+#   (&(uid=username)($ldap_filter))
+# After binding to check the password, this check is used to see that
+# they are a valid user of mrbs.
+$ldap_filter = "mrbsuser=y";
 
 ##########
 # Language

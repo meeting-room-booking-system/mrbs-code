@@ -105,8 +105,11 @@ for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 	# meeting end time (since the next slot is for meetings which start then),
 	# or at the last slot in the day, whichever is earlier.
 	# Note: int casts on database rows for max may be needed for PHP3.
-	$end_t = min($row[2] - $resolution, $pm7);
-	for ($t = max((int)$row[1], $am7); $t <= $end_t; $t += $resolution)
+	# Adjust the starting and ending times so that bookings which don't
+	# start or end at a recognized time still appear.
+	$start_t = max(round_t_down($row[1], $resolution), $am7);
+	$end_t = min(round_t_up($row[2], $resolution) - $resolution, $pm7);
+	for ($t = $start_t; $t <= $end_t; $t += $resolution)
 	{
 		$today[$row[0]][$t]["id"]    = $row[4];
 		$today[$row[0]][$t]["color"] = $row[5];
@@ -118,7 +121,7 @@ for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 	if ($row[1] < $am7)
 		$today[$row[0]][$am7]["data"] = $row[3];
 	else
-		$today[$row[0]][$row[1]]["data"] = $row[3];
+		$today[$row[0]][$start_t]["data"] = $row[3];
 }
 
 # We need to know what all the rooms area called, so we can show them all

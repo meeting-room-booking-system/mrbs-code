@@ -68,7 +68,7 @@ if (isset($id))
 	
 	if($entry_type >= 1)
 	{
-		$sql = "SELECT rep_type, start_time, end_date, rep_opt
+		$sql = "SELECT rep_type, start_time, end_date, rep_opt, rep_num_weeks
 		        FROM mrbs_repeat WHERE id=$rep_id";
 		
 		$res = sql_query($sql);
@@ -93,6 +93,7 @@ if (isset($id))
 			switch($rep_type)
 			{
 				case 2:
+				case 6:
 					$rep_day[0] = $row[3][0] != "0";
 					$rep_day[1] = $row[3][1] != "0";
 					$rep_day[2] = $row[3][2] != "0";
@@ -100,6 +101,11 @@ if (isset($id))
 					$rep_day[4] = $row[3][4] != "0";
 					$rep_day[5] = $row[3][5] != "0";
 					$rep_day[6] = $row[3][6] != "0";
+
+					if ($rep_type == 6)
+					{
+						$rep_num_weeks = $row[4];
+					}
 					
 					break;
 				
@@ -296,6 +302,11 @@ else
 	}
 }
 ?>
+
+<TR>
+ <TD CLASS=CR><B><? echo $lang["rep_num_weeks"]?></B> <? echo $lang["rep_for_nweekly"]?></TD>
+ <TD CLASS=CL><INPUT TYPE=TEXT NAME="rep_num_weeks" VALUE="<? echo $rep_num_weeks?>">
+</TR>
 
 <TR>
  <TD colspan=2 align=center>

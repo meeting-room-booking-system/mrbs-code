@@ -5,6 +5,7 @@
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is an NL Dutch file.
 #
+#
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
@@ -39,7 +40,6 @@ $lang["addentry"]           = "Boeking Toevoegen";
 $lang["editentry"]          = "Boeking Wijzigen";
 $lang["editseries"]         = "Wijzig Reeks";
 $lang["namebooker"]         = "Korte Omschrijving:";
-// $lang["namebooker"]         = "Geboekt door:";
 $lang["fulldescription"]    = "Volledige Omschrijving:<br>&nbsp;&nbsp;(Aantal mensen,<br>&nbsp;&nbsp;Intern/Extern etc)";
 $lang["date"]               = "Datum:";
 $lang["start_date"]         = "Start Tijd:";
@@ -64,10 +64,13 @@ $lang["rep_type_2"]         = "Wekelijks";
 $lang["rep_type_3"]         = "Maandelijks";
 $lang["rep_type_4"]         = "Jaarlijks";
 $lang["rep_type_5"]         = "Maandelijks, Overeenkomstige dag";
+$lang["rep_type_6"]         = "n-Weekly";
 $lang["rep_end_date"]       = "Einde herhaling datum:";
 $lang["rep_rep_day"]        = "Herhalingsdag:";
 $lang["rep_for_weekly"]     = "(t.b.v. wekelijks)";
 $lang["rep_freq"]           = "Frequentie:";
+$lang["rep_num_weeks"]      = "Number of weeks";
+$lang["rep_for_nweekly"]    = "(for n-weekly)";
 
 # Used in view_entry.php
 $lang["description"]        = "Omschrijving:";
@@ -88,7 +91,6 @@ $lang["returncal"]          = "Terug naar kalender overzicht";
 
 # Authentication stuff
 $lang["accessdenied"]       = "Geen Toegang";
-// $lang["unandpw"]            = "Voer A.U.B. uw gebruikersnaam en wachtwoord in.";
 $lang["norights"]           = "U heeft geen rechten om deze boeking aan te passen.";
 
 # Used in search.php

@@ -241,4 +241,23 @@ function show_colour_key()
 	echo "</tr></table>\n";
 }
 
+# Round time down to the nearest resolution
+function round_t_down($t, $resolution)
+{
+       return (int)$t - (int)$t % $resolution;
+}
+
+# Round time up to the nearest resolution
+function round_t_up($t, $resolution)
+{
+       if ($t % $resolution != 0)
+       {
+               return $t + $resolution - $t % $resolution;
+       }
+       else
+       {
+               return $t;
+       }
+}
+
 ?>

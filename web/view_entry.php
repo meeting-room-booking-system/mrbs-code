@@ -67,7 +67,7 @@ $rep_type = 0;
 
 if($repeat_id != 0)
 {
-	$res = sql_query("SELECT rep_type, end_date, rep_opt
+	$res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks
 	                    FROM mrbs_repeat WHERE id=$repeat_id");
 	if (! $res) fatal_error(0, sql_error());
 
@@ -78,6 +78,7 @@ if($repeat_id != 0)
 		$rep_type     = $row[0];
 		$rep_end_date = strftime('%A %d %B %Y',$row[1]);
 		$rep_opt      = $row[2];
+		$rep_num_weeks = $row[3];
 	}
 	sql_free($res);
 }
@@ -133,7 +134,7 @@ $repeat_key = "rep_type_" . $rep_type;
 if($rep_type != 0)
 {
 	$opt = "";
-	if ($rep_type == 2)
+	if (($rep_type == 2) || ($rep_type == 6))
 	{
 		# Display day names according to language and preferred weekday start.
 		for ($i = 0; $i < 7; $i++)
@@ -141,6 +142,10 @@ if($rep_type != 0)
 			$daynum = ($i + $weekstarts) % 7;
 			if ($rep_opt[$daynum]) $opt .= day_name($daynum) . " ";
 		}
+	}
+	if ($rep_type == 6)
+	{
+		echo "<tr><td><b>$lang[rep_num_weeks]$lang[rep_for_nweekly]</b></td><td>$rep_num_weeks</td></tr>\n";
 	}
 	
 	if($opt)

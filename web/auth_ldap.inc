@@ -32,6 +32,7 @@ function authValidateUser($user, $pass)
         global $auth;
 	global $ldap_host;
 	global $ldap_base_dn;
+	global $ldap_filter;
 	
 	// Check if we do not have a username/password
 	// User can always bind to LDAP anonymously with empty password,
@@ -52,8 +53,23 @@ function authValidateUser($user, $pass)
 			
 			if(@ldap_bind($ldap, $dn, $pass))
 			{
-				@ldap_unbind($ldap);
-				return 1;
+                               if (! $ldap_filter)
+                               {
+                                      @ldap_unbind($ldap);
+                                      return 1;
+                               }
+                               else
+                               {
+                                      $res = @ldap_search($ldap,
+                                                          $ldap_base_dn[$i],
+                                                          "(&(uid=$user)($ldap_filter))",
+                                                          array());
+                                       if (@ldap_count_entries($ldap, $res) > 0)
+                                       {
+                                              @ldap_unbind($ldap);
+                                              return 1;
+                                       }
+                               }
 			}
 		}
 		

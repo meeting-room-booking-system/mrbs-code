@@ -5,6 +5,7 @@
 # The default strings come from lang.en, and anything in a locale
 # specific file will overwrite the default. This is a US/UK English file.
 #
+#
 # This file is PHP code. Treat it as such.
 
 # The charset to use in "Content-type" header
@@ -63,10 +64,13 @@ $lang["rep_type_2"]         = "Weekly";
 $lang["rep_type_3"]         = "Monthly";
 $lang["rep_type_4"]         = "Yearly";
 $lang["rep_type_5"]         = "Monthly, corresponding day";
+$lang["rep_type_6"]         = "n-Weekly";
 $lang["rep_end_date"]       = "Repeat End Date:";
 $lang["rep_rep_day"]        = "Repeat Day:";
-$lang["rep_for_weekly"]     = "(for weekly)";
+$lang["rep_for_weekly"]     = "(for (n-)weekly)";
 $lang["rep_freq"]           = "Frequency:";
+$lang["rep_num_weeks"]      = "Number of weeks";
+$lang["rep_for_nweekly"]    = "(for n-weekly)";
 
 # Used in view_entry.php
 $lang["description"]        = "Description:";

@@ -161,15 +161,15 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $r
  *   non-zero - The entry's ID
  */
 function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate, $rep_opt,
-                               $room_id, $owner, $name, $type, $description)
+                               $room_id, $owner, $name, $type, $description, $rep_num_weeks)
 {
 	$name        = slashes($name);
 	$description = slashes($description);
 	
 	$sql = "INSERT INTO mrbs_repeat (  start_time,   end_time,    rep_type,    end_date,       rep_opt,
-	                                   room_id,      create_by,   type,        name,           description)
+	                                   room_id,      create_by,   type,        name,           description, rep_num_weeks)
 	                         VALUES ($starttime, $endtime,  $rep_type, $rep_enddate, '$rep_opt',
-	                                 $room_id,   '$owner',    '$type',     '$name',        '$description')";
+	                                 $room_id,   '$owner',    '$type',     '$name',        '$description', '$rep_num_weeks')";
 	
 	if (sql_command($sql) < 0) return 0;
 	
@@ -206,7 +206,7 @@ function same_day_next_month($time)
  *   empty     - The entry does not repeat
  *   an array  - This is a list of start times of each of the repeat entrys
  */
-function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr)
+function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr, $rep_num_weeks)
 {
 	$sec   = date("s", $time);
 	$min   = date("i", $time);
@@ -214,7 +214,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr)
 	$day   = date("d", $time);
 	$month = date("m", $time);
 	$year  = date("Y", $time);
-	
+
 	$entrys = "";
 	for($i = 0; $i < $max_ittr; $i++)
 	{
@@ -255,13 +255,27 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr)
 			case 5:
 				$day += same_day_next_month($time);
 				break;
+
+			// n Weekly repeat
+			case 6:
+				$j = $cur_day = date("w", $entrys[$i]);
+				// Skip over days of the week which are not enabled:
+				while (($j = ($j + 1) % (7*$rep_num_weeks)) != $cur_day && !$rep_opt[$j])
+				{
+					$day += 1;
+				}
+
+				$day += 1;
+
+                                $out[$i] = "$day";
+				break;	
 				
 			// Unknown repeat option
 			default:
 				return;
 		}
 	}
-	
+
 	return $entrys;
 }
 
@@ -285,11 +299,11 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr)
  *   non-zero - The entry's ID
  */
 function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type, $rep_enddate, $rep_opt,
-                                   $room_id, $owner, $name, $type, $description)
+                                   $room_id, $owner, $name, $type, $description, $rep_num_weeks)
 {
 	global $max_rep_entrys;
 	
-	$reps = mrbsGetRepeatEntryList($starttime, $rep_enddate, $rep_type, $rep_opt, $max_rep_entrys);
+	$reps = mrbsGetRepeatEntryList($starttime, $rep_enddate, $rep_type, $rep_opt, $max_rep_entrys, $rep_num_weeks);
 	if(count($reps) > $max_rep_entrys)
 		return 0;
 	
@@ -299,7 +313,7 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type, $rep_enddate
 		return;
 	}
 	
-	$ent = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate, $rep_opt, $room_id, $owner, $name, $type, $description);
+	$ent = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate, $rep_opt, $room_id, $owner, $name, $type, $description, $rep_num_weeks);
 	if($ent)
 	{
 		$diff = $endtime - $starttime;

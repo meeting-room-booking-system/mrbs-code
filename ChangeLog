@@ -1,3 +1,20 @@
+CVS: (2001-07-02 15:55 UTC jberanek)
+    Incorporated diff from Scott Leonard that allows you to configure a refresh
+     time for roombooker web pages.  Set config variable $refresh_rate to the
+     number of seconds to refresh after, or set to 0 to disable.
+    Implemented "n-weekly" repeat type. Not sure I like the way it's phrased in
+     the lang files, but the code works fine.  You can now a meeting that is
+     repeated every 'n' weeks. e.g. every 5th Monday.  This required a database
+     change, which I've made available in upgrade2.my.sql and upgrade2.pg.sql
+    Tidied lang files, and ensured every file has all the required tokens.
+     'wc -l lang.*' now shows all the files as having the same line count.
+     Quite a few languages now have English bits in them though.
+    Incorporated diffs from Tim Bell that allow you to configure a filter
+     for LDAP authentication.
+    Incorporated diffs from Tim Bell that solve problems with bookings made
+     for times that have smaller granularity that the configured booking
+     resolution.
+
 CVS: (2001-03-26 15:36 UTC jberanek)
     Fixed config.inc so that the correct lang.xx is included if
      HTTP_ACCEPT_LANGUAGE is a comma-seperated list like "sv, en".
