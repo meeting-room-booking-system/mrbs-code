@@ -172,13 +172,20 @@ if (($unicode_encoding) && (!function_exists('iconv')))
 {
   exit('
 <P>
-  <B>Error:</B> MRBS requires the optional PHP package "iconv".
+  <B>Error:</B> MRBS in UTF-8 mode requires the optional PHP extension called "iconv".
 </P>
 <P>
-  On a Windows server, enable php_iconv.dll in your %windir%\php.ini;<br>
-  Make sure both %phpdir%\dlls\iconv.dll and %phpdir%\extensions\php_iconv.dll are in the path<br>
-    &nbsp;(possibly by copying them to %windir%);<br>
-  and try again.
+  On a Windows server, enable php_iconv.dll in your %windir%\php.ini file;<br>
+  Make sure both %phpdir%\dlls\iconv.dll and %phpdir%\extensions\php_iconv.dll are in the path
+   (possibly by copying them to %windir%);<br>
+  and try again.<br>
+  <br>
+  On a Unix server, recompile your PHP module with the appropriate option
+  for enabling the iconv extension.<br>
+  <br>
+  If it is not possible to enable iconv, then disable the UTF-8 mode in MRBS:
+  In config.inc.php, change $unicode_encoding back to 0. <br>
+  Drawback: The support for non-english users will be crippled.
 </P>
 ');
 }
