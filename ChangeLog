@@ -1,47 +1,33 @@
-CVS (Thu May 23 11:10:57 BST 2002)
-    Czech translation (SmEjDiL malyl@col.cz)
+Version 1.1-pre1 (Thu May 30 12:41:02 BST 2002)
+   + add config option for drop-down boxes to select area and room
+          (Thanks to sponsorship of LTC Corporation)
+   + allow multiple rooms to be booked at the same time
+          (Thanks to sponsorship of the City of Wayne and LAEP)
+   + document need for register_globals() with new PHP versions
+   + add auth_nis.inc from Jeff Hoover (jberanek)
+   + add auth_imap.inc
+   + add warning about PHP3 not working
+   + new language tokens
 
-CVS (Fri May 10 16:48:52 BST 2002)
-    Allow meetings to be scheduled in multiple rooms at the same time
+   - Stop problem where all strings turn to "N"
+   - Fixes a problem where $resolution is an odd amount
+   - extra javascript validation around n-weekly bookings
+   - extra array index quoting to stop newer php warnings
+   - Commented all authentication schemes (jberanek)
+   - Change mrbs_repeat schema for postgres (mrbs_repeat.rep_num_weeks => smallint)
+   - replace poxix_uname with php_uname function for portability
+   - Declare $HTTP_ACCEPT_LANGUAGE global in config.inc
+   - some int casts to fix a bug from sourceforge
+   - language files normalised
 
-CVS (Thu May  9 13:36:44 BST 2002)
-    Change every $lang to $vocab to stop conflicts with other software
-    that's used $lang (lots of people have seen "N" appear everywhere
-    $lang variables should be)
+   - update translations: Norway, Rune Johansen
+                          France,
+			  Italy, Gianni
+			  Netherlands, Marc ter Horst
+			  Sweden, Hakan Nilsson
+			  Germany, Michael Redinger
 
-CVS (Wed May  8 13:23:46 BST 2002)
-    Update french translation (Jean-Max Redonnet)
-    Add option to display area list as a select box
-
-CVS (Thur Mar 7 15:26:00 GMT 2002)
-    Added comments to the top of all the authentication schemes (I
-     understand) that describes how to change config.inc to use
-     them.  This should help new installers.
-    Added auth_nis.inc, as provided by Jeff Hoover.  This is an
-     authentication scheme that uses NIS.
-
-CVS (Thu Feb 7 13:12:00 GMT 2002)
-    Added instructions into UPGRADE readme for upgrade2.[my|pg].ql scripts
-     that are required to upgrade from an older MRBS installation.
-    Added new language tokens, using patch supplied by Michael Redinger.
-    Added new or updated translations for:
-        Italy (Gianni)
-        Netherlands  (Marc ter Horst)
-        Norway (Rune Johansen)
-        Sweden (Hakan Nilsson)
-        German (Michael Redinger)
-    Added auth_imap.inc, an authentication scheme that uses IMAP,
-     this includes a few more (commented out) lines in config.inc
-    Changed datatype of 'rep_num_weeks' in 'mrbs_repeat' table for
-     PostgreSQL installs.  We now use smallint instead of tinyint,
-     as tinyint isn't available.
-    Changed config.inc to use getenv('HTTP_ACCEPT_LANGUAGE') instead
-     of $HTTP_ACCEPT_LANGUAGE...much tidier.
-
-CVS (Fri Nov  2 12:47:45 GMT 2001)
-    Fixed problem in config.inc, $HTTP_ACCEPT_LANGUAGE wasn't working for
-     me unless I put a global specification for it.  This should improve
-     internationalisation.
+   + add translation:     Czech, SmEjDiL
 
 Version 1.0 (Thu Aug 30 22:26:54 BST 2001)
     Added two upgrade.xx.sql files which should have been in -pre2
