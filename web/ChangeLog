@@ -1,3 +1,129 @@
+2004-01-19  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* auth_db.inc (1.1), config.inc.php (1.17), edit_users.php (1.1),
+	  lang.en (1.15), lang.fr (1.17), mrbs.css (1.5),
+	  session_cookie.inc (1.6), session_php.inc (1.6): Added a new
+	  authentication module auth_db.inc.  This is a web-based
+	  authentication, based on a new table of users in the mrbs
+	  database. Implements RFE #665239 "Multiuser, Web based auth".
+	  Added module edit_users.php to manage the contents of this table.
+	  New English and French strings added in lang.en and lang.fr
+	  respectively.  Added in session_php.inc and session_cookie.inc
+	  logon box an optional link to the user list management page.
+	  Finally minor changes to config.inc.php (comment) and mrbs.css
+	  (style for buttons inside tables).
+
+2004-01-15  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* language.inc (1.6): Updated the error message displayed in the
+	  case where the iconv extension is missing.
+
+2004-01-15  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* config.inc.php (1.16), session_cookie.inc (1.5), session_php.inc
+	  (1.5), trailer.inc (1.10): Changed absolute paths in anchor hrefs
+	  and redirection headers from absolute to relative.  This should
+	  fix the link failures seen by some users, in environments where a
+	  proxy makes the user-visible root different from the
+	  web-server-visible root.  In the unlikely case where some users
+	  have a very old browser not supporting relative HTTP relocation
+	  headers, then they can use the $url_base in config.inc.php as a
+	  workaround: In this case, put in this variable the full URL of
+	  the MRBS root, as seen by the users through the proxy.
+
+2004-01-15  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* month.php (1.18): - Fixed bug [ 875782 ]: Month View, Extra
+	  carriage return.  Text formating problem if
+	  $monthly_view_brief_description set to TRUE.
+
+2004-01-11  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* mrbs.css (1.4): Added a directive to avoid having a blank line
+	  below buttons inside tables. This makes the logon cell in the top
+	  banner, and the forthcoming user properties editor page, look
+	  much better.
+
+2004-01-09  John Beranek <jberanek@users.sourceforge.net>
+
+	* config.inc.php (1.15):
+	  * The MRBS version number hadn't been updated to 1.2-pre2.   It
+	  has now.
+
+2003-12-22  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* edit_entry.php (1.24), lang.en (1.14): Added support for changing
+	  area/room in Add/Edit entry form.  Added check to ensure that at
+	  least one room is selected as edit_entry_handler.php does not
+	  catch this.  Added wording to lang.en to cover the above check.
+
+	  The first fix requires that javascript is enabled.  If it is not
+	  then you get the same form as you get currently.  If it is
+	  enabled and you have more than one area then you get an area
+	  select box which controls the rooms displayed in the room select
+	  box.
+
+2003-12-22  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* day.php (1.21): Minor formatting fix for day view when viewed
+	  with Konqueror.
+
+2003-12-21  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* functions.inc (1.23): Doc fix: - Updated other doc areas about
+	  default administrator since JFL change.  - Removed warning in
+	  function.inc since it works now with Gavin changes
+
+2003-12-21  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* config.inc.php (1.14): Changed the default administrator list, to
+	  be coherent with the explanations in AUTHENTICATION, and also to
+	  work out-of-the-box.
+
+2003-12-17  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* functions.inc (1.22): Modified Javascript to work with Mozilla
+	  1.5 (Linux) and NS4 (Linux), also tested with Konqueror 3.1.4 and
+	  IE 6.0
+
+	  Days now work for all changes of Month and Year.
+
+	  Added JavaScript to fix days once date selector is displayed so
+	  that if a month has < 31 days then the day selector is shortened
+	  appropriately.
+
+2003-12-17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* auth_ldap.inc (1.6): (authValidateUser): - Tried to fix LDAP
+	  servers login processes waiting for 'uid' and not for 'cn'.  Does
+	  an anonymous bind first, tries to find  the dn for the user and
+	  then binds to it with $pass.	(Bernd Oeggl , Philippe Schwarz).
+
+2003-12-17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* config.inc.php (1.13): - Fix URL problems when using a proxy in
+	  the environment.
+
+2003-12-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* functions.inc (1.21): (print_header): Added JavaScript to insure
+	  the integrity of the date entered in three field drop-down menus.
+
+	       Tested with Windows IE 6.0
+	       Tested with Linux Opera 7.21, Mozilla 1.3, Konqueror 3.1.0
+
+	       WARNING: little bug in Mozilla 1.3. If a month with less
+	  than 31 days is
+	       selected, the max days number is updated correctly, but if
+	  you select
+	       a 31 days month again, then max days number is not updated
+	  (ie. stays at
+	       30 or 28). Goto a 31 days month to have the 31 days back.
+	  Since Mozilla
+	       1.3 is rather not up to date (1.6b current at 2003-11-15),
+	  this may be
+	       corrected in newer releases.
+
 2003-12-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* config.inc.php (1.12, mrbs-1-2-pre2): Doc fixes

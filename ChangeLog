@@ -1,3 +1,33 @@
+2004-01-11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* INSTALL (1.22): Doc fix: unlike Apache on Windows, you HAVE to
+	  copy iconv.dll in into \\%windir%\\system32\\ if you use
+	  Microsoft IIS.
+
+2003-12-21  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* AUTHENTICATION (1.24), INSTALL (1.21), README (1.13): Doc fix: -
+	  Updated other doc areas about default administrator since JFL
+	  change.  - Removed warning in function.inc since it works now
+	  with Gavin changes
+
+2003-12-21  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
+
+	* AUTHENTICATION (1.23): Added a few comments from last weeks
+	  emails on the list.  Changed the information about the default
+	  administrator settings, which was incoherent with the default
+	  contents of config.inc.php.
+
+2003-12-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* AUTHENTICATION (1.22): Compile Gavin Walker and my comments about
+	  installing SMB authentication, since previous documentation
+	  really lacks details.
+
+2003-12-11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
+
+	* INSTALL (1.20): Adding comments about iconv setup.
+
 2003-12-07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* NEWS (1.4, mrbs-1-2-pre2): Updated NEWS file for mrbs-1.2-pre2
