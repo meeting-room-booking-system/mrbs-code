@@ -31,7 +31,7 @@ if(mysql_num_rows($res) < 1)
 
 $row = mysql_fetch_row($res);
 
-$display_time = strftime('%X',$row[3]) != "01:00:00";
+$display_time = strftime('%X',$row[3]) != "00:00:00";
 
 $duration    = $row[4];
 $type        = $row[5];
