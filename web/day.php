@@ -231,10 +231,11 @@ else
 	# will ensure a constant time step
 	( $dst_change != -1 ) ? $j = 1 : $j = 0;
 	
+	$row_color = "white";
 	for (
 		$t = mktime($morningstarts, 0, 0, $month, $day+$j, $year);
 		$t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
-		$t += $resolution
+		$t += $resolution, $row_color=($row_color=="white")?$stripe_color:"white"
 	)
 	{
 		# convert timestamps to HHMM format without leading zeros
@@ -275,7 +276,7 @@ else
 			elseif (isset($timetohighlight) && ($time_t == $timetohighlight))
 				$c = "red";
 			else
-				$c = "white";
+				$c = $row_color;
 
 			tdcell($c);
 
