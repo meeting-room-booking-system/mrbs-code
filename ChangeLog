@@ -1,3 +1,7 @@
+CVS:
+    On conflict, show start time and link to day/week/month views (redinger)
+    Link each search result start time to entry's day view (bernd, beranak)
+
 CVS: Branch Merge (2001-02-24 ljb):
     Incorporated all changes from branch mrbs-0-9-1xp into CVS trunk.
     Undoes post-branch change (0.9.2) to remove "weekstarts" function.
