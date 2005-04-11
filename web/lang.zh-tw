@@ -14,99 +14,99 @@
 $vocab["charset"]            = "Big5";
 
 # Used in style.inc
-$vocab["mrbs"]               = "�|ĳ�ǹw���t��";
+$vocab["mrbs"]               = "會議室預約系統";
 
 # Used in functions.inc
-$vocab["report"]             = "Report";
-$vocab["admin"]              = "Admin";
-$vocab["help"]               = "Help";
-$vocab["search"]             = "Search:";
+$vocab["report"]             = "報表";
+$vocab["admin"]              = "系統管理";
+$vocab["help"]               = "說明";
+$vocab["search"]             = "搜尋:";
 $vocab["not_php3"]             = "<H1>WARNING: This probably doesn't work with PHP3</H1>";
 
 # Used in day.php
-$vocab["bookingsfor"]        = "Bookings for";
+$vocab["bookingsfor"]        = "預約:";
 $vocab["bookingsforpost"]    = "";
-$vocab["areas"]              = "�a�I";
-$vocab["daybefore"]          = "�d�ݫe�@��";
-$vocab["dayafter"]           = "�d�ݫ�@��";
-$vocab["gototoday"]          = "�d�ݤ���";
+$vocab["areas"]              = "區域";
+$vocab["daybefore"]          = "查看前一天";
+$vocab["dayafter"]           = "查看後一天";
+$vocab["gototoday"]          = "查看今天";
 $vocab["goto"]               = "goto";
-$vocab["highlight_line"]     = "Highlight this line";
-$vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
+$vocab["highlight_line"]     = "加強顯示這行";
+$vocab["click_to_reserve"]   = "點選格子進行預約登記";
 
 # Used in trailer.inc
-$vocab["viewday"]            = "�d�ݤ�� ";
-$vocab["viewweek"]           = "View Week";
-$vocab["viewmonth"]          = "View Month";
-$vocab["ppreview"]           = "Print Preview";
+$vocab["viewday"]            = "查看日期 ";
+$vocab["viewweek"]           = "週顯示";
+$vocab["viewmonth"]          = "月顯示";
+$vocab["ppreview"]           = "預覽列印";
 
 # Used in edit_entry.php
-$vocab["addentry"]           = "�s�W";
-$vocab["editentry"]          = "�ק�";
-$vocab["editseries"]         = "Edit Series";
-$vocab["namebooker"]         = "�q���:";
-$vocab["fulldescription"]    = "����:<br>&nbsp;&nbsp;(����,�P�|�H��,<br>&nbsp;&nbsp;�|ĳ�D�D ��)";
-$vocab["date"]               = "���:";
-$vocab["start_date"]         = "Start Time:";
-$vocab["end_date"]           = "End Time:";
-$vocab["time"]               = "�ɶ�:";
+$vocab["addentry"]           = "新增";
+$vocab["editentry"]          = "修改";
+$vocab["editseries"]         = "整批修改";
+$vocab["namebooker"]         = "預約人姓名:";
+$vocab["fulldescription"]    = "說明:<br>&nbsp;&nbsp;(聯約電話,部門,,<br>&nbsp;&nbsp;會議主題 等)";
+$vocab["date"]               = "日期:";
+$vocab["start_date"]         = "起始時間:";
+$vocab["end_date"]           = "結束時間:";
+$vocab["time"]               = "時間:";
 $vocab["period"]             = "Period:";
-$vocab["duration"]           = "����:";
-$vocab["seconds"]            = "��";
-$vocab["minutes"]            = "��";
-$vocab["hours"]              = "�p��";
-$vocab["days"]               = "��";
-$vocab["weeks"]              = "�P��";
-$vocab["years"]              = "�~";
+$vocab["duration"]           = "持續時間:";
+$vocab["seconds"]            = "秒";
+$vocab["minutes"]            = "分";
+$vocab["hours"]              = "小時";
+$vocab["days"]               = "天";
+$vocab["weeks"]              = "星期";
+$vocab["years"]              = "年";
 $vocab["periods"]            = "periods";
-$vocab["all_day"]            = "All day";
-$vocab["type"]               = "����:";
-$vocab["internal"]           = "�����|ĳ";
-$vocab["external"]           = "�~���|ĳ";
-$vocab["save"]               = "�x�s";
-$vocab["rep_type"]           = "Repeat Type:";
-$vocab["rep_type_0"]         = "None";
-$vocab["rep_type_1"]         = "Daily";
-$vocab["rep_type_2"]         = "Weekly";
-$vocab["rep_type_3"]         = "Monthly";
-$vocab["rep_type_4"]         = "Yearly";
-$vocab["rep_type_5"]         = "Monthly, corresponding day";
-$vocab["rep_type_6"]         = "n-Weekly";
-$vocab["rep_end_date"]       = "Repeat End Date:";
-$vocab["rep_rep_day"]        = "Repeat Day:";
-$vocab["rep_for_weekly"]     = "(for (n-)weekly)";
-$vocab["rep_freq"]           = "Frequency:";
-$vocab["rep_num_weeks"]      = "Number of weeks";
-$vocab["rep_for_nweekly"]    = "(for n-weekly)";
-$vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
-$vocab["entryid"]            = "Entry ID ";
-$vocab["repeat_id"]          = "Repeat ID "; 
-$vocab["you_have_not_entered"] = "You have not entered a";
-$vocab["you_have_not_selected"] = "You have not selected a";
-$vocab["valid_room"]         = "room.";
-$vocab["valid_time_of_day"]  = "valid time of day.";
-$vocab["brief_description"]  = "Brief Description.";
-$vocab["useful_n-weekly_value"] = "useful n-weekly value.";
+$vocab["all_day"]            = "整天";
+$vocab["type"]               = "種類:";
+$vocab["internal"]           = "內部使用";
+$vocab["external"]           = "外部使用";
+$vocab["save"]               = "儲存";
+$vocab["rep_type"]           = "重覆預約:";
+$vocab["rep_type_0"]         = "不重覆";
+$vocab["rep_type_1"]         = "每天";
+$vocab["rep_type_2"]         = "每週";
+$vocab["rep_type_3"]         = "每月";
+$vocab["rep_type_4"]         = "每年";
+$vocab["rep_type_5"]         = "每月對應的日期";
+$vocab["rep_type_6"]         = "(每週)";
+$vocab["rep_end_date"]       = "結束重覆的日期:";
+$vocab["rep_rep_day"]        = "重覆的星期:";
+$vocab["rep_for_weekly"]     = "(每週)";
+$vocab["rep_freq"]           = "頻率:";
+$vocab["rep_num_weeks"]      = "重覆幾週";
+$vocab["rep_for_nweekly"]    = "(每週)";
+$vocab["ctrl_click"]         = "用Control+滑鼠右鍵可以重覆選擇";
+$vocab["entryid"]            = "登記序號 ";
+$vocab["repeat_id"]          = "重覆序號 "; 
+$vocab["you_have_not_entered"] = "你沒有輸入";
+$vocab["you_have_not_selected"] = "你沒有選";
+$vocab["valid_room"]         = "會議室/設備.";
+$vocab["valid_time_of_day"]  = "可以預約的時間.";
+$vocab["brief_description"]  = "簡要說明.";
+$vocab["useful_n-weekly_value"] = "可以提供預約的星期.";
 
 # Used in view_entry.php
-$vocab["description"]        = "����:";
-$vocab["room"]               = "Room";
-$vocab["createdby"]          = "�q��ӷ�:";
-$vocab["lastupdate"]         = "�̫��s:";
-$vocab["deleteentry"]        = "�R��";
-$vocab["deleteseries"]       = "Delete Series";
-$vocab["confirmdel"]         = "�A�T�w�n�R�����O��??\\n";
-$vocab["returnprev"]         = "�^�e�@��";
-$vocab["invalid_entry_id"]   = "Invalid entry id.";
-$vocab["invalid_series_id"]  = "Invalid series id.";
+$vocab["description"]        = "說明:";
+$vocab["room"]               = "會議室/設備";
+$vocab["createdby"]          = "預約人:";
+$vocab["lastupdate"]         = "最後更新:";
+$vocab["deleteentry"]        = "刪除";
+$vocab["deleteseries"]       = "整批刪除";
+$vocab["confirmdel"]         = "你確定要刪除此記錄??\\n";
+$vocab["returnprev"]         = "回前一頁";
+$vocab["invalid_entry_id"]   = "預約序號錯誤.";
+$vocab["invalid_series_id"]  = "序列號錯誤.";
 
 # Used in edit_entry_handler.php
-$vocab["error"]              = "���~";
-$vocab["sched_conflict"]     = "Scheduling Conflict";
-$vocab["conflict"]           = "���ɬq�w�Q�q��";
-$vocab["too_may_entrys"]     = "The selected options will create too many entries.<BR>Please use different options!";
-$vocab["returncal"]          = "�d�ݤ�{��";
-$vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access"; 
+$vocab["error"]              = "錯誤";
+$vocab["sched_conflict"]     = "時段衝突";
+$vocab["conflict"]           = "此時段已被預約";
+$vocab["too_may_entrys"]     = "這個選擇造成太多輸入.<BR>請重新選擇!";
+$vocab["returncal"]          = "查看日程表";
+$vocab["failed_to_acquire"]  = "無法存取資料庫"; 
 $vocab["mail_subject_entry"] = $mail["subject"];
 $vocab["mail_body_new_entry"] = $mail["new_entry"];
 $vocab["mail_body_del_entry"] = $mail["deleted_entry"];
@@ -114,138 +114,138 @@ $vocab["mail_body_changed_entry"] = $mail["changed_entry"];
 $vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 # Authentication stuff
-$vocab["accessdenied"]       = "Access Denied";
-$vocab["norights"]           = "�z�L�v�Q�ק惡���q��O��!!";
-$vocab["please_login"]       = "Please log in";
-$vocab["user_name"]          = "Name";
-$vocab["user_password"]      = "Password";
-$vocab["unknown_user"]       = "Unknown user";
-$vocab["you_are"]            = "You are";
-$vocab["login"]              = "Log in";
-$vocab["logoff"]             = "Log Off";
+$vocab["accessdenied"]       = "限制存取";
+$vocab["norights"]           = "您無權利修改此筆記錄!!";
+$vocab["please_login"]       = "請先登入";
+$vocab["user_name"]          = "名稱";
+$vocab["user_password"]      = "密碼";
+$vocab["unknown_user"]       = "使用者不存在或密碼錯誤";
+$vocab["you_are"]            = "您是";
+$vocab["login"]              = "登入";
+$vocab["logoff"]             = "登出";
 
 # Authentication database
-$vocab["user_list"]          = "User list";
-$vocab["edit_user"]          = "Edit user";
-$vocab["delete_user"]        = "Delete this user";
+$vocab["user_list"]          = "使用者清單";
+$vocab["edit_user"]          = "編輯使用者";
+$vocab["delete_user"]        = "刪除使用者";
 #$vocab["user_name"]         = Use the same as above, for consistency.
 #$vocab["user_password"]     = Use the same as above, for consistency.
 $vocab["user_email"]         = "Email address";
 $vocab["password_twice"]     = "If you wish to change the password, please type the new password twice";
 $vocab["passwords_not_eq"]   = "Error: The passwords do not match.";
-$vocab["add_new_user"]       = "Add a new user";
-$vocab["rights"]             = "Rights";
-$vocab["action"]             = "Action";
-$vocab["user"]               = "User";
-$vocab["administrator"]      = "Administrator";
-$vocab["unknown"]            = "Unknown";
+$vocab["add_new_user"]       = "新增使用者";
+$vocab["rights"]             = "權限";
+$vocab["action"]             = "動作";
+$vocab["user"]               = "使用者";
+$vocab["administrator"]      = "管理者";
+$vocab["unknown"]            = "未知的";
 $vocab["ok"]                 = "OK";
-$vocab["show_my_entries"]    = "Click to display all my upcoming entries";
+$vocab["show_my_entries"]    = "顯示全部我的預約";
 
 # Used in search.php
-$vocab["invalid_search"]     = "Empty or invalid search string.";
-$vocab["search_results"]     = "Search Results for:";
-$vocab["nothing_found"]      = "No matching entries found.";
-$vocab["records"]            = "Records ";
-$vocab["through"]            = " through ";
+$vocab["invalid_search"]     = "空的或不合法的搜尋字串.";
+$vocab["search_results"]     = "搜尋結果:";
+$vocab["nothing_found"]      = "找不到.";
+$vocab["records"]            = "紀錄";
+$vocab["through"]            = "經由";
 $vocab["of"]                 = " of ";
-$vocab["previous"]           = "Previous";
-$vocab["next"]               = "Next";
-$vocab["entry"]              = "Entry";
-$vocab["view"]               = "View";
-$vocab["advanced_search"]    = "Advanced search";
-$vocab["search_button"]      = "Search";
-$vocab["search_for"]         = "Search For";
+$vocab["previous"]           = "前一個";
+$vocab["next"]               = "下一個";
+$vocab["entry"]              = "登錄";
+$vocab["view"]               = "顯示";
+$vocab["advanced_search"]    = "進階搜尋";
+$vocab["search_button"]      = "搜尋";
+$vocab["search_for"]         = "搜尋";
 $vocab["from"]               = "From";
 
 # Used in report.php
-$vocab["report_on"]          = "Report on Meetings:";
-$vocab["report_start"]       = "Report start date:";
-$vocab["report_end"]         = "Report end date:";
-$vocab["match_area"]         = "Match area:";
-$vocab["match_room"]         = "Match room:";
-$vocab["match_type"]         = "Match type:";
-$vocab["ctrl_click_type"]    = "Use Control-Click to select more than one type";
-$vocab["match_entry"]        = "Match brief description:";
-$vocab["match_descr"]        = "Match full description:";
-$vocab["include"]            = "Include:";
-$vocab["report_only"]        = "Report only";
-$vocab["summary_only"]       = "Summary only";
-$vocab["report_and_summary"] = "Report and Summary";
-$vocab["summarize_by"]       = "Summarize by:";
-$vocab["sum_by_descrip"]     = "Brief description";
-$vocab["sum_by_creator"]     = "Creator";
-$vocab["entry_found"]        = "entry found";
-$vocab["entries_found"]      = "entries found";
-$vocab["summary_header"]     = "Summary of (Entries) Hours";
-$vocab["summary_header_per"] = "Summary of (Entries) Periods";
-$vocab["total"]              = "Total";
-$vocab["submitquery"]        = "Run Report";
-$vocab["sort_rep"]           = "Sort Report by:";
-$vocab["sort_rep_time"]      = "Start Date/Time";
-$vocab["rep_dsp"]            = "Display in report:";
-$vocab["rep_dsp_dur"]        = "Duration";
-$vocab["rep_dsp_end"]        = "End Time";
+$vocab["report_on"]          = "會議室報表:";
+$vocab["report_start"]       = "報表起始日:";
+$vocab["report_end"]         = "報表結束日:";
+$vocab["match_area"]         = "符合的種類:";
+$vocab["match_room"]         = "符合的會議室:";
+$vocab["match_type"]         = "符合的類型:";
+$vocab["ctrl_click_type"]    = "使用Control-Click選取一個以上的類型";
+$vocab["match_entry"]        = "符合部份的簡述:";
+$vocab["match_descr"]        = "符合全部簡述:";
+$vocab["include"]            = "包含:";
+$vocab["report_only"]        = "只要明細";
+$vocab["summary_only"]       = "只要加總";
+$vocab["report_and_summary"] = "明細和加總";
+$vocab["summarize_by"]       = "加總項目:";
+$vocab["sum_by_descrip"]     = "簡述";
+$vocab["sum_by_creator"]     = "預約人";
+$vocab["entry_found"]        = "找到預約";
+$vocab["entries_found"]      = "找到預約";
+$vocab["summary_header"]     = "總共預約(小時)";
+$vocab["summary_header_per"] = "總共預約(次)";
+$vocab["total"]              = "全部";
+$vocab["submitquery"]        = "產生報表";
+$vocab["sort_rep"]           = "排序:";
+$vocab["sort_rep_time"]      = "起始日/時";
+$vocab["rep_dsp"]            = "顯示在報表:";
+$vocab["rep_dsp_dur"]        = "持續時間";
+$vocab["rep_dsp_end"]        = "結束時間";
 
 # Used in week.php
-$vocab["weekbefore"]         = "Go To Week Before";
-$vocab["weekafter"]          = "Go To Week After";
-$vocab["gotothisweek"]       = "Go To This Week";
+$vocab["weekbefore"]         = "前一週";
+$vocab["weekafter"]          = "後一週";
+$vocab["gotothisweek"]       = "這一週";
 
 # Used in month.php
-$vocab["monthbefore"]        = "Go To Month Before";
-$vocab["monthafter"]         = "Go To Month After";
-$vocab["gotothismonth"]      = "Go To This Month";
+$vocab["monthbefore"]        = "上一月";
+$vocab["monthafter"]         = "下一月";
+$vocab["gotothismonth"]      = "這個月";
 
 # Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "No rooms defined for this area";
+$vocab["no_rooms_for_area"]  = "這個種類沒有定義會議室/設備";
 
 # Used in admin.php
-$vocab["edit"]               = "Edit";
-$vocab["delete"]             = "Delete";
-$vocab["rooms"]              = "Rooms";
-$vocab["in"]                 = "in";
-$vocab["noareas"]            = "No Areas";
-$vocab["addarea"]            = "Add Area";
-$vocab["name"]               = "Name";
-$vocab["noarea"]             = "No area selected";
-$vocab["browserlang"]        = "Your browser is set to use";
-$vocab["postbrowserlang"]    = "language.";
-$vocab["addroom"]            = "Add Room";
-$vocab["capacity"]           = "Capacity";
-$vocab["norooms"]            = "No rooms.";
-$vocab["administration"]     = "Administration";
+$vocab["edit"]               = "編輯";
+$vocab["delete"]             = "刪除";
+$vocab["rooms"]              = "會議室/設備";
+$vocab["in"]                 = "在";
+$vocab["noareas"]            = "沒有種類";
+$vocab["addarea"]            = "新增種類";
+$vocab["name"]               = "名稱";
+$vocab["noarea"]             = "還沒選擇種類";
+$vocab["browserlang"]        = "你的瀏覽器設為";
+$vocab["postbrowserlang"]    = "語系.";
+$vocab["addroom"]            = "新增會議室/設備";
+$vocab["capacity"]           = "容量";
+$vocab["norooms"]            = "沒有會議室/設備.";
+$vocab["administration"]     = "管理者";
 
 # Used in edit_area_room.php
-$vocab["editarea"]           = "Edit Area";
-$vocab["change"]             = "Change";
-$vocab["backadmin"]          = "Back to Admin";
-$vocab["editroomarea"]       = "Edit Area or Room Description";
-$vocab["editroom"]           = "Edit Room";
-$vocab["update_room_failed"] = "Update room failed: ";
-$vocab["error_room"]         = "Error: room ";
-$vocab["not_found"]          = " not found";
-$vocab["update_area_failed"] = "Update area failed: ";
-$vocab["error_area"]         = "Error: area ";
-$vocab["room_admin_email"]   = "Room admin email:";
-$vocab["area_admin_email"]   = "Area admin email:";
-$vocab["invalid_email"]      = "Invalid email!";
+$vocab["editarea"]           = "新增種類";
+$vocab["change"]             = "改變";
+$vocab["backadmin"]          = "回到管理首頁";
+$vocab["editroomarea"]       = "修改描述";
+$vocab["editroom"]           = "修改會議室/設備";
+$vocab["update_room_failed"] = "更新失敗: ";
+$vocab["error_room"]         = "錯誤: 會議室/設備 ";
+$vocab["not_found"]          = "找不到";
+$vocab["update_area_failed"] = "更新區域失敗: ";
+$vocab["error_area"]         = "錯誤: 區域 ";
+$vocab["room_admin_email"]   = "會議室管理者email:";
+$vocab["area_admin_email"]   = "區域管理者email:";
+$vocab["invalid_email"]      = "不合法的email!";
 
 # Used in del.php
-$vocab["deletefollowing"]    = "This will delete the following bookings";
-$vocab["sure"]               = "Are you sure?";
+$vocab["deletefollowing"]    = "這個動作會刪除相關的預約紀錄";
+$vocab["sure"]               = "確定嗎?";
 $vocab["YES"]                = "YES";
 $vocab["NO"]                 = "NO";
-$vocab["delarea"]            = "You must delete all rooms in this area before you can delete it<p>";
+$vocab["delarea"]            = "你必須先刪除所屬的會議室<p>";
 
 # Used in help.php
-$vocab["about_mrbs"]         = "About MRBS";
-$vocab["database"]           = "Database: ";
-$vocab["system"]             = "System: ";
-$vocab["please_contact"]     = "Please contact ";
-$vocab["for_any_questions"]  = "for any questions that aren't answered here.";
+$vocab["about_mrbs"]         = "關於MRBS";
+$vocab["database"]           = "資料庫: ";
+$vocab["system"]             = "系統: ";
+$vocab["please_contact"]     = "請聯絡";
+$vocab["for_any_questions"]  = ",關於任何在這裡找不到答案的問題.";
 
 # Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Fatal Error: Failed to connect to database";
+$vocab["failed_connect_db"]  = "Fatal Error: 無法連上資料庫";
 
 ?>
