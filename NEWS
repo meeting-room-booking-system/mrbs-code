@@ -12,7 +12,7 @@ Version 1.2.2 (Fri Apr 22 12:00:00 BST 2005):
 [*] Bug 1090172 addressed. Length of booking creator field increased to
       80 characters.
 [*] Updated Taiwanese and Japanese translations, now both in UTF-8
-      encoding. Thanks to ? and ?, respectively.
+      encoding. Thanks to bruck and MATSUURA Takanori, respectively.
 [*] auth_config username matching is now case insensitive.
 [-] If using cookie authentication cookie is now deleted on logout, and
       user's password isn't stored in cookie any more.
