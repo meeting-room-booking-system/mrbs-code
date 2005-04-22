@@ -7,6 +7,22 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.2.2 (Fri Apr 22 12:00:00 BST 2005):
+
+[*] Bug 1090172 addressed. Length of booking creator field increased to
+      80 characters.
+[*] Updated Taiwanese and Japanese translations, now both in UTF-8
+      encoding. Thanks to ? and ?, respectively.
+[*] auth_config username matching is now case insensitive.
+[-] If using cookie authentication cookie is now deleted on logout, and
+      user's password isn't stored in cookie any more.
+[-] If using session authentication, cookie is stored based on the web
+      path MRBS is installed on, allowing more than one MRBS installation
+      per (virtual) host. Additionally session data is deleted on log out,
+      and the user's password isn't stored in the session data any more.
+
+
+-------------------------------------------------------------------------------
 Version 1.2.1 (Fri Dec 10 10:00:00 GMT 2004):
 
 [-] MySQL tables fixed for MySQL 4.0, namely to remove DEFAULT from
