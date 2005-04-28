@@ -213,11 +213,8 @@ if(empty($err))
                         $room_name = $row[1];
                         $area_name = $row[3];
                     }
-                    // If this is a modified entry and MAIL_DETAILS is true,
-                    // then call getPreviousEntryData to prepare entry
-                    // comparison. If MAIL_BOOKER is set, we also need
-                    // previous entry data to send mail to the room booker,
-                    // even if we do not need entry details
+                    // If this is a modified entry then call
+                    // getPreviousEntryData to prepare entry comparison.
                     if ( isset($id) )
                     {
                         $mail_previous = getPreviousEntryData($id, 1);
@@ -260,12 +257,9 @@ if(empty($err))
                         $room_name = $row[1];
                         $area_name = $row[3];
                     }
-                    // If this is a modified entry and MAIL_DETAILS is true,
-                    // then call getPreviousEntryData to prepare entry
-                    // comparison. If MAIL_BOOKER is set, we also need
-                    // previous entry data to send mail to the room booker,
-                    // even if we do not need entry details
-                    if ( isset($id) )
+                    // If this is a modified entry then call
+                    // getPreviousEntryData to prepare entry comparison.
+                   if ( isset($id) )
                     {
                         $mail_previous = getPreviousEntryData($id, 0);
                     }
