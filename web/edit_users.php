@@ -42,7 +42,7 @@ CREATE TABLE $tbl_users
   /* The first four fields are required. Don't remove or reorder. */
   id        int DEFAULT '0' NOT NULL auto_increment,
   name      varchar(30),
-  password  varchar(32),
+  password  varchar(40),
   email     varchar(75),
 
   /* The following fields are application-specific. However only int and varchar are editable. */
@@ -92,22 +92,25 @@ function get_loc_field_name($i)
 |                         Authentify the current user                         |
 \*---------------------------------------------------------------------------*/
 
+$initial_user_creation = 0;
+
 if ($nusers > 0)
-    {
+{
     $user = getUserName();
     $level = authGetUserLevel($user, $auth["admin"]);
     // Do not allow unidentified people to browse the list.
     if(!getAuthorised(1))
-        {
+    {
         showAccessDenied($day, $month, $year, $area);
         exit;
-        }
     }
+}
 else /* We've just created the table. Assume the person doing this IS the administrator. */
-    {
+{
+    $initial_user_creation = 1;
     $user = "administrator";
     $level = 2;
-    }
+}
 
 /*---------------------------------------------------------------------------*\
 |             Edit a given entry - 1st phase: Get the user input.             |
@@ -268,7 +271,7 @@ if (isset($Action) && ($Action == "Update"))
     /* print $operation . "<br>\n"; */
     $r = sql_command($operation);
     if ($r == -1)
-        {
+    {
 	print_header(0, 0, 0, "");
 
 	// This is unlikely to happen in normal  operation. Do not translate.
@@ -280,10 +283,11 @@ if (isset($Action) && ($Action == "Update"))
         print "</form>\n</body>\n</html>\n";
 
         exit();
-        }
-    /* print "Database updated successfully.<br><br>\n"; */
-    /* Success. Do not display a message. Simply fall through into the list display. */
     }
+
+    /* Success. Redirect to the user list, to remove the form args */
+    Header("Location: edit_users.php");
+}
 
 /*---------------------------------------------------------------------------*\
 |                                Delete a user                                |
@@ -325,6 +329,12 @@ if (isset($Action) && ($Action == "Delete"))
 print_header(0, 0, 0, "");
 
 print "<h2>" . get_vocab("user_list") . "</h2>\n";
+
+if ($initial_user_creation == 1)
+{
+    print "<h3>" . get_vocab("no_users_initial") . "</h3>\n";
+    print "<p>" . get_vocab("no_users_create_first_admin") . "</p>\n";
+}
 
 if ($level == 2) /* Administrators get the right to add new users */
     {
