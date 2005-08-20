@@ -1,22 +1,51 @@
+2005-08-20  John Beranek <jberanek@users.sourceforge.net>
+
+	* AUTHENTICATION (tags: mrbs-1_2_3) (mrbs-1_2-branch.1):
+	  * Improved db_ext auth scheme - moved the configuration into
+	  config.inc.php,  where it belongs. Additionally added support for
+	  the password in the  external database being in different
+	  formats, namely one of:    - MD5    - SHA1	- crypt    -
+	  plaintext   Also documented the scheme in AUTHENTICATION, and
+	  added example config	in config.inc.php.
+
+	  * Fixes for cookie and php session schemes, username and password
+	  as  obtained from the web form are now 'unslashed' before being
+	  stored  and/or passed to the auth scheme.  auth_db.inc updated to
+	  escape the  username being putting it in the database query.
+
+	  * Added site_faq_es.html, contributed by Carlos Insunza.
+
+2005-04-22  John Beranek <jberanek@users.sourceforge.net>
+
+	* NEWS (tags: mrbs-1_2_3, mrbs-1_2_2) (mrbs-1_2-branch.3): * Update
+	  to NEWS file, I'd forgotton to fill in the names of the
+	  contributors of updated Taiwanese and Japanese translations.
+
+2005-04-22  John Beranek <jberanek@users.sourceforge.net>
+
+	* NEWS (mrbs-1_2-branch.2): * Updated ChangeLogs and NEWS files for
+	  1.2.2 release.
+
 2005-02-13  John Beranek <jberanek@users.sourceforge.net>
 
-	* tables.my.sql (1.5.2.2), tables.pg.sql (1.6.2.1) (utags:
-	  mrbs-1_2-branch_lastmerge, mrbs-1_2_2):
+	* tables.my.sql, tables.pg.sql (mrbs-1_2-branch.[2,1]) (utags:
+	  mrbs-1_2-branch_lastmerge, mrbs-1_2_2, mrbs-1_2_3):
 	  * Fix for Sourceforge bug ID 1090172. Increase length of booking
 	  creator field to 80 characters.
 
 2004-12-10  John Beranek <jberanek@users.sourceforge.net>
 
-	* NEWS (1.7.2.1, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-1_2_1):
+	* NEWS (tags: mrbs-1_2-branch_lastmerge, mrbs-1_2_1)
+	  (mrbs-1_2-branch.1):
 	  * Updated NEWS file for MRBS 1.2.1 release.
 
 2004-11-29  John Beranek <jberanek@users.sourceforge.net>
 
-	* tables.my.sql (1.5.2.1), upgrade.my.sql (1.2.4.1, mrbs-1_2_2,
-	  mrbs-1_2-branch_lastmerge), upgrade2.my.sql (1.2.2.1, mrbs-1_2_2,
-	  mrbs-1_2-branch_lastmerge), upgrade3.my.sql (1.2.2.1, mrbs-1_2_2,
-	  mrbs-1_2-branch_lastmerge) (utags: mrbs-1_2_1):
+	* tables.my.sql, upgrade.my.sql (tags: mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge), upgrade2.my.sql (tags: mrbs-1_2_3,
+	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge), upgrade3.my.sql (tags:
+	  mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge)
+	  (mrbs-1_2-branch.[1,1,1,1]) (utags: mrbs-1_2_1):
 	  * MySQL tables fixed for MySQL 4.0, namely to remove DEFAULT from
 	   auto_increment columns.
 
@@ -30,9 +59,10 @@
 
 2004-06-14  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* INSTALL (1.36, mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-1_2_1,
-	  mrbs-1_2, mrbs-1_2-branch_bp): Changed comment about $url_base to
-	  recommend setting this if email notifications are to be used.
+	* INSTALL (1.36, mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp): Changed comment about
+	  $url_base to recommend setting this if email notifications are to
+	  be used.
 
 	  Fixed Bug 972186
 
@@ -66,14 +96,15 @@
 
 2004-05-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* upgrade2.pg.sql (1.3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
-	  mrbs-1_2-branch_bp, mrbs-1-2-pre3): Sync. sql statement with
+	* upgrade2.pg.sql (1.3, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
+	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
+	  mrbs-1-2-pre3): Sync. sql statement with
 	  tables.pg.73and_above.sql
 
 2004-05-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* tables.pg.73and_above.sql (1.3, mrbs-1_2_2,
+	* tables.pg.73and_above.sql (1.3, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge), tables.pg.sql (1.6) (utags:
 	  mrbs-1-2-pre3, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1_2_1,
 	  mrbs-pre-MDB-merge): Added new fields for emails.
@@ -100,7 +131,7 @@
 
 2004-05-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* INSTALL (1.31), UPGRADE (1.7, mrbs-1_2_2,
+	* INSTALL (1.31), UPGRADE (1.7, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
 	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3), tables.my.sql (1.5,
 	  mrbs-pre-MDB-merge, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3),
@@ -143,17 +174,18 @@
 
 2004-04-14  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* destroy.pg.sql (1.3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3), grant.pg.sql (1.4, mrbs-1_2_2,
-	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
-	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3), purge.my.sql (1.3, mrbs-1_2_2,
+	* destroy.pg.sql (1.3, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
-	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3), purge.pg.sql (1.3,
-	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge,
-	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3),
-	  sample-data.sql (1.3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3), grant.pg.sql (1.4,
+	  mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
+	  mrbs-1_2-branch_bp, mrbs-1-2-pre3), purge.my.sql (1.3,
+	  mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
+	  mrbs-1-2-pre3), purge.pg.sql (1.3, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
+	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3), sample-data.sql
+	  (1.3, mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
 	  mrbs-1-2-pre3), tables.my.sql (1.4), tables.pg.73and_above.sql
 	  (1.2), tables.pg.sql (1.5): Added comment that user needs to fix
@@ -162,10 +194,11 @@
 
 2004-04-14  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* testdata.php (1.5, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3): Changed the fixed table names to variables.  The
-	  variables are defined in config.inc.php.
+	* testdata.php (1.5, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
+	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3): Changed the fixed
+	  table names to variables.  The variables are defined in
+	  config.inc.php.
 
 2004-04-13  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -206,12 +239,12 @@
 
 2003-12-21  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* AUTHENTICATION (1.24), INSTALL (1.21), README (1.13, mrbs-1_2_2,
-	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
-	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3): Doc fix: - Updated
-	  other doc areas about default administrator since JFL change.  -
-	  Removed warning in function.inc since it works now with Gavin
-	  changes
+	* AUTHENTICATION (1.24), INSTALL (1.21), README (1.13, mrbs-1_2_3,
+	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge,
+	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3): Doc
+	  fix: - Updated other doc areas about default administrator since
+	  JFL change.  - Removed warning in function.inc since it works now
+	  with Gavin changes
 
 2003-12-21  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
@@ -244,9 +277,10 @@
 
 2003-12-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* README.nwauth (1.4, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3, mrbs-1-2-pre2): Doc fix.
+	* README.nwauth (1.4, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
+	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2): Doc
+	  fix.
 
 2003-12-06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -284,7 +318,7 @@
 
 2003-12-03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* pgsql.before_php42.inc (1.1, mrbs-1_2_2,
+	* pgsql.before_php42.inc (1.1, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
 	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2):
 	  Updated the postgreSql driver (pgsql.inc) to remove deprecated
@@ -300,7 +334,7 @@
 
 2003-11-18  John Beranek <jberanek@users.sourceforge.net>
 
-	* convert_db_to_utf8.php (1.1, mrbs-1_2_2,
+	* convert_db_to_utf8.php (1.1, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
 	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2):
 	  * Added utility to convert text in the database to UTF8, to  use
@@ -336,11 +370,11 @@
 
 2003-09-25  John Beranek <jberanek@users.sourceforge.net>
 
-	* AUTHENTICATION (1.18), crypt_passwd.example (1.1, mrbs-1_2_2,
-	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
+	* AUTHENTICATION (1.18), crypt_passwd.example (1.1, mrbs-1_2_3,
+	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3, mrbs-1-2-pre2), crypt_passwd.pl (1.1, mrbs-1_2_2,
-	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
+	  mrbs-1-2-pre3, mrbs-1-2-pre2), crypt_passwd.pl (1.1, mrbs-1_2_3,
+	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
 	  mrbs-1-2-pre3, mrbs-1-2-pre2):
 	  Added a new script for the "ext" authentication scheme that
@@ -354,14 +388,14 @@
 2003-09-23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* AUTHENTICATION (1.17), INSTALL (1.14), LANGUAGE (1.10,
-	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge,
-	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3,
-	  mrbs-1-2-pre2), README.nwauth (1.3), README.sqlapi (1.3,
-	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge,
-	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3,
-	  mrbs-1-2-pre2), grant.pg.sql (1.3, mrbs-1-2-pre2), testdata.php
-	  (1.3) (utags: mrbs-1-2-pre1): Finally we changed config.inc to
-	  config.inc.php for "security" reasons.
+	  mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
+	  mrbs-1-2-pre3, mrbs-1-2-pre2), README.nwauth (1.3), README.sqlapi
+	  (1.3, mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
+	  mrbs-1-2-pre3, mrbs-1-2-pre2), grant.pg.sql (1.3, mrbs-1-2-pre2),
+	  testdata.php (1.3) (utags: mrbs-1-2-pre1): Finally we changed
+	  config.inc to config.inc.php for "security" reasons.
 
 2003-08-09  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -400,10 +434,11 @@
 
 2002-10-08  John Beranek <jberanek@users.sourceforge.net>
 
-	* smb_auth.c (1.2, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs_MDB-latest,
-	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3,
-	  mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1):
+	* smb_auth.c (1.2, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
+	  mrbs-pre-MDB-merge, mrbs_MDB-latest, mrbs-1_2_1, mrbs-1_2,
+	  mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB, mrbs-1-1):
 	     - Changed all uses of <? to <?php.
 
 	     - Merged change from John Beranek for an Advanced search
@@ -459,11 +494,11 @@
 
 2002-05-11  Daniel <nambit@users.sourceforge.net>
 
-	* checklang.php (1.4, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs_MDB-latest,
-	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3,
-	  mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1): change
-	  last $lang to $vocab
+	* checklang.php (1.4, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
+	  mrbs-pre-MDB-merge, mrbs_MDB-latest, mrbs-1_2_1, mrbs-1_2,
+	  mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB, mrbs-1-1): change last $lang to $vocab
 
 2002-05-09  Daniel <nambit@users.sourceforge.net>
 
@@ -548,7 +583,7 @@
 
 2001-03-02  Michael Redinger <mred@users.sourceforge.net>
 
-	* AUTHENTICATION (1.12), auth_pam.pl (1.1, mrbs-1_2_2,
+	* AUTHENTICATION (1.12), auth_pam.pl (1.1, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs_MDB-latest, mrbs-1_2_1, mrbs-1_2,
 	  mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1,
@@ -564,14 +599,15 @@
 	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1),
 	  README.sqlapi (1.2, Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final,
 	  mrbs-1-0-pre1), UPGRADE (1.4, mrbs-1-0-final, mrbs-1-0-pre1),
-	  auth_ldap.pl (1.2, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB,
-	  mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), auth_ldapsearch.pl
-	  (1.3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge,
-	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3,
-	  mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1,
-	  mrbs-1-0-final, mrbs-1-0-pre1), badpw.pl (1.3, mrbs-1_2_2,
+	  auth_ldap.pl (1.2, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
+	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2,
+	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final,
+	  mrbs-1-0-pre1), auth_ldapsearch.pl (1.3, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
+	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2,
+	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final,
+	  mrbs-1-0-pre1), badpw.pl (1.3, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
 	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2,
 	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final,
@@ -734,15 +770,15 @@
 
 2000-05-03  Daniel <nambit@users.sourceforge.net>
 
-	* COPYING (1.1.1.1, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs_MDB-latest,
-	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3,
-	  mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1,
-	  mrbs-1-0-final, mrbs-1-0-pre1, mrbs-1-0-pre2, mrbs-0-9-2,
-	  mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2, rbs-branch, mrbs-0-9-a,
-	  mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6, mrbs-0-8-pre4,
-	  mrbs-0-8-pre3, mrbs-0-8-pre2, mrbs0-7, mrbs0-6, mrbs0-5, start):
-	  Initial Import
+	* COPYING (1.1.1.1, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
+	  mrbs-pre-MDB-merge, mrbs_MDB-latest, mrbs-1_2_1, mrbs-1_2,
+	  mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1,
+	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1,
+	  mrbs-1-0-pre2, mrbs-0-9-2, mrbs-0-9-1, mrbs-0-9, mrbs-0-9-pre2,
+	  rbs-branch, mrbs-0-9-a, mrbs-0-8-1, mrbs-0-8, mrbs-0-8-pre6,
+	  mrbs-0-8-pre4, mrbs-0-8-pre3, mrbs-0-8-pre2, mrbs0-7, mrbs0-6,
+	  mrbs0-5, start): Initial Import
 
 2000-05-03  Daniel <nambit@users.sourceforge.net>
 

@@ -7,6 +7,27 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.2.3 (Sat Aug 20 20:30:00 BST 2005):
+
+[+] Added new authentication scheme, db_ext. This allows authentication
+ to come from a table in an external database (MySQL only until MRBS 1.3).
+ All the parameters are configurable in config.inc.php and documented
+ in AUTHENTICATION.
+[-] Cookie and PHP session schemes will now handle usernames/passwords
+ with certain quote characters in properly.
+[*] HTTP session scheme now shows a login button, and who is currently
+ logged in.
+[+] Added Spanish translation of site FAQ, contributed by Carlos Insunza.
+[*] Password column in users table (db auth scheme) is now 40 characters
+ wide.
+[*] When setting up an installation using the db auth scheme, the
+ 'User list' screen allows the admin user to be added without you
+ being logged in. Once the first user is added you must log in.
+[*] Updated Norwegian translation supplied by Emil Stoa.
+[+] Added Korean translation, as contributed by YoungJoon Kim.
+
+
+-------------------------------------------------------------------------------
 Version 1.2.2 (Fri Apr 22 12:00:00 BST 2005):
 
 [*] Bug 1090172 addressed. Length of booking creator field increased to

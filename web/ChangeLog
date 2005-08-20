@@ -1,38 +1,117 @@
+2005-08-20  John Beranek <jberanek@users.sourceforge.net>
+
+	* session_http.inc (tags: mrbs-1_2_3) (mrbs-1_2-branch.2): * Minor
+	  tidying.
+
+2005-08-20  John Beranek <jberanek@users.sourceforge.net>
+
+	* session_cookie.inc (tags: mrbs-1_2_3), session_http.inc,
+	  session_php.inc (tags: mrbs-1_2_3) (mrbs-1_2-branch.[3,1,3]): *
+	  Improved/fixed HTTP session scheme. It now also shows whether the
+	  login  box in the to banner, and shows who you're logged in as.
+	  Tested it on	my Linux box.
+
+	  * Minor tidying in a few files.
+
+2005-08-20  John Beranek <jberanek@users.sourceforge.net>
+
+	* auth_db.inc (tags: mrbs-1_2_3), auth_db_ext.inc (tags:
+	  mrbs-1_2_3), config.inc.php (tags: mrbs-1_2_3),
+	  session_cookie.inc, session_php.inc, site_faq_es.html (tags:
+	  mrbs-1_2_3) (mrbs-1_2-branch.[3,2,5,2,2,1]):
+	  * Improved db_ext auth scheme - moved the configuration into
+	  config.inc.php,  where it belongs. Additionally added support for
+	  the password in the  external database being in different
+	  formats, namely one of:    - MD5    - SHA1	- crypt    -
+	  plaintext   Also documented the scheme in AUTHENTICATION, and
+	  added example config	in config.inc.php.
+
+	  * Fixes for cookie and php session schemes, username and password
+	  as  obtained from the web form are now 'unslashed' before being
+	  stored  and/or passed to the auth scheme.  auth_db.inc updated to
+	  escape the  username being putting it in the database query.
+
+	  * Added site_faq_es.html, contributed by Carlos Insunza.
+
+2005-07-13  John Beranek <jberanek@users.sourceforge.net>
+
+	* lang.ko (tags: mrbs-1_2_3) (mrbs-1_2-branch.1): * Added Korean
+	  translation, as contributed by YoungJoon Kim.
+
+2005-06-10  John Beranek <jberanek@users.sourceforge.net>
+
+	* lang.no (tags: mrbs-1_2_3) (mrbs-1_2-branch.1): * Updated
+	  norwegian translation supplied by Emil Stoa.
+
+2005-05-17  John Beranek <jberanek@users.sourceforge.net>
+
+	* edit_users.php, lang.en (mrbs-1_2-branch.[2,1]) (utags:
+	  mrbs-1_2_3): * A few improvements to db authentication system:
+	  - mrbs_users table is now created with a 40 character wide
+	  password     column. Used to be 32 which was only just enough.
+	  This matches the     column width I made the trunk development
+	  MRBS use.    - A message is now shown at the top of the edit
+	  users page when      the mrbs_users table is empty that describes
+	  the situation and what      to do.	- After a user entry is
+	  updated we now redirect the web browser back	    to the edit
+	  users page, to discard the form arguments.
+
+2005-05-11  John Beranek <jberanek@users.sourceforge.net>
+
+	* config.inc.php (mrbs-1_2-branch.4): * Update version number to
+	  1.2.2+cvs
+
+2005-05-11  John Beranek <jberanek@users.sourceforge.net>
+
+	* auth_db_ext.inc (mrbs-1_2-branch.1): * Added new authentication
+	  scheme, a result of support request 1199314.	 It queries a table
+	  in an external database for username/password   information. It's
+	  mysql only, and assumes the password is stored in   plaintext.
+	  Config values must be changed at the top of the file too.
+
+2005-04-28  Gavin Walker <gwalker@users.sourceforge.net>
+
+	* edit_entry_handler.php (tags: mrbs-1_2_3) (mrbs-1_2-branch.3):
+	  fixed incorrect comment
+
 2005-04-22  John Beranek <jberanek@users.sourceforge.net>
 
-	* config.inc.php (1.39.2.3, mrbs-1_2_2): * Updated version number
-	  to 1.2.2.
+	* config.inc.php (tags: mrbs-1_2_2) (mrbs-1_2-branch.3): * Updated
+	  version number to 1.2.2.
 
 2005-04-11  John Beranek <jberanek@users.sourceforge.net>
 
-	* lang.zh-tw (1.15.2.1, mrbs-1_2_2): * Updated Taiwanese
-	  translation. Now stored in UTF-8 encoding. Taiwanese	users who
-	  have set $unicode_encoding to 0 will need to convert their
-	  databases to UTF-8.
+	* lang.zh-tw (tags: mrbs-1_2_3, mrbs-1_2_2) (mrbs-1_2-branch.1): *
+	  Updated Taiwanese translation. Now stored in UTF-8 encoding.
+	  Taiwanese  users who have set $unicode_encoding to 0 will need to
+	  convert their  databases to UTF-8.
 
 2005-04-11  John Beranek <jberanek@users.sourceforge.net>
 
-	* lang.ja (1.15.2.1, mrbs-1_2_2): * Updated Japanese translation.
-	  Now stored in UTF-8 encoding. Japanese  users who have set
-	  $unicode_encoding to 0 will need to convert their  databases to
-	  UTF-8.
+	* lang.ja (tags: mrbs-1_2_3, mrbs-1_2_2) (mrbs-1_2-branch.1): *
+	  Updated Japanese translation. Now stored in UTF-8 encoding.
+	  Japanese  users who have set $unicode_encoding to 0 will need to
+	  convert their  databases to UTF-8.
 
 2005-03-29  John Beranek <jberanek@users.sourceforge.net>
 
-	* add.php (1.5.2.1), admin.php (1.16.2.1), auth_config.inc
-	  (1.2.4.2), auth_db.inc (1.6.2.2), auth_ext.inc (1.6.2.2),
-	  auth_imap.inc (1.6.2.2), auth_ldap.inc (1.7.2.2), auth_nis.inc
-	  (1.5.2.2), auth_none.inc (1.1.4.2), auth_nw.inc (1.4.2.2),
-	  auth_pop3.inc (1.6.2.2), del.php (1.11.2.1), del_entry.php
-	  (1.5.2.1), edit_area_room.php (1.14.2.1), edit_entry.php
-	  (1.30.2.2), edit_entry_handler.php (1.22.2.2), edit_users.php
-	  (1.9.2.1), mrbs_auth.inc (1.8.2.1), session_cookie.inc (1.9.2.1),
-	  session_host.inc (1.1.4.1), session_ip.inc (1.1.4.1),
-	  session_nt.inc (1.1.4.1), session_omni.inc (1.1.4.1),
-	  session_php.inc (1.8.2.1) (utags: mrbs-1_2-branch_lastmerge,
-	  mrbs-1_2_2): * Made username matching case insensitive
-	  throughout. Auth schemes  may still have case sensitive usernames
-	  though.
+	* add.php (tags: mrbs-1_2_3), admin.php (tags: mrbs-1_2_3),
+	  auth_config.inc (tags: mrbs-1_2_3), auth_db.inc, auth_ext.inc
+	  (tags: mrbs-1_2_3), auth_imap.inc (tags: mrbs-1_2_3),
+	  auth_ldap.inc (tags: mrbs-1_2_3), auth_nis.inc (tags:
+	  mrbs-1_2_3), auth_none.inc (tags: mrbs-1_2_3), auth_nw.inc (tags:
+	  mrbs-1_2_3), auth_pop3.inc (tags: mrbs-1_2_3), del.php (tags:
+	  mrbs-1_2_3), del_entry.php (tags: mrbs-1_2_3), edit_area_room.php
+	  (tags: mrbs-1_2_3), edit_entry.php (tags: mrbs-1_2_3),
+	  edit_entry_handler.php, edit_users.php, mrbs_auth.inc (tags:
+	  mrbs-1_2_3), session_cookie.inc, session_host.inc (tags:
+	  mrbs-1_2_3), session_ip.inc (tags: mrbs-1_2_3), session_nt.inc
+	  (tags: mrbs-1_2_3), session_omni.inc (tags: mrbs-1_2_3),
+	  session_php.inc
+	  (mrbs-1_2-branch.[1,1,2,2,2,2,2,2,2,2,2,1,1,1,2,2,1,1,1,1,1,1,1,1])
+	  (utags: mrbs-1_2-branch_lastmerge, mrbs-1_2_2): * Made username
+	  matching case insensitive throughout. Auth schemes  may still
+	  have case sensitive usernames though.
 
 	  * auth_config username matching made case insensitive.
 
@@ -51,24 +130,25 @@
 
 2005-02-13  John Beranek <jberanek@users.sourceforge.net>
 
-	* auth_config.inc (1.2.4.1), auth_db.inc (1.6.2.1), auth_ext.inc
-	  (1.6.2.1), auth_imap.inc (1.6.2.1), auth_ldap.inc (1.7.2.1),
-	  auth_nis.inc (1.5.2.1), auth_none.inc (1.1.4.1), auth_nw.inc
-	  (1.4.2.1), auth_pop3.inc (1.6.2.1): * Fix for Sourceforge bug ID
-	  1112161. Removed case insensitivity  from auth schemes.
+	* auth_config.inc, auth_db.inc, auth_ext.inc, auth_imap.inc,
+	  auth_ldap.inc, auth_nis.inc, auth_none.inc, auth_nw.inc,
+	  auth_pop3.inc (mrbs-1_2-branch.[1,1,1,1,1,1,1,1,1]): * Fix for
+	  Sourceforge bug ID 1112161. Removed case insensitivity  from auth
+	  schemes.
 
 2004-11-21  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* functions_mail.inc (1.14.2.3, mrbs-1_2_2,
-	  mrbs-1_2-branch_lastmerge, mrbs-1_2_1): Bug 1027328 - fixed
-	  sendMail function so that it provides the correct parameters and
-	  headers for each type of backend (mail, sendmail or smtp).
-	  Thanks to Thekk.
+	* functions_mail.inc (tags: mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-1_2_1) (mrbs-1_2-branch.3): Bug
+	  1027328 - fixed sendMail function so that it provides the correct
+	  parameters and headers for each type of backend (mail, sendmail
+	  or smtp).  Thanks to Thekk.
 
 2004-11-20  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* functions_mail.inc (1.14.2.2): RFE 1000967 - enhance email
-	  notifications.  Also reference Neil Hawes' emails to the list:
+	* functions_mail.inc (mrbs-1_2-branch.2): RFE 1000967 - enhance
+	  email notifications.	Also reference Neil Hawes' emails to the
+	  list:
 	  http://sourceforge.net/mailarchive/message.php?msg_id=9550429
 
 	  Updated functions_mail.inc so that email notifications include
@@ -79,62 +159,65 @@
 
 2004-11-19  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* config.inc.php (1.39.2.2, mrbs-1_2-branch_lastmerge, mrbs-1_2_1):
-	  Bug 1068522 - changed "" around $db_password value to '' so that
-	  special characters are not interpeted. Thanks to Matt Schuler
+	* config.inc.php (tags: mrbs-1_2-branch_lastmerge, mrbs-1_2_1)
+	  (mrbs-1_2-branch.2): Bug 1068522 - changed "" around $db_password
+	  value to '' so that special characters are not interpeted. Thanks
+	  to Matt Schuler
 
 2004-11-19  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* mrbs_sql.inc (1.18.2.1, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-1_2_1): Bug 1035790 - unable to book series with pgsql.
-	  Fixed INSERT command in mrbsCreateRepeatEntry as per suggestion
-	  of Thekk.
+	* mrbs_sql.inc (tags: mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-1_2_1) (mrbs-1_2-branch.1): Bug
+	  1035790 - unable to book series with pgsql.  Fixed INSERT command
+	  in mrbsCreateRepeatEntry as per suggestion of Thekk.
 
 2004-11-09  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* edit_entry_handler.php (1.22.2.1, mrbs-1_2_1), functions_mail.inc
-	  (1.14.2.1): Bug 994056 - fixed emailing so that emails are sent
-	  to mrbs_admin, area and room admins under all conditions if
-	  configured to do so.
+	* edit_entry_handler.php (tags: mrbs-1_2_1), functions_mail.inc
+	  (mrbs-1_2-branch.[1,1]): Bug 994056 - fixed emailing so that
+	  emails are sent to mrbs_admin, area and room admins under all
+	  conditions if configured to do so.
 
 2004-10-28  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* edit_entry.php (1.30.2.1, mrbs-1_2_1): Bug 1040185 - changed
-	  mktime so that am and pm generation is not affected by timezone
-	  and the fact that "Negative timestamps are not supported under
-	  any known version of Windows" (from php manual).
+	* edit_entry.php (tags: mrbs-1_2_1) (mrbs-1_2-branch.1): Bug
+	  1040185 - changed mktime so that am and pm generation is not
+	  affected by timezone and the fact that "Negative timestamps are
+	  not supported under any known version of Windows" (from php
+	  manual).
 
 2004-09-21  John Beranek <jberanek@users.sourceforge.net>
 
-	* lang.cs (1.1.2.1), language.inc (1.13.2.1) (utags:
-	  mrbs-1_2-branch_lastmerge, mrbs-1_2_1, mrbs-1_2_2):
+	* lang.cs, language.inc (mrbs-1_2-branch.[1,1]) (utags:
+	  mrbs-1_2-branch_lastmerge, mrbs-1_2_1, mrbs-1_2_2, mrbs-1_2_3):
 	  * Fixed lang/locale selection for Czech language. Czech country
 	  code is "cs", not "cz".
 
 2004-09-17  John Beranek <jberanek@users.sourceforge.net>
 
-	* functions.inc (1.34.2.2), style.inc (1.10.2.1) (utags:
-	  mrbs-1_2-branch_lastmerge, mrbs-1_2_1, mrbs-1_2_2): * Merged a
-	  functions.inc change from the trunk, namely a fix for the
-	  ChangeOptionDays JavaScript function.
+	* functions.inc, style.inc (mrbs-1_2-branch.[2,1]) (utags:
+	  mrbs-1_2-branch_lastmerge, mrbs-1_2_1, mrbs-1_2_2, mrbs-1_2_3): *
+	  Merged a functions.inc change from the trunk, namely a fix for
+	  the  ChangeOptionDays JavaScript function.
 
 	  * Fix for page refresh functionality. If a refresh time is
 	  configured,  only do it for day.php, week.php and month.php
 
 2004-09-14  John Beranek <jberanek@users.sourceforge.net>
 
-	* lang.nl (1.16.2.1, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-1_2_1): * Updated lang.nl from Marc ter Horst
+	* lang.nl (tags: mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-1_2_1) (mrbs-1_2-branch.1): * Updated lang.nl from Marc ter
+	  Horst
 
 2004-09-13  John Beranek <jberanek@users.sourceforge.net>
 
-	* functions.inc (1.34.2.1):
+	* functions.inc (mrbs-1_2-branch.1):
 	  * Merged a "post-1.2 release" fix from the trunk onto the 1.2
 	  branch.
 
 2004-09-13  John Beranek <jberanek@users.sourceforge.net>
 
-	* config.inc.php (1.39.2.1):
+	* config.inc.php (mrbs-1_2-branch.1):
 	  * Created branch (mrbs-1_2-branch) for MRBS 1.2 fixes/minor
 	  updates. Changed version number to 1.2.1
 
@@ -142,10 +225,10 @@
 
 	* mrbs.css (1.11, mrbs-post-MDB-merge, mrbs-pre-MDB-merge),
 	  xbLib.js (1.4) (utags: mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1_2-branch_lastmerge, mrbs-1_2_1, mrbs-1_2_2): Minor bug
-	  fix: The hidden active cell was sized differently from the main
-	  table cell.  This generated extra mouse events, causing flicker
-	  on the status line.
+	  mrbs-1_2-branch_lastmerge, mrbs-1_2_1, mrbs-1_2_2, mrbs-1_2_3):
+	  Minor bug fix: The hidden active cell was sized differently from
+	  the main table cell.	This generated extra mouse events, causing
+	  flicker on the status line.
 
 2004-08-05  Gavin Walker <gwalker@users.sourceforge.net>
 
@@ -160,32 +243,32 @@
 
 2004-07-28  John Beranek <jberanek@users.sourceforge.net>
 
-	* lang.cz (1.10, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	* lang.cz (1.10, mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
 	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
 	  mrbs-1_2-branch_bp): * Updated lang.cz from David Krotil. Only
 	  required one token  to be translated.
 
 2004-07-28  John Beranek <jberanek@users.sourceforge.net>
 
-	* lang.cz (1.9), lang.da (1.5, mrbs-1_2_2,
+	* lang.cz (1.9), lang.da (1.5, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp),
-	  lang.de (1.18, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  lang.de (1.18, mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
 	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
-	  mrbs-1_2-branch_bp), lang.el (1.4, mrbs-1_2_2,
+	  mrbs-1_2-branch_bp), lang.el (1.4, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp),
 	  lang.en (1.26, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
 	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
-	  mrbs-1_2-branch_bp), lang.es (1.18, mrbs-1_2_2,
+	  mrbs-1_2-branch_bp), lang.es (1.18, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp),
-	  lang.fi (1.9, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  lang.fi (1.9, mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
 	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
-	  mrbs-1_2-branch_bp), lang.fr (1.23, mrbs-1_2_2,
+	  mrbs-1_2-branch_bp), lang.fr (1.23, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp),
-	  lang.it (1.11, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  lang.it (1.11, mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
 	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
 	  mrbs-1_2-branch_bp), lang.ja (1.15, mrbs-1_2-branch_lastmerge,
 	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
@@ -193,9 +276,9 @@
 	  mrbs-pre-MDB-merge, mrbs-1_2, mrbs-1_2-branch_bp), lang.no (1.13,
 	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp),
-	  lang.pt (1.5, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  lang.pt (1.5, mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
 	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
-	  mrbs-1_2-branch_bp), lang.sv (1.17, mrbs-1_2_2,
+	  mrbs-1_2-branch_bp), lang.sv (1.17, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp),
 	  lang.zh-tw (1.15, mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
@@ -224,10 +307,11 @@
 2004-06-23  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* functions_mail.inc (1.12), lang.en (1.25), view_entry.php (1.16,
-	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge,
-	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp): Changed view_entry.php
-	  so that it could handle the situation where an id for a series is
-	  passed to it.  A series is identified by series=1 in the url.
+	  mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp):
+	  Changed view_entry.php so that it could handle the situation
+	  where an id for a series is passed to it.  A series is identified
+	  by series=1 in the url.
 
 	  Changed functions_mail.inc to generate urls with series=1 in the
 	  email messages where the message relates to a series.
@@ -254,9 +338,10 @@
 
 2004-06-15  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* month.php (1.31, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp): Changed so that '+'
-	  sign and javascript are not included in month "print preview"
+	* month.php (1.31, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-1_2_1, mrbs-1_2,
+	  mrbs-1_2-branch_bp): Changed so that '+' sign and javascript are
+	  not included in month "print preview"
 
 2004-06-15  Gavin Walker <gwalker@users.sourceforge.net>
 
@@ -303,10 +388,10 @@
 
 2004-06-12  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* day.php (1.38, mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-1_2_1,
-	  mrbs-1_2, mrbs-1_2-branch_bp): Changing ordering of rooms in day
-	  view back to "by room name" as "by capacity" was specific to
-	  Jean-François' implementation.
+	* day.php (1.38, mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp): Changing ordering of
+	  rooms in day view back to "by room name" as "by capacity" was
+	  specific to Jean-François' implementation.
 
 2004-06-12  Gavin Walker <gwalker@users.sourceforge.net>
 
@@ -410,9 +495,10 @@
 2004-05-06  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* config.inc.php (1.34), day.php (1.36), week.php (1.37,
-	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-1_2_1, mrbs-1_2,
-	  mrbs-1_2-branch_bp, mrbs-1-2-pre3): Added $morningstarts_minutes
-	  to allow for a day to start at say 8:30 am.  Default value is 0.
+	  mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-1_2_1,
+	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3): Added
+	  $morningstarts_minutes to allow for a day to start at say 8:30
+	  am.  Default value is 0.
 
 2004-05-06  Gavin Walker <gwalker@users.sourceforge.net>
 
@@ -467,7 +553,7 @@
 	  mrbs-1-2-pre3), functions_mail.inc (1.1), lang.en (1.24,
 	  mrbs-1-2-pre3), lang.fr (1.22, mrbs-1-2-pre3), language.inc
 	  (1.9), mrbs_sql.inc (1.18, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3), Net/Socket.php (1.2, mrbs-1_2_2,
+	  mrbs-1-2-pre3), Net/Socket.php (1.2, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
 	  mrbs-1-2-pre3): + Added/changed features to email support:  -
@@ -507,15 +593,15 @@
 
 2004-04-25  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* edit_users.php (1.8), mysql.inc (1.5, mrbs-1_2_2,
+	* edit_users.php (1.8), mysql.inc (1.5, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
 	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3), pgsql.inc (1.6,
-	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge,
-	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3):
-	  Modified the way edit_users.php gets the user table fields names
-	  and types.  It now uses the three new routines sql_field_name,
-	  sql_field_type, sql_num_fields, defined in mysql.inc and
-	  pgsql.inc, which in turn call their corresponding
+	  mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
+	  mrbs-1-2-pre3): Modified the way edit_users.php gets the user
+	  table fields names and types.  It now uses the three new routines
+	  sql_field_name, sql_field_type, sql_num_fields, defined in
+	  mysql.inc and pgsql.inc, which in turn call their corresponding
 	  database-specific eponym.  Still not tested with PostgreSQL, but
 	  much more likely to work.
 
@@ -546,9 +632,10 @@
 
 2004-04-17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* report.php (1.22, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3): - fixed bug $typematch, variable undefined
+	* report.php (1.22, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
+	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3): - fixed bug
+	  $typematch, variable undefined
 
 2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -569,33 +656,34 @@
 
 2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* Mail/mail.php (1.2, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
-	  mrbs-1_2-branch_bp, mrbs-1-2-pre3): - Removed PEAR_MAIL constants
-	  (never had).
+	* Mail/mail.php (1.2, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
+	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
+	  mrbs-1-2-pre3): - Removed PEAR_MAIL constants (never had).
 
 2004-04-16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* Mail.php (1.1, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	* Mail.php (1.1, mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
 	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
-	  mrbs-1_2-branch_bp, mrbs-1-2-pre3), PEAR.php (1.2, mrbs-1_2_2,
-	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
+	  mrbs-1_2-branch_bp, mrbs-1-2-pre3), PEAR.php (1.2, mrbs-1_2_3,
+	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
 	  mrbs-1-2-pre3), config.inc.php (1.31), edit_entry_handler.php
 	  (1.18), functions.inc (1.30), lang.en (1.22), mrbs_sql.inc
 	  (1.17), view_entry.php (1.15, mrbs-1-2-pre3), Mail/RFC822.php
-	  (1.1, mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
-	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3), Mail/mail.php (1.1), Mail/null.php (1.1,
-	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
-	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3), Mail/sendmail.php (1.1, mrbs-1_2_2,
+	  (1.1, mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
+	  mrbs-1_2-branch_bp, mrbs-1-2-pre3), Mail/mail.php (1.1),
+	  Mail/null.php (1.1, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3), Mail/smtp.php (1.1, mrbs-1_2_2,
+	  mrbs-1-2-pre3), Mail/sendmail.php (1.1, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3), Net/SMTP.php (1.1, mrbs-1_2_2,
+	  mrbs-1-2-pre3), Mail/smtp.php (1.1, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
+	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
+	  mrbs-1-2-pre3), Net/SMTP.php (1.1, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
 	  mrbs-1-2-pre3), Net/Socket.php (1.1): + Added email support to
@@ -620,14 +708,15 @@
 	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
 	  mrbs-1-2-pre3), edit_area_room.php (1.11), edit_entry.php (1.27),
 	  edit_entry_handler.php (1.17), edit_users.php (1.7),
-	  functions.inc (1.29), index.php (1.8, mrbs-1_2_2,
+	  functions.inc (1.29), index.php (1.8, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
 	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3), month.php (1.26),
 	  mrbs_sql.inc (1.16), report.php (1.21), search.php (1.12,
-	  mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge,
-	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3),
-	  view_entry.php (1.14), week.php (1.31): Changed the fixed table
-	  names to variables.  The variables are defined in config.inc.php.
+	  mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
+	  mrbs-1-2-pre3), view_entry.php (1.14), week.php (1.31): Changed
+	  the fixed table names to variables.  The variables are defined in
+	  config.inc.php.
 
 2004-04-14  Gavin Walker <gwalker@users.sourceforge.net>
 
@@ -707,17 +796,17 @@
 
 2004-04-12  Gavin Walker <gwalker@users.sourceforge.net>
 
-	* mincals.inc (1.11, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
-	  mrbs-1_2-branch_bp, mrbs-1-2-pre3): mincal changes: - correct
-	  week highlight code to correctly highlight where a week crosses
-	  into a new month.  The problem was when crossing the year
-	  boundary, and   where only the last day of the week was in the
-	  new month and the number   of days in the current month was < 31.
-	  - week and month now include room in the link thus maintaining
-	  the same   room when using the calendars for navigation -
-	  highlights whole month in month view - highlight colour moved to
-	  mrbs.css
+	* mincals.inc (1.11, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
+	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
+	  mrbs-1-2-pre3): mincal changes: - correct week highlight code to
+	  correctly highlight where a week crosses   into a new month.	The
+	  problem was when crossing the year boundary, and   where only the
+	  last day of the week was in the new month and the number   of
+	  days in the current month was < 31.  - week and month now include
+	  room in the link thus maintaining the same   room when using the
+	  calendars for navigation - highlights whole month in month view -
+	  highlight colour moved to mrbs.css
 
 2004-04-11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -979,18 +1068,18 @@
 2004-01-15  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* config.inc.php (1.16), session_cookie.inc (1.5), session_php.inc
-	  (1.5), trailer.inc (1.10, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2,
-	  mrbs-1_2-branch_bp, mrbs-1-2-pre3): Changed absolute paths in
-	  anchor hrefs and redirection headers from absolute to relative.
-	  This should fix the link failures seen by some users, in
-	  environments where a proxy makes the user-visible root different
-	  from the web-server-visible root.  In the unlikely case where
-	  some users have a very old browser not supporting relative HTTP
-	  relocation headers, then they can use the $url_base in
-	  config.inc.php as a workaround: In this case, put in this
-	  variable the full URL of the MRBS root, as seen by the users
-	  through the proxy.
+	  (1.5), trailer.inc (1.10, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
+	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
+	  mrbs-1-2-pre3): Changed absolute paths in anchor hrefs and
+	  redirection headers from absolute to relative.  This should fix
+	  the link failures seen by some users, in environments where a
+	  proxy makes the user-visible root different from the
+	  web-server-visible root.  In the unlikely case where some users
+	  have a very old browser not supporting relative HTTP relocation
+	  headers, then they can use the $url_base in config.inc.php as a
+	  workaround: In this case, put in this variable the full URL of
+	  the MRBS root, as seen by the users through the proxy.
 
 2004-01-15  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -1162,7 +1251,7 @@
 
 2003-11-21  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* config.inc.php (1.11), help.php (1.12, mrbs-1_2_2,
+	* config.inc.php (1.11), help.php (1.12, mrbs-1_2_3, mrbs-1_2_2,
 	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
 	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2):
 	  Since we always forgot for each release to update mrbs version in
@@ -1307,9 +1396,10 @@
 
 2003-11-14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
-	* grab_globals.inc.php (1.2, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3, mrbs-1-2-pre2): Added the setting of $HTTP_HOST.
+	* grab_globals.inc.php (1.2, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
+	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2):
+	  Added the setting of $HTTP_HOST.
 
 2003-11-14  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -1694,10 +1784,11 @@
 
 2003-01-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
-	* site_faq_fr.html (1.2, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB,
-	  mrbs-1-1): Minor translation corrections
+	* site_faq_fr.html (1.2, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
+	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2,
+	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1): Minor translation
+	  corrections
 
 2003-01-12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
@@ -1809,15 +1900,16 @@
 
 	* admin.php (1.6), auth_ext.inc (1.4, Root-of-mrbs_MDB, mrbs-1-1),
 	  edit_area_room.php (1.5), edit_entry.php (1.8),
-	  escapeshellarg.inc (1.1, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
-	  mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB,
-	  mrbs-1-1), functions.inc (1.13), help.php (1.5), index.php (1.3),
-	  lang.cz (1.2), lang.de (1.10), lang.en (1.9), lang.es (1.11),
-	  lang.fr (1.10), lang.it (1.4), lang.ja (1.9), lang.nl (1.10),
-	  lang.no (1.5), lang.sv (1.10), lang.zh-tw (1.9), mincals.inc
-	  (1.4), mrbs_auth.inc (1.4, mrbs-1-1), report.php (1.7),
-	  search.php (1.5), style.inc (1.6), view_entry.php (1.5):
+	  escapeshellarg.inc (1.1, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
+	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2,
+	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1), functions.inc (1.13),
+	  help.php (1.5), index.php (1.3), lang.cz (1.2), lang.de (1.10),
+	  lang.en (1.9), lang.es (1.11), lang.fr (1.10), lang.it (1.4),
+	  lang.ja (1.9), lang.nl (1.10), lang.no (1.5), lang.sv (1.10),
+	  lang.zh-tw (1.9), mincals.inc (1.4), mrbs_auth.inc (1.4,
+	  mrbs-1-1), report.php (1.7), search.php (1.5), style.inc (1.6),
+	  view_entry.php (1.5):
 	     - Changed all uses of <? to <?php.
 
 	     - Merged change from John Beranek for an Advanced search
@@ -2136,37 +2228,38 @@
 
 2001-02-25  L J Bayuk <lbayuk@users.sourceforge.net>
 
-	* .htaccess (1.2, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
-	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs_MDB-latest,
-	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3,
-	  mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1,
-	  mrbs-1-0-final, mrbs-1-0-pre1), add.php (1.2, mrbs-1-1,
-	  mrbs-1-0-final, mrbs-1-0-pre1), admin.php (1.2, mrbs-1-0-final,
-	  mrbs-1-0-pre1), auth_ext.inc (1.2, mrbs-1-0-final,
-	  mrbs-1-0-pre1), auth_ldap.inc (1.2, mrbs-1-0-pre1), auth_nw.inc
-	  (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), day.php (1.2),
-	  del.php (1.2, mrbs-1-0-final, mrbs-1-0-pre1), del_entry.php (1.2,
-	  mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), edit_area_room.php
-	  (1.2, mrbs-1-0-final, mrbs-1-0-pre1), edit_entry.php (1.2),
-	  edit_entry_handler.php (1.2, mrbs-1-0-pre1), functions.inc (1.2),
-	  help.php (1.2, mrbs-1-0-final, mrbs-1-0-pre1), index.php (1.2,
-	  mrbs-1-0-final, mrbs-1-0-pre1), lang.de (1.2), lang.en (1.2),
-	  lang.es (1.2), lang.fr (1.2), lang.ja (1.2), lang.nl (1.2),
-	  lang.sv (1.2), lang.zh-tw (1.2), mincals.inc (1.2), month.php
-	  (1.2), mrbs.css (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1),
-	  mrbs_auth.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1), mrbs_sql.inc
-	  (1.2), mysql.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1), new.gif
-	  (1.2, mrbs-1_2_2, mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
+	* .htaccess (1.2, mrbs-1_2_3, mrbs-1_2_2,
+	  mrbs-1_2-branch_lastmerge, mrbs-post-MDB-merge,
 	  mrbs-pre-MDB-merge, mrbs_MDB-latest, mrbs-1_2_1, mrbs-1_2,
 	  mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1,
 	  Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1),
-	  pgsql.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1), report.php (1.2),
-	  search.php (1.2), site_faq.html (1.2, mrbs-1_2_2,
-	  mrbs-1_2-branch_lastmerge, mrbs-pre-MDB-merge, mrbs-1_2_1,
-	  mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3, mrbs-1-2-pre2,
-	  mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1, mrbs-1-0-final,
-	  mrbs-1-0-pre1), style.inc (1.2, mrbs-1-0-pre1), trailer.inc (1.2,
-	  mrbs-1-0-pre1), view_entry.php (1.2, mrbs-1-0-pre1), week.php
-	  (1.2) (utags: mrbs-1-0-pre2): Merge branch mrbs-0-9-1xp into
-	  trunk
+	  add.php (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), admin.php
+	  (1.2, mrbs-1-0-final, mrbs-1-0-pre1), auth_ext.inc (1.2,
+	  mrbs-1-0-final, mrbs-1-0-pre1), auth_ldap.inc (1.2,
+	  mrbs-1-0-pre1), auth_nw.inc (1.2, mrbs-1-1, mrbs-1-0-final,
+	  mrbs-1-0-pre1), day.php (1.2), del.php (1.2, mrbs-1-0-final,
+	  mrbs-1-0-pre1), del_entry.php (1.2, mrbs-1-1, mrbs-1-0-final,
+	  mrbs-1-0-pre1), edit_area_room.php (1.2, mrbs-1-0-final,
+	  mrbs-1-0-pre1), edit_entry.php (1.2), edit_entry_handler.php
+	  (1.2, mrbs-1-0-pre1), functions.inc (1.2), help.php (1.2,
+	  mrbs-1-0-final, mrbs-1-0-pre1), index.php (1.2, mrbs-1-0-final,
+	  mrbs-1-0-pre1), lang.de (1.2), lang.en (1.2), lang.es (1.2),
+	  lang.fr (1.2), lang.ja (1.2), lang.nl (1.2), lang.sv (1.2),
+	  lang.zh-tw (1.2), mincals.inc (1.2), month.php (1.2), mrbs.css
+	  (1.2, mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), mrbs_auth.inc
+	  (1.2, mrbs-1-0-final, mrbs-1-0-pre1), mrbs_sql.inc (1.2),
+	  mysql.inc (1.2, mrbs-1-0-final, mrbs-1-0-pre1), new.gif (1.2,
+	  mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-post-MDB-merge, mrbs-pre-MDB-merge, mrbs_MDB-latest,
+	  mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp, mrbs-1-2-pre3,
+	  mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB, mrbs-1-1,
+	  mrbs-1-0-final, mrbs-1-0-pre1), pgsql.inc (1.2, mrbs-1-0-final,
+	  mrbs-1-0-pre1), report.php (1.2), search.php (1.2), site_faq.html
+	  (1.2, mrbs-1_2_3, mrbs-1_2_2, mrbs-1_2-branch_lastmerge,
+	  mrbs-pre-MDB-merge, mrbs-1_2_1, mrbs-1_2, mrbs-1_2-branch_bp,
+	  mrbs-1-2-pre3, mrbs-1-2-pre2, mrbs-1-2-pre1, Root-of-mrbs_MDB,
+	  mrbs-1-1, mrbs-1-0-final, mrbs-1-0-pre1), style.inc (1.2,
+	  mrbs-1-0-pre1), trailer.inc (1.2, mrbs-1-0-pre1), view_entry.php
+	  (1.2, mrbs-1-0-pre1), week.php (1.2) (utags: mrbs-1-0-pre2):
+	  Merge branch mrbs-0-9-1xp into trunk
 
