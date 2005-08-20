@@ -1,17 +1,17 @@
 <?php 
 /*****************************************************************************\
-*									      *
-*   File name       auth_http.inc					      *
-*									      *
-*   Description	    Get user identity using the HTTP basic authentication.    *
-*									      *
-*   Notes	    To use this session scheme, set in config.inc.php:        *
-*			$auth["session"]  = "http";			      *
-*									      *
-*   History								      *
-*    2003/11/12 JFL Created this file					      *
+*                                                                             *
+*   File name       auth_http.inc                                             *
+*                                                                             *
+*   Description     Get user identity using the HTTP basic authentication.    *
+*                                                                             *
+*   Notes           To use this session scheme, set in config.inc.php:        *
+*                       $auth["session"]  = "http";                           *
+*                                                                             *
+*   History                                                                   *
+*    2003/11/12 JFL Created this file                                         *
 *    Remaining history in ChangeLog and CVS logs                              *
-*									      *
+*                                                                             *
 \*****************************************************************************/
 
 // $Id$
