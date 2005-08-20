@@ -41,6 +41,8 @@ if (isset($Action) && ($Action == "SetName"))
             $HTTP_SESSION_VARS = array();
         }
     } else {
+        $NewUserName = unslashes($NewUserName);
+        $NewPassword = unslashes($NewPassword);
         if (!authValidateUser($NewUserName, $NewUserPassword)) {
             print_header(0, 0, 0, 0);
             echo "<P>".get_vocab('unknown_user')."</P>\n";

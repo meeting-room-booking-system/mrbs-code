@@ -169,7 +169,8 @@ $default_room = 0;
 $auth["session"] = "php"; # How to get and keep the user ID. One of
 			  # "http" "php" "cookie" "ip" "host" "nt" "omni".
 $auth["type"] = "config"; # How to validate the user/password. One of "none"
-                          # "config" "db" "pop3" "imap" "ldap" "nis" "nw" "ext".
+                          # "config" "db" "db_ext" "pop3" "imap" "ldap" "nis"
+                          # "nw" "ext".
 
 # The list of administrators (can modify other peoples settings)
 $auth["admin"][] = "127.0.0.1";	# localhost IP address. Useful with IP sessions.
@@ -191,6 +192,17 @@ $auth["realm"]  = "mrbs";
 # 'auth_ext' configuration settings
 $auth["prog"]   = "";
 $auth["params"] = "";
+
+# 'auth_db_ext' configuration settings
+$auth['db_ext']['db_host'] = 'localhost';
+$auth['db_ext']['db_username'] = 'authuser';
+$auth['db_ext']['db_password'] = 'authpass';
+$auth['db_ext']['db_name'] = 'authdb';
+$auth['db_ext']['db_table'] = 'users';
+$auth['db_ext']['column_name_username'] = 'name';
+$auth['db_ext']['column_name_password'] = 'password';
+# Either 'md5', 'sha1', 'crypt' or 'plaintext'
+$auth['db_ext']['password_format'] = 'md5';
 
 # 'auth_ldap' configuration settings
 # Where is the LDAP server
@@ -421,6 +433,6 @@ $tbl_room   = $db_tbl_prefix . "room";
 $tbl_users  = $db_tbl_prefix . "users";
 
 # MRBS developers, make sure to update this string before each release:
-$mrbs_version = "MRBS 1.2.2+cvs";
+$mrbs_version = "MRBS 1.2.3";
 
 ?>

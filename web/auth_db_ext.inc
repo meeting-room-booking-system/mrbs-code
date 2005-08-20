@@ -18,16 +18,6 @@
 
 // $Id$
 
-// Config
-
-$my_db_host = 'localhost';
-$my_db_username = 'db_user';
-$my_db_password = 'db_password';
-$my_db_name = 'db_name';
-$my_db_table = 'table_name';
-$column_name_username = 'name';
-$column_name_password = 'password';
-
 
 /* authValidateUser($user, $pass)
  * 
@@ -43,24 +33,67 @@ $column_name_password = 'password';
 
 function authValidateUser($user, $pass)
 {
-  global $my_db_host, $my_db_username, $my_db_password, $my_db_name,
-    $my_db_table, $column_name_username, $column_name_password;
+   global $auth;
+
+   $retval = 0;
 
    $user=strtolower($user);
 
-   $conn = mysql_connect($my_db_host, $my_db_username, $my_db_password);
+   $conn = mysql_connect($auth['db_ext']['db_host'],
+                         $auth['db_ext']['db_username'],
+                         $auth['db_ext']['db_password']);
 
-   mysql_select_db($my_db_name, $conn);
+   mysql_select_db($auth['db_ext']['db_name'], $conn);
 
-   $r = mysql_query("SELECT count(*) FROM $my_db_table WHERE $column_name_username='$user' AND $column_name_password='$pass'", $conn);
+   $user = addslashes($user);
 
-   if ($r && (mysql_result($r, 0) == 1))
+   if ($auth['db_ext']['use_md5_passwords'] == 1)
    {
-     $retval = 1;
+     $pass = md5($pass);
    }
-   else
+
+   $query = "SELECT " . $auth['db_ext']['column_name_password'] .
+            " FROM " . $auth['db_ext']['db_table'] .
+            " WHERE ". $auth['db_ext']['column_name_username'] . "='$user'";
+
+   $r = mysql_query($query, $conn);
+
+   if ($r && (mysql_num_rows($r) == 1)) // force a unique match
    {
-     $retval = 0;
+     $row = mysql_fetch_row($r);
+
+     switch ($auth['db_ext']['password_format'])
+     {
+       case 'md5':
+         if (md5($pass) == $row[0])
+         {
+           $retval = 1;
+         }
+         break;
+
+       case 'sha1':
+         if (sha1($pass) == $row[0])
+         {
+           $retval = 1;
+         }
+         break;
+
+       case 'crypt':
+         $recrypt = crypt($pass,$row[0]);
+         if ($row[0] == $recrypt)
+         {
+           $retval = 1;
+         }
+         break;
+
+       default:
+         // Otherwise assume plaintext
+         if ($pass == $row[0])
+         {
+           $retval = 1;
+         }
+         break;
+     }
    }
 
    mysql_close($conn);

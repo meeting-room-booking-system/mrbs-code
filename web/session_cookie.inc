@@ -36,6 +36,9 @@ if (isset($Action) && ($Action == "SetName"))
 
         setcookie("UserName", '', time()-42000);
     } else {
+        $NewUserName = unslashes($NewUserName);
+        $NewPassword = unslashes($NewPassword);
+
         if (!authValidateUser($NewUserName, $NewUserPassword))
         {
             print_header(0, 0, 0, 0);
