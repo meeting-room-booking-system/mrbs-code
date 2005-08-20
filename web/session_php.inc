@@ -1,18 +1,19 @@
 <?php
 /*****************************************************************************\
-*                                                                            *
-*   File name       session_php.inc                                          *
-*                                                                            *
-*   Description	    Use PHP built-in sessions handling                       *
-*                                                                            *
-*   Notes	        To use this authentication scheme, set in                *
-*                   config.inc.php:                                          *
-*                     $auth["session"]  = "php";                             *
-*                                                                            *
-*                                                                            *
-*   History                                                                  *
-*    2003/11/09 JFL Created this file                                        *
-*                                                                            *
+*                                                                             *
+*   File name       session_php.inc                                           *
+*                                                                             *
+*   Description     Use PHP built-in sessions handling                        *
+*                                                                             *
+*   Notes           To use this authentication scheme, set in                 *
+*                   config.inc.php:                                           *
+*                       $auth["session"]  = "php";                            *
+*                                                                             *
+*                                                                             *
+*   History                                                                   *
+*    2003/11/09 JFL Created this file                                         *
+*    Remaining history in ChangeLog and CVS logs                              *
+*                                                                             *
 \*****************************************************************************/
 
 // $Id$
@@ -162,10 +163,11 @@ function PrintLogonBox()
         // words 'you are xxxx' becomes a link to the
         // report page with only entries created by xxx. Past entries are not
         // displayed but this can be changed
-       	$search_string = "report.php?From_day=$day&From_month=$month&From_year=$year&
-   			To_day=1&To_month=12&To_year=2030&areamatch=&roommatch=&
-            namematch=&descrmatch=&summarize=1&sortby=r&display=d&sumby=d
-            &creatormatch=$user"; ?>
+       	$search_string = "report.php?From_day=$day&From_month=$month&".
+          "From_year=$year&To_day=1&To_month=12&To_year=2030&areamatch=&".
+          "roommatch=&namematch=&descrmatch=&summarize=1&sortby=r&display=d&".
+          "sumby=d&creatormatch=$user"; ?>
+
     <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
       <A name="logonBox" href="<?php echo "$search_string\" title=\""
          . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
