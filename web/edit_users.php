@@ -40,7 +40,7 @@ if ($nusers == -1)	/* If the table does not exist */
 CREATE TABLE $tbl_users
 (
   /* The first four fields are required. Don't remove or reorder. */
-  id        int DEFAULT '0' NOT NULL auto_increment,
+  id        int NOT NULL auto_increment,
   name      varchar(30),
   password  varchar(40),
   email     varchar(75),
