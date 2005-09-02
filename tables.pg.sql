@@ -59,5 +59,5 @@ CREATE TABLE mrbs_repeat
   name        varchar(80) DEFAULT '' NOT NULL,
   type        char DEFAULT 'E' NOT NULL,
   description text,
-  rep_num_weeks smallint DEFAULT '' NULL
+  rep_num_weeks smallint DEFAULT NULL NULL
 );
