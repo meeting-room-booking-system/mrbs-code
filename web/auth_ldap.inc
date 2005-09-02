@@ -20,6 +20,7 @@ function authValidateUser($user, $pass)
 {
 	global $auth;
 	global $ldap_host;
+	global $ldap_port;
 	global $ldap_base_dn;
 	global $ldap_user_attrib;
 	global $ldap_filter;
@@ -72,7 +73,14 @@ function authValidateUser($user, $pass)
 
 	// establish ldap connection
 	// the '@' suppresses errors
-	$ldap = @ldap_connect($ldap_host);
+	if (isset($ldap_port))
+	{
+		$ldap = @ldap_connect($ldap_host, $ldap_port);
+	}
+	else
+	{
+		$ldap = @ldap_connect($ldap_host);
+	}
 
 	// Check that connection was established
 	if($ldap)

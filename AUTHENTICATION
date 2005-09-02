@@ -651,11 +651,16 @@ Also you will need to change the section:
 # 'auth_ldap' configuration settings
 # Where is the LDAP server
 $ldap_host = "localhost";
+# If you have a non-standard LDAP port, you can define it here
+#$ldap_port = 389;
 # LDAP base distinguish name
 # See AUTHENTICATION for details of how check against multiple base dn's
 $ldap_base_dn = "ou=organizationalunit,dc=my-domain,dc=com";
 # Attribute within the base dn that contains the username
 $ldap_user_attrib = "uid";
+
+You only need to set $ldap_port if your LDAP server uses a non-standard
+port.
 
 This method will attempt an authenticated bind to the ldap server using
 the supplied password and a distinguished name, which is formed from the
@@ -697,7 +702,9 @@ NIS Authentication
 
 $auth["type"] = "nis";
 
-Details?
+Authenticates the user from the NIS passwd.byname map. Requires the crypt
+password to be stored in the passwd.byname map and won't therefore work
+with shadow password NIS.
 
 
 NT Authentication

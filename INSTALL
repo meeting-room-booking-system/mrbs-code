@@ -531,34 +531,34 @@ here will be added at the top of the message body. Default is
 7. Language:
 
 MRBS supports multiple languages, which can be used at the same time, based on 
-what the client is using. One of the environment variables supplied to PHP is 
-$HTTP_ACCEPT_LANGUAGE, which we use to choose a language file. You can specify 
-the default in config.inc.php. See the file called LANGUAGE for more info.
+what the client is using. Users can configure their web browsers to prefer
+one language over another, and MRBS will attempt to serve the MRBS pages in
+the user's preferred language. You can specify the default language in
+config.inc.php. See the file called LANGUAGE for more info.
 
-MRBS also uses your OS locale support for certain date/time strings.
-There is some code that tries to figure out what locale should be used
-based on your browser. Use "locale -a" on your unix system to find out what
-locale support is installed.
+MRBS also uses your server's OS locale support to localise date/time strings.
+MRBS attempts to figure out what locale should be used based on your
+preferred language and the server OS. Use "locale -a" on your unix system to
+find out what locale support is installed. On Windows any language supported
+by Windows should work.
 
-* Revamped localisation/internationalisation. 
-
-From mrbs-1.2-pre2, MRBS can be called  fulled Unicode, as long as the 
-config variable $unicode_encoding is set to 1 (this is a default setting now). 
-If this is set, then MRBS serves all of it's pages in UTF-8 and stores
+From mrbs-1.2-pre2, MRBS is internationalised as long as the config
+variable $unicode_encoding is set to 1 (which is the default setting). 
+If this is set, then MRBS serves all of its pages in UTF-8 and stores
 everything in the database in UTF-8. This means that all languages work
-together. So, the Japanese one may use "Shift JIS", European ones "iso-8859-1"
-(or perhaps "iso-8859-15", etc). So, MRBS translates all these different
-encodings into an encoding that can represent all of them, UTF-8. Then,
-all pages are displayed in UTF-8, and all text in the database is encoded
-in UTF-8 too.
+together.
 
 IF THIS DOES NOT WORK for you (your server may not have unicode support),
-just set $unicode_encoding to 0. MRBS will run the old way, with each
-language string stored using its own character set.
+just set $unicode_encoding to 0. MRBS will run the old way, with pages
+being served in an encoding based on the language, and the encoding of data
+in the database being a mess of different encodings based on the users'
+preferred language.
 
-To  use Unicode, php should be built with 'iconv' support ('--with-iconv'
-directive). On Windows, if you are using PHP 5, iconv support is built-in.
-For PHP 4, three things are needed :
+To use Unicode, php should be built with 'iconv' support ('--with-iconv'
+directive), or have the iconv extension installed and enabled. On Windows,
+if you are using PHP 5, iconv support is built-in.
+
+For PHP 4 on Windows, three things are needed :
 
 - iconv.dll file in in the system path. Either copy it from your
   \%phpdir%\dlls\ directory into \%windir%\system32\ directory,
@@ -571,12 +571,12 @@ For PHP 4, three things are needed :
 
 Note: Upgrading mysql database from previous charsets to Unicode :
 
-	  You can use convert_db_to_utf8.php script to convert text in the
-	  database to UTF8, to use MRBS with $unicode_encoding set to 1. The
-	  administrator should copy it into the web directory, run it (choosing
-	  the encoding to convert from) ONCE, and then move it back out of the
-	  web directory. We recommend you backup your database before running
-	  this script if you are at all worried.
+  You can use convert_db_to_utf8.php script to convert text in the
+  database to UTF8, to use MRBS with $unicode_encoding set to 1. The
+  administrator should copy it into the web directory, run it (choosing
+  the encoding to convert from) ONCE, and then move it back out of the
+  web directory. We recommend you backup your database before running
+  this script if you are at all worried.
 
 
 8. Entry Types:
@@ -589,7 +589,8 @@ your config.inc.php file. Each type has a color, defined in the style sheet.
 HELP/FAQ File:
 
 Customize site_faq.html if desired.  It contains help that can be tailored
-to your environment. Currently this help is available in english and in french.
+to your environment. Currently this help is available in a number of
+languages.
 
 
 SECURITY NOTES!

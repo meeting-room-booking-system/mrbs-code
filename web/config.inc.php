@@ -207,6 +207,8 @@ $auth['db_ext']['password_format'] = 'md5';
 # 'auth_ldap' configuration settings
 # Where is the LDAP server
 #$ldap_host = "localhost";
+# If you have a non-standard LDAP port, you can define it here
+#$ldap_port = 389;
 # LDAP base distinguish name
 # See AUTHENTICATION for details of how check against multiple base dn's
 #$ldap_base_dn = "ou=organizationalunit,dc=my-domain,dc=com";
@@ -358,7 +360,7 @@ $mail["deleted_entry"] = "An entry has been deleted, here are the details:";
 ##########
 
 # Set this to 1 to use UTF-8 in all pages and in the database, otherwise
-# text gets enterered in the database in different encodings, dependent
+# text gets entered in the database in different encodings, dependent
 # on the users' language
 $unicode_encoding = 1;
 
