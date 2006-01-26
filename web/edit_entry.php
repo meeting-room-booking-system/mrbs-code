@@ -445,7 +445,7 @@ this.document.writeln("</td></tr>");
 <TR><TD CLASS=CR><B><?php echo get_vocab("type")?></B></TD>
   <TD CLASS=CL><SELECT NAME="type">
 <?php
-for ($c = "A"; $c <= "J"; $c++)
+for ($c = "A"; $c <= "Z"; $c++)
 {
 	if (!empty($typel[$c]))
 		echo "<OPTION VALUE=$c" . ($type == $c ? " SELECTED" : "") . ">$typel[$c]\n";

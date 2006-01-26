@@ -116,7 +116,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
     
     //
     $recipients = '';
-    $id_table = ($rep_type > 0 ? "rep" : "e");
+    $id_table = ($rep_type > 0) ? "rep" : "e";
     (MAIL_ADMIN_ON_BOOKINGS) ? $recipients = MAIL_RECIPIENTS : '';
     if (MAIL_AREA_ADMIN_ON_BOOKINGS)
     {

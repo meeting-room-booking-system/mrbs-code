@@ -459,7 +459,7 @@ function show_colour_key()
 	global $typel;
 	echo "<table border=0><tr>\n";
 	$nct = 0;
-	for ($ct = "A"; $ct <= "J"; $ct++)
+	for ($ct = "A"; $ct <= "Z"; $ct++)
 	{
 		if (!empty($typel[$ct]))
 		{

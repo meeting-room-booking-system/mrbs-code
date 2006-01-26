@@ -241,7 +241,11 @@ else
  \"".$locale."\" to a Windows locale specifier";
     }
   }
-  else if ($server_os == "unix")
+  /* All of these Unix OSes work in mostly the same way... */
+  else if (($server_os == "linux") ||
+           ($server_os == "sunos") ||
+           ($server_os == "bsd") ||
+           ($server_os == "macosx"))
   {
     if (strlen($locale) == 2)
     {
@@ -260,7 +264,14 @@ else
     }
     if ($unicode_encoding)
     {
-      $locale .= ".utf-8";
+      if ($server_os == "sunos")
+      {
+        $locale .= ".UTF-8";
+      }
+      else
+      {
+        $locale .= ".utf-8";
+      }
     }
     if (setlocale(LC_ALL, $locale) == FALSE)
     {
@@ -274,15 +285,23 @@ function get_server_os()
 {
   if (stristr(PHP_OS,"Darwin"))
   {
-    return "unix";
+    return "macosx";
   }
   else if (stristr(PHP_OS, "WIN"))
   {
     return "windows";
   }
-  else if (stristr(PHP_OS, "ux") || stristr(PHP_OS, "BSD"))
+  else if (stristr(PHP_OS, "Linux"))
   {
-    return "unix";
+    return "linux";
+  }
+  else if (stristr(PHP_OS, "BSD"))
+  {
+    return "bsd";
+  }
+  else if (stristr(PHP_OS, "SunOS"))
+  {
+    return "sunos";
   }
   else
   {

@@ -291,6 +291,9 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr,
 
 	global $_initial_weeknumber;
 	$_initial_weeknumber = (int)(($day - 1) / 7) + 1;
+	$week_num = 0;
+	$start_day = date('w', mktime($hour, $min, $sec, $month, $day, $year));
+	$cur_day = $start_day;
 
 	$entrys = "";
 	for($i = 0; $i < $max_ittr; $i++)
@@ -335,14 +338,24 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr,
 
 			// n Weekly repeat
 			case 6:
-				$j = $cur_day = date("w", $entrys[$i]);
-				// Skip over days of the week which are not enabled:
-				while (($j = ($j + 1) % (7*$rep_num_weeks)) != $cur_day && !$rep_opt[$j])
+
+				while (1)
 				{
-					$day += 1;
+					$day++;
+					$cur_day = ($cur_day + 1) % 7;
+
+					if (($cur_day % 7) == $start_day)
+					{
+						$week_num++;
+					}
+
+					if (($week_num % $rep_num_weeks == 0) &&
+					    ($rep_opt[$cur_day] == 1))
+					{
+						break;
+					}
 				}
 
-				$day += 1;
 				break;	
 				
 			// Unknown repeat option

@@ -452,8 +452,8 @@ if (isset($areamatch))
 	$descrmatch = unslashes($descrmatch);
 
 	# Start and end times are also used to clip the times for summary info.
-	$report_start = mktime(0, 0, 0, $From_month, $From_day, $From_year);
-	$report_end = mktime(0, 0, 0, $To_month, $To_day+1, $To_year);
+	$report_start = mktime(0, 0, 0, $From_month+0, $From_day+0, $From_year+0);
+	$report_end = mktime(0, 0, 0, $To_month+0, $To_day+1, $To_year+0);
 
 #   SQL result will contain the following columns:
 # Col Index  Description:
