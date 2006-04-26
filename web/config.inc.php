@@ -190,7 +190,7 @@ $auth["user"]["bob"] = "b";
 # 'session_http' configuration settings
 $auth["realm"]  = "mrbs";
 
-# 'session_remote_user' configiration settings
+# 'session_remote_user' configuration settings
 #$auth['remote_user']['logout_link'] = '/logout/link.html';
 
 # 'auth_ext' configuration settings
