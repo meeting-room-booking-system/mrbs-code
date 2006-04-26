@@ -301,6 +301,16 @@ for historical reasons:
 |       |by OmniHTTPd during the       |                    |                |
 |       |session initiation.           |                    |                |
 +-------+------------------------------+--------------------+----------------+
+|remote_|The user's identity is        |                    |                |
+|user   |determined by reading the     |                    |                |
+|       |REMOTE_USER environment       | - For users that   |  - Requires a  |
+|       |variable.                     | already have an    |  web server    |
+|       |Use in combination with       | wider auth.        |  setup that    |
+|       |authentication "none", as     | scheme that sets   |  sets          |
+|       |authentication has already    | REMOTE_USER, allows|  REMOTE_USER.  |
+|       |been done by the system that  | MRBS to use that   |  Could be hard |
+|       |sets REMOTE_USER              | scheme             |  to set up     |
++-------+------------------------------+--------------------+----------------+
 |ip     |Users are identified by the IP|                    |                |
 |       |address of their computer.    |                    |                |
 |       |                              |  - Easy to setup,  |  - Incompatible|
@@ -782,6 +792,20 @@ $auth["type"] = "none";
 
 Note that technically Omni authentication is actually an MRBS session scheme.
 We put it in this list as it is related with authentication anyway.
+
+REMOTE_USER Authentication
+--------------------------
+
+Get user identity/password using the REMOTE_USER environment variable
+
+To use this session scheme, set in config.inc.php:
+
+  $auth['session']  = 'remote_user';
+  $auth['type'] = 'none';
+
+If you want to display a logout link, set in config.inc.php:
+
+  $auth['remote_user']['logout_link'] = '/logout/link.html'
 
 External Authentication Programs Configuration
 ==============================================

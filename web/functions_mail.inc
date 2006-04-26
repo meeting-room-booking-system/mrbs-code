@@ -124,7 +124,13 @@ function notifyAdminOnBooking($new_entry , $new_id)
         if ($new_entry)
         {
             $sql = "SELECT a.area_admin_email ";
-            $sql .= "FROM $tbl_room r, $tbl_area a, $tbl_entry e, $tbl_repeat rep ";
+            $sql .= "FROM $tbl_room r, $tbl_area a, $tbl_entry e ";
+            // If this is a repeating entry...
+            if ($id_table == 'rep')
+            {
+                // ...use the repeat table
+                $sql .= ", $tbl_repeat rep ";
+            }
             $sql .= "WHERE ${id_table}.id=$new_id AND r.id=${id_table}.room_id AND a.id=r.area_id";
             $res = sql_query($sql);
             (! $res) ? fatal_error(0, sql_error()) : '';
@@ -158,7 +164,13 @@ function notifyAdminOnBooking($new_entry , $new_id)
         if ($new_entry)
         {
             $sql = "SELECT r.room_admin_email ";
-            $sql .= "FROM $tbl_room r, $tbl_entry e, $tbl_repeat rep ";
+            $sql .= "FROM $tbl_room r, $tbl_entry e ";
+            // If this is a repeating entry...
+            if ($id_table == 'rep')
+            {
+                // ...use the repeat table
+                $sql .= ", $tbl_repeat rep ";
+            }
             $sql .= "WHERE ${id_table}.id=$new_id AND r.id=${id_table}.room_id";
             $res = sql_query($sql);
             (! $res) ? fatal_error(0, sql_error()) : '';
@@ -849,6 +861,11 @@ function sendMail($recipients, $subject, $body, $charset = 'us-ascii',
     // Call to the PEAR::Mail class
     $mail_object =& Mail::factory($backend, $params);
     $result = $mail_object->send($recipients, $headers, $body);
+
+    if (is_object($result))
+    {
+      error_log("Error sending email: ".$result->getMessage());
+    }
     return $result;
 }
 

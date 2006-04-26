@@ -362,8 +362,8 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
                 {
                     echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
                         . "&day=$cday&month=$month&year=$year\" title=\""
-                        . $d[$cday]["data"][$i] . "\">"
-                        . substr($d[$cday]["shortdescrip"][$i], 0, 17)
+                        . htmlspecialchars($d[$cday]["data"][$i]) . "\">"
+                        . htmlspecialchars(substr($d[$cday]["shortdescrip"][$i], 0, 17))
                         . "</a>";
                     break;
                 }
@@ -371,16 +371,16 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
                 {
                     echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
                         . "&day=$cday&month=$month&year=$year\" title=\""
-                        . substr($d[$cday]["shortdescrip"][$i], 0, 17) . "\">"
-                        . $d[$cday]["data"][$i] . "</a>";
+                        . htmlspecialchars(substr($d[$cday]["shortdescrip"][$i], 0, 17)) . "\">"
+                        . htmlspecialchars($d[$cday]["data"][$i]) . "</a>";
                     break;
                 }
                 case "both":
                 {
                     echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
                         . "&day=$cday&month=$month&year=$year\">"
-                        . $d[$cday]["data"][$i] . " "
-                        . substr($d[$cday]["shortdescrip"][$i], 0, 6) . "</a>";
+                        . htmlspecialchars($d[$cday]["data"][$i]) . " "
+                        . htmlspecialchars(substr($d[$cday]["shortdescrip"][$i], 0, 6)) . "</a>";
                     break;
                 }
                 default:

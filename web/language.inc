@@ -315,7 +315,7 @@ function get_vocab($tag)
 {
   global $vocab, $unicode_encoding;
 
-  if ($unicode_encoding)
+  if ($unicode_encoding && (strcasecmp($vocab["charset"], "utf-8") != 0))
   {
     return iconv($vocab["charset"],"utf-8",$vocab[$tag]);
   }

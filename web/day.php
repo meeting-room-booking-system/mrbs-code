@@ -285,7 +285,7 @@ else
 				$id    = $today[$room][$time_t]["id"];
 				$color = $today[$room][$time_t]["color"];
 				$descr = htmlspecialchars($today[$room][$time_t]["data"]);
-				$long_descr = $today[$room][$time_t]["long_descr"];
+				$long_descr = htmlspecialchars($today[$room][$time_t]["long_descr"]);
 			}
 			else
 				unset($id);

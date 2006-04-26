@@ -114,7 +114,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
         global $enable_periods;
 	# Display Area/Room, but only when it changes:
 	$area_room = htmlspecialchars($row[8]) . " - " . htmlspecialchars($row[9]);
-	$date = utf8_strftime("%d-%b-%Y", $row[2]);
+	$date = utf8_strftime("%d-%b-%Y", $row[1]);
 	# entries to be sorted on area/room
 	if( $sortby == "r" )
 	{

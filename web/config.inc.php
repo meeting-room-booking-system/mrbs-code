@@ -167,7 +167,8 @@ $default_room = 0;
 # Authentication settings - read AUTHENTICATION
 ###############################################
 $auth["session"] = "php"; # How to get and keep the user ID. One of
-			  # "http" "php" "cookie" "ip" "host" "nt" "omni".
+			  # "http" "php" "cookie" "ip" "host" "nt" "omni"
+			  # "remote_user"
 $auth["type"] = "config"; # How to validate the user/password. One of "none"
                           # "config" "db" "db_ext" "pop3" "imap" "ldap" "nis"
                           # "nw" "ext".
@@ -188,6 +189,9 @@ $auth["user"]["bob"] = "b";
 
 # 'session_http' configuration settings
 $auth["realm"]  = "mrbs";
+
+# 'session_remote_user' configiration settings
+#$auth['remote_user']['logout_link'] = '/logout/link.html';
 
 # 'auth_ext' configuration settings
 $auth["prog"]   = "";
@@ -435,6 +439,6 @@ $tbl_room   = $db_tbl_prefix . "room";
 $tbl_users  = $db_tbl_prefix . "users";
 
 # MRBS developers, make sure to update this string before each release:
-$mrbs_version = "MRBS 1.2.3";
+$mrbs_version = "MRBS 1.2.3+cvs";
 
 ?>
