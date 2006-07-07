@@ -38,6 +38,8 @@ testdata.php in your web site, though.)
 The latest version was tested with PHP 4.3.2, Apache 1.3.28, and either
 MySQL 4.0.14 or PostgreSQL 7.2. It should work on just about anything
 that's got PHP4 with MySQL or PostgreSQL support but PostgreSQL 7.3 and above.
+MRBS has also been somewhat tested on PHP 5.1.2, MySQL 5.0.18 and Apache
+2.2.0, using both the mysql and mysqli database access methods.
 
 It should be pretty easy to adjust it to your corporate colours - the file
 mrbs.css is used on every page, as is style.inc. Just fiddle with these until
@@ -52,7 +54,7 @@ See AUTHENTICATION for information about user authentication/passwords.
 -------------
 Requirements:
 -------------
-- PHP4 with MySQL and/or PostgreSQL support
+- PHP4/5 with MySQL and/or PostgreSQL support
 - MySQL or PostgreSQL
 - Any web server that is supported by PHP
 

@@ -12,8 +12,9 @@ You need to know how to install, secure, run, maintain, and back up your
 chosen database system.
 
 No optional PHP packages (other than the database system) are required for
-this application. This version of MRBS was tested with PHP 4.3.2. Older
-versions of PHP4 may work, but PHP3 likely won't.
+this application. This version of MRBS was tested with PHP 4.3.2 and
+somewhat with PHP 5.1.2. Older versions of PHP 4 may work, but PHP 3 is
+unsupported.
 
 You can run PHP either as a CGI or with a direct module interface (also called 
 SAPI). These servers include Apache, Microsoft Internet Information Server, 
@@ -32,11 +33,11 @@ If you are using PHP as an Apache module, you probably want to ensure that
 the Apache MaxRequestsPerChild is not set to 0, in case of undetected memory
 leaks in PHP or MRBS.
 
-If you use MySQL, versions 3.22.32, 3.23.23, 3.23.53, 4.0.13 and 4.0.14 have 
-been tested and reported to work.
+If you use MySQL, versions 3.22.32, 3.23.23, 3.23.53, 4.0.13, 4.0.14 and
+5.0.18 have been tested and reported to work.
 
-If you use PostgreSQL, you need at least version 7.0, and version 7.0.3 has
-been tested and reported to work. Versions 7.3 and above do not work .
+If you use PostgreSQL, you will need at least version 7.0, versions 7.0.3
+and 8.1.4 has been tested and reported to work.
 
 FILE UNPACKING
 ---------------------------------------------------------------------------
@@ -149,9 +150,10 @@ The following sections can be configured:
 
 1. Database Settings:
 
-First, select your database system. Define either:
+First, select your database system. Define one of the following:
+
     $dbsys = "mysql";
-or,
+    $dbsys = "mysqli";
     $dbsys = "pgsql";
 
 Then define your database connection parameters. Set the values for:
