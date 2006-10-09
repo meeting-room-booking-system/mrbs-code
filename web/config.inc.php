@@ -227,7 +227,7 @@ $auth['db_ext']['password_format'] = 'md5';
 #   (&($ldap_user_attrib=username)($ldap_filter))
 # After binding to check the password, this check is used to see that
 # they are a valid user of mrbs.
-#$ldap_user_filter = "mrbsuser=y";
+#$ldap_filter = "mrbsuser=y";
 
 # 'auth_imap' configuration settings
 # See AUTHENTICATION for details of how check against multiple servers

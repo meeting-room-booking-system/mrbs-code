@@ -43,7 +43,7 @@ if (isset($Action) && ($Action == "SetName"))
         }
     } else {
         $NewUserName = unslashes($NewUserName);
-        $NewPassword = unslashes($NewPassword);
+        $NewUserPassword = unslashes($NewUserPassword);
         if (!authValidateUser($NewUserName, $NewUserPassword)) {
             print_header(0, 0, 0, 0);
             echo "<P>".get_vocab('unknown_user')."</P>\n";
@@ -168,37 +168,39 @@ function PrintLogonBox()
           "roommatch=&namematch=&descrmatch=&summarize=1&sortby=r&display=d&".
           "sumby=d&creatormatch=$user"; ?>
 
-    <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-      <A name="logonBox" href="<?php echo "$search_string\" title=\""
+              <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
+                <A name="logonBox" href="<?php echo "$search_string\" title=\""
          . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
          .$user ?></A><br>
-          <FORM METHOD=POST ACTION="admin.php">
-	    <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" />
-	    <input type="hidden" name="Action" value="SetName" />
-	    <input type="hidden" name="NewUserName" value="" />
-	    <input type="hidden" name="NewUserPassword" value="" />
-	    <input type="submit" value=" <?php echo get_vocab('logoff') ?> " />
-	  </FORM>
-<?php if (isset($user_list_link)) print "	  <br>\n	  " .
-	    "<A href='$user_list_link'>" . get_vocab('user_list') . "</A><br>\n" ;
+                <FORM METHOD=POST ACTION="admin.php">
+	          <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" />
+	          <input type="hidden" name="Action" value="SetName" />
+	          <input type="hidden" name="NewUserName" value="" />
+	          <input type="hidden" name="NewUserPassword" value="" />
+	          <input type="submit" value=" <?php echo get_vocab('logoff') ?> " />
+                </FORM>
+<?php if (isset($user_list_link)) print "
+                <br>
+                <A href=\"$user_list_link\">" . get_vocab('user_list') . "</A><br>\n";
 ?>
-	</TD>
+              </TD>
 <?php
     }
 else
     {
 ?>
-	<TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-	  <A name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></A><br>
-          <FORM METHOD=POST ACTION="admin.php">
-	    <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" />
-	    <input type="hidden" name="Action" value="QueryName" />
-	    <input type="submit" value=" <?php echo get_vocab('login') ?> " />
-	  </FORM>
-<?php if (isset($user_list_link)) print "	  <br>\n	  " .
-	    "<A href=\"$user_list_link\">" . get_vocab('user_list') . "</A><br>\n" ;
+              <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
+                <A name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></A><br>
+                <FORM METHOD=POST ACTION="admin.php">
+                  <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" />
+                  <input type="hidden" name="Action" value="QueryName" />
+                  <input type="submit" value=" <?php echo get_vocab('login') ?> " />
+                </FORM>
+<?php if (isset($user_list_link)) print "
+	        <br>
+                <A href=\"$user_list_link\">" . get_vocab('user_list') . "</A><br>\n";
 ?>
-	</TD>
+              </TD>
 <?php
     }
 }

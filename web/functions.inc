@@ -43,12 +43,12 @@ function print_header($day, $month, $year, $area)
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
                       "http://www.w3.org/TR/html4/loose.dtd">
 <HTML>
- <HEAD>
+  <HEAD>
 <?php
    include "style.inc";
 ?>
- <TITLE><?php echo get_vocab("mrbs") ?></TITLE>
- <SCRIPT LANGUAGE="JavaScript">
+    <TITLE><?php echo get_vocab("mrbs") ?></TITLE>
+    <SCRIPT LANGUAGE="JavaScript">
 
 <!-- Begin
 
@@ -133,9 +133,9 @@ function ChangeOptionDays(formObj, prefix)
 }
 
   //  End -->
-  </SCRIPT>
- </HEAD>
- <BODY BGCOLOR="#ffffed" TEXT=black LINK="#5B69A6" VLINK="#5B69A6" ALINK=red>
+    </SCRIPT>
+  </HEAD>
+  <BODY BGCOLOR="#ffffed" TEXT=black LINK="#5B69A6" VLINK="#5B69A6" ALINK=red>
 	   <?php if ( $GLOBALS["pview"] != 1 ) { ?>
 
    <?php # show a warning if this is using a low version of php
@@ -145,57 +145,62 @@ function ChangeOptionDays(formObj, prefix)
                echo "[Warning: ".$locale_warning."]";
    ?>
 
-   <TABLE WIDTH="100%">
-    <TR>
-      <TD BGCOLOR="#5B69A6">
-       <TABLE WIDTH="100%" BORDER=0>
-        <TR>
-         <TD CLASS="banner" BGCOLOR="#C0E0FF">
-          <FONT SIZE=4><B><?php echo $mrbs_company ?></B><BR>
-           <A HREF="index.php"><?php echo get_vocab("mrbs") ?></A>
-          </FONT>
-         </TD>
-         <TD CLASS="banner" BGCOLOR="#C0E0FF">
-          <FORM ACTION="day.php" METHOD=GET name="Form1">
-           <FONT SIZE=2>
+    <TABLE WIDTH="100%">
+      <TR>
+        <TD BGCOLOR="#5B69A6">
+          <TABLE WIDTH="100%" BORDER=0>
+            <TR>
+              <TD CLASS="banner" BGCOLOR="#C0E0FF">
+                <FONT SIZE=4>
+                  <B><?php echo $mrbs_company ?></B><BR>
+                  <A HREF="index.php"><?php echo get_vocab("mrbs") ?></A>
+                </FONT>
+              </TD>
+              <TD CLASS="banner" BGCOLOR="#C0E0FF">
+                <FORM ACTION="day.php" METHOD=GET name="Form1">
+                  <FONT SIZE=2>
 <?php
    genDateSelector("", $day, $month, $year); // Note: The 1st arg must match the last arg in the call to ChangeOptionDays below.
    if (!empty($area))
-        echo "<INPUT TYPE=HIDDEN NAME=area VALUE=$area>"
+        echo "
+                    <INPUT TYPE=HIDDEN NAME=area VALUE=$area>\n"
  
 ?>
-	    <SCRIPT LANGUAGE="JavaScript">
-	    <!--
-	    // fix number of days for the $month/$year that you start with
-	    ChangeOptionDays(document.Form1, ''); // Note: The 2nd arg must match the first in the call to genDateSelector above.
-	    // -->
-	    </SCRIPT>
-	    <INPUT TYPE=SUBMIT VALUE="<?php echo get_vocab("goto") ?>">
-           </FONT>
-          </FORM>
-         </TD>
-         <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="help.php?day=<?php echo $day ?>&month=<?php echo $month ?>&year=<?php echo $year ?>"><?php echo get_vocab("help") ?></A>
-         </TD>
-         <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="admin.php?day=<?php echo $day ?>&month=<?php echo $month ?>&year=<?php echo $year ?>"><?php echo get_vocab("admin") ?></A>
-         </TD>
-         <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <A HREF="report.php"><?php echo get_vocab("report") ?></A>
-         </TD>
-         <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-          <FORM METHOD=GET ACTION="search.php">
-           <FONT SIZE=2><A HREF="search.php?advanced=1"><?php echo get_vocab("search") ?></A> </FONT>
-           <INPUT TYPE=TEXT   NAME="search_str" VALUE="<?php echo $search_str ?>" SIZE=10>
-           <INPUT TYPE=HIDDEN NAME=day        VALUE="<?php echo $day        ?>"        >
-           <INPUT TYPE=HIDDEN NAME=month      VALUE="<?php echo $month      ?>"        >
-           <INPUT TYPE=HIDDEN NAME=year       VALUE="<?php echo $year       ?>"        >
+	            <SCRIPT LANGUAGE="JavaScript">
+                    <!--
+                    // fix number of days for the $month/$year that you start with
+                    ChangeOptionDays(document.Form1, ''); // Note: The 2nd arg must match the first in the call to genDateSelector above.
+                    // -->
+                    </SCRIPT>
+                    <INPUT TYPE=SUBMIT VALUE="<?php echo get_vocab("goto") ?>">
+                  </FONT>
+                </FORM>
+              </TD>
+              <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
+                <A HREF="help.php?day=<?php echo $day ?>&month=<?php echo $month ?>&year=<?php echo $year ?>"><?php echo get_vocab("help") ?></A>
+              </TD>
+              <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
+                <A HREF="admin.php?day=<?php echo $day ?>&month=<?php echo $month ?>&year=<?php echo $year ?>"><?php echo get_vocab("admin") ?></A>
+              </TD>
+              <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
+                <A HREF="report.php"><?php echo get_vocab("report") ?></A>
+              </TD>
+              <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
+                <FORM METHOD=GET ACTION="search.php">
+                  <FONT SIZE=2>
+                    <A HREF="search.php?advanced=1"><?php echo get_vocab("search") ?></A>
+                  </FONT>
+                  <INPUT TYPE=TEXT   NAME="search_str" VALUE="<?php echo $search_str ?>" SIZE=10>
+                  <INPUT TYPE=HIDDEN NAME=day        VALUE="<?php echo $day        ?>"        >
+                  <INPUT TYPE=HIDDEN NAME=month      VALUE="<?php echo $month      ?>"        >
+                  <INPUT TYPE=HIDDEN NAME=year       VALUE="<?php echo $year       ?>"        >
 <?php
    if (!empty($area))
-        echo "<INPUT TYPE=HIDDEN NAME=area VALUE=$area>"
+        echo "
+                  <INPUT TYPE=HIDDEN NAME=area VALUE=$area>\n"
 ?>
-          </FORM>
-         </TD>
+                </FORM>
+              </TD>
 <?php
     # For session protocols that define their own logon box...
     if (function_exists('PrintLogonBox'))
@@ -203,10 +208,10 @@ function ChangeOptionDays(formObj, prefix)
    	PrintLogonBox();
    	}
 ?>
-        </TR>
-       </TABLE>
-      </TD>
-     </TR>
+            </TR>
+          </TABLE>
+        </TD>
+      </TR>
     </TABLE>
 <?php } ?>
 <?php
@@ -297,31 +302,39 @@ function genDateSelector($prefix, $day, $month, $year)
 	if($month == 0) $month = date("m");
 	if($year  == 0) $year = date("Y");
 	
-	echo "<SELECT NAME=\"${prefix}day\">\n";
+	echo "
+                  <SELECT NAME=\"${prefix}day\">";
 	
 	for($i = 1; $i <= 31; $i++)
-		echo "<OPTION" . ($i == $day ? " SELECTED" : "") . ">$i\n";
+		echo "
+                    <OPTION" . ($i == $day ? " SELECTED" : "") . ">$i";
 
-	echo "</SELECT>";
-	echo "<SELECT NAME=\"${prefix}month\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">\n";
+	echo "
+                  </SELECT>
+
+                  <SELECT NAME=\"${prefix}month\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">";
 
 	for($i = 1; $i <= 12; $i++)
 	{
 		$m = utf8_strftime("%b", mktime(0, 0, 0, $i, 1, $year));
 		
-		print "<OPTION VALUE=\"$i\"" . ($i == $month ? " SELECTED" : "") . ">$m\n";
+		print "
+                    <OPTION VALUE=\"$i\"" . ($i == $month ? " SELECTED" : "") . ">$m";
 	}
 
-	echo "</SELECT>";
-	echo "<SELECT NAME=\"${prefix}year\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">\n";
+	echo "
+                  </SELECT>
+	          <SELECT NAME=\"${prefix}year\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">";
 
 	$min = min($year, date("Y")) - 5;
 	$max = max($year, date("Y")) + 5;
 
 	for($i = $min; $i <= $max; $i++)
-		print "<OPTION VALUE=\"$i\"" . ($i == $year ? " SELECTED" : "") . ">$i\n";
+		print "
+                    <OPTION VALUE=\"$i\"" . ($i == $year ? " SELECTED" : "") . ">$i";
 
-	echo "</SELECT>";
+	echo "
+                  </SELECT>";
 }
 
 # Error handler - this is used to display serious errors such as database

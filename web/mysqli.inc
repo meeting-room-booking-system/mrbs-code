@@ -28,7 +28,7 @@ function sql_command ($sql)
   $ret = -1;
 
   if ($mysqli->query($sql)) {
-    $ret = $mysqli->affected_rows();
+    $ret = $mysqli->affected_rows;
   }
   return $ret;
 }
@@ -87,7 +87,7 @@ function sql_row ($r, $i)
 // the query and returns 0.
 function sql_row_keyed ($r, $i)
 {
-    if ($i >= $r->num_rows()) {
+    if ($i >= $r->num_rows) {
         $r->close();
         return 0;
     }

@@ -57,7 +57,7 @@ module. There are two general categories:
 Internal PHP modules support the following kinds of authentication servers:
 LDAP servers; POP3 email servers; IMAP email servers; NIS servers ; NW servers.
 In addition, three special internal modules support a local list of users for 
-one; a local list of users stored in databse for tthe second; and 
+one; a local list of users stored in databse for the second; and 
 authenticating anybody for the other.
 
 External programs support: NT Domain controllers; Netware servers; PAM servers.
@@ -648,9 +648,10 @@ LDAP Authentication
 
 There are currently three methods for doing LDAP authentication, auth_ldap,
 auth_ldap.pl, auth_ldapsearch.pl.  The preferred method, auth_ldap, uses
-the LDAP functionality built into PHP and is described here.  The other
-methods use the 'ext' authentication method and described further on in
-this file.
+PHP's LDAP extension which must be compiled into PHP or installed and loaded
+as a plugin extension in your php.ini. This method is described here.
+The other methods use the 'ext' authentication method and are described
+further on in this file.
 
 This method can be used by setting config.inc.php as follows:
 

@@ -29,7 +29,9 @@ for($i = -6; $i <= 7; $i++)
 	$cmonth = date("m", $ctime);
 	$cday   = date("d", $ctime);
 	if ($i != -6) echo " | ";
+	if ($i == 0) echo '<b>[ ';
 	echo "<a href=\"day.php?year=$cyear&month=$cmonth&day=$cday$params\">$str</a>\n";
+	if ($i == 0) echo ']</b> ';
 }
 
 echo "<BR><B>".get_vocab("viewweek").":</B>\n";
@@ -49,8 +51,18 @@ for ($i = -4; $i <= 4; $i++)
 	$cmonth = date("m", $ctime);
 	$cyear  = date("Y", $ctime);
 	if ($i != -4) echo " | ";
-    ($view_week_number) ? $str = $cweek : $str = utf8_strftime(empty($dateformat)? "%b %d" : "%d %b", $ctime);
-    echo "<a href=\"week.php?year=$cyear&month=$cmonth&day=$cday$params\">$str</a>\n";
+
+	if ($view_week_number)
+	{
+		$str = $cweek;
+	}
+	else
+	{
+		$str = utf8_strftime(empty($dateformat)? "%b %d" : "%d %b", $ctime);
+	}
+	if ($i == 0) echo '<b>[ ';
+	echo "<a href=\"week.php?year=$cyear&month=$cmonth&day=$cday$params\">$str</a>\n";
+	if ($i == 0) echo ']</b> ';
 }
 
 echo "<BR><B>".get_vocab("viewmonth").":</B>\n";
@@ -62,7 +74,9 @@ for ($i = -2; $i <= 6; $i++)
 	$cmonth = date("m", $ctime);
 	$cyear  = date("Y", $ctime);
 	if ($i != -2) echo " | ";
+	if ($i == 0) echo '<b>[ ';
 	echo "<a href=\"month.php?year=$cyear&month=$cmonth$params\">$str</a>\n";
+	if ($i == 0) echo ']</b> ';
 }
 
 echo "<HR>";

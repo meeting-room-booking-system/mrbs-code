@@ -31,6 +31,18 @@ if(!getWritable($create_by, getUserName()))
     exit;
 }
 
+if ($name == '')
+{
+     print_header($day, $month, $year, $area);
+     ?>
+       <H1><?php echo get_vocab('invalid_booking'); ?></H1>
+       <?php echo get_vocab('must_set_description'); ?>
+   </BODY>
+</HTML>
+<?
+     exit;
+}       
+
 if( $enable_periods ) {
 	$resolution = 60;
 	$hour = 12;

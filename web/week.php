@@ -22,7 +22,7 @@ if (!isset($day) or !isset($month) or !isset($year))
 	$year  = date("Y");
 } else {
 # Make the date valid if day is more then number of days in month:
-	while (!checkdate($month, $day, $year))
+	while (!checkdate(intval($month), intval($day), intval($year)))
 		$day--;
 }
 
