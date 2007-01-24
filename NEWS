@@ -7,6 +7,51 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.2.4 (Wed Jan 24 12:00:00 GMT 2007):
+
+[*] Added ability to specify the LDAP port in config.inc.php.
+[-] Database table creation for Postgresql 8 fixed.
+[-] Improved HTML escaping in the calendar views.
+[-] Fixed emailing of area/room admin in some cases. SF tracker #1474386,
+ fix provided by 'karcher'.
+[*] Added some error logging into the email code
+[-] Fixed encoding specification for zh_tw translation.
+[-] Fixed problem in report output.
+[+] Added 'remote user' session scheme, provided by 'bwiberg'.
+[+] Added 'mysqli' database abstraction layer.
+[-] Added robots instructions to stop search bots trawling MRBS. Fixes
+ SF tracker #1557192.
+[*] Improved documentation on LDAP authentication, fixes SF tracker
+ #1554351.
+[-] Fixed example of LDAP filter configuration in config.inc.php. Fixes
+ SF tracker #1550827.
+[-] Fixed warnings output by some pages. Fixes SF tracker #1557192.
+[*] Added check for empty booking description when creating/modifying
+ a booking - is only necessary if the user has JavaScript off.
+[*] Added updated Finnish translation provided by Tom Ingberg - it now
+ uses UTF-8.
+[-] Fixed password checking for PHP session scheme. Fixes SF tracker
+ #1563470.
+[*] Current day/week/month are now highlighted in the page footer.
+ Implements SF feature request #875744.
+[*] Moved MRBS version number out of config.inc.php so it doesn't get
+ left behind when people upgrade.
+[*] Updated Spanish translation, provided by SoTMaR.
+[*] More entry types are now allowed (now A-Z).
+[-] Fix in emailing of administrators. Fixes SF tracker #1315854, fix
+ supplied by Neville Gilbert.
+[*] SunOS is now supported as a server OS, including UTF-8 locale support.
+[-] Fixed n-weekly repeating bookings, days for booking are now
+ calculated more correctly. Fixes SF tracker #1300974.
+[*] Updated Swedish translation, provided by Bjorn Wiberg.
+[-] Fixed problem in report page if you were using HTTP session scheme.
+ Fix provided by Bjorn Wiberg in SF tracker #1396685.
+[-] Fix for using the 'db' authentication scheme on a MySQL >= 4.1
+ server.
+[+] Added German translation of site FAQ.
+
+
+-------------------------------------------------------------------------------
 Version 1.2.3 (Sat Aug 20 20:30:00 BST 2005):
 
 [+] Added new authentication scheme, db_ext. This allows authentication

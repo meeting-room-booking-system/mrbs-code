@@ -1,3 +1,171 @@
+2007-01-24  John Beranek <jberanek@users.sourceforge.net>
+
+	* config.inc.php, help.php, version.inc (mrbs-1_2-branch.[11,1,1]):
+	  * Moved version number out of config.inc.php and into a
+	  version.inc,	which provides a function to retrieve the version
+	  number. Upped  version to 1.2.4.
+
+2006-10-09  John Beranek <jberanek@users.sourceforge.net>
+
+	* auth_imap.inc, config.inc.php, day.php, edit_entry_handler.php,
+	  functions.inc, lang.en, lang.fi, month.php, mysqli.inc,
+	  robots.txt, session_php.inc, style.inc, trailer.inc, week.php
+	  (mrbs-1_2-branch.[3,10,2,4,4,2,2,2,2,1,4,2,1,1]):
+	  * Added robots.txt and "Robots" META tag, to stop robots trawling
+	   MRBS installations. Fixes SF bug tracker #1557192.
+
+	  * Improved documentation in AUTHENTICATION on LDAP auth method
+	  to make it clear that the 'ldap' PHP extension is required.
+	  Fixes SF bug tracker #1554351.
+
+	  * Fixes in auth_imap.inc to ensure that internet sockets to  the
+	  IMAP server are closed, in an attempt to fix a report  in SF
+	  tracker #1558451, though the reporter has since  told me my fixes
+	  didn't help his problem...
+
+	  * Fixed example setting of $ldap_filter in config.inc.php,  it
+	  showed $ldap_user_filter instead of $ldap_filter.   Fixes SF bug
+	  tracker #1550827.
+
+	  * Added a little code to turn $month, $week and $day into
+	  integers explicitly, before calling checkdate(), this  was
+	  reported under SF tracker #1557192 as a place  where MRBS will
+	  output warnings (when being trawled  by GoogleBot).
+
+	  * Added a check in edit_entry_handler.php to ensure  that the
+	  "Brief Description" is not empty. This will  only happen if the
+	  user doesn't have JavaScript turned  on, as usually there is
+	  JavaScript validation that you  enter a description. Translators
+	  note that I had to  add two more vocab tokens.
+
+	  * Tidied HTML formatting - just the header section (for now).
+
+	  * Added updated Finnish translation as provided by Tom  Ingberg
+	  in SF tracker #1450459. The translation encoding  has changed to
+	  UTF-8, so anyone with a Finnish installation	that sets
+	  $unicode_encoding to 1 will need to run  convert_db_to_utf8.php
+	  to convert the text in  their database from iso-8859-1 to UTF-8.
+
+	  * A few fixes to mysqli.inc that I'd not spotted in my  earlier
+	  testing.
+
+	  * A fix in session_php.inc to ensure that the user's password
+	  gets unslashed(). Fixed SF bug tracker #1563470.
+
+	  * A few changes in trailer.inc so that the current day/week/month
+	   in the trailer links are highlighted somewhat. Implements  SF
+	  feature request tracker # 875744.
+
+2006-07-07  John Beranek <jberanek@users.sourceforge.net>
+
+	* lang.es (mrbs-1_2-branch.1): * Updated Spanish translation, as
+	  provided by SoTMaR.
+
+2006-07-07  John Beranek <jberanek@users.sourceforge.net>
+
+	* config.inc.php, mysqli.inc (mrbs-1_2-branch.[9,1]): * Added
+	  'mysqli' database abstraction, to allow PHP 5 installations  to
+	  use the newer/better 'mysqli' extension instead of 'mysql'.
+	  Reasonably tested on a Linux Apache 2.2.0/MySQL 5.0.18/PHP 5.1.2
+	  installation. Updated the documentation to mention the new
+	  database   abstraction method, hopefully in all the necessary
+	  places.
+
+2006-04-26  John Beranek <jberanek@users.sourceforge.net>
+
+	* config.inc.php (mrbs-1_2-branch.8): * Fixed typo in comment in
+	  config.inc.php.
+
+2006-04-26  John Beranek <jberanek@users.sourceforge.net>
+
+	* config.inc.php, day.php, functions_mail.inc, lang.zh-tw,
+	  language.inc, month.php, report.php, session_remote_user.inc
+	  (mrbs-1_2-branch.[7,1,6,2,3,1,2,1]): * Upped version number to
+	  1.2.3+cvs (rather belatedly)
+
+	  * Fixed some HTML escaping issues in the grids.
+
+	  * Fixed a problem whereby non-repeating entries wouldn't  be
+	  emailed to area/room admins. Fixes SF tracker #1474386,  fix
+	  provided by 'karcher'.
+
+	  * Added a little error logging into email functionality.   You
+	  should get an diagnostic error in your error log if	an email
+	  fails to be sent.
+
+	  * Fixed zh-tw translation to correctly specify its encoding as
+	  utf-8.
+
+	  * Improved get_vocab() so that it doesn't do an iconv if the
+	  language  encoding is utf-8.
+
+	  * Fixed bug in report.php that meant the meeting end date was
+	  shown  when the start date should have been. This fix was
+	  provided to me  somehow, but I can't find who provided it...
+
+	  * Added "remote_user" session scheme, as provided by 'bwiberg' on
+	   SF tracker #1432748. Allows MRBS to be configured to use a
+	  server authentication scheme that sets the REMOTE_USER
+	  environment  variable.
+
+2006-01-26  John Beranek <jberanek@users.sourceforge.net>
+
+	* functions_mail.inc, mrbs_sql.inc, site_faq_de.html
+	  (mrbs-1_2-branch.[5,3,2]): * Removed errant CRs from a few files.
+
+2006-01-26  John Beranek <jberanek@users.sourceforge.net>
+
+	* edit_entry.php, functions.inc, functions_mail.inc, lang.sv,
+	  language.inc, mrbs_sql.inc, report.php
+	  (mrbs-1_2-branch.[3,3,4,1,2,2,1]): * Allow more entry types, now
+	  A-Z instead of A-J.
+
+	  * Fix in notifyAdminOnBooking, to fix SF tracker #1315854,  as
+	  supplied by Neville Gilbert. The fix ensures that the  area
+	  administrator is sent an email when a booking is  created.
+
+	  * Improve server OS detection in language.inc. SunOS is now
+	  handled, including utf-8 locale support.
+
+	  * Improved n-weekly repeat code, you can now do an n-weekly
+	  repeating  meeting that happens on a sunday. Calculation of which
+	  days to  create bookings on is now done more carefully. SF
+	  tracker #1300974
+
+	  * Updated Swedish translation, as provided by Bjorn Wiberg in SF
+	  tracker #1397719.
+
+	  * Fixed problem in report.php that would create an error if MRBS
+	  was  configured to use HTTP session handling and you clicked the
+	  "You are ..." link. Provided by Bjorn Wiberg in SF tracker
+	  #1396685.
+
+2005-09-02  John Beranek <jberanek@users.sourceforge.net>
+
+	* auth_ldap.inc, config.inc.php, lang.fi (mrbs-1_2-branch.[3,6,1]):
+	  * Added ability to change the port of the LDAP server when  the
+	  'ldap' auth scheme is used. Set $ldap_port in config.inc.php	to
+	  change from the default port.  * Added documentation for ldap
+	  port configuration into  AUTHENTICATION, along with some brief
+	  details on the 'nis'	auth scheme.  * Tidied up some of the text
+	  in INSTALL describing MRBS's i18n  and l10n support.	* Made
+	  checklang.php work with register_globals off, and made the
+	  output prettier.  * Fixed a typo in a comment in config.inc.php *
+	  Added a missing $ in a Finnish vocab entry.
+
+2005-09-02  John Beranek <jberanek@users.sourceforge.net>
+
+	* edit_users.php (mrbs-1_2-branch.3): * Bug fix for the SQL
+	  statement that generates the mrbs_users table.   Autoincrement
+	  columns don't need a DEFAULT, and if specified with	one on
+	  MySQL >= 4.1 the SQL statement fails. The DEFAULT clause has
+	  been removed from the SQL.
+
+2005-08-31  John Beranek <jberanek@users.sourceforge.net>
+
+	* site_faq_de.html (mrbs-1_2-branch.1): * Added German translation
+	  of site FAQ, courtesy of Bertold Altaner.
+
 2005-08-20  John Beranek <jberanek@users.sourceforge.net>
 
 	* session_http.inc (tags: mrbs-1_2_3) (mrbs-1_2-branch.2): * Minor
