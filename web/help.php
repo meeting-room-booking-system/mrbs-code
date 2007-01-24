@@ -6,6 +6,7 @@ require_once "grab_globals.inc.php";
 include "config.inc.php";
 include "$dbsys.inc";
 include "functions.inc";
+include "version.inc";
 
 #If we dont know the right date then make it up
 if(!isset($day) or !isset($month) or !isset($year))
@@ -20,7 +21,7 @@ if(empty($area))
 print_header($day, $month, $year, $area);
 
 echo "<H3>" . get_vocab("about_mrbs") . "</H3>\n";
-echo "<P><a href=\"http://mrbs.sourceforge.net\">".get_vocab("mrbs")."</a> - $mrbs_version\n";
+echo "<P><a href=\"http://mrbs.sourceforge.net\">".get_vocab("mrbs")."</a> - ".get_mrbs_version()."\n";
 echo "<BR>" . get_vocab("database") . sql_version() . "\n";
 echo "<BR>" . get_vocab("system") . php_uname() . "\n";
 echo "<BR>PHP: " . phpversion() . "\n";
