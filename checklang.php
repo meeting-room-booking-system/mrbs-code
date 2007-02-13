@@ -11,6 +11,12 @@ If you do not supply a lang=xx parameter, all languages will be checked.
 
 <?php
 
+# NOTE: You need to change this if you run checklang.php from anywhere but
+# the MRBS 'web' directory
+$path_to_mrbs = ".";
+
+include "$path_to_mrbs/config.inc.php";
+
 # Checklang 2001-01-28 ljb - Check MRBS language files for completeness.
 # This is a rather straightforward job. For each language file, report
 # on any missing or untranslated strings with respect to the reference
@@ -27,7 +33,7 @@ else if (!empty($HTTP_GET_VARS))
 	$lang = $HTTP_GET_VARS['lang'];
 }
         
-# Language file prefix. This can include a path, e.g. "../mrbs/lang."
+# Language file prefix
 $langs = "lang.";
 
 # Reference language:
@@ -48,14 +54,14 @@ else {
   closedir($dh);
 }
 
-include "$langs$ref_lang";
+include "$path_to_mrbs/$langs$ref_lang";
 $ref = $vocab;
 
 reset($check);
 while (list(,$l) = each($check))
 {
-	unset($lang);
-	include "$langs$l";
+	unset($vocab);
+	include "$path_to_mrbs/$langs$l";
 ?>
 <h2>Language: <?php echo $l ?></h2>
 <table border=1>
@@ -80,7 +86,8 @@ while (list(,$l) = each($check))
 
 		} elseif (($key != "charset") &&
 		          ($vocab[$key] == $ref[$key]) &&
-		          ($ref[$key] != ""))
+		          ($ref[$key] != "") &&
+		          (!preg_match('/^mail_/', $key)))
 		{
 			$status = "Untranslated";
 			$nunxlate++;

@@ -15,7 +15,7 @@
 $vocab["charset"]            = "iso-8859-1";
 
 # Used in style.inc
-$vocab["mrbs"]               = "MRBS - MötesRums BokningsSystem";
+$vocab["mrbs"]               = "MRBS - MötesRumsBokningsSystem";
 
 # Used in functions.inc
 $vocab["report"]             = "Rapport";
@@ -99,6 +99,7 @@ $vocab["deleteseries"]       = "Radera serie";
 $vocab["confirmdel"]         = "Är du säker att\\ndu vill radera\\nden här bokningen?\\n\\n";
 $vocab["returnprev"]         = "Åter till föregående sida";
 $vocab["invalid_entry_id"]   = "Ogiltigt boknings-ID!";
+$vocab["invalid_series_id"]  = "Ogiltigt serie-ID!";
 
 # Used in edit_entry_handler.php
 $vocab["error"]              = "Fel";
@@ -107,6 +108,8 @@ $vocab["conflict"]           = "Den nya bokningen krockar med följande bokning(a
 $vocab["too_may_entrys"]     = "De valda inställningarna skapar för många bokningar.<BR>V.g. använd andra inställningar!";
 $vocab["returncal"]          = "Återgå till kalendervy";
 $vocab["failed_to_acquire"]  = "Kunde ej få exklusiv databasåtkomst"; 
+$vocab["invalid_booking"]    = "Ogiltig bokning";
+$vocab["must_set_description"] = "Du måste ange en kort beskrivning för bokningen. Vänligen gå tillbaka och korrigera detta.";
 $vocab["mail_subject_entry"] = $mail["subject"];
 $vocab["mail_body_new_entry"] = $mail["new_entry"];
 $vocab["mail_body_del_entry"] = $mail["deleted_entry"];
@@ -141,6 +144,8 @@ $vocab["administrator"]      = "Administratör";
 $vocab["unknown"]            = "Okänd";
 $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Klicka för att visa alla dina aktuella bokningar";
+$vocab["no_users_initial"]   = "Inga användare finns i databasen. Tillåter initialt skapande av användare.";
+$vocab["no_users_create_first_admin"] = "Skapa en administrativ användare först. Därefter kan du logga in och skapa fler användare.";
 
 # Used in search.php
 $vocab["invalid_search"]     = "Tom eller ogiltig söksträng.";

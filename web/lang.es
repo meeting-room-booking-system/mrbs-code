@@ -1,4 +1,4 @@
-<?
+<?php
 # $Id$
 
 # This file contains PHP code that specifies language specific strings

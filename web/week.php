@@ -342,7 +342,7 @@ for (
 	} else {
 		echo "<a href=\"$hilite_url=$time_t\" title=\""
         . get_vocab("highlight_line") . "\">"
-        . utf8_date(hour_min_format(),$t) . "</a></td>";
+        . utf8_strftime(hour_min_format(),$t) . "</a></td>";
 	}
 
 	# Color to use for empty cells: white, unless highlighting this row:
@@ -450,7 +450,7 @@ for (
             tdcell("red");
             echo "<a href=\"$hilite_url=$time_t\" title=\""
             . get_vocab("highlight_line") . "\">"
-            . utf8_date(hour_min_format(),$t) . "</a></td>";
+            . utf8_strftime(hour_min_format(),$t) . "</a></td>";
         }
     }
 

@@ -20,6 +20,16 @@
 
 // $Id$
 
+if (isset($cookie_path_override))
+{
+  $cookie_path = $cookie_path_override;
+}
+else
+{
+  $cookie_path = $PHP_SELF;
+  $cookie_path = ereg_replace('[^/]*$', '', $cookie_path);
+}
+
 /*
   Target of the form with sets the URL argument "Action=SetName".
   Will eventually return to URL argument "TargetURL=whatever".
@@ -35,7 +45,7 @@ if (isset($Action) && ($Action == "SetName"))
     if ($NewUserName == "") {
         // Delete cookie
 
-        setcookie("UserName", '', time()-42000);
+        setcookie("UserName", '', time()-42000, $cookie_path);
     } else {
         $NewUserName = unslashes($NewUserName);
         $NewPassword = unslashes($NewPassword);
@@ -53,7 +63,7 @@ if (isset($Action) && ($Action == "SetName"))
             $UserPassword = $NewUserPassword;
         }
 
-        setcookie("UserName", $UserName);
+        setcookie("UserName", $UserName, time()+(60*60*24*30), $cookie_path);
     }
     header ("Location: $TargetURL"); /* Redirect browser to initial page */
     /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,

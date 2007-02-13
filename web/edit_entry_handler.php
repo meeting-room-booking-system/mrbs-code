@@ -39,9 +39,12 @@ if ($name == '')
        <?php echo get_vocab('must_set_description'); ?>
    </BODY>
 </HTML>
-<?
+<?php
      exit;
 }       
+
+# Support locales where ',' is used as the decimal point
+$duration = preg_replace('/,/', '.', $duration);
 
 if( $enable_periods ) {
 	$resolution = 60;

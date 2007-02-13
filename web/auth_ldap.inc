@@ -21,6 +21,8 @@ function authValidateUser($user, $pass)
 	global $auth;
 	global $ldap_host;
 	global $ldap_port;
+	global $ldap_v3;
+	global $ldap_tls;
 	global $ldap_base_dn;
 	global $ldap_user_attrib;
 	global $ldap_filter;
@@ -85,6 +87,15 @@ function authValidateUser($user, $pass)
 	// Check that connection was established
 	if($ldap)
 	{
+		if ($ldap_v3)
+		{
+			ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+		}
+		if ($ldap_tls)
+		{
+			ldap_start_tls($ldap);
+		}
+
 		// now process all base dn's until authentication is achieved
 		// or fail
 		foreach( $all_ldap_base_dn as $idx => $base_dn)

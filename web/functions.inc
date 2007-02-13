@@ -400,11 +400,11 @@ function hour_min_format()
         global $twentyfourhour_format;
         if ($twentyfourhour_format)
 	{
-  	        return "H:i";
+  	        return "%H:%M";
 	}
 	else
 	{
-		return "h:ia";
+		return "%I:%M%p";
 	}
 }
 
@@ -435,16 +435,14 @@ function period_time_string($t, $mod_time=0)
 function time_date_string($t)
 {
         global $twentyfourhour_format;
-        # This bit's necessary, because it seems %p in strftime format
-        # strings doesn't work
-        $ampm = utf8_date("a",$t);
+
         if ($twentyfourhour_format)
 	{
   	        return utf8_strftime("%H:%M:%S - %A %d %B %Y",$t);
 	}
 	else
 	{
-	        return utf8_strftime("%I:%M:%S$ampm - %A %d %B %Y",$t);
+	        return utf8_strftime("%I:%M:%S%p - %A %d %B %Y",$t);
 	}
 }
 

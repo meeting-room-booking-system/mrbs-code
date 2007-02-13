@@ -174,6 +174,11 @@ $auth["type"] = "config"; # How to validate the user/password. One of "none"
                           # "config" "db" "db_ext" "pop3" "imap" "ldap" "nis"
                           # "nw" "ext".
 
+# Cookie path override. If this value is set it will be used by the
+# 'php' and 'cookie' session schemes to override the default behaviour
+# of automatically determining the cookie path to use
+$cookie_path_override = '';
+
 # The list of administrators (can modify other peoples settings)
 $auth["admin"][] = "127.0.0.1";	# localhost IP address. Useful with IP sessions.
 $auth["admin"][] = "administrator";	# A user name from the user list. Useful 
@@ -214,6 +219,10 @@ $auth['db_ext']['password_format'] = 'md5';
 #$ldap_host = "localhost";
 # If you have a non-standard LDAP port, you can define it here
 #$ldap_port = 389;
+# If you want to use LDAP v3, change the following to true
+$ldap_v3 = false;
+# If you want to use TLS, change following to true
+$ldap_tls = false;
 # LDAP base distinguish name
 # See AUTHENTICATION for details of how check against multiple base dn's
 #$ldap_base_dn = "ou=organizationalunit,dc=my-domain,dc=com";

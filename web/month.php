@@ -20,7 +20,7 @@ function cmp3($a, $b)
 
 # Default parameters:
 if (empty($debug_flag)) $debug_flag = 0;
-if (empty($month) || empty($year) || !checkdate((intval($month), 1, intval($year)))
+if (empty($month) || empty($year) || !checkdate(intval($month), 1, intval($year)))
 {
     $month = date("m");
     $year  = date("Y");
