@@ -219,28 +219,28 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++) {
               {
         	case "> < ":         # Starts after midnight, ends before midnight
         	case "= < ":         # Starts at midnight, ends before midnight
-                    $d[$day_num]["data"][] = date(hour_min_format(), $row[0]) . "~" . date(hour_min_format(), $row[1]);
+                    $d[$day_num]["data"][] = utf8_strftime(hour_min_format(), $row[0]) . "~" . utf8_strftime(hour_min_format(), $row[1]);
                     break;
         	case "> = ":         # Starts after midnight, ends at midnight
-                    $d[$day_num]["data"][] = date(hour_min_format(), $row[0]) . "~24:00";
+                    $d[$day_num]["data"][] = utf8_strftime(hour_min_format(), $row[0]) . "~24:00";
                     break;
         	case "> > ":         # Starts after midnight, continues tomorrow
-                    $d[$day_num]["data"][] = date(hour_min_format(), $row[0]) . "~====&gt;";
+                    $d[$day_num]["data"][] = utf8_strftime(hour_min_format(), $row[0]) . "~====>";
                     break;
         	case "= = ":         # Starts at midnight, ends at midnight
                     $d[$day_num]["data"][] = $all_day;
                     break;
         	case "= > ":         # Starts at midnight, continues tomorrow
-                    $d[$day_num]["data"][] = $all_day . "====&gt;";
+                    $d[$day_num]["data"][] = $all_day . "====>";
                     break;
         	case "< < ":         # Starts before today, ends before midnight
-                    $d[$day_num]["data"][] = "&lt;====~" . date(hour_min_format(), $row[1]);
+                    $d[$day_num]["data"][] = "<====~" . utf8_strftime(hour_min_format(), $row[1]);
                     break;
         	case "< = ":         # Starts before today, ends at midnight
-                    $d[$day_num]["data"][] = "&lt;====" . $all_day;
+                    $d[$day_num]["data"][] = "<====" . $all_day;
                     break;
         	case "< > ":         # Starts before today, continues tomorrow
-                    $d[$day_num]["data"][] = "&lt;====" . $all_day . "====&gt;";
+                    $d[$day_num]["data"][] = "<====" . $all_day . "====>";
                     break;
               }
 	    }
@@ -258,22 +258,22 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++) {
                     $d[$day_num]["data"][] = $start_str . "~24:00";
                     break;
         	case "> > ":         # Starts after midnight, continues tomorrow
-                    $d[$day_num]["data"][] = $start_str . "~====&gt;";
+                    $d[$day_num]["data"][] = $start_str . "~====>";
                     break;
         	case "= = ":         # Starts at midnight, ends at midnight
                     $d[$day_num]["data"][] = $all_day;
                     break;
         	case "= > ":         # Starts at midnight, continues tomorrow
-                    $d[$day_num]["data"][] = $all_day . "====&gt;";
+                    $d[$day_num]["data"][] = $all_day . "====>";
                     break;
         	case "< < ":         # Starts before today, ends before midnight
-                    $d[$day_num]["data"][] = "&lt;====~" . $end_str;
+                    $d[$day_num]["data"][] = "<====~" . $end_str;
                     break;
         	case "< = ":         # Starts before today, ends at midnight
-                    $d[$day_num]["data"][] = "&lt;====" . $all_day;
+                    $d[$day_num]["data"][] = "<====" . $all_day;
                     break;
         	case "< > ":         # Starts before today, continues tomorrow
-                    $d[$day_num]["data"][] = "&lt;====" . $all_day . "====&gt;";
+                    $d[$day_num]["data"][] = "<====" . $all_day . "====>";
                     break;
               }
             }
