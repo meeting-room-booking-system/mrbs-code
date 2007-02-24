@@ -1,3 +1,8 @@
+2007-02-24  John Beranek <jberanek@users.sourceforge.net>
+
+	* NEWS (tags: mrbs-1_2_5) (mrbs-1_2-branch.6): * Updated NEWS for
+	  1.2.5 release (rather late, almost forgot).
+
 2007-02-13  John Beranek <jberanek@users.sourceforge.net>
 
 	* AUTHENTICATION, checklang.php (mrbs-1_2-branch.[5,2]) (utags:
@@ -50,8 +55,8 @@
 
 2007-01-24  John Beranek <jberanek@users.sourceforge.net>
 
-	* NEWS (tags: mrbs-1_2_5, mrbs-1_2_4) (mrbs-1_2-branch.5): *
-	  Updated NEWS and ChangeLogs for MRBS 1.2.4 release.
+	* NEWS (tags: mrbs-1_2_4) (mrbs-1_2-branch.5): * Updated NEWS and
+	  ChangeLogs for MRBS 1.2.4 release.
 
 2006-10-09  John Beranek <jberanek@users.sourceforge.net>
 
