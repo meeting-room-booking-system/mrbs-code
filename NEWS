@@ -7,6 +7,28 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.2.5 (Sat Feb 24 20:00:00 GMT 2007):
+
+[*] Added options to LDAP authentication so that LDAP v3 and TLS connections
+ can be used. Implements SF tracker #1644311.
+[*] You can now configure the cookie path used by the cookie and php session
+ schemes. Fixes SF tracker #1515118.
+[*] Improved localisation of date/time strings.
+[-] Fixed a short PHP start tag, to fix SF tracker #1652396.
+[-] Updated code to add/edit bookings so that times using ',' as the
+ decimal point work. Fixes SF tracker  #1647430.
+[*] Updated Swedish translation, as provided by bwiberg.
+[+] Added AIX support. You can now run  MRBS on an AIX server, in Unicode
+ mode too. AIX support  provided (and tested) by bwiberg.
+[*] Improved language preference code so that the user's language
+ preference order is followed.
+[-] Corrected some bracketing in the month view, as reported by lots
+ of people, including 't-matsuu' in SF tracker #1644042 who provided a fix.
+[-] Fixed various display bugs in month view, including a fix for
+ SF tracker  #1663905.
+
+
+-------------------------------------------------------------------------------
 Version 1.2.4 (Wed Jan 24 12:00:00 GMT 2007):
 
 [*] Added ability to specify the LDAP port in config.inc.php.
