@@ -61,6 +61,9 @@ $lang_map_windows = array
   'pt' => 'ptg',
   'pt-br' => 'ptb',
   'pt-pt' => 'ptg',
+  'sl' => 'slv',
+  'sl-sl' => 'slv',
+  'sl-si' => 'slv',
   'sv' => 'sve',
   'sv-se' => 'sve',
   'sv-sv' => 'sve',
@@ -105,6 +108,7 @@ $winlocale_codepage_map = array
   'ptb' => 'CP1252',
   'ptg' => 'CP1252',
   'plk' => 'CP1250',
+  'slv' => 'CP1250',
   'sve' => 'CP1252',
   'usa' => 'CP1252'
 );
@@ -119,6 +123,7 @@ $lang_map_unix = array
   'en_EN' => 'en_GB',
   'ja_JA' => 'ja_JP',
   'ko_KO' => 'ko_KR',
+  'sl_SL' => 'sl_SI',
   'sv_SV' => 'sv_SE',
   'zh_ZH' => 'zh_CN',
 );
