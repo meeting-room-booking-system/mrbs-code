@@ -1,0 +1,165 @@
+<!-- $Id$ -->
+<p>
+
+<b><a name=top>Autenticazione</a></b>
+<menu>
+<a href="#authenticate"><u>Come effettuo il log-in?</u></a><br>
+<a href="#meeting_delete"><u>Perchè non posso cancellare/modificare un appuntamento?</u></a><br>
+</menu>
+<b>Creare/Modificare Appuntamento</b>
+<menu>
+<a href="#repeating"><u>Come creo un appuntamento ricorrente?</u></a><br>
+<a href="#repeating_delete"><u>Come elimino un istanza di un appuntamento ricorrente?</u></a><br>
+<a href="#multiple_sites"><u>Come prenoto due stanze contemporaneamente?</u></a><br>
+<a href="#too_many"><u>La creazione del mio appuntamento è fallita perchè "<i>troppi inserimenti</i>"!</u></a><br>
+<a href="#multiple_users"><u>Cosa accade se più di una persona programma lo stesso appuntamento?</u></a><br>
+</menu>
+<b>Varie</b>
+<menu>
+<a href="#internal_external"><u>Che differenza c'è tra "Interno" ed "Esterno"</u></a><br>
+</menu>
+<b>Informazioni su The Meeting Room Booking System</b>
+<menu>
+<a href="#how_much"><u>Quanto è costato il sistema?</u></a><br>
+<a href="#about"><u>Come funziona il sistema e chi l'ha scritto?</u></a><br>
+</menu>
+
+
+<hr>
+<p>
+<a name=authenticate><b>Come effettuo il log-in?</b></a>
+<menu>
+Il sistema può essere configurato per utilizzare diversi sistemi di autenticazione,
+incluso LDAP, Netware, e SMB. Contatta l'amministratore se hai problemi di autenticazione.
+Alcune funzionalità sono accessibili solo per alcuni utenti, gli altri riceveranno questo messaggio
+<i>Non hai i permessi per modificare questo ogetto</i>. 
+Contatta l'amministratore per ulteriori informazioni.
+Se il sistema è configurato per utilizzare l'autenticazione LDAP, significa che devi utilizzare
+le stesse credenziali che utilizzi per accedere all'email.
+</menu>
+<a href="#top">Top</a><hr>
+</p>
+
+<p>
+<a name="meeting_delete"><b>Perchè non posso cancellare/modificare un appuntamento?</b></a>
+<menu>
+Per cancellare o modificare un appuntamento, devi essere loggato come lo stesso utente
+che ha creato l'appuntamento. Contatta l'amministratore di una delle stanze o la persona che ha creato l'appuntamento
+inizialmente se vuoi modificare o cancellare l'appuntamento.
+</menu>
+<a href="#top">Top</a><hr>
+</p>
+
+<p>
+<a name=repeating><b>Come creo un appuntamento ricorrente?</b></a>
+<menu>
+Cliccando sull'orario desiderato visualizzerai la pagina di prenotazione.
+Seleziona l'appropiato <b>Tipo ripetizione</b>. La stanza verrà prenotata
+alla stessa ora, finchè <b>Ripeti fino al</b>, nei giorni determinati dal <b>Tipo ripetizione</b>.
+<p>
+<i>Giornaliero</i> ripete la prenotazione tutti i giorni.
+<i>Settimanale</i> ripete la prenotazione in quei giorni della settimana che hai selezionato 
+in <i>Ripeti giorno</i>. Per esempio, usa la ripetizione settimanale per prenotare la stanza ogni
+Lunedì, Martedì, Mercoledì e Venerdì; Selezione quei giorni in Ripeti giorno.
+Se non selezioni alcun giorno in Ripeti giorno, la prenotazione si ripeterà lo stesso giorno di ogni settimana della prenotazione iniziale.
+<i>Mensile</i> ripete la prenotazione lo stesso giorno ogni mese,
+per esempio il 15 del mese.
+<i>Annuale</i> ripete la prenotazione lo stesso mese e giorno,
+per esempio ogni 15 Marzo.
+Infine <i>Mensile, giorno corrispondente</i> ripete la prenotazione un giorno
+ogni mese, lo stesso giorno della settimana nella stessa posizione ordinale del mese.
+Usa questa ripetizione se per esempio vuoi prenotare il primo Lunedì, il secondo Martedì o il quarto venerdì del mese.
+Use this repeat type to schedule the first Monday, second Tuesday,
+Non utilizzare questa ripetizione dopo il 28 del mese.
+</p>
+</menu>
+<a href="#top">Top</a><hr>
+</p>
+
+<p>
+<a name="repeating_delete"><b>Come elimino un istanza di un appuntamento ricorrente?</b></a>
+<menu>
+Seleziona il giorno/stanza/ora che vuoi cancellare e seleziona <b>Cancella</b>..
+</menu>
+<a href="#top">Top</a><hr>
+</p>
+
+<p>
+<a name="multiple_sites"><b>Come prenoto due stanze contemporaneamente?</b></a>
+<menu>
+Non puoi.  Attualmente il sistema non prevede la prenotazione di due stanze contemporaneamente.
+Devi prenotarle singolarmente. Controlla che l'orario scelto sia disponibile per entrambe le stanze prima di prenotare.
+</menu>
+<a href="#top">Top</a><hr>
+</p>
+
+<p>
+<a name="too_many"><b>La creazione del mio appuntamento è fallita perchè "<i>troppi inserimenti</i>"!</b></a>
+<menu>
+Qualsiasi appuntamento non può creare più di 365 inserimenti. E' necessario limitare il numero di appuntamenti creati.
+Questo numero può essere modificato se necessario.
+</menu>
+<a href="#top">Top</a><hr>
+</p>
+
+<p>
+<a name="multiple_users"><b>Cosa accade se più di una persona programma lo stesso appuntamento?</b></a>
+<menu>
+La risposta corta è: La prima persona che clicca sul pulsante <b>Salva</b> vince.<br>
+Dietro le quinte, il sistema utilizza un database relazionale multi-utente, multi-processo che può gestire centinaia di utenti simultanei.
+</menu>
+<a href="#top">Top</a><hr>
+</p>
+
+<p>
+<a name="internal_external"><b>Che differenza c'è tra "Interno" ed "Esterno"</b></a>
+<menu>
+Di default, MRBS definisce due tipi di appuntamento. <b>"Interno"</b> 
+significa che all'incontro saranno presenti solo dipendenti.
+Appuntamenti <b>"Esterno"</b> significa che all'incontro potrebbero partecipare clienti, venditori, investitori ecc. 
+Il sito permette di gestire fino a 10 tipi se necessario.
+Le prenotazioni sono evidenziate nel calendario principale con un colore corrispondente al tipo, a la leggenda dei colori 
+è visibile a fondopagina.
+</menu>
+<a href="#top">Top</a><hr>
+</p>
+
+<p>
+<a name="how_much"><b>Quanto è costato il sistema?</b></a>
+<menu>
+Nulla.  Visualizza la prossima sezione per informazioni.
+</menu>
+<a href="#top">Top</a><hr>
+</p>
+
+<p>
+<a name=about><b>Come funziona il sistema e chi l'ha scritto?</b></a>
+<menu>
+The <a href="http://sourceforge.net/project/?group_id=5113">Meeting Room Booking System</a>
+è un software open source che è distribuito sotto licenza Gnu Public License(GPL).
+Questo significa che il software è gratuito per l'utilizzo, distribuzione e modifiche.
+<p>
+Il sistema è principalmente scritto in
+<a href="http://www.php.net">PHP</a>, 
+che è una programmazione open source che può essere inserita nelle pagine web e simile come concetto a
+Microsoft active server pages.  PHP è estremamente ottimizzato per gli accessi ai databases.
+<p>  
+Il database utilizzato è
+<a href="http://www.mysql.com">MySQL</a>
+o <a href="http://www.postgresql.org">PostgreSQL</a>.
+MySQL è un database sempre GPL molto veloce, multi-processo, multi-utente e strutturato in
+SQL (Structured Query Language).
+PostgreSQL è un database orientato agli ogetti SQL relazionale ed open source
+<p>
+Il sistema può girare su molteplici piattaforme, inclusi PC con sistema operativo
+<a href="http://www.linux.com">Linux</a>.
+Linux, è un sistema operativo simil-unix gratuito ed open source.
+<p>
+Il web server è un altro pezzo di software open source e gratuito.
+L'<a href="http://www.apache.org">Apache</a> web server è il più utilizzato al mondo.
+<p>
+L'ultima riga è:<br>
+<b>Ogni pezzo del sistema, dal sistema operativo all'applicazione è completamente gratuita compresi i sorgenti</b>.
+</menu>
+<a href="#top">Top</a><hr>
+</p>
