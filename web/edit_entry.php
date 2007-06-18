@@ -277,7 +277,7 @@ function OnAllDayClick(allday) // Executed when the user clicks on the all_day c
 <TABLE BORDER=0>
 
 <TR><TD CLASS=CR><B><?php echo get_vocab("namebooker")?></B></TD>
-  <TD CLASS=CL><INPUT NAME="name" SIZE=40 VALUE="<?php echo htmlspecialchars($name,ENT_NOQUOTES) ?>"></TD></TR>
+  <TD CLASS=CL><INPUT NAME="name" SIZE=40 VALUE="<?php echo htmlspecialchars($name) ?>"></TD></TR>
 
 <TR><TD CLASS=TR><B><?php echo get_vocab("fulldescription")?></B></TD>
   <TD CLASS=TL><TEXTAREA NAME="description" ROWS=8 COLS=40 WRAP="virtual"><?php echo
