@@ -38,8 +38,6 @@ print_header($day, $month, $year, isset($area) ? $area : "");
 
 <h2><?php echo get_vocab("editroomarea") ?></h2>
 
-<table border=1>
-
 <?php
 if(!empty($room)) {
     include_once 'Mail/RFC822.php';
@@ -150,5 +148,4 @@ value="<?php echo get_vocab("change") ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n
 </CENTER>
 </form>
 <?php } ?>
-</TABLE>
 <?php include "trailer.inc" ?>

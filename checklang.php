@@ -24,6 +24,8 @@ include "$path_to_mrbs/config.inc.php";
 # Parameter lang=xx can be supplied, to just check that language; by
 # default all languages are checked.
 
+unset($lang);
+
 if (!empty($_GET))
 {
 	$lang = $_GET['lang'];
@@ -32,7 +34,7 @@ else if (!empty($HTTP_GET_VARS))
 {
 	$lang = $HTTP_GET_VARS['lang'];
 }
-        
+
 # Language file prefix
 $langs = "lang.";
 
@@ -47,11 +49,22 @@ if (isset($lang))
 else {
   # Make a list of language files to check. This is similar to glob() in
   # PEAR File/Find.
-  $dh = opendir(".");
-  while ($filename = readdir($dh))
-	  if (ereg("^lang\\.(.*)", $filename, $name) && $name[1] != $ref_lang)
-	  $check[] = $name[1];
+  $dh = opendir($path_to_mrbs);
+  while (($filename = readdir($dh)) !== false)
+  {
+    $files[] = $filename;
+  }
   closedir($dh);
+  
+  sort($files);
+  
+  foreach ($files as $filename)
+  {
+    if (ereg("^lang\\.(.*)", $filename, $name) && $name[1] != $ref_lang)
+    {
+      $check[] = $name[1];
+    }
+  }
 }
 
 include "$path_to_mrbs/$langs$ref_lang";

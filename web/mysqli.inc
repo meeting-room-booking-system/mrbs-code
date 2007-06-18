@@ -216,11 +216,30 @@ function sql_field_name($result, $index)
     return $finfo->name;
 }
 
+# A map to turn mysqli extension field type numbers into our (well, the mysql
+# extension's) field type strings
+$sql_type_map = array();
+$sql_type_map[0] = "int";      # DECIMAL
+$sql_type_map[1] = "int";      # TINYINT
+$sql_type_map[2] = "int";      # SMALLINT
+$sql_type_map[3] = "int";      # INTEGER
+$sql_type_map[4] = "real";     # FLOAT
+$sql_type_map[5] = "real";     # DOUBLE
+$sql_type_map[8] = "int";      # BIGINT
+$sql_type_map[9] = "int";      # MEDIUMINT
+$sql_type_map[246] = "int";    # DECIMAL
+$sql_type_map[247] = "string"; # ENUM
+$sql_type_map[252] = "string"; # BLOB
+$sql_type_map[253] = "string"; # VARCHAR
+$sql_type_map[254] = "string"; # CHAR
+
 // Returns the type of a field. (one of "int", "real", "string", "blob", etc...)
 function sql_field_type($result, $index)
 {
+    global $sql_type_map;
+
     $finfo = $result->fetch_field_direct($index);
-    return $finfo->type;
+    return isset($sql_type_map[$finfo->type]) ? $sql_type_map[$finfo->type] : 'unknown';
 }
 
 // Returns the number of fields in a result.

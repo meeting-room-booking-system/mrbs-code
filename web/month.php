@@ -205,7 +205,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++) {
 
             if ($debug_flag) echo "<br>DEBUG: Entry $row[2] day $day_num\n";
             $d[$day_num]["id"][] = $row[2];
-            $d[$day_num]["shortdescrip"][] = $row[3];
+            $d[$day_num]["shortdescrip"][] = htmlspecialchars($row[3]);
 
             # Describe the start and end time, accounting for "all day"
             # and for entries starting before/ending after today.
@@ -219,35 +219,35 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++) {
               {
         	case "> < ":         # Starts after midnight, ends before midnight
         	case "= < ":         # Starts at midnight, ends before midnight
-                    $d[$day_num]["data"][] = utf8_strftime(hour_min_format(), $row[0]) . "~" . utf8_strftime(hour_min_format(), $row[1]);
+                    $d[$day_num]["data"][] = htmlspecialchars(utf8_strftime(hour_min_format(), $row[0])) . "~" . htmlspecialchars(utf8_strftime(hour_min_format(), $row[1]));
                     break;
         	case "> = ":         # Starts after midnight, ends at midnight
-                    $d[$day_num]["data"][] = utf8_strftime(hour_min_format(), $row[0]) . "~24:00";
+                    $d[$day_num]["data"][] = htmlspecialchars(utf8_strftime(hour_min_format(), $row[0])) . "~24:00";
                     break;
         	case "> > ":         # Starts after midnight, continues tomorrow
-                    $d[$day_num]["data"][] = utf8_strftime(hour_min_format(), $row[0]) . "~====>";
+                    $d[$day_num]["data"][] = htmlspecialchars(utf8_strftime(hour_min_format(), $row[0])) . "~====&gt;";
                     break;
         	case "= = ":         # Starts at midnight, ends at midnight
                     $d[$day_num]["data"][] = $all_day;
                     break;
         	case "= > ":         # Starts at midnight, continues tomorrow
-                    $d[$day_num]["data"][] = $all_day . "====>";
+                    $d[$day_num]["data"][] = $all_day . "====&gt;";
                     break;
         	case "< < ":         # Starts before today, ends before midnight
-                    $d[$day_num]["data"][] = "<====~" . utf8_strftime(hour_min_format(), $row[1]);
+                    $d[$day_num]["data"][] = "&lt;====~" . htmlspecialchars(utf8_strftime(hour_min_format(), $row[1]));
                     break;
         	case "< = ":         # Starts before today, ends at midnight
-                    $d[$day_num]["data"][] = "<====" . $all_day;
+                    $d[$day_num]["data"][] = "&lt;====" . $all_day;
                     break;
         	case "< > ":         # Starts before today, continues tomorrow
-                    $d[$day_num]["data"][] = "<====" . $all_day . "====>";
+                    $d[$day_num]["data"][] = "&lt;====" . $all_day . "====&gt;";
                     break;
               }
 	    }
             else
             {
-              $start_str = ereg_replace(" ", "&nbsp;", period_time_string($row[0]));
-              $end_str   = ereg_replace(" ", "&nbsp;", period_time_string($row[1], -1));
+              $start_str = ereg_replace(" ", "&nbsp;", htmlspecialchars(period_time_string($row[0])));
+              $end_str   = ereg_replace(" ", "&nbsp;", htmlspecialchars(period_time_string($row[1], -1)));
               switch (cmp3($row[0], $midnight[$day_num]) . cmp3($row[1], $midnight_tonight[$day_num] + 1))
               {
         	case "> < ":         # Starts after midnight, ends before midnight
@@ -258,22 +258,22 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++) {
                     $d[$day_num]["data"][] = $start_str . "~24:00";
                     break;
         	case "> > ":         # Starts after midnight, continues tomorrow
-                    $d[$day_num]["data"][] = $start_str . "~====>";
+                    $d[$day_num]["data"][] = $start_str . "~====&gt;";
                     break;
         	case "= = ":         # Starts at midnight, ends at midnight
                     $d[$day_num]["data"][] = $all_day;
                     break;
         	case "= > ":         # Starts at midnight, continues tomorrow
-                    $d[$day_num]["data"][] = $all_day . "====>";
+                    $d[$day_num]["data"][] = $all_day . "====&gt;";
                     break;
         	case "< < ":         # Starts before today, ends before midnight
-                    $d[$day_num]["data"][] = "<====~" . $end_str;
+                    $d[$day_num]["data"][] = "&lt;====~" . $end_str;
                     break;
         	case "< = ":         # Starts before today, ends at midnight
-                    $d[$day_num]["data"][] = "<====" . $all_day;
+                    $d[$day_num]["data"][] = "&lt;====" . $all_day;
                     break;
         	case "< > ":         # Starts before today, continues tomorrow
-                    $d[$day_num]["data"][] = "<====" . $all_day . "====>";
+                    $d[$day_num]["data"][] = "&lt;====" . $all_day . "====&gt;";
                     break;
               }
             }
@@ -362,8 +362,8 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
                 {
                     echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
                         . "&day=$cday&month=$month&year=$year\" title=\""
-                        . htmlspecialchars($d[$cday]["data"][$i]) . "\">"
-                        . htmlspecialchars(substr($d[$cday]["shortdescrip"][$i], 0, 17))
+                        . $d[$cday]["data"][$i] . "\">"
+                        . substr($d[$cday]["shortdescrip"][$i], 0, 17)
                         . "</a>";
                     break;
                 }
@@ -371,16 +371,16 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
                 {
                     echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
                         . "&day=$cday&month=$month&year=$year\" title=\""
-                        . htmlspecialchars(substr($d[$cday]["shortdescrip"][$i], 0, 17)) . "\">"
-                        . htmlspecialchars($d[$cday]["data"][$i]) . "</a>";
+                        . substr($d[$cday]["shortdescrip"][$i], 0, 17) . "\">"
+                        . $d[$cday]["data"][$i] . "</a>";
                     break;
                 }
                 case "both":
                 {
                     echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
                         . "&day=$cday&month=$month&year=$year\">"
-                        . htmlspecialchars($d[$cday]["data"][$i]) . " "
-                        . htmlspecialchars(substr($d[$cday]["shortdescrip"][$i], 0, 6)) . "</a>";
+                        . $d[$cday]["data"][$i] . " "
+                        . substr($d[$cday]["shortdescrip"][$i], 0, 6) . "</a>";
                     break;
                 }
                 default:

@@ -4,30 +4,39 @@
 
 # A map is needed to convert from the HTTP language specifier to a
 # locale specifier for Windows
+#
+# These locale TLAs found at:
+# http://www.microsoft.com/globaldev/reference/winxp/langtla.mspx
 $lang_map_windows = array
 (
+  'ca' => 'cat',
+  'ca-es' => 'cat',
   'cs' => 'csy',
-  'cs-cs' => 'csy',
   'cs-cz' => 'csy',
-  'cz' => 'csy',
-  'cz-cz' => 'csy',
   'da' => 'dan',
-  'da-da' => 'dan',
+  'da-dk' => 'dan',
   'de' => 'deu',
   'de-at' => 'dea',
   'de-ch' => 'des',
   'de-de' => 'deu',
+  'de-li' => 'dec',
+  'de-lu' => 'del',
   'el' => 'ell',
-  'el-el' => 'ell',
   'el-gr' => 'ell',
-  'en' => 'eng',
+  'en' => 'enu',
   'en-au' => 'ena',
+  'en-bz' => 'enl',
   'en-ca' => 'enc',
+  'en-cb' => 'enb',
   'en-en' => 'eng',
-  'en-ie' => 'eng',
-  'en-nz' => 'enz',
   'en-gb' => 'eng',
-  'en-us' => 'usa',
+  'en-ie' => 'eng',
+  'en-jm' => 'enj',
+  'en-nz' => 'enz',
+  'en-ph' => 'enp',
+  'en-tt' => 'ent',
+  'en-us' => 'enu',
+  'en-za' => 'ens',
   'es' => 'esp',
   'es-es' => 'esp',
   'es-mx' => 'esm',
@@ -40,56 +49,67 @@ $lang_map_windows = array
   'fr-fr' => 'fra',
   'it' => 'ita',
   'it-ch' => 'its',
-  'it-it' => 'its',
+  'it-it' => 'ita',
   'ja' => 'jpn',
-  'ja-ja' => 'jpn',
   'ja-jp' => 'jpn',
   'ko' => 'kor',
-  'ko-ko' => 'kor',
   'ko-kr' => 'kor',
+  'nb' => 'nor',
+  'nb-no' => 'nor',
   'nl' => 'nld',
   'nl-be' => 'nlb',
   'nl-nl' => 'nld',
-  'no' => 'norwegian',
-  'no-no' => 'norwegian',
+  'no' => 'nor',
+  'no-no' => 'nor',
   'nb' => 'nor',
-  'nb-nb' => 'nor',
+  'nb-no' => 'nor',
   'nn' => 'non',
-  'nn-nn' => 'non',
+  'nn-no' => 'non',
   'pl' => 'plk',
   'pl-pl' => 'plk',
   'pt' => 'ptg',
   'pt-br' => 'ptb',
   'pt-pt' => 'ptg',
   'sl' => 'slv',
-  'sl-sl' => 'slv',
   'sl-si' => 'slv',
   'sv' => 'sve',
-  'sv-se' => 'sve',
+  'sv-fi' => 'svf',
   'sv-sv' => 'sve',
-  'zh' => 'chinese',
+  'zh' => 'chs',
   'zh-tw' => 'cht',
   'zh-cn' => 'chs',
-  'zh-hk' => 'cht',
-  'zh-sg' => 'cht',
-  'zh-zh' => 'chinese',
+  'zh-hk' => 'zhh',
+  'zh-sg' => 'zhi',
 );
 
 # This maps a Windows locale to the charset it uses, which are
 # all Windows code pages
+#
+# The code pages used by these locales found at: 
+# http://www.microsoft.com/globaldev/nlsweb/default.mspx
 $winlocale_codepage_map = array
 (
+  'cat' => 'CP1252',
   'chs' => 'CP936',
   'cht' => 'CP950',
   'csy' => 'CP1250',
   'dan' => 'CP1252',
   'dea' => 'CP1252',
+  'dec' => 'CP1252',
+  'del' => 'CP1252',
   'des' => 'CP1252',
   'deu' => 'CP1252',
   'ell' => 'CP1253',
   'ena' => 'CP1252',
+  'enb' => 'CP1252',
   'enc' => 'CP1252',
   'eng' => 'CP1252',
+  'enj' => 'CP1252',
+  'enl' => 'CP1252',
+  'enp' => 'CP1252',
+  'ens' => 'CP1252',
+  'ent' => 'CP1252',
+  'enu' => 'CP1252',
   'enz' => 'CP1252',
   'esm' => 'CP1252',
   'esp' => 'CP1252',
@@ -104,28 +124,32 @@ $winlocale_codepage_map = array
   'kor' => 'CP949',
   'nlb' => 'CP1252',
   'nld' => 'CP1252',
-  'norwegian' => 'CP1252',
+  'non' => 'CP1252',
+  'nor' => 'CP1252',
   'ptb' => 'CP1252',
   'ptg' => 'CP1252',
   'plk' => 'CP1250',
   'slv' => 'CP1250',
   'sve' => 'CP1252',
-  'usa' => 'CP1252'
+  'svf' => 'CP1252',
+  'zhh' => 'CP950',
+  'zhi' => 'CP936',
 );
 
 # These are special cases, generally we can convert from the HTTP
 # language specifier to a locale specifier without a map
 $lang_map_unix = array
 (
-  'cs_CS' => 'cs_CZ',
-  'da_DA' => 'da_DK',
-  'el_EL' => 'el_GR',
-  'en_EN' => 'en_GB',
-  'ja_JA' => 'ja_JP',
-  'ko_KO' => 'ko_KR',
-  'sl_SL' => 'sl_SI',
-  'sv_SV' => 'sv_SE',
-  'zh_ZH' => 'zh_CN',
+  'ca' => 'ca_ES',
+  'cs' => 'cs_CZ',
+  'da' => 'da_DK',
+  'el' => 'el_GR',
+  'en' => 'en_GB',
+  'ja' => 'ja_JP',
+  'ko' => 'ko_KR',
+  'sl' => 'sl_SI',
+  'sv' => 'sv_SE',
+  'zh' => 'zh_CN',
 );
 
 # IBM AIX locale to code set table
@@ -362,7 +386,7 @@ if (!$disable_automatic_language_changing)
     # find a lang file for one of the base languages, e.g. look for
     # lang.en if "en-ca" was specified.
 
-    foreach ($langs as $lang)
+    foreach ($langs as $lang => $qual)
     {
       $lang_file = "lang." . strtolower(substr($lang,0,2));
 
@@ -445,18 +469,21 @@ else
   {
     if (strlen($locale) == 2)
     {
-      # Convert locale=xx to xx_XX; this is not correct for some locales???
-      $locale = strtolower($locale)."_".strtoupper($locale);
+      if (isset($lang_map_unix[$locale]) && ($lang_map_unix[$locale]))
+      {
+        $locale = $lang_map_unix[$locale];
+      }
+      else
+      {
+        # Convert locale=xx to xx_XX
+        $locale = strtolower($locale)."_".strtoupper($locale);
+      }
     }
     else
     {
       # Convert locale=xx-xX or xx_Xx or xx_XxXx (etc.) to xx_XX[XX]; this is highly
       # dependent on the machine's installed locales
       $locale = strtolower(substr($locale,0,2))."_".strtoupper(substr($locale,3));
-    }
-    if (isset($lang_map_unix[$locale]) && ($lang_map_unix[$locale]))
-    {
-      $locale = $lang_map_unix[$locale];
     }
     if ($unicode_encoding)
     {

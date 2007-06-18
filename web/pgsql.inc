@@ -223,10 +223,29 @@ function sql_field_name($result, $index)
 	return pg_field_name($result, $index);
 }
 
+# A map to turn pgsql extension field type names into our (well, the mysql
+# extension's) field type strings
+$sql_type_map = array();
+$sql_type_map['bool'] = "int";
+$sql_type_map['int2'] = "int";
+$sql_type_map['int4'] = "int";
+$sql_type_map['int8'] = "int";
+$sql_type_map['numeric'] = "int";
+$sql_type_map['float4'] = "real";
+$sql_type_map['float8'] = "real";
+$sql_type_map['varchar'] = "string";
+$sql_type_map['text'] = "string";
+$sql_type_map['bpchar'] = "string";
+
+
 // Returns the type of a field. (one of "int", "real", "string", "blob", etc...)
 function sql_field_type($result, $index)
 {
-	return pg_field_type($result, $index);
+	global $sql_type_map;
+
+	$type = pg_field_type($result, $index);
+
+	return isset($sql_type_map[$type]) ? $sql_type_map[$type] : 'unknown';
 }
 
 // Returns the number of fields in a result.

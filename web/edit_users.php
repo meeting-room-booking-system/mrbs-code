@@ -68,10 +68,10 @@ for ($i=0; $i<$nfields ;$i++)
     $field_name[$i] = sql_field_name($result, $i);
 // print "<p>field_name[$i] = $field_name[$i]</p>\n";
     $field_type[$i] = sql_field_type($result, $i);
-// print "<p>field_type[$i] = $field_type[$i]</p>\n";
-    $field_istext[$i] = ((stristr($field_type[$i], "char")) || (stristr($field_type[$i], "string"))) ? true : false;
-// print "<p>field_istext[$i] = $field_istext[$i]</p>\n";
-    $field_isnum[$i] = ((stristr($field_type[$i], "int")) || (stristr($field_type[$i], "real"))) ? true : false;
+//  print "<p>field_type[$i] = $field_type[$i]</p>\n";
+    $field_istext[$i] = ($field_type[$i] == 'string') ? true : false;
+//  print "<p>field_istext[$i] = $field_istext[$i]</p>\n";
+    $field_isnum[$i] = preg_match('/(int|real)/',$field_type[$i]) ? true : false;
 // print "<p>field_isnum[$i] = $field_isnum[$i]</p>\n";
     }
 sql_free($result);
@@ -255,20 +255,25 @@ if (isset($Action) && ($Action == "Update"))
         }
 
     for ($i=0; $i<$nfields; $i++)
-        {
+    {
         if ($field_name[$i]=="id") $Field[$i] = $Id;
         if ($field_name[$i]=="name") $Field[$i] = strtolower($Field[$i]);
         if (($field_name[$i]=="password") && ($password0!="")) $Field[$i]=md5($password0);
         /* print "$field_name[$i] = $Field[$i]<br>"; */
         if ($i > 0) $operation = $operation . ", ";
-        if ($field_istext[$i]) $operation .= "'";
-        if ($field_isnum[$i] && ($Field[$i] == "")) $Field[$i] = "0";
-        $operation = $operation . $Field[$i];
-        if ($field_istext[$i]) $operation .= "'";
+        if ($field_istext[$i])
+        {
+          $operation .= "'" . slashes($Field[$i]) . "'";
         }
+        else
+        {
+          if ($field_isnum[$i] && ($Field[$i] == "")) $Field[$i] = "0";
+          $operation = $operation . $Field[$i];
+        }
+    }
     $operation = $operation . ");";
 
-    /* print $operation . "<br>\n"; */
+    print $operation . "<br>\n";
     $r = sql_command($operation);
     if ($r == -1)
     {
