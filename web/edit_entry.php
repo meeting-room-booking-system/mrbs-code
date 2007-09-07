@@ -366,7 +366,8 @@ function changeRooms( formObj )
     roomsObj = eval( "formObj.elements['rooms[]']" )
 
     // remove all entries
-    for (i=0; i < (roomsObj.length); i++)
+    roomsNum = roomsObj.length;
+    for (i=(roomsNum-1); i >= 0; i--)
     {
       roomsObj.options[i] = null
     }
