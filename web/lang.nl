@@ -20,7 +20,7 @@ $vocab["mrbs"]               = "Vergaderruimte Boekingssysteem";
 $vocab["report"]             = "Rapportage";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Help";
-$vocab["search"]             = "Zoek:";
+$vocab["search"]             = "Zoek";
 $vocab["not_php3"]             = "<H1>Waarschuwing: Werkt waarschijnlijk niet met PHP3</H1>";
 
 # Used in day.php
@@ -44,14 +44,14 @@ $vocab["ppreview"]           = "Afdruk Voorbeeld";
 $vocab["addentry"]           = "Boeking Toevoegen";
 $vocab["editentry"]          = "Boeking Wijzigen";
 $vocab["editseries"]         = "Wijzig Reeks";
-$vocab["namebooker"]         = "Korte Omschrijving:";
+$vocab["namebooker"]         = "Korte Omschrijving";
 $vocab["fulldescription"]    = "Volledige Omschrijving:<br>&nbsp;&nbsp;(Aantal mensen,<br>&nbsp;&nbsp;Intern/Extern etc)";
-$vocab["date"]               = "Datum:";
-$vocab["start_date"]         = "Start Tijd:";
-$vocab["end_date"]           = "Eind Tijd:";
-$vocab["time"]               = "Tijd:";
-$vocab["period"]             = "Period:";
-$vocab["duration"]           = "Tijdsduur:";
+$vocab["date"]               = "Datum";
+$vocab["start_date"]         = "Start Tijd";
+$vocab["end_date"]           = "Eind Tijd";
+$vocab["time"]               = "Tijd";
+$vocab["period"]             = "Period";
+$vocab["duration"]           = "Tijdsduur";
 $vocab["seconds"]            = "seconden";
 $vocab["minutes"]            = "minuten";
 $vocab["hours"]              = "uren";
@@ -60,11 +60,11 @@ $vocab["weeks"]              = "weken";
 $vocab["years"]              = "jaren";
 $vocab["periods"]            = "periods";
 $vocab["all_day"]            = "Hele Dag";
-$vocab["type"]               = "Soort:";
+$vocab["type"]               = "Soort";
 $vocab["internal"]           = "Intern";
 $vocab["external"]           = "Extern";
 $vocab["save"]               = "Opslaan";
-$vocab["rep_type"]           = "Soort Herhaling:";
+$vocab["rep_type"]           = "Soort Herhaling";
 $vocab["rep_type_0"]         = "Geen";
 $vocab["rep_type_1"]         = "Dagelijks";
 $vocab["rep_type_2"]         = "Wekelijks";
@@ -72,10 +72,10 @@ $vocab["rep_type_3"]         = "Maandelijks";
 $vocab["rep_type_4"]         = "Jaarlijks";
 $vocab["rep_type_5"]         = "Maandelijks, Overeenkomstige dag";
 $vocab["rep_type_6"]         = "n-wekelijks";
-$vocab["rep_end_date"]       = "Einde herhaling datum:";
-$vocab["rep_rep_day"]        = "Herhalingsdag:";
+$vocab["rep_end_date"]       = "Einde herhaling datum";
+$vocab["rep_rep_day"]        = "Herhalingsdag";
 $vocab["rep_for_weekly"]     = "(t.b.v. wekelijks)";
-$vocab["rep_freq"]           = "Frequentie:";
+$vocab["rep_freq"]           = "Frequentie";
 $vocab["rep_num_weeks"]      = "Aantal weken";
 $vocab["rep_for_nweekly"]    = "(Voor n-wekelijks)";
 $vocab["ctrl_click"]         = "Gebruik Control-Linker muis klik om meer dan 1 ruimte te reserveren";
@@ -89,10 +89,10 @@ $vocab["brief_description"]  = "Korte Omschrijving.";
 $vocab["useful_n-weekly_value"] = "bruikbaar n-wekelijks aantal.";
 
 # Used in view_entry.php
-$vocab["description"]        = "Omschrijving:";
+$vocab["description"]        = "Omschrijving";
 $vocab["room"]               = "Kamer";
-$vocab["createdby"]          = "Aangemaakt door:";
-$vocab["lastupdate"]         = "Laatste aanpassing:";
+$vocab["createdby"]          = "Aangemaakt door";
+$vocab["lastupdate"]         = "Laatste aanpassing";
 $vocab["deleteentry"]        = "Boeking verwijderen";
 $vocab["deleteseries"]       = "Herhalingen verwijderen";
 $vocab["confirmdel"]         = "Weet U zeker\\ndat U deze\\nBoeking wilt verwijderen?\\n\\n";
@@ -103,7 +103,7 @@ $vocab["invalid_series_id"]  = "Ongeldig Herhalings-ID.";
 # Used in edit_entry_handler.php
 $vocab["error"]              = "Fout";
 $vocab["sched_conflict"]     = "Overlappende Boeking";
-$vocab["conflict"]           = "De nieuwe boeking overlapt de volgende boeking(en):";
+$vocab["conflict"]           = "De nieuwe boeking overlapt de volgende boeking(en)";
 $vocab["too_may_entrys"]     = "De door U geselecteerde opties zullen teveel boekingen genereren.<BR>Pas A.U.B. uw opties aan !";
 $vocab["returncal"]          = "Terug naar kalender overzicht";
 $vocab["failed_to_acquire"]  = "Het is niet gelukt om exclusive toegang tot de database te verkrijgen"; 
@@ -144,7 +144,7 @@ $vocab["show_my_entries"]    = "Klikken om al mijn aankomende boekingen te tonen
 
 # Used in search.php
 $vocab["invalid_search"]     = "Niet bestaand of ongeldig zoek argument.";
-$vocab["search_results"]     = "Zoek resultaten voor:";
+$vocab["search_results"]     = "Zoek resultaten voor";
 $vocab["nothing_found"]      = "Geen resultaten voor uw zoek opdracht gevonden.";
 $vocab["records"]            = "Boekingregels ";
 $vocab["through"]            = " tot en met ";
@@ -159,20 +159,20 @@ $vocab["search_for"]         = "Zoeken naar";
 $vocab["from"]               = "Van";
 
 # Used in report.php
-$vocab["report_on"]          = "Boekingsoverzicht:";
-$vocab["report_start"]       = "Start datum overzicht:";
-$vocab["report_end"]         = "Eind datum overzicht:";
-$vocab["match_area"]         = "Gebied als:";
-$vocab["match_room"]         = "Kamer als:";
-$vocab["match_type"]         = "Match type:";
+$vocab["report_on"]          = "Boekingsoverzicht";
+$vocab["report_start"]       = "Start datum overzicht";
+$vocab["report_end"]         = "Eind datum overzicht";
+$vocab["match_area"]         = "Gebied als";
+$vocab["match_room"]         = "Kamer als";
+$vocab["match_type"]         = "Match type";
 $vocab["ctrl_click_type"]    = "Gebruik Control-Linker muis klik om meer dan 1 type te selekteren";
-$vocab["match_entry"]        = "Korte omschrijving als:";
-$vocab["match_descr"]        = "Volledige omschrijving als:";
-$vocab["include"]            = "Neem mee:";
+$vocab["match_entry"]        = "Korte omschrijving als";
+$vocab["match_descr"]        = "Volledige omschrijving als";
+$vocab["include"]            = "Neem mee";
 $vocab["report_only"]        = "Alleen overzicht";
 $vocab["summary_only"]       = "Alleen samenvatting";
 $vocab["report_and_summary"] = "Overzicht en samenvatting";
-$vocab["summarize_by"]       = "Samenvatten volgens:";
+$vocab["summarize_by"]       = "Samenvatten volgens";
 $vocab["sum_by_descrip"]     = "Korte omschrijving";
 $vocab["sum_by_creator"]     = "Boeker";
 $vocab["entry_found"]        = "boeking gevonden";
@@ -181,9 +181,9 @@ $vocab["summary_header"]     = "Totaal aan (geboekte) uren";
 $vocab["summary_header_per"] = "Summary of (Entries) Periods";
 $vocab["total"]              = "Totaal";
 $vocab["submitquery"]        = "Rapport uitvoeren";
-$vocab["sort_rep"]           = "Rapport sorteren op:";
+$vocab["sort_rep"]           = "Rapport sorteren op";
 $vocab["sort_rep_time"]      = "Start Datum/Tijd";
-$vocab["rep_dsp"]            = "Weergeven in rapport:";
+$vocab["rep_dsp"]            = "Weergeven in rapport";
 $vocab["rep_dsp_dur"]        = "Duur";
 $vocab["rep_dsp_end"]        = "Eind Tijd";
 
@@ -227,8 +227,8 @@ $vocab["error_room"]         = "Fout: kamer ";
 $vocab["not_found"]          = " niet gevonden";
 $vocab["update_area_failed"] = "Wijzigen gebouw mislukt: ";
 $vocab["error_area"]         = "Fout: gebouw ";
-$vocab["room_admin_email"]   = "Kamer beheer email:";
-$vocab["area_admin_email"]   = "Gebouw beheer email:";
+$vocab["room_admin_email"]   = "Kamer beheer email";
+$vocab["area_admin_email"]   = "Gebouw beheer email";
 $vocab["invalid_email"]      = "Ongeldig email adres !";
 
 # Used in del.php
@@ -240,8 +240,8 @@ $vocab["delarea"]            = "U moet alle kamers in dit gebouw verwijderen voo
 
 # Used in help.php
 $vocab["about_mrbs"]         = "Over MRBS";
-$vocab["database"]           = "Database: ";
-$vocab["system"]             = "Systeem: ";
+$vocab["database"]           = "Database";
+$vocab["system"]             = "Systeem";
 $vocab["please_contact"]     = "Neem contact op met ";
 $vocab["for_any_questions"]  = "Voor alle vragen die hier niet worden beantwoord.";
 

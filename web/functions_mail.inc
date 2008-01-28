@@ -16,22 +16,24 @@
 //
 // $Id$
 
-// {{{ removeMailUnicode()
+// {{{ convertToMailCharset()
 
 /**
  * Convert already utf-8 encoded strings to charset defined for mails in
- * c.i.php.
+ * config.inc.php.
  *
  * @param string    $string   string to convert
- * @return string   $string   string converted to $mail_vocab["charset"]
+ * @return string   $string   string converted to $mail_charset, or in
+ *                            original UTF-8 if mail_charset isn't set.
  */
-function removeMailUnicode($string)
+function convertToMailCharset($string)
 {
-    global $unicode_encoding, $mail_vocab;
+    global $unicode_encoding, $mail_charset;
     //
-    if ($unicode_encoding)
+    if ($unicode_encoding && isset($mail_charset) &&
+        (strcasecmp($mail_charset, "utf-8") != 0))
     {
-        return iconv("utf-8", $mail_vocab["charset"], $string);
+        return iconv("utf-8", $mail_charset, $string);
     }
     else
     {
@@ -39,6 +41,44 @@ function removeMailUnicode($string)
     }
 }
 
+
+function get_mail_charset()
+{
+    global $unicode_encoding, $mail_charset, $mail_vocab;
+
+    if (isset($mail_charset))
+    {
+        $charset = $mail_charset;
+    }
+    else
+    {
+        $charset = "utf-8";
+        if (!$unicode_encoding)
+        {
+            $charset = $mail_vocab["charset"];
+        }
+    }
+    return $charset;
+}
+
+function get_mail_vocab($token)
+{
+    global $unicode_encoding, $mail_vocab;
+
+    $string = get_vocab($token, $mail_vocab);
+
+    $charset = "utf-8";
+    if (!$unicode_encoding)
+    {
+        $charset = $mail_vocab["charset"];
+    }
+
+    $unescaped_string = html_entity_decode($string,
+                                           ENT_QUOTES,
+                                           $charset);
+    return convertToMailCharset($unescaped_string);
+}
+    
 // }}}
 // {{{ getMailPeriodDateString()
 
@@ -75,24 +115,28 @@ function getMailPeriodDateString($t, $mod_time=0)
 function getMailTimeDateString($t, $inc_time=TRUE)
 {
     global $twentyfourhour_format;
-    // This bit's necessary, because it seems %p in strftime format
-    // strings doesn't work
-    $ampm = date("a",$t);
+
     if ($inc_time)
     {
         if ($twentyfourhour_format)
         {
-            return strftime("%H:%M:%S - %A %d %B %Y",$t);
+            return mail_strftime("%H:%M:%S - %A %d %B %Y",$t);
         }
         else
         {
-            return strftime("%I:%M:%S$ampm - %A %d %B %Y",$t);
+            return mail_strftime("%I:%M:%S%p - %A %d %B %Y",$t);
         }
     }
     else
     {
-        return strftime("%A %d %B %Y",$t);
+        return mail_strftime("%A %d %B %Y",$t);
     }
+}
+
+function mail_strftime($format,$t)
+{
+    $string = utf8_strftime($format,$t);
+    return convertToMailCharset($string);
 }
 
 // }}}
@@ -107,7 +151,7 @@ function getMailTimeDateString($t, $inc_time=TRUE)
  */
 function notifyAdminOnBooking($new_entry , $new_id)
 {
-    global $url_base, $returl, $mail_vocab, $name, $description, $area_name;
+    global $url_base, $returl, $name, $description, $area_name;
     global $room_name, $starttime, $duration, $dur_units, $end_date, $endtime;
     global $rep_enddate, $typel, $type, $create_by, $rep_type, $enable_periods;
     global $rep_opt, $rep_num_weeks;
@@ -257,14 +301,14 @@ function notifyAdminOnBooking($new_entry , $new_id)
         return FALSE;
     }
     //
-    $subject = $mail_vocab["mail_subject_entry"];
+    $subject = get_mail_vocab("mail_subject_entry");
     if ($new_entry)
     {
-        $body = $mail_vocab["mail_body_new_entry"] . "\n\n";
+        $body = get_mail_vocab("mail_body_new_entry") . "\n\n";
     }
     else
     {
-        $body = $mail_vocab["mail_body_changed_entry"] . "\n\n";
+        $body = get_mail_vocab("mail_body_changed_entry") . "\n\n";
     }
     // Set the link to view entry page
     if (isset($url_base) && ($url_base != ""))
@@ -284,64 +328,78 @@ function notifyAdminOnBooking($new_entry , $new_id)
     // Displays/don't displays entry details
     if (MAIL_DETAILS)
     {
-        $body .= "\n" . $mail_vocab["namebooker"] . " ";
-        $body .= compareEntries(removeMailUnicode($name),
-            removeMailUnicode($mail_previous['namebooker']), $new_entry)  . "\n";
+        $body .= "\n" . get_mail_vocab("namebooker") . ": ";
+        $body .= compareEntries(convertToMailCharset($name),
+                                convertToMailCharset($mail_previous['namebooker']),
+                                $new_entry)  . "\n";
         
         // Description:
-        $body .= $mail_vocab["description"] . " ";
-        $body .= compareEntries(removeMailUnicode($description),
-            removeMailUnicode($mail_previous['description']), $new_entry) . "\n";
+        $body .= get_mail_vocab("description") . ": ";
+        $body .= compareEntries(convertToMailCharset($description),
+                                convertToMailCharset($mail_previous['description']),
+                                $new_entry) . "\n";
         
         // Room:
-        $body .= $mail_vocab["room"] . ": " .
-            compareEntries(removeMailUnicode($area_name),
-            removeMailUnicode($mail_previous['area_name']), $new_entry);
-        $body .= " - " . compareEntries(removeMailUnicode($room_name),
-            removeMailUnicode($mail_previous['room_name']), $new_entry) . "\n";
+        $body .= get_mail_vocab("room") . ": " .
+            compareEntries(convertToMailCharset($area_name),
+                           convertToMailCharset($mail_previous['area_name']),
+                           $new_entry);
+        $body .= " - " . compareEntries(convertToMailCharset($room_name),
+                                        convertToMailCharset($mail_previous['room_name']),
+                                        $new_entry) . "\n";
         
         // Start time
         if ( $enable_periods )
         {
             list( $start_period, $start_date) =
                 getMailPeriodDateString($starttime);
-            $body .= $mail_vocab["start_date"] . " ";
-            $body .= compareEntries(unHtmlEntities($start_date),
-                unHtmlEntities($mail_previous['start_date']), $new_entry) . "\n";
+            $body .= get_mail_vocab("start_date") . ": ";
+            $body .= compareEntries($start_date,
+                                    $mail_previous['start_date'],
+                                    $new_entry) . "\n";
         }
         else
         {
             $start_date = getMailTimeDateString($starttime);
-            $body .= $mail_vocab["start_date"] . " " .
-                compareEntries($start_date, $mail_previous['start_date'], $new_entry) . "\n";
+            $body .= get_mail_vocab("start_date") . ": " .
+                compareEntries($start_date,
+                               $mail_previous['start_date'],
+                               $new_entry) . "\n";
         }
         
         // Duration
-        $body .= $mail_vocab["duration"] . " " .
-            compareEntries($duration, $mail_previous['duration'], $new_entry);
-        $body .= " " . compareEntries($mail_vocab["$dur_units"],
-            $mail_previous['dur_units'], $new_entry) . "\n";
+        $body .= get_mail_vocab("duration") . ": " .
+            compareEntries($duration,
+                           $mail_previous['duration'],
+                           $new_entry);
+        $body .= " " . compareEntries(get_mail_vocab("$dur_units"),
+                                      $mail_previous['dur_units'],
+                                      $new_entry) . "\n";
         
         // End time
         if ( $enable_periods )
         {
             $myendtime = $endtime;
             $mod_time = -1;
-            list($end_period, $end_date) =  getMailPeriodDateString($myendtime, $mod_time);
-            $body .= $mail_vocab["end_date"] . " ";
-            $body .= compareEntries(unHtmlEntities($end_date),
-                unHtmlEntities($mail_previous['end_date']), $new_entry) ."\n";
+            list($end_period, $end_date) =  getMailPeriodDateString($myendtime,
+                                                                    $mod_time);
+            $body .= get_mail_vocab("end_date") . ": ";
+            $body .= compareEntries($end_date,
+                                    $mail_previous['end_date'],
+                                    $new_entry) ."\n";
         }
         else
         {
             $myendtime = $endtime;
             $end_date = getMailTimeDateString($myendtime);
-            $body .= $mail_vocab["end_date"] . " " .
-                compareEntries($end_date, $mail_previous['end_date'], $new_entry) . "\n";
+            $body .= get_mail_vocab("end_date") . ": " .
+                compareEntries($end_date,
+                               $mail_previous['end_date'],
+                               $new_entry) . "\n";
         }
         
         // Type of booking
-        $body .= $mail_vocab["type"] . " ";
+        $body .= get_mail_vocab("type") . ": ";
         if ($new_entry)
         {
             $body .= $typel[$type];
@@ -349,28 +407,35 @@ function notifyAdminOnBooking($new_entry , $new_id)
         else
         {
             $temp = $mail_previous['type'];
-            $body .= compareEntries($typel[$type], $typel[$temp], $new_entry);
+            $body .= compareEntries($typel[$type],
+                                    $typel[$temp],
+                                    $new_entry);
         }
         
         // Created by
-        $body .= "\n" . $mail_vocab["createdby"] . " " .
-            compareEntries($create_by, $mail_previous['createdby'], $new_entry) . "\n";
+        $body .= "\n" . get_mail_vocab("createdby") . ": " .
+            compareEntries($create_by,
+                           $mail_previous['createdby'],
+                           $new_entry) . "\n";
         
         // Last updated
-        $body .= $mail_vocab["lastupdate"] . " " .
-            compareEntries(getMailTimeDateString(time()), $mail_previous['updated'], $new_entry);
+        $body .= get_mail_vocab("lastupdate") . ": " .
+            compareEntries(getMailTimeDateString(time()),
+                           $mail_previous['updated'],
+                           $new_entry);
         
         // Repeat Type
-        $body .= "\n" . $mail_vocab["rep_type"];
+        $body .= "\n" . get_mail_vocab("rep_type");
         if ($new_entry)
         {
-            $body .= " " . $mail_vocab["rep_type_$rep_type"];
+            $body .= ": " . get_mail_vocab("rep_type_$rep_type");
         }
         else
         {
             $temp = $mail_previous['rep_type'];
-            $body .=  " " . compareEntries($mail_vocab["rep_type_$rep_type"],
-                $mail_vocab["rep_type_$temp"], $new_entry);
+            $body .=  ": " . compareEntries(get_mail_vocab("rep_type_$rep_type"),
+                                           get_mail_vocab("rep_type_$temp"),
+                                           $new_entry);
         }
         
         // Details if a series
@@ -388,31 +453,41 @@ function notifyAdminOnBooking($new_entry , $new_id)
 	    }
 	    if ($rep_type == 6)
 	    {
-		$body .= "\n" . $mail_vocab["rep_num_weeks"];
-		$body .=  ": " . compareEntries($rep_num_weeks, $mail_previous["rep_num_weeks"], $new_entry);
+		$body .= "\n" . get_mail_vocab("rep_num_weeks");
+		$body .=  ": " . compareEntries($rep_num_weeks,
+                                                $mail_previous["rep_num_weeks"],
+                                                $new_entry);
 	    }
 	
 	    if($opt || $mail_previous["rep_opt"])
 	    {
-		$body .= "\n" . $mail_vocab["rep_rep_day"];
-		$body .=  " " . compareEntries($opt, $mail_previous["rep_opt"], $new_entry);
+		$body .= "\n" . get_mail_vocab("rep_rep_day");
+		$body .=  ": " . compareEntries($opt,
+                                                $mail_previous["rep_opt"],
+                                                $new_entry);
 	    }
 
-            $body .= "\n" . $mail_vocab["rep_end_date"];
+            $body .= "\n" . get_mail_vocab("rep_end_date");
             if ($new_entry)
             {
-                $body .= " " . utf8_strftime('%A %d %B %Y',$rep_enddate);
+                $body .= ": " . mail_strftime('%A %d %B %Y',$rep_enddate);
             }
             else
             {
-                $temp = utf8_strftime('%A %d %B %Y',$rep_enddate);
-                $body .=  " " . 
-                    compareEntries($temp, $mail_previous['rep_end_date'], $new_entry) . "\n";
+                $temp = mail_strftime('%A %d %B %Y',$rep_enddate);
+                $body .=  ": " . 
+                    compareEntries($temp,
+                                   $mail_previous['rep_end_date'],
+                                   $new_entry) . "\n";
             }
         }
 	$body .= "\n";
     }
-    $result = sendMail($recipients, $subject, $body, $mail_vocab['charset'] ,MAIL_CC);
+    $result = sendMail($recipients,
+                       $subject,
+                       $body,
+                       get_mail_charset(),
+                       MAIL_CC);
     return $result;
 }
 
@@ -427,7 +502,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
  */
 function notifyAdminOnDelete($mail_previous)
 {
-    global $mail_vocab, $typel, $enable_periods, $auth, $tbl_users;
+    global $typel, $enable_periods, $auth, $tbl_users;
     //
     $recipients = '';
     (MAIL_ADMIN_ON_BOOKINGS) ? $recipients = MAIL_RECIPIENTS : '';
@@ -497,66 +572,67 @@ function notifyAdminOnDelete($mail_previous)
         return FALSE;
     }
     //
-    $subject = $mail_vocab["mail_subject_delete"];
-    $body = $mail_vocab["mail_body_del_entry"] . "\n\n";
+    $subject = get_mail_vocab("mail_subject_delete");
+    $body = get_mail_vocab("mail_body_del_entry") . "\n\n";
     // Displays deleted entry details
-    $body .= "\n" . $mail_vocab["namebooker"] . ' ';
-    $body .= removeMailUnicode($mail_previous['namebooker']) . "\n";
-    $body .= $mail_vocab["description"] . " ";
-    $body .= removeMailUnicode($mail_previous['description']) . "\n";
-    $body .= $mail_vocab["room"] . ": ";
-    $body .= removeMailUnicode($mail_previous['area_name']);
-    $body .= " - " . removeMailUnicode($mail_previous['room_name']) . "\n";
-    $body .= $mail_vocab["start_date"] . ' ';
+    $body .= "\n" . get_mail_vocab("namebooker") . ': ';
+    $body .= convertToMailCharset($mail_previous['namebooker']) . "\n";
+    $body .= get_mail_vocab("description") . ": ";
+    $body .= convertToMailCharset($mail_previous['description']) . "\n";
+    $body .= get_mail_vocab("room") . ": ";
+    $body .= convertToMailCharset($mail_previous['area_name']);
+    $body .= " - " . convertToMailCharset($mail_previous['room_name']) . "\n";
+    $body .= get_mail_vocab("start_date") . ': ';
     if ( $enable_periods )
     {
-        $body .= unHtmlEntities($mail_previous['start_date']) . "\n";
+        $body .= convertToMailCharset($mail_previous['start_date']) . "\n";
     }
     else
     {
-        $body .= $mail_previous['start_date'] . "\n";
+        $body .= convertToMailCharset($mail_previous['start_date']) . "\n";
     }
-    $body .= $mail_vocab["duration"] . ' ' . $mail_previous['duration'] . ' ';
+    $body .= get_mail_vocab("duration") . ': ' . $mail_previous['duration'] . ' ';
     $body .= $mail_previous['dur_units'] . "\n";
     if ( $enable_periods )
     {
-        $body .= $mail_vocab["end_date"] . " ";
-        $body .= unHtmlEntities($mail_previous['end_date']) ."\n";
+        $body .= get_mail_vocab("end_date") . ": ";
+        $body .= convertToMailCharset($mail_previous['end_date']) ."\n";
     }
     else
     {
-        $body .= $mail_vocab["end_date"] . " " . $mail_previous['end_date'];
+        $body .= get_mail_vocab("end_date") . ": " .
+            convertToMailCharset($mail_previous['end_date']);
         $body .= "\n";
     }
-    $body .= $mail_vocab["type"] . " ";
+    $body .= get_mail_vocab("type") . ": ";
     $body .=  (empty($typel[$mail_previous['type']])) ? "?" .
-        $mail_previous['type'] . "?" : $typel[$mail_previous['type']];
-    $body .= "\n" . $mail_vocab["createdby"] . " ";
-    $body .= $mail_previous['createdby'] . "\n";
-    $body .= $mail_vocab["lastupdate"] . " " . $mail_previous['updated'];
-    $body .= "\n" . $mail_vocab["rep_type"];
+    $mail_previous['type'] . "?" : $typel[$mail_previous['type']];
+    $body .= "\n" . get_mail_vocab("createdby") . ": ";
+    $body .= convertToMailCharset($mail_previous['createdby']) . "\n";
+    $body .= get_mail_vocab("lastupdate") . ": " . convertToMailCharset($mail_previous['updated']);
+    $body .= "\n" . get_mail_vocab("rep_type");
     $temp = $mail_previous['rep_type'];
-    $body .=  " " . $mail_vocab["rep_type_$temp"];
+    $body .=  ": " . get_mail_vocab("rep_type_$temp");
     if ($mail_previous['rep_type'] > 0)
     {
         if ($mail_previous['rep_type'] == 6)
         {
-           $body .= "\n" . $mail_vocab["rep_num_weeks"];
-           $body .=  ": " . $mail_previous["rep_num_weeks"];
+            $body .= "\n" . get_mail_vocab("rep_num_weeks");
+            $body .=  ": " . $mail_previous["rep_num_weeks"];
         }
    
         if($mail_previous["rep_opt"])
         {
-           $body .= "\n" . $mail_vocab["rep_rep_day"];
-           $body .=  " " . $mail_previous["rep_opt"];
+            $body .= "\n" . get_mail_vocab("rep_rep_day");
+            $body .=  ": " . $mail_previous["rep_opt"];
         }
 
-        $body .= "\n" . $mail_vocab["rep_end_date"];
-        $body .=  " " . $mail_previous['rep_end_date'] . "\n";
+        $body .= "\n" . get_mail_vocab("rep_end_date");
+        $body .=  ": " . $mail_previous['rep_end_date'] . "\n";
     }
     $body .= "\n";
     // End of mail details
-    $result = sendMail($recipients, $subject, $body, $mail_vocab['charset'], MAIL_CC);
+    $result = sendMail($recipients, $subject, $body, get_mail_charset(), MAIL_CC);
     return $result;
 }
 
@@ -867,25 +943,6 @@ function sendMail($recipients, $subject, $body, $charset = 'us-ascii',
       error_log("Error sending email: ".$result->getMessage());
     }
     return $result;
-}
-
-// }}}
-// {{{ unHtmlEntities()
-
-/**
- * Convert all HTML entities to their applicable characters.
- * Added to remove HTML entities that are not suitable for plain text emails.
- * May be replaced by PHP function 'html_entity_decode()' but this function
- * only exist since PHP 4.3.0 and is buggy before PHP5.
- *
- * @param  string   $string     string to decode
- * @return string               decoded string
- */
-function unHtmlEntities($string)
-{
-    $trans_tbl = get_html_translation_table(HTML_ENTITIES);
-    $trans_tbl = array_flip($trans_tbl);
-    return strtr($string, $trans_tbl);
 }
 
 // }}}

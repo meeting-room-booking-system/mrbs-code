@@ -79,11 +79,11 @@ if(!empty($room)) {
 <TABLE>
 <TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name="room_name" value="<?php
 echo htmlspecialchars($row["room_name"]); ?>"></TD></TR>
-<TR><TD><?php echo get_vocab("description") ?></TD><TD><input type=text name=description value="<?php
+<TR><TD><?php echo get_vocab("description") ?>:</TD><TD><input type=text name=description value="<?php
 echo htmlspecialchars($row["description"]); ?>"></TD></TR>
 <TR><TD><?php echo get_vocab("capacity") ?>:   </TD><TD><input type=text name=capacity value="<?php
 echo $row["capacity"]; ?>"></TD></TR>
-<TR><TD><?php echo get_vocab("room_admin_email") ?></TD><TD><input type=text name=room_admin_email MAXLENGTH=75 value="<?php
+<TR><TD><?php echo get_vocab("room_admin_email") ?>:</TD><TD><input type=text name=room_admin_email MAXLENGTH=75 value="<?php
 echo htmlspecialchars($row["room_admin_email"]); ?>"></TD>
 <?php if (FALSE == $valid_email) {
     echo ("<TD>&nbsp;</TD><TD><STRONG>" . get_vocab('invalid_email') . "<STRONG></TD>");

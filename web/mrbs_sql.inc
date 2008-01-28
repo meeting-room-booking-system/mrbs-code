@@ -338,8 +338,8 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr,
 
 			// n Weekly repeat
 			case 6:
-
-				while (1)
+                                # Loop until we hit the end time
+				while ($time <= $enddate)
 				{
 					$day++;
 					$cur_day = ($cur_day + 1) % 7;

@@ -221,7 +221,7 @@ else
 
 	#This is where we start displaying stuff
 	echo "<table cellspacing=0 border=1 width=\"100%\">";
-	echo "<tr><th width=\"1%\">".($enable_periods ? get_vocab("period") : get_vocab("time"))."</th>";
+	echo "<tr><th width=\"1%\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
 
 	$room_column_width = (int)(95 / sql_count($res));
 	for ($i = 0; ($row = sql_row($res, $i)); $i++)
@@ -237,7 +237,7 @@ else
     if ( FALSE != $times_right_side )
     {
         echo "<th width=\"1%\">". ( $enable_periods  ? get_vocab("period") : get_vocab("time") )
-        ."</th>";
+        .":</th>";
     }
     echo "</tr>\n";
   

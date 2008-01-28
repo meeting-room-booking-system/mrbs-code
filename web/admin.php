@@ -122,7 +122,7 @@ if(isset($area)) {
 
 <TABLE>
 <TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name=name></TD></TR>
-<TR><TD><?php echo get_vocab("description") ?></TD><TD><input type=text name=description></TD></TR>
+<TR><TD><?php echo get_vocab("description") ?>:</TD><TD><input type=text name=description></TD></TR>
 <TR><TD><?php echo get_vocab("capacity") ?>:   </TD><TD><input type=text name=capacity></TD></TR>
 </TABLE>
 <input type=submit value="<?php echo get_vocab("addroom") ?>">

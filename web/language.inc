@@ -75,6 +75,8 @@ $lang_map_windows = array
   'sv' => 'sve',
   'sv-fi' => 'svf',
   'sv-sv' => 'sve',
+  'tr' => 'trk',
+  'tr-tr' => 'trk',
   'zh' => 'chs',
   'zh-tw' => 'cht',
   'zh-cn' => 'chs',
@@ -132,6 +134,7 @@ $winlocale_codepage_map = array
   'slv' => 'CP1250',
   'sve' => 'CP1252',
   'svf' => 'CP1252',
+  'trk' => 'CP1254',
   'zhh' => 'CP950',
   'zhi' => 'CP936',
 );
@@ -567,18 +570,18 @@ function get_aix_character_encoding($character_encoding)
   return $gnu_iconv_to_aix_iconv_codepage_map[$character_encoding];
 }
 
-function get_vocab_utf8_aix($tag)
+function get_vocab_utf8_aix($vocab_array, $tag)
 {
-  global $aix_utf8_converters, $vocab;
+  global $aix_utf8_converters;
 
   // Attempt to translate character encoding name
-  $aix_character_set = get_aix_character_encoding($vocab['charset']);
+  $aix_character_set = get_aix_character_encoding($vocab_array['charset']);
 
   // Check if character encoding name translation was successful
   if ($aix_character_set === FALSE)
   {
     // Unsuccessful; just use the original character encoding name
-    $aix_character_set = $vocab['charset'];
+    $aix_character_set = $vocab_array['charset'];
 
   }
   else
@@ -587,7 +590,7 @@ function get_vocab_utf8_aix($tag)
     if (!in_array($aix_character_set, $aix_utf8_converters, TRUE))
     {
       // Corresponding UTF-8 converter does not exist; just use the original character encoding name
-      $aix_character_set = $vocab['charset'];
+      $aix_character_set = $vocab_array['charset'];
 
     }
     else
@@ -596,7 +599,7 @@ function get_vocab_utf8_aix($tag)
     }
   }
 
-  return iconv($aix_character_set, 'UTF-8', $vocab[$tag]);
+  return iconv($aix_character_set, 'UTF-8', $vocab_array[$tag]);
 }
 
 
@@ -606,22 +609,31 @@ function get_vocab($tag)
 {
   global $vocab, $unicode_encoding;
 
-  if ($unicode_encoding && (strcasecmp($vocab["charset"], "utf-8") != 0))
+  if (func_num_args() > 1)
+  {
+    $vocab_array = func_get_arg(1);
+  }
+  else
+  {
+    $vocab_array = $vocab;
+  }
+
+  if ($unicode_encoding && (strcasecmp($vocab_array["charset"], "utf-8") != 0))
   {
     if ((get_server_os() == 'aix') &&
         (strcasecmp(ICONV_IMPL, 'unknown') == 0) &&
         (strcasecmp(ICONV_VERSION, 'unknown') == 0))
     {
-      $translated = get_vocab_utf8_aix($tag);
+      $translated = get_vocab_utf8_aix($vocab_array, $tag);
     }
     else
     {
-      $translated = iconv($vocab["charset"],"utf-8",$vocab[$tag]);
+      $translated = iconv($vocab_array["charset"],"utf-8",$vocab_array[$tag]);
     }
   }
   else
   {
-    $translated = $vocab[$tag];
+    $translated = $vocab_array[$tag];
   }
   return $translated;
 }
@@ -629,7 +641,7 @@ function get_vocab($tag)
 // AIX version of utf8_convert(); needed as locales won't give us UTF-8
 // NOTE: Should ONLY be called with input encoded in the default code set of the current locale!
 // NOTE: Uses the LC_TIME category for determining the current locale setting, so should preferrably be used on date/time input only!
-function utf8_convert_aix($string)
+function utf8_convert_aix($vocab_array, $string)
 {
   global $aixlocale_codepage_map, $aix_utf8_converters, $unicode_encoding;
 
@@ -703,6 +715,21 @@ function utf8_strftime($format, $time)
 
   $result = strftime($format,$time);
   return utf8_convert_from_locale($result);
+}
+
+
+// UTF-8 compatible substr function obtained from a contribution by
+// "frank at jkelloggs dot dk" in the PHP online manual for substr()
+function utf8_substr($str,$start)
+{
+  preg_match_all("/./su", $str, $ar);
+
+  if(func_num_args() >= 3) {
+    $end = func_get_arg(2);
+    return join("",array_slice($ar[0],$start,$end));
+  } else {
+    return join("",array_slice($ar[0],$start));
+  }
 }
 
 ?>

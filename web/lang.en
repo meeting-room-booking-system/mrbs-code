@@ -20,7 +20,7 @@ $vocab["mrbs"]               = "Meeting Room Booking System";
 $vocab["report"]             = "Report";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Help";
-$vocab["search"]             = "Search:";
+$vocab["search"]             = "Search";
 $vocab["not_php3"]             = "<H1>WARNING: This probably doesn't work with PHP3</H1>";
 
 # Used in day.php
@@ -44,14 +44,14 @@ $vocab["ppreview"]           = "Print Preview";
 $vocab["addentry"]           = "Add Entry";
 $vocab["editentry"]          = "Edit Entry";
 $vocab["editseries"]         = "Edit Series";
-$vocab["namebooker"]         = "Brief Description:";
+$vocab["namebooker"]         = "Brief Description";
 $vocab["fulldescription"]    = "Full Description:<br>&nbsp;&nbsp;(Number of people,<br>&nbsp;&nbsp;Internal/External etc)";
-$vocab["date"]               = "Date:";
-$vocab["start_date"]         = "Start Time:";
-$vocab["end_date"]           = "End Time:";
-$vocab["time"]               = "Time:";
-$vocab["period"]             = "Period:";
-$vocab["duration"]           = "Duration:";
+$vocab["date"]               = "Date";
+$vocab["start_date"]         = "Start Time";
+$vocab["end_date"]           = "End Time";
+$vocab["time"]               = "Time";
+$vocab["period"]             = "Period";
+$vocab["duration"]           = "Duration";
 $vocab["seconds"]            = "seconds";
 $vocab["minutes"]            = "minutes";
 $vocab["hours"]              = "hours";
@@ -60,11 +60,11 @@ $vocab["weeks"]              = "weeks";
 $vocab["years"]              = "years";
 $vocab["periods"]            = "periods";
 $vocab["all_day"]            = "All day";
-$vocab["type"]               = "Type:";
+$vocab["type"]               = "Type";
 $vocab["internal"]           = "Internal";
 $vocab["external"]           = "External";
 $vocab["save"]               = "Save";
-$vocab["rep_type"]           = "Repeat Type:";
+$vocab["rep_type"]           = "Repeat Type";
 $vocab["rep_type_0"]         = "None";
 $vocab["rep_type_1"]         = "Daily";
 $vocab["rep_type_2"]         = "Weekly";
@@ -72,10 +72,10 @@ $vocab["rep_type_3"]         = "Monthly";
 $vocab["rep_type_4"]         = "Yearly";
 $vocab["rep_type_5"]         = "Monthly, corresponding day";
 $vocab["rep_type_6"]         = "n-Weekly";
-$vocab["rep_end_date"]       = "Repeat End Date:";
-$vocab["rep_rep_day"]        = "Repeat Day:";
+$vocab["rep_end_date"]       = "Repeat End Date";
+$vocab["rep_rep_day"]        = "Repeat Day";
 $vocab["rep_for_weekly"]     = "(for (n-)weekly)";
-$vocab["rep_freq"]           = "Frequency:";
+$vocab["rep_freq"]           = "Frequency";
 $vocab["rep_num_weeks"]      = "Number of weeks";
 $vocab["rep_for_nweekly"]    = "(for n-weekly)";
 $vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
@@ -89,10 +89,10 @@ $vocab["brief_description"]  = "Brief Description.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 
 # Used in view_entry.php
-$vocab["description"]        = "Description:";
+$vocab["description"]        = "Description";
 $vocab["room"]               = "Room";
-$vocab["createdby"]          = "Created By:";
-$vocab["lastupdate"]         = "Last Updated:";
+$vocab["createdby"]          = "Created By";
+$vocab["lastupdate"]         = "Last Updated";
 $vocab["deleteentry"]        = "Delete Entry";
 $vocab["deleteseries"]       = "Delete Series";
 $vocab["confirmdel"]         = "Are you sure\\nyou want to\\ndelete this entry?\\n\\n";
@@ -103,7 +103,7 @@ $vocab["invalid_series_id"]  = "Invalid series id.";
 # Used in edit_entry_handler.php
 $vocab["error"]              = "Error";
 $vocab["sched_conflict"]     = "Scheduling Conflict";
-$vocab["conflict"]           = "The new booking will conflict with the following entry(s):";
+$vocab["conflict"]           = "The new booking will conflict with the following entry(s)";
 $vocab["too_may_entrys"]     = "The selected options will create too many entries.<BR>Please use different options!";
 $vocab["returncal"]          = "Return to calendar view";
 $vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access";
@@ -148,7 +148,7 @@ $vocab["no_users_create_first_admin"] = "Create a user configured as administrat
 
 # Used in search.php
 $vocab["invalid_search"]     = "Empty or invalid search string.";
-$vocab["search_results"]     = "Search Results for:";
+$vocab["search_results"]     = "Search Results for";
 $vocab["nothing_found"]      = "No matching entries found.";
 $vocab["records"]            = "Records ";
 $vocab["through"]            = " through ";
@@ -163,20 +163,20 @@ $vocab["search_for"]         = "Search For";
 $vocab["from"]               = "From";
 
 # Used in report.php
-$vocab["report_on"]          = "Report on Meetings:";
-$vocab["report_start"]       = "Report start date:";
-$vocab["report_end"]         = "Report end date:";
-$vocab["match_area"]         = "Match area:";
-$vocab["match_room"]         = "Match room:";
-$vocab["match_type"]         = "Match type:";
+$vocab["report_on"]          = "Report on Meetings";
+$vocab["report_start"]       = "Report start date";
+$vocab["report_end"]         = "Report end date";
+$vocab["match_area"]         = "Match area";
+$vocab["match_room"]         = "Match room";
+$vocab["match_type"]         = "Match type";
 $vocab["ctrl_click_type"]    = "Use Control-Click to select more than one type";
-$vocab["match_entry"]        = "Match brief description:";
-$vocab["match_descr"]        = "Match full description:";
-$vocab["include"]            = "Include:";
+$vocab["match_entry"]        = "Match brief description";
+$vocab["match_descr"]        = "Match full description";
+$vocab["include"]            = "Include";
 $vocab["report_only"]        = "Report only";
 $vocab["summary_only"]       = "Summary only";
 $vocab["report_and_summary"] = "Report and Summary";
-$vocab["summarize_by"]       = "Summarize by:";
+$vocab["summarize_by"]       = "Summarize by";
 $vocab["sum_by_descrip"]     = "Brief description";
 $vocab["sum_by_creator"]     = "Creator";
 $vocab["entry_found"]        = "entry found";
@@ -185,9 +185,9 @@ $vocab["summary_header"]     = "Summary of (Entries) Hours";
 $vocab["summary_header_per"] = "Summary of (Entries) Periods";
 $vocab["total"]              = "Total";
 $vocab["submitquery"]        = "Run Report";
-$vocab["sort_rep"]           = "Sort Report by:";
+$vocab["sort_rep"]           = "Sort Report by";
 $vocab["sort_rep_time"]      = "Start Date/Time";
-$vocab["rep_dsp"]            = "Display in report:";
+$vocab["rep_dsp"]            = "Display in report";
 $vocab["rep_dsp_dur"]        = "Duration";
 $vocab["rep_dsp_end"]        = "End Time";
 
@@ -231,8 +231,8 @@ $vocab["error_room"]         = "Error: room ";
 $vocab["not_found"]          = " not found";
 $vocab["update_area_failed"] = "Update area failed: ";
 $vocab["error_area"]         = "Error: area ";
-$vocab["room_admin_email"]   = "Room admin email:";
-$vocab["area_admin_email"]   = "Area admin email:";
+$vocab["room_admin_email"]   = "Room admin email";
+$vocab["area_admin_email"]   = "Area admin email";
 $vocab["invalid_email"]      = "Invalid email!";
 
 # Used in del.php
@@ -244,8 +244,8 @@ $vocab["delarea"]            = "You must delete all rooms in this area before yo
 
 # Used in help.php
 $vocab["about_mrbs"]         = "About MRBS";
-$vocab["database"]           = "Database: ";
-$vocab["system"]             = "System: ";
+$vocab["database"]           = "Database";
+$vocab["system"]             = "System";
 $vocab["please_contact"]     = "Please contact ";
 $vocab["for_any_questions"]  = "for any questions that aren't answered here.";
 

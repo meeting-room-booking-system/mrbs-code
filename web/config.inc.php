@@ -245,6 +245,18 @@ $imap_host = "imap-server-name";
 # The IMAP server port
 $imap_port = "143";
 
+# 'auth_imap_php' configuration settings
+$auth["imap_php"]["hostname"] = "localhost";
+# You can also specify any of the following options:
+# Specifies the port number to connect to
+#$auth["imap_php"]["port"] = 993;
+# Use SSL
+#$auth["imap_php"]["ssl"] = TRUE;
+# Use TLS
+#$auth["imap_php"]["tls"] = TRUE;
+# Turn off SSL/TLS certificate validation
+#$auth["imap_php"]["novalidate-cert"] = TRUE;
+
 # 'auth_pop3' configuration settings
 # See AUTHENTICATION for details of how check against multiple servers
 # Where is the POP3 server
@@ -256,6 +268,12 @@ $pop3_port = "110";
 ###############################################
 # Email settings
 ###############################################
+
+# You can override the charset used in emails if $unicode_encoding is 1
+# (utf-8) if you like, but be sure the charset you choose can handle all
+# the characters in the translation and that anyone may use in a
+# booking description
+#$mail_charset = "iso-8859-1";
 
 # Set to TRUE if you want to be notified when entries are booked. Default is
 # FALSE
@@ -350,6 +368,9 @@ define ("MAIL_RECIPIENTS", $mrbs_admin_email);
 # Set email address of the Carbon Copy field. Default is ''. You can define
 # more than one recipient (see MAIL_RECIPIENTS)
 define ("MAIL_CC", '');
+
+# The values below need to be in UTF-8, or if set, $mail_vocab.
+# (Although proper encoding of subjects isn't currently handled)
 
 # Set the content of the Subject field for added/changed entries.
 $mail["subject"] = "Entry added/changed for $mrbs_company MRBS";

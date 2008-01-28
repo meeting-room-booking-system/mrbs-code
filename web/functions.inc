@@ -188,7 +188,7 @@ function ChangeOptionDays(formObj, prefix)
               <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
                 <FORM METHOD=GET ACTION="search.php">
                   <FONT SIZE=2>
-                    <A HREF="search.php?advanced=1"><?php echo get_vocab("search") ?></A>
+                    <A HREF="search.php?advanced=1"><?php echo get_vocab("search") ?>:</A>
                   </FONT>
                   <INPUT TYPE=TEXT   NAME="search_str" VALUE="<?php echo $search_str ?>" SIZE=10>
                   <INPUT TYPE=HIDDEN NAME=day        VALUE="<?php echo $day        ?>"        >

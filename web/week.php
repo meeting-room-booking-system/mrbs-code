@@ -287,7 +287,7 @@ if ($debug_flag)
 echo "<table cellspacing=0 border=1 width=\"100%\">";
 
 # The header row contains the weekday names and short dates.
-echo "<tr><th width=\"1%\"><br>".($enable_periods ? get_vocab("period") : get_vocab("time"))."</th>";
+echo "<tr><th width=\"1%\"><br>".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
 if (empty($dateformat))
 	$dformat = "%a<br>%b %d";
 else
@@ -305,7 +305,7 @@ if ( FALSE != $times_right_side )
 {
     echo "<th width=\"1%\"><br>"
     . ( $enable_periods  ? get_vocab("period") : get_vocab("time") )
-    . "</th>";
+    . ":</th>";
 }
 
 echo "</tr>\n";

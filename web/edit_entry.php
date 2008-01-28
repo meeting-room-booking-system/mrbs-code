@@ -226,10 +226,31 @@ function validate_and_submit ()
   {
   	n = parseInt(document.forms["main"].rep_num_weeks.value);
   }
-  if ((!i1 || (i1 && i2)) && document.forms["main"].rep_type && document.forms["main"].rep_type[6].checked && (!n || n < 2))
+  if ((!i1 || (i1 && i2)) && (document.forms["main"].rep_type.value != 0) && document.forms["main"].rep_type[6].checked && (!n || n < 2))
   {
     alert("<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("useful_n-weekly_value") ?>");
     return false;
+  }
+  
+  if ((document.forms["main"].rep_type.value != 0) &&
+      (document.forms["main"].rep_type[2].checked ||
+      document.forms["main"].rep_type[6].checked))
+  {
+    ok = false;
+    for (j=0; j < 7; j++)
+    {
+      if (document.forms["main"]["rep_day["+j+"]"].checked)
+      {
+        ok = true;
+        break;
+      }
+    }
+    
+    if (ok == false)
+    {
+      alert("<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("rep_rep_day") ?>");
+      return false;
+    }
   }
 
   // check that a room(s) has been selected
@@ -283,14 +304,14 @@ function OnAllDayClick(allday) // Executed when the user clicks on the all_day c
   <TD CLASS=TL><TEXTAREA NAME="description" ROWS=8 COLS=40 WRAP="virtual"><?php echo
 htmlspecialchars ( $description ); ?></TEXTAREA></TD></TR>
 
-<TR><TD CLASS=CR><B><?php echo get_vocab("date")?></B></TD>
+<TR><TD CLASS=CR><B><?php echo get_vocab("date")?>:</B></TD>
  <TD CLASS=CL>
   <?php genDateSelector("", $start_day, $start_month, $start_year) ?>
  </TD>
 </TR>
 
 <?php if(! $enable_periods ) { ?>
-<TR><TD CLASS=CR><B><?php echo get_vocab("time")?></B></TD>
+<TR><TD CLASS=CR><B><?php echo get_vocab("time")?>:</B></TD>
   <TD CLASS=CL><INPUT NAME="hour" SIZE=2 VALUE="<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>" MAXLENGTH=2>:<INPUT NAME="minute" SIZE=2 VALUE="<?php echo $start_min;?>" MAXLENGTH=2>
 <?php
 if (!$twentyfourhour_format)
@@ -303,7 +324,7 @@ if (!$twentyfourhour_format)
 ?>
 </TD></TR>
 <?php } else { ?>
-<TR><TD CLASS=CR><B><?php echo get_vocab("period")?></B></TD>
+<TR><TD CLASS=CR><B><?php echo get_vocab("period")?>:</B></TD>
   <TD CLASS=CL>
     <SELECT NAME="period">
 <?php
@@ -320,7 +341,7 @@ foreach ($periods as $p_num => $p_val)
 </TD></TR>
 
 <?php } ?>
-<TR><TD CLASS=CR><B><?php echo get_vocab("duration");?></B></TD>
+<TR><TD CLASS=CR><B><?php echo get_vocab("duration");?>:</B></TD>
   <TD CLASS=CL><INPUT NAME="duration" SIZE=7 VALUE="<?php echo $duration;?>">
     <SELECT NAME="dur_units">
 <?php
@@ -456,7 +477,7 @@ for ($c = "A"; $c <= "Z"; $c++)
 <?php if($edit_type == "series") { ?>
 
 <TR>
- <TD CLASS=CR><B><?php echo get_vocab("rep_type")?></B></TD>
+ <TD CLASS=CR><B><?php echo get_vocab("rep_type")?>:</B></TD>
  <TD CLASS=CL>
 <?php
 
@@ -475,12 +496,12 @@ for($i = 0; isset($vocab["rep_type_$i"]); $i++)
 </TR>
 
 <TR>
- <TD CLASS=CR><B><?php echo get_vocab("rep_end_date")?></B></TD>
+ <TD CLASS=CR><B><?php echo get_vocab("rep_end_date")?>:</B></TD>
  <TD CLASS=CL><?php genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year) ?></TD>
 </TR>
 
 <TR>
- <TD CLASS=CR><B><?php echo get_vocab("rep_rep_day")?></B> <?php echo get_vocab("rep_for_weekly")?></TD>
+ <TD CLASS=CR><B><?php echo get_vocab("rep_rep_day")?>:</B> <?php echo get_vocab("rep_for_weekly")?></TD>
  <TD CLASS=CL>
 <?php
 # Display day name checkboxes according to language and preferred weekday start.
@@ -501,7 +522,8 @@ else
 {
 	$key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
 
-	echo "<tr><td class=\"CR\"><b>".get_vocab("rep_type")."</b></td><td class=\"CL\">".get_vocab($key)."</td></tr>\n";
+        echo "<input type=hidden name=rep_type value=0>\n";
+	echo "<tr><td class=\"CR\"><b>".get_vocab("rep_type").":</b></td><td class=\"CL\">".get_vocab($key)."</td></tr>\n";
 
 	if(isset($rep_type) && ($rep_type != 0))
 	{
@@ -516,9 +538,9 @@ else
 			}
 		}
 		if($opt)
-			echo "<tr><td class=\"CR\"><b>".get_vocab("rep_rep_day")."</b></td><td class=\"CL\">$opt</td></tr>\n";
+			echo "<tr><td class=\"CR\"><b>".get_vocab("rep_rep_day").":</b></td><td class=\"CL\">$opt</td></tr>\n";
 
-		echo "<tr><td class=\"CR\"><b>".get_vocab("rep_end_date")."</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
+		echo "<tr><td class=\"CR\"><b>".get_vocab("rep_end_date").":</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
 	}
 }
 /* We display the rep_num_weeks box only if:
@@ -532,7 +554,7 @@ if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) && ( "seri
 ?>
 
 <TR>
- <TD CLASS=CR><B><?php echo get_vocab("rep_num_weeks")?></B> <?php echo get_vocab("rep_for_nweekly")?></TD>
+ <TD CLASS=CR><B><?php echo get_vocab("rep_num_weeks")?>:</B> <?php echo get_vocab("rep_for_nweekly")?></TD>
  <TD CLASS=CL><INPUT TYPE=TEXT NAME="rep_num_weeks" VALUE="<?php echo $rep_num_weeks?>">
 </TR>
 <?php } ?>

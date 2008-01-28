@@ -101,7 +101,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
 			echo "<hr><h2>". get_vocab("room") . ": " . $area_room . "</h2>\n";
 		if ($date != $last_date || $area_room != $last_area_room)
 		{
-			echo "<hr noshade=\"true\"><h3>". get_vocab("date") . " " . $date . "</h3>\n";
+			echo "<hr noshade=\"true\"><h3>". get_vocab("date") . ": " . $date . "</h3>\n";
 			$last_date = $date;
 		}
 		# remember current area/room that is being processed.
@@ -114,7 +114,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
 	# entries to be sorted on start date
 	{
 		if ($date != $last_date)
-			echo "<hr><h2>". get_vocab("date") . " " . $date . "</h2>\n";
+			echo "<hr><h2>". get_vocab("date") . ": " . $date . "</h2>\n";
 		if ($area_room != $last_area_room  || $date != $last_date)
 		{
 			echo "<hr noshade=\"true\"><h3>". get_vocab("room") . ": " . $area_room . "</h3>\n";
@@ -150,15 +150,15 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
 			"</td></tr>\n";
 
 	# Description:
-	echo "<tr><td class=\"BL\" colspan=2><b>".get_vocab("description")."</b> " .
+	echo "<tr><td class=\"BL\" colspan=2><b>".get_vocab("description").":</b> " .
 		nl2br(htmlspecialchars($row[4])) . "</td></tr>\n";
 
 	# Entry Type:
 	$et = empty($typel[$row[5]]) ? "?$row[5]?" : $typel[$row[5]];
-	echo "<tr><td class=\"BL\" colspan=2><b>".get_vocab("type")."</b> $et</td></tr>\n";
+	echo "<tr><td class=\"BL\" colspan=2><b>".get_vocab("type").":</b> $et</td></tr>\n";
 	# Created by and last update timestamp:
-	echo "<tr><td class=\"BL\" colspan=2><small><b>".get_vocab("createdby")."</b> " .
-		htmlspecialchars($row[6]) . ", <b>".get_vocab("lastupdate")."</b> " .
+	echo "<tr><td class=\"BL\" colspan=2><small><b>".get_vocab("createdby").":</b> " .
+		htmlspecialchars($row[6]) . ", <b>".get_vocab("lastupdate").":</b> " .
 		date_time_string($row[7]) . "</small></td></tr>\n";
 
 	echo "</table>\n";
@@ -340,26 +340,26 @@ if (empty($display)) $display = "d";
 # Upper part: The form.
 if ( $pview != 1 ) {
 ?>
-<h1><?php echo get_vocab("report_on");?></h1>
+<h1><?php echo get_vocab("report_on");?>:</h1>
 <form method=get action=report.php>
 <table>
-<tr><td class="CR"><?php echo get_vocab("report_start");?></td>
+<tr><td class="CR"><?php echo get_vocab("report_start");?>:</td>
     <td class="CL"> <font size="-1">
     <?php genDateSelector("From_", $From_day, $From_month, $From_year); ?>
     </font></td></tr>
-<tr><td class="CR"><?php echo get_vocab("report_end");?></td>
+<tr><td class="CR"><?php echo get_vocab("report_end");?>:</td>
     <td class="CL"> <font size="-1">
     <?php genDateSelector("To_", $To_day, $To_month, $To_year); ?>
     </font></td></tr>
-<tr><td class="CR"><?php echo get_vocab("match_area");?></td>
+<tr><td class="CR"><?php echo get_vocab("match_area");?>:</td>
     <td class="CL"><input type=text name=areamatch size=18
     value="<?php echo $areamatch_default; ?>">
     </td></tr>
-<tr><td class="CR"><?php echo get_vocab("match_room");?></td>
+<tr><td class="CR"><?php echo get_vocab("match_room");?>:</td>
     <td class="CL"><input type=text name=roommatch size=18
     value="<?php echo $roommatch_default; ?>">
     </td></tr>
-<tr><td CLASS=CR><?php echo get_vocab("match_type")?></td>
+<tr><td CLASS=CR><?php echo get_vocab("match_type")?>:</td>
     <td CLASS=CL valign=top><table><tr><td>
         <select name="typematch[]" multiple="yes">
 <?php
@@ -372,19 +372,19 @@ foreach( $typel as $key => $val )
 }
 ?></select></td><td><?php echo get_vocab("ctrl_click_type") ?></td></tr></table>
 </td></tr>
-<tr><td class="CR"><?php echo get_vocab("match_entry");?></td>
+<tr><td class="CR"><?php echo get_vocab("match_entry");?>:</td>
     <td class="CL"><input type=text name=namematch size=18
     value="<?php echo $namematch_default; ?>">
     </td></tr>
-<tr><td class="CR"><?php echo get_vocab("match_descr");?></td>
+<tr><td class="CR"><?php echo get_vocab("match_descr");?>:</td>
     <td class="CL"><input type=text name=descrmatch size=18
     value="<?php echo $descrmatch_default; ?>">
     </td></tr>
-<tr><td class="CR"><?php echo get_vocab("createdby");?></td>
+<tr><td class="CR"><?php echo get_vocab("createdby");?>:</td>
     <td class="CL"><input type=text name=creatormatch size=18
     value="<?php echo $creatormatch_default; ?>">
     </td></tr>
-<tr><td class="CR"><?php echo get_vocab("include");?></td>
+<tr><td class="CR"><?php echo get_vocab("include");?>:</td>
     <td class="CL">
       <input type=radio name=summarize value=1<?php if ($summarize==1) echo " checked";
         echo ">" . get_vocab("report_only");?>
@@ -393,21 +393,21 @@ foreach( $typel as $key => $val )
       <input type=radio name=summarize value=3<?php if ($summarize==3) echo " checked";
         echo ">" . get_vocab("report_and_summary");?>
     </td></tr>
-<tr><td class="CR"><?php echo get_vocab("sort_rep");?></td>
+<tr><td class="CR"><?php echo get_vocab("sort_rep");?>:</td>
     <td class="CL">
       <input type=radio name=sortby value=r<?php if ($sortby=="r") echo " checked";
         echo ">". get_vocab("room");?>
       <input type=radio name=sortby value=s<?php if ($sortby=="s") echo " checked";
         echo ">". get_vocab("sort_rep_time");?>
     </td></tr>
-<tr><td class="CR"><?php echo get_vocab("rep_dsp");?></td>
+<tr><td class="CR"><?php echo get_vocab("rep_dsp");?>:</td>
     <td class="CL">
       <input type=radio name=display value=d<?php if ($display=="d") echo " checked";
         echo ">". get_vocab("rep_dsp_dur");?>
       <input type=radio name=display value=e<?php if ($display=="e") echo " checked";
         echo ">". get_vocab("rep_dsp_end");?>
     </td></tr>
-<tr><td class="CR"><?php echo get_vocab("summarize_by");?></td>
+<tr><td class="CR"><?php echo get_vocab("summarize_by");?>:</td>
     <td class="CL">
       <input type=radio name=sumby value=d<?php if ($sumby=="d") echo " checked";
         echo ">" . get_vocab("sum_by_descrip");?>

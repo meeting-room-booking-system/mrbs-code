@@ -43,6 +43,42 @@ if ($name == '')
      exit;
 }       
 
+if ($rep_type  == 2 || $rep_type == 6)
+{
+    $got_rep_day = 0;
+    for ($i = 0; $i < 7; $i++)
+    {
+        if ($rep_day[$i])
+        {
+          $got_rep_day =1;
+          break;
+        }
+    }
+    if ($got_rep_day == 0)
+    {
+        print_header($day, $month, $year, $area);
+     ?>
+       <H1><?php echo get_vocab('invalid_booking'); ?></H1>
+       <?php echo get_vocab('you_have_not_entered')." ".get_vocab("rep_rep_day"); ?>
+   </BODY>
+</HTML>
+<?php
+        exit;
+    }
+}       
+
+if (($rep_type == 6) && ($rep_num_weeks < 2))
+{
+    print_header($day, $month, $year, $area);
+     ?>
+       <H1><?php echo get_vocab('invalid_booking'); ?></H1>
+       <?php echo get_vocab('you_have_not_entered')." ".get_vocab("useful_n-weekly_value"); ?>
+   </BODY>
+</HTML>
+<?php
+    exit;
+}
+
 # Support locales where ',' is used as the decimal point
 $duration = preg_replace('/,/', '.', $duration);
 
@@ -126,7 +162,7 @@ else
     $endtime += cross_dst( $starttime, $endtime );
 }
 
-if(isset($rep_type) && isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
+if(isset($rep_type) && ($rep_type > 0) && isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
 {
     // Get the repeat entry settings
     $rep_enddate = mktime($hour, $minute, 0, $rep_end_month, $rep_end_day, $rep_end_year);
@@ -307,7 +343,7 @@ if(strlen($err))
     echo "<H2>" . get_vocab("sched_conflict") . "</H2>";
     if(!isset($hide_title))
     {
-        echo get_vocab("conflict");
+        echo get_vocab("conflict").":";
         echo "<UL>";
     }
     
