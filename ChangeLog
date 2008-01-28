@@ -1,7 +1,14 @@
 2008-01-28  John Beranek <jberanek@users.sourceforge.net>
 
-	* NEWS (tags: mrbs-1_2_6) (mrbs-1_2-branch.7): * Updated NEWS for
-	  release of 1.2.6.
+	* NEWS, web/edit_entry.php, web/lang.en, web/view_entry.php
+	  (mrbs-1_2-branch.[8,8,4,2]) (utags: mrbs-1_2_6): * Added copy
+	  booking/series feature, as provided by Julian Eglestaff.   Adds
+	  two new translation tokens, which are now only available in
+	  English.
+
+2008-01-28  John Beranek <jberanek@users.sourceforge.net>
+
+	* NEWS (mrbs-1_2-branch.7): * Updated NEWS for release of 1.2.6.
 
 2008-01-28  John Beranek <jberanek@users.sourceforge.net>
 
@@ -15,22 +22,21 @@
 	* web/: admin.php (tags: mrbs-1_2_6), auth_imap_php.inc (tags:
 	  mrbs-1_2_6), config.inc.php (tags: mrbs-1_2_6), day.php (tags:
 	  mrbs-1_2_6), edit_area_room.php (tags: mrbs-1_2_6),
-	  edit_entry.php (tags: mrbs-1_2_6), edit_entry_handler.php (tags:
-	  mrbs-1_2_6), functions.inc (tags: mrbs-1_2_6), functions_mail.inc
-	  (tags: mrbs-1_2_6), lang.ca (tags: mrbs-1_2_6), lang.cs (tags:
+	  edit_entry.php, edit_entry_handler.php (tags: mrbs-1_2_6),
+	  functions.inc (tags: mrbs-1_2_6), functions_mail.inc (tags:
+	  mrbs-1_2_6), lang.ca (tags: mrbs-1_2_6), lang.cs (tags:
 	  mrbs-1_2_6), lang.cz (tags: mrbs-1_2_6), lang.da (tags:
 	  mrbs-1_2_6), lang.de (tags: mrbs-1_2_6), lang.el (tags:
-	  mrbs-1_2_6), lang.en (tags: mrbs-1_2_6), lang.es (tags:
-	  mrbs-1_2_6), lang.fi (tags: mrbs-1_2_6), lang.fr, lang.it (tags:
-	  mrbs-1_2_6), lang.ja (tags: mrbs-1_2_6), lang.ko (tags:
-	  mrbs-1_2_6), lang.nl (tags: mrbs-1_2_6), lang.no (tags:
-	  mrbs-1_2_6), lang.pt (tags: mrbs-1_2_6), lang.sl (tags:
-	  mrbs-1_2_6), lang.sv (tags: mrbs-1_2_6), lang.tr (tags:
-	  mrbs-1_2_6), lang.zh-tw (tags: mrbs-1_2_6), language.inc (tags:
-	  mrbs-1_2_6), month.php (tags: mrbs-1_2_6), mrbs_sql.inc (tags:
-	  mrbs-1_2_6), report.php (tags: mrbs-1_2_6), search.php (tags:
-	  mrbs-1_2_6), version.inc (tags: mrbs-1_2_6), view_entry.php
-	  (tags: mrbs-1_2_6), week.php (tags: mrbs-1_2_6)
+	  mrbs-1_2_6), lang.en, lang.es (tags: mrbs-1_2_6), lang.fi (tags:
+	  mrbs-1_2_6), lang.fr, lang.it (tags: mrbs-1_2_6), lang.ja (tags:
+	  mrbs-1_2_6), lang.ko (tags: mrbs-1_2_6), lang.nl (tags:
+	  mrbs-1_2_6), lang.no (tags: mrbs-1_2_6), lang.pt (tags:
+	  mrbs-1_2_6), lang.sl (tags: mrbs-1_2_6), lang.sv (tags:
+	  mrbs-1_2_6), lang.tr (tags: mrbs-1_2_6), lang.zh-tw (tags:
+	  mrbs-1_2_6), language.inc (tags: mrbs-1_2_6), month.php (tags:
+	  mrbs-1_2_6), mrbs_sql.inc (tags: mrbs-1_2_6), report.php (tags:
+	  mrbs-1_2_6), search.php (tags: mrbs-1_2_6), version.inc (tags:
+	  mrbs-1_2_6), view_entry.php, week.php (tags: mrbs-1_2_6)
 	  (mrbs-1_2-branch.[2,1,13,4,3,7,6,6,7,2,2,1,1,1,1,3,3,3,1,2,2,2,2,2,1,2,4,1,3,7,6,4,4,1,4,1,3]):
 	  * Removed all terminating colons from the translations, moving
 	  them to  the (arguably) correct place: the code.
