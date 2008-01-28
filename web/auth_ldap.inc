@@ -26,6 +26,9 @@ function authValidateUser($user, $pass)
     global $ldap_base_dn;
     global $ldap_user_attrib;
     global $ldap_filter;
+    global $ldap_dn_search_attrib;
+    global $ldap_dn_search_dn;
+    global $ldap_dn_search_password;
 
     $all_ldap_base_dn     = array();
     $all_ldap_user_attrib = array();
@@ -100,8 +103,39 @@ function authValidateUser($user, $pass)
         // or fail
         foreach( $all_ldap_base_dn as $idx => $base_dn)
         {
-            // construct dn for user
-            $dn = $all_ldap_user_attrib[$idx] . "=" . $user . "," . $base_dn;
+            if (isset($ldap_dn_search_attrib))
+            {
+                if (isset($ldap_dn_search_dn) &&
+                    isset($ldap_dn_search_password))
+                {
+                    // Bind with DN and password
+                    $res = @ldap_bind($ldap, $ldap_dn_search_dn,
+                                      $ldap_dn_search_password);
+                }
+                else
+                {
+                    // Anonymous bind
+                    $res = @ldap_bind($ldap);
+                }
+
+                if ($res)
+                {
+                    $res = @ldap_search($ldap,
+                                        $base_dn,
+                                        "(". $ldap_dn_search_attrib ."=$user)");
+              
+                    if (@ldap_count_entries($ldap, $res) == 1)
+                    {
+                        $entries = ldap_get_entries($ldap, $res);
+                        $dn = $entries[0]["dn"];
+                    }
+                }
+            }
+            else
+            {
+                // construct dn for user
+                $dn = $all_ldap_user_attrib[$idx] . "=" . $user . "," . $base_dn;
+            }
 
             // try an authenticated bind
             // use this to confirm that the user/password pair
