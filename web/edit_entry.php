@@ -291,7 +291,41 @@ function OnAllDayClick(allday) // Executed when the user clicks on the all_day c
 }
 </SCRIPT>
 
-<h2><?php echo isset($id) ? ($edit_type == "series" ? get_vocab("editseries") : get_vocab("editentry")) : get_vocab("addentry"); ?></H2>
+<h2>
+<?php
+
+if (isset($id) && !isset($copy))
+{
+  if ($edit_type == "series")
+  {
+    $token = "editseries";
+  }
+  else
+  {
+    $token = "editentry";
+  }
+}
+else
+{
+  if (isset($copy))
+  {
+    if ($edit_type == "series")
+    {
+      $token = "copyseries";
+    }
+    else
+    {
+      $token = "copyentry";
+    }
+  }
+  else
+  {
+    $token = "addentry";
+  }
+}
+echo get_vocab($token);
+?>
+</H2>
 
 <FORM NAME="main" ACTION="edit_entry_handler.php" METHOD="GET">
 
@@ -575,7 +609,7 @@ if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) && ( "seri
 <INPUT TYPE=HIDDEN NAME="create_by" VALUE="<?php echo $create_by?>">
 <INPUT TYPE=HIDDEN NAME="rep_id"    VALUE="<?php echo $rep_id?>">
 <INPUT TYPE=HIDDEN NAME="edit_type" VALUE="<?php echo $edit_type?>">
-<?php if(isset($id)) echo "<INPUT TYPE=HIDDEN NAME=\"id\"        VALUE=\"$id\">\n";
+  <?php if(isset($id) && !isset($copy)) echo "<INPUT TYPE=HIDDEN NAME=\"id\"        VALUE=\"$id\">\n";
 ?>
 
 </FORM>

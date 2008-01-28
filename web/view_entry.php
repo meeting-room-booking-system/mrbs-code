@@ -263,6 +263,19 @@ if($repeat_id || $series )
 ?>
 <BR>
 <?php
+// Copy and Copy series
+if( ! $series )
+	echo "<a href=\"edit_entry.php?id=$id&amp;copy=true\">". get_vocab("copyentry") ."</a>";
+	
+if($repeat_id)
+	echo " - ";
+	
+if($repeat_id || $series ) 
+  echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=true\">".get_vocab("copyseries")."</a>";
+
+?>
+<BR>
+<?php
 if( ! $series )
 	echo "<A HREF=\"del_entry.php?id=$id&series=0\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</A>";
 

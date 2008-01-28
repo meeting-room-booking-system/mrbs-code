@@ -43,7 +43,9 @@ $vocab["ppreview"]           = "Print Preview";
 # Used in edit_entry.php
 $vocab["addentry"]           = "Add Entry";
 $vocab["editentry"]          = "Edit Entry";
+$vocab["copyentry"]          = "Copy Entry";
 $vocab["editseries"]         = "Edit Series";
+$vocab["copyseries"]         = "Copy Series";
 $vocab["namebooker"]         = "Brief Description";
 $vocab["fulldescription"]    = "Full Description:<br>&nbsp;&nbsp;(Number of people,<br>&nbsp;&nbsp;Internal/External etc)";
 $vocab["date"]               = "Date";
