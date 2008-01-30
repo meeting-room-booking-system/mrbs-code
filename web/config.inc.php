@@ -219,15 +219,23 @@ $auth['db_ext']['password_format'] = 'md5';
 #$ldap_host = "localhost";
 # If you have a non-standard LDAP port, you can define it here
 #$ldap_port = 389;
-# If you want to use LDAP v3, change the following to true
-$ldap_v3 = false;
-# If you want to use TLS, change following to true
+# If you do not want to use LDAP v3, change the following to false
+$ldap_v3 = true;
+# If you want to use TLS, change the following to true
 $ldap_tls = false;
 # LDAP base distinguish name
 # See AUTHENTICATION for details of how check against multiple base dn's
 #$ldap_base_dn = "ou=organizationalunit,dc=my-domain,dc=com";
 # Attribute within the base dn that contains the username
 #$ldap_user_attrib = "uid";
+# If you need to search the directory to find the user's DN to bind
+# with, set the following to the attribute that holds the user's
+# "username". In Microsoft AD directories this is "sAMAccountName"
+#$ldap_dn_search_attrib = "sAMAccountName";
+# If you need to bind as a particular user to do the search described
+# above, specify the DN and password in the variables below
+# $ldap_dn_search_dn = "cn=Search User,ou=Users,dc=some,dc=company";
+# $ldap_dn_search_password = "some-password";
 
 # 'auth_ldap' extra configuration for ldap configuration of who can use
 # the system

@@ -139,7 +139,7 @@ function authValidateUser($user, $pass)
 
             // try an authenticated bind
             // use this to confirm that the user/password pair
-            if(@ldap_bind($ldap, $dn, $pass))
+            if($dn && @ldap_bind($ldap, $dn, $pass))
             {
                 // however if there is a filter check that the
                 // user is part of the group defined by the filter
