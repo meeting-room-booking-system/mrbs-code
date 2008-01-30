@@ -7,6 +7,15 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.2.6.1 (Wed Jan 30 11:00:00 GMT 2008):
+
+[-] Fixed major bug in the new LDAP authentication functionality. If
+ $ldap_dn_search_attrib was set, any username/password combination
+ was allowed in.
+[*] Changed configuration default so that LDAP v3 is enabled by
+ default in the LDAP authentication scheme.
+
+-------------------------------------------------------------------------------
 Version 1.2.6 (Mon Jan 28 15:00:00 GMT 2008):
 
 [*] Added options to LDAP authentication, so that the DN to be used for
