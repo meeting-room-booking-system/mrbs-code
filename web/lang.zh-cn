@@ -1,0 +1,251 @@
+<?php
+# $Id$
+
+# This file contains PHP code that specifies language specific strings
+# The default strings come from lang.en, and anything in a locale
+# specific file will overwrite the default. This is a Chinese (zh-tw Big5) file.
+#
+#
+#
+#
+# This file is PHP code. Treat it as such.
+
+# The charset to use in "Content-type" header
+$vocab["charset"]            = "utf-8";
+
+# Used in style.inc
+$vocab["mrbs"]               = "会议室预订管理系统";
+
+# Used in functions.inc
+$vocab["report"]             = "报表";
+$vocab["admin"]              = "系统管理";
+$vocab["help"]               = "说明";
+$vocab["search"]             = "查找:";
+$vocab["not_php3"]             = "<H1>警告: 无法运行于PHP3环境</H1>";
+
+# Used in day.php
+$vocab["bookingsfor"]        = "预订:";
+$vocab["bookingsforpost"]    = "";
+$vocab["areas"]              = "区域";
+$vocab["daybefore"]          = "查看前一天";
+$vocab["dayafter"]           = "查看后一天";
+$vocab["gototoday"]          = "查看今天";
+$vocab["goto"]               = "跳转";
+$vocab["highlight_line"]     = "加强显示这行";
+$vocab["click_to_reserve"]   = "点击格子进行预订";
+
+# Used in trailer.inc
+$vocab["viewday"]            = "查看日期 ";
+$vocab["viewweek"]           = "周显示";
+$vocab["viewmonth"]          = "月显示";
+$vocab["ppreview"]           = "打印预览";
+
+# Used in edit_entry.php
+$vocab["addentry"]           = "新增";
+$vocab["editentry"]          = "修改";
+$vocab["editseries"]         = "批量修改";
+$vocab["namebooker"]         = "预订人姓名:";
+$vocab["fulldescription"]    = "说明:<br>&nbsp;&nbsp;(联系电话,部门,,<br>&nbsp;&nbsp;会议主题 等)";
+$vocab["date"]               = "日期:";
+$vocab["start_date"]         = "起始时间:";
+$vocab["end_date"]           = "结束时间:";
+$vocab["time"]               = "时间:";
+$vocab["period"]             = "Period:";
+$vocab["duration"]           = "持续时间:";
+$vocab["seconds"]            = "秒";
+$vocab["minutes"]            = "分";
+$vocab["hours"]              = "小时";
+$vocab["days"]               = "天";
+$vocab["weeks"]              = "星期";
+$vocab["years"]              = "年";
+$vocab["periods"]            = "periods";
+$vocab["all_day"]            = "整天";
+$vocab["type"]               = "种类:";
+$vocab["internal"]           = "内部使用";
+$vocab["external"]           = "外部使用";
+$vocab["save"]               = "保存";
+$vocab["rep_type"]           = "重复预订:";
+$vocab["rep_type_0"]         = "不重复";
+$vocab["rep_type_1"]         = "每天";
+$vocab["rep_type_2"]         = "每周";
+$vocab["rep_type_3"]         = "每月";
+$vocab["rep_type_4"]         = "每年";
+$vocab["rep_type_5"]         = "每月对应的日期";
+$vocab["rep_type_6"]         = "(每周)";
+$vocab["rep_end_date"]       = "结束重复的日期:";
+$vocab["rep_rep_day"]        = "重复的星期:";
+$vocab["rep_for_weekly"]     = "(每周)";
+$vocab["rep_freq"]           = "频率:";
+$vocab["rep_num_weeks"]      = "重复几周";
+$vocab["rep_for_nweekly"]    = "(每周)";
+$vocab["ctrl_click"]         = "用Ctrl+鼠标右键可以重复选择";
+$vocab["entryid"]            = "登记序号 ";
+$vocab["repeat_id"]          = "重复序号 "; 
+$vocab["you_have_not_entered"] = "你没有输入";
+$vocab["you_have_not_selected"] = "你没有选择";
+$vocab["valid_room"]         = "会议室/设备.";
+$vocab["valid_time_of_day"]  = "可以预订的时间.";
+$vocab["brief_description"]  = "简要说明.";
+$vocab["useful_n-weekly_value"] = "可以提供预订的星期.";
+
+# Used in view_entry.php
+$vocab["description"]        = "说明:";
+$vocab["room"]               = "会议室/设备";
+$vocab["createdby"]          = "预订人:";
+$vocab["lastupdate"]         = "最后更新:";
+$vocab["deleteentry"]        = "删除";
+$vocab["deleteseries"]       = "整批删除";
+$vocab["confirmdel"]         = "你确定要删除此记录??\\n";
+$vocab["returnprev"]         = "回前一页";
+$vocab["invalid_entry_id"]   = "预订序号错误.";
+$vocab["invalid_series_id"]  = "序列号错误.";
+
+# Used in edit_entry_handler.php
+$vocab["error"]              = "错误";
+$vocab["sched_conflict"]     = "时段冲突";
+$vocab["conflict"]           = "此时段已被预订";
+$vocab["too_may_entrys"]     = "这个选择造成太多输入.<BR>请重新选择!";
+$vocab["returncal"]          = "查看日程表";
+$vocab["failed_to_acquire"]  = "无法读取资料库"; 
+$vocab["mail_subject_entry"] = $mail["subject"];
+$vocab["mail_body_new_entry"] = $mail["new_entry"];
+$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
+$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
+$vocab["mail_subject_delete"] = $mail["subject_delete"];
+
+# Authentication stuff
+$vocab["accessdenied"]       = "限制读取";
+$vocab["norights"]           = "您无权限修改此笔记录!!";
+$vocab["please_login"]       = "请先登录";
+$vocab["user_name"]          = "名称";
+$vocab["user_password"]      = "密码";
+$vocab["unknown_user"]       = "用户不存在或密码错误";
+$vocab["you_are"]            = "您是";
+$vocab["login"]              = "登录";
+$vocab["logoff"]             = "注销";
+
+# Authentication database
+$vocab["user_list"]          = "用户清单";
+$vocab["edit_user"]          = "编辑用户";
+$vocab["delete_user"]        = "删除用户";
+#$vocab["user_name"]         = Use the same as above, for consistency.
+#$vocab["user_password"]     = Use the same as above, for consistency.
+$vocab["user_email"]         = "Email 地址";
+$vocab["password_twice"]     = "如果需要修改密码，请输入两次新密码";
+$vocab["passwords_not_eq"]   = "错误: 密码不匹配.";
+$vocab["add_new_user"]       = "新增用户";
+$vocab["rights"]             = "权限";
+$vocab["action"]             = "动作";
+$vocab["user"]               = "用户";
+$vocab["administrator"]      = "管理员";
+$vocab["unknown"]            = "未知的";
+$vocab["ok"]                 = "OK";
+$vocab["show_my_entries"]    = "显示全部我的预订";
+
+# Used in search.php
+$vocab["invalid_search"]     = "空的或不合法的查找字串.";
+$vocab["search_results"]     = "查找结果:";
+$vocab["nothing_found"]      = "找不到.";
+$vocab["records"]            = "记录";
+$vocab["through"]            = "经过";
+$vocab["of"]                 = " of ";
+$vocab["previous"]           = "前一个";
+$vocab["next"]               = "下一个";
+$vocab["entry"]              = "登录";
+$vocab["view"]               = "显示";
+$vocab["advanced_search"]    = "高级查找";
+$vocab["search_button"]      = "查找";
+$vocab["search_for"]         = "查找";
+$vocab["from"]               = "从";
+
+# Used in report.php
+$vocab["report_on"]          = "会议室报表:";
+$vocab["report_start"]       = "报表起始日:";
+$vocab["report_end"]         = "报表结束日:";
+$vocab["match_area"]         = "符合的区域:";
+$vocab["match_room"]         = "符合的会议室:";
+$vocab["match_type"]         = "符合的类型:";
+$vocab["ctrl_click_type"]    = "使用Ctrl键选取一个以上的类型";
+$vocab["match_entry"]        = "符合部份描述:";
+$vocab["match_descr"]        = "符合全部描述:";
+$vocab["include"]            = "包含:";
+$vocab["report_only"]        = "只要明细";
+$vocab["summary_only"]       = "只要汇总";
+$vocab["report_and_summary"] = "明细和汇总";
+$vocab["summarize_by"]       = "汇总项目:";
+$vocab["sum_by_descrip"]     = "简述";
+$vocab["sum_by_creator"]     = "预订人";
+$vocab["entry_found"]        = "找到预订";
+$vocab["entries_found"]      = "找到预订";
+$vocab["summary_header"]     = "总共预订(小时)";
+$vocab["summary_header_per"] = "总共预订(次)";
+$vocab["total"]              = "全部";
+$vocab["submitquery"]        = "产生报表";
+$vocab["sort_rep"]           = "排序:";
+$vocab["sort_rep_time"]      = "起始日/时";
+$vocab["rep_dsp"]            = "显示在报表:";
+$vocab["rep_dsp_dur"]        = "持续时间";
+$vocab["rep_dsp_end"]        = "结束时间";
+
+# Used in week.php
+$vocab["weekbefore"]         = "前一周";
+$vocab["weekafter"]          = "后一周";
+$vocab["gotothisweek"]       = "这一周";
+
+# Used in month.php
+$vocab["monthbefore"]        = "上一月";
+$vocab["monthafter"]         = "下一月";
+$vocab["gotothismonth"]      = "这个月";
+
+# Used in {day week month}.php
+$vocab["no_rooms_for_area"]  = "这个区域没有定义会议室/设备";
+
+# Used in admin.php
+$vocab["edit"]               = "编辑";
+$vocab["delete"]             = "删除";
+$vocab["rooms"]              = "会议室/设备";
+$vocab["in"]                 = "在";
+$vocab["noareas"]            = "没有区域";
+$vocab["addarea"]            = "新增区域";
+$vocab["name"]               = "名称";
+$vocab["noarea"]             = "还没选择区域";
+$vocab["browserlang"]        = "你的浏览器设为";
+$vocab["postbrowserlang"]    = "语系.";
+$vocab["addroom"]            = "新增会议室/设备";
+$vocab["capacity"]           = "容纳人数";
+$vocab["norooms"]            = "没有会议室/设备.";
+$vocab["administration"]     = "管理者";
+
+# Used in edit_area_room.php
+$vocab["editarea"]           = "修改区域";
+$vocab["change"]             = "改变";
+$vocab["backadmin"]          = "回到管理首页";
+$vocab["editroomarea"]       = "修改描述";
+$vocab["editroom"]           = "修改会议室/设备";
+$vocab["update_room_failed"] = "更新失败: ";
+$vocab["error_room"]         = "错误: 会议室/设备 ";
+$vocab["not_found"]          = "找不到";
+$vocab["update_area_failed"] = "更新区域信息失败: ";
+$vocab["error_area"]         = "错误: 区域 ";
+$vocab["room_admin_email"]   = "会议室管理员email:";
+$vocab["area_admin_email"]   = "区域管理员email:";
+$vocab["invalid_email"]      = "无效的email!";
+
+# Used in del.php
+$vocab["deletefollowing"]    = "这个操作会删除相关的预订纪录";
+$vocab["sure"]               = "确定吗?";
+$vocab["YES"]                = "YES";
+$vocab["NO"]                 = "NO";
+$vocab["delarea"]            = "你必须先删除所属的会议室<p>";
+
+# Used in help.php
+$vocab["about_mrbs"]         = "关于MRBS";
+$vocab["database"]           = "数据库: ";
+$vocab["system"]             = "操作系统: ";
+$vocab["please_contact"]     = "请联系";
+$vocab["for_any_questions"]  = ",关于任何无法在此解决的问题.";
+
+# Used in mysql.inc AND pgsql.inc
+$vocab["failed_connect_db"]  = "Fatal Error: 无法连接数据库";
+
+?>

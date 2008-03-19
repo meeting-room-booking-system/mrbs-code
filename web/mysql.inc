@@ -23,7 +23,9 @@ function sql_free ($r)
 // Returns -1 on error; use sql_error to get the error message.
 function sql_command ($sql)
 {
-	if (mysql_query($sql)) return mysql_affected_rows();
+	global $db_c;
+
+	if (mysql_query($sql, $db_c)) return mysql_affected_rows($db_c);
 	return -1;
 }
 
@@ -35,7 +37,9 @@ function sql_command ($sql)
 // a MIN or MAX aggregate function applied over no rows.
 function sql_query1 ($sql)
 {
-	$r = mysql_query($sql);
+	global $db_c;
+
+	$r = mysql_query($sql, $db_c);
 	if (! $r) return -1;
 	if (mysql_num_rows($r) != 1 || mysql_num_fields($r) != 1
 		|| ($result = mysql_result($r, 0, 0)) == "") $result = -1;
@@ -48,7 +52,9 @@ function sql_query1 ($sql)
 // Returns 0 on error; use sql_error to get the error message.
 function sql_query ($sql)
 {
-	$r = mysql_query($sql);
+	global $db_c;
+
+	$r = mysql_query($sql, $db_c);
 	return $r;
 }
 
@@ -95,13 +101,17 @@ function sql_count ($r)
 // Must be called right after an insert on that table!
 function sql_insert_id($table, $field)
 {
-	return mysql_insert_id();
+	global $db_c;
+
+	return mysql_insert_id($db_c);
 }
 
 // Return the text of the last error message.
 function sql_error()
 {
-	return mysql_error();
+	global $db_c;
+
+	return mysql_error($db_c);
 }
 
 // Begin a transaction, if the database supports it. This is used to
@@ -225,7 +235,7 @@ if (empty($db_nopersist))
 else
 	$db_c = mysql_connect($db_host, $db_login, $db_password);
 
-if (!$db_c || !mysql_select_db ($db_database))
+if (!$db_c || !mysql_select_db ($db_database, $db_c))
 {
 	echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n";
 	exit;
