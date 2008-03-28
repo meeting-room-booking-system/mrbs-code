@@ -95,7 +95,7 @@ if ( $pview != 1 ) {
     if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
     {
         if ( $pview != 1 )
-            echo "<a href=\"month.php?year=$year&month=$month&area=$row[0]\">";
+            echo "<a href=\"month.php?year=$year&amp;month=$month&amp;area=$row[0]\">";
         if ($row[0] == $area)
         {
             $this_area_name = htmlspecialchars($row[1]);
@@ -122,7 +122,7 @@ if ( $pview != 1 ) {
     $res = sql_query($sql);
     if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
     {
-        echo "<a href=\"month.php?year=$year&month=$month&area=$area&room=$row[0]\">";
+        echo "<a href=\"month.php?year=$year&amp;month=$month&amp;area=$area&amp;room=$row[0]\">";
         if ($row[0] == $room)
         {
             $this_room_name = htmlspecialchars($row[1]);
@@ -166,10 +166,10 @@ $ty = date("Y",$i);
 $tm = date("n",$i);
 if ( $pview != 1 ) {
     echo "<table width=\"100%\"><tr><td>
-      <a href=\"month.php?year=$yy&month=$ym&area=$area&room=$room\">
+      <a href=\"month.php?year=$yy&amp;month=$ym&amp;area=$area&amp;room=$room\">
       &lt;&lt; ".get_vocab("monthbefore")."</a></td>
-      <td align=center><a href=\"month.php?area=$area&room=$room\">".get_vocab("gotothismonth")."</a></td>
-      <td align=right><a href=\"month.php?year=$ty&month=$tm&area=$area&room=$room\">
+      <td align=center><a href=\"month.php?area=$area&amp;room=$room\">".get_vocab("gotothismonth")."</a></td>
+      <td align=right><a href=\"month.php?year=$ty&amp;month=$tm&amp;area=$area&amp;room=$room\">
       ".get_vocab("monthafter")."&gt;&gt;</a></td></tr></table>";
 }
 
@@ -301,14 +301,14 @@ if ($debug_flag)
 // Must be included before the beginnning of the main table.
 if ($javascript_cursor) // If authorized in config.inc.php, include the javascript cursor management.
     {
-    echo "<SCRIPT language=\"JavaScript\" type=\"text/javascript\" src=\"xbLib.js\"></SCRIPT>\n";
-    echo "<SCRIPT language=\"JavaScript\">InitActiveCell("
+    echo "<script type=\"text/javascript\" src=\"xbLib.js\"></script>\n";
+    echo "<script type=\"text/javascript\">InitActiveCell("
        . ($show_plus_link ? "true" : "false") . ", "
        . "false, "
        . "false, "
        . "\"$highlight_method\", "
        . "\"" . get_vocab("click_to_reserve") . "\""
-       . ");</SCRIPT>\n";
+       . ");</script>\n";
     }
 
 echo "<table border=\"1\" cellspacing=\"0\" width=\"100%\">\n<tr>";
@@ -329,7 +329,7 @@ for ($weekcol = 0; $weekcol < $weekday_start; $weekcol++)
 for ($cday = 1; $cday <= $days_in_month; $cday++)
 {
     if ($weekcol == 0) echo "</tr><tr>\n";
-    echo "<td valign=top height=100 class=\"month\"><div class=\"monthday\"><a href=\"day.php?year=$year&month=$month&day=$cday&area=$area\">$cday</a>&nbsp;\n";
+    echo "<td valign=top height=100 class=\"month\"><div class=\"monthday\"><a href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>&nbsp;\n";
     echo "</div>";
 
     # Anything to display for this day?
@@ -361,7 +361,7 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
                 case "description":
                 {
                     echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-                        . "&day=$cday&month=$month&year=$year\" title=\""
+                        . "&amp;day=$cday&amp;month=$month&amp;year=$year\" title=\""
                         . $d[$cday]["data"][$i] . "\">"
                         . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 17)
                         . "</a>";
@@ -370,7 +370,7 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
                 case "slot":
                 {
                     echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-                        . "&day=$cday&month=$month&year=$year\" title=\""
+                        . "&amp;day=$cday&amp;month=$month&amp;year=$year\" title=\""
                         . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 17) . "\">"
                         . $d[$cday]["data"][$i] . "</a>";
                     break;
@@ -378,7 +378,7 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
                 case "both":
                 {
                     echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-                        . "&day=$cday&month=$month&year=$year\">"
+                        . "&amp;day=$cday&amp;month=$month&amp;year=$year\">"
                         . $d[$cday]["data"][$i] . " "
                         . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 6) . "</a>";
                     break;
@@ -396,24 +396,24 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
     if ( $pview != 1 ) {
         if ($javascript_cursor)
 	    {
-            echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+            echo "<script type=\"text/javascript\">\n<!--\n";
             echo "BeginActiveCell();\n";
-            echo "// -->\n</SCRIPT>";
+            echo "// -->\n</script>";
             }
         if( $enable_periods ) {
-            echo "<a href=\"edit_entry.php?room=$room&area=$area"
-            . "&period=0&year=$year&month=$month"
-            . "&day=$cday\"><img src=new.gif width=10 height=10 border=0></a>";
+            echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
+            . "&amp;period=0&amp;year=$year&amp;month=$month"
+            . "&amp;day=$cday\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
         } else {
-            echo "<a href=\"edit_entry.php?room=$room&area=$area"
-            . "&hour=$morningstarts&minute=0&year=$year&month=$month"
-            . "&day=$cday\"><img src=new.gif width=10 height=10 border=0></a>";
+            echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
+            . "&amp;hour=$morningstarts&amp;minute=0&amp;year=$year&amp;month=$month"
+            . "&amp;day=$cday\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
         }
         if ($javascript_cursor)
             {
-            echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+            echo "<script type=\"text/javascript\">\n<!--\n";
             echo "EndActiveCell();\n";
-            echo "// -->\n</SCRIPT>";
+            echo "// -->\n</script>";
             }
     }
     else

@@ -258,10 +258,10 @@ if($repeat_id)
 	echo " - ";
 
 if($repeat_id || $series )
-	echo "<a href=\"edit_entry.php?id=$id&edit_type=series&day=$day&month=$month&year=$year\">".get_vocab("editseries")."</a>";
+	echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year\">".get_vocab("editseries")."</a>";
 
 ?>
-<BR>
+<br>
 <?php
 // Copy and Copy series
 if( ! $series )
@@ -274,19 +274,19 @@ if($repeat_id || $series )
   echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=true\">".get_vocab("copyseries")."</a>";
 
 ?>
-<BR>
+<br>
 <?php
 if( ! $series )
-	echo "<A HREF=\"del_entry.php?id=$id&series=0\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</A>";
+	echo "<A HREF=\"del_entry.php?id=$id&amp;series=0\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</A>";
 
 if($repeat_id)
 	echo " - ";
 
 if($repeat_id || $series )
-	echo "<A HREF=\"del_entry.php?id=$id&series=1&day=$day&month=$month&year=$year\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteseries")."</A>";
+	echo "<A HREF=\"del_entry.php?id=$id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteseries")."</A>";
 
 ?>
-<BR>
+<br>
 <?php if (isset($HTTP_REFERER)) //remove the link if displayed from an email
 { ?>
 <a href="<?php echo $HTTP_REFERER ?>"><?php echo get_vocab("returnprev") ?></a>

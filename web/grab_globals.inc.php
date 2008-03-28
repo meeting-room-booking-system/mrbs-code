@@ -93,11 +93,11 @@ else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['REMOTE_ADDR']))
 // -- QUERY_STRING --
 if (!empty($_SERVER) && isset($_SERVER['QUERY_STRING']))
 {
-    $QUERY_STRING = $_SERVER['QUERY_STRING'];
+    $QUERY_STRING = htmlspecialchars($_SERVER['QUERY_STRING']);
 }
 else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['QUERY_STRING']))
 {
-    $QUERY_STRING = $HTTP_SERVER_VARS['QUERY_STRING'];
+    $QUERY_STRING = htmlspecialchars($HTTP_SERVER_VARS['QUERY_STRING']);
 }
 
 // -- HTTP_ACCEPT_LANGUAGE --
@@ -133,6 +133,9 @@ else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['HTTP_HOST']))
 // +---------------------------------------------------------------------------+
 /* Changes to this file :
  * $Log$
+ * Revision 1.2  2003/11/14 21:47:20  jflarvoire
+ * Added the setting of $HTTP_HOST.
+ *
  * Revision 1.1  2003/03/05 05:12:31  thierry_bo
  * + Make MRBS compliant to the 'register_globals = off' directive
  *

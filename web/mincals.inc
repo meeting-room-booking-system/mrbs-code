@@ -48,9 +48,9 @@ class Calendar
    function getDateLink($day, $month, $year)
    {
       if( empty($this->room) )
-         return $this->dmy.".php?year=$year&month=$month&day=$day&area=".$this->area;
+         return $this->dmy.".php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$this->area;
       else
-         return $this->dmy.".php?year=$year&month=$month&day=$day&area=".$this->area."&room=".$this->room;
+         return $this->dmy.".php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$this->area."&amp;room=".$this->room;
    }
     
 

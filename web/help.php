@@ -22,9 +22,9 @@ print_header($day, $month, $year, $area);
 
 echo "<H3>" . get_vocab("about_mrbs") . "</H3>\n";
 echo "<P><a href=\"http://mrbs.sourceforge.net\">".get_vocab("mrbs")."</a> - ".get_mrbs_version()."\n";
-echo "<BR>" . get_vocab("database") . sql_version() . "\n";
-echo "<BR>" . get_vocab("system") . php_uname() . "\n";
-echo "<BR>PHP: " . phpversion() . "\n";
+echo "<br>" . get_vocab("database") . sql_version() . "\n";
+echo "<br>" . get_vocab("system") . php_uname() . "\n";
+echo "<br>PHP: " . phpversion() . "\n";
 
 echo "<H3>" . get_vocab("help") . "</H3>\n";
 echo get_vocab("please_contact") . '<a href="mailto:' . $mrbs_admin_email

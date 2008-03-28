@@ -48,8 +48,8 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 	for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	{
 		$starts = getdate($row[2]);
-		$param_ym = "area=$area&year=$starts[year]&month=$starts[mon]";
-		$param_ymd = $param_ym . "&day=$starts[mday]";
+		$param_ym = "area=$area&amp;year=$starts[year]&amp;month=$starts[mon]";
+		$param_ymd = $param_ym . "&amp;day=$starts[mday]";
 
 
 		if( $enable_periods ) {

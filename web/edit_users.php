@@ -150,9 +150,9 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
     if (($Id >= 0) && ($level == 2)) /* Administrators get the right to delete users */
         {
         print "<p><form method=post action=\"" . basename($PHP_SELF) . "\">\n";
-        print "\t<input type=hidden name=Action value=Delete />\n";
-        print "\t<input type=hidden name=Id value=$Id />\n";
-        print "\t<input style=\"margin:0\" type=submit value=\"" . get_vocab("delete_user") . "\" />\n";
+        print "\t<input type=hidden name=Action value=Delete >\n";
+        print "\t<input type=hidden name=Id value=$Id >\n";
+        print "\t<input style=\"margin:0\" type=submit value=\"" . get_vocab("delete_user") . "\" >\n";
         print "</form></p>\n";
         }
 
@@ -164,19 +164,19 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
         /* The ID field cannot change; The password field must not be shown. */
         if ($field_name[$i] == "id")
             {
-            print "    <input type=hidden name=Id value=$Id />\n";
+            print "    <input type=hidden name=Id value=$Id >\n";
             continue;
             }
         if ($field_name[$i] == "password")
             {
             print "    <input type=hidden name=\"Field[$i]\" value=\"".
-                        htmlspecialchars($data[$i])."\" />\n";
+                        htmlspecialchars($data[$i])."\" >\n";
             continue;
             }
         print "    <tr>\n";
         print "      <td align=right valign=bottom>" . get_loc_field_name($i) . "</td>\n";
         print "      <td><input type=text name=\"".htmlspecialchars("Field[$i]").
-                          "\" value=\"".htmlspecialchars($data[$i])."\" /></td>\n";
+                          "\" value=\"".htmlspecialchars($data[$i])."\" ></td>\n";
         // Display message about invalid email
         (!isset($invalid_email)) ? $invalid_email = '' : '' ;
         if ( ($field_name[$i] == "email") && (1 == $invalid_email) )
@@ -193,13 +193,13 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
         {
         print "    <tr>\n";
         print "      <td align=right valign=center>" . get_vocab("user_password") . "</td>\n";
-        print "      <td><input type=password name=password$i value=\"\" /></td>\n";
+        print "      <td><input type=password name=password$i value=\"\" ></td>\n";
         print "    </tr>\n";
         }
     print "  </table>\n";
-/*    print "  <input type=hidden name=Id value=\"$this_id\" /> <br />\n"; */
-    print "  <input type=hidden name=Action value=Update /> <br />\n";
-    print "  <input type=submit value=\" " . get_vocab("ok") . " \" /> <br />\n";
+/*    print "  <input type=hidden name=Id value=\"$this_id\" > <br>\n"; */
+    print "  <input type=hidden name=Action value=Update > <br>\n";
+    print "  <input type=submit value=\" " . get_vocab("ok") . " \" > <br>\n";
     print "</form>\n</body>\n</html>\n";
 
     exit();
@@ -219,7 +219,7 @@ if (isset($Action) && ($Action == "Update"))
         print get_vocab("passwords_not_eq") . "<br>\n";
 
         print "<form method=post action=\"" . basename($PHP_SELF) . "\">\n";
-        print "  <input type=submit value=\" " . get_vocab("ok") . " \" /> <br />\n";
+        print "  <input type=submit value=\" " . get_vocab("ok") . " \" > <br>\n";
         print "</form>\n</body>\n</html>\n";
 
         exit();
@@ -238,7 +238,7 @@ if (isset($Action) && ($Action == "Update"))
             && ('' != $Field[3]) )
         {
             // Now display this form again with an error message
-            Header("Location: edit_users.php?Action=Edit&Id=$Id&invalid_email=1");
+            Header("Location: edit_users.php?Action=Edit&amp;Id=$Id&amp;invalid_email=1");
             exit;
         }
     }
@@ -284,7 +284,7 @@ if (isset($Action) && ($Action == "Update"))
         print sql_error() . "<br>\n";
         
         print "<form method=post action=\"" . basename($PHP_SELF) . "\">\n";
-        print "  <input type=submit value=\" " . get_vocab("ok") . " \" /> <br />\n";
+        print "  <input type=submit value=\" " . get_vocab("ok") . " \" > <br>\n";
         print "</form>\n</body>\n</html>\n";
 
         exit();
@@ -316,7 +316,7 @@ if (isset($Action) && ($Action == "Delete"))
         print sql_error() . "<br>\n";
         
         print "<form method=post action=\"" . basename($PHP_SELF) . "\">\n";
-        print "  <input type=submit value=\" " . get_vocab("ok") . " \" /> <br />\n";
+        print "  <input type=submit value=\" " . get_vocab("ok") . " \" > <br>\n";
         print "</form>\n</body>\n</html>\n";
 
         exit();
@@ -344,9 +344,9 @@ if ($initial_user_creation == 1)
 if ($level == 2) /* Administrators get the right to add new users */
     {
     print "<p><form method=post action=\"" . basename($PHP_SELF) . "\">\n";
-    print "\t<input type=hidden name=Action value=Add />\n";
-    print "\t<input type=hidden name=Id value=\"-1\" />\n";
-    print "\t<input style=\"margin:0\" type=submit value=\"" . get_vocab("add_new_user") . "\" />\n";
+    print "\t<input type=hidden name=Action value=Add >\n";
+    print "\t<input type=hidden name=Id value=\"-1\" >\n";
+    print "\t<input style=\"margin:0\" type=submit value=\"" . get_vocab("add_new_user") . "\" >\n";
     print "</form></p>\n";
     }
 
@@ -398,9 +398,9 @@ while ($line = sql_row($list, $i++))
     if (getWritable($name, $user)) /* If the logged-on user has the right to edit this entry */
     	{
         print "\t\t    <form method=post action=\"" . basename($PHP_SELF) . "\">\n";
-        print "\t\t\t<input type=hidden name=Action value=Edit />\n";
-        print "\t\t\t<input type=hidden name=Id value=\"$this_id\" />\n";
-        print "\t\t\t<input style=\"margin:0\" type=submit value=\"" . get_vocab("edit") . "\" />\n";
+        print "\t\t\t<input type=hidden name=Action value=Edit >\n";
+        print "\t\t\t<input type=hidden name=Id value=\"$this_id\" >\n";
+        print "\t\t\t<input style=\"margin:0\" type=submit value=\"" . get_vocab("edit") . "\" >\n";
         print "\t\t    </form>\n";
         }
     else

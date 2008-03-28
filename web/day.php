@@ -68,7 +68,7 @@ if ( $pview != 1 ) {
    	$res = sql_query($sql);
    	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
    	{
-		echo "<a href=\"day.php?year=$year&month=$month&day=$day&area=$row[0]\">";
+		echo "<a href=\"day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$row[0]\">";
 		if ($row[0] == $area)
 			echo "<font color=\"red\">" . htmlspecialchars($row[1]) . "</font></a><br>\n";
 		else echo htmlspecialchars($row[1]) . "</a><br>\n";
@@ -199,9 +199,9 @@ else
 
 	if ( $pview != 1 ) {
 		#Show Go to day before and after links
-        $output = "<table width=\"100%\"><tr><td><a href=\"day.php?year=$yy&month=$ym&day=$yd&area=$area\">&lt;&lt;".get_vocab("daybefore")."</a></td>
+        $output = "<table width=\"100%\"><tr><td><a href=\"day.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area\">&lt;&lt;".get_vocab("daybefore")."</a></td>
         <td align=center><a href=\"day.php?area=$area\">".get_vocab("gototoday")."</a></td>
-        <td align=right><a href=\"day.php?year=$ty&month=$tm&day=$td&area=$area\">".get_vocab("dayafter")."&gt;&gt;</a></td></tr></table>\n";
+        <td align=right><a href=\"day.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area\">".get_vocab("dayafter")."&gt;&gt;</a></td></tr></table>\n";
         print $output;
 	}
 
@@ -209,14 +209,14 @@ else
 	// Must be included before the beginnning of the main table.
 	if ($javascript_cursor) // If authorized in config.inc.php, include the javascript cursor management.
             {
-	    echo "<SCRIPT language=\"JavaScript\" type=\"text/javascript\" src=\"xbLib.js\"></SCRIPT>\n";
-            echo "<SCRIPT language=\"JavaScript\">InitActiveCell("
+	    echo "<script type=\"text/javascript\" src=\"xbLib.js\"></script>\n";
+            echo "<script type=\"text/javascript\">InitActiveCell("
                . ($show_plus_link ? "true" : "false") . ", "
                . "true, "
                . ((FALSE != $times_right_side) ? "true" : "false") . ", "
                . "\"$highlight_method\", "
                . "\"" . get_vocab("click_to_reserve") . "\""
-               . ");</SCRIPT>\n";
+               . ");</script>\n";
             }
 
 	#This is where we start displaying stuff
@@ -227,7 +227,7 @@ else
 	for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	{
         echo "<th width=\"$room_column_width%\">
-            <a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[2]\"
+            <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$row[2]\"
             title=\"" . get_vocab("viewweek") . " &#10;&#10;$row[3]\">"
             . htmlspecialchars($row[0]) . ($row[1] > 0 ? "($row[1])" : "") . "</a></th>";
 		$rooms[] = $row[2];
@@ -243,7 +243,7 @@ else
   
 	# URL for highlighting a time. Don't use REQUEST_URI or you will get
 	# the timetohighlight parameter duplicated each time you click.
-	$hilite_url="day.php?year=$year&month=$month&day=$day&area=$area&timetohighlight";
+	$hilite_url="day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;timetohighlight";
 
 	# This is the main bit of the display
 	# We loop through time and then the rooms we just got
@@ -311,29 +311,29 @@ else
 				if ( $pview != 1 ) {
 					if ($javascript_cursor)
 					{
-						echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+						echo "<script type=\"text/javascript\">\n<!--\n";
 						echo "BeginActiveCell();\n";
-						echo "// -->\n</SCRIPT>";
+						echo "// -->\n</script>";
 					}
 					echo "<center>";
 					if( $enable_periods ) {
-						echo "<a href=\"edit_entry.php?area=$area&room=$room&period=$time_t_stripped&year=$year&month=$month&day=$day\"><img src=new.gif width=10 height=10 border=0></a>";
+						echo "<a href=\"edit_entry.php?area=$area&amp;room=$room&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
 					} else {
-						echo "<a href=\"edit_entry.php?area=$area&room=$room&hour=$hour&minute=$minute&year=$year&month=$month&day=$day\"><img src=new.gif width=10 height=10 border=0></a>";
+						echo "<a href=\"edit_entry.php?area=$area&amp;room=$room&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
 					}
 					echo "</center>";
 					if ($javascript_cursor)
 					{
-						echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+						echo "<script type=\"text/javascript\">\n<!--\n";
 						echo "EndActiveCell();\n";
-						echo "// -->\n</SCRIPT>";
+						echo "// -->\n</script>";
 					}
 				} else echo '&nbsp;';
 			}
 			elseif ($descr != "")
 			{
 				#if it is booked then show
-				echo " <a href=\"view_entry.php?id=$id&area=$area&day=$day&month=$month&year=$year\" title=\"$long_descr\">$descr</a>";
+				echo " <a href=\"view_entry.php?id=$id&amp;area=$area&amp;day=$day&amp;month=$month&amp;year=$year\" title=\"$long_descr\">$descr</a>";
 			}
 			else
 				echo "&nbsp;\"&nbsp;";

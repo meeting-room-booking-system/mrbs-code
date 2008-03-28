@@ -97,14 +97,14 @@ $has_next = $search_pos < ($total-$search["count"]);
 
 if($has_prev || $has_next)
 {
-	echo "<B>" . get_vocab("records") . ($search_pos+1) . get_vocab("through") . ($search_pos+$num_records) . get_vocab("of") . $total . "</B><BR>";
+	echo "<B>" . get_vocab("records") . ($search_pos+1) . get_vocab("through") . ($search_pos+$num_records) . get_vocab("of") . $total . "</B><br>";
 
 	# display a "Previous" button if necessary
 	if($has_prev)
 	{
-		echo "<A HREF=\"search.php?search_str=$search_url&search_pos=";
+		echo "<A HREF=\"search.php?search_str=$search_url&amp;search_pos=";
 		echo max(0, $search_pos-$search["count"]);
-		echo "&total=$total&year=$year&month=$month&day=$day\">";
+		echo "&amp;total=$total&amp;year=$year&amp;month=$month&amp;day=$day\">";
 	}
 
 	echo "<B>" . get_vocab("previous") . "</B>";
@@ -118,9 +118,9 @@ if($has_prev || $has_next)
 	# display a "Previous" button if necessary
 	if($has_next)
 	{
-		echo "<A HREF=\"search.php?search_str=$search_url&search_pos=";
+		echo "<A HREF=\"search.php?search_str=$search_url&amp;search_pos=";
 		echo max(0, $search_pos+$search["count"]);
-		echo "&total=$total&year=$year&month=$month&day=$day\">";
+		echo "&amp;total=$total&amp;year=$year&amp;month=$month&amp;day=$day\">";
 	}
 
 	echo "<B>". get_vocab("next") ."</B>";
@@ -130,7 +130,7 @@ if($has_prev || $has_next)
 }
 ?>
   <P>
-  <TABLE BORDER=2 CELLSPACING=0 CELLPADDING=3>
+  <table BORDER=2 CELLSPACING=0 CELLPADDING=3>
    <TR>
     <TH><?php echo get_vocab("entry") ?></TH>
     <TH><?php echo get_vocab("createdby") ?></TH>
@@ -148,7 +148,7 @@ for ($i = 0; ($row = sql_row($result, $i)); $i++)
 	echo "<TD>" . htmlspecialchars($row[3]) . "</TD>\n";
 	// generate a link to the day.php
 	$link = getdate($row[4]);
-	echo "<TD><A HREF=\"day.php?day=$link[mday]&month=$link[mon]&year=$link[year]&area=$row[5]\">";
+	echo "<TD><A HREF=\"day.php?day=$link[mday]&amp;month=$link[mon]&amp;year=$link[year]&amp;area=$row[5]\">";
 	if(empty($enable_periods)){
         	$link_str = time_date_string($row[4]);
         }
@@ -159,6 +159,6 @@ for ($i = 0; ($row = sql_row($result, $i)); $i++)
 	echo "</TR>\n";
 }
 
-echo "</TABLE>\n";
+echo "</table>\n";
 include "trailer.inc";
 ?>

@@ -419,10 +419,10 @@ installed on your system.</P>
 English. Without Unicode, support for non-English-speaking users will be crippled.</P>
 <P>To fix this error, do one of the following:</P>
 <UL>
-<LI><P>Install and enable the iconv module.<BR>
+<LI><P>Install and enable the iconv module.<br>
 On a Windows server, enable php_iconv.dll in %windir%\php.ini, and make sure both
 %phpdir%\dlls\iconv.dll and %phpdir%\extensions\php_iconv.dll are in the
-path. One way to do this is to copy these two files to %windir%.<BR>
+path. One way to do this is to copy these two files to %windir%.<br>
 On a Unix server, recompile your PHP module with the appropriate
 option for enabling the iconv extension. Consult your PHP server
 documentation for more information about enabling iconv support.</P></LI>

@@ -193,7 +193,7 @@ print_header($day, $month, $year, $area);
 
 ?>
 
-<SCRIPT LANGUAGE="JavaScript">
+<script type="text/javascript">
 // do a little form verifying
 function validate_and_submit ()
 {
@@ -289,7 +289,7 @@ function OnAllDayClick(allday) // Executed when the user clicks on the all_day c
     }
   }
 }
-</SCRIPT>
+</script>
 
 <h2>
 <?php
@@ -329,7 +329,7 @@ echo get_vocab($token);
 
 <FORM NAME="main" ACTION="edit_entry_handler.php" METHOD="GET">
 
-<TABLE BORDER=0>
+<table BORDER=0>
 
 <TR><TD CLASS=CR><B><?php echo get_vocab("namebooker")?></B></TD>
   <TD CLASS=CL><INPUT NAME="name" SIZE=40 VALUE="<?php echo htmlspecialchars($name) ?>"></TD></TR>
@@ -595,14 +595,14 @@ if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) && ( "seri
 
 <TR>
  <TD colspan=2 align=center>
-  <SCRIPT LANGUAGE="JavaScript">
+  <script type="text/javascript">
    document.writeln ( '<INPUT TYPE="button" NAME="save_button" VALUE="<?php echo get_vocab("save")?>" ONCLICK="validate_and_submit()">' );
-  </SCRIPT>
-  <NOSCRIPT>
+  </script>
+  <noscript>
    <INPUT TYPE="submit" VALUE="<?php echo get_vocab("save")?>">
-  </NOSCRIPT>
+  </noscript>
  </TD></TR>
-</TABLE>
+</table>
 
 <INPUT TYPE=HIDDEN NAME="returl"    VALUE="<?php echo $HTTP_REFERER?>">
 <!--INPUT TYPE=HIDDEN NAME="room_id"   VALUE="<?php echo $room_id?>"-->

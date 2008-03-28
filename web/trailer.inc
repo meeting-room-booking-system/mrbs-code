@@ -3,7 +3,7 @@
 
 if ( $pview != 1 ) {
 
-echo "<P><HR><B>".get_vocab("viewday").":</B>\n";
+echo "<p><hr><b>".get_vocab("viewday").":</b>\n";
 
 if(!isset($year))
 	$year = strftime("%Y");
@@ -17,7 +17,7 @@ if(!isset($day))
 if (empty($area))
 	$params = "";
 else
-	$params = "&area=$area";
+	$params = "&amp;area=$area";
 
 for($i = -6; $i <= 7; $i++)
 {
@@ -30,13 +30,13 @@ for($i = -6; $i <= 7; $i++)
 	$cday   = date("d", $ctime);
 	if ($i != -6) echo " | ";
 	if ($i == 0) echo '<b>[ ';
-	echo "<a href=\"day.php?year=$cyear&month=$cmonth&day=$cday$params\">$str</a>\n";
+	echo "<a href=\"day.php?year=$cyear&amp;month=$cmonth&amp;day=$cday$params\">$str</a>\n";
 	if ($i == 0) echo ']</b> ';
 }
 
-echo "<BR><B>".get_vocab("viewweek").":</B>\n";
+echo "<br><b>".get_vocab("viewweek").":</b>\n";
 
-if (!empty($room)) $params .= "&room=$room";
+if (!empty($room)) $params .= "&amp;room=$room";
 
 $ctime = mktime(0, 0, 0, $month, $day, $year);
 # How many days to skip back to first day of week:
@@ -61,11 +61,11 @@ for ($i = -4; $i <= 4; $i++)
 		$str = utf8_strftime(empty($dateformat)? "%b %d" : "%d %b", $ctime);
 	}
 	if ($i == 0) echo '<b>[ ';
-	echo "<a href=\"week.php?year=$cyear&month=$cmonth&day=$cday$params\">$str</a>\n";
+	echo "<a href=\"week.php?year=$cyear&amp;month=$cmonth&amp;day=$cday$params\">$str</a>\n";
 	if ($i == 0) echo ']</b> ';
 }
 
-echo "<BR><B>".get_vocab("viewmonth").":</B>\n";
+echo "<br><b>".get_vocab("viewmonth").":</b>\n";
 for ($i = -2; $i <= 6; $i++)
 {
 	$ctime = mktime(0, 0, 0, $month + $i, 1, $year);
@@ -75,16 +75,16 @@ for ($i = -2; $i <= 6; $i++)
 	$cyear  = date("Y", $ctime);
 	if ($i != -2) echo " | ";
 	if ($i == 0) echo '<b>[ ';
-	echo "<a href=\"month.php?year=$cyear&month=$cmonth$params\">$str</a>\n";
+	echo "<a href=\"month.php?year=$cyear&amp;month=$cmonth$params\">$str</a>\n";
 	if ($i == 0) echo ']</b> ';
 }
 
-echo "<HR>";
-echo '<p><center><a href="' . basename($PHP_SELF) . '?' . $QUERY_STRING . '&pview=1">' . get_vocab("ppreview") . '</a></center><p>';
+echo "<hr>";
+echo '<p><center><a href="' . basename($PHP_SELF) . '?' . $QUERY_STRING . '&amp;pview=1">' . get_vocab("ppreview") . '</a></center><p>';
 
 }
 ?>
 
-<HR>
-</BODY>
-</HTML>
+<hr>
+</body>
+</html>
