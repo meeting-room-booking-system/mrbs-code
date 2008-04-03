@@ -289,7 +289,7 @@ if($repeat_id || $series )
 <br>
 <?php if (isset($HTTP_REFERER)) //remove the link if displayed from an email
 { ?>
-<a href="<?php echo $HTTP_REFERER ?>"><?php echo get_vocab("returnprev") ?></a>
+<a href="<?php echo htmlspecialchars($HTTP_REFERER) ?>"><?php echo get_vocab("returnprev") ?></a>
 <?php
 }
 include "trailer.inc"; ?>

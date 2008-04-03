@@ -37,9 +37,8 @@ if (!empty($advanced))
 	echo get_vocab("from"). " ";
 	genDateSelector ("", $day, $month, $year);
 	echo "<br><INPUT TYPE=SUBMIT VALUE=\"" . get_vocab("search_button") ."\">";
+	echo "</FORM>";
 	include "trailer.inc";
-	echo "</BODY>";
-	echo "</HTML>";
 	exit;
 }
 
