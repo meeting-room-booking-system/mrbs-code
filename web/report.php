@@ -101,7 +101,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
 			echo "<hr><h2>". get_vocab("room") . ": " . $area_room . "</h2>\n";
 		if ($date != $last_date || $area_room != $last_area_room)
 		{
-			echo "<hr noshade=\"true\"><h3>". get_vocab("date") . ": " . $date . "</h3>\n";
+			echo "<hr noshade=\"noshade\"><h3>". get_vocab("date") . ": " . $date . "</h3>\n";
 			$last_date = $date;
 		}
 		# remember current area/room that is being processed.
@@ -117,7 +117,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
 			echo "<hr><h2>". get_vocab("date") . ": " . $date . "</h2>\n";
 		if ($area_room != $last_area_room  || $date != $last_date)
 		{
-			echo "<hr noshade=\"true\"><h3>". get_vocab("room") . ": " . $area_room . "</h3>\n";
+			echo "<hr noshade=\"noshade\"><h3>". get_vocab("room") . ": " . $area_room . "</h3>\n";
 			$last_area_room = $area_room;
 		}
 		# remember current date that is being processed.
@@ -361,7 +361,7 @@ if ( $pview != 1 ) {
     </td></tr>
 <tr><td CLASS=CR><?php echo get_vocab("match_type")?>:</td>
     <td CLASS=CL valign=top><table><tr><td>
-        <select name="typematch[]" multiple="yes">
+        <select name="typematch[]" multiple="multiple">
 <?php
 foreach( $typel as $key => $val )
 {

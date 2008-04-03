@@ -28,7 +28,7 @@ if (isset($change_done))
 	{
 		$area = sql_query1("SELECT area_id from $tbl_room where id=$room");
 	}
-	Header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
+	Header("Location: admin.php?day=$day&amp;month=$month&amp;year=$year&amp;area=$area");
 	exit();
 }
 
@@ -72,11 +72,11 @@ if(!empty($room)) {
 	$row = sql_row_keyed($res, 0);
 	sql_free($res);
 ?>
-<h3 ALIGN=CENTER><?php echo get_vocab("editroom") ?></h3>
+<h3 style="text-align:center;"><?php echo get_vocab("editroom") ?></h3>
 <form action="edit_area_room.php" method="post">
 <input type=hidden name="room" value="<?php echo $row["id"]?>">
 <CENTER>
-<TABLE>
+<table>
 <TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name="room_name" value="<?php
 echo htmlspecialchars($row["room_name"]); ?>"></TD></TR>
 <TR><TD><?php echo get_vocab("description") ?>:</TD><TD><input type=text name=description value="<?php
@@ -88,7 +88,7 @@ echo htmlspecialchars($row["room_admin_email"]); ?>"></TD>
 <?php if (FALSE == $valid_email) {
     echo ("<TD>&nbsp;</TD><TD><STRONG>" . get_vocab('invalid_email') . "<STRONG></TD>");
 } ?></TR>
-</TABLE>
+</table>
 <input type=submit name="change_room"
 value="<?php echo get_vocab("change") ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <input type=submit name="change_done" value="<?php echo get_vocab("backadmin") ?>">
@@ -129,11 +129,11 @@ if(!empty($area))
 	$row = sql_row_keyed($res, 0);
 	sql_free($res);
 ?>
-<h3 ALIGN=CENTER><?php echo get_vocab("editarea") ?></h3>
+<h3 style="text-align:center;"><?php echo get_vocab("editarea") ?></h3>
 <form action="edit_area_room.php" method="post">
 <input type=hidden name="area" value="<?php echo $row["id"]?>">
 <CENTER>
-<TABLE>
+<table>
 <TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name="area_name" value="<?php
 echo htmlspecialchars($row["area_name"]); ?>"></TD></TR>
 <TR><TD><?php echo get_vocab("area_admin_email") ?>:       </TD><TD><input type=text name="area_admin_email" MAXLENGTH=75 value="<?php
@@ -141,7 +141,7 @@ echo htmlspecialchars($row["area_admin_email"]); ?>"></TD>
 <?php if (FALSE == $valid_email) {
     echo ("<TD>&nbsp;</TD><TD><STRONG>" . get_vocab('invalid_email') . "</STRONG></TD>");
 } ?></TR>
-</TABLE>
+</table>
 <input type=submit name="change_area"
 value="<?php echo get_vocab("change") ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <input type=submit name="change_done" value="<?php echo get_vocab("backadmin") ?>">

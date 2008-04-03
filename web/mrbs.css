@@ -36,7 +36,7 @@ A:hover.blue {color:red}
 TH {color:#eeeeee; font-size:10pt; font-family:verdana,sans-serif;
 background-color:#999999;
 border-width:1; border-color:#999999; vertical-align:top}
-TD.banner {vertical-align:middle; background-color:#C0E0FF}
+TD.banner {text-align:center; vertical-align:middle; background-color:#C0E0FF;}
 
 TD.blue {background-color:#F0F0FF}
 TD.red  {background-color:#FFF0F0}

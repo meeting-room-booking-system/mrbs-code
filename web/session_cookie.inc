@@ -70,7 +70,7 @@ if (isset($Action) && ($Action == "SetName"))
         which allows to work around problems with DNS inconsistencies in the server name.
         Anyway, if the browser cannot redirect automatically, the manual link below will work. */
     print_header(0, 0, 0, 0);
-    echo "<br />\n";
+    echo "<br>\n";
     echo "<p>Please click <a href=\"$TargetURL\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
     echo "</body>\n";
     echo "</html>\n";
@@ -92,16 +92,16 @@ function printLoginForm($TargetURL)
   <table>
     <tr>
       <td align="right"><?php echo get_vocab("user_name") ?></td>
-      <td><input type="text" name="NewUserName" /></td>
+      <td><input type="text" name="NewUserName" ></td>
     </tr>
     <tr>
       <td align="right"><?php echo get_vocab("user_password") ?></td>
-      <td><input type="password" name="NewUserPassword" /></td>
+      <td><input type="password" name="NewUserPassword" ></td>
     </tr>
   </table>
-  <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" /> <br />
-  <input type="hidden" name="Action" value="SetName" /> <br />
-  <input type="submit" value="<?php echo get_vocab('login') ?> " /> <br />
+  <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" > <br>
+  <input type="hidden" name="Action" value="SetName" > <br>
+  <input type="submit" value="<?php echo get_vocab('login') ?> " > <br>
 </form>
 </body>
 </html>
@@ -169,21 +169,21 @@ function PrintLogonBox()
         // words 'you are xxxx' becomes a link to the
         // report page with only entries created by xxx. Past entries are not
         // displayed but this can be changed
-           $search_string = "report.php?From_day=$day&From_month=$month&".
-             "From_year=$year&To_day=1&To_month=12&To_year=2030&".
-             "areamatch=&roommatch=&namematch=&descrmatch=&summarize=1&".
-             "sortby=r&display=d&sumby=d&creatormatch=$user"; ?>
+           $search_string = "report.php?From_day=$day&amp;From_month=$month&amp;".
+             "From_year=$year&amp;To_day=1&amp;To_month=12&amp;To_year=2030&amp;".
+             "areamatch=&amp;roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;".
+             "sortby=r&amp;display=d&amp;sumby=d&amp;creatormatch=$user"; ?>
 
-    <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
+    <TD CLASS="banner">
       <A name="logonBox" href="<?php echo "$search_string\" title=\""
          . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
          .$user ?></A><br>
           <FORM METHOD=POST ACTION="admin.php">
-	    <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" />
-	    <input type="hidden" name="Action" value="SetName" />
-	    <input type="hidden" name="UserName" value="" />
-	    <input type="hidden" name="UserPassword" value="" />
-	    <input type="submit" value=" <?php echo get_vocab('logoff') ?> " />
+	    <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" >
+	    <input type="hidden" name="Action" value="SetName" >
+	    <input type="hidden" name="UserName" value="" >
+	    <input type="hidden" name="UserPassword" value="" >
+	    <input type="submit" value=" <?php echo get_vocab('logoff') ?> " >
 	  </FORM>
 <?php if (isset($user_list_link)) print "	  <br>\n	  " .
 	    "<A href=\"$user_list_link\">" . get_vocab('user_list') . "</A><br>\n" ;
@@ -194,12 +194,12 @@ function PrintLogonBox()
 else
     {
 ?>
-	<TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
+	<TD CLASS="banner">
 	  <A name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></A><br>
           <FORM METHOD=POST ACTION="admin.php">
-	    <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" />
-	    <input type="hidden" name="Action" value="QueryName" />
-	    <input type="submit" value=" <?php echo get_vocab('login') ?> " />
+	    <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" >
+	    <input type="hidden" name="Action" value="QueryName" >
+	    <input type="submit" value=" <?php echo get_vocab('login') ?> " >
 	  </FORM>
 <?php if (isset($user_list_link)) print "	  <br>\n	  " .
 	    "<A href=\"$user_list_link\">" . get_vocab('user_list') . "</A><br>\n" ;

@@ -94,7 +94,7 @@ if ( $pview != 1 ) {
 	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	{
 		if ( $pview != 1 )
-			echo "<a href=\"week.php?year=$year&month=$month&day=$day&area=$row[0]\">";
+			echo "<a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$row[0]\">";
 		if ($row[0] == $area)
 		{
 			$this_area_name = htmlspecialchars($row[1]);
@@ -120,7 +120,7 @@ echo "<td width=\"30%\"><u>".get_vocab("rooms")."</u><br>";
 	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	{
 		if ( $pview != 1 )
-			echo "<a href=\"week.php?year=$year&month=$month&day=$day&area=$area&room=$row[0]\" title=\"$row[2]\">";
+			echo "<a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$row[0]\" title=\"$row[2]\">";
 		if ($row[0] == $room)
 		{
 			$this_room_name = htmlspecialchars($row[1]);
@@ -166,10 +166,10 @@ $td = date("d",$i);
 if ( $pview != 1 ) {
 	#Show Go to week before and after links
 	echo "<table width=\"100%\"><tr><td>
-	  <a href=\"week.php?year=$yy&month=$ym&day=$yd&area=$area&room=$room\">
+	  <a href=\"week.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area&amp;room=$room\">
 	  &lt;&lt; ".get_vocab("weekbefore")."</a></td>
-	  <td align=center><a href=\"week.php?area=$area&room=$room\">".get_vocab("gotothisweek")."</a></td>
-	  <td align=right><a href=\"week.php?year=$ty&month=$tm&day=$td&area=$area&room=$room\">
+	  <td align=center><a href=\"week.php?area=$area&amp;room=$room\">".get_vocab("gotothisweek")."</a></td>
+	  <td align=right><a href=\"week.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area&amp;room=$room\">
 	  ".get_vocab("weekafter")."&gt;&gt;</a></td></tr></table>";
 }
 
@@ -273,14 +273,14 @@ if ($debug_flag)
 // Must be included before the beginnning of the main table.
 	if ($javascript_cursor) // If authorized in config.inc.php, include the javascript cursor management.
             {
-	    echo "<SCRIPT language=\"JavaScript\" type=\"text/javascript\" src=\"xbLib.js\"></SCRIPT>\n";
-            echo "<SCRIPT language=\"JavaScript\">InitActiveCell("
+	    echo "<script type=\"text/javascript\" src=\"xbLib.js\"></script>\n";
+            echo "<script type=\"text/javascript\">InitActiveCell("
                . ($show_plus_link ? "true" : "false") . ", "
                . "true, "
                . ((FALSE != $times_right_side) ? "true" : "false") . ", "
                . "\"$highlight_method\", "
                . "\"" . get_vocab("click_to_reserve") . "\""
-               . ");</SCRIPT>\n";
+               . ");</script>\n";
             }
 
 #This is where we start displaying stuff
@@ -296,8 +296,8 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
 {
 	$t = mktime( 12, 0, 0, $month, $day+$j, $year); 
 	echo "<th width=\"14%\"><a href=\"day.php?year=" . strftime("%Y", $t) . 
-	"&month=" . strftime("%m", $t) . "&day=" . strftime("%d", $t) . 
-	"&area=$area\" title=\"" . get_vocab("viewday") . "\">"
+	"&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) . 
+	"&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">"
     . utf8_strftime($dformat, $t) . "</a></th>\n";
 }
 # next line to display times on right side
@@ -316,7 +316,7 @@ echo "</tr>\n";
 
 # URL for highlighting a time. Don't use REQUEST_URI or you will get
 # the timetohighlight parameter duplicated each time you click.
-$hilite_url="week.php?year=$year&month=$month&day=$day&area=$area&room=$room&timetohighlight";
+$hilite_url="week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$room&amp;timetohighlight";
 
 # if the first day of the week to be displayed contains as DST change then
 # move to the next day to get the hours in the day.
@@ -397,26 +397,26 @@ for (
  			if ( $pview != 1 ) {
 				if ($javascript_cursor)
 				{
-					echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+					echo "<script type=\"text/javascript\">\n<!--\n";
 					echo "BeginActiveCell();\n";
-					echo "// -->\n</SCRIPT>";
+					echo "// -->\n</script>";
 				}
 	  			echo "<center>";
 				if( $enable_periods ) {
-					echo "<a href=\"edit_entry.php?room=$room&area=$area"
-						. "&period=$time_t_stripped&year=$wyear&month=$wmonth"
-						. "&day=$wday\"><img src=new.gif width=10 height=10 border=0></a>";
+					echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
+						. "&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth"
+						. "&amp;day=$wday\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
 				} else {
-					echo "<a href=\"edit_entry.php?room=$room&area=$area"
-						. "&hour=$hour&minute=$minute&year=$wyear&month=$wmonth"
-						. "&day=$wday\"><img src=new.gif width=10 height=10 border=0></a>";
+					echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
+						. "&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth"
+						. "&amp;day=$wday\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
 				}
 	 			echo "</center>";
 				if ($javascript_cursor)
 				{
-					echo "<SCRIPT language=\"JavaScript\">\n<!--\n";
+					echo "<script type=\"text/javascript\">\n<!--\n";
 					echo "EndActiveCell();\n";
-					echo "// -->\n</SCRIPT>";
+					echo "// -->\n</script>";
 				}
  			} else
 				echo '&nbsp;';
@@ -425,7 +425,7 @@ for (
  		{
  			#if it is booked then show 
 			echo " <a href=\"view_entry.php?id=$id"
-				. "&area=$area&day=$wday&month=$wmonth&year=$wyear\" "
+				. "&amp;area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear\" "
                        		. "title=\"$long_descr\">$descr</a>";
 		}
  		else

@@ -48,7 +48,7 @@ function print_header($day, $month, $year, $area)
    include "style.inc";
 ?>
     <TITLE><?php echo get_vocab("mrbs") ?></TITLE>
-    <SCRIPT LANGUAGE="JavaScript">
+    <script type="text/javascript">
 
 <!-- Begin
 
@@ -133,7 +133,7 @@ function ChangeOptionDays(formObj, prefix)
 }
 
   //  End -->
-    </SCRIPT>
+    </script>
   </HEAD>
   <BODY BGCOLOR="#ffffed" TEXT=black LINK="#5B69A6" VLINK="#5B69A6" ALINK=red>
 	   <?php if ( $GLOBALS["pview"] != 1 ) { ?>
@@ -145,15 +145,15 @@ function ChangeOptionDays(formObj, prefix)
                echo "[Warning: ".$locale_warning."]";
    ?>
 
-    <TABLE WIDTH="100%">
+    <table WIDTH="100%">
       <TR>
         <TD BGCOLOR="#5B69A6">
-          <TABLE WIDTH="100%" BORDER=0>
+          <table WIDTH="100%" BORDER=0>
             <TR>
               <TD CLASS="banner" BGCOLOR="#C0E0FF">
                 <FONT SIZE=4>
-                  <B><?php echo $mrbs_company ?></B><BR>
-                  <A HREF="index.php"><?php echo get_vocab("mrbs") ?></A>
+                  <B><?php echo $mrbs_company ?></B><br>
+                  <a href="index.php"><?php echo get_vocab("mrbs") ?></a>
                 </FONT>
               </TD>
               <TD CLASS="banner" BGCOLOR="#C0E0FF">
@@ -166,26 +166,26 @@ function ChangeOptionDays(formObj, prefix)
                     <INPUT TYPE=HIDDEN NAME=area VALUE=$area>\n"
  
 ?>
-	            <SCRIPT LANGUAGE="JavaScript">
+	            <script type="text/javascript">
                     <!--
                     // fix number of days for the $month/$year that you start with
                     ChangeOptionDays(document.Form1, ''); // Note: The 2nd arg must match the first in the call to genDateSelector above.
                     // -->
-                    </SCRIPT>
+                    </script>
                     <INPUT TYPE=SUBMIT VALUE="<?php echo get_vocab("goto") ?>">
                   </FONT>
                 </FORM>
               </TD>
-              <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-                <A HREF="help.php?day=<?php echo $day ?>&month=<?php echo $month ?>&year=<?php echo $year ?>"><?php echo get_vocab("help") ?></A>
+              <TD CLASS="banner">
+                <A HREF="help.php?day=<?php echo $day ?>&amp;month=<?php echo $month ?>&amp;year=<?php echo $year ?>"><?php echo get_vocab("help") ?></A>
               </TD>
-              <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
-                <A HREF="admin.php?day=<?php echo $day ?>&month=<?php echo $month ?>&year=<?php echo $year ?>"><?php echo get_vocab("admin") ?></A>
+              <TD CLASS="banner">
+                <A HREF="admin.php?day=<?php echo $day ?>&amp;month=<?php echo $month ?>&amp;year=<?php echo $year ?>"><?php echo get_vocab("admin") ?></A>
               </TD>
-              <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
+              <TD CLASS="banner">
                 <A HREF="report.php"><?php echo get_vocab("report") ?></A>
               </TD>
-              <TD CLASS="banner" BGCOLOR="#C0E0FF" ALIGN=CENTER>
+              <TD CLASS="banner">
                 <FORM METHOD=GET ACTION="search.php">
                   <FONT SIZE=2>
                     <A HREF="search.php?advanced=1"><?php echo get_vocab("search") ?>:</A>
@@ -209,10 +209,10 @@ function ChangeOptionDays(formObj, prefix)
    	}
 ?>
             </TR>
-          </TABLE>
+          </table>
         </TD>
       </TR>
-    </TABLE>
+    </table>
 <?php } ?>
 <?php
 }

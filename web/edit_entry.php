@@ -193,7 +193,9 @@ print_header($day, $month, $year, $area);
 
 ?>
 
-<SCRIPT LANGUAGE="JavaScript">
+<script type="text/javascript">
+<!-- Hide this from non-Javascript aware UAs
+
 // do a little form verifying
 function validate_and_submit ()
 {
@@ -289,7 +291,8 @@ function OnAllDayClick(allday) // Executed when the user clicks on the all_day c
     }
   }
 }
-</SCRIPT>
+// End of Javascript -->
+</script>
 
 <h2>
 <?php
@@ -325,17 +328,18 @@ else
 }
 echo get_vocab($token);
 ?>
-</H2>
+</h2>
+
 
 <FORM NAME="main" ACTION="edit_entry_handler.php" METHOD="GET">
 
-<TABLE BORDER=0>
+<table BORDER=0>
 
 <TR><TD CLASS=CR><B><?php echo get_vocab("namebooker")?></B></TD>
   <TD CLASS=CL><INPUT NAME="name" SIZE=40 VALUE="<?php echo htmlspecialchars($name) ?>"></TD></TR>
 
 <TR><TD CLASS=TR><B><?php echo get_vocab("fulldescription")?></B></TD>
-  <TD CLASS=TL><TEXTAREA NAME="description" ROWS=8 COLS=40 WRAP="virtual"><?php echo
+  <TD CLASS=TL><TEXTAREA NAME="description" ROWS=8 COLS=40><?php echo
 htmlspecialchars ( $description ); ?></TEXTAREA></TD></TR>
 
 <TR><TD CLASS=CR><B><?php echo get_vocab("date")?>:</B></TD>
@@ -411,8 +415,10 @@ while (list(,$unit) = each($units))
       if( $num_areas > 1 ) {
 
 ?>
-<script language="JavaScript">
-<!--
+<tr><td>
+<script type="text/javascript">
+<!-- Hide the Javascript from non-Javascript UAs
+
 function changeRooms( formObj )
 {
     areasObj = eval( "formObj.areas" );
@@ -452,10 +458,11 @@ function changeRooms( formObj )
     } //switch
 }
 
-// create area selector if javascript is enabled as this is required
-// if the room selector is to be updated.
-this.document.writeln("<tr><td class=CR><b><?php echo get_vocab("areas") ?>:</b></td><td class=CL valign=top>");
+// Create area selector, only if we have Javascript
+
+this.document.writeln("<b><?php echo get_vocab("areas") ?>:<\/b><\/td><td class=CL valign=top>");
 this.document.writeln("          <select name=\"areas\" onChange=\"changeRooms(this.form)\">");
+
 <?php
 # get list of areas
 $sql = "select id, area_name from $tbl_area order by area_name";
@@ -469,15 +476,16 @@ if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
 	print "this.document.writeln(\"            <option $selected value=\\\"".$row[0]."\\\">".$row[1]."\")\n";
 }
 ?>
-this.document.writeln("          </select>");
-this.document.writeln("</td></tr>");
-// -->
+this.document.writeln("          <\/select>");
+
+// End of Javascipt -->
 </script>
+</td></tr>
 <?php
 } # if $num_areas
 ?>
 <tr><td class=CR><b><?php echo get_vocab("rooms") ?>:</b></td>
-  <td class=CL valign=top><table><tr><td><select name="rooms[]" multiple="yes">
+  <td class=CL valign=top><table><tr><td><select name="rooms[]" multiple="multiple">
   <?php
         # select the rooms in the area determined above
 	$sql = "select id, room_name from $tbl_room where area_id=$area_id order by room_name";
@@ -595,16 +603,16 @@ if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) && ( "seri
 
 <TR>
  <TD colspan=2 align=center>
-  <SCRIPT LANGUAGE="JavaScript">
+  <script type="text/javascript">
    document.writeln ( '<INPUT TYPE="button" NAME="save_button" VALUE="<?php echo get_vocab("save")?>" ONCLICK="validate_and_submit()">' );
-  </SCRIPT>
-  <NOSCRIPT>
+  </script>
+  <noscript>
    <INPUT TYPE="submit" VALUE="<?php echo get_vocab("save")?>">
-  </NOSCRIPT>
+  </noscript>
  </TD></TR>
-</TABLE>
+</table>
 
-<INPUT TYPE=HIDDEN NAME="returl"    VALUE="<?php echo $HTTP_REFERER?>">
+<INPUT TYPE=HIDDEN NAME="returl"    VALUE="<?php echo htmlspecialchars($HTTP_REFERER) ?>">
 <!--INPUT TYPE=HIDDEN NAME="room_id"   VALUE="<?php echo $room_id?>"-->
 <INPUT TYPE=HIDDEN NAME="create_by" VALUE="<?php echo $create_by?>">
 <INPUT TYPE=HIDDEN NAME="rep_id"    VALUE="<?php echo $rep_id?>">

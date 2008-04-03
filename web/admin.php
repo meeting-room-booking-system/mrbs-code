@@ -70,8 +70,8 @@ if (sql_count($res) == 0) {
 	echo "<ul>";
 	for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 		$area_name_q = urlencode($row[1]);
-		echo "<li><a href=\"admin.php?area=$row[0]&area_name=$area_name_q\">"
-			. htmlspecialchars($row[1]) . "</a> (<a href=\"edit_area_room.php?area=$row[0]\">" . get_vocab("edit") . "</a>) (<a href=\"del.php?type=area&area=$row[0]\">" .  get_vocab("delete") . "</a>)\n";
+		echo "<li><a href=\"admin.php?area=$row[0]&amp;area_name=$area_name_q\">"
+			. htmlspecialchars($row[1]) . "</a> (<a href=\"edit_area_room.php?area=$row[0]\">" . get_vocab("edit") . "</a>) (<a href=\"del.php?type=area&amp;area=$row[0]\">" .  get_vocab("delete") . "</a>)\n";
 	}
 	echo "</ul>";
 }
@@ -89,7 +89,7 @@ if(isset($area)) {
 		echo "<ul>";
 		for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 			echo "<li>" . htmlspecialchars($row[1]) . "(" . htmlspecialchars($row[2])
-			. ", $row[3]) (<a href=\"edit_area_room.php?room=$row[0]\">" . get_vocab("edit") . "</a>) (<a href=\"del.php?type=room&room=$row[0]\">" . get_vocab("delete") . "</a>)\n";
+			. ", $row[3]) (<a href=\"edit_area_room.php?room=$row[0]\">" . get_vocab("edit") . "</a>) (<a href=\"del.php?type=room&amp;room=$row[0]\">" . get_vocab("delete") . "</a>)\n";
 		}
 		echo "</ul>";
 	}
@@ -102,29 +102,29 @@ if(isset($area)) {
 </tr>
 <tr>
 <td>
-<h3 ALIGN=CENTER><?php echo get_vocab("addarea") ?></h3>
+<h3 style="text-align:center;"><?php echo get_vocab("addarea") ?></h3>
 <form action=add.php method=post>
 <input type=hidden name=type value=area>
 
-<TABLE>
+<table>
 <TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name=name></TD></TR>
-</TABLE>
+</table>
 <input type=submit value="<?php echo get_vocab("addarea") ?>">
 </form>
 </td>
 
 <td>
 <?php if (0 != $area) { ?>
-<h3 ALIGN=CENTER><?php echo get_vocab("addroom") ?></h3>
+<h3 style="text-align:center;"><?php echo get_vocab("addroom") ?></h3>
 <form action=add.php method=post>
 <input type=hidden name=type value=room>
 <input type=hidden name=area value=<?php echo $area; ?>>
 
-<TABLE>
+<table>
 <TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name=name></TD></TR>
 <TR><TD><?php echo get_vocab("description") ?>:</TD><TD><input type=text name=description></TD></TR>
 <TR><TD><?php echo get_vocab("capacity") ?>:   </TD><TD><input type=text name=capacity></TD></TR>
-</TABLE>
+</table>
 <input type=submit value="<?php echo get_vocab("addroom") ?>">
 </form>
 <?php } else { echo "&nbsp;"; }?>
