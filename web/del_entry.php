@@ -28,7 +28,7 @@ if(getAuthorised(1) && ($info = mrbsGetEntryInfo($id)))
 	{
         // Send a mail to the Administrator
         (MAIL_ADMIN_ON_DELETE) ? $result = notifyAdminOnDelete($mail_previous) : '';
-        Header("Location: day.php?day=$day&amp;month=$month&amp;year=$year&amp;area=$area");
+        Header("Location: day.php?day=$day&month=$month&year=$year&area=$area");
 		exit();
 	}
 }

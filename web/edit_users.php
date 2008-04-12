@@ -238,7 +238,7 @@ if (isset($Action) && ($Action == "Update"))
             && ('' != $Field[3]) )
         {
             // Now display this form again with an error message
-            Header("Location: edit_users.php?Action=Edit&amp;Id=$Id&amp;invalid_email=1");
+            Header("Location: edit_users.php?Action=Edit&Id=$Id&invalid_email=1");
             exit;
         }
     }

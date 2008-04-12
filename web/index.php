@@ -18,13 +18,13 @@ $year  = date("Y");
 switch ($default_view)
 {
 	case "month":
-		$redirect_str = "month.php?year=$year&amp;month=$month";
+		$redirect_str = "month.php?year=$year&month=$month";
 		break;
 	case "week":
-		$redirect_str = "week.php?year=$year&amp;month=$month&amp;day=$day";
+		$redirect_str = "week.php?year=$year&month=$month&day=$day";
 		break;
 	default:
-		$redirect_str = "day.php?day=$day&amp;month=$month&amp;year=$year";
+		$redirect_str = "day.php?day=$day&month=$month&year=$year";
 }
 
 if( ! empty($default_room) )
@@ -39,7 +39,7 @@ if( ! empty($default_room) )
 			$row = sql_row($res, 0);
 			$area = $row[0];
 			$room = $default_room;
-			$redirect_str .= "&amp;area=$area&amp;room=$room";
+			$redirect_str .= "&area=$area&room=$room";
 		}
 	}
 }

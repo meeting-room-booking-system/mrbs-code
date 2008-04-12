@@ -28,7 +28,7 @@ if (isset($change_done))
 	{
 		$area = sql_query1("SELECT area_id from $tbl_room where id=$room");
 	}
-	Header("Location: admin.php?day=$day&amp;month=$month&amp;year=$year&amp;area=$area");
+	Header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
 	exit();
 }
 
