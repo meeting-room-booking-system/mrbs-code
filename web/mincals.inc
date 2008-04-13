@@ -98,7 +98,7 @@ class Calendar
       {
          $show = $basetime + ($i * 24 * 60 * 60);
          $fl = utf8_strftime('%a',$show);
-         $s .= "<td align=center valign=top class=\"calendarHeader\">$fl</td>\n";
+         $s .= "<td align=\"center\" valign=\"top\" class=\"calendarHeader\">$fl</td>\n";
       }
       return $s;
     }
@@ -138,9 +138,9 @@ class Calendar
         $s .= "<table class=\"calendar\">\n";
         // prints month name and year
         $s .= "<tr>\n";
-        //$s .= "<td align=center valign=top>" . (($prevMonth == "") ? "&nbsp;" : "<a href=\"$prevMonth\">&lt;&lt;</a>")  . "</td>\n";
-        $s .= "<td align=center valign=top class=\"calendarHeader\" colspan=7>$monthName&nbsp;$this->year</td>\n"; 
-        //$s .= "<td align=center valign=top>" . (($nextMonth == "") ? "&nbsp;" : "<a href=\"$nextMonth\">&gt;&gt;</a>")  . "</td>\n";
+        //$s .= "<td align=\"center\" valign=\"top\">" . (($prevMonth == "") ? "&nbsp;" : "<a href=\"$prevMonth\">&lt;&lt;</a>")  . "</td>\n";
+        $s .= "<td align=\"center\" valign=\"top\" class=\"calendarHeader\" colspan=7>$monthName&nbsp;$this->year</td>\n"; 
+        //$s .= "<td align=\"center\" valign=\"top\">" . (($nextMonth == "") ? "&nbsp;" : "<a href=\"$nextMonth\">&gt;&gt;</a>")  . "</td>\n";
         $s .= "</tr>\n";
         
         $s .= "<tr>\n";

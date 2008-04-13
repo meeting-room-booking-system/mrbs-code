@@ -6,7 +6,7 @@
 function get_mrbs_version()
 {
   # MRBS developers, make sure to update this string before each release
-  $mrbs_version = "MRBS 1.2.6";
+  $mrbs_version = "MRBS 1.2.6.1+cvs";
 
   return $mrbs_version;
 }

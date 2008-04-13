@@ -7,6 +7,15 @@ include "functions.inc";
 include "$dbsys.inc";
 include "mrbs_auth.inc";
 
+// Get form variables
+$day = get_form_var('day', 'int');
+$month = get_form_var('month', 'int');
+$year = get_form_var('year', 'int');
+$area = get_form_var('area', 'int');
+$room = get_form_var('room', 'int');
+$type = get_form_var('type', 'string');
+$confirm = get_form_var('confirm', 'string');
+
 #If we dont know the right date then make it up
 if(!isset($day) or !isset($month) or !isset($year))
 {
@@ -57,20 +66,20 @@ if($type == "room")
 		{
 			echo get_vocab("deletefollowing") . ":<ul>";
 			
-			for ($i = 0; ($row = sql_row($res, $i)); $i++)
+			for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 			{
-				echo "<li>$row[0] (";
-				echo time_date_string($row[1]) . " -> ";
-				echo time_date_string($row[2]) . ")";
+				echo "<li>".htmlspecialchars($row['name'])." (";
+				echo time_date_string($row['start_time']) . " -> ";
+				echo time_date_string($row['end_time']) . ")</li>";
 			}
 			
 			echo "</ul>";
 		}
 		
-		echo "<center>";
-		echo "<H1>" .  get_vocab("sure") . "</h1>";
-		echo "<H1><a href=\"del.php?type=room&amp;room=$room&amp;confirm=Y\">" . get_vocab("YES") . "!</a> &nbsp;&nbsp;&nbsp; <a href=admin.php>" . get_vocab("NO") . "!</a></h1>";
-		echo "</center>";
+		echo "<div align=\"center\">";
+		echo "<h1>" .  get_vocab("sure") . "</h1>";
+		echo "<h1><a href=\"del.php?type=room&amp;room=$room&amp;confirm=Y\">" . get_vocab("YES") . "!</a> &nbsp;&nbsp;&nbsp; <a href=admin.php>" . get_vocab("NO") . "!</a></h1>";
+		echo "</div>";
 		include "trailer.inc";
 	}
 }
@@ -94,7 +103,7 @@ if($type == "area")
 		print_header($day, $month, $year, $area);
 		
 		echo get_vocab("delarea");
-		echo "<a href=admin.php>" . get_vocab("backadmin") . "</a>";
+		echo "<a href=\"admin.php\">" . get_vocab("backadmin") . "</a>";
 		include "trailer.inc";
 	}
 }

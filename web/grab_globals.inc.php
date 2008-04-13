@@ -20,24 +20,80 @@
 //
 // $Id$
 
-// -- GET --
-if (!empty($_GET))
+function get_form_var($variable, $type = 'string')
 {
-    extract($_GET, EXTR_OVERWRITE);
-}
-else if (!empty($HTTP_GET_VARS))
-{
-    extract($HTTP_GET_VARS, EXTR_OVERWRITE);
-}
+  if ($type == 'array')
+  {
+    $value = array();
+  }
+  else
+  {
+    $value = NULL;
+  }
 
-// -- POST --
-if (!empty($_POST))
-{
-    extract($_POST, EXTR_OVERWRITE);
-}
-else if (!empty($HTTP_POST_VARS))
-{
-    extract($HTTP_POST_VARS, EXTR_OVERWRITE);
+  if (!empty($_POST) && isset($_POST[$variable]))
+  {
+    if ($type == 'array')
+    {
+      $value = (array)$_POST[$variable];
+    }
+    else
+    {
+      $value = $_POST[$variable];
+    }
+  }
+  else if (!empty($HTTP_POST_VARS) && isset($HTTP_POST_VARS[$variable]))
+  {
+    if ($type == 'array')
+    {
+      $value = (array)$HTTP_POST_VARS[$variable];
+    }
+    else
+    {
+      $value = $HTTP_POST_VARS[$variable];
+    }
+  }
+  if (!empty($_GET) && isset($_GET[$variable]))
+  {
+    if ($type == 'array')
+    {
+      $value = (array)$_GET[$variable];
+    }
+    else
+    {
+      $value = $_GET[$variable];
+    }
+  }
+  else if (!empty($HTTP_GET_VARS) && isset($HTTP_GET_VARS[$variable]))
+  {
+    if ($type == 'array')
+    {
+      $value = (array)$HTTP_GET_VARS[$variable];
+    }
+    else
+    {
+      $value = $HTTP_GET_VARS[$variable];
+    }
+  }
+  if ($value != NULL)
+  {
+    if ($type == 'int')
+    {
+      $value = intval(unslashes($value));
+    }
+    else if ($type == 'string')
+    {
+      $value = unslashes($value);
+    }
+    else if ($type == 'array')
+    {
+      foreach ($value as $arrkey => $arrvalue)
+      {
+        $value[$arrkey] = unslashes($arrvalue);
+      }
+    }
+  }
+  return $value;
 }
 
 // -- PHP_SELF --
@@ -93,11 +149,11 @@ else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['REMOTE_ADDR']))
 // -- QUERY_STRING --
 if (!empty($_SERVER) && isset($_SERVER['QUERY_STRING']))
 {
-    $QUERY_STRING = htmlspecialchars($_SERVER['QUERY_STRING']);
+    $QUERY_STRING = $_SERVER['QUERY_STRING'];
 }
 else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['QUERY_STRING']))
 {
-    $QUERY_STRING = htmlspecialchars($HTTP_SERVER_VARS['QUERY_STRING']);
+    $QUERY_STRING = $HTTP_SERVER_VARS['QUERY_STRING'];
 }
 
 // -- HTTP_ACCEPT_LANGUAGE --
@@ -130,19 +186,4 @@ else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['HTTP_HOST']))
     $HTTP_HOST = $HTTP_SERVER_VARS['HTTP_HOST'];
 }
 
-// +---------------------------------------------------------------------------+
-/* Changes to this file :
- * $Log$
- * Revision 1.2.4.1  2008/03/28 12:32:17  jberanek
- * * Wide changes to improve HTML compliance (HTML 4.01 Transitional),
- *  provided by Claudio Strizzolo. Not yet heavily checked or tested.
- *  Just on a branch for now.
- *
- * Revision 1.2  2003/11/14 21:47:20  jflarvoire
- * Added the setting of $HTTP_HOST.
- *
- * Revision 1.1  2003/03/05 05:12:31  thierry_bo
- * + Make MRBS compliant to the 'register_globals = off' directive
- *
- */
 ?>

@@ -8,6 +8,14 @@ include "$dbsys.inc";
 include "mrbs_auth.inc";
 include "mincals.inc";
 
+// Get form variables
+$day = get_form_var('day', 'int');
+$month = get_form_var('month', 'int');
+$year = get_form_var('year', 'int');
+$area = get_form_var('area', 'int');
+$pview = get_form_var('pview', 'int');
+$debug_flag = get_form_var('debug_flag', 'int');
+
 if (empty($debug_flag)) $debug_flag = 0;
 
 #If we dont know the right date then make it up 
@@ -66,12 +74,17 @@ if ( $pview != 1 ) {
 	# show the standard html list
 	$sql = "select id, area_name from $tbl_area order by area_name";
    	$res = sql_query($sql);
-   	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+   	if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
    	{
-		echo "<a href=\"day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$row[0]\">";
-		if ($row[0] == $area)
-			echo "<font color=\"red\">" . htmlspecialchars($row[1]) . "</font></a><br>\n";
-		else echo htmlspecialchars($row[1]) . "</a><br>\n";
+		echo "<a href=\"day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$row['id']."\">";
+		if ($row['id'] == $area)
+		{
+			echo "<font color=\"red\">" . htmlspecialchars($row['area_name']) . "</font></a><br>\n";
+		}
+		else
+		{
+			echo htmlspecialchars($row['area_name']) . "</a><br>\n";
+		}
    	}
    }
    echo "</td>\n";
@@ -101,8 +114,8 @@ $td = date("d",$i);
 #Note: The predicate clause 'start_time <= ...' is an equivalent but simpler
 #form of the original which had 3 BETWEEN parts. It selects all entries which
 #occur on or cross the current day.
-$sql = "SELECT $tbl_room.id, start_time, end_time, name, $tbl_entry.id, type,
-        $tbl_entry.description
+$sql = "SELECT $tbl_room.id AS room_id, start_time, end_time, name, $tbl_entry.id AS entry_id, type,
+        $tbl_entry.description AS entry_description
    FROM $tbl_entry, $tbl_room
    WHERE $tbl_entry.room_id = $tbl_room.id
    AND area_id = $area
@@ -110,15 +123,15 @@ $sql = "SELECT $tbl_room.id, start_time, end_time, name, $tbl_entry.id, type,
 
 $res = sql_query($sql);
 if (! $res) fatal_error(0, sql_error());
-for ($i = 0; ($row = sql_row($res, $i)); $i++) {
+for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++) {
 	# Each row weve got here is an appointment.
-	#Row[0] = Room ID
-	#row[1] = start time
-	#row[2] = end time
-	#row[3] = short description
-	#row[4] = id of this booking
-	#row[5] = type (internal/external)
-	#row[6] = description
+	#Row['room_id'] = Room ID
+	#row['start_time'] = start time
+	#row['end_time'] = end time
+	#row['name'] = short description
+	#row['entry_id'] = id of this booking
+	#row['type'] = type (internal/external)
+	#row['entry_description'] = description
 
 	# $today is a map of the screen that will be displayed
 	# It looks like:
@@ -136,27 +149,27 @@ for ($i = 0; ($row = sql_row($res, $i)); $i++) {
 	# Note: int casts on database rows for max may be needed for PHP3.
 	# Adjust the starting and ending times so that bookings which don't
 	# start or end at a recognized time still appear.
-	$start_t = max(round_t_down($row[1], $resolution, $am7), $am7);
-	$end_t = min(round_t_up($row[2], $resolution, $am7) - $resolution, $pm7);
+	$start_t = max(round_t_down($row['start_time'], $resolution, $am7), $am7);
+	$end_t = min(round_t_up($row['end_time'], $resolution, $am7) - $resolution, $pm7);
 	for ($t = $start_t; $t <= $end_t; $t += $resolution)
 	{
-		$today[$row[0]][date($format,$t)]["id"]    = $row[4];
-		$today[$row[0]][date($format,$t)]["color"] = $row[5];
-		$today[$row[0]][date($format,$t)]["data"]  = "";
-		$today[$row[0]][date($format,$t)]["long_descr"]  = "";
+		$today[$row['room_id']][date($format,$t)]["id"]    = $row['entry_id'];
+		$today[$row['room_id']][date($format,$t)]["color"] = $row['type'];
+		$today[$row['room_id']][date($format,$t)]["data"]  = "";
+		$today[$row['room_id']][date($format,$t)]["long_descr"]  = "";
 	}
 
 	# Show the name of the booker in the first segment that the booking
 	# happens in, or at the start of the day if it started before today.
-	if ($row[1] < $am7)
+	if ($row['start_time'] < $am7)
 	{
-		$today[$row[0]][date($format,$am7)]["data"] = $row[3];
-		$today[$row[0]][date($format,$am7)]["long_descr"] = $row[6];
+		$today[$row['room_id']][date($format,$am7)]["data"] = $row['name'];
+		$today[$row['room_id']][date($format,$am7)]["long_descr"] = $row['entry_description'];
 	}
 	else
 	{
-		$today[$row[0]][date($format,$start_t)]["data"] = $row[3];
-		$today[$row[0]][date($format,$start_t)]["long_descr"] = $row[6];
+		$today[$row['room_id']][date($format,$start_t)]["data"] = $row['name'];
+		$today[$row['room_id']][date($format,$start_t)]["long_descr"] = $row['entry_description'];
 	}
 }
 
@@ -195,13 +208,13 @@ if (sql_count($res) == 0)
 else
 {
 	#Show current date
-	echo "<h2 align=center>" . utf8_strftime("%A %d %B %Y", $am7) . "</h2>\n";
+	echo "<h2 align=\"center\">" . utf8_strftime("%A %d %B %Y", $am7) . "</h2>\n";
 
 	if ( $pview != 1 ) {
 		#Show Go to day before and after links
         $output = "<table width=\"100%\"><tr><td><a href=\"day.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area\">&lt;&lt;".get_vocab("daybefore")."</a></td>
-        <td align=center><a href=\"day.php?area=$area\">".get_vocab("gototoday")."</a></td>
-        <td align=right><a href=\"day.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area\">".get_vocab("dayafter")."&gt;&gt;</a></td></tr></table>\n";
+        <td align=\"center\"><a href=\"day.php?area=$area\">".get_vocab("gototoday")."</a></td>
+        <td align=\"right\"><a href=\"day.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area\">".get_vocab("dayafter")."&gt;&gt;</a></td></tr></table>\n";
         print $output;
 	}
 
@@ -220,17 +233,17 @@ else
             }
 
 	#This is where we start displaying stuff
-	echo "<table cellspacing=0 border=1 width=\"100%\">";
+	echo "<table cellspacing=\"0\" border=\"1\" width=\"100%\">";
 	echo "<tr><th width=\"1%\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
 
 	$room_column_width = (int)(95 / sql_count($res));
-	for ($i = 0; ($row = sql_row($res, $i)); $i++)
+	for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 	{
         echo "<th width=\"$room_column_width%\">
-            <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$row[2]\"
-            title=\"" . get_vocab("viewweek") . " &#10;&#10;$row[3]\">"
-            . htmlspecialchars($row[0]) . ($row[1] > 0 ? "($row[1])" : "") . "</a></th>";
-		$rooms[] = $row[2];
+            <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\"
+            title=\"" . get_vocab("viewweek") . " &#10;&#10;".$row['description']."\">"
+            . htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "") . "</a></th>";
+		$rooms[] = $row['id'];
 	}
 
     # next line to display times on right side

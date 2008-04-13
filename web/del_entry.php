@@ -8,6 +8,14 @@ include "$dbsys.inc";
 include "mrbs_auth.inc";
 include "mrbs_sql.inc";
 
+// Get form variables
+$day = get_form_var('day', 'int');
+$month = get_form_var('month', 'int');
+$year = get_form_var('year', 'int');
+$area = get_form_var('area', 'int');
+$id = get_form_var('id', 'int');
+$series = get_form_var('series', 'int');
+
 if(getAuthorised(1) && ($info = mrbsGetEntryInfo($id)))
 {
 	$day   = strftime("%d", $info["start_time"]);

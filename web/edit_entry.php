@@ -9,6 +9,18 @@ include "mrbs_auth.inc";
 
 global $twentyfourhour_format;
 
+// Get form variables
+$day = get_form_var('day', 'int');
+$month = get_form_var('month', 'int');
+$year = get_form_var('year', 'int');
+$hour = get_form_var('hour', 'int');
+$minute = get_form_var('minute', 'int');
+$area = get_form_var('area', 'int');
+$room = get_form_var('room', 'int');
+$id = get_form_var('id', 'int');
+$copy = get_form_var('copy', 'int');
+$edit_type = get_form_var('edit_type', 'string');
+
 #If we dont know the right date then make it up
 if(!isset($day) or !isset($month) or !isset($year))
 {
@@ -49,25 +61,22 @@ if (isset($id))
 	if (! $res) fatal_error(1, sql_error());
 	if (sql_count($res) != 1) fatal_error(1, get_vocab("entryid") . $id . get_vocab("not_found"));
 	
-	$row = sql_row($res, 0);
+	$row = sql_row_keyed($res, 0);
 	sql_free($res);
-# Note: Removed stripslashes() calls from name and description. Previous
-# versions of MRBS mistakenly had the backslash-escapes in the actual database
-# records because of an extra addslashes going on. Fix your database and
-# leave this code alone, please.
-	$name        = $row[0];
-	$create_by   = $row[1];
-	$description = $row[2];
-	$start_day   = strftime('%d', $row[3]);
-	$start_month = strftime('%m', $row[3]);
-	$start_year  = strftime('%Y', $row[3]);
-	$start_hour  = strftime('%H', $row[3]);
-	$start_min   = strftime('%M', $row[3]);
-	$duration    = $row[4] - $row[3] - cross_dst($row[3], $row[4]);
-	$type        = $row[5];
-	$room_id     = $row[6];
-	$entry_type  = $row[7];
-	$rep_id      = $row[8];
+
+	$name        = $row['name'];
+	$create_by   = $row['create_by'];
+	$description = $row['description'];
+	$start_day   = strftime('%d', $row['start_time']);
+	$start_month = strftime('%m', $row['start_time']);
+	$start_year  = strftime('%Y', $row['start_time']);
+	$start_hour  = strftime('%H', $row['start_time']);
+	$start_min   = strftime('%M', $row['start_time']);
+	$duration    = $row['end_time'] - $row['start_time'] - cross_dst($row['start_time'], $row['end_time']);
+	$type        = $row['type'];
+	$room_id     = $row['room_id'];
+	$entry_type  = $row['entry_type'];
+	$rep_id      = $row['repeat_id'];
 	
 	if($entry_type >= 1)
 	{
@@ -78,36 +87,36 @@ if (isset($id))
 		if (! $res) fatal_error(1, sql_error());
 		if (sql_count($res) != 1) fatal_error(1, get_vocab("repeat_id") . $rep_id . get_vocab("not_found"));
 		
-		$row = sql_row($res, 0);
+		$row = sql_row_keyed($res, 0);
 		sql_free($res);
 		
-		$rep_type = $row[0];
+		$rep_type = $row['rep_type'];
 
 		if($edit_type == "series")
 		{
-			$start_day   = (int)strftime('%d', $row[1]);
-			$start_month = (int)strftime('%m', $row[1]);
-			$start_year  = (int)strftime('%Y', $row[1]);
+			$start_day   = (int)strftime('%d', $row['start_time']);
+			$start_month = (int)strftime('%m', $row['start_time']);
+			$start_year  = (int)strftime('%Y', $row['start_time']);
 			
-			$rep_end_day   = (int)strftime('%d', $row[2]);
-			$rep_end_month = (int)strftime('%m', $row[2]);
-			$rep_end_year  = (int)strftime('%Y', $row[2]);
+			$rep_end_day   = (int)strftime('%d', $row['end_date']);
+			$rep_end_month = (int)strftime('%m', $row['end_date']);
+			$rep_end_year  = (int)strftime('%Y', $row['end_date']);
 			
 			switch($rep_type)
 			{
 				case 2:
 				case 6:
-					$rep_day[0] = $row[3][0] != "0";
-					$rep_day[1] = $row[3][1] != "0";
-					$rep_day[2] = $row[3][2] != "0";
-					$rep_day[3] = $row[3][3] != "0";
-					$rep_day[4] = $row[3][4] != "0";
-					$rep_day[5] = $row[3][5] != "0";
-					$rep_day[6] = $row[3][6] != "0";
+					$rep_day[0] = $row['rep_opt'][0] != "0";
+					$rep_day[1] = $row['rep_opt'][1] != "0";
+					$rep_day[2] = $row['rep_opt'][2] != "0";
+					$rep_day[3] = $row['rep_opt'][3] != "0";
+					$rep_day[4] = $row['rep_opt'][4] != "0";
+					$rep_day[5] = $row['rep_opt'][5] != "0";
+					$rep_day[6] = $row['rep_opt'][6] != "0";
 
 					if ($rep_type == 6)
 					{
-						$rep_num_weeks = $row[4];
+						$rep_num_weeks = $row['rep_num'];
 					}
 					
 					break;
@@ -118,9 +127,9 @@ if (isset($id))
 		}
 		else
 		{
-			$rep_type     = $row[0];
-			$rep_end_date = utf8_strftime('%A %d %B %Y',$row[2]);
-			$rep_opt      = $row[3];
+			$rep_type     = $row['rep_type'];
+			$rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
+			$rep_opt      = $row['rep_opt'];
 		}
 	}
 }
@@ -158,8 +167,8 @@ if( empty( $room_id ) )
 {
 	$sql = "select id from $tbl_room limit 1";
 	$res = sql_query($sql);
-	$row = sql_row($res, 0);
-	$room_id = $row[0];
+	$row = sql_row_keyed($res, 0);
+	$room_id = $row['id'];
 
 }
 
@@ -258,7 +267,7 @@ function validate_and_submit ()
   // check that a room(s) has been selected
   // this is needed as edit_entry_handler does not check that a room(s)
   // has been chosen
-  if( document.forms["main"].elements['rooms[]'].selectedIndex == -1 )
+  if( document.forms["main"].elements['rooms'].selectedIndex == -1 )
   {
     alert("<?php echo get_vocab("you_have_not_selected") . '\n' . get_vocab("valid_room") ?>");
     return false;
@@ -275,7 +284,9 @@ function validate_and_submit ()
 
   return true;
 }
-function OnAllDayClick(allday) // Executed when the user clicks on the all_day checkbox.
+
+// Executed when the user clicks on the all_day checkbox.
+function OnAllDayClick(allday)
 {
   form = document.forms["main"];
   if (allday.checked) // If checking the box...
@@ -331,57 +342,72 @@ echo get_vocab($token);
 </h2>
 
 
-<FORM NAME="main" ACTION="edit_entry_handler.php" METHOD="GET">
+<form name="main" action="edit_entry_handler.php" method="get">
 
-<table BORDER=0>
+<table border="0">
+  <tr>
+    <td class="CR"><b><?php echo get_vocab("namebooker")?></b></td>
+    <td class="CL">
+      <input name="name" size="40" value="<?php echo htmlspecialchars($name) ?>">
+    </td>
+  </tr>
 
-<TR><TD CLASS=CR><B><?php echo get_vocab("namebooker")?></B></TD>
-  <TD CLASS=CL><INPUT NAME="name" SIZE=40 VALUE="<?php echo htmlspecialchars($name) ?>"></TD></TR>
+  <tr>
+    <td class="tr"><b><?php echo get_vocab("fulldescription")?></b></td>
+    <td class="tl">
+      <textarea name="description" rows="8" cols="40"><?php echo
+htmlspecialchars ( $description ); ?></textarea>
+    </td>
+  </tr>
 
-<TR><TD CLASS=TR><B><?php echo get_vocab("fulldescription")?></B></TD>
-  <TD CLASS=TL><TEXTAREA NAME="description" ROWS=8 COLS=40><?php echo
-htmlspecialchars ( $description ); ?></TEXTAREA></TD></TR>
-
-<TR><TD CLASS=CR><B><?php echo get_vocab("date")?>:</B></TD>
- <TD CLASS=CL>
-  <?php genDateSelector("", $start_day, $start_month, $start_year) ?>
- </TD>
-</TR>
+  <tr>
+    <td class="CR"><b><?php echo get_vocab("date")?>:</b></td>
+    <td class="CL">
+      <?php gendateselector("", $start_day, $start_month, $start_year) ?>
+    </td>
+  </tr>
 
 <?php if(! $enable_periods ) { ?>
-<TR><TD CLASS=CR><B><?php echo get_vocab("time")?>:</B></TD>
-  <TD CLASS=CL><INPUT NAME="hour" SIZE=2 VALUE="<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>" MAXLENGTH=2>:<INPUT NAME="minute" SIZE=2 VALUE="<?php echo $start_min;?>" MAXLENGTH=2>
+  <tr>
+    <td class="CR"><b><?php echo get_vocab("time")?>:</b></td>
+    <td class="CL">
+      <input name="hour" size="2" value="<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>" maxlength="2">
+      :<input name="minute" size="2" value="<?php echo $start_min;?>" maxlength="2">
 <?php
 if (!$twentyfourhour_format)
 {
-  $checked = ($start_hour < 12) ? "checked" : "";
-  echo "<INPUT NAME=\"ampm\" type=\"radio\" value=\"am\" $checked>".utf8_strftime("%p",mktime(1,0,0,1,1,2000));
-  $checked = ($start_hour >= 12) ? "checked" : "";
-  echo "<INPUT NAME=\"ampm\" type=\"radio\" value=\"pm\" $checked>".utf8_strftime("%p",mktime(13,0,0,1,1,2000));
+  $checked = ($start_hour < 12) ? "checked=\"checked\"" : "";
+  echo "      <input name=\"ampm\" type=\"radio\" value=\"am\" $checked>".utf8_strftime("%p",mktime(1,0,0,1,1,2000));
+  $checked = ($start_hour >= 12) ? "checked=\"checked\"" : "";
+  echo "      <input name=\"ampm\" type=\"radio\" value=\"pm\" $checked>".utf8_strftime("%p",mktime(13,0,0,1,1,2000));
 }
 ?>
-</TD></TR>
+    </td>
+  </tr>
 <?php } else { ?>
-<TR><TD CLASS=CR><B><?php echo get_vocab("period")?>:</B></TD>
-  <TD CLASS=CL>
-    <SELECT NAME="period">
+  <tr>
+    <td class="CR"><b><?php echo get_vocab("period")?>:</b></td>
+    <td class="CL">
+      <select name="period">
 <?php
 foreach ($periods as $p_num => $p_val)
 {
-	echo "<OPTION VALUE=$p_num";
+	echo "<option value=\"$p_num\"";
 	if( ( isset( $period ) && $period == $p_num ) || $p_num == $start_min)
-        	echo " SELECTED";
-	echo ">$p_val";
+        	echo " selected=\"selected";
+	echo ">$p_val</option>\n";
 }
 ?>
-    </SELECT>
-
-</TD></TR>
+      </select>
+    </td>
+  </tr>
 
 <?php } ?>
-<TR><TD CLASS=CR><B><?php echo get_vocab("duration");?>:</B></TD>
-  <TD CLASS=CL><INPUT NAME="duration" SIZE=7 VALUE="<?php echo $duration;?>">
-    <SELECT NAME="dur_units">
+  <tr>
+    <td class="CR"><b><?php echo get_vocab("duration");?>:</b></td>
+    <td class="CL">
+      <input name="duration" size"=7" value="<?php echo $duration;?>">
+      <select name="dur_units">
 <?php
 if( $enable_periods )
 	$units = array("periods", "days");
@@ -390,22 +416,23 @@ else
 
 while (list(,$unit) = each($units))
 {
-	echo "<OPTION VALUE=$unit";
-	if ($dur_units == get_vocab($unit)) echo " SELECTED";
-	echo ">".get_vocab($unit);
+	echo "        <option value=\"$unit\"";
+	if ($dur_units == get_vocab($unit)) echo " selected=\"selected\"";
+	echo ">".get_vocab($unit)."</option>";
 }
 ?>
-    </SELECT>
-    <INPUT NAME="all_day" TYPE="checkbox" VALUE="yes" onClick="OnAllDayClick(this)"> <?php echo get_vocab("all_day"); ?>
-</TD></TR>
-
+      </select>
+      <input name="all_day" type="checkbox" value="yes" onclick="OnAllDayClick(this)">
+      <?php echo get_vocab("all_day"); ?>
+    </td>
+  </tr>
 
 <?php
       # Determine the area id of the room in question first
       $sql = "select area_id from $tbl_room where id=$room_id";
       $res = sql_query($sql);
-      $row = sql_row($res, 0);
-      $area_id = $row[0];
+      $row = sql_row_keyed($res, 0);
+      $area_id = $row['area_id'];
       # determine if there is more than one area
       $sql = "select id from $tbl_area";
       $res = sql_query($sql);
@@ -415,16 +442,17 @@ while (list(,$unit) = each($units))
       if( $num_areas > 1 ) {
 
 ?>
-<tr><td>
-<script type="text/javascript">
-<!-- Hide the Javascript from non-Javascript UAs
+  <tr>
+    <td>
+      <script type="text/javascript">
+      <!-- Hide the Javascript from non-Javascript UAs
 
 function changeRooms( formObj )
 {
     areasObj = eval( "formObj.areas" );
 
     area = areasObj[areasObj.selectedIndex].value
-    roomsObj = eval( "formObj.elements['rooms[]']" )
+    roomsObj = eval( "formObj.elements['rooms']" )
 
     // remove all entries
     roomsNum = roomsObj.length;
@@ -438,16 +466,16 @@ function changeRooms( formObj )
         # get the area id for case statement
 	$sql = "select id, area_name from $tbl_area order by area_name";
         $res = sql_query($sql);
-	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+	if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 	{
 
-                print "      case \"".$row[0]."\":\n";
+                print "      case \"".$row['id']."\":\n";
         	# get rooms for this area
-		$sql2 = "select id, room_name from $tbl_room where area_id='".$row[0]."' order by room_name";
+		$sql2 = "select id, room_name from $tbl_room where area_id='".$row['id']."' order by room_name";
         	$res2 = sql_query($sql2);
-		if ($res2) for ($j = 0; ($row2 = sql_row($res2, $j)); $j++)
+		if ($res2) for ($j = 0; ($row2 = sql_row_keyed($res2, $j)); $j++)
 		{
-                	print "        roomsObj.options[$j] = new Option(\"".str_replace('"','\\"',$row2[1])."\",".$row2[0] .")\n";
+                	print "        roomsObj.options[$j] = new Option(\"".str_replace('"','\\"',$row2['room_name'])."\",".$row2['id'] .")\n";
                 }
 		# select the first entry by default to ensure
 		# that one room is selected to begin with
@@ -461,102 +489,123 @@ function changeRooms( formObj )
 // Create area selector, only if we have Javascript
 
 this.document.writeln("<b><?php echo get_vocab("areas") ?>:<\/b><\/td><td class=CL valign=top>");
-this.document.writeln("          <select name=\"areas\" onChange=\"changeRooms(this.form)\">");
+this.document.writeln("          <select name=\"areas\" onchange=\"changeRooms(this.form)\">");
 
 <?php
 # get list of areas
 $sql = "select id, area_name from $tbl_area order by area_name";
 $res = sql_query($sql);
-if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 {
 	$selected = "";
-	if ($row[0] == $area_id) {
-		$selected = "SELECTED";
+	if ($row['id'] == $area_id) {
+		$selected = "selected=\"selected\"";
 	}
-	print "this.document.writeln(\"            <option $selected value=\\\"".$row[0]."\\\">".$row[1]."\")\n";
+	print "this.document.writeln(\"            <option $selected value=\\\"".$row['id']."\\\">".$row['area_name']."\")</option>\n";
 }
 ?>
 this.document.writeln("          <\/select>");
 
 // End of Javascipt -->
-</script>
-</td></tr>
+      </script>
+    </td>
+  </tr>
 <?php
 } # if $num_areas
 ?>
-<tr><td class=CR><b><?php echo get_vocab("rooms") ?>:</b></td>
-  <td class=CL valign=top><table><tr><td><select name="rooms[]" multiple="multiple">
+  <tr>
+    <td class="CR"><b><?php echo get_vocab("rooms") ?>:</b></td>
+    <td class="CL" valign="top">
+      <table>
+        <tr>
+          <td>
+            <select name="rooms" multiple="multiple">
   <?php
         # select the rooms in the area determined above
 	$sql = "select id, room_name from $tbl_room where area_id=$area_id order by room_name";
    	$res = sql_query($sql);
 
 
-   	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+   	if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
    	{
 		$selected = "";
-		if ($row[0] == $room_id) {
-			$selected = "SELECTED";
+		if ($row['id'] == $room_id) {
+			$selected = "selected=\"selected\"";
 		}
-		echo "<option $selected value=\"".$row[0]."\">".$row[1];
+		echo "              <option $selected value=\"".$row['id']."\">".$row['room_name']."</option>\n";
         // store room names for emails
-        $room_names[$i] = $row[1];
+        $room_names[$i] = $row['room_name'];
    	}
   ?>
-  </select></td><td><?php echo get_vocab("ctrl_click") ?></td></tr></table>
-    </td></tr>
+            </select>
+          </td>
+          <td><?php echo get_vocab("ctrl_click") ?></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
 
-<TR><TD CLASS=CR><B><?php echo get_vocab("type")?></B></TD>
-  <TD CLASS=CL><SELECT NAME="type">
+  <tr>
+    <td class="CR"><b><?php echo get_vocab("type")?></b></td>
+    <td class="CL">
+      <select name="type">
 <?php
 for ($c = "A"; $c <= "Z"; $c++)
 {
 	if (!empty($typel[$c]))
-		echo "<OPTION VALUE=$c" . ($type == $c ? " SELECTED" : "") . ">$typel[$c]\n";
+		echo "        <option value=\"$c\"" . ($type == $c ? " selected=\"selected\"" : "") . ">$typel[$c]</option>\n";
 }
-?></SELECT></TD></TR>
+?>
+      </select>
+    </td>
+  </tr>
 
 <?php if($edit_type == "series") { ?>
 
-<TR>
- <TD CLASS=CR><B><?php echo get_vocab("rep_type")?>:</B></TD>
- <TD CLASS=CL>
+  <tr>
+    <td class="CR"><b><?php echo get_vocab("rep_type")?>:</b></td>
+    <td class="CL">
 <?php
 
 for($i = 0; isset($vocab["rep_type_$i"]); $i++)
 {
-	echo "<INPUT NAME=\"rep_type\" TYPE=\"RADIO\" VALUE=\"" . $i . "\"";
+	echo "      <input name=\"rep_type\" type=\"radio\" value=\"" . $i . "\"";
 
 	if($i == $rep_type)
-		echo " CHECKED";
+		echo " checked=\"checked\"";
 
 	echo ">" . get_vocab("rep_type_$i") . "\n";
 }
 
 ?>
- </TD>
-</TR>
+    </td>
+  </tr>
 
-<TR>
- <TD CLASS=CR><B><?php echo get_vocab("rep_end_date")?>:</B></TD>
- <TD CLASS=CL><?php genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year) ?></TD>
-</TR>
+  <tr>
+    <td class="CR"><b><?php echo get_vocab("rep_end_date")?>:</b></td>
+    <td class="CL">
+      <?php genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year) ?>
+     </td>
+  </tr>
 
-<TR>
- <TD CLASS=CR><B><?php echo get_vocab("rep_rep_day")?>:</B> <?php echo get_vocab("rep_for_weekly")?></TD>
- <TD CLASS=CL>
+  <tr>
+    <td class="CR">
+      <b><?php echo get_vocab("rep_rep_day")?>:</b>
+      <?php echo get_vocab("rep_for_weekly")?>
+    </td>
+    <td class="CL">
 <?php
 # Display day name checkboxes according to language and preferred weekday start.
 for ($i = 0; $i < 7; $i++)
 {
 	$wday = ($i + $weekstarts) % 7;
-	echo "<INPUT NAME=\"rep_day[$wday]\" TYPE=CHECKBOX";
-	if ($rep_day[$wday]) echo " CHECKED";
+	echo "      <input name=\"rep_day[$wday]\" type=\"checkbox\"";
+	if ($rep_day[$wday]) echo " checked=\"checked\"";
 	echo ">" . day_name($wday) . "\n";
 }
 ?>
- </TD>
-</TR>
+    </td>
+  </tr>
 
 <?php
 }
@@ -564,9 +613,15 @@ else
 {
 	$key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
 
-        echo "<input type=hidden name=rep_type value=0>\n";
-	echo "<tr><td class=\"CR\"><b>".get_vocab("rep_type").":</b></td><td class=\"CL\">".get_vocab($key)."</td></tr>\n";
-
+?>
+  <tr>
+     <td class="CR">
+       <input type="hidden" name="rep_type" value="0">
+	<b><?php echo get_vocab("rep_type") ?>:</b>
+     </td>
+     <td class="CL"><?php echo get_vocab($key) ?></td>
+   </tr>
+<?php
 	if(isset($rep_type) && ($rep_type != 0))
 	{
 		$opt = "";
@@ -580,9 +635,11 @@ else
 			}
 		}
 		if($opt)
-			echo "<tr><td class=\"CR\"><b>".get_vocab("rep_rep_day").":</b></td><td class=\"CL\">$opt</td></tr>\n";
+                {
+			echo "  <tr><td class=\"CR\"><b>".get_vocab("rep_rep_day").":</b></td><td class=\"CL\">$opt</td></tr>\n";
+                }
 
-		echo "<tr><td class=\"CR\"><b>".get_vocab("rep_end_date").":</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
+		echo "  <tr><td class=\"CR\"><b>".get_vocab("rep_end_date").":</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
 	}
 }
 /* We display the rep_num_weeks box only if:
@@ -595,31 +652,37 @@ if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) && ( "seri
 {
 ?>
 
-<TR>
- <TD CLASS=CR><B><?php echo get_vocab("rep_num_weeks")?>:</B> <?php echo get_vocab("rep_for_nweekly")?></TD>
- <TD CLASS=CL><INPUT TYPE=TEXT NAME="rep_num_weeks" VALUE="<?php echo $rep_num_weeks?>">
-</TR>
+  <tr>
+    <td class="CR">
+      <b><?php echo get_vocab("rep_num_weeks")?>:</b>
+      <?php echo get_vocab("rep_for_nweekly")?>
+    </td>
+    <td class="CL">
+      <input type="text" name="rep_num_weeks" value="<?php echo $rep_num_weeks?>">
+    </td>
+  </tr>
 <?php } ?>
 
-<TR>
- <TD colspan=2 align=center>
-  <script type="text/javascript">
-   document.writeln ( '<INPUT TYPE="button" NAME="save_button" VALUE="<?php echo get_vocab("save")?>" ONCLICK="validate_and_submit()">' );
-  </script>
-  <noscript>
-   <INPUT TYPE="submit" VALUE="<?php echo get_vocab("save")?>">
-  </noscript>
- </TD></TR>
+  <tr>
+    <td colspan="2" align="center">
+      <script type="text/javascript">
+   document.writeln ( '<input type="button" name="save_button" value="<?php echo get_vocab("save")?>" onclick="validate_and_submit()">' );
+      </script>
+      <noscript>
+        <input type="submit" value="<?php echo get_vocab("save")?>">
+      </noscript>
+    </td>
+  </tr>
 </table>
 
-<INPUT TYPE=HIDDEN NAME="returl"    VALUE="<?php echo htmlspecialchars($HTTP_REFERER) ?>">
-<!--INPUT TYPE=HIDDEN NAME="room_id"   VALUE="<?php echo $room_id?>"-->
-<INPUT TYPE=HIDDEN NAME="create_by" VALUE="<?php echo $create_by?>">
-<INPUT TYPE=HIDDEN NAME="rep_id"    VALUE="<?php echo $rep_id?>">
-<INPUT TYPE=HIDDEN NAME="edit_type" VALUE="<?php echo $edit_type?>">
-  <?php if(isset($id) && !isset($copy)) echo "<INPUT TYPE=HIDDEN NAME=\"id\"        VALUE=\"$id\">\n";
+<input type="hidden" name="returl" value="<?php echo htmlspecialchars($HTTP_REFERER) ?>">
+<!--input type="hidden" name="room_id" value="<?php echo $room_id?>"-->
+<input type="hidden" name="create_by" value="<?php echo $create_by?>">
+<input type="hidden" name="rep_id" value="<?php echo $rep_id?>">
+<input type="hidden" name="edit_type" value="<?php echo $edit_type?>">
+  <?php if(isset($id) && !isset($copy)) echo "<input type=\"hidden\" name=\"id\"        value=\"$id\">\n";
 ?>
 
-</FORM>
+</form>
 
 <?php include "trailer.inc" ?>

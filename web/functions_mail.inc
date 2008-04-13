@@ -178,14 +178,14 @@ function notifyAdminOnBooking($new_entry , $new_id)
             $sql .= "WHERE ${id_table}.id=$new_id AND r.id=${id_table}.room_id AND a.id=r.area_id";
             $res = sql_query($sql);
             (! $res) ? fatal_error(0, sql_error()) : '';
-            $row = sql_row($res, 0);
+            $row = sql_row_keyed($res, 0);
             if ( !empty($recipients) && (NULL != $row[0]) )
             {
                 $recipients .= ',';
             }
-            if (NULL != $row[0])
+            if (NULL != $row['area_admin_email'])
             {
-                $recipients .= $row[0];
+                $recipients .= $row['area_admin_email'];
             }
         }
         else
@@ -218,14 +218,14 @@ function notifyAdminOnBooking($new_entry , $new_id)
             $sql .= "WHERE ${id_table}.id=$new_id AND r.id=${id_table}.room_id";
             $res = sql_query($sql);
             (! $res) ? fatal_error(0, sql_error()) : '';
-            $row = sql_row($res, 0);
+            $row = sql_row_keyed($res, 0);
             if ( !empty($recipients) && (NULL != $row[0]) )
             {
                 $recipients .= ',';
             }
-            if (NULL != $row[0])
+            if (NULL != $row['room_admin_email'])
             {
-                $recipients .= $row[0];
+                $recipients .= $row['room_admin_email'];
             }
         }
         else
@@ -257,14 +257,14 @@ function notifyAdminOnBooking($new_entry , $new_id)
             $sql .= "'";
             $res = sql_query($sql);
             (! $res) ? fatal_error(0, sql_error()) : '';
-            $row = sql_row($res, 0);
-            if ( !empty($recipients) && (NULL != $row[0]) )
+            $row = sql_row_keyed($res, 0);
+            if ( !empty($recipients) && (NULL != $row['email']) )
             {
                 $recipients .= ',';
             }
-            if (NULL != $row[0])
+            if (NULL != $row['email'])
             {
-                $recipients .= $row[0];
+                $recipients .= $row['email'];
             }
         }
         else
@@ -543,14 +543,14 @@ function notifyAdminOnDelete($mail_previous)
                     WHERE name='" . $mail_previous['createdby'] . "'";
             $res = sql_query($sql);
             (! $res) ? fatal_error(0, sql_error()) : '';
-            $row = sql_row($res, 0);
-            if ( !empty($recipients) && (NULL != $row[0]) )
+            $row = sql_row_keyed($res, 0);
+            if ( !empty($recipients) && (NULL != $row['email']) )
             {
                 $recipients .= ',';
             }
-            if (NULL != $row[0])
+            if (NULL != $row['email'])
             {
-                $recipients .= $row[0];
+                $recipients .= $row['email'];
             }
         }
         else
@@ -660,7 +660,7 @@ function getPreviousEntryData($id, $series)
             e.type,
             e.room_id,
             e.repeat_id, " .
-            sql_syntax_timestamp_to_unix("e.timestamp") . ",
+            sql_syntax_timestamp_to_unix("e.timestamp") . " AS last_updated,
             (e.end_time - e.start_time) AS tbl_e_duration,
             e.start_time AS tbl_e_start_time,
             e.end_time AS tbl_e_end_time,
@@ -701,7 +701,7 @@ function getPreviousEntryData($id, $series)
     $mail_previous['type']          = $row['type'];
     $mail_previous['room_id']       = $row['room_id'];
     $mail_previous['repeat_id']     = $row['repeat_id'];
-    $mail_previous['updated']       = getMailTimeDateString($row[8]);
+    $mail_previous['updated']       = getMailTimeDateString($row['last_updated']);
     $mail_previous['area_admin_email'] = $row['area_admin_email'];
     $mail_previous['room_admin_email'] = $row['room_admin_email'];
     // If we use periods

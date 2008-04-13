@@ -10,6 +10,14 @@ include "$dbsys.inc";
 include "mrbs_auth.inc";
 include "mincals.inc";
 
+// Get form variables
+$month = get_form_var('month', 'int');
+$year = get_form_var('year', 'int');
+$area = get_form_var('area', 'int');
+$room = get_form_var('room', 'int');
+$pview = get_form_var('pview', 'int');
+$debug_flag = get_form_var('debug_flag', 'int');
+
 # 3-value compare: Returns result of compare as "< " "= " or "> ".
 function cmp3($a, $b)
 {
@@ -25,7 +33,9 @@ if (empty($month) || empty($year) || !checkdate(intval($month), 1, intval($year)
     $month = date("m");
     $year  = date("Y");
 }
+
 $day = 1;
+
 # print the page header
 print_header($day, $month, $year, $area);
 
@@ -92,17 +102,22 @@ if ( $pview != 1 ) {
   } else {
     $sql = "select id, area_name from $tbl_area order by area_name";
     $res = sql_query($sql);
-    if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+    if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
         if ( $pview != 1 )
             echo "<a href=\"month.php?year=$year&amp;month=$month&amp;area=$row[0]\">";
-        if ($row[0] == $area)
+        if ($row['id'] == $area)
         {
-            $this_area_name = htmlspecialchars($row[1]);
+            $this_area_name = htmlspecialchars($row['area_name']);
             if ( $pview != 1 )
+            {
                 echo "<font color=\"red\">$this_area_name</font></a><br>\n";
+            }
         }
-        else if ( $pview !=1 ) echo htmlspecialchars($row[1]) . "</a><br>\n";
+        else if ( $pview !=1 )
+        {
+            echo htmlspecialchars($row['area_name']) . "</a><br>\n";
+        }
     }
   } # end select if
 
@@ -120,16 +135,21 @@ if ( $pview != 1 ) {
   } else {
     $sql = "select id, room_name from $tbl_room where area_id=$area order by room_name";
     $res = sql_query($sql);
-    if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+    if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-        echo "<a href=\"month.php?year=$year&amp;month=$month&amp;area=$area&amp;room=$row[0]\">";
-        if ($row[0] == $room)
+        echo "<a href=\"month.php?year=$year&amp;month=$month&amp;area=$area&amp;room=".$row['id']."\">";
+        if ($row['id'] == $room)
         {
-            $this_room_name = htmlspecialchars($row[1]);
+            $this_room_name = htmlspecialchars($row['room_name']);
             if ( $pview != 1 )
+            {
                 echo "<font color=\"red\">$this_room_name</font></a><br>\n";
+            }
         }
-        else if ( $pview != 1 ) echo htmlspecialchars($row[1]) . "</a><br>\n";
+        else if ( $pview != 1 )
+        {
+            echo htmlspecialchars($row['room_name']) . "</a><br>\n";
+        }
     }
   } # end select if
 
@@ -150,7 +170,7 @@ if ($room <= 0)
 }
 
 # Show Month, Year, Area, Room header:
-echo "<h2 align=center>" . utf8_strftime("%B %Y", $month_start)
+echo "<h2 align=\"center\">" . utf8_strftime("%B %Y", $month_start)
   . " - $this_area_name - $this_room_name</h2>\n";
 
 # Show Go to month before and after links
@@ -168,8 +188,8 @@ if ( $pview != 1 ) {
     echo "<table width=\"100%\"><tr><td>
       <a href=\"month.php?year=$yy&amp;month=$ym&amp;area=$area&amp;room=$room\">
       &lt;&lt; ".get_vocab("monthbefore")."</a></td>
-      <td align=center><a href=\"month.php?area=$area&amp;room=$room\">".get_vocab("gotothismonth")."</a></td>
-      <td align=right><a href=\"month.php?year=$ty&amp;month=$tm&amp;area=$area&amp;room=$room\">
+      <td align=\"center\"><a href=\"month.php?area=$area&amp;room=$room\">".get_vocab("gotothismonth")."</a></td>
+      <td align=\"right\"><a href=\"month.php?year=$ty&amp;month=$tm&amp;area=$area&amp;room=$room\">
       ".get_vocab("monthafter")."&gt;&gt;</a></td></tr></table>";
 }
 
@@ -198,14 +218,14 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++) {
 
 	$res = sql_query($sql);
 	if (! $res) echo sql_error();
-	else for ($i = 0; ($row = sql_row($res, $i)); $i++)
+	else for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 	{
 	    if ($debug_flag)
-        	echo "<br>DEBUG: result $i, id $row[2], starts $row[0], ends $row[1]\n";
+        	echo "<br>DEBUG: result $i, id ".$row['id'].", starts ".$row['start_time'].", ends ".$row['end_time']."\n";
 
-            if ($debug_flag) echo "<br>DEBUG: Entry $row[2] day $day_num\n";
-            $d[$day_num]["id"][] = $row[2];
-            $d[$day_num]["shortdescrip"][] = htmlspecialchars($row[3]);
+            if ($debug_flag) echo "<br>DEBUG: Entry ".$row['id']." day $day_num\n";
+            $d[$day_num]["id"][] = $row['id'];
+            $d[$day_num]["shortdescrip"][] = htmlspecialchars($row['name']);
 
             # Describe the start and end time, accounting for "all day"
             # and for entries starting before/ending after today.
@@ -215,17 +235,17 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++) {
             # will incorrectly line break after a -.
 
             if(empty( $enable_periods ) ){
-              switch (cmp3($row[0], $midnight[$day_num]) . cmp3($row[1], $midnight_tonight[$day_num] + 1))
+              switch (cmp3($row['start_time'], $midnight[$day_num]) . cmp3($row['end_time'], $midnight_tonight[$day_num] + 1))
               {
         	case "> < ":         # Starts after midnight, ends before midnight
         	case "= < ":         # Starts at midnight, ends before midnight
-                    $d[$day_num]["data"][] = htmlspecialchars(utf8_strftime(hour_min_format(), $row[0])) . "~" . htmlspecialchars(utf8_strftime(hour_min_format(), $row[1]));
+                    $d[$day_num]["data"][] = htmlspecialchars(utf8_strftime(hour_min_format(), $row['start_time'])) . "~" . htmlspecialchars(utf8_strftime(hour_min_format(), $row['end_time']));
                     break;
         	case "> = ":         # Starts after midnight, ends at midnight
-                    $d[$day_num]["data"][] = htmlspecialchars(utf8_strftime(hour_min_format(), $row[0])) . "~24:00";
+                    $d[$day_num]["data"][] = htmlspecialchars(utf8_strftime(hour_min_format(), $row['start_time'])) . "~24:00";
                     break;
         	case "> > ":         # Starts after midnight, continues tomorrow
-                    $d[$day_num]["data"][] = htmlspecialchars(utf8_strftime(hour_min_format(), $row[0])) . "~====&gt;";
+                    $d[$day_num]["data"][] = htmlspecialchars(utf8_strftime(hour_min_format(), $row['start_time'])) . "~====&gt;";
                     break;
         	case "= = ":         # Starts at midnight, ends at midnight
                     $d[$day_num]["data"][] = $all_day;
@@ -234,7 +254,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++) {
                     $d[$day_num]["data"][] = $all_day . "====&gt;";
                     break;
         	case "< < ":         # Starts before today, ends before midnight
-                    $d[$day_num]["data"][] = "&lt;====~" . htmlspecialchars(utf8_strftime(hour_min_format(), $row[1]));
+                    $d[$day_num]["data"][] = "&lt;====~" . htmlspecialchars(utf8_strftime(hour_min_format(), $row['end_time']));
                     break;
         	case "< = ":         # Starts before today, ends at midnight
                     $d[$day_num]["data"][] = "&lt;====" . $all_day;
@@ -246,9 +266,9 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++) {
 	    }
             else
             {
-              $start_str = ereg_replace(" ", "&nbsp;", htmlspecialchars(period_time_string($row[0])));
-              $end_str   = ereg_replace(" ", "&nbsp;", htmlspecialchars(period_time_string($row[1], -1)));
-              switch (cmp3($row[0], $midnight[$day_num]) . cmp3($row[1], $midnight_tonight[$day_num] + 1))
+              $start_str = ereg_replace(" ", "&nbsp;", htmlspecialchars(period_time_string($row['start_time'])));
+              $end_str   = ereg_replace(" ", "&nbsp;", htmlspecialchars(period_time_string($row['end_time'], -1)));
+              switch (cmp3($row['start_time'], $midnight[$day_num]) . cmp3($row['end_time'], $midnight_tonight[$day_num] + 1))
               {
         	case "> < ":         # Starts after midnight, ends before midnight
         	case "= < ":         # Starts at midnight, ends before midnight
@@ -322,14 +342,14 @@ echo "</tr><tr>\n";
 # Skip days in week before start of month:
 for ($weekcol = 0; $weekcol < $weekday_start; $weekcol++)
 {
-    echo "<td bgcolor=\"#cccccc\" height=100>&nbsp;</td>\n";
+    echo "<td bgcolor=\"#cccccc\" height=\"100\">&nbsp;</td>\n";
 }
 
 # Draw the days of the month:
 for ($cday = 1; $cday <= $days_in_month; $cday++)
 {
     if ($weekcol == 0) echo "</tr><tr>\n";
-    echo "<td valign=top height=100 class=\"month\"><div class=\"monthday\"><a href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>&nbsp;\n";
+    echo "<td valign=\"top\" height=\"100\" class=\"month\"><div class=\"monthday\"><a href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>&nbsp;\n";
     echo "</div>";
 
     # Anything to display for this day?
@@ -425,7 +445,7 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
 # Skip from end of month to end of week:
 if ($weekcol > 0) for (; $weekcol < 7; $weekcol++)
 {
-    echo "<td bgcolor=\"#cccccc\" height=100>&nbsp;</td>\n";
+    echo "<td bgcolor=\"#cccccc\" height=\"100\">&nbsp;</td>\n";
 }
 echo "</tr></table>\n";
 

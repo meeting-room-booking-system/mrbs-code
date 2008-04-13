@@ -8,6 +8,33 @@ include "$dbsys.inc";
 include "mrbs_auth.inc";
 include "mrbs_sql.inc";
 
+// Get form variables
+$day = get_form_var('day', 'int');
+$month = get_form_var('month', 'int');
+$year = get_form_var('year', 'int');
+$area = get_form_var('area', 'int');
+$create_by = get_form_var('create_by', 'string');
+$name = get_form_var('name', 'string');
+$rep_type = get_form_var('rep_type', 'int');
+$description = get_form_var('description', 'string');
+$hour = get_form_var('hour', 'int');
+$minute = get_form_var('minute', 'int');
+$duration = get_form_var('duration', 'int');
+$dur_units = get_form_var('dur_units', 'string');
+$all_day = get_form_var('all_day', 'string'); // bool, actually
+$type = get_form_var('type', 'string');
+$rooms = get_form_var('rooms', 'array');
+$returl = get_form_var('returl', 'string');
+$rep_id = get_form_var('rep_id', 'int');
+$edit_type = get_form_var('edit_type', 'string');
+$id = get_form_var('id', 'int');
+$rep_end_day = get_form_var('rep_end_day', 'int');
+$rep_end_month = get_form_var('rep_end_month', 'int');
+$rep_end_year = get_form_var('rep_end_year', 'int');
+$rep_id = get_form_var('rep_id', 'int');
+$rep_day = get_form_var('rep_day', 'array'); // array of bools
+$rep_num_weeks = get_form_var('rep_num_weeks', 'int');
+
 #If we dont know the right date then make it up 
 if(!isset($day) or !isset($month) or !isset($year))
 {
@@ -17,7 +44,9 @@ if(!isset($day) or !isset($month) or !isset($year))
 }
 
 if(empty($area))
+{
     $area = get_default_area();
+}
 
 if(!getAuthorised(1))
 {
@@ -33,14 +62,14 @@ if(!getWritable($create_by, getUserName()))
 
 if ($name == '')
 {
-     print_header($day, $month, $year, $area);
+    print_header($day, $month, $year, $area);
      ?>
-       <H1><?php echo get_vocab('invalid_booking'); ?></H1>
+       <h1><?php echo get_vocab('invalid_booking'); ?></h1>
        <?php echo get_vocab('must_set_description'); ?>
-   </BODY>
-</HTML>
+   </body>
+</html>
 <?php
-     exit;
+    exit;
 }       
 
 if ($rep_type  == 2 || $rep_type == 6)
@@ -50,18 +79,18 @@ if ($rep_type  == 2 || $rep_type == 6)
     {
         if ($rep_day[$i])
         {
-          $got_rep_day =1;
-          break;
+            $got_rep_day =1;
+            break;
         }
     }
     if ($got_rep_day == 0)
     {
         print_header($day, $month, $year, $area);
      ?>
-       <H1><?php echo get_vocab('invalid_booking'); ?></H1>
+       <h1><?php echo get_vocab('invalid_booking'); ?></h1>
        <?php echo get_vocab('you_have_not_entered')." ".get_vocab("rep_rep_day"); ?>
-   </BODY>
-</HTML>
+   </body>
+</html>
 <?php
         exit;
     }
@@ -71,10 +100,10 @@ if (($rep_type == 6) && ($rep_num_weeks < 2))
 {
     print_header($day, $month, $year, $area);
      ?>
-       <H1><?php echo get_vocab('invalid_booking'); ?></H1>
+       <h1><?php echo get_vocab('invalid_booking'); ?></h1>
        <?php echo get_vocab('you_have_not_entered')." ".get_vocab("useful_n-weekly_value"); ?>
-   </BODY>
-</HTML>
+   </body>
+</html>
 <?php
     exit;
 }
@@ -82,21 +111,22 @@ if (($rep_type == 6) && ($rep_num_weeks < 2))
 # Support locales where ',' is used as the decimal point
 $duration = preg_replace('/,/', '.', $duration);
 
-if( $enable_periods ) {
-	$resolution = 60;
-	$hour = 12;
-	$minute = $period;
-        $max_periods = count($periods);
-        if( $dur_units == "periods" && ($minute + $duration) > $max_periods )
-        {
-            $duration = (24*60*floor($duration/$max_periods)) + ($duration%$max_periods);
-        }
-        if( $dur_units == "days" && $minute == 0 )
-        {
-		$dur_units = "periods";
-                $duration = $max_periods + ($duration-1)*60*24;
-        }
+if( $enable_periods )
+{
+    $resolution = 60;
+    $hour = 12;
+    $minute = $period;
+    $max_periods = count($periods);
+    if( $dur_units == "periods" && ($minute + $duration) > $max_periods )
+    {
+        $duration = (24*60*floor($duration/$max_periods)) + ($duration%$max_periods);
     }
+    if( $dur_units == "days" && $minute == 0 )
+    {
+        $dur_units = "periods";
+        $duration = $max_periods + ($duration-1)*60*24;
+    }
+}
 
 // Units start in seconds
 $units = 1.0;
@@ -130,10 +160,14 @@ if(isset($all_day) && ($all_day == "yes"))
     }
     else
     {
-        $starttime = mktime($morningstarts, 0, 0, $month, $day  , $year, is_dst($month, $day  , $year));
+        $starttime = mktime($morningstarts, 0, 0,
+                            $month, $day  , $year,
+                            is_dst($month, $day  , $year));
         $end_minutes = $eveningends_minutes + $morningstarts_minutes;
         ($eveningends_minutes > 59) ? $end_minutes += 60 : '';
-        $endtime   = mktime($eveningends, $end_minutes, 0, $month, $day, $year, is_dst($month, $day, $year));
+        $endtime   = mktime($eveningends, $end_minutes, 0,
+                            $month, $day, $year,
+                            is_dst($month, $day, $year));
     }
 }
 else
@@ -150,39 +184,59 @@ else
       }
     }
 
-    $starttime = mktime($hour, $minute, 0, $month, $day, $year, is_dst($month, $day, $year, $hour));
-    $endtime   = mktime($hour, $minute, 0, $month, $day, $year, is_dst($month, $day, $year, $hour)) + ($units * $duration);
+    $starttime = mktime($hour, $minute, 0,
+                        $month, $day, $year,
+                        is_dst($month, $day, $year, $hour));
+    $endtime   = mktime($hour, $minute, 0,
+                        $month, $day, $year,
+                        is_dst($month, $day, $year, $hour)) + ($units * $duration);
 
     # Round up the duration to the next whole resolution unit.
     # If they asked for 0 minutes, push that up to 1 resolution unit.
     $diff = $endtime - $starttime;
     if (($tmp = $diff % $resolution) != 0 || $diff == 0)
+    {
         $endtime += $resolution - $tmp;
+    }
 
     $endtime += cross_dst( $starttime, $endtime );
 }
 
-if(isset($rep_type) && ($rep_type > 0) && isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
+if(isset($rep_type) && ($rep_type > 0) &&
+   isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
 {
     // Get the repeat entry settings
-    $rep_enddate = mktime($hour, $minute, 0, $rep_end_month, $rep_end_day, $rep_end_year);
+    $rep_enddate = mktime($hour, $minute, 0,
+                          $rep_end_month, $rep_end_day, $rep_end_year);
 }
 else
+{
     $rep_type = 0;
+}
 
 if(!isset($rep_day))
+{
     $rep_day = array();
+}
 
 # For weekly repeat(2), build string of weekdays to repeat on:
 $rep_opt = "";
 if (($rep_type == 2) || ($rep_type == 6))
-    for ($i = 0; $i < 7; $i++) $rep_opt .= empty($rep_day[$i]) ? "0" : "1";
-
+{
+    for ($i = 0; $i < 7; $i++)
+    {
+        $rep_opt .= empty($rep_day[$i]) ? "0" : "1";
+    }
+}
 
 # Expand a series into a list of start times:
 if ($rep_type != 0)
-    $reps = mrbsGetRepeatEntryList($starttime, isset($rep_enddate) ? $rep_enddate : 0,
-        $rep_type, $rep_opt, $max_rep_entrys, $rep_num_weeks);
+{
+    $reps = mrbsGetRepeatEntryList($starttime,
+                                   isset($rep_enddate) ? $rep_enddate : 0,
+                                   $rep_type, $rep_opt, $max_rep_entrys,
+                                   $rep_num_weeks);
+}
 
 # When checking for overlaps, for Edit (not New), ignore this entry and series:
 $repeat_id = 0;
@@ -191,56 +245,80 @@ if (isset($id))
     $ignore_id = $id;
     $repeat_id = sql_query1("SELECT repeat_id FROM $tbl_entry WHERE id=$id");
     if ($repeat_id < 0)
+    {
         $repeat_id = 0;
+    }
 }
 else
+{
     $ignore_id = 0;
+}
 
 # Acquire mutex to lock out others trying to book the same slot(s).
 if (!sql_mutex_lock("$tbl_entry"))
+{
     fatal_error(1, get_vocab("failed_to_acquire"));
+}
     
 # Check for any schedule conflicts in each room we're going to try and
 # book in
 $err = "";
-foreach ( $rooms as $room_id ) {
-  if ($rep_type != 0 && !empty($reps))
-  {
-    if(count($reps) < $max_rep_entrys)
+foreach ( $rooms as $room_id )
+{
+    if ($rep_type != 0 && !empty($reps))
     {
-        
-        for($i = 0; $i < count($reps); $i++)
+        if(count($reps) < $max_rep_entrys)
         {
-	    # calculate diff each time and correct where events
-	    # cross DST
-            $diff = $endtime - $starttime;
-            $diff += cross_dst($reps[$i], $reps[$i] + $diff);
-	    
-	    $tmp = mrbsCheckFree($room_id, $reps[$i], $reps[$i] + $diff, $ignore_id, $repeat_id);
 
-            if(!empty($tmp))
-                $err = $err . $tmp;
+            for($i = 0; $i < count($reps); $i++)
+            {
+	        # calculate diff each time and correct where events
+	        # cross DST
+                $diff = $endtime - $starttime;
+                $diff += cross_dst($reps[$i], $reps[$i] + $diff);
+	    
+	        $tmp = mrbsCheckFree($room_id,
+                                     $reps[$i],
+                                     $reps[$i] + $diff,
+                                     $ignore_id,
+                                     $repeat_id);
+
+                if(!empty($tmp))
+                {
+                    $err = $err . $tmp;
+                }
+            }
+        }
+        else
+        {
+            $err        .= get_vocab("too_may_entrys") . "<P>";
+            $hide_title  = 1;
         }
     }
     else
     {
-        $err        .= get_vocab("too_may_entrys") . "<P>";
-        $hide_title  = 1;
+        $err .= mrbsCheckFree($room_id, $starttime, $endtime-1, $ignore_id, 0);
     }
-  }
-  else
-    $err .= mrbsCheckFree($room_id, $starttime, $endtime-1, $ignore_id, 0);
 
 } # end foreach rooms
 
 if(empty($err))
 {
-    foreach ( $rooms as $room_id ) {
+    foreach ( $rooms as $room_id )
+    {
         if($edit_type == "series")
         {
-            $new_id = mrbsCreateRepeatingEntrys($starttime, $endtime,   $rep_type, $rep_enddate, $rep_opt,
-                                      $room_id,   $create_by, $name,     $type,        $description,
-                                      isset($rep_num_weeks) ? $rep_num_weeks : 0);
+            $new_id = mrbsCreateRepeatingEntrys($starttime,
+                                                $endtime,
+                                                $rep_type,
+                                                $rep_enddate,
+                                                $rep_opt,
+                                                $room_id,
+                                                $create_by,
+                                                $name,
+                                                $type,
+                                                $description,
+                                                isset($rep_num_weeks) ? $rep_num_weeks : 0);
             // Send a mail to the Administrator
             if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
                 MAIL_ROOM_ADMIN_ON_BOOKINGS or MAIL_BOOKER)
@@ -256,13 +334,13 @@ if(empty($err))
                     // details
                     if (MAIL_DETAILS)
                     {
-                        $sql = "SELECT r.id, r.room_name, r.area_id, a.area_name ";
+                        $sql = "SELECT r.id AS room_id, r.room_name, r.area_id, a.area_name ";
                         $sql .= "FROM $tbl_room r, $tbl_area a ";
                         $sql .= "WHERE r.id=$room_id AND r.area_id = a.id";
                         $res = sql_query($sql);
-                        $row = sql_row($res, 0);
-                        $room_name = $row[1];
-                        $area_name = $row[3];
+                        $row = sql_row_keyed($res, 0);
+                        $room_name = $row['room_name'];
+                        $area_name = $row['area_name'];
                     }
                     // If this is a modified entry then call
                     // getPreviousEntryData to prepare entry comparison.
@@ -278,13 +356,25 @@ if(empty($err))
         {
             # Mark changed entry in a series with entry_type 2:
             if ($repeat_id > 0)
+            {
                 $entry_type = 2;
+            }
             else
+            {
                 $entry_type = 0;
+            }
 
             # Create the entry:
-            $new_id = mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id, $room_id,
-                                     $create_by, $name, $type, $description);
+            $new_id = mrbsCreateSingleEntry($starttime,
+                                            $endtime,
+                                            $entry_type,
+                                            $repeat_id,
+                                            $room_id,
+                                            $create_by,
+                                            $name,
+                                            $type,
+                                            $description);
+
             // Send a mail to the Administrator
             if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
                 MAIL_ROOM_ADMIN_ON_BOOKINGS or MAIL_BOOKER)
@@ -300,17 +390,17 @@ if(empty($err))
                     // details.
                     if (MAIL_DETAILS)
                     {
-                        $sql = "SELECT r.id, r.room_name, r.area_id, a.area_name ";
+                        $sql = "SELECT r.id AS room_id, r.room_name, r.area_id, a.area_name ";
                         $sql .= "FROM $tbl_room r, $tbl_area a ";
                         $sql .= "WHERE r.id=$room_id AND r.area_id = a.id";
                         $res = sql_query($sql);
-                        $row = sql_row($res, 0);
-                        $room_name = $row[1];
-                        $area_name = $row[3];
+                        $row = sql_row_keyed($res, 0);
+                        $room_name = $row['room_name'];
+                        $area_name = $row['area_id'];
                     }
                     // If this is a modified entry then call
                     // getPreviousEntryData to prepare entry comparison.
-                   if ( isset($id) )
+                    if ( isset($id) )
                     {
                         $mail_previous = getPreviousEntryData($id, 0);
                     }
@@ -322,7 +412,9 @@ if(empty($err))
 
     # Delete the original entry
     if(isset($id))
+    {
         mrbsDelEntry(getUserName(), $id, ($edit_type == "series"), 1);
+    }
 
     sql_mutex_unlock("$tbl_entry");
     
@@ -340,19 +432,21 @@ if(strlen($err))
 {
     print_header($day, $month, $year, $area);
     
-    echo "<H2>" . get_vocab("sched_conflict") . "</H2>";
+    echo "<h2>" . get_vocab("sched_conflict") . "</h2>";
     if(!isset($hide_title))
     {
         echo get_vocab("conflict").":";
-        echo "<UL>";
+        echo "<ul>";
     }
     
     echo $err;
     
     if(!isset($hide_title))
-        echo "</UL>";
+    {
+        echo "</ul>";
+    }
 }
 
-echo "<a href=\"$returl\">".get_vocab("returncal")."</a><p>";
+echo "<a href=\"".htmlspecialchars($returl)."\">".get_vocab("returncal")."</a><p>";
 
 include "trailer.inc"; ?>

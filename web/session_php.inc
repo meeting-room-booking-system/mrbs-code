@@ -20,6 +20,12 @@
 
 global $PHP_SELF;
 
+// Get form variables
+$Action = get_form_var('Action', 'string');
+$NewUserName = get_form_var('NewUserName', 'string');
+$NewUserPassword = get_form_var('NewUserPassword', 'string');
+$TargetURL = get_form_var('TargetURL', 'string');
+
 if (isset($cookie_path_override))
 {
     $cookie_path = $cookie_path_override;
@@ -49,11 +55,10 @@ if (isset($Action) && ($Action == "SetName"))
             $HTTP_SESSION_VARS = array();
         }
     } else {
-        $NewUserName = unslashes($NewUserName);
-        $NewUserPassword = unslashes($NewUserPassword);
+
         if (!authValidateUser($NewUserName, $NewUserPassword)) {
             print_header(0, 0, 0, 0);
-            echo "<P>".get_vocab('unknown_user')."</P>\n";
+            echo "<p>".get_vocab('unknown_user')."</p>\n";
             printLoginForm($TargetURL);
             exit();
         }
@@ -72,7 +77,7 @@ if (isset($Action) && ($Action == "SetName"))
         Anyway, if the browser cannot redirect automatically, the manual link below will work. */
     print_header(0, 0, 0, 0);
     echo "<br>\n";
-    echo "<p>Please click <a href=\"$TargetURL\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
+    echo "<p>Please click <a href=\"".htmlspecialchars($TargetURL)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
     echo "</body>\n";
     echo "</html>\n";
     exit();
@@ -89,7 +94,7 @@ function printLoginForm($TargetURL)
 <p>
   <?php echo get_vocab("please_login") ?>
 </p>
-<form method="post" action="<?php echo basename($PHP_SELF) ?>">
+<form method="post" action="<?php echo htmlspecialchars(basename($PHP_SELF)) ?>">
   <table>
     <tr>
       <td align="right"><?php echo get_vocab("user_name") ?></td>
@@ -100,7 +105,7 @@ function printLoginForm($TargetURL)
       <td><input type="password" name="NewUserPassword" ></td>
     </tr>
   </table>
-  <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" > <br>
+  <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>" > <br>
   <input type="hidden" name="Action" value="SetName" > <br>
   <input type="submit" value=" <?php echo get_vocab('login') ?> " > <br>
 </form>
@@ -180,7 +185,7 @@ function PrintLogonBox()
          . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
          .$user ?></A><br>
                 <FORM METHOD=POST ACTION="admin.php">
-	          <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" >
+	          <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>" >
 	          <input type="hidden" name="Action" value="SetName" >
 	          <input type="hidden" name="NewUserName" value="" >
 	          <input type="hidden" name="NewUserPassword" value="" >
@@ -199,7 +204,7 @@ else
               <TD CLASS="banner">
                 <A name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></A><br>
                 <FORM METHOD=POST ACTION="admin.php">
-                  <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" >
+                  <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>" >
                   <input type="hidden" name="Action" value="QueryName" >
                   <input type="submit" value=" <?php echo get_vocab('login') ?> " >
                 </FORM>

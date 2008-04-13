@@ -12,7 +12,7 @@ if (!isset($pview)) {
 
 function print_header($day, $month, $year, $area)
 {
-	global $mrbs_company, $search_str, $locale_warning;
+	global $mrbs_company, $search_str, $locale_warning, $unicode_encoding, $vocab;
 
 	# If we dont know the right date then make it up 
 	if(!$day)
@@ -42,12 +42,12 @@ function print_header($day, $month, $year, $area)
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
                       "http://www.w3.org/TR/html4/loose.dtd">
-<HTML>
-  <HEAD>
+<html>
+  <head>
 <?php
    include "style.inc";
 ?>
-    <TITLE><?php echo get_vocab("mrbs") ?></TITLE>
+    <title><?php echo get_vocab("mrbs") ?></title>
     <script type="text/javascript">
 
 <!-- Begin
@@ -60,7 +60,8 @@ function print_header($day, $month, $year, $area)
      
 */
 
-function daysInFebruary (year){
+function daysInFebruary (year)
+{
   // February has 28 days unless the year is divisible by four,
   // and if it is the turn of the century then the century year
   // must also be divisible by 400 when it has 29 days
@@ -134,8 +135,8 @@ function ChangeOptionDays(formObj, prefix)
 
   //  End -->
     </script>
-  </HEAD>
-  <BODY BGCOLOR="#ffffed" TEXT=black LINK="#5B69A6" VLINK="#5B69A6" ALINK=red>
+  </head>
+  <body bgcolor="#ffffed" text="black" link="#5b69a6" vlink="#5b69a6" alink="red">
 	   <?php if ( $GLOBALS["pview"] != 1 ) { ?>
 
    <?php # show a warning if this is using a low version of php
@@ -145,25 +146,25 @@ function ChangeOptionDays(formObj, prefix)
                echo "[Warning: ".$locale_warning."]";
    ?>
 
-    <table WIDTH="100%">
-      <TR>
-        <TD BGCOLOR="#5B69A6">
-          <table WIDTH="100%" BORDER=0>
-            <TR>
-              <TD CLASS="banner" BGCOLOR="#C0E0FF">
-                <FONT SIZE=4>
-                  <B><?php echo $mrbs_company ?></B><br>
+    <table width="100%">
+      <tr>
+        <td bgcolor="#5b69a6">
+          <table width="100%" border="0">
+            <tr>
+              <td class="banner" bgcolor="#c0e0ff">
+                <font size="4">
+                  <b><?php echo $mrbs_company ?></b><br>
                   <a href="index.php"><?php echo get_vocab("mrbs") ?></a>
-                </FONT>
-              </TD>
-              <TD CLASS="banner" BGCOLOR="#C0E0FF">
-                <FORM ACTION="day.php" METHOD=GET name="Form1">
-                  <FONT SIZE=2>
+                </font>
+              </td>
+              <td class="banner" bgcolor="#c0e0ff">
+                <form action="day.php" method="get" name="Form1">
+                  <font size="2">
 <?php
    genDateSelector("", $day, $month, $year); // Note: The 1st arg must match the last arg in the call to ChangeOptionDays below.
    if (!empty($area))
         echo "
-                    <INPUT TYPE=HIDDEN NAME=area VALUE=$area>\n"
+                    <input type=\"hidden\" name=\"area\" value=\"$area\">\n"
  
 ?>
 	            <script type="text/javascript">
@@ -172,50 +173,51 @@ function ChangeOptionDays(formObj, prefix)
                     ChangeOptionDays(document.Form1, ''); // Note: The 2nd arg must match the first in the call to genDateSelector above.
                     // -->
                     </script>
-                    <INPUT TYPE=SUBMIT VALUE="<?php echo get_vocab("goto") ?>">
-                  </FONT>
-                </FORM>
-              </TD>
-              <TD CLASS="banner">
-                <A HREF="help.php?day=<?php echo $day ?>&amp;month=<?php echo $month ?>&amp;year=<?php echo $year ?>"><?php echo get_vocab("help") ?></A>
-              </TD>
-              <TD CLASS="banner">
-                <A HREF="admin.php?day=<?php echo $day ?>&amp;month=<?php echo $month ?>&amp;year=<?php echo $year ?>"><?php echo get_vocab("admin") ?></A>
-              </TD>
-              <TD CLASS="banner">
-                <A HREF="report.php"><?php echo get_vocab("report") ?></A>
-              </TD>
-              <TD CLASS="banner">
-                <FORM METHOD=GET ACTION="search.php">
-                  <FONT SIZE=2>
-                    <A HREF="search.php?advanced=1"><?php echo get_vocab("search") ?>:</A>
-                  </FONT>
-                  <INPUT TYPE=TEXT   NAME="search_str" VALUE="<?php echo $search_str ?>" SIZE=10>
-                  <INPUT TYPE=HIDDEN NAME=day        VALUE="<?php echo $day        ?>"        >
-                  <INPUT TYPE=HIDDEN NAME=month      VALUE="<?php echo $month      ?>"        >
-                  <INPUT TYPE=HIDDEN NAME=year       VALUE="<?php echo $year       ?>"        >
+                    <input type="submit" value="<?php echo get_vocab("goto") ?>">
+                  </font>
+                </form>
+              </td>
+              <td class="banner">
+                <a href="help.php?day=<?php echo $day ?>&amp;month=<?php echo $month ?>&amp;year=<?php echo $year ?>"><?php echo get_vocab("help") ?></a>
+              </td>
+              <td class="banner">
+                <a href="admin.php?day=<?php echo $day ?>&amp;month=<?php echo $month ?>&amp;year=<?php echo $year ?>"><?php echo get_vocab("admin") ?></a>
+              </td>
+              <td class="banner">
+                <a href="report.php"><?php echo get_vocab("report") ?></a>
+              </td>
+              <td class="banner">
+                <form method="get" action="search.php">
+                  <font size="2">
+                    <a href="search.php?advanced=1"><?php echo get_vocab("search") ?>:</a>
+                  </font>
+                  <input type="text"   name="search_str" value="<?php echo $search_str ?>" size="10">
+                  <input type="hidden" name="day"        value="<?php echo $day        ?>"        >
+                  <input type="hidden" name="month"      value="<?php echo $month      ?>"        >
+                  <input type="hidden" name="year"       value="<?php echo $year       ?>"        >
 <?php
    if (!empty($area))
         echo "
-                  <INPUT TYPE=HIDDEN NAME=area VALUE=$area>\n"
+                  <input type=\"hidden\" name=\"area\" value=\"$area\">\n"
 ?>
-                </FORM>
-              </TD>
+                </form>
+              </td>
 <?php
     # For session protocols that define their own logon box...
     if (function_exists('PrintLogonBox'))
-   	{
-   	PrintLogonBox();
-   	}
+    {
+        PrintLogonBox();
+    }
 ?>
-            </TR>
+            </tr>
           </table>
-        </TD>
-      </TR>
+        </td>
+      </tr>
     </table>
 <?php } ?>
 <?php
-}
+
+} // end of print_header()
 
 function toTimeString(&$dur, &$units)
 {
@@ -303,38 +305,38 @@ function genDateSelector($prefix, $day, $month, $year)
 	if($year  == 0) $year = date("Y");
 	
 	echo "
-                  <SELECT NAME=\"${prefix}day\">";
+                  <select name=\"${prefix}day\">";
 	
 	for($i = 1; $i <= 31; $i++)
 		echo "
-                    <OPTION" . ($i == $day ? " SELECTED" : "") . ">$i";
+                    <option" . ($i == $day ? " selected=\"selected\"" : "") . ">$i</option>";
 
 	echo "
-                  </SELECT>
+                  </select>
 
-                  <SELECT NAME=\"${prefix}month\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">";
+                  <select name=\"${prefix}month\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">";
 
 	for($i = 1; $i <= 12; $i++)
 	{
 		$m = utf8_strftime("%b", mktime(0, 0, 0, $i, 1, $year));
 		
 		print "
-                    <OPTION VALUE=\"$i\"" . ($i == $month ? " SELECTED" : "") . ">$m";
+                    <option value=\"$i\"" . ($i == $month ? " selected=\"selected\"" : "") . ">$m</option>";
 	}
 
 	echo "
-                  </SELECT>
-	          <SELECT NAME=\"${prefix}year\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">";
+                  </select>
+	          <select name=\"${prefix}year\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">";
 
 	$min = min($year, date("Y")) - 5;
 	$max = max($year, date("Y")) + 5;
 
 	for($i = $min; $i <= $max; $i++)
 		print "
-                    <OPTION VALUE=\"$i\"" . ($i == $year ? " SELECTED" : "") . ">$i";
+                    <option value=\"$i\"" . ($i == $year ? " selected=\"selected\"" : "") . ">$i</option>";
 
 	echo "
-                  </SELECT>";
+                  </select>";
 }
 
 # Error handler - this is used to display serious errors such as database
@@ -513,24 +515,24 @@ function make_area_select_html( $link, $current, $year, $month, $day )
 {
 	global $tbl_area;
 	$out_html = "
-<form name=\"areaChangeForm\" method=get action=\"$link\">
+<form name=\"areaChangeForm\" method=\"get\" action=\"$link\">
   <select name=\"area\" onChange=\"document.areaChangeForm.submit()\">";
 
 	$sql = "select id, area_name from $tbl_area order by area_name";
    	$res = sql_query($sql);
-   	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+   	if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
    	{
-		$selected = ($row[0] == $current) ? "selected" : "";
+		$selected = ($row['id'] == $current) ? "selected=\"selected\"" : "";
 		$out_html .= "
-    <option $selected value=\"".$row[0]."\">" . htmlspecialchars($row[1]);
+    <option $selected value=\"".$row['id']."\">" . htmlspecialchars($row['area+name']);
    	}
 	$out_html .= "
   </select>
 
-  <INPUT TYPE=HIDDEN NAME=day        VALUE=\"$day\">
-  <INPUT TYPE=HIDDEN NAME=month      VALUE=\"$month\">
-  <INPUT TYPE=HIDDEN NAME=year       VALUE=\"$year\">
-  <input type=submit value=\"".get_vocab("change")."\">
+  <input type=\"hidden\" name=\"day\"        value=\"$day\">
+  <input type=\"hidden\" name=\"month\"      value=\"$month\">
+  <input type=\"hidden\" name=\"year\"       value=\"$year\">
+  <input type=\"submit\" value=\"".get_vocab("change")."\">
 </form>\n";
 
 	return $out_html;
@@ -540,24 +542,24 @@ function make_room_select_html( $link, $area, $current, $year, $month, $day )
 {
 	global $tbl_room;
 	$out_html = "
-<form name=\"roomChangeForm\" method=get action=\"$link\">
+<form name=\"roomChangeForm\" method=\"get\" action=\"$link\">
   <select name=\"room\" onChange=\"document.roomChangeForm.submit()\">";
 
 	$sql = "select id, room_name from $tbl_room where area_id=$area order by room_name";
    	$res = sql_query($sql);
-   	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+   	if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
    	{
-		$selected = ($row[0] == $current) ? "selected" : "";
+		$selected = ($row['id'] == $current) ? "selected=\"selected\"" : "";
 		$out_html .= "
-    <option $selected value=\"".$row[0]."\">" . htmlspecialchars($row[1]);
+    <option $selected value=\"".$row['id']."\">" . htmlspecialchars($row['room_name']);
    	}
 	$out_html .= "
   </select>
-  <INPUT TYPE=HIDDEN NAME=day        VALUE=\"$day\"        >
-  <INPUT TYPE=HIDDEN NAME=month      VALUE=\"$month\"        >
-  <INPUT TYPE=HIDDEN NAME=year       VALUE=\"$year\"      >
-  <INPUT TYPE=HIDDEN NAME=area       VALUE=\"$area\"         >
-  <input type=submit value=\"".get_vocab("change")."\">
+  <input type=\"hidden\" name=\"day\"        value=\"$day\"        >
+  <input type=\"hidden\" name=\"month\"      value=\"$month\"        >
+  <input type=\"hidden\" name=\"year\"       value=\"$year\"      >
+  <input type=\"hidden\" name=\"area\"       value=\"$area\"         >
+  <input type=\"submit\" value=\"".get_vocab("change")."\">
 </form>\n";
 
 	return $out_html;

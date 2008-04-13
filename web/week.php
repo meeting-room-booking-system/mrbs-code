@@ -10,6 +10,15 @@ include "$dbsys.inc";
 include "mrbs_auth.inc";
 include "mincals.inc";
 
+// Get form variables
+$debug_flag = get_form_var('debug_flag', 'int');
+$day = get_form_var('day', 'int');
+$month = get_form_var('month', 'int');
+$year = get_form_var('year', 'int');
+$area = get_form_var('area', 'int');
+$room = get_form_var('room', 'int');
+$pview = get_form_var('pview', 'int');
+
 if (empty($debug_flag)) $debug_flag = 0;
 
 $num_of_days=7; #could also pass this in as a parameter or whatever
@@ -20,10 +29,14 @@ if (!isset($day) or !isset($month) or !isset($year))
 	$day   = date("d");
 	$month = date("m");
 	$year  = date("Y");
-} else {
-# Make the date valid if day is more then number of days in month:
-	while (!checkdate(intval($month), intval($day), intval($year)))
+}
+else
+{
+	# Make the date valid if day is more then number of days in month:
+	while (!checkdate($month, $day, $year))
+	{
 		$day--;
+	}
 }
 
 # Set the date back to the previous $weekstarts day (Sunday, if 0):
@@ -91,17 +104,17 @@ if ( $pview != 1 ) {
   } else {
 	$sql = "select id, area_name from $tbl_area order by area_name";
 	$res = sql_query($sql);
-	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+	if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 	{
 		if ( $pview != 1 )
-			echo "<a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$row[0]\">";
-		if ($row[0] == $area)
+			echo "<a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$row['id']."\">";
+		if ($row['id'] == $area)
 		{
-			$this_area_name = htmlspecialchars($row[1]);
+			$this_area_name = htmlspecialchars($row['area_name']);
 			if ( $pview != 1 )
 				echo "<font color=\"red\">$this_area_name</font></a><br>\n";
 		}
-		else if ( $pview != 1 ) echo htmlspecialchars($row[1]) . "</a><br>\n";
+		else if ( $pview != 1 ) echo htmlspecialchars($row['area_name']) . "</a><br>\n";
 	}
   } # end area display if
 if ( $pview != 1) {
@@ -117,17 +130,17 @@ echo "<td width=\"30%\"><u>".get_vocab("rooms")."</u><br>";
   } else {
 	$sql = "select id, room_name, description from $tbl_room where area_id=$area order by room_name";
 	$res = sql_query($sql);
-	if ($res) for ($i = 0; ($row = sql_row($res, $i)); $i++)
+	if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 	{
 		if ( $pview != 1 )
-			echo "<a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$row[0]\" title=\"$row[2]\">";
-		if ($row[0] == $room)
+			echo "<a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\" title=\"$row[2]\">";
+		if ($row['id'] == $room)
 		{
-			$this_room_name = htmlspecialchars($row[1]);
+			$this_room_name = htmlspecialchars($row['room_name']);
 			if ( $pview != 1 )
 				echo "<font color=\"red\">$this_room_name</font></a><br>\n";
 		}
-		else if ( $pview != 1 ) echo htmlspecialchars($row[1]) . "</a><br>\n";
+		else if ( $pview != 1 ) echo htmlspecialchars($row['room_name']) . "</a><br>\n";
 	}
 } # end select if
 
@@ -174,12 +187,12 @@ if ( $pview != 1 ) {
 }
 
 #Get all appointments for this week in the room that we care about
-# row[0] = Start time
-# row[1] = End time
-# row[2] = Entry type
-# row[3] = Entry name (brief description)
-# row[4] = Entry ID
-# row[5] = Complete description
+# row['start_time'] = Start time
+# row['end_time'] = End time
+# row['type'] = Entry type
+# row['name'] = Entry name (brief description)
+# row['id'] = Entry ID
+# row['description'] = Complete description
 # This data will be retrieved day-by-day
 for ($j = 0; $j<=($num_of_days-1) ; $j++) {
 
@@ -200,10 +213,10 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++) {
 	if ($debug_flag) echo "<br>DEBUG: query=$sql\n";
 	$res = sql_query($sql);
 	if (! $res) echo sql_error();
-	else for ($i = 0; ($row = sql_row($res, $i)); $i++)
+	else for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 	{
 		if ($debug_flag)
-			echo "<br>DEBUG: result $i, id $row[4], starts $row[0], ends $row[1]\n";
+			echo "<br>DEBUG: result $i, id ".$row['id'].", starts ".$row['start_time'],", ends ".$row['end_time']."\n";
 
 	 	# $d is a map of the screen that will be displayed
  		# It looks like:
@@ -220,28 +233,28 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++) {
  		# Adjust the starting and ending times so that bookings which don't
  		# start or end at a recognized time still appear.
  
-		$start_t = max(round_t_down($row[0], $resolution, $am7[$j]), $am7[$j]);
- 		$end_t = min(round_t_up($row[1], $resolution, $am7[$j]) - $resolution, $pm7[$j]);
+		$start_t = max(round_t_down($row['start_time'], $resolution, $am7[$j]), $am7[$j]);
+ 		$end_t = min(round_t_up($row['end_time'], $resolution, $am7[$j]) - $resolution, $pm7[$j]);
 
  		for ($t = $start_t; $t <= $end_t; $t += $resolution)
  		{
-			$d[$j][date($format,$t)]["id"]    = $row[4];
- 			$d[$j][date($format,$t)]["color"] = $row[2];
+			$d[$j][date($format,$t)]["id"]    = $row['id'];
+ 			$d[$j][date($format,$t)]["color"] = $row['type'];
  			$d[$j][date($format,$t)]["data"]  = "";
  			$d[$j][date($format,$t)]["long_descr"]  = "";
  		}
  
  		# Show the name of the booker in the first segment that the booking
  		# happens in, or at the start of the day if it started before today.
- 		if ($row[1] < $am7[$j])
+ 		if ($row['end_time'] < $am7[$j])
 		{
- 			$d[$j][date($format,$am7[$j])]["data"] = $row[3];
- 			$d[$j][date($format,$am7[$j])]["long_descr"] = $row[5];
+ 			$d[$j][date($format,$am7[$j])]["data"] = $row['name'];
+ 			$d[$j][date($format,$am7[$j])]["long_descr"] = $row['description'];
 		}
  		else
 		{
- 			$d[$j][date($format,$start_t)]["data"] = $row[3];
- 			$d[$j][date($format,$start_t)]["long_descr"] = $row[5];
+ 			$d[$j][date($format,$start_t)]["data"] = $row['name'];
+ 			$d[$j][date($format,$start_t)]["long_descr"] = $row['description'];
 		}
 	}
 } 

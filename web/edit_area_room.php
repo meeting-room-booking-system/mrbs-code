@@ -7,6 +7,22 @@ include "functions.inc";
 include "$dbsys.inc";
 include "mrbs_auth.inc";
 
+// Get form variables
+$day = get_form_var('day', 'int');
+$month = get_form_var('month', 'int');
+$year = get_form_var('year', 'int');
+$area = get_form_var('area', 'int');
+$room = get_form_var('room', 'int');
+$room_name = get_form_var('room_name', 'string');
+$area_name = get_form_var('area_name', 'string');
+$description = get_form_var('description', 'string');
+$capacity = get_form_var('capacity', 'int');
+$room_admin_email = get_form_var('room_admin_email', 'string');
+$area_admin_email = get_form_var('area_admin_email', 'string');
+$change_done = get_form_var('change_done', 'string');
+$change_room = get_form_var('change_room', 'string');
+$change_area = get_form_var('change_area', 'string');
+
 #If we dont know the right date then make it up
 if(!isset($day) or !isset($month) or !isset($year))
 {
@@ -73,26 +89,47 @@ if(!empty($room)) {
 	sql_free($res);
 ?>
 <h3 style="text-align:center;"><?php echo get_vocab("editroom") ?></h3>
+
 <form action="edit_area_room.php" method="post">
-<input type=hidden name="room" value="<?php echo $row["id"]?>">
-<CENTER>
-<table>
-<TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name="room_name" value="<?php
-echo htmlspecialchars($row["room_name"]); ?>"></TD></TR>
-<TR><TD><?php echo get_vocab("description") ?>:</TD><TD><input type=text name=description value="<?php
-echo htmlspecialchars($row["description"]); ?>"></TD></TR>
-<TR><TD><?php echo get_vocab("capacity") ?>:   </TD><TD><input type=text name=capacity value="<?php
-echo $row["capacity"]; ?>"></TD></TR>
-<TR><TD><?php echo get_vocab("room_admin_email") ?>:</TD><TD><input type=text name=room_admin_email MAXLENGTH=75 value="<?php
-echo htmlspecialchars($row["room_admin_email"]); ?>"></TD>
+  <input type=hidden name="room" value="<?php echo $row["id"]?>">
+  <div align="center">
+    <table>
+      <tr>
+        <td><?php echo get_vocab("name") ?>:       </td>
+        <td>
+          <input type="text" name="room_name" value="<?php
+echo htmlspecialchars($row["room_name"]); ?>">
+        </td>
+      </tr>
+      <tr>
+        <td><?php echo get_vocab("description") ?>:</td>
+        <td>
+          <input type="text" name="description" value="<?php
+echo htmlspecialchars($row["description"]); ?>">
+        </td>
+      </tr>
+      <tr>
+        <td><?php echo get_vocab("capacity") ?>:   </td>
+        <td>
+          <input type="text" name="capacity" value="<?php
+echo $row["capacity"]; ?>">
+        </td>
+      </tr>
+      <tr>
+        <td><?php echo get_vocab("room_admin_email") ?>:</td>
+        <td>
+          <input type="text" name="room_admin_email" maxlength="75" value="<?php
+echo htmlspecialchars($row["room_admin_email"]); ?>">
+        </td>
 <?php if (FALSE == $valid_email) {
-    echo ("<TD>&nbsp;</TD><TD><STRONG>" . get_vocab('invalid_email') . "<STRONG></TD>");
-} ?></TR>
-</table>
-<input type=submit name="change_room"
-value="<?php echo get_vocab("change") ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type=submit name="change_done" value="<?php echo get_vocab("backadmin") ?>">
-</CENTER>
+    echo ("<td>&nbsp;</td><td><strong>" . get_vocab('invalid_email') . "</strong></td>");
+} ?>
+      </tr>
+    </table>
+    <input type=submit name="change_room" value="<?php echo get_vocab("change") ?>">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type=submit name="change_done" value="<?php echo get_vocab("backadmin") ?>">
+  </div>
 </form>
 <?php } ?>
 
@@ -130,22 +167,33 @@ if(!empty($area))
 	sql_free($res);
 ?>
 <h3 style="text-align:center;"><?php echo get_vocab("editarea") ?></h3>
+
 <form action="edit_area_room.php" method="post">
-<input type=hidden name="area" value="<?php echo $row["id"]?>">
-<CENTER>
-<table>
-<TR><TD><?php echo get_vocab("name") ?>:       </TD><TD><input type=text name="area_name" value="<?php
-echo htmlspecialchars($row["area_name"]); ?>"></TD></TR>
-<TR><TD><?php echo get_vocab("area_admin_email") ?>:       </TD><TD><input type=text name="area_admin_email" MAXLENGTH=75 value="<?php
-echo htmlspecialchars($row["area_admin_email"]); ?>"></TD>
+  <input type="hidden" name="area" value="<?php echo $row["id"]?>">
+  <div align="center">
+    <table>
+      <tr>
+        <td><?php echo get_vocab("name") ?>:</td>
+        <td>
+          <input type="text" name="area_name" value="<?php
+echo htmlspecialchars($row["area_name"]); ?>">
+        </td>
+      </tr>
+      <tr>
+        <td><?php echo get_vocab("area_admin_email") ?>:</td>
+        <td>
+          <input type="text" name="area_admin_email" maxlength="75" value="<?php
+echo htmlspecialchars($row["area_admin_email"]); ?>">
+        </td>
 <?php if (FALSE == $valid_email) {
-    echo ("<TD>&nbsp;</TD><TD><STRONG>" . get_vocab('invalid_email') . "</STRONG></TD>");
-} ?></TR>
-</table>
-<input type=submit name="change_area"
-value="<?php echo get_vocab("change") ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type=submit name="change_done" value="<?php echo get_vocab("backadmin") ?>">
-</CENTER>
+    echo ("<td>&nbsp;</td><td><strong>" . get_vocab('invalid_email') . "</strong></td>");
+} ?>
+      </tr>
+    </table>
+    <input type="submit" name="change_area" value="<?php echo get_vocab("change") ?>">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="submit" name="change_done" value="<?php echo get_vocab("backadmin") ?>">
+  </div>
 </form>
 <?php } ?>
 <?php include "trailer.inc" ?>

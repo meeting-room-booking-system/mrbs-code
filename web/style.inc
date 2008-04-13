@@ -6,8 +6,8 @@ global $unicode_encoding;
 global $vocab; # outside of scope; needs to be denote as global
 
 ?>
-    <LINK REL="stylesheet" href="mrbs.css" type="text/css">
-    <META HTTP-EQUIV="Content-Type" content="text/html; charset=<?php
+    <link rel="stylesheet" href="mrbs.css" type="text/css">
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php
    if ($unicode_encoding)
    {
      echo "utf-8";
@@ -20,7 +20,7 @@ global $vocab; # outside of scope; needs to be denote as global
      echo $vocab["charset"];
    }
 ?>">
-    <META NAME="Robots" content="noindex">
+    <meta name="robots" content="noindex">
 <?php
 
 global $refresh_rate;
@@ -29,6 +29,6 @@ global $PHP_SELF;
 if (($refresh_rate != 0) &&
     preg_match("/(day|week|month)\.php/",$PHP_SELF))
 {
-  echo "    <META HTTP-EQUIV=\"Refresh\" CONTENT=\"$refresh_rate\">\n";
+  echo "    <meta http-equiv=\"Refresh\" content=\"$refresh_rate\">\n";
 }
 ?>

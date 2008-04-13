@@ -20,6 +20,12 @@
 
 // $Id$
 
+// Get form variables
+$Action = get_form_var('Action', 'string');
+$NewUserName = get_form_var('NewUserName', 'string');
+$NewUserPassword = get_form_var('NewUserPassword', 'string');
+$TargetURL = get_form_var('TargetURL', 'string');
+
 if (isset($cookie_path_override))
 {
   $cookie_path = $cookie_path_override;
@@ -47,9 +53,6 @@ if (isset($Action) && ($Action == "SetName"))
 
         setcookie("UserName", '', time()-42000, $cookie_path);
     } else {
-        $NewUserName = unslashes($NewUserName);
-        $NewPassword = unslashes($NewPassword);
-
         if (!authValidateUser($NewUserName, $NewUserPassword))
         {
             print_header(0, 0, 0, 0);
@@ -71,7 +74,7 @@ if (isset($Action) && ($Action == "SetName"))
         Anyway, if the browser cannot redirect automatically, the manual link below will work. */
     print_header(0, 0, 0, 0);
     echo "<br>\n";
-    echo "<p>Please click <a href=\"$TargetURL\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
+    echo "<p>Please click <a href=\"".htmlspecialchars($TargetURL)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
     echo "</body>\n";
     echo "</html>\n";
     exit();
@@ -88,7 +91,7 @@ function printLoginForm($TargetURL)
 <p>
   <?php echo get_vocab("please_login") ?>
 </p>
-<form method="post" action="<?php echo basename($PHP_SELF) ?>">
+<form method="post" action="<?php echo htmlspecialchars(basename($PHP_SELF)) ?>">
   <table>
     <tr>
       <td align="right"><?php echo get_vocab("user_name") ?></td>
@@ -99,7 +102,7 @@ function printLoginForm($TargetURL)
       <td><input type="password" name="NewUserPassword" ></td>
     </tr>
   </table>
-  <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" > <br>
+  <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>" > <br>
   <input type="hidden" name="Action" value="SetName" > <br>
   <input type="submit" value="<?php echo get_vocab('login') ?> " > <br>
 </form>
@@ -144,13 +147,15 @@ function getUserName()
 {
     if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
     {
-	return $_COOKIE["UserName"];
+	return unslashes($_COOKIE["UserName"]);
     }
     else
     {
         global $HTTP_COOKIE_VARS;
 	if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["UserName"]))
-	    return $HTTP_COOKIE_VARS["UserName"];
+	{
+		return unslashes($HTTP_COOKIE_VARS["UserName"]);
+	}
     }
 }
 
@@ -174,37 +179,39 @@ function PrintLogonBox()
              "areamatch=&amp;roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;".
              "sortby=r&amp;display=d&amp;sumby=d&amp;creatormatch=$user"; ?>
 
-    <TD CLASS="banner">
-      <A name="logonBox" href="<?php echo "$search_string\" title=\""
-         . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
-         .$user ?></A><br>
-          <FORM METHOD=POST ACTION="admin.php">
-	    <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" >
-	    <input type="hidden" name="Action" value="SetName" >
-	    <input type="hidden" name="UserName" value="" >
-	    <input type="hidden" name="UserPassword" value="" >
-	    <input type="submit" value=" <?php echo get_vocab('logoff') ?> " >
-	  </FORM>
+    <td class="banner">
+      <a name="logonBox" href="<?php echo "$search_string\" title=\""
+         . get_vocab('show_my_entries') . "\">
+        " . get_vocab('you_are')." "
+         .$user ?>
+      </a><br>
+      <form method="post" action="admin.php">
+        <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>" >
+        <input type="hidden" name="Action" value="SetName" >
+        <input type="hidden" name="UserName" value="" >
+        <input type="hidden" name="UserPassword" value="" >
+        <input type="submit" value=" <?php echo get_vocab('logoff') ?> " >
+      </form>
 <?php if (isset($user_list_link)) print "	  <br>\n	  " .
-	    "<A href=\"$user_list_link\">" . get_vocab('user_list') . "</A><br>\n" ;
+    "<a href=\"$user_list_link\">" . get_vocab('user_list') . "</a><br>\n" ;
 ?>
-	</TD>
+    </td>
 <?php
     }
 else
     {
 ?>
-	<TD CLASS="banner">
-	  <A name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></A><br>
-          <FORM METHOD=POST ACTION="admin.php">
-	    <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" >
-	    <input type="hidden" name="Action" value="QueryName" >
-	    <input type="submit" value=" <?php echo get_vocab('login') ?> " >
-	  </FORM>
+    <td class="banner">
+      <a name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></a><br>
+      <form method="post" action="admin.php">
+        <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>" >
+        <input type="hidden" name="Action" value="QueryName" >
+        <input type="submit" value=" <?php echo get_vocab('login') ?> " >
+      </form>
 <?php if (isset($user_list_link)) print "	  <br>\n	  " .
-	    "<A href=\"$user_list_link\">" . get_vocab('user_list') . "</A><br>\n" ;
+    "<a href=\"$user_list_link\">" . get_vocab('user_list') . "</a><br>\n";
 ?>
-	</TD>
+    </td>
 <?php
     }
 }

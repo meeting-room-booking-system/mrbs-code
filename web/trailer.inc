@@ -3,7 +3,7 @@
 
 if ( $pview != 1 ) {
 
-echo "<p><hr><b>".get_vocab("viewday").":</b>\n";
+echo "<hr><b>".get_vocab("viewday").":</b>\n";
 
 if(!isset($year))
 	$year = strftime("%Y");
@@ -80,7 +80,7 @@ for ($i = -2; $i <= 6; $i++)
 }
 
 echo "<hr>";
-echo '<p><center><a href="' . basename($PHP_SELF) . '?' . $QUERY_STRING . '&amp;pview=1">' . get_vocab("ppreview") . '</a></center><p>';
+echo '<p align="center"><a href="' . htmlspecialchars(basename($PHP_SELF)) . '?' . htmlspecialchars($QUERY_STRING) . '&amp;pview=1">' . get_vocab("ppreview") . '</a></p>';
 
 }
 ?>

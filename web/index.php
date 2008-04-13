@@ -36,8 +36,8 @@ if( ! empty($default_room) )
 	{
 		if( sql_count($res) == 1 )
 		{
-			$row = sql_row($res, 0);
-			$area = $row[0];
+			$row = sql_row_keyed($res, 0);
+			$area = $row['area_id'];
 			$room = $default_room;
 			$redirect_str .= "&area=$area&room=$room";
 		}
