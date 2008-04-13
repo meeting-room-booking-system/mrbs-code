@@ -26,7 +26,7 @@ require_once 'PEAR.php';
  * useful in multiple mailer backends.
  *
  * @access public
- * @version $Revision$
+ * @version $Revision: 797 $
  * @package Mail
  */
 class Mail
