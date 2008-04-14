@@ -1,9 +1,11 @@
 <?php
-# $Id$
+// $Id$
+?>
 
-if ( $pview != 1 ) {
-
-echo "<hr><b>".get_vocab("viewday").":</b>\n";
+<div class="screenonly">
+  <hr>
+  <b><?php echo get_vocab("viewday") ?></b>
+<?php
 
 if(!isset($year))
 	$year = strftime("%Y");
@@ -30,11 +32,11 @@ for($i = -6; $i <= 7; $i++)
 	$cday   = date("d", $ctime);
 	if ($i != -6) echo " | ";
 	if ($i == 0) echo '<b>[ ';
-	echo "<a href=\"day.php?year=$cyear&amp;month=$cmonth&amp;day=$cday$params\">$str</a>\n";
+	echo "  <a href=\"day.php?year=$cyear&amp;month=$cmonth&amp;day=$cday$params\">$str</a>\n";
 	if ($i == 0) echo ']</b> ';
 }
 
-echo "<br><b>".get_vocab("viewweek").":</b>\n";
+echo "  <br><b>".get_vocab("viewweek").":</b>\n";
 
 if (!empty($room)) $params .= "&amp;room=$room";
 
@@ -61,11 +63,11 @@ for ($i = -4; $i <= 4; $i++)
 		$str = utf8_strftime(empty($dateformat)? "%b %d" : "%d %b", $ctime);
 	}
 	if ($i == 0) echo '<b>[ ';
-	echo "<a href=\"week.php?year=$cyear&amp;month=$cmonth&amp;day=$cday$params\">$str</a>\n";
+	echo "  <a href=\"week.php?year=$cyear&amp;month=$cmonth&amp;day=$cday$params\">$str</a>\n";
 	if ($i == 0) echo ']</b> ';
 }
 
-echo "<br><b>".get_vocab("viewmonth").":</b>\n";
+echo "  <br><b>".get_vocab("viewmonth").":</b>\n";
 for ($i = -2; $i <= 6; $i++)
 {
 	$ctime = mktime(0, 0, 0, $month + $i, 1, $year);
@@ -75,16 +77,13 @@ for ($i = -2; $i <= 6; $i++)
 	$cyear  = date("Y", $ctime);
 	if ($i != -2) echo " | ";
 	if ($i == 0) echo '<b>[ ';
-	echo "<a href=\"month.php?year=$cyear&amp;month=$cmonth$params\">$str</a>\n";
+	echo "  <a href=\"month.php?year=$cyear&amp;month=$cmonth$params\">$str</a>\n";
 	if ($i == 0) echo ']</b> ';
 }
 
-echo "<hr>";
-echo '<p align="center"><a href="' . htmlspecialchars(basename($PHP_SELF)) . '?' . htmlspecialchars($QUERY_STRING) . '&amp;pview=1">' . get_vocab("ppreview") . '</a></p>';
-
-}
 ?>
+  <hr>
 
-<hr>
+</div><!-- end of "screenonly" div -->
 </body>
 </html>

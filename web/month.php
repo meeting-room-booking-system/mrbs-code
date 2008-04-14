@@ -15,7 +15,6 @@ $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');
-$pview = get_form_var('pview', 'int');
 $debug_flag = get_form_var('debug_flag', 'int');
 
 # 3-value compare: Returns result of compare as "< " "= " or "> ".
@@ -84,56 +83,57 @@ for ($j = 1; $j<=$days_in_month; $j++) {
         }
 }
 
-if ( $pview != 1 ) {
-    # Table with areas, rooms, minicals.
-    echo "<table width=\"100%\"><tr>";
-    $this_area_name = "";
-    $this_room_name = "";
+// Table with areas, rooms, minicals.
+?>
+<div class="screenonly">
 
-    # Show all areas
-    echo "<td width=\"30%\"><u>".get_vocab("areas")."</u><br>";
-}
+  <table width="100%">
+    <tr>
+<?php
 
-  # show either a select box or the normal html list
-  if ($area_list_format == "select") {
-    echo make_area_select_html('month.php', $area, $year, $month, $day); # from functions.inc
-    $this_area_name = sql_query1("select area_name from $tbl_area where id=$area");
-    $this_room_name = sql_query1("select room_name from $tbl_room where id=$room");
+$this_area_name = "";
+$this_room_name = "";
+
+// Show all areas
+echo "<td width=\"30%\"><u>".get_vocab("areas")."</u><br>";
+
+// show either a select box or the normal html list
+if ($area_list_format == "select") {
+    echo make_area_select_html('month.php', $area, $year, $month, $day);
+    $this_area_name = sql_query1("select area_name from $tbl_area
+                                  where id=$area");
+    $this_room_name = sql_query1("select room_name from $tbl_room
+                                  where id=$room");
   } else {
     $sql = "select id, area_name from $tbl_area order by area_name";
     $res = sql_query($sql);
     if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-        if ( $pview != 1 )
-            echo "<a href=\"month.php?year=$year&amp;month=$month&amp;area=$row[0]\">";
+        echo "<a href=\"month.php?year=$year&amp;month=$month&amp;area=$row[0]\">";
         if ($row['id'] == $area)
         {
             $this_area_name = htmlspecialchars($row['area_name']);
-            if ( $pview != 1 )
-            {
-                echo "<font color=\"red\">$this_area_name</font></a><br>\n";
-            }
+            echo "<font color=\"red\">$this_area_name</font></a><br>\n";
         }
-        else if ( $pview !=1 )
+        else
         {
             echo htmlspecialchars($row['area_name']) . "</a><br>\n";
         }
     }
-  } # end select if
+} # end select if
 
-if ( $pview != 1 ) {
-    echo "</td>\n";
+echo "</td>\n";
     
-    # Show all rooms in the current area:
-    echo "<td width=\"30%\"><u>".get_vocab("rooms")."</u><br>";
-}
+// Show all rooms in the current area:
+echo "<td width=\"30%\"><u>".get_vocab("rooms")."</u><br>";
 
-
-  # should we show a drop-down for the room list, or not?
-  if ($area_list_format == "select") {
-    echo make_room_select_html('month.php', $area, $room, $year, $month, $day); # from functions.inc
-  } else {
-    $sql = "select id, room_name from $tbl_room where area_id=$area order by room_name";
+// should we show a drop-down for the room list, or not?
+if ($area_list_format == "select") {
+    echo make_room_select_html('month.php', $area, $room,
+                               $year, $month, $day);
+} else {
+    $sql = "select id, room_name from $tbl_room
+            where area_id=$area order by room_name";
     $res = sql_query($sql);
     if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
@@ -141,25 +141,23 @@ if ( $pview != 1 ) {
         if ($row['id'] == $room)
         {
             $this_room_name = htmlspecialchars($row['room_name']);
-            if ( $pview != 1 )
-            {
-                echo "<font color=\"red\">$this_room_name</font></a><br>\n";
-            }
+            echo "<font color=\"red\">$this_room_name</font></a><br>\n";
         }
-        else if ( $pview != 1 )
+        else
         {
             echo htmlspecialchars($row['room_name']) . "</a><br>\n";
         }
     }
-  } # end select if
+} # end select if
 
-if ( $pview != 1 ) {
-    echo "</td>\n";
+echo "</td>\n";
     
-    #Draw the three month calendars
-    minicals($year, $month, $day, $area, $room, 'month');
-    echo "</tr></table>\n";
-}
+// Draw the three month calendars
+minicals($year, $month, $day, $area, $room, 'month');
+echo "</tr></table>\n";
+
+// End of "screenonly" div
+echo "</div>\n";
 
 # Don't continue if this area has no rooms:
 if ($room <= 0)
@@ -184,17 +182,34 @@ $ym = date("n",$i);
 $i= mktime(12,0,0,$month+1,1,$year);
 $ty = date("Y",$i);
 $tm = date("n",$i);
-if ( $pview != 1 ) {
-    echo "<table width=\"100%\"><tr><td>
-      <a href=\"month.php?year=$yy&amp;month=$ym&amp;area=$area&amp;room=$room\">
-      &lt;&lt; ".get_vocab("monthbefore")."</a></td>
-      <td align=\"center\"><a href=\"month.php?area=$area&amp;room=$room\">".get_vocab("gotothismonth")."</a></td>
-      <td align=\"right\"><a href=\"month.php?year=$ty&amp;month=$tm&amp;area=$area&amp;room=$room\">
-      ".get_vocab("monthafter")."&gt;&gt;</a></td></tr></table>";
-}
+
+echo "<div class=\"screenonly\">
+  <table width=\"100%\">
+    <tr>
+      <td>
+        <a href=\"month.php?year=$yy&amp;month=$ym&amp;area=$area&amp;room=$room\">
+          &lt;&lt; ".get_vocab("monthbefore")."
+        </a>
+      </td>
+      <td align=\"center\">
+        <a href=\"month.php?area=$area&amp;room=$room\">
+          ".get_vocab("gotothismonth")."
+        </a>
+      </td>
+      <td align=\"right\">
+        <a href=\"month.php?year=$ty&amp;month=$tm&amp;area=$area&amp;room=$room\">
+          ".get_vocab("monthafter")."&gt;&gt;
+        </a>
+      </td>
+    </tr>
+  </table>
+</div>
+";
 
 if ($debug_flag)
+{
     echo "<p>DEBUG: month=$month year=$year start=$weekday_start range=$month_start:$month_end\n";
+}
 
 # Used below: localized "all day" text but with non-breaking spaces:
 $all_day = ereg_replace(" ", "&nbsp;", get_vocab("all_day"));
@@ -413,31 +428,31 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
     }
 
     echo "<br>";
-    if ( $pview != 1 ) {
-        if ($javascript_cursor)
-	    {
-            echo "<script type=\"text/javascript\">\n<!--\n";
-            echo "BeginActiveCell();\n";
-            echo "// -->\n</script>";
-            }
-        if( $enable_periods ) {
-            echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
+    if ($javascript_cursor)
+    {
+        echo "<script type=\"text/javascript\">\n<!--\n";
+        echo "BeginActiveCell();\n";
+        echo "// -->\n</script>";
+    }
+    if ($enable_periods)
+    {
+        echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
             . "&amp;period=0&amp;year=$year&amp;month=$month"
             . "&amp;day=$cday\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
-        } else {
-            echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
-            . "&amp;hour=$morningstarts&amp;minute=0&amp;year=$year&amp;month=$month"
-            . "&amp;day=$cday\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
-        }
-        if ($javascript_cursor)
-            {
-            echo "<script type=\"text/javascript\">\n<!--\n";
-            echo "EndActiveCell();\n";
-            echo "// -->\n</script>";
-            }
     }
     else
-        echo '&nbsp;';
+    {
+        echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
+            . "&amp;hour=$morningstarts&amp;minute=0&amp;year=$year&amp;month=$month"
+            . "&amp;day=$cday\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
+    }
+    if ($javascript_cursor)
+    {
+        echo "<script type=\"text/javascript\">\n<!--\n";
+        echo "EndActiveCell();\n";
+        echo "// -->\n</script>";
+    }
+
     echo "</td>\n";
     if (++$weekcol == 7) $weekcol = 0;
 }

@@ -2,14 +2,6 @@
 
 # $Id$
 
-# probably a bad place to put this, but for error reporting purposes
-# $pview must be defined. if it's not then there's errors generated all
-# over the place. so we test to see if it is set, and if not then set
-# it.
-if (!isset($pview)) {
-	$pview = 0;
-}
-
 function print_header($day, $month, $year, $area)
 {
 	global $mrbs_company, $search_str, $locale_warning, $unicode_encoding, $vocab;
@@ -137,7 +129,7 @@ function ChangeOptionDays(formObj, prefix)
     </script>
   </head>
   <body bgcolor="#ffffed" text="black" link="#5b69a6" vlink="#5b69a6" alink="red">
-	   <?php if ( $GLOBALS["pview"] != 1 ) { ?>
+    <div class="screenonly">
 
    <?php # show a warning if this is using a low version of php
        if (substr(phpversion(), 0, 1) == 3)
@@ -214,7 +206,7 @@ function ChangeOptionDays(formObj, prefix)
         </td>
       </tr>
     </table>
-<?php } ?>
+  </div>
 <?php
 
 } // end of print_header()

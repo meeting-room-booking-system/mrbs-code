@@ -7,6 +7,7 @@ global $vocab; # outside of scope; needs to be denote as global
 
 ?>
     <link rel="stylesheet" href="mrbs.css" type="text/css">
+    <link rel="stylesheet" media="print" href="mrbs-print.css" type="text/css">
     <meta http-equiv="Content-Type" content="text/html; charset=<?php
    if ($unicode_encoding)
    {

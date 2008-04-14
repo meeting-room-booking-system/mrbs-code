@@ -300,7 +300,6 @@ $typematch = get_form_var('typematch[]', 'array');
 $sortby = get_form_var('sortby', 'string');
 $display = get_form_var('display', 'string');
 $sumby = get_form_var('sumby', 'string');
-$pview = get_form_var('pview', 'int');
 
 #If we dont know the right date then make it up
 if(!isset($day) or !isset($month) or !isset($year))
@@ -356,89 +355,149 @@ if (empty($sortby)) $sortby = "r";
 if (empty($display)) $display = "d";
 
 # Upper part: The form.
-if ( $pview != 1 ) {
 ?>
-<h1><?php echo get_vocab("report_on");?>:</h1>
-<form method="get" action="report.php">
-<table>
-<tr><td class="CR"><?php echo get_vocab("report_start");?>:</td>
-    <td class="CL"> <font size="-1">
-    <?php genDateSelector("From_", $From_day, $From_month, $From_year); ?>
-    </font></td></tr>
-<tr><td class="CR"><?php echo get_vocab("report_end");?>:</td>
-    <td class="CL"> <font size="-1">
-    <?php genDateSelector("To_", $To_day, $To_month, $To_year); ?>
-    </font></td></tr>
-<tr><td class="CR"><?php echo get_vocab("match_area");?>:</td>
-    <td class="CL"><input type="text" name="areamatch" size="18"
-    value="<?php echo $areamatch_default; ?>">
-    </td></tr>
-<tr><td class="CR"><?php echo get_vocab("match_room");?>:</td>
-    <td class="CL"><input type="text" name="roommatch" size="18"
-    value="<?php echo $roommatch_default; ?>">
-    </td></tr>
-<tr><td class="CR"><?php echo get_vocab("match_type")?>:</td>
-    <td class="CL" valign="top"><table><tr><td>
-        <select name="typematch[]" multiple="multiple">
+<div class="screenonly">
+  <h1><?php echo get_vocab("report_on");?>:</h1>
+  <form method="get" action="report.php">
+    <table>
+      <tr>
+        <td class="CR"><?php echo get_vocab("report_start");?>:</td>
+        <td class="CL">
+          <font size="-1">
+            <?php genDateSelector("From_",
+                                  $From_day,
+                                  $From_month,
+                                  $From_year); ?>
+          </font>
+        </td>
+      </tr>
+      <tr>
+        <td class="CR"><?php echo get_vocab("report_end");?>:</td>
+        <td class="CL">
+          <font size="-1">
+            <?php genDateSelector("To_",
+                                  $To_day,
+                                  $To_month,
+                                  $To_year); ?>
+          </font>
+        </td>
+      </tr>
+      <tr>
+        <td class="CR"><?php echo get_vocab("match_area");?>:</td>
+        <td class="CL">
+          <input type="text" name="areamatch" size="18"
+                 value="<?php echo $areamatch_default; ?>">
+        </td>
+      </tr>
+      <tr>
+        <td class="CR"><?php echo get_vocab("match_room");?>:</td>
+        <td class="CL">
+          <input type="text" name="roommatch" size="18"
+                 value="<?php echo $roommatch_default; ?>">
+        </td>
+      </tr>
+      <tr>
+        <td class="CR"><?php echo get_vocab("match_type")?>:</td>
+        <td class="CL" valign="top">
+          <table>
+            <tr>
+              <td>
+                <select name="typematch[]" multiple="multiple">
 <?php
 foreach( $typel as $key => $val )
 {
 	if (!empty($val) )
-		echo "<option value=\"$key\"" .
+		echo "                  <option value=\"$key\"" .
 		     (is_array($typematch_default) && in_array ( $key, $typematch_default ) ? " selected" : "") .
-		     ">$val\n";
+		     ">$val</option>\n";
 }
-?></select></td><td><?php echo get_vocab("ctrl_click_type") ?></td></tr></table>
-</td></tr>
-<tr><td class="CR"><?php echo get_vocab("match_entry");?>:</td>
-    <td class="CL"><input type="text" name="namematch" size="18"
-    value="<?php echo $namematch_default; ?>">
-    </td></tr>
-<tr><td class="CR"><?php echo get_vocab("match_descr");?>:</td>
-    <td class="CL"><input type="text" name="descrmatch" size="18"
-    value="<?php echo $descrmatch_default; ?>">
-    </td></tr>
-<tr><td class="CR"><?php echo get_vocab("createdby");?>:</td>
-    <td class="CL"><input type="text" name="creatormatch" size="18"
-    value="<?php echo $creatormatch_default; ?>">
-    </td></tr>
-<tr><td class="CR"><?php echo get_vocab("include");?>:</td>
-    <td class="CL">
-      <input type="radio" name=summarize value="1"<?php if ($summarize==1) echo " checked=\"checked\"";
+?>
+                </select>
+              </td>
+              <td><?php echo get_vocab("ctrl_click_type") ?></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td class="CR"><?php echo get_vocab("match_entry");?>:</td>
+        <td class="CL">
+          <input type="text" name="namematch" size="18"
+                 value="<?php echo $namematch_default; ?>">
+        </td>
+      </tr>
+      <tr>
+        <td class="CR"><?php echo get_vocab("match_descr");?>:</td>
+        <td class="CL">
+          <input type="text" name="descrmatch" size="18"
+                 value="<?php echo $descrmatch_default; ?>">
+        </td>
+      </tr>
+      <tr>
+        <td class="CR"><?php echo get_vocab("createdby");?>:</td>
+        <td class="CL">
+          <input type="text" name="creatormatch" size="18"
+                 value="<?php echo $creatormatch_default; ?>">
+        </td>
+      </tr>
+      <tr>
+        <td class="CR"><?php echo get_vocab("include");?>:</td>
+        <td class="CL">
+          <input type="radio" name="summarize" value="1"
+                 <?php if ($summarize==1) echo " checked=\"checked\"";
         echo ">" . get_vocab("report_only");?>
-      <input type="radio" name=summarize value="2"<?php if ($summarize==2) echo " checked=\"checked\"";
+          <input type="radio" name=summarize value="2"
+                 <?php if ($summarize==2) echo " checked=\"checked\"";
         echo ">" . get_vocab("summary_only");?>
-      <input type="radio" name=summarize value="3"<?php if ($summarize==3) echo " checked=\"checked\"";
+          <input type="radio" name=summarize value="3"
+                 <?php if ($summarize==3) echo " checked=\"checked\"";
         echo ">" . get_vocab("report_and_summary");?>
-    </td></tr>
-<tr><td class="CR"><?php echo get_vocab("sort_rep");?>:</td>
-    <td class="CL">
-      <input type="radio" name="sortby" value="r"<?php if ($sortby=="r") echo " checked=\"checked\"";
+        </td>
+      </tr>
+      <tr>
+        <td class="CR"><?php echo get_vocab("sort_rep");?>:</td>
+        <td class="CL">
+          <input type="radio" name="sortby" value="r"
+                 <?php if ($sortby=="r") echo " checked=\"checked\"";
         echo ">". get_vocab("room");?>
-      <input type=radio name="sortby" value="s"<?php if ($sortby=="s") echo " checked=\"checked\"";
+          <input type="radio" name="sortby" value="s"
+                 <?php if ($sortby=="s") echo " checked=\"checked\"";
         echo ">". get_vocab("sort_rep_time");?>
-    </td></tr>
-<tr><td class="CR"><?php echo get_vocab("rep_dsp");?>:</td>
-    <td class="CL">
-      <input type="radio" name="display" value="d"<?php if ($display=="d") echo " checked=\"checked\"";
+        </td>
+      </tr>
+      <tr>
+        <td class="CR"><?php echo get_vocab("rep_dsp");?>:</td>
+        <td class="CL">
+          <input type="radio" name="display" value="d"
+                 <?php if ($display=="d") echo " checked=\"checked\"";
         echo ">". get_vocab("rep_dsp_dur");?>
-      <input type="radio" name="display" value="e"<?php if ($display=="e") echo " checked=\"checked\"";
+          <input type="radio" name="display" value="e"
+                 <?php if ($display=="e") echo " checked=\"checked\"";
         echo ">". get_vocab("rep_dsp_end");?>
-    </td></tr>
-<tr><td class="CR"><?php echo get_vocab("summarize_by");?>:</td>
-    <td class="CL">
-      <input type="radio" name="sumby" value="d"<?php if ($sumby=="d") echo " checked=\"checked\"";
+        </td>
+      </tr>
+      <tr>
+        <td class="CR"><?php echo get_vocab("summarize_by");?>:</td>
+        <td class="CL">
+          <input type="radio" name="sumby" value="d"
+                 <?php if ($sumby=="d") echo " checked=\"checked\"";
         echo ">" . get_vocab("sum_by_descrip");?>
-      <input type="radio" name="sumby" value="c"<?php if ($sumby=="c") echo " checked=\"checked\"";
+          <input type="radio" name="sumby" value="c"
+                 <?php if ($sumby=="c") echo " checked=\"checked\"";
         echo ">" . get_vocab("sum_by_creator");?>
-    </td></tr>
-<tr><td colspan="2" align="center"><input type="submit" value="<?php echo get_vocab("submitquery") ?>">
-</td></tr>
-</table>
-</form>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" align="center">
+          <input type="submit" value="<?php echo get_vocab("submitquery") ?>">
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
 
 <?php
-}
+
 # Lower part: Results, if called with parameters:
 if (isset($areamatch))
 {
