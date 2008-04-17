@@ -1,30 +1,30 @@
 <?php
-# $Id$
+// $Id$
 
-# This file contains PHP code that specifies language specific strings
-# The default strings come from lang.en, and anything in a locale
-# specific file will overwrite the default. This is the Swedish file.
-#
-# Translated provede by: Bo Kleve (bok@unit.liu.se), MissterX
-# Modified on 2006-01-04 by: Björn Wiberg <Bjorn.Wiberg@its.uu.se>
-#
-#
-# This file is PHP code. Treat it as such.
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.en, and anything in a locale
+// specific file will overwrite the default. This is the Swedish file.
+//
+// Translated provede by: Bo Kleve (bok@unit.liu.se), MissterX
+// Modified on 2006-01-04 by: Björn Wiberg <Bjorn.Wiberg@its.uu.se>
+//
+//
+// This file is PHP code. Treat it as such.
 
-# The charset to use in "Content-type" header
+// The charset to use in "Content-type" header
 $vocab["charset"]            = "iso-8859-1";
 
-# Used in style.inc
+// Used in style.inc
 $vocab["mrbs"]               = "MRBS - MötesRumsBokningsSystem";
 
-# Used in functions.inc
+// Used in functions.inc
 $vocab["report"]             = "Rapport";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Hjälp";
 $vocab["search"]             = "Sök";
 $vocab["not_php3"]           = "<H1>VARNING: Detta fungerar förmodligen inte med PHP3</H1>";
 
-# Used in day.php
+// Used in day.php
 $vocab["bookingsfor"]        = "Bokningar för";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Områden";
@@ -35,13 +35,13 @@ $vocab["goto"]               = "Gå till";
 $vocab["highlight_line"]     = "Markera denna rad";
 $vocab["click_to_reserve"]   = "Klicka på cellen för att göra en bokning.";
 
-# Used in trailer.inc
+// Used in trailer.inc
 $vocab["viewday"]            = "Visa dag";
 $vocab["viewweek"]           = "Visa vecka";
 $vocab["viewmonth"]          = "Visa månad";
 $vocab["ppreview"]           = "Förhandsgranska";
 
-# Used in edit_entry.php
+// Used in edit_entry.php
 $vocab["addentry"]           = "Ny bokning";
 $vocab["editentry"]          = "Ändra bokningen";
 $vocab["editseries"]         = "Ändra serie";
@@ -89,7 +89,7 @@ $vocab["valid_time_of_day"]  = "en giltig tidpunkt på dagen.";
 $vocab["brief_description"]  = "en kort beskrivning.";
 $vocab["useful_n-weekly_value"] = "ett användbart n-veckovist värde.";
 
-# Used in view_entry.php
+// Used in view_entry.php
 $vocab["description"]        = "Beskrivning";
 $vocab["room"]               = "Rum";
 $vocab["createdby"]          = "Skapad av";
@@ -101,7 +101,7 @@ $vocab["returnprev"]         = "Åter till föregående sida";
 $vocab["invalid_entry_id"]   = "Ogiltigt boknings-ID!";
 $vocab["invalid_series_id"]  = "Ogiltigt serie-ID!";
 
-# Used in edit_entry_handler.php
+// Used in edit_entry_handler.php
 $vocab["error"]              = "Fel";
 $vocab["sched_conflict"]     = "Bokningskonflikt";
 $vocab["conflict"]           = "Den nya bokningen krockar med följande bokning(ar)";
@@ -116,7 +116,7 @@ $vocab["mail_body_del_entry"] = $mail["deleted_entry"];
 $vocab["mail_body_changed_entry"] = $mail["changed_entry"];
 $vocab["mail_subject_delete"] = $mail["subject_delete"];
 
-# Authentication stuff
+// Authentication stuff
 $vocab["accessdenied"]       = "Åtkomst nekad";
 $vocab["norights"]           = "Du har inte rättighet att ändra bokningen.";
 $vocab["please_login"]       = "Vänligen logga in";
@@ -127,12 +127,12 @@ $vocab["you_are"]            = "Du är";
 $vocab["login"]              = "Logga in";
 $vocab["logoff"]             = "Logga ut";
 
-# Authentication database
+// Authentication database
 $vocab["user_list"]          = "Användarlista";
 $vocab["edit_user"]          = "Editera användare";
 $vocab["delete_user"]        = "Radera denna användare";
-#$vocab["user_name"]         = Use the same as above, for consistency.
-#$vocab["user_password"]     = Use the same as above, for consistency.
+//$vocab["user_name"]         = Use the same as above, for consistency.
+//$vocab["user_password"]     = Use the same as above, for consistency.
 $vocab["user_email"]         = "E-postadress";
 $vocab["password_twice"]     = "Om du vill ändra ditt lösenord, vänligen mata in detta två gånger";
 $vocab["passwords_not_eq"]   = "Fel: Lösenorden stämmer inte överens.";
@@ -147,7 +147,7 @@ $vocab["show_my_entries"]    = "Klicka för att visa alla dina aktuella bokningar
 $vocab["no_users_initial"]   = "Inga användare finns i databasen. Tillåter initialt skapande av användare.";
 $vocab["no_users_create_first_admin"] = "Skapa en administrativ användare först. Därefter kan du logga in och skapa fler användare.";
 
-# Used in search.php
+// Used in search.php
 $vocab["invalid_search"]     = "Tom eller ogiltig söksträng.";
 $vocab["search_results"]     = "Sökresultat för";
 $vocab["nothing_found"]      = "Inga sökträffar hittades.";
@@ -163,7 +163,7 @@ $vocab["search_button"]      = "Sök";
 $vocab["search_for"]         = "Sök för";
 $vocab["from"]               = "Från";
 
-# Used in report.php
+// Used in report.php
 $vocab["report_on"]          = "Rapport över möten";
 $vocab["report_start"]       = "Startdatum för rapport";
 $vocab["report_end"]         = "Slutdatum för rapport";
@@ -192,20 +192,20 @@ $vocab["rep_dsp"]            = "Visa i rapport";
 $vocab["rep_dsp_dur"]        = "Längd";
 $vocab["rep_dsp_end"]        = "Sluttid";
 
-# Used in week.php
+// Used in week.php
 $vocab["weekbefore"]         = "Föregående vecka";
 $vocab["weekafter"]          = "Nästa vecka";
 $vocab["gotothisweek"]       = "Denna vecka";
 
-# Used in month.php
+// Used in month.php
 $vocab["monthbefore"]        = "Föregående månad";
 $vocab["monthafter"]         = "Nästa månad";
 $vocab["gotothismonth"]      = "Denna månad";
 
-# Used in {day week month}.php
+// Used in {day week month}.php
 $vocab["no_rooms_for_area"]  = "Rum saknas för denna plats";
 
-# Used in admin.php
+// Used in admin.php
 $vocab["edit"]               = "Ändra";
 $vocab["delete"]             = "Radera";
 $vocab["rooms"]              = "Rum";
@@ -221,7 +221,7 @@ $vocab["capacity"]           = "Kapacitet";
 $vocab["norooms"]            = "Inga rum.";
 $vocab["administration"]     = "Administration";
 
-# Used in edit_area_room.php
+// Used in edit_area_room.php
 $vocab["editarea"]           = "Ändra område";
 $vocab["change"]             = "Ändra";
 $vocab["backadmin"]          = "Tillbaka till Administration";
@@ -236,7 +236,7 @@ $vocab["room_admin_email"]   = "E-postadress till rumsansvarig";
 $vocab["area_admin_email"]   = "E-postadress till områdesansvarig";
 $vocab["invalid_email"]      = "Ogiltig e-postadress!";
 
-# Used in del.php
+// Used in del.php
 $vocab["deletefollowing"]    = "Detta raderar följande bokningar";
 $vocab["sure"]               = "Är du säker?";
 $vocab["YES"]                = "JA";
@@ -244,14 +244,14 @@ $vocab["NO"]                 = "NEJ";
 $vocab["delarea"]            = "Du måste ta bort alla rum i detta område innan du kan ta bort området!<p>";
 $vocab["backadmin"]          = "Tillbaka till Administration";
 
-# Used in help.php
+// Used in help.php
 $vocab["about_mrbs"]         = "Om MRBS";
 $vocab["database"]           = "Databas";
 $vocab["system"]             = "System";
 $vocab["please_contact"]     = "Var vänlig kontakta ";
 $vocab["for_any_questions"]  = "för eventuella frågor som ej besvaras här.";
 
-# Used in mysql.inc AND pgsql.inc
+// Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatalt fel: Kunde ej ansluta till databasen!";
 
 ?>

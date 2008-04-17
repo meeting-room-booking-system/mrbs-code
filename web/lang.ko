@@ -1,29 +1,29 @@
 <?php
-# $Id$
+// $Id$
 
-# This file contains PHP code that specifies language specific strings
-# The default strings come from lang.en, and anything in a locale
-# specific file will overwrite the default. This is a Korean file.
-#
-#
-#
-#
-# This file is PHP code. Treat it as such.
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.en, and anything in a locale
+// specific file will overwrite the default. This is a Korean file.
+//
+//
+//
+//
+// This file is PHP code. Treat it as such.
 
-# The charset to use in "Content-type" header
+// The charset to use in "Content-type" header
 $vocab["charset"]            = "utf-8";
 
-# Used in style.inc
+// Used in style.inc
 $vocab["mrbs"]               = "회의실 예약 시스템";
 
-# Used in functions.inc
+// Used in functions.inc
 $vocab["report"]             = "보고서";
 $vocab["admin"]              = "관리자";
 $vocab["help"]               = "도움말";
 $vocab["search"]             = "검색";
 $vocab["not_php3"]             = "<H1>주의: PHP3에서는 동작하지 않습니다.</H1>";
 
-# Used in day.php
+// Used in day.php
 $vocab["bookingsfor"]        = "Bookings for";
 $vocab["bookingsforpost"]    = "의 예약입니다.";
 $vocab["areas"]              = "지역";
@@ -34,13 +34,13 @@ $vocab["goto"]               = "바로가기";
 $vocab["highlight_line"]     = "Highlight this line";
 $vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 
-# Used in trailer.inc
+// Used in trailer.inc
 $vocab["viewday"]            = "일 단위";
 $vocab["viewweek"]           = "주 단위";
 $vocab["viewmonth"]          = "월 단위";
 $vocab["ppreview"]           = "인쇄용 미리보기";
 
-# Used in edit_entry.php
+// Used in edit_entry.php
 $vocab["addentry"]           = "예약 등록";
 $vocab["editentry"]          = "예약 수정";
 $vocab["editseries"]         = "예약(Series) 수정";
@@ -88,7 +88,7 @@ $vocab["valid_time_of_day"]  = "valid time of day.";
 $vocab["brief_description"]  = "간략 설명";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 
-# Used in view_entry.php
+// Used in view_entry.php
 $vocab["description"]        = "설명";
 $vocab["room"]               = "회의실명";
 $vocab["createdby"]          = "예약자";
@@ -100,7 +100,7 @@ $vocab["returnprev"]         = "이전 페이지로";
 $vocab["invalid_entry_id"]   = "무효한 엔트리 ID.";
 $vocab["invalid_series_id"]  = "무효한 Serires ID.";
 
-# Used in edit_entry_handler.php
+// Used in edit_entry_handler.php
 $vocab["error"]              = "에러";
 $vocab["sched_conflict"]     = "스케쥴 중복";
 $vocab["conflict"]           = "이미 다른 예약이 되어있습니다.";
@@ -113,7 +113,7 @@ $vocab["mail_body_del_entry"] = $mail["deleted_entry"];
 $vocab["mail_body_changed_entry"] = $mail["changed_entry"];
 $vocab["mail_subject_delete"] = $mail["subject_delete"];
 
-# Authentication stuff
+// Authentication stuff
 $vocab["accessdenied"]       = "접근이 거부됨";
 $vocab["norights"]           = "수정할 수 있는 권한이 없습니다.";
 $vocab["please_login"]       = "로그인 하여 주십시오";
@@ -124,12 +124,12 @@ $vocab["you_are"]            = "아이디: ";
 $vocab["login"]              = "로그인";
 $vocab["logoff"]             = "로그아웃";
 
-# Authentication database
+// Authentication database
 $vocab["user_list"]          = "사용자 리스트";
 $vocab["edit_user"]          = "사용자 수정";
 $vocab["delete_user"]        = "사용자 삭제";
-#$vocab["user_name"]         = Use the same as above, for consistency.
-#$vocab["user_password"]     = Use the same as above, for consistency.
+//$vocab["user_name"]         = Use the same as above, for consistency.
+//$vocab["user_password"]     = Use the same as above, for consistency.
 $vocab["user_email"]         = "메일 주소";
 $vocab["password_twice"]     = "비밀번호를 변경하시려면, 새로운 비밀번호를 2회 입력하세요.";
 $vocab["passwords_not_eq"]   = "에러: 비밀번호가 바르지 않습니다.";
@@ -142,7 +142,7 @@ $vocab["unknown"]            = "Unknown";
 $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Click to display all my upcoming entries";
 
-# Used in search.php
+// Used in search.php
 $vocab["invalid_search"]     = "잘못된 검색어를 입력했음.";
 $vocab["search_results"]     = "검색 결과";
 $vocab["nothing_found"]      = "검색 결과가 없습니다.";
@@ -158,7 +158,7 @@ $vocab["search_button"]      = "검색";
 $vocab["search_for"]         = "Search For";
 $vocab["from"]               = "From";
 
-# Used in report.php
+// Used in report.php
 $vocab["report_on"]          = "회의에 관한 보고서 작성";
 $vocab["report_start"]       = "시작일";
 $vocab["report_end"]         = "종료일";
@@ -187,20 +187,20 @@ $vocab["rep_dsp"]            = "Display in report";
 $vocab["rep_dsp_dur"]        = "기간";
 $vocab["rep_dsp_end"]        = "종료 시간";
 
-# Used in week.php
+// Used in week.php
 $vocab["weekbefore"]         = "저번 주로";
 $vocab["weekafter"]          = "다음 주로";
 $vocab["gotothisweek"]       = "이번 주로";
 
-# Used in month.php
+// Used in month.php
 $vocab["monthbefore"]        = "저번 달로";
 $vocab["monthafter"]         = "다음 달로";
 $vocab["gotothismonth"]      = "이번 달로";
 
-# Used in {day week month}.php
+// Used in {day week month}.php
 $vocab["no_rooms_for_area"]  = "등록된 회의실이 없습니다.";
 
-# Used in admin.php
+// Used in admin.php
 $vocab["edit"]               = "수정";
 $vocab["delete"]             = "삭제";
 $vocab["rooms"]              = "회의실";
@@ -216,7 +216,7 @@ $vocab["capacity"]           = "수용가능 인원";
 $vocab["norooms"]            = "등록된 회의실이 없음";
 $vocab["administration"]     = "지역 및 회의실 관리";
 
-# Used in edit_area_room.php
+// Used in edit_area_room.php
 $vocab["editarea"]           = "지역 수정";
 $vocab["change"]             = "수정";
 $vocab["backadmin"]          = "돌아가기";
@@ -231,21 +231,21 @@ $vocab["room_admin_email"]   = "회의실 관리자 메일주소";
 $vocab["area_admin_email"]   = "지역 관리자 메일주소";
 $vocab["invalid_email"]      = "잘못된 메일주소입니다!";
 
-# Used in del.php
+// Used in del.php
 $vocab["deletefollowing"]    = "다음의 예약들이 삭제됩니다.";
 $vocab["sure"]               = "삭제하시겠습니까?";
 $vocab["YES"]                = "예";
 $vocab["NO"]                 = "아니오";
 $vocab["delarea"]            = "지우기 전에 이 지역안에 있는 모든 회의실을 지워야 합니다.<p>";
 
-# Used in help.php
+// Used in help.php
 $vocab["about_mrbs"]         = "About MRBS";
 $vocab["database"]           = "Database";
 $vocab["system"]             = "System";
 $vocab["please_contact"]     = "자세한 사항은 다음 관리자에게 연락주십시오: ";
 $vocab["for_any_questions"]  = " ";
 
-# Used in mysql.inc AND pgsql.inc
+// Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "심각한 에러: 데이터베이스에 접속할 수 없습니다.";
 
 ?>

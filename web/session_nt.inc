@@ -24,13 +24,15 @@
  *
  * For this scheme no need to prompt for a name - NT User always there.
  */
-function authGet() { }
+function authGet()
+{
+}
 
 function getUserName()
 {
-	global $AUTH_USER;
-	$AUTH_USER = get_current_user();  
-	return $AUTH_USER;
+  global $AUTH_USER;
+  $AUTH_USER = get_current_user();  
+  return $AUTH_USER;
 
 }
 

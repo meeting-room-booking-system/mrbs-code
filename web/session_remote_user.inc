@@ -34,9 +34,14 @@ function authGet()
 
 function getUserName()
 {
-  if ((!isset($_SERVER['REMOTE_USER'])) || (!is_string($_SERVER['REMOTE_USER'])) || (empty($_SERVER['REMOTE_USER']))) {
+  if ((!isset($_SERVER['REMOTE_USER'])) ||
+      (!is_string($_SERVER['REMOTE_USER'])) ||
+      (empty($_SERVER['REMOTE_USER'])))
+  {
     return NULL;
-  } else {
+  } 
+  else
+  {
     return $_SERVER['REMOTE_USER'];
   }
 }
@@ -44,47 +49,52 @@ function getUserName()
 // Print the logon entry on the top banner.
 function PrintLogonBox()
 {
-	global $user_list_link;
-        global $auth;
+  global $user_list_link;
+  global $auth;
   
-	$user = getUserName();
+  $user = getUserName();
 
-	if (isset($user))
-	{
-	// words 'you are xxxx' becomes a link to the
-        // report page with only entries created by xxx. Past entries are not
-        // displayed but this can be changed
-       	$search_string = "report.php?From_day=$day&amp;From_month=$month&amp;".
-          "From_year=$year&amp;To_day=1&amp;To_month=12&amp;To_year=2030&amp;areamatch=&amp;".
-          "roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;sortby=r&amp;display=d&amp;".
-          "sumby=d&amp;creatormatch=$user"; ?>
+  if (isset($user))
+  {
+    // words 'you are xxxx' becomes a link to the
+    // report page with only entries created by xxx. Past entries are not
+    // displayed but this can be changed
+    $search_string = "report.php?From_day=$day&amp;From_month=$month&amp;".
+      "From_year=$year&amp;To_day=1&amp;To_month=12&amp;To_year=2030&amp;areamatch=&amp;".
+      "roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;sortby=r&amp;display=d&amp;".
+      "sumby=d&amp;creatormatch=$user"; ?>
 
-    <TD CLASS="banner">
-      <A name="logonBox" href="<?php echo "$search_string\" title=\""
+    <td class="banner">
+      <a name="logonBox" href="<?php echo "$search_string\" title=\""
          . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
-         .$user ?></A><br>
-<?php if (isset($user_list_link)) print "	  <br>\n	  " .
-	    "<A href='$user_list_link'>" . get_vocab('user_list') . "</A><br>\n" ;
-?>
-
+         .$user ?></a><br>
 <?php
-// Retrieve logout link from configuration, if specified
-if (isset($auth['remote_user']['logout_link']) && is_string($auth['remote_user']['logout_link']) && (!empty($auth['remote_user']['logout_link']))) {
-  print '<A HREF="' . $auth['remote_user']['logout_link'] .'">' . get_vocab('logoff') . "</A><br>\n";
-}
-?>
-
-    </TD>
-<?php
-    }
-    else
+    if (isset($user_list_link))
     {
+      print "	  <br>\n	  " .
+	    "<A href='$user_list_link'>" . get_vocab('user_list') . "</A><br>\n" ;
+    }
+
+    // Retrieve logout link from configuration, if specified
+    if (isset($auth['remote_user']['logout_link']) &&
+        is_string($auth['remote_user']['logout_link']) &&
+        (!empty($auth['remote_user']['logout_link'])))
+    {
+      print '<A HREF="' . $auth['remote_user']['logout_link'] .'">' . get_vocab('logoff') . "</a><br>\n";
+   }
+?>
+
+    </td>
+<?php
+  }
+  else
+  {
 ?>
     </table>
-    <H1>Error, REMOTE_USER was not set when it should have been</H1>
+    <h1>Error, REMOTE_USER was not set when it should have been</H1>
 <?php
     exit;
-    }
+  }
 }
 
 ?>

@@ -22,7 +22,7 @@
 // handle when you finish reading the rows.
 function sql_free ($r)
 {
-	pg_free_result($r);
+  pg_free_result($r);
 }
 
 // Execute a non-SELECT SQL command (insert/update/delete).
@@ -30,14 +30,17 @@ function sql_free ($r)
 // Returns -1 on error; use sql_error to get the error message.
 function sql_command ($sql)
 {
-	global $db_c;
-	$e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
-	$r = pg_query($db_c, $sql);
-	error_reporting($e);
-	if (! $r) return -1;
-	$n = pg_affected_rows($r);
-	pg_free_result($r);
-	return $n;
+  global $db_c;
+  $e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
+  $r = pg_query($db_c, $sql);
+  error_reporting($e);
+  if (! $r)
+  {
+    return -1;
+  }
+  $n = pg_affected_rows($r);
+  pg_free_result($r);
+  return $n;
 }
 
 // Execute an SQL query which should return a single non-negative number value.
@@ -48,15 +51,21 @@ function sql_command ($sql)
 // a MIN or MAX aggregate function applied over no rows.
 function sql_query1 ($sql)
 {
-	global $db_c;
-	$e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
-	$r = pg_query($db_c, $sql);
-	error_reporting($e);
-	if (! $r) return -1;
-	if (pg_num_rows($r) != 1 || pg_num_fields($r) != 1
-		|| ($result = pg_fetch_result($r, 0, 0)) == "") $result = -1;
-	pg_free_result($r);
-	return $result;
+  global $db_c;
+  $e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
+  $r = pg_query($db_c, $sql);
+  error_reporting($e);
+  if (! $r)
+  {
+    return -1;
+  }
+  if (pg_num_rows($r) != 1 || pg_num_fields($r) != 1
+      || ($result = pg_fetch_result($r, 0, 0)) == "")
+  {
+    $result = -1;
+  }
+  pg_free_result($r);
+  return $result;
 }
 
 // Execute an SQL query. Returns a database-dependent result handle,
@@ -64,11 +73,11 @@ function sql_query1 ($sql)
 // Returns 0 on error; use sql_error to get the error message.
 function sql_query ($sql)
 {
-	global $db_c;
-	$e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
-	$r = pg_query($db_c, $sql);
-	error_reporting($e);
-	return $r;
+  global $db_c;
+  $e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
+  $r = pg_query($db_c, $sql);
+  error_reporting($e);
+  return $r;
 }
 
 // Return a row from a result. The first row is 0.
@@ -78,12 +87,12 @@ function sql_query ($sql)
 // Typical usage: $i = 0; while ((a = sql_row($r, $i++))) { ... }
 function sql_row ($r, $i)
 {
-	if ($i >= pg_num_rows($r))
-	{
-		pg_free_result($r);
-		return 0;
-	}
-	return pg_fetch_row($r, $i);
+  if ($i >= pg_num_rows($r))
+  {
+    pg_free_result($r);
+    return 0;
+  }
+  return pg_fetch_row($r, $i);
 }
 
 // Return a row from a result as an associative array keyed by field name.
@@ -94,33 +103,33 @@ function sql_row ($r, $i)
 // the query and returns 0.
 function sql_row_keyed ($r, $i)
 {
-	if ($i >= pg_num_rows($r))
-	{
-		pg_free_result($r);
-		return 0;
-	}
-	return pg_fetch_array($r, $i);
+  if ($i >= pg_num_rows($r))
+  {
+    pg_free_result($r);
+    return 0;
+  }
+  return pg_fetch_array($r, $i);
 }
 
 // Return the number of rows returned by a result handle from sql_query.
 function sql_count ($r)
 {
-	return pg_num_rows($r);
+  return pg_num_rows($r);
 }
 
 // Return the value of an autoincrement field from the last insert.
 // For PostgreSQL, this must be a SERIAL type field.
 function sql_insert_id($table, $field)
 {
-	$seq_name = $table . "_" . $field . "_seq";
-	return sql_query1("select last_value from $seq_name");
+  $seq_name = $table . "_" . $field . "_seq";
+  return sql_query1("select last_value from $seq_name");
 }
 
 // Return the text of the last error message.
 function sql_error()
 {
-	global $db_c;
-	return pg_last_error($db_c);
+  global $db_c;
+  return pg_last_error($db_c);
 }
 
 // Begin a transaction, if the database supports it. This is used to
@@ -128,13 +137,13 @@ function sql_error()
 // There is no rollback support, since MySQL doesn't support it.
 function sql_begin()
 {
-	sql_command("BEGIN");
+  sql_command("BEGIN");
 }
 
 // Commit (end) a transaction. See sql_begin().
 function sql_commit()
 {
-	sql_command("COMMIT");
+  sql_command("COMMIT");
 }
 
 // Acquire a mutual-exclusion lock on the named table. For portability:
@@ -151,16 +160,19 @@ function sql_commit()
 // It does not timeout, but waits forever for the lock.
 function sql_mutex_lock($name)
 {
-	global $sql_mutex_shutdown_registered, $sql_mutex_unlock_name;
-	if (sql_command("BEGIN") < 0
-		|| sql_command("LOCK TABLE $name IN EXCLUSIVE MODE") < 0) return 0;
-	$sql_mutex_unlock_name = $name;
-	if (empty($sql_mutex_shutdown_registered))
-	{
-		register_shutdown_function("sql_mutex_cleanup");
-		$sql_mutex_shutdown_registered = 1;
-	}
-	return 1;
+  global $sql_mutex_shutdown_registered, $sql_mutex_unlock_name;
+  if (sql_command("BEGIN") < 0
+      || sql_command("LOCK TABLE $name IN EXCLUSIVE MODE") < 0)
+  {
+    return 0;
+  }
+  $sql_mutex_unlock_name = $name;
+  if (empty($sql_mutex_shutdown_registered))
+  {
+    register_shutdown_function("sql_mutex_cleanup");
+    $sql_mutex_shutdown_registered = 1;
+  }
+  return 1;
 }
 
 // Release a mutual-exclusion lock on the named table. See sql_mutex_lock.
@@ -168,41 +180,41 @@ function sql_mutex_lock($name)
 // is no other way.
 function sql_mutex_unlock($name)
 {
-	global $sql_mutex_unlock_name;
-	sql_command("COMMIT");
-	$sql_mutex_unlock_name = "";
+  global $sql_mutex_unlock_name;
+  sql_command("COMMIT");
+  $sql_mutex_unlock_name = "";
 }
 
 // Shutdown function to clean up a forgotten lock. For internal use only.
 function sql_mutex_cleanup()
 {
-	global $sql_mutex_shutdown_registered, $sql_mutex_unlock_name;
-	if (!empty($sql_mutex_unlock_name))
-	{
-		sql_command("ABORT");
-		$sql_mutex_unlock_name = "";
-	}
+  global $sql_mutex_shutdown_registered, $sql_mutex_unlock_name;
+  if (!empty($sql_mutex_unlock_name))
+  {
+    sql_command("ABORT");
+    $sql_mutex_unlock_name = "";
+  }
 }
 
 // Return a string identifying the database version:
 function sql_version()
 {
-	$r = sql_query("select version()");
-	$v = sql_row($r, 0);
-	sql_free($r);
-	return $v[0];
+  $r = sql_query("select version()");
+  $v = sql_row($r, 0);
+  sql_free($r);
+  return $v[0];
 }
 
 // Generate non-standard SQL for LIMIT clauses:
 function sql_syntax_limit($count, $offset)
 {
-	return " LIMIT $count OFFSET $offset ";
+  return " LIMIT $count OFFSET $offset ";
 }
 
 // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
 function sql_syntax_timestamp_to_unix($fieldname)
 {
-	return " DATE_PART('epoch', $fieldname) ";
+  return " DATE_PART('epoch', $fieldname) ";
 }
 
 // Generate non-standard SQL to match a string anywhere in a field's value
@@ -212,19 +224,19 @@ function sql_syntax_timestamp_to_unix($fieldname)
 // Quotemeta escapes everything we need except for single quotes.
 function sql_syntax_caseless_contains($fieldname, $s)
 {
-	$s = quotemeta($s);
-	$s = str_replace("'", "''", $s);
-	return " $fieldname ~* '$s' ";
+  $s = quotemeta($s);
+  $s = str_replace("'", "''", $s);
+  return " $fieldname ~* '$s' ";
 }
 
 // Returns the name of a field.
 function sql_field_name($result, $index)
 {
-	return pg_field_name($result, $index);
+  return pg_field_name($result, $index);
 }
 
-# A map to turn pgsql extension field type names into our (well, the mysql
-# extension's) field type strings
+// A map to turn pgsql extension field type names into our (well, the mysql
+// extension's) field type strings
 $sql_type_map = array();
 $sql_type_map['bool'] = "int";
 $sql_type_map['int2'] = "int";
@@ -241,17 +253,17 @@ $sql_type_map['bpchar'] = "string";
 // Returns the type of a field. (one of "int", "real", "string", "blob", etc...)
 function sql_field_type($result, $index)
 {
-	global $sql_type_map;
+  global $sql_type_map;
 
-	$type = pg_field_type($result, $index);
+  $type = pg_field_type($result, $index);
 
-	return isset($sql_type_map[$type]) ? $sql_type_map[$type] : 'unknown';
+  return isset($sql_type_map[$type]) ? $sql_type_map[$type] : 'unknown';
 }
 
 // Returns the number of fields in a result.
 function sql_num_fields($result)
 {
-	return pg_num_fields($result);
+  return pg_num_fields($result);
 }
 
 // Establish a database connection.
@@ -260,17 +272,21 @@ function sql_num_fields($result)
 // there seems to be no way to supress the automatic error message output and
 // still be able to access the error text.
 $conninfo = (empty($db_host) ? "" : "host=$db_host ")
-	. "dbname=$db_database user=$db_login password=$db_password";
+  . "dbname=$db_database user=$db_login password=$db_password";
 if (empty($db_nopersist))
-	$db_c = pg_pconnect($conninfo);
+{
+  $db_c = pg_pconnect($conninfo);
+}
 else
-	$db_c = pg_connect($conninfo);
+{
+  $db_c = pg_connect($conninfo);
+}
 unset($conninfo);
 
 if (!$db_c)
 {
-	echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n";
-	exit;
+  echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n";
+  exit;
 }
 
 ?>

@@ -1,31 +1,31 @@
 <?php
-# $Id$
+// $Id$
 
-# This file contains PHP code that specifies language specific strings
-# The default strings come from lang.en, and anything in a locale
-# specific file will overwrite the default. This is a Greek file.
-#
-#
-#
-#
-# This file is PHP code. Treat it as such.
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.en, and anything in a locale
+// specific file will overwrite the default. This is a Greek file.
+//
+//
+//
+//
+// This file is PHP code. Treat it as such.
 
-# The charset to use in "Content-type" header
+// The charset to use in "Content-type" header
 $vocab["charset"]            = "iso-8859-7";
 
-# Used in style.inc
+// Used in style.inc
 $vocab["mrbs"]               = "Σύστημα Κρατήσεων Αιθουσών (MRBS)";
 
-# Used in functions.inc
+// Used in functions.inc
 $vocab["report"]             = "Αναφορά";
 $vocab["admin"]              = "Διαχείριση";
 $vocab["help"]               = "Βοήθεια";
 $vocab["search"]             = "Αναζήτηση";
 $vocab["not_php3"]           = "<H1>Προσοχή: Αυτή η σελίδα δεν δουλεύει με PHP3</H1>";
 
-# Used in day.php
+// Used in day.php
 $vocab["bookingsfor"]        = "Κρατήσεις για";
-$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Περιοχές";
 $vocab["daybefore"]          = "Μετάβαση στην προηγούμενη μέρα";
 $vocab["dayafter"]           = "Μετάβαση στην επόμενη μέρα";
@@ -34,13 +34,13 @@ $vocab["goto"]               = "Μετάβαση";
 $vocab["highlight_line"]     = "Highlight this line";
 $vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 
-# Used in trailer.inc
+// Used in trailer.inc
 $vocab["viewday"]            = "Προβολή ανά ημέρα";
 $vocab["viewweek"]           = "Προβολή ανά εβδομάδα";
 $vocab["viewmonth"]          = "Προβολή ανά μήνα";
 $vocab["ppreview"]           = "Προεπισκόπηση εκτύπωσης";
 
-# Used in edit_entry.php
+// Used in edit_entry.php
 $vocab["addentry"]           = "Προσθήκη εγγραφής";
 $vocab["editentry"]          = "Τροποποίηση εγγραφής";
 $vocab["editseries"]         = "Τροποποίηση σειράς";
@@ -88,7 +88,7 @@ $vocab["valid_time_of_day"]  = "έγκυρη ώρα.";
 $vocab["brief_description"]  = "Σύντομη Περιγραφή.";
 $vocab["useful_n-weekly_value"] = "χρήσιμη n-εβδομαδιαία τιμή.";
 
-# Used in view_entry.php
+// Used in view_entry.php
 $vocab["description"]        = "Περιγραφή";
 $vocab["room"]               = "Αίθουσα";
 $vocab["createdby"]          = "Δημιουργήθηκε από";
@@ -100,7 +100,7 @@ $vocab["returnprev"]         = "Επιστροφή στην προηγούμενη σελίδα";
 $vocab["invalid_entry_id"]   = "Λάθος αναγνωριστικός αριθμός αίτησης.";
 $vocab["invalid_series_id"]  = "Invalid series id.";
 
-# Used in edit_entry_handler.php
+// Used in edit_entry_handler.php
 $vocab["error"]              = "Σφάλμα";
 $vocab["sched_conflict"]     = "Αντικρουόμενος Προγραμματισμός";
 $vocab["conflict"]           = "Η νέα κράτηση αντικρούει με τις ακόλουθες εγγραφές";
@@ -113,7 +113,7 @@ $vocab["mail_body_del_entry"] = $mail["deleted_entry"];
 $vocab["mail_body_changed_entry"] = $mail["changed_entry"];
 $vocab["mail_subject_delete"] = $mail["subject_delete"];
 
-# Authentication stuff
+// Authentication stuff
 $vocab["accessdenied"]       = "Απαγορεύεται η πρόσβαση";
 $vocab["norights"]           = "Δεν έχετε δικαιώματα πρόσβασης για να τροποποιήσετε αυτό το αντικείμενο.";
 $vocab["please_login"]       = "Παρακαλώ κάνετε εισαγωγή (log in)";
@@ -124,12 +124,12 @@ $vocab["you_are"]            = "Είστε";
 $vocab["login"]              = "Εισαγωγή (Log in)";
 $vocab["logoff"]             = "Έξοδος (Log Off)";
 
-# Authentication database
+// Authentication database
 $vocab["user_list"]          = "User list";
 $vocab["edit_user"]          = "Edit user";
 $vocab["delete_user"]        = "Delete this user";
-#$vocab["user_name"]         = Use the same as above, for consistency.
-#$vocab["user_password"]     = Use the same as above, for consistency.
+//$vocab["user_name"]         = Use the same as above, for consistency.
+//$vocab["user_password"]     = Use the same as above, for consistency.
 $vocab["user_email"]         = "Email address";
 $vocab["password_twice"]     = "If you wish to change the password, please type the new password twice";
 $vocab["passwords_not_eq"]   = "Error: The passwords do not match.";
@@ -142,7 +142,7 @@ $vocab["unknown"]            = "Unknown";
 $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Click to display all my upcoming entries";
 
-# Used in search.php
+// Used in search.php
 $vocab["invalid_search"]     = "Κενό ή λανθασμένο κείμενο αναζήτησης.";
 $vocab["search_results"]     = "Αποτελέσματα αναζήτησης για";
 $vocab["nothing_found"]      = "Δεν βρέθηκαν εγγραφές που να ταιριάζουν.";
@@ -158,7 +158,7 @@ $vocab["search_button"]      = "Αναζήτηση";
 $vocab["search_for"]         = "Αναζήτηση για";
 $vocab["from"]               = "Από";
 
-# Used in report.php
+// Used in report.php
 $vocab["report_on"]          = "Αναφορά για Συναντήσεις";
 $vocab["report_start"]       = "Ημερομηνία έναρξης αναφοράς";
 $vocab["report_end"]         = "Ημερομηνία λήξης αναφοράς";
@@ -187,20 +187,20 @@ $vocab["rep_dsp"]            = "Display in report";
 $vocab["rep_dsp_dur"]        = "Duration";
 $vocab["rep_dsp_end"]        = "End Time";
 
-# Used in week.php
+// Used in week.php
 $vocab["weekbefore"]         = "Μετάβαση στην προηγούμενη εβδομάδα";
 $vocab["weekafter"]          = "Μετάβαση στην επόμενη εβδομάδα";
 $vocab["gotothisweek"]       = "Μετάβαση στην τρέχουσα εβδομάδα";
 
-# Used in month.php
+// Used in month.php
 $vocab["monthbefore"]        = "Μετάβαση στον προηγούμενο μήνα";
 $vocab["monthafter"]         = "Μετάβαση στον επόμενο μήνα";
 $vocab["gotothismonth"]      = "Μετάβαση στον τρέχοντα μήνα";
 
-# Used in {day week month}.php
+// Used in {day week month}.php
 $vocab["no_rooms_for_area"]  = "Δεν έχουν οριστεί αίθουσες για αυτή την περιοχή";
 
-# Used in admin.php
+// Used in admin.php
 $vocab["edit"]               = "Τροποποίηση";
 $vocab["delete"]             = "Διαγραφή";
 $vocab["rooms"]              = "Αίθουσες";
@@ -216,7 +216,7 @@ $vocab["capacity"]           = "Χωρητικότητα";
 $vocab["norooms"]            = "Καμιά αίθουσα.";
 $vocab["administration"]     = "Διαχείριση";
 
-# Used in edit_area_room.php
+// Used in edit_area_room.php
 $vocab["editarea"]           = "Τροποποίηση περιοχής";
 $vocab["change"]             = "Αλλαγή";
 $vocab["backadmin"]          = "Επιστροφή στην διαχείριση";
@@ -231,21 +231,21 @@ $vocab["room_admin_email"]   = "Room admin email";
 $vocab["area_admin_email"]   = "Area admin email";
 $vocab["invalid_email"]      = "Invalid email!";
 
-# Used in del.php
+// Used in del.php
 $vocab["deletefollowing"]    = "Η ενέργεια αυτή θα διαγράψει τις ακόλουθες κρατήσεις";
 $vocab["sure"]               = "Είστε σίγουροι;";
 $vocab["YES"]                = "ΝΑΙ";
 $vocab["NO"]                 = "ΟΧΙ";
 $vocab["delarea"]            = "Πρέπει να διαγράψετε όλες τις αίθουσες σε αυτή τη περιοχή για να μπορέσετε να την διαγράψετε<p>";
 
-# Used in help.php
+// Used in help.php
 $vocab["about_mrbs"]         = "Σχετικά με το MRBS";
 $vocab["database"]           = "Βάση δεδομένων";
 $vocab["system"]             = "Σύστημα";
 $vocab["please_contact"]     = "Παρακαλώ επικοινωνήστε με ";
 $vocab["for_any_questions"]  = "για όσες ερωτήσεις δεν απαντώνται εδώ.";
 
-# Used in mysql.inc AND pgsql.inc
+// Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Κρίσιμο σφάλμα: Αποτυχία σύνδεσης στη βάση δεδομένων";
 
 ?>

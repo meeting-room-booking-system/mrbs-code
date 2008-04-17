@@ -1,6 +1,6 @@
 <?php
 
-# $Id$
+// $Id$
 
 require_once "grab_globals.inc.php";
 include "config.inc.php";
@@ -14,15 +14,17 @@ $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
 
-#If we dont know the right date then make it up
-if(!isset($day) or !isset($month) or !isset($year))
+// If we dont know the right date then make it up
+if (!isset($day) or !isset($month) or !isset($year))
 {
-	$day   = date("d");
-	$month = date("m");
-	$year  = date("Y");
+  $day   = date("d");
+  $month = date("m");
+  $year  = date("Y");
 }
-if(empty($area))
-	$area = get_default_area();
+if (empty($area))
+{
+  $area = get_default_area();
+}
 
 print_header($day, $month, $year, $area);
 
@@ -34,8 +36,8 @@ echo "<br>PHP: " . phpversion() . "\n";
 
 echo "<h3>" . get_vocab("help") . "</h3>\n";
 echo get_vocab("please_contact") . '<a href="mailto:' . htmlspecialchars($mrbs_admin_email)
-	. '">' . htmlspecialchars($mrbs_admin)
-	. "</a> " . get_vocab("for_any_questions") . "\n";
+  . '">' . htmlspecialchars($mrbs_admin)
+  . "</a> " . get_vocab("for_any_questions") . "\n";
  
 include "site_faq" . $faqfilelang . ".html";
 

@@ -3,7 +3,10 @@
 
 // include the authentification wrappers
 include "auth_$auth[type].inc";
-if (isset($auth['session'])) include "session_$auth[session].inc";
+if (isset($auth['session']))
+{
+  include "session_$auth[session].inc";
+}
 
 /* getAuthorised($user, $pass, $level)
  * 
@@ -19,15 +22,16 @@ if (isset($auth['session'])) include "session_$auth[session].inc";
  */
 function getAuthorised($level)
 {
-    global $auth;
+  global $auth;
 
-    $user = getUserName();
-    if(isset($user) == FALSE) {
-        authGet();
-        return 0;
-    }
+  $user = getUserName();
+  if(isset($user) == FALSE)
+  {
+    authGet();
+    return 0;
+  }
 
-    return authGetUserLevel($user, $auth["admin"]) >= $level;
+  return authGetUserLevel($user, $auth["admin"]) >= $level;
 }
 
 /* getWritable($creator, $user)
@@ -43,17 +47,21 @@ function getAuthorised($level)
  */
 function getWritable($creator, $user)
 {
-    global $auth;
+  global $auth;
 
-    // Always allowed to modify your own stuff
-    if(strcasecmp($creator, $user) == 0)
-        return 1;
+  // Always allowed to modify your own stuff
+  if(strcasecmp($creator, $user) == 0)
+  {
+    return 1;
+  }
 
-    if(authGetUserLevel($user, $auth["admin"]) >= 2)
-        return 1;
+  if(authGetUserLevel($user, $auth["admin"]) >= 2)
+  {
+    return 1;
+  }
 
-    // Unathorised access
-    return 0;
+  // Unathorised access
+  return 0;
 }
 
 /* showAccessDenied()
@@ -64,19 +72,21 @@ function getWritable($creator, $user)
  */
 function showAccessDenied($day, $month, $year, $area)
 {
-    global $HTTP_REFERER;
+  global $HTTP_REFERER;
 
-    print_header($day, $month, $year, $area);
+  print_header($day, $month, $year, $area);
 ?>
-  <H1><?php echo get_vocab("accessdenied")?></H1>
-  <P>
+  <h1><?php echo get_vocab("accessdenied")?></h1>
+  <p>
    <?php echo get_vocab("norights")?>
-  </P>
-  <P>
-   <A HREF="<?php echo $HTTP_REFERER; ?>"><?php echo get_vocab("returnprev"); ?></A>
-  </P>
- </BODY>
-</HTML>
+  </p>
+  <p>
+    <a href="<?php echo $HTTP_REFERER; ?>">
+      <?php echo get_vocab("returnprev"); ?>
+    </a>
+  </p>
+ </body>
+</html>
 <?php
 }
 ?>

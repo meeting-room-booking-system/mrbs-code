@@ -18,13 +18,15 @@
  * $auth["admin"][] = "192.168.0.1";
  */
 
-# No need to prompt for a name - ip address always there
-function authGet() { }
+// No need to prompt for a name - ip address always there
+function authGet()
+{
+}
 
 function getUserName()
 {
-	global $REMOTE_ADDR;
-	return $REMOTE_ADDR;
+  global $REMOTE_ADDR;
+  return $REMOTE_ADDR;
 }
 
 ?>

@@ -8,16 +8,16 @@
  * To use this authentication scheme set the following
  * things in config.inc.php:
  *
- * $auth["realm"]  = "MRBS";    # Or any other string
+ * $auth["realm"]  = "MRBS";    // Or any other string
  * $auth["type"]   = "ext";
- * $auth["prog"]   = "authenticationprogram";  # The full path to the external
- *                                             # script
- * $auth["params"] = "#USERNAME# #PASSWORD# other-params" # Parameters to pass to
- *                                                        # the script, #USERNAME#
- *                                                        # and #PASSWORD#
- *                                                        # will be expanded to
- *                                                        # the values typed by
- *                                                        # the user.
+ * $auth["prog"]   = "authenticationprogram";  // The full path to the external
+ *                                            // script
+ * $auth["params"] = "#USERNAME# #PASSWORD# other-params" // Parameters to pass to
+ *                                                        // the script, #USERNAME#
+ *                                                        // and #PASSWORD#
+ *                                                        // will be expanded to
+ *                                                        // the values typed by
+ *                                                        // the user.
  *
  * Then, you may configure admin users:
  *
@@ -59,28 +59,30 @@ if (version_check("4.0.3") == false)
  */
 function authValidateUser($user, $pass)
 {
-        global $auth;
+  global $auth;
 	
-	// Check if we do not have a username/password
-	if(!isset($user) || !isset($pass))
-	{
-		return 0;
-	}
+  // Check if we do not have a username/password
+  if(!isset($user) || !isset($pass))
+  {
+    return 0;
+  }
 	
-	// Generate the command line
-	$cmd = $auth["prog"] . ' ' . $auth["params"];
-	$cmd = preg_replace('/#USERNAME#/',escapeshellarg($user),$cmd);
-	$cmd = preg_replace('/#PASSWORD#/',escapeshellarg($pass),$cmd);
+  // Generate the command line
+  $cmd = $auth["prog"] . ' ' . $auth["params"];
+  $cmd = preg_replace('/#USERNAME#/',escapeshellarg($user),$cmd);
+  $cmd = preg_replace('/#PASSWORD#/',escapeshellarg($pass),$cmd);
 	
-	// Run the program
-	exec($cmd, $output, $ret);
+  // Run the program
+  exec($cmd, $output, $ret);
 	
-	// If it succeeded, return success
-	if($ret == 0)
-		return 1;
-	
-	// return failure
-	return 0;
+  // If it succeeded, return success
+  if ($ret == 0)
+  {
+    return 1;
+  }
+
+  // return failure
+  return 0;
 }
 
 /* authGetUserLevel($user)
@@ -94,19 +96,23 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user, $lev1_admin)
 {
-	// User not logged in, user level '0'
-	if(!isset($user))
-		return 0;
-	
-	// Check if the user is can modify
-	for($i = 0; $lev1_admin[$i]; $i++)
-	{
-		if(strcasecmp($user, $lev1_admin[$i]) == 0)
-			return 2;
-	}
-	
-	// Everybody else is access level '1'
-	return 1;
+  // User not logged in, user level '0'
+  if(!isset($user))
+  {
+    return 0;
+  }
+
+  // Check if the user is can modify
+  for($i = 0; $lev1_admin[$i]; $i++)
+  {
+    if(strcasecmp($user, $lev1_admin[$i]) == 0)
+    {
+      return 2;
+    }
+  }
+
+  // Everybody else is access level '1'
+  return 1;
 }
 
 ?>

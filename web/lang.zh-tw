@@ -1,29 +1,29 @@
 <?php
-# $Id$
+// $Id$
 
-# This file contains PHP code that specifies language specific strings
-# The default strings come from lang.en, and anything in a locale
-# specific file will overwrite the default. This is a Chinese (zh-tw Big5) file.
-#
-#
-#
-#
-# This file is PHP code. Treat it as such.
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.en, and anything in a locale
+// specific file will overwrite the default. This is a Chinese (zh-tw Big5) file.
+//
+//
+//
+//
+// This file is PHP code. Treat it as such.
 
-# The charset to use in "Content-type" header
+// The charset to use in "Content-type" header
 $vocab["charset"]            = "utf-8";
 
-# Used in style.inc
+// Used in style.inc
 $vocab["mrbs"]               = "會議室預約系統";
 
-# Used in functions.inc
+// Used in functions.inc
 $vocab["report"]             = "報表";
 $vocab["admin"]              = "系統管理";
 $vocab["help"]               = "說明";
 $vocab["search"]             = "搜尋";
 $vocab["not_php3"]             = "<H1>WARNING: This probably doesn't work with PHP3</H1>";
 
-# Used in day.php
+// Used in day.php
 $vocab["bookingsfor"]        = "預約";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "區域";
@@ -34,13 +34,13 @@ $vocab["goto"]               = "goto";
 $vocab["highlight_line"]     = "加強顯示這行";
 $vocab["click_to_reserve"]   = "點選格子進行預約登記";
 
-# Used in trailer.inc
+// Used in trailer.inc
 $vocab["viewday"]            = "查看日期 ";
 $vocab["viewweek"]           = "週顯示";
 $vocab["viewmonth"]          = "月顯示";
 $vocab["ppreview"]           = "預覽列印";
 
-# Used in edit_entry.php
+// Used in edit_entry.php
 $vocab["addentry"]           = "新增";
 $vocab["editentry"]          = "修改";
 $vocab["editseries"]         = "整批修改";
@@ -88,7 +88,7 @@ $vocab["valid_time_of_day"]  = "可以預約的時間.";
 $vocab["brief_description"]  = "簡要說明.";
 $vocab["useful_n-weekly_value"] = "可以提供預約的星期.";
 
-# Used in view_entry.php
+// Used in view_entry.php
 $vocab["description"]        = "說明";
 $vocab["room"]               = "會議室/設備";
 $vocab["createdby"]          = "預約人";
@@ -100,7 +100,7 @@ $vocab["returnprev"]         = "回前一頁";
 $vocab["invalid_entry_id"]   = "預約序號錯誤.";
 $vocab["invalid_series_id"]  = "序列號錯誤.";
 
-# Used in edit_entry_handler.php
+// Used in edit_entry_handler.php
 $vocab["error"]              = "錯誤";
 $vocab["sched_conflict"]     = "時段衝突";
 $vocab["conflict"]           = "此時段已被預約";
@@ -113,7 +113,7 @@ $vocab["mail_body_del_entry"] = $mail["deleted_entry"];
 $vocab["mail_body_changed_entry"] = $mail["changed_entry"];
 $vocab["mail_subject_delete"] = $mail["subject_delete"];
 
-# Authentication stuff
+// Authentication stuff
 $vocab["accessdenied"]       = "限制存取";
 $vocab["norights"]           = "您無權利修改此筆記錄!!";
 $vocab["please_login"]       = "請先登入";
@@ -124,12 +124,12 @@ $vocab["you_are"]            = "您是";
 $vocab["login"]              = "登入";
 $vocab["logoff"]             = "登出";
 
-# Authentication database
+// Authentication database
 $vocab["user_list"]          = "使用者清單";
 $vocab["edit_user"]          = "編輯使用者";
 $vocab["delete_user"]        = "刪除使用者";
-#$vocab["user_name"]         = Use the same as above, for consistency.
-#$vocab["user_password"]     = Use the same as above, for consistency.
+//$vocab["user_name"]         = Use the same as above, for consistency.
+//$vocab["user_password"]     = Use the same as above, for consistency.
 $vocab["user_email"]         = "Email address";
 $vocab["password_twice"]     = "If you wish to change the password, please type the new password twice";
 $vocab["passwords_not_eq"]   = "Error: The passwords do not match.";
@@ -142,7 +142,7 @@ $vocab["unknown"]            = "未知的";
 $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "顯示全部我的預約";
 
-# Used in search.php
+// Used in search.php
 $vocab["invalid_search"]     = "空的或不合法的搜尋字串.";
 $vocab["search_results"]     = "搜尋結果";
 $vocab["nothing_found"]      = "找不到.";
@@ -158,7 +158,7 @@ $vocab["search_button"]      = "搜尋";
 $vocab["search_for"]         = "搜尋";
 $vocab["from"]               = "From";
 
-# Used in report.php
+// Used in report.php
 $vocab["report_on"]          = "會議室報表";
 $vocab["report_start"]       = "報表起始日";
 $vocab["report_end"]         = "報表結束日";
@@ -187,20 +187,20 @@ $vocab["rep_dsp"]            = "顯示在報表";
 $vocab["rep_dsp_dur"]        = "持續時間";
 $vocab["rep_dsp_end"]        = "結束時間";
 
-# Used in week.php
+// Used in week.php
 $vocab["weekbefore"]         = "前一週";
 $vocab["weekafter"]          = "後一週";
 $vocab["gotothisweek"]       = "這一週";
 
-# Used in month.php
+// Used in month.php
 $vocab["monthbefore"]        = "上一月";
 $vocab["monthafter"]         = "下一月";
 $vocab["gotothismonth"]      = "這個月";
 
-# Used in {day week month}.php
+// Used in {day week month}.php
 $vocab["no_rooms_for_area"]  = "這個種類沒有定義會議室/設備";
 
-# Used in admin.php
+// Used in admin.php
 $vocab["edit"]               = "編輯";
 $vocab["delete"]             = "刪除";
 $vocab["rooms"]              = "會議室/設備";
@@ -216,7 +216,7 @@ $vocab["capacity"]           = "容量";
 $vocab["norooms"]            = "沒有會議室/設備.";
 $vocab["administration"]     = "管理者";
 
-# Used in edit_area_room.php
+// Used in edit_area_room.php
 $vocab["editarea"]           = "新增種類";
 $vocab["change"]             = "改變";
 $vocab["backadmin"]          = "回到管理首頁";
@@ -231,21 +231,21 @@ $vocab["room_admin_email"]   = "會議室管理者email";
 $vocab["area_admin_email"]   = "區域管理者email";
 $vocab["invalid_email"]      = "不合法的email!";
 
-# Used in del.php
+// Used in del.php
 $vocab["deletefollowing"]    = "這個動作會刪除相關的預約紀錄";
 $vocab["sure"]               = "確定嗎?";
 $vocab["YES"]                = "YES";
 $vocab["NO"]                 = "NO";
 $vocab["delarea"]            = "你必須先刪除所屬的會議室<p>";
 
-# Used in help.php
+// Used in help.php
 $vocab["about_mrbs"]         = "關於MRBS";
 $vocab["database"]           = "資料庫";
 $vocab["system"]             = "系統";
 $vocab["please_contact"]     = "請聯絡";
 $vocab["for_any_questions"]  = ",關於任何在這裡找不到答案的問題.";
 
-# Used in mysql.inc AND pgsql.inc
+// Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatal Error: 無法連上資料庫";
 
 ?>

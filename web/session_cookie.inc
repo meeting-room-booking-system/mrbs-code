@@ -42,31 +42,34 @@ else
 */
 if (isset($Action) && ($Action == "SetName"))
 {
-    // Avoid errors with error level ALL
-    if ( !isset( $NewUserName ) )
+  // Avoid errors with error level ALL
+  if ( !isset( $NewUserName ) )
+  {
+    $NewUserName = "";
+  }
+  /* First make sure the password is valid */
+  if ($NewUserName == "") 
+  {
+    // Delete cookie
+
+    setcookie("UserName", '', time()-42000, $cookie_path);
+  }
+  else
+  {
+    if (!authValidateUser($NewUserName, $NewUserPassword))
     {
-    	$NewUserName = "";
+      print_header(0, 0, 0, 0);
+      echo "<P>".get_vocab('unknown_user')."</P>\n";
+      printLoginForm($TargetURL);
+      exit();
     }
-    /* First make sure the password is valid */
-    if ($NewUserName == "") {
-        // Delete cookie
+    else
+    {
+      $UserName     = $NewUserName;
+      $UserPassword = $NewUserPassword;
+    }
 
-        setcookie("UserName", '', time()-42000, $cookie_path);
-    } else {
-        if (!authValidateUser($NewUserName, $NewUserPassword))
-        {
-            print_header(0, 0, 0, 0);
-            echo "<P>".get_vocab('unknown_user')."</P>\n";
-            printLoginForm($TargetURL);
-            exit();
-        }
-        else
-        {
-            $UserName     = $NewUserName;
-            $UserPassword = $NewUserPassword;
-        }
-
-        setcookie("UserName", $UserName, time()+(60*60*24*30), $cookie_path);
+    setcookie("UserName", $UserName, time()+(60*60*24*30), $cookie_path);
     }
     header ("Location: $TargetURL"); /* Redirect browser to initial page */
     /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
@@ -86,7 +89,7 @@ if (isset($Action) && ($Action == "SetName"))
 */
 function printLoginForm($TargetURL)
 {
-    global $PHP_SELF;
+  global $PHP_SELF;
 ?>
 <p>
   <?php echo get_vocab("please_login") ?>
@@ -117,9 +120,9 @@ function printLoginForm($TargetURL)
 */
 if (isset($Action) && ($Action == "QueryName"))
 {
-    print_header(0, 0, 0, 0);
-    printLoginForm($TargetURL);
-    exit();
+  print_header(0, 0, 0, 0);
+  printLoginForm($TargetURL);
+  exit();
 }
 
 /* authGet()
@@ -130,54 +133,64 @@ if (isset($Action) && ($Action == "QueryName"))
  */
 function authGet()
 {
-    global $PHP_SELF, $QUERY_STRING;
+  global $PHP_SELF, $QUERY_STRING;
 
-    print_header(0, 0, 0, 0);
+  print_header(0, 0, 0, 0);
 
-    echo "<p>".get_vocab("norights")."</p>\n";
+  echo "<p>".get_vocab("norights")."</p>\n";
 
-    $TargetURL = basename($PHP_SELF);
-    if (isset($QUERY_STRING)) $TargetURL = $TargetURL . "?" . $QUERY_STRING;
-    printLoginForm($TargetURL);
+  $TargetURL = basename($PHP_SELF);
+  if (isset($QUERY_STRING))
+  {
+    $TargetURL = $TargetURL . "?" . $QUERY_STRING;
+  }
+  printLoginForm($TargetURL);
 
-    exit();
+  exit();
 }
 
 function getUserName()
 {
-    if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
+  if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
+  {
+    return unslashes($_COOKIE["UserName"]);
+  }
+  else
+  {
+    global $HTTP_COOKIE_VARS;
+    if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["UserName"]))
     {
-	return unslashes($_COOKIE["UserName"]);
+      return unslashes($HTTP_COOKIE_VARS["UserName"]);
     }
-    else
-    {
-        global $HTTP_COOKIE_VARS;
-	if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["UserName"]))
-	{
-		return unslashes($HTTP_COOKIE_VARS["UserName"]);
-	}
-    }
+  }
 }
 
 // Print the logon entry on the top banner.
 function PrintLogonBox()
 {
-    global $PHP_SELF, $QUERY_STRING, $user_list_link, $user_link, $day, $month;
-    global $year, $auth;
-
-    $TargetURL = basename($PHP_SELF);
-    if (isset($url_base) && ($url_base != "")) $TargetURL = $url_base . '/' . $TargetURL;
-    if (isset($QUERY_STRING)) $TargetURL = $TargetURL . "?" . $QUERY_STRING;
-    $user=getUserName();
-    if (isset($user))
-    {
-        // words 'you are xxxx' becomes a link to the
-        // report page with only entries created by xxx. Past entries are not
-        // displayed but this can be changed
-           $search_string = "report.php?From_day=$day&amp;From_month=$month&amp;".
-             "From_year=$year&amp;To_day=1&amp;To_month=12&amp;To_year=2030&amp;".
-             "areamatch=&amp;roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;".
-             "sortby=r&amp;display=d&amp;sumby=d&amp;creatormatch=$user"; ?>
+  global $PHP_SELF, $QUERY_STRING, $user_list_link, $user_link, $day, $month;
+  global $year, $auth;
+  
+  $TargetURL = basename($PHP_SELF);
+  if (isset($url_base) && ($url_base != ""))
+  {
+    $TargetURL = $url_base . '/' . $TargetURL;
+  }
+  if (isset($QUERY_STRING))
+  {
+    $TargetURL = $TargetURL . "?" . $QUERY_STRING;
+  }
+  $user=getUserName();
+  if (isset($user))
+  {
+    // words 'you are xxxx' becomes a link to the
+    // report page with only entries created by xxx. Past entries are not
+    // displayed but this can be changed
+    $search_string = "report.php?From_day=$day&amp;From_month=$month&amp;".
+      "From_year=$year&amp;To_day=1&amp;To_month=12&amp;To_year=2030&amp;".
+      "areamatch=&amp;roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;".
+      "sortby=r&amp;display=d&amp;sumby=d&amp;creatormatch=$user";
+?>
 
     <td class="banner">
       <a name="logonBox" href="<?php echo "$search_string\" title=\""
@@ -213,7 +226,7 @@ else
 ?>
     </td>
 <?php
-    }
+  }
 }
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-# $Id$
+// $Id$
 
 require_once('grab_globals.inc.php');
 include "config.inc.php";
@@ -21,181 +21,204 @@ $id = get_form_var('id', 'int');
 $copy = get_form_var('copy', 'int');
 $edit_type = get_form_var('edit_type', 'string');
 
-#If we dont know the right date then make it up
-if(!isset($day) or !isset($month) or !isset($year))
+// If we dont know the right date then make it up
+if (!isset($day) or !isset($month) or !isset($year))
 {
-	$day   = date("d");
-	$month = date("m");
-	$year  = date("Y");
+  $day   = date("d");
+  $month = date("m");
+  $year  = date("Y");
 }
-if(empty($area))
-	$area = get_default_area();
-if(!isset($edit_type))
-	$edit_type = "";
-
-if(!getAuthorised(1))
+if (empty($area))
 {
-	showAccessDenied($day, $month, $year, $area);
-	exit;
+  $area = get_default_area();
+}
+if (!isset($edit_type))
+{
+  $edit_type = "";
 }
 
-# This page will either add or modify a booking
+if (!getAuthorised(1))
+{
+  showAccessDenied($day, $month, $year, $area);
+  exit;
+}
 
-# We need to know:
-#  Name of booker
-#  Description of meeting
-#  Date (option select box for day, month, year)
-#  Time
-#  Duration
-#  Internal/External
+// This page will either add or modify a booking
 
-# Firstly we need to know if this is a new booking or modifying an old one
-# and if it's a modification we need to get all the old data from the db.
-# If we had $id passed in then it's a modification.
+// We need to know:
+//  Name of booker
+//  Description of meeting
+//  Date (option select box for day, month, year)
+//  Time
+//  Duration
+//  Internal/External
+
+// Firstly we need to know if this is a new booking or modifying an old one
+// and if it's a modification we need to get all the old data from the db.
+// If we had $id passed in then it's a modification.
 if (isset($id))
 {
-	$sql = "select name, create_by, description, start_time, end_time,
-	        type, room_id, entry_type, repeat_id from $tbl_entry where id=$id";
+  $sql = "select name, create_by, description, start_time, end_time,
+	  type, room_id, entry_type, repeat_id from $tbl_entry where id=$id";
 	
-	$res = sql_query($sql);
-	if (! $res) fatal_error(1, sql_error());
-	if (sql_count($res) != 1) fatal_error(1, get_vocab("entryid") . $id . get_vocab("not_found"));
+  $res = sql_query($sql);
+  if (! $res)
+  {
+    fatal_error(1, sql_error());
+  }
+  if (sql_count($res) != 1)
+  {
+    fatal_error(1, get_vocab("entryid") . $id . get_vocab("not_found"));
+  }
+
+  $row = sql_row_keyed($res, 0);
+  sql_free($res);
+
+  $name        = $row['name'];
+  $create_by   = $row['create_by'];
+  $description = $row['description'];
+  $start_day   = strftime('%d', $row['start_time']);
+  $start_month = strftime('%m', $row['start_time']);
+  $start_year  = strftime('%Y', $row['start_time']);
+  $start_hour  = strftime('%H', $row['start_time']);
+  $start_min   = strftime('%M', $row['start_time']);
+  $duration    = $row['end_time'] - $row['start_time'] - cross_dst($row['start_time'], $row['end_time']);
+  $type        = $row['type'];
+  $room_id     = $row['room_id'];
+  $entry_type  = $row['entry_type'];
+  $rep_id      = $row['repeat_id'];
+
+  if($entry_type >= 1)
+  {
+    $sql = "SELECT rep_type, start_time, end_date, rep_opt, rep_num_weeks
+            FROM $tbl_repeat WHERE id=$rep_id";
 	
-	$row = sql_row_keyed($res, 0);
-	sql_free($res);
+    $res = sql_query($sql);
+    if (! $res)
+    {
+      fatal_error(1, sql_error());
+    }
+    if (sql_count($res) != 1)
+    {
+      fatal_error(1,
+                  get_vocab("repeat_id") . $rep_id . get_vocab("not_found"));
+    }
 
-	$name        = $row['name'];
-	$create_by   = $row['create_by'];
-	$description = $row['description'];
-	$start_day   = strftime('%d', $row['start_time']);
-	$start_month = strftime('%m', $row['start_time']);
-	$start_year  = strftime('%Y', $row['start_time']);
-	$start_hour  = strftime('%H', $row['start_time']);
-	$start_min   = strftime('%M', $row['start_time']);
-	$duration    = $row['end_time'] - $row['start_time'] - cross_dst($row['start_time'], $row['end_time']);
-	$type        = $row['type'];
-	$room_id     = $row['room_id'];
-	$entry_type  = $row['entry_type'];
-	$rep_id      = $row['repeat_id'];
+    $row = sql_row_keyed($res, 0);
+    sql_free($res);
 	
-	if($entry_type >= 1)
-	{
-		$sql = "SELECT rep_type, start_time, end_date, rep_opt, rep_num_weeks
-		        FROM $tbl_repeat WHERE id=$rep_id";
-		
-		$res = sql_query($sql);
-		if (! $res) fatal_error(1, sql_error());
-		if (sql_count($res) != 1) fatal_error(1, get_vocab("repeat_id") . $rep_id . get_vocab("not_found"));
-		
-		$row = sql_row_keyed($res, 0);
-		sql_free($res);
-		
-		$rep_type = $row['rep_type'];
+    $rep_type = $row['rep_type'];
 
-		if($edit_type == "series")
-		{
-			$start_day   = (int)strftime('%d', $row['start_time']);
-			$start_month = (int)strftime('%m', $row['start_time']);
-			$start_year  = (int)strftime('%Y', $row['start_time']);
-			
-			$rep_end_day   = (int)strftime('%d', $row['end_date']);
-			$rep_end_month = (int)strftime('%m', $row['end_date']);
-			$rep_end_year  = (int)strftime('%Y', $row['end_date']);
-			
-			switch($rep_type)
-			{
-				case 2:
-				case 6:
-					$rep_day[0] = $row['rep_opt'][0] != "0";
-					$rep_day[1] = $row['rep_opt'][1] != "0";
-					$rep_day[2] = $row['rep_opt'][2] != "0";
-					$rep_day[3] = $row['rep_opt'][3] != "0";
-					$rep_day[4] = $row['rep_opt'][4] != "0";
-					$rep_day[5] = $row['rep_opt'][5] != "0";
-					$rep_day[6] = $row['rep_opt'][6] != "0";
+    if ($edit_type == "series")
+    {
+      $start_day   = (int)strftime('%d', $row['start_time']);
+      $start_month = (int)strftime('%m', $row['start_time']);
+      $start_year  = (int)strftime('%Y', $row['start_time']);
+		
+      $rep_end_day   = (int)strftime('%d', $row['end_date']);
+      $rep_end_month = (int)strftime('%m', $row['end_date']);
+      $rep_end_year  = (int)strftime('%Y', $row['end_date']);
 
-					if ($rep_type == 6)
-					{
-						$rep_num_weeks = $row['rep_num'];
-					}
-					
-					break;
-				
-				default:
-					$rep_day = array(0, 0, 0, 0, 0, 0, 0);
-			}
-		}
-		else
-		{
-			$rep_type     = $row['rep_type'];
-			$rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
-			$rep_opt      = $row['rep_opt'];
-		}
-	}
+      switch ($rep_type)
+      {
+        case 2:
+        case 6:
+          $rep_day[0] = $row['rep_opt'][0] != "0";
+          $rep_day[1] = $row['rep_opt'][1] != "0";
+          $rep_day[2] = $row['rep_opt'][2] != "0";
+          $rep_day[3] = $row['rep_opt'][3] != "0";
+          $rep_day[4] = $row['rep_opt'][4] != "0";
+          $rep_day[5] = $row['rep_opt'][5] != "0";
+          $rep_day[6] = $row['rep_opt'][6] != "0";
+
+          if ($rep_type == 6)
+          {
+            $rep_num_weeks = $row['rep_num'];
+          }
+
+          break;
+
+        default:
+          $rep_day = array(0, 0, 0, 0, 0, 0, 0);
+      }
+    }
+    else
+    {
+      $rep_type     = $row['rep_type'];
+      $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
+      $rep_opt      = $row['rep_opt'];
+    }
+  }
 }
 else
 {
-	# It is a new booking. The data comes from whichever button the user clicked
-	$edit_type   = "series";
-	$name        = "";
-	$create_by   = getUserName();
-	$description = "";
-	$start_day   = $day;
-	$start_month = $month;
-	$start_year  = $year;
-    // Avoid notices for $hour and $minute if periods is enabled
-    (isset($hour)) ? $start_hour = $hour : '';
-	(isset($minute)) ? $start_min = $minute : '';
-	$duration    = ($enable_periods ? 60 : 60 * 60);
-	$type        = "I";
-	$room_id     = $room;
-    unset($id);
+  // It is a new booking. The data comes from whichever button the user clicked
+  $edit_type   = "series";
+  $name        = "";
+  $create_by   = getUserName();
+  $description = "";
+  $start_day   = $day;
+  $start_month = $month;
+  $start_year  = $year;
+  // Avoid notices for $hour and $minute if periods is enabled
+  (isset($hour)) ? $start_hour = $hour : '';
+  (isset($minute)) ? $start_min = $minute : '';
+  $duration    = ($enable_periods ? 60 : 60 * 60);
+  $type        = "I";
+  $room_id     = $room;
+  unset($id);
 
-	$rep_id        = 0;
-	$rep_type      = 0;
-	$rep_end_day   = $day;
-	$rep_end_month = $month;
-	$rep_end_year  = $year;
-	$rep_day       = array(0, 0, 0, 0, 0, 0, 0);
+  $rep_id        = 0;
+  $rep_type      = 0;
+  $rep_end_day   = $day;
+  $rep_end_month = $month;
+  $rep_end_year  = $year;
+  $rep_day       = array(0, 0, 0, 0, 0, 0, 0);
 }
 
-# These next 4 if statements handle the situation where
-# this page has been accessed directly and no arguments have
-# been passed to it.
-# If we have not been provided with a room_id
-if( empty( $room_id ) )
+// These next 4 if statements handle the situation where
+// this page has been accessed directly and no arguments have
+// been passed to it.
+// If we have not been provided with a room_id
+if (empty( $room_id ) )
 {
-	$sql = "select id from $tbl_room limit 1";
-	$res = sql_query($sql);
-	$row = sql_row_keyed($res, 0);
-	$room_id = $row['id'];
+  $sql = "select id from $tbl_room limit 1";
+  $res = sql_query($sql);
+  $row = sql_row_keyed($res, 0);
+  $room_id = $row['id'];
 
 }
 
-# If we have not been provided with starting time
-if( empty( $start_hour ) && $morningstarts < 10 )
-	$start_hour = "0$morningstarts";
+// If we have not been provided with starting time
+if ( empty( $start_hour ) && $morningstarts < 10 )
+{
+  $start_hour = "0$morningstarts";
+}
 
-if( empty( $start_hour ) )
-	$start_hour = "$morningstarts";
+if ( empty( $start_hour ) )
+{
+  $start_hour = "$morningstarts";
+}
 
-if( empty( $start_min ) )
-	$start_min = "00";
+if ( empty( $start_min ) )
+{
+  $start_min = "00";
+}
 
 // Remove "Undefined variable" notice
 if (!isset($rep_num_weeks))
 {
-    $rep_num_weeks = "";
+  $rep_num_weeks = "";
 }
 
 $enable_periods ? toPeriodString($start_min, $duration, $dur_units) : toTimeString($duration, $dur_units);
 
-#now that we know all the data to fill the form with we start drawing it
+//now that we know all the data to fill the form with we start drawing it
 
-if(!getWritable($create_by, getUserName()))
+if (!getWritable($create_by, getUserName()))
 {
-	showAccessDenied($day, $month, $year, $area);
-	exit;
+  showAccessDenied($day, $month, $year, $area);
+  exit;
 }
 
 print_header($day, $month, $year, $area);
@@ -227,10 +250,14 @@ function validate_and_submit ()
   <?php } ?>
 
   // check form element exist before trying to access it
-  if( document.forms["main"].id )
+  if ( document.forms["main"].id )
+  {
     i1 = parseInt(document.forms["main"].id.value);
+  }
   else
+  {
     i1 = 0;
+  }
 
   i2 = parseInt(document.forms["main"].rep_id.value);
   if ( document.forms["main"].rep_num_weeks)
@@ -267,7 +294,7 @@ function validate_and_submit ()
   // check that a room(s) has been selected
   // this is needed as edit_entry_handler does not check that a room(s)
   // has been chosen
-  if( document.forms["main"].elements['rooms'].selectedIndex == -1 )
+  if ( document.forms["main"].elements['rooms'].selectedIndex == -1 )
   {
     alert("<?php echo get_vocab("you_have_not_selected") . '\n' . get_vocab("valid_room") ?>");
     return false;
@@ -384,7 +411,11 @@ if (!$twentyfourhour_format)
 ?>
     </td>
   </tr>
-<?php } else { ?>
+<?php
+}
+else
+{
+?>
   <tr>
     <td class="CR"><b><?php echo get_vocab("period")?>:</b></td>
     <td class="CL">
@@ -392,17 +423,21 @@ if (!$twentyfourhour_format)
 <?php
 foreach ($periods as $p_num => $p_val)
 {
-	echo "<option value=\"$p_num\"";
-	if( ( isset( $period ) && $period == $p_num ) || $p_num == $start_min)
-        	echo " selected=\"selected";
-	echo ">$p_val</option>\n";
+  echo "<option value=\"$p_num\"";
+  if( ( isset( $period ) && $period == $p_num ) || $p_num == $start_min)
+  {
+    echo " selected=\"selected";
+  }
+  echo ">$p_val</option>\n";
 }
 ?>
       </select>
     </td>
   </tr>
 
-<?php } ?>
+<?php
+}
+?>
   <tr>
     <td class="CR"><b><?php echo get_vocab("duration");?>:</b></td>
     <td class="CL">
@@ -410,15 +445,22 @@ foreach ($periods as $p_num => $p_val)
       <select name="dur_units">
 <?php
 if( $enable_periods )
-	$units = array("periods", "days");
+{
+  $units = array("periods", "days");
+}
 else
-	$units = array("minutes", "hours", "days", "weeks");
+{
+  $units = array("minutes", "hours", "days", "weeks");
+}
 
 while (list(,$unit) = each($units))
 {
-	echo "        <option value=\"$unit\"";
-	if ($dur_units == get_vocab($unit)) echo " selected=\"selected\"";
-	echo ">".get_vocab($unit)."</option>";
+  echo "        <option value=\"$unit\"";
+  if ($dur_units == get_vocab($unit))
+  {
+    echo " selected=\"selected\"";
+  }
+  echo ">".get_vocab($unit)."</option>";
 }
 ?>
       </select>
@@ -428,18 +470,19 @@ while (list(,$unit) = each($units))
   </tr>
 
 <?php
-      # Determine the area id of the room in question first
-      $sql = "select area_id from $tbl_room where id=$room_id";
-      $res = sql_query($sql);
-      $row = sql_row_keyed($res, 0);
-      $area_id = $row['area_id'];
-      # determine if there is more than one area
-      $sql = "select id from $tbl_area";
-      $res = sql_query($sql);
-      $num_areas = sql_count($res);
-      # if there is more than one area then give the option
-      # to choose areas.
-      if( $num_areas > 1 ) {
+// Determine the area id of the room in question first
+$sql = "select area_id from $tbl_room where id=$room_id";
+$res = sql_query($sql);
+$row = sql_row_keyed($res, 0);
+$area_id = $row['area_id'];
+// determine if there is more than one area
+$sql = "select id from $tbl_area";
+$res = sql_query($sql);
+$num_areas = sql_count($res);
+// if there is more than one area then give the option
+// to choose areas.
+if( $num_areas > 1 )
+{
 
 ?>
   <tr>
@@ -463,25 +506,30 @@ function changeRooms( formObj )
     // add entries based on area selected
     switch (area){
 <?php
-        # get the area id for case statement
-	$sql = "select id, area_name from $tbl_area order by area_name";
-        $res = sql_query($sql);
-	if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-	{
-
-                print "      case \"".$row['id']."\":\n";
-        	# get rooms for this area
-		$sql2 = "select id, room_name from $tbl_room where area_id='".$row['id']."' order by room_name";
-        	$res2 = sql_query($sql2);
-		if ($res2) for ($j = 0; ($row2 = sql_row_keyed($res2, $j)); $j++)
-		{
-                	print "        roomsObj.options[$j] = new Option(\"".str_replace('"','\\"',$row2['room_name'])."\",".$row2['id'] .")\n";
-                }
-		# select the first entry by default to ensure
-		# that one room is selected to begin with
-		print "        roomsObj.options[0].selected = true\n";
-		print "        break\n";
-	}
+  // get the area id for case statement
+  $sql = "select id, area_name from $tbl_area order by area_name";
+  $res = sql_query($sql);
+  if ($res)
+  {
+    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+    {
+      print "      case \"".$row['id']."\":\n";
+      // get rooms for this area
+      $sql2 = "select id, room_name from $tbl_room where area_id='".$row['id']."' order by room_name";
+      $res2 = sql_query($sql2);
+      if ($res2)
+      {
+        for ($j = 0; ($row2 = sql_row_keyed($res2, $j)); $j++)
+        {
+          print "        roomsObj.options[$j] = new Option(\"".str_replace('"','\\"',$row2['room_name'])."\",".$row2['id'] .")\n";
+        }
+        // select the first entry by default to ensure
+        // that one room is selected to begin with
+        print "        roomsObj.options[0].selected = true\n";
+        print "        break\n";
+      }
+    }
+  }
 ?>
     } //switch
 }
@@ -492,17 +540,21 @@ this.document.writeln("<b><?php echo get_vocab("areas") ?>:<\/b><\/td><td class=
 this.document.writeln("          <select name=\"areas\" onchange=\"changeRooms(this.form)\">");
 
 <?php
-# get list of areas
-$sql = "select id, area_name from $tbl_area order by area_name";
-$res = sql_query($sql);
-if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-{
-	$selected = "";
-	if ($row['id'] == $area_id) {
-		$selected = "selected=\"selected\"";
-	}
-	print "this.document.writeln(\"            <option $selected value=\\\"".$row['id']."\\\">".$row['area_name']."\")</option>\n";
-}
+  // get list of areas
+  $sql = "select id, area_name from $tbl_area order by area_name";
+   $res = sql_query($sql);
+  if ($res)
+  {
+    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+    {
+      $selected = "";
+      if ($row['id'] == $area_id)
+      {
+        $selected = "selected=\"selected\"";
+      }
+      print "this.document.writeln(\"            <option $selected value=\\\"".$row['id']."\\\">".$row['area_name']."\")</option>\n";
+    }
+  }
 ?>
 this.document.writeln("          <\/select>");
 
@@ -511,7 +563,7 @@ this.document.writeln("          <\/select>");
     </td>
   </tr>
 <?php
-} # if $num_areas
+} // if $num_areas
 ?>
   <tr>
     <td class="CR"><b><?php echo get_vocab("rooms") ?>:</b></td>
@@ -520,23 +572,27 @@ this.document.writeln("          <\/select>");
         <tr>
           <td>
             <select name="rooms" multiple="multiple">
-  <?php
-        # select the rooms in the area determined above
-	$sql = "select id, room_name from $tbl_room where area_id=$area_id order by room_name";
-   	$res = sql_query($sql);
+<?php
 
+// select the rooms in the area determined above
+$sql = "select id, room_name from $tbl_room where area_id=$area_id order by room_name";
+$res = sql_query($sql);
 
-   	if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-   	{
-		$selected = "";
-		if ($row['id'] == $room_id) {
-			$selected = "selected=\"selected\"";
-		}
-		echo "              <option $selected value=\"".$row['id']."\">".$row['room_name']."</option>\n";
-        // store room names for emails
-        $room_names[$i] = $row['room_name'];
-   	}
-  ?>
+if ($res)
+{
+  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  {
+    $selected = "";
+    if ($row['id'] == $room_id)
+    {
+      $selected = "selected=\"selected\"";
+    }
+    echo "              <option $selected value=\"".$row['id']."\">".$row['room_name']."</option>\n";
+    // store room names for emails
+    $room_names[$i] = $row['room_name'];
+  }
+}
+?>
             </select>
           </td>
           <td><?php echo get_vocab("ctrl_click") ?></td>
@@ -552,30 +608,37 @@ this.document.writeln("          <\/select>");
 <?php
 for ($c = "A"; $c <= "Z"; $c++)
 {
-	if (!empty($typel[$c]))
-		echo "        <option value=\"$c\"" . ($type == $c ? " selected=\"selected\"" : "") . ">$typel[$c]</option>\n";
+  if (!empty($typel[$c]))
+  {
+    echo "        <option value=\"$c\"" . ($type == $c ? " selected=\"selected\"" : "") . ">$typel[$c]</option>\n";
+  }
 }
 ?>
       </select>
     </td>
   </tr>
 
-<?php if($edit_type == "series") { ?>
+<?php
+if ($edit_type == "series")
+{
+?>
 
   <tr>
     <td class="CR"><b><?php echo get_vocab("rep_type")?>:</b></td>
     <td class="CL">
 <?php
 
-for($i = 0; isset($vocab["rep_type_$i"]); $i++)
-{
-	echo "      <input name=\"rep_type\" type=\"radio\" value=\"" . $i . "\"";
+  for ($i = 0; isset($vocab["rep_type_$i"]); $i++)
+  {
+    echo "      <input name=\"rep_type\" type=\"radio\" value=\"" . $i . "\"";
 
-	if($i == $rep_type)
-		echo " checked=\"checked\"";
+    if ($i == $rep_type)
+    {
+      echo " checked=\"checked\"";
+    }
 
-	echo ">" . get_vocab("rep_type_$i") . "\n";
-}
+    echo ">" . get_vocab("rep_type_$i") . "\n";
+  }
 
 ?>
     </td>
@@ -595,14 +658,17 @@ for($i = 0; isset($vocab["rep_type_$i"]); $i++)
     </td>
     <td class="CL">
 <?php
-# Display day name checkboxes according to language and preferred weekday start.
-for ($i = 0; $i < 7; $i++)
-{
-	$wday = ($i + $weekstarts) % 7;
-	echo "      <input name=\"rep_day[$wday]\" type=\"checkbox\"";
-	if ($rep_day[$wday]) echo " checked=\"checked\"";
-	echo ">" . day_name($wday) . "\n";
-}
+  // Display day name checkboxes according to language and preferred weekday start.
+  for ($i = 0; $i < 7; $i++)
+  {
+    $wday = ($i + $weekstarts) % 7;
+    echo "      <input name=\"rep_day[$wday]\" type=\"checkbox\"";
+    if ($rep_day[$wday])
+    {
+      echo " checked=\"checked\"";
+    }
+    echo ">" . day_name($wday) . "\n";
+  }
 ?>
     </td>
   </tr>
@@ -611,7 +677,7 @@ for ($i = 0; $i < 7; $i++)
 }
 else
 {
-	$key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
+  $key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
 
 ?>
   <tr>
@@ -622,25 +688,28 @@ else
      <td class="CL"><?php echo get_vocab($key) ?></td>
    </tr>
 <?php
-	if(isset($rep_type) && ($rep_type != 0))
-	{
-		$opt = "";
-		if ($rep_type == 2)
-		{
-			# Display day names according to language and preferred weekday start.
-			for ($i = 0; $i < 7; $i++)
-			{
-				$wday = ($i + $weekstarts) % 7;
-				if ($rep_opt[$wday]) $opt .= day_name($wday) . " ";
-			}
-		}
-		if($opt)
-                {
-			echo "  <tr><td class=\"CR\"><b>".get_vocab("rep_rep_day").":</b></td><td class=\"CL\">$opt</td></tr>\n";
-                }
+  if(isset($rep_type) && ($rep_type != 0))
+  {
+    $opt = "";
+    if ($rep_type == 2)
+    {
+      // Display day names according to language and preferred weekday start.
+      for ($i = 0; $i < 7; $i++)
+      {
+        $wday = ($i + $weekstarts) % 7;
+        if ($rep_opt[$wday])
+        {
+          $opt .= day_name($wday) . " ";
+        }
+      }
+    }
+    if($opt)
+    {
+      echo "  <tr><td class=\"CR\"><b>".get_vocab("rep_rep_day").":</b></td><td class=\"CL\">$opt</td></tr>\n";
+    }
 
-		echo "  <tr><td class=\"CR\"><b>".get_vocab("rep_end_date").":</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
-	}
+    echo "  <tr><td class=\"CR\"><b>".get_vocab("rep_end_date").":</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
+  }
 }
 /* We display the rep_num_weeks box only if:
    - this is a new entry ($id is not set)
@@ -648,7 +717,8 @@ else
    - we are editing an existing repeating entry ($rep_type is set and
      $rep_type != 0 and $edit_type == "series" )
 */
-if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) && ( "series" == $edit_type ) ) )
+if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) &&
+                             ( "series" == $edit_type ) ) )
 {
 ?>
 
@@ -661,7 +731,9 @@ if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) && ( "seri
       <input type="text" name="rep_num_weeks" value="<?php echo $rep_num_weeks?>">
     </td>
   </tr>
-<?php } ?>
+<?php
+}
+?>
 
   <tr>
     <td colspan="2" align="center">

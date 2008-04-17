@@ -1,29 +1,29 @@
 <?php
-# $Id$
+// $Id$
 
-# This file contains PHP code that specifies language specific strings
-# The default strings come from lang.en, and anything in a locale
-# specific file will overwrite the default. This is a Japanese file.
-#
-#
-#
-#
-# This file is PHP code. Treat it as such.
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.en, and anything in a locale
+// specific file will overwrite the default. This is a Japanese file.
+//
+//
+//
+//
+// This file is PHP code. Treat it as such.
 
-# The charset to use in "Content-type" header
+// The charset to use in "Content-type" header
 $vocab["charset"]            = "UTF-8";
 
-# Used in style.inc
+// Used in style.inc
 $vocab["mrbs"]               = "会議室予約システム";
 
-# Used in functions.inc
+// Used in functions.inc
 $vocab["report"]             = "報告";
 $vocab["admin"]              = "管理";
 $vocab["help"]               = "ヘルプ";
 $vocab["search"]             = "検索";
 $vocab["not_php3"]             = "<h1>警告: 本ソフトウェアは、PHP3ではおそらく動作しません。</h1>";
 
-# Used in day.php
+// Used in day.php
 $vocab["bookingsfor"]        = "";
 $vocab["bookingsforpost"]    = "の予約です";
 $vocab["areas"]              = "部署";
@@ -34,13 +34,13 @@ $vocab["goto"]               = "移動";
 $vocab["highlight_line"]     = "この行を強調";
 $vocab["click_to_reserve"]   = "予約を入れたいセルをクリックしてください。";
 
-# Used in trailer.inc
+// Used in trailer.inc
 $vocab["viewday"]            = "日で表示";
 $vocab["viewweek"]           = "週で表示";
 $vocab["viewmonth"]          = "月で表示";
 $vocab["ppreview"]           = "印刷向けページ";
 
-# Used in edit_entry.php
+// Used in edit_entry.php
 $vocab["addentry"]           = "予約登録";
 $vocab["editentry"]          = "予約の編集";
 $vocab["editseries"]         = "定例予約の編集";
@@ -88,7 +88,7 @@ $vocab["valid_time_of_day"]  = "valid time of day.";
 $vocab["brief_description"]  = "簡単な説明";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 
-# Used in view_entry.php
+// Used in view_entry.php
 $vocab["description"]        = "説明";
 $vocab["room"]               = "部屋";
 $vocab["createdby"]          = "予約者";
@@ -100,7 +100,7 @@ $vocab["returnprev"]         = "前のページに戻る";
 $vocab["invalid_entry_id"]   = "不正な予約IDです。";
 $vocab["invalid_series_id"]  = "不正な定例予約IDです。";
 
-# Used in edit_entry_handler.php
+// Used in edit_entry_handler.php
 $vocab["error"]              = "エラー";
 $vocab["sched_conflict"]     = "予定の重複";
 $vocab["conflict"]           = "新しい予約は、以下の登録と重複しています:";
@@ -115,7 +115,7 @@ $vocab["mail_body_del_entry"] = $mail["登録削除"];
 $vocab["mail_body_changed_entry"] = $mail["登録変更"];
 $vocab["mail_subject_delete"] = $mail["subject_delete"];
 
-# Authentication stuff
+// Authentication stuff
 $vocab["accessdenied"]       = "アクセスが拒否されました";
 $vocab["norights"]           = "この項目を変更する権利がありません。";
 $vocab["please_login"]       = "ログインしてください";
@@ -126,12 +126,12 @@ $vocab["you_are"]            = "あなたは";
 $vocab["login"]              = "ログイン";
 $vocab["logoff"]             = "ログオフ";
 
-# Authentication database
+// Authentication database
 $vocab["user_list"]          = "ユーザリスト";
 $vocab["edit_user"]          = "ユーザを編集";
 $vocab["delete_user"]        = "このユーザを削除";
-#$vocab["user_name"]         = Use the same as above, for consistency.
-#$vocab["user_password"]     = Use the same as above, for consistency.
+//$vocab["user_name"]         = Use the same as above, for consistency.
+//$vocab["user_password"]     = Use the same as above, for consistency.
 $vocab["user_email"]         = "Eメールアドレス";
 $vocab["password_twice"]     = "パスワードを変更したい場合は、新しいパスワードを2回入力してください";
 $vocab["passwords_not_eq"]   = "エラー: パスワードが一致しません。";
@@ -147,7 +147,7 @@ $vocab["no_users_initial"]   = "初期のユーザを作成可能なユーザが
 $vocab["no_users_create_first_admin"] = "管理者権限を持つユーザを作成すると、管理者権限ユーザでログインして、他ユーザを作成することが可能になります。";
 
 
-# Used in search.php
+// Used in search.php
 $vocab["invalid_search"]     = "検索語が空または不正です。";
 $vocab["search_results"]     = "検索結果:";
 $vocab["nothing_found"]      = "一致する予約は見つかりませんでした。";
@@ -163,7 +163,7 @@ $vocab["search_button"]      = "検索";
 $vocab["search_for"]         = "検索語";
 $vocab["from"]               = "始点";
 
-# Used in report.php
+// Used in report.php
 $vocab["report_on"]          = "会合の報告";
 $vocab["report_start"]       = "報告開始日";
 $vocab["report_end"]         = "報告終了日";
@@ -192,20 +192,20 @@ $vocab["rep_dsp"]            = "報告の表示";
 $vocab["rep_dsp_dur"]        = "使用期間";
 $vocab["rep_dsp_end"]        = "終了時刻";
 
-# Used in week.php
+// Used in week.php
 $vocab["weekbefore"]         = "前の週に移動";
 $vocab["weekafter"]          = "次の週に移動";
 $vocab["gotothisweek"]       = "今週に移動";
 
-# Used in month.php
+// Used in month.php
 $vocab["monthbefore"]        = "前の月に移動";
 $vocab["monthafter"]         = "次の月に移動";
 $vocab["gotothismonth"]      = "今月に移動";
 
-# Used in {day week month}.php
+// Used in {day week month}.php
 $vocab["no_rooms_for_area"]  = "この部署には部屋が設定されていません";
 
-# Used in admin.php
+// Used in admin.php
 $vocab["edit"]               = "編集";
 $vocab["delete"]             = "削除";
 $vocab["rooms"]              = "部屋";
@@ -221,7 +221,7 @@ $vocab["capacity"]           = "収容人数";
 $vocab["norooms"]            = "部屋がありません。";
 $vocab["administration"]     = "管理";
 
-# Used in edit_area_room.php
+// Used in edit_area_room.php
 $vocab["editarea"]           = "部署の編集";
 $vocab["change"]             = "変更";
 $vocab["backadmin"]          = "管理画面に戻る";
@@ -236,21 +236,21 @@ $vocab["room_admin_email"]   = "部屋の管理者のEメール";
 $vocab["area_admin_email"]   = "部署の管理者のEメール";
 $vocab["invalid_email"]      = "不適切なEメールです!";
 
-# Used in del.php
+// Used in del.php
 $vocab["deletefollowing"]    = "以下の予約を削除します";
 $vocab["sure"]               = "よろしいですか?";
 $vocab["YES"]                = "はい";
 $vocab["NO"]                 = "いいえ";
 $vocab["delarea"]            = "削除する前に、この部署に属する部屋を全て削除してください。<p>";
 
-# Used in help.php
+// Used in help.php
 $vocab["about_mrbs"]         = "MRBSについて";
 $vocab["database"]           = "データベース";
 $vocab["system"]             = "システム";
 $vocab["please_contact"]     = "ここに答えがない質問は、";
 $vocab["for_any_questions"]  = "にお尋ねください。";
 
-# Used in mysql.inc AND pgsql.inc
+// Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "致命的なエラー: データベースに接続できませんでした。";
 
 ?>

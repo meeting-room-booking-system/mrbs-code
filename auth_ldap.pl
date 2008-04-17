@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-  
+
 # $Id$
 
 $server = shift;

@@ -1,31 +1,31 @@
 <?php
-# $Id$
+// $Id$
 
-# This file contains PHP code that specifies language specific strings
-# The default strings come from lang.en, and anything in a locale
-# specific file will overwrite the default. This is a sl_SI Slovenian file.
-# translated by Martin Terbuc 2007/02/24
-#
-#
-#
-# This file is PHP code. Treat it as such.
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.en, and anything in a locale
+// specific file will overwrite the default. This is a sl_SI Slovenian file.
+// translated by Martin Terbuc 2007/02/24
+//
+//
+//
+// This file is PHP code. Treat it as such.
 
-# The charset to use in "Content-type" header
+// The charset to use in "Content-type" header
 $vocab["charset"]            = "utf-8";
 
-# Used in style.inc
+// Used in style.inc
 $vocab["mrbs"]               = "Prikaži urnike prostorov";
 
-# Used in functions.inc
+// Used in functions.inc
 $vocab["report"]             = "Poročilo";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Pomoč";
 $vocab["search"]             = "Išči";
 $vocab["not_php3"]             = "<H1>OPOZORILO: Verjetno ne bo delovalo z PHP3</H1>";
 
-# Used in day.php
+// Used in day.php
 $vocab["bookingsfor"]        = "Rezervacija za";
-$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Področja";
 $vocab["daybefore"]          = "Prejšnji dan";
 $vocab["dayafter"]           = "Naslednji dan";
@@ -34,13 +34,13 @@ $vocab["goto"]               = "pojdi";
 $vocab["highlight_line"]     = "Poudari to vrsto";
 $vocab["click_to_reserve"]   = "Za dodajanje rezervacije klikni na celico.";
 
-# Used in trailer.inc
+// Used in trailer.inc
 $vocab["viewday"]            = "Pogled dan";
 $vocab["viewweek"]           = "Pogled teden";
 $vocab["viewmonth"]          = "Pogled mesec";
 $vocab["ppreview"]           = "Predogled tiskanja";
 
-# Used in edit_entry.php
+// Used in edit_entry.php
 $vocab["addentry"]           = "Dodaj vnos";
 $vocab["editentry"]          = "Uredi vnos";
 $vocab["editseries"]         = "Uredi ponavljanja";
@@ -88,7 +88,7 @@ $vocab["valid_time_of_day"]  = "veljavne ure v dnevu.";
 $vocab["brief_description"]  = "kratek opis.";
 $vocab["useful_n-weekly_value"] = "prave vrednosti za n-tednov.";
 
-# Used in view_entry.php
+// Used in view_entry.php
 $vocab["description"]        = "Opis";
 $vocab["room"]               = "Prostor";
 $vocab["createdby"]          = "Vnesel";
@@ -100,7 +100,7 @@ $vocab["returnprev"]         = "Vrni na prejšnjo stran";
 $vocab["invalid_entry_id"]   = "Napačen vnos.";
 $vocab["invalid_series_id"]  = "Napačen vnos ponavljanj.";
 
-# Used in edit_entry_handler.php
+// Used in edit_entry_handler.php
 $vocab["error"]              = "Napaka";
 $vocab["sched_conflict"]     = "Konflikt rezervacij";
 $vocab["conflict"]           = "Konflikt nove rezervacije z naslednjim(i) obsoječim(i)";
@@ -115,7 +115,7 @@ $vocab["mail_body_del_entry"] = $mail["deleted_entry"];
 $vocab["mail_body_changed_entry"] = $mail["changed_entry"];
 $vocab["mail_subject_delete"] = $mail["subject_delete"];
 
-# Authentication stuff
+// Authentication stuff
 $vocab["accessdenied"]       = "Dostop zavrnjen";
 $vocab["norights"]           = "Nimate pravice spreminjanja tega.";
 $vocab["please_login"]       = "Prosim, prijavite se";
@@ -126,12 +126,12 @@ $vocab["you_are"]            = "Prijavljen";
 $vocab["login"]              = "Prijava";
 $vocab["logoff"]             = "Odjava";
 
-# Authentication database
+// Authentication database
 $vocab["user_list"]          = "Spisek uporabnikov";
 $vocab["edit_user"]          = "Uredi uporabnika";
 $vocab["delete_user"]        = "Izbriši tega uporabnika";
-#$vocab["user_name"]         = Use the same as above, for consistency.
-#$vocab["user_password"]     = Use the same as above, for consistency.
+//$vocab["user_name"]         = Use the same as above, for consistency.
+//$vocab["user_password"]     = Use the same as above, for consistency.
 $vocab["user_email"]         = "e-pošni naslov";
 $vocab["password_twice"]     = "Če želite zamenjati geslo, ga vtipkajte dvakrat";
 $vocab["passwords_not_eq"]   = "Napaka: Gesli se ne ujemata.";
@@ -146,7 +146,7 @@ $vocab["show_my_entries"]    = "Kliknite za prikaz vseh prihodnjih dogodkov";
 $vocab["no_users_initial"]   = "V bazi ni uporabnikov, kreiranje osnovnih";
 $vocab["no_users_create_first_admin"] = "Ustvarite uporabnika konfiguriranega kakor administrator in se prijavite, da boste lahko dodajali uporabnike.";
 
-# Used in search.php
+// Used in search.php
 $vocab["invalid_search"]     = "Prazen ali napačen iskalni niz.";
 $vocab["search_results"]     = "Rezultati iskanja za";
 $vocab["nothing_found"]      = "Ni najdenih vnosov niza.";
@@ -162,7 +162,7 @@ $vocab["search_button"]      = "Išči";
 $vocab["search_for"]         = "Iskanje";
 $vocab["from"]               = "Od";
 
-# Used in report.php
+// Used in report.php
 $vocab["report_on"]          = "Poročila vnosov";
 $vocab["report_start"]       = "Začetni datum poročila";
 $vocab["report_end"]         = "Končni datum poročila";
@@ -191,20 +191,20 @@ $vocab["rep_dsp"]            = "V poročilu prikaži";
 $vocab["rep_dsp_dur"]        = "Trajanje";
 $vocab["rep_dsp_end"]        = "Začetni - končni čas";
 
-# Used in week.php
+// Used in week.php
 $vocab["weekbefore"]         = "Prejšni teden";
 $vocab["weekafter"]          = "Naslednji teden";
 $vocab["gotothisweek"]       = "Ta teden";
 
-# Used in month.php
+// Used in month.php
 $vocab["monthbefore"]        = "Prejšni mesec";
 $vocab["monthafter"]         = "Naslednji mesec";
 $vocab["gotothismonth"]      = "Ta mesec";
 
-# Used in {day week month}.php
+// Used in {day week month}.php
 $vocab["no_rooms_for_area"]  = "Ni definiranih prostorov v tem področju";
 
-# Used in admin.php
+// Used in admin.php
 $vocab["edit"]               = "Uredi";
 $vocab["delete"]             = "Izbriši";
 $vocab["rooms"]              = "Prostori";
@@ -220,7 +220,7 @@ $vocab["capacity"]           = "Število mest";
 $vocab["norooms"]            = "Ni prostorov.";
 $vocab["administration"]     = "Administracija";
 
-# Used in edit_area_room.php
+// Used in edit_area_room.php
 $vocab["editarea"]           = "Uredi področje";
 $vocab["change"]             = "Uporabi";
 $vocab["backadmin"]          = "Nazaj v Admin";
@@ -235,21 +235,21 @@ $vocab["room_admin_email"]   = "e-pošta upravnika prostora";
 $vocab["area_admin_email"]   = "e-pošta upravnika področja";
 $vocab["invalid_email"]      = "Napačen e-pošni naslov!";
 
-# Used in del.php
+// Used in del.php
 $vocab["deletefollowing"]    = "Izbrisali boste naslednje vnose";
 $vocab["sure"]               = "Ste prepričanie?";
 $vocab["YES"]                = "Da";
 $vocab["NO"]                 = "NE";
 $vocab["delarea"]            = "Izbrisati morate vse prostore v področju, preden ga lahko izbrišete<p>";
 
-# Used in help.php
+// Used in help.php
 $vocab["about_mrbs"]         = "About MRBS";
 $vocab["database"]           = "Database";
 $vocab["system"]             = "System";
 $vocab["please_contact"]     = "Na dodatna vprašanja vam bo odgovoril ";
 $vocab["for_any_questions"]  = ".";
 
-# Used in mysql.inc AND pgsql.inc
+// Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "NAPAKA: ni se možno povezati v podatkovno bazo";
 
 ?>

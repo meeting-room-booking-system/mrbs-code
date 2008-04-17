@@ -19,15 +19,17 @@
  * $auth["admin"][] = "DNSname2";
  */
 
-# No need to prompt for a name - if no DNSname is returned, ip address
-# is used
-function authGet() { }
+// No need to prompt for a name - if no DNSname is returned, ip address
+// is used
+function authGet()
+{
+}
 
 function getUserName()
 {
-	global $REMOTE_ADDR;
-	$remotehostname = gethostbyaddr($REMOTE_ADDR);
-        return $remotehostname;
+  global $REMOTE_ADDR;
+  $remotehostname = gethostbyaddr($REMOTE_ADDR);
+  return $remotehostname;
 }
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-# $Id$
+// $Id$
 
 require_once "grab_globals.inc.php";
 include "config.inc.php";
@@ -14,32 +14,32 @@ $area = get_form_var('area', 'int');
 $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'int');
 
-#If we dont know the right date then make it up
-if(!isset($day) or !isset($month) or !isset($year))
+// If we dont know the right date then make it up
+if (!isset($day) or !isset($month) or !isset($year))
 {
-    $day   = date("d");
-    $month = date("m");
-    $year  = date("Y");
+  $day   = date("d");
+  $month = date("m");
+  $year  = date("Y");
 }
-if(empty($area))
+if (empty($area))
 {
-    $area = get_default_area();
+  $area = get_default_area();
 }
 
 print_header($day, $month, $year, $area);
 
 if (empty($series))
 {
-    $series = 0;
+  $series = 0;
 }
 else
 {
-    $series = 1;
+  $series = 1;
 }
 
 if ($series)
 {
-    $sql = "
+  $sql = "
 	SELECT $tbl_repeat.name,
 	       $tbl_repeat.description,
 	       $tbl_repeat.create_by,
@@ -64,7 +64,7 @@ if ($series)
 }
 else
 {
-    $sql = "
+  $sql = "
 	SELECT $tbl_entry.name,
 	       $tbl_entry.description,
 	       $tbl_entry.create_by,
@@ -88,14 +88,14 @@ else
 $res = sql_query($sql);
 if (! $res)
 {
-    fatal_error(0, sql_error());
+  fatal_error(0, sql_error());
 }
 
-if(sql_count($res) < 1)
+if (sql_count($res) < 1)
 {
-    fatal_error(0,
-		($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id"))
-	);
+  fatal_error(0,
+              ($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id"))
+    );
 }
 
 $row = sql_row_keyed($res, 0);
@@ -109,27 +109,27 @@ $area_name    = htmlspecialchars($row['area_name']);
 $type         = $row['type'];
 $room_id      = $row['room_id'];
 $updated      = time_date_string($row['last_updated']);
-# need to make DST correct in opposite direction to entry creation
-# so that user see what he expects to see
+// need to make DST correct in opposite direction to entry creation
+// so that user see what he expects to see
 $duration     = $row['duration'] - cross_dst($row['start_time'],
                                              $row['end_time']);
 
 if ($enable_periods)
 {
-    list($start_period, $start_date) =  period_date_string($row['start_time']);
+  list($start_period, $start_date) =  period_date_string($row['start_time']);
 }
 else
 {
-    $start_date = time_date_string($row['start_time']);
+  $start_date = time_date_string($row['start_time']);
 }
 
 if ($enable_periods)
 {
-    list( , $end_date) =  period_date_string($row['end_time'], -1);
+  list( , $end_date) =  period_date_string($row['end_time'], -1);
 }
 else
 {
-    $end_date = time_date_string($row['end_time']);
+  $end_date = time_date_string($row['end_time']);
 }
 
 
@@ -137,73 +137,73 @@ $rep_type = 0;
 
 if ($series == 1)
 {
-    $rep_type     = $row['rep_type'];
-    $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
-    $rep_opt      = $row['rep_opt'];
-    $rep_num_weeks = $row['rep_num_weeks'];
-    # I also need to set $id to the value of a single entry as it is a
-    # single entry from a series that is used by del_entry.php and
-    # edit_entry.php
-    # So I will look for the first entry in the series where the entry is
-    # as per the original series settings
+  $rep_type     = $row['rep_type'];
+  $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
+  $rep_opt      = $row['rep_opt'];
+  $rep_num_weeks = $row['rep_num_weeks'];
+  // I also need to set $id to the value of a single entry as it is a
+  // single entry from a series that is used by del_entry.php and
+  // edit_entry.php
+  // So I will look for the first entry in the series where the entry is
+  // as per the original series settings
+  $sql = "SELECT id
+          FROM $tbl_entry
+          WHERE repeat_id=\"$id\" AND entry_type=\"1\"
+          ORDER BY start_time
+          LIMIT 1";
+  $res = sql_query($sql);
+  if (! $res)
+  {
+    fatal_error(0, sql_error());
+  }
+  if (sql_count($res) < 1)
+  {
+    // if all entries in series have been modified then
+    // as a fallback position just select the first entry
+    // in the series
+    // hopefully this code will never be reached as
+    // this page will display the start time of the series
+    // but edit_entry.php will display the start time of the entry
+    sql_free($res);
     $sql = "SELECT id
             FROM $tbl_entry
-            WHERE repeat_id=\"$id\" AND entry_type=\"1\"
+            WHERE repeat_id=\"$id\"
             ORDER BY start_time
             LIMIT 1";
     $res = sql_query($sql);
     if (! $res)
     {
-        fatal_error(0, sql_error());
+      fatal_error(0, sql_error());
     }
-    if (sql_count($res) < 1)
-    {
-        # if all entries in series have been modified then
-        # as a fallback position just select the first entry
-        # in the series
-        # hopefully this code will never be reached as
-        # this page will display the start time of the series
-        # but edit_entry.php will display the start time of the entry
-        sql_free($res);
-        $sql = "SELECT id
-			FROM $tbl_entry
-			WHERE repeat_id=\"$id\"
-			ORDER BY start_time
-			LIMIT 1";
-        $res = sql_query($sql);
-        if (! $res)
-        {
-            fatal_error(0, sql_error());
-        }
-    }
-    $row = sql_row_keyed($res, 0);
-    $id = $row['id'];
-    sql_free($res);
+  }
+  $row = sql_row_keyed($res, 0);
+  $id = $row['id'];
+  sql_free($res);
 }
 else
 {
-    $repeat_id = $row['repeat_id'];
+  $repeat_id = $row['repeat_id'];
 
-    if($repeat_id != 0)
+  if ($repeat_id != 0)
+  {
+    $res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks
+                      FROM $tbl_repeat WHERE id=$repeat_id");
+    if (! $res)
     {
-        $res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks
-                          FROM $tbl_repeat WHERE id=$repeat_id");
-        if (! $res)
-        {
-            fatal_error(0, sql_error());
-        }
-
-        if (sql_count($res) == 1)
-        {
-            $row = sql_row_keyed($res, 0);
-
-            $rep_type     = $row['rep_type'];
-            $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
-            $rep_opt      = $row['rep_opt'];
-            $rep_num_weeks = $row['rep_num_weeks'];
-        }
-        sql_free($res);
+      fatal_error(0, sql_error());
     }
+
+    if (sql_count($res) == 1)
+    {
+      $row = sql_row_keyed($res, 0);
+
+      $rep_type     = $row['rep_type'];
+      $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
+      $rep_opt      = $row['rep_opt'];
+      $rep_num_weeks = $row['rep_num_weeks'];
+    }
+    sql_free($res);
+  }
 }
 
 
@@ -211,7 +211,7 @@ $enable_periods ? toPeriodString($start_period, $duration, $dur_units) : toTimeS
 
 $repeat_key = "rep_type_" . $rep_type;
 
-# Now that we know all the data we start drawing it
+// Now that we know all the data we start drawing it
 
 ?>
 
@@ -257,27 +257,30 @@ $repeat_key = "rep_type_" . $rep_type;
 
 if($rep_type != 0)
 {
-    $opt = "";
-    if (($rep_type == 2) || ($rep_type == 6))
+  $opt = "";
+  if (($rep_type == 2) || ($rep_type == 6))
+  {
+    // Display day names according to language and preferred weekday start.
+    for ($i = 0; $i < 7; $i++)
     {
-        # Display day names according to language and preferred weekday start.
-        for ($i = 0; $i < 7; $i++)
-        {
-            $daynum = ($i + $weekstarts) % 7;
-            if ($rep_opt[$daynum]) $opt .= day_name($daynum) . " ";
-        }
+      $daynum = ($i + $weekstarts) % 7;
+      if ($rep_opt[$daynum])
+      {
+        $opt .= day_name($daynum) . " ";
+      }
     }
-    if ($rep_type == 6)
-    {
-        echo "<tr><td><b>".get_vocab("rep_num_weeks")." ".get_vocab("rep_for_nweekly").":</b></td><td>$rep_num_weeks</td></tr>\n";
-    }
-	
-    if($opt)
-    {
-        echo "<tr><td><b>".get_vocab("rep_rep_day").":</b></td><td>$opt</td></tr>\n";
-    }
-	
-    echo "<tr><td><b>".get_vocab("rep_end_date").":</b></td><td>$rep_end_date</td></tr>\n";
+  }
+  if ($rep_type == 6)
+  {
+    echo "<tr><td><b>".get_vocab("rep_num_weeks")." ".get_vocab("rep_for_nweekly").":</b></td><td>$rep_num_weeks</td></tr>\n";
+  }
+
+  if ($opt)
+  {
+    echo "<tr><td><b>".get_vocab("rep_rep_day").":</b></td><td>$opt</td></tr>\n";
+  }
+
+  echo "<tr><td><b>".get_vocab("rep_end_date").":</b></td><td>$rep_end_date</td></tr>\n";
 }
 
 ?>
@@ -287,46 +290,62 @@ if($rep_type != 0)
 <?php
 if (! $series)
 {
-    echo "<a href=\"edit_entry.php?id=$id\">". get_vocab("editentry") ."</a>";
+  echo "<a href=\"edit_entry.php?id=$id\">". get_vocab("editentry") ."</a>";
 }
 
-if($repeat_id)
+if ($repeat_id)
 {
-    echo " - ";
+  echo " - ";
 }
 
-if($repeat_id || $series )
-	echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year\">".get_vocab("editseries")."</a>";
+if ($repeat_id || $series )
+{
+  echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year\">".get_vocab("editseries")."</a>";
+}
 
 ?>
 <br>
 <?php
 // Copy and Copy series
-if( ! $series )
-	echo "<a href=\"edit_entry.php?id=$id&amp;copy=1\">". get_vocab("copyentry") ."</a>";
+if ( ! $series )
+{
+  echo "<a href=\"edit_entry.php?id=$id&amp;copy=1\">". get_vocab("copyentry") ."</a>";
+}
 	
-if($repeat_id)
-	echo " - ";
+if ($repeat_id)
+{
+  echo " - ";
+}
 	
-if($repeat_id || $series ) 
+if ($repeat_id || $series ) 
+{
   echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=1\">".get_vocab("copyseries")."</a>";
+}
 
 ?>
 <br>
 <?php
-if( ! $series )
-	echo "<a href=\"del_entry.php?id=$id&amp;series=0\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</a>";
+if ( ! $series )
+{
+  echo "<a href=\"del_entry.php?id=$id&amp;series=0\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</a>";
+}
 
-if($repeat_id)
-	echo " - ";
+if ($repeat_id)
+{
+  echo " - ";
+}
 
-if($repeat_id || $series )
-	echo "<a href=\"del_entry.php?id=$id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteseries")."</a>";
+if ($repeat_id || $series )
+{
+  echo "<a href=\"del_entry.php?id=$id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteseries")."</a>";
+}
 
 ?>
 <br>
-<?php if (isset($HTTP_REFERER)) //remove the link if displayed from an email
-{ ?>
+<?php
+if (isset($HTTP_REFERER)) //remove the link if displayed from an email
+{
+?>
 <a href="<?php echo htmlspecialchars($HTTP_REFERER) ?>"><?php echo get_vocab("returnprev") ?></a>
 <?php
 }

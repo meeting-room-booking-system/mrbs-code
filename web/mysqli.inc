@@ -41,16 +41,20 @@ function sql_command ($sql)
 // a MIN or MAX aggregate function applied over no rows.
 function sql_query1 ($sql)
 {
-    global $mysqli;
+  global $mysqli;
     
-    $r = $mysqli->query($sql);
-    if (! $r) return -1;
-    if (($r->num_rows != 1) || ($r->field_count != 1) ||
-        (($row = $r->fetch_row()) == NULL)) {
-        $result = -1;
-    }
-    $r->close();
-    return $row[0];
+  $r = $mysqli->query($sql);
+  if (! $r)
+  {
+    return -1;
+  }
+  if (($r->num_rows != 1) || ($r->field_count != 1) ||
+      (($row = $r->fetch_row()) == NULL))
+  {
+    $result = -1;
+  }
+  $r->close();
+  return $row[0];
 }
 
 // Execute an SQL query. Returns a database-dependent result handle,
@@ -58,10 +62,10 @@ function sql_query1 ($sql)
 // Returns 0 on error; use sql_error to get the error message.
 function sql_query ($sql)
 {
-    global $mysqli;
+  global $mysqli;
 
-    $r = $mysqli->query($sql);
-    return $r;
+  $r = $mysqli->query($sql);
+  return $r;
 }
 
 // Return a row from a result. The first row is 0.
@@ -71,12 +75,13 @@ function sql_query ($sql)
 // Typical usage: $i = 0; while ((a = sql_row($r, $i++))) { ... }
 function sql_row ($r, $i)
 {
-    if ($i >= $r->num_rows) {
-      $r->close();
-      return 0;
-    }
-    $r->data_seek($i);
-    return $r->fetch_row();
+  if ($i >= $r->num_rows)
+  {
+    $r->close();
+    return 0;
+  }
+  $r->data_seek($i);
+  return $r->fetch_row();
 }
 
 // Return a row from a result as an associative array keyed by field name.
@@ -87,35 +92,36 @@ function sql_row ($r, $i)
 // the query and returns 0.
 function sql_row_keyed ($r, $i)
 {
-    if ($i >= $r->num_rows) {
-        $r->close();
-        return 0;
-    }
-    $r->data_seek($i);
-    return $r->fetch_array();
+  if ($i >= $r->num_rows)
+  {
+    $r->close();
+    return 0;
+  }
+  $r->data_seek($i);
+  return $r->fetch_array();
 }
 
 // Return the number of rows returned by a result handle from sql_query.
 function sql_count ($r)
 {
-    return $r->num_rows;
+  return $r->num_rows;
 }
 
 // Return the value of an autoincrement field from the last insert.
 // Must be called right after an insert on that table!
 function sql_insert_id($table, $field)
 {
-    global $mysqli;
+  global $mysqli;
 
-    return $mysqli->insert_id;
+  return $mysqli->insert_id;
 }
 
 // Return the text of the last error message.
 function sql_error()
 {
-    global $mysqli;
+  global $mysqli;
 
-    return $mysqli->error;
+  return $mysqli->error;
 }
 
 // Begin a transaction, if the database supports it. This is used to
@@ -143,57 +149,60 @@ function sql_commit()
 // In MySQL, we avoid table locks, and use low-level locks instead.
 function sql_mutex_lock($name)
 {
-    global $sql_mutex_shutdown_registered, $sql_mutex_unlock_name;
-    if (!sql_query1("SELECT GET_LOCK('$name', 20)")) {
-        return 0;
-    }
-    $sql_mutex_unlock_name = $name;
-    if (empty($sql_mutex_shutdown_registered)) {
-        register_shutdown_function("sql_mutex_cleanup");
-        $sql_mutex_shutdown_registered = 1;
-    }
-    return 1;
+  global $sql_mutex_shutdown_registered, $sql_mutex_unlock_name;
+  if (!sql_query1("SELECT GET_LOCK('$name', 20)"))
+  {
+    return 0;
+  }
+  $sql_mutex_unlock_name = $name;
+  if (empty($sql_mutex_shutdown_registered))
+  {
+    register_shutdown_function("sql_mutex_cleanup");
+    $sql_mutex_shutdown_registered = 1;
+  }
+  return 1;
 }
 
 // Release a mutual-exclusion lock on the named table. See sql_mutex_unlock.
 function sql_mutex_unlock($name)
 {
-    global $sql_mutex_unlock_name;
-    sql_query1("SELECT RELEASE_LOCK('$name')");
-    $sql_mutex_unlock_name = "";
+  global $sql_mutex_unlock_name;
+  sql_query1("SELECT RELEASE_LOCK('$name')");
+  $sql_mutex_unlock_name = "";
 }
 
 // Shutdown function to clean up a forgotten lock. For internal use only.
 function sql_mutex_cleanup()
 {
-    global $sql_mutex_shutdown_registered, $sql_mutex_unlock_name;
-    if (!empty($sql_mutex_unlock_name)) {
-        sql_mutex_unlock($sql_mutex_unlock_name);
-        $sql_mutex_unlock_name = "";
-    }
+  global $sql_mutex_shutdown_registered, $sql_mutex_unlock_name;
+  if (!empty($sql_mutex_unlock_name))
+  {
+    sql_mutex_unlock($sql_mutex_unlock_name);
+    $sql_mutex_unlock_name = "";
+  }
 }
 
 
 // Return a string identifying the database version:
 function sql_version()
 {
-    $r = sql_query("select version()");
-    $v = sql_row($r, 0);
-    sql_free($r);
-    return "MySQL $v[0]";
+  $r = sql_query("select version()");
+  $v = sql_row($r, 0);
+  sql_free($r);
+  return "MySQL $v[0]";
 }
 
 
 // Generate non-standard SQL for LIMIT clauses:
 function sql_syntax_limit($count, $offset)
 {
-    return " LIMIT $offset,$count ";
+  return " LIMIT $offset,$count ";
 }
 
 // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
 function sql_syntax_timestamp_to_unix($fieldname)
 {
-    return " UNIX_TIMESTAMP($fieldname) ";
+  return " UNIX_TIMESTAMP($fieldname) ";
 }
 
 // Generate non-standard SQL to match a string anywhere in a field's value
@@ -202,50 +211,50 @@ function sql_syntax_timestamp_to_unix($fieldname)
 // requires quoting of % and _ in addition to the usual.
 function sql_syntax_caseless_contains($fieldname, $s)
 {
-    $s = str_replace("\\", "\\\\", $s);
-    $s = str_replace("%", "\\%", $s);
-    $s = str_replace("_", "\\_", $s);
-    $s = str_replace("'", "''", $s);
-    return " $fieldname LIKE '%$s%' ";
+  $s = str_replace("\\", "\\\\", $s);
+  $s = str_replace("%", "\\%", $s);
+  $s = str_replace("_", "\\_", $s);
+  $s = str_replace("'", "''", $s);
+  return " $fieldname LIKE '%$s%' ";
 }
 
 // Returns the name of a field.
 function sql_field_name($result, $index)
 {
-    $finfo = $result->fetch_field_direct($index);
-    return $finfo->name;
+  $finfo = $result->fetch_field_direct($index);
+  return $finfo->name;
 }
 
-# A map to turn mysqli extension field type numbers into our (well, the mysql
-# extension's) field type strings
+// A map to turn mysqli extension field type numbers into our (well, the mysql
+// extension's) field type strings
 $sql_type_map = array();
-$sql_type_map[0] = "int";      # DECIMAL
-$sql_type_map[1] = "int";      # TINYINT
-$sql_type_map[2] = "int";      # SMALLINT
-$sql_type_map[3] = "int";      # INTEGER
-$sql_type_map[4] = "real";     # FLOAT
-$sql_type_map[5] = "real";     # DOUBLE
-$sql_type_map[8] = "int";      # BIGINT
-$sql_type_map[9] = "int";      # MEDIUMINT
-$sql_type_map[246] = "int";    # DECIMAL
-$sql_type_map[247] = "string"; # ENUM
-$sql_type_map[252] = "string"; # BLOB
-$sql_type_map[253] = "string"; # VARCHAR
-$sql_type_map[254] = "string"; # CHAR
+$sql_type_map[0] = "int";      // DECIMAL
+$sql_type_map[1] = "int";      // TINYINT
+$sql_type_map[2] = "int";      // SMALLINT
+$sql_type_map[3] = "int";      // INTEGER
+$sql_type_map[4] = "real";     // FLOAT
+$sql_type_map[5] = "real";     // DOUBLE
+$sql_type_map[8] = "int";      // BIGINT
+$sql_type_map[9] = "int";      // MEDIUMINT
+$sql_type_map[246] = "int";    // DECIMAL
+$sql_type_map[247] = "string"; // ENUM
+$sql_type_map[252] = "string"; // BLOB
+$sql_type_map[253] = "string"; // VARCHAR
+$sql_type_map[254] = "string"; // CHAR
 
 // Returns the type of a field. (one of "int", "real", "string", "blob", etc...)
 function sql_field_type($result, $index)
 {
-    global $sql_type_map;
+  global $sql_type_map;
 
-    $finfo = $result->fetch_field_direct($index);
-    return isset($sql_type_map[$finfo->type]) ? $sql_type_map[$finfo->type] : 'unknown';
+  $finfo = $result->fetch_field_direct($index);
+  return isset($sql_type_map[$finfo->type]) ? $sql_type_map[$finfo->type] : 'unknown';
 }
 
 // Returns the number of fields in a result.
 function sql_num_fields($result)
 {
-    return $result->field_count;
+  return $result->field_count;
 }
 
 
@@ -259,9 +268,10 @@ function sql_num_fields($result)
 $mysqli = new mysqli($db_host, $db_login, $db_password, $db_database);
 
 /* check connection */
-if (mysqli_connect_errno()) {
-    echo "\n<p>\n" . get_vocab("failed_connect_db") . " : " . mysqli_connect_error();
-    exit;
+if (mysqli_connect_errno())
+{
+  echo "\n<p>\n" . get_vocab("failed_connect_db") . " : " . mysqli_connect_error();
+  exit;
 }
 
 ?>

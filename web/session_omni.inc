@@ -40,12 +40,14 @@
  * 
  *  No need to prompt for a name - this is done by the server.
  */
-function authGet() { }
+function authGet()
+{
+}
 
 function getUserName()
 {
-	global $REMOTE_USER;
-	return $REMOTE_USER;
+  global $REMOTE_USER;
+  return $REMOTE_USER;
 }
 
 ?>

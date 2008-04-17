@@ -1,31 +1,31 @@
 <?php
-# $Id$
+// $Id$
 
-# This file contains PHP code that specifies language specific strings
-# The default strings come from lang.en, and anything in a locale
-# specific file will overwrite the default. This is a TR Turkish file.
-#
-#  Translations provided by: Ahmet YILDIZ
-#
-#
-# This file is PHP code. Treat it as such.
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.en, and anything in a locale
+// specific file will overwrite the default. This is a TR Turkish file.
+//
+//  Translations provided by: Ahmet YILDIZ
+//
+//
+// This file is PHP code. Treat it as such.
 
-# The charset to use in "Content-type" header
+// The charset to use in "Content-type" header
 $vocab["charset"]            = "iso-8859-9";
 
-# Used in style.inc
+// Used in style.inc
 $vocab["mrbs"]               = "Toplantý Odasý Ayýrtma Sistemi";
 
-# Used in functions.inc
+// Used in functions.inc
 $vocab["report"]             = "Rapor";
 $vocab["admin"]              = "Yönetici";
 $vocab["help"]               = "Yardým";
 $vocab["search"]             = "Arama";
 $vocab["not_php3"]             = "<H1>UYARI: Yüksek ihtimalle PHP3 ile çalýþmaz</H1>";
 
-# Used in day.php
+// Used in day.php
 $vocab["bookingsfor"]        = "Yer ayýrtmak için";
-$vocab["bookingsforpost"]    = ""; # Goes after the date
+$vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Alanlar";
 $vocab["daybefore"]          = "Dün";
 $vocab["dayafter"]           = "Yarýn";
@@ -34,13 +34,13 @@ $vocab["goto"]               = "Git";
 $vocab["highlight_line"]     = "Satýrý belirgin hale getir";
 $vocab["click_to_reserve"]   = "Yer ayýrtmak için bu hücreye týklayýn.";
 
-# Used in trailer.inc
+// Used in trailer.inc
 $vocab["viewday"]            = "Günlük gösterim";
 $vocab["viewweek"]           = "Haftalýk gösterim";
 $vocab["viewmonth"]          = "Aylýk gösterim";
 $vocab["ppreview"]           = "Önizleme";
 
-# Used in edit_entry.php
+// Used in edit_entry.php
 $vocab["addentry"]           = "Kayýt Ekle";
 $vocab["editentry"]          = "Kayýt Düzelt";
 $vocab["editseries"]         = "Seri Düzenle";
@@ -89,7 +89,7 @@ $vocab["valid_time_of_day"]  = "Günün geçerli zamaný.";
 $vocab["brief_description"]  = "Kýsa Taným.";
 $vocab["useful_n-weekly_value"] = "faydali n-haftalýk deðer.";
 
-# Used in view_entry.php
+// Used in view_entry.php
 $vocab["description"]        = "Taným";
 $vocab["room"]               = "Yer";
 $vocab["createdby"]          = "Ayýrtan kiþi";
@@ -101,7 +101,7 @@ $vocab["returnprev"]         = "Önceki sayfaya dön";
 $vocab["invalid_entry_id"]   = "Geçersiz kayýt id.";
 $vocab["invalid_series_id"]  = "Geçersiz seri id.";
 
-# Used in edit_entry_handler.php
+// Used in edit_entry_handler.php
 $vocab["error"]              = "Hata";
 $vocab["sched_conflict"]     = "Program çakýþmasý";
 $vocab["conflict"]           = "Yeni ayýrtma iþlemi önceki kayýt(lar) ile uyuþmazlýk yapacak";
@@ -116,7 +116,7 @@ $vocab["mail_body_del_entry"] = $mail["sil_kayýt"];
 $vocab["mail_body_changed_entry"] = $mail["deðiþtir_kayýt"];
 $vocab["mail_subject_delete"] = $mail["konu_sil"];
 
-# Authentication stuff
+// Authentication stuff
 $vocab["accessdenied"]       = "Eriþim Engellendi";
 $vocab["norights"]           = "Bunu deðiþtirecek giriþ haklarýnýz yoktur.";
 $vocab["please_login"]       = "Lütfen girin";
@@ -127,12 +127,12 @@ $vocab["you_are"]            = "Siz";
 $vocab["login"]              = "Giriþ";
 $vocab["logoff"]             = "Çýkýþ";
 
-# Authentication database
+// Authentication database
 $vocab["user_list"]          = "Kullanýcý listesi";
 $vocab["edit_user"]          = "Kullanýcý düzenle";
 $vocab["delete_user"]        = "Bu kullanýcýyý sil";
-#$vocab["user_name"]         = Tutarlýlýk için yukardaki ayarýn aynýsýný kullan.
-#$vocab["user_password"]     = Tutarlýlýk için yukardaki ayarýn aynýsýný kullan.
+//$vocab["user_name"]         = Tutarlýlýk için yukardaki ayarýn aynýsýný kullan.
+//$vocab["user_password"]     = Tutarlýlýk için yukardaki ayarýn aynýsýný kullan.
 $vocab["user_email"]         = "Eposta adresi";
 $vocab["password_twice"]     = "Eðer þifremnizi deðiþtirmek istiyorsanýz, lütfen yeni þifrenizi iki kez giriniz.";
 $vocab["passwords_not_eq"]   = "Hata: Þifreler uyuþmadý.";
@@ -147,7 +147,7 @@ $vocab["show_my_entries"]    = "Tüm kayýtlarýmý Göster";
 $vocab["no_users_initial"]   = "VeriTabanýnda kullanýcý tanýmlý deðil, ilk kullanýcý oluþturmaya izin ver";
 $vocab["no_users_create_first_admin"] = "Yönetici olarak bir kullanýcý tanýmla ve giriþ yaparak yeni kullanýcýlar oluþturunuz.";
 
-# Used in search.php
+// Used in search.php
 $vocab["invalid_search"]     = "Boþ yada geçersiz arama kelimesi .";
 $vocab["search_results"]     = "Arama sonuçlarý";
 $vocab["nothing_found"]      = "Aranan kayýt bulunamadý.";
@@ -163,7 +163,7 @@ $vocab["search_button"]      = "Arama";
 $vocab["search_for"]         = "Anahtar kelime";
 $vocab["from"]               = "den";
 
-# Used in report.php
+// Used in report.php
 $vocab["report_on"]          = "Toplantýlarýn Raporlarý";
 $vocab["report_start"]       = "Report start date";
 $vocab["report_end"]         = "Report end date";
@@ -192,20 +192,20 @@ $vocab["rep_dsp"]            = "Raporda Görüntüle";
 $vocab["rep_dsp_dur"]        = "Devam Süresi";
 $vocab["rep_dsp_end"]        = "Bitiþ Zamaný";
 
-# Used in week.php
+// Used in week.php
 $vocab["weekbefore"]         = "Önceki Haftaya Git";
 $vocab["weekafter"]          = "Sonraki Haftaya Git";
 $vocab["gotothisweek"]       = "Bu Haftaya Git";
 
-# Used in month.php
+// Used in month.php
 $vocab["monthbefore"]        = "Bir önceki ayý görüntüle";
 $vocab["monthafter"]         = "Bir sonraki ayý görüntüle";
 $vocab["gotothismonth"]      = "Bu ayý görüntüle";
 
-# Used in {day week month}.php
+// Used in {day week month}.php
 $vocab["no_rooms_for_area"]  = "Bu bölge için TSalon tanýmlý deðil.";
 
-# Used in admin.php
+// Used in admin.php
 $vocab["edit"]               = "Düzenle";
 $vocab["delete"]             = "Sil";
 $vocab["rooms"]              = "Salonlar";
@@ -221,7 +221,7 @@ $vocab["capacity"]           = "Kapasite";
 $vocab["norooms"]            = "TSalon yok.";
 $vocab["administration"]     = "Yönetici";
 
-# Used in edit_area_room.php
+// Used in edit_area_room.php
 $vocab["editarea"]           = "Bölge düzenle";
 $vocab["change"]             = "Deðiþtir";
 $vocab["backadmin"]          = "Yönetim'e git";
@@ -236,21 +236,21 @@ $vocab["room_admin_email"]   = "Tsalon yönetici epostasý";
 $vocab["area_admin_email"]   = "Bölge yönetici epostasý";
 $vocab["invalid_email"]      = "Geçersiz eposta!";
 
-# Used in del.php
+// Used in del.php
 $vocab["deletefollowing"]    = "Bu hareket rezervasyonu silecek";
 $vocab["sure"]               = "Emin misiniz?";
 $vocab["YES"]                = "Evet";
 $vocab["NO"]                 = "Hayýr";
 $vocab["delarea"]            = "Silmeden önce bu bölgedeki tüm TSalon'larý silmelisiniz.<p>";
 
-# Used in help.php
+// Used in help.php
 $vocab["about_mrbs"]         = "MRBS hakkýnda";
 $vocab["database"]           = "VeriTabaný";
 $vocab["system"]             = "Sistem";
 $vocab["please_contact"]     = "Lütfen baðlantýya geçiniz ";
 $vocab["for_any_questions"]  = "henüz cevaplanmamýþ her bir soru için.";
 
-# Used in mysql.inc AND pgsql.inc
+// Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Ciddi Hata: VeriTabanýna baðlanýlamadý.";
 
 ?>

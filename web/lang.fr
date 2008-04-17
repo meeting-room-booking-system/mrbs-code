@@ -1,30 +1,30 @@
 <?php
-# $Id$
+// $Id$
 
-# This file contains PHP code that specifies language specific strings
-# The default strings come from lang.en, and anything in a locale
-# specific file will overwrite the default. This is a French file.
-#
-# Translations provided by: Thierry Wehr, thierry_bo
-#              updated by:  Alain Portal, dionysos-sf
-#
-#
-# This file is PHP code. Treat it as such.
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.en, and anything in a locale
+// specific file will overwrite the default. This is a French file.
+//
+// Translations provided by: Thierry Wehr, thierry_bo
+//              updated by:  Alain Portal, dionysos-sf
+//
+//
+// This file is PHP code. Treat it as such.
 
-# The charset to use in "Content-type" header
+// The charset to use in "Content-type" header
 $vocab["charset"]            = "utf-8";
 
-# Used in style.inc
+// Used in style.inc
 $vocab["mrbs"]               = "Système de Réservation de Ressources";
 
-# Used in functions.inc
+// Used in functions.inc
 $vocab["report"]             = "Rapport";
 $vocab["admin"]              = "Gestion";
 $vocab["help"]               = "Aide";
 $vocab["search"]             = "Recherche&nbsp;";
 $vocab["not_php3"]             = "<H1>ATTENTION : Cette application peut ne pas fonctionner correctement avec PHP3</H1>";
 
-# Used in day.php
+// Used in day.php
 $vocab["bookingsfor"]        = "Réservation pour<br>";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Lieux";
@@ -35,13 +35,13 @@ $vocab["goto"]               = "Afficher";
 $vocab["highlight_line"]     = "Surligner cette ligne";
 $vocab["click_to_reserve"]   = "Cliquer sur la case pour réserver.";
 
-# Used in trailer.inc
+// Used in trailer.inc
 $vocab["viewday"]            = "Voir la journée";
 $vocab["viewweek"]           = "Voir la semaine";
 $vocab["viewmonth"]          = "Voir le mois";
 $vocab["ppreview"]           = "Format imprimable";
 
-# Used in edit_entry.php
+// Used in edit_entry.php
 $vocab["addentry"]           = "Ajouter une réservation";
 $vocab["editentry"]          = "Éditer une réservation";
 $vocab["editseries"]         = "Éditer une périodicité";
@@ -89,7 +89,7 @@ $vocab["valid_time_of_day"]  = "une heure valide.";
 $vocab["brief_description"]  = "la description brève.";
 $vocab["useful_n-weekly_value"] = "un intervalle de semaines valide.";
 
-# Used in view_entry.php
+// Used in view_entry.php
 $vocab["description"]        = "Description&nbsp;";
 $vocab["room"]               = "Salle&nbsp;";
 $vocab["createdby"]          = "Créée par&nbsp;";
@@ -101,7 +101,7 @@ $vocab["returnprev"]         = "Retour à la page précédente";
 $vocab["invalid_entry_id"]   = "N° de réservation invalide.";
 $vocab["invalid_series_id"]  = "N° de série invalide.";
 
-# Used in edit_entry_handler.php
+// Used in edit_entry_handler.php
 $vocab["error"]              = "Erreur";
 $vocab["sched_conflict"]     = "Conflit entre réservations";
 $vocab["conflict"]           = "La nouvelle réservation entre en conflit avec la(les) réservation(s) suivante(s)&nbsp;";
@@ -116,7 +116,7 @@ $vocab["mail_body_del_entry"] = $mail["deleted_entry"];
 $vocab["mail_body_changed_entry"] = $mail["changed_entry"];
 $vocab["mail_subject_delete"] = $mail["subject_delete"];
 
-# Authentication stuff
+// Authentication stuff
 $vocab["accessdenied"]       = "Accès refusé";
 $vocab["norights"]           = "Vous n'avez pas les droits suffisants pour faire une modification.";
 $vocab["please_login"]       = "Veuillez-vous identifier";
@@ -127,12 +127,12 @@ $vocab["you_are"]            = "Vous êtes";
 $vocab["login"]              = "S'identifier";
 $vocab["logoff"]             = "Se déconnecter";
 
-# Authentication database
+// Authentication database
 $vocab["user_list"]          = "Liste des utilisateurs";
 $vocab["edit_user"]          = "Modification de l'utilisateur";
 $vocab["delete_user"]        = "Supprimer cet utilisateur";
-#$vocab["user_name"]         = Use the same as above, for consistency.
-#$vocab["user_password"]     = Use the same as above, for consistency.
+//$vocab["user_name"]         = Use the same as above, for consistency.
+//$vocab["user_password"]     = Use the same as above, for consistency.
 $vocab["user_email"]         = "Adresse courriel";
 $vocab["password_twice"]     = "Pour modifier le mot de passe, tapez le nouveau mot de passe ici deux fois";
 $vocab["passwords_not_eq"]   = "Erreur&nbsp;: Les mots de passe ne sont pas identiques.";
@@ -147,7 +147,7 @@ $vocab["show_my_entries"]    = "Afficher mes réservations à venir";
 $vocab["no_users_initial"]   = "Pas d'utilisateur dans la base de données, vous pouvez créer l'utilisateur initial";
 $vocab["no_users_create_first_admin"] = "Créez un utilisateur de type administrateur, identifiez-vous en tant que tel puis créez les autres utilisateurs.";
 
-# Used in search.php
+// Used in search.php
 $vocab["invalid_search"]     = "Recherche invalide.";
 $vocab["search_results"]     = "Résultats de la recherche pour&nbsp;";
 $vocab["nothing_found"]      = "Aucune réservation n'a été trouvée.";
@@ -163,7 +163,7 @@ $vocab["search_button"]      = "Recherche";
 $vocab["search_for"]         = "Rechercher"; 
 $vocab["from"]               = "À partir de"; 
 
-# Used in report.php
+// Used in report.php
 $vocab["report_on"]          = "Rapport des réservations&nbsp;";
 $vocab["report_start"]       = "Date de début du rapport&nbsp;";
 $vocab["report_end"]         = "Date de fin du rapport&nbsp;";
@@ -192,20 +192,20 @@ $vocab["rep_dsp"]            = "Afficher&nbsp;";
 $vocab["rep_dsp_dur"]        = "la durée";
 $vocab["rep_dsp_end"]        = "l'heure de fin";
 
-# Used in week.php
+// Used in week.php
 $vocab["weekbefore"]         = "Voir la semaine précédente";
 $vocab["weekafter"]          = "Voir la semaine suivante";
 $vocab["gotothisweek"]       = "Voir cette semaine-ci";
 
-# Used in month.php
+// Used in month.php
 $vocab["monthbefore"]        = "Voir le mois précédent";
 $vocab["monthafter"]         = "Voir le mois suivant";
 $vocab["gotothismonth"]      = "Voir ce mois-ci";
 
-# Used in {day week month}.php
+// Used in {day week month}.php
 $vocab["no_rooms_for_area"]  = "Aucune salle n'est définie pour ce lieu";
 
-# Used in admin.php
+// Used in admin.php
 $vocab["edit"]               = "Modifier";
 $vocab["delete"]             = "Supprimer";
 $vocab["rooms"]              = "Salles";
@@ -221,7 +221,7 @@ $vocab["capacity"]           = "Maximum de personnes";
 $vocab["norooms"]            = "Aucune salle n'est créée pour ce lieu.";
 $vocab["administration"]     = "Administration";
 
-# Used in edit_area_room.php
+// Used in edit_area_room.php
 $vocab["editarea"]           = "Modifier le lieu";
 $vocab["change"]             = "Changer";
 $vocab["backadmin"]          = "Revenir à l'écran de gestion";
@@ -236,21 +236,21 @@ $vocab["room_admin_email"]   = "Courriels des responsables&nbsp;";
 $vocab["area_admin_email"]   = "Courriels des responsables&nbsp;";
 $vocab["invalid_email"]      = "Adresse courriel invalide&nbsp;!";
 
-# Used in del.php
+// Used in del.php
 $vocab["deletefollowing"]    = "Vous allez supprimer les réservations suivantes";
 $vocab["sure"]               = "Êtes-vous certains&nbsp;?";
 $vocab["YES"]                = "OUI";
 $vocab["NO"]                 = "NON";
 $vocab["delarea"]            = "Vous devez supprimer toutes les salles de ce lieu avant de pouvoir le supprimer<p>";
 
-# Used in help.php
+// Used in help.php
 $vocab["about_mrbs"]         = "À propos de MRBS (Meeting Room Booking System)";
 $vocab["database"]           = "Base de donnée&nbsp;: ";
 $vocab["system"]             = "Système d'exploitation&nbsp;: ";
 $vocab["please_contact"]     = "Contactez ";
 $vocab["for_any_questions"]  = "si vous avez une question qui n'est pas traitée ici.";
 
-# Used in mysql.inc AND pgsql.inc
+// Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Erreur grave&nbsp;: échec de la connexion à la base de données";
 
 ?>

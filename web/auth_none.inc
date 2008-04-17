@@ -32,7 +32,7 @@
  */
 function authValidateUser($user, $pass)
 {
-    return 1;
+  return 1;
 }
 
 /* authGetUserLevel($user)
@@ -46,19 +46,23 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user, $lev1_admin)
 {
-    // User not logged in, user level '0'
-    if(!isset($user))
-	return 0;
-	
-    // Check if the user is can modify
-    for($i = 0; isset($lev1_admin[$i]); $i++)
+  // User not logged in, user level '0'
+  if (!isset($user))
+  {
+    return 0;
+  }
+
+  // Check if the user is can modify
+  for ($i = 0; isset($lev1_admin[$i]); $i++)
+  {
+    if (strcasecmp($user, $lev1_admin[$i]) == 0)
     {
-	if(strcasecmp($user, $lev1_admin[$i]) == 0)
-	    return 2;
+      return 2;
     }
-	
-    // Everybody else is access level '1'
-    return 1;
+  }
+
+  // Everybody else is access level '1'
+  return 1;
 }
 
 ?>

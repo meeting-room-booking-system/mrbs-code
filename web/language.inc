@@ -1,12 +1,12 @@
 <?php
 
-# $Id$
+// $Id$
 
-# A map is needed to convert from the HTTP language specifier to a
-# locale specifier for Windows
-#
-# These locale TLAs found at:
-# http://www.microsoft.com/globaldev/reference/winxp/langtla.mspx
+// A map is needed to convert from the HTTP language specifier to a
+// locale specifier for Windows
+//
+// These locale TLAs found at:
+// http://www.microsoft.com/globaldev/reference/winxp/langtla.mspx
 $lang_map_windows = array
 (
   'ca' => 'cat',
@@ -86,11 +86,11 @@ $lang_map_windows = array
   'zh-sg' => 'zhi',
 );
 
-# This maps a Windows locale to the charset it uses, which are
-# all Windows code pages
-#
-# The code pages used by these locales found at: 
-# http://www.microsoft.com/globaldev/nlsweb/default.mspx
+// This maps a Windows locale to the charset it uses, which are
+// all Windows code pages
+//
+// The code pages used by these locales found at: 
+// http://www.microsoft.com/globaldev/nlsweb/default.mspx
 $winlocale_codepage_map = array
 (
   'cat' => 'CP1252',
@@ -142,8 +142,8 @@ $winlocale_codepage_map = array
   'zhi' => 'CP936',
 );
 
-# These are special cases, generally we can convert from the HTTP
-# language specifier to a locale specifier without a map
+// These are special cases, generally we can convert from the HTTP
+// language specifier to a locale specifier without a map
 $lang_map_unix = array
 (
   'ca' => 'ca_ES',
@@ -159,8 +159,8 @@ $lang_map_unix = array
   'zh' => 'zh_CN',
 );
 
-# IBM AIX locale to code set table
-# See http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/libs/basetrf2/setlocale.htm
+// IBM AIX locale to code set table
+// See http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/libs/basetrf2/setlocale.htm
 $aixlocale_codepage_map = array
 (
   'Ar_AA' => 'IBM-1046',
@@ -223,8 +223,8 @@ $aixlocale_codepage_map = array
   'zh_TW' => 'IBM-eucTW'
 );
 
-# GNU iconv code set to IBM AIX libiconv code set table
-# Keys of this table should be in lowercase, and searches should be performed using lowercase!
+// GNU iconv code set to IBM AIX libiconv code set table
+// Keys of this table should be in lowercase, and searches should be performed using lowercase!
 $gnu_iconv_to_aix_iconv_codepage_map = array
 (
   // "iso-8859-[1-9]" --> "ISO8859-[1-9]" according to http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/libs/basetrf2/setlocale.htm
@@ -245,8 +245,8 @@ $gnu_iconv_to_aix_iconv_codepage_map = array
   'big-5' => 'IBM-eucTW'
 );
 
-# IBM AIX libiconv UTF-8 converters
-# See http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/aixprggd/genprogc/convert_prg.htm#HDRDNNRI49HOWA
+// IBM AIX libiconv UTF-8 converters
+// See http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/aixprggd/genprogc/convert_prg.htm#HDRDNNRI49HOWA
 $aix_utf8_converters = array
 (
   'ISO8859-1',
@@ -320,30 +320,30 @@ $aix_utf8_converters = array
 );
 
 
-##############################################################################
-# Language token handling
+////////////////////////////////////////////////////////////////////////
+// Language token handling
 
 // Get first default set of language tokens for emails.
 if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
     MAIL_ROOM_ADMIN_ON_BOOKINGS or MAIL_BOOKER)
 {
-    include "lang." . $default_language_tokens;
-    include "lang." . MAIL_ADMIN_LANG;
-    $mail_vocab = $vocab;
-    unset ($vocab);
+  include "lang." . $default_language_tokens;
+  include "lang." . MAIL_ADMIN_LANG;
+  $mail_vocab = $vocab;
+  unset ($vocab);
 }
 
-# Get a default set of language tokens, you can change this if you like
+// Get a default set of language tokens, you can change this if you like
 include "lang." . $default_language_tokens;
 
-# Define the default locale here. For a list of supported
-# locales on your system do "locale -a"
+// Define the default locale here. For a list of supported
+// locales on your system do "locale -a"
 setlocale(LC_ALL,'C');
 
-# We attempt to make up a sensible locale from the HTTP_ACCEPT_LANGUAGE
-# environment variable.
+// We attempt to make up a sensible locale from the HTTP_ACCEPT_LANGUAGE
+// environment variable.
 
-# First we enumerate the user's language preferences...
+// First we enumerate the user's language preferences...
 if (isset($HTTP_ACCEPT_LANGUAGE)) // Attempt to use $HTTP_ACCEPT_LANGUAGE only when defined.
 {
   $lang_specifiers = explode(',',$HTTP_ACCEPT_LANGUAGE);
@@ -365,15 +365,15 @@ else // Else use the value from config.inc.php.
   $langs[$default_language_tokens] = 1.0;
 }
 
-# The following attempts to import a language based on what the client
-# is using.
+// The following attempts to import a language based on what the client
+// is using.
 
 if (!$disable_automatic_language_changing)
 {
   $doneit = 0;
 
-  # First try for an exact match, so if the user specified en-gb, look
-  # for lang.en-gb
+  // First try for an exact match, so if the user specified en-gb, look
+  // for lang.en-gb
 
   foreach ($langs as $lang => $qual)
   {
@@ -389,9 +389,9 @@ if (!$disable_automatic_language_changing)
   }
   if ($doneit == 0)
   {
-    # None of the user's preferred languages was available, so try to
-    # find a lang file for one of the base languages, e.g. look for
-    # lang.en if "en-ca" was specified.
+    // None of the user's preferred languages was available, so try to
+    // find a lang file for one of the base languages, e.g. look for
+    // lang.en if "en-ca" was specified.
 
     foreach ($langs as $lang => $qual)
     {
@@ -407,12 +407,12 @@ if (!$disable_automatic_language_changing)
   }
 }
 
-##############################################################################
-# Locale handling
+//////////////////////////////////////////////////////////////////////
+// Locale handling
 
 $windows_locale = "eng";
 
-# 2003/11/09 JF Larvoire: Help new admins understand what to do in case the iconv error occurs...
+// 2003/11/09 JF Larvoire: Help new admins understand what to do in case the iconv error occurs...
 if (($unicode_encoding) && (!function_exists('iconv')))
 {
   exit('
@@ -496,14 +496,14 @@ else
       }
       else
       {
-        # Convert locale=xx to xx_XX
+        // Convert locale=xx to xx_XX
         $locale = strtolower($locale)."_".strtoupper($locale);
       }
     }
     else
     {
-      # Convert locale=xx-xX or xx_Xx or xx_XxXx (etc.) to xx_XX[XX]; this is highly
-      # dependent on the machine's installed locales
+      // Convert locale=xx-xX or xx_Xx or xx_XxXx (etc.) to xx_XX[XX]; this is highly
+      // dependent on the machine's installed locales
       $locale = strtolower(substr($locale,0,2))."_".strtoupper(substr($locale,3));
     }
     if ($unicode_encoding)
@@ -621,8 +621,8 @@ function get_vocab_utf8_aix($vocab_array, $tag)
 }
 
 
-# Get a vocab item, in UTF-8 or a local encoding, depending on
-# the setting of $unicode_encoding
+// Get a vocab item, in UTF-8 or a local encoding, depending on
+// the setting of $unicode_encoding
 function get_vocab($tag)
 {
   global $vocab, $unicode_encoding;
@@ -719,7 +719,7 @@ function utf8_convert_from_locale($string)
   
 function utf8_strftime($format, $time)
 {
-  # %p doesn't actually work in some locales, we have to patch it up ourselves
+  // %p doesn't actually work in some locales, we have to patch it up ourselves
   if (preg_match('/%p/', $format))
   {
     $ampm = strftime('%p', $time);

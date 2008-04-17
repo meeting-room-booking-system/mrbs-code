@@ -1,9 +1,9 @@
 <?php
 
-# $Id$
+// $Id$
 
-# This script converts text in the database from a particular encoding
-# to UTF-8
+// This script converts text in the database from a particular encoding
+// to UTF-8
 
 include "grab_globals.inc.php";
 
@@ -33,7 +33,7 @@ if (!isset($encoding))
       backup your database before running this script if you\'re at all worried.</b>
     </p>
 
-    <form method=get action="'.$PHP_SELF.'">
+    <form method="get" action="'.$PHP_SELF.'">
       Encoding to convert from:<br>
       <select name="encoding">
         <option value="iso-8859-1">Latin 1 (English/French/German/Italian/Norwegian etc.)
@@ -42,7 +42,7 @@ if (!isset($encoding))
         <option value="Shift-JIS">Shift-JIS (Japanese)
       </select>
       <p>
-      <input type=submit value="Do it">
+      <input type="submit" value="Do it">
     </form>
 ';
 }

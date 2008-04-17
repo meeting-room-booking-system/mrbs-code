@@ -23,29 +23,29 @@ $change_done = get_form_var('change_done', 'string');
 $change_room = get_form_var('change_room', 'string');
 $change_area = get_form_var('change_area', 'string');
 
-#If we dont know the right date then make it up
-if(!isset($day) or !isset($month) or !isset($year))
+// If we dont know the right date then make it up
+if (!isset($day) or !isset($month) or !isset($year))
 {
-	$day   = date("d");
-	$month = date("m");
-	$year  = date("Y");
+  $day   = date("d");
+  $month = date("m");
+  $year  = date("Y");
 }
 
-if(!getAuthorised(2))
+if (!getAuthorised(2))
 {
-	showAccessDenied($day, $month, $year, $area);
-	exit();
+  showAccessDenied($day, $month, $year, $area);
+  exit();
 }
 
 // Done changing area or room information?
 if (isset($change_done))
 {
-	if (!empty($room)) // Get the area the room is in
-	{
-		$area = sql_query1("SELECT area_id from $tbl_room where id=$room");
-	}
-	Header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
-	exit();
+  if (!empty($room)) // Get the area the room is in
+  {
+    $area = sql_query1("SELECT area_id from $tbl_room where id=$room");
+  }
+  Header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
+  exit();
 }
 
 print_header($day, $month, $year, isset($area) ? $area : "");
@@ -55,38 +55,47 @@ print_header($day, $month, $year, isset($area) ? $area : "");
 <h2><?php echo get_vocab("editroomarea") ?></h2>
 
 <?php
-if(!empty($room)) {
-    include_once 'Mail/RFC822.php';
-    (!isset($room_admin_email)) ? $room_admin_email = '': '';
-    $emails = explode(',', $room_admin_email);
-    $valid_email = TRUE;
-    $email_validator = new Mail_RFC822();
-    foreach ($emails as $email)
+if (!empty($room))
+{
+  include_once 'Mail/RFC822.php';
+  (!isset($room_admin_email)) ? $room_admin_email = '': '';
+  $emails = explode(',', $room_admin_email);
+  $valid_email = TRUE;
+  $email_validator = new Mail_RFC822();
+  foreach ($emails as $email)
+  {
+    // if no email address is entered, this is OK, even if isValidInetAddress
+    // does not return TRUE
+    if ( !$email_validator->isValidInetAddress($email, $strict = FALSE)
+         && ('' != $room_admin_email) )
     {
-        // if no email address is entered, this is OK, even if isValidInetAddress
-        // does not return TRUE
-        if ( !$email_validator->isValidInetAddress($email, $strict = FALSE)
-            && ('' != $room_admin_email) )
-        {
-            $valid_email = FALSE;
-        }
+      $valid_email = FALSE;
     }
-    //
-	if ( isset($change_room) && (FALSE != $valid_email) )
-	{
-        if (empty($capacity)) $capacity = 0;
-		$sql = "UPDATE $tbl_room SET room_name='" . slashes($room_name)
-			. "', description='" . slashes($description)
-			. "', capacity=$capacity, room_admin_email='"
-            . slashes($room_admin_email) . "' WHERE id=$room";
-		if (sql_command($sql) < 0)
-			fatal_error(0, get_vocab("update_room_failed") . sql_error());
-	}
+  }
+  //
+  if ( isset($change_room) && (FALSE != $valid_email) )
+  {
+    if (empty($capacity))
+    {
+      $capacity = 0;
+    }
+    $sql = "UPDATE $tbl_room SET room_name='" . slashes($room_name)
+      . "', description='" . slashes($description)
+      . "', capacity=$capacity, room_admin_email='"
+      . slashes($room_admin_email) . "' WHERE id=$room";
+    if (sql_command($sql) < 0)
+    {
+      fatal_error(0, get_vocab("update_room_failed") . sql_error());
+    }
+  }
 
-	$res = sql_query("SELECT * FROM $tbl_room WHERE id=$room");
-	if (! $res) fatal_error(0, get_vocab("error_room") . $room . get_vocab("not_found"));
-	$row = sql_row_keyed($res, 0);
-	sql_free($res);
+  $res = sql_query("SELECT * FROM $tbl_room WHERE id=$room");
+  if (! $res)
+  {
+    fatal_error(0, get_vocab("error_room") . $room . get_vocab("not_found"));
+  }
+  $row = sql_row_keyed($res, 0);
+  sql_free($res);
 ?>
 <h3 style="text-align:center;"><?php echo get_vocab("editroom") ?></h3>
 
@@ -121,9 +130,13 @@ echo $row["capacity"]; ?>">
           <input type="text" name="room_admin_email" maxlength="75" value="<?php
 echo htmlspecialchars($row["room_admin_email"]); ?>">
         </td>
-<?php if (FALSE == $valid_email) {
+<?php
+
+  if (FALSE == $valid_email)
+  {
     echo ("<td>&nbsp;</td><td><strong>" . get_vocab('invalid_email') . "</strong></td>");
-} ?>
+  }
+?>
       </tr>
     </table>
     <input type=submit name="change_room" value="<?php echo get_vocab("change") ?>">
@@ -131,40 +144,47 @@ echo htmlspecialchars($row["room_admin_email"]); ?>">
     <input type=submit name="change_done" value="<?php echo get_vocab("backadmin") ?>">
   </div>
 </form>
-<?php } ?>
+<?php
+}
+?>
 
 <?php
-if(!empty($area))
+if (!empty($area))
 {
-    include_once 'Mail/RFC822.php';
-    (!isset($area_admin_email)) ? $area_admin_email = '': '';
-    $emails = explode(',', $area_admin_email);
-    $valid_email = TRUE;
-    $email_validator = new Mail_RFC822();
-    foreach ($emails as $email)
+  include_once 'Mail/RFC822.php';
+  (!isset($area_admin_email)) ? $area_admin_email = '': '';
+  $emails = explode(',', $area_admin_email);
+  $valid_email = TRUE;
+  $email_validator = new Mail_RFC822();
+  foreach ($emails as $email)
+  {
+    // if no email address is entered, this is OK, even if isValidInetAddress
+    // does not return TRUE
+    if ( !$email_validator->isValidInetAddress($email, $strict = FALSE)
+         && ('' != $area_admin_email) )
     {
-        // if no email address is entered, this is OK, even if isValidInetAddress
-        // does not return TRUE
-        if ( !$email_validator->isValidInetAddress($email, $strict = FALSE)
-            && ('' != $area_admin_email) )
-        {
-            $valid_email = FALSE;
-        }
+      $valid_email = FALSE;
     }
-    //
-    if ( isset($change_area) && (FALSE != $valid_email) )
-	{
-		$sql = "UPDATE $tbl_area SET area_name='" . slashes($area_name)
-			. "', area_admin_email='" . slashes($area_admin_email)
-            . "' WHERE id=$area";
-		if (sql_command($sql) < 0)
-			fatal_error(0, get_vocab("update_area_failed") . sql_error());
-	}
+  }
+  //
+  if ( isset($change_area) && (FALSE != $valid_email) )
+  {
+    $sql = "UPDATE $tbl_area SET area_name='" . slashes($area_name)
+      . "', area_admin_email='" . slashes($area_admin_email)
+      . "' WHERE id=$area";
+    if (sql_command($sql) < 0)
+    {
+      fatal_error(0, get_vocab("update_area_failed") . sql_error());
+    }
+  }
 
-	$res = sql_query("SELECT * FROM $tbl_area WHERE id=$area");
-	if (! $res) fatal_error(0, get_vocab("error_area") . $area . get_vocab("not_found"));
-	$row = sql_row_keyed($res, 0);
-	sql_free($res);
+  $res = sql_query("SELECT * FROM $tbl_area WHERE id=$area");
+  if (! $res)
+  {
+    fatal_error(0, get_vocab("error_area") . $area . get_vocab("not_found"));
+  }
+  $row = sql_row_keyed($res, 0);
+  sql_free($res);
 ?>
 <h3 style="text-align:center;"><?php echo get_vocab("editarea") ?></h3>
 
@@ -195,5 +215,7 @@ echo htmlspecialchars($row["area_admin_email"]); ?>">
     <input type="submit" name="change_done" value="<?php echo get_vocab("backadmin") ?>">
   </div>
 </form>
-<?php } ?>
+<?php
+}
+?>
 <?php include "trailer.inc" ?>

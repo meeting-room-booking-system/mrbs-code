@@ -54,13 +54,17 @@ function authGetUserLevel($user, $lev1_admin)
 {
    // User not logged in, user level '0'
    if(!isset($user))
-      return 0;
+   {
+     return 0;
+   }
 
    // Check if the user is can modify
    for($i = 0; isset($lev1_admin[$i]); $i++)
    {
       if(strcasecmp($user, $lev1_admin[$i]) == 0)
+      {
 	 return 2;
+      }
    }
 
    // Everybody else is access level '1'
