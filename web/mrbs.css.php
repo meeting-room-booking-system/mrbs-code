@@ -83,3 +83,9 @@ top:12}
 
 TD.month {font-size: 8pt; background-color:#FFFFFF}
 .monthday {font-size: 12pt; vertical-align: top; text-align: left}
+
+table#admin {margin-bottom: 1em}
+#admin td {border: 1px solid #999999}
+#admin th {text-align: center; font-weight: bold}
+#admin h3 {text-align: center}
+#admin_area td, #admin_room td {border: 0px}

@@ -55,12 +55,17 @@ if (isset($area))
 
 <h2><?php echo get_vocab("administration") ?></h2>
 
-<table border="1">
+<table id="admin">
   <tr>
-    <th align="center"><b><?php echo get_vocab("areas") ?></b></th>
-    <th align="center">
-      <b><?php echo get_vocab("rooms") ?> <?php if(isset($area_name)) { echo get_vocab("in") . " " .
-  htmlspecialchars($area_name); }?></b>
+    <th><?php echo get_vocab("areas") ?></th>
+    <th>
+	   <?php 
+		echo get_vocab("rooms");
+	   if(isset($area_name))
+		{ 
+		  echo " " . get_vocab("in") . " " . htmlspecialchars($area_name); 
+		}
+		?>
     </th>
   </tr>
 
@@ -123,11 +128,11 @@ else
   </tr>
   <tr>
     <td>
-      <h3 style="text-align:center;"><?php echo get_vocab("addarea") ?></h3>
+      <h3><?php echo get_vocab("addarea") ?></h3>
       <form action="add.php" method="post">
         <input type="hidden" name="type" value="area">
 
-        <table>
+        <table id="admin_area">
           <tr>
             <td><?php echo get_vocab("name") ?>:</td>
             <td><input type="text" name="name"></td>
@@ -142,12 +147,12 @@ else
 if (0 != $area)
 {
 ?>
-      <h3 style="text-align:center;"><?php echo get_vocab("addroom") ?></h3>
+      <h3><?php echo get_vocab("addroom") ?></h3>
       <form action="add.php" method="post">
         <input type="hidden" name="type" value="room">
         <input type="hidden" name="area" value="<?php echo $area; ?>">
 
-        <table>
+        <table id="admin_room">
           <tr>
             <td><?php echo get_vocab("name") ?>:</td>
             <td><input type="text" name="name"></td>
@@ -174,7 +179,6 @@ else
   </tr>
 </table>
 
-<br>
 <?php echo get_vocab("browserlang") . " " . $HTTP_ACCEPT_LANGUAGE . " " . get_vocab("postbrowserlang") ; ?>
 
 <?php include "trailer.inc" ?>
