@@ -237,7 +237,7 @@ var GetNodeColorClass = function(node)
     }
 var SetNodeColorClass = function(node, colorClass) 
     { 
-    node.className = colorClass;  // Use the TD.highlight color from mrbs.css.
+    node.className = colorClass;  // Use the TD.highlight color from mrbs.css.php.
     }
 
 // Helper routines for searching text in the TD.highlight CSS class.
@@ -389,7 +389,7 @@ function InitActiveCell(show, left, right, method, message)
         SetNodeColorClass = function(node, colorClass) 
             { 
             xbDump("SetNodeColorClass(" + colorClass + ")");
-            node.className = colorClass;  // Use the TD.highlight color from mrbs.css.
+            node.className = colorClass;  // Use the TD.highlight color from mrbs.css.php.
             }
     else				 // Pre-DOM browsers like Opera 6
         SetNodeColorClass = function(node, colorClass) 
