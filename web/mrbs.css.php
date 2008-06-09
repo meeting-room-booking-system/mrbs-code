@@ -9,6 +9,8 @@ header("Content-type: text/css");
 BODY {color:black; font-size: 10pt; font-family:arial,sans-serif;
 background-color:#ffffed}
 
+.current {color: red}		/* used to highlight the current item */
+
 A:link {color:#5B69A6; font-weight: bold; text-decoration: none}
 A:visited {color:#5B69A6; font-weight: bold; text-decoration: none}
 A:hover {color:red; text-decoration:underline}
@@ -89,3 +91,19 @@ table#admin {margin-bottom: 1em}
 #admin th {text-align: center; font-weight: bold}
 #admin h3 {text-align: center}
 #admin_area td, #admin_room td {border: 0px}
+
+table#day_header {width: 100%}
+#day_header h3 {color:black; font-size: 10pt; font-family: arial,sans-serif; text-decoration: underline; margin-bottom: 0.2em; padding-bottom: 0px}
+td#day_header_areas {width: 60%}
+#day_header_areas ul {list-style-type: none; padding-left: 0px; margin-top: 0px}
+h2#day {text-align: center}
+
+table#day_main {width: 100%; border-spacing: 0px; border-collapse: collapse}
+#day_main td, #day_main th {border: 1px solid #555555}
+
+div.date_nav    {position: relative; width: 100%; height: 2.5em}
+div.date_before {width: 32%; position: absolute; top: 0.5em; left: 0; text-align: left}
+div.date_now    {width: 32%; position: absolute; top: 0.5em; left: 50%; margin-left: -16%; text-align: center}
+div.date_after  {width: 32%; position: absolute; top: 0.5em; right: 0; text-align: right}
+
+img.new_booking {display: block; margin-left: auto; margin-right: auto}
