@@ -69,22 +69,25 @@ if ($type == "room")
     }
     else if (sql_count($res) > 0)
     {
-      echo get_vocab("deletefollowing") . ":<ul>";
+      echo get_vocab("deletefollowing") . ":\n<ul>\n";
 		
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
         echo "<li>".htmlspecialchars($row['name'])." (";
         echo time_date_string($row['start_time']) . " -> ";
-        echo time_date_string($row['end_time']) . ")</li>";
+        echo time_date_string($row['end_time']) . ")</li>\n";
       }
 		
-      echo "</ul>";
+      echo "</ul>\n";
     }
 	
-    echo "<div align=\"center\">";
-    echo "<h1>" .  get_vocab("sure") . "</h1>";
-    echo "<h1><a href=\"del.php?type=room&amp;room=$room&amp;confirm=Y\">" . get_vocab("YES") . "!</a> &nbsp;&nbsp;&nbsp; <a href=admin.php>" . get_vocab("NO") . "!</a></h1>";
-    echo "</div>";
+    echo "<div id=\"del_room_confirm\">\n";
+	 echo "<p>" .  get_vocab("sure") . "</p>\n";
+	 echo "<div id=\"del_room_confirm_links\">\n";
+    echo "<a href=\"del.php?type=room&amp;room=$room&amp;confirm=Y\"><span id=\"del_yes\">" . get_vocab("YES") . "!</span></a>\n";
+	 echo "<a href=admin.php><span id=\"del_no\">" . get_vocab("NO") . "!</span></a>\n";
+	 echo "</div>\n";
+    echo "</div>\n";
     include "trailer.inc";
   }
 }

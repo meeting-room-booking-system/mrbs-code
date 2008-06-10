@@ -107,3 +107,11 @@ div.date_now    {width: 32%; position: absolute; top: 0.5em; left: 50%; margin-l
 div.date_after  {width: 32%; position: absolute; top: 0.5em; right: 0; text-align: right}
 
 img.new_booking {display: block; margin-left: auto; margin-right: auto}
+
+div#del_room_confirm {padding-bottom: 3em}
+#del_room_confirm p {text-align: center; font-size: large; font-weight: bold}
+div#del_room_confirm_links {position: relative; margin-left: auto; margin-right: auto}
+span#del_yes {display:block; position: absolute; right: 50%; margin-right: 1em; font-size: large}
+span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; font-size: large}
+#del_room_confirm_links a:hover {cursor: pointer}                  /* for IE */
+#del_room_confirm_links span:hover {text-decoration: underline}    /* for Firefox */
