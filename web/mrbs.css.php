@@ -9,7 +9,13 @@ header("Content-type: text/css");
 BODY {color:black; font-size: 10pt; font-family:arial,sans-serif;
 background-color:#ffffed}
 
-.current {color: red}		/* used to highlight the current item */
+.current {color: red}		                    /* used to highlight the current item */
+.error   {color: red; font-weight: bold}       /* for error messages */
+
+legend {font-weight: bold; font-size: large}
+fieldset {width: 100%; padding-left: 1.0em; padding-right: 1.0em}
+fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
+fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
 
 A:link {color:#5B69A6; font-weight: bold; text-decoration: none}
 A:visited {color:#5B69A6; font-weight: bold; text-decoration: none}
@@ -115,3 +121,23 @@ span#del_yes {display:block; position: absolute; right: 50%; margin-right: 1em; 
 span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; font-size: large}
 #del_room_confirm_links a:hover {cursor: pointer}                  /* for IE */
 #del_room_confirm_links span:hover {text-decoration: underline}    /* for Firefox */
+
+<?php
+// Ideally the label text will fit on a single line, but as the text
+// is editable in the lang.* files and there are so many translations, we cannot
+// be sure how long the longest line will be.    Once you've chosen your preferred language and you can see what it looks like,
+// you may want to adjust the width of the label below so that the longest label just fits on one line.   (Of couse, we could
+// implement the form in a table, but that would limit the options for re-styling using CSS).
+
+$edit_area_room_label_width       = 10.0;    // em
+$edit_area_room_input_margin_left = 1.0;
+$edit_area_room_input_width       = 8.3;
+$edit_area_room_width_overheads   = 0.7;     // borders around inputs etc.    Konqueror seems to be the most extreme
+$edit_area_room_form_width        = $edit_area_room_label_width + $edit_area_room_input_margin_left + $edit_area_room_input_width + $edit_area_room_width_overheads;
+?>
+form.form_edit_area_room {position: relative; width: <?php echo $edit_area_room_form_width ?>em; margin-top: 2em; margin-bottom: 2em; margin-left: auto; margin-right: auto}
+.form_edit_area_room label {display: block; float: left; clear: left; min-height: 2.0em; width: <?php echo $edit_area_room_label_width ?>em; text-align: right}
+.form_edit_area_room input {display: block; position: relative; float: right; width: <?php echo $edit_area_room_input_width ?>em; margin-top: -0.2em; margin-left: <?php echo $edit_area_room_margin_left ?>em}
+.form_edit_area_room .submit_buttons input {width: auto; margin-top: 1.2em; margin-left: 1.0em}
+.form_edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}
+.form_edit_area_room div {width: 100%}
