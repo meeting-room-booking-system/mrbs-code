@@ -9,14 +9,6 @@ header("Content-type: text/css");
 BODY {color:black; font-size: 10pt; font-family:arial,sans-serif;
 background-color:#ffffed}
 
-.current {color: red}		                    /* used to highlight the current item */
-.error   {color: red; font-weight: bold}       /* for error messages */
-
-legend {font-weight: bold; font-size: large}
-fieldset {width: 100%; padding-left: 1.0em; padding-right: 1.0em}
-fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
-fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
-
 A:link {color:#5B69A6; font-weight: bold; text-decoration: none}
 A:visited {color:#5B69A6; font-weight: bold; text-decoration: none}
 A:hover {color:red; text-decoration:underline}
@@ -24,8 +16,7 @@ H1 {color:black; font-family:verdana,sans-serif; font-size:16pt}
 H2 {color:black; font-family:verdana,sans-serif; font-size:14pt}
 H3 {font-family:verdana,sans-serif}
 
-TD {font-size:10pt; font-family:arial,sans-serif; border-width:1;
-vertical-align:top}
+TD {font-size:10pt; font-family: arial,sans-serif; border-width: 1px; vertical-align: top}
 TD.header {color:black; font-family:verdana,sans-serif; border-width:0;
 background-color:#ffffdd; font-size:26pt}
 TD.CR { vertical-align: middle; text-align: right}
@@ -49,9 +40,7 @@ A.blue {color:blue}
 A:visited.blue {color:blue}
 A:hover.blue {color:red}
 
-TH {color:#eeeeee; font-size:10pt; font-family:verdana,sans-serif;
-background-color:#999999;
-border-width:1; border-color:#999999; vertical-align:top}
+TH {color:#eeeeee; font-size:10pt; font-family:verdana,sans-serif; background-color:#999999; border-width:1px; border-color:#999999; vertical-align:top}
 TD.banner {text-align:center; vertical-align:middle; background-color:#C0E0FF;}
 
 TD.blue {background-color:#F0F0FF}
@@ -76,7 +65,7 @@ FONT.calendarHighlight {color: red}
 TD.even_row {background-color:#FFFFFF}	/* Even rows in the day view */
 TD.odd_row {background-color:#EEEEEE}	/* Odd rows in the day view */
 
-TD.highlight {background-color:#AABBFF; border-style:solid; border-width:1; border-color:#0000AA;} /* The highlighted cell under the cursor */
+TD.highlight {background-color:#AABBFF; border-style: solid; border-width: 1px; border-color:#0000AA;} /* The highlighted cell under the cursor */
 .naked { margin: 0; padding: 0; border-width:0} /* Invisible tables used for internal needs */
 
 .sitename
@@ -86,13 +75,21 @@ font-weight: bold;
 text-transform: none;
 color:#ffffff;
 position: absolute;
-left:30;
-top:12}
+left:30px;
+top:12px}
 
 TD.month {font-size: 8pt; background-color:#FFFFFF}
 .monthday {font-size: 12pt; vertical-align: top; text-align: left}
 
 /* ------------ GENERAL -----------------------------*/
+
+.current {color: red}		                    /* used to highlight the current item */
+.error   {color: red; font-weight: bold}       /* for error messages */
+
+legend {font-weight: bold; font-size: large}
+fieldset {width: 100%; padding-left: 1.0em; padding-right: 1.0em}
+fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
+fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
 
 img.new_booking {display: block; margin-left: auto; margin-right: auto}
 
@@ -154,6 +151,6 @@ $edit_area_room_form_width        = $edit_area_room_label_width + $edit_area_roo
 form.form_edit_area_room {position: relative; width: <?php echo $edit_area_room_form_width ?>em; margin-top: 2em; margin-bottom: 2em; margin-left: auto; margin-right: auto}
 .form_edit_area_room label {display: block; float: left; clear: left; min-height: 2.0em; width: <?php echo $edit_area_room_label_width ?>em; text-align: right}
 .form_edit_area_room input {display: block; position: relative; float: right; clear: right; width: <?php echo $edit_area_room_input_width ?>em; margin-top: -0.2em; margin-left: <?php echo $edit_area_room_input_margin_left ?>em}
-.form_edit_area_room .submit_buttons input {width: auto; margin-top: 1.2em; margin-left: 1.0em}
+.form_edit_area_room .submit_buttons input {width: auto; clear: none; margin-top: 1.2em; margin-left: 1.0em}
 .form_edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}
 .form_edit_area_room div {width: 100%}
