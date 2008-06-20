@@ -112,9 +112,9 @@ if(isset($area))
     echo "      <ul>";
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      echo "        <li>" . htmlspecialchars($row['room_name']) . "(" . htmlspecialchars($row['description'])
+		echo "        <li>" . htmlspecialchars($row['room_name']) . "(" . htmlspecialchars($row['description'])
         . ", ".$row['capacity'].") (<a href=\"edit_area_room.php?room=".$row['id']."\">" . get_vocab("edit") . "</a>) (<a href=\"del.php?type=room&amp;room=".$row['id']."\">" . get_vocab("delete") . "</a>)</li>\n";
-    }
+	 }
     echo "      </ul>";
   }
 }
@@ -128,17 +128,20 @@ else
   </tr>
   <tr>
     <td>
-      <h3><?php echo get_vocab("addarea") ?></h3>
-      <form action="add.php" method="post">
-        <input type="hidden" name="type" value="area">
-
-        <table id="admin_area">
-          <tr>
-            <td><?php echo get_vocab("name") ?>:</td>
-            <td><input type="text" name="name"></td>
-          </tr>
-        </table>
-        <input type="submit" value="<?php echo get_vocab("addarea") ?>">
+      <form class="form_admin" action="add.php" method="post">
+		  <fieldset>
+		  <legend><?php echo get_vocab("addarea") ?></legend>
+		  
+          <input type="hidden" name="type" value="area">
+			 
+          <div>
+            <label for="area_name"><?php echo get_vocab("name") ?>:</label>
+            <input type="text" id="area_name" name="name">
+		    </div>
+			 
+        <input type="submit" class="submit" value="<?php echo get_vocab("addarea") ?>">
+		  
+		  </fieldset>
       </form>
     </td>
 
@@ -147,26 +150,31 @@ else
 if (0 != $area)
 {
 ?>
-      <h3><?php echo get_vocab("addroom") ?></h3>
-      <form action="add.php" method="post">
+      <form class="form_admin" action="add.php" method="post">
+		  <fieldset>
+		  <legend><?php echo get_vocab("addroom") ?></legend>
+		  
         <input type="hidden" name="type" value="room">
         <input type="hidden" name="area" value="<?php echo $area; ?>">
-
-        <table id="admin_room">
-          <tr>
-            <td><?php echo get_vocab("name") ?>:</td>
-            <td><input type="text" name="name"></td>
-          </tr>
-          <tr>
-            <td><?php echo get_vocab("description") ?>:</td>
-            <td><input type="text" name="description"></td>
-          </tr>
-          <tr>
-            <td><?php echo get_vocab("capacity") ?>:</td>
-            <td><input type="text" name="capacity"></td>
-          </tr>
-        </table>
-        <input type="submit" value="<?php echo get_vocab("addroom") ?>">
+		  
+        <div>
+          <label for="room_name"><?php echo get_vocab("name") ?>:</label>
+          <input type="text" id="room_name" name="name">
+        </div>
+		  
+		  <div>
+          <label for="room_description"><?php echo get_vocab("description") ?>:</label>
+          <input type="text" id="room_description" name="description">
+        </div>
+		  
+		  <div>
+          <label for="room_capacity"><?php echo get_vocab("capacity") ?>:</label>
+          <input type="text" id="room_capacity" name="capacity">
+        </div>
+		 
+        <input type="submit" class="submit" value="<?php echo get_vocab("addroom") ?>">
+		  
+		  </fieldset>
       </form>
 <?php
 }

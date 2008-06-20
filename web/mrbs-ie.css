@@ -3,4 +3,7 @@
 
 /* Fixes for Internet Explorer (all versions) */
 
-/* Nothing in here yet!! */
+/* ------------ ADMIN.PHP ---------------------------*/
+#admin ul {margin-top: 1.0em}
+form.form_admin {margin-top: 0}
+.form_admin legend {margin-bottom: 1.0em}   /* by default IE gives no gap between legend and first form element */

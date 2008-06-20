@@ -92,12 +92,27 @@ top:12}
 TD.month {font-size: 8pt; background-color:#FFFFFF}
 .monthday {font-size: 12pt; vertical-align: top; text-align: left}
 
+/* ------------ GENERAL -----------------------------*/
+
+img.new_booking {display: block; margin-left: auto; margin-right: auto}
+
+/* ------------ ADMIN.PHP ---------------------------*/
+<?php
+// Adjust the label width to suit the longest label - it will depend on the translation being used
+// The input width can normally be left alone
+$admin_form_input_width       = 8.3;   // em   (Also used in edit_area_room.php)
+?>
 table#admin {margin-bottom: 1em}
 #admin td {border: 1px solid #999999}
 #admin th {text-align: center; font-weight: bold}
-#admin h3 {text-align: center}
-#admin_area td, #admin_room td {border: 0px}
+form.form_admin {margin-top: 0.5em; margin-bottom: 0.5em}
+.form_admin fieldset {width: auto; border: 0; padding-top: 1.0em}
+.form_admin div {width: 100%}
+.form_admin label {display: block; float: left; clear: left; width: 7.0em; min-height: 2.0em; text-align: right}
+.form_admin input {display: block; position: relative; float: right; clear: right; width: <?php echo $admin_form_input_width ?>em; margin-top: -0.2em; margin-left: 0.5em; margin-right: 0.5em}
+.form_admin input.submit {width: auto; margin-top: 1.2em; margin-left: 1.0em}
 
+/* ------------ DAY.PHP -----------------------------*/
 table#day_header {width: 100%}
 #day_header h3 {color:black; font-size: 10pt; font-family: arial,sans-serif; text-decoration: underline; margin-bottom: 0.2em; padding-bottom: 0px}
 td#day_header_areas {width: 60%}
@@ -112,8 +127,8 @@ div.date_before {width: 32%; position: absolute; top: 0.5em; left: 0; text-align
 div.date_now    {width: 32%; position: absolute; top: 0.5em; left: 50%; margin-left: -16%; text-align: center}
 div.date_after  {width: 32%; position: absolute; top: 0.5em; right: 0; text-align: right}
 
-img.new_booking {display: block; margin-left: auto; margin-right: auto}
 
+/* ------------ DEL.PHP -----------------------------*/
 div#del_room_confirm {padding-bottom: 3em}
 #del_room_confirm p {text-align: center; font-size: large; font-weight: bold}
 div#del_room_confirm_links {position: relative; margin-left: auto; margin-right: auto}
@@ -122,22 +137,23 @@ span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; fo
 #del_room_confirm_links a:hover {cursor: pointer}                  /* for IE */
 #del_room_confirm_links span:hover {text-decoration: underline}    /* for Firefox */
 
+
+/* ------------ EDIT_AREA_ROOM.PHP ------------------*/
 <?php
 // Ideally the label text will fit on a single line, but as the text
 // is editable in the lang.* files and there are so many translations, we cannot
 // be sure how long the longest line will be.    Once you've chosen your preferred language and you can see what it looks like,
-// you may want to adjust the width of the label below so that the longest label just fits on one line.   (Of couse, we could
-// implement the form in a table, but that would limit the options for re-styling using CSS).
+// you may want to adjust the width of the label below so that the longest label just fits on one line.  
 
 $edit_area_room_label_width       = 10.0;    // em
 $edit_area_room_input_margin_left = 1.0;
-$edit_area_room_input_width       = 8.3;
+$edit_area_room_input_width       = $admin_form_input_width;
 $edit_area_room_width_overheads   = 0.7;     // borders around inputs etc.    Konqueror seems to be the most extreme
 $edit_area_room_form_width        = $edit_area_room_label_width + $edit_area_room_input_margin_left + $edit_area_room_input_width + $edit_area_room_width_overheads;
 ?>
 form.form_edit_area_room {position: relative; width: <?php echo $edit_area_room_form_width ?>em; margin-top: 2em; margin-bottom: 2em; margin-left: auto; margin-right: auto}
 .form_edit_area_room label {display: block; float: left; clear: left; min-height: 2.0em; width: <?php echo $edit_area_room_label_width ?>em; text-align: right}
-.form_edit_area_room input {display: block; position: relative; float: right; width: <?php echo $edit_area_room_input_width ?>em; margin-top: -0.2em; margin-left: <?php echo $edit_area_room_margin_left ?>em}
+.form_edit_area_room input {display: block; position: relative; float: right; clear: right; width: <?php echo $edit_area_room_input_width ?>em; margin-top: -0.2em; margin-left: <?php echo $edit_area_room_input_margin_left ?>em}
 .form_edit_area_room .submit_buttons input {width: auto; margin-top: 1.2em; margin-left: 1.0em}
 .form_edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}
 .form_edit_area_room div {width: 100%}
