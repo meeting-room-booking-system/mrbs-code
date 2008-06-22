@@ -139,8 +139,9 @@ else
             <input type="text" id="area_name" name="name">
 		    </div>
 			 
-        <input type="submit" class="submit" value="<?php echo get_vocab("addarea") ?>">
-		  
+			 <div>
+            <input type="submit" class="submit" value="<?php echo get_vocab("addarea") ?>">
+		    </div>
 		  </fieldset>
       </form>
     </td>
@@ -172,7 +173,9 @@ if (0 != $area)
           <input type="text" id="room_capacity" name="capacity">
         </div>
 		 
-        <input type="submit" class="submit" value="<?php echo get_vocab("addroom") ?>">
+		  <div>
+          <input type="submit" class="submit" value="<?php echo get_vocab("addroom") ?>">
+		  </div>
 		  
 		  </fieldset>
       </form>
@@ -186,7 +189,7 @@ else
     </td>
   </tr>
 </table>
-
-<?php echo get_vocab("browserlang") . " " . $HTTP_ACCEPT_LANGUAGE . " " . get_vocab("postbrowserlang") ; ?>
-
+<p>
+  <?php echo get_vocab("browserlang") . " " . $HTTP_ACCEPT_LANGUAGE . " " . get_vocab("postbrowserlang") ; ?>
+</p>
 <?php include "trailer.inc" ?>

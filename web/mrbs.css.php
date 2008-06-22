@@ -101,20 +101,34 @@ img.new_booking {display: block; margin-left: auto; margin-right: auto}
 <?php
 // Adjust the label width to suit the longest label - it will depend on the translation being used
 // The input width can normally be left alone
+$admin_form_label_width       = 7.0;   // em
+$admin_form_gap               = 1.0;   // em
 $admin_form_input_width       = 8.3;   // em   (Also used in edit_area_room.php)
+$admin_total_width = $admin_form_label_width + $admin_form_gap + $admin_form_input_width + 1; // +1 to allow for various overheads
 ?>
-table#admin {margin-bottom: 1em}
-#admin td {border: 1px solid #999999}
-#admin th {text-align: center; font-weight: bold}
-form.form_admin {margin-top: 0.5em; margin-bottom: 0.5em}
-.form_admin fieldset {width: auto; border: 0; padding-top: 1.0em}
-.form_admin div {width: 100%}
-.form_admin label {display: block; float: left; clear: left; width: 7.0em; min-height: 2.0em; text-align: right}
-.form_admin input {
-    display: block; position: relative; float: right; clear: right; 
-    width: <?php echo $admin_form_input_width ?>em; margin-top: -0.2em; margin-left: 0.5em; margin-right: 0.5em
+table#admin {margin-bottom: 1.0em}
+#admin td {padding: 0.5em; border: 1px solid #999999}
+#admin th {padding: 0.5em; text-align: center; font-weight: bold}
+.form_admin fieldset {
+    width: <?php echo $admin_total_width ?>em;      /* Safari doesn't like width: auto */
+	 border: 0; padding-top: 1.0em;
+}    
+.form_admin div {float: left; clear: left; width: <?php echo $admin_total_width ?>em}
+.form_admin label {
+    display: block; float: left; clear: left; 
+	 width: <?php echo $admin_form_label_width ?>em; min-height: 2.0em; text-align: right;
 }
-.form_admin input.submit {width: auto; margin-top: 1.2em; margin-left: 1.0em}
+.form_admin input {
+    display: block; float: left; 
+    width: <?php echo $admin_form_input_width ?>em; 
+	 margin-top: -0.2em; margin-left: <?php echo $admin_form_gap ?>em;
+	 font-family: arial,sans-serif; font-size: 10pt;
+}
+.form_admin input.submit {
+    position: relative; clear: both; left: <?php echo $admin_form_label_width ?>em;
+    width: auto; margin-top: 1.2em; margin-left: <?php echo $admin_form_gap ?>em;
+}
+
 
 
 

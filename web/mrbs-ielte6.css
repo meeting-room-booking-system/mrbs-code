@@ -5,6 +5,7 @@
 
 /* ------------ ADMIN.PHP ---------------------------*/
 .form_admin label {height: 2.0em}           /* min-height not recognised by IE6 and below */
+.form_admin input {margin-top: 0}           /* negative margins remove the input border in IE6 */
 
 /* ------------ EDIT_AREA_ROOM.PHP ------------------*/
 #form_edit_area_room label {height: 2.0em}  /* min-height not recognised by IE6 and below */
