@@ -7,4 +7,4 @@
 .form_admin label {height: 2.0em}           /* min-height not recognised by IE6 and below */
 
 /* ------------ EDIT_AREA_ROOM.PHP ------------------*/
-.form_edit_area_room label {height: 2.0em}  /* min-height not recognised by IE6 and below */
+#form_edit_area_room label {height: 2.0em}  /* min-height not recognised by IE6 and below */

@@ -332,7 +332,6 @@ function OnAllDayClick(allday)
 // End of Javascript -->
 </script>
 
-<h2>
 <?php
 
 if (isset($id) && !isset($copy))
@@ -364,397 +363,367 @@ else
     $token = "addentry";
   }
 }
-echo get_vocab($token);
 ?>
-</h2>
 
 
-<form name="main" action="edit_entry_handler.php" method="get">
+<form id="form_edit_entry" name="main" action="edit_entry_handler.php" method="get">
+  <fieldset>
+  <legend><?php echo get_vocab($token); ?></legend>
 
-<table border="0">
-  <tr>
-    <td class="CR"><b><?php echo get_vocab("namebooker")?></b></td>
-    <td class="CL">
-      <input name="name" size="40" value="<?php echo htmlspecialchars($name) ?>">
-    </td>
-  </tr>
+    <div id="div_name">
+      <label for="name"><?php echo get_vocab("namebooker")?>:</label>
+      <input id="name" name="name" value="<?php echo htmlspecialchars($name) ?>">
+    </div>
 
-  <tr>
-    <td class="tr"><b><?php echo get_vocab("fulldescription")?></b></td>
-    <td class="tl">
-      <textarea name="description" rows="8" cols="40"><?php echo
-htmlspecialchars ( $description ); ?></textarea>
-    </td>
-  </tr>
+    <div id="div_description">
+      <label for="description"><?php echo get_vocab("fulldescription")?></label>
+	   <!-- textarea rows and cols are overridden by CSS height and width -->
+      <textarea id="description" name="description" rows="8" cols="40"><?php echo htmlspecialchars ( $description ); ?></textarea>
+	 </div>
 
-  <tr>
-    <td class="CR"><b><?php echo get_vocab("date")?>:</b></td>
-    <td class="CL">
+    <div id="div_date">
+      <label><?php echo get_vocab("date")?>:</label>
       <?php gendateselector("", $start_day, $start_month, $start_year) ?>
-    </td>
-  </tr>
+    </div>
 
-<?php if(! $enable_periods ) { ?>
-  <tr>
-    <td class="CR"><b><?php echo get_vocab("time")?>:</b></td>
-    <td class="CL">
-      <input name="hour" size="2" value="<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>" maxlength="2">
-      :<input name="minute" size="2" value="<?php echo $start_min;?>" maxlength="2">
-<?php
-if (!$twentyfourhour_format)
-{
-  $checked = ($start_hour < 12) ? "checked=\"checked\"" : "";
-  echo "      <input name=\"ampm\" type=\"radio\" value=\"am\" $checked>".utf8_strftime("%p",mktime(1,0,0,1,1,2000));
-  $checked = ($start_hour >= 12) ? "checked=\"checked\"" : "";
-  echo "      <input name=\"ampm\" type=\"radio\" value=\"pm\" $checked>".utf8_strftime("%p",mktime(13,0,0,1,1,2000));
-}
-?>
-    </td>
-  </tr>
-<?php
-}
-else
-{
-?>
-  <tr>
-    <td class="CR"><b><?php echo get_vocab("period")?>:</b></td>
-    <td class="CL">
-      <select name="period">
-<?php
-foreach ($periods as $p_num => $p_val)
-{
-  echo "<option value=\"$p_num\"";
-  if( ( isset( $period ) && $period == $p_num ) || $p_num == $start_min)
-  {
-    echo " selected=\"selected";
-  }
-  echo ">$p_val</option>\n";
-}
-?>
-      </select>
-    </td>
-  </tr>
+    <?php 
+	 if(! $enable_periods ) 
+	 { 
+	 ?>
+      <div id="div_time">
+        <label><?php echo get_vocab("time")?>:</label>
+        <input name="hour" value="<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>" maxlength="2">
+        <span>:</span>
+		  <input name="minute" value="<?php echo $start_min;?>" maxlength="2">
+        <?php
+        if (!$twentyfourhour_format)
+        {
+          $checked = ($start_hour < 12) ? "checked=\"checked\"" : "";
+          echo "      <input name=\"ampm\" type=\"radio\" value=\"am\" $checked>".utf8_strftime("%p",mktime(1,0,0,1,1,2000));
+          $checked = ($start_hour >= 12) ? "checked=\"checked\"" : "";
+          echo "      <input name=\"ampm\" type=\"radio\" value=\"pm\" $checked>".utf8_strftime("%p",mktime(13,0,0,1,1,2000));
+        }
+        ?>
+	   </div>
+      <?php
+    }
+	 
+    else
+	 {
+      ?>
+      <div id="div_period">
+        <label><?php echo get_vocab("period")?>:</label>
+        <select name="period">
+          <?php
+          foreach ($periods as $p_num => $p_val)
+          {
+            echo "<option value=\"$p_num\"";
+            if( ( isset( $period ) && $period == $p_num ) || $p_num == $start_min)
+            {
+              echo " selected=\"selected\"";
+            }
+            echo ">$p_val</option>\n";
+          }
+          ?>
+        </select>
+      </div>
 
-<?php
-}
-?>
-  <tr>
-    <td class="CR"><b><?php echo get_vocab("duration");?>:</b></td>
-    <td class="CL">
-      <input name="duration" size"=7" value="<?php echo $duration;?>">
-      <select name="dur_units">
-<?php
-if( $enable_periods )
-{
-  $units = array("periods", "days");
-}
-else
-{
-  $units = array("minutes", "hours", "days", "weeks");
-}
+    <?php
+    }
+    ?>
+	 <div id="div_duration">
+      <label for="duration"><?php echo get_vocab("duration");?>:</label>
+		<div class="group">
+        <input id="duration" name="duration" value="<?php echo $duration;?>">
+        <select id="dur_units" name="dur_units">
+          <?php
+          if( $enable_periods )
+          {
+            $units = array("periods", "days");
+          }
+          else
+          {
+            $units = array("minutes", "hours", "days", "weeks");
+          }
 
-while (list(,$unit) = each($units))
-{
-  echo "        <option value=\"$unit\"";
-  if ($dur_units == get_vocab($unit))
-  {
-    echo " selected=\"selected\"";
-  }
-  echo ">".get_vocab($unit)."</option>";
-}
-?>
-      </select>
-      <input name="all_day" type="checkbox" value="yes" onclick="OnAllDayClick(this)">
-      <?php echo get_vocab("all_day"); ?>
-    </td>
-  </tr>
+          while (list(,$unit) = each($units))
+          {
+            echo "        <option value=\"$unit\"";
+            if ($dur_units == get_vocab($unit))
+            {
+              echo " selected=\"selected\"";
+            }
+            echo ">".get_vocab($unit)."</option>\n";
+          }
+          ?>
+        </select>
+		  <div id="ad">
+		    <input id="all_day" class="checkbox" name="all_day" type="checkbox" value="yes" onclick="OnAllDayClick(this)">
+		    <label for="all_day"><?php echo get_vocab("all_day"); ?></label>
+		  </div>
+		</div>
+    </div>
 
-<?php
-// Determine the area id of the room in question first
-$sql = "select area_id from $tbl_room where id=$room_id";
-$res = sql_query($sql);
-$row = sql_row_keyed($res, 0);
-$area_id = $row['area_id'];
-// determine if there is more than one area
-$sql = "select id from $tbl_area";
-$res = sql_query($sql);
-$num_areas = sql_count($res);
-// if there is more than one area then give the option
-// to choose areas.
-if( $num_areas > 1 )
-{
-
-?>
-  <tr>
-    <td>
-      <script type="text/javascript">
+    <?php
+    // Determine the area id of the room in question first
+    $sql = "select area_id from $tbl_room where id=$room_id";
+    $res = sql_query($sql);
+    $row = sql_row_keyed($res, 0);
+    $area_id = $row['area_id'];
+    // determine if there is more than one area
+    $sql = "select id from $tbl_area";
+    $res = sql_query($sql);
+    $num_areas = sql_count($res);
+    // if there is more than one area then give the option
+    // to choose areas.
+    if( $num_areas > 1 )
+    {
+	 
+    ?>
+	 
+		<script type="text/javascript">
+		
       <!-- Hide the Javascript from non-Javascript UAs
-
-function changeRooms( formObj )
-{
-    areasObj = eval( "formObj.areas" );
-
-    area = areasObj[areasObj.selectedIndex].value
-    roomsObj = eval( "formObj.elements['rooms']" )
-
-    // remove all entries
-    roomsNum = roomsObj.length;
-    for (i=(roomsNum-1); i >= 0; i--)
-    {
-      roomsObj.options[i] = null
-    }
-    // add entries based on area selected
-    switch (area){
-<?php
-  // get the area id for case statement
-  $sql = "select id, area_name from $tbl_area order by area_name";
-  $res = sql_query($sql);
-  if ($res)
-  {
-    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-    {
-      print "      case \"".$row['id']."\":\n";
-      // get rooms for this area
-      $sql2 = "select id, room_name from $tbl_room where area_id='".$row['id']."' order by room_name";
-      $res2 = sql_query($sql2);
-      if ($res2)
+		
+      function changeRooms( formObj )
       {
-        for ($j = 0; ($row2 = sql_row_keyed($res2, $j)); $j++)
+        areasObj = eval( "formObj.areas" );
+
+        area = areasObj[areasObj.selectedIndex].value;
+        roomsObj = eval( "formObj.elements['rooms']" );
+
+        // remove all entries
+        roomsNum = roomsObj.length;
+        for (i=(roomsNum-1); i >= 0; i--)
         {
-          print "        roomsObj.options[$j] = new Option(\"".str_replace('"','\\"',$row2['room_name'])."\",".$row2['id'] .")\n";
+          roomsObj.options[i] = null;
         }
-        // select the first entry by default to ensure
-        // that one room is selected to begin with
-        print "        roomsObj.options[0].selected = true\n";
-        print "        break\n";
+        // add entries based on area selected
+        switch (area){
+          <?php
+          // get the area id for case statement
+          $sql = "select id, area_name from $tbl_area order by area_name";
+          $res = sql_query($sql);
+          if ($res)
+          {
+            for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+            {
+              print "      case \"".$row['id']."\":\n";
+              // get rooms for this area
+              $sql2 = "select id, room_name from $tbl_room where area_id='".$row['id']."' order by room_name";
+              $res2 = sql_query($sql2);
+              if ($res2)
+              {
+                for ($j = 0; ($row2 = sql_row_keyed($res2, $j)); $j++)
+                {
+                  print "        roomsObj.options[$j] = new Option(\"".str_replace('"','\\"',$row2['room_name'])."\",".$row2['id'] .");\n";
+                }
+                // select the first entry by default to ensure
+                // that one room is selected to begin with
+                print "        roomsObj.options[0].selected = true;\n";
+                print "        break;\n";
+              }
+            }
+          }
+          ?>
+        } //switch
       }
-    }
-  }
-?>
-    } //switch
-}
 
-// Create area selector, only if we have Javascript
+      // Create area selector, only if we have Javascript
 
-this.document.writeln("<b><?php echo get_vocab("areas") ?>:<\/b><\/td><td class=CL valign=top>");
-this.document.writeln("          <select name=\"areas\" onchange=\"changeRooms(this.form)\">");
+      this.document.writeln("<div id=\"div_areas\">");
+      this.document.writeln("<label for=\"areas\"><?php echo get_vocab("areas") ?>:<\/label>");
+      this.document.writeln("          <select id=\"areas\" name=\"areas\" onchange=\"changeRooms(this.form)\">");
 
-<?php
-  // get list of areas
-  $sql = "select id, area_name from $tbl_area order by area_name";
-   $res = sql_query($sql);
-  if ($res)
-  {
-    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-    {
-      $selected = "";
-      if ($row['id'] == $area_id)
+      <?php
+      // get list of areas
+      $sql = "select id, area_name from $tbl_area order by area_name";
+      $res = sql_query($sql);
+      if ($res)
       {
-        $selected = "selected=\"selected\"";
+        for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+        {
+          $selected = "";
+          if ($row['id'] == $area_id)
+          {
+            $selected = 'selected=\"selected\"';
+          }
+          print "this.document.writeln(\"            <option $selected value=\\\"".$row['id']."\\\">".$row['area_name']."<\/option>\");\n";
+        }
       }
-      print "this.document.writeln(\"            <option $selected value=\\\"".$row['id']."\\\">".$row['area_name']."\")</option>\n";
-    }
-  }
-?>
-this.document.writeln("          <\/select>");
+      ?>
+      this.document.writeln("          <\/select>");
+		this.document.writeln("<\/div>");
 
-// End of Javascipt -->
+      // End of Javascript -->
       </script>
-    </td>
-  </tr>
-<?php
-} // if $num_areas
-?>
-  <tr>
-    <td class="CR"><b><?php echo get_vocab("rooms") ?>:</b></td>
-    <td class="CL" valign="top">
-      <table>
-        <tr>
-          <td>
-            <select name="rooms" multiple="multiple">
-<?php
-
-// select the rooms in the area determined above
-$sql = "select id, room_name from $tbl_room where area_id=$area_id order by room_name";
-$res = sql_query($sql);
-
-if ($res)
-{
-  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-  {
-    $selected = "";
-    if ($row['id'] == $room_id)
-    {
-      $selected = "selected=\"selected\"";
-    }
-    echo "              <option $selected value=\"".$row['id']."\">".$row['room_name']."</option>\n";
-    // store room names for emails
-    $room_names[$i] = $row['room_name'];
-  }
-}
-?>
-            </select>
-          </td>
-          <td><?php echo get_vocab("ctrl_click") ?></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-
-  <tr>
-    <td class="CR"><b><?php echo get_vocab("type")?></b></td>
-    <td class="CL">
-      <select name="type">
-<?php
-for ($c = "A"; $c <= "Z"; $c++)
-{
-  if (!empty($typel[$c]))
-  {
-    echo "        <option value=\"$c\"" . ($type == $c ? " selected=\"selected\"" : "") . ">$typel[$c]</option>\n";
-  }
-}
-?>
+      <?php
+    } // if $num_areas
+    ?>
+	 
+	 
+	 <div id="div_rooms">
+    <label for="rooms"><?php echo get_vocab("rooms") ?>:</label>
+	 <div class="group">
+      <select id="rooms" name="rooms" multiple="multiple">
+        <?php 
+		  // select the rooms in the area determined above
+        $sql = "select id, room_name from $tbl_room where area_id=$area_id order by room_name";
+	     $res = sql_query($sql);
+        if ($res)
+        {
+          for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+          {
+            $selected = "";
+            if ($row['id'] == $room_id)
+            {
+              $selected = "selected=\"selected\"";
+            }
+            echo "              <option $selected value=\"".$row['id']."\">".$row['room_name']."</option>\n";
+            // store room names for emails
+            $room_names[$i] = $row['room_name'];
+          }
+        }
+        ?>
       </select>
-    </td>
-  </tr>
-
-<?php
-if ($edit_type == "series")
-{
-?>
-
-  <tr>
-    <td class="CR"><b><?php echo get_vocab("rep_type")?>:</b></td>
-    <td class="CL">
-<?php
-
-  for ($i = 0; isset($vocab["rep_type_$i"]); $i++)
-  {
-    echo "      <input name=\"rep_type\" type=\"radio\" value=\"" . $i . "\"";
-
-    if ($i == $rep_type)
-    {
-      echo " checked=\"checked\"";
-    }
-
-    echo ">" . get_vocab("rep_type_$i") . "\n";
-  }
-
-?>
-    </td>
-  </tr>
-
-  <tr>
-    <td class="CR"><b><?php echo get_vocab("rep_end_date")?>:</b></td>
-    <td class="CL">
-      <?php genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year) ?>
-     </td>
-  </tr>
-
-  <tr>
-    <td class="CR">
-      <b><?php echo get_vocab("rep_rep_day")?>:</b>
-      <?php echo get_vocab("rep_for_weekly")?>
-    </td>
-    <td class="CL">
-<?php
-  // Display day name checkboxes according to language and preferred weekday start.
-  for ($i = 0; $i < 7; $i++)
-  {
-    $wday = ($i + $weekstarts) % 7;
-    echo "      <input name=\"rep_day[$wday]\" type=\"checkbox\"";
-    if ($rep_day[$wday])
-    {
-      echo " checked=\"checked\"";
-    }
-    echo ">" . day_name($wday) . "\n";
-  }
-?>
-    </td>
-  </tr>
-
-<?php
-}
-else
-{
-  $key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
-
-?>
-  <tr>
-     <td class="CR">
-       <input type="hidden" name="rep_type" value="0">
-	<b><?php echo get_vocab("rep_type") ?>:</b>
-     </td>
-     <td class="CL"><?php echo get_vocab($key) ?></td>
-   </tr>
-<?php
-  if(isset($rep_type) && ($rep_type != 0))
-  {
-    $opt = "";
-    if ($rep_type == 2)
-    {
-      // Display day names according to language and preferred weekday start.
-      for ($i = 0; $i < 7; $i++)
-      {
-        $wday = ($i + $weekstarts) % 7;
-        if ($rep_opt[$wday])
+	   <span><?php echo get_vocab("ctrl_click") ?></span>
+	   </div>
+	 </div>
+	 
+	 <div id="div_type">
+      <label for="type"><?php echo get_vocab("type")?>:</label>
+      <select id="type" name="type">
+        <?php
+        for ($c = "A"; $c <= "Z"; $c++)
         {
-          $opt .= day_name($wday) . " ";
+          if (!empty($typel[$c]))
+          { 
+		      echo "        <option value=\"$c\"" . ($type == $c ? " selected=\"selected\"" : "") . ">$typel[$c]</option>\n";
+          }
         }
-      }
-    }
-    if($opt)
+        ?>
+      </select>
+	 </div>
+
+
+    <?php
+    if ($edit_type == "series")
     {
-      echo "  <tr><td class=\"CR\"><b>".get_vocab("rep_rep_day").":</b></td><td class=\"CL\">$opt</td></tr>\n";
+    ?>
+	   <div id="rep_type">
+        <label><?php echo get_vocab("rep_type")?>:</label>
+		  <div class="group">
+          <?php
+		    for ($i = 0; isset($vocab["rep_type_$i"]); $i++)
+          {
+            echo "      <label><input class=\"radio\" name=\"rep_type\" type=\"radio\" value=\"" . $i . "\"";
+            if ($i == $rep_type)
+            {
+              echo " checked=\"checked\"";
+            }
+            echo ">" . get_vocab("rep_type_$i") . "</label>\n";
+          }
+          ?>
+		  </div>
+		</div>
+
+		<div id="rep_end_date">
+        <label><?php echo get_vocab("rep_end_date")?>:</label>
+        <?php genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year) ?>
+      </div>
+		
+		<div id="rep_day">
+        <label><?php echo get_vocab("rep_rep_day")?>:<br><?php echo get_vocab("rep_for_weekly")?></label>
+		  <div class="group">
+          <?php
+          // Display day name checkboxes according to language and preferred weekday start.
+          for ($i = 0; $i < 7; $i++)
+          {
+            $wday = ($i + $weekstarts) % 7;
+            echo "      <label><input class=\"checkbox\" name=\"rep_day[$wday]\" type=\"checkbox\"";
+            if ($rep_day[$wday])
+            {
+              echo " checked=\"checked\"";
+            }
+            echo ">" . day_name($wday) . "</label>\n";
+          }
+		    ?>
+		  </div>
+      </div>
+	   <?php
+    }
+    else
+    {
+      $key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
+      ?>
+		<fieldset id="rep_info">
+		<legend></legend>
+        <input type="hidden" name="rep_type" value="0">
+		  <div>
+	       <label><?php echo get_vocab("rep_type") ?>:</label>
+		    <input type="text" value ="<?php echo get_vocab($key) ?>" disabled="disabled">
+		  </div>
+        <?php
+        if(isset($rep_type) && ($rep_type != 0))
+        {
+          $opt = "";
+          if ($rep_type == 2)
+          {
+            // Display day names according to language and preferred weekday start.
+            for ($i = 0; $i < 7; $i++)
+            {
+              $wday = ($i + $weekstarts) % 7;
+              if ($rep_opt[$wday])
+              {
+                $opt .= day_name($wday) . " ";
+              }
+            }
+          }
+          if($opt)
+          {
+            echo "  <div><label>".get_vocab("rep_rep_day").":</label><input type=\"text\" value=\"$opt\" disabled=\"disabled\"></div>\n";
+          }
+
+          echo "  <div><label>".get_vocab("rep_end_date").":</label><input type=\"text\" value=\"$rep_end_date\" disabled=\"disabled\"></div>\n";
+        }
+		  ?>
+		</fieldset>
+		<?php
     }
 
-    echo "  <tr><td class=\"CR\"><b>".get_vocab("rep_end_date").":</b></td><td class=\"CL\">$rep_end_date</td></tr>\n";
-  }
-}
-/* We display the rep_num_weeks box only if:
-   - this is a new entry ($id is not set)
-   Xor
-   - we are editing an existing repeating entry ($rep_type is set and
-     $rep_type != 0 and $edit_type == "series" )
-*/
-if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) &&
+    /* We display the rep_num_weeks box only if:
+       - this is a new entry ($id is not set)
+       Xor
+       - we are editing an existing repeating entry ($rep_type is set and
+         $rep_type != 0 and $edit_type == "series" )
+    */
+    if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) &&
                              ( "series" == $edit_type ) ) )
-{
-?>
+    {
+      ?>
+      <label for="rep_num_weeks"><?php echo get_vocab("rep_num_weeks")?>:<br><?php echo get_vocab("rep_for_nweekly")?></label>
+      <input type="text" id="rep_num_weeks" name="rep_num_weeks" value="<?php echo $rep_num_weeks?>">
+      <?php
+    }
+    ?>
 
-  <tr>
-    <td class="CR">
-      <b><?php echo get_vocab("rep_num_weeks")?>:</b>
-      <?php echo get_vocab("rep_for_nweekly")?>
-    </td>
-    <td class="CL">
-      <input type="text" name="rep_num_weeks" value="<?php echo $rep_num_weeks?>">
-    </td>
-  </tr>
-<?php
-}
-?>
+    <div id="edit_entry_submit">
+    <script type="text/javascript">
+      document.writeln ( '<input type="button" name="save_button" value="<?php echo get_vocab("save")?>" onclick="validate_and_submit()">' );
+    </script>
+    <noscript>
+      <input type="submit" value="<?php echo get_vocab("save")?>">
+    </noscript>
+    </div>
 
-  <tr>
-    <td colspan="2" align="center">
-      <script type="text/javascript">
-   document.writeln ( '<input type="button" name="save_button" value="<?php echo get_vocab("save")?>" onclick="validate_and_submit()">' );
-      </script>
-      <noscript>
-        <input type="submit" value="<?php echo get_vocab("save")?>">
-      </noscript>
-    </td>
-  </tr>
-</table>
-
-<input type="hidden" name="returl" value="<?php echo htmlspecialchars($HTTP_REFERER) ?>">
-<!--input type="hidden" name="room_id" value="<?php echo $room_id?>"-->
-<input type="hidden" name="create_by" value="<?php echo $create_by?>">
-<input type="hidden" name="rep_id" value="<?php echo $rep_id?>">
-<input type="hidden" name="edit_type" value="<?php echo $edit_type?>">
-  <?php if(isset($id) && !isset($copy)) echo "<input type=\"hidden\" name=\"id\"        value=\"$id\">\n";
-?>
-
+    <input type="hidden" name="returl" value="<?php echo htmlspecialchars($HTTP_REFERER) ?>">
+    <!--input type="hidden" name="room_id" value="<?php echo $room_id?>"-->
+    <input type="hidden" name="create_by" value="<?php echo $create_by?>">
+    <input type="hidden" name="rep_id" value="<?php echo $rep_id?>">
+    <input type="hidden" name="edit_type" value="<?php echo $edit_type?>">
+    <?php if(isset($id) && !isset($copy)) echo "<input type=\"hidden\" name=\"id\"        value=\"$id\">\n";
+    ?>
+  </fieldset>
 </form>
 
 <?php include "trailer.inc" ?>

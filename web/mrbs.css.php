@@ -81,6 +81,8 @@ top:12px}
 TD.month {font-size: 8pt; background-color:#FFFFFF}
 .monthday {font-size: 12pt; vertical-align: top; text-align: left}
 
+
+
 /* ------------ GENERAL -----------------------------*/
 
 .current {color: red}		                    /* used to highlight the current item */
@@ -92,6 +94,8 @@ fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; bor
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
 
 img.new_booking {display: block; margin-left: auto; margin-right: auto}
+
+
 
 /* ------------ ADMIN.PHP ---------------------------*/
 <?php
@@ -106,8 +110,13 @@ form.form_admin {margin-top: 0.5em; margin-bottom: 0.5em}
 .form_admin fieldset {width: auto; border: 0; padding-top: 1.0em}
 .form_admin div {width: 100%}
 .form_admin label {display: block; float: left; clear: left; width: 7.0em; min-height: 2.0em; text-align: right}
-.form_admin input {display: block; position: relative; float: right; clear: right; width: <?php echo $admin_form_input_width ?>em; margin-top: -0.2em; margin-left: 0.5em; margin-right: 0.5em}
+.form_admin input {
+    display: block; position: relative; float: right; clear: right; 
+    width: <?php echo $admin_form_input_width ?>em; margin-top: -0.2em; margin-left: 0.5em; margin-right: 0.5em
+}
 .form_admin input.submit {width: auto; margin-top: 1.2em; margin-left: 1.0em}
+
+
 
 /* ------------ DAY.PHP -----------------------------*/
 table#day_header {width: 100%}
@@ -125,6 +134,7 @@ div.date_now    {width: 32%; position: absolute; top: 0.5em; left: 50%; margin-l
 div.date_after  {width: 32%; position: absolute; top: 0.5em; right: 0; text-align: right}
 
 
+
 /* ------------ DEL.PHP -----------------------------*/
 div#del_room_confirm {padding-bottom: 3em}
 #del_room_confirm p {text-align: center; font-size: large; font-weight: bold}
@@ -133,6 +143,7 @@ span#del_yes {display:block; position: absolute; right: 50%; margin-right: 1em; 
 span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; font-size: large}
 #del_room_confirm_links a:hover {cursor: pointer}                  /* for IE */
 #del_room_confirm_links span:hover {text-decoration: underline}    /* for Firefox */
+
 
 
 /* ------------ EDIT_AREA_ROOM.PHP ------------------*/
@@ -148,9 +159,79 @@ $edit_area_room_input_width       = $admin_form_input_width;
 $edit_area_room_width_overheads   = 0.7;     // borders around inputs etc.    Konqueror seems to be the most extreme
 $edit_area_room_form_width        = $edit_area_room_label_width + $edit_area_room_input_margin_left + $edit_area_room_input_width + $edit_area_room_width_overheads;
 ?>
-form.form_edit_area_room {position: relative; width: <?php echo $edit_area_room_form_width ?>em; margin-top: 2em; margin-bottom: 2em; margin-left: auto; margin-right: auto}
-.form_edit_area_room label {display: block; float: left; clear: left; min-height: 2.0em; width: <?php echo $edit_area_room_label_width ?>em; text-align: right}
-.form_edit_area_room input {display: block; position: relative; float: right; clear: right; width: <?php echo $edit_area_room_input_width ?>em; margin-top: -0.2em; margin-left: <?php echo $edit_area_room_input_margin_left ?>em}
+form.form_edit_area_room {
+    position: relative; width: <?php echo $edit_area_room_form_width ?>em; 
+    margin-top: 2em; margin-bottom: 2em; margin-left: auto; margin-right: auto
+}
+.form_edit_area_room label {
+    display: block; float: left; clear: left; min-height: 2.0em; 
+    width: <?php echo $edit_area_room_label_width ?>em; text-align: right
+}
+.form_edit_area_room input {
+    display: block; position: relative; float: right; clear: right; 
+    width: <?php echo $edit_area_room_input_width ?>em; 
+	 margin-top: -0.2em; margin-left: <?php echo $edit_area_room_input_margin_left ?>em
+}
 .form_edit_area_room .submit_buttons input {width: auto; clear: none; margin-top: 1.2em; margin-left: 1.0em}
 .form_edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}
 .form_edit_area_room div {width: 100%}
+
+
+
+/* ------------ EDIT_AREA_ROOM.PHP ------------------*/
+<?php
+$edit_entry_label_height          = 1.0;     // em
+$edit_entry_left_col_max_width    = 10;      // em
+$edit_entry_left_col_width        = 20;      // %
+$edit_entry_right_col_width       = 80;      // %
+$edit_entry_gap                   = 1.0;     // em  (gap between left and right columns)
+$edit_entry_textarea_width        = 26;      // em
+$edit_entry_form_min_width        = $edit_entry_left_col_max_width + $edit_entry_textarea_width + $edit_entry_gap;
+?>
+form#form_edit_entry {margin-top: 2.0em; width: 100%; min-width: <?php echo $edit_entry_form_min_width ?>em}
+#form_edit_entry div {float: left; width: 100%}
+#form_edit_entry div div {float: none; width: auto}
+#form_edit_entry div.group {display: table-cell; float: left; width: <?php echo $edit_entry_right_col_width ?>%}
+#form_edit_entry fieldset {width: auto; border: 0; padding-top: 2.0em}
+#form_edit_entry label {
+    display: block; float: left; 
+    min-height: <?php echo $edit_entry_label_height ?>em; 
+	 width: <?php echo $edit_entry_left_col_width ?>%; 
+	 max-width: <?php echo $edit_entry_left_col_max_width ?>em; 
+	 text-align: right; padding-bottom: 0.8em; font-weight: bold;
+}
+/* font family and size needs to be the same for input and textarea as their widths are defined in ems */
+#form_edit_entry input {
+    display: block; float: left; 
+    width: <?php echo $edit_entry_textarea_width ?>em; 
+    margin-left: <?php echo $edit_entry_gap ?>em; 
+	 font-family: arial,sans-serif; font-size: 10pt
+}
+#form_edit_entry textarea {
+    display: block; float: left; 
+    width: <?php echo $edit_entry_textarea_width ?>em; height: 11em; 
+    margin-left: <?php echo $edit_entry_gap ?>em; margin-bottom: 0.5em;
+	 font-family: arial,sans-serif; font-size: 10pt
+}
+#form_edit_entry select {float: left; margin-left: <?php echo $edit_entry_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
+#form_edit_entry input.radio {margin-top: 0.1em}
+#form_edit_entry input.checkbox {margin-top: 0.1em}
+#form_edit_entry #div_time input {width: 1.5em}
+#form_edit_entry #div_time span + input {margin-left: 0}
+#form_edit_entry #div_time span {display: block; float: left; margin-left: 0.2em; margin-right: 0.2em}
+#form_edit_entry input#duration {width: 3.0em}
+#form_edit_entry select#dur_units {margin-right: 1.0em}
+#form_edit_entry div#ad {float: left}
+#form_edit_entry #ad label {clear: none; text-align: left; font-weight: normal}
+#form_edit_entry input#all_day {width: auto; margin-left: 1.0em; margin-right: 0.5em}
+#form_edit_entry #div_rooms select {float: left; margin-right: 2.0em}
+#form_edit_entry .group label {clear: none; width: auto; max-width: 100%; font-weight: normal}
+#form_edit_entry .group input {clear: none; width: auto}
+#form_edit_entry fieldset#rep_info {padding-top: 0}
+#form_edit_entry #rep_info input {width: 13em}
+#form_edit_entry input#rep_num_weeks {width: 1.5em}
+#form_edit_entry #edit_entry_submit input {
+    position: relative; clear: left; 
+    left: <?php echo $edit_entry_left_col_max_width ?>em; width: auto; margin-top: 1.0em
+}
+

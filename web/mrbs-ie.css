@@ -7,3 +7,21 @@
 #admin ul {margin-top: 1.0em}
 form.form_admin {margin-top: 0}
 .form_admin legend {margin-bottom: 1.0em}   /* by default IE gives no gap between legend and first form element */
+
+
+
+/* ------------ EDIT_AREA_ROOM.PHP ------------------*/
+#formedit_entry legend {margin-bottom: 2.0em}   /* by default IE gives no gap between legend and first form element */
+
+/* margin-bottom on some form controls does not work, so put it on the relevant divs instead */
+#form_edit_entry div#div_description {margin-bottom: 0.5em}  
+#form_edit_entry div#div_date {margin-bottom: 0.5em}
+#form_edit_entry div#div_period {margin-bottom: 0.5em}
+#form_edit_entry div#div_areas {margin-bottom: 0.5em}
+#form_edit_entry div#div_rooms {margin-bottom: 0.5em}
+#form_edit_entry div#div_type {margin-bottom: 0.5em}
+#form_edit_entry div#rep_end_date {margin-bottom: 0.5em}
+
+/* alignment of some inputs with labels is different in IE, so adjust */
+#form_edit_entry input.radio {margin-top: -0.2em}
+#form_edit_entry input.checkbox {margin-top: -0.2em}
