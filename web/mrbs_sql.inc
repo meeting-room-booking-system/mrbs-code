@@ -73,7 +73,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
       . " ( " . $startstr . ") "
       . "(<a href=\"day.php?$param_ymd\">".get_vocab("viewday")."</a>"
       . " | <a href=\"week.php?room=$room_id&amp;$param_ymd\">".get_vocab("viewweek")."</a>"
-      . " | <a href=\"month.php?room=$room_id&amp;$param_ym\">".get_vocab("viewmonth")."</a>)";
+      . " | <a href=\"month.php?room=$room_id&amp;$param_ym\">".get_vocab("viewmonth")."</a>)</li>\n";
   }
 
   return $err;

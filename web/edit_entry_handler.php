@@ -291,7 +291,7 @@ foreach ( $rooms as $room_id )
     }
     else
     {
-      $err        .= get_vocab("too_may_entrys") . "<P>";
+      $err        .= get_vocab("too_may_entrys") . "\n";
       $hide_title  = 1;
     }
   }
@@ -433,22 +433,24 @@ if (strlen($err))
 {
   print_header($day, $month, $year, $area);
     
-  echo "<h2>" . get_vocab("sched_conflict") . "</h2>";
+  echo "<h2>" . get_vocab("sched_conflict") . "</h2>\n";
   if (!isset($hide_title))
   {
-    echo get_vocab("conflict").":";
-    echo "<ul>";
+    echo get_vocab("conflict").":\n";
+    echo "<ul>\n";
   }
 
   echo $err;
     
   if(!isset($hide_title))
   {
-    echo "</ul>";
+    echo "</ul>\n";
   }
 }
 
-echo "<a href=\"".htmlspecialchars($returl)."\">".get_vocab("returncal")."</a><p>";
+echo "<p>\n";
+echo "<a href=\"" . htmlspecialchars($returl) . "\">" . get_vocab("returncal") . "</a>\n";
+echo "</p>\n";
 
 include "trailer.inc";
 ?>
