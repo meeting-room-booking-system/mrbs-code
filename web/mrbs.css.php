@@ -84,16 +84,37 @@ TD.month {font-size: 8pt; background-color:#FFFFFF}
 
 
 /* ------------ GENERAL -----------------------------*/
+<?php
+$admin_table_header_back_color  = "#999999";    // background colour for header and also border colour for table cells
+$admin_table_header_sep_color   = "#eeeeee";    // vertical separator colour in header
+$admin_table_header_font_color  = "#eeeeee";    // font colour for header
+
+?>
 
 .current {color: red}		                    /* used to highlight the current item */
 .error   {color: red; font-weight: bold}       /* for error messages */
 
 legend {font-weight: bold; font-size: large}
-fieldset {width: 100%; padding-left: 1.0em; padding-right: 1.0em}
+fieldset {width: 100%; padding-left: 1.0em; padding-right: 1.0em; 
+    border-color: <?php echo $admin_table_header_back_color ?>; border-width: 1px}
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
 
 img.new_booking {display: block; margin-left: auto; margin-right: auto}
+
+table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_header_back_color ?>; border-style: solid;
+    border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
+.admin_table th {color: <?php echo $admin_table_header_font_color ?>; font-size:10pt; ; font-weight: bold; font-family: verdana, sans-serif;
+    background-color: <?php echo $admin_table_header_back_color ?>; 
+	 padding: 0.1em 0.5em 0.1em 0.5em;
+    border-top-width: 1px; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;
+	 border-top-color: <?php echo $admin_table_header_back_color ?>; border-left-color: <?php echo $admin_table_header_sep_color ?>;
+	 vertical-align: middle; text-align: left}
+.admin_table th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}
+.admin_table td {padding: 0.1em 0.5em 0.1em 0.5em; 
+    border-top-width: 1px; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;
+	 border-top-color: <?php echo $admin_table_header_back_color ?>; border-left-color: <?php echo $admin_table_header_back_color ?>;
+	 vertical-align: middle}
 
 
 
@@ -107,8 +128,8 @@ $admin_form_input_width       = 8.3;   // em   (Also used in edit_area_room.php)
 $admin_total_width = $admin_form_label_width + $admin_form_gap + $admin_form_input_width + 1; // +1 to allow for various overheads
 ?>
 table#admin {margin-bottom: 1.0em}
-#admin td {padding: 0.5em; border: 1px solid #999999}
-#admin th {padding: 0.5em; text-align: center; font-weight: bold}
+#admin th {text-align: center}
+#admin td {padding: 0.5em; vertical-align: top}
 .form_admin fieldset {
     width: <?php echo $admin_total_width ?>em;      /* Safari doesn't like width: auto */
 	 border: 0; padding-top: 1.0em;
@@ -125,7 +146,7 @@ table#admin {margin-bottom: 1.0em}
 	 font-family: arial,sans-serif; font-size: 10pt;
 }
 .form_admin input.submit {
-    position: relative; clear: both; left: <?php echo $admin_form_label_width ?>em;
+    position: relative; left: <?php echo $admin_form_label_width ?>em;
     width: auto; margin-top: 1.2em; margin-left: <?php echo $admin_form_gap ?>em;
 }
 
@@ -192,7 +213,7 @@ form.form_edit_area_room {
 
 
 
-/* ------------ EDIT_AREA_ROOM.PHP ------------------*/
+/* ------------ EDIT_ENTRY.PHP ------------------*/
 <?php
 $edit_entry_label_height          = 1.0;     // em
 $edit_entry_left_col_max_width    = 10;      // em
@@ -249,3 +270,42 @@ form#form_edit_entry {margin-top: 2.0em; width: 100%; min-width: <?php echo $edi
     left: <?php echo $edit_entry_left_col_max_width ?>em; width: auto; margin-top: 1.0em
 }
 
+/* ------------ EDIT_USERS.PHP ------------------*/
+<?php
+$edit_users_label_height     = 2.0;   // em
+$edit_users_label_width      = 10.0;   // em
+$edit_users_gap              = 1.0;   // em
+$edit_users_input_width      = 10.0;   // em
+$edit_users_form_width = $edit_users_label_width + $edit_users_gap + $edit_users_input_width + 5;
+// This CSS works by using absolute positioning to bring the Delete button up into the main form.
+// Logically the HTML for the Delete button is implemented and because you can't nest a form within
+// a form it appears as a second form after the main form.    However, to the user it is more logical to
+// see it within the main form, which we achieve through CSS.    [Actually it would probably be better
+// to have the Delete button in a column on the User List page, just like the Edit button is.  However
+// if you put it there you probably also need a confirmation screen, otherwise it is too easy to delete
+// users by mistake.    Having it on the edit form at least means that you have to press two buttons to
+// delete a user (the Edit button followed by the Delete button)]
+?>
+div#form_container {position: relative; float: left}    /* this is the containing block against which the absolute positioning works */
+#form_container input.submit {width: auto; position: absolute; bottom: 2.0em}  /* bring both buttons up          */
+form#form_edit_users {width: <?php echo $edit_users_form_width ?>em; margin-top: 2.0em}
+#form_edit_users fieldset {width: auto}  
+#form_edit_users div {float: left; width: 100%}
+#form_edit_users div#edit_users_input_container {padding-bottom: 4.0em}    /* padding-bottom leaves room for the submit buttons. */
+                                                                           /* Apply it to the div because applying it to the     */
+																									/* fieldset does not work in all browsers (eg Safari) */
+#form_edit_users label{
+    display: block; float: left;
+    min-height: <?php echo $edit_users_label_height ?>em; 
+	 width: <?php echo $edit_users_label_width ?>em;  
+	 text-align: right;
+}
+#form_edit_users input {
+    display: block; float: left;
+    width: <?php echo $edit_users_input_width ?>em; 
+    margin-left: <?php echo $edit_users_gap ?>em; 
+}
+#form_edit_users input.submit {right: 2.0em}                                   /* and put the OK on the right     */
+#form_delete_users input.submit {left: 2.0em}                                  /* and put the Delete on the left */
+form.edit_users_error {width: 10em; margin-top: 2.0em}
+table#edit_users_list {margin-top: 1.0em; margin-bottom: 1.0em}

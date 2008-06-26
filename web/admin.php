@@ -55,20 +55,23 @@ if (isset($area))
 
 <h2><?php echo get_vocab("administration") ?></h2>
 
-<table id="admin">
-  <tr>
-    <th><?php echo get_vocab("areas") ?></th>
-    <th>
-	   <?php 
-		echo get_vocab("rooms");
-	   if(isset($area_name))
-		{ 
-		  echo " " . get_vocab("in") . " " . htmlspecialchars($area_name); 
-		}
-		?>
-    </th>
-  </tr>
+<table id="admin" class="admin_table">
+  <thead>
+    <tr>
+      <th><?php echo get_vocab("areas") ?></th>
+      <th>
+	     <?php 
+		  echo get_vocab("rooms");
+	     if(isset($area_name))
+		  { 
+		    echo " " . get_vocab("in") . " " . htmlspecialchars($area_name); 
+		  }
+		  ?>
+      </th>
+    </tr>
+  </thead>
 
+  <tbody>
   <tr>
     <td>
 <?php 
@@ -188,6 +191,7 @@ else
 ?>
     </td>
   </tr>
+  </tbody>
 </table>
 <p>
   <?php echo get_vocab("browserlang") . " " . $HTTP_ACCEPT_LANGUAGE . " " . get_vocab("postbrowserlang") ; ?>
