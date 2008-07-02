@@ -5,6 +5,7 @@ require_once "grab_globals.inc.php";
 include "config.inc.php";
 include "functions.inc";
 include "$dbsys.inc";
+include "mrbs_auth.inc";
 
 // Get form variables
 $day = get_form_var('day', 'int');
