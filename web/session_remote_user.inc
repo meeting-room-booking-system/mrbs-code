@@ -64,15 +64,13 @@ function PrintLogonBox()
       "roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;sortby=r&amp;display=d&amp;".
       "sumby=d&amp;creatormatch=$user"; ?>
 
-    <td class="banner">
       <a name="logonBox" href="<?php echo "$search_string\" title=\""
          . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
-         .$user ?></a><br>
+         .$user ?></a>
 <?php
     if (isset($user_list_link))
     {
-      print "	  <br>\n	  " .
-	    "<A href='$user_list_link'>" . get_vocab('user_list') . "</A><br>\n" ;
+      print "<a href='$user_list_link'>" . get_vocab('user_list') . "</a>\n" ;
     }
 
     // Retrieve logout link from configuration, if specified
@@ -80,19 +78,13 @@ function PrintLogonBox()
         is_string($auth['remote_user']['logout_link']) &&
         (!empty($auth['remote_user']['logout_link'])))
     {
-      print '<A HREF="' . $auth['remote_user']['logout_link'] .'">' . get_vocab('logoff') . "</a><br>\n";
+      print '<a href="' . $auth['remote_user']['logout_link'] .'">' . get_vocab('logoff') . "</a>\n";
    }
-?>
 
-    </td>
-<?php
   }
   else
   {
-?>
-    </table>
-    <h1>Error, REMOTE_USER was not set when it should have been</H1>
-<?php
+    echo "<p class=\"error\">Error: REMOTE_USER was not set when it should have been.</p>";
     exit;
   }
 }

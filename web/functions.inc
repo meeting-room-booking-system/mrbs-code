@@ -148,7 +148,7 @@ function ChangeOptionDays(formObj, prefix)
   //  End -->
     </script>
   </head>
-  <body bgcolor="#ffffed" text="black" link="#5b69a6" vlink="#5b69a6" alink="red">
+  <body>
     <div class="screenonly">
 
 <?php // show a warning if this is using a low version of php
@@ -162,6 +162,8 @@ function ChangeOptionDays(formObj, prefix)
   }
 ?>
 
+    
+	 
     <table width="100%">
       <tr>
         <td bgcolor="#5b69a6">
@@ -226,7 +228,11 @@ function ChangeOptionDays(formObj, prefix)
   // For session protocols that define their own logon box...
   if (function_exists('PrintLogonBox'))
   {
-    PrintLogonBox();
+	 echo "<td class=\"banner\">\n";
+	 echo "<div id=\"logon_box\">\n";
+    PrintLogonBox(); 
+	 echo "</div>\n";
+	 echo "</td>\n";
   }
 ?>
             </tr>

@@ -85,6 +85,8 @@ TD.month {font-size: 8pt; background-color:#FFFFFF}
 
 /* ------------ GENERAL -----------------------------*/
 <?php
+$banner_back_color              = "#c0e0ff";    // background colour for banner
+
 $admin_table_header_back_color  = "#999999";    // background colour for header and also border colour for table cells
 $admin_table_header_sep_color   = "#eeeeee";    // vertical separator colour in header
 $admin_table_header_font_color  = "#eeeeee";    // font colour for header
@@ -309,3 +311,6 @@ form#form_edit_users {width: <?php echo $edit_users_form_width ?>em; margin-top:
 #form_delete_users input.submit {left: 2.0em}                                  /* and put the Delete on the left */
 form.edit_users_error {width: 10em; margin-top: 2.0em}
 table#edit_users_list {margin-top: 1.0em; margin-bottom: 1.0em}
+
+/* ------------ FUNCTIONS.INC -------------------*/
+#logon_box a {display: block; width: 100%; padding-top: 0.3em; padding-bottom: 0.3em}
