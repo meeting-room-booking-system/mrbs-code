@@ -162,85 +162,69 @@ function ChangeOptionDays(formObj, prefix)
   }
 ?>
 
-    
-	 
-    <table width="100%">
-      <tr>
-        <td bgcolor="#5b69a6">
-          <table width="100%" border="0">
-            <tr>
-              <td class="banner" bgcolor="#c0e0ff">
-                <font size="4">
-                  <b><?php echo $mrbs_company ?></b><br>
-                  <a href="index.php"><?php echo get_vocab("mrbs") ?></a>
-                </font>
-              </td>
-              <td class="banner" bgcolor="#c0e0ff">
-                <form action="day.php" method="get" name="Form1">
-                  <font size="2">
-<?php
-  genDateSelector("", $day, $month, $year); // Note: The 1st arg must match the last arg in the call to ChangeOptionDays below.
-  if (!empty($area))
-  {
-    echo "
-                    <input type=\"hidden\" name=\"area\" value=\"$area\">\n";
-  }
+  <table id="banner">
+    <tr>
+      <td id="company">
+          <span><?php echo $mrbs_company ?></span>
+          <a href="index.php"><?php echo get_vocab("mrbs") ?></a>
+      </td>
+      <td>
+        <form action="day.php" method="get" name="Form1">
+          <?php
+          genDateSelector("", $day, $month, $year); // Note: The 1st arg must match the last arg in the call to ChangeOptionDays below.
+          if (!empty($area))
+          {
+            echo "<input type=\"hidden\" name=\"area\" value=\"$area\">\n";
+          }
 
-?>
-                    <script type="text/javascript">
-                    <!--
-                    // fix number of days for the $month/$year that you start with
-                    ChangeOptionDays(document.Form1, ''); // Note: The 2nd arg must match the first in the call to genDateSelector above.
-                    // -->
-                    </script>
-                    <input type="submit" value="<?php echo get_vocab("goto") ?>">
-                  </font>
-                </form>
-              </td>
-              <td class="banner">
-                <a href="help.php?day=<?php echo $day ?>&amp;month=<?php echo $month ?>&amp;year=<?php echo $year ?>"><?php echo get_vocab("help") ?></a>
-              </td>
-              <td class="banner">
-                <a href="admin.php?day=<?php echo $day ?>&amp;month=<?php echo $month ?>&amp;year=<?php echo $year ?>"><?php echo get_vocab("admin") ?></a>
-              </td>
-              <td class="banner">
-                <a href="report.php"><?php echo get_vocab("report") ?></a>
-              </td>
-              <td class="banner">
-                <form method="get" action="search.php">
-                  <font size="2">
-                    <a href="search.php?advanced=1"><?php echo get_vocab("search") ?>:</a>
-                  </font>
-                  <input type="text"   name="search_str" value="<?php echo $search_str ?>" size="10">
-                  <input type="hidden" name="day"        value="<?php echo $day        ?>"        >
-                  <input type="hidden" name="month"      value="<?php echo $month      ?>"        >
-                  <input type="hidden" name="year"       value="<?php echo $year       ?>"        >
-<?php
-  if (!empty($area))
-  {
-    echo "
-                  <input type=\"hidden\" name=\"area\" value=\"$area\">\n";
-  }
-?>
-                </form>
-              </td>
-<?php
-  // For session protocols that define their own logon box...
-  if (function_exists('PrintLogonBox'))
-  {
-	 echo "<td class=\"banner\">\n";
-	 echo "<div id=\"logon_box\">\n";
-    PrintLogonBox(); 
-	 echo "</div>\n";
-	 echo "</td>\n";
-  }
-?>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </div>
+          ?>
+          <script type="text/javascript">
+            <!--
+            // fix number of days for the $month/$year that you start with
+            ChangeOptionDays(document.Form1, ''); // Note: The 2nd arg must match the first in the call to genDateSelector above.
+            // -->
+          </script>
+          <input type="submit" value="<?php echo get_vocab("goto") ?>">
+        </form>
+      </td>
+      <td>
+        <a href="help.php?day=<?php echo $day ?>&amp;month=<?php echo $month ?>&amp;year=<?php echo $year ?>"><?php echo get_vocab("help") ?></a>
+      </td>
+      <td>
+        <a href="admin.php?day=<?php echo $day ?>&amp;month=<?php echo $month ?>&amp;year=<?php echo $year ?>"><?php echo get_vocab("admin") ?></a>
+      </td>
+      <td>
+        <a href="report.php"><?php echo get_vocab("report") ?></a>
+      </td>
+      <td>
+        <form method="get" action="search.php">
+          <a href="search.php?advanced=1"><?php echo get_vocab("search") ?>:</a>
+          <input type="text"   name="search_str" value="<?php echo $search_str ?>" size="10">
+          <input type="hidden" name="day"        value="<?php echo $day        ?>"        >
+          <input type="hidden" name="month"      value="<?php echo $month      ?>"        >
+          <input type="hidden" name="year"       value="<?php echo $year       ?>"        >
+          <?php
+          if (!empty($area))
+          {
+            echo "<input type=\"hidden\" name=\"area\" value=\"$area\">\n";
+          }
+          ?>
+        </form>
+      </td>
+      <?php
+      // For session protocols that define their own logon box...
+      if (function_exists('PrintLogonBox'))
+      {
+	     echo "<td>\n";
+	     echo "<div id=\"logon_box\">\n";
+        PrintLogonBox(); 
+	     echo "</div>\n";
+	     echo "</td>\n";
+      }
+      ?>
+    </tr>
+  </table>
+</div>
 <?php
 
 } // end of print_header()
@@ -526,38 +510,18 @@ function time_date_string($t)
   }
 }
 
-// Output a start table cell tag <td> with color class and fallback color.
+// Output a start table cell tag <td> with color class.
 // $colclass is an entry type (A-J), "white" for empty, or "red" for highlighted.
-// The colors for CSS browsers can be found in the style sheet. The colors
-// in the array below are fallback for non-CSS browsers only.
 function tdcell($colclass)
 {
-  // This should be 'static $ecolors = array(...)' but that crashes PHP3.0.12!
-  static $ecolors;
-  if (!isset($ecolors))
-  {
-    $ecolors = array("A"=>"#FFCCFF", "B"=>"#99CCCC",
-                     "C"=>"#FF9999", "D"=>"#FFFF99",
-                     "E"=>"#C0E0FF", "F"=>"#FFCC99",
-                     "G"=>"#FF6666", "H"=>"#66FFFF",
-                     "I"=>"#DDFFDD", "J"=>"#CCCCCC",
-                     "red"=>"#FFF0F0", "white"=>"#FFFFFF");
-  }
-  if (isset($ecolors[$colclass]))
-  {
-    echo "<td class=\"$colclass\" bgcolor=\"$ecolors[$colclass]\">";
-  }
-  else
-  {
-    echo "<td class=\"$colclass\">";
-  }
+  echo "<td class=\"$colclass\">";
 }
 
 // Display the entry-type color key. This has up to 2 rows, up to 5 columns.
 function show_colour_key()
 {
   global $typel;
-  echo "<table border=0><tr>\n";
+  echo "<table id=\"colour_key\"><tr>\n";
   $nct = 0;
   for ($ct = "A"; $ct <= "Z"; $ct++)
   {

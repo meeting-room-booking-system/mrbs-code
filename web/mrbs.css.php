@@ -41,7 +41,7 @@ A:visited.blue {color:blue}
 A:hover.blue {color:red}
 
 TH {color:#eeeeee; font-size:10pt; font-family:verdana,sans-serif; background-color:#999999; border-width:1px; border-color:#999999; vertical-align:top}
-TD.banner {text-align:center; vertical-align:middle; background-color:#C0E0FF;}
+
 
 TD.blue {background-color:#F0F0FF}
 TD.red  {background-color:#FFF0F0}
@@ -86,6 +86,7 @@ TD.month {font-size: 8pt; background-color:#FFFFFF}
 /* ------------ GENERAL -----------------------------*/
 <?php
 $banner_back_color              = "#c0e0ff";    // background colour for banner
+$banner_border_color            = "#5b69a6";    // border colour for banner
 
 $admin_table_header_back_color  = "#999999";    // background colour for header and also border colour for table cells
 $admin_table_header_sep_color   = "#eeeeee";    // vertical separator colour in header
@@ -314,3 +315,12 @@ table#edit_users_list {margin-top: 1.0em; margin-bottom: 1.0em}
 
 /* ------------ FUNCTIONS.INC -------------------*/
 #logon_box a {display: block; width: 100%; padding-top: 0.3em; padding-bottom: 0.3em}
+table#banner {width: 100%; border-spacing: 0px; border-collapse: collapse;
+    border-color: <?php echo $banner_border_color ?>; border-style: solid;
+    border-top-width: 0; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 0}
+#banner td {text-align: center; vertical-align: middle; background-color: <?php echo $banner_back_color ?>;
+    border-color: <?php echo $banner_border_color ?>; border-style: solid;
+    border-top-width: 2px; border-right-width: 0; border-bottom-width: 0; border-left-width: 2px}
+#banner td#company {font-size: large; font-weight: bold}
+#banner #company span {display: block; width: 100%}
+table#colour_key {border-spacing: 0; border-collapse: collapse}
