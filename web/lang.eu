@@ -21,7 +21,7 @@ $vocab["report"]             = "Txostenak";
 $vocab["admin"]              = "Kudeaketa";
 $vocab["help"]               = "Laguntza";
 $vocab["search"]             = "Bilatu:";
-$vocab["not_php3"]             = "<H1>Kontuz: Honek seguru asko ez du PHP3rekin ongi funtzionatuko</H1>";
+$vocab["not_php3"]           = "Kontuz: Honek seguru asko ez du PHP3rekin ongi funtzionatuko";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "Noiz erreserbatu: ";

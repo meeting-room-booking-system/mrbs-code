@@ -21,7 +21,7 @@ $vocab["report"]             = "Αναφορά";
 $vocab["admin"]              = "Διαχείριση";
 $vocab["help"]               = "Βοήθεια";
 $vocab["search"]             = "Αναζήτηση";
-$vocab["not_php3"]           = "<H1>Προσοχή: Αυτή η σελίδα δεν δουλεύει με PHP3</H1>";
+$vocab["not_php3"]           = "Προσοχή: Αυτή η σελίδα δεν δουλεύει με PHP3";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "Κρατήσεις για";

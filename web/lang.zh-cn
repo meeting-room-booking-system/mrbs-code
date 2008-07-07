@@ -21,7 +21,7 @@ $vocab["report"]             = "报表";
 $vocab["admin"]              = "系统管理";
 $vocab["help"]               = "说明";
 $vocab["search"]             = "查找:";
-$vocab["not_php3"]             = "<H1>警告: 无法运行于PHP3环境</H1>";
+$vocab["not_php3"]           = "警告: 无法运行于PHP3环境";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "预订:";

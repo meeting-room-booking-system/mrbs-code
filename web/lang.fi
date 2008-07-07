@@ -21,7 +21,7 @@ $vocab["report"]             = "Raportit";
 $vocab["admin"]              = "Ylläpito";
 $vocab["help"]               = "Ohjeet";
 $vocab["search"]             = "Etsi";
-$vocab["not_php3"]             = "Varoitus: Järjestelmä ei välttämättä toimi PHP3:lla.</H1>";
+$vocab["not_php3"]           = "Varoitus: Järjestelmä ei välttämättä toimi PHP3:lla.";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "Varaukset";
