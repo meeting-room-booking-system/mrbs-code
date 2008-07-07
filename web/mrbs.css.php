@@ -324,3 +324,8 @@ table#banner {width: 100%; border-spacing: 0px; border-collapse: collapse;
 #banner td#company {font-size: large; font-weight: bold}
 #banner #company span {display: block; width: 100%}
 table#colour_key {border-spacing: 0; border-collapse: collapse}
+
+/* ------------ HELP.PHP ------------------------*/
+table#version_info {border-spacing: 0px; border-collapse: collapse}
+#version_info td {padding: 0 1.0em 0 0; vertical-align: bottom}
+
