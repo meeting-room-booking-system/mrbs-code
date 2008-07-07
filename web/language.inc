@@ -416,8 +416,15 @@ $windows_locale = "eng";
 if (($unicode_encoding) && (!function_exists('iconv')))
 {
   exit('
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>MRBS - iconv module not installed</title>
+</head>
+<body>
 <p>
-  <b>Error:</b> The iconv module, which provides PHP support for Unicode, is not
+  <strong>Error:</strong> The iconv module, which provides PHP support for Unicode, is not
 installed on your system.
 </p>
 <p>
@@ -428,26 +435,29 @@ installed on your system.
 <p>To fix this error, do one of the following:</p>
 <ul>
   <li>
-    <p>
-      Install and enable the iconv module.<br>
-      On a Windows server, enable php_iconv.dll in %windir%\php.ini,
-      and make sure both %phpdir%\dlls\iconv.dll and
-      %phpdir%\extensions\php_iconv.dll are in the path. One way to
-      do this is to copy these two files to %windir%.<br>
-
-      On a Unix server, recompile your PHP module with the appropriate
-      option for enabling the iconv extension. Consult your PHP server
-      documentation for more information about enabling iconv support.
-    </p>
+    Install and enable the iconv module.
+    <ul>
+      <li>
+		  On a Windows server, enable php_iconv.dll in %windir%\php.ini,
+        and make sure both %phpdir%\dlls\iconv.dll and
+        %phpdir%\extensions\php_iconv.dll are in the path. One way to
+        do this is to copy these two files to %windir%.
+		</li>
+      <li>
+        On a Unix server, recompile your PHP module with the appropriate
+        option for enabling the iconv extension. Consult your PHP server
+        documentation for more information about enabling iconv support.
+		</li>
+    </ul>
   </li>
   <li>
-    <p>
-      Disable Unicode support by modifying config.inc.php and setting the
-      variable $unicode_encoding to 0. If your MRBS installation is on a
-      shared host, then this may be your only option.
-    </p>
+    Disable Unicode support by modifying config.inc.php and setting the
+    variable $unicode_encoding to 0. If your MRBS installation is on a
+    shared host, then this may be your only option.
   </li>
 </ul>
+</body>
+</html>
 ');
 }
 
