@@ -58,10 +58,6 @@ TD.I {background-color:#DDFFDD}
 TD.J {background-color:#CCCCCC}
 TD.white {background-color:#FFFFFF}
 
-TD.calendar { border:0px; font-size: 8pt}
-TD.calendarHeader {border:0px; font-size: 10pt}
-FONT.calendarHighlight {color: red}
-
 TD.even_row {background-color:#FFFFFF}	/* Even rows in the day view */
 TD.odd_row {background-color:#EEEEEE}	/* Odd rows in the day view */
 
@@ -118,7 +114,6 @@ table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color:
     border-top-width: 1px; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;
 	 border-top-color: <?php echo $admin_table_header_back_color ?>; border-left-color: <?php echo $admin_table_header_back_color ?>;
 	 vertical-align: middle}
-
 
 
 /* ------------ ADMIN.PHP ---------------------------*/
@@ -328,4 +323,11 @@ table#colour_key {border-spacing: 0; border-collapse: collapse}
 /* ------------ HELP.PHP ------------------------*/
 table#version_info {border-spacing: 0px; border-collapse: collapse}
 #version_info td {padding: 0 1.0em 0 0; vertical-align: bottom}
+
+/* ------------ MINCALS.PHP ---------------------*/
+table.calendar {border-spacing: 0px; border-collapse: collapse; margin: 0.5em 0.5em 0 0}
+.calendar th {min-width: 2.0em; text-align: center; font-family: arial,sans-serif;
+    font-weight: normal; color: black; background-color: transparent}
+.calendar td {text-align: center; font-size: x-small; font-weight: bold}
+.calendar a.current {color: red}
 

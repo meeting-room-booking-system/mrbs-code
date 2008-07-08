@@ -98,7 +98,7 @@ class Calendar
       {
          $show = $basetime + ($i * 24 * 60 * 60);
          $fl = utf8_strftime('%a',$show);
-         $s .= "<td align=\"center\" valign=\"top\" class=\"calendarHeader\">$fl</td>\n";
+         $s .= "<th>$fl</th>\n";
       }
       return $s;
     }
@@ -136,18 +136,20 @@ class Calendar
         //$nextMonth = $this->getCalendarLink($this->month + 1 <= 12 ? $this->month + 1 :  1, $this->month + 1 <= 12 ? $this->year : $this->year + 1);
         
         $s .= "<table class=\"calendar\">\n";
+		  $s .= "<thead>\n";
         // prints month name and year
-        $s .= "<tr>\n";
-        //$s .= "<td align=\"center\" valign=\"top\">" . (($prevMonth == "") ? "&nbsp;" : "<a href=\"$prevMonth\">&lt;&lt;</a>")  . "</td>\n";
-        $s .= "<td align=\"center\" valign=\"top\" class=\"calendarHeader\" colspan=7>$monthName&nbsp;$this->year</td>\n"; 
-        //$s .= "<td align=\"center\" valign=\"top\">" . (($nextMonth == "") ? "&nbsp;" : "<a href=\"$nextMonth\">&gt;&gt;</a>")  . "</td>\n";
+		  
+        $s .= "<tr>\n";   
+        $s .= "<th colspan=\"7\">$monthName&nbsp;$this->year</th>\n"; 
         $s .= "</tr>\n";
         
         $s .= "<tr>\n";
         // gets days of week
         $s .= $this->getFirstDays();
         $s .= "</tr>\n";
+		  $s .= "</thead>\n";
 
+		  $s .= "<tbody>\n";
         $d = 1 - $first;
             
         # this is used to highlight days in upcoming month
@@ -159,7 +161,7 @@ class Calendar
 
             for ($i = 0; $i < 7; $i++)
             {
-                $s .= "<td class=\"calendar\" align=\"center\" valign=\"top\">";
+                $s .= "<td>";
                 if ($d > 0 && $d <= $daysInMonth)
                 {
                     $link = $this->getDateLink($d, $this->month, $this->year);
@@ -170,7 +172,7 @@ class Calendar
                     elseif (preg_match("/day/i", basename($PHP_SELF)))
                     {
                         if (($d == $this->day) and ($this->h))
-                            $s .= "<a href=\"$link\"><font class=\"calendarHighlight\">$d</font></a>";
+                            $s .= "<a class=\"current\" href=\"$link\">$d</a>";
                         else
                             $s .= "<a href=\"$link\">$d</a>";
                     }
@@ -178,15 +180,15 @@ class Calendar
                     {
 		    #echo "((".$this->day." < $days_to_highlight) && ($d < $days_to_highlight) && (($day - $daysInMonth) > (-6)) && (".$this->month." == ($month + 1)) && ($first != 0))<br>";
                         if (($this->day <= $d) && ($this->day > $d_week) && ($this->h))
-                            $s .= "<a href=\"$link\"><font class=\"calendarHighlight\">$d</font></a>";
+                            $s .= "<a class=\"current\" href=\"$link\">$d</a>";
                         elseif (($this->day < $days_to_highlight) && ($d < $days_to_highlight) && (($day - $daysInPrevMonth) > (-6)) && ($this->month == (($month + 1)%12)) && ($first != 0))
-                            $s .= "<a href=\"$link\"><font class=\"calendarHighlight\">$d</font></a>";
+                            $s .= "<a class=\"current\" href=\"$link\">$d</a>";
                         else
                             $s .= "<a href=\"$link\">$d</a>";
                     }
                     elseif (preg_match("/month/i", basename($PHP_SELF)))
                         if ( $this->h )
-                            $s .= "<a href=\"$link\"><font class=\"calendarHighlight\">$d</font></a>";
+                            $s .= "<a class=\"current\" href=\"$link\">$d</a>";
                         else
                             $s .= "<a href=\"$link\">$d</a>";
                 }
@@ -200,6 +202,7 @@ class Calendar
             $s .= "</tr>\n";
         }
         
+		  $s .= "</tbody>\n";
         $s .= "</table>\n";
         
         return $s;
