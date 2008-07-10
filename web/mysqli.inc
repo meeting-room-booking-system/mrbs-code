@@ -265,12 +265,13 @@ function sql_num_fields($result)
 // there seems to be no way to supress the automatic error message output and
 // still be able to access the error text.
 
+
 $mysqli = new mysqli($db_host, $db_login, $db_password, $db_database);
 
 /* check connection */
 if (mysqli_connect_errno())
 {
-  echo "\n<p>\n" . get_vocab("failed_connect_db") . " : " . mysqli_connect_error();
+  echo "\n<p>\n" . get_vocab("failed_connect_db") . " : " . mysqli_connect_error() . "\n</p>\n";
   exit;
 }
 
