@@ -74,8 +74,8 @@ position: absolute;
 left:30px;
 top:12px}
 
-TD.month {font-size: 8pt; background-color:#FFFFFF}
-.monthday {font-size: 12pt; vertical-align: top; text-align: left}
+
+
 
 
 
@@ -87,6 +87,10 @@ $banner_border_color            = "#5b69a6";    // border colour for banner
 $admin_table_header_back_color  = "#999999";    // background colour for header and also border colour for table cells
 $admin_table_header_sep_color   = "#eeeeee";    // vertical separator colour in header
 $admin_table_header_font_color  = "#eeeeee";    // font colour for header
+
+$main_table_border_color        = "#555555";    // border colour for day/week/month tables
+$main_table_month_color         = "#ffffff";    // background colour for days in the month view
+$main_table_month_invalid_color = "#cccccc";    // background colour for invalid days in the month view
 
 ?>
 
@@ -149,23 +153,33 @@ table#admin {margin-bottom: 1.0em}
 }
 
 
+/* ------------ DAY/WEEK/MONTH.PHP ------------------*/
+div#dwm_header {width: 100%; float: left; margin-top: 1.0em; margin-bottom: 0.5em}
+div#dwm_areas  {float: left; margin-right: 2.0em}
+div#dwm_rooms  {float: left; margin-right: 2.0em}
+#dwm_header h3 {color:black; font-size: small; font-weight: normal; font-family: arial, sans-serif; text-decoration: underline; 
+    margin-top: 0; margin-bottom: 0.2em; padding-bottom: 0}
+#dwm_header ul {list-style-type: none; padding-left: 0; margin-left: 0; margin-top: 0}
+#dwm_header li {padding-left: 0; margin-left: 0}
 
+h2#dwm {text-align: center}
 
-/* ------------ DAY.PHP -----------------------------*/
-table#day_header {width: 100%}
-#day_header h3 {color:black; font-size: 10pt; font-family: arial,sans-serif; text-decoration: underline; margin-bottom: 0.2em; padding-bottom: 0px}
-td#day_header_areas {width: 60%}
-#day_header_areas ul {list-style-type: none; padding-left: 0px; margin-top: 0px}
-h2#day {text-align: center}
+div.date_nav    {float: left;  width: 100%; margin-top: 0.5em; margin-bottom: 0.5em}
+div.date_before {float: left;  width: 33%; text-align: left}
+div.date_now    {float: left;  width: 33%; text-align: center}
+div.date_after  {float: right; width: 33%; text-align: right}
 
-table#day_main {width: 100%; border-spacing: 0px; border-collapse: collapse}
-#day_main td, #day_main th {border: 1px solid #555555}
-
-div.date_nav    {position: relative; width: 100%; height: 2.5em}
-div.date_before {width: 32%; position: absolute; top: 0.5em; left: 0; text-align: left}
-div.date_now    {width: 32%; position: absolute; top: 0.5em; left: 50%; margin-left: -16%; text-align: center}
-div.date_after  {width: 32%; position: absolute; top: 0.5em; right: 0; text-align: right}
-
+table.dwm_main {clear: both; width: 100%; border-spacing: 1px; border-collapse: collapse}
+.dwm_main td, .dwm_main th {border: 1px solid <?php echo $main_table_border_color ?>; padding: 0}
+.dwm_main#day_main td {padding: 2px}
+.dwm_main#month_main th {width: 14%}                                                   /* 7 days in the week */
+.dwm_main#month_main td.valid   {background-color: <?php echo $main_table_month_color ?>}
+.dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
+div.cell_container {float: left; min-height: 100px; width: 100%}                           /* the containing div for the td cell contents */
+div.cell_container div {width: 100%; float: left; clear: left}                         /* each of the sections in the cell is wrapped in another div */                        
+a.monthday {display: block; font-size: medium; padding: 0 2px 0 2px}                   /* first section: the date in the top left corner */
+.dwm_main#month_main span {display: block; font-size: x-small; padding: 0 2px 0 2px}   /* then details of any bookings */
+.dwm_main#month_main img {border: 0; padding: 5px 0 0 2px}                             /* finally the new booking image */
 
 
 /* ------------ DEL.PHP -----------------------------*/
@@ -310,7 +324,7 @@ table#edit_users_list {margin-top: 1.0em; margin-bottom: 1.0em}
 
 /* ------------ FUNCTIONS.INC -------------------*/
 #logon_box a {display: block; width: 100%; padding-top: 0.3em; padding-bottom: 0.3em}
-table#banner {width: 100%; border-spacing: 0px; border-collapse: collapse;
+table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
     border-color: <?php echo $banner_border_color ?>; border-style: solid;
     border-top-width: 0; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 0}
 #banner td {text-align: center; vertical-align: middle; background-color: <?php echo $banner_back_color ?>;
@@ -318,16 +332,20 @@ table#banner {width: 100%; border-spacing: 0px; border-collapse: collapse;
     border-top-width: 2px; border-right-width: 0; border-bottom-width: 0; border-left-width: 2px}
 #banner td#company {font-size: large; font-weight: bold}
 #banner #company span {display: block; width: 100%}
-table#colour_key {border-spacing: 0; border-collapse: collapse}
+table#colour_key {clear: both; border-spacing: 0; border-collapse: collapse}
 
 /* ------------ HELP.PHP ------------------------*/
-table#version_info {border-spacing: 0px; border-collapse: collapse}
+table#version_info {border-spacing: 0; border-collapse: collapse}
 #version_info td {padding: 0 1.0em 0 0; vertical-align: bottom}
 
 /* ------------ MINCALS.PHP ---------------------*/
-table.calendar {border-spacing: 0px; border-collapse: collapse; margin: 0.5em 0.5em 0 0}
+div#cals {float: right}
+div#cal_last {float: left}
+div#cal_this {float: left; margin-left: 1.0em}
+div#cal_next {float: left; margin-left: 1.0em}
+
+table.calendar {border-spacing: 0; border-collapse: collapse}
 .calendar th {min-width: 2.0em; text-align: center; font-family: arial,sans-serif;
     font-weight: normal; color: black; background-color: transparent}
 .calendar td {text-align: center; font-size: x-small; font-weight: bold}
 .calendar a.current {color: red}
-

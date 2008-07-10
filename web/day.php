@@ -74,9 +74,8 @@ $pm7=mktime($eveningends,$eveningends_minutes,0,
 
 ?>
 <div class="screenonly">
-  <table id="day_header">
-    <tr>
-	   <td id="day_header_areas">
+  <div id="dwm_header">
+	   <div id="dwm_areas">
 <?php
 
 // Show all avaliable areas
@@ -91,22 +90,26 @@ if ($area_list_format == "select")
 else
 {
   // show the standard html list
-  echo ("<ul>\n");
+ 
   $sql = "select id, area_name from $tbl_area order by area_name";
   $res = sql_query($sql);
-  if ($res) for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-  {
-	 echo "<li><a href=\"day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$row['id']."\">";
-    echo "<span" . (($row['id'] == $area) ? ' class="current"' : '') . ">";
-	 echo htmlspecialchars($row['area_name']) . "</span></a></li>\n";
+  if ($res) 
+  { 
+    echo ("<ul>\n");
+    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+    {
+	   echo "<li><a href=\"day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$row['id']."\">";
+      echo "<span" . (($row['id'] == $area) ? ' class="current"' : '') . ">";
+	   echo htmlspecialchars($row['area_name']) . "</span></a></li>\n";
+    }  
+	 echo ("</ul>\n");
   }
-  echo ("</ul>\n");
 }
-echo "</td>\n";
+echo "</div>\n";
 
 // Draw the three month calendars
 minicals($year, $month, $day, $area, '', 'day');
-echo "</tr></table>";
+echo "</div>";
 
 ?>
 </div>
@@ -244,7 +247,7 @@ if (sql_count($res) == 0)
 else
 {
   // Show current date
-  echo "<h2 id=\"day\">" . utf8_strftime("%A %d %B %Y", $am7) . "</h2>\n";
+  echo "<h2 id=\"dwm\">" . utf8_strftime("%A %d %B %Y", $am7) . "</h2>\n";
   // Generate Go to day before and after links
 
   $before_after_links_html = "
@@ -282,7 +285,7 @@ else
   }
 
   // This is where we start displaying stuff
-  echo "<table id=\"day_main\">\n";
+  echo "<table class=\"dwm_main\" id=\"day_main\">\n";
   
   // Table header giving room names
   echo "<thead>\n";

@@ -103,19 +103,18 @@ for ($j = 0; $j<=($num_of_days-1); $j++)
                                               $eveningends));
 }
 
-// Table with areas, rooms, minicals.
+// Section with areas, rooms, minicals.
 
 ?>
 <div class="screenonly">
-  <table width="100%">
-    <tr>
+  <div id="dwm_header">
 <?php
 
 $this_area_name = "";
 $this_room_name = "";
 
 // Show all areas
-echo "<td width=\"30%\"><u>".get_vocab("areas")."</u><br>";
+echo "<div id=\"dwm_areas\"><h3>".get_vocab("areas")."</h3>";
 
 // show either a select box or the normal html list
 if ($area_list_format == "select")
@@ -129,30 +128,32 @@ if ($area_list_format == "select")
 }
 else
 {
-  $sql = "select id, area_name from $tbl_area order by area_name";
+ $sql = "select id, area_name from $tbl_area order by area_name";
   $res = sql_query($sql);
   if ($res)
   {
+    echo "<ul>\n";
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      echo "<a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$row['id']."\">";
-      if ($row['id'] == $area)
-      {
-        $this_area_name = htmlspecialchars($row['area_name']);
-        echo "<font color=\"red\">$this_area_name</font></a><br>\n";
-      }
-      else
-      {
-        echo htmlspecialchars($row['area_name']) . "</a><br>\n";
-      }
+      echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;area=$row[0]\">";
+		echo "<span";
+		if ($row['id'] == $area)
+		{
+		  $this_area_name = htmlspecialchars($row['area_name']);
+		  echo ' class="current"';
+		}
+		echo ">";
+      echo htmlspecialchars($row['area_name']) . "</span></a></li>\n";
     }
+	 echo "</ul>\n";
   }
+
 } // end area display if
 
-echo "</td>\n";
+echo "</div>\n";
 
 // Show all rooms in the current area
-echo "<td width=\"30%\"><u>".get_vocab("rooms")."</u><br>";
+echo "<div id=\"dwm_rooms\"><h3>".get_vocab("rooms")."</h3>";
 
 // should we show a drop-down for the room list, or not?
 if ($area_list_format == "select")
@@ -162,32 +163,33 @@ if ($area_list_format == "select")
 }
 else
 {
-  $sql = "select id, room_name, description
-          from $tbl_room where area_id=$area order by room_name";
+  $sql = "select id, room_name from $tbl_room
+          where area_id=$area order by room_name";
   $res = sql_query($sql);
   if ($res)
   {
+    echo "<ul>\n";
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      echo "<a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\" title=\"$row[2]\">";
-      if ($row['id'] == $room)
-      {
-        $this_room_name = htmlspecialchars($row['room_name']);
-        echo "<font color=\"red\">$this_room_name</font></a><br>\n";
-      }
-      else
-      {
-        echo htmlspecialchars($row['room_name']) . "</a><br>\n";
-      }
+      echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;area=$area&amp;room=".$row['id']."\">";
+		echo "<span";
+		if ($row['id'] == $room)
+		{
+		  $this_room_name = htmlspecialchars($row['room_name']);
+		  echo ' class="current"';
+		}
+		echo ">";
+      echo htmlspecialchars($row['room_name']) . "</span></a></li>\n";
     }
+	 echo "</ul>\n";
   }
 } // end select if
 
-echo "</td>\n";
+echo "</div>\n";
 
 // Draw the three month calendars
 minicals($year, $month, $day, $area, $room, 'week');
-echo "</tr></table>\n";
+echo "</div>\n";
 
 // End of "screenonly" div
 echo "</div>\n";
