@@ -320,8 +320,8 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
       }
       else
       {
-        $start_str = ereg_replace(" ", "&nbsp;", htmlspecialchars(period_time_string($row['start_time'])));
-        $end_str   = ereg_replace(" ", "&nbsp;", htmlspecialchars(period_time_string($row['end_time'], -1)));
+        $start_str = period_time_string($row['start_time']);
+        $end_str   = period_time_string($row['end_time'], -1);
         switch (cmp3($row['start_time'], $midnight[$day_num]) . cmp3($row['end_time'], $midnight_tonight[$day_num] + 1))
         {
           case "> < ":         // Starts after midnight, ends before midnight

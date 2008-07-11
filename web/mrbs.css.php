@@ -179,7 +179,7 @@ div.cell_container {float: left; min-height: 100px; width: 100%}                
 div.cell_container div {width: 100%; float: left; clear: left}                         /* each of the sections in the cell is wrapped in another div */                        
 a.monthday {display: block; font-size: medium; padding: 0 2px 0 2px}                   /* first section: the date in the top left corner */
 .dwm_main#month_main span {display: block; font-size: x-small; padding: 0 2px 0 2px}   /* then details of any bookings */
-.dwm_main#month_main img {border: 0; padding: 5px 0 0 2px}                             /* finally the new booking image */
+.dwm_main#month_main img {border: 0; padding: 5px 0 5px 2px}                             /* finally the new booking image */
 
 
 /* ------------ DEL.PHP -----------------------------*/

@@ -101,6 +101,11 @@ $eveningends_minutes = 0;
 // &nbsp; is used to ensure that the name or description is not wrapped
 // when the browser determines the column widths to use in day and week
 // views
+//
+// NOTE:  MRBS assumes that the descriptions are valid HTML and can be output
+// directly without any encoding.    Please ensure that any special characters
+// are encoded, eg '&' to '&amp;', '>' to '&gt;', lower case e acute to 
+// '&eacute;' or '&#233;', etc.
 
 $periods[] = "Period&nbsp;1";
 $periods[] = "Period&nbsp;2";
