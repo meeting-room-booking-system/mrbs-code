@@ -19,8 +19,7 @@ H3 {font-family:verdana,sans-serif}
 TD {font-size:10pt; font-family: arial,sans-serif; border-width: 1px; vertical-align: top}
 TD.header {color:black; font-family:verdana,sans-serif; border-width:0;
 background-color:#ffffdd; font-size:26pt}
-TD.CR { vertical-align: middle; text-align: right}
-TD.CL { vertical-align: middle; text-align: left}
+
 TD.BR { vertical-align: baseline; text-align: right}
 TD.BL { vertical-align: baseline; text-align: left}
 TD.TR { vertical-align: top; text-align: right}
@@ -192,7 +191,6 @@ span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; fo
 #del_room_confirm_links span:hover {text-decoration: underline}    /* for Firefox */
 
 
-
 /* ------------ EDIT_AREA_ROOM.PHP ------------------*/
 <?php
 // Ideally the label text will fit on a single line, but as the text
@@ -224,63 +222,86 @@ form.form_edit_area_room {
 .form_edit_area_room div {width: 100%}
 
 
+/* ------------ FORM_GENERAL ------------------------*/
+/*                                                   */
+/*   used in EDIT_ENTRY.PHP and REPORT.PHP           */
 
-/* ------------ EDIT_ENTRY.PHP ------------------*/
 <?php
-$edit_entry_label_height          = 1.0;     // em
-$edit_entry_left_col_max_width    = 10;      // em
-$edit_entry_left_col_width        = 20;      // %
-$edit_entry_right_col_width       = 80;      // %
-$edit_entry_gap                   = 1.0;     // em  (gap between left and right columns)
-$edit_entry_textarea_width        = 26;      // em
-$edit_entry_form_min_width        = $edit_entry_left_col_max_width + $edit_entry_textarea_width + $edit_entry_gap;
+// Common to all forms in the class "form_general"
+$general_label_height          = 1.0;     // em
+$general_left_col_width        = 20;      // %
+$general_right_col_width       = 80;      // %
+$general_gap                   = 1.0;     // em  (gap between left and right columns)
+
+// Specific to the "edit_entry" form
+$edit_entry_left_col_max_width = 10;      // em
+$edit_entry_textarea_width     = 26;      // em
+$edit_entry_form_min_width     = $edit_entry_left_col_max_width + $edit_entry_textarea_width + $general_gap;
+
+// Specific to the "report" form
+$report_left_col_max_width     = 12;      // em
+$report_input_width            = 12;      // em
+$report_form_min_width         = $report_left_col_max_width + $report_input_width + $general_gap;
 ?>
-form#form_edit_entry {margin-top: 2.0em; width: 100%; min-width: <?php echo $edit_entry_form_min_width ?>em}
-#form_edit_entry div {float: left; width: 100%}
-#form_edit_entry div div {float: none; width: auto}
-#form_edit_entry div.group {display: table-cell; float: left; width: <?php echo $edit_entry_right_col_width ?>%}
-#form_edit_entry fieldset {width: auto; border: 0; padding-top: 2.0em}
-#form_edit_entry label {
+form.form_general {margin-top: 2.0em; width: 100%}
+form.form_general#edit_entry {min-width: <?php echo $edit_entry_form_min_width ?>em}
+form.form_general#report     {min-width: <?php echo $report_form_min_width ?>em}
+
+.form_general div {float: left; width: 100%}
+.form_general div div {float: none; width: auto}
+.form_general div.group {display: table-cell; float: left; width: <?php echo $general_right_col_width ?>%}
+.form_general fieldset {width: auto; border: 0; padding-top: 2.0em}
+
+.form_general label {
     display: block; float: left; 
-    min-height: <?php echo $edit_entry_label_height ?>em; 
-	 width: <?php echo $edit_entry_left_col_width ?>%; 
-	 max-width: <?php echo $edit_entry_left_col_max_width ?>em; 
+    min-height: <?php echo $general_label_height ?>em; 
+	 width: <?php echo $general_left_col_width ?>%; 
 	 text-align: right; padding-bottom: 0.8em; font-weight: bold;
 }
-/* font family and size needs to be the same for input and textarea as their widths are defined in ems */
-#form_edit_entry input {
-    display: block; float: left; 
-    width: <?php echo $edit_entry_textarea_width ?>em; 
-    margin-left: <?php echo $edit_entry_gap ?>em; 
-	 font-family: arial,sans-serif; font-size: 10pt
+.form_general#edit_entry label {max-width: <?php echo $edit_entry_left_col_max_width ?>em}
+.form_general#report     label {max-width: <?php echo $report_left_col_max_width ?>em}
+.form_general#edit_entry .group label, .form_general#report .group label {clear: none; width: auto; max-width: 100%; font-weight: normal}
+
+.form_general input {
+    display: block; float: left; margin-left: <?php echo $general_gap ?>em; 
+    font-family: arial,sans-serif; font-size: 10pt
 }
-#form_edit_entry textarea {
+.form_general#edit_entry input {width: <?php echo $edit_entry_textarea_width ?>em}
+.form_general#report     input {width: <?php echo $report_input_width ?>em}
+.form_general#edit_entry .group input, .form_general#report .group input {clear: none; width: auto}
+
+/* font family and size needs to be the same for input and textarea as their widths are defined in ems */
+.form_general textarea {
     display: block; float: left; 
     width: <?php echo $edit_entry_textarea_width ?>em; height: 11em; 
-    margin-left: <?php echo $edit_entry_gap ?>em; margin-bottom: 0.5em;
+    margin-left: <?php echo $general_gap ?>em; margin-bottom: 0.5em;
 	 font-family: arial,sans-serif; font-size: 10pt
 }
-#form_edit_entry select {float: left; margin-left: <?php echo $edit_entry_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
-#form_edit_entry input.radio {margin-top: 0.1em}
-#form_edit_entry input.checkbox {margin-top: 0.1em}
-#form_edit_entry #div_time input {width: 1.5em}
-#form_edit_entry #div_time span + input {margin-left: 0}
-#form_edit_entry #div_time span {display: block; float: left; margin-left: 0.2em; margin-right: 0.2em}
-#form_edit_entry input#duration {width: 3.0em}
-#form_edit_entry select#dur_units {margin-right: 1.0em}
-#form_edit_entry div#ad {float: left}
-#form_edit_entry #ad label {clear: none; text-align: left; font-weight: normal}
-#form_edit_entry input#all_day {width: auto; margin-left: 1.0em; margin-right: 0.5em}
-#form_edit_entry #div_rooms select {float: left; margin-right: 2.0em}
-#form_edit_entry .group label {clear: none; width: auto; max-width: 100%; font-weight: normal}
-#form_edit_entry .group input {clear: none; width: auto}
-#form_edit_entry fieldset#rep_info {padding-top: 0}
-#form_edit_entry #rep_info input {width: 13em}
-#form_edit_entry input#rep_num_weeks {width: 1.5em}
-#form_edit_entry #edit_entry_submit input {
+.form_general select {float: left; margin-left: <?php echo $general_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
+.form_general input.radio {margin-top: 0.1em}
+.form_general input.checkbox {margin-top: 0.1em}
+.form_general #edit_entry_submit input {
     position: relative; clear: left; 
     left: <?php echo $edit_entry_left_col_max_width ?>em; width: auto; margin-top: 1.0em
 }
+.form_general #report_submit input {
+    position: relative; clear: left; 
+    left: <?php echo $report_left_col_max_width ?>em; width: auto; margin-top: 1.0em
+}
+
+.form_general #div_time input {width: 1.5em}
+.form_general #div_time span + input {margin-left: 0}
+.form_general #div_time span {display: block; float: left; margin-left: 0.2em; margin-right: 0.2em}
+.form_general input#duration {width: 3.0em}
+.form_general select#dur_units {margin-right: 1.0em}
+.form_general div#ad {float: left}
+.form_general #ad label {clear: none; text-align: left; font-weight: normal}
+.form_general input#all_day {width: auto; margin-left: 1.0em; margin-right: 0.5em}
+.form_general #div_rooms select, .form_general #div_typematch select {float: left; margin-right: 2.0em}
+.form_general fieldset#rep_info {padding-top: 0}
+.form_general #rep_info input {width: 13em}
+.form_general input#rep_num_weeks {width: 1.5em}
+
 
 /* ------------ EDIT_USERS.PHP ------------------*/
 <?php
@@ -349,3 +370,6 @@ table.calendar {border-spacing: 0; border-collapse: collapse}
     font-weight: normal; color: black; background-color: transparent}
 .calendar td {text-align: center; font-size: x-small; font-weight: bold}
 .calendar a.current {color: red}
+
+
+/* ------------ REPORT.PHP ----------------------*/

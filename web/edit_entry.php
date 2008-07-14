@@ -366,7 +366,7 @@ else
 ?>
 
 
-<form id="form_edit_entry" name="main" action="edit_entry_handler.php" method="get">
+<form class="form_general" id="edit_entry" name="main" action="edit_entry_handler.php" method="get">
   <fieldset>
   <legend><?php echo get_vocab($token); ?></legend>
 
@@ -412,8 +412,8 @@ else
 	 {
       ?>
       <div id="div_period">
-        <label><?php echo get_vocab("period")?>:</label>
-        <select name="period">
+        <label for="period" ><?php echo get_vocab("period")?>:</label>
+        <select id="period" name="period">
           <?php
           foreach ($periods as $p_num => $p_val)
           {
