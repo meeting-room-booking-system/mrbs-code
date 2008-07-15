@@ -1,20 +1,20 @@
 <?php 
-/*****************************************************************************\
-*                                 *
-*   File name       auth_config.inc                     *
-*                                 *
-*   Description       Authenticate users from a list in config.inc.php.         *
-*                                 *
-*   Notes       To use this authentication scheme, set in config.inc.php: *
-*         $auth["type"]  = "config";               *
-*                                 *
-*          Then for each user, add an entry formatted as:         *
-*         $auth["user"]["username"] == "userpassword";          *
-*                                 *
-*   History                              *
-*    2003/11/09 JFL Created this file                     *
-*                                 *
-\*****************************************************************************/
+/*****************************************************************************
+*
+*   File name       auth_config.inc
+*
+*   Description     Authenticate users from a list in config.inc.php.
+*
+*   Notes           To use this authentication scheme, set in config.inc.php:
+*         $auth["type"]  = "config";
+*
+*          Then for each user, add an entry formatted as:
+*         $auth["user"]["username"] == "userpassword";
+*
+*   History
+*    Available in the source control system
+*
+******************************************************************************/
 
 // $Id$
 
@@ -32,25 +32,25 @@
 
 function authValidateUser($user, $pass)
 {
-   global $auth;
+  global $auth;
 
-   // Check if we do not have a username/password
-   if(!isset($user) || !isset($pass) || strlen($pass)==0)
-   {
-      return 0;
-   }
+  // Check if we do not have a username/password
+  if(!isset($user) || !isset($pass) || strlen($pass)==0)
+  {
+    return 0;
+  }
 
-   if ((isset($auth["user"][$user])
-        && ($auth["user"][$user] == $pass)
-       ) ||
-       (isset($auth["user"][strtolower($user)])
-        && ($auth["user"][strtolower($user)] == $pass)
-       ))
-   {
-      return 1; // User validated
-   }
+  if ((isset($auth["user"][$user]) &&
+       ($auth["user"][$user] == $pass)
+        ) ||
+      (isset($auth["user"][strtolower($user)]) &&
+       ($auth["user"][strtolower($user)] == $pass)
+        ))
+  {
+    return 1; // User validated
+  }
 
-   return 0;      // User unknown or password invalid
+  return 0;      // User unknown or password invalid
 }
 
 /* authGetUserLevel($user)
@@ -64,23 +64,23 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user, $lev1_admin)
 {
-   // User not logged in, user level '0'
-   if(!isset($user))
-   {
-     return 0;
-   }
+  // User not logged in, user level '0'
+  if(!isset($user))
+  {
+    return 0;
+  }
 
-   // Check if the user is can modify
-   for($i = 0; isset($lev1_admin[$i]); $i++)
-   {
-      if(strcasecmp($user, $lev1_admin[$i]) == 0)
-      {
-   return 2;
-      }
-   }
+  // Check if the user is can modify
+  for($i = 0; isset($lev1_admin[$i]); $i++)
+  {
+    if(strcasecmp($user, $lev1_admin[$i]) == 0)
+    {
+      return 2;
+    }
+  }
 
-   // Everybody else is access level '1'
-   return 1;
+  // Everybody else is access level '1'
+  return 1;
 }
 
 ?>

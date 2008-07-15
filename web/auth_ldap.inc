@@ -109,62 +109,62 @@ function authValidateUser($user, $pass)
     {
       if (isset($ldap_dn_search_attrib))
       {
-   if (isset($ldap_dn_search_dn) &&
-       isset($ldap_dn_search_password))
-   {
-     // Bind with DN and password
-     $res = @ldap_bind($ldap, $ldap_dn_search_dn,
-             $ldap_dn_search_password);
-   }
-   else
-   {
-     // Anonymous bind
-     $res = @ldap_bind($ldap);
-   }
+        if (isset($ldap_dn_search_dn) &&
+            isset($ldap_dn_search_password))
+        {
+          // Bind with DN and password
+          $res = @ldap_bind($ldap, $ldap_dn_search_dn,
+                            $ldap_dn_search_password);
+        }
+        else
+        {
+          // Anonymous bind
+          $res = @ldap_bind($ldap);
+        }
 
-   if ($res)
-   {
-     $res = @ldap_search($ldap,
-               $base_dn,
-               "(". $ldap_dn_search_attrib ."=$user)");
+        if ($res)
+        {
+          $res = @ldap_search($ldap,
+                              $base_dn,
+                              "(". $ldap_dn_search_attrib ."=$user)");
 
-     if (@ldap_count_entries($ldap, $res) == 1)
-     {
-       $entries = ldap_get_entries($ldap, $res);
-       $dn = $entries[0]["dn"];
-     }
-   }
+          if (@ldap_count_entries($ldap, $res) == 1)
+          {
+            $entries = ldap_get_entries($ldap, $res);
+            $dn = $entries[0]["dn"];
+          }
+        }
       }
       else
       {
-   // construct dn for user
-   $dn = $all_ldap_user_attrib[$idx] . "=" . $user . "," . $base_dn;
+        // construct dn for user
+        $dn = $all_ldap_user_attrib[$idx] . "=" . $user . "," . $base_dn;
       }
 
       // try an authenticated bind
       // use this to confirm that the user/password pair
       if ($dn && @ldap_bind($ldap, $dn, $pass))
       {
-   // however if there is a filter check that the
-   // user is part of the group defined by the filter
-   if (! $ldap_filter)
-   {
-     @ldap_unbind($ldap);
-     return 1;
-   }
-   else
-     {
-       $res = @ldap_search($ldap,
-            $base_dn,
-            "(&(". $all_ldap_user_attrib[$idx] ."=$user)($ldap_filter))",
-            array()
-            );
-       if (@ldap_count_entries($ldap, $res) > 0)
-       {
-         @ldap_unbind($ldap);
-         return 1;
-       }
-     }
+        // however if there is a filter check that the
+        // user is part of the group defined by the filter
+        if (! $ldap_filter)
+        {
+          @ldap_unbind($ldap);
+          return 1;
+        }
+        else
+        {
+          $res = @ldap_search($ldap,
+                              $base_dn,
+                              "(&(". $all_ldap_user_attrib[$idx] ."=$user)($ldap_filter))",
+                              array()
+                             );
+          if (@ldap_count_entries($ldap, $res) > 0)
+          {
+            @ldap_unbind($ldap);
+            return 1;
+          }
+        }
       }
     }
     @ldap_unbind($ldap);

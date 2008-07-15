@@ -43,7 +43,7 @@ function version_check($vercheck)
 
 if (version_check("4.0.3") == false)
 {
-    include "escapeshellarg.inc";
+  include "escapeshellarg.inc";
 }
 
 /* authValidateUser($user, $pass)
