@@ -1,23 +1,23 @@
 <?php
 /*****************************************************************************\
-*                                 *
-*   File name       edit_users.php                     *
-*                                 *
-*   Description       Edit the user database                                    *
-*                                 *
-*   Notes       Automatically creates the database if it's not present.   *
-*                                 *
-*          Designed to be easily extensible:                         *
-*                   Adding more fields for each user does not require         *
-*                    modifying the editor code. Only to add the fields in     *
-*                    the database creation code.                              *
-*                                 *
-*          To do:                        *
-*         - Localisability                                      *
-*                                 *
-*   History                              *
-*    2003/12/29 JFL Created this file                     *
-*                                 *
+*                                                                            *
+*   File name     edit_users.php                                             *
+*                                                                            *
+*   Description   Edit the user database                                     *
+*                                                                            *
+*   Notes         Automatically creates the database if it's not present.    *
+*                                                                            *
+*                 Designed to be easily extensible:                          *
+*                 Adding more fields for each user does not require          *
+*                 modifying the editor code. Only to add the fields in       *
+*                 the database creation code.                                *
+*                                                                            *
+*                 To do:                                                     *
+*                     - Localisability                                       *
+*                                                                            *
+*   History                                                                  *
+*                 2003/12/29 JFL Created this file                           *
+*                                                                            *
 \*****************************************************************************/
 
 // $Id$
