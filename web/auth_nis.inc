@@ -92,7 +92,7 @@ function authGetUserLevel($user, $lev1_admin)
       return 2;
     }
   }
-	
+   
   // Everybody else is access level '1'
   return 1;
 }

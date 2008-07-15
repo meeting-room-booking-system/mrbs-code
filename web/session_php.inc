@@ -204,11 +204,11 @@ function PrintLogonBox()
          . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
          .$user ?></a>
                 <form method="post" action="admin.php">
-	               <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>" >
-	               <input type="hidden" name="Action" value="SetName" >
-	               <input type="hidden" name="NewUserName" value="" >
-	               <input type="hidden" name="NewUserPassword" value="" >
-	               <input type="submit" value=" <?php echo get_vocab('logoff') ?> " >
+                  <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>" >
+                  <input type="hidden" name="Action" value="SetName" >
+                  <input type="hidden" name="NewUserName" value="" >
+                  <input type="hidden" name="NewUserPassword" value="" >
+                  <input type="submit" value=" <?php echo get_vocab('logoff') ?> " >
                 </form>
 <?php
   }

@@ -1,19 +1,19 @@
 <?php
 /*****************************************************************************\
-*									      *
-*   File name       auth_db_ext.inc					      *
-*									      *
-*   Description	    Authenticate users from a table in another database.      *
-*									      *
-*   Notes	    To use this authentication scheme, set in config.inc.php: *
-*			$auth["type"]  = "db_ext";			      *
+*                                 *
+*   File name       auth_db_ext.inc                     *
+*                                 *
+*   Description       Authenticate users from a table in another database.      *
+*                                 *
+*   Notes       To use this authentication scheme, set in config.inc.php: *
+*         $auth["type"]  = "db_ext";               *
 *                   Assumes passwords are stored in the other table in        *
 *                   plaintext, authValidateUser() will need to be changed if  *
 *                   the password is stored differently.                       *
-*									      *
-*   History								      *
-*    2005/05/11 JPB Created this file					      *
-*									      *
+*                                 *
+*   History                              *
+*    2005/05/11 JPB Created this file                     *
+*                                 *
 \*****************************************************************************/
 
 // $Id$
@@ -123,7 +123,7 @@ function authGetUserLevel($user, $lev1_admin)
    {
       if(strcasecmp($user, $lev1_admin[$i]) == 0)
       {
-	return 2;
+   return 2;
       }
    }
 

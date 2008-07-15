@@ -57,7 +57,7 @@ class Mail_mail extends Mail
         $this->sep = (strstr(PHP_OS, 'WIN')) ? "\r\n" : "\n";
     }
 
-	/**
+   /**
      * Implements Mail_mail::send() function using php's built-in mail()
      * command.
      *

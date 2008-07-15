@@ -57,8 +57,8 @@ TD.I {background-color:#DDFFDD}
 TD.J {background-color:#CCCCCC}
 TD.white {background-color:#FFFFFF}
 
-TD.even_row {background-color:#FFFFFF}	/* Even rows in the day view */
-TD.odd_row {background-color:#EEEEEE}	/* Odd rows in the day view */
+TD.even_row {background-color:#FFFFFF}   /* Even rows in the day view */
+TD.odd_row {background-color:#EEEEEE}   /* Odd rows in the day view */
 
 TD.highlight {background-color:#AABBFF; border-style: solid; border-width: 1px; border-color:#0000AA;} /* The highlighted cell under the cursor */
 .naked { margin: 0; padding: 0; border-width:0} /* Invisible tables used for internal needs */
@@ -93,7 +93,7 @@ $main_table_month_invalid_color = "#cccccc";    // background colour for invalid
 
 ?>
 
-.current {color: red}		                    /* used to highlight the current item */
+.current {color: red}                          /* used to highlight the current item */
 .error   {color: red; font-weight: bold}       /* for error messages */
 
 legend {font-weight: bold; font-size: large}
@@ -108,15 +108,15 @@ table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color:
     border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
 .admin_table th {color: <?php echo $admin_table_header_font_color ?>; font-size:10pt; ; font-weight: bold; font-family: verdana, sans-serif;
     background-color: <?php echo $admin_table_header_back_color ?>; 
-	 padding: 0.1em 0.5em 0.1em 0.5em;
+    padding: 0.1em 0.5em 0.1em 0.5em;
     border-top-width: 1px; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;
-	 border-top-color: <?php echo $admin_table_header_back_color ?>; border-left-color: <?php echo $admin_table_header_sep_color ?>;
-	 vertical-align: middle; text-align: left}
+    border-top-color: <?php echo $admin_table_header_back_color ?>; border-left-color: <?php echo $admin_table_header_sep_color ?>;
+    vertical-align: middle; text-align: left}
 .admin_table th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}
 .admin_table td {padding: 0.1em 0.5em 0.1em 0.5em; 
     border-top-width: 1px; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;
-	 border-top-color: <?php echo $admin_table_header_back_color ?>; border-left-color: <?php echo $admin_table_header_back_color ?>;
-	 vertical-align: middle}
+    border-top-color: <?php echo $admin_table_header_back_color ?>; border-left-color: <?php echo $admin_table_header_back_color ?>;
+    vertical-align: middle}
 
 
 /* ------------ ADMIN.PHP ---------------------------*/
@@ -133,18 +133,18 @@ table#admin {margin-bottom: 1.0em}
 #admin td {padding: 0.5em; vertical-align: top}
 .form_admin fieldset {
     width: <?php echo $admin_total_width ?>em;      /* Safari doesn't like width: auto */
-	 border: 0; padding-top: 1.0em;
+    border: 0; padding-top: 1.0em;
 }    
 .form_admin div {float: left; clear: left; width: <?php echo $admin_total_width ?>em}
 .form_admin label {
     display: block; float: left; clear: left; 
-	 width: <?php echo $admin_form_label_width ?>em; min-height: 2.0em; text-align: right;
+    width: <?php echo $admin_form_label_width ?>em; min-height: 2.0em; text-align: right;
 }
 .form_admin input {
     display: block; float: left; 
     width: <?php echo $admin_form_input_width ?>em; 
-	 margin-top: -0.2em; margin-left: <?php echo $admin_form_gap ?>em;
-	 font-family: arial,sans-serif; font-size: 10pt;
+    margin-top: -0.2em; margin-left: <?php echo $admin_form_gap ?>em;
+    font-family: arial,sans-serif; font-size: 10pt;
 }
 .form_admin input.submit {
     position: relative; left: <?php echo $admin_form_label_width ?>em;
@@ -215,7 +215,7 @@ form.form_edit_area_room {
 .form_edit_area_room input {
     display: block; position: relative; float: right; clear: right; 
     width: <?php echo $edit_area_room_input_width ?>em; 
-	 margin-top: -0.2em; margin-left: <?php echo $edit_area_room_input_margin_left ?>em
+    margin-top: -0.2em; margin-left: <?php echo $edit_area_room_input_margin_left ?>em
 }
 .form_edit_area_room .submit_buttons input {width: auto; clear: none; margin-top: 1.2em; margin-left: 1.0em}
 .form_edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}
@@ -255,8 +255,8 @@ form.form_general#report     {min-width: <?php echo $report_form_min_width ?>em}
 .form_general label {
     display: block; float: left; 
     min-height: <?php echo $general_label_height ?>em; 
-	 width: <?php echo $general_left_col_width ?>%; 
-	 text-align: right; padding-bottom: 0.8em; font-weight: bold;
+    width: <?php echo $general_left_col_width ?>%; 
+    text-align: right; padding-bottom: 0.8em; font-weight: bold;
 }
 .form_general#edit_entry label {max-width: <?php echo $edit_entry_left_col_max_width ?>em}
 .form_general#report     label {max-width: <?php echo $report_left_col_max_width ?>em}
@@ -275,7 +275,7 @@ form.form_general#report     {min-width: <?php echo $report_form_min_width ?>em}
     display: block; float: left; 
     width: <?php echo $edit_entry_textarea_width ?>em; height: 11em; 
     margin-left: <?php echo $general_gap ?>em; margin-bottom: 0.5em;
-	 font-family: arial,sans-serif; font-size: 10pt
+    font-family: arial,sans-serif; font-size: 10pt
 }
 .form_general select {float: left; margin-left: <?php echo $general_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
 .form_general input.radio {margin-top: 0.1em}
@@ -326,12 +326,12 @@ form#form_edit_users {width: <?php echo $edit_users_form_width ?>em; margin-top:
 #form_edit_users div {float: left; width: 100%}
 #form_edit_users div#edit_users_input_container {padding-bottom: 4.0em}    /* padding-bottom leaves room for the submit buttons. */
                                                                            /* Apply it to the div because applying it to the     */
-																									/* fieldset does not work in all browsers (eg Safari) */
+                                                                           /* fieldset does not work in all browsers (eg Safari) */
 #form_edit_users label{
     display: block; float: left;
     min-height: <?php echo $edit_users_label_height ?>em; 
-	 width: <?php echo $edit_users_label_width ?>em;  
-	 text-align: right;
+    width: <?php echo $edit_users_label_width ?>em;  
+    text-align: right;
 }
 #form_edit_users input {
     display: block; float: left;

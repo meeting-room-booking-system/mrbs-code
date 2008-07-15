@@ -60,13 +60,13 @@ if (isset($area))
     <tr>
       <th><?php echo get_vocab("areas") ?></th>
       <th>
-	     <?php 
-		  echo get_vocab("rooms");
-	     if(isset($area_name))
-		  { 
-		    echo " " . get_vocab("in") . " " . htmlspecialchars($area_name); 
-		  }
-		  ?>
+        <?php 
+        echo get_vocab("rooms");
+        if(isset($area_name))
+        { 
+          echo " " . get_vocab("in") . " " . htmlspecialchars($area_name); 
+        }
+        ?>
       </th>
     </tr>
   </thead>
@@ -115,9 +115,9 @@ if(isset($area))
     echo "      <ul>";
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-		echo "        <li>" . htmlspecialchars($row['room_name']) . "(" . htmlspecialchars($row['description'])
+      echo "        <li>" . htmlspecialchars($row['room_name']) . "(" . htmlspecialchars($row['description'])
         . ", ".$row['capacity'].") (<a href=\"edit_area_room.php?room=".$row['id']."\">" . get_vocab("edit") . "</a>) (<a href=\"del.php?type=room&amp;room=".$row['id']."\">" . get_vocab("delete") . "</a>)</li>\n";
-	 }
+    }
     echo "      </ul>";
   }
 }
@@ -132,20 +132,20 @@ else
   <tr>
     <td>
       <form class="form_admin" action="add.php" method="post">
-		  <fieldset>
-		  <legend><?php echo get_vocab("addarea") ?></legend>
-		  
+        <fieldset>
+        <legend><?php echo get_vocab("addarea") ?></legend>
+        
           <input type="hidden" name="type" value="area">
-			 
+          
           <div>
             <label for="area_name"><?php echo get_vocab("name") ?>:</label>
             <input type="text" id="area_name" name="name">
-		    </div>
-			 
-			 <div>
+          </div>
+          
+          <div>
             <input type="submit" class="submit" value="<?php echo get_vocab("addarea") ?>">
-		    </div>
-		  </fieldset>
+          </div>
+        </fieldset>
       </form>
     </td>
 
@@ -155,32 +155,32 @@ if (0 != $area)
 {
 ?>
       <form class="form_admin" action="add.php" method="post">
-		  <fieldset>
-		  <legend><?php echo get_vocab("addroom") ?></legend>
-		  
+        <fieldset>
+        <legend><?php echo get_vocab("addroom") ?></legend>
+        
         <input type="hidden" name="type" value="room">
         <input type="hidden" name="area" value="<?php echo $area; ?>">
-		  
+        
         <div>
           <label for="room_name"><?php echo get_vocab("name") ?>:</label>
           <input type="text" id="room_name" name="name">
         </div>
-		  
-		  <div>
+        
+        <div>
           <label for="room_description"><?php echo get_vocab("description") ?>:</label>
           <input type="text" id="room_description" name="description">
         </div>
-		  
-		  <div>
+        
+        <div>
           <label for="room_capacity"><?php echo get_vocab("capacity") ?>:</label>
           <input type="text" id="room_capacity" name="capacity">
         </div>
-		 
-		  <div>
+       
+        <div>
           <input type="submit" class="submit" value="<?php echo get_vocab("addroom") ?>">
-		  </div>
-		  
-		  </fieldset>
+        </div>
+        
+        </fieldset>
       </form>
 <?php
 }

@@ -59,8 +59,8 @@ if (!getAuthorised(1))
 if (isset($id))
 {
   $sql = "select name, create_by, description, start_time, end_time,
-	  type, room_id, entry_type, repeat_id from $tbl_entry where id=$id";
-	
+     type, room_id, entry_type, repeat_id from $tbl_entry where id=$id";
+   
   $res = sql_query($sql);
   if (! $res)
   {
@@ -92,7 +92,7 @@ if (isset($id))
   {
     $sql = "SELECT rep_type, start_time, end_date, rep_opt, rep_num_weeks
             FROM $tbl_repeat WHERE id=$rep_id";
-	
+   
     $res = sql_query($sql);
     if (! $res)
     {
@@ -106,7 +106,7 @@ if (isset($id))
 
     $row = sql_row_keyed($res, 0);
     sql_free($res);
-	
+   
     $rep_type = $row['rep_type'];
 
     if ($edit_type == "series")
@@ -114,7 +114,7 @@ if (isset($id))
       $start_day   = (int)strftime('%d', $row['start_time']);
       $start_month = (int)strftime('%m', $row['start_time']);
       $start_year  = (int)strftime('%Y', $row['start_time']);
-		
+      
       $rep_end_day   = (int)strftime('%d', $row['end_date']);
       $rep_end_month = (int)strftime('%m', $row['end_date']);
       $rep_end_year  = (int)strftime('%Y', $row['end_date']);
@@ -262,7 +262,7 @@ function validate_and_submit ()
   i2 = parseInt(document.forms["main"].rep_id.value);
   if ( document.forms["main"].rep_num_weeks)
   {
-  	n = parseInt(document.forms["main"].rep_num_weeks.value);
+     n = parseInt(document.forms["main"].rep_num_weeks.value);
   }
   if ((!i1 || (i1 && i2)) && (document.forms["main"].rep_type.value != 0) && document.forms["main"].rep_type[6].checked && (!n || n < 2))
   {
@@ -377,9 +377,9 @@ else
 
     <div id="div_description">
       <label for="description"><?php echo get_vocab("fulldescription")?></label>
-	   <!-- textarea rows and cols are overridden by CSS height and width -->
+      <!-- textarea rows and cols are overridden by CSS height and width -->
       <textarea id="description" name="description" rows="8" cols="40"><?php echo htmlspecialchars ( $description ); ?></textarea>
-	 </div>
+    </div>
 
     <div id="div_date">
       <label><?php echo get_vocab("date")?>:</label>
@@ -387,14 +387,14 @@ else
     </div>
 
     <?php 
-	 if(! $enable_periods ) 
-	 { 
-	 ?>
+    if(! $enable_periods ) 
+    { 
+    ?>
       <div id="div_time">
         <label><?php echo get_vocab("time")?>:</label>
         <input name="hour" value="<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>" maxlength="2">
         <span>:</span>
-		  <input name="minute" value="<?php echo $start_min;?>" maxlength="2">
+        <input name="minute" value="<?php echo $start_min;?>" maxlength="2">
         <?php
         if (!$twentyfourhour_format)
         {
@@ -404,12 +404,12 @@ else
           echo "      <input name=\"ampm\" type=\"radio\" value=\"pm\" $checked>".utf8_strftime("%p",mktime(13,0,0,1,1,2000));
         }
         ?>
-	   </div>
+      </div>
       <?php
     }
-	 
+    
     else
-	 {
+    {
       ?>
       <div id="div_period">
         <label for="period" ><?php echo get_vocab("period")?>:</label>
@@ -431,9 +431,9 @@ else
     <?php
     }
     ?>
-	 <div id="div_duration">
+    <div id="div_duration">
       <label for="duration"><?php echo get_vocab("duration");?>:</label>
-		<div class="group">
+      <div class="group">
         <input id="duration" name="duration" value="<?php echo $duration;?>">
         <select id="dur_units" name="dur_units">
           <?php
@@ -457,11 +457,11 @@ else
           }
           ?>
         </select>
-		  <div id="ad">
-		    <input id="all_day" class="checkbox" name="all_day" type="checkbox" value="yes" onclick="OnAllDayClick(this)">
-		    <label for="all_day"><?php echo get_vocab("all_day"); ?></label>
-		  </div>
-		</div>
+        <div id="ad">
+          <input id="all_day" class="checkbox" name="all_day" type="checkbox" value="yes" onclick="OnAllDayClick(this)">
+          <label for="all_day"><?php echo get_vocab("all_day"); ?></label>
+        </div>
+      </div>
     </div>
 
     <?php
@@ -478,13 +478,13 @@ else
     // to choose areas.
     if( $num_areas > 1 )
     {
-	 
+    
     ?>
-	 
-		<script type="text/javascript">
-		
+    
+      <script type="text/javascript">
+      
       <!-- Hide the Javascript from non-Javascript UAs
-		
+      
       function changeRooms( formObj )
       {
         areasObj = eval( "formObj.areas" );
@@ -553,23 +553,23 @@ else
       }
       ?>
       this.document.writeln("          <\/select>");
-		this.document.writeln("<\/div>");
+      this.document.writeln("<\/div>");
 
       // End of Javascript -->
       </script>
       <?php
     } // if $num_areas
     ?>
-	 
-	 
-	 <div id="div_rooms">
+    
+    
+    <div id="div_rooms">
     <label for="rooms"><?php echo get_vocab("rooms") ?>:</label>
-	 <div class="group">
+    <div class="group">
       <select id="rooms" name="rooms" multiple="multiple">
         <?php 
-		  // select the rooms in the area determined above
+        // select the rooms in the area determined above
         $sql = "select id, room_name from $tbl_room where area_id=$area_id order by room_name";
-	     $res = sql_query($sql);
+        $res = sql_query($sql);
         if ($res)
         {
           for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
@@ -586,11 +586,11 @@ else
         }
         ?>
       </select>
-	   <span><?php echo get_vocab("ctrl_click") ?></span>
-	   </div>
-	 </div>
-	 
-	 <div id="div_type">
+      <span><?php echo get_vocab("ctrl_click") ?></span>
+      </div>
+    </div>
+    
+    <div id="div_type">
       <label for="type"><?php echo get_vocab("type")?>:</label>
       <select id="type" name="type">
         <?php
@@ -598,23 +598,23 @@ else
         {
           if (!empty($typel[$c]))
           { 
-		      echo "        <option value=\"$c\"" . ($type == $c ? " selected=\"selected\"" : "") . ">$typel[$c]</option>\n";
+            echo "        <option value=\"$c\"" . ($type == $c ? " selected=\"selected\"" : "") . ">$typel[$c]</option>\n";
           }
         }
         ?>
       </select>
-	 </div>
+    </div>
 
 
     <?php
     if ($edit_type == "series")
     {
     ?>
-	   <div id="rep_type">
+      <div id="rep_type">
         <label><?php echo get_vocab("rep_type")?>:</label>
-		  <div class="group">
+        <div class="group">
           <?php
-		    for ($i = 0; isset($vocab["rep_type_$i"]); $i++)
+          for ($i = 0; isset($vocab["rep_type_$i"]); $i++)
           {
             echo "      <label><input class=\"radio\" name=\"rep_type\" type=\"radio\" value=\"" . $i . "\"";
             if ($i == $rep_type)
@@ -624,17 +624,17 @@ else
             echo ">" . get_vocab("rep_type_$i") . "</label>\n";
           }
           ?>
-		  </div>
-		</div>
+        </div>
+      </div>
 
-		<div id="rep_end_date">
+      <div id="rep_end_date">
         <label><?php echo get_vocab("rep_end_date")?>:</label>
         <?php genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year) ?>
       </div>
-		
-		<div id="rep_day">
+      
+      <div id="rep_day">
         <label><?php echo get_vocab("rep_rep_day")?>:<br><?php echo get_vocab("rep_for_weekly")?></label>
-		  <div class="group">
+        <div class="group">
           <?php
           // Display day name checkboxes according to language and preferred weekday start.
           for ($i = 0; $i < 7; $i++)
@@ -647,22 +647,22 @@ else
             }
             echo ">" . day_name($wday) . "</label>\n";
           }
-		    ?>
-		  </div>
+          ?>
+        </div>
       </div>
-	   <?php
+      <?php
     }
     else
     {
       $key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
       ?>
-		<fieldset id="rep_info">
-		<legend></legend>
+      <fieldset id="rep_info">
+      <legend></legend>
         <input type="hidden" name="rep_type" value="0">
-		  <div>
-	       <label><?php echo get_vocab("rep_type") ?>:</label>
-		    <input type="text" value ="<?php echo get_vocab($key) ?>" disabled="disabled">
-		  </div>
+        <div>
+          <label><?php echo get_vocab("rep_type") ?>:</label>
+          <input type="text" value ="<?php echo get_vocab($key) ?>" disabled="disabled">
+        </div>
         <?php
         if(isset($rep_type) && ($rep_type != 0))
         {
@@ -686,9 +686,9 @@ else
 
           echo "  <div><label>".get_vocab("rep_end_date").":</label><input type=\"text\" value=\"$rep_end_date\" disabled=\"disabled\"></div>\n";
         }
-		  ?>
-		</fieldset>
-		<?php
+        ?>
+      </fieldset>
+      <?php
     }
 
     /* We display the rep_num_weeks box only if:

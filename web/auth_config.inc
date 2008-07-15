@@ -1,19 +1,19 @@
 <?php 
 /*****************************************************************************\
-*									      *
-*   File name       auth_config.inc					      *
-*									      *
-*   Description	    Authenticate users from a list in config.inc.php.         *
-*									      *
-*   Notes	    To use this authentication scheme, set in config.inc.php: *
-*			$auth["type"]  = "config";			      *
-*									      *
-*		    Then for each user, add an entry formatted as:	      *
-*			$auth["user"]["username"] == "userpassword";          *
-*									      *
-*   History								      *
-*    2003/11/09 JFL Created this file					      *
-*									      *
+*                                 *
+*   File name       auth_config.inc                     *
+*                                 *
+*   Description       Authenticate users from a list in config.inc.php.         *
+*                                 *
+*   Notes       To use this authentication scheme, set in config.inc.php: *
+*         $auth["type"]  = "config";               *
+*                                 *
+*          Then for each user, add an entry formatted as:         *
+*         $auth["user"]["username"] == "userpassword";          *
+*                                 *
+*   History                              *
+*    2003/11/09 JFL Created this file                     *
+*                                 *
 \*****************************************************************************/
 
 // $Id$
@@ -50,7 +50,7 @@ function authValidateUser($user, $pass)
       return 1; // User validated
    }
 
-   return 0;		// User unknown or password invalid
+   return 0;      // User unknown or password invalid
 }
 
 /* authGetUserLevel($user)
@@ -75,7 +75,7 @@ function authGetUserLevel($user, $lev1_admin)
    {
       if(strcasecmp($user, $lev1_admin[$i]) == 0)
       {
-	return 2;
+   return 2;
       }
    }
 

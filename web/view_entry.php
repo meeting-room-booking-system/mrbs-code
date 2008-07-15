@@ -40,49 +40,49 @@ else
 if ($series)
 {
   $sql = "
-	SELECT $tbl_repeat.name,
-	       $tbl_repeat.description,
-	       $tbl_repeat.create_by,
-	       $tbl_room.room_name,
-	       $tbl_area.area_name,
-	       $tbl_repeat.type,
-	       $tbl_repeat.room_id,
-	       " . sql_syntax_timestamp_to_unix("$tbl_repeat.timestamp") . " AS last_updated,
-	       ($tbl_repeat.end_time - $tbl_repeat.start_time) AS duration,
-	       $tbl_repeat.start_time,
-	       $tbl_repeat.end_time,
-	       $tbl_repeat.rep_type,
-	       $tbl_repeat.end_date,
-	       $tbl_repeat.rep_opt,
-	       $tbl_repeat.rep_num_weeks
+   SELECT $tbl_repeat.name,
+          $tbl_repeat.description,
+          $tbl_repeat.create_by,
+          $tbl_room.room_name,
+          $tbl_area.area_name,
+          $tbl_repeat.type,
+          $tbl_repeat.room_id,
+          " . sql_syntax_timestamp_to_unix("$tbl_repeat.timestamp") . " AS last_updated,
+          ($tbl_repeat.end_time - $tbl_repeat.start_time) AS duration,
+          $tbl_repeat.start_time,
+          $tbl_repeat.end_time,
+          $tbl_repeat.rep_type,
+          $tbl_repeat.end_date,
+          $tbl_repeat.rep_opt,
+          $tbl_repeat.rep_num_weeks
 
-	FROM  $tbl_repeat, $tbl_room, $tbl_area
-	WHERE $tbl_repeat.room_id = $tbl_room.id
-		AND $tbl_room.area_id = $tbl_area.id
-		AND $tbl_repeat.id=$id
-	";
+   FROM  $tbl_repeat, $tbl_room, $tbl_area
+   WHERE $tbl_repeat.room_id = $tbl_room.id
+      AND $tbl_room.area_id = $tbl_area.id
+      AND $tbl_repeat.id=$id
+   ";
 }
 else
 {
   $sql = "
-	SELECT $tbl_entry.name,
-	       $tbl_entry.description,
-	       $tbl_entry.create_by,
-	       $tbl_room.room_name,
-	       $tbl_area.area_name,
-	       $tbl_entry.type,
-	       $tbl_entry.room_id,
-	       " . sql_syntax_timestamp_to_unix("$tbl_entry.timestamp") . " AS last_updated,
-	       ($tbl_entry.end_time - $tbl_entry.start_time) AS duration,
-	       $tbl_entry.start_time,
-	       $tbl_entry.end_time,
-	       $tbl_entry.repeat_id
+   SELECT $tbl_entry.name,
+          $tbl_entry.description,
+          $tbl_entry.create_by,
+          $tbl_room.room_name,
+          $tbl_area.area_name,
+          $tbl_entry.type,
+          $tbl_entry.room_id,
+          " . sql_syntax_timestamp_to_unix("$tbl_entry.timestamp") . " AS last_updated,
+          ($tbl_entry.end_time - $tbl_entry.start_time) AS duration,
+          $tbl_entry.start_time,
+          $tbl_entry.end_time,
+          $tbl_entry.repeat_id
 
-	FROM  $tbl_entry, $tbl_room, $tbl_area
-	WHERE $tbl_entry.room_id = $tbl_room.id
-		AND $tbl_room.area_id = $tbl_area.id
-		AND $tbl_entry.id=$id
-	";
+   FROM  $tbl_entry, $tbl_room, $tbl_area
+   WHERE $tbl_entry.room_id = $tbl_room.id
+      AND $tbl_room.area_id = $tbl_area.id
+      AND $tbl_entry.id=$id
+   ";
 }
 
 $res = sql_query($sql);
@@ -311,12 +311,12 @@ if ( ! $series )
 {
   echo "<a href=\"edit_entry.php?id=$id&amp;copy=1\">". get_vocab("copyentry") ."</a>";
 }
-	
+   
 if ($repeat_id)
 {
   echo " - ";
 }
-	
+   
 if ($repeat_id || $series ) 
 {
   echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=1\">".get_vocab("copyseries")."</a>";

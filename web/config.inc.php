@@ -175,8 +175,8 @@ $default_room = 0;
  ***********************************************/
 
 $auth["session"] = "php"; // How to get and keep the user ID. One of
-			  // "http" "php" "cookie" "ip" "host" "nt" "omni"
-			  // "remote_user"
+           // "http" "php" "cookie" "ip" "host" "nt" "omni"
+           // "remote_user"
 $auth["type"] = "config"; // How to validate the user/password. One of "none"
                           // "config" "db" "db_ext" "pop3" "imap" "ldap" "nis"
                           // "nw" "ext".
@@ -187,7 +187,7 @@ $auth["type"] = "config"; // How to validate the user/password. One of "none"
 $cookie_path_override = '';
 
 // The list of administrators (can modify other peoples settings)
-$auth["admin"][] = "127.0.0.1";	// localhost IP address. Useful with IP sessions.
+$auth["admin"][] = "127.0.0.1";   // localhost IP address. Useful with IP sessions.
 $auth["admin"][] = "administrator"; // A user name from the user list. Useful 
                                     // with most other session schemes.
 //$auth["admin"][] = "10.0.0.1";

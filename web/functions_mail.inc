@@ -739,7 +739,7 @@ function getPreviousEntryData($id, $series)
       // so that user see what he expects to see
       $mail_previous['duration'] = $row['tbl_r_duration'] -
         cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_time']);
-	    
+       
       $mail_previous['rep_opt'] = "";
       switch($row['rep_type'])
       {
@@ -763,7 +763,7 @@ function getPreviousEntryData($id, $series)
           }
           
           break;
-		
+      
         default:
           $rep_day = array(0, 0, 0, 0, 0, 0, 0);
       }
@@ -844,7 +844,7 @@ function getPreviousEntryData($id, $series)
           $mail_previous['rep_opt'] .= day_name($wday) . " ";
         }
       }
-	    
+       
       $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
     }
     toTimeString($mail_previous['duration'], $mail_previous['dur_units']);

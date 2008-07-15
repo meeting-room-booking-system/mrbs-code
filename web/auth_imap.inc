@@ -103,7 +103,7 @@ function authValidateUser($user, $pass)
 
     // Connect to IMAP-server
     $stream = fsockopen( $host, $all_imap_ports[$idx], $error_number,
-			 $error_string, 15 );
+          $error_string, 15 );
     if ( $stream )
     {
       $response = fgets( $stream, 1024 );
@@ -112,10 +112,10 @@ function authValidateUser($user, $pass)
       $response = fgets( $stream, 1024 );
       if ( substr( $response, 5, 2 ) == 'OK' )
       {
-	fputs( $stream, "a002 LOGOUT\r\n" );
-	$response = fgets( $stream, 1024 );
-	fclose( $stream );
-	return 1;
+   fputs( $stream, "a002 LOGOUT\r\n" );
+   $response = fgets( $stream, 1024 );
+   fclose( $stream );
+   return 1;
       }
       fputs( $stream, "a002 LOGOUT\r\n" );
       fclose( $stream );

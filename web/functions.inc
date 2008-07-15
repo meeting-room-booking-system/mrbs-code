@@ -215,11 +215,11 @@ function ChangeOptionDays(formObj, prefix)
       // For session protocols that define their own logon box...
       if (function_exists('PrintLogonBox'))
       {
-	     echo "<td>\n";
-	     echo "<div id=\"logon_box\">\n";
+        echo "<td>\n";
+        echo "<div id=\"logon_box\">\n";
         PrintLogonBox(); 
-	     echo "</div>\n";
-	     echo "</td>\n";
+        echo "</div>\n";
+        echo "</td>\n";
       }
       ?>
     </tr>
@@ -334,10 +334,10 @@ function genDateSelector($prefix, $day, $month, $year)
   {
     $year = date("Y");
   }
-	
+   
   echo "
                   <select name=\"${prefix}day\">";
-	
+   
   for ($i = 1; $i <= 31; $i++)
   {
     echo "
@@ -352,14 +352,14 @@ function genDateSelector($prefix, $day, $month, $year)
   for ($i = 1; $i <= 12; $i++)
   {
     $m = utf8_strftime("%b", mktime(0, 0, 0, $i, 1, $year));
-		
+      
     print "
                     <option value=\"$i\"" . ($i == $month ? " selected=\"selected\"" : "") . ">$m</option>";
   }
 
   echo "
                   </select>
-	          <select name=\"${prefix}year\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">";
+             <select name=\"${prefix}year\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">";
 
   $min = min($year, date("Y")) - 5;
   $max = max($year, date("Y")) + 5;
@@ -634,7 +634,7 @@ function is_dst ( $month, $day, $year, $hour="-1" )
   {
     return( -1 );
   }
-	
+   
   // entering DST
   if( !date( "I", mktime(12, 0, 0, $month, $day-1, $year)) && 
       date( "I", mktime(12, 0, 0, $month, $day, $year)))

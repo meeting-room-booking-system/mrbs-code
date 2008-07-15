@@ -102,41 +102,41 @@ if (!empty($room))
   <fieldset>
   <legend><?php echo get_vocab("editroom") ?></legend>
   
-	 <fieldset>
-	 <legend></legend>
-	   <span class="error">
-	 	  <?php echo ((FALSE == $valid_email) ? get_vocab('invalid_email') : "&nbsp;"); ?>
-		</span>
+    <fieldset>
+    <legend></legend>
+      <span class="error">
+         <?php echo ((FALSE == $valid_email) ? get_vocab('invalid_email') : "&nbsp;"); ?>
+      </span>
     </fieldset>
-	 
+    
     <input type=hidden name="room" value="<?php echo $row["id"]?>" />
     
-	 <div>
+    <div>
     <label for="room_name"><?php echo get_vocab("name") ?>:</label>
     <input type="text" id="room_name" name="room_name" value="<?php echo htmlspecialchars($row["room_name"]); ?>" />
     </div>
-	 
-	 <div>
+    
+    <div>
     <label for="description"><?php echo get_vocab("description") ?>:</label>
     <input type="text" id="description" name="description" value="<?php echo htmlspecialchars($row["description"]); ?>" /> 
-	 </div>
-	 
-	 <div>
+    </div>
+    
+    <div>
     <label for="capacity"><?php echo get_vocab("capacity") ?>:</label>
     <input type="text" id="capacity" name="capacity" value="<?php echo $row["capacity"]; ?>" />
-	 </div>
-	 
-	 <div>
+    </div>
+    
+    <div>
     <label for="room_admin_email"><?php echo get_vocab("room_admin_email") ?>:</label>
     <input type="text" id="room_admin_email" name="room_admin_email" maxlength="75" value="<?php echo htmlspecialchars($row["room_admin_email"]); ?>" />
     </div>
-	 
-	 <fieldset class="submit_buttons">
-	 <legend></legend>
+    
+    <fieldset class="submit_buttons">
+    <legend></legend>
       <input type=submit name="change_room" value="<?php echo get_vocab("change") ?>" />
       <input type=submit name="change_done" value="<?php echo get_vocab("backadmin") ?>" />
-	 </fieldset>
-	 
+    </fieldset>
+    
   </fieldset>
 </form>
 
@@ -188,30 +188,30 @@ if (!empty($area))
   <legend><?php echo get_vocab("editarea") ?></legend>
   
     <fieldset>
-	 <legend></legend>
-	   <span class="error">
-	 	  <?php echo ((FALSE == $valid_email) ? get_vocab('invalid_email') : "&nbsp;"); ?>
-		</span>
+    <legend></legend>
+      <span class="error">
+         <?php echo ((FALSE == $valid_email) ? get_vocab('invalid_email') : "&nbsp;"); ?>
+      </span>
     </fieldset>
   
     <input type="hidden" name="area" value="<?php echo $row["id"]?>">
-	 
-	 <div>
+    
+    <div>
     <label for="area_name"><?php echo get_vocab("name") ?>:</label>
     <input type="text" id="area_name" name="area_name" value="<?php echo htmlspecialchars($row["area_name"]); ?>">
-	 </div>
-	 
-	 <div>
+    </div>
+    
+    <div>
     <label for="area_admin_email"><?php echo get_vocab("area_admin_email") ?>:</label>
     <input type="text" id="area_admin_email" name="area_admin_email" maxlength="75" value="<?php echo htmlspecialchars($row["area_admin_email"]); ?>">
     </div>
-	 
-	 <fieldset class="submit_buttons">
-	 <legend></legend>
+    
+    <fieldset class="submit_buttons">
+    <legend></legend>
       <input type="submit" name="change_area" value="<?php echo get_vocab("change") ?>">
       <input type="submit" name="change_done" value="<?php echo get_vocab("backadmin") ?>">
-	 </fieldset>
-	 
+    </fieldset>
+    
   </fieldset>
 </form>
 <?php

@@ -114,18 +114,18 @@ class Calendar
         $s = "";
         
         $daysInMonth = $this->getDaysInMonth($this->month, $this->year);
-	// $prevYear is the current year unless the previous month is
-	// December then you need to decrement the year
-	if( $this->month - 1 > 0 )
-	{
-		$prevMonth = $this->month - 1;
-		$prevYear = $this->year;
-	}
-	else
-	{
-		$prevMonth = 12;
-		$prevYear = $this->year -1;
-	}
+   // $prevYear is the current year unless the previous month is
+   // December then you need to decrement the year
+   if( $this->month - 1 > 0 )
+   {
+      $prevMonth = $this->month - 1;
+      $prevYear = $this->year;
+   }
+   else
+   {
+      $prevMonth = 12;
+      $prevYear = $this->year -1;
+   }
         $daysInPrevMonth = $this->getDaysInMonth($prevMonth, $prevYear);
         $date = mktime(12, 0, 0, $this->month, 1, $this->year);
         
@@ -136,9 +136,9 @@ class Calendar
         //$nextMonth = $this->getCalendarLink($this->month + 1 <= 12 ? $this->month + 1 :  1, $this->month + 1 <= 12 ? $this->year : $this->year + 1);
         
         $s .= "<table class=\"calendar\">\n";
-		  $s .= "<thead>\n";
+        $s .= "<thead>\n";
         // prints month name and year
-		  
+        
         $s .= "<tr>\n";   
         $s .= "<th colspan=\"7\">$monthName&nbsp;$this->year</th>\n"; 
         $s .= "</tr>\n";
@@ -147,9 +147,9 @@ class Calendar
         // gets days of week
         $s .= $this->getFirstDays();
         $s .= "</tr>\n";
-		  $s .= "</thead>\n";
+        $s .= "</thead>\n";
 
-		  $s .= "<tbody>\n";
+        $s .= "<tbody>\n";
         $d = 1 - $first;
             
         # this is used to highlight days in upcoming month
@@ -178,7 +178,7 @@ class Calendar
                     }
                     elseif (preg_match("/week/i", basename($PHP_SELF)))
                     {
-		    #echo "((".$this->day." < $days_to_highlight) && ($d < $days_to_highlight) && (($day - $daysInMonth) > (-6)) && (".$this->month." == ($month + 1)) && ($first != 0))<br>";
+          #echo "((".$this->day." < $days_to_highlight) && ($d < $days_to_highlight) && (($day - $daysInMonth) > (-6)) && (".$this->month." == ($month + 1)) && ($first != 0))<br>";
                         if (($this->day <= $d) && ($this->day > $d_week) && ($this->h))
                             $s .= "<a class=\"current\" href=\"$link\">$d</a>";
                         elseif (($this->day < $days_to_highlight) && ($d < $days_to_highlight) && (($day - $daysInPrevMonth) > (-6)) && ($this->month == (($month + 1)%12)) && ($first != 0))
@@ -202,7 +202,7 @@ class Calendar
             $s .= "</tr>\n";
         }
         
-		  $s .= "</tbody>\n";
+        $s .= "</tbody>\n";
         $s .= "</table>\n";
         
         return $s;

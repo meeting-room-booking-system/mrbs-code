@@ -1,21 +1,21 @@
 <?php
 /*****************************************************************************\
-*									      *
-*   File name       session_cookie.inc					      *
-*									      *
-*   Description	    Manage sessions via cookies stored in the client browser. *
-*									      *
-*   URL arguments   UserName		The user name			      *
-*		    UserPassword	His password			      *
-*		    TargetURL		Where we were going before login.     *
-*									      *
-*   Notes	    To use this session mechanism, set in config.inc.php:     *
-*			$auth["session"]  = "cookie";			      *
-*									      *
-*   History								      *
-*    2003/11/09 JFL Created this file					      *
+*                                 *
+*   File name       session_cookie.inc                     *
+*                                 *
+*   Description       Manage sessions via cookies stored in the client browser. *
+*                                 *
+*   URL arguments   UserName      The user name               *
+*          UserPassword   His password               *
+*          TargetURL      Where we were going before login.     *
+*                                 *
+*   Notes       To use this session mechanism, set in config.inc.php:     *
+*         $auth["session"]  = "cookie";               *
+*                                 *
+*   History                              *
+*    2003/11/09 JFL Created this file                     *
 *    Remaining history in ChangeLog and CVS logs                              *
-*									      *
+*                                 *
 \*****************************************************************************/
 
 // $Id$

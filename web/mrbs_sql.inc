@@ -103,7 +103,7 @@ function mrbsDelEntry($user, $id, $series, $all)
   }
 
   $sql = "SELECT create_by, id, entry_type FROM $tbl_entry WHERE ";
-	
+   
   if ($series)
   {
     $sql .= "repeat_id=$repeat_id";
@@ -123,12 +123,12 @@ function mrbsDelEntry($user, $id, $series, $all)
     {
       continue;
     }
-	
+   
     if ($series && $row['entry_type'] == 2 && !$all)
     {
       continue;
     }
-	
+   
     if (sql_command("DELETE FROM $tbl_entry WHERE id=" . $row['id']) > 0)
     {
       $removed++;
@@ -169,7 +169,7 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
 
   $name        = slashes($name);
   $description = slashes($description);
-	
+   
   // make sure that any entry is of a positive duration
   // this is to trap potential negative duration created when DST comes
   // into effect
@@ -225,31 +225,31 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
   $sql_coln = array(); $sql_val = array();
 
   // Mandatory things:
-  $sql_coln[] = 'start_time'; 	$sql_val[] = $starttime;
-  $sql_coln[] = 'end_time'; 	$sql_val[] = $endtime;
-  $sql_coln[] = 'rep_type'; 	$sql_val[] = $rep_type;
-  $sql_coln[] = 'end_date';	$sql_val[] = $rep_enddate;
-  $sql_coln[] = 'room_id';	$sql_val[] = $room_id;
-  $sql_coln[] = 'create_by';	$sql_val[] = '\''.$owner.'\'';
-  $sql_coln[] = 'type';		$sql_val[] = '\''.$type.'\'';
-  $sql_coln[] = 'name';		$sql_val[] = '\''.$name.'\'';
+  $sql_coln[] = 'start_time';    $sql_val[] = $starttime;
+  $sql_coln[] = 'end_time';    $sql_val[] = $endtime;
+  $sql_coln[] = 'rep_type';    $sql_val[] = $rep_type;
+  $sql_coln[] = 'end_date';   $sql_val[] = $rep_enddate;
+  $sql_coln[] = 'room_id';   $sql_val[] = $room_id;
+  $sql_coln[] = 'create_by';   $sql_val[] = '\''.$owner.'\'';
+  $sql_coln[] = 'type';      $sql_val[] = '\''.$type.'\'';
+  $sql_coln[] = 'name';      $sql_val[] = '\''.$name.'\'';
 
   // Optional things, pgsql doesn't like empty strings!
   if (!empty($rep_opt))
   {
-    $sql_coln[] = 'rep_opt';	$sql_val[] = '\''.$rep_opt.'\'';
+    $sql_coln[] = 'rep_opt';   $sql_val[] = '\''.$rep_opt.'\'';
   }
   else
   {
-    $sql_coln[] = 'rep_opt';	$sql_val[] = '\'0\'';
+    $sql_coln[] = 'rep_opt';   $sql_val[] = '\'0\'';
   }
   if (!empty($description))
   {
-    $sql_coln[] = 'description';	$sql_val[] = '\''.$description.'\'';
+    $sql_coln[] = 'description';   $sql_val[] = '\''.$description.'\'';
   }
   if (!empty($rep_num_weeks))
   {
-    $sql_coln[] = 'rep_num_weeks';	$sql_val[] = $rep_num_weeks;
+    $sql_coln[] = 'rep_num_weeks';   $sql_val[] = $rep_num_weeks;
   }
 
   $sql = 'INSERT INTO ' . $tbl_repeat .
@@ -358,7 +358,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
       case 1:
         $day += 1;
         break;
-		
+      
       // Weekly repeat
       case 2:
         $j = $cur_day = date("w", $entrys[$i]);
@@ -370,17 +370,17 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
 
         $day += 1;
         break;
-		
+      
       // Monthly repeat
       case 3:
         $month += 1;
         break;
-		
+      
       // Yearly repeat
       case 4:
         $year += 1;
         break;
-	
+   
       // Monthly repeat on same week number and day of week
       case 5:
         $day += same_day_next_month($time);
@@ -406,8 +406,8 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
           }
         }
 
-        break;	
-				
+        break;   
+            
       // Unknown repeat option
       default:
         return;
@@ -441,7 +441,7 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                    $name, $type, $description, $rep_num_weeks)
 {
   global $max_rep_entrys;
-	
+   
   $reps = mrbsGetRepeatEntryList($starttime, $rep_enddate,
                                  $rep_type, $rep_opt,
                                  $max_rep_entrys, $rep_num_weeks);
@@ -458,7 +458,7 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                  $description);
     return $ent;
   }
-	
+   
   $ent = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type,
                                $rep_enddate, $rep_opt, $room_id,
                                $owner, $name, $type, $description,

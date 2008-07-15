@@ -438,16 +438,16 @@ installed on your system.
     Install and enable the iconv module.
     <ul>
       <li>
-		  On a Windows server, enable php_iconv.dll in %windir%\php.ini,
+        On a Windows server, enable php_iconv.dll in %windir%\php.ini,
         and make sure both %phpdir%\dlls\iconv.dll and
         %phpdir%\extensions\php_iconv.dll are in the path. One way to
         do this is to copy these two files to %windir%.
-		</li>
+      </li>
       <li>
         On a Unix server, recompile your PHP module with the appropriate
         option for enabling the iconv extension. Consult your PHP server
         documentation for more information about enabling iconv support.
-		</li>
+      </li>
     </ul>
   </li>
   <li>

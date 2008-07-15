@@ -136,16 +136,16 @@ else
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
       echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;area=$row[0]\">";
-		echo "<span";
-		if ($row['id'] == $area)
-		{
-		  $this_area_name = htmlspecialchars($row['area_name']);
-		  echo ' class="current"';
-		}
-		echo ">";
+      echo "<span";
+      if ($row['id'] == $area)
+      {
+        $this_area_name = htmlspecialchars($row['area_name']);
+        echo ' class="current"';
+      }
+      echo ">";
       echo htmlspecialchars($row['area_name']) . "</span></a></li>\n";
     }
-	 echo "</ul>\n";
+    echo "</ul>\n";
   }
 
 } // end area display if
@@ -172,16 +172,16 @@ else
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
       echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;area=$area&amp;room=".$row['id']."\">";
-		echo "<span";
-		if ($row['id'] == $room)
-		{
-		  $this_room_name = htmlspecialchars($row['room_name']);
-		  echo ' class="current"';
-		}
-		echo ">";
+      echo "<span";
+      if ($row['id'] == $room)
+      {
+        $this_room_name = htmlspecialchars($row['room_name']);
+        echo ' class="current"';
+      }
+      echo ">";
       echo htmlspecialchars($row['room_name']) . "</span></a></li>\n";
     }
-	 echo "</ul>\n";
+    echo "</ul>\n";
   }
 } // end select if
 
@@ -503,7 +503,7 @@ for (
     }
     
     tdcell($c);
- 	
+    
     // If the room isnt booked then allow it to be booked
     if (!isset($id))
     {

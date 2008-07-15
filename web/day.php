@@ -75,7 +75,7 @@ $pm7=mktime($eveningends,$eveningends_minutes,0,
 ?>
 <div class="screenonly">
   <div id="dwm_header">
-	   <div id="dwm_areas">
+      <div id="dwm_areas">
 <?php
 
 // Show all avaliable areas
@@ -98,11 +98,11 @@ else
     echo ("<ul>\n");
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-	   echo "<li><a href=\"day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$row['id']."\">";
+      echo "<li><a href=\"day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$row['id']."\">";
       echo "<span" . (($row['id'] == $area) ? ' class="current"' : '') . ">";
-	   echo htmlspecialchars($row['area_name']) . "</span></a></li>\n";
+      echo htmlspecialchars($row['area_name']) . "</span></a></li>\n";
     }  
-	 echo ("</ul>\n");
+    echo ("</ul>\n");
   }
 }
 echo "</div>\n";
@@ -254,16 +254,16 @@ else
 <div class=\"screenonly\">
   <div class=\"date_nav\">
     <div class=\"date_before\">
-	   <a href=\"day.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area\">&lt;&lt;". get_vocab("daybefore") ."
+      <a href=\"day.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area\">&lt;&lt;". get_vocab("daybefore") ."
       </a>
-	 </div>
-	 <div class=\"date_now\">
-	   <a href=\"day.php?area=$area\">" . get_vocab("gototoday") . "</a>
-	 </div>
-	 <div class=\"date_after\">
-	   <a href=\"day.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area\">". get_vocab("dayafter") . "&gt;&gt;
+    </div>
+    <div class=\"date_now\">
+      <a href=\"day.php?area=$area\">" . get_vocab("gototoday") . "</a>
+    </div>
+    <div class=\"date_after\">
+      <a href=\"day.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area\">". get_vocab("dayafter") . "&gt;&gt;
       </a>
-	 </div>
+    </div>
   </div>
 </div>\n";
 
@@ -326,7 +326,7 @@ else
   $hilite_url="day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;timetohighlight";
   
   ( $dst_change != -1 ) ? $j = 1 : $j = 0;
-	
+   
   $row_class = "even_row";
   for (
        $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
@@ -399,7 +399,7 @@ else
           echo "BeginActiveCell();\n";
           echo "// -->\n</script>";
         }
-		  
+        
         if( $enable_periods )
         {
           echo "<a href=\"edit_entry.php?area=$area&amp;room=$room&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day\"><img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\" /></a>";
@@ -408,7 +408,7 @@ else
         {
           echo "<a href=\"edit_entry.php?area=$area&amp;room=$room&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day\"><img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\" /></a>";
         }
-		  
+        
         if ($javascript_cursor)
         {
           echo "<script type=\"text/javascript\">\n<!--\n";

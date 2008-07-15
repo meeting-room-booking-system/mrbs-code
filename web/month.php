@@ -132,16 +132,16 @@ else
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
       echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;area=$row[0]\">";
-		echo "<span";
-		if ($row['id'] == $area)
-		{
-		  $this_area_name = htmlspecialchars($row['area_name']);
-		  echo ' class="current"';
-		}
-		echo ">";
+      echo "<span";
+      if ($row['id'] == $area)
+      {
+        $this_area_name = htmlspecialchars($row['area_name']);
+        echo ' class="current"';
+      }
+      echo ">";
       echo htmlspecialchars($row['area_name']) . "</span></a></li>\n";
     }
-	 echo "</ul>\n";
+    echo "</ul>\n";
   }
 } // end select if
 
@@ -166,16 +166,16 @@ else
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
       echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;area=$area&amp;room=".$row['id']."\">";
-		echo "<span";
-		if ($row['id'] == $room)
-		{
-		  $this_room_name = htmlspecialchars($row['room_name']);
-		  echo ' class="current"';
-		}
-		echo ">";
+      echo "<span";
+      if ($row['id'] == $room)
+      {
+        $this_room_name = htmlspecialchars($row['room_name']);
+        echo ' class="current"';
+      }
+      echo ">";
       echo htmlspecialchars($row['room_name']) . "</span></a></li>\n";
     }
-	 echo "</ul>\n";
+    echo "</ul>\n";
   }
 } // end select if
 
@@ -215,20 +215,20 @@ $tm = date("n",$i);
 echo "<div class=\"screenonly\">
   <div class=\"date_nav\">
     <div class=\"date_before\">
-	   <a href=\"month.php?year=$yy&amp;month=$ym&amp;area=$area&amp;room=$room\">
+      <a href=\"month.php?year=$yy&amp;month=$ym&amp;area=$area&amp;room=$room\">
           &lt;&lt;".get_vocab("monthbefore")."
         </a>
-	 </div>
-	 <div class=\"date_now\">
-	   <a href=\"month.php?area=$area&amp;room=$room\">
+    </div>
+    <div class=\"date_now\">
+      <a href=\"month.php?area=$area&amp;room=$room\">
           ".get_vocab("gotothismonth")."
         </a>
-	 </div>
-	 <div class=\"date_after\">
-	    <a href=\"month.php?year=$ty&amp;month=$tm&amp;area=$area&amp;room=$room\">
+    </div>
+    <div class=\"date_after\">
+       <a href=\"month.php?year=$ty&amp;month=$tm&amp;area=$area&amp;room=$room\">
           ".get_vocab("monthafter")."&gt;&gt;
         </a>
-	 </div>
+    </div>
   </div>
 </div>
 ";
@@ -249,7 +249,7 @@ $all_day = ereg_replace(" ", "&nbsp;", get_vocab("all_day"));
 for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
 {
   $sql = "SELECT start_time, end_time, id, name
-	       FROM $tbl_entry
+          FROM $tbl_entry
           WHERE room_id=$room
           AND start_time <= $midnight_tonight[$day_num] AND end_time > $midnight[$day_num]
           ORDER by 1";
@@ -419,7 +419,7 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
   if (isset($d[$cday]["id"][0]))
   {
     echo "<div>\n";
-	 echo "<span>\n"; 
+    echo "<span>\n"; 
     $n = count($d[$cday]["id"]);
     // Show the start/stop times, 2 per line, linked to view_entry.
     // If there are 12 or fewer, show them, else show 11 and "...".
@@ -473,8 +473,8 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
         }
       }
     }
-	 echo "</span>\n";
-	 echo "</div>\n";
+    echo "</span>\n";
+    echo "</div>\n";
   }
 
   echo "<div>\n";

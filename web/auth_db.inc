@@ -1,16 +1,16 @@
 <?php
 /*****************************************************************************\
-*									      *
-*   File name       auth_db.inc						      *
-*									      *
-*   Description	    Authenticate users from a table in the MRBS database.     *
-*									      *
-*   Notes	    To use this authentication scheme, set in config.inc.php: *
-*			$auth["type"]  = "db";				      *
-*									      *
-*   History								      *
-*    2004/01/11 JFL Created this file					      *
-*									      *
+*                                 *
+*   File name       auth_db.inc                        *
+*                                 *
+*   Description       Authenticate users from a table in the MRBS database.     *
+*                                 *
+*   Notes       To use this authentication scheme, set in config.inc.php: *
+*         $auth["type"]  = "db";                  *
+*                                 *
+*   History                              *
+*    2004/01/11 JFL Created this file                     *
+*                                 *
 \*****************************************************************************/
 
 // $Id$
@@ -63,7 +63,7 @@ function authGetUserLevel($user, $lev1_admin)
    {
       if(strcasecmp($user, $lev1_admin[$i]) == 0)
       {
-	 return 2;
+    return 2;
       }
    }
 

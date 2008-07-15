@@ -65,7 +65,7 @@ if (!empty($room))
 $ctime = mktime(0, 0, 0, $month, $day, $year);
 // How many days to skip back to first day of week:
 $skipback = (date("w", $ctime) - $weekstarts + 7) % 7;
-	
+   
 for ($i = -4; $i <= 4; $i++)
 {
   $ctime = mktime(0, 0, 0, $month, $day + 7 * $i - $skipback, $year);
@@ -103,7 +103,7 @@ for ($i = -2; $i <= 6; $i++)
 {
   $ctime = mktime(0, 0, 0, $month + $i, 1, $year);
   $str = utf8_strftime("%b %Y", $ctime);
-	
+   
   $cmonth = date("m", $ctime);
   $cyear  = date("Y", $ctime);
   if ($i != -2)
