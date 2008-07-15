@@ -15,7 +15,7 @@ if (doAlert) alert("Started xbLib.js v4");
 xbDump("Started xbLib.js v4");
 
 /*****************************************************************************\
-*      Part 1: Generic Cross-Browser Library routines            *
+*		Part 1: Generic Cross-Browser Library routines		      *
 \*****************************************************************************/
 
 // Browser-independant background color management
@@ -24,20 +24,20 @@ function xblGetNodeBgColor(node)
     if (!node) return null;
     xbDump("node.bgColor = " + (node.bgColor ? node.bgColor : "<undefined>"));
     if (node.style)
-   {
+	{
         xbDump("node.style.getPropertyValue(\"background-color\") = " + (node.style.getPropertyValue ? ("\""+node.style.getPropertyValue("background-color")+"\"") : "<undefined>"));
         xbDump("node.style.getAttribute(\"backgroundColor\") = " + (node.style.getAttribute ? ("\""+node.style.getAttribute("backgroundColor")+"\"") : "<undefined>"));
         xbDump("node.style.backgroundColor = " + (node.style.backgroundColor ? node.style.backgroundColor : "<undefined>"));
-   if (node.style.getPropertyValue)   // If DOM level 2 supported, the NS 6 way
+	if (node.style.getPropertyValue)	// If DOM level 2 supported, the NS 6 way
             {
             return node.style.getPropertyValue("background-color");
             }
-   if (node.style.getAttribute)      // If DOM level 2 supported, the IE 6 way
+	if (node.style.getAttribute)		// If DOM level 2 supported, the IE 6 way
             {
             return node.style.getAttribute("backgroundColor");
             }
-        return node.style.backgroundColor;   // Else DOM support is very limited.
-   }
+        return node.style.backgroundColor;	// Else DOM support is very limited.
+	}
     // Else this browser is not DOM compliant. Try getting a classic attribute.
     return node.bgColor;
     }
@@ -45,21 +45,21 @@ function xblSetNodeBgColor(node, color)
     {
     if (!node) return;
     if (node.style)
-   {
-   if (node.style.setProperty)      // If DOM level 2 supported, the NS 6 way
+	{
+	if (node.style.setProperty)		// If DOM level 2 supported, the NS 6 way
             {
             node.style.setProperty("background-color", color, "");
-       return;
+	    return;
             }
-   if (node.style.setAttribute)      // If DOM level 2 supported, the IE 6 way
+	if (node.style.setAttribute)		// If DOM level 2 supported, the IE 6 way
             {
             node.style.setAttribute("backgroundColor", color);
-       return;
+	    return;
             }
-   // Else this browser has very limited DOM support. Try setting the attribute directly.
-        node.style.backgroundColor = color;   // Works on Opera 6
-   return;
-   }
+	// Else this browser has very limited DOM support. Try setting the attribute directly.
+        node.style.backgroundColor = color;	// Works on Opera 6
+	return;
+	}
     // Else this browser is not DOM compliant. Try setting a classic attribute.
     node.bgColor = color;
     }
@@ -68,8 +68,8 @@ function xblSetNodeBgColor(node, color)
 function xblChildNodes(node)
     {
     if (!node) return null;
-    if (node.childNodes) return node.childNodes;   // DOM-compliant browsers
-    if (node.children) return node.children;      // Pre-DOM browsers like Opera 6
+    if (node.childNodes) return node.childNodes;	// DOM-compliant browsers
+    if (node.children) return node.children;		// Pre-DOM browsers like Opera 6
     return null;
     }
 function xblFirstSibling(node)
@@ -90,9 +90,9 @@ function xblLastSibling(node)
 var xbGetElementById;
 if (document.getElementById) // DOM level 2
     xblGetElementById = function(id) { return document.getElementById(id); };
-else if (document.layers)     // NS 4
+else if (document.layers)	  // NS 4
     xblGetElementById = function(id) { return document.layers[id]; };
-else if (document.all)        // IE 4
+else if (document.all)		  // IE 4
     xblGetElementById = function(id) { return document.all[id]; };
 else
     xblGetElementById = function(id) { return null; };
@@ -125,30 +125,30 @@ function xbForEachCssRule(callback, ref)
     }
 
 /*---------------------------------------------------------------------------*\
-*                                 *
-|   Function:       ForEachChild                     |
-|                                 |
-|   Description:    Apply a method to each child node of an object.         |
-|                                 |
+*									      *
+|   Function:	    ForEachChild					      |
+|									      |
+|   Description:    Apply a method to each child node of an object.	      |
+|									      |
 |   Parameters:     Object obj          The object. Typically a DOM node.     |
 |                   Function callback   Callback function.                    |
 |                   Object ref          Reference object.                     |
-|                                 |
+|									      |
 |   Returns:        The first non-null result reported by the callback.       |
-|                                 |
+|									      |
 |   Support:        NS4           No. Returns null.                           |
 |                   IE5+, NS6+    Yes.                                        |
 |                   Opera 6       Yes.                                        |
-|                                 |
+|									      |
 |   Notes:          The callback prototype is:                                |
 |                   int callback(obj, ref);                                   |
 |                   If the callback returns !null, the loop stops.            |
-|                                 |
+|									      |
 |   History:                                                                  |
-|                                 |
+|									      |
 |    2002/03/04 JFL Initial implementation.                                   |
 |    2002/03/25 JFL Simplified the implementation.                            |
-*                                 *
+*									      *
 \*---------------------------------------------------------------------------*/
 
 function ForEachChild(obj, callback, ref)
@@ -173,29 +173,29 @@ function ForEachChild(obj, callback, ref)
   }
 
 /*---------------------------------------------------------------------------*\
-*                                 *
+*									      *
 |   Function:       ForEachDescendant                                         |
-|                                 |
+|									      |
 |   Description:    Apply a method to each descendant node of an object.      |
-|                                 |
+|									      |
 |   Parameters:     Object obj          The object. Typically a DOM node.     |
 |                   Function callback   Callback function.                    |
 |                   Object ref          Reference object.                     |
-|                                 |
+|									      |
 |   Returns:        The first non-null result reported by the callback.       |
-|                                 |
+|									      |
 |   Support:        NS4           No. Returns null.                           |
 |                   IE5+, NS6+    Yes.                                        |
 |                   Opera 6       Yes.                                        |
-|                                 |
+|									      |
 |   Notes:          The callback prototype is:                                |
 |                   int callback(obj, ref);                                   |
 |                   If the callback returns !null, the loop stops.            |
-|                                 |
+|									      |
 |   History:                                                                  |
-|                                 |
-|    2002/10/29 JFL Initial implementation.                  |
-*                                 *
+|									      |
+|    2002/10/29 JFL Initial implementation.				      |
+*									      *
 \*---------------------------------------------------------------------------*/
 
 function ForEachDescendantCB(obj, ref)
@@ -221,7 +221,7 @@ function ForEachDescendant(obj, callback, ref)
 // Define global variables that control the behaviour of the Active Cells.
 // Set conservative defaults, to get the "classic" behaviour if JavaScript is half broken.
 
-var useJS = false;   // If true, use JavaScript for cell user interface. If null, use a plain Anchor link.
+var useJS = false;	// If true, use JavaScript for cell user interface. If null, use a plain Anchor link.
 var highlight_left_column = false;
 var highlight_right_column = false;
 var highlightColor = "#999999"; // Default highlight color, if we don't find the one in the CSS.
@@ -241,23 +241,23 @@ var SetNodeColorClass = function(node, colorClass)
     }
 
 // Helper routines for searching text in the TD.highlight CSS class.
-function SearchTdHighlightText(ruleText, ref)   // Callback called by the CSS scan routine
+function SearchTdHighlightText(ruleText, ref)	// Callback called by the CSS scan routine
     {
     xbDump("SearchTdHighlightText() called back");
     if (!ruleText) return null;
-    ruleText = ruleText.toLowerCase();         // Make sure search is using a known case.
+    ruleText = ruleText.toLowerCase();			// Make sure search is using a known case.
     var k = ruleText.indexOf("td.highlight");
-    if (k == -1) return null;            // TD.highlight not found in this rule.
+    if (k == -1) return null;				// TD.highlight not found in this rule.
     k = ruleText.indexOf("background-color:", k) + 17;
-    if (k == 16) return null;            // TD.highlight background-color not defined.
-    while (ruleText.charAt(k) <= ' ') k += 1;      // Strip blanks before the color value.
+    if (k == 16) return null;				// TD.highlight background-color not defined.
+    while (ruleText.charAt(k) <= ' ') k += 1;		// Strip blanks before the color value.
     var l = ruleText.length;
-    var m = ruleText.indexOf(";", k);         // Search the separator with the next attribute.
+    var m = ruleText.indexOf(";", k);			// Search the separator with the next attribute.
     if (m == -1) m = l;
-    var n = ruleText.indexOf("}", k);         // Search the end of the rule.
+    var n = ruleText.indexOf("}", k);			// Search the end of the rule.
     if (n == -1) n = l;
-    if (m < n) n = m;               // n = index of the first of the above two.
-    while (ruleText.charAt(n-1) <= ' ') n -= 1;    // Strip blanks after the color value
+    if (m < n) n = m;					// n = index of the first of the above two.
+    while (ruleText.charAt(n-1) <= ' ') n -= 1; 	// Strip blanks after the color value
     var color = ruleText.substr(k, n-k);
     xbDump("SearchTdHighlightText() found color = " + color);
     return color;
@@ -266,65 +266,65 @@ function isAlphaNum(c)
     {
     return ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".indexOf(c) >= 0);
     }
-function SearchTdHighlight(rule, ref)   // Callback called by the CSS scan routine
+function SearchTdHighlight(rule, ref)	// Callback called by the CSS scan routine
     {
     if (!rule) return null;
-    if (rule.selectorText)      // DOM. NS6, Konqueror.
-   {
-   var selector = rule.selectorText.toLowerCase();
+    if (rule.selectorText)		// DOM. NS6, Konqueror.
+	{
+	var selector = rule.selectorText.toLowerCase();
         var i = selector.indexOf("td.highlight");
         if (i == -1) return null;
         if (i > 0) return null;
         // var c = selector.charAt(i+12);
         // if ((!c) || isAlphaNum(c)) return null;
-   if (!rule.style) return null;
-   return xblGetNodeBgColor(rule);
+	if (!rule.style) return null;
+	return xblGetNodeBgColor(rule);
         }
-    if (rule.cssText)         // Alternative for IE6
+    if (rule.cssText)			// Alternative for IE6
         return SearchTdHighlightText(rule.cssText);
     return null;
     }
 
 /*---------------------------------------------------------------------------*\
-*                                 *
-|   Function:       InitActiveCell                     |
-|                                 |
-|   Description:    Initialize the active cell management.            |
-|                                 |
-|   Parameters:     Boolean show   Whether to show the (+) link.         |
-|                   Boolean left   Whether to highlight the left column. |
-|                   Boolean right   Whether to highlight the right column.|
-|                   String method   One of "bgcolor", "class", "hybrid".  |
+*									      *
+|   Function:       InitActiveCell					      |
+|									      |
+|   Description:    Initialize the active cell management.		      |
+|									      |
+|   Parameters:     Boolean show	Whether to show the (+) link.	      |
+|                   Boolean left	Whether to highlight the left column. |
+|                   Boolean right	Whether to highlight the right column.|
+|                   String method	One of "bgcolor", "class", "hybrid".  |
 |                   String message      The message to put on the status bar. |
-|                                 |
-|   Returns:        Nothing.                        |
-|                                 |
+|									      |
+|   Returns:        Nothing.						      |
+|									      |
 |   Support:        NS4           No. Returns null.                           |
 |                   IE5+, NS6+    Yes.                                        |
 |                   Opera 6       Yes.                                        |
-|                                 |
+|									      |
 |   Notes:          This code implements 3 methods for highlighting cells:    |
-|          highlight_method="bgcolor"                  |
-|         Dynamically changes the cell background color.         |
-|         Advantage: Works with most javascript-capable browsers.
-|         Drawback: The color is hardwired in this module.(grey)|
-|          highlight_method="class"                  |
-|         Highlights active cells by changing their color class.|
-|         The highlight color is the background-color defined   |
-|          in class td.highlight in the CSS.            |
-|         Advantage: The class definition in the CSS can set    |
-|          anything, not just the color.               |
-|         Drawback: Slooow on Internet Explorer 6 on slow PCs.  |
-|          highlight_method="hybrid"                  |
-|         Extracts the color from the CSS DOM if possible, and  |
-|          uses it it like in the bgcolor method.            |
-|         Advantage: Fast on all machines; color defined in CSS.|
-|         Drawback: Not as powerful as the class method.         |
-|                                 |
+|		    highlight_method="bgcolor"				      |
+|			Dynamically changes the cell background color.	      |
+|			Advantage: Works with most javascript-capable browsers.
+|			Drawback: The color is hardwired in this module.(grey)|
+|		    highlight_method="class"				      |
+|			Highlights active cells by changing their color class.|
+|			The highlight color is the background-color defined   |
+|			 in class td.highlight in the CSS.		      |
+|			Advantage: The class definition in the CSS can set    |
+|			 anything, not just the color.			      |
+|			Drawback: Slooow on Internet Explorer 6 on slow PCs.  |
+|		    highlight_method="hybrid"				      |
+|			Extracts the color from the CSS DOM if possible, and  |
+|			 uses it it like in the bgcolor method.		      |
+|			Advantage: Fast on all machines; color defined in CSS.|
+|			Drawback: Not as powerful as the class method.	      |
+|									      |
 |   History:                                                                  |
-|                                 |
-|    2004/03/01 JFL Initial implementation.                  |
-*                                 *
+|									      |
+|    2004/03/01 JFL Initial implementation.				      |
+*									      *
 \*---------------------------------------------------------------------------*/
 
 function InitActiveCell(show, left, right, method, message)
@@ -356,12 +356,12 @@ function InitActiveCell(show, left, right, method, message)
 
     //----------------------------------------------------//
 
-    //   Javascript feature detection: Check if the browser supports dynamically setting style properties.
+    //	Javascript feature detection: Check if the browser supports dynamically setting style properties.
     var useCssClass = ((highlight_method=="class") && test_table && test_table.style
                        && (test_table.style.setProperty || test_table.style.setAttribute) && true);
-    if (useCssClass)         // DOM-compliant browsers
+    if (useCssClass)			// DOM-compliant browsers
         GetNodeColorClass = function(node) { return node.className; }
-    else               // Pre-DOM browsers like Opera 6
+    else					// Pre-DOM browsers like Opera 6
         GetNodeColorClass = function(node) { return xblGetNodeBgColor(node); } // Can't get class, so get color.
 
     xbDump("JavaScript feature detection: Table class setting supported = " + useCssClass);
@@ -374,7 +374,7 @@ function InitActiveCell(show, left, right, method, message)
     if (highlight_method!="bgcolor") highlightColor = xbForEachCssRule(SearchTdHighlight, 0);
     if (!highlightColor)
         {
-        highlightColor = "#999999";   // Set default for DOM-challenged browsers
+        highlightColor = "#999999";	// Set default for DOM-challenged browsers
         xbDump("Using defaut highlight color = " + highlightColor);
         }
     else
@@ -385,13 +385,13 @@ function InitActiveCell(show, left, right, method, message)
     //----------------------------------------------------//
 
     // Finally combine the last 2 results to generate the SetNodeColorClass function.
-    if (useCssClass)          // DOM-compliant browsers
+    if (useCssClass)			 // DOM-compliant browsers
         SetNodeColorClass = function(node, colorClass) 
             { 
             xbDump("SetNodeColorClass(" + colorClass + ")");
             node.className = colorClass;  // Use the TD.highlight color from mrbs.css.php.
             }
-    else             // Pre-DOM browsers like Opera 6
+    else				 // Pre-DOM browsers like Opera 6
         SetNodeColorClass = function(node, colorClass) 
             {
             xbDump("SetNodeColorClass(" + colorClass + ")");
@@ -403,19 +403,19 @@ function InitActiveCell(show, left, right, method, message)
 //----------------------------------------------------//
 
 // Cell activation
-function HighlightNode(node)   // Change one TD cell color class
+function HighlightNode(node)	// Change one TD cell color class
     {
     node.oldColorClass = GetNodeColorClass(node);
     SetNodeColorClass(node, "highlight");
     }
-function ActivateCell(cell)   // Activate the TD cell under the mouse, and optionally the corresponding hour cells on both sides of the table.
+function ActivateCell(cell)	// Activate the TD cell under the mouse, and optionally the corresponding hour cells on both sides of the table.
     {
-    if (cell.isActive) return;   // Prevent problems with reentrancy. (It happens on slow systems)
+    if (cell.isActive) return;	// Prevent problems with reentrancy. (It happens on slow systems)
     cell.isActive = true;
     if (statusBarMsg) window.status = statusBarMsg; // Write into the status bar.
     // First find the enclosing table data cell.
     for (var tdCell=cell.parentNode; tdCell; tdCell=tdCell.parentNode)
-   { if (tdCell.tagName == "TD") break; }
+	{ if (tdCell.tagName == "TD") break; }
     if (!tdCell) return;
     HighlightNode(tdCell);
     if (highlight_left_column)
@@ -438,10 +438,10 @@ function UnactivateCell(cell)
     {
     if (!cell.isActive) return; // Prevent problems with reentrancy.
     cell.isActive = null;
-    window.status = "";      // Clear the status bar.
+    window.status = "";		// Clear the status bar.
     // First find the enclosing table data cell.
     for (var tdCell=cell.parentNode; tdCell; tdCell=tdCell.parentNode)
-   { if (tdCell.tagName == "TD") break; }
+	{ if (tdCell.tagName == "TD") break; }
     if (!tdCell) return;
     SetNodeColorClass(tdCell, tdCell.oldColorClass);
     if (highlight_left_column)
@@ -470,8 +470,8 @@ xbDump("Cell activation routines defined.");
 function GotoLinkCB(node, ref)
 {
     var tag = null;
-    if (node.tagName) tag = node.tagName;      // DOM-compliant tag name.
-    else if (node.nodeName) tag = node.nodeName;   // Implicit nodes, such as #text.
+    if (node.tagName) tag = node.tagName;		// DOM-compliant tag name.
+    else if (node.nodeName) tag = node.nodeName;	// Implicit nodes, such as #text.
     if (tag && (tag.toUpperCase() == "A")) return node;
     return null;
 }
@@ -495,7 +495,7 @@ function BeginActiveCell()
     if (useJS)
         {
         document.write("<table class=\"naked\" width=\"100%\" cellSpacing=\"0\" onMouseOver=\"ActivateCell(this)\" onMouseOut=\"UnactivateCell(this)\" onClick=\"GotoLink(this)\">\n<td class=\"naked\" style=\"border: 0px\">\n");
-   // Note: The &nbsp; below is necessary to fill-up the cell. Empty cells behave badly in some browsers.
+	// Note: The &nbsp; below is necessary to fill-up the cell. Empty cells behave badly in some browsers.
         if (!show_plus_link) document.write("&nbsp;<div style=\"display:none\">\n"); // This will hide the (+) link.
         }
 }
