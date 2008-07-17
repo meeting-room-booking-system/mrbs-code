@@ -98,15 +98,16 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   $area_room = htmlspecialchars($row['area_name']) . " - " . htmlspecialchars($row['room_name']);
   $date = utf8_strftime("%d-%b-%Y", $row['start_time']);
   // entries to be sorted on area/room
+  echo "<div class=\"div_report\">\n";
   if( $sortby == "r" )
   {
     if ($area_room != $last_area_room)
     {
-      echo "<hr><h2>". get_vocab("room") . ": " . $area_room . "</h2>\n";
+      echo "<h2>". get_vocab("room") . ": " . $area_room . "</h2>\n";
     }
     if ($date != $last_date || $area_room != $last_area_room)
     {
-      echo "<hr noshade=\"noshade\"><h3>". get_vocab("date") . ": " . $date . "</h3>\n";
+      echo "<h3>". get_vocab("date") . ": " . $date . "</h3>\n";
       $last_date = $date;
     }
     // remember current area/room that is being processed.
@@ -122,11 +123,11 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   {
     if ($date != $last_date)
     {
-      echo "<hr><h2>". get_vocab("date") . ": " . $date . "</h2>\n";
+      echo "<h2>". get_vocab("date") . ": " . $date . "</h2>\n";
     }
     if ($area_room != $last_area_room  || $date != $last_date)
     {
-      echo "<hr noshade=\"noshade\"><h3>". get_vocab("room") . ": " . $area_room . "</h3>\n";
+      echo "<h3>". get_vocab("room") . ": " . $area_room . "</h3>\n";
       $last_area_room = $area_room;
     }
     // remember current date that is being processed.
@@ -137,46 +138,51 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
       $last_date = $date;
     }
   }
-
-  echo "<hr><table width=\"100%\">\n";
-
+  echo "<div class=\"report_entry_title\">\n";
+  
+  echo "<div class=\"report_entry_name\">\n";
   // Brief Description (title), linked to view_entry:
-  echo "<tr><td class=\"BL\"><a href=\"view_entry.php?id=".$row['entry_id']."\">"
-    . htmlspecialchars($row['name']) . "</a></td>\n";
-
+  echo "<a href=\"view_entry.php?id=".$row['entry_id']."\">" . htmlspecialchars($row['name']) . "</a>\n";
+  echo "</div>\n";
+  
+  echo "<div class=\"report_entry_when\">\n";
   // what do you want to display duration or end date/time
   if( $display == "d" )
   {
     // Start date/time and duration:
-    echo "<td class=\"BR\" align=\"right\">" .
-      (empty($enable_periods) ?
-       describe_span($row['start_time'], $row['end_time']) :
-       describe_period_span($row['start_time'], $row['end_time'])) .
-      "</td></tr>\n";
+    echo (empty($enable_periods) ? 
+          describe_span($row['start_time'], $row['end_time']) : 
+          describe_period_span($row['start_time'], $row['end_time'])) . "\n";
   }
   else
   {
     // Start date/time and End date/time:
-    echo "<td class=\"BR\" align=\"right\">" .
-      (empty($enable_periods) ?
-       start_to_end($row['start_time'], $row['end_time']) :
-       start_to_end_period($row['start_time'], $row['end_time'])) .
-      "</td></tr>\n";
+    echo (empty($enable_periods) ? 
+          start_to_end($row['start_time'], $row['end_time']) :
+          start_to_end_period($row['start_time'], $row['end_time'])) . "\n";
   }
+  echo "</div>\n";
+  echo "</div>\n";
+  
+  echo "<table>\n";
+  echo "<colgroup>\n";
+  echo "<col class=\"col1\">\n";
+  echo "<col class=\"col2\">\n";
+  echo "</colgroup>\n";
 
   // Description:
-  echo "<tr><td class=\"BL\" colspan=\"2\"><b>".get_vocab("description").":</b> " .
+  echo "<tr><td>" . get_vocab("description") . ":</td><td>" .
     nl2br(htmlspecialchars($row['description'])) . "</td></tr>\n";
 
   // Entry Type:
   $et = empty($typel[$row['type']]) ? "?".$row['type']."?" : $typel[$row['type']];
-  echo "<tr><td class=\"BL\" colspan=\"2\"><b>".get_vocab("type").":</b> $et</td></tr>\n";
+  echo "<tr><td>" . get_vocab("type")       . ":</td><td>$et</td></tr>\n";
   // Created by and last update timestamp:
-  echo "<tr><td class=\"BL\" colspan=\"2\"><small><b>".get_vocab("createdby").":</b> " .
-    htmlspecialchars($row['create_by']) . ", <b>".get_vocab("lastupdate").":</b> " .
-    date_time_string($row['last_updated']) . "</small></td></tr>\n";
+  echo "<tr class=\"createdby\"><td>"  . get_vocab("createdby")  . ":</td><td>" . htmlspecialchars($row['create_by'])    . "</td></tr>\n";
+  echo "<tr class=\"lastupdate\"><td>" . get_vocab("lastupdate") . ":</td><td>" . date_time_string($row['last_updated']) . "</td></tr>\n";
 
   echo "</table>\n";
+  echo "</div>\n\n";
 }
 
 // Collect summary statistics on one entry. See below for columns in $row[].
@@ -221,10 +227,10 @@ function accumulate_periods(&$row, &$count, &$hours, $report_start,
 }
 
 // Output a table cell containing a count (integer) and hours (float):
+// (actually output two cells, so that we can style the counts and hours)
 function cell($count, $hours)
 {
-  echo "<td class=\"BR\" align=\"right\">($count) "
-    . sprintf("%.2f", $hours) . "</td>\n";
+  echo "<td class=\"count\">($count)</td><td>" . sprintf("%.2f", $hours) . "</td>\n";
 }
 
 // Output the summary table (a "cross-tab report"). $count and $hours are
@@ -252,26 +258,30 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
   $n_rooms = sizeof($rooms);
   $n_names = sizeof($names);
 
-  echo "<hr><h1>".
-    (empty($enable_periods) ? get_vocab("summary_header") : get_vocab("summary_header_per")).
-    "</h1><table border=\"2\" cellspacing=\"4\">\n";
-  echo "<tr><td>&nbsp;</td>\n";
+  echo "<div id=\"div_summary\">\n";
+  echo "<h1>" . (empty($enable_periods) ? get_vocab("summary_header") : get_vocab("summary_header_per")). "</h1>\n";
+  echo "<table>\n";
+  
+  echo "<thead>\n";
+  echo "<tr><th>&nbsp;</th>\n";
   for ($c = 0; $c < $n_rooms; $c++)
   {
-    echo "<td class=\"BL\" align=\"left\"><b>$rooms[$c]</b></td>\n";
+    echo "<th colspan=\"2\">$rooms[$c]</th>\n";
     $col_count_total[$c] = 0;
     $col_hours_total[$c] = 0.0;
   }
-  echo "<td class=\"BR\" align=\"right\"><br><b>".get_vocab("total")."</b></td></tr>\n";
+  echo "<th colspan=\"2\"><br>" . get_vocab("total") . "</th></tr>\n";
   $grand_count_total = 0;
   $grand_hours_total = 0;
-
+  echo "</thead>\n";
+  
+  echo "<tbody>\n";
   for ($r = 0; $r < $n_names; $r++)
   {
     $row_count_total = 0;
     $row_hours_total = 0.0;
     $name = $names[$r];
-    echo "<tr><td class=\"BR\" align=\"right\"><b>$name</b></td>\n";
+    echo "<tr><td>$name</td>\n";
     for ($c = 0; $c < $n_rooms; $c++)
     {
       $room = $rooms[$c];
@@ -287,7 +297,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
       }
       else
       {
-        echo "<td>&nbsp;</td>\n";
+        echo "<td class=\"count\">&nbsp;</td><td>&nbsp;</td>\n";
       }
     }
     cell($row_count_total, $row_hours_total);
@@ -295,13 +305,14 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
     $grand_count_total += $row_count_total;
     $grand_hours_total += $row_hours_total;
   }
-  echo "<tr><td class=\"BR\" align=\"right\"><b>".get_vocab("total")."</b></td>\n";
+  echo "<tr><td>". get_vocab("total"). "</td>\n";
   for ($c = 0; $c < $n_rooms; $c++)
   {
     cell($col_count_total[$c], $col_hours_total[$c]);
   }
   cell($grand_count_total, $grand_hours_total);
-  echo "</tr></table>\n";
+  echo "</tr></tbody></table>\n";
+  echo "</div>\n";
 }
 
 // Get form variables
@@ -630,7 +641,7 @@ if (isset($areamatch))
     $sql .= " ORDER BY 2,9,10";
   }
 
-  // echo "<p>DEBUG: SQL: <tt> $sql </tt>\n";
+  // echo "<p>DEBUG: SQL: <tt> $sql </tt></p>\n";
 
   $res = sql_query($sql);
   if (! $res)
@@ -640,16 +651,16 @@ if (isset($areamatch))
   $nmatch = sql_count($res);
   if ($nmatch == 0)
   {
-    echo "<p><b>" . get_vocab("nothing_found") . "</b>\n";
+    echo "<p class=\"report_entries\">" . get_vocab("nothing_found") . "</p>\n";
     sql_free($res);
   }
   else
   {
     $last_area_room = "";
     $last_date = "";
-    echo "<p><b>" . $nmatch . " "
+    echo "<p class=\"report_entries\">" . $nmatch . " "
     . ($nmatch == 1 ? get_vocab("entry_found") : get_vocab("entries_found"))
-    .  "</b>\n";
+    .  "</p>\n";
 
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {

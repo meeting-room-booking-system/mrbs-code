@@ -20,8 +20,6 @@ TD {font-size:10pt; font-family: arial,sans-serif; border-width: 1px; vertical-a
 TD.header {color:black; font-family:verdana,sans-serif; border-width:0;
 background-color:#ffffdd; font-size:26pt}
 
-TD.BR { vertical-align: baseline; text-align: right}
-TD.BL { vertical-align: baseline; text-align: left}
 TD.TR { vertical-align: top; text-align: right}
 TD.TL { vertical-align: top; text-align: left}
 
@@ -90,6 +88,11 @@ $admin_table_header_font_color  = "#eeeeee";    // font colour for header
 $main_table_border_color        = "#555555";    // border colour for day/week/month tables
 $main_table_month_color         = "#ffffff";    // background colour for days in the month view
 $main_table_month_invalid_color = "#cccccc";    // background colour for invalid days in the month view
+
+$report_table_border_color      = $main_table_border_color;
+$report_h2_border_color         = "#474747";    // border colour for <h2> in report.php
+$report_h3_border_color         = "#808080";    // border colour for <h2> in report.php
+$report_entry_border_color      = "#D0D0D0";    // used to separate individual bookings in report.php
 
 ?>
 
@@ -373,3 +376,27 @@ table.calendar {border-spacing: 0; border-collapse: collapse}
 
 
 /* ------------ REPORT.PHP ----------------------*/
+.div_report h2, #div_summary h1 {border-top: 2px solid <?php echo $report_h2_border_color ?>;
+    padding-top: 0.5em; margin-top: 2.0em}
+.div_report h3 {border-top: 1px solid <?php echo $report_h3_border_color ?>;
+    padding-top: 0.5em; margin-bottom: 0}
+.div_report table {clear: both; width: 100%; margin-top: 0.5em}
+.div_report col.col1 {width: 8em}
+.div_report td:first-child {text-align: right; font-weight: bold}
+.div_report .createdby td, .div_report .lastupdate td {font-size: x-small}
+div.report_entry_title {width: 100%; float: left; font-family: verdana, sans-serif;
+    border-top: 1px solid <?php echo $report_entry_border_color ?>; margin-top: 0.8em}
+div.report_entry_name  {width: 40%;  float: left; font-weight: bold}
+div.report_entry_when  {width: 60%;  float: right; text-align: right}
+#div_summary table {border-spacing: 1px; border-collapse: collapse;
+    border-color: <?php echo $report_table_border_color ?>; border-style: solid;
+    border-top-width: 1px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 1px}
+#div_summary td, #div_summary th {padding: 0.1em 0.2em 0.1em 0.2em;
+    border-color: <?php echo $report_table_border_color ?>; border-style: solid;
+    border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
+#div_summary th {background-color: transparent; color: black; font-weight: bold; text-align: center}
+#div_summary td {text-align: right}
+#div_summary td.count {border-right-width: 0}
+#div_summary td:first-child {font-weight: bold}
+p.report_entries {font-weight: bold}
+
