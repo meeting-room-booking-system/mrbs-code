@@ -250,14 +250,20 @@ $report_input_width            = 12;      // em
 $report_form_min_width         = $report_left_col_max_width + $report_input_width + $general_gap;
 
 // Specific to the "search" form
-$search_left_col_max_width     = 8;      // em
+$search_left_col_max_width     = 8;       // em
 $search_input_width            = 12;      // em
 $search_form_min_width         = $search_left_col_max_width + $search_input_width + $general_gap;
+
+// Specific to the "logon" form
+$logon_left_col_max_width      = 8;       // em
+$logon_input_width             = 12;      // em
+$logon_form_min_width          = $logon_left_col_max_width + $logon_input_width + $general_gap;
 ?>
 form.form_general {margin-top: 2.0em; width: 100%}
 form.form_general#edit_entry {min-width: <?php echo $edit_entry_form_min_width ?>em}
 form.form_general#report     {min-width: <?php echo $report_form_min_width ?>em}
 form.form_general#search     {min-width: <?php echo $search_form_min_width ?>em}
+form.form_general#logon      {min-width: <?php echo $logon_form_min_width ?>em}
 
 .form_general div {float: left; width: 100%}
 .form_general div div {float: none; width: auto}
@@ -273,9 +279,11 @@ form.form_general#search     {min-width: <?php echo $search_form_min_width ?>em}
 .form_general#edit_entry label {max-width: <?php echo $edit_entry_left_col_max_width ?>em}
 .form_general#report     label {max-width: <?php echo $report_left_col_max_width ?>em}
 .form_general#search     label {max-width: <?php echo $search_left_col_max_width ?>em}
+.form_general#logon      label {max-width: <?php echo $logon_left_col_max_width ?>em}
 .form_general#edit_entry .group label,
 .form_general#report     .group label,
-.form_general#search     .group label {clear: none; width: auto; max-width: 100%; font-weight: normal}
+.form_general#search     .group label,
+.form_general#logon      .group label {clear: none; width: auto; max-width: 100%; font-weight: normal}
 
 .form_general input {
     display: block; float: left; margin-left: <?php echo $general_gap ?>em; 
@@ -284,9 +292,11 @@ form.form_general#search     {min-width: <?php echo $search_form_min_width ?>em}
 .form_general#edit_entry input {width: <?php echo $edit_entry_textarea_width ?>em}
 .form_general#report     input {width: <?php echo $report_input_width ?>em}
 .form_general#search     input {width: <?php echo $search_input_width ?>em}
+.form_general#logon      input {width: <?php echo $logon_input_width ?>em}
 .form_general#edit_entry .group input,
 .form_general#report     .group input,
-.form_general#search     .group input {clear: none; width: auto}
+.form_general#search     .group input,
+.form_general#logon      .group input {clear: none; width: auto}
 
 /* font family and size needs to be the same for input and textarea as their widths are defined in ems */
 .form_general textarea {
@@ -309,6 +319,10 @@ form.form_general#search     {min-width: <?php echo $search_form_min_width ?>em}
 .form_general #search_submit input {
     position: relative; clear: left; 
     left: <?php echo $search_left_col_max_width ?>em; width: auto; margin-top: 1.0em
+}
+.form_general #logon_submit input {
+    position: relative; clear: left; 
+    left: <?php echo $logon_left_col_max_width ?>em; width: auto; margin-top: 1.0em
 }
 
 .form_general #div_time input {width: 1.5em}
