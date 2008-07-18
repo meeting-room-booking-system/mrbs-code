@@ -210,7 +210,6 @@ $vocab["addarea"]            = "Gebouw toevoegen";
 $vocab["name"]               = "Naam";
 $vocab["noarea"]             = "Geen gebouw geselecteerd";
 $vocab["browserlang"]        = "Uw browser is ingesteld op ";
-$vocab["postbrowserlang"]    = "Nederlands.";
 $vocab["addroom"]            = "Kamer toevoegen";
 $vocab["capacity"]           = "Zitplaatsen";
 $vocab["norooms"]            = "Geen Kamers.";

@@ -210,7 +210,6 @@ $vocab["addarea"]            = "Aggiungi area";
 $vocab["name"]               = "Nome";
 $vocab["noarea"]             = "Nessun area selezionata";
 $vocab["browserlang"]        = "Il tuo browser e' settato";
-$vocab["postbrowserlang"]    = "lingua.";
 $vocab["addroom"]            = "Aggiungi stanza";
 $vocab["capacity"]           = "Capacita'";
 $vocab["norooms"]            = "Nessuna stanza.";

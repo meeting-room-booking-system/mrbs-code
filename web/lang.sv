@@ -215,7 +215,6 @@ $vocab["addarea"]            = "Lägg till område";
 $vocab["name"]               = "Namn";
 $vocab["noarea"]             = "Inget område valt";
 $vocab["browserlang"]        = "Din webbläsare är inställd att använda språk(en)";
-$vocab["postbrowserlang"]    = "";
 $vocab["addroom"]            = "Lägg till rum";
 $vocab["capacity"]           = "Kapacitet";
 $vocab["norooms"]            = "Inga rum.";

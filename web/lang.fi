@@ -210,7 +210,6 @@ $vocab["addarea"]            = "Lisää alue";
 $vocab["name"]               = "Nimi";
 $vocab["noarea"]             = "Ei valittua aluetta";
 $vocab["browserlang"]        = "Selaimesi kieliasetus on";
-$vocab["postbrowserlang"]    = ".";
 $vocab["addroom"]            = "Lisää huone";
 $vocab["capacity"]           = "Maksimi henkilömäärä";
 $vocab["norooms"]            = "Ei huoneita.";

@@ -210,7 +210,6 @@ $vocab["addarea"]            = "新增種類";
 $vocab["name"]               = "名稱";
 $vocab["noarea"]             = "還沒選擇種類";
 $vocab["browserlang"]        = "你的瀏覽器設為";
-$vocab["postbrowserlang"]    = "語系.";
 $vocab["addroom"]            = "新增會議室/設備";
 $vocab["capacity"]           = "容量";
 $vocab["norooms"]            = "沒有會議室/設備.";

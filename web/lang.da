@@ -210,7 +210,6 @@ $vocab["addarea"]            = "Tilføj område";
 $vocab["name"]               = "Navn";
 $vocab["noarea"]             = "Område ikke valgt";
 $vocab["browserlang"]        = "Din browser er indstillet til at bruge følgende sprog";
-$vocab["postbrowserlang"]    = "";
 $vocab["addroom"]            = "Tilføj rom";
 $vocab["capacity"]           = "Kapacitet";
 $vocab["norooms"]            = "Ingen rum.";

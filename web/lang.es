@@ -210,7 +210,6 @@ $vocab["addarea"]            = "Agregar Edificio";
 $vocab["name"]               = "Nombre";
 $vocab["noarea"]             = "No se seleccion&oacute; Edificio";
 $vocab["browserlang"]        = "Su navegador est&aacute; configurado para usar los siguientes juegos de caracteres";
-$vocab["postbrowserlang"]    = ".";
 $vocab["addroom"]            = "Agregar Sala";
 $vocab["capacity"]           = "Capacidad (Personas)";
 $vocab["norooms"]            = "No hay Salas.";

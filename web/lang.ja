@@ -215,7 +215,6 @@ $vocab["addarea"]            = "部署を追加";
 $vocab["name"]               = "名称";
 $vocab["noarea"]             = "部署が選択されていません";
 $vocab["browserlang"]        = "あなたのブラウザの言語設定は";
-$vocab["postbrowserlang"]    = "です。";
 $vocab["addroom"]            = "部屋を追加";
 $vocab["capacity"]           = "収容人数";
 $vocab["norooms"]            = "部屋がありません。";

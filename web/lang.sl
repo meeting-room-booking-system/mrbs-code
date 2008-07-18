@@ -214,7 +214,6 @@ $vocab["addarea"]            = "Dodaj področje";
 $vocab["name"]               = "Ime";
 $vocab["noarea"]             = "Ni izbranega področja";
 $vocab["browserlang"]        = "Vaš brskalnik je nastavljen za uporabo ";
-$vocab["postbrowserlang"]    = "jezik(e).";
 $vocab["addroom"]            = "Dodaj prostor";
 $vocab["capacity"]           = "Število mest";
 $vocab["norooms"]            = "Ni prostorov.";

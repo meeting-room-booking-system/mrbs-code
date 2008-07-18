@@ -210,7 +210,6 @@ $vocab["addarea"]            = "Προσθήκη περιοχής";
 $vocab["name"]               = "Όνομα";
 $vocab["noarea"]             = "Δεν έχει επιλεχθεί περιοχή";
 $vocab["browserlang"]        = "Ο φυλλομετρητής σας χρησιμοποιεί";
-$vocab["postbrowserlang"]    = "γλώσσα.";
 $vocab["addroom"]            = "Προσθήκη αίθουσας";
 $vocab["capacity"]           = "Χωρητικότητα";
 $vocab["norooms"]            = "Καμιά αίθουσα.";

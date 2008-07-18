@@ -32,7 +32,7 @@ $vocab["dayafter"]           = "gehe zum nächsten Tag";
 $vocab["gototoday"]          = "gehe zum heutigen Tag";
 $vocab["goto"]               = "Start";
 $vocab["highlight_line"]     = "Markieren Sie diese Zeile";
-$vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
+$vocab["click_to_reserve"]   = "Klicken Sie eine Zelle an um eine Reservierung zu machen";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Zeige Tag";
@@ -209,8 +209,7 @@ $vocab["noareas"]            = "Keine Bereiche";
 $vocab["addarea"]            = "Bereich hinzufügen";
 $vocab["name"]               = "Name";
 $vocab["noarea"]             = "Kein Bereich ausgewählt";
-$vocab["browserlang"]        = "Die Spracheinstellung Ihres Browsers ist";
-$vocab["postbrowserlang"]    = ".";
+$vocab["browserlang"]        = "Die Sprachpräfernzreihenfolge Ihres Browsers ist";
 $vocab["addroom"]            = "Raum hinzufügen";
 $vocab["capacity"]           = "Kapazität";
 $vocab["norooms"]            = "Keine Räume vorhanden.";
@@ -242,6 +241,7 @@ $vocab["delarea"]            = "Sie müssen alle Räume dieses Bereiches löschen, 
 $vocab["about_mrbs"]         = "Über MRBS";
 $vocab["database"]           = "Datenbank";
 $vocab["system"]             = "System";
+$vocab["servertime"]         = "Serverzeit";
 $vocab["please_contact"]     = "Bitte kontaktieren Sie ";
 $vocab["for_any_questions"]  = "für Fragen die hier nicht beantwortet sind.";
 

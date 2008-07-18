@@ -68,6 +68,11 @@ $enable_periods = FALSE;
 // Default is half an hour: 1800 seconds.
 $resolution = 1800;
 
+// Default duration - default length (in seconds) of a booking.
+// Ignored if $enable_periods is TRUE
+// Defaults to (60 * 60) seconds, i.e. an hour
+$default_duration = (60 * 60);
+
 // Start and end of day, NOTE: These are integer hours only, 0-23, and
 // morningstarts must be < eveningends. See also eveningends_minutes.
 $morningstarts = 7;

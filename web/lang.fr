@@ -215,7 +215,6 @@ $vocab["addarea"]            = "Ajouter un lieu";
 $vocab["name"]               = "Nom";
 $vocab["noarea"]             = "Sélectionnez d'abord un lieu";
 $vocab["browserlang"]        = "Votre navigateur est configuré pour utiliser la langue";
-$vocab["postbrowserlang"]    = ".";
 $vocab["addroom"]            = "Ajouter une salle";
 $vocab["capacity"]           = "Maximum de personnes";
 $vocab["norooms"]            = "Aucune salle n'est créée pour ce lieu.";

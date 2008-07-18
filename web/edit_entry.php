@@ -163,7 +163,11 @@ else
   // Avoid notices for $hour and $minute if periods is enabled
   (isset($hour)) ? $start_hour = $hour : '';
   (isset($minute)) ? $start_min = $minute : '';
-  $duration    = ($enable_periods ? 60 : 60 * 60);
+  if (!isset($default_duration))
+  {
+    $default_duration = (60 * 60);
+  }
+  $duration    = ($enable_periods ? 60 : $default_duration);
   $type        = "I";
   $room_id     = $room;
   unset($id);

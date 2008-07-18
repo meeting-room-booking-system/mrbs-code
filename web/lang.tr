@@ -215,7 +215,6 @@ $vocab["addarea"]            = "Bölge ekle";
 $vocab["name"]               = "Ad";
 $vocab["noarea"]             = "Seçili bölge yok";
 $vocab["browserlang"]        = "Tarayýcýnýz kullaným için kurulu deðil.";
-$vocab["postbrowserlang"]    = "dil.";
 $vocab["addroom"]            = "TSalon Ekle";
 $vocab["capacity"]           = "Kapasite";
 $vocab["norooms"]            = "TSalon yok.";

@@ -210,7 +210,6 @@ $vocab["addarea"]            = "新增区域";
 $vocab["name"]               = "名称";
 $vocab["noarea"]             = "还没选择区域";
 $vocab["browserlang"]        = "你的浏览器设为";
-$vocab["postbrowserlang"]    = "语系.";
 $vocab["addroom"]            = "新增会议室/设备";
 $vocab["capacity"]           = "容纳人数";
 $vocab["norooms"]            = "没有会议室/设备.";

@@ -215,8 +215,7 @@ $vocab["noareas"]            = "No Areas";
 $vocab["addarea"]            = "Add Area";
 $vocab["name"]               = "Name";
 $vocab["noarea"]             = "No area selected";
-$vocab["browserlang"]        = "Your browser is set to use";
-$vocab["postbrowserlang"]    = "language.";
+$vocab["browserlang"]        = "Your browser is set with the following language preference order";
 $vocab["addroom"]            = "Add Room";
 $vocab["capacity"]           = "Capacity";
 $vocab["norooms"]            = "No rooms.";
@@ -248,6 +247,7 @@ $vocab["delarea"]            = "You must delete all rooms in this area before yo
 $vocab["about_mrbs"]         = "About MRBS";
 $vocab["database"]           = "Database";
 $vocab["system"]             = "System";
+$vocab["servertime"]         = "Server time";
 $vocab["please_contact"]     = "Please contact ";
 $vocab["for_any_questions"]  = "for any questions that aren't answered here.";
 

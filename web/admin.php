@@ -174,7 +174,13 @@ else
   </tr>
 </table>
 
-<br>
-<?php echo get_vocab("browserlang") . " " . $HTTP_ACCEPT_LANGUAGE . " " . get_vocab("postbrowserlang") ; ?>
+<?php
 
-<?php include "trailer.inc" ?>
+echo "<p>\n" . get_vocab("browserlang") .":\n";
+
+echo implode(", ", array_keys($langs));
+
+echo "\n</p>\n";
+
+include "trailer.inc"
+?>

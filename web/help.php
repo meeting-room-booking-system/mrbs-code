@@ -32,7 +32,14 @@ echo "<h3>" . get_vocab("about_mrbs") . "</h3>\n";
 echo "<p><a href=\"http://mrbs.sourceforge.net\">".get_vocab("mrbs")."</a> - ".get_mrbs_version()."</p>\n";
 echo "<br>" . get_vocab("database") . ": " . sql_version() . "\n";
 echo "<br>" . get_vocab("system") . ": " . php_uname() . "\n";
+echo "<br>" . get_vocab("servertime") . ": " . utf8_strftime("%c", time()) . "\n";
 echo "<br>PHP: " . phpversion() . "\n";
+
+echo "<p>\n" . get_vocab("browserlang") .":\n";
+
+echo implode(", ", array_keys($langs));
+
+echo "\n</p>\n";
 
 echo "<h3>" . get_vocab("help") . "</h3>\n";
 echo get_vocab("please_contact") . '<a href="mailto:' . htmlspecialchars($mrbs_admin_email)

@@ -438,7 +438,7 @@ function get_default_area()
 {
   global $tbl_area;
   $area = sql_query1("SELECT id FROM $tbl_area ORDER BY area_name LIMIT 1");
-  return ($area < 0 ? 0 : $area);
+  return ((!isset($area) || ($area < 0)) ? 0 : $area);
 }
 
 // Return a default room given a valid area; used if no room is already known.

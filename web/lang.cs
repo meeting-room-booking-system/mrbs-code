@@ -210,7 +210,6 @@ $vocab["addarea"]            = "Pøidat oblast";
 $vocab["name"]               = "Jméno";
 $vocab["noarea"]             = "Není vybrána žádná oblast";
 $vocab["browserlang"]        = "Prohlížec je nastaven k použití";
-$vocab["postbrowserlang"]    = "jazyku.";
 $vocab["addroom"]            = "Pøidat místnost";
 $vocab["capacity"]           = "Kapacita";
 $vocab["norooms"]            = "Žádná místnost.";

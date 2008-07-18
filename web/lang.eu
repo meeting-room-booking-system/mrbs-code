@@ -210,7 +210,6 @@ $vocab["addarea"]            = "Baliabidea erantsi";
 $vocab["name"]               = "Izena";
 $vocab["noarea"]             = "Ez duzu baliabiderik aukeratu";
 $vocab["browserlang"]        = "Zure nabigatzaileak hizkuntza hauek ikusteko ezarpena dauka:";
-$vocab["postbrowserlang"]    = ".";
 $vocab["addroom"]            = "Elementua aukeratu";
 $vocab["capacity"]           = "Zenbat pertsonentzat";
 $vocab["norooms"]            = "Ez dago elementurik.";

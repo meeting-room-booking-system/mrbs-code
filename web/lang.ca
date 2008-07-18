@@ -210,7 +210,6 @@ $vocab["addarea"]            = "Afegir fam&iacute;lia";
 $vocab["name"]               = "Nombre";
 $vocab["noarea"]             = "No ha sel·leccionat fam&iacute;lia";
 $vocab["browserlang"]        = "El seu visor est&aagrave; configurat per els llenguatges";
-$vocab["postbrowserlang"]    = ".";
 $vocab["addroom"]            = "Afegir recurs";
 $vocab["capacity"]           = "Capacitat (persones)";
 $vocab["norooms"]            = "No hi han recursos.";
