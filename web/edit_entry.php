@@ -366,7 +366,7 @@ else
 ?>
 
 
-<form class="form_general" id="edit_entry" name="main" action="edit_entry_handler.php" method="get">
+<form class="form_general" name="main" action="edit_entry_handler.php" method="get">
   <fieldset>
   <legend><?php echo get_vocab($token); ?></legend>
 
@@ -709,10 +709,10 @@ else
 
     <div id="edit_entry_submit">
     <script type="text/javascript">
-      document.writeln ( '<input type="button" name="save_button" value="<?php echo get_vocab("save")?>" onclick="validate_and_submit()">' );
+      document.writeln ( '<input class="submit" type="button" name="save_button" value="<?php echo get_vocab("save")?>" onclick="validate_and_submit()">' );
     </script>
     <noscript>
-      <input type="submit" value="<?php echo get_vocab("save")?>">
+      <input class="submit" type="submit" value="<?php echo get_vocab("save")?>">
     </noscript>
     </div>
 

@@ -148,7 +148,11 @@ function ChangeOptionDays(formObj, prefix)
   //  End -->
     </script>
   </head>
-  <body>
+  <?php
+  // Put the filename in as a class to aid styling.   
+  // (Use a class rather than id to avoid specificity problems)
+  echo "<body class=\"" . basename($PHP_SELF,".php" ) . "\">\n";
+  ?>
     <div class="screenonly">
 
 <?php // show a warning if this is using a low version of php

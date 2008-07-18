@@ -408,7 +408,7 @@ if (empty($display))
 ?>
 <div class="screenonly">
  
-  <form class="form_general" id="report" method="get" action="report.php">
+  <form class="form_general" method="get" action="report.php">
     <fieldset>
     <legend><?php echo get_vocab("report_on");?></legend>
       
@@ -555,7 +555,7 @@ if (empty($display))
       </div>
       
       <div id="report_submit">
-        <input type="submit" value="<?php echo get_vocab("submitquery") ?>">
+        <input class="submit" type="submit" value="<?php echo get_vocab("submitquery") ?>">
       </div>
       
     </fieldset>
