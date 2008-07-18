@@ -101,7 +101,7 @@ $search_table_border_color      = $main_table_border_color;
 .current {color: red}                          /* used to highlight the current item */
 .error   {color: red; font-weight: bold}       /* for error messages */
 
-legend {font-weight: bold; font-size: large}
+legend {font-weight: bold; font-size: large; color: black}
 fieldset {width: 100%; padding-left: 1.0em; padding-right: 1.0em; 
     border-color: <?php echo $admin_table_header_back_color ?>; border-width: 1px}
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
