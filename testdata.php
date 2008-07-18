@@ -21,59 +21,59 @@ mt_srand((double)microtime()*1000000);
 
 for ($day = date("d") - 5; $day < date("d")+55; $day++)
 {
- $month = date("m");
- $year = date("Y");
+  $month = date("m");
+  $year = date("Y");
 
- $dayt = date("D",mktime(0,0,0,$month,$day,$year));
- if ($dayt <> "Sat" and $dayt <> "Sun")
- {
-   $sql = "select id from $tbl_area";
-   $area_res = sql_query($sql);
-   for ($i = 0; (list($area) = sql_row($area_res, $i)); $i++)
-   {
-     // We know the area we want to add appointments in
-     $sql = "select id from $tbl_room where area_id = $area";
-     $room_res = sql_query($sql);
-     if (!$room_res)
-     {
-       echo sql_error();
-     }
-     for ($j = 0; (list($room) = sql_row($room_res, $j)); $j++)
-     {
-       // Now we know room and area
-       // We have to add some appointments to the day
-       // four in each room seems good enough
-       for ($a = 1; $a < 5; $a++)
-       {
-         // Pick a random hour 8-5
-         $starthour = mt_rand(7,16);
-         $length = mt_rand(1,5) * 30;
-         $starttime = mktime($starthour, 0, 0, $month, $day, $year);
-         $endtime   = mktime($starthour, $length, 0, $month, $day, $year);
+  $dayt = date("D",mktime(0,0,0,$month,$day,$year));
+  if ($dayt <> "Sat" and $dayt <> "Sun")
+  {
+    $sql = "select id from $tbl_area";
+    $area_res = sql_query($sql);
+    for ($i = 0; (list($area) = sql_row($area_res, $i)); $i++)
+    {
+      // We know the area we want to add appointments in
+      $sql = "select id from $tbl_room where area_id = $area";
+      $room_res = sql_query($sql);
+      if (!$room_res)
+      {
+        echo sql_error();
+      }
+      for ($j = 0; (list($room) = sql_row($room_res, $j)); $j++)
+      {
+        // Now we know room and area
+        // We have to add some appointments to the day
+        // four in each room seems good enough
+        for ($a = 1; $a < 5; $a++)
+        {
+          // Pick a random hour 8-5
+          $starthour = mt_rand(7,16);
+          $length = mt_rand(1,5) * 30;
+          $starttime = mktime($starthour, 0, 0, $month, $day, $year);
+          $endtime   = mktime($starthour, $length, 0, $month, $day, $year);
 
-         // Check that this isnt going to overlap
-         $sql = "select count(*) from $tbl_entry where room_id=$room and ((start_time between $starttime and $endtime) or (end_time between $starttime and $endtime) or (start_time = $starttime and end_time = $endtime))";
-         $counte = sql_query1($sql);
-         if ($counte == 0)
-         {
-           // There are no overlaps
-           if ($area == 4)
-           {
-             $name = $jpnames[mt_rand(1,count($jpnames)-1)];
-           }
-           else
-           {
-             $name = $ennames[mt_rand(1,count($ennames)-1)];
-           }
-           $type = $intext[mt_rand(1,2)];
-           $sql = "insert into $tbl_entry (room_id, create_by, start_time, end_time, type, name, description) values ($room, '$REMOTE_ADDR', $starttime, $endtime,'$type','$name','A meeting')";
-           sql_command($sql);
-         }
-         echo "$area - $room ($starthour,$length), $type<br>";
-       }
-     }
-   }
- }
+          // Check that this isnt going to overlap
+          $sql = "select count(*) from $tbl_entry where room_id=$room and ((start_time between $starttime and $endtime) or (end_time between $starttime and $endtime) or (start_time = $starttime and end_time = $endtime))";
+          $counte = sql_query1($sql);
+          if ($counte == 0)
+          {
+            // There are no overlaps
+            if ($area == 4)
+            {
+              $name = $jpnames[mt_rand(1,count($jpnames)-1)];
+            }
+            else
+            {
+              $name = $ennames[mt_rand(1,count($ennames)-1)];
+            }
+            $type = $intext[mt_rand(1,2)];
+            $sql = "insert into $tbl_entry (room_id, create_by, start_time, end_time, type, name, description) values ($room, '$REMOTE_ADDR', $starttime, $endtime,'$type','$name','A meeting')";
+            sql_command($sql);
+          }
+          echo "$area - $room ($starthour,$length), $type<br>";
+        }
+      }
+    }
+  }
 }
 
 ?>
