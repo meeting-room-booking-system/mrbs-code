@@ -1,4 +1,37 @@
-2008-04-17 20:29  jberanek
+2008-07-18 21:21  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r842] ChangeLog, testdata.php, web/admin.php,
+	  web/config.inc.php, web/edit_entry.php, web/functions.inc,
+	  web/help.php, web/lang.ca, web/lang.cs, web/lang.cz, web/lang.da,
+	  web/lang.de, web/lang.el, web/lang.en, web/lang.es, web/lang.eu,
+	  web/lang.fi, web/lang.fr, web/lang.it, web/lang.ja, web/lang.ko,
+	  web/lang.nl, web/lang.no, web/lang.pt, web/lang.sl, web/lang.sv,
+	  web/lang.tr, web/lang.zh-cn, web/lang.zh-tw, web/mysqli.inc:
+	  
+	  * Updated a few tokens in the German translation, curtesy of my
+	  wife.
+	  
+	  * Added "server time" to help page, necessitating a new
+	  translation token, "servertime". The only other language this is
+	  translated for is German.
+	  
+	  * Improved the display of the "Browser language section" in the
+	  admin page, and added it to the help page too. This changed the
+	  meaning of the "browserlang" translation token a bit, and removed
+	  the need for the "postbrowserlang" token.
+	  
+	  * Fixed a bug in the mysqli database abstraction, along the way
+	  made get_default_area() in functions.inc more robust.
+	  
+	  * Added $default_duration into config.inc.php, which allows the
+	  administrator to change the default booking duration, which was
+	  previously hard-coded into edit_entry.php.
+	  
+	  * Corrected incorrect short PHP tag in testdata.php.
+	  
+	  * New svn2cl generated ChangeLog.
+
+2008-04-17 20:29  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r802] auth_ldap.pl, badpw.pl, checklang.php,
 	  convert_db_to_utf8.php, testdata.php, web/add.php, web/admin.php,
@@ -28,7 +61,7 @@
 	  don't use # comments anywhere, only // and /* */. Removed all
 	  tabs, replaced with 2 spaces. Ensured every block use braces.
 
-2008-04-14 20:37  jberanek
+2008-04-14 20:37  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r801] web/day.php, web/functions.inc, web/month.php,
 	  web/mrbs-print.css, web/report.php, web/style.inc,
@@ -39,7 +72,7 @@
 	  printing are now removed automatically by the user's browser when
 	  the user prints.
 
-2008-04-13 20:50  jberanek
+2008-04-13 20:50  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r800] web/add.php, web/admin.php, web/day.php, web/del.php,
 	  web/del_entry.php, web/edit_area_room.php, web/edit_entry.php,
@@ -71,13 +104,13 @@
 	  * Belatedly updated the version number, realised I didn't even
 	  update it for the 1.2.6.1 release.
 
-2008-04-13 20:02  jberanek
+2008-04-13 20:02  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r799] auth_ldap.pl:
 	  
 	  * Undid change that I accidentally made in revision 797.
 
-2008-04-13 19:59  jberanek
+2008-04-13 19:59  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r798] AUTHENTICATION, COPYING, ChangeLog, INSTALL, LANGUAGE,
 	  NEWS, README, README.nwauth, README.sqlapi, UPGRADE,
@@ -116,7 +149,7 @@
 	  
 	  * Set keywords properties.
 
-2008-04-13 19:28  jberanek
+2008-04-13 19:28  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r797] auth_ldap.pl, auth_ldapsearch.pl, auth_pam.pl, badpw.pl,
 	  checklang.php, convert_db_to_utf8.php, crypt_passwd.pl,
@@ -150,7 +183,7 @@
 	  * Changed MIME types to not be 'application' types, as this stops
 	  Subversion showing diffs.
 
-2008-04-12 21:05  jberanek
+2008-04-12 21:05  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r796] .[CPY]:
 	  
@@ -159,7 +192,7 @@
 	  branches/abandoned-mrbs-1_3-development/ to abandon the trunk
 	  development that was working towards MRBS 1.3.
 
-2008-04-12 20:03  jberanek
+2008-04-12 20:03  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r794]
 	  
@@ -172,7 +205,7 @@
 	  Location: redirect, where HTML escaping is unnecessary and
 	  incorrect.
 
-2008-04-03 18:59  jberanek
+2008-04-03 18:59  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r792]
 	  
@@ -180,20 +213,20 @@
 	  4.01 Transitional HTML. Majority of changes thanks to Claudio
 	  Strizzolo.
 
-2008-03-21 21:24  jberanek
+2008-03-21 21:24  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r788]
 	  
 	  * Upped width of mrbs_entry.create_by to 80 characters, to match
 	  the other schemas.
 
-2008-03-21 20:14  jberanek
+2008-03-21 20:14  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r787]
 	  
 	  * Added Basque translation, curtesy of Juan Ezeiza GutiÃ©rrez.
 
-2008-03-19 21:27  jberanek
+2008-03-19 21:27  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r786]
 	  
@@ -202,7 +235,7 @@
 	  where I moved final colons into the code. I've hopefully changed
 	  only the required ones.
 
-2008-03-19 21:06  jberanek
+2008-03-19 21:06  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r785]
 	  
@@ -213,19 +246,19 @@
 	  * Added Simplified Chinese translation, provided by 'sunjunps' on
 	  SF tracker #1818278.
 
-2008-01-30 10:53  jberanek
+2008-01-30 10:53  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r781]
 	  
 	  * Updated ChangeLog for 1.2.6.1 release.
 
-2008-01-30 10:51  jberanek
+2008-01-30 10:51  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r780]
 	  
 	  * Updated NEWS for 1.2.6.1 release.
 
-2008-01-30 10:43  jberanek
+2008-01-30 10:43  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r779]
 	  
@@ -236,13 +269,13 @@
 	  * Added description of new LDAP auth configuration variables into
 	  config.inc.php, and changed the default of $ldap_v3 to "true".
 
-2008-01-28 15:52  jberanek
+2008-01-28 15:52  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r773]
 	  
 	  * Updated ChangeLog for 1.2.6 release.
 
-2008-01-28 15:50  jberanek
+2008-01-28 15:50  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r772]
 	  
@@ -250,19 +283,19 @@
 	  Eglestaff. Adds two new translation tokens, which are now only
 	  available in English.
 
-2008-01-28 15:06  jberanek
+2008-01-28 15:06  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r771]
 	  
 	  * Updated ChangeLog for release of 1.2.6.
 
-2008-01-28 15:04  jberanek
+2008-01-28 15:04  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r770]
 	  
 	  * Updated NEWS for release of 1.2.6.
 
-2008-01-28 14:43  jberanek
+2008-01-28 14:43  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r769]
 	  
@@ -270,7 +303,7 @@
 	  slipped through. Gives me a chance to acknowledge dionysos-sf for
 	  providing the updated French translation (in SF #1791821).
 
-2008-01-28 14:37  jberanek
+2008-01-28 14:37  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r768]
 	  
@@ -298,7 +331,7 @@
 	  
 	  * Upped version number to 1.2.6 in preparation for a release.
 
-2008-01-28 11:28  jberanek
+2008-01-28 11:28  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r767]
 	  
@@ -312,14 +345,14 @@
 	  untested, as I don't currently have an MRBS test installation
 	  that can bind to an AD server for testing.
 
-2008-01-28 11:20  jberanek
+2008-01-28 11:20  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r766]
 	  
 	  * Detabbified (4 space indent now) auth_ldap.inc, so it's easier
 	  to edit. Only whitespace changes.,
 
-2007-09-07 12:50  jberanek
+2007-09-07 12:50  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r765]
 	  
@@ -327,7 +360,7 @@
 	  'northtommy'. Update of the room list as you change area in the
 	  edit entry screen is now correct.
 
-2007-06-18 13:40  jberanek
+2007-06-18 13:40  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r764]
 	  
@@ -335,7 +368,7 @@
 	  mode of htmlspecialchars() was being used, when it shouldn't have
 	  been.
 
-2007-06-18 09:25  jberanek
+2007-06-18 09:25  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r763]
 	  
@@ -356,27 +389,27 @@
 	  * Fixed bug in language preference code, fix supplied by
 	  'mikedip' in SF tracker #1696382.
 
-2007-03-01 14:36  jberanek
+2007-03-01 14:36  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r762]
 	  
 	  * Added updated Italian translation and Italian FAQ, as posted on
 	  mrbs-general more than 2 years ago!
 
-2007-02-25 18:41  jberanek
+2007-02-25 18:41  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r761]
 	  
 	  * Added support for Slovenian language, and added translation
 	  provided by Martin Terbuc.
 
-2007-02-24 20:34  jberanek
+2007-02-24 20:34  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r753]
 	  
 	  * Added a new-style, unified ChangeLog.
 
-2007-02-24 20:32  jberanek
+2007-02-24 20:32  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r752]
 	  
@@ -385,25 +418,25 @@
 	  
 	  * Upped version number to "1.2.5+cvs".
 
-2007-02-24 20:14  jberanek
+2007-02-24 20:14  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r750]
 	  
 	  * Updated ChangeLogs for 1.2.5 release (again!).
 
-2007-02-24 20:12  jberanek
+2007-02-24 20:12  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r749]
 	  
 	  * Updated NEWS for 1.2.5 release (rather late, almost forgot).
 
-2007-02-23 22:12  jberanek
+2007-02-23 22:12  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r745]
 	  
 	  * Updated ChangeLogs for 1.2.5 release.
 
-2007-02-23 22:06  jberanek
+2007-02-23 22:06  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r744]
 	  
@@ -415,13 +448,13 @@
 	  
 	  * Upped version to 1.2.5 in preparation for release.
 
-2007-02-13 13:05  jberanek
+2007-02-13 13:05  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r743]
 	  
 	  * Got rid of nasty DOS line endings in lang.sv.
 
-2007-02-13 12:53  jberanek
+2007-02-13 12:53  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r742]
 	  
@@ -471,13 +504,13 @@
 	  * Corrected CSS commenting in mrbs.css, as reported in SF tracker
 	  #1644042.
 
-2007-01-24 11:12  jberanek
+2007-01-24 11:12  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r739]
 	  
 	  * Updated NEWS and ChangeLogs for MRBS 1.2.4 release.
 
-2007-01-24 10:40  jberanek
+2007-01-24 10:40  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r738]
 	  
@@ -485,7 +518,7 @@
 	  version.inc, which provides a function to retrieve the version
 	  number. Upped version to 1.2.4.
 
-2006-10-09 15:54  jberanek
+2006-10-09 15:54  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r737]
 	  
@@ -534,13 +567,13 @@
 	  in the trailer links are highlighted somewhat. Implements SF
 	  feature request tracker # 875744.
 
-2006-07-07 20:16  jberanek
+2006-07-07 20:16  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r736]
 	  
 	  * Updated Spanish translation, as provided by SoTMaR.
 
-2006-07-07 19:16  jberanek
+2006-07-07 19:16  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r735]
 	  
@@ -551,13 +584,13 @@
 	  mention the new database abstraction method, hopefully in all the
 	  necessary places.
 
-2006-04-26 10:15  jberanek
+2006-04-26 10:15  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r733]
 	  
 	  * Fixed typo in comment in config.inc.php.
 
-2006-04-26 10:01  jberanek
+2006-04-26 10:01  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r732]
 	  
@@ -588,13 +621,13 @@
 	  authentication scheme that sets the REMOTE_USER environment
 	  variable.
 
-2006-01-26 11:34  jberanek
+2006-01-26 11:34  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r728]
 	  
 	  * Removed errant CRs from a few files.
 
-2006-01-26 11:23  jberanek
+2006-01-26 11:23  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r727]
 	  
@@ -620,14 +653,14 @@
 	  "You are ..." link. Provided by Bjorn Wiberg in SF tracker
 	  #1396685.
 
-2005-09-02 22:31  jberanek
+2005-09-02 22:31  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r725]
 	  
 	  * Postgresql table creation fixed for Postgresql 8. Integer
 	  columns can't have a DEFAULT of '', fixed this oversight.
 
-2005-09-02 21:47  jberanek
+2005-09-02 21:47  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r723]
 	  
@@ -641,7 +674,7 @@
 	  Fixed a typo in a comment in config.inc.php * Added a missing $
 	  in a Finnish vocab entry.
 
-2005-09-02 10:42  jberanek
+2005-09-02 10:42  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r722]
 	  
@@ -650,26 +683,26 @@
 	  specified with one on MySQL >= 4.1 the SQL statement fails. The
 	  DEFAULT clause has been removed from the SQL.
 
-2005-08-31 15:45  jberanek
+2005-08-31 15:45  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r720]
 	  
 	  * Added German translation of site FAQ, courtesy of Bertold
 	  Altaner.
 
-2005-08-20 19:22  jberanek
+2005-08-20 19:22  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r715]
 	  
 	  * Updated ChangeLogs and NEWS for 1.2.3 release.
 
-2005-08-20 18:49  jberanek
+2005-08-20 18:49  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r713]
 	  
 	  * Minor tidying.
 
-2005-08-20 18:38  jberanek
+2005-08-20 18:38  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r712]
 	  
@@ -679,7 +712,7 @@
 	  
 	  * Minor tidying in a few files.
 
-2005-08-20 09:46  jberanek
+2005-08-20 09:46  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r711]
 	  
@@ -697,19 +730,19 @@
 	  
 	  * Added site_faq_es.html, contributed by Carlos Insunza.
 
-2005-07-13 10:30  jberanek
+2005-07-13 10:30  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r710] web/lang.ko:
 	  
 	  * Added Korean translation, as contributed by YoungJoon Kim.
 
-2005-06-10 08:54  jberanek
+2005-06-10 08:54  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r709] web/lang.no:
 	  
 	  * Updated norwegian translation supplied by Emil Stoa.
 
-2005-05-17 15:00  jberanek
+2005-05-17 15:00  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r708]
 	  
@@ -722,13 +755,13 @@
 	  user entry is updated we now redirect the web browser back to the
 	  edit users page, to discard the form arguments.
 
-2005-05-11 10:59  jberanek
+2005-05-11 10:59  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r706]
 	  
 	  * Update version number to 1.2.2+cvs
 
-2005-05-11 10:03  jberanek
+2005-05-11 10:03  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r704]
 	  
@@ -738,32 +771,32 @@
 	  password is stored in plaintext. Config values must be changed at
 	  the top of the file too.
 
-2005-04-28 20:44  gwalker
+2005-04-28 20:44  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r702] web/edit_entry_handler.php:
 	  
 	  fixed incorrect comment
 
-2005-04-22 10:57  jberanek
+2005-04-22 10:57  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r700]
 	  
 	  * Update to NEWS file, I'd forgotton to fill in the names of the
 	  contributors of updated Taiwanese and Japanese translations.
 
-2005-04-22 10:45  jberanek
+2005-04-22 10:45  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r699]
 	  
 	  * Updated ChangeLogs and NEWS files for 1.2.2 release.
 
-2005-04-22 10:18  jberanek
+2005-04-22 10:18  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r698]
 	  
 	  * Updated version number to 1.2.2.
 
-2005-04-11 13:44  jberanek
+2005-04-11 13:44  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r696]
 	  
@@ -771,7 +804,7 @@
 	  Taiwanese users who have set $unicode_encoding to 0 will need to
 	  convert their databases to UTF-8.
 
-2005-04-11 13:40  jberanek
+2005-04-11 13:40  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r695]
 	  
@@ -779,7 +812,7 @@
 	  Japanese users who have set $unicode_encoding to 0 will need to
 	  convert their databases to UTF-8.
 
-2005-03-29 13:26  jberanek
+2005-03-29 13:26  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r692]
 	  
@@ -801,7 +834,7 @@
 	  deleted on log out, and the user's password isn't stored in the
 	  session data any more.
 
-2005-02-13 11:40  jberanek
+2005-02-13 11:40  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r690] web/auth_config.inc, web/auth_db.inc, web/auth_ext.inc,
 	  web/auth_imap.inc, web/auth_ldap.inc, web/auth_nis.inc,
@@ -810,26 +843,26 @@
 	  * Fix for Sourceforge bug ID 1112161. Removed case insensitivity
 	  from auth schemes.
 
-2005-02-13 11:21  jberanek
+2005-02-13 11:21  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r688]
 	  
 	  * Fix for Sourceforge bug ID 1090172. Increase length of booking
 	  creator field to 80 characters.
 
-2004-12-10 10:19  jberanek
+2004-12-10 10:19  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r679]
 	  
 	  * Updated NEWS file for MRBS 1.2.1 release.
 
-2004-12-10 09:58  jberanek
+2004-12-10 09:58  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r678]
 	  
 	  * Updated ChangeLogs for 1.2.1 release.
 
-2004-11-29 23:12  jberanek
+2004-11-29 23:12  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r675]
 	  
@@ -839,7 +872,7 @@
 	  * Also synced the various upgrade MySQL files, including changing
 	  the rep_num_weeks column to smallint with no default throughout.
 
-2004-11-21 00:23  gwalker
+2004-11-21 00:23  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r674] web/functions_mail.inc:
 	  
@@ -847,7 +880,7 @@
 	  correct parameters and headers for each type of backend (mail,
 	  sendmail or smtp). Thanks to Thekk.
 
-2004-11-20 00:42  gwalker
+2004-11-20 00:42  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r673] web/functions_mail.inc:
 	  
@@ -861,21 +894,21 @@
 	  
 	  Thanks to Neil Hawes and Stuart Chalmers.
 
-2004-11-19 22:25  gwalker
+2004-11-19 22:25  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r672] web/config.inc.php:
 	  
 	  Bug 1068522 - changed "" around $db_password value to '' so that
 	  special characters are not interpeted. Thanks to Matt Schuler
 
-2004-11-19 22:08  gwalker
+2004-11-19 22:08  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r671] web/mrbs_sql.inc:
 	  
 	  Bug 1035790 - unable to book series with pgsql. Fixed INSERT
 	  command in mrbsCreateRepeatEntry as per suggestion of Thekk.
 
-2004-11-09 22:37  gwalker
+2004-11-09 22:37  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r669]
 	  
@@ -883,7 +916,7 @@
 	  mrbs_admin, area and room admins under all conditions if
 	  configured to do so.
 
-2004-10-28 20:54  gwalker
+2004-10-28 20:54  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r666]
 	  
@@ -892,14 +925,14 @@
 	  not supported under any known version of Windows" (from php
 	  manual).
 
-2004-09-21 13:11  jberanek
+2004-09-21 13:11  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r664]
 	  
 	  * Fixed lang/locale selection for Czech language. Czech country
 	  code is "cs", not "cz".
 
-2004-09-17 22:44  jberanek
+2004-09-17 22:44  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r663]
 	  
@@ -909,20 +942,20 @@
 	  * Fix for page refresh functionality. If a refresh time is
 	  configured, only do it for day.php, week.php and month.php
 
-2004-09-14 09:01  jberanek
+2004-09-14 09:01  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r661]
 	  
 	  * Updated lang.nl from Marc ter Horst
 
-2004-09-13 16:11  jberanek
+2004-09-13 16:11  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r660]
 	  
 	  * Merged a "post-1.2 release" fix from the trunk onto the 1.2
 	  branch.
 
-2004-09-13 15:47  jberanek
+2004-09-13 15:47  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r659]
 	  
@@ -936,19 +969,19 @@
 	  This commit was manufactured by cvs2svn to create branch
 	  'mrbs-1_2-branch'.
 
-2004-09-09 13:10  jberanek
+2004-09-09 13:10  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r653] NEWS:
 	  
 	  * Updated NEWS file.
 
-2004-09-09 12:11  jberanek
+2004-09-09 12:11  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r652] ChangeLog, web/ChangeLog:
 	  
 	  * Updated ChangeLog files for 1.2 release.
 
-2004-08-24 16:58  jflarvoire
+2004-08-24 16:58  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r651] web/mrbs.css, web/xbLib.js:
 	  
@@ -956,28 +989,28 @@
 	  the main table cell. This generated extra mouse events, causing
 	  flicker on the status line.
 
-2004-08-05 22:13  gwalker
+2004-08-05 22:13  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r650] web/functions_mail.inc:
 	  
 	  Removed sql_free() statements as they are not required when using
 	  sql_row. Fixed bug 994056
 
-2004-07-30 20:40  gwalker
+2004-07-30 20:40  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r649] web/functions_mail.inc:
 	  
 	  Added missing ampersand for URL in emails when a series is
 	  involved.
 
-2004-07-28 15:52  jberanek
+2004-07-28 15:52  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r648] web/lang.cz:
 	  
 	  * Updated lang.cz from David Krotil. Only required one token to
 	  be translated.
 
-2004-07-28 10:01  jberanek
+2004-07-28 10:01  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r647] web/lang.cz, web/lang.da, web/lang.de, web/lang.el,
 	  web/lang.en, web/lang.es, web/lang.fi, web/lang.fr, web/lang.it,
@@ -992,7 +1025,7 @@
 	  #992390 (Huey). Browser language "en-ie" is now translated to the
 	  correct Windows locale.
 
-2004-06-29 13:04  jberanek
+2004-06-29 13:04  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r646] web/functions.inc, web/language.inc:
 	  
@@ -1004,7 +1037,7 @@
 	  en_US instead). Added support for OS X into locale setting code.
 	  OS X is treated as "unix".
 
-2004-06-23 21:06  gwalker
+2004-06-23 21:06  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r645] web/functions_mail.inc, web/lang.en, web/view_entry.php:
 	  
@@ -1022,7 +1055,7 @@
 	  
 	  Fixed bug
 
-2004-06-23 10:49  jberanek
+2004-06-23 10:49  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r644] web/functions.inc:
 	  
@@ -1031,7 +1064,7 @@
 	  PHP function genDateSelector() to JavaScript function
 	  ChangeOptionDays().
 
-2004-06-15 21:49  gwalker
+2004-06-15 21:49  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r643] web/functions_mail.inc:
 	  
@@ -1039,20 +1072,20 @@
 	  notifications Removed duplicate $mail_vocab["start_date"] when
 	  deleting a "time" entry.
 
-2004-06-15 20:40  gwalker
+2004-06-15 20:40  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r642] web/month.php:
 	  
 	  Changed so that '+' sign and javascript are not included in month
 	  "print preview"
 
-2004-06-15 19:52  gwalker
+2004-06-15 19:52  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r641] web/month.php:
 	  
 	  Changed main table formatting to match day and week view tables.
 
-2004-06-15 19:46  gwalker
+2004-06-15 19:46  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r640] web/mrbs.css:
 	  
@@ -1060,14 +1093,14 @@
 	  in day and week view the links in the header cells of the tables
 	  are more readable.
 
-2004-06-15 19:43  gwalker
+2004-06-15 19:43  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r639] web/mrbs.css:
 	  
 	  Changed default colour for odd row (TD.odd_row) so that it is not
 	  the same as the default colour for TD.J
 
-2004-06-14 21:34  gwalker
+2004-06-14 21:34  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r638] web/session_cookie.inc:
 	  
@@ -1076,7 +1109,7 @@
 	  validation of the user being done because the wrong variables
 	  were being used. This is not a security issue.
 
-2004-06-14 21:22  gwalker
+2004-06-14 21:22  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r637] INSTALL, web/config.inc.php:
 	  
@@ -1085,7 +1118,7 @@
 	  
 	  Fixed Bug 972186
 
-2004-06-13 15:06  gwalker
+2004-06-13 15:06  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r636] web/functions_mail.inc:
 	  
@@ -1096,21 +1129,21 @@
 	  - use rep_type as more accurate indication of series or not, so
 	  that $myendtime can be set the most appropriate value.
 
-2004-06-12 10:38  gwalker
+2004-06-12 10:38  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r635] web/day.php:
 	  
 	  Changing ordering of rooms in day view back to "by room name" as
 	  "by capacity" was specific to Jean-François' implementation.
 
-2004-06-12 08:38  gwalker
+2004-06-12 08:38  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r634] AUTHENTICATION:
 	  
 	  Doc updated to reflect changes in auth_ldap.inc 1.7 and
 	  config.inc.php 1.38
 
-2004-06-12 08:34  gwalker
+2004-06-12 08:34  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r633] web/auth_ldap.inc, web/config.inc.php:
 	  
@@ -1127,26 +1160,26 @@
 	  way to imap and pop3, server and port, definitions, and
 	  config.inic.php has been updated to reflect this.
 
-2004-05-27 20:53  thierry_bo
+2004-05-27 20:53  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r632] web/lang.cz:
 	  
 	  Updated Czech lang file ("David Krotil"
 	  David.Krotil@mu-sokolov.cz)
 
-2004-05-26 15:55  thierry_bo
+2004-05-26 15:55  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r631] ChangeLog, web/ChangeLog, web/lang.de:
 	  
 	  Updating lang.de (thanks Andreas Moroder)
 
-2004-05-20 02:00  thierry_bo
+2004-05-20 02:00  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r630] web/config.inc.php:
 	  
 	  Updating mrbs version to next 1.2.
 
-2004-05-19 15:42  thierry_bo
+2004-05-19 15:42  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r629] web/functions_mail.inc:
 	  
@@ -1154,49 +1187,49 @@
 	  contain non us-ascii characters, then header should have
 	  MIME-Version and Content-Type headers.
 
-2004-05-14 04:52  thierry_bo
+2004-05-14 04:52  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r626] NEWS:
 	  
 	  Doc fix.
 
-2004-05-14 03:23  thierry_bo
+2004-05-14 03:23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r625] ChangeLog, web/ChangeLog:
 	  
 	  ChangeLog update.
 
-2004-05-14 03:08  thierry_bo
+2004-05-14 03:08  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r624] AUTHENTICATION, INSTALL, NEWS:
 	  
 	  Dox fix: Documentation update
 
-2004-05-14 02:35  thierry_bo
+2004-05-14 02:35  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r623] upgrade3.my.sql:
 	  
 	  Dox fix: This script can be used with both mysql and postgresql
 
-2004-05-14 01:54  thierry_bo
+2004-05-14 01:54  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r622] upgrade2.my.sql:
 	  
 	  Sync with tables.my.sql
 
-2004-05-14 01:52  thierry_bo
+2004-05-14 01:52  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r621] upgrade2.pg.sql:
 	  
 	  Sync. sql statement with tables.pg.73and_above.sql
 
-2004-05-14 01:50  thierry_bo
+2004-05-14 01:50  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r620] tables.pg.73and_above.sql, tables.pg.sql:
 	  
 	  Added new fields for emails.
 
-2004-05-12 03:31  thierry_bo
+2004-05-12 03:31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r619] ChangeLog, web/ChangeLog, web/config.inc.php:
 	  
@@ -1205,7 +1238,7 @@
 	  to provide this extra string so that it will be removed from the
 	  username.
 
-2004-05-12 03:25  thierry_bo
+2004-05-12 03:25  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r618] INSTALL, web/ChangeLog, web/edit_entry_handler.php,
 	  web/functions_mail.inc:
@@ -1216,7 +1249,7 @@
 	  username. - Fixed bug: if MAIL_BOOKER is enabled, previous booker
 	  was empty if MAIL_DETAILS was not set.
 
-2004-05-12 01:25  thierry_bo
+2004-05-12 01:25  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r617] web/functions_mail.inc:
 	  
@@ -1224,46 +1257,46 @@
 	  servers and sendmail may display 'undisclosed-recipients:
 	  <undisclosed-recipients:>' instead of recipients list.
 
-2004-05-11 05:00  thierry_bo
+2004-05-11 05:00  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r616] web/functions_mail.inc:
 	  
 	  -(getPreviousEntryData): removed repeat table in FROM statement
 	  if this is not a serie (can cause sql error on some systems)
 
-2004-05-11 03:24  thierry_bo
+2004-05-11 03:24  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r615] web/language.inc:
 	  
 	  Removed notice in case $lang_map_unix[$locale] is not set
 
-2004-05-10 21:03  thierry_bo
+2004-05-10 21:03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r614] web/day.php:
 	  
 	  duplicated the 'previous day - current day - next day' navigation
 	  bar to the calendar bottom.
 
-2004-05-10 20:47  thierry_bo
+2004-05-10 20:47  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r613] web/lang.sv:
 	  
 	  updated lang.sv (thanks MissterX).
 
-2004-05-10 03:36  thierry_bo
+2004-05-10 03:36  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r612] ChangeLog, web/ChangeLog, web/edit_entry_handler.php:
 	  
 	  - Fixed bug #748925 (All day booking misbehaves if a day extends
 	  beyond midnight).
 
-2004-05-08 22:48  thierry_bo
+2004-05-08 22:48  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r611] web/edit_entry.php:
 	  
 	  Replaced submit button hiding by 'disabled'.
 
-2004-05-08 20:48  thierry_bo
+2004-05-08 20:48  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r610] ChangeLog, INSTALL, web/ChangeLog, web/config.inc.php,
 	  web/edit_entry_handler.php, web/functions_mail.inc,
@@ -1274,20 +1307,20 @@
 	  from the used auth scheme : email field for auth_db, username +
 	  provided domain for all other schemes.
 
-2004-05-06 22:48  gwalker
+2004-05-06 22:48  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r609] INSTALL:
 	  
 	  Added details about $morningstarts_minutes
 
-2004-05-06 22:40  gwalker
+2004-05-06 22:40  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r608] web/config.inc.php, web/day.php, web/week.php:
 	  
 	  Added $morningstarts_minutes to allow for a day to start at say
 	  8:30 am. Default value is 0.
 
-2004-05-06 21:58  gwalker
+2004-05-06 21:58  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r607] web/day.php:
 	  
@@ -1295,7 +1328,7 @@
 	  room name if capacity is 0. This helps where the "room" is a
 	  piece of equipment or a person. Thanks to Michael Hellwig.
 
-2004-05-06 21:49  gwalker
+2004-05-06 21:49  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r606] web/day.php, web/week.php:
 	  
@@ -1303,45 +1336,45 @@
 	  displayed normally and in print preview if no area/room is
 	  defined.
 
-2004-05-06 20:33  thierry_bo
+2004-05-06 20:33  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r605] web/lang.de:
 	  
 	  lang fix (Michael Glaessel)
 
-2004-05-06 18:02  thierry_bo
+2004-05-06 18:02  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r604] web/ChangeLog, web/functions_mail.inc:
 	  
 	  - Fixed bug #948246 :SQL syntax error when sending emails for
 	  deleted entries.
 
-2004-05-06 01:23  thierry_bo
+2004-05-06 01:23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r603] web/ChangeLog, web/edit_users.php:
 	  
 	  + added email address validation
 
-2004-05-06 01:20  thierry_bo
+2004-05-06 01:20  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r602] ChangeLog, web/ChangeLog, web/edit_area_room.php:
 	  
 	  enhanced email validation
 
-2004-05-05 02:12  thierry_bo
+2004-05-05 02:12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r601] web/edit_area_room.php, web/functions_mail.inc:
 	  
 	  * removed duplicated email validation function from
 	  function_mail.php. Use one in RFC822.php instead.
 
-2004-05-03 17:39  thierry_bo
+2004-05-03 17:39  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r600] web/functions_mail.inc:
 	  
 	  Typos fix
 
-2004-05-03 06:21  thierry_bo
+2004-05-03 06:21  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r599] INSTALL, UPGRADE, tables.my.sql, upgrade3.my.sql,
 	  web/ChangeLog, web/Net/Socket.php, web/config.inc.php,
@@ -1368,19 +1401,19 @@
 	  external smtp server (with or without authentication) or unix
 	  sendmail program. - upgraded Net::Socket from 1.0.1 to 1.0.2
 
-2004-04-29 12:02  thierry_bo
+2004-04-29 12:02  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r598] web/lang.fi:
 	  
 	  Updated lang.fi (thanks Tom Ingberg (tom.ingberg@edu.vantaa.fi))
 
-2004-04-27 20:57  gwalker
+2004-04-27 20:57  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r597] web/edit_entry.php:
 	  
 	  Need to escape double-quotes in room names Thanks to Klavs Bryld
 
-2004-04-27 20:48  gwalker
+2004-04-27 20:48  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r596] web/functions.inc:
 	  
@@ -1388,7 +1421,7 @@
 	  quotes around a string literal array index" - quote from PHP
 	  manual. Thanks Thierry
 
-2004-04-25 18:10  jflarvoire
+2004-04-25 18:10  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r595] web/edit_users.php, web/mysql.inc, web/pgsql.inc:
 	  
@@ -1399,7 +1432,7 @@
 	  database-specific eponym. Still not tested with PostgreSQL, but
 	  much more likely to work.
 
-2004-04-25 18:01  jflarvoire
+2004-04-25 18:01  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r594] web/day.php, web/lang.en, web/lang.fr, web/month.php,
 	  web/week.php, web/xbLib.js:
@@ -1409,7 +1442,7 @@
 	  $vocab["click_to_reserve"] in lang.xx. It is passed from PHP to
 	  JavaScript as an additional argument to routine InitActiveCell().
 
-2004-04-18 17:14  jflarvoire
+2004-04-18 17:14  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r593] web/day.php, web/month.php, web/mrbs.css, web/week.php,
 	  web/xbLib.js:
@@ -1422,32 +1455,32 @@
 	  list itself was moved to the bottom of the cell, which did not
 	  look good.
 
-2004-04-18 14:37  jflarvoire
+2004-04-18 14:37  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r592] web/month.php, web/week.php:
 	  
 	  Include mrbs_auth.inc to allow the display of the logon box in
 	  the MRBS top banner.
 
-2004-04-17 15:28  thierry_bo
+2004-04-17 15:28  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r591] web/report.php:
 	  
 	  - fixed bug $typematch, variable undefined
 
-2004-04-17 00:50  thierry_bo
+2004-04-17 00:50  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r590] ChangeLog, web/ChangeLog:
 	  
 	  ChangeLog update
 
-2004-04-16 23:54  thierry_bo
+2004-04-16 23:54  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r589] web/lang.el:
 	  
 	  Doc fix (it is a greek file, not english)
 
-2004-04-16 22:22  gwalker
+2004-04-16 22:22  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r588] web/day.php, web/week.php:
 	  
@@ -1456,19 +1489,19 @@
 	  that it makes sense to include the key in the "print preview"
 	  version so that you can understand the colours on a hardcopy.
 
-2004-04-16 21:55  thierry_bo
+2004-04-16 21:55  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r587] INSTALL, web/config.inc.php:
 	  
 	  Doc fixes
 
-2004-04-16 19:10  thierry_bo
+2004-04-16 19:10  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r586] web/Mail/mail.php:
 	  
 	  - Removed PEAR_MAIL constants (never had).
 
-2004-04-16 17:23  thierry_bo
+2004-04-16 17:23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r585] INSTALL, web/Mail, web/Mail.php, web/Mail/RFC822.php,
 	  web/Mail/mail.php, web/Mail/null.php, web/Mail/sendmail.php,
@@ -1484,20 +1517,20 @@
 	  someone else) with an email on each new entry or new and changed
 	  entries)
 
-2004-04-15 11:08  thierry_bo
+2004-04-15 11:08  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r584] web/auth_db.inc:
 	  
 	  - (authValidateUser): add global $tbl_users;
 
-2004-04-14 22:27  gwalker
+2004-04-14 22:27  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r583] INSTALL:
 	  
 	  Added instructions about using table name prefix to allow second
 	  installations or resolve table name conflicts.
 
-2004-04-14 22:18  gwalker
+2004-04-14 22:18  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r582] destroy.pg.sql, grant.pg.sql, purge.my.sql, purge.pg.sql,
 	  sample-data.sql, tables.my.sql, tables.pg.73and_above.sql,
@@ -1506,7 +1539,7 @@
 	  Added comment that user needs to fix table names if they have
 	  changed the prefix that they wish to use.
 
-2004-04-14 22:02  gwalker
+2004-04-14 22:02  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r581] testdata.php, web/add.php, web/admin.php, web/auth_db.inc,
 	  web/day.php, web/del.php, web/edit_area_room.php,
@@ -1518,7 +1551,7 @@
 	  Changed the fixed table names to variables. The variables are
 	  defined in config.inc.php.
 
-2004-04-14 21:57  gwalker
+2004-04-14 21:57  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r580] web/config.inc.php:
 	  
@@ -1527,7 +1560,7 @@
 	  when only one database is available or resolve table name
 	  conflicts.
 
-2004-04-14 16:34  thierry_bo
+2004-04-14 16:34  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r579] web/day.php:
 	  
@@ -1540,14 +1573,14 @@
 	  that method seems to fit the specs much more closely. (John
 	  Beranek)
 
-2004-04-14 14:18  jflarvoire
+2004-04-14 14:18  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r578] web/config.inc.php:
 	  
 	  Corrected the errors pointed out by Thierry. (Missing change from
 	  his last commit, and authentication default changed by mistake)
 
-2004-04-14 10:23  jberanek
+2004-04-14 10:23  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r577] web/functions.inc:
 	  
@@ -1555,7 +1588,7 @@
 	  encoding specifier. That way the browser knows what encoding the
 	  title is in before it gets to it.
 
-2004-04-14 09:33  jflarvoire
+2004-04-14 09:33  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r576] web/config.inc.php, web/day.php, web/mrbs.css,
 	  web/week.php, web/xbLib.js:
@@ -1568,52 +1601,52 @@
 	  Changed the background stripe generation method. Now defined be
 	  classes in mrbs.css.
 
-2004-04-14 09:23  jflarvoire
+2004-04-14 09:23  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r575] web/language.inc:
 	  
 	  Fixed error when the server does not define
 	  $HTTP_ACCEPT_LANGUAGE.
 
-2004-04-13 21:48  thierry_bo
+2004-04-13 21:48  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r574] INSTALL, web/config.inc.php:
 	  
 	  + Doc fix.
 
-2004-04-13 21:45  thierry_bo
+2004-04-13 21:45  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r573] web/config.inc.php, web/month.php:
 	  
 	  + Added the option to show both time slots and brief description.
 
-2004-04-13 03:13  thierry_bo
+2004-04-13 03:13  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r572] web/report.php:
 	  
 	  + Added the 'creator' search criteria.
 
-2004-04-12 21:22  gwalker
+2004-04-12 21:22  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r571] web/day.php:
 	  
 	  added '' to minicals function call for room parameter as room is
 	  not relevant in day context
 
-2004-04-12 21:22  gwalker
+2004-04-12 21:22  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r570] web/mrbs.css:
 	  
 	  added class for highlighting current month/week/day in calendars,
 	  used in mincals.inc
 
-2004-04-12 21:22  gwalker
+2004-04-12 21:22  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r569] web/month.php, web/week.php:
 	  
 	  added $room to minicals function call
 
-2004-04-12 21:22  gwalker
+2004-04-12 21:22  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r568] web/mincals.inc:
 	  
@@ -1626,7 +1659,7 @@
 	  navigation - highlights whole month in month view - highlight
 	  colour moved to mrbs.css
 
-2004-04-11 22:34  thierry_bo
+2004-04-11 22:34  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r566] web/auth_db.inc, web/session_cookie.inc,
 	  web/session_php.inc:
@@ -1634,7 +1667,7 @@
 	  + Add link to user entries for all auth schemes, not only db
 	  (thanks Gavin!).
 
-2004-04-11 20:32  gwalker
+2004-04-11 20:32  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r565] web/month.php:
 	  
@@ -1643,7 +1676,7 @@
 	  This will take the user to an add entry page for that day of the
 	  month.
 
-2004-04-11 13:12  thierry_bo
+2004-04-11 13:12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r564] web/auth_db.inc, web/lang.en, web/lang.fr, web/report.php,
 	  web/session_cookie.inc, web/session_php.inc:
@@ -1654,21 +1687,21 @@
 	  previous empty HREF link "you are XXXX" is useless and is now a
 	  simple text message.
 
-2004-04-10 05:12  thierry_bo
+2004-04-10 05:12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r563] web/edit_users.php:
 	  
 	  - Changed the title displayed when adding new user from 'Edit
 	  user' to 'Add a new user'.
 
-2004-04-10 04:52  thierry_bo
+2004-04-10 04:52  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r562] web/auth_db.inc, web/edit_users.php:
 	  
 	  + Hashes passwords in dababase (auth_db). Update 'password' field
 	  for this purpose.
 
-2004-04-10 03:26  thierry_bo
+2004-04-10 03:26  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r561] web/lang.cz, web/lang.da, web/lang.de, web/lang.el,
 	  web/lang.en, web/lang.es, web/lang.fi, web/lang.fr, web/lang.it,
@@ -1682,7 +1715,7 @@
 	  as a general rule we should not use punctuation and other things
 	  not related to translation in these strings.
 
-2004-04-09 21:19  gwalker
+2004-04-09 21:19  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r560] AUTHENTICATION, web/auth_imap.inc, web/auth_pop3.inc,
 	  web/config.inc.php:
@@ -1694,7 +1727,7 @@
 	  referred to AUTHENTICATION from config.inc.php if they wish to
 	  use multiple servers.
 
-2004-04-08 21:20  gwalker
+2004-04-08 21:20  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r556] web/functions.inc, web/lang.en, web/report.php:
 	  
@@ -1709,25 +1742,25 @@
 	  functions.inc to make the display start/end dates and periods
 	  clearer.
 
-2004-04-07 04:45  thierry_bo
+2004-04-07 04:45  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r555] AUTHENTICATION, INSTALL, web/config.inc.php:
 	  
 	  Doc fixes (added DB doc)
 
-2004-04-07 02:02  thierry_bo
+2004-04-07 02:02  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r554] web/config.inc.php:
 	  
 	  Updating mrbs version number before next release :-)
 
-2004-04-07 01:57  thierry_bo
+2004-04-07 01:57  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r553] ChangeLog, web/ChangeLog, web/month.php, web/week.php:
 	  
 	  ChangeLog update Doc fixes.
 
-2004-04-05 13:16  jberanek
+2004-04-05 13:16  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r546] web/lang.el, web/style.inc:
 	  
@@ -1738,13 +1771,13 @@
 	  
 	  [Translation and fix provided by Stavros Papadakis]
 
-2004-03-24 21:47  thierry_bo
+2004-03-24 21:47  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r545] INSTALL:
 	  
 	  Doc fix
 
-2004-03-15 22:54  gwalker
+2004-03-15 22:54  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r544] web/functions.inc, web/month.php, web/week.php:
 	  
@@ -1756,14 +1789,14 @@
 	  specified then the first listed area will be chosen rather than
 	  the one with the lowest id.
 
-2004-03-15 22:24  gwalker
+2004-03-15 22:24  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r543] web/config.inc.php, web/index.php:
 	  
 	  Added configuration option to allow index.php to redirect to a
 	  specific room.
 
-2004-03-10 04:27  thierry_bo
+2004-03-10 04:27  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r542] web/day.php, web/week.php:
 	  
@@ -1771,7 +1804,7 @@
 	  for each room on the week view link in day.php and room link in
 	  week.php. (Valeria Montesi/Gareth T).
 
-2004-03-08 14:24  jflarvoire
+2004-03-08 14:24  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r538] web/edit_users.php:
 	  
@@ -1781,21 +1814,21 @@
 	  Actually moved the code to a branch that already ran only if the
 	  user list was not empty.
 
-2004-02-27 01:17  thierry_bo
+2004-02-27 01:17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r521] web/mrbs_sql.inc:
 	  
 	  (mrbsCheckFree): - corrected 'undefined variable' bug (typo on
 	  variable name line 54, $enable_period instead of $enable_periods)
 
-2004-02-11 13:55  thierry_bo
+2004-02-11 13:55  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r520] web/index.php:
 	  
 	  - included grab_globals.inc.php at the top of the file otherwise
 	  $HTTP_ACCEPT_LANGUAGE is undefined
 
-2004-02-04 15:21  jberanek
+2004-02-04 15:21  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r518] web/mrbs_sql.inc, web/report.php:
 	  
@@ -1804,14 +1837,14 @@
 	  Windows MRBS (Apache + MySQL) installation. Problem reported by
 	  Reinhold Petrich on the mailing list, and fix also confirmed.
 
-2004-02-04 15:13  jflarvoire
+2004-02-04 15:13  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r517] web/mincals.inc:
 	  
 	  Use basename($PHP_SELF) to avoid false hits, if the substrings
 	  "day" or "week" or "month" appear in the full URL.
 
-2004-02-02 17:35  jberanek
+2004-02-02 17:35  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r516] web/functions.inc:
 	  
@@ -1819,21 +1852,21 @@
 	  menus in day/week/month view) to use relative URLs, and better
 	  "onChange" handling.
 
-2004-01-31 08:51  jflarvoire
+2004-01-31 08:51  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r514] web/language.inc:
 	  
 	  Updated the iconv error message, based on the suggestion by David
 	  Watts.
 
-2004-01-31 07:53  jflarvoire
+2004-01-31 07:53  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r513] web/edit_users.php:
 	  
 	  Make sure the user is authenticated before giving him access to
 	  the list.
 
-2004-01-28 23:01  gwalker
+2004-01-28 23:01  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r511] web/config.inc.php, web/index.php:
 	  
@@ -1841,14 +1874,14 @@
 	  used to determine the default starting view, i.e. month, week or
 	  day, as used by index.php.
 
-2004-01-27 22:29  gwalker
+2004-01-27 22:29  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r510] web/report.php:
 	  
 	  BUG 885333 - fixed - added check to ensure that
 	  $typematch_default is an array.
 
-2004-01-26 06:31  jflarvoire
+2004-01-26 06:31  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r505] web/edit_entry.php:
 	  
@@ -1856,13 +1889,13 @@
 	  immediately change the time to 00:00 and the duration to 1 day.
 	  (Designed for support of periods too, but not tested)
 
-2004-01-22 22:33  jflarvoire
+2004-01-22 22:33  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r500] web/edit_users.php:
 	  
 	  Removed the paragliding-specific weight field :-)
 
-2004-01-22 22:28  jflarvoire
+2004-01-22 22:28  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r499] web/config.inc.php, web/day.php:
 	  
@@ -1873,13 +1906,13 @@
 	  "white"= no bands (default) For example changing it to "J"
 	  display light gray bands.
 
-2004-01-22 21:35  gwalker
+2004-01-22 21:35  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r498] INSTALL:
 	  
 	  Previous commit truncated file - adding back in missing lines
 
-2004-01-22 04:05  thierry_bo
+2004-01-22 04:05  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r497] web/config.inc.php, web/day.php, web/lang.cz, web/lang.da,
 	  web/lang.de, web/lang.en, web/lang.es, web/lang.fi, web/lang.fr,
@@ -1889,7 +1922,7 @@
 	  + Option to display times on right side in day and week view. +
 	  pop-up messages
 
-2004-01-21 22:36  gwalker
+2004-01-21 22:36  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r496] web/lang.en, web/report.php:
 	  
@@ -1898,7 +1931,7 @@
 	  selected or none are selected then all reservation types are
 	  included in the report.
 
-2004-01-21 22:16  gwalker
+2004-01-21 22:16  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r495] INSTALL, web/config.inc.php, web/day.php,
 	  web/edit_entry.php, web/edit_entry_handler.php,
@@ -1908,20 +1941,20 @@
 	  This update contains all of the code and documentation to support
 	  "periods" within mrbs.
 
-2004-01-20 19:30  thierry_bo
+2004-01-20 19:30  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r494] web/day.php:
 	  
 	  + Added link to rooms heading to display the weekly view for that
 	  room.
 
-2004-01-19 23:40  thierry_bo
+2004-01-19 23:40  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r492] ChangeLog, web/ChangeLog:
 	  
 	  ChangeLog update.
 
-2004-01-19 21:31  jflarvoire
+2004-01-19 21:31  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r491] web/auth_db.inc, web/config.inc.php, web/edit_users.php,
 	  web/lang.en, web/lang.fr, web/mrbs.css, web/session_cookie.inc,
@@ -1937,14 +1970,14 @@
 	  management page. Finally minor changes to config.inc.php
 	  (comment) and mrbs.css (style for buttons inside tables).
 
-2004-01-15 22:37  jflarvoire
+2004-01-15 22:37  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r485] web/language.inc:
 	  
 	  Updated the error message displayed in the case where the iconv
 	  extension is missing.
 
-2004-01-15 21:01  jflarvoire
+2004-01-15 21:01  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r484] web/config.inc.php, web/session_cookie.inc,
 	  web/session_php.inc, web/trailer.inc:
@@ -1959,14 +1992,14 @@
 	  put in this variable the full URL of the MRBS root, as seen by
 	  the users through the proxy.
 
-2004-01-15 20:39  thierry_bo
+2004-01-15 20:39  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r483] web/month.php:
 	  
 	  - Fixed bug [ 875782 ]: Month View, Extra carriage return. Text
 	  formating problem if $monthly_view_brief_description set to TRUE.
 
-2004-01-11 21:52  jflarvoire
+2004-01-11 21:52  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r482] web/mrbs.css:
 	  
@@ -1974,21 +2007,21 @@
 	  inside tables. This makes the logon cell in the top banner, and
 	  the forthcoming user properties editor page, look much better.
 
-2004-01-11 15:26  thierry_bo
+2004-01-11 15:26  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r481] INSTALL:
 	  
 	  Doc fix: unlike Apache on Windows, you HAVE to copy iconv.dll in
 	  into \\%windir%\\system32\\ if you use Microsoft IIS.
 
-2004-01-09 09:40  jberanek
+2004-01-09 09:40  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r480] web/config.inc.php:
 	  
 	  * The MRBS version number hadn't been updated to 1.2-pre2. It has
 	  now.
 
-2003-12-22 23:12  gwalker
+2003-12-22 23:12  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r479] web/edit_entry.php, web/lang.en:
 	  
@@ -2002,13 +2035,13 @@
 	  and you have more than one area then you get an area select box
 	  which controls the rooms displayed in the room select box.
 
-2003-12-22 21:52  gwalker
+2003-12-22 21:52  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r478] web/day.php:
 	  
 	  Minor formatting fix for day view when viewed with Konqueror.
 
-2003-12-21 17:59  thierry_bo
+2003-12-21 17:59  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r477] AUTHENTICATION, INSTALL, README, web/functions.inc:
 	  
@@ -2016,14 +2049,14 @@
 	  since JFL change. - Removed warning in function.inc since it
 	  works now with Gavin changes
 
-2003-12-21 11:05  jflarvoire
+2003-12-21 11:05  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r476] web/config.inc.php:
 	  
 	  Changed the default administrator list, to be coherent with the
 	  explanations in AUTHENTICATION, and also to work out-of-the-box.
 
-2003-12-21 11:03  jflarvoire
+2003-12-21 11:03  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r475] AUTHENTICATION:
 	  
@@ -2031,7 +2064,7 @@
 	  the information about the default administrator settings, which
 	  was incoherent with the default contents of config.inc.php.
 
-2003-12-17 22:03  gwalker
+2003-12-17 22:03  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r474] web/functions.inc:
 	  
@@ -2044,7 +2077,7 @@
 	  that if a month has < 31 days then the day selector is shortened
 	  appropriately.
 
-2003-12-17 00:29  thierry_bo
+2003-12-17 00:29  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r473] web/auth_ldap.inc:
 	  
@@ -2053,13 +2086,13 @@
 	  tries to find the dn for the user and then binds to it with
 	  $pass. (Bernd Oeggl , Philippe Schwarz).
 
-2003-12-17 00:01  thierry_bo
+2003-12-17 00:01  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r472] web/config.inc.php:
 	  
 	  - Fix URL problems when using a proxy in the environment.
 
-2003-12-14 22:45  thierry_bo
+2003-12-14 22:45  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r471] web/functions.inc:
 	  
@@ -2076,7 +2109,7 @@
 	  31 days back. Since Mozilla 1.3 is rather not up to date (1.6b
 	  current at 2003-11-15), this may be corrected in newer releases.
 
-2003-12-12 17:51  thierry_bo
+2003-12-12 17:51  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r470] AUTHENTICATION:
 	  
@@ -2084,74 +2117,74 @@
 	  authentication, since previous documentation really lacks
 	  details.
 
-2003-12-11 00:11  thierry_bo
+2003-12-11 00:11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r469] INSTALL:
 	  
 	  Adding comments about iconv setup.
 
-2003-12-07 17:59  thierry_bo
+2003-12-07 17:59  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r467] ChangeLog, web/ChangeLog:
 	  
 	  ChangeLog update
 
-2003-12-07 17:29  thierry_bo
+2003-12-07 17:29  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r466] ChangeLog, web/ChangeLog:
 	  
 	  ChangeLog update
 
-2003-12-07 16:39  thierry_bo
+2003-12-07 16:39  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r465] web/config.inc.php:
 	  
 	  Doc fixes
 
-2003-12-07 16:35  thierry_bo
+2003-12-07 16:35  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r464] NEWS:
 	  
 	  Updated NEWS file for mrbs-1.2-pre2
 
-2003-12-07 01:31  thierry_bo
+2003-12-07 01:31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r463] web/edit_entry.php, web/edit_entry_handler.php:
 	  
 	  - Fixed bug [ 853410 ]: when changing a non n-weekly entry, field
 	  "Number of weeks (for n-weekly)" appear...
 
-2003-12-06 13:02  thierry_bo
+2003-12-06 13:02  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r462] INSTALL:
 	  
 	  Doc fix (Unicode support).
 
-2003-12-06 05:59  thierry_bo
+2003-12-06 05:59  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r461] README.nwauth, UPGRADE:
 	  
 	  Doc fix.
 
-2003-12-06 05:45  thierry_bo
+2003-12-06 05:45  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r460] AUTHENTICATION, INSTALL:
 	  
 	  Fixing typos. Addding some documentation about Unicode.
 
-2003-12-04 17:49  thierry_bo
+2003-12-04 17:49  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r459] AUTHENTICATION, README:
 	  
 	  Fixing typos; doc update.
 
-2003-12-04 16:07  thierry_bo
+2003-12-04 16:07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r458] web/admin.php:
 	  
 	  - Fixed bug #846337: We can create rooms with no area
 
-2003-12-03 21:52  gwalker
+2003-12-03 21:52  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r457] web/day.php, web/edit_entry.php,
 	  web/edit_entry_handler.php, web/functions.inc, web/month.php,
@@ -2197,13 +2230,13 @@
 	  changes but these can be fixed by editting the entry/series and
 	  saving it.
 
-2003-12-03 18:22  thierry_bo
+2003-12-03 18:22  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r456] ChangeLog, web/ChangeLog:
 	  
 	  Changelog update.
 
-2003-12-03 18:16  thierry_bo
+2003-12-03 18:16  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r455] INSTALL, README, tables.pg.73and_above.sql:
 	  
@@ -2228,7 +2261,7 @@
 	  experimental. You can still browse existing mrbs tables with new
 	  versions, but you cannot add/edit entries/rooms/areas any more.
 
-2003-12-03 18:05  thierry_bo
+2003-12-03 18:05  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r454] pgsql.before_php42.inc, web/pgsql.inc:
 	  
@@ -2237,35 +2270,35 @@
 	  will have to replace the existing pgsql.inc file with
 	  pgsql.before_php42.inc file and rename it to pgsql.inc
 
-2003-12-01 22:05  jflarvoire
+2003-12-01 22:05  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r453] AUTHENTICATION:
 	  
 	  Complete rewrite of the file in html. Converted to text using
 	  detagger (http://www.jafsoft.com/detagger/)
 
-2003-11-24 22:11  gwalker
+2003-11-24 22:11  Gavin Walker <gwalker@users.sourceforge.net>
 
 	* [r452] web/edit_entry.php:
 	  
 	  Displays "Edit Series" or "Edit Entry" at top of page when
 	  editing a series or entry respectively.
 
-2003-11-22 15:11  jflarvoire
+2003-11-22 15:11  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r451] ROXEN[DEL]:
 	  
 	  This file described how to operate the old cookie authentication
 	  module.
 
-2003-11-22 09:40  jflarvoire
+2003-11-22 09:40  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r450] auth_cookie_ext.inc[DEL]:
 	  
 	  As Thierry pointed-out, this file is now useless, as there is a
 	  more general implementation in web/session_cookie.inc.
 
-2003-11-21 15:27  thierry_bo
+2003-11-21 15:27  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r449] web/config.inc.php, web/help.php:
 	  
@@ -2273,19 +2306,19 @@
 	  help.php (this is not a file we open often), I moved the variable
 	  to config.inc.php.
 
-2003-11-21 04:19  thierry_bo
+2003-11-21 04:19  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r445] web/ChangeLog:
 	  
 	  ChangeLog update.
 
-2003-11-21 01:34  thierry_bo
+2003-11-21 01:34  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r444] web/session_cookie.inc:
 	  
 	  - fixed not working with error level all.
 
-2003-11-19 23:18  jflarvoire
+2003-11-19 23:18  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r443] web/auth_ip.inc[DEL], web/auth_name.inc[DEL],
 	  web/auth_nt.inc[DEL], web/auth_omni.inc[DEL]:
@@ -2294,7 +2327,7 @@
 	  now superseeded by session_ip.inc, session_host.inc,
 	  session_nt.inc, and session_omni.inc respectively.
 
-2003-11-19 23:09  jflarvoire
+2003-11-19 23:09  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r442] web/auth_none.inc, web/config.inc.php,
 	  web/session_host.inc, web/session_ip.inc, web/session_nt.inc,
@@ -2307,14 +2340,14 @@
 	  config.inc.php comments to reflect the possible choices for
 	  session name and authentication types.
 
-2003-11-18 21:30  jflarvoire
+2003-11-18 21:30  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r441] web/language.inc:
 	  
 	  Updated the administrator warning message about the iconv package
 	  requirement, to fire only if $unicode_encoding is true.
 
-2003-11-18 10:41  jberanek
+2003-11-18 10:41  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r440] convert_db_to_utf8.php, web/style.inc:
 	  
@@ -2327,19 +2360,19 @@
 	  * Added comment to my usage of $vocab["charset"] in style.inc, as
 	  ist doesn't match the general usage of get_vocab().
 
-2003-11-17 03:52  thierry_bo
+2003-11-17 03:52  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r439] ChangeLog, web/ChangeLog:
 	  
 	  ChangeLog update.
 
-2003-11-17 03:41  thierry_bo
+2003-11-17 03:41  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r438] web/config.inc.php:
 	  
 	  Removed unnecessary comment.
 
-2003-11-17 03:39  thierry_bo
+2003-11-17 03:39  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r437] web/admin.php:
 	  
@@ -2347,51 +2380,51 @@
 	  defined (previous fix causes an error in case http authentication
 	  fail).
 
-2003-11-17 03:30  thierry_bo
+2003-11-17 03:30  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r436] web/lang.fr:
 	  
 	  Changing $vocab language string.
 
-2003-11-16 20:25  thierry_bo
+2003-11-16 20:25  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r435] web/session_cookie.inc, web/session_php.inc:
 	  
 	  - Removed remainings plain text strings by get_vocab() function.
 
-2003-11-16 19:41  thierry_bo
+2003-11-16 19:41  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r434] web/month.php:
 	  
 	  - fixed remainings non unicode compliant php functions.
 
-2003-11-16 19:30  thierry_bo
+2003-11-16 19:30  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r433] web/mrbs_sql.inc:
 	  
 	  - (mrbsCheckFree): fixed remainings non unicode php functions.
 
-2003-11-16 19:23  thierry_bo
+2003-11-16 19:23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r432] web/admin.php:
 	  
 	  - make admin.php working with error level E_ALL with no area/room
 	  defined.
 
-2003-11-16 17:10  thierry_bo
+2003-11-16 17:10  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r431] web/config.inc.php, web/month.php:
 	  
 	  Changed my stupid $_MRBS_monthly_view_brief_description variable
 	  name to $monthly_view_brief_description
 
-2003-11-15 20:37  thierry_bo
+2003-11-15 20:37  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r430] web/ChangeLog:
 	  
 	  ChangeLog update.
 
-2003-11-14 22:26  jflarvoire
+2003-11-14 22:26  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r429] web/day.php:
 	  
@@ -2399,7 +2432,7 @@
 	  $dbsys.inc, as mrbs_auth.inc now uses definitions of the first
 	  one, and will use those of the second one eventually.
 
-2003-11-14 22:23  jflarvoire
+2003-11-14 22:23  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r428] web/auth_config.inc:
 	  
@@ -2407,7 +2440,7 @@
 	  case of failure it just returns 0 as specified in its header
 	  comment.
 
-2003-11-14 22:20  jflarvoire
+2003-11-14 22:20  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r427] web/auth_ext.inc, web/auth_imap.inc, web/auth_ldap.inc,
 	  web/auth_nis.inc, web/auth_nw.inc, web/auth_pop3.inc:
@@ -2419,14 +2452,14 @@
 	  authValidateUser() must not call authGet() anymore. In case of
 	  failure it just returns 0 as specified in its header comment.
 
-2003-11-14 22:13  jflarvoire
+2003-11-14 22:13  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r426] web/auth_ip.inc, web/auth_name.inc, web/auth_nt.inc,
 	  web/auth_omni.inc:
 	  
 	  Removed the argument to authGet().
 
-2003-11-14 22:07  jflarvoire
+2003-11-14 22:07  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r425] web/mrbs_auth.inc:
 	  
@@ -2435,7 +2468,7 @@
 	  call authGet() anymore. In case of failure it just returns 0 as
 	  specified in its header comment.
 
-2003-11-14 22:01  jflarvoire
+2003-11-14 22:01  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r424] web/session_cookie.inc, web/session_php.inc:
 	  
@@ -2444,38 +2477,38 @@
 	  "SetName" now validates the user/password pair. This avoids
 	  loging on unauthorized users, which would rejected later on.
 
-2003-11-14 21:52  jflarvoire
+2003-11-14 21:52  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r423] web/session_http.inc:
 	  
 	  Get the user/password using the HTTP basic authentication.
 
-2003-11-14 21:47  jflarvoire
+2003-11-14 21:47  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r422] web/grab_globals.inc.php:
 	  
 	  Added the setting of $HTTP_HOST.
 
-2003-11-14 04:10  thierry_bo
+2003-11-14 04:10  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r421] web/ChangeLog:
 	  
 	  ChangeLog update.
 
-2003-11-14 04:07  thierry_bo
+2003-11-14 04:07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r420] web/session_php.inc:
 	  
 	  - (printLoginForm): make session_php.inc working with error level
 	  E_ALL.
 
-2003-11-12 03:24  thierry_bo
+2003-11-12 03:24  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r419] README:
 	  
 	  Added warning about using php accelerators with mrbs.
 
-2003-11-11 21:59  jflarvoire
+2003-11-11 21:59  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r418] web/lang.cz, web/lang.da, web/lang.de, web/lang.es,
 	  web/lang.fi, web/lang.fr, web/lang.it, web/lang.ja, web/lang.nl,
@@ -2483,7 +2516,7 @@
 	  
 	  Added messages for session handling.
 
-2003-11-09 22:49  jflarvoire
+2003-11-09 22:49  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r417] web/auth_config.inc, web/config.inc.php, web/day.php,
 	  web/functions.inc, web/lang.en, web/mrbs_auth.inc,
@@ -2491,7 +2524,7 @@
 	  
 	  Added support for session handling.
 
-2003-11-09 10:58  jflarvoire
+2003-11-09 10:58  Jean-Francois LARVOIRE <jflarvoire@users.sourceforge.net>
 
 	* [r416] web/language.inc:
 	  
@@ -2500,13 +2533,13 @@
 	  server. It will help administrators who are likely to encounter
 	  the problem the first time they install mrbs.
 
-2003-11-01 21:12  thierry_bo
+2003-11-01 21:12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r415] ChangeLog, web/ChangeLog:
 	  
 	  ChangeLog update.
 
-2003-11-01 21:06  thierry_bo
+2003-11-01 21:06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r414] web/day.php, web/month.php, web/week.php:
 	  
@@ -2516,20 +2549,20 @@
 	  accordance with $_MRBS_monthly_view_brief_description value in
 	  config.inc.php.
 
-2003-11-01 19:06  thierry_bo
+2003-11-01 19:06  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r413] web/week.php:
 	  
 	  Fixing typos
 
-2003-10-31 20:34  thierry_bo
+2003-10-31 20:34  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r412] INSTALL, web/config.inc.php:
 	  
 	  Added warning to avoid specify calendar settings that displays
 	  blocks overlaping the next day, since it is not properly handled.
 
-2003-10-31 19:45  thierry_bo
+2003-10-31 19:45  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r411] web/language.inc:
 	  
@@ -2537,33 +2570,33 @@
 	  name was called $override_locale in config file and
 	  $locale_override in language.inc.
 
-2003-10-31 19:22  thierry_bo
+2003-10-31 19:22  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r410] web/week.php:
 	  
 	  - Fixing The Daylight Savings Time bug (thanks to Tony Fugere
 	  (tonyfugere at users.sourceforge.net)).
 
-2003-10-31 01:17  thierry_bo
+2003-10-31 01:17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r409] web/auth_pop3.inc:
 	  
 	  - getting auth_pop3 working even in error_reporting(ALL).
 
-2003-10-11 03:32  thierry_bo
+2003-10-11 03:32  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r408] ChangeLog, web/ChangeLog:
 	  
 	  ChangeLog update.
 
-2003-10-11 02:46  thierry_bo
+2003-10-11 02:46  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r407] testdata.php:
 	  
 	  - bug fix: Make testdata compliant to register_global=off
 	  (samples entries had no authors)
 
-2003-10-10 19:26  thierry_bo
+2003-10-10 19:26  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r405] web/language.inc:
 	  
@@ -2572,7 +2605,7 @@
 	  getenv('HTTP_ACCEPT_LANGUAGE') is always NULL with ISAPI. Global
 	  variable seems more reliable.
 
-2003-10-10 04:54  thierry_bo
+2003-10-10 04:54  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r404] web/ChangeLog, web/config.inc.php:
 	  
@@ -2580,19 +2613,19 @@
 	  (ie. 42) instead of 'first day of the week' (13 Oct). Committing
 	  again since John previous commit erased my changes :-)
 
-2003-10-10 04:31  thierry_bo
+2003-10-10 04:31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r403] web/ChangeLog:
 	  
 	  + new Unicode support (John).
 
-2003-10-09 20:07  jberanek
+2003-10-09 20:07  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r402] web/ChangeLog:
 	  
 	  * Just testing new CVS loginfo
 
-2003-10-09 19:58  jberanek
+2003-10-09 19:58  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r401] web/admin.php, web/config.inc.php, web/day.php,
 	  web/del.php, web/edit_area_room.php, web/edit_entry.php,
@@ -2630,7 +2663,7 @@
 	  Thierry does it automatically, and I wasn't gonna do it by hand
 	  with all the files I changed :)
 
-2003-10-03 17:46  thierry_bo
+2003-10-03 17:46  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r400] ChangeLog, INSTALL, web/ChangeLog, web/config.inc.php,
 	  web/trailer.inc:
@@ -2639,7 +2672,7 @@
 	  (ie. 42) instead of 'first day of the week' (13 Oct) (Per
 	  Wermelin - SKIOLD Sæby A/S" <ela@skiold.dk>).
 
-2003-09-25 23:19  jberanek
+2003-09-25 23:19  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r396] AUTHENTICATION, ChangeLog, crypt_passwd.example,
 	  crypt_passwd.pl:
@@ -2648,26 +2681,26 @@
 	  allows you to use a password file with usernames and their
 	  crypted passwords.
 
-2003-09-25 18:20  jberanek
+2003-09-25 18:20  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r395] web/ChangeLog, web/auth_pop3.inc:
 	  
 	  Bug fix for POP3 authentication scheme provided by Jean-Baptiste
 	  Lehucher.
 
-2003-09-23 06:11  thierry_bo
+2003-09-23 06:11  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r393] ChangeLog, web/ChangeLog:
 	  
 	  Doc fixes.
 
-2003-09-23 06:05  thierry_bo
+2003-09-23 06:05  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r392] NEWS, web/help.php:
 	  
 	  Doc fixes.
 
-2003-09-23 05:55  thierry_bo
+2003-09-23 05:55  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r391] AUTHENTICATION, INSTALL, LANGUAGE, README.nwauth,
 	  README.sqlapi, ROXEN, grant.pg.sql, testdata.php, web/add.php,
@@ -2683,53 +2716,53 @@
 	  Finally we changed config.inc to config.inc.php for "security"
 	  reasons.
 
-2003-09-23 05:37  thierry_bo
+2003-09-23 05:37  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r390] web/ChangeLog, web/config.inc:
 	  
 	  Make sure notice errors are not reported, they can break mrbs
 	  code.
 
-2003-09-11 14:52  thierry_bo
+2003-09-11 14:52  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r386] web/ChangeLog, web/lang.fi:
 	  
 	  Updating finish lang file (Tom Ingberg
 	  (tom.ingberg@edu.vantaa.fi)).
 
-2003-08-12 16:17  thierry_bo
+2003-08-12 16:17  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r385] web/ChangeLog, web/edit_entry.php:
 	  
 	  - Fixed bug #748934, do not allow booking descriptions with only
 	  spaces (cannot click the slot).
 
-2003-08-09 20:55  thierry_bo
+2003-08-09 20:55  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r384] ChangeLog, web/ChangeLog:
 	  
 	  ChangeLog update.
 
-2003-08-09 05:23  thierry_bo
+2003-08-09 05:23  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r383] AUTHENTICATION, web/auth_nt.inc:
 	  
 	  + Added Windows NT / IIS authentication scheme.
 
-2003-08-09 03:36  thierry_bo
+2003-08-09 03:36  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r382] AUTHENTICATION, INSTALL, README, web/config.inc:
 	  
 	  Dox fixes. Update documentation and comments to the current cvs
 	  situation.
 
-2003-08-07 15:57  thierry_bo
+2003-08-07 15:57  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r381] NEWS:
 	  
 	  * Doc fixes: updated to have a consistent layout.
 
-2003-08-07 05:32  thierry_bo
+2003-08-07 05:32  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r380] web/ChangeLog:
 	  
@@ -2746,7 +2779,7 @@
 	  automatically from Sourceforge, so they have to be put in a file.
 	  I set a 12 hours window to not have 'atomic' entries in the file.
 
-2003-08-07 05:28  thierry_bo
+2003-08-07 05:28  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r379] ChangeLog:
 	  
@@ -2763,7 +2796,7 @@
 	  ChangeLog straight in this directory. I set a 12 hours window to
 	  not have 'atomic' entries in the file.
 
-2003-08-07 05:07  thierry_bo
+2003-08-07 05:07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r378] NEWS:
 	  
@@ -2772,14 +2805,14 @@
 	  from the previous ChangeLog file which was a NEWS file in fact,
 	  except last CVS entries which should go to the ChangeLog file.
 
-2003-05-29 07:25  thierry_bo
+2003-05-29 07:25  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r376] web/edit_entry.php:
 	  
 	  - Fixed bug : Always displays "edit entry" instead of "Add Entry"
 	  even when adding an entry. (<Ian Duncan>i.duncan@uq.edu.au)
 
-2003-05-12 03:50  thierry_bo
+2003-05-12 03:50  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r375] ChangeLog, web/mrbs_sql.inc:
 	  
@@ -2788,14 +2821,14 @@
 	  switch to the 5th week when possible after falling back to the
 	  4th week.
 
-2003-05-12 03:31  thierry_bo
+2003-05-12 03:31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r374] web/mrbs_sql.inc:
 	  
 	  - fixed bug : monthly repeat, corresponding day not properly
 	  booked
 
-2003-05-11 00:40  thierry_bo
+2003-05-11 00:40  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r373] ChangeLog, web/mrbs_sql.inc:
 	  
@@ -2804,7 +2837,7 @@
 	  properly scheduled. Now if no 5th week exist, the 4th week is
 	  selected instead for all subsequen
 
-2003-05-08 12:55  thierry_bo
+2003-05-08 12:55  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r372] ChangeLog, web/report.php:
 	  
@@ -2812,7 +2845,7 @@
 	  all but the submission form is visible but not the actual report
 	  (<sQuare>mrbs@synapse.plus.com).
 
-2003-04-25 21:20  thierry_bo
+2003-04-25 21:20  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r371] web/mincals.inc:
 	  
@@ -2820,14 +2853,14 @@
 	  instead of the first day of the week
 	  (<sQuare>mrbs@synapse.plus.com).
 
-2003-04-25 20:56  thierry_bo
+2003-04-25 20:56  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r370] web/mincals.inc:
 	  
 	  - converts all 'tabs' to 'space' (the file contains a mix of
 	  both)
 
-2003-04-18 04:47  thierry_bo
+2003-04-18 04:47  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r369] ChangeLog:
 	  
@@ -2835,7 +2868,7 @@
 	  browsers to see links to the corresponding days in column titles
 	  (Johan.Schonning@uab.ericsson.se).
 
-2003-04-18 02:21  thierry_bo
+2003-04-18 02:21  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r368] web/week.php:
 	  
@@ -2843,14 +2876,14 @@
 	  browsers to see links to the corresponding days in column titles
 	  (Johan.Schonning@uab.ericsson.se).
 
-2003-04-17 03:38  thierry_bo
+2003-04-17 03:38  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r367] ChangeLog, web/config.inc, web/month.php:
 	  
 	  + Entries in monthly view can be shown as start/end slot or brief
 	  description
 
-2003-04-15 15:20  thierry_bo
+2003-04-15 15:20  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r366] web/week.php:
 	  
@@ -2859,14 +2892,14 @@
 	  day view from the week view without having to scroll down to the
 	  bottom of the page. (<sQuare>mrbs@synapse.plus.com)
 
-2003-04-09 20:10  thierry_bo
+2003-04-09 20:10  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r365] web/edit_entry_handler.php:
 	  
 	  - Fixed bug : if AM/PM hour format is used, bookings between
 	  12:00 AM and 12:59 AM are stored with a wrong start date.
 
-2003-04-01 05:26  thierry_bo
+2003-04-01 05:26  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r364] ChangeLog:
 	  
@@ -2874,7 +2907,7 @@
 	  prevents deleting entries and/or prevent javascript popup to
 	  works (Pietro donatini)
 
-2003-03-31 22:19  thierry_bo
+2003-03-31 22:19  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r362] web/lang.it:
 	  
@@ -2882,14 +2915,14 @@
 	  prevents deleting entries and/or prevent javascript popup to
 	  works (Pietro donatini)
 
-2003-03-28 18:31  thierry_bo
+2003-03-28 18:31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r356] ChangeLog:
 	  
 	  - Fixed bug : if AM/PM hour format is used, bookings between
 	  12:00 PM and 12:59 PM are stored with a wrong start date.
 
-2003-03-28 15:40  jberanek
+2003-03-28 15:40  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r355] ChangeLog, web/auth_imap.inc, web/auth_ldap.inc,
 	  web/auth_nis.inc, web/auth_nw.inc, web/mrbs_auth.inc:
@@ -2897,21 +2930,21 @@
 	  * Fixed bug in escaping of username and password for all
 	  authentication schemes that use HTTP authentication.
 
-2003-03-28 00:29  thierry_bo
+2003-03-28 00:29  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r354] web/edit_entry_handler.php:
 	  
 	  - Fixed bug : if AM/PM hour format is used, bookings between
 	  12:00 PM and 12:59 PM are stored with a wrong start date.
 
-2003-03-11 19:01  thierry_bo
+2003-03-11 19:01  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r353] ChangeLog, web/help.php, web/lang.da:
 	  
 	  + Added translation: Danish (Claes Bolvig Pedersen (cp@dhi.dk)) -
 	  Changed mrbs_version in help.php to "MRBS 1.1"
 
-2003-03-05 05:12  thierry_bo
+2003-03-05 05:12  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r352] ChangeLog, web/add.php, web/admin.php, web/day.php,
 	  web/del.php, web/del_entry.php, web/edit_area_room.php,
@@ -2921,25 +2954,25 @@
 	  
 	  + Make MRBS compliant to the 'register_globals = off' directive
 
-2003-03-05 05:07  thierry_bo
+2003-03-05 05:07  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r351] web/lang.pt:
 	  
 	  + added translation: Portuguese (Lopo Pizarro)
 
-2003-02-09 20:03  thierry_bo
+2003-02-09 20:03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r350] web/edit_entry.php, web/edit_entry_handler.php:
 	  
 	  - minor bug fixes ("Undefined variable" notices...)
 
-2003-01-30 07:08  thierry_bo
+2003-01-30 07:08  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r349] web/lang.fi:
 	  
 	  - Parse error fix
 
-2003-01-30 06:53  thierry_bo
+2003-01-30 06:53  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r348] ChangeLog:
 	  
@@ -2948,26 +2981,26 @@
 	  functions.inc - Bug fix if "select" option is choosen to show
 	  areas/rooms
 
-2003-01-30 06:50  thierry_bo
+2003-01-30 06:50  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r347] web/lang.fi:
 	  
 	  + add translation: Finnish, Vesa Palmu
 
-2003-01-29 05:48  thierry_bo
+2003-01-29 05:48  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r346] web/lang.no:
 	  
 	  - minor translation update
 
-2003-01-29 05:43  thierry_bo
+2003-01-29 05:43  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r345] web/functions.inc, web/lang.fr, web/lang.no:
 	  
 	  - Minor translations updates in lang.fr, lang.no (Tobias), 1
 	  vocab added in functions.inc
 
-2003-01-29 00:08  thierry_bo
+2003-01-29 00:08  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r344] web/functions.inc:
 	  
@@ -2976,7 +3009,7 @@
 	  the "change" button is clicked (mostly used for non javascript
 	  users).
 
-2003-01-15 04:02  thierry_bo
+2003-01-15 04:02  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r343] web/mrbs.css:
 	  
@@ -2984,7 +3017,7 @@
 	  There is more room to do this since week day names are displayed
 	  with 3 characters now instead of one.
 
-2003-01-15 03:49  thierry_bo
+2003-01-15 03:49  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r342] web/admin.php, web/lang.cz, web/lang.de, web/lang.en,
 	  web/lang.es, web/lang.fr, web/lang.it, web/lang.ja, web/lang.nl,
@@ -2994,13 +3027,13 @@
 	  defined twice since a recent update. - Added one (hopefully last)
 	  missing $vocab (administration).
 
-2003-01-14 10:22  jberanek
+2003-01-14 10:22  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r340] web/config.inc, web/mincals.inc:
 	  
 	  * Fixed small problem in Daniel's recent minicals change.
 
-2003-01-14 09:58  jberanek
+2003-01-14 09:58  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r339] ChangeLog, web/config.inc, web/day.php, web/del.php,
 	  web/edit_entry.php, web/edit_entry_handler.php,
@@ -3012,7 +3045,7 @@
 	  
 	  * Modified ChangeLog in anticipation of 1.1 release.
 
-2003-01-14 00:38  nambit
+2003-01-14 00:38  Daniel <nambit@users.sourceforge.net>
 
 	* [r338] ChangeLog, web/lang.cz, web/lang.de, web/lang.en,
 	  web/lang.es, web/lang.fr, web/lang.it, web/lang.ja, web/lang.nl,
@@ -3020,7 +3053,7 @@
 	  
 	  make all language files consistant
 
-2003-01-13 21:41  nambit
+2003-01-13 21:41  Daniel <nambit@users.sourceforge.net>
 
 	* [r337] ChangeLog, web/day.php, web/mincals.inc, web/month.php,
 	  web/week.php:
@@ -3028,21 +3061,21 @@
 	  Change minicals so they point to week when on week view and month
 	  when on month view
 
-2003-01-13 14:37  jberanek
+2003-01-13 14:37  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r336] ChangeLog, web/edit_entry.php:
 	  
 	  - Changed occurences of "<?=" to "<?php echo" which means we
 	  still use the long tag form everywhere.
 
-2003-01-13 01:58  thierry_bo
+2003-01-13 01:58  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r335] web/edit_entry.php:
 	  
 	  Added new $vocab in order to remove the last plain english
 	  strings in the code.
 
-2003-01-12 22:54  thierry_bo
+2003-01-12 22:54  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r334] ChangeLog:
 	  
@@ -3051,33 +3084,33 @@
 	  site_faq.html file translated in another language - Added
 	  auth_name.inc, auth_omni.inc
 
-2003-01-12 22:50  thierry_bo
+2003-01-12 22:50  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r333] web/auth_omni.inc:
 	  
 	  Authentification scheme using own Omnicron OmniHTTPd web server
 	  security features.
 
-2003-01-12 22:46  thierry_bo
+2003-01-12 22:46  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r332] web/auth_name.inc:
 	  
 	  Variant of auth_ip.inc that try to use DNS name instead of IP.
 
-2003-01-12 21:54  thierry_bo
+2003-01-12 21:54  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r331] web/functions.inc:
 	  
 	  Added new $vocab in order to remove the last plain english
 	  strings in the code.
 
-2003-01-12 20:34  thierry_bo
+2003-01-12 20:34  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r330] web/site_faq_fr.html:
 	  
 	  Minor translation corrections
 
-2003-01-12 20:15  thierry_bo
+2003-01-12 20:15  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r329] web/edit_entry.php:
 	  
@@ -3090,33 +3123,33 @@
 	  
 	  alert ( "<?= which seems to work.
 
-2003-01-12 19:50  thierry_bo
+2003-01-12 19:50  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r328] web/view_entry.php:
 	  
 	  Added new $vocab in order to remove the last plain english
 	  strings in the code.
 
-2003-01-12 19:39  thierry_bo
+2003-01-12 19:39  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r327] web/mysql.inc, web/pgsql.inc:
 	  
 	  Added new $vocab in order to remove the last plain english
 	  strings in the code.
 
-2003-01-12 19:31  thierry_bo
+2003-01-12 19:31  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r326] web/site_faq_fr.html:
 	  
 	  Added site_faq_fr.html (french translation of site_faq.html)
 
-2003-01-12 19:26  thierry_bo
+2003-01-12 19:26  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r325] web/config.inc:
 	  
 	  Added Faq file language selection ($faqfilelang).
 
-2003-01-12 19:03  thierry_bo
+2003-01-12 19:03  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r324] web/help.php:
 	  
@@ -3124,88 +3157,88 @@
 	  strings in the code. Changed Faq file include to use language
 	  selection (in config.inc)
 
-2003-01-12 18:54  thierry_bo
+2003-01-12 18:54  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r323] web/edit_entry_handler.php:
 	  
 	  Added new $vocab in order to remove the last plain english
 	  strings in the code.
 
-2003-01-12 18:48  thierry_bo
+2003-01-12 18:48  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r322] web/edit_entry.php:
 	  
 	  Added new $vocab in order to remove the last plain english
 	  strings in the code.
 
-2003-01-12 16:45  thierry_bo
+2003-01-12 16:45  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r321] web/edit_area_room.php:
 	  
 	  Added new $vocab in order to remove the last plain english
 	  strings in the code.
 
-2003-01-12 16:39  thierry_bo
+2003-01-12 16:39  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r320] web/del.php:
 	  
 	  Added new $vocab in order to remove the last plain english
 	  strings in the code.
 
-2003-01-12 16:32  thierry_bo
+2003-01-12 16:32  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r319] web/lang.fr:
 	  
 	  Added new $vocab in order to remove the last plain english
 	  strings in the code. Minor language corrections
 
-2003-01-12 16:04  thierry_bo
+2003-01-12 16:04  Thierry Bothorel <thierry_bo@users.sourceforge.net>
 
 	* [r318] web/lang.en:
 	  
 	  Added new $vocab in order to remove the last plain english
 	  strings in the code.
 
-2003-01-10 12:43  jberanek
+2003-01-10 12:43  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r317] ChangeLog:
 	  
 	  * Corrected ChangeLog. Daniel's 2 latest changes didn't make it
 	  into 1.1-pre2.
 
-2003-01-10 11:33  nambit
+2003-01-10 11:33  Daniel <nambit@users.sourceforge.net>
 
 	* [r316] ChangeLog, web/search.php:
 	  
 	  Remove warnings about headers in search.php
 
-2003-01-09 18:05  nambit
+2003-01-09 18:05  Daniel <nambit@users.sourceforge.net>
 
 	* [r315] ChangeLog, web/trailer.inc:
 	  
 	  Change trailer.inc to make print preview more likely to work on
 	  windows and non-apache servers
 
-2003-01-09 17:48  jberanek
+2003-01-09 17:48  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r314] ChangeLog:
 	  
 	  * Modified ChangeLog to show changes for soon to be released
 	  1.1-pre2 version.
 
-2003-01-09 17:44  nambit
+2003-01-09 17:44  Daniel <nambit@users.sourceforge.net>
 
 	* [r313] ChangeLog, web/lang.es:
 	  
 	  Updated spanish translation
 
-2003-01-09 17:39  nambit
+2003-01-09 17:39  Daniel <nambit@users.sourceforge.net>
 
 	* [r312] AUTHENTICATION:
 	  
 	  add a note about using APOP
 
-2003-01-09 17:38  nambit
+2003-01-09 17:38  Daniel <nambit@users.sourceforge.net>
 
 	* [r311] AUTHENTICATION, ChangeLog, web/auth_pop3.inc,
 	  web/config.inc:
@@ -3214,7 +3247,7 @@
 	  
 	  Can authenticate using APOP or standard USER/PASS
 
-2002-11-28 10:24  jberanek
+2002-11-28 10:24  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r310] ChangeLog, web/admin.php, web/edit_entry.php:
 	  
@@ -3224,7 +3257,7 @@
 	  when editting/creating bookings. [Note: this is the bug that has
 	  been reported by multiple people on the mailing list.]
 
-2002-10-14 15:45  jberanek
+2002-10-14 15:45  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r309] ChangeLog, web/admin.php, web/del.php,
 	  web/edit_area_room.php, web/index.php, web/style.inc:
@@ -3235,13 +3268,13 @@
 	  to style.inc - Fixed all occurences (hopefully) of $vocab[]
 	  indices written without surrounding quotes.
 
-2002-10-09 11:44  jberanek
+2002-10-09 11:44  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r308] ChangeLog:
 	  
 	  * Minor change to ChangeLog.
 
-2002-10-08 13:19  jberanek
+2002-10-08 13:19  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r307] ChangeLog, smb_auth.c, web/admin.php, web/auth_ext.inc,
 	  web/config.inc, web/edit_area_room.php, web/edit_entry.php,
@@ -3290,13 +3323,13 @@
 	  sending Pragma: no-cache and an Expires: header in the past. This
 	  should help ensure the calendar pages don't get cached.
 
-2002-05-30 11:42  nambit
+2002-05-30 11:42  Daniel <nambit@users.sourceforge.net>
 
 	* [r306] ChangeLog:
 	  
 	  update changelog for new release
 
-2002-05-30 10:59  nambit
+2002-05-30 10:59  Daniel <nambit@users.sourceforge.net>
 
 	* [r305] web/edit_entry.php:
 	  
@@ -3304,7 +3337,7 @@
 	  
 	  https://sourceforge.net/tracker/index.php?func=detail&aid=482145&group_id=5113&atid=105113
 
-2002-05-30 10:53  nambit
+2002-05-30 10:53  Daniel <nambit@users.sourceforge.net>
 
 	* [r304] web/day.php, web/week.php:
 	  
@@ -3312,32 +3345,32 @@
 	  
 	  https://sourceforge.net/tracker/index.php?func=detail&aid=559655&group_id=5113&atid=105113
 
-2002-05-25 12:27  nambit
+2002-05-25 12:27  Daniel <nambit@users.sourceforge.net>
 
 	* [r303] web/lang.no:
 	  
 	  update lang.no translation (by Tobias Johan Karlsen)
 
-2002-05-23 10:10  nambit
+2002-05-23 10:10  Daniel <nambit@users.sourceforge.net>
 
 	* [r302] ChangeLog, web/lang.cz:
 	  
 	  add Czech translation
 
-2002-05-18 23:04  nambit
+2002-05-18 23:04  Daniel <nambit@users.sourceforge.net>
 
 	* [r301] web/admin.php, web/report.php, web/trailer.inc:
 	  
 	  quote some array indexes to cut down on the number of warnings
 
-2002-05-18 18:16  nambit
+2002-05-18 18:16  Daniel <nambit@users.sourceforge.net>
 
 	* [r300] web/help.php:
 	  
 	  stop using posix_uname and use php_uname instead. should make the
 	  help screen work on windows
 
-2002-05-18 16:39  nambit
+2002-05-18 16:39  Daniel <nambit@users.sourceforge.net>
 
 	* [r299] web/day.php, web/functions.inc, web/week.php:
 	  
@@ -3345,7 +3378,7 @@
 	  
 	  http://sourceforge.net/tracker/index.php?func=detail&aid=493079&group_id=5113&atid=105113
 
-2002-05-18 16:27  nambit
+2002-05-18 16:27  Daniel <nambit@users.sourceforge.net>
 
 	* [r298] web/week.php:
 	  
@@ -3354,19 +3387,19 @@
 	  
 	  http://sourceforge.net/tracker/index.php?func=detail&aid=522990&group_id=5113&atid=105113
 
-2002-05-18 16:14  nambit
+2002-05-18 16:14  Daniel <nambit@users.sourceforge.net>
 
 	* [r297] web/functions.inc:
 	  
 	  add warning about PHP3
 
-2002-05-18 15:59  nambit
+2002-05-18 15:59  Daniel <nambit@users.sourceforge.net>
 
 	* [r296] web/auth_nis.inc:
 	  
 	  correct typo
 
-2002-05-18 15:06  nambit
+2002-05-18 15:06  Daniel <nambit@users.sourceforge.net>
 
 	* [r295] web/lang.de, web/lang.es, web/lang.fr, web/lang.it,
 	  web/lang.ja, web/lang.nl, web/lang.no, web/lang.sv,
@@ -3374,7 +3407,7 @@
 	  
 	  renormalize all of the language files
 
-2002-05-14 16:11  nambit
+2002-05-14 16:11  Daniel <nambit@users.sourceforge.net>
 
 	* [r294] web/month.php, web/week.php:
 	  
@@ -3382,39 +3415,39 @@
 	  month views. the page header now shows the area and room name
 	  again
 
-2002-05-13 16:56  nambit
+2002-05-13 16:56  Daniel <nambit@users.sourceforge.net>
 
 	* [r293] web/day.php, web/functions.inc, web/month.php,
 	  web/week.php:
 	  
 	  add dropdown room selectors to week and month views
 
-2002-05-11 12:19  nambit
+2002-05-11 12:19  Daniel <nambit@users.sourceforge.net>
 
 	* [r292] web/day.php:
 	  
 	  add $area to variables passed to edit_entry.php
 
-2002-05-11 11:56  nambit
+2002-05-11 11:56  Daniel <nambit@users.sourceforge.net>
 
 	* [r291] INSTALL, README:
 	  
 	  stop saying that PHP3 will work
 
-2002-05-11 11:32  nambit
+2002-05-11 11:32  Daniel <nambit@users.sourceforge.net>
 
 	* [r290] ChangeLog, web/edit_entry.php, web/edit_entry_handler.php,
 	  web/lang.en:
 	  
 	  allows multiple rooms to be booked at the same time
 
-2002-05-11 11:31  nambit
+2002-05-11 11:31  Daniel <nambit@users.sourceforge.net>
 
 	* [r289] checklang.php:
 	  
 	  change last $lang to $vocab
 
-2002-05-09 12:50  nambit
+2002-05-09 12:50  Daniel <nambit@users.sourceforge.net>
 
 	* [r288] ChangeLog, LANGUAGE, auth_cookie_ext.inc, checklang.php,
 	  web/admin.php, web/config.inc, web/day.php, web/del.php,
@@ -3430,19 +3463,19 @@
 	  software that's used $lang (lots of people have seen "N" appear
 	  everywhere $lang variables should be)
 
-2002-05-08 13:04  nambit
+2002-05-08 13:04  Daniel <nambit@users.sourceforge.net>
 
 	* [r287] INSTALL:
 	  
 	  document need for register_globals
 
-2002-05-08 13:03  nambit
+2002-05-08 13:03  Daniel <nambit@users.sourceforge.net>
 
 	* [r286] web/lang.fr:
 	  
 	  updated lang.fr
 
-2002-05-08 12:35  nambit
+2002-05-08 12:35  Daniel <nambit@users.sourceforge.net>
 
 	* [r285] web/config.inc, web/day.php, web/functions.inc:
 	  
@@ -3450,7 +3483,7 @@
 	  default html display. option in config.inc to control this
 	  behaviour
 
-2002-03-07 15:29  jberanek
+2002-03-07 15:29  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r284] ChangeLog, web/auth_ext.inc, web/auth_imap.inc,
 	  web/auth_ip.inc, web/auth_nis.inc:
@@ -3462,7 +3495,7 @@
 	  * Added auth_nis.inc, as provided by Jeff Hoover. This is an
 	  authentication scheme that uses NIS.
 
-2002-02-07 13:12  jberanek
+2002-02-07 13:12  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r283] ChangeLog, UPGRADE, tables.pg.sql, upgrade2.pg.sql,
 	  web/admin.php, web/auth_imap.inc, web/config.inc, web/del.php,
@@ -3492,7 +3525,7 @@
 	  * Changed config.inc to use getenv('HTTP_ACCEPT_LANGUAGE')
 	  instead of $HTTP_ACCEPT_LANGUAGE...much tidier.
 
-2001-11-02 12:57  jberanek
+2001-11-02 12:57  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r282] ChangeLog, web/config.inc:
 	  
@@ -3500,39 +3533,39 @@
 	  working for me unless I put a global specification for it. This
 	  should improve internationalisation.
 
-2001-08-30 21:27  nambit
+2001-08-30 21:27  Daniel <nambit@users.sourceforge.net>
 
 	* [r280] ChangeLog:
 	  
 	  updated for 1.0
 
-2001-07-16 08:44  jberanek
+2001-07-16 08:44  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r279] upgrade2.my.sql, upgrade2.pg.sql:
 	  
 	  * Added these upgrade SQL files. Don't know how I forgot to add
 	  them!
 
-2001-07-08 12:42  nambit
+2001-07-08 12:42  Daniel <nambit@users.sourceforge.net>
 
 	* [r278] ChangeLog:
 	  
 	  edit for 1.0-pre2 release
 
-2001-07-02 17:32  jberanek
+2001-07-02 17:32  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r277] web/mrbs_sql.inc:
 	  
 	  * Removed a little debug code that I left in accidentally.
 
-2001-07-02 16:58  jberanek
+2001-07-02 16:58  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r276] web/style.inc:
 	  
 	  * Missed a bit in previous checkin, because I have multiple MRBS
 	  trees, ahem.
 
-2001-07-02 15:05  jberanek
+2001-07-02 15:05  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r275] ChangeLog, tables.my.sql, tables.pg.sql,
 	  web/auth_ldap.inc, web/config.inc, web/day.php,
@@ -3565,20 +3598,20 @@
 	  bookings made for times that have smaller granularity that the
 	  configured booking resolution.
 
-2001-03-26 14:36  jberanek
+2001-03-26 14:36  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r274] ChangeLog:
 	  
 	  * Fixed time in ChangeLog :)
 
-2001-03-26 14:34  jberanek
+2001-03-26 14:34  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r273] ChangeLog, web/config.inc:
 	  
 	  * Fixed config.inc so that the correct lang.xx is included if
 	  HTTP_ACCEPT_LANGUAGE is a comma-seperated list like "sv, en".
 
-2001-03-26 14:02  jberanek
+2001-03-26 14:02  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r272] ChangeLog, web/lang.es, web/lang.sv:
 	  
@@ -3587,7 +3620,7 @@
 	  not able to use "monthly, corresponding day" repeats without the
 	  token being present.
 
-2001-03-18 18:07  mred
+2001-03-18 18:07  Michael Redinger <mred@users.sourceforge.net>
 
 	* [r271] web/lang.de, web/lang.en, web/lang.es, web/lang.fr,
 	  web/lang.ja, web/lang.nl, web/lang.sv, web/lang.zh-tw,
@@ -3597,14 +3630,14 @@
 	  files, but only german was translated - the rest still has the
 	  english string.
 
-2001-03-18 18:02  mred
+2001-03-18 18:02  Michael Redinger <mred@users.sourceforge.net>
 
 	* [r270] web/day.php, web/functions.inc, web/month.php,
 	  web/trailer.inc, web/week.php:
 	  
 	  red: Added print preview for day, week and month.
 
-2001-03-07 13:57  jberanek
+2001-03-07 13:57  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r269] web/lang.de, web/lang.es:
 	  
@@ -3612,32 +3645,32 @@
 	  lang.de (received by Bernd Oeggl). 2nd attempt, actually the
 	  check the files in this time.
 
-2001-03-07 13:52  jberanek
+2001-03-07 13:52  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r268] ChangeLog:
 	  
 	  * Checked in updates to lang.es (received from Pablo Gomez) and
 	  lang.de (received by Bernd Oeggl).
 
-2001-03-07 00:34  nambit
+2001-03-07 00:34  Daniel <nambit@users.sourceforge.net>
 
 	* [r267] ChangeLog, web/lang.nl:
 	  
 	  Update lang.nl
 
-2001-03-04 23:25  nambit
+2001-03-04 23:25  Daniel <nambit@users.sourceforge.net>
 
 	* [r265] ChangeLog:
 	  
 	  Changes for release 1.0-pre1
 
-2001-03-02 13:10  mred
+2001-03-02 13:10  Michael Redinger <mred@users.sourceforge.net>
 
 	* [r264] AUTHENTICATION, auth_pam.pl:
 	  
 	  mred: added auth_pam, updated AUTHENTIFICATION
 
-2001-02-27 09:49  jberanek
+2001-02-27 09:49  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r263] ChangeLog:
 	  
@@ -3645,7 +3678,7 @@
 	  CVS commit logs get sent to the list...mainly to see if it's
 	  working.
 
-2001-02-26 12:19  jberanek
+2001-02-26 12:19  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r262] ChangeLog, web/functions.inc, web/lang.de, web/lang.en,
 	  web/lang.es, web/lang.fr, web/lang.ja, web/lang.nl, web/lang.sv,
@@ -3655,7 +3688,7 @@
 	  are now lang strings. Also, fixed an error in lang.fr,
 	  $lang["mrbs"] was defined twice.
 
-2001-02-26 10:51  jberanek
+2001-02-26 10:51  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r261] ChangeLog, web/day.php, web/edit_entry.php,
 	  web/functions.inc, web/mincals.inc, web/month.php,
@@ -3664,27 +3697,27 @@
 	  * Added double quotes around all uses of color and class
 	  attributes, as HTML dictates.
 
-2001-02-26 01:27  lbayuk
+2001-02-26 01:27  L J Bayuk <lbayuk@users.sourceforge.net>
 
 	* [r260] ChangeLog:
 	  
 	  Note new links on search, conflict
 
-2001-02-26 01:24  lbayuk
+2001-02-26 01:24  L J Bayuk <lbayuk@users.sourceforge.net>
 
 	* [r259] web/mrbs_sql.inc:
 	  
 	  On conflict, show start time and links to day/week/month views
 	  (based on patch from M. Redinger).
 
-2001-02-26 01:24  lbayuk
+2001-02-26 01:24  L J Bayuk <lbayuk@users.sourceforge.net>
 
 	* [r258] web/search.php:
 	  
 	  Link each search result start time to a day view of that entry
 	  (bernd, beranek).
 
-2001-02-25 01:34  lbayuk
+2001-02-25 01:34  L J Bayuk <lbayuk@users.sourceforge.net>
 
 	* [r256] .htaccess[DEL], AUTHENTICATION, ChangeLog, INSTALL,
 	  LANGUAGE, README, README.nwauth, README.sqlapi, ROXEN, UPGRADE,
@@ -3718,49 +3751,49 @@
 	  
 	  Merge branch mrbs-0-9-1xp into trunk
 
-2001-02-09 20:08  nambit
+2001-02-09 20:08  Daniel <nambit@users.sourceforge.net>
 
 	* [r154] ChangeLog:
 	  
 	  Change release date
 
-2001-02-08 22:44  nambit
+2001-02-08 22:44  Daniel <nambit@users.sourceforge.net>
 
 	* [r153] ChangeLog, config.inc, mincals.inc:
 	  
 	  remove 'weekstarts' functionality
 
-2001-02-04 21:56  nambit
+2001-02-04 21:56  Daniel <nambit@users.sourceforge.net>
 
 	* [r148] ChangeLog:
 	  
 	  calendar day was off by one
 
-2001-02-04 21:53  nambit
+2001-02-04 21:53  Daniel <nambit@users.sourceforge.net>
 
 	* [r147] mincals.inc:
 	  
 	  Fixed bug where days displayed wrong in mincals
 
-2001-02-04 21:40  nambit
+2001-02-04 21:40  Daniel <nambit@users.sourceforge.net>
 
 	* [r146] ChangeLog:
 	  
 	  release 0.9
 
-2001-01-28 17:42  nambit
+2001-01-28 17:42  Daniel <nambit@users.sourceforge.net>
 
 	* [r145] UPGRADE:
 	  
 	  small note to say no db changes since 0.8
 
-2001-01-28 17:15  nambit
+2001-01-28 17:15  Daniel <nambit@users.sourceforge.net>
 
 	* [r144] ChangeLog:
 	  
 	  Comments for bo's fixes
 
-2001-01-24 23:37  bokleve
+2001-01-24 23:37  Bo Kleve <bokleve@users.sourceforge.net>
 
 	* [r143] config.inc, edit_entry.php3, functions.inc, mincals.inc,
 	  trailer.inc, view_entry.php3:
@@ -3771,7 +3804,7 @@
 	  language and that the translation of hours, minutes, ... are
 	  according to the lang file.
 
-2001-01-24 00:16  bokleve
+2001-01-24 00:16  Bo Kleve <bokleve@users.sourceforge.net>
 
 	* [r142] admin.php3, day.php3, edit_area_room.php3,
 	  edit_entry.php3, edit_entry_handler.php3, lang.sv, mrbs_sql.inc,
@@ -3789,133 +3822,133 @@
 	  could not be made for Sundays if Saturdays also booked.
 	  view_entry.php3 Fix escape characters showing in text
 
-2000-11-29 20:50  nambit
+2000-11-29 20:50  Daniel <nambit@users.sourceforge.net>
 
 	* [r141] ChangeLog:
 	  
 	  Claus roxen stuff
 
-2000-11-29 20:42  nambit
+2000-11-29 20:42  Daniel <nambit@users.sourceforge.net>
 
 	* [r140] ROXEN, auth_cookie_ext.inc, mrbs.css:
 	  
 	  Claus Jeppesen's roxen stuff
 
-2000-09-13 10:28  sam_mason
+2000-09-13 10:28  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r139] lang.en:
 	  
 	  Better text
 
-2000-09-13 09:00  sam_mason
+2000-09-13 09:00  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r138] search.php3:
 	  
 	  Better searching
 
-2000-09-08 08:44  sam_mason
+2000-09-08 08:44  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r137] view_entry.php3:
 	  
 	  Now displays the room + area
 
-2000-09-08 08:24  sam_mason
+2000-09-08 08:24  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r136] edit_entry_handler.php3, mrbs_sql.inc:
 	  
 	  Another bug in the repeat entry code
 
-2000-09-08 08:23  sam_mason
+2000-09-08 08:23  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r135] auth_ext.inc, lang.en:
 	  
 	  Added a "room" entry
 
-2000-09-05 20:10  sam_mason
+2000-09-05 20:10  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r129] view_entry.php3:
 	  
 	  Language updates
 
-2000-09-05 09:33  sam_mason
+2000-09-05 09:33  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r128] mrbs_auth.inc:
 	  
 	  One less warning
 
-2000-09-04 08:20  sam_mason
+2000-09-04 08:20  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r126] lang.es:
 	  
 	  Updated by "Dised Sistemas <dised@arrakis.es>"
 
-2000-09-04 08:19  sam_mason
+2000-09-04 08:19  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r125] config.inc:
 	  
 	  Added some sanity checks
 
-2000-08-18 11:37  sam_mason
+2000-08-18 11:37  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r120] mrbs_sql.inc:
 	  
 	  Should work now
 
-2000-08-18 11:26  sam_mason
+2000-08-18 11:26  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r119] help.php3:
 	  
 	  Why did I take this outls
 
-2000-08-18 11:04  sam_mason
+2000-08-18 11:04  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r118] edit_entry.php3, functions.inc:
 	  
 	  Put "<?=" back to "<? echo" for compatibility
 
-2000-08-18 10:53  sam_mason
+2000-08-18 10:53  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r117] edit_entry.php3, functions.inc:
 	  
 	  Put "<?=" back to "<? echo" for compatibility
 
-2000-08-18 08:15  sam_mason
+2000-08-18 08:15  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r116] auth_ip.inc:
 	  
 	  More PHP warning fixes
 
-2000-08-17 20:08  sam_mason
+2000-08-17 20:08  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r115] admin.php3, search.php3, view_entry.php3:
 	  
 	  More PHP warning fixes
 
-2000-08-17 20:06  sam_mason
+2000-08-17 20:06  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r114] edit_entry_handler.php3, search.php3:
 	  
 	  More PHP warning fixes
 
-2000-08-17 19:56  sam_mason
+2000-08-17 19:56  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r113] auth_ext.inc:
 	  
 	  More PHP warning fixes
 
-2000-08-17 19:37  sam_mason
+2000-08-17 19:37  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r112] edit_entry.php3, edit_entry_handler.php3:
 	  
 	  More PHP warning fixes
 
-2000-08-17 19:30  sam_mason
+2000-08-17 19:30  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r111] edit_entry.php3:
 	  
 	  More PHP waning fixes
 
-2000-08-17 14:59  sam_mason
+2000-08-17 14:59  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r110] admin.php3, auth_ext.inc, config.inc, day.php3, del.php3,
 	  del_entry.php3, edit_entry.php3, edit_entry_handler.php3,
@@ -3925,68 +3958,68 @@
 	  
 	  Major change to remove most of the warnings from the code
 
-2000-08-10 12:45  sam_mason
+2000-08-10 12:45  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r109] AUTHENTICATION, auth_ldapsearch.pl:
 	  
 	  better ldapsearch support
 
-2000-08-10 09:18  sam_mason
+2000-08-10 09:18  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r108] lang.en, search.php3:
 	  
 	  Better language support
 
-2000-08-10 09:02  sam_mason
+2000-08-10 09:02  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r107] help.php3:
 	  
 	  Put "Meeting room booking system" into the subject line
 	  automagically
 
-2000-08-10 09:01  sam_mason
+2000-08-10 09:01  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r106] search.php3:
 	  
 	  Get it to behave nicely at the beginning and end of the search
 
-2000-08-10 09:00  sam_mason
+2000-08-10 09:00  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r105] site_faq.html:
 	  
 	  get the links all working
 
-2000-08-09 17:35  sam_mason
+2000-08-09 17:35  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r104] AUTHENTICATION, ChangeLog, README:
 	  
 	  a few final updates
 
-2000-08-09 17:24  sam_mason
+2000-08-09 17:24  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r103] mrbs_auth.inc:
 	  
 	  the ultimate one liner
 
-2000-08-09 17:04  sam_mason
+2000-08-09 17:04  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r102] head.gif[DEL]:
 	  
 	  We have a nice banner now, no need for this
 
-2000-08-09 17:02  sam_mason
+2000-08-09 17:02  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r101] mrbs.css:
 	  
 	  looks better now
 
-2000-08-09 17:00  sam_mason
+2000-08-09 17:00  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r100] help.php3:
 	  
 	  added help finally
 
-2000-08-09 13:13  sam_mason
+2000-08-09 13:13  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r98] AUTHENTICATION, ChangeLog, INSTALL, add.php3, admin.php3,
 	  auth_ldapsearch.pl, config.inc, day.php3, del.php3,
@@ -3996,199 +4029,199 @@
 	  
 	  A big change of most things
 
-2000-08-03 15:00  sam_mason
+2000-08-03 15:00  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r97] AUTHENTICATION, badpw.pl:
 	  
 	  Improved the documentation a bit
 
-2000-08-01 12:25  sam_mason
+2000-08-01 12:25  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r96] day.php3, functions.inc:
 	  
 	  UI updates
 
-2000-08-01 11:50  sam_mason
+2000-08-01 11:50  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r95] edit_entry_handler.php3:
 	  
 	  Was not passing the correct number of paremeters
 
-2000-07-27 09:54  sam_mason
+2000-07-27 09:54  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r93] ChangeLog:
 	  
 	  0.8.1
 
-2000-07-27 09:48  sam_mason
+2000-07-27 09:48  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r92] day.php3:
 	  
 	  Better handling of areas
 
-2000-07-27 09:36  sam_mason
+2000-07-27 09:36  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r91] del_entry.php3, edit_entry_handler.php3, mrbs_sql.inc:
 	  
 	  Better handling of areas
 
-2000-07-26 18:35  sam_mason
+2000-07-26 18:35  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r90] mrbs_sql.inc:
 	  
 	  removed unused parameter
 
-2000-07-26 17:46  sam_mason
+2000-07-26 17:46  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r89] config.inc, edit_entry_handler.php3:
 	  
 	  Brings up an error if you try and create too many options
 
-2000-07-26 16:49  sam_mason
+2000-07-26 16:49  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r87] ChangeLog:
 	  
 	  version 0.8
 
-2000-07-26 16:42  sam_mason
+2000-07-26 16:42  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r86] del_entry.php3, mrbs_sql.inc:
 	  
 	  Better repeat entry handling
 
-2000-07-26 16:32  sam_mason
+2000-07-26 16:32  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r85] edit_entry.php3:
 	  
 	  "Edit Series" works even if you did not modify the first entry
 
-2000-07-26 16:22  sam_mason
+2000-07-26 16:22  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r84] mrbs_sql.inc:
 	  
 	  Allow "Edit Series" to work.
 
-2000-07-21 11:53  sam_mason
+2000-07-21 11:53  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r83] functions.inc:
 	  
 	  Better year chooser.
 
-2000-07-20 09:56  sam_mason
+2000-07-20 09:56  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r81] ChangeLog:
 	  
 	  new release
 
-2000-07-20 09:07  sam_mason
+2000-07-20 09:07  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r80] view_entry.php3:
 	  
 	  Keep it in sync with the creation in "edit_entry_handler"
 
-2000-07-20 09:06  sam_mason
+2000-07-20 09:06  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r79] mrbs_sql.inc:
 	  
 	  Nicer listing of conflicting entrys
 
-2000-07-20 09:05  sam_mason
+2000-07-20 09:05  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r78] lang.en:
 	  
 	  Keeping in sync with the rest of the code
 
-2000-07-20 09:04  sam_mason
+2000-07-20 09:04  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r77] edit_entry_handler.php3:
 	  
 	  Various date/time handling improvements
 
-2000-07-19 15:02  sam_mason
+2000-07-19 15:02  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r76] view_entry.php3:
 	  
 	  Handle HTML chars in the users fields better
 
-2000-07-19 15:01  sam_mason
+2000-07-19 15:01  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r75] trailer.inc:
 	  
 	  a few "copy+paste" problems
 
-2000-07-19 14:59  sam_mason
+2000-07-19 14:59  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r74] day.php3:
 	  
 	  Make small (0 hours) entrys work
 
-2000-07-19 14:30  sam_mason
+2000-07-19 14:30  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r73] edit_entry.php3:
 	  
 	  Stop the repeat days from getting muddled up.
 
-2000-07-18 10:40  sam_mason
+2000-07-18 10:40  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r72] auth_ldap.inc:
 	  
 	  CRLF conversion done
 
-2000-07-18 10:23  sam_mason
+2000-07-18 10:23  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r71] auth_ldap.inc:
 	  
 	  Better cleanup
 
-2000-07-18 10:22  sam_mason
+2000-07-18 10:22  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r70] edit_entry_handler.php3:
 	  
 	  Nicer page displayed when there is a conflicting entry
 
-2000-07-18 10:21  sam_mason
+2000-07-18 10:21  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r69] day.php3:
 	  
 	  removed some old debugging code
 
-2000-07-17 13:48  sam_mason
+2000-07-17 13:48  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r68] AUTHENTICATION, auth_ldap.inc, config.inc:
 	  
 	  Added a new LDAP authenticatication method.
 
-2000-07-17 08:00  sam_mason
+2000-07-17 08:00  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r67] mrbs_sql.inc:
 	  
 	  Fix for older versions of PHP (PRE 4)
 
-2000-07-13 10:53  sam_mason
+2000-07-13 10:53  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r66] ChangeLog:
 	  
 	  Updated
 
-2000-07-13 10:35  sam_mason
+2000-07-13 10:35  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r65] edit_entry_handler.php3:
 	  
 	  Better colision detection.
 
-2000-07-13 10:23  sam_mason
+2000-07-13 10:23  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r64] mrbs_sql.inc:
 	  
 	  Beginning of database independence
 
-2000-07-13 10:22  sam_mason
+2000-07-13 10:22  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r63] day.php3, mincals.inc, trailer.inc:
 	  
 	  General time/date handling updates.
 
-2000-07-12 15:25  sam_mason
+2000-07-12 15:25  Sam Mason <sam_mason@users.sourceforge.net>
 
 	* [r61] AUTHENTICATION, ChangeLog, LANGUAGE, README, UPGRADE,
 	  config.inc, day.php3, del_entry.php3, edit_entry.php3,
@@ -4199,49 +4232,49 @@
 	  
 	  + a few other minor changes.
 
-2000-06-22 11:30  nambit
+2000-06-22 11:30  Daniel <nambit@users.sourceforge.net>
 
 	* [r58] ChangeLog, mincals.inc:
 	  
 	  Fixed bug where the wrong months would be shown sometimes
 
-2000-06-21 13:53  nambit
+2000-06-21 13:53  Daniel <nambit@users.sourceforge.net>
 
 	* [r56] AUTHENTICATION, ChangeLog, auth_ldap.pl:
 	  
 	  LDAP Auth
 
-2000-06-21 11:43  nambit
+2000-06-21 11:43  Daniel <nambit@users.sourceforge.net>
 
 	* [r54] ChangeLog:
 	  
 	  Release 0.8-pre2
 
-2000-06-21 11:42  nambit
+2000-06-21 11:42  Daniel <nambit@users.sourceforge.net>
 
 	* [r53] AUTHENTICATION, ChangeLog, auth_ext.inc:
 	  
 	  Changes for netware auth
 
-2000-06-21 10:53  nambit
+2000-06-21 10:53  Daniel <nambit@users.sourceforge.net>
 
 	* [r52] lang.zh-tw:
 	  
 	  Updated for 0.8-pre1
 
-2000-06-21 07:18  nambit
+2000-06-21 07:18  Daniel <nambit@users.sourceforge.net>
 
 	* [r51] ChangeLog, LANGUAGE, lang.es:
 	  
 	  Added Spanish language file
 
-2000-06-21 07:14  nambit
+2000-06-21 07:14  Daniel <nambit@users.sourceforge.net>
 
 	* [r50] ChangeLog, LANGUAGE, lang.nl:
 	  
 	  Added Dutch language file
 
-2000-06-20 08:46  nambit
+2000-06-20 08:46  Daniel <nambit@users.sourceforge.net>
 
 	* [r49] AUTHENTICATION, ChangeLog, auth.inc[DEL], del_entry.php3,
 	  edit_entry.php3, edit_entry_handler.php3, mrbs_auth.inc,
@@ -4249,20 +4282,20 @@
 	  
 	  Rename auth.inc to mrbs_auth.inc to stop conflicts with phplib
 
-2000-06-19 08:30  nambit
+2000-06-19 08:30  Daniel <nambit@users.sourceforge.net>
 
 	* [r48] ChangeLog, LANGUAGE, lang.de:
 	  
 	  Added German language
 
-2000-06-16 17:23  nambit
+2000-06-16 17:23  Daniel <nambit@users.sourceforge.net>
 
 	* [r47] ChangeLog, LANGUAGE, lang.en, lang.ja, lang.zh-tw,
 	  style.inc:
 	  
 	  Added Chinese language file
 
-2000-06-16 08:36  nambit
+2000-06-16 08:36  Daniel <nambit@users.sourceforge.net>
 
 	* [r45] AUTHENTICATION, ChangeLog, FAQ[DEL], INSTALL, README,
 	  auth.inc, auth_ext.inc, auth_ip.inc, badpw.pl, config.inc,
@@ -4276,37 +4309,37 @@
 	  (Mins, Hours, Days, Weeks) Thanks to Sam Mason
 	  <smason@mtc.ricardo.com> for much of this
 
-2000-06-14 09:07  nambit
+2000-06-14 09:07  Daniel <nambit@users.sourceforge.net>
 
 	* [r44] ChangeLog, day.php3:
 	  
 	  Meetings longer than one day show the name on following days
 
-2000-06-13 09:02  nambit
+2000-06-13 09:02  Daniel <nambit@users.sourceforge.net>
 
 	* [r43] circle.gif[DEL]:
 	  
 	  Removed unused circle.gif
 
-2000-06-13 09:00  nambit
+2000-06-13 09:00  Daniel <nambit@users.sourceforge.net>
 
 	* [r42] login.php3[DEL]:
 	  
 	  Removed unused login.php3
 
-2000-06-12 12:50  nambit
+2000-06-12 12:50  Daniel <nambit@users.sourceforge.net>
 
 	* [r39] ChangeLog:
 	  
 	  0.7 release
 
-2000-06-12 12:43  nambit
+2000-06-12 12:43  Daniel <nambit@users.sourceforge.net>
 
 	* [r38] ChangeLog:
 	  
 	  DB uses unixtime
 
-2000-06-12 12:42  nambit
+2000-06-12 12:42  Daniel <nambit@users.sourceforge.net>
 
 	* [r37] INSTALL, UPGRADE, day.php3, edit_entry.php3,
 	  edit_entry_handler.php3, tables.sql, testdata.php3, upgrade.sql,
@@ -4314,13 +4347,13 @@
 	  
 	  Changed DB to use unixtime rather than mysql date/time datatype.
 
-2000-06-12 10:28  nambit
+2000-06-12 10:28  Daniel <nambit@users.sourceforge.net>
 
 	* [r36] ChangeLog:
 	  
 	  Support for strftime()
 
-2000-06-12 09:13  nambit
+2000-06-12 09:13  Daniel <nambit@users.sourceforge.net>
 
 	* [r27] INSTALL, LANGUAGE, config.inc, day.php3, lang.en,
 	  mincals.inc, trailer.inc, view_entry.php3:
@@ -4328,71 +4361,71 @@
 	  Changes to strftime() rather than date() for some strings, so
 	  that locale support can be used.
 
-2000-06-09 18:16  nambit
+2000-06-09 18:16  Daniel <nambit@users.sourceforge.net>
 
 	* [r26] config.inc, day.php3, mincals.inc:
 	  
 	  start move to locale-based time strings (strftime)
 
-2000-06-06 16:55  nambit
+2000-06-06 16:55  Daniel <nambit@users.sourceforge.net>
 
 	* [r25] mrbs.css:
 	  
 	  Change external meeting colour to something darker. The old one
 	  can only just be seen on an LCD panel
 
-2000-06-05 15:23  nambit
+2000-06-05 15:23  Daniel <nambit@users.sourceforge.net>
 
 	* [r24] ChangeLog, mincals.inc, mrbs.css:
 	  
 	  New code for three month calendars. Thanks to David Wilkinson,
 	  see http://www.cascade.org.uk/software/php/calendar/
 
-2000-06-05 11:31  nambit
+2000-06-05 11:31  Daniel <nambit@users.sourceforge.net>
 
 	* [r23] day.php3, mrbs.css:
 	  
 	  Fixed a couple of small bugs with the Internal/External colour
 	  support
 
-2000-06-03 18:56  nambit
+2000-06-03 18:56  Daniel <nambit@users.sourceforge.net>
 
 	* [r22] ChangeLog, day.php3, mrbs.css:
 	  
 	  Internal and External meetings show in different colours
 
-2000-05-31 21:47  nambit
+2000-05-31 21:47  Daniel <nambit@users.sourceforge.net>
 
 	* [r21] lang.en:
 	  
 	  Update [time]
 
-2000-05-30 18:49  nambit
+2000-05-30 18:49  Daniel <nambit@users.sourceforge.net>
 
 	* [r20] lang.ja:
 	  
 	  Japanese support
 
-2000-05-30 18:49  nambit
+2000-05-30 18:49  Daniel <nambit@users.sourceforge.net>
 
 	* [r19] ChangeLog, config.inc, day.php3:
 	  
 	  Moved "resolution" to config file - so length of booking
 	  displayed can be varied
 
-2000-05-30 18:41  nambit
+2000-05-30 18:41  Daniel <nambit@users.sourceforge.net>
 
 	* [r18] ChangeLog:
 	  
 	  Japanese support
 
-2000-05-30 18:40  nambit
+2000-05-30 18:40  Daniel <nambit@users.sourceforge.net>
 
 	* [r17] lang.en, view_entry.php3:
 	  
 	  Updates for Japanese
 
-2000-05-29 17:16  nambit
+2000-05-29 17:16  Daniel <nambit@users.sourceforge.net>
 
 	* [r16] ChangeLog, INSTALL, LANGUAGE, admin.php3, config.inc,
 	  day.php3, edit_entry.php3, edit_entry_handler.php3, lang.en,
@@ -4400,31 +4433,31 @@
 	  
 	  Moved language-specific strings into external file.
 
-2000-05-28 19:28  nambit
+2000-05-28 19:28  Daniel <nambit@users.sourceforge.net>
 
 	* [r15] INSTALL:
 	  
 	  Added stuff about mySQL 3.23 not working
 
-2000-05-28 15:22  nambit
+2000-05-28 15:22  Daniel <nambit@users.sourceforge.net>
 
 	* [r14] TODO[DEL]:
 	  
 	  Removed useless TODO file
 
-2000-05-28 15:12  nambit
+2000-05-28 15:12  Daniel <nambit@users.sourceforge.net>
 
 	* [r13] ChangeLog, day.php3:
 	  
 	  Fixed areas with no rooms causing major error messages
 
-2000-05-28 13:15  nambit
+2000-05-28 13:15  Daniel <nambit@users.sourceforge.net>
 
 	* [r12] FAQ, README:
 	  
 	  Documentation update
 
-2000-05-27 08:29  nambit
+2000-05-27 08:29  Daniel <nambit@users.sourceforge.net>
 
 	* [r10] .htaccess, ChangeLog, INSTALL, config.inc, day.php3,
 	  edit_entry.php3, edit_entry_handler.php3, needed_files[DEL]:
@@ -4438,26 +4471,26 @@
 	  booking's date Added .htaccess to protect .inc files Moved start
 	  and end of day config variables to config.inc
 
-2000-05-21 11:08  nambit
+2000-05-21 11:08  Daniel <nambit@users.sourceforge.net>
 
 	* [r8] ChangeLog:
 	  
 	  Admin added. Now OK to use
 
-2000-05-21 11:03  nambit
+2000-05-21 11:03  Daniel <nambit@users.sourceforge.net>
 
 	* [r7] add.php3, del.php3:
 	  
 	  First version of files needed for admin
 
-2000-05-21 11:02  nambit
+2000-05-21 11:02  Daniel <nambit@users.sourceforge.net>
 
 	* [r6] INSTALL, README, admin.php3, edit_entry_handler.php3,
 	  meetingroomsystem.gif[DEL], tables.sql, testdata.php3:
 	  
 	  Various fixes and doc updates
 
-2000-05-20 21:43  nambit
+2000-05-20 21:43  Daniel <nambit@users.sourceforge.net>
 
 	* [r5] ChangeLog, TODO, config.inc, day.php3, del_entry.php3,
 	  edit_entry.php3, edit_entry_handler.php3:
@@ -4465,7 +4498,7 @@
 	  The system now works! There's no administration stuff, but the
 	  user pages are OK
 
-2000-05-03 22:41  nambit
+2000-05-03 22:41  Daniel <nambit@users.sourceforge.net>
 
 	* [r3] COPYING[CPY], ChangeLog[CPY], INSTALL[CPY], README[CPY],
 	  circle.gif[CPY], config.inc[CPY], connect.inc[CPY],
