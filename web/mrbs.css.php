@@ -96,6 +96,8 @@ $report_entry_border_color      = "#D0D0D0";    // used to separate individual b
 
 $search_table_border_color      = $main_table_border_color;
 
+$site_faq_entry_border_color    = $report_entry_border_color;    // used to separate individual FAQ's in help.php
+
 ?>
 
 .current {color: red}                          /* used to highlight the current item */
@@ -423,4 +425,11 @@ div#record_numbers {font-weight: bold}
 div#record_nav {font-weight: bold; margin-bottom: 1.0em}
 table#search_results {border-spacing: 1px; border-collapse: collapse}
 #search_results td, #search_results th {border: 1px solid <?php echo $search_table_border_color ?>; padding: 0.1em 0.2em 0.1em 0.2em}
+
+/* ------------ SITE_FAQ ------------------------*/
+.help q {font-style: italic}
+.help dfn {font-style: normal; font-weight: bold}
+#site_faq_contents li a {text-decoration: underline}
+div#site_faq_body {margin-top: 2.0em}
+#site_faq_body h4 {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.5em} 
 
