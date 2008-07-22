@@ -1,133 +1,193 @@
-<p>
+<!-- $Id$ -->
 
-<b><a name=top>Autenticaci&#243n</a></b>
-<menu>
-<a href="#authenticate"><u>&#191C&#243mo se ingresa al sistema?</u></a><br>
-<a href="#meeting_delete"><u>&#191Por qu&#233 no puedo borrar/modificar una reserva?</u></a><br>
-</menu>
-<b>Crear/Modificar reuniones</b>
-<menu>
-<a href="#repeating"><u>&#191C&#243mo hago una reserva repetitiva?</u></a><br>
-<a href="#repeating_delete"><u>&#191C&#243mo elimino una instancia de una reserva repetitiva?</u></a><br>
-<a href="#multiple_sites"><u>&#191C&#243mo reservo salas en distintos lugares?</u></a><br>
-<a href="#too_many"><u>No pude hacer mi reserva y apareci&#243 el mensaje "<i>too many entries</i>"!</u></a><br>
-<a href="#multiple_users"><u>&#191Qu&#233 pasa si varias personas fijan una reserva a la misma hora?</u></a><br>
-</menu>
-<b>Miscel&#225nea</b>
-<menu>
-<a href="#internal_external"><u>&#191Cu&#225l es la diferencia entre "Interno" y "Externo"?</u></a><br>
-</menu>
-<b>Acerca del programa "The Meeting Room Booking System" (MRBS)</b>
-<menu>
-<a href="#how_much"><u>&#191Cu&#225nto cost&#243 el sistema?</u></a><br>
-<a href="#about"><u>&#191C&#243mo funciona el sistema y qui&#233n lo escribi&#243?</u></a><br>
-</menu>
+<div id="site_faq_contents">
+  <a name="top"></a><h4>Autenticaci&oacute;n</h4>
+  <ul>
+    <li><a href="#authenticate">&iquest;C&oacute;mo se ingresa al sistema?</a></li>
+    <li><a href="#meeting_delete">&iquest;Por qu&eacute; no puedo borrar/modificar una reserva?</a></li>
+  </ul>
+  
+  <h4>Crear/Modificar reuniones</h4>
+  <ul>
+    <li><a href="#repeating">&iquest;C&oacute;mo hago una reserva repetitiva?</a></li>
+    <li><a href="#repeating_delete">&iquest;C&oacute;mo elimino una instancia de una reserva repetitiva?</a></li>
+    <li><a href="#multiple_sites">&iquest;C&oacute;mo reservo salas en distintos lugares?</a></li>
+    <li>
+      <a href="#too_many">
+        No pude hacer mi reserva y apareci&oacute; el mensaje 
+        <q>Las opciones seleccionadas crear&aacute;n demasiadas entradas</q>!
+      </a>
+    </li>
+    <li><a href="#multiple_users">&iquest;Qu&eacute; pasa si varias personas fijan una reserva a la misma hora?</a></li>
+  </ul>
+  
+  <h4>Miscel&aacute;nea</h4>
+  <ul>
+    <li><a href="#internal_external">&iquest;Cu&aacute;l es la diferencia entre <q>Interno</q> y <q>Externo</q>?</a></li>
+  </ul>
+  
+  <h4>Acerca del programa <q>The Meeting Room Booking System</q> (MRBS)</h4>
+  <ul>
+    <li><a href="#how_much">&iquest;Cu&aacute;nto cost&oacute; el sistema?</a></li>
+    <li><a href="#about">&iquest;C&oacute;mo funciona el sistema y qui&eacute;n lo escribi&oacute;?</a></li>
+  </ul>
+</div>
 
+<div id="site_faq_body">
+  <a name="authenticate"></a><h4>&iquest;C&oacute;mo se ingresa al sistema?</h4>
+  <p>
+    El sistema se puede configurar para utilizar uno entre varios m&eacute;todos 
+    de autenticaci&oacute;n incluyendo LDAP, Netware y SMB. Contacte al administrador 
+    del sistema si tiene problema para ingresar. Algunas funciones est&aacute;n 
+    restringidas s&oacute;lo para ciertos usuarios, y a los dem&aacute;s usuarios 
+    les aparecer&aacute; un mensaje que dice <q>No tiene autorizaci&oacute;n para 
+    modificar este dato</q>. Contacte al administrador del sistema si esto no funciona 
+    correctamente para usted. Si el sistema est&aacute; configurado para usar la 
+    autenticaci&oacute;n LDAP , esto significa que usted ingresa con el mismo nombre 
+    de usuario y clave que los que usa para obtener su correo.
+  </p>
+  <a href="#top">Top</a>
 
-<hr>
-<p>
-<a name=authenticate><b>&#191C&#243mo se ingresa al sistema?</b></a>
-<menu>
-El sistema se puede configurar para utilizar uno entre varios m&#233todos de autenticaci&#243n incluyendo LDAP, Netware y SMB. Contacte al administrador del sistema si tiene problema para ingresar. Algunas funciones est&#225n restringidas s&#243lo para ciertos usuarios, y a los dem&#225s usuarios les aparecer&#225 un mensaje que dice <i>You do not have access rights to
-modify this item</i>. Contacte al administrador del sistema si esto no funciona correctamente para usted. Si el sistema est&#225 configurado para usar la autenticaci&#243n LDAP , esto significa que usted ingresa con el mismo nombre de usuario y clave que los que usa para obtener su correo.
-</menu>
-<a href="#top">Subir</a><hr>
-</p>
+  <a name="meeting_delete"></a><h4>&iquest;Por qu&eacute; no puedo borrar/modificar una reserva?</h4>
+  <p>
+    Para poder borrar o modificar una reserva, usted debe haber ingresado como 
+    la misma persona que hizo la reserva de sala o arm&oacute; reuni&oacute;n. 
+    Contacte a uno de los administradores de salas o a la persona que hizo la 
+    reserva inicial para que la borre o modifique.
+  </p>
+  <a href="#top">Top</a>
 
-<p>
-<a name="meeting_delete"><b>&#191Por qu&#233 no puedo borrar/modificar una reserva?</b></a>
-<menu>
-Para poder borrar o modificar una reserva, usted debe haber ingresado como la misma persona que hizo la reserva de sala o arm&#243 reuni&#243n. Contacte a uno de los administradores de salas o a la persona que hizo la reserva inicial para que la borre o modifique.
-</menu>
-<a href="#top">Subir</a><hr>
-</p>
+  <a name="repeating"></a><h4>&iquest;C&oacute;mo hago una reserva repetitiva?</h4>
+  <p>
+    El hacer click en la hora deseada lo lleva a la pantalla de reservas. Seleccione el 
+    tipo apropiado de repetici&oacute;n. La sala quedar&aacute; reservada a la misma 
+    hora hasta la <dfn>fecha final</dfn> (Repeat End Date), durante los d&iacute;as 
+    determinados por el <dfn>tipo de repetici&oacute;n</dfn> (Repeat Type).
+  </p>
+  <ul>
+    <li>
+      Una <dfn>repetici&oacute;n diaria</dfn> (Daily repeat) repite la reserva todos 
+      los d&iacute;as.
+    </li>
+    <li>
+      Una <dfn>repetici&oacute;n semanal</dfn> (Weekly repeat) repite la reserva&nbsp; 
+      en aquellos d&iacute;as de la semana que usted marc&oacute; bajo <dfn>D&iacute;as a 
+      repetir</dfn> (Repeat Day).  Por ejemplo, utilice la repetici&oacute;n semanal 
+      (Weekly repeat) para reservar la sala todos los lunes, mi&eacute;rcoles y jueves, 
+      marcando esos d&iacute;as bajo D&iacute;as a repetir (Repeat Day). Si usted no 
+      marca ning&uacute;n d&iacute;a, la reserva se repetir&aacute; el mismo d&iacute;a 
+      de la semana que el primer d&iacute;a reservado.&nbsp;
+    </li>
+    <li>
+      Una <dfn>repetici&oacute;n mensual</dfn> (Monthly repeat) reserva el mismo d&iacute;a del mes.  
+      Por ejemplo el 28 avo d&iacute;a de cada mes.
+    </li>
+    <li>
+      Una <dfn>repetici&oacute;n anual</dfn> (Yearly repeat) reserva el mismo d&iacute;a del 
+      mes y el mismo mes, por ejemplo, cada 28 de octubre.
+    </li>
+    <li>
+      Finalmente, una <dfn>repetici&oacute;n mensual del d&iacute;a correspondiente</dfn> 
+      (Monthly, corresponding day repeat) reserva un d&iacute;a cada mes, el mismo 
+      d&iacute;a de semana y en la misma posici&oacute;n de orden dentro del mes. 
+      Use este tipo de repetici&oacute;n por ejemplo, para hacer reservas el primer 
+      lunes de cada mes, o el segundo mi&eacute;rcoles de cada mes, o el cuarto 
+      viernes de cada mes.&nbsp;
+      No use este tipo de repetici&oacute;n despu&eacute;s del d&iacute;a a 28avo del mes.
+    </li>
+  </ul>
+  <a href="#top">Top</a>
 
-<p>
-<a name=repeating><b>&#191C&#243mo hago una reserva repetitiva?</b></a>
-<menu>
-El hacer click en la hora deseada lo lleva a la pantalla de reservas. Seleccione el tipo apropiado de repetici&#243n. La sala quedar&#225 reservada a la misma hora hasta la fecha final (<b>Repeat End Date</b>), durante los d&#237as determinados por el tipo de repetici&#243n (<b>Repeat Type</b>).<p>Una repetici&#243n diaria (<i>Daily repeat</i>) repite la reserva todos los d&#237as.&nbsp;<br> Una repetici&#243n semanal (<i>Weekly repeat </i>) repite la reserva&nbsp; en aquellos d&#237as de la semana que usted marc&#243 bajo <b>D&#237as a repetir</b> (<b>Repeat Day</b>).  Por ejemplo, utilice la repetici&#243n semanal (Weekly repeat) para reservar la sala todos los lunes, mi&#233rcoles y jueves, marcando esos d&#237as bajo <b>D&#237as a repetir</b> (Repeat Day). Si usted no marca ning&#250n d&#237a, la reserva se repetir&#225 el mismo d&#237a de la semana que el primer d&#237a reservado.&nbsp;<br>
-Una repetici&#243n mensual (<i>Monthly</i> repeat) reserva el mismo d&#237a del mes.  Por ejemplo el 28 avo d&#237a de cada mes.&nbsp;<br>
-Una repetici&#243n anual (<i>Yearly</i> repeat) reserva el mismo d&#237a del mes y el mismo mes, por ejemplo, cada 28 de octubre.<br>
-Finalmente, una repetici&#243n mensual del d&#237a correspondiente (<i>Monthly, corresponding day</i> repeat) reserva un d&#237a cada mes, el mismo d&#237a de semana y en la misma posici&#243n de orden dentro del mes. Use este tipo de repetici&#243n por ejemplo, para hacer reservas el primer lunes de cada mes, o el segundo mi&#233rcoles de cada mes, o el cuarto viernes de cada mes.&nbsp;<br>
-No use este tipo de repetici&#243n despu&#233s del d&#237a a 28avo del mes.
+  <a name="repeating_delete"></a><h4>&iquest;C&oacute;mo elimino una instancia de una reserva repetitiva?</h4>
+  <p>
+    Seleccione el d&iacute;a/sala/hora que quiere borrar y seleccione <dfn>Borrar entrada</dfn> (Delete Entry).
+  </p>
+  <a href="#top">Top</a>
 
-</menu>
-<a href="#top">Subir</a><hr>
-</p>
+  <a name="multiple_sites"></a><h4>&iquest;C&oacute;mo reservo salas en distintos lugares?</h4>
+  <p>
+    No se puede. El sistema no permite hacer reservas en dos salas distintas 
+    simult&aacute;neamente. Usted debe hacer cada una de las reservas separadamente. 
+    Aseg&uacute;rese que la hora que usted quiere est&eacute; disponible en ambas salas 
+    antes de hacer una reserva.
+  </p>
+  <a href="#top">Top</a>
 
-<p>
-<a name="repeating_delete"><b>&#191C&#243mo elimino una instancia de una reserva repetitiva?</b></a>
-<menu>
- Seleccione el d&#237a/sala/hora que quiere borrar y seleccione Borrar entrada (<b>Delete Entry</b>).
-</menu>
-<a href="#top">Subir</a><hr>
-</p>
+  <a name="too_many"></a>
+  <h4>No pude hacer mi reserva y apareci&oacute; el mensaje <q>Las opciones seleccionadas crear&aacute;n demasiadas entradas</q>!</h4>
+  <p>
+    Ninguna reserva repetitiva puede generar m&aacute;s de 365 reservas. 
+    Debe haber un l&iacute;mite del n&uacute;mero de reservas m&aacute;ximas repetitivas 
+    que se pueden crear. Este n&uacute;mero puede aumentarse si es necesario.
+  </p>
+  <a href="#top">Top</a>
 
-<p>
-<a name="multiple_sites"><b>&#191C&#243mo reservo salas en distintos lugares?</b></a>
-<menu>
-No se puede. El sistema no permite hacer reservas en dos salas distintas simult&#225neamente. Usted debe hacer cada una de las reservas separadamente. Aseg&#250rese que la hora que usted quiere est&#233 disponible en ambas salas antes de hacer una reserva.
-</menu>
-<a href="#top">Subir</a><hr>
-</p>
+  <a name="multiple_users"></a><h4>&iquest;Qu&eacute; pasa si m&uacute;ltiples personas hacen una reserva a la misma hora?</h4>
+  <p>
+    La respuesta corta es: la primera persona que graba la reserva gana.
+    Detr&aacute;s de las bambalinas, el sistema usa una adecuada base de 
+    datos relacional multiusuaria que puede manejar varios miles de usuarios simult&aacute;neamente.
+  </p>
+  <a href="#top">Top</a>
 
-<p>
-<a name="too_many"><b>&#191No pude hacer mi reserva y apareci&#243 el mensaje "<i>too many entries</i>"!</b></a>
-<menu>
-Ninguna reserva repetitiva puede generar m&#225s de 365 reservas. Debe haber un l&#237mite del n&#250mero de reservas m&#225ximas repetitivas que se pueden crear. Este n&#250mero puede aumentarse si es necesario.
-</menu>
-<a href="#top">Subir</a><hr>
-</p>
+  <a name="internal_external"></a><h4>&iquest;Cu&aacute;l es la diferencia entre <q>Interno</q> y <q>Externo</q>?</h4>
+  <p>
+    Por defecto, MRBS define dos tipos de reservas de sala: <dfn>"Interna"</dfn> que 
+    significa que a la reuni&oacute;n asistir&aacute;n solamente empleados. 
+    Una reuni&oacute;n <dfn>"Externa"</dfn> puede tambi&eacute;n incluir la asistencia 
+    de clientes, vendedores, inversionistas, etc. Se pueden definir definir hasta un 
+    total de 10 tipos distintos de reuni&oacute;n, de acuerdo a las necesidades. Las 
+    reuniones se destacan en el calendario principal con el color que corresponde a su 
+    tipo, y la secuencia de colores de los tipos de reuni&oacute;n definidos se despliega 
+    debajo de la vista principal del calendario.
+  </p>
+  <a href="#top">Top</a>
 
-<p>
-<a name="multiple_users"><b>&#191Qu&#233 pasa si m&#250ltiples personas hacen una reserva a la misma hora?</b></a>
-<menu>
-La respuesta corta es: la primera persona que graba la reserva gana.<br>
-Detr&#225s de las bambalinas, el sistema usa una adecuada base de datos relacional multiusuaria que puede manejar varios miles de usuarios simult&#225neamente.
-</menu>
-<a href="#top">Subir</a><hr>
-</p>
+  <a name="how_much"></a><h4>&iquest;Cu&aacute;nto cost&oacute; el sistema?</h4>
+  <p>
+    Nada. Vea la siguiente secci&oacute;n para mayor infomaci&oacute;n.
+  </p>
+  <a href="#top">Top</a>
 
-<p>
-<a name="internal_external"><b>&#191Cu&#225l es la diferencia entre "Curso", "Taller" y "Reuni&#243n de trabajo"</b></a>
-<menu>
-Por defecto, MRBS define dos tipos de reservas de sala: <b>"Interna"</b> que significa que a la reunión asistirán solamente empleados. Una reunión <b>"Externa"</b> puede también incluir la asistencia de clientes, vendedores, inversionistas, etc. Se pueden definir definir hasta un total de 10 tipos distintos de reunión, de acuerdo a las necesidades. Las reuniones se destacan en el calendario principal con el color que corresponde a su tipo, y la secuencia de colores de los tipos de reunión definidos se despliega debajo de la vista principal del calendario.
-
-</menu>
-<a href="#top">Subir</a><hr>
-</p>
-
-<p>
-<a name="how_much"><b>&#191Cu&#225nto cost&#243 el sistema?</b></a>
-<menu>
-Nada. Vea la siguiente secci&#243n para mayor infomaci&#243n.
-</menu>
-<a href="#top">Subir</a><hr>
-</p>
-
-<p>
-<a name=about><b>&#191C&#243mo funciona el sistema y qui&#233n lo escribi&#243?</b></a>
-<menu>
-El sistema de Reserva de Salas MRBS (<a href="http://sourceforge.net/project/?group_id=5113">Meeting Room Booking System</a>)
-es un software de fuente abierta (open source software) que se distribuye  bajo la licencia p&#250blica Gnu (Gnu Public License o GPL). Esto significa que este software es libre de ser usado, distribuido y modificado.
-<p>
-El sistema fue escrito por <b>Daniel Gardner</b> mayoritariamente en lenguaje  <a href="http://www.php.net">PHP</a>, que es un lenguaje de programaci&#243n de c&#243digo abierto, que puede ser incluido en p&#225ginas web usando un concepto similar al de ASP (Microsoft Active Server Pages). PHP es especialmente bueno para dar acceso a bases de datos.
-
-<p>  
-La base de datos que se usa para el sistema puede ser
-<a href="http://www.mysql.com">MySQL</a>
-o <a href="http://www.postgresql.org">PostgreSQL</a>.<br>
-MySQL es una base de datos muy r&#225pida, multivinculo, multi-usario y muy  robusta que usa el lenguaje de consulta estructurado SQL (Structured Query Language) en el servidor de base de datos, que tambi&#233n es GPL.<br>
-PostgreSQL es un servidor de base de datos relacional de objetos SQL multi-usuario, muy potente, de c&#243digo abierto.
-<p> 
-El sistema puede operar en m&#250ltiples plataformas incluyendo la arquitectura de PC usando el sistema operativo  <a href="http://www.linux.com">Linux</a>.<br> Linux, es un sistema operativo gratuito, de c&#243digo abierto, de tipo Unix.
-<p>
-El software que opera en el servidor, que cumple la funci&#243n de "Servidor de WEB" que se est&#225 utilizando, o web server, es a&#250n otro software gratuito, de c&#243digo abierto. Se llama  <a href="http://www.apache.org">Apache</a> web server y es el web server m&#225s popular en el mundo.
-<p>
-En &#250ltimo t&#233rmino y como l&#237nea final:<br>
-<b>Cada parte de este sistema, desde el sistema operativo hasta la aplicaci&#243n, es completamente gratis, incluyendo el c&#243digo fuente y todo...</b>.
-
-
-</menu>
-<a href="#top">Subir</a><hr>
-</p>
+  <a name="about"></a><h4>&iquest;C&oacute;mo funciona el sistema y qui&eacute;n lo escribi&oacute;?</h4>
+  <p>
+    El Sistema de Reserva de Salas MRBS (<a href="http://sourceforge.net/project/?group_id=5113">Meeting Room Booking System</a>)
+    es un software de fuente abierta (open source software) que se distribuye  bajo la licencia p&uacute;blica Gnu 
+    (Gnu Public License o GPL). Esto significa que este software es libre de ser usado, distribuido y modificado.
+  </p> 
+  <p>
+    El sistema fue escrito por Daniel Gardner mayoritariamente en lenguaje 
+    <a href="http://www.php.net">PHP</a>, que es un lenguaje de 
+    programaci&oacute;n de c&oacute;digo abierto, que puede ser incluido 
+    en p&aacute;ginas web usando un concepto similar al de ASP (Microsoft Active Server Pages). 
+    PHP es especialmente bueno para dar acceso a bases de datos.
+  </p>
+  <p>  
+    La base de datos que se usa para el sistema puede ser
+    <a href="http://www.mysql.com">MySQL</a>
+    o <a href="http://www.postgresql.org">PostgreSQL</a>.
+    MySQL es una base de datos muy r&aacute;pida, multivinculo, multi-usario y muy 
+    robusta que usa el lenguaje de consulta estructurado SQL (Structured Query Language) 
+    en el servidor de base de datos, que tambi&eacute;n es GPL.
+    PostgreSQL es un servidor de base de datos relacional de objetos SQL 
+    multi-usuario, muy potente, de c&oacute;digo abierto.
+  </p>
+  <p> 
+    El sistema puede operar en m&uacute;ltiples plataformas incluyendo la 
+    arquitectura de PC usando el sistema operativo  <a href="http://www.linux.com">Linux</a>.
+    Linux, es un sistema operativo gratuito, de c&oacute;digo abierto, de tipo Unix.
+  </p>
+  <p>
+    El software que opera en el servidor, que cumple la funci&oacute;n de <q>Servidor de WEB</q> 
+    que se est&aacute; utilizando, o web server, es a&uacute;n otro software gratuito, de c&oacute;digo 
+    abierto. Se llama  <a href="http://www.apache.org">Apache</a> web server y es el web server 
+    m&aacute;s popular en el mundo.
+  </p>
+  <p>
+    En &uacute;ltimo t&eacute;rmino y como l&iacute;nea final:<strong>
+    Cada parte de este sistema, desde el sistema operativo hasta la 
+    aplicaci&oacute;n, es completamente gratis, incluyendo el c&oacute;digo fuente y todo...</strong>.
+  </p>
+  <a href="#top">Top</a>
+  
+</div>
