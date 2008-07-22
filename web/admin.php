@@ -136,7 +136,7 @@ else
         <legend><?php echo get_vocab("addarea") ?></legend>
         
           <input type="hidden" name="type" value="area">
-          
+
           <div>
             <label for="area_name"><?php echo get_vocab("name") ?>:</label>
             <input type="text" id="area_name" name="name">
@@ -145,6 +145,7 @@ else
           <div>
             <input type="submit" class="submit" value="<?php echo get_vocab("addarea") ?>">
           </div>
+
         </fieldset>
       </form>
     </td>

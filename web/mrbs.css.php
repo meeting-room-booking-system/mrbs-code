@@ -133,29 +133,24 @@ table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color:
 $admin_form_label_width       = 7.0;   // em
 $admin_form_gap               = 1.0;   // em
 $admin_form_input_width       = 8.3;   // em   (Also used in edit_area_room.php)
-$admin_total_width = $admin_form_label_width + $admin_form_gap + $admin_form_input_width + 1; // +1 to allow for various overheads
 ?>
 table#admin {margin-bottom: 1.0em}
 #admin th {text-align: center}
 #admin td {padding: 0.5em; vertical-align: top}
-.form_admin fieldset {
-    width: <?php echo $admin_total_width ?>em;      /* Safari doesn't like width: auto */
-    border: 0; padding-top: 1.0em;
-}    
-.form_admin div {float: left; clear: left; width: <?php echo $admin_total_width ?>em}
+.form_admin fieldset {border: 0; padding-top: 1.0em}   
+.form_admin div {float: left; clear: left} 
 .form_admin label {
     display: block; float: left; clear: left; 
     width: <?php echo $admin_form_label_width ?>em; min-height: 2.0em; text-align: right;
 }
 .form_admin input {
-    display: block; float: left; 
-    width: <?php echo $admin_form_input_width ?>em; 
+    display: block; float: left; clear: right;
+    width: <?php echo $admin_form_input_width ?>em;
     margin-top: -0.2em; margin-left: <?php echo $admin_form_gap ?>em;
     font-family: arial,sans-serif; font-size: 10pt;
 }
 .form_admin input.submit {
-    position: relative; left: <?php echo $admin_form_label_width ?>em;
-    width: auto; margin-top: 1.2em; margin-left: <?php echo $admin_form_gap ?>em;
+    width: auto; margin-top: 1.2em; margin-left: <?php echo ($admin_form_gap + $admin_form_label_width)?>em
 }
 
 
@@ -212,7 +207,7 @@ $edit_area_room_width_overheads   = 0.7;     // borders around inputs etc.    Ko
 $edit_area_room_form_width        = $edit_area_room_label_width + $edit_area_room_input_margin_left + $edit_area_room_input_width + $edit_area_room_width_overheads;
 ?>
 form.form_edit_area_room {
-    position: relative; width: <?php echo $edit_area_room_form_width ?>em; 
+    position: relative; width: <?php echo $edit_area_room_form_width ?>em;
     margin-top: 2em; margin-bottom: 2em; margin-left: auto; margin-right: auto
 }
 .form_edit_area_room label {
@@ -226,7 +221,7 @@ form.form_edit_area_room {
 }
 .form_edit_area_room .submit_buttons input {width: auto; clear: none; margin-top: 1.2em; margin-left: 1.0em}
 .form_edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}
-.form_edit_area_room div {width: 100%}
+.form_edit_area_room div {float: left; clear: left; width: 100%}
 
 
 /* ------------ FORM_GENERAL ------------------------*/
@@ -267,8 +262,8 @@ form.form_general {margin-top: 2.0em; width: 100%}
 .search     form.form_general {min-width: <?php echo $search_form_min_width ?>em}
 form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 
-.form_general div {float: left; width: 100%}
-.form_general div div {float: none; width: auto}
+.form_general div {float: left; clear: left; width: 100%}
+.form_general div div {float: none; clear: none; width: auto}
 .form_general div.group {display: table-cell; float: left; width: <?php echo $general_right_col_width ?>%}
 .form_general fieldset {width: auto; border: 0; padding-top: 2.0em}
 
@@ -278,10 +273,14 @@ form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
     width: <?php echo $general_left_col_width ?>%; 
     text-align: right; padding-bottom: 0.8em; font-weight: bold;
 }
-.edit_entry .form_general label {max-width: <?php echo $edit_entry_left_col_max_width ?>em}
-.report     .form_general label {max-width: <?php echo $report_left_col_max_width ?>em}
-.search     .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
-#logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em}
+.edit_entry .form_general label {max-width: <?php echo $edit_entry_left_col_max_width ?>em;
+                                     width: <?php echo $edit_entry_left_col_max_width ?>em}
+.report     .form_general label {max-width: <?php echo $report_left_col_max_width ?>em;
+                                     width: <?php echo $report_left_col_max_width ?>em}
+.search     .form_general label {max-width: <?php echo $search_left_col_max_width ?>em;
+                                     width: <?php echo $search_left_col_max_width ?>em}
+#logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em;
+                                     width: <?php echo $logon_left_col_max_width ?>em}
 .form_general .group      label {clear: none; width: auto; max-width: 100%; font-weight: normal}
 
 .form_general input {
@@ -304,11 +303,11 @@ form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 .form_general select {float: left; margin-left: <?php echo $general_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
 .form_general input.radio {margin-top: 0.1em}
 .form_general input.checkbox {margin-top: 0.1em}
-.form_general input.submit {position: relative; clear: left; margin-top: 1.0em}
-.edit_entry .form_general input.submit {width: auto; left: <?php echo $edit_entry_left_col_max_width ?>em}
-.report     .form_general input.submit {width: auto; left: <?php echo $report_left_col_max_width ?>em}
-.search     .form_general input.submit {width: auto; left: <?php echo $search_left_col_max_width ?>em}
-#logon                    input.submit {width: auto; left: <?php echo $logon_left_col_max_width ?>em}
+.form_general input.submit {display: block; width: auto; float: left; clear: left; margin-top: 1.0em}
+.edit_entry .form_general input.submit {margin-left: <?php echo ($edit_entry_left_col_max_width + $general_gap) ?>em}
+.report     .form_general input.submit {margin-left: <?php echo ($report_left_col_max_width + $general_gap) ?>em}
+.search     .form_general input.submit {margin-left: <?php echo ($search_left_col_max_width + $general_gap) ?>em}
+#logon                    input.submit {margin-left: <?php echo ($logon_left_col_max_width + $general_gap) ?>em; width: auto}
 
 .form_general #div_time input {width: 1.5em}
 .form_general #div_time span + input {margin-left: 0}
