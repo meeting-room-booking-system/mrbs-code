@@ -1,126 +1,173 @@
 <!-- $Id$ -->
-<h4><a name=top>Autenticazione</a></h4>
-<ul>
-<li><a href="#authenticate"><u>Come effettuo il log-in?</u></a></li>
-<li><a href="#meeting_delete"><u>Perchè non posso cancellare/modificare un appuntamento?</u></a></li>
-</ul>
-<h4>Creare/Modificare Appuntamento</h4>
-<ul>
-<li><a href="#repeating"><u>Come creo un appuntamento ricorrente?</u></a></li>
-<li><a href="#repeating_delete"><u>Come elimino un istanza di un appuntamento ricorrente?</u></a></li>
-<li><a href="#multiple_sites"><u>Come prenoto due stanze contemporaneamente?</u></a></li>
-<li><a href="#too_many"><u>La creazione del mio appuntamento è fallita perchè "<i>troppi inserimenti</i>"!</u></a></li>
-<li><a href="#multiple_users"><u>Cosa accade se più di una persona programma lo stesso appuntamento?</u></a></li>
-</ul>
-<h4>Varie</h4>
-<ul>
-<li><a href="#internal_external"><u>Che differenza c'è tra "Interno" ed "Esterno"</u></a></li>
-</ul>
-<h4>Informazioni su The Meeting Room Booking System</h4>
-<ul>
-<li><a href="#how_much"><u>Quanto è costato il sistema?</u></a></li>
-<li><a href="#about"><u>Come funziona il sistema e chi l'ha scritto?</u></a></li>
-</ul>
 
-<hr>
-<a name=authenticate><h4>Come effettuo il log-in?</h4></a>
-<p>
-Il sistema può essere configurato per utilizzare diversi sistemi di autenticazione,
-incluso LDAP, Netware, e SMB. Contatta l'amministratore se hai problemi di autenticazione.
-Alcune funzionalità sono accessibili solo per alcuni utenti, gli altri riceveranno questo messaggio
-<i>Non hai i permessi per modificare questo ogetto</i>. 
-Contatta l'amministratore per ulteriori informazioni.
-Se il sistema è configurato per utilizzare l'autenticazione LDAP, significa che devi utilizzare
-le stesse credenziali che utilizzi per accedere all'email.
-</p>
-<p><a href="#top">Top</a></p><hr>
+<div id="site_faq_contents">
+  <a name="top"></a><h4>Autenticazione</h4>
+  <ul>
+    <li><a href="#authenticate">Come effettuo il log-in?</a></li>
+    <li><a href="#meeting_delete">Perch&egrave; non posso cancellare/modificare un appuntamento?</a></li>
+  </ul>
 
-<a name="meeting_delete"><h4>Perchè non posso cancellare/modificare un appuntamento?</h4></a>
-<p>
-Per cancellare o modificare un appuntamento, devi essere loggato come lo stesso utente
-che ha creato l'appuntamento. Contatta l'amministratore di una delle stanze o la persona che ha creato l'appuntamento
-inizialmente se vuoi modificare o cancellare l'appuntamento.
-</p>
-<p><a href="#top">Top</a></p><hr>
+  <h4>Creare/Modificare Appuntamento</h4>
+  <ul>
+    <li><a href="#repeating">Come creo un appuntamento ricorrente?</a></li>
+    <li><a href="#repeating_delete">Come elimino un istanza di un appuntamento ricorrente?</a></li>
+    <li><a href="#multiple_sites">Come prenoto due stanze contemporaneamente?</a></li>
+    <li><a href="#too_many">La creazione del mio appuntamento &egrave; fallita perch&egrave; <q>troppi inserimenti</q>!</a></li>
+    <li><a href="#multiple_users">Cosa accade se pi&ugrave; di una persona programma lo stesso appuntamento?</a></li>
+  </ul>
+  
+  <h4>Varie</h4>
+  <ul>
+    <li><a href="#internal_external">Che differenza c'&egrave; tra <q>Interno</q> ed <q>Esterno</q></a></li>
+  </ul>
+  
+  <h4>Informazioni su The Meeting Room Booking System</h4>
+  <ul>
+    <li><a href="#how_much">Quanto &egrave; costato il sistema?</a></li>
+    <li><a href="#about">Come funziona il sistema e chi l'ha scritto?</a></li>
+  </ul>
+</div>
 
-<p>
-<a name=repeating><h4>Come creo un appuntamento ricorrente?</h4></a>
-<p>Cliccando sull'orario desiderato visualizzerai la pagina di prenotazione.
-Seleziona l'appropiato <b>Tipo ripetizione</b>. La stanza verrà prenotata
-alla stessa ora, finchè <b>Ripeti fino al</b>, nei giorni determinati dal <b>Tipo ripetizione</b>.</p>
-<p>
-<i>Giornaliero</i> ripete la prenotazione tutti i giorni.
-<i>Settimanale</i> ripete la prenotazione in quei giorni della settimana che hai selezionato 
-in <i>Ripeti giorno</i>. Per esempio, usa la ripetizione settimanale per prenotare la stanza ogni
-Lunedì, Martedì, Mercoledì e Venerdì; Selezione quei giorni in Ripeti giorno.
-Se non selezioni alcun giorno in Ripeti giorno, la prenotazione si ripeterà lo stesso giorno di ogni settimana della prenotazione iniziale.
-<i>Mensile</i> ripete la prenotazione lo stesso giorno ogni mese,
-per esempio il 15 del mese.
-<i>Annuale</i> ripete la prenotazione lo stesso mese e giorno,
-per esempio ogni 15 Marzo.
-Infine <i>Mensile, giorno corrispondente</i> ripete la prenotazione un giorno
-ogni mese, lo stesso giorno della settimana nella stessa posizione ordinale del mese.
-Usa questa ripetizione se per esempio vuoi prenotare il primo Lunedì, il secondo Martedì o il quarto venerdì del mese.
-Use this repeat type to schedule the first Monday, second Tuesday,
-Non utilizzare questa ripetizione dopo il 28 del mese.
-</p>
-<p><a href="#top">Top</a></p><hr>
+<div id="site_faq_body">
+  <a name="authenticate"></a><h4>Come effettuo il log-in?</h4>
+  <p>
+    Il sistema pu&ograve; essere configurato per utilizzare diversi sistemi di autenticazione,
+    incluso LDAP, Netware, e SMB. Contatta l'amministratore se hai problemi di autenticazione.
+    Alcune funzionalit&agrave; sono accessibili solo per alcuni utenti, gli altri riceveranno questo messaggio
+    <q>Non hai i permessi per modificare questo ogetto</q>. 
+    Contatta l'amministratore per ulteriori informazioni.
+    Se il sistema &egrave; configurato per utilizzare l'autenticazione LDAP, significa che devi utilizzare
+    le stesse credenziali che utilizzi per accedere all'email.
+  </p>
+  <a href="#top">Top</a>
 
-<a name="repeating_delete"><h4>Come elimino un'istanza di un appuntamento ricorrente?</h4></a>
-<p>Seleziona il giorno/stanza/ora che vuoi cancellare e seleziona <b>Cancella</b>.</p>
-<p><a href="#top">Top</a></p><hr>
+  <a name="meeting_delete"></a><h4>Perch&egrave; non posso cancellare/modificare un appuntamento?</h4>
+  <p>
+    Per cancellare o modificare un appuntamento, devi essere loggato come lo stesso utente
+    che ha creato l'appuntamento. Contatta l'amministratore di una delle stanze o la persona che ha creato l'appuntamento
+    inizialmente se vuoi modificare o cancellare l'appuntamento.
+  </p>
+  <a href="#top">Top</a>
 
-<a name="multiple_sites"><h4>Come prenoto due stanze contemporaneamente?</h4></a>
-<p>Non puoi.  Attualmente il sistema non prevede la prenotazione di due stanze contemporaneamente.
-Devi prenotarle singolarmente. Controlla che l'orario scelto sia disponibile per entrambe le stanze prima di prenotare.</p>
-<p><a href="#top">Top</a></p><hr>
+  <a name="meeting_delete"></a><h4>Why can't I delete/alter a meeting?</h4>
+  <p>
+    In order to delete or alter a meeting, you must be logged in as the
+    same person that made the meeting.  Contact one of the meeting room
+    administrators or the person who initially made the meeting to
+    have it deleted or changed.
+  </p>
+  <a href="#top">Top</a>
+  
+  <a name="repeating"></a><h4>Come creo un appuntamento ricorrente?</h4>
+  <p>
+    Cliccando sull'orario desiderato visualizzerai la pagina di prenotazione.
+    Seleziona l'appropiato <dfn>Tipo ripetizione</dfn>. La stanza verr&agrave; prenotata
+    alla stessa ora, finch&egrave; <dfn>Ripeti fino al</dfn>, nei giorni determinati dal Tipo ripetizione.
+  </p>
+  <ul>
+    <li>
+      <dfn>Giornaliero</dfn> ripete la prenotazione tutti i giorni.
+    </li>
+    <li>
+      <dfn>Settimanale</dfn> ripete la prenotazione in quei giorni della settimana che hai selezionato 
+      in <dfn>Ripeti giorno</dfn>. Per esempio, usa la ripetizione settimanale per prenotare la stanza ogni
+      Luned&igrave;, Marted&igrave;, Mercoled&igrave; e Venerd&igrave;; Selezione quei giorni in Ripeti giorno.
+      Se non selezioni alcun giorno in Ripeti giorno, la prenotazione si ripeter&agrave; lo stesso giorno di 
+      ogni settimana della prenotazione iniziale.
+    </li>
+    <li>
+      <dfn>Mensile</dfn> ripete la prenotazione lo stesso giorno ogni mese,
+      per esempio il 15 del mese.
+    </li>
+    <li>
+      <dfn>Annuale</dfn> ripete la prenotazione lo stesso mese e giorno,
+      per esempio ogni 15 Marzo.
+    </li>
+    <li>
+      Infine <dfn>Mensile, giorno corrispondente</dfn> ripete la prenotazione un giorno
+      ogni mese, lo stesso giorno della settimana nella stessa posizione ordinale del mese.
+      Usa questa ripetizione se per esempio vuoi prenotare il primo Luned&igrave;, il secondo 
+      Marted&igrave; o il quarto venerd&igrave; del mese.
+      Non utilizzare questa ripetizione dopo il 28 del mese.
+    </li>
+  </ul>
+  <a href="#top">Top</a>
+  
+  <a name="repeating_delete"></a><h4>Come elimino un'istanza di un appuntamento ricorrente?</h4>
+  <p>
+    Seleziona il giorno/stanza/ora che vuoi cancellare e seleziona <dfn>Cancella</dfn>.
+  </p>
+  <a href="#top">Top</a>
 
-<a name="too_many"><h4>La creazione del mio appuntamento è fallita perchè "<i>troppi inserimenti</i>"!</h4></a>
-<p>Qualsiasi appuntamento non può creare più di 365 inserimenti. E' necessario limitare il numero di appuntamenti creati.
-Questo numero può essere modificato se necessario.
-</p>
-<p><a href="#top">Top</a></p><hr>
+  <a name="multiple_sites"></a><h4>Come prenoto due stanze contemporaneamente?</h4>
+  <p>
+    Non puoi.  Attualmente il sistema non prevede la prenotazione di due stanze contemporaneamente.
+    Devi prenotarle singolarmente. Controlla che l'orario scelto sia disponibile per entrambe le stanze prima di prenotare.
+  </p>
+  <a href="#top">Top</a>
 
-<a name="multiple_users"><h4>Cosa accade se più di una persona programma lo stesso appuntamento?</h4></a>
-<p>
-La risposta corta è: La prima persona che clicca sul pulsante <b>Salva</b> vince.</li>
-Dietro le quinte, il sistema utilizza un database relazionale multi-utente, multi-processo che può gestire centinaia di utenti simultanei.
-</p>
-<p><a href="#top">Top</a></p><hr>
+  <a name="too_many"></a><h4>La creazione del mio appuntamento &egrave; fallita perch&egrave; <q>troppi inserimenti</q>!</h4>
+  <p>
+    Qualsiasi appuntamento non pu&ograve; creare pi&ugrave; di 365 inserimenti. E' necessario limitare il numero di appuntamenti creati.
+    Questo numero pu&ograve; essere modificato se necessario.
+  </p>
+  <a href="#top">Top</a>
 
-<a name="internal_external"><h4>Che differenza c'è tra "Interno" ed "Esterno"</h4></a>
-<p>
-Di default, MRBS definisce due tipi di appuntamento. <b>"Interno"</b> 
-significa che all'incontro saranno presenti solo dipendenti.
-Appuntamenti <b>"Esterno"</b> significa che all'incontro potrebbero partecipare clienti, venditori, investitori ecc. 
-Il sito permette di gestire fino a 10 tipi se necessario.
-Le prenotazioni sono evidenziate nel calendario principale con un colore corrispondente al tipo, a la leggenda dei colori 
-è visibile a fondopagina.
-</p>
-<p><a href="#top">Top</a></p><hr>
+  <a name="multiple_users"></a><h4>Cosa accade se pi&ugrave; di una persona programma lo stesso appuntamento?</h4>
+  <p>
+    La risposta corta &egrave;: La prima persona che clicca sul pulsante <dfn>Salva</dfn> vince.
+    Dietro le quinte, il sistema utilizza un database relazionale multi-utente, multi-processo 
+    che pu&ograve; gestire centinaia di utenti simultanei.
+  </p>
+  <a href="#top">Top</a>
 
-<a name="how_much"><h4>Quanto è costato il sistema?</h4></a>
-<p>Nulla.  Visualizza la prossima sezione per informazioni.</p>
-<p><a href="#top">Top</a></p><hr>
+  <a name="internal_external"></a><h4>Che differenza c'&egrave; tra <q>Interno</q> ed <q>Esterno</q></h4>
+  <p>
+    Di default, MRBS definisce due tipi di appuntamento. <dfn>Interno</dfn> 
+    significa che all'incontro saranno presenti solo dipendenti.
+    Appuntamenti <dfn>Esterno</dfn> significa che all'incontro potrebbero partecipare clienti, venditori, investitori ecc. 
+    Il sito permette di gestire fino a 10 tipi se necessario.
+    Le prenotazioni sono evidenziate nel calendario principale con un colore corrispondente al tipo, a la leggenda dei colori 
+    &egrave; visibile a fondopagina.
+  </p>
+  <a href="#top">Top</a>
 
-<a name=about><h4>Come funziona il sistema e chi l'ha scritto?</h4></a>
-<p>The <a href="http://sourceforge.net/project/?group_id=5113">Meeting Room Booking System</a>
-è un software open source che è distribuito sotto licenza Gnu Public License(GPL).
-Questo significa che il software è gratuito per l'utilizzo, distribuzione e modifiche.
-</p><p>Il sistema è principalmente scritto in
-<a href="http://www.php.net">PHP</a>, 
-che è una programmazione open source che può essere inserita nelle pagine web e simile come concetto a
-Microsoft active server pages.  PHP è estremamente ottimizzato per gli accessi ai databases.</p>
-<p>Il database utilizzato è
-<a href="http://www.mysql.com">MySQL</a>
-o <a href="http://www.postgresql.org">PostgreSQL</a>.
-MySQL è un database sempre GPL molto veloce, multi-processo, multi-utente e strutturato in
-SQL (Structured Query Language).
-PostgreSQL è un database orientato agli ogetti SQL relazionale ed open source</p>
-<p>Il sistema può girare su molteplici piattaforme, inclusi PC con sistema operativo
-<a href="http://www.linux.com">Linux</a>.
-Linux, è un sistema operativo simil-unix gratuito ed open source.</p>
-<p>Il web server è un altro pezzo di software open source e gratuito.
-L'<a href="http://www.apache.org">Apache</a> web server è il più utilizzato al mondo.</p>
-<p>Riassumendo: <b>ogni pezzo del sistema, dal sistema operativo all'applicazione è completamente gratuita compresi i sorgenti</b>.</p>
-<p><a href="#top">Top</a></p>
+  <a name="how_much"></a><h4>Quanto &egrave; costato il sistema?</h4>
+  <p>
+    Nulla.  Visualizza la prossima sezione per informazioni.
+  </p>
+  <a href="#top">Top</a>
+
+  <a name="about"></a><h4>Come funziona il sistema e chi l'ha scritto?</h4>
+  <p>
+    The <a href="http://sourceforge.net/project/?group_id=5113">Meeting Room Booking System</a>
+    &egrave; un software open source che &egrave; distribuito sotto licenza Gnu Public License(GPL).
+    Questo significa che il software &egrave; gratuito per l'utilizzo, distribuzione e modifiche.
+  </p> 
+  <p>
+    Il sistema &egrave; principalmente scritto in <a href="http://www.php.net">PHP</a>, 
+    che &egrave; una programmazione open source che pu&ograve; essere inserita nelle pagine web e simile come concetto a
+    Microsoft active server pages.  PHP &egrave; estremamente ottimizzato per gli accessi ai databases.
+  </p>
+  <p>  
+    Il database utilizzato &egrave; <a href="http://www.mysql.com">MySQL</a>
+    o <a href="http://www.postgresql.org">PostgreSQL</a>. MySQL &egrave; un 
+    database sempre GPL molto veloce, multi-processo, multi-utente e strutturato in
+    SQL (Structured Query Language). PostgreSQL &egrave; un database orientato agli ogetti SQL relazionale ed open source.
+  </p>
+  <p> 
+    Il sistema pu&ograve; girare su molteplici piattaforme, inclusi PC con sistema operativo
+    <a href="http://www.linux.com">Linux</a>.
+    Linux, &egrave; un sistema operativo simil-unix gratuito ed open source.
+  </p>
+  <p>
+    Il web server &egrave; un altro pezzo di software open source e gratuito.
+    L'<a href="http://www.apache.org">Apache</a> web server &egrave; il pi&ugrave; utilizzato al mondo.
+  </p>
+  <p>
+    Riassumendo: <strong>ogni pezzo del sistema, dal sistema operativo all'applicazione &egrave; 
+    completamente gratuita compresi i sorgenti</strong>.
+  </p>
+  <a href="#top">Top</a>
+  
+</div>
