@@ -203,7 +203,7 @@ if ($room <= 0)
 }
 
 // Show area and room:
-echo "<h2 align=center>$this_area_name - $this_room_name</h2>\n";
+echo "<h2 id=\"dwm\">$this_area_name - $this_room_name</h2>\n";
 
 //y? are year, month and day of the previous week.
 //t? are year, month and day of the next week.
@@ -219,28 +219,29 @@ $tm = date("m",$i);
 $td = date("d",$i);
 
 // Show Go to week before and after links
-echo "<div class=\"screenonly\">
-  <table width=\"100%\">
-    <tr>
-      <td>
-        <a href=\"week.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area&amp;room=$room\">
+$before_after_links_html = "
+<div class=\"screenonly\">
+  <div class=\"date_nav\">
+    <div class=\"date_before\">
+      <a href=\"week.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area&amp;room=$room\">
           &lt;&lt; ".get_vocab("weekbefore")."
-        </a>
-      </td>
-      <td align=\"center\">
-        <a href=\"week.php?area=$area&amp;room=$room\">
+      </a>
+    </div>
+    <div class=\"date_now\">
+      <a href=\"week.php?area=$area&amp;room=$room\">
           ".get_vocab("gotothisweek")."
-        </a>
-      </td>
-      <td align=\"right\">
-        <a href=\"week.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area&amp;room=$room\">
+      </a>
+    </div>
+    <div class=\"date_after\">
+      <a href=\"week.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area&amp;room=$room\">
           ".get_vocab("weekafter")."&gt;&gt;
-        </a>
-      </td>
-    </tr>
-  </table>
+      </a>
+    </div>
+  </div>
 </div>
 ";
+
+print $before_after_links_html;
 
 //Get all appointments for this week in the room that we care about
 // row['start_time'] = Start time
@@ -268,7 +269,7 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
 
   if ($debug_flag)
   {
-    echo "<br>DEBUG: query=$sql\n";
+    echo "<p>DEBUG: query=$sql</p>\n";
   }
   $res = sql_query($sql);
   if (! $res)
@@ -281,7 +282,7 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
     {
       if ($debug_flag)
       {
-        echo "<br>DEBUG: result $i, id ".$row['id'].", starts ".$row['start_time'],", ends ".$row['end_time']."\n";
+        echo "<p>DEBUG: result $i, id ".$row['id'].", starts ".$row['start_time'],", ends ".$row['end_time']."</p>\n";
       }
 
       // $d is a map of the screen that will be displayed
@@ -344,8 +345,9 @@ if ($debug_flag)
   {
     print "$pm7_val - " . date("r", $pm7_val) . "\n";
   }
+  echo "</pre></p>\n";
 
-  echo "<p>\$d =\n";
+  echo "<p><pre>\$d =\n";
   if (gettype($d) == "array")
   {
     while (list($w_k, $w_v) = each($d))
@@ -381,10 +383,10 @@ if ($javascript_cursor) // If authorized in config.inc.php, include the javascri
 }
 
 //This is where we start displaying stuff
-echo "<table cellspacing=0 border=1 width=\"100%\">";
+echo "<table class=\"dwm_main\" id=\"week_main\">";
 
 // The header row contains the weekday names and short dates.
-echo "<tr><th width=\"1%\"><br>".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
+echo "<tr><th class=\"first_last\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
 if (empty($dateformat))
 {
   $dformat = "%a<br>%b %d";
@@ -396,7 +398,7 @@ else
 for ($j = 0; $j<=($num_of_days-1) ; $j++)
 {
   $t = mktime( 12, 0, 0, $month, $day+$j, $year); 
-  echo "<th width=\"14%\"><a href=\"day.php?year=" . strftime("%Y", $t) . 
+  echo "<th><a href=\"day.php?year=" . strftime("%Y", $t) . 
     "&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) . 
     "&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">"
     . utf8_strftime($dformat, $t) . "</a></th>\n";
@@ -404,7 +406,7 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
 // next line to display times on right side
 if ( FALSE != $times_right_side )
 {
-  echo "<th width=\"1%\"><br>"
+  echo "<th class=\"first_last\">"
     . ( $enable_periods  ? get_vocab("period") : get_vocab("time") )
     . ":</th>";
 }
@@ -516,20 +518,20 @@ for (
         echo "BeginActiveCell();\n";
         echo "// -->\n</script>";
       }
-      echo "<div align=\"center\">";
+
       if ( $enable_periods )
       {
         echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
           . "&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth"
-          . "&amp;day=$wday\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
+          . "&amp;day=$wday\"><img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\"></a>";
       }
       else
       {
         echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
           . "&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth"
-          . "&amp;day=$wday\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
+          . "&amp;day=$wday\"><img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\"></a>";
       }
-      echo "</div>";
+
       if ($javascript_cursor)
       {
         echo "<script type=\"text/javascript\">\n<!--\n";
@@ -575,6 +577,8 @@ for (
   echo "</tr>\n";
 }
 echo "</table>";
+
+print $before_after_links_html;
 
 show_colour_key();
 

@@ -111,7 +111,7 @@ fieldset {width: 100%; padding-left: 1.0em; padding-right: 1.0em;
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
 
-img.new_booking {display: block; margin-left: auto; margin-right: auto}
+img.new_booking {display: block; margin-left: auto; margin-right: auto; border: 0}
 
 table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_header_back_color ?>; border-style: solid;
     border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
@@ -174,15 +174,18 @@ div.date_after  {float: right; width: 33%; text-align: right}
 
 table.dwm_main {clear: both; width: 100%; border-spacing: 1px; border-collapse: collapse}
 .dwm_main td, .dwm_main th {border: 1px solid <?php echo $main_table_border_color ?>; padding: 0}
-.dwm_main#day_main td {padding: 2px}
+.dwm_main#day_main th.first_last {width: 1%}
+.dwm_main#day_main td, .dwm_main#week_main td {padding: 2px}
 .dwm_main#month_main th {width: 14%}                                                   /* 7 days in the week */
 .dwm_main#month_main td.valid   {background-color: <?php echo $main_table_month_color ?>}
 .dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
-div.cell_container {float: left; min-height: 100px; width: 100%}                           /* the containing div for the td cell contents */
+div.cell_container {float: left; min-height: 100px; width: 100%}                       /* the containing div for the td cell contents */
 div.cell_container div {width: 100%; float: left; clear: left}                         /* each of the sections in the cell is wrapped in another div */                        
 a.monthday {display: block; font-size: medium; padding: 0 2px 0 2px}                   /* first section: the date in the top left corner */
 .dwm_main#month_main span {display: block; font-size: x-small; padding: 0 2px 0 2px}   /* then details of any bookings */
-.dwm_main#month_main img {border: 0; padding: 5px 0 5px 2px}                             /* finally the new booking image */
+.dwm_main#month_main img {border: 0; padding: 5px 0 5px 2px}                           /* finally the new booking image */
+.dwm_main#week_main th {width: 14%}
+.dwm_main#week_main th.first_last {width: 1%; vertical-align: bottom}  
 
 
 /* ------------ DEL.PHP -----------------------------*/

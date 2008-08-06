@@ -289,7 +289,7 @@ else
   
   // Table header giving room names
   echo "<thead>\n";
-  echo "<tr><th style=\"width: 1%\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
+  echo "<tr><th class=\"first_last\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
 
   $room_column_width = (int)(95 / sql_count($res));
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
@@ -304,7 +304,7 @@ else
   // next line to display times on right side
   if ( FALSE != $times_right_side )
   {
-    echo "<th style=\"width: 1%\">". ( $enable_periods  ? get_vocab("period") : get_vocab("time") )
+    echo "<th class=\"first_last\">". ( $enable_periods  ? get_vocab("period") : get_vocab("time") )
       .":</th>";
   }
   echo "</tr>\n";
@@ -402,11 +402,11 @@ else
         
         if( $enable_periods )
         {
-          echo "<a href=\"edit_entry.php?area=$area&amp;room=$room&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day\"><img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\" /></a>";
+          echo "<a href=\"edit_entry.php?area=$area&amp;room=$room&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day\"><img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" /></a>";
         }
         else
         {
-          echo "<a href=\"edit_entry.php?area=$area&amp;room=$room&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day\"><img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\" /></a>";
+          echo "<a href=\"edit_entry.php?area=$area&amp;room=$room&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day\"><img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" /></a>";
         }
         
         if ($javascript_cursor)
