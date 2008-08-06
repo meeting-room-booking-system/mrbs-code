@@ -14,7 +14,7 @@ A:visited {color:#5B69A6; font-weight: bold; text-decoration: none}
 A:hover {color:red; text-decoration:underline}
 H1 {color:black; font-family:verdana,sans-serif; font-size:16pt}
 H2 {color:black; font-family:verdana,sans-serif; font-size:14pt}
-H3 {font-family:verdana,sans-serif}
+/* H3 {font-family:verdana,sans-serif} */
 
 TD {font-size:10pt; font-family: arial,sans-serif; border-width: 1px; vertical-align: top}
 TD.header {color:black; font-family:verdana,sans-serif; border-width:0;
@@ -97,6 +97,8 @@ $report_entry_border_color      = "#D0D0D0";    // used to separate individual b
 $search_table_border_color      = $main_table_border_color;
 
 $site_faq_entry_border_color    = $report_entry_border_color;    // used to separate individual FAQ's in help.php
+
+$trailer_border_color           = $main_table_border_color;
 
 ?>
 
@@ -378,6 +380,7 @@ table#colour_key {clear: both; border-spacing: 0; border-collapse: collapse}
 /* ------------ HELP.PHP ------------------------*/
 table#version_info {border-spacing: 0; border-collapse: collapse}
 #version_info td {padding: 0 1.0em 0 0; vertical-align: bottom}
+#version_info td:first-child {text-align: right}
 
 /* ------------ MINCALS.PHP ---------------------*/
 div#cals {float: right}
@@ -432,3 +435,14 @@ table#search_results {border-spacing: 1px; border-collapse: collapse}
 div#site_faq_body {margin-top: 2.0em}
 #site_faq_body h4 {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.5em} 
 
+
+/* ------------ TRAILER.INC ---------------------*/
+div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>; 
+             border-bottom: 1px solid <?php echo $trailer_border_color ?>; 
+             margin-top: 1.0em; padding: 0.3em 0 0.3em 0}
+#trailer span.label {font-weight: bold}
+#trailer span.current {font-weight: bold; color: black}
+
+/* ------------ VIEW_ENTRY.PHP ------------------*/
+.view_entry #entry td:first-child {text-align: right; font-weight: bold; padding-right: 1.0em}
+.view_entry div#view_entry_nav {margin-top: 1.0em}
