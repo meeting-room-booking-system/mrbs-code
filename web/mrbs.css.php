@@ -9,9 +9,7 @@ header("Content-type: text/css");
 BODY {color:black; font-size: 10pt; font-family:arial,sans-serif;
 background-color:#ffffed}
 
-A:link {color:#5B69A6; font-weight: bold; text-decoration: none}
-A:visited {color:#5B69A6; font-weight: bold; text-decoration: none}
-A:hover {color:red; text-decoration:underline}
+
 H1 {color:black; font-family:verdana,sans-serif; font-size:16pt}
 H2 {color:black; font-family:verdana,sans-serif; font-size:14pt}
 /* H3 {font-family:verdana,sans-serif} */
@@ -25,22 +23,9 @@ TD.TL { vertical-align: top; text-align: left}
 
 td form { margin:0; } /* Prevent IE from displaying margins around forms in tables. */
 
-TD.unallocated {color:gray}
-TD.allocated {color:black}
-A:link.unallocated {color:#9BA9E6}
-A:link.allocated {color:#5B69A6}
-
-A:hover.unallocated {color:red}
-A:hover.allocated {color:red}
-
-A.blue {color:blue}
-A:visited.blue {color:blue}
-A:hover.blue {color:red}
-
 TH {color:#eeeeee; font-size:10pt; font-family:verdana,sans-serif; background-color:#999999; border-width:1px; border-color:#999999; vertical-align:top}
 
 
-TD.blue {background-color:#F0F0FF}
 TD.red  {background-color:#FFF0F0}
 TD.green {background-color:#DDFFDD}
 TD.A {background-color:#FFCCFF}
@@ -59,7 +44,7 @@ TD.even_row {background-color:#FFFFFF}   /* Even rows in the day view */
 TD.odd_row {background-color:#EEEEEE}   /* Odd rows in the day view */
 
 TD.highlight {background-color:#AABBFF; border-style: solid; border-width: 1px; border-color:#0000AA;} /* The highlighted cell under the cursor */
-.naked { margin: 0; padding: 0; border-width:0} /* Invisible tables used for internal needs */
+
 
 .sitename
 {font-size: 18px;
@@ -100,10 +85,18 @@ $site_faq_entry_border_color    = $report_entry_border_color;    // used to sepa
 
 $trailer_border_color           = $main_table_border_color;
 
+$anchor_link_color              = "#5b69a6";            // link color
+$anchor_visited_color           = $anchor_link_color;   // link color (visited)
+$anchor_hover_color             = "red";                // link color (hover)
+
 ?>
 
 .current {color: red}                          /* used to highlight the current item */
 .error   {color: red; font-weight: bold}       /* for error messages */
+
+a:link    {color: <?php echo $anchor_link_color ?>;    font-weight: bold; text-decoration: none}
+a:visited {color: <?php echo $anchor_visited_color ?>; font-weight: bold; text-decoration: none}
+a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration:underline}
 
 legend {font-weight: bold; font-size: large; color: black}
 fieldset {width: 100%; padding-left: 1.0em; padding-right: 1.0em; 
@@ -126,6 +119,8 @@ table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color:
     border-top-width: 1px; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;
     border-top-color: <?php echo $admin_table_header_back_color ?>; border-left-color: <?php echo $admin_table_header_back_color ?>;
     vertical-align: middle}
+    
+.naked {margin: 0; padding: 0; border-width: 0} /* Invisible tables used for internal needs */
 
 
 /* ------------ ADMIN.PHP ---------------------------*/
