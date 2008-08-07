@@ -32,7 +32,7 @@ $vocab["dayafter"]           = "gehe zum nächsten Tag";
 $vocab["gototoday"]          = "gehe zum heutigen Tag";
 $vocab["goto"]               = "Start";
 $vocab["highlight_line"]     = "Markieren Sie diese Zeile";
-$vocab["click_to_reserve"]   = "Klicken Sie eine Zelle an um eine Reservierung zu machen";
+$vocab["click_to_reserve"]   = "In die Zelle klicken um eine Reservierung vorzunehmen";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Zeige Tag";
@@ -80,10 +80,10 @@ $vocab["rep_num_weeks"]      = "Anzahl Wochen";
 $vocab["rep_for_nweekly"]    = "(für n-te Woche)";
 $vocab["ctrl_click"]         = "Strg-Click um mehr als einen Raum auszuwählen";
 $vocab["entryid"]            = "Entry ID ";
-$vocab["repeat_id"]          = "Repeat ID "; 
+$vocab["repeat_id"]          = "ID wiederholen "; 
 $vocab["you_have_not_entered"] = "Sie haben folgendes Feld nicht ausgefüllt ";
 $vocab["you_have_not_selected"] = "You have not selected a";
-$vocab["valid_room"]         = "room.";
+$vocab["valid_room"]         = "Raum.";
 $vocab["valid_time_of_day"]  = "Gültige Uhrzeit.";
 $vocab["brief_description"]  = "Kurzbeschreibung.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
@@ -97,8 +97,8 @@ $vocab["deleteentry"]        = "Eintrag löschen";
 $vocab["deleteseries"]       = "Alle Einträge löschen";
 $vocab["confirmdel"]         = "Sind Sie sicher,\\ndass Sie diesen Eintrag\\nlöschen wollen?\\n\\n";
 $vocab["returnprev"]         = "Zurück zur vorigen Seite";
-$vocab["invalid_entry_id"]   = "Invalid entry id.";
-$vocab["invalid_series_id"]  = "Invalid series id.";
+$vocab["invalid_entry_id"]   = "Ungültige ID des Eintrags.";
+$vocab["invalid_series_id"]  = "Ungültige ID der Serie.";
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Fehler";
@@ -140,7 +140,7 @@ $vocab["user"]               = "Benutzer";
 $vocab["administrator"]      = "Administrator";
 $vocab["unknown"]            = "Unbekannt";
 $vocab["ok"]                 = "OK";
-$vocab["show_my_entries"]    = "Click to display all my upcoming entries";
+$vocab["show_my_entries"]    = "Klicken um alle meine anstehenden Einträge anzuzeigen";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Leerer oder ungültiger Suchbegriff.";
