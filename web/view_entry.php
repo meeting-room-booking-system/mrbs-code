@@ -332,7 +332,7 @@ if($rep_type != 0)
     <?php
     if ( ! $series )
     {
-      echo "<a href=\"del_entry.php?id=$id&amp;series=0\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</a>";
+      echo "<a href=\"del_entry.php?id=$id&amp;series=0\" onclick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</a>";
     }
     
     if ($repeat_id)

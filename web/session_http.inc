@@ -103,9 +103,11 @@ function PrintLogonBox()
 ?>
     <a name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></a>
     <form method="post" action="admin.php">
-      <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" >
-      <input type="hidden" name="Action" value="QueryName" >
-      <input type="submit" value=" <?php echo get_vocab('login') ?> " >
+      <div>
+        <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>">
+        <input type="hidden" name="Action" value="QueryName">
+        <input type="submit" value=" <?php echo get_vocab('login') ?> ">
+      </div>
     </form>
 <?php
   }

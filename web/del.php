@@ -69,7 +69,11 @@ if ($type == "room")
     }
     else if (sql_count($res) > 0)
     {
-      echo get_vocab("deletefollowing") . ":\n<ul>\n";
+      echo "<p>\n";
+      echo get_vocab("deletefollowing") . ":\n";
+      echo "</p>\n";
+      
+      echo "<ul>\n";
       
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
@@ -85,7 +89,7 @@ if ($type == "room")
     echo "<p>" .  get_vocab("sure") . "</p>\n";
     echo "<div id=\"del_room_confirm_links\">\n";
     echo "<a href=\"del.php?type=room&amp;room=$room&amp;confirm=Y\"><span id=\"del_yes\">" . get_vocab("YES") . "!</span></a>\n";
-    echo "<a href=admin.php><span id=\"del_no\">" . get_vocab("NO") . "!</span></a>\n";
+    echo "<a href=\"admin.php\"><span id=\"del_no\">" . get_vocab("NO") . "!</span></a>\n";
     echo "</div>\n";
     echo "</div>\n";
     include "trailer.inc";
@@ -109,9 +113,10 @@ if ($type == "area")
   {
     // There are rooms left in the area
     print_header($day, $month, $year, $area);
-   
+    echo "<p>\n";
     echo get_vocab("delarea");
     echo "<a href=\"admin.php\">" . get_vocab("backadmin") . "</a>";
+    echo "</p>\n";
     include "trailer.inc";
   }
 }

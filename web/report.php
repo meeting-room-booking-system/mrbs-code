@@ -483,14 +483,14 @@ if (empty($display))
             ?>
           </label>
           <label>
-            <input class="radio" type="radio" name=summarize value="2"
+            <input class="radio" type="radio" name="summarize" value="2"
             <?php
             if ($summarize==2) echo " checked=\"checked\"";
             echo ">" . get_vocab("summary_only");
             ?>
           </label>
           <label>
-            <input class="radio" type="radio" name=summarize value="3"
+            <input class="radio" type="radio" name="summarize" value="3"
             <?php 
             if ($summarize==3) echo " checked=\"checked\"";
             echo ">" . get_vocab("report_and_summary");?>

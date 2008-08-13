@@ -226,7 +226,7 @@ print_header($day, $month, $year, $area);
 ?>
 
 <script type="text/javascript">
-<!-- Hide this from non-Javascript aware UAs
+//<![CDATA[
 
 // do a little form verifying
 function validate_and_submit ()
@@ -329,7 +329,7 @@ function OnAllDayClick(allday)
     }
   }
 }
-// End of Javascript -->
+//]]>
 </script>
 
 <?php
@@ -366,7 +366,7 @@ else
 ?>
 
 
-<form class="form_general" name="main" action="edit_entry_handler.php" method="get">
+<form class="form_general" id="main" action="edit_entry_handler.php" method="get">
   <fieldset>
   <legend><?php echo get_vocab($token); ?></legend>
 
@@ -482,8 +482,7 @@ else
     ?>
     
       <script type="text/javascript">
-      
-      <!-- Hide the Javascript from non-Javascript UAs
+      //<![CDATA[
       
       function changeRooms( formObj )
       {
@@ -555,8 +554,10 @@ else
       this.document.writeln("          <\/select>");
       this.document.writeln("<\/div>");
 
-      // End of Javascript -->
+      //]]>
       </script>
+      
+      
       <?php
     } // if $num_areas
     ?>
@@ -705,16 +706,21 @@ else
       <input type="text" id="rep_num_weeks" name="rep_num_weeks" value="<?php echo $rep_num_weeks?>">
       <?php
     }
+    
+    // In the section below the <div> needs to be inside the <noscript> in order to pass validation
     ?>
-
-    <div id="edit_entry_submit">
     <script type="text/javascript">
-      document.writeln ( '<input class="submit" type="button" name="save_button" value="<?php echo get_vocab("save")?>" onclick="validate_and_submit()">' );
+      //<![CDATA[
+      document.writeln ('<div id="edit_entry_submit">');
+      document.writeln ('<input class="submit" type="button" name="save_button" value="<?php echo get_vocab("save")?>" onclick="validate_and_submit()">');
+      document.writeln ('<\/div>');
+      //]]>
     </script>
     <noscript>
-      <input class="submit" type="submit" value="<?php echo get_vocab("save")?>">
+      <div id="edit_entry_submit">
+        <input class="submit" type="submit" value="<?php echo get_vocab("save")?>">
+      </div>
     </noscript>
-    </div>
 
     <input type="hidden" name="returl" value="<?php echo htmlspecialchars($HTTP_REFERER) ?>">
     <!--input type="hidden" name="room_id" value="<?php echo $room_id?>"-->

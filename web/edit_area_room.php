@@ -99,7 +99,7 @@ if (!empty($room))
 ?>
 
 <form class="form_edit_area_room" action="edit_area_room.php" method="post">
-  <fieldset>
+  <fieldset class="admin">
   <legend><?php echo get_vocab("editroom") ?></legend>
   
     <fieldset>
@@ -109,32 +109,32 @@ if (!empty($room))
       </span>
     </fieldset>
     
-    <input type=hidden name="room" value="<?php echo $row["id"]?>" />
+    <input type="hidden" name="room" value="<?php echo $row["id"]?>">
     
     <div>
     <label for="room_name"><?php echo get_vocab("name") ?>:</label>
-    <input type="text" id="room_name" name="room_name" value="<?php echo htmlspecialchars($row["room_name"]); ?>" />
+    <input type="text" id="room_name" name="room_name" value="<?php echo htmlspecialchars($row["room_name"]); ?>">
     </div>
     
     <div>
     <label for="description"><?php echo get_vocab("description") ?>:</label>
-    <input type="text" id="description" name="description" value="<?php echo htmlspecialchars($row["description"]); ?>" /> 
+    <input type="text" id="description" name="description" value="<?php echo htmlspecialchars($row["description"]); ?>"> 
     </div>
     
     <div>
     <label for="capacity"><?php echo get_vocab("capacity") ?>:</label>
-    <input type="text" id="capacity" name="capacity" value="<?php echo $row["capacity"]; ?>" />
+    <input type="text" id="capacity" name="capacity" value="<?php echo $row["capacity"]; ?>">
     </div>
     
     <div>
     <label for="room_admin_email"><?php echo get_vocab("room_admin_email") ?>:</label>
-    <input type="text" id="room_admin_email" name="room_admin_email" maxlength="75" value="<?php echo htmlspecialchars($row["room_admin_email"]); ?>" />
+    <input type="text" id="room_admin_email" name="room_admin_email" maxlength="75" value="<?php echo htmlspecialchars($row["room_admin_email"]); ?>">
     </div>
     
     <fieldset class="submit_buttons">
     <legend></legend>
-      <input type=submit name="change_room" value="<?php echo get_vocab("change") ?>" />
-      <input type=submit name="change_done" value="<?php echo get_vocab("backadmin") ?>" />
+      <input type="submit" name="change_room" value="<?php echo get_vocab("change") ?>">
+      <input type="submit" name="change_done" value="<?php echo get_vocab("backadmin") ?>">
     </fieldset>
     
   </fieldset>
@@ -184,7 +184,7 @@ if (!empty($area))
 ?>
 
 <form class="form_edit_area_room" action="edit_area_room.php" method="post">
-  <fieldset>
+  <fieldset class="admin">
   <legend><?php echo get_vocab("editarea") ?></legend>
   
     <fieldset>

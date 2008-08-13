@@ -155,7 +155,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   print "<div id=\"form_container\">";
   print "<form id=\"form_edit_users\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)). "\">\n";
     ?>
-        <fieldset>
+        <fieldset class="admin">
         <legend><?php echo (($Action == "Edit") ? get_vocab("edit_user") : get_vocab("add_new_user"));?></legend>
         <div id="edit_users_input_container">
           <?php
@@ -170,7 +170,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
             }
             if ($fieldname == "password")
             {
-              print "    <input type=\"hidden\" name=\"Field_$fieldname\" value=\"". htmlspecialchars($data['password'])."\" >\n";
+              print "    <input type=\"hidden\" name=\"Field_$fieldname\" value=\"". htmlspecialchars($data['password'])."\">\n";
               continue;
             }
             $html_fieldname = htmlspecialchars("Field_$fieldname");
@@ -194,7 +194,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           {
             print "<div>\n";
             print "<label for=\"password$i\">" . get_vocab("user_password") . ":</label>\n";
-            print "<input type=\"password\" id=\"password$i\" name=\"password$i\" value=\"\" >\n";
+            print "<input type=\"password\" id=\"password$i\" name=\"password$i\" value=\"\">\n";
             print "</div>\n";
           }
           ?>
@@ -208,9 +208,11 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
       {
         ?>
         <form id="form_delete_users" method="post" action="<?php echo(htmlspecialchars(basename($PHP_SELF))); ?>">
-          <input type="hidden" name="Action" value="Delete">
-          <input type="hidden" name="Id" value="<?php echo($Id); ?>">
-          <input class="submit" type="submit" value="<?php echo(get_vocab("delete_user")); ?>">
+          <div>
+            <input type="hidden" name="Action" value="Delete">
+            <input type="hidden" name="Id" value="<?php echo($Id); ?>">
+            <input class="submit" type="submit" value="<?php echo(get_vocab("delete_user")); ?>">
+          </div>
         </form>
         <?php
       }
@@ -237,7 +239,7 @@ if (isset($Action) && ($Action == "Update"))
     print "  <fieldset>\n";
     print "  <legend></legend>\n";
     print "    <p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
-    print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \" >\n";
+    print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
     print "  </fieldset>\n";
     print "</form>\n</body>\n</html>\n";
 
@@ -332,7 +334,7 @@ if (isset($Action) && ($Action == "Update"))
     print "  <legend></legend>\n";
     print "    <p class=\"error\">Error updating the $tbl_users table.</p>\n";
     print "    <p class=\"error\">" . sql_error() . "</p>\n";
-    print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \" >\n";
+    print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
     print "  </fieldset>\n";
     print "</form>\n</body>\n</html>\n";
 
@@ -367,7 +369,7 @@ if (isset($Action) && ($Action == "Delete"))
     print "  <legend></legend>\n";
     print "    <p class=\"error\">Error deleting entry $Id from the $tbl_users table.</p>\n";
     print "    <p class=\"error\">" . sql_error() . "</p>\n";
-    print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \" >\n";
+    print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
     print "  </fieldset>\n";
     print "</form>\n</body>\n</html>\n";
 
@@ -396,9 +398,11 @@ if ($initial_user_creation == 1)
 if ($level == 2) /* Administrators get the right to add new users */
 {
   print "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-  print "  <input type=\"hidden\" name=\"Action\" value=\"Add\">\n";
-  print "  <input type=\"hidden\" name=\"Id\" value=\"-1\">\n";
-  print "  <input style=\"margin:0\" type=\"submit\" value=\"" . get_vocab("add_new_user") . "\" >\n";
+  print "  <div>\n";
+  print "    <input type=\"hidden\" name=\"Action\" value=\"Add\">\n";
+  print "    <input type=\"hidden\" name=\"Id\" value=\"-1\">\n";
+  print "    <input style=\"margin:0\" type=\"submit\" value=\"" . get_vocab("add_new_user") . "\">\n";
+  print "  </div>\n";
   print "</form>\n";
 }
 
@@ -472,9 +476,11 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     if (getWritable($name, $user)) /* If the logged-on user has the right to edit this entry */
     {
       print "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-      print "  <input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
-      print "  <input type=\"hidden\" name=\"Id\" value=\"$this_id\">\n";
-      print "  <input style=\"margin:0\" type=\"submit\" value=\"" . get_vocab("edit") . "\" >\n";
+      print "  <div>\n";
+      print "    <input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
+      print "    <input type=\"hidden\" name=\"Id\" value=\"$this_id\">\n";
+      print "    <input style=\"margin:0\" type=\"submit\" value=\"" . get_vocab("edit") . "\">\n";
+      print "  </div>\n";
       print "</form>\n";
     }
     else

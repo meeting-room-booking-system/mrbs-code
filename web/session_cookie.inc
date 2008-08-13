@@ -104,10 +104,10 @@ function printLoginForm($TargetURL)
       <label for="NewUserPassword"><?php echo get_vocab("user_password") ?>:</label>
       <input type="password" id="NewUserPassword" name="NewUserPassword">
     </div>
-    <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>" >
-    <input type="hidden" name="Action" value="SetName" >
+    <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
+    <input type="hidden" name="Action" value="SetName">
     <div id="logon_submit">
-      <input class="submit" type="submit" value="<?php echo get_vocab('login') ?> " >
+      <input class="submit" type="submit" value="<?php echo get_vocab('login') ?> ">
     </div>
   </fieldset>
 </form>
@@ -199,11 +199,13 @@ function PrintLogonBox()
          .$user ?>
       </a>
       <form method="post" action="admin.php">
-        <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>" >
-        <input type="hidden" name="Action" value="SetName" >
-        <input type="hidden" name="UserName" value="" >
-        <input type="hidden" name="UserPassword" value="" >
-        <input type="submit" value=" <?php echo get_vocab('logoff') ?> " >
+        <div>
+          <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
+          <input type="hidden" name="Action" value="SetName">
+          <input type="hidden" name="UserName" value="">
+          <input type="hidden" name="UserPassword" value="">
+          <input type="submit" value=" <?php echo get_vocab('logoff') ?> ">
+        </div>
       </form>
   <?php 
   }
@@ -212,9 +214,11 @@ function PrintLogonBox()
   ?>
       <a name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></a>
       <form method="post" action="admin.php">
-        <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>" >
-        <input type="hidden" name="Action" value="QueryName" >
-        <input type="submit" value=" <?php echo get_vocab('login') ?> " >
+        <div>
+          <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
+          <input type="hidden" name="Action" value="QueryName">
+          <input type="submit" value=" <?php echo get_vocab('login') ?> ">
+        </div>
       </form>
   <?php 
   }

@@ -373,13 +373,17 @@ if ($debug_flag)
 if ($javascript_cursor) // If authorized in config.inc.php, include the javascript cursor management.
 {
   echo "<script type=\"text/javascript\" src=\"xbLib.js\"></script>\n";
-  echo "<script type=\"text/javascript\">InitActiveCell("
+  echo "<script type=\"text/javascript\">\n";
+  echo "//<![CDATA[\n";
+  echo "InitActiveCell("
     . ($show_plus_link ? "true" : "false") . ", "
     . "true, "
     . ((FALSE != $times_right_side) ? "true" : "false") . ", "
     . "\"$highlight_method\", "
     . "\"" . get_vocab("click_to_reserve") . "\""
-    . ");</script>\n";
+    . ");\n";
+  echo "//]]>\n";
+  echo "</script>\n";
 }
 
 //This is where we start displaying stuff
@@ -514,29 +518,33 @@ for (
  
       if ($javascript_cursor)
       {
-        echo "<script type=\"text/javascript\">\n<!--\n";
+        echo "<script type=\"text/javascript\">\n";
+        echo "//<![CDATA[\n";
         echo "BeginActiveCell();\n";
-        echo "// -->\n</script>";
+        echo "//]]>\n";
+        echo "</script>\n";
       }
 
       if ( $enable_periods )
       {
-        echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
-          . "&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth"
-          . "&amp;day=$wday\"><img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\"></a>";
+        echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
+        echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+        echo "</a>";
       }
       else
       {
-        echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
-          . "&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth"
-          . "&amp;day=$wday\"><img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\"></a>";
+        echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
+        echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+        echo "</a>";
       }
 
       if ($javascript_cursor)
       {
-        echo "<script type=\"text/javascript\">\n<!--\n";
+        echo "<script type=\"text/javascript\">\n";
+        echo "//<![CDATA[\n";
         echo "EndActiveCell();\n";
-        echo "// -->\n</script>";
+            echo "//]]>\n";
+        echo "</script>\n";
       }
     }
     else if ($descr != "")

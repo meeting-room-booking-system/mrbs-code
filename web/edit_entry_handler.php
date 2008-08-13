@@ -65,7 +65,9 @@ if ($name == '')
   print_header($day, $month, $year, $area);
 ?>
        <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-       <?php echo get_vocab('must_set_description'); ?>
+       <p>
+         <?php echo get_vocab('must_set_description'); ?>
+       </p>
    </body>
 </html>
 <?php
@@ -88,7 +90,9 @@ if ($rep_type  == 2 || $rep_type == 6)
     print_header($day, $month, $year, $area);
      ?>
        <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-       <?php echo get_vocab('you_have_not_entered')." ".get_vocab("rep_rep_day"); ?>
+       <p>
+         <?php echo get_vocab('you_have_not_entered')." ".get_vocab("rep_rep_day"); ?>
+       </p>
    </body>
 </html>
 <?php
@@ -101,7 +105,9 @@ if (($rep_type == 6) && ($rep_num_weeks < 2))
   print_header($day, $month, $year, $area);
 ?>
        <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-       <?php echo get_vocab('you_have_not_entered')." ".get_vocab("useful_n-weekly_value"); ?>
+       <p>
+         <?php echo get_vocab('you_have_not_entered')." ".get_vocab("useful_n-weekly_value"); ?>
+       </p>
    </body>
 </html>
 <?php
@@ -436,7 +442,9 @@ if (strlen($err))
   echo "<h2>" . get_vocab("sched_conflict") . "</h2>\n";
   if (!isset($hide_title))
   {
+    echo "<p>\n";
     echo get_vocab("conflict").":\n";
+    echo "</p>\n";
     echo "<ul>\n";
   }
 

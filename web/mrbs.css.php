@@ -6,44 +6,44 @@ header("Content-type: text/css");
 
 ?>
 
-BODY {color:black; font-size: 10pt; font-family:arial,sans-serif;
+body {color:black; font-size: 10pt; font-family:arial,sans-serif;
 background-color:#ffffed}
 
 
-H1 {color:black; font-family:verdana,sans-serif; font-size:16pt}
-H2 {color:black; font-family:verdana,sans-serif; font-size:14pt}
+h1 {color:black; font-family:verdana,sans-serif; font-size:16pt}
+h2 {color:black; font-family:verdana,sans-serif; font-size:14pt}
 /* H3 {font-family:verdana,sans-serif} */
 
-TD {font-size:10pt; font-family: arial,sans-serif; border-width: 1px; vertical-align: top}
-TD.header {color:black; font-family:verdana,sans-serif; border-width:0;
+td {font-size:10pt; font-family: arial,sans-serif; border-width: 1px; vertical-align: top}
+td.header {color:black; font-family:verdana,sans-serif; border-width:0;
 background-color:#ffffdd; font-size:26pt}
 
-TD.TR { vertical-align: top; text-align: right}
-TD.TL { vertical-align: top; text-align: left}
+td.TR { vertical-align: top; text-align: right}
+td.TL { vertical-align: top; text-align: left}
 
 td form { margin:0; } /* Prevent IE from displaying margins around forms in tables. */
 
-TH {color:#eeeeee; font-size:10pt; font-family:verdana,sans-serif; background-color:#999999; border-width:1px; border-color:#999999; vertical-align:top}
+th {color:#eeeeee; font-size:10pt; font-family:verdana,sans-serif; background-color:#999999; border-width:1px; border-color:#999999; vertical-align:top}
 
 
-TD.red  {background-color:#FFF0F0}
-TD.green {background-color:#DDFFDD}
-TD.A {background-color:#FFCCFF}
-TD.B {background-color:#99CCCC}
-TD.C {background-color:#FF9999}
-TD.D {background-color:#FFFF99}
-TD.E {background-color:#C0E0FF}
-TD.F {background-color:#FFCC99}
-TD.G {background-color:#FF6666}
-TD.H {background-color:#66FFFF}
-TD.I {background-color:#DDFFDD}
-TD.J {background-color:#CCCCCC}
-TD.white {background-color:#FFFFFF}
+td.red  {background-color:#FFF0F0}
+td.green {background-color:#DDFFDD}
+td.A {background-color:#FFCCFF}
+td.B {background-color:#99CCCC}
+td.C {background-color:#FF9999}
+td.D {background-color:#FFFF99}
+td.E {background-color:#C0E0FF}
+td.F {background-color:#FFCC99}
+td.G {background-color:#FF6666}
+td.H {background-color:#66FFFF}
+td.I {background-color:#DDFFDD}
+td.J {background-color:#CCCCCC}
+td.white {background-color:#FFFFFF}
 
-TD.even_row {background-color:#FFFFFF}   /* Even rows in the day view */
-TD.odd_row {background-color:#EEEEEE}   /* Odd rows in the day view */
+td.even_row {background-color:#FFFFFF}   /* Even rows in the day view */
+td.odd_row {background-color:#EEEEEE}   /* Odd rows in the day view */
 
-TD.highlight {background-color:#AABBFF; border-style: solid; border-width: 1px; border-color:#0000AA;} /* The highlighted cell under the cursor */
+td.highlight {background-color:#AABBFF; border-style: solid; border-width: 1px; border-color:#0000AA;} /* The highlighted cell under the cursor */
 
 
 .sitename
@@ -99,8 +99,9 @@ a:visited {color: <?php echo $anchor_visited_color ?>; font-weight: bold; text-d
 a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration:underline}
 
 legend {font-weight: bold; font-size: large; color: black}
-fieldset {width: 100%; padding-left: 1.0em; padding-right: 1.0em; 
-    border-color: <?php echo $admin_table_header_back_color ?>; border-width: 1px}
+fieldset {margin: 0; padding: 0; border: 0}
+fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
+  border: 1px solid <?php echo $admin_table_header_back_color ?>}
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
 
@@ -374,6 +375,7 @@ table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
 #banner td#company {font-size: large; font-weight: bold}
 #banner #company span {display: block; width: 100%}
 table#colour_key {clear: both; border-spacing: 0; border-collapse: collapse}
+#header_search input {width: 6.0em}
 
 /* ------------ HELP.PHP ------------------------*/
 table#version_info {border-spacing: 0; border-collapse: collapse}
