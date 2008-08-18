@@ -20,6 +20,10 @@
 
 // $Id$
 
+require_once('Blowfish.php');
+
+$blowfish = new Crypt_Blowfish($auth['session_cookie']['secret']);
+
 // Get form variables
 $Action = get_form_var('Action', 'string');
 $NewUserName = get_form_var('NewUserName', 'string');
@@ -34,6 +38,12 @@ else
 {
   $cookie_path = $PHP_SELF;
   $cookie_path = ereg_replace('[^/]*$', '', $cookie_path);
+}
+
+/* Delete old-style cookies */
+if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
+{
+  setcookie("UserName", '', time()-42000, $cookie_path);
 }
 
 /*
@@ -51,8 +61,7 @@ if (isset($Action) && ($Action == "SetName"))
   if ($NewUserName == "") 
   {
     // Delete cookie
-
-    setcookie("UserName", '', time()-42000, $cookie_path);
+    setcookie("SessionToken", '', time()-42000, $cookie_path);
   }
   else
   {
@@ -69,7 +78,13 @@ if (isset($Action) && ($Action == "SetName"))
       $UserPassword = $NewUserPassword;
     }
 
-    setcookie("UserName", $UserName, time()+(60*60*24*30), $cookie_path);
+    $expiry_time = time()+$auth['session_cookie']['session_expire_time'];
+    $token = "AUTH".$UserName."|".$expiry_time;
+    if ($auth['session_cookie']['include_ip'])
+    {
+      $token .= "|".$REMOTE_ADDR;
+    }
+    setcookie("SessionToken", $blowfish->encrypt($token), $expiry_time, $cookie_path);
     }
     header ("Location: $TargetURL"); /* Redirect browser to initial page */
     /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
@@ -151,18 +166,55 @@ function authGet()
 
 function getUserName()
 {
-  if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
+  global $blowfish, $REMOTE_ADDR;
+
+  $encrypted_token = NULL;
+  $username = NULL;
+
+  if (!empty($_COOKIE) && isset($_COOKIE["SessionToken"]))
   {
-    return unslashes($_COOKIE["UserName"]);
+    $encrypted_token = $_COOKIE["SessionToken"];
   }
   else
   {
     global $HTTP_COOKIE_VARS;
-    if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["UserName"]))
+    if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["SessionToken"]))
     {
-      return unslashes($HTTP_COOKIE_VARS["UserName"]);
+      $encrypted_token = $HTTP_COOKIE_VARS["SessionToken"];
     }
   }
+
+  if (isset($encrypted_token))
+  {
+    $token = $blowfish->decrypt($encrypted_token);
+
+    /* Remove the NULs off the end of the decrypted string */
+    $token = preg_replace('/\0+$/', "", $token);
+
+    if (substr($token, 0, 4) == "AUTH")
+    {
+      $parts = explode("|",substr($token,4));
+
+      /* Check for a valid token */
+      if (isset($parts[0]) &&
+          isset($parts[1]) && ($parts[1] > time()) &&
+          (!isset($parts[2]) ||
+          (isset($parts[2]) && ($parts[2] == $REMOTE_ADDR))))
+      {
+        $username = $parts[0];
+      }
+      else
+      {
+        // We can't delete the cookie, as it's too late - we'll just ignore it
+      }
+    }
+    else
+    {
+      error_log("Token is invalid, secret may have changed");
+    }
+  }
+
+  return $username;
 }
 
 // Print the logon entry on the top banner.

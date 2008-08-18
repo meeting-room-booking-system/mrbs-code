@@ -177,9 +177,23 @@ $default_room = 0;
 $auth["session"] = "php"; // How to get and keep the user ID. One of
 			  // "http" "php" "cookie" "ip" "host" "nt" "omni"
 			  // "remote_user"
+
 $auth["type"] = "config"; // How to validate the user/password. One of "none"
                           // "config" "db" "db_ext" "pop3" "imap" "ldap" "nis"
                           // "nw" "ext".
+
+// Configuration parameters for 'cookie' session scheme
+
+// The encryption secret key for the session tokens. You are strongly
+// advises to change this if you use this session scheme
+$auth["session_cookie"]["secret"] = "This isn't a very good secret!";
+// The expiry time of a session, in seconds
+$auth["session_cookie"]["session_expire_time"] = (60*60*24*30); // 30 days
+// Whether to include the user's IP address in their session cookie.
+// Increases security, but could cause problems with proxies/dynamic IP
+// machines
+$auth["session_cookie"]["include_ip"] = TRUE;
+
 
 // Cookie path override. If this value is set it will be used by the
 // 'php' and 'cookie' session schemes to override the default behaviour
