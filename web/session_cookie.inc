@@ -173,14 +173,14 @@ function getUserName()
 
   if (!empty($_COOKIE) && isset($_COOKIE["SessionToken"]))
   {
-    $encrypted_token = $_COOKIE["SessionToken"];
+    $encrypted_token = unslashes($_COOKIE["SessionToken"]);
   }
   else
   {
     global $HTTP_COOKIE_VARS;
     if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["SessionToken"]))
     {
-      $encrypted_token = $HTTP_COOKIE_VARS["SessionToken"];
+      $encrypted_token = unslashes($HTTP_COOKIE_VARS["SessionToken"]);
     }
   }
 
