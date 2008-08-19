@@ -659,7 +659,7 @@ function get_vocab($tag)
 // AIX version of utf8_convert(); needed as locales won't give us UTF-8
 // NOTE: Should ONLY be called with input encoded in the default code set of the current locale!
 // NOTE: Uses the LC_TIME category for determining the current locale setting, so should preferrably be used on date/time input only!
-function utf8_convert_aix($vocab_array, $string)
+function utf8_convert_aix($string)
 {
   global $aixlocale_codepage_map, $aix_utf8_converters, $unicode_encoding;
 
