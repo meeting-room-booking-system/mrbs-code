@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 
-<a name="Top"></a><h4>Generelles:</h4>
+<h4>Generelles:</h4>
 <ul>
   <li>
     Mit dem Raumbuchungssystem MRBS k&ouml;nnen Sie sowohl
@@ -63,158 +63,183 @@
 </div>
 
 <div id="site_faq_body">
-  <a name="authenticate"></a><h4>Wie melde ich mich an?</h4>
-  <p>
-    Das System kann mit verschiedenen Authentifizierungsmethoden konfiguriert werden, dazu 
-    gehoeren LDAP,Netware und SMB. Wenden Sie sich bitte an ihren Systemadministrator, wenn Sie
-    Schwierigkeiten bei der Anmeldung haben.
-    
-    Einige Systemfunktionen koennen auf bestimmte Benutzer beschraenkt sein, und
-    daher werden die uebrigen Benutzer die Meldung: <q>Sie haben keine Berechtigung, diesen 
-    Eintrag zu &auml;ndern</q> erhalten. Wenden Sie sich bitte an ihren
-    Systemadministratoren, wenn ihre Benutzerberechtigungen nicht korrekt
-    fuer sie eingestellt sind.
-    
-    Wenn das System auf der Grundlage der Authentifizierungsmethode LDAP
-    eingerichtet ist, dann bedeutet dies, dass sie Zugang zu dem System mit
-    dem gleichen Benutzernamen und Passwort z.B. <q>Mark Belanger</q> <q>MyPassword</q>
-    wie zu ihrem E-Mail System haben.
-  </p>
-  <a href="#top">Top</a>
 
-  <a name="meeting_delete"></a><h4>Warum kann ich eine Buchung nicht loeschen bzw. abaendern?</h4>
-  <p>
-    Nur die Person, die die Besprechung im System angelegt hat, kann diese auch
-    loeschen bzw. abaendern. Nehmen Sie Kontakt mit einem der Administratoren der
-    Besprechungszimmer oder mit der Person, die die Besprechung urspruenglich
-    angelegt hat, auf um diese loeschen bzw. aendern zu lassen.
-  </p>
-  <a href="#top">Top</a>
-  
-  <a name="repeating"></a><h4>Wie kann ich eine (periodisch) wiederkehrende Buchung anlegen?</h4>
-  <p>
-    Wenn sie auf die gewuenschte Besprechungszeit klicken, kommen Sie auf den
-    Bildschirm zum Anlegen einer Besprechung.
-    Nach Eingabe einere <dfn>Kurzbeschreibung</dfn> und evtl. einer optionalen 
-    <dfn>Vollst&auml;ndigen Beschreibung</dfn>, sowie von <dfn>Tag</dfn>, <dfn>Dauer</dfn>, 
-    <dfn>Bereiche</dfn>, <dfn>R&auml;ume</dfn> (halten Sie die STRG-Taste beim Klicken 
-    gedr&uuml;ckt um mehrere zu selektieren), waehlen Sie die geeignete Art der
-    Wiederholung aus. Der Raum wird fuer die gleiche Uhrzeit an den Tagen,
-    die durch Ihren Wiederholungsschluessel (Art der Wiederholung)
-    festgelegt sind, bis zum Endtermin (Ende der Wiederholung)
-    eingeplant. Taeglich&nbsp; bedeutet eine Einplanung fuer jeden Tag.
-    Woechentlich nimmt die Einplanungen an den Wochentagen vor, die
-    sie unter Tag der Wiederholung ausgewaehlt haben.
-  </p>
-  <a href="#top">Top</a>
+  <div id="authenticate">
+    <h4>Wie melde ich mich an?</h4>
+    <p>
+      Das System kann mit verschiedenen Authentifizierungsmethoden konfiguriert werden, dazu 
+      gehoeren LDAP,Netware und SMB. Wenden Sie sich bitte an ihren Systemadministrator, wenn Sie
+      Schwierigkeiten bei der Anmeldung haben.
+      
+      Einige Systemfunktionen koennen auf bestimmte Benutzer beschraenkt sein, und
+      daher werden die uebrigen Benutzer die Meldung: <q>Sie haben keine Berechtigung, diesen 
+      Eintrag zu &auml;ndern</q> erhalten. Wenden Sie sich bitte an ihren
+      Systemadministratoren, wenn ihre Benutzerberechtigungen nicht korrekt
+      fuer sie eingestellt sind.
+      
+      Wenn das System auf der Grundlage der Authentifizierungsmethode LDAP
+      eingerichtet ist, dann bedeutet dies, dass sie Zugang zu dem System mit
+      dem gleichen Benutzernamen und Passwort z.B. <q>Mark Belanger</q> <q>MyPassword</q>
+      wie zu ihrem E-Mail System haben.
+    </p>
+    <a href="#top">Top</a>
+  </div>
 
-  <a name="repeating_delete"></a><h4>Wie kann ich eine Buchung innerhalb einer Reihe von periodisch wiederkehrenden Besprechungen loeschen?</h4>
-  <p>
-    Waehlen Sie den entsprechenden Besprechungstermin aus und gehen Sie danach auf
-    die Auswahl <dfn>Eintrag loeschen</dfn>.
-  </p>
-  <a href="#top">Top</a>
+  <div id="meeting_delete">
+    <h4>Warum kann ich eine Buchung nicht loeschen bzw. abaendern?</h4>
+    <p>
+      Nur die Person, die die Besprechung im System angelegt hat, kann diese auch
+      loeschen bzw. abaendern. Nehmen Sie Kontakt mit einem der Administratoren der
+      Besprechungszimmer oder mit der Person, die die Besprechung urspruenglich
+      angelegt hat, auf um diese loeschen bzw. aendern zu lassen.
+    </p>
+    <a href="#top">Top</a>
+  </div>
   
-  <a name="multiple_sites"></a><h4>Wie kann ich Raeume an verschiedenen Standorten einplanen?</h4>
-  <p>
-    Das ist nicht moeglich. Gegenwaertig kann das System nicht mehrere Raeume
-    gleichzeitig einplanen. Sie muessen jeden Raum separat einplanen. Stellen Sie bitte
-    sicher, dass die Raeume an den verschiedenen Orten zu der gewuenschten Zeit
-    verfuegbar sind, bevor sie eine Belegung vornehmen.
-  </p>
-  <a href="#top">Top</a>
+  <div id="repeating">
+    <h4>Wie kann ich eine (periodisch) wiederkehrende Buchung anlegen?</h4>
+    <p>
+      Wenn sie auf die gewuenschte Besprechungszeit klicken, kommen Sie auf den
+      Bildschirm zum Anlegen einer Besprechung.
+      Nach Eingabe einere <dfn>Kurzbeschreibung</dfn> und evtl. einer optionalen 
+      <dfn>Vollst&auml;ndigen Beschreibung</dfn>, sowie von <dfn>Tag</dfn>, <dfn>Dauer</dfn>, 
+      <dfn>Bereiche</dfn>, <dfn>R&auml;ume</dfn> (halten Sie die STRG-Taste beim Klicken 
+      gedr&uuml;ckt um mehrere zu selektieren), waehlen Sie die geeignete Art der
+      Wiederholung aus. Der Raum wird fuer die gleiche Uhrzeit an den Tagen,
+      die durch Ihren Wiederholungsschluessel (Art der Wiederholung)
+      festgelegt sind, bis zum Endtermin (Ende der Wiederholung)
+      eingeplant. Taeglich&nbsp; bedeutet eine Einplanung fuer jeden Tag.
+      Woechentlich nimmt die Einplanungen an den Wochentagen vor, die
+      sie unter Tag der Wiederholung ausgewaehlt haben.
+    </p>
+    <a href="#top">Top</a>
+  </div>
+
+  <div id="repeating_delete">
+    <h4>Wie kann ich eine Buchung innerhalb einer Reihe von periodisch wiederkehrenden Besprechungen loeschen?</h4>
+    <p>
+      Waehlen Sie den entsprechenden Besprechungstermin aus und gehen Sie danach auf
+      die Auswahl <dfn>Eintrag loeschen</dfn>.
+    </p>
+    <a href="#top">Top</a>
+  </div>
   
-  <a name="too_many"></a><h4>Meine Besprechung konnte nicht angelegt werden, da es <q>zu viele Eintraege</q> gab!</h4>
-  <p>
-    Die Obergrenze fuer die Anzahl der Wiederholungseintr&auml;ge eines
-    Besprechungseintrags liegt im System bei 365. Die Zahl kann aber bei
-    Bedarf erhoeht werden. Bitte informieren Sie den Buchungsadministrator.
-  </p>
-  <a href="#top">Top</a>
+  <div id="multiple_sites">
+    <h4>Wie kann ich Raeume an verschiedenen Standorten einplanen?</h4>
+    <p>
+      Das ist nicht moeglich. Gegenwaertig kann das System nicht mehrere Raeume
+      gleichzeitig einplanen. Sie muessen jeden Raum separat einplanen. Stellen Sie bitte
+      sicher, dass die Raeume an den verschiedenen Orten zu der gewuenschten Zeit
+      verfuegbar sind, bevor sie eine Belegung vornehmen.
+    </p>
+    <a href="#top">Top</a>
+  </div>
   
-  <a name="multiple_users"></a><h4>Was passiert, wenn mehrere Benutzer die gleiche Besprechung einplanen?</h4>
-  <p>
-    Die einfache Antwort ist: der erste, der den Button <dfn>Speichern</dfn> drueckt,
-    macht das Rennen. Hinter den Kulissen benutzt das System eine einwandfrei
-    arbeitende fuer mehrere Benutzer und gleichzeitige Verarbeitung mehrerer Anforderungen 
-    ausgerichtete relationale Datenbank, die viele Tausende von gleichzeitigen Benutzern bedienen kann.
-  </p>
-  <a href="#top">Top</a>
+  <div id="too_many">
+    <h4>Meine Besprechung konnte nicht angelegt werden, da es <q>zu viele Eintraege</q> gab!</h4>
+    <p>
+      Die Obergrenze fuer die Anzahl der Wiederholungseintr&auml;ge eines
+      Besprechungseintrags liegt im System bei 365. Die Zahl kann aber bei
+      Bedarf erhoeht werden. Bitte informieren Sie den Buchungsadministrator.
+    </p>
+    <a href="#top">Top</a>
+  </div>
   
-  <a name="search"></a><h4>Suchen</h4>
-  <p>
-    Mit Hilfe des Such-Feldes wird in allen Buchungs-Eintr&auml;gen
-    gesucht. Gesucht wird in folgenden Kategorien: 
-    <q>Erstellt von</q>, <q>Kurzbeschreibung</q>, <q>Beschreibung</q>.<br>
-  </p>
-  <p>
-    Zum Suchen den Such-Begriff in das Such-Feld eingeben und <q>Return</q>
-    dr&uuml;cken. Als Ergebnis erscheint eine Liste mit gefundenen
-    Buchungseintr&auml;gen die den Such-Begriff &nbsp;enthalten.
-  </p>
-  <p>
-    Wenn Sie auf <q>Sie sind &lt;Benutzername&gt;</q>
-    klicken, erhalten Sie eine Liste aller von Ihnen in der Zukunft
-    reservierten R&auml;umen/Ger&auml;ten.
-  </p>
-  <a href="#top">Top</a>
+  <div id="multiple_users">
+    <h4>Was passiert, wenn mehrere Benutzer die gleiche Besprechung einplanen?</h4>
+    <p>
+      Die einfache Antwort ist: der erste, der den Button <dfn>Speichern</dfn> drueckt,
+      macht das Rennen. Hinter den Kulissen benutzt das System eine einwandfrei
+      arbeitende fuer mehrere Benutzer und gleichzeitige Verarbeitung mehrerer Anforderungen 
+      ausgerichtete relationale Datenbank, die viele Tausende von gleichzeitigen Benutzern bedienen kann.
+    </p>
+    <a href="#top">Top</a>
+  </div>
   
-  <a name="report"></a><h4>Bericht</h4>
-  <p>
-    Ein Bericht generiert eine komplette Liste von Terminen, gefiltert nach bestimmten Kriterien.
-  </p>
-  <a href="#top">Top</a>
- 
-  <a name="internal_external"></a><h4>Was ist Unterschied zwischen <q>Intern</q> und <q>Extern</q>?</h4>
-  <p>
-    Standardmaessig gibt es im System MRBS zwei Besprechungsarten. <dfn>Intern</dfn>
-    bedeutet, dass an der Besprechung nur Firmenangestellte teilnehmen. <dfn>Extern</dfn> heisst,
-    dass als Teilnehmer auch Kunden, Lieferanten, Geldanleger, usw. vorgesehen
-    sind. Sie koennen fuer ihren Standort bis zu 10 Besprechungsarten nach ihren eigenen 
-    Beduerfnissen definieren. Jeder Besprechungsart ist eine Farbe zugeordnet und die Besprechung
-    werden in der Kalenderuebersicht entsprechend farblich unterlegt. Eine Uebersicht
-    ueber die Besprechungsarten und ihre farbliche Darstellung befindet sich am Fuss
-    der Kalenderuebersicht.
-  </p>
-  <a href="#top">Top</a>
+  <div id="search">
+    <h4>Suchen</h4>
+    <p>
+      Mit Hilfe des Such-Feldes wird in allen Buchungs-Eintr&auml;gen
+      gesucht. Gesucht wird in folgenden Kategorien: 
+      <q>Erstellt von</q>, <q>Kurzbeschreibung</q>, <q>Beschreibung</q>.<br>
+    </p>
+    <p>
+      Zum Suchen den Such-Begriff in das Such-Feld eingeben und <q>Return</q>
+      dr&uuml;cken. Als Ergebnis erscheint eine Liste mit gefundenen
+      Buchungseintr&auml;gen die den Such-Begriff &nbsp;enthalten.
+    </p>
+    <p>
+      Wenn Sie auf <q>Sie sind &lt;Benutzername&gt;</q>
+      klicken, erhalten Sie eine Liste aller von Ihnen in der Zukunft
+      reservierten R&auml;umen/Ger&auml;ten.
+    </p>
+    <a href="#top">Top</a>
+  </div>
   
-  <a name="how_much"></a><h4>Wieviel hat das System gekostet?</h4>
-  <p>
-    Nichts. Weitere Informationen entnehmen Sie bitte dem naechsten Abschnitt.
-  </p>
-  <a href="#top">Top</a>
+  <div id="report">
+    <a></a><h4>Bericht</h4>
+    <p>
+      Ein Bericht generiert eine komplette Liste von Terminen, gefiltert nach bestimmten Kriterien.
+    </p>
+    <a href="#top">Top</a>
+  </div>
   
-  <a name="about"></a><h4>Wie arbeitet das System und wer hat es geschrieben?</h4>
-  <p>
-    <a href="http://sourceforge.net/project/?group_id=5113">Meeting Room Booking System</a> ist eine Open Source
-    Software, die unter Gnu Public License (GPL) vertrieben wird. Das bedeutet, die
-    Software kann unentgeltlich benutzt, vertrieben und geaendert werden.
-  </p> 
-  <p>
-    Der groesste Teil des Systems ist in <a href="http://www.php.net">PHP</a>, geschrieben, dies ist eine
-    Open Source Programmiersprache, die in Webseiten eingebettet werden kann, vergleichbar den
-    Microsoft active server pages. PHP eignet sich besonders gut fuer den Zugriff auf Datenbanken.
-  </p>
-  <p>  
-    Das Datenbanksystem, das dem Anwendungssystem zugrunde liegt, ist entweder <a href="http://www.mysql.com">MySQL</a>
-    oder <a href="http://www.postgresql.org">PostgreSQL</a>. MySQL ist ein sehr schneller, fuer mehrere
-    Benutzer und parallele Verarbeitung verschiedener Benutzeranforderungen ausgerichteter,
-    leistungsfaehiger SQL (Structured Query Language) Datenbankserver, dies trifft auch fuer GPL zu. 
-    PostgreSQL ist ein Multi User, Open Source und objektorientierter SQL Datenbankserver mit allen 
-    Leistungsmerkmalen. 
-  </p>
-  <p> 
-    Das System laeuft auf vielen Plattformen, auch auf einer PC-Architektur mit einem <a href="http://www.linux.com">Linux</a>
-    -Betriebsssystem. Linux ist eine kostenloses, Open Source und unix-aehnliches Betriebssystem.
-  </p>
-  <p>
-    Auch der eingesetzte Webserver ist eine kostenlose Open Source Software. Der <a href="http://www.apache.org">Apache</a>
-    Webserver ist der weitverbreiteste Webserver.
-  </p>
-  <p>
-    Die Quintessenz lautet: <strong>Jeder Bestandteil des Systems vom Betriebssystem bis zur Anwendungssoftware
-    ist vollkommen kostenloser Quellcode.</strong>
-  </p>
-  <a href="#top">Top</a>
+  <div id="internal_external">
+    <h4>Was ist Unterschied zwischen <q>Intern</q> und <q>Extern</q>?</h4>
+    <p>
+      Standardmaessig gibt es im System MRBS zwei Besprechungsarten. <dfn>Intern</dfn>
+      bedeutet, dass an der Besprechung nur Firmenangestellte teilnehmen. <dfn>Extern</dfn> heisst,
+      dass als Teilnehmer auch Kunden, Lieferanten, Geldanleger, usw. vorgesehen
+      sind. Sie koennen fuer ihren Standort bis zu 10 Besprechungsarten nach ihren eigenen 
+      Beduerfnissen definieren. Jeder Besprechungsart ist eine Farbe zugeordnet und die Besprechung
+      werden in der Kalenderuebersicht entsprechend farblich unterlegt. Eine Uebersicht
+      ueber die Besprechungsarten und ihre farbliche Darstellung befindet sich am Fuss
+      der Kalenderuebersicht.
+    </p>
+    <a href="#top">Top</a>
+  </div>
+  
+  <div id="how_much">
+    <h4>Wieviel hat das System gekostet?</h4>
+    <p>
+      Nichts. Weitere Informationen entnehmen Sie bitte dem naechsten Abschnitt.
+    </p>
+    <a href="#top">Top</a>
+  </div>
+  
+  <div id="about">
+    <h4>Wie arbeitet das System und wer hat es geschrieben?</h4>
+    <p>
+      <a href="http://sourceforge.net/project/?group_id=5113">Meeting Room Booking System</a> ist eine Open Source
+      Software, die unter Gnu Public License (GPL) vertrieben wird. Das bedeutet, die
+      Software kann unentgeltlich benutzt, vertrieben und geaendert werden.
+    </p> 
+    <p>
+      Der groesste Teil des Systems ist in <a href="http://www.php.net">PHP</a>, geschrieben, dies ist eine
+      Open Source Programmiersprache, die in Webseiten eingebettet werden kann, vergleichbar den
+      Microsoft active server pages. PHP eignet sich besonders gut fuer den Zugriff auf Datenbanken.
+    </p>
+    <p>  
+      Das Datenbanksystem, das dem Anwendungssystem zugrunde liegt, ist entweder <a href="http://www.mysql.com">MySQL</a>
+      oder <a href="http://www.postgresql.org">PostgreSQL</a>. MySQL ist ein sehr schneller, fuer mehrere
+      Benutzer und parallele Verarbeitung verschiedener Benutzeranforderungen ausgerichteter,
+      leistungsfaehiger SQL (Structured Query Language) Datenbankserver, dies trifft auch fuer GPL zu. 
+      PostgreSQL ist ein Multi User, Open Source und objektorientierter SQL Datenbankserver mit allen 
+      Leistungsmerkmalen. 
+    </p>
+    <p> 
+      Das System laeuft auf vielen Plattformen, auch auf einer PC-Architektur mit einem <a href="http://www.linux.com">Linux</a>
+      -Betriebsssystem. Linux ist eine kostenloses, Open Source und unix-aehnliches Betriebssystem.
+    </p>
+    <p>
+      Auch der eingesetzte Webserver ist eine kostenlose Open Source Software. Der <a href="http://www.apache.org">Apache</a>
+      Webserver ist der weitverbreiteste Webserver.
+    </p>
+    <p>
+      Die Quintessenz lautet: <strong>Jeder Bestandteil des Systems vom Betriebssystem bis zur Anwendungssoftware
+      ist vollkommen kostenloser Quellcode.</strong>
+    </p>
+    <a href="#top">Top</a>
+  </div>
   
 </div>

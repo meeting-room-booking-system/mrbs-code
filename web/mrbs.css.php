@@ -433,7 +433,9 @@ table#search_results {border-spacing: 1px; border-collapse: collapse}
 .help dfn {font-style: normal; font-weight: bold}
 #site_faq_contents li a {text-decoration: underline}
 div#site_faq_body {margin-top: 2.0em}
-#site_faq_body h4 {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.5em} 
+#site_faq_body h4 {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.5em; margin-top: 0} 
+#site_faq_body div {padding-bottom: 0.5em}
+#site_faq_body :target {background-color: #ffffbb}
 
 
 /* ------------ TRAILER.INC ---------------------*/
