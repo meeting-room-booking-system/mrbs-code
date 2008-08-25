@@ -135,7 +135,7 @@ else
     echo "<ul>\n";
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;area=$row[0]\">";
+      echo "<li><a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$row[0]\">";
       echo "<span";
       if ($row['id'] == $area)
       {
@@ -171,7 +171,7 @@ else
     echo "<ul>\n";
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;area=$area&amp;room=".$row['id']."\">";
+      echo "<li><a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\">";
       echo "<span";
       if ($row['id'] == $room)
       {
@@ -256,7 +256,7 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
   $sql = "SELECT start_time, end_time, type, name, id, description
           FROM $tbl_entry
           WHERE room_id = $room
-          AND start_time <= $pm7[$j] AND end_time > $am7[$j]";
+          AND start_time < $pm7[$j] AND end_time > $am7[$j]";
 
   // Each row returned from the query is a meeting. Build an array of the
   // form:  d[weekday][slot][x], where x = id, color, data, long_desc.
@@ -438,7 +438,7 @@ $hilite_url="week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&am
 $row_class = "even_row";
 for (
      $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
-     $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
+     $t < mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
      $t += $resolution, $row_class = ($row_class == "even_row")?"odd_row":"even_row"
 )
 {

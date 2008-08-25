@@ -132,7 +132,7 @@ $td = date("d",$i);
 //and then spit it out. 
 
 //Get all appointments for today in the area that we care about
-//Note: The predicate clause 'start_time <= ...' is an equivalent but simpler
+//Note: The predicate clause 'start_time < ...' is an equivalent but simpler
 //form of the original which had 3 BETWEEN parts. It selects all entries which
 //occur on or cross the current day.
 $sql = "SELECT $tbl_room.id AS room_id, start_time, end_time, name, $tbl_entry.id AS entry_id, type,
@@ -140,7 +140,7 @@ $sql = "SELECT $tbl_room.id AS room_id, start_time, end_time, name, $tbl_entry.i
    FROM $tbl_entry, $tbl_room
    WHERE $tbl_entry.room_id = $tbl_room.id
    AND area_id = $area
-   AND start_time <= $pm7 AND end_time > $am7";
+   AND start_time < $pm7 AND end_time > $am7";
 
 $res = sql_query($sql);
 if (! $res)
@@ -340,7 +340,7 @@ else
   $row_class = "even_row";
   for (
        $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
-       $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
+       $t < mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
        $t += $resolution, $row_class = ($row_class == "even_row")?"odd_row":"even_row"
       )
   {
