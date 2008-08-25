@@ -290,7 +290,12 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
       //     $d[Day][Time][id]
       //                  [color]
       //                  [data]
-      // where Day is in the range 0 to $num_of_days. 
+      //      					  [slots]
+      // where Day is in the range 0 to $num_of_days.
+       
+      // slots records the duration of the booking in number of slots.
+		  // Used to calculate how high to make the block used for clipping
+		  // overflow descriptions.
       
       // Fill in the map for this meeting. Start at the meeting start time,
       // or the day start time, whichever is later. End one slot before the
@@ -311,6 +316,7 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
         $d[$j][date($format,$t)]["color"] = $row['type'];
         $d[$j][date($format,$t)]["data"]  = "";
         $d[$j][date($format,$t)]["long_descr"]  = "";
+        $d[$j][date($format,$t)]["slots"] = (($end_t - $start_t)/$resolution)+1; 
       }
  
       // Show the name of the booker in the first segment that the booking
@@ -440,7 +446,7 @@ for (
   $time_t = date($format, $t);
   // Show the time linked to the URL for highlighting that time:
   echo "<tr>";
-  tdcell("red");
+  tdcell("red", 1);
   if ( $enable_periods )
   {
     $time_t_stripped = preg_replace( "/^0/", "", $time_t );
@@ -486,10 +492,12 @@ for (
       $color = $d[$thisday][$time_t]["color"];
       $descr = htmlspecialchars($d[$thisday][$time_t]["data"]);
       $long_descr = htmlspecialchars($d[$thisday][$time_t]["long_descr"]);
+      $slots = $d[$thisday][$time_t]["slots"];
     }
     else
     {
       unset($id);
+      $slots = 1;
     }
     
     // $c is the colour of the cell that the browser sees. White normally, 
@@ -508,58 +516,61 @@ for (
       $c = $row_class;
     }
     
-    tdcell($c);
+    // Don't put in a <td> cell if the slot is booked and there's no description.
+	  // This would mean that it's the second or subsequent slot of a booking and so the
+		// <td> for the first slot would have had a rowspan that extended the cell down for
+		// the number of slots of the booking.
     
-    // If the room isnt booked then allow it to be booked
-    if (!isset($id))
+    if (!(isset($id) && ($descr == "")))
     {
-      $hour = date("H",$t);
-      $minute  = date("i",$t);
- 
-      if ($javascript_cursor)
+      tdcell($c, $slots);
+      
+      // If the room isnt booked then allow it to be booked
+      if (!isset($id))
       {
-        echo "<script type=\"text/javascript\">\n";
-        echo "//<![CDATA[\n";
-        echo "BeginActiveCell();\n";
-        echo "//]]>\n";
-        echo "</script>\n";
+        $hour = date("H",$t);
+        $minute  = date("i",$t);
+   
+        if ($javascript_cursor)
+        {
+          echo "<script type=\"text/javascript\">\n";
+          echo "//<![CDATA[\n";
+          echo "BeginActiveCell();\n";
+          echo "//]]>\n";
+          echo "</script>\n";
+        }
+  
+        if ( $enable_periods )
+        {
+          echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
+          echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          echo "</a>";
+        }
+        else
+        {
+          echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
+          echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          echo "</a>";
+        }
+  
+        if ($javascript_cursor)
+        {
+          echo "<script type=\"text/javascript\">\n";
+          echo "//<![CDATA[\n";
+          echo "EndActiveCell();\n";
+              echo "//]]>\n";
+          echo "</script>\n";
+        }
       }
-
-      if ( $enable_periods )
-      {
-        echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
-        echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-        echo "</a>";
+      else      //if it is booked then show the booking
+      { 
+        echo " <a href=\"view_entry.php?id=$id"
+          . "&amp;area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear\" "
+          . "title=\"$long_descr\">$descr</a>";
       }
-      else
-      {
-        echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
-        echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-        echo "</a>";
-      }
-
-      if ($javascript_cursor)
-      {
-        echo "<script type=\"text/javascript\">\n";
-        echo "//<![CDATA[\n";
-        echo "EndActiveCell();\n";
-            echo "//]]>\n";
-        echo "</script>\n";
-      }
+      
+      echo "</td>\n";
     }
-    else if ($descr != "")
-    {
-      //if it is booked then show 
-      echo " <a href=\"view_entry.php?id=$id"
-        . "&amp;area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear\" "
-        . "title=\"$long_descr\">$descr</a>";
-    }
-    else
-    {
-      echo "&nbsp;\"&nbsp;";
-    }
-    
-    echo "</td>\n";
   }
 
   // next lines to display times on right side
@@ -567,7 +578,7 @@ for (
     {
       if ( $enable_periods )
       {
-        tdcell("red");
+        tdcell("red", 1);
         $time_t_stripped = preg_replace( "/^0/", "", $time_t );
         echo "<a href=\"$hilite_url=$time_t\"  title=\""
           . get_vocab("highlight_line") . "\">"
@@ -575,7 +586,7 @@ for (
       }
       else
       {
-        tdcell("red");
+        tdcell("red", 1);
         echo "<a href=\"$hilite_url=$time_t\" title=\""
           . get_vocab("highlight_line") . "\">"
           . utf8_strftime(hour_min_format(),$t) . "</a></td>";

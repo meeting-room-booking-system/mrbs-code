@@ -519,9 +519,10 @@ function time_date_string($t)
 
 // Output a start table cell tag <td> with color class.
 // $colclass is an entry type (A-J), "white" for empty, or "red" for highlighted.
-function tdcell($colclass)
+// $slots is the number of time slots high that the cell should be
+function tdcell($colclass, $slots)
 {
-  echo "<td class=\"$colclass\">\n";
+  echo "<td class=\"$colclass\" rowspan=\"$slots\">\n";
 }
 
 // Display the entry-type color key. This has up to 2 rows, up to 5 columns.
@@ -539,7 +540,7 @@ function show_colour_key()
         $nct = 0;
         echo "</tr><tr>";
       }
-      tdcell($ct);
+      tdcell($ct, 1);
       echo "$typel[$ct]</td>\n";
     }
   }
