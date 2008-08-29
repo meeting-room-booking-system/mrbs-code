@@ -447,19 +447,21 @@ for (
   // Show the time linked to the URL for highlighting that time:
   echo "<tr>";
   tdcell("red", 1);
+  echo "<div class=\"celldiv1\">\n";
   if ( $enable_periods )
   {
     $time_t_stripped = preg_replace( "/^0/", "", $time_t );
     echo "<a href=\"$hilite_url=$time_t\"  title=\""
       . get_vocab("highlight_line") . "\">"
-      . $periods[$time_t_stripped] . "</a></td>";
+      . $periods[$time_t_stripped] . "</a>";
   }
   else
   {
     echo "<a href=\"$hilite_url=$time_t\" title=\""
       . get_vocab("highlight_line") . "\">"
-      . utf8_strftime(hour_min_format(),$t) . "</a></td>";
+      . utf8_strftime(hour_min_format(),$t) . "</a>";
   }
+  echo "</div></td>\n";
 
   // Color to use for empty cells: white, unless highlighting this row:
   if (isset($timetohighlight) && $timetohighlight == $time_t)
@@ -530,7 +532,8 @@ for (
       {
         $hour = date("H",$t);
         $minute  = date("i",$t);
-   
+        
+        echo "<div class=\"celldiv1\">\n";  // a bookable slot is only one unit high
         if ($javascript_cursor)
         {
           echo "<script type=\"text/javascript\">\n";
@@ -544,13 +547,13 @@ for (
         {
           echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
           echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-          echo "</a>";
+          echo "</a>\n";
         }
         else
         {
           echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
           echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-          echo "</a>";
+          echo "</a>\n";
         }
   
         if ($javascript_cursor)
@@ -561,12 +564,15 @@ for (
               echo "//]]>\n";
           echo "</script>\n";
         }
+        echo "</div>\n";
       }
       else      //if it is booked then show the booking
       { 
-        echo " <a href=\"view_entry.php?id=$id"
+      	echo "<div class=\"celldiv" . $slots . "\">\n";		// we want clipping of overflow
+        echo " <a class=\"booking\" href=\"view_entry.php?id=$id"
           . "&amp;area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear\" "
-          . "title=\"$long_descr\">$descr</a>";
+          . "title=\"$long_descr\">$descr</a>\n";
+        echo "</div>\n";
       }
       
       echo "</td>\n";
@@ -576,21 +582,22 @@ for (
   // next lines to display times on right side
   if ( FALSE != $times_right_side )
     {
+      tdcell("red", 1);
+      echo "<div class=\"celldiv1\">\n";
       if ( $enable_periods )
       {
-        tdcell("red", 1);
         $time_t_stripped = preg_replace( "/^0/", "", $time_t );
         echo "<a href=\"$hilite_url=$time_t\"  title=\""
           . get_vocab("highlight_line") . "\">"
-          . $periods[$time_t_stripped] . "</a></td>";
+          . $periods[$time_t_stripped] . "</a>";
       }
       else
       {
-        tdcell("red", 1);
         echo "<a href=\"$hilite_url=$time_t\" title=\""
           . get_vocab("highlight_line") . "\">"
-          . utf8_strftime(hour_min_format(),$t) . "</a></td>";
+          . utf8_strftime(hour_min_format(),$t) . "</a>";
       }
+      echo "</div></td>\n";
     }
 
   echo "</tr>\n";

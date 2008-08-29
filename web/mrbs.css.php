@@ -3,6 +3,7 @@
 // $Id$
 
 header("Content-type: text/css"); 
+include "config.inc.php";
 
 ?>
 
@@ -168,10 +169,13 @@ div.date_before {float: left;  width: 33%; text-align: left}
 div.date_now    {float: left;  width: 33%; text-align: center}
 div.date_after  {float: right; width: 33%; text-align: right}
 
+<?php 
+$table_dwm_main_border_width = 1;    // px
+?>
 table.dwm_main {clear: both; width: 100%; border-spacing: 1px; border-collapse: collapse}
-.dwm_main td, .dwm_main th {border: 1px solid <?php echo $main_table_border_color ?>; padding: 0}
+.dwm_main td, .dwm_main th {border: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_border_color ?>; padding: 0 2px 0 2px}
 .dwm_main#day_main th.first_last {width: 1%}
-.dwm_main#day_main td, .dwm_main#week_main td {padding: 2px}
+.dwm_main#day_main td, .dwm_main#week_main td {padding: 0 2px 0 2px}
 .dwm_main#month_main th {width: 14%}                                                   /* 7 days in the week */
 .dwm_main#month_main td.valid   {background-color: <?php echo $main_table_month_color ?>}
 .dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
@@ -182,6 +186,84 @@ a.monthday {display: block; font-size: medium; padding: 0 2px 0 2px}            
 .dwm_main#month_main img {border: 0; padding: 5px 0 5px 2px}                           /* finally the new booking image */
 .dwm_main#week_main th {width: 14%}
 .dwm_main#week_main th.first_last {width: 1%; vertical-align: bottom}  
+.dwm_main a {display: block; height: 100%}
+
+<?php
+
+/* CELLDIV CLASSES
+
+The next section generates the celldiv classes (i.e. celldiv1, celldiv2, etc.).   We need
+enough of them so that they cover a booking spanning all the slots.
+
+These classes are used to control the styling of the main div in a cell in the main display table.
+By editing $clipped the styling can be set to be either 
+(1) CLIPPED.
+The cells are all a standard height and any content that does not fit in the cell is clipped.
+The height is a multiple of the height for a single cell, defined by $main_cell_height.   For 
+example if you define the main cell height to be 1.1em high, then a booking that is only one slot long
+will be 1.1 em high and a booking two slots long will be 2.2em high, etc.
+(2) NOT CLIPPED
+The cells expand to fit the content.
+
+The cell height can be specified in pixels or ems.    Specifying it in pixels has the advantage that we 
+are able to calculate the true height of merged cells and make them clickable for the entire height.  If
+the units are in ems, we cannot calculate this and there will be an area at the bottom that is not clickable -
+the effect will be most noticeable on long bookings.   However specifying pixels may cause zooming problems
+on older browsers.
+
+(Although the style information could be put in an inline style declaration, this would mean that every
+cell in the display would carry the extra size of the style declaration, whereas the classes here mean
+that we only need the style declaration for each row.) 
+
+In the classes below
+- celldivN is the class for displaying a booking N slots long
+- height is the height of N slots (ie N * $main_cell_height)
+- you need to specify max-height so that clipping works correctly in Firefox
+- you need to specify height so that clipping works correctly in IE and also
+  to force min-height to work correctly in IE
+- you need to specify min-height to force the box to be the min-height in
+  IE (Firefox works OK without min-height)
+
+*/
+
+$main_cell_height = 17;          // Units specified below
+$main_cell_height_units = 'px';  // Set to "em" or "px" as desired
+$clipped = TRUE;                 // Set to TRUE for clipping, FALSE if not   
+
+if ($clipped)
+{
+  $n_slots = (($eveningends-$morningstarts)*(3600/$resolution))+1;    # the number of slots in a day
+  for ($i=1; $i<=$n_slots; $i++) 
+  {
+    $div_height = $main_cell_height * $i;
+    
+    // need to add the height of the inter-cell borders to the height of the div, but
+    // we can only do this if the cell height is specified in pixels otherwise we end
+    // up with a mixture of ems and pixels
+    if ('px' == $main_cell_height_units)
+    {
+      $div_height = $div_height + (($i-1)*$table_dwm_main_border_width);
+      $div_height = (int) $div_height;    // Make absolutely sure it's an int to avoid generating invalid CSS
+    }
+    
+    // need to make sure the height is formatted with a '.' as the decimal point,
+    // otherwise in some locales you will get invalid CSS (eg 1,1em will not work as CSS).
+    // This step isn't necessary if the cell height is in pixels and
+    // therefore guaranteed to be an integer.
+    else
+    {
+      $div_height = number_format($div_height, 2, '.', '');
+    }
+    
+    echo "div.celldiv" . $i . " {" . 
+      "display: block; overflow: hidden; margin: 0; padding: 0; " . 
+    	"height:"      . $div_height . $main_cell_height_units . "; " . 
+    	"max-height: " . $div_height . $main_cell_height_units . "; " . 
+    	"min-height: " . $div_height . $main_cell_height_units . ";}\n";
+  }
+}
+?>
+
 
 
 /* ------------ DEL.PHP -----------------------------*/

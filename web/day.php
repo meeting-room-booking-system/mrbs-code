@@ -299,7 +299,8 @@ else
   
   // Table header giving room names
   echo "<thead>\n";
-  echo "<tr><th class=\"first_last\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
+  echo "<tr>\n";
+  echo "<th class=\"first_last\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
 
   $room_column_width = (int)(95 / sql_count($res));
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
@@ -350,19 +351,21 @@ else
     // Show the time linked to the URL for highlighting that time
     echo "<tr>";
     tdcell("red", 1);
+    echo "<div class=\"celldiv1\">\n";
     if( $enable_periods )
     {
       $time_t_stripped = preg_replace( "/^0/", "", $time_t );
       echo "<a href=\"$hilite_url=$time_t\"  title=\""
         . get_vocab("highlight_line") . "\">"
-        . $periods[$time_t_stripped] . "</a></td>\n";
+        . $periods[$time_t_stripped] . "</a>\n";
     }
     else
     {
       echo "<a href=\"$hilite_url=$time_t\" title=\""
         . get_vocab("highlight_line") . "\">"
-        . utf8_strftime(hour_min_format(),$t) . "</a></td>\n";
+        . utf8_strftime(hour_min_format(),$t) . "</a>\n";
     }
+    echo "</div></td>\n";
 
     // Loop through the list of rooms we have for this area
     while (list($key, $room) = each($rooms))
@@ -411,6 +414,7 @@ else
         {
           $hour = date("H",$t);
           $minute  = date("i",$t);
+          echo "<div class=\"celldiv1\">\n";  // a bookable slot is only one unit high
   
           if ($javascript_cursor)
           {
@@ -442,10 +446,13 @@ else
             echo "//]]>\n";
             echo "</script>\n";
           }
+          echo "</div>\n";
         }
         else                 // if it is booked then show the booking
-        {  
-          echo " <a href=\"view_entry.php?id=$id&amp;area=$area&amp;day=$day&amp;month=$month&amp;year=$year\" title=\"$long_descr\">$descr</a>";
+        {    
+	        echo "<div class=\"celldiv" . $slots . "\">\n";		// we want clipping of overflow
+          echo "  <a href=\"view_entry.php?id=$id&amp;area=$area&amp;day=$day&amp;month=$month&amp;year=$year\" title=\"$long_descr\">$descr</a>\n";
+          echo "</div>\n";
         }
         echo "</td>\n";
       }
@@ -453,21 +460,22 @@ else
     // next lines to display times on right side
     if ( FALSE != $times_right_side )
     {
+      tdcell("red", 1);
+      echo "<div class=\"celldiv1\">\n";
       if ( $enable_periods )
       {
-        tdcell("red", 1);
         $time_t_stripped = preg_replace( "/^0/", "", $time_t );
         echo "<a href=\"$hilite_url=$time_t\"  title=\""
           . get_vocab("highlight_line") . "\">"
-          . $periods[$time_t_stripped] . "</a></td>\n";
+          . $periods[$time_t_stripped] . "</a>\n";
       }
       else
       {
-        tdcell("red", 1);
         echo "<a href=\"$hilite_url=$time_t\" title=\""
           . get_vocab("highlight_line") . "\">"
-          . utf8_strftime(hour_min_format(),$t) . "</a></td>\n";
+          . utf8_strftime(hour_min_format(),$t) . "</a>\n";
       }
+      echo "</div></td>\n";
     }
 
     echo "</tr>\n";
