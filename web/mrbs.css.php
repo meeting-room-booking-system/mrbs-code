@@ -232,7 +232,17 @@ $clipped = TRUE;                 // Set to TRUE for clipping, FALSE if not
 
 if ($clipped)
 {
-  $n_slots = (($eveningends-$morningstarts)*(3600/$resolution))+1;    # the number of slots in a day
+  // find the max. number of slots in a day
+  if ($enable_periods)
+  {
+    $n_slots = count($periods);    // if we're using periods it's just the number of periods
+  }
+  else
+  {
+    $n_slots = ($eveningends*60) + $eveningends_minutes;
+    $n_slots = $n_slots - (($morningstarts*60) + $morningstarts_minutes);  // day duration in minutes
+    $n_slots = ($n_slots*60)/$resolution;                                  // number of slots
+  }
   for ($i=1; $i<=$n_slots; $i++) 
   {
     $div_height = $main_cell_height * $i;

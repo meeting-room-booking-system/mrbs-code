@@ -316,7 +316,15 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
         $d[$j][date($format,$t)]["color"] = $row['type'];
         $d[$j][date($format,$t)]["data"]  = "";
         $d[$j][date($format,$t)]["long_descr"]  = "";
-        $d[$j][date($format,$t)]["slots"] = (($end_t - $start_t)/$resolution)+1; 
+        // Calculate the number of slots.   Because $end_t ends one slot before the meeting
+        // end time, you need to add 1 to get the number of slots - unless $end_t is the 
+        // last slot in the day.
+        $s = intval(($end_t - $start_t)/$resolution) + 1;
+        if ($end_t == $pm7[$j])
+        {
+          $s = $s - 1;
+        }
+        $d[$j][date($format,$t)]["slots"] = $s; 
       }
  
       // Show the name of the booker in the first segment that the booking

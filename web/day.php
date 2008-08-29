@@ -187,7 +187,15 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     $today[$row['room_id']][date($format,$t)]["color"] = $row['type'];
     $today[$row['room_id']][date($format,$t)]["data"]  = "";
     $today[$row['room_id']][date($format,$t)]["long_descr"]  = "";
-    $today[$row['room_id']][date($format,$t)]["slots"] = (($end_t - $start_t)/$resolution)+1;
+    // Calculate the number of slots.   Because $end_t ends one slot before the meeting
+    // end time, you need to add 1 to get the number of slots - unless $end_t is the 
+    // last slot in the day.
+    $s = intval(($end_t - $start_t)/$resolution) + 1;
+    if ($end_t == $pm7)
+    {
+      $s = $s - 1;
+    }
+    $today[$row['room_id']][date($format,$t)]["slots"] = $s;
   }
 
   // Show the name of the booker in the first segment that the booking
