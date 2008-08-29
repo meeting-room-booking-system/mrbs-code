@@ -110,11 +110,6 @@ $vocab["returncal"]          = "Återgå till kalendervy";
 $vocab["failed_to_acquire"]  = "Kunde ej få exklusiv databasåtkomst"; 
 $vocab["invalid_booking"]    = "Ogiltig bokning";
 $vocab["must_set_description"] = "Du måste ange en kort beskrivning för bokningen. Vänligen gå tillbaka och korrigera detta.";
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Åtkomst nekad";

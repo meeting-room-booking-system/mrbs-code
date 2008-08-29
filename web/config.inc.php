@@ -401,27 +401,6 @@ define ("MAIL_RECIPIENTS", $mrbs_admin_email);
 // more than one recipient (see MAIL_RECIPIENTS)
 define ("MAIL_CC", '');
 
-// The values below need to be in UTF-8, or if set, $mail_vocab.
-// (Although proper encoding of subjects isn't currently handled)
-
-// Set the content of the Subject field for added/changed entries.
-$mail["subject"] = "Entry added/changed for $mrbs_company MRBS";
-
-// Set the content of the Subject field for deleted fields.
-$mail["subject_delete"] = "Entry deleted for $mrbs_company MRBS";
-
-// Set the content of the message when a new entry is booked. What you type
-// here will be added at the top of the message body.
-$mail["new_entry"] = "A new entry has been booked, here are the details:";
-
-// Set the content of the message when an entry is modified. What you type
-// here will be added at the top of the message body.
-$mail["changed_entry"] = "An entry has been modified, here are the details:";
-
-// Set the content of the message when an entry is deleted. What you type
-// here will be added at the top of the message body.
-$mail["deleted_entry"] = "An entry has been deleted, here are the details:";
-
 /**********
  * Language
  *&********/

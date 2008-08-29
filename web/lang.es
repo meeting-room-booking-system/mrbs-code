@@ -107,11 +107,6 @@ $vocab["conflict"]           = "La nueva reserva entra en conflicto con la(s) si
 $vocab["too_may_entrys"]     = "Las opciones seleccionadas crear&aacute;n demasiadas entradas.<br>Por favor, revise las opciones";
 $vocab["returncal"]          = "Volver a Vista de Calendario";
 $vocab["failed_to_acquire"]  = "Error al obtener acceso a la Base de Datos"; 
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Acceso Denegado";

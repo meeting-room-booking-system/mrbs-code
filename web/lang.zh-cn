@@ -107,11 +107,6 @@ $vocab["conflict"]           = "此时段已被预订";
 $vocab["too_may_entrys"]     = "这个选择造成太多输入.<BR>请重新选择!";
 $vocab["returncal"]          = "查看日程表";
 $vocab["failed_to_acquire"]  = "无法读取资料库"; 
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 // Authentication stuff
 $vocab["accessdenied"]       = "限制读取";

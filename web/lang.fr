@@ -110,11 +110,6 @@ $vocab["returncal"]          = "Retour au calendrier";
 $vocab["failed_to_acquire"]  = "Erreur, impossible d'obtenir l'accès exclusif à la base de données"; 
 $vocab["invalid_booking"]    = "Réservation invalide";
 $vocab["must_set_description"] = "Vous devez définir une brève description pour la réservation. Veuillez revenir en arrière et en saisir une.";
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Accès refusé";

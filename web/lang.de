@@ -107,11 +107,6 @@ $vocab["conflict"]           = "Der neue Eintrag hat einen Konflikt mit folgende
 $vocab["too_may_entrys"]     = "Die gewählten Optionen würden zu viele Einträge erzeugen.<br>Ändern Sie bitte die Optionen!";
 $vocab["returncal"]          = "Zurück zur Kalenderansicht";
 $vocab["failed_to_acquire"]  = "Konnte nicht exclusiv auf die Datenbank zugreifen"; 
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Zugang verweigert";

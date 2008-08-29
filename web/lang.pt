@@ -107,11 +107,6 @@ $vocab["conflict"]           = "A nova marcação entra em confito com as seguinte
 $vocab["too_may_entrys"]     = "A opção selecionada criará demasiadas entradas.<br>Use outras opções por favor!";
 $vocab["returncal"]          = "Voltar à vista de Calendário";
 $vocab["failed_to_acquire"]  = "A tentativa de adquirir acesso exclusivo à base de dados falhou!"; 
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Acesso Negado";

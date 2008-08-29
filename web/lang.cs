@@ -107,11 +107,6 @@ $vocab["conflict"]           = "Nová rezervace je v konfliktu s jiným záznamem";
 $vocab["too_may_entrys"]     = "Vybraná volba byla vytvoøena pro jiné záznamy.<br>Prosím vyberte jinou volbu!";
 $vocab["returncal"]          = "Návrat do kalendáøe";
 $vocab["failed_to_acquire"]  = "Chyba výhradního pøístupu do databáze"; 
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Pøístup zamítnut";

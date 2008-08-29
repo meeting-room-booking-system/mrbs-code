@@ -106,11 +106,6 @@ $vocab["conflict"]           = "La nova reserva entra en conflicte amb le(s) seg
 $vocab["too_may_entrys"]     = "Les opcions sel·leccionades crearan mases entrades.<br>Si us plau, revisi les opcions";
 $vocab["returncal"]          = "Tornar a la vista del calendari";
 $vocab["failed_to_acquire"]  = "Fallada en l'intent d'obtenir acc&eacute;s a la base de dades"; 
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Acc&eacute;s denegat";

@@ -109,11 +109,6 @@ $vocab["returncal"]          = "Vrnitev na pogled koledarja";
 $vocab["failed_to_acquire"]  = "Napaka pri dostopu do baze";
 $vocab["invalid_booking"]    = "Napačna rezervacija";
 $vocab["must_set_description"] = "Vnesti morate kratek opis rezervacije. Prosimo vrnite se in jo vnesite.";
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Dostop zavrnjen";

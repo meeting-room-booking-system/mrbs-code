@@ -107,11 +107,6 @@ $vocab["conflict"]           = "Η νέα κράτηση αντικρούει με τις ακόλουθες εγγραφ
 $vocab["too_may_entrys"]     = "Οι επιλογές θα δημιουργήσουν υπερβολικό αριθμό εγγραφών.<br>Παρακαλώ χρησιμοποιείστε διαφορετικές επιλογές!";
 $vocab["returncal"]          = "Επιστροφή σε προβολή ημερολογίου";
 $vocab["failed_to_acquire"]  = "Αποτυχία εξασφάλισης αποκλειστικής πρόσβασης στην βάση δεδομένων"; 
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Απαγορεύεται η πρόσβαση";

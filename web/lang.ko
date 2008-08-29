@@ -107,11 +107,6 @@ $vocab["conflict"]           = "이미 다른 예약이 되어있습니다.";
 $vocab["too_may_entrys"]     = "선택한 옵션은 너무 많은 엔트리를 작성하게 됩니다.<br>다른 옵션을 선택해 주세요.";
 $vocab["returncal"]          = "달력 화면으로 돌아감";
 $vocab["failed_to_acquire"]  = "데이타베이스 접근에 실패하였습니다."; 
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 // Authentication stuff
 $vocab["accessdenied"]       = "접근이 거부됨";

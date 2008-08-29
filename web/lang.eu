@@ -107,11 +107,6 @@ $vocab["conflict"]           = "Erreserba berria beste erreserba hauekin baterae
 $vocab["too_may_entrys"]     = "Aukeratu duzunak arazoak sortzen ditu.<BR>Aukera(k) berriz aztertu, mesedez";
 $vocab["returncal"]          = "Egutegiaren bistara itzuli, mesedez";
 $vocab["failed_to_acquire"]  = "Datubasera sartzeko arazoa"; 
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Ezin zara sartu";

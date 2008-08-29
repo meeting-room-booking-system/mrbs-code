@@ -108,11 +108,6 @@ $vocab["conflict"]           = "Bookingen er i konflikt med følgende booking(er)
 $vocab["too_may_entrys"]     = "De valgte instillinger skaper for mange bookinger.<br>Vennligst bruk andre instillinger!";
 $vocab["returncal"]          = "Tilbake til kalender";
 $vocab["failed_to_acquire"]  = "Kunne ikke oppnå eksklusiv databasetilgang"; 
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Ingen adgang";

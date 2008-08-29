@@ -109,11 +109,9 @@ $vocab["returncal"]          = "カレンダー表示画面に戻る";
 $vocab["failed_to_acquire"]  = "データベースへの排他的なアクセスの確保に失敗しました"; 
 $vocab["invalid_booking"]    = "不正な予約";
 $vocab["must_set_description"] = "予約のための簡単な説明を設定しなければなりません。戻って入力してください。";
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["新規登録"];
-$vocab["mail_body_del_entry"] = $mail["登録削除"];
-$vocab["mail_body_changed_entry"] = $mail["登録変更"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
+$vocab["mail_body_new_entry"] = "新規登録";
+$vocab["mail_body_del_entry"] = "登録削除";
+$vocab["mail_body_changed_entry"] = "登録変更";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "アクセスが拒否されました";

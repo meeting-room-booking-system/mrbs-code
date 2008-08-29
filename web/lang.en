@@ -111,11 +111,11 @@ $vocab["returncal"]          = "Return to calendar view";
 $vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access";
 $vocab["invalid_booking"]    = "Invalid booking";
 $vocab["must_set_description"] = "You must set a brief description for the booking. Please go back and enter one.";
-$vocab["mail_subject_entry"] = $mail["subject"];
-$vocab["mail_body_new_entry"] = $mail["new_entry"];
-$vocab["mail_body_del_entry"] = $mail["deleted_entry"];
-$vocab["mail_body_changed_entry"] = $mail["changed_entry"];
-$vocab["mail_subject_delete"] = $mail["subject_delete"];
+$vocab["mail_subject_entry"] = "Entry added/changed for $mrbs_company MRBS";
+$vocab["mail_body_new_entry"] = "A new entry has been booked, here are the details:";
+$vocab["mail_body_del_entry"] = "An entry has been deleted, here are the details:";
+$vocab["mail_body_changed_entry"] = "An entry has been modified, here are the details:";
+$vocab["mail_subject_delete"] = "Entry deleted for $mrbs_company MRBS";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Access Denied";

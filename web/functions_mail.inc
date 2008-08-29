@@ -486,6 +486,12 @@ function notifyAdminOnBooking($new_entry , $new_id)
     }
     $body .= "\n";
   }
+  // If the subject contains any non-ASCII characters...
+  if (!preg_match('/^[[:ascii:]]*$/', $subject))
+  {
+    // ...communicate the charset and encode it correctly
+    $subject = "=?".get_mail_charset()."?B?".base64_encode($subject)."?=";
+  }
   $result = sendMail($recipients,
                      $subject,
                      $body,
