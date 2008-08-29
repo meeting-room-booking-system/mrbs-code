@@ -1,4 +1,5 @@
-<?php
+<?php // -*-mode: PHP; coding:iso-8859-7;-*-
+
 // $Id$
 
 // This file contains PHP code that specifies language specific strings
