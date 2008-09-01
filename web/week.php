@@ -256,7 +256,7 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
   $sql = "SELECT start_time, end_time, type, name, id, description
           FROM $tbl_entry
           WHERE room_id = $room
-          AND start_time < $pm7[$j] AND end_time > $am7[$j]";
+          AND start_time <= $pm7[$j] AND end_time > $am7[$j]";
 
   // Each row returned from the query is a meeting. Build an array of the
   // form:  d[weekday][slot][x], where x = id, color, data, long_desc.
@@ -290,12 +290,12 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
       //     $d[Day][Time][id]
       //                  [color]
       //                  [data]
-      //      					  [slots]
+      //                  [slots]
       // where Day is in the range 0 to $num_of_days.
        
       // slots records the duration of the booking in number of slots.
-		  // Used to calculate how high to make the block used for clipping
-		  // overflow descriptions.
+      // Used to calculate how high to make the block used for clipping
+      // overflow descriptions.
       
       // Fill in the map for this meeting. Start at the meeting start time,
       // or the day start time, whichever is later. End one slot before the
@@ -316,15 +316,7 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
         $d[$j][date($format,$t)]["color"] = $row['type'];
         $d[$j][date($format,$t)]["data"]  = "";
         $d[$j][date($format,$t)]["long_descr"]  = "";
-        // Calculate the number of slots.   Because $end_t ends one slot before the meeting
-        // end time, you need to add 1 to get the number of slots - unless $end_t is the 
-        // last slot in the day.
-        $s = intval(($end_t - $start_t)/$resolution) + 1;
-        if ($end_t == $pm7[$j])
-        {
-          $s = $s - 1;
-        }
-        $d[$j][date($format,$t)]["slots"] = $s; 
+        $d[$j][date($format,$t)]["slots"] = intval(($end_t - $start_t)/$resolution) + 1; 
       }
  
       // Show the name of the booker in the first segment that the booking
@@ -446,7 +438,7 @@ $hilite_url="week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&am
 $row_class = "even_row";
 for (
      $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
-     $t < mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
+     $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
      $t += $resolution, $row_class = ($row_class == "even_row")?"odd_row":"even_row"
 )
 {
@@ -519,9 +511,9 @@ for (
     }
     
     // Don't put in a <td> cell if the slot is booked and there's no description.
-	  // This would mean that it's the second or subsequent slot of a booking and so the
-		// <td> for the first slot would have had a rowspan that extended the cell down for
-		// the number of slots of the booking.
+    // This would mean that it's the second or subsequent slot of a booking and so the
+    // <td> for the first slot would have had a rowspan that extended the cell down for
+    // the number of slots of the booking.
     
     if (!(isset($id) && ($descr == "")))
     {
@@ -568,7 +560,7 @@ for (
       }
       else      //if it is booked then show the booking
       { 
-      	echo "<div class=\"celldiv" . $slots . "\">\n";		// we want clipping of overflow
+      	echo "<div class=\"celldiv" . $slots . "\">\n";     // we want clipping of overflow
         echo " <a class=\"booking\" href=\"view_entry.php?id=$id"
           . "&amp;area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear\" "
           . "title=\"$long_descr\">$descr</a>\n";

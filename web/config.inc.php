@@ -68,26 +68,37 @@ $enable_periods = FALSE;
 // Default is half an hour: 1800 seconds.
 $resolution = 1800;
 
-// Start and end of day, NOTE: These are integer hours only, 0-23, and
-// morningstarts must be < eveningends. See also eveningends_minutes.
-$morningstarts = 7;
-$eveningends   = 19;
+// Start and end of day.
+// NOTE:  The time between the beginning of the last and first
+// slots of the day must be an integral multiple of the resolution,
+// and obviously >=0.
 
-// Minutes to add to $morningstarts to get to the real start of the day.
-// Be sure to consider the value of $eveningends_minutes if you change
-// this, so that you do not cause a day to finish before the start of
-// the last period.  For example if resolution=3600 (1 hour)
-// morningstarts = 8 and morningstarts_minutes = 30 then for the last
-// period to start at say 4:30pm you would need to set eveningends = 16
+// The beginning of the first slot of the day
+$morningstarts         = 7;   // must be integer in range 0-23
+$morningstarts_minutes = 0;   // must be integer in range 0-59
+
+// The beginning of the last slot of the day
+$eveningends           = 19;  // must be integer in range 0-23
+$eveningends_minutes   = 0;   // must be integer in range 0-59
+
+// Example 1.
+// If resolution=3600 (1 hour), morningstarts = 8 and morningstarts_minutes = 30 
+// then for the last period to start at say 4:30pm you would need to set eveningends = 16
 // and eveningends_minutes = 30
-$morningstarts_minutes = 0;
 
-// Minutes to add to $eveningends hours to get the real end of the day.
-// Examples: To get the last slot on the calendar to be 16:30-17:00, set
-// eveningends=16 and eveningends_minutes=30. To get a full 24 hour display
-// with 15-minute steps, set morningstarts=0; eveningends=23;
+// Example 2.
+// To get a full 24 hour display with 15-minute steps, set morningstarts=0; eveningends=23;
 // eveningends_minutes=45; and resolution=900.
-$eveningends_minutes = 0;
+
+// Do some checking
+$start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
+$start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
+$start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
+if (($start_difference < 0) or ($start_difference%$resolution != 0))
+{
+  die('Configuration error: start and end of day incorrectly defined');
+}
+
 
 // Define the name or description for your periods in chronological order
 // For example:
@@ -107,8 +118,16 @@ $eveningends_minutes = 0;
 // are encoded, eg '&' to '&amp;', '>' to '&gt;', lower case e acute to 
 // '&eacute;' or '&#233;', etc.
 
+// NOTE:  The maximum number of periods is 60.   Do not define more than this.
 $periods[] = "Period&nbsp;1";
 $periods[] = "Period&nbsp;2";
+// NOTE:  The maximum number of periods is 60.   Do not define more than this.
+
+// Do some checking
+if (count($periods) > 60))
+{
+  die('Configuration error: too many periods defined');
+}
 
 // Start of week: 0 for Sunday, 1 for Monday, etc.
 $weekstarts = 0;
