@@ -27,22 +27,21 @@ td form { margin:0; } /* Prevent IE from displaying margins around forms in tabl
 th {color:#eeeeee; font-size:10pt; font-family:verdana,sans-serif; background-color:#999999; border-width:1px; border-color:#999999; vertical-align:top}
 
 
-td.red  {background-color:#FFF0F0}
-td.green {background-color:#DDFFDD}
-td.A {background-color:#FFCCFF}
-td.B {background-color:#99CCCC}
-td.C {background-color:#FF9999}
-td.D {background-color:#FFFF99}
-td.E {background-color:#C0E0FF}
-td.F {background-color:#FFCC99}
-td.G {background-color:#FF6666}
-td.H {background-color:#66FFFF}
-td.I {background-color:#DDFFDD}
-td.J {background-color:#CCCCCC}
-td.white {background-color:#FFFFFF}
+td.A {background-color: #FFCCFF}
+td.B {background-color: #99CCCC}
+td.C {background-color: #FF9999}
+td.D {background-color: #FFFF99}
+td.E {background-color: #C0E0FF}
+td.F {background-color: #FFCC99}
+td.G {background-color: #FF6666}
+td.H {background-color: #66FFFF}
+td.I {background-color: #DDFFDD}
+td.J {background-color: #CCCCCC}
 
-td.even_row {background-color:#FFFFFF}   /* Even rows in the day view */
-td.odd_row {background-color:#EEEEEE}   /* Odd rows in the day view */
+td.times          {background-color: #FFF0F0}   /* used for the column with times/periods */
+td.row_highlight  {background-color: #FFF0F0}   /* used for highlighting a row */
+td.even_row       {background-color: #FFFFFF}   /* even rows in the day view */
+td.odd_row        {background-color: #EEEEEE}   /* odd rows in the day view */
 
 td.highlight {background-color:#AABBFF; border-style: solid; border-width: 1px; border-color:#0000AA;} /* The highlighted cell under the cursor */
 

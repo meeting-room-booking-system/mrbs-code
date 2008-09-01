@@ -358,7 +358,7 @@ else
 
     // Show the time linked to the URL for highlighting that time
     echo "<tr>";
-    tdcell("red", 1);
+    tdcell("times", 1);
     echo "<div class=\"celldiv1\">\n";
     if( $enable_periods )
     {
@@ -392,8 +392,9 @@ else
         $slots = 1;
       }
 
-      // $c is the colour of the cell that the browser sees. White normally,
-      // red if were hightlighting that line and a nice attractive green if the room is booked.
+      // $c is the colour of the cell that the browser sees. Zebra stripes normally,
+      // row_highlight if we're highlighting that line and the appropriate colour if
+      // it is booked (determined by the type).
       // We tell if its booked by $id having something in it
       if (isset($id))
       {
@@ -401,7 +402,7 @@ else
       }
       else if (isset($timetohighlight) && ($time_t == $timetohighlight))
       {
-        $c = "red";
+        $c = "row_highlight";
       }
       else
       {
@@ -468,7 +469,7 @@ else
     // next lines to display times on right side
     if ( FALSE != $times_right_side )
     {
-      tdcell("red", 1);
+      tdcell("times", 1);
       echo "<div class=\"celldiv1\">\n";
       if ( $enable_periods )
       {

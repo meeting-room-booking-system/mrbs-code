@@ -454,7 +454,7 @@ for (
   $time_t = date($format, $t);
   // Show the time linked to the URL for highlighting that time:
   echo "<tr>";
-  tdcell("red", 1);
+  tdcell("times", 1);
   echo "<div class=\"celldiv1\">\n";
   if ( $enable_periods )
   {
@@ -471,25 +471,16 @@ for (
   }
   echo "</div></td>\n";
 
-  // Color to use for empty cells: white, unless highlighting this row:
-  if (isset($timetohighlight) && $timetohighlight == $time_t)
-  {
-    $empty_color = "red";
-  }
-  else
-  {
-    $empty_color = "white";
-  }
 
   // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
   for ($thisday = 0; $thisday<=($num_of_days-1) ; $thisday++)
   {
     // Three cases:
-    // color:  id:   Slot is:   Color:    Link to:
-    // -----   ----- --------   --------- -----------------------
-    // unset   -     empty      white,red add new entry
-    // set     unset used       by type   none (unlabelled slot)
-    // set     set   used       by type   view entry
+    // color:  id:   Slot is:   Color:                  Link to:
+    // -----   ----- --------   ---------               -----------------------
+    // unset   -     empty      zebra or row_highlight  add new entry
+    // set     unset used       by type                 none (unlabelled slot)
+    // set     set   used       by type                 view entry
 
     $wt = mktime( 12, 0, 0, $month, $day+$thisday, $year );
     $wday = date("d", $wt);
@@ -510,8 +501,9 @@ for (
       $slots = 1;
     }
     
-    // $c is the colour of the cell that the browser sees. White normally, 
-    // red if were hightlighting that line and a nice attractive green if the room is booked.
+    // $c is the colour of the cell that the browser sees. Zebra stripes normally,
+    // row_highlight if we're highlighting that line and the appropriate colour if
+    // it is booked (determined by the type).
     // We tell if its booked by $id having something in it
     if (isset($id))
     {
@@ -519,7 +511,7 @@ for (
     }
     else if (isset($timetohighlight) && ($time_t == $timetohighlight))
     {
-      $c = "red";
+      $c = "row_highlight";
     }
     else
     {
@@ -590,7 +582,7 @@ for (
   // next lines to display times on right side
   if ( FALSE != $times_right_side )
     {
-      tdcell("red", 1);
+      tdcell("times", 1);
       echo "<div class=\"celldiv1\">\n";
       if ( $enable_periods )
       {

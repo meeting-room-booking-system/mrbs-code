@@ -518,7 +518,8 @@ function time_date_string($t)
 }
 
 // Output a start table cell tag <td> with color class.
-// $colclass is an entry type (A-J), "white" for empty, or "red" for highlighted.
+// $colclass is an entry type (A-J), zebra stripes if
+// empty or row_highlight if highlighted.
 // $slots is the number of time slots high that the cell should be
 function tdcell($colclass, $slots)
 {

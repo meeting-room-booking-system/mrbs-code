@@ -450,8 +450,6 @@ require_once "language.inc";
 
 // This array maps entry type codes (letters A through J) into descriptions.
 // Each type has a color (see TD.x classes in the style sheet mrbs.css.php).
-//    A=Pink  B=Blue-green  C=Peach  D=Yellow      E=Light blue
-//    F=Tan   G=Red         H=Aqua   I=Light green J=Gray
 // The value for each type is a short (one word is best) description of the
 // type. The values must be escaped for HTML output ("R&amp;D").
 // Please leave I and E alone for compatibility.
