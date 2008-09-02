@@ -167,14 +167,15 @@ if (isset($all_day) && ($all_day == "yes"))
   }
   else
   {
-    $starttime = mktime($morningstarts, 0, 0,
+    $starttime = mktime($morningstarts, $morningstarts_minutes, 0,
                         $month, $day  , $year,
                         is_dst($month, $day  , $year));
-    $end_minutes = $eveningends_minutes + $morningstarts_minutes;
-    ($eveningends_minutes > 59) ? $end_minutes += 60 : '';
-    $endtime   = mktime($eveningends, $end_minutes, 0,
+    $endtime   = mktime($eveningends, $eveningends_minutes, 0,
                         $month, $day, $year,
                         is_dst($month, $day, $year));
+    $endtime += intval($resolution/60);     // add on the duration (in minutes) of the last slot as
+                                            // $eveningends and $eveningends_minutes specify the 
+                                            // beginning of the last slot
   }
 }
 else
