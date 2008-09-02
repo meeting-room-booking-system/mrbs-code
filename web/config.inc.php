@@ -124,7 +124,7 @@ $periods[] = "Period&nbsp;2";
 // NOTE:  The maximum number of periods is 60.   Do not define more than this.
 
 // Do some checking
-if (count($periods) > 60))
+if (count($periods) > 60)
 {
   die('Configuration error: too many periods defined');
 }
