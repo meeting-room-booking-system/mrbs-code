@@ -74,7 +74,7 @@ $resolution = 1800;
 // and obviously >=0.
 
 // The default settings below (along with the 30 minute resolution above)
-// give you slot half-hourly slots starting at 07:00, with the last slot
+// give you 24 half-hourly slots starting at 07:00, with the last slot
 // being 18:30 -> 19:00
 
 // The beginning of the first slot of the day
