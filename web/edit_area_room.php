@@ -97,53 +97,49 @@ if (!empty($room))
   $row = sql_row_keyed($res, 0);
   sql_free($res);
 ?>
-<h3 style="text-align:center;"><?php echo get_vocab("editroom") ?></h3>
 
-<form action="edit_area_room.php" method="post">
-  <input type=hidden name="room" value="<?php echo $row["id"]?>">
-  <div align="center">
-    <table>
-      <tr>
-        <td><?php echo get_vocab("name") ?>:       </td>
-        <td>
-          <input type="text" name="room_name" value="<?php
-echo htmlspecialchars($row["room_name"]); ?>">
-        </td>
-      </tr>
-      <tr>
-        <td><?php echo get_vocab("description") ?>:</td>
-        <td>
-          <input type="text" name="description" value="<?php
-echo htmlspecialchars($row["description"]); ?>">
-        </td>
-      </tr>
-      <tr>
-        <td><?php echo get_vocab("capacity") ?>:   </td>
-        <td>
-          <input type="text" name="capacity" value="<?php
-echo $row["capacity"]; ?>">
-        </td>
-      </tr>
-      <tr>
-        <td><?php echo get_vocab("room_admin_email") ?>:</td>
-        <td>
-          <input type="text" name="room_admin_email" maxlength="75" value="<?php
-echo htmlspecialchars($row["room_admin_email"]); ?>">
-        </td>
-<?php
-
-  if (FALSE == $valid_email)
-  {
-    echo ("<td>&nbsp;</td><td><strong>" . get_vocab('invalid_email') . "</strong></td>");
-  }
-?>
-      </tr>
-    </table>
-    <input type=submit name="change_room" value="<?php echo get_vocab("change") ?>">
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <input type=submit name="change_done" value="<?php echo get_vocab("backadmin") ?>">
-  </div>
+<form class="form_edit_area_room" action="edit_area_room.php" method="post">
+  <fieldset class="admin">
+  <legend><?php echo get_vocab("editroom") ?></legend>
+  
+    <fieldset>
+    <legend></legend>
+      <span class="error">
+         <?php echo ((FALSE == $valid_email) ? get_vocab('invalid_email') : "&nbsp;"); ?>
+      </span>
+    </fieldset>
+    
+    <input type="hidden" name="room" value="<?php echo $row["id"]?>">
+    
+    <div>
+    <label for="room_name"><?php echo get_vocab("name") ?>:</label>
+    <input type="text" id="room_name" name="room_name" value="<?php echo htmlspecialchars($row["room_name"]); ?>">
+    </div>
+    
+    <div>
+    <label for="description"><?php echo get_vocab("description") ?>:</label>
+    <input type="text" id="description" name="description" value="<?php echo htmlspecialchars($row["description"]); ?>"> 
+    </div>
+    
+    <div>
+    <label for="capacity"><?php echo get_vocab("capacity") ?>:</label>
+    <input type="text" id="capacity" name="capacity" value="<?php echo $row["capacity"]; ?>">
+    </div>
+    
+    <div>
+    <label for="room_admin_email"><?php echo get_vocab("room_admin_email") ?>:</label>
+    <input type="text" id="room_admin_email" name="room_admin_email" maxlength="75" value="<?php echo htmlspecialchars($row["room_admin_email"]); ?>">
+    </div>
+    
+    <fieldset class="submit_buttons">
+    <legend></legend>
+      <input type="submit" name="change_room" value="<?php echo get_vocab("change") ?>">
+      <input type="submit" name="change_done" value="<?php echo get_vocab("backadmin") ?>">
+    </fieldset>
+    
+  </fieldset>
 </form>
+
 <?php
 }
 ?>
@@ -186,34 +182,37 @@ if (!empty($area))
   $row = sql_row_keyed($res, 0);
   sql_free($res);
 ?>
-<h3 style="text-align:center;"><?php echo get_vocab("editarea") ?></h3>
 
-<form action="edit_area_room.php" method="post">
-  <input type="hidden" name="area" value="<?php echo $row["id"]?>">
-  <div align="center">
-    <table>
-      <tr>
-        <td><?php echo get_vocab("name") ?>:</td>
-        <td>
-          <input type="text" name="area_name" value="<?php
-echo htmlspecialchars($row["area_name"]); ?>">
-        </td>
-      </tr>
-      <tr>
-        <td><?php echo get_vocab("area_admin_email") ?>:</td>
-        <td>
-          <input type="text" name="area_admin_email" maxlength="75" value="<?php
-echo htmlspecialchars($row["area_admin_email"]); ?>">
-        </td>
-<?php if (FALSE == $valid_email) {
-    echo ("<td>&nbsp;</td><td><strong>" . get_vocab('invalid_email') . "</strong></td>");
-} ?>
-      </tr>
-    </table>
-    <input type="submit" name="change_area" value="<?php echo get_vocab("change") ?>">
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <input type="submit" name="change_done" value="<?php echo get_vocab("backadmin") ?>">
-  </div>
+<form class="form_edit_area_room" action="edit_area_room.php" method="post">
+  <fieldset class="admin">
+  <legend><?php echo get_vocab("editarea") ?></legend>
+  
+    <fieldset>
+    <legend></legend>
+      <span class="error">
+         <?php echo ((FALSE == $valid_email) ? get_vocab('invalid_email') : "&nbsp;"); ?>
+      </span>
+    </fieldset>
+  
+    <input type="hidden" name="area" value="<?php echo $row["id"]?>">
+    
+    <div>
+    <label for="area_name"><?php echo get_vocab("name") ?>:</label>
+    <input type="text" id="area_name" name="area_name" value="<?php echo htmlspecialchars($row["area_name"]); ?>">
+    </div>
+    
+    <div>
+    <label for="area_admin_email"><?php echo get_vocab("area_admin_email") ?>:</label>
+    <input type="text" id="area_admin_email" name="area_admin_email" maxlength="75" value="<?php echo htmlspecialchars($row["area_admin_email"]); ?>">
+    </div>
+    
+    <fieldset class="submit_buttons">
+    <legend></legend>
+      <input type="submit" name="change_area" value="<?php echo get_vocab("change") ?>">
+      <input type="submit" name="change_done" value="<?php echo get_vocab("backadmin") ?>">
+    </fieldset>
+    
+  </fieldset>
 </form>
 <?php
 }

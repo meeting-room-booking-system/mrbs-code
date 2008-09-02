@@ -81,7 +81,7 @@ function showAccessDenied($day, $month, $year, $area)
    <?php echo get_vocab("norights")?>
   </p>
   <p>
-    <a href="<?php echo $HTTP_REFERER; ?>">
+    <a href="<?php echo htmlspecialchars($HTTP_REFERER); ?>">
       <?php echo get_vocab("returnprev"); ?>
     </a>
   </p>

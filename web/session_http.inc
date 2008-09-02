@@ -92,40 +92,28 @@ function PrintLogonBox()
       "sumby=d&amp;creatormatch=$user";
 ?>
 
-    <td class="banner">
+
       <a name="logonBox" href="<?php echo "$search_string\" title=\""
          . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
-         .$user ?></a><br>
-<?php
-    if (isset($user_list_link))
-    {
-      print "	  <br>\n	  " .
-	    "<a href='$user_list_link'>" . get_vocab('user_list') . "</a><br>\n" ;
-    }
-?>
-    </td>
+         .$user ?></a>
 <?php
   }
   else
   {
 ?>
-    <td class="banner">
-       <a name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></a><br>
-          <form method="post" action="admin.php">
-	    <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>" >
-	    <input type="hidden" name="Action" value="QueryName" >
-	    <input type="submit" value=" <?php echo get_vocab('login') ?> " >
-	  </form>
-<?php
-    if (isset($user_list_link))
-    {
-      print "	  <br>\n	  " .
-	    "<A href=\"$user_list_link\">" . get_vocab('user_list') . "</A><br>\n" ;
-    }
-?>
-	</td>
+    <a name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></a>
+    <form method="post" action="admin.php">
+      <div>
+        <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>">
+        <input type="hidden" name="Action" value="QueryName">
+        <input type="submit" value=" <?php echo get_vocab('login') ?> ">
+      </div>
+    </form>
 <?php
   }
+  if (isset($user_list_link))
+  {
+    print "<a href=\"$user_list_link\">" . get_vocab('user_list') . "</a>\n" ;
+  } 
 }
-
 ?>

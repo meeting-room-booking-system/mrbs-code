@@ -22,7 +22,7 @@ $vocab["report"]             = "Relatório";
 $vocab["admin"]              = "Administração";
 $vocab["help"]               = "Ajuda";
 $vocab["search"]             = "Pesquisa";
-$vocab["not_php3"]             = "<H1>AVISO: Isto provavelmente não funciona com php3</H1>";
+$vocab["not_php3"]           = "AVISO: Isto provavelmente não funciona com php3";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "Marcações para";

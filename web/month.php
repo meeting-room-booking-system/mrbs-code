@@ -101,19 +101,17 @@ for ($j = 1; $j<=$days_in_month; $j++)
   }
 }
 
-// Table with areas, rooms, minicals.
+// Section with areas, rooms, minicals.
 ?>
 <div class="screenonly">
-
-  <table width="100%">
-    <tr>
+  <div id="dwm_header">
 <?php
 
 $this_area_name = "";
 $this_room_name = "";
 
 // Show all areas
-echo "<td width=\"30%\"><u>".get_vocab("areas")."</u><br>";
+echo "<div id=\"dwm_areas\"><h3>".get_vocab("areas")."</h3>";
 
 // show either a select box or the normal html list
 if ($area_list_format == "select")
@@ -130,32 +128,32 @@ else
   $res = sql_query($sql);
   if ($res)
   {
+    echo "<ul>\n";
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      echo "<a href=\"month.php?year=$year&amp;month=$month&amp;area=$row[0]\">";
+      echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;area=$row[0]\">";
+      echo "<span";
       if ($row['id'] == $area)
       {
         $this_area_name = htmlspecialchars($row['area_name']);
-        echo "<font color=\"red\">$this_area_name</font></a><br>\n";
+        echo ' class="current"';
       }
-      else
-      {
-        echo htmlspecialchars($row['area_name']) . "</a><br>\n";
-      }
+      echo ">";
+      echo htmlspecialchars($row['area_name']) . "</span></a></li>\n";
     }
+    echo "</ul>\n";
   }
 } // end select if
 
-echo "</td>\n";
+echo "</div>\n";
     
 // Show all rooms in the current area:
-echo "<td width=\"30%\"><u>".get_vocab("rooms")."</u><br>";
+echo "<div id=\"dwm_rooms\"><h3>".get_vocab("rooms")."</h3>";
 
 // should we show a drop-down for the room list, or not?
 if ($area_list_format == "select")
 {
-  echo make_room_select_html('month.php', $area, $room,
-                             $year, $month, $day);
+  echo make_room_select_html('month.php', $area, $room, $year, $month, $day);
 }
 else
 {
@@ -164,27 +162,28 @@ else
   $res = sql_query($sql);
   if ($res)
   {
+    echo "<ul>\n";
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      echo "<a href=\"month.php?year=$year&amp;month=$month&amp;area=$area&amp;room=".$row['id']."\">";
+      echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;area=$area&amp;room=".$row['id']."\">";
+      echo "<span";
       if ($row['id'] == $room)
       {
         $this_room_name = htmlspecialchars($row['room_name']);
-        echo "<font color=\"red\">$this_room_name</font></a><br>\n";
+        echo ' class="current"';
       }
-      else
-      {
-        echo htmlspecialchars($row['room_name']) . "</a><br>\n";
-      }
+      echo ">";
+      echo htmlspecialchars($row['room_name']) . "</span></a></li>\n";
     }
+    echo "</ul>\n";
   }
 } // end select if
 
-echo "</td>\n";
+echo "</div>\n";
     
 // Draw the three month calendars
 minicals($year, $month, $day, $area, $room, 'month');
-echo "</tr></table>\n";
+echo "</div>\n";
 
 // End of "screenonly" div
 echo "</div>\n";
@@ -198,7 +197,7 @@ if ($room <= 0)
 }
 
 // Show Month, Year, Area, Room header:
-echo "<h2 align=\"center\">" . utf8_strftime("%B %Y", $month_start)
+echo "<h2 id=\"dwm\">" . utf8_strftime("%B %Y", $month_start)
   . " - $this_area_name - $this_room_name</h2>\n";
 
 // Show Go to month before and after links
@@ -214,31 +213,29 @@ $ty = date("Y",$i);
 $tm = date("n",$i);
 
 echo "<div class=\"screenonly\">
-  <table width=\"100%\">
-    <tr>
-      <td>
-        <a href=\"month.php?year=$yy&amp;month=$ym&amp;area=$area&amp;room=$room\">
-          &lt;&lt; ".get_vocab("monthbefore")."
+  <div class=\"date_nav\">
+    <div class=\"date_before\">
+      <a href=\"month.php?year=$yy&amp;month=$ym&amp;area=$area&amp;room=$room\">
+          &lt;&lt;".get_vocab("monthbefore")."
         </a>
-      </td>
-      <td align=\"center\">
-        <a href=\"month.php?area=$area&amp;room=$room\">
+    </div>
+    <div class=\"date_now\">
+      <a href=\"month.php?area=$area&amp;room=$room\">
           ".get_vocab("gotothismonth")."
         </a>
-      </td>
-      <td align=\"right\">
-        <a href=\"month.php?year=$ty&amp;month=$tm&amp;area=$area&amp;room=$room\">
+    </div>
+    <div class=\"date_after\">
+       <a href=\"month.php?year=$ty&amp;month=$tm&amp;area=$area&amp;room=$room\">
           ".get_vocab("monthafter")."&gt;&gt;
         </a>
-      </td>
-    </tr>
-  </table>
+    </div>
+  </div>
 </div>
 ";
 
 if ($debug_flag)
 {
-  echo "<p>DEBUG: month=$month year=$year start=$weekday_start range=$month_start:$month_end\n";
+  echo "<p>DEBUG: month=$month year=$year start=$weekday_start range=$month_start:$month_end</p>\n";
 }
 
 // Used below: localized "all day" text but with non-breaking spaces:
@@ -252,7 +249,7 @@ $all_day = ereg_replace(" ", "&nbsp;", get_vocab("all_day"));
 for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
 {
   $sql = "SELECT start_time, end_time, id, name
-	  FROM $tbl_entry
+          FROM $tbl_entry
           WHERE room_id=$room
           AND start_time <= $midnight_tonight[$day_num] AND end_time > $midnight[$day_num]
           ORDER by 1";
@@ -323,8 +320,8 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
       }
       else
       {
-        $start_str = ereg_replace(" ", "&nbsp;", htmlspecialchars(period_time_string($row['start_time'])));
-        $end_str   = ereg_replace(" ", "&nbsp;", htmlspecialchars(period_time_string($row['end_time'], -1)));
+        $start_str = period_time_string($row['start_time']);
+        $end_str   = period_time_string($row['end_time'], -1);
         switch (cmp3($row['start_time'], $midnight[$day_num]) . cmp3($row['end_time'], $midnight_tonight[$day_num] + 1))
         {
           case "> < ":         // Starts after midnight, ends before midnight
@@ -359,7 +356,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
 }
 if ($debug_flag)
 {
-  echo "<p>DEBUG: Array of month day data:<p><pre>\n";
+  echo "<p>DEBUG: Array of month day data:</p><pre>\n";
   for ($i = 1; $i <= $days_in_month; $i++)
   {
     if (isset($d[$i]["id"]))
@@ -381,27 +378,31 @@ if ($debug_flag)
 if ($javascript_cursor) // If authorized in config.inc.php, include the javascript cursor management.
 {
   echo "<script type=\"text/javascript\" src=\"xbLib.js\"></script>\n";
-  echo "<script type=\"text/javascript\">InitActiveCell("
+  echo "<script type=\"text/javascript\">\n";
+  echo "//<![CDATA[\n";
+  echo "InitActiveCell("
     . ($show_plus_link ? "true" : "false") . ", "
     . "false, "
     . "false, "
     . "\"$highlight_method\", "
     . "\"" . get_vocab("click_to_reserve") . "\""
-    . ");</script>\n";
+    . ");\n";
+  echo "//]]>\n";
+  echo "</script>\n";
 }
 
-echo "<table border=\"1\" cellspacing=\"0\" width=\"100%\">\n<tr>";
+echo "<table class=\"dwm_main\" id=\"month_main\">\n<tr>";
 // Weekday name header row:
 for ($weekcol = 0; $weekcol < 7; $weekcol++)
 {
-  echo "<th width=\"14%\">" . day_name(($weekcol + $weekstarts)%7) . "</th>";
+  echo "<th>" . day_name(($weekcol + $weekstarts)%7) . "</th>";
 }
 echo "</tr><tr>\n";
 
 // Skip days in week before start of month:
 for ($weekcol = 0; $weekcol < $weekday_start; $weekcol++)
 {
-  echo "<td bgcolor=\"#cccccc\" height=\"100\">&nbsp;</td>\n";
+  echo "<td class=\"invalid\"><div class=\"cell_container\">&nbsp;</div></td>\n";
 }
 
 // Draw the days of the month:
@@ -411,13 +412,18 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
   {
     echo "</tr><tr>\n";
   }
-  echo "<td valign=\"top\" height=\"100\" class=\"month\"><div class=\"monthday\"><a href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>&nbsp;\n";
-  echo "</div>";
-
+  echo "<td class=\"valid\">\n";
+  echo "<div class=\"cell_container\">\n";
+  
+  echo "<div>\n";
+  echo "<a class=\"monthday\" href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>\n";
+  echo "</div>\n";
+  
   // Anything to display for this day?
   if (isset($d[$cday]["id"][0]))
   {
-    echo "<font size=-2>";
+    echo "<div>\n";
+    echo "<span>\n"; 
     $n = count($d[$cday]["id"]);
     // Show the start/stop times, 2 per line, linked to view_entry.
     // If there are 12 or fewer, show them, else show 11 and "...".
@@ -471,35 +477,42 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
         }
       }
     }
-    echo "</font>";
+    echo "</span>\n";
+    echo "</div>\n";
   }
 
-  echo "<br>";
+  echo "<div>\n";
   if ($javascript_cursor)
   {
-    echo "<script type=\"text/javascript\">\n<!--\n";
+    echo "<script type=\"text/javascript\">\n";
+    echo "//<![CDATA[\n";
     echo "BeginActiveCell();\n";
-    echo "// -->\n</script>";
+    echo "//]]>\n";
+    echo "</script>\n";
   }
   if ($enable_periods)
   {
-    echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
-      . "&amp;period=0&amp;year=$year&amp;month=$month"
-      . "&amp;day=$cday\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
+    echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
+    echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+    echo "</a>\n";
   }
   else
   {
-    echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
-      . "&amp;hour=$morningstarts&amp;minute=0&amp;year=$year&amp;month=$month"
-      . "&amp;day=$cday\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
+    echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$morningstarts&amp;minute=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
+    echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+    echo "</a>\n";
   }
   if ($javascript_cursor)
   {
-    echo "<script type=\"text/javascript\">\n<!--\n";
+    echo "<script type=\"text/javascript\">\n";
+    echo "//<![CDATA[\n";
     echo "EndActiveCell();\n";
-    echo "// -->\n</script>";
+    echo "//]]>\n";
+    echo "</script>\n";
   }
+  echo "</div>\n";
   
+  echo "</div>\n";
   echo "</td>\n";
   if (++$weekcol == 7)
   {
@@ -512,7 +525,7 @@ if ($weekcol > 0)
 {
  for (; $weekcol < 7; $weekcol++)
  {
-   echo "<td bgcolor=\"#cccccc\" height=\"100\">&nbsp;</td>\n";
+   echo "<td class=\"invalid\"><div class=\"cell_container\">&nbsp;</div></td>\n";
  }
 }
 echo "</tr></table>\n";

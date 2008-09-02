@@ -2,9 +2,10 @@
 // $Id$
 ?>
 
-<div class="screenonly">
-  <hr>
-  <b><?php echo get_vocab("viewday") ?></b>
+<div class="screenonly" id="trailer">
+  <div id="viewday">
+
+  <span class="label"><?php echo get_vocab("viewday") ?>:</span>
 <?php
 
 if(!isset($year))
@@ -46,16 +47,18 @@ for ($i = -6; $i <= 7; $i++)
   }
   if ($i == 0)
   {
-    echo '<b>[ ';
+    echo "<span class=\"current\">\n[ ";
   }
   echo "  <a href=\"day.php?year=$cyear&amp;month=$cmonth&amp;day=$cday$params\">$str</a>\n";
   if ($i == 0)
   {
-    echo ']</b> ';
+    echo "]</span>\n";
   }
 }
+echo "</div>\n";
 
-echo "  <br><b>".get_vocab("viewweek").":</b>\n";
+echo "<div id=\"viewweek\">\n";
+echo "  <span class=\"label\">".get_vocab("viewweek").":</span>\n";
 
 if (!empty($room))
 {
@@ -65,7 +68,7 @@ if (!empty($room))
 $ctime = mktime(0, 0, 0, $month, $day, $year);
 // How many days to skip back to first day of week:
 $skipback = (date("w", $ctime) - $weekstarts + 7) % 7;
-	
+   
 for ($i = -4; $i <= 4; $i++)
 {
   $ctime = mktime(0, 0, 0, $month, $day + 7 * $i - $skipback, $year);
@@ -89,21 +92,23 @@ for ($i = -4; $i <= 4; $i++)
   }
   if ($i == 0)
   {
-    echo '<b>[ ';
+    echo "<span class=\"current\">\n[ ";
   }
   echo "  <a href=\"week.php?year=$cyear&amp;month=$cmonth&amp;day=$cday$params\">$str</a>\n";
   if ($i == 0)
   {
-    echo ']</b> ';
+    echo "]</span>\n";
   }
 }
+echo "</div>\n";
 
-echo "  <br><b>".get_vocab("viewmonth").":</b>\n";
+echo "<div id=\"viewmonth\">\n";
+echo "  <span class=\"label\">".get_vocab("viewmonth").":</span>\n";
 for ($i = -2; $i <= 6; $i++)
 {
   $ctime = mktime(0, 0, 0, $month + $i, 1, $year);
   $str = utf8_strftime("%b %Y", $ctime);
-	
+   
   $cmonth = date("m", $ctime);
   $cyear  = date("Y", $ctime);
   if ($i != -2)
@@ -112,17 +117,17 @@ for ($i = -2; $i <= 6; $i++)
   }
   if ($i == 0)
   {
-    echo '<b>[ ';
+    echo "<span class=\"current\">\n[ ";
   }
   echo "  <a href=\"month.php?year=$cyear&amp;month=$cmonth$params\">$str</a>\n";
   if ($i == 0)
   {
-    echo ']</b> ';
+    echo "]</span>\n";
   }
 }
+echo "</div>\n";
 
 ?>
-  <hr>
 
 </div><!-- end of "screenonly" div -->
 </body>

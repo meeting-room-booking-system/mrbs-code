@@ -65,7 +65,9 @@ if ($name == '')
   print_header($day, $month, $year, $area);
 ?>
        <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-       <?php echo get_vocab('must_set_description'); ?>
+       <p>
+         <?php echo get_vocab('must_set_description'); ?>
+       </p>
    </body>
 </html>
 <?php
@@ -88,7 +90,9 @@ if ($rep_type  == 2 || $rep_type == 6)
     print_header($day, $month, $year, $area);
      ?>
        <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-       <?php echo get_vocab('you_have_not_entered')." ".get_vocab("rep_rep_day"); ?>
+       <p>
+         <?php echo get_vocab('you_have_not_entered')." ".get_vocab("rep_rep_day"); ?>
+       </p>
    </body>
 </html>
 <?php
@@ -101,7 +105,9 @@ if (($rep_type == 6) && ($rep_num_weeks < 2))
   print_header($day, $month, $year, $area);
 ?>
        <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-       <?php echo get_vocab('you_have_not_entered')." ".get_vocab("useful_n-weekly_value"); ?>
+       <p>
+         <?php echo get_vocab('you_have_not_entered')." ".get_vocab("useful_n-weekly_value"); ?>
+       </p>
    </body>
 </html>
 <?php
@@ -161,14 +167,15 @@ if (isset($all_day) && ($all_day == "yes"))
   }
   else
   {
-    $starttime = mktime($morningstarts, 0, 0,
+    $starttime = mktime($morningstarts, $morningstarts_minutes, 0,
                         $month, $day  , $year,
                         is_dst($month, $day  , $year));
-    $end_minutes = $eveningends_minutes + $morningstarts_minutes;
-    ($eveningends_minutes > 59) ? $end_minutes += 60 : '';
-    $endtime   = mktime($eveningends, $end_minutes, 0,
+    $endtime   = mktime($eveningends, $eveningends_minutes, 0,
                         $month, $day, $year,
                         is_dst($month, $day, $year));
+    $endtime += intval($resolution/60);     // add on the duration (in minutes) of the last slot as
+                                            // $eveningends and $eveningends_minutes specify the 
+                                            // beginning of the last slot
   }
 }
 else
@@ -291,7 +298,7 @@ foreach ( $rooms as $room_id )
     }
     else
     {
-      $err        .= get_vocab("too_may_entrys") . "<P>";
+      $err        .= get_vocab("too_may_entrys") . "\n";
       $hide_title  = 1;
     }
   }
@@ -433,22 +440,26 @@ if (strlen($err))
 {
   print_header($day, $month, $year, $area);
     
-  echo "<h2>" . get_vocab("sched_conflict") . "</h2>";
+  echo "<h2>" . get_vocab("sched_conflict") . "</h2>\n";
   if (!isset($hide_title))
   {
-    echo get_vocab("conflict").":";
-    echo "<ul>";
+    echo "<p>\n";
+    echo get_vocab("conflict").":\n";
+    echo "</p>\n";
+    echo "<ul>\n";
   }
 
   echo $err;
     
   if(!isset($hide_title))
   {
-    echo "</ul>";
+    echo "</ul>\n";
   }
 }
 
-echo "<a href=\"".htmlspecialchars($returl)."\">".get_vocab("returncal")."</a><p>";
+echo "<p>\n";
+echo "<a href=\"" . htmlspecialchars($returl) . "\">" . get_vocab("returncal") . "</a>\n";
+echo "</p>\n";
 
 include "trailer.inc";
 ?>

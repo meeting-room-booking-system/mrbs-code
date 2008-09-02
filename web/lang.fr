@@ -23,7 +23,7 @@ $vocab["report"]             = "Rapport";
 $vocab["admin"]              = "Gestion";
 $vocab["help"]               = "Aide";
 $vocab["search"]             = "Recherche&nbsp;";
-$vocab["not_php3"]             = "<H1>ATTENTION : Cette application peut ne pas fonctionner correctement avec PHP3</H1>";
+$vocab["not_php3"]           = "ATTENTION : Cette application peut ne pas fonctionner correctement avec PHP3";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "Réservation pour<br>";
@@ -240,8 +240,8 @@ $vocab["delarea"]            = "Vous devez supprimer toutes les salles de ce lie
 
 // Used in help.php
 $vocab["about_mrbs"]         = "À propos de MRBS (Meeting Room Booking System)";
-$vocab["database"]           = "Base de donnée&nbsp;: ";
-$vocab["system"]             = "Système d'exploitation&nbsp;: ";
+$vocab["database"]           = "Base de donnée";
+$vocab["system"]             = "Système d'exploitation";
 $vocab["please_contact"]     = "Contactez ";
 $vocab["for_any_questions"]  = "si vous avez une question qui n'est pas traitée ici.";
 

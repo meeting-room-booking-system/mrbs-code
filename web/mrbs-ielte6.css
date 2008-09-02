@@ -1,0 +1,20 @@
+
+/* $Id$ */
+
+/* Fixes for Internet Explorer (IE6 and below) */
+
+
+/* ------------ ADMIN.PHP ---------------------------*/
+.form_admin label {height: 2.0em}            /* min-height not recognised by IE6 and below */
+.form_admin input {margin-top: 0}            /* negative margins remove the input border in IE6 */
+.form_admin input.submit {display: inline}   /* stops IE6 "double margin float bug" appearing */
+
+/* ------------ EDIT_AREA_ROOM.PHP ------------------*/
+.form_edit_area_room label {height: 2.0em}   /* min-height not recognised by IE6 and below */
+
+/* ------------ EDIT_USERS.PHP ----------------------*/
+#form_edit_users label {height: 2.0em}       /* min-height not recognised by IE6 and below */
+
+/* ------------ FORM_GENERAL ------------------------*/
+.form_general input {display: inline}        /* stops IE6 "double margin float bug" appearing */
+.form_general input.submit {display: inline} /* stops IE6 "double margin float bug" appearing */

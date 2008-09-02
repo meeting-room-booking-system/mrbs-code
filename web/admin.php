@@ -55,15 +55,23 @@ if (isset($area))
 
 <h2><?php echo get_vocab("administration") ?></h2>
 
-<table border="1">
-  <tr>
-    <th align="center"><b><?php echo get_vocab("areas") ?></b></th>
-    <th align="center">
-      <b><?php echo get_vocab("rooms") ?> <?php if(isset($area_name)) { echo get_vocab("in") . " " .
-  htmlspecialchars($area_name); }?></b>
-    </th>
-  </tr>
+<table id="admin" class="admin_table">
+  <thead>
+    <tr>
+      <th><?php echo get_vocab("areas") ?></th>
+      <th>
+        <?php 
+        echo get_vocab("rooms");
+        if(isset($area_name))
+        { 
+          echo " " . get_vocab("in") . " " . htmlspecialchars($area_name); 
+        }
+        ?>
+      </th>
+    </tr>
+  </thead>
 
+  <tbody>
   <tr>
     <td>
 <?php 
@@ -123,17 +131,22 @@ else
   </tr>
   <tr>
     <td>
-      <h3 style="text-align:center;"><?php echo get_vocab("addarea") ?></h3>
-      <form action="add.php" method="post">
-        <input type="hidden" name="type" value="area">
+      <form class="form_admin" action="add.php" method="post">
+        <fieldset>
+        <legend><?php echo get_vocab("addarea") ?></legend>
+        
+          <input type="hidden" name="type" value="area">
 
-        <table>
-          <tr>
-            <td><?php echo get_vocab("name") ?>:</td>
-            <td><input type="text" name="name"></td>
-          </tr>
-        </table>
-        <input type="submit" value="<?php echo get_vocab("addarea") ?>">
+          <div>
+            <label for="area_name"><?php echo get_vocab("name") ?>:</label>
+            <input type="text" id="area_name" name="name">
+          </div>
+          
+          <div>
+            <input type="submit" class="submit" value="<?php echo get_vocab("addarea") ?>">
+          </div>
+
+        </fieldset>
       </form>
     </td>
 
@@ -142,26 +155,33 @@ else
 if (0 != $area)
 {
 ?>
-      <h3 style="text-align:center;"><?php echo get_vocab("addroom") ?></h3>
-      <form action="add.php" method="post">
+      <form class="form_admin" action="add.php" method="post">
+        <fieldset>
+        <legend><?php echo get_vocab("addroom") ?></legend>
+        
         <input type="hidden" name="type" value="room">
         <input type="hidden" name="area" value="<?php echo $area; ?>">
-
-        <table>
-          <tr>
-            <td><?php echo get_vocab("name") ?>:</td>
-            <td><input type="text" name="name"></td>
-          </tr>
-          <tr>
-            <td><?php echo get_vocab("description") ?>:</td>
-            <td><input type="text" name="description"></td>
-          </tr>
-          <tr>
-            <td><?php echo get_vocab("capacity") ?>:</td>
-            <td><input type="text" name="capacity"></td>
-          </tr>
-        </table>
-        <input type="submit" value="<?php echo get_vocab("addroom") ?>">
+        
+        <div>
+          <label for="room_name"><?php echo get_vocab("name") ?>:</label>
+          <input type="text" id="room_name" name="name">
+        </div>
+        
+        <div>
+          <label for="room_description"><?php echo get_vocab("description") ?>:</label>
+          <input type="text" id="room_description" name="description">
+        </div>
+        
+        <div>
+          <label for="room_capacity"><?php echo get_vocab("capacity") ?>:</label>
+          <input type="text" id="room_capacity" name="capacity">
+        </div>
+       
+        <div>
+          <input type="submit" class="submit" value="<?php echo get_vocab("addroom") ?>">
+        </div>
+        
+        </fieldset>
       </form>
 <?php
 }
@@ -172,6 +192,7 @@ else
 ?>
     </td>
   </tr>
+  </tbody>
 </table>
 
 <?php

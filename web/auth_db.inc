@@ -1,17 +1,17 @@
 <?php
-/*****************************************************************************\
-*									      *
-*   File name       auth_db.inc						      *
-*									      *
-*   Description	    Authenticate users from a table in the MRBS database.     *
-*									      *
-*   Notes	    To use this authentication scheme, set in config.inc.php: *
-*			$auth["type"]  = "db";				      *
-*									      *
-*   History								      *
-*    2004/01/11 JFL Created this file					      *
-*									      *
-\*****************************************************************************/
+/*****************************************************************************
+*
+*   File name       auth_db.inc
+*
+*   Description     Authenticate users from a table in the MRBS database.
+*
+*   Notes           To use this authentication scheme, set in config.inc.php:
+*         $auth["type"]  = "db";
+*
+*   History
+*    Available in the source control system
+*
+******************************************************************************/
 
 // $Id$
 
@@ -33,12 +33,12 @@ $user_list_link = "edit_users.php";
 
 function authValidateUser($user, $pass)
 {
-   global $tbl_users;
+  global $tbl_users;
 
-   $user=slashes($user);
-   $user=strtolower($user);
-   $pass = md5($pass);
-   return sql_query1("select count(*) from $tbl_users where name='$user' and password='$pass';");
+  $user=slashes($user);
+  $user=strtolower($user);
+  $pass = md5($pass);
+  return sql_query1("select count(*) from $tbl_users where name='$user' and password='$pass';");
 }
 
 /* authGetUserLevel($user)
@@ -52,23 +52,23 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user, $lev1_admin)
 {
-   // User not logged in, user level '0'
-   if(!isset($user))
-   {
-     return 0;
-   }
+  // User not logged in, user level '0'
+  if(!isset($user))
+  {
+    return 0;
+  }
 
-   // Check if the user is can modify
-   for($i = 0; isset($lev1_admin[$i]); $i++)
-   {
-      if(strcasecmp($user, $lev1_admin[$i]) == 0)
-      {
-	 return 2;
-      }
-   }
+  // Check if the user is can modify
+  for($i = 0; isset($lev1_admin[$i]); $i++)
+  {
+    if(strcasecmp($user, $lev1_admin[$i]) == 0)
+    {
+      return 2;
+    }
+  }
 
-   // Everybody else is access level '1'
-   return 1;
+  // Everybody else is access level '1'
+  return 1;
 }
 
 ?>

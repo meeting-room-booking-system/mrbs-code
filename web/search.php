@@ -5,6 +5,7 @@ require_once "grab_globals.inc.php";
 include "config.inc.php";
 include "functions.inc";
 include "$dbsys.inc";
+include "mrbs_auth.inc";
 
 // Get form variables
 $day = get_form_var('day', 'int');
@@ -40,26 +41,37 @@ print_header($day, $month, $year, $area);
 
 if (!empty($advanced))
 {
-  echo "<h3>" . get_vocab("advanced_search") . "</h3>";
-  echo "<form method=\"get\" action=\"search.php\">";
-  echo get_vocab("search_for") . " <input type=\"text\" size=\"25\" name=\"search_str\"><br>";
-  echo get_vocab("from"). " ";
-  genDateSelector ("", $day, $month, $year);
-  echo "<br><input type=\"submit\" value=\"" . get_vocab("search_button") ."\">";
-  echo "</form>";
+  ?>
+  <form class="form_general" method="get" action="search.php">
+    <fieldset>
+    <legend><?php echo get_vocab("advanced_search") ?></legend>
+      <div id="div_search_str">
+        <label for="search_str"><?php echo get_vocab("search_for") ?>:</label>
+        <input type="text" id="search_str" name="search_str">
+      </div>   
+      <div id="div_search_from">
+        <label><?php echo get_vocab("from") ?>:</label>
+        <?php genDateSelector ("", $day, $month, $year) ?>
+      </div> 
+      <div>
+        <input class="submit" type="submit" value="<?php echo get_vocab("search_button") ?>">
+      </div>
+    </fieldset>
+  </form>
+  <?php
   include "trailer.inc";
   exit;
 }
 
 if (!$search_str)
 {
-  echo "<h3>" . get_vocab("invalid_search") . "</h3>";
+  echo "<p class=\"error\">" . get_vocab("invalid_search") . "</p>";
   include "trailer.inc";
   exit;
 }
 
 // now is used so that we only display entries newer than the current time
-echo "<h3>" . get_vocab("search_results") . ": \"<font color=\"blue\">$search_str</font>\"</h3>\n";
+echo "<h3>" . get_vocab("search_results") . ": \"<span id=\"search_str\">$search_str</span>\"</h3>\n";
 
 $now = mktime(0, 0, 0, $month, $day, $year);
 
@@ -79,7 +91,7 @@ if (!isset($total))
 
 if ($total <= 0)
 {
-  echo "<b>" . get_vocab("nothing_found") . "</b>\n";
+  echo "<p id=\"nothing_found\">" . get_vocab("nothing_found") . "</p>\n";
   include "trailer.inc";
   exit;
 }
@@ -114,8 +126,11 @@ $has_next = $search_pos < ($total-$search["count"]);
 
 if ($has_prev || $has_next)
 {
-  echo "<b>" . get_vocab("records") . ($search_pos+1) . get_vocab("through") . ($search_pos+$num_records) . get_vocab("of") . $total . "</b><br>";
-
+  echo "<div id=\"record_numbers\">\n";
+  echo get_vocab("records") . ($search_pos+1) . get_vocab("through") . ($search_pos+$num_records) . get_vocab("of") . $total;
+  echo "</div>\n";
+  
+  echo "<div id=\"record_nav\">\n";
   // display a "Previous" button if necessary
   if($has_prev)
   {
@@ -124,7 +139,7 @@ if ($has_prev || $has_next)
     echo "&amp;total=$total&amp;year=$year&amp;month=$month&amp;day=$day\">";
   }
 
-  echo "<b>" . get_vocab("previous") . "</b>";
+  echo get_vocab("previous");
 
   if ($has_prev)
   {
@@ -142,27 +157,32 @@ if ($has_prev || $has_next)
     echo "&amp;total=$total&amp;year=$year&amp;month=$month&amp;day=$day\">";
   }
 
-  echo "<b>". get_vocab("next") ."</b>";
+  echo get_vocab("next");
   
   if ($has_next)
   {
     echo "</a>";
   }
+  echo "</div>\n";
 }
 ?>
 
-  <table border="2" cellspacing="0" cellpadding="3">
-   <tr>
-    <th><?php echo get_vocab("entry") ?></th>
-    <th><?php echo get_vocab("createdby") ?></th>
-    <th><?php echo get_vocab("namebooker") ?></th>
-    <th><?php echo get_vocab("description") ?></th>
-    <th><?php echo get_vocab("start_date") ?></th>
-   </tr>
+  <table id="search_results">
+    <thead>
+      <tr>
+        <th><?php echo get_vocab("entry") ?></th>
+        <th><?php echo get_vocab("createdby") ?></th>
+        <th><?php echo get_vocab("namebooker") ?></th>
+        <th><?php echo get_vocab("description") ?></th>
+        <th><?php echo get_vocab("start_date") ?></th>
+      </tr>
+    </thead>
+    
+    <tbody>
 <?php
 for ($i = 0; ($row = sql_row_keyed($result, $i)); $i++)
 {
-  echo "<tr>";
+  echo "<tr>\n";
   echo "<td><a href=\"view_entry.php?id=".$row['entry_id']."\">".get_vocab("view")."</a></td>\n";
   echo "<td>" . htmlspecialchars($row['create_by']) . "</td>\n";
   echo "<td>" . htmlspecialchars($row['name']) . "</td>\n";
@@ -181,7 +201,7 @@ for ($i = 0; ($row = sql_row_keyed($result, $i)); $i++)
   echo "$link_str</a></td>";
   echo "</tr>\n";
 }
-
+echo "</tbody>\n";
 echo "</table>\n";
 include "trailer.inc";
 ?>

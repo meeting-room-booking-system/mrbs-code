@@ -1,0 +1,6 @@
+/* $Id$ */
+
+/* Fixes for Internet Explorer 8 */
+
+/* ------------ ADMIN.PHP ---------------------------*/
+.form_admin fieldset {padding-top: 0}

@@ -103,19 +103,18 @@ for ($j = 0; $j<=($num_of_days-1); $j++)
                                               $eveningends));
 }
 
-// Table with areas, rooms, minicals.
+// Section with areas, rooms, minicals.
 
 ?>
 <div class="screenonly">
-  <table width="100%">
-    <tr>
+  <div id="dwm_header">
 <?php
 
 $this_area_name = "";
 $this_room_name = "";
 
 // Show all areas
-echo "<td width=\"30%\"><u>".get_vocab("areas")."</u><br>";
+echo "<div id=\"dwm_areas\"><h3>".get_vocab("areas")."</h3>";
 
 // show either a select box or the normal html list
 if ($area_list_format == "select")
@@ -129,30 +128,32 @@ if ($area_list_format == "select")
 }
 else
 {
-  $sql = "select id, area_name from $tbl_area order by area_name";
+ $sql = "select id, area_name from $tbl_area order by area_name";
   $res = sql_query($sql);
   if ($res)
   {
+    echo "<ul>\n";
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      echo "<a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$row['id']."\">";
+      echo "<li><a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$row[0]\">";
+      echo "<span";
       if ($row['id'] == $area)
       {
         $this_area_name = htmlspecialchars($row['area_name']);
-        echo "<font color=\"red\">$this_area_name</font></a><br>\n";
+        echo ' class="current"';
       }
-      else
-      {
-        echo htmlspecialchars($row['area_name']) . "</a><br>\n";
-      }
+      echo ">";
+      echo htmlspecialchars($row['area_name']) . "</span></a></li>\n";
     }
+    echo "</ul>\n";
   }
+
 } // end area display if
 
-echo "</td>\n";
+echo "</div>\n";
 
 // Show all rooms in the current area
-echo "<td width=\"30%\"><u>".get_vocab("rooms")."</u><br>";
+echo "<div id=\"dwm_rooms\"><h3>".get_vocab("rooms")."</h3>";
 
 // should we show a drop-down for the room list, or not?
 if ($area_list_format == "select")
@@ -162,32 +163,33 @@ if ($area_list_format == "select")
 }
 else
 {
-  $sql = "select id, room_name, description
-          from $tbl_room where area_id=$area order by room_name";
+  $sql = "select id, room_name from $tbl_room
+          where area_id=$area order by room_name";
   $res = sql_query($sql);
   if ($res)
   {
+    echo "<ul>\n";
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      echo "<a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\" title=\"$row[2]\">";
+      echo "<li><a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\">";
+      echo "<span";
       if ($row['id'] == $room)
       {
         $this_room_name = htmlspecialchars($row['room_name']);
-        echo "<font color=\"red\">$this_room_name</font></a><br>\n";
+        echo ' class="current"';
       }
-      else
-      {
-        echo htmlspecialchars($row['room_name']) . "</a><br>\n";
-      }
+      echo ">";
+      echo htmlspecialchars($row['room_name']) . "</span></a></li>\n";
     }
+    echo "</ul>\n";
   }
 } // end select if
 
-echo "</td>\n";
+echo "</div>\n";
 
 // Draw the three month calendars
 minicals($year, $month, $day, $area, $room, 'week');
-echo "</tr></table>\n";
+echo "</div>\n";
 
 // End of "screenonly" div
 echo "</div>\n";
@@ -201,7 +203,7 @@ if ($room <= 0)
 }
 
 // Show area and room:
-echo "<h2 align=center>$this_area_name - $this_room_name</h2>\n";
+echo "<h2 id=\"dwm\">$this_area_name - $this_room_name</h2>\n";
 
 //y? are year, month and day of the previous week.
 //t? are year, month and day of the next week.
@@ -217,28 +219,29 @@ $tm = date("m",$i);
 $td = date("d",$i);
 
 // Show Go to week before and after links
-echo "<div class=\"screenonly\">
-  <table width=\"100%\">
-    <tr>
-      <td>
-        <a href=\"week.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area&amp;room=$room\">
+$before_after_links_html = "
+<div class=\"screenonly\">
+  <div class=\"date_nav\">
+    <div class=\"date_before\">
+      <a href=\"week.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area&amp;room=$room\">
           &lt;&lt; ".get_vocab("weekbefore")."
-        </a>
-      </td>
-      <td align=\"center\">
-        <a href=\"week.php?area=$area&amp;room=$room\">
+      </a>
+    </div>
+    <div class=\"date_now\">
+      <a href=\"week.php?area=$area&amp;room=$room\">
           ".get_vocab("gotothisweek")."
-        </a>
-      </td>
-      <td align=\"right\">
-        <a href=\"week.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area&amp;room=$room\">
+      </a>
+    </div>
+    <div class=\"date_after\">
+      <a href=\"week.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area&amp;room=$room\">
           ".get_vocab("weekafter")."&gt;&gt;
-        </a>
-      </td>
-    </tr>
-  </table>
+      </a>
+    </div>
+  </div>
 </div>
 ";
+
+print $before_after_links_html;
 
 //Get all appointments for this week in the room that we care about
 // row['start_time'] = Start time
@@ -266,7 +269,7 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
 
   if ($debug_flag)
   {
-    echo "<br>DEBUG: query=$sql\n";
+    echo "<p>DEBUG: query=$sql</p>\n";
   }
   $res = sql_query($sql);
   if (! $res)
@@ -279,7 +282,7 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
     {
       if ($debug_flag)
       {
-        echo "<br>DEBUG: result $i, id ".$row['id'].", starts ".$row['start_time'],", ends ".$row['end_time']."\n";
+        echo "<p>DEBUG: result $i, id ".$row['id'].", starts ".$row['start_time'],", ends ".$row['end_time']."</p>\n";
       }
 
       // $d is a map of the screen that will be displayed
@@ -287,7 +290,12 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
       //     $d[Day][Time][id]
       //                  [color]
       //                  [data]
-      // where Day is in the range 0 to $num_of_days. 
+      //                  [slots]
+      // where Day is in the range 0 to $num_of_days.
+       
+      // slots records the duration of the booking in number of slots.
+      // Used to calculate how high to make the block used for clipping
+      // overflow descriptions.
       
       // Fill in the map for this meeting. Start at the meeting start time,
       // or the day start time, whichever is later. End one slot before the
@@ -308,6 +316,7 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
         $d[$j][date($format,$t)]["color"] = $row['type'];
         $d[$j][date($format,$t)]["data"]  = "";
         $d[$j][date($format,$t)]["long_descr"]  = "";
+        $d[$j][date($format,$t)]["slots"] = intval(($end_t - $start_t)/$resolution) + 1; 
       }
  
       // Show the name of the booker in the first segment that the booking
@@ -342,8 +351,9 @@ if ($debug_flag)
   {
     print "$pm7_val - " . date("r", $pm7_val) . "\n";
   }
+  echo "</pre></p>\n";
 
-  echo "<p>\$d =\n";
+  echo "<p><pre>\$d =\n";
   if (gettype($d) == "array")
   {
     while (list($w_k, $w_v) = each($d))
@@ -369,20 +379,24 @@ if ($debug_flag)
 if ($javascript_cursor) // If authorized in config.inc.php, include the javascript cursor management.
 {
   echo "<script type=\"text/javascript\" src=\"xbLib.js\"></script>\n";
-  echo "<script type=\"text/javascript\">InitActiveCell("
+  echo "<script type=\"text/javascript\">\n";
+  echo "//<![CDATA[\n";
+  echo "InitActiveCell("
     . ($show_plus_link ? "true" : "false") . ", "
     . "true, "
     . ((FALSE != $times_right_side) ? "true" : "false") . ", "
     . "\"$highlight_method\", "
     . "\"" . get_vocab("click_to_reserve") . "\""
-    . ");</script>\n";
+    . ");\n";
+  echo "//]]>\n";
+  echo "</script>\n";
 }
 
 //This is where we start displaying stuff
-echo "<table cellspacing=0 border=1 width=\"100%\">";
+echo "<table class=\"dwm_main\" id=\"week_main\">";
 
 // The header row contains the weekday names and short dates.
-echo "<tr><th width=\"1%\"><br>".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
+echo "<tr><th class=\"first_last\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
 if (empty($dateformat))
 {
   $dformat = "%a<br>%b %d";
@@ -394,7 +408,7 @@ else
 for ($j = 0; $j<=($num_of_days-1) ; $j++)
 {
   $t = mktime( 12, 0, 0, $month, $day+$j, $year); 
-  echo "<th width=\"14%\"><a href=\"day.php?year=" . strftime("%Y", $t) . 
+  echo "<th><a href=\"day.php?year=" . strftime("%Y", $t) . 
     "&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) . 
     "&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">"
     . utf8_strftime($dformat, $t) . "</a></th>\n";
@@ -402,7 +416,7 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
 // next line to display times on right side
 if ( FALSE != $times_right_side )
 {
-  echo "<th width=\"1%\"><br>"
+  echo "<th class=\"first_last\">"
     . ( $enable_periods  ? get_vocab("period") : get_vocab("time") )
     . ":</th>";
 }
@@ -432,40 +446,33 @@ for (
   $time_t = date($format, $t);
   // Show the time linked to the URL for highlighting that time:
   echo "<tr>";
-  tdcell("red");
+  tdcell("times", 1);
+  echo "<div class=\"celldiv1\">\n";
   if ( $enable_periods )
   {
     $time_t_stripped = preg_replace( "/^0/", "", $time_t );
     echo "<a href=\"$hilite_url=$time_t\"  title=\""
       . get_vocab("highlight_line") . "\">"
-      . $periods[$time_t_stripped] . "</a></td>";
+      . $periods[$time_t_stripped] . "</a>";
   }
   else
   {
     echo "<a href=\"$hilite_url=$time_t\" title=\""
       . get_vocab("highlight_line") . "\">"
-      . utf8_strftime(hour_min_format(),$t) . "</a></td>";
+      . utf8_strftime(hour_min_format(),$t) . "</a>";
   }
+  echo "</div></td>\n";
 
-  // Color to use for empty cells: white, unless highlighting this row:
-  if (isset($timetohighlight) && $timetohighlight == $time_t)
-  {
-    $empty_color = "red";
-  }
-  else
-  {
-    $empty_color = "white";
-  }
 
   // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
   for ($thisday = 0; $thisday<=($num_of_days-1) ; $thisday++)
   {
     // Three cases:
-    // color:  id:   Slot is:   Color:    Link to:
-    // -----   ----- --------   --------- -----------------------
-    // unset   -     empty      white,red add new entry
-    // set     unset used       by type   none (unlabelled slot)
-    // set     set   used       by type   view entry
+    // color:  id:   Slot is:   Color:                  Link to:
+    // -----   ----- --------   ---------               -----------------------
+    // unset   -     empty      zebra or row_highlight  add new entry
+    // set     unset used       by type                 none (unlabelled slot)
+    // set     set   used       by type                 view entry
 
     $wt = mktime( 12, 0, 0, $month, $day+$thisday, $year );
     $wday = date("d", $wt);
@@ -478,14 +485,17 @@ for (
       $color = $d[$thisday][$time_t]["color"];
       $descr = htmlspecialchars($d[$thisday][$time_t]["data"]);
       $long_descr = htmlspecialchars($d[$thisday][$time_t]["long_descr"]);
+      $slots = $d[$thisday][$time_t]["slots"];
     }
     else
     {
       unset($id);
+      $slots = 1;
     }
     
-    // $c is the colour of the cell that the browser sees. White normally, 
-    // red if were hightlighting that line and a nice attractive green if the room is booked.
+    // $c is the colour of the cell that the browser sees. Zebra stripes normally,
+    // row_highlight if we're highlighting that line and the appropriate colour if
+    // it is booked (determined by the type).
     // We tell if its booked by $id having something in it
     if (isset($id))
     {
@@ -493,86 +503,100 @@ for (
     }
     else if (isset($timetohighlight) && ($time_t == $timetohighlight))
     {
-      $c = "red";
+      $c = "row_highlight";
     }
     else
     {
       $c = $row_class;
     }
     
-    tdcell($c);
- 	
-    // If the room isnt booked then allow it to be booked
-    if (!isset($id))
-    {
-      $hour = date("H",$t);
-      $minute  = date("i",$t);
- 
-      if ($javascript_cursor)
-      {
-        echo "<script type=\"text/javascript\">\n<!--\n";
-        echo "BeginActiveCell();\n";
-        echo "// -->\n</script>";
-      }
-      echo "<div align=\"center\">";
-      if ( $enable_periods )
-      {
-        echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
-          . "&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth"
-          . "&amp;day=$wday\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
-      }
-      else
-      {
-        echo "<a href=\"edit_entry.php?room=$room&amp;area=$area"
-          . "&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth"
-          . "&amp;day=$wday\"><img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\" border=\"0\"></a>";
-      }
-      echo "</div>";
-      if ($javascript_cursor)
-      {
-        echo "<script type=\"text/javascript\">\n<!--\n";
-        echo "EndActiveCell();\n";
-        echo "// -->\n</script>";
-      }
-    }
-    else if ($descr != "")
-    {
-      //if it is booked then show 
-      echo " <a href=\"view_entry.php?id=$id"
-        . "&amp;area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear\" "
-        . "title=\"$long_descr\">$descr</a>";
-    }
-    else
-    {
-      echo "&nbsp;\"&nbsp;";
-    }
+    // Don't put in a <td> cell if the slot is booked and there's no description.
+    // This would mean that it's the second or subsequent slot of a booking and so the
+    // <td> for the first slot would have had a rowspan that extended the cell down for
+    // the number of slots of the booking.
     
-    echo "</td>\n";
+    if (!(isset($id) && ($descr == "")))
+    {
+      tdcell($c, $slots);
+      
+      // If the room isnt booked then allow it to be booked
+      if (!isset($id))
+      {
+        $hour = date("H",$t);
+        $minute  = date("i",$t);
+        
+        echo "<div class=\"celldiv1\">\n";  // a bookable slot is only one unit high
+        if ($javascript_cursor)
+        {
+          echo "<script type=\"text/javascript\">\n";
+          echo "//<![CDATA[\n";
+          echo "BeginActiveCell();\n";
+          echo "//]]>\n";
+          echo "</script>\n";
+        }
+  
+        if ( $enable_periods )
+        {
+          echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
+          echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          echo "</a>\n";
+        }
+        else
+        {
+          echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
+          echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          echo "</a>\n";
+        }
+  
+        if ($javascript_cursor)
+        {
+          echo "<script type=\"text/javascript\">\n";
+          echo "//<![CDATA[\n";
+          echo "EndActiveCell();\n";
+              echo "//]]>\n";
+          echo "</script>\n";
+        }
+        echo "</div>\n";
+      }
+      else      //if it is booked then show the booking
+      { 
+      	echo "<div class=\"celldiv" . $slots . "\">\n";     // we want clipping of overflow
+        echo " <a class=\"booking\" href=\"view_entry.php?id=$id"
+          . "&amp;area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear\" "
+          . "title=\"$long_descr\">$descr</a>\n";
+        echo "</div>\n";
+      }
+      
+      echo "</td>\n";
+    }
   }
 
   // next lines to display times on right side
   if ( FALSE != $times_right_side )
     {
+      tdcell("times", 1);
+      echo "<div class=\"celldiv1\">\n";
       if ( $enable_periods )
       {
-        tdcell("red");
         $time_t_stripped = preg_replace( "/^0/", "", $time_t );
         echo "<a href=\"$hilite_url=$time_t\"  title=\""
           . get_vocab("highlight_line") . "\">"
-          . $periods[$time_t_stripped] . "</a></td>";
+          . $periods[$time_t_stripped] . "</a>";
       }
       else
       {
-        tdcell("red");
         echo "<a href=\"$hilite_url=$time_t\" title=\""
           . get_vocab("highlight_line") . "\">"
-          . utf8_strftime(hour_min_format(),$t) . "</a></td>";
+          . utf8_strftime(hour_min_format(),$t) . "</a>";
       }
+      echo "</div></td>\n";
     }
 
   echo "</tr>\n";
 }
 echo "</table>";
+
+print $before_after_links_html;
 
 show_colour_key();
 

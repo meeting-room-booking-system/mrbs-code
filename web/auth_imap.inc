@@ -64,7 +64,9 @@ function authValidateUser($user, $pass)
 
   // Check that if there is an array of hosts and an array of ports
   // then the number of each is the same
-  if (is_array( $imap_host ) && is_array( $imap_port ) && count($imap_port) != count($imap_host) )
+  if (is_array( $imap_host ) &&
+      is_array( $imap_port ) &&
+      (count($imap_port) != count($imap_host)) )
   {
     return 0;
   }
@@ -103,7 +105,7 @@ function authValidateUser($user, $pass)
 
     // Connect to IMAP-server
     $stream = fsockopen( $host, $all_imap_ports[$idx], $error_number,
-			 $error_string, 15 );
+                         $error_string, 15 );
     if ( $stream )
     {
       $response = fgets( $stream, 1024 );
@@ -112,10 +114,10 @@ function authValidateUser($user, $pass)
       $response = fgets( $stream, 1024 );
       if ( substr( $response, 5, 2 ) == 'OK' )
       {
-	fputs( $stream, "a002 LOGOUT\r\n" );
-	$response = fgets( $stream, 1024 );
-	fclose( $stream );
-	return 1;
+        fputs( $stream, "a002 LOGOUT\r\n" );
+        $response = fgets( $stream, 1024 );
+        fclose( $stream );
+        return 1;
       }
       fputs( $stream, "a002 LOGOUT\r\n" );
       fclose( $stream );

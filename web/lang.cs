@@ -22,7 +22,7 @@ $vocab["report"]             = "Výpis";
 $vocab["admin"]              = "Administrátor";
 $vocab["help"]               = "Pomoc";
 $vocab["search"]             = "Hledat";
-$vocab["not_php3"]             = "<H1>UPOZORNÌNÍ: Toto zøejmì není funkèní s PHP3</H1>";
+$vocab["not_php3"]           = "UPOZORNÌNÍ: Toto zøejmì není funkèní s PHP3";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "Objednáno pro";

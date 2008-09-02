@@ -22,7 +22,7 @@ $vocab["report"]             = "报表";
 $vocab["admin"]              = "系统管理";
 $vocab["help"]               = "说明";
 $vocab["search"]             = "查找:";
-$vocab["not_php3"]             = "<H1>警告: 无法运行于PHP3环境</H1>";
+$vocab["not_php3"]           = "警告: 无法运行于PHP3环境";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "预订:";
@@ -105,7 +105,7 @@ $vocab["invalid_series_id"]  = "序列号错误.";
 $vocab["error"]              = "错误";
 $vocab["sched_conflict"]     = "时段冲突";
 $vocab["conflict"]           = "此时段已被预订";
-$vocab["too_may_entrys"]     = "这个选择造成太多输入.<BR>请重新选择!";
+$vocab["too_may_entrys"]     = "这个选择造成太多输入.<br>请重新选择!";
 $vocab["returncal"]          = "查看日程表";
 $vocab["failed_to_acquire"]  = "无法读取资料库"; 
 

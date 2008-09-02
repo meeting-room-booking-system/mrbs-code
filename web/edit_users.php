@@ -1,23 +1,23 @@
 <?php
 /*****************************************************************************\
-*									      *
-*   File name       edit_users.php					      *
-*									      *
-*   Description	    Edit the user database                                    *
-*									      *
-*   Notes	    Automatically creates the database if it's not present.   *
-*									      *
-*		    Designed to be easily extensible:                         *
-*                   Adding more fields for each user does not require         *
-*                    modifying the editor code. Only to add the fields in     *
-*                    the database creation code.                              *
-*									      *
-*		    To do:						      *
-*			- Localisability                                      *
-*									      *
-*   History								      *
-*    2003/12/29 JFL Created this file					      *
-*									      *
+*                                                                            *
+*   File name     edit_users.php                                             *
+*                                                                            *
+*   Description   Edit the user database                                     *
+*                                                                            *
+*   Notes         Automatically creates the database if it's not present.    *
+*                                                                            *
+*                 Designed to be easily extensible:                          *
+*                 Adding more fields for each user does not require          *
+*                 modifying the editor code. Only to add the fields in       *
+*                 the database creation code.                                *
+*                                                                            *
+*                 To do:                                                     *
+*                     - Localisability                                       *
+*                                                                            *
+*   History                                                                  *
+*                 2003/12/29 JFL Created this file                           *
+*                                                                            *
 \*****************************************************************************/
 
 // $Id$
@@ -45,8 +45,8 @@ $invalid_email = get_form_var('invalid_email', 'int');
 
 $nusers = sql_query1("select count(*) from $tbl_users");
 
-if ($nusers == -1)	/* If the table does not exist */
-{			/* Then create it */
+if ($nusers == -1)   /* If the table does not exist */
+{         /* Then create it */
   $cmd = "
 CREATE TABLE $tbl_users
 (
@@ -65,8 +65,8 @@ CREATE TABLE $tbl_users
   if ($r == -1)
   {
     // No need to localize this: Only the admin running this for the first time would see it.
-    print "Error creating the $tbl_users table.<br>\n";
-    print sql_error() . "<br>\n";
+    print "<p class=\"error\">Error creating the $tbl_users table.</p>\n";
+    print "<p class=\"error\">" . sql_error() . "</p>\n";
     exit();
   }
   $nusers = 0;
@@ -151,71 +151,76 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   }
 
   print_header(0, 0, 0, 0);
+  
+  print "<div id=\"form_container\">";
+  print "<form id=\"form_edit_users\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)). "\">\n";
+    ?>
+        <fieldset class="admin">
+        <legend><?php echo (($Action == "Edit") ? get_vocab("edit_user") : get_vocab("add_new_user"));?></legend>
+        <div id="edit_users_input_container">
+          <?php
 
-  if ($Action == "Edit")
-  {
-    print "<h2>" . get_vocab("edit_user") . "</h2>\n";
-  }
-  else
-  {
-    print "<h2>" . get_vocab("add_new_user") . "</h2>\n";
-  }
+          foreach ($fields as $fieldname)
+          {
+            /* The ID field cannot change; The password field must not be shown. */
+            if ($fieldname == "id")
+            {
+              print "    <input type=\"hidden\" name=\"Id\" value=\"$Id\">\n";
+              continue;
+            }
+            if ($fieldname == "password")
+            {
+              print "    <input type=\"hidden\" name=\"Field_$fieldname\" value=\"". htmlspecialchars($data['password'])."\">\n";
+              continue;
+            }
+            $html_fieldname = htmlspecialchars("Field_$fieldname");
+            echo ("<div>\n");
+            echo ("<label for=\"$html_fieldname\">" . get_loc_field_name($fieldname) . ":</label>\n");
+            echo ("<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n");
+            echo ("</div>\n");
+            
+            // Display message about invalid email
+            (!isset($invalid_email)) ? $invalid_email = '' : '' ;
+            if ( ($fieldname == "email") && (1 == $invalid_email) )
+            {
+              print ("<p class=\"error\">" . get_vocab('invalid_email') . "<p>\n");
+            }
+          }
 
-  if (($Id >= 0) && ($level == 2)) /* Administrators get the right to delete users */
-  {
-    print "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-    print "\t<input type=\"hidden\" name=\"Action\" value=\"Delete\">\n";
-    print "\t<input type=\"hidden\" name=\"Id\" value=\"$Id\">\n";
-    print "\t<input style=\"margin:0\" type=\"submit\" value=\"" . get_vocab("delete_user") . "\" >\n";
-    print "</form>\n";
-  }
 
-  print "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)). "\">\n";
-  print "  <table>\n";
+            print "<div><p>" . get_vocab("password_twice") . "...</p></div>\n";
 
-  foreach ($fields as $fieldname)
-  {
-    /* The ID field cannot change; The password field must not be shown. */
-    if ($fieldname == "id")
-    {
-      print "    <input type=\"hidden\" name=\"Id\" value=\"$Id\">\n";
-      continue;
-    }
-    if ($fieldname == "password")
-    {
-      print "    <input type=\"hidden\" name=\"Field_$fieldname\" value=\"".
-        htmlspecialchars($data['password'])."\" >\n";
-      continue;
-    }
-    print "    <tr>\n";
-    print "      <td align=\"right\" valign=\"bottom\">" . get_loc_field_name($fieldname) . "</td>\n";
-    print "      <td><input type=\"text\" name=\"".htmlspecialchars("Field_$fieldname").
-      "\" value=\"".htmlspecialchars($data[$fieldname])."\" ></td>\n";
-    // Display message about invalid email
-    (!isset($invalid_email)) ? $invalid_email = '' : '' ;
-    if ( ($fieldname == "email") && (1 == $invalid_email) )
-    {
-      print ("<td><strong>" . get_vocab('invalid_email') . "<strong></td>\n");
-    }
-    print "    </tr>\n";
-  }
-  print "  </table>\n";
-
-  print " <br>" . get_vocab("password_twice") . "...<br><br>\n";
-  print "  <table>\n";
-  for ($i=0; $i<2; $i++)
-  {
-    print "    <tr>\n";
-    print "      <td align=\"right\" valign=\"center\">" . get_vocab("user_password") . "</td>\n";
-    print "      <td><input type=\"password\" name=\"password$i\" value=\"\" ></td>\n";
-    print "    </tr>\n";
-  }
-  print "  </table>\n";
-/*    print "  <input type=\"hidden\" name=\"Id\" value=\"$this_id\" > <br>\n"; */
-  print "  <input type=\"hidden\" name=\"Action\" value=\"Update\"> <br>\n";
-  print "  <input type=\"submit\" value=\" " . get_vocab("ok") . " \" > <br>\n";
-  print "</form>\n</body>\n</html>\n";
-
+          for ($i=0; $i<2; $i++)
+          {
+            print "<div>\n";
+            print "<label for=\"password$i\">" . get_vocab("user_password") . ":</label>\n";
+            print "<input type=\"password\" id=\"password$i\" name=\"password$i\" value=\"\">\n";
+            print "</div>\n";
+          }
+          ?>
+          <input type="hidden" name="Action" value="Update">    
+          <input class="submit" type="submit" value="<?php echo(get_vocab("ok")); ?>">
+        </div>
+        </fieldset>
+      </form>
+      <?php
+      if (($Id >= 0) && ($level == 2)) /* Administrators get the right to delete users */
+      {
+        ?>
+        <form id="form_delete_users" method="post" action="<?php echo(htmlspecialchars(basename($PHP_SELF))); ?>">
+          <div>
+            <input type="hidden" name="Action" value="Delete">
+            <input type="hidden" name="Id" value="<?php echo($Id); ?>">
+            <input class="submit" type="submit" value="<?php echo(get_vocab("delete_user")); ?>">
+          </div>
+        </form>
+        <?php
+      }
+      ?>
+      </div>
+    </body>
+    </html>
+  <?php
   exit();
 }
 
@@ -230,10 +235,12 @@ if (isset($Action) && ($Action == "Update"))
   {
     print_header(0, 0, 0, "");
 
-    print get_vocab("passwords_not_eq") . "<br>\n";
-
-    print "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-    print "  <input type=\"submit\" value=\" " . get_vocab("ok") . " \" > <br>\n";
+    print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+    print "  <fieldset>\n";
+    print "  <legend></legend>\n";
+    print "    <p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
+    print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
+    print "  </fieldset>\n";
     print "</form>\n</body>\n</html>\n";
 
     exit();
@@ -321,11 +328,14 @@ if (isset($Action) && ($Action == "Update"))
     print_header(0, 0, 0, "");
 
     // This is unlikely to happen in normal operation. Do not translate.
-    print "Error updating the $tbl_users table.<br>\n";
-    print sql_error() . "<br>\n";
-        
-    print "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-    print "  <input type=\"submit\" value=\" " . get_vocab("ok") . " \" > <br>\n";
+     
+    print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+    print "  <fieldset>\n";
+    print "  <legend></legend>\n";
+    print "    <p class=\"error\">Error updating the $tbl_users table.</p>\n";
+    print "    <p class=\"error\">" . sql_error() . "</p>\n";
+    print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
+    print "  </fieldset>\n";
     print "</form>\n</body>\n</html>\n";
 
     exit();
@@ -353,16 +363,19 @@ if (isset($Action) && ($Action == "Delete"))
     print_header(0, 0, 0, "");
 
     // This is unlikely to happen in normal  operation. Do not translate.
-    print "Error deleting entry $Id from the $tbl_users table.<br>\n";
-    print sql_error() . "<br>\n";
     
-    print "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-    print "  <input type=\"submit\" value=\" " . get_vocab("ok") . " \" > <br>\n";
+    print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+    print "  <fieldset>\n";
+    print "  <legend></legend>\n";
+    print "    <p class=\"error\">Error deleting entry $Id from the $tbl_users table.</p>\n";
+    print "    <p class=\"error\">" . sql_error() . "</p>\n";
+    print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
+    print "  </fieldset>\n";
     print "</form>\n</body>\n</html>\n";
 
     exit();
   }
-  /* print "Database updated successfully.<br><br>\n"; */
+
   /* Success. Do not display a message. Simply fall through into the list display. */
 }
 
@@ -385,90 +398,101 @@ if ($initial_user_creation == 1)
 if ($level == 2) /* Administrators get the right to add new users */
 {
   print "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-  print "\t<input type=\"hidden\" name=\"Action\" value=\"Add\">\n";
-  print "\t<input type=\"hidden\" name=\"Id\" value=\"-1\">\n";
-  print "\t<input style=\"margin:0\" type=\"submit\" value=\"" . get_vocab("add_new_user") . "\" >\n";
+  print "  <div>\n";
+  print "    <input type=\"hidden\" name=\"Action\" value=\"Add\">\n";
+  print "    <input type=\"hidden\" name=\"Id\" value=\"-1\">\n";
+  print "    <input style=\"margin:0\" type=\"submit\" value=\"" . get_vocab("add_new_user") . "\">\n";
+  print "  </div>\n";
   print "</form>\n";
 }
 
-$list = sql_query("select * from $tbl_users order by name");
-print "<table border=\"1\">\n";
-print "<tr>";
-// The first 2 columns are the user rights and user name.
-print "<th>" . get_vocab("rights") . "</th><th>" . get_vocab("user_name") . "</th>";
-// The remaining columns are all the columns from the database, past the initial 3 (id, name, password).
-foreach ($fields as $fieldname)
+if ($initial_user_creation != 1)   // don't print the user table if there are no users
 {
-  if ($fieldname != 'id' && $fieldname != 'name' && $fieldname != 'password')
+  $list = sql_query("select * from $tbl_users order by name");
+  print "<table id=\"edit_users_list\" class=\"admin_table\">\n";
+  print "<thead>\n";
+  print "<tr>";
+  // The first 2 columns are the user rights and user name.
+  print "<th>" . get_vocab("rights") . "</th><th>" . get_vocab("user_name") . "</th>";
+  // The remaining columns are all the columns from the database, past the initial 3 (id, name, password).
+  foreach ($fields as $fieldname)
   {
-    print "<th>" . get_loc_field_name($fieldname) . "</th>";
-  }
-}
-print "<th>" . get_vocab("action") . "</th>";
-print "</tr>\n";
-$i = 0; 
-while ($line = sql_row($list, $i++))
-{
-  print "\t<tr>\n";
-  $j = -1;
-  $this_id = 0;
-  foreach ($line as $col_value) 
-  {
-    $j += 1;
-    if ($j == 0)	/* The 1st data is the ID. */
-    {		/* Don't display it, but remember it. */
-      $this_id = $col_value;
-      continue;
+    if ($fieldname != 'id' && $fieldname != 'name' && $fieldname != 'password')
+    {
+      print "<th>" . get_loc_field_name($fieldname) . "</th>";
     }
-    if ($j == 1)	/* The 2nd data is the name. */
-    {		/* Use it to tell if it's a user or an admin */
-      $name = $col_value;
-      switch (authGetUserLevel($name, $auth["admin"]))
-      {
-        case 1:
-          $right = get_vocab("user");
-          break;
-        case 2:
-          $right = get_vocab("administrator");
-          break; // MRBS admin
-        case 3:
-          $right = get_vocab("administrator");
-          break; // Reserved for future user admin.
-        default:
-          $right = get_vocab("unknown");
-          break;
+  }
+  print "<th>" . get_vocab("action") . "</th>";
+  print "</tr>\n";
+  print "</thead>\n";
+  print "<tbody>\n";
+  $i = 0; 
+  while ($line = sql_row($list, $i++))
+  {
+    print "<tr>\n";
+    $j = -1;
+    $this_id = 0;
+    foreach ($line as $col_value) 
+    {
+      $j += 1;
+      if ($j == 0)   /* The 1st data is the ID. */
+      {      /* Don't display it, but remember it. */
+        $this_id = $col_value;
+        continue;
       }
-      print "\t\t<td>$right</td>\n";
-      /* Fall through to display the name */
+      if ($j == 1)   /* The 2nd data is the name. */
+      {      /* Use it to tell if it's a user or an admin */
+        $name = $col_value;
+        switch (authGetUserLevel($name, $auth["admin"]))
+        {
+          case 1:
+            $right = get_vocab("user");
+            break;
+          case 2:
+            $right = get_vocab("administrator");
+            break; // MRBS admin
+          case 3:
+            $right = get_vocab("administrator");
+            break; // Reserved for future user admin.
+          default:
+            $right = get_vocab("unknown");
+            break;
+        }
+        print "<td>$right</td>\n";
+        /* Fall through to display the name */
+      }
+      if ($j == 2)   /* The 3rd data is the password, which we must not display. */
+      {
+        continue;
+      }
+      /* Display the data, if any. */
+      if ($col_value == "")
+      {
+        $col_value = "&nbsp;"; // IE doesn't print a frame around void data.
+      }
+      print "<td>$col_value</td>\n";
     }
-    if ($j == 2)	/* The 3rd data is the password, which we must not display. */
+    print "<td>\n";
+    if (getWritable($name, $user)) /* If the logged-on user has the right to edit this entry */
     {
-      continue;
+      print "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+      print "  <div>\n";
+      print "    <input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
+      print "    <input type=\"hidden\" name=\"Id\" value=\"$this_id\">\n";
+      print "    <input style=\"margin:0\" type=\"submit\" value=\"" . get_vocab("edit") . "\">\n";
+      print "  </div>\n";
+      print "</form>\n";
     }
-    /* Display the data, if any. */
-    if ($col_value == "")
+    else
     {
-      $col_value = "&nbsp;"; // IE doesn't print a frame around void data.
+      print "&nbsp;\n";
     }
-    print "\t\t<td>$col_value</td>\n";
+    print "</td>\n";
+    print "</tr>\n";
   }
-  print "\t\t<td>\n";
-  if (getWritable($name, $user)) /* If the logged-on user has the right to edit this entry */
-  {
-    print "\t\t    <form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-    print "\t\t\t<input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
-    print "\t\t\t<input type=\"hidden\" name=\"Id\" value=\"$this_id\">\n";
-    print "\t\t\t<input style=\"margin:0\" type=\"submit\" value=\"" . get_vocab("edit") . "\" >\n";
-    print "\t\t    </form>\n";
-  }
-  else
-  {
-    print "\t\t\t&nbsp;\n";
-  }
-  print "\t\t</td>\n";
-  print "\t</tr>\n";
-}
-print "</table>\n";
+  print "</tbody>\n";
+  print "</table>\n";
+}   // ($initial_user_creation != 1)
 
 include "trailer.inc";
 ?>
