@@ -73,13 +73,17 @@ $resolution = 1800;
 // slots of the day must be an integral multiple of the resolution,
 // and obviously >=0.
 
+// The default settings below (along with the 30 minute resolution above)
+// give you slot half-hourly slots starting at 07:00, with the last slot
+// being 18:30 -> 19:00
+
 // The beginning of the first slot of the day
 $morningstarts         = 7;   // must be integer in range 0-23
 $morningstarts_minutes = 0;   // must be integer in range 0-59
 
 // The beginning of the last slot of the day
-$eveningends           = 19;  // must be integer in range 0-23
-$eveningends_minutes   = 0;   // must be integer in range 0-59
+$eveningends           = 18;  // must be integer in range 0-23
+$eveningends_minutes   = 30;   // must be integer in range 0-59
 
 // Example 1.
 // If resolution=3600 (1 hour), morningstarts = 8 and morningstarts_minutes = 30 
