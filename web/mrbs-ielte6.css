@@ -9,6 +9,9 @@
 .form_admin input {margin-top: 0}            /* negative margins remove the input border in IE6 */
 .form_admin input.submit {display: inline}   /* stops IE6 "double margin float bug" appearing */
 
+/* ------------ DAY/WEEK/MONTH.PHP ------------------*/
+div.booking_list {overflow: hidden}          /* scrollbars don't work properly in IE6, so forget them */
+
 /* ------------ EDIT_AREA_ROOM.PHP ------------------*/
 .form_edit_area_room label {height: 2.0em}   /* min-height not recognised by IE6 and below */
 

@@ -7,8 +7,7 @@ include "config.inc.php";
 
 ?>
 
-body {color:black; font-size: 10pt; font-family:arial,sans-serif;
-background-color:#ffffed}
+body {color:black; font-size: 10pt; font-family:arial,sans-serif; background-color:#ffffed}
 
 
 h1 {color:black; font-family:verdana,sans-serif; font-size:16pt}
@@ -17,49 +16,16 @@ h2 {color:black; font-family:verdana,sans-serif; font-size:14pt}
 
 td {font-size:10pt; font-family: arial,sans-serif; border-width: 1px; vertical-align: top}
 td.header {color:black; font-family:verdana,sans-serif; border-width:0;
-background-color:#ffffdd; font-size:26pt}
+    background-color:#ffffdd; font-size:26pt}
 
-td.TR { vertical-align: top; text-align: right}
-td.TL { vertical-align: top; text-align: left}
-
-td form { margin:0; } /* Prevent IE from displaying margins around forms in tables. */
+td form {margin: 0}     /* Prevent IE from displaying margins around forms in tables. */
 
 th {color:#eeeeee; font-size:10pt; font-family:verdana,sans-serif; background-color:#999999; border-width:1px; border-color:#999999; vertical-align:top}
 
-
-td.A {background-color: #FFCCFF}
-td.B {background-color: #99CCCC}
-td.C {background-color: #FF9999}
-td.D {background-color: #FFFF99}
-td.E {background-color: #C0E0FF}
-td.F {background-color: #FFCC99}
-td.G {background-color: #FF6666}
-td.H {background-color: #66FFFF}
-td.I {background-color: #DDFFDD}
-td.J {background-color: #CCCCCC}
-
-td.times          {background-color: #FFF0F0}   /* used for the column with times/periods */
-td.row_highlight  {background-color: #FFF0F0}   /* used for highlighting a row */
-td.even_row       {background-color: #FFFFFF}   /* even rows in the day view */
-td.odd_row        {background-color: #EEEEEE}   /* odd rows in the day view */
-
 td.highlight {background-color:#AABBFF; border-style: solid; border-width: 1px; border-color:#0000AA;} /* The highlighted cell under the cursor */
 
-
-.sitename
-{font-size: 18px;
-font-style: normal;
-font-weight: bold;
-text-transform: none;
-color:#ffffff;
-position: absolute;
-left:30px;
-top:12px}
-
-
-
-
-
+.sitename {font-size: 18px; font-style: normal; font-weight: bold; text-transform: none; color:#ffffff;
+    position: absolute; left:30px; top:12px}
 
 /* ------------ GENERAL -----------------------------*/
 <?php
@@ -89,6 +55,19 @@ $anchor_link_color              = "#5b69a6";            // link color
 $anchor_visited_color           = $anchor_link_color;   // link color (visited)
 $anchor_hover_color             = "red";                // link color (hover)
 
+// These are the colours used for distinguishing between the dfferent types of bookings in the main
+// displays in the day, week and month views
+$color_types = array(
+    'A' => "#FFCCFF",
+    'B' => "#99CCCC",
+    'C' => "#FF9999",
+    'D' => "#FFFF99",
+    'E' => "#C0E0FF",
+    'F' => "#FFCC99",
+    'G' => "#FF6666",
+    'H' => "#66FFFF",
+    'I' => "#DDFFDD",
+    'J' => "#CCCCCC");
 ?>
 
 .current {color: red}                          /* used to highlight the current item */
@@ -172,20 +151,37 @@ div.date_after  {float: right; width: 33%; text-align: right}
 $table_dwm_main_border_width = 1;    // px
 ?>
 table.dwm_main {clear: both; width: 100%; border-spacing: 1px; border-collapse: collapse}
-.dwm_main td, .dwm_main th {border: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_border_color ?>; padding: 0 2px 0 2px}
+.dwm_main td, .dwm_main th {border: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_border_color ?>; padding: 0}
+.dwm_main a {display: block; height: 100%}
 .dwm_main#day_main th.first_last {width: 1%}
 .dwm_main#day_main td, .dwm_main#week_main td {padding: 0 2px 0 2px}
+.dwm_main#week_main th {width: 14%}
+.dwm_main#week_main th.first_last {width: 1%; vertical-align: bottom}  
 .dwm_main#month_main th {width: 14%}                                                   /* 7 days in the week */
 .dwm_main#month_main td.valid   {background-color: <?php echo $main_table_month_color ?>}
 .dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
-div.cell_container {float: left; min-height: 100px; width: 100%}                       /* the containing div for the td cell contents */
-div.cell_container div {width: 100%; float: left; clear: left}                         /* each of the sections in the cell is wrapped in another div */                        
-a.monthday {display: block; font-size: medium; padding: 0 2px 0 2px}                   /* first section: the date in the top left corner */
-.dwm_main#month_main span {display: block; font-size: x-small; padding: 0 2px 0 2px}   /* then details of any bookings */
-.dwm_main#month_main img {border: 0; padding: 5px 0 5px 2px}                           /* finally the new booking image */
-.dwm_main#week_main th {width: 14%}
-.dwm_main#week_main th.first_last {width: 1%; vertical-align: bottom}  
-.dwm_main a {display: block; height: 100%}
+div.cell_container {float: left; min-height: 100px; height: 100px; width: 100%}    /* the containing div for the td cell contents */ 
+div.cell_header  {height: 20%; min-height: 20%; max-height: 20%; overflow: hidden; position: relative}
+div.booking_list {height: 80%; min-height: 80%; max-height: 80%; overflow: auto; font-size: x-small}                                                         /* contains the list of bookings */
+a.monthday {display: block; position: absolute; top: 0; left: 0; font-size: medium}                                                   /* the date in the top left corner */
+a.new_booking {display: block; width: 100%; font-size: medium; text-align: center}
+.booking_list a {font-size: x-small}
+.dwm_main#month_main img {border: 0; padding: 4px 0 2px 0}
+.dwm_main#month_main a {padding: 0 2px 0 2px}
+
+<?php
+// Generate the classes to give the colour coding by booking type in the day/week/month views
+foreach ($color_types as $type => $col)
+{
+  echo "td.$type {background-color: $col}\n";         // used in the day and week views
+  echo ".month div.$type {float: left; max-height: 1.3em; height: 1.3em; min-height: 1.3em; overflow: hidden; background-color: $col}\n";   // used in the month view
+}
+
+?>
+td.times          {background-color: #FFF0F0}   /* used for the column with times/periods */
+td.row_highlight  {background-color: #FFF0F0}   /* used for highlighting a row */
+td.even_row       {background-color: #FFFFFF}   /* even rows in the day view */
+td.odd_row        {background-color: #EEEEEE}   /* odd rows in the day view */
 
 <?php
 

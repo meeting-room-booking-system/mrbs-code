@@ -212,7 +212,7 @@ $i= mktime(12,0,0,$month+1,1,$year);
 $ty = date("Y",$i);
 $tm = date("n",$i);
 
-echo "<div class=\"screenonly\">
+$before_after_links_html = "<div class=\"screenonly\">
   <div class=\"date_nav\">
     <div class=\"date_before\">
       <a href=\"month.php?year=$yy&amp;month=$ym&amp;area=$area&amp;room=$room\">
@@ -233,6 +233,8 @@ echo "<div class=\"screenonly\">
 </div>
 ";
 
+print $before_after_links_html;
+
 if ($debug_flag)
 {
   echo "<p>DEBUG: month=$month year=$year start=$weekday_start range=$month_start:$month_end</p>\n";
@@ -248,7 +250,7 @@ $all_day = ereg_replace(" ", "&nbsp;", get_vocab("all_day"));
 // This data will be retrieved day-by-day fo the whole month
 for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
 {
-  $sql = "SELECT start_time, end_time, id, name
+  $sql = "SELECT start_time, end_time, id, name, type
           FROM $tbl_entry
           WHERE room_id=$room
           AND start_time <= $midnight_tonight[$day_num] AND end_time > $midnight[$day_num]
@@ -279,6 +281,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
       }
       $d[$day_num]["id"][] = $row['id'];
       $d[$day_num]["shortdescrip"][] = htmlspecialchars($row['name']);
+      $d[$day_num]["color"][] = $row['type'];
 
       // Describe the start and end time, accounting for "all day"
       // and for entries starting before/ending after today.
@@ -415,73 +418,11 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
   echo "<td class=\"valid\">\n";
   echo "<div class=\"cell_container\">\n";
   
-  echo "<div>\n";
+  echo "<div class=\"cell_header\">\n";
+  // first put in the day of the month
   echo "<a class=\"monthday\" href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>\n";
-  echo "</div>\n";
   
-  // Anything to display for this day?
-  if (isset($d[$cday]["id"][0]))
-  {
-    echo "<div>\n";
-    echo "<span>\n"; 
-    $n = count($d[$cday]["id"]);
-    // Show the start/stop times, 2 per line, linked to view_entry.
-    // If there are 12 or fewer, show them, else show 11 and "...".
-    for ($i = 0; $i < $n; $i++)
-    {
-      if ( ($i == 11 && $n > 12 && $monthly_view_entries_details != "both") or
-           ($i == 6 && $n > 6 && $monthly_view_entries_details == "both") )
-      {
-        echo " ...\n";
-        break;
-      }
-      if ( ($i > 0 && $i % 2 == 0) or
-           ($monthly_view_entries_details == "both"  && $i > 0) )
-      {
-        echo "<br>";
-      }
-      else
-      {
-        echo " ";
-      }
-      switch ($monthly_view_entries_details)
-      {
-        case "description":
-        {
-          echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-            . "&amp;day=$cday&amp;month=$month&amp;year=$year\" title=\""
-            . $d[$cday]["data"][$i] . "\">"
-            . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 17)
-            . "</a>";
-          break;
-        }
-        case "slot":
-        {
-          echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-            . "&amp;day=$cday&amp;month=$month&amp;year=$year\" title=\""
-            . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 17) . "\">"
-            . $d[$cday]["data"][$i] . "</a>";
-          break;
-        }
-        case "both":
-        {
-          echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-            . "&amp;day=$cday&amp;month=$month&amp;year=$year\">"
-            . $d[$cday]["data"][$i] . " "
-            . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 6) . "</a>";
-          break;
-        }
-        default:
-        {
-          echo "error: unknown parameter";
-        }
-      }
-    }
-    echo "</span>\n";
-    echo "</div>\n";
-  }
-
-  echo "<div>\n";
+  // then the link to make a new booking
   if ($javascript_cursor)
   {
     echo "<script type=\"text/javascript\">\n";
@@ -492,13 +433,13 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
   }
   if ($enable_periods)
   {
-    echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
+    echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
     echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
     echo "</a>\n";
   }
   else
   {
-    echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$morningstarts&amp;minute=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
+    echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$morningstarts&amp;minute=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
     echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
     echo "</a>\n";
   }
@@ -511,6 +452,55 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
     echo "</script>\n";
   }
   echo "</div>\n";
+  
+  // then any bookings for the day
+  if (isset($d[$cday]["id"][0]))
+  {
+    echo "<div class=\"booking_list\">\n";
+    $n = count($d[$cday]["id"]);
+    // Show the start/stop times, 1 or 2 per line, linked to view_entry.
+    for ($i = 0; $i < $n; $i++)
+    {
+      // give the enclosing div the appropriate width: full width if both,
+      // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
+      echo "<div class=\"" . $d[$cday]["color"][$i] . "\"" .
+        " style=\"width: " . (($monthly_view_entries_details == "both") ? '100%' : '49.9%') . "\">\n"; 
+      switch ($monthly_view_entries_details)
+      {
+        case "description":
+        {
+          echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
+            . "&amp;day=$cday&amp;month=$month&amp;year=$year\" title=\""
+            . $d[$cday]["data"][$i] . "\">"
+            . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255)
+            . "</a>\n";
+          break;
+        }
+        case "slot":
+        {
+          echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
+            . "&amp;day=$cday&amp;month=$month&amp;year=$year\" title=\""
+            . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255) . "\">"
+            . $d[$cday]["data"][$i] . "</a>\n";
+          break;
+        }
+        case "both":
+        {
+          echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
+            . "&amp;day=$cday&amp;month=$month&amp;year=$year\">"
+            . $d[$cday]["data"][$i] . " "
+            . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255) . "</a>\n";
+          break;
+        }
+        default:
+        {
+          echo "error: unknown parameter";
+        }
+      }
+      echo "</div>\n";
+    }
+    echo "</div>\n";
+  }
   
   echo "</div>\n";
   echo "</td>\n";
@@ -529,6 +519,9 @@ if ($weekcol > 0)
  }
 }
 echo "</tr></table>\n";
+
+print $before_after_links_html;
+show_colour_key();
 
 include "trailer.inc";
 ?>

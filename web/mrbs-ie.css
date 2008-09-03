@@ -9,6 +9,8 @@
 form.form_admin {margin-top: 0}
 .form_admin legend {margin-bottom: 1.0em}   /* by default IE gives no gap between legend and first form element */
 
+/* ------------ DAY/WEEK/MONTH.PHP ------------------*/
+div.booking_list {overflow-x: hidden}       /* we don't want IE to give us the horizontal scrollbar */
 
 
 /* ------------ FORM_GENERAL ------------------------*/
