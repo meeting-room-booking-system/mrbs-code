@@ -173,7 +173,7 @@ if (isset($all_day) && ($all_day == "yes"))
     $endtime   = mktime($eveningends, $eveningends_minutes, 0,
                         $month, $day, $year,
                         is_dst($month, $day, $year));
-    $endtime += intval($resolution/60);     // add on the duration (in minutes) of the last slot as
+    $endtime += $resolution;                // add on the duration (in seconds) of the last slot as
                                             // $eveningends and $eveningends_minutes specify the 
                                             // beginning of the last slot
   }
