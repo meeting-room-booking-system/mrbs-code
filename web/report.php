@@ -441,7 +441,7 @@ if (empty($display))
       
       <div id="div_typematch">
         <label for="typematch"><?php echo get_vocab("match_type")?>:</label>
-        <select id="typematch" name="typematch[]" multiple="multiple">
+        <select id="typematch" name="typematch[]" multiple="multiple" size="5">
           <?php
           foreach ( $typel as $key => $val )
           {

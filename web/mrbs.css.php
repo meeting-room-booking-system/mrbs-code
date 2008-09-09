@@ -7,88 +7,122 @@ include "config.inc.php";
 
 ?>
 
-body {color:black; font-size: 10pt; font-family:arial,sans-serif; background-color:#ffffed}
-
-
-h1 {color:black; font-family:verdana,sans-serif; font-size:16pt}
-h2 {color:black; font-family:verdana,sans-serif; font-size:14pt}
-/* H3 {font-family:verdana,sans-serif} */
-
-td {font-size:10pt; font-family: arial,sans-serif; border-width: 1px; vertical-align: top}
-td.header {color:black; font-family:verdana,sans-serif; border-width:0;
-    background-color:#ffffdd; font-size:26pt}
-
-td form {margin: 0}     /* Prevent IE from displaying margins around forms in tables. */
-
-th {color:#eeeeee; font-size:10pt; font-family:verdana,sans-serif; background-color:#999999; border-width:1px; border-color:#999999; vertical-align:top}
-
-td.highlight {background-color:#AABBFF; border-style: solid; border-width: 1px; border-color:#0000AA;} /* The highlighted cell under the cursor */
-
-.sitename {font-size: 18px; font-style: normal; font-weight: bold; text-transform: none; color:#ffffff;
-    position: absolute; left:30px; top:12px}
 
 /* ------------ GENERAL -----------------------------*/
 <?php
-$banner_back_color              = "#c0e0ff";    // background colour for banner
-$banner_border_color            = "#5b69a6";    // border colour for banner
 
-$admin_table_header_back_color  = "#999999";    // background colour for header and also border colour for table cells
-$admin_table_header_sep_color   = "#eeeeee";    // vertical separator colour in header
-$admin_table_header_font_color  = "#eeeeee";    // font colour for header
+// ***** COLOURS ************************
+// Colours used in MRBS.    All the colours are defined here as PHP variables
 
-$main_table_border_color        = "#555555";    // border colour for day/week/month tables
+$body_background_color          = "#e7ebee";    // background colour for the main body
+$standard_font_color            = "#0B263B";    // default font color
+$header_font_color              = "#ffffff";    // font color for text in headers
+$highlight_font_color           = "#ff0066";    // used for highlighting text (eg links, errors)
+
+$banner_back_color              = "#4b667b";    // background colour for banner
+$banner_border_color            = $body_background_color;    // border colour for banner
+$company_name_color             = $header_font_color;        // colour for company name text
+
+$header_back_color              = $banner_back_color;  // background colour for headers
+
+$admin_table_header_back_color  = $header_back_color;     // background colour for header and also border colour for table cells
+$admin_table_header_sep_color   = $body_background_color; // vertical separator colour in header
+$admin_table_header_font_color  = $header_font_color;     // font colour for header
+
+$main_table_header_border_color = $body_background_color; // border colour for day/week/month tables - header
+$main_table_body_h_border_color = "#ffffff";              // border colour for day/week/month tables - body, horizontal
+$main_table_body_v_border_color = $body_background_color; // border colour for day/week/month tables - body, vertical
 $main_table_month_color         = "#ffffff";    // background colour for days in the month view
 $main_table_month_invalid_color = "#cccccc";    // background colour for invalid days in the month view
 
-$report_table_border_color      = $main_table_border_color;
-$report_h2_border_color         = "#474747";    // border colour for <h2> in report.php
-$report_h3_border_color         = "#808080";    // border colour for <h2> in report.php
-$report_entry_border_color      = "#D0D0D0";    // used to separate individual bookings in report.php
+$report_table_border_color      = $standard_font_color;
+$report_h2_border_color         = $banner_back_color;     // border colour for <h2> in report.php
+$report_h3_border_color         = "#879AA8";              // border colour for <h2> in report.php
+$report_entry_border_color      = "#C3CCD3";              // used to separate individual bookings in report.php
 
-$search_table_border_color      = $main_table_border_color;
+$search_table_border_color      = $standard_font_color;
 
 $site_faq_entry_border_color    = $report_entry_border_color;    // used to separate individual FAQ's in help.php
 
 $trailer_border_color           = $main_table_border_color;
 
-$anchor_link_color              = "#5b69a6";            // link color
-$anchor_visited_color           = $anchor_link_color;   // link color (visited)
-$anchor_hover_color             = "red";                // link color (hover)
+$anchor_link_color              = $standard_font_color;        // link color
+$anchor_visited_color           = $anchor_link_color;          // link color (visited)
+$anchor_hover_color             = $highlight_font_color;       // link color (hover)
+
+$anchor_link_color_banner       = $header_font_color;          // link color
+$anchor_visited_color_banner    = $anchor_link_color_banner;   // link color (visited)
+$anchor_hover_color_banner      = $anchor_link_color_banner;   // link color (hover)
+
+$anchor_link_color_header       = $header_font_color;          // link color
+$anchor_visited_color_header    = $anchor_link_color_header;   // link color (visited)
+$anchor_hover_color_header      = $anchor_link_color_header;   // link color (hover)
+
+$row_even_color                 = "#ffffff";        // even rows in the day and week views
+$row_odd_color                  = "#f8f8f8";        // even rows in the day and week views
+$row_highlight_color            = "#ffc0da";        // used for highlighting a row
+                                                    // NOTE: this colour is also used in xbLib.js (in more than one place)and 
+                                                    // if you change it here you will also need to change it there.
+
+$help_highlight_color           = "#ffe6f0";        // highlighting text on the help page #ffffbb
 
 // These are the colours used for distinguishing between the dfferent types of bookings in the main
 // displays in the day, week and month views
 $color_types = array(
-    'A' => "#FFCCFF",
+    'A' => "#FFFF99",
     'B' => "#99CCCC",
-    'C' => "#FF9999",
-    'D' => "#FFFF99",
-    'E' => "#C0E0FF",
-    'F' => "#FFCC99",
-    'G' => "#FF6666",
-    'H' => "#66FFFF",
-    'I' => "#DDFFDD",
-    'J' => "#CCCCCC");
+    'C' => "#ffffcd",
+    'D' => "#cde6e6",
+    'E' => "#99cc66",
+    'F' => "#82adad",
+    'G' => "#ccffcc",
+    'H' => "#e6ffe6",
+    'I' => "#d9d982",
+    'J' => "#6dd9c4");
+
+    
+    
+    
+// ***** FONTS ************************    
+$standard_font_family  = 'Arial, Verdana, sans-serif';
+
+ 
 ?>
+body {font-size: small;
+    color:            <?php echo $standard_font_color ?>;
+    font-family:      <?php echo $standard_font_family ?>;
+    background-color: <?php echo $body_background_color ?>}
 
-.current {color: red}                          /* used to highlight the current item */
-.error   {color: red; font-weight: bold}       /* for error messages */
+.current {color: <?php echo $highlight_font_color ?>}                        /* used to highlight the current item */
+.error   {color: <?php echo $highlight_font_color ?>; font-weight: bold}     /* for error messages */
 
-a:link    {color: <?php echo $anchor_link_color ?>;    font-weight: bold; text-decoration: none}
-a:visited {color: <?php echo $anchor_visited_color ?>; font-weight: bold; text-decoration: none}
-a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration:underline}
+h1 {font-size: x-large}
+h2 {font-size: large}
 
-legend {font-weight: bold; font-size: large; color: black}
+a:link    {color: <?php echo $anchor_link_color ?>;    text-decoration: none; font-weight: bold}
+a:visited {color: <?php echo $anchor_visited_color ?>; text-decoration: none; font-weight: bold}
+a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration:underline; font-weight: bold}
+
+td, th {vertical-align: top}
+
+td.highlight {background-color: <?php echo $row_highlight_color ?>; border-style: solid; border-width: 1px; border-color:#0000AA;} /* The highlighted cell under the cursor */
+
+td form {margin: 0}     /* Prevent IE from displaying margins around forms in tables. */
+
+legend {font-weight: bold; font-size: large;
+    font-family: <?php echo $standard_font_family ?>;
+    color: <?php echo $standard_font_color ?>}
 fieldset {margin: 0; padding: 0; border: 0}
 fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
-  border: 1px solid <?php echo $admin_table_header_back_color ?>}
+    border: 1px solid <?php echo $admin_table_header_back_color ?>}
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
 
-img.new_booking {display: block; margin-left: auto; margin-right: auto; border: 0}
+
 
 table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_header_back_color ?>; border-style: solid;
     border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
-.admin_table th {color: <?php echo $admin_table_header_font_color ?>; font-size:10pt; ; font-weight: bold; font-family: verdana, sans-serif;
+.admin_table th {color: <?php echo $admin_table_header_font_color ?>; font-size: small;
     background-color: <?php echo $admin_table_header_back_color ?>; 
     padding: 0.1em 0.5em 0.1em 0.5em;
     border-top-width: 1px; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;
@@ -124,7 +158,7 @@ table#admin {margin-bottom: 1.0em}
     display: block; float: left; clear: right;
     width: <?php echo $admin_form_input_width ?>em;
     margin-top: -0.2em; margin-left: <?php echo $admin_form_gap ?>em;
-    font-family: arial,sans-serif; font-size: 10pt;
+    font-family: <?php echo $standard_font_family ?>; font-size: small;
 }
 .form_admin input.submit {
     width: auto; margin-top: 1.2em; margin-left: <?php echo ($admin_form_gap + $admin_form_label_width)?>em
@@ -135,14 +169,14 @@ table#admin {margin-bottom: 1.0em}
 div#dwm_header {width: 100%; float: left; margin-top: 1.0em; margin-bottom: 0.5em}
 div#dwm_areas  {float: left; margin-right: 2.0em}
 div#dwm_rooms  {float: left; margin-right: 2.0em}
-#dwm_header h3 {color:black; font-size: small; font-weight: normal; font-family: arial, sans-serif; text-decoration: underline; 
+#dwm_header h3 {font-size: small; font-weight: normal; text-decoration: underline; 
     margin-top: 0; margin-bottom: 0.2em; padding-bottom: 0}
 #dwm_header ul {list-style-type: none; padding-left: 0; margin-left: 0; margin-top: 0}
 #dwm_header li {padding-left: 0; margin-left: 0}
 
 h2#dwm {text-align: center}
 
-div.date_nav    {float: left;  width: 100%; margin-top: 0.5em; margin-bottom: 0.5em}
+div.date_nav    {float: left;  width: 100%; margin-top: 0.5em; margin-bottom: 0.5em; font-weight: bold}
 div.date_before {float: left;  width: 33%; text-align: left}
 div.date_now    {float: left;  width: 33%; text-align: center}
 div.date_after  {float: right; width: 33%; text-align: right}
@@ -150,14 +184,28 @@ div.date_after  {float: right; width: 33%; text-align: right}
 <?php 
 $table_dwm_main_border_width = 1;    // px
 ?>
-table.dwm_main {clear: both; width: 100%; border-spacing: 1px; border-collapse: collapse}
-.dwm_main td, .dwm_main th {border: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_border_color ?>; padding: 0}
+table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: separate; border: 0}
+.dwm_main td {padding: 0;
+   border-top:  <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>;
+   border-left: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
+   border-bottom: 0;
+   border-right: 0}
+.dwm_main td:first-child {border-left: 0}
+.dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0;
+    color: <?php echo $header_font_color ?>; 
+    background-color: <?php echo $header_back_color ?>;
+    border-left: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
+.dwm_main th:first-child {border-left: 0}
 .dwm_main a {display: block; height: 100%}
+.dwm_main th a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
+.dwm_main th a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
+.dwm_main th a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
 .dwm_main#day_main th.first_last {width: 1%}
 .dwm_main#day_main td, .dwm_main#week_main td {padding: 0 2px 0 2px}
 .dwm_main#week_main th {width: 14%}
 .dwm_main#week_main th.first_last {width: 1%; vertical-align: bottom}  
 .dwm_main#month_main th {width: 14%}                                                   /* 7 days in the week */
+.dwm_main#month_main td {border-top:  <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>}
 .dwm_main#month_main td.valid   {background-color: <?php echo $main_table_month_color ?>}
 .dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
 div.cell_container {float: left; min-height: 100px; height: 100px; width: 100%}    /* the containing div for the td cell contents */ 
@@ -165,8 +213,8 @@ div.cell_header  {height: 20%; min-height: 20%; max-height: 20%; overflow: hidde
 div.booking_list {height: 80%; min-height: 80%; max-height: 80%; overflow: auto; font-size: x-small}                                                         /* contains the list of bookings */
 a.monthday {display: block; position: absolute; top: 0; left: 0; font-size: medium}                                                   /* the date in the top left corner */
 a.new_booking {display: block; width: 100%; font-size: medium; text-align: center}
+.new_booking img {margin: auto; border: 0; padding: 4px 0 2px 0}
 .booking_list a {font-size: x-small}
-.dwm_main#month_main img {border: 0; padding: 4px 0 2px 0}
 .dwm_main#month_main a {padding: 0 2px 0 2px}
 
 <?php
@@ -178,10 +226,15 @@ foreach ($color_types as $type => $col)
 }
 
 ?>
-td.times          {background-color: #FFF0F0}   /* used for the column with times/periods */
-td.row_highlight  {background-color: #FFF0F0}   /* used for highlighting a row */
-td.even_row       {background-color: #FFFFFF}   /* even rows in the day view */
-td.odd_row        {background-color: #EEEEEE}   /* odd rows in the day view */
+
+td.row_highlight  {background-color: <?php echo $row_highlight_color ?>} /* used for highlighting a row */
+td.even_row       {background-color: <?php echo $row_even_color ?>}      /* even rows in the day view */
+td.odd_row        {background-color: <?php echo $row_odd_color ?>}       /* odd rows in the day view */
+td.times          {background-color: <?php echo $header_back_color ?>}   /* used for the column with times/periods */
+.times a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
+.times a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
+.times a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
+
 
 <?php
 
@@ -373,7 +426,7 @@ form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 
 .form_general input {
     display: block; float: left; margin-left: <?php echo $general_gap ?>em; 
-    font-family: arial,sans-serif; font-size: 10pt
+    font-family: <?php echo $standard_font_family ?>; font-size: small
 }
 .edit_entry .form_general input {width: <?php echo $edit_entry_textarea_width ?>em}
 .report     .form_general input {width: <?php echo $report_input_width ?>em}
@@ -386,7 +439,7 @@ form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
     display: block; float: left; 
     width: <?php echo $edit_entry_textarea_width ?>em; height: 11em; 
     margin-left: <?php echo $general_gap ?>em; margin-bottom: 0.5em;
-    font-family: arial,sans-serif; font-size: 10pt
+    font-family: <?php echo $standard_font_family ?>; font-size: small
 }
 .form_general select {float: left; margin-left: <?php echo $general_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
 .form_general input.radio {margin-top: 0.1em}
@@ -455,13 +508,20 @@ table#edit_users_list {margin-top: 1.0em; margin-bottom: 1.0em}
 #logon_box a {display: block; width: 100%; padding-top: 0.3em; padding-bottom: 0.3em}
 table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
     border-color: <?php echo $banner_border_color ?>; border-style: solid;
-    border-top-width: 0; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 0}
+    border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0}
 #banner td {text-align: center; vertical-align: middle; background-color: <?php echo $banner_back_color ?>;
     border-color: <?php echo $banner_border_color ?>; border-style: solid;
-    border-top-width: 2px; border-right-width: 0; border-bottom-width: 0; border-left-width: 2px}
-#banner td#company {font-size: large; font-weight: bold}
-#banner #company span {display: block; width: 100%}
+    border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px;
+    padding: 6px}
+#banner td:first-child {border-left-width: 0}
+#banner td#company {font-size: large}
+#banner a:link    {color: <?php echo $anchor_link_color_banner ?>;    text-decoration: none; font-weight: normal}
+#banner a:visited {color: <?php echo $anchor_visited_color_banner ?>; text-decoration: none; font-weight: normal}
+#banner a:hover   {color: <?php echo $anchor_hover_color_banner ?>;   text-decoration:underline; font-weight: normal}
+#banner #company span {display: block; color: <?php echo $company_name_color ?>; width: 100%}
 table#colour_key {clear: both; border-spacing: 0; border-collapse: collapse}
+#colour_key td {width: 7.0em; padding: 2px; font-weight: bold;
+    border: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>}
 #header_search input {width: 6.0em}
 
 /* ------------ HELP.PHP ------------------------*/
@@ -476,10 +536,9 @@ div#cal_this {float: left; margin-left: 1.0em}
 div#cal_next {float: left; margin-left: 1.0em}
 
 table.calendar {border-spacing: 0; border-collapse: collapse}
-.calendar th {min-width: 2.0em; text-align: center; font-family: arial,sans-serif;
-    font-weight: normal; color: black; background-color: transparent}
-.calendar td {text-align: center; font-size: x-small; font-weight: bold}
-.calendar a.current {color: red}
+.calendar th {min-width: 2.0em; text-align: center; font-weight: normal; background-color: transparent; color: <?php echo $standard_font_color ?>}
+.calendar td {text-align: center; font-size: x-small}
+.calendar a.current {font-weight: bold; color: <?php echo $highlight_font_color ?>}
 
 
 /* ------------ REPORT.PHP ----------------------*/
@@ -491,7 +550,7 @@ table.calendar {border-spacing: 0; border-collapse: collapse}
 .div_report col.col1 {width: 8em}
 .div_report td:first-child {text-align: right; font-weight: bold}
 .div_report .createdby td, .div_report .lastupdate td {font-size: x-small}
-div.report_entry_title {width: 100%; float: left; font-family: verdana, sans-serif;
+div.report_entry_title {width: 100%; float: left;
     border-top: 1px solid <?php echo $report_entry_border_color ?>; margin-top: 0.8em}
 div.report_entry_name  {width: 40%;  float: left; font-weight: bold}
 div.report_entry_when  {width: 60%;  float: right; text-align: right}
@@ -501,7 +560,7 @@ div.report_entry_when  {width: 60%;  float: right; text-align: right}
 #div_summary td, #div_summary th {padding: 0.1em 0.2em 0.1em 0.2em;
     border-color: <?php echo $report_table_border_color ?>; border-style: solid;
     border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
-#div_summary th {background-color: transparent; color: black; font-weight: bold; text-align: center}
+#div_summary th {background-color: transparent; font-weight: bold; text-align: center}
 #div_summary td {text-align: right}
 #div_summary td.count {border-right-width: 0}
 #div_summary td:first-child {font-weight: bold}
@@ -522,15 +581,17 @@ table#search_results {border-spacing: 1px; border-collapse: collapse}
 div#site_faq_body {margin-top: 2.0em}
 #site_faq_body h4 {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.5em; margin-top: 0} 
 #site_faq_body div {padding-bottom: 0.5em}
-#site_faq_body :target {background-color: #ffffbb}
+#site_faq_body :target {background-color: <?php echo $help_highlight_color ?>}
 
 
 /* ------------ TRAILER.INC ---------------------*/
 div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>; 
              border-bottom: 1px solid <?php echo $trailer_border_color ?>; 
              margin-top: 1.0em; padding: 0.3em 0 0.3em 0}
-#trailer span.label {font-weight: bold}
-#trailer span.current {font-weight: bold; color: black}
+#trailer span.label {font-weight: bold; padding-right: 1.0em}
+#trailer span.current {font-weight: bold}
+#trailer .current a {color: <?php echo $highlight_font_color ?>}
+
 
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 .view_entry #entry td:first-child {text-align: right; font-weight: bold; padding-right: 1.0em}

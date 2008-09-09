@@ -260,14 +260,14 @@ else
 <div class=\"screenonly\">
   <div class=\"date_nav\">
     <div class=\"date_before\">
-      <a href=\"day.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area\">&lt;&lt;". get_vocab("daybefore") ."
+      <a href=\"day.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area\">&lt;&lt;&nbsp;". get_vocab("daybefore") ."
       </a>
     </div>
     <div class=\"date_now\">
       <a href=\"day.php?area=$area\">" . get_vocab("gototoday") . "</a>
     </div>
     <div class=\"date_after\">
-      <a href=\"day.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area\">". get_vocab("dayafter") . "&gt;&gt;
+      <a href=\"day.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area\">". get_vocab("dayafter") . "&nbsp;&gt;&gt;
       </a>
     </div>
   </div>
@@ -428,14 +428,14 @@ else
           
           if( $enable_periods )
           {
-            echo "<a href=\"edit_entry.php?area=$area&amp;room=$room&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day\">\n";
-            echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+            echo "<a class=\"new_booking\" href=\"edit_entry.php?area=$area&amp;room=$room&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day\">\n";
+            echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
             echo "</a>\n";
           }
           else
           {
-            echo "<a href=\"edit_entry.php?area=$area&amp;room=$room&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day\">\n";
-            echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+            echo "<a class=\"new_booking\" href=\"edit_entry.php?area=$area&amp;room=$room&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day\">\n";
+            echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
             echo "</a>\n";
           }
           

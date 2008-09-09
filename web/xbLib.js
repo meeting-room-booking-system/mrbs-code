@@ -289,7 +289,7 @@ function ForEachDescendant(obj, callback, ref)
 var useJS = false; // If true, use JavaScript for cell user interface. If null, use a plain Anchor link.
 var highlight_left_column = false;
 var highlight_right_column = false;
-var highlightColor = "#999999"; // Default highlight color, if we don't find the one in the CSS.
+var highlightColor = "#ffc0da"; // Default highlight color, if we don't find the one in the CSS.
 var statusBarMsg = "Click on the cell to make a reservation."; // Message to write on the status bar when activating a cell.
 
 // Duplicate at JavaScript level the relevant PHP configuration variables.
@@ -302,10 +302,10 @@ var GetNodeColorClass = function(node)
 }
 var SetNodeColorClass = function(node, colorClass) 
 { 
-  node.className = colorClass;  // Use the TD.highlight color from mrbs.css.php.
+  node.className = colorClass;  // Use the td.highlight color from mrbs.css.php.
 }
 
-// Helper routines for searching text in the TD.highlight CSS class.
+// Helper routines for searching text in the td.highlight CSS class.
 function SearchTdHighlightText(ruleText, ref) // Callback called by the CSS scan routine
 {
   xbDump("SearchTdHighlightText() called back");
@@ -317,12 +317,12 @@ function SearchTdHighlightText(ruleText, ref) // Callback called by the CSS scan
   var k = ruleText.indexOf("td.highlight");
   if (k == -1)
   {
-    return null; // TD.highlight not found in this rule.
+    return null; // td.highlight not found in this rule.
   }
   k = ruleText.indexOf("background-color:", k) + 17;
   if (k == 16)
   {
-    return null; // TD.highlight background-color not defined.
+    return null; // td.highlight background-color not defined.
   }
   while (ruleText.charAt(k) <= ' ')
   {
@@ -483,8 +483,8 @@ function InitActiveCell(show, left, right, method, message)
 
   //----------------------------------------------------//
 
-  // Now search in the CSS objects the background color of the TD.highlight class.
-  // This is done as a performance optimization for IE6: Only change the TD background color, but not its class.
+  // Now search in the CSS objects the background color of the td.highlight class.
+  // This is done as a performance optimization for IE6: Only change the td background color, but not its class.
   highlightColor = null;
   if (highlight_method!="bgcolor")
   {
@@ -492,7 +492,7 @@ function InitActiveCell(show, left, right, method, message)
   }
   if (!highlightColor)
   {
-    highlightColor = "#999999"; // Set default for DOM-challenged browsers
+    highlightColor = "#ffc0da"; // Set default for DOM-challenged browsers
     xbDump("Using defaut highlight color = " + highlightColor);
   }
   else
@@ -509,7 +509,7 @@ function InitActiveCell(show, left, right, method, message)
     SetNodeColorClass = function(node, colorClass) 
       { 
         xbDump("SetNodeColorClass(" + colorClass + ")");
-        node.className = colorClass;  // Use the TD.highlight color from mrbs.css.php.
+        node.className = colorClass;  // Use the td.highlight color from mrbs.css.php.
       }
   }
   else
@@ -530,13 +530,13 @@ function InitActiveCell(show, left, right, method, message)
 //----------------------------------------------------//
 
 // Cell activation
-function HighlightNode(node) // Change one TD cell color class
+function HighlightNode(node) // Change one td cell color class
 {
   node.oldColorClass = GetNodeColorClass(node);
   SetNodeColorClass(node, "highlight");
 }
 
-// Activate the TD cell under the mouse, and optionally the corresponding
+// Activate the td cell under the mouse, and optionally the corresponding
 // hour cells on both sides of the table.
 function ActivateCell(cell)
 {

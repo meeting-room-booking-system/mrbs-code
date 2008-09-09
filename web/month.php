@@ -216,7 +216,7 @@ $before_after_links_html = "<div class=\"screenonly\">
   <div class=\"date_nav\">
     <div class=\"date_before\">
       <a href=\"month.php?year=$yy&amp;month=$ym&amp;area=$area&amp;room=$room\">
-          &lt;&lt;".get_vocab("monthbefore")."
+          &lt;&lt;&nbsp;".get_vocab("monthbefore")."
         </a>
     </div>
     <div class=\"date_now\">
@@ -226,7 +226,7 @@ $before_after_links_html = "<div class=\"screenonly\">
     </div>
     <div class=\"date_after\">
        <a href=\"month.php?year=$ty&amp;month=$tm&amp;area=$area&amp;room=$room\">
-          ".get_vocab("monthafter")."&gt;&gt;
+          ".get_vocab("monthafter")."&nbsp;&gt;&gt;
         </a>
     </div>
   </div>

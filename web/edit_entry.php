@@ -570,7 +570,7 @@ else
     <div id="div_rooms">
     <label for="rooms"><?php echo get_vocab("rooms") ?>:</label>
     <div class="group">
-      <select id="rooms" name="rooms" multiple="multiple">
+      <select id="rooms" name="rooms" multiple="multiple" size="5">
         <?php 
         // select the rooms in the area determined above
         $sql = "select id, room_name from $tbl_room where area_id=$area_id order by room_name";

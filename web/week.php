@@ -224,7 +224,7 @@ $before_after_links_html = "
   <div class=\"date_nav\">
     <div class=\"date_before\">
       <a href=\"week.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area&amp;room=$room\">
-          &lt;&lt; ".get_vocab("weekbefore")."
+          &lt;&lt;&nbsp;".get_vocab("weekbefore")."
       </a>
     </div>
     <div class=\"date_now\">
@@ -234,7 +234,7 @@ $before_after_links_html = "
     </div>
     <div class=\"date_after\">
       <a href=\"week.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area&amp;room=$room\">
-          ".get_vocab("weekafter")."&gt;&gt;
+          ".get_vocab("weekafter")."&nbsp;&gt;&gt;
       </a>
     </div>
   </div>
@@ -537,14 +537,14 @@ for (
   
         if ( $enable_periods )
         {
-          echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
-          echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
+          echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
           echo "</a>\n";
         }
         else
         {
-          echo "<a href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
-          echo "<img class=\"new_booking\" src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
+          echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
           echo "</a>\n";
         }
   
