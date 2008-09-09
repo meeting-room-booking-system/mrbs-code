@@ -1,3 +1,17 @@
+2008-09-09 19:48  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r882] NEWS, web/version.inc:
+	  
+	  * Changed beta version specifier to 1.4beta1.
+	  
+	  * Updated NEWS for 1.4beta1 release.
+
+2008-09-09 16:36  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r879] ChangeLog:
+	  
+	  * Updated changelog for MRBS 1.4-b1 release.
+
 2008-09-09 16:33  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r878] web/version.inc:
