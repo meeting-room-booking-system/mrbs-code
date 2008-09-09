@@ -9,11 +9,11 @@
 -------------------------------------------------------------------------------
 Version 1.4beta (Tue Sep 9 21:00:00 BST 2008):
 
-[+] MRBS now validates as HTML 4.01 Strict, a lot of this work is curtesy of
+[+] MRBS now validates as HTML 4.01 Strict, a lot of this work is courtesy of
  Claudio Strizzolo.
-[*] MRBS now uses CSS for all styling, curtesy of stirling effort by
+[*] MRBS now uses CSS for all styling, courtesy of sterling effort by
  Campbell Morrison.
-[*] Improved default styling, curtesy of Campbell Morrison.
+[*] Improved default styling, courtesy of Campbell Morrison.
 [+] Added Simplified Chinese translation, provided by 'sunjunps'.
 [-] Made the MySQL database use an explicit database connection
  throughout.
@@ -53,7 +53,7 @@ Version 1.4beta (Tue Sep 9 21:00:00 BST 2008):
 [-] Fixed HTML escaping of period descriptions, period descriptions must
  be valid HTML in config.inc.php.
 [*] Bookings that cover more than one slot now show as merged slots in
- day and week views, replacing the previous "ditton marks" behaviour.
+ day and week views, replacing the previous "ditto marks" behaviour.
 
 -------------------------------------------------------------------------------
 Version 1.2.6.1 (Wed Jan 30 11:00:00 GMT 2008):
