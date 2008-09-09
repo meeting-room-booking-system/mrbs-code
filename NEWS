@@ -7,6 +7,55 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.4beta (Tue Sep 9 21:00:00 BST 2008):
+
+[+] MRBS now validates as HTML 4.01 Strict, a lot of this work is curtesy of
+ Claudio Strizzolo.
+[*] MRBS now uses CSS for all styling, curtesy of stirling effort by
+ Campbell Morrison.
+[*] Improved default styling, curtesy of Campbell Morrison.
+[+] Added Simplified Chinese translation, provided by 'sunjunps'.
+[-] Made the MySQL database use an explicit database connection
+ throughout.
+[*] Updated Japanese translation, provided by MATSUURA Takanori.
+[+] Added Basque translation, provided by Juan Ezeiza Gutierrez.
+[*] Updated Postgresql schema to match the MySQL one.
+[-] Improved HTML and SQL escaping throughout.
+[*] Improved code style/indenting throughout.
+[-] Improved form handling, individual form components are now pulled out
+ as their expected types, improving security.
+[*] Improved way in which MRBS calls the database, to make things
+ tidier/safer.
+[*] Improved print preview functionality, now use a print media CSS
+ stylesheet.
+[*] Updated German translation somewhat.
+[+] Added server time to the help page, to help diagnose time zone
+ issues.
+[*] Improved the output of the "browser language" section in the admin
+ page, and show it in the help page too.
+[-] Fixed a bug in the 'mysqli' database abstraction.
+[*] Added default duration configuration variable to the config file, to
+ allow administrators to change it without editing the MRBS code.
+[-] Corrected short PHP tag in testdata.php.
+[*] Improved security of 'cookie' session scheme - utilises Crypt_Blowfish
+ PEAR module.
+[-] Fixed AIX internationalisation function, patch provided by bwiberg
+ in SF tracker #2057646.
+[*] MRBS now encodes the subject of emails correctly.
+[*] Moved the translation of strings used in MRBS emails into the lang.*
+ files, where they belong - most languages now have no translation for
+ these strings.
+[*] Changed default booking slot configuration to give half-hourly slots
+ from 07:00 to 19:300, with the last slot being 18:30->19:00.
+[*] Fixed a bug that made all-day bookings not reserve the last slot in
+ the day.
+[*] Help, report and search pages now show the logon box in the header.
+[-] Fixed HTML escaping of period descriptions, period descriptions must
+ be valid HTML in config.inc.php.
+[*] Bookings that cover more than one slot now show as merged slots in
+ day and week views, replacing the previous "ditton marks" behaviour.
+
+-------------------------------------------------------------------------------
 Version 1.2.6.1 (Wed Jan 30 11:00:00 GMT 2008):
 
 [-] Fixed major bug in the new LDAP authentication functionality. If
