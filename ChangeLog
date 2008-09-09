@@ -1,3 +1,148 @@
+2008-09-09 16:33  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r878] web/version.inc:
+	  
+	  * Updated version number for MRBS 1.4-b1.
+
+2008-09-09 16:31  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r877] web/config.inc.php, web/help.php, web/lang.en,
+	  web/mrbs-print.css:
+	  
+	  * Added missing emacs mode specifier to the top of lang.en
+	  
+	  * Added back "server time" display to help page that was lost in
+	  the branch merge.
+	  
+	  * Added back definition of $default_duration in config.inc.php,
+	  that was lost in the branch merge.
+	  
+	  * The 'plus' graphic is now hidden when printing.
+	  
+	  * Set svn:keywords for mrbs-print.css in order to get $Id$ filled
+	  out.
+
+2008-09-09 15:24  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r876] web/day.php, web/edit_entry.php, web/month.php,
+	  web/mrbs-ie.css, web/mrbs.css.php, web/report.php, web/week.php,
+	  web/xbLib.js:
+	  
+	  Changed default look and feel
+
+2008-09-04 10:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r875] web/edit_entry_handler.php:
+	  
+	  Fixed bug introduced when previously fixing the "all day" bug
+
+2008-09-03 22:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r874] web/month.php, web/mrbs-ie.css, web/mrbs-ielte6.css,
+	  web/mrbs.css.php:
+	  
+	  Added colour coding to main table in month view, together with
+	  better handling of overflow.
+
+2008-09-02 18:54  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r873] ., testdata.php, web/Mail/sendmail.php, web/admin.php,
+	  web/auth_config.inc, web/auth_db.inc, web/auth_db_ext.inc,
+	  web/auth_ext.inc, web/auth_imap.inc, web/auth_ldap.inc,
+	  web/auth_nis.inc, web/config.inc.php, web/day.php, web/del.php,
+	  web/edit_area_room.php, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/edit_users.php,
+	  web/functions.inc, web/functions_mail.inc, web/help.php,
+	  web/lang.ca, web/lang.cs, web/lang.cz, web/lang.da, web/lang.de,
+	  web/lang.el, web/lang.en, web/lang.es, web/lang.eu, web/lang.fi,
+	  web/lang.fr, web/lang.it, web/lang.ja, web/lang.ko, web/lang.nl,
+	  web/lang.no, web/lang.pt, web/lang.sl, web/lang.sv, web/lang.tr,
+	  web/lang.zh-cn, web/lang.zh-tw, web/language.inc,
+	  web/mincals.inc, web/month.php, web/mrbs-ie.css[CPY],
+	  web/mrbs-ie8.css[CPY], web/mrbs-ielte6.css[CPY],
+	  web/mrbs.css[DEL], web/mrbs.css.php[CPY], web/mrbs_auth.inc,
+	  web/mrbs_sql.inc, web/mysql.inc, web/mysqli.inc, web/pgsql.inc,
+	  web/report.php, web/search.php, web/session_cookie.inc,
+	  web/session_http.inc, web/session_php.inc,
+	  web/session_remote_user.inc, web/site_faq.html,
+	  web/site_faq_de.html, web/site_faq_es.html, web/site_faq_fr.html,
+	  web/site_faq_it.html, web/style.inc, web/trailer.inc,
+	  web/view_entry.php, web/week.php, web/xbLib.js:
+	  
+	  Merged into the trunk revisions 804-872 from the
+	  improve_css_2008_06
+
+2008-08-29 19:39  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r866] web/lang.ca, web/lang.cs, web/lang.cz, web/lang.da,
+	  web/lang.de, web/lang.el, web/lang.es, web/lang.eu, web/lang.fi,
+	  web/lang.fr, web/lang.it, web/lang.ja, web/lang.ko, web/lang.nl,
+	  web/lang.no, web/lang.pt, web/lang.sl, web/lang.sv, web/lang.tr,
+	  web/lang.zh-cn, web/lang.zh-tw:
+	  
+	  * Added magic xemacs commands to the tops of the translation
+	  files, so that xemacs will know what encoding the files are in.
+
+2008-08-29 19:31  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r865] web/config.inc.php, web/functions_mail.inc, web/lang.ca,
+	  web/lang.cs, web/lang.cz, web/lang.da, web/lang.de, web/lang.el,
+	  web/lang.en, web/lang.es, web/lang.eu, web/lang.fi, web/lang.fr,
+	  web/lang.it, web/lang.ja, web/lang.ko, web/lang.nl, web/lang.no,
+	  web/lang.pt, web/lang.sl, web/lang.sv, web/lang.tr,
+	  web/lang.zh-cn, web/lang.zh-tw:
+	  
+	  * Emails sent from MRBS now encode the subject data correctly, if
+	  the subject contains anything but ASCII.
+	  
+	  * Moved the email translation tokens back into the lang.* files,
+	  where they belong, instead of having them in config.inc.php. Note
+	  to translators: this means that only there is only English text
+	  for $vocab["mail_*"] apart from the partial translations in the
+	  Japanese and Turkish files.
+
+2008-08-19 20:01  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r859] web/language.inc:
+	  
+	  * Patch from SF tracker #2057646 - fixes the arguments of
+	  utf8_convert_aix(). Patch provided by bwiberg.
+
+2008-08-18 11:55  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r858] web/session_cookie.inc:
+	  
+	  * Added missing calls to unslashes() in session_cookie.inc. I
+	  believe they're not strictly necessary, but it's best to be safe.
+
+2008-08-18 11:38  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r857] web/Blowfish, web/Blowfish.php,
+	  web/Blowfish/DefaultKey.php, web/config.inc.php,
+	  web/session_cookie.inc:
+	  
+	  * Revamped 'cookie' session scheme, so that the client receives
+	  and stores an encrypted session token. MRBS then validates this
+	  token on each page fetch. Adds new configuration items into
+	  config.inc.php.
+	  
+	  * Added Crypt_Blowfish PEAR module, version 1.0.1 - used by
+	  session_cookie.inc.
+
+2008-08-07 19:16  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r855] web/lang.de:
+	  
+	  * A few translation updates from the mailing list, with a few
+	  corrections.
+
+2008-07-18 21:31  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r844] ChangeLog:
+	  
+	  * Authors in the ChangeLog now have proper names/email addresses,
+	  svn2cl is now called with the --authors option.
+
 2008-07-18 21:21  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r842] ChangeLog, testdata.php, web/admin.php,
