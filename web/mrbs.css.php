@@ -291,7 +291,7 @@ if ($clipped)
   {
     $n_slots = ($eveningends*60) + $eveningends_minutes;
     $n_slots = $n_slots - (($morningstarts*60) + $morningstarts_minutes);  // day duration in minutes
-    $n_slots = ($n_slots*60)/$resolution;                                  // number of slots
+    $n_slots = (($n_slots*60)/$resolution) + 1;                            // number of slots
   }
   for ($i=1; $i<=$n_slots; $i++) 
   {
