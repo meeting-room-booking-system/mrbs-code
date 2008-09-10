@@ -101,7 +101,8 @@ h2 {font-size: large}
 
 a:link    {color: <?php echo $anchor_link_color ?>;    text-decoration: none; font-weight: bold}
 a:visited {color: <?php echo $anchor_visited_color ?>; text-decoration: none; font-weight: bold}
-a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration:underline; font-weight: bold}
+a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration: underline; font-weight: bold} 
+
 
 td, th {vertical-align: top}
 
@@ -135,6 +136,7 @@ table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color:
     vertical-align: middle}
     
 .naked {margin: 0; padding: 0; border-width: 0} /* Invisible tables used for internal needs */
+table:hover.naked {cursor: pointer}   /* set cursor to pointer; if you don't it doesn't show up when show_plus_link is false */
 
 
 /* ------------ ADMIN.PHP ---------------------------*/
