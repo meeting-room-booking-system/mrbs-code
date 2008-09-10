@@ -117,7 +117,7 @@ $this_room_name = htmlspecialchars(sql_query1("select room_name
                                   
 $sql = "select id, area_name from $tbl_area order by area_name";
 $res = sql_query($sql);
-// Show all avaliable areas
+// Show all available areas
 // but only if there's more than one of them, otherwise there's no point
 if ($res && (mysql_num_rows($res)>1))
 {
