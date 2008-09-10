@@ -542,7 +542,9 @@ function show_colour_key()
         echo "</tr><tr>";
       }
       tdcell($ct, 1);
-      echo "$typel[$ct]</td>\n";
+      echo "<div class=\"celldiv1\" " .  // put the description inside a div which will give clipping in case of long names
+      "title=\"$typel[$ct]\">\n";        // but put the name in the title so you can still read it all if you hover over it
+      echo "$typel[$ct]</div></td>\n";
     }
   }
   echo "</tr></table>\n";
