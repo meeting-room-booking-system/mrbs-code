@@ -401,7 +401,7 @@ for ($weekcol = 0; $weekcol < $weekday_start; $weekcol++)
 // Draw the days of the month:
 for ($cday = 1; $cday <= $days_in_month; $cday++)
 {
-  if ($weekcol == 0)
+  if (($weekcol == 0) && ($cday > 1))
   {
     echo "</tr><tr>\n";
   }
