@@ -110,47 +110,41 @@ for ($j = 0; $j<=($num_of_days-1); $j++)
   <div id="dwm_header">
 <?php
 
+// Get the area and room names (we will need them later for the heading)
 $this_area_name = "";
 $this_room_name = "";
+$this_area_name = htmlspecialchars(sql_query1("select area_name
+                                  from $tbl_area where id=$area"));
+$this_room_name = htmlspecialchars(sql_query1("select room_name
+                                  from $tbl_room where id=$room"));
 
-// Show all areas
-echo "<div id=\"dwm_areas\"><h3>".get_vocab("areas")."</h3>";
-
-// show either a select box or the normal html list
-if ($area_list_format == "select")
+$sql = "select id, area_name from $tbl_area order by area_name";
+$res = sql_query($sql);
+// Show all avaliable areas
+// but only if there's more than one of them, otherwise there's no point
+if ($res && (mysql_num_rows($res)>1))
 {
-  echo make_area_select_html('week.php', $area,
-                             $year, $month, $day);
-  $this_area_name = sql_query1("select area_name
-                                from $tbl_area where id=$area");
-  $this_room_name = sql_query1("select room_name
-                                from $tbl_room where id=$room");
-}
-else
-{
- $sql = "select id, area_name from $tbl_area order by area_name";
-  $res = sql_query($sql);
-  if ($res)
+  echo "<div id=\"dwm_areas\"><h3>".get_vocab("areas")."</h3>";
+  
+  // show either a select box or the normal html list
+  if ($area_list_format == "select")
+  {
+    echo make_area_select_html('week.php', $area, $year, $month, $day);   
+  }
+  else
   {
     echo "<ul>\n";
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
       echo "<li><a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$row[0]\">";
-      echo "<span";
-      if ($row['id'] == $area)
-      {
-        $this_area_name = htmlspecialchars($row['area_name']);
-        echo ' class="current"';
-      }
-      echo ">";
+      echo "<span" . (($row['id'] == $area) ? ' class="current"' : '') . ">";
       echo htmlspecialchars($row['area_name']) . "</span></a></li>\n";
     }
     echo "</ul>\n";
-  }
-
-} // end area display if
-
-echo "</div>\n";
+  } // end area display if
+  
+  echo "</div>\n";
+}
 
 // Show all rooms in the current area
 echo "<div id=\"dwm_rooms\"><h3>".get_vocab("rooms")."</h3>";
@@ -172,13 +166,7 @@ else
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
       echo "<li><a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\">";
-      echo "<span";
-      if ($row['id'] == $room)
-      {
-        $this_room_name = htmlspecialchars($row['room_name']);
-        echo ' class="current"';
-      }
-      echo ">";
+      echo "<span" . (($row['id'] == $room) ? ' class="current"' : '') . ">";
       echo htmlspecialchars($row['room_name']) . "</span></a></li>\n";
     }
     echo "</ul>\n";

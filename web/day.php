@@ -75,26 +75,27 @@ $pm7=mktime($eveningends,$eveningends_minutes,0,
 ?>
 <div class="screenonly">
   <div id="dwm_header">
-      <div id="dwm_areas">
+      
 <?php
 
+$sql = "select id, area_name from $tbl_area order by area_name";
+$res = sql_query($sql);
 // Show all avaliable areas
-echo "<h3>".get_vocab("areas")."</h3>";
-
-// need to show either a select box or a normal html list,
-// depending on the settings in config.inc.php
-if ($area_list_format == "select")
+// but only if there's more than one of them, otherwise there's no point
+if ($res && (mysql_num_rows($res)>1))
 {
-  echo make_area_select_html('day.php', $area, $year, $month, $day);
-}
-else
-{
-  // show the standard html list
- 
-  $sql = "select id, area_name from $tbl_area order by area_name";
-  $res = sql_query($sql);
-  if ($res) 
-  { 
+  echo "<div id=\"dwm_areas\">\n";
+  echo "<h3>".get_vocab("areas")."</h3>";
+  
+  // need to show either a select box or a normal html list,
+  // depending on the settings in config.inc.php
+  if ($area_list_format == "select")
+  {
+    echo make_area_select_html('day.php', $area, $year, $month, $day);
+  }
+  else
+  {
+    // show the standard html list
     echo ("<ul>\n");
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
@@ -104,8 +105,8 @@ else
     }  
     echo ("</ul>\n");
   }
+  echo "</div>\n";
 }
-echo "</div>\n";
 
 // Draw the three month calendars
 minicals($year, $month, $day, $area, '', 'day');
