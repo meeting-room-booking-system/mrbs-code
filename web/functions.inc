@@ -551,7 +551,7 @@ function show_colour_key()
     {
       if (++$nct > $table_width)
       {
-        $nct = 0;
+        $nct = 1;
         echo "</tr><tr>";
       }
       tdcell($ct, 1);
