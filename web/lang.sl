@@ -44,7 +44,9 @@ $vocab["ppreview"]           = "Predogled tiskanja";
 // Used in edit_entry.php
 $vocab["addentry"]           = "Dodaj vnos";
 $vocab["editentry"]          = "Uredi vnos";
+$vocab["copyentry"]          = "Kopiraj vnos";
 $vocab["editseries"]         = "Uredi ponavljanja";
+$vocab["copyseries"]         = "Kopiraj vrsto";
 $vocab["namebooker"]         = "Kratek opis";
 $vocab["fulldescription"]    = "Dolgi opis:<br>&nbsp;&nbsp;(Število oseb,<br>&nbsp;&nbsp;Interno/Zunanje, itd.)";
 $vocab["date"]               = "Datum";
@@ -110,6 +112,11 @@ $vocab["returncal"]          = "Vrnitev na pogled koledarja";
 $vocab["failed_to_acquire"]  = "Napaka pri dostopu do baze";
 $vocab["invalid_booking"]    = "Napačna rezervacija";
 $vocab["must_set_description"] = "Vnesti morate kratek opis rezervacije. Prosimo vrnite se in jo vnesite.";
+$vocab["mail_subject_entry"] = "Vnos dodan/spremenjen za vaš MRBS";
+$vocab["mail_body_new_entry"] = "Dodan je bil nov vnos in tukaj so podrobnosti:";
+$vocab["mail_body_del_entry"] = "Vnos je bil izbrisan in tukaj so podrobnosti:";
+$vocab["mail_body_changed_entry"] = "Vnos je bil spremenjen in tukaj so podrobnosti:";
+$vocab["mail_subject_delete"] = "Vnos za vaš MRBS je bil izbrisan";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Dostop zavrnjen";
@@ -179,7 +186,7 @@ $vocab["entry_found"]        = "najden vnos";
 $vocab["entries_found"]      = "najdenih vnosov";
 $vocab["summary_header"]     = "Pregled (vnosov) ur";
 $vocab["summary_header_per"] = "Pregled (vnosov) ponavljanj";
-$vocab["total"]              = "Total";
+$vocab["total"]              = "Skupaj";
 $vocab["submitquery"]        = "Naredi poročilo";
 $vocab["sort_rep"]           = "Uredi poročilo po";
 $vocab["sort_rep_time"]      = "Začetni datum/ura";
@@ -221,7 +228,7 @@ $vocab["change"]             = "Uporabi";
 $vocab["backadmin"]          = "Nazaj v Admin";
 $vocab["editroomarea"]       = "Uredi opis področja ali prostora";
 $vocab["editroom"]           = "Uredi prostor";
-$vocab["update_room_failed"] = "Update room failed: ";
+$vocab["update_room_failed"] = "Sprememba za prostor ni uspela: ";
 $vocab["error_room"]         = "Napaka: prostor ";
 $vocab["not_found"]          = " ne najdem";
 $vocab["update_area_failed"] = "Ni uspela posodobitev področja: ";
@@ -238,9 +245,10 @@ $vocab["NO"]                 = "NE";
 $vocab["delarea"]            = "Izbrisati morate vse prostore v področju, preden ga lahko izbrišete<p>";
 
 // Used in help.php
-$vocab["about_mrbs"]         = "About MRBS";
-$vocab["database"]           = "Database";
-$vocab["system"]             = "System";
+$vocab["about_mrbs"]         = "O MRBS";
+$vocab["database"]           = "Podatkovna zbirka";
+$vocab["system"]             = "Sistem";
+$vocab["servertime"]         = "Čas strežnika";
 $vocab["please_contact"]     = "Na dodatna vprašanja vam bo odgovoril ";
 $vocab["for_any_questions"]  = ".";
 
