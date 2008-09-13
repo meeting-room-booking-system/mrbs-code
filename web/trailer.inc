@@ -1,9 +1,36 @@
 <?php
 // $Id$
-?>
 
 
-<?php
+if(!isset($year))
+{
+  $year = strftime("%Y");
+}
+
+if (!isset($month))
+{
+  $month = strftime("%m");
+}
+
+if (!isset($day))
+{
+  $day = strftime("%d");
+}
+
+if (empty($area))
+{
+  $params = "";
+}
+else
+{
+  $params = "&amp;area=$area";
+}
+  if (!empty($room))
+{
+  $params .= "&amp;room=$room";
+}
+
+
 if ($simple_trailer) {
   echo "<div class=\"screenonly\" id=\"simple_trailer\">\n";
   echo "<div id=\"simple\">\n";
@@ -20,32 +47,11 @@ if ($simple_trailer) {
 else
 {
   echo "<div class=\"screenonly\" id=\"trailer\">\n";
+  
+  // DAYS
   echo "<div id=\"viewday\">\n";
   echo "<span class=\"label\">" . get_vocab("viewday") .":</span>\n";
   
-  if(!isset($year))
-  {
-    $year = strftime("%Y");
-  }
-  
-  if (!isset($month))
-  {
-    $month = strftime("%m");
-  }
-  
-  if (!isset($day))
-  {
-    $day = strftime("%d");
-  }
-  
-  if (empty($area))
-  {
-    $params = "";
-  }
-  else
-  {
-    $params = "&amp;area=$area";
-  }
   
   for ($i = -6; $i <= 7; $i++)
   {
@@ -72,14 +78,11 @@ else
   }
   echo "</div>\n";
   
+  
+  // WEEKS
   echo "<div id=\"viewweek\">\n";
   echo "  <span class=\"label\">".get_vocab("viewweek").":</span>\n";
-  
-  if (!empty($room))
-  {
-    $params .= "&amp;room=$room";
-  }
-  
+ 
   $ctime = mktime(0, 0, 0, $month, $day, $year);
   // How many days to skip back to first day of week:
   $skipback = (date("w", $ctime) - $weekstarts + 7) % 7;
@@ -117,6 +120,8 @@ else
   }
   echo "</div>\n";
   
+  
+  // MONTHS
   echo "<div id=\"viewmonth\">\n";
   echo "  <span class=\"label\">".get_vocab("viewmonth").":</span>\n";
   for ($i = -2; $i <= 6; $i++)
