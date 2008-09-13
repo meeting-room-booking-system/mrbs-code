@@ -165,6 +165,11 @@ $search["count"] = 20;
 // Page refresh time (in seconds). Set to 0 to disable
 $refresh_rate = 0;
 
+// Trailer type.   FALSE gives a trailer complete with links to days, weeks and months before
+// and after the current date.    TRUE gives a simpler trailer that just has links to the
+// current day, week and month.
+$simple_trailer = FALSE;
+
 // should areas be shown as a list or a drop-down select box?
 $area_list_format = "list";
 //$area_list_format = "select";

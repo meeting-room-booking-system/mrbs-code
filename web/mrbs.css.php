@@ -593,6 +593,8 @@ div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>;
 #trailer span.label {font-weight: bold; padding-right: 1.0em}
 #trailer span.current {font-weight: bold}
 #trailer .current a {color: <?php echo $highlight_font_color ?>}
+div#simple_trailer {width: 100%; text-align: center; padding-top: 1.0em; padding-bottom: 2.0em}
+#simple_trailer a {padding: 0 1.0em 0 1.0em}
 
 
 /* ------------ VIEW_ENTRY.PHP ------------------*/
