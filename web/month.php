@@ -477,7 +477,8 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
         case "both":
         {
           echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-            . "&amp;day=$cday&amp;month=$month&amp;year=$year\">"
+            . "&amp;day=$cday&amp;month=$month&amp;year=$year\" title=\""
+            . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255) . "\">"
             . $d[$cday]["data"][$i] . " "
             . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255) . "</a>\n";
           break;
