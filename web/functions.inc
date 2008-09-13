@@ -560,6 +560,13 @@ function show_colour_key()
       echo "$typel[$ct]</div></td>\n";
     }
   }
+  // If the bottom row isn't complete then pad it out with a single merged cell with bottom and right borders
+  // set to zero to stop them being drawn
+  if ($nct < $table_width)
+  {
+    echo "<td colspan=\"" . ($table_width - $nct) . "\"" .
+        " style=\"border-bottom: 0; border-right: 0\">&nbsp;</td>\n";
+  }
   echo "</tr></table>\n";
 }
 
