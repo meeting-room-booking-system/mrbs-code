@@ -524,6 +524,7 @@ table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
 table#colour_key {clear: both; border-spacing: 0; border-collapse: collapse}
 #colour_key td {width: 7.0em; padding: 2px; font-weight: bold;
     border: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>}
+#colour_key td#row_padding {border-right: 0; border-bottom: 0}
 #header_search input {width: 6.0em}
 
 /* ------------ HELP.PHP ------------------------*/

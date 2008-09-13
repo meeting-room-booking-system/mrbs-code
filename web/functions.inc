@@ -561,12 +561,11 @@ function show_colour_key()
     }
   }
   // If there is more than one row and the bottom row isn't complete then 
-  // pad it out with a single merged cell with bottom and right borders
-  // set to zero to stop them being drawn
+  // pad it out with a single merged cell
   if ((count($typel) > $table_width) && ($nct < $table_width))
   {
     echo "<td colspan=\"" . ($table_width - $nct) . "\"" .
-        " style=\"border-bottom: 0; border-right: 0\">&nbsp;</td>\n";
+        " id=\"row_padding\">&nbsp;</td>\n";
   }
   echo "</tr></table>\n";
 }
