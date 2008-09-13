@@ -530,13 +530,26 @@ function tdcell($colclass, $slots)
 function show_colour_key()
 {
   global $typel;
+  // set the table width.   Default is 5, but try and avoid rows of unequal length
+  switch (count($typel))
+  {
+    case '6':
+      $table_width = 3;
+      break;
+    case '8':
+    case '12':
+      $table_width = 4;
+      break;
+    default:
+      $table_width = 5;
+  }
   echo "<table id=\"colour_key\"><tr>\n";
   $nct = 0;
   for ($ct = "A"; $ct <= "Z"; $ct++)
   {
     if (!empty($typel[$ct]))
     {
-      if (++$nct > 5)
+      if (++$nct > $table_width)
       {
         $nct = 0;
         echo "</tr><tr>";
