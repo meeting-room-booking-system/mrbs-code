@@ -19,7 +19,7 @@ $vocab["mrbs"]               = "Vergaderruimte Boekingssysteem";
 
 // Used in functions.inc
 $vocab["report"]             = "Rapportage";
-$vocab["admin"]              = "Admin";
+$vocab["admin"]              = "Beheer";
 $vocab["help"]               = "Help";
 $vocab["search"]             = "Zoek";
 $vocab["not_php3"]           = "Waarschuwing: Werkt waarschijnlijk niet met PHP3";
@@ -44,14 +44,16 @@ $vocab["ppreview"]           = "Afdruk Voorbeeld";
 // Used in edit_entry.php
 $vocab["addentry"]           = "Boeking Toevoegen";
 $vocab["editentry"]          = "Boeking Wijzigen";
+$vocab["copyentry"]          = "Kopiëer Boeking";
 $vocab["editseries"]         = "Wijzig Reeks";
+$vocab["copyseries"]         = "Kopiëer Serie";
 $vocab["namebooker"]         = "Korte Omschrijving";
 $vocab["fulldescription"]    = "Volledige Omschrijving:<br>&nbsp;&nbsp;(Aantal mensen,<br>&nbsp;&nbsp;Intern/Extern etc)";
 $vocab["date"]               = "Datum";
 $vocab["start_date"]         = "Start Tijd";
 $vocab["end_date"]           = "Eind Tijd";
 $vocab["time"]               = "Tijd";
-$vocab["period"]             = "Period";
+$vocab["period"]             = "Periode";
 $vocab["duration"]           = "Tijdsduur";
 $vocab["seconds"]            = "seconden";
 $vocab["minutes"]            = "minuten";
@@ -59,7 +61,7 @@ $vocab["hours"]              = "uren";
 $vocab["days"]               = "dagen";
 $vocab["weeks"]              = "weken";
 $vocab["years"]              = "jaren";
-$vocab["periods"]            = "periods";
+$vocab["periods"]            = "Perioden";
 $vocab["all_day"]            = "Hele Dag";
 $vocab["type"]               = "Soort";
 $vocab["internal"]           = "Intern";
@@ -108,6 +110,13 @@ $vocab["conflict"]           = "De nieuwe boeking overlapt de volgende boeking(e
 $vocab["too_may_entrys"]     = "De door U geselecteerde opties zullen teveel boekingen genereren.<br>Pas A.U.B. uw opties aan !";
 $vocab["returncal"]          = "Terug naar kalender overzicht";
 $vocab["failed_to_acquire"]  = "Het is niet gelukt om exclusive toegang tot de database te verkrijgen"; 
+$vocab["invalid_booking"]    = "Verkeerde boeking";
+$vocab["must_set_description"] = "Er moet een korte omschrijving worden gegeven. Ga terug een en geef korte omschrijving.";
+$vocab["mail_subject_entry"] = "Boeking toegevoegd/aangepast voor Uw Organisatie MRBS";
+$vocab["mail_body_new_entry"] = "Er is een nieuwe boeking geplaatst, dit zijn de details:";
+$vocab["mail_body_del_entry"] = "Er is een boeking verdwijderd, dit zijn de details:";
+$vocab["mail_body_changed_entry"] = "Een boeking is gewijzigd, dit zijn de details:";
+$vocab["mail_subject_delete"] = "Boeking gewist voor Uw Organisatie MRBS";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Geen Toegang";
@@ -137,6 +146,8 @@ $vocab["administrator"]      = "Beheerder";
 $vocab["unknown"]            = "Onbekend";
 $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Klikken om al mijn aankomende boekingen te tonen.";
+$vocab["no_users_initial"]   = "Geen gebruiker in de database, aanmaken basis gebruiker toegestaan";
+$vocab["no_users_create_first_admin"] = "Maak een gebruiker aan als administrator; daarna kun je inloggen en andere gebruikers aanmaken.";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Niet bestaand of ongeldig zoek argument.";
@@ -149,7 +160,7 @@ $vocab["previous"]           = "Vorige";
 $vocab["next"]               = "Volgende";
 $vocab["entry"]              = "Boeking";
 $vocab["view"]               = "Overzicht";
-$vocab["advanced_search"]    = "Advanced search";
+$vocab["advanced_search"]    = "Uitgebreid Zoeken";
 $vocab["search_button"]      = "Zoek";
 $vocab["search_for"]         = "Zoeken naar";
 $vocab["from"]               = "Van";
@@ -160,7 +171,7 @@ $vocab["report_start"]       = "Start datum overzicht";
 $vocab["report_end"]         = "Eind datum overzicht";
 $vocab["match_area"]         = "Gebied als";
 $vocab["match_room"]         = "Kamer als";
-$vocab["match_type"]         = "Match type";
+$vocab["match_type"]         = "Type als";
 $vocab["ctrl_click_type"]    = "Gebruik Control-Linker muis klik om meer dan 1 type te selekteren";
 $vocab["match_entry"]        = "Korte omschrijving als";
 $vocab["match_descr"]        = "Volledige omschrijving als";
@@ -174,7 +185,7 @@ $vocab["sum_by_creator"]     = "Boeker";
 $vocab["entry_found"]        = "boeking gevonden";
 $vocab["entries_found"]      = "boekingen gevonden";
 $vocab["summary_header"]     = "Totaal aan (geboekte) uren";
-$vocab["summary_header_per"] = "Summary of (Entries) Periods";
+$vocab["summary_header_per"] = "Samenvatting van (Boekingen) Perioden";
 $vocab["total"]              = "Totaal";
 $vocab["submitquery"]        = "Rapport uitvoeren";
 $vocab["sort_rep"]           = "Rapport sorteren op";
@@ -238,6 +249,7 @@ $vocab["about_mrbs"]         = "Over MRBS";
 $vocab["database"]           = "Database";
 $vocab["system"]             = "Systeem";
 $vocab["please_contact"]     = "Neem contact op met ";
+$vocab["servertime"]         = "Datum en tijd op de Server";
 $vocab["for_any_questions"]  = "Voor alle vragen die hier niet worden beantwoord.";
 
 // Used in mysql.inc AND pgsql.inc
