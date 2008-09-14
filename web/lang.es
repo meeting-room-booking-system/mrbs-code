@@ -44,7 +44,9 @@ $vocab["ppreview"]           = "Vista Previa";
 // Used in edit_entry.php
 $vocab["addentry"]           = "Nueva Reserva";
 $vocab["editentry"]          = "Editar Reserva";
+$vocab["copyentry"]          = "Copiar Reserva";
 $vocab["editseries"]         = "Editar Serie";
+$vocab["copyseries"]         = "Copiar Serie";
 $vocab["namebooker"]         = "Nombre";
 $vocab["fulldescription"]    = "Descripci&oacute;n Completa";
 $vocab["date"]               = "Fecha";
@@ -108,6 +110,13 @@ $vocab["conflict"]           = "La nueva reserva entra en conflicto con la(s) si
 $vocab["too_may_entrys"]     = "Las opciones seleccionadas crear&aacute;n demasiadas entradas.<br>Por favor, revise las opciones";
 $vocab["returncal"]          = "Volver a Vista de Calendario";
 $vocab["failed_to_acquire"]  = "Error al obtener acceso a la Base de Datos"; 
+$vocab["invalid_booking"]    = "Reserva Incorrecta";
+$vocab["must_set_description"] = "Debes introducir una breve descripci&oacute;n para la Reserva. Por favor, vuelve atr&aacute;s e introduce una.";
+$vocab["mail_subject_entry"] = "Reserva creada/modificada en el MRBS de tu Compa&ntilde;&iacute;a";
+$vocab["mail_body_new_entry"] = "Nueva Reserva a&ntilde;adida, aqu&iacute; est&aacute;n los detalles:";
+$vocab["mail_body_del_entry"] = "Reserva borrada, aqu&iacute; est&aacute;n los detalles:";
+$vocab["mail_body_changed_entry"] = "Reserva modificada, aqu&iacute; est&aacute;n los detalles:";
+$vocab["mail_subject_delete"] = "Reserva borrada en el MRBS de tu Compa&ntilde;&iacute;a";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Acceso Denegado";
@@ -137,6 +146,8 @@ $vocab["administrator"]      = "Administrador";
 $vocab["unknown"]            = "Desconocido";
 $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Click para mostrar todos mis eventos futuros";
+$vocab["no_users_initial"]   = "No hay usuarios en la Base de Datos, permitiendo la creacion del usuario inicial";
+$vocab["no_users_create_first_admin"] = "Crea un Usuario con permisos de Administrador y entonces podr&aacute;s acceder y crear m&aacute;s Usuarios.";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Cadena de b&uacute;squeda vac&iacute;a o incorrecta.";
@@ -238,6 +249,7 @@ $vocab["about_mrbs"]         = "Acerca de MRBS";
 $vocab["database"]           = "Base de Datos";
 $vocab["system"]             = "Sistema";
 $vocab["please_contact"]     = "Contacte con ";
+$vocab["servertime"]         = "Hora del Servidor";
 $vocab["for_any_questions"]  = "para cualquier duda.";
 
 // Used in mysql.inc AND pgsql.inc

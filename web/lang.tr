@@ -6,7 +6,7 @@
 // The default strings come from lang.en, and anything in a locale
 // specific file will overwrite the default. This is a TR Turkish file.
 //
-//  Translations provided by: Ahmet YILDIZ
+//  Translations provided by: Ahmet YILDIZ ahmetyildizmail@yahoo.com
 //
 //
 // This file is PHP code. Treat it as such.
@@ -26,7 +26,7 @@ $vocab["not_php3"]           = "UYARI: Yüksek ihtimalle PHP3 ile çalýþmaz";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "Yer ayýrtmak için";
-$vocab["bookingsforpost"]    = ""; // Goes after the date
+$vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Alanlar";
 $vocab["daybefore"]          = "Dün";
 $vocab["dayafter"]           = "Yarýn";
@@ -44,7 +44,9 @@ $vocab["ppreview"]           = "Önizleme";
 // Used in edit_entry.php
 $vocab["addentry"]           = "Kayýt Ekle";
 $vocab["editentry"]          = "Kayýt Düzelt";
+$vocab["copyentry"]          = "Kayýt Kopyala";
 $vocab["editseries"]         = "Seri Düzenle";
+$vocab["copyseries"]         = "Serileri Kopyala";
 $vocab["namebooker"]         = "Kýsa Taným";
 $vocab["fulldescription"]    = "Tam Taným:<br>&nbsp;&nbsp;(Kiþi sayýsý,<br>&nbsp;&nbsp;Ýç/Dýþ/Karma vb.)";
 $vocab["date"]               = "Tarih";
@@ -74,7 +76,7 @@ $vocab["rep_type_3"]         = "Aylýk";
 $vocab["rep_type_4"]         = "Yýllýk";
 $vocab["rep_type_5"]         = "Aylýk, denk gelen gün";
 $vocab["rep_type_6"]         = "n-Haftalýk";
-$vocab["rep_end_date"]       = "Repeat End Date";
+$vocab["rep_end_date"]       = "Tekrarýn solanma tarihi";
 $vocab["rep_rep_day"]        = "Tekrar Eden Gün";
 $vocab["rep_for_weekly"]     = "((n-)Haftalýk için)";
 $vocab["rep_freq"]           = "Sýklýk";
@@ -166,10 +168,10 @@ $vocab["from"]               = "den";
 
 // Used in report.php
 $vocab["report_on"]          = "Toplantýlarýn Raporlarý";
-$vocab["report_start"]       = "Report start date";
-$vocab["report_end"]         = "Report end date";
+$vocab["report_start"]       = "Rapor Baþlama Tarihi";
+$vocab["report_end"]         = "Rapor Bitiþ Tarihi";
 $vocab["match_area"]         = "Uygun bölge";
-$vocab["match_room"]         = "Uygun TSalon";
+$vocab["match_room"]         = "Uygun Toplantý Salonu";
 $vocab["match_type"]         = "Uygun tip";
 $vocab["ctrl_click_type"]    = "Klavyede Ctrl tuþuna basýlý iken fare ile týklýyarak birden fazla tip seçebilirsiniz.";
 $vocab["match_entry"]        = "Uygun kýsa taným";
@@ -204,7 +206,7 @@ $vocab["monthafter"]         = "Bir sonraki ayý görüntüle";
 $vocab["gotothismonth"]      = "Bu ayý görüntüle";
 
 // Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Bu bölge için TSalon tanýmlý deðil.";
+$vocab["no_rooms_for_area"]  = "Bu bölge için Toplantý Salonu tanýmlý deðil.";
 
 // Used in admin.php
 $vocab["edit"]               = "Düzenle";
@@ -216,23 +218,23 @@ $vocab["addarea"]            = "Bölge ekle";
 $vocab["name"]               = "Ad";
 $vocab["noarea"]             = "Seçili bölge yok";
 $vocab["browserlang"]        = "Tarayýcýnýz kullaným için kurulu deðil.";
-$vocab["addroom"]            = "TSalon Ekle";
+$vocab["addroom"]            = "Toplantý Salonu Ekle";
 $vocab["capacity"]           = "Kapasite";
-$vocab["norooms"]            = "TSalon yok.";
+$vocab["norooms"]            = "Toplantý Salonu Yok.";
 $vocab["administration"]     = "Yönetici";
 
 // Used in edit_area_room.php
 $vocab["editarea"]           = "Bölge düzenle";
 $vocab["change"]             = "Deðiþtir";
 $vocab["backadmin"]          = "Yönetim'e git";
-$vocab["editroomarea"]       = "Bölge düzenle veya TSalon taným.";
-$vocab["editroom"]           = "TSalon Düzenle";
-$vocab["update_room_failed"] = "Tsalon güncelleme hatasý: ";
-$vocab["error_room"]         = "Hata: TSalon ";
+$vocab["editroomarea"]       = "Bölge düzenle veya Toplantý Salonu tanýmý.";
+$vocab["editroom"]           = "Toplantý Salonu Düzenle";
+$vocab["update_room_failed"] = "Toplantý Salonu güncelleme hatasý: ";
+$vocab["error_room"]         = "Hata: Toplantý Salonu ";
 $vocab["not_found"]          = " bulunamadý";
 $vocab["update_area_failed"] = "Bölge güncelleme hatasý: ";
 $vocab["error_area"]         = "Hata: Bölge ";
-$vocab["room_admin_email"]   = "Tsalon yönetici epostasý";
+$vocab["room_admin_email"]   = "Toplantý Salonu yönetici epostasý";
 $vocab["area_admin_email"]   = "Bölge yönetici epostasý";
 $vocab["invalid_email"]      = "Geçersiz eposta!";
 
@@ -241,12 +243,13 @@ $vocab["deletefollowing"]    = "Bu hareket rezervasyonu silecek";
 $vocab["sure"]               = "Emin misiniz?";
 $vocab["YES"]                = "Evet";
 $vocab["NO"]                 = "Hayýr";
-$vocab["delarea"]            = "Silmeden önce bu bölgedeki tüm TSalon'larý silmelisiniz.<p>";
+$vocab["delarea"]            = "Silmeden önce bu bölgedeki tüm Toplantý Salonlarýný silmelisiniz.<p>";
 
 // Used in help.php
 $vocab["about_mrbs"]         = "MRBS hakkýnda";
 $vocab["database"]           = "VeriTabaný";
 $vocab["system"]             = "Sistem";
+$vocab["servertime"]         = "Sunucu zamaný";
 $vocab["please_contact"]     = "Lütfen baðlantýya geçiniz ";
 $vocab["for_any_questions"]  = "henüz cevaplanmamýþ her bir soru için.";
 
