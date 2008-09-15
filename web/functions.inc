@@ -185,7 +185,7 @@ function ChangeOptionDays(formObj, prefix)
             <script type="text/javascript">
               //<![CDATA[
               // fix number of days for the $month/$year that you start with
-              ChangeOptionDays(document.Form1, ''); // Note: The 2nd arg must match the first in the call to genDateSelector above.
+              ChangeOptionDays(document.getElementById('Form1'), ''); // Note: The 2nd arg must match the first in the call to genDateSelector above.
               //]]>
             </script>
             <input type="submit" value="<?php echo get_vocab("goto") ?>">
