@@ -23,7 +23,7 @@ $vocab["report"]             = "Rapport";
 $vocab["admin"]              = "Gestion";
 $vocab["help"]               = "Aide";
 $vocab["search"]             = "Recherche&nbsp;";
-$vocab["not_php3"]           = "ATTENTION : Cette application peut ne pas fonctionner correctement avec PHP3";
+$vocab["not_php3"]           = "ATTENTION&nbsp;: Cette application peut ne pas fonctionner correctement avec PHP3";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "Réservation pour<br>";
@@ -45,7 +45,9 @@ $vocab["ppreview"]           = "Format imprimable";
 // Used in edit_entry.php
 $vocab["addentry"]           = "Ajouter une réservation";
 $vocab["editentry"]          = "Éditer une réservation";
+$vocab["copyentry"]          = "Copier une réservation";
 $vocab["editseries"]         = "Éditer une périodicité";
+$vocab["copyseries"]         = "Copier une périodicité";
 $vocab["namebooker"]         = "Brève description";
 $vocab["fulldescription"]    = "Description complète&nbsp;:<br>&nbsp;&nbsp;(Nombre de personnes,<br>&nbsp;&nbsp;Interne/Externe etc)";
 $vocab["date"]               = "Date&nbsp;";
@@ -97,7 +99,7 @@ $vocab["createdby"]          = "Créée par&nbsp;";
 $vocab["lastupdate"]         = "Dernière mise à jour&nbsp;";
 $vocab["deleteentry"]        = "Effacer une réservation";
 $vocab["deleteseries"]       = "Effacer une périodicité";
-$vocab["confirmdel"]         = "Etes-vous sûr\\nde vouloir effacer\\ncette réservation ?\\n\\n";
+$vocab["confirmdel"]         = "Êtes-vous sûr\\nde vouloir effacer\\ncette réservation ?\\n\\n";
 $vocab["returnprev"]         = "Retour à la page précédente";
 $vocab["invalid_entry_id"]   = "N° de réservation invalide.";
 $vocab["invalid_series_id"]  = "N° de série invalide.";
@@ -108,9 +110,14 @@ $vocab["sched_conflict"]     = "Conflit entre réservations";
 $vocab["conflict"]           = "La nouvelle réservation entre en conflit avec la(les) réservation(s) suivante(s)&nbsp;";
 $vocab["too_may_entrys"]     = "Les options choisies créeront trop de réservations.<br>Choisissez des options différentes&nbsp;!";
 $vocab["returncal"]          = "Retour au calendrier";
-$vocab["failed_to_acquire"]  = "Erreur, impossible d'obtenir l'accès exclusif à la base de données"; 
+$vocab["failed_to_acquire"]  = "Erreur, impossible d'obtenir l'accès exclusif à la base de données";
 $vocab["invalid_booking"]    = "Réservation invalide";
 $vocab["must_set_description"] = "Vous devez définir une brève description pour la réservation. Veuillez revenir en arrière et en saisir une.";
+$vocab["mail_subject_entry"] = "Réservation ajoutée/modifiée dans le système de réservation $mrbs_company";
+$vocab["mail_body_new_entry"] = "Une nouvelle réservation a été faite, voici les détails:";
+$vocab["mail_body_del_entry"] = "Une réservation a été supprimée, voici les détails :";
+$vocab["mail_body_changed_entry"] = "Une réservation a été modifiée, voici les détails :";
+$vocab["mail_subject_delete"] = "Réservation supprimée dans le système de réservation $mrbs_company";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Accès refusé";
@@ -154,10 +161,10 @@ $vocab["previous"]           = "Précédent";
 $vocab["next"]               = "Suivant";
 $vocab["entry"]              = "Réservation";
 $vocab["view"]               = "Voir";
-$vocab["advanced_search"]    = "Recherche avancée"; 
-$vocab["search_button"]      = "Recherche"; 
-$vocab["search_for"]         = "Rechercher"; 
-$vocab["from"]               = "À partir de"; 
+$vocab["advanced_search"]    = "Recherche avancée";
+$vocab["search_button"]      = "Recherche";
+$vocab["search_for"]         = "Rechercher";
+$vocab["from"]               = "À partir de";
 
 // Used in report.php
 $vocab["report_on"]          = "Rapport des réservations&nbsp;";
@@ -242,6 +249,7 @@ $vocab["delarea"]            = "Vous devez supprimer toutes les salles de ce lie
 $vocab["about_mrbs"]         = "À propos de MRBS (Meeting Room Booking System)";
 $vocab["database"]           = "Base de donnée";
 $vocab["system"]             = "Système d'exploitation";
+$vocab["servertime"]         = "Heure du serveur";
 $vocab["please_contact"]     = "Contactez ";
 $vocab["for_any_questions"]  = "si vous avez une question qui n'est pas traitée ici.";
 
