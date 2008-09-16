@@ -50,9 +50,11 @@ else
   
   // DAYS
   echo "<div id=\"viewday\">\n";
-  echo "<span class=\"label\">" . get_vocab("viewday") .":</span>\n";
+  echo "<div class=\"trailer_label\">\n";
+  echo "<span>" . get_vocab("viewday") .":</span>\n";
+  echo "</div>\n";
   
-  
+  echo "<div class=\"trailer_links\">\n";
   for ($i = -6; $i <= 7; $i++)
   {
     $ctime = mktime(0, 0, 0, $month, $day + $i, $year);
@@ -78,15 +80,20 @@ else
   }
   echo "</div>\n";
   
+  echo "</div>\n";
+  
   
   // WEEKS
   echo "<div id=\"viewweek\">\n";
-  echo "  <span class=\"label\">".get_vocab("viewweek").":</span>\n";
+  echo "<div class=\"trailer_label\">\n";
+  echo "  <span>".get_vocab("viewweek").":</span>\n";
+  echo "</div>\n";
  
   $ctime = mktime(0, 0, 0, $month, $day, $year);
   // How many days to skip back to first day of week:
   $skipback = (date("w", $ctime) - $weekstarts + 7) % 7;
-     
+  
+  echo "<div class=\"trailer_links\">\n";
   for ($i = -4; $i <= 4; $i++)
   {
     $ctime = mktime(0, 0, 0, $month, $day + 7 * $i - $skipback, $year);
@@ -120,10 +127,16 @@ else
   }
   echo "</div>\n";
   
+  echo "</div>\n";
+  
   
   // MONTHS
   echo "<div id=\"viewmonth\">\n";
-  echo "  <span class=\"label\">".get_vocab("viewmonth").":</span>\n";
+  echo "<div class=\"trailer_label\">\n";
+  echo "  <span>".get_vocab("viewmonth").":</span>\n";
+  echo "</div>\n";
+  
+  echo "<div class=\"trailer_links\">\n";
   for ($i = -2; $i <= 6; $i++)
   {
     $ctime = mktime(0, 0, 0, $month + $i, 1, $year);
@@ -145,7 +158,8 @@ else
       echo "]</span>\n";
     }
   }
-  echo "</div>\n";
+  echo "</div>\n";  // end of links div
+  echo "</div>\n";  // end of viewmonth
   echo "</div>\n";  // end of "classic" trailer
 }
 ?>

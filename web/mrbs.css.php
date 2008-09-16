@@ -376,7 +376,7 @@ form.form_edit_area_room {
 // Common to all forms in the class "form_general"
 $general_label_height          = 1.0;     // em
 $general_left_col_width        = 20;      // %
-$general_right_col_width       = 80;      // %
+$general_right_col_width       = 79;      // %  (79 to avoid rounding problems)
 $general_gap                   = 1.0;     // em  (gap between left and right columns)
 
 // Specific to the "edit_entry" form
@@ -407,24 +407,22 @@ form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 
 .form_general div {float: left; clear: left; width: 100%}
 .form_general div div {float: none; clear: none; width: auto}
-.form_general div.group {display: table-cell; float: left; width: <?php echo $general_right_col_width ?>%}
+.form_general div.group {float: left; width: <?php echo $general_right_col_width ?>%}
 .form_general fieldset {width: auto; border: 0; padding-top: 2.0em}
 
 .form_general label {
-    display: block; float: left; 
+    display: block; float: left; overflow: hidden;
     min-height: <?php echo $general_label_height ?>em; 
     width: <?php echo $general_left_col_width ?>%; 
     text-align: right; padding-bottom: 0.8em; font-weight: bold;
 }
-.edit_entry .form_general label {max-width: <?php echo $edit_entry_left_col_max_width ?>em;
-                                     width: <?php echo $edit_entry_left_col_max_width ?>em}
-.report     .form_general label {max-width: <?php echo $report_left_col_max_width ?>em;
-                                     width: <?php echo $report_left_col_max_width ?>em}
-.search     .form_general label {max-width: <?php echo $search_left_col_max_width ?>em;
-                                     width: <?php echo $search_left_col_max_width ?>em}
-#logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em;
-                                     width: <?php echo $logon_left_col_max_width ?>em}
-.form_general .group      label {clear: none; width: auto; max-width: 100%; font-weight: normal}
+
+.edit_entry .form_general label {max-width: <?php echo $edit_entry_left_col_max_width ?>em}
+.report     .form_general label {max-width: <?php echo $report_left_col_max_width ?>em}
+.search     .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
+#logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em}
+
+.form_general .group      label {clear: none; width: auto; max-width: 100%; font-weight: normal; overflow: visible}
 
 .form_general input {
     display: block; float: left; margin-left: <?php echo $general_gap ?>em; 
@@ -447,10 +445,13 @@ form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 .form_general input.radio {margin-top: 0.1em}
 .form_general input.checkbox {margin-top: 0.1em}
 .form_general input.submit {display: block; width: auto; float: left; clear: left; margin-top: 1.0em}
-.edit_entry .form_general input.submit {margin-left: <?php echo ($edit_entry_left_col_max_width + $general_gap) ?>em}
-.report     .form_general input.submit {margin-left: <?php echo ($report_left_col_max_width + $general_gap) ?>em}
-.search     .form_general input.submit {margin-left: <?php echo ($search_left_col_max_width + $general_gap) ?>em}
-#logon                    input.submit {margin-left: <?php echo ($logon_left_col_max_width + $general_gap) ?>em; width: auto}
+
+div#edit_entry_submit {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $edit_entry_left_col_max_width ?>em}
+div#report_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $report_left_col_max_width ?>em}
+div#search_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $search_left_col_max_width ?>em}
+div#logon_submit      {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $logon_left_col_max_width ?>em}
+#edit_entry_submit input, #report_submit input, #search_submit input, #logon_submit input
+    {position: relative; left: 100%; width: auto}
 
 .form_general #div_time input {width: 1.5em}
 .form_general #div_time span + input {margin-left: 0}
@@ -590,11 +591,17 @@ div#site_faq_body {margin-top: 2.0em}
 /* ------------ TRAILER.INC ---------------------*/
 div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>; 
              border-bottom: 1px solid <?php echo $trailer_border_color ?>; 
-             float: left; width: 100%; margin-top: 1.0em; padding: 0.3em 0 0.3em 0}
+             float: left; width: 100%; 
+             margin-top: 1.5em; margin-bottom: 1.5em;
+             padding: 0.3em 0 0.3em 0}
 #trailer div {float: left; width: 100%}
-#trailer span.label {display: block; float: left; clear: left; width: 7.0em; font-weight: bold}
+#trailer div.trailer_label {float: left; clear: left; width: 20%; max-width: 9.0em; font-weight: bold}
+#trailer div.trailer_links {float: left;              width: 79%}  /* 79 to avoid rounding problems */
+.trailer_label span {margin-right: 1.0em}
+
 #trailer span.current {font-weight: bold}
 #trailer .current a {color: <?php echo $highlight_font_color ?>}
+
 div#simple_trailer {width: 100%; text-align: center; padding-top: 1.0em; padding-bottom: 2.0em}
 #simple_trailer a {padding: 0 1.0em 0 1.0em}
 

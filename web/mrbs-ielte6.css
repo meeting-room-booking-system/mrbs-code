@@ -21,3 +21,6 @@ div.booking_list {overflow: hidden}          /* scrollbars don't work properly i
 /* ------------ FORM_GENERAL ------------------------*/
 .form_general input {display: inline}        /* stops IE6 "double margin float bug" appearing */
 .form_general input.submit {display: inline} /* stops IE6 "double margin float bug" appearing */
+
+/* ------------ TRAILER.INC ---------------------*/
+#trailer div.trailer_label {text-align: right}   /* max-width does not work in IE6, so this keeps it looking OK */

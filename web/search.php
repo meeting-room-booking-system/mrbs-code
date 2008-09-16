@@ -53,7 +53,7 @@ if (!empty($advanced))
         <label><?php echo get_vocab("from") ?>:</label>
         <?php genDateSelector ("", $day, $month, $year) ?>
       </div> 
-      <div>
+      <div id="search_submit">
         <input class="submit" type="submit" value="<?php echo get_vocab("search_button") ?>">
       </div>
     </fieldset>
