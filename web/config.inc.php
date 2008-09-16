@@ -219,7 +219,7 @@ $auth["type"] = "config"; // How to validate the user/password. One of "none"
 // Configuration parameters for 'cookie' session scheme
 
 // The encryption secret key for the session tokens. You are strongly
-// advises to change this if you use this session scheme
+// advised to change this if you use this session scheme
 $auth["session_cookie"]["secret"] = "This isn't a very good secret!";
 // The expiry time of a session, in seconds
 $auth["session_cookie"]["session_expire_time"] = (60*60*24*30); // 30 days
