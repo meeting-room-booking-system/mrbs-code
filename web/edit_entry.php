@@ -15,6 +15,7 @@ $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $hour = get_form_var('hour', 'int');
 $minute = get_form_var('minute', 'int');
+$period = get_form_var('period', 'int');
 $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');
 $id = get_form_var('id', 'int');

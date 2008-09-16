@@ -19,6 +19,7 @@ $rep_type = get_form_var('rep_type', 'int');
 $description = get_form_var('description', 'string');
 $hour = get_form_var('hour', 'int');
 $minute = get_form_var('minute', 'int');
+$period = get_form_var('period', 'int');
 $duration = get_form_var('duration', 'int');
 $dur_units = get_form_var('dur_units', 'string');
 $all_day = get_form_var('all_day', 'string'); // bool, actually
