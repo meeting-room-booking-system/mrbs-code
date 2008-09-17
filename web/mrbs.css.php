@@ -5,6 +5,13 @@
 header("Content-type: text/css"); 
 include "config.inc.php";
 
+// IMPORTANT *************************************************************************************************
+// In order to avoid problems in locales where the decimal point is represented as a comma, it is important to
+//   (1) specify all PHP length variables as strings, eg $border_width = '1.5'; and not $border_width = 1.5;
+//   (2) convert PHP variables after arithmetic using number_format
+// ***********************************************************************************************************
+
+
 ?>
 
 
@@ -141,11 +148,12 @@ table:hover.naked {cursor: pointer}   /* set cursor to pointer; if you don't it 
 <?php
 // Adjust the label width to suit the longest label - it will depend on the translation being used
 // The input width can normally be left alone
-$admin_form_label_width       = 7.0;   // em
-$admin_form_gap               = 1.0;   // em
-$admin_form_input_width       = 8.3;   // em   (Also used in edit_area_room.php)
-$admin_form_overheads         = 1.0;   // em   (fudge factor)
+$admin_form_label_width       = '7.0';   // em
+$admin_form_gap               = '1.0';   // em
+$admin_form_input_width       = '10.5';   // em   (Also used in edit_area_room.php)
+$admin_form_overheads         = '1.0';   // em   (fudge factor)
 $admin_form_width             = $admin_form_label_width + $admin_form_gap + $admin_form_input_width + $admin_form_overheads;
+$admin_form_width             = number_format($admin_form_width, 1, '.', '');   // get rid of any commas
 ?>
 table#admin {margin-bottom: 1.0em}
 #admin th {text-align: center}
@@ -163,7 +171,7 @@ table#admin {margin-bottom: 1.0em}
     font-family: <?php echo $standard_font_family ?>; font-size: small;
 }
 .form_admin input.submit {
-    width: auto; margin-top: 1.2em; margin-left: <?php echo ($admin_form_gap + $admin_form_label_width)?>em
+    width: auto; margin-top: 1.2em; margin-left: <?php echo number_format(($admin_form_gap + $admin_form_label_width), 1, '.', '')?>em
 }
 
 
@@ -184,7 +192,7 @@ div.date_now    {float: left;  width: 33%; text-align: center}
 div.date_after  {float: right; width: 33%; text-align: right}
 
 <?php 
-$table_dwm_main_border_width = 1;    // px
+$table_dwm_main_border_width = '1';    // px
 ?>
 table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: separate; border: 0}
 .dwm_main td {padding: 0;
@@ -281,7 +289,7 @@ In the classes below
 
 */
 
-$main_cell_height = 17;          // Units specified below
+$main_cell_height = '17';        // Units specified below
 $main_cell_height_units = 'px';  // Set to "em" or "px" as desired
 $clipped = TRUE;                 // Set to TRUE for clipping, FALSE if not   
 
@@ -348,12 +356,13 @@ span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; fo
 // be sure how long the longest line will be.    Once you've chosen your preferred language and you can see what it looks like,
 // you may want to adjust the width of the label below so that the longest label just fits on one line.  
 
-$edit_area_room_label_width       = 10.0;    // em
-$edit_area_room_input_margin_left = 1.0;
+$edit_area_room_label_width       = '11.0';    // em
+$edit_area_room_input_margin_left = '1.0';
 $edit_area_room_input_width       = $admin_form_input_width;
-$edit_area_room_width_overheads   = 0.7;     // borders around inputs etc.    Konqueror seems to be the most extreme
+$edit_area_room_width_overheads   = '1.0';     // borders around inputs etc.    Konqueror seems to be the most extreme
 $edit_area_room_form_width        = $edit_area_room_label_width + $edit_area_room_input_margin_left + $edit_area_room_input_width + $edit_area_room_width_overheads;
-
+$edit_area_room_form_width        = number_format($edit_area_room_form_width, 1, '.', '');   // get rid of any commas
+      
 ?>
 form.form_edit_area_room {
     position: relative; width: <?php echo $edit_area_room_form_width ?>em;
@@ -380,30 +389,34 @@ form.form_edit_area_room {
 
 <?php
 // Common to all forms in the class "form_general"
-$general_label_height          = 1.0;     // em
-$general_left_col_width        = 20;      // %
-$general_right_col_width       = 79;      // %  (79 to avoid rounding problems)
-$general_gap                   = 1.0;     // em  (gap between left and right columns)
+$general_label_height          = '1.0';     // em
+$general_left_col_width        = '20';      // %
+$general_right_col_width       = '79';      // %  (79 to avoid rounding problems)
+$general_gap                   = '1.0';     // em  (gap between left and right columns)
 
 // Specific to the "edit_entry" form
-$edit_entry_left_col_max_width = 10;      // em
-$edit_entry_textarea_width     = 26;      // em
+$edit_entry_left_col_max_width = '10';      // em
+$edit_entry_textarea_width     = '26';      // em
 $edit_entry_form_min_width     = $edit_entry_left_col_max_width + $edit_entry_textarea_width + $general_gap;
+$edit_entry_form_min_width     = number_format($edit_entry_form_min_width, 1, '.', '');   // get rid of any commas
 
 // Specific to the "report" form
-$report_left_col_max_width     = 12;      // em
-$report_input_width            = 12;      // em
+$report_left_col_max_width     = '12';      // em
+$report_input_width            = '12';      // em
 $report_form_min_width         = $report_left_col_max_width + $report_input_width + $general_gap;
+$report_form_min_width         = number_format($report_form_min_width, 1, '.', '');   // get rid of any commas
 
 // Specific to the "search" form
-$search_left_col_max_width     = 8;       // em
-$search_input_width            = 12;      // em
+$search_left_col_max_width     = '8';       // em
+$search_input_width            = '12';      // em
 $search_form_min_width         = $search_left_col_max_width + $search_input_width + $general_gap;
+$search_form_min_width         = number_format($search_form_min_width, 1, '.', '');   // get rid of any commas
 
 // Specific to the "logon" form
-$logon_left_col_max_width      = 8;       // em
-$logon_input_width             = 12;      // em
+$logon_left_col_max_width      = '8';       // em
+$logon_input_width             = '12';      // em
 $logon_form_min_width          = $logon_left_col_max_width + $logon_input_width + $general_gap;
+$logon_form_min_width          = number_format($logon_form_min_width, 1, '.', '');   // get rid of any commas
 ?>
 form.form_general {margin-top: 2.0em; width: 100%}
 .edit_entry form.form_general {min-width: <?php echo $edit_entry_form_min_width ?>em}
@@ -475,11 +488,12 @@ div#logon_submit      {width: <?php echo $general_left_col_width ?>%; max-width:
 
 /* ------------ EDIT_USERS.PHP ------------------*/
 <?php
-$edit_users_label_height     = 2.0;   // em
-$edit_users_label_width      = 10.0;   // em
-$edit_users_gap              = 1.0;   // em
-$edit_users_input_width      = 10.0;   // em
-$edit_users_form_width = $edit_users_label_width + $edit_users_gap + $edit_users_input_width + 5;
+$edit_users_label_height     = '2.0';    // em
+$edit_users_label_width      = '10.0';   // em
+$edit_users_gap              = '1.0';    // em
+$edit_users_input_width      = '10.0';   // em
+$edit_users_form_width       = $edit_users_label_width + $edit_users_gap + $edit_users_input_width + 5;
+$edit_users_form_width       = number_format($edit_users_form_width, 1, '.', '');   // get rid of any commas
 // This CSS works by using absolute positioning to bring the Delete button up into the main form.
 // Logically the HTML for the Delete button is implemented and because you can't nest a form within
 // a form it appears as a second form after the main form.    However, to the user it is more logical to
