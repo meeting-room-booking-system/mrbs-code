@@ -188,11 +188,11 @@ $view_week_number = FALSE;
 $times_right_side = FALSE;
 
 // Control the active cursor in day/week/month views.
-$javascript_cursor = true; // Change to false if clients have old browsers
+$javascript_cursor = TRUE; // Change to FALSE if clients have old browsers
                            // incompatible with JavaScript.
-$show_plus_link = true; // Change to true to always show the (+) link as in
-                        // MRBS 1.1.
-$highlight_method = "hybrid"; // One of "bgcolor", "class", "hybrid".
+$show_plus_link = FALSE;   // Change to TRUE to always show the (+) link as in
+                           // MRBS 1.1.
+$highlight_method = "class"; // One of "bgcolor", "class", "hybrid".
 
 // Define default starting view (month, week or day)
 // Default is day

@@ -106,8 +106,6 @@ a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration: underlin
 
 td, th {vertical-align: top}
 
-td.highlight {background-color: <?php echo $row_highlight_color ?>; border-style: solid; border-width: 1px; border-color:#0000AA;} /* The highlighted cell under the cursor */
-
 td form {margin: 0}     /* Prevent IE from displaying margins around forms in tables. */
 
 legend {font-weight: bold; font-size: large;
@@ -146,11 +144,13 @@ table:hover.naked {cursor: pointer}   /* set cursor to pointer; if you don't it 
 $admin_form_label_width       = 7.0;   // em
 $admin_form_gap               = 1.0;   // em
 $admin_form_input_width       = 8.3;   // em   (Also used in edit_area_room.php)
+$admin_form_overheads         = 1.0;   // em   (fudge factor)
+$admin_form_width             = $admin_form_label_width + $admin_form_gap + $admin_form_input_width + $admin_form_overheads;
 ?>
 table#admin {margin-bottom: 1.0em}
 #admin th {text-align: center}
 #admin td {padding: 0.5em; vertical-align: top}
-.form_admin fieldset {border: 0; padding-top: 1.0em}   
+.form_admin fieldset {border: 0; padding-top: 1.0em; width: <?php echo $admin_form_width ?>em}  /* width necessary for Safari */
 .form_admin div {float: left; clear: left} 
 .form_admin label {
     display: block; float: left; clear: left; 
@@ -236,6 +236,11 @@ td.times          {background-color: <?php echo $header_back_color ?>}   /* used
 .times a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
 .times a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
 .times a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
+
+/* Set styles for the highlighted cells under the cursor (the time/period cell and the current cell) */
+td.highlight         {background-color: <?php echo $row_highlight_color ?>}            /* background color      */
+.highlight a:link    {font-weight: normal; color: <?php echo $standard_font_color ?>}  /* font color and weight */
+.highlight a:visited {font-weight: normal; color: <?php echo $standard_font_color ?>}  /* font color and weight */
 
 
 <?php
@@ -348,13 +353,14 @@ $edit_area_room_input_margin_left = 1.0;
 $edit_area_room_input_width       = $admin_form_input_width;
 $edit_area_room_width_overheads   = 0.7;     // borders around inputs etc.    Konqueror seems to be the most extreme
 $edit_area_room_form_width        = $edit_area_room_label_width + $edit_area_room_input_margin_left + $edit_area_room_input_width + $edit_area_room_width_overheads;
+
 ?>
 form.form_edit_area_room {
     position: relative; width: <?php echo $edit_area_room_form_width ?>em;
     margin-top: 2em; margin-bottom: 2em; margin-left: auto; margin-right: auto
 }
 .form_edit_area_room label {
-    display: block; float: left; clear: left; min-height: 2.0em; 
+    display: block; float: left; clear: left; min-height: 2.0em;
     width: <?php echo $edit_area_room_label_width ?>em; text-align: right
 }
 .form_edit_area_room input {
