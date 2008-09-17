@@ -20,7 +20,7 @@ if (empty($debug_flag))
   $debug_flag = 0;
 }
 
-// If we dont know the right date then make it up 
+// If we don't know the right date then use today:
 if (!isset($day) or !isset($month) or !isset($year))
 {
   $day   = date("d");
@@ -29,12 +29,20 @@ if (!isset($day) or !isset($month) or !isset($year))
 }
 else
 {
-  // Make the date valid if day is more then number of days in month
-  while (!checkdate(intval($month), intval($day), intval($year)))
+  // Make the date valid if day is more than number of days in month:
+  while (!checkdate($month, $day, $year))
   {
     $day--;
+    if ($day == 0)
+    {
+      $day   = date("d");
+      $month = date("m");
+      $year  = date("Y");   
+      break;
+    }
   }
 }
+
 if (empty($area))
 {
   $area = get_default_area();

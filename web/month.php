@@ -11,6 +11,7 @@ include "mrbs_auth.inc";
 include "mincals.inc";
 
 // Get form variables
+$day = get_form_var('day', 'int');
 $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
@@ -36,14 +37,30 @@ if (empty($debug_flag))
 {
   $debug_flag = 0;
 }
-if (empty($month) || empty($year) ||
-    !checkdate($month, 1, $year))
+
+// If we don't know the right date then use today:
+if (!isset($day) or !isset($month) or !isset($year))
 {
+  $day   = date("d");
   $month = date("m");
   $year  = date("Y");
 }
+else
+{
+  // Make the date valid if day is more than number of days in month:
+  while (!checkdate($month, $day, $year))
+  {
+    $day--;
+    if ($day == 0)
+    {
+      $day   = date("d");
+      $month = date("m");
+      $year  = date("Y");   
+      break;
+    }
+  }
+}
 
-$day = 1;
 
 // print the page header
 print_header($day, $month, $year, $area);
