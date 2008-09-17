@@ -144,6 +144,18 @@ else
      
     $cmonth = date("m", $ctime);
     $cyear  = date("Y", $ctime);
+    $cday   = $day;
+    // decrement day until it's a valid one for the month, in case you're moving to a month with fewer
+    // days than the current one
+    while (!checkdate($cmonth, $cday, $cyear))
+    {
+      $cday--;
+      if ($cday == 0)
+      {
+        $cday   = 1;
+        break;
+      }
+    }
     if ($i != -2)
     {
       echo " | ";
@@ -152,7 +164,7 @@ else
     {
       echo "<span class=\"current\">\n[ ";
     }
-    echo "  <a href=\"month.php?year=$cyear&amp;month=$cmonth$params\">$str</a>\n";
+    echo "  <a href=\"month.php?year=$cyear&amp;month=$cmonth&amp;day=$cday$params\">$str</a>\n";
     if ($i == 0)
     {
       echo "]</span>\n";

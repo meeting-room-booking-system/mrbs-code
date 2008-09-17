@@ -208,31 +208,66 @@ echo "<h2 id=\"dwm\">" . utf8_strftime("%B %Y", $month_start)
   . " - $this_area_name - $this_room_name</h2>\n";
 
 // Show Go to month before and after links
-//y? are year and month of the previous month.
-//t? are year and month of the next month.
+//y? are year and month and day of the previous month.
+//t? are year and month and day of the next month.
+//c? are year and month of this month.   But $cd is the day that was passed to us.
 
 $i= mktime(12,0,0,$month-1,1,$year);
 $yy = date("Y",$i);
 $ym = date("n",$i);
+$yd = $day;
+while (!checkdate($ym, $yd, $yy))
+{
+  $yd--;
+  if ($yd == 0)
+  {
+    $yd   = 1;
+    break;
+  }
+}
 
 $i= mktime(12,0,0,$month+1,1,$year);
 $ty = date("Y",$i);
 $tm = date("n",$i);
+$td = $day;
+while (!checkdate($tm, $td, $ty))
+{
+  $td--;
+  if ($td == 0)
+  {
+    $td   = 1;
+    break;
+  }
+}
+
+$cy = date("Y");
+$cm = date("m");
+$cd = $day;    // preserve the day information
+while (!checkdate($cm, $cd, $cy))
+{
+  $cd--;
+  if ($cd == 0)
+  {
+    $cd   = 1;
+    break;
+  }
+}
+
 
 $before_after_links_html = "<div class=\"screenonly\">
   <div class=\"date_nav\">
     <div class=\"date_before\">
-      <a href=\"month.php?year=$yy&amp;month=$ym&amp;area=$area&amp;room=$room\">
+      <a href=\"month.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area&amp;room=$room\">
           &lt;&lt;&nbsp;".get_vocab("monthbefore")."
         </a>
     </div>
     <div class=\"date_now\">
-      <a href=\"month.php?area=$area&amp;room=$room\">
+      <a href=\"month.php?year=$cy&amp;month=$cm&amp;day=$cd&amp;area=$area&amp;room=$room\">
           ".get_vocab("gotothismonth")."
         </a>
     </div>
     <div class=\"date_after\">
-       <a href=\"month.php?year=$ty&amp;month=$tm&amp;area=$area&amp;room=$room\">
+       <a href=\"month.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area&amp;room=$room\">
           ".get_vocab("monthafter")."&nbsp;&gt;&gt;
         </a>
     </div>
