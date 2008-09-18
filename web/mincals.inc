@@ -105,110 +105,148 @@ class Calendar
 
     function getHTML()
     {
-        global $weekstarts;
-        global $PHP_SELF;
-        global $day;
-        global $month;
+      global $weekstarts;
+      global $PHP_SELF;
+      global $day;
+      global $month;
+      global $year;
 
-        if (!isset($weekstarts)) $weekstarts = 0;
-        $s = "";
-        
-        $daysInMonth = $this->getDaysInMonth($this->month, $this->year);
-   // $prevYear is the current year unless the previous month is
-   // December then you need to decrement the year
-   if( $this->month - 1 > 0 )
-   {
-      $prevMonth = $this->month - 1;
-      $prevYear = $this->year;
-   }
-   else
-   {
-      $prevMonth = 12;
-      $prevYear = $this->year -1;
-   }
-        $daysInPrevMonth = $this->getDaysInMonth($prevMonth, $prevYear);
-        $date = mktime(12, 0, 0, $this->month, 1, $this->year);
-        
-        $first = (strftime("%w",$date) + 7 - $weekstarts) % 7;
-        $monthName = utf8_strftime("%B",$date);
-        
-        //$prevMonth = $this->getCalendarLink($this->month - 1 >   0 ? $this->month - 1 : 12, $this->month - 1 >   0 ? $this->year : $this->year - 1);
-        //$nextMonth = $this->getCalendarLink($this->month + 1 <= 12 ? $this->month + 1 :  1, $this->month + 1 <= 12 ? $this->year : $this->year + 1);
-        
-        $s .= "<table class=\"calendar\">\n";
-        $s .= "<thead>\n";
-        // prints month name and year
-        
-        $s .= "<tr>\n";   
-        $s .= "<th colspan=\"7\">$monthName&nbsp;$this->year</th>\n"; 
-        $s .= "</tr>\n";
-        
+      if (!isset($weekstarts)) $weekstarts = 0;
+      $s = "";
+      
+      // For the week view we will need to know the start of the week that should be highlighted
+      if (preg_match("/week/i", basename($PHP_SELF)))
+      {
+        // First of all work out the time of the "sticky day"
+        $sticky_time = gmmktime(0, 0, 0, $month, $day, $year);         // Use gm to avoid DST problems
+        $skipback = (date("w", $sticky_time) - $weekstarts + 7) % 7;   // How many days to skip back to first day of week:
+        $start_highlight_time = $sticky_time - ($skipback * 24 * 60 * 60); 
+      }
+      
+      $daysInMonth = $this->getDaysInMonth($this->month, $this->year);
+      // $prevYear is the current year unless the previous month is
+      // December then you need to decrement the year
+      if( $this->month - 1 > 0 )
+      {
+        $prevMonth = $this->month - 1;
+        $prevYear = $this->year;
+      }
+      else
+      {
+        $prevMonth = 12;
+        $prevYear = $this->year -1;
+      }
+      $daysInPrevMonth = $this->getDaysInMonth($prevMonth, $prevYear);
+      $date = mktime(12, 0, 0, $this->month, 1, $this->year);
+      
+      $first = (strftime("%w",$date) + 7 - $weekstarts) % 7;  // day number of the first day of the month
+      $monthName = utf8_strftime("%B",$date);
+      
+      //$prevMonth = $this->getCalendarLink($this->month - 1 >   0 ? $this->month - 1 : 12, $this->month - 1 >   0 ? $this->year : $this->year - 1);
+      //$nextMonth = $this->getCalendarLink($this->month + 1 <= 12 ? $this->month + 1 :  1, $this->month + 1 <= 12 ? $this->year : $this->year + 1);
+      
+      $s .= "<table class=\"calendar\">\n";
+      $s .= "<thead>\n";
+      // prints month name and year
+      
+      $s .= "<tr>\n";   
+      $s .= "<th colspan=\"7\">$monthName&nbsp;$this->year</th>\n"; 
+      $s .= "</tr>\n";
+      
+      $s .= "<tr>\n";
+      // gets days of week
+      $s .= $this->getFirstDays();
+      $s .= "</tr>\n";
+      $s .= "</thead>\n";
+
+      $s .= "<tbody>\n";
+      $d = 1 - $first;   // this is the date of the top left hand cell in the calendar (which may of course
+                         // be negative and therefore not displayed)
+          
+      while ($d <= $daysInMonth)
+      {
         $s .= "<tr>\n";
-        // gets days of week
-        $s .= $this->getFirstDays();
-        $s .= "</tr>\n";
-        $s .= "</thead>\n";
 
-        $s .= "<tbody>\n";
-        $d = 1 - $first;
-            
-        # this is used to highlight days in upcoming month
-        $days_to_highlight = ($d + 7);
-
-        while ($d <= $daysInMonth)
+        for ($i = 0; $i < 7; $i++)
         {
-            $s .= "<tr>\n";
+          $s .= "<td";
+          
+          // If this cell is the "sticky day" (ie the day passed through in GET parameters)
+          // then assign an id so that we can apply some special styling
+          if (($d == $day) && ($this->month == $month) && ($this->year == $year))
+          {
+            $s .= " id=\"sticky_day\"";
+          }
+          $s .= ">";
+          
+          if ($d > 0 && $d <= $daysInMonth)   // valid days of the month
+          {
+            $link = $this->getDateLink($d, $this->month, $this->year);
 
-            for ($i = 0; $i < 7; $i++)
+            if ($link == "")
             {
-                $s .= "<td>";
-                if ($d > 0 && $d <= $daysInMonth)
-                {
-                    $link = $this->getDateLink($d, $this->month, $this->year);
-                    $d_week = ($d - 7);
+              $s .= $d;
+            }     
+            
+            else   // we have a valid link
+            {
+              // start the anchor
+              $s .= "<a";
+              
+              // then work out whether to mark it as the current day/week/month
 
-                    if ($link == "")
-                        $s .= $d;
-                    elseif (preg_match("/day/i", basename($PHP_SELF)))
-                    {
-                        if (($d == $this->day) and ($this->h))
-                            $s .= "<a class=\"current\" href=\"$link\">$d</a>";
-                        else
-                            $s .= "<a href=\"$link\">$d</a>";
-                    }
-                    elseif (preg_match("/week/i", basename($PHP_SELF)))
-                    {
-          #echo "((".$this->day." < $days_to_highlight) && ($d < $days_to_highlight) && (($day - $daysInMonth) > (-6)) && (".$this->month." == ($month + 1)) && ($first != 0))<br>";
-                        if (($this->day <= $d) && ($this->day > $d_week) && ($this->h))
-                            $s .= "<a class=\"current\" href=\"$link\">$d</a>";
-                        elseif (($this->day < $days_to_highlight) && ($d < $days_to_highlight) && (($day - $daysInPrevMonth) > (-6)) && ($this->month == (($month + 1)%12)) && ($first != 0))
-                            $s .= "<a class=\"current\" href=\"$link\">$d</a>";
-                        else
-                            $s .= "<a href=\"$link\">$d</a>";
-                    }
-                    elseif (preg_match("/month/i", basename($PHP_SELF)))
-                        if ( $this->h )
-                            $s .= "<a class=\"current\" href=\"$link\">$d</a>";
-                        else
-                            $s .= "<a href=\"$link\">$d</a>";
-                }
-                else
+              if (preg_match("/day/i", basename($PHP_SELF)))              // DAY VIEW
+              {
+                if (($d == $this->day) and ($this->h))
                 {
-                    $s .= "&nbsp;";
+                  $s .= " class=\"current\"";
                 }
-                $s .= "</td>\n";
-                $d++;
+              }             
+
+              elseif (preg_match("/week/i", basename($PHP_SELF)))         // WEEK VIEW
+              {
+                // work out current time and if we're up to 7 days after the
+                // start of the week to be highlighted then mark it as the
+                // current week.   (Use gm to avoid DST problems)
+                $this_time = gmmktime (0, 0, 0, $this->month, $d, $this->year);
+                $diff = $this_time - $start_highlight_time;  // seconds
+                $diff = $diff/86400;                         // days
+                if (($diff >= 0) && ($diff < 7))             
+                {
+                  $s .= " class=\"current\"";
+                }         
+              }             
+
+              elseif (preg_match("/month/i", basename($PHP_SELF)))        // MONTH VIEW
+              {
+                if ($this->h)
+                {
+                  $s .= " class=\"current\"";
+                }
+              }
+              
+              // Now finish the anchor
+              $s .= " href=\"$link\">$d</a>";  
             }
-            $s .= "</tr>\n";
-        }
-        
-        $s .= "</tbody>\n";
-        $s .= "</table>\n";
-        
-        return $s;
+          }
+          
+          else    // invalid days of the month
+          {
+            $s .= "&nbsp;";
+          }
+          $s .= "</td>\n";
+          $d++;
+        }  // end for days in the week
+        $s .= "</tr>\n";
+      } // end while days in the month
+      
+      $s .= "</tbody>\n";
+      $s .= "</table>\n";
+      
+      return $s;
     }
 }
-
+        
 $lastmonth = mktime(12, 0, 0, $month-1, 1, $year);
 $thismonth = mktime(12, 0, 0, $month,   $day, $year);
 $nextmonth = mktime(12, 0, 0, $month+1, 1, $year);

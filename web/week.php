@@ -48,15 +48,15 @@ else
   }
 }
 
-// Set the date back to the previous $weekstarts day (Sunday, if 0):
+
+// Calculate how many days to skip back to get to the start of the week
 $time = mktime(12, 0, 0, $month, $day, $year);
-if (($weekday = (date("w", $time) - $weekstarts + 7) % 7) > 0)
-{
-  $time -= $weekday * 86400;
-  $day   = date("d", $time);
-  $month = date("m", $time);
-  $year  = date("Y", $time);
-}
+$skipback = (date("w", $time) - $weekstarts + 7) % 7;
+$day_start_week = $day - $skipback;
+// We will use $day for links and $day_start_week for anything to do with showing the bookings,
+// because we want the booking display to start on the first day of the week (eg Sunday if $weekstarts is 0)
+// but we want to preserve the notion of the current day (or 'sticky day') when switching between pages
+
 
 if (empty($area))
 {
@@ -97,15 +97,15 @@ for ($j = 0; $j<=($num_of_days-1); $j++)
   // -1 => no change
   //  0 => entering DST
   //  1 => leaving DST
-  $dst_change[$j] = is_dst($month,$day+$j,$year);
+  $dst_change[$j] = is_dst($month,$day_start_week+$j,$year);
   $am7[$j]=mktime($morningstarts,$morningstarts_minutes,0,
-                  $month,$day+$j,$year,is_dst($month,
-                                              $day+$j,
+                  $month,$day_start_week+$j,$year,is_dst($month,
+                                              $day_start_week+$j,
                                               $year,
                                               $morningstarts));
   $pm7[$j]=mktime($eveningends,$eveningends_minutes,0,
-                  $month,$day+$j,$year,is_dst($month,
-                                              $day+$j,
+                  $month,$day_start_week+$j,$year,is_dst($month,
+                                              $day_start_week+$j,
                                               $year,
                                               $eveningends));
 }
@@ -402,7 +402,7 @@ else
 }
 for ($j = 0; $j<=($num_of_days-1) ; $j++)
 {
-  $t = mktime( 12, 0, 0, $month, $day+$j, $year); 
+  $t = mktime( 12, 0, 0, $month, $day_start_week+$j, $year); 
   echo "<th><a href=\"day.php?year=" . strftime("%Y", $t) . 
     "&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) . 
     "&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">"
@@ -432,8 +432,8 @@ $hilite_url="week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&am
 
 $row_class = "even_row";
 for (
-     $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
-     $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
+     $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year);
+     $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
      $t += $resolution, $row_class = ($row_class == "even_row")?"odd_row":"even_row"
 )
 {
@@ -469,7 +469,7 @@ for (
     // set     unset used       by type                 none (unlabelled slot)
     // set     set   used       by type                 view entry
 
-    $wt = mktime( 12, 0, 0, $month, $day+$thisday, $year );
+    $wt = mktime( 12, 0, 0, $month, $day_start_week+$thisday, $year );
     $wday = date("d", $wt);
     $wmonth = date("m", $wt);
     $wyear = date("Y", $wt);

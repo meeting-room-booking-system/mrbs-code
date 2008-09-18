@@ -51,7 +51,7 @@ else
   // DAYS
   echo "<div id=\"viewday\">\n";
   echo "<div class=\"trailer_label\">\n";
-  echo "<span>" . get_vocab("viewday") .":</span>\n";
+  echo "<span><a href=\"day.php?year=$year&amp;month=$month&amp;day=$day$params\">" . get_vocab("viewday") .":</a></span>\n";
   echo "</div>\n";
   
   echo "<div class=\"trailer_links\">\n";
@@ -86,7 +86,7 @@ else
   // WEEKS
   echo "<div id=\"viewweek\">\n";
   echo "<div class=\"trailer_label\">\n";
-  echo "  <span>".get_vocab("viewweek").":</span>\n";
+  echo "  <span><a href=\"week.php?year=$year&amp;month=$month&amp;day=$day$params\">".get_vocab("viewweek").":</a></span>\n";
   echo "</div>\n";
  
   $ctime = mktime(0, 0, 0, $month, $day, $year);
@@ -102,6 +102,14 @@ else
     $cday   = date("d", $ctime);
     $cmonth = date("m", $ctime);
     $cyear  = date("Y", $ctime);
+    
+    // $htime gives you the d/m/y to use in the href link.    This is the
+    // real day that we want to look at, whereas $ctime is the start of that week
+    $htime = mktime(0, 0, 0, $month, $day + 7 * $i, $year);
+    $hday   = date("d", $htime);
+    $hmonth = date("m", $htime);
+    $hyear  = date("Y", $htime);
+    
     if ($i != -4)
     {
       echo " | ";
@@ -119,7 +127,7 @@ else
     {
       echo "<span class=\"current\">\n[ ";
     }
-    echo "  <a href=\"week.php?year=$cyear&amp;month=$cmonth&amp;day=$cday$params\">$str</a>\n";
+    echo "  <a href=\"week.php?year=$hyear&amp;month=$hmonth&amp;day=$hday$params\">$str</a>\n";
     if ($i == 0)
     {
       echo "]</span>\n";
@@ -133,7 +141,7 @@ else
   // MONTHS
   echo "<div id=\"viewmonth\">\n";
   echo "<div class=\"trailer_label\">\n";
-  echo "  <span>".get_vocab("viewmonth").":</span>\n";
+  echo "  <span><a href=\"month.php?year=$year&amp;month=$month&amp;day=$day$params\">".get_vocab("viewmonth").":</a></span>\n";
   echo "</div>\n";
   
   echo "<div class=\"trailer_links\">\n";

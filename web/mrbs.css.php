@@ -563,6 +563,7 @@ table.calendar {border-spacing: 0; border-collapse: collapse}
 .calendar th {min-width: 2.0em; text-align: center; font-weight: normal; background-color: transparent; color: <?php echo $standard_font_color ?>}
 .calendar td {text-align: center; font-size: x-small}
 .calendar a.current {font-weight: bold; color: <?php echo $highlight_font_color ?>}
+td#sticky_day {border: 1px dotted <?php echo $highlight_font_color ?>}
 
 
 /* ------------ REPORT.PHP ----------------------*/
