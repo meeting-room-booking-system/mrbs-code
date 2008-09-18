@@ -247,12 +247,12 @@ $vocab["delarea"]            = "Devi cancellare tutte le stanze in quest'area pr
 // Used in help.php
 $vocab["about_mrbs"]         = "About MRBS";
 $vocab["database"]           = "Database";
-$vocab["system"]             = "System";
+$vocab["system"]             = "Sistema operativo";
 $vocab["servertime"]         = "Ora del Server";
 $vocab["please_contact"]     = "Contatta ";
-$vocab["for_any_questions"]  = "per qualiasi altra domanda.";
+$vocab["for_any_questions"]  = "per qualsiasi altra domanda.";
 
 // Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Errore fatale: Faillita connessione database";
+$vocab["failed_connect_db"]  = "Errore fatale: Fallita connessione al database";
 
 ?>
