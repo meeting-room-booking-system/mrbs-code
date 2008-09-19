@@ -218,14 +218,41 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main#month_main td {border-top:  <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>}
 .dwm_main#month_main td.valid   {background-color: <?php echo $main_table_month_color ?>}
 .dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
-div.cell_container {float: left; min-height: 100px; height: 100px; width: 100%}    /* the containing div for the td cell contents */ 
-div.cell_header  {height: 20%; min-height: 20%; max-height: 20%; overflow: hidden; position: relative}
-div.booking_list {height: 80%; min-height: 80%; max-height: 80%; overflow: auto; font-size: x-small}                                                         /* contains the list of bookings */
-a.monthday {display: block; position: absolute; top: 0; left: 0; font-size: medium}                                                   /* the date in the top left corner */
+.dwm_main#month_main a {padding: 0 2px 0 2px}
+
 a.new_booking {display: block; width: 100%; font-size: medium; text-align: center}
 .new_booking img {margin: auto; border: 0; padding: 4px 0 2px 0}
+
+<?php
+// The following section deals with the contents of the table cells in the month view.    It is designed
+// to ensure that the new booking link is active anywhere in the cell that there isn't another link, for 
+// example the link to the day in question at the top left and the bookings themselves.   It works by using
+// z-index levels and placing the new booking link at the bottom of the pile.
+//
+// [There is in fact one area where the new booking link is not active and that is to the right of the last
+// booking when there is an odd number of bookings and the mode is 'slot' or 'description' (ie not 'both').
+// This is because the list of bookings is in a div of its own which includes that bottom right hand corner.   One
+// could do without the container div, and then you could solve the problem, but the container div is there to
+// allow the bookings to scroll without moving the date and new booking space at the top of the cell.   Putting up
+// with the small gap at the end of odd rows is probably a small price worth paying to ensure that the date and the 
+// new booking link remain visible when you scroll.]
+?>
+div.cell_container {position: relative; float: left;                    /* the containing div for a.new_booking and the naked table  */ 
+    min-height: 100px; height: 100px; width: 100%} 
+.month a.new_booking {position: absolute; top: 0; left: 0; z-index: 10} /* needs to be above the base, but below the date (monthday) */
+
+.dwm_main#month_main table.naked {position: absolute; top: 0; left: 0;  /* used when javascript cursor set - similar to new_booking  */
+    width: 100%; height: 100%; z-index: 10}
+       
+div.cell_header {position: relative; width: 2.0em; z-index: 20;         /* needs to be above the new booking anchor */
+     min-height: 20%; height: 20%; max-height: 20%; overflow: hidden}
+                                                                                  
+a.monthday {display: block; width: 100%; font-size: medium}             /* the date in the top left corner */
+
+div.booking_list {position: relative; z-index: 20;                      /* contains the list of bookings */
+    max-height: 80%; overflow: auto; font-size: x-small}                /* needs to be above new_booking and naked table */
 .booking_list a {font-size: x-small}
-.dwm_main#month_main a {padding: 0 2px 0 2px}
+
 
 <?php
 // Generate the classes to give the colour coding by booking type in the day/week/month views
@@ -249,6 +276,8 @@ td.times          {background-color: <?php echo $header_back_color ?>}   /* used
 td.highlight         {background-color: <?php echo $row_highlight_color ?>}            /* background color      */
 .highlight a:link    {font-weight: normal; color: <?php echo $standard_font_color ?>}  /* font color and weight */
 .highlight a:visited {font-weight: normal; color: <?php echo $standard_font_color ?>}  /* font color and weight */
+.month .highlight a:link    {font-weight: bold}
+.month .highlight a:visited {font-weight: bold}
 
 
 <?php

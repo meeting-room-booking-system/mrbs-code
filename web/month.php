@@ -463,7 +463,7 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
   echo "<div class=\"cell_header\">\n";
   // first put in the day of the month
   echo "<a class=\"monthday\" href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>\n";
-  
+  echo "</div>\n";
   // then the link to make a new booking
   if ($javascript_cursor)
   {
@@ -493,7 +493,6 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
     echo "//]]>\n";
     echo "</script>\n";
   }
-  echo "</div>\n";
   
   // then any bookings for the day
   if (isset($d[$cday]["id"][0]))
@@ -506,33 +505,29 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
       // give the enclosing div the appropriate width: full width if both,
       // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
       echo "<div class=\"" . $d[$cday]["color"][$i] . "\"" .
-        " style=\"width: " . (($monthly_view_entries_details == "both") ? '100%' : '49.9%') . "\">\n"; 
+        " style=\"width: " . (($monthly_view_entries_details == "both") ? '100%' : '49.9%') . "\">\n";
+      $booking_link = "view_entry.php?id=" . $d[$cday]["id"][$i] . "&amp;day=$cday&amp;month=$month&amp;year=$year";
+      $slot_text = $d[$cday]["data"][$i];
+      $description_text = utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255);
+      $full_text = $slot_text . " " . $description_text;
       switch ($monthly_view_entries_details)
       {
         case "description":
         {
-          echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-            . "&amp;day=$cday&amp;month=$month&amp;year=$year\" title=\""
-            . $d[$cday]["data"][$i] . "\">"
-            . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255)
-            . "</a>\n";
+          echo "<a href=\"$booking_link\" title=\"$full_text\">"
+            . $description_text . "</a>\n";
           break;
         }
         case "slot":
         {
-          echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-            . "&amp;day=$cday&amp;month=$month&amp;year=$year\" title=\""
-            . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255) . "\">"
-            . $d[$cday]["data"][$i] . "</a>\n";
+          echo "<a href=\"$booking_link\" title=\"$full_text\">"
+            . $slot_text . "</a>\n";
           break;
         }
         case "both":
         {
-          echo "<a href=\"view_entry.php?id=" . $d[$cday]["id"][$i]
-            . "&amp;day=$cday&amp;month=$month&amp;year=$year\" title=\""
-            . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255) . "\">"
-            . $d[$cday]["data"][$i] . " "
-            . utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255) . "</a>\n";
+          echo "<a href=\"$booking_link\" title=\"$full_text\">"
+            . $full_text . "</a>\n";
           break;
         }
         default:
