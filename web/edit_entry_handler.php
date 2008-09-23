@@ -310,6 +310,28 @@ foreach ( $rooms as $room_id )
 
 } // end foreach rooms
 
+
+// Now set up the return URL, which will be needed whether the booking is successful or not.
+// It's possible that $returl could be empty, for example if edit_entry.php had been called
+// direct, perhaps if the user has it set as a bookmark
+$area = mrbsGetRoomArea($room_id);
+if (empty($returl))
+{
+  switch ($default_view)
+  {
+    case "month":
+      $returl = "month.php";
+      break;
+    case "week":
+      $returl = "week.php";
+      break;
+    default:
+      $returl = "day.php";
+  }
+  $returl .= "?year=$year&month=$month&day=$day&area=$area&room=$room_id";
+}
+
+// If the rooms were free, go ahead an process the bookings
 if (empty($err))
 {
   foreach ( $rooms as $room_id )
@@ -426,11 +448,9 @@ if (empty($err))
   }
 
   sql_mutex_unlock("$tbl_entry");
-
-  $area = mrbsGetRoomArea($room_id);
     
-  // Now its all done go back to the day view
-  Header("Location: day.php?year=$year&month=$month&day=$day&area=$area");
+  // Now it's all done go back to the previous view
+  header("Location: $returl");
   exit;
 }
 
