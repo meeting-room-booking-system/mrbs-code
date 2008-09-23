@@ -150,7 +150,7 @@ if ($res && (mysql_num_rows($res)>1))
     echo "<ul>\n";
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;area=$row[0]\">";
+      echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$row[0]\">";
       echo "<span" . (($row['id'] == $area) ? ' class="current"' : '') . ">";
       echo htmlspecialchars($row['area_name']) . "</span></a></li>\n";
     }
@@ -178,7 +178,7 @@ else
     echo "<ul>\n";
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;area=$area&amp;room=".$row['id']."\">";
+      echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\">";
       echo "<span" . (($row['id'] == $room) ? ' class="current"' : '') . ">";
       echo htmlspecialchars($row['room_name']) . "</span></a></li>\n";
     }
