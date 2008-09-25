@@ -50,6 +50,50 @@ if (empty($area))
   $area = get_default_area();
 }
 
+// Set up the return URL.    As the user has tried to book a particular room and a particular
+// day, we must consider these to be the new "sticky room" and "sticky day", so modify the 
+// return URL accordingly.
+
+// First get the return URL basename, having stipped off the old query string
+//   (1) It's possible that $returl could be empty, for example if edit_entry.php had been called
+//       direct, perhaps if the user has it set as a bookmark
+//   (2) Avoid an endless loop.   It shouldn't happen, but just in case ...
+$returl_base   = explode('?', basename($returl));
+if (empty($returl) || ($returl_base[0] == "edit_entry.php") || ($returl_base[0] == "edit_entry_handler.php"))
+{
+  switch ($default_view)
+  {
+    case "month":
+      $returl = "month.php";
+      break;
+    case "week":
+      $returl = "week.php";
+      break;
+    default:
+      $returl = "day.php";
+  }
+}
+else
+{
+  $returl = $returl_base[0];
+}
+
+// Now construct the new query string
+$returl .= "?year=$year&month=$month&day=$day";
+
+// If the old sticky room is one of the rooms requested for booking, then don't change the sticky room.
+// Otherwise change the sticky room to be one of the new rooms.
+if (!in_array($room, $rooms))
+{
+  $room = $rooms[0];
+} 
+// Find the corresponding area
+$area = mrbsGetRoomArea($room);
+// Complete the query string
+$returl .= "&area=$area&room=$room";
+
+
+
 if (!getAuthorised(1))
 {
   showAccessDenied($day, $month, $year, $area);
@@ -311,28 +355,6 @@ foreach ( $rooms as $room_id )
 
 } // end foreach rooms
 
-
-// Now set up the return URL, which will be needed whether the booking is successful or not.
-$area = mrbsGetRoomArea($room_id);
-// (1) It's possible that $returl could be empty, for example if edit_entry.php had been called
-//     direct, perhaps if the user has it set as a bookmark
-// (2) Avoid an endless loop.   It shouldn't happen, but just in case ...
-$returl_base   = explode('?', basename($returl));
-if (empty($returl) || ($returl_base[0] == "edit_entry.php") || ($returl_base[0] == "edit_entry_handler.php"))
-{
-  switch ($default_view)
-  {
-    case "month":
-      $returl = "month.php";
-      break;
-    case "week":
-      $returl = "week.php";
-      break;
-    default:
-      $returl = "day.php";
-  }
-  $returl .= "?year=$year&month=$month&day=$day&area=$area&room=$room_id";
-}
 
 // If the rooms were free, go ahead an process the bookings
 if (empty($err))
