@@ -226,7 +226,7 @@ if (!getWritable($create_by, getUserName()))
   exit;
 }
 
-print_header($day, $month, $year, $area);
+print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 ?>
 

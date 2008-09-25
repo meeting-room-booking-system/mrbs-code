@@ -13,6 +13,7 @@ $day = get_form_var('day', 'int');
 $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
+$room = get_form_var('room', 'int');
 $create_by = get_form_var('create_by', 'string');
 $name = get_form_var('name', 'string');
 $rep_type = get_form_var('rep_type', 'int');
@@ -63,7 +64,7 @@ if (!getWritable($create_by, getUserName()))
 
 if ($name == '')
 {
-  print_header($day, $month, $year, $area);
+  print_header($day, $month, $year, $area, isset($room) ? $room : "");
 ?>
        <h1><?php echo get_vocab('invalid_booking'); ?></h1>
        <p>
@@ -88,7 +89,7 @@ if ($rep_type  == 2 || $rep_type == 6)
   }
   if ($got_rep_day == 0)
   {
-    print_header($day, $month, $year, $area);
+    print_header($day, $month, $year, $area, isset($room) ? $room : "");
      ?>
        <h1><?php echo get_vocab('invalid_booking'); ?></h1>
        <p>
@@ -103,7 +104,7 @@ if ($rep_type  == 2 || $rep_type == 6)
 
 if (($rep_type == 6) && ($rep_num_weeks < 2))
 {
-  print_header($day, $month, $year, $area);
+  print_header($day, $month, $year, $area, isset($room) ? $room : "");
 ?>
        <h1><?php echo get_vocab('invalid_booking'); ?></h1>
        <p>
@@ -459,7 +460,7 @@ sql_mutex_unlock("$tbl_entry");
 
 if (strlen($err))
 {
-  print_header($day, $month, $year, $area);
+  print_header($day, $month, $year, $area, isset($room) ? $room : "");
     
   echo "<h2>" . get_vocab("sched_conflict") . "</h2>\n";
   if (!isset($hide_title))

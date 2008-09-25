@@ -74,7 +74,7 @@ function showAccessDenied($day, $month, $year, $area)
 {
   global $HTTP_REFERER;
 
-  print_header($day, $month, $year, $area);
+  print_header($day, $month, $year, $area, isset($room) ? $room : "");
 ?>
   <h1><?php echo get_vocab("accessdenied")?></h1>
   <p>

@@ -13,6 +13,7 @@ $day = get_form_var('day', 'int');
 $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
+$room = get_form_var('room', 'int');  // not needed for the main display, but needed for trailer links
 $debug_flag = get_form_var('debug_flag', 'int');
 
 if (empty($debug_flag))
@@ -48,8 +49,19 @@ if (empty($area))
   $area = get_default_area();
 }
 
+// form the room parameter for use in query strings.    We want to preserve room information
+// if possible when switching between views
+if (empty($room))
+{
+  $room_param = "";
+}
+else
+{
+  $room_param = "&amp;room=$room";
+}
+
 // print the page header
-print_header($day, $month, $year, $area);
+print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 $format = "Gi";
 if ( $enable_periods )
@@ -117,7 +129,7 @@ if ($res && (mysql_num_rows($res)>1))
 }
 
 // Draw the three month calendars
-minicals($year, $month, $day, $area, '', 'day');
+minicals($year, $month, $day, $area, $room, 'day');
 echo "</div>";
 
 ?>
@@ -269,14 +281,14 @@ else
 <div class=\"screenonly\">
   <div class=\"date_nav\">
     <div class=\"date_before\">
-      <a href=\"day.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area\">&lt;&lt;&nbsp;". get_vocab("daybefore") ."
+      <a href=\"day.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area$room_param\">&lt;&lt;&nbsp;". get_vocab("daybefore") ."
       </a>
     </div>
     <div class=\"date_now\">
-      <a href=\"day.php?area=$area\">" . get_vocab("gototoday") . "</a>
+      <a href=\"day.php?area=$area$room_param\">" . get_vocab("gototoday") . "</a>
     </div>
     <div class=\"date_after\">
-      <a href=\"day.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area\">". get_vocab("dayafter") . "&nbsp;&gt;&gt;
+      <a href=\"day.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area$room_param\">". get_vocab("dayafter") . "&nbsp;&gt;&gt;
       </a>
     </div>
   </div>
@@ -343,7 +355,7 @@ else
   
   // URL for highlighting a time. Don't use REQUEST_URI or you will get
   // the timetohighlight parameter duplicated each time you click.
-  $hilite_url="day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;timetohighlight";
+  $hilite_url="day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area$room_param&amp;timetohighlight";
   
   ( $dst_change != -1 ) ? $j = 1 : $j = 0;
    
@@ -377,15 +389,15 @@ else
     echo "</div></td>\n";
 
     // Loop through the list of rooms we have for this area
-    while (list($key, $room) = each($rooms))
+    while (list($key, $room_id) = each($rooms))
     {
-      if(isset($today[$room][$time_t]["id"]))
+      if(isset($today[$room_id][$time_t]["id"]))
       {
-        $id    = $today[$room][$time_t]["id"];
-        $color = $today[$room][$time_t]["color"];
-        $descr = htmlspecialchars($today[$room][$time_t]["data"]);
-        $long_descr = htmlspecialchars($today[$room][$time_t]["long_descr"]);
-        $slots = $today[$room][$time_t]["slots"];
+        $id    = $today[$room_id][$time_t]["id"];
+        $color = $today[$room_id][$time_t]["color"];
+        $descr = htmlspecialchars($today[$room_id][$time_t]["data"]);
+        $long_descr = htmlspecialchars($today[$room_id][$time_t]["long_descr"]);
+        $slots = $today[$room_id][$time_t]["slots"];
       }
       else
       {
@@ -437,13 +449,13 @@ else
           
           if( $enable_periods )
           {
-            echo "<a class=\"new_booking\" href=\"edit_entry.php?area=$area&amp;room=$room&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day\">\n";
+            echo "<a class=\"new_booking\" href=\"edit_entry.php?area=$area&amp;room=$room_id&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day\">\n";
             echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
             echo "</a>\n";
           }
           else
           {
-            echo "<a class=\"new_booking\" href=\"edit_entry.php?area=$area&amp;room=$room&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day\">\n";
+            echo "<a class=\"new_booking\" href=\"edit_entry.php?area=$area&amp;room=$room_id&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day\">\n";
             echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
             echo "</a>\n";
           }

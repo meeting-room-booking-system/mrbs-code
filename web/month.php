@@ -63,7 +63,7 @@ else
 
 
 // print the page header
-print_header($day, $month, $year, $area);
+print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 if (empty($area))
 {

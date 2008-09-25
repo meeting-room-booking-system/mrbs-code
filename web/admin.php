@@ -13,6 +13,7 @@ $day = get_form_var('day', 'int');
 $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
+$room = get_form_var('room', 'int');
 $area_name = get_form_var('area_name', 'string');
 
 // If we dont know the right date then make it up 
@@ -34,7 +35,7 @@ if(!getAuthorised(2))
   exit();
 }
 
-print_header($day, $month, $year, isset($area) ? $area : "");
+print_header($day, $month, $year, isset($area) ? $area : "", isset($room) ? $room : "");
 
 // If area is set but area name is not known, get the name.
 if (isset($area))

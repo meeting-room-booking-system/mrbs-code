@@ -14,6 +14,7 @@ $day = get_form_var('day', 'int');
 $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
+$room = get_form_var('room', 'int');
 
 // If we dont know the right date then make it up
 if (!isset($day) or !isset($month) or !isset($year))
@@ -27,7 +28,7 @@ if (empty($area))
   $area = get_default_area();
 }
 
-print_header($day, $month, $year, $area);
+print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 echo "<h3>" . get_vocab("about_mrbs") . "</h3>\n";
 echo "<table id=\"version_info\">\n";

@@ -2,7 +2,7 @@
 
 // $Id$
 
-function print_header($day, $month, $year, $area)
+function print_header($day, $month, $year, $area, $room)
 {
   global $mrbs_company, $search_str, $locale_warning, $unicode_encoding,
     $vocab;
@@ -180,6 +180,10 @@ function ChangeOptionDays(formObj, prefix)
             {
               echo "<input type=\"hidden\" name=\"area\" value=\"$area\">\n";
             }
+            if (!empty($room))
+            {
+              echo "<input type=\"hidden\" name=\"room\" value=\"$room\">\n";
+            }
   
             ?>
             <script type="text/javascript">
@@ -192,15 +196,30 @@ function ChangeOptionDays(formObj, prefix)
           </div>
         </form>
       </td>
-      <td>
-        <a href="help.php?day=<?php echo $day ?>&amp;month=<?php echo $month ?>&amp;year=<?php echo $year ?>"><?php echo get_vocab("help") ?></a>
-      </td>
-      <td>
-        <a href="admin.php?day=<?php echo $day ?>&amp;month=<?php echo $month ?>&amp;year=<?php echo $year ?>"><?php echo get_vocab("admin") ?></a>
-      </td>
-      <td>
-        <a href="report.php"><?php echo get_vocab("report") ?></a>
-      </td>
+      <?php
+      $query_str = "day=$day&amp;month=$month&amp;year=$year";
+      if (!empty($area))
+      {
+        $query_str .= "&amp;area=$area";
+      }
+      if (!empty($room))
+      {
+        $query_str .= "&amp;room=$room";
+      }
+      
+      echo "<td>\n";
+      echo "<a href=\"help.php?$query_str\">" . get_vocab("help") . "</a>\n";
+      echo "</td>\n";
+      
+      echo "<td>\n";
+      echo "<a href=\"admin.php?$query_str\">" . get_vocab("admin") . "</a>\n";
+      echo "</td>\n";
+      
+      echo "<td>\n";
+      echo "<a href=\"report.php?$query_str\">" . get_vocab("report") . "</a>\n";
+      echo "</td>\n";
+      ?>
+      
       <td>
         <form id="header_search" method="get" action="search.php">
           <div>
@@ -213,6 +232,10 @@ function ChangeOptionDays(formObj, prefix)
             if (!empty($area))
             {
               echo "<input type=\"hidden\" name=\"area\" value=\"$area\">\n";
+            }
+            if (!empty($room))
+            {
+              echo "<input type=\"hidden\" name=\"room\" value=\"$room\">\n";
             }
             ?>
           </div>
@@ -390,7 +413,7 @@ function fatal_error($need_header, $message)
 {
   if ($need_header)
   {
-    print_header(0, 0, 0, 0);
+    print_header(0, 0, 0, 0, "");
   }
   echo $message;
   include "trailer.inc";

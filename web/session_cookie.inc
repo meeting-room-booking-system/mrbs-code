@@ -67,7 +67,7 @@ if (isset($Action) && ($Action == "SetName"))
   {
     if (!authValidateUser($NewUserName, $NewUserPassword))
     {
-      print_header(0, 0, 0, 0);
+      print_header(0, 0, 0, 0, "");
       echo "<p>".get_vocab('unknown_user')."</p>\n";
       printLoginForm($TargetURL);
       exit();
@@ -90,7 +90,7 @@ if (isset($Action) && ($Action == "SetName"))
     /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
         which allows to work around problems with DNS inconsistencies in the server name.
         Anyway, if the browser cannot redirect automatically, the manual link below will work. */
-    print_header(0, 0, 0, 0);
+    print_header(0, 0, 0, 0, "");
     echo "<p>Please click <a href=\"".htmlspecialchars($TargetURL)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
     echo "</body>\n";
     echo "</html>\n";
@@ -137,7 +137,7 @@ function printLoginForm($TargetURL)
 */
 if (isset($Action) && ($Action == "QueryName"))
 {
-  print_header(0, 0, 0, 0);
+  print_header(0, 0, 0, 0, "");
   printLoginForm($TargetURL);
   exit();
 }
@@ -152,7 +152,7 @@ function authGet()
 {
   global $PHP_SELF, $QUERY_STRING;
 
-  print_header(0, 0, 0, 0);
+  print_header(0, 0, 0, 0, "");
 
   echo "<p>".get_vocab("norights")."</p>\n";
 

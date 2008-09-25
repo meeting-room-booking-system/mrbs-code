@@ -68,7 +68,7 @@ if (empty($room))
 // Note $room will be 0 if there are no rooms; this is checked for below.
 
 // print the page header
-print_header($day, $month, $year, $area);
+print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 $format = "Gi";
 if( $enable_periods )

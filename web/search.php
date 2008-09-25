@@ -12,6 +12,7 @@ $day = get_form_var('day', 'int');
 $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
+$room = get_form_var('room', 'int');
 $search_str = get_form_var('search_str', 'string');
 $advanced = get_form_var('advanced', 'int');
 
@@ -37,7 +38,7 @@ if (!empty($search_str))
   $search_str = htmlspecialchars($search_str);
 }
 
-print_header($day, $month, $year, $area);
+print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 if (!empty($advanced))
 {

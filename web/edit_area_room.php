@@ -48,7 +48,7 @@ if (isset($change_done))
   exit();
 }
 
-print_header($day, $month, $year, isset($area) ? $area : "");
+print_header($day, $month, $year, isset($area) ? $area : "", isset($room) ? $room : "");
 
 ?>
 

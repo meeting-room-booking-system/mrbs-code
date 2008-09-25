@@ -11,6 +11,7 @@ $day = get_form_var('day', 'int');
 $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
+$room = get_form_var('room', 'int');
 $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'int');
 
@@ -26,7 +27,7 @@ if (empty($area))
   $area = get_default_area();
 }
 
-print_header($day, $month, $year, $area);
+print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 if (empty($series))
 {

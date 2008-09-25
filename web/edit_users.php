@@ -150,7 +150,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
     exit();
   }
 
-  print_header(0, 0, 0, 0);
+  print_header(0, 0, 0, 0, "");
   
   print "<div id=\"form_container\">";
   print "<form id=\"form_edit_users\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)). "\">\n";
@@ -233,7 +233,7 @@ if (isset($Action) && ($Action == "Update"))
   /* To do: Add JavaScript to verify passwords _before_ sending the form here */
   if ($password0 != $password1)
   {
-    print_header(0, 0, 0, "");
+    print_header(0, 0, 0, "", "");
 
     print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
     print "  <fieldset>\n";
@@ -325,7 +325,7 @@ if (isset($Action) && ($Action == "Update"))
   $r = sql_command($operation);
   if ($r == -1)
   {
-    print_header(0, 0, 0, "");
+    print_header(0, 0, 0, "", "");
 
     // This is unlikely to happen in normal operation. Do not translate.
      
@@ -360,7 +360,7 @@ if (isset($Action) && ($Action == "Delete"))
   $r = sql_command("delete from $tbl_users where id=$Id;");
   if ($r == -1)
   {
-    print_header(0, 0, 0, "");
+    print_header(0, 0, 0, "", "");
 
     // This is unlikely to happen in normal  operation. Do not translate.
     
@@ -385,7 +385,7 @@ if (isset($Action) && ($Action == "Delete"))
 
 /* Print the standard MRBS header */
 
-print_header(0, 0, 0, "");
+print_header(0, 0, 0, "", "");
 
 print "<h2>" . get_vocab("user_list") . "</h2>\n";
 
