@@ -20,7 +20,7 @@ $type = get_form_var('type', 'string');
 
 if (!getAuthorised(2))
 {
-  showAccessDenied($day, $month, $year, $area);
+  showAccessDenied($day, $month, $year, $area, "");
   exit();
 }
 

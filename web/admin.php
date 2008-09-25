@@ -31,7 +31,7 @@ if (empty($area))
 
 if(!getAuthorised(2))
 {
-  showAccessDenied($day, $month, $year, $area);
+  showAccessDenied($day, $month, $year, $area, "");
   exit();
 }
 

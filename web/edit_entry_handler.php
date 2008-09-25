@@ -96,13 +96,13 @@ $returl .= "&area=$area&room=$room";
 
 if (!getAuthorised(1))
 {
-  showAccessDenied($day, $month, $year, $area);
+  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
   exit;
 }
 
 if (!getWritable($create_by, getUserName()))
 {
-  showAccessDenied($day, $month, $year, $area);
+  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
   exit;
 }
 

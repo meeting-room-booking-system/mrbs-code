@@ -40,7 +40,7 @@ if (!isset($edit_type))
 
 if (!getAuthorised(1))
 {
-  showAccessDenied($day, $month, $year, $area);
+  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
   exit;
 }
 
@@ -222,7 +222,7 @@ $enable_periods ? toPeriodString($start_min, $duration, $dur_units) : toTimeStri
 
 if (!getWritable($create_by, getUserName()))
 {
-  showAccessDenied($day, $month, $year, $area);
+  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
   exit;
 }
 

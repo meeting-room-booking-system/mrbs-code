@@ -112,7 +112,7 @@ if ($nusers > 0)
   // Do not allow unidentified people to browse the list.
   if(!getAuthorised(1))
   {
-    showAccessDenied($day, $month, $year, $area);
+    showAccessDenied($day, $month, $year, $area, "");
     exit;
   }
 }
@@ -146,7 +146,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   /* First make sure the user is authorized */
   if (!getWritable($data['name'], $user))
   {
-    showAccessDenied(0, 0, 0, "");
+    showAccessDenied(0, 0, 0, "", "");
     exit();
   }
 
@@ -353,7 +353,7 @@ if (isset($Action) && ($Action == "Delete"))
 {
   if ($level < 2)
   {
-    showAccessDenied(0, 0, 0, "");
+    showAccessDenied(0, 0, 0, "", "");
     exit();
   }
 

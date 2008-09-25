@@ -66,11 +66,11 @@ function getWritable($creator, $user)
 
 /* showAccessDenied()
  * 
- * Displays an appropate message when access has been denied
+ * Displays an appropriate message when access has been denied
  * 
- * Retusns: Nothing
+ * Returns: Nothing
  */
-function showAccessDenied($day, $month, $year, $area)
+function showAccessDenied($day, $month, $year, $area, $room)
 {
   global $HTTP_REFERER;
 
