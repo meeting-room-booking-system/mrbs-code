@@ -313,10 +313,12 @@ foreach ( $rooms as $room_id )
 
 
 // Now set up the return URL, which will be needed whether the booking is successful or not.
-// It's possible that $returl could be empty, for example if edit_entry.php had been called
-// direct, perhaps if the user has it set as a bookmark
 $area = mrbsGetRoomArea($room_id);
-if (empty($returl))
+// (1) It's possible that $returl could be empty, for example if edit_entry.php had been called
+//     direct, perhaps if the user has it set as a bookmark
+// (2) Avoid an endless loop.   It shouldn't happen, but just in case ...
+$returl_base   = explode('?', basename($returl));
+if (empty($returl) || ($returl_base[0] == "edit_entry.php") || ($returl_base[0] == "edit_entry_handler.php"))
 {
   switch ($default_view)
   {
