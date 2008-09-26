@@ -15,6 +15,23 @@ $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
 $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'int');
+$returl = get_form_var('returl', 'string');
+
+if (empty($returl))
+{
+  switch ($default_view)
+  {
+    case "month":
+      $returl = "month.php";
+      break;
+    case "week":
+      $returl = "week.php";
+      break;
+    default:
+      $returl = "day.php";
+  }
+  $returl .= "?year=$year&month=$month&day=$day&area=$area";
+}
 
 if (getAuthorised(1) && ($info = mrbsGetEntryInfo($id)))
 {
@@ -36,7 +53,7 @@ if (getAuthorised(1) && ($info = mrbsGetEntryInfo($id)))
   {
     // Send a mail to the Administrator
     (MAIL_ADMIN_ON_DELETE) ? $result = notifyAdminOnDelete($mail_previous) : '';
-    Header("Location: day.php?day=$day&month=$month&year=$year&area=$area");
+    Header("Location: $returl");
     exit();
   }
 }
