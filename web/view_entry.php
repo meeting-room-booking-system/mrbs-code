@@ -287,13 +287,38 @@ if($rep_type != 0)
 ?>
 </table>
 
+<?php
+// Need to tell all the links where to go back to after an edit or delete
+if (isset($HTTP_REFERER))
+{
+  $returl = $HTTP_REFERER;
+}
+// If we haven't got a referer (eg we've come here from an email) then construct
+// a sensible place to go to afterwards
+else
+{
+  switch ($default_view)
+  {
+    case "month":
+      $returl = "month.php";
+      break;
+    case "week":
+      $returl = "week.php";
+      break;
+    default:
+      $returl = "day.php";
+  }
+  $returl .= "?year=$year&month=$month&day=$day&area=$area";
+}
+$returl = urlencode($returl);
+?>
 
 <div id="view_entry_nav">
   <div>
     <?php
     if (! $series)
     {
-      echo "<a href=\"edit_entry.php?id=$id\">". get_vocab("editentry") ."</a>";
+      echo "<a href=\"edit_entry.php?id=$id&amp;returl=$returl\">". get_vocab("editentry") ."</a>";
     }
     
     if ($repeat_id)
@@ -303,7 +328,7 @@ if($rep_type != 0)
     
     if ($repeat_id || $series )
     {
-      echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year\">".get_vocab("editseries")."</a>";
+      echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$returl\">".get_vocab("editseries")."</a>";
     }
     
      ?>
@@ -314,7 +339,7 @@ if($rep_type != 0)
     // Copy and Copy series
     if ( ! $series )
     {
-      echo "<a href=\"edit_entry.php?id=$id&amp;copy=1\">". get_vocab("copyentry") ."</a>";
+      echo "<a href=\"edit_entry.php?id=$id&amp;copy=1&amp;returl=$returl\">". get_vocab("copyentry") ."</a>";
     }
        
     if ($repeat_id)
@@ -324,7 +349,7 @@ if($rep_type != 0)
        
     if ($repeat_id || $series ) 
     {
-      echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=1\">".get_vocab("copyseries")."</a>";
+      echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=1&amp;returl=$returl\">".get_vocab("copyseries")."</a>";
     }
     
     ?>
@@ -333,7 +358,7 @@ if($rep_type != 0)
     <?php
     if ( ! $series )
     {
-      echo "<a href=\"del_entry.php?id=$id&amp;series=0\" onclick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</a>";
+      echo "<a href=\"del_entry.php?id=$id&amp;series=0&amp;returl=$returl\" onclick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</a>";
     }
     
     if ($repeat_id)
@@ -343,7 +368,7 @@ if($rep_type != 0)
     
     if ($repeat_id || $series )
     {
-      echo "<a href=\"del_entry.php?id=$id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteseries")."</a>";
+      echo "<a href=\"del_entry.php?id=$id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$returl\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteseries")."</a>";
     }
     
     ?>
