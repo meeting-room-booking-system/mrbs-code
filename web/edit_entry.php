@@ -21,6 +21,7 @@ $room = get_form_var('room', 'int');
 $id = get_form_var('id', 'int');
 $copy = get_form_var('copy', 'int');
 $edit_type = get_form_var('edit_type', 'string');
+$returl = get_form_var('returl', 'string');
 
 // If we dont know the right date then make it up
 if (!isset($day) or !isset($month) or !isset($year))
@@ -726,8 +727,14 @@ else
         <input class="submit" type="submit" value="<?php echo get_vocab("save")?>">
       </div>
     </noscript>
-
-    <input type="hidden" name="returl" value="<?php echo htmlspecialchars($HTTP_REFERER) ?>">
+    <?php
+    // We might be going through edit_entry more than once, for example if we have to log on on the way.  We
+    // still need to preserve the original calling page so that once we've completed edit_entry_handler we can
+    // go back to the page we started at (rather than going to the default view).  If this is the first time 
+    // through, then $HTTP_REFERER holds the original caller.    If this is the second time through we will have 
+    // stored it in $returl.
+    ?>
+    <input type="hidden" name="returl" value="<?php echo htmlspecialchars((isset($returl)) ? $returl : ($HTTP_REFERER)) ?>">
     <!--input type="hidden" name="room_id" value="<?php echo $room_id?>"-->
     <input type="hidden" name="create_by" value="<?php echo $create_by?>">
     <input type="hidden" name="rep_id" value="<?php echo $rep_id?>">

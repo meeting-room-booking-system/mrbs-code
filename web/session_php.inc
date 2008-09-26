@@ -25,6 +25,7 @@ $Action = get_form_var('Action', 'string');
 $NewUserName = get_form_var('NewUserName', 'string');
 $NewUserPassword = get_form_var('NewUserPassword', 'string');
 $TargetURL = get_form_var('TargetURL', 'string');
+$returl = get_form_var('returl', 'string');
 
 if (isset($cookie_path_override))
 {
@@ -79,7 +80,19 @@ if (isset($Action) && ($Action == "SetName"))
       $HTTP_SESSION_VARS["UserName"] = $NewUserName;
     }
   }
-
+  // preserve the original $HTTP_REFERER by sending it as a GET parameter
+  if (!empty($returl))
+  {
+    // check to see whether there's a query string already
+    if (strpos($TargetURL, '?') === false)
+    {
+      $TargetURL .= "?returl=" . urlencode($returl);
+    }
+    else
+    {
+      $TargetURL .= "&returl=" . urlencode($returl);
+    }
+  }
   header ("Location: $TargetURL"); /* Redirect browser to initial page */
   /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
     which allows to work around problems with DNS inconsistencies in the server name.
@@ -98,7 +111,8 @@ if (isset($Action) && ($Action == "SetName"))
 */
 function printLoginForm($TargetURL)
 {
-  global $PHP_SELF;
+  global $PHP_SELF, $HTTP_REFERER;
+  global $returl;
 ?>
 <form class="form_general" id="logon" method="post" action="<?php echo htmlspecialchars(basename($PHP_SELF)) ?>">
   <fieldset>
@@ -111,11 +125,18 @@ function printLoginForm($TargetURL)
       <label for="NewUserPassword"><?php echo get_vocab("user_password") ?>:</label>
       <input type="password" id="NewUserPassword" name="NewUserPassword">
     </div>
-  <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
-  <input type="hidden" name="Action" value="SetName">
-  <div id="logon_submit">
-    <input class="submit" type="submit" value=" <?php echo get_vocab('login') ?> ">
-  </div>
+    <?php
+    // We need to preserve the original calling page, so that it's there when we eventually get
+    // to the TargetURL (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER holds
+    // the original caller.    If this is the second time through we will have stored it in $returl.
+    echo "<input type=\"hidden\" name=\"returl\" value=\"" . 
+    htmlspecialchars((isset($returl)) ? $returl : $HTTP_REFERER) . "\">\n";
+    ?>
+    <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
+    <input type="hidden" name="Action" value="SetName">
+    <div id="logon_submit">
+      <input class="submit" type="submit" value=" <?php echo get_vocab('login') ?> ">
+    </div>
   </fieldset>
 </form>
 </body>
