@@ -76,16 +76,16 @@ $help_highlight_color           = "#ffe6f0";        // highlighting text on the 
 // These are the colours used for distinguishing between the dfferent types of bookings in the main
 // displays in the day, week and month views
 $color_types = array(
-    'A' => "#FFFF99",
-    'B' => "#99CCCC",
+    'A' => "#ffff99",
+    'B' => "#99cccc",
     'C' => "#ffffcd",
     'D' => "#cde6e6",
-    'E' => "#99cc66",
+    'E' => "#6dd9c4",
     'F' => "#82adad",
     'G' => "#ccffcc",
-    'H' => "#e6ffe6",
-    'I' => "#d9d982",
-    'J' => "#6dd9c4");
+    'H' => "#d9d982",
+    'I' => "#99cc66",
+    'J' => "#e6ffe6");
 
     
     
