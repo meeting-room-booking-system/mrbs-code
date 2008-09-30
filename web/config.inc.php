@@ -192,7 +192,8 @@ $javascript_cursor = TRUE; // Change to FALSE if clients have old browsers
                            // incompatible with JavaScript.
 $show_plus_link = FALSE;   // Change to TRUE to always show the (+) link as in
                            // MRBS 1.1.
-$highlight_method = "class"; // One of "bgcolor", "class", "hybrid".
+$highlight_method = "class"; // One of "bgcolor", "class", "hybrid".   "class" is recommended as it means that
+                             // you can change more than just the background-color when highlighting a cell.
 
 // Define default starting view (month, week or day)
 // Default is day

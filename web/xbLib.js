@@ -21,28 +21,32 @@ xbDump("Started xbLib.js v4");
 * Part 1: Generic Cross-Browser Library routines                             *
 \*****************************************************************************/
 
-// Browser-independant background color management
+// Browser-independent background color management
 function xblGetNodeBgColor(node)
 {
   if (!node)
   {
     return null;
   }
-  xbDump("node.bgColor = " + (node.bgColor ? node.bgColor : "<undefined>"));
-  if (node.style)
+  
+  // Have to use currentStyle or ComputedStyle here because node.style will just give you
+  // what's in the style attribute (ie <td style="xxx">), rather than what the actual style 
+  // is computed from the cascade.    As there is no style attribute this does not work.  
+  // 
+  // [Except that it seems to haapen to work on most browsers other than Konqueror.  That is 
+  // presumably because this function will return a null value which is stored and then used to
+  // set the style attribute again (ie back to null) when you move the mouse out of the highlighted 
+  // cell.  On all browsers except Konqueror this seems to work, presumably because setting style back
+  // to null gets rid of the temporary highlight style.]
+  
+  if (node.currentStyle)         // The IE way
   {
-    xbDump("node.style.getPropertyValue(\"background-color\") = " + (node.style.getPropertyValue ? ("\""+node.style.getPropertyValue("background-color")+"\"") : "<undefined>"));
-    xbDump("node.style.getAttribute(\"backgroundColor\") = " + (node.style.getAttribute ? ("\""+node.style.getAttribute("backgroundColor")+"\"") : "<undefined>"));
-    xbDump("node.style.backgroundColor = " + (node.style.backgroundColor ? node.style.backgroundColor : "<undefined>"));
-    if (node.style.getPropertyValue) // If DOM level 2 supported, the NS 6 way
-    {
-      return node.style.getPropertyValue("background-color");
-    }
-    if (node.style.getAttribute) // If DOM level 2 supported, the IE 6 way
-    {
-      return node.style.getAttribute("backgroundColor");
-    }
-    return node.style.backgroundColor; // Else DOM support is very limited.
+		return node.currentStyle.backgroundColor;
+  }
+  if (window.getComputedStyle)   // All other browsers
+  {
+    var compStyle = document.defaultView.getComputedStyle(node, "");
+    return compStyle.getPropertyValue("background-color");
   }
   // Else this browser is not DOM compliant. Try getting a classic attribute.
   return node.bgColor;
@@ -382,8 +386,18 @@ function SearchTdHighlight(rule, ref)
     {
       return null;
     }
-    return xblGetNodeBgColor(rule);
+    
+    if (rule.style.getPropertyValue) // If DOM level 2 supported, the NS 6 way
+    {
+      return rule.style.getPropertyValue("background-color");
+    }
+    if (rule.style.getAttribute) // If DOM level 2 supported, the IE 6 way
+    {
+      return rule.style.getAttribute("backgroundColor");
+    }
+    return rule.style.backgroundColor; // Else DOM support is very limited.
   }
+  
   if (rule.cssText) // Alternative for IE6
   {
     return SearchTdHighlightText(rule.cssText);
