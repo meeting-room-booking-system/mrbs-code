@@ -201,7 +201,7 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
    border-bottom: 0;
    border-right: 0}
 .dwm_main td:first-child {border-left: 0}
-.dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0;
+.dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0 2px 0 2px;
     color: <?php echo $header_font_color ?>; 
     background-color: <?php echo $header_back_color ?>;
     border-left: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
@@ -213,7 +213,7 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main#day_main th.first_last {width: 1%}
 .dwm_main#day_main td, .dwm_main#week_main td {padding: 0 2px 0 2px}
 .dwm_main#week_main th {width: 14%}
-.dwm_main#week_main th.first_last {width: 1%; vertical-align: bottom}  
+.dwm_main#week_main th.first_last {width: 1%; vertical-align: bottom}
 .dwm_main#month_main th {width: 14%}                                                   /* 7 days in the week */
 .dwm_main#month_main td {border-top:  <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>}
 .dwm_main#month_main td.valid   {background-color: <?php echo $main_table_month_color ?>}
