@@ -390,7 +390,9 @@ if ($javascript_cursor) // If authorized in config.inc.php, include the javascri
 //This is where we start displaying stuff
 echo "<table class=\"dwm_main\" id=\"week_main\">";
 
+
 // The header row contains the weekday names and short dates.
+echo "<thead>\n";
 echo "<tr><th class=\"first_last\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
 if (empty($dateformat))
 {
@@ -417,10 +419,12 @@ if ( FALSE != $times_right_side )
 }
 
 echo "</tr>\n";
+echo "</thead>\n";
 
 
 // This is the main bit of the display. Outer loop is for the time slots,
 // inner loop is for days of the week.
+echo "<tbody>\n";
 
 // URL for highlighting a time. Don't use REQUEST_URI or you will get
 // the timetohighlight parameter duplicated each time you click.
@@ -589,7 +593,8 @@ for (
 
   echo "</tr>\n";
 }
-echo "</table>";
+echo "</tbody>\n";
+echo "</table>\n";
 
 print $before_after_links_html;
 

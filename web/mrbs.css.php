@@ -222,6 +222,12 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 
 a.new_booking {display: block; width: 100%; font-size: medium; text-align: center}
 .new_booking img {margin: auto; border: 0; padding: 4px 0 2px 0}
+<?php
+if (!$show_plus_link)
+{
+  echo ".new_booking img {display: none}\n";
+}
+?>
 
 <?php
 // The following section deals with the contents of the table cells in the month view.    It is designed
@@ -272,10 +278,55 @@ td.times          {background-color: <?php echo $header_back_color ?>}   /* used
 .times a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
 .times a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
 
-/* Set styles for the highlighted cells under the cursor (the time/period cell and the current cell) */
-td.highlight         {background-color: <?php echo $row_highlight_color ?>}            /* background color      */
-.highlight a:link    {font-weight: normal; color: <?php echo $standard_font_color ?>}  /* font color and weight */
-.highlight a:visited {font-weight: normal; color: <?php echo $standard_font_color ?>}  /* font color and weight */
+<?php
+// HIGHLIGHTING:  Set styles for the highlighted cells under the cursor (the time/period cell and the current cell)
+//
+// There are two methods of highlighting:  (1) CSS Highlighting and (2) JavaScript highlighting.    Javascript highlighting
+// has itself three different modes of highlighting:  'class', 'hybrid' and 'bgcolor'.    See xbLib.js for an explanation of
+// the three modes.    JavaScript highlighting was originally the only method of highlighting cells, but now that support is
+// common for the :hover pseudo-class used with elements other than <a>, CSS highlighting is used by default and JavaScript
+// highlighting is only used for old browsers, eg IE6 and before, where the :hover pseudo-class is not supported.
+// Note that CSS highlighting is essential for IE7 and IE8 where the performance of JavaScript highlighting is very poor.  This 
+// is why CSS highlighting was introduced, though it is also simpler and produces smaller pages.
+//
+// (1) CSS HIGHLIGHTING
+//
+// The next four rules are used to implement CSS highlighting.    CSS highlighting is used because the performance 
+// of JavaScript highlighting - both in 'class' and 'hybrid' modes - is very poor in IE7 and IE8Beta2 (the latest version of
+// IE at the time of writing) when there are a large number of table rows, ie when $resolution is small compared to the length
+// of the booking day.   As the performance of CSS highlighting is as good as JavaScript highlighting in recent versions of
+// non-IE browsers, it is used as the default method of highlighting since it is simpler than the JavaScript method.
+//
+// The first two rules highlight the cell that you are actually hovering over.    The second rule highlights the cell in the 
+// left-hand (and right-hand if present) column that shows the time/period for that row.   The fourth rule highlights the cell
+// being hovered over in the month view.
+//
+// Note that the first two rules only highlight empty cells in the day and week views.    They will not highlight 
+// actual bookings (because they have a class other than odd_row or even_row), the header cells (because they 
+// are <th> and not <td>) nor the empty cells in the month view (because odd_row and even_row are not used 
+// in the month view).   The fourth rule provides highlighting in the month view.
+?>
+.dwm_main tr:hover td:hover.odd_row, .dwm_main tr:hover td:hover.even_row {background-color: <?php echo $row_highlight_color ?>}
+.dwm_main tr:hover td.times {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
+.dwm_main#month_main td:hover.valid {background-color: <?php echo $row_highlight_color ?>}
+
+
+<?php
+// (2) JAVASCRIPT HIGHLIGHTING
+//
+// See xbLib.js for an explanation.
+?>
+
+td.highlight         {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
+<?php
+// would be nicer to use color: inherit in the four rules below, but inherit is not supported by IE until IE8.   
+// inherit would mean that (1) you didn't have to specify the colour again and (2) you needn't use the tbody selector to
+// stop the header links changing colour.
+?>
+.highlight a:link    {font-weight: normal; color: <?php echo $standard_font_color ?>}       /* used for JavaScript highlighting  */
+.highlight a:visited {font-weight: normal; color: <?php echo $standard_font_color ?>}       /* used for JavaScript highlighting  */
+tbody tr:hover a:link    {color: <?php echo $standard_font_color ?>}   /* used for CSS highlighting (but will also be used in JavaScript highlighting */
+tbody tr:hover a:visited {color: <?php echo $standard_font_color ?>}   /* used for CSS highlighting (but will also be used in JavaScript highlighting */
 .month .highlight a:link    {font-weight: bold}
 .month .highlight a:visited {font-weight: bold}
 

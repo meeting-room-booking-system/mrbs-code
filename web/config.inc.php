@@ -187,13 +187,20 @@ $view_week_number = FALSE;
 // To display times on right side in day and week view, set to TRUE;
 $times_right_side = FALSE;
 
-// Control the active cursor in day/week/month views.
-$javascript_cursor = TRUE; // Change to FALSE if clients have old browsers
+// Control the active cursor in day/week/month views.   By default, highlighting
+// is implemented using the CSS :hover pseudo-class.    For old browers such as
+// IE6, this is not supported and MRBS will automatically switch over to use 
+// JavaScript highlighting - for which there are three different modes: 'bgcolor',
+// 'class' and 'hybrid'.  If clients have VERY old browsers, then you may even want
+// to disable the JavaScript highlighting by setting $javascript_cursor to false.
+$javascript_cursor = TRUE; // Change to FALSE if clients have very old browsers
                            // incompatible with JavaScript.
 $show_plus_link = FALSE;   // Change to TRUE to always show the (+) link as in
                            // MRBS 1.1.
-$highlight_method = "class"; // One of "bgcolor", "class", "hybrid".   "class" is recommended as it means that
-                             // you can change more than just the background-color when highlighting a cell.
+$highlight_method = "hybrid"; // One of "bgcolor", "class", "hybrid".   "hybrid" is recommended as it is
+                              // faster in old browsers such as IE6 - which is the only time that
+                              // JavaScript highlighting is used anyway.    The rest of the time CSS
+                              // highlighting is used, whether or not $javascript_cursor is set.
 
 // Define default starting view (month, week or day)
 // Default is day

@@ -436,13 +436,21 @@ if ($javascript_cursor) // If authorized in config.inc.php, include the javascri
   echo "</script>\n";
 }
 
-echo "<table class=\"dwm_main\" id=\"month_main\">\n<tr>";
+echo "<table class=\"dwm_main\" id=\"month_main\">\n";
+
 // Weekday name header row:
+echo "<thead>\n";
+echo "<tr>\n";
 for ($weekcol = 0; $weekcol < 7; $weekcol++)
 {
   echo "<th>" . day_name(($weekcol + $weekstarts)%7) . "</th>";
 }
-echo "</tr><tr>\n";
+echo "</tr>\n";
+echo "</thead>\n";
+
+// Main body
+echo "<tbody>\n";
+echo "<tr>\n";
 
 // Skip days in week before start of month:
 for ($weekcol = 0; $weekcol < $weekday_start; $weekcol++)
@@ -556,7 +564,7 @@ if ($weekcol > 0)
    echo "<td class=\"invalid\"><div class=\"cell_container\">&nbsp;</div></td>\n";
  }
 }
-echo "</tr></table>\n";
+echo "</tr></tbody></table>\n";
 
 print $before_after_links_html;
 show_colour_key();
