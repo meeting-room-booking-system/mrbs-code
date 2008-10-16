@@ -31,4 +31,10 @@ you will see the results of checking all available language files.
 If you do create or improve a language file, please post a message about
 it on the mailing list, so it can be included in future releases. Thanks!
 
+Important note: You should not use any HTML entities in the translation
+other than &nbsp;. If you need to use any other characters that don't fit
+in your single-byte encoding (e.g. iso-8859-1) you should change your
+language's encoding to utf-8, and then you can use whatever characters you
+would like, encoded in utf-8.
+
 $Id$

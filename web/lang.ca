@@ -19,100 +19,100 @@ $vocab["mrbs"]               = "Reserva de sales";
 
 // Used in functions.inc
 $vocab["report"]             = "Informes";
-$vocab["admin"]              = "Administraci&oacute;";
+$vocab["admin"]              = "Administració";
 $vocab["help"]               = "Ajuda";
 $vocab["search"]             = "Cerca";
-$vocab["not_php3"]           = "PERILL: Segurament no funcionar&agrave; amb PHP3";
+$vocab["not_php3"]           = "PERILL: Segurament no funcionarà amb PHP3";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "Reserves per a";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
-$vocab["areas"]              = "Fam&iacute;lies";
+$vocab["areas"]              = "Famílies";
 $vocab["daybefore"]          = "Dia anterior";
-$vocab["dayafter"]           = "Dia seg&uuml;ent";
+$vocab["dayafter"]           = "Dia següent";
 $vocab["gototoday"]          = "Dia actual";
 $vocab["goto"]               = "Anar a";
-$vocab["highlight_line"]     = "Destacar aquesta l&iacute;nia";
+$vocab["highlight_line"]     = "Destacar aquesta línia";
 $vocab["click_to_reserve"]   = "Clicar per fer una reserva.";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Veure dia";
 $vocab["viewweek"]           = "Veure setmana";
 $vocab["viewmonth"]          = "Veure mes";
-$vocab["ppreview"]           = "Imprimir vista pr&egrave;via.";
+$vocab["ppreview"]           = "Imprimir vista prèvia.";
 
 // Used in edit_entry.php
 $vocab["addentry"]           = "Nova reserva";
 $vocab["editentry"]          = "Editar reserva";
 $vocab["editseries"]         = "Editar series";
 $vocab["namebooker"]         = "Nom";
-$vocab["fulldescription"]    = "Descripci&oacute;:";
+$vocab["fulldescription"]    = "Descripció:";
 $vocab["date"]               = "Data";
 $vocab["start_date"]         = "Data d'inici";
 $vocab["end_date"]           = "Data de fi";
 $vocab["time"]               = "Hora";
-$vocab["period"]             = "Per&iacute;ode";
-$vocab["duration"]           = "Duraci&oacute;";
+$vocab["period"]             = "Període";
+$vocab["duration"]           = "Duració";
 $vocab["seconds"]            = "segons";
 $vocab["minutes"]            = "minuts";
 $vocab["hours"]              = "hores";
 $vocab["days"]               = "dies";
 $vocab["weeks"]              = "setmanes";
 $vocab["years"]              = "anys";
-$vocab["periods"]            = "per&iacute;odes";
+$vocab["periods"]            = "períodes";
 $vocab["all_day"]            = "Dia complet";
 $vocab["type"]               = "Entitat";
 $vocab["internal"]           = "Intern";
 $vocab["external"]           = "Extern";
 $vocab["save"]               = "Guardar";
-$vocab["rep_type"]           = "Tipus de repetici&oacute;";
+$vocab["rep_type"]           = "Tipus de repetició";
 $vocab["rep_type_0"]         = "Cap";
-$vocab["rep_type_1"]         = "Di&agrave;ria";
+$vocab["rep_type_1"]         = "Diària";
 $vocab["rep_type_2"]         = "Setmanal";
 $vocab["rep_type_3"]         = "Mensual";
 $vocab["rep_type_4"]         = "Anual";
 $vocab["rep_type_5"]         = "Menusal, en el mateix dia";
 $vocab["rep_type_6"]         = "n-Setmanal";
-$vocab["rep_end_date"]       = "Data m&agrave;xima Repetici&oacute;";
-$vocab["rep_rep_day"]        = "Dia de repetici&oacute;";
+$vocab["rep_end_date"]       = "Data màxima Repetició";
+$vocab["rep_rep_day"]        = "Dia de repetició";
 $vocab["rep_for_weekly"]     = "(setmanal)";
-$vocab["rep_freq"]           = "Freq&uuml;&egrave;ncia";
-$vocab["rep_num_weeks"]      = "N&uacute;mero de setmanes";
+$vocab["rep_freq"]           = "Freqüència";
+$vocab["rep_num_weeks"]      = "Número de setmanes";
 $vocab["rep_for_nweekly"]    = "(n-setmanes)";
-$vocab["ctrl_click"]         = "Control-Clic per seleccionar m&eacute;s d'un recurs";
+$vocab["ctrl_click"]         = "Control-Clic per seleccionar més d'un recurs";
 $vocab["entryid"]            = "ID d'entrada";
-$vocab["repeat_id"]          = "ID de repetici&oacute;";
+$vocab["repeat_id"]          = "ID de repetició";
 $vocab["you_have_not_entered"] = "No ha entrat";
 $vocab["you_have_not_selected"] = "No ha sel·leccionat";
 $vocab["valid_room"]         = "room.";$vocab["valid_time_of_day"]  = "valid time of day.";
 $vocab["valid_time_of_day"]  = "valid time of day.";
-$vocab["brief_description"]  = "Breu descriptci&oacute;.";
+$vocab["brief_description"]  = "Breu descriptció.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 
 // Used in view_entry.php
-$vocab["description"]        = "Descripci&oacute;";
+$vocab["description"]        = "Descripció";
 $vocab["room"]               = "Recurs";
 $vocab["createdby"]          = "Creada per";
-$vocab["lastupdate"]         = "&Uacute;ltima actualizaci&oacute;";
+$vocab["lastupdate"]         = "Última actualizació";
 $vocab["deleteentry"]        = "Esborrar reserva";
-$vocab["deleteseries"]       = "Esborrar s&egrave;rie";
+$vocab["deleteseries"]       = "Esborrar sèrie";
 $vocab["confirmdel"]         = "Segur que\\ndesitja esborrar\\naquesta reserva?\\n\\n";
-$vocab["returnprev"]         = "Tornar a la p&agrave;gina anterior";
-$vocab["invalid_entry_id"]   = "Valor d'entrada inv&agrave;lid.";
-$vocab["invalid_series_id"]  = "Valor de s&egrave;rie inv&agrave;lid.";
+$vocab["returnprev"]         = "Tornar a la pàgina anterior";
+$vocab["invalid_entry_id"]   = "Valor d'entrada invàlid.";
+$vocab["invalid_series_id"]  = "Valor de sèrie invàlid.";
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Error";
-$vocab["sched_conflict"]     = "Conflicte de planificaci&oacute;";
-$vocab["conflict"]           = "La nova reserva entra en conflicte amb le(s) seg&uuml;ent(s) entrade(s)";
+$vocab["sched_conflict"]     = "Conflicte de planificació";
+$vocab["conflict"]           = "La nova reserva entra en conflicte amb le(s) següent(s) entrade(s)";
 $vocab["too_may_entrys"]     = "Les opcions sel·leccionades crearan mases entrades.<br>Si us plau, revisi les opcions";
 $vocab["returncal"]          = "Tornar a la vista del calendari";
-$vocab["failed_to_acquire"]  = "Fallada en l'intent d'obtenir acc&eacute;s a la base de dades"; 
+$vocab["failed_to_acquire"]  = "Fallada en l'intent d'obtenir accés a la base de dades"; 
 
 // Authentication stuff
-$vocab["accessdenied"]       = "Acc&eacute;s denegat";
-$vocab["norights"]           = "No te autorizaci&oacute; per modificar aquesta dada.";
-$vocab["please_login"]       = "Si us plau, inici&iuml; la sessi&oacute;";
+$vocab["accessdenied"]       = "Accés denegat";
+$vocab["norights"]           = "No te autorizació per modificar aquesta dada.";
+$vocab["please_login"]       = "Si us plau, iniciï la sessió";
 $vocab["user_name"]          = "Nom";
 $vocab["user_password"]      = "Contrasenya";
 $vocab["unknown_user"]       = "Usuari desconegut";
@@ -126,31 +126,31 @@ $vocab["edit_user"]          = "Editar usuari";
 $vocab["delete_user"]        = "Eliminar aquest usuari";
 //$vocab["user_name"]         = Use the same as above, for consistency.
 //$vocab["user_password"]     = Use the same as above, for consistency.
-$vocab["user_email"]         = "Adre&ccedil;a de correu";
+$vocab["user_email"]         = "Adreça de correu";
 $vocab["password_twice"]     = "Si vols canviar la contrasenya, introdueix-la dues vegades";
-$vocab["passwords_not_eq"]   = "Error: Les contrasenyes no s&oacute;n 
+$vocab["passwords_not_eq"]   = "Error: Les contrasenyes no són 
 iguals.";
 $vocab["add_new_user"]       = "Afegir nou usuari";
 $vocab["rights"]             = "Drets";
-$vocab["action"]             = "Acci&oacute;";
+$vocab["action"]             = "Acció";
 $vocab["user"]               = "Usuari";
 $vocab["administrator"]      = "Administrador";
 $vocab["unknown"]            = "Desconegut";
 $vocab["ok"]                 = "D'acord";
-$vocab["show_my_entries"]    = "Fer Clic per mostar tots els events pr&oagrave;xims";
+$vocab["show_my_entries"]    = "Fer Clic per mostar tots els events pròxims";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Cadena de cerca buida o incorrecte.";
 $vocab["search_results"]     = "Cercar resultats de";
 $vocab["nothing_found"]      = "No s'han trobat coincidencies";
 $vocab["records"]            = "Registres ";
-$vocab["through"]            = " a trav&eacute;s ";
+$vocab["through"]            = " a través ";
 $vocab["of"]                 = " de ";
 $vocab["previous"]           = "Anterior";
-$vocab["next"]               = "Seg&uuml;ent";
+$vocab["next"]               = "Següent";
 $vocab["entry"]              = "Entrada";
 $vocab["view"]               = "Veure";
-$vocab["advanced_search"]    = "Cerca avan&ccedil;ada";
+$vocab["advanced_search"]    = "Cerca avançada";
 $vocab["search_button"]      = "Cerca";
 $vocab["search_for"]         = "Cerca per";
 $vocab["from"]               = "De";
@@ -162,15 +162,15 @@ $vocab["report_end"]         = "Data fins a";
 $vocab["match_area"]         = "Trobar famila";
 $vocab["match_room"]         = "Trobar recurs";
 $vocab["match_type"]         = "Trobar tipus";
-$vocab["ctrl_click_type"]    = "Fes servir control-clic per sel·leccionar m&uacute;ltiples elements";
-$vocab["match_entry"]        = "Trobar descripci&oacute; breu";
-$vocab["match_descr"]        = "Encontar descripci&oacute; completa";
+$vocab["ctrl_click_type"]    = "Fes servir control-clic per sel·leccionar múltiples elements";
+$vocab["match_entry"]        = "Trobar descripció breu";
+$vocab["match_descr"]        = "Encontar descripció completa";
 $vocab["include"]            = "Incloure";
-$vocab["report_only"]        = "Nom&eacute;s informe";
-$vocab["summary_only"]       = "Nom&eacute;s resum";
+$vocab["report_only"]        = "Només informe";
+$vocab["summary_only"]       = "Només resum";
 $vocab["report_and_summary"] = "Informe i resum";
 $vocab["summarize_by"]       = "Resumir per";
-$vocab["sum_by_descrip"]     = "Descripci&oacute; breu";
+$vocab["sum_by_descrip"]     = "Descripció breu";
 $vocab["sum_by_creator"]     = "Creador";
 $vocab["entry_found"]        = "registre trobat";
 $vocab["entries_found"]      = "registres trobats";
@@ -181,7 +181,7 @@ $vocab["submitquery"]        = "Executar informe";
 $vocab["sort_rep"]           = "Ordenar informe per";
 $vocab["sort_rep_time"]      = "Inici data/hora";
 $vocab["rep_dsp"]            = "Ensenya en l'informe";
-$vocab["rep_dsp_dur"]        = "Duraci&oacute;";
+$vocab["rep_dsp_dur"]        = "Duració";
 $vocab["rep_dsp_end"]        = "Temps esgotat";
 
 // Used in week.php
@@ -202,37 +202,37 @@ $vocab["edit"]               = "Editar";
 $vocab["delete"]             = "Esborrar";
 $vocab["rooms"]              = "Recursos";
 $vocab["in"]                 = "a";
-$vocab["noareas"]            = "No hi ha fam&iacute;lies";
-$vocab["addarea"]            = "Afegir fam&iacute;lia";
+$vocab["noareas"]            = "No hi ha famílies";
+$vocab["addarea"]            = "Afegir família";
 $vocab["name"]               = "Nombre";
-$vocab["noarea"]             = "No ha sel·leccionat fam&iacute;lia";
-$vocab["browserlang"]        = "El seu visor est&agrave; configurat per els llenguatges";
+$vocab["noarea"]             = "No ha sel·leccionat família";
+$vocab["browserlang"]        = "El seu visor està configurat per els llenguatges";
 $vocab["addroom"]            = "Afegir recurs";
 $vocab["capacity"]           = "Capacitat (persones)";
 $vocab["norooms"]            = "No hi han recursos.";
-$vocab["administration"]     = "Administraci&oacute;";
+$vocab["administration"]     = "Administració";
 
 // Used in edit_area_room.php
 $vocab["editarea"]           = "Editar familia";
 $vocab["change"]             = "Canviar";
-$vocab["backadmin"]          = "Tornar a admintraci&oacute;";
-$vocab["editroomarea"]       = "Editar descripci&oacute; de fam&iacute;lia o recurs";
+$vocab["backadmin"]          = "Tornar a admintració";
+$vocab["editroomarea"]       = "Editar descripció de família o recurs";
 $vocab["editroom"]           = "Editar recurs";
-$vocab["update_room_failed"] = "Actualitzaci&oacute; de recurs fallida: ";
+$vocab["update_room_failed"] = "Actualització de recurs fallida: ";
 $vocab["error_room"]         = "Error: recurs ";
 $vocab["not_found"]          = " no trobat";
-$vocab["update_area_failed"] = "Actualitzaci&oacute; d'area fallida:: ";
+$vocab["update_area_failed"] = "Actualització d'area fallida:: ";
 $vocab["error_area"]         = "Error: area ";
 $vocab["room_admin_email"]   = "Recuros admin email";
 $vocab["area_admin_email"]   = "Area admin email";
-$vocab["invalid_email"]      = "email inv&agrave;lid!";
+$vocab["invalid_email"]      = "email invàlid!";
 
 // Used in del.php
-$vocab["deletefollowing"]    = "Aix&oacute; esborra les seg&uuml;ents agendes";
+$vocab["deletefollowing"]    = "Aixó esborra les següents agendes";
 $vocab["sure"]               = "ESTA SEGUR?";
-$vocab["YES"]                = "S&Iacute;";
+$vocab["YES"]                = "SÍ";
 $vocab["NO"]                 = "NO";
-$vocab["delarea"]            = "S'han d'esborrar tots els recursos d'aquesta fam&iacute;lia per poder esborrar-lo<p>";
+$vocab["delarea"]            = "S'han d'esborrar tots els recursos d'aquesta família per poder esborrar-lo<p>";
 
 // Used in help.php
 $vocab["about_mrbs"]         = "Sobre l'MRBS";

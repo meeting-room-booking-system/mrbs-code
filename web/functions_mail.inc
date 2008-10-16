@@ -63,19 +63,12 @@ function get_mail_charset()
 
 function get_mail_vocab($token)
 {
-  global $unicode_encoding, $mail_vocab;
+  global $mail_vocab;
 
   $string = get_vocab($token, $mail_vocab);
 
-  $charset = "utf-8";
-  if (!$unicode_encoding)
-  {
-    $charset = $mail_vocab["charset"];
-  }
+  $unescaped_string = str_replace('&nbsp;', ' ', $string);
 
-  $unescaped_string = html_entity_decode($string,
-                                         ENT_QUOTES,
-                                         $charset);
   return convertToMailCharset($unescaped_string);
 }
     
