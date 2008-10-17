@@ -297,14 +297,15 @@ td.times          {background-color: <?php echo $header_back_color ?>}   /* used
 // of the booking day.   As the performance of CSS highlighting is as good as JavaScript highlighting in recent versions of
 // non-IE browsers, it is used as the default method of highlighting since it is simpler than the JavaScript method.
 //
-// The first two rules highlight the cell that you are actually hovering over.    The second rule highlights the cell in the 
+// The first two rules highlight the cell that you are actually hovering over.    The third rule highlights the cell in the 
 // left-hand (and right-hand if present) column that shows the time/period for that row.   The fourth rule highlights the cell
 // being hovered over in the month view.
 //
 // Note that the first two rules only highlight empty cells in the day and week views.    They will not highlight 
 // actual bookings (because they have a class other than odd_row or even_row), the header cells (because they 
 // are <th> and not <td>) nor the empty cells in the month view (because odd_row and even_row are not used 
-// in the month view).   The fourth rule provides highlighting in the month view.
+// in the month view).   However the third rule does have the useful effect of highlighting the time slot that
+// corresponds to the start of a booking when you hover over a booked cell.    The fourth rule provides highlighting in the month view.
 ?>
 .dwm_main tr:hover td:hover.odd_row, .dwm_main tr:hover td:hover.even_row {background-color: <?php echo $row_highlight_color ?>}
 .dwm_main tr:hover td.times {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
