@@ -1,3 +1,491 @@
+2008-10-18 18:59  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r942] web/version.inc:
+	  
+	  * Updated version specifier to 1.4beta2.
+
+2008-10-18 09:16  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r941] web/functions.inc:
+	  
+	  Optimised HTML output in tdcell by suppressing rowspan="n" when
+	  n=1.
+
+2008-10-17 15:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r940] web/mrbs.css.php:
+	  
+	  Updated comments to explain the new behaviour whereby the time
+	  period cell corresponding to the start of a booking is
+	  highlighted when you hover over a booked cell.
+
+2008-10-17 12:20  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r939] web/language.inc:
+	  
+	  * Added Hungarian support to the internationalisation - only
+	  required entries in the Windows specific maps, as hu_HU is the
+	  POSIX locale.
+
+2008-10-17 11:18  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r938] web/mrbs.css.php:
+	  
+	  Tweaked default colours to provide more contrast between odd and
+	  even rows.
+
+2008-10-16 21:29  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r937] LANGUAGE, web/functions_mail.inc, web/lang.ca,
+	  web/lang.es:
+	  
+	  * Removed all HTML entities in the translations apart from
+	  &nbsp;. The only two languages that used these were Spanish and
+	  Catalan. Updated LANGUAGE document to tell translators to not use
+	  character entities. This was all done because functions_mail.inc
+	  was having to call html_entity_decode() to remove the HTML
+	  entities, but this function was only added in PHP 4.3, and only
+	  works properly (in UTF-8) from PHP 5. The use of
+	  html_entity_decode() has now been removed.
+
+2008-10-16 09:43  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r936] web/config.inc.php, web/month.php, web/mrbs.css.php,
+	  web/style.inc, web/week.php, web/xbLib.js:
+	  
+	  Fixed the problem of poor performance of cell highlighting in IE7
+	  and IE8 when the day and week tables are large by implementing
+	  CSS highlighting (ie using the :hover pseudo-class) as the
+	  default. JavaScript highlighting is now only used if (a)
+	  $javascript_cursor is set to true in the config file and (b) the
+	  browser is IE6 or less. At the same time changed the default mode
+	  for JavaScript highlighting back to 'hybrid', as this gives
+	  better performance than 'class' for IE6.
+
+2008-10-14 10:23  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r935] web/lang.ja:
+	  
+	  * Updated Japanese translation from MATSUURA Takanori.
+
+2008-10-09 15:40  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r934] web/xbLib.js:
+	  
+	  Reverted last set of changes
+
+2008-10-09 14:26  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r933] web/xbLib.js:
+	  
+	  Implemented a better fix for the Konqueror "sticky highlighting"
+	  problem - as suggested by Jean-François Larvoire
+
+2008-10-01 12:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r932] web/mrbs.css.php:
+	  
+	  Added some padding to the table header cells in the
+	  day/week/month views.
+
+2008-09-30 12:21  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r931] web/config.inc.php, web/xbLib.js:
+	  
+	  Fixed the "sticky highlighting" problem in Konqueror (highlighted
+	  cells do not go back to normal when you move the mouse out and
+	  the highlight method is set to "hybrid").
+
+2008-09-28 19:16  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r930] web/mrbs.css.php:
+	  
+	  Changed default colours for booking types.
+
+2008-09-28 18:56  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r929] web/day.php, web/month.php, web/week.php:
+	  
+	  Fixed bug introduced in revision 890. Day/week/month now use the
+	  database abstraction layer.
+
+2008-09-26 10:16  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r928] web/del_entry.php:
+	  
+	  Ensured that if you delete an entry you go back to the view you
+	  started from, rather than the day view. (See also Revision 921).
+
+2008-09-26 10:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r927] web/view_entry.php:
+	  
+	  Fixed view_entry.php so that if you edit or copy an entry from
+	  here, then you go back afterwards to where you were beforehand
+	  (with some sensible view if you got there from an email). (See
+	  also Revision 921)
+
+2008-09-26 08:25  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r926] web/edit_entry.php, web/session_cookie.inc,
+	  web/session_php.inc:
+	  
+	  Fixed the edit entry procedure so that if you try to create a new
+	  booking without first being logged on, you are returned at the
+	  end of the procedure to the view that you started at, instead of
+	  being returned to the default view. (See also Revision 921).
+
+2008-09-25 22:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r925] web/add.php, web/admin.php, web/del.php,
+	  web/del_entry.php, web/edit_area_room.php, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/edit_users.php,
+	  web/mrbs_auth.inc:
+	  
+	  Tidied up changes for "sticky room" by ensuring that the room
+	  information is passed to showAccessDenied.
+
+2008-09-25 21:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r924] web/edit_entry_handler.php:
+	  
+	  Modified edit_entry_handler.php so that the "sticky day" and
+	  "sticky room" are updated when a booking is made, as presumably
+	  the user is now interested in the day and room that they were
+	  trying to book, rather than the previous sticky day and room.
+
+2008-09-25 20:03  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r923] web/edit_entry_handler.php:
+	  
+	  Modified edit_entry_handler.php so that the possibility of the
+	  return url giving an endless loop is avoided.
+
+2008-09-25 18:59  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r922] web/admin.php, web/day.php, web/del.php,
+	  web/edit_area_room.php, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/edit_users.php,
+	  web/functions.inc, web/help.php, web/month.php,
+	  web/mrbs_auth.inc, web/report.php, web/search.php,
+	  web/session_cookie.inc, web/session_php.inc, web/view_entry.php,
+	  web/week.php:
+	  
+	  Ensured that room information is preserved as you switch between
+	  views (ie in the same that the day information is now preserved
+	  as the "sticky day", so there is a "sticky room").
+
+2008-09-23 08:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r921] web/edit_entry_handler.php:
+	  
+	  Fixed edit_entry_handler.php so that on exit it returns to the
+	  page it was called from instead of going automatically to the day
+	  view.
+
+2008-09-23 08:18  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r920] web/month.php:
+	  
+	  Added day information to the room and area HTML links in the
+	  month view (the Select drop-down menus were OK, as were the day
+	  and week views).
+
+2008-09-19 09:28  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r919] web/month.php, web/mrbs.css.php:
+	  
+	  1. Improved behaviour of new booking link in the month view so
+	  that the link is now active everywhere in the cell where there
+	  isn't something else.
+	  
+	  2. Changed the title for bookings in the month view so that the
+	  full information (slot time and description) is displayed in the
+	  title tooltip when you hover over the booking for all three modes
+	  ('slot', 'description' and 'both').
+
+2008-09-18 15:41  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r918] web/mincals.inc, web/mrbs.css.php, web/trailer.inc,
+	  web/week.php:
+	  
+	  (1) Added highlighting of the "sticky day" to the mini-cals, on
+	  top of highlighting the current day/week/month.
+	  
+	  (2) Implemented the "sticky day" in the week links, preserving
+	  the day of the week when moving to a week for which the current
+	  sticky day is invalid.
+	  
+	  (3) Added links to the View Day/Week/Month labels in the classic
+	  trailer, to bring it into line with the simple trailer and to
+	  assist navigation between the day/week/month views now that the
+	  "sticky date" concept is working.
+
+2008-09-18 08:46  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r917] web/lang.it:
+	  
+	  * A few Italian translation updates, from Erica Maria Peressini.
+
+2008-09-17 15:54  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r916] web/month.php, web/trailer.inc:
+	  
+	  Improved links in trailer and month views so that day information
+	  is preserved if possible (following Chris Cook's suggestion).
+
+2008-09-17 15:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r915] web/day.php, web/month.php, web/week.php:
+	  
+	  Improved choice of default day in month.php following Chris
+	  Cook's suggestion. At the same time tidied up default date
+	  selection in day and week views.
+
+2008-09-17 14:21  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r914] web/lang.ca, web/lang.es, web/lang.eu, web/lang.sv,
+	  web/lang.zh-cn, web/mrbs.css.php:
+	  
+	  1. Fixed internationalisation issues in CSS (the CSS was
+	  generating commas as decimal points in some locales).
+	  
+	  2. Adjusted default CSS sizes to suit most translations.
+	  
+	  3. Tidied up some language files - removing superfluous colons or
+	  correcting typos in HTML entities.
+
+2008-09-17 09:41  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r913] web/config.inc.php, web/mrbs.css.php:
+	  
+	  1. Fixed problem that caused the admin form in Safari to stretch
+	  to the full screen width
+	  
+	  2. Changed default setting of show_plus_link to be 'false'.
+	  
+	  3. Changed default setting of highlight_method to be 'class'.
+	  This lets you specify other properties for highlighted cells
+	  apart from just the background colour - in particular the font
+	  colour so that if you switch to a light background you can switch
+	  the font to be dark. (It also avoids the "sticky highlighting"
+	  problem in Konqueror which shows up using 'hybrid'. This problem
+	  still needs to be fixed though). Also adjusted some of the
+	  styling to work better with 'class'.
+
+2008-09-16 15:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r912] web/mrbs-ielte6.css, web/mrbs.css.php, web/search.php,
+	  web/trailer.inc:
+	  
+	  1. Improved display (kept left-right alignment of labels and
+	  inputs) when the browser window width is decreased for the
+	  edit_entry, search, report and logon forms.
+	  
+	  2. Improved display of trailer, especially when the browser width
+	  is decreased.
+
+2008-09-16 12:57  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r911] web/edit_entry.php, web/edit_entry_handler.php:
+	  
+	  * Added missing 'period' form variable in edit_entry.php and
+	  edit_entry_handler.php that was stopping correct booking of
+	  meetings if you were in 'periods' mode. As reported and solved by
+	  Chris Cook on the mailing list.
+
+2008-09-16 09:37  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r910] web/config.inc.php, web/report.php:
+	  
+	  * Fixed problem that caused selection of booking type in reports
+	  not to work.
+	  
+	  * Fixed small typo in the config file.
+
+2008-09-16 09:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r909] web/edit_entry.php:
+	  
+	  Fixed bug that caused selection of multiple rooms not to work
+
+2008-09-15 15:43  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r908] web/functions.inc:
+	  
+	  Fixed bug that caused incorrect number of days to be displayed in
+	  date selector when first loaded (and also caused Internet
+	  Explorer to report "Done, but with errors on page" in status bar)
+
+2008-09-15 10:35  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r907] web/lang.fr:
+	  
+	  * French translation updates from Alain PORTAL.
+
+2008-09-14 19:03  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r906] web/lang.cz[DEL], web/lang.es, web/lang.it, web/lang.tr:
+	  
+	  * Updated Italian translations from Erica Maria Peressini,
+	  Turkish translations from Ahmet YILDIZ and Spanish translations
+	  from SoTMaR.
+	  
+	  * Deleted old, incorrectly named lang.cz translation, the proper
+	  file is lang.cs.
+
+2008-09-13 22:02  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r905] web/site_faq_nl.html:
+	  
+	  * Converted some encoded characters to character entities, as
+	  encoded characters are unsafe in FAQ files in MRBS's current
+	  internationalisation implementation.
+
+2008-09-13 21:24  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r904] web/site_faq_nl.html:
+	  
+	  * Added Dutch site FAQ, as provided by Cor Marjee.
+
+2008-09-13 21:19  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r903] web/lang.nl:
+	  
+	  * Dutch translation updates from Cor Marjee.
+
+2008-09-13 21:03  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r902] web/lang.sl:
+	  
+	  * Slovenian translation updates from Martin Terbuc.
+
+2008-09-13 19:48  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r901] web/functions.inc, web/mrbs.css.php:
+	  
+	  Moved the styling introduced in Revision 895 out of functions.inc
+	  and into CSS
+
+2008-09-13 19:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r900] web/functions.inc:
+	  
+	  The bug fix in Revision 895 was incomplete. The colour key table
+	  should now be fixed so that incomplete first rows are drawn
+	  properly, as well as incomplete subsequent rows.
+
+2008-09-13 17:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r899] web/trailer.inc:
+	  
+	  Fixed links in "simple trailer" so that the area and room are
+	  correct
+
+2008-09-13 17:46  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r898] web/mrbs.css.php:
+	  
+	  Improved display of trailer in "classic" view
+
+2008-09-13 17:07  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r897] web/month.php:
+	  
+	  Added a title to the booking in "both" mode, so that the full
+	  text of the booking description can be seen when you hover over
+	  it.
+
+2008-09-13 16:54  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r896] web/config.inc.php, web/mrbs.css.php, web/trailer.inc:
+	  
+	  Implemented the "simple trailer" as suggested by Chris Cook
+
+2008-09-13 15:30  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r895] web/functions.inc:
+	  
+	  Improved display of colour key tables so that cell borders are
+	  not drawn at the end of an incomplete row.
+
+2008-09-13 15:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r894] web/functions.inc:
+	  
+	  Fixed bug that caused colour key table to be drawn incorrectly
+	  when there were more than 10 colour types
+
+2008-09-13 14:59  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r893] web/functions.inc:
+	  
+	  Improved layout of colour key table so that unequal rows are
+	  avoided if possible.
+
+2008-09-10 22:30  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r892] web/month.php:
+	  
+	  Fixed bug which caused HTML validation to fail in the month view
+	  if the first day of the month was also the first day of the week
+	  (ie no greyed out days at the beginning of the first row).
+
+2008-09-10 21:45  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r891] web/day.php, web/month.php, web/week.php:
+	  
+	  Fixed a typo in the comments in the last change
+
+2008-09-10 21:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r890] web/day.php, web/month.php, web/week.php:
+	  
+	  Improved the display of the day/week/month views so that the area
+	  select box or list is not displayed if there is only one area
+	  defined (as then it's redundant).
+
+2008-09-10 20:07  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r889] web/functions.inc:
+	  
+	  Improved the layout of the colour key table when there are long
+	  type descriptions (which one would not normally expect anyway).
+	  The content is now clipped so that the table does not become too
+	  large, but in order that you can still read the full description
+	  if you want to, it's also in the title for the cell: so hovering
+	  over the cell will give you the full description.
+
+2008-09-10 16:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r888] web/mrbs.css.php:
+	  
+	  Fixed bug whereby the CSS for an all day booking wasn't being
+	  generated. It seems that the only visible effect was that an all
+	  day booking cell was only clickable over the text, rather than
+	  the whole cell. However there may have been other problems that I
+	  hadn't noticed.
+
+2008-09-10 15:45  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r887] web/mrbs.css.php:
+	  
+	  Fixed minor problem whereby, with $show_plus_link set to FALSE,
+	  the cursor wasn't showing a pointer when hovering over an empty
+	  cell, even though the link was active.
+
+2008-09-09 20:21  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r886] NEWS:
+	  
+	  * Fixed a few typos/spelling mistakes in NEWS.
+
+2008-09-09 19:51  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r883] ChangeLog:
+	  
+	  * Updated changelog for MRBS 1.4beta1 release.
+
 2008-09-09 19:48  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r882] NEWS, web/version.inc:

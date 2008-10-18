@@ -7,8 +7,43 @@
 [============================]
 
 -------------------------------------------------------------------------------
-Version 1.4beta (Tue Sep 9 21:00:00 BST 2008):
+Version 1.4beta2 (Sat Oct 18 21:00:00 BST 2008):
 
+[+] Added Hungarian internationalision, in preparation for an offered
+ translation.
+[-] Removed all HTML entities apart from &nbsp; from the translations,
+ so that the flawed PHP function html_entity_decode() doesn't need
+ to be used in the email sending code - solving a problem when running
+ MRBS with PHP 4.
+[*] Booking highlighting is now performed with CSS rather than JavaScript
+ by default, except in IE6, which doesn't support the appropriate
+ CSS feature. This improves performance in IE7/8, and makes the highlighting
+ not depend on JavaScript, which is good.
+[*] After making a booking (change), you now return to the view you
+ came from, be in day, week or month.
+[*] Improved highlighting of booking links in month view.
+[*] The day/week you're browsing is now maintained as you change between
+ day, week and month views, as far as is possible. This so-called
+ "sticky day" is highlighted in the mini-calendars also.
+[*] "Plus" graphics for adding new bookings are now not shown by default.
+[-] Fixed bug that stopped correct booking of meetings when in "periods"
+ mode. Reported and solved by Chris Cook.
+[-] Fixed bug in the add booking screen that caused selection of
+ multiple rooms to not work, and a similar bug that stopped selection
+ of booking type in the report screen.
+[-] Fixed bug in the date selector.
+[*] Deleted .cz translation, in preference of the .cs translation, which
+ is the right language code.
+[+] Added Dutch FAQ, provided by Cor Marjee.
+[*] Translation updates for Slovenian (Martin Terbuc), Dutch (Cor Marjee),
+ Italian (Erica Maria Peressini), Turkish (Ahmet YILDIZ), Spanish (SoTMaR),
+ French (Alain PORTAL), Japanese (MATSUURA Takanori).
+[*] Improved display of the trailer.
+[+] Implemented a configuration option for a simple trailer, as suggested
+ by Chris Cook.
+[*] Improved layout of the "type" colour key.
+[*] The area select box is no longer shows if there is only one area.
+[-] Fixed some problems shows up by 1.4beta1.
 [+] MRBS now validates as HTML 4.01 Strict, a lot of this work is courtesy of
  Claudio Strizzolo.
 [*] MRBS now uses CSS for all styling, courtesy of sterling effort by
