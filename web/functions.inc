@@ -546,7 +546,13 @@ function time_date_string($t)
 // $slots is the number of time slots high that the cell should be
 function tdcell($colclass, $slots)
 {
-  echo "<td class=\"$colclass\" rowspan=\"$slots\">\n";
+  echo "<td class=\"$colclass\"";
+  if ($slots > 1)
+  // No need to output more HTML than necessary
+  {
+    echo " rowspan=\"$slots\"";
+  }
+  echo ">\n";
 }
 
 // Display the entry-type color key. This has up to 2 rows, up to 5 columns.
