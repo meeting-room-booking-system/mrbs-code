@@ -40,7 +40,7 @@ $main_table_header_border_color = $body_background_color; // border colour for d
 $main_table_body_h_border_color = "#ffffff";              // border colour for day/week/month tables - body, horizontal
 $main_table_body_v_border_color = $body_background_color; // border colour for day/week/month tables - body, vertical
 $main_table_month_color         = "#ffffff";    // background colour for days in the month view
-$main_table_month_invalid_color = "#cccccc";    // background colour for invalid days in the month view
+$main_table_month_invalid_color = "#d1d9de";    // background colour for invalid days in the month view
 
 $report_table_border_color      = $standard_font_color;
 $report_h2_border_color         = $banner_back_color;     // border colour for <h2> in report.php
@@ -326,8 +326,8 @@ td.highlight         {background-color: <?php echo $row_highlight_color ?>; colo
 ?>
 .highlight a:link    {font-weight: normal; color: <?php echo $standard_font_color ?>}       /* used for JavaScript highlighting  */
 .highlight a:visited {font-weight: normal; color: <?php echo $standard_font_color ?>}       /* used for JavaScript highlighting  */
-tbody tr:hover a:link    {color: <?php echo $standard_font_color ?>}   /* used for CSS highlighting (but will also be used in JavaScript highlighting */
-tbody tr:hover a:visited {color: <?php echo $standard_font_color ?>}   /* used for CSS highlighting (but will also be used in JavaScript highlighting */
+.dwm_main tbody tr:hover a:link    {color: <?php echo $standard_font_color ?>}   /* used for CSS highlighting (but will also be used in JavaScript highlighting */
+.dwm_main tbody tr:hover a:visited {color: <?php echo $standard_font_color ?>}   /* used for CSS highlighting (but will also be used in JavaScript highlighting */
 .month .highlight a:link    {font-weight: bold}
 .month .highlight a:visited {font-weight: bold}
 
@@ -673,7 +673,7 @@ div.report_entry_when  {width: 60%;  float: right; text-align: right}
 p.report_entries {font-weight: bold}
 
 /* ------------ SEARCH.PHP ----------------------*/
-span#search_str {color: blue}
+span#search_str {color: <?php echo $highlight_font_color ?>}
 p#nothing_found {font-weight: bold}
 div#record_numbers {font-weight: bold}
 div#record_nav {font-weight: bold; margin-bottom: 1.0em}
