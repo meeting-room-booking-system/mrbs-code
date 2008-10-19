@@ -36,9 +36,9 @@ $mrbs_admin = "Your Administrator";
 $mrbs_admin_email = "admin_email@your.org";
 
 // This is the text displayed in the upper left corner of every page. Either
-// type the name of your organization, or you can put your logo like this :
-// $mrbs_company = "<a href=http://www.your_organisation.com/>
-// <img src=your_logo.gif border=0></a>";
+// type the name of your organisation, or you can put your logo like this :
+// $mrbs_company = "<a href=\"http://www.your_organisation.com\"><img src=\"your_logo.gif\" width=\"600\" height=\"300\" alt=\"Logo\" style=\"border: 0\"></a>";
+// NOTE:  make sure you set the width and height.   The default values here are deliberately large to make it obvious if they have not been set.
 $mrbs_company = "Your Company";
 
 // This is to fix URL problems when using a proxy in the environment.
