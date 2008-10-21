@@ -18,6 +18,15 @@ include "config.inc.php";
 /* ------------ GENERAL -----------------------------*/
 <?php
 
+// ***** SETTINGS ***********************
+
+$month_cell_scrolling = TRUE;   // set to TRUE if you want the cells in the month view to scroll if there are too
+                                // many bookings to display; set to FALSE if you want the table cell to expand to
+                                // accommodate the bookings.   (NOTE: (1) scrolling doesn't work in IE6 and so the table
+                                // cell will always expand in IE6.  (2) In IE8 Beta 2 scrolling doesn't work either and
+                                // the cell content is clipped when $month_cell_scrolling is set to TRUE.)
+
+
 // ***** COLOURS ************************
 // Colours used in MRBS.    All the colours are defined here as PHP variables
 
@@ -243,9 +252,10 @@ if (!$show_plus_link)
 // with the small gap at the end of odd rows is probably a small price worth paying to ensure that the date and the 
 // new booking link remain visible when you scroll.]
 ?>
-div.cell_container {position: relative; float: left;                    /* the containing div for a.new_booking and the naked table  */ 
-    min-height: 100px; height: 100px; width: 100%} 
-.month a.new_booking {position: absolute; top: 0; left: 0; z-index: 10} /* needs to be above the base, but below the date (monthday) */
+div.cell_container {position: relative; float: left; width: 100%;        /* the containing div for a.new_booking and the naked table  */ 
+<?php echo ($month_cell_scrolling ? 'height:' : 'min-height:') ?> 100px} /* NOTE:  if you change the value of (min-)height, make sure you */
+                                                                         /* also change the value of height in mrbs-ielte6.css */
+.month a.new_booking {position: absolute; top: 0; left: 0; z-index: 10}  /* needs to be above the base, but below the date (monthday) */
 
 .dwm_main#month_main table.naked {position: absolute; top: 0; left: 0;  /* used when javascript cursor set - similar to new_booking  */
     width: 100%; height: 100%; z-index: 10}
@@ -256,7 +266,8 @@ div.cell_header {position: relative; width: 2.0em; z-index: 20;         /* needs
 a.monthday {display: block; width: 100%; font-size: medium}             /* the date in the top left corner */
 
 div.booking_list {position: relative; z-index: 20;                      /* contains the list of bookings */
-    max-height: 80%; overflow: auto; font-size: x-small}                /* needs to be above new_booking and naked table */
+    max-height: 80%; font-size: x-small;                                /* needs to be above new_booking and naked table */
+    overflow: <?php echo ($month_cell_scrolling ? 'auto' : 'visible') ?>}
 .booking_list a {font-size: x-small}
 
 

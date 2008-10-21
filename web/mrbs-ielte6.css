@@ -10,7 +10,9 @@
 .form_admin input.submit {display: inline}   /* stops IE6 "double margin float bug" appearing */
 
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/
-div.booking_list {overflow: hidden}          /* scrollbars don't work properly in IE6, so forget them */
+div.cell_container {height: 100px}           /* NOTE:  if you change the value of height, make sure you */
+                                             /* also change the value of min-height in mrbs.css.php */
+div.booking_list {overflow: visible}         /* scrollbars don't work properly in IE6, so forget them and just let the cell expand*/
 
 /* ------------ EDIT_AREA_ROOM.PHP ------------------*/
 .form_edit_area_room label {height: 2.0em}   /* min-height not recognised by IE6 and below */
