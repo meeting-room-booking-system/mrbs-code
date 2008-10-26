@@ -90,7 +90,7 @@ function ChangeOptionDays(formObj, prefix)
   var MonthObject = eval("formObj." + prefix + "month");
   var YearObject = eval("formObj." + prefix + "year");
 
-  if (DaysObject.selectedIndex && DaysObject.options)
+  if (typeof DaysObject.selectedIndex == 'number' && DaysObject.options)
   { // The DOM2 standard way
     // alert("The DOM2 standard way");
     var DaySelIdx = DaysObject.selectedIndex;
