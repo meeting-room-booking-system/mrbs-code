@@ -489,6 +489,7 @@ $general_gap                   = '1.0';     // em  (gap between left and right c
 // Specific to the "edit_entry" form
 $edit_entry_left_col_max_width = '10';      // em
 $edit_entry_textarea_width     = '26';      // em
+$edit_entry_ampm_width         = '16';      // em
 $edit_entry_form_min_width     = $edit_entry_left_col_max_width + $edit_entry_textarea_width + $general_gap;
 $edit_entry_form_min_width     = number_format($edit_entry_form_min_width, 1, '.', '');   // get rid of any commas
 
@@ -519,6 +520,7 @@ form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 .form_general div {float: left; clear: left; width: 100%}
 .form_general div div {float: none; clear: none; width: auto}
 .form_general div.group {float: left; width: <?php echo $general_right_col_width ?>%}
+.form_general div.group#ampm {width: <?php echo $edit_entry_ampm_width ?>em}
 .form_general fieldset {width: auto; border: 0; padding-top: 2.0em}
 
 .form_general label {
@@ -564,10 +566,12 @@ div#logon_submit      {width: <?php echo $general_left_col_width ?>%; max-width:
 #edit_entry_submit input, #report_submit input, #search_submit input, #logon_submit input
     {position: relative; left: 100%; width: auto}
 
-.form_general #div_time input {width: 1.5em}
+.form_general #div_time input {width: 2.0em}
+.form_general #div_time input#time_hour {text-align: right}
+.form_general #div_time input#time_minute {text-align: left; margin-left: 0}
 .form_general #div_time span + input {margin-left: 0}
-.form_general #div_time span {display: block; float: left; margin-left: 0.2em; margin-right: 0.2em}
-.form_general input#duration {width: 3.0em}
+.form_general #div_time span {display: block; float: left; width: 0.5em; text-align: center}
+.form_general input#duration {width: 2.0em; text-align: right}
 .form_general select#dur_units {margin-right: 1.0em}
 .form_general div#ad {float: left}
 .form_general #ad label {clear: none; text-align: left; font-weight: normal}
@@ -575,7 +579,7 @@ div#logon_submit      {width: <?php echo $general_left_col_width ?>%; max-width:
 .form_general #div_rooms select, .form_general #div_typematch select {float: left; margin-right: 2.0em}
 .form_general fieldset#rep_info {padding-top: 0}
 .form_general #rep_info input {width: 13em}
-.form_general input#rep_num_weeks {width: 1.5em}
+.form_general input#rep_num_weeks {width: 2.0em}
 
 
 /* ------------ EDIT_USERS.PHP ------------------*/
