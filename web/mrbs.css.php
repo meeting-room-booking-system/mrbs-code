@@ -572,7 +572,7 @@ div#logon_submit      {width: <?php echo $general_left_col_width ?>%; max-width:
 .form_general #div_time span + input {margin-left: 0}
 .form_general #div_time span {display: block; float: left; width: 0.5em; text-align: center}
 .form_general input#duration {width: 2.0em; text-align: right}
-.form_general select#dur_units {margin-right: 1.0em}
+.form_general select#dur_units {margin-right: 1.0em; margin-left: 0.5em}
 .form_general div#ad {float: left}
 .form_general #ad label {clear: none; text-align: left; font-weight: normal}
 .form_general input#all_day {width: auto; margin-left: 1.0em; margin-right: 0.5em}
