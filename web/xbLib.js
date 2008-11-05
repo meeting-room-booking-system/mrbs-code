@@ -28,16 +28,12 @@ function xblGetNodeBgColor(node)
   {
     return null;
   }
-  
+
   // Have to use currentStyle or ComputedStyle here because node.style will just give you
   // what's in the style attribute (ie <td style="xxx">), rather than what the actual style 
-  // is computed from the cascade.    As there is no style attribute this does not work.  
-  // 
-  // [Except that it seems to haapen to work on most browsers other than Konqueror.  That is 
-  // presumably because this function will return a null value which is stored and then used to
-  // set the style attribute again (ie back to null) when you move the mouse out of the highlighted 
-  // cell.  On all browsers except Konqueror this seems to work, presumably because setting style back
-  // to null gets rid of the temporary highlight style.]
+  // is computed from the cascade.    As there is no style attribute this does not work (ie 
+  // will return null).    Although xblSetNodeBgColor() will cope with null values, we will
+  // try and avoid them in the first place. 
   
   if (node.currentStyle)         // The IE way
   {
@@ -62,12 +58,28 @@ function xblSetNodeBgColor(node, color)
   {
     if (node.style.setProperty) // If DOM level 2 supported, the NS 6 way
     {
-      node.style.setProperty("background-color", color, "");
+      if (color)
+      {
+        node.style.setProperty("background-color", color, "");
+      }
+      else
+      // Need to cater for the case when color is null.    Although most browsers will do what you might expect
+      // when you use setProperty or setAttribute with null, there are some, eg Konqueror, that don't.
+      {
+        node.style.removeProperty("background-color");
+      }
       return;
     }
     if (node.style.setAttribute) // If DOM level 2 supported, the IE 6 way
     {
-      node.style.setAttribute("backgroundColor", color);
+      if (color)
+      {
+        node.style.setAttribute("backgroundColor", color);
+      }
+      else      // see comment above
+      {
+        node.style.removeAttribute("backgroundColor");
+      }
       return;
     }
     // Else this browser has very limited DOM support. Try setting the attribute directly.
