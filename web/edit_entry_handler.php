@@ -19,6 +19,7 @@ $name = get_form_var('name', 'string');
 $rep_type = get_form_var('rep_type', 'int');
 $description = get_form_var('description', 'string');
 $hour = get_form_var('hour', 'int');
+$ampm = get_form_var('ampm', 'string');
 $minute = get_form_var('minute', 'int');
 $period = get_form_var('period', 'int');
 $duration = get_form_var('duration', 'int');
