@@ -13,7 +13,7 @@
 // if you don't, meetings in a different DST than you are currently
 // in are offset by the DST offset incorrectly.
 //
-$timezone = "Europe/London";
+//$timezone = "Europe/London";
 
 
 /*******************
