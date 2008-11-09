@@ -8,6 +8,14 @@
  *   You shouldn't have to modify anything outside this file.
  **************************************************************************/
 
+// The timezone your web server runs in. It is especially important
+// to set this if you're using PHP 5 on Linux. In this configuration
+// if you don't, meetings in a different DST than you are currently
+// in are offset by the DST offset incorrectly.
+//
+$timezone = "Europe/London";
+
+
 /*******************
  * Database settings
  ******************/

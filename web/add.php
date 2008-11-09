@@ -31,7 +31,7 @@ if (!getAuthorised(2))
 
 if ($type == "area")
 {
-  $area_name_q = slashes($name);
+  $area_name_q = addslashes($name);
   $sql = "insert into $tbl_area (area_name) values ('$area_name_q')";
   if (sql_command($sql) < 0)
   {
@@ -42,8 +42,8 @@ if ($type == "area")
 
 if ($type == "room")
 {
-  $room_name_q = slashes($name);
-  $description_q = slashes($description);
+  $room_name_q = addslashes($name);
+  $description_q = addslashes($description);
   if (empty($capacity))
   {
     $capacity = 0;

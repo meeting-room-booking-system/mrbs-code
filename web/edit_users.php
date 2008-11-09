@@ -306,7 +306,7 @@ if (isset($Action) && ($Action == "Update"))
     }
     if ($field_props[$fieldname]['istext'])
     {
-      $operation .= "'" . slashes($value) . "'";
+      $operation .= "'" . addslashes($value) . "'";
     }
     else
     {

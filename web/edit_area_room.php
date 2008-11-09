@@ -79,10 +79,10 @@ if (!empty($room))
     {
       $capacity = 0;
     }
-    $sql = "UPDATE $tbl_room SET room_name='" . slashes($room_name)
-      . "', description='" . slashes($description)
+    $sql = "UPDATE $tbl_room SET room_name='" . addslashes($room_name)
+      . "', description='" . addslashes($description)
       . "', capacity=$capacity, room_admin_email='"
-      . slashes($room_admin_email) . "' WHERE id=$room";
+      . addslashes($room_admin_email) . "' WHERE id=$room";
     if (sql_command($sql) < 0)
     {
       fatal_error(0, get_vocab("update_room_failed") . sql_error());
@@ -165,8 +165,8 @@ if (!empty($area))
   //
   if ( isset($change_area) && (FALSE != $valid_email) )
   {
-    $sql = "UPDATE $tbl_area SET area_name='" . slashes($area_name)
-      . "', area_admin_email='" . slashes($area_admin_email)
+    $sql = "UPDATE $tbl_area SET area_name='" . addslashes($area_name)
+      . "', area_admin_email='" . addslashes($area_admin_email)
       . "' WHERE id=$area";
     if (sql_command($sql) < 0)
     {

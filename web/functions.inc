@@ -2,6 +2,25 @@
 
 // $Id$
 
+/////////////////////////////////////////
+// Set timezone, if one has been provided
+
+global $timezone;
+
+if (isset($timezone))
+{
+  if (function_exists("date_default_timezone_set"))
+  {
+    date_default_timezone_set($timezone);
+  }
+  else
+  {
+    putenv("TZ=$timezone");
+  }
+}
+
+
+// Print the page header
 function print_header($day, $month, $year, $area, $room)
 {
   global $mrbs_company, $search_str, $locale_warning, $unicode_encoding,
@@ -418,21 +437,6 @@ function fatal_error($need_header, $message)
   echo $message;
   include "trailer.inc";
   exit;
-}
-
-// Apply backslash-escape quoting unless PHP is configured to do it
-// automatically. Use this for GET/POST form parameters, since we
-// cannot predict if the PHP configuration file has magic_quotes_gpc on.
-function slashes($s)
-{
-  if (get_magic_quotes_gpc())
-  {
-    return $s;
-  }
-  else
-  {
-    return addslashes($s);
-  }
 }
 
 // Remove backslash-escape quoting if PHP is configured to do it with

@@ -35,12 +35,7 @@ function getAuthPassword()
 
   if (isset($PHP_AUTH_PW))
   {
-    $pw = $PHP_AUTH_PW;
-    if (get_magic_quotes_gpc())
-    {
-      $pw = stripslashes($pw);
-    }
-    return $pw;
+    return unslashes($PHP_AUTH_PW);
   }
   else
   {
@@ -53,11 +48,7 @@ function getUserName()
   global $PHP_AUTH_USER;
   if (isset($PHP_AUTH_USER))
   {
-    $user = $PHP_AUTH_USER;
-    if (get_magic_quotes_gpc())
-    {
-      $user = stripslashes($user);
-    }
+    $user = unslashes($PHP_AUTH_USER);
 
     if (authValidateUser($user,getAuthPassword()))
     {
