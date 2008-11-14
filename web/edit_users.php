@@ -504,6 +504,10 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
       {
         $col_value = "&nbsp;"; // IE doesn't print a frame around void data.
       }
+      else
+      {
+        $col_value = htmlspecialchars($col_value);
+      }
       print "<td>$col_value</td>\n";
     }
     print "<td>\n";
