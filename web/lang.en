@@ -236,6 +236,9 @@ $vocab["room_admin_email"]   = "Room admin email";
 $vocab["area_admin_email"]   = "Area admin email";
 $vocab["invalid_email"]      = "Invalid email!";
 
+// Used in edit_users.php
+$vocab["name_not_unique"]    = "already exists.   Please choose another name.";
+
 // Used in del.php
 $vocab["deletefollowing"]    = "This will delete the following bookings";
 $vocab["sure"]               = "Are you sure?";
