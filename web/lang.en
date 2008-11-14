@@ -146,7 +146,7 @@ $vocab["unknown"]            = "Unknown";
 $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Click to display all my upcoming entries";
 $vocab["no_users_initial"]   = "No users in database, allowing initial user creation";
-$vocab["no_users_create_first_admin"] = "Create a user configured as administrator and then you can log in and create more users.";
+$vocab["no_users_create_first_admin"] = "Create a user configured as configured as an administrator and then you can log in and create more users.";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Empty or invalid search string.";
