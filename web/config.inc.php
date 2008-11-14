@@ -231,6 +231,10 @@ $auth["session"] = "php"; // How to get and keep the user ID. One of
 $auth["type"] = "config"; // How to validate the user/password. One of "none"
                           // "config" "db" "db_ext" "pop3" "imap" "ldap" "nis"
                           // "nw" "ext".
+// NOTE:  if you are using the "db" authentication scheme, then make sure you keep the admin user
+// "administrator" below.    The system initially relies on there being an admin called "administrator".
+// Once you have set up the user list and created one or more other admins (by adding them both to the
+// user list and the config file), then you can delete or rename the "administrator" user.
 
 // Configuration parameters for 'cookie' session scheme
 
