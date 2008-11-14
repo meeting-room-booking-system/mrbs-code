@@ -38,6 +38,7 @@ $Id = get_form_var('Id', 'int');
 $password0 = get_form_var('password0', 'string');
 $password1 = get_form_var('password1', 'string');
 $invalid_email = get_form_var('invalid_email', 'int');
+$name_empty = get_form_var('name_empty', 'int');
 $name_not_unique = get_form_var('name_not_unique', 'int');
 $taken_name = get_form_var('taken_name', 'string');
 
@@ -188,10 +189,17 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
               print ("<p class=\"error\">" . get_vocab('invalid_email') . "<p>\n");
             }
             
-            //Display message about non-unique name
-            if ( ($fieldname == "name") && isset($name_not_unique) && (1 == $name_not_unique) )
+            //Display messages about the name
+            if ($fieldname == "name")
             {
-              print ("<p class=\"error\">'" . htmlspecialchars($taken_name) . "' " . get_vocab('name_not_unique') . "<p>\n");
+              if (isset($name_not_unique) && (1 == $name_not_unique))
+              {
+                print ("<p class=\"error\">'" . htmlspecialchars($taken_name) . "' " . get_vocab('name_not_unique') . "<p>\n");
+              }
+              if (isset($name_empty) && (1 == $name_empty))
+              {
+                print ("<p class=\"error\">" . get_vocab('name_empty') . "<p>\n");
+              }
             }
           }
 
@@ -278,11 +286,22 @@ if (isset($Action) && ($Action == "Update"))
   }
   //
   
+  // Check that the name is not empty
+  $new_name = strtolower(get_form_var('Field_name', 'string'));
+  if (empty($new_name))
+  {
+    // Now display this form again with an error message
+    // Build the query string
+    $q_string = "Action=" . (($Id >= 0) ? 'Edit' : 'Add');
+    $q_string .= "&Id=$Id&name_empty=1";
+    Header("Location: edit_users.php?$q_string");
+    exit;
+  }
+  
   // Check that the name is unique.
   // If it's a new user, then to check to see if there are any rows with that name.
   // If it's an update, then check to see if there are any rows with that name, except
   // for that user.
-  $new_name = strtolower(get_form_var('Field_name', 'string'));
   $query = "SELECT id FROM $tbl_users WHERE name='$new_name'";
   if ($Id >= 0)
   {

@@ -237,6 +237,7 @@ $vocab["area_admin_email"]   = "Area admin email";
 $vocab["invalid_email"]      = "Invalid email!";
 
 // Used in edit_users.php
+$vocab["name_empty"]         = "You must enter a name.";
 $vocab["name_not_unique"]    = "already exists.   Please choose another name.";
 
 // Used in del.php
