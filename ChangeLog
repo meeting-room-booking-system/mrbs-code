@@ -1,3 +1,174 @@
+2008-12-03 14:27  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r965] web/version.inc:
+	  
+	  * Updated version number to 1.4.
+
+2008-12-03 14:27  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r964] web/config.inc.php:
+	  
+	  * Tweaked the comment in config.inc.php about setting $timezone.
+
+2008-11-14 15:31  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r963] web/lang.en:
+	  
+	  * Third time lucky with translation update!
+
+2008-11-14 15:29  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r962] web/lang.en:
+	  
+	  * Fixed a typo in my previous translation update.
+
+2008-11-14 15:25  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r961] web/lang.en:
+	  
+	  * Clarified 'no_users_create_first_admin' English translation a
+	  bit.
+
+2008-11-14 14:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r960] web/config.inc.php:
+	  
+	  Added a comment to the config file to make it clear that the 'db'
+	  authentication scheme relies on there being an admin user called
+	  'administrator' for initial set-up.
+
+2008-11-14 13:07  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r959] web/edit_users.php:
+	  
+	  Changed the value of the Submit button when adding or editing a
+	  user from "OK" to "Save". The "OK" button was misleading as it
+	  could be interpreted as a request to acknowledge an error
+	  message.
+
+2008-11-14 12:49  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r958] web/edit_users.php, web/lang.en:
+	  
+	  Changed edit_users.php so that it won't accept users with no
+	  name.
+
+2008-11-14 12:29  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r957] web/edit_users.php:
+	  
+	  Fixed bug in edit_users.php, so that field values (eg user names)
+	  are now put through htmlspecialchars() before being displayed in
+	  the user list.
+
+2008-11-14 12:16  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r956] web/edit_users.php, web/lang.en:
+	  
+	  Fixed SF bug 2275465, originally reported by Simon Hunter.
+	  Edit_users will now ensure that user names are unique.
+
+2008-11-09 22:04  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r955] web/config.inc.php:
+	  
+	  * Commented out default timezone in config.inc.php, I didn't mean
+	  to have it uncommented.
+
+2008-11-09 21:59  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r954] web/add.php, web/auth_db.inc, web/config.inc.php,
+	  web/edit_area_room.php, web/edit_users.php, web/functions.inc,
+	  web/mrbs_sql.inc, web/session_http.inc, web/site_faq_nl.html:
+	  
+	  * Fixed database escaping issues, reported as SF tracker #2229897
+	  and diagnosed by 'mahbr'.
+	  
+	  * Added setting into config.inc.php (and code to use it) to set
+	  the timezone that the MRBS web server runs in. This is especially
+	  required with PHP 5 on Linux, as if you don't set the timezone it
+	  seems PHP just runs without any proper timezone functionality.
+
+2008-11-07 14:35  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r953] web/edit_entry_handler.php:
+	  
+	  * Fixed booking of meetings when $twentyfourhour_format is 0.
+	  Wasn't reading the 'ampm' form field in edit_entry_handler.php.
+	  Reported in SF tracker #2107847 by jwarchol.
+
+2008-11-05 17:41  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r952] web/xbLib.js:
+	  
+	  Modified xblSetNodeBgColor(node, color) so that it can cope with
+	  a null color. Although most browsers seem to accept a value of
+	  null being passed to setAttribute or setProperty, some, eg
+	  Konqueror, do not. It was this that was causing the "sticky
+	  highlighting" problem in Konqueror. (Although the "sticky
+	  highlighting" problem has already been cured by ensuring that a
+	  null value is never passed to xblSetNodeBgColor(), this change is
+	  being made as an added precaution).
+
+2008-10-28 01:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r951] web/mrbs.css.php:
+	  
+	  Tweaked formatting of edit_entry form
+
+2008-10-28 01:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r950] web/edit_entry.php, web/mrbs.css.php:
+	  
+	  (1) Fixed layout of am/pm radio buttons in the edit_entry form
+	  (when not using 24 hour format) (2) Tweaked styling of inputs on
+	  the edit_entry form
+
+2008-10-26 18:35  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r949] web/functions.inc:
+	  
+	  * Patch to fix a problem reported in SF tracker #2193184. Problem
+	  reported and patch supplied by 'peterjclaw'.
+
+2008-10-21 21:57  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r948] web/mrbs-ielte6.css, web/mrbs.css.php:
+	  
+	  Implemented $month_cell_scrolling so that the scrolling behaviour
+	  in the month view can be easily turned off and on.
+
+2008-10-19 11:45  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r947] web/config.inc.php:
+	  
+	  Fixed the comments concerning the use of a company logo: made the
+	  suggested code HTMl 4.01 compliant.
+
+2008-10-19 08:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r946] web/mrbs.css.php:
+	  
+	  (1) Fixed problem whereby the minical links were not behaving
+	  properly when you hovered over them (because I'd forgotten to
+	  restrict the tr:hover behaviour to the bookings table when
+	  introducing CSS highlighting) (2) Tweaked the default colour for
+	  an invalid day in the month view to tie in to the default colour
+	  scheme (3) Tweaked the default colour for the search term in
+	  search results to tie in to the default colour scheme
+
+2008-10-18 21:49  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r945] ChangeLog:
+	  
+	  * Unset 'svn:keywords' on ChangeLog.
+
+2008-10-18 19:41  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r943] ChangeLog, NEWS:
+	  
+	  * Updated NEWS and ChangeLog for MRBS 1.4beta2 release.
+
 2008-10-18 18:59  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r942] web/version.inc:

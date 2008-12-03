@@ -7,7 +7,7 @@
 [============================]
 
 -------------------------------------------------------------------------------
-Version 1.4beta2 (Sat Oct 18 21:00:00 BST 2008):
+Version 1.4 (Wed Dec  3 15:00:00 GMT 2008):
 
 [+] Added Hungarian internationalision, in preparation for an offered
  translation.
@@ -89,6 +89,14 @@ Version 1.4beta2 (Sat Oct 18 21:00:00 BST 2008):
  be valid HTML in config.inc.php.
 [*] Bookings that cover more than one slot now show as merged slots in
  day and week views, replacing the previous "ditto marks" behaviour.
+[-] Fixed a number of issues that were reported during the 1.4 beta
+ phase.
+[+] You can now set the timezone that your meetings run in from
+ config.inc.php. In some configurations this must be done to get
+ proper DST behaviour.
+[*] The 'db' authentication scheme now ensures that usernames are
+ unique.
+
 
 -------------------------------------------------------------------------------
 Version 1.2.6.1 (Wed Jan 30 11:00:00 GMT 2008):
