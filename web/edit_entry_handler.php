@@ -453,7 +453,7 @@ if (empty($err))
             $res = sql_query($sql);
             $row = sql_row_keyed($res, 0);
             $room_name = $row['room_name'];
-            $area_name = $row['area_id'];
+            $area_name = $row['area_name'];
           }
           // If this is a modified entry then call
           // getPreviousEntryData to prepare entry comparison.
