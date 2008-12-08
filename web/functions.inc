@@ -23,7 +23,7 @@ if (isset($timezone))
 // Print the page header
 function print_header($day, $month, $year, $area, $room)
 {
-  global $mrbs_company, $mrbs_company_logo, $mrbs_company_url, 
+  global $mrbs_company, $mrbs_company_logo, $mrbs_company_url, $mrbs_company_more_info,
     $search_str, $locale_warning, $unicode_encoding, $vocab;
 
   // If we dont know the right date then make it up 
@@ -207,6 +207,10 @@ function ChangeOptionDays(formObj, prefix)
             echo "</a>\n";
           }
           echo "</div>\n";
+          if (!empty($mrbs_company_more_info))
+          {
+            echo "<div>$mrbs_company_more_info</div>\n";
+          }
           ?>
           <div>
             <a href="index.php"><?php echo get_vocab("mrbs") ?></a>
