@@ -23,8 +23,8 @@ if (isset($timezone))
 // Print the page header
 function print_header($day, $month, $year, $area, $room)
 {
-  global $mrbs_company, $search_str, $locale_warning, $unicode_encoding,
-    $vocab;
+  global $mrbs_company, $mrbs_company_logo, $mrbs_company_url, 
+    $search_str, $locale_warning, $unicode_encoding, $vocab;
 
   // If we dont know the right date then make it up 
   if (!$day)
@@ -187,8 +187,30 @@ function ChangeOptionDays(formObj, prefix)
   <table id="banner">
     <tr>
       <td id="company">
-          <span><?php echo $mrbs_company ?></span>
-          <a href="index.php"><?php echo get_vocab("mrbs") ?></a>
+          <?php
+          echo "<div>\n";
+          if (!empty($mrbs_company_url))
+          {
+            echo "<a href=\"$mrbs_company_url\">\n";
+          }
+          if (empty($mrbs_company_logo))
+          {
+            echo "<span>$mrbs_company</span>\n";
+          }
+          else
+          {
+            $logo_size = getimagesize($mrbs_company_logo);
+            echo "<img src=\"$mrbs_company_logo\" " . $logo_size[3] . " alt=\"logo\">\n";
+          }
+          if (!empty($mrbs_company_url))
+          {
+            echo "</a>\n";
+          }
+          echo "</div>\n";
+          ?>
+          <div>
+            <a href="index.php"><?php echo get_vocab("mrbs") ?></a>
+          </div>
       </td>
       <td>
         <form action="day.php" method="get" id="Form1">

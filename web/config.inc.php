@@ -46,11 +46,16 @@ $db_tbl_prefix = "mrbs_";
 $mrbs_admin = "Your Administrator";
 $mrbs_admin_email = "admin_email@your.org";
 
-// This is the text displayed in the upper left corner of every page. Either
-// type the name of your organisation, or you can put your logo like this :
-// $mrbs_company = "<a href=\"http://www.your_organisation.com\"><img src=\"your_logo.gif\" width=\"600\" height=\"300\" alt=\"Logo\" style=\"border: 0\"></a>";
-// NOTE:  make sure you set the width and height.   The default values here are deliberately large to make it obvious if they have not been set.
-$mrbs_company = "Your Company";
+// The company name is mandatory.   It is used in the header and also for email notifications.
+// The company logo and URL are both optional.
+
+$mrbs_company = "Your Company";   // This line must always be uncommented ($mrbs_company is used in various places)
+
+// Uncomment this next line to use a logo instead of text for your organisation in the header
+//$mrbs_company_logo = "your_logo.gif";    // name of your logo file.   This example assumes it is in the MRBS directory
+
+// Uncomment this next line to have a link to your organisation in the header
+//$mrbs_company_url = "http://www.your_organisation.com/";
 
 // This is to fix URL problems when using a proxy in the environment.
 // If links inside MRBS appear broken, then specify here the URL of

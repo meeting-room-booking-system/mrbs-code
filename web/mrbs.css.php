@@ -37,7 +37,6 @@ $highlight_font_color           = "#ff0066";    // used for highlighting text (e
 
 $banner_back_color              = "#4b667b";    // background colour for banner
 $banner_border_color            = $body_background_color;    // border colour for banner
-$company_name_color             = $header_font_color;        // colour for company name text
 
 $header_back_color              = $banner_back_color;  // background colour for headers
 
@@ -631,13 +630,15 @@ table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
 #banner td {text-align: center; vertical-align: middle; background-color: <?php echo $banner_back_color ?>;
     border-color: <?php echo $banner_border_color ?>; border-style: solid;
     border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px;
-    padding: 6px}
+    padding: 6px; color: <?php echo $header_font_color ?>}
 #banner td:first-child {border-left-width: 0}
 #banner td#company {font-size: large}
+#banner #company div {width: 100%}
+#banner #company img {border: 0}
 #banner a:link    {color: <?php echo $anchor_link_color_banner ?>;    text-decoration: none; font-weight: normal}
 #banner a:visited {color: <?php echo $anchor_visited_color_banner ?>; text-decoration: none; font-weight: normal}
 #banner a:hover   {color: <?php echo $anchor_hover_color_banner ?>;   text-decoration:underline; font-weight: normal}
-#banner #company span {display: block; color: <?php echo $company_name_color ?>; width: 100%}
+
 table#colour_key {clear: both; border-spacing: 0; border-collapse: collapse}
 #colour_key td {width: 7.0em; padding: 2px; font-weight: bold;
     border: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>}
