@@ -37,6 +37,7 @@ $highlight_font_color           = "#ff0066";    // used for highlighting text (e
 
 $banner_back_color              = "#4b667b";    // background colour for banner
 $banner_border_color            = $body_background_color;    // border colour for banner
+$banner_font_colour             = $header_font_colour;       // font colour for banner
 
 $header_back_color              = $banner_back_color;  // background colour for headers
 
@@ -630,7 +631,7 @@ table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
 #banner td {text-align: center; vertical-align: middle; background-color: <?php echo $banner_back_color ?>;
     border-color: <?php echo $banner_border_color ?>; border-style: solid;
     border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px;
-    padding: 6px; color: <?php echo $header_font_color ?>}
+    padding: 6px; color: <?php echo $banner_font_color ?>}
 #banner td:first-child {border-left-width: 0}
 #banner td#company {font-size: large}
 #banner #company div {width: 100%}
