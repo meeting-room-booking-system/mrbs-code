@@ -37,7 +37,7 @@ $highlight_font_color           = "#ff0066";    // used for highlighting text (e
 
 $banner_back_color              = "#4b667b";    // background colour for banner
 $banner_border_color            = $body_background_color;    // border colour for banner
-$banner_font_colour             = $header_font_colour;       // font colour for banner
+$banner_font_color              = $header_font_color;       // font colour for banner
 
 $header_back_color              = $banner_back_color;  // background colour for headers
 
