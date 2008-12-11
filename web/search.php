@@ -14,6 +14,8 @@ $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');
 $search_str = get_form_var('search_str', 'string');
+$search_pos = get_form_var('search_pos', 'int');
+$total = get_form_var('total', 'int');
 $advanced = get_form_var('advanced', 'int');
 
 // If we dont know the right date then make it up 
