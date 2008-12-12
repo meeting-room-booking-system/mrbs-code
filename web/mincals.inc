@@ -118,9 +118,12 @@ class Calendar
       if (preg_match("/week/i", basename($PHP_SELF)))
       {
         // First of all work out the time of the "sticky day"
+        // We use gmmktime() here rather than mktime() as gmmktime() is independent of DST.   This avoids 
+        // problems when we come to look at the difference ($diff) further down if the two ends of the
+        // time period straddle a DST boundary.
         $sticky_time = gmmktime(12, 0, 0, $month, $day, $year);         // Use gm to avoid DST problems
-        $skipback = (date("w", $sticky_time) - $weekstarts + 7) % 7;   // How many days to skip back to first day of week:
-        $start_highlight_time = $sticky_time - ($skipback * 24 * 60 * 60); 
+        $skipback = (date("w", $sticky_time) - $weekstarts + 7) % 7;    // How many days to skip back to first day of week:
+        $start_highlight_gmtime = $sticky_time - ($skipback * 24 * 60 * 60); 
       }
       
       $daysInMonth = $this->getDaysInMonth($this->month, $this->year);
@@ -207,10 +210,13 @@ class Calendar
               {
                 // work out current time and if we're up to 7 days after the
                 // start of the week to be highlighted then mark it as the
-                // current week.   (Use gm to avoid DST problems)
-                $this_time = gmmktime (12, 0, 0, $this->month, $d, $this->year);
-                $diff = $this_time - $start_highlight_time;  // seconds
-                $diff = $diff/86400;                         // days
+                // current week.    We are using gmmktime() rather than mktime() because
+                // gmmktime() is independent of DST and we do not want the difference
+                // to be affected if the time period straddles a DST boundary.    See 
+                // also the comment further up.
+                $this_time = gmmktime (12, 0, 0, $this->month, $d, $this->year);  // Use gm to avoid DST problems
+                $diff = $this_time - $start_highlight_gmtime;  // seconds
+                $diff = $diff/86400;                           // days
                 if (($diff >= 0) && ($diff < 7))             
                 {
                   $s .= " class=\"current\"";
