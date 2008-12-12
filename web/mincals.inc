@@ -118,7 +118,7 @@ class Calendar
       if (preg_match("/week/i", basename($PHP_SELF)))
       {
         // First of all work out the time of the "sticky day"
-        $sticky_time = gmmktime(0, 0, 0, $month, $day, $year);         // Use gm to avoid DST problems
+        $sticky_time = gmmktime(12, 0, 0, $month, $day, $year);         // Use gm to avoid DST problems
         $skipback = (date("w", $sticky_time) - $weekstarts + 7) % 7;   // How many days to skip back to first day of week:
         $start_highlight_time = $sticky_time - ($skipback * 24 * 60 * 60); 
       }
@@ -208,7 +208,7 @@ class Calendar
                 // work out current time and if we're up to 7 days after the
                 // start of the week to be highlighted then mark it as the
                 // current week.   (Use gm to avoid DST problems)
-                $this_time = gmmktime (0, 0, 0, $this->month, $d, $this->year);
+                $this_time = gmmktime (12, 0, 0, $this->month, $d, $this->year);
                 $diff = $this_time - $start_highlight_time;  // seconds
                 $diff = $diff/86400;                         // days
                 if (($diff >= 0) && ($diff < 7))             
