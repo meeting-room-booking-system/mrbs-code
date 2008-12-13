@@ -17,6 +17,7 @@ $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');
+$timetohighlight = get_form_var('timetohighlight', 'int');
 
 if (empty($debug_flag))
 {

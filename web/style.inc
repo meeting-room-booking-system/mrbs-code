@@ -9,8 +9,8 @@ global $vocab; // outside of scope; needs to be denote as global
 // test whether the browser is IE6 or below - and therefore whether to use JavaScript
 // highlighting instead of CSS highlighting.
 ?>
-    <link rel="stylesheet" href="mrbs.css.php" type="text/css" title="standard">
-    <link rel="stylesheet" media="print" href="mrbs-print.css" type="text/css" title="print">
+    <link rel="stylesheet" href="mrbs.css.php" type="text/css">
+    <link rel="stylesheet" media="print" href="mrbs-print.css" type="text/css">
     <!--[if IE]>
     <link rel="stylesheet" href="mrbs-ie.css" type="text/css" title="ie">
     <![endif]-->

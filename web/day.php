@@ -14,6 +14,7 @@ $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');  // not needed for the main display, but needed for trailer links
+$timetohighlight = get_form_var('timetohighlight', 'int');
 $debug_flag = get_form_var('debug_flag', 'int');
 
 if (empty($debug_flag))
