@@ -5,20 +5,22 @@
 global $unicode_encoding;
 global $vocab; // outside of scope; needs to be denote as global
 
-// The titles in the <link> tags below are used by InitActiveCell in xbLib.js to 
+// NOTE:  The filename for the stylesheet for <= IE6 must contain the string 'ielte6'.
+// The href strings in the <link> tags below are used by InitActiveCell in xbLib.js to 
 // test whether the browser is IE6 or below - and therefore whether to use JavaScript
-// highlighting instead of CSS highlighting.
+// highlighting instead of CSS highlighting.   In particular the href string for the
+// stylesheet for browsers IE6 or below must contain the string 'ielte6'.
 ?>
     <link rel="stylesheet" href="mrbs.css.php" type="text/css">
     <link rel="stylesheet" media="print" href="mrbs-print.css" type="text/css">
     <!--[if IE]>
-    <link rel="stylesheet" href="mrbs-ie.css" type="text/css" title="ie">
+    <link rel="stylesheet" href="mrbs-ie.css" type="text/css">
     <![endif]-->
     <!--[if IE 8]>
-    <link rel="stylesheet" href="mrbs-ie8.css" type="text/css" title="ie8">
+    <link rel="stylesheet" href="mrbs-ie8.css" type="text/css">
     <![endif]-->
     <!--[if lte IE 6]>
-    <link rel="stylesheet" href="mrbs-ielte6.css" type="text/css" title="ielte6">
+    <link rel="stylesheet" href="mrbs-ielte6.css" type="text/css">
     <![endif]-->
     <meta http-equiv="Content-Type" content="text/html; charset=<?php
 

@@ -474,11 +474,11 @@ function InitActiveCell(show, left, right, method, message)
   xbDump("statusBarMsg = " + statusBarMsg);
   
   // Check to see whether we are using IE6 or below.    This is done by checking the
-  // titles of the stylesheets that have been loaded (see style.inc for the titles).
+  // href string of the stylesheets that have been loaded (see style.inc for the titles).
   //
   // If we are using IE6 or below then the :hover pseudo-class
   // is not supported for elements other than <a> and we will have to use JavaScript highlighting
-  // instead of CSS highlighting.    If we can't even read the title, then it's a good bet that 
+  // instead of CSS highlighting.    If we can't even read the href string, then it's a good bet that 
   // the :hover pseudo-class isn't supported either.
   var use_css_highlighting = true;
   if (document.styleSheets)
@@ -486,7 +486,9 @@ function InitActiveCell(show, left, right, method, message)
     var nStyleSheets = document.styleSheets.length;
     for (var i=0; i < nStyleSheets; i++)
     {
-      if ((document.styleSheets[i].title == null) || (document.styleSheets[i].title == 'ielte6'))
+      // check to see if the stylesheet is an 'ielte6' sheet;
+      // if it is, then we can't use CSS highlighting
+      if (document.styleSheets[i].href.search(/ielte6/i) != -1)
       {
         use_css_highlighting = false;
       }
