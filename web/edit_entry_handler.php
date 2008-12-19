@@ -59,8 +59,11 @@ if (empty($area))
 //   (1) It's possible that $returl could be empty, for example if edit_entry.php had been called
 //       direct, perhaps if the user has it set as a bookmark
 //   (2) Avoid an endless loop.   It shouldn't happen, but just in case ...
+//   (3) If you've come from search, you probably don't want to go back there (and if you did we'd
+//       have to preserve the search parameter in the query string)
 $returl_base   = explode('?', basename($returl));
-if (empty($returl) || ($returl_base[0] == "edit_entry.php") || ($returl_base[0] == "edit_entry_handler.php"))
+if (empty($returl) || ($returl_base[0] == "edit_entry.php") || ($returl_base[0] == "edit_entry_handler.php")
+                   || ($returl_base[0] == "search.php"))
 {
   switch ($default_view)
   {
