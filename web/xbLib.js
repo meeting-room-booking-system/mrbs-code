@@ -488,9 +488,13 @@ function InitActiveCell(show, left, right, method, message)
     {
       // check to see if the stylesheet is an 'ielte6' sheet;
       // if it is, then we can't use CSS highlighting
-      if (document.styleSheets[i].href.search(/ielte6/i) != -1)
+      if (document.styleSheets[i].href != null)  // will be null in the case of an embedded style sheet
       {
-        use_css_highlighting = false;
+        if (document.styleSheets[i].href.search(/ielte6/i) != -1)
+        {
+          use_css_highlighting = false;
+          break;
+        }
       }
     }
   }
