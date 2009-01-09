@@ -318,21 +318,71 @@ function validate_and_submit ()
   return true;
 }
 
+// set up some global variables for use by OnAllDayClick().   (It doesn't really
+// matter about the initial values, but we might as well put in some sensible ones).
+var old_duration = '<?php echo $duration;?>';
+var old_dur_units = 0;  // This is the index number
+var old_hour = '<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>';
+var old_minute = '<?php echo $start_min;?>';
+
 // Executed when the user clicks on the all_day checkbox.
 function OnAllDayClick(allday)
 {
-  form = document.forms["main"];
-  if (allday.checked) // If checking the box...
+  var form = document.forms["main"];
+  if (form.all_day.checked) // If checking the box...
   {
-    <?php if( ! $enable_periods ) { ?>
-      form.hour.value = "00";
-      form.minute.value = "00";
-    <?php } ?>
-    if (form.dur_units.value!="days") // Don't change it if the user already did.
+    // save the old values, disable the inputs and, to avoid user confusion,
+    // show the start time as the beginning of the day and the duration as one day
+    <?php 
+    if ($enable_periods )
     {
-      form.duration.value = "1";
-      form.dur_units.value = "days";
+      ?>
+      form.period.disabled = true;
+      <?php
     }
+    else
+    { 
+      ?>
+      old_hour = form.hour.value;
+      form.hour.value = '<?php echo $morningstarts; ?>';
+      old_minute = form.minute.value;
+      form.minute.value = '<?php printf("%02d", $morningstarts_minutes); ?>';
+      form.hour.disabled = true;
+      form.minute.disabled = true;
+      <?php 
+    } 
+    ?>
+    
+    old_duration = form.duration.value;
+    form.duration.value = '1';  
+    old_dur_units = form.dur_units.selectedIndex;
+    form.dur_units.value = 'days';  
+    form.duration.disabled = true;
+    form.dur_units.disabled = true;
+  }
+  else  // restore the old values and re-enable the inputs
+  {
+    <?php 
+    if ($enable_periods)
+    {
+      ?>
+      form.period.disabled = false;
+      <?php
+    }
+    else
+    { 
+      ?>
+      form.hour.value = old_hour;
+      form.minute.value = old_minute;
+      form.hour.disabled = false;
+      form.minute.disabled = false;
+      <?php 
+    } 
+    ?>
+    form.duration.value = old_duration;
+    form.dur_units.selectedIndex = old_dur_units;  
+    form.duration.disabled = false;
+    form.dur_units.disabled = false;
   }
 }
 //]]>
