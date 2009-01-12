@@ -117,13 +117,17 @@ class Calendar
       // For the week view we will need to know the start of the week that should be highlighted
       if (preg_match("/week/i", basename($PHP_SELF)))
       {
-        // First of all work out the time of the "sticky day"
+        
+        // First of all work out how many days we have to skip back to the
+        // start of the week
+        $sticky_dow = date("w", mktime(12, 0, 0, $month, $day, $year));
+        $skipback = ($sticky_dow - $weekstarts + 7) % 7;                // How many days to skip back to first day of week:
+        // Then work out the time of the "sticky day"
         // We use gmmktime() here rather than mktime() as gmmktime() is independent of DST.   This avoids 
         // problems when we come to look at the difference ($diff) further down if the two ends of the
         // time period straddle a DST boundary.
         $sticky_time = gmmktime(12, 0, 0, $month, $day, $year);         // Use gm to avoid DST problems
-        $skipback = (date("w", $sticky_time) - $weekstarts + 7) % 7;    // How many days to skip back to first day of week:
-        $start_highlight_gmtime = $sticky_time - ($skipback * 24 * 60 * 60); 
+        $start_highlight_gmtime = $sticky_time - ($skipback * 24 * 60 * 60);
       }
       
       $daysInMonth = $this->getDaysInMonth($this->month, $this->year);
