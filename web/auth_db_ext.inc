@@ -37,13 +37,18 @@ function authValidateUser($user, $pass)
 
   $retval = 0;
 
-  $user=strtolower($user);
+  $user = strtolower($user);
 
-  $conn = mysql_connect($auth['db_ext']['db_host'],
-                        $auth['db_ext']['db_username'],
-                        $auth['db_ext']['db_password']);
+  if (empty($auth['db_ext']['db_system'])
+  {
+    $auth['db_ext']['db_system'] = 'mysql';
+  }
 
-  mysql_select_db($auth['db_ext']['db_name'], $conn);
+  $conn = sql_connect($auth['db_ext']['db_system'],
+                      $auth['db_ext']['db_host'],
+                      $auth['db_ext']['db_username'],
+                      $auth['db_ext']['db_password'],
+                      $auth['db_ext']['db_name']);
 
   $user = addslashes($user);
 
@@ -56,11 +61,11 @@ function authValidateUser($user, $pass)
            " FROM " . $auth['db_ext']['db_table'] .
            " WHERE ". $auth['db_ext']['column_name_username'] . "='$user'";
 
-  $r = mysql_query($query, $conn);
+  $r = sql_query($query, $conn);
 
-  if ($r && (mysql_num_rows($r) == 1)) // force a unique match
+  if ($r && (sql_count($r, $conn) == 1)) // force a unique match
   {
-    $row = mysql_fetch_row($r);
+    $row = sql_row($r, 0, $conn);
 
     switch ($auth['db_ext']['password_format'])
     {
@@ -95,8 +100,6 @@ function authValidateUser($user, $pass)
         break;
     }
   }
-
-  mysql_close($conn);
 
   return $retval;
 }

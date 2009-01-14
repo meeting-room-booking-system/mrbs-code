@@ -2,12 +2,13 @@
 // $Id$
 
 // pgsql.inc - Simple PHP database support for PostgreSQL.
-// Include this file after defining the following variables:
+// The standard MRBS database connection utilises the following configuration
+// variables:
 //   $db_host = The hostname of the database server
 //   $db_login = The username to use when connecting to the database
 //   $db_password = The database account password
 //   $db_database = The database name.
-// Including this file connects you to the database, or exits on error.
+
 // This code hides an implementation difference in error reporting by the PHP
 // PostgreSQL and MySQL extensions. PostgreSQL reports an E_WARNING error
 // for some queries which MySQL does not; both properly set their own
@@ -17,22 +18,39 @@
 // setting in your php.ini configuration file.
 
 
+// A small utility function (not part of the DB abstraction API) to
+// update a connection handle to the global MRBS connection handle
+// if said handle is null/empty
+function sql_pgsql_ensure_handle(&$db_conn)
+{
+  if (empty($db_conn))
+  {
+    global $sql_pgsql_conn;
+    $db_conn = $sql_pgsql_conn;
+  }
+}
+
+
 // Free a results handle. You need not call this if you call sql_row or
 // sql_row_keyed until the row returns 0, since sql_row frees the results
 // handle when you finish reading the rows.
-function sql_free ($r)
+function sql_pgsql_free ($r, $db_conn = null)
 {
+  sql_pgsql_ensure_handle($db_conn);
+
   pg_free_result($r);
 }
+
 
 // Execute a non-SELECT SQL command (insert/update/delete).
 // Returns the number of tuples affected if OK (a number >= 0).
 // Returns -1 on error; use sql_error to get the error message.
-function sql_command ($sql)
+function sql_pgsql_command ($sql, $db_conn = null)
 {
-  global $db_c;
+  sql_pgsql_ensure_handle($db_conn);
+
   $e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
-  $r = pg_query($db_c, $sql);
+  $r = pg_query($db_conn, $sql);
   error_reporting($e);
   if (! $r)
   {
@@ -43,17 +61,19 @@ function sql_command ($sql)
   return $n;
 }
 
+
 // Execute an SQL query which should return a single non-negative number value.
 // This is a lightweight alternative to sql_query, good for use with count(*)
 // and similar queries. It returns -1 on error or if the query did not return
 // exactly one value, so error checking is somewhat limited.
 // It also returns -1 if the query returns a single NULL value, such as from
 // a MIN or MAX aggregate function applied over no rows.
-function sql_query1 ($sql)
+function sql_pgsql_query1 ($sql, $db_conn = null)
 {
-  global $db_c;
+  sql_pgsql_ensure_handle($db_conn);
+
   $e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
-  $r = pg_query($db_c, $sql);
+  $r = pg_query($db_conn, $sql);
   error_reporting($e);
   if (! $r)
   {
@@ -68,25 +88,30 @@ function sql_query1 ($sql)
   return $result;
 }
 
+
 // Execute an SQL query. Returns a database-dependent result handle,
 // which should be passed back to sql_row or sql_row_keyed to get the results.
 // Returns 0 on error; use sql_error to get the error message.
-function sql_query ($sql)
+function sql_pgsql_query ($sql, $db_conn = null)
 {
-  global $db_c;
+  sql_pgsql_ensure_handle($db_conn);
+
   $e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
-  $r = pg_query($db_c, $sql);
+  $r = pg_query($db_conn, $sql);
   error_reporting($e);
   return $r;
 }
+
 
 // Return a row from a result. The first row is 0.
 // The row is returned as an array with index 0=first column, etc.
 // When called with i >= number of rows in the result, cleans up from
 // the query and returns 0.
 // Typical usage: $i = 0; while ((a = sql_row($r, $i++))) { ... }
-function sql_row ($r, $i)
+function sql_pgsql_row ($r, $i, $db_conn = null)
 {
+  sql_pgsql_ensure_handle($db_conn);
+
   if ($i >= pg_num_rows($r))
   {
     pg_free_result($r);
@@ -95,14 +120,17 @@ function sql_row ($r, $i)
   return pg_fetch_row($r, $i);
 }
 
+
 // Return a row from a result as an associative array keyed by field name.
 // The first row is 0.
 // This is actually upward compatible with sql_row since the underlying
 // routing also stores the data under number indexes.
 // When called with i >= number of rows in the result, cleans up from
 // the query and returns 0.
-function sql_row_keyed ($r, $i)
+function sql_pgsql_row_keyed ($r, $i, $db_conn = null)
 {
+  sql_pgsql_ensure_handle($db_conn);
+
   if ($i >= pg_num_rows($r))
   {
     pg_free_result($r);
@@ -111,40 +139,55 @@ function sql_row_keyed ($r, $i)
   return pg_fetch_array($r, $i);
 }
 
+
 // Return the number of rows returned by a result handle from sql_query.
-function sql_count ($r)
+function sql_pgsql_count ($r, $db_conn = null)
 {
+  sql_pgsql_ensure_handle($db_conn);
+
   return pg_num_rows($r);
 }
 
+
 // Return the value of an autoincrement field from the last insert.
 // For PostgreSQL, this must be a SERIAL type field.
-function sql_insert_id($table, $field)
+function sql_pgsql_insert_id($table, $field, $db_conn = null)
 {
+  sql_pgsql_ensure_handle($db_conn);
+
   $seq_name = $table . "_" . $field . "_seq";
-  return sql_query1("select last_value from $seq_name");
+  return sql_pgsql_query1("select last_value from $seq_name", $db_conn);
 }
 
+
 // Return the text of the last error message.
-function sql_error()
+function sql_pgsql_error($db_conn = null)
 {
-  global $db_c;
-  return pg_last_error($db_c);
+  sql_pgsql_ensure_handle($db_conn);
+
+  return pg_last_error($db_conn);
 }
+
 
 // Begin a transaction, if the database supports it. This is used to
 // improve PostgreSQL performance for multiple insert/delete/updates.
 // There is no rollback support, since MySQL doesn't support it.
-function sql_begin()
+function sql_pgsql_begin($db_conn = null)
 {
-  sql_command("BEGIN");
+  sql_pgsql_ensure_handle($db_conn);
+
+  sql_pgsql_command("BEGIN", $db_conn);
 }
 
+
 // Commit (end) a transaction. See sql_begin().
-function sql_commit()
+function sql_pgsql_commit($db_conn = null)
 {
-  sql_command("COMMIT");
+  sql_pgsql_ensure_handle($db_conn);
+
+  sql_pgsql_command("COMMIT", $db_conn);
 }
+
 
 // Acquire a mutual-exclusion lock on the named table. For portability:
 // This will not lock out SELECTs.
@@ -158,135 +201,197 @@ function sql_commit()
 //
 // In PostgreSQL, the EXCLUSIVE mode lock excludes all but SELECT.
 // It does not timeout, but waits forever for the lock.
-function sql_mutex_lock($name)
+function sql_pgsql_mutex_lock($name, $db_conn = null)
 {
-  global $sql_mutex_shutdown_registered, $sql_mutex_unlock_name;
-  if (sql_command("BEGIN") < 0
-      || sql_command("LOCK TABLE $name IN EXCLUSIVE MODE") < 0)
+  sql_pgsql_ensure_handle($db_conn);
+
+  global $sql_pgsql_mutex_shutdown_registered, $sql_pgsql_mutex_unlock_name;
+  if ((sql_pgsql_command("BEGIN", $db_conn) < 0) ||
+      (sql_pgsql_command("LOCK TABLE $name IN EXCLUSIVE MODE", $db_conn) < 0))
   {
     return 0;
   }
-  $sql_mutex_unlock_name = $name;
-  if (empty($sql_mutex_shutdown_registered))
+  $sql_pgsql_mutex_unlock_name = $name;
+  if (empty($sql_pgsql_mutex_shutdown_registered))
   {
-    register_shutdown_function("sql_mutex_cleanup");
-    $sql_mutex_shutdown_registered = 1;
+    register_shutdown_function("sql_pgsql_mutex_cleanup", $db_conn);
+    $sql_pgsql_mutex_shutdown_registered = 1;
   }
   return 1;
 }
 
+
 // Release a mutual-exclusion lock on the named table. See sql_mutex_lock.
 // In PostgreSQL, all locks are released by closing the transaction; there
 // is no other way.
-function sql_mutex_unlock($name)
+function sql_pgsql_mutex_unlock($name, $db_conn = null)
 {
-  global $sql_mutex_unlock_name;
-  sql_command("COMMIT");
-  $sql_mutex_unlock_name = "";
+  sql_pgsql_ensure_handle($db_conn);
+
+  global $sql_pgsql_mutex_unlock_name;
+  sql_pgsql_command("COMMIT", $db_conn);
+  $sql_pgsql_mutex_unlock_name = "";
 }
 
+
 // Shutdown function to clean up a forgotten lock. For internal use only.
-function sql_mutex_cleanup()
+function sql_pgsql_mutex_cleanup($db_conn)
 {
-  global $sql_mutex_shutdown_registered, $sql_mutex_unlock_name;
-  if (!empty($sql_mutex_unlock_name))
+  global $sql_pgsql_mutex_shutdown_registered, $sql_pgsql_mutex_unlock_name;
+  if (!empty($sql_pgsql_mutex_unlock_name))
   {
-    sql_command("ABORT");
-    $sql_mutex_unlock_name = "";
+    sql_pgsql_command("ABORT", $db_conn);
+    $sql_pgsql_mutex_unlock_name = "";
   }
 }
 
+
 // Return a string identifying the database version:
-function sql_version()
+function sql_pgsql_version($db_conn = null)
 {
-  $r = sql_query("select version()");
-  $v = sql_row($r, 0);
-  sql_free($r);
+  sql_pgsql_ensure_handle($db_conn);
+
+  $r = sql_pgsql_query("select version()", $db_conn);
+  $v = sql_pgsql_row($r, 0, $db_conn);
+  sql_pgsql_free($r, $db_conn);
+
   return $v[0];
 }
 
+
 // Generate non-standard SQL for LIMIT clauses:
-function sql_syntax_limit($count, $offset)
+function sql_pgsql_syntax_limit($count, $offset, $db_conn = null)
 {
+  sql_pgsql_ensure_handle($db_conn);
+
   return " LIMIT $count OFFSET $offset ";
 }
 
+
 // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
-function sql_syntax_timestamp_to_unix($fieldname)
+function sql_pgsql_syntax_timestamp_to_unix($fieldname, $db_conn = null)
 {
+  sql_pgsql_ensure_handle($db_conn);
+
   return " DATE_PART('epoch', $fieldname) ";
 }
+
 
 // Generate non-standard SQL to match a string anywhere in a field's value
 // in a case insensitive manner. $s is the un-escaped/un-slashed string.
 // In PostgreSQL, we can do case insensitive regexp with ~*, but not case
 // insensitive LIKE matching.
 // Quotemeta escapes everything we need except for single quotes.
-function sql_syntax_caseless_contains($fieldname, $s)
+function sql_pgsql_syntax_caseless_contains($fieldname, $s, $db_conn = null)
 {
+  sql_pgsql_ensure_handle($db_conn);
+
   $s = quotemeta($s);
   $s = str_replace("'", "''", $s);
   return " $fieldname ~* '$s' ";
 }
 
+
 // Returns the name of a field.
-function sql_field_name($result, $index)
+function sql_pgsql_field_name($result, $index, $db_conn = null)
 {
+  sql_pgsql_ensure_handle($db_conn);
+
   return pg_field_name($result, $index);
 }
 
+
 // A map to turn pgsql extension field type names into our (well, the mysql
 // extension's) field type strings
-$sql_type_map = array();
-$sql_type_map['bool'] = "int";
-$sql_type_map['int2'] = "int";
-$sql_type_map['int4'] = "int";
-$sql_type_map['int8'] = "int";
-$sql_type_map['numeric'] = "int";
-$sql_type_map['float4'] = "real";
-$sql_type_map['float8'] = "real";
-$sql_type_map['varchar'] = "string";
-$sql_type_map['text'] = "string";
-$sql_type_map['bpchar'] = "string";
+$sql_pgsql_type_map = array();
+$sql_pgsql_type_map['bool'] = "int";
+$sql_pgsql_type_map['int2'] = "int";
+$sql_pgsql_type_map['int4'] = "int";
+$sql_pgsql_type_map['int8'] = "int";
+$sql_pgsql_type_map['numeric'] = "int";
+$sql_pgsql_type_map['float4'] = "real";
+$sql_pgsql_type_map['float8'] = "real";
+$sql_pgsql_type_map['varchar'] = "string";
+$sql_pgsql_type_map['text'] = "string";
+$sql_pgsql_type_map['bpchar'] = "string";
 
 
 // Returns the type of a field. (one of "int", "real", "string", "blob", etc...)
-function sql_field_type($result, $index)
+function sql_pgsql_field_type($result, $index, $db_conn = null)
 {
-  global $sql_type_map;
+  sql_pgsql_ensure_handle($db_conn);
+
+  global $sql_pgsql_type_map;
 
   $type = pg_field_type($result, $index);
 
-  return isset($sql_type_map[$type]) ? $sql_type_map[$type] : 'unknown';
+  return isset($sql_pgsql_type_map[$type]) ? $sql_pgsql_type_map[$type] : 'unknown';
 }
 
+
 // Returns the number of fields in a result.
-function sql_num_fields($result)
+function sql_pgsql_num_fields($result, $db_conn = null)
 {
+  sql_pgsql_ensure_handle($db_conn);
+
   return pg_num_fields($result);
 }
 
-// Establish a database connection.
-// On connection error, the message will be output without a proper HTML
-// header. There is no way I can see around this; if track_errors isn't on
-// there seems to be no way to supress the automatic error message output and
-// still be able to access the error text.
-$conninfo = (empty($db_host) ? "" : "host=$db_host ")
-  . "dbname=$db_database user=$db_login password=$db_password";
-if (empty($db_nopersist))
-{
-  $db_c = pg_pconnect($conninfo);
-}
-else
-{
-  $db_c = pg_connect($conninfo);
-}
-unset($conninfo);
 
-if (!$db_c)
+// Connect to a database server and select a database, optionally using
+// persistent connections
+function sql_pgsql_connect($host, $username, $password, $db_name,
+                           $persist = 0)
 {
-  echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n</p>\n";
-  exit;
+  // Establish a database connection.
+
+  // On connection error, the message will be output without a proper HTML
+  // header. There is no way I can see around this; if track_errors isn't on
+  // there seems to be no way to supress the automatic error message output and
+  // still be able to access the error text.
+
+  $conninfo = (empty($host) ? "" : "host=$host ") .
+    "dbname=$db_name user=$username password=$password";
+
+  if ($persist)
+  {
+    $db_conn = pg_pconnect($conninfo);
+  }
+  else
+  {
+    $db_conn = pg_connect($conninfo);
+  }
+
+  unset($conninfo);
+
+  if (!$db_conn)
+  {
+    echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n</p>\n";
+    exit;
+  }
+
+  return $db_conn;
+}
+
+
+//
+function sql_pgsql_default_connect()
+{
+  global $sql_pgsql_conn, $db_nopersist, $db_host, $db_login, $db_password,
+         $db_database;
+
+  /////////////////////////////////////////////
+  // Open the standard MRBS database connection
+
+  $persist = 1;
+  if (!empty($db_nopersist) && $db_nopersist)
+  {
+    $persist = 0;
+  }
+  global $sql_pgsql_conn;
+
+  $sql_pgsql_conn = sql_pgsql_connect($db_host, $db_login, $db_password,
+                                      $db_database, $persist);
 }
 
 ?>

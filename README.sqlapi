@@ -1,15 +1,17 @@
-README.sqlapi     - Database wrappers for MRBS                     2001-01-15
+README.sqlapi     - Database wrappers for MRBS
 -----------------------------------------------------------------------------
 This is a simple set of PHP database call wrapper routines, currently
 implemented for MySQL (>= 3.22) (for both the 'mysql' and 'mysqli' extensions
 and PostgreSQL (>= 7.0). It was written for MRBS but may be useful in
 other applications.
 
-This package supports one single connection to a database, because the
-database connection handle is stored in a global variable. It supports
-multiple pending results for each connection. It can be configured to
-use PHP persistent (pooled) database connections, or normal (single use)
-connections.
+This package supports multiple connections to arbitrary databases,
+but also handles the default MRBS database connection without the user
+always passing a database connection handle around by storing this
+default connection handle in a global variable inside the database
+abstraction. It supports multiple pending results for each connection. It
+can be configured to use PHP persistent (pooled) database connections,
+or normal (single use) connections.
 
 CAUTION: Before using PHP persistent database connections with PostgreSQL,
 be sure your PostgreSQL postmaster can support enough backends. In theory,
@@ -23,8 +25,9 @@ connections, set $db_nopersist as described below.
 
 -----------------------------------------------------------------------------
 
-To use this package, include either "mysql.inc", "mysqli.inc" or "pgsql.inc"
-after defining the following variables:
+To use this package, include "dbsys.inc" after defining the following
+variables:
+     $dbsys = The database abstraction to use, 'mysql', 'mysqli' or 'pgsql'
      $db_host = The hostname of the database server, or "localhost"
      $db_login = The username to use when connecting to the database
      $db_password = The database account password
@@ -39,7 +42,9 @@ use Unix Domain Sockets. Generally this won't make much difference, but if
 your server runs without the -i option, it will only accept Unix Domain
 Socket connections, so you must use $db_host="".
 
-After your script includes the file, it will be connected to the database.
+After your script includes the file, it will be connected to the database,
+by calling the abstracted function sql_$dbsys_default_connect().
+
 If an error occurs while trying to connect, a message will be output
 followed by a PHP exit. (Failure to connect to the database is the only
 reason the functions defined here will output an error message and exit.)
@@ -49,7 +54,7 @@ the above variables plus:
      $dbsys = "pgsql";  //  or:  $dbsys = "mysql"; or: $dbsys = "mysqli";
 Then, each PHP script which wants to connect to the database starts with:
      include "config.inc.php";
-     include "$dbsys.inc";
+     include "dbsys.inc";
 If you do this, be sure the web server will not serve config.inc.php to
 clients, for security reasons.
 
@@ -105,6 +110,9 @@ database system):
 -----------------------------------------------------------------------------
 
 The database-independent wrapper functions are documented here:
+
+Each of the functions below takes an optional final argument that is the
+MRBS database handle returned by sql_connect() call.
 
 sql_command($sql)
   Execute a non-SELECT SQL command (for example: insert, update, delete).
@@ -219,6 +227,12 @@ sql_mutex_unlock($name)
 
 sql_version()
   Return a string identifying the database system and version.
+
+sql_connect($host, $username, $password, $db_name, $persist)
+  Connects to the specified database using the specified credentials,
+  optionally using persistent database connections. Returns an MRBS
+  specific database handle, which can be passed as the last argument of
+  all the other sql_*() functions.
 
 -----------------------------------------------------------------------------
 

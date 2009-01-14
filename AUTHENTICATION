@@ -1,4 +1,4 @@
-MRBS Users Authentication
+RBS Users Authentication
 =========================
 
 Principles
@@ -107,8 +107,8 @@ PHP authentication modules
 +------+------------------------+-------------------+------------------------+
 |db_ext|Users validated using   |                   |                        |
 |      |a table in an external  |  - Uses an        |                        |
-|      |MySQL database          |  existing         |  - MySQL only at the   |
-|      |                        |  authentication   |  moment.               |
+|      |MySQL database          |  existing         |                        |
+|      |                        |  authentication   |                        |
 |      |                        |  database thereby |                        |
 |      |                        |  saving directory |                        |
 |      |                        |  duplication.     |                        |
@@ -516,8 +516,6 @@ External DB (db_ext) Authentication
 -----------------------------------
 
 Authentication method, usable on the Internet.
-
- Works only with Mysql currently.
 
 It works by using one of the installer's own MySQL databases. You can
 configure how to connect to the database server, what database/table to

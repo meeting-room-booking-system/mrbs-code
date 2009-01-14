@@ -2,32 +2,46 @@
 // $Id$
 
 // mysql.inc - Simple PHP database support for MySQL.
-// Include this file after defining the following variables:
+// The standard MRBS database connection utilises the following configuration
+// variables:
 //   $db_host = The hostname of the database server
 //   $db_login = The username to use when connecting to the database
 //   $db_password = The database account password
 //   $db_database = The database name.
-// Including this file connects you to the database, or exits on error.
 
+
+// A small utility function (not part of the DB abstraction API) to
+// update a connection handle to the global MRBS connection handle
+// if said handle is null/empty
+function sql_mysql_ensure_handle(&$db_conn)
+{
+  if (empty($db_conn))
+  {
+    global $sql_mysql_conn;
+    $db_conn = $sql_mysql_conn;
+  }
+}
 
 // Free a results handle. You need not call this if you call sql_row or
 // sql_row_keyed until the row returns 0, since sql_row frees the results
 // handle when you finish reading the rows.
-function sql_free ($r)
+function sql_mysql_free ($r, $db_conn = null)
 {
+  sql_mysql_ensure_handle($db_conn);
+
   mysql_free_result($r);
 }
 
 // Execute a non-SELECT SQL command (insert/update/delete).
 // Returns the number of tuples affected if OK (a number >= 0).
 // Returns -1 on error; use sql_error to get the error message.
-function sql_command ($sql)
+function sql_mysql_command ($sql, $db_conn = null)
 {
-  global $db_c;
+  sql_mysql_ensure_handle($db_conn);
 
-  if (mysql_query($sql, $db_c))
+  if (mysql_query($sql, $db_conn))
   {
-    return mysql_affected_rows($db_c);
+    return mysql_affected_rows($db_conn);
   }
   return -1;
 }
@@ -38,11 +52,11 @@ function sql_command ($sql)
 // exactly one value, so error checking is somewhat limited.
 // It also returns -1 if the query returns a single NULL value, such as from
 // a MIN or MAX aggregate function applied over no rows.
-function sql_query1 ($sql)
+function sql_mysql_query1 ($sql, $db_conn = null)
 {
-  global $db_c;
+  sql_mysql_ensure_handle($db_conn);
 
-  $r = mysql_query($sql, $db_c);
+  $r = mysql_query($sql, $db_conn);
   if (! $r)
   {
     return -1;
@@ -59,11 +73,11 @@ function sql_query1 ($sql)
 // Execute an SQL query. Returns a database-dependent result handle,
 // which should be passed back to sql_row or sql_row_keyed to get the results.
 // Returns 0 on error; use sql_error to get the error message.
-function sql_query ($sql)
+function sql_mysql_query ($sql, $db_conn = null)
 {
-  global $db_c;
+  sql_mysql_ensure_handle($db_conn);
 
-  $r = mysql_query($sql, $db_c);
+  $r = mysql_query($sql, $db_conn);
   return $r;
 }
 
@@ -72,8 +86,10 @@ function sql_query ($sql)
 // When called with i >= number of rows in the result, cleans up from
 // the query and returns 0.
 // Typical usage: $i = 0; while ((a = sql_row($r, $i++))) { ... }
-function sql_row ($r, $i)
+function sql_mysql_row ($r, $i, $db_conn = null)
 {
+  sql_mysql_ensure_handle($db_conn);
+
   if ($i >= mysql_num_rows($r))
   {
     mysql_free_result($r);
@@ -89,8 +105,10 @@ function sql_row ($r, $i)
 // routing also stores the data under number indexes.
 // When called with i >= number of rows in the result, cleans up from
 // the query and returns 0.
-function sql_row_keyed ($r, $i)
+function sql_mysql_row_keyed ($r, $i, $db_conn = null)
 {
+  sql_mysql_ensure_handle($db_conn);
+
   if ($i >= mysql_num_rows($r))
   {
     mysql_free_result($r);
@@ -101,37 +119,39 @@ function sql_row_keyed ($r, $i)
 }
 
 // Return the number of rows returned by a result handle from sql_query.
-function sql_count ($r)
+function sql_mysql_count ($r, $db_conn = null)
 {
+  sql_mysql_ensure_handle($db_conn);
+
   return mysql_num_rows($r);
 }
 
 // Return the value of an autoincrement field from the last insert.
 // Must be called right after an insert on that table!
-function sql_insert_id($table, $field)
+function sql_mysql_insert_id($table, $field, $db_conn = null)
 {
-  global $db_c;
+  sql_mysql_ensure_handle($db_conn);
 
-  return mysql_insert_id($db_c);
+  return mysql_insert_id($db_conn);
 }
 
 // Return the text of the last error message.
-function sql_error()
+function sql_mysql_error($db_conn = null)
 {
-  global $db_c;
+  sql_mysql_ensure_handle($db_conn);
 
-  return mysql_error($db_c);
+  return mysql_error($db_conn);
 }
 
 // Begin a transaction, if the database supports it. This is used to
 // improve PostgreSQL performance for multiple insert/delete/updates.
 // There is no rollback support, since MySQL doesn't support it.
-function sql_begin()
+function sql_msyql_begin($db_conn = null)
 {
 }
 
 // Commit (end) a transaction. See sql_begin().
-function sql_commit()
+function sql_mysql_commit($db_conn = null)
 {
 }
 
@@ -146,61 +166,70 @@ function sql_commit()
 // Do not mix this with sql_begin()/sql_end() calls.
 //
 // In MySQL, we avoid table locks, and use low-level locks instead.
-function sql_mutex_lock($name)
+function sql_mysql_mutex_lock($name, $db_conn = null)
 {
-  global $sql_mutex_shutdown_registered, $sql_mutex_unlock_name;
-  if (!sql_query1("SELECT GET_LOCK('$name', 20)"))
+  sql_mysql_ensure_handle($db_conn);
+
+  global $sql_mysql_mutex_shutdown_registered, $sql_mysql_mutex_unlock_name;
+  if (!sql_mysql_query1("SELECT GET_LOCK('$name', 20)", $db_conn))
   {
     return 0;
   }
-  $sql_mutex_unlock_name = $name;
-  if (empty($sql_mutex_shutdown_registered))
+  $sql_mysql_mutex_unlock_name = $name;
+  if (empty($sql_mysql_mutex_shutdown_registered))
   {
-    register_shutdown_function("sql_mutex_cleanup");
-    $sql_mutex_shutdown_registered = 1;
+    register_shutdown_function("sql_mysql_mutex_cleanup", $db_conn);
+    $sql_mysql_mutex_shutdown_registered = 1;
   }
   return 1;
 }
 
 // Release a mutual-exclusion lock on the named table. See sql_mutex_unlock.
-function sql_mutex_unlock($name)
+function sql_mysql_mutex_unlock($name, $db_conn = null)
 {
-  global $sql_mutex_unlock_name;
-  sql_query1("SELECT RELEASE_LOCK('$name')");
-  $sql_mutex_unlock_name = "";
+  sql_mysql_ensure_handle($db_conn);
+
+  global $sql_mysql_mutex_unlock_name;
+  sql_mysql_query1("SELECT RELEASE_LOCK('$name')", $db_conn);
+  $sql_mysql_mutex_unlock_name = "";
 }
 
 // Shutdown function to clean up a forgotten lock. For internal use only.
-function sql_mutex_cleanup()
+function sql_mysql_mutex_cleanup($db_conn)
 {
-  global $sql_mutex_shutdown_registered, $sql_mutex_unlock_name;
-  if (!empty($sql_mutex_unlock_name))
+  global $sql_mysql_mutex_shutdown_registered, $sql_mysql_mutex_unlock_name;
+  if (!empty($sql_mysql_mutex_unlock_name))
   {
-    sql_mutex_unlock($sql_mutex_unlock_name);
-    $sql_mutex_unlock_name = "";
+    sql_mysql_mutex_unlock($sql_mysql_mutex_unlock_name, $db_conn);
+    $sql_mysql_mutex_unlock_name = "";
   }
 }
 
-
 // Return a string identifying the database version:
-function sql_version()
+function sql_mysql_version($db_conn = null)
 {
-  $r = sql_query("select version()");
-  $v = sql_row($r, 0);
-  sql_free($r);
+  sql_mysql_ensure_handle($db_conn);
+
+  $r = sql_mysql_query("select version()", $db_conn);
+  $v = sql_mysql_row($r, 0, $db_conn);
+  sql_mysql_free($r, $db_conn);
   return "MySQL $v[0]";
 }
 
 
 // Generate non-standard SQL for LIMIT clauses:
-function sql_syntax_limit($count, $offset)
+function sql_mysql_syntax_limit($count, $offset, $db_conn = null)
 {
+  sql_mysql_ensure_handle($db_conn);
+
   return " LIMIT $offset,$count ";
 }
 
 // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
-function sql_syntax_timestamp_to_unix($fieldname)
+function sql_mysql_syntax_timestamp_to_unix($fieldname, $db_conn = null)
 {
+  sql_mysql_ensure_handle($db_conn);
+
   return " UNIX_TIMESTAMP($fieldname) ";
 }
 
@@ -208,8 +237,10 @@ function sql_syntax_timestamp_to_unix($fieldname)
 // in a case insensitive manner. $s is the un-escaped/un-slashed string.
 // In MySQL, REGEXP seems to be case sensitive, so use LIKE instead. But this
 // requires quoting of % and _ in addition to the usual.
-function sql_syntax_caseless_contains($fieldname, $s)
+function sql_mysql_syntax_caseless_contains($fieldname, $s, $db_conn = null)
 {
+  sql_mysql_ensure_handle($db_conn);
+
   $s = str_replace("\\", "\\\\", $s);
   $s = str_replace("%", "\\%", $s);
   $s = str_replace("_", "\\_", $s);
@@ -218,43 +249,76 @@ function sql_syntax_caseless_contains($fieldname, $s)
 }
 
 // Returns the name of a field.
-function sql_field_name($result, $index)
+function sql_mysql_field_name($result, $index, $db_conn = null)
 {
+  sql_mysql_ensure_handle($db_conn);
+
   return mysql_field_name($result, $index);
 }
 
 // Returns the type of a field. (one of "int", "real", "string", "blob", etc...)
-function sql_field_type($result, $index)
+function sql_mysql_field_type($result, $index, $db_conn = null)
 {
+  sql_mysql_ensure_handle($db_conn);
+
   return mysql_field_type($result, $index);
 }
 
 // Returns the number of fields in a result.
-function sql_num_fields($result)
+function sql_mysql_num_fields($result, $db_conn = null)
 {
+  sql_mysql_ensure_handle($db_conn);
+
   return mysql_num_fields($result);
 }
 
 
+// Connect to a database server and select a database, optionally using
+// persistent connections
+function sql_mysql_connect($host, $username, $password, $db_name, $persist = 0)
+{
+  // Establish a database connection.
 
-// Establish a database connection.
-// On connection error, the message will be output without a proper HTML
-// header. There is no way I can see around this; if track_errors isn't on
-// there seems to be no way to supress the automatic error message output and
-// still be able to access the error text.
-if (empty($db_nopersist))
-{
-  $db_c = mysql_pconnect($db_host, $db_login, $db_password);
-}
-else
-{
-  $db_c = mysql_connect($db_host, $db_login, $db_password);
+  // On connection error, the message will be output without a proper HTML
+  // header. There is no way I can see around this; if track_errors isn't on
+  // there seems to be no way to supress the automatic error message output and
+  // still be able to access the error text.
+
+  if ($persist)
+  {
+    $db_conn = mysql_pconnect($host, $username, $password);
+  }
+  else
+  {
+    $db_conn = mysql_connect($host, $username, $password);
+  }
+
+  if (!$db_conn || !mysql_select_db ($db_name, $db_conn))
+  {
+    echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n</p>\n";
+    exit;
+  }
+  return $db_conn;
 }
 
-if (!$db_c || !mysql_select_db ($db_database, $db_c))
+
+//
+function sql_mysql_default_connect()
 {
-  echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n</p>\n";
-  exit;
+  global $sql_mysql_conn, $db_nopersist, $db_host, $db_login, $db_password,
+         $db_database;
+
+  /////////////////////////////////////////////
+  // Open the standard MRBS database connection
+
+  $persist = 1;
+  if (!empty($db_nopersist) && $db_nopersist)
+  {
+    $persist = 0;
+  }
+
+  $sql_mysql_conn = sql_mysql_connect($db_host, $db_login, $db_password,
+                                      $db_database, $persist);
 }
 
 ?>

@@ -9,7 +9,7 @@
 
 require_once "grab_globals.inc.php";
 include("config.inc.php");
-include("$dbsys.inc");
+include("dbsys.inc");
 
 $day   = date("d");
 $month = date("m");
