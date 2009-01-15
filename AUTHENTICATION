@@ -107,7 +107,7 @@ PHP authentication modules
 +------+------------------------+-------------------+------------------------+
 |db_ext|Users validated using   |                   |                        |
 |      |a table in an external  |  - Uses an        |                        |
-|      |MySQL database          |  existing         |                        |
+|      |database                |  existing         |                        |
 |      |                        |  authentication   |                        |
 |      |                        |  database thereby |                        |
 |      |                        |  saving directory |                        |
