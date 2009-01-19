@@ -22,6 +22,7 @@ function sql_mysql_ensure_handle(&$db_conn)
   }
 }
 
+
 // Free a results handle. You need not call this if you call sql_row or
 // sql_row_keyed until the row returns 0, since sql_row frees the results
 // handle when you finish reading the rows.
@@ -31,6 +32,7 @@ function sql_mysql_free ($r, $db_conn = null)
 
   mysql_free_result($r);
 }
+
 
 // Execute a non-SELECT SQL command (insert/update/delete).
 // Returns the number of tuples affected if OK (a number >= 0).
@@ -45,6 +47,7 @@ function sql_mysql_command ($sql, $db_conn = null)
   }
   return -1;
 }
+
 
 // Execute an SQL query which should return a single non-negative number value.
 // This is a lightweight alternative to sql_query, good for use with count(*)
@@ -70,6 +73,7 @@ function sql_mysql_query1 ($sql, $db_conn = null)
   return $result;
 }
 
+
 // Execute an SQL query. Returns a database-dependent result handle,
 // which should be passed back to sql_row or sql_row_keyed to get the results.
 // Returns 0 on error; use sql_error to get the error message.
@@ -80,6 +84,7 @@ function sql_mysql_query ($sql, $db_conn = null)
   $r = mysql_query($sql, $db_conn);
   return $r;
 }
+
 
 // Return a row from a result. The first row is 0.
 // The row is returned as an array with index 0=first column, etc.
@@ -98,6 +103,7 @@ function sql_mysql_row ($r, $i, $db_conn = null)
   mysql_data_seek($r, $i);
   return mysql_fetch_row($r);
 }
+
 
 // Return a row from a result as an associative array keyed by field name.
 // The first row is 0.
@@ -118,6 +124,7 @@ function sql_mysql_row_keyed ($r, $i, $db_conn = null)
   return mysql_fetch_array($r);
 }
 
+
 // Return the number of rows returned by a result handle from sql_query.
 function sql_mysql_count ($r, $db_conn = null)
 {
@@ -125,6 +132,7 @@ function sql_mysql_count ($r, $db_conn = null)
 
   return mysql_num_rows($r);
 }
+
 
 // Return the value of an autoincrement field from the last insert.
 // Must be called right after an insert on that table!
@@ -135,6 +143,7 @@ function sql_mysql_insert_id($table, $field, $db_conn = null)
   return mysql_insert_id($db_conn);
 }
 
+
 // Return the text of the last error message.
 function sql_mysql_error($db_conn = null)
 {
@@ -143,17 +152,20 @@ function sql_mysql_error($db_conn = null)
   return mysql_error($db_conn);
 }
 
+
 // Begin a transaction, if the database supports it. This is used to
 // improve PostgreSQL performance for multiple insert/delete/updates.
 // There is no rollback support, since MySQL doesn't support it.
-function sql_msyql_begin($db_conn = null)
+function sql_mysql_begin($db_conn = null)
 {
 }
+
 
 // Commit (end) a transaction. See sql_begin().
 function sql_mysql_commit($db_conn = null)
 {
 }
+
 
 // Acquire a mutual-exclusion lock on the named table. For portability:
 // This will not lock out SELECTs.
@@ -184,6 +196,7 @@ function sql_mysql_mutex_lock($name, $db_conn = null)
   return 1;
 }
 
+
 // Release a mutual-exclusion lock on the named table. See sql_mutex_unlock.
 function sql_mysql_mutex_unlock($name, $db_conn = null)
 {
@@ -193,6 +206,7 @@ function sql_mysql_mutex_unlock($name, $db_conn = null)
   sql_mysql_query1("SELECT RELEASE_LOCK('$name')", $db_conn);
   $sql_mysql_mutex_unlock_name = "";
 }
+
 
 // Shutdown function to clean up a forgotten lock. For internal use only.
 function sql_mysql_mutex_cleanup($db_conn)
@@ -204,6 +218,7 @@ function sql_mysql_mutex_cleanup($db_conn)
     $sql_mysql_mutex_unlock_name = "";
   }
 }
+
 
 // Return a string identifying the database version:
 function sql_mysql_version($db_conn = null)
@@ -225,6 +240,7 @@ function sql_mysql_syntax_limit($count, $offset, $db_conn = null)
   return " LIMIT $offset,$count ";
 }
 
+
 // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
 function sql_mysql_syntax_timestamp_to_unix($fieldname, $db_conn = null)
 {
@@ -232,6 +248,7 @@ function sql_mysql_syntax_timestamp_to_unix($fieldname, $db_conn = null)
 
   return " UNIX_TIMESTAMP($fieldname) ";
 }
+
 
 // Generate non-standard SQL to match a string anywhere in a field's value
 // in a case insensitive manner. $s is the un-escaped/un-slashed string.
@@ -248,6 +265,7 @@ function sql_mysql_syntax_caseless_contains($fieldname, $s, $db_conn = null)
   return " $fieldname LIKE '%$s%' ";
 }
 
+
 // Returns the name of a field.
 function sql_mysql_field_name($result, $index, $db_conn = null)
 {
@@ -256,6 +274,7 @@ function sql_mysql_field_name($result, $index, $db_conn = null)
   return mysql_field_name($result, $index);
 }
 
+
 // Returns the type of a field. (one of "int", "real", "string", "blob", etc...)
 function sql_mysql_field_type($result, $index, $db_conn = null)
 {
@@ -263,6 +282,7 @@ function sql_mysql_field_type($result, $index, $db_conn = null)
 
   return mysql_field_type($result, $index);
 }
+
 
 // Returns the number of fields in a result.
 function sql_mysql_num_fields($result, $db_conn = null)
