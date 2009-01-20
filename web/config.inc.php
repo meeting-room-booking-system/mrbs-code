@@ -119,14 +119,6 @@ $eveningends_minutes   = 30;   // must be integer in range 0-59
 // To get a full 24 hour display with 15-minute steps, set morningstarts=0; eveningends=23;
 // eveningends_minutes=45; and resolution=900.
 
-// Do some checking
-$start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
-$start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
-$start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
-if (($start_difference < 0) or ($start_difference%$resolution != 0))
-{
-  die('Configuration error: start and end of day incorrectly defined');
-}
 
 
 // Define the name or description for your periods in chronological order
@@ -153,9 +145,22 @@ $periods[] = "Period&nbsp;2";
 // NOTE:  The maximum number of periods is 60.   Do not define more than this.
 
 // Do some checking
-if (count($periods) > 60)
+if ($enable_periods)
 {
-  die('Configuration error: too many periods defined');
+  if (count($periods) > 60)
+  {
+    die('Configuration error: too many periods defined');
+  }
+}
+else
+{
+  $start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
+  $start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
+  $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
+  if (($start_difference < 0) or ($start_difference%$resolution != 0))
+  {
+    die('Configuration error: start and end of day incorrectly defined');
+  }
 }
 
 // Start of week: 0 for Sunday, 1 for Monday, etc.
