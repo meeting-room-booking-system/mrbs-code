@@ -60,23 +60,43 @@ else
     $ctime = mktime(0, 0, 0, $month, $day + $i, $year);
   
     $str = utf8_strftime(empty($dateformat)? "%b %d" : "%d %b", $ctime);
+    $class = "";
   
     $cyear  = date("Y", $ctime);
     $cmonth = date("m", $ctime);
     $cday   = date("d", $ctime);
+    
+    // put in a separator, unless we are at the beginning
     if ($i != -6)
     {
       echo " | ";
     }
+    
+    // if it's a hidden day set the class; otherwise construct the anchor
+    // (don't offer a link if the day is a hidden day)
+    if (is_hidden_day(date("w", $ctime)))
+    { 
+      $class .= "hidden";      
+    }
+    else
+    {
+      $str = "<a href=\"day.php?year=$cyear&amp;month=$cmonth&amp;day=$cday$params\">" . $str . "</a>";
+    }
+    
+    // and if it's the current day, add square brackets and set the class
     if ($i == 0)
     {
-      echo "<span class=\"current\">\n[ ";
-    }
-    echo "  <a href=\"day.php?year=$cyear&amp;month=$cmonth&amp;day=$cday$params\">$str</a>\n";
-    if ($i == 0)
-    {
-      echo "]</span>\n";
-    }
+      $str = "[ " . $str . " ]";
+      if (empty($class))
+      {
+        $class = "current";
+      }
+      else
+      {
+        $class .= " current";
+      }
+    }   
+    echo "<span class=\"$class\">$str</span>\n";
   }
   echo "</div>\n";
   

@@ -4,3 +4,16 @@
 
 /* ------------ ADMIN.PHP ---------------------------*/
 .form_admin fieldset {padding-top: 0}
+
+/* ------------ TRAILER.INC ---------------------*/
+
+/* opacity for IE8 is implemented with filter, but only works if the element */
+/* is positioned;  you can also get filter to work by using zoom.   However  */
+/* the zoom only works if the element is a block or inline-block; we need it */
+/* to be inline, hence the inline-block.    Note also that in IE8 you have   */
+/* to use -ms-zoom and -ms-filter instead of zoom and filter                 */
+#trailer span.hidden {
+    display: inline-block;            /* to force the zoom to work */
+    -ms-zoom: 1;                      /* to force the filter to work */
+    -ms-filter: "alpha(opacity=50)";  /* keep the value in step with the main stylesheet */
+}

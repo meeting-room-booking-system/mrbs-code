@@ -1,0 +1,13 @@
+/* $Id$ */
+
+/* Fixes for Internet Explorer 7 and less */
+
+
+/* ------------ TRAILER.INC ---------------------*/
+
+/* opacity for IE7 and below is implemented with filter, but only works if the */
+/* element is positioned;  you can also get filter to work by using zoom.      */
+#trailer span.hidden {
+    zoom: 1;                   /* to force the filter to work */
+    filter: alpha(opacity=50); /* keep the value in step with the main stylesheet */
+}

@@ -74,6 +74,8 @@ $anchor_link_color_header       = $header_font_color;          // link color
 $anchor_visited_color_header    = $anchor_link_color_header;   // link color (visited)
 $anchor_hover_color_header      = $anchor_link_color_header;   // link color (hover)
 
+$column_hidden_color            = $main_table_month_invalid_color;    // hidden days in the week and month views
+$calendar_hidden_color          = "#dae0e4";                          // hidden days in the mini-cals
 $row_even_color                 = "#ffffff";        // even rows in the day and week views
 $row_odd_color                  = "#f2f4f6";        // even rows in the day and week views
 $row_highlight_color            = "#ffc0da";        // used for highlighting a row
@@ -185,6 +187,36 @@ table#admin {margin-bottom: 1.0em}
 
 
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/
+
+<?php
+$column_hidden_width  = 0;  // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column)
+$column_times_width   = 1;  // (%) width of the times/periods columns (will expand if necessary)
+
+// week view:  work out what percentage of the width is available to
+// normal columns (ie columns that are not hidden)
+$n_hidden_days = count($hidden_days);
+$column_week = 100 - $column_times_width;                // subtract the width of the left hand column
+if ($times_right_side)
+{
+  $column_week -= $column_times_width;                   // and the right hand column if present
+}
+$column_week -= ($column_hidden_width * $n_hidden_days); // subtract the width of the hidden columns
+if ($n_hidden_days < 7)                                  // (avoid the div by zero)
+{
+  $column_week = $column_week/(7 - $n_hidden_days);      // divide what's left between the number of days to display
+}
+$column_week = number_format($column_week, 1, '.', '');  // (%) tidy the number up and make sure it's valid for CSS (no commas)
+
+// month view:  work out what percentage of the width is available to
+// normal columns (ie columns that are not hidden)
+$column_month = 100 - ($column_hidden_width *  $n_hidden_days);
+if ($n_hidden_days < 7)                                  // (avoid the div by zero)
+{
+  $column_month = $column_month/(7 - $n_hidden_days);      // divide what's left between the number of days to display
+}
+$column_month = number_format($column_month, 1, '.', '');  // (%) tidy the number up and make sure it's valid for CSS (no commas)
+
+?>
 div#dwm_header {width: 100%; float: left; margin-top: 1.0em; margin-bottom: 0.5em}
 div#dwm_areas  {float: left; margin-right: 2.0em}
 div#dwm_rooms  {float: left; margin-right: 2.0em}
@@ -219,11 +251,11 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main th a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
 .dwm_main th a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
 .dwm_main th a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
-.dwm_main#day_main th.first_last {width: 1%}
+.dwm_main#day_main th.first_last {width: <?php echo $column_times_width ?>%}
 .dwm_main#day_main td, .dwm_main#week_main td {padding: 0 2px 0 2px}
-.dwm_main#week_main th {width: 14%}
-.dwm_main#week_main th.first_last {width: 1%; vertical-align: bottom}
-.dwm_main#month_main th {width: 14%}                                                   /* 7 days in the week */
+.dwm_main#week_main th {width: <?php echo $column_week ?>%}
+.dwm_main#week_main th.first_last {width: <?php echo $column_times_width ?>%; vertical-align: bottom}
+.dwm_main#month_main th {width: <?php echo $column_month ?>%}
 .dwm_main#month_main td {border-top:  <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>}
 .dwm_main#month_main td.valid   {background-color: <?php echo $main_table_month_color ?>}
 .dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
@@ -281,6 +313,19 @@ foreach ($color_types as $type => $col)
 
 ?>
 
+.dwm_main#week_main th.hidden_day, .dwm_main#month_main th.hidden_day     
+    {width: <?php echo $column_hidden_width ?>%; 
+    <?php 
+      echo (empty($column_hidden_width) ? " display: none" : ""); // if the width is set to zero, then don't display anything at all
+    ?>
+    }
+td.hidden_day     {background-color: <?php echo $column_hidden_color ?>; /* hidden columns (eg weekends) in the week and month views */
+    font-size: medium; font-weight: bold;
+    border-top: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $column_hidden_color ?>;
+    <?php 
+      echo (empty($column_hidden_width) ? " display: none" : ""); // if the width is set to zero, then don't display anything at all
+    ?>
+    }
 td.row_highlight  {background-color: <?php echo $row_highlight_color ?>} /* used for highlighting a row */
 td.even_row       {background-color: <?php echo $row_even_color ?>}      /* even rows in the day view */
 td.odd_row        {background-color: <?php echo $row_odd_color ?>}       /* odd rows in the day view */
@@ -660,6 +705,11 @@ div#cal_next {float: left; margin-left: 1.0em}
 table.calendar {border-spacing: 0; border-collapse: collapse}
 .calendar th {min-width: 2.0em; text-align: center; font-weight: normal; background-color: transparent; color: <?php echo $standard_font_color ?>}
 .calendar td {text-align: center; font-size: x-small}
+<?php
+// set the styling for the "hidden" days in the mini-cals
+?>
+.calendar th.hidden {background-color: <?php echo $calendar_hidden_color ?>} 
+.calendar td.hidden {background-color: <?php echo $calendar_hidden_color ?>; font-weight: bold} 
 .calendar a.current {font-weight: bold; color: <?php echo $highlight_font_color ?>}
 td#sticky_day {border: 1px dotted <?php echo $highlight_font_color ?>}
 
@@ -719,6 +769,9 @@ div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>;
 .trailer_label span {margin-right: 1.0em}
 
 #trailer span.current {font-weight: bold}
+#trailer span.hidden {font-weight: normal; 
+    background-color: <?php echo $body_background_color ?>;  /* hack: only necessary for IE6 to prevent blurring with opacity */
+    opacity: 0.5}  /* if you change this value, change it in the IE sheets as well */
 #trailer .current a {color: <?php echo $highlight_font_color ?>}
 
 div#simple_trailer {width: 100%; text-align: center; padding-top: 1.0em; padding-bottom: 2.0em}

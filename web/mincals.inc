@@ -96,9 +96,17 @@ class Calendar
       $basetime = mktime(12,0,0,6,11+$weekstarts,2000);
       for ($i = 0, $s = ""; $i < 7; $i++)
       {
-         $show = $basetime + ($i * 24 * 60 * 60);
-         $fl = utf8_strftime('%a',$show);
-         $s .= "<th>$fl</th>\n";
+        $show = $basetime + ($i * 24 * 60 * 60);
+        $fl = utf8_strftime('%a',$show);
+        // add a class if it's a hidden day so that we can apply special styling
+        if (is_hidden_day(($i + $weekstarts) % 7))
+        {
+          $s .= "<th class=\"hidden\">$fl</th>\n";
+        }
+        else
+        {
+          $s .= "<th>$fl</th>\n";
+        }
       }
       return $s;
     }
@@ -176,7 +184,13 @@ class Calendar
 
         for ($i = 0; $i < 7; $i++)
         {
+          $hide_this_day = is_hidden_day(($i + $weekstarts) % 7);
           $s .= "<td";
+
+          if ($hide_this_day)
+          {
+            $s .= " class=\"hidden\"";
+          }
           
           // If this cell is the "sticky day" (ie the day passed through in GET parameters)
           // then assign an id so that we can apply some special styling
@@ -197,8 +211,15 @@ class Calendar
             
             else   // we have a valid link
             {
-              // start the anchor
-              $s .= "<a";
+              // start the anchor or span, depending on whether it's a hidden day
+              if ($hide_this_day)
+              {
+                $s .= "<span";
+              }
+              else
+              {
+                $s .= "<a";
+              }
               
               // then work out whether to mark it as the current day/week/month
 
@@ -235,8 +256,15 @@ class Calendar
                 }
               }
               
-              // Now finish the anchor
-              $s .= " href=\"$link\">$d</a>";  
+              // Now finish the anchor or span, depending on whether it's a hidden day
+              if ($hide_this_day)
+              {
+                $s .= ">$d</span>";
+              }
+              else
+              {
+                $s .= " href=\"$link\">$d</a>";
+              } 
             }
           }
           

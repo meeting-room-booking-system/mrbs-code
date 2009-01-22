@@ -770,4 +770,11 @@ function cross_dst ( $start, $end )
 
   return $modification;
 }
+
+// checks whether a given day of the week is supposed to be hidden in the display
+function is_hidden_day ($dow)
+{
+  global $hidden_days;
+  return (isset($hidden_days) && in_array($dow, $hidden_days));
+}
 ?>

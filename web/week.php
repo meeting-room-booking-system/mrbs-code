@@ -406,10 +406,21 @@ else
 for ($j = 0; $j<=($num_of_days-1) ; $j++)
 {
   $t = mktime( 12, 0, 0, $month, $day_start_week+$j, $year); 
-  echo "<th><a href=\"day.php?year=" . strftime("%Y", $t) . 
-    "&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) . 
-    "&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">"
-    . utf8_strftime($dformat, $t) . "</a></th>\n";
+  
+  if (is_hidden_day(($j + $weekstarts) % 7))
+  {
+    // These days are to be hidden in the display (as they are hidden, just give the
+    // day of the week in the header row 
+    echo "<th class=\"hidden_day\">" . utf8_strftime('%a', $t) . "</th>\n";
+  }
+
+  else  
+  {  
+    echo "<th><a href=\"day.php?year=" . strftime("%Y", $t) . 
+      "&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) . 
+      "&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">"
+      . utf8_strftime($dformat, $t) . "</a></th>\n";
+  }
 }
 // next line to display times on right side
 if ( FALSE != $times_right_side )
@@ -467,109 +478,117 @@ for (
   // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
   for ($thisday = 0; $thisday<=($num_of_days-1) ; $thisday++)
   {
-    // Three cases:
-    // color:  id:   Slot is:   Color:                  Link to:
-    // -----   ----- --------   ---------               -----------------------
-    // unset   -     empty      zebra or row_highlight  add new entry
-    // set     unset used       by type                 none (unlabelled slot)
-    // set     set   used       by type                 view entry
-
-    $wt = mktime( 12, 0, 0, $month, $day_start_week+$thisday, $year );
-    $wday = date("d", $wt);
-    $wmonth = date("m", $wt);
-    $wyear = date("Y", $wt);
-
-    if (isset($d[$thisday][$time_t]["id"]))
+    if (is_hidden_day(($thisday + $weekstarts) % 7))
     {
-      $id    = $d[$thisday][$time_t]["id"];
-      $color = $d[$thisday][$time_t]["color"];
-      $descr = htmlspecialchars($d[$thisday][$time_t]["data"]);
-      $long_descr = htmlspecialchars($d[$thisday][$time_t]["long_descr"]);
-      $slots = $d[$thisday][$time_t]["slots"];
+      // These days are to be hidden in the display
+      echo "<td class=\"hidden_day\">&nbsp;</td>\n";
     }
     else
     {
-      unset($id);
-      $slots = 1;
-    }
-    
-    // $c is the colour of the cell that the browser sees. Zebra stripes normally,
-    // row_highlight if we're highlighting that line and the appropriate colour if
-    // it is booked (determined by the type).
-    // We tell if its booked by $id having something in it
-    if (isset($id))
-    {
-      $c = $color;
-    }
-    else if (isset($timetohighlight) && ($time_t == $timetohighlight))
-    {
-      $c = "row_highlight";
-    }
-    else
-    {
-      $c = $row_class;
-    }
-    
-    // Don't put in a <td> cell if the slot is booked and there's no description.
-    // This would mean that it's the second or subsequent slot of a booking and so the
-    // <td> for the first slot would have had a rowspan that extended the cell down for
-    // the number of slots of the booking.
-    
-    if (!(isset($id) && ($descr == "")))
-    {
-      tdcell($c, $slots);
-      
-      // If the room isnt booked then allow it to be booked
-      if (!isset($id))
+      // Three cases:
+      // color:  id:   Slot is:   Color:                  Link to:
+      // -----   ----- --------   ---------               -----------------------
+      // unset   -     empty      zebra or row_highlight  add new entry
+      // set     unset used       by type                 none (unlabelled slot)
+      // set     set   used       by type                 view entry
+  
+      $wt = mktime( 12, 0, 0, $month, $day_start_week+$thisday, $year );
+      $wday = date("d", $wt);
+      $wmonth = date("m", $wt);
+      $wyear = date("Y", $wt);
+  
+      if (isset($d[$thisday][$time_t]["id"]))
       {
-        $hour = date("H",$t);
-        $minute  = date("i",$t);
-        
-        echo "<div class=\"celldiv1\">\n";  // a bookable slot is only one unit high
-        if ($javascript_cursor)
-        {
-          echo "<script type=\"text/javascript\">\n";
-          echo "//<![CDATA[\n";
-          echo "BeginActiveCell();\n";
-          echo "//]]>\n";
-          echo "</script>\n";
-        }
-  
-        if ( $enable_periods )
-        {
-          echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
-          echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-          echo "</a>\n";
-        }
-        else
-        {
-          echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
-          echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-          echo "</a>\n";
-        }
-  
-        if ($javascript_cursor)
-        {
-          echo "<script type=\"text/javascript\">\n";
-          echo "//<![CDATA[\n";
-          echo "EndActiveCell();\n";
-              echo "//]]>\n";
-          echo "</script>\n";
-        }
-        echo "</div>\n";
+        $id    = $d[$thisday][$time_t]["id"];
+        $color = $d[$thisday][$time_t]["color"];
+        $descr = htmlspecialchars($d[$thisday][$time_t]["data"]);
+        $long_descr = htmlspecialchars($d[$thisday][$time_t]["long_descr"]);
+        $slots = $d[$thisday][$time_t]["slots"];
       }
-      else      //if it is booked then show the booking
-      { 
-      	echo "<div class=\"celldiv" . $slots . "\">\n";     // we want clipping of overflow
-        echo " <a class=\"booking\" href=\"view_entry.php?id=$id"
-          . "&amp;area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear\" "
-          . "title=\"$long_descr\">$descr</a>\n";
-        echo "</div>\n";
+      else
+      {
+        unset($id);
+        $slots = 1;
       }
       
-      echo "</td>\n";
-    }
-  }
+      // $c is the colour of the cell that the browser sees. Zebra stripes normally,
+      // row_highlight if we're highlighting that line and the appropriate colour if
+      // it is booked (determined by the type).
+      // We tell if its booked by $id having something in it
+      if (isset($id))
+      {
+        $c = $color;
+      }
+      else if (isset($timetohighlight) && ($time_t == $timetohighlight))
+      {
+        $c = "row_highlight";
+      }
+      else
+      {
+        $c = $row_class;
+      }
+      
+      // Don't put in a <td> cell if the slot is booked and there's no description.
+      // This would mean that it's the second or subsequent slot of a booking and so the
+      // <td> for the first slot would have had a rowspan that extended the cell down for
+      // the number of slots of the booking.
+      
+      if (!(isset($id) && ($descr == "")))
+      {
+        tdcell($c, $slots);
+        
+        // If the room isnt booked then allow it to be booked
+        if (!isset($id))
+        {
+          $hour = date("H",$t);
+          $minute  = date("i",$t);
+          
+          echo "<div class=\"celldiv1\">\n";  // a bookable slot is only one unit high
+          if ($javascript_cursor)
+          {
+            echo "<script type=\"text/javascript\">\n";
+            echo "//<![CDATA[\n";
+            echo "BeginActiveCell();\n";
+            echo "//]]>\n";
+            echo "</script>\n";
+          }
+    
+          if ( $enable_periods )
+          {
+            echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
+            echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+            echo "</a>\n";
+          }
+          else
+          {
+            echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday\">\n";
+            echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+            echo "</a>\n";
+          }
+    
+          if ($javascript_cursor)
+          {
+            echo "<script type=\"text/javascript\">\n";
+            echo "//<![CDATA[\n";
+            echo "EndActiveCell();\n";
+                echo "//]]>\n";
+            echo "</script>\n";
+          }
+          echo "</div>\n";
+        }
+        else      //if it is booked then show the booking
+        { 
+        	echo "<div class=\"celldiv" . $slots . "\">\n";     // we want clipping of overflow
+          echo " <a class=\"booking\" href=\"view_entry.php?id=$id"
+            . "&amp;area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear\" "
+            . "title=\"$long_descr\">$descr</a>\n";
+          echo "</div>\n";
+        }
+        
+        echo "</td>\n";
+      }
+    }  // if this is a day that is not hidden
+  }    // for loop
 
   // next lines to display times on right side
   if ( FALSE != $times_right_side )

@@ -166,6 +166,19 @@ else
 // Start of week: 0 for Sunday, 1 for Monday, etc.
 $weekstarts = 0;
 
+// Days of the week that should be hidden from display
+// 0 for Sunday, 1 for Monday, etc.
+// For example, if you want Saturdays and Sundays to be hidden set $hidden_days = array(0,6);
+//
+// By default the hidden days will be removed completely from the main table in the week and month
+// views.   You can alternatively arrange for them to be shown as narrow, greyed-out columns
+// by editing the CSS file.   Look for $column_hidden_width in mrbs.css.php.
+//
+// [Note that although they are hidden from display in the week and month views, they 
+// can still be booked from the edit_entry form and you can display the bookings by
+// jumping straight into the day view from the date selector.]
+$hidden_days = array();
+
 // Trailer date format: 0 to show dates as "Jul 10", 1 for "10 Jul"
 $dateformat = 0;
 

@@ -443,9 +443,18 @@ echo "<thead>\n";
 echo "<tr>\n";
 for ($weekcol = 0; $weekcol < 7; $weekcol++)
 {
-  echo "<th>" . day_name(($weekcol + $weekstarts)%7) . "</th>";
+  if (is_hidden_day(($weekcol + $weekstarts) % 7))
+  {
+    // These days are to be hidden in the display (as they are hidden, just give the
+    // day of the week in the header row 
+    echo "<th class=\"hidden_day\">" . day_name(($weekcol + $weekstarts)%7) . "</th>";
+  }
+  else
+  {
+    echo "<th>" . day_name(($weekcol + $weekstarts)%7) . "</th>";
+  }
 }
-echo "</tr>\n";
+echo "\n</tr>\n";
 echo "</thead>\n";
 
 // Main body
@@ -455,114 +464,150 @@ echo "<tr>\n";
 // Skip days in week before start of month:
 for ($weekcol = 0; $weekcol < $weekday_start; $weekcol++)
 {
-  echo "<td class=\"invalid\"><div class=\"cell_container\">&nbsp;</div></td>\n";
+  if (is_hidden_day(($weekcol + $weekstarts) % 7))
+  {
+    echo "<td class=\"hidden_day\"><div class=\"cell_container\">&nbsp;</div></td>\n";
+  }
+  else
+  {
+    echo "<td class=\"invalid\"><div class=\"cell_container\">&nbsp;</div></td>\n";
+  }
 }
 
 // Draw the days of the month:
 for ($cday = 1; $cday <= $days_in_month; $cday++)
 {
+  // if we're at the start of the week (and it's not the first week), start a new row
   if (($weekcol == 0) && ($cday > 1))
   {
     echo "</tr><tr>\n";
   }
-  echo "<td class=\"valid\">\n";
-  echo "<div class=\"cell_container\">\n";
   
-  echo "<div class=\"cell_header\">\n";
-  // first put in the day of the month
-  echo "<a class=\"monthday\" href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>\n";
-  echo "</div>\n";
-  // then the link to make a new booking
-  if ($javascript_cursor)
+  // output the day cell
+  if (is_hidden_day(($weekcol + $weekstarts) % 7))
   {
-    echo "<script type=\"text/javascript\">\n";
-    echo "//<![CDATA[\n";
-    echo "BeginActiveCell();\n";
-    echo "//]]>\n";
-    echo "</script>\n";
-  }
-  if ($enable_periods)
-  {
-    echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
-    echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-    echo "</a>\n";
+    // These days are to be hidden in the display (as they are hidden, just give the
+    // day of the week in the header row 
+    echo "<td class=\"hidden_day\">\n";
+    echo "<div class=\"cell_container\">\n";
+    echo "<div class=\"cell_header\">\n";
+    // first put in the day of the month
+    echo "<span>$cday</span>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+    echo "</td>\n";
   }
   else
-  {
-    echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$morningstarts&amp;minute=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
-    echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-    echo "</a>\n";
-  }
-  if ($javascript_cursor)
-  {
-    echo "<script type=\"text/javascript\">\n";
-    echo "//<![CDATA[\n";
-    echo "EndActiveCell();\n";
-    echo "//]]>\n";
-    echo "</script>\n";
-  }
-  
-  // then any bookings for the day
-  if (isset($d[$cday]["id"][0]))
-  {
-    echo "<div class=\"booking_list\">\n";
-    $n = count($d[$cday]["id"]);
-    // Show the start/stop times, 1 or 2 per line, linked to view_entry.
-    for ($i = 0; $i < $n; $i++)
+  {   
+    echo "<td class=\"valid\">\n";
+    echo "<div class=\"cell_container\">\n";
+    
+    echo "<div class=\"cell_header\">\n";
+    // first put in the day of the month
+    echo "<a class=\"monthday\" href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>\n";
+    echo "</div>\n";
+    // then the link to make a new booking
+    if ($javascript_cursor)
     {
-      // give the enclosing div the appropriate width: full width if both,
-      // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
-      echo "<div class=\"" . $d[$cday]["color"][$i] . "\"" .
-        " style=\"width: " . (($monthly_view_entries_details == "both") ? '100%' : '49.9%') . "\">\n";
-      $booking_link = "view_entry.php?id=" . $d[$cday]["id"][$i] . "&amp;day=$cday&amp;month=$month&amp;year=$year";
-      $slot_text = $d[$cday]["data"][$i];
-      $description_text = utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255);
-      $full_text = $slot_text . " " . $description_text;
-      switch ($monthly_view_entries_details)
+      echo "<script type=\"text/javascript\">\n";
+      echo "//<![CDATA[\n";
+      echo "BeginActiveCell();\n";
+      echo "//]]>\n";
+      echo "</script>\n";
+    }
+    if ($enable_periods)
+    {
+      echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
+      echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+      echo "</a>\n";
+    }
+    else
+    {
+      echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$morningstarts&amp;minute=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
+      echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+      echo "</a>\n";
+    }
+    if ($javascript_cursor)
+    {
+      echo "<script type=\"text/javascript\">\n";
+      echo "//<![CDATA[\n";
+      echo "EndActiveCell();\n";
+      echo "//]]>\n";
+      echo "</script>\n";
+    }
+    
+    // then any bookings for the day
+    if (isset($d[$cday]["id"][0]))
+    {
+      echo "<div class=\"booking_list\">\n";
+      $n = count($d[$cday]["id"]);
+      // Show the start/stop times, 1 or 2 per line, linked to view_entry.
+      for ($i = 0; $i < $n; $i++)
       {
-        case "description":
+        // give the enclosing div the appropriate width: full width if both,
+        // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
+        echo "<div class=\"" . $d[$cday]["color"][$i] . "\"" .
+          " style=\"width: " . (($monthly_view_entries_details == "both") ? '100%' : '49.9%') . "\">\n";
+        $booking_link = "view_entry.php?id=" . $d[$cday]["id"][$i] . "&amp;day=$cday&amp;month=$month&amp;year=$year";
+        $slot_text = $d[$cday]["data"][$i];
+        $description_text = utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255);
+        $full_text = $slot_text . " " . $description_text;
+        switch ($monthly_view_entries_details)
         {
-          echo "<a href=\"$booking_link\" title=\"$full_text\">"
-            . $description_text . "</a>\n";
-          break;
+          case "description":
+          {
+            echo "<a href=\"$booking_link\" title=\"$full_text\">"
+              . $description_text . "</a>\n";
+            break;
+          }
+          case "slot":
+          {
+            echo "<a href=\"$booking_link\" title=\"$full_text\">"
+              . $slot_text . "</a>\n";
+            break;
+          }
+          case "both":
+          {
+            echo "<a href=\"$booking_link\" title=\"$full_text\">"
+              . $full_text . "</a>\n";
+            break;
+          }
+          default:
+          {
+            echo "error: unknown parameter";
+          }
         }
-        case "slot":
-        {
-          echo "<a href=\"$booking_link\" title=\"$full_text\">"
-            . $slot_text . "</a>\n";
-          break;
-        }
-        case "both":
-        {
-          echo "<a href=\"$booking_link\" title=\"$full_text\">"
-            . $full_text . "</a>\n";
-          break;
-        }
-        default:
-        {
-          echo "error: unknown parameter";
-        }
+        echo "</div>\n";
       }
       echo "</div>\n";
     }
+    
     echo "</div>\n";
+    echo "</td>\n";
   }
   
-  echo "</div>\n";
-  echo "</td>\n";
+  // increment the day of the week counter
   if (++$weekcol == 7)
   {
     $weekcol = 0;
   }
-}
+
+} // end of for loop going through valid days of the month
 
 // Skip from end of month to end of week:
 if ($weekcol > 0)
 {
- for (; $weekcol < 7; $weekcol++)
- {
-   echo "<td class=\"invalid\"><div class=\"cell_container\">&nbsp;</div></td>\n";
- }
+  for (; $weekcol < 7; $weekcol++)
+  {
+    if (is_hidden_day(($weekcol + $weekstarts) % 7))
+    {
+      echo "<td class=\"hidden_day\"><div class=\"cell_container\">&nbsp;</div></td>\n";
+    }
+    else
+    {
+      echo "<td class=\"invalid\"><div class=\"cell_container\">&nbsp;</div></td>\n";
+    }
+  }
 }
 echo "</tr></tbody></table>\n";
 

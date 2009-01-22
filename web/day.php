@@ -140,15 +140,30 @@ echo "</div>";
 //y? are year, month and day of yesterday
 //t? are year, month and day of tomorrow
 
-$i= mktime(12,0,0,$month,$day-1,$year);
+// find the last non-hidden day
+$d = $day;
+do
+{  
+  $d--;
+  $i= mktime(12,0,0,$month,$d,$year);
+}
+while (is_hidden_day(date("w", $i)) && ($d > $day - 7));  // break the loop if all days are hidden
 $yy = date("Y",$i);
 $ym = date("m",$i);
 $yd = date("d",$i);
 
-$i= mktime(12,0,0,$month,$day+1,$year);
+// find the next non-hidden day
+$d = $day;
+do
+{
+  $d++;
+  $i= mktime(12,0,0,$month,$d,$year);
+}
+while (is_hidden_day(date("w", $i)) && ($d < $day + 7));  // break the loop if all days are hidden
 $ty = date("Y",$i);
 $tm = date("m",$i);
 $td = date("d",$i);
+
 
 //We want to build an array containing all the data we want to show
 //and then spit it out. 
