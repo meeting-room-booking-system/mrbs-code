@@ -42,7 +42,9 @@ $rep_num_weeks = get_form_var('rep_num_weeks', 'int');
 // that they are not passed through by the form.   We need to set them because they are needed below  
 // in various places. (We could change the JavaScript in edit_entry.php to set the fields to readonly
 // instead of disabled, but browsers do not generally grey out readonly fields and this would mean
-// that it's not so obvious to the user what is happening.)
+// that it's not so obvious to the user what is happening.   Also doing it here is safer, in case 
+// JavaScript is disabled and for some strange reason the user changes the values in the form to be
+// before start of day)
 if (isset($all_day) && ($all_day == "yes"))
 { 
   if ($enable_periods)
