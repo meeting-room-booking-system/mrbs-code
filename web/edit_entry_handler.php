@@ -38,6 +38,24 @@ $rep_id = get_form_var('rep_id', 'int');
 $rep_day = get_form_var('rep_day', 'array'); // array of bools
 $rep_num_weeks = get_form_var('rep_num_weeks', 'int');
 
+// When $all_day is set, the hour and minute (or $period) fields are set to disabled, which means 
+// that they are not passed through by the form.   We need to set them because they are needed below  
+// in various places. (We could change the JavaScript in edit_entry.php to set the fields to readonly
+// instead of disabled, but browsers do not generally grey out readonly fields and this would mean
+// that it's not so obvious to the user what is happening.)
+if (isset($all_day) && ($all_day == "yes"))
+{ 
+  if ($enable_periods)
+  {
+    $period = 0;
+  }
+  else
+  {
+    $hour = $morningstarts;
+    $minute = $morningstarts_minutes;
+  }
+}
+
 // If we dont know the right date then make it up 
 if (!isset($day) or !isset($month) or !isset($year))
 {
@@ -55,7 +73,7 @@ if (empty($area))
 // day, we must consider these to be the new "sticky room" and "sticky day", so modify the 
 // return URL accordingly.
 
-// First get the return URL basename, having stipped off the old query string
+// First get the return URL basename, having stripped off the old query string
 //   (1) It's possible that $returl could be empty, for example if edit_entry.php had been called
 //       direct, perhaps if the user has it set as a bookmark
 //   (2) Avoid an endless loop.   It shouldn't happen, but just in case ...
