@@ -324,6 +324,7 @@ var old_duration = '<?php echo $duration;?>';
 var old_dur_units = 0;  // This is the index number
 var old_hour = '<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>';
 var old_minute = '<?php echo $start_min;?>';
+var old_period = 0; // This is the index number
 
 // Executed when the user clicks on the all_day checkbox.
 function OnAllDayClick(allday)
@@ -337,6 +338,8 @@ function OnAllDayClick(allday)
     if ($enable_periods )
     {
       ?>
+      old_period = form.period.selectedIndex;
+      form.period.value = 0;
       form.period.disabled = true;
       <?php
     }
@@ -366,6 +369,7 @@ function OnAllDayClick(allday)
     if ($enable_periods)
     {
       ?>
+      form.period.selectedIndex = old_period;
       form.period.disabled = false;
       <?php
     }
