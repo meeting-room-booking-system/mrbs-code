@@ -5,18 +5,19 @@
 header("Content-type: text/css"); 
 include "config.inc.php";
 
-// IMPORTANT *************************************************************************************************
-// In order to avoid problems in locales where the decimal point is represented as a comma, it is important to
-//   (1) specify all PHP length variables as strings, eg $border_width = '1.5'; and not $border_width = 1.5;
-//   (2) convert PHP variables after arithmetic using number_format
-// ***********************************************************************************************************
+// ***** THEMES ************************
+
+// The most commonly changed colours, dimensions and fonts have been extracted from the main CSS file and 
+// put into include files in the Themes directory.   If you want to change the colour scheme, you should
+// be able to do it by changing the values in the theme file.    More advanced styling changes can be made
+// by changing the rules in this file.  
+
+// You need to have one of the these theme statements un-commented.
+
+include "Themes/default.inc";     // Default MRBS theme
+// include "Themes/classic126.inc";   // Same colour scheme as MRBS 1.2.6
 
 
-?>
-
-
-/* ------------ GENERAL -----------------------------*/
-<?php
 
 // ***** SETTINGS ***********************
 
@@ -25,87 +26,19 @@ $month_cell_scrolling = TRUE;   // set to TRUE if you want the cells in the mont
                                 // accommodate the bookings.   (NOTE: (1) scrolling doesn't work in IE6 and so the table
                                 // cell will always expand in IE6.  (2) In IE8 Beta 2 scrolling doesn't work either and
                                 // the cell content is clipped when $month_cell_scrolling is set to TRUE.)
-
-
-// ***** COLOURS ************************
-// Colours used in MRBS.    All the colours are defined here as PHP variables
-
-$body_background_color          = "#e7ebee";    // background colour for the main body
-$standard_font_color            = "#0B263B";    // default font color
-$header_font_color              = "#ffffff";    // font color for text in headers
-$highlight_font_color           = "#ff0066";    // used for highlighting text (eg links, errors)
-
-$banner_back_color              = "#4b667b";    // background colour for banner
-$banner_border_color            = $body_background_color;    // border colour for banner
-$banner_font_color              = $header_font_color;       // font colour for banner
-
-$header_back_color              = $banner_back_color;  // background colour for headers
-
-$admin_table_header_back_color  = $header_back_color;     // background colour for header and also border colour for table cells
-$admin_table_header_sep_color   = $body_background_color; // vertical separator colour in header
-$admin_table_header_font_color  = $header_font_color;     // font colour for header
-
-$main_table_header_border_color = $body_background_color; // border colour for day/week/month tables - header
-$main_table_body_h_border_color = "#ffffff";              // border colour for day/week/month tables - body, horizontal
-$main_table_body_v_border_color = $body_background_color; // border colour for day/week/month tables - body, vertical
-$main_table_month_color         = "#ffffff";    // background colour for days in the month view
-$main_table_month_invalid_color = "#d1d9de";    // background colour for invalid days in the month view
-
-$report_table_border_color      = $standard_font_color;
-$report_h2_border_color         = $banner_back_color;     // border colour for <h2> in report.php
-$report_h3_border_color         = "#879AA8";              // border colour for <h2> in report.php
-$report_entry_border_color      = "#C3CCD3";              // used to separate individual bookings in report.php
-
-$search_table_border_color      = $standard_font_color;
-
-$site_faq_entry_border_color    = $report_entry_border_color;    // used to separate individual FAQ's in help.php
-
-$trailer_border_color           = $main_table_border_color;
-
-$anchor_link_color              = $standard_font_color;        // link color
-$anchor_visited_color           = $anchor_link_color;          // link color (visited)
-$anchor_hover_color             = $highlight_font_color;       // link color (hover)
-
-$anchor_link_color_banner       = $header_font_color;          // link color
-$anchor_visited_color_banner    = $anchor_link_color_banner;   // link color (visited)
-$anchor_hover_color_banner      = $anchor_link_color_banner;   // link color (hover)
-
-$anchor_link_color_header       = $header_font_color;          // link color
-$anchor_visited_color_header    = $anchor_link_color_header;   // link color (visited)
-$anchor_hover_color_header      = $anchor_link_color_header;   // link color (hover)
-
-$column_hidden_color            = $main_table_month_invalid_color;    // hidden days in the week and month views
-$calendar_hidden_color          = "#dae0e4";                          // hidden days in the mini-cals
-$row_even_color                 = "#ffffff";        // even rows in the day and week views
-$row_odd_color                  = "#f2f4f6";        // even rows in the day and week views
-$row_highlight_color            = "#ffc0da";        // used for highlighting a row
-                                                    // NOTE: this colour is also used in xbLib.js (in more than one place)and 
-                                                    // if you change it here you will also need to change it there.
-
-$help_highlight_color           = "#ffe6f0";        // highlighting text on the help page #ffffbb
-
-// These are the colours used for distinguishing between the dfferent types of bookings in the main
-// displays in the day, week and month views
-$color_types = array(
-    'A' => "#ffff99",
-    'B' => "#99cccc",
-    'C' => "#ffffcd",
-    'D' => "#cde6e6",
-    'E' => "#6dd9c4",
-    'F' => "#82adad",
-    'G' => "#ccffcc",
-    'H' => "#d9d982",
-    'I' => "#99cc66",
-    'J' => "#e6ffe6");
-
-    
-    
-    
-// ***** FONTS ************************    
-$standard_font_family  = 'Arial, Verdana, sans-serif';
-
- 
+                                
+                                
+// IMPORTANT *************************************************************************************************
+// In order to avoid problems in locales where the decimal point is represented as a comma, it is important to
+//   (1) specify all PHP length variables as strings, eg $border_width = '1.5'; and not $border_width = 1.5;
+//   (2) convert PHP variables after arithmetic using number_format
+// ***********************************************************************************************************
+                                
 ?>
+
+
+/* ------------ GENERAL -----------------------------*/
+
 body {font-size: small;
     color:            <?php echo $standard_font_color ?>;
     font-family:      <?php echo $standard_font_family ?>;
@@ -232,20 +165,20 @@ div.date_before {float: left;  width: 33%; text-align: left}
 div.date_now    {float: left;  width: 33%; text-align: center}
 div.date_after  {float: right; width: 33%; text-align: right}
 
-<?php 
-$table_dwm_main_border_width = '1';    // px
-?>
-table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: separate; border: 0}
+table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: separate;
+    border-color: <?php echo $main_table_border_color ?>;
+    border-width: <?php echo $main_table_border_width ?>px;
+    border-style: solid}
 .dwm_main td {padding: 0;
-   border-top:  <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>;
-   border-left: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
-   border-bottom: 0;
-   border-right: 0}
+    border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>;
+    border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
+    border-bottom: 0;
+    border-right: 0}
 .dwm_main td:first-child {border-left: 0}
 .dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0 2px 0 2px;
     color: <?php echo $header_font_color ?>; 
     background-color: <?php echo $header_back_color ?>;
-    border-left: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
+    border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
 .dwm_main th:first-child {border-left: 0}
 .dwm_main a {display: block; height: 100%}
 .dwm_main th a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
@@ -256,7 +189,7 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main#week_main th {width: <?php echo $column_week ?>%}
 .dwm_main#week_main th.first_last {width: <?php echo $column_times_width ?>%; vertical-align: bottom}
 .dwm_main#month_main th {width: <?php echo $column_month ?>%}
-.dwm_main#month_main td {border-top:  <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>}
+.dwm_main#month_main td {border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>}
 .dwm_main#month_main td.valid   {background-color: <?php echo $main_table_month_color ?>}
 .dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
 .dwm_main#month_main a {padding: 0 2px 0 2px}
@@ -321,7 +254,7 @@ foreach ($color_types as $type => $col)
     }
 td.hidden_day     {background-color: <?php echo $column_hidden_color ?>; /* hidden columns (eg weekends) in the week and month views */
     font-size: medium; font-weight: bold;
-    border-top: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $column_hidden_color ?>;
+    border-top: <?php echo $main_table_cell_border_width ?>px solid <?php echo $column_hidden_color ?>;
     <?php 
       echo (empty($column_hidden_width) ? " display: none" : ""); // if the width is set to zero, then don't display anything at all
     ?>
@@ -329,7 +262,7 @@ td.hidden_day     {background-color: <?php echo $column_hidden_color ?>; /* hidd
 td.row_highlight  {background-color: <?php echo $row_highlight_color ?>} /* used for highlighting a row */
 td.even_row       {background-color: <?php echo $row_even_color ?>}      /* even rows in the day view */
 td.odd_row        {background-color: <?php echo $row_odd_color ?>}       /* odd rows in the day view */
-td.times          {background-color: <?php echo $header_back_color ?>}   /* used for the column with times/periods */
+td.times          {background-color: <?php echo $main_table_times_back_color ?>}    /* used for the column with times/periods */
 .times a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
 .times a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
 .times a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
@@ -382,8 +315,8 @@ td.highlight         {background-color: <?php echo $row_highlight_color ?>; colo
 ?>
 .highlight a:link    {font-weight: normal; color: <?php echo $standard_font_color ?>}       /* used for JavaScript highlighting  */
 .highlight a:visited {font-weight: normal; color: <?php echo $standard_font_color ?>}       /* used for JavaScript highlighting  */
-.dwm_main tbody tr:hover a:link    {color: <?php echo $standard_font_color ?>}   /* used for CSS highlighting (but will also be used in JavaScript highlighting */
-.dwm_main tbody tr:hover a:visited {color: <?php echo $standard_font_color ?>}   /* used for CSS highlighting (but will also be used in JavaScript highlighting */
+.dwm_main tbody tr:hover a:link    {color: <?php echo $anchor_link_color ?>}   /* used for CSS highlighting (but will also be used in JavaScript highlighting */
+.dwm_main tbody tr:hover a:visited {color: <?php echo $anchor_link_color ?>}   /* used for CSS highlighting (but will also be used in JavaScript highlighting */
 .month .highlight a:link    {font-weight: bold}
 .month .highlight a:visited {font-weight: bold}
 
@@ -452,7 +385,7 @@ if ($clipped)
     // up with a mixture of ems and pixels
     if ('px' == $main_cell_height_units)
     {
-      $div_height = $div_height + (($i-1)*$table_dwm_main_border_width);
+      $div_height = $div_height + (($i-1)*$main_table_cell_border_width);
       $div_height = (int) $div_height;    // Make absolutely sure it's an int to avoid generating invalid CSS
     }
     
@@ -671,11 +604,12 @@ table#edit_users_list {margin-top: 1.0em; margin-bottom: 1.0em}
 /* ------------ FUNCTIONS.INC -------------------*/
 #logon_box a {display: block; width: 100%; padding-top: 0.3em; padding-bottom: 0.3em}
 table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
-    border-color: <?php echo $banner_border_color ?>; border-style: solid;
-    border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0}
+    border-color: <?php echo $banner_border_color ?>;
+    border-width: <?php echo $banner_border_width ?>px;
+    border-style: solid}
 #banner td {text-align: center; vertical-align: middle; background-color: <?php echo $banner_back_color ?>;
     border-color: <?php echo $banner_border_color ?>; border-style: solid;
-    border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px;
+    border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: <?php echo $banner_border_cell_width ?>px;
     padding: 6px; color: <?php echo $banner_font_color ?>}
 #banner td:first-child {border-left-width: 0}
 #banner td#company {font-size: large}
@@ -687,7 +621,8 @@ table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
 
 table#colour_key {clear: both; border-spacing: 0; border-collapse: collapse}
 #colour_key td {width: 7.0em; padding: 2px; font-weight: bold;
-    border: <?php echo $table_dwm_main_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>}
+    color: <?php echo $colour_key_font_color ?>;
+    border: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>}
 #colour_key td#row_padding {border-right: 0; border-bottom: 0}
 #header_search input {width: 6.0em}
 
