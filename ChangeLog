@@ -1,3 +1,322 @@
+2009-02-14 14:10  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1016] web/version.inc:
+	  
+	  * Updated version number for 1.4.1 release.
+
+2009-02-06 13:11  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1012] NEWS, README.nwauth, web/Themes/classic126.inc,
+	  web/Themes/default.inc, web/mrbs-ie8.css, web/mrbs-ielte6.css,
+	  web/mrbs-ielte7.css, web/site_faq_nl.html:
+	  
+	  * Added svn:eol-type native to Theme files, and added missing
+	  final \n's to a number of files. I wrote a script to check for
+	  both problems, which I'll check-in to the tools tree.
+
+2009-02-06 12:47  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1011] web/Blowfish.php, web/Blowfish/DefaultKey.php,
+	  web/dbsys.inc, web/mrbs-ie.css, web/mrbs-ie8.css,
+	  web/mrbs-ielte6.css, web/mrbs-ielte7.css, web/mrbs-print.css,
+	  web/mrbs.css.php, web/site_faq_nl.html:
+	  
+	  * Set svn:eol-style to native on some files that didn't have it
+	  set yet.
+
+2009-02-05 22:34  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1010] web/dbsys.inc, web/version.inc:
+	  
+	  * Added missing $Id$ to a few files.
+
+2009-02-05 22:25  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1009] web/version.inc:
+	  
+	  * Belated updated version specifier to 1.4+svn.
+
+2009-01-24 17:03  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1004] web/Themes, web/Themes/classic126.inc,
+	  web/Themes/default.inc, web/mrbs.css.php:
+	  
+	  Added the concept of Themes to MRBS, and implemented the first
+	  theme - "classic126" which uses the MRBS 1.2.6 colour scheme.
+	  
+	  Colours which can be changed have now been extracted from the
+	  main CSS file and put in an include file in the Themes directory.
+	  Themes are selected by commenting out or un-commenting the
+	  appropriate include statements in the main CSS file.
+
+2009-01-23 20:51  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1003] web/edit_entry_handler.php:
+	  
+	  Added to comments.
+
+2009-01-23 20:36  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1002] web/edit_entry.php:
+	  
+	  User feedback improvement: changed the period that is shown
+	  (disabled) in the Period field when All Day is checked to the
+	  first period, and restored the previous value when it is
+	  unchecked. This matches the behaviour when using time slots. See
+	  also Revision 991 and SF Tracker #2494369
+
+2009-01-23 20:31  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1001] web/edit_entry_handler.php:
+	  
+	  Fixed a bug which meant that repeating All Day bookings were not
+	  being booked for the right number of days (eg daily repeats were
+	  being booked for N-1 instead of N days). Bug caused by the fact
+	  that the JavaScript in edit_entry was disabling some fields, and
+	  so they were not being passed through by the form. Could have
+	  fixed this by changing edit_entry to make the fields readonly
+	  instead of disabled, and thus passed through, but decided not to
+	  as browsers generally do not grey out readonly fields - and so
+	  there would not be enough user feedback. Instead decided to fix
+	  by setting the relevant form variables at the beginning of
+	  edit_entry_handler when all_day is checked.
+	  
+	  Note that these symptoms were in MRBS before the disabled fields
+	  were introduced in Revision 991, but the cause was different:
+	  whilst the fields were enabled, their values were being set to 0
+	  and so the test for when to finish a repeat series was finishing
+	  prematurely.
+	  
+	  See also SF Tracker #2494369.
+
+2009-01-22 09:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1000] web/mrbs-ielte7.css:
+	  
+	  Added keywords
+
+2009-01-22 00:36  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r999] web/config.inc.php, web/day.php, web/functions.inc,
+	  web/mincals.inc, web/month.php, web/mrbs-ie8.css,
+	  web/mrbs-ielte7.css, web/mrbs.css.php, web/style.inc,
+	  web/trailer.inc, web/week.php:
+	  
+	  Implemented the option to hide certain days of the week (eg
+	  weekends) in the week and month views. The days of the week are
+	  specified in the config file by the array $hidden_days. Hidden
+	  days will not be displayed in the main table in the week and
+	  month views; they will be greyed out in the trailer links and in
+	  the mini-cals; and in the day view the Goto Next/Previous links
+	  will skip past them. However they are are still bookable if you
+	  want, by choosing the day in the edit entry form, and you can
+	  still see bookings for hidden days if you jump directly to the
+	  day view for a hidden day using the date selector. Moreover it is
+	  perfectly possible to book repeating bookings that fall on hidden
+	  days. (The option to prevent certain days of the week being
+	  booked by non-admins is an independent option which could be
+	  implemented at a later date).
+
+2009-01-20 14:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r998] web/config.inc.php:
+	  
+	  Fixed problem reported by Phillip Williams on the mailing list.
+	  Checking of $resolution and slot times now only happens if
+	  periods are not enabled, and checking of the number of periods
+	  defined only happens if periods are enabled.
+
+2009-01-19 14:01  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r997] web/mysql.inc:
+	  
+	  * Corrected mispelt function implementation in 'mysql' DB
+	  abstraction layer.
+
+2009-01-15 09:22  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r996] AUTHENTICATION:
+	  
+	  * Small documentation fix, db_ext authentication method no longer
+	  says it is only for a MySQL database.
+
+2009-01-14 22:04  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r995] web/dbsys.inc:
+	  
+	  * Added new file that I forgot to add in the previous checkin!
+
+2009-01-14 21:48  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r994] AUTHENTICATION, README.sqlapi, web/add.php, web/admin.php,
+	  web/auth_db_ext.inc, web/config.inc.php, web/day.php,
+	  web/del.php, web/del_entry.php, web/edit_area_room.php,
+	  web/edit_entry.php, web/edit_entry_handler.php,
+	  web/edit_users.php, web/help.php, web/index.php, web/month.php,
+	  web/mysql.inc, web/mysqli.inc, web/pgsql.inc, web/report.php,
+	  web/search.php, web/view_entry.php, web/week.php:
+	  
+	  * Revamped the database abstraction system a bit. You can now use
+	  the abstraction API to connect to any database you like, as long
+	  as an abstraction is provided for it. This has been made possible
+	  by creating a new PHP file, dbsys.inc, that defines all the sql_*
+	  functions. Each database abstraction then defines sql_XXX_*,
+	  where XXX is the database system. Additionally to the old API
+	  there is then an sql_connect() function to connect to a database,
+	  and also an sql_XXX_default_connect() function that connects to
+	  the default MRBS database as appropriate in a particular
+	  abstraction.
+	  
+	  * 'db_ext' authentication scheme can now use any of the available
+	  SQL abstraction schemes, by defining
+	  $auth['db_ext']['db_system']. If this is not defined the
+	  configuration variable is defaulted to 'mysql'.
+
+2009-01-12 21:51  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r993] web/lang.it:
+	  
+	  * Small Italian translation update from Claudio Strizzolo.
+
+2009-01-12 11:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r992] web/mincals.inc:
+	  
+	  Fixed the problem of the sticky week not being highlighted
+	  properly. First reported by dmacdoug in the mailing list. Fix
+	  attempted in Revision 983, which proved to be incorrect. Many
+	  thanks to dwpoon for this fix. Se also SF Patches item #2493501.
+
+2009-01-09 19:30  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r991] web/edit_entry.php:
+	  
+	  Fixed SF Tracker #2494369 (The duration length and units can
+	  still be changed even when All Day is checked, leading to user
+	  confusion). Fix based on input from David Cummins.
+
+2008-12-21 22:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r990] web/xbLib.js:
+	  
+	  Further improved testing for IE6 or lower browsers by: - testing
+	  for null href strings, which will be the case for embedded style
+	  sheets (if used) - stopping testing style sheets once an IE6 or
+	  lower sheet has been found
+
+2008-12-19 15:57  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r989] web/edit_entry_handler.php:
+	  
+	  Fixed bug reported by Brian Taylor in the mailing list (" If I
+	  use the search facility to find a specific entry, click on edit
+	  and then save I get the error message - Empty or invalid search
+	  string. This only happens if you attempt to edit an entry, all
+	  the other options work."). After editing an entry found from a
+	  search you are now returned to the default view for the date that
+	  you have just edited. [The alternative is to return the user to
+	  the search results, but I'm not sure that's particularly useful -
+	  and besides it would be a little trickier to code as you'd have
+	  to preserve the search parameter in the query string.]
+
+2008-12-18 17:29  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r988] web/edit_entry_handler.php:
+	  
+	  Fixed problem reported by Michael Graham on the mailing list:
+	  bookings for fractions of an hour are incorrectly rounded down.
+
+2008-12-18 17:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r987] web/style.inc, web/xbLib.js:
+	  
+	  Changed the way that the JavaScript tests for the presence of IE6
+	  or lower browsers (and therefore whether to use JavaScript or CSS
+	  highlighting). It now checks the "href" strings of style sheets
+	  that have been loaded, rather than the titles, as using titles
+	  causes other problems (see SF tracker #2418073). This change
+	  improves on the fix supplied in Revision 986 as there is now need
+	  for titles at all, and they can now be used in future if
+	  necessary for the purposes for which they were intended (eg
+	  distinguishing between persistent and preferred style sheets).
+
+2008-12-13 20:23  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r986] web/day.php, web/style.inc, web/week.php:
+	  
+	  * Fix for SF tracker #2418172, fixing a bug that stopped time
+	  highlighting from working. Fix supplied by David Cummings.
+	  
+	  * Fix for SF tracker #2418073, fixing a bug that stopped the
+	  print media stylesheet from working in Firefox. Fix suplied by
+	  David Cummings.
+
+2008-12-12 09:57  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r984] web/mincals.inc:
+	  
+	  Improved comments and variable naming to make it slightly clearer
+	  what's going on when working out which days to highlight in the
+	  week view.
+
+2008-12-12 00:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r983] web/mincals.inc:
+	  
+	  Fixed bug reported by dmacdoug in the mailing list: the week view
+	  highlighting is shifted forward one day.
+
+2008-12-11 10:31  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r982] web/search.php:
+	  
+	  Fixed bug reported by Paul Turner on the mailing list: the 'Next'
+	  button in Search does not work.
+
+2008-12-10 08:14  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r981] web/mrbs.css.php:
+	  
+	  Fixed error introduced in last revision. (Spelling of color).
+	  Third time lucky!
+
+2008-12-09 10:55  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r980] web/mrbs.css.php:
+	  
+	  Corrected a very minor mistake introduced in the last revision
+	  (no impact on appearance)
+
+2008-12-08 11:45  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r978] web/config.inc.php, web/functions.inc:
+	  
+	  Added the ability to have supplementary text after the company
+	  logo or name (for example "XYZ Department") as some users need
+	  this.
+
+2008-12-08 11:25  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r977] web/config.inc.php, web/functions.inc, web/mrbs.css.php:
+	  
+	  Fixed bug which was causing the wrong text to be sent in the
+	  subject line for email notifications when $mrbs_company was set
+	  to be a logo image
+
+2008-12-05 13:57  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r973] web/edit_entry_handler.php:
+	  
+	  * Fix for SF tracker #2388038 as provided in the tracker by
+	  'blueteen'. Now uses the right SQL column for the area name when
+	  building a notification email.
+
+2008-12-03 14:35  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r966] ChangeLog, NEWS:
+	  
+	  * Updated NEWS and ChangeLog for 1.4 release.
+
 2008-12-03 14:27  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r965] web/version.inc:

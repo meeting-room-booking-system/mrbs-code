@@ -7,6 +7,43 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.4.1 (Sat Feb 14 22:00:00 GMT 2009):
+
+[-] Fixed email notification problem, SF tracker #233038.
+[-] Fixed problem that caused incorrect subject line to be used in email
+ notifications if $mrbs_company was set to an image.
+[*] Introduced a way to configure MRBS to use additional text after
+ the configured company name/logo.
+[-] Fixed the 'next' button in search page.
+[-] Fixed highlighting in the week view.
+[-] Fixed time highlighting, SF tracker #2418172. Fix supplied by David
+ Cummings.
+[-] Fixed printing styling in Firefox, SF tracker #2418073. Fix supplied
+ by David Cummings.
+[*] Improved detection of IE6 or lower browsers.
+[-] Fixed rounding down of duration for meetings that were set as
+ fractions of an hour.
+[-] Fixed for navigation problem encountered after editing a booking you
+ found by searching.
+[-] Fix for SF tracker #2494369 - user feedback in edit booking page has
+ been improved.
+[-] Fixed sticky week highlighting - thanks to 'dwpoon' for this fix.
+[*] Small Italian translation update from Claudio Strizzolo.
+[*] Improved the database abstraction layer.
+[+] 'db_ext' authentication scheme can now use any database that MRBS
+ provides an abstraction for, so you can store authentication in a PostGresql
+ database.
+[-] Fixed configuration testing in config.inc.php for when periods are
+ used.
+[+] Added the ability to hide certain days of the week.
+[-] Fixed a bug which mean that repeating 'All Day' bookings were not
+ being booked for the right number of days.
+[+] Added ability to add themes to MRBS. Added a "classic126" that makes
+ MRBS look more like it did in MRBS 1.2.6.
+[-] Fixed line endings in a number of files, caused by Subversion
+ misconfiguration.
+
+-------------------------------------------------------------------------------
 Version 1.4 (Wed Dec  3 15:00:00 GMT 2008):
 
 [+] Added Hungarian internationalision, in preparation for an offered
