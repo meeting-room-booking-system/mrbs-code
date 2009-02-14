@@ -206,7 +206,7 @@ if ( $enable_periods )
 }
 
 // Units start in seconds
-$units = 1.0;
+$units = 1;
 
 switch($dur_units)
 {
@@ -267,7 +267,7 @@ else
                       is_dst($month, $day, $year, $hour));
   $endtime   = mktime($hour, $minute, 0,
                       $month, $day, $year,
-                      is_dst($month, $day, $year, $hour)) + ($units * $duration);
+                      is_dst($month, $day, $year, $hour)) + (int)($units * $duration);
 
   // Round up the duration to the next whole resolution unit.
   // If they asked for 0 minutes, push that up to 1 resolution unit.
