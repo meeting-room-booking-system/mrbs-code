@@ -29,4 +29,10 @@ table.dwm_main {
 
 .dwm_main#month_main td {
     border-top-color:  <?php echo $main_table_body_h_border_color_print ?>}
+    
+<?php
+// add a top margin to the colour key table to separate it from the main table
+// (in the screen view the separation is provided by the Goto Prev/This/Next links
+?>
+table#colour_key {margin-top: 1em}
 
