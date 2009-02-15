@@ -40,6 +40,7 @@ $db_tbl_prefix = "mrbs_";
 // Uncomment this to NOT use PHP persistent (pooled) database connections:
 // $db_nopersist = 1;
 
+
 /*********************************
  * Site identification information
  *********************************/
@@ -68,6 +69,25 @@ $mrbs_company = "Your Company";   // This line must always be uncommented ($mrbs
 // notifications, to ensure that the correct URL is displayed in the
 // notification.
 $url_base = "";
+
+
+/*******************
+ * Themes
+ *******************/
+
+// Choose a theme for the MRBS styling. 
+  
+// The most commonly changed colours, dimensions and fonts have been extracted from the main CSS file and 
+// put into include files in the Themes directory.   If you want to change the colour scheme, you should
+// be able to do it by changing the values in the theme file.    More advanced styling changes can be made
+// by changing the rules in the CSS file.     
+
+// Available options are:
+
+// "default"        Default MRBS theme
+// "classic126"     Same colour scheme as MRBS 1.2.6
+
+$theme = "default";
 
 
 /*******************

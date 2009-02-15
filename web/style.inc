@@ -12,7 +12,7 @@ global $vocab; // outside of scope; needs to be denote as global
 // stylesheet for browsers IE6 or below must contain the string 'ielte6'.
 ?>
     <link rel="stylesheet" href="mrbs.css.php" type="text/css">
-    <link rel="stylesheet" media="print" href="mrbs-print.css" type="text/css">
+    <link rel="stylesheet" media="print" href="mrbs-print.css.php" type="text/css">
     <!--[if IE]>
     <link rel="stylesheet" href="mrbs-ie.css" type="text/css">
     <![endif]-->

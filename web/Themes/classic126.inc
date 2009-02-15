@@ -31,6 +31,12 @@ $main_table_month_color         = "#ffffff";    // background colour for days in
 $main_table_month_invalid_color = "#d1d9de";    // background colour for invalid days in the month view
 $main_table_times_back_color    = "#fff0f0";    // background colour for the times/periods column
 
+// border colours for the main table when it is printed.     These are used by mrbs-print.css.php
+$main_table_border_color_print        = "#888888";    // border colour for the main table (print view)
+$main_table_header_border_color_print = "#888888";    // border colour for day/week/month tables - header (print view)
+$main_table_body_h_border_color_print = "#888888";    // border colour for day/week/month tables - body, horizontal (print view)
+$main_table_body_v_border_color_print = "#888888";    // border colour for day/week/month tables - body, vertical (print view)
+
 $report_table_border_color      = $standard_font_color;
 $report_h2_border_color         = $banner_back_color;     // border colour for <h2> in report.php
 $report_h3_border_color         = "#879AA8";              // border colour for <h2> in report.php

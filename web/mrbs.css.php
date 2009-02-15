@@ -4,19 +4,7 @@
 
 header("Content-type: text/css"); 
 include "config.inc.php";
-
-// ***** THEMES ************************
-
-// The most commonly changed colours, dimensions and fonts have been extracted from the main CSS file and 
-// put into include files in the Themes directory.   If you want to change the colour scheme, you should
-// be able to do it by changing the values in the theme file.    More advanced styling changes can be made
-// by changing the rules in this file.  
-
-// You need to have one of the these theme statements un-commented.
-
-include "Themes/default.inc";     // Default MRBS theme
-// include "Themes/classic126.inc";   // Same colour scheme as MRBS 1.2.6
-
+include "Themes/$theme.inc";
 
 
 // ***** SETTINGS ***********************
