@@ -549,7 +549,11 @@ require_once "language.inc";
  *************/
 
 // This array maps entry type codes (letters A through J) into descriptions.
-// Each type has a color (see TD.x classes in the style sheet mrbs.css.php).
+//
+// Each type has a color which is defined in the array $color_types in the Themes
+// directory - just edit whichever include file corresponds to the theme you
+// have chosen in the config settings. (The default is default.inc, unsurprisingly!)
+//
 // The value for each type is a short (one word is best) description of the
 // type. The values must be escaped for HTML output ("R&amp;D").
 // Please leave I and E alone for compatibility.
