@@ -392,6 +392,57 @@ function sql_syntax_caseless_contains($fieldname, $s)
   return $f($fieldname, $s, $db_conn);
 }
 
+// Returns the syntax for a caseless "contains" function
+function sql_syntax_addcolumn_after($fieldname)
+{
+  if (func_num_args() > 1)
+  {
+    $handle = func_get_arg(1);
+    $db_sys = $handle['system'];
+    $db_conn = $handle['connection'];
+  }
+  else
+  {
+    global $dbsys;
+
+    $db_sys = $dbsys;
+    $db_conn = null;
+  }
+
+  $f = "sql_${db_sys}_syntax_addcolumn_after";
+
+  if (function_exists($f))
+  {
+    return $f($fieldname, $db_conn);
+  }
+  else
+  {
+    return "";
+  }
+}
+
+
+// Returns the syntax for a caseless "contains" function
+function sql_syntax_createtable_autoincrementcolumn()
+{
+  if (func_num_args() > 0)
+  {
+    $handle = func_get_arg(0);
+    $db_sys = $handle['system'];
+    $db_conn = $handle['connection'];
+  }
+  else
+  {
+    global $dbsys;
+
+    $db_sys = $dbsys;
+    $db_conn = null;
+  }
+
+  $f = "sql_${db_sys}_syntax_createtable_autoincrementcolumn";
+  return $f($db_conn);
+}
+
 
 // Return the name of a column in a result object
 function sql_field_name($result, $index)

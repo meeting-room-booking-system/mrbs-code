@@ -292,6 +292,16 @@ function sql_pgsql_syntax_caseless_contains($fieldname, $s, $db_conn = null)
 }
 
 
+// Generate non-standard SQL to specify a column as an auto-incrementing
+// integer while doing a CREATE TABLE
+function sql_pgsql_syntax_createtable_autoincrementcolumn($db_conn = null)
+{
+  sql_pgsql_ensure_handle($db_conn);
+
+  return "serial";
+}
+
+
 // Returns the name of a field.
 function sql_pgsql_field_name($result, $index, $db_conn = null)
 {

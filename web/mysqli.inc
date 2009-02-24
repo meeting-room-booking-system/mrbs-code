@@ -274,6 +274,25 @@ function sql_mysqli_syntax_caseless_contains($fieldname, $s, $db_conn = null)
 }
 
 
+// Generate non-standard SQL to add a table column after another specified
+// column
+function sql_mysqli_addcolumn_after($fieldname, $db_conn = null)
+{
+  sql_mysqli_ensure_handle($db_conn);
+
+  return "AFTER $fieldname";
+}
+
+
+// Generate non-standard SQL to specify a column as an auto-incrementing
+// integer while doing a CREATE TABLE
+function sql_mysqli_syntax_createtable_autoincrementcolumn($db_conn = null)
+{
+  sql_mysqli_ensure_handle($db_conn);
+
+  return "int NOT NULL auto_increment";
+}
+
 // Returns the name of a field.
 function sql_mysqli_field_name($result, $index, $db_conn = null)
 {

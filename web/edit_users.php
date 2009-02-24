@@ -61,6 +61,7 @@ function get_fields()
     $field_props[$field_name]['type'] = sql_field_type($result, $i);
     $field_props[$field_name]['istext'] = ($field_props[$field_name]['type'] == 'string') ? true : false;
     $field_props[$field_name]['isnum'] = preg_match('/(int|real)/',$field_props[$field_name]['type']) ? true : false;
+    $field_props[$field_name]['isbool'] = ($field_props[$field_name]['type'] == 'boolean') ? true : false;
   }
   sql_free($result);
 }
@@ -78,7 +79,7 @@ if ($nusers == -1)   /* If the table does not exist */
 CREATE TABLE $tbl_users
 (
   /* The first four fields are required. Don't remove. */
-  id        int NOT NULL auto_increment,
+  id        ".sql_syntax_createtable_autoincrementcolumn().",
   level     smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
   name      varchar(30),
   password  varchar(40),
@@ -109,7 +110,7 @@ if (!in_array('level', $fields))
 {
   // Default is '1' because we will assume all existing entries in the database are ordinary
   // users.   In a moment we will go through the admins and upgrade them.
-  $r = sql_command("ALTER TABLE $tbl_users ADD level smallint DEFAULT '1' NOT NULL AFTER id");
+  $r = sql_command("ALTER TABLE $tbl_users ADD COLUMN level smallint DEFAULT '1' NOT NULL ".sql_syntax_addcolumn_after("id"));
   if ($r == -1)
   {
     // No need to localize this: Only the admin running this for the first time would see it.
@@ -445,31 +446,25 @@ if (isset($Action) && ($Action == "Update"))
     exit;
   }
   
-  
-  if ($Id >= 0)
-  {
-    $operation = "replace into $tbl_users values (";
-  }
-  else
-  {
-    $operation = "insert into $tbl_users values (";
-    $Id = sql_query1("select max(id) from $tbl_users;") + 1; /* Use the last index + 1 */
-    /* Note: If the table is empty, sql_query1 returns -1. So use index 0. */
-  }
+  $sql_fields = array();
 
-  $i = 0;
+  // For each db column, try to fetch out an appropriate form field value
   foreach ($fields as $fieldname)
   {
     if ($fieldname=="id")
     {
-      $value = $Id;
+      // We don't add or update the id - that's autoincremented in the db
+      // so move onto the next value
+      continue;
     }
     else if ($fieldname=="name")
     {
+      // convert to lowercase so that authentication will be case insensitive
       $value = strtolower(get_form_var('Field_name', 'string'));
     }
     else if (($fieldname=="password") && ($password0!=""))
     {
+      // Hash the password for security
       $value=md5($password0);
     }
     else if ($fieldname=="level")
@@ -489,31 +484,84 @@ if (isset($Action) && ($Action == "Update"))
     }
     else
     {
-      $value = get_form_var("Field_$fieldname", $field_props[$fieldname]['istext'] ? 'string' : 'int');
+      $value = get_form_var("Field_$fieldname", $field_props[$fieldname]['type']);
     }
 
-    if ($i > 0)
-    {
-      $operation = $operation . ", ";
-    }
+    // pre-process the field value for SQL
     if ($field_props[$fieldname]['istext'])
     {
-      $operation .= "'" . addslashes($value) . "'";
+      $value = "'" . addslashes($value) . "'";
+    }
+    else if ($field_props[$fieldname]['isbool'])
+    {
+      if ($value && $value == true)
+      {
+        $value = "TRUE";
+      }
+      else
+      {
+        $value = "FALSE";
+      }
     }
     else
     {
-      if ($field_props[$fieldname]['isnum'] && ($value == ""))
+      // put in a sensible default for a missing field
+      if (($value == null) || ($value == ''))
       {
-        $value = "0";
+        if ($field_props[$fieldname]['isnum'])
+        {
+         $value = "0";
+        }
+        else
+        {
+          $value = "NULL";
+        }
       }
-      $operation = $operation . $value;
     }
-    $i++;
-  }
-  $operation = $operation . ");";
+    
+    /* If we got here, we have a valid, sql-ified value for this field,
+     * so save it for later */
+    $sql_fields[$fieldname] = $value;
+                         
+  } /* end for each column of user database */
 
-//  print $operation . "<br>\n";
-//  exit;
+  /* Now generate the SQL operation based on the given array of fields */
+  if ($Id >= 0)
+  {
+    /* if the Id exists - then we are editing an existing user, rather th
+     * creating a new one */
+
+    $assign_array = array();
+    $operation = "UPDATE $tbl_users SET ";
+
+    foreach ($sql_fields as $fieldname => $value)
+    {
+      array_push($assign_array,"$fieldname=$value");
+    }
+    $operation .= implode(",", $assign_array) . " WHERE id=$Id;";
+  }
+  else
+  {
+    /* The id field doesn't exist, so we're adding a new user */
+
+    $fields_list = array();
+    $values_list = array();
+
+    foreach ($sql_fields as $fieldname => $value)
+    {
+      array_push($fields_list,$fieldname);
+      array_push($values_list,$value);
+    }
+    
+    $operation = "INSERT INTO $tbl_users " .
+      "(". implode(",",$fields_list) . ")" .
+      " VALUES " . "(" . implode(",",$values_list) . ");";
+  }
+
+  /* DEBUG lines - check the actual sql statement going into the db */
+  //echo "Final SQL string: <code>$operation</code>";
+  //exit;
+
   $r = sql_command($operation);
   if ($r == -1)
   {
