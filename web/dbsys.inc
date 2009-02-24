@@ -392,7 +392,8 @@ function sql_syntax_caseless_contains($fieldname, $s)
   return $f($fieldname, $s, $db_conn);
 }
 
-// Returns the syntax for a caseless "contains" function
+// Returns the syntax for adding a column after another column, in an
+// ALTER TABLE command
 function sql_syntax_addcolumn_after($fieldname)
 {
   if (func_num_args() > 1)

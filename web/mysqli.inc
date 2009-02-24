@@ -276,7 +276,7 @@ function sql_mysqli_syntax_caseless_contains($fieldname, $s, $db_conn = null)
 
 // Generate non-standard SQL to add a table column after another specified
 // column
-function sql_mysqli_addcolumn_after($fieldname, $db_conn = null)
+function sql_mysqli_syntax_addcolumn_after($fieldname, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
