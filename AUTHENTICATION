@@ -458,67 +458,60 @@ DB Authentication
 
 Authentication method, usable on the Internet.
 
- Works only with Mysql, will be implemented for Postgresql in an upcoming
- release.
+It works by storing the list of users in a new table called mrbs_users in
+the mrbs database.
 
- It works by storing the list of users in a new table called mrbs_users in
- the mrbs database.
+The authentication is done by the module auth_db.inc.
+Enable it by setting $auth["type"]="db" in config.inc.php.
 
- The authentication is done by the new module auth_db.inc.
- Enable it by setting $auth["type"]="db" in config.inc.php.
+The list of users is displayed by clicking on the "User list" link in
+the logon box in the top banner.
+This list is managed by module edit_users.php.
+Administrators have the right to edit every entry, and add or remove users.
+Simple users only have the right to edit their own entry.
 
- The list of users is displayed by clicking on the "User list" link in
- the logon box in the top banner.
- This list is managed by module edit_users.php.
- Administrators have the right to edit every entry, and add or remove users.
- Simple users only have the right to edit their own entry.
+The first time it is accessed, the mrbs_users table is automatically
+created.
 
- The first time it is accessed, the mrbs_users table is automatically
- created.
+*** WARNING ***
+ 
+After you have set up MRBS, the first thing you must do is go to the 
+"User list" and set up a user with administrator rights.    Until you 
+do this the system is open and the first person to go to the "User list" link
+will be able to set up an administrator and lock you out of the system.  You
+will then only be able to get back into the system by droppng the users
+table.
+ 
+Once you have set up the first administrator you can then log on to
+the system using the username and password you have just created and
+create more users.
+ 
+*** END OF WARNING ***
 
- *** WARNING ***
+Upgrading from pre-1.4.2 systems:
  
- After you have set up MRBS, the first thing you must do is go to the 
- "User list" and set up a user with administrator rights.    Until you 
- do this the system is open and the first person to go to the "User list" link
- will be able to set up an administrator and lock you out of the system.  You
- will then only be able to get back into the system by droppng the users
- table.
+Versions of MRBS before 1.4.2 did not store access rights in the database
+and relied on the list of admins in the config file.    If you are upgrading
+from a pre-1.4.2 system, MRBS will automatically upgrade the users table in the
+database by adding a field for access rights level and give admin rights to
+those users for whom admin access is defined in the config file.   So, if 
+upgrading, you will need to make sure that your admins are set in the config
+file until you have run edit_users.php (by following the "User list" link) for 
+the first time.  Once you have run edit_users.php the admin definitions in the 
+config file are no longer used and can be deleted if you wish.
  
- Once you have set up the first administrator you can then log on to
- the system using the username and password you have just created and
- create more users.
+It's possible, and very simple, to add new application-specific fields in
+the mrbs_users table.
+No change is needed in edit_users.php editor code.
+Edit_users.php will automatically detect the new fields and add columns for
+them.
+The new fields can either be added beforehand in the code that creates the
+table in the beginning of edit_users.php (See comments there);
+Or they can be added afterwards using database admin tools
+Note: The first three fields (id, level, name, password) must not be
+tampered with. All others are modifiable at will.
  
- *** END OF WARNING ***
-
- Upgrading from pre-1.4.2 systems:
- 
- Versions of MRBS before 1.4.2 did not store access rights in the database
- and relied on the list of admins in the config file.    If you are upgrading
- from a pre-1.4.2 system, MRBS will automatically upgrade the users table in the
- database by adding a field for access rights level and give admin rights to
- those users for whom admin access is defined in the config file.   So, if 
- upgrading, you will need to make sure that your admins are set in the config
- file until you have run edit_users.php (by following the "User list" link) for 
- the first time.  Once you have run edit_users.php the admin definitions in the 
- config file are no longer used and can be deleted if you wish.
- 
- Experimental:
-
- It's possible, and very simple, to add new application-specific fields in
- the mrbs_users table.
- No change is needed in edit_users.php editor code.
- Edit_users.php will automatically detect the new fields and add columns for
- them.
- The new fields can either be added beforehand in the code that creates the
- table in the beginning of edit_users.php (See comments there);
- Or they can be added afterwards using mysql.exe or phpMyAdmin, or the
- equivalent for other databases. Note: The first three fields (id, name,
- password) must not be tampered with. All others are modifiable at will.
- 
- Important: does not work with PosgreSql.
- 
- Future improvements
+Future improvements
  - Have a second level of administrators (level 3 users), with only such
  level 3 users allowed to edit the user database. This would be similar to
  all other authentications in mrbs, which delegate the user accounts
@@ -530,15 +523,18 @@ External DB (db_ext) Authentication
 
 Authentication method, usable on the Internet.
 
-It works by using one of the installer's own MySQL databases. You can
-configure how to connect to the database server, what database/table to
+It works by using one of the installer's own databases. The database can
+be any database system for which MRBS has a database abstraction. You can
+configure how to connect to the database server, what kind of database
+system it is (mysql, mysqli, pgsql currently), the database/table to
 use and the names of the "user" and "password" columns.
 
 The configuration items are held in config.inc.php and are as follows:
 
+$auth['db_ext']['db_system'] = 'mysql'; /* Or 'mysqli', 'pgsql' */
 $auth['db_ext']['db_host'] = 'localhost';
 
-The MySQL server to connect to.
+The server to connect to.
 
 $auth['db_ext']['db_username'] = 'authuser';
 $auth['db_ext']['db_password'] = 'authpass';
