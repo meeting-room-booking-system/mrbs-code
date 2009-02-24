@@ -584,6 +584,9 @@ form#form_edit_users {width: <?php echo $edit_users_form_width ?>em; margin-top:
     width: <?php echo $edit_users_input_width ?>em; 
     margin-left: <?php echo $edit_users_gap ?>em; 
 }
+#form_edit_users select {
+    margin-left: <?php echo $edit_users_gap ?>em;
+}
 #form_edit_users input.submit {right: 2.0em}                                   /* and put the OK on the right     */
 #form_delete_users input.submit {left: 2.0em}                                  /* and put the Delete on the left */
 form.edit_users_error {width: 10em; margin-top: 2.0em}

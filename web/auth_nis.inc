@@ -76,8 +76,10 @@ function authValidateUser($user, $pass)
  * Returns:
  *   The users access level
  */
-function authGetUserLevel($user, $lev1_admin)
+function authGetUserLevel($user)
 {
+  global $auth;
+  $admins = $auth['admin'];
   // User not logged in, user level '0'
   if (!isset($user))
   {
@@ -85,9 +87,9 @@ function authGetUserLevel($user, $lev1_admin)
   }
 
   // Check if the user is can modify
-  for ($i = 0; $lev1_admin[$i]; $i++)
+  for ($i = 0; $admins[$i]; $i++)
   {
-    if (strcasecmp($user, $lev1_admin[$i]) == 0)
+    if (strcasecmp($user, $admins[$i]) == 0)
     {
       return 2;
     }

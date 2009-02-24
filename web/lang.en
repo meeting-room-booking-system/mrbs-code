@@ -123,10 +123,16 @@ $vocab["norights"]           = "You do not have access rights to modify this ite
 $vocab["please_login"]       = "Please log in";
 $vocab["user_name"]          = "Name";
 $vocab["user_password"]      = "Password";
+$vocab["user_level"]         = "Rights";
 $vocab["unknown_user"]       = "Unknown user";
 $vocab["you_are"]            = "You are";
 $vocab["login"]              = "Log in";
 $vocab["logoff"]             = "Log Off";
+
+// User access levels
+$vocab["level_0"]            = "none";
+$vocab["level_1"]            = "user";
+$vocab["level_2"]            = "admin";
 
 // Authentication database
 $vocab["user_list"]          = "User list";
@@ -138,7 +144,6 @@ $vocab["user_email"]         = "Email address";
 $vocab["password_twice"]     = "If you wish to change the password, please type the new password twice";
 $vocab["passwords_not_eq"]   = "Error: The passwords do not match.";
 $vocab["add_new_user"]       = "Add a new user";
-$vocab["rights"]             = "Rights";
 $vocab["action"]             = "Action";
 $vocab["user"]               = "User";
 $vocab["administrator"]      = "Administrator";
@@ -147,6 +152,7 @@ $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Click to display all my upcoming entries";
 $vocab["no_users_initial"]   = "No users in database, allowing initial user creation";
 $vocab["no_users_create_first_admin"] = "Create a user configured as an administrator and then you can log in and create more users.";
+$vocab["warning_last_admin"] = "Warning!  This is the last admin and so you cannot delete this user or remove admin rights, otherwise you will be locked out of the system.";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Empty or invalid search string.";

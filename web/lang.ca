@@ -115,6 +115,7 @@ $vocab["norights"]           = "No te autorizació per modificar aquesta dada.";
 $vocab["please_login"]       = "Si us plau, iniciï la sessió";
 $vocab["user_name"]          = "Nom";
 $vocab["user_password"]      = "Contrasenya";
+$vocab["user_level"]         = "Drets";
 $vocab["unknown_user"]       = "Usuari desconegut";
 $vocab["you_are"]            = "Ets ";
 $vocab["login"]              = "Connectar";
@@ -131,7 +132,6 @@ $vocab["password_twice"]     = "Si vols canviar la contrasenya, introdueix-la du
 $vocab["passwords_not_eq"]   = "Error: Les contrasenyes no són 
 iguals.";
 $vocab["add_new_user"]       = "Afegir nou usuari";
-$vocab["rights"]             = "Drets";
 $vocab["action"]             = "Acció";
 $vocab["user"]               = "Usuari";
 $vocab["administrator"]      = "Administrador";

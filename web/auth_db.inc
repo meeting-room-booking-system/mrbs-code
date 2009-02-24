@@ -19,6 +19,11 @@
     in the logon box, if the value $user_list_link is set. */
 $user_list_link = "edit_users.php";
 
+// The highest level of access (0=none; 1=user; 2=admin).    Used in edit_users.php
+// In the future we might want a higher level of granularity, eg to distinguish between
+// different levels of admin
+$max_level = 2;
+
 /* authValidateUser($user, $pass)
  * 
  * Checks if the specified username/password pair are valid
@@ -41,7 +46,9 @@ function authValidateUser($user, $pass)
   // which is safe.
   $pass = md5($pass);
 
-  return sql_query1("select count(*) from $tbl_users where name='$user' and password='$pass';");
+  return max(0, sql_query1("select count(*) from $tbl_users where name='$user' and password='$pass';"));
+  // The max is used to cover the case when there's an SQL Query error (ie -1), probably because $tbl_users
+  // hasn't been set up yet.   In that case we want to return 0 (ie validation failed)  
 }
 
 /* authGetUserLevel($user)
@@ -53,25 +60,19 @@ function authValidateUser($user, $pass)
  * Returns:
  *   The users access level
  */
-function authGetUserLevel($user, $lev1_admin)
+function authGetUserLevel($user)
 {
+  global $tbl_users;
   // User not logged in, user level '0'
   if(!isset($user))
   {
     return 0;
   }
-
-  // Check if the user is can modify
-  for($i = 0; isset($lev1_admin[$i]); $i++)
-  {
-    if(strcasecmp($user, $lev1_admin[$i]) == 0)
-    {
-      return 2;
-    }
-  }
-
-  // Everybody else is access level '1'
-  return 1;
+  
+  return max (0, sql_query1("SELECT level FROM $tbl_users WHERE name='$user' LIMIT 1"));
+  // The max is used to cover the case when there's an SQL Query error (ie -1), probably because
+  // the database hasn't yet been upgraded and there's no 'level' column.   In that case we want 
+  // to return 0 (ie the user has no rights)
 }
 
 ?>

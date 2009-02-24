@@ -280,10 +280,6 @@ $auth["session"] = "php"; // How to get and keep the user ID. One of
 $auth["type"] = "config"; // How to validate the user/password. One of "none"
                           // "config" "db" "db_ext" "pop3" "imap" "ldap" "nis"
                           // "nw" "ext".
-// NOTE:  if you are using the "db" authentication scheme, then make sure you keep the admin user
-// "administrator" below.    The system initially relies on there being an admin called "administrator".
-// Once you have set up the user list and created one or more other admins (by adding them both to the
-// user list and the config file), then you can delete or rename the "administrator" user.
 
 // Configuration parameters for 'cookie' session scheme
 
@@ -303,8 +299,16 @@ $auth["session_cookie"]["include_ip"] = TRUE;
 // of automatically determining the cookie path to use
 $cookie_path_override = '';
 
-// The list of administrators (can modify other peoples settings)
-$auth["admin"][] = "127.0.0.1";   // localhost IP address. Useful with IP sessions.
+// The list of administrators (can modify other peoples settings).
+//
+// This list is not needed when using the 'db' authentication scheme EXCEPT
+// when upgrading from a pre-MRBS 1.4.2 system that used db authentication.
+// Pre-1.4.2 the 'db' authentication scheme did need this list.   When running
+// edit_users.php for the first time in a 1.4.2 system or later, with an existing
+// users list in the database, the system will automatically add a field to
+// the table for access rights and give admin rights to those users in the database
+// for whom admin rights are defined here.   After that this list is ignored.
+$auth["admin"][] = "127.0.0.1";     // localhost IP address. Useful with IP sessions.
 $auth["admin"][] = "administrator"; // A user name from the user list. Useful 
                                     // with most other session schemes.
 //$auth["admin"][] = "10.0.0.1";

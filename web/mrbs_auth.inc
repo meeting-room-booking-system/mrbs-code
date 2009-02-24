@@ -31,7 +31,7 @@ function getAuthorised($level)
     return 0;
   }
 
-  return authGetUserLevel($user, $auth["admin"]) >= $level;
+  return authGetUserLevel($user) >= $level;
 }
 
 /* getWritable($creator, $user)
@@ -47,15 +47,13 @@ function getAuthorised($level)
  */
 function getWritable($creator, $user)
 {
-  global $auth;
-
   // Always allowed to modify your own stuff
   if(strcasecmp($creator, $user) == 0)
   {
     return 1;
   }
 
-  if(authGetUserLevel($user, $auth["admin"]) >= 2)
+  if(authGetUserLevel($user) >= 2)
   {
     return 1;
   }
