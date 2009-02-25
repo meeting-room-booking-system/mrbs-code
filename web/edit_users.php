@@ -12,6 +12,22 @@
 *                 modifying the editor code. Only to add the fields in       *
 *                 the database creation code.                                *
 *                                                                            *
+*                 An admin rights model is used where the level (an          *
+*                 integer between 0 and $max_level) denotes rights:          *
+*                      0:  no rights                                         *
+*                      1:  an ordinary user                                  *
+*                      2+: admins, with increasing rights.   Designed to     *
+*                          allow more granularity of admin rights, for       *
+*                          example by having booking admins, user admins     *
+*                          snd system admins.  (System admins might be       *
+*                          necessary in the future if, for example, some     *
+*                          parameters curreently in the config file are      *
+*                          made editable from MRBS)                          *
+*                                                                            *
+*                 Only admins with at least user editing rights (level >=    *
+*                 $min_user_editing_level) can edit other users, and they    *
+*                 cannot edit users with a higher level than themselves      *
+*                                                                            *
 *                 To do:                                                     *
 *                     - Localisability                                       *
 *                                                                            *
@@ -223,8 +239,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           // or admin rights are removed!
           if ($Action == "Edit")
           {
-            $n_admins = sql_query1("select count(*) from $tbl_users where level>=2");
-            $editing_last_admin = ($n_admins <= 1) && ($data['level'] == 2);
+            $n_admins = sql_query1("select count(*) from $tbl_users where level=$max_level");
+            $editing_last_admin = ($n_admins <= 1) && ($data['level'] == $max_level);
           }
           else
           {
@@ -234,7 +250,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
           // We don't want the user to be able to change the level if (a) it's the first user being created or
           // (b) it's the last admin left or (c) they don't have admin rights
-          $disable_select = ($initial_user_creation || $editing_last_admin || ($level < 2));
+          $disable_select = ($initial_user_creation || $editing_last_admin || ($level < $min_user_editing_level));
           
           foreach ($fields as $fieldname)
           {
@@ -252,7 +268,10 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                 echo "<div>\n";
                 echo "<label for=\"Field_$fieldname\">" . get_loc_field_name($fieldname) . ":</label>\n";
                 echo "<select id=\"Field_$fieldname\" name=\"Field_$fieldname\"" . ($disable_select ? " disabled=\"disabled\"" : "") . ">\n";
-                for ($i=0; $i<=$max_level; $i++)
+                // Only display options up to and including one's own level (you can't upgrade yourself).
+                // If you're not some kind of admin then the select will also be disabled.
+                // (Note - disabling individual options doesn't work in older browsers, eg IE6)     
+                for ($i=0; $i<=$level; $i++)
                 {
                   echo "<option value=\"$i\"";
                   // Work out which option should be selected by default:
@@ -260,7 +279,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                   //   if we're adding the very first entry, then it should be an admin;
                   //   if we're adding a subsequent entry, then it should be an ordinary user;
                   if ( (($Action == "Edit")  && ($i == $data[$fieldname])) ||
-                       (($Action == "Add") && $initial_user_creation && ($i == 2)) ||
+                       (($Action == "Add") && $initial_user_creation && ($i == $max_level)) ||
                        (($Action == "Add") && !$initial_user_creation && ($i == 1)) )
                   {
                     echo " selected=\"selected\"";
@@ -274,7 +293,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                 {
                   if ($initial_user_creation)
                   {
-                    $v = 2;
+                    $v = $max_level;
                   }
                   else
                   {
@@ -340,7 +359,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
         </fieldset>
       </form>
       <?php
-      if (($Id >= 0) && ($level >= 2)) /* Administrators get the right to delete users */
+      /* Administrators get the right to delete users, but only those at the same level as them or lower */
+      if (($Id >= 0) && ($level >= $min_user_editing_level) && ($level >= $data['level'])) 
       {
         echo "<form id=\"form_delete_users\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
         echo "<div>\n";
@@ -586,7 +606,14 @@ if (isset($Action) && ($Action == "Update"))
 
 if (isset($Action) && ($Action == "Delete"))
 {
-  if ($level < 2)
+  $target_level = sql_query1("SELECT level FROM $tbl_users WHERE id=$Id LIMIT 1");
+  if ($target_level < 0)
+  {
+    fatal_error(TRUE, "Fatal error while deleting a user");
+  }
+  // you can't delete a user if you're not some kind of admin, and then you can't
+  // delete someone higher than you
+  if (($level < $min_user_editing_level) || ($level < $target_level))
   {
     showAccessDenied(0, 0, 0, "", "");
     exit();
@@ -624,7 +651,7 @@ print_header(0, 0, 0, "", "");
 
 print "<h2>" . get_vocab("user_list") . "</h2>\n";
 
-if ($level >= 2) /* Administrators get the right to add new users */
+if ($level >= $min_user_editing_level) /* Administrators get the right to add new users */
 {
   print "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
   print "  <div>\n";
