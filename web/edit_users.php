@@ -282,11 +282,6 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                   }
                   echo "<input type=\"hidden\" name=\"Field_$fieldname\" value=\"$v\">\n";
                 }
-                if ($initial_user_creation)
-                {
-                  // Send the level through as a hidden input because the <select> is disabled
-                  echo "<input type=\"hidden\" name=\"Field_$fieldname\" value=\"2\">\n";
-                }
                 echo "</div>\n";
                 break;
               default:
