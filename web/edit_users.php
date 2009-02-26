@@ -490,7 +490,7 @@ if (isset($Action) && ($Action == "Update"))
         $value = 0;
       }
       // Check that we are not trying to upgrade our level.    This shouldn't be possible
-      // but someone might have spoofed the hidden input in the edit form
+      // but someone might have spoofed the input in the edit form
       if ($value > $level)
       {
         Header("Location: edit_users.php");
