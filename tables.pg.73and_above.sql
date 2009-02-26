@@ -69,7 +69,7 @@ CREATE TABLE mrbs_repeat
   rep_opt     varchar(32) NOT NULL,
   room_id     int DEFAULT 1 NOT NULL,
   timestamp   timestamp DEFAULT current_timestamp,
-  create_by   varchar(25) NOT NULL,
+  create_by   varchar(80) NOT NULL,
   name        varchar(80) NOT NULL,
   type        char DEFAULT 'E' NOT NULL,
   description text,
