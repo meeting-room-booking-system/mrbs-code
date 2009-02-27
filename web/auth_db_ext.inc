@@ -39,7 +39,7 @@ function authValidateUser($user, $pass)
 
   $user = strtolower($user);
 
-  if (empty($auth['db_ext']['db_system'])
+  if (empty($auth['db_ext']['db_system']))
   {
     $auth['db_ext']['db_system'] = 'mysql';
   }
