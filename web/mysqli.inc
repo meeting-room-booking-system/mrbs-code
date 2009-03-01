@@ -342,6 +342,17 @@ function sql_mysqli_num_fields($result, $db_conn = null)
 }
 
 
+// Check if a table exists
+function sql_mysqli_table_exists($table, $db_conn = null)
+{
+  sql_mysqli_ensure_handle($db_conn);
+
+  $res = sql_mysqli_query1("SHOW TABLES LIKE '".addslashes($table)."'");
+
+  return ($res == -1) ? FALSE : TRUE;
+}
+
+
 // Connect to a database server and select a database, optionally using
 // persistent connections
 function sql_mysqli_connect($host, $username, $password,

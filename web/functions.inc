@@ -20,11 +20,19 @@ if (isset($timezone))
 }
 
 
+$done_header = FALSE;
+
+
 // Print the page header
 function print_header($day, $month, $year, $area, $room)
 {
-  global $mrbs_company, $mrbs_company_logo, $mrbs_company_url, $mrbs_company_more_info,
-    $search_str, $locale_warning, $unicode_encoding, $vocab;
+  global $mrbs_ecompany, $mrbs_company_logo, $mrbs_company_url, $mrbs_company_more_info,
+    $search_str, $locale_warning, $unicode_encoding, $vocab, $done_header;
+
+  if ($done_header)
+  {
+    return;
+  }
 
   // If we dont know the right date then make it up 
   if (!$day)
@@ -302,7 +310,25 @@ function ChangeOptionDays(formObj, prefix)
 </div>
 <?php
 
+  $done_header = TRUE;
+
 } // end of print_header()
+
+
+// Print the standard footer, currently very simple.  Pass $and_exit as
+// TRUE to exit afterwards
+function print_footer($and_exit)
+{
+?>
+</body>
+</html>
+<?php
+  if ($and_exit)
+  {
+    exit(0);
+  }
+}
+
 
 function toTimeString(&$dur, &$units)
 {

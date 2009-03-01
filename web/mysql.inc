@@ -313,6 +313,17 @@ function sql_mysql_num_fields($result, $db_conn = null)
 }
 
 
+// Check if a table exists
+function sql_mysql_table_exists($table, $db_conn = null)
+{
+  sql_mysql_ensure_handle($db_conn);
+
+  $res = sql_mysql_query1("SHOW TABLES LIKE '".addslashes($table)."'");
+
+  return ($res == -1) ? FALSE : TRUE;
+}
+
+
 // Connect to a database server and select a database, optionally using
 // persistent connections
 function sql_mysql_connect($host, $username, $password, $db_name, $persist = 0)

@@ -3,9 +3,9 @@
 
 require_once "grab_globals.inc.php";
 include "config.inc.php";
-include "functions.inc";
+include_once "functions.inc";
 include "dbsys.inc";
-include "mrbs_auth.inc";
+include_once "mrbs_auth.inc";
 
 
 function date_time_string($t)

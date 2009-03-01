@@ -8,12 +8,10 @@ if (isset($auth['session']))
   include "session_$auth[session].inc";
 }
 
-/* getAuthorised($user, $pass, $level)
+/* getAuthorised($level)
  * 
- * Check to see if the user name/password is valid
+ * Check to see if the current user has a certain level of rights
  * 
- * $user  - The user name
- * $pass  - The users password
  * $level - The access level required
  * 
  * Returns:

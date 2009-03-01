@@ -67,3 +67,15 @@ CREATE TABLE mrbs_repeat
   
   PRIMARY KEY (id)
 );
+
+CREATE TABLE mrbs_variables
+(
+  id               int NOT NULL auto_increment,
+  variable_name    varchar(80),
+  variable_content text,
+      
+  PRIMARY KEY (id)
+);
+
+INSERT INTO mrbs_variables (variable_name, variable_content)
+  VALUES ( 'db_version', '1');

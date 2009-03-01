@@ -23,8 +23,6 @@
 -- line below.
 
 
-
-
 CREATE TABLE mrbs_area
 (
   id                serial primary key,
@@ -75,3 +73,12 @@ CREATE TABLE mrbs_repeat
   description text,
   rep_num_weeks smallint DEFAULT 0 NULL
 );
+
+CREATE TABLE mrbs_variables
+(
+  id               serial primary key,
+  variable_name    varchar(80),
+  variable_content text
+);
+INSERT INTO mrbs_variables (variable_name, variable_content)
+  VALUES ('db_version', '1');

@@ -61,3 +61,12 @@ CREATE TABLE mrbs_repeat
   description text,
   rep_num_weeks smallint DEFAULT NULL NULL
 );
+
+CREATE TABLE mrbs_variables
+(
+  id               serial primary key,
+  variable_name    varchar(80),
+  variable_content text
+);
+INSERT INTO mrbs_variables (variable_name, variable_content)
+  VALUES ('db_version', '1');

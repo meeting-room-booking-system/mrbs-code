@@ -4,6 +4,20 @@
 
 global $dbsys;
 
+// These variables specify the names of the tables in the database
+global $db_tbl_prefix;
+
+$tbl_area      = $db_tbl_prefix . "area";
+$tbl_entry     = $db_tbl_prefix . "entry";
+$tbl_repeat    = $db_tbl_prefix . "repeat";
+$tbl_room      = $db_tbl_prefix . "room";
+$tbl_users     = $db_tbl_prefix . "users";
+$tbl_variables = $db_tbl_prefix . "variables";
+
+
+$db_schema_version = 1;
+
+
 // Include the abstraction configured to be used for the default MRBS
 // database
 require_once("${dbsys}.inc");
@@ -511,6 +525,28 @@ function sql_num_fields($result)
 }
 
 
+// Check if a table exists - returns TRUE if it exists, FALSE if it doesn't
+function sql_table_exists($table)
+{
+  if (func_num_args() > 1)
+  {
+    $handle = func_get_arg(1);
+    $db_sys = $handle['system'];
+    $db_conn = $handle['connection'];
+  }
+  else
+  {
+    global $dbsys;
+
+    $db_sys = $dbsys;
+    $db_conn = null;
+  }
+
+  $f = "sql_${db_sys}_table_exists";
+  return $f($table, $db_conn);
+}
+
+
 // Connect to a database host and select the supplied database
 function sql_connect($system, $host, $username, $password, $db_name,
                      $persist = 0)
@@ -532,3 +568,43 @@ function sql_connect($system, $host, $username, $password, $db_name,
 
 $f = "sql_${dbsys}_default_connect";
 $f();
+
+// Default version is 0, before we had schema versions
+$current_db_schema_version = 0;
+
+if (sql_table_exists($tbl_variables))
+{
+  $current_db_schema_version = sql_query1("SELECT variable_content ".
+                                          "FROM $tbl_variables ".
+                                          "WHERE variable_name = 'db_version'");
+}
+
+if ($current_db_schema_version < $db_schema_version)
+{
+  // Upgrade needed
+
+  include_once "functions.inc";
+  include_once "mrbs_auth.inc";
+
+  print_header(0,0,0,0,"");
+
+  $user = getUserName();
+  if (isset($user) && authGetUserLevel($user))
+  {
+    include "upgrade.inc";
+    upgrade_database($current_db_schema_version, $db_schema_version);
+
+    print get_vocab("upgrade_completed").
+      ". <a href=\"./\">".
+      get_vocab("returncal")."</a>.";
+  }
+  else
+  {
+    print "<div class=\"error\">
+  ".get_vocab("login_for_upgrade").".
+</div>\n";
+    authGet();
+  }
+
+  print_footer(TRUE);
+}

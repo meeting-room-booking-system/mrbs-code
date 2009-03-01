@@ -5,8 +5,8 @@
 require_once "grab_globals.inc.php";
 include "config.inc.php";
 include "dbsys.inc";
-include "mrbs_auth.inc";
-include "functions.inc";
+include_once "mrbs_auth.inc";
+include_once "functions.inc";
 include "version.inc";
 
 // Get form variables
