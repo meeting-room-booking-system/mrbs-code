@@ -589,7 +589,7 @@ if ($current_db_schema_version < $db_schema_version)
   print_header(0,0,0,0,"");
 
   $user = getUserName();
-  if (isset($user) && authGetUserLevel($user))
+  if (isset($user) && (authGetUserLevel($user) >= 2))
   {
     include "upgrade.inc";
     upgrade_database($current_db_schema_version, $db_schema_version);
