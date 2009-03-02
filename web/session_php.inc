@@ -36,7 +36,19 @@ else
   $cookie_path = $PHP_SELF;
   $cookie_path = ereg_replace('[^/]*$', '', $cookie_path);
 }
-session_set_cookie_params(0, $cookie_path);
+
+global $auth;
+
+if (!isset($auth["session_php"]["session_expire_time"]))
+{
+  // Default to the behaviour of previous versions of MRBS, use only
+  // session cookies - no persistent cookie.
+  $auth["session_php"]["session_expire_time"] = 0;
+}
+
+session_set_cookie_params($auth["session_php"]["session_expire_time"],
+                          $cookie_path);
+session_name("MRBS_SESSID");
 session_start();
 
 /*

@@ -294,6 +294,12 @@ $auth["session_cookie"]["session_expire_time"] = (60*60*24*30); // 30 days
 $auth["session_cookie"]["include_ip"] = TRUE;
 
 
+// Configuration parameters for 'php' session scheme
+
+// The expiry time of a session, in seconds
+$auth["session_php"]["session_expire_time"] = (60*60*24*30); // 30 days
+
+
 // Cookie path override. If this value is set it will be used by the
 // 'php' and 'cookie' session schemes to override the default behaviour
 // of automatically determining the cookie path to use
