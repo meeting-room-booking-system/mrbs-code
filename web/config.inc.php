@@ -297,6 +297,9 @@ $auth["session_cookie"]["include_ip"] = TRUE;
 // Configuration parameters for 'php' session scheme
 
 // The expiry time of a session, in seconds
+// N.B. Long session expiry times rely on PHP not retiring the session
+// on the server too early. If you only want session cookies to be used,
+// set this to 0.
 $auth["session_php"]["session_expire_time"] = (60*60*24*30); // 30 days
 
 
