@@ -269,14 +269,20 @@ else
                       $month, $day, $year,
                       is_dst($month, $day, $year, $hour)) + (int)($units * $duration);
 
-  // Round up the duration to the next whole resolution unit.
-  // If they asked for 0 minutes, push that up to 1 resolution unit.
-  $diff = $endtime - $starttime;
-  if (($tmp = $diff % $resolution) != 0 || $diff == 0)
+  // Round down the starttime and round up the endtime to the nearest slot boundaries                   
+  $am7=mktime($morningstarts,$morningstarts_minutes,0,
+              $month,$day,$year,is_dst($month,$day,$year,$morningstarts));
+  $starttime = round_t_down($starttime, $resolution, $am7);
+  $endtime = round_t_up($endtime, $resolution, $am7);
+  
+  // If they asked for 0 minutes, and even after the rounding the slot length is still
+  // 0 minutes, push that up to 1 resolution unit.
+  if ($endtime == $starttime)
   {
-    $endtime += $resolution - $tmp;
+    $endtime += $resolution;
   }
-
+ 
+  // Adjust the endtime for DST
   $endtime += cross_dst( $starttime, $endtime );
 }
 
