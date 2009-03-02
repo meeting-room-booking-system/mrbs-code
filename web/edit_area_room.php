@@ -2,10 +2,10 @@
 // $Id$
 
 require_once "grab_globals.inc.php";
-include "config.inc.php";
-include_once "functions.inc";
-include "dbsys.inc";
-include_once "mrbs_auth.inc";
+require_once "config.inc.php";
+require_once "functions.inc";
+require_once "dbsys.inc";
+require_once "mrbs_auth.inc";
 
 // Get form variables
 $day = get_form_var('day', 'int');
@@ -57,7 +57,7 @@ print_header($day, $month, $year, isset($area) ? $area : "", isset($room) ? $roo
 <?php
 if (!empty($room))
 {
-  include_once 'Mail/RFC822.php';
+  require_once 'Mail/RFC822.php';
   (!isset($room_admin_email)) ? $room_admin_email = '': '';
   $emails = explode(',', $room_admin_email);
   $valid_email = TRUE;
@@ -147,7 +147,7 @@ if (!empty($room))
 <?php
 if (!empty($area))
 {
-  include_once 'Mail/RFC822.php';
+  require_once 'Mail/RFC822.php';
   (!isset($area_admin_email)) ? $area_admin_email = '': '';
   $emails = explode(',', $area_admin_email);
   $valid_email = TRUE;
@@ -217,4 +217,4 @@ if (!empty($area))
 <?php
 }
 ?>
-<?php include "trailer.inc" ?>
+<?php require_once "trailer.inc" ?>

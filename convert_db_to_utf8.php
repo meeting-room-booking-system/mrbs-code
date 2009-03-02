@@ -5,7 +5,7 @@
 // This script converts text in the database from a particular encoding
 // to UTF-8
 
-include "grab_globals.inc.php";
+require_once "grab_globals.inc.php";
 
 ?>
 
@@ -48,9 +48,9 @@ if (!isset($encoding))
 }
 else
 {
-  include "config.inc.php";
-  include "$dbsys.inc";
-  include "functions.inc";
+  require_once "config.inc.php";
+  require_once "dbsys.inc";
+  require_once "functions.inc";
 
   echo '
     Starting update, this could take a while...<p>

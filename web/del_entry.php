@@ -2,11 +2,11 @@
 // $Id$
 
 require_once "grab_globals.inc.php";
-include "config.inc.php";
-include_once "functions.inc";
-include "dbsys.inc";
-include_once "mrbs_auth.inc";
-include "mrbs_sql.inc";
+require_once "config.inc.php";
+require_once "functions.inc";
+require_once "dbsys.inc";
+require_once "mrbs_auth.inc";
+require_once "mrbs_sql.inc";
 
 // Get form variables
 $day = get_form_var('day', 'int');
@@ -42,7 +42,7 @@ if (getAuthorised(1) && ($info = mrbsGetEntryInfo($id)))
 
   if (MAIL_ADMIN_ON_DELETE)
   {
-    include_once "functions_mail.inc";
+    require_once "functions_mail.inc";
     // Gather all fields values for use in emails.
     $mail_previous = getPreviousEntryData($id, $series);
   }

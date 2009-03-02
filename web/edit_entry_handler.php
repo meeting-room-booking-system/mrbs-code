@@ -2,11 +2,11 @@
 // $Id$
 
 require_once "grab_globals.inc.php";
-include "config.inc.php";
-include_once "functions.inc";
-include "dbsys.inc";
-include_once "mrbs_auth.inc";
-include "mrbs_sql.inc";
+require_once "config.inc.php";
+require_once "functions.inc";
+require_once "dbsys.inc";
+require_once "mrbs_auth.inc";
+require_once "mrbs_sql.inc";
 
 // Get form variables
 $day = get_form_var('day', 'int');
@@ -138,10 +138,9 @@ if ($name == '')
        <p>
          <?php echo get_vocab('must_set_description'); ?>
        </p>
-   </body>
-</html>
 <?php
-  exit;
+  // Print footer and exit
+  print_footer(TRUE);
 }       
 
 if ($rep_type  == 2 || $rep_type == 6)
@@ -158,15 +157,14 @@ if ($rep_type  == 2 || $rep_type == 6)
   if ($got_rep_day == 0)
   {
     print_header($day, $month, $year, $area, isset($room) ? $room : "");
-     ?>
+?>
        <h1><?php echo get_vocab('invalid_booking'); ?></h1>
        <p>
          <?php echo get_vocab('you_have_not_entered')." ".get_vocab("rep_rep_day"); ?>
        </p>
-   </body>
-</html>
 <?php
-    exit;
+    // Print footer and exit
+    print_footer(TRUE);
   }
 }       
 
@@ -178,10 +176,9 @@ if (($rep_type == 6) && ($rep_num_weeks < 2))
        <p>
          <?php echo get_vocab('you_have_not_entered')." ".get_vocab("useful_n-weekly_value"); ?>
        </p>
-   </body>
-</html>
 <?php
-  exit;
+  // Print footer and exit
+  print_footer(TRUE);
 }
 
 // Support locales where ',' is used as the decimal point
@@ -408,7 +405,7 @@ if (empty($err))
       if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
           MAIL_ROOM_ADMIN_ON_BOOKINGS or MAIL_BOOKER)
       {
-        include_once "functions_mail.inc";
+        require_once "functions_mail.inc";
         // Send a mail only if this a new entry, or if this is an
         // edited entry but we have to send mail on every change,
         // and if mrbsCreateRepeatingEntrys is successful
@@ -465,7 +462,7 @@ if (empty($err))
       if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
           MAIL_ROOM_ADMIN_ON_BOOKINGS or MAIL_BOOKER)
       {
-        include_once "functions_mail.inc";
+        require_once "functions_mail.inc";
         // Send a mail only if this a new entry, or if this is an
         // edited entry but we have to send mail on every change,
         // and if mrbsCreateRepeatingEntrys is successful
@@ -537,5 +534,5 @@ echo "<p>\n";
 echo "<a href=\"" . htmlspecialchars($returl) . "\">" . get_vocab("returncal") . "</a>\n";
 echo "</p>\n";
 
-include "trailer.inc";
+require_once "trailer.inc";
 ?>

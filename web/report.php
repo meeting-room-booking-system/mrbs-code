@@ -2,10 +2,10 @@
 // $Id$
 
 require_once "grab_globals.inc.php";
-include "config.inc.php";
-include_once "functions.inc";
-include "dbsys.inc";
-include_once "mrbs_auth.inc";
+require_once "config.inc.php";
+require_once "functions.inc";
+require_once "dbsys.inc";
+require_once "mrbs_auth.inc";
 
 
 function date_time_string($t)
@@ -687,6 +687,6 @@ if (isset($areamatch))
   }
 }
 
-include "trailer.inc";
+require_once "trailer.inc";
 
 ?>

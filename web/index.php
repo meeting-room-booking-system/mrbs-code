@@ -8,8 +8,8 @@
 // be used to redirect to a particular room.
 
 require_once "grab_globals.inc.php";
-include("config.inc.php");
-include("dbsys.inc");
+require_once "config.inc.php";
+require_once "dbsys.inc";
 
 $day   = date("d");
 $month = date("m");

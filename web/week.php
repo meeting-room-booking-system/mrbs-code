@@ -4,11 +4,11 @@
 // mrbs/week.php - Week-at-a-time view
 
 require_once "grab_globals.inc.php";
-include "config.inc.php";
-include_once "functions.inc";
-include "dbsys.inc";
-include_once "mrbs_auth.inc";
-include "mincals.inc";
+require_once "config.inc.php";
+require_once "functions.inc";
+require_once "dbsys.inc";
+require_once "mrbs_auth.inc";
+require_once "mincals.inc";
 
 // Get form variables
 $debug_flag = get_form_var('debug_flag', 'int');
@@ -194,7 +194,7 @@ echo "</div>\n";
 if ($room <= 0)
 {
   echo "<h1>".get_vocab("no_rooms_for_area")."</h1>";
-  include "trailer.inc";
+  require_once "trailer.inc";
   exit;
 }
 
@@ -620,5 +620,5 @@ print $before_after_links_html;
 
 show_colour_key();
 
-include "trailer.inc"; 
+require_once "trailer.inc"; 
 ?>

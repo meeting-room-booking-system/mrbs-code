@@ -2,10 +2,10 @@
 // $Id$
 
 require_once "grab_globals.inc.php";
-include "config.inc.php";
-include_once "functions.inc";
-include "dbsys.inc";
-include_once "mrbs_auth.inc";
+require_once "config.inc.php";
+require_once "functions.inc";
+require_once "dbsys.inc";
+require_once "mrbs_auth.inc";
 
 // Get form variables
 $day = get_form_var('day', 'int');
@@ -62,14 +62,14 @@ if (!empty($advanced))
     </fieldset>
   </form>
   <?php
-  include "trailer.inc";
+  require_once "trailer.inc";
   exit;
 }
 
 if (!$search_str)
 {
   echo "<p class=\"error\">" . get_vocab("invalid_search") . "</p>";
-  include "trailer.inc";
+  require_once "trailer.inc";
   exit;
 }
 
@@ -95,7 +95,7 @@ if (!isset($total))
 if ($total <= 0)
 {
   echo "<p id=\"nothing_found\">" . get_vocab("nothing_found") . "</p>\n";
-  include "trailer.inc";
+  require_once "trailer.inc";
   exit;
 }
 
@@ -206,5 +206,5 @@ for ($i = 0; ($row = sql_row_keyed($result, $i)); $i++)
 }
 echo "</tbody>\n";
 echo "</table>\n";
-include "trailer.inc";
+require_once "trailer.inc";
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 // $Id$
 
 
@@ -202,7 +203,8 @@ else
   echo "</div>\n";  // end of viewmonth
   echo "</div>\n";  // end of "classic" trailer
 }
-?>
 
-</body>
-</html>
+// Print footer
+print_footer(FALSE);
+
+?>

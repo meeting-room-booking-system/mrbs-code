@@ -2,11 +2,13 @@
 // $Id$
 
 // include the authentification wrappers
-include "auth_$auth[type].inc";
+require_once "auth_$auth[type].inc";
+
 if (isset($auth['session']))
 {
-  include "session_$auth[session].inc";
+  require_once "session_$auth[session].inc";
 }
+
 
 /* getAuthorised($level)
  * 
@@ -81,8 +83,8 @@ function showAccessDenied($day, $month, $year, $area, $room)
       <?php echo get_vocab("returnprev"); ?>
     </a>
   </p>
- </body>
-</html>
 <?php
+  // Print footer and exit
+  print_footer(TRUE);
 }
 ?>

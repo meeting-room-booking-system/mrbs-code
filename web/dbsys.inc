@@ -20,7 +20,7 @@ $db_schema_version = 1;
 
 // Include the abstraction configured to be used for the default MRBS
 // database
-require_once("${dbsys}.inc");
+require_once "${dbsys}.inc";
 
 
 // All the sql_* functions below apart from sql_connect() and
@@ -583,15 +583,15 @@ if ($current_db_schema_version < $db_schema_version)
 {
   // Upgrade needed
 
-  include_once "functions.inc";
-  include_once "mrbs_auth.inc";
+  require_once "functions.inc";
+  require_once "mrbs_auth.inc";
 
   print_header(0,0,0,0,"");
 
   $user = getUserName();
   if (isset($user) && (authGetUserLevel($user) >= 2))
   {
-    include "upgrade.inc";
+    require_once "upgrade.inc";
     upgrade_database($current_db_schema_version, $db_schema_version);
 
     print get_vocab("upgrade_completed").

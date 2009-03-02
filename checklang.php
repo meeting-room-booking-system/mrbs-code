@@ -19,7 +19,7 @@
 // the MRBS 'web' directory
 $path_to_mrbs = ".";
 
-include "$path_to_mrbs/config.inc.php";
+require_once "$path_to_mrbs/config.inc.php";
 
 // Checklang 2001-01-28 ljb - Check MRBS language files for completeness.
 // This is a rather straightforward job. For each language file, report

@@ -72,7 +72,7 @@ function print_header($day, $month, $year, $area, $room)
 <html>
   <head>
 <?php
-  include "style.inc";
+  require_once "style.inc";
 ?>
     <title><?php echo get_vocab("mrbs") ?></title>
     <script type="text/javascript">
@@ -487,7 +487,7 @@ function fatal_error($need_header, $message)
     print_header(0, 0, 0, 0, "");
   }
   echo $message;
-  include "trailer.inc";
+  require_once "trailer.inc";
   exit;
 }
 

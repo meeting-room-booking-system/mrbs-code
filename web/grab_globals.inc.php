@@ -20,8 +20,13 @@
 //
 // $Id$
 
+
+//
 function get_form_var($variable, $type = 'string')
 {
+  // We use some functions from here
+  require_once "functions.inc";
+
   if ($type == 'array')
   {
     $value = array();
@@ -95,6 +100,7 @@ function get_form_var($variable, $type = 'string')
   }
   return $value;
 }
+
 
 // -- PHP_SELF --
 if (!empty($_SERVER) && isset($_SERVER['PHP_SELF']))

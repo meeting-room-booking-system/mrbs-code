@@ -20,6 +20,9 @@
 
 // $Id$
 
+// We use some functions from here
+require_once "functions.inc";
+
 require_once('Blowfish.php');
 
 $blowfish = new Crypt_Blowfish($auth['session_cookie']['secret']);
@@ -106,9 +109,9 @@ if (isset($Action) && ($Action == "SetName"))
         Anyway, if the browser cannot redirect automatically, the manual link below will work. */
     print_header(0, 0, 0, 0, "");
     echo "<p>Please click <a href=\"".htmlspecialchars($TargetURL)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
-    echo "</body>\n";
-    echo "</html>\n";
-    exit();
+
+    // Print footer and exit
+    print_footer(TRUE);
 }
 
 /*
@@ -148,9 +151,9 @@ function printLoginForm($TargetURL)
     </div>
   </fieldset>
 </form>
-</body>
-</html>
 <?php
+  // Print footer and exit
+  print_footer(TRUE);
 }
 
 /*

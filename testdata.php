@@ -4,8 +4,8 @@
 
 // This script initialises the database with some random data
 require_once "grab_globals.inc.php";
-include "config.inc.php";
-include "$dbsys.inc";
+require_once "config.inc.php";
+require_once "dbsys.inc";
 
 // The sample data has an office in Tokyo. We have an array of Japanese
 // Names and other names

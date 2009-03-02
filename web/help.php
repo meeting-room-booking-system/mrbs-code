@@ -3,11 +3,11 @@
 // $Id$
 
 require_once "grab_globals.inc.php";
-include "config.inc.php";
-include "dbsys.inc";
-include_once "mrbs_auth.inc";
-include_once "functions.inc";
-include "version.inc";
+require_once "config.inc.php";
+require_once "dbsys.inc";
+require_once "mrbs_auth.inc";
+require_once "functions.inc";
+require_once "version.inc";
 
 // Get form variables
 $day = get_form_var('day', 'int');
@@ -52,7 +52,7 @@ echo get_vocab("please_contact") . '<a href="mailto:' . htmlspecialchars($mrbs_a
   . "</a> " . get_vocab("for_any_questions") . "\n";
 echo "</p>\n";
  
-include "site_faq" . $faqfilelang . ".html";
+require_once "site_faq" . $faqfilelang . ".html";
 
-include "trailer.inc";
+require_once "trailer.inc";
 ?>

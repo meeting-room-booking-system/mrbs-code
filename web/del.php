@@ -2,10 +2,10 @@
 // $Id$
 
 require_once "grab_globals.inc.php";
-include "config.inc.php";
-include_once "functions.inc";
-include "dbsys.inc";
-include_once "mrbs_auth.inc";
+require_once "config.inc.php";
+require_once "functions.inc";
+require_once "dbsys.inc";
+require_once "mrbs_auth.inc";
 
 // Get form variables
 $day = get_form_var('day', 'int');
@@ -92,7 +92,7 @@ if ($type == "room")
     echo "<a href=\"admin.php\"><span id=\"del_no\">" . get_vocab("NO") . "!</span></a>\n";
     echo "</div>\n";
     echo "</div>\n";
-    include "trailer.inc";
+    require_once "trailer.inc";
   }
 }
 
@@ -117,7 +117,7 @@ if ($type == "area")
     echo get_vocab("delarea");
     echo "<a href=\"admin.php\">" . get_vocab("backadmin") . "</a>";
     echo "</p>\n";
-    include "trailer.inc";
+    require_once "trailer.inc";
   }
 }
 

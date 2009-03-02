@@ -100,9 +100,9 @@ if (isset($Action) && ($Action == "SetName"))
   print_header(0, 0, 0, 0, "");
   echo "<br>\n";
   echo "<p>Please click <a href=\"".htmlspecialchars($TargetURL)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
-  echo "</body>\n";
-  echo "</html>\n";
-  exit();
+
+  // Print footer and exit
+  print_footer(TRUE);
 }
 
 /*
@@ -139,9 +139,9 @@ function printLoginForm($TargetURL)
     </div>
   </fieldset>
 </form>
-</body>
-</html>
 <?php
+  // Print footer and exit
+  print_footer(TRUE);
 }
 
 /*

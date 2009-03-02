@@ -39,10 +39,10 @@
 // $Id$
 
 require_once "grab_globals.inc.php";
-include "config.inc.php";
-include_once "functions.inc";
-include "dbsys.inc";
-include_once "mrbs_auth.inc";
+require_once "config.inc.php";
+require_once "functions.inc";
+require_once "dbsys.inc";
+require_once "mrbs_auth.inc";
 
 // Get form variables
 $day = get_form_var('day', 'int');
@@ -372,12 +372,12 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
         echo "</div>\n";
         echo "</form>\n";
       }
-      ?>
+?>
       </div>
-    </body>
-    </html>
-  <?php
-  exit();
+<?php
+
+  // Print footer and exit
+  print_footer(TRUE);
 }
 
 /*---------------------------------------------------------------------------*\
@@ -397,13 +397,14 @@ if (isset($Action) && ($Action == "Update"))
     print "    <p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
     print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
     print "  </fieldset>\n";
-    print "</form>\n</body>\n</html>\n";
-
-    exit();
+    print "</form>\n";
+    
+    // Print footer and exit
+    print_footer(TRUE);
   }
   //
   // Verify email adresses
-  include_once 'Mail/RFC822.php';
+  require_once 'Mail/RFC822.php';
 
   $email_var = get_form_var('Field_email', 'string');
   if (!isset($email_var))
@@ -591,9 +592,10 @@ if (isset($Action) && ($Action == "Update"))
     print "    <p class=\"error\">" . sql_error() . "</p>\n";
     print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
     print "  </fieldset>\n";
-    print "</form>\n</body>\n</html>\n";
+    print "</form>\n";
 
-    exit();
+    // Print footer and exit
+    print_footer(TRUE);
   }
 
   /* Success. Redirect to the user list, to remove the form args */
@@ -633,9 +635,10 @@ if (isset($Action) && ($Action == "Delete"))
     print "    <p class=\"error\">" . sql_error() . "</p>\n";
     print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
     print "  </fieldset>\n";
-    print "</form>\n</body>\n</html>\n";
+    print "</form>\n";
 
-    exit();
+    // Print footer and exit
+    print_footer(TRUE);
   }
 
   /* Success. Do not display a message. Simply fall through into the list display. */
@@ -738,5 +741,6 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   print "</table>\n";
 }   // ($initial_user_creation != 1)
 
-include "trailer.inc";
+require_once "trailer.inc";
+
 ?>
