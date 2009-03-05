@@ -73,6 +73,7 @@ table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color:
     vertical-align: middle}
     
 .naked {margin: 0; padding: 0; border-width: 0} /* Invisible tables used for internal needs */
+table.naked {width: 100%; height: 100%}
 table:hover.naked {cursor: pointer}   /* set cursor to pointer; if you don't it doesn't show up when show_plus_link is false */
 
 

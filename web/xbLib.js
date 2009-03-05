@@ -435,7 +435,20 @@ function SearchTdHighlight(rule, ref)
 |                   IE5+, NS6+    Yes.                                        |
 |                   Opera 6       Yes.                                        |
 |                                                                             |
-|   Notes:          This code implements 3 methods for highlighting cells:    |
+|   Notes:          For all browsers other than IE6 and below, highlighting   |
+|                   is done using CSS, i.e. by using tr:hover and td:hover.   |
+|                   But since IE6 and below do not support the hover pseudo-  |
+|                   class on elements other than <a>, we have to use          |
+|                   JavaScript for those browsers.    (Theoretically we       |
+|                   would also have to for early versions of other browsers,  |
+|                   but we are making the assumption that if people are       |
+|                   using non-IE browsers, then they will have upgraded at    |
+|                   least to a version that properly supports the :hover      |
+|                   pseudo-class).                                            |
+|                                                                             |
+|                   For IE6 and below, this code implements 3 methods for     |
+|                   highlighting cells, all using JavaScript:                 |
+|                                                                             |
 |                   highlight_method="bgcolor"                                |
 |                       Dynamically changes the cell background color.        |
 |                       Advantage: Works with most javascript-capable browsers.
@@ -452,6 +465,17 @@ function SearchTdHighlight(rule, ref)
 |                        uses it it like in the bgcolor method.               |
 |                       Advantage: Fast on all machines; color defined in CSS.|
 |                       Drawback: Not as powerful as the class method.        |
+|                                                                             |
+|                   (Note that if you try and force newer browsers to use     |
+|                   JavaScript highlighting, by forcing use_css_highlighting  |
+|                   to be false, then this won't work unless you remove the   |
+|                   CSS rules.    What can happen is that if the CSS :hover   |
+|                   event gets triggered before the onMouseOver event, then   |
+|                   the CSS will change the background colour, and when       |
+|                   JavaScript eventually arrives and reads what it thinks is |
+|                   the "old" background colour it actually reads the         |
+|                   highlight colour that has just been set by CSS.  So the   |
+|                   cell gets stuck at the highlight colour.)                 |
 |                                                                             |
 |   History:                                                                  |
 |                                                                             |
@@ -742,7 +766,7 @@ function BeginActiveCell()
 {
   if (useJS)
   {
-    document.write("<table class=\"naked\" width=\"100%\" cellSpacing=\"0\" onMouseOver=\"ActivateCell(this)\" onMouseOut=\"UnactivateCell(this)\" onClick=\"GotoLink(this)\">\n<td class=\"naked\" style=\"border: 0px\">\n");
+    document.write("<table class=\"naked\" cellSpacing=\"0\" onMouseOver=\"ActivateCell(this)\" onMouseOut=\"UnactivateCell(this)\" onClick=\"GotoLink(this)\">\n<td class=\"naked\" style=\"border: 0\">\n");
     // Note: The &nbsp; below is necessary to fill-up the cell. Empty cells behave badly in some browsers.
     if (!show_plus_link)
     {
