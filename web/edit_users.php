@@ -303,6 +303,16 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                 }
                 echo "</div>\n";
                 break;
+              case 'name':
+                // you cannot change a username (even your own) unless you have user editing rights
+                $html_fieldname = htmlspecialchars("Field_$fieldname");
+                echo ("<div>\n");
+                echo ("<label for=\"$html_fieldname\">" . get_loc_field_name($fieldname) . ":</label>\n");
+                echo ("<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" " .
+                     (($level < $min_user_editing_level) ? "disabled=\"disabled\" " : "") .
+                      "value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n");
+                echo ("</div>\n");
+                break;
               default:
                 $html_fieldname = htmlspecialchars("Field_$fieldname");
                 echo ("<div>\n");
