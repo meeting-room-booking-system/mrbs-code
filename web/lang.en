@@ -138,6 +138,7 @@ $vocab["upgrade_completed"]  = "Database upgrade completed";
 $vocab["level_0"]            = "none";
 $vocab["level_1"]            = "user";
 $vocab["level_2"]            = "admin";
+$vocab["level_3"]            = "user admin";
 
 // Authentication database
 $vocab["user_list"]          = "User list";

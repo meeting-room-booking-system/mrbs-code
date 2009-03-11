@@ -386,220 +386,232 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 
 if (isset($Action) && ($Action == "Update"))
 {
-  /* To do: Add JavaScript to verify passwords _before_ sending the form here */
-  if ($password0 != $password1)
+  // If you haven't got the rights to do this, then exit
+  $my_id = sql_query1("SELECT id FROM $tbl_users WHERE name='$user' LIMIT 1");
+  if (($level < $min_user_editing_level) && ($Id != $my_id ))
   {
-    print_header(0, 0, 0, "", "");
-
-    print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-    print "  <fieldset>\n";
-    print "  <legend></legend>\n";
-    print "    <p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
-    print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
-    print "  </fieldset>\n";
-    print "</form>\n";
-    
-    // Print footer and exit
-    print_footer(TRUE);
-  }
-  //
-  // Verify email adresses
-  require_once 'Mail/RFC822.php';
-
-  $email_var = get_form_var('Field_email', 'string');
-  if (!isset($email_var))
-  {
-    $email_var = '';
-  }
-  $emails = explode(',', $email_var);
-  $valid_email = new Mail_RFC822();
-  foreach ($emails as $email)
-  {
-    // if no email address is entered, this is OK, even if isValidInetAddress
-    // does not return TRUE
-    if ( !$valid_email->isValidInetAddress($email, $strict = FALSE)
-         && ('' != $email_var) )
-    {
-      // Now display this form again with an error message
-      Header("Location: edit_users.php?Action=Edit&Id=$Id&invalid_email=1");
-      exit;
-    }
-  }
-  //
-  
-  // Check that the name is not empty
-  $new_name = strtolower(get_form_var('Field_name', 'string'));
-  if (empty($new_name))
-  {
-    // Now display this form again with an error message
-    // Build the query string
-    $q_string = "Action=" . (($Id >= 0) ? 'Edit' : 'Add');
-    $q_string .= "&Id=$Id&name_empty=1";
-    Header("Location: edit_users.php?$q_string");
+    Header("Location: edit_users.php");
     exit;
   }
   
-  // Check that the name is unique.
-  // If it's a new user, then to check to see if there are any rows with that name.
-  // If it's an update, then check to see if there are any rows with that name, except
-  // for that user.
-  $query = "SELECT id FROM $tbl_users WHERE name='$new_name'";
-  if ($Id >= 0)
+  // otherwise go ahead and update the database
+  else
   {
-    $query .= " AND id!='$Id'";
-  }
-  $query .= " LIMIT 1";  // we only want to know if there is at least one instance of the name
-  $result = sql_query($query);
-  if (sql_count($result) > 0)
-  {
-    // Now display this form again with an error message
-    // Build the query string
-    $q_string = "Action=" . (($Id >= 0) ? 'Edit' : 'Add');
-    $q_string .= "&Id=$Id";
-    $q_string .= "&taken_name=" . urlencode($new_name);
-    $q_string .= "&name_not_unique=1";
-    Header("Location: edit_users.php?$q_string");
-    exit;
-  }
+    /* To do: Add JavaScript to verify passwords _before_ sending the form here */
+    if ($password0 != $password1)
+    {
+      print_header(0, 0, 0, "", "");
   
-  $sql_fields = array();
-
-  // For each db column, try to fetch out an appropriate form field value
-  foreach ($fields as $fieldname)
-  {
-    if ($fieldname=="id")
-    {
-      // We don't add or update the id - that's autoincremented in the db
-      // so move onto the next value
-      continue;
+      print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+      print "  <fieldset>\n";
+      print "  <legend></legend>\n";
+      print "    <p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
+      print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
+      print "  </fieldset>\n";
+      print "</form>\n";
+      
+      // Print footer and exit
+      print_footer(TRUE);
     }
-    else if ($fieldname=="name")
+    //
+    // Verify email adresses
+    require_once 'Mail/RFC822.php';
+  
+    $email_var = get_form_var('Field_email', 'string');
+    if (!isset($email_var))
     {
-      // convert to lowercase so that authentication will be case insensitive
-      $value = strtolower(get_form_var('Field_name', 'string'));
+      $email_var = '';
     }
-    else if (($fieldname=="password") && ($password0!=""))
+    $emails = explode(',', $email_var);
+    $valid_email = new Mail_RFC822();
+    foreach ($emails as $email)
     {
-      // Hash the password for security
-      $value=md5($password0);
-    }
-    else if ($fieldname=="level")
-    {
-      $value = get_form_var('Field_level', 'int');
-      if (!isset($value))
+      // if no email address is entered, this is OK, even if isValidInetAddress
+      // does not return TRUE
+      if ( !$valid_email->isValidInetAddress($email, $strict = FALSE)
+           && ('' != $email_var) )
       {
-        $value = 0;
-      }
-      // Check that we are not trying to upgrade our level.    This shouldn't be possible
-      // but someone might have spoofed the input in the edit form
-      if ($value > $level)
-      {
-        Header("Location: edit_users.php");
+        // Now display this form again with an error message
+        Header("Location: edit_users.php?Action=Edit&Id=$Id&invalid_email=1");
         exit;
       }
     }
-    else
+    //
+    
+    // Check that the name is not empty
+    $new_name = strtolower(get_form_var('Field_name', 'string'));
+    if (empty($new_name))
     {
-      $value = get_form_var("Field_$fieldname", $field_props[$fieldname]['type']);
+      // Now display this form again with an error message
+      // Build the query string
+      $q_string = "Action=" . (($Id >= 0) ? 'Edit' : 'Add');
+      $q_string .= "&Id=$Id&name_empty=1";
+      Header("Location: edit_users.php?$q_string");
+      exit;
     }
-
-    // pre-process the field value for SQL
-    if ($field_props[$fieldname]['istext'])
+    
+    // Check that the name is unique.
+    // If it's a new user, then to check to see if there are any rows with that name.
+    // If it's an update, then check to see if there are any rows with that name, except
+    // for that user.
+    $query = "SELECT id FROM $tbl_users WHERE name='$new_name'";
+    if ($Id >= 0)
     {
-      $value = "'" . addslashes($value) . "'";
+      $query .= " AND id!='$Id'";
     }
-    else if ($field_props[$fieldname]['isbool'])
+    $query .= " LIMIT 1";  // we only want to know if there is at least one instance of the name
+    $result = sql_query($query);
+    if (sql_count($result) > 0)
     {
-      if ($value && $value == true)
+      // Now display this form again with an error message
+      // Build the query string
+      $q_string = "Action=" . (($Id >= 0) ? 'Edit' : 'Add');
+      $q_string .= "&Id=$Id";
+      $q_string .= "&taken_name=" . urlencode($new_name);
+      $q_string .= "&name_not_unique=1";
+      Header("Location: edit_users.php?$q_string");
+      exit;
+    }
+    
+    $sql_fields = array();
+  
+    // For each db column, try to fetch out an appropriate form field value
+    foreach ($fields as $fieldname)
+    {
+      if ($fieldname=="id")
       {
-        $value = "TRUE";
+        // We don't add or update the id - that's autoincremented in the db
+        // so move onto the next value
+        continue;
+      }
+      else if ($fieldname=="name")
+      {
+        // convert to lowercase so that authentication will be case insensitive
+        $value = strtolower(get_form_var('Field_name', 'string'));
+      }
+      else if (($fieldname=="password") && ($password0!=""))
+      {
+        // Hash the password for security
+        $value=md5($password0);
+      }
+      else if ($fieldname=="level")
+      {
+        $value = get_form_var('Field_level', 'int');
+        if (!isset($value))
+        {
+          $value = 0;
+        }
+        // Check that we are not trying to upgrade our level.    This shouldn't be possible
+        // but someone might have spoofed the input in the edit form
+        if ($value > $level)
+        {
+          Header("Location: edit_users.php");
+          exit;
+        }
       }
       else
       {
-        $value = "FALSE";
+        $value = get_form_var("Field_$fieldname", $field_props[$fieldname]['type']);
       }
-    }
-    else
-    {
-      // put in a sensible default for a missing field
-      if (($value == null) || ($value == ''))
+  
+      // pre-process the field value for SQL
+      if ($field_props[$fieldname]['istext'])
       {
-        if ($field_props[$fieldname]['isnum'])
+        $value = "'" . addslashes($value) . "'";
+      }
+      else if ($field_props[$fieldname]['isbool'])
+      {
+        if ($value && $value == true)
         {
-         $value = "0";
+          $value = "TRUE";
         }
         else
         {
-          $value = "NULL";
+          $value = "FALSE";
         }
       }
-    }
-    
-    /* If we got here, we have a valid, sql-ified value for this field,
-     * so save it for later */
-    $sql_fields[$fieldname] = $value;
-                         
-  } /* end for each column of user database */
-
-  /* Now generate the SQL operation based on the given array of fields */
-  if ($Id >= 0)
-  {
-    /* if the Id exists - then we are editing an existing user, rather th
-     * creating a new one */
-
-    $assign_array = array();
-    $operation = "UPDATE $tbl_users SET ";
-
-    foreach ($sql_fields as $fieldname => $value)
+      else
+      {
+        // put in a sensible default for a missing field
+        if (($value == null) || ($value == ''))
+        {
+          if ($field_props[$fieldname]['isnum'])
+          {
+           $value = "0";
+          }
+          else
+          {
+            $value = "NULL";
+          }
+        }
+      }
+      
+      /* If we got here, we have a valid, sql-ified value for this field,
+       * so save it for later */
+      $sql_fields[$fieldname] = $value;
+                           
+    } /* end for each column of user database */
+  
+    /* Now generate the SQL operation based on the given array of fields */
+    if ($Id >= 0)
     {
-      array_push($assign_array,"$fieldname=$value");
+      /* if the Id exists - then we are editing an existing user, rather th
+       * creating a new one */
+  
+      $assign_array = array();
+      $operation = "UPDATE $tbl_users SET ";
+  
+      foreach ($sql_fields as $fieldname => $value)
+      {
+        array_push($assign_array,"$fieldname=$value");
+      }
+      $operation .= implode(",", $assign_array) . " WHERE id=$Id;";
     }
-    $operation .= implode(",", $assign_array) . " WHERE id=$Id;";
-  }
-  else
-  {
-    /* The id field doesn't exist, so we're adding a new user */
-
-    $fields_list = array();
-    $values_list = array();
-
-    foreach ($sql_fields as $fieldname => $value)
+    else
     {
-      array_push($fields_list,$fieldname);
-      array_push($values_list,$value);
+      /* The id field doesn't exist, so we're adding a new user */
+  
+      $fields_list = array();
+      $values_list = array();
+  
+      foreach ($sql_fields as $fieldname => $value)
+      {
+        array_push($fields_list,$fieldname);
+        array_push($values_list,$value);
+      }
+      
+      $operation = "INSERT INTO $tbl_users " .
+        "(". implode(",",$fields_list) . ")" .
+        " VALUES " . "(" . implode(",",$values_list) . ");";
     }
-    
-    $operation = "INSERT INTO $tbl_users " .
-      "(". implode(",",$fields_list) . ")" .
-      " VALUES " . "(" . implode(",",$values_list) . ");";
+  
+    /* DEBUG lines - check the actual sql statement going into the db */
+    //echo "Final SQL string: <code>$operation</code>";
+    //exit;
+  
+    $r = sql_command($operation);
+    if ($r == -1)
+    {
+      print_header(0, 0, 0, "", "");
+  
+      // This is unlikely to happen in normal operation. Do not translate.
+       
+      print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+      print "  <fieldset>\n";
+      print "  <legend></legend>\n";
+      print "    <p class=\"error\">Error updating the $tbl_users table.</p>\n";
+      print "    <p class=\"error\">" . sql_error() . "</p>\n";
+      print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
+      print "  </fieldset>\n";
+      print "</form>\n";
+  
+      // Print footer and exit
+      print_footer(TRUE);
+    }
+  
+    /* Success. Redirect to the user list, to remove the form args */
+    Header("Location: edit_users.php");
   }
-
-  /* DEBUG lines - check the actual sql statement going into the db */
-  //echo "Final SQL string: <code>$operation</code>";
-  //exit;
-
-  $r = sql_command($operation);
-  if ($r == -1)
-  {
-    print_header(0, 0, 0, "", "");
-
-    // This is unlikely to happen in normal operation. Do not translate.
-     
-    print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-    print "  <fieldset>\n";
-    print "  <legend></legend>\n";
-    print "    <p class=\"error\">Error updating the $tbl_users table.</p>\n";
-    print "    <p class=\"error\">" . sql_error() . "</p>\n";
-    print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
-    print "  </fieldset>\n";
-    print "</form>\n";
-
-    // Print footer and exit
-    print_footer(TRUE);
-  }
-
-  /* Success. Redirect to the user list, to remove the form args */
-  Header("Location: edit_users.php");
 }
 
 /*---------------------------------------------------------------------------*\
@@ -718,7 +730,8 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     
     // Last column (the action button)
     print "<td>\n";
-    if (getWritable($line['name'], $user)) /* If the logged-on user has the right to edit this entry */
+    // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
+    if (($level >= $min_user_editing_level) || (strcasecmp($line['name'], $user) == 0))
     {
       print "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
       print "  <div>\n";
