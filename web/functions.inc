@@ -26,7 +26,7 @@ $done_header = FALSE;
 // Print the page header
 function print_header($day, $month, $year, $area, $room)
 {
-  global $mrbs_ecompany, $mrbs_company_logo, $mrbs_company_url, $mrbs_company_more_info,
+  global $mrbs_company, $mrbs_company_logo, $mrbs_company_url, $mrbs_company_more_info,
     $search_str, $locale_warning, $unicode_encoding, $vocab, $done_header;
 
   if ($done_header)
