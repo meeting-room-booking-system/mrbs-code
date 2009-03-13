@@ -885,6 +885,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     $column[$time_t][$n]["id"]    = $row['entry_id'];
     $column[$time_t][$n]["color"] = $row['type'];
     $column[$time_t][$n]["start_time"] = utf8_strftime(hour_min_format(), $row['start_time']);
+    $column[$time_t][$n]["slots"] = null;  // to avoid undefined index NOTICE errors
     // if it's a multiple booking also fill in the name and description
     if ($n > 0)
     {

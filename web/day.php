@@ -381,6 +381,10 @@ else
       $query_strings['new_times']   = "area=$area&amp;room=$room_id&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";
       $query_strings['booking']     = "area=$area&amp;day=$day&amp;month=$month&amp;year=$year";
       // and then draw the cell
+      if (!isset($today[$room_id][$day][$time_t]))
+      {
+        $today[$room_id][$day][$time_t] = array();  // to avoid an undefined index NOTICE error
+      }
       draw_cell($today[$room_id][$day][$time_t], $query_strings, $row_class);
     }
     

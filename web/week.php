@@ -426,6 +426,10 @@ for (
       $query_strings['booking']     = "area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear";
       
       // and then draw the cell
+      if (!isset($week_map[$room][$thisday][$time_t]))
+      {
+        $week_map[$room][$thisday][$time_t] = array();  // to avoid an undefined index NOTICE error
+      }
       draw_cell($week_map[$room][$thisday][$time_t], $query_strings, $row_class);
     }
 
