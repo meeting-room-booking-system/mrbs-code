@@ -803,4 +803,401 @@ function is_hidden_day ($dow)
   global $hidden_days;
   return (isset($hidden_days) && in_array($dow, $hidden_days));
 }
+
+function map_add_booking ($row, &$column, $am7, $pm7, $format)
+{
+  // Enters the contents of the booking found in $row into $column, which is
+  // a column of the map of the bookings being prepared ready for display.
+  //
+  // $column    the column of the map that is being prepared (see below)
+  // $row       a booking from the database
+  // $am7       the start of the first slot of the booking day (Unix timestamp)
+  // $pm7       the start of the last slot of the booking day (Unix timestamp)
+  // $format    time format used for indexing the $map array
+  
+  // $row is expected to have the following field names, when present:
+  //       room_id
+  //       start_time
+  //       end_time
+  //       name
+  //       entry_id
+  //       type
+  //       entry_description
+  
+  // $column is a column of the map of the screen that will be displayed
+  // It looks like:
+  //     $column[Time][n][id]
+  //                     [color]
+  //                     [data]
+  //                     [long_descr]
+  //                     [start_time]
+  //                     [slots]
+  
+  // slots records the duration of the booking in number of time slots.
+	// Used to calculate how high to make the block used for clipping
+	// overflow descriptions.
+
+  // Fill in the map for this meeting. Start at the meeting start time,
+  // or the day start time, whichever is later. End one slot before the
+  // meeting end time (since the next slot is for meetings which start then),
+  // or at the last slot in the day, whichever is earlier.
+  // Time is of the format HHMM without leading zeros.
+  //
+  // [n] exists because it's possible that there may be multiple bookings
+  // in the same time slot.   Normally this won't be the case.   However it
+  // can arise legitimately if you increase the resolution, or shift the 
+  // displayed day.   For example if you previously had a resolution of 1800 
+  // seconds you might have a booking (A) for 1000-1130 and another (B) for 1130-1230.
+  // If you then increase the resolution to 3600 seconds, these two bookings 
+  // will both occupy the 1100-1200 time slot.   [n] starts at 0.   For
+  // the example above the map for the room would look like this
+  //
+  //       0  1
+  // 1000  A
+  // 1100  A  B
+  // 1200  B
+  //
+  // Note: int casts on database rows for max may be needed for PHP3.
+  // Adjust the starting and ending times so that bookings which don't
+  // start or end at a recognized time still appear.
+  
+  global $resolution;
+  
+  $start_t = max(round_t_down($row['start_time'], $resolution, $am7), $am7);
+  $end_t = min(round_t_up($row['end_time'], $resolution, $am7) - $resolution, $pm7);
+  // calculate the times used for indexing
+  $time_start_t = date($format,$start_t);
+  $time_end_t = date($format,$end_t);
+  
+
+  for ($t = $start_t; $t <= $end_t; $t += $resolution)
+  { 
+    $time_t = date($format,$t);
+    
+    // find the first free index (in case there are multiple bookings in a timeslot)
+    $n = 0;
+    while (!empty($column[$time_t][$n]["id"]))
+    {
+      $n++;
+    }
+    
+    // fill in the id, type and start time
+    $column[$time_t][$n]["id"]    = $row['entry_id'];
+    $column[$time_t][$n]["color"] = $row['type'];
+    $column[$time_t][$n]["start_time"] = utf8_strftime(hour_min_format(), $row['start_time']);
+    // if it's a multiple booking also fill in the name and description
+    if ($n > 0)
+    {
+      $column[$time_t][$n]["data"]  = $row['name'];
+      $column[$time_t][$n]["long_descr"]  = $row['entry_description'];
+    }
+    // otherwise just leave them blank (we'll fill in the first whole slot later)
+    else
+    {
+      $column[$time_t][$n]["data"]  = "";
+      $column[$time_t][$n]["long_descr"]  = ""; 
+    }
+  } // end for
+  
+  
+  // Show the name of the booker, the description and the number of complete
+  // slots in the first complete slot that the booking happens in, or at the 
+  // start of the day if it started before today.
+
+  // Find the number of time slots that the booking occupies, and the index
+  // of the first slot that this booking has entirely to itself
+  $n_slots = intval(($end_t - $start_t)/$resolution) + 1;
+  $first_slot = $start_t;
+  
+  // If the last time slot is already occupied, we have a multiple
+  // booking in the last slot, so decrement the number of slots that
+  // we will display for this booking
+  if (isset($column[$time_end_t][1]["id"]))
+  {
+    $n_slots--;
+    // If we're only the second booking to land on this time slot
+    // then we'll have to adjust the information held for the first booking
+    // (unless it's just one slot long in the first place, when it 
+    // doesn't matter as it will now be part of a multiple booking).
+    // If we are the third booking or more, then it will have already
+    // been adjusted.
+    if (!isset($column[$time_end_t][2]["id"]))
+    {
+      if ($column[$time_end_t][0]["slots"] > 1)
+      {
+        // Move the name and description into the new first slot and decrement the number of slots
+        $column[date($format, $end_t + $resolution)][0]["data"] = $column[$time_end_t][0]["data"];
+        $column[date($format, $end_t + $resolution)][0]["long_descr"] = $column[$time_end_t][0]["long_descr"];
+        $column[date($format, $end_t + $resolution)][0]["slots"] = $column[$time_end_t][0]["slots"] - 1;
+      }
+    }
+  }
+  
+  // and if the first time slot is already occupied, decrement
+  // again, adjust the first slot for this booking
+  if (isset($column[$time_start_t][1]["id"]))
+  {
+    $n_slots--;
+    $first_slot += $resolution;
+    // If we're only the second booking to land on this time slot
+    // then we'll have to adjust the information held for the first booking
+    if (!isset($column[$time_start_t][2]["id"]))
+    {
+      // Find the first slot ($s) of the first booking, by going back through the slots
+      // until you get to a slot that has more than one booking, or else just
+      // one booking but a different one, or else no booking at all.    Then 
+      // you know you've gone back one slot too far.
+      $first_booking_id = $column[$time_start_t][0]["id"];
+      for ($s = $start_t -$resolution; $s >= $am7; $s -= $resolution)
+      {
+        if (isset($column[date($format,$s)][1]["id"]) || 
+            !isset($column[date($format,$s)][0]["id"]) ||
+            ($column[date($format,$s)][0]["id"] != $first_booking_id))   
+        {
+          $s += $resolution;  // Gone back one slot too far, so advance one.
+          break;
+        }
+      }
+      // and decrement the slot count for the first booking
+      $column[date($format,$s)][0]["slots"]--;
+      // and put the name and description in the multiply booked slot
+      $column[$time_start_t][0]["data"] = $column[date($format,$s)][0]["data"];
+      $column[$time_start_t][0]["long_descr"] = $column[date($format,$s)][0]["long_descr"];
+
+    }
+  }
+ 
+  // now we've got all the information we can enter it in the first complete
+  // slot for the booking (provided it's not a multiple booking slot)
+  if (!isset($column[date($format,$first_slot)][1]["id"]))
+  {
+    $column[date($format,$first_slot)][0]["data"] = $row['name'];
+    $column[date($format,$first_slot)][0]["long_descr"] = $row['entry_description'];
+    $column[date($format,$first_slot)][0]["slots"] = $n_slots;
+  }
+
+} // end function map_add_booking()
+
+
+
+function draw_cell($cell, $query_strings, $row_class)
+{
+  // draws a single cell in the main table of the day and week views
+  //
+  // $cell is a two dimensional array that is part of the map of the whole
+  // display and looks like this:
+  // 
+  // $cell[n][id]
+  //         [color]
+  //         [data]
+  //         [long_descr]
+  //         [start_time]
+  //         [slots]
+  //
+  // where n is the number of the booking in the cell.    There can be none, one or many 
+  // bookings in a cell.    If there are no bookings then a blank cell is drawn with a link
+  // to the edit entry form.     If there is one booking, then the booking is shown in that
+  // cell.    If there is more than one booking then all the bookings are shown, but they can 
+  // be shown in two different ways: minimised and maximised.   By default they are shown
+  // minimised, so that the standard row height is preserved.   By clicking a control
+  // the cell can be maximised.   (Multiple bookings can arise in a cell if the resolution
+  // of an existing database in increased or the booking day is shifted).
+  
+  // $query_strings is an array containg the query strings (or partial query strings) to be
+  // appended to the link used for the cell.    It is indexed as follows:
+  //    ['new_periods']   the string to be used for an empty cell if using periods
+  //    ['new_times']     the string to be used for an empty cell if using times
+  //    ['booking']       the string to be used for a full cell
+  //
+  // $row_class specifies whether the row is even or odd so that the zebra stripes can be drawn
+  
+  global $main_cell_height, $main_table_cell_border_width;
+  global $area, $year, $month, $timetohighlight;
+  global $javascript_cursor, $enable_periods;
+  
+  // if the time slot has got multiple bookings, then draw a mini-table
+  if(isset($cell[1]["id"]))
+  {
+    // Find out how many bookings there are (needed to calculate heights)
+    $n_bookings = 0;
+    while (isset($cell[$n_bookings]["id"]))
+    {
+      $n_bookings++;
+    }
+    
+    // Give the cell a unique id so that the JavaScript can use it
+    $td_id = uniqid('td', true);
+    
+    // Make the class maximized by default so that if you don't have JavaScript then
+    // you can still see all the bookings.    If you have JavaScript it will overwrite
+    // the class and make it minimized.
+    echo "<td class=\"multiple_booking maximized\" id=\"$td_id\">\n";
+    ?>
+    <script type="text/javascript">
+    //<![CDATA[
+      document.getElementById('<?php echo $td_id ?>').className = "multiple_booking minimized <?php echo $row_class ?>";
+    //]]>
+    </script>
+    <?php
+    
+    // First draw the mini table
+    echo "<div class=\"celldiv1 mini\">\n";
+    echo "<div class=\"multiple_control\" onClick=\"document.getElementById('$td_id').className = 'multiple_booking maximized $row_class'\">+</div>\n";
+    echo "<table>\n";
+    echo "<tbody>\n";
+    
+    $row_height = $main_cell_height - (($n_bookings-1) * $main_table_cell_border_width);   // subtract the borders (first row has no top border)
+    $row_height = $row_height/$n_bookings;  // split what's left between the bookings
+    $row_height = (int) ceil($row_height);  // round up, so that (a) there's no empty space at the bottom
+                                            // and (b) each stripe is at least 1 unit high
+    for ($n=0; $n<$n_bookings; $n++)
+    {
+      $id    = $cell[$n]["id"];
+      $color = $cell[$n]["color"];
+      $descr = htmlspecialchars($cell[$n]["data"]);
+      $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
+      echo "<tr>\n";
+      echo "<td class=\"$color\"" .
+           (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
+           ">\n";
+      echo "<div style=\"overflow: hidden; " .
+           "height: " . $row_height . "px; " .
+           "max-height: " . $row_height . "px; " .
+           "min-height: " . $row_height . "px\">\n";
+      echo "&nbsp;\n";
+      echo "</div>\n";
+      echo "</td>\n";
+      echo "</tr>\n";
+    }
+    echo "</tbody>\n";
+    echo "</table>\n";
+    echo "</div>\n";
+    
+    // Now draw the maxi table
+    echo "<div class=\"maxi\">\n";
+    $total_height = $n_bookings * $main_cell_height;
+    $total_height += ($n_bookings - 1) * $main_table_cell_border_width;  // (first row has no top border)
+    echo "<div class=\"multiple_control\" " .
+         "onClick=\"document.getElementById('$td_id').className = 'multiple_booking minimized $row_class'\" " .
+         "style =\"height: " . $total_height . "px; " .
+                  "min-height: " . $total_height . "px; " .
+                  "max-height: " . $total_height . "px; " .
+         "\">-</div>\n";  
+    echo "<table>\n";
+    echo "<tbody>\n";
+    for ($n=0; $n<$n_bookings; $n++)
+    {
+      $id    = $cell[$n]["id"];
+      $color = $cell[$n]["color"];
+      $descr = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
+      $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
+      echo "<tr>\n";
+      echo "<td class=\"$color\"" .
+           (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
+           ">\n";
+      echo "<div class=\"celldiv1\">\n";     // we want clipping of overflow
+      echo "  <a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">$descr</a>\n";
+      echo "</div>\n";
+     
+      echo "</td>\n";
+      echo "</tr>\n";
+    }
+    echo "</tbody>\n";
+    echo "</table>\n";
+    echo "</div>\n";
+    
+    echo "</td>\n";
+  }  // end of if isset ( ...[1]..)
+  
+  // otherwise draw a cell, showing either the booking or a blank cell
+  else
+  {  
+    if(isset($cell[0]["id"]))
+    {       
+      $id    = $cell[0]["id"];
+      $color = $cell[0]["color"];
+      $descr = htmlspecialchars($cell[0]["data"]);
+      $long_descr = htmlspecialchars($cell[0]["long_descr"]);
+      $slots = $cell[0]["slots"];
+    }
+    else  // id not set
+    {
+      unset($id);
+      $slots = 1;
+    }
+
+    // $c is the colour of the cell that the browser sees. Zebra stripes normally,
+    // row_highlight if we're highlighting that line and the appropriate colour if
+    // it is booked (determined by the type).
+    // We tell if its booked by $id having something in it
+    if (isset($id))
+    {
+      $c = $color;
+    }
+    else if (isset($timetohighlight) && ($time_t == $timetohighlight))
+    {
+      $c = "row_highlight";
+    }
+    else
+    {
+      $c = $row_class; // Use the default color class for the row.
+    }
+    
+    // Don't put in a <td> cell if the slot is booked and there's no description.
+    // This would mean that it's the second or subsequent slot of a booking and so the
+    // <td> for the first slot would have had a rowspan that extended the cell down for
+    // the number of slots of the booking.
+
+    if (!(isset($id) && ($descr == ""))) 
+    {
+      tdcell($c, $slots);
+
+      // If the room isn't booked then allow it to be booked
+      if (!isset($id))
+      {
+        echo "<div class=\"celldiv1\">\n";  // a bookable slot is only one unit high
+
+        if ($javascript_cursor)
+        {
+          echo "<script type=\"text/javascript\">\n";
+          echo "//<![CDATA[\n";
+          echo "BeginActiveCell();\n";
+          echo "//]]>\n";
+          echo "</script>\n";
+        }
+        
+        if( $enable_periods )
+        {
+          echo "<a class=\"new_booking\" href=\"edit_entry.php?" . $query_strings['new_periods'] . "\">\n";
+          echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          echo "</a>\n";
+        }
+        else
+        {
+          echo "<a class=\"new_booking\" href=\"edit_entry.php?" . $query_strings['new_times'] . "\">\n";
+          echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          echo "</a>\n";
+        }
+        
+        if ($javascript_cursor)
+        {
+          echo "<script type=\"text/javascript\">\n";
+          echo "//<![CDATA[\n";
+          echo "EndActiveCell();\n";
+          echo "//]]>\n";
+          echo "</script>\n";
+        }
+        echo "</div>\n";
+      }
+      else                 // if it is booked then show the booking
+      {    
+        echo "<div class=\"celldiv" . $slots . "\">\n";     // we want clipping of overflow
+        echo "  <a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">$descr</a>\n";
+        echo "</div>\n";
+      }
+      echo "</td>\n";
+    }
+  }
+}  // end function draw_cell
+
 ?>

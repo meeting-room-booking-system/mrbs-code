@@ -7,6 +7,7 @@ require_once "functions.inc";
 require_once "dbsys.inc";
 require_once "mrbs_auth.inc";
 require_once "mincals.inc";
+require_once "Themes/$theme.inc";
 
 // Get form variables
 $day = get_form_var('day', 'int');
@@ -177,13 +178,17 @@ $sql = "SELECT $tbl_room.id AS room_id, start_time, end_time, name, $tbl_entry.i
    FROM $tbl_entry, $tbl_room
    WHERE $tbl_entry.room_id = $tbl_room.id
    AND area_id = $area
-   AND start_time <= $pm7 AND end_time > $am7";
-
+   AND start_time <= $pm7 AND end_time > $am7
+   ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
+   
 $res = sql_query($sql);
 if (! $res)
 {
   fatal_error(0, sql_error());
 }
+
+$today = array();
+
 for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 {
   // Each row we've got here is an appointment.
@@ -194,51 +199,9 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   //  row['entry_id'] = id of this booking
   //  row['type'] = type (internal/external)
   //  row['entry_description'] = description
-
-  // $today is a map of the screen that will be displayed
-  // It looks like:
-  //     $today[Room ID][Time][id]
-  //                          [color]
-  //                          [data]
-  //                          [long_descr]
-  //                          [slots]
   
-  // slots records the duration of the booking in number of time slots.
-	// Used to calculate how high to make the block used for clipping
-	// overflow descriptions.
+  map_add_booking($row, $today[$row['room_id']][$day], $am7, $pm7, $format);
 
-  // Fill in the map for this meeting. Start at the meeting start time,
-  // or the day start time, whichever is later. End one slot before the
-  // meeting end time (since the next slot is for meetings which start then),
-  // or at the last slot in the day, whichever is earlier.
-  // Time is of the format HHMM without leading zeros.
-  //
-  // Note: int casts on database rows for max may be needed for PHP3.
-  // Adjust the starting and ending times so that bookings which don't
-  // start or end at a recognized time still appear.
-  $start_t = max(round_t_down($row['start_time'], $resolution, $am7), $am7);
-  $end_t = min(round_t_up($row['end_time'], $resolution, $am7) - $resolution, $pm7);
-  for ($t = $start_t; $t <= $end_t; $t += $resolution)
-  {
-    $today[$row['room_id']][date($format,$t)]["id"]    = $row['entry_id'];
-    $today[$row['room_id']][date($format,$t)]["color"] = $row['type'];
-    $today[$row['room_id']][date($format,$t)]["data"]  = "";
-    $today[$row['room_id']][date($format,$t)]["long_descr"]  = "";
-    $today[$row['room_id']][date($format,$t)]["slots"] = intval(($end_t - $start_t)/$resolution) + 1;
-  }
-
-  // Show the name of the booker in the first segment that the booking
-  // happens in, or at the start of the day if it started before today.
-  if ($row['start_time'] < $am7)
-  {
-    $today[$row['room_id']][date($format,$am7)]["data"] = $row['name'];
-    $today[$row['room_id']][date($format,$am7)]["long_descr"] = $row['entry_description'];
-  }
-  else
-  {
-    $today[$row['room_id']][date($format,$start_t)]["data"] = $row['name'];
-    $today[$row['room_id']][date($format,$start_t)]["long_descr"] = $row['entry_description'];
-  }
 }
 
 if ($debug_flag) 
@@ -384,14 +347,19 @@ else
   {
     // convert timestamps to HHMM format without leading zeros
     $time_t = date($format, $t);
+    // and get a stripped version for use with periods
+    $time_t_stripped = preg_replace( "/^0/", "", $time_t );
+    
+    // calculate hour and minute (needed for links)
+    $hour = date("H",$t);
+    $minute = date("i",$t);
 
     // Show the time linked to the URL for highlighting that time
     echo "<tr>";
     tdcell("times", 1);
     echo "<div class=\"celldiv1\">\n";
     if( $enable_periods )
-    {
-      $time_t_stripped = preg_replace( "/^0/", "", $time_t );
+    { 
       echo "<a href=\"$hilite_url=$time_t\"  title=\""
         . get_vocab("highlight_line") . "\">"
         . $periods[$time_t_stripped] . "</a>\n";
@@ -407,94 +375,15 @@ else
     // Loop through the list of rooms we have for this area
     while (list($key, $room_id) = each($rooms))
     {
-      if(isset($today[$room_id][$time_t]["id"]))
-      {
-        $id    = $today[$room_id][$time_t]["id"];
-        $color = $today[$room_id][$time_t]["color"];
-        $descr = htmlspecialchars($today[$room_id][$time_t]["data"]);
-        $long_descr = htmlspecialchars($today[$room_id][$time_t]["long_descr"]);
-        $slots = $today[$room_id][$time_t]["slots"];
-      }
-      else
-      {
-        unset($id);
-        $slots = 1;
-      }
-
-      // $c is the colour of the cell that the browser sees. Zebra stripes normally,
-      // row_highlight if we're highlighting that line and the appropriate colour if
-      // it is booked (determined by the type).
-      // We tell if its booked by $id having something in it
-      if (isset($id))
-      {
-        $c = $color;
-      }
-      else if (isset($timetohighlight) && ($time_t == $timetohighlight))
-      {
-        $c = "row_highlight";
-      }
-      else
-      {
-        $c = $row_class; // Use the default color class for the row.
-      }
-      
-      // Don't put in a <td> cell if the slot is booked and there's no description.
-      // This would mean that it's the second or subsequent slot of a booking and so the
-      // <td> for the first slot would have had a rowspan that extended the cell down for
-      // the number of slots of the booking.
-
-    if (!(isset($id) && ($descr == ""))) 
-      {
-        tdcell($c, $slots);
-  
-        // If the room isn't booked then allow it to be booked
-        if (!isset($id))
-        {
-          $hour = date("H",$t);
-          $minute  = date("i",$t);
-          echo "<div class=\"celldiv1\">\n";  // a bookable slot is only one unit high
-  
-          if ($javascript_cursor)
-          {
-            echo "<script type=\"text/javascript\">\n";
-            echo "//<![CDATA[\n";
-            echo "BeginActiveCell();\n";
-            echo "//]]>\n";
-            echo "</script>\n";
-          }
-          
-          if( $enable_periods )
-          {
-            echo "<a class=\"new_booking\" href=\"edit_entry.php?area=$area&amp;room=$room_id&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day\">\n";
-            echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-            echo "</a>\n";
-          }
-          else
-          {
-            echo "<a class=\"new_booking\" href=\"edit_entry.php?area=$area&amp;room=$room_id&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day\">\n";
-            echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-            echo "</a>\n";
-          }
-          
-          if ($javascript_cursor)
-          {
-            echo "<script type=\"text/javascript\">\n";
-            echo "//<![CDATA[\n";
-            echo "EndActiveCell();\n";
-            echo "//]]>\n";
-            echo "</script>\n";
-          }
-          echo "</div>\n";
-        }
-        else                 // if it is booked then show the booking
-        {    
-          echo "<div class=\"celldiv" . $slots . "\">\n";     // we want clipping of overflow
-          echo "  <a href=\"view_entry.php?id=$id&amp;area=$area&amp;day=$day&amp;month=$month&amp;year=$year\" title=\"$long_descr\">$descr</a>\n";
-          echo "</div>\n";
-        }
-        echo "</td>\n";
-      }
+      // set up the query strings to be used for the link in the cell
+      $query_strings = array();
+      $query_strings['new_periods'] = "area=$area&amp;room=$room_id&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day";
+      $query_strings['new_times']   = "area=$area&amp;room=$room_id&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";
+      $query_strings['booking']     = "area=$area&amp;day=$day&amp;month=$month&amp;year=$year";
+      // and then draw the cell
+      draw_cell($today[$room_id][$day][$time_t], $query_strings, $row_class);
     }
+    
     // next lines to display times on right side
     if ( FALSE != $times_right_side )
     {
@@ -502,7 +391,6 @@ else
       echo "<div class=\"celldiv1\">\n";
       if ( $enable_periods )
       {
-        $time_t_stripped = preg_replace( "/^0/", "", $time_t );
         echo "<a href=\"$hilite_url=$time_t\"  title=\""
           . get_vocab("highlight_line") . "\">"
           . $periods[$time_t_stripped] . "</a>\n";

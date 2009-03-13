@@ -14,6 +14,14 @@ div.cell_container {height: 100px}           /* NOTE:  if you change the value o
                                              /* also change the value of min-height in mrbs.css.php */
 div.booking_list {overflow: visible}         /* scrollbars don't work properly in IE6, so forget them and just let the cell expand*/
 
+/* We don't want the controls for multiple bookings for IE6, because they rely on div:hover working   */
+/* which is not supported by IE6.   So reverse the JavaScript overrides and just treat IE6 as though  */
+/* JavaScript was disabled.                                                                           */
+div.multiple_control {display: none}
+.multiple_booking .maxi a {padding-left: 2px}
+.minimized div.mini {display: none}   /* Ignore the minimized class and always display the maxi table */
+.minimized div.maxi {display: block}
+
 /* ------------ EDIT_AREA_ROOM.PHP ------------------*/
 .form_edit_area_room label {height: 2.0em}   /* min-height not recognised by IE6 and below */
 

@@ -4,7 +4,7 @@
 
 header("Content-type: text/css"); 
 require_once "config.inc.php";
-include "Themes/$theme.inc";
+require_once "Themes/$theme.inc";
 
 
 // ***** SETTINGS ***********************
@@ -164,17 +164,17 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
     border-bottom: 0;
     border-right: 0}
 .dwm_main td:first-child {border-left: 0}
-.dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0 2px 0 2px;
+.dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0 2px;
     color: <?php echo $header_font_color ?>; 
     background-color: <?php echo $header_back_color ?>;
     border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
 .dwm_main th:first-child {border-left: 0}
 .dwm_main a {display: block; height: 100%}
+.dwm_main tbody a {padding: 0 2px}
 .dwm_main th a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
 .dwm_main th a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
 .dwm_main th a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
 .dwm_main#day_main th.first_last {width: <?php echo $column_times_width ?>%}
-.dwm_main#day_main td, .dwm_main#week_main td {padding: 0 2px 0 2px}
 .dwm_main#week_main th {width: <?php echo $column_week ?>%}
 .dwm_main#week_main th.first_last {width: <?php echo $column_times_width ?>%; vertical-align: bottom}
 .dwm_main#month_main th {width: <?php echo $column_month ?>%}
@@ -327,12 +327,6 @@ will be 1.1 em high and a booking two slots long will be 2.2em high, etc.
 (2) NOT CLIPPED
 The cells expand to fit the content.
 
-The cell height can be specified in pixels or ems.    Specifying it in pixels has the advantage that we 
-are able to calculate the true height of merged cells and make them clickable for the entire height.  If
-the units are in ems, we cannot calculate this and there will be an area at the bottom that is not clickable -
-the effect will be most noticeable on long bookings.   However specifying pixels may cause zooming problems
-on older browsers.
-
 (Although the style information could be put in an inline style declaration, this would mean that every
 cell in the display would carry the extra size of the style declaration, whereas the classes here mean
 that we only need the style declaration for each row.) 
@@ -348,8 +342,6 @@ In the classes below
 
 */
 
-$main_cell_height = '17';        // Units specified below
-$main_cell_height_units = 'px';  // Set to "em" or "px" as desired
 $clipped = TRUE;                 // Set to TRUE for clipping, FALSE if not   
 
 if ($clipped)
@@ -368,33 +360,44 @@ if ($clipped)
   for ($i=1; $i<=$n_slots; $i++) 
   {
     $div_height = $main_cell_height * $i;
-    
-    // need to add the height of the inter-cell borders to the height of the div, but
-    // we can only do this if the cell height is specified in pixels otherwise we end
-    // up with a mixture of ems and pixels
-    if ('px' == $main_cell_height_units)
-    {
-      $div_height = $div_height + (($i-1)*$main_table_cell_border_width);
-      $div_height = (int) $div_height;    // Make absolutely sure it's an int to avoid generating invalid CSS
-    }
-    
-    // need to make sure the height is formatted with a '.' as the decimal point,
-    // otherwise in some locales you will get invalid CSS (eg 1,1em will not work as CSS).
-    // This step isn't necessary if the cell height is in pixels and
-    // therefore guaranteed to be an integer.
-    else
-    {
-      $div_height = number_format($div_height, 2, '.', '');
-    }
+    $div_height = $div_height + (($i-1)*$main_table_cell_border_width);
+    $div_height = (int) $div_height;    // Make absolutely sure it's an int to avoid generating invalid CSS
     
     echo "div.celldiv" . $i . " {" . 
       "display: block; overflow: hidden; margin: 0; padding: 0; " . 
-    	"height:"      . $div_height . $main_cell_height_units . "; " . 
-    	"max-height: " . $div_height . $main_cell_height_units . "; " . 
-    	"min-height: " . $div_height . $main_cell_height_units . ";}\n";
+    	"height:"      . $div_height . "px; " . 
+    	"max-height: " . $div_height . "px; " . 
+    	"min-height: " . $div_height . "px;}\n";
   }
 }
+
+
+
+// Multiple bookings.  These rules control the styling of the cells and controls when there is more than
+// one booking in a time slot.
 ?>
+div.mini, div.maxi {position: relative}     /* establish a relative position for the absolute position to follow */
+div.multiple_control {
+    display: none;       /* will be over-ridden by JavaScript if enabled */
+    position: absolute; z-index: 20;
+    width: <?php echo $main_cell_height ?>px;
+    text-align: center;
+    padding: 0;
+    border-right: <?php echo $main_table_cell_border_width . "px solid " . $main_table_body_v_border_color ?>;
+    background-color: <?php echo $multiple_control_color ?>}
+.mini div.multiple_control {                /* heights for maxi are set using in-line styles */
+    height: <?php echo $main_cell_height ?>px;
+    max-height: <?php echo $main_cell_height ?>px;
+    min-height: <?php echo $main_cell_height ?>px}
+div:hover.multiple_control {cursor: pointer}
+.multiple_booking table {height: 100%; width: 100%; border-spacing: 0; border-collapse: collapse}
+.multiple_booking td {border-left: 0}
+
+/* used for toggling multiple bookings from mini to maxi size */
+.maximized div.mini {display: none}
+.maximized div.maxi {display: block}
+.minimized div.mini {display: block}
+.minimized div.maxi {display: none}
 
 
 

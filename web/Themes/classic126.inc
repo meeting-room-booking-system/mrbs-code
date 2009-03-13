@@ -68,7 +68,10 @@ $row_highlight_color            = "#ffc0da";        // used for highlighting a r
                                                     // NOTE: this colour is also used in xbLib.js (in more than one place)and 
                                                     // if you change it here you will also need to change it there.
 
-$help_highlight_color           = "#ffe6f0";        // highlighting text on the help page #ffffbb
+$help_highlight_color           = "#ffe6f0";        // highlighting text on the help page
+
+$multiple_control_color         = "#ffff44";        // background colour for the multiple booking controls
+
 
 // These are the colours used for distinguishing between the dfferent types of bookings in the main
 // displays in the day, week and month views
@@ -89,7 +92,8 @@ $color_types = array(
 $banner_border_width          = '1';  // (px)  border width for the outside of the banner
 $banner_border_cell_width     = '1';  // (px)  border width for the cells of the banner
 $main_table_border_width      = '1';  // (px)  the border width for the outside of the main day/week/month tables
-$main_table_cell_border_width = '1';  // (px)  the border width for the cells of the main day/week/month tables    
+$main_table_cell_border_width = '1';  // (px)  the border width for the cells of the main day/week/month tables
+$main_cell_height             = '17'; // (px)  height of the cells in the main day/week tables
     
     
 // ***** FONTS ************************    
