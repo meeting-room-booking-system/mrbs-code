@@ -64,6 +64,12 @@ function upgrade_database($from, $to)
       }
     }
     print "</p>\n";
+    
+    // Now execute the PHP file if there is one
+    if (file_exists("upgrade/$ver/post.inc"))
+    {
+      include "upgrade/$ver/post.inc";
+    }
   }
 }
 
