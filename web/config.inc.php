@@ -103,12 +103,23 @@ $theme = "default";
 // $eveningends_minutes and $twentyfourhour_format are ignored.
 $enable_periods = FALSE;
 
+// This is the maximum number of rows (timeslots or periods) that one can expect to see in the day
+// and week views.    It is used by mrbs.css.php for creating classes.    It does not matter if it
+// is too large, except for the fact that more CSS than necessary will be generated.
+$max_slots = 60;
+
+// TIMES SETTINGS
+// --------------
+
+// NOTE:  The "Times" settings can all be configured per area.    These are the
+// default settings to be used.   The "Times" settings are ignored if $enable_periods
+// is TRUE.
+
 // Resolution - what blocks can be booked, in seconds.
 // Default is half an hour: 1800 seconds.
-$resolution = 1800;
+$resolution = (30 * 60);
 
 // Default duration - default length (in seconds) of a booking.
-// Ignored if $enable_periods is TRUE
 // Defaults to (60 * 60) seconds, i.e. an hour
 $default_duration = (60 * 60);
 
@@ -140,6 +151,10 @@ $eveningends_minutes   = 30;   // must be integer in range 0-59
 // eveningends_minutes=45; and resolution=900.
 
 
+// PERIODS SETTINGS
+// ----------------
+
+// The "Periods" settings are ignored if $enable_periods is FALSE.
 
 // Define the name or description for your periods in chronological order
 // For example:
@@ -164,6 +179,10 @@ $periods[] = "Period&nbsp;1";
 $periods[] = "Period&nbsp;2";
 // NOTE:  The maximum number of periods is 60.   Do not define more than this.
 
+
+// CHECKING
+// --------
+
 // Do some checking
 if ($enable_periods)
 {
@@ -182,6 +201,13 @@ else
     die('Configuration error: start and end of day incorrectly defined');
   }
 }
+
+/******************
+ * Display settings
+ ******************/
+
+// [These are all variables that control the appearance of pages and could in time
+//  become per-user settings]
 
 // Start of week: 0 for Sunday, 1 for Monday, etc.
 $weekstarts = 0;
@@ -205,16 +231,6 @@ $dateformat = 0;
 // Time format in pages. 0 to show dates in 12 hour format, 1 to show them
 // in 24 hour format
 $twentyfourhour_format = 1;
-
-/************************
- * Miscellaneous settings
- ************************/
-
-// Maximum repeating entrys (max needed +1):
-$max_rep_entrys = 365 + 1;
-
-// Default report span in days:
-$default_report_days = 60;
 
 // Results per page for searching:
 $search["count"] = 20;
@@ -244,6 +260,27 @@ $view_week_number = FALSE;
 // To display times on right side in day and week view, set to TRUE;
 $times_right_side = FALSE;
 
+// Define default starting view (month, week or day)
+// Default is day
+$default_view = "day";
+
+// Define default room to start with (used by index.php)
+// Room numbers can be determined by looking at the Edit or Delete URL for a
+// room on the admin page.
+// Default is 0
+$default_room = 0;
+
+
+/************************
+ * Miscellaneous settings
+ ************************/
+
+// Maximum repeating entrys (max needed +1):
+$max_rep_entrys = 365 + 1;
+
+// Default report span in days:
+$default_report_days = 60;
+
 // Control the active cursor in day/week/month views.   By default, highlighting
 // is implemented using the CSS :hover pseudo-class.    For old browers such as
 // IE6, this is not supported and MRBS will automatically switch over to use 
@@ -259,15 +296,6 @@ $highlight_method = "hybrid"; // One of "bgcolor", "class", "hybrid".   "hybrid"
                               // JavaScript highlighting is used anyway.    The rest of the time CSS
                               // highlighting is used, whether or not $javascript_cursor is set.
 
-// Define default starting view (month, week or day)
-// Default is day
-$default_view = "day";
-
-// Define default room to start with (used by index.php)
-// Room numbers can be determined by looking at the Edit or Delete URL for a
-// room on the admin page.
-// Default is 0
-$default_room = 0;
 
 /***********************************************
  * Authentication settings - read AUTHENTICATION

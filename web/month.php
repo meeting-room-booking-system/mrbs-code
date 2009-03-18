@@ -38,6 +38,14 @@ if (empty($debug_flag))
   $debug_flag = 0;
 }
 
+if (empty($area))
+{
+  $area = get_default_area();
+}
+
+// Get the timeslot settings (resolution, etc.) for this area
+get_area_settings($area);
+
 // If we don't know the right date then use today:
 if (!isset($day) or !isset($month) or !isset($year))
 {
@@ -65,10 +73,6 @@ else
 // print the page header
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
-if (empty($area))
-{
-  $area = get_default_area();
-}
 if (empty($room))
 {
   $room = get_default_room($area);

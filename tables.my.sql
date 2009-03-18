@@ -11,9 +11,15 @@
 
 CREATE TABLE mrbs_area
 (
-  id               int NOT NULL auto_increment,
-  area_name        varchar(30),
-  area_admin_email text,
+  id                    int NOT NULL auto_increment,
+  area_name             varchar(30),
+  area_admin_email      text,
+  resolution            int,
+  default_duration      int,
+  morningstarts         int,
+  morningstarts_minutes int,
+  eveningends           int,
+  eveningends_minutes   int,
 
   PRIMARY KEY (id)
 );

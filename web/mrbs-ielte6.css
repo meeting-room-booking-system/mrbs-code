@@ -22,9 +22,6 @@ div.multiple_control {display: none}
 .minimized div.mini {display: none}   /* Ignore the minimized class and always display the maxi table */
 .minimized div.maxi {display: block}
 
-/* ------------ EDIT_AREA_ROOM.PHP ------------------*/
-.form_edit_area_room label {height: 2.0em}   /* min-height not recognised by IE6 and below */
-
 /* ------------ EDIT_USERS.PHP ----------------------*/
 #form_edit_users label {height: 2.0em}       /* min-height not recognised by IE6 and below */
 

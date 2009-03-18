@@ -527,6 +527,32 @@ function get_default_room($area)
   return ($room < 0 ? 0 : $room);
 }
 
+// Update the default timeslot settings with the ones specific to this area
+function get_area_settings($area)
+{
+  global $tbl_area;
+  global $resolution, $default_duration, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+  $sql = "SELECT *
+          FROM $tbl_area 
+          WHERE id=$area 
+          LIMIT 1";
+  $res = sql_query($sql);
+  if (!$res || (sql_count($res) == 0))
+  {
+    return;
+  }
+  else
+  {
+    $row = sql_row_keyed($res, 0);
+    $resolution = (isset($row['resolution']) ? $row['resolution'] : $resolution);
+    $default_duration = (isset($row['default_duration']) ? $row['default_duration'] : $default_duration);
+    $morningstarts = (isset($row['morningstarts']) ? $row['morningstarts'] : $morningstarts);
+    $morningstarts_minutes = (isset($row['morningstarts_minutes']) ? $row['morningstarts_minutes'] : $morningstarts_minutes);
+    $eveningends = (isset($row['eveningends']) ? $row['eveningends'] : $eveningends);
+    $eveningends_minutes = (isset($row['eveningends_minutes']) ? $row['eveningends_minutes'] : $eveningends_minutes);
+  }
+}
+
 // Get the local day name based on language. Note 2000-01-02 is a Sunday.
 function day_name($daynumber)
 {

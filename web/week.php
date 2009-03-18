@@ -25,6 +25,14 @@ if (empty($debug_flag))
   $debug_flag = 0;
 }
 
+if (empty($area))
+{
+  $area = get_default_area();
+}
+
+// Get the timeslot settings (resolution, etc.) for this area
+get_area_settings($area);
+
 $num_of_days=7; //could also pass this in as a parameter or whatever
 
 // If we don't know the right date then use today:
@@ -59,10 +67,6 @@ $day_start_week = $day - $skipback;
 // because we want the booking display to start on the first day of the week (eg Sunday if $weekstarts is 0)
 // but we want to preserve the notion of the current day (or 'sticky day') when switching between pages
 
-
-if (empty($area))
-{
-  $area = get_default_area();}
 if (empty($room))
 {
   $room = get_default_room($area);

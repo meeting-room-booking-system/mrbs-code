@@ -23,6 +23,15 @@ if (empty($debug_flag))
   $debug_flag = 0;
 }
 
+if (empty($area))
+{
+  $area = get_default_area();
+}
+
+// Get the timeslot settings (resolution, etc.) for this area
+get_area_settings($area);
+
+
 // If we don't know the right date then use today:
 if (!isset($day) or !isset($month) or !isset($year))
 {
@@ -44,11 +53,6 @@ else
       break;
     }
   }
-}
-
-if (empty($area))
-{
-  $area = get_default_area();
 }
 
 // form the room parameter for use in query strings.    We want to preserve room information

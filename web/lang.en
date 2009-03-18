@@ -234,19 +234,24 @@ $vocab["norooms"]            = "No rooms.";
 $vocab["administration"]     = "Administration";
 
 // Used in edit_area_room.php
-$vocab["editarea"]           = "Edit Area";
-$vocab["change"]             = "Change";
-$vocab["backadmin"]          = "Back to Admin";
-$vocab["editroomarea"]       = "Edit Area or Room Description";
-$vocab["editroom"]           = "Edit Room";
-$vocab["update_room_failed"] = "Update room failed: ";
-$vocab["error_room"]         = "Error: room ";
-$vocab["not_found"]          = " not found";
-$vocab["update_area_failed"] = "Update area failed: ";
-$vocab["error_area"]         = "Error: area ";
-$vocab["room_admin_email"]   = "Room admin email";
-$vocab["area_admin_email"]   = "Area admin email";
-$vocab["invalid_email"]      = "Invalid email!";
+$vocab["editarea"]               = "Edit Area";
+$vocab["change"]                 = "Change";
+$vocab["backadmin"]              = "Back to Admin";
+$vocab["editroomarea"]           = "Edit Area or Room Description";
+$vocab["editroom"]               = "Edit Room";
+$vocab["update_room_failed"]     = "Update room failed: ";
+$vocab["error_room"]             = "Error: room ";
+$vocab["not_found"]              = " not found";
+$vocab["update_area_failed"]     = "Update area failed: ";
+$vocab["error_area"]             = "Error: area ";
+$vocab["room_admin_email"]       = "Room admin email";
+$vocab["area_admin_email"]       = "Area admin email";
+$vocab["area_first_slot_start"]  = "Start of first slot";
+$vocab["area_last_slot_start"]   = "Start of last slot";
+$vocab["area_res_mins"]          = "Resolution (minutes)";
+$vocab["area_def_duration_mins"] = "Default duration (minutes)";
+$vocab["invalid_email"]          = "Invalid email!";
+$vocab["invalid_resolution"]     = "Invalid combination of first slot, last slot and resolution!";
 
 // Used in edit_users.php
 $vocab["name_empty"]         = "You must enter a name.";

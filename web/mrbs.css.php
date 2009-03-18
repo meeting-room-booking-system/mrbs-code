@@ -346,18 +346,7 @@ $clipped = TRUE;                 // Set to TRUE for clipping, FALSE if not
 
 if ($clipped)
 {
-  // find the max. number of slots in a day
-  if ($enable_periods)
-  {
-    $n_slots = count($periods);    // if we're using periods it's just the number of periods
-  }
-  else
-  {
-    $n_slots = ($eveningends*60) + $eveningends_minutes;
-    $n_slots = $n_slots - (($morningstarts*60) + $morningstarts_minutes);  // day duration in minutes
-    $n_slots = (($n_slots*60)/$resolution) + 1;                            // number of slots
-  }
-  for ($i=1; $i<=$n_slots; $i++) 
+  for ($i=1; $i<=$max_slots; $i++) 
   {
     $div_height = $main_cell_height * $i;
     $div_height = $div_height + (($i-1)*$main_table_cell_border_width);
@@ -411,43 +400,11 @@ span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; fo
 #del_room_confirm_links span:hover {text-decoration: underline}    /* for Firefox */
 
 
-/* ------------ EDIT_AREA_ROOM.PHP ------------------*/
-<?php
-// Ideally the label text will fit on a single line, but as the text
-// is editable in the lang.* files and there are so many translations, we cannot
-// be sure how long the longest line will be.    Once you've chosen your preferred language and you can see what it looks like,
-// you may want to adjust the width of the label below so that the longest label just fits on one line.  
-
-$edit_area_room_label_width       = '11.0';    // em
-$edit_area_room_input_margin_left = '1.0';
-$edit_area_room_input_width       = $admin_form_input_width;
-$edit_area_room_width_overheads   = '1.0';     // borders around inputs etc.    Konqueror seems to be the most extreme
-$edit_area_room_form_width        = $edit_area_room_label_width + $edit_area_room_input_margin_left + $edit_area_room_input_width + $edit_area_room_width_overheads;
-$edit_area_room_form_width        = number_format($edit_area_room_form_width, 1, '.', '');   // get rid of any commas
-      
-?>
-form.form_edit_area_room {
-    position: relative; width: <?php echo $edit_area_room_form_width ?>em;
-    margin-top: 2em; margin-bottom: 2em; margin-left: auto; margin-right: auto
-}
-.form_edit_area_room label {
-    display: block; float: left; clear: left; min-height: 2.0em;
-    width: <?php echo $edit_area_room_label_width ?>em; text-align: right
-}
-.form_edit_area_room input {
-    display: block; position: relative; float: right; clear: right; 
-    width: <?php echo $edit_area_room_input_width ?>em; 
-    margin-top: -0.2em; margin-left: <?php echo $edit_area_room_input_margin_left ?>em
-}
-.form_edit_area_room .submit_buttons input {width: auto; clear: none; margin-top: 1.2em; margin-left: 1.0em}
-.form_edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}
-.form_edit_area_room div {float: left; clear: left; width: 100%}
-
 
 /* ------------ FORM_GENERAL ------------------------*/
 /*                                                   */
-/*   used in EDIT_ENTRY.PHP, REPORT.PHP              */
-/*   and SEARCH.PHP                                  */
+/*   used in EDIT_ENTRY.PHP, REPORT.PHP,             */
+/*   SEARCH.PHP and EDIT_AREA_ROOM.PHP               */
 
 <?php
 // Common to all forms in the class "form_general"
@@ -480,17 +437,26 @@ $logon_left_col_max_width      = '8';       // em
 $logon_input_width             = '12';      // em
 $logon_form_min_width          = $logon_left_col_max_width + $logon_input_width + $general_gap;
 $logon_form_min_width          = number_format($logon_form_min_width, 1, '.', '');   // get rid of any commas
+
+// Specific to the "edit_area_room" form
+$edit_area_room_left_col_max_width  = '14';      // em
+$edit_area_room_input_width         = '12';      // em
+$edit_area_room_form_min_width      = $edit_area_room_left_col_max_width + $edit_area_room_input_width + $general_gap;
+$edit_area_room_form_min_width      = number_format($edit_area_room_form_min_width, 1, '.', '');   // get rid of any commas
+
+
 ?>
 form.form_general {margin-top: 2.0em; width: 100%}
-.edit_entry form.form_general {min-width: <?php echo $edit_entry_form_min_width ?>em}
-.report     form.form_general {min-width: <?php echo $report_form_min_width ?>em}
-.search     form.form_general {min-width: <?php echo $search_form_min_width ?>em}
+.edit_entry     form.form_general {min-width: <?php echo $edit_entry_form_min_width ?>em}
+.report         form.form_general {min-width: <?php echo $report_form_min_width ?>em}
+.search         form.form_general {min-width: <?php echo $search_form_min_width ?>em}
+.edit_area_room form.form_general {min-width: <?php echo $edit_area_room_form_min_width ?>em}
 form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 
 .form_general div {float: left; clear: left; width: 100%}
 .form_general div div {float: none; clear: none; width: auto}
 .form_general div.group {float: left; width: <?php echo $general_right_col_width ?>%}
-.form_general div.group#ampm {width: <?php echo $edit_entry_ampm_width ?>em}
+.form_general div.group.ampm {width: <?php echo $edit_entry_ampm_width ?>em}
 .form_general fieldset {width: auto; border: 0; padding-top: 2.0em}
 
 .form_general label {
@@ -500,9 +466,10 @@ form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
     text-align: right; padding-bottom: 0.8em; font-weight: bold;
 }
 
-.edit_entry .form_general label {max-width: <?php echo $edit_entry_left_col_max_width ?>em}
-.report     .form_general label {max-width: <?php echo $report_left_col_max_width ?>em}
-.search     .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
+.edit_entry     .form_general label {max-width: <?php echo $edit_entry_left_col_max_width ?>em}
+.report         .form_general label {max-width: <?php echo $report_left_col_max_width ?>em}
+.search         .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
+.edit_area_room .form_general label {max-width: <?php echo $edit_area_room_left_col_max_width ?>em}
 #logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em}
 
 .form_general .group      label {clear: none; width: auto; max-width: 100%; font-weight: normal; overflow: visible}
@@ -511,9 +478,10 @@ form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
     display: block; float: left; margin-left: <?php echo $general_gap ?>em; 
     font-family: <?php echo $standard_font_family ?>; font-size: small
 }
-.edit_entry .form_general input {width: <?php echo $edit_entry_textarea_width ?>em}
-.report     .form_general input {width: <?php echo $report_input_width ?>em}
-.search     .form_general input {width: <?php echo $search_input_width ?>em}
+.edit_entry     .form_general input {width: <?php echo $edit_entry_textarea_width ?>em}
+.report         .form_general input {width: <?php echo $report_input_width ?>em}
+.search         .form_general input {width: <?php echo $search_input_width ?>em}
+.edit_area_room .form_general input {width: <?php echo $edit_area_room_input_width ?>em}
 #logon                    input {width: <?php echo $logon_input_width ?>em}
 .form_general .group      input {clear: none; width: auto}
 
@@ -535,12 +503,16 @@ div#search_submit     {width: <?php echo $general_left_col_width ?>%; max-width:
 div#logon_submit      {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $logon_left_col_max_width ?>em}
 #edit_entry_submit input, #report_submit input, #search_submit input, #logon_submit input
     {position: relative; left: 100%; width: auto}
+div#edit_area_room_submit_back {float: left; width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $edit_area_room_left_col_max_width ?>em}
+div#edit_area_room_submit_save {float: left; clear: none; width: auto}
+#edit_area_room_submit_back input {float: right}
 
-.form_general #div_time input {width: 2.0em}
-.form_general #div_time input#time_hour {text-align: right}
-.form_general #div_time input#time_minute {text-align: left; margin-left: 0}
-.form_general #div_time span + input {margin-left: 0}
-.form_general #div_time span {display: block; float: left; width: 0.5em; text-align: center}
+.form_general .div_dur_mins input{width: 4.0em}
+.form_general .div_time input {width: 2.0em}
+.form_general .div_time input.time_hour {text-align: right}
+.form_general .div_time input.time_minute {text-align: left; margin-left: 0}
+.form_general .div_time span + input {margin-left: 0}
+.form_general .div_time span {display: block; float: left; width: 0.5em; text-align: center}
 .form_general input#duration {width: 2.0em; text-align: right}
 .form_general select#dur_units {margin-right: 1.0em; margin-left: 0.5em}
 .form_general div#ad {float: left}
@@ -551,6 +523,9 @@ div#logon_submit      {width: <?php echo $general_left_col_width ?>%; max-width:
 .form_general #rep_info input {width: 13em}
 .form_general input#rep_num_weeks {width: 2.0em}
 
+.edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}
+
+    
 
 /* ------------ EDIT_USERS.PHP ------------------*/
 <?php

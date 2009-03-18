@@ -38,6 +38,15 @@ $rep_id = get_form_var('rep_id', 'int');
 $rep_day = get_form_var('rep_day', 'array'); // array of bools
 $rep_num_weeks = get_form_var('rep_num_weeks', 'int');
 
+if (empty($area))
+{
+  $area = get_default_area();
+}
+
+// Get the timeslot settings (resolution, etc.) for this area
+get_area_settings($area);
+
+
 // When $all_day is set, the hour and minute (or $period) fields are set to disabled, which means 
 // that they are not passed through by the form.   We need to set them because they are needed below  
 // in various places. (We could change the JavaScript in edit_entry.php to set the fields to readonly
@@ -64,11 +73,6 @@ if (!isset($day) or !isset($month) or !isset($year))
   $day   = date("d");
   $month = date("m");
   $year  = date("Y");
-}
-
-if (empty($area))
-{
-  $area = get_default_area();
 }
 
 // Set up the return URL.    As the user has tried to book a particular room and a particular

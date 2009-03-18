@@ -23,6 +23,14 @@ $copy = get_form_var('copy', 'int');
 $edit_type = get_form_var('edit_type', 'string');
 $returl = get_form_var('returl', 'string');
 
+if (empty($area))
+{
+  $area = get_default_area();
+}
+
+// Get the timeslot settings (resolution, etc.) for this area
+get_area_settings($area);
+
 // If we dont know the right date then make it up
 if (!isset($day) or !isset($month) or !isset($year))
 {
@@ -30,10 +38,7 @@ if (!isset($day) or !isset($month) or !isset($year))
   $month = date("m");
   $year  = date("Y");
 }
-if (empty($area))
-{
-  $area = get_default_area();
-}
+
 if (!isset($edit_type))
 {
   $edit_type = "";
@@ -450,15 +455,15 @@ else
     if(! $enable_periods ) 
     { 
     ?>
-      <div id="div_time">
+      <div class="div_time">
         <label><?php echo get_vocab("time")?>:</label>
-        <input id="time_hour" name="hour" value="<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>" maxlength="2">
+        <input class="time_hour" name="hour" value="<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>" maxlength="2">
         <span>:</span>
-        <input id="time_minute" name="minute" value="<?php echo $start_min;?>" maxlength="2">
+        <input class="time_minute" name="minute" value="<?php echo $start_min;?>" maxlength="2">
         <?php
         if (!$twentyfourhour_format)
         {
-          echo "<div class=\"group\" id=\"ampm\">\n";
+          echo "<div class=\"group ampm\">\n";
           $checked = ($start_hour < 12) ? "checked=\"checked\"" : "";
           echo "      <label><input name=\"ampm\" type=\"radio\" value=\"am\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
           $checked = ($start_hour >= 12) ? "checked=\"checked\"" : "";
