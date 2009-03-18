@@ -454,25 +454,38 @@ else
     <?php 
     if(! $enable_periods ) 
     { 
-    ?>
-      <div class="div_time">
-        <label><?php echo get_vocab("time")?>:</label>
-        <input class="time_hour" name="hour" value="<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>" maxlength="2">
-        <span>:</span>
-        <input class="time_minute" name="minute" value="<?php echo $start_min;?>" maxlength="2">
-        <?php
-        if (!$twentyfourhour_format)
-        {
-          echo "<div class=\"group ampm\">\n";
-          $checked = ($start_hour < 12) ? "checked=\"checked\"" : "";
-          echo "      <label><input name=\"ampm\" type=\"radio\" value=\"am\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
-          $checked = ($start_hour >= 12) ? "checked=\"checked\"" : "";
-          echo "      <label><input name=\"ampm\" type=\"radio\" value=\"pm\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
-          echo "</div>\n";
-        }
-        ?>
-      </div>
-      <?php
+      echo "<div class=\"div_time\">\n";
+      echo "<label>" . get_vocab("time") . ":</label>\n";
+      echo "<input type=\"text\" class=\"time_hour\" name=\"hour\" value=\"";
+      if ($twentyfourhour_format)
+      {
+        echo $start_hour;
+      }
+      elseif ($start_hour > 12)
+      {
+        echo ($start_hour - 12);
+      } 
+      elseif ($start_hour == 0)
+      {
+        echo "12";
+      }
+      else
+      {
+        echo $start_hour;
+      } 
+      echo "\" maxlength=\"2\">\n";
+      echo "<span>:</span>\n";
+      echo "<input type=\"text\" class=\"time_minute\" name=\"minute\" value=\"" . $start_min . "\" maxlength=\"2\">\n";
+      if (!$twentyfourhour_format)
+      {
+        echo "<div class=\"group ampm\">\n";
+        $checked = ($start_hour < 12) ? "checked=\"checked\"" : "";
+        echo "      <label><input name=\"ampm\" type=\"radio\" value=\"am\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
+        $checked = ($start_hour >= 12) ? "checked=\"checked\"" : "";
+        echo "      <label><input name=\"ampm\" type=\"radio\" value=\"pm\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
+        echo "</div>\n";
+      }
+      echo "</div>\n";
     }
     
     else
