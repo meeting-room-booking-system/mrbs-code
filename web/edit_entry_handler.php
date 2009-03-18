@@ -297,6 +297,7 @@ if (isset($rep_type) && ($rep_type > 0) &&
 else
 {
   $rep_type = 0;
+  $rep_enddate = 0;  // to avoid an undefined variable notice
 }
 
 if (!isset($rep_day))
