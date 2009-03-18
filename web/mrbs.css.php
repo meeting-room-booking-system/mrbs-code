@@ -518,6 +518,7 @@ div#edit_area_room_submit_save {float: left; clear: none; width: auto}
 .form_general div#ad {float: left}
 .form_general #ad label {clear: none; text-align: left; font-weight: normal}
 .form_general input#all_day {width: auto; margin-left: 1.0em; margin-right: 0.5em}
+.form_general input#private {width: auto; margin-left: 3.0em; margin-right: 0.5em}
 .form_general #div_rooms select, .form_general #div_typematch select {float: left; margin-right: 2.0em}
 .form_general fieldset#rep_info {padding-top: 0}
 .form_general #rep_info input {width: 13em}

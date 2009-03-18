@@ -297,6 +297,30 @@ $highlight_method = "hybrid"; // One of "bgcolor", "class", "hybrid".   "hybrid"
                               // highlighting is used, whether or not $javascript_cursor is set.
 
 
+// Private Bookings Settings
+// Only administrators or the person who booked a private event can see
+// details of the event.  Everyone else just sees that the time/period
+// is booked on the schedule.
+$private_enabled = FALSE;  // Display checkbox in entry page to make
+           // the booking private.  
+
+$private_default = FALSE;  // Set default value for "Private" flag on
+           // new/edited entries.  Used even if checkbox is not displayed.
+
+$private_mandatory = FALSE; // If TRUE all new/edited entries will 
+           // use the value from $private_default when saved.
+           // If checkbox is displayed it will be disabled.
+
+$private_override = "none"; // Override default privacy behavior. 
+           // "none" - Private flag on entry is used
+           // "private" - ALL entries are treated as private regardless
+           //             of private flag on the entry.
+           // "public" - NO entry is treated as private, regardless of
+           //            private flag on the entry.
+           // Overrides $private_default and $private_mandatory
+           // Consider your users' expectations of privacy before
+           // changing to "public" or from "private" to "none"
+
 /***********************************************
  * Authentication settings - read AUTHENTICATION
  ***********************************************/

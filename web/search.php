@@ -18,6 +18,9 @@ $search_pos = get_form_var('search_pos', 'int');
 $total = get_form_var('total', 'int');
 $advanced = get_form_var('advanced', 'int');
 
+$user = getUserName();
+$is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
+
 // If we dont know the right date then make it up 
 if (!isset($day) or !isset($month) or !isset($year))
 {
@@ -66,6 +69,16 @@ if (!empty($advanced))
   exit;
 }
 
+# Require authenticated user if private bookings are required
+if ($private_override == "private")
+{
+  if (!getAuthorised(1))
+  {
+    showAccessDenied($day, $month, $year, $area, "");
+    exit();
+  }
+}
+
 if (!$search_str)
 {
   echo "<p class=\"error\">" . get_vocab("invalid_search") . "</p>";
@@ -83,6 +96,32 @@ $sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_str)
   . " OR " . sql_syntax_caseless_contains("E.name", $search_str)
   . " OR " . sql_syntax_caseless_contains("E.description", $search_str)
   . ") AND E.end_time > $now";
+
+# Unless we overriding privacy settings as "public" or user
+# is and admin, we have to restrict which listings are returned
+if (($private_override != "public") && !$is_admin) 
+{
+  if (isset($user)) 
+  {
+    # If private bookings are forced then user can only
+    # search their own.  If not they can also search non-private entries
+    if ($private_override == "private") 
+    {
+      $sql_pred .= " AND E.create_by = '$user'";
+    }
+    else
+    {
+      $sql_pred .= " AND (E.create_by = '$user' OR NOT E.private)";
+    }
+  }
+  else
+  {
+    # If user isn't logged in then we already know
+    # override isn't set to "private" and we wouldn't
+    # be here if it were "public" so...
+    $sql_pred .= " AND NOT E.private";
+  }
+}
 
 // The first time the search is called, we get the total
 // number of matches.  This is passed along to subsequent

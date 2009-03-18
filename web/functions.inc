@@ -19,6 +19,18 @@ if (isset($timezone))
   }
 }
 
+// Deal with $private_xxxx overrides.  Simplifies
+// logic related to private bookings.
+if ($private_override == "private" )
+{
+  $private_mandatory=TRUE;
+  $private_default=TRUE;
+}
+elseif ($private_override == "public" )
+{
+  $private_mandatory=TRUE;
+  $private_default=FALSE;
+}
 
 $done_header = FALSE;
 
@@ -830,6 +842,24 @@ function is_hidden_day ($dow)
   return (isset($hidden_days) && in_array($dow, $hidden_days));
 }
 
+// returns true if event should be considered private based on
+// config settings and event's "private" flag (passed to function)
+function is_private_event($event_flag) 
+{
+  global $private_override;
+  if ($private_override == "private" )
+  {
+    $event_flag = TRUE;
+  }
+  elseif ($private_override == "public" )
+  {
+    $event_flag = FALSE;
+  }
+
+  return $event_flag;
+}
+
+
 function map_add_booking ($row, &$column, $am7, $pm7, $format)
 {
   // Enters the contents of the booking found in $row into $column, which is
@@ -849,6 +879,8 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   //       entry_id
   //       type
   //       entry_description
+  //       entry_private
+  //       entry_create_by
   
   // $column is a column of the map of the screen that will be displayed
   // It looks like:
@@ -889,6 +921,19 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   
   global $resolution;
   
+  $user = getUserName();
+  if (is_private_event($row['entry_private']) &&
+         !getWritable($row['entry_create_by'],$user))
+  {
+    $is_private = TRUE;
+    $row['name']= "- ".get_vocab('unavailable')." -";
+    $row['entry_description']= "- ".get_vocab('unavailable')." -";
+  }
+  else
+  {
+    $is_private = FALSE;
+  }
+
   $start_t = max(round_t_down($row['start_time'], $resolution, $am7), $am7);
   $end_t = min(round_t_up($row['end_time'], $resolution, $am7) - $resolution, $pm7);
   // calculate the times used for indexing
@@ -909,7 +954,14 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     
     // fill in the id, type and start time
     $column[$time_t][$n]["id"]    = $row['entry_id'];
-    $column[$time_t][$n]["color"] = $row['type'];
+    if ($is_private) 
+    {
+      $column[$time_t][$n]["color"] = 'P'.$row['type'];
+    }
+    else
+    {
+      $column[$time_t][$n]["color"] = $row['type'];
+    }
     $column[$time_t][$n]["start_time"] = utf8_strftime(hour_min_format(), $row['start_time']);
     $column[$time_t][$n]["slots"] = null;  // to avoid undefined index NOTICE errors
     // if it's a multiple booking also fill in the name and description

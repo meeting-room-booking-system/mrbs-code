@@ -15,7 +15,7 @@ $tbl_users     = $db_tbl_prefix . "users";
 $tbl_variables = $db_tbl_prefix . "variables";
 
 
-$db_schema_version = 2;
+$db_schema_version = 3;
 
 
 // Include the abstraction configured to be used for the default MRBS

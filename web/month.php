@@ -18,6 +18,8 @@ $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');
 $debug_flag = get_form_var('debug_flag', 'int');
 
+$user = getUserName();
+
 // 3-value compare: Returns result of compare as "< " "= " or "> ".
 function cmp3($a, $b)
 {
@@ -296,7 +298,8 @@ $all_day = ereg_replace(" ", "&nbsp;", get_vocab("all_day"));
 // This data will be retrieved day-by-day fo the whole month
 for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
 {
-  $sql = "SELECT start_time, end_time, id, name, type
+  $sql = "SELECT start_time, end_time, id, name, type,
+          private, create_by
           FROM $tbl_entry
           WHERE room_id=$room
           AND start_time <= $midnight_tonight[$day_num] AND end_time > $midnight[$day_num]
@@ -326,8 +329,35 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
         echo "<br>DEBUG: Entry ".$row['id']." day $day_num\n";
       }
       $d[$day_num]["id"][] = $row['id'];
-      $d[$day_num]["shortdescrip"][] = htmlspecialchars($row['name']);
-      $d[$day_num]["color"][] = $row['type'];
+      
+      // Handle private events
+      if (is_private_event($row['private'])) 
+      {
+        if (getWritable($row['create_by'],$user)) 
+        {
+          $private = FALSE;
+        }
+        else 
+        {
+          $private = TRUE;
+        }
+      }
+      else 
+      {
+        $private = FALSE;
+      }
+
+      if ($private) 
+      {
+        $d[$day_num]["shortdescrip"][] = '- '.get_vocab('unavailable').' -';
+        $d[$day_num]["color"][] = 'P';
+      }
+      else
+      {
+        $d[$day_num]["shortdescrip"][] = htmlspecialchars($row['name']);
+        $d[$day_num]["color"][] = $row['type'];
+      }
+        
 
       // Describe the start and end time, accounting for "all day"
       // and for entries starting before/ending after today.

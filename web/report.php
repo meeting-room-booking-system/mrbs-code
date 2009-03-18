@@ -338,6 +338,20 @@ $sortby = get_form_var('sortby', 'string');
 $display = get_form_var('display', 'string');
 $sumby = get_form_var('sumby', 'string');
 
+# Require authenticated user if private bookings are required
+if ($private_override == "private")
+{
+  if (!getAuthorised(1))
+  {
+    showAccessDenied($day, $month, $year, $area, "");
+    exit();
+  }
+}
+
+# Need to know user name and if they are an admin
+$user = getUserName();
+$is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
+
 //If we dont know the right date then make it up
 if (!isset($day) or !isset($month) or !isset($year))
 {
@@ -629,6 +643,28 @@ if (isset($areamatch))
   if (!empty($creatormatch))
   {
     $sql .= " AND" .  sql_syntax_caseless_contains("e.create_by", $creatormatch);
+  }
+
+  # If not overriding as public entries and user isn't and admin...
+  if (($private_override != "public") && !$is_admin) 
+  {
+    if (isset($user))
+    {
+      if ($private_override == "private") 
+      {
+        $sql .= " AND e.create_by = '$user'";
+      }
+      else
+      {
+        $sql .= " AND (e.create_by = '$user' OR NOT e.private)";
+      }
+    }
+    else
+    { 
+      # un-authenticated users can only report on
+      # items which are not marked private
+      $sql .= " AND NOT e.private";
+    }
   }
    
   if ( $sortby == "r" )

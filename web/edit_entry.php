@@ -22,6 +22,7 @@ $id = get_form_var('id', 'int');
 $copy = get_form_var('copy', 'int');
 $edit_type = get_form_var('edit_type', 'string');
 $returl = get_form_var('returl', 'string');
+$private = get_form_var('private', 'string');
 
 if (empty($area))
 {
@@ -66,7 +67,7 @@ if (!getAuthorised(1))
 if (isset($id))
 {
   $sql = "select name, create_by, description, start_time, end_time,
-     type, room_id, entry_type, repeat_id from $tbl_entry where id=$id";
+     type, room_id, entry_type, repeat_id, private from $tbl_entry where id=$id";
    
   $res = sql_query($sql);
   if (! $res)
@@ -94,6 +95,11 @@ if (isset($id))
   $room_id     = $row['room_id'];
   $entry_type  = $row['entry_type'];
   $rep_id      = $row['repeat_id'];
+  $private     = $row['private'];
+  if ($private_mandatory) 
+  {
+    $private = $private_default;
+  }
 
   if($entry_type >= 1)
   {
@@ -185,6 +191,7 @@ else
   $rep_end_month = $month;
   $rep_end_year  = $year;
   $rep_day       = array(0, 0, 0, 0, 0, 0, 0);
+  $private       = $private_default;
 }
 
 // These next 4 if statements handle the situation where
@@ -670,9 +677,9 @@ else
       <span><?php echo get_vocab("ctrl_click") ?></span>
       </div>
     </div>
-    
     <div id="div_type">
       <label for="type"><?php echo get_vocab("type")?>:</label>
+     <div class="group">    
       <select id="type" name="type">
         <?php
         for ($c = "A"; $c <= "Z"; $c++)
@@ -684,6 +691,24 @@ else
         }
         ?>
       </select>
+      <?php 
+      if ($private_enabled) 
+      { ?>
+        <div id="div_private">
+          <input id="private" class="checkbox" name="private" type="checkbox" value="yes"<?php 
+          if($private) 
+          {
+            echo " checked=\"checked\"";
+          }
+          if($private_mandatory) 
+          {
+            echo " disabled=\"true\"";
+          }
+          ?>>
+          <label for="private"><?php echo get_vocab("private") ?></label>
+        </div><?php 
+      } ?>
+     </div>
     </div>
 
 
@@ -722,7 +747,7 @@ else
           {
             $wday = ($i + $weekstarts) % 7;
             echo "      <label><input class=\"checkbox\" name=\"rep_day[$wday]\" type=\"checkbox\"";
-            if ($rep_day[$wday])
+            if ($irep_day[$wday])
             {
               echo " checked=\"checked\"";
             }

@@ -37,6 +37,7 @@ $rep_end_year = get_form_var('rep_end_year', 'int');
 $rep_id = get_form_var('rep_id', 'int');
 $rep_day = get_form_var('rep_day', 'array'); // array of bools
 $rep_num_weeks = get_form_var('rep_num_weeks', 'int');
+$private = get_form_var('private', 'string'); // bool, actually
 
 if (empty($area))
 {
@@ -120,7 +121,16 @@ $area = mrbsGetRoomArea($room);
 // Complete the query string
 $returl .= "&area=$area&room=$room";
 
-
+// Handle private booking
+// Enforce config file settings if needed
+if ($private_mandatory) 
+{
+  $isprivate = $private_default;
+}
+else
+{
+  $isprivate = ((isset($private) && ($private == "yes")));
+}
 
 if (!getAuthorised(1))
 {
@@ -405,7 +415,8 @@ if (empty($err))
                                           $name,
                                           $type,
                                           $description,
-                                          isset($rep_num_weeks) ? $rep_num_weeks : 0);
+                                          isset($rep_num_weeks) ? $rep_num_weeks : 0,
+                                          $isprivate);
       // Send a mail to the Administrator
       if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
           MAIL_ROOM_ADMIN_ON_BOOKINGS or MAIL_BOOKER)
@@ -461,7 +472,8 @@ if (empty($err))
                                       $create_by,
                                       $name,
                                       $type,
-                                      $description);
+                                      $description,
+                                      $isprivate);
 
       // Send a mail to the Administrator
       if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or

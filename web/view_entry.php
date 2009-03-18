@@ -7,6 +7,8 @@ require_once "functions.inc";
 require_once "dbsys.inc";
 require_once "mrbs_auth.inc";
 
+$user = getUserName();
+
 // Get form variables
 $day = get_form_var('day', 'int');
 $month = get_form_var('month', 'int');
@@ -48,6 +50,7 @@ if ($series)
           $tbl_room.room_name,
           $tbl_area.area_name,
           $tbl_repeat.type,
+          $tbl_repeat.private,
           $tbl_repeat.room_id,
           " . sql_syntax_timestamp_to_unix("$tbl_repeat.timestamp") . " AS last_updated,
           ($tbl_repeat.end_time - $tbl_repeat.start_time) AS duration,
@@ -73,6 +76,7 @@ else
           $tbl_room.room_name,
           $tbl_area.area_name,
           $tbl_entry.type,
+          $tbl_entry.private,
           $tbl_entry.room_id,
           " . sql_syntax_timestamp_to_unix("$tbl_entry.timestamp") . " AS last_updated,
           ($tbl_entry.end_time - $tbl_entry.start_time) AS duration,
@@ -109,12 +113,20 @@ $create_by    = htmlspecialchars($row['create_by']);
 $room_name    = htmlspecialchars($row['room_name']);
 $area_name    = htmlspecialchars($row['area_name']);
 $type         = $row['type'];
+$private      = $row['private'];
 $room_id      = $row['room_id'];
 $updated      = time_date_string($row['last_updated']);
 // need to make DST correct in opposite direction to entry creation
 // so that user see what he expects to see
 $duration     = $row['duration'] - cross_dst($row['start_time'],
                                              $row['end_time']);
+$writeable = getWritable($create_by,$user);
+if (is_private_event($private) && !$writeable) 
+{
+    $name = "-".get_vocab('private')."-";
+    $description = $name ;
+    $create_by = $name ;
+}
 
 if ($enable_periods)
 {
@@ -217,7 +229,13 @@ $repeat_key = "rep_type_" . $rep_type;
 
 ?>
 
-<h3><?php echo $name ?></h3>
+<h3><?php 
+  echo $name;
+  if (is_private_event($private) && $writeable) 
+  {
+    echo ' ('.get_vocab('private').')';
+  }
+?></h3>
  <table id="entry">
    <tr>
     <td><?php echo get_vocab("description") ?>:</td>
@@ -245,7 +263,9 @@ $repeat_key = "rep_type_" . $rep_type;
    </tr>
    <tr>
     <td><?php echo get_vocab("createdby") ?>:</td>
-    <td><?php    echo $create_by ?></td>
+    <td><?php
+          echo $create_by ;
+        ?></td>
    </tr>
    <tr>
     <td><?php echo get_vocab("lastupdate") ?>:</td>

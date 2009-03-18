@@ -178,7 +178,8 @@ $td = date("d",$i);
 //form of the original which had 3 BETWEEN parts. It selects all entries which
 //occur on or cross the current day.
 $sql = "SELECT $tbl_room.id AS room_id, start_time, end_time, name, $tbl_entry.id AS entry_id, type,
-        $tbl_entry.description AS entry_description
+        $tbl_entry.description AS entry_description, 
+        $tbl_entry.private AS entry_private, $tbl_entry.create_by AS entry_create_by
    FROM $tbl_entry, $tbl_room
    WHERE $tbl_entry.room_id = $tbl_room.id
    AND area_id = $area
@@ -203,6 +204,8 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   //  row['entry_id'] = id of this booking
   //  row['type'] = type (internal/external)
   //  row['entry_description'] = description
+  //  row['entry_private'] = if entry is private
+  //  row['entry_create_by'] = Creator/owner of entry
   
   map_add_booking($row, $today[$row['room_id']][$day], $am7, $pm7, $format);
 

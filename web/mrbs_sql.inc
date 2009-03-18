@@ -157,16 +157,19 @@ function mrbsDelEntry($user, $id, $series, $all)
  * $name        - Name
  * $type        - Type (Internal/External)
  * $description - Description
+ * $private     - Private Booking (TRUE/FALSE)
  * 
  * Returns:
  *   0        - An error occured while inserting the entry
  *   non-zero - The entry's ID
  */
 function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
-                               $room_id, $owner, $name, $type, $description)
+                               $room_id, $owner, $name, $type, $description,
+                               $private)
 {
   global $tbl_entry;
 
+  $private = $private ? 1 : 0 ;
   $name        = addslashes($name);
   $description = addslashes($description);
    
@@ -176,9 +179,9 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
   if ($endtime > $starttime)
   {
     $sql = "INSERT INTO $tbl_entry (  start_time,   end_time,   entry_type,    repeat_id,   room_id,
-                                      create_by,    name,       type,          description)
+                                      create_by,    name,       type,          description, private)
                             VALUES ($starttime, $endtime, $entry_type, $repeat_id, $room_id,
-                                    '$owner',     '$name',    '$type',       '$description')";
+                                    '$owner',     '$name',    '$type',       '$description', $private)";
 
     if (sql_command($sql) < 0)
     {
@@ -207,6 +210,8 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
  * $name        - Name
  * $type        - Type (Internal/External)
  * $description - Description
+ * $rep_num_weeks - (missing)
+ * $private     - Private Booking (bool)
  * 
  * Returns:
  *   0        - An error occured while inserting the entry
@@ -214,7 +219,7 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
  */
 function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
                                $rep_opt, $room_id, $owner, $name, $type,
-                               $description, $rep_num_weeks)
+                               $description, $rep_num_weeks, $private)
 {
   global $tbl_repeat;
 
@@ -232,6 +237,7 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
   $sql_coln[] = 'room_id';   $sql_val[] = $room_id;
   $sql_coln[] = 'create_by';   $sql_val[] = '\''.$owner.'\'';
   $sql_coln[] = 'type';      $sql_val[] = '\''.$type.'\'';
+  $sql_coln[] = 'private';      $sql_val[] = '\''.$private.'\'';
   $sql_coln[] = 'name';      $sql_val[] = '\''.$name.'\'';
 
   // Optional things, pgsql doesn't like empty strings!
@@ -431,6 +437,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
  * $name        - Name
  * $type        - Type (Internal/External)
  * $description - Description
+ * $private     - Private Booking (bool)
  * 
  * Returns:
  *   0        - An error occured while inserting the entry
@@ -438,9 +445,11 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
  */
 function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                    $rep_enddate, $rep_opt, $room_id, $owner,
-                                   $name, $type, $description, $rep_num_weeks)
+                                   $name, $type, $description, $rep_num_weeks,
+                                   $private)
 {
   global $max_rep_entrys;
+  $private = $private ? 1 : 0 ;
    
   $reps = mrbsGetRepeatEntryList($starttime, $rep_enddate,
                                  $rep_type, $rep_opt,
@@ -455,14 +464,14 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
   {
     $ent = mrbsCreateSingleEntry($starttime, $endtime, 0, 0,
                                  $room_id, $owner, $name, $type,
-                                 $description);
+                                 $description, $private);
     return $ent;
   }
    
   $ent = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type,
                                $rep_enddate, $rep_opt, $room_id,
                                $owner, $name, $type, $description,
-                               $rep_num_weeks);
+                               $rep_num_weeks,$private);
     
   if ($ent)
   {
@@ -481,7 +490,7 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                       $owner,
                                       $name,
                                       $type,
-                                      $description);
+                                      $description, $private);
     }
   }
   return $ent;
