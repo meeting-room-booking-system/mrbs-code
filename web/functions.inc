@@ -1027,7 +1027,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
       // one booking but a different one, or else no booking at all.    Then 
       // you know you've gone back one slot too far.
       $first_booking_id = $column[$time_start_t][0]["id"];
-      for ($s = $start_t -$resolution; $s >= $am7; $s -= $resolution)
+      for ($s = $start_t -$resolution; $s > $am7; $s -= $resolution)
       {
         if (isset($column[date($format,$s)][1]["id"]) || 
             !isset($column[date($format,$s)][0]["id"]) ||
