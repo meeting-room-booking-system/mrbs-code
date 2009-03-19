@@ -214,27 +214,33 @@ if (!empty($area))
     }
     //
     
-    // Check morningstarts, eveningends, and resolution for consistency
-    $start_first_slot = ($area_morningstarts*60) + $area_morningstarts_minutes;   // minutes
-    $start_last_slot  = ($area_eveningends*60) + $area_eveningends_minutes;       // minutes
-    $start_difference = ($start_last_slot - $start_first_slot);         // minutes
-    if (($start_difference < 0) or ($start_difference%$area_res_mins != 0))
+    if (!$enable_periods)
     {
-      $valid_resolution = FALSE;
+      // Check morningstarts, eveningends, and resolution for consistency
+      $start_first_slot = ($area_morningstarts*60) + $area_morningstarts_minutes;   // minutes
+      $start_last_slot  = ($area_eveningends*60) + $area_eveningends_minutes;       // minutes
+      $start_difference = ($start_last_slot - $start_first_slot);         // minutes
+      if (($start_difference < 0) or ($start_difference%$area_res_mins != 0))
+      {
+        $valid_resolution = FALSE;
+      }
     }
     
     // If everything is OK, update the database
     if ((FALSE != $valid_email) && (FALSE != $valid_resolution))
     {
       $sql = "UPDATE $tbl_area SET area_name='" . addslashes($area_name)
-        . "', area_admin_email='" . addslashes($area_admin_email)
-        . "', resolution=" . $area_res_mins * 60
-        . ", default_duration=" . $area_def_duration_mins * 60
-        . ", morningstarts=" . $area_morningstarts
-        . ", morningstarts_minutes=" . $area_morningstarts_minutes
-        . ", eveningends=" . $area_eveningends
-        . ", eveningends_minutes=" . $area_eveningends_minutes
-        . " WHERE id=$area";
+        . "', area_admin_email='" . addslashes($area_admin_email) . "'";
+      if (!$enable_periods)
+      {
+        $sql .= ", resolution=" . $area_res_mins * 60
+              . ", default_duration=" . $area_def_duration_mins * 60
+              . ", morningstarts=" . $area_morningstarts
+              . ", morningstarts_minutes=" . $area_morningstarts_minutes
+              . ", eveningends=" . $area_eveningends
+              . ", eveningends_minutes=" . $area_eveningends_minutes;
+      }
+      $sql .= " WHERE id=$area";
       if (sql_command($sql) < 0)
       {
         fatal_error(0, get_vocab("update_area_failed") . sql_error());
