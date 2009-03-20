@@ -194,6 +194,7 @@ if (!empty($area))
 {
   $valid_email = TRUE;
   $valid_resolution = TRUE;
+  $enough_slots = TRUE;
   
   if (isset($change_area))  // we're on the second pass through
   {
@@ -224,10 +225,18 @@ if (!empty($area))
       {
         $valid_resolution = FALSE;
       }
+      
+      // Check that the number of slots we now have is no greater than $max_slots
+      // defined in the config file - otherwise we won't generate enough CSS classes
+      $n_slots = ($start_difference/$area_res_mins) + 1;
+      if ($n_slots > $max_slots)
+      {
+        $enough_slots = FALSE;
+      }
     }
     
     // If everything is OK, update the database
-    if ((FALSE != $valid_email) && (FALSE != $valid_resolution))
+    if ((FALSE != $valid_email) && (FALSE != $valid_resolution) && (FALSE != $enough_slots))
     {
       $sql = "UPDATE $tbl_area SET area_name='" . addslashes($area_name)
         . "', area_admin_email='" . addslashes($area_admin_email) . "'";
@@ -275,6 +284,10 @@ if (!empty($area))
       if (FALSE == $valid_resolution)
       {
         echo "<p class=\"error\">" .get_vocab('invalid_resolution') . "</p>\n";
+      }
+      if (FALSE == $enough_slots)
+      {
+        echo "<p class=\"error\">" .get_vocab('too_many_slots') . "</p>\n";
       }
       ?>
     </fieldset>

@@ -254,6 +254,7 @@ $vocab["area_res_mins"]          = "Resolution (minutes)";
 $vocab["area_def_duration_mins"] = "Default duration (minutes)";
 $vocab["invalid_email"]          = "Invalid email!";
 $vocab["invalid_resolution"]     = "Invalid combination of first slot, last slot and resolution!";
+$vocab["too_many_slots"]         = 'You need to increase the value of $max_slots in the config file!';
 
 // Used in edit_users.php
 $vocab["name_empty"]         = "You must enter a name.";

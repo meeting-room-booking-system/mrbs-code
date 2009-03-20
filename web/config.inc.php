@@ -103,10 +103,6 @@ $theme = "default";
 // $eveningends_minutes and $twentyfourhour_format are ignored.
 $enable_periods = FALSE;
 
-// This is the maximum number of rows (timeslots or periods) that one can expect to see in the day
-// and week views.    It is used by mrbs.css.php for creating classes.    It does not matter if it
-// is too large, except for the fact that more CSS than necessary will be generated.
-$max_slots = 60;
 
 // TIMES SETTINGS
 // --------------
@@ -150,6 +146,11 @@ $eveningends_minutes   = 30;   // must be integer in range 0-59
 // To get a full 24 hour display with 15-minute steps, set morningstarts=0; eveningends=23;
 // eveningends_minutes=45; and resolution=900.
 
+// This is the maximum number of rows (timeslots or periods) that one can expect to see in the day
+// and week views.    It is used by mrbs.css.php for creating classes.    It does not matter if it
+// is too large, except for the fact that more CSS than necessary will be generated.
+$max_slots = 60;
+
 
 // PERIODS SETTINGS
 // ----------------
@@ -183,10 +184,11 @@ $periods[] = "Period&nbsp;2";
 // CHECKING
 // --------
 
-// Do some checking
+// Do some checking (and redefine $max_slots if we're using periods)
 if ($enable_periods)
 {
-  if (count($periods) > 60)
+  $max_slots = count($periods);  // We know exactly how many we need
+  if ($max_slots > 60)
   {
     die('Configuration error: too many periods defined');
   }
