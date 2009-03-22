@@ -207,8 +207,9 @@ function ChangeOptionDays(formObj, prefix)
   <table id="banner">
     <tr>
       <td id="company">
+        <div>
           <?php
-          echo "<div>\n";
+          echo "<div id=\"logo\">\n";
           if (!empty($mrbs_company_url))
           {
             echo "<a href=\"$mrbs_company_url\">\n";
@@ -229,12 +230,13 @@ function ChangeOptionDays(formObj, prefix)
           echo "</div>\n";
           if (!empty($mrbs_company_more_info))
           {
-            echo "<div>$mrbs_company_more_info</div>\n";
+            echo "<div id=\"more_info\">$mrbs_company_more_info</div>\n";
           }
           ?>
-          <div>
+          <div id="mrbs">
             <a href="index.php"><?php echo get_vocab("mrbs") ?></a>
           </div>
+        </div>
       </td>
       <td>
         <form action="day.php" method="get" id="Form1">
