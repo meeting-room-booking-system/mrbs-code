@@ -30,6 +30,8 @@ if (empty($area))
 }
 
 // Get the timeslot settings (resolution, etc.) for this area
+// (We will need to update them later if we are editing an existing
+//  booking - once we know the area for that booking)
 get_area_settings($area);
 
 // If we dont know the right date then make it up
@@ -81,6 +83,11 @@ if (isset($id))
 
   $row = sql_row_keyed($res, 0);
   sql_free($res);
+  
+  // We've possibly got a new room and area, so we need to update the settings
+  // for this area.
+  $area = get_area($row['room_id']);
+  get_area_settings($area);
 
   $name        = $row['name'];
   $create_by   = $row['create_by'];
