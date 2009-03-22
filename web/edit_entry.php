@@ -573,7 +573,7 @@ else
       
       function changeRooms( formObj )
       {
-        areasObj = eval( "formObj.areas" );
+        areasObj = eval( "formObj.area" );
 
         area = areasObj[areasObj.selectedIndex].value;
         roomsObj = eval( "formObj.elements['rooms']" );
@@ -618,8 +618,8 @@ else
       // Create area selector, only if we have Javascript
 
       this.document.writeln("<div id=\"div_areas\">");
-      this.document.writeln("<label for=\"areas\"><?php echo get_vocab("areas") ?>:<\/label>");
-      this.document.writeln("          <select id=\"areas\" name=\"areas\" onchange=\"changeRooms(this.form)\">");
+      this.document.writeln("<label for=\"area\"><?php echo get_vocab("areas") ?>:<\/label>");
+      this.document.writeln("          <select id=\"area\" name=\"area\" onchange=\"changeRooms(this.form)\">");
 
       <?php
       // get list of areas

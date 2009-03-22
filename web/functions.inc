@@ -539,6 +539,14 @@ function get_default_room($area)
   return ($room < 0 ? 0 : $room);
 }
 
+// Return an area id for a given room
+function get_area($room)
+{
+  global $tbl_room;
+  $area = sql_query1("SELECT area_id FROM $tbl_room WHERE id=$room LIMIT 1");
+  return ($area < 0 ? 0 : $area);
+}
+
 // Update the default timeslot settings with the ones specific to this area
 function get_area_settings($area)
 {

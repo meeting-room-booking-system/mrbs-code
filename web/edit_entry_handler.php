@@ -41,7 +41,14 @@ $private = get_form_var('private', 'string'); // bool, actually
 
 if (empty($area))
 {
-  $area = get_default_area();
+  if (empty($rooms[0]))
+  {
+    $area = get_default_area();
+  }
+  else
+  {
+    $area = get_area($rooms[0]);
+  }
 }
 
 // Get the timeslot settings (resolution, etc.) for this area
