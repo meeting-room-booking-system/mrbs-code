@@ -437,7 +437,15 @@ for (
       {
         $week_map[$room][$thisday][$time_t] = array();  // to avoid an undefined index NOTICE error
       }
-      draw_cell($week_map[$room][$thisday][$time_t], $query_strings, $row_class);
+      if (isset($timetohighlight) && ($time_t == $timetohighlight))
+      {
+        $cell_class = "row_highlight";
+      }
+      else
+      {
+        $cell_class = $row_class;
+      }
+      draw_cell($week_map[$room][$thisday][$time_t], $query_strings, $cell_class);
     }
 
   }    // for loop

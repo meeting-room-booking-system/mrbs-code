@@ -1059,7 +1059,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
 
 
 
-function draw_cell($cell, $query_strings, $row_class)
+function draw_cell($cell, $query_strings, $cell_class)
 {
   // draws a single cell in the main table of the day and week views
   //
@@ -1088,7 +1088,8 @@ function draw_cell($cell, $query_strings, $row_class)
   //    ['new_times']     the string to be used for an empty cell if using times
   //    ['booking']       the string to be used for a full cell
   //
-  // $row_class specifies whether the row is even or odd so that the zebra stripes can be drawn
+  // $cell_class specifies the default class for the cell (odd_row, even_row or row_highlight)
+  // so that the zebra stripes can be drawn, or else to allow the whole row to be highlighted.
   
   global $main_cell_height, $main_table_cell_border_width;
   global $area, $year, $month, $timetohighlight;
@@ -1114,14 +1115,14 @@ function draw_cell($cell, $query_strings, $row_class)
     ?>
     <script type="text/javascript">
     //<![CDATA[
-      document.getElementById('<?php echo $td_id ?>').className = "multiple_booking minimized <?php echo $row_class ?>";
+      document.getElementById('<?php echo $td_id ?>').className = "multiple_booking minimized <?php echo $cell_class ?>";
     //]]>
     </script>
     <?php
     
     // First draw the mini table
     echo "<div class=\"celldiv1 mini\">\n";
-    echo "<div class=\"multiple_control\" onClick=\"document.getElementById('$td_id').className = 'multiple_booking maximized $row_class'\">+</div>\n";
+    echo "<div class=\"multiple_control\" onClick=\"document.getElementById('$td_id').className = 'multiple_booking maximized $cell_class'\">+</div>\n";
     echo "<table>\n";
     echo "<tbody>\n";
     
@@ -1157,7 +1158,7 @@ function draw_cell($cell, $query_strings, $row_class)
     $total_height = $n_bookings * $main_cell_height;
     $total_height += ($n_bookings - 1) * $main_table_cell_border_width;  // (first row has no top border)
     echo "<div class=\"multiple_control\" " .
-         "onClick=\"document.getElementById('$td_id').className = 'multiple_booking minimized $row_class'\" " .
+         "onClick=\"document.getElementById('$td_id').className = 'multiple_booking minimized $cell_class'\" " .
          "style =\"height: " . $total_height . "px; " .
                   "min-height: " . $total_height . "px; " .
                   "max-height: " . $total_height . "px; " .
@@ -1213,13 +1214,9 @@ function draw_cell($cell, $query_strings, $row_class)
     {
       $c = $color;
     }
-    else if (isset($timetohighlight) && ($time_t == $timetohighlight))
-    {
-      $c = "row_highlight";
-    }
     else
     {
-      $c = $row_class; // Use the default color class for the row.
+      $c = $cell_class; // Use the default color class (zebra stripes or highlighting).
     }
     
     // Don't put in a <td> cell if the slot is booked and there's no description.
