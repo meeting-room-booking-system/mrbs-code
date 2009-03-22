@@ -362,10 +362,14 @@ if (!sql_mutex_lock("$tbl_entry"))
 {
   fatal_error(1, get_vocab("failed_to_acquire"));
 }
-    
+
+// Validate the booking for (a) conflicting bookings and (b) conformance to rules
+$valid_booking = TRUE;
+$conflicts = "";          // Holds a list of all the conflicts (ideally this would be an array)
+$rules_broken = array();  // Holds an array of the rules that have been broken
+ 
 // Check for any schedule conflicts in each room we're going to try and
 // book in
-$err = "";
 foreach ( $rooms as $room_id )
 {
   if ($rep_type != 0 && !empty($reps))
@@ -387,26 +391,32 @@ foreach ( $rooms as $room_id )
 
         if (!empty($tmp))
         {
-          $err = $err . $tmp;
+          $valid_booking = FALSE;
+          $conflicts .= $tmp;
         }
       }
     }
     else
     {
-      $err        .= get_vocab("too_may_entrys") . "\n";
-      $hide_title  = 1;
+      $valid_booking = FALSE;
+      $rules_broken[] = get_vocab("too_may_entrys");
     }
   }
   else
   {
-    $err .= mrbsCheckFree($room_id, $starttime, $endtime-1, $ignore_id, 0);
+    $tmp .= mrbsCheckFree($room_id, $starttime, $endtime-1, $ignore_id, 0);
+    if (!empty($tmp))
+      {
+        $valid_booking = FALSE;
+        $conflicts .= $tmp;
+      }
   }
 
 } // end foreach rooms
 
 
 // If the rooms were free, go ahead an process the bookings
-if (empty($err))
+if ($valid_booking)
 {
   foreach ( $rooms as $room_id )
   {
@@ -533,23 +543,30 @@ if (empty($err))
 // The room was not free.
 sql_mutex_unlock("$tbl_entry");
 
-if (strlen($err))
+if (!$valid_booking)
 {
   print_header($day, $month, $year, $area, isset($room) ? $room : "");
     
   echo "<h2>" . get_vocab("sched_conflict") . "</h2>\n";
-  if (!isset($hide_title))
+  if (!empty($rules_broken))
+  {
+    echo "<p>\n";
+    echo get_vocab("rules_broken") . ":\n";
+    echo "</p>\n";
+    echo "<ul>\n";
+    foreach ($rules_broken as $rule)
+    {
+      echo "<li>$rule</li>\n";
+    }
+    echo "</ul>\n";
+  }
+  if (!empty($conflicts))
   {
     echo "<p>\n";
     echo get_vocab("conflict").":\n";
     echo "</p>\n";
     echo "<ul>\n";
-  }
-
-  echo $err;
-    
-  if(!isset($hide_title))
-  {
+    echo $conflicts;
     echo "</ul>\n";
   }
 }

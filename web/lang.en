@@ -107,7 +107,8 @@ $vocab["invalid_series_id"]  = "Invalid series id.";
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Error";
 $vocab["sched_conflict"]     = "Scheduling Conflict";
-$vocab["conflict"]           = "The new booking will conflict with the following entry(s)";
+$vocab["conflict"]           = "The new booking will conflict with the following entries";
+$vocab["rules_broken"]       = "The new booking will conflict with the following policies";
 $vocab["too_may_entrys"]     = "The selected options will create too many entries.<br>Please use different options!";
 $vocab["returncal"]          = "Return to calendar view";
 $vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access";
