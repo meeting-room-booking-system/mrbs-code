@@ -21,6 +21,7 @@ if (isset($timezone))
 
 // Deal with $private_xxxx overrides.  Simplifies
 // logic related to private bookings.
+global $private_override;
 if ($private_override == "private" )
 {
   $private_mandatory=TRUE;
