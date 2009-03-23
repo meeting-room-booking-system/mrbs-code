@@ -404,7 +404,7 @@ foreach ( $rooms as $room_id )
   }
   else
   {
-    $tmp .= mrbsCheckFree($room_id, $starttime, $endtime-1, $ignore_id, 0);
+    $tmp = mrbsCheckFree($room_id, $starttime, $endtime-1, $ignore_id, 0);
     if (!empty($tmp))
       {
         $valid_booking = FALSE;
