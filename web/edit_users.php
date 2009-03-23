@@ -311,6 +311,11 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                 echo ("<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" " .
                      (($level < $min_user_editing_level) ? "disabled=\"disabled\" " : "") .
                       "value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n");
+                // if the field was disabled then we still need to pass through the value as a hidden input
+                if ($level < $min_user_editing_level)
+                {
+                  echo "<input type=\"hidden\" name=\"Field_$fieldname\" value=\"" . $data[$fieldname] . "\">\n";
+                }
                 echo ("</div>\n");
                 break;
               default:
