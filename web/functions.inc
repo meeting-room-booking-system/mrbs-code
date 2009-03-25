@@ -645,6 +645,27 @@ function time_date_string($t)
   }
 }
 
+// validates a comma separated list of email addresses
+// returns FALSE if any one of them is invalid, otherwise TRUE
+function validate_email_list($list)
+{
+  require_once 'Mail/RFC822.php';
+  (!isset($list)) ? $list = '': '';
+  $emails = explode(',', $list);
+  $email_validator = new Mail_RFC822();
+  foreach ($emails as $email)
+  {
+    // if no email address is entered, this is OK, even if isValidInetAddress
+    // does not return TRUE
+    if ( !$email_validator->isValidInetAddress($email, $strict = FALSE)
+         && ('' != $list) )
+    {
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
 // Output a start table cell tag <td> with color class.
 // $colclass is an entry type (A-J), zebra stripes if
 // empty or row_highlight if highlighted.

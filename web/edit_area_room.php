@@ -99,22 +99,9 @@ print_header($day, $month, $year, isset($area) ? $area : "", isset($room) ? $roo
 <?php
 if (!empty($room))
 {
-  require_once 'Mail/RFC822.php';
-  (!isset($room_admin_email)) ? $room_admin_email = '': '';
-  $emails = explode(',', $room_admin_email);
-  $valid_email = TRUE;
-  $email_validator = new Mail_RFC822();
-  foreach ($emails as $email)
-  {
-    // if no email address is entered, this is OK, even if isValidInetAddress
-    // does not return TRUE
-    if ( !$email_validator->isValidInetAddress($email, $strict = FALSE)
-         && ('' != $room_admin_email) )
-    {
-      $valid_email = FALSE;
-    }
-  }
-  //
+  // validate the email addresses
+  $valid_email = validate_email_list($room_admin_email);
+  
   if ( isset($change_room) && (FALSE != $valid_email) )
   {
     if (empty($capacity))
@@ -200,21 +187,7 @@ if (!empty($area))
   if (isset($change_area))  // we're on the second pass through
   {
     // validate email addresses
-    require_once 'Mail/RFC822.php';
-    (!isset($area_admin_email)) ? $area_admin_email = '': '';
-    $emails = explode(',', $area_admin_email);
-    $email_validator = new Mail_RFC822();
-    foreach ($emails as $email)
-    {
-      // if no email address is entered, this is OK, even if isValidInetAddress
-      // does not return TRUE
-      if ( !$email_validator->isValidInetAddress($email, $strict = FALSE)
-           && ('' != $area_admin_email) )
-      {
-        $valid_email = FALSE;
-      }
-    }
-    //
+    $valid_email = validate_email_list($area_admin_email);
     
     if (!$enable_periods)
     {
