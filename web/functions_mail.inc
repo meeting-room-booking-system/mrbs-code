@@ -913,6 +913,8 @@ function sendMail($recipients, $subject, $body, $charset = 'us-ascii',
     $username = SMTP_USERNAME, $password = SMTP_PASSWORD)
 {
   require_once "Mail.php";
+  
+  $params = array();  // to avoid an undefined variable message
 
   // Headers part
   $headers['From']         = $from;
