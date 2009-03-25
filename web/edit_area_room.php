@@ -6,6 +6,7 @@ require_once "config.inc.php";
 require_once "functions.inc";
 require_once "dbsys.inc";
 require_once "mrbs_auth.inc";
+require_once "mrbs_sql.inc";
 
 // Get form variables
 $day = get_form_var('day', 'int');
@@ -83,7 +84,7 @@ if (isset($change_done))
 {
   if (!empty($room)) // Get the area the room is in
   {
-    $area = sql_query1("SELECT area_id from $tbl_room where id=$room");
+    $area = mrbsGetRoomArea($room);
   }
   Header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
   exit();

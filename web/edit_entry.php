@@ -6,6 +6,7 @@ require_once "config.inc.php";
 require_once "functions.inc";
 require_once "dbsys.inc";
 require_once "mrbs_auth.inc";
+require_once "mrbs_sql.inc";
 
 global $twentyfourhour_format;
 
@@ -560,10 +561,7 @@ else
 
     <?php
     // Determine the area id of the room in question first
-    $sql = "select area_id from $tbl_room where id=$room_id";
-    $res = sql_query($sql);
-    $row = sql_row_keyed($res, 0);
-    $area_id = $row['area_id'];
+    $area_id = mrbsGetRoomArea($room_id);
     // determine if there is more than one area
     $sql = "select id from $tbl_area";
     $res = sql_query($sql);
