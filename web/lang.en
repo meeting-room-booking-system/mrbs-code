@@ -133,9 +133,10 @@ $vocab["login"]              = "Log in";
 $vocab["logoff"]             = "Log Off";
 
 // Database upgrade code
-$vocab["login_for_upgrade"]  = "Please login as an administrator to perform a required database upgrade";
-$vocab["upgrade_to_version"] = "Upgrading to database version";
-$vocab["upgrade_completed"]  = "Database upgrade completed";
+$vocab["login_for_upgrade"]        = "Please login as an administrator to perform a required database upgrade";
+$vocab["upgrade_to_version"]       = "Upgrading to database version";
+$vocab["upgrade_to_local_version"] = "Upgrading to database local version";
+$vocab["upgrade_completed"]        = "Database upgrade completed";
 
 // User access levels
 $vocab["level_0"]            = "none";

@@ -16,6 +16,7 @@ $tbl_variables = $db_tbl_prefix . "variables";
 
 
 $db_schema_version = 3;
+$local_db_schema_version = 1;
 
 
 // Include the abstraction configured to be used for the default MRBS
@@ -571,15 +572,24 @@ $f();
 
 // Default version is 0, before we had schema versions
 $current_db_schema_version = 0;
+$current_local_db_schema_version = 0;
 
 if (sql_table_exists($tbl_variables))
 {
   $current_db_schema_version = sql_query1("SELECT variable_content ".
                                           "FROM $tbl_variables ".
                                           "WHERE variable_name = 'db_version'");
+  $current_local_db_schema_version = sql_query1("SELECT variable_content ".
+                                                "FROM $tbl_variables ".
+                                                "WHERE variable_name = 'local_db_version'");                                            
+  if ($current_local_db_schema_version < 0)
+  {
+    $current_local_db_schema_version = 0;
+  }
 }
 
-if ($current_db_schema_version < $db_schema_version)
+if (($current_db_schema_version < $db_schema_version) || 
+    ($current_local_db_schema_version < $local_db_schema_version))
 {
   // Upgrade needed
 
@@ -592,7 +602,16 @@ if ($current_db_schema_version < $db_schema_version)
   if (isset($user) && (authGetUserLevel($user) >= 2))
   {
     require_once "upgrade.inc";
-    upgrade_database($current_db_schema_version, $db_schema_version);
+    // Do any MRBS upgrades first
+    if ($current_db_schema_version < $db_schema_version)
+    {
+      upgrade_database(FALSE, $current_db_schema_version, $db_schema_version);
+    }
+    // Then any local upgrades
+    if ($current_local_db_schema_version < $local_db_schema_version)
+    {
+      upgrade_database(TRUE, $current_local_db_schema_version, $local_db_schema_version);
+    }
 
     print get_vocab("upgrade_completed").
       ". <a href=\"./\">".

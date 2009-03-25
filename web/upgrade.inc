@@ -4,8 +4,10 @@
 
 
 //
-function upgrade_database($from, $to)
+function upgrade_database($local, $from, $to)
 {
+  // $local is a boolean specifying whether the upgrades are global MRBS ones ($local == FALSE)
+  // or local upgrades ($local == TRUE);
   global $dbsys;
   global $db_tbl_prefix;
   global $tbl_variables;
@@ -18,9 +20,20 @@ function upgrade_database($from, $to)
     
   for ($ver = ($from+1); $ver <= $to; $ver++)
   {
-    print "<p>".get_vocab("upgrade_to_version").": $ver";
+    print "<p>" .
+          (($local) ? get_vocab("upgrade_to_local_version") : get_vocab("upgrade_to_version")) .
+          ": $ver";
 
-    $filename = "upgrade/$ver/$sql_type.sql";
+    if ($local)
+    {
+      $filename = "upgrade/local/$ver/$sql_type.sql";
+      $php_filename = "upgrade/local/$ver/post.inc";
+    }
+    else
+    {
+      $filename = "upgrade/$ver/$sql_type.sql";
+      $php_filename = "upgrade/$ver/post.inc";
+    }
     $handle = fopen($filename, "r");
     if (!$handle)
     {
@@ -55,8 +68,9 @@ function upgrade_database($from, $to)
     print "<br>".get_vocab("ok");
     if ($ver > 1)
     {
+      $variable_name = ($local) ? "local_db_version" : "db_version";
       $res = sql_command("UPDATE $tbl_variables SET variable_content = '$ver' ".
-                         "WHERE variable_name = 'db_version'");
+                         "WHERE variable_name = '$variable_name'");
       if ($res == -1)
       {
         // No need to localise, should never happen
@@ -66,9 +80,9 @@ function upgrade_database($from, $to)
     print "</p>\n";
     
     // Now execute the PHP file if there is one
-    if (file_exists("upgrade/$ver/post.inc"))
+    if (file_exists($php_filename))
     {
-      include "upgrade/$ver/post.inc";
+      include($php_filename);
     }
   }
 }
