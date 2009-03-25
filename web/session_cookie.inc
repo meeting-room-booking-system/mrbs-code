@@ -141,8 +141,11 @@ function printLoginForm($TargetURL)
     // We need to preserve the original calling page, so that it's there when we eventually get
     // to the TargetURL (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER holds
     // the original caller.    If this is the second time through we will have stored it in $returl.
-    echo "<input type=\"hidden\" name=\"returl\" value=\"" . 
-    htmlspecialchars((isset($returl)) ? $returl : $HTTP_REFERER) . "\">\n";
+    if (!isset($returl))
+    {
+      $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
+    }
+    echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
     ?>
     <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
     <input type="hidden" name="Action" value="SetName">
