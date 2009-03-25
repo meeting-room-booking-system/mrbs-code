@@ -837,8 +837,12 @@ else
     // go back to the page we started at (rather than going to the default view).  If this is the first time 
     // through, then $HTTP_REFERER holds the original caller.    If this is the second time through we will have 
     // stored it in $returl.
+    if (!isset($returl))
+    {
+      $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
+    }
     ?>
-    <input type="hidden" name="returl" value="<?php echo htmlspecialchars((isset($returl)) ? $returl : ($HTTP_REFERER)) ?>">
+    <input type="hidden" name="returl" value="<?php echo htmlspecialchars($returl) ?>">
     <!--input type="hidden" name="room_id" value="<?php echo $room_id?>"-->
     <input type="hidden" name="create_by" value="<?php echo $create_by?>">
     <input type="hidden" name="rep_id" value="<?php echo $rep_id?>">
