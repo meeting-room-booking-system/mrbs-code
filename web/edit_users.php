@@ -429,27 +429,18 @@ if (isset($Action) && ($Action == "Update"))
       print_footer(TRUE);
     }
     //
+    
     // Verify email adresses
-    require_once 'Mail/RFC822.php';
-  
     $email_var = get_form_var('Field_email', 'string');
     if (!isset($email_var))
     {
       $email_var = '';
     }
-    $emails = explode(',', $email_var);
-    $valid_email = new Mail_RFC822();
-    foreach ($emails as $email)
+    if (!validate_email_list($email_var))
     {
-      // if no email address is entered, this is OK, even if isValidInetAddress
-      // does not return TRUE
-      if ( !$valid_email->isValidInetAddress($email, $strict = FALSE)
-           && ('' != $email_var) )
-      {
-        // Now display this form again with an error message
-        Header("Location: edit_users.php?Action=Edit&Id=$Id&invalid_email=1");
-        exit;
-      }
+      // Now display this form again with an error message
+      Header("Location: edit_users.php?Action=Edit&Id=$Id&invalid_email=1");
+      exit;
     }
     //
     
