@@ -25,9 +25,15 @@
 
 CREATE TABLE mrbs_area
 (
-  id                serial primary key,
-  area_name         varchar(30),
-  area_admin_email  text
+  id                    serial primary key,
+  area_name             varchar(30),
+  area_admin_email      text,
+  resolution            int,
+  default_duration      int,
+  morningstarts         int,
+  morningstarts_minutes int,
+  eveningends           int,
+  eveningends_minutes   int
 );
 
 CREATE TABLE mrbs_room
@@ -52,7 +58,8 @@ CREATE TABLE mrbs_entry
   create_by   varchar(80) NOT NULL,
   name        varchar(80) NOT NULL,
   type        char DEFAULT 'E' NOT NULL,
-  description text
+  description text,
+  private     private BOOL NOT NULL DEFAULT '0'
 );
 create index idxStartTime on mrbs_entry(start_time);
 create index idxEndTime on mrbs_entry(end_time);
@@ -71,7 +78,8 @@ CREATE TABLE mrbs_repeat
   name        varchar(80) NOT NULL,
   type        char DEFAULT 'E' NOT NULL,
   description text,
-  rep_num_weeks smallint DEFAULT 0 NULL
+  rep_num_weeks smallint DEFAULT 0 NULL,
+  private     private BOOL NOT NULL DEFAULT '0'
 );
 
 CREATE TABLE mrbs_variables
@@ -81,4 +89,6 @@ CREATE TABLE mrbs_variables
   variable_content text
 );
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '1');
+  VALUES ('db_version', '3');
+INSERT INTO mrbs_variables (variable_name, variable_content)
+  VALUES ('local_db_version', '1');
