@@ -651,7 +651,7 @@ function notifyAdminOnDelete($mail_previous)
  */
 function getPreviousEntryData($id, $series)
 {
-  global $tbl_area, $tbl_entry, $tbl_repeat, $tbl_room, $enable_periods;
+  global $tbl_area, $tbl_entry, $tbl_repeat, $tbl_room, $enable_periods, $weekstarts;
   //
   $sql = "
     SELECT  e.name,
