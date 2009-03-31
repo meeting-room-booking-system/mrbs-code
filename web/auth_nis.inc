@@ -53,7 +53,7 @@ function authValidateUser($user, $pass)
   if ( ! empty ( $rs ) )
   {
     $rs = explode ( ":", $rs );
-    if ( $rs[1] == crypt ( $pass, substr ( $rs[1], 0, 2 ) ) )
+    if ( $rs[1] == crypt ( $pass, $rs[1] ) )
     {
       return 1;
     }
