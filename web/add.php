@@ -18,7 +18,8 @@ $description = get_form_var('description', 'string');
 $capacity = get_form_var('capacity', 'int');
 $type = get_form_var('type', 'string');
 
-if (!getAuthorised(2))
+$required_level = (isset($max_level) ? $max_level : 2);
+if (!getAuthorised($required_level))
 {
   showAccessDenied($day, $month, $year, $area, "");
   exit();

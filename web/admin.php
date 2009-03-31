@@ -29,7 +29,8 @@ if (empty($area))
   $area = get_default_area();
 }
 
-if(!getAuthorised(2))
+$required_level = (isset($max_level) ? $max_level : 2);
+if (!getAuthorised($required_level))
 {
   showAccessDenied($day, $month, $year, $area, "");
   exit();
