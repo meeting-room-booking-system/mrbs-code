@@ -645,6 +645,20 @@ function time_date_string($t)
   }
 }
 
+// version of the standard PHP function nl2br that takes account of the fact
+// that the optional second parameter is only available from PHP 5.3.0 onwards.
+function mrbs_nl2br($string)
+{
+  if (function_exists('version_compare') && version_compare(PHP_VERSION, '5.3.0', 'ge') === 1)
+  {
+    return nl2br($string, IS_XHTML);
+  }
+  else
+  {
+    return nl2br($string);
+  }
+}
+
 // validates a comma separated list of email addresses
 // returns FALSE if any one of them is invalid, otherwise TRUE
 function validate_email_list($list)
