@@ -239,11 +239,11 @@ $repeat_key = "rep_type_" . $rep_type;
  <table id="entry">
    <tr>
     <td><?php echo get_vocab("description") ?>:</td>
-    <td><?php echo nl2br($description) ?></td>
+    <td><?php echo nl2br($description, IS_XHTML) ?></td>
    </tr>
    <tr>
     <td><?php echo get_vocab("room") ?>:</td>
-    <td><?php    echo  nl2br($area_name . " - " . $room_name) ?></td>
+    <td><?php    echo  nl2br($area_name . " - " . $room_name, IS_XHTML) ?></td>
    </tr>
    <tr>
     <td><?php echo get_vocab("start_date") ?>:</td>

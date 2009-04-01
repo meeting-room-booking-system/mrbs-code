@@ -172,7 +172,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
 
   // Description:
   echo "<tr><td>" . get_vocab("description") . ":</td><td>" .
-    nl2br(htmlspecialchars($row['description'])) . "</td></tr>\n";
+    nl2br(htmlspecialchars($row['description']), IS_XHTML) . "</td></tr>\n";
 
   // Entry Type:
   $et = empty($typel[$row['type']]) ? "?".$row['type']."?" : $typel[$row['type']];

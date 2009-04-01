@@ -89,6 +89,14 @@ $url_base = "";
 
 $theme = "default";
 
+/*********
+ * DOCTYPE
+ ********/
+
+ // Records which DOCTYPE is being used.    Do not change - it will not change the DOCTYPE
+ // that is used;  it is merely used when the code needs to know the DOCTYPE, for example
+ // in calls to nl2br.   TRUE means XHTML, FALSE means HTML.
+ define("IS_XHTML", FALSE);
 
 /*******************
  * Calendar settings
