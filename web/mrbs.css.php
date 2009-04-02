@@ -118,7 +118,7 @@ $column_times_width   = 1;  // (%) width of the times/periods columns (will expa
 // normal columns (ie columns that are not hidden)
 $n_hidden_days = count($hidden_days);
 $column_week = 100 - $column_times_width;                // subtract the width of the left hand column
-if ($times_right_side)
+if ($row_labels_both_sides)
 {
   $column_week -= $column_times_width;                   // and the right hand column if present
 }
@@ -251,7 +251,7 @@ td.hidden_day     {background-color: <?php echo $column_hidden_color ?>; /* hidd
 td.row_highlight  {background-color: <?php echo $row_highlight_color ?>} /* used for highlighting a row */
 td.even_row       {background-color: <?php echo $row_even_color ?>}      /* even rows in the day view */
 td.odd_row        {background-color: <?php echo $row_odd_color ?>}       /* odd rows in the day view */
-td.times          {background-color: <?php echo $main_table_times_back_color ?>}    /* used for the column with times/periods */
+td.times          {background-color: <?php echo $main_table_times_back_color ?>; white-space: nowrap}    /* used for the column with times/periods */
 .times a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
 .times a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
 .times a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
@@ -346,7 +346,12 @@ $clipped = TRUE;                 // Set to TRUE for clipping, FALSE if not
 
 if ($clipped)
 {
-  for ($i=1; $i<=$max_slots; $i++) 
+  // work out how many classes we'll need.   If we're transposing the table then we'll only need one, since all
+  // cells are the same height (it's the width that varies, controlled by the colspan attribute).   For a normal
+  // table we'll need at least as many as we've got slots, since a booking could span as many as all the slots
+  // (in this case controlled by a rowspan).
+  $classes_required = ($times_along_top) ? 1 : $max_slots;
+  for ($i=1; $i<=$classes_required; $i++) 
   {
     $div_height = $main_cell_height * $i;
     $div_height = $div_height + (($i-1)*$main_table_cell_border_width);
@@ -359,7 +364,6 @@ if ($clipped)
     	"min-height: " . $div_height . "px;}\n";
   }
 }
-
 
 
 // Multiple bookings.  These rules control the styling of the cells and controls when there is more than

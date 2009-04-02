@@ -148,7 +148,8 @@ $eveningends_minutes   = 30;   // must be integer in range 0-59
 
 // This is the maximum number of rows (timeslots or periods) that one can expect to see in the day
 // and week views.    It is used by mrbs.css.php for creating classes.    It does not matter if it
-// is too large, except for the fact that more CSS than necessary will be generated.
+// is too large, except for the fact that more CSS than necessary will be generated.  (The variable
+// is ignored if $times_along_top is set to TRUE).
 $max_slots = 60;
 
 
@@ -259,8 +260,16 @@ $monthly_view_entries_details = "both";
 // 'first day of the week' (13 Oct), set this to TRUE
 $view_week_number = FALSE;
 
-// To display times on right side in day and week view, set to TRUE;
-$times_right_side = FALSE;
+// To display times on the x-axis (along the top) and rooms or days on the y-axis (down the side)
+// set to TRUE;   the default/traditional version of MRBS has rooms (or days) along the top and
+// times along the side.    Transposing the table can be useful if you have a large number of
+// rooms and not many time slots.
+$times_along_top = FALSE;
+
+// To display the row labels (times, rooms or days) on the right hand side as well as the 
+// left hand side in the day and week views, set to TRUE;
+// (was called $times_right_side in earlier versions of MRBS)
+$row_labels_both_sides = FALSE;
 
 // Define default starting view (month, week or day)
 // Default is day

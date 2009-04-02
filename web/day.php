@@ -293,7 +293,7 @@ else
     echo "InitActiveCell("
       . ($show_plus_link ? "true" : "false") . ", "
       . "true, "
-      . ((FALSE != $times_right_side) ? "true" : "false") . ", "
+      . ((FALSE != $row_labels_both_sides) ? "true" : "false") . ", "
       . "\"$highlight_method\", "
       . "\"" . get_vocab("click_to_reserve") . "\""
       . ");\n";
@@ -301,35 +301,80 @@ else
     echo "</script>\n";
   }
 
-  // This is where we start displaying stuff
+  // START DISPLAYING THE MAIN TABLE
   echo "<table class=\"dwm_main\" id=\"day_main\">\n";
+  ( $dst_change != -1 ) ? $j = 1 : $j = 0;
   
-  // Table header giving room names
+  // TABLE HEADER
   echo "<thead>\n";
   echo "<tr>\n";
-  echo "<th class=\"first_last\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
-
-  $room_column_width = (int)(95 / sql_count($res));
-  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  
+  
+  // We can display the table in two ways
+  if ($times_along_top)
   {
-    echo "<th style=\"width: $room_column_width%\">
-            <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\"
-            title=\"" . get_vocab("viewweek") . " &#10;&#10;".$row['description']."\">"
-      . htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "") . "</a></th>";
-    $rooms[] = $row['id'];
-  }
-
-  // next line to display times on right side
-  if ( FALSE != $times_right_side )
+    // with times along the top and rooms down the side
+    $start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
+    $start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
+    $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
+    $n_slots = ($start_difference/$resolution) + 1;
+    $column_width = (int)(95 / $n_slots);
+    echo "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
+    for (
+         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
+         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
+         $t += $resolution
+        )
+    {
+      echo "<th style=\"width: $column_width%\">";
+      if ( $enable_periods )
+      {
+        // convert timestamps to HHMM format without leading zeros
+        $time_t = date($format, $t);
+        // and get a stripped version of the time for use with periods
+        $time_t_stripped = preg_replace( "/^0/", "", $time_t );
+        echo $periods[$time_t_stripped];
+      }
+      else
+      {
+        echo utf8_strftime(hour_min_format(),$t);
+      }
+      echo "</th>\n";
+    }
+    // next: line to display times on right side
+    if ( FALSE != $row_labels_both_sides )
+    {
+      echo "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
+    }
+  } // end "times_along_top" view (for the header)
+  
+  else
   {
-    echo "<th class=\"first_last\">". ( $enable_periods  ? get_vocab("period") : get_vocab("time") )
-      .":</th>";
-  }
+    // the standard view, with rooms along the top and times down the side
+    echo "<th class=\"first_last\">" . ($enable_periods ? get_vocab("period") : get_vocab("time")) . ":</th>";
+  
+    $column_width = (int)(95 / sql_count($res));
+    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+    {
+      echo "<th style=\"width: $column_width%\">
+              <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\"
+              title=\"" . get_vocab("viewweek") . " &#10;&#10;".$row['description']."\">"
+        . htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "") . "</a></th>";
+      $rooms[] = $row['id'];
+    }
+  
+    // next line to display times on right side
+    if ( FALSE != $row_labels_both_sides )
+    {
+      echo "<th class=\"first_last\">" . ( $enable_periods  ? get_vocab("period") : get_vocab("time") ) . ":</th>";
+    }
+  }  // end standard view (for the header)
+  
   echo "</tr>\n";
   echo "</thead>\n";
   
   
-  // Table body listing bookings
+  // TABLE BODY LISTING BOOKINGS
   echo "<tbody>\n";
   
   // This is the main bit of the display
@@ -343,89 +388,113 @@ else
   // the timetohighlight parameter duplicated each time you click.
   $hilite_url="day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area$room_param&amp;timetohighlight";
   
-  ( $dst_change != -1 ) ? $j = 1 : $j = 0;
+  
    
   $row_class = "even_row";
-  for (
-       $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
-       $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
-       $t += $resolution, $row_class = ($row_class == "even_row")?"odd_row":"even_row"
-      )
+  
+  // We can display the table in two ways
+  if ($times_along_top)
   {
-    // convert timestamps to HHMM format without leading zeros
-    $time_t = date($format, $t);
-    // and get a stripped version for use with periods
-    $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-    
-    // calculate hour and minute (needed for links)
-    $hour = date("H",$t);
-    $minute = date("i",$t);
-
-    // Show the time linked to the URL for highlighting that time
-    echo "<tr>";
-    tdcell("times", 1);
-    echo "<div class=\"celldiv1\">\n";
-    if( $enable_periods )
-    { 
-      echo "<a href=\"$hilite_url=$time_t\"  title=\""
-        . get_vocab("highlight_line") . "\">"
-        . $periods[$time_t_stripped] . "</a>\n";
-    }
-    else
+    // with times along the top and rooms down the side
+    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++, $row_class = ($row_class == "even_row")?"odd_row":"even_row")
     {
-      echo "<a href=\"$hilite_url=$time_t\" title=\""
-        . get_vocab("highlight_line") . "\">"
-        . utf8_strftime(hour_min_format(),$t) . "</a>\n";
-    }
-    echo "</div></td>\n";
-
-    // Loop through the list of rooms we have for this area
-    while (list($key, $room_id) = each($rooms))
-    {
-      // set up the query strings to be used for the link in the cell
-      $query_strings = array();
-      $query_strings['new_periods'] = "area=$area&amp;room=$room_id&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day";
-      $query_strings['new_times']   = "area=$area&amp;room=$room_id&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";
-      $query_strings['booking']     = "area=$area&amp;day=$day&amp;month=$month&amp;year=$year";
-      // and then draw the cell
-      if (!isset($today[$room_id][$day][$time_t]))
+      echo "<tr>\n";
+      $room_id = $row['id']; 
+      $room_cell_link = "week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$room_id";
+      draw_room_cell($row, $room_cell_link);
+      for (
+           $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
+           $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
+           $t += $resolution
+          )
       {
-        $today[$room_id][$day][$time_t] = array();  // to avoid an undefined index NOTICE error
-      }
-      if (isset($timetohighlight) && ($time_t == $timetohighlight))
-      {
-        $cell_class = "row_highlight";
-      }
-      else
-      {
+        // convert timestamps to HHMM format without leading zeros
+        $time_t = date($format, $t);
+        // and get a stripped version of the time for use with periods
+        $time_t_stripped = preg_replace( "/^0/", "", $time_t );
+        
+        // calculate hour and minute (needed for links)
+        $hour = date("H",$t);
+        $minute = date("i",$t);
+        
+        // set up the query strings to be used for the link in the cell
+        $query_strings = array();
+        $query_strings['new_periods'] = "area=$area&amp;room=$room_id&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day";
+        $query_strings['new_times']   = "area=$area&amp;room=$room_id&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";
+        $query_strings['booking']     = "area=$area&amp;day=$day&amp;month=$month&amp;year=$year";
+        // and then draw the cell
+        if (!isset($today[$room_id][$day][$time_t]))
+        {
+          $today[$room_id][$day][$time_t] = array();  // to avoid an undefined index NOTICE error
+        }   
         $cell_class = $row_class;
+        draw_cell($today[$room_id][$day][$time_t], $query_strings, $cell_class);
+      }  // end for (looping through the times)
+      if ( FALSE != $row_labels_both_sides )
+      {
+        draw_room_cell($row, $room_cell_link);
       }
-      draw_cell($today[$room_id][$day][$time_t], $query_strings, $cell_class);
-    }
-    
-    // next lines to display times on right side
-    if ( FALSE != $times_right_side )
+      echo "</tr>\n";
+    }  // end for (looping through the rooms)
+  }  // end "times_along_top" view (for the body)
+  
+  else
+  {
+    // the standard view, with rooms along the top and times down the side
+    for (
+         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
+         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
+         $t += $resolution
+        )
     {
-      tdcell("times", 1);
-      echo "<div class=\"celldiv1\">\n";
-      if ( $enable_periods )
+      // convert timestamps to HHMM format without leading zeros
+      $time_t = date($format, $t);
+      // and get a stripped version of the time for use with periods
+      $time_t_stripped = preg_replace( "/^0/", "", $time_t );
+      
+      // calculate hour and minute (needed for links)
+      $hour = date("H",$t);
+      $minute = date("i",$t);
+  
+      // Show the time linked to the URL for highlighting that time
+      echo "<tr>";
+      draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url);
+  
+      // Loop through the list of rooms we have for this area
+      while (list($key, $room_id) = each($rooms))
       {
-        echo "<a href=\"$hilite_url=$time_t\"  title=\""
-          . get_vocab("highlight_line") . "\">"
-          . $periods[$time_t_stripped] . "</a>\n";
+        // set up the query strings to be used for the link in the cell
+        $query_strings = array();
+        $query_strings['new_periods'] = "area=$area&amp;room=$room_id&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day";
+        $query_strings['new_times']   = "area=$area&amp;room=$room_id&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";
+        $query_strings['booking']     = "area=$area&amp;day=$day&amp;month=$month&amp;year=$year";
+        // and then draw the cell
+        if (!isset($today[$room_id][$day][$time_t]))
+        {
+          $today[$room_id][$day][$time_t] = array();  // to avoid an undefined index NOTICE error
+        }
+        if (isset($timetohighlight) && ($time_t == $timetohighlight))
+        {
+          $cell_class = "row_highlight";
+        }
+        else
+        {
+          $cell_class = $row_class;
+        }
+        draw_cell($today[$room_id][$day][$time_t], $query_strings, $cell_class);
       }
-      else
+      
+      // next lines to display times on right side
+      if ( FALSE != $row_labels_both_sides )
       {
-        echo "<a href=\"$hilite_url=$time_t\" title=\""
-          . get_vocab("highlight_line") . "\">"
-          . utf8_strftime(hour_min_format(),$t) . "</a>\n";
+        draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url);
       }
-      echo "</div></td>\n";
+  
+      echo "</tr>\n";
+      reset($rooms);
     }
-
-    echo "</tr>\n";
-    reset($rooms);
-  }
+  }  // end standard view (for the body)
+  
   echo "</tbody>\n";
   echo "</table>\n";
 

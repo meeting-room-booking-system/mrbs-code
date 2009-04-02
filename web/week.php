@@ -310,7 +310,7 @@ if ($javascript_cursor) // If authorized in config.inc.php, include the javascri
   echo "InitActiveCell("
     . ($show_plus_link ? "true" : "false") . ", "
     . "true, "
-    . ((FALSE != $times_right_side) ? "true" : "false") . ", "
+    . ((FALSE != $row_labels_both_sides) ? "true" : "false") . ", "
     . "\"$highlight_method\", "
     . "\"" . get_vocab("click_to_reserve") . "\""
     . ");\n";
@@ -318,13 +318,17 @@ if ($javascript_cursor) // If authorized in config.inc.php, include the javascri
   echo "</script>\n";
 }
 
-//This is where we start displaying stuff
+  // START DISPLAYING THE MAIN TABLE
 echo "<table class=\"dwm_main\" id=\"week_main\">";
+// if the first day of the week to be displayed contains as DST change then
+// move to the next day to get the hours in the day.
+( $dst_change[0] != -1 ) ? $j = 1 : $j = 0;
 
 
-// The header row contains the weekday names and short dates.
+  // TABLE HEADER
 echo "<thead>\n";
-echo "<tr><th class=\"first_last\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
+echo "<tr>\n";
+
 if (empty($dateformat))
 {
   $dformat = "%a<br>%b %d";
@@ -333,145 +337,240 @@ else
 {
   $dformat = "%a<br>%d %b";
 }
-for ($j = 0; $j<=($num_of_days-1) ; $j++)
-{
-  $t = mktime( 12, 0, 0, $month, $day_start_week+$j, $year); 
-  
-  if (is_hidden_day(($j + $weekstarts) % 7))
-  {
-    // These days are to be hidden in the display (as they are hidden, just give the
-    // day of the week in the header row 
-    echo "<th class=\"hidden_day\">" . utf8_strftime('%a', $t) . "</th>\n";
-  }
 
-  else  
-  {  
-    echo "<th><a href=\"day.php?year=" . strftime("%Y", $t) . 
-      "&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) . 
-      "&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">"
-      . utf8_strftime($dformat, $t) . "</a></th>\n";
-  }
-}
-// next line to display times on right side
-if ( FALSE != $times_right_side )
+// If we've got a table with times along the top then put everything on the same line
+// (ie replace the <br> with a space).   It looks slightly better
+if ($times_along_top)
 {
-  echo "<th class=\"first_last\">"
-    . ( $enable_periods  ? get_vocab("period") : get_vocab("time") )
-    . ":</th>";
+  $dformat = ereg_replace("<br>", " ", $dformat);
 }
+
+
+// We can display the table in two ways
+if ($times_along_top)
+{
+  // with times along the top and days of the week down the side
+  $start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
+  $start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
+  $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
+  $n_slots = ($start_difference/$resolution) + 1;
+  $column_width = (int)(95 / $n_slots);
+  echo "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
+  for (
+       $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year);
+       $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
+       $t += $resolution
+      )
+  {
+    echo "<th style=\"width: $column_width%\">";
+    if ( $enable_periods )
+    {
+      // convert timestamps to HHMM format without leading zeros
+      $time_t = date($format, $t);
+      // and get a stripped version of the time for use with periods
+      $time_t_stripped = preg_replace( "/^0/", "", $time_t );
+      echo $periods[$time_t_stripped];
+    }
+    else
+    {
+      echo utf8_strftime(hour_min_format(),$t);
+    }
+    echo "</th>\n";
+  }
+  // next: line to display times on right side
+  if ( FALSE != $row_labels_both_sides )
+  {
+    echo "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
+  } 
+} // end "times_along_top" view (for the header)
+
+else
+{
+  // the standard view, with days along the top and times down the side
+  echo "<th class=\"first_last\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
+  for ($j = 0; $j<=($num_of_days-1) ; $j++)
+  {
+    $t = mktime( 12, 0, 0, $month, $day_start_week+$j, $year); 
+    
+    if (is_hidden_day(($j + $weekstarts) % 7))
+    {
+      // These days are to be hidden in the display (as they are hidden, just give the
+      // day of the week in the header row 
+      echo "<th class=\"hidden_day\">" . utf8_strftime('%a', $t) . "</th>\n";
+    }
+  
+    else  
+    {  
+      echo "<th><a href=\"day.php?year=" . strftime("%Y", $t) . 
+        "&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) . 
+        "&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">"
+        . utf8_strftime($dformat, $t) . "</a></th>\n";
+    }
+  }
+  // next line to display times on right side
+  if ( FALSE != $row_labels_both_sides )
+  {
+    echo "<th class=\"first_last\">"
+      . ( $enable_periods  ? get_vocab("period") : get_vocab("time") )
+      . ":</th>";
+  }
+}  // end standard view (for the header)
 
 echo "</tr>\n";
 echo "</thead>\n";
 
 
-// This is the main bit of the display. Outer loop is for the time slots,
-// inner loop is for days of the week.
+
+// TABLE BODY LISTING BOOKINGS
 echo "<tbody>\n";
 
 // URL for highlighting a time. Don't use REQUEST_URI or you will get
 // the timetohighlight parameter duplicated each time you click.
 $hilite_url="week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$room&amp;timetohighlight";
-
-// if the first day of the week to be displayed contains as DST change then
-// move to the next day to get the hours in the day.
-( $dst_change[0] != -1 ) ? $j = 1 : $j = 0;
-
 $row_class = "even_row";
-for (
-     $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year);
-     $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
-     $t += $resolution, $row_class = ($row_class == "even_row")?"odd_row":"even_row"
-)
+
+// We can display the table in two ways
+if ($times_along_top)
 {
-  // use hour:minute format
-  $time_t = date($format, $t);
-  // and get a stripped version for use with periods
-  $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-  
-  // calculate hour and minute (needed for links)
-  $hour = date("H",$t);
-  $minute  = date("i",$t);
-  
-  // Show the time linked to the URL for highlighting that time:
-  echo "<tr>";
-  tdcell("times", 1);
-  echo "<div class=\"celldiv1\">\n";
-  if ( $enable_periods )
-  {
-    echo "<a href=\"$hilite_url=$time_t\"  title=\""
-      . get_vocab("highlight_line") . "\">"
-      . $periods[$time_t_stripped] . "</a>";
-  }
-  else
-  {
-    echo "<a href=\"$hilite_url=$time_t\" title=\""
-      . get_vocab("highlight_line") . "\">"
-      . utf8_strftime(hour_min_format(),$t) . "</a>";
-  }
-  echo "</div></td>\n";
-
-
+  // with times along the top and days of the week down the side
   // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
-  for ($thisday = 0; $thisday<=($num_of_days-1) ; $thisday++)
+  for ($thisday = 0; $thisday<=($num_of_days-1) ; $thisday++, $row_class = ($row_class == "even_row")?"odd_row":"even_row")
   {
     if (is_hidden_day(($thisday + $weekstarts) % 7))
     {
-      // These days are to be hidden in the display
-      echo "<td class=\"hidden_day\">&nbsp;</td>\n";
+      // These days are to be hidden in the display: don't display a row
+      // Toggle the row class back to keep it in sequence
+      $row_class = ($row_class == "even_row")?"odd_row":"even_row";
+      continue;
     }
+    
     else
     {
-      // set up the query strings to be used for the link in the cell
+      echo "<tr>\n";
+      
       $wt = mktime( 12, 0, 0, $month, $day_start_week+$thisday, $year );
       $wday = date("d", $wt);
       $wmonth = date("m", $wt);
       $wyear = date("Y", $wt);
       
-      $query_strings = array();
-      $query_strings['new_periods'] = "room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
-      $query_strings['new_times']   = "room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
-      $query_strings['booking']     = "area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear";
-      
-      // and then draw the cell
-      if (!isset($week_map[$room][$thisday][$time_t]))
+      $day_cell_text = utf8_strftime($dformat, $wt);
+      $day_cell_link = "day.php?year=" . strftime("%Y", $wt) . 
+                       "&amp;month=" . strftime("%m", $wt) . 
+                       "&amp;day=" . strftime("%d", $wt) . 
+                       "&amp;area=$area";
+                       
+      draw_day_cell($day_cell_text, $day_cell_link);
+      for (
+           $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year);
+           $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
+           $t += $resolution
+          )
       {
-        $week_map[$room][$thisday][$time_t] = array();  // to avoid an undefined index NOTICE error
-      }
-      if (isset($timetohighlight) && ($time_t == $timetohighlight))
-      {
-        $cell_class = "row_highlight";
-      }
-      else
-      {
+        // use hour:minute format
+        $time_t = date($format, $t);
+        // and get a stripped version for use with periods
+        $time_t_stripped = preg_replace( "/^0/", "", $time_t );
+        
+        // calculate hour and minute (needed for links)
+        $hour = date("H",$t);
+        $minute  = date("i",$t);
+        
+        // set up the query strings to be used for the link in the cell
+        $query_strings = array();
+        $query_strings['new_periods'] = "room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
+        $query_strings['new_times']   = "room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
+        $query_strings['booking']     = "area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear";
+        
+        // and then draw the cell
+        if (!isset($week_map[$room][$thisday][$time_t]))
+        {
+          $week_map[$room][$thisday][$time_t] = array();  // to avoid an undefined index NOTICE error
+        }
         $cell_class = $row_class;
-      }
-      draw_cell($week_map[$room][$thisday][$time_t], $query_strings, $cell_class);
-    }
-
-  }    // for loop
-
-  // next lines to display times on right side
-  if ( FALSE != $times_right_side )
-    {
-      tdcell("times", 1);
-      echo "<div class=\"celldiv1\">\n";
-      if ( $enable_periods )
+        draw_cell($week_map[$room][$thisday][$time_t], $query_strings, $cell_class);
+      }  // end looping through the time slots
+      if ( FALSE != $row_labels_both_sides )
       {
-        echo "<a href=\"$hilite_url=$time_t\"  title=\""
-          . get_vocab("highlight_line") . "\">"
-          . $periods[$time_t_stripped] . "</a>";
+        draw_day_cell($day_cell_text, $day_cell_link);
+      }
+      echo "</tr>\n";
+    }
+    
+  }  // end looping through the days of the week
+  
+} // end "times along top" view (for the body)
+
+else
+{
+  // the standard view, with days of the week along the top and times down the side
+  for (
+       $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year);
+       $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
+       $t += $resolution, $row_class = ($row_class == "even_row")?"odd_row":"even_row"
+  )
+  {
+    // use hour:minute format
+    $time_t = date($format, $t);
+    // and get a stripped version for use with periods
+    $time_t_stripped = preg_replace( "/^0/", "", $time_t );
+    
+    // calculate hour and minute (needed for links)
+    $hour = date("H",$t);
+    $minute  = date("i",$t);
+    
+    // Show the time linked to the URL for highlighting that time:
+    echo "<tr>";
+    draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url);
+  
+  
+    // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
+    for ($thisday = 0; $thisday<=($num_of_days-1) ; $thisday++)
+    {
+      if (is_hidden_day(($thisday + $weekstarts) % 7))
+      {
+        // These days are to be hidden in the display
+        echo "<td class=\"hidden_day\">&nbsp;</td>\n";
       }
       else
       {
-        echo "<a href=\"$hilite_url=$time_t\" title=\""
-          . get_vocab("highlight_line") . "\">"
-          . utf8_strftime(hour_min_format(),$t) . "</a>";
+        // set up the query strings to be used for the link in the cell
+        $wt = mktime( 12, 0, 0, $month, $day_start_week+$thisday, $year );
+        $wday = date("d", $wt);
+        $wmonth = date("m", $wt);
+        $wyear = date("Y", $wt);
+        
+        $query_strings = array();
+        $query_strings['new_periods'] = "room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
+        $query_strings['new_times']   = "room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
+        $query_strings['booking']     = "area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear";
+        
+        // and then draw the cell
+        if (!isset($week_map[$room][$thisday][$time_t]))
+        {
+          $week_map[$room][$thisday][$time_t] = array();  // to avoid an undefined index NOTICE error
+        }
+        if (isset($timetohighlight) && ($time_t == $timetohighlight))
+        {
+          $cell_class = "row_highlight";
+        }
+        else
+        {
+          $cell_class = $row_class;
+        }
+        draw_cell($week_map[$room][$thisday][$time_t], $query_strings, $cell_class);
       }
-      echo "</div></td>\n";
-    }
-
-  echo "</tr>\n";
-}
+  
+    }    // for loop
+  
+    // next lines to display times on right side
+    if ( FALSE != $row_labels_both_sides )
+      {
+        draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url);
+      }
+  
+    echo "</tr>\n";
+  }
+}  // end standard view (for the body)
 echo "</tbody>\n";
 echo "</table>\n";
 

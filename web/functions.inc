@@ -686,11 +686,12 @@ function validate_email_list($list)
 // $slots is the number of time slots high that the cell should be
 function tdcell($colclass, $slots)
 {
+  global $times_along_top;
   echo "<td class=\"$colclass\"";
   if ($slots > 1)
   // No need to output more HTML than necessary
   {
-    echo " rowspan=\"$slots\"";
+    echo " " . (($times_along_top) ? "colspan" : "rowspan") . "=\"$slots\"";
   }
   echo ">\n";
 }
@@ -1139,7 +1140,7 @@ function draw_cell($cell, $query_strings, $cell_class)
   
   global $main_cell_height, $main_table_cell_border_width;
   global $area, $year, $month, $timetohighlight;
-  global $javascript_cursor, $enable_periods;
+  global $javascript_cursor, $enable_periods, $times_along_top;
   
   // if the time slot has got multiple bookings, then draw a mini-table
   if(isset($cell[1]["id"]))
@@ -1313,7 +1314,14 @@ function draw_cell($cell, $query_strings, $cell_class)
       }
       else                 // if it is booked then show the booking
       {    
-        echo "<div class=\"celldiv" . $slots . "\">\n";     // we want clipping of overflow
+        if ($times_along_top)
+        {
+          echo "<div class=\"celldiv1\">\n";
+        }
+        else
+        {
+          echo "<div class=\"celldiv" . $slots . "\">\n";     // we want clipping of overflow
+        } 
         echo "  <a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">$descr</a>\n";
         echo "</div>\n";
       }
@@ -1321,5 +1329,57 @@ function draw_cell($cell, $query_strings, $cell_class)
     }
   }
 }  // end function draw_cell
+
+
+// Draw a time cell to be used in the first and last columns of the day and week views
+//    $t                 the timestamp for the start of the slot
+//    $time_t            the time converted to HHMM format without leading zeros
+//    $time_t_stripped   a stripped version of the time for use with periods
+//    $hilite_url        the url to form the basis of the link in the time cell
+function draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url)
+{
+  global $enable_periods, $periods;
+  
+  tdcell("times", 1);
+  echo "<div class=\"celldiv1\">\n";
+  if ( $enable_periods )
+  {
+    
+    echo "<a href=\"$hilite_url=$time_t\"  title=\""
+      . get_vocab("highlight_line") . "\">"
+      . $periods[$time_t_stripped] . "</a>\n";
+  }
+  else
+  {
+    echo "<a href=\"$hilite_url=$time_t\" title=\""
+      . get_vocab("highlight_line") . "\">"
+      . utf8_strftime(hour_min_format(),$t) . "</a>\n";
+  }
+  echo "</div></td>\n";
+}
+
+// Draw a room cell to be used in the first and last columns of the day view
+//    $row     contains the room details; comes from an SQL query
+//    $link    the href to be used for the link
+function draw_room_cell($row, $link)
+{
+  tdcell("times", 1);
+  echo "<div class=\"celldiv1\">\n";
+  echo "<a href=\"$link\" title=\"" . get_vocab("viewweek") . " &#10;&#10;" . $row['description'] . "\">";
+  echo htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "");
+  echo "</a>\n";
+  echo "</div></td>\n";
+}
+
+// Draw a day cell to be used in the first and last columns of the week view
+//    $text    contains the date, formatted as a string
+//    $link    the href to be used for the link
+function draw_day_cell($text, $link)
+{
+  tdcell("times", 1);
+  echo "<div class=\"celldiv1\">\n";
+  echo "<a href=\"$link\" title=\"" . get_vocab("viewday") . "\">$text</a>\n";
+  echo "</div></td>\n";
+}
 
 ?>
