@@ -369,6 +369,9 @@ if ($clipped)
 // Multiple bookings.  These rules control the styling of the cells and controls when there is more than
 // one booking in a time slot.
 ?>
+
+.times div.celldiv1 {overflow: visible}  // we want to see the content in the row label columns
+
 div.mini, div.maxi {position: relative}     /* establish a relative position for the absolute position to follow */
 div.multiple_control {
     display: none;       /* will be over-ridden by JavaScript if enabled */
