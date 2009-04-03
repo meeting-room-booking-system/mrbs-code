@@ -1340,7 +1340,7 @@ function draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url)
 {
   global $enable_periods, $periods;
   
-  tdcell("times", 1);
+  tdcell("row_labels", 1);
   echo "<div class=\"celldiv1\">\n";
   if ( $enable_periods )
   {
@@ -1363,7 +1363,7 @@ function draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url)
 //    $link    the href to be used for the link
 function draw_room_cell($row, $link)
 {
-  tdcell("times", 1);
+  tdcell("row_labels", 1);
   echo "<div class=\"celldiv1\">\n";
   echo "<a href=\"$link\" title=\"" . get_vocab("viewweek") . " &#10;&#10;" . $row['description'] . "\">";
   echo htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "");
@@ -1376,7 +1376,7 @@ function draw_room_cell($row, $link)
 //    $link    the href to be used for the link
 function draw_day_cell($text, $link)
 {
-  tdcell("times", 1);
+  tdcell("row_labels", 1);
   echo "<div class=\"celldiv1\">\n";
   echo "<a href=\"$link\" title=\"" . get_vocab("viewday") . "\">$text</a>\n";
   echo "</div></td>\n";

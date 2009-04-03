@@ -111,16 +111,17 @@ table#admin {margin-bottom: 1.0em}
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/
 
 <?php
-$column_hidden_width  = 0;  // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column)
-$column_times_width   = 1;  // (%) width of the times/periods columns (will expand if necessary)
+$column_hidden_width  = 0;       // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column);
+                                 //     when $times_along_top is TRUE, hidden days (rows) are not shown at all
+$column_row_labels_width   = 1;  // (%) width of the row label columns (will expand if necessary)
 
 // week view:  work out what percentage of the width is available to
 // normal columns (ie columns that are not hidden)
 $n_hidden_days = count($hidden_days);
-$column_week = 100 - $column_times_width;                // subtract the width of the left hand column
+$column_week = 100 - $column_row_labels_width;                // subtract the width of the left hand column
 if ($row_labels_both_sides)
 {
-  $column_week -= $column_times_width;                   // and the right hand column if present
+  $column_week -= $column_row_labels_width;                   // and the right hand column if present
 }
 $column_week -= ($column_hidden_width * $n_hidden_days); // subtract the width of the hidden columns
 if ($n_hidden_days < 7)                                  // (avoid the div by zero)
@@ -174,9 +175,9 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main th a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
 .dwm_main th a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
 .dwm_main th a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
-.dwm_main#day_main th.first_last {width: <?php echo $column_times_width ?>%}
+.dwm_main#day_main th.first_last {width: <?php echo $column_row_labels_width ?>%}
 .dwm_main#week_main th {width: <?php echo $column_week ?>%}
-.dwm_main#week_main th.first_last {width: <?php echo $column_times_width ?>%; vertical-align: bottom}
+.dwm_main#week_main th.first_last {width: <?php echo $column_row_labels_width ?>%; vertical-align: bottom}
 .dwm_main#month_main th {width: <?php echo $column_month ?>%}
 .dwm_main#month_main td {border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>}
 .dwm_main#month_main td.valid   {background-color: <?php echo $main_table_month_color ?>}
@@ -251,10 +252,10 @@ td.hidden_day     {background-color: <?php echo $column_hidden_color ?>; /* hidd
 td.row_highlight  {background-color: <?php echo $row_highlight_color ?>} /* used for highlighting a row */
 td.even_row       {background-color: <?php echo $row_even_color ?>}      /* even rows in the day view */
 td.odd_row        {background-color: <?php echo $row_odd_color ?>}       /* odd rows in the day view */
-td.times          {background-color: <?php echo $main_table_times_back_color ?>; white-space: nowrap}    /* used for the column with times/periods */
-.times a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
-.times a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
-.times a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
+td.row_labels     {background-color: <?php echo $main_table_labels_back_color ?>; white-space: nowrap}    /* used for the row labels column */
+.row_labels a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
+.row_labels a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
+.row_labels a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
 
 <?php
 // HIGHLIGHTING:  Set styles for the highlighted cells under the cursor (the time/period cell and the current cell)
@@ -286,7 +287,7 @@ td.times          {background-color: <?php echo $main_table_times_back_color ?>;
 // corresponds to the start of a booking when you hover over a booked cell.    The fourth rule provides highlighting in the month view.
 ?>
 .dwm_main tr:hover td:hover.odd_row, .dwm_main tr:hover td:hover.even_row {background-color: <?php echo $row_highlight_color ?>}
-.dwm_main tr:hover td.times {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
+.dwm_main tr:hover td.row_labels {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
 .dwm_main#month_main td:hover.valid {background-color: <?php echo $row_highlight_color ?>}
 
 
@@ -370,7 +371,7 @@ if ($clipped)
 // one booking in a time slot.
 ?>
 
-.times div.celldiv1 {overflow: visible}     /* we want to see the content in the row label columns */
+.row_labels div.celldiv1 {overflow: visible}  /* we want to see the content in the row label columns */
 
 div.mini, div.maxi {position: relative}     /* establish a relative position for the absolute position to follow */
 div.multiple_control {

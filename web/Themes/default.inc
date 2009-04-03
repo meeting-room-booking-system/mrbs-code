@@ -29,7 +29,7 @@ $main_table_body_h_border_color = "#ffffff";              // border colour for d
 $main_table_body_v_border_color = $body_background_color; // border colour for day/week/month tables - body, vertical
 $main_table_month_color         = "#ffffff";    // background colour for days in the month view
 $main_table_month_invalid_color = "#d1d9de";    // background colour for invalid days in the month view
-$main_table_times_back_color    = $header_back_color;     // background colour for the times/periods column
+$main_table_labels_back_color   = $header_back_color;     // background colour for the row labels column
 
 // border colours for the main table when it is printed.     These are used by mrbs-print.css.php
 $main_table_border_color_print        = "#879AA8";    // border colour for the main table (print view)
