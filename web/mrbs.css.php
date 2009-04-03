@@ -370,7 +370,7 @@ if ($clipped)
 // one booking in a time slot.
 ?>
 
-.times div.celldiv1 {overflow: visible}  // we want to see the content in the row label columns
+.times div.celldiv1 {overflow: visible}     /* we want to see the content in the row label columns */
 
 div.mini, div.maxi {position: relative}     /* establish a relative position for the absolute position to follow */
 div.multiple_control {
