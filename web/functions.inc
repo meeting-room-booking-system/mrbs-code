@@ -725,7 +725,7 @@ function show_colour_key()
         echo "</tr><tr>";
       }
       tdcell($ct, 1);
-      echo "<div class=\"celldiv1\" " .  // put the description inside a div which will give clipping in case of long names
+      echo "<div class=\"celldiv slots1\" " .  // put the description inside a div which will give clipping in case of long names
       "title=\"$typel[$ct]\">\n";        // but put the name in the title so you can still read it all if you hover over it
       echo "$typel[$ct]</div></td>\n";
     }
@@ -1168,7 +1168,7 @@ function draw_cell($cell, $query_strings, $cell_class)
     <?php
     
     // First draw the mini table
-    echo "<div class=\"celldiv1 mini\">\n";
+    echo "<div class=\"celldiv slots1 mini\">\n";
     echo "<div class=\"multiple_control\" onClick=\"document.getElementById('$td_id').className = 'multiple_booking maximized $cell_class'\">+</div>\n";
     echo "<table>\n";
     echo "<tbody>\n";
@@ -1222,7 +1222,7 @@ function draw_cell($cell, $query_strings, $cell_class)
       echo "<td class=\"$color\"" .
            (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
            ">\n";
-      echo "<div class=\"celldiv1\">\n";     // we want clipping of overflow
+      echo "<div class=\"celldiv slots1\">\n";     // we want clipping of overflow
       echo "  <a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">$descr</a>\n";
       echo "</div>\n";
      
@@ -1278,7 +1278,7 @@ function draw_cell($cell, $query_strings, $cell_class)
       // If the room isn't booked then allow it to be booked
       if (!isset($id))
       {
-        echo "<div class=\"celldiv1\">\n";  // a bookable slot is only one unit high
+        echo "<div class=\"celldiv slots1\">\n";  // a bookable slot is only one unit high
 
         if ($javascript_cursor)
         {
@@ -1316,11 +1316,11 @@ function draw_cell($cell, $query_strings, $cell_class)
       {    
         if ($times_along_top)
         {
-          echo "<div class=\"celldiv1\">\n";
+          echo "<div class=\"celldiv slots1\">\n";
         }
         else
         {
-          echo "<div class=\"celldiv" . $slots . "\">\n";     // we want clipping of overflow
+          echo "<div class=\"celldiv slots" . $slots . "\">\n";     // we want clipping of overflow
         } 
         echo "  <a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">$descr</a>\n";
         echo "</div>\n";
@@ -1341,7 +1341,7 @@ function draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url)
   global $enable_periods, $periods;
   
   tdcell("row_labels", 1);
-  echo "<div class=\"celldiv1\">\n";
+  echo "<div class=\"celldiv slots1\">\n";
   if ( $enable_periods )
   {
     
@@ -1364,7 +1364,7 @@ function draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url)
 function draw_room_cell($row, $link)
 {
   tdcell("row_labels", 1);
-  echo "<div class=\"celldiv1\">\n";
+  echo "<div class=\"celldiv slots1\">\n";
   echo "<a href=\"$link\" title=\"" . get_vocab("viewweek") . " &#10;&#10;" . $row['description'] . "\">";
   echo htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "");
   echo "</a>\n";
@@ -1377,7 +1377,7 @@ function draw_room_cell($row, $link)
 function draw_day_cell($text, $link)
 {
   tdcell("row_labels", 1);
-  echo "<div class=\"celldiv1\">\n";
+  echo "<div class=\"celldiv slots1\">\n";
   echo "<a href=\"$link\" title=\"" . get_vocab("viewday") . "\">$text</a>\n";
   echo "</div></td>\n";
 }

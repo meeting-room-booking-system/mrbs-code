@@ -313,9 +313,9 @@ td.highlight         {background-color: <?php echo $row_highlight_color ?>; colo
 
 <?php
 
-/* CELLDIV CLASSES
+/* SLOTS CLASSES
 
-The next section generates the celldiv classes (i.e. celldiv1, celldiv2, etc.).   We need
+The next section generates the slot classes (i.e. slots1, slots2, etc.).   We need
 enough of them so that they cover a booking spanning all the slots.
 
 These classes are used to control the styling of the main div in a cell in the main display table.
@@ -333,7 +333,7 @@ cell in the display would carry the extra size of the style declaration, whereas
 that we only need the style declaration for each row.) 
 
 In the classes below
-- celldivN is the class for displaying a booking N slots long
+- slotsN is the class for displaying a booking N slots long
 - height is the height of N slots (ie N * $main_cell_height)
 - you need to specify max-height so that clipping works correctly in Firefox
 - you need to specify height so that clipping works correctly in IE and also
@@ -358,8 +358,7 @@ if ($clipped)
     $div_height = $div_height + (($i-1)*$main_table_cell_border_width);
     $div_height = (int) $div_height;    // Make absolutely sure it's an int to avoid generating invalid CSS
     
-    echo "div.celldiv" . $i . " {" . 
-      "display: block; overflow: hidden; margin: 0; padding: 0; " . 
+    echo "div.slots" . $i . " {" . 
     	"height:"      . $div_height . "px; " . 
     	"max-height: " . $div_height . "px; " . 
     	"min-height: " . $div_height . "px;}\n";
@@ -371,7 +370,8 @@ if ($clipped)
 // one booking in a time slot.
 ?>
 
-.row_labels div.celldiv1 {overflow: visible}  /* we want to see the content in the row label columns */
+div.celldiv {overflow: hidden; margin: 0; padding: 0}
+.row_labels div.celldiv {overflow: visible}  /* we want to see the content in the row label columns */
 
 div.mini, div.maxi {position: relative}     /* establish a relative position for the absolute position to follow */
 div.multiple_control {
