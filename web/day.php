@@ -444,7 +444,7 @@ else
     for (
          $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
          $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
-         $t += $resolution
+         $t += $resolution, $row_class = ($row_class == "even_row")?"odd_row":"even_row"
         )
     {
       // convert timestamps to HHMM format without leading zeros
