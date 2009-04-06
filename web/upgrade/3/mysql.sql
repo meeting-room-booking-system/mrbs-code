@@ -1,3 +1,4 @@
+-- $Id$
 -- Run this script to upgrade postgres or mysql mrbs database
 
 -- Add an extra column to the mrbs_entry and mrbs_repeat table 
