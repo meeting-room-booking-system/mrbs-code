@@ -4,7 +4,7 @@
 
 header("Content-type: text/css"); 
 require_once "config.inc.php";
-require_once "Themes/$theme.inc";
+require_once "theme.inc";
 
 
 // ***** SETTINGS ***********************

@@ -3,8 +3,7 @@
 // $Id$
 
 header("Content-type: text/css");
-require_once "config.inc.php";
-include "Themes/$theme.inc"; 
+require_once "theme.inc"; 
 
 ?>
 

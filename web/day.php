@@ -7,7 +7,7 @@ require_once "functions.inc";
 require_once "dbsys.inc";
 require_once "mrbs_auth.inc";
 require_once "mincals.inc";
-require_once "Themes/$theme.inc";
+require_once "theme.inc";
 
 // Get form variables
 $day = get_form_var('day', 'int');

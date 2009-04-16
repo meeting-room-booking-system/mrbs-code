@@ -1,6 +1,5 @@
 <?php 
-require_once "config.inc.php";
-require_once "Themes/$theme.inc";
+require_once "theme.inc";
 header("Content-type: text/css"); 
 
 // $Id$
