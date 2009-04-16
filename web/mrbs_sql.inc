@@ -39,7 +39,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
   $res = sql_query($sql);
   if (! $res)
   {
-    return sql_error();
+    fatal_error(TRUE, "Fatal error: " . sql_error());  // probably because the table hasn't been created properly
   }
   if (sql_count($res) == 0)
   {
@@ -185,7 +185,7 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
 
     if (sql_command($sql) < 0)
     {
-      return 0;
+      fatal_error(TRUE, "Fatal error: " . sql_error());  // probably because the table hasn't been created properly
     }
 
     return sql_insert_id("$tbl_entry", "id");
@@ -264,7 +264,7 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
 
   if (sql_command($sql) < 0)
   {
-    return 0;
+    fatal_error(TRUE, "Fatal error: " . sql_error());  // probably because the table hasn't been created properly
   }
 
   return sql_insert_id("$tbl_repeat", "id");

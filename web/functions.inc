@@ -231,7 +231,7 @@ function fatal_error($need_header, $message)
   {
     print_header(0, 0, 0, 0, "");
   }
-  echo $message;
+  echo "<p>$message</p>";
   require_once "trailer.inc";
   exit;
 }
