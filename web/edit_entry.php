@@ -623,7 +623,7 @@ else
       // Create area selector, only if we have Javascript
 
       this.document.writeln("<div id=\"div_areas\">");
-      this.document.writeln("<label for=\"area\"><?php echo get_vocab("areas") ?>:<\/label>");
+      this.document.writeln("<label for=\"area\"><?php echo get_vocab("area") ?>:<\/label>");
       this.document.writeln("          <select id=\"area\" name=\"area\" onchange=\"changeRooms(this.form)\">");
 
       <?php
