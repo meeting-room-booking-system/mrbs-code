@@ -460,7 +460,7 @@ if (isset($Action) && ($Action == "Update"))
     // If it's a new user, then to check to see if there are any rows with that name.
     // If it's an update, then check to see if there are any rows with that name, except
     // for that user.
-    $query = "SELECT id FROM $tbl_users WHERE name='$new_name'";
+    $query = "SELECT id FROM $tbl_users WHERE name='" . addslashes($new_name) . "'";
     if ($Id >= 0)
     {
       $query .= " AND id!='$Id'";
