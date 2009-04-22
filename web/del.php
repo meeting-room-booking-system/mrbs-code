@@ -47,6 +47,7 @@ if ($type == "room")
     sql_begin();
     // First take out all appointments for this room
     sql_command("delete from $tbl_entry where room_id=$room");
+    sql_command("delete from $tbl_repeat where room_id=$room");
    
     // Now take out the room itself
     sql_command("delete from $tbl_room where id=$room");
