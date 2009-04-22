@@ -36,7 +36,7 @@ if ($type == "area")
   $sql = "insert into $tbl_area (area_name) values ('$area_name_q')";
   if (sql_command($sql) < 0)
   {
-    fatal_error(1, "<p>" . sql_error() . "</p>");
+    fatal_error(1, sql_error());
   }
   $area = sql_insert_id("$tbl_area", "id");
 }
@@ -53,7 +53,7 @@ if ($type == "room")
           values ('$room_name_q',$area, '$description_q',$capacity)";
   if (sql_command($sql) < 0)
   {
-    fatal_error(1, "<p>" . sql_error() . "</p>");
+    fatal_error(1, sql_error());
   }
 }
 
