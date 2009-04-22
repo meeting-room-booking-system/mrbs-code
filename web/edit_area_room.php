@@ -102,6 +102,7 @@ print_header($day, $month, $year, isset($area) ? $area : "", isset($room) ? $roo
 if (!empty($room))
 {
   $valid_area = TRUE;
+  $valid_room_name = TRUE;
   // validate the email addresses
   $valid_email = validate_email_list($room_admin_email);
   
@@ -122,7 +123,12 @@ if (!empty($room))
     {
       $valid_area = FALSE;
     }
-    // If so, update the databasae
+    // If so, check that the room name is not already used in the area
+    elseif (sql_query1("SELECT COUNT(*) FROM $tbl_room WHERE room_name='" . addslashes($room_name) . "' AND area_id=$new_area LIMIT 1") > 0)
+    {
+      $valid_room_name = FALSE;
+    }
+    // If everything is still OK, update the databasae
     else
     {
       $sql = "UPDATE $tbl_room SET room_name='" . addslashes($room_name)
@@ -136,7 +142,7 @@ if (!empty($room))
     }
     
     // Release the mutex
-    sql_mutex_unlock("$tbl_entry");
+    sql_mutex_unlock("$tbl_area");
   }
 
   $res = sql_query("SELECT * FROM $tbl_room WHERE id=$room");
@@ -156,10 +162,11 @@ if (!empty($room))
     <legend></legend>
       <span class="error">
          <?php 
-         // It's impossible to have both these error messages, so no need to worry
+         // It's impossible to have more than one of these error messages, so no need to worry
          // about paragraphs or line breaks.
          echo ((FALSE == $valid_email) ? get_vocab('invalid_email') : "");
          echo ((FALSE == $valid_area) ? get_vocab('invalid_area') : "");
+         echo ((FALSE == $valid_room_name) ? get_vocab('invalid_room_name') : "");
          ?>
       </span>
     </fieldset>

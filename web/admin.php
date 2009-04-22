@@ -15,6 +15,7 @@ $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');
 $area_name = get_form_var('area_name', 'string');
+$error = get_form_var('error', 'string');
 
 // If we dont know the right date then make it up 
 if (!isset($day) or !isset($month) or !isset($year))
@@ -53,10 +54,15 @@ if (isset($area))
     sql_free($res);
   }
 }
+
+
+echo "<h2>" . get_vocab("administration") . "</h2>\n";
+if (!empty($error))
+{
+  echo "<p class=\"error\">" . get_vocab($error) . "</p>\n";
+}
+
 ?>
-
-<h2><?php echo get_vocab("administration") ?></h2>
-
 <table id="admin" class="admin_table">
   <thead>
     <tr>

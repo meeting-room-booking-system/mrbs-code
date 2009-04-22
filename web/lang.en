@@ -237,6 +237,7 @@ $vocab["addroom"]            = "Add Room";
 $vocab["capacity"]           = "Capacity";
 $vocab["norooms"]            = "No rooms have been defined.";
 $vocab["administration"]     = "Administration";
+$vocab["invalid_area_name"]  = "This area name has already been used!";
 
 // Used in edit_area_room.php
 $vocab["editarea"]               = "Edit Area";
@@ -256,6 +257,7 @@ $vocab["area_last_slot_start"]   = "Start of last slot";
 $vocab["area_res_mins"]          = "Resolution (minutes)";
 $vocab["area_def_duration_mins"] = "Default duration (minutes)";
 $vocab["invalid_area"]           = "Invalid area!";
+$vocab["invalid_room_name"]      = "This room name has already been used in the area!";
 $vocab["invalid_email"]          = "Invalid email!";
 $vocab["invalid_resolution"]     = "Invalid combination of first slot, last slot and resolution!";
 $vocab["too_many_slots"]         = 'You need to increase the value of $max_slots in the config file!';
