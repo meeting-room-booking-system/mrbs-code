@@ -189,8 +189,7 @@ if (!empty($room))
           echo " selected=\"selected\"";
         }
         echo ">" . $row_area['area_name'] . "</option>\n";
-      }
-      sql_free($res);   
+      }  
       ?>
     </select>
     </div>
