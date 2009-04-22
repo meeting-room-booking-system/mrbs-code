@@ -13,6 +13,7 @@ $day = get_form_var('day', 'int');
 $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
+$new_area = get_form_var ('new_area', 'int');
 $room = get_form_var('room', 'int');
 $room_name = get_form_var('room_name', 'string');
 $area_name = get_form_var('area_name', 'string');
@@ -100,6 +101,7 @@ print_header($day, $month, $year, isset($area) ? $area : "", isset($room) ? $roo
 <?php
 if (!empty($room))
 {
+  $valid_area = TRUE;
   // validate the email addresses
   $valid_email = validate_email_list($room_admin_email);
   
@@ -109,14 +111,32 @@ if (!empty($room))
     {
       $capacity = 0;
     }
-    $sql = "UPDATE $tbl_room SET room_name='" . addslashes($room_name)
-      . "', description='" . addslashes($description)
-      . "', capacity=$capacity, room_admin_email='"
-      . addslashes($room_admin_email) . "' WHERE id=$room";
-    if (sql_command($sql) < 0)
+    
+    // Acquire a mutex to lock out others who might be deleting the new area
+    if (!sql_mutex_lock("$tbl_area"))
     {
-      fatal_error(0, get_vocab("update_room_failed") . sql_error());
+      fatal_error(TRUE, get_vocab("failed_to_acquire"));
     }
+    // Check the new area still exists
+    if (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE id=$new_area LIMIT 1") < 1)
+    {
+      $valid_area = FALSE;
+    }
+    // If so, update the databasae
+    else
+    {
+      $sql = "UPDATE $tbl_room SET room_name='" . addslashes($room_name)
+        . "', description='" . addslashes($description)
+        . "', capacity=$capacity, area_id=$new_area, room_admin_email='"
+        . addslashes($room_admin_email) . "' WHERE id=$room";
+      if (sql_command($sql) < 0)
+      {
+        fatal_error(0, get_vocab("update_room_failed") . sql_error());
+      }
+    }
+    
+    // Release the mutex
+    sql_mutex_unlock("$tbl_entry");
   }
 
   $res = sql_query("SELECT * FROM $tbl_room WHERE id=$room");
@@ -135,11 +155,45 @@ if (!empty($room))
     <fieldset>
     <legend></legend>
       <span class="error">
-         <?php echo ((FALSE == $valid_email) ? get_vocab('invalid_email') : "&nbsp;"); ?>
+         <?php 
+         // It's impossible to have both these error messages, so no need to worry
+         // about paragraphs or line breaks.
+         echo ((FALSE == $valid_email) ? get_vocab('invalid_email') : "");
+         echo ((FALSE == $valid_area) ? get_vocab('invalid_area') : "");
+         ?>
       </span>
     </fieldset>
     
     <input type="hidden" name="room" value="<?php echo $row["id"]?>">
+    
+    <?php
+    $res = sql_query("SELECT id, area_name FROM $tbl_area");
+    if (!$res)
+    {
+      fatal_error(FALSE, "Fatal error: " . sql_error);  // should not happen
+    }
+    if (sql_count($res) == 0)
+    {
+      fatal_error(FALSE, get_vocab('noareas'));  // should not happen
+    }
+    ?>
+    <div>
+    <label for="new_area"><?php echo get_vocab("area") ?>:</label>
+    <select id="new_area" name="new_area">
+      <?php  
+      for ($i = 0; ($row_area = sql_row_keyed($res, $i)); $i++)
+      {
+        echo "<option value=\"" . $row_area['id'] . "\"";
+        if ($row_area['id'] == $row['area_id'])
+        {
+          echo " selected=\"selected\"";
+        }
+        echo ">" . $row_area['area_name'] . "</option>\n";
+      }
+      sql_free($res);   
+      ?>
+    </select>
+    </div>
     
     <div>
     <label for="room_name"><?php echo get_vocab("name") ?>:</label>
@@ -177,6 +231,8 @@ if (!empty($room))
 <?php
 }
 ?>
+
+
 
 <?php
 if (!empty($area))
