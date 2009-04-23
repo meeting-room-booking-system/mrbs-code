@@ -179,7 +179,7 @@ if ($nusers > 0)
   }
 }
 else 
-// We've just created the table.   Assume the person doing this IS the administrator
+// We've just created the table.   Assume the person doing this IS an administrator
 // and then send them through to the screen to add the first user (which we'll force
 // to be an admin)
 {
@@ -190,6 +190,7 @@ else
     $Id = -1;
   }
   $level = $max_level;
+  $user = "";           // to avoid an undefined variable notice
 }
 
 /*---------------------------------------------------------------------------*\
