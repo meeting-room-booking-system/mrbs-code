@@ -825,13 +825,23 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
         break;
       } // end while
       
-      // and decrement the slot count for the first booking
+      // Now we've found the time ($s) of the first slot of the first booking
+      // we need to find its index ($i)
+      foreach ($column[date($format,$s)] as $i => $booking)
+      {
+        if ($booking["id"] == $first_booking_id)
+        {
+          break;
+        }
+      }
+
+      // Finally decrement the slot count for the first booking
       // no need to worry about count going < 1: the multiple booking display
       // does not use the slot count.
-      $column[date($format,$s)][0]["slots"]--;
+      $column[date($format,$s)][$i]["slots"]--;
       // and put the name and description in the multiply booked slot
-      $column[$time_start_t][0]["data"] = $column[date($format,$s)][0]["data"];
-      $column[$time_start_t][0]["long_descr"] = $column[date($format,$s)][0]["long_descr"];
+      $column[$time_start_t][0]["data"] = $column[date($format,$s)][$i]["data"];
+      $column[$time_start_t][0]["long_descr"] = $column[date($format,$s)][$i]["long_descr"];
 
     }
   }
