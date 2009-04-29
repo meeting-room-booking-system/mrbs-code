@@ -799,22 +799,35 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     // then we'll have to adjust the information held for the first booking
     if (!isset($column[$time_start_t][2]["id"]))
     {
-      // Find the first slot ($s) of the first booking, by going back through the slots
-      // until you get to a slot that has more than one booking, or else just
-      // one booking but a different one, or else no booking at all.    Then 
-      // you know you've gone back one slot too far.
+      // Find the first slot ($s) of the first booking
       $first_booking_id = $column[$time_start_t][0]["id"];
-      for ($s = $start_t -$resolution; $s > $am7; $s -= $resolution)
+      $s = $start_t;
+      // If you've got to the first slot of the day then that must be the
+      // first slot of the first booking
+      while ($s > $am7)
       {
-        if (isset($column[date($format,$s)][1]["id"]) || 
-            !isset($column[date($format,$s)][0]["id"]) ||
-            ($column[date($format,$s)][0]["id"] != $first_booking_id))   
+        // Otherwise, step back one slot.
+        $s -= $resolution;
+        // If that slot contains the first booking, then step back again
+        if (isset($column[date($format,$s)]))
         {
-          $s += $resolution;  // Gone back one slot too far, so advance one.
-          break;
+          foreach ($column[date($format,$s)] as $booking)
+          {
+            if ($booking["id"] == $first_booking_id)
+            {
+              continue 2;  // next iteration of the while loop
+            }
+          }
         }
-      }
+        // If not, then we've stepped back one slot past the start of
+        // the first booking, so step forward again and finish
+        $s += $resolution;
+        break;
+      } // end while
+      
       // and decrement the slot count for the first booking
+      // no need to worry about count going < 1: the multiple booking display
+      // does not use the slot count.
       $column[date($format,$s)][0]["slots"]--;
       // and put the name and description in the multiply booked slot
       $column[$time_start_t][0]["data"] = $column[date($format,$s)][0]["data"];
