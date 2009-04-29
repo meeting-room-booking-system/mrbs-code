@@ -607,7 +607,9 @@ else
               {
                 for ($j = 0; ($row2 = sql_row_keyed($res2, $j)); $j++)
                 {
-                  print "        roomsObj.options[$j] = new Option(\"".str_replace('"','\\"',$row2['room_name'])."\",".$row2['id'] .");\n";
+                  $clean_room_name = str_replace('\\', '\\\\', $row2['room_name']);
+                  $clean_room_name = str_replace('"', '\\"', $clean_room_name);
+                  print "        roomsObj.options[$j] = new Option(\"".$clean_room_name."\",".$row2['id'] .");\n";
                 }
                 // select the first entry by default to ensure
                 // that one room is selected to begin with
