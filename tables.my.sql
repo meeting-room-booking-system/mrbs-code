@@ -49,7 +49,7 @@ CREATE TABLE mrbs_entry
   name        varchar(80) DEFAULT '' NOT NULL,
   type        char DEFAULT 'E' NOT NULL,
   description text,
-  private     BOOL NOT NULL DEFAULT '0',
+  private     TINYINT(1) NOT NULL DEFAULT 0,
 
   PRIMARY KEY (id),
   KEY idxStartTime (start_time),
@@ -70,8 +70,8 @@ CREATE TABLE mrbs_repeat
   name        varchar(80) DEFAULT '' NOT NULL,
   type        char DEFAULT 'E' NOT NULL,
   description text,
-  rep_num_weeks smallint NULL,
-  private     BOOL NOT NULL DEFAULT '0',
+  rep_num_weeks smallint NULL, 
+  private     TINYINT(1) NOT NULL DEFAULT 0,
   
   PRIMARY KEY (id)
 );

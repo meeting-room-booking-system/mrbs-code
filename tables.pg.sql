@@ -47,7 +47,7 @@ CREATE TABLE mrbs_entry
   name        varchar(80) DEFAULT '' NOT NULL,
   type        char DEFAULT 'E' NOT NULL,
   description text,
-  private     private BOOL NOT NULL DEFAULT '0'
+  private     BOOLEAN NOT NULL DEFAULT FALSE
 );
 create index idxStartTime on mrbs_entry(start_time);
 create index idxEndTime on mrbs_entry(end_time);
@@ -67,7 +67,7 @@ CREATE TABLE mrbs_repeat
   type        char DEFAULT 'E' NOT NULL,
   description text,
   rep_num_weeks smallint DEFAULT NULL NULL,
-  private     private BOOL NOT NULL DEFAULT '0'
+  private     BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE mrbs_variables
