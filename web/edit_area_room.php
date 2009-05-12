@@ -14,8 +14,10 @@ $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
 $new_area = get_form_var ('new_area', 'int');
+$old_area = get_form_var ('old_area', 'int');
 $room = get_form_var('room', 'int');
 $room_name = get_form_var('room_name', 'string');
+$old_room_name = get_form_var('old_room_name', 'string');
 $area_name = get_form_var('area_name', 'string');
 $description = get_form_var('description', 'string');
 $capacity = get_form_var('capacity', 'int');
@@ -124,7 +126,11 @@ if (!empty($room))
       $valid_area = FALSE;
     }
     // If so, check that the room name is not already used in the area
-    elseif (sql_query1("SELECT COUNT(*) FROM $tbl_room WHERE room_name='" . addslashes($room_name) . "' AND area_id=$new_area LIMIT 1") > 0)
+    // (only do this if you're changing the room name or the area - if you're
+    // just editing the other details for an existing room we don't want to reject
+    // the edit because the room already exists!)
+    elseif ( (($new_area != $old_area) || ($room_name != $old_room_name))
+            && sql_query1("SELECT COUNT(*) FROM $tbl_room WHERE room_name='" . addslashes($room_name) . "' AND area_id=$new_area LIMIT 1") > 0)
     {
       $valid_room_name = FALSE;
     }
@@ -199,11 +205,13 @@ if (!empty($room))
       }  
       ?>
     </select>
+    <input type="hidden" name="old_area" value="<?php echo $row['area_id'] ?>">
     </div>
     
     <div>
     <label for="room_name"><?php echo get_vocab("name") ?>:</label>
     <input type="text" id="room_name" name="room_name" value="<?php echo htmlspecialchars($row["room_name"]); ?>">
+    <input type="hidden" name="old_room_name" value="<?php echo htmlspecialchars($row["room_name"]); ?>">
     </div>
     
     <div>
