@@ -609,8 +609,9 @@ else
               {
                 for ($j = 0; ($row2 = sql_row_keyed($res2, $j)); $j++)
                 {
-                  $clean_room_name = str_replace('\\', '\\\\', $row2['room_name']);
-                  $clean_room_name = str_replace('"', '\\"', $clean_room_name);
+                  $clean_room_name = str_replace('\\', '\\\\', $row2['room_name']);  // escape backslash
+                  $clean_room_name = str_replace('"', '\\"', $clean_room_name);      // escape double quotes
+                  $clean_room_name = str_replace('/', '\\/', $clean_room_name);      // prevent '/' being parsed as markup (eg </p>)
                   print "        roomsObj.options[$j] = new Option(\"".$clean_room_name."\",".$row2['id'] .");\n";
                 }
                 // select the first entry by default to ensure
@@ -676,7 +677,7 @@ else
             {
               $selected = "selected=\"selected\"";
             }
-            echo "              <option $selected value=\"".$row['id']."\">".$row['room_name']."</option>\n";
+            echo "              <option $selected value=\"" . $row['id'] . "\">" . htmlspecialchars($row['room_name']) . "</option>\n";
             // store room names for emails
             $room_names[$i] = $row['room_name'];
           }
