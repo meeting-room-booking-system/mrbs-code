@@ -10,6 +10,11 @@
 -- If you have decided to change the prefix of your tables from 'mrbs_'
 -- to something else then you must edit each 'CREATE TABLE' and 'create index'
 -- line below.
+--
+-- If you change some of the varchar lengths here, then you should check
+-- to see whether a corresponding length has been defined in the config file.
+-- An example is ENTRY_NAME_LENGTH which is defined in the config file and
+-- used for setting a maxlength attribute in the edit_entry form.
 
 CREATE TABLE mrbs_area
 (

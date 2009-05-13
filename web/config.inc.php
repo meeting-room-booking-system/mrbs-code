@@ -40,6 +40,11 @@ $db_tbl_prefix = "mrbs_";
 // Uncomment this to NOT use PHP persistent (pooled) database connections:
 // $db_nopersist = 1;
 
+// Field lengths in the database tables
+// NOTE:  these must be kept in step with the database.   If you change the field
+// lengths in the database then you should change the values here, and vice versa.
+define("ENTRY_NAME_LENGTH", 80);    // characters   (name field in entry table)
+
 
 /*********************************
  * Site identification information
