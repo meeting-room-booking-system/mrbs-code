@@ -9,6 +9,10 @@ require_once "theme.inc";
 
 // ***** SETTINGS ***********************
 
+$clipped = TRUE;                // Set to TRUE if you want the cells in the day and week views to be clipped.   This
+                                // gives a table where all the rows have the same hight, regardless of content.
+                                // Alternatively set to FALSE if you want the cells to expand to fit the content.
+  
 $month_cell_scrolling = TRUE;   // set to TRUE if you want the cells in the month view to scroll if there are too
                                 // many bookings to display; set to FALSE if you want the table cell to expand to
                                 // accommodate the bookings.   (NOTE: (1) scrolling doesn't work in IE6 and so the table
@@ -343,8 +347,6 @@ In the classes below
 
 */
 
-$clipped = TRUE;                 // Set to TRUE for clipping, FALSE if not   
-
 if ($clipped)
 {
   // work out how many classes we'll need.   If we're transposing the table then we'll only need one, since all
@@ -363,16 +365,17 @@ if ($clipped)
     	"max-height: " . $div_height . "px; " . 
     	"min-height: " . $div_height . "px;}\n";
   }
+  echo "div.celldiv {overflow: hidden}\n";
 }
+?>
+div.celldiv {margin: 0; padding: 0}
+.row_labels div.celldiv {overflow: visible}  /* we want to see the content in the row label columns */
+<?php
 
 
 // Multiple bookings.  These rules control the styling of the cells and controls when there is more than
 // one booking in a time slot.
 ?>
-
-div.celldiv {overflow: hidden; margin: 0; padding: 0}
-.row_labels div.celldiv {overflow: visible}  /* we want to see the content in the row label columns */
-
 div.mini, div.maxi {position: relative}     /* establish a relative position for the absolute position to follow */
 div.multiple_control {
     display: none;       /* will be over-ridden by JavaScript if enabled */
