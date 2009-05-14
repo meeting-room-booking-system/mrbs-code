@@ -91,7 +91,9 @@ if (isset($id))
   get_area_settings($area);
 
   $name        = $row['name'];
-  $create_by   = $row['create_by'];
+  // If we're copying an existing entry then we need to change the create_by (they could be
+  // different if it's an admin doing the copying)
+  $create_by   = (isset($copy)) ? getUserName() : $row['create_by'];
   $description = $row['description'];
   $start_day   = strftime('%d', $row['start_time']);
   $start_month = strftime('%m', $row['start_time']);
