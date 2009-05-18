@@ -21,8 +21,10 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
   global $enable_periods;
   global $periods;
 
+  $user = getUserName();
   // Select any meetings which overlap ($starttime,$endtime) for this room:
-  $sql = "SELECT id, name, start_time FROM $tbl_entry WHERE
+  $sql = "SELECT id, name, start_time, create_by, private
+              FROM $tbl_entry WHERE
                  start_time < $endtime AND end_time > $starttime
           AND room_id = $room_id";
 
@@ -67,6 +69,12 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
     {
       $startstr = utf8_strftime('%A %d %B %Y %H:%M:%S',
                                 $row['start_time']);
+    }
+    
+    if (is_private_event($row['private']) &&
+         !getWritable($row['create_by'], $user))
+    {
+       $row['name'] = get_vocab("private");
     }
 
     $err .= "<li><a href=\"view_entry.php?id=".$row['id']."\">".$row['name']."</a>"
