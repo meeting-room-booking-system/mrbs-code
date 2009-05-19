@@ -110,6 +110,19 @@ if (isset($id))
   {
     $private = $private_default;
   }
+  # Need to clear some data if entry is private and user
+  # does not have permission to edit/view details
+  if (isset($copy) && ($create_by != $row['create_by'])) 
+  {
+    # Entry being copied by different user
+    # If they don't have rights to view details, clear them
+    $privatewriteable = getWritable($row['create_by'],getUserName());
+    if (is_private_event($private) && !$privatewriteable) 
+    {
+        $name = '';
+        $description = '' ;
+    }
+  }
 
   if($entry_type >= 1)
   {
