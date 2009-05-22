@@ -489,6 +489,9 @@ $pop3_host = "pop3-server-name";
 // The POP3 server port
 $pop3_port = "110";
 
+// 'auth_smtp' configuration settings
+$auth['smtp']['server'] = 'myserver.example.org';
+
 
 /**********************************************
  * Email settings
