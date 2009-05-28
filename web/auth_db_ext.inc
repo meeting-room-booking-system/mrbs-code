@@ -52,11 +52,6 @@ function authValidateUser($user, $pass)
 
   $user = addslashes($user);
 
-  if ($auth['db_ext']['use_md5_passwords'] == 1)
-  {
-    $pass = md5($pass);
-  }
-
   $query = "SELECT " . $auth['db_ext']['column_name_password'] .
            " FROM " . $auth['db_ext']['db_table'] .
            " WHERE ". $auth['db_ext']['column_name_username'] . "='$user'";
@@ -93,6 +88,13 @@ function authValidateUser($user, $pass)
 
       default:
         // Otherwise assume plaintext
+
+        // Backwards-compatibility config option
+        if ($auth['db_ext']['use_md5_passwords'] == 1)
+        {
+          $pass = md5($pass);
+        }
+
         if ($pass == $row[0])
         {
           $retval = 1;
