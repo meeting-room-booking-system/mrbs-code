@@ -176,8 +176,8 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
                                $private)
 {
   global $tbl_entry;
-
-  $private = $private ? 1 : 0 ;
+ 
+  $private = $private ? "TRUE" : "FALSE";
   $name        = addslashes($name);
   $description = addslashes($description);
    
@@ -231,6 +231,7 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
 {
   global $tbl_repeat;
 
+  $private = $private ? "TRUE" : "FALSE";
   $name        = addslashes($name);
   $description = addslashes($description);
 
@@ -238,15 +239,15 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
   $sql_coln = array(); $sql_val = array();
 
   // Mandatory things:
-  $sql_coln[] = 'start_time';    $sql_val[] = $starttime;
-  $sql_coln[] = 'end_time';    $sql_val[] = $endtime;
-  $sql_coln[] = 'rep_type';    $sql_val[] = $rep_type;
+  $sql_coln[] = 'start_time'; $sql_val[] = $starttime;
+  $sql_coln[] = 'end_time';   $sql_val[] = $endtime;
+  $sql_coln[] = 'rep_type';   $sql_val[] = $rep_type;
   $sql_coln[] = 'end_date';   $sql_val[] = $rep_enddate;
-  $sql_coln[] = 'room_id';   $sql_val[] = $room_id;
-  $sql_coln[] = 'create_by';   $sql_val[] = '\''.$owner.'\'';
-  $sql_coln[] = 'type';      $sql_val[] = '\''.$type.'\'';
-  $sql_coln[] = 'private';      $sql_val[] = '\''.$private.'\'';
-  $sql_coln[] = 'name';      $sql_val[] = '\''.$name.'\'';
+  $sql_coln[] = 'room_id';    $sql_val[] = $room_id;
+  $sql_coln[] = 'create_by';  $sql_val[] = '\''.$owner.'\'';
+  $sql_coln[] = 'type';       $sql_val[] = '\''.$type.'\'';
+  $sql_coln[] = 'private';    $sql_val[] = $private;
+  $sql_coln[] = 'name';       $sql_val[] = '\''.$name.'\'';
 
   // Optional things, pgsql doesn't like empty strings!
   if (!empty($rep_opt))
