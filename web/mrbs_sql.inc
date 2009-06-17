@@ -177,7 +177,7 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
 {
   global $tbl_entry;
  
-  $private = $private ? "TRUE" : "FALSE";
+  $private = $private ? 1 : 0;
   $name        = addslashes($name);
   $description = addslashes($description);
    
@@ -231,7 +231,7 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
 {
   global $tbl_repeat;
 
-  $private = $private ? "TRUE" : "FALSE";
+  $private = $private ? 1 : 0;
   $name        = addslashes($name);
   $description = addslashes($description);
 
