@@ -39,6 +39,15 @@ $rep_day = get_form_var('rep_day', 'array'); // array of bools
 $rep_num_weeks = get_form_var('rep_num_weeks', 'int');
 $private = get_form_var('private', 'string'); // bool, actually
 
+// Truncate the name field to the maximum length as a precaution.
+// Although the MAXLENGTH attribute is used in the <input> tag, this can
+// sometimes be ignored by the browser, for example by Firefox when 
+// autocompletion is used.  The user could also edit the HTML and remove
+// the MAXLENGTH attribute.    Passing an oversize string to some
+// databases (eg some versions of PostgreSQL) results in an SQL error,
+// rather than silent truncation of the string.
+$name = substr($name, 0, ENTRY_NAME_LENGTH);
+
 if (empty($area))
 {
   if (empty($rooms[0]))
