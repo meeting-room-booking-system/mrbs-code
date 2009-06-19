@@ -139,7 +139,7 @@ if (!in_array('level', $fields))
   // Now populate the table with the existing admins
   foreach ($auth['admin'] as $admin_name)
   {
-    $sql = "UPDATE $tbl_users SET level=2 WHERE name='$admin_name'";
+    $sql = "UPDATE $tbl_users SET level=2 WHERE name='".addslashes($admin_name)."'";
     if (sql_command($sql) < 0)
     {
       fatal_error(0, "Error adding existing admins. " . sql_error());
@@ -403,7 +403,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 if (isset($Action) && ($Action == "Update"))
 {
   // If you haven't got the rights to do this, then exit
-  $my_id = sql_query1("SELECT id FROM $tbl_users WHERE name='$user' LIMIT 1");
+  $my_id = sql_query1("SELECT id FROM $tbl_users WHERE name='".addslashes($user)."' LIMIT 1");
   if (($level < $min_user_editing_level) && ($Id != $my_id ))
   {
     Header("Location: edit_users.php");

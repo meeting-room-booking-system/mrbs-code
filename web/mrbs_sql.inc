@@ -180,6 +180,8 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
   $private = $private ? 1 : 0;
   $name        = addslashes($name);
   $description = addslashes($description);
+  $owner       = addslashes($owner);
+  $type        = addslashes($type);
    
   // make sure that any entry is of a positive duration
   // this is to trap potential negative duration created when DST comes
@@ -234,6 +236,9 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
   $private = $private ? 1 : 0;
   $name        = addslashes($name);
   $description = addslashes($description);
+  $owner       = addslashes($owner);
+  $type        = addslashes($type);
+  $rep_opt     = addslashes($rep_opt);
 
   // Let's construct the sql statement:
   $sql_coln = array(); $sql_val = array();
