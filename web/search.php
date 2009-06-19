@@ -35,12 +35,10 @@ if (empty($area))
 }
 
 // Need all these different versions with different escaping.
-// search_str must be left as the html-escaped version because this is
-// used as the default value for the search box in the header.
 if (!empty($search_str)) 
 {
   $search_url = urlencode($search_str);
-  $search_str = htmlspecialchars($search_str);
+  $search_html = htmlspecialchars($search_str);
 }
 
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
@@ -87,14 +85,14 @@ if (!$search_str)
 }
 
 // now is used so that we only display entries newer than the current time
-echo "<h3>" . get_vocab("search_results") . ": \"<span id=\"search_str\">$search_str</span>\"</h3>\n";
+echo "<h3>" . get_vocab("search_results") . ": \"<span id=\"search_str\">$search_html</span>\"</h3>\n";
 
 $now = mktime(0, 0, 0, $month, $day, $year);
 
 // This is the main part of the query predicate, used in both queries:
-$sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_str)
-  . " OR " . sql_syntax_caseless_contains("E.name", $search_str)
-  . " OR " . sql_syntax_caseless_contains("E.description", $search_str)
+$sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", addslashes($search_str))
+  . " OR " . sql_syntax_caseless_contains("E.name", addslashes($search_str))
+  . " OR " . sql_syntax_caseless_contains("E.description", addslashes($search_str))
   . ") AND E.end_time > $now";
 
 # Unless we overriding privacy settings as "public" or user
