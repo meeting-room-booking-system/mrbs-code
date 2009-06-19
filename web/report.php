@@ -609,11 +609,11 @@ if (isset($areamatch))
 
   if (!empty($areamatch))
   {
-    $sql .= " AND" .  sql_syntax_caseless_contains("a.area_name", $areamatch);
+    $sql .= " AND" .  sql_syntax_caseless_contains("a.area_name", addslashes($areamatch));
   }
   if (!empty($roommatch))
   {
-    $sql .= " AND" .  sql_syntax_caseless_contains("r.room_name", $roommatch);
+    $sql .= " AND" .  sql_syntax_caseless_contains("r.room_name", addslashes($roommatch));
   }
   if (!empty($typematch))
   {
@@ -623,26 +623,26 @@ if (isset($areamatch))
       $or_array = array();
       foreach ( $typematch as $type )
       {
-        $or_array[] = "e.type = '$type'";
+        $or_array[] = "e.type = '".addslashes($type)."'";
       }
       $sql .= "(". implode( " OR ", $or_array ) .")";
     }
     else
     {
-      $sql .= "e.type = '".$typematch[0]."'";
+      $sql .= "e.type = '".addslashes($typematch[0])."'";
     }
   }
   if (!empty($namematch))
   {
-    $sql .= " AND" .  sql_syntax_caseless_contains("e.name", $namematch);
+    $sql .= " AND" .  sql_syntax_caseless_contains("e.name", addslashes($namematch));
   }
   if (!empty($descrmatch))
   {
-    $sql .= " AND" .  sql_syntax_caseless_contains("e.description", $descrmatch);
+    $sql .= " AND" .  sql_syntax_caseless_contains("e.description", addslashes($descrmatch));
   }
   if (!empty($creatormatch))
   {
-    $sql .= " AND" .  sql_syntax_caseless_contains("e.create_by", $creatormatch);
+    $sql .= " AND" .  sql_syntax_caseless_contains("e.create_by", addslashes($creatormatch));
   }
 
   # If not overriding as public entries and user isn't and admin...
@@ -652,11 +652,11 @@ if (isset($areamatch))
     {
       if ($private_override == "private") 
       {
-        $sql .= " AND e.create_by = '$user'";
+        $sql .= " AND e.create_by = '".addslashes($user)."'";
       }
       else
       {
-        $sql .= " AND (e.create_by = '$user' OR NOT e.private)";
+        $sql .= " AND (e.create_by = '".addslashes($user)."' OR NOT e.private)";
       }
     }
     else
