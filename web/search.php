@@ -90,9 +90,11 @@ echo "<h3>" . get_vocab("search_results") . ": \"<span id=\"search_str\">$search
 $now = mktime(0, 0, 0, $month, $day, $year);
 
 // This is the main part of the query predicate, used in both queries:
-$sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", addslashes($search_str))
-  . " OR " . sql_syntax_caseless_contains("E.name", addslashes($search_str))
-  . " OR " . sql_syntax_caseless_contains("E.description", addslashes($search_str))
+// NOTE: sql_syntax_caseless_contains() does the SQL escaping
+    
+$sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_str)
+  . " OR " . sql_syntax_caseless_contains("E.name", $search_str)
+  . " OR " . sql_syntax_caseless_contains("E.description", $search_str)
   . ") AND E.end_time > $now";
 
 # Unless we overriding privacy settings as "public" or user

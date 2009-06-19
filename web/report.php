@@ -609,11 +609,13 @@ if (isset($areamatch))
 
   if (!empty($areamatch))
   {
-    $sql .= " AND" .  sql_syntax_caseless_contains("a.area_name", addslashes($areamatch));
+    // sql_syntax_caseless_contains() does the SQL escaping
+    $sql .= " AND" .  sql_syntax_caseless_contains("a.area_name", $areamatch);
   }
   if (!empty($roommatch))
   {
-    $sql .= " AND" .  sql_syntax_caseless_contains("r.room_name", addslashes($roommatch));
+    // sql_syntax_caseless_contains() does the SQL escaping
+    $sql .= " AND" .  sql_syntax_caseless_contains("r.room_name", $roommatch);
   }
   if (!empty($typematch))
   {
@@ -634,15 +636,18 @@ if (isset($areamatch))
   }
   if (!empty($namematch))
   {
-    $sql .= " AND" .  sql_syntax_caseless_contains("e.name", addslashes($namematch));
+    // sql_syntax_caseless_contains() does the SQL escaping
+    $sql .= " AND" .  sql_syntax_caseless_contains("e.name", $namematch);
   }
   if (!empty($descrmatch))
   {
-    $sql .= " AND" .  sql_syntax_caseless_contains("e.description", addslashes($descrmatch));
+    // sql_syntax_caseless_contains() does the SQL escaping
+    $sql .= " AND" .  sql_syntax_caseless_contains("e.description", $descrmatch);
   }
   if (!empty($creatormatch))
   {
-    $sql .= " AND" .  sql_syntax_caseless_contains("e.create_by", addslashes($creatormatch));
+    // sql_syntax_caseless_contains() does the SQL escaping
+    $sql .= " AND" .  sql_syntax_caseless_contains("e.create_by", $creatormatch);
   }
 
   # If not overriding as public entries and user isn't and admin...
