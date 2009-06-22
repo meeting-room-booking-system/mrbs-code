@@ -261,22 +261,30 @@ if (!empty($area))
     $valid_email = validate_email_list($area_admin_email);
     
     if (!$enable_periods)
-    {
-      // Check morningstarts, eveningends, and resolution for consistency
-      $start_first_slot = ($area_morningstarts*60) + $area_morningstarts_minutes;   // minutes
-      $start_last_slot  = ($area_eveningends*60) + $area_eveningends_minutes;       // minutes
-      $start_difference = ($start_last_slot - $start_first_slot);         // minutes
-      if (($start_difference < 0) or ($start_difference%$area_res_mins != 0))
+    { 
+      // Avoid divide by zero errors
+      if ($area_res_mins == 0)
       {
         $valid_resolution = FALSE;
       }
-      
-      // Check that the number of slots we now have is no greater than $max_slots
-      // defined in the config file - otherwise we won't generate enough CSS classes
-      $n_slots = ($start_difference/$area_res_mins) + 1;
-      if ($n_slots > $max_slots)
+      else
       {
-        $enough_slots = FALSE;
+        // Check morningstarts, eveningends, and resolution for consistency
+        $start_first_slot = ($area_morningstarts*60) + $area_morningstarts_minutes;   // minutes
+        $start_last_slot  = ($area_eveningends*60) + $area_eveningends_minutes;       // minutes
+        $start_difference = ($start_last_slot - $start_first_slot);         // minutes
+        if (($start_difference < 0) or ($start_difference%$area_res_mins != 0))
+        {
+          $valid_resolution = FALSE;
+        }
+      
+        // Check that the number of slots we now have is no greater than $max_slots
+        // defined in the config file - otherwise we won't generate enough CSS classes
+        $n_slots = ($start_difference/$area_res_mins) + 1;
+        if ($n_slots > $max_slots)
+        {
+          $enough_slots = FALSE;
+        }
       }
     }
     
@@ -391,6 +399,8 @@ if (!empty($area))
         {
           // generates the HTML for the drop-down for the last slot time and
           // puts it in the element with id 'last_slot'
+          if (res_mins == 0) return;  // avoid endless loops
+          
           var first_slot = (morningstarts * 60) + morningstarts_minutes;
           var last_slot = (eveningends * 60) + eveningends_minutes;
           var last_possible = (24 * 60) - res_mins;
@@ -414,6 +424,7 @@ if (!empty($area))
         {
           // re-generates the dropdown given changed form values
           var res_mins = parseInt(formObj.area_res_mins.value);
+          if (res_mins == 0) return;  // avoid endless loops and divide by zero errors
           var morningstarts = parseInt(formObj.area_morningstarts.value);
           var morningstarts_minutes = parseInt(formObj.area_morningstarts_minutes.value);
           var eveningends_t = parseInt(formObj.area_eveningends_t.value);
