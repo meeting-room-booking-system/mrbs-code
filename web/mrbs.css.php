@@ -6,19 +6,6 @@ header("Content-type: text/css");
 require_once "config.inc.php";
 require_once "theme.inc";
 
-
-// ***** SETTINGS ***********************
-
-$clipped = TRUE;                // Set to TRUE if you want the cells in the day and week views to be clipped.   This
-                                // gives a table where all the rows have the same hight, regardless of content.
-                                // Alternatively set to FALSE if you want the cells to expand to fit the content.
-  
-$month_cell_scrolling = TRUE;   // set to TRUE if you want the cells in the month view to scroll if there are too
-                                // many bookings to display; set to FALSE if you want the table cell to expand to
-                                // accommodate the bookings.   (NOTE: (1) scrolling doesn't work in IE6 and so the table
-                                // cell will always expand in IE6.  (2) In IE8 Beta 2 scrolling doesn't work either and
-                                // the cell content is clipped when $month_cell_scrolling is set to TRUE.)
-                                
                                 
 // IMPORTANT *************************************************************************************************
 // In order to avoid problems in locales where the decimal point is represented as a comma, it is important to
@@ -174,11 +161,12 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
     background-color: <?php echo $header_back_color ?>;
     border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
 .dwm_main th:first-child {border-left: 0}
-.dwm_main a {display: block; height: 100%}
+.dwm_main a {display: block; min-height: inherit}
 .dwm_main tbody a {padding: 0 2px}
 .dwm_main th a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
 .dwm_main th a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
 .dwm_main th a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
+.dwm_main#day_main tbody td, .dwm_main#week_main tbody td {min-height: <?php echo $main_cell_height ?>px}
 .dwm_main#day_main th.first_last {width: <?php echo $column_row_labels_width ?>%}
 .dwm_main#week_main th {width: <?php echo $column_week ?>%}
 .dwm_main#week_main th.first_last {width: <?php echo $column_row_labels_width ?>%; vertical-align: bottom}
@@ -188,7 +176,7 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
 .dwm_main#month_main a {padding: 0 2px 0 2px}
 
-a.new_booking {display: block; width: 100%; font-size: medium; text-align: center}
+a.new_booking {display: block; font-size: medium; text-align: center}
 .new_booking img {margin: auto; border: 0; padding: 4px 0 2px 0}
 <?php
 if (!$show_plus_link)
@@ -347,28 +335,30 @@ In the classes below
 
 */
 
-if ($clipped)
+
+// work out how many classes we'll need.   If we're transposing the table then we'll only need one, since all
+// cells are the same height (it's the width that varies, controlled by the colspan attribute).   For a normal
+// table we'll need at least as many as we've got slots, since a booking could span as many as all the slots
+// (in this case controlled by a rowspan).
+$classes_required = ($times_along_top) ? 1 : $max_slots;
+for ($i=1; $i<=$classes_required; $i++) 
 {
-  // work out how many classes we'll need.   If we're transposing the table then we'll only need one, since all
-  // cells are the same height (it's the width that varies, controlled by the colspan attribute).   For a normal
-  // table we'll need at least as many as we've got slots, since a booking could span as many as all the slots
-  // (in this case controlled by a rowspan).
-  $classes_required = ($times_along_top) ? 1 : $max_slots;
-  for ($i=1; $i<=$classes_required; $i++) 
+  $div_height = $main_cell_height * $i;
+  $div_height = $div_height + (($i-1)*$main_table_cell_border_width);
+  $div_height = (int) $div_height;    // Make absolutely sure it's an int to avoid generating invalid CSS
+  
+  $rule = "div.slots" . $i . " {min-height: " . $div_height . "px";
+  if ($clipped)
   {
-    $div_height = $main_cell_height * $i;
-    $div_height = $div_height + (($i-1)*$main_table_cell_border_width);
-    $div_height = (int) $div_height;    // Make absolutely sure it's an int to avoid generating invalid CSS
-    
-    echo "div.slots" . $i . " {" . 
-    	"height:"      . $div_height . "px; " . 
-    	"max-height: " . $div_height . "px; " . 
-    	"min-height: " . $div_height . "px;}\n";
+    $rule .= "; max-height: " . $div_height . "px"; 
+    $rule .= "; height: "     . $div_height . "px";
   }
-  echo "div.celldiv {overflow: hidden}\n";
+  $rule .= "}";
+  echo $rule . "\n";
 }
+
 ?>
-div.celldiv {margin: 0; padding: 0}
+div.celldiv {overflow: hidden; margin: 0; padding: 0}
 .row_labels div.celldiv {overflow: visible}  /* we want to see the content in the row label columns */
 <?php
 

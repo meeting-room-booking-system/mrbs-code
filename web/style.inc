@@ -25,7 +25,7 @@ global $vocab; // outside of scope; needs to be denote as global
     <link rel="stylesheet" href="mrbs-ie8.css" type="text/css">
     <![endif]-->
     <!--[if lte IE 7]>
-    <link rel="stylesheet" href="mrbs-ielte7.css" type="text/css">
+    <link rel="stylesheet" href="mrbs-ielte7.css.php" type="text/css">
     <![endif]-->
     <!--[if lte IE 6]>
     <link rel="stylesheet" href="mrbs-ielte6.css" type="text/css">

@@ -294,6 +294,22 @@ $default_view = "day";
 // Default is 0
 $default_room = 0;
 
+// Define clipping behaviour for the cells in the day and week views.
+// Set to TRUE if you want the cells in the day and week views to be clipped.   This
+// gives a table where all the rows have the same hight, regardless of content.
+// Alternatively set to FALSE if you want the cells to expand to fit the content.
+// (FALSE not supported in IE6 and IE7 due to their incomplete CSS support)
+$clipped = TRUE;                
+
+// Define clipping behaviour for the cells in the month view.                           
+// Set to TRUE if you want the cells in the month view to scroll if there are too
+// many bookings to display; set to FALSE if you want the table cell to expand to
+// accommodate the bookings.   (NOTE: (1) scrolling doesn't work in IE6 and so the table
+// cell will always expand in IE6.  (2) In IE8 Beta 2 scrolling doesn't work either and
+// the cell content is clipped when $month_cell_scrolling is set to TRUE.)
+$month_cell_scrolling = TRUE;   
+                                
+
 
 /************************
  * Miscellaneous settings
