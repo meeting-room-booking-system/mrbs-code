@@ -166,7 +166,7 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main th a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
 .dwm_main th a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
 .dwm_main th a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
-.dwm_main#day_main tbody td, .dwm_main#week_main tbody td {min-height: <?php echo $main_cell_height ?>px}
+
 .dwm_main#day_main th.first_last {width: <?php echo $column_row_labels_width ?>%}
 .dwm_main#week_main th {width: <?php echo $column_week ?>%}
 .dwm_main#week_main th.first_last {width: <?php echo $column_row_labels_width ?>%; vertical-align: bottom}
