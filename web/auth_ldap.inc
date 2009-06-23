@@ -33,6 +33,12 @@ function authValidateUser($user, $pass)
   global $ldap_dn_search_dn;
   global $ldap_dn_search_password;
 
+  if (!function_exists("ldap_connect"))
+  {
+    die("<hr><p><b>ERROR: PHP's 'ldap' extension is not installed/enabled. ".
+        "Please check your MRBS and web server configuration.</b></p><hr>\n");
+  }
+
   $all_ldap_base_dn     = array();
   $all_ldap_user_attrib = array();
 
