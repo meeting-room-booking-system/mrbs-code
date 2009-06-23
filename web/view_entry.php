@@ -123,9 +123,14 @@ $duration     = $row['duration'] - cross_dst($row['start_time'],
 $writeable = getWritable($create_by,$user);
 if (is_private_event($private) && !$writeable) 
 {
-    $name = "-".get_vocab('private')."-";
-    $description = $name ;
-    $create_by = $name ;
+  $name = "[".get_vocab('private')."]";
+  $description = $name;
+  $create_by = $name;
+  $keep_private = TRUE;
+}
+else
+{
+  $keep_private = FALSE;
 }
 
 if ($enable_periods)
@@ -227,19 +232,22 @@ $repeat_key = "rep_type_" . $rep_type;
 
 // Now that we know all the data we start drawing it
 
-?>
 
-<h3><?php 
-  echo $name;
-  if (is_private_event($private) && $writeable) 
-  {
-    echo ' ('.get_vocab('private').')';
-  }
-?></h3>
+echo "<h3" . (($keep_private) ? " class=\"private\"" : "") . ">\n";
+echo $name;
+if (is_private_event($private) && $writeable) 
+{
+  echo ' ('.get_vocab('private').')';
+}
+echo "</h3>\n";
+
+?>
  <table id="entry">
    <tr>
     <td><?php echo get_vocab("description") ?>:</td>
-    <td><?php echo mrbs_nl2br($description) ?></td>
+    <?php
+    echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . mrbs_nl2br($description) . "</td>\n";
+    ?>
    </tr>
    <tr>
     <td><?php echo get_vocab("room") ?>:</td>
@@ -263,9 +271,9 @@ $repeat_key = "rep_type_" . $rep_type;
    </tr>
    <tr>
     <td><?php echo get_vocab("createdby") ?>:</td>
-    <td><?php
-          echo $create_by ;
-        ?></td>
+    <?php
+    echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . $create_by . "</td>\n";
+    ?>
    </tr>
    <tr>
     <td><?php echo get_vocab("lastupdate") ?>:</td>

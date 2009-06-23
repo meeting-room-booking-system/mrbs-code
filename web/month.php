@@ -349,15 +349,16 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
 
       if ($private) 
       {
-        $d[$day_num]["shortdescrip"][] = '- '.get_vocab('unavailable').' -';
-        $d[$day_num]["color"][] = 'P';
+        $d[$day_num]["shortdescrip"][] = '['.get_vocab('unavailable').']';
       }
       else
       {
         $d[$day_num]["shortdescrip"][] = htmlspecialchars($row['name']);
-        $d[$day_num]["color"][] = $row['type'];
       }
-        
+      
+      $d[$day_num]["is_private"][] = $private;
+      
+      $d[$day_num]["color"][] = $row['type'];
 
       // Describe the start and end time, accounting for "all day"
       // and for entries starting before/ending after today.
@@ -580,7 +581,12 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
       {
         // give the enclosing div the appropriate width: full width if both,
         // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
-        echo "<div class=\"" . $d[$cday]["color"][$i] . "\"" .
+        $class = $d[$cday]["color"][$i];
+        if ($d[$cday]["is_private"][$i])
+        {
+          $class .= " private";
+        }
+        echo "<div class=\"" . $class . "\"" .
           " style=\"width: " . (($monthly_view_entries_details == "both") ? '100%' : '49.9%') . "\">\n";
         $booking_link = "view_entry.php?id=" . $d[$cday]["id"][$i] . "&amp;day=$cday&amp;month=$month&amp;year=$year";
         $slot_text = $d[$cday]["data"][$i];

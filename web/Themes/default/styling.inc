@@ -84,17 +84,7 @@ $color_types = array(
     'G' => "#ccffcc",
     'H' => "#d9d982",
     'I' => "#99cc66",
-    'J' => "#e6ffe6",
-    'PA' => "#D8D871", // PA-PJ are "Private" entry colors for A-J
-    'PB' => "#85b3b3",
-    'PC' => "#e9e9c0",
-    'PD' => "#b5c7c7",
-    'PE' => "#5db6a7",
-    'PF' => "#668484",
-    'PG' => "#aed8ae",
-    'PH' => "#bdbd71",
-    'PI' => "#99aa44",
-    'PJ' => "#c9dcc9"); 
+    'J' => "#e6ffe6"); 
 
     
 // ***** DIMENSIONS *******************

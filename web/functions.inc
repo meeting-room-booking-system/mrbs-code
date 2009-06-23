@@ -662,6 +662,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   // $column is a column of the map of the screen that will be displayed
   // It looks like:
   //     $column[Time][n][id]
+  //                     [is_private]
   //                     [color]
   //                     [data]
   //                     [long_descr]
@@ -703,8 +704,8 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
          !getWritable($row['entry_create_by'],$user))
   {
     $is_private = TRUE;
-    $row['name']= "- ".get_vocab('unavailable')." -";
-    $row['entry_description']= "- ".get_vocab('unavailable')." -";
+    $row['name']= "[".get_vocab('unavailable')."]";
+    $row['entry_description']= "[".get_vocab('unavailable')."]";
   }
   else
   {
@@ -730,28 +731,22 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     }
     
     // fill in the id, type and start time
-    $column[$time_t][$n]["id"]    = $row['entry_id'];
-    if ($is_private) 
-    {
-      $column[$time_t][$n]["color"] = 'P'.$row['type'];
-    }
-    else
-    {
-      $column[$time_t][$n]["color"] = $row['type'];
-    }
+    $column[$time_t][$n]["id"] = $row['entry_id'];
+    $column[$time_t][$n]["is_private"] = $is_private;
+    $column[$time_t][$n]["color"] = $row['type'];
     $column[$time_t][$n]["start_time"] = utf8_strftime(hour_min_format(), $row['start_time']);
     $column[$time_t][$n]["slots"] = null;  // to avoid undefined index NOTICE errors
     // if it's a multiple booking also fill in the name and description
     if ($n > 0)
     {
-      $column[$time_t][$n]["data"]  = $row['name'];
-      $column[$time_t][$n]["long_descr"]  = $row['entry_description'];
+      $column[$time_t][$n]["data"] = $row['name'];
+      $column[$time_t][$n]["long_descr"] = $row['entry_description'];
     }
     // otherwise just leave them blank (we'll fill in the first whole slot later)
     else
     {
-      $column[$time_t][$n]["data"]  = "";
-      $column[$time_t][$n]["long_descr"]  = ""; 
+      $column[$time_t][$n]["data"] = "";
+      $column[$time_t][$n]["long_descr"] = ""; 
     }
   } // end for
   
@@ -867,6 +862,7 @@ function draw_cell($cell, $query_strings, $cell_class)
   // display and looks like this:
   // 
   // $cell[n][id]
+  //         [is_private]
   //         [color]
   //         [data]
   //         [long_descr]
@@ -932,12 +928,18 @@ function draw_cell($cell, $query_strings, $cell_class)
                                             // and (b) each stripe is at least 1 unit high
     for ($n=0; $n<$n_bookings; $n++)
     {
-      $id    = $cell[$n]["id"];
-      $color = $cell[$n]["color"];
-      $descr = htmlspecialchars($cell[$n]["data"]);
+      $id         = $cell[$n]["id"];
+      $is_private = $cell[$n]["is_private"];
+      $color      = $cell[$n]["color"];
+      $descr      = htmlspecialchars($cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
+      $class = $color;
+      if ($is_private)
+      {
+        $class .= " private";
+      }
       echo "<tr>\n";
-      echo "<td class=\"$color\"" .
+      echo "<td class=\"$class\"" .
            (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
            ">\n";
       echo "<div style=\"overflow: hidden; " .
@@ -967,12 +969,18 @@ function draw_cell($cell, $query_strings, $cell_class)
     echo "<tbody>\n";
     for ($n=0; $n<$n_bookings; $n++)
     {
-      $id    = $cell[$n]["id"];
-      $color = $cell[$n]["color"];
-      $descr = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
+      $id         = $cell[$n]["id"];
+      $is_private = $cell[$n]["is_private"];
+      $color      = $cell[$n]["color"];
+      $descr      = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
+      $class = $color;
+      if ($is_private)
+      {
+        $class .= " private";
+      }
       echo "<tr>\n";
-      echo "<td class=\"$color\"" .
+      echo "<td class=\"$class\"" .
            (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
            ">\n";
       echo "<div class=\"celldiv slots1\">\n";     // we want clipping of overflow
@@ -994,11 +1002,12 @@ function draw_cell($cell, $query_strings, $cell_class)
   {  
     if(isset($cell[0]["id"]))
     {       
-      $id    = $cell[0]["id"];
-      $color = $cell[0]["color"];
-      $descr = htmlspecialchars($cell[0]["data"]);
+      $id         = $cell[0]["id"];
+      $is_private = $cell[0]["is_private"];
+      $color      = $cell[0]["color"];
+      $descr      = htmlspecialchars($cell[0]["data"]);
       $long_descr = htmlspecialchars($cell[0]["long_descr"]);
-      $slots = $cell[0]["slots"];
+      $slots      = $cell[0]["slots"];
     }
     else  // id not set
     {
@@ -1013,6 +1022,10 @@ function draw_cell($cell, $query_strings, $cell_class)
     if (isset($id))
     {
       $c = $color;
+      if ($is_private)
+      {
+        $c .= " private";
+      }
     }
     else
     {
@@ -1066,7 +1079,7 @@ function draw_cell($cell, $query_strings, $cell_class)
         echo "</div>\n";
       }
       else                 // if it is booked then show the booking
-      {    
+      {
         if ($times_along_top)
         {
           echo "<div class=\"celldiv slots1\">\n";

@@ -1,0 +1,11 @@
+/* $Id$ */
+
+/* Fixes for Internet Explorer 8 and below */
+
+/* ------------ PRIVATE BOOKINGS ---------------------------*/
+
+/* Opacity doesn't work well in IE8 and below, so we'll just change */
+/* the font color for private bookings */
+
+.private {color: #637582}
+.private a {color: #637582}

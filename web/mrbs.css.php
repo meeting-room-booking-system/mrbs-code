@@ -389,6 +389,8 @@ div:hover.multiple_control {cursor: pointer}
 .minimized div.mini {display: block}
 .minimized div.maxi {display: none}
 
+/* private bookings */
+.private {opacity: 0.6; font-style: italic}
 
 
 /* ------------ DEL.PHP -----------------------------*/

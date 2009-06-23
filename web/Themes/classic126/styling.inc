@@ -85,17 +85,8 @@ $color_types = array(
     'G' => "#FF6666",
     'H' => "#66FFFF",
     'I' => "#DDFFDD",
-    'J' => "#CCCCCC",
-    'PA' => "#D0A8D0", // PA-PJ are "Private" entry colors for A-J
-    'PB' => "#85b3b3",
-    'PC' => "#f08f8f",
-    'PD' => "#e6e38a",
-    'PE' => "#b2c8ed",
-    'PF' => "#e1ad7a",
-    'PG' => "#dc5959",
-    'PH' => "#50c6ce",
-    'PI' => "#aedeae",
-    'PJ' => "#959595"); 
+    'J' => "#CCCCCC");
+     
 
 // ***** DIMENSIONS *******************
 $banner_border_width          = '1';  // (px)  border width for the outside of the banner

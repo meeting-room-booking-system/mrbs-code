@@ -91,7 +91,7 @@ $vocab["valid_time_of_day"]  = "valid time of day.";
 $vocab["brief_description"]  = "Brief Description.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 $vocab["private"]            = "Private";
-$vocab["unavailable"]        = "Unavailable";
+$vocab["unavailable"]        = "Private";
 
 // Used in view_entry.php
 $vocab["description"]        = "Description";
