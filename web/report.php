@@ -661,14 +661,14 @@ if (isset($areamatch))
       }
       else
       {
-        $sql .= " AND (e.create_by = '".addslashes($user)."' OR NOT e.private)";
+        $sql .= " AND (e.create_by = '".addslashes($user)."' OR e.private=0)";
       }
     }
     else
     { 
       # un-authenticated users can only report on
       # items which are not marked private
-      $sql .= " AND NOT e.private";
+      $sql .= " AND e.private=0";
     }
   }
    
