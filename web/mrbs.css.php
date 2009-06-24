@@ -403,6 +403,12 @@ span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; fo
 #del_room_confirm_links span:hover {text-decoration: underline}    /* for Firefox */
 
 
+/* ------------ EDIT_AREA_ROOM.PHP ------------------*/
+.edit_area_room .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
+.edit_area_room .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
+span#private_display_caution {display: block; margin-top: 1em; font-style: italic; font-weight: normal}
+
+
 
 /* ------------ FORM_GENERAL ------------------------*/
 /*                                                   */
@@ -460,6 +466,8 @@ form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 .form_general div div {float: none; clear: none; width: auto}
 .form_general div.group {float: left; width: <?php echo $general_right_col_width ?>%}
 .form_general div.group.ampm {width: <?php echo $edit_entry_ampm_width ?>em}
+.edit_area_room div.group {clear: none}
+.edit_area_room div.group#private_override div {clear: left}
 .form_general fieldset {width: auto; border: 0; padding-top: 2.0em}
 
 .form_general label {
@@ -498,6 +506,7 @@ form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 .form_general select {float: left; margin-left: <?php echo $general_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
 .form_general input.radio {margin-top: 0.1em}
 .form_general input.checkbox {margin-top: 0.1em}
+.edit_area_room .form_general input.checkbox {width: auto; margin-left: <?php echo $general_gap ?>em}
 .form_general input.submit {display: block; width: auto; float: left; clear: left; margin-top: 1.0em}
 
 div#edit_entry_submit {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $edit_entry_left_col_max_width ?>em}

@@ -280,11 +280,13 @@ function get_area($room)
   return ($area < 0 ? 0 : $area);
 }
 
-// Update the default timeslot settings with the ones specific to this area
+// Update the default timeslot settings with the ones specific to this area.
+// If no value is set in the database, use the value from the config file
 function get_area_settings($area)
 {
   global $tbl_area;
   global $resolution, $default_duration, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+  global $private_enabled, $private_default, $private_mandatory, $private_override;
   $sql = "SELECT *
           FROM $tbl_area 
           WHERE id=$area 
@@ -303,6 +305,10 @@ function get_area_settings($area)
     $morningstarts_minutes = (isset($row['morningstarts_minutes']) ? $row['morningstarts_minutes'] : $morningstarts_minutes);
     $eveningends = (isset($row['eveningends']) ? $row['eveningends'] : $eveningends);
     $eveningends_minutes = (isset($row['eveningends_minutes']) ? $row['eveningends_minutes'] : $eveningends_minutes);
+    $private_enabled = (bool) (isset($row['private_enabled']) ? $row['private_enabled'] : $private_enabled);
+    $private_default = (bool) (isset($row['private_default']) ? $row['private_default'] : $private_default);
+    $private_mandatory = (bool) (isset($row['private_mandatory']) ? $row['private_mandatory'] : $private_mandatory);
+    $private_override = (isset($row['private_override']) ? $row['private_override'] : $private_override);
   }
 }
 

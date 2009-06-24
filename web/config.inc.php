@@ -120,9 +120,10 @@ $enable_periods = FALSE;
 // TIMES SETTINGS
 // --------------
 
-// NOTE:  The "Times" settings can all be configured per area.    These are the
-// default settings to be used.   The "Times" settings are ignored if $enable_periods
-// is TRUE.
+// These settings are all set per area through MRBS.   These are the default
+// settings that are used when a new area is created.
+
+// The "Times" settings are ignored if $enable_periods is TRUE.
 
 // Resolution - what blocks can be booked, in seconds.
 // Default is half an hour: 1800 seconds.
@@ -337,7 +338,11 @@ $highlight_method = "hybrid"; // One of "bgcolor", "class", "hybrid".   "hybrid"
                               // highlighting is used, whether or not $javascript_cursor is set.
 
 
-// Private Bookings Settings
+// PRIVATE BOOKINGS SETTINGS
+
+// These settings are all set per area through MRBS.   These are the default
+// settings that are used when a new area is created.
+
 // Only administrators or the person who booked a private event can see
 // details of the event.  Everyone else just sees that the time/period
 // is booked on the schedule.

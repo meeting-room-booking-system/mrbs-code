@@ -32,6 +32,10 @@ $area_eveningends = get_form_var('area_eveningends', 'int');
 $area_eveningends_minutes = get_form_var('area_eveningends_minutes', 'int');
 $area_evening_ampm = get_form_var('area_evening_ampm', 'string');
 $area_eveningends_t = get_form_var('area_eveningends_t', 'int');
+$area_private_enabled = get_form_var('area_private_enabled', 'string');
+$area_private_default = get_form_var('area_private_default', 'int');
+$area_private_mandatory = get_form_var('area_private_mandatory', 'string');
+$area_private_override = get_form_var('area_private_override', 'string');
 $change_done = get_form_var('change_done', 'string');
 $change_room = get_form_var('change_room', 'string');
 $change_area = get_form_var('change_area', 'string');
@@ -75,6 +79,9 @@ if (!empty($area_evening_ampm))
     $area_eveningends -= 12;
   }
 }
+
+$area_private_enabled = (!empty($area_private_enabled)) ? 1 : 0;
+$area_private_mandatory = (!empty($area_private_mandatory)) ? 1 : 0;
 
 $required_level = (isset($max_level) ? $max_level : 2);
 if (!getAuthorised($required_level))
@@ -302,6 +309,11 @@ if (!empty($area))
               . ", eveningends=" . $area_eveningends
               . ", eveningends_minutes=" . $area_eveningends_minutes;
       }
+      $sql .= ", private_enabled=" . $area_private_enabled
+            . ", private_default=" . $area_private_default
+            . ", private_mandatory=" . $area_private_mandatory
+            . ", private_override='" . $area_private_override . "'";
+            
       $sql .= " WHERE id=$area";
       if (sql_command($sql) < 0)
       {
@@ -345,17 +357,20 @@ if (!empty($area))
       ?>
     </fieldset>
   
-    <input type="hidden" name="area" value="<?php echo $row["id"]?>">
+    <fieldset>
+    <legend><?php echo get_vocab("general_settings")?></legend>
+      <input type="hidden" name="area" value="<?php echo $row["id"]?>">
     
-    <div>
-    <label for="area_name"><?php echo get_vocab("name") ?>:</label>
-    <input type="text" id="area_name" name="area_name" value="<?php echo htmlspecialchars($row["area_name"]); ?>">
-    </div>
+      <div>
+      <label for="area_name"><?php echo get_vocab("name") ?>:</label>
+      <input type="text" id="area_name" name="area_name" value="<?php echo htmlspecialchars($row["area_name"]); ?>">
+      </div>
     
-    <div>
-    <label for="area_admin_email"><?php echo get_vocab("area_admin_email") ?>:</label>
-    <input type="text" id="area_admin_email" name="area_admin_email" maxlength="75" value="<?php echo htmlspecialchars($row["area_admin_email"]); ?>">
-    </div>
+      <div>
+      <label for="area_admin_email"><?php echo get_vocab("area_admin_email") ?>:</label>
+      <input type="text" id="area_admin_email" name="area_admin_email" maxlength="75" value="<?php echo htmlspecialchars($row["area_admin_email"]); ?>">
+      </div>
+    </fieldset>
     
     <?php
     if (!$enable_periods)
@@ -466,6 +481,8 @@ if (!empty($area))
       //]]>
       </script>
       
+      <fieldset>
+      <legend><?php echo get_vocab("time_settings")?></legend>
       <div class="div_time">
         <label><?php echo get_vocab("area_first_slot_start")?>:</label>
         <?php
@@ -566,6 +583,73 @@ if (!empty($area))
     }
     
     ?>
+    </fieldset>
+    
+    <fieldset>
+    <legend><?php echo get_vocab("private_settings")?></legend>
+      <div>
+        <label for="area_private_enabled"><?php echo get_vocab("allow_private")?>:</label>
+        <?php $checked = ($private_enabled) ? " checked=\"checked\"" : "" ?>
+        <input class="checkbox" type="checkbox"<?php echo $checked ?> id="area_private_enabled" name="area_private_enabled">
+      </div>
+      <div>
+        <label for="area_private_mandatory"><?php echo get_vocab("force_private")?>:</label>
+        <?php $checked = ($private_mandatory) ? " checked=\"checked\"" : "" ?>
+        <input class="checkbox" type="checkbox"<?php echo $checked ?> id="area_private_mandatory" name="area_private_mandatory">
+      </div>
+      <label>
+        <?php echo get_vocab("default_settings")?>:
+      </label>
+      <div class="group">
+        <div>
+          <label>
+            <?php $checked = ($private_default) ? " checked=\"checked\"" : "" ?>
+            <input class="radio" type="radio" name="area_private_default" value="1"<?php echo $checked ?>>
+            <?php echo get_vocab("default_private")?>
+          </label>
+        </div>
+        <div>
+          <label>
+            <?php $checked = ($private_default) ? "" : " checked=\"checked\"" ?>
+            <input class="radio" type="radio" name="area_private_default" value="0"<?php echo $checked ?>>
+            <?php echo get_vocab("default_public")?>
+          </label>
+        </div>
+      </div>
+    </fieldset>
+    
+    <fieldset>
+    <legend><?php echo get_vocab("private_display")?></legend>
+      <label>
+        <?php echo get_vocab("private_display_label")?>
+        <span id="private_display_caution">
+          <?php echo get_vocab("private_display_caution")?>
+        </span>
+      </label>
+      <div class="group" id="private_override" >
+        <div>
+          <label>
+            <?php $checked = ($private_override == "none") ? " checked=\"checked\"" : "" ?>
+            <input class="radio" type="radio" name="area_private_override" value="none"<?php echo $checked ?>>
+            <?php echo get_vocab("treat_respect")?>
+          </label>
+        </div>
+        <div>
+          <label>
+            <?php $checked = ($private_override == "private") ? " checked=\"checked\"" : "" ?>
+            <input class="radio" type="radio" name="area_private_override" value="private"<?php echo $checked ?>>
+            <?php echo get_vocab("treat_private")?>
+          </label>
+        </div>
+        <div>
+          <label>
+            <?php $checked = ($private_override == "public") ? " checked=\"checked\"" : "" ?>
+            <input class="radio" type="radio" name="area_private_override" value="public"<?php echo $checked ?>>
+            <?php echo get_vocab("treat_public")?>
+          </label>
+        </div>
+      </div>
+    </fieldset>
     
     <fieldset class="submit_buttons">
     <legend></legend>

@@ -19,6 +19,7 @@ div.booking_list {overflow-x: hidden}       /* we don't want IE to give us the h
 /*   used in EDIT_ENTRY.PHP and REPORT.PHP           */
 
 .form_general legend {margin-bottom: 2.0em}   /* by default IE gives no gap between legend and first form element */
+.form_general fieldset fieldset legend {margin-bottom: 5px}
 
 /* margin-bottom on some form controls does not work, so put it on the relevant divs instead */
 .form_general div#div_description, 

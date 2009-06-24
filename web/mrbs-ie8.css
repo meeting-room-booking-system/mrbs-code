@@ -5,6 +5,12 @@
 /* ------------ ADMIN.PHP ---------------------------*/
 .form_admin fieldset {padding-top: 0}
 
+/* ------------ FORM_GENERAL ------------------------*/
+/* Even though no max-height is set, IE8 will clip content */
+/* when overflow is set to hidden.    Therefore we need to */
+/* set it to visible explicitly for the y direction        */
+.form_general label {overflow-y: visible}
+
 /* ------------ TRAILER.INC ---------------------*/
 
 /* opacity for IE8 is implemented with filter, but only works if the element */
