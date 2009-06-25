@@ -91,7 +91,7 @@ CREATE TABLE mrbs_variables
 CREATE TABLE mrbs_users
 (
   /* The first four fields are required. Don't remove. */
-  id        int NOT NULL auto_increment
+  id        int NOT NULL auto_increment,
   level     smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
   name      varchar(30),
   password  varchar(40),
