@@ -88,7 +88,19 @@ CREATE TABLE mrbs_variables
   PRIMARY KEY (id)
 );
 
+CREATE TABLE mrbs_users
+(
+  /* The first four fields are required. Don't remove. */
+  id        int NOT NULL auto_increment
+  level     smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
+  name      varchar(30),
+  password  varchar(40),
+  email     varchar(75),
+
+  PRIMARY KEY (id)
+);
+
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '3');
+  VALUES ( 'db_version', '5');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
