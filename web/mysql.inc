@@ -372,4 +372,11 @@ function sql_mysql_default_connect()
                                       $db_database, $persist);
 }
 
+
+// Close a connection
+function sql_mysql_close($connection)
+{
+  mysql_close($connection);
+}
+
 ?>

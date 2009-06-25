@@ -418,4 +418,11 @@ function sql_pgsql_default_connect()
                                       $db_database, $persist);
 }
 
+
+// Close a connection
+function sql_pgsql_close($connection)
+{
+  pg_close($connection);
+}
+
 ?>

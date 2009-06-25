@@ -406,4 +406,11 @@ function sql_mysqli_default_connect()
                                         $db_database, $persist);
 }
 
+
+// Close a connection
+function sql_mysqli_close($connection)
+{
+  mysqli_close($connection);
+}
+
 ?>

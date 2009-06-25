@@ -56,7 +56,7 @@ function upgrade_database($local, $from, $to)
         if ($res == -1)
         {
           // No need to localise, should hopefully never happen
-          print "Tried:<pre>
+          print "<br>Tried:<pre>
 ".htmlspecialchars($command)."
 </pre> and got error:<pre>
 ".sql_error()."

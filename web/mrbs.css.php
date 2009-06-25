@@ -447,6 +447,12 @@ $logon_input_width             = '12';      // em
 $logon_form_min_width          = $logon_left_col_max_width + $logon_input_width + $general_gap;
 $logon_form_min_width          = number_format($logon_form_min_width, 1, '.', '');   // get rid of any commas
 
+// Specific to the "db_logon" form
+$db_logon_left_col_max_width   = '12';      // em
+$db_logon_input_width          = '12';      // em
+$db_logon_form_min_width       = $db_logon_left_col_max_width + $db_logon_input_width + $general_gap;
+$db_logon_form_min_width       = number_format($db_logon_form_min_width, 1, '.', '');   // get rid of any commas
+
 // Specific to the "edit_area_room" form
 $edit_area_room_left_col_max_width  = '14';      // em
 $edit_area_room_input_width         = '12';      // em
@@ -461,6 +467,7 @@ form.form_general {margin-top: 2.0em; width: 100%}
 .search         form.form_general {min-width: <?php echo $search_form_min_width ?>em}
 .edit_area_room form.form_general {min-width: <?php echo $edit_area_room_form_min_width ?>em}
 form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
+form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>em}
 
 .form_general div {float: left; clear: left; width: 100%}
 .form_general div div {float: none; clear: none; width: auto}
@@ -482,6 +489,7 @@ form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 .search         .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
 .edit_area_room .form_general label {max-width: <?php echo $edit_area_room_left_col_max_width ?>em}
 #logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em}
+#db_logon                 label {max-width: <?php echo $db_logon_left_col_max_width ?>em}
 
 .form_general .group      label {clear: none; width: auto; max-width: 100%; font-weight: normal; overflow: visible}
 
@@ -494,6 +502,7 @@ form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 .search         .form_general input {width: <?php echo $search_input_width ?>em}
 .edit_area_room .form_general input {width: <?php echo $edit_area_room_input_width ?>em}
 #logon                    input {width: <?php echo $logon_input_width ?>em}
+#db_logon                 input {width: <?php echo $db_logon_input_width ?>em}
 .form_general .group      input {clear: none; width: auto}
 
 /* font family and size needs to be the same for input and textarea as their widths are defined in ems */
@@ -513,7 +522,8 @@ div#edit_entry_submit {width: <?php echo $general_left_col_width ?>%; max-width:
 div#report_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $report_left_col_max_width ?>em}
 div#search_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $search_left_col_max_width ?>em}
 div#logon_submit      {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $logon_left_col_max_width ?>em}
-#edit_entry_submit input, #report_submit input, #search_submit input, #logon_submit input
+div#db_logon_submit   {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $db_logon_left_col_max_width ?>em}
+#edit_entry_submit input, #report_submit input, #search_submit input, #logon_submit input, #db_logon_submit input
     {position: relative; left: 100%; width: auto}
 div#edit_area_room_submit_back {float: left; width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $edit_area_room_left_col_max_width ?>em}
 div#edit_area_room_submit_save {float: left; clear: none; width: auto}
