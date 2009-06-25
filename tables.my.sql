@@ -23,6 +23,10 @@ CREATE TABLE mrbs_area
   morningstarts_minutes int,
   eveningends           int,
   eveningends_minutes   int,
+  private_enabled       tinyint(1),
+  private_default       tinyint(1),
+  private_mandatory     tinyint(1),
+  private_override      varchar(32),
 
   PRIMARY KEY (id)
 );

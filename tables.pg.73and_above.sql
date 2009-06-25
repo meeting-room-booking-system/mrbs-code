@@ -38,7 +38,11 @@ CREATE TABLE mrbs_area
   morningstarts         int,
   morningstarts_minutes int,
   eveningends           int,
-  eveningends_minutes   int
+  eveningends_minutes   int,
+  private_enabled       smallint,
+  private_default       smallint,
+  private_mandatory     smallint,
+  private_override      varchar(32)
 );
 
 CREATE TABLE mrbs_room
