@@ -662,21 +662,26 @@ if (($current_db_schema_version < $db_schema_version) ||
     }
   }
 
+  $ok = TRUE;
+
   // Do any MRBS upgrades first
   if ($current_db_schema_version < $db_schema_version)
   {
-    upgrade_database(FALSE, $current_db_schema_version, $db_schema_version);
+    $ok = upgrade_database(FALSE, $current_db_schema_version, $db_schema_version);
   }
   // Then any local upgrades
-  if ($current_local_db_schema_version < $local_db_schema_version)
+  if ($ok && $current_local_db_schema_version < $local_db_schema_version)
   {
-    upgrade_database(TRUE, $current_local_db_schema_version, $local_db_schema_version);
+    $ok = upgrade_database(TRUE, $current_local_db_schema_version, $local_db_schema_version);
   }
   
   // close the database connection that has admin rights
   sql_close($admin_handle);
 
-  echo "<p>" . get_vocab("upgrade_completed") . "</p>\n";
+  if ($ok)
+  {
+    echo "<p>" . get_vocab("upgrade_completed") . "</p>\n";
+  }
   echo "<a href=\"./\">" . get_vocab("returncal") . "</a>.";
 
   print_footer(TRUE);

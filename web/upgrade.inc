@@ -3,7 +3,9 @@
 // $Id$
 
 
+// Upgrade between database schema versions.
 //
+// Returns FALSE on error, TRUE is successful
 function upgrade_database($local, $from, $to)
 {
   // $local is a boolean specifying whether the upgrades are global MRBS ones ($local == FALSE)
@@ -39,7 +41,7 @@ function upgrade_database($local, $from, $to)
     {
       // No need to localise, should never happen!
       print "Fatal error: Failed to open '$filename' for reading.\n";
-      return;
+      return FALSE;
     }
     $sql = fread($handle, filesize($filename));
     fclose($handle);
@@ -61,6 +63,7 @@ function upgrade_database($local, $from, $to)
 </pre> and got error:<pre>
 ".sql_error()."
 </pre>\n";
+          return FALSE;
         }
       }
     }
@@ -75,6 +78,7 @@ function upgrade_database($local, $from, $to)
       {
         // No need to localise, should never happen
         print "<span class=\"error\">Failed to update database version variable.</span>";
+        return FALSE;
       }
     }
     print "</p>\n";
@@ -85,6 +89,7 @@ function upgrade_database($local, $from, $to)
       include($php_filename);
     }
   }
+  return TRUE;
 }
 
 ?>
