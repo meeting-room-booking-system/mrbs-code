@@ -19,12 +19,6 @@
     in the logon box, if the value $user_list_link is set. */
 $user_list_link = "edit_users.php";
 
-// The highest level of access (0=none; 1=user; 2+=admin).    Used in edit_users.php
-// In the future we might want a higher level of granularity, eg to distinguish between
-// different levels of admin
-$max_level = 2;
-// The lowest level of admin allowed to edit other users
-$min_user_editing_level = 2;
 
 /* authValidateUser($user, $pass)
  * 
