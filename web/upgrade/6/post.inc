@@ -13,15 +13,23 @@ $r = sql_query("SELECT level FROM $tbl_users ".
 // then create it and populate it with existing admins defined in the config file
 if ($r == 0)
 {
-  // Default is '1' because we will assume all existing entries in the database are ordinary
-  // users.   In a moment we will go through the admins and upgrade them.
-  $r = sql_command("ALTER TABLE $tbl_users ADD COLUMN level smallint DEFAULT '1' NOT NULL ".sql_syntax_addcolumn_after("id"), $admin_handle);
+  // Default is '0' because we want to play safe and give no rights.
+  // In a moment we will go through the table and add users and admins.
+  $r = sql_command("ALTER TABLE $tbl_users ADD COLUMN level smallint DEFAULT '0' NOT NULL ".sql_syntax_addcolumn_after("id"), $admin_handle);
   if ($r == -1)
   {
     // No need to localize this: Only the admin running this for the first time would see it.
     print "<p class=\"error\">Error adding the 'level' column.</p>\n";
     print "<p class=\"error\">" . sql_error($admin_handle) . "</p>\n";
     exit();
+  }
+  
+  // Assuming that all existing entries in the users table are at least users, 
+  // make them all Level 1
+  $sql = "UPDATE $tbl_users SET level=1";
+  if (sql_command($sql) < 0)
+  {
+    fatal_error(0, "Error adding users. " . sql_error());
   }
   
   // Now populate the table with the existing admins
