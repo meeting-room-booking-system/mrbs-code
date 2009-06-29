@@ -43,7 +43,8 @@ function upgrade_database($local, $from, $to)
       print "Fatal error: Failed to open '$filename' for reading.\n";
       return FALSE;
     }
-    $sql = fread($handle, filesize($filename));
+    $file_size = filesize($filename);
+    $sql = (!empty($file_size)) ? fread($handle, filesize($filename)) : "";
     fclose($handle);
 
     $sql = str_replace('%DB_TBL_PREFIX%', $db_tbl_prefix, $sql);
