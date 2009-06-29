@@ -24,8 +24,8 @@ $local_db_schema_version = 1;
 require_once "${dbsys}.inc";
 
 
-// All the sql_* functions below apart from sql_connect() and
-// sql_default_connect() take an optional final argument which is
+// All the sql_* functions below apart from sql_connect(), sql_default_connect()
+// and sql_close() and take an optional final argument which is
 // the MRBS database handle to use. If this is not passed, the default
 // MRBS database connection is used.
 
