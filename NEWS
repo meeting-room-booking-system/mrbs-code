@@ -6,6 +6,74 @@
 [ - Bug fixed (we hope)      ]
 [============================]
 
+------------------------------------------------------------------------------- 
+Version 1.4.2 (??? July ?? ??:??:?? BST 2009): 
+
+[+] Added automatic upgrade system for upgrading MRBS installations
+ as the database schema changes. When an upgrade is needed MRBS will
+ prompt for database admin user authentication details.
+[+] Sites can also define their own local DB schema changes, using the
+ sane upgrade system.
+[*] Made access levels more flexible, by adding definitions for
+ "maximum level" and "minimum editing level" into config.inc.php.
+[*] Moved database table creation/alteration code out of edit_users.php,
+ it is now done with the upgrade system.
+[+] Added ability to make bookings private, with details only available
+ to the booker and administrators. Feature provided by Cory Jaeger and later
+ enhanced to allow private booking functionality to be configurable
+ per area.
+[*] Added check for PHP LDAP support into auth_ldap.inc, based on a suggestion
+ from Chris Cook.
+[-] Fixed issue with booknig display if booking "clipping" is turned off.
+[-] Added some missing SQL escaping in various places in response to
+ Secunia Advisory SA35469.
+[*] Booking fields that have maximum lengths in the database are now
+ truncated before adding them to the database, and additionally HTML
+ form elements have 'maxlength' attributes to match the database column
+ widths.
+[+] New authentication method that authenticates using an SMTP connection.
+[*] The creator of an entry is no longer cloned when a booking is copied.
+ This ensures that the entry is editable by the user that did the copy.
+[-] Adding missing HTML and JavaScript escaping of room names in the
+ "edit booking" screen.
+[*] Checks are now done to ensure that area names are unique and room names
+ are unique within an area.
+[*] Improved room deletion, so that repeat entries for the room are deleted.
+[*] You can now move a room between areas.
+[*] Improved error reporting on SQL errors when creating or modifying a
+ booking.
+[*] Made theme functionality more flexible, by allowing a theme to
+ change the page header.
+[*] Added Croating internationalialisation support, no translation yet.
+[+] Added the ability to reverse the standard display for week and day
+ view so that the columns are rows and vice versa.
+[-] Fix for NIS authentication on systems that use crypt methods other
+ than DES.
+[*] Improved handling of conflicts in edit_entry to allow for easy
+ addition of more booking policies
+[+] Timeslot settings are now help in the database, and are configurable
+ per area. Period settings are not yet per area.
+[*] Improved display of booking slots that contain more than one booking.
+ This is possible if booking resolution is decreased when bookings
+ already exist.
+[*] Added a configuration variable for session expiry time, for users
+ of the 'php' session scheme. The default is now to have a persistent
+ session that lasts 30 days.
+[-] Fixed rounding of booking slots to resolution boundaries.
+[-] Fixed Postgresql initial table creation script so that 'create_by'
+ column in the mrbs_repeat table is the correct width.
+[-] Fixed syntax error in auth_db_ext.inc reported on the mailing list.
+[-] Fixes for utilising 'db' auth scheme with PostgreSQL.
+[*] DB authentication scheme improved so that access rights are now
+ stored in the database and administered from the MRBS 'user list'
+ page.
+[+] Added Polish translation.
+[*] Improved print view, including changes that ensure cell
+ boundaries are visible.
+[-] Fixes for problems whereby a time was converted to "engineering"
+ format before an SQL call, thereby creating an error. First report of
+ the problem was  SF tracker #1794351.
+
 -------------------------------------------------------------------------------
 Version 1.4.1 (Sat Feb 14 22:00:00 GMT 2009):
 
@@ -427,7 +495,7 @@ Version 1.2-pre2 (Sun Dec 07 00:00:00 GMT 2003):
 [+] Bubbles are displayed when mouse hover entries in day, week and month 
       view, showing a more complete description.
 [+] Allow to view weeks in the bottom of the web pages as week numbers 
-      instead of 'first day of the week' (Per Wermelin - SKIOLD Sæby A/S"
+      instead of 'first day of the week' (Per Wermelin - SKIOLD SÃ¦by A/S"
 	  <ela@skiold.dk>).
 [*] Added a new script for the "ext" authentication scheme that
 	  allows you to use a password file with usernames and their
@@ -511,7 +579,7 @@ Version 1.1-pre2 (Thu Jan  9 17:50:00 GMT 2003)
         getting a list of the rooms in that area. This solves
         a number of errors that occur when editting/creating
         bookings.
-[-] Fixes submitted/suggested by Jean-François Larvoire:
+[-] Fixes submitted/suggested by Jean-FranÃ§ois Larvoire:
         * Added closing ?> to index.php
         * Added "global $refresh_rate;" to style.inc
         * Fixed all occurences (hopefully) of $vocab[] indices
