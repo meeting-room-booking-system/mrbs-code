@@ -5,8 +5,9 @@
 #
 # Notes:
 # (1) If you have decided to change the prefix of your tables from 'mrbs_'
-# to something else then you must edit each 'CREATE TABLE' line
-# below.
+# to something else using $db_tbl_prefix then you must edit each
+# 'CREATE TABLE' and 'INSERT INTO' line below to replace 'mrbs_' with
+# your new table prefix.
 # (2) If you change some of the varchar lengths here, then you should check
 # to see whether a corresponding length has been defined in the config file.
 # An example is ENTRY_NAME_LENGTH which is defined in the config file and

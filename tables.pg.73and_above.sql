@@ -19,8 +19,9 @@
 -- (thierry_bo 2003-12-03)
 --
 -- If you have decided to change the prefix of your tables from 'mrbs_'
--- to something else then you must edit each 'CREATE TABLE' and 'create index'
--- line below.
+-- to something else using $db_tbl_prefix then you must edit each
+-- 'CREATE TABLE', 'create index' and 'INSERT INTO' line below to replace
+-- 'mrbs_' with your new table prefix.
 --
 -- If you change some of the varchar lengths here, then you should check
 -- to see whether a corresponding length has been defined in the config file.
