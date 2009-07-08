@@ -46,6 +46,9 @@ $db_tbl_prefix = "mrbs_";
 $maxlength['entry.name']     = 80;    // characters   (name field in entry table)
 $maxlength['area.area_name'] = 30;    // characters   (area_name field in area table)
 $maxlength['room.room_name'] = 25;    // characters   (room_name field in room table)
+$maxlength['users.name']     = 30;    // characters   (name field in users table)
+$maxlength['users.email']    = 75;    // characters   (email field in users table)
+// other values for the users table need to follow the $maxlength['users.fieldname'] pattern
 
 
 /*********************************

@@ -251,6 +251,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                 echo ("<div>\n");
                 echo ("<label for=\"$html_fieldname\">" . get_loc_field_name($fieldname) . ":</label>\n");
                 echo ("<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" " .
+                      "maxlength=\"" . $maxlength['users.name'] . "\" " .
                      (($level < $min_user_editing_level) ? "disabled=\"disabled\" " : "") .
                       "value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n");
                 // if the field was disabled then we still need to pass through the value as a hidden input
@@ -264,7 +265,9 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                 $html_fieldname = htmlspecialchars("Field_$fieldname");
                 echo ("<div>\n");
                 echo ("<label for=\"$html_fieldname\">" . get_loc_field_name($fieldname) . ":</label>\n");
-                echo ("<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n");
+                echo ("<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" " .
+                     (isset($maxlength["users.$fieldname"]) ? "maxlength=\"" . $maxlength["users.$fieldname"] . "\" " : "") .
+                      "value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n");
                 echo ("</div>\n");
                 break;
             } // end switch
@@ -374,6 +377,8 @@ if (isset($Action) && ($Action == "Update"))
     
     // Verify email adresses
     $email_var = get_form_var('Field_email', 'string');
+    // Truncate the email field to the maximum length as a precaution.
+    $email_var = substr($email_var, 0, $maxlength['users.email']);
     if (!isset($email_var))
     {
       $email_var = '';
@@ -397,6 +402,9 @@ if (isset($Action) && ($Action == "Update"))
       Header("Location: edit_users.php?$q_string");
       exit;
     }
+    
+    // Truncate the name field to the maximum length as a precaution.
+    $new_name = substr($new_name, 0, $maxlength['users.name']);
     
     // Check that the name is unique.
     // If it's a new user, then to check to see if there are any rows with that name.
@@ -465,6 +473,11 @@ if (isset($Action) && ($Action == "Update"))
       // pre-process the field value for SQL
       if ($field_props[$fieldname]['istext'])
       {
+        // Truncate the field to the maximum length as a precaution.
+        if (isset($maxlength["users.$fieldname"]))
+        {
+          $value = substr($value, 0, $maxlength["users.$fieldname"]);
+        }
         $value = "'" . addslashes($value) . "'";
       }
       else if ($field_props[$fieldname]['isbool'])
