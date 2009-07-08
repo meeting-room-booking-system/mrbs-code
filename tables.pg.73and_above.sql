@@ -23,10 +23,9 @@
 -- 'CREATE TABLE', 'create index' and 'INSERT INTO' line below to replace
 -- 'mrbs_' with your new table prefix.
 --
--- If you change some of the varchar lengths here, then you should check
--- to see whether a corresponding length has been defined in the config file.
--- An example is ENTRY_NAME_LENGTH which is defined in the config file and
--- used for setting a maxlength attribute in the edit_entry form.
+-- If you change the varchar lengths here, then you should check
+-- to see whether a corresponding length has been defined in the config file
+-- in the array $maxlength.
 
 
 CREATE TABLE mrbs_area
