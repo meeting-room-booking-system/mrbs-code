@@ -468,7 +468,7 @@ else
     <div id="div_name">
       <label for="name"><?php echo get_vocab("namebooker")?>:</label>
       <?php
-      echo "<input id=\"name\" name=\"name\" maxlength=\"" . ENTRY_NAME_LENGTH . "\" value=\"" . htmlspecialchars($name) . "\">\n";
+      echo "<input id=\"name\" name=\"name\" maxlength=\"" . $maxlength['entry.name'] . "\" value=\"" . htmlspecialchars($name) . "\">\n";
       ?>
     </div>
 

@@ -43,7 +43,9 @@ $db_tbl_prefix = "mrbs_";
 // Field lengths in the database tables
 // NOTE:  these must be kept in step with the database.   If you change the field
 // lengths in the database then you should change the values here, and vice versa.
-define("ENTRY_NAME_LENGTH", 80);    // characters   (name field in entry table)
+$maxlength['entry.name']     = 80;    // characters   (name field in entry table)
+$maxlength['area.area_name'] = 30;    // characters   (area_name field in area table)
+$maxlength['room.room_name'] = 25;    // characters   (room_name field in room table)
 
 
 /*********************************

@@ -32,6 +32,8 @@ if (!getAuthorised($required_level))
 
 if ($type == "area")
 {
+  // Truncate the name field to the maximum length as a precaution.
+  $name = substr($name, 0, $maxlength['area.area_name']);
   $area_name_q = addslashes($name);
   // Acquire a mutex to lock out others who might be editing the area
   if (!sql_mutex_lock("$tbl_area"))
@@ -59,6 +61,8 @@ if ($type == "area")
 
 if ($type == "room")
 {
+  // Truncate the name field to the maximum length as a precaution.
+  $name = substr($name, 0, $maxlength['room.room_name']);
   $room_name_q = addslashes($name);
   $description_q = addslashes($description);
   if (empty($capacity))

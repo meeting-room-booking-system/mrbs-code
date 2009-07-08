@@ -46,7 +46,7 @@ $private = get_form_var('private', 'string'); // bool, actually
 // the MAXLENGTH attribute.    Passing an oversize string to some
 // databases (eg some versions of PostgreSQL) results in an SQL error,
 // rather than silent truncation of the string.
-$name = substr($name, 0, ENTRY_NAME_LENGTH);
+$name = substr($name, 0, $maxlength['entry.name']);
 
 if (empty($area))
 {
