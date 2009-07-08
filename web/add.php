@@ -61,8 +61,10 @@ if ($type == "area")
 
 if ($type == "room")
 {
-  // Truncate the name field to the maximum length as a precaution.
+  // Truncate the name and description fields to the maximum length as a precaution.
   $name = substr($name, 0, $maxlength['room.room_name']);
+  $description = substr($description, 0, $maxlength['room.description']);
+  // Add SQL escaping
   $room_name_q = addslashes($name);
   $description_q = addslashes($description);
   if (empty($capacity))

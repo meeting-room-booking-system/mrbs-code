@@ -177,7 +177,7 @@ if (0 != $area)
         
         <div>
           <label for="room_description"><?php echo get_vocab("description") ?>:</label>
-          <input type="text" id="room_description" name="description">
+          <input type="text" id="room_description" name="description" maxlength="<?php echo $maxlength['room.description'] ?>">
         </div>
         
         <div>
