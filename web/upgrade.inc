@@ -6,10 +6,12 @@
 // Upgrade between database schema versions.
 //
 // Returns FALSE on error, TRUE is successful
-function upgrade_database($local, $from, $to)
+function upgrade_database($local, $from, $to, $upgrade_handle)
 {
   // $local is a boolean specifying whether the upgrades are global MRBS ones ($local == FALSE)
   // or local upgrades ($local == TRUE);
+  // $upgrade_handle is the database handle to use for the upgrade.   It will typically
+  // have admin rights (eg CREATE and ALTER)
   global $dbsys;
   global $db_tbl_prefix;
   global $tbl_variables;
@@ -55,7 +57,7 @@ function upgrade_database($local, $from, $to)
       // an empty command)
       if (preg_match("/\S/", $command))
       {
-        $res = sql_command($command);
+        $res = sql_command($command, $upgrade_handle);
         if ($res == -1)
         {
           // No need to localise, should hopefully never happen

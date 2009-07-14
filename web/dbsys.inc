@@ -667,12 +667,12 @@ if (($current_db_schema_version < $db_schema_version) ||
   // Do any MRBS upgrades first
   if ($current_db_schema_version < $db_schema_version)
   {
-    $ok = upgrade_database(FALSE, $current_db_schema_version, $db_schema_version);
+    $ok = upgrade_database(FALSE, $current_db_schema_version, $db_schema_version, $admin_handle);
   }
   // Then any local upgrades
   if ($ok && $current_local_db_schema_version < $local_db_schema_version)
   {
-    $ok = upgrade_database(TRUE, $current_local_db_schema_version, $local_db_schema_version);
+    $ok = upgrade_database(TRUE, $current_local_db_schema_version, $local_db_schema_version, $admin_handle);
   }
   
   // close the database connection that has admin rights
