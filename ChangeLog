@@ -1,3 +1,69 @@
+2009-07-15 22:36  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1152] web/version.inc:
+	  
+	  * Updated version number for 1.4.2 release.
+
+2009-07-14 08:58  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1151] web/dbsys.inc, web/upgrade.inc:
+	  
+	  Fixed problem that meant that the correct database connection
+	  wasn't being used when upgrading the database (ie MRBS was using
+	  the ordinary username/password specified in the config file
+	  rather than the admin username/password entered during the
+	  upgrade process).
+
+2009-07-08 12:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1150] tables.my.sql, tables.pg.73and_above.sql, tables.pg.sql:
+	  
+	  Updated comments to reflect the new definition of maximum field
+	  lengths in the config file.
+
+2009-07-08 12:01  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1149] web/config.inc.php:
+	  
+	  * Small typo fix in a comment in the new $maxlength array values
+	  in config.inc.php.
+
+2009-07-08 11:55  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1148] web/add.php, web/admin.php, web/config.inc.php:
+	  
+	  Added checking of lengths for room description in order to avoid
+	  SQL errors in PostgreSQL.
+
+2009-07-08 10:56  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1147] web/config.inc.php, web/edit_users.php:
+	  
+	  Added checking of name lengths for username and email address in
+	  order to avoid SQL errors in PostgreSQL.
+
+2009-07-08 09:40  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1146] web/add.php, web/admin.php, web/config.inc.php,
+	  web/edit_entry.php, web/edit_entry_handler.php:
+	  
+	  Added checking of name lengths for room and area names in order
+	  to avoid SQL errors in PostgreSQL.
+
+2009-07-03 20:07  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1145] tables.my.sql, tables.pg.73and_above.sql, tables.pg.sql:
+	  
+	  * Updated comments at the top of the table definition SQL files,
+	  to tell people to update the 'INSERT INTO' lines too, if they
+	  change the table prefix.
+
+2009-07-02 09:12  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1143] ChangeLog, NEWS:
+	  
+	  * Updated NEWS and ChangeLog for MRBS 1.4.2 release.
+
 2009-07-02 08:25  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r1142] web/version.inc:

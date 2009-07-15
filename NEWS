@@ -7,8 +7,13 @@
 [============================]
 
 ------------------------------------------------------------------------------- 
-Version 1.4.2 (??? July ?? ??:??:?? BST 2009): 
+Version 1.4.2 (Thu July 15 00:00 BST 2009): 
 
+[+] Added checking of lengths of values for user-typeable fields, so that
+ overly long field values aren't passed to the MRBS database, - something
+ which causes errors with PostgreSQL. Adds new array variable $maxlength
+ to config.inc.php that _must_ be populated if you are upgrading and keeping
+ your old config.inc.php.
 [+] Added automatic upgrade system for upgrading MRBS installations
  as the database schema changes. When an upgrade is needed MRBS will
  prompt for database admin user authentication details.
