@@ -7,10 +7,7 @@
 // If $default_room is defined in config.inc.php then this will
 // be used to redirect to a particular room.
 
-require_once "grab_globals.inc.php";
-require_once "config.inc.php";
-require_once "dbsys.inc";
-require_once "mrbs_sql.inc";
+require_once "defaultincludes.inc";
 
 $day   = date("d");
 $month = date("m");

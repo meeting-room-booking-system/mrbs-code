@@ -48,6 +48,7 @@ if (!isset($encoding))
 }
 else
 {
+  require_once "systemdefaults.inc.php";
   require_once "config.inc.php";
   require_once "dbsys.inc";
   require_once "functions.inc";

@@ -4,6 +4,7 @@
 
 // This script initialises the database with some random data
 require_once "grab_globals.inc.php";
+require_once "systemdefaults.inc.php";
 require_once "config.inc.php";
 require_once "dbsys.inc";
 

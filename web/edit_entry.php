@@ -1,11 +1,8 @@
 <?php
 // $Id$
 
-require_once('grab_globals.inc.php');
-require_once "config.inc.php";
-require_once "functions.inc";
-require_once "dbsys.inc";
-require_once "mrbs_auth.inc";
+require_once "defaultincludes.inc";
+
 require_once "mrbs_sql.inc";
 
 global $twentyfourhour_format;
