@@ -42,6 +42,6 @@ $db_tbl_prefix = "mrbs_";
 
 
 /* Add lines from systemdefaults.inc.php here to change the default
-   configuration. DO _NOT_ modify systemdefaults.inc.php. */
+   configuration. Do _NOT_ modify systemdefaults.inc.php. */
 
 ?>
