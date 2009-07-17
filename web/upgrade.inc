@@ -64,7 +64,7 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
           print "<br>Tried:<pre>
 ".htmlspecialchars($command)."
 </pre> and got error:<pre>
-".sql_error()."
+".sql_error($upgrade_handle)."
 </pre>\n";
           return FALSE;
         }
