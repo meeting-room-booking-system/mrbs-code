@@ -63,7 +63,7 @@ if (!empty($advanced))
   exit;
 }
 
-# Require authenticated user if private bookings are required
+// Require authenticated user if private bookings are required
 if ($private_override == "private")
 {
   if (!getAuthorised(1))
@@ -93,14 +93,14 @@ $sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_str)
   . " OR " . sql_syntax_caseless_contains("E.description", $search_str)
   . ") AND E.end_time > $now";
 
-# Unless we overriding privacy settings as "public" or user
-# is and admin, we have to restrict which listings are returned
+// Unless we overriding privacy settings as "public" or user
+// is and admin, we have to restrict which listings are returned
 if (($private_override != "public") && !$is_admin) 
 {
   if (isset($user)) 
   {
-    # If private bookings are forced then user can only
-    # search their own.  If not they can also search non-private entries
+    // If private bookings are forced then user can only
+    // search their own.  If not they can also search non-private entries
     if ($private_override == "private") 
     {
       $sql_pred .= " AND E.create_by = '$user'";
@@ -112,9 +112,9 @@ if (($private_override != "public") && !$is_admin)
   }
   else
   {
-    # If user isn't logged in then we already know
-    # override isn't set to "private" and we wouldn't
-    # be here if it were "public" so...
+    // If user isn't logged in then we already know
+    // override isn't set to "private" and we wouldn't
+    // be here if it were "public" so...
     $sql_pred .= " AND NOT E.private";
   }
 }
