@@ -69,6 +69,7 @@ function getUserName()
 function PrintLogonBox()
 {
   global $user_list_link;
+  global $day, $month, $year;
   
   $user = getUserName();
 
