@@ -213,7 +213,7 @@ function getUserName()
 // Print the logon entry on the top banner.
 function PrintLogonBox()
 {
-  global $PHP_SELF, $QUERY_STRING, $user_list_link, $user_link, $day, $month;
+  global $PHP_SELF, $QUERY_STRING, $user_list_link, $day, $month;
   global $year, $auth;
 
   $TargetURL = basename($PHP_SELF);
