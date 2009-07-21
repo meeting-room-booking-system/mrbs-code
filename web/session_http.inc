@@ -68,11 +68,19 @@ function getUserName()
 // Print the logon entry on the top banner.
 function PrintLogonBox()
 {
-  global $user_list_link;
-  global $day, $month, $year;
+  global $PHP_SELF, $QUERY_STRING, $user_list_link, $day, $month, $year;
+  
+  $TargetURL = basename($PHP_SELF);
+  if (isset($url_base) && ($url_base != ""))
+  {
+    $TargetURL = $url_base . '/' . $TargetURL;
+  }
+  if (isset($QUERY_STRING))
+  {
+    $TargetURL = $TargetURL . "?" . $QUERY_STRING;
+  }
   
   $user = getUserName();
-
   if (isset($user))
   {
     // words 'you are xxxx' becomes a link to the
@@ -96,7 +104,7 @@ function PrintLogonBox()
     <a name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></a>
     <form method="post" action="admin.php">
       <div>
-        <input type="hidden" name="TargetURL" value="<?php echo $TargetURL ?>">
+        <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
         <input type="hidden" name="Action" value="QueryName">
         <input type="submit" value=" <?php echo get_vocab('login') ?> ">
       </div>
