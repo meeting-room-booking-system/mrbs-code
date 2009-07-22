@@ -176,7 +176,7 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main#month_main td {border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>}
 .dwm_main#month_main td.valid   {background-color: <?php echo $main_table_month_color ?>}
 .dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
-.dwm_main#month_main a {padding: 0 2px 0 2px}
+.dwm_main#month_main a {height: 100%; width: 100%; padding: 0 2px 0 2px}
 
 a.new_booking {display: block; font-size: medium; text-align: center}
 .new_booking img {margin: auto; border: 0; padding: 4px 0 2px 0}
