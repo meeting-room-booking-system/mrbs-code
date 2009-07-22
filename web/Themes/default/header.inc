@@ -7,6 +7,7 @@ function print_theme_header($day, $month, $year, $area, $room)
 {
   global $mrbs_company, $mrbs_company_logo, $mrbs_company_url, $mrbs_company_more_info,
     $search_str, $locale_warning, $unicode_encoding, $vocab;
+  global $PHP_SELF;
 
   // If we dont know the right date then make it up 
   if (!$day)
