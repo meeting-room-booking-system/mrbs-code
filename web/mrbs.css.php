@@ -642,7 +642,7 @@ table.calendar {border-spacing: 0; border-collapse: collapse}
 .calendar td.hidden {background-color: <?php echo $calendar_hidden_color ?>; font-weight: bold} 
 .calendar a.current {font-weight: bold; color: <?php echo $highlight_font_color ?>}
 td#sticky_day {border: 1px dotted <?php echo $highlight_font_color ?>}
-
+td.mincals_week_number { opacity: 0.5; font-size: 60%; }
 
 /* ------------ REPORT.PHP ----------------------*/
 .div_report h2, #div_summary h1 {border-top: 2px solid <?php echo $report_h2_border_color ?>;

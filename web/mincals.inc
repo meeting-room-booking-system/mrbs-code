@@ -118,6 +118,7 @@ class Calendar
       global $day;
       global $month;
       global $year;
+      global $mincals_week_numbers;
 
       if (!isset($weekstarts)) $weekstarts = 0;
       $s = "";
@@ -164,11 +165,20 @@ class Calendar
       $s .= "<thead>\n";
       // prints month name and year
       
+      $cols = 7;
+      if ($mincals_week_numbers)
+      {
+        $cols++;
+      }
       $s .= "<tr>\n";   
-      $s .= "<th colspan=\"7\">$monthName&nbsp;$this->year</th>\n"; 
+      $s .= "<th colspan=\"$cols\">$monthName&nbsp;$this->year</th>\n"; 
       $s .= "</tr>\n";
       
       $s .= "<tr>\n";
+      if ($mincals_week_numbers)
+      {
+          $s .= "<th></th>\n";
+      }
       // gets days of week
       $s .= $this->getFirstDays();
       $s .= "</tr>\n";
@@ -182,6 +192,10 @@ class Calendar
       {
         $s .= "<tr>\n";
 
+        if ($mincals_week_numbers)
+        {
+            $s .= "<td valign=\"middle\" class=\"mincals_week_number\">".date("W",gmmktime (12, 0, 0, $this->month, $d, $this->year))."</td>\n";
+        }
         for ($i = 0; $i < 7; $i++)
         {
           $hide_this_day = is_hidden_day(($i + $weekstarts) % 7);

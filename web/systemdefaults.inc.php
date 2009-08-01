@@ -283,6 +283,11 @@ $monthly_view_entries_details = "both";
 // 'first day of the week' (13 Oct), set this to TRUE
 $view_week_number = FALSE;
 
+// To display week numbers in the mini-calendars, set this to true. The week
+// numbers are only accurate if you set $weekstarts to 1, i.e. set the
+// start of the week to Monday
+$mincals_week_numbers = FALSE;
+
 // To display times on the x-axis (along the top) and rooms or days on the y-axis (down the side)
 // set to TRUE;   the default/traditional version of MRBS has rooms (or days) along the top and
 // times along the side.    Transposing the table can be useful if you have a large number of
