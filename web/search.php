@@ -103,11 +103,11 @@ if (($private_override != "public") && !$is_admin)
     // search their own.  If not they can also search non-private entries
     if ($private_override == "private") 
     {
-      $sql_pred .= " AND E.create_by = '$user'";
+      $sql_pred .= " AND E.create_by = '".addslashes($user)."'";
     }
     else
     {
-      $sql_pred .= " AND (E.create_by = '$user' OR NOT E.private)";
+      $sql_pred .= " AND (E.create_by = '".addslashes($user)."' OR NOT E.private)";
     }
   }
   else
