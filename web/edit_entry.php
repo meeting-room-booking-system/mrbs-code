@@ -628,7 +628,10 @@ else
                 }
                 // select the first entry by default to ensure
                 // that one room is selected to begin with
-                print "        roomsObj.options[0].selected = true;\n";
+                if ($j > 0)  // but only do this if there is a room
+                {
+                  print "        roomsObj.options[0].selected = true;\n";
+                }
                 print "        break;\n";
               }
             }
