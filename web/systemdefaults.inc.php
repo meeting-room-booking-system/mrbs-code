@@ -205,29 +205,6 @@ $periods[] = "Period&nbsp;2";
 // NOTE:  The maximum number of periods is 60.   Do not define more than this.
 
 
-// CHECKING
-// --------
-
-// Do some checking (and redefine $max_slots if we're using periods)
-if ($enable_periods)
-{
-  $max_slots = count($periods);  // We know exactly how many we need
-  if ($max_slots > 60)
-  {
-    die('Configuration error: too many periods defined');
-  }
-}
-else
-{
-  $start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
-  $start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
-  $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
-  if (($start_difference < 0) or ($start_difference%$resolution != 0))
-  {
-    die('Configuration error: start and end of day incorrectly defined');
-  }
-}
-
 /******************
  * Display settings
  ******************/
