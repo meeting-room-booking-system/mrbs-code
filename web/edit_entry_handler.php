@@ -441,20 +441,20 @@ if ($valid_booking)
                                           isset($rep_num_weeks) ? $rep_num_weeks : 0,
                                           $isprivate);
       // Send a mail to the Administrator
-      if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
-          MAIL_ROOM_ADMIN_ON_BOOKINGS or MAIL_BOOKER)
+      if ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
+          $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'])
       {
         require_once "functions_mail.inc";
         // Send a mail only if this a new entry, or if this is an
         // edited entry but we have to send mail on every change,
         // and if mrbsCreateRepeatingEntrys is successful
-        if ( ( (isset($id) && MAIL_ADMIN_ALL) or !isset($id) ) &&
+        if ( ( (isset($id) && $mail_settings['admin_all']) or !isset($id) ) &&
              (0 != $new_id) )
         {
           // Get room name and area name. Would be better to avoid
           // a database access just for that. Ran only if we need
           // details
-          if (MAIL_DETAILS)
+          if ($mail_settings['details'])
           {
             $sql = "SELECT r.id AS room_id, r.room_name, r.area_id, a.area_name ";
             $sql .= "FROM $tbl_room r, $tbl_area a ";
@@ -499,19 +499,19 @@ if ($valid_booking)
                                       $isprivate);
 
       // Send a mail to the Administrator
-      if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
-          MAIL_ROOM_ADMIN_ON_BOOKINGS or MAIL_BOOKER)
+      if ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
+          $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'])
       {
         require_once "functions_mail.inc";
         // Send a mail only if this a new entry, or if this is an
         // edited entry but we have to send mail on every change,
         // and if mrbsCreateRepeatingEntrys is successful
-        if ( ( (isset($id) && MAIL_ADMIN_ALL) or !isset($id) ) && (0 != $new_id) )
+        if ( ( (isset($id) && $mail_settings['admin_all']) or !isset($id) ) && (0 != $new_id) )
         {
           // Get room name and are name. Would be better to avoid
           // a database access just for that. Ran only if we need
           // details.
-          if (MAIL_DETAILS)
+          if ($mail_settings['details'])
           {
             $sql = "SELECT r.id AS room_id, r.room_name, r.area_id, a.area_name ";
             $sql .= "FROM $tbl_room r, $tbl_area a ";

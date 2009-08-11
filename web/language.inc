@@ -329,11 +329,11 @@ $aix_utf8_converters = array
 // Language token handling
 
 // Get first default set of language tokens for emails.
-if (MAIL_ADMIN_ON_BOOKINGS or MAIL_AREA_ADMIN_ON_BOOKINGS or
-    MAIL_ROOM_ADMIN_ON_BOOKINGS or MAIL_BOOKER)
+if ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
+    $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'])
 {
   include "lang." . $default_language_tokens;
-  include "lang." . MAIL_ADMIN_LANG;
+  include "lang." . $mail_settings['admin_lang'];
   $mail_vocab = $vocab;
   unset ($vocab);
 }

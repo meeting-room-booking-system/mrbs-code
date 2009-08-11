@@ -150,12 +150,13 @@ function notifyAdminOnBooking($new_entry , $new_id)
   global $rep_opt, $rep_num_weeks;
   global $tbl_room, $tbl_area, $tbl_entry, $tbl_users, $tbl_repeat;
   global $mail_previous, $auth;
+  global $mail_settings;
     
   //
   $recipients = '';
   $id_table = ($rep_type > 0) ? "rep" : "e";
-  (MAIL_ADMIN_ON_BOOKINGS) ? $recipients = MAIL_RECIPIENTS : '';
-  if (MAIL_AREA_ADMIN_ON_BOOKINGS)
+  ($mail_settings['admin_on_bookings']) ? $recipients = $mail_settings['recipients'] : '';
+  if ($mail_settings['area_admin_on_bookings'])
   {
     // Look for list of area admins emails addresses
     if ($new_entry)
@@ -195,7 +196,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
       }
     }
   }
-  if (MAIL_ROOM_ADMIN_ON_BOOKINGS)
+  if ($mail_settings['room_admin_on_bookings'])
   {
     // Look for list of room admins emails addresses
     if ($new_entry)
@@ -235,7 +236,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
       }
     }
   }
-  if (MAIL_BOOKER)
+  if ($mail_settings['booker'])
   {
     if ('db' == $auth['type'])
     {
@@ -270,8 +271,8 @@ function notifyAdminOnBooking($new_entry , $new_id)
         }
         if ('' != $create_by)
         {
-          $recipients .= str_replace(MAIL_USERNAME_SUFFIX, '',
-                                     $create_by) . MAIL_DOMAIN;
+          $recipients .= str_replace($mail_settings['username_suffix'], '',
+                                     $create_by) . $mail_settings['domain'];
         }
       }
       else
@@ -282,8 +283,8 @@ function notifyAdminOnBooking($new_entry , $new_id)
         }
         if ('' != $mail_previous['createdby'])
         {
-          $recipients .= str_replace(MAIL_USERNAME_SUFFIX, '',
-                                     $mail_previous['createdby']) . MAIL_DOMAIN;
+          $recipients .= str_replace($mail_settings['username_suffix'], '',
+                                     $mail_previous['createdby']) . $mail_settings['domain'];
         }
       }
     }
@@ -319,7 +320,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
   }
   $body .= "\n";
   // Displays/don't displays entry details
-  if (MAIL_DETAILS)
+  if ($mail_settings['details'])
   {
     $body .= "\n" . get_mail_vocab("namebooker") . ": ";
     $body .= compareEntries(convertToMailCharset($name),
@@ -489,7 +490,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
                      $subject,
                      $body,
                      get_mail_charset(),
-                     MAIL_CC);
+                     $mail_settings['cc']);
   return $result;
 }
 
@@ -505,10 +506,11 @@ function notifyAdminOnBooking($new_entry , $new_id)
 function notifyAdminOnDelete($mail_previous)
 {
   global $typel, $enable_periods, $auth, $tbl_users;
+  global $mail_settings;
   //
   $recipients = '';
-  (MAIL_ADMIN_ON_BOOKINGS) ? $recipients = MAIL_RECIPIENTS : '';
-  if (MAIL_AREA_ADMIN_ON_BOOKINGS)
+  ($mail_settings['admin_on_bookings']) ? $recipients = $mail_settings['recipients'] : '';
+  if ($mail_settings['area_admin_on_bookings'])
   {
     if ( !empty($recipients) && ('' != $mail_previous['area_admin_email']) )
     {
@@ -519,7 +521,7 @@ function notifyAdminOnDelete($mail_previous)
       $recipients .= $mail_previous['area_admin_email'];
     }
   }
-  if (MAIL_ROOM_ADMIN_ON_BOOKINGS)
+  if ($mail_settings['room_admin_on_bookings'])
   {
     if ( !empty($recipients) && ('' != $mail_previous['room_admin_email']) )
     {
@@ -530,7 +532,7 @@ function notifyAdminOnDelete($mail_previous)
       $recipients .= $mail_previous['room_admin_email'];
     }
   }
-  if (MAIL_BOOKER)
+  if ($mail_settings['booker'])
   {
     if ('db' == $auth['type'])
     {
@@ -563,8 +565,8 @@ function notifyAdminOnDelete($mail_previous)
       }
       if ('' != $mail_previous['createdby'])
       {
-        $recipients .= str_replace(MAIL_USERNAME_SUFFIX, '',
-                                   $mail_previous['createdby']) . MAIL_DOMAIN;
+        $recipients .= str_replace($mail_settings['username_suffix'], '',
+                                   $mail_previous['createdby']) . $mail_settings['domain'];
       }
     }
   }
@@ -634,7 +636,7 @@ function notifyAdminOnDelete($mail_previous)
   }
   $body .= "\n";
   // End of mail details
-  $result = sendMail($recipients, $subject, $body, get_mail_charset(), MAIL_CC);
+  $result = sendMail($recipients, $subject, $body, get_mail_charset(), $mail_settings['cc']);
   return $result;
 }
 
@@ -906,13 +908,23 @@ function compareEntries($new_value, $previous_value, $new_entry)
  * @param string  $password         smtp server password
  * @return bool                     TRUE or PEAR error object if fails
  */
-function sendMail($recipients, $subject, $body, $charset = 'us-ascii',
-    $cc = NULL, $bcc = NULL, $from = MAIL_FROM, $backend = MAIL_ADMIN_BACKEND,
-    $sendmail_path = SENDMAIL_PATH, $sendmail_args = SENDMAIL_ARGS,
-    $host = SMTP_HOST, $port = SMTP_PORT, $auth = SMTP_AUTH,
-    $username = SMTP_USERNAME, $password = SMTP_PASSWORD)
+function sendMail($recipients, $subject, $body, 
+                  $charset = 'us-ascii', $cc = NULL, $bcc = NULL)
 {
   require_once "Mail.php";
+  
+  global $mail_settings, $sendmail_settings, $smtp_settings;
+  
+  // Set up configuration settings
+  $from = $mail_settings['from'];
+  $backend = $mail_settings['admin_backend'];
+  $sendmail_path = $sendmail_settings['path'];
+  $sendmail_args = $sendmail_settings['args'];
+  $host = $smtp_settings['host'];
+  $port = $smtp_settings['port'];
+  $auth = $smtp_settings['auth'];
+  $username = $smtp_settings['username'];
+  $password = $smtp_settings['password'];
   
   $params = array();  // to avoid an undefined variable message
 

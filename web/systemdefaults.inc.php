@@ -59,7 +59,7 @@ $maxlength['users.email']      = 75;  // characters   (email field in users tabl
  * Site identification information
  *********************************/
 $mrbs_admin = "Your Administrator";
-$mrbs_admin_email = "admin_email@your.org";
+$mrbs_admin_email = "admin_email@your.org";  // NOTE:  there are more email addresses in $mail_settings below
 
 // The company name is mandatory.   It is used in the header and also for email notifications.
 // The company logo, additional information and URL are all optional.
@@ -548,61 +548,61 @@ $auth['smtp']['server'] = 'myserver.example.org';
 
 // Set to TRUE if you want to be notified when entries are booked. Default is
 // FALSE
-define ("MAIL_ADMIN_ON_BOOKINGS", FALSE);
+$mail_settings['admin_on_bookings'] = FALSE;
 
 // Set to TRUE if you want AREA ADMIN to be notified when entries are booked.
 // Default is FALSE. Area admin emails are set in room_area admin page.
-define ("MAIL_AREA_ADMIN_ON_BOOKINGS", FALSE);
+$mail_settings['area_admin_on_bookings'] = FALSE;
 
 // Set to TRUE if you want ROOM ADMIN to be notified when entries are booked.
 // Default is FALSE. Room admin emails are set in room_area admin page.
-define ("MAIL_ROOM_ADMIN_ON_BOOKINGS", FALSE);
+$mail_settings['room_admin_on_bookings'] = FALSE;
 
 // Set to TRUE if you want ADMIN to be notified when entries are deleted. Email
 // will be sent to mrbs admin, area admin and room admin as per above settings,
-// as well as to booker if MAIL_BOOKER is TRUE (see below).
-define ("MAIL_ADMIN_ON_DELETE", FALSE);
+// as well as to booker if 'booker' is TRUE (see below).
+$mail_settings['admin_on_delete'] = FALSE;
 
 // Set to TRUE if you want to be notified on every change (i.e, on new entries)
 // but also each time they are edited. Default is FALSE (only new entries)
-define ("MAIL_ADMIN_ALL", FALSE);
+$mail_settings['admin_all'] = FALSE;
 
 // Set to TRUE is you want to show entry details in email, otherwise only a
 // link to view_entry is provided. Irrelevant for deleted entries. Default is
 // FALSE.
-define ("MAIL_DETAILS", FALSE);
+$mail_settings['details'] = FALSE;
 
 // Set to TRUE if you want BOOKER to receive a copy of his entries as well any
-// changes (depends of MAIL_ADMIN_ALL, see below). Default is FALSE. To know
+// changes (depends on 'admin_all', see below). Default is FALSE. To know
 // how to set mrbs to send emails to users/bookers, see INSTALL.
-define ("MAIL_BOOKER", FALSE);
+$mail_settings['booker'] = FALSE;
 
-// If MAIL_BOOKER is set to TRUE (see above) and you use an authentication
+// If 'booker' is set to TRUE (see above) and you use an authentication
 // scheme other than 'auth_db', you need to provide the mail domain that will
 // be appended to the username to produce a valid email address (ie.
 // "@domain.com").
-define ("MAIL_DOMAIN", '');
+$mail_settings['domain'] = '';
 
-// If you use MAIL_DOMAIN above and username returned by mrbs contains extra
+// If you use $mail_settings['domain'] above and username returned by mrbs contains extra
 // strings appended like domain name ('username.domain'), you need to provide
 // this extra string here so that it will be removed from the username.
-define ("MAIL_USERNAME_SUFFIX", '');
+$mail_settings['username_suffix'] = '';
 
-// Set the name of the Backend used to transport your mails. Either "mail",
-// "smtp" or "sendmail". Default is 'mail'. See INSTALL for more details.
-define ("MAIL_ADMIN_BACKEND", "mail");
+// Set the name of the Backend used to transport your mails. Either 'mail',
+// 'smtp' or 'sendmail'. Default is 'mail'. See INSTALL for more details.
+$mail_settings['admin_backend'] = 'mail';
 
 /*******************
  * Sendmail settings
  */
 
 // Set the path of the Sendmail program (only used with "sendmail" backend).
-// Default is "/usr/bin/sendmail"
-define ("SENDMAIL_PATH", "/usr/bin/sendmail");
+// Default is '/usr/bin/sendmail'
+$sendmail_settings['path'] = '/usr/bin/sendmail';
 
 // Set additional Sendmail parameters (only used with "sendmail" backend).
-// (example "-t -i"). Default is ""
-define ("SENDMAIL_ARGS", '');
+// (example "-t -i"). Default is ''
+$sendmail_settings['args'] = '';
 
 /*******************
  * SMTP settings
@@ -610,19 +610,19 @@ define ("SENDMAIL_ARGS", '');
 
 // Set smtp server to connect. Default is 'localhost' (only used with "smtp"
 // backend).
-define ("SMTP_HOST", "localhost");
+$smtp_settings['host'] = 'localhost';
 
 // Set smtp port to connect. Default is '25' (only used with "smtp" backend).
-define ("SMTP_PORT", 25);
+$smtp_settings['port'] = 25;
 
 // Set whether or not to use SMTP authentication. Default is 'FALSE'
-define ("SMTP_AUTH", FALSE);
+$smtp_settings['auth'] = FALSE;
 
-// Set the username to use for SMTP authentication. Default is ""
-define ("SMTP_USERNAME", '');
+// Set the username to use for SMTP authentication. Default is ''
+$smtp_settings['username'] = '';
 
-// Set the password to use for SMTP authentication. Default is ""
-define ("SMTP_PASSWORD", '');
+// Set the password to use for SMTP authentication. Default is ''
+$smtp_settings['password'] = '';
 
 /**********************
  * Miscellaneous settings
@@ -630,22 +630,22 @@ define ("SMTP_PASSWORD", '');
 
 // Set the language used for emails (choose an available lang.* file).
 // Default is 'en'.
-define ("MAIL_ADMIN_LANG", 'en');
+$mail_settings['admin_lang'] = 'en';
 
-// Set the email address of the From field. Default is $mrbs_admin_email
-define ("MAIL_FROM", $mrbs_admin_email);
+// Set the email address of the From field. Default is 'admin_email@your.org'
+$mail_settings['from'] = 'admin_email@your.org';
 
-// Set the recipient email. Default is $mrbs_admin_email. You can define
+// Set the recipient email. Default is 'admin_email@your.org'. You can define
 // more than one recipient like this "john@doe.com,scott@tiger.com"
-define ("MAIL_RECIPIENTS", $mrbs_admin_email);
+$mail_settings['recipients'] = 'admin_email@your.org';
 
 // Set email address of the Carbon Copy field. Default is ''. You can define
-// more than one recipient (see MAIL_RECIPIENTS)
-define ("MAIL_CC", '');
+// more than one recipient (see 'recipients')
+$mail_settings['cc'] = '';
 
 /**********
  * Language
- *&********/
+ **********/
 
 // Set this to 1 to use UTF-8 in all pages and in the database, otherwise
 // text gets entered in the database in different encodings, dependent
@@ -675,15 +675,17 @@ $override_locale = "";
 // use "_fr"
 $faqfilelang = ""; 
 
-// This next require must be done after the definitions above, as the definitions
-// are used in the included file
-require_once "language.inc";
 
 /*************
  * Entry Types
  *************/
 
 // This array maps entry type codes (letters A through J) into descriptions.
+//
+// This is a basic default array which ensures there are at least some types defined.
+// The proper type definitions should be made in config.inc.php:  they have to go there
+// because they use get_vocab which requires language.inc which uses settings which might
+// be made in config.inc.php.
 //
 // Each type has a color which is defined in the array $color_types in the Themes
 // directory - just edit whichever include file corresponds to the theme you
@@ -700,11 +702,11 @@ require_once "language.inc";
 // $typel["B"] = "B";
 // $typel["C"] = "C";
 // $typel["D"] = "D";
-$typel["E"] = get_vocab("external");
+$typel["E"] = "E";
 // $typel["F"] = "F";
 // $typel["G"] = "G";
 // $typel["H"] = "H";
-$typel["I"] = get_vocab("internal");
+$typel["I"] = "I";
 // $typel["J"] = "J";
 
 

@@ -37,7 +37,7 @@ if (getAuthorised(1) && ($info = mrbsGetEntryInfo($id)))
   $year  = strftime("%Y", $info["start_time"]);
   $area  = mrbsGetRoomArea($info["room_id"]);
 
-  if (MAIL_ADMIN_ON_DELETE)
+  if ($mail_settings['admin_on_delete'])
   {
     require_once "functions_mail.inc";
     // Gather all fields values for use in emails.
@@ -49,7 +49,7 @@ if (getAuthorised(1) && ($info = mrbsGetEntryInfo($id)))
   if ($result)
   {
     // Send a mail to the Administrator
-    (MAIL_ADMIN_ON_DELETE) ? $result = notifyAdminOnDelete($mail_previous) : '';
+    ($mail_settings['admin_on_delete']) ? $result = notifyAdminOnDelete($mail_previous) : '';
     Header("Location: $returl");
     exit();
   }
