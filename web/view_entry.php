@@ -341,17 +341,17 @@ $returl = urlencode($returl);
 <div id="view_entry_nav">
   <div>
     <?php
-    if (! $series)
+    if (!$series)
     {
       echo "<a href=\"edit_entry.php?id=$id&amp;returl=$returl\">". get_vocab("editentry") ."</a>";
     }
     
-    if ($repeat_id)
+    if (!empty($repeat_id))
     {
       echo " - ";
     }
     
-    if ($repeat_id || $series )
+    if (!empty($repeat_id) || $series)
     {
       echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$returl\">".get_vocab("editseries")."</a>";
     }
@@ -362,17 +362,17 @@ $returl = urlencode($returl);
     <?php
     
     // Copy and Copy series
-    if ( ! $series )
+    if (!$series)
     {
       echo "<a href=\"edit_entry.php?id=$id&amp;copy=1&amp;returl=$returl\">". get_vocab("copyentry") ."</a>";
     }
        
-    if ($repeat_id)
+    if (!empty($repeat_id))
     {
       echo " - ";
     }
        
-    if ($repeat_id || $series ) 
+    if (!empty($repeat_id) || $series) 
     {
       echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=1&amp;returl=$returl\">".get_vocab("copyseries")."</a>";
     }
@@ -381,17 +381,17 @@ $returl = urlencode($returl);
   </div>
   <div>
     <?php
-    if ( ! $series )
+    if (!$series)
     {
       echo "<a href=\"del_entry.php?id=$id&amp;series=0&amp;returl=$returl\" onclick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</a>";
     }
     
-    if ($repeat_id)
+    if (!empty($repeat_id))
     {
       echo " - ";
     }
     
-    if ($repeat_id || $series )
+    if (!empty($repeat_id) || $series)
     {
       echo "<a href=\"del_entry.php?id=$id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$returl\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteseries")."</a>";
     }
