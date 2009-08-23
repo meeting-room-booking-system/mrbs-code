@@ -93,9 +93,7 @@ CREATE TABLE mrbs_users
   level     smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
   name      varchar(30),
   password  varchar(40),
-  email     varchar(75),
-
-  PRIMARY KEY (id)
+  email     varchar(75)
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
