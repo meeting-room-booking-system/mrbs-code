@@ -353,10 +353,8 @@ function sql_pgsql_table_exists($table, $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  $res = sql_pgsql_query1("SELECT table_name FROM information_schema.tables ".
-                          "WHERE table_schema='public' AND ".
-                          "table_type='BASE TABLE' AND ".
-                          "table_name = '".addslashes($table)."'");
+  $res = sql_pgsql_query1("SELECT relname FROM pg_class ".
+                          "WHERE relname = '".addslashes($table)."'");
 
   return ($res == -1) ? FALSE : TRUE;
 }
