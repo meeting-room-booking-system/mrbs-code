@@ -90,9 +90,22 @@ function getMailPeriodDateString($t, $mod_time=0)
   $p_num = $time['minutes'] + $mod_time;
   ( $p_num < 0 ) ? $p_num = 0 : '';
   ( $p_num >= count($periods) - 1 ) ? $p_num = count($periods ) - 1 : '';
-  // I have made the separater a ',' as a '-' leads to an ambiguious
+  // I have made the separator a ',' as a '-' leads to an ambiguous
   // display in report.php when showing end times.
-  return array($p_num, $periods[$p_num] . strftime(", %A %d %B %Y",$t));
+  
+  // As HTML entities and tags are allowed in period names, we need to replace/strip
+  // them out before putting them in emails, which are sent as plain text
+  $mailperiod = $periods[$p_num];
+  // Although html_entity_decode() was introduced in PHP 4.3.0, support for
+  // multi-byte character sets was only introduced in PHP 5.0.0.   So rather than
+  // trying to do anything complicated for PHP 4, we'll just do the decode if
+  // we're running PHP 5 or higher.   Sorry, PHP 4 users!
+  if (function_exists('version_compare') && version_compare(PHP_VERSION, '5.0.0', 'ge') === 1)
+  {
+    $mailperiod = html_entity_decode($mailperiod, ENT_COMPAT, get_mail_charset());
+  }
+  $mailperiod = strip_tags($mailperiod);
+  return array($p_num, $mailperiod . strftime(", %A %d %B %Y",$t));
 }
 
 // }}}
