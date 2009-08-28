@@ -66,7 +66,7 @@ function PrintLogonBox()
 
       <a name="logonBox" href="<?php echo "$search_string\" title=\""
          . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
-         .$user ?></a>
+         . htmlspecialchars($user) ?></a>
 <?php
     if (isset($user_list_link))
     {
