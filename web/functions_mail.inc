@@ -100,7 +100,7 @@ function getMailPeriodDateString($t, $mod_time=0)
   // multi-byte character sets was only introduced in PHP 5.0.0.   So rather than
   // trying to do anything complicated for PHP 4, we'll just do the decode if
   // we're running PHP 5 or higher.   Sorry, PHP 4 users!
-  if (function_exists('version_compare') && version_compare(PHP_VERSION, '5.0.0', 'ge') === 1)
+  if (function_exists('version_compare') && version_compare(PHP_VERSION, '5.0.0', 'ge'))
   {
     $mailperiod = html_entity_decode($mailperiod, ENT_COMPAT, get_mail_charset());
   }

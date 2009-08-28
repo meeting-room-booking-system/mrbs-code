@@ -385,7 +385,7 @@ function time_date_string($t)
 // that the optional second parameter is only available from PHP 5.3.0 onwards.
 function mrbs_nl2br($string)
 {
-  if (function_exists('version_compare') && version_compare(PHP_VERSION, '5.3.0', 'ge') === 1)
+  if (function_exists('version_compare') && version_compare(PHP_VERSION, '5.3.0', 'ge'))
   {
     return nl2br($string, IS_XHTML);
   }
