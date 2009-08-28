@@ -116,7 +116,7 @@ $updated      = time_date_string($row['last_updated']);
 // so that user see what he expects to see
 $duration     = $row['duration'] - cross_dst($row['start_time'],
                                              $row['end_time']);
-$writeable = getWritable($create_by,$user);
+$writeable = getWritable($row['create_by'], $user);
 if (is_private_event($private) && !$writeable) 
 {
   $name = "[".get_vocab('private')."]";
