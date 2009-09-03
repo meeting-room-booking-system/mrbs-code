@@ -673,12 +673,12 @@ if (isset($areamatch))
   if ( $sortby == "r" )
   {
     // Order by Area, Room, Start date/time
-    $sql .= " ORDER BY 9,10,2";
+    $sql .= " ORDER BY area_name, room_name, start_time";
   }
   else
   {
     // Order by Start date/time, Area, Room
-    $sql .= " ORDER BY 2,9,10";
+    $sql .= " ORDER BY start_time, area_name, room_name";
   }
 
   // echo "<p>DEBUG: SQL: <tt> $sql </tt></p>\n";
