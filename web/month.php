@@ -300,7 +300,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
           FROM $tbl_entry
           WHERE room_id=$room
           AND start_time <= $midnight_tonight[$day_num] AND end_time > $midnight[$day_num]
-          ORDER by 1";
+          ORDER by start_time";
 
   // Build an array of information about each day in the month.
   // The information is stored as:
