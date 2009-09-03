@@ -356,7 +356,9 @@ if (!isset($day) or !isset($month) or !isset($year))
   $year  = date("Y");
 }
 if(empty($area))
-   $area = get_default_area();
+{
+  $area = get_default_area();
+}
 
 // print the page header
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
