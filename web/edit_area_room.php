@@ -509,9 +509,9 @@ if (!empty($area))
         {
           echo "<div class=\"group ampm\">\n";
           $checked = ($morningstarts < 12) ? "checked=\"checked\"" : "";
-          echo "      <label><input name=\"area_morning_ampm\" type=\"radio\" value=\"am\" onChange=\"changeSelect(this.form)\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
+          echo "      <label><input name=\"area_morning_ampm\" type=\"radio\" value=\"am\" onClick=\"changeSelect(this.form)\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
           $checked = ($morningstarts >= 12) ? "checked=\"checked\"" : "";
-          echo "      <label><input name=\"area_morning_ampm\" type=\"radio\" value=\"pm\" onChange=\"changeSelect(this.form)\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
+          echo "      <label><input name=\"area_morning_ampm\" type=\"radio\" value=\"pm\" onClick=\"changeSelect(this.form)\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
           echo "</div>\n";
         }
         ?>
@@ -561,9 +561,9 @@ if (!empty($area))
         {
           echo "<div class=\"group ampm\">\n";
           $checked = ($eveningends < 12) ? "checked=\"checked\"" : "";
-          echo "      <label><input name=\"area_evening_ampm\" type=\"radio\" value=\"am\" onChange=\"changeSelect(this.form)\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
+          echo "      <label><input name=\"area_evening_ampm\" type=\"radio\" value=\"am\" onClick=\"changeSelect(this.form)\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
           $checked = ($eveningends >= 12) ? "checked=\"checked\"" : "";
-          echo "      <label><input name=\"area_evening_ampm\" type=\"radio\" value=\"pm\" onChange=\"changeSelect(this.form)\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
+          echo "      <label><input name=\"area_evening_ampm\" type=\"radio\" value=\"pm\" onClick=\"changeSelect(this.form)\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
           echo "</div>\n";
         }
       echo "</div>\n";  
