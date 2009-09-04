@@ -270,17 +270,27 @@ td.row_labels     {background-color: <?php echo $main_table_labels_back_color ?>
 // of the booking day.   As the performance of CSS highlighting is as good as JavaScript highlighting in recent versions of
 // non-IE browsers, it is used as the default method of highlighting since it is simpler than the JavaScript method.
 //
-// The first two rules highlight the cell that you are actually hovering over.    The third rule highlights the cell in the 
-// left-hand (and right-hand if present) column that shows the time/period for that row.   The fourth rule highlights the cell
-// being hovered over in the month view.
+// The first two rules (both on the same line) highlight the cell that you are actually hovering over.
+// 
+// The next two disable this behaviour for multiple booking cells.   That's because we don't want the highlight colour showing
+// through if one or more of the bookings are using an opacity setting of less than 1, eg if one of the bookings is a private
+// booking.  This does not happen on the normal cells because they don't have a class of odd_row/even_row.   However we still need
+// the odd_row/even_row classes for the multiple booking cells because we may need to display the odd/even row background - for
+// example if you have a cell with two multiple bookings in it and another cell in the row has more than two.
+//
+// The fifth rule highlights the cell in the left-hand (and right-hand if present) column that shows the time/period for that row.
+//
+// The sixth rule highlights the cell being hovered over in the month view.
 //
 // Note that the first two rules only highlight empty cells in the day and week views.    They will not highlight 
 // actual bookings (because they have a class other than odd_row or even_row), the header cells (because they 
 // are <th> and not <td>) nor the empty cells in the month view (because odd_row and even_row are not used 
-// in the month view).   However the third rule does have the useful effect of highlighting the time slot that
-// corresponds to the start of a booking when you hover over a booked cell.    The fourth rule provides highlighting in the month view.
+// in the month view).   However the fifth rule does have the useful effect of highlighting the time slot that
+// corresponds to the start of a booking when you hover over a booked cell.    The sixth rule provides highlighting in the month view.
 ?>
-.dwm_main tr:hover td:hover.odd_row, .dwm_main tr:hover td:hover.even_row {background-color: <?php echo $row_highlight_color ?>}
+.dwm_main td:hover.odd_row, .dwm_main td:hover.even_row {background-color: <?php echo $row_highlight_color ?>}
+.dwm_main td:hover.multiple_booking.odd_row {background-color: <?php echo $row_odd_color ?>}
+.dwm_main td:hover.multiple_booking.even_row {background-color: <?php echo $row_even_color ?>}
 .dwm_main tr:hover td.row_labels {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
 .dwm_main#month_main td:hover.valid {background-color: <?php echo $row_highlight_color ?>}
 
