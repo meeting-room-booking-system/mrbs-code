@@ -200,6 +200,7 @@ $max_slots = 60;
 // '&eacute;' or '&#233;', etc.
 
 // NOTE:  The maximum number of periods is 60.   Do not define more than this.
+unset($periods);    // Include this line when copying to config.inc.php
 $periods[] = "Period&nbsp;1";
 $periods[] = "Period&nbsp;2";
 // NOTE:  The maximum number of periods is 60.   Do not define more than this.
@@ -405,6 +406,7 @@ $cookie_path_override = '';
 // users list in the database, the system will automatically add a field to
 // the table for access rights and give admin rights to those users in the database
 // for whom admin rights are defined here.   After that this list is ignored.
+unset($auth["admin"]);              // Include this when copying to config.inc.php
 $auth["admin"][] = "127.0.0.1";     // localhost IP address. Useful with IP sessions.
 $auth["admin"][] = "administrator"; // A user name from the user list. Useful 
                                     // with most other session schemes.
