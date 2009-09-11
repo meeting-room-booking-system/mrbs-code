@@ -36,3 +36,7 @@ div.booking_list {overflow-x: hidden}       /* we don't want IE to give us the h
 /* alignment of some inputs with labels is different in IE, so adjust */
 .form_general input.radio {margin-top: -0.2em}
 .form_general input.checkbox {margin-top: -0.2em}
+
+
+/* ------------ EDIT_USERS.PHP ------------------*/
+#form_edit_users legend {margin-bottom: 1.0em}   /* by default IE gives no gap between legend and first form element */
