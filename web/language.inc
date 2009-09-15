@@ -9,6 +9,8 @@
 // http://www.microsoft.com/globaldev/reference/winxp/langtla.mspx
 $lang_map_windows = array
 (
+  'bg' => 'bgr',
+  'bg-bg' => 'bgr',
   'ca' => 'cat',
   'ca-es' => 'cat',
   'cs' => 'csy',
@@ -96,6 +98,7 @@ $lang_map_windows = array
 // http://www.microsoft.com/globaldev/nlsweb/default.mspx
 $winlocale_codepage_map = array
 (
+  'bgr' => 'CP1251',
   'cat' => 'CP1252',
   'chs' => 'CP936',
   'cht' => 'CP950',
