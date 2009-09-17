@@ -631,17 +631,18 @@ $mail_settings['cc'] = '';
 // on the users' language
 $unicode_encoding = 1;
 
-// Set this to a different language specifier to default to different
-// language tokens. This must equate to a lang.* file in MRBS.
-// e.g. use "fr" to use the translations in "lang.fr" as the default
-// translations
-$default_language_tokens = "en";
-
 // Set this to 1 to disable the automatic language changing MRBS performs
 // based on the user's browser language settings. It will ensure that
 // the language displayed is always the value of $default_language_tokens,
-// as specified above
+// as specified below
 $disable_automatic_language_changing = 0;
+
+// Set this to a different language specifier to default to different
+// language tokens. This must equate to a lang.* file in MRBS.
+// e.g. use "fr" to use the translations in "lang.fr" as the default
+// translations.  [NOTE: it is only necessary to change this if you
+// have disabled automatic language changing above]
+$default_language_tokens = "en";
 
 // Set this to a valid locale (for the OS you run the MRBS server on)
 // if you want to override the automatic locale determination MRBS
