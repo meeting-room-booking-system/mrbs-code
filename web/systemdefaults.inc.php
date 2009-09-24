@@ -661,12 +661,12 @@ $faqfilelang = "";
  *************/
  
 // Default CSV file names
-define(REPORT_FILENAME,  "report.csv");
-define(SUMMARY_FILENAME, "summary.csv");
+define('REPORT_FILENAME',  "report.csv");
+define('SUMMARY_FILENAME', "summary.csv");
 
 // CSV format
-define(CSV_ROW_SEP, "\n");  // Separator between rows/records
-define(CSV_COL_SEP, ",");   // Separator between columns/fields
+define('CSV_ROW_SEP', "\n");  // Separator between rows/records
+define('CSV_COL_SEP', ",");   // Separator between columns/fields
 
 
 /*************
