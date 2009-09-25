@@ -109,10 +109,12 @@ function escape($string)
 // Return the new row
 function csv_row_add_value($row, $value)
 {
+  global $csv_col_sep;
+  
   // if it's not the first entry add a column separator
   if (!empty($row))
   {
-    $row .= CSV_COL_SEP;
+    $row .= $csv_col_sep;
   }
   $row .= '"';
   $row .= escape($value);
@@ -123,6 +125,8 @@ function csv_row_add_value($row, $value)
 // Output the first row (header row) for CSV reports
 function csv_report_header($display)
 {
+  global $csv_row_sep;
+  
   // initialise the row
   $line = "";
   // add values, one by one
@@ -141,7 +145,7 @@ function csv_report_header($display)
   $line = csv_row_add_value($line, get_vocab("createdby"));
   $line = csv_row_add_value($line, get_vocab("lastupdate"));
   // terminate the row
-  $line .= CSV_ROW_SEP;
+  $line .= $csv_row_sep;
   // output the row
   echo $line;
 }
@@ -154,6 +158,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   global $typel;
   global $enable_periods;
   global $output_as_csv;
+  global $csv_row_sep;
   
   // Initialise the line for CSV reports
   $line = "";
@@ -308,7 +313,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   if ($output_as_csv)
   {
     // terminate and output the line
-    $line .= CSV_ROW_SEP;
+    $line .= $csv_row_sep;
     echo $line;
   }
   else
@@ -371,10 +376,11 @@ function accumulate_periods(&$row, &$count, &$hours, $report_start,
 function cell($count, $hours)
 {
   global $output_as_csv;
+  global $csv_col_sep;
   
-  echo ($output_as_csv) ? CSV_COL_SEP . '"'  : "<td class=\"count\">(";
+  echo ($output_as_csv) ? $csv_col_sep . '"'  : "<td class=\"count\">(";
   echo $count;
-  echo ($output_as_csv) ? '"' . CSV_COL_SEP . '"' : ")</td><td>";
+  echo ($output_as_csv) ? '"' . $csv_col_sep . '"' : ")</td><td>";
   echo sprintf("%.2f", $hours);
   echo ($output_as_csv) ? '"'   : "</td>\n";
 }
@@ -386,6 +392,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 {
   global $enable_periods;
   global $output_as_csv;
+  global $csv_row_sep, $csv_col_sep;
         
   // Make a sorted array of area/rooms, and of names, to use for column
   // and row indexes. Use the rooms and names hashes built by accumulate().
@@ -414,7 +421,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
     echo "<thead>\n";
     echo "<tr>\n";
   }
-  echo ($output_as_csv) ? '""' . CSV_COL_SEP : "<th>&nbsp;</th>\n";
+  echo ($output_as_csv) ? '""' . $csv_col_sep : "<th>&nbsp;</th>\n";
 
   for ($c = 0; $c < $n_rooms; $c++)
   {
@@ -422,7 +429,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
     if ($output_as_csv)
     {
       echo $rooms[$c] . ' - ' . get_vocab("entries");
-      echo '"' .CSV_COL_SEP . '"';
+      echo '"' . $csv_col_sep . '"';
       echo $rooms[$c] . ' - ';
       echo ($enable_periods) ? get_vocab("periods") : get_vocab("hours");
     }
@@ -430,7 +437,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
     {
       echo $rooms[$c];
     }
-    echo ($output_as_csv) ? '"' . CSV_COL_SEP : "</th>\n";
+    echo ($output_as_csv) ? '"' . $csv_col_sep : "</th>\n";
     $col_count_total[$c] = 0;
     $col_hours_total[$c] = 0.0;
   }
@@ -438,7 +445,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
   if ($output_as_csv)
   {
     echo get_vocab("total") . ' - ' . get_vocab("entries");
-    echo '"' . CSV_COL_SEP . '"';
+    echo '"' . $csv_col_sep . '"';
     echo get_vocab("total") . ' - ';
     echo ($enable_periods) ? get_vocab("periods") : get_vocab("hours");
   }
@@ -447,7 +454,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
     echo get_vocab("total");
   }
   echo ($output_as_csv) ? '"'  : "</th>\n";
-  echo ($output_as_csv) ? CSV_ROW_SEP : "</tr>\n";
+  echo ($output_as_csv) ? $csv_row_sep : "</tr>\n";
   $grand_count_total = 0;
   $grand_hours_total = 0;
   echo ($output_as_csv) ? ''   : "</thead>\n";
@@ -478,7 +485,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
       {
         if ($output_as_csv)
         {
-          echo CSV_COL_SEP . CSV_COL_SEP;
+          echo $csv_col_sep . $csv_col_sep;
         }
         else
         {
@@ -487,7 +494,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
       }
     }
     cell($row_count_total, $row_hours_total);
-    echo ($output_as_csv) ? CSV_ROW_SEP : "</tr>\n";
+    echo ($output_as_csv) ? $csv_row_sep : "</tr>\n";
     $grand_count_total += $row_count_total;
     $grand_hours_total += $row_hours_total;
   }
@@ -499,7 +506,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
     cell($col_count_total[$c], $col_hours_total[$c]);
   }
   cell($grand_count_total, $grand_hours_total);
-  echo ($output_as_csv) ? CSV_ROW_SEP : "</tr>\n";
+  echo ($output_as_csv) ? $csv_row_sep : "</tr>\n";
   if (!$output_as_csv)
   {
     echo "</tbody></table>\n";
@@ -565,7 +572,7 @@ $output_as_csv = $summarize & CSV;
 // print the page header
 if ($output_as_csv)
 {
-  $filename = ($summarize & REPORT) ? REPORT_FILENAME : SUMMARY_FILENAME;
+  $filename = ($summarize & REPORT) ? $report_filename : $summary_filename;
   header("Content-type: application/octet-stream");
   header("Content-Disposition: attachment; filename=\"$filename\"");
 }
