@@ -163,7 +163,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
   global $rep_opt, $rep_num_weeks;
   global $tbl_room, $tbl_area, $tbl_entry, $tbl_users, $tbl_repeat;
   global $mail_previous, $auth;
-  global $mail_settings;
+  global $mail_settings, $weekstarts;
     
   //
   $recipients = '';
