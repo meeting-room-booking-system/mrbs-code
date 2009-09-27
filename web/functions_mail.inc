@@ -661,7 +661,7 @@ function notifyAdminOnDelete($mail_previous)
  * entry state.
  *
  * @param int     $id       entry id to get data
- * @param int     $series   1 if this is a serie or 0
+ * @param int     $series   1 if this is a series or 0
  * @return bool             TRUE or PEAR error object if fails
  */
 function getPreviousEntryData($id, $series)
@@ -708,6 +708,7 @@ function getPreviousEntryData($id, $series)
   (sql_count($res) < 1) ? fatal_error(0, get_vocab("invalid_entry_id")) : '';
   $row = sql_row_keyed($res, 0);
   sql_free($res);
+  
   // Store all needed values in $mail_previous array to pass to
   // notifyAdminOnDelete function (shorter than individual variables -:) )
   $mail_previous['namebooker']    = $row['name'];
@@ -721,13 +722,16 @@ function getPreviousEntryData($id, $series)
   $mail_previous['updated']       = getMailTimeDateString($row['last_updated']);
   $mail_previous['area_admin_email'] = $row['area_admin_email'];
   $mail_previous['room_admin_email'] = $row['room_admin_email'];
+  
+  // Now get the start time, end time and duration.   The way this is done
+  // depends on (a) whether we're using periods and (b) whether this is a series.
   // If we use periods
   if ( $enable_periods )
   {
-    // If we delete a serie, start_time and end_time must
+    // If we delete a series, start_time and end_time must
     // come from $tbl_repeat, not $tbl_entry.
     //
-    // This is not a serie
+    // This is not a series
     if (1 != $series)
     {
       list( $mail_previous['start_period'], $mail_previous['start_date']) =
@@ -737,58 +741,19 @@ function getPreviousEntryData($id, $series)
       // need to make DST correct in opposite direction to entry creation
       // so that user see what he expects to see
       $mail_previous['duration'] = $row['tbl_e_duration'] -
-      cross_dst($row['tbl_e_start_time'], $row['tbl_e_end_time']);
+        cross_dst($row['tbl_e_start_time'], $row['tbl_e_end_time']);
     }
-    // This is a serie
+    // This is a series
     else
     {
       list( $mail_previous['start_period'], $mail_previous['start_date']) =
         getMailPeriodDateString($row['tbl_r_start_time']);
       list( $mail_previous['end_period'] , $mail_previous['end_date']) =
-        getMailPeriodDateString($row['tbl_r_end_time'], 0);
-      // use getMailTimeDateString as all I want is the date
-      $mail_previous['rep_end_date'] =
-        getMailTimeDateString($row['tbl_r_end_date'], FALSE);
+        getMailPeriodDateString($row['tbl_r_end_time'], 0);   
       // need to make DST correct in opposite direction to entry creation
       // so that user see what he expects to see
       $mail_previous['duration'] = $row['tbl_r_duration'] -
-        cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_time']);
-       
-      $mail_previous['rep_opt'] = "";
-      switch($row['rep_type'])
-      {
-        case 2:
-        case 6:
-          $rep_day[0] = $row['rep_opt'][0] != "0";
-          $rep_day[1] = $row['rep_opt'][1] != "0";
-          $rep_day[2] = $row['rep_opt'][2] != "0";
-          $rep_day[3] = $row['rep_opt'][3] != "0";
-          $rep_day[4] = $row['rep_opt'][4] != "0";
-          $rep_day[5] = $row['rep_opt'][5] != "0";
-          $rep_day[6] = $row['rep_opt'][6] != "0";
-
-          if ($row['rep_type'] == 6)
-          {
-            $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
-          }
-          else
-          {
-            $mail_previous['rep_num_weeks'] = "";
-          }
-          
-          break;
-      
-        default:
-          $rep_day = array(0, 0, 0, 0, 0, 0, 0);
-      }
-      for ($i = 0; $i < 7; $i++)
-      {
-        $wday = ($i + $weekstarts) % 7;
-        if ($rep_day[$wday])
-          $mail_previous['rep_opt'] .= day_name($wday) . " ";
-      }
-      
-      $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
+        cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_time']);    
     }
     toPeriodString($mail_previous['start_period'],
                    $mail_previous['duration'], $mail_previous['dur_units']);
@@ -796,7 +761,7 @@ function getPreviousEntryData($id, $series)
   // If we don't use periods
   else
   {
-    // This is not a serie
+    // This is not a series
     if (1 != $series)
     {
       $mail_previous['start_date'] =
@@ -808,63 +773,72 @@ function getPreviousEntryData($id, $series)
       $mail_previous['duration'] = $row['tbl_e_duration'] -
         cross_dst($row['tbl_e_start_time'], $row['tbl_e_end_time']);
     }
-    // This is a serie
+    // This is a series
     else
     {
       $mail_previous['start_date'] =
         getMailTimeDateString($row['tbl_r_start_time']);
       $mail_previous['end_date'] =
         getMailTimeDateString($row['tbl_r_end_time']);
-      // use getMailTimeDateString as all I want is the date
-      $mail_previous['rep_end_date'] =
-        getMailTimeDateString($row['tbl_r_end_date'], FALSE);
       // need to make DST correct in opposite direction to entry creation
       // so that user see what he expects to see
       $mail_previous['duration'] = $row['tbl_r_duration'] -
         cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_time']);
-      
-      $mail_previous['rep_opt'] = "";
-      switch($row['rep_type'])
-      {
-        case 2:
-        case 6:
-          $rep_day[0] = $row['rep_opt'][0] != "0";
-          $rep_day[1] = $row['rep_opt'][1] != "0";
-          $rep_day[2] = $row['rep_opt'][2] != "0";
-          $rep_day[3] = $row['rep_opt'][3] != "0";
-          $rep_day[4] = $row['rep_opt'][4] != "0";
-          $rep_day[5] = $row['rep_opt'][5] != "0";
-          $rep_day[6] = $row['rep_opt'][6] != "0";
-
-          if ($row['rep_type'] == 6)
-          {
-            $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
-          }
-          else
-          {
-            $mail_previous['rep_num_weeks'] = "";
-          }
-          
-          break;
-          
-        default:
-          $rep_day = array(0, 0, 0, 0, 0, 0, 0);
-      }
-      for ($i = 0; $i < 7; $i++)
-      {
-        $wday = ($i + $weekstarts) % 7;
-        if ($rep_day[$wday])
-        {
-          $mail_previous['rep_opt'] .= day_name($wday) . " ";
-        }
-      }
-       
-      $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
     }
     toTimeString($mail_previous['duration'], $mail_previous['dur_units']);
   }
-  (1 == $series) ? $mail_previous['rep_type'] = $row['rep_type']
-    : $mail_previous['rep_type'] = 0;
+  
+  
+  // Next, get the repeat information if it's a series (and if it's not
+  // a series, we still need to set rep_type to show that it's not a series)
+  if (1 != $series)
+  {
+    $mail_previous['rep_type'] = 0;
+  }
+  else
+  {
+    $mail_previous['rep_type'] = $row['rep_type'];
+    
+    // use getMailTimeDateString as all I want is the date
+    $mail_previous['rep_end_date'] =
+        getMailTimeDateString($row['tbl_r_end_date'], FALSE);
+    $mail_previous['rep_opt'] = "";
+    switch($row['rep_type'])
+    {
+      case 2:
+      case 6:
+        $rep_day[0] = $row['rep_opt'][0] != "0";
+        $rep_day[1] = $row['rep_opt'][1] != "0";
+        $rep_day[2] = $row['rep_opt'][2] != "0";
+        $rep_day[3] = $row['rep_opt'][3] != "0";
+        $rep_day[4] = $row['rep_opt'][4] != "0";
+        $rep_day[5] = $row['rep_opt'][5] != "0";
+        $rep_day[6] = $row['rep_opt'][6] != "0";
+
+        if ($row['rep_type'] == 6)
+        {
+          $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
+        }
+        else
+        {
+          $mail_previous['rep_num_weeks'] = "";
+        }
+          
+        break;
+      
+      default:
+        $rep_day = array(0, 0, 0, 0, 0, 0, 0);
+    }
+    for ($i = 0; $i < 7; $i++)
+    {
+      $wday = ($i + $weekstarts) % 7;
+      if ($rep_day[$wday])
+        $mail_previous['rep_opt'] .= day_name($wday) . " ";
+    }
+         
+    $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
+  }
+  
   // return entry previous data as an array
   return $mail_previous;
 }
