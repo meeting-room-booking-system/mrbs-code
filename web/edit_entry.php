@@ -166,7 +166,7 @@ if (isset($id))
 
           if ($rep_type == 6)
           {
-            $rep_num_weeks = $row['rep_num'];
+            $rep_num_weeks = $row['rep_num_weeks'];
           }
 
           break;
