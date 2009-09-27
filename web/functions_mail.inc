@@ -813,19 +813,8 @@ function getPreviousEntryData($id, $series)
         $rep_day[3] = $row['rep_opt'][3] != "0";
         $rep_day[4] = $row['rep_opt'][4] != "0";
         $rep_day[5] = $row['rep_opt'][5] != "0";
-        $rep_day[6] = $row['rep_opt'][6] != "0";
-
-        if ($row['rep_type'] == 6)
-        {
-          $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
-        }
-        else
-        {
-          $mail_previous['rep_num_weeks'] = "";
-        }
-          
-        break;
-      
+        $rep_day[6] = $row['rep_opt'][6] != "0";     
+        break; 
       default:
         $rep_day = array(0, 0, 0, 0, 0, 0, 0);
     }
@@ -835,8 +824,15 @@ function getPreviousEntryData($id, $series)
       if ($rep_day[$wday])
         $mail_previous['rep_opt'] .= day_name($wday) . " ";
     }
-         
-    $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
+    
+    if ($row['rep_type'] == 6)
+    {
+      $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
+    }
+    else
+    {
+      $mail_previous['rep_num_weeks'] = "";
+    }   
   }
   
   // return entry previous data as an array
