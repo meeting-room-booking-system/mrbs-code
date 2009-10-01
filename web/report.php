@@ -573,7 +573,7 @@ $output_as_csv = $summarize & CSV;
 if ($output_as_csv)
 {
   $filename = ($summarize & REPORT) ? $report_filename : $summary_filename;
-  header("Content-type: application/octet-stream");
+  header("Content-Type: text/csv; charset=" . get_charset());
   header("Content-Disposition: attachment; filename=\"$filename\"");
 }
 else
