@@ -6,7 +6,7 @@
 function print_theme_header($day, $month, $year, $area, $room)
 {
   global $mrbs_company, $mrbs_company_logo, $mrbs_company_url, $mrbs_company_more_info,
-    $search_str, $locale_warning, $unicode_encoding, $vocab;
+    $search_str, $locale_warning;
   global $PHP_SELF;
 
   // If we dont know the right date then make it up 
@@ -27,18 +27,7 @@ function print_theme_header($day, $month, $year, $area, $room)
     $search_str = "";
   }
   
-  if ($unicode_encoding)
-  {
-    header("Content-Type: text/html; charset=utf-8");
-  }
-  else
-  {
-    // We use $vocab directly instead of get_vocab() because we have
-    // no requirement to convert the vocab text, we just output
-    // the charset
-    header("Content-Type: text/html; charset=".$vocab["charset"]);
-  }
-
+  header("Content-Type: text/html; charset=" . get_charset());
   header("Pragma: no-cache");                          // HTTP 1.0
   header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
 

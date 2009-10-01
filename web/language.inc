@@ -548,6 +548,16 @@ else
   }
 }
 
+
+function get_charset()
+{
+  global $unicode_encoding, $vocab;
+  // We use $vocab directly instead of get_vocab() because we have
+  // no requirement to convert the vocab text, we just output
+  // the charset
+  return ($unicode_encoding) ? "utf-8" : $vocab["charset"];
+}
+
 function get_server_os()
 {
   if (stristr(PHP_OS,"Darwin"))

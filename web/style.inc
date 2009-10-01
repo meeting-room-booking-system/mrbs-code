@@ -2,9 +2,6 @@
 
 // $Id$
 
-global $unicode_encoding;
-global $vocab; // outside of scope; needs to be denote as global
-
 // NOTE:  The filename for the stylesheet for <= IE6 must contain the string 'ielte6'.
 // The href strings in the <link> tags below are used by InitActiveCell in xbLib.js to 
 // test whether the browser is IE6 or below - and therefore whether to use JavaScript
@@ -34,20 +31,7 @@ global $vocab; // outside of scope; needs to be denote as global
     <link rel="stylesheet" href="mrbs-ielte6.css" type="text/css">
     <![endif]-->
 
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php
-
-if ($unicode_encoding)
-{
-  echo "utf-8";
-}
-else
-{
-  // We use $vocab directly instead of get_vocab() because we have
-  // no requirement to convert the vocab text, we just output
-  // the charset
-  echo $vocab["charset"];
-}
-?>">
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo get_charset(); ?>">
     <meta name="robots" content="noindex">
 <?php
 
