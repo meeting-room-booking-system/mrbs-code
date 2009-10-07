@@ -381,7 +381,7 @@ function time_date_string($t)
   }
 }
 
-// version of the standard PHP function nl2br that takes account of the fact
+// version of the standard PHP function nl2br() that takes account of the fact
 // that the optional second parameter is only available from PHP 5.3.0 onwards.
 function mrbs_nl2br($string)
 {
@@ -393,6 +393,49 @@ function mrbs_nl2br($string)
   {
     return nl2br($string);
   }
+}
+
+// Version of the standard PHP function html_entity_decode()
+// Although html_entity_decode() was introduced in PHP 4.3.0, support for
+// multi-byte character sets was only introduced in PHP 5.0.0.   
+// So if we're running PHP5 or higher we'll use the standard
+// PHP function; otherwise we'll do the best we can.   At the moment
+// we just replace &nbsp; with an ordinary space, which
+// should be sufficient in most MRBS circumstances.   This could
+// always be extended later to do something more sophisticated if
+// necessary.
+function mrbs_entity_decode($string)
+{
+  $n_args = func_num_args();
+  if ($n_args > 1)
+  {
+    $quote_style = func_get_arg(1);
+  }
+  if ($n_args > 2)
+  {
+    $charset = func_get_arg(2);
+  }
+  
+  if (function_exists('version_compare') && version_compare(PHP_VERSION, '5.0.0', 'ge'))
+  {
+    switch ($n_args)
+    {
+      case 3:
+        $string = html_entity_decode($string, $quote_style, $charset);
+        break;
+      case 2:
+        $string = html_entity_decode($string, $quote_style);
+        break;
+      default:
+        $string = html_entity_decode($string);
+        break;
+    }  
+  }
+  else
+  {
+    $string = str_replace('&nbsp;', ' ', $string);
+  }
+  return $string;
 }
 
 // validates a comma separated list of email addresses
