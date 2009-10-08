@@ -127,26 +127,46 @@ function csv_report_header($display)
 {
   global $csv_row_sep;
   
-  // initialise the row
-  $line = "";
-  // add values, one by one
-  $line = csv_row_add_value($line, get_vocab("area") . ' - ' . get_vocab("room"));
-  $line = csv_row_add_value($line, get_vocab("namebooker"));
+  // Build an array of values to go into the header row
+  $values = array();
+  $values[] = get_vocab("area") . ' - ' . get_vocab("room");
+  $values[] = get_vocab("namebooker"); 
   if ($display == "d")
   {
-    $line = csv_row_add_value($line, get_vocab("start_date") . ' - ' . get_vocab("duration"));
+    $values[] = get_vocab("start_date") . ' - ' . get_vocab("duration");
   }
   else
   {
-    $line = csv_row_add_value($line, get_vocab("start_date") . ' - ' . get_vocab("end_date"));
+    $values[] = get_vocab("start_date") . ' - ' . get_vocab("end_date");
   }
-  $line = csv_row_add_value($line, get_vocab("fulldescription_short"));
-  $line = csv_row_add_value($line, get_vocab("type"));
-  $line = csv_row_add_value($line, get_vocab("createdby"));
-  $line = csv_row_add_value($line, get_vocab("lastupdate"));
-  // terminate the row
-  $line .= $csv_row_sep;
-  // output the row
+  $values[] = get_vocab("fulldescription_short");
+  $values[] = get_vocab("type"); 
+  $values[] = get_vocab("createdby");  
+  $values[] = get_vocab("lastupdate");
+  
+  // Remove any HTML entities from the values
+  $n_values = count($values);
+  $charset = get_charset();
+  // Find out what the non-breaking space is in this character set
+  $nbsp = mrbs_entity_decode('&nbsp;', ENT_NOQUOTES, $charset);
+  for ($i=0; $i < $n_values; $i++)
+  {
+    $values[$i] = mrbs_entity_decode($values[$i], ENT_NOQUOTES, $charset);
+    // Trim non-breaking spaces from the string
+    $values[$i] = trim($values[$i], $nbsp);
+    // And do an ordinary trim
+    $values[$i] = trim($values[$i]);
+  }
+  
+  // Now turn the array of values into a CSV row
+  $line = "";  // initialise the row
+  foreach ($values as $v)
+  {
+    $line = csv_row_add_value($line, $v);
+  }
+  $line .= $csv_row_sep;  // terminate the row
+  
+  // Output the row
   echo $line;
 }
 
