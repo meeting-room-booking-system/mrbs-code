@@ -138,6 +138,11 @@ $enable_periods = FALSE;
 // Default is half an hour: 1800 seconds.
 $resolution = (30 * 60);
 
+// If the following variable is set to TRUE, the resolution of bookings
+// is forced to be the value of $resolution, rather than the resolution set
+// for the area in the database.
+$force_resolution = FALSE;
+
 // Default duration - default length (in seconds) of a booking.
 // Defaults to (60 * 60) seconds, i.e. an hour
 $default_duration = (60 * 60);

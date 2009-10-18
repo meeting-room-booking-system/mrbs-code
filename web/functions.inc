@@ -286,6 +286,7 @@ function get_area_settings($area)
 {
   global $tbl_area;
   global $resolution, $default_duration, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+  global $force_resolution;
   global $private_enabled, $private_default, $private_mandatory, $private_override;
   $sql = "SELECT *
           FROM $tbl_area 
@@ -299,7 +300,8 @@ function get_area_settings($area)
   else
   {
     $row = sql_row_keyed($res, 0);
-    $resolution = (isset($row['resolution']) ? $row['resolution'] : $resolution);
+    if (!isset($force_resolution) || !$force_resolution)
+    	$resolution = (isset($row['resolution']) ? $row['resolution'] : $resolution);
     $default_duration = (isset($row['default_duration']) ? $row['default_duration'] : $default_duration);
     $morningstarts = (isset($row['morningstarts']) ? $row['morningstarts'] : $morningstarts);
     $morningstarts_minutes = (isset($row['morningstarts_minutes']) ? $row['morningstarts_minutes'] : $morningstarts_minutes);
