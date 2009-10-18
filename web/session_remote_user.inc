@@ -8,7 +8,11 @@
 *                                                                                            *
 *   Notes           To use this session scheme, set in config.inc.php:                       *
 *                     $auth['session']  = 'remote_user';                                     *
-*                     $auth['type'] = 'none';
+*                     $auth['type'] = 'none';                                                *
+*                                                                                            *
+*                                                                                            *
+*                   If you want to display a login link, set in config.inc.php:              *
+*                     $auth['remote_user']['login_link'] = '/login/link.html';               *
 *                                                                                            *
 *                   If you want to display a logout link, set in config.inc.php:             *
 *                     $auth['remote_user']['logout_link'] = '/logout/link.html';             *
@@ -79,13 +83,22 @@ function PrintLogonBox()
         (!empty($auth['remote_user']['logout_link'])))
     {
       print '<a href="' . $auth['remote_user']['logout_link'] .'">' . get_vocab('logoff') . "</a>\n";
-   }
+    }
 
   }
   else
   {
-    echo "<p class=\"error\">Error: REMOTE_USER was not set when it should have been.</p>";
-    exit;
+    if (isset($auth['remote_user']['login_link']) &&
+        is_string($auth['remote_user']['login_link']) &&
+        (!empty($auth['remote_user']['login_link'])))
+    {
+      print '<a href="' . $auth['remote_user']['login_link'] .'">' . get_vocab('login') . "</a>\n";
+    }
+    else
+    {
+      echo "<p class=\"error\">Error: REMOTE_USER was not set when it should have been.</p>";
+      exit;
+    }
   }
 }
 

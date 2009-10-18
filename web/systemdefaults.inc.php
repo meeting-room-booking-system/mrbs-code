@@ -429,6 +429,7 @@ $auth["user"]["bob"] = "b";
 $auth["realm"]  = "mrbs";
 
 // 'session_remote_user' configuration settings
+//$auth['remote_user']['login_link'] = '/login/link.html';
 //$auth['remote_user']['logout_link'] = '/logout/link.html';
 
 // 'auth_ext' configuration settings
