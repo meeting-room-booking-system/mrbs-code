@@ -526,18 +526,17 @@ else
     }
     if ($unicode_encoding)
     {
-      if ($server_os == "sunos")
+      switch ($server_os)
       {
-        $locale .= ".UTF-8";
-      }
-      else
-      {
-        // On IBM AIX, do not add ".utf-8" as this yields an invalid
-        // locale name
-        if ($server_os != "aix")
-        {
+        case "sunos":
+        case "linux":
+        case "bsd":
+          $locale .= ".UTF-8";
+          break;
+
+        case "macosx":
           $locale .= ".utf-8";
-        }
+          break;
       }
     }
     if (setlocale(LC_ALL, $locale) == FALSE)
