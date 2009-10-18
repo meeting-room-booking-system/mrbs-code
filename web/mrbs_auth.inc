@@ -31,6 +31,11 @@ function getAuthorised($level)
     return 0;
   }
 
+  if (isset($auth['only_admin_can_book']) && $auth['only_admin_can_book'])
+  {
+    $level = 2;
+  }
+
   return authGetUserLevel($user) >= $level;
 }
 

@@ -438,6 +438,10 @@ $max_level = 2;
 // The lowest level of admin allowed to edit other users
 $min_user_editing_level = 2;
 
+// If you want only administrators to be able to book slots, set this
+// variable to TRUE
+$auth['only_admin_can_book'] = FALSE;
+
 // 'auth_db_ext' configuration settings
 // The 'db_system' variable is equivalent to the core MRBS $dbsys variable,
 // and allows you to use any of MRBS's database abstraction layers for
