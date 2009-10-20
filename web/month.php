@@ -286,7 +286,7 @@ if ($debug_flag)
 }
 
 // Used below: localized "all day" text but with non-breaking spaces:
-$all_day = ereg_replace(" ", "&nbsp;", get_vocab("all_day"));
+$all_day = preg_replace("/ /", "&nbsp;", get_vocab("all_day"));
 
 //Get all meetings for this month in the room that we care about
 // row[0] = Start time

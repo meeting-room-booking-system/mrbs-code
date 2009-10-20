@@ -339,7 +339,7 @@ else
 // (ie replace the <br> with a space).   It looks slightly better
 if ($times_along_top)
 {
-  $dformat = ereg_replace("<br>", " ", $dformat);
+  $dformat = preg_replace("/<br>/", " ", $dformat);
 }
 
 

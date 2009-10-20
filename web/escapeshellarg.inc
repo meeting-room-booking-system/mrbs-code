@@ -9,7 +9,7 @@
 
 function escapeshellarg($x)
 {
-  return "'".ereg_replace("'", "'\\''", $x)."'";
+  return "'".preg_replace("/'/", "\\'", $x)."'";
 } 
 
 ?>

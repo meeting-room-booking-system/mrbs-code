@@ -34,7 +34,8 @@ if (isset($cookie_path_override))
 else
 {
   $cookie_path = $PHP_SELF;
-  $cookie_path = ereg_replace('[^/]*$', '', $cookie_path);
+  // Strip off everything after the last '/' in $PHP_SELF
+  $cookie_path = preg_replace('/[^/]*$/', '', $cookie_path);
 }
 
 global $auth;
