@@ -43,11 +43,11 @@ $db_tbl_prefix = "mrbs_";
 
 /* Add lines from systemdefaults.inc.php here to change the default
    configuration. Do _NOT_ modify systemdefaults.inc.php. */
-   
-   
 
-   
-   
+
+
+
+
 // This next section must come at the end of the config file - ie after any
 // language and mail settings, as the definitions are used in the included file
 require_once "language.inc";   // DO NOT DELETE THIS LINE
