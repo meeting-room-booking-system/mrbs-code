@@ -93,29 +93,31 @@ $sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_str)
   . " OR " . sql_syntax_caseless_contains("E.description", $search_str)
   . ") AND E.end_time > $now";
 
-// Unless we overriding privacy settings as "public" or user
-// is and admin, we have to restrict which listings are returned
-if (($private_override != "public") && !$is_admin) 
+$sql_pred .= " AND E.room_id = R.id AND R.area_id = A.id";
+
+// If we're not an admin (they are allowed to see everything), then we need
+// to make sure we respect the privacy settings.  (We rely on the privacy fields
+// in the area table being not NULL.   If they are by some chance NULL, then no
+// entries will be found, which is at least safe from the privacy viewpoint)
+if (!$is_admin)
 {
-  if (isset($user)) 
+  if (isset($user))
   {
-    // If private bookings are forced then user can only
-    // search their own.  If not they can also search non-private entries
-    if ($private_override == "private") 
-    {
-      $sql_pred .= " AND E.create_by = '".addslashes($user)."'";
-    }
-    else
-    {
-      $sql_pred .= " AND (E.create_by = '".addslashes($user)."' OR NOT E.private)";
-    }
+    // if the user is logged in they can see:
+    //   - all bookings, if private_override is set to 'public'
+    //   - their own bookings, and others' public bookings if private_override is set to 'none'
+    //   - just their own bookings, if private_override is set to 'private'
+    $sql_pred .= " AND ((A.private_override='public') OR
+                        (A.private_override='none' AND (E.private=0 OR E.create_by = '" . addslashes($user) . "')) OR
+                        (A.private_override='private' AND E.create_by = '" . addslashes($user) . "'))";                
   }
   else
   {
-    // If user isn't logged in then we already know
-    // override isn't set to "private" and we wouldn't
-    // be here if it were "public" so...
-    $sql_pred .= " AND NOT E.private";
+    // if the user is not logged in they can see:
+    //   - all bookings, if private_override is set to 'public'
+    //   - public bookings if private_override is set to 'none'
+    $sql_pred .= " AND ((A.private_override='public') OR
+                        (A.private_override='none' AND E.private=0))";
   }
 }
 
@@ -124,7 +126,9 @@ if (($private_override != "public") && !$is_admin)
 // searches so that we don't have to run it for each page.
 if (!isset($total))
 {
-  $total = sql_query1("SELECT count(*) FROM $tbl_entry E WHERE $sql_pred");
+  $total = sql_query1("SELECT count(*)
+                       FROM $tbl_entry E, $tbl_room R, $tbl_area A
+                       WHERE $sql_pred");
 }
 
 if ($total <= 0)
@@ -145,9 +149,8 @@ else if($search_pos >= $total)
 
 // Now we set up the "real" query using LIMIT to just get the stuff we want.
 $sql = "SELECT E.id AS entry_id, E.create_by, E.name, E.description, E.start_time, R.area_id
-        FROM $tbl_entry E, $tbl_room R
+        FROM $tbl_entry E, $tbl_room R, $tbl_area A
         WHERE $sql_pred
-        AND E.room_id = R.id
         ORDER BY E.start_time asc "
   . sql_syntax_limit($search["count"], $search_pos);
 
