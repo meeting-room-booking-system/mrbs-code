@@ -569,7 +569,7 @@ if ($private_override == "private")
 
 // Need to know user name and if they are an admin
 $user = getUserName();
-$is_admin =  (isset($user) && ($user)>=2) ;
+$is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
 
 //If we dont know the right date then make it up
 if (!isset($day) or !isset($month) or !isset($year))
@@ -882,25 +882,29 @@ if (isset($areamatch))
     $sql .= " AND" .  sql_syntax_caseless_contains("e.create_by", $creatormatch);
   }
 
-  // If not overriding as public entries and user isn't and admin...
-  if (($private_override != "public") && !$is_admin) 
+  // If we're not an admin (they are allowed to see everything), then we need
+  // to make sure we respect the privacy settings.  (We rely on the privacy fields
+  // in the area table being not NULL.   If they are by some chance NULL, then no
+  // entries will be found, which is at least safe from the privacy viewpoint)
+  if (!$is_admin)
   {
     if (isset($user))
     {
-      if ($private_override == "private") 
-      {
-        $sql .= " AND e.create_by = '".addslashes($user)."'";
-      }
-      else
-      {
-        $sql .= " AND (e.create_by = '".addslashes($user)."' OR e.private=0)";
-      }
+      // if the user is logged in they can see:
+      //   - all bookings, if private_override is set to 'public'
+      //   - their own bookings, and others' public bookings if private_override is set to 'none'
+      //   - just their own bookings, if private_override is set to 'private'
+      $sql .= " AND ((a.private_override='public') OR
+                     (a.private_override='none' AND (e.private=0 OR e.create_by = '" . addslashes($user) . "')) OR
+                     (a.private_override='private' AND e.create_by = '" . addslashes($user) . "'))";                
     }
     else
-    { 
-      // un-authenticated users can only report on
-      // items which are not marked private
-      $sql .= " AND e.private=0";
+    {
+      // if the user is not logged in they can see:
+      //   - all bookings, if private_override is set to 'public'
+      //   - public bookings if private_override is set to 'none'
+      $sql .= " AND ((a.private_override='public') OR
+                     (a.private_override='none' AND e.private=0))";
     }
   }
    
