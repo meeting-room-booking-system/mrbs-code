@@ -45,6 +45,7 @@ if ($series)
           $tbl_repeat.create_by,
           $tbl_room.room_name,
           $tbl_area.area_name,
+          $tbl_room.area_id,
           $tbl_repeat.type,
           $tbl_repeat.private,
           $tbl_repeat.room_id,
@@ -70,6 +71,7 @@ else
           $tbl_entry.description,
           $tbl_entry.create_by,
           $tbl_room.room_name,
+          $tbl_room.area_id,
           $tbl_area.area_name,
           $tbl_entry.type,
           $tbl_entry.private,
@@ -102,6 +104,10 @@ if (sql_count($res) < 1)
 
 $row = sql_row_keyed($res, 0);
 sql_free($res);
+
+// Get the area settings for the entry's area.   In particular we want
+// to know how to display private/public bookings in this area.
+get_area_settings($row['area_id']);
 
 $name         = htmlspecialchars($row['name']);
 $description  = htmlspecialchars($row['description']);
