@@ -831,23 +831,23 @@ if (isset($areamatch))
   //   9  [8]   Area name, must be HTML escaped
   //  10  [9]   Room name, must be HTML escaped
   
-  $sql = "SELECT e.id AS entry_id, e.start_time, e.end_time, e.name, e.description, "
-  . "e.type, e.create_by, "
-  .  sql_syntax_timestamp_to_unix("e.timestamp") . " AS last_updated"
-  . ", a.area_name, r.room_name"
-  . " FROM $tbl_entry e, $tbl_area a, $tbl_room r"
-  . " WHERE e.room_id = r.id AND r.area_id = a.id"
-  . " AND e.start_time < $report_end AND e.end_time > $report_start";
+  $sql = "SELECT E.id AS entry_id, E.start_time, E.end_time, E.name, E.description, "
+  . "E.type, E.create_by, "
+  .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated"
+  . ", A.area_name, R.room_name"
+  . " FROM $tbl_entry E, $tbl_area A, $tbl_room R"
+  . " WHERE E.room_id = R.id AND R.area_id = A.id"
+  . " AND E.start_time < $report_end AND E.end_time > $report_start";
 
   if (!empty($areamatch))
   {
     // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("a.area_name", $areamatch);
+    $sql .= " AND" .  sql_syntax_caseless_contains("A.area_name", $areamatch);
   }
   if (!empty($roommatch))
   {
     // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("r.room_name", $roommatch);
+    $sql .= " AND" .  sql_syntax_caseless_contains("R.room_name", $roommatch);
   }
   if (!empty($typematch))
   {
@@ -857,29 +857,29 @@ if (isset($areamatch))
       $or_array = array();
       foreach ( $typematch as $type )
       {
-        $or_array[] = "e.type = '".addslashes($type)."'";
+        $or_array[] = "E.type = '".addslashes($type)."'";
       }
       $sql .= "(". implode( " OR ", $or_array ) .")";
     }
     else
     {
-      $sql .= "e.type = '".addslashes($typematch[0])."'";
+      $sql .= "E.type = '".addslashes($typematch[0])."'";
     }
   }
   if (!empty($namematch))
   {
     // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("e.name", $namematch);
+    $sql .= " AND" .  sql_syntax_caseless_contains("E.name", $namematch);
   }
   if (!empty($descrmatch))
   {
     // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("e.description", $descrmatch);
+    $sql .= " AND" .  sql_syntax_caseless_contains("E.description", $descrmatch);
   }
   if (!empty($creatormatch))
   {
     // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("e.create_by", $creatormatch);
+    $sql .= " AND" .  sql_syntax_caseless_contains("E.create_by", $creatormatch);
   }
 
   // If we're not an admin (they are allowed to see everything), then we need
@@ -894,17 +894,17 @@ if (isset($areamatch))
       //   - all bookings, if private_override is set to 'public'
       //   - their own bookings, and others' public bookings if private_override is set to 'none'
       //   - just their own bookings, if private_override is set to 'private'
-      $sql .= " AND ((a.private_override='public') OR
-                     (a.private_override='none' AND (e.private=0 OR e.create_by = '" . addslashes($user) . "')) OR
-                     (a.private_override='private' AND e.create_by = '" . addslashes($user) . "'))";                
+      $sql .= " AND ((A.private_override='public') OR
+                     (A.private_override='none' AND (E.private=0 OR E.create_by = '" . addslashes($user) . "')) OR
+                     (A.private_override='private' AND E.create_by = '" . addslashes($user) . "'))";                
     }
     else
     {
       // if the user is not logged in they can see:
       //   - all bookings, if private_override is set to 'public'
       //   - public bookings if private_override is set to 'none'
-      $sql .= " AND ((a.private_override='public') OR
-                     (a.private_override='none' AND e.private=0))";
+      $sql .= " AND ((A.private_override='public') OR
+                     (A.private_override='none' AND E.private=0))";
     }
   }
    
