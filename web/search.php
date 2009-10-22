@@ -130,7 +130,10 @@ if (!isset($total))
                        FROM $tbl_entry E, $tbl_room R, $tbl_area A
                        WHERE $sql_pred");
 }
-
+if ($total < 0)
+{
+  fatal_error(0, sql_error());
+}
 if ($total <= 0)
 {
   echo "<p id=\"nothing_found\">" . get_vocab("nothing_found") . "</p>\n";
