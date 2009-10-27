@@ -615,7 +615,7 @@ else
             {
               print "      case \"".$row['id']."\":\n";
               // get rooms for this area
-              $sql2 = "select id, room_name from $tbl_room where area_id='".$row['id']."' order by room_name";
+              $sql2 = "select id, room_name from $tbl_room where area_id='".$row['id']."' order by sort_key";
               $res2 = sql_query($sql2);
               if ($res2)
               {
@@ -681,7 +681,7 @@ else
       <select id="rooms" name="rooms[]" multiple="multiple" size="5">
         <?php 
         // select the rooms in the area determined above
-        $sql = "select id, room_name from $tbl_room where area_id=$area_id order by room_name";
+        $sql = "select id, room_name from $tbl_room where area_id=$area_id order by sort_key";
         $res = sql_query($sql);
         if ($res)
         {

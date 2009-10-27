@@ -50,10 +50,12 @@ CREATE TABLE mrbs_room
   id                serial primary key,
   area_id           int DEFAULT 0 NOT NULL,
   room_name         varchar(25) NOT NULL,
+  sort_key          varchar(25) NOT NULL,
   description       varchar(60),
   capacity          int DEFAULT 0 NOT NULL,
   room_admin_email  text
 );
+create index idxSortKey on mrbs_room(sort_key);
 
 CREATE TABLE mrbs_entry
 (
@@ -109,6 +111,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '7');
+  VALUES ('db_version', '8');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');

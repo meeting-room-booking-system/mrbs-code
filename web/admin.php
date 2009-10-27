@@ -105,7 +105,7 @@ else
 // This one has the rooms
 if(isset($area))
 {
-  $res = sql_query("select id, room_name, description, capacity from $tbl_room where area_id=$area order by room_name");
+  $res = sql_query("select id, room_name, description, capacity from $tbl_room where area_id=$area order by sort_key");
   if (! $res)
   {
     fatal_error(0, sql_error());

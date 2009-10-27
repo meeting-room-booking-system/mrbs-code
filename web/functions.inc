@@ -263,12 +263,12 @@ function get_default_area()
 }
 
 // Return a default room given a valid area; used if no room is already known.
-// This returns the first room in alphbetic order in the database.
+// This returns the first room in sort_key order in the database.
 // This could be changed to implement something like per-user defaults.
 function get_default_room($area)
 {
   global $tbl_room;
-  $room = sql_query1("SELECT id FROM $tbl_room WHERE area_id=$area ORDER BY room_name LIMIT 1");
+  $room = sql_query1("SELECT id FROM $tbl_room WHERE area_id=$area ORDER BY sort_key LIMIT 1");
   return ($room < 0 ? 0 : $room);
 }
 
@@ -584,7 +584,7 @@ function make_room_select_html( $link, $area, $current, $year, $month, $day )
   <div>
     <select name=\"room\" onchange=\"document.forms['roomChangeForm'].submit()\">";
   
-    $sql = "select id, room_name from $tbl_room where area_id=$area order by room_name";
+    $sql = "select id, room_name from $tbl_room where area_id=$area order by sort_key";
     $res = sql_query($sql);
     if ($res)
     {

@@ -174,7 +174,7 @@ if ($area_list_format == "select")
 else
 {
   $sql = "select id, room_name from $tbl_room
-          where area_id=$area order by room_name";
+          where area_id=$area order by sort_key";
   $res = sql_query($sql);
   if ($res)
   {

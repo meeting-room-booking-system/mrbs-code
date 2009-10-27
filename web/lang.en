@@ -282,6 +282,8 @@ $vocab["private_display_caution"] = "CAUTION: think carefully about the privacy 
 $vocab["treat_respect"]           = "Respect the privacy setting of the booking";
 $vocab["treat_private"]           = "Treat all bookings as private, ignoring their privacy settings";
 $vocab["treat_public"]            = "Treat all bookings as public, ignoring their privacy settings";
+$vocab["sort_key"]                = "Sort key";
+$vocab["sort_key_note"]           = "This is the key used for ordering rooms";
 
 // Used in edit_users.php
 $vocab["name_empty"]         = "You must enter a name.";

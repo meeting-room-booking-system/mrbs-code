@@ -36,11 +36,13 @@ CREATE TABLE mrbs_room
   id               int NOT NULL auto_increment,
   area_id          int DEFAULT '0' NOT NULL,
   room_name        varchar(25) DEFAULT '' NOT NULL,
+  sort_key         varchar(25) DEFAULT '' NOT NULL,
   description      varchar(60),
   capacity         int DEFAULT '0' NOT NULL,
   room_admin_email text,
 
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  KEY idxSortKey (sort_key)
 );
 
 CREATE TABLE mrbs_entry
@@ -105,6 +107,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '7');
+  VALUES ( 'db_version', '8');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

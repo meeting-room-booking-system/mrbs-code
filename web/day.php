@@ -238,7 +238,7 @@ if ($debug_flag)
 // pull the data from the db and store it. Convienently we can print the room
 // headings and capacities at the same time
 
-$sql = "SELECT room_name, capacity, id, description FROM $tbl_room WHERE area_id=$area ORDER BY room_name";
+$sql = "SELECT room_name, capacity, id, description FROM $tbl_room WHERE area_id=$area ORDER BY sort_key";
 
 $res = sql_query($sql);
 

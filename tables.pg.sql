@@ -38,10 +38,12 @@ CREATE TABLE mrbs_room
   id                serial primary key,
   area_id           int DEFAULT 0 NOT NULL,
   room_name         varchar(25) DEFAULT '' NOT NULL,
+  sort_key          varchar(25) DEFAULT '' NOT NULL,
   description       varchar(60),
   capacity          int DEFAULT 0 NOT NULL,
   room_admin_email  text
 );
+create index idxSortKey on mrbs_room(sort_key);
 
 CREATE TABLE mrbs_entry
 (

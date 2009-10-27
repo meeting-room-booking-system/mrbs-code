@@ -14,6 +14,7 @@ $new_area = get_form_var ('new_area', 'int');
 $old_area = get_form_var ('old_area', 'int');
 $room = get_form_var('room', 'int');
 $room_name = get_form_var('room_name', 'string');
+$sort_key = get_form_var('sort_key', 'string');
 $old_room_name = get_form_var('old_room_name', 'string');
 $area_name = get_form_var('area_name', 'string');
 $description = get_form_var('description', 'string');
@@ -142,6 +143,7 @@ if (!empty($room))
     else
     {
       $sql = "UPDATE $tbl_room SET room_name='" . addslashes($room_name)
+        . "', sort_key='" . addslashes($sort_key)
         . "', description='" . addslashes($description)
         . "', capacity=$capacity, area_id=$new_area, room_admin_email='"
         . addslashes($room_admin_email) . "' WHERE id=$room";
@@ -216,6 +218,13 @@ if (!empty($room))
     <label for="room_name"><?php echo get_vocab("name") ?>:</label>
     <input type="text" id="room_name" name="room_name" value="<?php echo htmlspecialchars($row["room_name"]); ?>">
     <input type="hidden" name="old_room_name" value="<?php echo htmlspecialchars($row["room_name"]); ?>">
+    </div>
+    
+    <div>
+    <?php
+    echo "<label for=\"sort_key\" title=\"" . get_vocab("sort_key_note") . "\">" . get_vocab("sort_key") . ":</label>\n";
+    ?>
+    <input type="text" id="sort_key" name="sort_key" value="<?php echo htmlspecialchars($row["sort_key"]); ?>">
     </div>
     
     <div>
