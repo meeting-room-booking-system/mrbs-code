@@ -64,6 +64,7 @@ $vocab["weeks"]              = "semaines";
 $vocab["years"]              = "années";
 $vocab["periods"]            = "periodes";
 $vocab["all_day"]            = "Journée entière";
+$vocab["area"]               = "Lieu";
 $vocab["type"]               = "Type&nbsp;";
 $vocab["internal"]           = "Interne";
 $vocab["external"]           = "Externe";
