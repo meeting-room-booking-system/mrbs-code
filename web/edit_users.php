@@ -53,6 +53,7 @@ $invalid_email = get_form_var('invalid_email', 'int');
 $name_empty = get_form_var('name_empty', 'int');
 $name_not_unique = get_form_var('name_not_unique', 'int');
 $taken_name = get_form_var('taken_name', 'string');
+$pwd_not_match = get_form_var('pwd_not_match', 'string');
 
 $fields = array();
 $field_props = array();
@@ -139,15 +140,22 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   
   if ($Id >= 0) /* -1 for new users, or >=0 for existing ones */
   {
+    // If it's an existing user then get the data from the database
     $result = sql_query("select * from $tbl_users where id=$Id");
     $data = sql_row_keyed($result, 0);
     sql_free($result);
   }
-  if (($Id == -1) || (!$data)) /* Set blank data for undefined entries */
+  if (($Id == -1) || (!$data))
   {
+    // Otherwise try and get the data from the query string, and if it's
+    // not there set the default to be blank.  (The data will be in the 
+    // query string if there was an error on validating the data after it
+    // had been submitted.   We want to preserve the user's original values
+    // so that they don't have to re-type them).
     foreach ($fields as $fieldname)
     {
-      $data[$fieldname] = "";
+      $value = get_form_var($fieldname, $field_props[$fieldname]['type']);
+      $data[$fieldname] = (isset($value)) ? $value : "";
     }
   }
 
@@ -270,20 +278,21 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
             
             
             // Then output any error messages associated with the field
+            // except for the password field which is a special case
             switch($fieldname)
             {
               case 'email':
-                if (isset($invalid_email) && (1 == $invalid_email))
+                if (!empty($invalid_email))
                 {
                   echo "<p class=\"error\">" . get_vocab('invalid_email') . "<p>\n";
                 }
                 break;
               case 'name':
-                if (isset($name_not_unique) && (1 == $name_not_unique))
+                if (!empty($name_not_unique))
                 {
                   echo "<p class=\"error\">'" . htmlspecialchars($taken_name) . "' " . get_vocab('name_not_unique') . "<p>\n";
                 }
-                if (isset($name_empty) && (1 == $name_empty))
+                if (!empty($name_empty))
                 {
                   echo "<p class=\"error\">" . get_vocab('name_empty') . "<p>\n";
                 }
@@ -291,8 +300,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
             }
                      
           } // end foreach
-
-
+      
           print "<div><p>" . get_vocab("password_twice") . "...</p></div>\n";
 
           for ($i=0; $i<2; $i++)
@@ -301,6 +309,12 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
             print "<label for=\"password$i\">" . get_vocab("user_password") . ":</label>\n";
             print "<input type=\"password\" id=\"password$i\" name=\"password$i\" value=\"\">\n";
             print "</div>\n";
+          }
+          
+          // Now do any password error messages
+          if (!empty($pwd_not_match))
+          {
+            echo "<p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
           }
           
           if ($editing_last_admin)
@@ -353,127 +367,141 @@ if (isset($Action) && ($Action == "Update"))
   // otherwise go ahead and update the database
   else
   {
-    /* To do: Add JavaScript to verify passwords _before_ sending the form here */
-    if ($password0 != $password1)
+    $values = array();
+    $q_string = ($Id >= 0) ? "Action=Edit" : "Action=Add";
+    foreach ($fields as $fieldname)
     {
-      print_header(0, 0, 0, "", "");
-  
-      print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-      print "  <fieldset>\n";
-      print "  <legend></legend>\n";
-      print "    <p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
-      print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
-      print "  </fieldset>\n";
-      print "</form>\n";
-      
-      // Print footer and exit
-      print_footer(TRUE);
+      // first, get all the form variables and put them into an array, $values, which 
+      // we will use for entering into the database assuming we pass validation
+      $values[$fieldname] = get_form_var("Field_$fieldname", $field_props[$fieldname]['type']);
+      // Truncate the field to the maximum length as a precaution.
+      if (isset($maxlength["users.$fieldname"]))
+      {
+        $values[$fieldname] = substr($values[$fieldname], 0, $maxlength["users.$fieldname"]);
+      }
+      // we will also put the data into a query string which we will use for passing
+      // back to this page if we fail validation.   This will enable us to reload the
+      // form with the original data so that the user doesn't have to
+      // re-enter it.  (Instead of passing the data in a query string we
+      // could pass them as session variables, but at the moment MRBS does
+      // not rely on PHP sessions).
+      switch ($fieldname)
+      {
+        // some of the fields get special treatment
+        case 'id':
+          // id: don't need to do anything except add the id to the query string
+          $q_string .= "&Id=$Id";   
+          break;
+        case 'name':
+          // name: convert it to lower case
+          $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
+          $values[$fieldname] = strtolower($values[$fieldname]);
+          break;
+        case 'password':
+          // password: if the password field is blank it means
+          // that the user doesn't want to change the password
+          // so don't do anything; otherwise get the MD5 hash.
+          // Note: we don't put the password in the query string
+          // for security reasons.
+          if ($password0 != "")
+          {
+            $values[$fieldname]=md5($password0);
+          }
+          break;
+        case 'level':
+          // level:  set a safe default (lowest level of access)
+          // if there is no value set
+          $q_string .= "&$fieldname=" . $values[$fieldname];
+          if (!isset($values[$fieldname]))
+          {
+            $values[$fieldname] = 0;
+          }
+          // Check that we are not trying to upgrade our level.    This shouldn't be possible
+          // but someone might have spoofed the input in the edit form
+          if ($values[$fieldname] > $level)
+          {
+            Header("Location: edit_users.php");
+            exit;
+          }
+          break;
+        default:
+          $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
+          break;
+      }
     }
-    //
-    
-    // Verify email adresses
-    $email_var = get_form_var('Field_email', 'string');
-    // Truncate the email field to the maximum length as a precaution.
-    $email_var = substr($email_var, 0, $maxlength['users.email']);
-    if (!isset($email_var))
+
+    // Now do some form validation
+    $valid_data = TRUE;
+    foreach ($values as $fieldname => $value)
     {
-      $email_var = '';
+      switch ($fieldname)
+      {
+        case 'name':
+          // check that the name is not empty
+          if (empty($value))
+          {
+            $valid_data = FALSE;
+            $q_string .= "&name_empty=1";
+          }
+          // Check that the name is unique.
+          // If it's a new user, then to check to see if there are any rows with that name.
+          // If it's an update, then check to see if there are any rows with that name, except
+          // for that user.
+          $query = "SELECT id FROM $tbl_users WHERE name='" . addslashes($value) . "'";
+          if ($Id >= 0)
+          {
+            $query .= " AND id!='$Id'";
+          }
+          $query .= " LIMIT 1";  // we only want to know if there is at least one instance of the name
+          $result = sql_query($query);
+          if (sql_count($result) > 0)
+          {
+            $valid_data = FALSE;
+            $q_string .= "&name_not_unique=1";
+            $q_string .= "&taken_name=$value";
+          }
+          break;
+        case 'password':
+          // check that the two passwords match
+          if ($password0 != $password1)
+          {
+            $valid_data = FALSE;
+            $q_string .= "&pwd_not_match=1";
+          }
+          break;
+        case 'email':
+          // check that the email address is valid
+          if (!empty($value) && !validate_email_list($value))
+          {
+            $valid_data = FALSE;
+            $q_string .= "&invalid_email=1";
+          }
+          break;
+      }
     }
-    if (!validate_email_list($email_var))
-    {
-      // Now display this form again with an error message
-      Header("Location: edit_users.php?Action=Edit&Id=$Id&invalid_email=1");
-      exit;
-    }
-    //
-    
-    // Check that the name is not empty
-    $new_name = strtolower(get_form_var('Field_name', 'string'));
-    if (empty($new_name))
-    {
-      // Now display this form again with an error message
-      // Build the query string
-      $q_string = "Action=" . (($Id >= 0) ? 'Edit' : 'Add');
-      $q_string .= "&Id=$Id&name_empty=1";
+
+    // if validation failed, go back to this page with the query 
+    // string, which by now has both the error codes and the original
+    // form values 
+    if (!$valid_data)
+    { 
       Header("Location: edit_users.php?$q_string");
       exit;
     }
+
     
-    // Truncate the name field to the maximum length as a precaution.
-    $new_name = substr($new_name, 0, $maxlength['users.name']);
-    
-    // Check that the name is unique.
-    // If it's a new user, then to check to see if there are any rows with that name.
-    // If it's an update, then check to see if there are any rows with that name, except
-    // for that user.
-    $query = "SELECT id FROM $tbl_users WHERE name='" . addslashes($new_name) . "'";
-    if ($Id >= 0)
-    {
-      $query .= " AND id!='$Id'";
-    }
-    $query .= " LIMIT 1";  // we only want to know if there is at least one instance of the name
-    $result = sql_query($query);
-    if (sql_count($result) > 0)
-    {
-      // Now display this form again with an error message
-      // Build the query string
-      $q_string = "Action=" . (($Id >= 0) ? 'Edit' : 'Add');
-      $q_string .= "&Id=$Id";
-      $q_string .= "&taken_name=" . urlencode($new_name);
-      $q_string .= "&name_not_unique=1";
-      Header("Location: edit_users.php?$q_string");
-      exit;
-    }
+    // If we got here, then we've passed validation and we need to
+    // enter the data into the database
     
     $sql_fields = array();
   
-    // For each db column, try to fetch out an appropriate form field value
-    foreach ($fields as $fieldname)
+    // For each db column get the value ready for the database
+    foreach ($values as $fieldname => $value)
     {
-      if ($fieldname=="id")
-      {
-        // We don't add or update the id - that's autoincremented in the db
-        // so move onto the next value
-        continue;
-      }
-      else if ($fieldname=="name")
-      {
-        // convert to lowercase so that authentication will be case insensitive
-        $value = strtolower(get_form_var('Field_name', 'string'));
-      }
-      else if (($fieldname=="password") && ($password0!=""))
-      {
-        // Hash the password for security
-        $value=md5($password0);
-      }
-      else if ($fieldname=="level")
-      {
-        $value = get_form_var('Field_level', 'int');
-        if (!isset($value))
-        {
-          $value = 0;
-        }
-        // Check that we are not trying to upgrade our level.    This shouldn't be possible
-        // but someone might have spoofed the input in the edit form
-        if ($value > $level)
-        {
-          Header("Location: edit_users.php");
-          exit;
-        }
-      }
-      else
-      {
-        $value = get_form_var("Field_$fieldname", $field_props[$fieldname]['type']);
-      }
-  
       // pre-process the field value for SQL
       if ($field_props[$fieldname]['istext'])
       {
-        // Truncate the field to the maximum length as a precaution.
-        if (isset($maxlength["users.$fieldname"]))
-        {
-          $value = substr($value, 0, $maxlength["users.$fieldname"]);
-        }
+       
         $value = "'" . addslashes($value) . "'";
       }
       else if ($field_props[$fieldname]['isbool'])
