@@ -501,7 +501,6 @@ if (isset($Action) && ($Action == "Update"))
       // pre-process the field value for SQL
       if ($field_props[$fieldname]['istext'])
       {
-       
         $value = "'" . addslashes($value) . "'";
       }
       else if ($field_props[$fieldname]['isbool'])
