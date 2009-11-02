@@ -308,26 +308,6 @@ function validate_and_submit ()
     return false;
   }
   
-  if ((document.forms["main"].rep_type.value != 0) &&
-      (document.forms["main"].rep_type[2].checked ||
-      document.forms["main"].rep_type[6].checked))
-  {
-    ok = false;
-    for (j=0; j < 7; j++)
-    {
-      if (document.forms["main"]["rep_day["+j+"]"].checked)
-      {
-        ok = true;
-        break;
-      }
-    }
-    
-    if (ok == false)
-    {
-      alert("<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("rep_rep_day") ?>");
-      return false;
-    }
-  }
 
   // check that a room(s) has been selected
   // this is needed as edit_entry_handler does not check that a room(s)

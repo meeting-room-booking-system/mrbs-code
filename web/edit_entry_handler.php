@@ -170,30 +170,6 @@ if ($name == '')
   print_footer(TRUE);
 }       
 
-if ($rep_type  == 2 || $rep_type == 6)
-{
-  $got_rep_day = 0;
-  for ($i = 0; $i < 7; $i++)
-  {
-    if ($rep_day[$i])
-    {
-      $got_rep_day =1;
-      break;
-    }
-  }
-  if ($got_rep_day == 0)
-  {
-    print_header($day, $month, $year, $area, isset($room) ? $room : "");
-?>
-       <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-       <p>
-         <?php echo get_vocab('you_have_not_entered')." ".get_vocab("rep_rep_day"); ?>
-       </p>
-<?php
-    // Print footer and exit
-    print_footer(TRUE);
-  }
-}       
 
 if (($rep_type == 6) && ($rep_num_weeks < 2))
 {
