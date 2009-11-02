@@ -361,7 +361,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
   $start_day = date('w', mktime($hour, $min, $sec, $month, $day, $year));
   $cur_day = $start_day;
 
-  $entrys = "";
+  $entrys = array();
   for ($i = 0; $i < $max_ittr; $i++)
   {
     $time = mktime($hour, $min, $sec, $month, $day, $year);
@@ -431,6 +431,20 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
       // Unknown repeat option
       default:
         return;
+    }
+  }
+  
+  // For weekly and n-weekly repeats, the first entry that we've
+  // got in the array is not necessarily valid.   In fact it will
+  // only be valid if there are no repeat days defined, or else 
+  // if the first entry falls on a repeat day.  (In MRBS, if you
+  // don't specify a repeat day or days, then the repeat day is
+  // assumed to be the day of the start of the series.)
+  if (($rep_type == 2) || ($rep_type == 6))
+  {
+    if ((strpos($rep_opt, '1') !== FALSE) && !$rep_opt[$start_day])
+    {
+      array_shift($entrys);  // remove the first entry
     }
   }
 
