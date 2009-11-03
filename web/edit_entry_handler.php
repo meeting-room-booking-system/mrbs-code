@@ -304,6 +304,18 @@ if (!isset($rep_day))
   $rep_day = array();
 }
 
+// If there's a weekly or n-weekly repeat and no repeat day has
+// been set, then set a default repeat day as the day of
+// the week of the start of the period
+if (isset($rep_type) && (($rep_type == 2) || ($rep_type == 6)))
+{
+  if (count($rep_day) == 0)
+  {
+    $start_day = date('w', $starttime);
+    $rep_day[$start_day] = TRUE;
+  }
+}
+
 // For weekly repeat(2), build string of weekdays to repeat on:
 $rep_opt = "";
 if (($rep_type == 2) || ($rep_type == 6))
