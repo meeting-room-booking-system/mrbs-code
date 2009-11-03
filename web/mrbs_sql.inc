@@ -337,7 +337,8 @@ function same_day_next_month($time)
  * $time     - The start time
  * $enddate  - When the repeat ends
  * $rep_type - What type of repeat is it
- * $rep_opt  - The repeat entrys
+ * $rep_opt  - The repeat entrys (if the repeat type is weekly or n-weekly
+ *             then at least one repeat day must be set)
  * $max_ittr - After going through this many entrys assume an error has occured
  * $_initial_weeknumber - Save initial week number for use in 'monthly repeat same week number' case
  * 
@@ -358,7 +359,8 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
   global $_initial_weeknumber;
   $_initial_weeknumber = (int)(($day - 1) / 7) + 1;
   $week_num = 0;
-  $start_day = date('w', mktime($hour, $min, $sec, $month, $day, $year));
+  $start_day = date('w', $time);
+  $start_dom = $day;  // the starting day of the month
   $cur_day = $start_day;
 
   $entrys = array();
@@ -379,8 +381,10 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
         $day += 1;
         break;
       
-      // Weekly repeat
+      // Weekly (2) and n-Weekly (6) repeats
       case 2:
+        $rep_num_weeks = 1;
+      case 6:
         $j = $cur_day = date("w", $entrys[$i]);
         // Skip over days of the week which are not enabled:
         while (($j = ($j + 1) % 7) != $cur_day && !$rep_opt[$j])
@@ -388,17 +392,41 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
           $day += 1;
         }
 
-        $day += 1;
+        $day += 1 + (7 * ($rep_num_weeks - 1));
         break;
       
-      // Monthly repeat
+      // Monthly (3) and Yearly (4) repeats
       case 3:
-        $month += 1;
-        break;
-      
-      // Yearly repeat
       case 4:
-        $year += 1;
+        if ($rep_type == 3)
+        {
+          $month += 1;
+        }
+        else
+        {
+          $year += 1;
+        }
+        // Make sure the month and year are valid, so
+        // that we can check the days with checkdate()
+        if ($month > 12)
+        {
+          $year++;
+          $month -= 12;
+        }
+        // Get the day of the month back to where it should be (in case we
+        // decremented it to make it a valid date last time round)
+        $day = $start_dom;
+        // Make the date valid if day is more than number of days in month:
+        while (!checkdate($month, $day, $year))
+        {
+          $day--;
+          if ($day == 0)
+          {
+            // should never happen (so not internationalised), but
+            // just in case it does, stop an infinite loop 
+            fatal_error(TRUE, "Error generating series");
+          }
+        }
         break;
    
       // Monthly repeat on same week number and day of week
@@ -406,28 +434,6 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
         $day += same_day_next_month($time);
         break;
 
-      // n Weekly repeat
-      case 6:
-        // Loop until we hit the end time
-        while ($time <= $enddate)
-        {
-          $day++;
-          $cur_day = ($cur_day + 1) % 7;
-
-          if (($cur_day % 7) == $start_day)
-          {
-            $week_num++;
-          }
-
-          if (($week_num % $rep_num_weeks == 0) &&
-              ($rep_opt[$cur_day] == 1))
-          {
-            break;
-          }
-        }
-
-        break;   
-            
       // Unknown repeat option
       default:
         return;
@@ -435,14 +441,13 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
   }
   
   // For weekly and n-weekly repeats, the first entry that we've
-  // got in the array is not necessarily valid.   In fact it will
-  // only be valid if there are no repeat days defined, or else 
-  // if the first entry falls on a repeat day.  (In MRBS, if you
-  // don't specify a repeat day or days, then the repeat day is
-  // assumed to be the day of the start of the series.)
+  // got in the array is not valid if the day of the week of the
+  // start of the period is not one of the repeat days.  (We are
+  // allowed to assume that at least one repeat day is set in this
+  // function)
   if (($rep_type == 2) || ($rep_type == 6))
   {
-    if ((strpos($rep_opt, '1') !== FALSE) && !$rep_opt[$start_day])
+    if (!$rep_opt[$start_day])
     {
       array_shift($entrys);  // remove the first entry
     }
