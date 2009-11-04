@@ -5,7 +5,10 @@
 /**************************************************************************
  *   MRBS Configuration File
  *   Configure this file for your site.
- *   You shouldn't have to modify anything outside this file.
+ *   You shouldn't have to modify anything outside this file
+ *   (except for the lang.* files, eg lang.en for English, if
+ *   you want to change text strings such as "Meeting Room
+ *   Booking System", "room" and "area").
  **************************************************************************/
 
 // The timezone your meeting rooms run in. It is especially important
