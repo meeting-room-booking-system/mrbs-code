@@ -652,7 +652,7 @@ print "<h2>" . get_vocab("user_list") . "</h2>\n";
 
 if ($level >= $min_user_editing_level) /* Administrators get the right to add new users */
 {
-  print "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+  print "<form id=\"add_new_user\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
   print "  <div>\n";
   print "    <input type=\"hidden\" name=\"Action\" value=\"Add\">\n";
   print "    <input type=\"hidden\" name=\"Id\" value=\"-1\">\n";
