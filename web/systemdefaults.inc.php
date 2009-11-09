@@ -720,9 +720,20 @@ $typel["I"] = "I";
  // Records which DOCTYPE is being used.    Do not change - it will not change the DOCTYPE
  // that is used;  it is merely used when the code needs to know the DOCTYPE, for example
  // in calls to nl2br.   TRUE means XHTML, FALSE means HTML.
- define("IS_XHTML", FALSE);
- 
+ define('IS_XHTML', FALSE);
 
+ /*************************************************
+ * ENTRY STATUS CODES - internal use, do not change
+ **************************************************/
+
+// The booking status codes that are used in the status column in the
+// entry table.   Although there are only two codes at the moment, the
+// codes can be added to later if additional status types are required.
+// The default code in the database table is 1, ie a confirmed booking.
+
+define('STATUS_PROVISIONAL', 0);
+define('STATUS_CONFIRMED',   1);
+ 
 /********************************************************
  * PHP System Configuration - internal use, do not change
  ********************************************************/

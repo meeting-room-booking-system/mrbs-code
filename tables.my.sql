@@ -59,6 +59,7 @@ CREATE TABLE mrbs_entry
   type        char DEFAULT 'E' NOT NULL,
   description text,
   private     TINYINT(1) NOT NULL DEFAULT 0,
+  status      tinyint NOT NULL DEFAULT 1,
 
   PRIMARY KEY (id),
   KEY idxStartTime (start_time),
@@ -107,6 +108,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '8');
+  VALUES ( 'db_version', '9');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
