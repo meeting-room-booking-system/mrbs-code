@@ -362,6 +362,15 @@ $private_override = "none"; // Override default privacy behavior.
            // Overrides $private_default and $private_mandatory
            // Consider your users' expectations of privacy before
            // changing to "public" or from "private" to "none"
+    
+                  
+// PROVISIONAL BOOKINGS SETTINGS
+
+// These settings control whether provisional bookings should be used.
+// If provisional bookings are enabled then ordinary users must have their
+// bookings confirmed by an admin.
+$provisional_enabled = FALSE;  // Set to TRUE to enable provisional bookings
+
 
 /***********************************************
  * Authentication settings - read AUTHENTICATION

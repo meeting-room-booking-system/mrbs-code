@@ -150,8 +150,9 @@ if (!getAuthorised(1))
   showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
   exit;
 }
+$user = getUserName();
 
-if (!getWritable($create_by, getUserName()))
+if (!getWritable($create_by, $user))
 {
   showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
   exit;
@@ -414,6 +415,18 @@ if ($valid_booking)
 {
   foreach ( $rooms as $room_id )
   {
+    // If we're using provisional booking then we need to work out whether the
+    // status of this booking is confirmed.   If the user is allowed to confirm
+    // bookings for this room, then the status will be confirmed , since they are
+    // in effect immediately confirming their own booking.
+    if ($provisional_enabled)
+    {
+      $status = (auth_can_confirm($user, $room_id)) ? STATUS_CONFIRMED : STATUS_PROVISIONAL;
+    }
+    else
+    {
+      $status = STATUS_CONFIRMED;
+    }
     if ($edit_type == "series")
     {
       $new_id = mrbsCreateRepeatingEntrys($starttime,
@@ -427,7 +440,8 @@ if ($valid_booking)
                                           $type,
                                           $description,
                                           isset($rep_num_weeks) ? $rep_num_weeks : 0,
-                                          $isprivate);
+                                          $isprivate,
+                                          $status);
       // Send a mail to the Administrator
       if ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
           $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'])
@@ -484,7 +498,8 @@ if ($valid_booking)
                                       $name,
                                       $type,
                                       $description,
-                                      $isprivate);
+                                      $isprivate,
+                                      $status);
 
       // Send a mail to the Administrator
       if ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
@@ -524,7 +539,7 @@ if ($valid_booking)
   // Delete the original entry
   if (isset($id))
   {
-    mrbsDelEntry(getUserName(), $id, ($edit_type == "series"), 1);
+    mrbsDelEntry($user, $id, ($edit_type == "series"), 1);
   }
 
   sql_mutex_unlock("$tbl_entry");

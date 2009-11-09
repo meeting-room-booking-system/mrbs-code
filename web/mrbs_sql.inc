@@ -166,6 +166,7 @@ function mrbsDelEntry($user, $id, $series, $all)
  * $type        - Type (Internal/External)
  * $description - Description
  * $private     - Private Booking (TRUE/FALSE)
+ * $status      - Status code of the entry
  * 
  * Returns:
  *   0        - An error occured while inserting the entry
@@ -173,7 +174,7 @@ function mrbsDelEntry($user, $id, $series, $all)
  */
 function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
                                $room_id, $owner, $name, $type, $description,
-                               $private)
+                               $private, $status)
 {
   global $tbl_entry;
  
@@ -189,9 +190,9 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
   if ($endtime > $starttime)
   {
     $sql = "INSERT INTO $tbl_entry (  start_time,   end_time,   entry_type,    repeat_id,   room_id,
-                                      create_by,    name,       type,          description, private)
+                                      create_by,    name,       type,          description, private, status)
                             VALUES ($starttime, $endtime, $entry_type, $repeat_id, $room_id,
-                                    '$owner',     '$name',    '$type',       '$description', $private)";
+                                    '$owner',     '$name',    '$type',       '$description', $private, $status)";
 
     if (sql_command($sql) < 0)
     {
@@ -222,6 +223,10 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
  * $description - Description
  * $rep_num_weeks - (missing)
  * $private     - Private Booking (bool)
+ *
+ * (NOTE: there is no status code passed, because the repeat table
+ *  does not have a status field.  Only the individual members of 
+ *  a series can have a status)
  * 
  * Returns:
  *   0        - An error occured while inserting the entry
@@ -471,6 +476,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
  * $type        - Type (Internal/External)
  * $description - Description
  * $private     - Private Booking (bool)
+ * $status      - Status code
  * 
  * Returns:
  *   0        - An error occured while inserting the entry
@@ -479,7 +485,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
 function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                    $rep_enddate, $rep_opt, $room_id, $owner,
                                    $name, $type, $description, $rep_num_weeks,
-                                   $private)
+                                   $private, $status)
 {
   global $max_rep_entrys;
   $private = $private ? 1 : 0 ;
@@ -497,14 +503,14 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
   {
     $ent = mrbsCreateSingleEntry($starttime, $endtime, 0, 0,
                                  $room_id, $owner, $name, $type,
-                                 $description, $private);
+                                 $description, $private, $status);
     return $ent;
   }
    
   $ent = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type,
                                $rep_enddate, $rep_opt, $room_id,
                                $owner, $name, $type, $description,
-                               $rep_num_weeks,$private);
+                               $rep_num_weeks, $private);
     
   if ($ent)
   {
@@ -523,7 +529,9 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                       $owner,
                                       $name,
                                       $type,
-                                      $description, $private);
+                                      $description,
+                                      $private,
+                                      $status);
     }
   }
   return $ent;

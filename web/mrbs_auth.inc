@@ -92,4 +92,31 @@ function showAccessDenied($day, $month, $year, $area, $room)
   // Print footer and exit
   print_footer(TRUE);
 }
+
+// auth_can_confirm($user, $room)
+//
+// Checks whether $user is allowed to confirm provisional bookings for $room
+// At the moment $room is ignored, but is passed here so that later
+// it can be enhanced to provide fine-grained permissions
+// 
+// Returns:  TRUE if the user is allowed to confirm bookings (or
+// if the requirement to have provisional bookings is disabled); 
+// otherwise FALSE
+function auth_can_confirm($user, $room)
+{
+  global $provisional_enabled;
+  
+  if (!$provisional_enabled)
+  {
+    // We're not using provisional booking, so a booking is
+    // automatically confirmed
+    return TRUE;
+  }
+  else
+  {
+    // At the moment the policy is simple: if we're using
+    // provisional bookings then only admins can confirm them
+    return (authGetUserLevel($user) >= 2);
+  }
+}
 ?>
