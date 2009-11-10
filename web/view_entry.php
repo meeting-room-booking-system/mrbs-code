@@ -3,6 +3,7 @@
 
 require_once "defaultincludes.inc";
 
+// Generates a single button
 function generateButton($form_action, $id, $series, $action_type, $returl, $submit_value)
 {
   global $room_id;
@@ -15,21 +16,24 @@ function generateButton($form_action, $id, $series, $action_type, $returl, $subm
   echo "<input type=\"hidden\" name=\"action\" value=\"$action_type\">\n";
   echo "<input type=\"hidden\" name=\"room_id\" value=\"$room_id\">\n";
   echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-  echo "<input type=\"submit\" value=\"" . get_vocab("accept") . "\">\n";
+  echo "<input type=\"submit\" value=\"$submit_value\">\n";
   echo "</fieldset>\n";
   echo "</form>\n";  
 }
 
+// Generates the Accept, Reject and More Info buttons
 function generateConfirmButtons($id, $series)
 {
-  global $returl;
+  global $returl, $PHP_SELF;
+  
+  $this_page = htmlspecialchars(basename($PHP_SELF));
   
   echo "<tr>\n";
   echo "<td>" . ($series ? get_vocab("series") : get_vocab("entry")) . ":</td>\n";
   echo "<td>\n";
   generateButton("confirm_entry_handler.php", $id, $series, "accept", $returl, get_vocab("accept"));
-  // generateButton();
-  // generateButton();
+  generateButton($this_page, $id, $series, "reject", $returl, get_vocab("reject"));
+  generateButton($this_page, $id, $series, "more_info", $returl, get_vocab("more_info"));
   echo "</td>\n";
   echo "</tr>\n";
 }
@@ -38,9 +42,33 @@ function generateOwnerButtons($id, $series)
 {
 }
 
+function generateTextArea($form_action, $id, $series, $action_type, $returl, $submit_value, $caption)
+{
+  echo "<tr><td id=\"caption\" colspan=\"2\">$caption:</td></tr>\n";
+  echo "<tr>\n";
+  echo "<td id=\"note\" colspan=\"2\">\n";
+  echo "<form action=\"$form_action\" method=\"post\">\n";
+  echo "<fieldset>\n";
+  echo "<legend></legend>\n";
+  echo "<textarea name=\"note\"></textarea>\n";
+  echo "<input type=\"hidden\" name=\"id\" value=\"$id\">\n";
+  echo "<input type=\"hidden\" name=\"series\" value=\"$series\">\n";
+  echo "<input type=\"hidden\" name=\"returl\" value=\"$returl\">\n";
+  echo "<input type=\"hidden\" name=\"action\" value=\"$action_type\">\n";
+  echo "<input type=\"submit\" value=\"$submit_value\">\n";
+  echo "</fieldset>\n";
+  echo "</form>\n";
+  echo "</td>\n";
+  echo "<tr>\n";
+}
+    
+
 $user = getUserName();
 
 // Get form variables
+//
+// If $series is TRUE, it means that the $id is the id of an 
+// entry in the repeat table.  Otherwise it's from the entry table.
 $day = get_form_var('day', 'int');
 $month = get_form_var('month', 'int');
 $year = get_form_var('year', 'int');
@@ -48,6 +76,8 @@ $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');
 $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'int');
+$action = get_form_var('action', 'string');
+$returl = get_form_var('returl', 'string');
 
 // If we dont know the right date then make it up
 if (!isset($day) or !isset($month) or !isset($year))
@@ -65,26 +95,29 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 
 // Need to tell all the links where to go back to after an edit or delete
-if (isset($HTTP_REFERER))
+if (!isset($returl))
 {
-  $returl = $HTTP_REFERER;
-}
-// If we haven't got a referer (eg we've come here from an email) then construct
-// a sensible place to go to afterwards
-else
-{
-  switch ($default_view)
+  if (isset($HTTP_REFERER))
   {
-    case "month":
-      $returl = "month.php";
-      break;
-    case "week":
-      $returl = "week.php";
-      break;
-    default:
-      $returl = "day.php";
+    $returl = $HTTP_REFERER;
   }
-  $returl .= "?year=$year&month=$month&day=$day&area=$area";
+  // If we haven't got a referer (eg we've come here from an email) then construct
+  // a sensible place to go to afterwards
+  else
+  {
+    switch ($default_view)
+    {
+      case "month":
+        $returl = "month.php";
+        break;
+      case "week":
+        $returl = "week.php";
+        break;
+      default:
+        $returl = "day.php";
+    }
+    $returl .= "?year=$year&month=$month&day=$day&area=$area";
+  }
 }
 $link_returl = urlencode($returl);  // for use in links
 
@@ -199,8 +232,8 @@ if ($provisional_enabled)
   {
     $sql = "SELECT COUNT(*)
             FROM $tbl_entry
-            WHERE $repeat_id=$id
-            AND $status=" . STATUS_PROVISIONAL . "
+            WHERE repeat_id=$id
+            AND status=" . STATUS_PROVISIONAL . "
             LIMIT 1";
     $status = (sql_query1($sql) > 0) ? STATUS_PROVISIONAL : STATUS_CONFIRMED;
   }
@@ -285,6 +318,7 @@ if ($series == 1)
     }
   }
   $row = sql_row_keyed($res, 0);
+  $repeat_id = $id;  // Save the repeat_id
   $id = $row['id'];
   sql_free($res);
 }
@@ -339,29 +373,55 @@ echo "</h3>\n";
 if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
 {
   echo "<tfoot id=\"confirm_buttons\">\n";
-  // Buttons for those who are allowed to confirm this booking
-  if (auth_can_confirm($user, $room_id))
+  // PHASE 2 - REJECT
+  if (isset($action) && ($action == "reject"))
   {
-    if (!$series)
-    {
-      generateConfirmButtons($id, FALSE);
-    }
-    if (!empty($repeat_id) || $series)
-    {
-      $target_id = (empty($repeat_id)) ? $id : $repeat_id;
-      generateConfirmButtons($target_id, TRUE);
-    }    
+    // del_entry expects the id of a member of a series
+    // when deleting a series and not the repeat_id
+    generateTextArea("del_entry.php", $id, $series,
+                     "reject", $returl,
+                     get_vocab("reject"),
+                     get_vocab("reject_reason"));
   }
-  // Buttons for the owner of this booking
-  elseif ($user == $create_by)
+  // PHASE 2 - MORE INFO
+  elseif (isset($action) && ($action == "more_info"))
   {
-    generateOwnerButtons($id, $series);
+    // but confirm_entry_handler expects the id to be a repeat_id
+    // if $series is true (ie behaves like the rest of MRBS).
+    // Sometime this difference in behaviour should be rationalised
+    // because it is very confusing!
+    $target_id = ($series) ? $repeat_id : $id;
+    generateTextArea("confirm_entry_handler.php", $target_id, $series,
+                     "more_info", $returl,
+                     get_vocab("send"),
+                     get_vocab("request_more_info"));
   }
-  // Others don't get any buttons
+  // PHASE 1 - first time through this page
   else
   {
-    // But valid HTML requires that there's something inside the <tfoot></tfoot>
-    echo "<tr><td></td><td></td></tr>\n";
+    // Buttons for those who are allowed to confirm this booking
+    if (auth_can_confirm($user, $room_id))
+    {
+      if (!$series)
+      {
+        generateConfirmButtons($id, FALSE);
+      }
+      if (!empty($repeat_id) || $series)
+      {
+        generateConfirmButtons($repeat_id, TRUE);
+      }    
+    }
+    // Buttons for the owner of this booking
+    elseif ($user == $create_by)
+    {
+      generateOwnerButtons($id, $series);
+    }
+    // Others don't get any buttons
+    else
+    {
+      // But valid HTML requires that there's something inside the <tfoot></tfoot>
+      echo "<tr><td></td><td></td></tr>\n";
+    }
   }
   echo "</tfoot>\n";
 }

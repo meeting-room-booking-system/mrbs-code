@@ -108,7 +108,12 @@ $vocab["status"]             = "Status";
 $vocab["confirmed"]          = "Confirmed booking";
 $vocab["provisional"]        = "Provisional booking";
 $vocab["accept"]             = "Accept";
-$vocab["series"]             = "Series";  
+$vocab["reject"]             = "Reject";
+$vocab["more_info"]          = "More Info";  
+$vocab["series"]             = "Series";
+$vocab["request_more_info"]  = "Please list the extra information you require";
+$vocab["reject_reason"]      = "Please give a reason for your rejection of this reservation request";
+$vocab["send"]               = "Send"; 
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Error";

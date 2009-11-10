@@ -726,3 +726,10 @@ div#simple_trailer {width: 100%; text-align: center; padding-top: 1.0em; padding
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 .view_entry #entry td:first-child {text-align: right; font-weight: bold; padding-right: 1.0em}
 .view_entry div#view_entry_nav {margin-top: 1.0em}
+.view_entry #confirm_buttons form {float: left; margin-right: 2em}
+.view_entry #confirm_buttons legend {font-size: 0}
+#confirm_buttons td {vertical-align: middle; padding-top: 1em}
+#confirm_buttons td#caption {text-align: left}
+#confirm_buttons td#note {padding-top: 0}
+#confirm_buttons td#note form {width: 100%}
+#confirm_buttons td#note textarea {width: 100%; height: 6em}
