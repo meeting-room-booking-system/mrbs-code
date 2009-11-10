@@ -709,6 +709,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   //       entry_description
   //       entry_private
   //       entry_create_by
+  //       status
   
   // $column is a column of the map of the screen that will be displayed
   // It looks like:
@@ -719,6 +720,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   //                     [long_descr]
   //                     [start_time]
   //                     [slots]
+  //                     [status]
   
   // slots records the duration of the booking in number of time slots.
 	// Used to calculate how high to make the block used for clipping
@@ -784,6 +786,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     // fill in the id, type and start time
     $column[$time_t][$n]["id"] = $row['entry_id'];
     $column[$time_t][$n]["is_private"] = $is_private;
+    $column[$time_t][$n]["status"] = $row['status'];
     $column[$time_t][$n]["color"] = $row['type'];
     $column[$time_t][$n]["start_time"] = utf8_strftime(hour_min_format(), $row['start_time']);
     $column[$time_t][$n]["slots"] = null;  // to avoid undefined index NOTICE errors
@@ -919,6 +922,7 @@ function draw_cell($cell, $query_strings, $cell_class)
   //         [long_descr]
   //         [start_time]
   //         [slots]
+  //         [status]
   //
   // where n is the number of the booking in the cell.    There can be none, one or many 
   // bookings in a cell.    If there are no bookings then a blank cell is drawn with a link
@@ -981,10 +985,15 @@ function draw_cell($cell, $query_strings, $cell_class)
     {
       $id         = $cell[$n]["id"];
       $is_private = $cell[$n]["is_private"];
+      $status     = $cell[$n]["status"];
       $color      = $cell[$n]["color"];
       $descr      = htmlspecialchars($cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
+      if ($status == STATUS_PROVISIONAL)
+      {
+        $class .= " provisional";
+      }
       if ($is_private)
       {
         $class .= " private";
@@ -1022,10 +1031,15 @@ function draw_cell($cell, $query_strings, $cell_class)
     {
       $id         = $cell[$n]["id"];
       $is_private = $cell[$n]["is_private"];
+      $status     = $cell[$n]["status"];
       $color      = $cell[$n]["color"];
       $descr      = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
+      if ($status == STATUS_PROVISIONAL)
+      {
+        $class .= " provisional";
+      }    
       if ($is_private)
       {
         $class .= " private";
@@ -1055,6 +1069,7 @@ function draw_cell($cell, $query_strings, $cell_class)
     {       
       $id         = $cell[0]["id"];
       $is_private = $cell[0]["is_private"];
+      $status     = $cell[0]["status"];
       $color      = $cell[0]["color"];
       $descr      = htmlspecialchars($cell[0]["data"]);
       $long_descr = htmlspecialchars($cell[0]["long_descr"]);
@@ -1073,6 +1088,10 @@ function draw_cell($cell, $query_strings, $cell_class)
     if (isset($id))
     {
       $c = $color;
+      if ($status == STATUS_PROVISIONAL)
+      {
+        $c .= " provisional";
+      } 
       if ($is_private)
       {
         $c .= " private";

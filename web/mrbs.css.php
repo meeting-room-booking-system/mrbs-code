@@ -404,6 +404,11 @@ div:hover.multiple_control {cursor: pointer}
 /* private bookings */
 .private {opacity: 0.6; font-style: italic}
 
+/* provisional bookings */
+.provisional {opacity: 0.6}
+.provisional a {font-weight: normal}
+.provisional a:before {content: "? "}
+
 
 /* ------------ DEL.PHP -----------------------------*/
 div#del_room_confirm {padding-bottom: 3em}
