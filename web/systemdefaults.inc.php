@@ -581,7 +581,7 @@ $mail_settings['booker'] = FALSE;
 
 // If 'booker' is set to TRUE (see above) and you use an authentication
 // scheme other than 'auth_db', you need to provide the mail domain that will
-// be appended to the username to produce a valid email address (ie.
+// be appended to the username to produce a valid email address (eg
 // "@domain.com").
 $mail_settings['domain'] = '';
 
