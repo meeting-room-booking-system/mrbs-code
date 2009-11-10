@@ -537,6 +537,31 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
   return $ent;
 }
 
+// mrbsConfirmEntry($id, $series)
+//
+// Confirm an entry with id $id.   If series is set to TRUE
+// then the id is the id in the repeat table and we must confirm
+// all the individual entries.
+// Returns FALSE on failure, TRUE on success
+function mrbsConfirmEntry($id, $series)
+{
+  global $tbl_entry;
+  
+  $sql = "UPDATE $tbl_entry 
+          SET status=". STATUS_CONFIRMED . "
+          WHERE status!=" . STATUS_CONFIRMED;
+  if ($series)
+  {
+    $sql .= " AND repeat_id=$id";
+  }
+  else
+  {
+    $sql .= " AND id=$id LIMIT 1";
+  }
+  return (sql_command($sql) >= 0);
+}
+
+
 /* mrbsGetEntryInfo()
  *
  * Get the booking's entrys

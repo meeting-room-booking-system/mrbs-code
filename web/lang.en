@@ -107,6 +107,8 @@ $vocab["invalid_series_id"]  = "Invalid series id.";
 $vocab["status"]             = "Status";
 $vocab["confirmed"]          = "Confirmed booking";
 $vocab["provisional"]        = "Provisional booking";
+$vocab["accept"]             = "Accept";
+$vocab["series"]             = "Series";  
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Error";

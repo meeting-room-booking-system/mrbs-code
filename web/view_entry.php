@@ -3,6 +3,41 @@
 
 require_once "defaultincludes.inc";
 
+function generateButton($form_action, $id, $series, $action_type, $returl, $submit_value)
+{
+  global $room_id;
+  
+  echo "<form action=\"$form_action\" method=\"post\">\n";
+  echo "<fieldset>\n";
+  echo "<legend></legend>\n";
+  echo "<input type=\"hidden\" name=\"id\" value=\"$id\">\n";
+  echo "<input type=\"hidden\" name=\"series\" value=\"$series\">\n";
+  echo "<input type=\"hidden\" name=\"action\" value=\"$action_type\">\n";
+  echo "<input type=\"hidden\" name=\"room_id\" value=\"$room_id\">\n";
+  echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
+  echo "<input type=\"submit\" value=\"" . get_vocab("accept") . "\">\n";
+  echo "</fieldset>\n";
+  echo "</form>\n";  
+}
+
+function generateConfirmButtons($id, $series)
+{
+  global $returl;
+  
+  echo "<tr>\n";
+  echo "<td>" . ($series ? get_vocab("series") : get_vocab("entry")) . ":</td>\n";
+  echo "<td>\n";
+  generateButton("confirm_entry_handler.php", $id, $series, "accept", $returl, get_vocab("accept"));
+  // generateButton();
+  // generateButton();
+  echo "</td>\n";
+  echo "</tr>\n";
+}
+
+function generateOwnerButtons($id, $series)
+{
+}
+
 $user = getUserName();
 
 // Get form variables
@@ -27,6 +62,31 @@ if (empty($area))
 }
 
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
+
+
+// Need to tell all the links where to go back to after an edit or delete
+if (isset($HTTP_REFERER))
+{
+  $returl = $HTTP_REFERER;
+}
+// If we haven't got a referer (eg we've come here from an email) then construct
+// a sensible place to go to afterwards
+else
+{
+  switch ($default_view)
+  {
+    case "month":
+      $returl = "month.php";
+      break;
+    case "week":
+      $returl = "week.php";
+      break;
+    default:
+      $returl = "day.php";
+  }
+  $returl .= "?year=$year&month=$month&day=$day&area=$area";
+}
+$link_returl = urlencode($returl);  // for use in links
 
 if (empty($series))
 {
@@ -271,56 +331,92 @@ if (is_private_event($private) && $writeable)
 echo "</h3>\n";
 
 ?>
- <table id="entry">
-   <tr>
+<table id="entry">
+
+<?php
+// If we're using provisional bookings, put the buttons to do with managing
+// the bookings in the footer
+if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
+{
+  echo "<tfoot id=\"confirm_buttons\">\n";
+  // Buttons for those who are allowed to confirm this booking
+  if (auth_can_confirm($user, $room_id))
+  {
+    if (!$series)
+    {
+      generateConfirmButtons($id, FALSE);
+    }
+    if (!empty($repeat_id) || $series)
+    {
+      $target_id = (empty($repeat_id)) ? $id : $repeat_id;
+      generateConfirmButtons($target_id, TRUE);
+    }    
+  }
+  // Buttons for the owner of this booking
+  elseif ($user == $create_by)
+  {
+    generateOwnerButtons($id, $series);
+  }
+  // Others don't get any buttons
+  else
+  {
+    // But valid HTML requires that there's something inside the <tfoot></tfoot>
+    echo "<tr><td></td><td></td></tr>\n";
+  }
+  echo "</tfoot>\n";
+}
+?>
+
+<tbody>
+  <tr>
     <td><?php echo get_vocab("description") ?>:</td>
     <?php
     echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . mrbs_nl2br($description) . "</td>\n";
     ?>
-   </tr>
-   <?php
-   if ($provisional_enabled)
-   {
+  </tr>
+  <?php
+  if ($provisional_enabled)
+  {
     echo "<tr>\n";
     echo "<td>" . get_vocab("status") . ":</td>\n";
     echo "<td>" . (($status == STATUS_PROVISIONAL) ? get_vocab("provisional") : get_vocab("confirmed")) . "</td>\n";
     echo "</tr>\n";
-   }
-   ?>
-   <tr>
+  }
+  ?>
+  <tr>
     <td><?php echo get_vocab("room") ?>:</td>
     <td><?php    echo  mrbs_nl2br($area_name . " - " . $room_name) ?></td>
-   </tr>
-   <tr>
+  </tr>
+  <tr>
     <td><?php echo get_vocab("start_date") ?>:</td>
     <td><?php    echo $start_date ?></td>
-   </tr>
-   <tr>
+  </tr>
+  <tr>
     <td><?php echo get_vocab("duration") ?>:</td>
     <td><?php    echo $duration . " " . $dur_units ?></td>
-   </tr>
-   <tr>
+  </tr>
+  <tr>
     <td><?php echo get_vocab("end_date") ?>:</td>
     <td><?php    echo $end_date ?></td>
-   </tr>
-   <tr>
+  </tr>
+  <tr>
     <td><?php echo get_vocab("type") ?>:</td>
     <td><?php    echo empty($typel[$type]) ? "?$type?" : $typel[$type] ?></td>
-   </tr>
-   <tr>
+  </tr>
+  <tr>
     <td><?php echo get_vocab("createdby") ?>:</td>
     <?php
     echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . $create_by . "</td>\n";
     ?>
-   </tr>
-   <tr>
+  </tr>
+  <tr>
     <td><?php echo get_vocab("lastupdate") ?>:</td>
     <td><?php    echo $updated ?></td>
-   </tr>
-   <tr>
+  </tr>
+  <tr>
     <td><?php echo get_vocab("rep_type") ?>:</td>
     <td><?php    echo get_vocab($repeat_key) ?></td>
-   </tr>
+  </tr>
 <?php
 
 if($rep_type != 0)
@@ -352,40 +448,15 @@ if($rep_type != 0)
 }
 
 ?>
+</tbody>
 </table>
-
-<?php
-// Need to tell all the links where to go back to after an edit or delete
-if (isset($HTTP_REFERER))
-{
-  $returl = $HTTP_REFERER;
-}
-// If we haven't got a referer (eg we've come here from an email) then construct
-// a sensible place to go to afterwards
-else
-{
-  switch ($default_view)
-  {
-    case "month":
-      $returl = "month.php";
-      break;
-    case "week":
-      $returl = "week.php";
-      break;
-    default:
-      $returl = "day.php";
-  }
-  $returl .= "?year=$year&month=$month&day=$day&area=$area";
-}
-$returl = urlencode($returl);
-?>
 
 <div id="view_entry_nav">
   <div>
     <?php
     if (!$series)
     {
-      echo "<a href=\"edit_entry.php?id=$id&amp;returl=$returl\">". get_vocab("editentry") ."</a>";
+      echo "<a href=\"edit_entry.php?id=$id&amp;returl=$link_returl\">". get_vocab("editentry") ."</a>";
     }
     
     if (!empty($repeat_id))
@@ -395,7 +466,7 @@ $returl = urlencode($returl);
     
     if (!empty($repeat_id) || $series)
     {
-      echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$returl\">".get_vocab("editseries")."</a>";
+      echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$link_returl\">".get_vocab("editseries")."</a>";
     }
     
      ?>
@@ -406,7 +477,7 @@ $returl = urlencode($returl);
     // Copy and Copy series
     if (!$series)
     {
-      echo "<a href=\"edit_entry.php?id=$id&amp;copy=1&amp;returl=$returl\">". get_vocab("copyentry") ."</a>";
+      echo "<a href=\"edit_entry.php?id=$id&amp;copy=1&amp;returl=$link_returl\">". get_vocab("copyentry") ."</a>";
     }
        
     if (!empty($repeat_id))
@@ -416,7 +487,7 @@ $returl = urlencode($returl);
        
     if (!empty($repeat_id) || $series) 
     {
-      echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=1&amp;returl=$returl\">".get_vocab("copyseries")."</a>";
+      echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=1&amp;returl=$link_returl\">".get_vocab("copyseries")."</a>";
     }
     
     ?>
@@ -425,7 +496,7 @@ $returl = urlencode($returl);
     <?php
     if (!$series)
     {
-      echo "<a href=\"del_entry.php?id=$id&amp;series=0&amp;returl=$returl\" onclick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</a>";
+      echo "<a href=\"del_entry.php?id=$id&amp;series=0&amp;returl=$link_returl\" onclick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</a>";
     }
     
     if (!empty($repeat_id))
@@ -435,7 +506,7 @@ $returl = urlencode($returl);
     
     if (!empty($repeat_id) || $series)
     {
-      echo "<a href=\"del_entry.php?id=$id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$returl\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteseries")."</a>";
+      echo "<a href=\"del_entry.php?id=$id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$link_returl\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteseries")."</a>";
     }
     
     ?>
