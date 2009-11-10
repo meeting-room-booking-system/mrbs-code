@@ -556,6 +556,10 @@ $mail_settings['area_admin_on_bookings'] = FALSE;
 // Default is FALSE. Room admin emails are set in room_area admin page.
 $mail_settings['room_admin_on_bookings'] = FALSE;
 
+// Set to TRUE if you want the appropriate booking administrators to be emailed
+// when a provisional booking is created
+$mail_settings['book_admin_on_provisional'] = FALSE;
+
 // Set to TRUE if you want ADMIN to be notified when entries are deleted. Email
 // will be sent to mrbs admin, area admin and room admin as per above settings,
 // as well as to booker if 'booker' is TRUE (see below).

@@ -152,7 +152,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
 {
   global $url_base, $returl, $name, $description, $area_name;
   global $room_name, $starttime, $duration, $dur_units, $end_date, $endtime;
-  global $rep_enddate, $typel, $type, $create_by, $rep_type, $enable_periods;
+  global $rep_enddate, $typel, $type, $status, $create_by, $rep_type, $enable_periods;
   global $rep_opt, $rep_num_weeks;
   global $tbl_room, $tbl_area, $tbl_entry, $tbl_users, $tbl_repeat;
   global $mail_previous, $auth;
@@ -338,7 +338,12 @@ function notifyAdminOnBooking($new_entry , $new_id)
     $body .= compareEntries(convertToMailCharset($description),
                             convertToMailCharset($mail_previous['description']),
                             $new_entry) . "\n";
-        
+                            
+    // Status:
+    $body .= get_mail_vocab("status") . ": ";
+    $body .= ($status == STATUS_CONFIRMED) ? get_mail_vocab("confirmed") : get_mail_vocab("provisional");
+    $body .= "\n";
+                               
     // Room:
     $body .= get_mail_vocab("room") . ": " .
       compareEntries(convertToMailCharset($area_name),
