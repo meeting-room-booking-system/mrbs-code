@@ -104,6 +104,9 @@ $vocab["confirmdel"]         = "Are you sure\\nyou want to\\ndelete this entry?\
 $vocab["returnprev"]         = "Return to previous page";
 $vocab["invalid_entry_id"]   = "Invalid entry id.";
 $vocab["invalid_series_id"]  = "Invalid series id.";
+$vocab["status"]             = "Status";
+$vocab["confirmed"]          = "Confirmed booking";
+$vocab["provisional"]        = "Provisional booking";
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Error";

@@ -74,6 +74,7 @@ else
           $tbl_room.area_id,
           $tbl_area.area_name,
           $tbl_entry.type,
+          $tbl_entry.status,
           $tbl_entry.private,
           $tbl_entry.room_id,
           " . sql_syntax_timestamp_to_unix("$tbl_entry.timestamp") . " AS last_updated,
@@ -123,6 +124,32 @@ $updated      = time_date_string($row['last_updated']);
 $duration     = $row['duration'] - cross_dst($row['start_time'],
                                              $row['end_time']);
 $writeable = getWritable($row['create_by'], $user);
+
+// Get the status of the booking.   For an individual entry it's easy -
+// we've already got it.   For a series, the repeat table does not hold
+// a status field.  Instead the status of a series is defined by the status 
+// of its members: if any one of them is provisional, then the series as
+// a whole is considered to be provisional.
+//
+// But we won't bother fetching the status with another SQL query if we're not
+// using provisional bookings, because we won't be using it.
+if ($provisional_enabled)
+{
+  if ($series)
+  {
+    $sql = "SELECT COUNT(*)
+            FROM $tbl_entry
+            WHERE $repeat_id=$id
+            AND $status=" . STATUS_PROVISIONAL . "
+            LIMIT 1";
+    $status = (sql_query1($sql) > 0) ? STATUS_PROVISIONAL : STATUS_CONFIRMED;
+  }
+  else
+  {
+    $status       = $row['status'];
+  }
+}
+
 if (is_private_event($private) && !$writeable) 
 {
   $name = "[".get_vocab('private')."]";
@@ -251,6 +278,15 @@ echo "</h3>\n";
     echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . mrbs_nl2br($description) . "</td>\n";
     ?>
    </tr>
+   <?php
+   if ($provisional_enabled)
+   {
+    echo "<tr>\n";
+    echo "<td>" . get_vocab("status") . ":</td>\n";
+    echo "<td>" . (($status == STATUS_PROVISIONAL) ? get_vocab("provisional") : get_vocab("confirmed")) . "</td>\n";
+    echo "</tr>\n";
+   }
+   ?>
    <tr>
     <td><?php echo get_vocab("room") ?>:</td>
     <td><?php    echo  mrbs_nl2br($area_name . " - " . $room_name) ?></td>
