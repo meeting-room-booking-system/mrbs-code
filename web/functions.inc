@@ -663,6 +663,16 @@ function cross_dst ( $start, $end )
   return $modification;
 }
 
+// Returns the difference in seconds between two timestamps, $now and $then
+// It gives $now - $then
+// TO DO: exclude weekends, or preferably a set of days of the week defined 
+// as a config setting
+function working_time_diff($now, $then)
+{
+  $diff = $now - $then;
+  return $diff;
+}
+
 // checks whether a given day of the week is supposed to be hidden in the display
 function is_hidden_day ($dow)
 {

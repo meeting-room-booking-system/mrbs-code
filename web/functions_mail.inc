@@ -184,6 +184,17 @@ function get_email_address($user)
   return $email;
 }
 
+// get the list of email addresses that are allowed to approve
+// provisional bookings for the room with id $room_id
+// (At the moment this is just the admin email address, but this could
+// be extended.)
+function get_approvers_email($room_id)
+{
+  global $mail_settings;
+  
+  return $mail_settings['recipients'];
+}
+
 // }}}
 // {{{ notifyAdminOnBooking()
 
@@ -194,10 +205,10 @@ function get_email_address($user)
  * @param int     $new_id       used for create a link to the new entry
  * @return bool                 TRUE or PEAR error object if fails
  */
-function notifyAdminOnBooking($new_entry , $new_id, $action="book")
+function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
 {
   global $url_base, $returl, $name, $description, $area_name;
-  global $room_name, $starttime, $duration, $dur_units, $end_date, $endtime;
+  global $room_name, $room_id, $starttime, $duration, $dur_units, $end_date, $endtime;
   global $rep_enddate, $typel, $type, $status, $create_by, $rep_type, $enable_periods;
   global $rep_opt, $rep_num_weeks;
   global $tbl_room, $tbl_area, $tbl_entry, $tbl_users, $tbl_repeat;
@@ -210,7 +221,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $action="book")
   {
     $new_entry = TRUE;
   }
-  
+
   $recipients = array();
   $cc = array();
   $cc[] = $mail_settings['cc'];
@@ -229,6 +240,12 @@ function notifyAdminOnBooking($new_entry , $new_id, $action="book")
   else
   {
     $from = $mail_settings['from'];
+  }
+  
+  if ($provisional_enabled)
+  {
+    // get the list of email addresses of approvers for this room
+    $recipients[] = get_approvers_email($room_id);
   }
   
   $id_table = ($rep_type > 0) ? "rep" : "e";
@@ -329,6 +346,10 @@ function notifyAdminOnBooking($new_entry , $new_id, $action="book")
       $body .= get_mail_vocab("info_requested") . ": ";
       $body .= convertToMailCharset($note) . "\n\n";
       break;
+    case "remind":
+      $subject = get_mail_vocab("mail_subject_reminder");
+      $body = get_mail_vocab("mail_body_reminder") . "\n\n";
+      break;
     default:
       $subject = get_mail_vocab("mail_subject_entry");
       if ($new_entry)
@@ -352,7 +373,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $action="book")
     ('' != $returl) ? $url = explode(basename($returl), $returl) : '';
     $body .= $url[0] . "view_entry.php?id=$new_id";
   }
-  if ($rep_type > 0)
+  if ($series)
   {
     $body .= "&series=1";
   }

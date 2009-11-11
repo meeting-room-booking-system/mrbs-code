@@ -371,6 +371,14 @@ $private_override = "none"; // Override default privacy behavior.
 // bookings confirmed by an admin.
 $provisional_enabled = FALSE;  // Set to TRUE to enable provisional bookings
 
+// Set to FALSE if you don't want users to be able to send reminders
+// to admins if provisional bookings have not been approved
+$reminders_enabled = TRUE;
+
+// Interval before reminders can be issued (in seconds). (At the moment
+// weekends are included in the calculation.  Ideally they should be
+// excluded)
+$reminder_interval = 60*60*24*4;  // 4 days
 
 /***********************************************
  * Authentication settings - read AUTHENTICATION

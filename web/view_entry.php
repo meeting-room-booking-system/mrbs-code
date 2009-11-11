@@ -27,7 +27,7 @@ function generateConfirmButtons($id, $series)
 {
   global $returl, $PHP_SELF;
   
-  $this_page = htmlspecialchars(basename($PHP_SELF));
+  $this_page = basename($PHP_SELF);
   
   echo "<tr>\n";
   echo "<td>" . ($series ? get_vocab("series") : get_vocab("entry")) . ":</td>\n";
@@ -41,6 +41,26 @@ function generateConfirmButtons($id, $series)
 
 function generateOwnerButtons($id, $series)
 {
+  global $user, $create_by, $status, $area;
+  global $PHP_SELF, $reminders_enabled, $last_reminded, $reminder_interval;
+  
+  $this_page = basename($PHP_SELF);
+  
+  // Remind button if you're the owner AND there's a provisional
+  // booking outstanding AND sufficient time has passed since the last reminder
+  // AND we want reminders in the first place
+  if (($reminders_enabled) &&
+      ($user == $create_by) && 
+      ($status == STATUS_PROVISIONAL) &&
+      (working_time_diff(time(), $last_reminded) >= $reminder_interval))
+  {
+    echo "<tr>\n";
+    echo "<td>&nbsp;</td>\n";
+    echo "<td>\n";
+    generateButton("confirm_entry_handler.php", $id, $series, "remind", $this_page . "?id=$id&amp;area=$area", get_vocab("remind_admin"));
+    echo "</td>\n";
+    echo "</tr>\n";
+  } 
 }
 
 function generateTextArea($form_action, $id, $series, $action_type, $returl, $submit_value, $caption)
@@ -134,21 +154,22 @@ else
 
 $row = mrbsGetBookingInfo($id, $series);
 
-$name         = htmlspecialchars($row['name']);
-$description  = htmlspecialchars($row['description']);
-$create_by    = htmlspecialchars($row['create_by']);
-$room_name    = htmlspecialchars($row['room_name']);
-$area_name    = htmlspecialchars($row['area_name']);
-$type         = $row['type'];
-$status       = $row['status'];
-$private      = $row['private'];
-$room_id      = $row['room_id'];
-$updated      = time_date_string($row['last_updated']);
+$name          = htmlspecialchars($row['name']);
+$description   = htmlspecialchars($row['description']);
+$create_by     = htmlspecialchars($row['create_by']);
+$room_name     = htmlspecialchars($row['room_name']);
+$area_name     = htmlspecialchars($row['area_name']);
+$type          = $row['type'];
+$status        = $row['status'];
+$private       = $row['private'];
+$room_id       = $row['room_id'];
+$updated       = time_date_string($row['last_updated']);
+$last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
 // need to make DST correct in opposite direction to entry creation
 // so that user see what he expects to see
-$duration     = $row['duration'] - cross_dst($row['start_time'],
-                                             $row['end_time']);
-$writeable = getWritable($row['create_by'], $user);
+$duration      = $row['duration'] - cross_dst($row['start_time'],
+                                              $row['end_time']);
+$writeable     = getWritable($row['create_by'], $user);
 
 
 // Get the area settings for the entry's area.   In particular we want
@@ -436,7 +457,7 @@ if($rep_type != 0)
       echo "<a href=\"edit_entry.php?id=$id&amp;returl=$link_returl\">". get_vocab("editentry") ."</a>";
     }
     
-    if (!empty($repeat_id))
+    if (!empty($repeat_id)  && !$series)
     {
       echo " - ";
     }
@@ -457,7 +478,7 @@ if($rep_type != 0)
       echo "<a href=\"edit_entry.php?id=$id&amp;copy=1&amp;returl=$link_returl\">". get_vocab("copyentry") ."</a>";
     }
        
-    if (!empty($repeat_id))
+    if (!empty($repeat_id) && !$series)
     {
       echo " - ";
     }
@@ -476,7 +497,7 @@ if($rep_type != 0)
       echo "<a href=\"del_entry.php?id=$id&amp;series=0&amp;returl=$link_returl\" onclick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</a>";
     }
     
-    if (!empty($repeat_id))
+    if (!empty($repeat_id) && !$series)
     {
       echo " - ";
     }

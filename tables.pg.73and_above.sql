@@ -71,7 +71,8 @@ CREATE TABLE mrbs_entry
   type        char DEFAULT 'E' NOT NULL,
   description text,
   private     smallint DEFAULT 0 NOT NULL,
-  status      smallint DEFAULT 1 NOT NULL
+  status      smallint DEFAULT 1 NOT NULL,
+  reminded    int
 );
 create index idxStartTime on mrbs_entry(start_time);
 create index idxEndTime on mrbs_entry(end_time);
@@ -91,7 +92,8 @@ CREATE TABLE mrbs_repeat
   type        char DEFAULT 'E' NOT NULL,
   description text,
   rep_num_weeks smallint DEFAULT 0 NULL,
-  private     smallint DEFAULT 0 NOT NULL
+  private     smallint DEFAULT 0 NOT NULL,
+  reminded    int
 );
 
 CREATE TABLE mrbs_variables
@@ -112,6 +114,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '9');
+  VALUES ('db_version', '10');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');

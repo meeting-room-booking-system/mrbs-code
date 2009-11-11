@@ -427,21 +427,24 @@ if ($valid_booking)
     {
       $status = STATUS_CONFIRMED;
     }
+    
     if ($edit_type == "series")
     {
-      $new_id = mrbsCreateRepeatingEntrys($starttime,
-                                          $endtime,
-                                          $rep_type,
-                                          $rep_enddate,
-                                          $rep_opt,
-                                          $room_id,
-                                          $create_by,
-                                          $name,
-                                          $type,
-                                          $description,
-                                          isset($rep_num_weeks) ? $rep_num_weeks : 0,
-                                          $isprivate,
-                                          $status);
+      $booking = mrbsCreateRepeatingEntrys($starttime,
+                                           $endtime,
+                                           $rep_type,
+                                           $rep_enddate,
+                                           $rep_opt,
+                                           $room_id,
+                                           $create_by,
+                                           $name,
+                                           $type,
+                                           $description,
+                                           isset($rep_num_weeks) ? $rep_num_weeks : 0,
+                                           $isprivate,
+                                           $status);
+      $new_id = $booking['id'];
+
       // Send a mail to the Administrator
       if ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
           $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'] or
@@ -473,7 +476,7 @@ if ($valid_booking)
           {
             $mail_previous = getPreviousEntryData($id, 1);
           }
-          $result = notifyAdminOnBooking(!isset($id), $new_id);
+          $result = notifyAdminOnBooking(!isset($id), $new_id, $booking['series']);
         }
       }
     }
@@ -532,7 +535,7 @@ if ($valid_booking)
           {
             $mail_previous = getPreviousEntryData($id, 0);
           }
-          $result = notifyAdminOnBooking(!isset($id), $new_id);
+          $result = notifyAdminOnBooking(!isset($id), $new_id, ($edit_type == "series"));
         }
       }
     }

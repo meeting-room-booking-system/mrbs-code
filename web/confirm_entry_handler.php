@@ -40,15 +40,18 @@ if(!getAuthorised(1))
   exit;
 }
 $user = getUserName();
-// (2) We must also have confirm rights for this room
-if (!auth_can_confirm($user, $room_id))
-{
-  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
-  exit;
-}
+
                   
 if (isset($action))
 {
+  // (2) We must also have confirm rights for this room if necessary
+  if ((($action == "accept") || ($action == "reject")) 
+       && !auth_can_confirm($user, $room_id))
+  {
+    showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
+    exit;
+  }
+  
   $need_to_send_mail = ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
                         $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'] or
                         $mail_settings['book_admin_on_provisional']);
@@ -68,6 +71,7 @@ if (isset($action))
     $starttime     = $row['start_time'];
     $endtime       = $row['end_time'];
     $room_name     = $row['room_name'];
+    $room_id       = $row['room_id'];
     $area_name     = $row['area_name'];
     $duration      = ($row['end_time'] - $row['start_time']) - cross_dst($row['start_time'], $row['end_time']);
     $rep_type      = $row['rep_type'];
@@ -110,16 +114,30 @@ if (isset($action))
     }
     elseif ($need_to_send_mail)
     {
-      $result = notifyAdminOnBooking(TRUE, $id, $action);
+      $result = notifyAdminOnBooking(TRUE, $id, $series, $action);
     }
   }
   
   // ACTION = "MORE_INFO"
   if ($action == "more_info")
   {
+    // update the last reminded time (the ball is back in the 
+    // originator's court, so the clock gets reset)
+    mrbsUpdateLastReminded($id, $series);
     if ($need_to_send_mail)
     {
-      $result = notifyAdminOnBooking(TRUE, $id, $action);
+      $result = notifyAdminOnBooking(TRUE, $id, $series, $action);
+    }
+  }
+  
+  // ACTION = "REMIND"
+  if ($action == "remind")
+  {
+    // update the last reminded time
+    mrbsUpdateLastReminded($id, $series);
+    if ($need_to_send_mail)
+    {
+      $result = notifyAdminOnBooking(TRUE, $id, $series, $action);
     }
   }
   

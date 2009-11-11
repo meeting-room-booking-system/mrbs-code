@@ -479,8 +479,11 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
  * $status      - Status code
  * 
  * Returns:
- *   0        - An error occured while inserting the entry
- *   non-zero - The entry's ID
+ *   an array
+ *   ['id']      - 0 if an error occurred, otherwise an id
+ *   ['series']  - boolean: TRUE if the id refers to the repeat table
+ *                          FALSE if the id refers to the entry table
+ *
  */
 function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                    $rep_enddate, $rep_opt, $room_id, $owner,
@@ -488,6 +491,8 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                    $private, $status)
 {
   global $max_rep_entrys;
+  
+  $result = array('id' => 0, 'series' => FALSE);
   $private = $private ? 1 : 0 ;
    
   $reps = mrbsGetRepeatEntryList($starttime, $rep_enddate,
@@ -496,23 +501,26 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
 
   if (count($reps) > $max_rep_entrys)
   {
-    return 0;
+    $result['id'] = 0;
+    return $result;;
   }
 
   if (empty($reps))
   {
-    $ent = mrbsCreateSingleEntry($starttime, $endtime, 0, 0,
-                                 $room_id, $owner, $name, $type,
-                                 $description, $private, $status);
-    return $ent;
+    $id = mrbsCreateSingleEntry($starttime, $endtime, 0, 0,
+                                $room_id, $owner, $name, $type,
+                                $description, $private, $status);
+    $result['id'] = $id;
+    $result['series'] = FALSE;
+    return $result;
   }
    
-  $ent = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type,
-                               $rep_enddate, $rep_opt, $room_id,
-                               $owner, $name, $type, $description,
-                               $rep_num_weeks, $private);
+  $id = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type,
+                              $rep_enddate, $rep_opt, $room_id,
+                              $owner, $name, $type, $description,
+                              $rep_num_weeks, $private);
     
-  if ($ent)
+  if ($id)
   {
     for ($i = 0; $i < count($reps); $i++)
     {
@@ -524,7 +532,7 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
       $ent_id = mrbsCreateSingleEntry($reps[$i],
                                       $reps[$i] + $diff,
                                       1,
-                                      $ent,
+                                      $id,
                                       $room_id,
                                       $owner,
                                       $name,
@@ -534,7 +542,45 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                       $status);
     }
   }
-  return $ent;
+  $result['id'] = $id;
+  $result['series'] = TRUE;
+  return $result;
+}
+
+// Update the time of last reminding.
+// If the entry is part of a repeating series, then also increment
+// the last reminder time in the repeat table and all the individual 
+// entries.
+// Returns the number of tuples affected if OK (a number >= 0).
+// Returns -1 on error; use sql_error to get the error message.
+function mrbsUpdateLastReminded($id, $series)
+{
+  global $tbl_entry, $tbl_repeat;
+  
+  $now = time();
+  if ($series)
+  {
+    $sql = "UPDATE $tbl_repeat SET reminded=$now WHERE id=$id";
+    if (sql_command($sql) >= 0)
+    {
+      $sql = "UPDATE $tbl_entry SET reminded=$now WHERE repeat_id=$id";
+      return sql_command($sql);
+    }
+  }
+  else
+  {
+    $sql = "UPDATE $tbl_entry SET reminded=$now WHERE id=$id";
+    if (sql_command($sql) > 0)
+    {
+      $repeat_id = sql_query1("SELECT repeat_id FROM $tbl_entry WHERE id=$id LIMIT 1");
+      if ($repeat_id >= 0)
+      {
+        $sql = "UPDATE $tbl_repeat SET reminded=$now WHERE id=$repeat_id";
+        return sql_command($sql);
+      }
+    }
+  }
+  return -1;
 }
 
 // mrbsConfirmEntry($id, $series)
@@ -582,9 +628,11 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
             $tbl_repeat.description,
             $tbl_repeat.create_by,
             $tbl_room.room_name,
+            $tbl_repeat.room_id,
             $tbl_area.area_name,
             $tbl_room.area_id,
             $tbl_repeat.type,
+            $tbl_repeat.reminded,
             $tbl_repeat.private,
             $tbl_repeat.room_id,
             " . sql_syntax_timestamp_to_unix("$tbl_repeat.timestamp") . " AS last_updated,
@@ -609,10 +657,12 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
             $tbl_entry.description,
             $tbl_entry.create_by,
             $tbl_room.room_name,
+            $tbl_entry.room_id,
             $tbl_room.area_id,
             $tbl_area.area_name,
             $tbl_entry.type,
             $tbl_entry.status,
+            $tbl_entry.reminded,
             $tbl_entry.private,
             $tbl_entry.room_id,
             " . sql_syntax_timestamp_to_unix("$tbl_entry.timestamp") . " AS last_updated,
