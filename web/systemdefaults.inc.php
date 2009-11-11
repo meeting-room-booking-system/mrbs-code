@@ -645,6 +645,11 @@ $mail_settings['recipients'] = 'admin_email@your.org';
 // more than one recipient (see 'recipients')
 $mail_settings['cc'] = '';
 
+// Set to TRUE if you want the cc addresses to be appended to the to line.
+// (Some email servers are configured not to send emails if the cc or bcc
+// fields are set)
+$mail_settings['treat_cc_as_to'] = FALSE;
+
 /**********
  * Language
  **********/

@@ -863,6 +863,17 @@ function sendMail($recipients, $subject, $body,
   
   global $mail_settings, $sendmail_settings, $smtp_settings;
   
+  // for cases where the mail server refuses
+  // to send emails with cc or bcc set, put the cc
+  // addresses on the to line
+  if (isset($cc) && $mail_settings['treat_cc_as_to'])
+  {
+    $recipients_array = array_merge(explode(',', $recipients),
+                                    explode(',', $cc));
+    $recipients = get_address_list($recipients_array);
+    $cc = NULL;
+  }
+  
   // Set up configuration settings
   $from = $mail_settings['from'];
   $backend = $mail_settings['admin_backend'];
