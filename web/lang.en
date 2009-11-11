@@ -140,6 +140,7 @@ $vocab["mail_body_del_entry"] = "An entry has been deleted, here are the details
 $vocab["mail_body_changed_entry"] = "An entry has been modified, here are the details:";
 $vocab["mail_subject_delete"] = "Entry deleted for $mrbs_company MRBS";
 $vocab["reason"]              = "Reason";
+$vocab["info_requested"]      = "Information requested";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Access Denied";

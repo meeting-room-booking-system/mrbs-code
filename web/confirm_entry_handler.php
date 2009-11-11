@@ -17,6 +17,7 @@ $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'int');
 $returl = get_form_var('returl', 'string');
 $room_id = get_form_var('room_id', 'int');
+$note = get_form_var('note', 'string');
 
 // If we dont know the right date then make it up 
 if (!isset($day) or !isset($month) or !isset($year))
@@ -66,11 +67,11 @@ if (isset($action))
     $status        = $row['status'];
     $starttime     = $row['start_time'];
     $endtime       = $row['end_time'];
-    $repeat_id     = $row['repeat_id'];
     $room_name     = $row['room_name'];
     $area_name     = $row['area_name'];
     $duration      = ($row['end_time'] - $row['start_time']) - cross_dst($row['start_time'], $row['end_time']);
     $rep_type      = $row['rep_type'];
+    $repeat_id     = isset($row['repeat_id'])     ? $row['repeat_id']     : NULL;
     $rep_enddate   = isset($row['rep_enddate'])   ? $row['rep_enddate']   : NULL;
     $rep_opt       = isset($row['rep_opt'])       ? $row['rep_opt']       : NULL;
     $rep_num_weeks = isset($row['rep_num_weeks']) ? $row['rep_num_weeks'] : NULL;
@@ -112,6 +113,16 @@ if (isset($action))
       $result = notifyAdminOnBooking(TRUE, $id, $action);
     }
   }
+  
+  // ACTION = "MORE_INFO"
+  if ($action == "more_info")
+  {
+    if ($need_to_send_mail)
+    {
+      $result = notifyAdminOnBooking(TRUE, $id, $action);
+    }
+  }
+  
 }
 
 // Now it's all done go back to the previous view

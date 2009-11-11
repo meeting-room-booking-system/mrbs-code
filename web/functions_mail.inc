@@ -159,6 +159,31 @@ function get_address_list($array)
   return $string;
 }
 
+// get the email address of a user
+// returns an empty string in the event of an error
+function get_email_address($user)
+{
+  global $mail_settings, $auth, $tbl_users;
+  
+  if ('db' == $auth['type'])
+  {
+    $email = sql_query1("SELECT email 
+                         FROM $tbl_users 
+                         WHERE name='" . addslashes($user) . "'
+                         LIMIT 1");
+    if ($email == -1)
+    {
+      $email = "";
+    }
+  }
+  else
+  {
+    $email = str_replace($mail_settings['username_suffix'], '', $user);
+    $email .= $mail_settings['domain'];
+  }
+  return $email;
+}
+
 // }}}
 // {{{ notifyAdminOnBooking()
 
@@ -176,7 +201,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $action="book")
   global $rep_enddate, $typel, $type, $status, $create_by, $rep_type, $enable_periods;
   global $rep_opt, $rep_num_weeks;
   global $tbl_room, $tbl_area, $tbl_entry, $tbl_users, $tbl_repeat;
-  global $mail_previous, $auth;
+  global $mail_previous, $auth, $note;
   global $mail_settings, $weekstarts, $provisional_enabled;
   
   // We will treat Accept, Reject and More_info mailings as new entries because the
@@ -189,6 +214,22 @@ function notifyAdminOnBooking($new_entry , $new_id, $action="book")
   $recipients = array();
   $cc = array();
   $cc[] = $mail_settings['cc'];
+  
+  // set the from address
+  $user = getUserName();
+  if (isset($user) && (($action == "remind")  || ($action == "more_info")))
+  {
+    $from = get_email_address($user);
+    if (empty($from))
+    {
+      // there was an error:  use a sensible default
+      $from = $mail_settings['from'];
+    }
+  }
+  else
+  {
+    $from = $mail_settings['from'];
+  }
   
   $id_table = ($rep_type > 0) ? "rep" : "e";
   ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
@@ -253,52 +294,18 @@ function notifyAdminOnBooking($new_entry , $new_id, $action="book")
   
   if ($mail_settings['booker'])
   {
-    if ($action == "accept")
+    if (($action == "accept")  || ($action == "more_info"))
     {
       // Put the recipients on the cc line and the booker will go
       // on the to line
       $cc = array_merge($cc, $recipients);
       $recipients = array();
     }
-    if ('db' == $auth['type'])
+    $booker = ($new_entry) ? $create_by : $mail_previous['createdby'];
+    $booker_email = get_email_address($booker);
+    if (!empty($booker_email))
     {
-      /* It would be possible to move this query within the query in
-         getPreviousEntryData to have all in one central place and to
-         reduce database hits by one. However this is a bad idea. If a
-         user is deleted from your user database, this will prevent all
-         mails to admins when this user previously booked entries will
-         be changed, as no user name will match the booker name */
-      $sql = "SELECT email FROM $tbl_users WHERE name='";
-      $sql .= ($new_entry) ? $create_by : $mail_previous['createdby'];
-      $sql .= "'";
-      $res = sql_query($sql);
-      (! $res) ? fatal_error(0, sql_error()) : '';
-      $row = sql_row_keyed($res, 0);
-      if (!empty($row['email']))
-      {
-        $recipients[] = $row['email'];
-      }
-    }
-    else
-    {
-      if ($new_entry)
-      {
-        if (!empty($create_by))
-        {
-          $recipients[] = str_replace($mail_settings['username_suffix'], '',
-                                      $create_by) . 
-                          $mail_settings['domain'];
-        }
-      }
-      else
-      {
-        if (!empty($mail_previous['createdby']))
-        {
-          $recipients[] = str_replace($mail_settings['username_suffix'], '',
-                                      $mail_previous['createdby']) . 
-                          $mail_settings['domain'];
-        }
-      }
+      $recipients[] = $booker_email;
     }
   }
   // In case $recipients is empty, no need to go further
@@ -315,6 +322,12 @@ function notifyAdminOnBooking($new_entry , $new_id, $action="book")
     case "accept":
       $subject = get_mail_vocab("mail_subject_accepted");
       $body = get_mail_vocab("mail_body_accepted") . "\n\n";
+      break;
+    case "more_info":
+      $subject = get_mail_vocab("mail_subject_more_info");
+      $body = get_mail_vocab("mail_body_more_info") . "\n\n";
+      $body .= get_mail_vocab("info_requested") . ": ";
+      $body .= convertToMailCharset($note) . "\n\n";
       break;
     default:
       $subject = get_mail_vocab("mail_subject_entry");
@@ -523,6 +536,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $action="book")
                      $subject,
                      $body,
                      get_mail_charset(),
+                     $from,
                      $cc_list);
   return $result;
 }
@@ -549,6 +563,22 @@ function notifyAdminOnDelete($mail_previous)
   $cc = array();
   $cc[] = $mail_settings['cc'];
   
+  // set the from address
+  $user = getUserName();
+  if (isset($user) && ($action == "reject"))
+  {
+    $from = get_email_address($user);
+    if (empty($from))
+    {
+      // there was an error:  use a sensible default
+      $from = $mail_settings['from'];
+    }
+  }
+  else
+  {
+    $from = $mail_settings['from'];
+  }
+  
   ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
   if ($mail_settings['area_admin_on_bookings']  && !empty($mail_previous['area_admin_email']))
   {
@@ -567,30 +597,10 @@ function notifyAdminOnDelete($mail_previous)
       $cc = array_merge($cc, $recipients);
       $recipients = array();
     }
-    if ('db' == $auth['type'])
+    $booker_email = get_email_address($mail_previous['createdby']);
+    if (!empty($booker_email))
     {
-      /* It would be possible to move this query within the query in
-         getPreviousEntryData to have all in one central place and to
-         reduce database hits by one. However this is a bad idea. If a
-         user is deleted from your user database, this will prevent all
-         mails to admins when this user previously booked entries will
-         be changed, as no user name will match the booker name */
-      $sql = "SELECT email
-              FROM $tbl_users
-              WHERE name='" . $mail_previous['createdby'] . "'";
-      $res = sql_query($sql);
-      (! $res) ? fatal_error(0, sql_error()) : '';
-      $row = sql_row_keyed($res, 0);
-      if (!empty($row['email']))
-      {
-        $recipients[] = $row['email'];
-      }
-    }
-    elseif (!empty($mail_previous['createdby']))
-    {
-      $recipients[] = str_replace($mail_settings['username_suffix'], '',
-                                  $mail_previous['createdby']) .
-                      $mail_settings['domain'];
+      $recipients[] = $booker_email;
     }
   }
   // In case mail is allowed but someone forgot to supply email addresses...
@@ -673,7 +683,7 @@ function notifyAdminOnDelete($mail_previous)
   }
   $body .= "\n";
   // End of mail details
-  $result = sendMail($recipient_list, $subject, $body, get_mail_charset(), $cc_list);
+  $result = sendMail($recipient_list, $subject, $body, get_mail_charset(), $from, $cc_list);
   return $result;
 }
 
@@ -916,7 +926,7 @@ function compareEntries($new_value, $previous_value, $new_entry)
  * @return bool                     TRUE or PEAR error object if fails
  */
 function sendMail($recipients, $subject, $body, 
-                  $charset = 'us-ascii', $cc = NULL, $bcc = NULL)
+                  $charset = 'us-ascii', $from, $cc = NULL, $bcc = NULL)
 {
   require_once "Mail.php";
   
@@ -934,7 +944,10 @@ function sendMail($recipients, $subject, $body,
   }
   
   // Set up configuration settings
-  $from = $mail_settings['from'];
+  if (empty($from))
+  {
+    $from = $mail_settings['from'];
+  }
   $backend = $mail_settings['admin_backend'];
   $sendmail_path = $sendmail_settings['path'];
   $sendmail_args = $sendmail_settings['args'];
