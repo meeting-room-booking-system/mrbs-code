@@ -169,7 +169,7 @@ function get_address_list($array)
  * @param int     $new_id       used for create a link to the new entry
  * @return bool                 TRUE or PEAR error object if fails
  */
-function notifyAdminOnBooking($new_entry , $new_id)
+function notifyAdminOnBooking($new_entry , $new_id, $action="book")
 {
   global $url_base, $returl, $name, $description, $area_name;
   global $room_name, $starttime, $duration, $dur_units, $end_date, $endtime;
@@ -177,9 +177,15 @@ function notifyAdminOnBooking($new_entry , $new_id)
   global $rep_opt, $rep_num_weeks;
   global $tbl_room, $tbl_area, $tbl_entry, $tbl_users, $tbl_repeat;
   global $mail_previous, $auth;
-  global $mail_settings, $weekstarts;
-    
-  //
+  global $mail_settings, $weekstarts, $provisional_enabled;
+  
+  // We will treat Accept, Reject and More_info mailings as new entries because the
+  // data hasn't changed since the previous time.
+  if (($action == "accept") || ($action == "more_info") || ($action == "remind"))
+  {
+    $new_entry = TRUE;
+  }
+  
   $recipients = array();
   $id_table = ($rep_type > 0) ? "rep" : "e";
   ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
@@ -241,6 +247,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
       $recipients[] = $mail_previous['room_admin_email'];
     }
   }
+  
   if ($mail_settings['booker'])
   {
     if ('db' == $auth['type'])
@@ -290,16 +297,27 @@ function notifyAdminOnBooking($new_entry , $new_id)
     return FALSE;
   }
   $recipient_list = get_address_list($recipients);
-  //
-  $subject = get_mail_vocab("mail_subject_entry");
-  if ($new_entry)
+  
+  // set up the subject and body
+  switch ($action)
   {
-    $body = get_mail_vocab("mail_body_new_entry") . "\n\n";
+    case "accept":
+      $subject = get_mail_vocab("mail_subject_accepted");
+      $body = get_mail_vocab("mail_body_accepted") . "\n\n";
+      break;
+    default:
+      $subject = get_mail_vocab("mail_subject_entry");
+      if ($new_entry)
+      {
+        $body = get_mail_vocab("mail_body_new_entry") . "\n\n";
+      }
+      else
+      {
+        $body = get_mail_vocab("mail_body_changed_entry") . "\n\n";
+      }
+      break;
   }
-  else
-  {
-    $body = get_mail_vocab("mail_body_changed_entry") . "\n\n";
-  }
+
   // Set the link to view entry page
   if (isset($url_base) && ($url_base != ""))
   {
@@ -329,10 +347,13 @@ function notifyAdminOnBooking($new_entry , $new_id)
                             convertToMailCharset($mail_previous['description']),
                             $new_entry) . "\n";
                             
-    // Status:
-    $body .= get_mail_vocab("status") . ": ";
-    $body .= ($status == STATUS_CONFIRMED) ? get_mail_vocab("confirmed") : get_mail_vocab("provisional");
-    $body .= "\n";
+    if  ($provisional_enabled)
+    {                        
+      // Status:
+      $body .= get_mail_vocab("status") . ": ";
+      $body .= ($status == STATUS_CONFIRMED) ? get_mail_vocab("confirmed") : get_mail_vocab("provisional");
+      $body .= "\n";
+    }
                                
     // Room:
     $body .= get_mail_vocab("room") . ": " .

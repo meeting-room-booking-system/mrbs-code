@@ -45,11 +45,73 @@ if (!auth_can_confirm($user, $room_id))
   showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
   exit;
 }
-
-// ACTION = "ACCEPT"
-if ($action == "accept")
+                  
+if (isset($action))
 {
-  mrbsConfirmEntry($id, $series);
+  $need_to_send_mail = ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
+                        $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'] or
+                        $mail_settings['book_admin_on_provisional']);
+                        
+  if ($need_to_send_mail)
+  {      
+    // Retrieve the booking details which we will need for the email
+    // (notifyAdminOnBooking relies on them being available as globals)
+
+    $row = mrbsGetBookingInfo($id, $series);
+    
+    $name          = $row['name'];
+    $description   = $row['description'];
+    $create_by     = $row['create_by'];
+    $type          = $row['type'];
+    $status        = $row['status'];
+    $starttime     = $row['start_time'];
+    $endtime       = $row['end_time'];
+    $repeat_id     = $row['repeat_id'];
+    $room_name     = $row['room_name'];
+    $area_name     = $row['area_name'];
+    $duration      = ($row['end_time'] - $row['start_time']) - cross_dst($row['start_time'], $row['end_time']);
+    $rep_type      = $row['rep_type'];
+    $rep_enddate   = isset($row['rep_enddate'])   ? $row['rep_enddate']   : NULL;
+    $rep_opt       = isset($row['rep_opt'])       ? $row['rep_opt']       : NULL;
+    $rep_num_weeks = isset($row['rep_num_weeks']) ? $row['rep_num_weeks'] : NULL;
+    
+    if ($enable_periods)
+    {
+      list($start_period, $start_date) =  period_date_string($row['start_time']);
+    }
+    else
+    {
+      $start_date = time_date_string($row['start_time']);
+    }
+
+    if ($enable_periods)
+    {
+      list( , $end_date) =  period_date_string($row['end_time'], -1);
+    }
+    else
+    {
+      $end_date = time_date_string($row['end_time']);
+    }
+  
+    // The optional last parameters below are set to FALSE because we don't want the units
+    // translated - otherwise they will end up getting translated twice, resulting
+    // in an undefined index error.
+    $enable_periods ? toPeriodString($start_period, $duration, $dur_units, FALSE) : toTimeString($duration, $dur_units, FALSE);
+
+  }
+
+  // ACTION = "ACCEPT"
+  if ($action == "accept")
+  {
+    if (!mrbsConfirmEntry($id, $series))
+    {
+      $returl .= "&error=accept_failed";
+    }
+    elseif ($need_to_send_mail)
+    {
+      $result = notifyAdminOnBooking(TRUE, $id, $action);
+    }
+  }
 }
 
 // Now it's all done go back to the previous view

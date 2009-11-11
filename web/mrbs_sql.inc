@@ -562,43 +562,154 @@ function mrbsConfirmEntry($id, $series)
 }
 
 
-/* mrbsGetEntryInfo()
- *
- * Get the booking's entrys
- * 
- * $id = The ID for which to get the info for.
- * 
- * Returns:
- *    nothing = The ID does not exist
- *    array   = The bookings info
- */
-function mrbsGetEntryInfo($id)
-{
-  global $tbl_entry;
+// mrbsGetBookingInfo($id, $series)
+//
+// Gets all the details for a booking with $id, which is in the
+// repeat table id $series is set, otherwise in the entry table.
 
-  $sql = "SELECT start_time, end_time, entry_type, repeat_id, room_id,
-                 timestamp, create_by, name, type, description
-          FROM $tbl_entry WHERE (id = $id)";
+// Returns the results in an array with keys the same as the table
+// field names.  In the event of an error stops with a fatal error,
+// unless $silent is TRUe, when it returns FALSE.
+function mrbsGetBookingInfo($id, $series, $silent=FALSE)
+{
+  global $tbl_entry, $tbl_repeat, $tbl_room, $tbl_area;
+  global $provisional_enabled;
+
+  if ($series)
+  {
+    $sql = "
+     SELECT $tbl_repeat.name,
+            $tbl_repeat.description,
+            $tbl_repeat.create_by,
+            $tbl_room.room_name,
+            $tbl_area.area_name,
+            $tbl_room.area_id,
+            $tbl_repeat.type,
+            $tbl_repeat.private,
+            $tbl_repeat.room_id,
+            " . sql_syntax_timestamp_to_unix("$tbl_repeat.timestamp") . " AS last_updated,
+            ($tbl_repeat.end_time - $tbl_repeat.start_time) AS duration,
+            $tbl_repeat.start_time,
+            $tbl_repeat.end_time,
+            $tbl_repeat.rep_type,
+            $tbl_repeat.end_date,
+            $tbl_repeat.rep_opt,
+            $tbl_repeat.rep_num_weeks
+
+     FROM  $tbl_repeat, $tbl_room, $tbl_area
+     WHERE $tbl_repeat.room_id = $tbl_room.id
+        AND $tbl_room.area_id = $tbl_area.id
+        AND $tbl_repeat.id=$id
+     ";
+  }
+  else
+  {
+    $sql = "
+     SELECT $tbl_entry.name,
+            $tbl_entry.description,
+            $tbl_entry.create_by,
+            $tbl_room.room_name,
+            $tbl_room.area_id,
+            $tbl_area.area_name,
+            $tbl_entry.type,
+            $tbl_entry.status,
+            $tbl_entry.private,
+            $tbl_entry.room_id,
+            " . sql_syntax_timestamp_to_unix("$tbl_entry.timestamp") . " AS last_updated,
+            ($tbl_entry.end_time - $tbl_entry.start_time) AS duration,
+            $tbl_entry.start_time,
+            $tbl_entry.end_time,
+            $tbl_entry.repeat_id
+
+     FROM  $tbl_entry, $tbl_room, $tbl_area
+     WHERE $tbl_entry.room_id = $tbl_room.id
+        AND $tbl_room.area_id = $tbl_area.id
+        AND $tbl_entry.id=$id
+     ";
+  }
 
   $res = sql_query($sql);
   if (! $res)
   {
-    return;
-  }
-
-  $ret = "";
-  if (sql_count($res) > 0)
-  {
-    $row = sql_row_keyed($res, 0);
-
-    if ($row)
+    if ($silent)
     {
-      $ret = $row;
+      return FALSE;
+    }
+    else
+    {
+      fatal_error(0, sql_error());
     }
   }
-  sql_free($res);
 
-  return $ret;
+  if (sql_count($res) < 1)
+  {
+    if ($silent)
+    {
+      return FALSE;
+    }
+    else
+    {
+      fatal_error(0,
+                  ($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id"))
+        );
+    }
+  }
+
+  $row = sql_row_keyed($res, 0);
+  sql_free($res);
+  
+  // Get some extra information
+  if ($series)
+  {
+    // Get the status of the booking.   For an individual entry it's easy -
+    // we've already got it.   For a series, the repeat table does not hold
+    // a status field.  Instead the status of a series is defined by the status 
+    // of its members: if any one of them is provisional, then the series as
+    // a whole is considered to be provisional.
+    //
+    // But we won't bother fetching the status with another SQL query if we're not
+    // using provisional bookings, because we won't be using it.
+    if ($provisional_enabled)
+    {
+      $sql = "SELECT COUNT(*)
+              FROM $tbl_entry
+              WHERE repeat_id=$id
+              AND status=" . STATUS_PROVISIONAL . "
+              LIMIT 1";
+      $row['status'] = (sql_query1($sql) > 0) ? STATUS_PROVISIONAL : STATUS_CONFIRMED;
+    }
+  }
+  else
+  {
+    // Get the repeat information
+    if (empty($row['repeat_id']))
+    {
+      $row['rep_type'] = 0;   // just as a precaution
+    }
+    else
+    {
+      $res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks
+                        FROM $tbl_repeat WHERE id=${row['repeat_id']} LIMIT 1");
+      if (!$res || (!$extra_row = sql_row_keyed($res, 0)))
+      {
+        if ($silent)
+        {
+          return FALSE;
+        }
+        else
+        {
+          fatal_error(TRUE, get_vocab("invalid_series_id"));
+        }
+      }
+      $row['rep_type']      = $extra_row['rep_type'];
+      $row['rep_enddate']   = $extra_row['end_date'];
+      $row['rep_opt']       = $extra_row['rep_opt'];
+      $row['rep_num_weeks'] = $extra_row['rep_num_weeks'];
+      sql_free($res);
+    }
+  }
+  
+  return $row;
 }
 
 function mrbsGetRoomArea($id)

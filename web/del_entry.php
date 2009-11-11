@@ -30,7 +30,7 @@ if (empty($returl))
   $returl .= "?year=$year&month=$month&day=$day&area=$area";
 }
 
-if (getAuthorised(1) && ($info = mrbsGetEntryInfo($id)))
+if (getAuthorised(1) && ($info = mrbsGetBookingInfo($id, FALSE, TRUE)))
 {
   $day   = strftime("%d", $info["start_time"]);
   $month = strftime("%m", $info["start_time"]);

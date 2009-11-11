@@ -2,6 +2,7 @@
 // $Id$
 
 require_once "defaultincludes.inc";
+require_once "mrbs_sql.inc";
 
 // Generates a single button
 function generateButton($form_action, $id, $series, $action_type, $returl, $submit_value)
@@ -78,6 +79,7 @@ $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'int');
 $action = get_form_var('action', 'string');
 $returl = get_form_var('returl', 'string');
+$error = get_form_var('error', 'string');
 
 // If we dont know the right date then make it up
 if (!isset($day) or !isset($month) or !isset($year))
@@ -130,78 +132,7 @@ else
   $series = 1;
 }
 
-if ($series)
-{
-  $sql = "
-   SELECT $tbl_repeat.name,
-          $tbl_repeat.description,
-          $tbl_repeat.create_by,
-          $tbl_room.room_name,
-          $tbl_area.area_name,
-          $tbl_room.area_id,
-          $tbl_repeat.type,
-          $tbl_repeat.private,
-          $tbl_repeat.room_id,
-          " . sql_syntax_timestamp_to_unix("$tbl_repeat.timestamp") . " AS last_updated,
-          ($tbl_repeat.end_time - $tbl_repeat.start_time) AS duration,
-          $tbl_repeat.start_time,
-          $tbl_repeat.end_time,
-          $tbl_repeat.rep_type,
-          $tbl_repeat.end_date,
-          $tbl_repeat.rep_opt,
-          $tbl_repeat.rep_num_weeks
-
-   FROM  $tbl_repeat, $tbl_room, $tbl_area
-   WHERE $tbl_repeat.room_id = $tbl_room.id
-      AND $tbl_room.area_id = $tbl_area.id
-      AND $tbl_repeat.id=$id
-   ";
-}
-else
-{
-  $sql = "
-   SELECT $tbl_entry.name,
-          $tbl_entry.description,
-          $tbl_entry.create_by,
-          $tbl_room.room_name,
-          $tbl_room.area_id,
-          $tbl_area.area_name,
-          $tbl_entry.type,
-          $tbl_entry.status,
-          $tbl_entry.private,
-          $tbl_entry.room_id,
-          " . sql_syntax_timestamp_to_unix("$tbl_entry.timestamp") . " AS last_updated,
-          ($tbl_entry.end_time - $tbl_entry.start_time) AS duration,
-          $tbl_entry.start_time,
-          $tbl_entry.end_time,
-          $tbl_entry.repeat_id
-
-   FROM  $tbl_entry, $tbl_room, $tbl_area
-   WHERE $tbl_entry.room_id = $tbl_room.id
-      AND $tbl_room.area_id = $tbl_area.id
-      AND $tbl_entry.id=$id
-   ";
-}
-
-$res = sql_query($sql);
-if (! $res)
-{
-  fatal_error(0, sql_error());
-}
-
-if (sql_count($res) < 1)
-{
-  fatal_error(0,
-              ($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id"))
-    );
-}
-
-$row = sql_row_keyed($res, 0);
-sql_free($res);
-
-// Get the area settings for the entry's area.   In particular we want
-// to know how to display private/public bookings in this area.
-get_area_settings($row['area_id']);
+$row = mrbsGetBookingInfo($id, $series);
 
 $name         = htmlspecialchars($row['name']);
 $description  = htmlspecialchars($row['description']);
@@ -209,6 +140,7 @@ $create_by    = htmlspecialchars($row['create_by']);
 $room_name    = htmlspecialchars($row['room_name']);
 $area_name    = htmlspecialchars($row['area_name']);
 $type         = $row['type'];
+$status       = $row['status'];
 $private      = $row['private'];
 $room_id      = $row['room_id'];
 $updated      = time_date_string($row['last_updated']);
@@ -218,30 +150,10 @@ $duration     = $row['duration'] - cross_dst($row['start_time'],
                                              $row['end_time']);
 $writeable = getWritable($row['create_by'], $user);
 
-// Get the status of the booking.   For an individual entry it's easy -
-// we've already got it.   For a series, the repeat table does not hold
-// a status field.  Instead the status of a series is defined by the status 
-// of its members: if any one of them is provisional, then the series as
-// a whole is considered to be provisional.
-//
-// But we won't bother fetching the status with another SQL query if we're not
-// using provisional bookings, because we won't be using it.
-if ($provisional_enabled)
-{
-  if ($series)
-  {
-    $sql = "SELECT COUNT(*)
-            FROM $tbl_entry
-            WHERE repeat_id=$id
-            AND status=" . STATUS_PROVISIONAL . "
-            LIMIT 1";
-    $status = (sql_query1($sql) > 0) ? STATUS_PROVISIONAL : STATUS_CONFIRMED;
-  }
-  else
-  {
-    $status       = $row['status'];
-  }
-}
+
+// Get the area settings for the entry's area.   In particular we want
+// to know how to display private/public bookings in this area.
+get_area_settings($row['area_id']);
 
 if (is_private_event($private) && !$writeable) 
 {
@@ -364,10 +276,15 @@ if (is_private_event($private) && $writeable)
 }
 echo "</h3>\n";
 
-?>
-<table id="entry">
 
-<?php
+echo "<table id=\"entry\">\n";
+
+// Output any error messages
+if (!empty($error))
+{
+  echo "<tr><td>&nbsp;</td><td class=\"error\">" . get_vocab($error) . "</td></tr>\n";
+}
+
 // If we're using provisional bookings, put the buttons to do with managing
 // the bookings in the footer
 if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
