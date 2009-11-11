@@ -187,6 +187,9 @@ function notifyAdminOnBooking($new_entry , $new_id, $action="book")
   }
   
   $recipients = array();
+  $cc = array();
+  $cc[] = $mail_settings['cc'];
+  
   $id_table = ($rep_type > 0) ? "rep" : "e";
   ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
   if ($mail_settings['area_admin_on_bookings'])
@@ -250,6 +253,13 @@ function notifyAdminOnBooking($new_entry , $new_id, $action="book")
   
   if ($mail_settings['booker'])
   {
+    if ($action == "accept")
+    {
+      // Put the recipients on the cc line and the booker will go
+      // on the to line
+      $cc = array_merge($cc, $recipients);
+      $recipients = array();
+    }
     if ('db' == $auth['type'])
     {
       /* It would be possible to move this query within the query in
@@ -297,6 +307,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $action="book")
     return FALSE;
   }
   $recipient_list = get_address_list($recipients);
+  $cc_list = get_address_list($cc);
   
   // set up the subject and body
   switch ($action)
@@ -512,7 +523,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $action="book")
                      $subject,
                      $body,
                      get_mail_charset(),
-                     $mail_settings['cc']);
+                     $cc_list);
   return $result;
 }
 
@@ -529,8 +540,15 @@ function notifyAdminOnDelete($mail_previous)
 {
   global $typel, $enable_periods, $auth, $tbl_users;
   global $mail_settings;
-  //
+  
+  // Get any extra arguments
+  $action = (func_num_args() > 1) ? func_get_arg(1) : "delete";
+  $note   = (func_num_args() > 2) ? func_get_arg(2) : "";
+
   $recipients = array();
+  $cc = array();
+  $cc[] = $mail_settings['cc'];
+  
   ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
   if ($mail_settings['area_admin_on_bookings']  && !empty($mail_previous['area_admin_email']))
   {
@@ -542,6 +560,13 @@ function notifyAdminOnDelete($mail_previous)
   }
   if ($mail_settings['booker'])
   {
+    if ($action == "reject")
+    {
+      // Put the recipients on the cc line and the booker will go
+      // on the to line
+      $cc = array_merge($cc, $recipients);
+      $recipients = array();
+    }
     if ('db' == $auth['type'])
     {
       /* It would be possible to move this query within the query in
@@ -574,9 +599,22 @@ function notifyAdminOnDelete($mail_previous)
     return FALSE;
   }
   $recipient_list = get_address_list($recipients);
-  //
-  $subject = get_mail_vocab("mail_subject_delete");
-  $body = get_mail_vocab("mail_body_del_entry") . "\n\n";
+  $cc_list = get_address_list($cc);
+  
+  // Set the subject and body
+  if ($action == "reject")
+  {
+    $subject = get_mail_vocab("mail_subject_rejected");
+    $body = get_mail_vocab("mail_body_rej_entry") . "\n\n";
+    $body .= get_mail_vocab("reason") . ': ';
+    $body .= convertToMailCharset($note) . "\n\n";
+  }
+  else
+  {
+    $subject = get_mail_vocab("mail_subject_delete");
+    $body = get_mail_vocab("mail_body_del_entry") . "\n\n";
+  }
+
   // Displays deleted entry details
   $body .= "\n" . get_mail_vocab("namebooker") . ': ';
   $body .= convertToMailCharset($mail_previous['namebooker']) . "\n";
@@ -635,7 +673,7 @@ function notifyAdminOnDelete($mail_previous)
   }
   $body .= "\n";
   // End of mail details
-  $result = sendMail($recipient_list, $subject, $body, get_mail_charset(), $mail_settings['cc']);
+  $result = sendMail($recipient_list, $subject, $body, get_mail_charset(), $cc_list);
   return $result;
 }
 

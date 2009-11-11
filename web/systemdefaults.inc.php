@@ -557,7 +557,7 @@ $mail_settings['area_admin_on_bookings'] = FALSE;
 $mail_settings['room_admin_on_bookings'] = FALSE;
 
 // Set to TRUE if you want the appropriate booking administrators to be emailed
-// when a provisional booking is created
+// when a provisional booking is created, accepted or rejected
 $mail_settings['book_admin_on_provisional'] = FALSE;
 
 // Set to TRUE if you want ADMIN to be notified when entries are deleted. Email
