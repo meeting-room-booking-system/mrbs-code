@@ -692,14 +692,104 @@ function cross_dst ( $start, $end )
   return $modification;
 }
 
+// If $time falls on a non-working day, shift it back to the end of the last 
+// working day before that
+function shift_to_workday($time)
+{
+  global $working_days;
+  
+  $dow = date('w', $time);  // get the day of the week
+  $skip_back = 0;           // number of days to skip back
+  // work out how many days to skip back to get to a working day
+  while (!in_array($dow, $working_days))
+  {
+    if ($skip_back == 7)
+    {
+      break;
+    }
+    $skip_back++;
+    $dow = ($dow + 6) % 7;  // equivalent to skipping back a day
+  }
+  if ($skip_back != 0)
+  {
+    // set the time to the end of the working day
+    $d = date('j', $time) - $skip_back;
+    $m = date('n', $time);
+    $y  = date('Y', $time);
+    $time = mktime(23, 59, 59, $m, $d, $y);
+  }
+  return $time;
+}
+  
 // Returns the difference in seconds between two timestamps, $now and $then
-// It gives $now - $then
-// TO DO: exclude weekends, or preferably a set of days of the week defined 
-// as a config setting
+// It gives $now - $then, less any seconds that were part of a non-working day
 function working_time_diff($now, $then)
 {
-  $diff = $now - $then;
-  return $diff;
+  global $working_days;
+  
+  // Deal with the easy case
+  if ($now == $then)
+  {
+    return 0;
+  }
+  // Sanitise the $working_days array in case it was malformed
+  $working_week = array_unique(array_intersect(array(0,1,2,3,4,5,6), $working_days));
+  $n_working_days = count($working_week);
+  // Deal with the special case where there are no working days
+  if ($n_working_days == 0)
+  {
+    return 0;
+  }
+  // and the special case where there are no holidays
+  if ($n_working_days == 7)
+  {
+    return ($now - $then);
+  }
+
+  // For the rest we're going to assume that $last comes after $first
+  $last = max($now, $then);
+  $first = min($now, $then);
+  
+  // first of all, if $last or $first fall on a non-working day, shift
+  // them back to the end of the last working day
+  $last = shift_to_workday($last);
+  $first = shift_to_workday($first);
+  // So calculate the difference
+  $diff = $last - $first;
+  // Then we have to deduct all the non-working days in between.   This will be
+  // (a) the number of non-working days in the whole weeks between them +
+  // (b) the number of non-working days in the part week
+  
+  // First let's calculate (a)
+  $last = mktime(12, 0, 0, date('n', $last), date('j', $last), date('Y', $last));
+  $first = mktime(12, 0, 0, date('n', $first), date('j', $first), date('Y', $first));
+  $days_diff = (int) round(($last - $first)/(60*60*24));  // the difference in days
+  $whole_weeks = (int) floor($days_diff/7);  // the number of whole weeks between the two
+  $non_working_days = $whole_weeks * (7 - $n_working_days);
+  // Now (b), ie we just have to calculate how many non-working days there are between the two
+  // days of the week that are left
+  $last_dow = date('w', $last);
+  $first_dow = date('w', $first);
+  
+  while ($first_dow != $last_dow)
+  {
+    $first_dow = ($first_dow + 1) % 7;
+    if (!in_array($first_dow, $working_week))
+    {
+      $non_working_days++;
+    }
+  }
+
+  // So now subtract the number of weekend seconds
+  $diff = $diff - ($non_working_days * 60*60*24);
+  
+  // Finally reverse the difference if $now was in fact before $then
+  if ($now < $then)
+  {
+    $diff = -$diff;
+  }
+  
+  return (int) $diff;
 }
 
 // checks whether a given day of the week is supposed to be hidden in the display

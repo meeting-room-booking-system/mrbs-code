@@ -375,10 +375,12 @@ $provisional_enabled = FALSE;  // Set to TRUE to enable provisional bookings
 // to admins if provisional bookings have not been approved
 $reminders_enabled = TRUE;
 
-// Interval before reminders can be issued (in seconds). (At the moment
-// weekends are included in the calculation.  Ideally they should be
-// excluded)
-$reminder_interval = 60*60*24*4;  // 4 days
+// Interval before reminders can be issued (in seconds).   Only
+// working days (see below) are included in the calculation
+$reminder_interval = 60*60*24*4;  // 2 working days
+
+// Days of the week that are working days (Sunday = 0, etc.)
+$working_days = array(1,2,3,4,5);  // Mon-Fri
 
 /***********************************************
  * Authentication settings - read AUTHENTICATION
