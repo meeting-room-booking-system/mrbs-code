@@ -35,6 +35,35 @@ elseif ($private_override == "public" )
 
 $done_header = FALSE;
 
+// Prints a very simple header.  This may be necessary on occasions, such as
+// during a database upgrade, when some of the features that the normal
+// header uses are not yet available.
+function print_simple_header()
+{
+  global $done_header;
+ 
+  if ($done_header)
+  {
+    return;
+  } 
+  
+  header("Content-Type: text/html; charset=" . get_charset());
+  header("Pragma: no-cache");                          // HTTP 1.0
+  header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
+  echo DOCTYPE;
+ ?>
+
+<html>
+  <head>
+    <?php
+      require_once "style.inc";
+    ?>
+    <title><?php echo get_vocab("mrbs") ?></title>
+  </head>
+  <body>
+  <?php
+  $done_header = TRUE; 
+}
 
 // Print the page header
 function print_header($day, $month, $year, $area, $room)

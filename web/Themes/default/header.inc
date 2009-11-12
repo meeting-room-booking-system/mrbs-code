@@ -33,9 +33,9 @@ function print_theme_header($day, $month, $year, $area, $room)
   header("Content-Type: text/html; charset=" . get_charset());
   header("Pragma: no-cache");                          // HTTP 1.0
   header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
-
+  echo DOCTYPE;
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
 <html>
   <head>
 <?php
