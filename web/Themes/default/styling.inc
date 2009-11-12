@@ -86,6 +86,11 @@ $color_types = array(
     'I' => "#99cc66",
     'J' => "#e6ffe6"); 
 
+// colours used for pending.php and provisional bookings
+$outstanding_color         = "#FFF36C"; // font colour for the outstanding reservations message in the header
+$pending_header_back_color = $header_back_color;; // background colour for series headers
+$series_entry_back_color   = "#FFFCDA"; // background colour for entries in a series
+$pending_control_color     = "#FFF36C"; // background colour for the series +/- controls in pending.php
     
 // ***** DIMENSIONS *******************
 $banner_border_width          = '0';  // (px)  border width for the outside of the banner

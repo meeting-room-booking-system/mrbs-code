@@ -22,6 +22,7 @@ $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Help";
 $vocab["search"]             = "Search";
 $vocab["not_php3"]           = "WARNING: This probably doesn't work with PHP3";
+$vocab["outstanding"]        = "pending bookings";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "Bookings for";
@@ -142,6 +143,10 @@ $vocab["mail_body_changed_entry"] = "An entry has been modified, here are the de
 $vocab["mail_subject_delete"] = "Entry deleted for $mrbs_company MRBS";
 $vocab["reason"]              = "Reason";
 $vocab["info_requested"]      = "Information requested";
+
+// Used in pending.php
+$vocab["pending"]            = "Provisional bookings awaiting approval";
+$vocab["none_outstanding"]   = "You have no provisional bookings waiting to be approved.";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Access Denied";
