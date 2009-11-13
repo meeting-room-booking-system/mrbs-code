@@ -371,7 +371,14 @@ if (isset($Action) && ($Action == "Update"))
     $q_string = ($Id >= 0) ? "Action=Edit" : "Action=Add";
     foreach ($fields as $fieldname)
     {
-      // first, get all the form variables and put them into an array, $values, which 
+      if ($fieldname == 'id')
+      {
+        // id: don't need to do anything except add the id to the query string;
+        // the field itself is auto-incremented
+        $q_string .= "&Id=$Id";
+        continue; 
+      }
+      // first, get all the other form variables and put them into an array, $values, which 
       // we will use for entering into the database assuming we pass validation
       $values[$fieldname] = get_form_var("Field_$fieldname", $field_props[$fieldname]['type']);
       // Truncate the field to the maximum length as a precaution.
@@ -388,10 +395,6 @@ if (isset($Action) && ($Action == "Update"))
       switch ($fieldname)
       {
         // some of the fields get special treatment
-        case 'id':
-          // id: don't need to do anything except add the id to the query string
-          $q_string .= "&Id=$Id";   
-          break;
         case 'name':
           // name: convert it to lower case
           $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
