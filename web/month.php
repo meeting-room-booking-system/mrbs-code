@@ -330,7 +330,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
       // Handle private events
       if (is_private_event($row['private'])) 
       {
-        if (getWritable($row['create_by'],$user)) 
+        if (getWritable($row['create_by'], $user, $room)) 
         {
           $private = FALSE;
         }

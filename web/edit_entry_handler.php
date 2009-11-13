@@ -152,7 +152,34 @@ if (!getAuthorised(1))
 }
 $user = getUserName();
 
-if (!getWritable($create_by, $user))
+// Check that the user has permission to create/edit an entry for this room.
+// Get the id of the room that we are creating/editing
+if (isset($id))
+{
+  // Editing an existing booking: get the room_id from the database (you can't
+  // get it from $rooms because they are the new rooms)
+  $target_room = sql_query1("SELECT room_id FROM $tbl_entry WHERE id=$id LIMIT 1");
+  if ($target_room < 0)
+  {
+    fatal_error(0, sql_error());
+  }
+}
+else
+{
+  // New booking: get the room_id from the form
+  if (!isset($rooms[0]))
+  {
+    // $rooms[0] should always be set, because you can only get here
+    // from edit_entry.php, where it will be set.   If it's not set
+    // then something's gone wrong - probably somebody trying to call
+    // edit_entry_handler.php directly from the browser - so get out 
+    // of here and go somewhere safe.
+    header("Location: index.php");
+    exit;
+  }
+  $target_room = $rooms[0];
+}
+if (!getWritable($create_by, $user, $target_room))
 {
   showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
   exit;

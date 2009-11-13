@@ -72,7 +72,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
     }
     
     if (is_private_event($row['private']) &&
-         !getWritable($row['create_by'], $user))
+         !getWritable($row['create_by'], $user, $room_id))
     {
        $row['name'] = get_vocab("private");
     }
@@ -110,7 +110,7 @@ function mrbsDelEntry($user, $id, $series, $all)
     return 0;
   }
 
-  $sql = "SELECT create_by, id, entry_type FROM $tbl_entry WHERE ";
+  $sql = "SELECT create_by, id, room_id, entry_type FROM $tbl_entry WHERE ";
    
   if ($series)
   {
@@ -127,7 +127,7 @@ function mrbsDelEntry($user, $id, $series, $all)
 
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   {
-    if(!getWritable($row['create_by'], $user))
+    if(!getWritable($row['create_by'], $user, $row['room_id']))
     {
       continue;
     }

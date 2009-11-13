@@ -883,7 +883,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   
   $user = getUserName();
   if (is_private_event($row['entry_private']) &&
-         !getWritable($row['entry_create_by'],$user))
+         !getWritable($row['entry_create_by'], $user, $row['room_id']))
   {
     $is_private = TRUE;
     $row['name']= "[".get_vocab('unavailable')."]";

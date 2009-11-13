@@ -169,7 +169,7 @@ $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['remind
 // so that user see what he expects to see
 $duration      = $row['duration'] - cross_dst($row['start_time'],
                                               $row['end_time']);
-$writeable     = getWritable($row['create_by'], $user);
+$writeable     = getWritable($row['create_by'], $user, $room_id);
 
 
 // Get the area settings for the entry's area.   In particular we want

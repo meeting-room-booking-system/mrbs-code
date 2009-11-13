@@ -160,7 +160,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   }
 
   /* First make sure the user is authorized */
-  if (!$initial_user_creation && !getWritable($data['name'], $user))
+  if (!$initial_user_creation && !auth_can_edit_user($user, $data['name']))
   {
     showAccessDenied(0, 0, 0, "", "");
     exit();

@@ -47,7 +47,7 @@ if (getAuthorised(1) && ($info = mrbsGetBookingInfo($id, FALSE, TRUE)))
   }
   else
   {
-    $authorised = getWritable($info['create_by'], $user);
+    $authorised = getWritable($info['create_by'], $user, $info['room_id']);
   }
   if ($authorised)
   {
