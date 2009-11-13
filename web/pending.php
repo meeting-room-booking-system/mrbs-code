@@ -6,14 +6,14 @@ require_once "defaultincludes.inc";
 function display_buttons($row, $is_series)
 {
   global $PHP_SELF;
-  global $is_admin, $remind_interval, $user;
+  global $user, $remind_interval;
   
   $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
   $returl = $PHP_SELF;
                                     
   $target_id = ($is_series) ? $row['repeat_id'] : $row['id'];
   
-  if ($is_admin)
+  if (auth_can_confirm($user, $row['room_id']))
   {
     // accept
     echo "<form action=\"confirm_entry_handler.php\" method=\"post\">\n";
@@ -73,9 +73,7 @@ function display_buttons($row, $is_series)
 
 // display the header row for a series
 function display_series_header($row, $table_id)
-{
-  global $n_cols, $is_admin, $tbl_entry, $user;
-    
+{  
   echo "<tr>";  // no \n so as not to create another child in the DOM
   echo "<th class=\"control\" onClick=\"toggle_table('$table_id')\">&nbsp;</th>\n";
   // reservation name, with a link to the view_entry page
@@ -97,9 +95,7 @@ function display_series_header($row, $table_id)
 // display an entry in a row
 function display_entry_row($row)
 {
-  global $PHP_SELF;
-  global $enable_periods, $remind_interval;
-  global $is_admin;
+  global $enable_periods;
   
   echo "<tr>\n";
   echo "<td class=\"control\">&nbsp;</td>\n";
@@ -169,7 +165,7 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 echo "<h1>" . get_vocab("pending") . "</h1>\n";
 
 // Get a list of all the provisional bookings
-$sql = "SELECT E.id, E.name, E.start_time, E.create_by, " .
+$sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
                sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
                E.reminded, E.repeat_id,
                R.room_name, R.area_id, A.area_name

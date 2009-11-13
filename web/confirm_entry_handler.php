@@ -33,7 +33,7 @@ if (empty($area))
 }
 
 // Check that we're allowed to use this page
-// (1) We must be at least a logged in user
+// We must be at least a logged in user
 if(!getAuthorised(1))
 {
   showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
@@ -44,14 +44,6 @@ $user = getUserName();
                   
 if (isset($action))
 {
-  // (2) We must also have confirm rights for this room if necessary
-  if ((($action == "accept") || ($action == "reject")) 
-       && !auth_can_confirm($user, $room_id))
-  {
-    showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
-    exit;
-  }
-  
   $need_to_send_mail = ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
                         $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'] or
                         $mail_settings['book_admin_on_provisional']);
@@ -104,7 +96,15 @@ if (isset($action))
     $enable_periods ? toPeriodString($start_period, $duration, $dur_units, FALSE) : toTimeString($duration, $dur_units, FALSE);
 
   }
-
+  
+  // Now that we know the room, check that we have confirm rights for it if necessary
+  if ((($action == "accept") || ($action == "reject")) 
+       && !auth_can_confirm($user, $room_id))
+  {
+    showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
+    exit;
+  }
+  
   // ACTION = "ACCEPT"
   if ($action == "accept")
   {
