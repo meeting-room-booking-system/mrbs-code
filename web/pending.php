@@ -12,6 +12,13 @@ function display_buttons($row, $is_series)
   $returl = $PHP_SELF;
                                     
   $target_id = ($is_series) ? $row['repeat_id'] : $row['id'];
+
+  // When we're going to view_entry.php we need to pass the id and series
+  // in a query string rather than as hidden inputs.   That's because some
+  // pages called by view_entry use HTTP_REFERER to form a return URL, and
+  // view_entry needs to have a valid id.
+  $query_string = "id=$target_id";
+  $query_string .= ($is_series) ? "&series=1" : "";
   
   if (auth_can_confirm($user, $row['room_id']))
   {
@@ -26,21 +33,17 @@ function display_buttons($row, $is_series)
     echo "</div>\n";
     echo "</form>\n";
     // reject
-    echo "<form action=\"view_entry.php\" method=\"post\">\n";
+    echo "<form action=\"view_entry.php?$query_string\" method=\"post\">\n";
     echo "<div>\n";
     echo "<input type=\"hidden\" name=\"action\" value=\"reject\">\n";
-    echo "<input type=\"hidden\" name=\"id\" value=\"$target_id\">\n";
-    echo "<input type=\"hidden\" name=\"series\" value=\"$is_series\">\n";
     echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
     echo "<input type=\"submit\" value=\"" . get_vocab("reject") . "\">\n";
     echo "</div>\n";
     echo "</form>\n";
     // more info
-    echo "<form action=\"view_entry.php\" method=\"post\">\n";
+    echo "<form action=\"view_entry.php?$query_string\" method=\"post\">\n";
     echo "<div>\n";
     echo "<input type=\"hidden\" name=\"action\" value=\"more_info\">\n";
-    echo "<input type=\"hidden\" name=\"id\" value=\"$target_id\">\n";
-    echo "<input type=\"hidden\" name=\"series\" value=\"$is_series\">\n";
     echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
     echo "<input type=\"submit\" value=\"" . get_vocab("more_info") . "\">\n";
     echo "</div>\n";
