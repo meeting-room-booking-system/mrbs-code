@@ -1,3 +1,631 @@
+2009-11-24 21:21  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1269] web/auth_ldap.inc, web/mysql.inc, web/mysqli.inc,
+	  web/version.inc:
+	  
+	  * Fixed LDAP auth method so that $ldap_filter will work if you
+	  use $ldap_dn_search_attrib.
+	  
+	  * Updated 'mysql' and 'mysqli' DB abstractions to request a UTF-8
+	  client charset if $unicode_encoding is true.
+	  
+	  * Updated version number to 1.4.3.
+
+2009-11-14 21:35  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1268] web/systemdefaults.inc.php:
+	  
+	  * Added code to disable the E_DEPRECATED error class, due to our
+	  use of the 'is_dst' option in mktime() being deprecated in PHP >=
+	  5.3.0.
+
+2009-11-14 20:56  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1267] web/auth_imap.inc:
+	  
+	  * Fixed a regular expression used for IMAP quoting, received as a
+	  patch from Thomas Bleher.
+
+2009-11-13 21:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1264] web/edit_users.php:
+	  
+	  Fixed a bug which prevented users from being edited (unless they
+	  happened to be the user with id 0)
+
+2009-11-09 21:27  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1243] tables.pg.sql:
+	  
+	  Updated the db version number.
+
+2009-11-08 10:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1241] web/edit_users.php:
+	  
+	  Added an id to a form so that sites can add their own styling.
+
+2009-11-04 16:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1240] web/config.inc.php:
+	  
+	  Added comment to steer admins toward the lang files if they want
+	  to change some of the text strings.
+
+2009-11-03 15:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1239] web/mrbs_sql.inc, web/site_faq.html:
+	  
+	  - changed behaviour of monthly and yearly repeats so that if a
+	  day does not exist in the month (eg 29/30/31) MRBS will use the
+	  last day of the month (instead of going forward into the next
+	  month as it did before) - updated Help text to reflect new
+	  monthly and yearly repeat behaviour - updated Help text to
+	  reflect existing monthly, corresponding day behaviour (ie using
+	  29/30/31 is valid and is useful) - combined logic for weekly and
+	  n-weekly repeats: a weekly repeat is just a special case of an
+	  n-weekly repeat - simplified fix introduced in Rev 1236 now that
+	  we can rely on at least one repeat day being set for weekly and
+	  n-weekly repeats (see Rev 1238)
+
+2009-11-03 14:25  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1238] web/edit_entry_handler.php:
+	  
+	  Fixed bug introduced in Rev 1237 that caused n-weekly repeats to
+	  get stuck in an infinite loop (the code assumes that at least one
+	  repeat day has been set).
+
+2009-11-02 15:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1237] web/edit_entry.php, web/edit_entry_handler.php:
+	  
+	  Removed the checks that tested whether at least one repeat day
+	  had been checked in the case of weekly and n-weekly repeats. The
+	  checks were not necessary because if no repeat days are checked,
+	  MRBS assumes that the repeat day is the day of the week of the
+	  start of the period (as indeed it says in the Help text).
+
+2009-11-02 14:44  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1236] web/mrbs_sql.inc:
+	  
+	  Fixed a bug which meant that for weekly and n-weekly bookings the
+	  first day of the period was booked when it should not have been
+	  because one or more of the repeat days had been checked - but not
+	  the day of the week of the start of the period. For example if
+	  you request a weekly repeat from 1-30 November 2009 for
+	  Thursdays, then the 1 Nov was also being booked when it should
+	  not have been because it's a Sunday. (Problem reported by Randy
+	  Allen on the general mailing list).
+
+2009-11-01 20:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1235] web/edit_area_room.php:
+	  
+	  - altered the behaviour of edit_area_room.php so that after
+	  you've edited a room or an area you are returned to the admin
+	  page, rather than staying on the edit_area_room.php page. - fixed
+	  a bug which resulted in invalid HTML and an incorrectly rendered
+	  page when editing an area and using periods
+
+2009-10-31 23:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1234] web/edit_users.php:
+	  
+	  Removed stray blank line.
+
+2009-10-31 18:48  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1233] web/edit_users.php, web/lang.en:
+	  
+	  Improved the error handling when adding a new user, so that form
+	  data is reloaded if there is an error and does not have to be
+	  re-typed by the user.
+
+2009-10-27 23:28  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1232] web/lang.fr:
+	  
+	  Added "area" token
+
+2009-10-27 16:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1231] tables.my.sql, tables.pg.73and_above.sql, tables.pg.sql,
+	  web/add.php, web/admin.php, web/day.php, web/dbsys.inc,
+	  web/edit_area_room.php, web/edit_entry.php, web/functions.inc,
+	  web/lang.en, web/month.php, web/report.php, web/upgrade/8,
+	  web/upgrade/8/mysql.sql, web/upgrade/8/pgsql.sql,
+	  web/upgrade/8/post.inc, web/week.php:
+	  
+	  Added a sort key for rooms, so that rooms can be sorted in an
+	  order defined by the administrator rather than alphabetically. By
+	  default the sort key is the same as the room name and rooms will
+	  be sorted alphabetically as before. The sort order applies
+	  whenever rooms are listed, eg in the main day view and in
+	  drop-down lists.
+
+2009-10-22 16:21  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1230] web/search.php:
+	  
+	  Added error checking after the first SQL query. (Although there
+	  is some error checking after the second query, it is never
+	  reached if there's an error in the SQL predicate, or the first
+	  SQL query generally, and MRBS just incorrectly reports that there
+	  are no entries matching the search string).
+
+2009-10-22 16:16  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1229] web/report.php:
+	  
+	  Changed capitalisation of table aliases in the SQL query to be
+	  consistent with search.php. No functional change to MRBS.
+
+2009-10-22 12:59  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1228] tables.my.sql, tables.pg.73and_above.sql, tables.pg.sql:
+	  
+	  * Updated DB schema number in the instalation SQL files.
+
+2009-10-21 21:44  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1227] web/search.php:
+	  
+	  - Ensured that searches respect the per-area privacy settings -
+	  Fixed bug which meant that searches did not work on PostgreSQL
+	  when users were not admins and $private_override was not set to
+	  public
+
+2009-10-21 21:39  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1226] web/report.php:
+	  
+	  - Ensured that reports respect the per-area privacy settings -
+	  Fixed bug which meant that (depending on their name) admins would
+	  not be recognised as having admin rights, and so would not see
+	  private bookings made by other users
+
+2009-10-21 20:43  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1225] web/add.php, web/dbsys.inc, web/upgrade/7,
+	  web/upgrade/7/mysql.sql, web/upgrade/7/pgsql.sql,
+	  web/upgrade/7/post.inc:
+	  
+	  Ensured that the private settings in the area table are always
+	  not NULL, by converting existing areas and setting the private
+	  fields when creating new areas. (It will make ensuring that
+	  Search and Report respect the private settings easier if the
+	  settings can be guaranteed to be not NULL).
+
+2009-10-21 18:26  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1224] web/view_entry.php:
+	  
+	  Fix to ensure that view_entry uses the per-area privacy settings
+	  (problem reported by David Moore on the general mailing list).
+	  Still to come: fixes for Search and Report which suffer from a
+	  similar problem.
+
+2009-10-20 11:51  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1223] web/config.inc.php:
+	  
+	  * Removed odd stray spaces from the config file.
+
+2009-10-20 11:49  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1222] web/auth_imap.inc, web/escapeshellarg.inc, web/month.php,
+	  web/session_cookie.inc, web/session_php.inc, web/week.php:
+	  
+	  * Replaced all usage of ereg_replace() with calls to
+	  preg_replace() for consistency and because PHP 5.3 has deprecated
+	  the function.
+
+2009-10-18 16:02  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1221] web/language.inc:
+	  
+	  * Fix for setting UTF-8 locale on BSD (and Linux). It turns out
+	  Linux is also happy to specify a UTF-8 locale with ".UTF-8" in
+	  upper case. Fix provided by Ian Rees in SF tracker #2859067.
+
+2009-10-18 15:35  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1220] web/session_remote_user.inc, web/systemdefaults.inc.php:
+	  
+	  * Patch from Emmanuel Dreyfus to add a configuration variable to
+	  configure a login link for the "remote_user" authentication
+	  scheme.
+
+2009-10-18 15:30  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1219] web/functions.inc, web/systemdefaults.inc.php:
+	  
+	  * Patch from Emmanuel Dreyfus to add a config variable to force
+	  the booking resolution to the value of $resolution, rather than
+	  the resolution for the area set in the database.
+
+2009-10-18 15:25  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1218] web/mrbs_auth.inc, web/systemdefaults.inc.php:
+	  
+	  Slight variation on a patch from Emmanuel Dreyfus (changed
+	  variable name)
+
+2009-10-08 06:16  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1217] web/lang.fr, web/report.php:
+	  
+	  - Reverted Revision 1211 (ie put &nbsp; entities back in) -
+	  &nbsp; entities are now replaced in the CSV report header row
+	  using mrbs_entity_decode()
+
+2009-10-07 15:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1216] web/functions.inc, web/functions_mail.inc:
+	  
+	  - Added an mrbs_entity_decode() function - Extended removal of
+	  &nbsp; entities in period names in mail messages to PHP4 and
+	  below.
+
+2009-10-02 10:05  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1212] web/language.inc:
+	  
+	  Changed name of optional third parameter in utf8_substr() from
+	  $end to $length to make it less confusing.
+
+2009-10-01 23:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1211] web/lang.fr:
+	  
+	  Changed &nbsp; to an ordinary space (except where there are two
+	  of them) - otherwise they appear as is in CSV report headers.
+
+2009-10-01 22:57  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1210] web/report.php:
+	  
+	  Changed Content-type for CSV reports to text/csv and added a
+	  charset to aid internationalisation. (Note that Excel does not
+	  open CSV files properly. To open a UTF-8 file in Excel, save it
+	  as a .txt file first and then specify the charset in the dialogue
+	  that appears when you open the file in Excel).
+
+2009-10-01 22:46  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1209] web/Themes/default/header.inc, web/language.inc,
+	  web/style.inc:
+	  
+	  Introduced a get_charset() function. No functional change to
+	  MRBS.
+
+2009-09-27 17:14  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1206] web/functions_mail.inc:
+	  
+	  Further simplified the code in getPreviousEntryData(). No
+	  functional change to MRBS.
+
+2009-09-27 16:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1205] web/edit_entry.php:
+	  
+	  Fixed a bug which meant that the number of weeks wasn't shown in
+	  the form when editing an existing n-weekly booking.
+
+2009-09-27 16:07  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1204] web/functions_mail.inc:
+	  
+	  Fixed a (very minor!) bug that meant that $weekstarts was ignored
+	  in email notifications and repeat entries covering more than one
+	  day of the week were listed starting at the wrong place. For
+	  example if $weekstarts=1 (ie Mon) and a weekly repeat is made for
+	  Sat and Sun, the email notification listed them as Sun, Sat
+	  instead of Sat, Sun.
+
+2009-09-27 15:54  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1203] web/functions_mail.inc:
+	  
+	  Simplified the code in getPreviousEntryData(). No functional
+	  change to MRBS.
+
+2009-09-25 08:46  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1202] web/report.php, web/systemdefaults.inc.php:
+	  
+	  Converted CSV constants into variables, so that they can be
+	  redefined in config.inc.php
+
+2009-09-24 17:36  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1201] web/systemdefaults.inc.php:
+	  
+	  Corrected constant definitions used for CSV reports.
+
+2009-09-23 15:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1200] web/lang.en, web/report.php, web/systemdefaults.inc.php:
+	  
+	  Added the ability to output reports and summaries as CSV files.
+
+2009-09-17 15:25  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1199] web/systemdefaults.inc.php:
+	  
+	  Tried to make the language settings slightly clearer. No
+	  functional change to MRBS.
+
+2009-09-15 22:12  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1198] web/language.inc:
+	  
+	  * Added support for Bulgarian localisation
+
+2009-09-11 14:29  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1197] web/mrbs-ie.css:
+	  
+	  Minor change to formatting of the edit_user form to improve looks
+	  (added some more space below the form legend for IE, as IE by
+	  default leaves none)
+
+2009-09-08 15:52  dceschools
+
+	* [r1195] web/systemdefaults.inc.php:
+	  
+	  Add unset to array variables in systemdefaults.inc.php so they
+	  can be copied to config.inc.php if needed.
+
+2009-09-04 11:56  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1192] web/mrbs.css.php:
+	  
+	  Fixed a problem which caused the highlight colour to shine
+	  through bookings that have an opacity of less than 1 (eg private
+	  bookings) when they occur in cells in the day and week views that
+	  have multiple bookings.
+
+2009-09-03 23:26  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1191] web/edit_area_room.php:
+	  
+	  Changed event handlers for the radio buttons to be onClick rather
+	  than onChange (the onChange handler shouldn't fire until the
+	  control loses focus - correctly implemented on IE but not on FF).
+
+2009-09-03 13:49  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1189] web/day.php, web/month.php:
+	  
+	  Changed SQL ORDER BY clauses to use column names rather than
+	  column positions in order to improve maintainability. No
+	  functional change to MRBS.
+
+2009-09-03 13:31  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1188] web/report.php:
+	  
+	  Changed SQL ORDER BY clauses to use column names rather than
+	  column positions in order to improve maintainability. No
+	  functional change to MRBS.
+
+2009-09-03 13:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1187] web/report.php:
+	  
+	  Minor change to bring into line with MRBS coding conventions.
+
+2009-08-28 15:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1181] web/functions.inc, web/functions_mail.inc:
+	  
+	  Corrected use of version_compare()
+
+2009-08-28 14:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1180] web/session_cookie.inc, web/session_http.inc,
+	  web/session_php.inc, web/session_remote_user.inc:
+	  
+	  Fixed the display in the header ("You are <user>") of usernames
+	  that contain html special chars.
+
+2009-08-28 13:50  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1179] web/view_entry.php:
+	  
+	  Fixed bug which meant that a user could not see their own private
+	  bookings if the user name contained HTML special chars.
+
+2009-08-26 23:26  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1178] web/functions_mail.inc:
+	  
+	  Fixed a bug which meant that when using periods, any HTML
+	  entities or tags in the period name string (which are allowed)
+	  were left as is in email notifications, which are sent as plain
+	  text emails. (HTML entities are only replaced in PHP5 and above,
+	  to avoid any complications with lack of support for multi-byte
+	  character sets).
+
+2009-08-24 09:06  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1177] web/pgsql.inc:
+	  
+	  * Improved/fixed the PostgreSQL sql_table_exists()
+	  implementation.
+
+2009-08-23 18:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1175] tables.pg.73and_above.sql, tables.pg.sql:
+	  
+	  Removed duplicate primary key declaration from users table.
+
+2009-08-12 14:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1174] web/view_entry.php:
+	  
+	  Fixed bug causing undefined variable notice when an email
+	  notification of a series is viewed. (The notice is only visible
+	  in MRBS if error_reporting is set to include Notices).
+
+2009-08-11 14:11  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1173] web/config.inc.php:
+	  
+	  Addition of comment.
+
+2009-08-11 14:05  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1172] web/systemdefaults.inc.php, web/theme.inc:
+	  
+	  Moved consistency checking of user settings for periods and time
+	  slots out of systemdefaults.inc.php where it is now unnecessary
+	  (because systemdefaults.inc.php cannot be changed by the user)
+	  and put it into theme.inc.
+
+2009-08-11 12:33  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1171] web/config.inc.php, web/del_entry.php,
+	  web/edit_entry_handler.php, web/functions_mail.inc,
+	  web/language.inc, web/systemdefaults.inc.php, web/theme.inc:
+	  
+	  - Changed the constants in systemdefaults.inc.php to variables,
+	  as constants can only be defined once, meaning they cannot be
+	  redefined in config.inc.php (IS_XHTML should remain a constant
+	  though as that is not intended to be redefined in config.inc.php)
+	  - Resolved the Catch-22 (reported by Thomas Bleher on the mailing
+	  list) which prevented language settings from being defined in
+	  config.inc.php
+
+2009-08-05 22:36  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1170] web/edit_entry.php:
+	  
+	  Fixed very minor problem (not normally visible to the user) that
+	  caused an 'undefined' error in JavaScript when there are no rooms
+	  defined for an area.
+
+2009-08-05 15:52  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1169] web/search.php:
+	  
+	  * Added missing SQL escaping for $user in search.php, this
+	  variable is not directly enterable by a user, so the issue was of
+	  a lesser consequence.
+
+2009-08-01 21:05  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1168] web/mincals.inc, web/mrbs.css.php,
+	  web/systemdefaults.inc.php:
+	  
+	  * Implemented new config variable, $mincals_week_numbers. If this
+	  is set to true, week numbers will be shown in the mini-calendars.
+	  The numbers will only be accurate if you set $weekstarts to 1.
+
+2009-07-22 13:30  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1167] web/mrbs.css.php:
+	  
+	  Fixed a bug introduced in Revision 1123 which meant that the
+	  empty cells in the month view were no longer clickable.
+
+2009-07-22 09:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1166] web/Themes/default/header.inc:
+	  
+	  Added declaration of $PHP_SELF to avoid problems when using
+	  versions of PHP < 4.1.0
+
+2009-07-21 16:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1165] web/session_http.inc:
+	  
+	  Fixed problem with the TargetURL being undefined and causing
+	  badly formed HTML when Notice errors are turned on. (However the
+	  problem still exists that when using HTTP sessions MRBS will
+	  redirect to the admin page on login, rather than the current
+	  page. I haven't tried to fix this.)
+
+2009-07-21 15:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1164] web/session_cookie.inc, web/session_php.inc:
+	  
+	  Removed redundant declarations of $auth
+
+2009-07-21 14:48  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1163] web/session_cookie.inc, web/session_php.inc:
+	  
+	  Removed references to redundant variable $user_link
+
+2009-07-21 14:43  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1162] web/session_http.inc, web/session_remote_user.inc:
+	  
+	  Fixed bug that caused query string to be missing parameter values
+	  for day, month and year in the "You are user" link in the header
+	  in the http and remote_user session schemes. (Didn't affect
+	  functionality as search.php was resilient, but it caused
+	  undefined variable notices when running with notices turned on).
+
+2009-07-20 16:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1161] web/edit_entry.php, web/report.php, web/search.php:
+	  
+	  Brought commenting style into line with MRBS standard practice.
+
+2009-07-17 19:59  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1160] web/config.inc.php:
+	  
+	  * Tweaked capitalisation of warning in config.inc.php.
+
+2009-07-17 19:52  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1159] web/upgrade.inc:
+	  
+	  * Fixed error reporting in DB upgrade mechanism.
+
+2009-07-16 16:03  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1158] web/defaultincludes.inc:
+	  
+	  * Added $Id$ to new file, defaultincludes.inc.
+
+2009-07-16 15:56  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1157] checklang.php, convert_db_to_utf8.php, testdata.php,
+	  web/add.php, web/admin.php, web/config.inc.php, web/day.php,
+	  web/defaultincludes.inc, web/del.php, web/del_entry.php,
+	  web/edit_area_room.php, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/edit_users.php, web/help.php,
+	  web/index.php, web/month.php, web/mrbs-ielte7.css.php,
+	  web/mrbs.css.php, web/report.php, web/search.php,
+	  web/systemdefaults.inc.php, web/view_entry.php, web/week.php:
+	  
+	  * Moved default configuration out of config.inc.php into
+	  systemdefaults.inc.php. Users should _not_ modify
+	  systemdefaults.inc.php and instead add lines into config.inc.php.
+	  
+	  * Created defaultincludes.inc, which includes the 6 standard
+	  files that pages include. Most pages include this.
+
+2009-07-15 23:11  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1155] web/version.inc:
+	  
+	  * Updated version number post release of 1.4.2.
+
+2009-07-15 22:46  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1153] ChangeLog, NEWS:
+	  
+	  * Updated NEWS/ChangeLog for MRBS 1.4.2 release.
+
 2009-07-15 22:36  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r1152] web/version.inc:

@@ -6,7 +6,52 @@
 [ - Bug fixed (we hope)      ]
 [============================]
 
-------------------------------------------------------------------------------- 
+-------------------------------------------------------------------------------
+Version 1.4.3 (Tue Nov 24 22:00:00 GMT 2009):
+
+[+] Moved default configuration values out of config.inc.php - this file
+ should now only contain settings the administrator has changed (plus
+ a few unfortunately necessary bits of internal code).
+[-] Improved error reporting in the DB upgrade mechanism.
+[*] Some code tidying to improve correctness and remove warnings.
+[-] Added declaration of $PHP_SELF for PHP versions < 4.1.0.
+[-] Fixed problem whereby empty cells in the month view weren't clickable.
+[+] Added a configuration variable for showing week numbers in the mini
+ calendars.
+[-] Added SQL escaping for a variable not directly enterable by a user.
+[-] Removed duplicate primary in PostgreSQL users table.
+[-] Improved the PostgreSQL DB abstraction call for sql_table_exists().
+[-] HTML entities in period names are now converted/stripped before
+ being sent in emails.
+[-] Fixed "You are <user>" display for users that include html special chars.
+[*] Improved SQL to always use column names in ORDER BY clauses.
+[-] Fixed JS click handling in edit area/room page.
+[*] Added Bulgarian localisation (no translation yet).
+[+] Added CSV report functionality.
+[-] Fixed display of "number of weeks" when editing an existing n-weekly
+ booking.
+[+] Added a configuration variable to allow forcing of booking resolution
+ to the configuration variable $resolution rather than the DB settings.
+[+] Added a configuration variable for setting a login link for the
+ 'remote_user' authentication scheme.
+[*] Fix for setting UTF-8 locale on BSD, as provided in SF tracker #2859067.
+[*] Removed use of ereg_replace(), it has been deprecated in PHP 5.3.
+[-] A few fixes to honour privacy settings correctly.
+[*] Improved error checking in search page.
+[+] Added a sort key for rooms.
+[*] Improved error handing for adding a user, so that user does not have
+ to retype the form after an error.
+[-] Fixed weekly and n-weekly bookings for the condition the user clicks
+ a day that the repeat is not scheduled for.
+[*] Changed behaviour of monthly and yearly repeats so that if a day does
+ not exist in the month MRBS will use the last day of the month.
+[+] Added code to disable E_DEPRECATED error class for PHP >= 5.3.
+[-]  Fixed LDAP auth method so that $ldap_filter will work if you use
+ $ldap_dn_search_attrib.
+[*] Updated 'mysql' and 'mysqli' DB abstractions to request a UTF-8
+ client charset if $unicode_encoding is true.
+
+-------------------------------------------------------------------------------
 Version 1.4.2 (Thu July 15 00:00 BST 2009): 
 
 [+] Added checking of lengths of values for user-typeable fields, so that
