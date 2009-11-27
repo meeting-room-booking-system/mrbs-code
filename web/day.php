@@ -304,7 +304,7 @@ else
   
   // TABLE HEADER
   echo "<thead>\n";
-  echo "<tr>\n";
+  $header = "<tr>\n";
   
   
   // We can display the table in two ways
@@ -316,59 +316,68 @@ else
     $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
     $n_slots = ($start_difference/$resolution) + 1;
     $column_width = (int)(95 / $n_slots);
-    echo "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
+    $header .= "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
     for (
          $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
          $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
          $t += $resolution
         )
     {
-      echo "<th style=\"width: $column_width%\">";
+      $header .= "<th style=\"width: $column_width%\">";
       if ( $enable_periods )
       {
         // convert timestamps to HHMM format without leading zeros
         $time_t = date($format, $t);
         // and get a stripped version of the time for use with periods
         $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-        echo $periods[$time_t_stripped];
+        $header .= $periods[$time_t_stripped];
       }
       else
       {
-        echo utf8_strftime(hour_min_format(),$t);
+        $header .= utf8_strftime(hour_min_format(),$t);
       }
-      echo "</th>\n";
+      $header .= "</th>\n";
     }
     // next: line to display times on right side
     if ( FALSE != $row_labels_both_sides )
     {
-      echo "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
+      $header .= "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
     }
   } // end "times_along_top" view (for the header)
   
   else
   {
     // the standard view, with rooms along the top and times down the side
-    echo "<th class=\"first_last\">" . ($enable_periods ? get_vocab("period") : get_vocab("time")) . ":</th>";
+    $header .= "<th class=\"first_last\">" . ($enable_periods ? get_vocab("period") : get_vocab("time")) . ":</th>";
   
     $column_width = (int)(95 / sql_count($res));
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      echo "<th style=\"width: $column_width%\">
-              <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\"
-              title=\"" . get_vocab("viewweek") . " &#10;&#10;".$row['description']."\">"
-        . htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "") . "</a></th>";
+      $header .= "<th style=\"width: $column_width%\">
+                  <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\"
+                  title=\"" . get_vocab("viewweek") . " &#10;&#10;".$row['description']."\">" .
+                  htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "") . "</a></th>";
       $rooms[] = $row['id'];
     }
   
     // next line to display times on right side
     if ( FALSE != $row_labels_both_sides )
     {
-      echo "<th class=\"first_last\">" . ( $enable_periods  ? get_vocab("period") : get_vocab("time") ) . ":</th>";
+      $header .= "<th class=\"first_last\">" . ( $enable_periods  ? get_vocab("period") : get_vocab("time") ) . ":</th>";
     }
   }  // end standard view (for the header)
   
-  echo "</tr>\n";
+  $header .= "</tr>\n";
+  echo $header;
   echo "</thead>\n";
+  
+  // Now repeat the header in a footer if required
+  if ($column_labels_both_ends)
+  {
+    echo "<tfoot>\n";
+    echo $header;
+    echo "</tfoot>\n";
+  }
   
   
   // TABLE BODY LISTING BOOKINGS

@@ -282,6 +282,10 @@ $times_along_top = FALSE;
 // (was called $times_right_side in earlier versions of MRBS)
 $row_labels_both_sides = FALSE;
 
+// To display the column headers (times, rooms or days) on the bottom of the table as
+// well as the top in the day and week views, set to TRUE;
+$column_labels_both_ends = FALSE;
+
 // Define default starting view (month, week or day)
 // Default is day
 $default_view = "day";

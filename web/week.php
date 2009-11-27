@@ -324,7 +324,7 @@ echo "<table class=\"dwm_main\" id=\"week_main\">";
 
   // TABLE HEADER
 echo "<thead>\n";
-echo "<tr>\n";
+$header = "<tr>\n";
 
 if (empty($dateformat))
 {
@@ -352,39 +352,39 @@ if ($times_along_top)
   $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
   $n_slots = ($start_difference/$resolution) + 1;
   $column_width = (int)(95 / $n_slots);
-  echo "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
+  $header .= "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
   for (
        $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year);
        $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
        $t += $resolution
       )
   {
-    echo "<th style=\"width: $column_width%\">";
+    $header .= "<th style=\"width: $column_width%\">";
     if ( $enable_periods )
     {
       // convert timestamps to HHMM format without leading zeros
       $time_t = date($format, $t);
       // and get a stripped version of the time for use with periods
       $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-      echo $periods[$time_t_stripped];
+      $header .= $periods[$time_t_stripped];
     }
     else
     {
-      echo utf8_strftime(hour_min_format(),$t);
+      $header .= utf8_strftime(hour_min_format(),$t);
     }
-    echo "</th>\n";
+    $header .= "</th>\n";
   }
   // next: line to display times on right side
   if ( FALSE != $row_labels_both_sides )
   {
-    echo "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
+    $header .= "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
   } 
 } // end "times_along_top" view (for the header)
 
 else
 {
   // the standard view, with days along the top and times down the side
-  echo "<th class=\"first_last\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
+  $header .= "<th class=\"first_last\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
   for ($j = 0; $j<=($num_of_days-1) ; $j++)
   {
     $t = mktime( 12, 0, 0, $month, $day_start_week+$j, $year); 
@@ -393,28 +393,37 @@ else
     {
       // These days are to be hidden in the display (as they are hidden, just give the
       // day of the week in the header row 
-      echo "<th class=\"hidden_day\">" . utf8_strftime('%a', $t) . "</th>\n";
+      $header .= "<th class=\"hidden_day\">" . utf8_strftime('%a', $t) . "</th>\n";
     }
   
     else  
     {  
-      echo "<th><a href=\"day.php?year=" . strftime("%Y", $t) . 
-        "&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) . 
-        "&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">"
-        . utf8_strftime($dformat, $t) . "</a></th>\n";
+      $header .= "<th><a href=\"day.php?year=" . strftime("%Y", $t) . 
+                 "&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) . 
+                 "&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">" .
+                 utf8_strftime($dformat, $t) . "</a></th>\n";
     }
   }
   // next line to display times on right side
   if ( FALSE != $row_labels_both_sides )
   {
-    echo "<th class=\"first_last\">"
-      . ( $enable_periods  ? get_vocab("period") : get_vocab("time") )
-      . ":</th>";
+    $header .= "<th class=\"first_last\">" .
+               ( $enable_periods  ? get_vocab("period") : get_vocab("time") ) .
+               ":</th>";
   }
 }  // end standard view (for the header)
 
-echo "</tr>\n";
+$header .= "</tr>\n";
+echo $header;
 echo "</thead>\n";
+
+// Now repeat the header in a footer if required
+if ($column_labels_both_ends)
+{
+  echo "<tfoot>\n";
+  echo $header;
+  echo "</tfoot>\n";
+}
 
 
 
