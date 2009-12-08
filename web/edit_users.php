@@ -472,7 +472,7 @@ if (isset($Action) && ($Action == "Update"))
           // so don't do anything; otherwise get the MD5 hash.
           // Note: we don't put the password in the query string
           // for security reasons.
-          if ($password0 != "")
+          if (!empty($password0))
           {
             $values[$fieldname]=md5($password0);
           }
@@ -538,10 +538,15 @@ if (isset($Action) && ($Action == "Update"))
             $q_string .= "&pwd_not_match=1";
           }
           // check that the password conforms to the password policy
-          if (!validate_password($password0))
+          // if it's a new user (Id < 0), or else it's an existing user
+          // trying to change their password
+          if (($Id <0) || !empty($password0))
           {
-            $valid_data = FALSE;
-            $q_string .= "&pwd_invalid=1";
+            if (!validate_password($password0))
+            {
+              $valid_data = FALSE;
+              $q_string .= "&pwd_invalid=1";
+            }
           }
           break;
         case 'email':
