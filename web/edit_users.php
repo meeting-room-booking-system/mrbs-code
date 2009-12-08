@@ -54,6 +54,59 @@ $name_empty = get_form_var('name_empty', 'int');
 $name_not_unique = get_form_var('name_not_unique', 'int');
 $taken_name = get_form_var('taken_name', 'string');
 $pwd_not_match = get_form_var('pwd_not_match', 'string');
+$pwd_invalid = get_form_var('pwd_invalid', 'string');
+
+// Validates that the password conforms to the password policy
+// (Ideally this function should also be matched by client-side
+// validation, but unfortunately JavaScript's native support for Unicode
+// pattern matching is very limited.   Would need to be implemented using
+// an add-in library).
+function validate_password($password)
+{
+  global $pwd_policy, $unicode_encoding;
+          
+  if (isset($pwd_policy))
+  {
+    // Set up regular expressions.  Use p{Ll} instead of [a-z] etc.
+    // to make sure accented characters are included
+    $pattern = array('alpha'   => '/\p{L}/',
+                     'lower'   => '/\p{Ll}/',
+                     'upper'   => '/\p{Lu}/',
+                     'numeric' => '/\p{N}/',
+                     'special' => '/[^\p{L}|\p{N}]/');
+    // Check for conformance to each rule                 
+    foreach($pwd_policy as $rule => $value)
+    {
+      switch($rule)
+      {
+        case 'length':
+          // assumes that the site has enabled multi-byte string function
+          // overloading if necessary in php.ini
+          if (strlen($password) < $pwd_policy[$rule])
+          {
+            return FALSE;
+          }
+          break;
+        default:
+          if ($unicode_encoding)
+          {
+            // turn on Unicode matching
+            $pattern[$rule] .= 'u';
+          }
+          $n = preg_match_all($pattern[$rule], $password, $matches);
+          if (($n === FALSE) || ($n < $pwd_policy[$rule]))
+          {
+            return FALSE;
+          }
+          break;
+      }
+    }
+  }
+  
+  // Everything is OK
+  return TRUE;
+}
+
 
 $fields = array();
 $field_props = array();
@@ -316,6 +369,19 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           {
             echo "<p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
           }
+          if (!empty($pwd_invalid))
+          {
+            echo "<p class=\"error\">" . get_vocab("password_invalid") . "</p>\n";
+            if (isset($pwd_policy))
+            {
+              echo "<ul class=\"error\">\n";
+              foreach ($pwd_policy as $rule => $value)
+              {
+                echo "<li>$value " . get_vocab("policy_" . $rule) . "</li>\n";
+              }
+              echo "</ul>\n";
+            }
+          }
           
           if ($editing_last_admin)
           {
@@ -471,6 +537,12 @@ if (isset($Action) && ($Action == "Update"))
             $valid_data = FALSE;
             $q_string .= "&pwd_not_match=1";
           }
+          // check that the password conforms to the password policy
+          if (!validate_password($password0))
+          {
+            $valid_data = FALSE;
+            $q_string .= "&pwd_invalid=1";
+          }
           break;
         case 'email':
           // check that the email address is valid
@@ -575,7 +647,6 @@ if (isset($Action) && ($Action == "Update"))
     /* DEBUG lines - check the actual sql statement going into the db */
     //echo "Final SQL string: <code>$operation</code>";
     //exit;
-  
     $r = sql_command($operation);
     if ($r == -1)
     {

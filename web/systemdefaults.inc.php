@@ -448,9 +448,15 @@ $max_level = 2;
 // The lowest level of admin allowed to edit other users
 $min_user_editing_level = 2;
 
-// If you want only administrators to be able to book slots, set this
-// variable to TRUE
-$auth['only_admin_can_book'] = FALSE;
+// Password policy.  Uncomment the variables and set them to the
+// required values as appropriate.
+// $pwd_policy['length']  = 6;  // Minimum length
+// $pwd_policy['alpha']   = 1;  // Minimum number of alpha characters
+// $pwd_policy['lower']   = 1;  // Minimum number of lower case characters
+// $pwd_policy['upper']   = 1;  // Minimum number of upper case characters
+// $pwd_policy['numeric'] = 1;  // Minimum number of numeric characters
+// $pwd_policy['special'] = 1;  // Minimum number of special characters (not alpha-numeric)
+
 
 // 'auth_db_ext' configuration settings
 // The 'db_system' variable is equivalent to the core MRBS $dbsys variable,
@@ -528,6 +534,10 @@ $pop3_port = "110";
 // 'auth_smtp' configuration settings
 $auth['smtp']['server'] = 'myserver.example.org';
 
+// General settings
+// If you want only administrators to be able to book slots, set this
+// variable to TRUE
+$auth['only_admin_can_book'] = FALSE;
 
 /**********************************************
  * Email settings
