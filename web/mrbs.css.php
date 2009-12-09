@@ -404,6 +404,11 @@ div:hover.multiple_control {cursor: pointer}
 /* private bookings */
 .private {opacity: 0.6; font-style: italic}
 
+/* provisional bookings */
+.provisional {opacity: 0.6}
+.provisional a {font-weight: normal}
+.provisional a:before {content: "? "}
+
 
 /* ------------ DEL.PHP -----------------------------*/
 div#del_room_confirm {padding-bottom: 3em}
@@ -630,6 +635,8 @@ table#colour_key {clear: both; border-spacing: 0; border-collapse: collapse}
     border: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>}
 #colour_key td#row_padding {border-right: 0; border-bottom: 0}
 #header_search input {width: 6.0em}
+div#n_outstanding {margin-top: 0.5em}
+#banner .outstanding a {color: <?php echo $outstanding_color ?>}
 
 /* ------------ HELP.PHP ------------------------*/
 table#version_info {border-spacing: 0; border-collapse: collapse}
@@ -653,6 +660,30 @@ table.calendar {border-spacing: 0; border-collapse: collapse}
 .calendar a.current {font-weight: bold; color: <?php echo $highlight_font_color ?>}
 td#sticky_day {border: 1px dotted <?php echo $highlight_font_color ?>}
 td.mincals_week_number { opacity: 0.5; font-size: 60%; }
+
+/* ------------ PENDING.PHP ------------------*/
+table#pending_list {width: 100%}
+#pending_list form {float: left; margin: 0 0.5em}
+#pending_list table {width: 100%; border-spacing: 0px; border-collapse: collapse; border: 0}
+#pending_list td.sub_table {padding: 0; margin: 0}
+#pending_list table.minimised tbody {display: none}
+#pending_list table th {border-top: 1px solid <?php echo $admin_table_header_sep_color ?>;
+                        background-color: <?php echo $pending_header_back_color ?>}
+#pending_list .control {padding-left: 0; padding-right: 0; text-align: center;
+                        color: <?php echo $standard_font_color ?>}
+#pending_list th.control + th {border-left-width: 0}
+#pending_list td.control + td {border-left-width: 0}
+#pending_list table th.control{background-color: <?php echo $pending_control_color ?>; cursor: default}
+#pending_list table th a {color: <?php echo $admin_table_header_font_color ?>}
+#pending_list table td {border-color: <?php echo $pending_header_back_color ?>;
+                        background-color: <?php echo $series_entry_back_color ?>}
+#pending_list .control             {width: 1.2em}
+#pending_list th.header_name       {width: 10%}
+#pending_list th.header_create     {width: 10%}
+#pending_list th.header_area       {width: 10%}
+#pending_list th.header_room       {width: 10%}
+#pending_list th.header_action     {width: 20em}
+#pending_list table th.header_start_time {text-transform: uppercase}
 
 /* ------------ REPORT.PHP ----------------------*/
 .div_report h2, #div_summary h1 {border-top: 2px solid <?php echo $report_h2_border_color ?>;
@@ -721,3 +752,10 @@ div#simple_trailer {width: 100%; text-align: center; padding-top: 1.0em; padding
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 .view_entry #entry td:first-child {text-align: right; font-weight: bold; padding-right: 1.0em}
 .view_entry div#view_entry_nav {margin-top: 1.0em}
+.view_entry #confirm_buttons form {float: left; margin-right: 2em}
+.view_entry #confirm_buttons legend {font-size: 0}
+#confirm_buttons td {vertical-align: middle; padding-top: 1em}
+#confirm_buttons td#caption {text-align: left}
+#confirm_buttons td#note {padding-top: 0}
+#confirm_buttons td#note form {width: 100%}
+#confirm_buttons td#note textarea {width: 100%; height: 6em}

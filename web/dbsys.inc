@@ -15,7 +15,7 @@ $tbl_users     = $db_tbl_prefix . "users";
 $tbl_variables = $db_tbl_prefix . "variables";
 
 
-$db_schema_version = 8;
+$db_schema_version = 10;
 $local_db_schema_version = 1;
 
 
@@ -634,12 +634,16 @@ if (($current_db_schema_version < $db_schema_version) ||
   require_once "functions.inc";
   require_once "upgrade.inc";
 
-  print_header(0,0,0,0,"");
+  // Just use a simple header as the normal header may (a) use features
+  // which are not available until after the database upgrade or (b) use
+  // functions which are not available until after dbsys has run.
+  print_simple_header();
  
-  // We need to open a connection to the database with a database
-  // username that has admin rights.
+  echo "<h1>" . get_vocab("mrbs") . "</h1>\n";
   echo "<p class=\"error\">" . get_vocab("upgrade_required") . "</p>\n"; 
 
+  // We need to open a connection to the database with a database
+  // username that has admin rights.
   while (empty($admin_handle))
   {
     $db_admin_username = get_form_var('form_username', 'string');

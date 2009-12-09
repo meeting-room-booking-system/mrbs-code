@@ -6,8 +6,11 @@
 function print_theme_header($day, $month, $year, $area, $room)
 {
   global $mrbs_company, $mrbs_company_logo, $mrbs_company_url, $mrbs_company_more_info,
-    $search_str, $locale_warning;
+         $search_str, $locale_warning, $provisional_enabled;
+  global $tbl_entry;
   global $PHP_SELF;
+  
+  $page = basename($PHP_SELF, ".php" );
 
   // If we dont know the right date then make it up 
   if (!$day)
@@ -30,9 +33,9 @@ function print_theme_header($day, $month, $year, $area, $room)
   header("Content-Type: text/html; charset=" . get_charset());
   header("Pragma: no-cache");                          // HTTP 1.0
   header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
-
+  echo DOCTYPE;
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
 <html>
   <head>
 <?php
@@ -135,13 +138,92 @@ function ChangeOptionDays(formObj, prefix)
   }
 }
 
+<?php
+if ($page == 'pending')
+{
+?>
+  // test whether array contains element
+  function contains(array, element)
+  {
+    for (var i=0; i<array.length; i++)
+    {
+      if (array[i] == element)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  // Remove duplicates from an array
+  function unique(array)
+  {
+    temp = new Array();
+    for (var i=0; i<array.length; i++)
+    {
+      if (!contains(temp, array[i]))
+      {
+        temp.push(array[i]);
+      }
+    }
+    return temp;
+  }
+  
+  // Toggle a sub-table in the pending_list table to make it maximised/minimised
+  function toggle_table(id)
+  { 
+    var table = document.getElementById(id);
+    if (table.className == 'minimised')
+    {
+      table.className = 'maximised';
+      table.firstChild.firstChild.firstChild.innerHTML = '-';
+    }
+    else
+    {
+      table.className = 'minimised';
+      table.firstChild.firstChild.firstChild.innerHTML = '+';
+    }
+  }
+
+  
+  // Put a + control in the first cell of all the series headers on the pending.php page
+  // and minimise the tables (except for those tables listed in the cookie)
+  function activate_sub_tables()
+  {
+    // Go through each sub-table and minimise it
+    var tables = document.getElementsByTagName('table');
+    for (var i = 0; (element = tables[i]) != null; i++)
+    {
+      if (tables[i].className.indexOf('maximised') >= 0)
+      {
+        tables[i].className = 'minimised';
+        tables[i].firstChild.firstChild.firstChild.innerHTML = '+'; 
+      } 
+    }
+     
+    // now make the table visible (if it's there at all - which it won't be when you 
+    // log off from pending.php
+    if (document.getElementById('pending_list'))
+    {
+      document.getElementById('pending_list').style.visibility = 'visible';
+    }
+  }
+  
+  
+  
+<?php
+}
+?>
+
 //]]>
     </script>
   </head>
   <?php
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
-  echo "<body class=\"" . basename($PHP_SELF,".php" ) . "\">\n";
+  $body_tag = "<body class=\"$page\"";
+  $body_tag .= ($page == 'pending') ? " onLoad=\"activate_sub_tables()\"" : "";
+  echo "$body_tag\n";
   ?>
     <div class="screenonly">
 
@@ -214,6 +296,29 @@ function ChangeOptionDays(formObj, prefix)
             <input type="submit" value="<?php echo get_vocab("goto") ?>">
           </div>
         </form>
+        <?php
+        // Provide a link to the list of outstanding provisional bookings
+        $user = getUserName();
+        if ($provisional_enabled && (authGetUserLevel($user) >= 1))
+        {
+          $is_admin = (authGetUserLevel($user) >= 2);
+          // Find out how many provisional bookings there are
+          $sql = "SELECT COUNT(*) FROM $tbl_entry WHERE status=" . STATUS_PROVISIONAL;
+          if (!$is_admin)
+          {
+            // Ordinary users can only see their own
+            $sql .= " AND create_by='" . addslashes($user) . "'";
+          }
+          $n_outstanding = sql_query1($sql);
+          echo "<div id=\"n_outstanding\"" .
+               (($n_outstanding > 0) ? " class=\"outstanding\"" : '') .
+               ">\n";
+          echo "<a href=\"pending.php?day=$day&amp;month=$month&amp;year=$year&amp;area=$area" . 
+               ((!empty($room)) ? "&amp;room=$room" : "") . 
+               "\">$n_outstanding " . get_vocab("outstanding") . "</a>\n";
+          echo "</div>\n";
+        }
+        ?>
       </td>
       <?php
       $query_str = "day=$day&amp;month=$month&amp;year=$year";

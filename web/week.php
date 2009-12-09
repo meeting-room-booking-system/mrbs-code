@@ -256,7 +256,8 @@ $week_map = array();
 
 for ($j = 0; $j<=($num_of_days-1) ; $j++)
 {
-  $sql = "SELECT start_time, end_time, type, name, id AS entry_id, description AS entry_description,
+  $sql = "SELECT start_time, end_time, type, name, status,
+            id AS entry_id, description AS entry_description,
             private AS entry_private, create_by AS entry_create_by
           FROM $tbl_entry
           WHERE room_id = $room

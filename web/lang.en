@@ -22,6 +22,7 @@ $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Help";
 $vocab["search"]             = "Search";
 $vocab["not_php3"]           = "WARNING: This probably doesn't work with PHP3";
+$vocab["outstanding"]        = "pending bookings";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "Bookings for";
@@ -104,6 +105,18 @@ $vocab["confirmdel"]         = "Are you sure\\nyou want to\\ndelete this entry?\
 $vocab["returnprev"]         = "Return to previous page";
 $vocab["invalid_entry_id"]   = "Invalid entry id.";
 $vocab["invalid_series_id"]  = "Invalid series id.";
+$vocab["status"]             = "Status";
+$vocab["confirmed"]          = "Confirmed booking";
+$vocab["provisional"]        = "Provisional booking";
+$vocab["accept"]             = "Accept";
+$vocab["reject"]             = "Reject";
+$vocab["more_info"]          = "More Info";
+$vocab["remind_admin"]       = "Remind Admin";
+$vocab["series"]             = "Series";
+$vocab["request_more_info"]  = "Please list the extra information you require";
+$vocab["reject_reason"]      = "Please give a reason for your rejection of this reservation request";
+$vocab["send"]               = "Send";
+$vocab["accept_failed"]      = "The reservation could not be confirmed.";
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Error";
@@ -115,11 +128,25 @@ $vocab["returncal"]          = "Return to calendar view";
 $vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access";
 $vocab["invalid_booking"]    = "Invalid booking";
 $vocab["must_set_description"] = "You must set a brief description for the booking. Please go back and enter one.";
+$vocab["mail_subject_accepted"]  = "Entry approved for $mrbs_company MRBS";
+$vocab["mail_subject_rejected"]  = "Entry rejected for $mrbs_company MRBS";
+$vocab["mail_subject_more_info"] = "$mrbs_company MRBS: more information requested";
+$vocab["mail_subject_reminder"]  = "Reminder for $mrbs_company MRBS";
+$vocab["mail_body_accepted"]     = "An entry has been approved by the administrators; here are the details:";
+$vocab["mail_body_rej_entry"]    = "An entry has been rejected by the administrators, here are the details:";
+$vocab["mail_body_more_info"]    = "The administrators require more information about an entry; here are the details:";
+$vocab["mail_body_reminder"]     = "Reminder - an entry is awaiting approval; here are the details:";
 $vocab["mail_subject_entry"] = "Entry added/changed for $mrbs_company MRBS";
 $vocab["mail_body_new_entry"] = "A new entry has been booked, here are the details:";
 $vocab["mail_body_del_entry"] = "An entry has been deleted, here are the details:";
 $vocab["mail_body_changed_entry"] = "An entry has been modified, here are the details:";
 $vocab["mail_subject_delete"] = "Entry deleted for $mrbs_company MRBS";
+$vocab["reason"]              = "Reason";
+$vocab["info_requested"]      = "Information requested";
+
+// Used in pending.php
+$vocab["pending"]            = "Provisional bookings awaiting approval";
+$vocab["none_outstanding"]   = "You have no provisional bookings waiting to be approved.";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Access Denied";

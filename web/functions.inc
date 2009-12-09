@@ -35,6 +35,35 @@ elseif ($private_override == "public" )
 
 $done_header = FALSE;
 
+// Prints a very simple header.  This may be necessary on occasions, such as
+// during a database upgrade, when some of the features that the normal
+// header uses are not yet available.
+function print_simple_header()
+{
+  global $done_header;
+ 
+  if ($done_header)
+  {
+    return;
+  } 
+  
+  header("Content-Type: text/html; charset=" . get_charset());
+  header("Pragma: no-cache");                          // HTTP 1.0
+  header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
+  echo DOCTYPE;
+ ?>
+
+<html>
+  <head>
+    <?php
+      require_once "style.inc";
+    ?>
+    <title><?php echo get_vocab("mrbs") ?></title>
+  </head>
+  <body>
+  <?php
+  $done_header = TRUE; 
+}
 
 // Print the page header
 function print_header($day, $month, $year, $area, $room)
@@ -663,6 +692,106 @@ function cross_dst ( $start, $end )
   return $modification;
 }
 
+// If $time falls on a non-working day, shift it back to the end of the last 
+// working day before that
+function shift_to_workday($time)
+{
+  global $working_days;
+  
+  $dow = date('w', $time);  // get the day of the week
+  $skip_back = 0;           // number of days to skip back
+  // work out how many days to skip back to get to a working day
+  while (!in_array($dow, $working_days))
+  {
+    if ($skip_back == 7)
+    {
+      break;
+    }
+    $skip_back++;
+    $dow = ($dow + 6) % 7;  // equivalent to skipping back a day
+  }
+  if ($skip_back != 0)
+  {
+    // set the time to the end of the working day
+    $d = date('j', $time) - $skip_back;
+    $m = date('n', $time);
+    $y  = date('Y', $time);
+    $time = mktime(23, 59, 59, $m, $d, $y);
+  }
+  return $time;
+}
+  
+// Returns the difference in seconds between two timestamps, $now and $then
+// It gives $now - $then, less any seconds that were part of a non-working day
+function working_time_diff($now, $then)
+{
+  global $working_days;
+  
+  // Deal with the easy case
+  if ($now == $then)
+  {
+    return 0;
+  }
+  // Sanitise the $working_days array in case it was malformed
+  $working_week = array_unique(array_intersect(array(0,1,2,3,4,5,6), $working_days));
+  $n_working_days = count($working_week);
+  // Deal with the special case where there are no working days
+  if ($n_working_days == 0)
+  {
+    return 0;
+  }
+  // and the special case where there are no holidays
+  if ($n_working_days == 7)
+  {
+    return ($now - $then);
+  }
+
+  // For the rest we're going to assume that $last comes after $first
+  $last = max($now, $then);
+  $first = min($now, $then);
+  
+  // first of all, if $last or $first fall on a non-working day, shift
+  // them back to the end of the last working day
+  $last = shift_to_workday($last);
+  $first = shift_to_workday($first);
+  // So calculate the difference
+  $diff = $last - $first;
+  // Then we have to deduct all the non-working days in between.   This will be
+  // (a) the number of non-working days in the whole weeks between them +
+  // (b) the number of non-working days in the part week
+  
+  // First let's calculate (a)
+  $last = mktime(12, 0, 0, date('n', $last), date('j', $last), date('Y', $last));
+  $first = mktime(12, 0, 0, date('n', $first), date('j', $first), date('Y', $first));
+  $days_diff = (int) round(($last - $first)/(60*60*24));  // the difference in days
+  $whole_weeks = (int) floor($days_diff/7);  // the number of whole weeks between the two
+  $non_working_days = $whole_weeks * (7 - $n_working_days);
+  // Now (b), ie we just have to calculate how many non-working days there are between the two
+  // days of the week that are left
+  $last_dow = date('w', $last);
+  $first_dow = date('w', $first);
+  
+  while ($first_dow != $last_dow)
+  {
+    $first_dow = ($first_dow + 1) % 7;
+    if (!in_array($first_dow, $working_week))
+    {
+      $non_working_days++;
+    }
+  }
+
+  // So now subtract the number of weekend seconds
+  $diff = $diff - ($non_working_days * 60*60*24);
+  
+  // Finally reverse the difference if $now was in fact before $then
+  if ($now < $then)
+  {
+    $diff = -$diff;
+  }
+  
+  return (int) $diff;
+}
+
 // checks whether a given day of the week is supposed to be hidden in the display
 function is_hidden_day ($dow)
 {
@@ -709,6 +838,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   //       entry_description
   //       entry_private
   //       entry_create_by
+  //       status
   
   // $column is a column of the map of the screen that will be displayed
   // It looks like:
@@ -719,6 +849,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   //                     [long_descr]
   //                     [start_time]
   //                     [slots]
+  //                     [status]
   
   // slots records the duration of the booking in number of time slots.
 	// Used to calculate how high to make the block used for clipping
@@ -752,7 +883,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   
   $user = getUserName();
   if (is_private_event($row['entry_private']) &&
-         !getWritable($row['entry_create_by'],$user))
+         !getWritable($row['entry_create_by'], $user, $row['room_id']))
   {
     $is_private = TRUE;
     $row['name']= "[".get_vocab('unavailable')."]";
@@ -784,6 +915,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     // fill in the id, type and start time
     $column[$time_t][$n]["id"] = $row['entry_id'];
     $column[$time_t][$n]["is_private"] = $is_private;
+    $column[$time_t][$n]["status"] = $row['status'];
     $column[$time_t][$n]["color"] = $row['type'];
     $column[$time_t][$n]["start_time"] = utf8_strftime(hour_min_format(), $row['start_time']);
     $column[$time_t][$n]["slots"] = null;  // to avoid undefined index NOTICE errors
@@ -919,6 +1051,7 @@ function draw_cell($cell, $query_strings, $cell_class)
   //         [long_descr]
   //         [start_time]
   //         [slots]
+  //         [status]
   //
   // where n is the number of the booking in the cell.    There can be none, one or many 
   // bookings in a cell.    If there are no bookings then a blank cell is drawn with a link
@@ -941,6 +1074,7 @@ function draw_cell($cell, $query_strings, $cell_class)
   global $main_cell_height, $main_table_cell_border_width;
   global $area, $year, $month, $timetohighlight;
   global $javascript_cursor, $enable_periods, $times_along_top;
+  global $provisional_enabled;
   
   // if the time slot has got multiple bookings, then draw a mini-table
   if(isset($cell[1]["id"]))
@@ -981,10 +1115,15 @@ function draw_cell($cell, $query_strings, $cell_class)
     {
       $id         = $cell[$n]["id"];
       $is_private = $cell[$n]["is_private"];
+      $status     = $cell[$n]["status"];
       $color      = $cell[$n]["color"];
       $descr      = htmlspecialchars($cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
+      if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
+      {
+        $class .= " provisional";
+      }
       if ($is_private)
       {
         $class .= " private";
@@ -1022,10 +1161,15 @@ function draw_cell($cell, $query_strings, $cell_class)
     {
       $id         = $cell[$n]["id"];
       $is_private = $cell[$n]["is_private"];
+      $status     = $cell[$n]["status"];
       $color      = $cell[$n]["color"];
       $descr      = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
+      if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
+      {
+        $class .= " provisional";
+      }    
       if ($is_private)
       {
         $class .= " private";
@@ -1055,6 +1199,7 @@ function draw_cell($cell, $query_strings, $cell_class)
     {       
       $id         = $cell[0]["id"];
       $is_private = $cell[0]["is_private"];
+      $status     = $cell[0]["status"];
       $color      = $cell[0]["color"];
       $descr      = htmlspecialchars($cell[0]["data"]);
       $long_descr = htmlspecialchars($cell[0]["long_descr"]);
@@ -1073,6 +1218,10 @@ function draw_cell($cell, $query_strings, $cell_class)
     if (isset($id))
     {
       $c = $color;
+      if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
+      {
+        $c .= " provisional";
+      } 
       if ($is_private)
       {
         $c .= " private";

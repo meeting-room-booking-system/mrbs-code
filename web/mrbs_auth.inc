@@ -39,18 +39,22 @@ function getAuthorised($level)
   return authGetUserLevel($user) >= $level;
 }
 
-/* getWritable($creator, $user)
+/* getWritable($creator, $user, $room)
  * 
  * Determines if a user is able to modify an entry
  *
  * $creator - The creator of the entry
  * $user    - Who wants to modify it
+ * $room    - The id of the room that the entry is in
+ *
+ * $room is ignored at the moment, but is provided for
+ * future enhancements
  *
  * Returns:
  *   0        - The user does not have the required access
  *   non-zero - The user has the required access
  */
-function getWritable($creator, $user)
+function getWritable($creator, $user, $room)
 {
   // Always allowed to modify your own stuff
   if(strcasecmp($creator, $user) == 0)
@@ -91,5 +95,62 @@ function showAccessDenied($day, $month, $year, $area, $room)
 <?php
   // Print footer and exit
   print_footer(TRUE);
+}
+
+/* auth_can_edit_user($creator, $user)
+ * 
+ * Determines if a user is able to edit another user's details
+ *
+ * $user    - Who wants to modify it
+ * $target  - The user that is being edited
+ *
+ * Returns:
+ *   0        - The user does not have the required access
+ *   non-zero - The user has the required access
+ */
+function auth_can_edit_user($user, $target)
+{
+  global $min_user_editing_level;
+  
+  // Always allowed to modify your own stuff
+  if(strcasecmp($user, $target) == 0)
+  {
+    return 1;
+  }
+
+  if(authGetUserLevel($user) >= $min_user_editing_level)
+  {
+    return 1;
+  }
+
+  // Unathorised access
+  return 0;
+}
+
+// auth_can_confirm($user, $room)
+//
+// Checks whether $user is allowed to confirm provisional bookings for $room
+// At the moment $room is ignored, but is passed here so that later
+// it can be enhanced to provide fine-grained permissions
+// 
+// Returns:  TRUE if the user is allowed to confirm bookings (or
+// if the requirement to have provisional bookings is disabled); 
+// otherwise FALSE
+function auth_can_confirm($user, $room)
+{
+  global $provisional_enabled;
+  
+  if (!$provisional_enabled)
+  {
+    // We're not using provisional booking, so a booking is
+    // automatically confirmed
+    return TRUE;
+  }
+  else
+  {
+    // At the moment the policy is simple: if we're using
+    // provisional bookings then only admins can confirm them
+    return (authGetUserLevel($user) >= 2);
+  }
 }
 ?>

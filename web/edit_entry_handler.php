@@ -150,8 +150,36 @@ if (!getAuthorised(1))
   showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
   exit;
 }
+$user = getUserName();
 
-if (!getWritable($create_by, getUserName()))
+// Check that the user has permission to create/edit an entry for this room.
+// Get the id of the room that we are creating/editing
+if (isset($id))
+{
+  // Editing an existing booking: get the room_id from the database (you can't
+  // get it from $rooms because they are the new rooms)
+  $target_room = sql_query1("SELECT room_id FROM $tbl_entry WHERE id=$id LIMIT 1");
+  if ($target_room < 0)
+  {
+    fatal_error(0, sql_error());
+  }
+}
+else
+{
+  // New booking: get the room_id from the form
+  if (!isset($rooms[0]))
+  {
+    // $rooms[0] should always be set, because you can only get here
+    // from edit_entry.php, where it will be set.   If it's not set
+    // then something's gone wrong - probably somebody trying to call
+    // edit_entry_handler.php directly from the browser - so get out 
+    // of here and go somewhere safe.
+    header("Location: index.php");
+    exit;
+  }
+  $target_room = $rooms[0];
+}
+if (!getWritable($create_by, $user, $target_room))
 {
   showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
   exit;
@@ -414,23 +442,40 @@ if ($valid_booking)
 {
   foreach ( $rooms as $room_id )
   {
+    // If we're using provisional booking then we need to work out whether the
+    // status of this booking is confirmed.   If the user is allowed to confirm
+    // bookings for this room, then the status will be confirmed , since they are
+    // in effect immediately confirming their own booking.
+    if ($provisional_enabled)
+    {
+      $status = (auth_can_confirm($user, $room_id)) ? STATUS_CONFIRMED : STATUS_PROVISIONAL;
+    }
+    else
+    {
+      $status = STATUS_CONFIRMED;
+    }
+    
     if ($edit_type == "series")
     {
-      $new_id = mrbsCreateRepeatingEntrys($starttime,
-                                          $endtime,
-                                          $rep_type,
-                                          $rep_enddate,
-                                          $rep_opt,
-                                          $room_id,
-                                          $create_by,
-                                          $name,
-                                          $type,
-                                          $description,
-                                          isset($rep_num_weeks) ? $rep_num_weeks : 0,
-                                          $isprivate);
+      $booking = mrbsCreateRepeatingEntrys($starttime,
+                                           $endtime,
+                                           $rep_type,
+                                           $rep_enddate,
+                                           $rep_opt,
+                                           $room_id,
+                                           $create_by,
+                                           $name,
+                                           $type,
+                                           $description,
+                                           isset($rep_num_weeks) ? $rep_num_weeks : 0,
+                                           $isprivate,
+                                           $status);
+      $new_id = $booking['id'];
+
       // Send a mail to the Administrator
       if ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
-          $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'])
+          $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'] or
+          $mail_settings['book_admin_on_provisional'])
       {
         require_once "functions_mail.inc";
         // Send a mail only if this a new entry, or if this is an
@@ -458,7 +503,7 @@ if ($valid_booking)
           {
             $mail_previous = getPreviousEntryData($id, 1);
           }
-          $result = notifyAdminOnBooking(!isset($id), $new_id);
+          $result = notifyAdminOnBooking(!isset($id), $new_id, $booking['series']);
         }
       }
     }
@@ -484,11 +529,13 @@ if ($valid_booking)
                                       $name,
                                       $type,
                                       $description,
-                                      $isprivate);
+                                      $isprivate,
+                                      $status);
 
       // Send a mail to the Administrator
       if ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
-          $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'])
+          $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'] or
+          $mail_settings['book_admin_on_provisional'])
       {
         require_once "functions_mail.inc";
         // Send a mail only if this a new entry, or if this is an
@@ -515,7 +562,7 @@ if ($valid_booking)
           {
             $mail_previous = getPreviousEntryData($id, 0);
           }
-          $result = notifyAdminOnBooking(!isset($id), $new_id);
+          $result = notifyAdminOnBooking(!isset($id), $new_id, ($edit_type == "series"));
         }
       }
     }
@@ -524,7 +571,7 @@ if ($valid_booking)
   // Delete the original entry
   if (isset($id))
   {
-    mrbsDelEntry(getUserName(), $id, ($edit_type == "series"), 1);
+    mrbsDelEntry($user, $id, ($edit_type == "series"), 1);
   }
 
   sql_mutex_unlock("$tbl_entry");

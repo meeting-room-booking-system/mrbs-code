@@ -366,6 +366,25 @@ $private_override = "none"; // Override default privacy behavior.
            // Overrides $private_default and $private_mandatory
            // Consider your users' expectations of privacy before
            // changing to "public" or from "private" to "none"
+    
+                  
+// PROVISIONAL BOOKINGS SETTINGS
+
+// These settings control whether provisional bookings should be used.
+// If provisional bookings are enabled then ordinary users must have their
+// bookings confirmed by an admin.
+$provisional_enabled = FALSE;  // Set to TRUE to enable provisional bookings
+
+// Set to FALSE if you don't want users to be able to send reminders
+// to admins if provisional bookings have not been approved
+$reminders_enabled = TRUE;
+
+// Interval before reminders can be issued (in seconds).   Only
+// working days (see below) are included in the calculation
+$reminder_interval = 60*60*24*4;  // 2 working days
+
+// Days of the week that are working days (Sunday = 0, etc.)
+$working_days = array(1,2,3,4,5);  // Mon-Fri
 
 /***********************************************
  * Authentication settings - read AUTHENTICATION
@@ -561,6 +580,10 @@ $mail_settings['area_admin_on_bookings'] = FALSE;
 // Default is FALSE. Room admin emails are set in room_area admin page.
 $mail_settings['room_admin_on_bookings'] = FALSE;
 
+// Set to TRUE if you want the appropriate booking administrators to be emailed
+// when a provisional booking is created, accepted or rejected
+$mail_settings['book_admin_on_provisional'] = FALSE;
+
 // Set to TRUE if you want ADMIN to be notified when entries are deleted. Email
 // will be sent to mrbs admin, area admin and room admin as per above settings,
 // as well as to booker if 'booker' is TRUE (see below).
@@ -582,7 +605,7 @@ $mail_settings['booker'] = FALSE;
 
 // If 'booker' is set to TRUE (see above) and you use an authentication
 // scheme other than 'auth_db', you need to provide the mail domain that will
-// be appended to the username to produce a valid email address (ie.
+// be appended to the username to produce a valid email address (eg
 // "@domain.com").
 $mail_settings['domain'] = '';
 
@@ -645,6 +668,11 @@ $mail_settings['recipients'] = 'admin_email@your.org';
 // Set email address of the Carbon Copy field. Default is ''. You can define
 // more than one recipient (see 'recipients')
 $mail_settings['cc'] = '';
+
+// Set to TRUE if you want the cc addresses to be appended to the to line.
+// (Some email servers are configured not to send emails if the cc or bcc
+// fields are set)
+$mail_settings['treat_cc_as_to'] = FALSE;
 
 /**********
  * Language
@@ -731,12 +759,25 @@ $typel["I"] = "I";
  * DOCTYPE - internal use, do not change
  ***************************************/
 
+ define('DOCTYPE', '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">');
+ 
  // Records which DOCTYPE is being used.    Do not change - it will not change the DOCTYPE
  // that is used;  it is merely used when the code needs to know the DOCTYPE, for example
  // in calls to nl2br.   TRUE means XHTML, FALSE means HTML.
- define("IS_XHTML", FALSE);
- 
+ define('IS_XHTML', FALSE);
 
+ /*************************************************
+ * ENTRY STATUS CODES - internal use, do not change
+ **************************************************/
+
+// The booking status codes that are used in the status column in the
+// entry table.   Although there are only two codes at the moment, the
+// codes can be added to later if additional status types are required.
+// The default code in the database table is 1, ie a confirmed booking.
+
+define('STATUS_PROVISIONAL', 0);
+define('STATUS_CONFIRMED',   1);
+ 
 /********************************************************
  * PHP System Configuration - internal use, do not change
  ********************************************************/

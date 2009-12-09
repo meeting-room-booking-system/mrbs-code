@@ -296,7 +296,7 @@ $all_day = preg_replace("/ /", "&nbsp;", get_vocab("all_day"));
 for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
 {
   $sql = "SELECT start_time, end_time, id, name, type,
-          private, create_by
+          status, private, create_by
           FROM $tbl_entry
           WHERE room_id=$room
           AND start_time <= $midnight_tonight[$day_num] AND end_time > $midnight[$day_num]
@@ -330,7 +330,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
       // Handle private events
       if (is_private_event($row['private'])) 
       {
-        if (getWritable($row['create_by'],$user)) 
+        if (getWritable($row['create_by'], $user, $room)) 
         {
           $private = FALSE;
         }
@@ -354,7 +354,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
       }
       
       $d[$day_num]["is_private"][] = $private;
-      
+      $d[$day_num]["status"][] = $row['status'];
       $d[$day_num]["color"][] = $row['type'];
 
       // Describe the start and end time, accounting for "all day"
@@ -579,6 +579,10 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
         // give the enclosing div the appropriate width: full width if both,
         // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
         $class = $d[$cday]["color"][$i];
+        if ($provisional_enabled && ($d[$cday]["status"][$i] == STATUS_PROVISIONAL))
+        {
+          $class .= " provisional";
+        }   
         if ($d[$cday]["is_private"][$i])
         {
           $class .= " private";

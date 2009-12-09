@@ -138,6 +138,63 @@ function mail_strftime($format,$t)
   return convertToMailCharset($string);
 }
 
+// get_address_list($array)
+//
+// Takes an array of email addresses and returns a comma separated
+// list of addresses with duplicates removed.
+function get_address_list($array)
+{
+  // Turn the array into a comma separated string
+  $string = implode(',', $array);
+  // Now turn it back into an array.   This is necessary because
+  // some of the elements of the original array may themselves have
+  // been comma separated strings
+  $array = explode(',', $string);
+  // remove any leading and trailing whitespace
+  array_walk($array, 'trim');
+  // remove duplicates
+  $array = array_unique($array);
+  // re-assemble the string
+  $string = implode(',', $array);
+  return $string;
+}
+
+// get the email address of a user
+// returns an empty string in the event of an error
+function get_email_address($user)
+{
+  global $mail_settings, $auth, $tbl_users;
+  
+  if ('db' == $auth['type'])
+  {
+    $email = sql_query1("SELECT email 
+                         FROM $tbl_users 
+                         WHERE name='" . addslashes($user) . "'
+                         LIMIT 1");
+    if ($email == -1)
+    {
+      $email = "";
+    }
+  }
+  else
+  {
+    $email = str_replace($mail_settings['username_suffix'], '', $user);
+    $email .= $mail_settings['domain'];
+  }
+  return $email;
+}
+
+// get the list of email addresses that are allowed to approve
+// provisional bookings for the room with id $room_id
+// (At the moment this is just the admin email address, but this could
+// be extended.)
+function get_approvers_email($room_id)
+{
+  global $mail_settings;
+  
+  return $mail_settings['recipients'];
+}
+
 // }}}
 // {{{ notifyAdminOnBooking()
 
@@ -148,20 +205,52 @@ function mail_strftime($format,$t)
  * @param int     $new_id       used for create a link to the new entry
  * @return bool                 TRUE or PEAR error object if fails
  */
-function notifyAdminOnBooking($new_entry , $new_id)
+function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
 {
   global $url_base, $returl, $name, $description, $area_name;
-  global $room_name, $starttime, $duration, $dur_units, $end_date, $endtime;
-  global $rep_enddate, $typel, $type, $create_by, $rep_type, $enable_periods;
+  global $room_name, $room_id, $starttime, $duration, $dur_units, $end_date, $endtime;
+  global $rep_enddate, $typel, $type, $status, $create_by, $rep_type, $enable_periods;
   global $rep_opt, $rep_num_weeks;
   global $tbl_room, $tbl_area, $tbl_entry, $tbl_users, $tbl_repeat;
-  global $mail_previous, $auth;
-  global $mail_settings, $weekstarts;
-    
-  //
-  $recipients = '';
+  global $mail_previous, $auth, $note;
+  global $mail_settings, $weekstarts, $provisional_enabled;
+  
+  // We will treat Accept, Reject and More_info mailings as new entries because the
+  // data hasn't changed since the previous time.
+  if (($action == "accept") || ($action == "more_info") || ($action == "remind"))
+  {
+    $new_entry = TRUE;
+  }
+
+  $recipients = array();
+  $cc = array();
+  $cc[] = $mail_settings['cc'];
+  
+  // set the from address
+  $user = getUserName();
+  if (isset($user) && (($action == "remind")  || ($action == "more_info")))
+  {
+    $from = get_email_address($user);
+    if (empty($from))
+    {
+      // there was an error:  use a sensible default
+      $from = $mail_settings['from'];
+    }
+  }
+  else
+  {
+    $from = $mail_settings['from'];
+  }
+  
+  // if we're using provisional bookings and this user needs approval
+  // for this room, then get the email addresses of the approvers
+  if ($provisional_enabled && !auth_can_confirm($user, $room_id))
+  {
+    $recipients[] = get_approvers_email($room_id);
+  }
+  
   $id_table = ($rep_type > 0) ? "rep" : "e";
-  ($mail_settings['admin_on_bookings']) ? $recipients = $mail_settings['recipients'] : '';
+  ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
   if ($mail_settings['area_admin_on_bookings'])
   {
     // Look for list of area admins emails addresses
@@ -179,32 +268,21 @@ function notifyAdminOnBooking($new_entry , $new_id)
       $res = sql_query($sql);
       (! $res) ? fatal_error(0, sql_error()) : '';
       $row = sql_row_keyed($res, 0);
-      if ( !empty($recipients) && (NULL != $row[0]) )
+      if (!empty($row['area_admin_email']))
       {
-        $recipients .= ',';
-      }
-      if (NULL != $row['area_admin_email'])
-      {
-        $recipients .= $row['area_admin_email'];
+        $recipients[] = $row['area_admin_email'];
       }
     }
-    else
+    elseif (!empty($mail_previous['area_admin_email']))
+    {
       // if this is an edited entry, we already have area_admin_email,
       // avoiding a database hit.
-    {
-      if ( !empty($recipients) && ('' != $mail_previous['area_admin_email']) )
-      {
-        $recipients .= ',';
-      }
-      if ('' != $mail_previous['area_admin_email'])
-      {
-        $recipients .= $mail_previous['area_admin_email'];
-      }
+      $recipients[] = $mail_previous['area_admin_email'];
     }
   }
   if ($mail_settings['room_admin_on_bookings'])
   {
-    // Look for list of room admins emails addresses
+    // Look for list of room admins email addresses
     if ($new_entry)
     {
       $sql = "SELECT r.room_admin_email ";
@@ -219,97 +297,73 @@ function notifyAdminOnBooking($new_entry , $new_id)
       $res = sql_query($sql);
       (! $res) ? fatal_error(0, sql_error()) : '';
       $row = sql_row_keyed($res, 0);
-      if ( !empty($recipients) && (NULL != $row[0]) )
+      if (!empty($row['room_admin_email']))
       {
-        $recipients .= ',';
-      }
-      if (NULL != $row['room_admin_email'])
-      {
-        $recipients .= $row['room_admin_email'];
+        $recipients[] = $row['room_admin_email'];
       }
     }
-    else
+    elseif (!empty($mail_previous['room_admin_email']))
+    {
       // if this is an edited entry, we already have room_admin_email,
       // avoiding a database hit.
-    {
-      if ( !empty($recipients) && ('' != $mail_previous['room_admin_email']) )
-      {
-        $recipients .= ',';
-      }
-      if ('' != $mail_previous['room_admin_email'])
-      {
-        $recipients .= $mail_previous['room_admin_email'];
-      }
+      $recipients[] = $mail_previous['room_admin_email'];
     }
   }
+  
   if ($mail_settings['booker'])
   {
-    if ('db' == $auth['type'])
+    if (($action == "accept")  || ($action == "more_info"))
     {
-      /* It would be possible to move this query within the query in
-         getPreviousEntryData to have all in one central place and to
-         reduce database hits by one. However this is a bad idea. If a
-         user is deleted from your user database, this will prevent all
-         mails to admins when this user previously booked entries will
-         be changed, as no user name will match the booker name */
-      $sql = "SELECT email FROM $tbl_users WHERE name='";
-      $sql .= ($new_entry) ? $create_by : $mail_previous['createdby'];
-      $sql .= "'";
-      $res = sql_query($sql);
-      (! $res) ? fatal_error(0, sql_error()) : '';
-      $row = sql_row_keyed($res, 0);
-      if ( !empty($recipients) && (NULL != $row['email']) )
-      {
-        $recipients .= ',';
-      }
-      if (NULL != $row['email'])
-      {
-        $recipients .= $row['email'];
-      }
+      // Put the recipients on the cc line and the booker will go
+      // on the to line
+      $cc = array_merge($cc, $recipients);
+      $recipients = array();
     }
-    else
+    $booker = ($new_entry) ? $create_by : $mail_previous['createdby'];
+    $booker_email = get_email_address($booker);
+    if (!empty($booker_email))
     {
-      if ($new_entry)
-      {
-        if ( !empty($recipients) && ('' != $create_by) )
-        {
-          $recipients .= ',';
-        }
-        if ('' != $create_by)
-        {
-          $recipients .= str_replace($mail_settings['username_suffix'], '',
-                                     $create_by) . $mail_settings['domain'];
-        }
-      }
-      else
-      {
-        if ( !empty($recipients) && ('' != $mail_previous['createdby']) )
-        {
-          $recipients .= ',';
-        }
-        if ('' != $mail_previous['createdby'])
-        {
-          $recipients .= str_replace($mail_settings['username_suffix'], '',
-                                     $mail_previous['createdby']) . $mail_settings['domain'];
-        }
-      }
+      $recipients[] = $booker_email;
     }
   }
   // In case $recipients is empty, no need to go further
-  if ('' == $recipients)
+  if (empty($recipients))
   {
     return FALSE;
   }
-  //
-  $subject = get_mail_vocab("mail_subject_entry");
-  if ($new_entry)
+  $recipient_list = get_address_list($recipients);
+  $cc_list = get_address_list($cc);
+  
+  // set up the subject and body
+  switch ($action)
   {
-    $body = get_mail_vocab("mail_body_new_entry") . "\n\n";
+    case "accept":
+      $subject = get_mail_vocab("mail_subject_accepted");
+      $body = get_mail_vocab("mail_body_accepted") . "\n\n";
+      break;
+    case "more_info":
+      $subject = get_mail_vocab("mail_subject_more_info");
+      $body = get_mail_vocab("mail_body_more_info") . "\n\n";
+      $body .= get_mail_vocab("info_requested") . ": ";
+      $body .= convertToMailCharset($note) . "\n\n";
+      break;
+    case "remind":
+      $subject = get_mail_vocab("mail_subject_reminder");
+      $body = get_mail_vocab("mail_body_reminder") . "\n\n";
+      break;
+    default:
+      $subject = get_mail_vocab("mail_subject_entry");
+      if ($new_entry)
+      {
+        $body = get_mail_vocab("mail_body_new_entry") . "\n\n";
+      }
+      else
+      {
+        $body = get_mail_vocab("mail_body_changed_entry") . "\n\n";
+      }
+      break;
   }
-  else
-  {
-    $body = get_mail_vocab("mail_body_changed_entry") . "\n\n";
-  }
+
   // Set the link to view entry page
   if (isset($url_base) && ($url_base != ""))
   {
@@ -320,7 +374,7 @@ function notifyAdminOnBooking($new_entry , $new_id)
     ('' != $returl) ? $url = explode(basename($returl), $returl) : '';
     $body .= $url[0] . "view_entry.php?id=$new_id";
   }
-  if ($rep_type > 0)
+  if ($series)
   {
     $body .= "&series=1";
   }
@@ -338,7 +392,15 @@ function notifyAdminOnBooking($new_entry , $new_id)
     $body .= compareEntries(convertToMailCharset($description),
                             convertToMailCharset($mail_previous['description']),
                             $new_entry) . "\n";
-        
+                            
+    if  ($provisional_enabled)
+    {                        
+      // Status:
+      $body .= get_mail_vocab("status") . ": ";
+      $body .= ($status == STATUS_CONFIRMED) ? get_mail_vocab("confirmed") : get_mail_vocab("provisional");
+      $body .= "\n";
+    }
+                               
     // Room:
     $body .= get_mail_vocab("room") . ": " .
       compareEntries(convertToMailCharset($area_name),
@@ -492,11 +554,12 @@ function notifyAdminOnBooking($new_entry , $new_id)
     // ...communicate the charset and encode it correctly
     $subject = "=?".get_mail_charset()."?B?".base64_encode($subject)."?=";
   }
-  $result = sendMail($recipients,
+  $result = sendMail($recipient_list,
                      $subject,
                      $body,
                      get_mail_charset(),
-                     $mail_settings['cc']);
+                     $from,
+                     $cc_list);
   return $result;
 }
 
@@ -513,77 +576,77 @@ function notifyAdminOnDelete($mail_previous)
 {
   global $typel, $enable_periods, $auth, $tbl_users;
   global $mail_settings;
-  //
-  $recipients = '';
-  ($mail_settings['admin_on_bookings']) ? $recipients = $mail_settings['recipients'] : '';
-  if ($mail_settings['area_admin_on_bookings'])
+  
+  // Get any extra arguments
+  $action = (func_num_args() > 1) ? func_get_arg(1) : "delete";
+  $note   = (func_num_args() > 2) ? func_get_arg(2) : "";
+
+  $recipients = array();
+  $cc = array();
+  $cc[] = $mail_settings['cc'];
+  
+  // set the from address
+  $user = getUserName();
+  if (isset($user) && ($action == "reject"))
   {
-    if ( !empty($recipients) && ('' != $mail_previous['area_admin_email']) )
+    $from = get_email_address($user);
+    if (empty($from))
     {
-      $recipients .= ',';
-    }
-    if ('' != $mail_previous['area_admin_email'])
-    {
-      $recipients .= $mail_previous['area_admin_email'];
+      // there was an error:  use a sensible default
+      $from = $mail_settings['from'];
     }
   }
-  if ($mail_settings['room_admin_on_bookings'])
+  else
   {
-    if ( !empty($recipients) && ('' != $mail_previous['room_admin_email']) )
-    {
-      $recipients .= ',';
-    }
-    if ('' != $mail_previous['room_admin_email'])
-    {
-      $recipients .= $mail_previous['room_admin_email'];
-    }
+    $from = $mail_settings['from'];
+  }
+  
+  ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
+  if ($mail_settings['area_admin_on_bookings']  && !empty($mail_previous['area_admin_email']))
+  {
+    $recipients[] = $mail_previous['area_admin_email'];
+  }
+  if ($mail_settings['room_admin_on_bookings']  && !empty($mail_previous['room_admin_email']))
+  {
+    $recipients[] = $mail_previous['room_admin_email'];
   }
   if ($mail_settings['booker'])
   {
-    if ('db' == $auth['type'])
+    if ($action == "reject")
     {
-      /* It would be possible to move this query within the query in
-         getPreviousEntryData to have all in one central place and to
-         reduce database hits by one. However this is a bad idea. If a
-         user is deleted from your user database, this will prevent all
-         mails to admins when this user previously booked entries will
-         be changed, as no user name will match the booker name */
-      $sql = "SELECT email
-              FROM $tbl_users
-              WHERE name='" . $mail_previous['createdby'] . "'";
-      $res = sql_query($sql);
-      (! $res) ? fatal_error(0, sql_error()) : '';
-      $row = sql_row_keyed($res, 0);
-      if ( !empty($recipients) && (NULL != $row['email']) )
-      {
-        $recipients .= ',';
-      }
-      if (NULL != $row['email'])
-      {
-        $recipients .= $row['email'];
-      }
+      // Put the recipients on the cc line and the booker will go
+      // on the to line
+      $cc = array_merge($cc, $recipients);
+      $recipients = array();
     }
-    else
+    $booker_email = get_email_address($mail_previous['createdby']);
+    if (!empty($booker_email))
     {
-      if ( !empty($recipients) && ('' != $mail_previous['createdby']) )
-      {
-        $recipients .= ',';
-      }
-      if ('' != $mail_previous['createdby'])
-      {
-        $recipients .= str_replace($mail_settings['username_suffix'], '',
-                                   $mail_previous['createdby']) . $mail_settings['domain'];
-      }
+      $recipients[] = $booker_email;
     }
   }
   // In case mail is allowed but someone forgot to supply email addresses...
-  if ('' == $recipients)
+  if (empty($recipients))
   {
     return FALSE;
   }
-  //
-  $subject = get_mail_vocab("mail_subject_delete");
-  $body = get_mail_vocab("mail_body_del_entry") . "\n\n";
+  $recipient_list = get_address_list($recipients);
+  $cc_list = get_address_list($cc);
+  
+  // Set the subject and body
+  if ($action == "reject")
+  {
+    $subject = get_mail_vocab("mail_subject_rejected");
+    $body = get_mail_vocab("mail_body_rej_entry") . "\n\n";
+    $body .= get_mail_vocab("reason") . ': ';
+    $body .= convertToMailCharset($note) . "\n\n";
+  }
+  else
+  {
+    $subject = get_mail_vocab("mail_subject_delete");
+    $body = get_mail_vocab("mail_body_del_entry") . "\n\n";
+  }
+
   // Displays deleted entry details
   $body .= "\n" . get_mail_vocab("namebooker") . ': ';
   $body .= convertToMailCharset($mail_previous['namebooker']) . "\n";
@@ -642,7 +705,7 @@ function notifyAdminOnDelete($mail_previous)
   }
   $body .= "\n";
   // End of mail details
-  $result = sendMail($recipients, $subject, $body, get_mail_charset(), $mail_settings['cc']);
+  $result = sendMail($recipient_list, $subject, $body, get_mail_charset(), $from, $cc_list);
   return $result;
 }
 
@@ -885,14 +948,28 @@ function compareEntries($new_value, $previous_value, $new_entry)
  * @return bool                     TRUE or PEAR error object if fails
  */
 function sendMail($recipients, $subject, $body, 
-                  $charset = 'us-ascii', $cc = NULL, $bcc = NULL)
+                  $charset = 'us-ascii', $from, $cc = NULL, $bcc = NULL)
 {
   require_once "Mail.php";
   
   global $mail_settings, $sendmail_settings, $smtp_settings;
   
+  // for cases where the mail server refuses
+  // to send emails with cc or bcc set, put the cc
+  // addresses on the to line
+  if (isset($cc) && $mail_settings['treat_cc_as_to'])
+  {
+    $recipients_array = array_merge(explode(',', $recipients),
+                                    explode(',', $cc));
+    $recipients = get_address_list($recipients_array);
+    $cc = NULL;
+  }
+  
   // Set up configuration settings
-  $from = $mail_settings['from'];
+  if (empty($from))
+  {
+    $from = $mail_settings['from'];
+  }
   $backend = $mail_settings['admin_backend'];
   $sendmail_path = $sendmail_settings['path'];
   $sendmail_args = $sendmail_settings['args'];
