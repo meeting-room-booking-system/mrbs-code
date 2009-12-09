@@ -1074,6 +1074,7 @@ function draw_cell($cell, $query_strings, $cell_class)
   global $main_cell_height, $main_table_cell_border_width;
   global $area, $year, $month, $timetohighlight;
   global $javascript_cursor, $enable_periods, $times_along_top;
+  global $provisional_enabled;
   
   // if the time slot has got multiple bookings, then draw a mini-table
   if(isset($cell[1]["id"]))
@@ -1119,7 +1120,7 @@ function draw_cell($cell, $query_strings, $cell_class)
       $descr      = htmlspecialchars($cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
-      if ($status == STATUS_PROVISIONAL)
+      if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
       {
         $class .= " provisional";
       }
@@ -1165,7 +1166,7 @@ function draw_cell($cell, $query_strings, $cell_class)
       $descr      = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
-      if ($status == STATUS_PROVISIONAL)
+      if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
       {
         $class .= " provisional";
       }    
@@ -1217,7 +1218,7 @@ function draw_cell($cell, $query_strings, $cell_class)
     if (isset($id))
     {
       $c = $color;
-      if ($status == STATUS_PROVISIONAL)
+      if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
       {
         $c .= " provisional";
       } 
