@@ -34,7 +34,7 @@ if (!isset($auth['session']))
  */
 function quoteIMAP($str)
 {
-  return preg_replace('/(["\\])/', '\\$1', $str);
+  return preg_replace('/(["\\\\])/', '\\$1', $str);
 }
 
 /* authValidateUser($user, $pass)

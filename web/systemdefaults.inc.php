@@ -282,6 +282,10 @@ $times_along_top = FALSE;
 // (was called $times_right_side in earlier versions of MRBS)
 $row_labels_both_sides = FALSE;
 
+// To display the column headers (times, rooms or days) on the bottom of the table as
+// well as the top in the day and week views, set to TRUE;
+$column_labels_both_ends = FALSE;
+
 // Define default starting view (month, week or day)
 // Default is day
 $default_view = "day";
@@ -463,9 +467,15 @@ $max_level = 2;
 // The lowest level of admin allowed to edit other users
 $min_user_editing_level = 2;
 
-// If you want only administrators to be able to book slots, set this
-// variable to TRUE
-$auth['only_admin_can_book'] = FALSE;
+// Password policy.  Uncomment the variables and set them to the
+// required values as appropriate.
+// $pwd_policy['length']  = 6;  // Minimum length
+// $pwd_policy['alpha']   = 1;  // Minimum number of alpha characters
+// $pwd_policy['lower']   = 1;  // Minimum number of lower case characters
+// $pwd_policy['upper']   = 1;  // Minimum number of upper case characters
+// $pwd_policy['numeric'] = 1;  // Minimum number of numeric characters
+// $pwd_policy['special'] = 1;  // Minimum number of special characters (not alpha-numeric)
+
 
 // 'auth_db_ext' configuration settings
 // The 'db_system' variable is equivalent to the core MRBS $dbsys variable,
@@ -543,6 +553,10 @@ $pop3_port = "110";
 // 'auth_smtp' configuration settings
 $auth['smtp']['server'] = 'myserver.example.org';
 
+// General settings
+// If you want only administrators to be able to book slots, set this
+// variable to TRUE
+$auth['only_admin_can_book'] = FALSE;
 
 /**********************************************
  * Email settings
@@ -772,6 +786,11 @@ define('STATUS_CONFIRMED',   1);
 set_magic_quotes_runtime(0);
 
 // Make sure notice errors are not reported, they can break mrbs code:
-error_reporting (E_ALL ^ E_NOTICE);
+$error_level = E_ALL ^ E_NOTICE;
+if (defined("E_DEPRECATED"))
+{
+  $error_level = $error_level ^ E_DEPRECATED;
+}
+error_reporting ($error_level);
 
 ?>

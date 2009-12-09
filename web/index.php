@@ -8,6 +8,7 @@
 // be used to redirect to a particular room.
 
 require_once "defaultincludes.inc";
+require_once "mrbs_sql.inc";
 
 $day   = date("d");
 $month = date("m");

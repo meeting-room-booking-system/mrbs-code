@@ -162,7 +162,7 @@ function authValidateUser($user, $pass)
         {
           $res = @ldap_search($ldap,
                               $base_dn,
-                              "(&(". $all_ldap_user_attrib[$idx] ."=$user)($ldap_filter))",
+                              "(&($dn)($ldap_filter))",
                               array()
                              );
           if (@ldap_count_entries($ldap, $res) > 0)

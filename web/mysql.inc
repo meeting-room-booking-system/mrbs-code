@@ -328,6 +328,8 @@ function sql_mysql_table_exists($table, $db_conn = null)
 // persistent connections
 function sql_mysql_connect($host, $username, $password, $db_name, $persist = 0)
 {
+  global $unicode_encoding;
+
   // Establish a database connection.
 
   // On connection error, the message will be output without a proper HTML
@@ -348,6 +350,17 @@ function sql_mysql_connect($host, $username, $password, $db_name, $persist = 0)
   {
     echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n</p>\n";
     exit;
+  }
+  if ($unicode_encoding)
+  {
+    if (function_exists('mysql_set_charset'))
+    {
+      mysql_set_charset('utf8', $db_conn);
+    }
+    else
+    {
+      mysql_query("SET NAMES 'utf8'", $db_conn);
+    }
   }
   return $db_conn;
 }
