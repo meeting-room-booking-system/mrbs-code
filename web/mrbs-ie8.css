@@ -10,6 +10,7 @@
 /* when overflow is set to hidden.    Therefore we need to */
 /* set it to visible explicitly for the y direction        */
 .form_general label {overflow-y: visible}
+.form_general #ad label {overflow-y: auto} /* undo for all-day checkbox */
 
 /* ------------ TRAILER.INC ---------------------*/
 
