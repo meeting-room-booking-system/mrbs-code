@@ -18,7 +18,7 @@ function display_buttons($row, $is_series)
   // pages called by view_entry use HTTP_REFERER to form a return URL, and
   // view_entry needs to have a valid id.
   $query_string = "id=$target_id";
-  $query_string .= ($is_series) ? "&series=1" : "";
+  $query_string .= ($is_series) ? "&amp;series=1" : "";
   
   if (auth_can_confirm($user, $row['room_id']))
   {
