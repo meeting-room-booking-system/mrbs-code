@@ -42,7 +42,7 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 if (!empty($advanced))
 {
   ?>
-  <form class="form_general" method="get" action="search.php">
+  <form class="form_general" id="search_form" method="get" action="search.php">
     <fieldset>
     <legend><?php echo get_vocab("advanced_search") ?></legend>
       <div id="div_search_str">

@@ -227,11 +227,40 @@ function init()
   }
   
   <?php
+  // EDIT_ENTRY.PHP
+  // put the booking name field in focus (but only for new bookings,
+  // ie when the field is empty:  if it's a new booking you have to
+  // complete that field, but if it's an existing booking you might
+  // want to edit any field)
+  if ($page == 'edit_entry')
+  {
+  ?>
+  var form = document.getElementById('main');
+  if (form && form.name && (form.name.value.length == 0))
+  {
+    form.name.focus();
+  }
+  <?php
+  }
+
   // PENDING.PHP
   if ($page == 'pending')
   {
   ?>
     activate_sub_tables();
+  <?php
+  }
+
+  // SEARCH.PHP
+  // put the search string field in focus
+  if ($page == 'search')
+  {
+  ?>
+  var form = document.getElementById('search_form');
+  if (form && form.search_str)
+  {
+    form.search_str.focus();
+  }
   <?php
   }
   ?>
