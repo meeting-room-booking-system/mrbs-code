@@ -215,15 +215,36 @@ if ($page == 'pending')
 }
 ?>
 
+// actions to be taken on page load
+function init()
+{
+  <?php // ALL PAGES ?>
+  // if there's a logon box, set the username input field in focus
+  var logonForm = document.getElementById('logon');
+  if (logonForm && logonForm.NewUserName)
+  {
+    logonForm.NewUserName.focus();
+  }
+  
+  <?php
+  // PENDING.PHP
+  if ($page == 'pending')
+  {
+  ?>
+    activate_sub_tables();
+  <?php
+  }
+  ?>
+}
+
+
 //]]>
     </script>
   </head>
   <?php
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
-  $body_tag = "<body class=\"$page\"";
-  $body_tag .= ($page == 'pending') ? " onLoad=\"activate_sub_tables()\"" : "";
-  echo "$body_tag\n";
+  echo "<body class=\"$page\" onLoad =\"init()\">\n";
   ?>
     <div class="screenonly">
 
