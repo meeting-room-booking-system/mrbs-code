@@ -138,13 +138,15 @@ function authValidateUser($user, $pass)
           {
             $entries = ldap_get_entries($ldap, $res);
             $dn = $entries[0]["dn"];
+            $user_search = "distinguishedName=" . $dn;
           }
         }
       }
       else
       {
         // construct dn for user
-        $dn = $all_ldap_user_attrib[$idx] . "=" . $user . "," . $base_dn;
+        $user_search = $all_ldap_user_attrib[$idx] . "=" . $user;
+        $dn = $user_search . "," . $base_dn;
       }
 
       // try an authenticated bind
@@ -162,7 +164,7 @@ function authValidateUser($user, $pass)
         {
           $res = @ldap_search($ldap,
                               $base_dn,
-                              "(&($dn)($ldap_filter))",
+                              "(&($user_search)($ldap_filter))",
                               array()
                              );
           if (@ldap_count_entries($ldap, $res) > 0)
