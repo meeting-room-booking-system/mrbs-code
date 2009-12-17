@@ -136,7 +136,9 @@ function sql_pgsql_row_keyed ($r, $i, $db_conn = null)
     pg_free_result($r);
     return 0;
   }
-  return pg_fetch_array($r, $i);
+  // Use _array() rather _assoc() to ensure support
+  // for as many PHP versions as possible
+  return pg_fetch_array($r, $i, PGSQL_ASSOC);
 }
 
 

@@ -121,7 +121,9 @@ function sql_mysql_row_keyed ($r, $i, $db_conn = null)
     return 0;
   }
   mysql_data_seek($r, $i);
-  return mysql_fetch_array($r);
+  // Use _array() rather _assoc() to ensure support
+  // for as many PHP versions as possible
+  return mysql_fetch_array($r, MYSQL_ASSOC);
 }
 
 

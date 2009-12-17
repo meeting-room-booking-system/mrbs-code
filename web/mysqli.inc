@@ -128,7 +128,9 @@ function sql_mysqli_row_keyed ($r, $i, $db_conn = null)
     return 0;
   }
   $r->data_seek($i);
-  return $r->fetch_array();
+  // Use _assoc rather than _array because _array doesn't have
+  // an ASSOC parameter.  No impact on PHP version support.
+  return $r->fetch_assoc();
 }
 
 
