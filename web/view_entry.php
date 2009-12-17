@@ -338,7 +338,7 @@ if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
   else
   {
     // Buttons for those who are allowed to confirm this booking
-    if (auth_can_confirm($user, $room_id))
+    if (auth_book_admin($user, $room_id))
     {
       if (!$series)
       {

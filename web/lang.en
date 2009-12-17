@@ -143,6 +143,8 @@ $vocab["mail_body_changed_entry"] = "An entry has been modified, here are the de
 $vocab["mail_subject_delete"] = "Entry deleted for $mrbs_company MRBS";
 $vocab["reason"]              = "Reason";
 $vocab["info_requested"]      = "Information requested";
+$vocab["min_time_before"]     = "The minimum interval between now and the start of a booking is";
+$vocab["max_time_before"]     = "The maximum interval between now and the start of a booking is";
 
 // Used in pending.php
 $vocab["pending"]            = "Provisional bookings awaiting approval";
@@ -318,6 +320,9 @@ $vocab["treat_private"]           = "Treat all bookings as private, ignoring the
 $vocab["treat_public"]            = "Treat all bookings as public, ignoring their privacy settings";
 $vocab["sort_key"]                = "Sort key";
 $vocab["sort_key_note"]           = "This is the key used for ordering rooms";
+$vocab["booking_policies"]        = "Booking policies";
+$vocab["min_book_ahead"]          = "Advance booking - minimum";
+$vocab["max_book_ahead"]          = "Advance booking - maximum";
 
 // Used in edit_users.php
 $vocab["name_empty"]         = "You must enter a name.";

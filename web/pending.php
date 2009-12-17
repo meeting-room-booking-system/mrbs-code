@@ -20,7 +20,7 @@ function display_buttons($row, $is_series)
   $query_string = "id=$target_id";
   $query_string .= ($is_series) ? "&amp;series=1" : "";
   
-  if (auth_can_confirm($user, $row['room_id']))
+  if (auth_book_admin($user, $row['room_id']))
   {
     // accept
     echo "<form action=\"confirm_entry_handler.php\" method=\"post\">\n";

@@ -99,7 +99,7 @@ if (isset($action))
   
   // Now that we know the room, check that we have confirm rights for it if necessary
   if ((($action == "accept") || ($action == "reject")) 
-       && !auth_can_confirm($user, $room_id))
+       && !auth_book_admin($user, $room_id))
   {
     showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
     exit;

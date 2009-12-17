@@ -127,30 +127,19 @@ function auth_can_edit_user($user, $target)
   return 0;
 }
 
-// auth_can_confirm($user, $room)
+// auth_book_admin($user, $room)
 //
-// Checks whether $user is allowed to confirm provisional bookings for $room
+// Checks whether $user is allowed has booking administration rights
+// for $room - ie is allowed to modify and delete other people's bookings
+// and to confirm provisional bookings.
+//
 // At the moment $room is ignored, but is passed here so that later
 // it can be enhanced to provide fine-grained permissions
 // 
-// Returns:  TRUE if the user is allowed to confirm bookings (or
-// if the requirement to have provisional bookings is disabled); 
-// otherwise FALSE
-function auth_can_confirm($user, $room)
+// Returns:  TRUE if the user is allowed has booking admin rights for
+//           the room; otherwise FALSE
+function auth_book_admin($user, $room)
 {
-  global $provisional_enabled;
-  
-  if (!$provisional_enabled)
-  {
-    // We're not using provisional booking, so a booking is
-    // automatically confirmed
-    return TRUE;
-  }
-  else
-  {
-    // At the moment the policy is simple: if we're using
-    // provisional bookings then only admins can confirm them
-    return (authGetUserLevel($user) >= 2);
-  }
+  return (authGetUserLevel($user) >= 2);
 }
 ?>

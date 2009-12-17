@@ -14,19 +14,23 @@
 
 CREATE TABLE mrbs_area
 (
-  id                    int NOT NULL auto_increment,
-  area_name             varchar(30),
-  area_admin_email      text,
-  resolution            int,
-  default_duration      int,
-  morningstarts         int,
-  morningstarts_minutes int,
-  eveningends           int,
-  eveningends_minutes   int,
-  private_enabled       tinyint(1),
-  private_default       tinyint(1),
-  private_mandatory     tinyint(1),
-  private_override      varchar(32),
+  id                     int NOT NULL auto_increment,
+  area_name              varchar(30),
+  area_admin_email       text,
+  resolution             int,
+  default_duration       int,
+  morningstarts          int,
+  morningstarts_minutes  int,
+  eveningends            int,
+  eveningends_minutes    int,
+  private_enabled        tinyint(1),
+  private_default        tinyint(1),
+  private_mandatory      tinyint(1),
+  private_override       varchar(32),
+  min_book_ahead_enabled tinyint(1),
+  min_book_ahead_secs    int,
+  max_book_ahead_enabled tinyint(1),
+  max_book_ahead_secs    int,
 
   PRIMARY KEY (id)
 );
@@ -110,6 +114,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '10');
+  VALUES ( 'db_version', '11');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

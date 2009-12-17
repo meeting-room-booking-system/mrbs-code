@@ -87,6 +87,51 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
   return $err;
 }
 
+/** mrbsCheckPolicy()
+ * 
+ * Check to see if a proposed booking conforms to any booking policies in force
+ * 
+ * $starttime - The start of period
+ * 
+ * Returns:
+ *   nothing   - The booking is OK
+ *   something - An error occured, the return value is human readable
+ */
+function mrbsCheckPolicy($starttime)
+{
+  global $min_book_ahead_enabled, $max_book_ahead_enabled, $enable_periods;
+  global $min_book_ahead_secs, $max_book_ahead_secs, $min_book_ahead_days, $max_book_ahead_days;
+
+  $error = "";
+  
+  // Because MRBS has no notion of where we are in the day if we're using periods,
+  // we'll just assume that we're at the beginning of the day.
+  $now = ($enable_periods) ? mktime(0, 0, 0) : time();
+  
+  if ($min_book_ahead_enabled)
+  {
+    $min_book_ahead = ($enable_periods) ? ($min_book_ahead_days * 60*60*24) : $min_book_ahead_secs;
+    if (($starttime - $now) < $min_book_ahead)
+    {
+      toTimeString($min_book_ahead, $units);
+      $error = get_vocab("min_time_before"). " $min_book_ahead $units";
+      return $error;
+    }
+  }
+  
+  if ($max_book_ahead_enabled)
+  {
+    $max_book_ahead = ($enable_periods) ? ($max_book_ahead_days * 60*60*24) : $max_book_ahead_secs;
+    if (($starttime - $now) > $max_book_ahead_secs)
+    {
+      toTimeString($max_book_ahead, $units);
+      $error = get_vocab("max_time_before"). " $max_book_ahead $units";
+      return $error;
+    }
+  }
+  return $error;
+}
+
 /** mrbsDelEntry()
  * 
  * Delete an entry, or optionally all entrys.

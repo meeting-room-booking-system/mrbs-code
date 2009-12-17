@@ -138,7 +138,35 @@ function ChangeOptionDays(formObj, prefix)
   }
 }
 
+
 <?php
+if ($page == 'edit_area_room')
+{
+?>
+  // disable the min and max book ahead values and units if the corresponding
+  // checkbox isn't checkd;  and enable it it is.
+  function check_book_ahead()
+  {
+    var form = document.getElementById('edit_area');
+    
+    if (form)
+    {
+      if (form.area_min_ba_enabled)
+      {
+        form.area_min_ba_value.disabled = !form.area_min_ba_enabled.checked;
+        form.area_min_ba_units.disabled = !form.area_min_ba_enabled.checked;
+      }
+      if (form.area_max_ba_enabled)
+      {
+        form.area_max_ba_value.disabled = !form.area_max_ba_enabled.checked;
+        form.area_max_ba_units.disabled = !form.area_max_ba_enabled.checked;
+      }
+    }
+  }
+<?php
+} // edit_area_room
+
+
 if ($page == 'pending')
 {
 ?>
@@ -212,7 +240,7 @@ if ($page == 'pending')
   
   
 <?php
-}
+} // pending
 ?>
 
 // actions to be taken on page load
@@ -227,6 +255,14 @@ function init()
   }
   
   <?php
+  // EDIT_AREA_ROOM.PHP
+  if ($page == 'edit_area_room')
+  {
+  ?>
+    check_book_ahead();
+  <?php
+  }
+  
   // EDIT_ENTRY.PHP
   // put the booking name field in focus (but only for new bookings,
   // ie when the field is empty:  if it's a new booking you have to
@@ -242,7 +278,7 @@ function init()
   }
   <?php
   }
-
+  
   // PENDING.PHP
   if ($page == 'pending')
   {

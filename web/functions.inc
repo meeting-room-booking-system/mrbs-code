@@ -106,23 +106,23 @@ function print_footer($and_exit)
 
 function toTimeString(&$dur, &$units)
 {
-  if ($dur >= 60)
+  if (abs($dur) >= 60)
   {
     $dur /= 60;
 
-    if ($dur >= 60)
+    if (abs($dur) >= 60)
     {
       $dur /= 60;
 
-      if(($dur >= 24) && ($dur % 24 == 0))
+      if((abs($dur) >= 24) && ($dur % 24 == 0))
       {
         $dur /= 24;
 
-        if(($dur >= 7) && ($dur % 7 == 0))
+        if((abs($dur) >= 7) && ($dur % 7 == 0))
         {
           $dur /= 7;
 
-          if (($dur >= 52) && ($dur % 52 == 0))
+          if ((abs($dur) >= 52) && ($dur % 52 == 0))
           {
             $dur  /= 52;
             $units = get_vocab("years");
@@ -151,6 +151,36 @@ function toTimeString(&$dur, &$units)
   {
     $units = get_vocab("seconds");
   }
+}
+
+
+// Converts a time period of $units into seconds, when it is originally
+// expressed in $dur_units.   (Almost the inverse of toTimeString(),
+// but note that toTimeString() does language translation)
+function fromTimeString(&$units, $dur_units)
+{
+  if (!isset($units) || !isset($dur_units))
+  {
+    return;
+  }
+  
+  switch($dur_units)
+  {
+    case "years":
+      $units *= 52;
+    case "weeks":
+      $units *= 7;
+    case "days":
+      $units *= 24;
+    case "hours":
+      $units *= 60;
+    case "periods":
+    case "minutes":
+      $units *= 60;
+    case "seconds":
+      break;
+  }
+  $units = (int) $units;
 }
 
 
@@ -309,15 +339,23 @@ function get_area($room)
   return ($area < 0 ? 0 : $area);
 }
 
-// Update the default timeslot settings with the ones specific to this area.
+// Update the default area settings with the ones specific to this area.
 // If no value is set in the database, use the value from the config file
 function get_area_settings($area)
 {
-  global $tbl_area;
+  global $tbl_area, $force_resolution;
   global $resolution, $default_duration, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
-  global $force_resolution;
   global $private_enabled, $private_default, $private_mandatory, $private_override;
-  $sql = "SELECT *
+  global $min_book_ahead_enabled, $max_book_ahead_enabled, $min_book_ahead_secs, $max_book_ahead_secs;
+  
+  $booleans = array('private_enabled', 'private_default', 'private_mandatory',
+                    'min_book_ahead_enabled', 'max_book_ahead_enabled');
+  // Get all the "per area" config settings                  
+  $sql = "SELECT resolution, default_duration, morningstarts, morningstarts_minutes,
+                 eveningends, eveningends_minutes,
+                 private_enabled, private_default, private_mandatory, private_override,
+                 min_book_ahead_enabled, max_book_ahead_enabled,
+                 min_book_ahead_secs, max_book_ahead_secs
           FROM $tbl_area 
           WHERE id=$area 
           LIMIT 1";
@@ -329,17 +367,22 @@ function get_area_settings($area)
   else
   {
     $row = sql_row_keyed($res, 0);
-    if (!isset($force_resolution) || !$force_resolution)
-    	$resolution = (isset($row['resolution']) ? $row['resolution'] : $resolution);
-    $default_duration = (isset($row['default_duration']) ? $row['default_duration'] : $default_duration);
-    $morningstarts = (isset($row['morningstarts']) ? $row['morningstarts'] : $morningstarts);
-    $morningstarts_minutes = (isset($row['morningstarts_minutes']) ? $row['morningstarts_minutes'] : $morningstarts_minutes);
-    $eveningends = (isset($row['eveningends']) ? $row['eveningends'] : $eveningends);
-    $eveningends_minutes = (isset($row['eveningends_minutes']) ? $row['eveningends_minutes'] : $eveningends_minutes);
-    $private_enabled = (bool) (isset($row['private_enabled']) ? $row['private_enabled'] : $private_enabled);
-    $private_default = (bool) (isset($row['private_default']) ? $row['private_default'] : $private_default);
-    $private_mandatory = (bool) (isset($row['private_mandatory']) ? $row['private_mandatory'] : $private_mandatory);
-    $private_override = (isset($row['private_override']) ? $row['private_override'] : $private_override);
+    foreach ($row as $field => $value)
+    {
+      // If the "per area" setting is in the database, then use that.   Otherwise
+      // just stick with the default setting from the config file.
+      // (don't use the database setting if $force_resolution is TRUE 
+      // and we're looking at the resolution field)
+      if (($field != 'resolution') || empty($force_resolution))
+      {
+        $$field = (isset($row[$field])) ? $value : $$field;
+      }
+      // Cast those fields which are booleans into booleans
+      if (in_array($field, $booleans))
+      {
+        $$field = (bool) $$field;
+      }
+    }
   }
 }
 

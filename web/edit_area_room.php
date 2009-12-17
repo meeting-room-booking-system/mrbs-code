@@ -30,6 +30,12 @@ $area_eveningends = get_form_var('area_eveningends', 'int');
 $area_eveningends_minutes = get_form_var('area_eveningends_minutes', 'int');
 $area_evening_ampm = get_form_var('area_evening_ampm', 'string');
 $area_eveningends_t = get_form_var('area_eveningends_t', 'int');
+$area_min_ba_enabled = get_form_var('area_min_ba_enabled', 'string');
+$area_min_ba_value = get_form_var('area_min_ba_value', 'int');
+$area_min_ba_units = get_form_var('area_min_ba_units', 'string');
+$area_max_ba_enabled = get_form_var('area_max_ba_enabled', 'string');
+$area_max_ba_value = get_form_var('area_max_ba_value', 'int');
+$area_max_ba_units = get_form_var('area_max_ba_units', 'string');
 $area_private_enabled = get_form_var('area_private_enabled', 'string');
 $area_private_default = get_form_var('area_private_default', 'int');
 $area_private_mandatory = get_form_var('area_private_mandatory', 'string');
@@ -45,41 +51,6 @@ if (!isset($day) or !isset($month) or !isset($year))
   $month = date("m");
   $year  = date("Y");
 }
-
-if (isset($area_eveningends_t))
-{
-  // if we've been given a time in minutes rather than hours and minutes, convert it
-  // (this will happen if JavaScript is enabled)
-  $area_eveningends_minutes = $area_eveningends_t % 60;
-  $area_eveningends = ($area_eveningends_t - $area_eveningends_minutes)/60;
-}
-
-if (!empty($area_morning_ampm))
-{
-  if (($area_morning_ampm == "pm") && ($area_morningstarts < 12))
-  {
-    $area_morningstarts += 12;
-  }
-  if (($area_morning_ampm == "am") && ($area_morningstarts > 11))
-  {
-    $area_morningstarts -= 12;
-  }
-}
-
-if (!empty($area_evening_ampm))
-{
-  if (($area_evening_ampm == "pm") && ($area_eveningends < 12))
-  {
-    $area_eveningends += 12;
-  }
-  if (($area_evening_ampm == "am") && ($area_eveningends > 11))
-  {
-    $area_eveningends -= 12;
-  }
-}
-
-$area_private_enabled = (!empty($area_private_enabled)) ? 1 : 0;
-$area_private_mandatory = (!empty($area_private_mandatory)) ? 1 : 0;
 
 $required_level = (isset($max_level) ? $max_level : 2);
 if (!getAuthorised($required_level))
@@ -171,6 +142,49 @@ if (isset($change_area) && !empty($area))
 { 
   // validate email addresses
   $valid_email = validate_email_list($area_admin_email);
+  
+  // Tidy up the input from the form
+  if (isset($area_eveningends_t))
+  {
+    // if we've been given a time in minutes rather than hours and minutes, convert it
+    // (this will happen if JavaScript is enabled)
+    $area_eveningends_minutes = $area_eveningends_t % 60;
+    $area_eveningends = ($area_eveningends_t - $area_eveningends_minutes)/60;
+  }
+
+  if (!empty($area_morning_ampm))
+  {
+    if (($area_morning_ampm == "pm") && ($area_morningstarts < 12))
+    {
+      $area_morningstarts += 12;
+    }
+    if (($area_morning_ampm == "am") && ($area_morningstarts > 11))
+    {
+      $area_morningstarts -= 12;
+    }
+  }
+
+  if (!empty($area_evening_ampm))
+  {
+    if (($area_evening_ampm == "pm") && ($area_eveningends < 12))
+    {
+      $area_eveningends += 12;
+    }
+    if (($area_evening_ampm == "am") && ($area_eveningends > 11))
+    {
+      $area_eveningends -= 12;
+    }
+  }
+  
+  // Convert the book ahead times into seconds
+  fromTimeString($area_min_ba_value, $area_min_ba_units);
+  fromTimeString($area_max_ba_value, $area_max_ba_units);
+  
+  // Convert booleans into 0/1 (necessary for PostgreSQL)
+  $area_min_ba_enabled = (!empty($area_min_ba_enabled)) ? 1 : 0;
+  $area_max_ba_enabled = (!empty($area_max_ba_enabled)) ? 1 : 0;
+  $area_private_enabled = (!empty($area_private_enabled)) ? 1 : 0;
+  $area_private_mandatory = (!empty($area_private_mandatory)) ? 1 : 0;
     
   if (!$enable_periods)
   { 
@@ -207,12 +221,18 @@ if (isset($change_area) && !empty($area))
       . "', area_admin_email='" . addslashes($area_admin_email) . "'";
     if (!$enable_periods)
     {
+      // only update the min and max book_ahead_secs fields if the form values
+      // are set;  they might be NULL because they've been disabled by JavaScript
       $sql .= ", resolution=" . $area_res_mins * 60
             . ", default_duration=" . $area_def_duration_mins * 60
             . ", morningstarts=" . $area_morningstarts
             . ", morningstarts_minutes=" . $area_morningstarts_minutes
             . ", eveningends=" . $area_eveningends
-            . ", eveningends_minutes=" . $area_eveningends_minutes;
+            . ", eveningends_minutes=" . $area_eveningends_minutes
+            . ", min_book_ahead_enabled=" . $area_min_ba_enabled
+            . (isset($area_min_ba_value) ? ", min_book_ahead_secs=" . $area_min_ba_value : "")
+            . ", max_book_ahead_enabled=" . $area_max_ba_enabled
+            . (isset($area_max_ba_value) ? ", max_book_ahead_secs=" . $area_max_ba_value : "");
     }
     $sql .= ", private_enabled=" . $area_private_enabled
           . ", private_default=" . $area_private_default
@@ -254,7 +274,7 @@ if (!empty($room))
   sql_free($res);
   
   ?>
-  <form class="form_general" action="edit_area_room.php" method="post">
+  <form class="form_general" id="edit_room" action="edit_area_room.php" method="post">
     <fieldset class="admin">
     <legend><?php echo get_vocab("editroom") ?></legend>
   
@@ -362,7 +382,7 @@ if (!empty($area))
   get_area_settings($area);
   ?>
 
-  <form class="form_general" action="edit_area_room.php" method="post">
+  <form class="form_general" id="edit_area" action="edit_area_room.php" method="post">
     <fieldset class="admin">
     <legend><?php echo get_vocab("editarea") ?></legend>
   
@@ -606,11 +626,54 @@ if (!empty($area))
         //]]>
         </script>
         </fieldset>
-        <?php   
+        
+        <?php
+        // Booking policies
+        $min_ba_value = $min_book_ahead_secs;
+        toTimeString($min_ba_value, $min_ba_units);
+        $max_ba_value = $max_book_ahead_secs;
+        toTimeString($max_ba_value, $max_ba_units);
+        echo "<fieldset id=\"booking_policies\">\n";
+        echo "<legend>" . get_vocab("booking_policies") . "</legend>\n";
+        // Minimum book ahead
+        echo "<div>\n";
+        echo "<label for=\"area_min_book_ahead\">" . get_vocab("min_book_ahead") . ":</label>\n";
+        echo "<input class=\"checkbox\" type=\"checkbox\" id=\"area_min_ba_enabled\" name=\"area_min_ba_enabled\"" .
+             (($min_book_ahead_enabled) ? " checked=\"checked\"" : "") .
+             " onChange=\"check_book_ahead()\">\n";
+        echo "<input class=\"text\" type=\"text\" name=\"area_min_ba_value\" value=\"$min_ba_value\">";
+        echo "<select id=\"area_min_ba_units\" name=\"area_min_ba_units\">\n";
+        $units = array("seconds", "minutes", "hours", "days", "weeks");
+        foreach ($units as $unit)
+        {
+          echo "<option value=\"$unit\"" .
+               (($min_ba_units == get_vocab($unit)) ? " selected=\"selected\"" : "") .
+               ">" . get_vocab($unit) . "</option>\n";
+        }
+        echo "</select>\n";
+        echo "</div>\n";
+        // Maximum book ahead
+        echo "<div>\n";
+        echo "<label for=\"area_max_book_ahead\">" . get_vocab("max_book_ahead") . ":</label>\n";
+        echo "<input class=\"checkbox\" type=\"checkbox\" id=\"area_max_ba_enabled\" name=\"area_max_ba_enabled\"" .
+             (($max_book_ahead_enabled) ? " checked=\"checked\"" : "") .
+             " onChange=\"check_book_ahead()\">\n";
+        echo "<input class=\"text\" type=\"text\" name=\"area_max_ba_value\" value=\"$max_ba_value\">";
+        echo "<select id=\"area_max_ba_units\" name=\"area_max_ba_units\">\n";
+        $units = array("seconds", "minutes", "hours", "days", "weeks");
+        foreach ($units as $unit)
+        {
+          echo "<option value=\"$unit\"" .
+               (($max_ba_units == get_vocab($unit)) ? " selected=\"selected\"" : "") .
+               ">" . get_vocab($unit) . "</option>\n";
+        }
+        echo "</select>\n";
+        echo "</div>\n";
+        echo "</fieldset>\n";
       } // end if (!$enable_periods)
     
       ?>
-    
+        
       <fieldset>
       <legend><?php echo get_vocab("private_settings")?></legend>
         <div>

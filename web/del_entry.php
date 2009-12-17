@@ -43,7 +43,7 @@ if (getAuthorised(1) && ($info = mrbsGetBookingInfo($id, FALSE, TRUE)))
   // check that the user is allowed to delete this entry
   if (isset($action) && ($action="reject"))
   {
-    $authorised = auth_can_confirm($user, $info['room_id']);
+    $authorised = auth_book_admin($user, $info['room_id']);
   }
   else
   {

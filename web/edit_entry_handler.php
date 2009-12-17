@@ -233,27 +233,8 @@ if ( $enable_periods )
   }
 }
 
-// Units start in seconds
-$units = 1;
-
-switch($dur_units)
-{
-  case "years":
-    $units *= 52;
-  case "weeks":
-    $units *= 7;
-  case "days":
-    $units *= 24;
-  case "hours":
-    $units *= 60;
-  case "periods":
-  case "minutes":
-    $units *= 60;
-  case "seconds":
-    break;
-}
-
-// Units are now in "$dur_units" numbers of seconds
+// Convert the duration into seconds
+fromTimeString($duration, $dur_units);
 
 
 if (isset($all_day) && ($all_day == "yes"))
@@ -295,7 +276,7 @@ else
                       is_dst($month, $day, $year, $hour));
   $endtime   = mktime($hour, $minute, 0,
                       $month, $day, $year,
-                      is_dst($month, $day, $year, $hour)) + (int)($units * $duration);
+                      is_dst($month, $day, $year, $hour)) + $duration;
 
   // Round down the starttime and round up the endtime to the nearest slot boundaries                   
   $am7=mktime($morningstarts,$morningstarts_minutes,0,
@@ -391,7 +372,7 @@ $conflicts = "";          // Holds a list of all the conflicts (ideally this wou
 $rules_broken = array();  // Holds an array of the rules that have been broken
  
 // Check for any schedule conflicts in each room we're going to try and
-// book in
+// book in;  also check that the booking conforms to the policy
 foreach ( $rooms as $room_id )
 {
   if ($rep_type != 0 && !empty($reps))
@@ -416,6 +397,17 @@ foreach ( $rooms as $room_id )
           $valid_booking = FALSE;
           $conflicts .= $tmp;
         }
+        // if we're not an admin for this room, check that the booking
+        // conforms to the booking policy
+        if (!auth_book_admin($user, $room_id))
+        {
+          $tmp = mrbsCheckPolicy($reps[$i]);
+          if (!empty($tmp))
+          {
+            $valid_booking = FALSE;
+            $rules_broken[] = $tmp;
+          }
+        }
       }
     }
     else
@@ -431,6 +423,17 @@ foreach ( $rooms as $room_id )
       {
         $valid_booking = FALSE;
         $conflicts .= $tmp;
+      }
+      // if we're not an admin for this room, check that the booking
+      // conforms to the booking policy
+      if (!auth_book_admin($user, $room_id))
+      {
+        $tmp = mrbsCheckPolicy($starttime);
+        if (!empty($tmp))
+        {
+          $valid_booking = FALSE;
+          $rules_broken[] = $tmp;
+        }
       }
   }
 
@@ -448,7 +451,7 @@ if ($valid_booking)
     // in effect immediately confirming their own booking.
     if ($provisional_enabled)
     {
-      $status = (auth_can_confirm($user, $room_id)) ? STATUS_CONFIRMED : STATUS_PROVISIONAL;
+      $status = (auth_book_admin($user, $room_id)) ? STATUS_CONFIRMED : STATUS_PROVISIONAL;
     }
     else
     {
@@ -595,6 +598,8 @@ if (!$valid_booking)
     echo get_vocab("rules_broken") . ":\n";
     echo "</p>\n";
     echo "<ul>\n";
+    // get rid of duplicate messages
+    $rules_broken = array_unique($rules_broken);
     foreach ($rules_broken as $rule)
     {
       echo "<li>$rule</li>\n";

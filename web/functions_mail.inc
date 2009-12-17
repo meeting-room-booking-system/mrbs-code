@@ -244,7 +244,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
   
   // if we're using provisional bookings and this user needs approval
   // for this room, then get the email addresses of the approvers
-  if ($provisional_enabled && !auth_can_confirm($user, $room_id))
+  if ($provisional_enabled && !auth_book_admin($user, $room_id))
   {
     $recipients[] = get_approvers_email($room_id);
   }

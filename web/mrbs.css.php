@@ -471,7 +471,7 @@ $db_logon_form_min_width       = $db_logon_left_col_max_width + $db_logon_input_
 $db_logon_form_min_width       = number_format($db_logon_form_min_width, 1, '.', '');   // get rid of any commas
 
 // Specific to the "edit_area_room" form
-$edit_area_room_left_col_max_width  = '14';      // em
+$edit_area_room_left_col_max_width  = '16';      // em
 $edit_area_room_input_width         = '12';      // em
 $edit_area_room_form_min_width      = $edit_area_room_left_col_max_width + $edit_area_room_input_width + $general_gap;
 $edit_area_room_form_min_width      = number_format($edit_area_room_form_min_width, 1, '.', '');   // get rid of any commas
@@ -531,8 +531,9 @@ form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>
 }
 .form_general select {float: left; margin-left: <?php echo $general_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
 .form_general input.radio {margin-top: 0.1em}
-.form_general input.checkbox {margin-top: 0.1em}
+.form_general input.checkbox {margin-top: 0.2em}
 .edit_area_room .form_general input.checkbox {width: auto; margin-left: <?php echo $general_gap ?>em}
+.edit_area_room .form_general #booking_policies input.text {width: 2.0em}
 .form_general input.submit {display: block; width: auto; float: left; clear: left; margin-top: 1.0em}
 
 div#edit_entry_submit {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $edit_entry_left_col_max_width ?>em}
