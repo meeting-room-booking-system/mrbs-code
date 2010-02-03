@@ -645,8 +645,12 @@ function notifyAdminOnDelete($mail_previous)
   {
     $subject = get_mail_vocab("mail_subject_delete");
     $body = get_mail_vocab("mail_body_del_entry") . "\n\n";
+    // Give the name of the person deleting the entry (might not
+    // be the same as the creator)
+    $body .= get_mail_vocab("deleted_by") . ': ';
+    $body .= convertToMailCharset($user) . "\n";
   }
-
+  
   // Displays deleted entry details
   $body .= "\n" . get_mail_vocab("namebooker") . ': ';
   $body .= convertToMailCharset($mail_previous['namebooker']) . "\n";

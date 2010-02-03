@@ -141,6 +141,7 @@ $vocab["mail_body_new_entry"] = "A new entry has been booked, here are the detai
 $vocab["mail_body_del_entry"] = "An entry has been deleted, here are the details:";
 $vocab["mail_body_changed_entry"] = "An entry has been modified, here are the details:";
 $vocab["mail_subject_delete"] = "Entry deleted for $mrbs_company MRBS";
+$vocab["deleted_by"]          = "Deleted by";
 $vocab["reason"]              = "Reason";
 $vocab["info_requested"]      = "Information requested";
 $vocab["min_time_before"]     = "The minimum interval between now and the start of a booking is";
