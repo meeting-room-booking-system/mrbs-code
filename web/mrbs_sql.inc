@@ -122,7 +122,7 @@ function mrbsCheckPolicy($starttime)
   if ($max_book_ahead_enabled)
   {
     $max_book_ahead = ($enable_periods) ? ($max_book_ahead_days * 60*60*24) : $max_book_ahead_secs;
-    if (($starttime - $now) > $max_book_ahead_secs)
+    if (($starttime - $now) > $max_book_ahead)
     {
       toTimeString($max_book_ahead, $units);
       $error = get_vocab("max_time_before"). " $max_book_ahead $units";
