@@ -186,7 +186,6 @@ function fromTimeString(&$units, $dur_units)
 
 function toPeriodString($start_period, &$dur, &$units)
 {
-  global $enable_periods;
   global $periods;
 
   $max_periods = count($periods);
@@ -221,6 +220,41 @@ function toPeriodString($start_period, &$dur, &$units)
   {
     $units = get_vocab("periods");
   }
+}
+
+// Converts a period of $units starting at $start_period into seconds, when it is
+// originally expressed in $dur_units (periods or days).   (Almost the inverse of
+// toPeriodString(), but note that toPeriodString() does language translation)
+function fromPeriodString($start_period, &$units, $dur_units)
+{
+  global $periods;
+  
+  if (!isset($units) || !isset($dur_units))
+  {
+    return;
+  }
+  
+  // First get the duration in minutes
+  $max_periods = count($periods);
+  if ($dur_units == "periods" && ($start_period + $units) > $max_periods)
+  {
+    $units = (24*60*floor($units/$max_periods)) + ($units%$max_periods);
+  }
+  if ($dur_units == "days")
+  {
+    if ($start_period == 0)
+    {
+      $units = $max_periods + ($units-1)*60*24;
+    }
+    else
+    {
+      $units = $units * 60 * 24;
+    }
+  }
+  
+  // Then convert into seconds
+  $units = (int) $units;
+  $units = 60 * $units;
 }
 
 

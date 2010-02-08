@@ -215,26 +215,16 @@ if (($rep_type == 6) && ($rep_num_weeks < 2))
 // Support locales where ',' is used as the decimal point
 $duration = preg_replace('/,/', '.', $duration);
 
-if ( $enable_periods )
+if ($enable_periods)
 {
   $resolution = 60;
   $hour = 12;
   $minute = $period;
-  $max_periods = count($periods);
-  if ( $dur_units == "periods" && ($minute + $duration) > $max_periods )
-  {
-    $duration = (24*60*floor($duration/$max_periods)) +
-      ($duration%$max_periods);
-  }
-  if ( $dur_units == "days" && $minute == 0 )
-  {
-    $dur_units = "periods";
-    $duration = $max_periods + ($duration-1)*60*24;
-  }
 }
 
-// Convert the duration into seconds
-fromTimeString($duration, $dur_units);
+// Get the duration in seconds
+$dur_seconds = $duration;
+$enable_periods ? fromPeriodString($period, $dur_seconds, $dur_units) : fromTimeString($dur_seconds, $dur_units);
 
 
 if (isset($all_day) && ($all_day == "yes"))
@@ -276,7 +266,7 @@ else
                       is_dst($month, $day, $year, $hour));
   $endtime   = mktime($hour, $minute, 0,
                       $month, $day, $year,
-                      is_dst($month, $day, $year, $hour)) + $duration;
+                      is_dst($month, $day, $year, $hour)) + $dur_seconds;
 
   // Round down the starttime and round up the endtime to the nearest slot boundaries                   
   $am7=mktime($morningstarts,$morningstarts_minutes,0,
