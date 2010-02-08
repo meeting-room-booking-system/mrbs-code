@@ -236,9 +236,13 @@ function fromPeriodString($start_period, &$units, $dur_units)
   
   // First get the duration in minutes
   $max_periods = count($periods);
-  if ($dur_units == "periods" && ($start_period + $units) > $max_periods)
+  if ($dur_units == "periods")
   {
-    $units = (24*60*floor($units/$max_periods)) + ($units%$max_periods);
+    $end_period = $start_period + $units;
+    if ($end_period > $max_periods)
+    {
+      $units = (24*60*floor($end_period/$max_periods)) + ($end_period%$max_periods) - $start_period;
+    }
   }
   if ($dur_units == "days")
   {
