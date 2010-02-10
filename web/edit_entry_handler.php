@@ -222,17 +222,17 @@ if ($enable_periods)
   $minute = $period;
 }
 
-// Get the duration in seconds
-$dur_seconds = $duration;
-$enable_periods ? fromPeriodString($period, $dur_seconds, $dur_units) : fromTimeString($dur_seconds, $dur_units);
-
-
 if (isset($all_day) && ($all_day == "yes"))
 {
-  if ( $enable_periods )
+  if ($enable_periods)
   {
+    $max_periods = count($periods);
     $starttime = mktime(12, 0, 0, $month, $day, $year);
     $endtime   = mktime(12, $max_periods, 0, $month, $day, $year);
+    // We need to set the duration and units because they are needed for email notifications
+    $duration = $max_periods;
+    $dur_units = "periods";
+    // No need to convert into something sensible, because they already are
   }
   else
   {
@@ -245,10 +245,19 @@ if (isset($all_day) && ($all_day == "yes"))
     $endtime += $resolution;                // add on the duration (in seconds) of the last slot as
                                             // $eveningends and $eveningends_minutes specify the 
                                             // beginning of the last slot
+    // We need to set the duration and units because they are needed for email notifications
+    $duration = $endtime - $starttime;
+    $dur_units = "seconds";
+    // Convert them into something sensible (but don't translate because
+    // that's done later)
+    toTimeString($duration, $dur_units, FALSE);
   }
 }
 else
 {
+  // Get the duration in seconds
+  $dur_seconds = $duration;
+  $enable_periods ? fromPeriodString($period, $dur_seconds, $dur_units) : fromTimeString($dur_seconds, $dur_units);
   if (!$twentyfourhour_format)
   {
     if (isset($ampm) && ($ampm == "pm") && ($hour<12))

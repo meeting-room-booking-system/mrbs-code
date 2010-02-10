@@ -104,7 +104,7 @@ function print_footer($and_exit)
 }
 
 
-function toTimeString(&$dur, &$units)
+function toTimeString(&$dur, &$units, $translate=TRUE)
 {
   if (abs($dur) >= 60)
   {
@@ -125,38 +125,43 @@ function toTimeString(&$dur, &$units)
           if ((abs($dur) >= 52) && ($dur % 52 == 0))
           {
             $dur  /= 52;
-            $units = get_vocab("years");
+            $units = "years";
           }
           else
           {
-            $units = get_vocab("weeks");
+            $units = "weeks";
           }
         }
         else
         {
-          $units = get_vocab("days");
+          $units = "days";
         }
       }
       else
       {
-        $units = get_vocab("hours");
+        $units = "hours";
       }
     }
     else
     {
-      $units = get_vocab("minutes");
+      $units = "minutes";
     }
   }
   else
   {
-    $units = get_vocab("seconds");
+    $units = "seconds";
+  }
+  // Translate into local language if required
+  if ($translate)
+  {
+    $units = get_vocab($units);
   }
 }
 
 
 // Converts a time period of $units into seconds, when it is originally
 // expressed in $dur_units.   (Almost the inverse of toTimeString(),
-// but note that toTimeString() does language translation)
+// but note that toTimeString() can do language translation)
 function fromTimeString(&$units, $dur_units)
 {
   if (!isset($units) || !isset($dur_units))
@@ -184,7 +189,7 @@ function fromTimeString(&$units, $dur_units)
 }
 
 
-function toPeriodString($start_period, &$dur, &$units)
+function toPeriodString($start_period, &$dur, &$units, $translate=TRUE)
 {
   global $periods;
 
@@ -196,7 +201,7 @@ function toPeriodString($start_period, &$dur, &$units)
   {
     if( $start_period == 0 && $dur == $max_periods )
     {
-      $units = get_vocab("days");
+      $units = $translate ? get_vocab("days") : "days";
       $dur = 1;
       return;
     }
@@ -205,26 +210,26 @@ function toPeriodString($start_period, &$dur, &$units)
     if(($dur >= 24) && is_int($dur))
     {
       $dur /= 24;
-      $units = get_vocab("days");
+      $units = $translate ? get_vocab("days") : "days";
       return;
     }
     else
     {
       $dur *= 60;
       $dur = ($dur % $max_periods) + floor( $dur/(24*60) ) * $max_periods;
-      $units = get_vocab("periods");
+      $units = $translate ? get_vocab("periods") : "periods";
       return;
     }
   }
   else
   {
-    $units = get_vocab("periods");
+    $units = $translate ? get_vocab("periods") : "periods";
   }
 }
 
 // Converts a period of $units starting at $start_period into seconds, when it is
 // originally expressed in $dur_units (periods or days).   (Almost the inverse of
-// toPeriodString(), but note that toPeriodString() does language translation)
+// toPeriodString(), but note that toPeriodString() can do language translation)
 function fromPeriodString($start_period, &$units, $dur_units)
 {
   global $periods;
