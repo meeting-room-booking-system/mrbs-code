@@ -136,7 +136,7 @@ $enable_periods = FALSE;
 
 // Resolution - what blocks can be booked, in seconds.
 // Default is half an hour: 1800 seconds.
-$resolution = (30 * 60);
+$resolution = (30 * 60);  // DEFAULT VALUE FOR NEW AREAS
 
 // If the following variable is set to TRUE, the resolution of bookings
 // is forced to be the value of $resolution, rather than the resolution set
@@ -145,7 +145,7 @@ $force_resolution = FALSE;
 
 // Default duration - default length (in seconds) of a booking.
 // Defaults to (60 * 60) seconds, i.e. an hour
-$default_duration = (60 * 60);
+$default_duration = (60 * 60);  // DEFAULT VALUE FOR NEW AREAS
 
 // Start and end of day.
 // NOTE:  The time between the beginning of the last and first
@@ -157,11 +157,11 @@ $default_duration = (60 * 60);
 // give you 24 half-hourly slots starting at 07:00, with the last slot
 // being 18:30 -> 19:00
 
-// The beginning of the first slot of the day
+// The beginning of the first slot of the day (DEFAULT VALUES FOR NEW AREAS)
 $morningstarts         = 7;   // must be integer in range 0-23
 $morningstarts_minutes = 0;   // must be integer in range 0-59
 
-// The beginning of the last slot of the day
+// The beginning of the last slot of the day (DEFAULT VALUES FOR NEW AREAS)
 $eveningends           = 18;  // must be integer in range 0-23
 $eveningends_minutes   = 30;   // must be integer in range 0-59
 
@@ -222,6 +222,7 @@ $periods[] = "Period&nbsp;2";
 // book more than so far in advance.  How the times are determined depends on whether Periods
 // or Times are being used.
 
+// DEFAULT VALUES FOR NEW AREAS (WHEN USING TIMES)
 $min_book_ahead_enabled = FALSE;    // set to TRUE to enforce a minimum advance booking time
 $max_book_ahead_enabled = FALSE;    // set to TRUE to enforce a maximum advance booking time
 
@@ -232,6 +233,7 @@ $max_book_ahead_enabled = FALSE;    // set to TRUE to enforce a maximum advance 
 // allowed is the start time of the booking.  Values may be negative: for example setting
 // $min_book_ahead_secs = -300 means that users cannot book more than 5 minutes in the past.
 
+// DEFAULT VALUES FOR NEW AREAS
 $min_book_ahead_secs = 0;           // (seconds) cannot book in the past
 $max_book_ahead_secs = 60*60*24*7;  // (seconds) no more than one week ahead
 
@@ -391,17 +393,22 @@ $highlight_method = "hybrid"; // One of "bgcolor", "class", "hybrid".   "hybrid"
 // Only administrators or the person who booked a private event can see
 // details of the event.  Everyone else just sees that the time/period
 // is booked on the schedule.
-$private_enabled = FALSE;  // Display checkbox in entry page to make
-           // the booking private.  
 
-$private_default = FALSE;  // Set default value for "Private" flag on
-           // new/edited entries.  Used even if checkbox is not displayed.
+$private_enabled = FALSE;  // DEFAULT VALUE FOR NEW AREAS
+           // Display checkbox in entry page to make
+           // the booking private.
 
-$private_mandatory = FALSE; // If TRUE all new/edited entries will 
+$private_default = FALSE;  // DEFAULT VALUE FOR NEW AREAS
+           // Set default value for "Private" flag on new/edited entries.
+           // Used even if checkbox is not displayed.
+
+$private_mandatory = FALSE;  // DEFAULT VALUE FOR NEW AREAS
+           // If TRUE all new/edited entries will 
            // use the value from $private_default when saved.
            // If checkbox is displayed it will be disabled.
 
-$private_override = "none"; // Override default privacy behavior. 
+$private_override = "none";  // DEFAULT VALUE FOR NEW AREAS
+           // Override default privacy behavior. 
            // "none" - Private flag on entry is used
            // "private" - ALL entries are treated as private regardless
            //             of private flag on the entry.
