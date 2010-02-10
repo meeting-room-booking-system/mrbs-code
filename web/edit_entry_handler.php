@@ -237,11 +237,11 @@ if (isset($all_day) && ($all_day == "yes"))
   else
   {
     $starttime = mktime($morningstarts, $morningstarts_minutes, 0,
-                        $month, $day  , $year,
-                        is_dst($month, $day  , $year));
+                        $month, $day, $year,
+                        is_dst($month, $day, $year, $morningstarts));
     $endtime   = mktime($eveningends, $eveningends_minutes, 0,
                         $month, $day, $year,
-                        is_dst($month, $day, $year));
+                        is_dst($month, $day, $year, $eveningends));
     $endtime += $resolution;                // add on the duration (in seconds) of the last slot as
                                             // $eveningends and $eveningends_minutes specify the 
                                             // beginning of the last slot
