@@ -608,6 +608,9 @@ $auth['smtp']['server'] = 'myserver.example.org';
 // If you want only administrators to be able to book slots, set this
 // variable to TRUE
 $auth['only_admin_can_book'] = FALSE;
+// If you want only administrators to be able to make repeat bookings,
+// set this variable to TRUE
+$auth['only_admin_can_book_repeat'] = FALSE;
 
 /**********************************************
  * Email settings

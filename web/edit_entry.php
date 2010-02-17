@@ -50,6 +50,11 @@ if (!getAuthorised(1))
   showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
   exit;
 }
+$user = getUserName();
+$is_admin = (authGetUserLevel($user) >= 2);
+// You're only allowed to make repeat bookings if you're an admin
+// or else if $auth['only_admin_can_book_repeat'] is not set
+$repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
 
 // This page will either add or modify a booking
 
@@ -90,7 +95,7 @@ if (isset($id))
   $name        = $row['name'];
   // If we're copying an existing entry then we need to change the create_by (they could be
   // different if it's an admin doing the copying)
-  $create_by   = (isset($copy)) ? getUserName() : $row['create_by'];
+  $create_by   = (isset($copy)) ? $user : $row['create_by'];
   $description = $row['description'];
   $start_day   = strftime('%d', $row['start_time']);
   $start_month = strftime('%m', $row['start_time']);
@@ -113,7 +118,7 @@ if (isset($id))
   {
     // Entry being copied by different user
     // If they don't have rights to view details, clear them
-    $privatewriteable = getWritable($row['create_by'], getUserName(), $room_id);
+    $privatewriteable = getWritable($row['create_by'], $user, $room_id);
     if (is_private_event($private) && !$privatewriteable) 
     {
         $name = '';
@@ -142,7 +147,7 @@ if (isset($id))
    
     $rep_type = $row['rep_type'];
 
-    if ($edit_type == "series")
+    if (!empty($rep_type))
     {
       $start_day   = (int)strftime('%d', $row['start_time']);
       $start_month = (int)strftime('%m', $row['start_time']);
@@ -151,11 +156,15 @@ if (isset($id))
       $rep_end_day   = (int)strftime('%d', $row['end_date']);
       $rep_end_month = (int)strftime('%m', $row['end_date']);
       $rep_end_year  = (int)strftime('%Y', $row['end_date']);
+      // Get the end date in string format as well, for use when
+      // the input is disabled
+      $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
 
       switch ($rep_type)
       {
         case 2:
         case 6:
+          
           $rep_day[0] = $row['rep_opt'][0] != "0";
           $rep_day[1] = $row['rep_opt'][1] != "0";
           $rep_day[2] = $row['rep_opt'][2] != "0";
@@ -163,6 +172,9 @@ if (isset($id))
           $rep_day[4] = $row['rep_opt'][4] != "0";
           $rep_day[5] = $row['rep_opt'][5] != "0";
           $rep_day[6] = $row['rep_opt'][6] != "0";
+          // Get the repeat days as an array for use
+          // when the input is disabled
+          $rep_opt = $row['rep_opt'];
 
           if ($rep_type == 6)
           {
@@ -175,12 +187,6 @@ if (isset($id))
           $rep_day = array(0, 0, 0, 0, 0, 0, 0);
       }
     }
-    else
-    {
-      $rep_type     = $row['rep_type'];
-      $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
-      $rep_opt      = $row['rep_opt'];
-    }
   }
 }
 else
@@ -188,7 +194,7 @@ else
   // It is a new booking. The data comes from whichever button the user clicked
   $edit_type   = "series";
   $name        = "";
-  $create_by   = getUserName();
+  $create_by   = $user;
   $description = "";
   $start_day   = $day;
   $start_month = $month;
@@ -253,7 +259,7 @@ $enable_periods ? toPeriodString($start_min, $duration, $dur_units) : toTimeStri
 
 //now that we know all the data to fill the form with we start drawing it
 
-if (!getWritable($create_by, getUserName(), $room_id))
+if (!getWritable($create_by, $user, $room_id))
 {
   showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
   exit;
@@ -267,18 +273,19 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 //<![CDATA[
 
 // do a little form verifying
-function validate_and_submit ()
+function validate_and_submit()
 {
+  var form = document.forms["main"];
   // null strings and spaces only strings not allowed
-  if(/(^$)|(^\s+$)/.test(document.forms["main"].name.value))
+  if(/(^$)|(^\s+$)/.test(form.name.value))
   {
     alert ( "<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("brief_description") ?>");
     return false;
   }
   <?php if( ! $enable_periods ) { ?>
 
-  h = parseInt(document.forms["main"].hour.value);
-  m = parseInt(document.forms["main"].minute.value);
+  h = parseInt(form.hour.value);
+  m = parseInt(form.minute.value);
 
   if(h > 23 || m > 59)
   {
@@ -288,21 +295,25 @@ function validate_and_submit ()
   <?php } ?>
 
   // check form element exist before trying to access it
-  if ( document.forms["main"].id )
+  if (form.id )
   {
-    i1 = parseInt(document.forms["main"].id.value);
+    i1 = parseInt(form.id.value);
   }
   else
   {
     i1 = 0;
   }
 
-  i2 = parseInt(document.forms["main"].rep_id.value);
-  if ( document.forms["main"].rep_num_weeks)
+  i2 = parseInt(form.rep_id.value);
+  if (form.rep_num_weeks)
   {
-     n = parseInt(document.forms["main"].rep_num_weeks.value);
+     n = parseInt(form.rep_num_weeks.value);
   }
-  if ((!i1 || (i1 && i2)) && (document.forms["main"].rep_type.value != 0) && document.forms["main"].rep_type[6].checked && (!n || n < 2))
+  if ((!i1 || (i1 && i2)) &&
+      form.rep_type &&
+      (form.rep_type.value != 0) && 
+      form.rep_type[6].checked && 
+      (!n || n < 2))
   {
     alert("<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("useful_n-weekly_value") ?>");
     return false;
@@ -312,7 +323,7 @@ function validate_and_submit ()
   // check that a room(s) has been selected
   // this is needed as edit_entry_handler does not check that a room(s)
   // has been chosen
-  if ( document.forms["main"].elements['rooms'].selectedIndex == -1 )
+  if (form.elements['rooms'].selectedIndex == -1 )
   {
     alert("<?php echo get_vocab("you_have_not_selected") . '\n' . get_vocab("valid_room") ?>");
     return false;
@@ -322,10 +333,10 @@ function validate_and_submit ()
   // there are more than one recipient. To avoid users doing weird things
   // like clicking more than one time on submit button, we hide it as soon
   // it is clicked.
-  document.forms["main"].save_button.disabled="true";
+  form.save_button.disabled="true";
 
   // would be nice to also check date to not allow Feb 31, etc...
-  document.forms["main"].submit();
+  form.submit();
 
   return true;
 }
@@ -718,9 +729,13 @@ else
 
 
     <?php
-    if ($edit_type == "series")
+    // REPEAT BOOKING INPUTS
+    if (($edit_type == "series") && $repeats_allowed)
     {
-    ?>
+      // If repeats are allowed and the edit_type is a series (which means
+      // that either you're editing an existing series or else you're making
+      // a new booking) then print the repeat inputs
+      ?>
       <div id="rep_type">
         <label><?php echo get_vocab("rep_type")?>:</label>
         <div class="group">
@@ -761,62 +776,62 @@ else
           ?>
         </div>
       </div>
+      <div>
+        <label for="rep_num_weeks"><?php echo get_vocab("rep_num_weeks")?>:<br><?php echo get_vocab("rep_for_nweekly")?></label>
+        <input type="text" id="rep_num_weeks" name="rep_num_weeks" value="<?php echo $rep_num_weeks?>">
+      </div>
       <?php
     }
-    else
+    elseif (isset($id))
     {
+      // otherwise, if it's an existing booking, show the repeat information
+      // and pass it through to the handler but do not let the user edit it
+      // (because they're either not allowed to, or else they've chosen to edit
+      // an individual entry rather than a series).
+      // (NOTE: when repeat bookings are restricted to admins, an ordinary user
+      // would not normally be able to get to the stage of trying to edit a series.
+      // But we have to cater for the possibility because it could happen if (a) the
+      // series was created before the policy was introduced or (b) the user has
+      // been demoted since the series was created).
       $key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
-      ?>
-      <fieldset id="rep_info">
-      <legend></legend>
-        <input type="hidden" name="rep_type" value="0">
-        <div>
-          <label><?php echo get_vocab("rep_type") ?>:</label>
-          <input type="text" value ="<?php echo get_vocab($key) ?>" disabled="disabled">
-        </div>
-        <?php
-        if(isset($rep_type) && ($rep_type != 0))
+      echo "<fieldset id=\"rep_info\">\n";
+      echo "<legend></legend>\n";
+      echo "<div>\n";
+      echo "<label>" . get_vocab("rep_type") . ":</label>\n";
+      echo "<input type=\"text\" value =\"" . get_vocab($key) . "\" disabled=\"disabled\">\n";
+      echo "<input type=\"hidden\" name=\"rep_type\" value=\"0\">\n";
+      echo "</div>\n";
+      if (isset($rep_type) && ($rep_type != 0))
+      {
+        $opt = "";
+        if (($rep_type == 2) || ($rep_type == 6))
         {
-          $opt = "";
-          if ($rep_type == 2)
+          // Display day names according to language and preferred weekday start.
+          for ($i = 0; $i < 7; $i++)
           {
-            // Display day names according to language and preferred weekday start.
-            for ($i = 0; $i < 7; $i++)
+            $wday = ($i + $weekstarts) % 7;
+            if ($rep_opt[$wday])
             {
-              $wday = ($i + $weekstarts) % 7;
-              if ($rep_opt[$wday])
-              {
-                $opt .= day_name($wday) . " ";
-              }
+              $opt .= day_name($wday) . " ";
             }
           }
-          if($opt)
-          {
-            echo "  <div><label>".get_vocab("rep_rep_day").":</label><input type=\"text\" value=\"$opt\" disabled=\"disabled\"></div>\n";
-          }
-
-          echo "  <div><label>".get_vocab("rep_end_date").":</label><input type=\"text\" value=\"$rep_end_date\" disabled=\"disabled\"></div>\n";
         }
-        ?>
-      </fieldset>
-      <?php
+        if($opt)
+        {
+          echo "  <div><label>".get_vocab("rep_rep_day").":</label><input type=\"text\" value=\"$opt\" disabled=\"disabled\"></div>\n";
+        }
+        echo "  <div><label>".get_vocab("rep_end_date").":</label><input type=\"text\" value=\"$rep_end_date\" disabled=\"disabled\"></div>\n";
+        if ($rep_type == 6)
+        {
+          echo "<div>\n";
+          echo "<label for=\"rep_num_weeks\">" . get_vocab("rep_num_weeks") . ":<br>" . get_vocab("rep_for_nweekly") . "</label>\n";
+          echo "<input type=\"text\" id=\"rep_num_weeks\" name=\"rep_num_weeks\" value=\"$rep_num_weeks\" disabled=\"disabled\">\n";
+          echo "</div>\n";
+        }
+      }
+      echo "</fieldset>\n";
     }
-
-    /* We display the rep_num_weeks box only if:
-       - this is a new entry ($id is not set)
-       Xor
-       - we are editing an existing repeating entry ($rep_type is set and
-         $rep_type != 0 and $edit_type == "series" )
-    */
-    if ( ( !isset( $id ) ) Xor ( isset( $rep_type ) && ( $rep_type != 0 ) &&
-                             ( "series" == $edit_type ) ) )
-    {
-      ?>
-      <label for="rep_num_weeks"><?php echo get_vocab("rep_num_weeks")?>:<br><?php echo get_vocab("rep_for_nweekly")?></label>
-      <input type="text" id="rep_num_weeks" name="rep_num_weeks" value="<?php echo $rep_num_weeks?>">
-      <?php
-    }
-    
+ 
     // In the section below the <div> needs to be inside the <noscript> in order to pass validation
     ?>
     <script type="text/javascript">

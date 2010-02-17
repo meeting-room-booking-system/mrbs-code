@@ -151,6 +151,19 @@ if (!getAuthorised(1))
   exit;
 }
 $user = getUserName();
+$is_admin = (authGetUserLevel($user) >= 2);
+
+// Check to see whether this is a repeat booking and if so, whether the user
+// is allowed to make/edit repeat bookings.   (The edit_entry form should
+// prevent you ever getting here, but this check is here as a safeguard in 
+// case someone has spoofed the HTML)
+if (!empty($rep_type) &&
+    !$is_admin &&
+    !empty($auth['only_admin_can_book_repeat']))
+{
+  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
+  exit;
+}
 
 // Check that the user has permission to create/edit an entry for this room.
 // Get the id of the room that we are creating/editing

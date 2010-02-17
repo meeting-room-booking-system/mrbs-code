@@ -85,6 +85,10 @@ function generateTextArea($form_action, $id, $series, $action_type, $returl, $su
     
 
 $user = getUserName();
+$is_admin = (authGetUserLevel($user) >= 2);
+// You're only allowed to make repeat bookings if you're an admin
+// or else if $auth['only_admin_can_book_repeat'] is not set
+$repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
 
 // Get form variables
 //
@@ -457,12 +461,12 @@ if($rep_type != 0)
       echo "<a href=\"edit_entry.php?id=$id&amp;returl=$link_returl\">". get_vocab("editentry") ."</a>";
     }
     
-    if (!empty($repeat_id)  && !$series)
+    if (!empty($repeat_id)  && !$series && $repeats_allowed)
     {
       echo " - ";
     }
     
-    if (!empty($repeat_id) || $series)
+    if ((!empty($repeat_id) || $series) && $repeats_allowed)
     {
       echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$link_returl\">".get_vocab("editseries")."</a>";
     }
@@ -478,12 +482,12 @@ if($rep_type != 0)
       echo "<a href=\"edit_entry.php?id=$id&amp;copy=1&amp;returl=$link_returl\">". get_vocab("copyentry") ."</a>";
     }
        
-    if (!empty($repeat_id) && !$series)
+    if (!empty($repeat_id) && !$series && $repeats_allowed)
     {
       echo " - ";
     }
        
-    if (!empty($repeat_id) || $series) 
+    if ((!empty($repeat_id) || $series) && $repeats_allowed) 
     {
       echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=1&amp;returl=$link_returl\">".get_vocab("copyseries")."</a>";
     }
@@ -497,12 +501,12 @@ if($rep_type != 0)
       echo "<a href=\"del_entry.php?id=$id&amp;series=0&amp;returl=$link_returl\" onclick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</a>";
     }
     
-    if (!empty($repeat_id) && !$series)
+    if (!empty($repeat_id) && !$series && $repeats_allowed)
     {
       echo " - ";
     }
     
-    if (!empty($repeat_id) || $series)
+    if ((!empty($repeat_id) || $series) && $repeats_allowed)
     {
       echo "<a href=\"del_entry.php?id=$id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$link_returl\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteseries")."</a>";
     }
