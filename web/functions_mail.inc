@@ -249,7 +249,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
     $recipients[] = get_approvers_email($room_id);
   }
   
-  $id_table = ($rep_type > 0) ? "rep" : "e";
+  $id_table = ($rep_type != REP_NONE) ? "rep" : "e";
   ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
   if ($mail_settings['area_admin_on_bookings'])
   {
@@ -501,10 +501,10 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
     }
         
     // Details if a series
-    if ($rep_type > 0)
+    if ($rep_type != REP_NONE)
     {
       $opt = "";
-      if (($rep_type == 2) || ($rep_type == 6))
+      if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
       {
         // Display day names according to language and preferred weekday start.
         for ($i = 0; $i < 7; $i++)
@@ -516,7 +516,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
           }
         }
       }
-      if ($rep_type == 6)
+      if ($rep_type == REP_N_WEEKLY)
       {
         $body .= "\n" . get_mail_vocab("rep_num_weeks");
         $body .=  ": " . compareEntries($rep_num_weeks,
@@ -690,9 +690,9 @@ function notifyAdminOnDelete($mail_previous)
   $body .= "\n" . get_mail_vocab("rep_type");
   $temp = $mail_previous['rep_type'];
   $body .=  ": " . get_mail_vocab("rep_type_$temp");
-  if ($mail_previous['rep_type'] > 0)
+  if ($mail_previous['rep_type'] != REP_NONE)
   {
-    if ($mail_previous['rep_type'] == 6)
+    if ($mail_previous['rep_type'] == REP_N_WEEKLY)
     {
       $body .= "\n" . get_mail_vocab("rep_num_weeks");
       $body .=  ": " . $mail_previous["rep_num_weeks"];
@@ -853,7 +853,7 @@ function getPreviousEntryData($id, $series)
   // a series, we still need to set rep_type to show that it's not a series)
   if (1 != $series)
   {
-    $mail_previous['rep_type'] = 0;
+    $mail_previous['rep_type'] = REP_NONE;
   }
   else
   {
@@ -885,7 +885,7 @@ function getPreviousEntryData($id, $series)
         $mail_previous['rep_opt'] .= day_name($wday) . " ";
     }
     
-    if ($row['rep_type'] == 6)
+    if ($row['rep_type'] == REP_N_WEEKLY)
     {
       $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
     }

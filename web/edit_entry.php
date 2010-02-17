@@ -147,7 +147,7 @@ if (isset($id))
    
     $rep_type = $row['rep_type'];
 
-    if (!empty($rep_type))
+    if (isset($rep_type) && ($rep_type != REP_NONE))
     {
       $start_day   = (int)strftime('%d', $row['start_time']);
       $start_month = (int)strftime('%m', $row['start_time']);
@@ -176,7 +176,7 @@ if (isset($id))
           // when the input is disabled
           $rep_opt = $row['rep_opt'];
 
-          if ($rep_type == 6)
+          if ($rep_type == REP_N_WEEKLY)
           {
             $rep_num_weeks = $row['rep_num_weeks'];
           }
@@ -212,7 +212,7 @@ else
   unset($id);
 
   $rep_id        = 0;
-  $rep_type      = 0;
+  $rep_type      = REP_NONE;
   $rep_end_day   = $day;
   $rep_end_month = $month;
   $rep_end_year  = $year;
@@ -311,8 +311,8 @@ function validate_and_submit()
   }
   if ((!i1 || (i1 && i2)) &&
       form.rep_type &&
-      (form.rep_type.value != 0) && 
-      form.rep_type[6].checked && 
+      (form.rep_type.value != <?php echo REP_NONE ?>) && 
+      form.rep_type[<?php echo REP_N_WEEKLY ?>].checked && 
       (!n || n < 2))
   {
     alert("<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("useful_n-weekly_value") ?>");
@@ -793,18 +793,18 @@ else
       // But we have to cater for the possibility because it could happen if (a) the
       // series was created before the policy was introduced or (b) the user has
       // been demoted since the series was created).
-      $key = "rep_type_" . (isset($rep_type) ? $rep_type : "0");
+      $key = "rep_type_" . (isset($rep_type) ? $rep_type : REP_NONE);
       echo "<fieldset id=\"rep_info\">\n";
       echo "<legend></legend>\n";
       echo "<div>\n";
       echo "<label>" . get_vocab("rep_type") . ":</label>\n";
       echo "<input type=\"text\" value =\"" . get_vocab($key) . "\" disabled=\"disabled\">\n";
-      echo "<input type=\"hidden\" name=\"rep_type\" value=\"0\">\n";
+      echo "<input type=\"hidden\" name=\"rep_type\" value=\"" . REP_NONE . "\">\n";
       echo "</div>\n";
-      if (isset($rep_type) && ($rep_type != 0))
+      if (isset($rep_type) && ($rep_type != REP_NONE))
       {
         $opt = "";
-        if (($rep_type == 2) || ($rep_type == 6))
+        if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
         {
           // Display day names according to language and preferred weekday start.
           for ($i = 0; $i < 7; $i++)
@@ -821,7 +821,7 @@ else
           echo "  <div><label>".get_vocab("rep_rep_day").":</label><input type=\"text\" value=\"$opt\" disabled=\"disabled\"></div>\n";
         }
         echo "  <div><label>".get_vocab("rep_end_date").":</label><input type=\"text\" value=\"$rep_end_date\" disabled=\"disabled\"></div>\n";
-        if ($rep_type == 6)
+        if ($rep_type == REP_N_WEEKLY)
         {
           echo "<div>\n";
           echo "<label for=\"rep_num_weeks\">" . get_vocab("rep_num_weeks") . ":<br>" . get_vocab("rep_for_nweekly") . "</label>\n";

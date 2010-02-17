@@ -426,15 +426,13 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
 
     switch($rep_type)
     {
-      // Daily repeat
-      case 1:
+      case REP_DAILY:
         $day += 1;
         break;
       
-      // Weekly (2) and n-Weekly (6) repeats
-      case 2:
+      case REP_WEEKLY:
         $rep_num_weeks = 1;
-      case 6:
+      case REP_N_WEEKLY:
         $j = $cur_day = date("w", $entrys[$i]);
         // Skip over days of the week which are not enabled:
         while (($j = ($j + 1) % 7) != $cur_day && !$rep_opt[$j])
@@ -445,10 +443,9 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
         $day += 1 + (7 * ($rep_num_weeks - 1));
         break;
       
-      // Monthly (3) and Yearly (4) repeats
-      case 3:
-      case 4:
-        if ($rep_type == 3)
+      case REP_MONTHLY:
+      case REP_YEARLY:
+        if ($rep_type == REP_MONTHLY)
         {
           $month += 1;
         }
@@ -479,8 +476,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
         }
         break;
    
-      // Monthly repeat on same week number and day of week
-      case 5:
+      case REP_MONTHLY_SAMEDAY:
         $day += same_day_next_month($time);
         break;
 
@@ -495,7 +491,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
   // start of the period is not one of the repeat days.  (We are
   // allowed to assume that at least one repeat day is set in this
   // function)
-  if (($rep_type == 2) || ($rep_type == 6))
+  if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
   {
     if (!$rep_opt[$start_day])
     {
@@ -779,7 +775,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
     // Get the repeat information
     if (empty($row['repeat_id']))
     {
-      $row['rep_type'] = 0;   // just as a precaution
+      $row['rep_type'] = REP_NONE;   // just as a precaution
     }
     else
     {

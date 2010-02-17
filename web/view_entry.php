@@ -211,7 +211,7 @@ else
 }
 
 
-$rep_type = 0;
+$rep_type = REP_NONE;
 
 if ($series == 1)
 {
@@ -421,10 +421,10 @@ if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
   </tr>
 <?php
 
-if($rep_type != 0)
+if($rep_type != REP_NONE)
 {
   $opt = "";
-  if (($rep_type == 2) || ($rep_type == 6))
+  if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
   {
     // Display day names according to language and preferred weekday start.
     for ($i = 0; $i < 7; $i++)
@@ -436,7 +436,7 @@ if($rep_type != 0)
       }
     }
   }
-  if ($rep_type == 6)
+  if ($rep_type == REP_N_WEEKLY)
   {
     echo "<tr><td>".get_vocab("rep_num_weeks")." ".get_vocab("rep_for_nweekly").":</td><td>$rep_num_weeks</td></tr>\n";
   }

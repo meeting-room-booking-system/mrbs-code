@@ -157,7 +157,7 @@ $is_admin = (authGetUserLevel($user) >= 2);
 // is allowed to make/edit repeat bookings.   (The edit_entry form should
 // prevent you ever getting here, but this check is here as a safeguard in 
 // case someone has spoofed the HTML)
-if (!empty($rep_type) &&
+if (isset($rep_type) && ($rep_type != REP_NONE) &&
     !$is_admin &&
     !empty($auth['only_admin_can_book_repeat']))
 {
@@ -212,7 +212,7 @@ if ($name == '')
 }       
 
 
-if (($rep_type == 6) && ($rep_num_weeks < 2))
+if (($rep_type == REP_N_WEEKLY) && ($rep_num_weeks < 2))
 {
   print_header($day, $month, $year, $area, isset($room) ? $room : "");
 ?>
@@ -307,7 +307,7 @@ else
   $endtime += cross_dst( $starttime, $endtime );
 }
 
-if (isset($rep_type) && ($rep_type > 0) &&
+if (isset($rep_type) && ($rep_type != REP_NONE) &&
     isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
 {
   // Get the repeat entry settings
@@ -316,7 +316,7 @@ if (isset($rep_type) && ($rep_type > 0) &&
 }
 else
 {
-  $rep_type = 0;
+  $rep_type = REP_NONE;
   $rep_enddate = 0;  // to avoid an undefined variable notice
 }
 
@@ -328,7 +328,7 @@ if (!isset($rep_day))
 // If there's a weekly or n-weekly repeat and no repeat day has
 // been set, then set a default repeat day as the day of
 // the week of the start of the period
-if (isset($rep_type) && (($rep_type == 2) || ($rep_type == 6)))
+if (isset($rep_type) && (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY)))
 {
   if (count($rep_day) == 0)
   {
@@ -337,9 +337,9 @@ if (isset($rep_type) && (($rep_type == 2) || ($rep_type == 6)))
   }
 }
 
-// For weekly repeat(2), build string of weekdays to repeat on:
+// For weekly and n-weekly repeats, build string of weekdays to repeat on:
 $rep_opt = "";
-if (($rep_type == 2) || ($rep_type == 6))
+if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
 {
   for ($i = 0; $i < 7; $i++)
   {
@@ -348,7 +348,7 @@ if (($rep_type == 2) || ($rep_type == 6))
 }
 
 // Expand a series into a list of start times:
-if ($rep_type != 0)
+if ($rep_type != REP_NONE)
 {
   $reps = mrbsGetRepeatEntryList($starttime,
                                  isset($rep_enddate) ? $rep_enddate : 0,
@@ -387,7 +387,7 @@ $rules_broken = array();  // Holds an array of the rules that have been broken
 // book in;  also check that the booking conforms to the policy
 foreach ( $rooms as $room_id )
 {
-  if ($rep_type != 0 && !empty($reps))
+  if ($rep_type != REP_NONE && !empty($reps))
   {
     if(count($reps) < $max_rep_entrys)
     {

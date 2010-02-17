@@ -831,6 +831,18 @@ $typel["I"] = "I";
 
 define('STATUS_PROVISIONAL', 0);
 define('STATUS_CONFIRMED',   1);
+
+ /*************************************************
+ * REPEAT TYPE CODES - internal use, do not change
+ **************************************************/
+ 
+define('REP_NONE',            0);
+define('REP_DAILY',           1);
+define('REP_WEEKLY',          2);
+define('REP_MONTHLY',         3);
+define('REP_YEARLY',          4);
+define('REP_MONTHLY_SAMEDAY', 5);
+define('REP_N_WEEKLY',        6);
  
 /********************************************************
  * PHP System Configuration - internal use, do not change
