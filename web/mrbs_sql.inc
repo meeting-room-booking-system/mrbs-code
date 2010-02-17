@@ -411,7 +411,6 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
   $week_num = 0;
   $start_day = date('w', $time);
   $start_dom = $day;  // the starting day of the month
-  $cur_day = $start_day;
 
   $entrys = array();
   for ($i = 0; $i < $max_ittr; $i++)
@@ -427,7 +426,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
     switch($rep_type)
     {
       case REP_DAILY:
-        $day += 1;
+        $day++;
         break;
       
       case REP_WEEKLY:
@@ -435,23 +434,30 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
       case REP_N_WEEKLY:
         $j = $cur_day = date("w", $entrys[$i]);
         // Skip over days of the week which are not enabled:
-        while (($j = ($j + 1) % 7) != $cur_day && !$rep_opt[$j])
+        do
         {
-          $day += 1;
+          $day++;
+          $j = ($j + 1) % 7;
+          // If we've got back to the beginning of the week, then skip
+          // over the weeks we've got to miss out (eg miss out one week
+          // if we're repeating every two weeks)
+          if ($j == $start_day)
+          {
+            $day += 7 * ($rep_num_weeks - 1);
+          }
         }
-
-        $day += 1 + (7 * ($rep_num_weeks - 1));
+        while (($j != $cur_day) && !$rep_opt[$j]);
         break;
       
       case REP_MONTHLY:
       case REP_YEARLY:
         if ($rep_type == REP_MONTHLY)
         {
-          $month += 1;
+          $month++;
         }
         else
         {
-          $year += 1;
+          $year++;
         }
         // Make sure the month and year are valid, so
         // that we can check the days with checkdate()
