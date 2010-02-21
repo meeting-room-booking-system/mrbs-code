@@ -273,9 +273,8 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 //<![CDATA[
 
 // do a little form verifying
-function validate_and_submit()
+function validate(form)
 {
-  var form = document.forms["main"];
   // null strings and spaces only strings not allowed
   if(/(^$)|(^\s+$)/.test(form.name.value))
   {
@@ -336,7 +335,6 @@ function validate_and_submit()
   form.save_button.disabled="true";
 
   // would be nice to also check date to not allow Feb 31, etc...
-  form.submit();
 
   return true;
 }
@@ -449,7 +447,7 @@ else
 ?>
 
 
-<form class="form_general" id="main" action="edit_entry_handler.php" method="get">
+<form class="form_general" id="main" action="edit_entry_handler.php" method="get" onsubmit="return validate(this)">
   <fieldset>
   <legend><?php echo get_vocab($token); ?></legend>
 
@@ -563,6 +561,9 @@ else
         </div>
       </div>
     </div>
+    
+    <div id="div_areas">
+    </div>
 
     <?php
     // Determine the area id of the room in question first
@@ -632,11 +633,21 @@ else
       }
 
       // Create area selector, only if we have Javascript
-
-      this.document.writeln("<div id=\"div_areas\">");
-      this.document.writeln("<label for=\"area\"><?php echo get_vocab("area") ?>:<\/label>");
-      this.document.writeln("          <select id=\"area\" name=\"area\" onchange=\"changeRooms(this.form)\">");
-
+      var div_areas = document.getElementById('div_areas');
+      // First of all create a label and insert it into the <div>
+      var area_label = document.createElement('label');
+      var area_label_text = document.createTextNode('<?php echo get_vocab("area") ?>:');
+      area_label.appendChild(area_label_text);
+      area_label.setAttribute('for', 'area');
+      div_areas.appendChild(area_label);
+      // Now give it a select box
+      var area_select = document.createElement('select');
+      area_select.setAttribute('id', 'area');
+      area_select.setAttribute('name', 'area');
+      area_select.onchange = function(){changeRooms(this.form)}; // setAttribute doesn't work for onChange with IE6
+      // populated with options
+      var option;
+      var option_text
       <?php
       // get list of areas
       $sql = "select id, area_name from $tbl_area order by area_name";
@@ -645,18 +656,27 @@ else
       {
         for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
         {
-          $selected = "";
+          ?>
+          option = document.createElement('option');
+          option.value = <?php echo $row['id'] ?>;
+          option_text = document.createTextNode('<?php echo $row['area_name'] ?>');
+          <?php
           if ($row['id'] == $area_id)
           {
-            $selected = 'selected=\"selected\"';
+            ?>
+            option.selected = true;
+            <?php
           }
-          print "this.document.writeln(\"            <option $selected value=\\\"".$row['id']."\\\">".$row['area_name']."<\/option>\");\n";
+          ?>
+          option.appendChild(option_text);
+          area_select.appendChild(option);
+          <?php
         }
       }
       ?>
-      this.document.writeln("          <\/select>");
-      this.document.writeln("<\/div>");
-
+      // insert the <select> which we've just assembled into the <div>
+      div_areas.appendChild(area_select);
+      
       //]]>
       </script>
       
@@ -831,22 +851,7 @@ else
       }
       echo "</fieldset>\n";
     }
- 
-    // In the section below the <div> needs to be inside the <noscript> in order to pass validation
-    ?>
-    <script type="text/javascript">
-      //<![CDATA[
-      document.writeln ('<div id="edit_entry_submit">');
-      document.writeln ('<input class="submit" type="button" name="save_button" value="<?php echo get_vocab("save")?>" onclick="validate_and_submit()">');
-      document.writeln ('<\/div>');
-      //]]>
-    </script>
-    <noscript>
-      <div id="edit_entry_submit">
-        <input class="submit" type="submit" value="<?php echo get_vocab("save")?>">
-      </div>
-    </noscript>
-    <?php
+    
     // We might be going through edit_entry more than once, for example if we have to log on on the way.  We
     // still need to preserve the original calling page so that once we've completed edit_entry_handler we can
     // go back to the page we started at (rather than going to the default view).  If this is the first time 
@@ -858,11 +863,19 @@ else
     }
     ?>
     <input type="hidden" name="returl" value="<?php echo htmlspecialchars($returl) ?>">
-    <!--input type="hidden" name="room_id" value="<?php echo $room_id?>"-->
     <input type="hidden" name="create_by" value="<?php echo $create_by?>">
     <input type="hidden" name="rep_id" value="<?php echo $rep_id?>">
     <input type="hidden" name="edit_type" value="<?php echo $edit_type?>">
-    <?php if(isset($id) && !isset($copy)) echo "<input type=\"hidden\" name=\"id\"        value=\"$id\">\n";
+    <?php 
+    if(isset($id) && !isset($copy))
+    {
+      echo "<input type=\"hidden\" name=\"id\" value=\"$id\">\n";
+    }
+
+    // The Submit button
+    echo "<div id=\"edit_entry_submit\">\n";
+    echo "<input class=\"submit\" type=\"submit\" name=\"save_button\" value=\"" . get_vocab("save") . "\">\n";
+    echo "</div>\n";
     ?>
   </fieldset>
 </form>
