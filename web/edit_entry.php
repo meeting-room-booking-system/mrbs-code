@@ -45,6 +45,16 @@ if (!isset($edit_type))
   $edit_type = "";
 }
 
+// We might be going through edit_entry more than once, for example if we have to log on on the way.  We
+// still need to preserve the original calling page so that once we've completed edit_entry_handler we can
+// go back to the page we started at (rather than going to the default view).  If this is the first time 
+// through, then $HTTP_REFERER holds the original caller.    If this is the second time through we will have 
+// stored it in $returl.
+if (!isset($returl))
+{
+  $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
+}
+    
 if (!getAuthorised(1))
 {
   showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
@@ -852,15 +862,6 @@ else
       echo "</fieldset>\n";
     }
     
-    // We might be going through edit_entry more than once, for example if we have to log on on the way.  We
-    // still need to preserve the original calling page so that once we've completed edit_entry_handler we can
-    // go back to the page we started at (rather than going to the default view).  If this is the first time 
-    // through, then $HTTP_REFERER holds the original caller.    If this is the second time through we will have 
-    // stored it in $returl.
-    if (!isset($returl))
-    {
-      $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
-    }
     ?>
     <input type="hidden" name="returl" value="<?php echo htmlspecialchars($returl) ?>">
     <input type="hidden" name="create_by" value="<?php echo $create_by?>">
