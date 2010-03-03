@@ -27,7 +27,8 @@ else
   $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
   if (($start_difference < 0) or ($start_difference%$resolution != 0))
   {
-    die('Configuration error: start and end of day incorrectly defined');
+    die('Configuration error: make sure that $eveningends is after $morningstarts
+         and that the length of the booking day is an integral multiple of $resolution.');
   }
 }
 ?>
