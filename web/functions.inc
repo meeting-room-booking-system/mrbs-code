@@ -665,7 +665,7 @@ function make_area_select_html( $link, $current, $year, $month, $day )
   $out_html = "
 <form id=\"areaChangeForm\" method=\"get\" action=\"$link\">
   <div>
-    <select name=\"area\" onchange=\"document.forms['areaChangeForm'].submit()\">";
+    <select name=\"area\" onchange=\"this.form.submit()\">";
   
     $sql = "select id, area_name from $tbl_area order by area_name";
     $res = sql_query($sql);
@@ -678,13 +678,14 @@ function make_area_select_html( $link, $current, $year, $month, $day )
       <option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['area_name']) . "</option>";
       }
     }
+    // Note:  the submit button will not be displayed if JavaScript is enabled
     $out_html .= "
     </select>
   
     <input type=\"hidden\" name=\"day\"   value=\"$day\">
     <input type=\"hidden\" name=\"month\" value=\"$month\">
     <input type=\"hidden\" name=\"year\"  value=\"$year\">
-    <input type=\"submit\" value=\"".get_vocab("change")."\">
+    <input type=\"submit\" class=\"js_none\" value=\"".get_vocab("change")."\">
     </div>
 </form>\n";
 
@@ -697,7 +698,7 @@ function make_room_select_html( $link, $area, $current, $year, $month, $day )
   $out_html = "
 <form id=\"roomChangeForm\" method=\"get\" action=\"$link\">
   <div>
-    <select name=\"room\" onchange=\"document.forms['roomChangeForm'].submit()\">";
+    <select name=\"room\" onchange=\"this.form.submit()\">";
   
     $sql = "select id, room_name from $tbl_room where area_id=$area order by sort_key";
     $res = sql_query($sql);
@@ -710,13 +711,14 @@ function make_room_select_html( $link, $area, $current, $year, $month, $day )
       <option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['room_name']) . "</option>";
       }
     }
+    // Note:  the submit button will not be displayed if JavaScript is enabled
     $out_html .= "
     </select>
     <input type=\"hidden\" name=\"day\"   value=\"$day\">
     <input type=\"hidden\" name=\"month\" value=\"$month\">
     <input type=\"hidden\" name=\"year\"  value=\"$year\">
     <input type=\"hidden\" name=\"area\"  value=\"$area\">
-    <input type=\"submit\" value=\"".get_vocab("change")."\">
+    <input type=\"submit\" class=\"js_none\" value=\"".get_vocab("change")."\">
   </div>
 </form>\n";
 
