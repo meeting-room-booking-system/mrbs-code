@@ -257,6 +257,3 @@ $vocab["for_any_questions"]  = "W sprawie pytań na które brak tu odpowiedzi.";
 
 // Uzyte w mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Błąd Krytyczny: Błąd połączenia z bazą danych";
-
-?>
-
