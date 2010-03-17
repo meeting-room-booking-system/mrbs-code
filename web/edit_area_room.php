@@ -52,12 +52,16 @@ if (!isset($day) or !isset($month) or !isset($year))
   $year  = date("Y");
 }
 
-$required_level = (isset($max_level) ? $max_level : 2);
-if (!getAuthorised($required_level))
+// Users must be at least Level 1 for this page as we will be displaying
+// information such as email addresses
+if (!getAuthorised(1))
 {
   showAccessDenied($day, $month, $year, $area, "");
   exit();
 }
+$user = getUserName();
+$required_level = (isset($max_level) ? $max_level : 2);
+$is_admin = (authGetUserLevel($user) >= $required_level);
 
 // Done changing area or room information?
 if (isset($change_done))
@@ -77,6 +81,19 @@ $enough_slots = TRUE;
 $valid_area = TRUE;
 $valid_room_name = TRUE;
 
+
+// PHASE 2
+// -------
+// Unauthorised users shouldn't normally be able to reach Phase 2, but just in case
+// they have, check again that they are allowed to be here
+if (isset($change_room) || isset($change_area))
+{
+  if (!$is_admin)
+  {
+    showAccessDenied($day, $month, $year, $area, "");
+    exit();
+  }
+}
 
 // PHASE 2 (ROOM) - UPDATE THE DATABASE
 // ------------------------------------
@@ -256,11 +273,16 @@ if (isset($change_area) && !empty($area))
 
 print_header($day, $month, $year, isset($area) ? $area : "", isset($room) ? $room : "");
 
-?>
+if ($is_admin)
+{
+  // Heading is confusing for non-admins
+  echo "<h2>" . get_vocab("editroomarea") . "</h2>\n";
+}
 
-<h2><?php echo get_vocab("editroomarea") ?></h2>
-
-<?php
+// Non-admins will only be allowed to view room details, not change them
+// (We would use readonly instead of disabled, but it is not valid for some 
+// elements, eg <select>)
+$disabled = ($is_admin) ? "" : " disabled=\"disabled\"";
 
 // THE ROOM FORM
 if (!empty($room))
@@ -276,7 +298,9 @@ if (!empty($room))
   ?>
   <form class="form_general" id="edit_room" action="edit_area_room.php" method="post">
     <fieldset class="admin">
-    <legend><?php echo get_vocab("editroom") ?></legend>
+    <legend>
+    <?php echo ($is_admin) ? get_vocab("editroom") : get_vocab("viewroom")?>
+    </legend>
   
       <fieldset>
       <legend></legend>
@@ -303,11 +327,11 @@ if (!empty($room))
       {
         fatal_error(FALSE, get_vocab('noareas'));  // should not happen
       }
-      ?>
-      <div>
-      <label for="new_area"><?php echo get_vocab("area") ?>:</label>
-      <select id="new_area" name="new_area">
-        <?php  
+      
+      // The area select box
+      echo "<div>\n";
+      echo "<label for=\"new_area\">" . get_vocab("area") . ":</label>\n";
+      echo "<select id=\"new_area\" name=\"new_area\"$disabled>\n";
         for ($i = 0; ($row_area = sql_row_keyed($res, $i)); $i++)
         {
           echo "<option value=\"" . $row_area['id'] . "\"";
@@ -317,49 +341,56 @@ if (!empty($room))
           }
           echo ">" . $row_area['area_name'] . "</option>\n";
         }  
-        ?>
-      </select>
-      <input type="hidden" name="old_area" value="<?php echo $row['area_id'] ?>">
-      </div>
+      echo "</select>\n";
+      echo "<input type=\"hidden\" name=\"old_area\" value=\"" . $row['area_id'] . "\">\n";
+      echo "</div>\n";
     
-      <div>
-      <label for="room_name"><?php echo get_vocab("name") ?>:</label>
-      <input type="text" id="room_name" name="room_name" value="<?php echo htmlspecialchars($row["room_name"]); ?>">
-      <input type="hidden" name="old_room_name" value="<?php echo htmlspecialchars($row["room_name"]); ?>">
-      </div>
+      // Room name  
+      echo "<div>\n";
+      echo "<label for=\"room_name\">" . get_vocab("name") . ":</label>\n";
+      echo "<input type=\"text\" id=\"room_name\" name=\"room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\"$disabled>\n";
+      echo "<input type=\"hidden\" name=\"old_room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\">\n";
+      echo "</div>\n";
     
-      <div>
-      <?php
+      // Sort key  
+      echo "<div>\n";
       echo "<label for=\"sort_key\" title=\"" . get_vocab("sort_key_note") . "\">" . get_vocab("sort_key") . ":</label>\n";
+      echo "<input type=\"text\" id=\"sort_key\" name=\"sort_key\" value=\"" . htmlspecialchars($row["sort_key"]) . "\"$disabled>\n";
+      echo "</div>\n";
+    
+      // Description  
+      echo "<div>\n";
+      echo "<label for=\"description\">" . get_vocab("description") . ":</label>\n";
+      echo "<input type=\"text\" id=\"description\" name=\"description\" value=\"" . htmlspecialchars($row["description"]) . "\"$disabled>\n";
+      echo "</div>\n";
+    
+      // Capacity  
+      echo "<div>\n";
+      echo "<label for=\"capacity\">" . get_vocab("capacity") . ":</label>\n";
+      echo "<input type=\"text\" id=\"capacity\" name=\"capacity\" value=\"" . $row["capacity"] . "\"$disabled>\n";
+      echo "</div>\n";
+    
+      // Room admin email  
+      echo "<div>\n";
+      echo "<label for=\"room_admin_email\">" . get_vocab("room_admin_email") . ":</label>\n";
+      echo "<input type=\"text\" id=\"room_admin_email\" name=\"room_admin_email\" maxlength=\"75\" value=\"" . htmlspecialchars($row["room_admin_email"]) . "\"$disabled>\n";
+      echo "</div>\n";
+    
+      // Submit and Back buttons (Submit only if they're an admin)  
+      echo "<fieldset class=\"submit_buttons\">\n";
+      echo "<legend></legend>\n";
+      echo "<div id=\"edit_area_room_submit_back\">\n";
+      echo "<input class=\"submit\" type=\"submit\" name=\"change_done\" value=\"" . get_vocab("backadmin") . "\">\n";
+      echo "</div>\n";
+      if ($is_admin)
+      { 
+        echo "<div id=\"edit_area_room_submit_save\">\n";
+        echo "<input class=\"submit\" type=\"submit\" name=\"change_room\" value=\"" . get_vocab("change") . "\">\n";
+        echo "</div>\n";
+      }
+      echo "</fieldset>\n";
+        
       ?>
-      <input type="text" id="sort_key" name="sort_key" value="<?php echo htmlspecialchars($row["sort_key"]); ?>">
-      </div>
-    
-      <div>
-      <label for="description"><?php echo get_vocab("description") ?>:</label>
-      <input type="text" id="description" name="description" value="<?php echo htmlspecialchars($row["description"]); ?>"> 
-      </div>
-    
-      <div>
-      <label for="capacity"><?php echo get_vocab("capacity") ?>:</label>
-      <input type="text" id="capacity" name="capacity" value="<?php echo $row["capacity"]; ?>">
-      </div>
-    
-      <div>
-      <label for="room_admin_email"><?php echo get_vocab("room_admin_email") ?>:</label>
-      <input type="text" id="room_admin_email" name="room_admin_email" maxlength="75" value="<?php echo htmlspecialchars($row["room_admin_email"]); ?>">
-      </div>
-    
-      <fieldset class="submit_buttons">
-      <legend></legend>
-        <div id="edit_area_room_submit_back">
-          <input class="submit" type="submit" name="change_done" value="<?php echo get_vocab("backadmin") ?>">
-        </div>
-        <div id="edit_area_room_submit_save">
-          <input class="submit" type="submit" name="change_room" value="<?php echo get_vocab("change") ?>">
-        </div>
-      </fieldset>
-    
     </fieldset>
   </form>
 
@@ -369,6 +400,13 @@ if (!empty($room))
 // THE AREA FORM
 if (!empty($area))
 {
+  // Only admins can see this form
+  if (!$is_admin)
+  {
+    showAccessDenied($day, $month, $year, $area, "");
+    exit();
+  }
+  // Get the details for this area
   $res = sql_query("SELECT * FROM $tbl_area WHERE id=$area LIMIT 1");
   if (! $res)
   {

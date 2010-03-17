@@ -422,7 +422,7 @@ function init()
       echo "</td>\n";
       
       echo "<td>\n";
-      echo "<a href=\"admin.php?$query_str\">" . get_vocab("admin") . "</a>\n";
+      echo "<a href=\"admin.php?$query_str\">" . get_vocab("rooms") . "</a>\n";
       echo "</td>\n";
       
       echo "<td>\n";

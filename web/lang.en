@@ -280,15 +280,16 @@ $vocab["browserlang"]        = "Your browser is set with the following language 
 $vocab["addroom"]            = "Add Room";
 $vocab["capacity"]           = "Capacity";
 $vocab["norooms"]            = "No rooms have been defined.";
-$vocab["administration"]     = "Administration";
+$vocab["administration"]     = "Room Details";
 $vocab["invalid_area_name"]  = "This area name has already been used!";
 
 // Used in edit_area_room.php
 $vocab["editarea"]                = "Edit Area";
 $vocab["change"]                  = "Change";
-$vocab["backadmin"]               = "Back to Admin";
+$vocab["backadmin"]               = "Back to Rooms";
 $vocab["editroomarea"]            = "Edit Area or Room Description";
 $vocab["editroom"]                = "Edit Room";
+$vocab["viewroom"]                = "View Room";
 $vocab["update_room_failed"]      = "Update room failed: ";
 $vocab["error_room"]              = "Error: room ";
 $vocab["not_found"]               = " not found";

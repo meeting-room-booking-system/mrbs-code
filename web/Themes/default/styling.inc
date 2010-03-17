@@ -22,6 +22,7 @@ $header_back_color              = $banner_back_color;  // background colour for 
 $admin_table_header_back_color  = $header_back_color;     // background colour for header and also border colour for table cells
 $admin_table_header_sep_color   = $body_background_color; // vertical separator colour in header
 $admin_table_header_font_color  = $header_font_color;     // font colour for header
+$admin_table_border_color       = "#C3CCD3";
 
 $main_table_border_color        = $body_background_color; // border colour for day/week/month tables - outside
 $main_table_header_border_color = $body_background_color; // border colour for day/week/month tables - header

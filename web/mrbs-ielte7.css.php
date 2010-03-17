@@ -12,6 +12,13 @@ require_once "theme.inc";
 
 /* Fixes for Internet Explorer 7 and less */
 
+/* ------------ ADMIN.PHP ---------------------------*/
+<?php
+// Alignment slightly different in IE7 and below
+?>
+#areaChangeForm button {margin-top: -0.1em}
+
+
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/
 
 <?php

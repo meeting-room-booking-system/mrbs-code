@@ -550,13 +550,13 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
     if ($enable_periods)
     {
       echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
-      echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+      echo "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
       echo "</a>\n";
     }
     else
     {
       echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$morningstarts&amp;minute=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
-      echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+      echo "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
       echo "</a>\n";
     }
     if ($javascript_cursor)

@@ -665,7 +665,7 @@ function make_area_select_html( $link, $current, $year, $month, $day )
   $out_html = "
 <form id=\"areaChangeForm\" method=\"get\" action=\"$link\">
   <div>
-    <select name=\"area\" onchange=\"this.form.submit()\">";
+    <select class=\"room_area_select\" id=\"area_select\" name=\"area\" onchange=\"this.form.submit()\">";
   
     $sql = "select id, area_name from $tbl_area order by area_name";
     $res = sql_query($sql);
@@ -698,7 +698,7 @@ function make_room_select_html( $link, $area, $current, $year, $month, $day )
   $out_html = "
 <form id=\"roomChangeForm\" method=\"get\" action=\"$link\">
   <div>
-    <select name=\"room\" onchange=\"this.form.submit()\">";
+    <select class=\"room_area_select\" name=\"room\" onchange=\"this.form.submit()\">";
   
     $sql = "select id, room_name from $tbl_room where area_id=$area order by sort_key";
     $res = sql_query($sql);
@@ -1346,13 +1346,13 @@ function draw_cell($cell, $query_strings, $cell_class)
         if( $enable_periods )
         {
           echo "<a class=\"new_booking\" href=\"edit_entry.php?" . $query_strings['new_periods'] . "\">\n";
-          echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          echo "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
           echo "</a>\n";
         }
         else
         {
           echo "<a class=\"new_booking\" href=\"edit_entry.php?" . $query_strings['new_times'] . "\">\n";
-          echo "<img src=\"new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          echo "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
           echo "</a>\n";
         }
         

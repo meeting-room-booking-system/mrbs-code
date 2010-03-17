@@ -31,6 +31,8 @@ body {font-size: small;
 h1 {font-size: x-large}
 h2 {font-size: large}
 
+img {border: 0}
+
 a:link    {color: <?php echo $anchor_link_color ?>;    text-decoration: none; font-weight: bold}
 a:visited {color: <?php echo $anchor_visited_color ?>; text-decoration: none; font-weight: bold}
 a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration: underline; font-weight: bold} 
@@ -43,32 +45,32 @@ td form {margin: 0}     /* Prevent IE from displaying margins around forms in ta
 legend {font-weight: bold; font-size: large;
     font-family: <?php echo $standard_font_family ?>;
     color: <?php echo $standard_font_color ?>}
-fieldset {margin: 0; padding: 0; border: 0}
+fieldset {margin: 0; padding: 0; border: 0; 
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px}
 fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
-    border: 1px solid <?php echo $admin_table_header_back_color ?>}
+    border: 1px solid <?php echo $admin_table_border_color ?>}
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
 
 
-
 table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_header_back_color ?>; border-style: solid;
     border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
+.admin_table th, .admin_table td {padding: 0.1em 0.5em 0.1em 0.5em; vertical-align: middle; text-align: left;
+    border-top-width: 1px; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;
+    border-top-color: <?php echo $admin_table_header_back_color ?>}
 .admin_table th {color: <?php echo $admin_table_header_font_color ?>; font-size: small;
     background-color: <?php echo $admin_table_header_back_color ?>; 
-    padding: 0.1em 0.5em 0.1em 0.5em;
-    border-top-width: 1px; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;
-    border-top-color: <?php echo $admin_table_header_back_color ?>; border-left-color: <?php echo $admin_table_header_sep_color ?>;
-    vertical-align: middle; text-align: left}
+    border-left-color: <?php echo $admin_table_header_sep_color ?>}
 .admin_table th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}
-.admin_table td {padding: 0.1em 0.5em 0.1em 0.5em; 
-    border-top-width: 1px; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;
-    border-top-color: <?php echo $admin_table_header_back_color ?>; border-left-color: <?php echo $admin_table_header_back_color ?>;
-    vertical-align: middle}
+.admin_table td {border-left-color: <?php echo $admin_table_header_back_color ?>;}
     
 .naked {margin: 0; padding: 0; border-width: 0} /* Invisible tables used for internal needs */
 table.naked {width: 100%; height: 100%}
 table:hover.naked {cursor: pointer}   /* set cursor to pointer; if you don't it doesn't show up when show_plus_link is false */
 
+select.room_area_select {margin-right: 0.5em}
 
 /* ------------ ADMIN.PHP ---------------------------*/
 <?php
@@ -77,14 +79,11 @@ table:hover.naked {cursor: pointer}   /* set cursor to pointer; if you don't it 
 $admin_form_label_width       = '7.0';   // em
 $admin_form_gap               = '1.0';   // em
 $admin_form_input_width       = '10.5';   // em   (Also used in edit_area_room.php)
-$admin_form_overheads         = '1.0';   // em   (fudge factor)
-$admin_form_width             = $admin_form_label_width + $admin_form_gap + $admin_form_input_width + $admin_form_overheads;
-$admin_form_width             = number_format($admin_form_width, 1, '.', '');   // get rid of any commas
+
 ?>
-table#admin {margin-bottom: 1.0em}
-#admin th {text-align: center}
-#admin td {padding: 0.5em; vertical-align: top}
-.form_admin fieldset {border: 0; padding-top: 1.0em; width: <?php echo $admin_form_width ?>em}  /* width necessary for Safari */
+form.form_admin {float: left; clear: left; margin: 2em 0 0 0}
+.form_admin fieldset {float: left; width: auto; border: 1px solid <?php echo $admin_table_border_color ?>; padding: 1em}
+.form_admin legend {font-size: small}
 .form_admin div {float: left; clear: left} 
 .form_admin label {
     display: block; float: left; clear: left; 
@@ -99,6 +98,36 @@ table#admin {margin-bottom: 1.0em}
 .form_admin input.submit {
     width: auto; margin-top: 1.2em; margin-left: <?php echo number_format(($admin_form_gap + $admin_form_label_width), 1, '.', '')?>em
 }
+.admin h2 {clear: left}
+div#area_form, div#room_form {float: left; margin: 0 0 2em 1em}
+#area_form form {float: left; margin-right: 1em}
+#area_form label#area_label {display: block; float: left; font-weight: bold; margin-right: <?php echo $admin_form_gap ?>em}
+#areaChangeForm select {display: block; float: left; margin: -0.1em 1.5em 0 0}
+#areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
+#areaChangeForm button {display: block; float: left; margin: -0.2em 0.5em 0 0.5em;
+    background-color: transparent; border: 0; padding: 0}
+#areaChangeForm button img {vertical-align: middle}
+
+div#header_column, div#body_columns {float: left}
+
+#room_info table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_border_color ?>; border-style: solid;
+    border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
+#room_info th div, #room_info td div {display: table-cell; vertical-align: middle; white-space: nowrap; overflow: hidden}
+#room_info th div {height: 1.5em; max-height: 1.5em; min-height: 1.5em}
+#room_info td div {height: 2em; max-height: 2em; min-height: 2em}
+#room_info td.int div {width: 6em; text-align: right; padding-right: 0.5em}
+
+tr.even_row {background-color: <?php echo $row_even_color ?>}
+tr.odd_row {background-color: <?php echo $row_odd_color ?>}
+#room_info th, #room_info td {vertical-align: middle; text-align: left;
+    padding: 0.1em 0.5em 0.1em 0.5em;
+    border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;}
+#room_info th {color: <?php echo $admin_table_header_font_color ?>; 
+    background-color: <?php echo $admin_table_header_back_color ?>;
+    }
+#room_info td, #room_info th {border-color: <?php echo $admin_table_border_color ?>}
+#room_info #header_column th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}
+
 
 
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/
@@ -179,7 +208,7 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main#month_main a {height: 100%; width: 100%; padding: 0 2px 0 2px}
 
 a.new_booking {display: block; font-size: medium; text-align: center}
-.new_booking img {margin: auto; border: 0; padding: 4px 0 2px 0}
+.new_booking img {margin: auto; padding: 4px 0 2px 0}
 <?php
 if (!$show_plus_link)
 {
@@ -625,7 +654,6 @@ table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
 #banner td:first-child {border-left-width: 0}
 #banner td#company {font-size: large}
 #banner #company div {width: 100%}
-#banner #company img {border: 0}
 #banner a:link    {color: <?php echo $anchor_link_color_banner ?>;    text-decoration: none; font-weight: normal}
 #banner a:visited {color: <?php echo $anchor_visited_color_banner ?>; text-decoration: none; font-weight: normal}
 #banner a:hover   {color: <?php echo $anchor_hover_color_banner ?>;   text-decoration:underline; font-weight: normal}
