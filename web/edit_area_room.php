@@ -488,11 +488,7 @@ if (!empty($room))
               break;
             // then look at any user defined fields
             default:
-              $tag = substr($tbl_room, strlen($db_tbl_prefix));  // strip the prefix off the table name
-              $tag .= "." . $field['name'];           // add on the fieldname
-              // then if there's a string in the vocab array for $tag use that
-              // otherwise just use the fieldname
-              $label_text = (isset($vocab[$tag])) ? get_vocab($tag) : $field['name'];
+              $label_text = get_loc_field_name($tbl_room, $field['name']);
               echo "<label for=\"f_" . $field['name'] . "\">$label_text:</label>\n";
               // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
               // assume are intended to be booleans)

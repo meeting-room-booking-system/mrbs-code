@@ -683,6 +683,23 @@ function get_vocab($tag)
   return $translated;
 }
 
+
+// Get localized field name for a user defined table column
+// Looks for a tag of the format tablename.columnname (where tablename is
+// stripped of the table prefix) and if can't find a string for that tag will
+// return the columnname
+function get_loc_field_name($table, $name)
+{
+  global $vocab, $db_tbl_prefix;
+  
+  $tag = substr($table, strlen($db_tbl_prefix));  // strip the prefix off the table name
+  $tag .= "." . $name;           // add on the fieldname
+  // then if there's a string in the vocab array for $tag use that
+  // otherwise just use the fieldname
+  return (isset($vocab[$tag])) ? get_vocab($tag) : $name;
+}
+
+
 // AIX version of utf8_convert(); needed as locales won't give us UTF-8
 // NOTE: Should ONLY be called with input encoded in the default code set of the current locale!
 // NOTE: Uses the LC_TIME category for determining the current locale setting, so should preferrably be used on date/time input only!

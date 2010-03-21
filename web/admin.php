@@ -269,11 +269,7 @@ if (isset($area))
             break;
           // any user defined fields
           default:
-            $text = substr($tbl_room, strlen($db_tbl_prefix));  // strip the prefix off the table name
-            $text .= "." . $field['name'];           // add on the fieldname
-            // then if there's a string in the vocab array for $tag use that
-            // otherwise just use the fieldname
-            $text = (isset($vocab[$text])) ? get_vocab($text) : $field['name'];
+            $text = get_loc_field_name($tbl_room, $field['name']);
             break;
         }
         echo "<th><div>" . htmlspecialchars($text) . "</div></th>\n";

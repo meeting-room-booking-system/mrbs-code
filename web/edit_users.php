@@ -108,21 +108,6 @@ function validate_password($password)
 }
 
 
-/* Get localized field name */
-function get_loc_field_name($table, $name)
-{
-  global $vocab;
-
-  // Search for indexes "user_name", "user_password", etc, in the localization array.
-  if (isset($vocab["user_".$name]))
-  {
-    return get_vocab("user_".$name);
-  }
-  // If there is no entry (likely if user-defined fields have been added), return itself.
-  return $name;
-}
-
-
 // Get the type that should be used with get_form_var() for
 // a field which is a member of the array returned by get_field_info()
 function get_form_var_type($field)
@@ -506,7 +491,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           for ($i=0; $i<2; $i++)
           {
             print "<div>\n";
-            print "<label for=\"password$i\">" . get_vocab("user_password") . ":</label>\n";
+            print "<label for=\"password$i\">" . get_vocab("users.password") . ":</label>\n";
             print "<input type=\"password\" id=\"password$i\" name=\"password$i\" value=\"\">\n";
             print "</div>\n";
           }
