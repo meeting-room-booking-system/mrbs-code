@@ -205,7 +205,7 @@ if (isset($area))
     echo "<div id=\"room_info\">\n";
     // (a) the "header" column containing the room names
     echo "<div id=\"header_column\">\n";
-    echo "<table>\n";
+    echo "<table class=\"admin_table\">\n";
     echo "<thead>\n";
     echo "<tr>\n";
     if ($is_admin)
@@ -251,7 +251,7 @@ if (isset($area))
     
     // (b) the "body" columns containing the room info
     echo "<div id=\"body_columns\">\n";
-    echo "<table>\n";
+    echo "<table class=\"admin_table\">\n";
     echo "<thead>\n";
     echo "<tr>\n";
     // ignore these columns, either because we don't want to display them,

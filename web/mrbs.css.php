@@ -32,11 +32,15 @@ h1 {font-size: x-large}
 h2 {font-size: large}
 
 img {border: 0}
+button {background-color: transparent; border: 0; padding: 0}
+button img {vertical-align: middle}
 
 a:link    {color: <?php echo $anchor_link_color ?>;    text-decoration: none; font-weight: bold}
 a:visited {color: <?php echo $anchor_visited_color ?>; text-decoration: none; font-weight: bold}
 a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration: underline; font-weight: bold} 
 
+tr.even_row {background-color: <?php echo $row_even_color ?>}
+tr.odd_row {background-color: <?php echo $row_odd_color ?>}
 
 td, th {vertical-align: top}
 
@@ -53,23 +57,21 @@ fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
     border: 1px solid <?php echo $admin_table_border_color ?>}
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
-
-
-table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_header_back_color ?>; border-style: solid;
-    border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
-.admin_table th, .admin_table td {padding: 0.1em 0.5em 0.1em 0.5em; vertical-align: middle; text-align: left;
-    border-top-width: 1px; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;
-    border-top-color: <?php echo $admin_table_header_back_color ?>}
-.admin_table th {color: <?php echo $admin_table_header_font_color ?>; font-size: small;
-    background-color: <?php echo $admin_table_header_back_color ?>; 
-    border-left-color: <?php echo $admin_table_header_sep_color ?>}
-.admin_table th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}
-.admin_table td {border-left-color: <?php echo $admin_table_header_back_color ?>;}
     
 .naked {margin: 0; padding: 0; border-width: 0} /* Invisible tables used for internal needs */
 table.naked {width: 100%; height: 100%}
 table:hover.naked {cursor: pointer}   /* set cursor to pointer; if you don't it doesn't show up when show_plus_link is false */
 
+table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_border_color ?>; border-style: solid;
+    border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
+.admin_table th, .admin_table td {vertical-align: middle; text-align: left;
+    padding: 0.1em 0.5em 0.1em 0.5em;
+    border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;}
+.admin_table th {color: <?php echo $admin_table_header_font_color ?>; 
+    background-color: <?php echo $admin_table_header_back_color ?>}
+.admin_table td, .admin_table th {border-color: <?php echo $admin_table_border_color ?>}
+.admin_table th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}    
+    
 select.room_area_select {margin-right: 0.5em}
 
 /* ------------ ADMIN.PHP ---------------------------*/
@@ -104,32 +106,18 @@ div#area_form, div#room_form {float: left; width: 95%; padding: 0 0 2em 1em}
 #area_form label#area_label {display: block; float: left; font-weight: bold; margin-right: <?php echo $admin_form_gap ?>em}
 #areaChangeForm select {display: block; float: left; margin: -0.1em 1.5em 0 0}
 #areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
-#areaChangeForm button {display: block; float: left; margin: -0.2em 0.5em 0 0.5em;
-    background-color: transparent; border: 0; padding: 0}
-#areaChangeForm button img {vertical-align: middle}
+#areaChangeForm button {display: block; float: left; margin: -0.2em 0.5em 0 0.5em}
 
 div#room_info {width: 100%; float: left}
 div#header_column, div#body_columns {position: relative; float: left; overflow-x: scroll; overflow-y: hidden}
 div#header_column {max-width: 20%}
 div#body_columns {max-width: 80%}
 
-#room_info table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_border_color ?>; border-style: solid;
-    border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
 #room_info th div, #room_info td div {display: table-cell; vertical-align: middle; white-space: nowrap; overflow: hidden}
 #room_info th div {height: 1.5em; max-height: 1.5em; min-height: 1.5em}
 #room_info td div {height: 2em; max-height: 2em; min-height: 2em}
 #room_info td.int div {width: 6em; text-align: right; padding-right: 0.5em}
-
-tr.even_row {background-color: <?php echo $row_even_color ?>}
-tr.odd_row {background-color: <?php echo $row_odd_color ?>}
-#room_info th, #room_info td {vertical-align: middle; text-align: left;
-    padding: 0.1em 0.5em 0.1em 0.5em;
-    border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;}
-#room_info th {color: <?php echo $admin_table_header_font_color ?>; 
-    background-color: <?php echo $admin_table_header_back_color ?>;
-    }
-#room_info td, #room_info th {border-color: <?php echo $admin_table_border_color ?>}
-#room_info #header_column th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}
+#body_columns .admin_table th:first-child {border-left-color: <?php echo $admin_table_border_color ?>}
 
 
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/
@@ -700,13 +688,14 @@ table#pending_list {width: 100%}
 #pending_list table.minimised tbody {display: none}
 #pending_list table th {border-top: 1px solid <?php echo $admin_table_header_sep_color ?>;
                         background-color: <?php echo $pending_header_back_color ?>}
+#pending_list td {border-top-width: 1px}
 #pending_list .control {padding-left: 0; padding-right: 0; text-align: center;
                         color: <?php echo $standard_font_color ?>}
 #pending_list th.control + th {border-left-width: 0}
 #pending_list td.control + td {border-left-width: 0}
 #pending_list table th.control{background-color: <?php echo $pending_control_color ?>; cursor: default}
 #pending_list table th a {color: <?php echo $admin_table_header_font_color ?>}
-#pending_list table td {border-color: <?php echo $pending_header_back_color ?>;
+#pending_list table td {border-color: <?php echo $admin_table_border_color ?>;
                         background-color: <?php echo $series_entry_back_color ?>}
 #pending_list .control             {width: 1.2em}
 #pending_list th.header_name       {width: 10%}

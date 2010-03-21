@@ -746,6 +746,8 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   print "<table id=\"edit_users_list\" class=\"admin_table\">\n";
   print "<thead>\n";
   print "<tr>";
+  // First column which is an action button
+  print "<th>" . get_vocab("action") . "</th>";
   
   // Column headers (we don't use 'id' and 'password')
   foreach ($fields as $fieldname)
@@ -755,33 +757,46 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
       print "<th>" . get_loc_field_name($fieldname) . "</th>";
     }
   }
-  // Last column which is an action button
-  print "<th>" . get_vocab("action") . "</th>";
+
   print "</tr>\n";
   print "</thead>\n";
   
   print "<tbody>\n";
-  $i = 0; 
+  $i = 0;
+  $row_class = "odd_row";
   while ($line = sql_row_keyed($list, $i++))
   {
-    print "<tr>\n";
+    $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
+    echo "<tr class=\"$row_class\">\n";
+    // First column (the action button)
+    print "<td style=\"text-align: center\">\n";
+    // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
+    if (($level >= $min_user_editing_level) || (strcasecmp($line['name'], $user) == 0))
+    {
+      echo "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+      echo "<div>\n";
+      echo "<input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
+      echo "<input type=\"hidden\" name=\"Id\" value=\"" . $line['id'] . "\">\n";
+      echo "<button type=\"submit\" name=\"action\" value=\"edit\" title=\"" . get_vocab("edit") . "\">\n";
+      echo "<img src=\"images/edit.png\" width=\"16\" height=\"16\" alt=\"" . get_vocab("edit") . "\">\n";
+      echo "</button>\n";
+      echo "</div>\n";
+      echo "</form>\n";
+    }
+    else
+    {
+      print "&nbsp;\n";
+    }
+    print "</td>\n";
     
     // Column contents
     foreach ($line as $key=>$col_value) 
-    {
-      // sql_row_keyed returns an array indexed by both index number annd key name,
-      // so skip past the index numbers
-      if (is_int($key))
-      {
-        continue;
-      }
+    { 
       switch($key)
       {
         case 'id':
-          $this_id = $col_value;  // Don't display it, but remember it.
-          break;
         case 'password':
-          break;                  // Don't display the password
+          break;                  // Don't display the id or password
         case 'level':
           echo "<td>" . get_vocab("level_$col_value") . "</td>\n";
           break;
@@ -791,24 +806,6 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
       }  // end switch   
     }  // end foreach
     
-    // Last column (the action button)
-    print "<td>\n";
-    // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
-    if (($level >= $min_user_editing_level) || (strcasecmp($line['name'], $user) == 0))
-    {
-      print "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-      print "  <div>\n";
-      print "    <input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
-      print "    <input type=\"hidden\" name=\"Id\" value=\"$this_id\">\n";
-      print "    <input type=\"submit\" value=\"" . get_vocab("edit") . "\">\n";
-      print "  </div>\n";
-      print "</form>\n";
-    }
-    else
-    {
-      print "&nbsp;\n";
-    }
-    print "</td>\n";
     print "</tr>\n";
     
   }  // end while
