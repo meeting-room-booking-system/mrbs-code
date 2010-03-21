@@ -627,6 +627,8 @@ form#form_edit_users {width: auto; margin-top: 2.0em}
 #form_edit_users select, #form_edit_users textarea {
     margin-left: <?php echo $edit_users_gap ?>em;
 }
+#form_edit_users textarea {margin-bottom: 0.5em}
+
 #form_edit_users p {display: block; float: left; clear: left; padding: 0.5em 0 0.7em 0; margin: 0}
 #form_edit_users input.submit {right: 2.0em}                                   /* and put the OK on the right     */
 #form_delete_users input.submit {left: 2.0em}                                  /* and put the Delete on the left */
