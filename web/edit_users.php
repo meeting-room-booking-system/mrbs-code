@@ -108,38 +108,8 @@ function validate_password($password)
 }
 
 
-$fields = array();
-$field_props = array();
-
-/* Get the list of fields actually in the table. (Allows the addition of new fields later on) */
-function get_fields()
-{
-  global $tbl_users;
-  global $fields, $field_props;
-  array_splice($fields, 0);        // clear out any existing field names
-  array_splice($field_props, 0);   // and properties
-  $result = sql_query("select * from $tbl_users limit 1");
-  $nfields = sql_num_fields($result);
-  for ($i=0; $i<$nfields ;$i++)
-  {
-    $field_name = sql_field_name($result, $i);
-    $fields[] = $field_name;
-    $field_props[$field_name]['type'] = sql_field_type($result, $i);
-    $field_props[$field_name]['istext'] = ($field_props[$field_name]['type'] == 'string') ? true : false;
-    $field_props[$field_name]['isnum'] = preg_match('/(int|real)/',$field_props[$field_name]['type']) ? true : false;
-    $field_props[$field_name]['isbool'] = ($field_props[$field_name]['type'] == 'boolean') ? true : false;
-  }
-  sql_free($result);
-}
-
-
-$nusers = sql_query1("select count(*) from $tbl_users");
-
-// Get the list of fields in the table
-get_fields();
-
 /* Get localized field name */
-function get_loc_field_name($name)
+function get_loc_field_name($table, $name)
 {
   global $vocab;
 
@@ -151,6 +121,157 @@ function get_loc_field_name($name)
   // If there is no entry (likely if user-defined fields have been added), return itself.
   return $name;
 }
+
+
+// Get the type that should be used with get_form_var() for
+// a field which is a member of the array returned by get_field_info()
+function get_form_var_type($field)
+{
+  switch($field['nature'])
+  {
+    case 'character':
+      $type = 'string';
+      break;
+    case 'integer':
+      $type = 'int';
+      break;
+    // We can only really deal with the types above at the moment
+    default:
+      $type = 'string';
+      break;
+  }
+  return $type;
+}
+
+
+// Produce the HTML for a freeze_panes sub-table
+//
+//   $info       an array containing the data
+//   $columns    the columns in that data to display
+//   $class      the class name tio assign to the table
+//   $action     whether an action button is required
+function freeze_panes_table_html($info, $columns, $class, $action=FALSE)
+{
+  global $tbl_users, $PHP_SELF;
+  global $user, $level, $min_user_editing_level, $max_content_length;
+  global $fields;
+  
+  $html = '';
+  $html .= "<div class=\"$class\">\n";
+  $html .= "<table class=\"admin_table\">\n";
+  $html .= "<thead>\n";
+  $html .= "<tr>";
+  if ($action)
+  {
+    // First column which is an action button
+    $html .= "<th><div>" . get_vocab("action") . "</div></th>";
+  }
+  
+  // Column headers
+  foreach ($fields as $field)
+  {
+    $fieldname = $field['name'];
+    if (in_array($fieldname, $columns))
+    {
+      $html .= "<th><div>" . get_loc_field_name($tbl_users, $fieldname) . "</div></th>";
+    }
+  }
+
+  $html .= "</tr>\n";
+  $html .= "</thead>\n";
+  
+  $html .= "<tbody>\n";
+  $row_class = "odd_row";
+  foreach ($info as $line)
+  {
+    $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
+    $html .= "<tr class=\"$row_class\">\n";
+    if ($action)
+    {
+      // First column (the action button)
+      $html .= "<td class=\"action\"><div>\n";
+      // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
+      if (($level >= $min_user_editing_level) || (strcasecmp($line['name'], $user) == 0))
+      {
+        $html .= "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+        $html .= "<div>\n";
+        $html .= "<input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
+        $html .= "<input type=\"hidden\" name=\"Id\" value=\"" . $line['id'] . "\">\n";
+        $html .= "<button type=\"submit\" name=\"action\" value=\"edit\" title=\"" . get_vocab("edit") . "\">\n";
+        $html .= "<img src=\"images/edit.png\" width=\"16\" height=\"16\" alt=\"" . get_vocab("edit") . "\">\n";
+        $html .= "</button>\n";
+        $html .= "</div>\n";
+        $html .= "</form>\n";
+      }
+      else
+      {
+        $html .= "&nbsp;\n";
+      }
+      $html .= "</div></td>\n";
+    }
+    
+    // Column contents
+    foreach ($fields as $field)
+    {
+      $key = $field['name'];
+      if (in_array($key, $columns))
+      {
+        $col_value = $line[$key];
+        switch($key)
+        {
+          // special treatment for some fields
+          case 'level':
+            // the level field contains a code and we want to display a string
+            $html .= "<td><div>" . get_vocab("level_$col_value") . "</div></td>\n";
+            break;
+          case 'email':
+            // we don't want to truncate the email address
+            $html .= "<td><div>" . htmlspecialchars($col_value) . "</div></td>\n";
+            break;
+          default:
+            if (($field['nature'] == 'boolean') || 
+                (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+            {
+              // booleans: represent by a checkmark
+              $html .= "<td class=\"int\"><div>";
+              $html .= (!empty($col_value)) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;";
+              $html .= "</div></td>\n";
+            }
+            elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
+            {
+              // integer values
+              $html .= "<td class=\"int\"><div>" . $col_value . "</div></td>\n";
+            }
+            else
+            {
+              // strings
+              $text = htmlspecialchars($col_value);
+              $html .= "<td title=\"$text\"><div>";
+              $html .= substr($text, 0, $max_content_length);
+              $html .= (strlen($text) > $max_content_length) ? " ..." : "";
+              $html .= "</div></td>\n";
+            }
+            break;
+        }  // end switch
+      }
+    }  // end foreach
+    
+    $html .= "</tr>\n";
+    
+  }  // end while
+  
+  $html .= "</tbody>\n";
+  $html .= "</table>\n";
+  $html .= "</div>\n";
+  
+  return $html;
+}
+
+
+// Get the information about the fields in the users table
+$fields = sql_field_info($tbl_users);
+
+$nusers = sql_query1("SELECT COUNT(*) FROM $tbl_users");
 
 /*---------------------------------------------------------------------------*\
 |                         Authenticate the current user                         |
@@ -205,10 +326,11 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
     // query string if there was an error on validating the data after it
     // had been submitted.   We want to preserve the user's original values
     // so that they don't have to re-type them).
-    foreach ($fields as $fieldname)
+    foreach ($fields as $field)
     {
-      $value = get_form_var($fieldname, $field_props[$fieldname]['type']);
-      $data[$fieldname] = (isset($value)) ? $value : "";
+      $type = get_form_var_type($field);
+      $value = get_form_var($field['name'], $type);
+      $data[$field['name']] = (isset($value)) ? $value : "";
     }
   }
 
@@ -251,8 +373,9 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           // (b) it's the last admin left or (c) they don't have admin rights
           $disable_select = ($initial_user_creation || $editing_last_admin || ($level < $min_user_editing_level));
           
-          foreach ($fields as $fieldname)
+          foreach ($fields as $field)
           {
+            $fieldname = $field['name'];
             // First of all output the input for the field
             // The ID field cannot change; The password field must not be shown.
             switch($fieldname)
@@ -263,70 +386,94 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
               case 'password':
                 echo "<input type=\"hidden\" name=\"Field_$fieldname\" value=\"". htmlspecialchars($data[$fieldname]) . "\">\n";
                 break;
-              case 'level':
-                echo "<div>\n";
-                echo "<label for=\"Field_$fieldname\">" . get_loc_field_name($fieldname) . ":</label>\n";
-                echo "<select id=\"Field_$fieldname\" name=\"Field_$fieldname\"" . ($disable_select ? " disabled=\"disabled\"" : "") . ">\n";
-                // Only display options up to and including one's own level (you can't upgrade yourself).
-                // If you're not some kind of admin then the select will also be disabled.
-                // (Note - disabling individual options doesn't work in older browsers, eg IE6)     
-                for ($i=0; $i<=$level; $i++)
-                {
-                  echo "<option value=\"$i\"";
-                  // Work out which option should be selected by default:
-                  //   if we're editing an existing entry, then it should be the current value;
-                  //   if we're adding the very first entry, then it should be an admin;
-                  //   if we're adding a subsequent entry, then it should be an ordinary user;
-                  if ( (($Action == "Edit")  && ($i == $data[$fieldname])) ||
-                       (($Action == "Add") && $initial_user_creation && ($i == $max_level)) ||
-                       (($Action == "Add") && !$initial_user_creation && ($i == 1)) )
-                  {
-                    echo " selected=\"selected\"";
-                  }
-                  echo ">" . get_vocab("level_$i") . "</option>\n";
-                }
-                echo "</select>\n";
-                // If the level select input was disabled, we still need to submit a value with 
-                // the form.   <select> can't be set to 'readonly' so instead we'll use a hidden input
-                if ($disable_select)
-                {
-                  if ($initial_user_creation)
-                  {
-                    $v = $max_level;
-                  }
-                  else
-                  {
-                    $v = $data[$fieldname];
-                  }
-                  echo "<input type=\"hidden\" name=\"Field_$fieldname\" value=\"$v\">\n";
-                }
-                echo "</div>\n";
-                break;
-              case 'name':
-                // you cannot change a username (even your own) unless you have user editing rights
-                $html_fieldname = htmlspecialchars("Field_$fieldname");
-                echo ("<div>\n");
-                echo ("<label for=\"$html_fieldname\">" . get_loc_field_name($fieldname) . ":</label>\n");
-                echo ("<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" " .
-                      "maxlength=\"" . $maxlength['users.name'] . "\" " .
-                     (($level < $min_user_editing_level) ? "disabled=\"disabled\" " : "") .
-                      "value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n");
-                // if the field was disabled then we still need to pass through the value as a hidden input
-                if ($level < $min_user_editing_level)
-                {
-                  echo "<input type=\"hidden\" name=\"Field_$fieldname\" value=\"" . $data[$fieldname] . "\">\n";
-                }
-                echo ("</div>\n");
-                break;
               default:
                 $html_fieldname = htmlspecialchars("Field_$fieldname");
-                echo ("<div>\n");
-                echo ("<label for=\"$html_fieldname\">" . get_loc_field_name($fieldname) . ":</label>\n");
-                echo ("<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" " .
-                     (isset($maxlength["users.$fieldname"]) ? "maxlength=\"" . $maxlength["users.$fieldname"] . "\" " : "") .
-                      "value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n");
-                echo ("</div>\n");
-                break;
+                echo "<div>\n";
+                echo "<label for=\"Field_$fieldname\">" . get_loc_field_name($tbl_users, $fieldname) . ":</label>\n";
+                switch($fieldname)
+                {
+                  case 'level':
+                    echo "<select id=\"Field_$fieldname\" name=\"Field_$fieldname\"" . ($disable_select ? " disabled=\"disabled\"" : "") . ">\n";
+                    // Only display options up to and including one's own level (you can't upgrade yourself).
+                    // If you're not some kind of admin then the select will also be disabled.
+                    // (Note - disabling individual options doesn't work in older browsers, eg IE6)     
+                    for ($i=0; $i<=$level; $i++)
+                    {
+                      echo "<option value=\"$i\"";
+                      // Work out which option should be selected by default:
+                      //   if we're editing an existing entry, then it should be the current value;
+                      //   if we're adding the very first entry, then it should be an admin;
+                      //   if we're adding a subsequent entry, then it should be an ordinary user;
+                      if ( (($Action == "Edit")  && ($i == $data[$fieldname])) ||
+                           (($Action == "Add") && $initial_user_creation && ($i == $max_level)) ||
+                           (($Action == "Add") && !$initial_user_creation && ($i == 1)) )
+                      {
+                        echo " selected=\"selected\"";
+                      }
+                      echo ">" . get_vocab("level_$i") . "</option>\n";
+                    }
+                    echo "</select>\n";
+                    // If the level select input was disabled, we still need to submit a value with 
+                    // the form.   <select> can't be set to 'readonly' so instead we'll use a hidden input
+                    if ($disable_select)
+                    {
+                      if ($initial_user_creation)
+                      {
+                        $v = $max_level;
+                      }
+                      else
+                      {
+                        $v = $data[$fieldname];
+                      }
+                      echo "<input type=\"hidden\" name=\"Field_$fieldname\" value=\"$v\">\n";
+                    }
+                    break;
+                  case 'name':
+                    // you cannot change a username (even your own) unless you have user editing rights
+                    echo "<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" " .
+                          "maxlength=\"" . $maxlength['users.name'] . "\" " .
+                         (($level < $min_user_editing_level) ? "disabled=\"disabled\" " : "") .
+                          "value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n";
+                    // if the field was disabled then we still need to pass through the value as a hidden input
+                    if ($level < $min_user_editing_level)
+                    {
+                      echo "<input type=\"hidden\" name=\"Field_$fieldname\" value=\"" . $data[$fieldname] . "\">\n";
+                    }
+                    break;
+                  case 'email':
+                    echo "<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" " .
+                          (isset($maxlength["users.$fieldname"]) ? "maxlength=\"" . $maxlength["users.$fieldname"] . "\" " : "") .
+                          "value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n";
+                    break;
+                  default:    
+                    // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+                    // assume are intended to be booleans)
+                    if (($field['nature'] == 'boolean') || 
+                        (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+                    {
+                      echo "<input type=\"checkbox\" class=\"checkbox\" " .
+                            "id=\"$html_fieldname\" name=\"$html_fieldname\" value=\"1\"" .
+                            ((!empty($data[$fieldname])) ? " checked=\"checked\"" : "") .
+                            ">\n";
+                    }
+                    // Output a textarea if it's a character string longer than the limit for a
+                    // text input
+                    elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
+                    {
+                      echo "<textarea rows=\"8\" cols=\"40\" id=\"$html_fieldname\" name=\"$html_fieldname\">\n";
+                      echo htmlspecialchars($data[$fieldname]);
+                      echo "</textarea>\n";
+                    }
+                    // Otherwise output a text input
+                    else
+                    {
+                      echo "<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" " .
+                           (isset($maxlength["users.$fieldname"]) ? "maxlength=\"" . $maxlength["users.$fieldname"] . "\" " : "") .
+                            "value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n";
+                    }
+                    break;
+                } // end switch
+                echo "</div>\n";
             } // end switch
             
             
@@ -337,7 +484,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
               case 'email':
                 if (!empty($invalid_email))
                 {
-                  echo "<p class=\"error\">" . get_vocab('invalid_email') . "<p>\n";
+                  echo "<p class=\"error\">" . get_vocab('invalid_email') . "</p>\n";
                 }
                 break;
               case 'name':
@@ -435,8 +582,10 @@ if (isset($Action) && ($Action == "Update"))
   {
     $values = array();
     $q_string = ($Id >= 0) ? "Action=Edit" : "Action=Add";
-    foreach ($fields as $fieldname)
+    foreach ($fields as $field)
     {
+      $fieldname = $field['name'];
+      $type = get_form_var_type($field);
       if ($fieldname == 'id')
       {
         // id: don't need to do anything except add the id to the query string;
@@ -446,7 +595,7 @@ if (isset($Action) && ($Action == "Update"))
       }
       // first, get all the other form variables and put them into an array, $values, which 
       // we will use for entering into the database assuming we pass validation
-      $values[$fieldname] = get_form_var("Field_$fieldname", $field_props[$fieldname]['type']);
+      $values[$fieldname] = get_form_var("Field_$fieldname", $type);
       // Truncate the field to the maximum length as a precaution.
       if (isset($maxlength["users.$fieldname"]))
       {
@@ -576,44 +725,30 @@ if (isset($Action) && ($Action == "Update"))
     $sql_fields = array();
   
     // For each db column get the value ready for the database
-    foreach ($values as $fieldname => $value)
+    foreach ($fields as $field)
     {
-      // pre-process the field value for SQL
-      if ($field_props[$fieldname]['istext'])
+      $fieldname = $field['name'];
+      if ($fieldname != 'id')
       {
-        $value = "'" . addslashes($value) . "'";
-      }
-      else if ($field_props[$fieldname]['isbool'])
-      {
-        if ($value && $value == true)
+        // pre-process the field value for SQL
+        $value = $values[$fieldname];
+        switch ($field['nature'])
         {
-          $value = "TRUE";
+          case 'integer':
+            if (!isset($value))
+            {
+              $value = 'NULL';
+            }
+            break;
+          default:
+            $value = "'" . addslashes($value) . "'";
+            break;
         }
-        else
-        {
-          $value = "FALSE";
-        }
-      }
-      else
-      {
-        // put in a sensible default for a missing field
-        if (($value == null) || ($value == ''))
-        {
-          if ($field_props[$fieldname]['isnum'])
-          {
-           $value = "0";
-          }
-          else
-          {
-            $value = "NULL";
-          }
-        }
-      }
-      
-      /* If we got here, we have a valid, sql-ified value for this field,
-       * so save it for later */
-      $sql_fields[$fieldname] = $value;
-                           
+       
+        /* If we got here, we have a valid, sql-ified value for this field,
+         * so save it for later */
+        $sql_fields[$fieldname] = $value;
+      }                   
     } /* end for each column of user database */
   
     /* Now generate the SQL operation based on the given array of fields */
@@ -742,76 +877,37 @@ if ($level >= $min_user_editing_level) /* Administrators get the right to add ne
 
 if ($initial_user_creation != 1)   // don't print the user table if there are no users
 {
-  $list = sql_query("SELECT * FROM $tbl_users ORDER BY level DESC, name");
-  print "<table id=\"edit_users_list\" class=\"admin_table\">\n";
-  print "<thead>\n";
-  print "<tr>";
-  // First column which is an action button
-  print "<th>" . get_vocab("action") . "</th>";
-  
-  // Column headers (we don't use 'id' and 'password')
-  foreach ($fields as $fieldname)
+  // Get the user information
+  $res = sql_query("SELECT * FROM $tbl_users ORDER BY level DESC, name");
+  // Build an array with the user info
+  $info = array();
+  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   {
-    if ($fieldname != 'id' && $fieldname != 'password')
-    {
-      print "<th>" . get_loc_field_name($fieldname) . "</th>";
-    }
+    $info[] = $row;
   }
-
-  print "</tr>\n";
-  print "</thead>\n";
+  // Display it in a table [Actually two tables side by side so that we can
+  // achieve a "Freeze Panes" effect: there doesn't seem to be a good way of
+  // getting a colgroup to scroll, so we have to distort the mark-up a little]
+  echo "<div id=\"user_list\">\n";
+  echo "<div class=\"freeze_panes\">\n";
+  // (a) the "header" columns containing the user names
+  // For the header column we just want to use the level and name fields
+  $columns = array('level', 'name');
+  echo freeze_panes_table_html($info, $columns, 'header_columns', TRUE);
   
-  print "<tbody>\n";
-  $i = 0;
-  $row_class = "odd_row";
-  while ($line = sql_row_keyed($list, $i++))
+  // (b) the "body" columns containing the user info
+  // For the body column we want all the other columns, except the id and password
+  $columns[] = 'id';
+  $columns[] = 'password';
+  $all_columns = array();
+  foreach ($fields as $field)
   {
-    $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
-    echo "<tr class=\"$row_class\">\n";
-    // First column (the action button)
-    print "<td style=\"text-align: center\">\n";
-    // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
-    if (($level >= $min_user_editing_level) || (strcasecmp($line['name'], $user) == 0))
-    {
-      echo "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-      echo "<div>\n";
-      echo "<input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
-      echo "<input type=\"hidden\" name=\"Id\" value=\"" . $line['id'] . "\">\n";
-      echo "<button type=\"submit\" name=\"action\" value=\"edit\" title=\"" . get_vocab("edit") . "\">\n";
-      echo "<img src=\"images/edit.png\" width=\"16\" height=\"16\" alt=\"" . get_vocab("edit") . "\">\n";
-      echo "</button>\n";
-      echo "</div>\n";
-      echo "</form>\n";
-    }
-    else
-    {
-      print "&nbsp;\n";
-    }
-    print "</td>\n";
-    
-    // Column contents
-    foreach ($line as $key=>$col_value) 
-    { 
-      switch($key)
-      {
-        case 'id':
-        case 'password':
-          break;                  // Don't display the id or password
-        case 'level':
-          echo "<td>" . get_vocab("level_$col_value") . "</td>\n";
-          break;
-        default:
-          echo "<td>" . ((empty($col_value)) ? "&nbsp;" : htmlspecialchars($col_value)) . "</td>\n";
-          break;
-      }  // end switch   
-    }  // end foreach
-    
-    print "</tr>\n";
-    
-  }  // end while
-  
-  print "</tbody>\n";
-  print "</table>\n";
+    $all_columns[] = $field['name'];
+  }
+  $columns = array_diff($all_columns, $columns);
+  echo freeze_panes_table_html($info, $columns, 'body_columns', FALSE);
+  echo "</div>\n";   // freeze_panes
+  echo "</div>\n";
 }   // ($initial_user_creation != 1)
 
 require_once "trailer.inc";

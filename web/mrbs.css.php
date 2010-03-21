@@ -70,8 +70,16 @@ table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color:
 .admin_table th {color: <?php echo $admin_table_header_font_color ?>; 
     background-color: <?php echo $admin_table_header_back_color ?>}
 .admin_table td, .admin_table th {border-color: <?php echo $admin_table_border_color ?>}
-.admin_table th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}    
-    
+.admin_table th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}
+.admin_table td.action {text-align: center}
+.admin_table td.action div {display: inline-block}   
+
+div.freeze_panes {width: 100%; float: left}
+.freeze_panes th div, .freeze_panes td div {display: table-cell; vertical-align: middle; white-space: nowrap; overflow: hidden}
+.freeze_panes th div {height: 1.5em; max-height: 1.5em; min-height: 1.5em}
+.freeze_panes td div {height: 2em; max-height: 2em; min-height: 2em}
+.freeze_panes td.int div {width: 6em; text-align: right; padding-right: 0.5em}
+   
 select.room_area_select {margin-right: 0.5em}
 
 /* ------------ ADMIN.PHP ---------------------------*/
@@ -108,16 +116,11 @@ div#area_form, div#room_form {float: left; width: 95%; padding: 0 0 2em 1em}
 #areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
 #areaChangeForm button {display: block; float: left; margin: -0.2em 0.5em 0 0.5em}
 
-div#room_info {width: 100%; float: left}
-div#header_column, div#body_columns {position: relative; float: left; overflow-x: scroll; overflow-y: hidden}
-div#header_column {max-width: 20%}
-div#body_columns {max-width: 80%}
+div.header_columns, div.body_columns {position: relative; float: left; overflow-x: scroll; overflow-y: hidden}
+div.header_columns {max-width: 20%}
+div.body_columns {max-width: 80%}
 
-#room_info th div, #room_info td div {display: table-cell; vertical-align: middle; white-space: nowrap; overflow: hidden}
-#room_info th div {height: 1.5em; max-height: 1.5em; min-height: 1.5em}
-#room_info td div {height: 2em; max-height: 2em; min-height: 2em}
-#room_info td.int div {width: 6em; text-align: right; padding-right: 0.5em}
-#body_columns .admin_table th:first-child {border-left-color: <?php echo $admin_table_border_color ?>}
+.body_columns .admin_table th:first-child {border-left-color: <?php echo $admin_table_border_color ?>}
 
 
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/
@@ -593,8 +596,6 @@ $edit_users_label_height     = '2.0';    // em
 $edit_users_label_width      = '10.0';   // em
 $edit_users_gap              = '1.0';    // em
 $edit_users_input_width      = '10.0';   // em
-$edit_users_form_width       = $edit_users_label_width + $edit_users_gap + $edit_users_input_width + 5;
-$edit_users_form_width       = number_format($edit_users_form_width, 1, '.', '');   // get rid of any commas
 // This CSS works by using absolute positioning to bring the Delete button up into the main form.
 // Logically the HTML for the Delete button is implemented and because you can't nest a form within
 // a form it appears as a second form after the main form.    However, to the user it is more logical to
@@ -604,11 +605,11 @@ $edit_users_form_width       = number_format($edit_users_form_width, 1, '.', '')
 // users by mistake.    Having it on the edit form at least means that you have to press two buttons to
 // delete a user (the Edit button followed by the Delete button)]
 ?>
-div#form_container {position: relative; float: left}    /* this is the containing block against which the absolute positioning works */
+div#form_container {width: auto; position: relative; float: left}    /* this is the containing block against which the absolute positioning works */
 #form_container input.submit {width: auto; position: absolute; bottom: 2.0em}  /* bring both buttons up          */
-form#form_edit_users {width: <?php echo $edit_users_form_width ?>em; margin-top: 2.0em}
-#form_edit_users fieldset {width: auto}  
-#form_edit_users div {float: left; width: 100%}
+form#form_edit_users {width: auto; margin-top: 2.0em}
+#form_edit_users fieldset {float: left; width: auto}  
+#form_edit_users div {float: left; clear: left; width: auto}
 #form_edit_users div#edit_users_input_container {padding-bottom: 4.0em}    /* padding-bottom leaves room for the submit buttons. */
                                                                            /* Apply it to the div because applying it to the     */
                                                                            /* fieldset does not work in all browsers (eg Safari) */
@@ -623,13 +624,18 @@ form#form_edit_users {width: <?php echo $edit_users_form_width ?>em; margin-top:
     width: <?php echo $edit_users_input_width ?>em; 
     margin-left: <?php echo $edit_users_gap ?>em; 
 }
-#form_edit_users select {
+#form_edit_users select, #form_edit_users textarea {
     margin-left: <?php echo $edit_users_gap ?>em;
 }
+#form_edit_users p {display: block; float: left; clear: left; padding: 0.5em 0 0.7em 0; margin: 0}
 #form_edit_users input.submit {right: 2.0em}                                   /* and put the OK on the right     */
 #form_delete_users input.submit {left: 2.0em}                                  /* and put the Delete on the left */
+#form_edit_users input.checkbox {width: auto; margin-left: <?php echo $edit_users_gap ?>em}
 form.edit_users_error {width: 10em; margin-top: 2.0em}
-table#edit_users_list {margin-top: 1.0em; margin-bottom: 1.0em}
+div#user_list {float: left; width: 95%; padding: 2em 0 2em 1em}
+form#add_new_user {margin-left: 1em}
+
+
 
 /* ------------ FUNCTIONS.INC -------------------*/
 #logon_box a {display: block; width: 100%; padding-top: 0.3em; padding-bottom: 0.3em}

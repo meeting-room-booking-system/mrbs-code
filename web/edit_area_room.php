@@ -20,7 +20,7 @@
 // char(n)      character(n)          text/textarea, depending on the value of n
 //
 // NOTE 1: For char(n) and varchar(n) fields, a text input will be presented if
-// n is less than or equal to TEXT_INPUT_MAX, otherwise a textarea box will be
+// n is less than or equal to $text_input_max, otherwise a textarea box will be
 // presented.
 //
 // NOTE 2: PostgreSQL booleans are not supported, due to difficulties in
@@ -41,10 +41,6 @@
 //
 // If MRBS can't find an entry for the field in the lang file, then it will use
 // the fieldname, eg 'coffee_machine'.
-
-define('TEXT_INPUT_MAX', 70);   // Maximum size in characters of a user defined
-                                // column for a text input to be used.  Greater than
-                                // this and a textarea will be used
 
 require_once "defaultincludes.inc";
 
@@ -206,39 +202,31 @@ if (isset($change_room) && !empty($room))
     {
       $sql = "UPDATE $tbl_room SET ";
       $n_fields = count($fields);
-      $first_field = TRUE;
+      $assign_array = array();
       foreach ($fields as $field)
       {
         if ($field['name'] != 'id')  // don't do anything with the id field
         {
-          if (!$first_field)
-          {
-            $sql .= ", ";
-          }
-          else
-          {
-            $first_field = FALSE;
-          }
           switch ($field['name'])
           {
             // first of all deal with the standard MRBS fields
             case 'area_id':
-              $sql .= "area_id=$new_area";
+              $assign_array[] = "area_id=$new_area";
               break;
             case 'room_name':
-              $sql .= "room_name='" . addslashes($room_name) . "'";
+              $assign_array[] = "room_name='" . addslashes($room_name) . "'";
               break;
             case 'sort_key':
-              $sql .= "sort_key='" . addslashes($sort_key) . "'";
+              $assign_array[] = "sort_key='" . addslashes($sort_key) . "'";
               break;
             case 'description':
-              $sql .= "description='" . addslashes($description) . "'";
+              $assign_array[] = "description='" . addslashes($description) . "'";
               break;
             case 'capacity':
-              $sql .= "capacity=$capacity";
+              $assign_array[] = "capacity=$capacity";
               break;
             case 'room_admin_email':
-              $sql .= "room_admin_email='" . addslashes($room_admin_email) . "'";
+              $assign_array[] = "room_admin_email='" . addslashes($room_admin_email) . "'";
               break;
             // then look at any user defined fields
             default:
@@ -255,12 +243,12 @@ if (isset($change_room) && !empty($room))
                   $$var = "'" . addslashes($$var) . "'";
                   break;
               }
-              $sql .= $field['name'] . "=" . $$var;
+              $assign_array[] = $field['name'] . "=" . $$var;
               break;
           }
         }
       }
-      $sql .= " WHERE id=$room";
+      $sql .= implode(",", $assign_array) . " WHERE id=$room";
       if (sql_command($sql) < 0)
       {
         fatal_error(0, get_vocab("update_room_failed") . sql_error());
@@ -520,7 +508,7 @@ if (!empty($room))
               }
               // Output a textarea if it's a character string longer than the limit for a
               // text input
-              elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > TEXT_INPUT_MAX))
+              elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
               {
                 echo "<textarea rows=\"8\" cols=\"40\" " .
                       "id=\"f_" . $field['name'] . "\" " .

@@ -8,9 +8,9 @@
 .form_admin label {height: 2.0em}            /* min-height not recognised by IE6 and below */
 .form_admin input {margin-top: 0}            /* negative margins remove the input border in IE6 */
 .form_admin input.submit {display: inline}   /* stops IE6 "double margin float bug" appearing */
-div#header_column {width: 20%}               /* IE6 doesn't understand max-width */
-#header_column table {width: 100%}           /* so force the table to fill all of the 20% */
-div#body_columns {width: 80%}
+div.header_columns {width: 20%}              /* IE6 doesn't understand max-width */
+.header_columns table {width: 100%}          /* so force the table to fill all of the 20% */
+div.body_columns {width: 80%}
 
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/
 div.cell_container {height: 100px}           /* NOTE:  if you change the value of height, make sure you */

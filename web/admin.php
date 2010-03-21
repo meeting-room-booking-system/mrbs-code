@@ -2,8 +2,6 @@
 
 // $Id$
 
-define ('MAX_TEXT_LENGTH', 20);   // the maximum number of characters to display in the room table
-
 require_once "defaultincludes.inc";
 
 // Get form variables
@@ -202,9 +200,9 @@ if (isset($area))
     // achieve a "Freeze Panes" effect: there doesn't seem to be a good way of
     // getting a colgroup to scroll, so we have to distort the mark-up a little]
     
-    echo "<div id=\"room_info\">\n";
-    // (a) the "header" column containing the room names
-    echo "<div id=\"header_column\">\n";
+    echo "<div id=\"room_info\" class=\"freeze_panes\">\n";
+    // (a) the "header" columns containing the room names
+    echo "<div class=\"header_columns\">\n";
     echo "<table class=\"admin_table\">\n";
     echo "<thead>\n";
     echo "<tr>\n";
@@ -250,7 +248,7 @@ if (isset($area))
     echo "</div>\n";
     
     // (b) the "body" columns containing the room info
-    echo "<div id=\"body_columns\">\n";
+    echo "<div class=\"body_columns\">\n";
     echo "<table class=\"admin_table\">\n";
     echo "<thead>\n";
     echo "<tr>\n";
@@ -323,8 +321,8 @@ if (isset($area))
                 // strings
                 $text = htmlspecialchars($r[$field['name']]);
                 echo "<td title=\"$text\"><div>";
-                echo substr($text, 0, MAX_TEXT_LENGTH);
-                echo (strlen($text) > MAX_TEXT_LENGTH) ? " ..." : "";
+                echo substr($text, 0, $max_content_length);
+                echo (strlen($text) > $max_content_length) ? " ..." : "";
                 echo "</div></td>\n";
               }
               break;
