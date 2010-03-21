@@ -99,7 +99,7 @@ form.form_admin {float: left; clear: left; margin: 2em 0 0 0}
     width: auto; margin-top: 1.2em; margin-left: <?php echo number_format(($admin_form_gap + $admin_form_label_width), 1, '.', '')?>em
 }
 .admin h2 {clear: left}
-div#area_form, div#room_form {float: left; margin: 0 0 2em 1em}
+div#area_form, div#room_form {float: left; width: 95%; padding: 0 0 2em 1em}
 #area_form form {float: left; margin-right: 1em}
 #area_form label#area_label {display: block; float: left; font-weight: bold; margin-right: <?php echo $admin_form_gap ?>em}
 #areaChangeForm select {display: block; float: left; margin: -0.1em 1.5em 0 0}
@@ -108,7 +108,10 @@ div#area_form, div#room_form {float: left; margin: 0 0 2em 1em}
     background-color: transparent; border: 0; padding: 0}
 #areaChangeForm button img {vertical-align: middle}
 
-div#header_column, div#body_columns {float: left}
+div#room_info {width: 100%; float: left}
+div#header_column, div#body_columns {position: relative; float: left; overflow-x: scroll; overflow-y: hidden}
+div#header_column {max-width: 20%}
+div#body_columns {max-width: 80%}
 
 #room_info table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_border_color ?>; border-style: solid;
     border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
@@ -127,7 +130,6 @@ tr.odd_row {background-color: <?php echo $row_odd_color ?>}
     }
 #room_info td, #room_info th {border-color: <?php echo $admin_table_border_color ?>}
 #room_info #header_column th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}
-
 
 
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/

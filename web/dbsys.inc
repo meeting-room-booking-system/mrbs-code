@@ -548,6 +548,60 @@ function sql_table_exists($table)
 }
 
 
+// This function returns information about columns in the database in a manner
+// that is independent of the underlying database.    It was originally designed
+// for use by MRBS pages that have user defined columns in the relevant table
+// and to enable them to decide how to represent the column on a page.  For example
+// a smallint is often used to represent a boolean, which should be represented by a
+// checkbox. (Smallints are used by MRBS for booleans in PostgreSQL because booleans return
+// a PHP boolean type, rather than a 0 or 1 which MySQL does, and so this makes testing
+// of the results difficult).
+//
+// Returns an array with the following indices for each column
+//
+//  'name'        the column name
+//  'type'        the type as reported by MySQL or PostgreSQL
+//  'nature'      the type mapped onto one of a generic set of types
+//                (boolean, integer, real, character, binary).   This enables
+//                the nature to be used by MRBS code when deciding how to 
+//                display fields, without MRBS having to worry about the 
+//                differences between MySQL and PostgreSQL type names.
+//  'length'      the maximum length of the field in bytes, octets or characters
+//                (Note:  this could be NULL)
+//
+//  NOTE: the type mapping is incomplete and just covers the types commonly
+//  used by MRBS
+// 
+// The difficulty is that MySQL and PostgreSQL return different formats
+// of answer for the type of field when using sql_field_type.    For example
+// for a smallint, PostgreSQL will just return int, and there is no exact equivalent
+// of the mysql_ field_ len() function.   Although pg_field_size is a close
+// approximation and returns 2 for a smallint, enabling it to be distinguished
+// from an int, when used with variable length character types such as text or 
+// varying character it returns -1.
+//
+// [There must be a better way of doing all this???!]
+function sql_field_info($table)
+{
+  if (func_num_args() > 1)
+  {
+    $handle = func_get_arg(1);
+    $db_sys = $handle['system'];
+    $db_conn = $handle['connection'];
+  }
+  else
+  {
+    global $dbsys;
+
+    $db_sys = $dbsys;
+    $db_conn = null;
+  }
+  
+  $f = "sql_${db_sys}_field_info";
+  return $f($table, $db_conn);
+}
+
+
 // Connect to a database host and select the supplied database
 function sql_connect($system, $host, $username, $password, $db_name,
                      $persist = 0)

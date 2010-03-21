@@ -1,6 +1,51 @@
 <?php
 // $Id$
 
+// If you want to add some extra columns to the room table to describe the room
+// then you can do so and this page should automatically recognise them and handle
+// them.    At the moment support is limited to the following column types:
+//
+// MySQL        PostgreSQL            Form input type
+// -----        ----------            ---------------
+// bigint       bigint                text
+// int          integer               text
+// mediumint                          text
+// smallint     smallint              checkbox
+// tinyint                            checkbox
+// text         text                  textarea
+// tinytext                           textarea
+//              character varying     textarea
+// varchar(n)   character varying(n)  text/textarea, depending on the value of n
+//              character             text
+// char(n)      character(n)          text/textarea, depending on the value of n
+//
+// NOTE 1: For char(n) and varchar(n) fields, a text input will be presented if
+// n is less than or equal to TEXT_INPUT_MAX, otherwise a textarea box will be
+// presented.
+//
+// NOTE 2: PostgreSQL booleans are not supported, due to difficulties in
+// handling the fields in a database independent way (a PostgreSQL boolean
+// will return a PHP boolean type when read by a PHP query, whereas a MySQL
+// tinyint returns an int).   In order to have a boolean field in the room
+// table you should use a smallint in PostgreSQL or a smallint or a tinyint
+// in MySQL.
+//
+// You can put a description of the column that will be used as the label in
+// the form in the appropriate lang file(s) using the tag 'room.[columnname]'.
+// For example if you want to add a column specifying whether or not a room
+// has a coffee machine you could add a column to the room table called
+// 'coffee_machine' of type tinyint(1), in MySQL, or smallint in PostgreSQL.
+// Then in the appropriate lang file(s) you would add the line
+//
+// vocab["room.coffee_machine"] = "Coffee machine";  // or appropriate translation
+//
+// If MRBS can't find an entry for the field in the lang file, then it will use
+// the fieldname, eg 'coffee_machine'.
+
+define('TEXT_INPUT_MAX', 70);   // Maximum size in characters of a user defined
+                                // column for a text input to be used.  Greater than
+                                // this and a textarea will be used
+
 require_once "defaultincludes.inc";
 
 require_once "mrbs_sql.inc";
@@ -44,6 +89,33 @@ $change_done = get_form_var('change_done', 'string');
 $change_room = get_form_var('change_room', 'string');
 $change_area = get_form_var('change_area', 'string');
 
+// Get the information about the fields in the room table
+$fields = sql_field_info($tbl_room);
+
+// Get any user defined form variables
+foreach($fields as $field)
+{
+  switch($field['nature'])
+  {
+    case 'character':
+      $type = 'string';
+      break;
+    case 'integer':
+      $type = 'int';
+      break;
+    // We can only really deal with the types above at the moment
+    default:
+      $type = 'string';
+      break;
+  }
+  $var = "f_" . $field['name'];
+  $$var = get_form_var($var, $type);
+  if (($type == 'int') && ($$var === ''))
+  {
+    unset($$var);
+  }
+}
+
 // If we dont know the right date then make it up
 if (!isset($day) or !isset($month) or !isset($year))
 {
@@ -80,6 +152,7 @@ $valid_resolution = TRUE;
 $enough_slots = TRUE;
 $valid_area = TRUE;
 $valid_room_name = TRUE;
+
 
 
 // PHASE 2
@@ -131,11 +204,63 @@ if (isset($change_room) && !empty($room))
     // If everything is still OK, update the databasae
     else
     {
-      $sql = "UPDATE $tbl_room SET room_name='" . addslashes($room_name)
-        . "', sort_key='" . addslashes($sort_key)
-        . "', description='" . addslashes($description)
-        . "', capacity=$capacity, area_id=$new_area, room_admin_email='"
-        . addslashes($room_admin_email) . "' WHERE id=$room";
+      $sql = "UPDATE $tbl_room SET ";
+      $n_fields = count($fields);
+      $first_field = TRUE;
+      foreach ($fields as $field)
+      {
+        if ($field['name'] != 'id')  // don't do anything with the id field
+        {
+          if (!$first_field)
+          {
+            $sql .= ", ";
+          }
+          else
+          {
+            $first_field = FALSE;
+          }
+          switch ($field['name'])
+          {
+            // first of all deal with the standard MRBS fields
+            case 'area_id':
+              $sql .= "area_id=$new_area";
+              break;
+            case 'room_name':
+              $sql .= "room_name='" . addslashes($room_name) . "'";
+              break;
+            case 'sort_key':
+              $sql .= "sort_key='" . addslashes($sort_key) . "'";
+              break;
+            case 'description':
+              $sql .= "description='" . addslashes($description) . "'";
+              break;
+            case 'capacity':
+              $sql .= "capacity=$capacity";
+              break;
+            case 'room_admin_email':
+              $sql .= "room_admin_email='" . addslashes($room_admin_email) . "'";
+              break;
+            // then look at any user defined fields
+            default:
+              $var = "f_" . $field['name'];
+              switch ($field['nature'])
+              {
+                case 'integer':
+                  if (!isset($$var))
+                  {
+                    $$var = 'NULL';
+                  }
+                  break;
+                default:
+                  $$var = "'" . addslashes($$var) . "'";
+                  break;
+              }
+              $sql .= $field['name'] . "=" . $$var;
+              break;
+          }
+        }
+      }
+      $sql .= " WHERE id=$room";
       if (sql_command($sql) < 0)
       {
         fatal_error(0, get_vocab("update_room_failed") . sql_error());
@@ -287,13 +412,12 @@ $disabled = ($is_admin) ? "" : " disabled=\"disabled\"";
 // THE ROOM FORM
 if (!empty($room))
 {
-  $res = sql_query("SELECT * FROM $tbl_room WHERE id=$room");
+  $res = sql_query("SELECT * FROM $tbl_room WHERE id=$room LIMIT 1");
   if (! $res)
   {
     fatal_error(0, get_vocab("error_room") . $room . get_vocab("not_found"));
   }
   $row = sql_row_keyed($res, 0);
-  sql_free($res);
   
   ?>
   <form class="form_general" id="edit_room" action="edit_area_room.php" method="post">
@@ -345,36 +469,80 @@ if (!empty($room))
       echo "<input type=\"hidden\" name=\"old_area\" value=\"" . $row['area_id'] . "\">\n";
       echo "</div>\n";
     
-      // Room name  
-      echo "<div>\n";
-      echo "<label for=\"room_name\">" . get_vocab("name") . ":</label>\n";
-      echo "<input type=\"text\" id=\"room_name\" name=\"room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\"$disabled>\n";
-      echo "<input type=\"hidden\" name=\"old_room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\">\n";
-      echo "</div>\n";
-    
-      // Sort key  
-      echo "<div>\n";
-      echo "<label for=\"sort_key\" title=\"" . get_vocab("sort_key_note") . "\">" . get_vocab("sort_key") . ":</label>\n";
-      echo "<input type=\"text\" id=\"sort_key\" name=\"sort_key\" value=\"" . htmlspecialchars($row["sort_key"]) . "\"$disabled>\n";
-      echo "</div>\n";
-    
-      // Description  
-      echo "<div>\n";
-      echo "<label for=\"description\">" . get_vocab("description") . ":</label>\n";
-      echo "<input type=\"text\" id=\"description\" name=\"description\" value=\"" . htmlspecialchars($row["description"]) . "\"$disabled>\n";
-      echo "</div>\n";
-    
-      // Capacity  
-      echo "<div>\n";
-      echo "<label for=\"capacity\">" . get_vocab("capacity") . ":</label>\n";
-      echo "<input type=\"text\" id=\"capacity\" name=\"capacity\" value=\"" . $row["capacity"] . "\"$disabled>\n";
-      echo "</div>\n";
-    
-      // Room admin email  
-      echo "<div>\n";
-      echo "<label for=\"room_admin_email\">" . get_vocab("room_admin_email") . ":</label>\n";
-      echo "<input type=\"text\" id=\"room_admin_email\" name=\"room_admin_email\" maxlength=\"75\" value=\"" . htmlspecialchars($row["room_admin_email"]) . "\"$disabled>\n";
-      echo "</div>\n";
+      foreach ($fields as $field)
+      {
+        if (!in_array($field['name'], array('id', 'area_id')))  // Ignore certain fields
+        {
+          echo "<div>\n";
+          switch($field['name'])
+          {
+            // first of all deal with the standard MRBS fields
+            case 'room_name':
+              echo "<label for=\"room_name\">" . get_vocab("name") . ":</label>\n";
+              echo "<input type=\"text\" id=\"room_name\" name=\"room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\"$disabled>\n";
+              echo "<input type=\"hidden\" name=\"old_room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\">\n";
+              break;
+            case 'sort_key':
+              echo "<label for=\"sort_key\" title=\"" . get_vocab("sort_key_note") . "\">" . get_vocab("sort_key") . ":</label>\n";
+              echo "<input type=\"text\" id=\"sort_key\" name=\"sort_key\" value=\"" . htmlspecialchars($row["sort_key"]) . "\"$disabled>\n";
+              break;
+            case 'description':
+              echo "<label for=\"description\">" . get_vocab("description") . ":</label>\n";
+              echo "<input type=\"text\" id=\"description\" name=\"description\" value=\"" . htmlspecialchars($row["description"]) . "\"$disabled>\n";
+              break;
+            case 'capacity':
+              echo "<label for=\"capacity\">" . get_vocab("capacity") . ":</label>\n";
+              echo "<input type=\"text\" id=\"capacity\" name=\"capacity\" value=\"" . $row["capacity"] . "\"$disabled>\n";
+              break;
+            case 'room_admin_email':
+              echo "<label for=\"room_admin_email\">" . get_vocab("room_admin_email") . ":</label>\n";
+              echo "<input type=\"text\" id=\"room_admin_email\" name=\"room_admin_email\" maxlength=\"75\" value=\"" . htmlspecialchars($row["room_admin_email"]) . "\"$disabled>\n";
+              break;
+            // then look at any user defined fields
+            default:
+              $tag = substr($tbl_room, strlen($db_tbl_prefix));  // strip the prefix off the table name
+              $tag .= "." . $field['name'];           // add on the fieldname
+              // then if there's a string in the vocab array for $tag use that
+              // otherwise just use the fieldname
+              $label_text = (isset($vocab[$tag])) ? get_vocab($tag) : $field['name'];
+              echo "<label for=\"f_" . $field['name'] . "\">$label_text:</label>\n";
+              // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+              // assume are intended to be booleans)
+              if (($field['nature'] == 'boolean') || 
+                  (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+              {
+                echo "<input type=\"checkbox\" class=\"checkbox\" " .
+                      "id=\"f_" . $field['name'] . "\" " .
+                      "name=\"f_" . $field['name'] . "\" " .
+                      "value=\"1\" " .
+                      ((!empty($row[$field['name']])) ? " checked=\"checked\"" : "") .
+                      "$disabled>\n";
+              }
+              // Output a textarea if it's a character string longer than the limit for a
+              // text input
+              elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > TEXT_INPUT_MAX))
+              {
+                echo "<textarea rows=\"8\" cols=\"40\" " .
+                      "id=\"f_" . $field['name'] . "\" " .
+                      "name=\"f_" . $field['name'] . "\" " .
+                      "$disabled>\n";
+                echo htmlspecialchars($row[$field['name']]);
+                echo "</textarea>\n";
+              }
+              // Otherwise output a text input
+              else
+              {
+                echo "<input type=\"text\" " .
+                      "id=\"f_" . $field['name'] . "\" " .
+                      "name=\"f_" . $field['name'] . "\" " .
+                      "value=\"" . htmlspecialchars($row[$field['name']]) . "\"" .
+                      "$disabled>\n";
+              }
+              break;
+          }
+          echo "</div>\n";
+        }
+      }
     
       // Submit and Back buttons (Submit only if they're an admin)  
       echo "<fieldset class=\"submit_buttons\">\n";

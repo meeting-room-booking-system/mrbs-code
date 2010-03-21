@@ -362,6 +362,75 @@ function sql_pgsql_table_exists($table, $db_conn = null)
 }
 
 
+// Get information about the columns in a table
+// Returns an array with the following indices for each column
+//
+//  'name'        the column name
+//  'type'        the type as reported by PostgreSQL
+//  'nature'      the type mapped onto one of a generic set of types
+//                (boolean, integer, real, character, binary).   This enables
+//                the nature to be used by MRBS code when deciding how to 
+//                display fields, without MRBS having to worry about the 
+//                differences between MySQL and PostgreSQL type names.
+//  'length'      the maximum length of the field in bytes, octets or characters
+//                (Note:  this could be NULL)
+//
+//  NOTE: the type mapping is incomplete and just covers the types commonly
+//  used by MRBS
+function sql_pgsql_field_info($table, $db_conn = null)
+{
+  sql_pgsql_ensure_handle($db_conn);
+  
+  // Map PostgreSQL types on to a set of generic types
+  $nature_map = array('bigint'            => 'integer',
+                      'boolean'           => 'boolean',
+                      'bytea'             => 'binary',
+                      'character'         => 'character',
+                      'character varying' => 'character',
+                      'double precision'  => 'real',
+                      'integer'           => 'integer',
+                      'real'              => 'real',
+                      'smallint'          => 'integer',
+                      'text'              => 'character');
+  
+  $fields = array();
+  $res = sql_pgsql_query("SELECT column_name, data_type, numeric_precision,
+                                 character_maximum_length, character_octet_length
+                            FROM information_schema.columns
+                           WHERE table_name ='$table'
+                        ORDER BY ordinal_position");
+  if ($res && (sql_pgsql_count($res) > 0))
+  {
+    for ($i = 0; ($row = sql_pgsql_row_keyed($res, $i)); $i++)
+    {
+      $name = $row['column_name'];
+      $type = $row['data_type'];
+      // map the type onto one of the generic natures, if a mapping exists
+      $nature = (array_key_exists($type, $nature_map)) ? $nature_map[$type] : $type;
+      // Get a length value;  one of these values should be set
+      if (isset($row['numeric_precision']))
+      {
+        $length = (int) floor($row['numeric_precision'] / 8);  // precision is in bits
+      }
+      elseif (isset($row['character_maximum_length']))
+      {
+        $length = $row['character_maximum_length'];
+      }
+      elseif (isset($row['character_octet_length']))
+      {
+        $length = $row['character_octet_length'];
+      }
+      
+      $fields[$i]['name'] = $name;
+      $fields[$i]['type'] = $type;
+      $fields[$i]['nature'] = $nature;
+      $fields[$i]['length'] = $length;
+    }
+  }
+  return $fields;
+}
+
+
 // Connect to a database server and select a database, optionally using
 // persistent connections
 function sql_pgsql_connect($host, $username, $password, $db_name,

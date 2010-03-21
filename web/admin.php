@@ -2,6 +2,8 @@
 
 // $Id$
 
+define ('MAX_TEXT_LENGTH', 20);   // the maximum number of characters to display in the room table
+
 require_once "defaultincludes.inc";
 
 // Get form variables
@@ -186,12 +188,16 @@ if (isset($area))
   }
   else
   {
+     // Get the information about the fields in the room table
+    $fields = sql_field_info($tbl_room);
+    
     // Build an array with the room info
     $rooms = array();
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
       $rooms[] = $row;
     }
+
     // Display it in a table [Actually two tables side by side so that we can
     // achieve a "Freeze Panes" effect: there doesn't seem to be a good way of
     // getting a colgroup to scroll, so we have to distort the mark-up a little]
@@ -248,9 +254,33 @@ if (isset($area))
     echo "<table>\n";
     echo "<thead>\n";
     echo "<tr>\n";
-    echo "<th><div>" . get_vocab("description") . "</div></th>\n";
-    echo "<th><div>" . get_vocab("capacity") . "</div></th>\n";
-    echo "<th><div>" . get_vocab("room_admin_email") . "</div></th>\n";
+    // ignore these columns, either because we don't want to display them,
+    // or because we have already displayed them in the header column
+    $ignore = array('id', 'area_id', 'room_name', 'sort_key');
+    foreach($fields as $field)
+    {
+      if (!in_array($field['name'], $ignore))
+      {
+        switch ($field['name'])
+        {
+          // the standard MRBS fields
+          case 'description':
+          case 'capacity':
+          case 'room_admin_email':
+            $text = get_vocab($field['name']);
+            break;
+          // any user defined fields
+          default:
+            $text = substr($tbl_room, strlen($db_tbl_prefix));  // strip the prefix off the table name
+            $text .= "." . $field['name'];           // add on the fieldname
+            // then if there's a string in the vocab array for $tag use that
+            // otherwise just use the fieldname
+            $text = (isset($vocab[$text])) ? get_vocab($text) : $field['name'];
+            break;
+        }
+        echo "<th><div>" . htmlspecialchars($text) . "</div></th>\n";
+      }
+    }
     echo "</tr>\n";
     echo "</thead>\n";
     echo "<tbody>\n";
@@ -259,9 +289,48 @@ if (isset($area))
     {
       $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
       echo "<tr class=\"$row_class\">\n";
-      echo "<td><div>" . htmlspecialchars($r['description']) . "</div></td>\n";
-      echo "<td class=\"int\"><div>" . $r['capacity'] . "</div></td>\n";
-      echo "<td><div>" . htmlspecialchars($r['room_admin_email']) . "</div></td>\n";
+      foreach($fields as $field)
+      {
+        if (!in_array($field['name'], $ignore))
+        {
+          switch ($field['name'])
+          {
+            // the standard MRBS fields
+            case 'description':
+            case 'room_admin_email':
+              echo "<td><div>" . htmlspecialchars($r[$field['name']]) . "</div></td>\n";
+              break;
+            case 'capacity':
+              echo "<td class=\"int\"><div>" . $r[$field['name']] . "</div></td>\n";
+              break;
+            // any user defined fields
+            default:
+              if (($field['nature'] == 'boolean') || 
+                  (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+              {
+                // booleans: represent by a checkmark
+                echo "<td class=\"int\"><div>";
+                echo (!empty($r[$field['name']])) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;";
+                echo "</div></td>\n";
+              }
+              elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
+              {
+                // integer values
+                echo "<td class=\"int\"><div>" . $r[$field['name']] . "</div></td>\n";
+              }
+              else
+              {
+                // strings
+                $text = htmlspecialchars($r[$field['name']]);
+                echo "<td title=\"$text\"><div>";
+                echo substr($text, 0, MAX_TEXT_LENGTH);
+                echo (strlen($text) > MAX_TEXT_LENGTH) ? " ..." : "";
+                echo "</div></td>\n";
+              }
+              break;
+          }
+        }
+      }
       echo "</tr>\n";
     }
     echo "</tbody>\n";

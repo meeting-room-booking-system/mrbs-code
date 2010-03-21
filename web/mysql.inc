@@ -326,6 +326,92 @@ function sql_mysql_table_exists($table, $db_conn = null)
 }
 
 
+// Get information about the columns in a table
+// Returns an array with the following indices for each column
+//
+//  'name'        the column name
+//  'type'        the type as reported by MySQL
+//  'nature'      the type mapped onto one of a generic set of types
+//                (boolean, integer, real, character, binary).   This enables
+//                the nature to be used by MRBS code when deciding how to 
+//                display fields, without MRBS having to worry about the 
+//                differences between MySQL and PostgreSQL type names.
+//  'length'      the maximum length of the field in bytes, octets or characters
+//                (Note:  this could be NULL)
+//
+//  NOTE: the type mapping is incomplete and just covers the types commonly
+//  used by MRBS
+function sql_mysql_field_info($table, $db_conn = null)
+{
+  sql_mysql_ensure_handle($db_conn);
+  
+  // Map MySQL types on to a set of generic types
+  $nature_map = array('bigint'    => 'integer',
+                      'char'      => 'character',
+                      'double'    => 'real',
+                      'float'     => 'real',
+                      'int'       => 'integer',
+                      'mediumint' => 'integer',
+                      'smallint'  => 'integer',
+                      'text'      => 'character',
+                      'tinyint'   => 'integer',
+                      'tinytext'  => 'character',
+                      'varchar'   => 'character');
+  
+  // Length in bytes of MySQL integer types                                        
+  $int_bytes = array('bigint'    => 8, // bytes
+                     'int'       => 4,
+                     'mediumint' => 3,
+                     'smallint'  => 2,
+                     'tinyint'   => 1);
+  
+  $fields = array();
+  $res = sql_mysql_query("SHOW COLUMNS FROM $table");
+  if ($res && (sql_mysql_count($res) > 0))
+  {
+    for ($i = 0; ($row = sql_mysql_row_keyed($res, $i)); $i++)
+    {
+      $name = $row['Field'];
+      $type = $row['Type'];
+      // split the type (eg 'varchar(25)') around the opening '('
+      $parts = explode('(', $type);
+      // map the type onto one of the generic natures, if a mapping exists
+      $nature = (array_key_exists($parts[0], $nature_map)) ? $nature_map[$parts[0]] : $parts[0];
+      // now work out the length
+      if ($nature == 'integer')
+      {
+        // if it's one of the ints, then look up the length in bytes
+        $length = (array_key_exists($parts[0], $int_bytes)) ? $int_bytes[$parts[0]] : 0;
+      }
+      elseif ($nature == 'character')
+      {
+        // if it's a character type then use the length that was in parentheses
+        // eg if it was a varchar(25), we want the 25
+        if (isset($parts[1]))
+        {
+          $length = preg_replace('/\)/', '', $parts[1]);  // strip off the closing ')'
+        }
+        // otherwise it could be any length (eg if it was a 'text')
+        else
+        {
+          $length = defined('PHP_INT_MAX') ? PHP_INT_MAX : 9999;
+        }
+      }
+      else  // we're only dealing with a few simple cases at the moment
+      {
+        $length = NULL;
+      }
+
+      $fields[$i]['name'] = $name;
+      $fields[$i]['type'] = $type;
+      $fields[$i]['nature'] = $nature;
+      $fields[$i]['length'] = $length;
+    }
+  }
+  return $fields;
+}
+
+
 // Connect to a database server and select a database, optionally using
 // persistent connections
 function sql_mysql_connect($host, $username, $password, $db_name, $persist = 0)
