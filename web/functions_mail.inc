@@ -195,6 +195,66 @@ function get_approvers_email($room_id)
   return $mail_settings['recipients'];
 }
 
+
+// Get the area_admin_email for an entry $id
+// If $series is set this is an entry in the repeat table, otherwise the entry table
+// Returns an empty string in the case of an error
+function get_area_admin_email($id, $series=FALSE)
+{
+  global $tbl_room, $tbl_area, $tbl_entry, $tbl_repeat;
+  
+  $id_table = ($series) ? "rep" : "e";
+  
+  $sql = "SELECT a.area_admin_email ";
+  $sql .= "FROM $tbl_room r, $tbl_area a, $tbl_entry e ";
+  // If this is a repeating entry...
+  if ($id_table == 'rep')
+  {
+    // ...use the repeat table
+    $sql .= ", $tbl_repeat rep ";
+  }
+  $sql .= "WHERE ${id_table}.id=$id 
+             AND r.id=${id_table}.room_id
+             AND a.id=r.area_id
+           LIMIT 1";
+  $email = sql_query1($sql);
+  if ($email == -1)
+  {
+    $email = "";
+  }
+  return $email;
+}
+
+
+// Get the room_admin_email for an entry $id
+// If $series is set this is an entry in the repeat table, otherwise the entry table
+// Returns an empty string in the case of an error
+function get_room_admin_email($id, $series=FALSE)
+{
+  global $tbl_room, $tbl_entry, $tbl_repeat;
+  
+  $id_table = ($series) ? "rep" : "e";
+  
+  $sql = "SELECT r.room_admin_email ";
+  $sql .= "FROM $tbl_room r, $tbl_entry e ";
+  // If this is a repeating entry...
+  if ($id_table == 'rep')
+  {
+    // ...use the repeat table
+    $sql .= ", $tbl_repeat rep ";
+  }
+  $sql .= "WHERE ${id_table}.id=$id 
+             AND r.id=${id_table}.room_id
+           LIMIT 1";
+  $email = sql_query1($sql);
+  if ($email == -1)
+  {
+    $email = "";
+  }
+  return $email;
+}
+      
+
 // }}}
 // {{{ notifyAdminOnBooking()
 
@@ -249,28 +309,17 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
     $recipients[] = get_approvers_email($room_id);
   }
   
-  $id_table = ($rep_type != REP_NONE) ? "rep" : "e";
   ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
+  
   if ($mail_settings['area_admin_on_bookings'])
   {
     // Look for list of area admins emails addresses
     if ($new_entry)
     {
-      $sql = "SELECT a.area_admin_email ";
-      $sql .= "FROM $tbl_room r, $tbl_area a, $tbl_entry e ";
-      // If this is a repeating entry...
-      if ($id_table == 'rep')
+      $email = get_area_admin_email($new_id, ($rep_type != REP_NONE));
+      if (!empty($email))
       {
-        // ...use the repeat table
-        $sql .= ", $tbl_repeat rep ";
-      }
-      $sql .= "WHERE ${id_table}.id=$new_id AND r.id=${id_table}.room_id AND a.id=r.area_id";
-      $res = sql_query($sql);
-      (! $res) ? fatal_error(0, sql_error()) : '';
-      $row = sql_row_keyed($res, 0);
-      if (!empty($row['area_admin_email']))
-      {
-        $recipients[] = $row['area_admin_email'];
+        $recipients[] = $email;
       }
     }
     elseif (!empty($mail_previous['area_admin_email']))
@@ -280,26 +329,16 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
       $recipients[] = $mail_previous['area_admin_email'];
     }
   }
+  
   if ($mail_settings['room_admin_on_bookings'])
   {
     // Look for list of room admins email addresses
     if ($new_entry)
     {
-      $sql = "SELECT r.room_admin_email ";
-      $sql .= "FROM $tbl_room r, $tbl_entry e ";
-      // If this is a repeating entry...
-      if ($id_table == 'rep')
+      $email = get_room_admin_email($new_id, ($rep_type != REP_NONE));
+      if (!empty($email))
       {
-        // ...use the repeat table
-        $sql .= ", $tbl_repeat rep ";
-      }
-      $sql .= "WHERE ${id_table}.id=$new_id AND r.id=${id_table}.room_id";
-      $res = sql_query($sql);
-      (! $res) ? fatal_error(0, sql_error()) : '';
-      $row = sql_row_keyed($res, 0);
-      if (!empty($row['room_admin_email']))
-      {
-        $recipients[] = $row['room_admin_email'];
+        $recipients[] = $email;
       }
     }
     elseif (!empty($mail_previous['room_admin_email']))
