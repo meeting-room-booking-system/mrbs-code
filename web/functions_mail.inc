@@ -271,7 +271,6 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
   global $room_name, $room_id, $starttime, $duration, $dur_units, $end_date, $endtime;
   global $rep_enddate, $typel, $type, $status, $create_by, $rep_type, $enable_periods;
   global $rep_opt, $rep_num_weeks;
-  global $tbl_room, $tbl_area, $tbl_entry, $tbl_users, $tbl_repeat;
   global $mail_previous, $auth, $note;
   global $mail_settings, $weekstarts, $provisional_enabled;
   
@@ -613,7 +612,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
  */
 function notifyAdminOnDelete($mail_previous)
 {
-  global $typel, $enable_periods, $auth, $tbl_users;
+  global $typel, $enable_periods, $auth;
   global $mail_settings;
   
   // Get any extra arguments
