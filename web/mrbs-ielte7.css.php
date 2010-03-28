@@ -23,6 +23,8 @@ require_once "theme.inc";
 
 .form_general#edit_room legend {font-size: 0}   /* no legend in edit_room, so stop IE allocating space */
 .form_general#edit_room select {margin-bottom: 0.2em}
+.form_general textarea {margin-top: 0.25em} /* IE7 and below don't understand margin-bottom */
+                                            /* so use the top margin instead */
 
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/
 
