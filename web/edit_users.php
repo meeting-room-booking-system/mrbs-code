@@ -182,9 +182,8 @@ function freeze_panes_table_html($info, $columns, $class, $action=FALSE)
         $html .= "<div>\n";
         $html .= "<input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
         $html .= "<input type=\"hidden\" name=\"Id\" value=\"" . $line['id'] . "\">\n";
-        $html .= "<button type=\"submit\" name=\"action\" value=\"edit\" title=\"" . get_vocab("edit") . "\">\n";
-        $html .= "<img src=\"images/edit.png\" width=\"16\" height=\"16\" alt=\"" . get_vocab("edit") . "\">\n";
-        $html .= "</button>\n";
+        $html .= "<input type=\"image\" class=\"button\" src=\"images/edit.png\"
+                   title=\"" . get_vocab("edit") . "\" alt=\"" . get_vocab("edit") . "\">\n";
         $html .= "</div>\n";
         $html .= "</form>\n";
       }

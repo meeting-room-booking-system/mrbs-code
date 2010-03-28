@@ -19,6 +19,11 @@ require_once "theme.inc";
 #areaChangeForm button {margin-top: -0.1em}
 
 
+/* ------------ FORM_GENERAL ------------------------*/
+
+.form_general#edit_room legend {font-size: 0}   /* no legend in edit_room, so stop IE allocating space */
+.form_general#edit_room select {margin-bottom: 0.2em}
+
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/
 
 <?php

@@ -12,7 +12,10 @@ $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');
 $area_name = get_form_var('area_name', 'string');
 $error = get_form_var('error', 'string');
-$action = get_form_var('action', 'string');
+// the image buttons:  need to specify edit_x rather than edit etc. because
+// IE6 only returns _x and _y
+$edit_x = get_form_var('edit_x', 'int');
+$delete_x = get_form_var('delete_x', 'int');
 
 // If we dont know the right date then make it up 
 if (!isset($day) or !isset($month) or !isset($year))
@@ -27,29 +30,23 @@ if (empty($area))
   $area = get_default_area();
 }
 
+
 // Check to see whether the Edit or Delete buttons have been pressed and redirect
 // as appropriate
-if (isset($action))
+$std_query_string = "area=$area&day=$day&month=$month&year=$year";
+if (isset($edit_x))
 {
-  $std_query_string = "area=$area&day=$day&month=$month&year=$year";
-  switch($action) {
-    case 'edit':
-      $location = "edit_area_room.php?$std_query_string";
-      break;
-    case 'delete':
-      $location = "del.php?type=area&$std_query_string";
-      break;
-    default:
-      unset($location);
-      break;
-  }
-  if (isset($location))
-  {
-    header("Location: $location");
-    exit;
-  }
+  $location = $location = "edit_area_room.php?$std_query_string";
+  header("Location: $location");
+  exit;
 }
-
+if (isset($delete_x))
+{
+  $location = "del.php?type=area&$std_query_string";
+  header("Location: $location");
+  exit;
+}
+  
 // Users must be at least Level 1 for this page as we will be displaying
 // information such as email addresses
 if (!getAuthorised(1))
@@ -63,20 +60,18 @@ $is_admin = (authGetUserLevel($user) >= $required_level);
 
 print_header($day, $month, $year, isset($area) ? $area : "", isset($room) ? $room : "");
 
-// If area is set but area name is not known, get the name.
+// Get the details we need for this area
 if (isset($area))
 {
-  if (empty($area_name))
+  $res = sql_query("SELECT area_name, custom_html FROM $tbl_area WHERE id=$area LIMIT 1");
+  if (! $res) fatal_error(0, sql_error());
+  if (sql_count($res) == 1)
   {
-    $res = sql_query("SELECT area_name FROM $tbl_area WHERE id=$area");
-    if (! $res) fatal_error(0, sql_error());
-    if (sql_count($res) == 1)
-    {
-      $row = sql_row_keyed($res, 0);
-      $area_name = $row['area_name'];
-    }
-    sql_free($res);
+    $row = sql_row_keyed($res, 0);
+    $area_name = $row['area_name'];
+    $custom_html = $row['custom_html'];
   }
+  sql_free($res);
 }
 
 
@@ -120,15 +115,11 @@ if ($areas_defined)
   // and also a form for adding a new area
   if ($is_admin)
   {
-    // The edit button
-    echo "<button type=\"submit\" name=\"action\" value=\"edit\" title=\"" . get_vocab("edit") . "\">\n";
-    echo "<img src=\"images/edit.png\" width=\"16\" height=\"16\" alt=\"" . get_vocab("edit") . "\">\n";
-    echo "</button>\n";
-
-    // The delete button
-    echo "<button type=\"submit\" name=\"action\" value=\"delete\" title=\"" . get_vocab("delete") . "\">\n";
-    echo "<img src=\"images/delete.png\" width=\"16\" height=\"16\" alt=\"" . get_vocab("delete") . "\">\n";
-    echo "</button>\n";
+    // Can't use <button> because IE6 does not support those properly
+    echo "<input type=\"image\" class=\"button\" name=\"edit\" src=\"images/edit.png\"
+           title=\"" . get_vocab("edit") . "\" alt=\"" . get_vocab("edit") . "\">\n";
+    echo "<input type=\"image\" class=\"button\" name=\"delete\" src=\"images/delete.png\"
+           title=\"" . get_vocab("delete") . "\" alt=\"" . get_vocab("delete") . "\">\n";
   }
   
   echo "</fieldset>\n";
@@ -161,7 +152,14 @@ if ($is_admin)
   </form>
   <?php
 }
-echo "</div>";
+echo "</div>";  // area_form
+
+// Now the custom HTML
+echo "<div id=\"custom_html\">\n";
+// no htmlspecialchars() because we want the HTML!
+echo (!empty($custom_html)) ? "$custom_html\n" : "";
+echo "</div>\n";
+
 
 // BOTTOM SECTION: ROOMS IN THE SELECTED AREA
 echo "<h2>\n";
@@ -254,7 +252,7 @@ if (isset($area))
     echo "<tr>\n";
     // ignore these columns, either because we don't want to display them,
     // or because we have already displayed them in the header column
-    $ignore = array('id', 'area_id', 'room_name', 'sort_key');
+    $ignore = array('id', 'area_id', 'room_name', 'sort_key', 'custom_html');
     foreach($fields as $field)
     {
       if (!in_array($field['name'], $ignore))

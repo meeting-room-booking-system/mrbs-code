@@ -81,6 +81,7 @@ $area_private_enabled = get_form_var('area_private_enabled', 'string');
 $area_private_default = get_form_var('area_private_default', 'int');
 $area_private_mandatory = get_form_var('area_private_mandatory', 'string');
 $area_private_override = get_form_var('area_private_override', 'string');
+$custom_html = get_form_var('custom_html', 'string');  // Used for both area and room, but you only ever have one or the other
 $change_done = get_form_var('change_done', 'string');
 $change_room = get_form_var('change_room', 'string');
 $change_area = get_form_var('change_area', 'string');
@@ -228,6 +229,9 @@ if (isset($change_room) && !empty($room))
             case 'room_admin_email':
               $assign_array[] = "room_admin_email='" . addslashes($room_admin_email) . "'";
               break;
+            case 'custom_html':
+              $assign_array[] = "custom_html='" . addslashes($custom_html) . "'";
+              break;
             // then look at any user defined fields
             default:
               $var = "f_" . $field['name'];
@@ -347,29 +351,38 @@ if (isset($change_area) && !empty($area))
   // If everything is OK, update the database
   if ((FALSE != $valid_email) && (FALSE != $valid_resolution) && (FALSE != $enough_slots))
   {
-    $sql = "UPDATE $tbl_area SET area_name='" . addslashes($area_name)
-      . "', area_admin_email='" . addslashes($area_admin_email) . "'";
+    $sql = "UPDATE $tbl_area SET ";
+    $assign_array = array();
+    $assign_array[] = "area_name='" . addslashes($area_name) . "'";
+    $assign_array[] = "area_admin_email='" . addslashes($area_admin_email) . "'";
+    $assign_array[] = "custom_html='" . addslashes($custom_html) . "'";
     if (!$enable_periods)
     {
       // only update the min and max book_ahead_secs fields if the form values
       // are set;  they might be NULL because they've been disabled by JavaScript
-      $sql .= ", resolution=" . $area_res_mins * 60
-            . ", default_duration=" . $area_def_duration_mins * 60
-            . ", morningstarts=" . $area_morningstarts
-            . ", morningstarts_minutes=" . $area_morningstarts_minutes
-            . ", eveningends=" . $area_eveningends
-            . ", eveningends_minutes=" . $area_eveningends_minutes
-            . ", min_book_ahead_enabled=" . $area_min_ba_enabled
-            . (isset($area_min_ba_value) ? ", min_book_ahead_secs=" . $area_min_ba_value : "")
-            . ", max_book_ahead_enabled=" . $area_max_ba_enabled
-            . (isset($area_max_ba_value) ? ", max_book_ahead_secs=" . $area_max_ba_value : "");
+      $assign_array[] = "resolution=" . $area_res_mins * 60;
+      $assign_array[] = "default_duration=" . $area_def_duration_mins * 60;
+      $assign_array[] = "morningstarts=" . $area_morningstarts;
+      $assign_array[] = "morningstarts_minutes=" . $area_morningstarts_minutes;
+      $assign_array[] = "eveningends=" . $area_eveningends;
+      $assign_array[] = "eveningends_minutes=" . $area_eveningends_minutes;
+      $assign_array[] = "min_book_ahead_enabled=" . $area_min_ba_enabled;
+      $assign_array[] = "max_book_ahead_enabled=" . $area_max_ba_enabled;
+      if (isset($area_min_ba_value))
+      {
+        $assign_array[] = "min_book_ahead_secs=" . $area_min_ba_value;
+      }
+      if (isset($area_max_ba_value))
+      {
+        $assign_array[] = "max_book_ahead_secs=" . $area_max_ba_value;
+      }
     }
-    $sql .= ", private_enabled=" . $area_private_enabled
-          . ", private_default=" . $area_private_default
-          . ", private_mandatory=" . $area_private_mandatory
-          . ", private_override='" . $area_private_override . "'";
+    $assign_array[] = "private_enabled=" . $area_private_enabled;
+    $assign_array[] = "private_default=" . $area_private_default;
+    $assign_array[] = "private_mandatory=" . $area_private_mandatory;
+    $assign_array[] = "private_override='" . $area_private_override . "'";
             
-    $sql .= " WHERE id=$area";
+    $sql .= implode(",", $assign_array) . " WHERE id=$area";
     if (sql_command($sql) < 0)
     {
       fatal_error(0, get_vocab("update_area_failed") . sql_error());
@@ -407,12 +420,13 @@ if (!empty($room))
   }
   $row = sql_row_keyed($res, 0);
   
+  echo "<h2>\n";
+  echo ($is_admin) ? get_vocab("editroom") : get_vocab("viewroom");
+  echo "</h2>\n";
   ?>
   <form class="form_general" id="edit_room" action="edit_area_room.php" method="post">
     <fieldset class="admin">
-    <legend>
-    <?php echo ($is_admin) ? get_vocab("editroom") : get_vocab("viewroom")?>
-    </legend>
+    <legend></legend>
   
       <fieldset>
       <legend></legend>
@@ -427,6 +441,8 @@ if (!empty($room))
         </span>
       </fieldset>
     
+      <fieldset>
+      <legend></legend>
       <input type="hidden" name="room" value="<?php echo $row["id"]?>">
     
       <?php
@@ -471,8 +487,11 @@ if (!empty($room))
               echo "<input type=\"hidden\" name=\"old_room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\">\n";
               break;
             case 'sort_key':
-              echo "<label for=\"sort_key\" title=\"" . get_vocab("sort_key_note") . "\">" . get_vocab("sort_key") . ":</label>\n";
-              echo "<input type=\"text\" id=\"sort_key\" name=\"sort_key\" value=\"" . htmlspecialchars($row["sort_key"]) . "\"$disabled>\n";
+              if ($is_admin)
+              {
+                echo "<label for=\"sort_key\" title=\"" . get_vocab("sort_key_note") . "\">" . get_vocab("sort_key") . ":</label>\n";
+                echo "<input type=\"text\" id=\"sort_key\" name=\"sort_key\" value=\"" . htmlspecialchars($row["sort_key"]) . "\"$disabled>\n";
+              }
               break;
             case 'description':
               echo "<label for=\"description\">" . get_vocab("description") . ":</label>\n";
@@ -485,6 +504,16 @@ if (!empty($room))
             case 'room_admin_email':
               echo "<label for=\"room_admin_email\">" . get_vocab("room_admin_email") . ":</label>\n";
               echo "<input type=\"text\" id=\"room_admin_email\" name=\"room_admin_email\" maxlength=\"75\" value=\"" . htmlspecialchars($row["room_admin_email"]) . "\"$disabled>\n";
+              break;
+            case 'custom_html':
+              if ($is_admin)
+              {
+                // Only show the raw HTML to admins.  Non-admins will see the rendered HTML
+                echo "<label for=\"room_custom_html\" title=\"" . get_vocab("custom_html_note") . "\">" . get_vocab("custom_html") . ":</label>\n";
+                echo "<textarea id=\"room_custom_html\" class=\"custom_html\" name=\"custom_html\" rows=\"4\" cols=\"40\"$disabled>\n";
+                echo htmlspecialchars($row['custom_html']);
+                echo "</textarea>\n";
+              }
               break;
             // then look at any user defined fields
             default:
@@ -527,6 +556,7 @@ if (!empty($room))
           echo "</div>\n";
         }
       }
+      echo "</fieldset>\n";
     
       // Submit and Back buttons (Submit only if they're an admin)  
       echo "<fieldset class=\"submit_buttons\">\n";
@@ -547,6 +577,11 @@ if (!empty($room))
   </form>
 
   <?php
+  // Now the custom HTML
+  echo "<div id=\"custom_html\">\n";
+  // no htmlspecialchars() because we want the HTML!
+  echo (!empty($row['custom_html'])) ? $row['custom_html'] . "\n" : "";
+  echo "</div>\n";
 }
 
 // THE AREA FORM
@@ -608,8 +643,16 @@ if (!empty($area))
         <input type="text" id="area_admin_email" name="area_admin_email" maxlength="75" value="<?php echo htmlspecialchars($row["area_admin_email"]); ?>">
         </div>
       </fieldset>
-    
+      
       <?php
+        // The custom HTML
+        echo "<div>\n";
+        echo "<label for=\"area_custom_html\" title=\"" . get_vocab("custom_html_note") . "\">" . get_vocab("custom_html") . ":</label>\n";
+        echo "<textarea id=\"area_custom_html\" class=\"custom_html\" name=\"custom_html\" rows=\"4\" cols=\"40\">\n";
+        echo htmlspecialchars($row['custom_html']);
+        echo "</textarea>\n";
+        echo "</div>\n";
+    
       if (!$enable_periods)
       {
       ?>

@@ -32,8 +32,6 @@ h1 {font-size: x-large}
 h2 {font-size: large}
 
 img {border: 0}
-button {background-color: transparent; border: 0; padding: 0}
-button img {vertical-align: middle}
 
 a:link    {color: <?php echo $anchor_link_color ?>;    text-decoration: none; font-weight: bold}
 a:visited {color: <?php echo $anchor_visited_color ?>; text-decoration: none; font-weight: bold}
@@ -57,7 +55,7 @@ fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
     border: 1px solid <?php echo $admin_table_border_color ?>}
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
-    
+  
 .naked {margin: 0; padding: 0; border-width: 0} /* Invisible tables used for internal needs */
 table.naked {width: 100%; height: 100%}
 table:hover.naked {cursor: pointer}   /* set cursor to pointer; if you don't it doesn't show up when show_plus_link is false */
@@ -72,7 +70,8 @@ table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color:
 .admin_table td, .admin_table th {border-color: <?php echo $admin_table_border_color ?>}
 .admin_table th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}
 .admin_table td.action {text-align: center}
-.admin_table td.action div {display: inline-block}   
+.admin_table td.action div {display: inline-block}
+.admin_table td.action div div {display: table-cell} 
 
 div.freeze_panes {width: 100%; float: left}
 .freeze_panes th div, .freeze_panes td div {display: table-cell; vertical-align: middle; white-space: nowrap; overflow: hidden}
@@ -109,12 +108,15 @@ form.form_admin {float: left; clear: left; margin: 2em 0 0 0}
     width: auto; margin-top: 1.2em; margin-left: <?php echo number_format(($admin_form_gap + $admin_form_label_width), 1, '.', '')?>em
 }
 .admin h2 {clear: left}
-div#area_form, div#room_form {float: left; width: 95%; padding: 0 0 2em 1em}
+div#area_form, div#room_form {float: left; padding: 0 0 2em 1em}
+div#area_form {width: auto}
+div#room_form {width: 95%}
+div#custom_html {float: left; padding: 0 0 3em 1em}
 #area_form form {float: left; margin-right: 1em}
 #area_form label#area_label {display: block; float: left; font-weight: bold; margin-right: <?php echo $admin_form_gap ?>em}
 #areaChangeForm select {display: block; float: left; margin: -0.1em 1.5em 0 0}
 #areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
-#areaChangeForm button {display: block; float: left; margin: -0.2em 0.5em 0 0.5em}
+#areaChangeForm input.button {display: block; float: left; margin: 0 0.7em}
 
 div.header_columns, div.body_columns {position: relative; float: left; overflow-x: scroll; overflow-y: hidden}
 div.header_columns {max-width: 20%}
@@ -446,7 +448,8 @@ span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; fo
 .edit_area_room .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
 .edit_area_room .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
 span#private_display_caution {display: block; margin-top: 1em; font-style: italic; font-weight: normal}
-
+.edit_area_room textarea.custom_html {height: 6em; width: 25em}
+.edit_area_room div#custom_html {margin-top: 8px}
 
 
 /* ------------ FORM_GENERAL ------------------------*/
@@ -493,9 +496,10 @@ $db_logon_form_min_width       = $db_logon_left_col_max_width + $db_logon_input_
 $db_logon_form_min_width       = number_format($db_logon_form_min_width, 1, '.', '');   // get rid of any commas
 
 // Specific to the "edit_area_room" form
-$edit_area_room_left_col_max_width  = '16';      // em
+$edit_area_room_left_col_width      = '15';      // em
+$edit_area_room_left_col_max_width  = '30';      // em
 $edit_area_room_input_width         = '12';      // em
-$edit_area_room_form_min_width      = $edit_area_room_left_col_max_width + $edit_area_room_input_width + $general_gap;
+$edit_area_room_form_min_width      = $edit_area_room_left_col_width + $edit_area_room_input_width + $general_gap;
 $edit_area_room_form_min_width      = number_format($edit_area_room_form_min_width, 1, '.', '');   // get rid of any commas
 
 
@@ -507,6 +511,7 @@ form.form_general {margin-top: 2.0em; width: 100%}
 .edit_area_room form.form_general {min-width: <?php echo $edit_area_room_form_min_width ?>em}
 form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>em}
+form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 
 .form_general div {float: left; clear: left; width: 100%}
 .form_general div div {float: none; clear: none; width: auto}
@@ -515,6 +520,8 @@ form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>
 .edit_area_room div.group {clear: none}
 .edit_area_room div.group#private_override div {clear: left}
 .form_general fieldset {width: auto; border: 0; padding-top: 2.0em}
+#edit_room fieldset {width: 100%; float: left; padding: 0; margin: 0}
+#edit_room fieldset.submit_buttons {margin-top: 1em}
 
 .form_general label {
     display: block; float: left; overflow: hidden;
@@ -526,7 +533,7 @@ form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>
 .edit_entry     .form_general label {max-width: <?php echo $edit_entry_left_col_max_width ?>em}
 .report         .form_general label {max-width: <?php echo $report_left_col_max_width ?>em}
 .search         .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
-.edit_area_room .form_general label {max-width: <?php echo $edit_area_room_left_col_max_width ?>em}
+.edit_area_room .form_general label {max-width: <?php echo $edit_area_room_left_col_max_width ?>em; width: <?php echo $edit_area_room_left_col_width ?>em}
 #logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em}
 #db_logon                 label {max-width: <?php echo $db_logon_left_col_max_width ?>em}
 
@@ -565,7 +572,7 @@ div#logon_submit      {width: <?php echo $general_left_col_width ?>%; max-width:
 div#db_logon_submit   {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $db_logon_left_col_max_width ?>em}
 #edit_entry_submit input, #report_submit input, #search_submit input, #logon_submit input, #db_logon_submit input
     {position: relative; left: 100%; width: auto}
-div#edit_area_room_submit_back {float: left; width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $edit_area_room_left_col_max_width ?>em}
+div#edit_area_room_submit_back {float: left; width: <?php echo $edit_area_room_left_col_width ?>em; max-width: <?php echo $edit_area_room_left_col_max_width ?>em}
 div#edit_area_room_submit_save {float: left; clear: none; width: auto}
 #edit_area_room_submit_back input {float: right}
 
