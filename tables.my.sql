@@ -31,6 +31,7 @@ CREATE TABLE mrbs_area
   min_book_ahead_secs    int,
   max_book_ahead_enabled tinyint(1),
   max_book_ahead_secs    int,
+  custom_html            text,
 
   PRIMARY KEY (id)
 );
@@ -44,6 +45,7 @@ CREATE TABLE mrbs_room
   description      varchar(60),
   capacity         int DEFAULT '0' NOT NULL,
   room_admin_email text,
+  custom_html      text,
 
   PRIMARY KEY (id),
   KEY idxSortKey (sort_key)
@@ -114,6 +116,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '11');
+  VALUES ( 'db_version', '12');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
