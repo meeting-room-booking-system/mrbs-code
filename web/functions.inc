@@ -18,6 +18,11 @@ if (isset($timezone))
     putenv("TZ=$timezone");
   }
 }
+else
+{
+  // to prevent people running into DST problems
+  die('Configuration error: $timezone has not been set.');
+}
 
 // Deal with $private_xxxx overrides.  Simplifies
 // logic related to private bookings.
