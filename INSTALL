@@ -136,6 +136,49 @@ You can clean out old entries from your database using the supplied SQL
 scripts purge.my.sql (for MySQL) and purge.pg.sql (for PostgreSQL). Read
 the comments at the top of the scripts before using them.
 
+
+ADDING EXTRA COLUMNS TO THE DATABASE TABLES
+-------------------------------------------
+It is possible to add extra columns to the room and users tables, if you need
+to hold extra information about rooms and users.   For example you might want
+to add a column in the room table to record whether or not a room has a coffee
+machine and you might want to record the phone numbers of users. (Note that
+the users table is only used if you are using the 'db' authentication scheme).
+
+To add extra columns, just go into your database administration tool, eg
+phpMyAdmin, and add the extra columns manually.   MRBS will then recognise them
+and handle them automatically, displaying the information in the lists of rooms
+and users and allowing you to edit the data in the appropriate forms.
+
+At the moment only text, varchar, int, smallint and tinyint columns are 
+supported, displayed as textarea, text or checkbox fields as appropriate.
+Whether a varchar is displayed as a text or textarea input depends on its
+maximum length, with the breakpoint determined by a configuration variable.
+Smallints and tinyints are assumed to be booleans and are displayed as checkboxes.
+
+Text descriptions are looked for in the lang files with the tag room.column_name,
+eg room.coffee_machine, or users.phone enabling translations to be provided.   
+If not present, the column name will be used for labels etc.
+
+[Note:  smallints are assumed to be booleans because the boolean type in 
+PostgreSQL presents some problems in PHP when trying to process the results
+of a query in a database independent way, so it is more convenient to use a 
+smallint instead of a boolean in PostgreSQL.]
+
+As an example, to add a field to the room table recording whether or not
+there is a coffee machine you would, in MySQL, add the column 
+
+coffee_machine     tinyint(1)
+
+to the room table and add the line
+
+vocab["room.coffee_machine"] = "Coffee machine";
+
+to the lang.en file and similarly for other languages as required.   MRBS
+should then do the rest and display your coffee machine field on the room
+pages.
+
+
 APPLICATION SETUP
 ---------------------------------------------------------------------------
 Next, you will need to customize the file "config.inc.php"...
