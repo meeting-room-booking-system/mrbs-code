@@ -428,16 +428,23 @@ $private_override = "none";  // DEFAULT VALUE FOR NEW AREAS
            // changing to "public" or from "private" to "none"
     
                   
-// PROVISIONAL BOOKINGS SETTINGS
+// PROVISIONAL BOOKINGS SETTINGS - PER-AREA
 
 // These settings control whether provisional bookings should be used.
 // If provisional bookings are enabled then ordinary users must have their
-// bookings confirmed by an admin.
+// bookings confirmed by an admin.   The settings here are the default
+// settings for new areas.   The settings for individual areas can be
+// changed from within MRBS.
+
 $provisional_enabled = FALSE;  // Set to TRUE to enable provisional bookings
 
 // Set to FALSE if you don't want users to be able to send reminders
 // to admins if provisional bookings have not been approved
 $reminders_enabled = TRUE;
+
+// PROVISIONAL BOOKINGS SETTINGS - GLOBAL
+
+// These settings are system-wide and control the behaviour in all areas.
 
 // Interval before reminders can be issued (in seconds).   Only
 // working days (see below) are included in the calculation
