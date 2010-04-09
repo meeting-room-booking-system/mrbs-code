@@ -517,7 +517,7 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 .form_general div div {float: none; clear: none; width: auto}
 .form_general div.group {float: left; width: <?php echo $general_right_col_width ?>%}
 .form_general div.group.ampm {width: <?php echo $edit_entry_ampm_width ?>em}
-.edit_area_room div.group {clear: none}
+.edit_area_room div.group {clear: none; width: auto}
 .edit_area_room div.group#private_override div {clear: left}
 .form_general fieldset {width: auto; border: 0; padding-top: 2.0em}
 #edit_room fieldset {width: 100%; float: left; padding: 0; margin: 0}
