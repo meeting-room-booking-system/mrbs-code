@@ -7,7 +7,7 @@ function print_theme_header($day, $month, $year, $area, $room)
 {
   global $mrbs_company, $mrbs_company_logo, $mrbs_company_url, $mrbs_company_more_info,
          $search_str, $locale_warning, $provisional_enabled;
-  global $tbl_entry;
+  global $tbl_entry, $tbl_room, $tbl_area;
   global $PHP_SELF;
   
   $page = basename($PHP_SELF, ".php" );
@@ -384,12 +384,20 @@ function init()
         </form>
         <?php
         // Provide a link to the list of outstanding provisional bookings
+        // (if there are any areas where we are using provisional bookings)
         $user = getUserName();
-        if ($provisional_enabled && (authGetUserLevel($user) >= 1))
+        $provisional_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE provisional_enabled>0 LIMIT 1") > 0);
+        if ($provisional_somewhere && (authGetUserLevel($user) >= 1))
         {
           $is_admin = (authGetUserLevel($user) >= 2);
           // Find out how many provisional bookings there are
-          $sql = "SELECT COUNT(*) FROM $tbl_entry WHERE status=" . STATUS_PROVISIONAL;
+          // (but only for areas where provisional bookings are enabled)
+          $sql = "SELECT COUNT(*)
+                    FROM $tbl_entry E, $tbl_room R, $tbl_area A
+                   WHERE status=" . STATUS_PROVISIONAL . "
+                     AND E.room_id = R.id
+                     AND R.area_id = A.id
+                     AND A.provisional_enabled>0";
           if (!$is_admin)
           {
             // Ordinary users can only see their own

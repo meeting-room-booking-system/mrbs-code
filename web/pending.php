@@ -168,6 +168,7 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 echo "<h1>" . get_vocab("pending") . "</h1>\n";
 
 // Get a list of all the provisional bookings
+// We are only interested in areas where provisional bookings are enabled
 $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
                sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
                E.reminded, E.repeat_id,
@@ -175,6 +176,7 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
         FROM  $tbl_room AS R, $tbl_area AS A, $tbl_entry AS E
         WHERE E.room_id = R.id
           AND R.area_id = A.id
+          AND A.provisional_enabled>0
           AND status=" . STATUS_PROVISIONAL;
 
 // Ordinary users can only see their own bookings       

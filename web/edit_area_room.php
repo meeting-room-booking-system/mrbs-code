@@ -81,6 +81,8 @@ $area_private_enabled = get_form_var('area_private_enabled', 'string');
 $area_private_default = get_form_var('area_private_default', 'int');
 $area_private_mandatory = get_form_var('area_private_mandatory', 'string');
 $area_private_override = get_form_var('area_private_override', 'string');
+$area_provisional_enabled = get_form_var('area_provisional_enabled', 'string');
+$area_reminders_enabled = get_form_var('area_reminders_enabled', 'string');
 $custom_html = get_form_var('custom_html', 'string');  // Used for both area and room, but you only ever have one or the other
 $change_done = get_form_var('change_done', 'string');
 $change_room = get_form_var('change_room', 'string');
@@ -319,6 +321,8 @@ if (isset($change_area) && !empty($area))
   $area_max_ba_enabled = (!empty($area_max_ba_enabled)) ? 1 : 0;
   $area_private_enabled = (!empty($area_private_enabled)) ? 1 : 0;
   $area_private_mandatory = (!empty($area_private_mandatory)) ? 1 : 0;
+  $area_provisional_enabled = (!empty($area_provisional_enabled)) ? 1 : 0;
+  $area_reminders_enabled = (!empty($area_reminders_enabled)) ? 1 : 0;
     
   if (!$enable_periods)
   { 
@@ -381,6 +385,8 @@ if (isset($change_area) && !empty($area))
     $assign_array[] = "private_default=" . $area_private_default;
     $assign_array[] = "private_mandatory=" . $area_private_mandatory;
     $assign_array[] = "private_override='" . $area_private_override . "'";
+    $assign_array[] = "provisional_enabled=" . $area_provisional_enabled;
+    $assign_array[] = "reminders_enabled=" . $area_reminders_enabled;
             
     $sql .= implode(",", $assign_array) . " WHERE id=$area";
     if (sql_command($sql) < 0)
@@ -906,7 +912,21 @@ if (!empty($area))
       } // end if (!$enable_periods)
     
       ?>
-        
+      
+      <fieldset>
+      <legend><?php echo get_vocab("provisional_settings")?></legend>
+        <div>
+          <label for="area_provisional_enabled"><?php echo get_vocab("enable_provisional")?>:</label>
+          <?php $checked = ($provisional_enabled) ? " checked=\"checked\"" : "" ?>
+          <input class="checkbox" type="checkbox"<?php echo $checked ?> id="area_provisional_enabled" name="area_provisional_enabled">
+        </div>
+        <div>
+          <label for="area_reminders_enabled"><?php echo get_vocab("enable_reminders")?>:</label>
+          <?php $checked = ($reminders_enabled) ? " checked=\"checked\"" : "" ?>
+          <input class="checkbox" type="checkbox"<?php echo $checked ?> id="area_reminders_enabled" name="area_reminders_enabled">
+        </div>
+      </fieldset>
+      
       <fieldset>
       <legend><?php echo get_vocab("private_settings")?></legend>
         <div>

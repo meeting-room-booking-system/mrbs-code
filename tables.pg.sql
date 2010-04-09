@@ -35,7 +35,9 @@ CREATE TABLE mrbs_area
   min_book_ahead_secs    int,
   max_book_ahead_enabled smallint,
   max_book_ahead_secs    int,
-  custom_html            text
+  custom_html            text,
+  provisional_enabled    smallint,
+  reminders_enabled      smallint
 );
 
 CREATE TABLE mrbs_room

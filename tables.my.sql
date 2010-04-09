@@ -32,6 +32,8 @@ CREATE TABLE mrbs_area
   max_book_ahead_enabled tinyint(1),
   max_book_ahead_secs    int,
   custom_html            text,
+  provisional_enabled    tinyint(1),
+  reminders_enabled      tinyint(1),
 
   PRIMARY KEY (id)
 );
