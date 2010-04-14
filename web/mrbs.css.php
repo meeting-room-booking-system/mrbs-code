@@ -161,7 +161,7 @@ div#dwm_header {width: 100%; float: left; margin-top: 1.0em; margin-bottom: 0.5e
 div#dwm_areas  {float: left; margin-right: 2.0em}
 div#dwm_rooms  {float: left; margin-right: 2.0em}
 #dwm_header h3 {font-size: small; font-weight: normal; text-decoration: underline; 
-    margin-top: 0; margin-bottom: 0.2em; padding-bottom: 0}
+    margin-top: 0; margin-bottom: 0.5em; padding-bottom: 0}
 #dwm_header ul {list-style-type: none; padding-left: 0; margin-left: 0; margin-top: 0}
 #dwm_header li {padding-left: 0; margin-left: 0}
 
