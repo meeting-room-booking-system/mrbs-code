@@ -448,7 +448,7 @@ $reminders_enabled = TRUE;
 
 // Interval before reminders can be issued (in seconds).   Only
 // working days (see below) are included in the calculation
-$reminder_interval = 60*60*24*4;  // 2 working days
+$reminder_interval = 60*60*24*2;  // 2 working days
 
 // Days of the week that are working days (Sunday = 0, etc.)
 $working_days = array(1,2,3,4,5);  // Mon-Fri

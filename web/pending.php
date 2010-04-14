@@ -6,7 +6,7 @@ require_once "defaultincludes.inc";
 function display_buttons($row, $is_series)
 {
   global $PHP_SELF;
-  global $user, $remind_interval;
+  global $user, $reminder_interval;
   
   $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
   $returl = $PHP_SELF;
@@ -52,7 +52,7 @@ function display_buttons($row, $is_series)
   else
   {
     // Work out whether enough time has elapsed since the last reminder
-    $not_yet_time = working_time_diff(time(), $last_reminded) < $remind_interval;
+    $not_yet_time = working_time_diff(time(), $last_reminded) < $reminder_interval;
 
     // if enough time has passed since the last reminder
     // output a "Remind Admin" button, otherwise nothing
