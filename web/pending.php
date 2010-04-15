@@ -186,7 +186,7 @@ if (!$is_admin)
 }
 // We want entries for a series to appear together so that we can display
 // them as a separate table below the main entry for the series. 
-$sql .= " ORDER BY E.repeat_id, start_time";
+$sql .= " ORDER BY repeat_id, start_time";
 
 $res = sql_query($sql);
 if (! $res)
