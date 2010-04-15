@@ -42,7 +42,7 @@ function authValidateUser($user, $pass)
   // which is safe.
   $pass = md5($pass);
 
-  return max(0, sql_query1("select count(*) from $tbl_users where name='$user' and password='$pass';"));
+  return max(0, sql_query1("SELECT COUNT(*) FROM $tbl_users WHERE name='$user' AND password='$pass' LIMIT 1"));
   // The max is used to cover the case when there's an SQL Query error (ie -1), probably because $tbl_users
   // hasn't been set up yet.   In that case we want to return 0 (ie validation failed)  
 }
