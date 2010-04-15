@@ -65,7 +65,7 @@ function authGetUserLevel($user)
     return 0;
   }
   
-  return max (0, sql_query1("SELECT level FROM $tbl_users WHERE name='$user' LIMIT 1"));
+  return max (0, sql_query1("SELECT level FROM $tbl_users WHERE name='" . addslashes($user) . "' LIMIT 1"));
   // The max is used to cover the case when there's an SQL Query error (ie -1), probably because
   // the database hasn't yet been upgraded and there's no 'level' column.   In that case we want 
   // to return 0 (ie the user has no rights)
