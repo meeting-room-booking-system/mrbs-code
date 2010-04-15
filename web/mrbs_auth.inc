@@ -47,9 +47,6 @@ function getAuthorised($level)
  * $user    - Who wants to modify it
  * $room    - The id of the room that the entry is in
  *
- * $room is ignored at the moment, but is provided for
- * future enhancements
- *
  * Returns:
  *   0        - The user does not have the required access
  *   non-zero - The user has the required access
@@ -61,12 +58,13 @@ function getWritable($creator, $user, $room)
   {
     return 1;
   }
-
-  if(authGetUserLevel($user) >= 2)
+  
+  // Otherwise you have to be a (booking) admin for this room
+  if (auth_book_admin($user, $room))
   {
     return 1;
   }
-
+  
   // Unathorised access
   return 0;
 }
