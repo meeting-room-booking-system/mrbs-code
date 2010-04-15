@@ -118,6 +118,7 @@ if (isset($id))
   $entry_type  = $row['entry_type'];
   $rep_id      = $row['repeat_id'];
   $private     = $row['private'];
+
   if ($private_mandatory) 
   {
     $private = $private_default;
@@ -159,9 +160,12 @@ if (isset($id))
 
     if (isset($rep_type) && ($rep_type != REP_NONE))
     {
-      $start_day   = (int)strftime('%d', $row['start_time']);
-      $start_month = (int)strftime('%m', $row['start_time']);
-      $start_year  = (int)strftime('%Y', $row['start_time']);
+      if ($edit_type == "series")
+      {
+        $start_day   = (int)strftime('%d', $row['start_time']);
+        $start_month = (int)strftime('%m', $row['start_time']);
+        $start_year  = (int)strftime('%Y', $row['start_time']);
+      }
       
       $rep_end_day   = (int)strftime('%d', $row['end_date']);
       $rep_end_month = (int)strftime('%m', $row['end_date']);
