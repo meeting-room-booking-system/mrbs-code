@@ -116,13 +116,17 @@ $theme = "default";
  * Calendar settings
  *******************/
 
-// Note: Be careful to avoid specify options that displays blocks overlaping
-// the next day, since it is not properly handled.
+// This setting controls whether to use "clock" or "times" based intervals
+// (FALSE and the default) or user defined periods (TRUE).   "Times" based
+// bookings allow you to define regular consecutive booking slots, eg every
+// half an hour from 7.00 am to 7.00 pm.   "Periods" based bookings are useful
+// in, for example, schools where the booking slots are of different lengths
+// and are not consecutive because of change-over time or breaks.
 
-// This setting controls whether to use "clock" based intervals (FALSE and
-// the default) or user defined periods (TRUE).  If user-defined periods
-// are used then $resolution, $morningstarts, $eveningends,
-// $eveningends_minutes and $twentyfourhour_format are ignored.
+// It is not possible to swap between these two options once bookings have
+// been created and to have meaningful entries.  This is due to differences
+// in the way that the data is stored.
+
 $enable_periods = FALSE;
 
 
@@ -133,6 +137,9 @@ $enable_periods = FALSE;
 // settings that are used when a new area is created.
 
 // The "Times" settings are ignored if $enable_periods is TRUE.
+
+// Note: Be careful to avoid specifying options that display blocks overlapping
+// the next day, since it is not properly handled.
 
 // Resolution - what blocks can be booked, in seconds.
 // Default is half an hour: 1800 seconds.
