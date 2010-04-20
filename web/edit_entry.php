@@ -158,8 +158,10 @@ if (isset($id))
    
     $rep_type = $row['rep_type'];
 
+    // If it's a repeating entry get the repeat details
     if (isset($rep_type) && ($rep_type != REP_NONE))
     {
+      // but don't overwrite the start time if we're not editing the series
       if ($edit_type == "series")
       {
         $start_day   = (int)strftime('%d', $row['start_time']);
