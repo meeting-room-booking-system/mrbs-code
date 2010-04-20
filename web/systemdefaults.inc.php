@@ -628,74 +628,84 @@ $auth['only_admin_can_book'] = FALSE;
 // set this variable to TRUE
 $auth['only_admin_can_book_repeat'] = FALSE;
 
+
 /**********************************************
  * Email settings
  **********************************************/
 
+// WHO TO EMAIL
+// ------------
+// The following settings determine who should be emailed when a booking is made,
+// edited or deleted (though the latter two events depend on the "When" settings below).
+// Set to TRUE or FALSE as required
+// (Note:  the email addresses for the room and area administrators are set from the
+// edit_area_room.php page in MRBS)
+$mail_settings['admin_on_bookings']         = FALSE;  // the addresses defined by $mail_settings['recipients'] below
+$mail_settings['area_admin_on_bookings']    = FALSE;  // the area administrator
+$mail_settings['room_admin_on_bookings']    = FALSE;  // the room administrator
+$mail_settings['booker']                    = FALSE;  // the person making the booking
+$mail_settings['book_admin_on_provisional'] = FALSE;  // the booking administrator when provisional bookings are enabled
+                                                      // (which is the MRBS admin, but this setting allows MRBS
+                                                      // to be extended to have separate booking approvers)     
+
+// WHEN TO EMAIL
+// -------------
+// These settings determine when an email should be sent (an email is always sent for new
+// bookings provided at least on of the "Who" settings above is set to TRUE).
+// Set to TRUE or FALSE as required
+$mail_settings['admin_on_delete'] = FALSE;  // when an entry is deleted
+$mail_settings['admin_all']       = FALSE;  // edits as well as new bookings
+
+
+// WHAT TO EMAIL
+// -------------
+// These settings determine what should be included in the email
+// Set to TRUE or FALSE as required
+$mail_settings['details'] = FALSE;  // Set to TRUE if you want full booking details;
+                                    // otherwise you just get a link to the entry
+
+// HOW TO EMAIL - CHARACTER SET AND LANGUAGE
+// -----------------------------------------
 // You can override the charset used in emails if $unicode_encoding is 1
 // (utf-8) if you like, but be sure the charset you choose can handle all
 // the characters in the translation and that anyone may use in a
 // booking description
 //$mail_charset = "iso-8859-1";
 
-// Set to TRUE if you want to be notified when entries are booked. Default is
-// FALSE
-$mail_settings['admin_on_bookings'] = FALSE;
+// Set the language used for emails (choose an available lang.* file).
+$mail_settings['admin_lang'] = 'en';   // Default is 'en'.
 
-// Set to TRUE if you want AREA ADMIN to be notified when entries are booked.
-// Default is FALSE. Area admin emails are set in room_area admin page.
-$mail_settings['area_admin_on_bookings'] = FALSE;
 
-// Set to TRUE if you want ROOM ADMIN to be notified when entries are booked.
-// Default is FALSE. Room admin emails are set in room_area admin page.
-$mail_settings['room_admin_on_bookings'] = FALSE;
-
-// Set to TRUE if you want the appropriate booking administrators to be emailed
-// when a provisional booking is created, accepted or rejected
-$mail_settings['book_admin_on_provisional'] = FALSE;
-
-// Set to TRUE if you want ADMIN to be notified when entries are deleted. Email
-// will be sent to mrbs admin, area admin and room admin as per above settings,
-// as well as to booker if 'booker' is TRUE (see below).
-$mail_settings['admin_on_delete'] = FALSE;
-
-// Set to TRUE if you want to be notified on every change (i.e, on new entries)
-// but also each time they are edited. Default is FALSE (only new entries)
-$mail_settings['admin_all'] = FALSE;
-
-// Set to TRUE is you want to show entry details in email, otherwise only a
-// link to view_entry is provided. Irrelevant for deleted entries. Default is
-// FALSE.
-$mail_settings['details'] = FALSE;
-
-// Set to TRUE if you want BOOKER to receive a copy of his entries as well any
-// changes (depends on 'admin_all', see below). Default is FALSE. To know
-// how to set mrbs to send emails to users/bookers, see INSTALL.
-$mail_settings['booker'] = FALSE;
-
-// If 'booker' is set to TRUE (see above) and you use an authentication
-// scheme other than 'auth_db', you need to provide the mail domain that will
-// be appended to the username to produce a valid email address (eg
-// "@domain.com").
+// HOW TO EMAIL - ADDRESSES
+// ------------------------
+// The email addresses of the MRBS administrator are set in the config file, and
+// those of the room and area administrators are set though the edit_area_room.php
+// in MRBS.    But if you have set $mail_settings['booker'] above to TRUE, MRBS will
+// need the email addresses of ordinary users.   If you are using the "db" 
+// authentication method then MRBS will be able to get them from the users table.  But
+// if you are using any other authentication scheme then the following settings allow
+// you to specify a domain name that will be appended to the username to produce a
+// valid email address (eg "@domain.com").
 $mail_settings['domain'] = '';
-
 // If you use $mail_settings['domain'] above and username returned by mrbs contains extra
 // strings appended like domain name ('username.domain'), you need to provide
 // this extra string here so that it will be removed from the username.
 $mail_settings['username_suffix'] = '';
 
-// Set the name of the Backend used to transport your mails. Either 'mail',
+
+// HOW TO EMAIL - BACKEND
+// ----------------------
+// Set the name of the backend used to transport your mails. Either 'mail',
 // 'smtp' or 'sendmail'. Default is 'mail'. See INSTALL for more details.
 $mail_settings['admin_backend'] = 'mail';
 
 /*******************
  * Sendmail settings
  */
-
+ 
 // Set the path of the Sendmail program (only used with "sendmail" backend).
 // Default is '/usr/bin/sendmail'
 $sendmail_settings['path'] = '/usr/bin/sendmail';
-
 // Set additional Sendmail parameters (only used with "sendmail" backend).
 // (example "-t -i"). Default is ''
 $sendmail_settings['args'] = '';
@@ -704,29 +714,16 @@ $sendmail_settings['args'] = '';
  * SMTP settings
  */
 
-// Set smtp server to connect. Default is 'localhost' (only used with "smtp"
-// backend).
-$smtp_settings['host'] = 'localhost';
+// These settings are only used with the "smtp" backend"
+$smtp_settings['host'] = 'localhost';  // SMTP server
+$smtp_settings['port'] = 25;           // SMTP port number
+$smtp_settings['auth'] = FALSE;        // Whether to use SMTP authentication
+$smtp_settings['username'] = '';       // Username (if using authentication)
+$smtp_settings['password'] = '';       // Password (if using authentication)
 
-// Set smtp port to connect. Default is '25' (only used with "smtp" backend).
-$smtp_settings['port'] = 25;
 
-// Set whether or not to use SMTP authentication. Default is 'FALSE'
-$smtp_settings['auth'] = FALSE;
-
-// Set the username to use for SMTP authentication. Default is ''
-$smtp_settings['username'] = '';
-
-// Set the password to use for SMTP authentication. Default is ''
-$smtp_settings['password'] = '';
-
-/**********************
- * Miscellaneous settings
- */
-
-// Set the language used for emails (choose an available lang.* file).
-// Default is 'en'.
-$mail_settings['admin_lang'] = 'en';
+// EMAIL - MISCELLANEOUS
+// ---------------------
 
 // Set the email address of the From field. Default is 'admin_email@your.org'
 $mail_settings['from'] = 'admin_email@your.org';
@@ -743,6 +740,8 @@ $mail_settings['cc'] = '';
 // (Some email servers are configured not to send emails if the cc or bcc
 // fields are set)
 $mail_settings['treat_cc_as_to'] = FALSE;
+
+
 
 /**********
  * Language
