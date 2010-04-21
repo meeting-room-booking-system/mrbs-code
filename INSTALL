@@ -93,18 +93,10 @@ Also see the description of testdata.php in the README file.
 
 For an upgrade:
 
-If you are upgrading from MRBS version 0.7 or later, and continuing to
-use MySQL, your database will be upgraded automatically if necessary
-when you first run MRBS.   You will be prompted for a database (not MRBS)
-username and password with rights to create and alter tables.
-
-The database format changed slightly between 0.6 and 0.7. To change the
-format of your data do:
-
-[MySQL]         $ mysql mrbs < upgrade.my.sql
-
-(This does not apply to PostgreSQL, which was not supported then.)
-Also see the file UPGRADE in the distribution.
+If you are upgrading from MRBS 1.2-pre3 or later, your database will be
+upgraded automatically if necessary when you first run MRBS.   You will
+be prompted for a database (not MRBS) username and password with rights
+to create and alter tables.     Otherwise, please se the UPGRADE file.
 
 For a second installation or to use different table names:
 

@@ -1,12 +1,28 @@
 Upgrade Information for previous releases of MRBS:
 --------------------------------------------------
 
+If you are upgrading from MRBS 1.2-pre3 or later, then MRBS will
+automatically execute any necessary database upgrades when it is first
+run.   It will prompt you for a database (not MRBS) username and password
+with rights to create and alter tables.
+
+It would be a sensible precaution to take a backup of your database before
+the upgrade.
+
+MRBS database upgrades are intended to be backwards compatible, so that you
+should still be able to run the old version of MRBS against the new database
+schema.   This will allow you to install the new version of MRBS in a separate
+directory while you configure and test it.   When you are happy with the
+new release you can switch the directory to be your production directory.
+
+
+Upgrading from prior to mrbs 0.7
+================================
 There was a change to the database schema at version 0.7. See the
 information in INSTALL on using the upgrade.my.sql script.
 
-There have been no database changes from version 0.7, so your current
-database should work just fine. Although, naturally, you should back up
-any data you have before using a new version.
+Upgrading from prior to mrbs 1.0-pre1
+======================================
 
 A change in version 1.0-pre1 might affect the appearance of entries in your
 existing database. Prior versions of MRBS did an extra and unnecessary
@@ -22,7 +38,7 @@ Upgrading from prior to mrbs 1.0 final
 ======================================
 
 Please apply the upgrade2.my.sql (if using MySQL) or the
-the upgrade2.my.sql (if using PostgreSQL) script, which
+the upgrade2.pg.sql (if using PostgreSQL) script, which
 adds a new column to the 'mrbs_repeat' table to support
 "n-weekly" repeats.
 
