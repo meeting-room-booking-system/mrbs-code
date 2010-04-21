@@ -7,6 +7,59 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.4.4 (Wed Apr 21 17:00:00 BST 2010):
+
+[*] Finnish translation update, provided by Tuomas.
+[-] Fixed test for E_DEPRECATED, which was causing warnings on
+ some versions of PHP.
+[+] Added the ability to repeat the headers at the bottom of the
+ table on day and week views - see the configuration variable
+ $column_labels_both_ends.
+[+] Added ability to set a password strength policy for the 'db'
+ authentication scheme.
+[-] Added a missing include line, the absence of which was causing
+ errors when $default_room was non-zero.
+[+] Added the ability to have "provisional" bookings. i.e. bookings
+ that need to be authorised before they enter the calendar.
+[-] Fixed a problem with the display of the All Day checkbox in the
+ edit_entry form in IE8.
+[*] Set input focus on page entry for a few pages.
+[-] Fixes for LDAP authentication scheme when $ldap_filter is set.
+[+] Added the ability to limit how far in advance non-admin users
+ can make bookings.
+[*] Added  the name of the deleting user to email notifications of
+  deleted entries.
+[-] Fixed incorrect reporting of durations in email notifications.
+[-] Fixed bug when using periods which meant that if you made a
+ booking for N periods and there were fewer than N periods left in
+ the day, the booking didn't flow on to the next day properly
+ unless the start period was the first period of the day. 
+[-] Fixed bug which caused the duration to be blank in email
+ notifications for bookings when "All day" was checked.
+[-]  Partially fixed a problem to do with the handling of All Day
+ bookings crossing a DST boundary.
+[+] Added the ability to prevent ordinary users from making repeat
+ bookings. Controlled by the configuration setting
+  $auth['only_admin_can_book_repeat']
+[-]  Fixed a bug which meant that n-weekly repeats weren't being
+ calculated properly when more than one repeat day was checked.
+[-] Removed text after closing tag in Polish translation file,
+ as reported in SF #2970638.
+[*] Redesigned the admin page, renamed the page to "Rooms".
+[+] Added the ability to add custom fields for rooms, the custom
+ fields must be added by the administrator in their favourite SQL
+ admin tool.
+[*] The "edit users" screen now handles textareas and checkboxes for
+ custom fields, just like the room custom field handling does.
+[+] Added a "custom_html" field for areas and rooms - this allows
+ custom HTML to be attached to areas and rooms.
+[*] Added check to see if the configuration variable $timezone is set -
+ it's too important to count as a non-fatal configuration error.
+[*] Improved the layout of email configuration settings in
+ systemdefaults.inc.php to make them more clear.
+[*] Added transaction support to MySQL DB abstractions.
+
+-------------------------------------------------------------------------------
 Version 1.4.3 (Tue Nov 24 22:00:00 GMT 2009):
 
 [+] Moved default configuration values out of config.inc.php - this file

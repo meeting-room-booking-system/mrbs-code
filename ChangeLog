@@ -1,3 +1,545 @@
+2010-04-21 09:53  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1336] web/config.inc.php:
+	  
+	  Reverted inadvertent change to config.inc.php
+
+2010-04-21 09:52  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1335] web/config.inc.php, web/version.inc:
+	  
+	  Updated version number for release
+
+2010-04-21 09:51  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1334] web/mysql.inc, web/mysqli.inc, web/pgsql.inc:
+	  
+	  Added transaction support to MySQL DB abstractions
+
+2010-04-21 08:46  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1333] INSTALL, UPGRADE:
+	  
+	  Updated the Install and Upgrade instructions.
+
+2010-04-20 21:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1332] INSTALL, tables.pg.73and_above.sql[DEL],
+	  tables.pg.pre73.sql[CPY], tables.pg.sql[CPY],
+	  web/systemdefaults.inc.php:
+	  
+	  - Tidied up and updated the INSTALL information; tried to avoid
+	  duplication of information between INSTALL and
+	  systemdefaults.inc.php - Renamed the tables.pg sql files so that
+	  tables.pg.sql is the file to use for the latest version of
+	  PostgreSQL
+
+2010-04-20 20:16  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1331] web/systemdefaults.inc.php:
+	  
+	  Tried to improve the layout of the email configuration settings
+	  to make it slightly clearer how to configure email.
+
+2010-04-20 19:16  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1330] web/edit_entry.php:
+	  
+	  Added some comments following Rev 1329
+
+2010-04-15 23:21  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1329] web/edit_entry.php:
+	  
+	  Fixed bug which was preventing individual members of a series
+	  being edited (bug introduced in Rev 1297).
+
+2010-04-15 15:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1328] web/auth_db.inc:
+	  
+	  Added a "LIMIT 1" to an SQL query to improve performance
+
+2010-04-15 15:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1327] web/auth_db.inc:
+	  
+	  Added missing SQL escaping
+
+2010-04-15 13:59  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1326] web/pending.php:
+	  
+	  Fixed incorrect keyword property
+
+2010-04-15 13:56  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1325] web/pending.php:
+	  
+	  Fixed another problem with provisional bookings. (The problem
+	  doesn't affect standard MRBS, but becomes apparent if you try and
+	  extend MRBS using the concept of room admins who can approve
+	  bookings for certain rooms).
+
+2010-04-15 13:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1324] web/mrbs_auth.inc:
+	  
+	  Fixed a problem with provisional bookings. (The problem doesn't
+	  affect standard MRBS, but becomes apparent if you try and extend
+	  MRBS using the concept of room admins who can approve bookings
+	  for certain rooms).
+
+2010-04-14 22:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1323] web/pending.php, web/systemdefaults.inc.php:
+	  
+	  Fixed two bugs to do with provisional bookings: (1) Reminder
+	  interval was being ignored in pending.php (2) Comment did not
+	  match default reminder interval in systemdefaults.inc.php
+
+2010-04-14 19:57  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1322] web/mrbs.css.php:
+	  
+	  Very minor change to formatting of day/week/month pages
+
+2010-04-09 18:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1321] web/mrbs.css.php:
+	  
+	  Fixed a minor formatting problem on the edit_area_room page.
+
+2010-04-09 10:14  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1320] web/systemdefaults.inc.php:
+	  
+	  Updated comments (forgot to do this in the last revision).
+
+2010-04-09 09:57  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1319] tables.my.sql, tables.pg.73and_above.sql, tables.pg.sql,
+	  web/Themes/default/header.inc, web/dbsys.inc,
+	  web/edit_area_room.php, web/functions.inc, web/lang.en,
+	  web/pending.php, web/upgrade/13, web/upgrade/13/mysql.sql,
+	  web/upgrade/13/pgsql.sql, web/upgrade/13/post.inc:
+	  
+	  Allowed provisional bookings to be enabled on a per-area basis.
+
+2010-04-08 09:10  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1318] INSTALL:
+	  
+	  Updated installation instructions with details of how to add
+	  columns to the room and users tables.
+
+2010-03-31 08:10  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1317] web/functions.inc:
+	  
+	  Added a check to see if $timezone has been set. If not, MRBS
+	  halts with a configuration error. Designed to prevent sites
+	  running into possible DST problems.
+
+2010-03-28 17:03  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1316] tables.my.sql, tables.pg.73and_above.sql, tables.pg.sql:
+	  
+	  Updated installation SQL to reflect the recent addition of the
+	  custom_html field
+
+2010-03-28 12:42  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1315] web/mrbs-ielte7.css.php:
+	  
+	  Minor fix to formatting of textareas in IE7 and below, which
+	  don't understand margin-bottom in some circumstances.
+
+2010-03-28 09:48  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1314] web/admin.php, web/dbsys.inc, web/edit_area_room.php,
+	  web/edit_users.php, web/lang.en, web/mrbs-ie.css,
+	  web/mrbs-ielte7.css.php, web/mrbs.css.php, web/upgrade/12,
+	  web/upgrade/12/mysql.sql, web/upgrade/12/pgsql.sql:
+	  
+	  - added custom_html fields to the area and room tables. The HTML
+	  is displayed in a div with id "custom_html" on the Rooms and
+	  edit_area_room pages. The div can be styled and positioned using
+	  CSS. Useful, for example, for displaying an embedded Google map
+	  showing the location of a room or area. See also Sourceforge
+	  feature request ID 2976404 - Fixed a bug which prevented the edit
+	  and delete image buttons working with IE6 - Removed the sort_key
+	  from the list of room details shown to non-admins
+
+2010-03-23 09:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1313] web/functions_mail.inc:
+	  
+	  Removed some redundant global declarations. No functional change
+	  to MRBS.
+
+2010-03-22 16:03  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1312] web/functions_mail.inc:
+	  
+	  Moved code for getting area admin and room admin email addresses
+	  into two functions, get_area_admin_email() and
+	  get_room_admin_email(). No functional change to MRBS.
+
+2010-03-21 22:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1311] web/mrbs.css.php:
+	  
+	  Minor adjustment to styling of textarea in edit_users form
+
+2010-03-21 20:46  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1310] web/admin.php, web/edit_area_room.php,
+	  web/edit_users.php, web/lang.ca, web/lang.cs, web/lang.da,
+	  web/lang.de, web/lang.el, web/lang.en, web/lang.es, web/lang.eu,
+	  web/lang.fi, web/lang.fr, web/lang.it, web/lang.ja, web/lang.ko,
+	  web/lang.nl, web/lang.no, web/lang.pl, web/lang.pt, web/lang.sl,
+	  web/lang.sv, web/lang.tr, web/lang.zh-cn, web/lang.zh-tw,
+	  web/language.inc, web/session_cookie.inc, web/session_php.inc:
+	  
+	  - Standardised on a convention of using "tablename.columnname" in
+	  the lang files as the tag for user defined fields added to
+	  tables, where tablename is the table name stripped of the table
+	  prefix. Unfortunately this means that anyone with existing user
+	  defined fields in the users table will have to change the tags
+	  from "user_" to "users." when they upgrade, but it does mean
+	  there is now a convention for future additions. - Moved the
+	  function get_loc_field_name() to the language file and
+	  generalised it to cover any table
+
+2010-03-21 18:16  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1309] web/admin.php, web/edit_area_room.php,
+	  web/edit_users.php, web/mrbs-ielte6.css, web/mrbs.css.php,
+	  web/systemdefaults.inc.php:
+	  
+	  Extended edit_users so that it can display textareas and
+	  checkboxes for user defined fields, as well as just text inputs.
+
+2010-03-21 10:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1308] web/admin.php, web/edit_users.php, web/mrbs.css.php:
+	  
+	  Brought styling of the users table and the list of outstanding
+	  provisional bookings into line with the new styling for the rooms
+	  table
+
+2010-03-21 08:54  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1307] web/admin.php, web/dbsys.inc, web/edit_area_room.php,
+	  web/images/check.png, web/mrbs-ielte6.css, web/mrbs.css.php,
+	  web/mysql.inc, web/mysqli.inc, web/pgsql.inc:
+	  
+	  The room editing pages (admin.php and edit_area_room.php) will
+	  now recognise user defined columns in the room table, displaying
+	  them in the room editing form as appropriate. This enables
+	  information about the rooms to be added to the system (eg coffee
+	  machine? whiteboard? etc.). At the moment only text, varchar,
+	  int, smallint and tinyint are supported, displayed as textarea,
+	  text or checkbox fields as appropriate. Smaallints and tinyints
+	  are assumed to be booleans and are displayed as checkboxes. Text
+	  descriptions are looked for in the lang files with the tag
+	  room.column_name, eg room.coffee_machine, enabling translations
+	  to be provided. If not present, the column name will be used for
+	  labels etc.
+
+2010-03-19 09:40  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1306] web/version.inc:
+	  
+	  * Very belatedly updated version post the 1.4.3 release
+
+2010-03-17 09:27  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1305] web/Themes/classic126/styling.inc,
+	  web/Themes/default/header.inc, web/Themes/default/styling.inc,
+	  web/admin.php, web/edit_area_room.php, web/functions.inc,
+	  web/images, web/images/delete.png, web/images/edit.png,
+	  web/images/new.gif, web/lang.en, web/month.php, web/mrbs-ie8.css,
+	  web/mrbs-ielte7.css.php, web/mrbs.css.php, web/new.gif[DEL]:
+	  
+	  - Redesigned (and hopefully improved) the layout of the admin
+	  page with a view to being able to add extra fields to the room
+	  table in the future - Opened up the admin and edit_area_room
+	  pages to users at level 1, who can view room details but not
+	  change them - Renamed “Admin” in the header to “Rooms” - Removed
+	  the browser language details from the Rooms page as they’re
+	  available on the Help page - Created an images directory for
+	  holding icons
+
+2010-03-16 21:00  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1304] web/lang.pl:
+	  
+	  * Removed text after closing tag, as reported in SF tracker
+	  #2970638 - in fact removed the end tag altogether after learning
+	  this is allowed and accepted practice.
+
+2010-03-14 21:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1303] web/functions.inc, web/mrbs-js-overrides.css.php:
+	  
+	  - Removed the Submit button from Area and Room select forms when
+	  JavaScript is enabled as they are redundant. - Minor tidy up of
+	  JavaScript
+
+2010-03-03 17:48  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1302] web/theme.inc:
+	  
+	  Made the error message slightly more helpful when $morningstarts,
+	  $eveningends and $resolution are misconfigured.
+
+2010-02-22 11:42  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1301] web/edit_entry.php:
+	  
+	  More minor tidying of the code. No functional change to MRBS.
+
+2010-02-21 23:34  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1300] web/edit_entry.php:
+	  
+	  Replaced the document.writeln's with DOM compliant JavaScript,
+	  and did some minor tidying up. No functional change to MRBS.
+
+2010-02-17 23:15  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1299] web/mrbs_sql.inc:
+	  
+	  Fixed a bug which meant that n-weekly repeats weren't being
+	  calculated properly when more than one repeat day was checked.
+
+2010-02-17 20:59  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1298] web/edit_entry.php, web/edit_entry_handler.php,
+	  web/functions_mail.inc, web/mrbs_sql.inc,
+	  web/systemdefaults.inc.php, web/view_entry.php:
+	  
+	  Replaced magic numbers used for values of rep_type with
+	  constants.
+
+2010-02-17 17:40  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1297] web/edit_entry.php, web/edit_entry_handler.php,
+	  web/systemdefaults.inc.php, web/view_entry.php:
+	  
+	  - Added the ability to prevent ordinary users from making repeat
+	  bookings. Controlled by the configuration setting
+	  $auth['only_admin_can_book_repeat'] - Fixed some minor problems
+	  to do with editing repeat bookings - Tidied up the code in
+	  edit_entry.php a little
+
+2010-02-10 17:16  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1296] web/edit_entry_handler.php:
+	  
+	  Partially fixed a problem to do with the handling of All Day
+	  bookings crossing a DST boundary. It's not a complete fix - I've
+	  just made the handling mirror that of ordinary (non All Day)
+	  bookings - and I decided to leave fixing it properly until the
+	  Deprecated is_dst issue is tackled.
+
+2010-02-10 16:31  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1295] web/edit_entry_handler.php, web/functions.inc:
+	  
+	  Fixed bug which caused the duration to be blank in email
+	  notifications for bookings when "All day" was checked.
+
+2010-02-10 12:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1294] web/systemdefaults.inc.php:
+	  
+	  Added comments to make it clearer that certain settings are
+	  configurable on a per-area basis.
+
+2010-02-08 13:08  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1293] web/functions.inc:
+	  
+	  Fixed bug when using periods which meant that if you made a
+	  booking for N periods and there were fewer than N periods left in
+	  the day, the booking didn't flow on to the next day properly
+	  unless the start period was the first period of the day.
+
+2010-02-08 12:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1292] web/edit_entry_handler.php, web/functions.inc:
+	  
+	  Fixed incorrect reporting of durations in email notifications
+	  (both when using periods and not). Bug reported by Colin Napier.
+
+2010-02-07 09:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1291] web/mrbs_sql.inc:
+	  
+	  Fixed bug in max_book_ahead checking when using periods. Thanks
+	  to Colin Napier.
+
+2010-02-03 12:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1290] web/functions_mail.inc, web/lang.en:
+	  
+	  Added the name of the deleting user to email notifications of
+	  deleted entries.
+
+2010-01-20 10:03  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1289] web/mrbs.css.php:
+	  
+	  Minor correction to fix problem with the positioning of the
+	  simple trailer in some circumstances (it didn't always appear at
+	  the bottom)
+
+2009-12-17 18:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1288] tables.my.sql, tables.pg.73and_above.sql, tables.pg.sql,
+	  web/Themes/default/header.inc, web/confirm_entry_handler.php,
+	  web/dbsys.inc, web/del_entry.php, web/edit_area_room.php,
+	  web/edit_entry_handler.php, web/functions.inc,
+	  web/functions_mail.inc, web/lang.en, web/mrbs.css.php,
+	  web/mrbs_auth.inc, web/mrbs_sql.inc, web/pending.php,
+	  web/systemdefaults.inc.php, web/upgrade/11,
+	  web/upgrade/11/mysql.sql, web/upgrade/11/pgsql.sql,
+	  web/view_entry.php:
+	  
+	  Added the ability to limit how far in advance (both minimum and
+	  maximum times) ordinary users can make bookings. Works whether
+	  using periods or not, though for periods the time intervals are
+	  limited to days as MRBS does not know when the periods occur
+	  during the day. The intervals can be negative, allowing one to
+	  specify, for example, that users cannot make or edit bookings
+	  more than five minutes in the past or two weeks ahead. For times
+	  mode (ie when not using periods) the limits are settable on a
+	  per-area basis. For periods the limits apply globally at the
+	  moment.
+
+2009-12-17 17:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1287] web/month.php, web/mysql.inc, web/mysqli.inc,
+	  web/pgsql.inc, web/week.php:
+	  
+	  - Ensured that sql_row_keyed() actually returns an associative
+	  array, rather than one with both numeric and associative indices
+	  - Fixed a couple of places that still relied on a numeric index
+
+2009-12-14 20:30  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1286] web/auth_ldap.inc:
+	  
+	  * Fixes for the LDAP authentication method when $ldap_filter is
+	  configured.
+
+2009-12-13 19:34  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1285] web/Themes/default/header.inc, web/search.php:
+	  
+	  - Set the focus to the search string field on the search form on
+	  page load - Set the focus to the brief description field on the
+	  edit_entry form on page load (but only for new bookings)
+
+2009-12-13 18:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1284] web/pending.php:
+	  
+	  Fixed HTML validation problem
+
+2009-12-13 18:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1283] web/Themes/default/header.inc:
+	  
+	  - Added a missing '>' to the body tag - Set the focus to the
+	  username on the logon form on page load
+
+2009-12-11 16:35  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1282] web/mrbs-ie8.css:
+	  
+	  Fixed a problem with the display of the All Day checkbox in the
+	  edit_entry form in IE8.
+
+2009-12-09 22:37  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1281] ., tables.my.sql, tables.pg.73and_above.sql,
+	  tables.pg.sql, web/Themes/classic126/styling.inc,
+	  web/Themes/default/header.inc, web/Themes/default/styling.inc,
+	  web/confirm_entry_handler.php[CPY], web/day.php, web/dbsys.inc,
+	  web/del_entry.php, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/edit_users.php,
+	  web/functions.inc, web/functions_mail.inc, web/lang.en,
+	  web/month.php, web/mrbs.css.php, web/mrbs_auth.inc,
+	  web/mrbs_sql.inc, web/pending.php[CPY],
+	  web/systemdefaults.inc.php, web/upgrade/10[CPY],
+	  web/upgrade/10/mysql.sql[CPY], web/upgrade/10/pgsql.sql[CPY],
+	  web/upgrade/5/pgsql.sql, web/upgrade/9[CPY],
+	  web/upgrade/9/mysql.sql[CPY], web/upgrade/9/pgsql.sql[CPY],
+	  web/view_entry.php, web/week.php:
+	  
+	  * Performed --reintegrate branch merge of 'provisional_bookings'
+	  branch, r1242-1280.
+
+2009-12-09 13:16  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1278] web/index.php:
+	  
+	  Added missing include file, the absence of which caused errors
+	  when $default_room was non-zero.
+
+2009-12-08 18:07  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1277] web/edit_users.php:
+	  
+	  Fixed a bug in the last change (Rev 1276): passwords should only
+	  be validated if it's a new user, or an existing user changing
+	  their password.
+
+2009-12-08 14:10  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1276] web/edit_users.php, web/lang.en,
+	  web/systemdefaults.inc.php:
+	  
+	  Added the ability to set a password strength policy when using
+	  the 'db' authentication scheme. The policy can be defined in
+	  terms of minimum length and minimum numbers of alpha, lower-case,
+	  upper-case, numeric and special (ie non alpha-numeric)
+	  characters. The validation is only server side at the moment.
+	  Client side validation is not included yet as JavaScript's native
+	  support for Unicode pattern matching is very limited.
+
+2009-11-27 00:27  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1275] web/day.php, web/systemdefaults.inc.php, web/week.php:
+	  
+	  Added the ability to repeat the headers at the bottom of the
+	  table, controlled by a new config setting
+	  $column_labels_both_ends
+
+2009-11-26 05:31  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1274] web/systemdefaults.inc.php:
+	  
+	  Fixed test for E_DEPRECATED constant so that it doesn't give a
+	  warning if it doesn't exist.
+
+2009-11-25 11:31  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1273] web/lang.fi:
+	  
+	  * Finnish translation update, as provided by Tuomas in SF tracker
+	  #2870678 - annoyingly I missed the 1.4.3 release though.
+
+2009-11-24 21:56  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1270] ChangeLog, NEWS:
+	  
+	  * Updated NEWS anc ChangeLog for 1.4.3 release.
+
 2009-11-24 21:21  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r1269] web/auth_ldap.inc, web/mysql.inc, web/mysqli.inc,
