@@ -172,8 +172,8 @@ function sql_pgsql_error($db_conn = null)
 
 
 // Begin a transaction, if the database supports it. This is used to
-// improve PostgreSQL performance for multiple insert/delete/updates.
-// There is no rollback support, since MySQL doesn't support it.
+// improve performance for multiple insert/delete/updates.
+// There is no rollback support, since MySQL myisam tables don't support it.
 function sql_pgsql_begin($db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
