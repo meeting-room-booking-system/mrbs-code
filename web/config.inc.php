@@ -19,7 +19,7 @@
 // When upgrading an existing installation, this should be set to the
 // timezone the web server runs in.
 //
-$timezone = "Europe/London";
+//$timezone = "Europe/London";
 
 
 /*******************
