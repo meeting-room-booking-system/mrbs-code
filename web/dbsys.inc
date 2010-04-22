@@ -228,7 +228,7 @@ function sql_error()
   }
 
   $f = "sql_${db_sys}_error";
-  return $f();
+  return $f($db_conn);
 }
 
 
