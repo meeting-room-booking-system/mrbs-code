@@ -1,3 +1,27 @@
+2010-04-22 20:10  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1344] web/version.inc:
+	  
+	  * Up version for 1.4.4.1 release.
+
+2010-04-22 16:36  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1343] tables.my.sql, tables.pg.pre73.sql, tables.pg.sql:
+	  
+	  * Corrected DB schema version. :(
+
+2010-04-21 22:32  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1342] web/version.inc:
+	  
+	  * Update version number post-release.
+
+2010-04-21 15:30  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1337] ChangeLog, NEWS:
+	  
+	  * Updated NEWS and ChangeLog for 1.4.4 release.
+
 2010-04-21 09:53  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r1336] web/config.inc.php:

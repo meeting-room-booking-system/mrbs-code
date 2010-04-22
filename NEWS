@@ -7,6 +7,12 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.4.4.1 (Thu Apr 21 21:30:00 BST 2010):
+
+[-] Fixed bug in the 1.4.4 release, the database schema number in the
+ installation SQL files was incorrect.
+
+-------------------------------------------------------------------------------
 Version 1.4.4 (Wed Apr 21 17:00:00 BST 2010):
 
 [*] Finnish translation update, provided by Tuomas.
