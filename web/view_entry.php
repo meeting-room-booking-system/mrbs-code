@@ -266,7 +266,7 @@ else
   if ($repeat_id != 0)
   {
     $res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks
-                      FROM $tbl_repeat WHERE id=$repeat_id");
+                      FROM $tbl_repeat WHERE id=$repeat_id LIMIT 1");
     if (! $res)
     {
       fatal_error(0, sql_error());

@@ -361,7 +361,7 @@ $repeat_id = 0;
 if (isset($id))
 {
   $ignore_id = $id;
-  $repeat_id = sql_query1("SELECT repeat_id FROM $tbl_entry WHERE id=$id");
+  $repeat_id = sql_query1("SELECT repeat_id FROM $tbl_entry WHERE id=$id LIMIT 1");
   if ($repeat_id < 0)
   {
     $repeat_id = 0;

@@ -81,8 +81,11 @@ $repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
 // If we had $id passed in then it's a modification.
 if (isset($id))
 {
-  $sql = "select name, create_by, description, start_time, end_time,
-     type, room_id, entry_type, repeat_id, private from $tbl_entry where id=$id";
+  $sql = "SELECT name, create_by, description, start_time, end_time,
+                 type, room_id, entry_type, repeat_id, private
+            FROM $tbl_entry
+           WHERE id=$id
+           LIMIT 1";
    
   $res = sql_query($sql);
   if (! $res)
@@ -140,7 +143,9 @@ if (isset($id))
   if($entry_type >= 1)
   {
     $sql = "SELECT rep_type, start_time, end_date, rep_opt, rep_num_weeks
-            FROM $tbl_repeat WHERE id=$rep_id";
+              FROM $tbl_repeat 
+             WHERE id=$rep_id
+             LIMIT 1";
    
     $res = sql_query($sql);
     if (! $res)

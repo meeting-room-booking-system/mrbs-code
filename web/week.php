@@ -123,10 +123,8 @@ for ($j = 0; $j<=($num_of_days-1); $j++)
 // Get the area and room names (we will need them later for the heading)
 $this_area_name = "";
 $this_room_name = "";
-$this_area_name = htmlspecialchars(sql_query1("select area_name
-                                  from $tbl_area where id=$area"));
-$this_room_name = htmlspecialchars(sql_query1("select room_name
-                                  from $tbl_room where id=$room"));
+$this_area_name = htmlspecialchars(sql_query1("SELECT area_name FROM $tbl_area WHERE id=$area LIMIT 1"));
+$this_room_name = htmlspecialchars(sql_query1("SELECT room_name FROM $tbl_room WHERE id=$room LIMIT 1"));
 
 $sql = "select id, area_name from $tbl_area order by area_name";
 $res = sql_query($sql);
