@@ -178,7 +178,8 @@ will make it harder for you to upgrade when new versions are released.
 1.  Timezone
 
 You must set the timezone to a valid value, a list of which can be found at
-http://php.net/manual/en/timezones.php.   Note that the timezone to use is the
+http://php.net/manual/en/timezones.php.   Don't forget to uncomment the line
+by removing the '//' at the beginning.   Note that the timezone to use is the
 timezone in which your meeting rooms are located, not the timezone of your
 server in case they are different.
 

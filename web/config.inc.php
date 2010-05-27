@@ -19,6 +19,8 @@
 // When upgrading an existing installation, this should be set to the
 // timezone the web server runs in.
 //
+// A list of valid timezones can be found at http://php.net/manual/en/timezones.php
+// The following line must be uncommented by removing the '//' at the beginning
 //$timezone = "Europe/London";
 
 
