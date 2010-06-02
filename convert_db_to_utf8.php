@@ -5,7 +5,11 @@
 // This script converts text in the database from a particular encoding
 // to UTF-8
 
-require_once "grab_globals.inc.php";
+require_once "defaultincludes.inc";
+
+$encoding = get_form_var('encoding', 'string');
+
+header("Content-Type: text/html; charset=\"utf-8\"");
 
 ?>
 
@@ -20,9 +24,10 @@ require_once "grab_globals.inc.php";
 
 <?php
 
+
 if (!isset($encoding))
 {
-  echo '
+echo '
 
     <p>
       This script will convert all the text in the database from a selected encoding to
@@ -36,96 +41,110 @@ if (!isset($encoding))
     <form method="get" action="'.$PHP_SELF.'">
       Encoding to convert from:<br>
       <select name="encoding">
-        <option value="iso-8859-1">Latin 1 (English/French/German/Italian/Norwegian etc.)
-        <option value="iso-8859-2">Latin 2 (Czech)
-        <option value="Big-5">Big 5 (Chinese Traditional)
-        <option value="Shift-JIS">Shift-JIS (Japanese)
+        <option value="iso-8859-1">Latin 1 (English/French/German/Italian/Norwegian etc.)</option>
+        <option value="iso-8859-2">Latin 2 (Czech)</option>
+        <option value="iso-8859-7">ISO-8859-7 (Greek)</option>
+        <option value="iso-8859-15">Latin 9 (European)</option>
+        <option value="Big-5">Big 5 (Chinese Traditional)</option>
+        <option value="Shift-JIS">Shift-JIS (Japanese)</option>
       </select>
-      <p>
+      <br>
       <input type="submit" value="Do it">
     </form>
 ';
 }
 else
 {
-  require_once "systemdefaults.inc.php";
-  require_once "config.inc.php";
-  require_once "dbsys.inc";
-  require_once "functions.inc";
-
   echo '
-    Starting update, this could take a while...<p>
+    <p>
+      Starting update, this could take a while...
+    </p>
 
-    Updating areas:
+    <p>
+      Updating areas:
 ';
 
-  $sql = "select id,area_name from mrbs_area";
+  $sql = "SELECT id,area_name FROM mrbs_area";
   $areas_res = sql_query($sql);
 
   for ($i = 0; ($row = sql_row($areas_res, $i)); $i++)
   {
     $id = $row[0];
-    $name = slashes(iconv($encoding,"utf-8",$row[1]));
+    $name = addslashes(iconv($encoding,"utf-8",$row[1]));
 
-    $upd_sql = "update mrbs_area set area_name='$name' where id=$id";
+    $upd_sql = "UPDATE mrbs_area SET area_name='$name' WHERE id=$id";
     sql_query($upd_sql);
 
     echo ".";
   }
   echo " done.<br>Updating rooms: ";
 
-  $sql = "select id,room_name,description,capacity from mrbs_room";
+  $sql = "SELECT id,room_name,description,capacity FROM mrbs_room";
   $rooms_res = sql_query($sql);
 
   for ($i = 0; ($row = sql_row($rooms_res, $i)); $i++)
   {
     $id = $row[0];
-    $name = slashes(iconv($encoding,"utf-8",$row[1]));
-    $desc = slashes(iconv($encoding,"utf-8",$row[2]));
-    $capa = slashes(iconv($encoding,"utf-8",$row[3]));
+    $name = addslashes(iconv($encoding,"utf-8",$row[1]));
+    $desc = addslashes(iconv($encoding,"utf-8",$row[2]));
+    $capa = addslashes(iconv($encoding,"utf-8",$row[3]));
 
-    $upd_sql = "update mrbs_room set room_name='$name',description='$desc',capacity='$capa' where id=$id";
+    $upd_sql = "UPDATE mrbs_room SET room_name='$name',description='$desc',capacity='$capa' WHERE id=$id";
     sql_command($upd_sql);
 
     echo ".";
   }
   echo " done.<br>Updating repeating entries: ";
 
-  $sql = "select id,name,description from mrbs_repeat";
+  $sql = "SELECT id,name,description FROM mrbs_repeat";
   $repeats_res = sql_query($sql);
 
   for ($i = 0; ($row = sql_row($repeats_res, $i)); $i++)
   {
     $id = $row[0];
-    $name = slashes(iconv($encoding,"utf-8",$row[1]));
-    $desc = slashes(iconv($encoding,"utf-8",$row[2]));
+    $name = addslashes(iconv($encoding,"utf-8",$row[1]));
+    $desc = addslashes(iconv($encoding,"utf-8",$row[2]));
 
-    $upd_sql = "update mrbs_repeat set name='$name',description='$desc' where id=$id";
+    $upd_sql = "UPDATE mrbs_repeat SET name='$name',description='$desc' WHERE id=$id";
     sql_command($upd_sql);
 
     echo ".";
   }
   echo " done.<br>Updating normal entries: ";
 
-  $sql = "select id,name,description from mrbs_entry";
+  $sql = "SELECT id,name,description FROM mrbs_entry";
   $entries_res = sql_query($sql);
 
   for ($i = 0; ($row = sql_row($entries_res, $i)); $i++)
   {
     $id = $row[0];
-    $name = slashes(iconv($encoding,"utf-8",$row[1]));
-    $desc = slashes(iconv($encoding,"utf-8",$row[2]));
+    $name = addslashes(iconv($encoding,"utf-8",$row[1]));
+    $desc = addslashes(iconv($encoding,"utf-8",$row[2]));
 
-    $upd_sql = "update mrbs_entry set name='$name',description='$desc' where id=$id";
+    $upd_sql = "UPDATE mrbs_entry SET name='$name',description='$desc' WHERE id=$id";
     sql_command($upd_sql);
 
     echo ".";
   }
-  echo 'done.<p>
+  echo '
+      done.
+    </p>
 
-    Finished everything, byebye!
+    <p>
+      Finished everything that I can do.
+    </p>
+    
+    <p>
+      If you are using MySQL >= 4 you may still you need to modify
+      the database charset for textual columns. e.g.:
+    </p>
+    <pre>
+ALTER TABLE mrbs_area
+CHANGE area_name VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL
+</pre>
 ';
 }
 ?>
   </body>
 </html>
+ 
