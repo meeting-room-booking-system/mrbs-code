@@ -488,9 +488,7 @@ if ($valid_booking)
       $new_id = $booking['id'];
 
       // Send a mail to the Administrator
-      if ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
-          $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'] or
-          $mail_settings['book_admin_on_provisional'])
+      if ($need_to_send_mail)
       {
         require_once "functions_mail.inc";
         // Send a mail only if this a new entry, or if this is an
@@ -548,9 +546,7 @@ if ($valid_booking)
                                       $status);
 
       // Send a mail to the Administrator
-      if ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
-          $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'] or
-          $mail_settings['book_admin_on_provisional'])
+  		if ($need_to_send_mail)
       {
         require_once "functions_mail.inc";
         // Send a mail only if this a new entry, or if this is an

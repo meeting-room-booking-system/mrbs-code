@@ -43,11 +43,7 @@ $user = getUserName();
 
                   
 if (isset($action))
-{
-  $need_to_send_mail = ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
-                        $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'] or
-                        $mail_settings['book_admin_on_provisional']);
-                        
+{                      
   if ($need_to_send_mail)
   {      
     // Retrieve the booking details which we will need for the email

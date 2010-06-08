@@ -332,8 +332,10 @@ $aix_utf8_converters = array
 // Language token handling
 
 // Get first default set of language tokens for emails.
-if ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
-    $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'])
+$need_to_send_mail = ($mail_settings['admin_on_bookings'] or $mail_settings['area_admin_on_bookings'] or
+							 $mail_settings['room_admin_on_bookings'] or $mail_settings['booker'] or
+							 $mail_settings['book_admin_on_provisional']);
+if ($need_to_send_mail)
 {
   include "lang." . $default_language_tokens;
   include "lang." . $mail_settings['admin_lang'];
