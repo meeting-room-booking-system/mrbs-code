@@ -37,7 +37,7 @@ function xblGetNodeBgColor(node)
   
   if (node.currentStyle)         // The IE way
   {
-		return node.currentStyle.backgroundColor;
+    return node.currentStyle.backgroundColor;
   }
   if (window.getComputedStyle)   // All other browsers
   {

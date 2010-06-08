@@ -589,7 +589,7 @@ div#edit_area_room_submit_save {float: left; clear: none; width: auto}
 .form_general input#all_day {width: auto; margin-left: 1.0em; margin-right: 0.5em}
 .form_general input#private {width: auto; margin-left: 3.0em; margin-right: 0.5em}
 .form_general #div_rooms select, .form_general #div_typematch select {float: left; margin-right: 2.0em}
-.form_general fieldset#rep_info {padding-top: 0}
+fieldset#rep_info {border-top: 1px solid <?php echo $report_h3_border_color ?>; padding-top: 1em}
 .form_general #rep_info input {width: 13em}
 .form_general input#rep_num_weeks {width: 2.0em}
 

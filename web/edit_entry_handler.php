@@ -546,7 +546,7 @@ if ($valid_booking)
                                       $status);
 
       // Send a mail to the Administrator
-  		if ($need_to_send_mail)
+      if ($need_to_send_mail)
       {
         require_once "functions_mail.inc";
         // Send a mail only if this a new entry, or if this is an

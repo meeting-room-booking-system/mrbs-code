@@ -948,8 +948,8 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   //                     [status]
   
   // slots records the duration of the booking in number of time slots.
-	// Used to calculate how high to make the block used for clipping
-	// overflow descriptions.
+  // Used to calculate how high to make the block used for clipping
+  // overflow descriptions.
 
   // Fill in the map for this meeting. Start at the meeting start time,
   // or the day start time, whichever is later. End one slot before the
