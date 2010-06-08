@@ -776,6 +776,8 @@ else
       // If repeats are allowed and the edit_type is a series (which means
       // that either you're editing an existing series or else you're making
       // a new booking) then print the repeat inputs
+      echo "<fieldset id=\"rep_info\">\n";
+      echo "<legend></legend>\n";
       ?>
       <div id="rep_type">
         <label><?php echo get_vocab("rep_type")?>:</label>
@@ -822,6 +824,7 @@ else
         <input type="text" id="rep_num_weeks" name="rep_num_weeks" value="<?php echo $rep_num_weeks?>">
       </div>
       <?php
+      echo "</fieldset>\n";
     }
     elseif (isset($id))
     {
@@ -839,7 +842,9 @@ else
       echo "<legend></legend>\n";
       echo "<div>\n";
       echo "<label>" . get_vocab("rep_type") . ":</label>\n";
-      echo "<input type=\"text\" value =\"" . get_vocab($key) . "\" disabled=\"disabled\">\n";
+      echo "<select value =\"" . get_vocab($key) . "\" disabled=\"disabled\">\n";
+      echo "<option>" . get_vocab($key) . "</option>\n";
+      echo "</select>\n";
       echo "<input type=\"hidden\" name=\"rep_type\" value=\"" . REP_NONE . "\">\n";
       echo "</div>\n";
       if (isset($rep_type) && ($rep_type != REP_NONE))
