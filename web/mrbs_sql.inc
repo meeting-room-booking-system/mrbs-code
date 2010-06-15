@@ -194,10 +194,13 @@ function mrbsDelEntry($user, $id, $series, $all)
     }
     
     // check that the booking policies allow us to delete this entry
-    $tmp = mrbsCheckPolicy($row['start_time'], TRUE);
-    if (!$is_book_admin && !empty($tmp))
+    if (!$is_book_admin)
     {
-      continue;
+      $tmp = mrbsCheckPolicy($row['start_time'], TRUE);
+      if (!empty($tmp))
+      {
+        continue;
+      }
     }
    
     if (sql_command("DELETE FROM $tbl_entry WHERE id=" . $row['id']) > 0)
