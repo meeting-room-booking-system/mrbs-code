@@ -55,6 +55,8 @@ if (getAuthorised(1) && ($info = mrbsGetBookingInfo($id, FALSE, TRUE)))
     $month = strftime("%m", $info["start_time"]);
     $year  = strftime("%Y", $info["start_time"]);
     $area  = mrbsGetRoomArea($info["room_id"]);
+    // Get the settings for this area (they will be needed for policy checking)
+    get_area_settings($area);
     
     $notify_by_email = $mail_settings['admin_on_delete']  || $mail_settings['book_admin_on_provisional'];
 
@@ -67,6 +69,11 @@ if (getAuthorised(1) && ($info = mrbsGetBookingInfo($id, FALSE, TRUE)))
     sql_begin();
     $result = mrbsDelEntry(getUserName(), $id, $series, 1);
     sql_commit();
+    // [At the moment MRBS does not inform the user if it was only able to
+    // delete some members of a series but not all.    This could happen for
+    // example if a booking policy is in force thgat prevents the deletion of entries
+    // in the past.   It would be better to inform the user that the operation has only
+    // been partially successful]
     if ($result)
     {
       // Send a mail to the Administrator

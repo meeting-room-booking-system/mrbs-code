@@ -89,15 +89,20 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 
 /** mrbsCheckPolicy()
  * 
- * Check to see if a proposed booking conforms to any booking policies in force
+ * Check to see if a proposed booking conforms to any booking policies in force.,
+ * Can be used both for editing/creating an entry as well as deleting an entry
+ * (it's possible that in future some policies might apply to deletion and others
+ * to creation)
  * 
  * $starttime - The start of period
+ * $delete    - TRUE: We're intending to delete an entry
+ *            - FALSE:  We're intending to create or edit an entry (the default)
  * 
  * Returns:
  *   nothing   - The booking is OK
  *   something - An error occured, the return value is human readable
  */
-function mrbsCheckPolicy($starttime)
+function mrbsCheckPolicy($starttime, $delete=FALSE)
 {
   global $min_book_ahead_enabled, $max_book_ahead_enabled, $enable_periods;
   global $min_book_ahead_secs, $max_book_ahead_secs, $min_book_ahead_days, $max_book_ahead_days;
@@ -134,12 +139,12 @@ function mrbsCheckPolicy($starttime)
 
 /** mrbsDelEntry()
  * 
- * Delete an entry, or optionally all entrys.
+ * Delete an entry, or optionally all entries.
  * 
  * $user   - Who's making the request
  * $id     - The entry to delete
- * $series - If set, delete the series, except user modified entrys
- * $all    - If set, include user modified entrys in the series delete
+ * $series - If set, delete the series, except user modified entries
+ * $all    - If set, include user modified entries in the series delete
  *
  * Returns:
  *   0        - An error occured
@@ -149,13 +154,19 @@ function mrbsDelEntry($user, $id, $series, $all)
 {
   global $tbl_entry, $tbl_repeat;
 
-  $repeat_id = sql_query1("SELECT repeat_id FROM $tbl_entry WHERE id=$id LIMIT 1");
-  if ($repeat_id < 0)
+  // Get the repeat_id and room_id for this entry
+  $res = sql_query("SELECT repeat_id, room_id FROM $tbl_entry WHERE id=$id LIMIT 1");
+  if (($res === FALSE) || (sql_count($res) <= 0))
   {
     return 0;
   }
+  $row = sql_row_keyed($res, 0);
+  $repeat_id = $row['repeat_id'];
+  $room_id = $row['room_id'];
+  
+  $is_book_admin = auth_book_admin($user, $room_id);
 
-  $sql = "SELECT create_by, id, room_id, entry_type FROM $tbl_entry WHERE ";
+  $sql = "SELECT start_time, create_by, id, entry_type FROM $tbl_entry WHERE ";
    
   if ($series)
   {
@@ -172,12 +183,19 @@ function mrbsDelEntry($user, $id, $series, $all)
 
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   {
-    if(!getWritable($row['create_by'], $user, $row['room_id']))
+    if(!getWritable($row['create_by'], $user, $room_id))
     {
       continue;
     }
    
     if ($series && $row['entry_type'] == 2 && !$all)
+    {
+      continue;
+    }
+    
+    // check that the booking policies allow us to delete this entry
+    $tmp = mrbsCheckPolicy($row['start_time'], TRUE);
+    if (!$is_book_admin && !empty($tmp))
     {
       continue;
     }

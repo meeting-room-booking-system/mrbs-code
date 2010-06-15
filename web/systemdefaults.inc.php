@@ -227,7 +227,7 @@ $periods[] = "Period&nbsp;2";
 // minimum advance booking time allows you to set a policy saying that users must book
 // at least so far in advance.  The maximum allows you to set a policy saying that they cannot
 // book more than so far in advance.  How the times are determined depends on whether Periods
-// or Times are being used.
+// or Times are being used.   These settings also apply to the deletion of bookings.
 
 // DEFAULT VALUES FOR NEW AREAS (WHEN USING TIMES)
 $min_book_ahead_enabled = FALSE;    // set to TRUE to enforce a minimum advance booking time
