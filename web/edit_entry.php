@@ -562,7 +562,7 @@ else
           }
           else
           {
-            $units = array("minutes", "hours", "days", "weeks");
+            $units = array("minutes", "hours", "days", "weeks", "years");
           }
 
           while (list(,$unit) = each($units))
