@@ -63,16 +63,6 @@ if (!empty($advanced))
   exit;
 }
 
-// Require authenticated user if private bookings are required
-if ($private_override == "private")
-{
-  if (!getAuthorised(1))
-  {
-    showAccessDenied($day, $month, $year, $area, "");
-    exit();
-  }
-}
-
 if (!$search_str)
 {
   echo "<p class=\"error\">" . get_vocab("invalid_search") . "</p>";
