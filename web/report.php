@@ -557,15 +557,6 @@ $sortby = get_form_var('sortby', 'string');
 $display = get_form_var('display', 'string');
 $sumby = get_form_var('sumby', 'string');
 
-// Require authenticated user if private bookings are required
-if ($private_override == "private")
-{
-  if (!getAuthorised(1))
-  {
-    showAccessDenied($day, $month, $year, $area, "");
-    exit();
-  }
-}
 
 // Need to know user name and if they are an admin
 $user = getUserName();
