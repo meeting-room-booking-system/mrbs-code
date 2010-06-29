@@ -240,6 +240,7 @@ $before_after_links_html = "
 print $before_after_links_html;
 
 //Get all appointments for this week in the room that we care about
+// row['room_id'] = Room ID
 // row['start_time'] = Start time
 // row['end_time'] = End time
 // row['type'] = Entry type
@@ -254,7 +255,7 @@ $week_map = array();
 
 for ($j = 0; $j<=($num_of_days-1) ; $j++)
 {
-  $sql = "SELECT start_time, end_time, type, name, status,
+  $sql = "SELECT room_id, start_time, end_time, type, name, status,
             id AS entry_id, description AS entry_description,
             private AS entry_private, create_by AS entry_create_by
           FROM $tbl_entry
