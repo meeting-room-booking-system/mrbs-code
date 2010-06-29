@@ -9,6 +9,36 @@ if (isset($auth['session']))
   require_once "session_$auth[session].inc";
 }
 
+// MINIMUM PAGE ACCESS LEVELS
+
+// These pages are open to the public by default as they only contain
+// read features.   However if $auth['deny_public_access'] is TRUE then
+// access to the public is denied
+$page_level['day.php']                   = ($auth['deny_public_access']) ? 1 : 0;
+$page_level['help.php']                  = ($auth['deny_public_access']) ? 1 : 0;
+$page_level['month.php']                 = ($auth['deny_public_access']) ? 1 : 0;
+$page_level['report.php']                = ($auth['deny_public_access']) ? 1 : 0;
+$page_level['search.php']                = ($auth['deny_public_access']) ? 1 : 0;
+$page_level['view_entry.php']            = ($auth['deny_public_access']) ? 1 : 0;
+$page_level['week.php']                  = ($auth['deny_public_access']) ? 1 : 0;
+
+// These pages are set to have a minimum access level of 1 as ordinary users
+// should be able to access them because they will have read access and in some
+// cases write access for their own entries.   Where necessary further checks are
+// made within the page to prevent ordinary users gaining access to admin features.
+$page_level['admin.php']                 = 1;  // Ordinary users can view room details 
+$page_level['confirm_entry_handler.php'] = 1;  // Ordinary users are allowed to remind admins
+$page_level['del_entry.php']             = 1;  // Ordinary users can delete their own entries
+$page_level['edit_area_room.php']        = 1;  // Ordinary users can view room details
+$page_level['edit_entry.php']            = 1;  // Ordinary users can edit their own entries
+$page_level['edit_entry_handler.php']    = 1;  // Ordinary users can edit their own entries
+$page_level['edit_users.php']            = 1;  // Ordinary users can edit their own details
+$page_level['pending.php']               = 1;  // Ordinary users can view their own entries
+
+// These pages have a minimum access level of 2 as they only contain admin features
+$page_level['add.php']                   = 2;
+$page_level['del.php']                   = 2;
+
 
 /* getAuthorised($level)
  * 
@@ -23,7 +53,15 @@ if (isset($auth['session']))
 function getAuthorised($level)
 {
   global $auth;
+  
+  // If the minimum level is zero (or not set) then they are
+  // authorised, whoever they are
+  if (empty($level))
+  {
+    return TRUE;
+  }
 
+  // Otherwise we need to check who they are
   $user = getUserName();
   if(isset($user) == FALSE)
   {
@@ -37,6 +75,54 @@ function getAuthorised($level)
   }
 
   return authGetUserLevel($user) >= $level;
+}
+
+/* checkAuthorised()
+ *
+ * Checks to see that a user is authorised to access the current page.
+ * If they are not, then shows an Access Denied message and exits.
+ *
+ * Required page level authorisations are defined in systemdefaults/config
+ * If they are not defined then the function plays safe and requires the
+ * highest level of authorisation.
+ */
+function checkAuthorised()
+{
+  global $page_level, $max_level;
+  global $day, $month, $year, $area, $room;
+  global $PHP_SELF;
+  
+  // Get the minimum authorisation level for this page
+  if (isset($page_level[basename($PHP_SELF)]))
+  {
+    $required_level = $page_level[basename($PHP_SELF)];
+  }
+  elseif (isset($max_level))
+  {
+    $required_level = $max_level;
+  }
+  else
+  {
+    $required_level = 2;
+  }
+  
+  // Check that the user has this level
+  if (!getAuthorised($required_level))
+  {
+    // If we dont know the right date then use today's
+    if (!isset($day) or !isset($month) or !isset($year))
+    {
+      $day   = date("d");
+      $month = date("m");
+      $year  = date("Y");
+    }
+    if (empty($area))
+    {
+      $area = get_default_area();
+    }
+    showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
+    exit();
+  }
 }
 
 /* getWritable($creator, $user, $room)

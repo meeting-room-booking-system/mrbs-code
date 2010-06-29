@@ -25,6 +25,9 @@ if (empty($area))
   $area = get_default_area();
 }
 
+// Check the user is authorised for this page
+checkAuthorised();
+
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 echo "<h3>" . get_vocab("about_mrbs") . "</h3>\n";

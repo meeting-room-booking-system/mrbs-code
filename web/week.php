@@ -55,6 +55,8 @@ else
   }
 }
 
+// Check the user is authorised for this page
+checkAuthorised();
 
 // Calculate how many days to skip back to get to the start of the week
 $time = mktime(12, 0, 0, $month, $day, $year);

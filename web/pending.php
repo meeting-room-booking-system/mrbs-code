@@ -133,8 +133,6 @@ function display_entry_row($row)
   echo "</tr>\n";  
 }
 
-$user = getUserName();
-
 // Get form variables
 $day = get_form_var('day', 'int');
 $month = get_form_var('month', 'int');
@@ -154,12 +152,10 @@ if (empty($area))
   $area = get_default_area();
 }
 
+// Check the user is authorised for this page
+checkAuthorised();
 
-if(!getAuthorised(1))
-{
-  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
-  exit;
-}
+// Also need to know whether they have admin rights
 $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= 2);
 

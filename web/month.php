@@ -15,8 +15,6 @@ $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');
 $debug_flag = get_form_var('debug_flag', 'int');
 
-$user = getUserName();
-
 // 3-value compare: Returns result of compare as "< " "= " or "> ".
 function cmp3($a, $b)
 {
@@ -68,14 +66,20 @@ else
   }
 }
 
-
-// print the page header
-print_header($day, $month, $year, $area, isset($room) ? $room : "");
-
 if (empty($room))
 {
   $room = get_default_room($area);
 }
+
+// Check the user is authorised for this page
+checkAuthorised();
+
+$user = getUserName();
+
+// print the page header
+print_header($day, $month, $year, $area, isset($room) ? $room : "");
+
+
 // Note $room will be 0 if there are no rooms; this is checked for below.
 
 // Month view start time. This ignores morningstarts/eveningends because it

@@ -14,12 +14,8 @@ $description = get_form_var('description', 'string');
 $capacity = get_form_var('capacity', 'int');
 $type = get_form_var('type', 'string');
 
-$required_level = (isset($max_level) ? $max_level : 2);
-if (!getAuthorised($required_level))
-{
-  showAccessDenied($day, $month, $year, $area, "");
-  exit();
-}
+// Check the user is authorised for this page
+checkAuthorised();
 
 // This file is for adding new areas/rooms
 

@@ -24,12 +24,8 @@ if (empty($area))
   $area = get_default_area();
 }
 
-$required_level = (isset($max_level) ? $max_level : 2);
-if (!getAuthorised($required_level))
-{
-  showAccessDenied($day, $month, $year, $area, "");
-  exit();
-}
+// Check the user is authorised for this page
+checkAuthorised();
 
 // This is gonna blast away something. We want them to be really
 // really sure that this is what they want to do.

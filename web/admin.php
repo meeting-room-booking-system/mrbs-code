@@ -47,13 +47,10 @@ if (isset($delete_x))
   exit;
 }
   
-// Users must be at least Level 1 for this page as we will be displaying
-// information such as email addresses
-if (!getAuthorised(1))
-{
-  showAccessDenied($day, $month, $year, $area, "");
-  exit();
-}
+// Check the user is authorised for this page
+checkAuthorised();
+
+// Also need to know whether they have admin rights
 $user = getUserName();
 $required_level = (isset($max_level) ? $max_level : 2);
 $is_admin = (authGetUserLevel($user) >= $required_level);

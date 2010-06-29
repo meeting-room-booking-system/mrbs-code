@@ -558,10 +558,6 @@ $display = get_form_var('display', 'string');
 $sumby = get_form_var('sumby', 'string');
 
 
-// Need to know user name and if they are an admin
-$user = getUserName();
-$is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
-
 //If we dont know the right date then make it up
 if (!isset($day) or !isset($month) or !isset($year))
 {
@@ -573,6 +569,14 @@ if(empty($area))
 {
   $area = get_default_area();
 }
+
+// Check the user is authorised for this page
+checkAuthorised();
+
+// Also need to know whether they have admin rights
+$user = getUserName();
+$is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
+
 if (empty($summarize))
 {
   $summarize = REPORT;

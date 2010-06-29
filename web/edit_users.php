@@ -267,12 +267,8 @@ if ($nusers > 0)
 {
   $user = getUserName();
   $level = authGetUserLevel($user);
-  // Do not allow unidentified people to browse the list.
-  if(!getAuthorised(1))
-  {
-    showAccessDenied($day, $month, $year, $area, "");
-    exit;
-  }
+  // Check the user is authorised for this page
+  checkAuthorised();
 }
 else 
 // We've just created the table.   Assume the person doing this IS an administrator

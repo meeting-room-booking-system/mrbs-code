@@ -16,6 +16,9 @@ $returl = get_form_var('returl', 'string');
 $action = get_form_var('action', 'string');
 $note = get_form_var('note', 'string');
 
+// Check the user is authorised for this page
+checkAuthorised();
+
 if (!isset($note))
 {
   $note = "";
@@ -37,7 +40,7 @@ if (empty($returl))
   $returl .= "?year=$year&month=$month&day=$day&area=$area";
 }
 
-if (getAuthorised(1) && ($info = mrbsGetBookingInfo($id, FALSE, TRUE)))
+if ($info = mrbsGetBookingInfo($id, FALSE, TRUE))
 {
   $user = getUserName();
   // check that the user is allowed to delete this entry

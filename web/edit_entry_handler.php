@@ -145,11 +145,10 @@ else
   $isprivate = ((isset($private) && ($private == "yes")));
 }
 
-if (!getAuthorised(1))
-{
-  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
-  exit;
-}
+// Check the user is authorised for this page
+checkAuthorised();
+
+// Also need to know whether they have admin rights
 $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= 2);
 

@@ -52,6 +52,9 @@ else
   }
 }
 
+// Check the user is authorised for this page
+checkAuthorised();
+
 // form the room parameter for use in query strings.    We want to preserve room information
 // if possible when switching between views
 if (empty($room))

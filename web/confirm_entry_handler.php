@@ -32,13 +32,8 @@ if (empty($area))
   $area = get_default_area();
 }
 
-// Check that we're allowed to use this page
-// We must be at least a logged in user
-if(!getAuthorised(1))
-{
-  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
-  exit;
-}
+// Check the user is authorised for this page
+checkAuthorised();
 $user = getUserName();
 
                   

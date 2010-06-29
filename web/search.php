@@ -14,8 +14,6 @@ $search_pos = get_form_var('search_pos', 'int');
 $total = get_form_var('total', 'int');
 $advanced = get_form_var('advanced', 'int');
 
-$user = getUserName();
-$is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
 
 // If we dont know the right date then make it up 
 if (!isset($day) or !isset($month) or !isset($year))
@@ -29,6 +27,13 @@ if (empty($area))
 {
   $area = get_default_area();
 }
+
+// Check the user is authorised for this page
+checkAuthorised();
+
+// Also need to know whether they have admin rights
+$user = getUserName();
+$is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
 
 // Need all these different versions with different escaping.
 if (!empty($search_str)) 

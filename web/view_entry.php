@@ -84,12 +84,6 @@ function generateTextArea($form_action, $id, $series, $action_type, $returl, $su
 }
     
 
-$user = getUserName();
-$is_admin = (authGetUserLevel($user) >= 2);
-// You're only allowed to make repeat bookings if you're an admin
-// or else if $auth['only_admin_can_book_repeat'] is not set
-$repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
-
 // Get form variables
 //
 // If $series is TRUE, it means that the $id is the id of an 
@@ -116,6 +110,16 @@ if (empty($area))
 {
   $area = get_default_area();
 }
+
+// Check the user is authorised for this page
+checkAuthorised();
+
+// Also need to know whether they have admin rights
+$user = getUserName();
+$is_admin = (authGetUserLevel($user) >= 2);
+// You're only allowed to make repeat bookings if you're an admin
+// or else if $auth['only_admin_can_book_repeat'] is not set
+$repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
 
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
