@@ -382,11 +382,22 @@ function get_default_area()
 }
 
 // Return a default room given a valid area; used if no room is already known.
-// This returns the first room in sort_key order in the database.
+// If the area contains $default_room, then it returns $default_room,
+// otherwise the first room in sort_key order in the database.
 // This could be changed to implement something like per-user defaults.
 function get_default_room($area)
 {
-  global $tbl_room;
+  global $tbl_room, $default_room;
+  // Check to see whether this area contains $default_room
+  if (isset($default_room))
+  {
+    $room = sql_query1("SELECT id FROM $tbl_room WHERE id=$default_room AND area_id=$area LIMIT 1");
+    if ($room >= 0)
+    {
+      return $room;
+    }
+  }
+  // Otherwise just return the first room (in sortkey order) in the area
   $room = sql_query1("SELECT id FROM $tbl_room WHERE area_id=$area ORDER BY sort_key LIMIT 1");
   return ($room < 0 ? 0 : $room);
 }
