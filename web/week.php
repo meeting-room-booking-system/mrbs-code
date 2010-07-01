@@ -16,10 +16,10 @@ if (empty($debug_flag))
   $debug_flag = 0;
 }
 
-$num_of_days=7; //could also pass this in as a parameter or whatever
-
 // Check the user is authorised for this page
 checkAuthorised();
+
+$num_of_days=7; //could also pass this in as a parameter or whatever
 
 // Calculate how many days to skip back to get to the start of the week
 $time = mktime(12, 0, 0, $month, $day, $year);
@@ -29,11 +29,6 @@ $day_start_week = $day - $skipback;
 // because we want the booking display to start on the first day of the week (eg Sunday if $weekstarts is 0)
 // but we want to preserve the notion of the current day (or 'sticky day') when switching between pages
 
-if (empty($room))
-{
-  $room = get_default_room($area);
-}
-// Note $room will be 0 if there are no rooms; this is checked for below.
 
 // print the page header
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
