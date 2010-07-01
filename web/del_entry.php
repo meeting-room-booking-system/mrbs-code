@@ -2,14 +2,9 @@
 // $Id$
 
 require_once "defaultincludes.inc";
-
 require_once "mrbs_sql.inc";
 
-// Get form variables
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
-$area = get_form_var('area', 'int');
+// Get non-standard form variables
 $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'int');
 $returl = get_form_var('returl', 'string');

@@ -43,17 +43,11 @@
 // the fieldname, eg 'coffee_machine'.
 
 require_once "defaultincludes.inc";
-
 require_once "mrbs_sql.inc";
 
-// Get form variables
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
-$area = get_form_var('area', 'int');
+// Get non-standard form variables
 $new_area = get_form_var ('new_area', 'int');
 $old_area = get_form_var ('old_area', 'int');
-$room = get_form_var('room', 'int');
 $room_name = get_form_var('room_name', 'string');
 $sort_key = get_form_var('sort_key', 'string');
 $old_room_name = get_form_var('old_room_name', 'string');
@@ -113,14 +107,6 @@ foreach($fields as $field)
   {
     unset($$var);
   }
-}
-
-// If we dont know the right date then make it up
-if (!isset($day) or !isset($month) or !isset($year))
-{
-  $day   = date("d");
-  $month = date("m");
-  $year  = date("Y");
 }
 
 // Check the user is authorised for this page

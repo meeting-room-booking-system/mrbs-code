@@ -10,21 +10,19 @@
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-$day   = date("d");
-$month = date("m");
-$year  = date("Y");
-
 switch ($default_view)
 {
   case "month":
-    $redirect_str = "month.php?year=$year&month=$month";
+    $redirect_str = "month.php";
     break;
   case "week":
-    $redirect_str = "week.php?year=$year&month=$month&day=$day";
+    $redirect_str = "week.php";
     break;
   default:
-    $redirect_str = "day.php?day=$day&month=$month&year=$year";
+    $redirect_str = "day.php";
 }
+
+$redirect_str .= "?year=$year&month=$month&day=$day";
 
 if ( ! empty($default_room) )
 {

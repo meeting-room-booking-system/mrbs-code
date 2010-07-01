@@ -4,17 +4,11 @@
 // mrbs/week.php - Week-at-a-time view
 
 require_once "defaultincludes.inc";
-
 require_once "mincals.inc";
 require_once "theme.inc";
 
-// Get form variables
+// Get non-standard form variables
 $debug_flag = get_form_var('debug_flag', 'int');
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
-$area = get_form_var('area', 'int');
-$room = get_form_var('room', 'int');
 $timetohighlight = get_form_var('timetohighlight', 'int');
 
 if (empty($debug_flag))
@@ -22,38 +16,7 @@ if (empty($debug_flag))
   $debug_flag = 0;
 }
 
-if (empty($area))
-{
-  $area = get_default_area();
-}
-
-// Get the timeslot settings (resolution, etc.) for this area
-get_area_settings($area);
-
 $num_of_days=7; //could also pass this in as a parameter or whatever
-
-// If we don't know the right date then use today:
-if (!isset($day) or !isset($month) or !isset($year))
-{
-  $day   = date("d");
-  $month = date("m");
-  $year  = date("Y");
-}
-else
-{
-  // Make the date valid if day is more than number of days in month:
-  while (!checkdate($month, $day, $year))
-  {
-    $day--;
-    if ($day == 0)
-    {
-      $day   = date("d");
-      $month = date("m");
-      $year  = date("Y");   
-      break;
-    }
-  }
-}
 
 // Check the user is authorised for this page
 checkAuthorised();

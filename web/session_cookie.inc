@@ -22,12 +22,11 @@
 
 // We use some functions from here
 require_once "functions.inc";
-
 require_once('Blowfish.php');
 
 $blowfish = new Crypt_Blowfish($auth['session_cookie']['secret']);
 
-// Get form variables
+// Get non-standard form variables
 $Action = get_form_var('Action', 'string');
 $NewUserName = get_form_var('NewUserName', 'string');
 $NewUserPassword = get_form_var('NewUserPassword', 'string');

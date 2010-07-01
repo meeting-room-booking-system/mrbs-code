@@ -2,15 +2,9 @@
 // $Id$
 
 require_once "defaultincludes.inc";
-
 require_once "mrbs_sql.inc";
 
-// Get form variables
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
-$area = get_form_var('area', 'int');
-$room = get_form_var('room', 'int');
+// Get non-standard form variables
 $create_by = get_form_var('create_by', 'string');
 $name = get_form_var('name', 'string');
 $rep_type = get_form_var('rep_type', 'int');
@@ -45,21 +39,17 @@ $private = get_form_var('private', 'string'); // bool, actually
 // rather than silent truncation of the string.
 $name = substr($name, 0, $maxlength['entry.name']);
 
-if (empty($area))
+// Make sure the area corresponds to the room that is being booked
+if (!empty($rooms[0]))
 {
-  if (empty($rooms[0]))
-  {
-    $area = get_default_area();
-  }
-  else
-  {
-    $area = get_area($rooms[0]);
-  }
+  $area = get_area($rooms[0]);
+  get_area_settings($area);  // Update the area settings
 }
-
-// Get the timeslot settings (resolution, etc.) for this area
-get_area_settings($area);
-
+// and that $room is in $area
+if (get_area($room) != $area)
+{
+  $room = get_default_room($area);
+}
 
 // When $all_day is set, the hour and minute (or $period) fields are set to disabled, which means 
 // that they are not passed through by the form.   We need to set them because they are needed below  

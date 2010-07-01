@@ -4,11 +4,7 @@
 
 require_once "defaultincludes.inc";
 
-// Get form variables
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
-$area = get_form_var('area', 'int');
+// Get non-standard form variables
 $name = get_form_var('name', 'string');
 $description = get_form_var('description', 'string');
 $capacity = get_form_var('capacity', 'int');

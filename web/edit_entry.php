@@ -2,43 +2,19 @@
 // $Id$
 
 require_once "defaultincludes.inc";
-
 require_once "mrbs_sql.inc";
 
 global $twentyfourhour_format;
 
-// Get form variables
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
+// Get non-standard form variables
 $hour = get_form_var('hour', 'int');
 $minute = get_form_var('minute', 'int');
 $period = get_form_var('period', 'int');
-$area = get_form_var('area', 'int');
-$room = get_form_var('room', 'int');
 $id = get_form_var('id', 'int');
 $copy = get_form_var('copy', 'int');
 $edit_type = get_form_var('edit_type', 'string');
 $returl = get_form_var('returl', 'string');
 $private = get_form_var('private', 'string');
-
-if (empty($area))
-{
-  $area = get_default_area();
-}
-
-// Get the timeslot settings (resolution, etc.) for this area
-// (We will need to update them later if we are editing an existing
-//  booking - once we know the area for that booking)
-get_area_settings($area);
-
-// If we dont know the right date then make it up
-if (!isset($day) or !isset($month) or !isset($year))
-{
-  $day   = date("d");
-  $month = date("m");
-  $year  = date("Y");
-}
 
 if (!isset($edit_type))
 {

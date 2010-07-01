@@ -40,11 +40,7 @@
 
 require_once "defaultincludes.inc";
 
-// Get form variables
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
-$area = get_form_var('area', 'int');
+// Get non-standard form variables
 $Action = get_form_var('Action', 'string');
 $Id = get_form_var('Id', 'int');
 $password0 = get_form_var('password0', 'string');

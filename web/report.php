@@ -534,12 +534,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
   }
 }
 
-// Get form variables
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
-$area = get_form_var('area', 'int');
-$room = get_form_var('room', 'int');
+// Get non-standard form variables
 $From_day = get_form_var('From_day', 'int');
 $From_month = get_form_var('From_month', 'int');
 $From_year = get_form_var('From_year', 'int');
@@ -557,18 +552,6 @@ $sortby = get_form_var('sortby', 'string');
 $display = get_form_var('display', 'string');
 $sumby = get_form_var('sumby', 'string');
 
-
-//If we dont know the right date then make it up
-if (!isset($day) or !isset($month) or !isset($year))
-{
-  $day   = date("d");
-  $month = date("m");
-  $year  = date("Y");
-}
-if(empty($area))
-{
-  $area = get_default_area();
-}
 
 // Check the user is authorised for this page
 checkAuthorised();

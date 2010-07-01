@@ -7,11 +7,7 @@ require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 require_once "functions_mail.inc";
 
-// Get form variables
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
-$area = get_form_var('area', 'int');
+// Get non-standard form variables
 $action = get_form_var('action', 'string');
 $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'int');
@@ -19,18 +15,6 @@ $returl = get_form_var('returl', 'string');
 $room_id = get_form_var('room_id', 'int');
 $note = get_form_var('note', 'string');
 
-// If we dont know the right date then make it up 
-if (!isset($day) or !isset($month) or !isset($year))
-{
-  $day   = date("d");
-  $month = date("m");
-  $year  = date("Y");
-}
-
-if (empty($area))
-{
-  $area = get_default_area();
-}
 
 // Check the user is authorised for this page
 checkAuthorised();

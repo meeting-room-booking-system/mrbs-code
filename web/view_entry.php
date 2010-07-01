@@ -84,32 +84,15 @@ function generateTextArea($form_action, $id, $series, $action_type, $returl, $su
 }
     
 
-// Get form variables
+// Get non-standard form variables
 //
 // If $series is TRUE, it means that the $id is the id of an 
 // entry in the repeat table.  Otherwise it's from the entry table.
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
-$area = get_form_var('area', 'int');
-$room = get_form_var('room', 'int');
 $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'int');
 $action = get_form_var('action', 'string');
 $returl = get_form_var('returl', 'string');
 $error = get_form_var('error', 'string');
-
-// If we dont know the right date then make it up
-if (!isset($day) or !isset($month) or !isset($year))
-{
-  $day   = date("d");
-  $month = date("m");
-  $year  = date("Y");
-}
-if (empty($area))
-{
-  $area = get_default_area();
-}
 
 // Check the user is authorised for this page
 checkAuthorised();

@@ -20,7 +20,7 @@
 
 global $PHP_SELF;
 
-// Get form variables
+// Get non-standard form variables
 $Action = get_form_var('Action', 'string');
 $NewUserName = get_form_var('NewUserName', 'string');
 $NewUserPassword = get_form_var('NewUserPassword', 'string');

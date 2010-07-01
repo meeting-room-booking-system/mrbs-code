@@ -4,31 +4,13 @@
 
 require_once "defaultincludes.inc";
 
-// Get form variables
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
-$area = get_form_var('area', 'int');
-$room = get_form_var('room', 'int');
+// Get non-standard form variables
 $area_name = get_form_var('area_name', 'string');
 $error = get_form_var('error', 'string');
 // the image buttons:  need to specify edit_x rather than edit etc. because
 // IE6 only returns _x and _y
 $edit_x = get_form_var('edit_x', 'int');
 $delete_x = get_form_var('delete_x', 'int');
-
-// If we dont know the right date then make it up 
-if (!isset($day) or !isset($month) or !isset($year))
-{
-  $day   = date("d");
-  $month = date("m");
-  $year  = date("Y");
-}
-
-if (empty($area))
-{
-  $area = get_default_area();
-}
 
 
 // Check to see whether the Edit or Delete buttons have been pressed and redirect
