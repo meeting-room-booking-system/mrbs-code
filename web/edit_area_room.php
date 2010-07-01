@@ -574,7 +574,7 @@ if (!empty($room))
 }
 
 // THE AREA FORM
-if (!empty($area))
+if ((isset($change_done) || isset($change_area)) &&!empty($area))
 {
   // Only admins can see this form
   if (!$is_admin)
