@@ -360,11 +360,23 @@ function unslashes($s)
 }
 
 // Return a default area; used if no area is already known. This returns the
-// lowest area ID in the database (no guaranty there is an area 1).
+// area that contains the default room (if it is set and valid) otherwise the
+// first area in alphabetical order in the database (no guarantee there is an area 1).
 // This could be changed to implement something like per-user defaults.
 function get_default_area()
 {
-  global $tbl_area;
+  global $tbl_area, $tbl_room, $default_room;
+  
+  // If the $default_room is set and exists, then return the corresponding area
+  if (isset($default_room))
+  {
+    $area = sql_query1("SELECT area_id FROM $tbl_room WHERE id=$default_room LIMIT 1");
+    if ($area >= 0)
+    {
+      return $area;
+    }
+  }
+  // Otherwise return the first area in alphabetical order in the database
   $area = sql_query1("SELECT id FROM $tbl_area ORDER BY area_name LIMIT 1");
   return ((!isset($area) || ($area < 0)) ? 0 : $area);
 }
