@@ -22,14 +22,7 @@ switch ($default_view)
     $redirect_str = "day.php";
 }
 
-$redirect_str .= "?year=$year&month=$month&day=$day";
-
-if ( ! empty($default_room) )
-{
-  $area = mrbsGetRoomArea($default_room);
-  $room = $default_room;
-  $redirect_str .= "&area=$area&room=$room";
-}
+$redirect_str .= "?year=$year&month=$month&day=$day&area=$area&room=$room";
 
 header("Location: $redirect_str");
 
