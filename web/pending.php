@@ -6,7 +6,7 @@ require_once "defaultincludes.inc";
 function display_buttons($row, $is_series)
 {
   global $PHP_SELF;
-  global $user, $reminder_interval;
+  global $user, $reminders_enabled, $reminder_interval;
   
   $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
   $returl = $PHP_SELF;
@@ -65,16 +65,12 @@ function display_buttons($row, $is_series)
   }
   else
   {
-    // Work out whether enough time has elapsed since the last reminder
-    $not_yet_time = working_time_diff(time(), $last_reminded) < $reminder_interval;
-
+    // get the area settings for this room
+    get_area_settings(get_area($row['room_id']));
     // if enough time has passed since the last reminder
     // output a "Remind Admin" button, otherwise nothing
-    if ($not_yet_time)
-    {
-      echo "&nbsp";
-    }
-    else
+    if ($reminders_enabled  && 
+        (working_time_diff(time(), $last_reminded) >= $reminder_interval))
     {
       echo "<form action=\"confirm_entry_handler.php\" method=\"post\">\n";
       echo "<div>\n";
@@ -84,6 +80,10 @@ function display_buttons($row, $is_series)
       echo "<input type=\"submit\" value=\"" . get_vocab("remind_admin") . "\">\n";
       echo "</div>\n";
       echo "</form>\n";
+    }
+    else
+    {
+      echo "&nbsp";
     }
   }
 }
