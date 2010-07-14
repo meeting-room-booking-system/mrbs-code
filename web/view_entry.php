@@ -9,11 +9,9 @@ function generateButton($form_action, $id, $series, $action_type, $returl, $subm
 {
   global $room_id;
   
-  echo "<form action=\"$form_action\" method=\"post\">\n";
+  echo "<form action=\"$form_action?id=$id&amp;series=$series\" method=\"post\">\n";
   echo "<fieldset>\n";
   echo "<legend></legend>\n";
-  echo "<input type=\"hidden\" name=\"id\" value=\"$id\">\n";
-  echo "<input type=\"hidden\" name=\"series\" value=\"$series\">\n";
   echo "<input type=\"hidden\" name=\"action\" value=\"$action_type\">\n";
   echo "<input type=\"hidden\" name=\"room_id\" value=\"$room_id\">\n";
   echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";

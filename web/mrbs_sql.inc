@@ -714,6 +714,19 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
 {
   global $tbl_entry, $tbl_repeat, $tbl_room, $tbl_area;
   global $provisional_enabled;
+  
+  // Check that we've got an id
+  if (!isset($id))
+  {
+    if ($silent)
+    {
+      return FALSE;
+    }
+    else
+    {
+      fatal_error(0, ($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
+    }
+  }
 
   if ($series)
   {
@@ -774,9 +787,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
     }
     else
     {
-      fatal_error(0,
-                  ($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id"))
-        );
+      fatal_error(0, ($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
     }
   }
 
