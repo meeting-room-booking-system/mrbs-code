@@ -18,7 +18,7 @@ $delete_x = get_form_var('delete_x', 'int');
 $std_query_string = "area=$area&day=$day&month=$month&year=$year";
 if (isset($edit_x))
 {
-  $location = $location = "edit_area_room.php?$std_query_string";
+  $location = $location = "edit_area_room.php?change_area=1&phase=1&$std_query_string";
   header("Location: $location");
   exit;
 }
@@ -210,14 +210,14 @@ if (isset($area))
         echo "</div></td>\n";
         // Delete link
         echo "<td><div>\n";
-        echo "<a href=\"edit_area_room.php?room=" . $r['id'] . "\">\n";
+        echo "<a href=\"edit_area_room.php?change_room=1&amp;phase=1&amp;room=" . $r['id'] . "\">\n";
         echo "<img src=\"images/edit.png\" width=\"16\" height=\"16\" 
                    alt=\"" . get_vocab("edit") . "\"
                    title=\"" . get_vocab("edit") . "\">\n";
         echo "</a>\n";
         echo "</div></td>\n";
       }
-      echo "<td><div><a href=\"edit_area_room.php?room=" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</a></div></td>\n";
+      echo "<td><div><a href=\"edit_area_room.php?change_room=1&amp;phase=1&amp;room=" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</a></div></td>\n";
       echo "</tr>\n";
     }
     echo "</tbody>\n";
