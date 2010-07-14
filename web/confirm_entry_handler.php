@@ -99,6 +99,8 @@ if (isset($action))
     // update the last reminded time (the ball is back in the 
     // originator's court, so the clock gets reset)
     mrbsUpdateLastReminded($id, $series);
+    // update the more info fields
+    mrbsUpdateMoreInfo($id, $series, $user, $note);
     if ($need_to_send_mail)
     {
       $result = notifyAdminOnBooking(TRUE, $id, $series, $action);

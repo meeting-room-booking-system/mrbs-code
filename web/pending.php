@@ -41,11 +41,25 @@ function display_buttons($row, $is_series)
     echo "</div>\n";
     echo "</form>\n";
     // more info
+    $info_time = ($is_series) ? $row['repeat_info_time'] : $row['entry_info_time'];
+    $info_user = ($is_series) ? $row['repeat_info_user'] : $row['entry_info_user'];
+    if (empty($info_time))
+    {
+      $info_title = get_vocab("no_request_yet");
+    }
+    else
+    {
+      $info_title = get_vocab("last_request") . ' ' . time_date_string($info_time);
+      if (!empty($info_user))
+      {
+        $info_title .= " " . get_vocab("by") . " $info_user";
+      }
+    }
     echo "<form action=\"view_entry.php?$query_string\" method=\"post\">\n";
     echo "<div>\n";
     echo "<input type=\"hidden\" name=\"action\" value=\"more_info\">\n";
     echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-    echo "<input type=\"submit\" value=\"" . get_vocab("more_info") . "\">\n";
+    echo "<input type=\"submit\" title=\"" . htmlspecialchars($info_title) . "\" value=\"" . get_vocab("more_info") . "\">\n";
     echo "</div>\n";
     echo "</form>\n";
   }
@@ -150,12 +164,15 @@ echo "<h1>" . get_vocab("pending") . "</h1>\n";
 $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
                sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
                E.reminded, E.repeat_id,
-               R.room_name, R.area_id, A.area_name
-        FROM  $tbl_room AS R, $tbl_area AS A, $tbl_entry AS E
-        WHERE E.room_id = R.id
-          AND R.area_id = A.id
-          AND A.provisional_enabled>0
-          AND status=" . STATUS_PROVISIONAL;
+               M.room_name, M.area_id, A.area_name,
+               E.info_time AS entry_info_time, E.info_user AS entry_info_user,
+               T.info_time AS repeat_info_time, T.info_user AS repeat_info_user
+          FROM $tbl_room AS M, $tbl_area AS A, $tbl_entry AS E
+     LEFT JOIN $tbl_repeat AS T ON E.repeat_id=T.id
+         WHERE E.room_id = M.id
+           AND M.area_id = A.id
+           AND A.provisional_enabled>0
+           AND status=" . STATUS_PROVISIONAL;
 
 // Ordinary users can only see their own bookings       
 if (!$is_admin)

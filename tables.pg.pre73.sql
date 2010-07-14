@@ -68,7 +68,10 @@ CREATE TABLE mrbs_entry
   description text,
   private     smallint DEFAULT 0 NOT NULL,
   status      smallint DEFAULT 1 NOT NULL,
-  reminded    int
+  reminded    int,
+  info_time   int,
+  info_user   varchar(80),
+  info_text   text
 );
 create index idxStartTime on mrbs_entry(start_time);
 create index idxEndTime on mrbs_entry(end_time);
@@ -89,7 +92,10 @@ CREATE TABLE mrbs_repeat
   description text,
   rep_num_weeks smallint DEFAULT NULL NULL,
   private     smallint DEFAULT 0 NOT NULL,
-  reminded    int
+  reminded    int,
+  info_time   int,
+  info_user   varchar(80),
+  info_text   text
 );
 
 CREATE TABLE mrbs_variables
@@ -110,6 +116,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '13');
+  VALUES ('db_version', '14');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');

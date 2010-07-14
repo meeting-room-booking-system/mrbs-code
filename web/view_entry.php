@@ -5,7 +5,7 @@ require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
 // Generates a single button
-function generateButton($form_action, $id, $series, $action_type, $returl, $submit_value)
+function generateButton($form_action, $id, $series, $action_type, $returl, $submit_value, $title='')
 {
   global $room_id;
   
@@ -17,7 +17,7 @@ function generateButton($form_action, $id, $series, $action_type, $returl, $subm
   echo "<input type=\"hidden\" name=\"action\" value=\"$action_type\">\n";
   echo "<input type=\"hidden\" name=\"room_id\" value=\"$room_id\">\n";
   echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-  echo "<input type=\"submit\" value=\"$submit_value\">\n";
+  echo "<input type=\"submit\" title=\"" . htmlspecialchars($title) . "\" value=\"$submit_value\">\n";
   echo "</fieldset>\n";
   echo "</form>\n";  
 }
@@ -26,15 +26,31 @@ function generateButton($form_action, $id, $series, $action_type, $returl, $subm
 function generateConfirmButtons($id, $series)
 {
   global $returl, $PHP_SELF;
+  global $entry_info_time, $entry_info_user, $repeat_info_time, $repeat_info_user;
+  
+  $info_time = ($series) ? $repeat_info_time : $entry_info_time;
+  $info_user = ($series) ? $repeat_info_user : $entry_info_user;
   
   $this_page = basename($PHP_SELF);
+  if (empty($info_time))
+  {
+    $info_title = get_vocab("no_request_yet");
+  }
+  else
+  {
+    $info_title = get_vocab("last_request") . ' ' . time_date_string($info_time);
+    if (!empty($info_user))
+    {
+      $info_title .= " " . get_vocab("by") . " $info_user";
+    }
+  }
   
   echo "<tr>\n";
   echo "<td>" . ($series ? get_vocab("series") : get_vocab("entry")) . ":</td>\n";
   echo "<td>\n";
   generateButton("confirm_entry_handler.php", $id, $series, "accept", $returl, get_vocab("accept"));
   generateButton($this_page, $id, $series, "reject", $returl, get_vocab("reject"));
-  generateButton($this_page, $id, $series, "more_info", $returl, get_vocab("more_info"));
+  generateButton($this_page, $id, $series, "more_info", $returl, get_vocab("more_info"), $info_title);
   echo "</td>\n";
   echo "</tr>\n";
 }
@@ -63,7 +79,7 @@ function generateOwnerButtons($id, $series)
   } 
 }
 
-function generateTextArea($form_action, $id, $series, $action_type, $returl, $submit_value, $caption)
+function generateTextArea($form_action, $id, $series, $action_type, $returl, $submit_value, $caption, $value='')
 {
   echo "<tr><td id=\"caption\" colspan=\"2\">$caption:</td></tr>\n";
   echo "<tr>\n";
@@ -71,7 +87,7 @@ function generateTextArea($form_action, $id, $series, $action_type, $returl, $su
   echo "<form action=\"$form_action\" method=\"post\">\n";
   echo "<fieldset>\n";
   echo "<legend></legend>\n";
-  echo "<textarea name=\"note\"></textarea>\n";
+  echo "<textarea name=\"note\">" . htmlspecialchars($value) . "</textarea>\n";
   echo "<input type=\"hidden\" name=\"id\" value=\"$id\">\n";
   echo "<input type=\"hidden\" name=\"series\" value=\"$series\">\n";
   echo "<input type=\"hidden\" name=\"returl\" value=\"$returl\">\n";
@@ -156,6 +172,12 @@ $private       = $row['private'];
 $room_id       = $row['room_id'];
 $updated       = time_date_string($row['last_updated']);
 $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
+$entry_info_time  = $row['entry_info_time'];
+$entry_info_user  = $row['entry_info_user'];  // HTML escaping is done later
+$entry_info_text  = $row['entry_info_text'];  // HTML escaping is done later
+$repeat_info_time = $row['repeat_info_time'];
+$repeat_info_user = $row['repeat_info_user'];  // HTML escaping is done later
+$repeat_info_text = $row['repeat_info_text'];  // HTML escaping is done later
 // need to make DST correct in opposite direction to entry creation
 // so that user see what he expects to see
 $duration      = $row['duration'] - cross_dst($row['start_time'],
@@ -320,10 +342,29 @@ if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
     // Sometime this difference in behaviour should be rationalised
     // because it is very confusing!
     $target_id = ($series) ? $repeat_id : $id;
+    $info_time = ($series) ? $repeat_info_time : $entry_info_time;
+    $info_user = ($series) ? $repeat_info_user : $entry_info_user;
+    $info_text = ($series) ? $repeat_info_text : $entry_info_text;
+    
+    if (empty($info_time))
+    {
+      $value = '';
+    }
+    else
+    {
+      $value = get_vocab("sent_at") . time_date_string($info_time);
+      if (!empty($info_user))
+      {
+        $value .= "\n" . get_vocab("by") . " $info_user";
+      }
+      $value .= "\n----\n";
+      $value .= $info_text;
+    }
     generateTextArea("confirm_entry_handler.php", $target_id, $series,
                      "more_info", $returl,
                      get_vocab("send"),
-                     get_vocab("request_more_info"));
+                     get_vocab("request_more_info"),
+                     $value);
   }
   // PHASE 1 - first time through this page
   else

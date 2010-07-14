@@ -69,6 +69,9 @@ CREATE TABLE mrbs_entry
   private     TINYINT(1) NOT NULL DEFAULT 0,
   status      tinyint NOT NULL DEFAULT 1,
   reminded    int,
+  info_time   int,
+  info_user   varchar(80),
+  info_text   text,
 
   PRIMARY KEY (id),
   KEY idxStartTime (start_time),
@@ -92,6 +95,9 @@ CREATE TABLE mrbs_repeat
   rep_num_weeks smallint NULL, 
   private     TINYINT(1) NOT NULL DEFAULT 0,
   reminded    int,
+  info_time   int,
+  info_user   varchar(80),
+  info_text   text,
   
   PRIMARY KEY (id)
 );
@@ -118,6 +124,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '13');
+  VALUES ( 'db_version', '14');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

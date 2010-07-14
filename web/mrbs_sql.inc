@@ -618,7 +618,10 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
 // Update the time of last reminding.
 // If the entry is part of a repeating series, then also increment
 // the last reminder time in the repeat table and all the individual 
-// entries.
+// entries.  (Although strictly speaking the reminder time should apply
+// either to a series or an individual entry, we update everything to
+// prevent users bombarding admins with reminder emails)
+//
 // Returns the number of tuples affected if OK (a number >= 0).
 // Returns -1 on error; use sql_error to get the error message.
 function mrbsUpdateLastReminded($id, $series)
@@ -649,6 +652,29 @@ function mrbsUpdateLastReminded($id, $series)
     }
   }
   return -1;
+}
+
+// Update the entry/repeat tables with details about the last More Info
+// request (time, user, email text)
+//
+// If $series is TRUE then $id is the id of an entry in the repeat table
+// which is updated.   Otherwise $id is the id of an entry in the
+// entry table, which is updated.
+//
+// Returns the number of tuples affected if OK (a number >= 0).
+// Returns -1 on error; use sql_error to get the error message.
+function mrbsUpdateMoreInfo($id, $series, $user, $note)
+{
+  global $tbl_entry, $tbl_repeat;
+  
+  $table = ($series) ? $tbl_repeat : $tbl_entry;
+  $now = time();
+  $sql = "UPDATE $table SET";
+  $sql .= " info_time=$now";
+  $sql .= ", info_user='" . addslashes($user) . "'";
+  $sql .= ", info_text='" . addslashes($note) . "'";
+  $sql .= " WHERE id=$id";
+  return sql_command($sql);
 }
 
 // mrbsConfirmEntry($id, $series)
@@ -683,7 +709,7 @@ function mrbsConfirmEntry($id, $series)
 
 // Returns the results in an array with keys the same as the table
 // field names.  In the event of an error stops with a fatal error,
-// unless $silent is TRUe, when it returns FALSE.
+// unless $silent is TRUE, when it returns FALSE.
 function mrbsGetBookingInfo($id, $series, $silent=FALSE)
 {
   global $tbl_entry, $tbl_repeat, $tbl_room, $tbl_area;
@@ -692,57 +718,38 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   if ($series)
   {
     $sql = "
-     SELECT $tbl_repeat.name,
-            $tbl_repeat.description,
-            $tbl_repeat.create_by,
-            $tbl_room.room_name,
-            $tbl_repeat.room_id,
-            $tbl_area.area_name,
-            $tbl_room.area_id,
-            $tbl_repeat.type,
-            $tbl_repeat.reminded,
-            $tbl_repeat.private,
-            $tbl_repeat.room_id,
-            " . sql_syntax_timestamp_to_unix("$tbl_repeat.timestamp") . " AS last_updated,
-            ($tbl_repeat.end_time - $tbl_repeat.start_time) AS duration,
-            $tbl_repeat.start_time,
-            $tbl_repeat.end_time,
-            $tbl_repeat.rep_type,
-            $tbl_repeat.end_date,
-            $tbl_repeat.rep_opt,
-            $tbl_repeat.rep_num_weeks
+     SELECT T.name, T.description, T.create_by,
+            M.room_name, T.room_id, A.area_name, M.area_id,
+            T.type, T.reminded, T.private, T.room_id,
+            " . sql_syntax_timestamp_to_unix("T.timestamp") . " AS last_updated,
+            (T.end_time - T.start_time) AS duration,
+            T.start_time, T.end_time,
+            T.rep_type, T.end_date, T.rep_opt, T.rep_num_weeks,
+            T.info_time AS repeat_info_time, T.info_user AS repeat_info_user, T.info_text AS repeat_info_text
 
-     FROM  $tbl_repeat, $tbl_room, $tbl_area
-     WHERE $tbl_repeat.room_id = $tbl_room.id
-        AND $tbl_room.area_id = $tbl_area.id
-        AND $tbl_repeat.id=$id
+     FROM  $tbl_repeat T, $tbl_room M, $tbl_area A
+     WHERE T.room_id = M.id
+        AND M.area_id = A.id
+        AND T.id=$id
      ";
   }
   else
   {
     $sql = "
-     SELECT $tbl_entry.name,
-            $tbl_entry.description,
-            $tbl_entry.create_by,
-            $tbl_room.room_name,
-            $tbl_entry.room_id,
-            $tbl_room.area_id,
-            $tbl_area.area_name,
-            $tbl_entry.type,
-            $tbl_entry.status,
-            $tbl_entry.reminded,
-            $tbl_entry.private,
-            $tbl_entry.room_id,
-            " . sql_syntax_timestamp_to_unix("$tbl_entry.timestamp") . " AS last_updated,
-            ($tbl_entry.end_time - $tbl_entry.start_time) AS duration,
-            $tbl_entry.start_time,
-            $tbl_entry.end_time,
-            $tbl_entry.repeat_id
+     SELECT E.name, E.description, E.create_by,
+            M.room_name, E.room_id, A.area_name, M.area_id,
+            E.status,
+            E.type, E.reminded, E.private, E.room_id,
+            " . sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
+            (E.end_time - E.start_time) AS duration,
+            E.start_time, E.end_time,
+            E.repeat_id,
+            E.info_time AS entry_info_time, E.info_user AS entry_info_user, E.info_text AS entry_info_text
 
-     FROM  $tbl_entry, $tbl_room, $tbl_area
-     WHERE $tbl_entry.room_id = $tbl_room.id
-        AND $tbl_room.area_id = $tbl_area.id
-        AND $tbl_entry.id=$id
+     FROM  $tbl_entry E, $tbl_room M, $tbl_area A
+     WHERE E.room_id = M.id
+        AND M.area_id = A.id
+        AND E.id=$id
      ";
   }
 
@@ -796,6 +803,9 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
               LIMIT 1";
       $row['status'] = (sql_query1($sql) > 0) ? STATUS_PROVISIONAL : STATUS_CONFIRMED;
     }
+    $row['entry_info_time'] = '';
+    $row['entry_info_user'] = '';
+    $row['entry_info_text'] = '';
   }
   else
   {
@@ -803,10 +813,14 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
     if (empty($row['repeat_id']))
     {
       $row['rep_type'] = REP_NONE;   // just as a precaution
+      $row['repeat_info_time'] = '';
+      $row['repeat_info_user'] = '';
+      $row['repeat_info_text'] = '';
     }
     else
     {
-      $res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks
+      $res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks,
+                        info_time AS repeat_info_time, info_user AS repeat_info_user, info_text AS repeat_info_text
                         FROM $tbl_repeat WHERE id=${row['repeat_id']} LIMIT 1");
       if (!$res || (!$extra_row = sql_row_keyed($res, 0)))
       {
@@ -823,6 +837,9 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
       $row['rep_enddate']   = $extra_row['end_date'];
       $row['rep_opt']       = $extra_row['rep_opt'];
       $row['rep_num_weeks'] = $extra_row['rep_num_weeks'];
+      $row['repeat_info_time'] = $extra_row['repeat_info_time'];
+      $row['repeat_info_user'] = $extra_row['repeat_info_user'];
+      $row['repeat_info_text'] = $extra_row['repeat_info_text'];
       sql_free($res);
     }
   }

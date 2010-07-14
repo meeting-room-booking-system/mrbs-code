@@ -117,6 +117,10 @@ $vocab["request_more_info"]  = "Please list the extra information you require";
 $vocab["reject_reason"]      = "Please give a reason for your rejection of this reservation request";
 $vocab["send"]               = "Send";
 $vocab["accept_failed"]      = "The reservation could not be confirmed.";
+$vocab["no_request_yet"]     = "No request has been sent yet"; // Used for the title tooltip on More Info button
+$vocab["last_request"]       = "Last request sent at";         // Used for the title tooltip on More Info button
+$vocab["by"]                 = "by";                           // Used for the title tooltip on More Info button
+$vocab["sent_at"]            = "Sent at ";
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Error";
