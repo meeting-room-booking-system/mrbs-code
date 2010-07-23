@@ -560,8 +560,8 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 }
 .form_general select {float: left; margin-left: <?php echo $general_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
 .form_general input.radio {margin-top: 0.1em}
-.form_general input.checkbox {margin-top: 0.2em}
-.edit_area_room .form_general input.checkbox {width: auto; margin-left: <?php echo $general_gap ?>em}
+.form_general input.checkbox {width: auto; margin-top: 0.2em}
+.edit_area_room .form_general input.checkbox {margin-left: <?php echo $general_gap ?>em}
 .edit_area_room .form_general #booking_policies input.text {width: 2.0em}
 .form_general input.submit {display: block; width: auto; float: left; clear: left; margin-top: 1.0em}
 
