@@ -481,28 +481,30 @@ if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
   {
     $fields = sql_field_info($tbl_entry);
     $field_natures = array();
+    $field_lengths = array();
     foreach ($fields as $field)
     {
       $field_natures[$field['name']] = $field['nature'];
+      $field_lengths[$field['name']] = $field['length'];
     }
     foreach ($custom_fields as $key => $value)
     {
-      $desc = get_vocab("entry.$key");
-      if (!isset($desc))
+      echo "<tr>\n";
+      echo "<td>" . get_loc_field_name($tbl_entry, $key) . ":</td>\n";
+      // Output a yes/no if it's a boolean or integer <= 2 bytes (which we will
+      // assume are intended to be booleans)
+      if (($field_natures[$key] == 'boolean') || 
+          (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
       {
-        $desc = htmlspecialchars($key);
+        $shown_value = empty($value) ? get_vocab("no") : get_vocab("yes");
       }
-      $shown_value = htmlspecialchars($value);
-      if ($field_natures[$key] == 'integer')
+      // Otherwise output a string
+      else
       {
-        $shown_value = ($value == 0) ? get_vocab("YES") : get_vocab("NO");
+        $shown_value = (isset($value)) ? htmlspecialchars($value): "&nbsp;"; 
       }
-      print "
-  <tr>
-    <td>$desc:</td>
-    <td>$shown_value</td>
-  </tr>
-";
+      echo "<td>$shown_value</td>\n";
+      echo "</tr>\n";
     }
   }
 ?>
