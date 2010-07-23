@@ -705,7 +705,7 @@ function mrbsConfirmEntry($id, $series)
 // mrbsGetBookingInfo($id, $series)
 //
 // Gets all the details for a booking with $id, which is in the
-// repeat table id $series is set, otherwise in the entry table.
+// repeat table if $series is set, otherwise in the entry table.
 
 // Returns the results in an array with keys the same as the table
 // field names.  In the event of an error stops with a fatal error,
@@ -714,7 +714,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
 {
   global $tbl_entry, $tbl_repeat, $tbl_room, $tbl_area;
   global $provisional_enabled;
-  
+
   // Check that we've got an id
   if (!isset($id))
   {
@@ -728,42 +728,88 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
     }
   }
 
+  $entry_fields = sql_field_info($tbl_entry);
+  $repeat_fields = sql_field_info($tbl_repeat);
+
+  $rep_fields = array();
+  foreach ($repeat_fields as $field)
+  {
+    $rep_fields[$field['name']] = 1;
+  }
+
+  $t_or_e = $series ? "T" : "E";
+
+  $terms = array("M.room_name",
+                 "M.area_id",
+                 "A.area_name",
+                 "($t_or_e.end_time - $t_or_e.start_time) AS duration");
+  foreach ($entry_fields as $field)
+  {
+    switch ($field['name'])
+    {
+      case 'id':
+      case 'entry_type':
+        // Nothing to do
+        break;
+
+      case 'status':
+      case 'repeat_id':
+        array_push($terms, "E.".$field['name']);
+        break;
+
+      case 'timestamp':
+        array_push($terms,
+                   sql_syntax_timestamp_to_unix(($series ? "T" : "E" ).
+                                                ".timestamp").
+                   "AS last_updated");
+        break;
+
+      case 'info_time':
+      case 'info_user':
+      case 'info_text':
+        if ($series)
+        {
+          array_push($terms, "T.".$field['name']." AS repeat_".$field['name']);
+        }
+        else
+        {
+          array_push($terms, "E.".$field['name']." AS entry_".$field['name']);
+        }
+        break;
+
+      default:
+        if (!array_key_exists($field['name'], $rep_fields))
+        {
+          fatal_error(0, "Custom fields problem, '".$field['name']."' exists in entry table but not in repeat table");
+        }
+        
+        array_push($terms, ($series ? "T" : "E" ).".".$field['name']);
+        break;
+    }
+  }
   if ($series)
   {
-    $sql = "
-     SELECT T.name, T.description, T.create_by,
-            M.room_name, T.room_id, A.area_name, M.area_id,
-            T.type, T.reminded, T.private, T.room_id,
-            " . sql_syntax_timestamp_to_unix("T.timestamp") . " AS last_updated,
-            (T.end_time - T.start_time) AS duration,
-            T.start_time, T.end_time,
-            T.rep_type, T.end_date, T.rep_opt, T.rep_num_weeks,
-            T.info_time AS repeat_info_time, T.info_user AS repeat_info_user, T.info_text AS repeat_info_text
-
-     FROM  $tbl_repeat T, $tbl_room M, $tbl_area A
-     WHERE T.room_id = M.id
-        AND M.area_id = A.id
-        AND T.id=$id
-     ";
+    array_push($terms,
+               "T.rep_type",
+               "T.end_date",
+               "T.rep_opt",
+               "T.rep_num_weeks");
+    
+    $sql = "SELECT ".implode(",\n       ",$terms)."
+FROM $tbl_repeat T, $tbl_room M, $tbl_area A
+WHERE T.room_id = M.id
+      AND M.area_id = A.id
+      AND T.id=$id
+";
   }
   else
   {
-    $sql = "
-     SELECT E.name, E.description, E.create_by,
-            M.room_name, E.room_id, A.area_name, M.area_id,
-            E.status,
-            E.type, E.reminded, E.private, E.room_id,
-            " . sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
-            (E.end_time - E.start_time) AS duration,
-            E.start_time, E.end_time,
-            E.repeat_id,
-            E.info_time AS entry_info_time, E.info_user AS entry_info_user, E.info_text AS entry_info_text
-
-     FROM  $tbl_entry E, $tbl_room M, $tbl_area A
-     WHERE E.room_id = M.id
+    $sql = "SELECT ".implode(",\n       ",$terms)."
+FROM  $tbl_entry E, $tbl_room M, $tbl_area A
+WHERE E.room_id = M.id
         AND M.area_id = A.id
         AND E.id=$id
-     ";
+";
   }
 
   $res = sql_query($sql);
