@@ -176,25 +176,22 @@ foreach ($row as $column => $value)
     case 'start_time':
     case 'end_time':
       break;
-
+      
     case 'name':
     case 'description':
     case 'create_by':
     case 'room_name':
     case 'area_name':
-      $$column = htmlspecialchars($value);
-      break;
-
     case 'type':
     case 'status':
     case 'private':
     case 'room_id':
     case 'entry_info_time':
-    case 'entry_info_user': // HTML escaping done later
-    case 'entry_info_text': // HTML escaping done later
+    case 'entry_info_user':
+    case 'entry_info_text':
     case 'repeat_info_time':
-    case 'repeat_info_user': // HTML escaping done later
-    case 'repeat_info_text': // HTML escaping done later
+    case 'repeat_info_user':
+    case 'repeat_info_text':
       $$column = $row[$column];
       break;
 
@@ -336,7 +333,7 @@ $repeat_key = "rep_type_" . $rep_type;
 
 
 echo "<h3" . (($keep_private) ? " class=\"private\"" : "") . ">\n";
-echo $name;
+echo htmlspecialchars($name);
 if (is_private_event($private) && $writeable) 
 {
   echo ' ('.get_vocab('private').')';
@@ -434,7 +431,7 @@ if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
   <tr>
     <td><?php echo get_vocab("description") ?>:</td>
     <?php
-    echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . mrbs_nl2br($description) . "</td>\n";
+    echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . mrbs_nl2br(htmlspecialchars($description)) . "</td>\n";
     ?>
   </tr>
   <?php
@@ -448,7 +445,7 @@ if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
   ?>
   <tr>
     <td><?php echo get_vocab("room") ?>:</td>
-    <td><?php    echo  mrbs_nl2br($area_name . " - " . $room_name) ?></td>
+    <td><?php    echo  mrbs_nl2br(htmlspecialchars($area_name . " - " . $room_name)) ?></td>
   </tr>
   <tr>
     <td><?php echo get_vocab("start_date") ?>:</td>
@@ -469,7 +466,7 @@ if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
   <tr>
     <td><?php echo get_vocab("createdby") ?>:</td>
     <?php
-    echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . $create_by . "</td>\n";
+    echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . htmlspecialchars($create_by) . "</td>\n";
     ?>
   </tr>
   <tr>
@@ -501,7 +498,7 @@ if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
       // Otherwise output a string
       else
       {
-        $shown_value = (isset($value)) ? htmlspecialchars($value): "&nbsp;"; 
+        $shown_value = (isset($value)) ? mrbs_nl2br(htmlspecialchars($value)): "&nbsp;"; 
       }
       echo "<td>$shown_value</td>\n";
       echo "</tr>\n";
