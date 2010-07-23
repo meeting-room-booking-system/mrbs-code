@@ -54,6 +54,8 @@ $repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
 // Firstly we need to know if this is a new booking or modifying an old one
 // and if it's a modification we need to get all the old data from the db.
 // If we had $id passed in then it's a modification.
+$custom_fields = array();
+
 if (isset($id))
 {
   $sql = "SELECT *
@@ -79,7 +81,6 @@ if (isset($id))
   $area = get_area($row['room_id']);
   get_area_settings($area);
   
-  $custom_fields = array();
   foreach ($row as $column => $value)
   {
     switch ($column)
