@@ -222,17 +222,18 @@ function mrbsDelEntry($user, $id, $series, $all)
  * 
  * Create a single (non-repeating) entry in the database
  * 
- * $starttime   - Start time of entry
- * $endtime     - End time of entry
- * $entry_type  - Entry type
- * $repeat_id   - Repeat ID
- * $room_id     - Room ID
- * $owner       - Owner
- * $name        - Name
- * $type        - Type (Internal/External)
- * $description - Description
- * $private     - Private Booking (TRUE/FALSE)
- * $status      - Status code of the entry
+ * $starttime     - Start time of entry
+ * $endtime       - End time of entry
+ * $entry_type    - Entry type
+ * $repeat_id     - Repeat ID
+ * $room_id       - Room ID
+ * $owner         - Owner
+ * $name          - Name
+ * $type          - Type (Internal/External)
+ * $description   - Description
+ * $private       - Private Booking (TRUE/FALSE)
+ * $status        - Status code of the entry
+ * $custom_fields - an array of any custom fields
  * 
  * Returns:
  *   0        - An error occured while inserting the entry
@@ -240,7 +241,7 @@ function mrbsDelEntry($user, $id, $series, $all)
  */
 function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
                                $room_id, $owner, $name, $type, $description,
-                               $private, $status)
+                               $private, $status, $custom_fields)
 {
   global $tbl_entry;
  
@@ -255,10 +256,48 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
   // into effect
   if ($endtime > $starttime)
   {
-    $sql = "INSERT INTO $tbl_entry (  start_time,   end_time,   entry_type,    repeat_id,   room_id,
-                                      create_by,    name,       type,          description, private, status)
-                            VALUES ($starttime, $endtime, $entry_type, $repeat_id, $room_id,
-                                    '$owner',     '$name',    '$type',       '$description', $private, $status)";
+    $sql = "INSERT INTO $tbl_entry (start_time, end_time, entry_type, repeat_id, room_id,
+                                    create_by, name, type, description, private, status";
+    // Add in any custom field names
+    if (count($custom_fields))
+    {
+      foreach ($custom_fields as $key => $value)
+      {
+        $sql .= ", $key";
+      }
+    }
+    
+    $sql .= ")";
+    $sql .= " VALUES ($starttime, $endtime, $entry_type, $repeat_id, $room_id,
+                      '$owner', '$name', '$type', '$description', $private, $status";
+    // Add in any custom field values
+    if (count($custom_fields))
+    {
+      $fields = sql_field_info($tbl_entry);
+      $field_natures = array();
+      foreach ($fields as $field)
+      {
+        $field_natures[$field['name']] = $field['nature'];
+      }
+      foreach ($custom_fields as $key => $value)
+      {
+        switch ($field_natures[$key])
+        {
+          case 'integer':
+            if (!isset($value))
+            {
+              $value = 'NULL';
+            }
+            break;
+          default:
+            $value = "'" . addslashes($value) . "'";
+            break;
+        }
+        $sql .= ", $value";
+      }
+    }
+    
+    $sql .= ")";
 
     if (sql_command($sql) < 0)
     {
@@ -560,6 +599,7 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
 {
   global $max_rep_entrys;
   
+  $custom_fields = array();
   $result = array('id' => 0, 'series' => FALSE);
   $private = $private ? 1 : 0 ;
    
@@ -577,7 +617,7 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
   {
     $id = mrbsCreateSingleEntry($starttime, $endtime, 0, 0,
                                 $room_id, $owner, $name, $type,
-                                $description, $private, $status);
+                                $description, $private, $status, $custom_fields);
     $result['id'] = $id;
     $result['series'] = FALSE;
     return $result;
@@ -607,7 +647,8 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                       $type,
                                       $description,
                                       $private,
-                                      $status);
+                                      $status,
+                                      $custom_fields);
     }
   }
   $result['id'] = $id;
