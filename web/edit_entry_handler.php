@@ -34,28 +34,11 @@ $private = get_form_var('private', 'string'); // bool, actually
 $fields = sql_field_info($tbl_entry);
 
 // Get custom form variables
-$standard_fields = array('id',
-                         'start_time',
-                         'end_time',
-                         'entry_type',
-                         'repeat_id',
-                         'room_id',
-                         'timestamp',
-                         'create_by',
-                         'name',
-                         'type',
-                         'description',
-                         'private',
-                         'status',
-                         'reminded',
-                         'info_time',
-                         'info_user',
-                         'info_text');
 $custom_fields = array();
                         
 foreach($fields as $field)
 {
-  if (!in_array($field['name'], $standard_fields))
+  if (!in_array($field['name'], $standard_fields['entry']))
   {
     switch($field['nature'])
     {
@@ -522,7 +505,8 @@ if ($valid_booking)
                                            $description,
                                            isset($rep_num_weeks) ? $rep_num_weeks : 0,
                                            $isprivate,
-                                           $status);
+                                           $status,
+                                           $custom_fields);
       $new_id = $booking['id'];
 
       // Send a mail to the Administrator

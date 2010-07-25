@@ -3,18 +3,22 @@
 -- MRBS table creation script - for PostgreSQL
 --
 -- Notes:
--- MySQL inserts the current date/time into any timestamp field which is not
--- specified on insert. To get the same effect, use PostgreSQL default
--- value current_timestamp.
+-- (1) MySQL inserts the current date/time into any timestamp field which is not
+--     specified on insert. To get the same effect, use PostgreSQL default
+--     value current_timestamp.
 --
--- If you have decided to change the prefix of your tables from 'mrbs_'
--- to something else using $db_tbl_prefix then you must edit each
--- 'CREATE TABLE', 'create index' and 'INSERT INTO' line below to replace
--- 'mrbs_' with your new table prefix.
+-- (2) If you have decided to change the prefix of your tables from 'mrbs_'
+--     to something else using $db_tbl_prefix then you must edit each
+--     'CREATE TABLE', 'create index' and 'INSERT INTO' line below to replace
+--     'mrbs_' with your new table prefix.
 --
--- If you change the varchar lengths here, then you should check
--- to see whether a corresponding length has been defined in the config file
--- in the array $maxlength.
+-- (3) If you change the varchar lengths here, then you should check
+--     to see whether a corresponding length has been defined in the config file
+--     in the array $maxlength.
+--
+-- (4) If you add new (standard) fields then you should also change the global variable
+--     $standard_fields.    Note that if you are just adding custom fields for
+--     a single site then this is not necessary.
 
 CREATE TABLE mrbs_area
 (

@@ -51,10 +51,12 @@ $repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
 //  Duration
 //  Internal/External
 
+$fields = sql_field_info($tbl_entry);
+$custom_fields = array();
+
 // Firstly we need to know if this is a new booking or modifying an old one
 // and if it's a modification we need to get all the old data from the db.
 // If we had $id passed in then it's a modification.
-$custom_fields = array();
 
 if (isset($id))
 {
@@ -248,6 +250,14 @@ else
   $rep_end_year  = $year;
   $rep_day       = array(0, 0, 0, 0, 0, 0, 0);
   $private       = $private_default;
+  // now initialise the custom fields
+  foreach ($fields as $field)
+  {
+    if (!in_array($field['name'], $standard_fields['entry']))
+    {
+      $custom_fields[$field['name']] = '';
+    }
+  }
 }
 
 // These next 4 if statements handle the situation where
@@ -782,7 +792,6 @@ else
     // CUSTOM FIELDS
     if (count($custom_fields))
     {
-      $fields = sql_field_info($tbl_entry);
       $field_natures = array();
       $field_lengths = array();
       foreach ($fields as $field)

@@ -868,7 +868,32 @@ define('REP_MONTHLY',         3);
 define('REP_YEARLY',          4);
 define('REP_MONTHLY_SAMEDAY', 5);
 define('REP_N_WEEKLY',        6);
- 
+
+ /****************************************************************
+ * DATABASE TABLES - STANDARD FIELDS - internal use, do not change
+ *****************************************************************/
+
+// These are the standard fields in the database tables.   If you add more
+// standard (not user defined, custom) fields, then you need to change these
+
+$standard_fields['entry'] = array('id',
+                                  'start_time',
+                                  'end_time',
+                                  'entry_type',
+                                  'repeat_id',
+                                  'room_id',
+                                  'timestamp',
+                                  'create_by',
+                                  'name',
+                                  'type',
+                                  'description',
+                                  'private',
+                                  'status',
+                                  'reminded',
+                                  'info_time',
+                                  'info_user',
+                                  'info_text');
+                               
 /********************************************************
  * PHP System Configuration - internal use, do not change
  ********************************************************/

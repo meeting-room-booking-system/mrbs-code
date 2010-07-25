@@ -584,6 +584,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
  * $description - Description
  * $private     - Private Booking (bool)
  * $status      - Status code
+ * $custom_fields - an array of any custom fields
  * 
  * Returns:
  *   an array
@@ -595,11 +596,10 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
 function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                    $rep_enddate, $rep_opt, $room_id, $owner,
                                    $name, $type, $description, $rep_num_weeks,
-                                   $private, $status)
+                                   $private, $status, $custom_fields)
 {
   global $max_rep_entrys;
   
-  $custom_fields = array();
   $result = array('id' => 0, 'series' => FALSE);
   $private = $private ? 1 : 0 ;
    
