@@ -328,6 +328,7 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
  * $description - Description
  * $rep_num_weeks - (missing)
  * $private     - Private Booking (bool)
+ * $custom_fields - an array of any custom fields
  *
  * (NOTE: there is no status code passed, because the repeat table
  *  does not have a status field.  Only the individual members of 
@@ -339,7 +340,7 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
  */
 function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
                                $rep_opt, $room_id, $owner, $name, $type,
-                               $description, $rep_num_weeks, $private)
+                               $description, $rep_num_weeks, $private, $custom_fields)
 {
   global $tbl_repeat;
 
@@ -381,11 +382,35 @@ function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
   {
     $sql_coln[] = 'rep_num_weeks';   $sql_val[] = $rep_num_weeks;
   }
+  
+  // Add in any custom field values
+  if (count($custom_fields))
+  {
+    $fields = sql_field_info($tbl_repeat);
+    $field_natures = array();
+    foreach ($fields as $field)
+    {
+      $field_natures[$field['name']] = $field['nature'];
+    }
+    foreach ($custom_fields as $key => $value)
+    {
+      $sql_coln[] .= $key;
+      switch ($field_natures[$key])
+      {
+        case 'integer':
+          $sql_val[] = isset($value) ? $value : 'NULL';
+          break;
+        default:
+          $sql_val[] = "'" . addslashes($value) . "'";
+          break;
+      }
+    }
+  }
 
   $sql = 'INSERT INTO ' . $tbl_repeat .
     ' (' . implode(', ',$sql_coln) . ') '.
     'VALUES (' . implode(', ',$sql_val) . ')';
-
+    
   if (sql_command($sql) < 0)
   {
     fatal_error(TRUE, "Fatal error: " . sql_error());  // probably because the table hasn't been created properly
@@ -626,7 +651,7 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
   $id = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type,
                               $rep_enddate, $rep_opt, $room_id,
                               $owner, $name, $type, $description,
-                              $rep_num_weeks, $private);
+                              $rep_num_weeks, $private, $custom_fields);
     
   if ($id)
   {
