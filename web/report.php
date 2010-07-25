@@ -126,6 +126,7 @@ function csv_row_add_value($row, $value)
 function csv_report_header($display)
 {
   global $csv_row_sep;
+  global $custom_fields, $tbl_entry;
   
   // Build an array of values to go into the header row
   $values = array();
@@ -141,7 +142,12 @@ function csv_report_header($display)
   }
   $values[] = get_vocab("fulldescription_short");
   $values[] = get_vocab("type"); 
-  $values[] = get_vocab("createdby");  
+  $values[] = get_vocab("createdby");
+  // Now do the custom fields
+  foreach ($custom_fields as $key => $value)
+  {
+    $values[] = get_loc_field_name($tbl_entry, $key);
+  }
   $values[] = get_vocab("lastupdate");
   
   // Remove any HTML entities from the values
@@ -179,6 +185,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   global $enable_periods;
   global $output_as_csv;
   global $csv_row_sep;
+  global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
   
   // Initialise the line for CSV reports
   $line = "";
@@ -315,6 +322,35 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
     echo "<td>" . get_vocab("createdby") . ":</td>\n";
     echo "<td>" . escape($row['create_by']) . "</td>\n";
     echo "</tr>\n";
+  }
+  
+  // Now do any custom fields
+  foreach ($custom_fields as $key => $value)
+  {
+    // Output a yes/no if it's a boolean or integer <= 2 bytes (which we will
+    // assume are intended to be booleans)
+    if (($field_natures[$key] == 'boolean') || 
+        (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+    {
+      $value = empty($value) ? get_vocab("no") : get_vocab("yes");
+    }
+    // Otherwise output a string
+    else
+    {
+      $value = (isset($value)) ? $value : ''; 
+    }
+    
+    if ($output_as_csv)
+    {
+      $line = csv_row_add_value($line, $value);
+    }
+    else
+    {
+      echo "<tr>\n";
+      echo "<td>" . get_loc_field_name($tbl_entry, $key) . ":</td>\n";
+      echo "<td>" . escape($value) . "</td>\n";
+      echo "</tr>\n";
+    }
   }
 
   // Last updated:
@@ -567,6 +603,21 @@ if (empty($summarize))
 
 $output_as_csv = $summarize & CSV;
 
+// Get information about custom fields
+$fields = sql_field_info($tbl_entry);
+$custom_fields = array();
+$field_natures = array();
+$field_lengths = array();
+foreach ($fields as $field)
+{
+  if (!in_array($field['name'], $standard_fields['entry']))
+  {
+    $custom_fields[$field['name']] = '';
+  }
+  $field_natures[$field['name']] = $field['nature'];
+  $field_lengths[$field['name']] = $field['length'];
+}
+
 // print the page header
 if ($output_as_csv)
 {
@@ -812,10 +863,16 @@ if (isset($areamatch))
   $sql = "SELECT E.id AS entry_id, E.start_time, E.end_time, E.name, E.description, "
   . "E.type, E.create_by, "
   .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated"
-  . ", A.area_name, R.room_name"
-  . " FROM $tbl_entry E, $tbl_area A, $tbl_room R"
-  . " WHERE E.room_id = R.id AND R.area_id = A.id"
-  . " AND E.start_time < $report_end AND E.end_time > $report_start";
+  . ", A.area_name, R.room_name";
+  // Get any custom fields
+  foreach ($custom_fields as $custom_field => $value)
+  {
+    $sql .= ", E.$custom_field";
+  }
+
+  $sql .= " FROM $tbl_entry E, $tbl_area A, $tbl_room R"
+        . " WHERE E.room_id = R.id AND R.area_id = A.id"
+        . " AND E.start_time < $report_end AND E.end_time > $report_start";
 
   if (!empty($areamatch))
   {
