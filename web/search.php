@@ -66,10 +66,24 @@ $now = mktime(0, 0, 0, $month, $day, $year);
     
 $sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_str)
   . " OR " . sql_syntax_caseless_contains("E.name", $search_str)
-  . " OR " . sql_syntax_caseless_contains("E.description", $search_str)
-  . ") AND E.end_time > $now";
+  . " OR " . sql_syntax_caseless_contains("E.description", $search_str);
 
+// Also need to search custom fields (but only those with character data)
+$fields = sql_field_info($tbl_entry);
+foreach ($fields as $field)
+{
+  if (!in_array($field['name'], $standard_fields['entry']))
+  {
+    if ($field['nature'] == 'character')
+    {
+      $sql_pred .= " OR " . sql_syntax_caseless_contains("E." . $field['name'], $search_str);
+    }
+  }
+}
+
+$sql_pred .= ") AND E.end_time > $now";
 $sql_pred .= " AND E.room_id = R.id AND R.area_id = A.id";
+
 
 // If we're not an admin (they are allowed to see everything), then we need
 // to make sure we respect the privacy settings.  (We rely on the privacy fields
