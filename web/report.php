@@ -332,23 +332,23 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
     if (($field_natures[$key] == 'boolean') || 
         (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
     {
-      $value = empty($value) ? get_vocab("no") : get_vocab("yes");
+      $output = empty($row[$key]) ? get_vocab("no") : get_vocab("yes");
     }
     // Otherwise output a string
     else
     {
-      $value = (isset($value)) ? $value : ''; 
+      $output = (isset($row[$key])) ? $row[$key] : ''; 
     }
     
     if ($output_as_csv)
     {
-      $line = csv_row_add_value($line, $value);
+      $line = csv_row_add_value($line, $output);
     }
     else
     {
       echo "<tr>\n";
       echo "<td>" . get_loc_field_name($tbl_entry, $key) . ":</td>\n";
-      echo "<td>" . escape($value) . "</td>\n";
+      echo "<td>" . escape($output) . "</td>\n";
       echo "</tr>\n";
     }
   }
@@ -618,6 +618,22 @@ foreach ($fields as $field)
   $field_lengths[$field['name']] = $field['length'];
 }
 
+// Get the custom form inputs
+foreach ($custom_fields as $key => $value)
+{
+  $var = "match_$key";
+  if (($field_natures[$key] == 'integer') && ($field_lengths[$key] > 2))
+  {
+    $var_type = 'int';
+  }
+  else
+  {
+    $var_type = 'string';
+  }
+  $$var = get_form_var($var, $var_type);
+}
+
+
 // print the page header
 if ($output_as_csv)
 {
@@ -748,7 +764,36 @@ if (!$output_as_csv)
         <div id="div_creatormatch">
           <label for="creatormatch"><?php echo get_vocab("createdby");?>:</label>
           <input type="text" id="creatormatch" name="creatormatch" value="<?php echo $creatormatch_default; ?>">
-        </div> 
+        </div>
+        
+        <?php
+        // Now do the custom fields
+        foreach ($custom_fields as $key => $value)
+        {
+          $var = "match_$key";
+          echo "<div>\n";
+          echo "<label for=\"$var\">" . get_loc_field_name($tbl_entry, $key) . ":</label>\n";
+          // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+          // assume are intended to be booleans)
+          if (($field_natures[$key] == 'boolean') || 
+              (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+          {
+            echo "<input type=\"checkbox\" class=\"checkbox\" " .
+                  "id=\"$var\" name=\"$var\" value=\"1\" " .
+                  ((!empty($$var)) ? " checked=\"checked\"" : "") .
+                  ">\n";
+          }
+          // Otherwise output a text input
+          else
+          {
+            echo "<input type=\"text\" " .
+                  "id=\"$var\" name=\"$var\" " .
+                  "value=\"" . htmlspecialchars($$var) . "\"" .
+                  ">\n";
+          }
+          echo "</div>\n";
+        }
+        ?>
       
         <div id="div_summarize">
           <label><?php echo get_vocab("include");?>:</label>
@@ -915,6 +960,36 @@ if (isset($areamatch))
   {
     // sql_syntax_caseless_contains() does the SQL escaping
     $sql .= " AND" .  sql_syntax_caseless_contains("E.create_by", $creatormatch);
+  }
+  // now do the custom fields
+  foreach ($custom_fields as $key => $value)
+  {
+    $var = "match_$key";
+    // Booleans (or integers <= 2 bytes which we assume are intended to be booleans)
+    if (($field_natures[$key] == 'boolean') || 
+       (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+    {
+      if (!empty($$var))
+      {
+        $sql .= " AND E.$key!=0";
+      }
+    }
+    // Integers
+    elseif (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] > 2))
+    {
+      if (isset($$var) && $$var !== '')  // get_form_var() returns an empty string if no input
+      {
+        $sql .= " AND E.$key=" . $$var;
+      }
+    }
+    // Strings
+    else
+    {
+      if (!empty($$var))
+      {
+        $sql .= " AND" . sql_syntax_caseless_contains("E.$key", $$var);
+      }
+    }
   }
 
   // If we're not an admin (they are allowed to see everything), then we need
