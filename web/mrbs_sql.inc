@@ -235,7 +235,6 @@ function mrbsCreateEntry($table, $data)
   
   $sql_col = array();
   $sql_val = array();
-  $sql = "INSERT INTO $table ";
   $table_no_prefix = substr($table, strlen($db_tbl_prefix));  // strip the prefix off the table name
     
   $fields = sql_field_info($table);
@@ -298,7 +297,7 @@ function mrbsCreateEntry($table, $data)
           switch ($field['nature'])
           {
             case 'integer':
-              if (!isset($data['custom_fields'][$key]) || ($data['custom_fields'][$key] == ''))
+              if (!isset($data['custom_fields'][$key]) || ($data['custom_fields'][$key] === ''))
               {
                 // If the field length is greater than 2 bytes then this is a genuine 
                 // integer and we will write NULL to the database.    We need to do this
