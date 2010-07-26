@@ -65,6 +65,25 @@ $standard_fields['entry'] = array('id',
                                   'info_time',
                                   'info_user',
                                   'info_text');
+                                  
+$standard_fields['repeat'] = array('id',
+                                   'start_time',
+                                   'end_time',
+                                   'rep_type',
+                                   'end_date',
+                                   'rep_opt',
+                                   'room_id',
+                                   'timestamp',
+                                   'create_by',
+                                   'name',
+                                   'type',
+                                   'description',
+                                   'rep_num_weeks',
+                                   'private',
+                                   'reminded',
+                                   'info_time',
+                                   'info_user',
+                                   'info_text');
                                
 /********************************************************
  * PHP System Configuration - internal use, do not change

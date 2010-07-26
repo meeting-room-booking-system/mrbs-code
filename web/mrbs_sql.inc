@@ -218,16 +218,145 @@ function mrbsDelEntry($user, $id, $series, $all)
   return $removed > 0;
 }
 
+/** mrbsCreateEntry()
+ * 
+ * Create an entry in the database
+ * 
+ * $table         - The table in which to create the entry
+ * $data          - An array containing the row data for the entry
+ * 
+ * Returns:
+ *   0        - An error occured while inserting the entry
+ *   non-zero - The entry's ID
+ */
+function mrbsCreateEntry($table, $data)
+{
+  global $standard_fields, $db_tbl_prefix;
+  
+  $sql_col = array();
+  $sql_val = array();
+  $sql = "INSERT INTO $table ";
+  $table_no_prefix = substr($table, strlen($db_tbl_prefix));  // strip the prefix off the table name
+    
+  $fields = sql_field_info($table);
+    
+  foreach ($fields as $field)
+  {
+    $key = $field['name'];
+    switch ($key)
+    {
+      // integers
+      case 'start_time':
+      case 'end_time':
+      case 'entry_type':
+      case 'repeat_id':
+      case 'rep_type':
+      case 'end_date':
+      case 'room_id':
+      case 'status':
+        $sql_col[] = $key;
+        $sql_val[] = $data[$key];
+        break;
+        
+      // strings  
+      case 'create_by':
+      case 'name':
+      case 'type':
+      case 'description':
+        $sql_col[] = $key;
+        $sql_val[] = "'" . addslashes($data[$key]) . "'";
+        break;
+          
+      // booleans
+      case 'private':
+        $sql_col[] = $key;
+        $sql_val[] = ($data[$key]) ? 1 : 0;
+        break;
+      
+      // special case - rep_opt
+      case 'rep_opt':
+        // pgsql doesn't like empty strings
+        $sql_col[] = $key;
+        $sql_val[] = (empty($data[$key])) ? "'0'" : "'" . addslashes($data[$key]) . "'";
+          
+      // special case - rep_num_weeks
+      case 'rep_num_weeks':
+        if (!empty($data[$key]))
+        {
+          $sql_col[] = $key;
+          $sql_val[] = $data[$key];
+        }
+        break;
+        
+      default:
+        // custom fields
+        if (!in_array($key, $standard_fields[$table_no_prefix]))
+        {
+          $sql_col[] = $key;
+            
+          // Depending on the nature of the custom field the treatment will vary
+          switch ($field['nature'])
+          {
+            case 'integer':
+              if (!isset($data['custom_fields'][$key]) || ($data['custom_fields'][$key] == ''))
+              {
+                // If the field length is greater than 2 bytes then this is a genuine 
+                // integer and we will write NULL to the database.    We need to do this
+                // because in many cases we will want to distinguish between NULL (no
+                // value has yet been assigned) and 0 (no units of this resource are
+                // required.
+                //
+                // However if the field length is 2 bytes or less then it is to be treated
+                // as a boolean and we only represent the values TRUE (1) or FALSE (0). 
+                // So we will write out the value 0 rather than NULL in case the database 
+                // field has been set to "NOT NULL".
+                $value = ($field['length'] > 2) ? 'NULL' : 0;
+              }
+              else
+              {
+                $value = $data['custom_fields'][$key];
+              }
+              break;
+            default:
+              if (!isset($data['custom_fields'][$key]))
+              {
+                $value = '';
+              }
+              else
+              {
+                $value = "'" . addslashes($data['custom_fields'][$key]) . "'";
+              }
+              break;
+          } // switch ($field_natures[$key])
+            
+          $sql_val[] = $value;
+        }
+        // do nothing for fields that aren't custom or otherwise listed above
+        break;
+          
+    } // switch ($key)
+  } // foreach
+    
+  $sql = "INSERT INTO $table (" . implode(', ',$sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
+
+  if (sql_command($sql) < 0)
+  {
+    fatal_error(TRUE, "Fatal error: " . sql_error());  // probably because the table hasn't been created properly
+  }
+
+  return sql_insert_id($table, "id");
+}
+
 /** mrbsCreateSingleEntry()
  * 
  * Create a single (non-repeating) entry in the database
  * 
- * $starttime     - Start time of entry
- * $endtime       - End time of entry
+ * $start_time    - Start time of entry
+ * $end_time      - End time of entry
  * $entry_type    - Entry type
  * $repeat_id     - Repeat ID
  * $room_id       - Room ID
- * $owner         - Owner
+ * $create_by     - Owner
  * $name          - Name
  * $type          - Type (Internal/External)
  * $description   - Description
@@ -239,94 +368,33 @@ function mrbsDelEntry($user, $id, $series, $all)
  *   0        - An error occured while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
-                               $room_id, $owner, $name, $type, $description,
+function mrbsCreateSingleEntry($start_time, $end_time, $entry_type, $repeat_id,
+                               $room_id, $create_by, $name, $type, $description,
                                $private, $status, $custom_fields)
 {
-  global $tbl_entry, $standard_fields;
- 
-  $private = $private ? 1 : 0;
-  $name        = addslashes($name);
-  $description = addslashes($description);
-  $owner       = addslashes($owner);
-  $type        = addslashes($type);
-   
+  global $tbl_entry;
+  
+  $data = array();
+  $data['start_time'] = $start_time;
+  $data['end_time'] = $end_time;
+  $data['entry_type'] = $entry_type;
+  $data['repeat_id'] = $repeat_id;
+  $data['room_id'] = $room_id;
+  $data['create_by'] = $create_by;
+  $data['name'] = $name;
+  $data['type'] = $type;
+  $data['description'] = $description;
+  $data['private'] = $private;
+  $data['status'] = $status;
+  $data['custom_fields'] = $custom_fields;
+  
   // make sure that any entry is of a positive duration
   // this is to trap potential negative duration created when DST comes
   // into effect
-  if ($endtime > $starttime)
+  if ($end_time > $start_time)
   {
-    $sql = "INSERT INTO $tbl_entry (start_time, end_time, entry_type, repeat_id, room_id,
-                                    create_by, name, type, description, private, status";
-    // Add in any custom field names
-    $fields = sql_field_info($tbl_entry);
-    foreach ($fields as $field)
-    {
-      $key = $field['name'];
-      if (!in_array($key, $standard_fields['entry']))
-      {
-        $sql .= ", $key";
-      }
-    }
-    
-    $sql .= ")";
-    $sql .= " VALUES ($starttime, $endtime, $entry_type, $repeat_id, $room_id,
-                      '$owner', '$name', '$type', '$description', $private, $status";
-    // Add in any custom field values
-    $field_natures = array();
-    $field_lengths = array();
-    foreach ($fields as $field)
-    {
-      $field_natures[$field['name']] = $field['nature'];
-      $field_lengths[$field['name']] = $field['length'];
-      if (!in_array($field['name'], $standard_fields['entry']))
-      {
-        $key = $field['name'];
-        switch ($field_natures[$key])
-        {
-          case 'integer':
-            if (!isset($custom_fields[$key]) || ($custom_fields[$key] == ''))
-            {
-              // If the field length is greater than 2 bytes then this is a genuine 
-              // integer and we will write NULL to the database.    We need to do this
-              // because in many cases we will want to distinguish between NULL (no
-              // value has yet been assigned) and 0 (no units of this resource are
-              // required.
-              //
-              // However if the field length is 2 bytes or less then it is to be treated
-              // as a boolean and we only represent the values TRUE (1) or FALSE (0). 
-              // So we will write out the value 0 rather than NULL in case the database 
-              // field has been set to "NOT NULL".
-              $value = ($field_lengths[$key] > 2) ? 'NULL' : 0;
-            }
-            else
-            {
-              $value = $custom_fields[$key];
-            }
-            break;
-          default:
-            if (!isset($custom_fields[$key]))
-            {
-              $value = '';
-            }
-            else
-            {
-              $value = "'" . addslashes($custom_fields[$key]) . "'";
-            }
-            break;
-        }
-        $sql .= ", $value";
-      }
-    }
-    
-    $sql .= ")";
-
-    if (sql_command($sql) < 0)
-    {
-      fatal_error(TRUE, "Fatal error: " . sql_error());  // probably because the table hasn't been created properly
-    }
-
-    return sql_insert_id("$tbl_entry", "id");
+    $result = mrbsCreateEntry($tbl_entry, $data);
+    return $result;
   }
   else
   {
@@ -338,18 +406,18 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
  * 
  * Creates a repeat entry in the data base
  * 
- * $starttime   - Start time of entry
- * $endtime     - End time of entry
- * $rep_type    - The repeat type
- * $rep_enddate - When the repeating ends
- * $rep_opt     - Any options associated with the entry
- * $room_id     - Room ID
- * $owner       - Owner
- * $name        - Name
- * $type        - Type (Internal/External)
- * $description - Description
+ * $start_time    - Start time of entry
+ * $end_time      - End time of entry
+ * $rep_type      - The repeat type
+ * $end_date      - When the repeating ends
+ * $rep_opt       - Any options associated with the entry
+ * $room_id       - Room ID
+ * $create_by     - Owner
+ * $name          - Name
+ * $type          - Type (Internal/External)
+ * $description   - Description
  * $rep_num_weeks - (missing)
- * $private     - Private Booking (bool)
+ * $private       - Private Booking (bool)
  * $custom_fields - an array of any custom fields
  *
  * (NOTE: there is no status code passed, because the repeat table
@@ -360,86 +428,31 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
  *   0        - An error occured while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
-                               $rep_opt, $room_id, $owner, $name, $type,
+function mrbsCreateRepeatEntry($start_time, $end_time, $rep_type, $end_date,
+                               $rep_opt, $room_id, $create_by, $name, $type,
                                $description, $rep_num_weeks, $private, $custom_fields)
 {
   global $tbl_repeat;
-
-  $private = $private ? 1 : 0;
-  $name        = addslashes($name);
-  $description = addslashes($description);
-  $owner       = addslashes($owner);
-  $type        = addslashes($type);
-  $rep_opt     = addslashes($rep_opt);
-
-  // Let's construct the sql statement:
-  $sql_coln = array(); $sql_val = array();
-
-  // Mandatory things:
-  $sql_coln[] = 'start_time'; $sql_val[] = $starttime;
-  $sql_coln[] = 'end_time';   $sql_val[] = $endtime;
-  $sql_coln[] = 'rep_type';   $sql_val[] = $rep_type;
-  $sql_coln[] = 'end_date';   $sql_val[] = $rep_enddate;
-  $sql_coln[] = 'room_id';    $sql_val[] = $room_id;
-  $sql_coln[] = 'create_by';  $sql_val[] = '\''.$owner.'\'';
-  $sql_coln[] = 'type';       $sql_val[] = '\''.$type.'\'';
-  $sql_coln[] = 'private';    $sql_val[] = $private;
-  $sql_coln[] = 'name';       $sql_val[] = '\''.$name.'\'';
-
-  // Optional things, pgsql doesn't like empty strings!
-  if (!empty($rep_opt))
-  {
-    $sql_coln[] = 'rep_opt';   $sql_val[] = '\''.$rep_opt.'\'';
-  }
-  else
-  {
-    $sql_coln[] = 'rep_opt';   $sql_val[] = '\'0\'';
-  }
-  if (!empty($description))
-  {
-    $sql_coln[] = 'description';   $sql_val[] = '\''.$description.'\'';
-  }
-  if (!empty($rep_num_weeks))
-  {
-    $sql_coln[] = 'rep_num_weeks';   $sql_val[] = $rep_num_weeks;
-  }
   
-  // Add in any custom field values
-  if (count($custom_fields))
-  {
-    $fields = sql_field_info($tbl_repeat);
-    $field_natures = array();
-    foreach ($fields as $field)
-    {
-      $field_natures[$field['name']] = $field['nature'];
-    }
-    foreach ($custom_fields as $key => $value)
-    {
-      $sql_coln[] .= $key;
-      switch ($field_natures[$key])
-      {
-        case 'integer':
-          $sql_val[] = isset($value) ? $value : 'NULL';
-          break;
-        default:
-          $sql_val[] = "'" . addslashes($value) . "'";
-          break;
-      }
-    }
-  }
-
-  $sql = 'INSERT INTO ' . $tbl_repeat .
-    ' (' . implode(', ',$sql_coln) . ') '.
-    'VALUES (' . implode(', ',$sql_val) . ')';
-    
-  if (sql_command($sql) < 0)
-  {
-    fatal_error(TRUE, "Fatal error: " . sql_error());  // probably because the table hasn't been created properly
-  }
-
-  return sql_insert_id("$tbl_repeat", "id");
+  $data = array();
+  $data['start_time'] = $start_time;
+  $data['end_time'] = $end_time;
+  $data['rep_type'] = $rep_type;
+  $data['end_date'] = $end_date;
+  $data['rep_opt'] = $rep_opt;
+  $data['room_id'] = $room_id;
+  $data['create_by'] = $create_by;
+  $data['name'] = $name;
+  $data['type'] = $type;
+  $data['description'] = $description;
+  $data['rep_num_weeks'] = $rep_num_weeks;
+  $data['private'] = $private;
+  $data['custom_fields'] = $custom_fields;
+  
+  $result = mrbsCreateEntry($tbl_repeat, $data);
+  return $result;
 }
+
 
 /** same_day_next_month()
 * Find the same day of the week in next month, same week number.
