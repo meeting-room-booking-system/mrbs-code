@@ -237,7 +237,31 @@ $vocab["update_area_failed"] = "La mise à jour du lieu a échoué&nbsp;: ";
 $vocab["error_area"]         = "Erreur&nbsp;: lieu ";
 $vocab["room_admin_email"]   = "Courriels des responsables&nbsp;";
 $vocab["area_admin_email"]   = "Courriels des responsables&nbsp;";
+$vocab["area_first_slot_start"]   = "Premier créneau";
+$vocab["area_last_slot_start"]    = "Dernier créneau";
+$vocab["area_res_mins"]           = "Resolution (minutes)";
+$vocab["area_def_duration_mins"]  = "Durée par défaut (minutes)";
+$vocab["invalid_area"]            = "Lieu inexistant!";
+$vocab["invalid_room_name"]       = "Ce nom de pièce existe déjà pour ce lieu !";
 $vocab["invalid_email"]      = "Adresse courriel invalide&nbsp;!";
+$vocab["invalid_resolution"]      = "Combinaison invalide entre résolution, premier et dernier créneau"; 
+$vocab["too_many_slots"]          = 'Augmentez la valeur de $max_slots dans le fichier de configuration!';
+$vocab["general_settings"]        = "Général";
+$vocab["time_settings"]           = "Horraires des créneaux";
+$vocab["private_settings"]        = "Réservations confidentielles";
+$vocab["allow_private"]           = "Autoriser les réservations confidentielles";
+$vocab["force_private"]           = "Imposer les réservation confidentielles";
+$vocab["default_settings"]        = "Réglage par défaut:";
+$vocab["default_private"]         = "Confidentiel";
+$vocab["default_public"]          = "Public";
+$vocab["private_display"]         = "Réservations confidentielles (affichage)";
+$vocab["private_display_label"]   = "Comment afficher les réservations restreintes?";
+$vocab["private_display_caution"] = "ATTENTION: songez aux fuites d&apos;informations privées avant de faire une modification!";
+$vocab["treat_respect"]           = "Tenir compte de la confidentialité de la réservation";
+$vocab["treat_private"]           = "Toutes les réservations sont confidentielles";
+$vocab["treat_public"]            = "Toutes les réservations sont publiques";
+
+
 
 // Used in del.php
 $vocab["deletefollowing"]    = "Vous allez supprimer les réservations suivantes";

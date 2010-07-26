@@ -21,8 +21,10 @@
 //
 // A list of valid timezones can be found at http://php.net/manual/en/timezones.php
 // The following line must be uncommented by removing the '//' at the beginning
-//$timezone = "Europe/London";
+$timezone = "Europe/London";
 
+
+$theme = 'classic126';
 
 /*******************
  * Database settings
@@ -50,8 +52,13 @@ $db_tbl_prefix = "mrbs_";
    configuration. Do _NOT_ modify systemdefaults.inc.php. */
 
 
+$auth["type"] = "ldap";
+$ldap_host = "ad-ldap-1.pace.internal";
+$ldap_base_dn = "dc=pace,dc=internal";
+$ldap_dn_search_attrib = "sAMAccountName";
+$ldap_filter = "memberOf=CN=Engineering Tools Group,OU=Groups,OU=Home,DC=pace,DC=internal";
 
-
+$auth['admin'][] = 'beranej1';
 
 // This next section must come at the end of the config file - ie after any
 // language and mail settings, as the definitions are used in the included file
