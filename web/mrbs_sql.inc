@@ -275,9 +275,11 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
     {
       $fields = sql_field_info($tbl_entry);
       $field_natures = array();
+      $field_lengths = array();
       foreach ($fields as $field)
       {
         $field_natures[$field['name']] = $field['nature'];
+        $field_lengths[$field['name']] = $field['length'];
       }
       foreach ($custom_fields as $key => $value)
       {
@@ -286,7 +288,17 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
           case 'integer':
             if (!isset($value))
             {
-              $value = 'NULL';
+              // If the field length is greater than 2 bytes then this is a genuine 
+              // integer and we will write NULL to the database.    We need to do this
+              // because in many cases we will want to distinguish between NULL (no
+              // value has yet been assigned) and 0 (no units of this resource are
+              // required.
+              //
+              // However if the field length is 2 bytes or less then it is to be treated
+              // as a boolean and we only represent the values TRUE (1) or FALSE (0). 
+              // So we will write out the value 0 rather than NULL in case the database 
+              // field has been set to "NOT NULL".
+              $value = ($field_lengths[$key] > 2) ? 'NULL' : 0;
             }
             break;
           default:
