@@ -243,7 +243,7 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
                                $room_id, $owner, $name, $type, $description,
                                $private, $status, $custom_fields)
 {
-  global $tbl_entry;
+  global $tbl_entry, $standard_fields;
  
   $private = $private ? 1 : 0;
   $name        = addslashes($name);
@@ -259,9 +259,11 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
     $sql = "INSERT INTO $tbl_entry (start_time, end_time, entry_type, repeat_id, room_id,
                                     create_by, name, type, description, private, status";
     // Add in any custom field names
-    if (count($custom_fields))
+    $fields = sql_field_info($tbl_entry);
+    foreach ($fields as $field)
     {
-      foreach ($custom_fields as $key => $value)
+      $key = $field['name'];
+      if (!in_array($key, $standard_fields['entry']))
       {
         $sql .= ", $key";
       }
@@ -271,22 +273,19 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
     $sql .= " VALUES ($starttime, $endtime, $entry_type, $repeat_id, $room_id,
                       '$owner', '$name', '$type', '$description', $private, $status";
     // Add in any custom field values
-    if (count($custom_fields))
+    $field_natures = array();
+    $field_lengths = array();
+    foreach ($fields as $field)
     {
-      $fields = sql_field_info($tbl_entry);
-      $field_natures = array();
-      $field_lengths = array();
-      foreach ($fields as $field)
+      $field_natures[$field['name']] = $field['nature'];
+      $field_lengths[$field['name']] = $field['length'];
+      if (!in_array($field['name'], $standard_fields['entry']))
       {
-        $field_natures[$field['name']] = $field['nature'];
-        $field_lengths[$field['name']] = $field['length'];
-      }
-      foreach ($custom_fields as $key => $value)
-      {
+        $key = $field['name'];
         switch ($field_natures[$key])
         {
           case 'integer':
-            if (!isset($value))
+            if (!isset($custom_fields[$key]) || ($custom_fields[$key] == ''))
             {
               // If the field length is greater than 2 bytes then this is a genuine 
               // integer and we will write NULL to the database.    We need to do this
@@ -300,9 +299,20 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
               // field has been set to "NOT NULL".
               $value = ($field_lengths[$key] > 2) ? 'NULL' : 0;
             }
+            else
+            {
+              $value = $custom_fields[$key];
+            }
             break;
           default:
-            $value = "'" . addslashes($value) . "'";
+            if (!isset($custom_fields[$key]))
+            {
+              $value = '';
+            }
+            else
+            {
+              $value = "'" . addslashes($custom_fields[$key]) . "'";
+            }
             break;
         }
         $sql .= ", $value";
