@@ -652,7 +652,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
 function notifyAdminOnDelete($mail_previous)
 {
   global $typel, $enable_periods, $auth;
-  global $mail_settings;
+  global $mail_settings, $standard_fields, $tbl_entry;
   
   // Get any extra arguments
   $action = (func_num_args() > 1) ? func_get_arg(1) : "delete";
@@ -763,6 +763,25 @@ function notifyAdminOnDelete($mail_previous)
     $mail_previous['type'] . "?" : $typel[$mail_previous['type']];
   $body .= "\n" . get_mail_vocab("createdby") . ": ";
   $body .= convertToMailCharset($mail_previous['createdby']) . "\n";
+  
+  // Custom fields
+  $fields = sql_field_info($tbl_entry);
+  foreach ($fields as $field)
+  {
+    if (!in_array($field['name'], $standard_fields['entry']))
+    {
+      $key = $field['name'];
+      // Convert any booleans or pseudo-booleans to text strings (in the mail language)
+      if (($field['nature'] == 'boolean') || 
+          (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+      {
+        $mail_previous[$key] = ($mail_previous[$key]) ? get_mail_vocab("yes") : get_mail_vocab("no");
+      }
+      $body .= get_mail_field_name($tbl_entry, $key) . ": ";
+      $body .= convertToMailCharset($mail_previous[$key]) . "\n";
+    }
+  }
+    
   $body .= get_mail_vocab("lastupdate") . ": " . convertToMailCharset($mail_previous['updated']);
   $body .= "\n" . get_mail_vocab("rep_type");
   $temp = $mail_previous['rep_type'];
