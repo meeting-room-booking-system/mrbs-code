@@ -159,23 +159,55 @@ else
 
 $row = mrbsGetBookingInfo($id, $series);
 
-$name          = htmlspecialchars($row['name']);
-$description   = htmlspecialchars($row['description']);
-$create_by     = htmlspecialchars($row['create_by']);
-$room_name     = htmlspecialchars($row['room_name']);
-$area_name     = htmlspecialchars($row['area_name']);
-$type          = $row['type'];
-$status        = $row['status'];
-$private       = $row['private'];
-$room_id       = $row['room_id'];
-$updated       = time_date_string($row['last_updated']);
+$custom_fields = array();
+foreach ($row as $column => $value)
+{
+  switch ($column)
+  {
+    // Don't bother with these columns
+    case 'area_id':
+    case 'duration':
+    case 'repeat_id':
+    case 'reminded':
+    case 'rep_type':
+    case 'rep_enddate':
+    case 'rep_opt':
+    case 'rep_num_weeks':
+    case 'start_time':
+    case 'end_time':
+      break;
+      
+    case 'name':
+    case 'description':
+    case 'create_by':
+    case 'room_name':
+    case 'area_name':
+    case 'type':
+    case 'status':
+    case 'private':
+    case 'room_id':
+    case 'entry_info_time':
+    case 'entry_info_user':
+    case 'entry_info_text':
+    case 'repeat_info_time':
+    case 'repeat_info_user':
+    case 'repeat_info_text':
+      $$column = $row[$column];
+      break;
+
+    case 'last_updated':
+      $updated = time_date_string($row['last_updated']);
+      break;
+
+    default:
+      $custom_fields[$column] = $row[$column];
+      break;
+  }
+}
+
+// Very special cases
 $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
-$entry_info_time  = $row['entry_info_time'];
-$entry_info_user  = $row['entry_info_user'];  // HTML escaping is done later
-$entry_info_text  = $row['entry_info_text'];  // HTML escaping is done later
-$repeat_info_time = $row['repeat_info_time'];
-$repeat_info_user = $row['repeat_info_user'];  // HTML escaping is done later
-$repeat_info_text = $row['repeat_info_text'];  // HTML escaping is done later
+
 // need to make DST correct in opposite direction to entry creation
 // so that user see what he expects to see
 $duration      = $row['duration'] - cross_dst($row['start_time'],
@@ -301,7 +333,7 @@ $repeat_key = "rep_type_" . $rep_type;
 
 
 echo "<h3" . (($keep_private) ? " class=\"private\"" : "") . ">\n";
-echo $name;
+echo htmlspecialchars($name);
 if (is_private_event($private) && $writeable) 
 {
   echo ' ('.get_vocab('private').')';
@@ -399,7 +431,7 @@ if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
   <tr>
     <td><?php echo get_vocab("description") ?>:</td>
     <?php
-    echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . mrbs_nl2br($description) . "</td>\n";
+    echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . mrbs_nl2br(htmlspecialchars($description)) . "</td>\n";
     ?>
   </tr>
   <?php
@@ -413,7 +445,7 @@ if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
   ?>
   <tr>
     <td><?php echo get_vocab("room") ?>:</td>
-    <td><?php    echo  mrbs_nl2br($area_name . " - " . $room_name) ?></td>
+    <td><?php    echo  mrbs_nl2br(htmlspecialchars($area_name . " - " . $room_name)) ?></td>
   </tr>
   <tr>
     <td><?php echo get_vocab("start_date") ?>:</td>
@@ -434,13 +466,45 @@ if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
   <tr>
     <td><?php echo get_vocab("createdby") ?>:</td>
     <?php
-    echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . $create_by . "</td>\n";
+    echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . htmlspecialchars($create_by) . "</td>\n";
     ?>
   </tr>
   <tr>
     <td><?php echo get_vocab("lastupdate") ?>:</td>
     <td><?php    echo $updated ?></td>
   </tr>
+<?php
+  if (count($custom_fields))
+  {
+    $fields = sql_field_info($tbl_entry);
+    $field_natures = array();
+    $field_lengths = array();
+    foreach ($fields as $field)
+    {
+      $field_natures[$field['name']] = $field['nature'];
+      $field_lengths[$field['name']] = $field['length'];
+    }
+    foreach ($custom_fields as $key => $value)
+    {
+      echo "<tr>\n";
+      echo "<td>" . get_loc_field_name($tbl_entry, $key) . ":</td>\n";
+      // Output a yes/no if it's a boolean or integer <= 2 bytes (which we will
+      // assume are intended to be booleans)
+      if (($field_natures[$key] == 'boolean') || 
+          (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+      {
+        $shown_value = empty($value) ? get_vocab("no") : get_vocab("yes");
+      }
+      // Otherwise output a string
+      else
+      {
+        $shown_value = (isset($value)) ? mrbs_nl2br(htmlspecialchars($value)): "&nbsp;"; 
+      }
+      echo "<td>$shown_value</td>\n";
+      echo "</tr>\n";
+    }
+  }
+?>
   <tr>
     <td><?php echo get_vocab("rep_type") ?>:</td>
     <td><?php    echo get_vocab($repeat_key) ?></td>

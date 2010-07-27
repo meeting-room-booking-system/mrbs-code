@@ -30,6 +30,38 @@ $rep_day = get_form_var('rep_day', 'array'); // array of bools
 $rep_num_weeks = get_form_var('rep_num_weeks', 'int');
 $private = get_form_var('private', 'string'); // bool, actually
 
+// Get the information about the fields in the entry table
+$fields = sql_field_info($tbl_entry);
+
+// Get custom form variables
+$custom_fields = array();
+                        
+foreach($fields as $field)
+{
+  if (!in_array($field['name'], $standard_fields['entry']))
+  {
+    switch($field['nature'])
+    {
+      case 'character':
+        $f_type = 'string';
+        break;
+      case 'integer':
+        $f_type = 'int';
+        break;
+      // We can only really deal with the types above at the moment
+      default:
+        $f_type = 'string';
+        break;
+    }
+    $var = "f_" . $field['name'];
+    $custom_fields[$field['name']] = get_form_var($var, $f_type);
+    if (($f_type == 'int') && ($custom_fields[$field['name']] === ''))
+    {
+      unset($custom_fields[$field['name']]);
+    }
+  }
+}
+
 // Truncate the name field to the maximum length as a precaution.
 // Although the MAXLENGTH attribute is used in the <input> tag, this can
 // sometimes be ignored by the browser, for example by Firefox when 
@@ -473,7 +505,8 @@ if ($valid_booking)
                                            $description,
                                            isset($rep_num_weeks) ? $rep_num_weeks : 0,
                                            $isprivate,
-                                           $status);
+                                           $status,
+                                           $custom_fields);
       $new_id = $booking['id'];
 
       // Send a mail to the Administrator
@@ -532,7 +565,8 @@ if ($valid_booking)
                                       $type,
                                       $description,
                                       $isprivate,
-                                      $status);
+                                      $status,
+                                      $custom_fields);
 
       // Send a mail to the Administrator
       if ($need_to_send_mail)

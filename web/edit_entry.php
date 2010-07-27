@@ -1,6 +1,53 @@
 <?php
 // $Id$
 
+// If you want to add some extra columns to the entry and repeat tables to
+// record extra details about bookings then you can do so and this page should
+// automatically recognise them and handle them.    NOTE: if you add a column to
+// the entry table you must add an identical column to the repeat table.
+//
+// At the moment support is limited to the following column types:
+//
+// MySQL        PostgreSQL            Form input type
+// -----        ----------            ---------------
+// bigint       bigint                text
+// int          integer               text
+// mediumint                          text
+// smallint     smallint              checkbox
+// tinyint                            checkbox
+// text         text                  textarea
+// tinytext                           textarea
+//              character varying     textarea
+// varchar(n)   character varying(n)  text/textarea, depending on the value of n
+//              character             text
+// char(n)      character(n)          text/textarea, depending on the value of n
+//
+// NOTE 1: For char(n) and varchar(n) fields, a text input will be presented if
+// n is less than or equal to $text_input_max, otherwise a textarea box will be
+// presented.
+//
+// NOTE 2: PostgreSQL booleans are not supported, due to difficulties in
+// handling the fields in a database independent way (a PostgreSQL boolean
+// will return a PHP boolean type when read by a PHP query, whereas a MySQL
+// tinyint returns an int).   In order to have a boolean field in the room
+// table you should use a smallint in PostgreSQL or a smallint or a tinyint
+// in MySQL.
+//
+// You can put a description of the column that will be used as the label in
+// the form in the appropriate lang file(s) using the tag 'entry.[columnname]'.
+// (Note that it is not necessary to add a 'repeat.[columnname]' tag.   The 
+// entry tag is sufficient.)
+//
+// For example if you want to add a column recording the number of participants
+// you could add a column to the entry and repeat tables called 'participants'
+// of type int.  Then in the appropriate lang file(s) you would add the line
+//
+// vocab["entry.participants"] = "Participants";  // or appropriate translation
+//
+// If MRBS can't find an entry for the field in the lang file, then it will use
+// the fieldname, eg 'coffee_machine'. 
+
+
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
@@ -51,13 +98,16 @@ $repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
 //  Duration
 //  Internal/External
 
+$fields = sql_field_info($tbl_entry);
+$custom_fields = array();
+
 // Firstly we need to know if this is a new booking or modifying an old one
 // and if it's a modification we need to get all the old data from the db.
 // If we had $id passed in then it's a modification.
+
 if (isset($id))
 {
-  $sql = "SELECT name, create_by, description, start_time, end_time,
-                 type, room_id, entry_type, repeat_id, private
+  $sql = "SELECT *
             FROM $tbl_entry
            WHERE id=$id
            LIMIT 1";
@@ -79,24 +129,57 @@ if (isset($id))
   // for this area.
   $area = get_area($row['room_id']);
   get_area_settings($area);
-
-  $name        = $row['name'];
-  // If we're copying an existing entry then we need to change the create_by (they could be
-  // different if it's an admin doing the copying)
-  $create_by   = (isset($copy)) ? $user : $row['create_by'];
-  $description = $row['description'];
-  $start_day   = strftime('%d', $row['start_time']);
-  $start_month = strftime('%m', $row['start_time']);
-  $start_year  = strftime('%Y', $row['start_time']);
-  $start_hour  = strftime('%H', $row['start_time']);
-  $start_min   = strftime('%M', $row['start_time']);
-  $duration    = $row['end_time'] - $row['start_time'] - cross_dst($row['start_time'], $row['end_time']);
-  $type        = $row['type'];
-  $room_id     = $row['room_id'];
-  $entry_type  = $row['entry_type'];
-  $rep_id      = $row['repeat_id'];
-  $private     = $row['private'];
-
+  
+  foreach ($row as $column => $value)
+  {
+    switch ($column)
+    {
+      // Don't bother with these columns
+      case 'id':
+      case 'timestamp':
+      case 'status':
+      case 'reminded':
+      case 'info_time':
+      case 'info_user':
+      case 'info_text':
+        break;
+        
+      case 'name':
+      case 'description':
+      case 'type':
+      case 'room_id':
+      case 'entry_type':
+      case 'private':
+        $$column = $row[$column];
+        break;
+      
+      case 'repeat_id':
+        $rep_id      = $row['repeat_id'];
+        
+      case 'create_by':
+        // If we're copying an existing entry then we need to change the create_by (they could be
+        // different if it's an admin doing the copying)
+        $create_by   = (isset($copy)) ? $user : $row['create_by'];
+        break;
+        
+      case 'start_time':
+        $start_day   = strftime('%d', $row['start_time']);
+        $start_month = strftime('%m', $row['start_time']);
+        $start_year  = strftime('%Y', $row['start_time']);
+        $start_hour  = strftime('%H', $row['start_time']);
+        $start_min   = strftime('%M', $row['start_time']);
+        break;
+        
+      case 'end_time':
+        $duration = $row['end_time'] - $row['start_time'] - cross_dst($row['start_time'], $row['end_time']);
+        break;
+        
+      default:
+        $custom_fields[$column] = $row[$column];
+        break;
+    }
+  }
+  
   if ($private_mandatory) 
   {
     $private = $private_default;
@@ -214,6 +297,14 @@ else
   $rep_end_year  = $year;
   $rep_day       = array(0, 0, 0, 0, 0, 0, 0);
   $private       = $private_default;
+  // now initialise the custom fields
+  foreach ($fields as $field)
+  {
+    if (!in_array($field['name'], $standard_fields['entry']))
+    {
+      $custom_fields[$field['name']] = '';
+    }
+  }
 }
 
 // These next 4 if statements handle the situation where
@@ -742,9 +833,56 @@ else
       } ?>
      </div>
     </div>
-
-
+    
     <?php
+    
+    // CUSTOM FIELDS
+    if (count($custom_fields))
+    {
+      $field_natures = array();
+      $field_lengths = array();
+      foreach ($fields as $field)
+      {
+        $field_natures[$field['name']] = $field['nature'];
+        $field_lengths[$field['name']] = $field['length'];
+      }
+      foreach ($custom_fields as $key => $value)
+      {
+        echo "<div>\n";
+        echo "<label for=\"f_$key\">" . get_loc_field_name($tbl_entry, $key) . ":</label>\n";
+        // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+        // assume are intended to be booleans)
+        if (($field_natures[$key] == 'boolean') || 
+            (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+        {
+          echo "<input type=\"checkbox\" class=\"checkbox\" " .
+                "id=\"f_$key\" name=\"f_$key\" value=\"1\" " .
+                ((!empty($value)) ? " checked=\"checked\"" : "") .
+                ">\n";
+        }
+        // Output a textarea if it's a character string longer than the limit for a
+        // text input
+        elseif (($field_natures[$key] == 'character') && isset($field_lengths[$key]) && ($field_lengths[$key] > $text_input_max))
+        {
+          echo "<textarea rows=\"8\" cols=\"40\" " .
+                "id=\"f_$key\" name=\"f_$key\" " .
+                ">\n";
+          echo htmlspecialchars($value);
+          echo "</textarea>\n";
+        }
+        // Otherwise output a text input
+        else
+        {
+          echo "<input type=\"text\" " .
+                "id=\"f_$key\" name=\"f_$key\" " .
+                "value=\"" . htmlspecialchars($value) . "\"" .
+                ">\n";
+        }
+        echo "</div>\n";
+      }
+    }
+
+
     // REPEAT BOOKING INPUTS
     if (($edit_type == "series") && $repeats_allowed)
     {
@@ -817,7 +955,7 @@ else
       echo "<legend></legend>\n";
       echo "<div>\n";
       echo "<label>" . get_vocab("rep_type") . ":</label>\n";
-      echo "<select value =\"" . get_vocab($key) . "\" disabled=\"disabled\">\n";
+      echo "<select disabled=\"disabled\">\n";
       echo "<option>" . get_vocab($key) . "</option>\n";
       echo "</select>\n";
       echo "<input type=\"hidden\" name=\"rep_type\" value=\"" . REP_NONE . "\">\n";

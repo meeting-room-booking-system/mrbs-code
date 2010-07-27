@@ -126,16 +126,23 @@ the comments at the top of the scripts before using them.
 
 ADDING EXTRA COLUMNS TO THE DATABASE TABLES
 ---------------------------------------------------------------------------
-It is possible to add extra columns to the room and users tables, if you need
-to hold extra information about rooms and users.   For example you might want
-to add a column in the room table to record whether or not a room has a coffee
-machine and you might want to record the phone numbers of users. (Note that
-the users table is only used if you are using the 'db' authentication scheme).
+It is possible to add extra columns to the entry, repeat, room and users
+tables, if you need to hold extra information about bookings, rooms and users.
+For example you might want to add a column in the room table to record whether
+or not a room has a coffee machine and you might want to record the phone
+numbers of users. (Note that the users table is only used if you are using
+the 'db' authentication scheme).   Similarly you might want to add a field
+to the entry and repeat tables to record the number of participants for
+a meeting.
 
 To add extra columns, just go into your database administration tool, eg
 phpMyAdmin, and add the extra columns manually.   MRBS will then recognise them
 and handle them automatically, displaying the information in the lists of rooms
 and users and allowing you to edit the data in the appropriate forms.
+
+NOTE: if you are adding a field to the entry table you must add an
+identical field to the repeat table.   If you do not MRBS will fail with
+a fatal error when you try and run it.
 
 At the moment only text, varchar, int, smallint and tinyint columns are 
 supported, displayed as textarea, text or checkbox fields as appropriate.
@@ -145,7 +152,9 @@ Smallints and tinyints are assumed to be booleans and are displayed as checkboxe
 
 Text descriptions are looked for in the lang files with the tag room.column_name,
 eg room.coffee_machine, or users.phone enabling translations to be provided.   
-If not present, the column name will be used for labels etc.
+If not present, the column name will be used for labels etc.  If you are adding
+columns to the entry and repeat tables then you only need to add the 
+entry.column_name tags:  you don't need to add a repeat.column_name tag.
 
 [Note:  smallints are assumed to be booleans because the boolean type in 
 PostgreSQL presents some problems in PHP when trying to process the results

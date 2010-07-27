@@ -218,54 +218,175 @@ function mrbsDelEntry($user, $id, $series, $all)
   return $removed > 0;
 }
 
-/** mrbsCreateSingleEntry()
+/** mrbsCreateEntry()
  * 
- * Create a single (non-repeating) entry in the database
+ * Create an entry in the database
  * 
- * $starttime   - Start time of entry
- * $endtime     - End time of entry
- * $entry_type  - Entry type
- * $repeat_id   - Repeat ID
- * $room_id     - Room ID
- * $owner       - Owner
- * $name        - Name
- * $type        - Type (Internal/External)
- * $description - Description
- * $private     - Private Booking (TRUE/FALSE)
- * $status      - Status code of the entry
+ * $table         - The table in which to create the entry
+ * $data          - An array containing the row data for the entry
  * 
  * Returns:
  *   0        - An error occured while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
-                               $room_id, $owner, $name, $type, $description,
-                               $private, $status)
+function mrbsCreateEntry($table, $data)
+{
+  global $standard_fields, $db_tbl_prefix;
+  
+  $sql_col = array();
+  $sql_val = array();
+  $table_no_prefix = substr($table, strlen($db_tbl_prefix));  // strip the prefix off the table name
+    
+  $fields = sql_field_info($table);
+    
+  foreach ($fields as $field)
+  {
+    $key = $field['name'];
+    switch ($key)
+    {
+      // integers
+      case 'start_time':
+      case 'end_time':
+      case 'entry_type':
+      case 'repeat_id':
+      case 'rep_type':
+      case 'end_date':
+      case 'room_id':
+      case 'status':
+        $sql_col[] = $key;
+        $sql_val[] = $data[$key];
+        break;
+        
+      // strings  
+      case 'create_by':
+      case 'name':
+      case 'type':
+      case 'description':
+        $sql_col[] = $key;
+        $sql_val[] = "'" . addslashes($data[$key]) . "'";
+        break;
+          
+      // booleans
+      case 'private':
+        $sql_col[] = $key;
+        $sql_val[] = ($data[$key]) ? 1 : 0;
+        break;
+      
+      // special case - rep_opt
+      case 'rep_opt':
+        // pgsql doesn't like empty strings
+        $sql_col[] = $key;
+        $sql_val[] = (empty($data[$key])) ? "'0'" : "'" . addslashes($data[$key]) . "'";
+          
+      // special case - rep_num_weeks
+      case 'rep_num_weeks':
+        if (!empty($data[$key]))
+        {
+          $sql_col[] = $key;
+          $sql_val[] = $data[$key];
+        }
+        break;
+        
+      default:
+        // custom fields
+        if (!in_array($key, $standard_fields[$table_no_prefix]))
+        {
+          $sql_col[] = $key;
+            
+          // Depending on the nature of the custom field the treatment will vary
+          switch ($field['nature'])
+          {
+            case 'integer':
+              if (!isset($data['custom_fields'][$key]) || ($data['custom_fields'][$key] === ''))
+              {
+                // Try and set it to NULL when we can because there will be cases when we
+                // want to distinguish between NULL and 0 - especially when the field
+                // is a genuine integer.
+                $value = ($field['is_nullable']) ? 'NULL' : 0;
+              }
+              else
+              {
+                $value = $data['custom_fields'][$key];
+              }
+              break;
+            default:
+              if (!isset($data['custom_fields'][$key]))
+              {
+                $value = '';
+              }
+              else
+              {
+                $value = "'" . addslashes($data['custom_fields'][$key]) . "'";
+              }
+              break;
+          } // switch ($field_natures[$key])
+            
+          $sql_val[] = $value;
+        }
+        // do nothing for fields that aren't custom or otherwise listed above
+        break;
+          
+    } // switch ($key)
+  } // foreach
+    
+  $sql = "INSERT INTO $table (" . implode(', ',$sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
+
+  if (sql_command($sql) < 0)
+  {
+    fatal_error(TRUE, "Fatal error: " . sql_error());  // probably because the table hasn't been created properly
+  }
+
+  return sql_insert_id($table, "id");
+}
+
+/** mrbsCreateSingleEntry()
+ * 
+ * Create a single (non-repeating) entry in the database
+ * 
+ * $start_time    - Start time of entry
+ * $end_time      - End time of entry
+ * $entry_type    - Entry type
+ * $repeat_id     - Repeat ID
+ * $room_id       - Room ID
+ * $create_by     - Owner
+ * $name          - Name
+ * $type          - Type (Internal/External)
+ * $description   - Description
+ * $private       - Private Booking (TRUE/FALSE)
+ * $status        - Status code of the entry
+ * $custom_fields - an array of any custom fields
+ * 
+ * Returns:
+ *   0        - An error occured while inserting the entry
+ *   non-zero - The entry's ID
+ */
+function mrbsCreateSingleEntry($start_time, $end_time, $entry_type, $repeat_id,
+                               $room_id, $create_by, $name, $type, $description,
+                               $private, $status, $custom_fields)
 {
   global $tbl_entry;
- 
-  $private = $private ? 1 : 0;
-  $name        = addslashes($name);
-  $description = addslashes($description);
-  $owner       = addslashes($owner);
-  $type        = addslashes($type);
-   
+  
+  $data = array();
+  $data['start_time'] = $start_time;
+  $data['end_time'] = $end_time;
+  $data['entry_type'] = $entry_type;
+  $data['repeat_id'] = $repeat_id;
+  $data['room_id'] = $room_id;
+  $data['create_by'] = $create_by;
+  $data['name'] = $name;
+  $data['type'] = $type;
+  $data['description'] = $description;
+  $data['private'] = $private;
+  $data['status'] = $status;
+  $data['custom_fields'] = $custom_fields;
+  
   // make sure that any entry is of a positive duration
   // this is to trap potential negative duration created when DST comes
   // into effect
-  if ($endtime > $starttime)
+  if ($end_time > $start_time)
   {
-    $sql = "INSERT INTO $tbl_entry (  start_time,   end_time,   entry_type,    repeat_id,   room_id,
-                                      create_by,    name,       type,          description, private, status)
-                            VALUES ($starttime, $endtime, $entry_type, $repeat_id, $room_id,
-                                    '$owner',     '$name',    '$type',       '$description', $private, $status)";
-
-    if (sql_command($sql) < 0)
-    {
-      fatal_error(TRUE, "Fatal error: " . sql_error());  // probably because the table hasn't been created properly
-    }
-
-    return sql_insert_id("$tbl_entry", "id");
+    $result = mrbsCreateEntry($tbl_entry, $data);
+    return $result;
   }
   else
   {
@@ -277,18 +398,19 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
  * 
  * Creates a repeat entry in the data base
  * 
- * $starttime   - Start time of entry
- * $endtime     - End time of entry
- * $rep_type    - The repeat type
- * $rep_enddate - When the repeating ends
- * $rep_opt     - Any options associated with the entry
- * $room_id     - Room ID
- * $owner       - Owner
- * $name        - Name
- * $type        - Type (Internal/External)
- * $description - Description
+ * $start_time    - Start time of entry
+ * $end_time      - End time of entry
+ * $rep_type      - The repeat type
+ * $end_date      - When the repeating ends
+ * $rep_opt       - Any options associated with the entry
+ * $room_id       - Room ID
+ * $create_by     - Owner
+ * $name          - Name
+ * $type          - Type (Internal/External)
+ * $description   - Description
  * $rep_num_weeks - (missing)
- * $private     - Private Booking (bool)
+ * $private       - Private Booking (bool)
+ * $custom_fields - an array of any custom fields
  *
  * (NOTE: there is no status code passed, because the repeat table
  *  does not have a status field.  Only the individual members of 
@@ -298,62 +420,31 @@ function mrbsCreateSingleEntry($starttime, $endtime, $entry_type, $repeat_id,
  *   0        - An error occured while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
-                               $rep_opt, $room_id, $owner, $name, $type,
-                               $description, $rep_num_weeks, $private)
+function mrbsCreateRepeatEntry($start_time, $end_time, $rep_type, $end_date,
+                               $rep_opt, $room_id, $create_by, $name, $type,
+                               $description, $rep_num_weeks, $private, $custom_fields)
 {
   global $tbl_repeat;
-
-  $private = $private ? 1 : 0;
-  $name        = addslashes($name);
-  $description = addslashes($description);
-  $owner       = addslashes($owner);
-  $type        = addslashes($type);
-  $rep_opt     = addslashes($rep_opt);
-
-  // Let's construct the sql statement:
-  $sql_coln = array(); $sql_val = array();
-
-  // Mandatory things:
-  $sql_coln[] = 'start_time'; $sql_val[] = $starttime;
-  $sql_coln[] = 'end_time';   $sql_val[] = $endtime;
-  $sql_coln[] = 'rep_type';   $sql_val[] = $rep_type;
-  $sql_coln[] = 'end_date';   $sql_val[] = $rep_enddate;
-  $sql_coln[] = 'room_id';    $sql_val[] = $room_id;
-  $sql_coln[] = 'create_by';  $sql_val[] = '\''.$owner.'\'';
-  $sql_coln[] = 'type';       $sql_val[] = '\''.$type.'\'';
-  $sql_coln[] = 'private';    $sql_val[] = $private;
-  $sql_coln[] = 'name';       $sql_val[] = '\''.$name.'\'';
-
-  // Optional things, pgsql doesn't like empty strings!
-  if (!empty($rep_opt))
-  {
-    $sql_coln[] = 'rep_opt';   $sql_val[] = '\''.$rep_opt.'\'';
-  }
-  else
-  {
-    $sql_coln[] = 'rep_opt';   $sql_val[] = '\'0\'';
-  }
-  if (!empty($description))
-  {
-    $sql_coln[] = 'description';   $sql_val[] = '\''.$description.'\'';
-  }
-  if (!empty($rep_num_weeks))
-  {
-    $sql_coln[] = 'rep_num_weeks';   $sql_val[] = $rep_num_weeks;
-  }
-
-  $sql = 'INSERT INTO ' . $tbl_repeat .
-    ' (' . implode(', ',$sql_coln) . ') '.
-    'VALUES (' . implode(', ',$sql_val) . ')';
-
-  if (sql_command($sql) < 0)
-  {
-    fatal_error(TRUE, "Fatal error: " . sql_error());  // probably because the table hasn't been created properly
-  }
-
-  return sql_insert_id("$tbl_repeat", "id");
+  
+  $data = array();
+  $data['start_time'] = $start_time;
+  $data['end_time'] = $end_time;
+  $data['rep_type'] = $rep_type;
+  $data['end_date'] = $end_date;
+  $data['rep_opt'] = $rep_opt;
+  $data['room_id'] = $room_id;
+  $data['create_by'] = $create_by;
+  $data['name'] = $name;
+  $data['type'] = $type;
+  $data['description'] = $description;
+  $data['rep_num_weeks'] = $rep_num_weeks;
+  $data['private'] = $private;
+  $data['custom_fields'] = $custom_fields;
+  
+  $result = mrbsCreateEntry($tbl_repeat, $data);
+  return $result;
 }
+
 
 /** same_day_next_month()
 * Find the same day of the week in next month, same week number.
@@ -545,6 +636,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
  * $description - Description
  * $private     - Private Booking (bool)
  * $status      - Status code
+ * $custom_fields - an array of any custom fields
  * 
  * Returns:
  *   an array
@@ -556,7 +648,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
 function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                    $rep_enddate, $rep_opt, $room_id, $owner,
                                    $name, $type, $description, $rep_num_weeks,
-                                   $private, $status)
+                                   $private, $status, $custom_fields)
 {
   global $max_rep_entrys;
   
@@ -577,7 +669,7 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
   {
     $id = mrbsCreateSingleEntry($starttime, $endtime, 0, 0,
                                 $room_id, $owner, $name, $type,
-                                $description, $private, $status);
+                                $description, $private, $status, $custom_fields);
     $result['id'] = $id;
     $result['series'] = FALSE;
     return $result;
@@ -586,7 +678,7 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
   $id = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type,
                               $rep_enddate, $rep_opt, $room_id,
                               $owner, $name, $type, $description,
-                              $rep_num_weeks, $private);
+                              $rep_num_weeks, $private, $custom_fields);
     
   if ($id)
   {
@@ -607,7 +699,8 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                       $type,
                                       $description,
                                       $private,
-                                      $status);
+                                      $status,
+                                      $custom_fields);
     }
   }
   $result['id'] = $id;
@@ -705,7 +798,7 @@ function mrbsConfirmEntry($id, $series)
 // mrbsGetBookingInfo($id, $series)
 //
 // Gets all the details for a booking with $id, which is in the
-// repeat table id $series is set, otherwise in the entry table.
+// repeat table if $series is set, otherwise in the entry table.
 
 // Returns the results in an array with keys the same as the table
 // field names.  In the event of an error stops with a fatal error,
@@ -714,7 +807,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
 {
   global $tbl_entry, $tbl_repeat, $tbl_room, $tbl_area;
   global $provisional_enabled;
-  
+
   // Check that we've got an id
   if (!isset($id))
   {
@@ -728,42 +821,88 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
     }
   }
 
+  $entry_fields = sql_field_info($tbl_entry);
+  $repeat_fields = sql_field_info($tbl_repeat);
+
+  $rep_fields = array();
+  foreach ($repeat_fields as $field)
+  {
+    $rep_fields[$field['name']] = 1;
+  }
+
+  $t_or_e = $series ? "T" : "E";
+
+  $terms = array("M.room_name",
+                 "M.area_id",
+                 "A.area_name",
+                 "($t_or_e.end_time - $t_or_e.start_time) AS duration");
+  foreach ($entry_fields as $field)
+  {
+    switch ($field['name'])
+    {
+      case 'id':
+      case 'entry_type':
+        // Nothing to do
+        break;
+
+      case 'status':
+      case 'repeat_id':
+        array_push($terms, "E.".$field['name']);
+        break;
+
+      case 'timestamp':
+        array_push($terms,
+                   sql_syntax_timestamp_to_unix(($series ? "T" : "E" ).
+                                                ".timestamp").
+                   "AS last_updated");
+        break;
+
+      case 'info_time':
+      case 'info_user':
+      case 'info_text':
+        if ($series)
+        {
+          array_push($terms, "T.".$field['name']." AS repeat_".$field['name']);
+        }
+        else
+        {
+          array_push($terms, "E.".$field['name']." AS entry_".$field['name']);
+        }
+        break;
+
+      default:
+        if (!array_key_exists($field['name'], $rep_fields))
+        {
+          fatal_error(0, "Custom fields problem, '".$field['name']."' exists in entry table but not in repeat table");
+        }
+        
+        array_push($terms, ($series ? "T" : "E" ).".".$field['name']);
+        break;
+    }
+  }
   if ($series)
   {
-    $sql = "
-     SELECT T.name, T.description, T.create_by,
-            M.room_name, T.room_id, A.area_name, M.area_id,
-            T.type, T.reminded, T.private, T.room_id,
-            " . sql_syntax_timestamp_to_unix("T.timestamp") . " AS last_updated,
-            (T.end_time - T.start_time) AS duration,
-            T.start_time, T.end_time,
-            T.rep_type, T.end_date, T.rep_opt, T.rep_num_weeks,
-            T.info_time AS repeat_info_time, T.info_user AS repeat_info_user, T.info_text AS repeat_info_text
-
-     FROM  $tbl_repeat T, $tbl_room M, $tbl_area A
-     WHERE T.room_id = M.id
-        AND M.area_id = A.id
-        AND T.id=$id
-     ";
+    array_push($terms,
+               "T.rep_type",
+               "T.end_date",
+               "T.rep_opt",
+               "T.rep_num_weeks");
+    
+    $sql = "SELECT ".implode(",\n       ",$terms)."
+FROM $tbl_repeat T, $tbl_room M, $tbl_area A
+WHERE T.room_id = M.id
+      AND M.area_id = A.id
+      AND T.id=$id
+";
   }
   else
   {
-    $sql = "
-     SELECT E.name, E.description, E.create_by,
-            M.room_name, E.room_id, A.area_name, M.area_id,
-            E.status,
-            E.type, E.reminded, E.private, E.room_id,
-            " . sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
-            (E.end_time - E.start_time) AS duration,
-            E.start_time, E.end_time,
-            E.repeat_id,
-            E.info_time AS entry_info_time, E.info_user AS entry_info_user, E.info_text AS entry_info_text
-
-     FROM  $tbl_entry E, $tbl_room M, $tbl_area A
-     WHERE E.room_id = M.id
+    $sql = "SELECT ".implode(",\n       ",$terms)."
+FROM  $tbl_entry E, $tbl_room M, $tbl_area A
+WHERE E.room_id = M.id
         AND M.area_id = A.id
         AND E.id=$id
-     ";
+";
   }
 
   $res = sql_query($sql);

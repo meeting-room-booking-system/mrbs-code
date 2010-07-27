@@ -71,6 +71,21 @@ function get_mail_vocab($token)
 
   return convertToMailCharset($unescaped_string);
 }
+
+// Get localized (for email) field name for a user defined table column
+// Looks for a tag of the format tablename.columnname (where tablename is
+// stripped of the table prefix) and if can't find a string for that tag will
+// return the columnname
+function get_mail_field_name($table, $name)
+{
+  global $mail_vocab, $db_tbl_prefix;
+  
+  $tag = substr($table, strlen($db_tbl_prefix));  // strip the prefix off the table name
+  $tag .= "." . $name;           // add on the fieldname
+  // then if there's a string in the vocab array for $tag use that
+  // otherwise just use the fieldname
+  return (isset($mail_vocab[$tag])) ? get_mail_vocab($tag) : $name;
+}
     
 // }}}
 // {{{ getMailPeriodDateString()
@@ -270,9 +285,10 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
   global $url_base, $returl, $name, $description, $area_name;
   global $room_name, $room_id, $starttime, $duration, $dur_units, $end_date, $endtime;
   global $rep_enddate, $typel, $type, $status, $create_by, $rep_type, $enable_periods;
-  global $rep_opt, $rep_num_weeks;
+  global $rep_opt, $rep_num_weeks, $custom_fields, $standard_fields;
   global $mail_previous, $auth, $note;
   global $mail_settings, $weekstarts, $provisional_enabled;
+  global $tbl_entry;
   
   // We will treat Accept, Reject and More_info mailings as new entries because the
   // data hasn't changed since the previous time.
@@ -517,6 +533,29 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
       compareEntries($create_by,
                      $mail_previous['createdby'],
                      $new_entry) . "\n";
+                     
+    // Custom fields
+    $fields = sql_field_info($tbl_entry);
+    foreach ($fields as $field)
+    {
+      if (!in_array($field['name'], $standard_fields['entry']))
+      {
+        $key = $field['name'];
+        $value = (isset($custom_fields[$key])) ? $custom_fields[$key] : '';
+        // Convert any booleans or pseudo-booleans to text strings (in the mail language)
+        if (($field['nature'] == 'boolean') || 
+            (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+        {
+          $value = ($value) ? get_mail_vocab("yes") : get_mail_vocab("no");
+          if (!$new_entry)
+          {
+            $mail_previous[$key] = ($mail_previous[$key]) ? get_mail_vocab("yes") : get_mail_vocab("no");
+          }
+        }
+        $body .= get_mail_field_name($tbl_entry, $key) . ": ";
+        $body .= compareEntries($value, $mail_previous[$key], $new_entry) . "\n";
+      }
+    }
     
     // Last updated
     $body .= get_mail_vocab("lastupdate") . ": " .
@@ -613,7 +652,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
 function notifyAdminOnDelete($mail_previous)
 {
   global $typel, $enable_periods, $auth;
-  global $mail_settings;
+  global $mail_settings, $standard_fields, $tbl_entry;
   
   // Get any extra arguments
   $action = (func_num_args() > 1) ? func_get_arg(1) : "delete";
@@ -724,6 +763,25 @@ function notifyAdminOnDelete($mail_previous)
     $mail_previous['type'] . "?" : $typel[$mail_previous['type']];
   $body .= "\n" . get_mail_vocab("createdby") . ": ";
   $body .= convertToMailCharset($mail_previous['createdby']) . "\n";
+  
+  // Custom fields
+  $fields = sql_field_info($tbl_entry);
+  foreach ($fields as $field)
+  {
+    if (!in_array($field['name'], $standard_fields['entry']))
+    {
+      $key = $field['name'];
+      // Convert any booleans or pseudo-booleans to text strings (in the mail language)
+      if (($field['nature'] == 'boolean') || 
+          (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+      {
+        $mail_previous[$key] = ($mail_previous[$key]) ? get_mail_vocab("yes") : get_mail_vocab("no");
+      }
+      $body .= get_mail_field_name($tbl_entry, $key) . ": ";
+      $body .= convertToMailCharset($mail_previous[$key]) . "\n";
+    }
+  }
+    
   $body .= get_mail_vocab("lastupdate") . ": " . convertToMailCharset($mail_previous['updated']);
   $body .= "\n" . get_mail_vocab("rep_type");
   $temp = $mail_previous['rep_type'];
@@ -765,6 +823,7 @@ function notifyAdminOnDelete($mail_previous)
 function getPreviousEntryData($id, $series)
 {
   global $tbl_area, $tbl_entry, $tbl_repeat, $tbl_room, $enable_periods, $weekstarts;
+  global $standard_fields;
   //
   $sql = "
     SELECT  e.name,
@@ -781,6 +840,16 @@ function getPreviousEntryData($id, $series)
             e.end_time AS tbl_e_end_time,
             a.area_admin_email,
             r.room_admin_email";
+  // Get the custom fields
+  $fields = sql_field_info($tbl_entry);
+  foreach ($fields as $field)
+  {
+    if (!in_array($field['name'], $standard_fields['entry']))
+    {
+      $sql .= ", e." . $field['name'];
+    }
+  }
+  
   // Here we could just use $tbl_repeat.start_time, and not use alias,
   // as the last column will take precedence using mysql_fetch_array,
   // but for portability purpose I will not use it.
@@ -820,6 +889,14 @@ function getPreviousEntryData($id, $series)
   $mail_previous['updated']       = getMailTimeDateString($row['last_updated']);
   $mail_previous['area_admin_email'] = $row['area_admin_email'];
   $mail_previous['room_admin_email'] = $row['room_admin_email'];
+  // Add in the custom fields
+  foreach ($fields as $field)
+  {
+    if (!in_array($field['name'], $standard_fields['entry']))
+    {
+      $mail_previous[$field['name']] = $row[$field['name']];
+    }
+  }
   
   // Now get the start time, end time and duration.   The way this is done
   // depends on (a) whether we're using periods and (b) whether this is a series.

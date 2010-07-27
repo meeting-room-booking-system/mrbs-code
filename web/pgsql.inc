@@ -374,6 +374,7 @@ function sql_pgsql_table_exists($table, $db_conn = null)
 //                differences between MySQL and PostgreSQL type names.
 //  'length'      the maximum length of the field in bytes, octets or characters
 //                (Note:  this could be NULL)
+//  'is_nullable' whether the column can be set to NULL (boolean)
 //
 //  NOTE: the type mapping is incomplete and just covers the types commonly
 //  used by MRBS
@@ -395,7 +396,8 @@ function sql_pgsql_field_info($table, $db_conn = null)
   
   $fields = array();
   $res = sql_pgsql_query("SELECT column_name, data_type, numeric_precision,
-                                 character_maximum_length, character_octet_length
+                                 character_maximum_length, character_octet_length,
+                                 is_nullable
                             FROM information_schema.columns
                            WHERE table_name ='$table'
                         ORDER BY ordinal_position");
@@ -420,11 +422,14 @@ function sql_pgsql_field_info($table, $db_conn = null)
       {
         $length = $row['character_octet_length'];
       }
+      // Convert the is_nullable field to a boolean
+      $is_nullable = (strtolower($row['is_nullable']) == 'yes') ? TRUE : FALSE;
       
       $fields[$i]['name'] = $name;
       $fields[$i]['type'] = $type;
       $fields[$i]['nature'] = $nature;
       $fields[$i]['length'] = $length;
+      $fields[$i]['is_nullable'] = $is_nullable;
     }
   }
   return $fields;

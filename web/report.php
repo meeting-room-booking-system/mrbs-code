@@ -126,6 +126,7 @@ function csv_row_add_value($row, $value)
 function csv_report_header($display)
 {
   global $csv_row_sep;
+  global $custom_fields, $tbl_entry;
   
   // Build an array of values to go into the header row
   $values = array();
@@ -141,7 +142,12 @@ function csv_report_header($display)
   }
   $values[] = get_vocab("fulldescription_short");
   $values[] = get_vocab("type"); 
-  $values[] = get_vocab("createdby");  
+  $values[] = get_vocab("createdby");
+  // Now do the custom fields
+  foreach ($custom_fields as $key => $value)
+  {
+    $values[] = get_loc_field_name($tbl_entry, $key);
+  }
   $values[] = get_vocab("lastupdate");
   
   // Remove any HTML entities from the values
@@ -179,6 +185,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   global $enable_periods;
   global $output_as_csv;
   global $csv_row_sep;
+  global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
   
   // Initialise the line for CSV reports
   $line = "";
@@ -315,6 +322,35 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
     echo "<td>" . get_vocab("createdby") . ":</td>\n";
     echo "<td>" . escape($row['create_by']) . "</td>\n";
     echo "</tr>\n";
+  }
+  
+  // Now do any custom fields
+  foreach ($custom_fields as $key => $value)
+  {
+    // Output a yes/no if it's a boolean or integer <= 2 bytes (which we will
+    // assume are intended to be booleans)
+    if (($field_natures[$key] == 'boolean') || 
+        (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+    {
+      $output = empty($row[$key]) ? get_vocab("no") : get_vocab("yes");
+    }
+    // Otherwise output a string
+    else
+    {
+      $output = (isset($row[$key])) ? $row[$key] : ''; 
+    }
+    
+    if ($output_as_csv)
+    {
+      $line = csv_row_add_value($line, $output);
+    }
+    else
+    {
+      echo "<tr>\n";
+      echo "<td>" . get_loc_field_name($tbl_entry, $key) . ":</td>\n";
+      echo "<td>" . escape($output) . "</td>\n";
+      echo "</tr>\n";
+    }
   }
 
   // Last updated:
@@ -567,6 +603,37 @@ if (empty($summarize))
 
 $output_as_csv = $summarize & CSV;
 
+// Get information about custom fields
+$fields = sql_field_info($tbl_entry);
+$custom_fields = array();
+$field_natures = array();
+$field_lengths = array();
+foreach ($fields as $field)
+{
+  if (!in_array($field['name'], $standard_fields['entry']))
+  {
+    $custom_fields[$field['name']] = '';
+  }
+  $field_natures[$field['name']] = $field['nature'];
+  $field_lengths[$field['name']] = $field['length'];
+}
+
+// Get the custom form inputs
+foreach ($custom_fields as $key => $value)
+{
+  $var = "match_$key";
+  if (($field_natures[$key] == 'integer') && ($field_lengths[$key] > 2))
+  {
+    $var_type = 'int';
+  }
+  else
+  {
+    $var_type = 'string';
+  }
+  $$var = get_form_var($var, $var_type);
+}
+
+
 // print the page header
 if ($output_as_csv)
 {
@@ -697,7 +764,36 @@ if (!$output_as_csv)
         <div id="div_creatormatch">
           <label for="creatormatch"><?php echo get_vocab("createdby");?>:</label>
           <input type="text" id="creatormatch" name="creatormatch" value="<?php echo $creatormatch_default; ?>">
-        </div> 
+        </div>
+        
+        <?php
+        // Now do the custom fields
+        foreach ($custom_fields as $key => $value)
+        {
+          $var = "match_$key";
+          echo "<div>\n";
+          echo "<label for=\"$var\">" . get_loc_field_name($tbl_entry, $key) . ":</label>\n";
+          // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+          // assume are intended to be booleans)
+          if (($field_natures[$key] == 'boolean') || 
+              (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+          {
+            echo "<input type=\"checkbox\" class=\"checkbox\" " .
+                  "id=\"$var\" name=\"$var\" value=\"1\" " .
+                  ((!empty($$var)) ? " checked=\"checked\"" : "") .
+                  ">\n";
+          }
+          // Otherwise output a text input
+          else
+          {
+            echo "<input type=\"text\" " .
+                  "id=\"$var\" name=\"$var\" " .
+                  "value=\"" . htmlspecialchars($$var) . "\"" .
+                  ">\n";
+          }
+          echo "</div>\n";
+        }
+        ?>
       
         <div id="div_summarize">
           <label><?php echo get_vocab("include");?>:</label>
@@ -812,10 +908,16 @@ if (isset($areamatch))
   $sql = "SELECT E.id AS entry_id, E.start_time, E.end_time, E.name, E.description, "
   . "E.type, E.create_by, "
   .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated"
-  . ", A.area_name, R.room_name"
-  . " FROM $tbl_entry E, $tbl_area A, $tbl_room R"
-  . " WHERE E.room_id = R.id AND R.area_id = A.id"
-  . " AND E.start_time < $report_end AND E.end_time > $report_start";
+  . ", A.area_name, R.room_name";
+  // Get any custom fields
+  foreach ($custom_fields as $custom_field => $value)
+  {
+    $sql .= ", E.$custom_field";
+  }
+
+  $sql .= " FROM $tbl_entry E, $tbl_area A, $tbl_room R"
+        . " WHERE E.room_id = R.id AND R.area_id = A.id"
+        . " AND E.start_time < $report_end AND E.end_time > $report_start";
 
   if (!empty($areamatch))
   {
@@ -858,6 +960,36 @@ if (isset($areamatch))
   {
     // sql_syntax_caseless_contains() does the SQL escaping
     $sql .= " AND" .  sql_syntax_caseless_contains("E.create_by", $creatormatch);
+  }
+  // now do the custom fields
+  foreach ($custom_fields as $key => $value)
+  {
+    $var = "match_$key";
+    // Booleans (or integers <= 2 bytes which we assume are intended to be booleans)
+    if (($field_natures[$key] == 'boolean') || 
+       (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+    {
+      if (!empty($$var))
+      {
+        $sql .= " AND E.$key!=0";
+      }
+    }
+    // Integers
+    elseif (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] > 2))
+    {
+      if (isset($$var) && $$var !== '')  // get_form_var() returns an empty string if no input
+      {
+        $sql .= " AND E.$key=" . $$var;
+      }
+    }
+    // Strings
+    else
+    {
+      if (!empty($$var))
+      {
+        $sql .= " AND" . sql_syntax_caseless_contains("E.$key", $$var);
+      }
+    }
   }
 
   // If we're not an admin (they are allowed to see everything), then we need

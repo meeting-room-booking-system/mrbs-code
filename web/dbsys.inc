@@ -568,6 +568,7 @@ function sql_table_exists($table)
 //                differences between MySQL and PostgreSQL type names.
 //  'length'      the maximum length of the field in bytes, octets or characters
 //                (Note:  this could be NULL)
+//  'is_nullable' whether the column can be set to NULL (boolean)
 //
 //  NOTE: the type mapping is incomplete and just covers the types commonly
 //  used by MRBS

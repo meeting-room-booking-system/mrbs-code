@@ -121,6 +121,8 @@ $vocab["no_request_yet"]     = "No request has been sent yet"; // Used for the t
 $vocab["last_request"]       = "Last request sent at";         // Used for the title tooltip on More Info button
 $vocab["by"]                 = "by";                           // Used for the title tooltip on More Info button
 $vocab["sent_at"]            = "Sent at ";
+$vocab["yes"]                = "Yes";
+$vocab["no"]                 = "No";
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Error";

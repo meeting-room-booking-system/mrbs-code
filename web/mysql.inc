@@ -340,6 +340,7 @@ function sql_mysql_table_exists($table, $db_conn = null)
 //                differences between MySQL and PostgreSQL type names.
 //  'length'      the maximum length of the field in bytes, octets or characters
 //                (Note:  this could be NULL)
+//  'is_nullable' whether the column can be set to NULL (boolean)
 //
 //  NOTE: the type mapping is incomplete and just covers the types commonly
 //  used by MRBS
@@ -403,11 +404,14 @@ function sql_mysql_field_info($table, $db_conn = null)
       {
         $length = NULL;
       }
+      // Convert the is_nullable field to a boolean
+      $is_nullable = (strtolower($row['Null']) == 'yes') ? TRUE : FALSE;
 
       $fields[$i]['name'] = $name;
       $fields[$i]['type'] = $type;
       $fields[$i]['nature'] = $nature;
       $fields[$i]['length'] = $length;
+      $fields[$i]['is_nullable'] = $is_nullable;
     }
   }
   return $fields;
