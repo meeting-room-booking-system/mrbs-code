@@ -299,17 +299,10 @@ function mrbsCreateEntry($table, $data)
             case 'integer':
               if (!isset($data['custom_fields'][$key]) || ($data['custom_fields'][$key] === ''))
               {
-                // If the field length is greater than 2 bytes then this is a genuine 
-                // integer and we will write NULL to the database.    We need to do this
-                // because in many cases we will want to distinguish between NULL (no
-                // value has yet been assigned) and 0 (no units of this resource are
-                // required.
-                //
-                // However if the field length is 2 bytes or less then it is to be treated
-                // as a boolean and we only represent the values TRUE (1) or FALSE (0). 
-                // So we will write out the value 0 rather than NULL in case the database 
-                // field has been set to "NOT NULL".
-                $value = ($field['length'] > 2) ? 'NULL' : 0;
+                // Try and set it to NULL when we can because there will be cases when we
+                // want to distinguish between NULL and 0 - especially when the field
+                // is a genuine integer.
+                $value = ($field['is_nullable']) ? 'NULL' : 0;
               }
               else
               {
