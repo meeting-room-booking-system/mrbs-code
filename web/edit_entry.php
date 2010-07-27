@@ -1,6 +1,53 @@
 <?php
 // $Id$
 
+// If you want to add some extra columns to the entry and repeat tables to
+// record extra details about bookings then you can do so and this page should
+// automatically recognise them and handle them.    NOTE: if you add a column to
+// the entry table you must add an identical column to the repeat table.
+//
+// At the moment support is limited to the following column types:
+//
+// MySQL        PostgreSQL            Form input type
+// -----        ----------            ---------------
+// bigint       bigint                text
+// int          integer               text
+// mediumint                          text
+// smallint     smallint              checkbox
+// tinyint                            checkbox
+// text         text                  textarea
+// tinytext                           textarea
+//              character varying     textarea
+// varchar(n)   character varying(n)  text/textarea, depending on the value of n
+//              character             text
+// char(n)      character(n)          text/textarea, depending on the value of n
+//
+// NOTE 1: For char(n) and varchar(n) fields, a text input will be presented if
+// n is less than or equal to $text_input_max, otherwise a textarea box will be
+// presented.
+//
+// NOTE 2: PostgreSQL booleans are not supported, due to difficulties in
+// handling the fields in a database independent way (a PostgreSQL boolean
+// will return a PHP boolean type when read by a PHP query, whereas a MySQL
+// tinyint returns an int).   In order to have a boolean field in the room
+// table you should use a smallint in PostgreSQL or a smallint or a tinyint
+// in MySQL.
+//
+// You can put a description of the column that will be used as the label in
+// the form in the appropriate lang file(s) using the tag 'entry.[columnname]'.
+// (Note that it is not necessary to add a 'repeat.[columnname]' tag.   The 
+// entry tag is sufficient.)
+//
+// For example if you want to add a column recording the number of participants
+// you could add a column to the entry and repeat tables called 'participants'
+// of type int.  Then in the appropriate lang file(s) you would add the line
+//
+// vocab["entry.participants"] = "Participants";  // or appropriate translation
+//
+// If MRBS can't find an entry for the field in the lang file, then it will use
+// the fieldname, eg 'coffee_machine'. 
+
+
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
