@@ -837,23 +837,19 @@ else
     <?php
     
     // CUSTOM FIELDS
-    if (count($custom_fields))
+
+    foreach ($fields as $field)
     {
-      $field_natures = array();
-      $field_lengths = array();
-      foreach ($fields as $field)
+      $key = $field['name'];
+      if (!in_array($key, $standard_fields['entry']))
       {
-        $field_natures[$field['name']] = $field['nature'];
-        $field_lengths[$field['name']] = $field['length'];
-      }
-      foreach ($custom_fields as $key => $value)
-      {
+        $value = $custom_fields[$key];
         echo "<div>\n";
         echo "<label for=\"f_$key\">" . get_loc_field_name($tbl_entry, $key) . ":</label>\n";
         // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
         // assume are intended to be booleans)
-        if (($field_natures[$key] == 'boolean') || 
-            (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+        if (($field['nature'] == 'boolean') || 
+            (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
         {
           echo "<input type=\"checkbox\" class=\"checkbox\" " .
                 "id=\"f_$key\" name=\"f_$key\" value=\"1\" " .
@@ -862,7 +858,7 @@ else
         }
         // Output a textarea if it's a character string longer than the limit for a
         // text input
-        elseif (($field_natures[$key] == 'character') && isset($field_lengths[$key]) && ($field_lengths[$key] > $text_input_max))
+        elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
         {
           echo "<textarea rows=\"8\" cols=\"40\" " .
                 "id=\"f_$key\" name=\"f_$key\" " .

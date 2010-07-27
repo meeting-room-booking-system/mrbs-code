@@ -473,38 +473,33 @@ if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
     <td><?php echo get_vocab("lastupdate") ?>:</td>
     <td><?php    echo $updated ?></td>
   </tr>
-<?php
-  if (count($custom_fields))
+  <?php
+  // The custom fields
+  $fields = sql_field_info($tbl_entry);
+  foreach ($fields as $field)
   {
-    $fields = sql_field_info($tbl_entry);
-    $field_natures = array();
-    $field_lengths = array();
-    foreach ($fields as $field)
-    {
-      $field_natures[$field['name']] = $field['nature'];
-      $field_lengths[$field['name']] = $field['length'];
-    }
-    foreach ($custom_fields as $key => $value)
+    $key = $field['name'];
+    if (!in_array($key, $standard_fields['entry']))
     {
       echo "<tr>\n";
       echo "<td>" . get_loc_field_name($tbl_entry, $key) . ":</td>\n";
       // Output a yes/no if it's a boolean or integer <= 2 bytes (which we will
       // assume are intended to be booleans)
-      if (($field_natures[$key] == 'boolean') || 
-          (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+      if (($field['nature'] == 'boolean') || 
+          (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
       {
-        $shown_value = empty($value) ? get_vocab("no") : get_vocab("yes");
+        $shown_value = empty($custom_fields[$key]) ? get_vocab("no") : get_vocab("yes");
       }
       // Otherwise output a string
       else
       {
-        $shown_value = (isset($value)) ? mrbs_nl2br(htmlspecialchars($value)): "&nbsp;"; 
+        $shown_value = (isset($custom_fields[$key])) ? mrbs_nl2br(htmlspecialchars($custom_fields[$key])): "&nbsp;"; 
       }
       echo "<td>$shown_value</td>\n";
       echo "</tr>\n";
     }
   }
-?>
+  ?>
   <tr>
     <td><?php echo get_vocab("rep_type") ?>:</td>
     <td><?php    echo get_vocab($repeat_key) ?></td>
