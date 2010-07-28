@@ -109,6 +109,23 @@ function print_footer($and_exit)
 }
 
 
+// Format a timestamp in RFC 1123 format, for HTTP headers
+//
+// e.g. Wed, 28 Jul 2010 12:43:58 GMT
+function rfc1123_date($timestamp)
+{
+  return gmdate("D, d M Y G:i:s \\G\\M\\T",$timestamp);
+}
+
+
+// A little helper function to send an "Expires" header. Just one
+// parameter, the number of seconds in the future to set the expiry
+function expires_header($seconds)
+{
+  header("Expires: ".rfc1123_date(time()+$seconds));
+}
+
+
 function toTimeString(&$dur, &$units, $translate=TRUE)
 {
   if (abs($dur) >= 60)
