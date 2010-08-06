@@ -681,8 +681,13 @@ if (sql_table_exists($tbl_variables))
   }
 }
 
-if (($current_db_schema_version < $db_schema_version) || 
-    ($current_local_db_schema_version < $local_db_schema_version))
+// If either of the database schema version numbers are out of date, then 
+// upgrade the database - provided of course that the entry table exists.
+// (We check that the entry table exists just in case this is a new installation
+// and they've forgotten to create the database tables)
+if ((($current_db_schema_version < $db_schema_version) || 
+     ($current_local_db_schema_version < $local_db_schema_version)) &&
+    sql_table_exists($tbl_entry))
 {
   // Upgrade needed
 
