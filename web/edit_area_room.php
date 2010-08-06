@@ -226,9 +226,12 @@ if ($phase == 2)
                 switch ($field['nature'])
                 {
                   case 'integer':
-                    if (!isset($$var))
+                    if (!isset($$var) || ($$var === ''))
                     {
-                      $$var = 'NULL';
+                      // Try and set it to NULL when we can because there will be cases when we
+                      // want to distinguish between NULL and 0 - especially when the field
+                      // is a genuine integer.
+                      $$var = ($field['is_nullable']) ? 'NULL' : 0;
                     }
                     break;
                   default:
