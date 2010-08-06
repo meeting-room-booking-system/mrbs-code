@@ -766,6 +766,9 @@ if (isset($Action) && ($Action == "Update"))
     $r = sql_command($operation);
     if ($r == -1)
     {
+      // Get the error message before the print_header() call because the print_header()
+      // function can contain SQL queries and so reset the error message.
+      $error_message = sql_error();
       print_header(0, 0, 0, "", "");
   
       // This is unlikely to happen in normal operation. Do not translate.
@@ -774,7 +777,7 @@ if (isset($Action) && ($Action == "Update"))
       print "  <fieldset>\n";
       print "  <legend></legend>\n";
       print "    <p class=\"error\">Error updating the $tbl_users table.</p>\n";
-      print "    <p class=\"error\">" . sql_error() . "</p>\n";
+      print "    <p class=\"error\">$error_message</p>\n";
       print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
       print "  </fieldset>\n";
       print "</form>\n";
