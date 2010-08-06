@@ -711,7 +711,7 @@ if (isset($Action) && ($Action == "Update"))
         switch ($field['nature'])
         {
           case 'integer':
-            if (!isset($value))
+            if (!isset($value) || ($value == ''))
             {
               $value = 'NULL';
             }
