@@ -66,7 +66,20 @@ $(function() {
   // browser setting for which a datepicker localisation exists.   If the MRBS default 
   // language setting doesn't exist, then at least we get one the user prefers according
   // to the browser settings.
-  echo "$.datepicker.setDefaults($.datepicker.regional['$default_language_tokens']);\n";
+  
+  // Some special cases
+  $default_lang = strtolower($default_language_tokens);
+  switch ($default_lang)
+  {
+    case 'en':
+      // There is no 'en' localisation!  It is the default.
+      $default_lang = '';
+      break;
+    default:
+      break;
+  }
+  
+  echo "$.datepicker.setDefaults($.datepicker.regional['$default_lang']);\n";
   $datepicker_langs = $langs;
   asort($datepicker_langs, SORT_NUMERIC);
   foreach ($datepicker_langs as $lang => $qual)
@@ -84,7 +97,7 @@ $(function() {
   }
   if ($disable_automatic_language_changing)
   {
-    echo "$.datepicker.setDefaults($.datepicker.regional['$default_language_tokens']);\n";
+    echo "$.datepicker.setDefaults($.datepicker.regional['$default_lang']);\n";
   }
   ?>
   $.datepicker.setDefaults({
