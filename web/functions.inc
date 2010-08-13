@@ -289,59 +289,116 @@ function fromPeriodString($start_period, &$units, $dur_units)
 }
 
 
-
+// Generates a date selector for use on a form.   If JavaScript is enabled
+// then it will generate a calendar picker using jQuery UI datepicker.   If not,
+// it will generate three separate select boxes, one each for day, month and year.
+//
+// Whether or not JavaScript is enabled the date is passed back in three separate
+// variables:  ${prefix}day, ${prefix}month and ${prefix}year
+//
+// The function passes back three separate variables, rather than a single date 
+// variable, partly for compatibility with previous implementations of genDateSelector()
+// and partly because it's easier to do this for the non-JavaScript version.
 function genDateSelector($prefix, $day, $month, $year)
 {
-  if($day   == 0)
+  // Make sure we've got a date
+  if (empty($day) or empty($month) or empty($year))
   {
-    $day = date("d");
-  }
-  if($month == 0)
-  {
+    $day   = date("d");
     $month = date("m");
+    $year  = date("Y");
   }
-  if ($year  == 0)
-  {
-    $year = date("Y");
-  }
+
+  // Cast the dates to ints to remove any leading zeroes (otherwise
+  // JavaScript will treat them as octal numbers)
+  $day = (int) $day;
+  $month = (int) $month;
+  $year = (int) $year;
   
-  echo "
-                  <select name=\"${prefix}day\">";
-   
-  for ($i = 1; $i <= 31; $i++)
-  {
-    echo "
-                    <option" . ($i == $day ? " selected=\"selected\"" : "") . ">$i</option>";
-  }
-
-  echo "
-                  </select>
-
-                  <select name=\"${prefix}month\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">";
-
-  for ($i = 1; $i <= 12; $i++)
-  {
-    $m = utf8_strftime("%b", mktime(0, 0, 0, $i, 1, $year));
-      
-    print "
-                    <option value=\"$i\"" . ($i == $month ? " selected=\"selected\"" : "") . ">$m</option>";
-  }
-
-  echo "
-                  </select>
-             <select name=\"${prefix}year\" onchange=\"ChangeOptionDays(this.form,'$prefix')\">";
-
+  // Get a month for use with JavaScript (where the months run from 0 to 11)
+  $month_js = $month - 1;
+  
+  // First and last dates to show in year select
   $min = min($year, date("Y")) - 5;
   $max = max($year, date("Y")) + 5;
-
+  
+  // Generate a unique suffix so that we'll be able to distinguish between
+  // multiple date selectors on the same page
+  $suffix = "_" . uniqid();
+  $datepicker_baseid = "datepicker" . $suffix;
+  
+  // We'll put the date selector in a span.    First of all we'll generate
+  // day, month and year selectors.   These will be used if JavaScript is
+  // disabled.    If JavaScript is enabled it will overwrite these with a
+  // datepicker calendar.
+  echo "<span id=\"dateselector$suffix\">\n";
+  // the day selector
+  echo "<select name=\"${prefix}day\">\n";
+  for ($i = 1; $i <= 31; $i++)
+  {
+    echo "<option" . ($i == $day ? " selected=\"selected\"" : "") . ">$i</option>\n";
+  }
+  echo "</select>\n";
+  // the month selector
+  echo "<select name=\"${prefix}month\">\n";
+  for ($i = 1; $i <= 12; $i++)
+  {
+    $m = utf8_strftime("%b", mktime(0, 0, 0, $i, 1, $year));  
+    echo "<option value=\"$i\"" . ($i == $month ? " selected=\"selected\"" : "") . ">$m</option>\n";
+  }
+  echo "</select>\n";
+  // the year selector
+  echo "<select name=\"${prefix}year\">\n";
   for ($i = $min; $i <= $max; $i++)
   {
-    print "
-                    <option value=\"$i\"" . ($i == $year ? " selected=\"selected\"" : "") . ">$i</option>";
+    echo "<option value=\"$i\"" . ($i == $year ? " selected=\"selected\"" : "") . ">$i</option>\n";
   }
+  echo "</select>\n";
+  echo "</span>\n";
+  
+  // Now use JavaScript to overwrite the contents of this span with a datepicker calendar
+  ?>
+  <script type="text/javascript">
 
-  echo "
-                  </select>";
+	$(function() {
+		$("#<?php echo $datepicker_baseid ?>").datepicker({yearRange: <?php echo "'$min:$max'" ?>,
+		                                                   altField: '#<?php echo $datepicker_baseid ?>_alt',
+		                                                  });
+		<?php
+	  // Populate the input fields with the initial values
+	  ?>
+	  var initial_date = new Date(<?php echo "$year, $month_js, $day" ?>);
+	  var dateFormat = $("#<?php echo $datepicker_baseid ?>").datepicker( "option", "dateFormat" );
+	  document.getElementById(<?php echo "'${datepicker_baseid}'" ?>).value = $.datepicker.formatDate(dateFormat, initial_date);
+	  document.getElementById(<?php echo "'${datepicker_baseid}_alt_day'" ?>).value = <?php echo $day ?>;
+    document.getElementById(<?php echo "'${datepicker_baseid}_alt_month'" ?>).value = <?php echo $month ?>;
+    document.getElementById(<?php echo "'${datepicker_baseid}_alt_year'" ?>).value = <?php echo $year ?>;
+	  $(".ui-datepicker").draggable();
+	});
+ 
+	
+	var dateselector = document.getElementById(<?php echo "'dateselector$suffix'" ?>);
+	var datepicker_html = '<input class="date" type="text" id="<?php echo $datepicker_baseid ?>">\n';
+	<?php
+	// The next input is disabled because we don't need to pass the value through to
+  // the form and we don't want the value cluttering up the URL (it's a GET).
+  // It's just used as a holder for the date in a known format so that it can
+  // then be used by datepicker_close() to populate the following three inputs.
+  ?>
+	datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt"'
+	datepicker_html += ' name="<?php echo $prefix ?>_alt"';
+	datepicker_html += ' value="<?php echo "${year}-${month}-${day}" ?>"';
+	datepicker_html += ' disabled="disabled">\n';
+	<?php
+	// These three inputs we do want
+	?>
+	datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt_day" name="<?php echo $prefix ?>day">\n';
+	datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt_month" name="<?php echo $prefix ?>month">\n';
+	datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt_year" name="<?php echo $prefix ?>year">\n';
+	dateselector.innerHTML = datepicker_html;
+	
+	</script>
+  <?php
 }
 
 // Error handler - this is used to display serious errors such as database
