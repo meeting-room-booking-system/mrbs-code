@@ -322,16 +322,13 @@ function genDateSelector($prefix, $day, $month, $year)
   $min = min($year, date("Y")) - 5;
   $max = max($year, date("Y")) + 5;
   
-  // Generate a unique suffix so that we'll be able to distinguish between
-  // multiple date selectors on the same page
-  $suffix = "_" . uniqid();
-  $datepicker_baseid = "datepicker" . $suffix;
+  $datepicker_baseid = "${prefix}datepicker";
   
   // We'll put the date selector in a span.    First of all we'll generate
   // day, month and year selectors.   These will be used if JavaScript is
   // disabled.    If JavaScript is enabled it will overwrite these with a
   // datepicker calendar.
-  echo "<span id=\"dateselector$suffix\">\n";
+  echo "<span id=\"${prefix}dateselector\">\n";
   // the day selector
   echo "<select name=\"${prefix}day\">\n";
   for ($i = 1; $i <= 31; $i++)
@@ -377,7 +374,7 @@ function genDateSelector($prefix, $day, $month, $year)
 	});
  
 	
-	var dateselector = document.getElementById(<?php echo "'dateselector$suffix'" ?>);
+	var dateselector = document.getElementById(<?php echo "'${prefix}dateselector'" ?>);
 	var datepicker_html = '<input class="date" type="text" id="<?php echo $datepicker_baseid ?>">\n';
 	<?php
 	// The next input is disabled because we don't need to pass the value through to
