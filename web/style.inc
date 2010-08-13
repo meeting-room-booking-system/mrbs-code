@@ -30,6 +30,8 @@
     <!--[if lte IE 6]>
     <link rel="stylesheet" href="mrbs-ielte6.css" type="text/css">
     <![endif]-->
+    
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/sunny/jquery-ui.css" rel="stylesheet" type="text/css">
 
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo get_charset(); ?>">
     <meta name="robots" content="noindex">
