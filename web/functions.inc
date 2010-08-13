@@ -359,7 +359,7 @@ function genDateSelector($prefix, $day, $month, $year)
 
 	$(function() {
 		$("#<?php echo $datepicker_baseid ?>").datepicker({yearRange: <?php echo "'$min:$max'" ?>,
-		                                                   altField: '#<?php echo $datepicker_baseid ?>_alt',
+		                                                   altField: '#<?php echo $datepicker_baseid ?>_alt'
 		                                                  });
 		<?php
 	  // Populate the input fields with the initial values
