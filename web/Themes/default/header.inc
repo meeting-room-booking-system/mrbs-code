@@ -44,9 +44,20 @@ function print_theme_header($day, $month, $year, $area, $room)
 ?>
     <title><?php echo get_vocab("mrbs") ?></title>
     
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/i18n/jquery-ui-i18n.min.js"></script>
+    <?php
+    // We are using the jQuery UI library, which has been custom built to include the following components:
+    //   - Core
+    //   - Widget
+    //   - Mouse
+    //   - Draggable
+    //   - Datepicker
+    // If you need any other components you will need to rebuild the custom UI library
+    // See http://jqueryui.com/
+    ?>
+    
+    <script type="text/javascript" src="jquery/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="jquery/ui/jquery-ui-1.8.4.custom.min.js"></script>
+    <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
     
     <script type="text/javascript">
 
