@@ -8,6 +8,17 @@ $search_str = get_form_var('search_str', 'string');
 $search_pos = get_form_var('search_pos', 'int');
 $total = get_form_var('total', 'int');
 $advanced = get_form_var('advanced', 'int');
+// Get the start day/month/year and make them the current day/month/year
+$day = get_form_var('from_day', 'int');
+$month = get_form_var('from_month', 'int');
+$year = get_form_var('from_year', 'int');
+// If we haven't been given a sensible date then use today's
+if (!isset($day) || !isset($month) || !isset($year) || !checkdate($month, $day, $year))
+{
+  $day   = date("d");
+  $month = date("m");
+  $year  = date("Y");
+}
 
 // Check the user is authorised for this page
 checkAuthorised();
@@ -36,8 +47,10 @@ if (!empty($advanced))
         <input type="text" id="search_str" name="search_str">
       </div>   
       <div id="div_search_from">
-        <label><?php echo get_vocab("from") ?>:</label>
-        <?php genDateSelector ("", $day, $month, $year) ?>
+        <?php
+        echo "<label for=\"from_datepicker\">" . get_vocab("from") . ":</label>\n";
+        genDateSelector ("from_", $day, $month, $year);
+        ?>
       </div> 
       <div id="search_submit">
         <input class="submit" type="submit" value="<?php echo get_vocab("search_button") ?>">
