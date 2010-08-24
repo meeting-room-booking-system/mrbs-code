@@ -277,6 +277,7 @@ function mrbsCreateEntry($table, $data)
         // pgsql doesn't like empty strings
         $sql_col[] = $key;
         $sql_val[] = (empty($data[$key])) ? "'0'" : "'" . addslashes($data[$key]) . "'";
+        break;
           
       // special case - rep_num_weeks
       case 'rep_num_weeks':
