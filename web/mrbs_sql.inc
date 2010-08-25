@@ -822,22 +822,24 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
     }
   }
 
-  $entry_fields = sql_field_info($tbl_entry);
-  $repeat_fields = sql_field_info($tbl_repeat);
+  $table = ($series) ? $tbl_repeat : $tbl_entry;
+  $table_fields = sql_field_info($table);
 
+  // Build an array of the field names in the repeat table so that
+  // we'll be able to do some sanity checking later
+  $repeat_fields = sql_field_info($tbl_repeat);
   $rep_fields = array();
   foreach ($repeat_fields as $field)
   {
     $rep_fields[$field['name']] = 1;
   }
 
-  $t_or_e = $series ? "T" : "E";
-
   $terms = array("M.room_name",
                  "M.area_id",
                  "A.area_name",
-                 "($t_or_e.end_time - $t_or_e.start_time) AS duration");
-  foreach ($entry_fields as $field)
+                 "(end_time - start_time) AS duration");
+                 
+  foreach ($table_fields as $field)
   {
     switch ($field['name'])
     {
@@ -845,17 +847,15 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
       case 'entry_type':
         // Nothing to do
         break;
-
-      case 'status':
+        
       case 'repeat_id':
-        array_push($terms, "E.".$field['name']);
+      case 'status':
+        // repeat_id and status only exist in the entry table
+        array_push($terms, $field['name']);
         break;
 
       case 'timestamp':
-        array_push($terms,
-                   sql_syntax_timestamp_to_unix(($series ? "T" : "E" ).
-                                                ".timestamp").
-                   "AS last_updated");
+        array_push($terms, sql_syntax_timestamp_to_unix("timestamp") . "AS last_updated");
         break;
 
       case 'info_time':
@@ -863,48 +863,35 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
       case 'info_text':
         if ($series)
         {
-          array_push($terms, "T.".$field['name']." AS repeat_".$field['name']);
+          array_push($terms, $field['name'] . " AS repeat_".$field['name']);
         }
         else
         {
-          array_push($terms, "E.".$field['name']." AS entry_".$field['name']);
+          array_push($terms, $field['name'] . " AS entry_".$field['name']);
         }
         break;
 
       default:
-        if (!array_key_exists($field['name'], $rep_fields))
+        // These are (a) all the standard fields which are common to the entry
+        // and repeat tables and (b) all the customn fields, which should be
+        // common to the two tables (we will do a check to make sure)
+        if (!$series && !array_key_exists($field['name'], $rep_fields))
         {
+          // If this is the entry table then check that the custom field also
+          // exists in the rpeat table
           fatal_error(0, "Custom fields problem, '".$field['name']."' exists in entry table but not in repeat table");
         }
         
-        array_push($terms, ($series ? "T" : "E" ).".".$field['name']);
+        array_push($terms, "T." . $field['name']);
         break;
     }
   }
-  if ($series)
-  {
-    array_push($terms,
-               "T.rep_type",
-               "T.end_date",
-               "T.rep_opt",
-               "T.rep_num_weeks");
-    
-    $sql = "SELECT ".implode(",\n       ",$terms)."
-FROM $tbl_repeat T, $tbl_room M, $tbl_area A
-WHERE T.room_id = M.id
-      AND M.area_id = A.id
-      AND T.id=$id
-";
-  }
-  else
-  {
-    $sql = "SELECT ".implode(",\n       ",$terms)."
-FROM  $tbl_entry E, $tbl_room M, $tbl_area A
-WHERE E.room_id = M.id
-        AND M.area_id = A.id
-        AND E.id=$id
-";
-  }
+  
+  $sql = "SELECT " . implode(", ",$terms)."
+            FROM $table T, $tbl_room M, $tbl_area A
+           WHERE T.room_id = M.id
+             AND M.area_id = A.id
+             AND T.id=$id";
 
   $res = sql_query($sql);
   if (! $res)
