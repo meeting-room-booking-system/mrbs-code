@@ -873,7 +873,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
 
       default:
         // These are (a) all the standard fields which are common to the entry
-        // and repeat tables and (b) all the customn fields, which should be
+        // and repeat tables and (b) all the custom fields, which should be
         // common to the two tables (we will do a check to make sure)
         if (!$series && !array_key_exists($field['name'], $rep_fields))
         {
