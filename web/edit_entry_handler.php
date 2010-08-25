@@ -29,6 +29,10 @@ $rep_id = get_form_var('rep_id', 'int');
 $rep_day = get_form_var('rep_day', 'array'); // array of bools
 $rep_num_weeks = get_form_var('rep_num_weeks', 'int');
 $private = get_form_var('private', 'string'); // bool, actually
+// Get the start day/month/year and make them the current day/month/year
+$day = get_form_var('start_day', 'int');
+$month = get_form_var('start_month', 'int');
+$year = get_form_var('start_year', 'int');
 
 // Get the information about the fields in the entry table
 $fields = sql_field_info($tbl_entry);
@@ -103,14 +107,6 @@ if (isset($all_day) && ($all_day == "yes"))
   }
 }
 
-// If we dont know the right date then make it up 
-if (!isset($day) or !isset($month) or !isset($year))
-{
-  $day   = date("d");
-  $month = date("m");
-  $year  = date("Y");
-}
-
 // Set up the return URL.    As the user has tried to book a particular room and a particular
 // day, we must consider these to be the new "sticky room" and "sticky day", so modify the 
 // return URL accordingly.
@@ -140,6 +136,13 @@ if (empty($returl) || ($returl_base[0] == "edit_entry.php") || ($returl_base[0] 
 else
 {
   $returl = $returl_base[0];
+}
+
+// If we haven't been given a sensible date then get out of here and don't trey and make a booking
+if (!isset($day) || !isset($month) || !isset($year) || !checkdate($month, $day, $year))
+{
+  header("Location: $returl");
+  exit;
 }
 
 // Now construct the new query string

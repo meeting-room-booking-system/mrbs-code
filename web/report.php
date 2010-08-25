@@ -707,20 +707,18 @@ if (!$output_as_csv)
       <legend><?php echo get_vocab("report_on");?></legend>
       
         <div id="div_report_start">
-          <label><?php echo get_vocab("report_start");?>:</label>
-          <?php genDateSelector("From_",
-                                $From_day,
-                                $From_month,
-                                $From_year); ?>
+          <?php
+          echo "<label for=\"From_datepicker\">" . get_vocab("report_start") . ":</label>\n";
+          genDateSelector("From_", $From_day, $From_month, $From_year);
+          ?>
         
         </div>
       
         <div id="div_report_end">
-          <label><?php echo get_vocab("report_end");?>:</label>
-          <?php genDateSelector("To_",
-                                $To_day,
-                                $To_month,
-                                $To_year); ?>
+          <?php
+          echo "<label for=\"To_datepicker\">" . get_vocab("report_end") . ":</label>\n";
+          genDateSelector("To_", $To_day, $To_month, $To_year);
+          ?>
         </div>
       
         <div id="div_areamatch">                  

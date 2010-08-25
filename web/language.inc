@@ -5,6 +5,11 @@
 // A map is needed to convert from the HTTP language specifier to a
 // locale specifier for Windows
 //
+// The ordering of this array is important as it is also used to map in the
+// reverse direction, ie to convert a Windows style locale into an xx-yy style
+// locale by finding the first occurence of a value and then using the
+// corresponding key.
+//
 // These locale TLAs found at:
 // http://www.microsoft.com/globaldev/reference/winxp/langtla.mspx
 $lang_map_windows = array
@@ -328,6 +333,7 @@ $aix_utf8_converters = array
 );
 
 
+
 ////////////////////////////////////////////////////////////////////////
 // Language token handling
 
@@ -524,7 +530,7 @@ else
     {
       // Convert locale=xx-xX or xx_Xx or xx_XxXx (etc.) to xx_XX[XX]; this is highly
       // dependent on the machine's installed locales
-      $locale = strtolower(substr($locale,0,2))."_".strtoupper(substr($locale,3));
+      $locale = locale_format($locale, '_');
     }
     if ($unicode_encoding)
     {
@@ -794,6 +800,23 @@ function utf8_substr($str,$start)
   } else {
     return join("", array_slice($ar[0], $start));
   }
+}
+
+// Format a locale which could be xx-xX or xx_Xx or xx_XxXx (etc.) into a
+// standardised format consiting of a lower case language followed, if applicable,
+// by an upper case country, separated by $separator.    Typically the separator
+// will be '-' or '_'.
+function locale_format($locale, $separator)
+{
+  if (strlen($locale) == 2)
+  {
+    $locale = strtolower($locale);
+  }
+  else
+  {
+    $locale = strtolower(substr($locale,0,2)) . $separator . strtoupper(substr($locale,3));
+  }
+  return $locale;
 }
 
 ?>

@@ -13,7 +13,7 @@ $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');
 
 // If we don't know the right date then use today's date
-if (!isset($day) or !isset($month) or !isset($year))
+if (empty($day) or empty($month) or empty($year))
 {
   $day   = date("d");
   $month = date("m");

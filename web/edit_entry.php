@@ -552,8 +552,10 @@ else
     </div>
 
     <div id="div_date">
-      <label><?php echo get_vocab("date")?>:</label>
-      <?php gendateselector("", $start_day, $start_month, $start_year) ?>
+      <?php
+      echo "<label for=\"start_datepicker\">" . get_vocab("date") . ":</label>\n";
+      gendateselector("start_", $start_day, $start_month, $start_year);
+      ?>
     </div>
 
     <?php 
@@ -906,8 +908,10 @@ else
       </div>
 
       <div id="rep_end_date">
-        <label><?php echo get_vocab("rep_end_date")?>:</label>
-        <?php genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year) ?>
+        <?php
+        echo "<label for=\"rep_end_datepicker\">" . get_vocab("rep_end_date") . ":</label>\n";
+        genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year);
+        ?>
       </div>
       
       <div id="rep_day">
