@@ -9,7 +9,8 @@ function print_theme_header($day, $month, $year, $area, $room)
          $search_str, $locale_warning, $provisional_enabled;
   global $tbl_entry, $tbl_room, $tbl_area;
   global $PHP_SELF, $view_week_number, $weekstarts;
-  global $langs, $disable_automatic_language_changing, $default_language_tokens;
+  global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
+  global $lang_map_windows, $langs;
   
   $page = basename($PHP_SELF, ".php" );
 
@@ -67,15 +68,20 @@ function print_theme_header($day, $month, $year, $area, $room)
 ?>
 $(function() {
   <?php
-  // We set the regional setting, by
-  // - setting the MRBS default language
-  // - then setting the locales in increasing order of browser preference
-  // - then setting the MRBS default language setting again if automatic language
-  //   changing is disabled
-  // This algorithm is designed to ensure that datepicker is set to the most preferred
-  // browser setting for which a datepicker localisation exists.   If the MRBS default 
-  // language setting doesn't exist, then at least we get one the user prefers according
-  // to the browser settings.
+  // We set the regional setting by setting locales in reverse order of priority.
+  // If you try and set a datepicker locale that doesn't exist, then nothing is
+  // changed and the regional setting stays as it was before.   The reverse order
+  // of priority is:
+  // - the MRBS default language
+  // - locales taken from the browser in increasing order of browser preference
+  // - then, if automatic language changing is disabled, 
+  //      - the MRBS default language setting again
+  //      - the language part of the override_locale
+  //      - the full override_locale
+  // This algorithm is designed to ensure that datepicker is set to the closest
+  // available locale to that specified in the config file.   If automatic language
+  // changing is disabled, we fall back to a browser specified locale if the locale
+  // in the config file is not available in datepicker.
   
   // Some special cases
   $default_lang = strtolower($default_language_tokens);
@@ -95,19 +101,39 @@ $(function() {
   foreach ($datepicker_langs as $lang => $qual)
   {
     // Get the locale in the format that datepicker likes: language lower case
-    // and country upper case
-    $components = explode('-', $lang);
-    $components[0] = strtolower($components[0]);
-    if (count($components) > 1)
-    {
-      $components[1] = strtoupper($components[1]);
-    }
-    $lang = implode('-', $components);
-    echo "$.datepicker.setDefaults($.datepicker.regional['$lang']);\n";
+    // and country upper case (xx-XX)
+    $datepicker_locale = locale_format($lang, '-');
+    echo "$.datepicker.setDefaults($.datepicker.regional['$datepicker_locale']);\n";
   }
   if ($disable_automatic_language_changing)
   {
+    // They don't want us to use the browser language, so we'll set the datepicker
+    // locale setting back to the default language (as a fall-back) and then we'll
+    // try and set it to the override_locale
     echo "$.datepicker.setDefaults($.datepicker.regional['$default_lang']);\n";
+    if (!empty($override_locale))
+    {
+      $server_os = get_server_os();
+      if ($server_os == 'windows')
+      {
+        // If the server is running on Windows we'll have to try and translate the 
+        // Windows style locale back into an xx-YY locale
+        $datepicker_locale = array_search($override_locale, $lang_map_windows);
+      }
+      else
+      {
+        $datepicker_locale = $override_locale;
+      }
+      if (!empty($datepicker_locale))  // in case the array_search() returned FALSE
+      {
+        $datepicker_locale = locale_format($datepicker_locale, '-');
+        $datepicker_lang = substr($datepicker_locale, 0, 2);
+        // First we'll try and get the correct language and then we'll try and
+        // overwrite that with the correct country variant
+        echo "$.datepicker.setDefaults($.datepicker.regional['$datepicker_lang']);\n";
+        echo "$.datepicker.setDefaults($.datepicker.regional['$datepicker_locale']);\n";
+      }
+    }
   }
   ?>
   $.datepicker.setDefaults({
