@@ -155,6 +155,7 @@ if (isset($id))
       
       case 'repeat_id':
         $rep_id      = $row['repeat_id'];
+        break;
         
       case 'create_by':
         // If we're copying an existing entry then we need to change the create_by (they could be
