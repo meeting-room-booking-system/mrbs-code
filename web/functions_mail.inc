@@ -930,8 +930,10 @@ function getPreviousEntryData($id, $series)
       $mail_previous['duration'] = $row['tbl_r_duration'] -
         cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_time']);    
     }
+    // Don't translate the units at this stage, as they'll get translated into the
+    // browser language rather than the mail language.   We'll translate them later.
     toPeriodString($mail_previous['start_period'],
-                   $mail_previous['duration'], $mail_previous['dur_units']);
+                   $mail_previous['duration'], $mail_previous['dur_units'], FALSE);
   }
   // If we don't use periods
   else
@@ -960,8 +962,12 @@ function getPreviousEntryData($id, $series)
       $mail_previous['duration'] = $row['tbl_r_duration'] -
         cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_time']);
     }
-    toTimeString($mail_previous['duration'], $mail_previous['dur_units']);
+    // Don't translate the units at this stage, as they'll get translated into the
+    // browser language rather than the mail language.   We'll translate them later.
+    toTimeString($mail_previous['duration'], $mail_previous['dur_units'], FALSE);
   }
+  // Now translate the duration units into the mail language
+  $mail_previous['dur_units'] = get_mail_vocab($mail_previous['dur_units']);
   
   
   // Next, get the repeat information if it's a series (and if it's not
