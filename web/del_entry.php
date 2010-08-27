@@ -1,6 +1,13 @@
 <?php
 // $Id$
 
+// Deletes an entry, or a series.    The $id is always the id of
+// an individual entry.   If $series is set then the entire series
+// of wich $id is a member should be deleted. [Note - this use of
+// $series is inconsistent with use in the rest of MRBS where it
+// means that $id is the id of an entry in the repeat table.   This
+// should be fixed sometime.]
+
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
@@ -62,7 +69,7 @@ if ($info = mrbsGetBookingInfo($id, FALSE, TRUE))
     {
       require_once "functions_mail.inc";
       // Gather all fields values for use in emails.
-      $mail_previous = getPreviousEntryData($id, $series);
+      $mail_previous = getPreviousEntryData($id, FALSE);
     }
     sql_begin();
     $result = mrbsDelEntry(getUserName(), $id, $series, 1);
