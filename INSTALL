@@ -31,14 +31,30 @@ If you are using PHP as an Apache module, you probably want to ensure that
 the Apache MaxRequestsPerChild is not set to 0, in case of undetected memory
 leaks in PHP or MRBS.
 
+OVERVIEW
+---------------------------------------------------------------------------
+The steps involved in installing MRBS are:
 
-FILE UNPACKING
+1.  Installing the MRBS files on your web server
+2.  Creating the MRBS tables in your database
+3.  Configuring MRBS
+
+After that you can then point your browser at MRBS and start creating areas
+and rooms.
+
+
+INSTALLING THE MRBS FILES
 ---------------------------------------------------------------------------
 To install MRBS, just unpack the distribution into a temporary directory,
 then copy the files in the "web" subdirectory into a new directory somewhere
 your web server can find them.
 
-For example:
+If you are using a remote webserver, unpack the files into a temporary
+directory on your local machine and then upload them to suitable directory
+on your webserver, for example mydomain.com/mrbs
+
+If you are using a Unix/Linux webserver to which you have access, then 
+an example of the installation might be:
 
 Unpack the software into a new temporary directory, something like this:
     $ tar -xvzf ~/download/mrbs-1.0.tgz       (or whatever version)
@@ -56,12 +72,20 @@ distribution somewhere your web server can find it.  For example:
     $ cp -r web /var/lib/apache/htdocs/mrbs
 
     
-DATABASE SETUP
+CREATING THE MRBS TABLES IN YOUR DATABASE
 ---------------------------------------------------------------------------
 For a new install:
 
-You can place the MRBS database tables in an existing database or
-create a new database with the following:
+If you are using a remote webserver you should use your database
+administration program (eg phpMyAdmin in your control panel) to create the
+MRBS tables, by executing the contents of tables.my.sql.   For example, if
+you are using phpMyAdmin copy the contents of tables.my.sql into the SQL
+tab of phpMyAdmin and execute it as an SQL query.   This assumes that you
+have already created a database - if not you should create a database
+first.
+
+If you are using a Unix/Linux webserver to which you have access, then the
+procedure might be:
 
 [MySQL]         $ mysqladmin create mrbs
 [PostgreSQL]    $ createdb mrbs
@@ -175,7 +199,7 @@ should then do the rest and display your coffee machine field on the room
 pages.
 
 
-APPLICATION SETUP
+CONFIGURING MRBS
 ---------------------------------------------------------------------------
 Next, you will need to customize the file "config.inc.php"...
 
