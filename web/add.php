@@ -33,18 +33,12 @@ if ($type == "area")
   {
     $error = "invalid_area_name";
   }
-  // If so, insert the area into the database
+  // If so, insert the area into the database.   We just insert the area name
+  // at this stage.  The per-area settings will be NULL, which will be translated
+  // by get_area_settings() into the default values for new areas.
   else
   {
-    // Convert booleans to 1 or 0, as the fields are tinyints/smallints
-    $private_enabled = ($private_enabled) ? 1 : 0;
-    $private_default = ($private_default) ? 1 : 0;
-    $private_mandatory = ($private_mandatory) ? 1 : 0;
-    // Need to make sure the private settings are not NULL.   We can't specify a default
-    // in the SQL when creating the table because the default is a variable in the config file
-    $sql = "INSERT INTO $tbl_area 
-            (area_name, private_enabled, private_default, private_mandatory, private_override) 
-            VALUES ('$area_name_q', $private_enabled, $private_default, $private_mandatory, '$private_override')";
+    $sql = "INSERT INTO $tbl_area (area_name) VALUES ('$area_name_q')";
     if (sql_command($sql) < 0)
     {
       fatal_error(1, sql_error());

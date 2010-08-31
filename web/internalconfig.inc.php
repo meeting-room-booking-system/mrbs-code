@@ -84,6 +84,17 @@ $standard_fields['repeat'] = array('id',
                                    'info_time',
                                    'info_user',
                                    'info_text');
+                                   
+/********************************************************
+ * Miscellaneous
+ ********************************************************/
+ // Save some of the default per-area settings for later use.   We
+ // do this because they will get overwritten by the values for
+ // the current area in a moment - in standard_vars.inc by a call to 
+ // get_area_settings().   [This isn't a very elegant way of handling
+ // per-area settings and perhaps ought to be revisited at some stage]
+ $area_defaults = array();
+ $area_defaults['provisional_enabled'] = $provisional_enabled;
                                
 /********************************************************
  * PHP System Configuration - internal use, do not change
