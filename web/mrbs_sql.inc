@@ -23,10 +23,11 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 
   $user = getUserName();
   // Select any meetings which overlap ($starttime,$endtime) for this room:
-  $sql = "SELECT id, name, start_time, create_by, private
-              FROM $tbl_entry WHERE
-                 start_time < $endtime AND end_time > $starttime
-          AND room_id = $room_id";
+  $sql = "SELECT id, name, start_time, create_by, status
+            FROM $tbl_entry
+           WHERE start_time < $endtime
+             AND end_time > $starttime
+             AND room_id = $room_id";
 
   if ($ignore > 0)
   {
@@ -71,7 +72,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
                                 $row['start_time']);
     }
     
-    if (is_private_event($row['private']) &&
+    if (is_private_event($row['status'] & STATUS_PRIVATE) &&
          !getWritable($row['create_by'], $user, $room_id))
     {
        $row['name'] = get_vocab("private");
@@ -265,12 +266,6 @@ function mrbsCreateEntry($table, $data)
         $sql_col[] = $key;
         $sql_val[] = "'" . addslashes($data[$key]) . "'";
         break;
-          
-      // booleans
-      case 'private':
-        $sql_col[] = $key;
-        $sql_val[] = ($data[$key]) ? 1 : 0;
-        break;
       
       // special case - rep_opt
       case 'rep_opt':
@@ -353,7 +348,6 @@ function mrbsCreateEntry($table, $data)
  * $name          - Name
  * $type          - Type (Internal/External)
  * $description   - Description
- * $private       - Private Booking (TRUE/FALSE)
  * $status        - Status code of the entry
  * $custom_fields - an array of any custom fields
  * 
@@ -363,7 +357,7 @@ function mrbsCreateEntry($table, $data)
  */
 function mrbsCreateSingleEntry($start_time, $end_time, $entry_type, $repeat_id,
                                $room_id, $create_by, $name, $type, $description,
-                               $private, $status, $custom_fields)
+                               $status, $custom_fields)
 {
   global $tbl_entry;
   
@@ -377,7 +371,6 @@ function mrbsCreateSingleEntry($start_time, $end_time, $entry_type, $repeat_id,
   $data['name'] = $name;
   $data['type'] = $type;
   $data['description'] = $description;
-  $data['private'] = $private;
   $data['status'] = $status;
   $data['custom_fields'] = $custom_fields;
   
@@ -410,20 +403,16 @@ function mrbsCreateSingleEntry($start_time, $end_time, $entry_type, $repeat_id,
  * $type          - Type (Internal/External)
  * $description   - Description
  * $rep_num_weeks - (missing)
- * $private       - Private Booking (bool)
+ * $status        - status code
  * $custom_fields - an array of any custom fields
  *
- * (NOTE: there is no status code passed, because the repeat table
- *  does not have a status field.  Only the individual members of 
- *  a series can have a status)
- * 
  * Returns:
  *   0        - An error occured while inserting the entry
  *   non-zero - The entry's ID
  */
 function mrbsCreateRepeatEntry($start_time, $end_time, $rep_type, $end_date,
                                $rep_opt, $room_id, $create_by, $name, $type,
-                               $description, $rep_num_weeks, $private, $custom_fields)
+                               $description, $rep_num_weeks, $status, $custom_fields)
 {
   global $tbl_repeat;
   
@@ -439,7 +428,7 @@ function mrbsCreateRepeatEntry($start_time, $end_time, $rep_type, $end_date,
   $data['type'] = $type;
   $data['description'] = $description;
   $data['rep_num_weeks'] = $rep_num_weeks;
-  $data['private'] = $private;
+  $data['status'] = $status;
   $data['custom_fields'] = $custom_fields;
   
   $result = mrbsCreateEntry($tbl_repeat, $data);
@@ -635,7 +624,6 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
  * $name        - Name
  * $type        - Type (Internal/External)
  * $description - Description
- * $private     - Private Booking (bool)
  * $status      - Status code
  * $custom_fields - an array of any custom fields
  * 
@@ -649,12 +637,11 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
 function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                    $rep_enddate, $rep_opt, $room_id, $owner,
                                    $name, $type, $description, $rep_num_weeks,
-                                   $private, $status, $custom_fields)
+                                   $status, $custom_fields)
 {
   global $max_rep_entrys;
   
   $result = array('id' => 0, 'series' => FALSE);
-  $private = $private ? 1 : 0 ;
    
   $reps = mrbsGetRepeatEntryList($starttime, $rep_enddate,
                                  $rep_type, $rep_opt,
@@ -670,7 +657,7 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
   {
     $id = mrbsCreateSingleEntry($starttime, $endtime, 0, 0,
                                 $room_id, $owner, $name, $type,
-                                $description, $private, $status, $custom_fields);
+                                $description, $status, $custom_fields);
     $result['id'] = $id;
     $result['series'] = FALSE;
     return $result;
@@ -679,7 +666,7 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
   $id = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type,
                               $rep_enddate, $rep_opt, $room_id,
                               $owner, $name, $type, $description,
-                              $rep_num_weeks, $private, $custom_fields);
+                              $rep_num_weeks, $status, $custom_fields);
     
   if ($id)
   {
@@ -699,7 +686,6 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
                                       $name,
                                       $type,
                                       $description,
-                                      $private,
                                       $status,
                                       $custom_fields);
     }
@@ -779,20 +765,38 @@ function mrbsUpdateMoreInfo($id, $series, $user, $note)
 // Returns FALSE on failure, TRUE on success
 function mrbsConfirmEntry($id, $series)
 {
-  global $tbl_entry;
+  global $tbl_entry, $tbl_repeat;
   
-  $sql = "UPDATE $tbl_entry 
-          SET status=". STATUS_CONFIRMED . "
-          WHERE status!=" . STATUS_CONFIRMED;
   if ($series)
   {
-    $sql .= " AND repeat_id=$id";
+    // First update the repeat table
+    $sql = "UPDATE $tbl_repeat 
+               SET status=status&". ~STATUS_AWAITING_APPROVAL . "
+             WHERE id=$id
+             LIMIT 1";
+    if (sql_command($sql) > 0)  // We expect there to be one row affected
+    {
+      // Then update the entry table
+      $sql = "UPDATE $tbl_entry 
+                 SET status=status&". ~STATUS_AWAITING_APPROVAL . "
+               WHERE repeat_id=$id";
+      // It's possible that there will be no rows affected if all the
+      // entries have previously been individually approved
+      return (sql_command($sql) >= 0);
+    }
+    else
+    {
+      return FALSE;
+    }
   }
   else
   {
-    $sql .= " AND id=$id LIMIT 1";
+    $sql = "UPDATE $tbl_entry 
+               SET status=status&". ~STATUS_AWAITING_APPROVAL . "
+             WHERE id=$id
+             LIMIT 1";
+    return (sql_command($sql) > 0);  // We expect there to be one row affected
   }
-  return (sql_command($sql) >= 0);
 }
 
 
@@ -835,8 +839,10 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   }
 
   $terms = array("M.room_name",
+                 "M.room_admin_email",
                  "M.area_id",
                  "A.area_name",
+                 "A.area_admin_email",              
                  "(end_time - start_time) AS duration");
                  
   foreach ($table_fields as $field)
@@ -849,8 +855,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
         break;
         
       case 'repeat_id':
-      case 'status':
-        // repeat_id and status only exist in the entry table
+        // repeat_id only exists in the entry table
         array_push($terms, $field['name']);
         break;
 
@@ -924,23 +929,6 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   // Get some extra information
   if ($series)
   {
-    // Get the status of the booking.   For an individual entry it's easy -
-    // we've already got it.   For a series, the repeat table does not hold
-    // a status field.  Instead the status of a series is defined by the status 
-    // of its members: if any one of them is provisional, then the series as
-    // a whole is considered to be provisional.
-    //
-    // But we won't bother fetching the status with another SQL query if we're not
-    // using provisional bookings, because we won't be using it.
-    if ($provisional_enabled)
-    {
-      $sql = "SELECT COUNT(*)
-              FROM $tbl_entry
-              WHERE repeat_id=$id
-              AND status=" . STATUS_PROVISIONAL . "
-              LIMIT 1";
-      $row['status'] = (sql_query1($sql) > 0) ? STATUS_PROVISIONAL : STATUS_CONFIRMED;
-    }
     $row['entry_info_time'] = '';
     $row['entry_info_user'] = '';
     $row['entry_info_text'] = '';

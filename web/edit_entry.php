@@ -137,7 +137,6 @@ if (isset($id))
       // Don't bother with these columns
       case 'id':
       case 'timestamp':
-      case 'status':
       case 'reminded':
       case 'info_time':
       case 'info_user':
@@ -149,12 +148,16 @@ if (isset($id))
       case 'type':
       case 'room_id':
       case 'entry_type':
-      case 'private':
         $$column = $row[$column];
+        break;
+        
+      case 'status':
+        $private = $row['status'] & STATUS_PRIVATE;
         break;
       
       case 'repeat_id':
         $rep_id      = $row['repeat_id'];
+        break;
         
       case 'create_by':
         // If we're copying an existing entry then we need to change the create_by (they could be

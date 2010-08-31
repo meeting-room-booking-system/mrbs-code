@@ -480,19 +480,23 @@ foreach ( $rooms as $room_id )
 if ($valid_booking)
 {
   foreach ( $rooms as $room_id )
-  {
+  { 
+    // Set the various bits in the status field as appropriate
+    $status = 0;
+    if ($isprivate)
+    {
+      $status |= STATUS_PRIVATE;  // Set the private bit
+    }
     // If we're using provisional booking then we need to work out whether the
     // status of this booking is confirmed.   If the user is allowed to confirm
     // bookings for this room, then the status will be confirmed , since they are
-    // in effect immediately confirming their own booking.
-    if ($provisional_enabled)
+    // in effect immediately confirming their own booking.  Otherwise the booking
+    // will need to approved.
+    if ($provisional_enabled && !auth_book_admin($user, $room_id))
     {
-      $status = (auth_book_admin($user, $room_id)) ? STATUS_CONFIRMED : STATUS_PROVISIONAL;
+      $status |= STATUS_AWAITING_APPROVAL;
     }
-    else
-    {
-      $status = STATUS_CONFIRMED;
-    }
+
     
     if ($edit_type == "series")
     {
@@ -507,7 +511,6 @@ if ($valid_booking)
                                            $type,
                                            $description,
                                            isset($rep_num_weeks) ? $rep_num_weeks : 0,
-                                           $isprivate,
                                            $status,
                                            $custom_fields);
       $new_id = $booking['id'];
@@ -567,7 +570,6 @@ if ($valid_booking)
                                       $name,
                                       $type,
                                       $description,
-                                      $isprivate,
                                       $status,
                                       $custom_fields);
 

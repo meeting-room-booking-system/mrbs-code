@@ -65,7 +65,7 @@ function generateOwnerButtons($id, $series)
   // AND we want reminders in the first place
   if (($reminders_enabled) &&
       ($user == $create_by) && 
-      ($status == STATUS_PROVISIONAL) &&
+      ($status & STATUS_AWAITING_APPROVAL) &&
       (working_time_diff(time(), $last_reminded) >= $reminder_interval))
   {
     echo "<tr>\n";
@@ -183,8 +183,6 @@ foreach ($row as $column => $value)
     case 'room_name':
     case 'area_name':
     case 'type':
-    case 'status':
-    case 'private':
     case 'room_id':
     case 'entry_info_time':
     case 'entry_info_user':
@@ -193,6 +191,11 @@ foreach ($row as $column => $value)
     case 'repeat_info_user':
     case 'repeat_info_text':
       $$column = $row[$column];
+      break;
+      
+    case 'status':
+      $status = $row['status'];
+      $private = $row['status'] & STATUS_PRIVATE;
       break;
 
     case 'last_updated':
@@ -351,7 +354,7 @@ if (!empty($error))
 
 // If we're using provisional bookings, put the buttons to do with managing
 // the bookings in the footer
-if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
+if ($provisional_enabled && ($status & STATUS_AWAITING_APPROVAL))
 {
   echo "<tfoot id=\"confirm_buttons\">\n";
   // PHASE 2 - REJECT
@@ -439,7 +442,7 @@ if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
   {
     echo "<tr>\n";
     echo "<td>" . get_vocab("status") . ":</td>\n";
-    echo "<td>" . (($status == STATUS_PROVISIONAL) ? get_vocab("provisional") : get_vocab("confirmed")) . "</td>\n";
+    echo "<td>" . (($status & STATUS_AWAITING_APPROVAL) ? get_vocab("provisional") : get_vocab("confirmed")) . "</td>\n";
     echo "</tr>\n";
   }
   ?>

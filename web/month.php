@@ -254,12 +254,11 @@ $all_day = preg_replace("/ /", "&nbsp;", get_vocab("all_day"));
 // This data will be retrieved day-by-day fo the whole month
 for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
 {
-  $sql = "SELECT start_time, end_time, id, name, type,
-          status, private, create_by
-          FROM $tbl_entry
-          WHERE room_id=$room
-          AND start_time <= $midnight_tonight[$day_num] AND end_time > $midnight[$day_num]
-          ORDER by start_time";
+  $sql = "SELECT start_time, end_time, id, name, type, status, create_by
+            FROM $tbl_entry
+           WHERE room_id=$room
+             AND start_time <= $midnight_tonight[$day_num] AND end_time > $midnight[$day_num]
+        ORDER BY start_time";
 
   // Build an array of information about each day in the month.
   // The information is stored as:
@@ -285,9 +284,10 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
         echo "<br>DEBUG: Entry ".$row['id']." day $day_num\n";
       }
       $d[$day_num]["id"][] = $row['id'];
+      $d[$day_num]["color"][] = $row['type'];
       
       // Handle private events
-      if (is_private_event($row['private'])) 
+      if (is_private_event($row['status'] & STATUS_PRIVATE)) 
       {
         if (getWritable($row['create_by'], $user, $room)) 
         {
@@ -305,17 +305,15 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
 
       if ($private) 
       {
+        $d[$day_num]["status"][] = $row['status'] | STATUS_PRIVATE;  // Set the private bit
         $d[$day_num]["shortdescrip"][] = '['.get_vocab('unavailable').']';
       }
       else
       {
+        $d[$day_num]["status"][] = $row['status'] & ~STATUS_PRIVATE;  // Clear the private bit
         $d[$day_num]["shortdescrip"][] = htmlspecialchars($row['name']);
       }
       
-      $d[$day_num]["is_private"][] = $private;
-      $d[$day_num]["status"][] = $row['status'];
-      $d[$day_num]["color"][] = $row['type'];
-
       // Describe the start and end time, accounting for "all day"
       // and for entries starting before/ending after today.
       // There are 9 cases, for start time < = or > midnight this morning,
@@ -538,11 +536,11 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
         // give the enclosing div the appropriate width: full width if both,
         // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
         $class = $d[$cday]["color"][$i];
-        if ($provisional_enabled && ($d[$cday]["status"][$i] == STATUS_PROVISIONAL))
+        if ($provisional_enabled && ($d[$cday]["status"][$i] & STATUS_AWAITING_APPROVAL))
         {
           $class .= " provisional";
         }   
-        if ($d[$cday]["is_private"][$i])
+        if ($d[$cday]["status"][$i] & STATUS_PRIVATE)
         {
           $class .= " private";
         }

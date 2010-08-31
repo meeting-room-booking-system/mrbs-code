@@ -1003,7 +1003,7 @@ if (isset($areamatch))
       //   - their own bookings, and others' public bookings if private_override is set to 'none'
       //   - just their own bookings, if private_override is set to 'private'
       $sql .= " AND ((A.private_override='public') OR
-                     (A.private_override='none' AND (E.private=0 OR E.create_by = '" . addslashes($user) . "')) OR
+                     (A.private_override='none' AND (E.status&" . STATUS_PRIVATE . "=0 OR E.create_by = '" . addslashes($user) . "')) OR
                      (A.private_override='private' AND E.create_by = '" . addslashes($user) . "'))";                
     }
     else
@@ -1012,7 +1012,7 @@ if (isset($areamatch))
       //   - all bookings, if private_override is set to 'public'
       //   - public bookings if private_override is set to 'none'
       $sql .= " AND ((A.private_override='public') OR
-                     (A.private_override='none' AND E.private=0))";
+                     (A.private_override='none' AND E.status&" . STATUS_PRIVATE . "=0))";
     }
   }
    

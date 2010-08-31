@@ -22,9 +22,68 @@ $user = getUserName();
 
                   
 if (isset($action))
-{                      
+{                     
   if ($need_to_send_mail)
-  {      
+  { 
+    $is_new_entry = TRUE;  // Treat it as a new entry unless told otherwise    
+  }
+  
+  // If we have to accept or reject a booking, check that we have rights to do so
+  // for this room
+  if ((($action == "accept") || ($action == "reject")) 
+       && !auth_book_admin($user, $room_id))
+  {
+    showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
+    exit;
+  }
+  
+  switch ($action)
+  {
+    // ACTION = "ACCEPT"
+    case 'accept':
+      if ($need_to_send_mail)
+      {
+        $is_new_entry = FALSE;
+        // Get the current booking data, before we change anything, for use in emails
+        $mail_previous = getPreviousEntryData($id, $series);
+      }
+      $result = mrbsConfirmEntry($id, $series);
+      if (!$result)
+      {
+        $returl .= "&error=accept_failed";
+      }
+      break;
+    
+      
+    // ACTION = "MORE_INFO"  
+    case 'more_info':
+      // update the last reminded time (the ball is back in the 
+      // originator's court, so the clock gets reset)
+      mrbsUpdateLastReminded($id, $series);
+      // update the more info fields
+      mrbsUpdateMoreInfo($id, $series, $user, $note);
+      $result = TRUE;  // We'll assume success and end an email anyway
+      break;
+    
+      
+    // ACTION = "REMIND"
+    case 'remind':
+      // update the last reminded time
+      mrbsUpdateLastReminded($id, $series);
+      $result = TRUE;  // We'll assume success and end an email anyway
+      break;
+      
+    default:
+      $result = FALSE;  // should not get here
+      break;
+      
+  }  // switch ($action)
+  
+  
+  
+  // Now send an email if required and the operation was successful
+  if ($result && $need_to_send_mail)
+  {
     // Retrieve the booking details which we will need for the email
     // (notifyAdminOnBooking relies on them being available as globals)
 
@@ -70,54 +129,8 @@ if (isset($action))
     // in an undefined index error.
     $enable_periods ? toPeriodString($start_period, $duration, $dur_units, FALSE) : toTimeString($duration, $dur_units, FALSE);
 
+    $result = notifyAdminOnBooking($is_new_entry, $id, $series, $action);
   }
-  
-  // Now that we know the room, check that we have confirm rights for it if necessary
-  if ((($action == "accept") || ($action == "reject")) 
-       && !auth_book_admin($user, $room_id))
-  {
-    showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
-    exit;
-  }
-  
-  // ACTION = "ACCEPT"
-  if ($action == "accept")
-  {
-    if (!mrbsConfirmEntry($id, $series))
-    {
-      $returl .= "&error=accept_failed";
-    }
-    elseif ($need_to_send_mail)
-    {
-      $result = notifyAdminOnBooking(TRUE, $id, $series, $action);
-    }
-  }
-  
-  // ACTION = "MORE_INFO"
-  if ($action == "more_info")
-  {
-    // update the last reminded time (the ball is back in the 
-    // originator's court, so the clock gets reset)
-    mrbsUpdateLastReminded($id, $series);
-    // update the more info fields
-    mrbsUpdateMoreInfo($id, $series, $user, $note);
-    if ($need_to_send_mail)
-    {
-      $result = notifyAdminOnBooking(TRUE, $id, $series, $action);
-    }
-  }
-  
-  // ACTION = "REMIND"
-  if ($action == "remind")
-  {
-    // update the last reminded time
-    mrbsUpdateLastReminded($id, $series);
-    if ($need_to_send_mail)
-    {
-      $result = notifyAdminOnBooking(TRUE, $id, $series, $action);
-    }
-  }
-  
 }
 
 // Now it's all done go back to the previous view

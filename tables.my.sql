@@ -71,8 +71,7 @@ CREATE TABLE mrbs_entry
   name        varchar(80) DEFAULT '' NOT NULL,
   type        char DEFAULT 'E' NOT NULL,
   description text,
-  private     TINYINT(1) NOT NULL DEFAULT 0,
-  status      tinyint NOT NULL DEFAULT 1,
+  status      tinyint NOT NULL DEFAULT 0,
   reminded    int,
   info_time   int,
   info_user   varchar(80),
@@ -98,7 +97,7 @@ CREATE TABLE mrbs_repeat
   type        char DEFAULT 'E' NOT NULL,
   description text,
   rep_num_weeks smallint NULL, 
-  private     TINYINT(1) NOT NULL DEFAULT 0,
+  status      tinyint NOT NULL DEFAULT 0,
   reminded    int,
   info_time   int,
   info_user   varchar(80),
@@ -129,6 +128,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '14');
+  VALUES ( 'db_version', '16');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

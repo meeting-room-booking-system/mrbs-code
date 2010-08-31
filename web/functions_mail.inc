@@ -280,7 +280,7 @@ function get_room_admin_email($id, $series=FALSE)
  * @param int     $new_id       used for create a link to the new entry
  * @return bool                 TRUE or PEAR error object if fails
  */
-function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
+function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
 {
   global $url_base, $returl, $name, $description, $area_name;
   global $room_name, $room_id, $starttime, $duration, $dur_units, $end_date, $endtime;
@@ -290,13 +290,6 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
   global $mail_settings, $weekstarts, $provisional_enabled;
   global $tbl_entry;
   
-  // We will treat Accept, Reject and More_info mailings as new entries because the
-  // data hasn't changed since the previous time.
-  if (($action == "accept") || ($action == "more_info") || ($action == "remind"))
-  {
-    $new_entry = TRUE;
-  }
-
   $recipients = array();
   $cc = array();
   $cc[] = $mail_settings['cc'];
@@ -449,10 +442,11 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
                             
     if  ($provisional_enabled)
     {                        
-      // Status:
+      // Approval status:
       $body .= get_mail_vocab("status") . ": ";
-      $body .= ($status == STATUS_CONFIRMED) ? get_mail_vocab("confirmed") : get_mail_vocab("provisional");
-      $body .= "\n";
+      $old_approval_status = ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("provisional") : get_mail_vocab("confirmed");
+      $new_approval_status = ($status & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("provisional") : get_mail_vocab("confirmed");
+      $body .= compareEntries($new_approval_status, $old_approval_status, $new_entry) . "\n";
     }
                                
     // Room:
@@ -822,196 +816,82 @@ function notifyAdminOnDelete($mail_previous)
  */
 function getPreviousEntryData($id, $series)
 {
-  global $tbl_area, $tbl_entry, $tbl_repeat, $tbl_room, $enable_periods, $weekstarts;
-  global $standard_fields;
-  //
-  $sql = "
-    SELECT  e.name,
-            e.description,
-            e.create_by,
-            r.room_name,
-            a.area_name,
-            e.type,
-            e.room_id,
-            e.repeat_id, " .
-            sql_syntax_timestamp_to_unix("e.timestamp") . " AS last_updated,
-            (e.end_time - e.start_time) AS tbl_e_duration,
-            e.start_time AS tbl_e_start_time,
-            e.end_time AS tbl_e_end_time,
-            a.area_admin_email,
-            r.room_admin_email";
-  // Get the custom fields
-  $fields = sql_field_info($tbl_entry);
-  foreach ($fields as $field)
-  {
-    if (!in_array($field['name'], $standard_fields['entry']))
-    {
-      $sql .= ", e." . $field['name'];
-    }
-  }
+  global $enable_periods, $weekstarts;
   
-  // Here we could just use $tbl_repeat.start_time, and not use alias,
-  // as the last column will take precedence using mysql_fetch_array,
-  // but for portability purpose I will not use it.
-  if (1 == $series)
-  {
-    $sql .= ", re.rep_type, re.rep_opt, re.rep_num_weeks,
-               (re.end_time - re.start_time) AS tbl_r_duration,
-               re.start_time AS tbl_r_start_time,
-               re.end_time AS tbl_r_end_time,
-               re.end_date AS tbl_r_end_date";
-  }
-  $sql .= "
-    FROM $tbl_entry e, $tbl_room r, $tbl_area a ";
-  (1 == $series) ? $sql .= ', ' . $tbl_repeat . ' re ' : '';
-  $sql .= "
-    WHERE e.room_id = r.id
-    AND r.area_id = a.id
-    AND e.id=$id";
-  (1 == $series) ? $sql .= " AND e.repeat_id = re.id" : '';
-  //
-  $res = sql_query($sql);
-  (! $res) ? fatal_error(0, sql_error()) : '';
-  (sql_count($res) < 1) ? fatal_error(0, get_vocab("invalid_entry_id")) : '';
-  $row = sql_row_keyed($res, 0);
-  sql_free($res);
+  // Get the data for the booking
+  $data = mrbsGetBookingInfo($id, $series);
   
-  // Store all needed values in $mail_previous array to pass to
-  // notifyAdminOnDelete function (shorter than individual variables -:) )
-  $mail_previous['namebooker']    = $row['name'];
-  $mail_previous['description']   = $row['description'];
-  $mail_previous['createdby']     = $row['create_by'];
-  $mail_previous['room_name']     = $row['room_name'];
-  $mail_previous['area_name']     = $row['area_name'];
-  $mail_previous['type']          = $row['type'];
-  $mail_previous['room_id']       = $row['room_id'];
-  $mail_previous['repeat_id']     = $row['repeat_id'];
-  $mail_previous['updated']       = getMailTimeDateString($row['last_updated']);
-  $mail_previous['area_admin_email'] = $row['area_admin_email'];
-  $mail_previous['room_admin_email'] = $row['room_admin_email'];
-  // Add in the custom fields
-  foreach ($fields as $field)
+  // Now process some special fields
+  $data['namebooker'] = $data['name'];
+  $data['createdby']  = $data['create_by'];
+  $data['updated']    = getMailTimeDateString($data['last_updated']);
+
+  // Now get the start time, end time and duration.
+  if ($enable_periods)
   {
-    if (!in_array($field['name'], $standard_fields['entry']))
-    {
-      $mail_previous[$field['name']] = $row[$field['name']];
-    }
-  }
-  
-  // Now get the start time, end time and duration.   The way this is done
-  // depends on (a) whether we're using periods and (b) whether this is a series.
-  // If we use periods
-  if ( $enable_periods )
-  {
-    // If we delete a series, start_time and end_time must
-    // come from $tbl_repeat, not $tbl_entry.
-    //
-    // This is not a series
-    if (1 != $series)
-    {
-      list( $mail_previous['start_period'], $mail_previous['start_date']) =
-        getMailPeriodDateString($row['tbl_e_start_time']);
-      list( $mail_previous['end_period'] , $mail_previous['end_date']) =
-        getMailPeriodDateString($row['tbl_e_end_time'], -1);
-      // need to make DST correct in opposite direction to entry creation
-      // so that user see what he expects to see
-      $mail_previous['duration'] = $row['tbl_e_duration'] -
-        cross_dst($row['tbl_e_start_time'], $row['tbl_e_end_time']);
-    }
-    // This is a series
-    else
-    {
-      list( $mail_previous['start_period'], $mail_previous['start_date']) =
-        getMailPeriodDateString($row['tbl_r_start_time']);
-      list( $mail_previous['end_period'] , $mail_previous['end_date']) =
-        getMailPeriodDateString($row['tbl_r_end_time'], 0);   
-      // need to make DST correct in opposite direction to entry creation
-      // so that user see what he expects to see
-      $mail_previous['duration'] = $row['tbl_r_duration'] -
-        cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_time']);    
-    }
-    toPeriodString($mail_previous['start_period'],
-                   $mail_previous['duration'], $mail_previous['dur_units']);
-  }
-  // If we don't use periods
-  else
-  {
-    // This is not a series
-    if (1 != $series)
-    {
-      $mail_previous['start_date'] =
-        getMailTimeDateString($row['tbl_e_start_time']);
-      $mail_previous['end_date'] =
-        getMailTimeDateString($row['tbl_e_end_time']);
-      // need to make DST correct in opposite direction to entry creation
-      // so that user see what he expects to see
-      $mail_previous['duration'] = $row['tbl_e_duration'] -
-        cross_dst($row['tbl_e_start_time'], $row['tbl_e_end_time']);
-    }
-    // This is a series
-    else
-    {
-      $mail_previous['start_date'] =
-        getMailTimeDateString($row['tbl_r_start_time']);
-      $mail_previous['end_date'] =
-        getMailTimeDateString($row['tbl_r_end_time']);
-      // need to make DST correct in opposite direction to entry creation
-      // so that user see what he expects to see
-      $mail_previous['duration'] = $row['tbl_r_duration'] -
-        cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_time']);
-    }
-    toTimeString($mail_previous['duration'], $mail_previous['dur_units']);
-  }
-  
-  
-  // Next, get the repeat information if it's a series (and if it's not
-  // a series, we still need to set rep_type to show that it's not a series)
-  if (1 != $series)
-  {
-    $mail_previous['rep_type'] = REP_NONE;
+    list( $data['start_period'], $data['start_date']) = getMailPeriodDateString($data['start_time']);
+    list( $data['end_period'] , $data['end_date'])    = getMailPeriodDateString($data['end_time'], -1);
+    // need to make DST correct in opposite direction to entry creation
+    // so that user see what he expects to see
+    $data['duration'] -= cross_dst($data['start_time'], $data['end_time']);
+    // Don't translate the units at this stage, as they'll get translated into the
+    // browser language rather than the mail language.   We'll translate them later.
+    toPeriodString($data['start_period'], $data['duration'], $data['dur_units'], FALSE);
   }
   else
   {
-    $mail_previous['rep_type'] = $row['rep_type'];
-    
+    $data['start_date'] = getMailTimeDateString($data['start_time']);
+    $data['end_date']   = getMailTimeDateString($data['end_time']);
+    // need to make DST correct in opposite direction to entry creation
+    // so that user see what he expects to see
+    $data['duration'] -= cross_dst($data['start_time'], $data['end_time']);
+    // Don't translate the units at this stage, as they'll get translated into the
+    // browser language rather than the mail language.   We'll translate them later.
+    toTimeString($data['duration'], $data['dur_units'], FALSE);
+  }
+  // Now translate the duration units into the mail language
+  $data['dur_units'] = get_mail_vocab($data['dur_units']);
+  
+  // Next, process any repeat information
+  if ($data['rep_type'] != REP_NONE)
+  { 
+    // get the repeat end date
     // use getMailTimeDateString as all I want is the date
-    $mail_previous['rep_end_date'] =
-        getMailTimeDateString($row['tbl_r_end_date'], FALSE);
-    $mail_previous['rep_opt'] = "";
-    switch($row['rep_type'])
+    $data['rep_end_date'] = getMailTimeDateString($data['rep_enddate'], FALSE);
+    
+    // get the names of the repeat days 
+    switch($data['rep_type'])
     {
       case 2:
       case 6:
-        $rep_day[0] = $row['rep_opt'][0] != "0";
-        $rep_day[1] = $row['rep_opt'][1] != "0";
-        $rep_day[2] = $row['rep_opt'][2] != "0";
-        $rep_day[3] = $row['rep_opt'][3] != "0";
-        $rep_day[4] = $row['rep_opt'][4] != "0";
-        $rep_day[5] = $row['rep_opt'][5] != "0";
-        $rep_day[6] = $row['rep_opt'][6] != "0";     
+        $rep_day[0] = $data['rep_opt'][0] != "0";
+        $rep_day[1] = $data['rep_opt'][1] != "0";
+        $rep_day[2] = $data['rep_opt'][2] != "0";
+        $rep_day[3] = $data['rep_opt'][3] != "0";
+        $rep_day[4] = $data['rep_opt'][4] != "0";
+        $rep_day[5] = $data['rep_opt'][5] != "0";
+        $rep_day[6] = $data['rep_opt'][6] != "0";     
         break; 
       default:
         $rep_day = array(0, 0, 0, 0, 0, 0, 0);
     }
+    $data['rep_opt'] = "";
     for ($i = 0; $i < 7; $i++)
     {
       $wday = ($i + $weekstarts) % 7;
       if ($rep_day[$wday])
-        $mail_previous['rep_opt'] .= day_name($wday) . " ";
+        $data['rep_opt'] .= day_name($wday) . " ";
     }
     
-    if ($row['rep_type'] == REP_N_WEEKLY)
+    // Sanitise the rep_num_weeks
+    if ($data['rep_type'] != REP_N_WEEKLY)
     {
-      $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
+      $data['rep_num_weeks'] = "";
     }
-    else
-    {
-      $mail_previous['rep_num_weeks'] = "";
-    }   
   }
-  
+
   // return entry previous data as an array
-  return $mail_previous;
+  return $data;
 }
 
 // }}}

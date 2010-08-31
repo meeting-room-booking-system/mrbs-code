@@ -992,20 +992,20 @@ function is_hidden_day ($dow)
 }
 
 // returns true if event should be considered private based on
-// config settings and event's "private" flag (passed to function)
-function is_private_event($event_flag) 
+// config settings and event's privacy status (passed to function)
+function is_private_event($privacy_status) 
 {
   global $private_override;
   if ($private_override == "private" )
   {
-    $event_flag = TRUE;
+    $privacy_status = TRUE;
   }
   elseif ($private_override == "public" )
   {
-    $event_flag = FALSE;
+    $privacy_status = FALSE;
   }
 
-  return $event_flag;
+  return $privacy_status;
 }
 
 
@@ -1028,14 +1028,12 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   //       entry_id
   //       type
   //       entry_description
-  //       entry_private
   //       entry_create_by
   //       status
   
   // $column is a column of the map of the screen that will be displayed
   // It looks like:
   //     $column[Time][n][id]
-  //                     [is_private]
   //                     [color]
   //                     [data]
   //                     [long_descr]
@@ -1074,16 +1072,16 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   global $resolution;
   
   $user = getUserName();
-  if (is_private_event($row['entry_private']) &&
+  if (is_private_event($row['status'] & STATUS_PRIVATE) &&
          !getWritable($row['entry_create_by'], $user, $row['room_id']))
   {
-    $is_private = TRUE;
+    $row['status'] |= STATUS_PRIVATE;   // Set the private bit
     $row['name']= "[".get_vocab('unavailable')."]";
     $row['entry_description']= "[".get_vocab('unavailable')."]";
   }
   else
   {
-    $is_private = FALSE;
+    $row['status'] &= ~STATUS_PRIVATE;  // Clear the private bit
   }
 
   $start_t = max(round_t_down($row['start_time'], $resolution, $am7), $am7);
@@ -1106,7 +1104,6 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     
     // fill in the id, type and start time
     $column[$time_t][$n]["id"] = $row['entry_id'];
-    $column[$time_t][$n]["is_private"] = $is_private;
     $column[$time_t][$n]["status"] = $row['status'];
     $column[$time_t][$n]["color"] = $row['type'];
     $column[$time_t][$n]["start_time"] = utf8_strftime(hour_min_format(), $row['start_time']);
@@ -1237,7 +1234,6 @@ function draw_cell($cell, $query_strings, $cell_class)
   // display and looks like this:
   // 
   // $cell[n][id]
-  //         [is_private]
   //         [color]
   //         [data]
   //         [long_descr]
@@ -1306,17 +1302,16 @@ function draw_cell($cell, $query_strings, $cell_class)
     for ($n=0; $n<$n_bookings; $n++)
     {
       $id         = $cell[$n]["id"];
-      $is_private = $cell[$n]["is_private"];
       $status     = $cell[$n]["status"];
       $color      = $cell[$n]["color"];
       $descr      = htmlspecialchars($cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
-      if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
+      if ($provisional_enabled && ($status & STATUS_AWAITING_APPROVAL))
       {
         $class .= " provisional";
       }
-      if ($is_private)
+      if ($status & STATUS_PRIVATE)
       {
         $class .= " private";
       }
@@ -1352,17 +1347,16 @@ function draw_cell($cell, $query_strings, $cell_class)
     for ($n=0; $n<$n_bookings; $n++)
     {
       $id         = $cell[$n]["id"];
-      $is_private = $cell[$n]["is_private"];
       $status     = $cell[$n]["status"];
       $color      = $cell[$n]["color"];
       $descr      = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
-      if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
+      if ($provisional_enabled && ($status & STATUS_AWAITING_APPROVAL))
       {
         $class .= " provisional";
       }    
-      if ($is_private)
+      if ($status & STATUS_PRIVATE)
       {
         $class .= " private";
       }
@@ -1390,7 +1384,6 @@ function draw_cell($cell, $query_strings, $cell_class)
     if(isset($cell[0]["id"]))
     {       
       $id         = $cell[0]["id"];
-      $is_private = $cell[0]["is_private"];
       $status     = $cell[0]["status"];
       $color      = $cell[0]["color"];
       $descr      = htmlspecialchars($cell[0]["data"]);
@@ -1410,11 +1403,11 @@ function draw_cell($cell, $query_strings, $cell_class)
     if (isset($id))
     {
       $c = $color;
-      if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
+      if ($provisional_enabled && ($status & STATUS_AWAITING_APPROVAL))
       {
         $c .= " provisional";
       } 
-      if ($is_private)
+      if ($status & STATUS_PRIVATE)
       {
         $c .= " private";
       }
