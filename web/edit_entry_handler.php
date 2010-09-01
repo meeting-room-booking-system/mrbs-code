@@ -29,6 +29,7 @@ $rep_id = get_form_var('rep_id', 'int');
 $rep_day = get_form_var('rep_day', 'array'); // array of bools
 $rep_num_weeks = get_form_var('rep_num_weeks', 'int');
 $private = get_form_var('private', 'string'); // bool, actually
+$confirmed = get_form_var('confirmed', 'string');
 // Get the start day/month/year and make them the current day/month/year
 $day = get_form_var('start_day', 'int');
 $month = get_form_var('start_month', 'int');
@@ -483,6 +484,7 @@ if ($valid_booking)
   { 
     // Set the various bits in the status field as appropriate
     $status = 0;
+    // Privacy status
     if ($isprivate)
     {
       $status |= STATUS_PRIVATE;  // Set the private bit
@@ -495,6 +497,11 @@ if ($valid_booking)
     if ($approval_enabled && !auth_book_admin($user, $room_id))
     {
       $status |= STATUS_AWAITING_APPROVAL;
+    }
+    // Confirmation status
+    if ($confirmation_enabled && !$confirmed)
+    {
+      $status |= STATUS_TENTATIVE;
     }
 
     

@@ -535,15 +535,19 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
       {
         // give the enclosing div the appropriate width: full width if both,
         // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
-        $class = $d[$cday]["color"][$i];
-        if ($approval_enabled && ($d[$cday]["status"][$i] & STATUS_AWAITING_APPROVAL))
-        {
-          $class .= " awaiting_approval";
-        }   
+        $class = $d[$cday]["color"][$i]; 
         if ($d[$cday]["status"][$i] & STATUS_PRIVATE)
         {
           $class .= " private";
         }
+        if ($approval_enabled && ($d[$cday]["status"][$i] & STATUS_AWAITING_APPROVAL))
+        {
+          $class .= " awaiting_approval";
+        }
+        if ($confirmation_enabled && ($d[$cday]["status"][$i] & STATUS_TENTATIVE))
+        {
+          $class .= " tentative";
+        }  
         echo "<div class=\"" . $class . "\"" .
           " style=\"width: " . (($monthly_view_entries_details == "both") ? '100%' : '49.9%') . "\">\n";
         $booking_link = "view_entry.php?id=" . $d[$cday]["id"][$i] . "&amp;day=$cday&amp;month=$month&amp;year=$year";

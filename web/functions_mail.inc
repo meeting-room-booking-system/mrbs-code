@@ -287,7 +287,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
   global $rep_enddate, $typel, $type, $status, $create_by, $rep_type, $enable_periods;
   global $rep_opt, $rep_num_weeks, $custom_fields, $standard_fields;
   global $mail_previous, $auth, $note;
-  global $mail_settings, $weekstarts, $approval_enabled;
+  global $mail_settings, $weekstarts, $approval_enabled, $confirmation_enabled;
   global $tbl_entry;
   
   $recipients = array();
@@ -440,13 +440,22 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
                             convertToMailCharset($mail_previous['description']),
                             $new_entry) . "\n";
                             
+    if  ($confirmation_enabled)
+    {                        
+      // Confirmation status:
+      $body .= get_mail_vocab("confirmation_status") . ": ";
+      $old_status = ($mail_previous['status'] & STATUS_TENTATIVE) ? get_mail_vocab("tentative_booking") : get_mail_vocab("confirmed_booking");
+      $new_status = ($status & STATUS_TENTATIVE) ? get_mail_vocab("tentative_booking") : get_mail_vocab("confirmed_booking");
+      $body .= compareEntries($new_status, $old_status, $new_entry) . "\n";
+    }
+                            
     if  ($approval_enabled)
     {                        
       // Approval status:
-      $body .= get_mail_vocab("status") . ": ";
-      $old_approval_status = ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
-      $new_approval_status = ($status & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
-      $body .= compareEntries($new_approval_status, $old_approval_status, $new_entry) . "\n";
+      $body .= get_mail_vocab("approval_status") . ": ";
+      $old_status = ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
+      $new_status = ($status & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
+      $body .= compareEntries($new_status, $old_status, $new_entry) . "\n";
     }
                                
     // Room:

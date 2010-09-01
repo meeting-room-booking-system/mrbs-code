@@ -34,6 +34,7 @@
 
 define('STATUS_PRIVATE',           0x01);
 define('STATUS_AWAITING_APPROVAL', 0x02);
+define('STATUS_TENTATIVE',         0x04);
 
 
  /*************************************************

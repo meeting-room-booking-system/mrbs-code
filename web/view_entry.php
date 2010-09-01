@@ -438,10 +438,17 @@ if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
     ?>
   </tr>
   <?php
+  if ($confirmation_enabled)
+  {
+    echo "<tr>\n";
+    echo "<td>" . get_vocab("confirmation_status") . ":</td>\n";
+    echo "<td>" . (($status & STATUS_TENTATIVE) ? get_vocab("tentative_booking") : get_vocab("confirmed_booking")) . "</td>\n";
+    echo "</tr>\n";
+  }
   if ($approval_enabled)
   {
     echo "<tr>\n";
-    echo "<td>" . get_vocab("status") . ":</td>\n";
+    echo "<td>" . get_vocab("approval_status") . ":</td>\n";
     echo "<td>" . (($status & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved")) . "</td>\n";
     echo "</tr>\n";
   }

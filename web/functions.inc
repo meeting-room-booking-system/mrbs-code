@@ -1262,7 +1262,7 @@ function draw_cell($cell, $query_strings, $cell_class)
   global $main_cell_height, $main_table_cell_border_width;
   global $area, $year, $month, $timetohighlight;
   global $javascript_cursor, $enable_periods, $times_along_top;
-  global $approval_enabled;
+  global $approval_enabled, $confirmation_enabled;
   
   // if the time slot has got multiple bookings, then draw a mini-table
   if(isset($cell[1]["id"]))
@@ -1307,13 +1307,17 @@ function draw_cell($cell, $query_strings, $cell_class)
       $descr      = htmlspecialchars($cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
+      if ($status & STATUS_PRIVATE)
+      {
+        $class .= " private";
+      }
       if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
       {
         $class .= " awaiting_approval";
       }
-      if ($status & STATUS_PRIVATE)
+      if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
       {
-        $class .= " private";
+        $class .= " tentative";
       }
       echo "<tr>\n";
       echo "<td class=\"$class\"" .
@@ -1352,14 +1356,18 @@ function draw_cell($cell, $query_strings, $cell_class)
       $descr      = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
-      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
-      {
-        $class .= " awaiting_approval";
-      }    
       if ($status & STATUS_PRIVATE)
       {
         $class .= " private";
       }
+      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
+      {
+        $class .= " awaiting_approval";
+      }
+      if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
+      {
+        $class .= " tentative";
+      }    
       echo "<tr>\n";
       echo "<td class=\"$class\"" .
            (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
@@ -1403,14 +1411,18 @@ function draw_cell($cell, $query_strings, $cell_class)
     if (isset($id))
     {
       $c = $color;
-      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
-      {
-        $c .= " awaiting_approval";
-      } 
       if ($status & STATUS_PRIVATE)
       {
         $c .= " private";
       }
+      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
+      {
+        $c .= " awaiting_approval";
+      }
+      if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
+      {
+        $c .= " tentative";
+      } 
     }
     else
     {

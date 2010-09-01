@@ -451,7 +451,7 @@ $approval_enabled = FALSE;  // Set to TRUE to enable booking approval
 // to admins when bookings are still awaiting approval.
 $reminders_enabled = TRUE;
 
-// SETTINGS FOR APPROVING SETTINGS - GLOBAL
+// SETTINGS FOR APPROVING BOOKINGS - GLOBAL
 
 // These settings are system-wide and control the behaviour in all areas.
 
@@ -461,6 +461,18 @@ $reminder_interval = 60*60*24*2;  // 2 working days
 
 // Days of the week that are working days (Sunday = 0, etc.)
 $working_days = array(1,2,3,4,5);  // Mon-Fri
+
+// SETTINGS FOR BOOKING CONFIRMATION
+
+// Allows bookings to be marked as "tentative", ie not yet 100% certain,
+// and confirmed later.   Useful if you want to reserve a slot but at the same
+// time let other people know that there's a possibility it may not be needed.
+$confirmation_enabled = TRUE;
+
+// The default confirmation status for new bookings.  (TRUE: confirmed, FALSE: tentative)
+// Only used if $confirmation_enabled is TRUE.   If $confirmation_enabled is 
+// FALSE, then all new bookings are confirmed automatically.
+$confirmed_default = TRUE;
 
 /***********************************************
  * Authentication settings - read AUTHENTICATION

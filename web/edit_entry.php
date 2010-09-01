@@ -153,6 +153,7 @@ if (isset($id))
         
       case 'status':
         $private = $row['status'] & STATUS_PRIVATE;
+        $confirmed = !($row['status'] & STATUS_TENTATIVE);
         break;
       
       case 'repeat_id':
@@ -300,6 +301,7 @@ else
   $rep_end_year  = $year;
   $rep_day       = array(0, 0, 0, 0, 0, 0, 0);
   $private       = $private_default;
+  $confirmed     = $confirmed_default;
   // now initialise the custom fields
   foreach ($fields as $field)
   {
@@ -806,8 +808,7 @@ else
       </div>
     </div>
     <div id="div_type">
-      <label for="type"><?php echo get_vocab("type")?>:</label>
-     <div class="group">    
+      <label for="type"><?php echo get_vocab("type")?>:</label>  
       <select id="type" name="type">
         <?php
         for ($c = "A"; $c <= "Z"; $c++)
@@ -819,27 +820,48 @@ else
         }
         ?>
       </select>
-      <?php 
-      if ($private_enabled) 
-      { ?>
-        <div id="div_private">
-          <input id="private" class="checkbox" name="private" type="checkbox" value="yes"<?php 
-          if($private) 
-          {
-            echo " checked=\"checked\"";
-          }
-          if($private_mandatory) 
-          {
-            echo " disabled=\"true\"";
-          }
-          ?>>
-          <label for="private"><?php echo get_vocab("private") ?></label>
-        </div><?php 
-      } ?>
-     </div>
     </div>
     
     <?php
+    // Status
+    if ($private_enabled || $confirmation_enabled) 
+    { 
+      echo "<div id=\"div_status\">\n";
+      echo "<label>" . get_vocab("status") . ":</label>\n";
+      echo "<div class=\"group\">\n";
+      
+      // Privacy status
+      if ($private_enabled)
+      {    
+        echo "<input id=\"private\" class=\"checkbox\" name=\"private\" type=\"checkbox\" value=\"yes\"";
+        if ($private) 
+        {
+          echo " checked=\"checked\"";
+        }
+        if ($private_mandatory) 
+        {
+          echo " disabled=\"true\"";
+        }
+        echo ">\n";
+        echo "<label for=\"private\">" . get_vocab("private") . "</label>\n";
+      }
+      
+      // Confirmation status
+      if ($confirmation_enabled)
+      {
+        echo "<input id=\"confirmed\" class=\"checkbox\" name=\"confirmed\" type=\"checkbox\" value=\"yes\"";
+        if ($confirmed) 
+        {
+          echo " checked=\"checked\"";
+        }
+        echo ">\n";
+        echo "<label for=\"confirmed\">" . get_vocab("confirmed") . "</label>\n";
+      }
+
+      echo "</div>\n";
+      echo "</div>\n";
+    }
+
     
     // CUSTOM FIELDS
 
