@@ -20,8 +20,8 @@ function generateButton($form_action, $id, $series, $action_type, $returl, $subm
   echo "</form>\n";  
 }
 
-// Generates the Accept, Reject and More Info buttons
-function generateConfirmButtons($id, $series)
+// Generates the Approve, Reject and More Info buttons
+function generateApproveButtons($id, $series)
 {
   global $returl, $PHP_SELF;
   global $entry_info_time, $entry_info_user, $repeat_info_time, $repeat_info_user;
@@ -46,7 +46,7 @@ function generateConfirmButtons($id, $series)
   echo "<tr>\n";
   echo "<td>" . ($series ? get_vocab("series") : get_vocab("entry")) . ":</td>\n";
   echo "<td>\n";
-  generateButton("confirm_entry_handler.php", $id, $series, "accept", $returl, get_vocab("accept"));
+  generateButton("approve_entry_handler.php", $id, $series, "approve", $returl, get_vocab("approve"));
   generateButton($this_page, $id, $series, "reject", $returl, get_vocab("reject"));
   generateButton($this_page, $id, $series, "more_info", $returl, get_vocab("more_info"), $info_title);
   echo "</td>\n";
@@ -71,7 +71,7 @@ function generateOwnerButtons($id, $series)
     echo "<tr>\n";
     echo "<td>&nbsp;</td>\n";
     echo "<td>\n";
-    generateButton("confirm_entry_handler.php", $id, $series, "remind", $this_page . "?id=$id&amp;area=$area", get_vocab("remind_admin"));
+    generateButton("approve_entry_handler.php", $id, $series, "remind", $this_page . "?id=$id&amp;area=$area", get_vocab("remind_admin"));
     echo "</td>\n";
     echo "</tr>\n";
   } 
@@ -356,7 +356,7 @@ if (!empty($error))
 // the bookings in the footer
 if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
 {
-  echo "<tfoot id=\"confirm_buttons\">\n";
+  echo "<tfoot id=\"approve_buttons\">\n";
   // PHASE 2 - REJECT
   if (isset($action) && ($action == "reject"))
   {
@@ -370,7 +370,7 @@ if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
   // PHASE 2 - MORE INFO
   elseif (isset($action) && ($action == "more_info"))
   {
-    // but confirm_entry_handler expects the id to be a repeat_id
+    // but approve_entry_handler expects the id to be a repeat_id
     // if $series is true (ie behaves like the rest of MRBS).
     // Sometime this difference in behaviour should be rationalised
     // because it is very confusing!
@@ -393,7 +393,7 @@ if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
       $value .= "\n----\n";
       $value .= $info_text;
     }
-    generateTextArea("confirm_entry_handler.php", $target_id, $series,
+    generateTextArea("approve_entry_handler.php", $target_id, $series,
                      "more_info", $returl,
                      get_vocab("send"),
                      get_vocab("request_more_info"),
@@ -402,16 +402,16 @@ if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
   // PHASE 1 - first time through this page
   else
   {
-    // Buttons for those who are allowed to confirm this booking
+    // Buttons for those who are allowed to approve this booking
     if (auth_book_admin($user, $room_id))
     {
       if (!$series)
       {
-        generateConfirmButtons($id, FALSE);
+        generateApproveButtons($id, FALSE);
       }
       if (!empty($repeat_id) || $series)
       {
-        generateConfirmButtons($repeat_id, TRUE);
+        generateApproveButtons($repeat_id, TRUE);
       }    
     }
     // Buttons for the owner of this booking
@@ -442,7 +442,7 @@ if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
   {
     echo "<tr>\n";
     echo "<td>" . get_vocab("status") . ":</td>\n";
-    echo "<td>" . (($status & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("confirmed")) . "</td>\n";
+    echo "<td>" . (($status & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved")) . "</td>\n";
     echo "</tr>\n";
   }
   ?>

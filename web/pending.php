@@ -22,14 +22,14 @@ function display_buttons($row, $is_series)
   
   if (auth_book_admin($user, $row['room_id']))
   {
-    // accept
-    echo "<form action=\"confirm_entry_handler.php\" method=\"post\">\n";
+    // approve
+    echo "<form action=\"approve_entry_handler.php\" method=\"post\">\n";
     echo "<div>\n";
-    echo "<input type=\"hidden\" name=\"action\" value=\"accept\">\n";
+    echo "<input type=\"hidden\" name=\"action\" value=\"approve\">\n";
     echo "<input type=\"hidden\" name=\"id\" value=\"$target_id\">\n";
     echo "<input type=\"hidden\" name=\"series\" value=\"$is_series\">\n";
     echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-    echo "<input type=\"submit\" value=\"" . get_vocab("accept") . "\">\n";
+    echo "<input type=\"submit\" value=\"" . get_vocab("approve") . "\">\n";
     echo "</div>\n";
     echo "</form>\n";
     // reject
@@ -72,7 +72,7 @@ function display_buttons($row, $is_series)
     if ($reminders_enabled  && 
         (working_time_diff(time(), $last_reminded) >= $reminder_interval))
     {
-      echo "<form action=\"confirm_entry_handler.php\" method=\"post\">\n";
+      echo "<form action=\"approve_entry_handler.php\" method=\"post\">\n";
       echo "<div>\n";
       echo "<input type=\"hidden\" name=\"action\" value=\"remind_admin\">\n";
       echo "<input type=\"hidden\" name=\"id\" value=\"" . $row['id'] . "\">\n";

@@ -28,9 +28,9 @@ if (isset($action))
     $is_new_entry = TRUE;  // Treat it as a new entry unless told otherwise    
   }
   
-  // If we have to accept or reject a booking, check that we have rights to do so
+  // If we have to approve or reject a booking, check that we have rights to do so
   // for this room
-  if ((($action == "accept") || ($action == "reject")) 
+  if ((($action == "approve") || ($action == "reject")) 
        && !auth_book_admin($user, $room_id))
   {
     showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
@@ -39,18 +39,18 @@ if (isset($action))
   
   switch ($action)
   {
-    // ACTION = "ACCEPT"
-    case 'accept':
+    // ACTION = "APPROVE"
+    case 'approve':
       if ($need_to_send_mail)
       {
         $is_new_entry = FALSE;
         // Get the current booking data, before we change anything, for use in emails
         $mail_previous = getPreviousEntryData($id, $series);
       }
-      $result = mrbsConfirmEntry($id, $series);
+      $result = mrbsApproveEntry($id, $series);
       if (!$result)
       {
-        $returl .= "&error=accept_failed";
+        $returl .= "&error=approve_failed";
       }
       break;
     

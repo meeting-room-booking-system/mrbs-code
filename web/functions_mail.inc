@@ -359,7 +359,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
   
   if ($mail_settings['booker'])
   {
-    if (($action == "accept")  || ($action == "more_info"))
+    if (($action == "approve")  || ($action == "more_info"))
     {
       // Put the recipients on the cc line and the booker will go
       // on the to line
@@ -384,9 +384,9 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
   // set up the subject and body
   switch ($action)
   {
-    case "accept":
-      $subject = get_mail_vocab("mail_subject_accepted");
-      $body = get_mail_vocab("mail_body_accepted") . "\n\n";
+    case "approve":
+      $subject = get_mail_vocab("mail_subject_approved");
+      $body = get_mail_vocab("mail_body_approved") . "\n\n";
       break;
     case "more_info":
       $subject = get_mail_vocab("mail_subject_more_info");
@@ -444,8 +444,8 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     {                        
       // Approval status:
       $body .= get_mail_vocab("status") . ": ";
-      $old_approval_status = ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("confirmed");
-      $new_approval_status = ($status & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("confirmed");
+      $old_approval_status = ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
+      $new_approval_status = ($status & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
       $body .= compareEntries($new_approval_status, $old_approval_status, $new_entry) . "\n";
     }
                                

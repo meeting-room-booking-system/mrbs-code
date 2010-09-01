@@ -757,13 +757,13 @@ function mrbsUpdateMoreInfo($id, $series, $user, $note)
   return sql_command($sql);
 }
 
-// mrbsConfirmEntry($id, $series)
+// mrbsApproveEntry($id, $series)
 //
-// Confirm an entry with id $id.   If series is set to TRUE
-// then the id is the id in the repeat table and we must confirm
+// Approve an entry with id $id.   If series is set to TRUE
+// then the id is the id in the repeat table and we must approve
 // all the individual entries.
 // Returns FALSE on failure, TRUE on success
-function mrbsConfirmEntry($id, $series)
+function mrbsApproveEntry($id, $series)
 {
   global $tbl_entry, $tbl_repeat;
   
