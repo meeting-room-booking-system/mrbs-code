@@ -418,14 +418,15 @@ $private_enabled = FALSE;  // DEFAULT VALUE FOR NEW AREAS
            // Display checkbox in entry page to make
            // the booking private.
 
-$private_default = FALSE;  // DEFAULT VALUE FOR NEW AREAS
-           // Set default value for "Private" flag on new/edited entries.
-           // Used even if checkbox is not displayed.
-
 $private_mandatory = FALSE;  // DEFAULT VALUE FOR NEW AREAS
            // If TRUE all new/edited entries will 
            // use the value from $private_default when saved.
            // If checkbox is displayed it will be disabled.
+           
+$private_default = FALSE;  // DEFAULT VALUE FOR NEW AREAS
+           // Set default value for "Private" flag on new/edited entries.
+           // Used if the $private_enabled checkbox is displayed
+           // or if $private_mandatory is set.
 
 $private_override = "none";  // DEFAULT VALUE FOR NEW AREAS
            // Override default privacy behavior. 
