@@ -61,7 +61,6 @@ $id = get_form_var('id', 'int');
 $copy = get_form_var('copy', 'int');
 $edit_type = get_form_var('edit_type', 'string');
 $returl = get_form_var('returl', 'string');
-$private = get_form_var('private', 'string');
 
 if (!isset($edit_type))
 {
