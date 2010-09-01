@@ -491,18 +491,18 @@ function get_area_settings($area)
   global $resolution, $default_duration, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $private_enabled, $private_default, $private_mandatory, $private_override;
   global $min_book_ahead_enabled, $max_book_ahead_enabled, $min_book_ahead_secs, $max_book_ahead_secs;
-  global $provisional_enabled, $reminders_enabled;
+  global $approval_enabled, $reminders_enabled;
   
   $booleans = array('private_enabled', 'private_default', 'private_mandatory',
                     'min_book_ahead_enabled', 'max_book_ahead_enabled',
-                    'provisional_enabled', 'reminders_enabled');
+                    'approval_enabled', 'reminders_enabled');
   // Get all the "per area" config settings                  
   $sql = "SELECT resolution, default_duration, morningstarts, morningstarts_minutes,
                  eveningends, eveningends_minutes,
                  private_enabled, private_default, private_mandatory, private_override,
                  min_book_ahead_enabled, max_book_ahead_enabled,
                  min_book_ahead_secs, max_book_ahead_secs,
-                 provisional_enabled, reminders_enabled
+                 approval_enabled, reminders_enabled
           FROM $tbl_area 
           WHERE id=$area 
           LIMIT 1";
@@ -1262,7 +1262,7 @@ function draw_cell($cell, $query_strings, $cell_class)
   global $main_cell_height, $main_table_cell_border_width;
   global $area, $year, $month, $timetohighlight;
   global $javascript_cursor, $enable_periods, $times_along_top;
-  global $provisional_enabled;
+  global $approval_enabled;
   
   // if the time slot has got multiple bookings, then draw a mini-table
   if(isset($cell[1]["id"]))
@@ -1307,9 +1307,9 @@ function draw_cell($cell, $query_strings, $cell_class)
       $descr      = htmlspecialchars($cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
-      if ($provisional_enabled && ($status & STATUS_AWAITING_APPROVAL))
+      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
       {
-        $class .= " provisional";
+        $class .= " awaiting_approval";
       }
       if ($status & STATUS_PRIVATE)
       {
@@ -1352,9 +1352,9 @@ function draw_cell($cell, $query_strings, $cell_class)
       $descr      = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
-      if ($provisional_enabled && ($status & STATUS_AWAITING_APPROVAL))
+      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
       {
-        $class .= " provisional";
+        $class .= " awaiting_approval";
       }    
       if ($status & STATUS_PRIVATE)
       {
@@ -1403,9 +1403,9 @@ function draw_cell($cell, $query_strings, $cell_class)
     if (isset($id))
     {
       $c = $color;
-      if ($provisional_enabled && ($status & STATUS_AWAITING_APPROVAL))
+      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
       {
-        $c .= " provisional";
+        $c .= " awaiting_approval";
       } 
       if ($status & STATUS_PRIVATE)
       {

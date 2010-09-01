@@ -811,7 +811,7 @@ function mrbsConfirmEntry($id, $series)
 function mrbsGetBookingInfo($id, $series, $silent=FALSE)
 {
   global $tbl_entry, $tbl_repeat, $tbl_room, $tbl_area;
-  global $provisional_enabled;
+  global $approval_enabled;
 
   // Check that we've got an id
   if (!isset($id))

@@ -426,13 +426,13 @@ div:hover.multiple_control {cursor: pointer}
 .minimized div.mini {display: block}
 .minimized div.maxi {display: none}
 
-/* private bookings */
+/* booking privacy status */
 .private {opacity: 0.6; font-style: italic}
 
-/* provisional bookings */
-.provisional {opacity: 0.6}
-.provisional a {font-weight: normal}
-.provisional a:before {content: "? "}
+/* booking approval status */
+.awaiting_approval {opacity: 0.6}
+.awaiting_approval a {font-weight: normal}
+.awaiting_approval a:before {content: "? "}
 
 
 /* ------------ DEL.PHP -----------------------------*/

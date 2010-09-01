@@ -60,8 +60,8 @@ function generateOwnerButtons($id, $series)
   
   $this_page = basename($PHP_SELF);
   
-  // Remind button if you're the owner AND there's a provisional
-  // booking outstanding AND sufficient time has passed since the last reminder
+  // Remind button if you're the owner AND there's a booking awaiting
+  // approval AND sufficient time has passed since the last reminder
   // AND we want reminders in the first place
   if (($reminders_enabled) &&
       ($user == $create_by) && 
@@ -352,9 +352,9 @@ if (!empty($error))
   echo "<tr><td>&nbsp;</td><td class=\"error\">" . get_vocab($error) . "</td></tr>\n";
 }
 
-// If we're using provisional bookings, put the buttons to do with managing
+// If bookings require approval, put the buttons to do with managing
 // the bookings in the footer
-if ($provisional_enabled && ($status & STATUS_AWAITING_APPROVAL))
+if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
 {
   echo "<tfoot id=\"confirm_buttons\">\n";
   // PHASE 2 - REJECT
@@ -438,11 +438,11 @@ if ($provisional_enabled && ($status & STATUS_AWAITING_APPROVAL))
     ?>
   </tr>
   <?php
-  if ($provisional_enabled)
+  if ($approval_enabled)
   {
     echo "<tr>\n";
     echo "<td>" . get_vocab("status") . ":</td>\n";
-    echo "<td>" . (($status & STATUS_AWAITING_APPROVAL) ? get_vocab("provisional") : get_vocab("confirmed")) . "</td>\n";
+    echo "<td>" . (($status & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("confirmed")) . "</td>\n";
     echo "</tr>\n";
   }
   ?>

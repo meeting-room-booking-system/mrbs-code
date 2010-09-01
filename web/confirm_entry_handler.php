@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-// Handles actions on provisional bookings
+// Handles actions on bookings awaiting approval
 
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";

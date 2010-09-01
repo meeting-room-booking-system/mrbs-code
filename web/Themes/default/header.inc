@@ -413,34 +413,34 @@ function init()
           </div>
         </form>
         <?php
-        // Provide a link to the list of outstanding provisional bookings
-        // (if there are any areas where we are using provisional bookings)
+        // Provide a link to the list of bookings awaiting approval
+        // (if there are any areas where we require bookings to be approved)
         $user = getUserName();
-        // Build the SQL condition for evaluating whether provisional booking is
+        // Build the SQL condition for evaluating whether booking approval is
         // enabled for an area.   It is enabled if the field is set, or if it's 
         // not set but the default area setting is for it to be enabled.
-        $sql_provisional_enabled = "(provisional_enabled IS NOT NULL AND provisional_enabled > 0)";
-        if ($area_defaults['provisional_enabled'])
+        $sql_approval_enabled = "(approval_enabled IS NOT NULL AND approval_enabled > 0)";
+        if ($area_defaults['approval_enabled'])
         {
-          $sql_provisional_enabled = "(" . $sql_provisional_enabled . " OR (provisional_enabled IS NULL))";
+          $sql_approval_enabled = "(" . $sql_approval_enabled . " OR (approval_enabled IS NULL))";
         }
         
         $sql = "SELECT COUNT(*)
                         FROM $tbl_area
-                       WHERE $sql_provisional_enabled
+                       WHERE $sql_approval_enabled
                        LIMIT 1";
-        $provisional_somewhere = (sql_query1($sql) > 0);
-        if ($provisional_somewhere && (authGetUserLevel($user) >= 1))
+        $approval_somewhere = (sql_query1($sql) > 0);
+        if ($approval_somewhere && (authGetUserLevel($user) >= 1))
         {
           $is_admin = (authGetUserLevel($user) >= 2);
-          // Find out how many provisional bookings there are
-          // (but only for areas where provisional bookings are enabled)
+          // Find out how many bookings are awaiting approval
+          // (but only for areas where approval is required)
           $sql = "SELECT COUNT(*)
                     FROM $tbl_entry E, $tbl_room R, $tbl_area A
                    WHERE status&" . STATUS_AWAITING_APPROVAL . ">0
                      AND E.room_id = R.id
                      AND R.area_id = A.id
-                     AND $sql_provisional_enabled";
+                     AND $sql_approval_enabled";
           if (!$is_admin)
           {
             // Ordinary users can only see their own

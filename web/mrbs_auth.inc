@@ -215,7 +215,7 @@ function auth_can_edit_user($user, $target)
 //
 // Checks whether $user is allowed has booking administration rights
 // for $room - ie is allowed to modify and delete other people's bookings
-// and to confirm provisional bookings.
+// and to approve bookings.
 //
 // At the moment $room is ignored, but is passed here so that later
 // it can be enhanced to provide fine-grained permissions

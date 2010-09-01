@@ -159,16 +159,16 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 echo "<h1>" . get_vocab("pending") . "</h1>\n";
 
-// Get a list of all the provisional bookings
-// We are only interested in areas where provisional bookings are enabled
+// Get a list of all bookings awaiting approval
+// We are only interested in areas where approval is required
 
-// Build the SQL condition for evaluating whether provisional booking is
-// enabled for an area.   It is enabled if the field is set, or if it's 
+// Build the SQL condition for evaluating whether approval is
+// required for an area.   It is enabled if the field is set, or if it's 
 // not set but the default area setting is for it to be enabled.
-$sql_provisional_enabled = "(provisional_enabled IS NOT NULL AND provisional_enabled > 0)";
-if ($area_defaults['provisional_enabled'])
+$sql_approval_enabled = "(approval_enabled IS NOT NULL AND approval_enabled > 0)";
+if ($area_defaults['approval_enabled'])
 {
-  $sql_provisional_enabled = "(" . $sql_provisional_enabled . " OR (provisional_enabled IS NULL))";
+  $sql_approval_enabled = "(" . $sql_approval_enabled . " OR (approval_enabled IS NULL))";
 }
         
 $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
@@ -181,7 +181,7 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
      LEFT JOIN $tbl_repeat AS T ON E.repeat_id=T.id
          WHERE E.room_id = M.id
            AND M.area_id = A.id
-           AND $sql_provisional_enabled
+           AND $sql_approval_enabled
            AND E.status&" . STATUS_AWAITING_APPROVAL . ">0";
 
 // Ordinary users can only see their own bookings       

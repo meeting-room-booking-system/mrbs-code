@@ -199,8 +199,8 @@ function get_email_address($user)
   return $email;
 }
 
-// get the list of email addresses that are allowed to approve
-// provisional bookings for the room with id $room_id
+// get the list of email addresses that are allowed to approve bookings
+// for the room with id $room_id
 // (At the moment this is just the admin email address, but this could
 // be extended.)
 function get_approvers_email($room_id)
@@ -287,7 +287,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
   global $rep_enddate, $typel, $type, $status, $create_by, $rep_type, $enable_periods;
   global $rep_opt, $rep_num_weeks, $custom_fields, $standard_fields;
   global $mail_previous, $auth, $note;
-  global $mail_settings, $weekstarts, $provisional_enabled;
+  global $mail_settings, $weekstarts, $approval_enabled;
   global $tbl_entry;
   
   $recipients = array();
@@ -310,9 +310,9 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     $from = $mail_settings['from'];
   }
   
-  // if we're using provisional bookings and this user needs approval
+  // if we're requiring bookings to be approved and this user needs approval
   // for this room, then get the email addresses of the approvers
-  if ($provisional_enabled && !auth_book_admin($user, $room_id))
+  if ($approval_enabled && !auth_book_admin($user, $room_id))
   {
     $recipients[] = get_approvers_email($room_id);
   }
@@ -440,12 +440,12 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
                             convertToMailCharset($mail_previous['description']),
                             $new_entry) . "\n";
                             
-    if  ($provisional_enabled)
+    if  ($approval_enabled)
     {                        
       // Approval status:
       $body .= get_mail_vocab("status") . ": ";
-      $old_approval_status = ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("provisional") : get_mail_vocab("confirmed");
-      $new_approval_status = ($status & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("provisional") : get_mail_vocab("confirmed");
+      $old_approval_status = ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("confirmed");
+      $new_approval_status = ($status & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("confirmed");
       $body .= compareEntries($new_approval_status, $old_approval_status, $new_entry) . "\n";
     }
                                

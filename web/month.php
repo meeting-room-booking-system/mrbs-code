@@ -536,9 +536,9 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
         // give the enclosing div the appropriate width: full width if both,
         // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
         $class = $d[$cday]["color"][$i];
-        if ($provisional_enabled && ($d[$cday]["status"][$i] & STATUS_AWAITING_APPROVAL))
+        if ($approval_enabled && ($d[$cday]["status"][$i] & STATUS_AWAITING_APPROVAL))
         {
-          $class .= " provisional";
+          $class .= " awaiting_approval";
         }   
         if ($d[$cday]["status"][$i] & STATUS_PRIVATE)
         {

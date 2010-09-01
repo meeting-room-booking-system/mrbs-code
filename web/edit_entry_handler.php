@@ -487,12 +487,12 @@ if ($valid_booking)
     {
       $status |= STATUS_PRIVATE;  // Set the private bit
     }
-    // If we're using provisional booking then we need to work out whether the
-    // status of this booking is confirmed.   If the user is allowed to confirm
-    // bookings for this room, then the status will be confirmed , since they are
-    // in effect immediately confirming their own booking.  Otherwise the booking
+    // If we are using booking approvals then we need to work out whether the
+    // status of this booking is approved.   If the user is allowed to approve
+    // bookings for this room, then the status will be approved, since they are
+    // in effect immediately approving their own booking.  Otherwise the booking
     // will need to approved.
-    if ($provisional_enabled && !auth_book_admin($user, $room_id))
+    if ($approval_enabled && !auth_book_admin($user, $room_id))
     {
       $status |= STATUS_AWAITING_APPROVAL;
     }
