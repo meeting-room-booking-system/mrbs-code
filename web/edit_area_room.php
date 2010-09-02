@@ -311,6 +311,7 @@ if ($phase == 2)
     $area_min_ba_enabled = (!empty($area_min_ba_enabled)) ? 1 : 0;
     $area_max_ba_enabled = (!empty($area_max_ba_enabled)) ? 1 : 0;
     $area_private_enabled = (!empty($area_private_enabled)) ? 1 : 0;
+    $area_private_default = (!empty($area_private_default)) ? 1 : 0;
     $area_private_mandatory = (!empty($area_private_mandatory)) ? 1 : 0;
     $area_approval_enabled = (!empty($area_approval_enabled)) ? 1 : 0;
     $area_reminders_enabled = (!empty($area_reminders_enabled)) ? 1 : 0;
