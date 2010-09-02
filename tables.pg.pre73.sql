@@ -55,7 +55,7 @@ CREATE TABLE mrbs_room
   room_admin_email  text,
   custom_html       text
 );
-create index idxSortKey on mrbs_room(sort_key);
+create index mrbs_idxSortKey on mrbs_room(sort_key);
 
 CREATE TABLE mrbs_entry
 (
@@ -77,8 +77,8 @@ CREATE TABLE mrbs_entry
   info_user   varchar(80),
   info_text   text
 );
-create index idxStartTime on mrbs_entry(start_time);
-create index idxEndTime on mrbs_entry(end_time);
+create index mrbs_idxStartTime on mrbs_entry(start_time);
+create index mrbs_idxEndTime on mrbs_entry(end_time);
 
 CREATE TABLE mrbs_repeat
 (
