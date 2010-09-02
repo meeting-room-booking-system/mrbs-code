@@ -39,6 +39,8 @@ CREATE TABLE mrbs_area
   custom_html            text,
   approval_enabled       tinyint(1),
   reminders_enabled      tinyint(1),
+  confirmation_enabled   tinyint(1),
+  confirmed_default      tinyint(1),
 
   PRIMARY KEY (id)
 );
@@ -71,7 +73,7 @@ CREATE TABLE mrbs_entry
   name        varchar(80) DEFAULT '' NOT NULL,
   type        char DEFAULT 'E' NOT NULL,
   description text,
-  status      tinyint NOT NULL DEFAULT 0,
+  status      tinyint unsigned NOT NULL DEFAULT 0,
   reminded    int,
   info_time   int,
   info_user   varchar(80),
@@ -97,7 +99,7 @@ CREATE TABLE mrbs_repeat
   type        char DEFAULT 'E' NOT NULL,
   description text,
   rep_num_weeks smallint NULL, 
-  status      tinyint NOT NULL DEFAULT 0,
+  status      tinyint unsigned NOT NULL DEFAULT 0,
   reminded    int,
   info_time   int,
   info_user   varchar(80),
@@ -128,6 +130,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '17');
+  VALUES ( 'db_version', '18');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

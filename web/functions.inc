@@ -492,17 +492,20 @@ function get_area_settings($area)
   global $private_enabled, $private_default, $private_mandatory, $private_override;
   global $min_book_ahead_enabled, $max_book_ahead_enabled, $min_book_ahead_secs, $max_book_ahead_secs;
   global $approval_enabled, $reminders_enabled;
+  global $confirmation_enabled, $confirmed_default;
   
   $booleans = array('private_enabled', 'private_default', 'private_mandatory',
                     'min_book_ahead_enabled', 'max_book_ahead_enabled',
-                    'approval_enabled', 'reminders_enabled');
+                    'approval_enabled', 'reminders_enabled',
+                    'confirmation_enabled', 'confirmed_default');
   // Get all the "per area" config settings                  
   $sql = "SELECT resolution, default_duration, morningstarts, morningstarts_minutes,
                  eveningends, eveningends_minutes,
                  private_enabled, private_default, private_mandatory, private_override,
                  min_book_ahead_enabled, max_book_ahead_enabled,
                  min_book_ahead_secs, max_book_ahead_secs,
-                 approval_enabled, reminders_enabled
+                 approval_enabled, reminders_enabled,
+                 confirmation_enabled, confirmed_default
           FROM $tbl_area 
           WHERE id=$area 
           LIMIT 1";
