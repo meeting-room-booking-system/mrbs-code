@@ -731,7 +731,7 @@ table#pending_list {width: 100%}
 .div_report h3 {border-top: 1px solid <?php echo $report_h3_border_color ?>;
     padding-top: 0.5em; margin-bottom: 0}
 .div_report table {clear: both; width: 100%; margin-top: 0.5em}
-.div_report col.col1 {width: 8em}
+.div_report col.col1 {width: 11em}
 .div_report td:first-child {text-align: right; font-weight: bold}
 .div_report .createdby td, .div_report .lastupdate td {font-size: x-small}
 div.report_entry_title {width: 100%; float: left;
@@ -749,6 +749,9 @@ div.report_entry_when  {width: 60%;  float: right; text-align: right}
 #div_summary td.count {border-right-width: 0}
 #div_summary td:first-child {font-weight: bold}
 p.report_entries {font-weight: bold}
+.report .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
+.report .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
+
 
 /* ------------ SEARCH.PHP ----------------------*/
 span#search_str {color: <?php echo $highlight_font_color ?>}

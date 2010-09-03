@@ -162,14 +162,7 @@ echo "<h1>" . get_vocab("pending") . "</h1>\n";
 // Get a list of all bookings awaiting approval
 // We are only interested in areas where approval is required
 
-// Build the SQL condition for evaluating whether approval is
-// required for an area.   It is enabled if the field is set, or if it's 
-// not set but the default area setting is for it to be enabled.
-$sql_approval_enabled = "(approval_enabled IS NOT NULL AND approval_enabled > 0)";
-if ($area_defaults['approval_enabled'])
-{
-  $sql_approval_enabled = "(" . $sql_approval_enabled . " OR (approval_enabled IS NULL))";
-}
+$sql_approval_enabled = some_area_predicate('approval_enabled');
         
 $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
                sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
@@ -182,7 +175,7 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
          WHERE E.room_id = M.id
            AND M.area_id = A.id
            AND $sql_approval_enabled
-           AND E.status&" . STATUS_AWAITING_APPROVAL . ">0";
+           AND E.status&" . STATUS_AWAITING_APPROVAL;
 
 // Ordinary users can only see their own bookings       
 if (!$is_admin)

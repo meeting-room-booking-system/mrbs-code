@@ -442,7 +442,7 @@ if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
   {
     echo "<tr>\n";
     echo "<td>" . get_vocab("confirmation_status") . ":</td>\n";
-    echo "<td>" . (($status & STATUS_TENTATIVE) ? get_vocab("tentative_booking") : get_vocab("confirmed_booking")) . "</td>\n";
+    echo "<td>" . (($status & STATUS_TENTATIVE) ? get_vocab("tentative") : get_vocab("confirmed")) . "</td>\n";
     echo "</tr>\n";
   }
   if ($approval_enabled)

@@ -108,10 +108,9 @@ $vocab["returnprev"]          = "Return to previous page";
 $vocab["invalid_entry_id"]    = "Invalid entry id.";
 $vocab["invalid_series_id"]   = "Invalid series id.";
 $vocab["confirmation_status"] = "Confirmation status";
-$vocab["tentative_booking"]   = "Tentative booking";
-$vocab["confirmed_booking"]   = "Confirmed booking";
+$vocab["tentative"]           = "Tentative";
 $vocab["approval_status"]     = "Approval status";
-$vocab["approved"]            = "Approved booking";
+$vocab["approved"]            = "Approved";
 $vocab["awaiting_approval"]   = "Awaiting approval";
 $vocab["approve"]             = "Approve";
 $vocab["reject"]              = "Reject";
@@ -264,6 +263,10 @@ $vocab["rep_dsp"]               = "Display in report";
 $vocab["rep_dsp_dur"]           = "Duration";
 $vocab["rep_dsp_end"]           = "End Time";
 $vocab["fulldescription_short"] = "Full Description";
+$vocab["both"]                  = "All";
+$vocab["privacy_status"]        = "Privacy status";
+$vocab["search_criteria"]       = "Search criteria";
+$vocab["presentation_options"]  = "Presentation options";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Go To Week Before";

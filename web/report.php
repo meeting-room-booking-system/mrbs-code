@@ -10,6 +10,22 @@ define('REPORT',  01);
 define('SUMMARY', 02);
 define('CSV',     04);
 
+// Constants for booking privacy matching
+define('PRIVATE_NO',   0);
+define('PRIVATE_YES',  1);
+define('PRIVATE_BOTH', 2);  // Can be anything other than 0 or 1
+
+// Constants for booking confirmation matching
+define('CONFIRMED_NO',   0);
+define('CONFIRMED_YES',  1);
+define('CONFIRMED_BOTH', 2);  // Can be anything other than 0 or 1
+
+// Constants for booking approval matching
+define('APPROVED_NO',   0);
+define('APPROVED_YES',  1);
+define('APPROVED_BOTH', 2);  // Can be anything other than 0 or 1
+
+
 
 function date_time_string($t)
 {
@@ -127,6 +143,7 @@ function csv_report_header($display)
 {
   global $csv_row_sep;
   global $custom_fields, $tbl_entry;
+  global $approval_somewhere, $confirmation_somewhere;
   
   // Build an array of values to go into the header row
   $values = array();
@@ -143,6 +160,14 @@ function csv_report_header($display)
   $values[] = get_vocab("fulldescription_short");
   $values[] = get_vocab("type"); 
   $values[] = get_vocab("createdby");
+  if ($confirmation_somewhere)
+  {
+    $values[] = get_vocab("confirmation_status");
+  }
+  if ($approval_somewhere)
+  {
+    $values[] = get_vocab("approval_status");
+  }
   // Now do the custom fields
   foreach ($custom_fields as $key => $value)
   {
@@ -186,6 +211,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   global $output_as_csv;
   global $csv_row_sep;
   global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
+  global $approval_somewhere, $confirmation_somewhere;
   
   // Initialise the line for CSV reports
   $line = "";
@@ -322,6 +348,58 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
     echo "<td>" . get_vocab("createdby") . ":</td>\n";
     echo "<td>" . escape($row['create_by']) . "</td>\n";
     echo "</tr>\n";
+  }
+  
+  // Confirmation status
+  if ($confirmation_somewhere)
+  {
+    // Translate the status field bit into meaningful text
+    if ($row['confirmation_enabled'])
+    {
+      $confirmation_status = ($row['status'] & STATUS_TENTATIVE) ? get_vocab("tentative") : get_vocab("confirmed");
+    }
+    else
+    {
+      $confirmation_status = '';
+    }
+    // Now output the text
+    if ($output_as_csv)
+    {
+      $line = csv_row_add_value($line, $confirmation_status);
+    }
+    else
+    {
+      echo "<tr>\n";
+      echo "<td>" . get_vocab("confirmation_status") . ":</td>\n";
+      echo "<td>" . escape($confirmation_status) . "</td>\n";
+      echo "</tr>\n";
+    }
+  }
+  
+  // Approval status
+  if ($approval_somewhere)
+  {
+    // Translate the status field bit into meaningful text
+    if ($row['approval_enabled'])
+    {
+      $approval_status = ($row['status'] & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved");
+    }
+    else
+    {
+      $approval_status = '';
+    }
+    // Now output the text
+    if ($output_as_csv)
+    {
+      $line = csv_row_add_value($line, $approval_status);
+    }
+    else
+    {
+      echo "<tr>\n";
+      echo "<td>" . get_vocab("approval_status") . ":</td>\n";
+      echo "<td>" . escape($approval_status) . "</td>\n";
+      echo "</tr>\n";
+    }
   }
   
   // Now do any custom fields
@@ -587,6 +665,9 @@ $typematch = get_form_var('typematch', 'array');
 $sortby = get_form_var('sortby', 'string');
 $display = get_form_var('display', 'string');
 $sumby = get_form_var('sumby', 'string');
+$match_approved = get_form_var('match_approved', 'string');
+$match_confirmed = get_form_var('match_confirmed', 'string');
+$match_private = get_form_var('match_private', 'string');
 
 
 // Check the user is authorised for this page
@@ -659,8 +740,6 @@ if (isset($areamatch))
   $namematch_default = htmlspecialchars($namematch);
   $descrmatch_default = htmlspecialchars($descrmatch);
   $creatormatch_default = htmlspecialchars($creatormatch);
-
-
 }
 else
 {
@@ -678,6 +757,9 @@ else
   $To_day   = date("d", $To_time);
   $To_month = date("m", $To_time);
   $To_year  = date("Y", $To_time);
+  $match_private = PRIVATE_BOTH;
+  $match_approved = APPROVED_BOTH;
+  $match_confirmed = CONFIRMED_BOTH;
 }
 
 // $sumby: d=by brief description, c=by creator.
@@ -696,6 +778,10 @@ if (empty($display))
   $display = "d";
 }
 
+$private_somewhere = some_area('private_enabled') || some_area('private_mandatory');
+$approval_somewhere = some_area('approval_enabled');
+$confirmation_somewhere = some_area('confirmation_enabled');
+
 // Upper part: The form.
 if (!$output_as_csv)
 {
@@ -705,6 +791,9 @@ if (!$output_as_csv)
     <form class="form_general" method="get" action="report.php">
       <fieldset>
       <legend><?php echo get_vocab("report_on");?></legend>
+      
+        <fieldset>
+        <legend><?php echo get_vocab("search_criteria");?></legend>
       
         <div id="div_report_start">
           <?php
@@ -765,6 +854,67 @@ if (!$output_as_csv)
         </div>
         
         <?php
+        // Privacy status
+        // Only show this part of the form if there are areas that allow private bookings
+        if ($private_somewhere)
+        {
+          echo "<div id=\"div_privacystatus\">\n";
+          echo "<label>" . get_vocab("privacy_status") . ":</label>\n";
+          echo "<div class=\"group\">\n";   
+          $options = array(PRIVATE_BOTH => 'both', PRIVATE_NO => 'default_public', PRIVATE_YES => 'default_private');
+          foreach ($options as $option => $token)
+          {
+            echo "<label>";
+            echo "<input class=\"radio\" type=\"radio\" name=\"match_private\" value=\"$option\"" .          
+                 (($match_private == $option) ? " checked=\"checked\"" : "") .
+                 ">" . get_vocab($token);
+            echo "</label>\n";
+          }
+          echo "</div>\n";
+          echo "</div>\n";
+        }
+        
+        // Confirmation status
+        // Only show this part of the form if there are areas that require approval
+        if ($confirmation_somewhere)
+        {
+          echo "<div id=\"div_confirmationstatus\">\n";
+          echo "<label>" . get_vocab("confirmation_status") . ":</label>\n";
+          echo "<div class=\"group\">\n";   
+          $options = array(CONFIRMED_BOTH => 'both', CONFIRMED_YES => 'confirmed', CONFIRMED_NO => 'tentative');
+          foreach ($options as $option => $token)
+          {
+            echo "<label>";
+            echo "<input class=\"radio\" type=\"radio\" name=\"match_confirmed\" value=\"$option\"" .          
+                 (($match_confirmed == $option) ? " checked=\"checked\"" : "") .
+                 ">" . get_vocab($token);
+            echo "</label>\n";
+          }
+          echo "</div>\n";
+          echo "</div>\n";
+        }
+        
+        // Approval status
+        // Only show this part of the form if there are areas that require approval
+        if ($approval_somewhere)
+        {
+          echo "<div id=\"div_approvalstatus\">\n";
+          echo "<label>" . get_vocab("approval_status") . ":</label>\n";
+          echo "<div class=\"group\">\n";   
+          $options = array(APPROVED_BOTH => 'both', APPROVED_YES => 'approved', APPROVED_NO => 'awaiting_approval');
+          foreach ($options as $option => $token)
+          {
+            echo "<label>";
+            echo "<input class=\"radio\" type=\"radio\" name=\"match_approved\" value=\"$option\"" .          
+                 (($match_approved == $option) ? " checked=\"checked\"" : "") .
+                 ">" . get_vocab($token);
+            echo "</label>\n";
+          }
+          echo "</div>\n";
+          echo "</div>\n";
+        }
+        
+
         // Now do the custom fields
         foreach ($custom_fields as $key => $value)
         {
@@ -792,7 +942,10 @@ if (!$output_as_csv)
           echo "</div>\n";
         }
         ?>
+        </fieldset>
       
+        <fieldset>
+        <legend><?php echo get_vocab("presentation_options");?></legend>  
         <div id="div_summarize">
           <label><?php echo get_vocab("include");?>:</label>
           <div class="group">
@@ -872,10 +1025,12 @@ if (!$output_as_csv)
             </label>
           </div>
         </div>
+        </fieldset>
       
         <div id="report_submit">
           <input class="submit" type="submit" value="<?php echo get_vocab("submitquery") ?>">
         </div>
+        
       
       </fieldset>
     </form>
@@ -889,24 +1044,13 @@ if (isset($areamatch))
   // Start and end times are also used to clip the times for summary info.
   $report_start = mktime(0, 0, 0, $From_month+0, $From_day+0, $From_year+0);
   $report_end = mktime(0, 0, 0, $To_month+0, $To_day+1, $To_year+0);
-
-  //   SQL result will contain the following columns:
-  // Col Index  Description:
-  //   1  [0]   Entry ID, not displayed -- used for linking to View script.
-  //   2  [1]   Start time as Unix time_t
-  //   3  [2]   End time as Unix time_t
-  //   4  [3]   Entry name or short description, must be HTML escaped
-  //   5  [4]   Entry description, must be HTML escaped
-  //   6  [5]   Type, single char mapped to a string
-  //   7  [6]   Created by (user name or IP addr), must be HTML escaped
-  //   8  [7]   Creation timestamp, converted to Unix time_t by the database
-  //   9  [8]   Area name, must be HTML escaped
-  //  10  [9]   Room name, must be HTML escaped
   
+  // Construct the SQL query
   $sql = "SELECT E.id AS entry_id, E.start_time, E.end_time, E.name, E.description, "
-  . "E.type, E.create_by, "
-  .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated"
-  . ", A.area_name, R.room_name";
+       . "E.type, E.create_by, E.status, "
+       .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
+       . "A.area_name, R.room_name, "
+       . "A.approval_enabled, A.confirmation_enabled";
   // Get any custom fields
   foreach ($custom_fields as $custom_field => $value)
   {
@@ -959,7 +1103,33 @@ if (isset($areamatch))
     // sql_syntax_caseless_contains() does the SQL escaping
     $sql .= " AND" .  sql_syntax_caseless_contains("E.create_by", $creatormatch);
   }
-  // now do the custom fields
+  
+  // (In the next three cases, you will get the empty string if that part
+  // of the form was not displayed - which means that you need all bookings)
+  
+  // Match the privacy status
+  if (($match_private != PRIVATE_BOTH) && ($match_private != ''))
+  {
+    $sql .= " AND ";
+    $sql .= ($match_private) ? '' : '!';  // Note that private works the other way round to the next two
+    $sql .= "(status&" . STATUS_PRIVATE . ")";
+  }
+  // Match the confirmation status
+  if (($match_confirmed != CONFIRMED_BOTH) && ($match_confirmed != ''))
+  {
+    $sql .= " AND ";
+    $sql .= ($match_confirmed) ? '!' : '';
+    $sql .= "(status&" . STATUS_TENTATIVE . ")";
+  }
+  // Match the approval status
+  if (($match_approved != APPROVED_BOTH) && ($match_approved != ''))
+  {
+    $sql .= " AND ";
+    $sql .= ($match_approved) ? '!' : '';
+    $sql .= "(status&" . STATUS_AWAITING_APPROVAL . ")";
+  }
+  
+  // Now do the custom fields
   foreach ($custom_fields as $key => $value)
   {
     $var = "match_$key";
@@ -1003,7 +1173,7 @@ if (isset($areamatch))
       //   - their own bookings, and others' public bookings if private_override is set to 'none'
       //   - just their own bookings, if private_override is set to 'private'
       $sql .= " AND ((A.private_override='public') OR
-                     (A.private_override='none' AND (E.status&" . STATUS_PRIVATE . "=0 OR E.create_by = '" . addslashes($user) . "')) OR
+                     (A.private_override='none' AND (!(E.status&" . STATUS_PRIVATE . ") OR E.create_by = '" . addslashes($user) . "')) OR
                      (A.private_override='private' AND E.create_by = '" . addslashes($user) . "'))";                
     }
     else
@@ -1012,7 +1182,7 @@ if (isset($areamatch))
       //   - all bookings, if private_override is set to 'public'
       //   - public bookings if private_override is set to 'none'
       $sql .= " AND ((A.private_override='public') OR
-                     (A.private_override='none' AND E.status&" . STATUS_PRIVATE . "=0))";
+                     (A.private_override='none' AND !(E.status&" . STATUS_PRIVATE . ")))";
     }
   }
    

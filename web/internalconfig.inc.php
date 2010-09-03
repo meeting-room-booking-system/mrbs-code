@@ -101,7 +101,8 @@ $standard_fields['repeat'] = array('id',
  // get_area_settings().   [This isn't a very elegant way of handling
  // per-area settings and perhaps ought to be revisited at some stage]
  $area_defaults = array();
- $area_defaults['approval_enabled'] = $approval_enabled;
+ $area_defaults['approval_enabled']     = $approval_enabled;
+ $area_defaults['confirmation_enabled'] = $confirmation_enabled;
                                
 /********************************************************
  * PHP System Configuration - internal use, do not change

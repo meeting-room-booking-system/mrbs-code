@@ -6,7 +6,7 @@
 function print_theme_header($day, $month, $year, $area, $room)
 {
   global $mrbs_company, $mrbs_company_logo, $mrbs_company_url, $mrbs_company_more_info,
-         $search_str, $locale_warning, $area_defaults;
+         $search_str, $locale_warning;
   global $tbl_entry, $tbl_room, $tbl_area;
   global $PHP_SELF, $view_week_number, $weekstarts;
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
@@ -416,28 +416,17 @@ function init()
         // Provide a link to the list of bookings awaiting approval
         // (if there are any areas where we require bookings to be approved)
         $user = getUserName();
-        // Build the SQL condition for evaluating whether booking approval is
-        // enabled for an area.   It is enabled if the field is set, or if it's 
-        // not set but the default area setting is for it to be enabled.
-        $sql_approval_enabled = "(approval_enabled IS NOT NULL AND approval_enabled > 0)";
-        if ($area_defaults['approval_enabled'])
-        {
-          $sql_approval_enabled = "(" . $sql_approval_enabled . " OR (approval_enabled IS NULL))";
-        }
-        
-        $sql = "SELECT COUNT(*)
-                        FROM $tbl_area
-                       WHERE $sql_approval_enabled
-                       LIMIT 1";
-        $approval_somewhere = (sql_query1($sql) > 0);
+
+        $approval_somewhere = some_area('approval_enabled');
         if ($approval_somewhere && (authGetUserLevel($user) >= 1))
         {
+          $sql_approval_enabled = some_area_predicate('approval_enabled');
           $is_admin = (authGetUserLevel($user) >= 2);
           // Find out how many bookings are awaiting approval
           // (but only for areas where approval is required)
           $sql = "SELECT COUNT(*)
                     FROM $tbl_entry E, $tbl_room R, $tbl_area A
-                   WHERE status&" . STATUS_AWAITING_APPROVAL . ">0
+                   WHERE status&" . STATUS_AWAITING_APPROVAL . "
                      AND E.room_id = R.id
                      AND R.area_id = A.id
                      AND $sql_approval_enabled";

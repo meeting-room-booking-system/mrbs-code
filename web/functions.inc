@@ -536,6 +536,36 @@ function get_area_settings($area)
   }
 }
 
+// generate the predicate for use in an SQL query to test whether
+// an area has $field set
+function some_area_predicate($field)
+{
+  global $area_defaults;
+  
+  $predicate = "($field IS NOT NULL AND $field > 0)";
+  if ($area_defaults[$field])
+  {
+    $predicate = "(" . $predicate . " OR ($field IS NULL))";
+  }
+  return $predicate;
+}
+
+// Determines whether there is at least one area with the relevant $field
+// set (eg 'approval_enabled' or 'confirmation_enabled')
+//
+// Returns: boolean
+function some_area($field)
+{
+  global $tbl_area;
+  
+  $predicate = some_area_predicate($field);   
+  $sql = "SELECT COUNT(*)
+                  FROM $tbl_area
+                 WHERE $predicate
+                 LIMIT 1";                                
+  return (sql_query1($sql) > 0);
+}
+
 // Get the local day name based on language. Note 2000-01-02 is a Sunday.
 function day_name($daynumber)
 {

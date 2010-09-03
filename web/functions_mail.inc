@@ -444,8 +444,8 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     {                        
       // Confirmation status:
       $body .= get_mail_vocab("confirmation_status") . ": ";
-      $old_status = ($mail_previous['status'] & STATUS_TENTATIVE) ? get_mail_vocab("tentative_booking") : get_mail_vocab("confirmed_booking");
-      $new_status = ($status & STATUS_TENTATIVE) ? get_mail_vocab("tentative_booking") : get_mail_vocab("confirmed_booking");
+      $old_status = ($mail_previous['status'] & STATUS_TENTATIVE) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
+      $new_status = ($status & STATUS_TENTATIVE) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
       $body .= compareEntries($new_status, $old_status, $new_entry) . "\n";
     }
                             
