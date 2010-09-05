@@ -639,9 +639,8 @@ if (isset($change_area) &&!empty($area))
         <label for="area_admin_email"><?php echo get_vocab("area_admin_email") ?>:</label>
         <input type="text" id="area_admin_email" name="area_admin_email" maxlength="75" value="<?php echo htmlspecialchars($row["area_admin_email"]); ?>">
         </div>
-      </fieldset>
       
-      <?php
+        <?php
         // The custom HTML
         echo "<div>\n";
         echo "<label for=\"area_custom_html\" title=\"" . get_vocab("custom_html_note") . "\">" . get_vocab("custom_html") . ":</label>\n";
@@ -649,6 +648,8 @@ if (isset($change_area) &&!empty($area))
         echo htmlspecialchars($row['custom_html']);
         echo "</textarea>\n";
         echo "</div>\n";
+      
+      echo "</fieldset>\n";
     
       if (!$enable_periods)
       {
