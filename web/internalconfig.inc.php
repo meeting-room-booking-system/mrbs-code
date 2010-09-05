@@ -95,14 +95,31 @@ $standard_fields['repeat'] = array('id',
 /********************************************************
  * Miscellaneous
  ********************************************************/
- // Save some of the default per-area settings for later use.   We
- // do this because they will get overwritten by the values for
- // the current area in a moment - in standard_vars.inc by a call to 
- // get_area_settings().   [This isn't a very elegant way of handling
- // per-area settings and perhaps ought to be revisited at some stage]
- $area_defaults = array();
- $area_defaults['approval_enabled']     = $approval_enabled;
- $area_defaults['confirmation_enabled'] = $confirmation_enabled;
+// Save some of the default per-area settings for later use.   We
+// do this because they will get overwritten by the values for
+// the current area in a moment - in standard_vars.inc by a call to 
+// get_area_settings().   [This isn't a very elegant way of handling
+// per-area settings and perhaps ought to be revisited at some stage]
+
+$area_defaults = array();
+$area_defaults['resolution']             = $resolution;
+$area_defaults['default_duration']       = $default_duration;
+$area_defaults['morningstarts']          = $morningstarts;
+$area_defaults['morningstarts_minutes']  = $morningstarts_minutes;
+$area_defaults['eveningends']            = $eveningends;
+$area_defaults['eveningends_minutes']    = $eveningends_minutes;
+$area_defaults['private_enabled']        = $private_enabled;
+$area_defaults['private_default']        = $private_default;
+$area_defaults['private_mandatory']      = $private_mandatory;
+$area_defaults['private_override']       = $private_override;
+$area_defaults['min_book_ahead_enabled'] = $min_book_ahead_enabled;
+$area_defaults['max_book_ahead_enabled'] = $max_book_ahead_enabled;
+$area_defaults['min_book_ahead_secs']    = $min_book_ahead_secs;
+$area_defaults['max_book_ahead_secs']    = $max_book_ahead_secs;
+$area_defaults['provisional_enabled']    = $provisional_enabled;
+$area_defaults['reminders_enabled']      = $reminders_enabled;
+$area_defaults['approval_enabled']       = $approval_enabled;
+$area_defaults['confirmation_enabled']   = $confirmation_enabled;
                                
 /********************************************************
  * PHP System Configuration - internal use, do not change
