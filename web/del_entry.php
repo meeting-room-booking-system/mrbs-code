@@ -63,7 +63,7 @@ if ($info = mrbsGetBookingInfo($id, FALSE, TRUE))
     // Get the settings for this area (they will be needed for policy checking)
     get_area_settings($area);
     
-    $notify_by_email = $mail_settings['admin_on_delete']  || $mail_settings['book_admin_on_approval'];
+    $notify_by_email = $mail_settings['admin_on_delete'] && $need_to_send_mail;
 
     if ($notify_by_email)
     {
