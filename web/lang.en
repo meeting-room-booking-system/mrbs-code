@@ -171,7 +171,7 @@ $vocab["logoff"]             = "Log Off";
 
 // Database upgrade code
 $vocab["database_login"]           = "Database login";
-$vocab["upgrade_required"]         = "The database needs to be upgraded.";
+$vocab["upgrade_required"]         = "The database needs to be upgraded.  Please backup your database before proceeding.";
 $vocab["supply_userpass"]          = "Please supply a database username and password that has admin rights.";
 $vocab["contact_admin"]            = "If you are not the MRBS administrator please contact $mrbs_admin.";
 $vocab["upgrade_to_version"]       = "Upgrading to database version";
