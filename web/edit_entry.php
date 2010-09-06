@@ -535,7 +535,7 @@ else
 ?>
 
 
-<form class="form_general" id="main" action="edit_entry_handler.php" method="get" onsubmit="return validate(this)">
+<form class="form_general" id="main" action="edit_entry_handler.php" method="post" onsubmit="return validate(this)">
   <fieldset>
   <legend><?php echo get_vocab($token); ?></legend>
 
