@@ -820,7 +820,8 @@ function notifyAdminOnDelete($mail_previous)
  * entry state.
  *
  * @param int     $id       entry id to get data
- * @param int     $series   1 if this is a series or 0
+ * @param int     $series   TRUE if this is the id of an entry in the repeat table
+                            FALSE if this is the id of an entry in the entry table
  * @return bool             TRUE or PEAR error object if fails
  */
 function getPreviousEntryData($id, $series)

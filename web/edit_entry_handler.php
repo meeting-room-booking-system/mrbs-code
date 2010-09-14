@@ -547,9 +547,9 @@ if ($valid_booking)
           }
           // If this is a modified entry then call
           // getPreviousEntryData to prepare entry comparison.
-          if ( isset($id) )
+          if (isset($id))
           {
-            $mail_previous = getPreviousEntryData($id, 1);
+            $mail_previous = getPreviousEntryData($repeat_id, TRUE);
           }
           $result = notifyAdminOnBooking(!isset($id), $new_id, $booking['series']);
         }
@@ -604,9 +604,9 @@ if ($valid_booking)
           }
           // If this is a modified entry then call
           // getPreviousEntryData to prepare entry comparison.
-          if ( isset($id) )
+          if (isset($id))
           {
-            $mail_previous = getPreviousEntryData($id, 0);
+            $mail_previous = getPreviousEntryData($id, FALSE);
           }
           $result = notifyAdminOnBooking(!isset($id), $new_id, ($edit_type == "series"));
         }
