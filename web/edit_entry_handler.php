@@ -557,9 +557,10 @@ if ($valid_booking)
         // details
         if ($mail_settings['details'])
         {
-          $sql = "SELECT r.id AS room_id, r.room_name, r.area_id, a.area_name ";
-          $sql .= "FROM $tbl_room r, $tbl_area a ";
-          $sql .= "WHERE r.id=$room_id AND r.area_id = a.id";
+          $sql = "SELECT R.room_name, A.area_name
+                    FROM $tbl_room R, $tbl_area A
+                   WHERE R.id=$room_id AND R.area_id = A.id
+                   LIMIT 1";
           $res = sql_query($sql);
           $row = sql_row_keyed($res, 0);
           $room_name = $row['room_name'];
