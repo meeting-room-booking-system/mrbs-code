@@ -503,8 +503,7 @@ if ($valid_booking)
     {
       $status |= STATUS_TENTATIVE;
     }
-
-    
+        
     if ($edit_type == "series")
     {
       $booking = mrbsCreateRepeatingEntrys($starttime,
@@ -521,51 +520,12 @@ if ($valid_booking)
                                            $status,
                                            $custom_fields);
       $new_id = $booking['id'];
-
-      // Send a mail to the Administrator
-      if ($need_to_send_mail)
-      {
-        require_once "functions_mail.inc";
-        // Send a mail only if this a new entry, or if this is an
-        // edited entry but we have to send mail on every change,
-        // and if mrbsCreateRepeatingEntrys is successful
-        if ( ( (isset($id) && $mail_settings['admin_all']) or !isset($id) ) &&
-             (0 != $new_id) )
-        {
-          // Get room name and area name. Would be better to avoid
-          // a database access just for that. Ran only if we need
-          // details
-          if ($mail_settings['details'])
-          {
-            $sql = "SELECT r.id AS room_id, r.room_name, r.area_id, a.area_name ";
-            $sql .= "FROM $tbl_room r, $tbl_area a ";
-            $sql .= "WHERE r.id=$room_id AND r.area_id = a.id";
-            $res = sql_query($sql);
-            $row = sql_row_keyed($res, 0);
-            $room_name = $row['room_name'];
-            $area_name = $row['area_name'];
-          }
-          // If this is a modified entry then call
-          // getPreviousEntryData to prepare entry comparison.
-          if (isset($id))
-          {
-            $mail_previous = getPreviousEntryData($repeat_id, TRUE);
-          }
-          $result = notifyAdminOnBooking(!isset($id), $new_id, $booking['series']);
-        }
-      }
+      $is_repeat_table = $booking['series'];
     }
     else
     {
       // Mark changed entry in a series with entry_type 2:
-      if ($repeat_id > 0)
-      {
-        $entry_type = 2;
-      }
-      else
-      {
-        $entry_type = 0;
-      }
+      $entry_type = ($repeat_id > 0) ? 2 : 0;
 
       // Create the entry:
       $new_id = mrbsCreateSingleEntry($starttime,
@@ -579,39 +539,49 @@ if ($valid_booking)
                                       $description,
                                       $status,
                                       $custom_fields);
-
-      // Send a mail to the Administrator
-      if ($need_to_send_mail)
+      $is_repeat_table = FALSE;
+    }
+    
+    // Send a mail to the Administrator
+    if ($need_to_send_mail)
+    {
+      // Send a mail only if this a new entry, or if this is an
+      // edited entry but we have to send mail on every change,
+      // and if the entry creation is successful
+      if ( ( (isset($id) && $mail_settings['admin_all']) or !isset($id) ) &&
+           (0 != $new_id) )
       {
         require_once "functions_mail.inc";
-        // Send a mail only if this a new entry, or if this is an
-        // edited entry but we have to send mail on every change,
-        // and if mrbsCreateRepeatingEntrys is successful
-        if ( ( (isset($id) && $mail_settings['admin_all']) or !isset($id) ) && (0 != $new_id) )
+        // Get room name and area name. Would be better to avoid
+        // a database access just for that. Ran only if we need
+        // details
+        if ($mail_settings['details'])
         {
-          // Get room name and are name. Would be better to avoid
-          // a database access just for that. Ran only if we need
-          // details.
-          if ($mail_settings['details'])
+          $sql = "SELECT r.id AS room_id, r.room_name, r.area_id, a.area_name ";
+          $sql .= "FROM $tbl_room r, $tbl_area a ";
+          $sql .= "WHERE r.id=$room_id AND r.area_id = a.id";
+          $res = sql_query($sql);
+          $row = sql_row_keyed($res, 0);
+          $room_name = $row['room_name'];
+          $area_name = $row['area_name'];
+        }
+        // If this is a modified entry then call
+        // getPreviousEntryData to prepare entry comparison.
+        if (isset($id))
+        {
+          if ($edit_type == "series")
           {
-            $sql = "SELECT r.id AS room_id, r.room_name, r.area_id, a.area_name ";
-            $sql .= "FROM $tbl_room r, $tbl_area a ";
-            $sql .= "WHERE r.id=$room_id AND r.area_id = a.id";
-            $res = sql_query($sql);
-            $row = sql_row_keyed($res, 0);
-            $room_name = $row['room_name'];
-            $area_name = $row['area_name'];
+            $mail_previous = getPreviousEntryData($repeat_id, TRUE);
           }
-          // If this is a modified entry then call
-          // getPreviousEntryData to prepare entry comparison.
-          if (isset($id))
+          else
           {
             $mail_previous = getPreviousEntryData($id, FALSE);
           }
-          $result = notifyAdminOnBooking(!isset($id), $new_id, ($edit_type == "series"));
         }
+        // Send the email
+        $result = notifyAdminOnBooking(!isset($id), $new_id, $is_repeat_table);
       }
-    }
+    }   
   } // end foreach $rooms
 
   // Delete the original entry
