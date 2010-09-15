@@ -336,13 +336,13 @@ if (isset($rep_type) && ($rep_type != REP_NONE) &&
     isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
 {
   // Get the repeat entry settings
-  $rep_enddate = mktime($hour, $minute, 0,
-                        $rep_end_month, $rep_end_day, $rep_end_year);
+  $end_date = mktime($hour, $minute, 0,
+                     $rep_end_month, $rep_end_day, $rep_end_year);
 }
 else
 {
   $rep_type = REP_NONE;
-  $rep_enddate = 0;  // to avoid an undefined variable notice
+  $end_date = 0;  // to avoid an undefined variable notice
 }
 
 if (!isset($rep_day))
@@ -376,7 +376,7 @@ if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
 if ($rep_type != REP_NONE)
 {
   $reps = mrbsGetRepeatEntryList($starttime,
-                                 isset($rep_enddate) ? $rep_enddate : 0,
+                                 isset($end_date) ? $end_date : 0,
                                  $rep_type, $rep_opt, $max_rep_entrys,
                                  $rep_num_weeks);
 }
@@ -517,7 +517,7 @@ if ($valid_booking)
     if ($edit_type == "series")
     {
       $data['rep_type'] = $rep_type;
-      $data['end_date'] = $rep_enddate;
+      $data['end_date'] = $end_date;
       $data['rep_opt'] = $rep_opt;
       $data['rep_num_weeks'] = (isset($rep_num_weeks)) ? $rep_num_weeks : 0;
     }

@@ -170,7 +170,7 @@ foreach ($row as $column => $value)
     case 'repeat_id':
     case 'reminded':
     case 'rep_type':
-    case 'rep_enddate':
+    case 'end_date':
     case 'rep_opt':
     case 'rep_num_weeks':
     case 'start_time':

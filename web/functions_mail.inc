@@ -620,7 +620,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
         $temp = mail_strftime('%A %d %B %Y',$data['end_date']);
         $body .=  ": " . 
           compareEntries($temp,
-                         $mail_previous['rep_end_date'],
+                         $mail_previous['end_date'],
                          $new_entry) . "\n";
       }
     }
@@ -802,7 +802,7 @@ function notifyAdminOnDelete($mail_previous)
     }
 
     $body .= "\n" . get_mail_vocab("rep_end_date");
-    $body .=  ": " . $mail_previous['rep_end_date'] . "\n";
+    $body .=  ": " . $mail_previous['end_date'] . "\n";
   }
   $body .= "\n";
   // End of mail details
@@ -865,7 +865,7 @@ function getPreviousEntryData($id, $series)
   { 
     // get the repeat end date
     // use getMailTimeDateString as all I want is the date
-    $data['rep_end_date'] = getMailTimeDateString($data['rep_enddate'], FALSE);
+    $data['end_date'] = getMailTimeDateString($data['end_date'], FALSE);
     
     // get the names of the repeat days 
     switch($data['rep_type'])

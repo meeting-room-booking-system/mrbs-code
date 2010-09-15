@@ -560,18 +560,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
  * 
  * Creates a repeat entry in the data base + all the repeating entrys
  * 
- * $starttime   - Start time of entry
- * $endtime     - End time of entry
- * $rep_type    - The repeat type
- * $rep_enddate - When the repeating ends
- * $rep_opt     - Any options associated with the entry
- * $room_id     - Room ID
- * $owner       - Owner
- * $name        - Name
- * $type        - Type (Internal/External)
- * $description - Description
- * $status      - Status code
- * $custom_fields - an array of any custom fields
+ * $data      - An array containing the entry details
  * 
  * Returns:
  *   an array
@@ -895,10 +884,10 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
           fatal_error(TRUE, get_vocab("invalid_series_id"));
         }
       }
-      $row['rep_type']      = $extra_row['rep_type'];
-      $row['rep_enddate']   = $extra_row['end_date'];
-      $row['rep_opt']       = $extra_row['rep_opt'];
-      $row['rep_num_weeks'] = $extra_row['rep_num_weeks'];
+      $row['rep_type']         = $extra_row['rep_type'];
+      $row['end_date']         = $extra_row['end_date'];
+      $row['rep_opt']          = $extra_row['rep_opt'];
+      $row['rep_num_weeks']    = $extra_row['rep_num_weeks'];
       $row['repeat_info_time'] = $extra_row['repeat_info_time'];
       $row['repeat_info_user'] = $extra_row['repeat_info_user'];
       $row['repeat_info_text'] = $extra_row['repeat_info_text'];

@@ -89,7 +89,6 @@ if (isset($action))
     
     // Process some special fields
     $data['duration'] = ($data['end_time'] - $data['start_time']) - cross_dst($data['start_time'], $data['end_time']);
-    $data['end_date'] = isset($data['rep_enddate'])   ? $data['rep_enddate']   : NULL;
     
     if ($enable_periods)
     {
