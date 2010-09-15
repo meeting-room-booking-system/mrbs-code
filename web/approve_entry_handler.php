@@ -85,49 +85,34 @@ if (isset($action))
   if ($result && $need_to_send_mail)
   {
     // Retrieve the booking details which we will need for the email
-    // (notifyAdminOnBooking relies on them being available as globals)
-
-    $row = mrbsGetBookingInfo($id, $series);
+    $data = mrbsGetBookingInfo($id, $series);
     
-    $name          = $row['name'];
-    $description   = $row['description'];
-    $create_by     = $row['create_by'];
-    $type          = $row['type'];
-    $status        = $row['status'];
-    $starttime     = $row['start_time'];
-    $endtime       = $row['end_time'];
-    $room_name     = $row['room_name'];
-    $room_id       = $row['room_id'];
-    $area_name     = $row['area_name'];
-    $duration      = ($row['end_time'] - $row['start_time']) - cross_dst($row['start_time'], $row['end_time']);
-    $rep_type      = $row['rep_type'];
-    $repeat_id     = isset($row['repeat_id'])     ? $row['repeat_id']     : NULL;
-    $rep_enddate   = isset($row['rep_enddate'])   ? $row['rep_enddate']   : NULL;
-    $rep_opt       = isset($row['rep_opt'])       ? $row['rep_opt']       : NULL;
-    $rep_num_weeks = isset($row['rep_num_weeks']) ? $row['rep_num_weeks'] : NULL;
+    // Process some special fields
+    $data['duration'] = ($data['end_time'] - $data['start_time']) - cross_dst($data['start_time'], $data['end_time']);
+    $data['end_date'] = isset($data['rep_enddate'])   ? $data['rep_enddate']   : NULL;
     
     if ($enable_periods)
     {
-      list($start_period, $start_date) =  period_date_string($row['start_time']);
+      list($start_period, $start_date) =  period_date_string($data['start_time']);
     }
     else
     {
-      $start_date = time_date_string($row['start_time']);
+      $start_date = time_date_string($data['start_time']);
     }
 
     if ($enable_periods)
     {
-      list( , $end_date) =  period_date_string($row['end_time'], -1);
+      list( , $end_date) =  period_date_string($data['end_time'], -1);
     }
     else
     {
-      $end_date = time_date_string($row['end_time']);
+      $end_date = time_date_string($data['end_time']);
     }
   
     // The optional last parameters below are set to FALSE because we don't want the units
     // translated - otherwise they will end up getting translated twice, resulting
     // in an undefined index error.
-    $enable_periods ? toPeriodString($start_period, $duration, $dur_units, FALSE) : toTimeString($duration, $dur_units, FALSE);
+    $enable_periods ? toPeriodString($start_period, $data['duration'], $data['dur_units'], FALSE) : toTimeString($data['duration'], $data['dur_units'], FALSE);
 
     $result = notifyAdminOnBooking($is_new_entry, $id, $series, $action);
   }

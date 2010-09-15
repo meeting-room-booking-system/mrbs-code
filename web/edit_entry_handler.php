@@ -476,11 +476,10 @@ foreach ( $rooms as $room_id )
 
 } // end foreach rooms
 
-
 // If the rooms were free, go ahead an process the bookings
 if ($valid_booking)
 {
-  foreach ( $rooms as $room_id )
+  foreach ($rooms as $room_id)
   { 
     // Set the various bits in the status field as appropriate
     $status = 0;
@@ -503,42 +502,45 @@ if ($valid_booking)
     {
       $status |= STATUS_TENTATIVE;
     }
-        
+    
+    // Assemble the data in an array
+    $data = array();
+    $data['start_time'] = $starttime;
+    $data['end_time'] = $endtime;
+    $data['room_id'] = $room_id;
+    $data['create_by'] = $create_by;
+    $data['name'] = $name;
+    $data['type'] = $type;
+    $data['description'] = $description;
+    $data['status'] = $status;
+    $data['custom_fields'] = $custom_fields;
     if ($edit_type == "series")
     {
-      $booking = mrbsCreateRepeatingEntrys($starttime,
-                                           $endtime,
-                                           $rep_type,
-                                           $rep_enddate,
-                                           $rep_opt,
-                                           $room_id,
-                                           $create_by,
-                                           $name,
-                                           $type,
-                                           $description,
-                                           isset($rep_num_weeks) ? $rep_num_weeks : 0,
-                                           $status,
-                                           $custom_fields);
+      $data['rep_type'] = $rep_type;
+      $data['end_date'] = $rep_enddate;
+      $data['rep_opt'] = $rep_opt;
+      $data['rep_num_weeks'] = (isset($rep_num_weeks)) ? $rep_num_weeks : 0;
+    }
+    else
+    {
+      // Mark changed entry in a series with entry_type 2:
+      $data['entry_type'] = ($repeat_id > 0) ? 2 : 0;
+      $data['repeat_id'] = $repeat_id;
+    }
+    // The following elements are needed for email notifications
+    $data['duration'] = $duration;
+    $data['dur_units'] = $dur_units;
+
+    if ($edit_type == "series")
+    {
+      $booking = mrbsCreateRepeatingEntrys($data);
       $new_id = $booking['id'];
       $is_repeat_table = $booking['series'];
     }
     else
     {
-      // Mark changed entry in a series with entry_type 2:
-      $entry_type = ($repeat_id > 0) ? 2 : 0;
-
       // Create the entry:
-      $new_id = mrbsCreateSingleEntry($starttime,
-                                      $endtime,
-                                      $entry_type,
-                                      $repeat_id,
-                                      $room_id,
-                                      $create_by,
-                                      $name,
-                                      $type,
-                                      $description,
-                                      $status,
-                                      $custom_fields);
+      $new_id = mrbsCreateSingleEntry($data);
       $is_repeat_table = FALSE;
     }
     
@@ -552,9 +554,9 @@ if ($valid_booking)
            (0 != $new_id) )
       {
         require_once "functions_mail.inc";
-        // Get room name and area name. Would be better to avoid
-        // a database access just for that. Ran only if we need
-        // details
+        // Get room name and area name for email notifications.
+        // Would be better to avoid a database access just for that.
+        // Ran only if we need details
         if ($mail_settings['details'])
         {
           $sql = "SELECT R.room_name, A.area_name
@@ -563,8 +565,8 @@ if ($valid_booking)
                    LIMIT 1";
           $res = sql_query($sql);
           $row = sql_row_keyed($res, 0);
-          $room_name = $row['room_name'];
-          $area_name = $row['area_name'];
+          $data['room_name'] = $row['room_name'];
+          $data['area_name'] = $row['area_name'];
         }
         // If this is a modified entry then call
         // getPreviousEntryData to prepare entry comparison.

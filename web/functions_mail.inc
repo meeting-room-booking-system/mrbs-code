@@ -282,12 +282,10 @@ function get_room_admin_email($id, $series=FALSE)
  */
 function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
 {
-  global $url_base, $returl, $name, $description, $area_name;
-  global $room_name, $room_id, $starttime, $duration, $dur_units, $end_date, $endtime;
-  global $rep_enddate, $typel, $type, $status, $create_by, $rep_type, $enable_periods;
-  global $rep_opt, $rep_num_weeks, $custom_fields, $standard_fields;
-  global $mail_previous, $auth, $note;
-  global $mail_settings, $weekstarts, $approval_enabled, $confirmation_enabled;
+  global $data, $mail_previous, $note;
+  global $url_base, $returl;
+  global $auth, $weekstarts, $typel, $mail_settings, $standard_fields;
+  global $enable_periods, $approval_enabled, $confirmation_enabled;
   global $tbl_entry;
   
   $recipients = array();
@@ -312,9 +310,9 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
   
   // if we're requiring bookings to be approved and this user needs approval
   // for this room, then get the email addresses of the approvers
-  if ($approval_enabled && !auth_book_admin($user, $room_id))
+  if ($approval_enabled && !auth_book_admin($user, $data['room_id']))
   {
-    $recipients[] = get_approvers_email($room_id);
+    $recipients[] = get_approvers_email($data['room_id']);
   }
   
   ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
@@ -324,7 +322,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     // Look for list of area admins emails addresses
     if ($new_entry)
     {
-      $email = get_area_admin_email($new_id, ($rep_type != REP_NONE));
+      $email = get_area_admin_email($new_id, ($data['rep_type'] != REP_NONE));
       if (!empty($email))
       {
         $recipients[] = $email;
@@ -343,7 +341,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     // Look for list of room admins email addresses
     if ($new_entry)
     {
-      $email = get_room_admin_email($new_id, ($rep_type != REP_NONE));
+      $email = get_room_admin_email($new_id, ($data['rep_type'] != REP_NONE));
       if (!empty($email))
       {
         $recipients[] = $email;
@@ -366,7 +364,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
       $cc = array_merge($cc, $recipients);
       $recipients = array();
     }
-    $booker = ($new_entry) ? $create_by : $mail_previous['createdby'];
+    $booker = ($new_entry) ? $data['create_by'] : $mail_previous['createdby'];
     $booker_email = get_email_address($booker);
     if (!empty($booker_email))
     {
@@ -430,13 +428,13 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
   if ($mail_settings['details'])
   {
     $body .= "\n" . get_mail_vocab("namebooker") . ": ";
-    $body .= compareEntries(convertToMailCharset($name),
+    $body .= compareEntries(convertToMailCharset($data['name']),
                             convertToMailCharset($mail_previous['namebooker']),
                             $new_entry)  . "\n";
         
     // Description:
     $body .= get_mail_vocab("description") . ": ";
-    $body .= compareEntries(convertToMailCharset($description),
+    $body .= compareEntries(convertToMailCharset($data['description']),
                             convertToMailCharset($mail_previous['description']),
                             $new_entry) . "\n";
                             
@@ -445,7 +443,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
       // Confirmation status:
       $body .= get_mail_vocab("confirmation_status") . ": ";
       $old_status = ($mail_previous['status'] & STATUS_TENTATIVE) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
-      $new_status = ($status & STATUS_TENTATIVE) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
+      $new_status = ($data['status'] & STATUS_TENTATIVE) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
       $body .= compareEntries($new_status, $old_status, $new_entry) . "\n";
     }
                             
@@ -454,16 +452,16 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
       // Approval status:
       $body .= get_mail_vocab("approval_status") . ": ";
       $old_status = ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
-      $new_status = ($status & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
+      $new_status = ($data['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
       $body .= compareEntries($new_status, $old_status, $new_entry) . "\n";
     }
                                
     // Room:
     $body .= get_mail_vocab("room") . ": " .
-      compareEntries(convertToMailCharset($area_name),
+      compareEntries(convertToMailCharset($data['area_name']),
                      convertToMailCharset($mail_previous['area_name']),
                      $new_entry);
-    $body .= " - " . compareEntries(convertToMailCharset($room_name),
+    $body .= " - " . compareEntries(convertToMailCharset($data['room_name']),
                                     convertToMailCharset($mail_previous['room_name']),
                                     $new_entry) . "\n";
         
@@ -471,7 +469,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     if ( $enable_periods )
     {
       list( $start_period, $start_date) =
-        getMailPeriodDateString($starttime);
+        getMailPeriodDateString($data['start_time']);
       $body .= get_mail_vocab("start_date") . ": ";
       $body .= compareEntries($start_date,
                               $mail_previous['start_date'],
@@ -479,7 +477,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     }
     else
     {
-      $start_date = getMailTimeDateString($starttime);
+      $start_date = getMailTimeDateString($data['start_time']);
       $body .= get_mail_vocab("start_date") . ": " .
         compareEntries($start_date,
                        $mail_previous['start_date'],
@@ -488,17 +486,17 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
         
     // Duration
     $body .= get_mail_vocab("duration") . ": " .
-      compareEntries($duration,
+      compareEntries($data['duration'],
                      $mail_previous['duration'],
                      $new_entry);
-    $body .= " " . compareEntries(get_mail_vocab("$dur_units"),
+    $body .= " " . compareEntries(get_mail_vocab($data['dur_units']),
                                   $mail_previous['dur_units'],
                                   $new_entry) . "\n";
         
     // End time
     if ( $enable_periods )
     {
-      $myendtime = $endtime;
+      $myendtime = $data['end_time'];
       $mod_time = -1;
       list($end_period, $end_date) =  getMailPeriodDateString($myendtime,
                                                               $mod_time);
@@ -509,7 +507,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     }
     else
     {
-      $myendtime = $endtime;
+      $myendtime = $data['end_time'];
       $end_date = getMailTimeDateString($myendtime);
       $body .= get_mail_vocab("end_date") . ": " .
         compareEntries($end_date,
@@ -521,19 +519,19 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     $body .= get_mail_vocab("type") . ": ";
     if ($new_entry)
     {
-      $body .= $typel[$type];
+      $body .= $typel[$data['type']];
     }
     else
     {
       $temp = $mail_previous['type'];
-      $body .= compareEntries($typel[$type],
+      $body .= compareEntries($typel[$data['type']],
                               $typel[$temp],
                               $new_entry);
     }
         
     // Created by
     $body .= "\n" . get_mail_vocab("createdby") . ": " .
-      compareEntries($create_by,
+      compareEntries($data['create_by'],
                      $mail_previous['createdby'],
                      $new_entry) . "\n";
                      
@@ -544,7 +542,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
       if (!in_array($field['name'], $standard_fields['entry']))
       {
         $key = $field['name'];
-        $value = (isset($custom_fields[$key])) ? $custom_fields[$key] : '';
+        $value = (isset($data['custom_fields'][$key])) ? $data['custom_fields'][$key] : '';
         // Convert any booleans or pseudo-booleans to text strings (in the mail language)
         if (($field['nature'] == 'boolean') || 
             (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
@@ -570,36 +568,36 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     $body .= "\n" . get_mail_vocab("rep_type");
     if ($new_entry)
     {
-      $body .= ": " . get_mail_vocab("rep_type_$rep_type");
+      $body .= ": " . get_mail_vocab("rep_type_" . $data['rep_type']);
     }
     else
     {
       $temp = $mail_previous['rep_type'];
-      $body .=  ": " . compareEntries(get_mail_vocab("rep_type_$rep_type"),
+      $body .=  ": " . compareEntries(get_mail_vocab("rep_type_" . $data['rep_type']),
                                       get_mail_vocab("rep_type_$temp"),
                                       $new_entry);
     }
         
     // Details if a series
-    if ($rep_type != REP_NONE)
+    if ($data['rep_type'] != REP_NONE)
     {
       $opt = "";
-      if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
+      if (($data['rep_type'] == REP_WEEKLY) || ($data['rep_type'] == REP_N_WEEKLY))
       {
         // Display day names according to language and preferred weekday start.
         for ($i = 0; $i < 7; $i++)
         {
           $daynum = ($i + $weekstarts) % 7;
-          if ($rep_opt[$daynum])
+          if ($data['rep_opt'][$daynum])
           {
             $opt .= day_name($daynum) . " ";
           }
         }
       }
-      if ($rep_type == REP_N_WEEKLY)
+      if ($data['rep_type'] == REP_N_WEEKLY)
       {
         $body .= "\n" . get_mail_vocab("rep_num_weeks");
-        $body .=  ": " . compareEntries($rep_num_weeks,
+        $body .=  ": " . compareEntries($data['rep_num_weeks'],
                                         $mail_previous["rep_num_weeks"],
                                         $new_entry);
       }
@@ -615,11 +613,11 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
       $body .= "\n" . get_mail_vocab("rep_end_date");
       if ($new_entry)
       {
-        $body .= ": " . mail_strftime('%A %d %B %Y',$rep_enddate);
+        $body .= ": " . mail_strftime('%A %d %B %Y',$data['end_date']);
       }
       else
       {
-        $temp = mail_strftime('%A %d %B %Y',$rep_enddate);
+        $temp = mail_strftime('%A %d %B %Y',$data['end_date']);
         $body .=  ": " . 
           compareEntries($temp,
                          $mail_previous['rep_end_date'],

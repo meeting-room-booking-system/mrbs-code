@@ -339,45 +339,20 @@ function mrbsCreateEntry($table, $data)
  * 
  * Create a single (non-repeating) entry in the database
  * 
- * $start_time    - Start time of entry
- * $end_time      - End time of entry
- * $entry_type    - Entry type
- * $repeat_id     - Repeat ID
- * $room_id       - Room ID
- * $create_by     - Owner
- * $name          - Name
- * $type          - Type (Internal/External)
- * $description   - Description
- * $status        - Status code of the entry
- * $custom_fields - an array of any custom fields
+ * $data      - An array containing the entry details
  * 
  * Returns:
  *   0        - An error occured while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateSingleEntry($start_time, $end_time, $entry_type, $repeat_id,
-                               $room_id, $create_by, $name, $type, $description,
-                               $status, $custom_fields)
+function mrbsCreateSingleEntry($data)
 {
   global $tbl_entry;
-  
-  $data = array();
-  $data['start_time'] = $start_time;
-  $data['end_time'] = $end_time;
-  $data['entry_type'] = $entry_type;
-  $data['repeat_id'] = $repeat_id;
-  $data['room_id'] = $room_id;
-  $data['create_by'] = $create_by;
-  $data['name'] = $name;
-  $data['type'] = $type;
-  $data['description'] = $description;
-  $data['status'] = $status;
-  $data['custom_fields'] = $custom_fields;
   
   // make sure that any entry is of a positive duration
   // this is to trap potential negative duration created when DST comes
   // into effect
-  if ($end_time > $start_time)
+  if ($data['end_time'] > $data['start_time'])
   {
     $result = mrbsCreateEntry($tbl_entry, $data);
     return $result;
@@ -392,44 +367,15 @@ function mrbsCreateSingleEntry($start_time, $end_time, $entry_type, $repeat_id,
  * 
  * Creates a repeat entry in the data base
  * 
- * $start_time    - Start time of entry
- * $end_time      - End time of entry
- * $rep_type      - The repeat type
- * $end_date      - When the repeating ends
- * $rep_opt       - Any options associated with the entry
- * $room_id       - Room ID
- * $create_by     - Owner
- * $name          - Name
- * $type          - Type (Internal/External)
- * $description   - Description
- * $rep_num_weeks - (missing)
- * $status        - status code
- * $custom_fields - an array of any custom fields
+ * $data      - An array containing the entry details
  *
  * Returns:
  *   0        - An error occured while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateRepeatEntry($start_time, $end_time, $rep_type, $end_date,
-                               $rep_opt, $room_id, $create_by, $name, $type,
-                               $description, $rep_num_weeks, $status, $custom_fields)
+function mrbsCreateRepeatEntry($data)
 {
   global $tbl_repeat;
-  
-  $data = array();
-  $data['start_time'] = $start_time;
-  $data['end_time'] = $end_time;
-  $data['rep_type'] = $rep_type;
-  $data['end_date'] = $end_date;
-  $data['rep_opt'] = $rep_opt;
-  $data['room_id'] = $room_id;
-  $data['create_by'] = $create_by;
-  $data['name'] = $name;
-  $data['type'] = $type;
-  $data['description'] = $description;
-  $data['rep_num_weeks'] = $rep_num_weeks;
-  $data['status'] = $status;
-  $data['custom_fields'] = $custom_fields;
   
   $result = mrbsCreateEntry($tbl_repeat, $data);
   return $result;
@@ -634,18 +580,15 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
  *                          FALSE if the id refers to the entry table
  *
  */
-function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
-                                   $rep_enddate, $rep_opt, $room_id, $owner,
-                                   $name, $type, $description, $rep_num_weeks,
-                                   $status, $custom_fields)
+function mrbsCreateRepeatingEntrys($data)
 {
   global $max_rep_entrys;
   
   $result = array('id' => 0, 'series' => FALSE);
    
-  $reps = mrbsGetRepeatEntryList($starttime, $rep_enddate,
-                                 $rep_type, $rep_opt,
-                                 $max_rep_entrys, $rep_num_weeks);
+  $reps = mrbsGetRepeatEntryList($data['start_time'], $data['end_date'],
+                                 $data['rep_type'], $data['rep_opt'],
+                                 $max_rep_entrys, $data['rep_num_weeks']);
 
   if (count($reps) > $max_rep_entrys)
   {
@@ -655,39 +598,32 @@ function mrbsCreateRepeatingEntrys($starttime, $endtime, $rep_type,
 
   if (empty($reps))
   {
-    $id = mrbsCreateSingleEntry($starttime, $endtime, 0, 0,
-                                $room_id, $owner, $name, $type,
-                                $description, $status, $custom_fields);
+    $data['entry_type'] = 0;
+    $data['repeat_id'] = 0;
+    $id = mrbsCreateSingleEntry($data);
     $result['id'] = $id;
     $result['series'] = FALSE;
     return $result;
   }
    
-  $id = mrbsCreateRepeatEntry($starttime, $endtime, $rep_type,
-                              $rep_enddate, $rep_opt, $room_id,
-                              $owner, $name, $type, $description,
-                              $rep_num_weeks, $status, $custom_fields);
+  $id = mrbsCreateRepeatEntry($data);
     
   if ($id)
   {
+    $data['entry_type'] = 1;
+    $data['repeat_id'] = $id;
+    $starttime = $data['start_time'];
+    $endtime = $data['end_time'];
     for ($i = 0; $i < count($reps); $i++)
     {
       // calculate diff each time and correct where events
       // cross DST
       $diff = $endtime - $starttime;
-      $diff += cross_dst($reps[$i], $reps[$i] + $diff);
-    
-      $ent_id = mrbsCreateSingleEntry($reps[$i],
-                                      $reps[$i] + $diff,
-                                      1,
-                                      $id,
-                                      $room_id,
-                                      $owner,
-                                      $name,
-                                      $type,
-                                      $description,
-                                      $status,
-                                      $custom_fields);
+      $diff += cross_dst($reps[$i], $reps[$i] + $diff);  
+      $data['start_time'] = $reps[$i];
+      $data['end_time'] = $reps[$i] + $diff;
+
+      $ent_id = mrbsCreateSingleEntry($data);
     }
   }
   $result['id'] = $id;
