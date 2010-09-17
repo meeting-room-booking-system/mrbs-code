@@ -438,7 +438,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
                             convertToMailCharset($mail_previous['description']),
                             $new_entry) . "\n";
                             
-    if  ($confirmation_enabled)
+    if ($confirmation_enabled)
     {                        
       // Confirmation status:
       $body .= get_mail_vocab("confirmation_status") . ": ";
@@ -447,7 +447,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
       $body .= compareEntries($new_status, $old_status, $new_entry) . "\n";
     }
                             
-    if  ($approval_enabled)
+    if ($approval_enabled)
     {                        
       // Approval status:
       $body .= get_mail_vocab("approval_status") . ": ";
@@ -654,6 +654,7 @@ function notifyAdminOnDelete($mail_previous)
 {
   global $typel, $enable_periods, $auth;
   global $mail_settings, $standard_fields, $tbl_entry;
+  global $approval_enabled, $confirmation_enabled;
   
   // Get any extra arguments
   $action = (func_num_args() > 1) ? func_get_arg(1) : "delete";
@@ -734,6 +735,23 @@ function notifyAdminOnDelete($mail_previous)
   $body .= convertToMailCharset($mail_previous['namebooker']) . "\n";
   $body .= get_mail_vocab("description") . ": ";
   $body .= convertToMailCharset($mail_previous['description']) . "\n";
+  
+  if ($confirmation_enabled)
+  {                        
+    // Confirmation status:
+    $body .= get_mail_vocab("confirmation_status") . ": ";
+    $body .= ($mail_previous['status'] & STATUS_TENTATIVE) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
+    $body .= "\n";
+  }
+                            
+  if ($approval_enabled)
+  {                        
+    // Approval status:
+    $body .= get_mail_vocab("approval_status") . ": ";
+    $body .= ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
+    $body .= "\n";
+  }
+  
   $body .= get_mail_vocab("room") . ": ";
   $body .= convertToMailCharset($mail_previous['area_name']);
   $body .= " - " . convertToMailCharset($mail_previous['room_name']) . "\n";
