@@ -406,11 +406,20 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 // do a little form verifying
 function validate(form)
 {
-  // null strings and spaces only strings not allowed
-  if(/(^$)|(^\s+$)/.test(form.name.value))
+  <?php
+  // First of all check that a name (brief description) has been entered.
+  // Only do this if the name is being entered via an INPUT box.   If it's
+  // being entered via a SELECT box there's no need to do this because there's
+  // bound to be a value and the test below will fail on some browsers (eg IE)
+  ?>
+  if (form.name.tagName.toLowerCase() == 'input')
   {
-    alert ( "<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("brief_description") ?>");
-    return false;
+    // null strings and spaces only strings not allowed
+    if(/(^$)|(^\s+$)/.test(form.name.value))
+    {
+      alert ( "<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("brief_description") ?>");
+      return false;
+    }
   }
   <?php if( ! $enable_periods ) { ?>
 
