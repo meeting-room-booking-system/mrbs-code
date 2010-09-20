@@ -476,6 +476,26 @@ $confirmation_enabled = TRUE;
 $confirmed_default = TRUE;
 
 /***********************************************
+ * Form values
+ ***********************************************/
+
+// It is possible to constrain some form values to be selected from a drop-
+// down select box, rather than allowing free form input.   This is done by
+// putting the permitted options in an array as part of the $select_options
+// two dimensional array.   The first index specifies the form field in the
+// format tablename.columnname.    For example to restrict the name of a booking
+// to 'Physics', 'Chemistry' or 'Biology' uncomment the line below.
+
+//$select_options['entry.name'] = array('Physics', 'Chemistry', 'Biology');
+
+// At the moment this feature is only supported for the name, description and
+// any custom fields in the entry table.   However the indexing format of
+// tablename.columnname has been chosen to allow it to be extended to other
+// tables in the future.
+
+
+ 
+/***********************************************
  * Authentication settings - read AUTHENTICATION
  ***********************************************/
 

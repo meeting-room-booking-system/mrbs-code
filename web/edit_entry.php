@@ -51,6 +51,49 @@
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
+// Generate an input field with an associated label
+// Optional fourth parameter: $maxlength - the maximum length of input allowed
+function generate_input($label_text, $name, $value)
+{
+  // get any optional fourth parameter
+  if (func_num_args() > 3)
+  {
+    $maxlength = func_get_arg(3);
+  }
+  // generate the HTML
+  $html  = "<label for=\"$name\">$label_text</label>\n";
+  $html .= "<input id=\"$name\" name=\"$name\"";
+  $html .= (isset($maxlength)) ? " maxlength=\"$maxlength\"" : '';
+  $html .= " value=\"" . htmlspecialchars($value) . "\">\n";
+  echo $html;
+}
+
+// Generates a select box from $options, an array of options
+function generate_select($label_text, $name, $value, $options)
+{
+  // generate the HTML
+  $html  = "<label for=\"$name\">$label_text</label>\n";
+  $html .= "<select id=\"$name\" name=\"$name\">\n";
+  foreach ($options as $option)
+  {
+    $html .= "<option";
+    $html .= (isset($value) && ($value == $option)) ? " selected=\"selected\"" : '';
+    $html .= ">$option</option>\n";
+  }
+  $html .= "</select>\n";
+  echo $html;
+}
+
+// Generate a textarea with an associated label
+function generate_textarea($label_text, $name, $value)
+{
+  $html  = "<label for=\"$name\">$label_text</label>\n";
+  // textarea rows and cols are overridden by CSS height and width
+  $html .= "<textarea id=\"$name\" name=\"$name\" rows=\"8\" cols=\"40\">" . htmlspecialchars ($value) . "</textarea>\n";
+  echo $html;
+}
+    
+
 global $twentyfourhour_format;
 
 // Get non-standard form variables
@@ -366,11 +409,20 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 // do a little form verifying
 function validate(form)
 {
-  // null strings and spaces only strings not allowed
-  if(/(^$)|(^\s+$)/.test(form.name.value))
+  <?php
+  // First of all check that a name (brief description) has been entered.
+  // Only do this if the name is being entered via an INPUT box.   If it's
+  // being entered via a SELECT box there's no need to do this because there's
+  // bound to be a value and the test below will fail on some browsers (eg IE)
+  ?>
+  if (form.name.tagName.toLowerCase() == 'input')
   {
-    alert ( "<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("brief_description") ?>");
-    return false;
+    // null strings and spaces only strings not allowed
+    if(/(^$)|(^\s+$)/.test(form.name.value))
+    {
+      alert ( "<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("brief_description") ?>");
+      return false;
+    }
   }
   <?php if( ! $enable_periods ) { ?>
 
@@ -542,18 +594,31 @@ else
   <fieldset>
   <legend><?php echo get_vocab($token); ?></legend>
 
-    <div id="div_name">
-      <label for="name"><?php echo get_vocab("namebooker")?>:</label>
-      <?php
-      echo "<input id=\"name\" name=\"name\" maxlength=\"" . $maxlength['entry.name'] . "\" value=\"" . htmlspecialchars($name) . "\">\n";
-      ?>
-    </div>
-
-    <div id="div_description">
-      <label for="description"><?php echo get_vocab("fulldescription")?></label>
-      <!-- textarea rows and cols are overridden by CSS height and width -->
-      <textarea id="description" name="description" rows="8" cols="40"><?php echo htmlspecialchars ( $description ); ?></textarea>
-    </div>
+    <?php  
+    echo "<div id=\"div_name\">\n";
+    $label_text = get_vocab("namebooker") . ":";
+    if (count($select_options['entry.name']) > 0)
+    {
+      generate_select($label_text, 'name', $name, $select_options['entry.name']);  
+    }
+    else
+    {
+      generate_input($label_text, 'name', $name, $maxlength['entry.name']);
+    }
+    echo "</div>\n";
+    
+    echo "<div id=\"div_description\">\n";
+    $label_text = get_vocab("fulldescription");
+    if (count($select_options['entry.description']) > 0)
+    {
+      generate_select($label_text, 'description', $description, $select_options['entry.description']);
+    }
+    else
+    {
+      generate_textarea($label_text, 'description', $description);
+    }
+    echo "</div>\n";
+    ?>
 
     <div id="div_date">
       <?php
@@ -870,35 +935,34 @@ else
       if (!in_array($key, $standard_fields['entry']))
       {
         $value = $custom_fields[$key];
+        $label_text = get_loc_field_name($tbl_entry, $key) . ":";
         echo "<div>\n";
-        echo "<label for=\"f_$key\">" . get_loc_field_name($tbl_entry, $key) . ":</label>\n";
         // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
         // assume are intended to be booleans)
         if (($field['nature'] == 'boolean') || 
             (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
         {
+          echo "<label for=\"f_$key\">$label_text</label>\n";
           echo "<input type=\"checkbox\" class=\"checkbox\" " .
                 "id=\"f_$key\" name=\"f_$key\" value=\"1\" " .
                 ((!empty($value)) ? " checked=\"checked\"" : "") .
                 ">\n";
         }
+        // Output a select box if they want one
+        elseif (count($select_options["entry.$key"]) > 0)
+        {
+          generate_select($label_text, "f_$key", $value, $select_options["entry.$key"]);
+        }
         // Output a textarea if it's a character string longer than the limit for a
         // text input
         elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
         {
-          echo "<textarea rows=\"8\" cols=\"40\" " .
-                "id=\"f_$key\" name=\"f_$key\" " .
-                ">\n";
-          echo htmlspecialchars($value);
-          echo "</textarea>\n";
+          generate_textarea($label_text, "f_$key", $value);   
         }
         // Otherwise output a text input
         else
         {
-          echo "<input type=\"text\" " .
-                "id=\"f_$key\" name=\"f_$key\" " .
-                "value=\"" . htmlspecialchars($value) . "\"" .
-                ">\n";
+          generate_input($label_text, "f_$key", $value);
         }
         echo "</div>\n";
       }
@@ -956,11 +1020,13 @@ else
           ?>
         </div>
       </div>
-      <div>
-        <label for="rep_num_weeks"><?php echo get_vocab("rep_num_weeks")?>:<br><?php echo get_vocab("rep_for_nweekly")?></label>
-        <input type="text" id="rep_num_weeks" name="rep_num_weeks" value="<?php echo $rep_num_weeks?>">
-      </div>
+     
       <?php
+      echo "<div>\n";
+      $label_text = get_vocab("rep_num_weeks") . ":<br>" . get_vocab("rep_for_nweekly");
+      generate_input($label_text, 'rep_num_weeks', $rep_num_weeks);
+      echo "</div>\n";
+
       echo "</fieldset>\n";
     }
     elseif (isset($id))
