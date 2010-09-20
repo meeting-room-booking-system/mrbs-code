@@ -116,7 +116,6 @@ $area_defaults['min_book_ahead_enabled'] = $min_book_ahead_enabled;
 $area_defaults['max_book_ahead_enabled'] = $max_book_ahead_enabled;
 $area_defaults['min_book_ahead_secs']    = $min_book_ahead_secs;
 $area_defaults['max_book_ahead_secs']    = $max_book_ahead_secs;
-$area_defaults['provisional_enabled']    = $provisional_enabled;
 $area_defaults['reminders_enabled']      = $reminders_enabled;
 $area_defaults['approval_enabled']       = $approval_enabled;
 $area_defaults['confirmation_enabled']   = $confirmation_enabled;
