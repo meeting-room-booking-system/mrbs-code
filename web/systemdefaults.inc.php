@@ -217,6 +217,9 @@ $periods[] = "Period&nbsp;1";
 $periods[] = "Period&nbsp;2";
 // NOTE:  The maximum number of periods is 60.   Do not define more than this.
 
+// NOTE:  See INSTALL for information on how to add or remove periods in an
+// existing database.
+
 
 /******************
  * Booking policies

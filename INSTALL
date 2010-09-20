@@ -332,6 +332,28 @@ Note: Upgrading mysql database from previous charsets to Unicode :
   web directory. We recommend you backup your database before running
   this script if you are at all worried.
 
+  
+PERIODS
+---------------------------------------------------------------------------
+When using periods, MRBS stores bookings internally as one minute slots
+starting at 1200.    If once you have had your system up and running for
+a while find that you need to add a new period then you will need to
+adjust the times of your existing bookings unless your new period is at
+the end of the day.
+
+The simplest example is when you want to add a new period at the start of
+the day.   In this case you will need to run some SQL using phpMyAdmin or 
+a similar program to move all bookings one minute later.  In this example
+the SQL required would be
+
+UPDATE mrbs_entry SET start_time=start_time+60, end_time=end_time+60;
+UPDATE mrbs_repeat SET start_time=start_time+60, end_time=end_time+60,
+end_date=end_date+60;
+
+having changed "mrbs_" to your table prefix if necessary.
+
+Before running this SQL you should of course backup your database.
+
 
 SECURITY NOTES!
 ---------------------------------------------------------------------------
