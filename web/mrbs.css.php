@@ -166,7 +166,10 @@ div#dwm_rooms  {float: left; margin-right: 2.0em}
 #dwm_header ul {list-style-type: none; padding-left: 0; margin-left: 0; margin-top: 0}
 #dwm_header li {padding-left: 0; margin-left: 0}
 
-h2#dwm {text-align: center}
+div#dwm {margin-bottom: 0.5em}
+#dwm {text-align: center}
+#dwm h2 {margin-bottom: 0}
+#dwm div.timezone {opacity: 0.8}
 
 div.date_nav    {float: left;  width: 100%; margin-top: 0.5em; margin-bottom: 0.5em; font-weight: bold}
 div.date_before {float: left;  width: 33%; text-align: left}

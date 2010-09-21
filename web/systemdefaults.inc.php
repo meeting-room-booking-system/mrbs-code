@@ -301,6 +301,9 @@ $dateformat = 0;
 // in 24 hour format
 $twentyfourhour_format = 1;
 
+// Whether or not to display the timezone
+$display_timezone = FALSE;
+
 // Results per page for searching:
 $search["count"] = 20;
 
