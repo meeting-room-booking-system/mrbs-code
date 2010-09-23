@@ -466,23 +466,18 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
                                     $new_entry) . "\n";
         
     // Start time
-    if ( $enable_periods )
+    if ($enable_periods)
     {
-      list( $start_period, $entry_start_date) =
-        getMailPeriodDateString($data['start_time']);
-      $body .= get_mail_vocab("start_date") . ": ";
-      $body .= compareEntries($entry_start_date,
-                              $mail_previous['entry_start_date'],
-                              $new_entry) . "\n";
+      list( $start_period, $entry_start_date) = getMailPeriodDateString($data['start_time']);
     }
     else
     {
       $entry_start_date = getMailTimeDateString($data['start_time']);
-      $body .= get_mail_vocab("start_date") . ": " .
-        compareEntries($entry_start_date,
-                       $mail_previous['entry_start_date'],
-                       $new_entry) . "\n";
     }
+    $body .= get_mail_vocab("start_date") . ": ";
+    $body .= compareEntries($entry_start_date,
+                            $mail_previous['entry_start_date'],
+                            $new_entry) . "\n";
         
     // Duration
     $body .= get_mail_vocab("duration") . ": " .
@@ -494,26 +489,19 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
                                   $new_entry) . "\n";
         
     // End time
+    $myendtime = $data['end_time'];
     if ( $enable_periods )
     {
-      $myendtime = $data['end_time'];
-      $mod_time = -1;
-      list($end_period, $entry_end_date) =  getMailPeriodDateString($myendtime,
-                                                                    $mod_time);
-      $body .= get_mail_vocab("end_date") . ": ";
-      $body .= compareEntries($entry_end_date,
-                              $mail_previous['entry_end_date'],
-                              $new_entry) ."\n";
+      list($end_period, $entry_end_date) =  getMailPeriodDateString($myendtime, -1);
     }
     else
     {
-      $myendtime = $data['end_time'];
       $entry_end_date = getMailTimeDateString($myendtime);
-      $body .= get_mail_vocab("end_date") . ": " .
-        compareEntries($entry_end_date,
-                       $mail_previous['entry_end_date'],
-                       $new_entry) . "\n";
     }
+    $body .= get_mail_vocab("end_date") . ": ";
+    $body .= compareEntries($entry_end_date,
+                            $mail_previous['entry_end_date'],
+                            $new_entry) ."\n";
     
     // Type of booking
     $body .= get_mail_vocab("type") . ": ";
@@ -733,6 +721,7 @@ function notifyAdminOnDelete($mail_previous)
   // Displays deleted entry details
   $body .= "\n" . get_mail_vocab("namebooker") . ': ';
   $body .= convertToMailCharset($mail_previous['namebooker']) . "\n";
+  
   $body .= get_mail_vocab("description") . ": ";
   $body .= convertToMailCharset($mail_previous['description']) . "\n";
   
@@ -755,31 +744,20 @@ function notifyAdminOnDelete($mail_previous)
   $body .= get_mail_vocab("room") . ": ";
   $body .= convertToMailCharset($mail_previous['area_name']);
   $body .= " - " . convertToMailCharset($mail_previous['room_name']) . "\n";
+  
   $body .= get_mail_vocab("start_date") . ': ';
-  if ( $enable_periods )
-  {
-    $body .= convertToMailCharset($mail_previous['entry_start_date']) . "\n";
-  }
-  else
-  {
-    $body .= convertToMailCharset($mail_previous['entry_start_date']) . "\n";
-  }
+  $body .= convertToMailCharset($mail_previous['entry_start_date']) . "\n";
+
   $body .= get_mail_vocab("duration") . ': ' . $mail_previous['duration'] . ' ';
   $body .= $mail_previous['dur_units'] . "\n";
-  if ( $enable_periods )
-  {
-    $body .= get_mail_vocab("end_date") . ": ";
-    $body .= convertToMailCharset($mail_previous['entry_end_date']) ."\n";
-  }
-  else
-  {
-    $body .= get_mail_vocab("end_date") . ": " .
-      convertToMailCharset($mail_previous['entry_end_date']);
-    $body .= "\n";
-  }
+
+  $body .= get_mail_vocab("end_date") . ": ";
+  $body .= convertToMailCharset($mail_previous['entry_end_date']) ."\n";
+
   $body .= get_mail_vocab("type") . ": ";
   $body .=  (empty($typel[$mail_previous['type']])) ? "?" .
     $mail_previous['type'] . "?" : $typel[$mail_previous['type']];
+    
   $body .= "\n" . get_mail_vocab("createdby") . ": ";
   $body .= convertToMailCharset($mail_previous['createdby']) . "\n";
   
@@ -802,9 +780,11 @@ function notifyAdminOnDelete($mail_previous)
   }
     
   $body .= get_mail_vocab("lastupdate") . ": " . convertToMailCharset($mail_previous['updated']);
+  
   $body .= "\n" . get_mail_vocab("rep_type");
   $temp = $mail_previous['rep_type'];
   $body .=  ": " . get_mail_vocab("rep_type_$temp");
+  
   if ($mail_previous['rep_type'] != REP_NONE)
   {
     if ($mail_previous['rep_type'] == REP_N_WEEKLY)
