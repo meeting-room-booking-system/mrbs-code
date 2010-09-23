@@ -125,7 +125,8 @@ function expires_header($seconds)
   header("Expires: ".rfc1123_date(time()+$seconds));
 }
 
-
+// Converts a duration of $dur seconds into a duration of
+// $dur $units
 function toTimeString(&$dur, &$units, $translate=TRUE)
 {
   if (abs($dur) >= 60)

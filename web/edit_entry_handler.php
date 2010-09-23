@@ -326,7 +326,13 @@ else
   {
     $endtime += $resolution;
   }
- 
+
+  // Now adjust the duration in line with the adjustments to start and end time
+  // so that the email notifications report the adjusted duration
+  // (We do this before we adjust for DST so that the user sees what they expect to see)
+  $duration = $endtime - $starttime;
+  $enable_periods ? toPeriodString($period, $duration, $dur_units, FALSE) : toTimeString($duration, $dur_units, FALSE);
+  
   // Adjust the endtime for DST
   $endtime += cross_dst( $starttime, $endtime );
 }
