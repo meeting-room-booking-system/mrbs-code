@@ -468,19 +468,19 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     // Start time
     if ( $enable_periods )
     {
-      list( $start_period, $start_date) =
+      list( $start_period, $entry_start_date) =
         getMailPeriodDateString($data['start_time']);
       $body .= get_mail_vocab("start_date") . ": ";
-      $body .= compareEntries($start_date,
-                              $mail_previous['start_date'],
+      $body .= compareEntries($entry_start_date,
+                              $mail_previous['entry_start_date'],
                               $new_entry) . "\n";
     }
     else
     {
-      $start_date = getMailTimeDateString($data['start_time']);
+      $entry_start_date = getMailTimeDateString($data['start_time']);
       $body .= get_mail_vocab("start_date") . ": " .
-        compareEntries($start_date,
-                       $mail_previous['start_date'],
+        compareEntries($entry_start_date,
+                       $mail_previous['entry_start_date'],
                        $new_entry) . "\n";
     }
         
@@ -498,20 +498,20 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     {
       $myendtime = $data['end_time'];
       $mod_time = -1;
-      list($end_period, $end_date) =  getMailPeriodDateString($myendtime,
-                                                              $mod_time);
+      list($end_period, $entry_end_date) =  getMailPeriodDateString($myendtime,
+                                                                    $mod_time);
       $body .= get_mail_vocab("end_date") . ": ";
-      $body .= compareEntries($end_date,
-                              $mail_previous['end_date'],
+      $body .= compareEntries($entry_end_date,
+                              $mail_previous['entry_end_date'],
                               $new_entry) ."\n";
     }
     else
     {
       $myendtime = $data['end_time'];
-      $end_date = getMailTimeDateString($myendtime);
+      $entry_end_date = getMailTimeDateString($myendtime);
       $body .= get_mail_vocab("end_date") . ": " .
-        compareEntries($end_date,
-                       $mail_previous['end_date'],
+        compareEntries($entry_end_date,
+                       $mail_previous['entry_end_date'],
                        $new_entry) . "\n";
     }
     
@@ -758,23 +758,23 @@ function notifyAdminOnDelete($mail_previous)
   $body .= get_mail_vocab("start_date") . ': ';
   if ( $enable_periods )
   {
-    $body .= convertToMailCharset($mail_previous['start_date']) . "\n";
+    $body .= convertToMailCharset($mail_previous['entry_start_date']) . "\n";
   }
   else
   {
-    $body .= convertToMailCharset($mail_previous['start_date']) . "\n";
+    $body .= convertToMailCharset($mail_previous['entry_start_date']) . "\n";
   }
   $body .= get_mail_vocab("duration") . ': ' . $mail_previous['duration'] . ' ';
   $body .= $mail_previous['dur_units'] . "\n";
   if ( $enable_periods )
   {
     $body .= get_mail_vocab("end_date") . ": ";
-    $body .= convertToMailCharset($mail_previous['end_date']) ."\n";
+    $body .= convertToMailCharset($mail_previous['entry_end_date']) ."\n";
   }
   else
   {
     $body .= get_mail_vocab("end_date") . ": " .
-      convertToMailCharset($mail_previous['end_date']);
+      convertToMailCharset($mail_previous['entry_end_date']);
     $body .= "\n";
   }
   $body .= get_mail_vocab("type") . ": ";
@@ -855,8 +855,8 @@ function getPreviousEntryData($id, $series)
   // Now get the start time, end time and duration.
   if ($enable_periods)
   {
-    list( $data['start_period'], $data['start_date']) = getMailPeriodDateString($data['start_time']);
-    list( $data['end_period'] , $data['end_date'])    = getMailPeriodDateString($data['end_time'], -1);
+    list( $data['start_period'], $data['entry_start_date']) = getMailPeriodDateString($data['start_time']);
+    list( $data['end_period'] , $data['entry_end_date'])    = getMailPeriodDateString($data['end_time'], -1);
     // need to make DST correct in opposite direction to entry creation
     // so that user see what he expects to see
     $data['duration'] -= cross_dst($data['start_time'], $data['end_time']);
@@ -866,8 +866,8 @@ function getPreviousEntryData($id, $series)
   }
   else
   {
-    $data['start_date'] = getMailTimeDateString($data['start_time']);
-    $data['end_date']   = getMailTimeDateString($data['end_time']);
+    $data['entry_start_date'] = getMailTimeDateString($data['start_time']);
+    $data['entry_end_date']   = getMailTimeDateString($data['end_time']);
     // need to make DST correct in opposite direction to entry creation
     // so that user see what he expects to see
     $data['duration'] -= cross_dst($data['start_time'], $data['end_time']);
