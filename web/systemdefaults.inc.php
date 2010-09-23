@@ -217,6 +217,9 @@ $periods[] = "Period&nbsp;1";
 $periods[] = "Period&nbsp;2";
 // NOTE:  The maximum number of periods is 60.   Do not define more than this.
 
+// NOTE:  See INSTALL for information on how to add or remove periods in an
+// existing database.
+
 
 /******************
  * Booking policies
@@ -297,6 +300,9 @@ $dateformat = 0;
 // Time format in pages. 0 to show dates in 12 hour format, 1 to show them
 // in 24 hour format
 $twentyfourhour_format = 1;
+
+// Whether or not to display the timezone
+$display_timezone = FALSE;
 
 // Results per page for searching:
 $search["count"] = 20;

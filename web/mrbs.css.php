@@ -166,7 +166,10 @@ div#dwm_rooms  {float: left; margin-right: 2.0em}
 #dwm_header ul {list-style-type: none; padding-left: 0; margin-left: 0; margin-top: 0}
 #dwm_header li {padding-left: 0; margin-left: 0}
 
-h2#dwm {text-align: center}
+div#dwm {margin-bottom: 0.5em}
+#dwm {text-align: center}
+#dwm h2 {margin-bottom: 0}
+#dwm div.timezone {opacity: 0.8}
 
 div.date_nav    {float: left;  width: 100%; margin-top: 0.5em; margin-bottom: 0.5em; font-weight: bold}
 div.date_before {float: left;  width: 33%; text-align: left}
@@ -666,7 +669,7 @@ table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
 #banner a:link    {color: <?php echo $anchor_link_color_banner ?>;    text-decoration: none; font-weight: normal}
 #banner a:visited {color: <?php echo $anchor_visited_color_banner ?>; text-decoration: none; font-weight: normal}
 #banner a:hover   {color: <?php echo $anchor_hover_color_banner ?>;   text-decoration:underline; font-weight: normal}
-#banner input.date {width: 6em}
+#banner input.date {width: 6.5em}
 
 table#colour_key {clear: both; border-spacing: 0; border-collapse: collapse}
 #colour_key td {width: 7.0em; padding: 2px; font-weight: bold;

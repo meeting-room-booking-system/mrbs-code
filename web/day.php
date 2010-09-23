@@ -221,10 +221,18 @@ if (sql_count($res) == 0)
 }
 else
 {
-  // Show current date
-  echo "<h2 id=\"dwm\">" . utf8_strftime("%A %d %B %Y", $am7) . "</h2>\n";
+  // Show current date and timezone
+  echo "<div id=\"dwm\">\n";
+  echo "<h2>" . utf8_strftime("%A %d %B %Y", $am7) . "</h2>\n";
+  if ($display_timezone)
+  {
+    echo "<div class=\"timezone\">";
+    echo get_vocab("timezone") . ": " . date('T', $am7) . " (UTC" . date('O', $am7) . ")";
+    echo "</div>\n";
+  }
+  echo "</div>\n";
+  
   // Generate Go to day before and after links
-
   $before_after_links_html = "
 <div class=\"screenonly\">
   <div class=\"date_nav\">

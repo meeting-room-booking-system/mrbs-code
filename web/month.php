@@ -166,8 +166,10 @@ if ($room <= 0)
 }
 
 // Show Month, Year, Area, Room header:
-echo "<h2 id=\"dwm\">" . utf8_strftime("%B %Y", $month_start)
+echo "<div id=\"dwm\">\n";
+echo "<h2>" . utf8_strftime("%B %Y", $month_start)
   . " - $this_area_name - $this_room_name</h2>\n";
+echo "</div>\n";
 
 // Show Go to month before and after links
 //y? are year and month and day of the previous month.

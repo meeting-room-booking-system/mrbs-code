@@ -159,7 +159,9 @@ if ($room <= 0)
 }
 
 // Show area and room:
-echo "<h2 id=\"dwm\">$this_area_name - $this_room_name</h2>\n";
+echo "<div id=\"dwm\">\n";
+echo "<h2>$this_area_name - $this_room_name</h2>\n";
+echo "</div>\n";
 
 //y? are year, month and day of the previous week.
 //t? are year, month and day of the next week.
