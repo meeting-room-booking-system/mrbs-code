@@ -174,6 +174,13 @@ function toTimeString(&$dur, &$units, $translate=TRUE)
   {
     $units = "seconds";
   }
+  
+  // Limit any floating point values to three decimal places
+  if (is_float($dur))
+  {
+    $dur = sprintf('%.3f', $dur);
+  }
+  
   // Translate into local language if required
   if ($translate)
   {
