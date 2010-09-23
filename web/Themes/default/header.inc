@@ -59,6 +59,12 @@ function print_theme_header($day, $month, $year, $area, $room)
     <script type="text/javascript" src="jquery/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-1.8.4.custom.min.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
+    <?php
+    // The Portuguese (-pt) file below is a non-standard addition to the regional
+    // variants.   The standard package only has a pt-BR variant at the moment.  The
+    // file has been kept separate to avoid problems with merging new releases of UI
+    ?>
+    <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-pt.js"></script>
     
     <script type="text/javascript">
 
