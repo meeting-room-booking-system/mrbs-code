@@ -514,9 +514,9 @@ if ($valid_booking)
     $data['description'] = $description;
     $data['status'] = $status;
     $data['custom_fields'] = $custom_fields;
+    $data['rep_type'] = $rep_type;
     if ($edit_type == "series")
     {
-      $data['rep_type'] = $rep_type;
       $data['end_date'] = $end_date;
       $data['rep_opt'] = $rep_opt;
       $data['rep_num_weeks'] = (isset($rep_num_weeks)) ? $rep_num_weeks : 0;
