@@ -508,7 +508,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           
           if ($editing_last_admin)
           {
-            echo "<br><em>(" . get_vocab("warning_last_admin") . ")</em>\n";
+            echo "<p><em>(" . get_vocab("warning_last_admin") . ")</em></p>\n";
           }
           ?>
           <input type="hidden" name="Action" value="Update">    

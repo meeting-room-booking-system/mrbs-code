@@ -45,7 +45,7 @@ $vocab["ppreview"]           = "Pré-visualizar Inpressão";
 $vocab["addentry"]           = "Nova entrada";
 $vocab["editentry"]          = "Editar entrada";
 $vocab["editseries"]         = "Editar Serie";
-$vocab["namebooker"]         = "Descição breve";
+$vocab["namebooker"]         = "Descrição breve";
 $vocab["fulldescription"]    = "Descrição completa:<br>&nbsp;&nbsp;(Numero de Pessoas,<br>&nbsp;&nbsp;Internas/Externas etc)";
 $vocab["date"]               = "Data";
 $vocab["start_date"]         = "Hora Início";
@@ -86,7 +86,7 @@ $vocab["you_have_not_entered"] = "Não introduziu uma";
 $vocab["you_have_not_selected"] = "You have not selected a";
 $vocab["valid_room"]         = "room.";
 $vocab["valid_time_of_day"]  = "hora do dia válida.";
-$vocab["brief_description"]  = "Descição breve.";
+$vocab["brief_description"]  = "Descrição breve.";
 $vocab["useful_n-weekly_value"] = "valor n-semanal viável.";
 
 // Used in view_entry.php
