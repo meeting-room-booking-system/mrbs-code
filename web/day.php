@@ -139,14 +139,15 @@ $td = date("d",$i);
 //Note: The predicate clause 'start_time <= ...' is an equivalent but simpler
 //form of the original which had 3 BETWEEN parts. It selects all entries which
 //occur on or cross the current day.
-$sql = "SELECT $tbl_room.id AS room_id, start_time, end_time, name, $tbl_entry.id AS entry_id, type,
-        $tbl_entry.description AS entry_description, status,
-        $tbl_entry.private AS entry_private, $tbl_entry.create_by AS entry_create_by
-   FROM $tbl_entry, $tbl_room
-   WHERE $tbl_entry.room_id = $tbl_room.id
-   AND area_id = $area
-   AND start_time <= $pm7 AND end_time > $am7
-   ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
+$sql = "SELECT R.id AS room_id, start_time, end_time, name, repeat_id, 
+               E.id AS entry_id, type,
+               E.description AS entry_description, status,
+               E.private AS entry_private, E.create_by AS entry_create_by
+          FROM $tbl_entry E, $tbl_room R
+         WHERE E.room_id = R.id
+           AND area_id = $area
+           AND start_time <= $pm7 AND end_time > $am7
+      ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
    
 $res = sql_query($sql);
 if (! $res)
@@ -163,6 +164,7 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   //  row['start_time'] = start time
   //  row['end_time'] = end time
   //  row['name'] = short description
+  //  row['repeat_id'] = repeat type
   //  row['entry_id'] = id of this booking
   //  row['type'] = type (internal/external)
   //  row['entry_description'] = description
