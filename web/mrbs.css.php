@@ -208,6 +208,9 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 
 a.new_booking {display: block; font-size: medium; text-align: center}
 .new_booking img {margin: auto; padding: 4px 0 2px 0}
+img.repeat_symbol {float: right; padding: 3px}
+.dwm_main#month_main img.repeat_symbol {padding: 2px}
+
 <?php
 if (!$show_plus_link)
 {

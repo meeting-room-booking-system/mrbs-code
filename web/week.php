@@ -217,13 +217,13 @@ $week_map = array();
 
 for ($j = 0; $j<=($num_of_days-1) ; $j++)
 {
-  $sql = "SELECT room_id, start_time, end_time, type, name, status,
-            id AS entry_id, description AS entry_description,
-            create_by AS entry_create_by
-          FROM $tbl_entry
-          WHERE room_id = $room
-          AND start_time <= $pm7[$j] AND end_time > $am7[$j]
-          ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
+  $sql = "SELECT room_id, start_time, end_time, type, name, status, repeat_id,
+                 id AS entry_id, description AS entry_description,
+                 create_by AS entry_create_by
+            FROM $tbl_entry
+           WHERE room_id = $room
+             AND start_time <= $pm7[$j] AND end_time > $am7[$j]
+        ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
 
   // Each row returned from the query is a meeting. Build an array of the
   // form:  $week_map[room][weekday][slot][x], where x = id, color, data, long_desc.

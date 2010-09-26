@@ -1066,6 +1066,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   //       start_time
   //       end_time
   //       name
+  //       repeat_id
   //       entry_id
   //       type
   //       entry_description
@@ -1075,6 +1076,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   // $column is a column of the map of the screen that will be displayed
   // It looks like:
   //     $column[Time][n][id]
+  //                     [is_repeat]
   //                     [color]
   //                     [data]
   //                     [long_descr]
@@ -1145,6 +1147,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     
     // fill in the id, type and start time
     $column[$time_t][$n]["id"] = $row['entry_id'];
+    $column[$time_t][$n]["is_repeat"] = !empty($row['repeat_id']);
     $column[$time_t][$n]["status"] = $row['status'];
     $column[$time_t][$n]["color"] = $row['type'];
     $column[$time_t][$n]["start_time"] = utf8_strftime(hour_min_format(), $row['start_time']);
@@ -1275,6 +1278,7 @@ function draw_cell($cell, $query_strings, $cell_class)
   // display and looks like this:
   // 
   // $cell[n][id]
+  //         [is_repeat]
   //         [color]
   //         [data]
   //         [long_descr]
@@ -1343,6 +1347,7 @@ function draw_cell($cell, $query_strings, $cell_class)
     for ($n=0; $n<$n_bookings; $n++)
     {
       $id         = $cell[$n]["id"];
+      $is_repeat  = $cell[$n]["is_repeat"];
       $status     = $cell[$n]["status"];
       $color      = $cell[$n]["color"];
       $descr      = htmlspecialchars($cell[$n]["data"]);
@@ -1392,6 +1397,7 @@ function draw_cell($cell, $query_strings, $cell_class)
     for ($n=0; $n<$n_bookings; $n++)
     {
       $id         = $cell[$n]["id"];
+      $is_repeat  = $cell[$n]["is_repeat"];
       $status     = $cell[$n]["status"];
       $color      = $cell[$n]["color"];
       $descr      = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
@@ -1414,7 +1420,9 @@ function draw_cell($cell, $query_strings, $cell_class)
            (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
            ">\n";
       echo "<div class=\"celldiv slots1\">\n";     // we want clipping of overflow
-      echo "  <a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">$descr</a>\n";
+      echo "<a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">";
+      echo ($is_repeat) ? "<img class=\"repeat_symbol\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
+      echo "$descr</a>\n";
       echo "</div>\n";
      
       echo "</td>\n";
@@ -1433,6 +1441,7 @@ function draw_cell($cell, $query_strings, $cell_class)
     if(isset($cell[0]["id"]))
     {       
       $id         = $cell[0]["id"];
+      $is_repeat  = $cell[0]["is_repeat"];
       $status     = $cell[0]["status"];
       $color      = $cell[0]["color"];
       $descr      = htmlspecialchars($cell[0]["data"]);
@@ -1525,8 +1534,10 @@ function draw_cell($cell, $query_strings, $cell_class)
         else
         {
           echo "<div class=\"celldiv slots" . $slots . "\">\n";     // we want clipping of overflow
-        } 
-        echo "  <a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">$descr</a>\n";
+        }
+        echo "<a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">";
+        echo ($is_repeat) ? "<img class=\"repeat_symbol $c\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
+        echo "$descr</a>\n";
         echo "</div>\n";
       }
       echo "</td>\n";

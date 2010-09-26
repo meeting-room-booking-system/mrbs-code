@@ -256,7 +256,8 @@ $all_day = preg_replace("/ /", "&nbsp;", get_vocab("all_day"));
 // This data will be retrieved day-by-day fo the whole month
 for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
 {
-  $sql = "SELECT start_time, end_time, id, name, type, status, create_by
+  $sql = "SELECT start_time, end_time, id, name, type,
+                 repeat_id, status, create_by
             FROM $tbl_entry
            WHERE room_id=$room
              AND start_time <= $midnight_tonight[$day_num] AND end_time > $midnight[$day_num]
@@ -287,6 +288,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
       }
       $d[$day_num]["id"][] = $row['id'];
       $d[$day_num]["color"][] = $row['type'];
+      $d[$day_num]["is_repeat"][] = !empty($row['repeat_id']);
       
       // Handle private events
       if (is_private_event($row['status'] & STATUS_PRIVATE)) 
@@ -316,6 +318,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
         $d[$day_num]["shortdescrip"][] = htmlspecialchars($row['name']);
       }
       
+
       // Describe the start and end time, accounting for "all day"
       // and for entries starting before/ending after today.
       // There are 9 cases, for start time < = or > midnight this morning,
@@ -560,20 +563,17 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
         {
           case "description":
           {
-            echo "<a href=\"$booking_link\" title=\"$full_text\">"
-              . $description_text . "</a>\n";
+            $display_text = $description_text;
             break;
           }
           case "slot":
           {
-            echo "<a href=\"$booking_link\" title=\"$full_text\">"
-              . $slot_text . "</a>\n";
+            $display_text = $slot_text;
             break;
           }
           case "both":
           {
-            echo "<a href=\"$booking_link\" title=\"$full_text\">"
-              . $full_text . "</a>\n";
+            $display_text = $full_text;
             break;
           }
           default:
@@ -581,6 +581,9 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
             echo "error: unknown parameter";
           }
         }
+        echo "<a href=\"$booking_link\" title=\"$full_text\">";
+        echo ($d[$cday]['is_repeat'][$i]) ? "<img class=\"repeat_symbol\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
+        echo "$display_text</a>\n";
         echo "</div>\n";
       }
       echo "</div>\n";
