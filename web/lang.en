@@ -289,6 +289,7 @@ $vocab["capacity"]           = "Capacity";
 $vocab["norooms"]            = "No rooms have been defined.";
 $vocab["administration"]     = "Room Details";
 $vocab["invalid_area_name"]  = "This area name has already been used!";
+$vocab["empty_name"]         = "You have not entered a name!";
 
 // Used in edit_area_room.php
 $vocab["editarea"]                = "Edit Area";

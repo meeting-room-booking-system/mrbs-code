@@ -15,10 +15,15 @@ checkAuthorised();
 
 // This file is for adding new areas/rooms
 
+// First of all check that we've got an area or room name
+if (!isset($name) || ($name === ''))
+{
+  $error = "empty_name";
+}
+
 // we need to do different things depending on if its a room
 // or an area
-
-if ($type == "area")
+elseif ($type == "area")
 {
   // Truncate the name field to the maximum length as a precaution.
   $name = substr($name, 0, $maxlength['area.area_name']);
@@ -49,7 +54,7 @@ if ($type == "area")
   sql_mutex_unlock("$tbl_area");
 }
 
-if ($type == "room")
+elseif ($type == "room")
 {
   // Truncate the name and description fields to the maximum length as a precaution.
   $name = substr($name, 0, $maxlength['room.room_name']);
