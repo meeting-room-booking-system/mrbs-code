@@ -51,49 +51,6 @@
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-// Generate an input field with an associated label
-// Optional fourth parameter: $maxlength - the maximum length of input allowed
-function generate_input($label_text, $name, $value)
-{
-  // get any optional fourth parameter
-  if (func_num_args() > 3)
-  {
-    $maxlength = func_get_arg(3);
-  }
-  // generate the HTML
-  $html  = "<label for=\"$name\">$label_text</label>\n";
-  $html .= "<input id=\"$name\" name=\"$name\"";
-  $html .= (isset($maxlength)) ? " maxlength=\"$maxlength\"" : '';
-  $html .= " value=\"" . htmlspecialchars($value) . "\">\n";
-  echo $html;
-}
-
-// Generates a select box from $options, an array of options
-function generate_select($label_text, $name, $value, $options)
-{
-  // generate the HTML
-  $html  = "<label for=\"$name\">$label_text</label>\n";
-  $html .= "<select id=\"$name\" name=\"$name\">\n";
-  foreach ($options as $option)
-  {
-    $html .= "<option";
-    $html .= (isset($value) && ($value == $option)) ? " selected=\"selected\"" : '';
-    $html .= ">$option</option>\n";
-  }
-  $html .= "</select>\n";
-  echo $html;
-}
-
-// Generate a textarea with an associated label
-function generate_textarea($label_text, $name, $value)
-{
-  $html  = "<label for=\"$name\">$label_text</label>\n";
-  // textarea rows and cols are overridden by CSS height and width
-  $html .= "<textarea id=\"$name\" name=\"$name\" rows=\"8\" cols=\"40\">" . htmlspecialchars ($value) . "</textarea>\n";
-  echo $html;
-}
-    
-
 global $twentyfourhour_format;
 
 // Get non-standard form variables

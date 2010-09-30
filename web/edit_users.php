@@ -40,6 +40,8 @@
 
 require_once "defaultincludes.inc";
 
+define('VAR_PREFIX', 'f_');  // Prefix for custom field variable names
+
 // Get non-standard form variables
 $Action = get_form_var('Action', 'string');
 $Id = get_form_var('Id', 'int');
@@ -351,25 +353,26 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           
           foreach ($fields as $field)
           {
-            $fieldname = $field['name'];
+            $key = $field['name'];
+            $var_name = VAR_PREFIX . $key;
             // First of all output the input for the field
             // The ID field cannot change; The password field must not be shown.
-            switch($fieldname)
+            switch($key)
             {
               case 'id':
                 echo "<input type=\"hidden\" name=\"Id\" value=\"$Id\">\n";
                 break;
               case 'password':
-                echo "<input type=\"hidden\" name=\"Field_$fieldname\" value=\"". htmlspecialchars($data[$fieldname]) . "\">\n";
+                echo "<input type=\"hidden\" name=\"$var_name\" value=\"". htmlspecialchars($data[$key]) . "\">\n";
                 break;
               default:
-                $html_fieldname = htmlspecialchars("Field_$fieldname");
                 echo "<div>\n";
-                echo "<label for=\"Field_$fieldname\">" . get_loc_field_name($tbl_users, $fieldname) . ":</label>\n";
-                switch($fieldname)
+                $label_text = get_loc_field_name($tbl_users, $key);
+                switch($key)
                 {
                   case 'level':
-                    echo "<select id=\"Field_$fieldname\" name=\"Field_$fieldname\"" . ($disable_select ? " disabled=\"disabled\"" : "") . ">\n";
+                    echo "<label for=\"$var_name\">$label_text:</label>\n";
+                    echo "<select id=\"$var_name\" name=\"$var_name\"" . ($disable_select ? " disabled=\"disabled\"" : "") . ">\n";
                     // Only display options up to and including one's own level (you can't upgrade yourself).
                     // If you're not some kind of admin then the select will also be disabled.
                     // (Note - disabling individual options doesn't work in older browsers, eg IE6)     
@@ -380,7 +383,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                       //   if we're editing an existing entry, then it should be the current value;
                       //   if we're adding the very first entry, then it should be an admin;
                       //   if we're adding a subsequent entry, then it should be an ordinary user;
-                      if ( (($Action == "Edit")  && ($i == $data[$fieldname])) ||
+                      if ( (($Action == "Edit")  && ($i == $data[$key])) ||
                            (($Action == "Add") && $initial_user_creation && ($i == $max_level)) ||
                            (($Action == "Add") && !$initial_user_creation && ($i == 1)) )
                       {
@@ -399,27 +402,26 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                       }
                       else
                       {
-                        $v = $data[$fieldname];
+                        $v = $data[$key];
                       }
-                      echo "<input type=\"hidden\" name=\"Field_$fieldname\" value=\"$v\">\n";
+                      echo "<input type=\"hidden\" name=\"$var_name\" value=\"$v\">\n";
                     }
                     break;
                   case 'name':
                     // you cannot change a username (even your own) unless you have user editing rights
-                    echo "<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" " .
+                    echo "<label for=\"$var_name\">$label_text:</label>\n";
+                    echo "<input id=\"$var_name\" name=\"$var_name\" type=\"text\" " .
                           "maxlength=\"" . $maxlength['users.name'] . "\" " .
                          (($level < $min_user_editing_level) ? "disabled=\"disabled\" " : "") .
-                          "value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n";
+                          "value=\"" . htmlspecialchars($data[$key]) . "\">\n";
                     // if the field was disabled then we still need to pass through the value as a hidden input
                     if ($level < $min_user_editing_level)
                     {
-                      echo "<input type=\"hidden\" name=\"Field_$fieldname\" value=\"" . $data[$fieldname] . "\">\n";
+                      echo "<input type=\"hidden\" name=\"$var_name\" value=\"" . $data[$key] . "\">\n";
                     }
                     break;
                   case 'email':
-                    echo "<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" " .
-                          (isset($maxlength["users.$fieldname"]) ? "maxlength=\"" . $maxlength["users.$fieldname"] . "\" " : "") .
-                          "value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n";
+                    generate_input($label_text, $var_name, $data[$key], isset($maxlength["users.$key"]) ? $maxlength["users.$key"] : NULL);
                     break;
                   default:    
                     // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
@@ -427,25 +429,27 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                     if (($field['nature'] == 'boolean') || 
                         (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
                     {
+                      echo "<label for=\"$var_name\">$label_text:</label>\n";
                       echo "<input type=\"checkbox\" class=\"checkbox\" " .
-                            "id=\"$html_fieldname\" name=\"$html_fieldname\" value=\"1\"" .
-                            ((!empty($data[$fieldname])) ? " checked=\"checked\"" : "") .
+                            "id=\"$var_name\" name=\"$var_name\" value=\"1\"" .
+                            ((!empty($data[$key])) ? " checked=\"checked\"" : "") .
                             ">\n";
+                    }
+                    // Output a select box if they want one
+                    elseif (count($select_options["users.$key"]) > 0)
+                    {
+                      generate_select($label_text, $var_name, $data[$key], $select_options["users.$key"]);
                     }
                     // Output a textarea if it's a character string longer than the limit for a
                     // text input
                     elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
                     {
-                      echo "<textarea rows=\"8\" cols=\"40\" id=\"$html_fieldname\" name=\"$html_fieldname\">\n";
-                      echo htmlspecialchars($data[$fieldname]);
-                      echo "</textarea>\n";
+                      generate_textarea($label_text, $var_name, $data[$key]);   
                     }
                     // Otherwise output a text input
                     else
                     {
-                      echo "<input id=\"$html_fieldname\" name=\"$html_fieldname\" type=\"text\" " .
-                           (isset($maxlength["users.$fieldname"]) ? "maxlength=\"" . $maxlength["users.$fieldname"] . "\" " : "") .
-                            "value=\"" . htmlspecialchars($data[$fieldname]) . "\">\n";
+                      generate_input($label_text, $var_name, $data[$key], isset($maxlength["users.$key"]) ? $maxlength["users.$key"] : NULL);
                     }
                     break;
                 } // end switch
@@ -455,7 +459,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
             
             // Then output any error messages associated with the field
             // except for the password field which is a special case
-            switch($fieldname)
+            switch($key)
             {
               case 'email':
                 if (!empty($invalid_email))
@@ -571,7 +575,7 @@ if (isset($Action) && ($Action == "Update"))
       }
       // first, get all the other form variables and put them into an array, $values, which 
       // we will use for entering into the database assuming we pass validation
-      $values[$fieldname] = get_form_var("Field_$fieldname", $type);
+      $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
       // Truncate the field to the maximum length as a precaution.
       if (isset($maxlength["users.$fieldname"]))
       {
@@ -741,6 +745,8 @@ if (isset($Action) && ($Action == "Update"))
   
       foreach ($sql_fields as $fieldname => $value)
       {
+        // Note that we don't have to escape or quote the fieldname
+        // thanks to the restriction on custom field names
         array_push($assign_array,"$fieldname=$value");
       }
       $operation .= implode(",", $assign_array) . " WHERE id=$Id;";
@@ -757,14 +763,15 @@ if (isset($Action) && ($Action == "Update"))
         array_push($fields_list,$fieldname);
         array_push($values_list,$value);
       }
-      
+      // Note that we don't have to escape or quote the fieldname
+      // thanks to the restriction on custom field names
       $operation = "INSERT INTO $tbl_users " .
         "(". implode(",",$fields_list) . ")" .
         " VALUES " . "(" . implode(",",$values_list) . ");";
     }
   
     /* DEBUG lines - check the actual sql statement going into the db */
-    //echo "Final SQL string: <code>$operation</code>";
+    //echo "Final SQL string: <code>" . htmlspecialchars($operation) . "</code>";
     //exit;
     $r = sql_command($operation);
     if ($r == -1)

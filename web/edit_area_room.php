@@ -238,6 +238,8 @@ if ($phase == 2)
                     $$var = "'" . addslashes($$var) . "'";
                     break;
                 }
+                // Note that we don't have to escape or quote the fieldname
+                // thanks to the restriction on custom field names
                 $assign_array[] = $field['name'] . "=" . $$var;
                 break;
             }
