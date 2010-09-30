@@ -292,11 +292,13 @@ if (isset($area))
               else
               {
                 // strings
-                $text = htmlspecialchars($r[$field['name']]);
-                echo "<td title=\"$text\"><div>";
-                echo substr($text, 0, $max_content_length);
-                echo (strlen($text) > $max_content_length) ? " ..." : "";
-                echo "</div></td>\n";
+                $value = $r[$field['name']];
+                $html = "<td title=\"" . htmlspecialchars($value) . "\"><div>";
+                // Truncate before conversion, otherwise you could chop off in the middle of an entity
+                $html .= htmlspecialchars(substr($value, 0, $max_content_length));
+                $html .= (strlen($value) > $max_content_length) ? " ..." : "";
+                $html .= "</div></td>\n";
+                echo $html;
               }
               break;
           }

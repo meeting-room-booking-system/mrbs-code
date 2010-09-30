@@ -224,11 +224,11 @@ function freeze_panes_table_html($info, $columns, $class, $action=FALSE)
             }
             else
             {
-              // strings
-              $text = htmlspecialchars($col_value);
-              $html .= "<td title=\"$text\"><div>";
-              $html .= substr($text, 0, $max_content_length);
-              $html .= (strlen($text) > $max_content_length) ? " ..." : "";
+               // strings
+              $html .= "<td title=\"" . htmlspecialchars($col_value) . "\"><div>";
+              // Truncate before conversion, otherwise you could chop off in the middle of an entity
+              $html .= htmlspecialchars(substr($col_value, 0, $max_content_length));
+              $html .= (strlen($col_value) > $max_content_length) ? " ..." : "";
               $html .= "</div></td>\n";
             }
             break;
