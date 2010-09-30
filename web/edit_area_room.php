@@ -104,7 +104,7 @@ foreach($fields as $field)
       $type = 'string';
       break;
   }
-  $var = "f_" . $field['name'];
+  $var = VAR_PREFIX . $field['name'];
   $$var = get_form_var($var, $type);
   if (($type == 'int') && ($$var === ''))
   {
@@ -224,7 +224,7 @@ if ($phase == 2)
                 break;
               // then look at any user defined fields
               default:
-                $var = "f_" . $field['name'];
+                $var = VAR_PREFIX . $field['name'];
                 switch ($field['nature'])
                 {
                   case 'integer':
@@ -240,6 +240,8 @@ if ($phase == 2)
                     $$var = "'" . addslashes($$var) . "'";
                     break;
                 }
+                // Note that we don't have to escape or quote the fieldname
+                // thanks to the restriction on custom field names
                 $assign_array[] = $field['name'] . "=" . $$var;
                 break;
             }
@@ -520,15 +522,16 @@ if (isset($change_room) && !empty($room))
             // then look at any user defined fields
             default:
               $label_text = get_loc_field_name($tbl_room, $field['name']);
-              echo "<label for=\"f_" . $field['name'] . "\">$label_text:</label>\n";
+              $var_name = VAR_PREFIX . $field['name'];
+              echo "<label for=\"$var_name\">$label_text:</label>\n";
               // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
               // assume are intended to be booleans)
               if (($field['nature'] == 'boolean') || 
                   (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
               {
                 echo "<input type=\"checkbox\" class=\"checkbox\" " .
-                      "id=\"f_" . $field['name'] . "\" " .
-                      "name=\"f_" . $field['name'] . "\" " .
+                      "id=\"$var_name\" " .
+                      "name=\"$var_name\" " .
                       "value=\"1\" " .
                       ((!empty($row[$field['name']])) ? " checked=\"checked\"" : "") .
                       "$disabled>\n";
@@ -538,8 +541,8 @@ if (isset($change_room) && !empty($room))
               elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
               {
                 echo "<textarea rows=\"8\" cols=\"40\" " .
-                      "id=\"f_" . $field['name'] . "\" " .
-                      "name=\"f_" . $field['name'] . "\" " .
+                      "id=\"$var_name\" " .
+                      "name=\"$var_name\" " .
                       "$disabled>\n";
                 echo htmlspecialchars($row[$field['name']]);
                 echo "</textarea>\n";
@@ -548,8 +551,8 @@ if (isset($change_room) && !empty($room))
               else
               {
                 echo "<input type=\"text\" " .
-                      "id=\"f_" . $field['name'] . "\" " .
-                      "name=\"f_" . $field['name'] . "\" " .
+                      "id=\"$var_name\" " .
+                      "name=\"$var_name\" " .
                       "value=\"" . htmlspecialchars($row[$field['name']]) . "\"" .
                       "$disabled>\n";
               }

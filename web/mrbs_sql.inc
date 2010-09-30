@@ -324,7 +324,9 @@ function mrbsCreateEntry($table, $data)
           
     } // switch ($key)
   } // foreach
-    
+  
+  // Note that we don't have to escape or quote the fieldname
+  // thanks to the restriction on custom field names
   $sql = "INSERT INTO $table (" . implode(', ',$sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
 
   if (sql_command($sql) < 0)

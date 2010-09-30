@@ -51,49 +51,6 @@
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-// Generate an input field with an associated label
-// Optional fourth parameter: $maxlength - the maximum length of input allowed
-function generate_input($label_text, $name, $value)
-{
-  // get any optional fourth parameter
-  if (func_num_args() > 3)
-  {
-    $maxlength = func_get_arg(3);
-  }
-  // generate the HTML
-  $html  = "<label for=\"$name\">$label_text</label>\n";
-  $html .= "<input id=\"$name\" name=\"$name\"";
-  $html .= (isset($maxlength)) ? " maxlength=\"$maxlength\"" : '';
-  $html .= " value=\"" . htmlspecialchars($value) . "\">\n";
-  echo $html;
-}
-
-// Generates a select box from $options, an array of options
-function generate_select($label_text, $name, $value, $options)
-{
-  // generate the HTML
-  $html  = "<label for=\"$name\">$label_text</label>\n";
-  $html .= "<select id=\"$name\" name=\"$name\">\n";
-  foreach ($options as $option)
-  {
-    $html .= "<option";
-    $html .= (isset($value) && ($value == $option)) ? " selected=\"selected\"" : '';
-    $html .= ">$option</option>\n";
-  }
-  $html .= "</select>\n";
-  echo $html;
-}
-
-// Generate a textarea with an associated label
-function generate_textarea($label_text, $name, $value)
-{
-  $html  = "<label for=\"$name\">$label_text</label>\n";
-  // textarea rows and cols are overridden by CSS height and width
-  $html .= "<textarea id=\"$name\" name=\"$name\" rows=\"8\" cols=\"40\">" . htmlspecialchars ($value) . "</textarea>\n";
-  echo $html;
-}
-    
-
 global $twentyfourhour_format;
 
 // Get non-standard form variables
@@ -934,6 +891,7 @@ else
       $key = $field['name'];
       if (!in_array($key, $standard_fields['entry']))
       {
+        $var_name = VAR_PREFIX . $key;
         $value = $custom_fields[$key];
         $label_text = get_loc_field_name($tbl_entry, $key) . ":";
         echo "<div>\n";
@@ -942,27 +900,27 @@ else
         if (($field['nature'] == 'boolean') || 
             (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
         {
-          echo "<label for=\"f_$key\">$label_text</label>\n";
+          echo "<label for=\"$var_name\">$label_text</label>\n";
           echo "<input type=\"checkbox\" class=\"checkbox\" " .
-                "id=\"f_$key\" name=\"f_$key\" value=\"1\" " .
+                "id=\"$var_name\" name=\"$var_name\" value=\"1\" " .
                 ((!empty($value)) ? " checked=\"checked\"" : "") .
                 ">\n";
         }
         // Output a select box if they want one
         elseif (count($select_options["entry.$key"]) > 0)
         {
-          generate_select($label_text, "f_$key", $value, $select_options["entry.$key"]);
+          generate_select($label_text, $var_name, $value, $select_options["entry.$key"]);
         }
         // Output a textarea if it's a character string longer than the limit for a
         // text input
         elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
         {
-          generate_textarea($label_text, "f_$key", $value);   
+          generate_textarea($label_text, $var_name, $value);   
         }
         // Otherwise output a text input
         else
         {
-          generate_input($label_text, "f_$key", $value);
+          generate_input($label_text, $var_name, $value);
         }
         echo "</div>\n";
       }

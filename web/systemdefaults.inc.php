@@ -494,10 +494,9 @@ $confirmed_default = TRUE;
 
 //$select_options['entry.name'] = array('Physics', 'Chemistry', 'Biology');
 
-// At the moment this feature is only supported for the name, description and
-// any custom fields in the entry table.   However the indexing format of
-// tablename.columnname has been chosen to allow it to be extended to other
-// tables in the future.
+// At the moment this feature is only supported as follows:
+//     - Entry table: name, description and custom fields
+//     - Users table: custom fields
 
 
  

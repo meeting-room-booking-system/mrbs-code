@@ -17,9 +17,9 @@
  // in calls to nl2br.   TRUE means XHTML, FALSE means HTML.
  define('IS_XHTML', FALSE);
 
- /*************************************************
+/*************************************************
  * ENTRY STATUS CODES - internal use, do not change
- **************************************************/
+ *************************************************/
 
 // The status code field for an entry is a tinyint (smallint on PostgreSQL)
 // with individual bits set to record the various possible boolean properties
@@ -37,9 +37,9 @@ define('STATUS_AWAITING_APPROVAL', 0x02);
 define('STATUS_TENTATIVE',         0x04);
 
 
- /*************************************************
+/*************************************************
  * REPEAT TYPE CODES - internal use, do not change
- **************************************************/
+ *************************************************/
  
 define('REP_NONE',            0);
 define('REP_DAILY',           1);
@@ -49,10 +49,15 @@ define('REP_YEARLY',          4);
 define('REP_MONTHLY_SAMEDAY', 5);
 define('REP_N_WEEKLY',        6);
 
- /****************************************************************
- * DATABASE TABLES - STANDARD FIELDS - internal use, do not change
- *****************************************************************/
+/****************************************************************
+ * DATABASE TABLES  - internal use, do not change
+ ****************************************************************/
 
+// CUSTOM FIELDS
+// Prefix for custom field variable names
+define('VAR_PREFIX', 'f_');  // must begin with a letter;
+
+// STANDARD FIELDS
 // These are the standard fields in the database tables.   If you add more
 // standard (not user defined, custom) fields, then you need to change these
 
