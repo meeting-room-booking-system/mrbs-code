@@ -868,6 +868,7 @@ else
       $key = $field['name'];
       if (!in_array($key, $standard_fields['entry']))
       {
+        $var_name = VAR_PREFIX . $key;
         $value = $custom_fields[$key];
         $label_text = get_loc_field_name($tbl_entry, $key) . ":";
         echo "<div>\n";
@@ -876,27 +877,27 @@ else
         if (($field['nature'] == 'boolean') || 
             (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
         {
-          echo "<label for=\"f_$key\">$label_text</label>\n";
+          echo "<label for=\"$var_name\">$label_text</label>\n";
           echo "<input type=\"checkbox\" class=\"checkbox\" " .
-                "id=\"f_$key\" name=\"f_$key\" value=\"1\" " .
+                "id=\"$var_name\" name=\"$var_name\" value=\"1\" " .
                 ((!empty($value)) ? " checked=\"checked\"" : "") .
                 ">\n";
         }
         // Output a select box if they want one
         elseif (count($select_options["entry.$key"]) > 0)
         {
-          generate_select($label_text, "f_$key", $value, $select_options["entry.$key"]);
+          generate_select($label_text, $var_name, $value, $select_options["entry.$key"]);
         }
         // Output a textarea if it's a character string longer than the limit for a
         // text input
         elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
         {
-          generate_textarea($label_text, "f_$key", $value);   
+          generate_textarea($label_text, $var_name, $value);   
         }
         // Otherwise output a text input
         else
         {
-          generate_input($label_text, "f_$key", $value);
+          generate_input($label_text, $var_name, $value);
         }
         echo "</div>\n";
       }

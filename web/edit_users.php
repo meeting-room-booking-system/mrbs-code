@@ -40,8 +40,6 @@
 
 require_once "defaultincludes.inc";
 
-define('VAR_PREFIX', 'f_');  // Prefix for custom field variable names
-
 // Get non-standard form variables
 $Action = get_form_var('Action', 'string');
 $Id = get_form_var('Id', 'int');

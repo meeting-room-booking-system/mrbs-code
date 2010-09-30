@@ -57,7 +57,7 @@ foreach($fields as $field)
         $f_type = 'string';
         break;
     }
-    $var = "f_" . $field['name'];
+    $var = VAR_PREFIX . $field['name'];
     $custom_fields[$field['name']] = get_form_var($var, $f_type);
     if (($f_type == 'int') && ($custom_fields[$field['name']] === ''))
     {
