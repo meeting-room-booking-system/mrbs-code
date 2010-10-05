@@ -178,12 +178,12 @@ if ($has_prev || $has_next)
   echo "</div>\n";
   
   echo "<div id=\"record_nav\">\n";
+  $base_query_string = "search_str=$search_url&amp;total=$total&amp;from_year=$year&amp;from_month=$month&amp;from_day=$day";
   // display a "Previous" button if necessary
   if($has_prev)
   {
-    echo "<a href=\"search.php?search_str=$search_url&amp;search_pos=";
-    echo max(0, $search_pos-$search["count"]);
-    echo "&amp;total=$total&amp;year=$year&amp;month=$month&amp;day=$day\">";
+    $query_string = $base_query_string . "&amp;search_pos=" . max(0, $search_pos-$search["count"]);
+    echo "<a href=\"search.php?$query_string\">";
   }
 
   echo get_vocab("previous");
@@ -199,9 +199,8 @@ if ($has_prev || $has_next)
   // display a "Previous" button if necessary
   if ($has_next)
   {
-    echo "<a href=\"search.php?search_str=$search_url&amp;search_pos=";
-    echo max(0, $search_pos+$search["count"]);
-    echo "&amp;total=$total&amp;year=$year&amp;month=$month&amp;day=$day\">";
+    $query_string = $base_query_string . "&amp;search_pos=" . max(0, $search_pos+$search["count"]);
+    echo "<a href=\"search.php?$query_string\">";
   }
 
   echo get_vocab("next");
