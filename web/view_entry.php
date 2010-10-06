@@ -159,6 +159,17 @@ else
 
 $row = mrbsGetBookingInfo($id, $series);
 
+// Get the area settings for the entry's area.   In particular we want
+// to know how to display private/public bookings in this area.
+get_area_settings($row['area_id']);
+
+// Work out whether this event should be kept private
+$private = $row['status'] & STATUS_PRIVATE;
+$writeable = getWritable($row['create_by'], $user, $row['room_id']);
+$keep_private = (is_private_event($private) && !$writeable);
+$private_text = "[" . get_vocab("private") . "]";
+
+
 $custom_fields = array();
 foreach ($row as $column => $value)
 {
@@ -190,7 +201,7 @@ foreach ($row as $column => $value)
     case 'repeat_info_time':
     case 'repeat_info_user':
     case 'repeat_info_text':
-      $$column = $row[$column];
+      $$column = ($keep_private && $is_private_field["entry.$column"]) ? $private_text : $row[$column];
       break;
       
     case 'status':
@@ -203,7 +214,7 @@ foreach ($row as $column => $value)
       break;
 
     default:
-      $custom_fields[$column] = $row[$column];
+      $custom_fields[$column] = ($keep_private && $is_private_field["entry.$column"]) ? $private_text : $row[$column];
       break;
   }
 }
@@ -215,24 +226,8 @@ $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['remind
 // so that user see what he expects to see
 $duration      = $row['duration'] - cross_dst($row['start_time'],
                                               $row['end_time']);
-$writeable     = getWritable($row['create_by'], $user, $room_id);
 
 
-// Get the area settings for the entry's area.   In particular we want
-// to know how to display private/public bookings in this area.
-get_area_settings($row['area_id']);
-
-if (is_private_event($private) && !$writeable) 
-{
-  $name = "[".get_vocab('private')."]";
-  $description = $name;
-  $create_by = $name;
-  $keep_private = TRUE;
-}
-else
-{
-  $keep_private = FALSE;
-}
 
 if ($enable_periods)
 {
@@ -335,11 +330,11 @@ $repeat_key = "rep_type_" . $rep_type;
 // Now that we know all the data we start drawing it
 
 
-echo "<h3" . (($keep_private) ? " class=\"private\"" : "") . ">\n";
+echo "<h3" . (($keep_private && $is_private_field['entry.name']) ? " class=\"private\"" : "") . ">\n";
 echo htmlspecialchars($name);
 if (is_private_event($private) && $writeable) 
 {
-  echo ' ('.get_vocab('private').')';
+  echo ' ('.get_vocab("private").')';
 }
 echo "</h3>\n";
 
@@ -434,7 +429,7 @@ if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
   <tr>
     <td><?php echo get_vocab("description") ?>:</td>
     <?php
-    echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . mrbs_nl2br(htmlspecialchars($description)) . "</td>\n";
+    echo "<td" . (($keep_private & $is_private_field['entry.description']) ? " class=\"private\"" : "") . ">" . mrbs_nl2br(htmlspecialchars($description)) . "</td>\n";
     ?>
   </tr>
   <?php
@@ -476,7 +471,7 @@ if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
   <tr>
     <td><?php echo get_vocab("createdby") ?>:</td>
     <?php
-    echo "<td" . (($keep_private) ? " class=\"private\"" : "") . ">" . htmlspecialchars($create_by) . "</td>\n";
+    echo "<td" . (($keep_private && $is_private_field['entry.create_by']) ? " class=\"private\"" : "") . ">" . htmlspecialchars($create_by) . "</td>\n";
     ?>
   </tr>
   <tr>
@@ -498,14 +493,21 @@ if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
       if (($field['nature'] == 'boolean') || 
           (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
       {
-        $shown_value = empty($custom_fields[$key]) ? get_vocab("no") : get_vocab("yes");
+        if ($keep_private && $is_private_field["entry.$key"])
+        {
+          $shown_value = $custom_fields[$key];  // Will have been set previously
+        }
+        else
+        {
+          $shown_value = empty($custom_fields[$key]) ? get_vocab("no") : get_vocab("yes");
+        }
       }
       // Otherwise output a string
       else
       {
         $shown_value = (isset($custom_fields[$key])) ? mrbs_nl2br(htmlspecialchars($custom_fields[$key])): "&nbsp;"; 
       }
-      echo "<td>$shown_value</td>\n";
+      echo "<td" . (($keep_private && $is_private_field["entry.$key"]) ? " class=\"private\"" : "") . ">$shown_value</td>\n";
       echo "</tr>\n";
     }
   }

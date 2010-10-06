@@ -444,7 +444,17 @@ $private_override = "none";  // DEFAULT VALUE FOR NEW AREAS
            // Overrides $private_default and $private_mandatory
            // Consider your users' expectations of privacy before
            // changing to "public" or from "private" to "none"
-    
+
+// Choose which fields should be private by setting 
+// $is_private_field['tablename.columnname'] = TRUE
+// At the moment only fields in the entry table can be marked as private,
+// including custom fields, but with the exception of the following fields:
+// start_time, end_time, entry_type, repeat_id, room_id, timestamp, type, status,
+// reminded, info_time, info_user, info_text.
+$is_private_field['entry.name'] = TRUE;
+$is_private_field['entry.description'] = TRUE;
+$is_private_field['entry.create_by'] = TRUE;
+
                   
 // SETTINGS FOR APPROVING BOOKINGS - PER-AREA
 
