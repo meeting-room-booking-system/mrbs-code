@@ -1125,14 +1125,21 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   // start or end at a recognized time still appear.
   
   global $resolution;
+  global $is_private_field;
   
   $user = getUserName();
   if (is_private_event($row['entry_private']) &&
          !getWritable($row['entry_create_by'], $user, $row['room_id']))
   {
     $is_private = TRUE;
-    $row['name']= "[".get_vocab('unavailable')."]";
-    $row['entry_description']= "[".get_vocab('unavailable')."]";
+    if ($is_private_field['entry.name'])
+    {
+      $row['name']= "[".get_vocab('unavailable')."]";
+    }
+    if ($is_private_field['entry.description'])
+    {
+      $row['entry_description']= "[".get_vocab('unavailable')."]";
+    }
   }
   else
   {

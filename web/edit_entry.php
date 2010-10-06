@@ -130,6 +130,21 @@ if (isset($id))
   $area = get_area($row['room_id']);
   get_area_settings($area);
   
+  $private = $row['private'];
+  if ($private_mandatory) 
+  {
+    $private = $private_default;
+  }
+  // Need to clear some data if entry is private and user
+  // does not have permission to edit/view details
+  if (isset($copy) && ($create_by != $row['create_by'])) 
+  {
+    // Entry being copied by different user
+    // If they don't have rights to view details, clear them
+    $privatewriteable = getWritable($row['create_by'], $user, $row['room_id']);
+    $keep_private = (is_private_event($private) && !$privatewriteable);
+  }
+  
   foreach ($row as $column => $value)
   {
     switch ($column)
@@ -142,6 +157,7 @@ if (isset($id))
       case 'info_time':
       case 'info_user':
       case 'info_text':
+      case 'private':    // We've already got the privacy status above
         break;
         
       case 'name':
@@ -149,8 +165,7 @@ if (isset($id))
       case 'type':
       case 'room_id':
       case 'entry_type':
-      case 'private':
-        $$column = $row[$column];
+        $$column = ($keep_private && $is_private_field["entry.$column"]) ? '' : $row[$column];
         break;
       
       case 'repeat_id':
@@ -176,28 +191,11 @@ if (isset($id))
         break;
         
       default:
-        $custom_fields[$column] = $row[$column];
+        $custom_fields[$column] = ($keep_private && $is_private_field["entry.$column"]) ? '' : $row[$column];
         break;
     }
   }
   
-  if ($private_mandatory) 
-  {
-    $private = $private_default;
-  }
-  // Need to clear some data if entry is private and user
-  // does not have permission to edit/view details
-  if (isset($copy) && ($create_by != $row['create_by'])) 
-  {
-    // Entry being copied by different user
-    // If they don't have rights to view details, clear them
-    $privatewriteable = getWritable($row['create_by'], $user, $room_id);
-    if (is_private_event($private) && !$privatewriteable) 
-    {
-        $name = '';
-        $description = '' ;
-    }
-  }
 
   if($entry_type >= 1)
   {

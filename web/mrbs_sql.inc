@@ -71,7 +71,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
                                 $row['start_time']);
     }
     
-    if (is_private_event($row['private']) &&
+    if (is_private_event($row['private']) && $is_private_field['entry.name'] &&
          !getWritable($row['create_by'], $user, $room_id))
     {
        $row['name'] = get_vocab("private");

@@ -305,7 +305,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
         $private = FALSE;
       }
 
-      if ($private) 
+      if ($private & $is_private_field['entry.name']) 
       {
         $d[$day_num]["shortdescrip"][] = '['.get_vocab('unavailable').']';
       }
