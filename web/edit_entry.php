@@ -570,20 +570,16 @@ else
       generate_textarea($label_text, 'description', $description);
     }
     echo "</div>\n";
-    ?>
 
-    <div id="div_date">
-      <?php
-      echo "<label for=\"start_datepicker\">" . get_vocab("date") . ":</label>\n";
-      gendateselector("start_", $start_day, $start_month, $start_year);
-      ?>
-    </div>
 
-    <?php 
+    echo "<div id=\"div_date\">\n";
+
+    echo "<label for=\"start_datepicker\">" . get_vocab("start") . ":</label>\n";
+    gendateselector("start_", $start_day, $start_month, $start_year);
+
     if(! $enable_periods ) 
     { 
       echo "<div class=\"div_time\">\n";
-      echo "<label>" . get_vocab("time") . ":</label>\n";
       echo "<input type=\"text\" class=\"time_hour\" name=\"hour\" value=\"";
       if ($twentyfourhour_format)
       {
@@ -618,26 +614,22 @@ else
     
     else
     {
-      ?>
-      <div id="div_period">
-        <label for="period" ><?php echo get_vocab("period")?>:</label>
-        <select id="period" name="period">
-          <?php
-          foreach ($periods as $p_num => $p_val)
-          {
-            echo "<option value=\"$p_num\"";
-            if( ( isset( $period ) && $period == $p_num ) || $p_num == $start_min)
-            {
-              echo " selected=\"selected\"";
-            }
-            echo ">$p_val</option>\n";
-          }
-          ?>
-        </select>
-      </div>
-
-    <?php
+      echo "<div id=\"div_period\">\n";
+      echo "<select id=\"period\" name=\"period\">\n";
+      foreach ($periods as $p_num => $p_val)
+      {
+        echo "<option value=\"$p_num\"";
+        if( ( isset( $period ) && $period == $p_num ) || $p_num == $start_min)
+        {
+          echo " selected=\"selected\"";
+        }
+        echo ">$p_val</option>\n";
+      }
+      echo "</select>\n";
+      echo "</div>\n";
     }
+    echo "</div>\n";
+    
     ?>
     <div id="div_duration">
       <label for="duration"><?php echo get_vocab("duration");?>:</label>

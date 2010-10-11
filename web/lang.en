@@ -51,6 +51,7 @@ $vocab["copyseries"]         = "Copy Series";
 $vocab["namebooker"]         = "Brief Description";
 $vocab["fulldescription"]    = "Full Description:<br>&nbsp;&nbsp;(Number of people,<br>&nbsp;&nbsp;Internal/External etc)";
 $vocab["date"]               = "Date";
+$vocab["start"]              = "Start";
 $vocab["start_date"]         = "Start Time";
 $vocab["end_date"]           = "End Time";
 $vocab["time"]               = "Time";
