@@ -9,6 +9,7 @@
 /* set it to visible explicitly for the y direction        */
 .form_general label {overflow-y: visible}
 .form_general #ad label {overflow-y: auto} /* undo for all-day checkbox */
+.edit_area_room div.group {width: 25em} /* not necessary in IE7 or IE9 ?! */
 
 /* ------------ TRAILER.INC ---------------------*/
 
