@@ -7,6 +7,37 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.4.5rc1 (Fri Oct 8 11:00:00 BST 2010):
+
+[*] Optimised SQL to improve performance.
+[*] Japanese translation update from Takanori MATSUURA.
+[*] Clarified the edit booking form somewhat, SF tracker #3011370.
+[-] Fixed a bug that meant users could delete past bookings even though
+ the booking policy said they couldn't.
+[-] Fixed problem whereby a booking of 1 year would show up as 1 minute
+ in edit booking form.
+[-] Fixed bugs which meant that privacy settings were ignored in searches
+ and reports.
+[+] Added configuration option to deny public access to MRBS.
+[*] Improved choice of default area/room.
+[-] Fixed a few issues to do with provisional bookings.
+[*] Czech language update supplied by Marek Grac.
+[+] Added the ability to have custom fields in bookings, see details
+ in INSTALL.
+[*] Added cache expiry for generated CSS files.
+[-] A few fixes for custom fields in the user table.
+[*] Added a check in the upgrade code to check if it is a new installation
+ of MRBS.
+[+] Added Javascript date-picker widgets.
+[+] Added the ability to constrain certain fields (name, description
+ and custom fields) in the entry table to a set of values defined
+ in the config file.
+[+] Added a repeat symbol to the display of series on the day, week
+ and month views.
+[+] Added the ability to choose which fields in the entry table
+ should be regarded as private.
+
+-------------------------------------------------------------------------------
 Version 1.4.4.1 (Thu Apr 21 21:30:00 BST 2010):
 
 [-] Fixed bug in the 1.4.4 release, the database schema number in the
