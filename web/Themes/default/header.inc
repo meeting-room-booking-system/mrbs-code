@@ -79,7 +79,10 @@ $(function() {
   // changed and the regional setting stays as it was before.   The reverse order
   // of priority is:
   // - the MRBS default language
-  // - locales taken from the browser in increasing order of browser preference
+  // - locales taken from the browser in increasing order of browser preference,
+  //   taking for each locale
+  //     - the language part only (in case the xx-YY localisation does not exist)
+  //     - the full locale
   // - then, if automatic language changing is disabled, 
   //      - the MRBS default language setting again
   //      - the language part of the override_locale
@@ -109,6 +112,13 @@ $(function() {
     // Get the locale in the format that datepicker likes: language lower case
     // and country upper case (xx-XX)
     $datepicker_locale = locale_format($lang, '-');
+    // First we'll try and get the correct language and then we'll try and
+    // overwrite that with the correct country variant
+    if (strlen($datepicker_locale) > 2)
+    {
+      $datepicker_lang = substr($datepicker_locale, 0, 2);
+      echo "$.datepicker.setDefaults($.datepicker.regional['$datepicker_lang']);\n";
+    }
     echo "$.datepicker.setDefaults($.datepicker.regional['$datepicker_locale']);\n";
   }
   if ($disable_automatic_language_changing)
