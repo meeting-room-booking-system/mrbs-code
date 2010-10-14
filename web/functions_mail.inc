@@ -397,13 +397,14 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
       $body = get_mail_vocab("mail_body_reminder") . "\n\n";
       break;
     default:
-      $subject = get_mail_vocab("mail_subject_entry");
       if ($new_entry)
       {
+        $subject = get_mail_vocab("mail_subject_new_entry");
         $body = get_mail_vocab("mail_body_new_entry") . "\n\n";
       }
       else
       {
+        $subject = get_mail_vocab("mail_subject_changed_entry");
         $body = get_mail_vocab("mail_body_changed_entry") . "\n\n";
       }
       break;
