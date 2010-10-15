@@ -538,8 +538,8 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
         
     // Created by
     $body .= "\n" . get_mail_vocab("createdby") . ": " .
-      compareEntries($data['create_by'],
-                     $mail_previous['createdby'],
+      compareEntries(convertToMailCharset($data['create_by']),
+                     convertToMailCharset($mail_previous['createdby']),
                      $new_entry) . "\n";
                      
     // Custom fields
@@ -561,7 +561,9 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
           }
         }
         $body .= get_mail_field_name($tbl_entry, $key) . ": ";
-        $body .= compareEntries($value, $mail_previous[$key], $new_entry) . "\n";
+        $body .= compareEntries(convertToMailCharset($value), 
+                                convertToMailCharset($mail_previous[$key]),
+                                $new_entry) . "\n";
       }
     }
     
