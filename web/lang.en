@@ -352,6 +352,7 @@ $vocab["min_book_ahead"]          = "Advance booking - minimum";
 $vocab["max_book_ahead"]          = "Advance booking - maximum";
 $vocab["custom_html"]             = "Custom HTML";
 $vocab["custom_html_note"]        = "This field can be used for displaying your own HTML, for example an embedded Google map";
+$vocab["email_list_note"]         = "Enter a list of email addresses separated by commas or newlines";
                      
 
 // Used in edit_users.php

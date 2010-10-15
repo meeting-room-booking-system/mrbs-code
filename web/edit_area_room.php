@@ -154,11 +154,17 @@ if ($phase == 2)
       exit();
     }
   }
+  
+  require_once "functions_mail.inc";
 
   // PHASE 2 (ROOM) - UPDATE THE DATABASE
   // ------------------------------------
   if (isset($change_room) && !empty($room))
   {
+    // clean up the address list replacing newlines by commas and removing duplicates
+    $room_admin_email = clean_address_list($room_admin_email);
+    // put a space after each comma so that the list displays better
+    $room_admin_email = str_replace(',', ', ', $room_admin_email);
     // validate the email addresses
     $valid_email = validate_email_list($room_admin_email);
   
@@ -269,6 +275,10 @@ if ($phase == 2)
 
   if (isset($change_area) && !empty($area))
   { 
+    // clean up the address list replacing newlines by commas and removing duplicates
+    $area_admin_email = clean_address_list($area_admin_email);
+    // put a space after each comma so that the list displays better
+    $area_admin_email = str_replace(',', ', ', $area_admin_email);
     // validate email addresses
     $valid_email = validate_email_list($area_admin_email);
   
@@ -506,15 +516,15 @@ if (isset($change_room) && !empty($room))
               echo "<input type=\"text\" id=\"capacity\" name=\"capacity\" value=\"" . $row["capacity"] . "\"$disabled>\n";
               break;
             case 'room_admin_email':
-              echo "<label for=\"room_admin_email\">" . get_vocab("room_admin_email") . ":</label>\n";
-              echo "<input type=\"text\" id=\"room_admin_email\" name=\"room_admin_email\" maxlength=\"75\" value=\"" . htmlspecialchars($row["room_admin_email"]) . "\"$disabled>\n";
+              echo "<label for=\"room_admin_email\" title=\"" . get_vocab("email_list_note") . "\">" . get_vocab("room_admin_email") . ":</label>\n";
+              echo "<textarea id=\"room_admin_email\" name=\"room_admin_email\" rows=\"4\" cols=\"40\"$disabled>" . htmlspecialchars($row["room_admin_email"]) . "</textarea>\n";
               break;
             case 'custom_html':
               if ($is_admin)
               {
                 // Only show the raw HTML to admins.  Non-admins will see the rendered HTML
                 echo "<label for=\"room_custom_html\" title=\"" . get_vocab("custom_html_note") . "\">" . get_vocab("custom_html") . ":</label>\n";
-                echo "<textarea id=\"room_custom_html\" class=\"custom_html\" name=\"custom_html\" rows=\"4\" cols=\"40\"$disabled>\n";
+                echo "<textarea id=\"room_custom_html\" name=\"custom_html\" rows=\"4\" cols=\"40\"$disabled>\n";
                 echo htmlspecialchars($row['custom_html']);
                 echo "</textarea>\n";
               }
@@ -645,15 +655,17 @@ if (isset($change_area) &&!empty($area))
         </div>
     
         <div>
-        <label for="area_admin_email"><?php echo get_vocab("area_admin_email") ?>:</label>
-        <input type="text" id="area_admin_email" name="area_admin_email" maxlength="75" value="<?php echo htmlspecialchars($row["area_admin_email"]); ?>">
+        <?php
+        echo "<label for=\"area_admin_email\" title=\"" . get_vocab("email_list_note") . "\">" . get_vocab("area_admin_email") . ":</label>\n";
+        ?>
+        <textarea id="area_admin_email" name="area_admin_email" rows="4" cols="40"><?php echo htmlspecialchars($row["area_admin_email"]); ?></textarea>
         </div>
       
         <?php
         // The custom HTML
         echo "<div>\n";
         echo "<label for=\"area_custom_html\" title=\"" . get_vocab("custom_html_note") . "\">" . get_vocab("custom_html") . ":</label>\n";
-        echo "<textarea id=\"area_custom_html\" class=\"custom_html\" name=\"custom_html\" rows=\"4\" cols=\"40\">\n";
+        echo "<textarea id=\"area_custom_html\" name=\"custom_html\" rows=\"4\" cols=\"40\">\n";
         echo htmlspecialchars($row['custom_html']);
         echo "</textarea>\n";
         echo "</div>\n";
