@@ -455,7 +455,7 @@ span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; fo
 .edit_area_room .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
 .edit_area_room .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
 span#private_display_caution {display: block; margin-top: 1em; font-style: italic; font-weight: normal}
-.edit_area_room textarea.custom_html {height: 6em; width: 25em}
+.edit_area_room .form_general textarea {height: 6em; width: 25em}
 .edit_area_room div#custom_html {margin-top: 8px}
 
 

@@ -165,12 +165,30 @@ function get_address_list($array)
   // some of the elements of the original array may themselves have
   // been comma separated strings
   $array = explode(',', $string);
-  // remove any leading and trailing whitespace
-  array_walk($array, 'trim');
+  // remove any leading and trailing whitespace and any empty strings
+  $trimmed_array = array();
+  for ($i=0; $i < count($array); $i++)
+  {
+    $array[$i] = trim($array[$i]);
+    if ($array[$i] != '')
+    {
+      $trimmed_array[] = $array[$i];
+    }
+  }
   // remove duplicates
-  $array = array_unique($array);
+  $trimmed_array = array_unique($trimmed_array);
   // re-assemble the string
-  $string = implode(',', $array);
+  $string = implode(',', $trimmed_array);
+  return $string;
+}
+
+// Take a string of email addresses separated by commas or newlines
+// and return a comma separated list with duplicates removed.
+function clean_address_list($string)
+{
+  $string = str_replace(array("\r\n", "\n", "\r"), ',', $string);
+  $array = explode(',', $string);
+  $string = get_address_list($array);
   return $string;
 }
 
