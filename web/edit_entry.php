@@ -559,7 +559,7 @@ else
     }
     else
     {
-      generate_input($label_text, 'name', $name, $maxlength['entry.name']);
+      generate_input($label_text, 'name', $name, FALSE, $maxlength['entry.name']);
     }
     echo "</div>\n";
     

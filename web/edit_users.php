@@ -419,7 +419,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                     }
                     break;
                   case 'email':
-                    generate_input($label_text, $var_name, $data[$key], isset($maxlength["users.$key"]) ? $maxlength["users.$key"] : NULL);
+                    generate_input($label_text, $var_name, $data[$key], FALSE, isset($maxlength["users.$key"]) ? $maxlength["users.$key"] : NULL);
                     break;
                   default:    
                     // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
@@ -447,7 +447,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                     // Otherwise output a text input
                     else
                     {
-                      generate_input($label_text, $var_name, $data[$key], isset($maxlength["users.$key"]) ? $maxlength["users.$key"] : NULL);
+                      generate_input($label_text, $var_name, $data[$key], FALSE, isset($maxlength["users.$key"]) ? $maxlength["users.$key"] : NULL);
                     }
                     break;
                 } // end switch

@@ -298,28 +298,38 @@ function fromPeriodString($start_period, &$units, $dur_units)
 
 
 // Generate an input field with an associated label
-// Optional fourth parameter: $maxlength - the maximum length of input allowed
-function generate_input($label_text, $name, $value)
+// Optional fifth parameter: $maxlength - the maximum length of input allowed
+function generate_input($label_text, $name, $value, $disabled=FALSE)
 {
-  // get any optional fourth parameter
-  if (func_num_args() > 3)
+  // get any optional fifth parameter
+  if (func_num_args() > 4)
   {
-    $maxlength = func_get_arg(3);
+    $maxlength = func_get_arg(4);
   }
   // generate the HTML
   $html  = "<label for=\"$name\">$label_text</label>\n";
   $html .= "<input id=\"$name\" name=\"$name\" type=\"text\"";
+  $html .= ($disabled) ? " disabled=\"disabled\"" : '';
   $html .= (isset($maxlength)) ? " maxlength=\"$maxlength\"" : '';
   $html .= " value=\"" . htmlspecialchars($value) . "\">\n";
+  // and a hidden input if the input box is disabled
+  if ($disabled)
+  {
+    $html .= "<input type=\"hidden\" name=\"$name\" value=\"$value\">\n";
+  }
   echo $html;
 }
 
 // Generates a select box from $options, an array of options
-function generate_select($label_text, $name, $value, $options)
+// If $disabled is TRUE, then the select box is disabled and a hidden
+// input is generated to pass through $value
+function generate_select($label_text, $name, $value, $options, $disabled=FALSE)
 {
   // generate the HTML
   $html  = "<label for=\"$name\">$label_text</label>\n";
-  $html .= "<select id=\"$name\" name=\"$name\">\n";
+  $html .= "<select id=\"$name\" name=\"$name\"";
+  $html .= ($disabled) ? " disabled=\"disabled\"" : '';
+  $html .= ">\n";
   foreach ($options as $option)
   {
     $html .= "<option";
@@ -327,16 +337,31 @@ function generate_select($label_text, $name, $value, $options)
     $html .= ">$option</option>\n";
   }
   $html .= "</select>\n";
+  // and a hidden input if the select box is disabled
+  if ($disabled)
+  {
+    $html .= "<input type=\"hidden\" name=\"$name\" value=\"$value\">\n";
+  }
+  
   echo $html;
 }
 
 // Generate a textarea with an associated label
-function generate_textarea($label_text, $name, $value)
+// If $disabled is TRUE, then the textarea is disabled and a hidden
+// input is generated to pass through $value
+function generate_textarea($label_text, $name, $value, $disabled=FALSE)
 {
   // generate the HTML
   $html  = "<label for=\"$name\">$label_text</label>\n";
   // textarea rows and cols are overridden by CSS height and width
-  $html .= "<textarea id=\"$name\" name=\"$name\" rows=\"8\" cols=\"40\">" . htmlspecialchars($value) . "</textarea>\n";
+  $html .= "<textarea id=\"$name\" name=\"$name\" rows=\"8\" cols=\"40\"";
+  $html .= ($disabled) ? " disabled=\"disabled\"" : '';
+  $html .= ">" . htmlspecialchars($value) . "</textarea>\n";
+  // and a hidden input if the textarea is disabled
+  if ($disabled)
+  {
+    $html .= "<input type=\"hidden\" name=\"$name\" value=\"$value\">\n";
+  }
   echo $html;
 }
 
