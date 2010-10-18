@@ -538,7 +538,7 @@ $auth["session_php"]["session_expire_time"] = (60*60*24*30); // 30 days
 // Cookie path override. If this value is set it will be used by the
 // 'php' and 'cookie' session schemes to override the default behaviour
 // of automatically determining the cookie path to use
-$cookie_path_override = '';
+//$cookie_path_override = '/mrbs/';
 
 // The list of administrators (can modify other peoples settings).
 //
