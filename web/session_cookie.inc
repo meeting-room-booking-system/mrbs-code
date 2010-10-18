@@ -41,7 +41,7 @@ else
 {
   $cookie_path = $PHP_SELF;
   // Strip off everything after the last '/' in $PHP_SELF
-  $cookie_path = preg_replace('/[^/]*$/', '', $cookie_path);
+  $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
 }
 
 /* Delete old-style cookies */
