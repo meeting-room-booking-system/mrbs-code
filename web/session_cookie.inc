@@ -82,7 +82,14 @@ if (isset($Action) && ($Action == "SetName"))
       $UserPassword = $NewUserPassword;
     }
 
-    $expiry_time = time()+$auth['session_cookie']['session_expire_time'];
+    if ($auth['session_cookie']['session_expire_time'] == 0)
+    {
+      $expiry_time = 0;
+    }
+    else
+    {
+      $expiry_time = time()+$auth['session_cookie']['session_expire_time'];
+    }
     $token = "AUTH".$UserName."|".$expiry_time;
     if ($auth['session_cookie']['include_ip'])
     {
@@ -196,7 +203,7 @@ function authGet()
 
 function getUserName()
 {
-  global $blowfish, $REMOTE_ADDR;
+  global $blowfish, $REMOTE_ADDR, $auth;
 
   $encrypted_token = NULL;
   $username = NULL;
@@ -227,11 +234,16 @@ function getUserName()
 
       /* Check for a valid token */
       if (isset($parts[0]) &&
-          isset($parts[1]) && ($parts[1] > time()) &&
-          (!isset($parts[2]) ||
-          (isset($parts[2]) && ($parts[2] == $REMOTE_ADDR))))
+          isset($parts[1]))
       {
-        $username = $parts[0];
+        error_log("expiry is ".$parts[1]);
+        if (((($auth["session_cookie"]["session_expire_time"] == 0) &&
+            ($parts[1] == 0)) || ($parts[1] > time())) &&
+            (!isset($parts[2]) ||
+             (isset($parts[2]) && ($parts[2] == $REMOTE_ADDR))))
+        {
+          $username = $parts[0];
+        }
       }
       else
       {
