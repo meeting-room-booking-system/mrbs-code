@@ -51,7 +51,76 @@
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-global $twentyfourhour_format;
+function gen_date_time_fields($label_text, $prefix, $time)
+{
+  global $enable_periods, $periods, $twentyfourhour_format;
+  
+  $form_day   = strftime('%d', $time);
+  $form_month = strftime('%m', $time);
+  $form_year  = strftime('%Y', $time);
+  $form_hour  = strftime('%H', $time);
+  $form_min   = strftime('%M', $time);
+  if ($enable_periods)
+  {
+    $form_period = (($form_hour - 12) * 60) + $form_min;
+  }
+  
+  echo "<label for=\"${prefix}datepicker\">$label_text:</label>\n";
+  gendateselector($prefix, $form_day, $form_month, $form_year);
+
+  if(! $enable_periods ) 
+  { 
+    echo "<div class=\"div_time\">\n";
+    echo "<input type=\"text\" class=\"time_hour\" name=\"hour\" value=\"";
+    if ($twentyfourhour_format)
+    {
+      echo $form_hour;
+    }
+    elseif ($form_hour > 12)
+    {
+      echo ($form_hour - 12);
+    } 
+    elseif ($form_hour == 0)
+    {
+      echo "12";
+    }
+    else
+    {
+      echo $form_hour;
+    } 
+    echo "\" maxlength=\"2\">\n";
+    echo "<span>:</span>\n";
+    echo "<input type=\"text\" class=\"time_minute\" name=\"minute\" value=\"" . $form_min . "\" maxlength=\"2\">\n";
+    if (!$twentyfourhour_format)
+    {
+      echo "<div class=\"group ampm\">\n";
+      $checked = ($form_hour < 12) ? "checked=\"checked\"" : "";
+      echo "      <label><input name=\"ampm\" type=\"radio\" value=\"am\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
+      $checked = ($form_hour >= 12) ? "checked=\"checked\"" : "";
+      echo "      <label><input name=\"ampm\" type=\"radio\" value=\"pm\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
+      echo "</div>\n";
+    }
+    echo "</div>\n";
+  }
+    
+  else
+  {
+    echo "<div id=\"div_period\">\n";
+    echo "<select id=\"period\" name=\"period\">\n";
+    foreach ($periods as $p_num => $p_val)
+    {
+      echo "<option value=\"$p_num\"";
+      if ($form_period == $p_num)
+      {
+        echo " selected=\"selected\"";
+      }
+      echo ">$p_val</option>\n";
+    }
+    echo "</select>\n";
+    echo "</div>\n";
+  }
+}
+
 
 // Get non-standard form variables
 $hour = get_form_var('hour', 'int');
@@ -179,11 +248,7 @@ if (isset($id))
         break;
         
       case 'start_time':
-        $start_day   = strftime('%d', $row['start_time']);
-        $start_month = strftime('%m', $row['start_time']);
-        $start_year  = strftime('%Y', $row['start_time']);
-        $start_hour  = strftime('%H', $row['start_time']);
-        $start_min   = strftime('%M', $row['start_time']);
+        $start_time = $row['start_time'];
         break;
         
       case 'end_time':
@@ -223,12 +288,11 @@ if (isset($id))
     // If it's a repeating entry get the repeat details
     if (isset($rep_type) && ($rep_type != REP_NONE))
     {
-      // but don't overwrite the start time if we're not editing the series
+      // If we're editing the series we want the start_time to be the start
+      // of the series, not the start of this entry
       if ($edit_type == "series")
       {
-        $start_day   = (int)strftime('%d', $row['start_time']);
-        $start_month = (int)strftime('%m', $row['start_time']);
-        $start_year  = (int)strftime('%Y', $row['start_time']);
+        $start_time = $row['start_time'];
       }
       
       $rep_end_day   = (int)strftime('%d', $row['end_date']);
@@ -274,12 +338,33 @@ else
   $name        = "";
   $create_by   = $user;
   $description = "";
-  $start_day   = $day;
-  $start_month = $month;
-  $start_year  = $year;
-  // Avoid notices for $hour and $minute if periods is enabled
-  (isset($hour)) ? $start_hour = $hour : '';
-  (isset($minute)) ? $start_min = $minute : '';
+
+  // Get the hour and minute, converting a period to its MRBS time
+  // Set some sensible defaults
+  if ($enable_periods)
+  {
+    if (isset($period))
+    {
+      $hour = 12 + intval($period/60);
+      $minute = $period % 60;
+    }
+    else
+    {
+      $hour = 0;
+      $minute = 0;
+    }
+  }
+  else
+  {
+    if (!isset($hour) || !isset($minute))
+    {
+      $hour = $morningstarts;
+      $minute = $morningstarts_minutes;
+    }
+  }
+
+  $start_time = mktime($hour, $minute, 0, $month, $day, $year);
+
   if (!isset($default_duration))
   {
     $default_duration = (60 * 60);
@@ -306,6 +391,9 @@ else
   }
 }
 
+$start_hour  = strftime('%H', $start_time);
+$start_min   = strftime('%M', $start_time);
+
 // These next 4 if statements handle the situation where
 // this page has been accessed directly and no arguments have
 // been passed to it.
@@ -319,21 +407,6 @@ if (empty( $room_id ) )
 
 }
 
-// If we have not been provided with starting time
-if ( empty( $start_hour ) && $morningstarts < 10 )
-{
-  $start_hour = "0$morningstarts";
-}
-
-if ( empty( $start_hour ) )
-{
-  $start_hour = "$morningstarts";
-}
-
-if ( empty( $start_min ) )
-{
-  $start_min = "00";
-}
 
 // Remove "Undefined variable" notice
 if (!isset($rep_num_weeks))
@@ -573,61 +646,8 @@ else
 
 
     echo "<div id=\"div_date\">\n";
-
-    echo "<label for=\"start_datepicker\">" . get_vocab("start") . ":</label>\n";
-    gendateselector("start_", $start_day, $start_month, $start_year);
-
-    if(! $enable_periods ) 
-    { 
-      echo "<div class=\"div_time\">\n";
-      echo "<input type=\"text\" class=\"time_hour\" name=\"hour\" value=\"";
-      if ($twentyfourhour_format)
-      {
-        echo $start_hour;
-      }
-      elseif ($start_hour > 12)
-      {
-        echo ($start_hour - 12);
-      } 
-      elseif ($start_hour == 0)
-      {
-        echo "12";
-      }
-      else
-      {
-        echo $start_hour;
-      } 
-      echo "\" maxlength=\"2\">\n";
-      echo "<span>:</span>\n";
-      echo "<input type=\"text\" class=\"time_minute\" name=\"minute\" value=\"" . $start_min . "\" maxlength=\"2\">\n";
-      if (!$twentyfourhour_format)
-      {
-        echo "<div class=\"group ampm\">\n";
-        $checked = ($start_hour < 12) ? "checked=\"checked\"" : "";
-        echo "      <label><input name=\"ampm\" type=\"radio\" value=\"am\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
-        $checked = ($start_hour >= 12) ? "checked=\"checked\"" : "";
-        echo "      <label><input name=\"ampm\" type=\"radio\" value=\"pm\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
-        echo "</div>\n";
-      }
-      echo "</div>\n";
-    }
-    
-    else
-    {
-      echo "<div id=\"div_period\">\n";
-      echo "<select id=\"period\" name=\"period\">\n";
-      foreach ($periods as $p_num => $p_val)
-      {
-        echo "<option value=\"$p_num\"";
-        if( ( isset( $period ) && $period == $p_num ) || $p_num == $start_min)
-        {
-          echo " selected=\"selected\"";
-        }
-        echo ">$p_val</option>\n";
-      }
-      echo "</select>\n";
-      echo "</div>\n";
-    }
+    $label_text = get_vocab("start");
+    gen_date_time_fields($label_text, "start_", $start_time);
     echo "</div>\n";
     
     ?>
