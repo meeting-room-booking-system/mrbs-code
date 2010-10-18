@@ -518,7 +518,7 @@ $auth["type"] = "config"; // How to validate the user/password. One of "none"
 // The encryption secret key for the session tokens. You are strongly
 // advised to change this if you use this session scheme
 $auth["session_cookie"]["secret"] = "This isn't a very good secret!";
-// The expiry time of a session, in seconds
+// The expiry time of a session, in seconds. Set to 0 to use session cookies
 $auth["session_cookie"]["session_expire_time"] = (60*60*24*30); // 30 days
 // Whether to include the user's IP address in their session cookie.
 // Increases security, but could cause problems with proxies/dynamic IP

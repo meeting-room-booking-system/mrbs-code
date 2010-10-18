@@ -234,16 +234,13 @@ function getUserName()
 
       /* Check for a valid token */
       if (isset($parts[0]) &&
-          isset($parts[1]))
-      {
-        error_log("expiry is ".$parts[1]);
-        if (((($auth["session_cookie"]["session_expire_time"] == 0) &&
+          isset($parts[1]) &&
+          ((($auth["session_cookie"]["session_expire_time"] == 0) &&
             ($parts[1] == 0)) || ($parts[1] > time())) &&
-            (!isset($parts[2]) ||
-             (isset($parts[2]) && ($parts[2] == $REMOTE_ADDR))))
-        {
-          $username = $parts[0];
-        }
+          (!isset($parts[2]) ||
+           (isset($parts[2]) && ($parts[2] == $REMOTE_ADDR))))
+      {
+        $username = $parts[0];
       }
       else
       {
