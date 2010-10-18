@@ -206,6 +206,32 @@ to the lang.en file and similarly for other languages as required.   MRBS
 should then do the rest and display your coffee machine field on the room
 pages.
 
+Extra options for custom fields:
+
+1)
+
+You can create dropdown boxes for a custom field by defining an
+entry in the configuration array $select_options. For example:
+
+$select_options['entry.conference_facilities'] = array('Video',
+                                                       'Telephone',
+                                                       'None');
+
+would define the 'conference_facilities' custom field to have three
+possible values.
+
+2)
+
+You can specify that a field is mandatory. This will ensure that the
+user specifies a value for a field that may be empty, like a text box
+or a selection, as in 1) above. For example:
+
+$mandatory_fields['entry.conference_facilities'] = true;
+
+would define the 'conference_facilities' custom field to be mandatory.
+In the case of a select field, this adds an empty value to the dropdown
+list.
+
 Technical explanation of the restriction on column names for custom fields
 --------------------------------------------------------------------------
 // Column names for custom fields are used by MRBS in a number of ways:

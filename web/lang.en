@@ -94,6 +94,8 @@ $vocab["brief_description"]  = "Brief Description.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 $vocab["private"]            = "Private";
 $vocab["unavailable"]        = "Private";
+$vocab["is_mandatory_field"] = "is a mandatory field, please supply a value";
+$vocab["missing_mandatory_field"] = "You have not supplied a value for the mandatory field";
 
 // Used in view_entry.php
 $vocab["description"]        = "Description";

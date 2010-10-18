@@ -422,6 +422,40 @@ function validate(form)
     alert("<?php echo get_vocab("you_have_not_selected") . '\n' . get_vocab("valid_room") ?>");
     return false;
   }
+  
+  <?php
+  if (count($mandatory_fields))
+  {
+    $m_fields = array();
+    foreach ($mandatory_fields as $field => $value)
+    {
+      if ($value)
+      {
+        $field = preg_replace('/^entry\./', 'f_', $field);
+        $m_fields[] = "'".str_replace("'", "\\'", $field)."'";
+      }
+    }
+    echo "var mandatory_fields = [".implode(', ', $m_fields)."];\n";
+  ?>
+    for (i = 0; i < mandatory_fields.length; i++)
+    {
+      if (form[mandatory_fields[i]].value == '')
+      {
+        label = $("label[for="+mandatory_fields[i]+"]").html();
+        label = label.replace(/:$/, '');
+        alert('"' + label + '" ' +
+              <?php echo '"'.
+                         str_replace('"', '\\"',
+                                     get_vocab("is_mandatory_field")
+                                    ).
+                         '"'; ?>);
+        return false;
+      }
+    }
+  <?php
+   
+  }
+  ?>
 
   // Form submit can take some times, especially if mails are enabled and
   // there are more than one recipient. To avoid users doing weird things
@@ -884,7 +918,10 @@ else
         // Output a select box if they want one
         elseif (count($select_options["entry.$key"]) > 0)
         {
-          generate_select($label_text, $var_name, $value, $select_options["entry.$key"]);
+          $mandatory = (array_key_exists("entry.$key", $mandatory_fields) &&
+                        $mandatory_fields["entry.$key"]) ? true : false;
+          generate_select($label_text, $var_name, $value,
+                          $select_options["entry.$key"], $mandatory);
         }
         // Output a textarea if it's a character string longer than the limit for a
         // text input
