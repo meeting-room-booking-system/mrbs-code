@@ -226,7 +226,7 @@ You can specify that a field is mandatory. This will ensure that the
 user specifies a value for a field that may be empty, like a text box
 or a selection, as in 1) above. For example:
 
-$mandatory_fields['entry.conference_facilities'] = true;
+$is_mandatory_field['entry.conference_facilities'] = true;
 
 would define the 'conference_facilities' custom field to be mandatory.
 In the case of a select field, this adds an empty value to the dropdown

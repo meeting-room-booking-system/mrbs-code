@@ -249,9 +249,9 @@ if (($rep_type == REP_N_WEEKLY) && ($rep_num_weeks < 2))
   print_footer(TRUE);
 }
 
-if (count($mandatory_fields))
+if (count($is_mandatory_field))
 {
-  foreach ($mandatory_fields as $field => $value)
+  foreach ($is_mandatory_field as $field => $value)
   {
     $field = preg_replace('/^entry\./', '', $field);
     if ($value && ($custom_fields[$field] == ''))

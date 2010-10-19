@@ -499,6 +499,10 @@ $working_days = array(1,2,3,4,5);  // Mon-Fri
 //     - Entry table: name, description and custom fields
 //     - Users table: custom fields
 
+// You can define custom entry fields to be mandatory by setting
+// items in the array $is_mandatory_field. For example:
+
+// $is_mandatory_field['entry.coffee_required'] = true;
 
  
 /***********************************************

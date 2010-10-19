@@ -424,10 +424,10 @@ function validate(form)
   }
   
   <?php
-  if (count($mandatory_fields))
+  if (count($is_mandatory_field))
   {
     $m_fields = array();
-    foreach ($mandatory_fields as $field => $value)
+    foreach ($is_mandatory_field as $field => $value)
     {
       if ($value)
       {
@@ -918,8 +918,8 @@ else
         // Output a select box if they want one
         elseif (count($select_options["entry.$key"]) > 0)
         {
-          $mandatory = (array_key_exists("entry.$key", $mandatory_fields) &&
-                        $mandatory_fields["entry.$key"]) ? true : false;
+          $mandatory = (array_key_exists("entry.$key", $is_mandatory_field) &&
+                        $is_mandatory_field["entry.$key"]) ? true : false;
           generate_select($label_text, $var_name, $value,
                           $select_options["entry.$key"], $mandatory);
         }
