@@ -35,7 +35,7 @@ else
 {
   $cookie_path = $PHP_SELF;
   // Strip off everything after the last '/' in $PHP_SELF
-  $cookie_path = preg_replace('/[^/]*$/', '', $cookie_path);
+  $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
 }
 
 global $auth;
@@ -47,9 +47,9 @@ if (!isset($auth["session_php"]["session_expire_time"]))
   $auth["session_php"]["session_expire_time"] = 0;
 }
 
+session_name("MRBS_SESSID");  // call before session_set_cookie_params() - see PHP manual
 session_set_cookie_params($auth["session_php"]["session_expire_time"],
                           $cookie_path);
-session_name("MRBS_SESSID");
 session_start();
 
 /*

@@ -250,6 +250,27 @@ if (($rep_type == REP_N_WEEKLY) && ($rep_num_weeks < 2))
   print_footer(TRUE);
 }
 
+if (count($is_mandatory_field))
+{
+  foreach ($is_mandatory_field as $field => $value)
+  {
+    $field = preg_replace('/^entry\./', '', $field);
+    if ($value && ($custom_fields[$field] == ''))
+    {
+      print_header($day, $month, $year, $area, isset($room) ? $room : "");
+?>
+       <h1><?php echo get_vocab('invalid_booking'); ?></h1>
+       <p>
+         <?php echo get_vocab('missing_mandatory_field')." \"".
+           get_loc_field_name($tbl_entry, $field)."\""; ?>
+       </p>
+<?php
+      // Print footer and exit
+      print_footer(TRUE);
+    }
+  }
+}        
+
 // Support locales where ',' is used as the decimal point
 $duration = preg_replace('/,/', '.', $duration);
 

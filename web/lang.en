@@ -95,6 +95,8 @@ $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 $vocab["status"]             = "Status";
 $vocab["private"]            = "Private";
 $vocab["unavailable"]        = "Private";
+$vocab["is_mandatory_field"] = "is a mandatory field, please supply a value";
+$vocab["missing_mandatory_field"] = "You have not supplied a value for the mandatory field";
 $vocab["confirmed"]          = "Confirmed";
 
 // Used in view_entry.php

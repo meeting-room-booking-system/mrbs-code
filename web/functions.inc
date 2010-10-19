@@ -323,13 +323,18 @@ function generate_input($label_text, $name, $value, $disabled=FALSE)
 // Generates a select box from $options, an array of options
 // If $disabled is TRUE, then the select box is disabled and a hidden
 // input is generated to pass through $value
-function generate_select($label_text, $name, $value, $options, $disabled=FALSE)
+function generate_select($label_text, $name, $value, $options, 
+                         $mandatory = FALSE, $disabled=FALSE)
 {
   // generate the HTML
   $html  = "<label for=\"$name\">$label_text</label>\n";
   $html .= "<select id=\"$name\" name=\"$name\"";
   $html .= ($disabled) ? " disabled=\"disabled\"" : '';
   $html .= ">\n";
+  if ($mandatory)
+  {
+    $options = array_merge(array(""),$options);
+  }
   foreach ($options as $option)
   {
     $html .= "<option";
