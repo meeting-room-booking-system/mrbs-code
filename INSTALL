@@ -232,6 +232,18 @@ would define the 'conference_facilities' custom field to be mandatory.
 In the case of a select field, this adds an empty value to the dropdown
 list.
 
+3)
+
+You can also specify that a field is private, ensuring that the contents
+are only visible to yourself and the administrators.   For example:
+
+$is_private_field['entry.refreshments'] = true;
+
+would prevent the details of your refreshments being visible to other
+users - provided that private bookings are enabled.   See the section
+on private bookings in systemdefaults.inc.php for more information.
+
+
 Technical explanation of the restriction on column names for custom fields
 --------------------------------------------------------------------------
 // Column names for custom fields are used by MRBS in a number of ways:
