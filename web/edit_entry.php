@@ -51,76 +51,35 @@
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-function gen_date_time_fields($label_text, $prefix, $time)
+// Generate a time or period selector starting with $first and ending with $last.
+// $time is a full Unix timestamp and is the current value.  The selector returns
+// the start time in seconds since the beginning of the day for the start of that slot
+function genslotselector($prefix, $first, $last, $time)
 {
-  global $enable_periods, $periods, $twentyfourhour_format;
+  global $resolution, $twentyfourhour_format, $periods, $enable_periods;
   
-  $form_day   = strftime('%d', $time);
-  $form_month = strftime('%m', $time);
-  $form_year  = strftime('%Y', $time);
-  $form_hour  = strftime('%H', $time);
-  $form_min   = strftime('%M', $time);
+  $date = getdate($time);
+  $time_zero = mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']);
   if ($enable_periods)
   {
-    $form_period = (($form_hour - 12) * 60) + $form_min;
+    $base = 12*60*60;  // The start of the first period of the day
   }
-  
-  echo "<label for=\"${prefix}datepicker\">$label_text:</label>\n";
-  gendateselector($prefix, $form_day, $form_month, $form_year);
-
-  if(! $enable_periods ) 
-  { 
-    echo "<div class=\"div_time\">\n";
-    echo "<input type=\"text\" class=\"time_hour\" name=\"hour\" value=\"";
-    if ($twentyfourhour_format)
-    {
-      echo $form_hour;
-    }
-    elseif ($form_hour > 12)
-    {
-      echo ($form_hour - 12);
-    } 
-    elseif ($form_hour == 0)
-    {
-      echo "12";
-    }
-    else
-    {
-      echo $form_hour;
-    } 
-    echo "\" maxlength=\"2\">\n";
-    echo "<span>:</span>\n";
-    echo "<input type=\"text\" class=\"time_minute\" name=\"minute\" value=\"" . $form_min . "\" maxlength=\"2\">\n";
-    if (!$twentyfourhour_format)
-    {
-      echo "<div class=\"group ampm\">\n";
-      $checked = ($form_hour < 12) ? "checked=\"checked\"" : "";
-      echo "      <label><input name=\"ampm\" type=\"radio\" value=\"am\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
-      $checked = ($form_hour >= 12) ? "checked=\"checked\"" : "";
-      echo "      <label><input name=\"ampm\" type=\"radio\" value=\"pm\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
-      echo "</div>\n";
-    }
-    echo "</div>\n";
-  }
-    
   else
   {
-    echo "<div id=\"div_period\">\n";
-    echo "<select id=\"period\" name=\"period\">\n";
-    foreach ($periods as $p_num => $p_val)
-    {
-      echo "<option value=\"$p_num\"";
-      if ($form_period == $p_num)
-      {
-        echo " selected=\"selected\"";
-      }
-      echo ">$p_val</option>\n";
-    }
-    echo "</select>\n";
-    echo "</div>\n";
+    $format = ($twentyfourhour_format) ? "%R" : "%l:%M %P";
   }
+  $html .= "<select id = \"${prefix}seconds\" name=\"${prefix}seconds\">\n";
+  for ($t = $first; $t <= $last; $t = $t + $resolution)
+  {
+    $timestamp = $t + $time_zero;
+    $slot_string = ($enable_periods) ? $periods[intval(($t-$base)/60)] : utf8_strftime($format, $timestamp);
+    $html .= "<option value=\"$t\"";
+    $html .= ($timestamp == $time) ? " selected=\"selected\"" : "";
+    $html .= ">$slot_string</option>\n";
+  }
+  $html .= "</select>\n";
+  echo $html;
 }
-
 
 // Get non-standard form variables
 $hour = get_form_var('hour', 'int');
@@ -252,6 +211,7 @@ if (isset($id))
         break;
         
       case 'end_time':
+        $end_time = $row['end_time'];
         $duration = $row['end_time'] - $row['start_time'] - cross_dst($row['start_time'], $row['end_time']);
         break;
         
@@ -370,6 +330,7 @@ else
     $default_duration = (60 * 60);
   }
   $duration    = ($enable_periods ? 60 : $default_duration);
+  $end_time = $start_time + $duration;
   $type        = "I";
   $room_id     = $room;
   unset($id);
@@ -523,59 +484,19 @@ function OnAllDayClick(allday)
   {
     // save the old values, disable the inputs and, to avoid user confusion,
     // show the start time as the beginning of the day and the duration as one day
-    <?php 
-    if ($enable_periods )
-    {
-      ?>
-      old_period = form.period.selectedIndex;
-      form.period.value = 0;
-      form.period.disabled = true;
-      <?php
-    }
-    else
-    { 
-      ?>
-      old_hour = form.hour.value;
-      form.hour.value = '<?php echo $morningstarts; ?>';
-      old_minute = form.minute.value;
-      form.minute.value = '<?php printf("%02d", $morningstarts_minutes); ?>';
-      form.hour.disabled = true;
-      form.minute.disabled = true;
-      <?php 
-    } 
-    ?>
-    
-    old_duration = form.duration.value;
-    form.duration.value = '1';  
-    old_dur_units = form.dur_units.selectedIndex;
-    form.dur_units.value = 'days';  
-    form.duration.disabled = true;
-    form.dur_units.disabled = true;
+    old_start = form.start_seconds.selectedIndex;
+    form.start_seconds.selectedIndex = 0;
+    form.start_seconds.disabled = true;
+    old_end = form.end_seconds.selectedIndex;
+    form.end_seconds.selectedIndex = form.end_seconds.options.length - 1;
+    form.end_seconds.disabled = true;
   }
   else  // restore the old values and re-enable the inputs
   {
-    <?php 
-    if ($enable_periods)
-    {
-      ?>
-      form.period.selectedIndex = old_period;
-      form.period.disabled = false;
-      <?php
-    }
-    else
-    { 
-      ?>
-      form.hour.value = old_hour;
-      form.minute.value = old_minute;
-      form.hour.disabled = false;
-      form.minute.disabled = false;
-      <?php 
-    } 
-    ?>
-    form.duration.value = old_duration;
-    form.dur_units.selectedIndex = old_dur_units;  
-    form.duration.disabled = false;
-    form.dur_units.disabled = false;
+    form.start_seconds.selectedIndex = old_start;
+    form.start_seconds.disabled = false;
+    form.end_seconds.selectedIndex = old_end;
+    form.end_seconds.disabled = false;
   }
 }
 //]]>
@@ -644,46 +565,50 @@ else
     }
     echo "</div>\n";
 
+    if ($enable_periods)
+    {
+      $resolution = 60;
+      $first = 12*60*60;
+      // If we're using periods we just go to the beginning of the last slot
+      $last = $first + ((count($periods) - 1) * $resolution);
+    }
+    else
+    {
+      $first = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+      $last = (($eveningends * 60) + $eveningends_minutes) * 60;
+    }
+    echo "<div id=\"div_start_date\">\n";
+    echo "<label for=\"start_datepicker\">" . get_vocab("start") . ":</label>\n";
+    $date = getdate($start_time);
+    gendateselector("start_", $date['mday'], $date['mon'], $date['year']);
+    // If we're using periods the booking model is slightly different:
+    // you're allowed to specify the last period as your first period.
+    // This is why we don't substract the $resolution
+    $start_last = ($enable_periods) ? $last : $last - $resolution;
+    genslotselector("start_", $first, $start_last, $start_time);
 
-    echo "<div id=\"div_date\">\n";
-    $label_text = get_vocab("start");
-    gen_date_time_fields($label_text, "start_", $start_time);
-    echo "</div>\n";
-    
     ?>
-    <div id="div_duration">
-      <label for="duration"><?php echo get_vocab("duration");?>:</label>
-      <div class="group">
-        <input id="duration" name="duration" value="<?php echo $duration;?>">
-        <select id="dur_units" name="dur_units">
-          <?php
-          if( $enable_periods )
-          {
-            $units = array("periods", "days");
-          }
-          else
-          {
-            $units = array("minutes", "hours", "days", "weeks", "years");
-          }
-
-          while (list(,$unit) = each($units))
-          {
-            echo "        <option value=\"$unit\"";
-            if ($dur_units == get_vocab($unit))
-            {
-              echo " selected=\"selected\"";
-            }
-            echo ">".get_vocab($unit)."</option>\n";
-          }
-          ?>
-        </select>
-        <div id="ad">
-          <input id="all_day" class="checkbox" name="all_day" type="checkbox" value="yes" onclick="OnAllDayClick(this)">
-          <label for="all_day"><?php echo get_vocab("all_day"); ?></label>
-        </div>
+    <div class="group">
+      <div id="ad">
+        <input id="all_day" class="checkbox" name="all_day" type="checkbox" value="yes" onclick="OnAllDayClick(this)">
+        <label for="all_day"><?php echo get_vocab("all_day"); ?></label>
       </div>
     </div>
+    <?php
+    echo "</div>\n";
     
+    echo "<div id=\"div_end_date\">\n";
+    echo "<label for=\"start_datepicker\">" . get_vocab("end") . ":</label>\n";
+    $date = getdate($end_time);
+    gendateselector("end_", $date['mday'], $date['mon'], $date['year']);
+    // If we're using periods the booking model is slightly different,
+    // so subtract one period because the "end" period is actually the beginning
+    // of the last period booked
+    $end_value = ($enable_periods) ? $end_time - $resolution : $end_time;
+    genslotselector("end_", $first, $last, $end_value);
+    echo "</div>\n";
+    
+    ?>  
     <div id="div_areas">
     </div>
 
@@ -836,8 +761,7 @@ else
       </div>
     </div>
     <div id="div_type">
-      <label for="type"><?php echo get_vocab("type")?>:</label>
-     <div class="group">    
+      <label for="type"><?php echo get_vocab("type")?>:</label> 
       <select id="type" name="type">
         <?php
         for ($c = "A"; $c <= "Z"; $c++)
@@ -852,7 +776,7 @@ else
       <?php 
       if ($private_enabled) 
       { ?>
-        <div id="div_private">
+        <div id="div_private" class="group"">
           <input id="private" class="checkbox" name="private" type="checkbox" value="yes"<?php 
           if($private) 
           {
@@ -866,7 +790,6 @@ else
           <label for="private"><?php echo get_vocab("private") ?></label>
         </div><?php 
       } ?>
-     </div>
     </div>
     
     <?php

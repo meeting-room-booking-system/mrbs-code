@@ -9,12 +9,8 @@ $create_by = get_form_var('create_by', 'string');
 $name = get_form_var('name', 'string');
 $rep_type = get_form_var('rep_type', 'int');
 $description = get_form_var('description', 'string');
-$hour = get_form_var('hour', 'int');
-$ampm = get_form_var('ampm', 'string');
-$minute = get_form_var('minute', 'int');
-$period = get_form_var('period', 'int');
-$duration = get_form_var('duration', 'string');
-$dur_units = get_form_var('dur_units', 'string');
+$start_seconds = get_form_var('start_seconds', 'int');
+$end_seconds = get_form_var('end_seconds', 'int');
 $all_day = get_form_var('all_day', 'string'); // bool, actually
 $type = get_form_var('type', 'string');
 $rooms = get_form_var('rooms', 'array');
@@ -33,13 +29,17 @@ $private = get_form_var('private', 'string'); // bool, actually
 $day = get_form_var('start_day', 'int');
 $month = get_form_var('start_month', 'int');
 $year = get_form_var('start_year', 'int');
+// Get the end day/month/year
+$end_day = get_form_var('end_day', 'int');
+$end_month = get_form_var('end_month', 'int');
+$end_year = get_form_var('end_year', 'int');
 
 // Get the information about the fields in the entry table
 $fields = sql_field_info($tbl_entry);
 
 // Get custom form variables
 $custom_fields = array();
-                        
+                    
 foreach($fields as $field)
 {
   if (!in_array($field['name'], $standard_fields['entry']))
@@ -87,25 +87,6 @@ if (get_area($room) != $area)
   $room = get_default_room($area);
 }
 
-// When $all_day is set, the hour and minute (or $period) fields are set to disabled, which means 
-// that they are not passed through by the form.   We need to set them because they are needed below  
-// in various places. (We could change the JavaScript in edit_entry.php to set the fields to readonly
-// instead of disabled, but browsers do not generally grey out readonly fields and this would mean
-// that it's not so obvious to the user what is happening.   Also doing it here is safer, in case 
-// JavaScript is disabled and for some strange reason the user changes the values in the form to be
-// before start of day)
-if (isset($all_day) && ($all_day == "yes"))
-{ 
-  if ($enable_periods)
-  {
-    $period = 0;
-  }
-  else
-  {
-    $hour = $morningstarts;
-    $minute = $morningstarts_minutes;
-  }
-}
 
 // Set up the return URL.    As the user has tried to book a particular room and a particular
 // day, we must consider these to be the new "sticky room" and "sticky day", so modify the 
@@ -249,14 +230,9 @@ if (($rep_type == REP_N_WEEKLY) && ($rep_num_weeks < 2))
   print_footer(TRUE);
 }
 
-// Support locales where ',' is used as the decimal point
-$duration = preg_replace('/,/', '.', $duration);
-
 if ($enable_periods)
 {
   $resolution = 60;
-  $hour = 12;
-  $minute = $period;
 }
 
 if (isset($all_day) && ($all_day == "yes"))
@@ -292,27 +268,19 @@ if (isset($all_day) && ($all_day == "yes"))
 }
 else
 {
-  // Get the duration in seconds
-  $dur_seconds = $duration;
-  $enable_periods ? fromPeriodString($period, $dur_seconds, $dur_units) : fromTimeString($dur_seconds, $dur_units);
-  if (!$twentyfourhour_format)
+  $starttime = mktime(0, 0, 0,
+                      $month, $day, $year,
+                      is_dst($month, $day, $year, intval($start_seconds/3600))) + $start_seconds;
+  $endtime   = mktime(0, 0, 0,
+                      $end_month, $end_day, $end_year,
+                      is_dst($end_month, $end_day, $end_year, intval($end_seconds/3600))) + $end_seconds;
+  // If we're using periods then the endtime we've been returned by the form is actually
+  // the beginning of the last period in the booking (it's more intuitive for users this way)
+  // so we need to add on 60 seconds (1 period)
+  if ($enable_periods)
   {
-    if (isset($ampm) && ($ampm == "pm") && ($hour<12))
-    {
-      $hour += 12;
-    }
-    if (isset($ampm) && ($ampm == "am") && ($hour>11))
-    {
-      $hour -= 12;
-    }
+    $endtime = $endtime + 60;
   }
-
-  $starttime = mktime($hour, $minute, 0,
-                      $month, $day, $year,
-                      is_dst($month, $day, $year, $hour));
-  $endtime   = mktime($hour, $minute, 0,
-                      $month, $day, $year,
-                      is_dst($month, $day, $year, $hour)) + $dur_seconds;
 
   // Round down the starttime and round up the endtime to the nearest slot boundaries                   
   $am7=mktime($morningstarts,$morningstarts_minutes,0,
@@ -331,6 +299,8 @@ else
   // so that the email notifications report the adjusted duration
   // (We do this before we adjust for DST so that the user sees what they expect to see)
   $duration = $endtime - $starttime;
+  $date = getdate($starttime);
+  $period = ($date['hours'] - 12) * 60) + $date['minutes'];
   $enable_periods ? toPeriodString($period, $duration, $dur_units, FALSE) : toTimeString($duration, $dur_units, FALSE);
   
   // Adjust the endtime for DST
@@ -341,8 +311,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE) &&
     isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
 {
   // Get the repeat entry settings
-  $rep_enddate = mktime($hour, $minute, 0,
-                        $rep_end_month, $rep_end_day, $rep_end_year);
+  $rep_enddate = $start_seconds + mktime(0, 0, 0, $rep_end_month, $rep_end_day, $rep_end_year);
 }
 else
 {
@@ -576,7 +545,6 @@ if ($valid_booking)
                                       $isprivate,
                                       $status,
                                       $custom_fields);
-
       // Send a mail to the Administrator
       if ($need_to_send_mail)
       {

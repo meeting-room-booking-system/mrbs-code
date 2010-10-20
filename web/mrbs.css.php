@@ -522,7 +522,7 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 
 .form_general div {float: left; clear: left; width: 100%}
 .form_general div div {float: none; clear: none; width: auto}
-.form_general div.group {float: left; width: <?php echo $general_right_col_width ?>%}
+.form_general div.group {float: left}
 .form_general div.group.ampm {width: <?php echo $edit_entry_ampm_width ?>em}
 .edit_area_room div.group {clear: none; width: auto}
 .edit_area_room div.group#private_override div {clear: left}
@@ -594,7 +594,7 @@ div#edit_area_room_submit_save {float: left; clear: none; width: auto}
 .form_general select#dur_units {margin-right: 1.0em; margin-left: 0.5em}
 .form_general div#ad {float: left}
 .form_general #ad label {clear: none; text-align: left; font-weight: normal}
-.form_general input#all_day {width: auto; margin-left: 1.0em; margin-right: 0.5em}
+.form_general input#all_day {width: auto; margin-left: 3.0em; margin-right: 0.5em}
 .form_general input#private {width: auto; margin-left: 3.0em; margin-right: 0.5em}
 .form_general #div_rooms select, .form_general #div_typematch select {float: left; margin-right: 2.0em}
 fieldset#rep_info {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.7em}
