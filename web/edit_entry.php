@@ -68,7 +68,7 @@ function genslotselector($prefix, $first, $last, $time)
   {
     $format = ($twentyfourhour_format) ? "%R" : "%l:%M %P";
   }
-  $html .= "<select id = \"${prefix}seconds\" name=\"${prefix}seconds\">\n";
+  $html .= "<select id = \"${prefix}seconds\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\">\n";
   for ($t = $first; $t <= $last; $t = $t + $resolution)
   {
     $timestamp = $t + $time_zero;
@@ -776,7 +776,7 @@ else
       <?php 
       if ($private_enabled) 
       { ?>
-        <div id="div_private" class="group"">
+        <div id="div_private" class="group">
           <input id="private" class="checkbox" name="private" type="checkbox" value="yes"<?php 
           if($private) 
           {

@@ -9,6 +9,7 @@ function print_theme_header($day, $month, $year, $area, $room)
          $search_str, $locale_warning, $area_defaults;
   global $tbl_entry, $tbl_room, $tbl_area;
   global $PHP_SELF, $view_week_number, $weekstarts;
+  global $enable_periods;
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   global $lang_map_windows, $langs;
   
@@ -209,6 +210,65 @@ if ($page == 'edit_area_room')
 } // edit_area_room
 
 
+if ($page == 'edit_entry')
+{
+  // Declare some variables to hold details of the slot selectors.
+  // We are going to store the contents of the selectors on page load
+  // (when they will be fully populated with options) so that we can
+  // rebuild the arrays later
+  ?>
+  var nStartOptions;
+  var startOptions = new Array();
+  var nEndOptions;
+  var endOptions = new Array();
+
+  function adjustSlotSelectors(form)
+  {
+    <?php
+    // the end slot options cannot start before the currently
+    // selected start option.   When we are using periods the booking
+    // model is different and you are allowed to have the start and 
+    // end period the same
+    ?>
+    var startIndex = form.start_seconds.selectedIndex;
+    var startValue = parseInt(form.start_seconds.options[startIndex].value);
+    var endIndex = form.end_seconds.selectedIndex;
+    var endValue = parseInt(form.end_seconds.options[endIndex].value);
+ 
+    while (form.start_seconds.options.length > 0)
+    {
+      form.start_seconds.remove(0);
+    }
+
+    var i = 0;
+    while ((i < nStartOptions) && (startOptions[i]['value'] <?php echo ($enable_periods) ? "<=" : "<"?> endValue))
+    {
+      var isSelected = (startOptions[i]['value'] == startValue);
+      form.start_seconds.options[i] = new Option(startOptions[i]['text'], startOptions[i]['value'], false, isSelected);
+      i++;
+    }
+    
+    while (form.end_seconds.options.length > 0)
+    {
+      form.end_seconds.remove(0);
+    }
+
+    var j = 0;
+    for (i = 0; i < nEndOptions; i++)
+    {
+      if (endOptions[i]['value'] <?php echo ($enable_periods) ? ">=" : ">"?> startValue)
+      {
+       isSelected = (endOptions[i]['value'] == endValue);
+       form.end_seconds.options[j] = new Option(endOptions[i]['text'], endOptions[i]['value'], false, isSelected);
+       j++;
+      }
+    }
+    
+  }
+<?php
+}
+
+
 if ($page == 'pending')
 {
 ?>
@@ -306,10 +366,11 @@ function init()
   }
   
   // EDIT_ENTRY.PHP
-  // put the booking name field in focus (but only for new bookings,
+  // (1) put the booking name field in focus (but only for new bookings,
   // ie when the field is empty:  if it's a new booking you have to
   // complete that field, but if it's an existing booking you might
   // want to edit any field)
+  // (2) Adjust the slot selectors
   if ($page == 'edit_entry')
   {
   ?>
@@ -318,6 +379,28 @@ function init()
   {
     form.name.focus();
   }
+  <?php
+  // Get the details of the start and end slot selectors now since
+  // they are fully populated with options.  We can then use the details
+  // to rebuild the selectors later on
+  ?>
+  nStartOptions = form.start_seconds.options.length;
+  for (var i=0; i < nStartOptions; i++)
+  {
+    startOptions[i] = new Array();
+    startOptions[i]['text'] = form.start_seconds.options[i].text;
+    startOptions[i]['value'] = parseInt(form.start_seconds.options[i].value);
+  }
+  
+  nEndOptions = form.end_seconds.options.length;
+  for (var i=0; i < nEndOptions; i++)
+  {
+    endOptions[i] = new Array();
+    endOptions[i]['text'] = form.end_seconds.options[i].text;
+    endOptions[i]['value'] = parseInt(form.end_seconds.options[i].value);
+  }
+  
+  adjustSlotSelectors(form);
   <?php
   }
   
