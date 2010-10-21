@@ -86,7 +86,7 @@ $vocab["entryid"]            = "ID de Entrada ";
 $vocab["repeat_id"]          = "ID de Repetición "; 
 $vocab["you_have_not_entered"] = "No ha introducido ningún";
 $vocab["you_have_not_selected"] = "No ha seleccionado ningún";
-$vocab["valid_room"]         = "Sala.";$vocab["valid_time_of_day"]  = "Hora Válida del Día.";
+$vocab["valid_room"]         = "Sala.";
 $vocab["valid_time_of_day"]  = "Hora Válida del Día.";
 $vocab["brief_description"]  = "Breve Descripción.";
 $vocab["useful_n-weekly_value"] = "valor útil de n-Semanalmente.";
