@@ -304,6 +304,7 @@ if ($page == 'edit_entry')
     var endValue = parseInt(form.end_seconds.options[endIndex].value);
     var text, durationText, isSelected, i, j;
     var nbsp = '\u00A0';
+    var errorText = '<?php echo get_vocab("start_after_end")?>';
     
     <?php
     // Work out whether the start date is before, after or the same
@@ -328,6 +329,9 @@ if ($page == 'edit_entry')
       }
     }
     
+    form.start_seconds.disabled = (dateDifference < 0);
+    form.end_seconds.disabled = (dateDifference < 0);
+
     while (form.start_seconds.options.length > 0)
     {
       form.start_seconds.remove(0);
@@ -340,10 +344,17 @@ if ($page == 'edit_entry')
       {
         isSelected = (startOptions[i]['value'] == startValue);
         durationText = getDuration(startOptions[i]['value'], endValue);
-        text = startOptions[i]['text'];
-        if (!isSelected && (dateDifference == 0))
+        if (dateDifference < 0)
         {
-          text = text + nbsp + nbsp + '(' + durationText + ')';
+          text = errorText;
+        }
+        else
+        {
+          text = startOptions[i]['text'];
+          if (dateDifference == 0)
+          {
+            text = text + nbsp + nbsp + '(' + durationText + ')';
+          }
         }
         form.start_seconds.options[i] = new Option(text, startOptions[i]['value'], false, isSelected);
       }
@@ -362,11 +373,19 @@ if ($page == 'edit_entry')
       {
         isSelected = (endOptions[i]['value'] == endValue);
         durationText = getDuration(startValue, endOptions[i]['value']);
-        text = endOptions[i]['text'];
-        if (dateDifference == 0)
+        if (dateDifference < 0)
         {
-          text = text + nbsp + nbsp + '(' + durationText + ')';
+          text = errorText;
         }
+        else
+        {
+          text = endOptions[i]['text'];
+          if (dateDifference == 0)
+          {
+            text = text + nbsp + nbsp + '(' + durationText + ')';
+          }
+        }
+          
         form.end_seconds.options[j] = new Option(text, endOptions[i]['value'], false, isSelected);
         j++;
       }
