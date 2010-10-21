@@ -455,7 +455,7 @@ span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; fo
 .edit_area_room .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
 .edit_area_room .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
 span#private_display_caution {display: block; margin-top: 1em; font-style: italic; font-weight: normal}
-.edit_area_room textarea.custom_html {height: 6em; width: 25em}
+.edit_area_room .form_general textarea {height: 6em; width: 25em}
 .edit_area_room div#custom_html {margin-top: 8px}
 
 
@@ -544,7 +544,7 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 #logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em}
 #db_logon                 label {max-width: <?php echo $db_logon_left_col_max_width ?>em}
 
-.form_general .group      label {clear: none; width: auto; max-width: 100%; font-weight: normal; overflow: visible}
+.form_general .group      label {clear: none; width: auto; max-width: 100%; font-weight: normal; overflow: visible; text-align: left}
 
 .form_general input {
     display: block; float: left; margin-left: <?php echo $general_gap ?>em; 
@@ -567,7 +567,7 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
     font-family: <?php echo $standard_font_family ?>; font-size: small
 }
 .form_general select {float: left; margin-left: <?php echo $general_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
-.form_general input.radio {margin-top: 0.1em}
+.form_general input.radio {margin-top: 0.1em; margin-right: 2px}
 .form_general input.checkbox {width: auto; margin-top: 0.2em}
 .edit_area_room .form_general input.checkbox {margin-left: <?php echo $general_gap ?>em}
 .edit_area_room .form_general #booking_policies input.text {width: 2.0em}

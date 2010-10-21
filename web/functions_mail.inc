@@ -165,12 +165,30 @@ function get_address_list($array)
   // some of the elements of the original array may themselves have
   // been comma separated strings
   $array = explode(',', $string);
-  // remove any leading and trailing whitespace
-  array_walk($array, 'trim');
+  // remove any leading and trailing whitespace and any empty strings
+  $trimmed_array = array();
+  for ($i=0; $i < count($array); $i++)
+  {
+    $array[$i] = trim($array[$i]);
+    if ($array[$i] != '')
+    {
+      $trimmed_array[] = $array[$i];
+    }
+  }
   // remove duplicates
-  $array = array_unique($array);
+  $trimmed_array = array_unique($trimmed_array);
   // re-assemble the string
-  $string = implode(',', $array);
+  $string = implode(',', $trimmed_array);
+  return $string;
+}
+
+// Take a string of email addresses separated by commas or newlines
+// and return a comma separated list with duplicates removed.
+function clean_address_list($string)
+{
+  $string = str_replace(array("\r\n", "\n", "\r"), ',', $string);
+  $array = explode(',', $string);
+  $string = get_address_list($array);
   return $string;
 }
 
@@ -530,8 +548,8 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
         
     // Created by
     $body .= "\n" . get_mail_vocab("createdby") . ": " .
-      compareEntries($create_by,
-                     $mail_previous['createdby'],
+      compareEntries(convertToMailCharset($create_by),
+                     convertToMailCharset($mail_previous['createdby']),
                      $new_entry) . "\n";
                      
     // Custom fields
@@ -553,7 +571,9 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
           }
         }
         $body .= get_mail_field_name($tbl_entry, $key) . ": ";
-        $body .= compareEntries($value, $mail_previous[$key], $new_entry) . "\n";
+        $body .= compareEntries(convertToMailCharset($value), 
+                                convertToMailCharset($mail_previous[$key]),
+                                $new_entry) . "\n";
       }
     }
     

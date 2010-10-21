@@ -315,11 +315,16 @@ function generate_input($label_text, $name, $value)
 }
 
 // Generates a select box from $options, an array of options
-function generate_select($label_text, $name, $value, $options)
+function generate_select($label_text, $name, $value, $options,
+                         $mandatory = false)
 {
   // generate the HTML
   $html  = "<label for=\"$name\">$label_text</label>\n";
   $html .= "<select id=\"$name\" name=\"$name\">\n";
+  if ($mandatory)
+  {
+    $options = array_merge(array(""),$options);
+  }
   foreach ($options as $option)
   {
     $html .= "<option";

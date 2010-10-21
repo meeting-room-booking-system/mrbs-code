@@ -456,6 +456,48 @@ function validate(form)
     alert("<?php echo get_vocab("you_have_not_selected") . '\n' . get_vocab("valid_room") ?>");
     return false;
   }
+  
+  <?php
+  if (count($is_mandatory_field))
+  {
+    $m_fields = array();
+    foreach ($is_mandatory_field as $field => $value)
+    {
+      if ($value)
+      {
+        $field = preg_replace('/^entry\./', 'f_', $field);
+        $m_fields[] = "'".str_replace("'", "\\'", $field)."'";
+      }
+    }
+    echo "var mandatory_fields = [".implode(', ', $m_fields)."];\n";
+  ?>
+
+    var return_val = true;
+
+    $.each(mandatory_fields,
+           function(index, value)
+           {
+             if ($("#"+value).val() == '')
+             {
+               label = $("label[for="+value+"]").html();
+               label = label.replace(/:$/, '');
+               alert('"' + label + '" ' +
+                 <?php echo '"'.
+                         str_replace('"', '\\"',
+                                     get_vocab("is_mandatory_field")
+                                    ).
+                         '"'; ?>);
+               return_val = false;
+             }
+           });
+    if (!return_val)
+    {
+      return return_val;
+    }
+  <?php
+   
+  }
+  ?>
 
   // Form submit can take some times, especially if mails are enabled and
   // there are more than one recipient. To avoid users doing weird things
@@ -819,7 +861,10 @@ else
         // Output a select box if they want one
         elseif (count($select_options["entry.$key"]) > 0)
         {
-          generate_select($label_text, $var_name, $value, $select_options["entry.$key"]);
+          $mandatory = (array_key_exists("entry.$key", $is_mandatory_field) &&
+                        $is_mandatory_field["entry.$key"]) ? true : false;
+          generate_select($label_text, $var_name, $value,
+                          $select_options["entry.$key"], $mandatory);
         }
         // Output a textarea if it's a character string longer than the limit for a
         // text input
