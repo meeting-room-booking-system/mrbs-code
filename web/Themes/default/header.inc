@@ -325,21 +325,26 @@ if ($page == 'edit_entry')
     // model is different and you are allowed to have the start and 
     // end period the same
     ?>
-    var startIndex = form.start_seconds.selectedIndex;
-    var startValue = parseInt(form.start_seconds.options[startIndex].value);
-    var endIndex = form.end_seconds.selectedIndex;
-    var endValue = parseInt(form.end_seconds.options[endIndex].value);
+    var startSelect = form.start_seconds;
+    var startIndex = startSelect.selectedIndex;
+    var startValue = parseInt(startSelect.options[startIndex].value);
+    
+    var endSelect = form.end_seconds;
+    var endIndex = endSelect.selectedIndex;
+    var endValue = parseInt(endSelect.options[endIndex].value);
+    
     var text, durationText, isSelected, i, j;
     var nbsp = '\u00A0';
     var errorText = '<?php echo get_vocab("start_after_end")?>';
-    var dateDifference = getDateDifference(form);
     
-    form.start_seconds.disabled = (dateDifference < 0);
-    form.end_seconds.disabled = (dateDifference < 0);
+    var dateDifference = getDateDifference(form); 
+    startSelect.disabled = (dateDifference < 0);
+    endSelect.disabled = (dateDifference < 0);
 
-    while (form.start_seconds.options.length > 0)
+    <?php // Destroy and rebuild the start select ?>
+    while (startSelect.options.length > 0)
     {
-      form.start_seconds.remove(0);
+      startSelect.remove(0);
     }
 
     for (i = 0; i < nStartOptions; i++)
@@ -356,18 +361,19 @@ if ($page == 'edit_entry')
         else
         {
           text = startOptions[i]['text'];
-          if (dateDifference == 0)
+          if ((dateDifference == 0) && !isSelected)
           {
             text = text + nbsp + nbsp + '(' + durationText + ')';
           }
         }
-        form.start_seconds.options[i] = new Option(text, startOptions[i]['value'], false, isSelected);
+        startSelect.options[i] = new Option(text, startOptions[i]['value'], false, isSelected);
       }
     }
     
-    while (form.end_seconds.options.length > 0)
+    <?php // Destroy and rebuild the end select ?>
+    while (endSelect.options.length > 0)
     {
-      form.end_seconds.remove(0);
+      endSelect.remove(0);
     }
 
     j = 0;
@@ -391,7 +397,7 @@ if ($page == 'edit_entry')
           }
         }
           
-        form.end_seconds.options[j] = new Option(text, endOptions[i]['value'], false, isSelected);
+        endSelect.options[j] = new Option(text, endOptions[i]['value'], false, isSelected);
         j++;
       }
     }
