@@ -169,6 +169,9 @@ $(function() {
 // Blur the datepicker input field on close, so that the datepicker will reappear
 // if you select it.    (Not quite sure why you need this.  It only seems
 // to be necessary when you are using Firefox and the datepicker is draggable).
+//
+// Then go and adjust the start and end time/period select options, because
+// they are dependent on the start and end dates
 ?>
 function datepicker_close(dateText, inst)
 {
@@ -178,6 +181,14 @@ function datepicker_close(dateText, inst)
   document.getElementById(alt_id + '_month').value = date[1];
   document.getElementById(alt_id + '_day').value   = date[2];
   document.getElementById(inst.id).blur();
+  <?php
+  if ($page == 'edit_entry')
+  {
+    ?>
+    adjustSlotSelectors(document.getElementById('main'));
+    <?php
+  }
+  ?>
 }
 
 
@@ -293,24 +304,49 @@ if ($page == 'edit_entry')
     var endValue = parseInt(form.end_seconds.options[endIndex].value);
     var text, durationText, isSelected, i, j;
     var nbsp = '\u00A0';
+    
+    <?php
+    // Work out whether the start date is before, after or the same
+    // as the end date.  Store the result in dateDifference which can
+    // be tested for being equal (same), negative (after) or positive (before)
+    ?>
+    var startDay = parseInt(form.start_datepicker_alt_day.value);
+    var startMonth = parseInt(form.start_datepicker_alt_month.value);
+    var startYear = parseInt(form.start_datepicker_alt_year.value);
+    var endDay = parseInt(form.end_datepicker_alt_day.value);
+    var endMonth = parseInt(form.end_datepicker_alt_month.value);
+    var endYear = parseInt(form.end_datepicker_alt_year.value);
  
+    var dateDifference;
+    dateDifference = endYear - startYear;
+    if (dateDifference == 0)
+    {
+      dateDifference = endMonth - startMonth;
+      if (dateDifference == 0)
+      {
+        dateDifference = endDay - startDay;
+      }
+    }
+    
     while (form.start_seconds.options.length > 0)
     {
       form.start_seconds.remove(0);
     }
 
-    i = 0;
-    while ((i < nStartOptions) && (startOptions[i]['value'] <?php echo ($enable_periods) ? "<=" : "<"?> endValue))
+    for (i = 0; i < nStartOptions; i++)
     {
-      isSelected = (startOptions[i]['value'] == startValue);
-      durationText = getDuration(startOptions[i]['value'], endValue);
-      text = startOptions[i]['text'];
-      if (!isSelected)
+      if ((startOptions[i]['value'] <?php echo ($enable_periods) ? "<=" : "<"?> endValue) ||
+          (dateDifference != 0))
       {
-        text = text + nbsp + nbsp + '(' + durationText + ')';
+        isSelected = (startOptions[i]['value'] == startValue);
+        durationText = getDuration(startOptions[i]['value'], endValue);
+        text = startOptions[i]['text'];
+        if (!isSelected && (dateDifference == 0))
+        {
+          text = text + nbsp + nbsp + '(' + durationText + ')';
+        }
+        form.start_seconds.options[i] = new Option(text, startOptions[i]['value'], false, isSelected);
       }
-      form.start_seconds.options[i] = new Option(text, startOptions[i]['value'], false, isSelected);
-      i++;
     }
     
     while (form.end_seconds.options.length > 0)
@@ -321,11 +357,16 @@ if ($page == 'edit_entry')
     j = 0;
     for (i = 0; i < nEndOptions; i++)
     {
-      if (endOptions[i]['value'] <?php echo ($enable_periods) ? ">=" : ">"?> startValue)
+      if ((endOptions[i]['value'] <?php echo ($enable_periods) ? ">=" : ">"?> startValue) ||
+          (dateDifference != 0))
       {
         isSelected = (endOptions[i]['value'] == endValue);
         durationText = getDuration(startValue, endOptions[i]['value']);
-        text = endOptions[i]['text'] + nbsp + nbsp + '(' + durationText + ')';
+        text = endOptions[i]['text'];
+        if (dateDifference == 0)
+        {
+          text = text + nbsp + nbsp + '(' + durationText + ')';
+        }
         form.end_seconds.options[j] = new Option(text, endOptions[i]['value'], false, isSelected);
         j++;
       }
