@@ -224,7 +224,7 @@ if (isset($id))
 
   if($entry_type >= 1)
   {
-    $sql = "SELECT rep_type, start_time, end_date, rep_opt, rep_num_weeks
+    $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_num_weeks
               FROM $tbl_repeat 
              WHERE id=$rep_id
              LIMIT 1";
@@ -248,11 +248,12 @@ if (isset($id))
     // If it's a repeating entry get the repeat details
     if (isset($rep_type) && ($rep_type != REP_NONE))
     {
-      // If we're editing the series we want the start_time to be the start
-      // of the series, not the start of this entry
+      // If we're editing the series we want the start_time and end_time to be the
+      // start and of the first entry of the series, not the start of this entry
       if ($edit_type == "series")
       {
         $start_time = $row['start_time'];
+        $end_time = $row['end_time'];
       }
       
       $rep_end_day   = (int)strftime('%d', $row['end_date']);
