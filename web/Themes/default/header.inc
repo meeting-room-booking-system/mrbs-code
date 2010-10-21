@@ -290,6 +290,33 @@ if ($page == 'edit_entry')
     return text;
   }
   
+  <?php
+  // Work out whether the start date is before, after or the same
+  // as the end date.  Store the result in dateDifference which can
+  // be tested for being equal (same), negative (after) or positive (before)
+  ?>
+  function getDateDifference(form)
+  {
+    var startDay = parseInt(form.start_datepicker_alt_day.value);
+    var startMonth = parseInt(form.start_datepicker_alt_month.value);
+    var startYear = parseInt(form.start_datepicker_alt_year.value);
+    var endDay = parseInt(form.end_datepicker_alt_day.value);
+    var endMonth = parseInt(form.end_datepicker_alt_month.value);
+    var endYear = parseInt(form.end_datepicker_alt_year.value);
+ 
+    var diff;
+    diff = endYear - startYear;
+    if (diff == 0)
+    {
+      diff = endMonth - startMonth;
+      if (diff == 0)
+      {
+        diff = endDay - startDay;
+      }
+    }
+    return diff;
+  }
+  
   function adjustSlotSelectors(form)
   {
     <?php
@@ -305,29 +332,7 @@ if ($page == 'edit_entry')
     var text, durationText, isSelected, i, j;
     var nbsp = '\u00A0';
     var errorText = '<?php echo get_vocab("start_after_end")?>';
-    
-    <?php
-    // Work out whether the start date is before, after or the same
-    // as the end date.  Store the result in dateDifference which can
-    // be tested for being equal (same), negative (after) or positive (before)
-    ?>
-    var startDay = parseInt(form.start_datepicker_alt_day.value);
-    var startMonth = parseInt(form.start_datepicker_alt_month.value);
-    var startYear = parseInt(form.start_datepicker_alt_year.value);
-    var endDay = parseInt(form.end_datepicker_alt_day.value);
-    var endMonth = parseInt(form.end_datepicker_alt_month.value);
-    var endYear = parseInt(form.end_datepicker_alt_year.value);
- 
-    var dateDifference;
-    dateDifference = endYear - startYear;
-    if (dateDifference == 0)
-    {
-      dateDifference = endMonth - startMonth;
-      if (dateDifference == 0)
-      {
-        dateDifference = endDay - startDay;
-      }
-    }
+    var dateDifference = getDateDifference(form);
     
     form.start_seconds.disabled = (dateDifference < 0);
     form.end_seconds.disabled = (dateDifference < 0);

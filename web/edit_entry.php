@@ -411,6 +411,17 @@ function validate(form)
       return false;
     }
   }
+  
+  <?php
+  // Check that the start date is not after the end date
+  ?>
+  var dateDiff = getDateDifference(form);
+  if (dateDiff < 0)
+  {
+    alert('<?php echo get_vocab("start_after_end_long")?>');
+    return false;
+  }
+  
   <?php if( ! $enable_periods ) { ?>
 
   h = parseInt(form.hour.value);

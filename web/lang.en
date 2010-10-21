@@ -96,6 +96,8 @@ $vocab["brief_description"]  = "Brief Description.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 $vocab["private"]            = "Private";
 $vocab["unavailable"]        = "Private";
+$vocab["start_after_end"]    = "Start day after end day";
+$vocab["start_after_end_long"] = "Error: the start day is after the end day";
 
 // Used in view_entry.php
 $vocab["description"]        = "Description";
