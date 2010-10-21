@@ -421,18 +421,6 @@ function validate(form)
     alert('<?php echo get_vocab("start_after_end_long")?>');
     return false;
   }
-  
-  <?php if( ! $enable_periods ) { ?>
-
-  h = parseInt(form.hour.value);
-  m = parseInt(form.minute.value);
-
-  if(h > 23 || m > 59)
-  {
-    alert ("<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("valid_time_of_day") ?>");
-    return false;
-  }
-  <?php } ?>
 
   // check form element exist before trying to access it
   if (form.id )

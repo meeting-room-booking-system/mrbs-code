@@ -84,8 +84,7 @@ $vocab["entryid"]            = "ID d'entrada";
 $vocab["repeat_id"]          = "ID de repetició";
 $vocab["you_have_not_entered"] = "No ha entrat";
 $vocab["you_have_not_selected"] = "No ha sel·leccionat";
-$vocab["valid_room"]         = "room.";$vocab["valid_time_of_day"]  = "valid time of day.";
-$vocab["valid_time_of_day"]  = "valid time of day.";
+$vocab["valid_room"]         = "room.";
 $vocab["brief_description"]  = "Breu descriptció.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 

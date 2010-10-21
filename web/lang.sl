@@ -87,7 +87,6 @@ $vocab["repeat_id"]          = "ID ponavljanj";
 $vocab["you_have_not_entered"] = "Niste vnesli";
 $vocab["you_have_not_selected"] = "Niste izbrali";
 $vocab["valid_room"]         = "prostor.";
-$vocab["valid_time_of_day"]  = "veljavne ure v dnevu.";
 $vocab["brief_description"]  = "kratek opis.";
 $vocab["useful_n-weekly_value"] = "prave vrednosti za n-tednov.";
 

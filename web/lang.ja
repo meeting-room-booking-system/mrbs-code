@@ -88,7 +88,6 @@ $vocab["repeat_id"]          = "定例予約ID ";
 $vocab["you_have_not_entered"] = "以下の項目が入力されていません:";
 $vocab["you_have_not_selected"] = "以下の項目が選択されていません:";
 $vocab["valid_room"]         = "部屋";
-$vocab["valid_time_of_day"]  = "有効な時間の値。";
 $vocab["brief_description"]  = "簡単な説明";
 $vocab["useful_n-weekly_value"] = "有効なn週毎の値。";
 $vocab["private"]            = "私用";

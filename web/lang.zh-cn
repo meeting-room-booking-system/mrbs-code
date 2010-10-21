@@ -85,7 +85,6 @@ $vocab["repeat_id"]          = "重复序号 ";
 $vocab["you_have_not_entered"] = "你没有输入";
 $vocab["you_have_not_selected"] = "你没有选择";
 $vocab["valid_room"]         = "会议室/设备.";
-$vocab["valid_time_of_day"]  = "可以预订的时间.";
 $vocab["brief_description"]  = "简要说明.";
 $vocab["useful_n-weekly_value"] = "可以提供预订的星期.";
 

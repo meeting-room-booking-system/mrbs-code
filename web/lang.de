@@ -85,7 +85,6 @@ $vocab["repeat_id"]          = "ID wiederholen ";
 $vocab["you_have_not_entered"] = "Sie haben folgendes Feld nicht ausgefüllt ";
 $vocab["you_have_not_selected"] = "You have not selected a";
 $vocab["valid_room"]         = "Raum.";
-$vocab["valid_time_of_day"]  = "Gültige Uhrzeit.";
 $vocab["brief_description"]  = "Kurzbeschreibung.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 

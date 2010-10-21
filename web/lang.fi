@@ -88,7 +88,6 @@ $vocab["repeat_id"]          = "Toiston ID ";
 $vocab["you_have_not_entered"] = "Et ole antanut seuraavaa pakollista tietoa";
 $vocab["you_have_not_selected"] = "Et ole valinnut";
 $vocab["valid_room"]         = "huonetta.";
-$vocab["valid_time_of_day"]  = "Ajankohta ei ole kelpaa.";
 $vocab["brief_description"]  = "Lyhyt kuvaus";
 $vocab["useful_n-weekly_value"] = "Määräaikaisen viikottaisen varauksen viikkomäärä.";
 $vocab["private"]            = "Yksityinen";
