@@ -216,12 +216,69 @@ if ($page == 'edit_entry')
   // We are going to store the contents of the selectors on page load
   // (when they will be fully populated with options) so that we can
   // rebuild the arrays later
+  // Also declare a variable to hold text strings with the current
+  // locale translations for periods,minutes, hours, etc.
   ?>
   var nStartOptions;
   var startOptions = new Array();
   var nEndOptions;
   var endOptions = new Array();
+  var vocab = new Array();
 
+  function durFormat(r)
+  {
+
+    r = r.toFixed(2);
+    r = parseFloat(r);
+    r = r.toLocaleString();
+
+    while (r.substr(r.length -1) == '0')
+    {
+      r = r.substr(0, r.length - 1);
+    }
+
+    if ((r.substr(r.length -1) == '.') || (r.substr(r.length -1) == ','))
+    {
+      r = r.substr(0, r.length - 1);
+    }
+    
+    return r;
+  }
+  
+  <?php
+  // Returns a string giving the duration having chosen sensible units,
+  // translated into the user's language, and formatted the number, taking
+  // into account the user's locale.    Note that when using periods one
+  // is added to the duration because the model is slightly different
+  ?>
+  function getDuration(from, to)
+  {
+    var duration, durUnits, text;
+    
+    durUnits = '<?php echo ($enable_periods) ? "periods" : "minutes" ?>';
+    duration = Math.floor((to - from) / 60);
+    <?php
+    if ($enable_periods)
+    {
+      ?>
+      duration++;
+      <?php
+    }
+    else
+    {
+      ?>
+      if (duration >= 60)
+      {
+        durUnits = "hours";
+        duration = durFormat(duration/60);
+      }
+      <?php
+    }
+    ?>
+    text = duration + ' ' + vocab[durUnits];
+    return text;
+  }
+  
   function adjustSlotSelectors(form)
   {
     <?php
@@ -234,17 +291,25 @@ if ($page == 'edit_entry')
     var startValue = parseInt(form.start_seconds.options[startIndex].value);
     var endIndex = form.end_seconds.selectedIndex;
     var endValue = parseInt(form.end_seconds.options[endIndex].value);
+    var text, durationText, isSelected, i, j;
+    var nbsp = '\u00A0';
  
     while (form.start_seconds.options.length > 0)
     {
       form.start_seconds.remove(0);
     }
 
-    var i = 0;
+    i = 0;
     while ((i < nStartOptions) && (startOptions[i]['value'] <?php echo ($enable_periods) ? "<=" : "<"?> endValue))
     {
-      var isSelected = (startOptions[i]['value'] == startValue);
-      form.start_seconds.options[i] = new Option(startOptions[i]['text'], startOptions[i]['value'], false, isSelected);
+      isSelected = (startOptions[i]['value'] == startValue);
+      durationText = getDuration(startOptions[i]['value'], endValue);
+      text = startOptions[i]['text'];
+      if (!isSelected)
+      {
+        text = text + nbsp + nbsp + '(' + durationText + ')';
+      }
+      form.start_seconds.options[i] = new Option(text, startOptions[i]['value'], false, isSelected);
       i++;
     }
     
@@ -253,14 +318,16 @@ if ($page == 'edit_entry')
       form.end_seconds.remove(0);
     }
 
-    var j = 0;
+    j = 0;
     for (i = 0; i < nEndOptions; i++)
     {
       if (endOptions[i]['value'] <?php echo ($enable_periods) ? ">=" : ">"?> startValue)
       {
-       isSelected = (endOptions[i]['value'] == endValue);
-       form.end_seconds.options[j] = new Option(endOptions[i]['text'], endOptions[i]['value'], false, isSelected);
-       j++;
+        isSelected = (endOptions[i]['value'] == endValue);
+        durationText = getDuration(startValue, endOptions[i]['value']);
+        text = endOptions[i]['text'] + nbsp + nbsp + '(' + durationText + ')';
+        form.end_seconds.options[j] = new Option(text, endOptions[i]['value'], false, isSelected);
+        j++;
       }
     }
     
@@ -379,6 +446,14 @@ function init()
   {
     form.name.focus();
   }
+  <?php
+  // Get the current vocab (in the appropriate language) for periods,
+  // minutes, hours
+  ?>
+  vocab['periods'] = '<?php echo get_vocab("periods") ?>';
+  vocab['minutes'] = '<?php echo get_vocab("minutes") ?>';
+  vocab['hours'] = '<?php echo get_vocab("hours") ?>';
+  vocab['days'] = '<?php echo get_vocab("days") ?>';
   <?php
   // Get the details of the start and end slot selectors now since
   // they are fully populated with options.  We can then use the details
