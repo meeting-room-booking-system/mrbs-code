@@ -369,6 +369,7 @@ if ($page == 'edit_entry')
       var startDate = new Date(startYear, startMonth - 1, startDay, 12);
       var endDate = new Date(endYear, endMonth - 1, endDay, 12);    
       diff = (endDate - startDate)/(24 * 60 * 60 * 1000);
+      diff = Math.round(diff);
       <?php
     }
     ?>
