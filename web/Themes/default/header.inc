@@ -248,19 +248,21 @@ if ($page == 'edit_entry')
 
   function durFormat(r)
   {
-
     r = r.toFixed(2);
     r = parseFloat(r);
     r = r.toLocaleString();
 
-    while (r.substr(r.length -1) == '0')
+    if ((r.indexOf('.') >= 0) || (r.indexOf(',') >= 0))
     {
-      r = r.substr(0, r.length - 1);
-    }
+      while (r.substr(r.length -1) == '0')
+      {
+        r = r.substr(0, r.length - 1);
+      }
 
-    if ((r.substr(r.length -1) == '.') || (r.substr(r.length -1) == ','))
-    {
-      r = r.substr(0, r.length - 1);
+      if ((r.substr(r.length -1) == '.') || (r.substr(r.length -1) == ','))
+      {
+        r = r.substr(0, r.length - 1);
+      }
     }
     
     return r;
@@ -411,6 +413,7 @@ if ($page == 'edit_entry')
         j++;
       }
     }
+    
     
   }
 <?php
