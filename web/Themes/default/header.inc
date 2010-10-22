@@ -240,11 +240,11 @@ if ($page == 'edit_entry')
   // Also declare a variable to hold text strings with the current
   // locale translations for periods,minutes, hours, etc.
   ?>
-  var nStartOptions;
+  var nStartOptions, nEndOptions;
   var startOptions = new Array();
-  var nEndOptions;
   var endOptions = new Array();
   var vocab = new Array();
+  var prevStartValue;
 
   function durFormat(r)
   {
@@ -332,11 +332,19 @@ if ($page == 'edit_entry')
   function adjustSlotSelectors(form)
   {
     <?php
-    // the end slot options cannot start before the currently
-    // selected start option.   When we are using periods the booking
-    // model is different and you are allowed to have the start and 
-    // end period the same
+    // Adjust the start and end time slot select boxes.
+    // (a) If the start time has changed then adjust the end time so
+    //     that the duration is still the same, provided that the endtime
+    //     does not go past the start of the booking day
+    // (b) If the end time has changed then adjust the duration.
+    // (c) Make sure that you can't have an end time before the start time.
+    // (d) Tidy up the two select boxes so that they are the same width
     ?>
+    var durationText, isSelected, i, j;
+    var nbsp = '\u00A0';
+    var errorText = '<?php echo get_vocab("start_after_end")?>';
+    var text = errorText;
+    
     var startSelect = form.start_seconds;
     var startIndex = startSelect.selectedIndex;
     var startValue = parseInt(startSelect.options[startIndex].value);
@@ -345,9 +353,12 @@ if ($page == 'edit_entry')
     var endIndex = endSelect.selectedIndex;
     var endValue = parseInt(endSelect.options[endIndex].value);
     
-    var text, durationText, isSelected, i, j;
-    var nbsp = '\u00A0';
-    var errorText = '<?php echo get_vocab("start_after_end")?>';
+    if (prevStartValue)
+    {
+      endValue = endValue + (startValue - prevStartValue);
+      endValue = Math.min(endValue, endOptions[nEndOptions - 1]['value']);
+    }
+    prevStartValue = startValue;
     
     var dateDifference = getDateDifference(form); 
     startSelect.disabled = (dateDifference < 0);
@@ -361,25 +372,12 @@ if ($page == 'edit_entry')
 
     for (i = 0; i < nStartOptions; i++)
     {
-      if ((startOptions[i]['value'] <?php echo ($enable_periods) ? "<=" : "<"?> endValue) ||
-          (dateDifference != 0))
+      isSelected = (startOptions[i]['value'] == startValue);
+      if (dateDifference >= 0)
       {
-        isSelected = (startOptions[i]['value'] == startValue);
-        durationText = getDuration(startOptions[i]['value'], endValue);
-        if (dateDifference < 0)
-        {
-          text = errorText;
-        }
-        else
-        {
-          text = startOptions[i]['text'];
-          if ((dateDifference == 0) && !isSelected)
-          {
-            text = text + nbsp + nbsp + '(' + durationText + ')';
-          }
-        }
-        startSelect.options[i] = new Option(text, startOptions[i]['value'], false, isSelected);
+        text = startOptions[i]['text'];
       }
+      startSelect.options[i] = new Option(text, startOptions[i]['value'], false, isSelected);
     }
     
     <?php // Destroy and rebuild the end select ?>
@@ -395,20 +393,15 @@ if ($page == 'edit_entry')
           (dateDifference != 0))
       {
         isSelected = (endOptions[i]['value'] == endValue);
-        durationText = getDuration(startValue, endOptions[i]['value']);
-        if (dateDifference < 0)
-        {
-          text = errorText;
-        }
-        else
+        if (dateDifference >= 0)
         {
           text = endOptions[i]['text'];
           if (dateDifference == 0)
           {
+            durationText = getDuration(startValue, endOptions[i]['value']);
             text = text + nbsp + nbsp + '(' + durationText + ')';
           }
-        }
-          
+        }      
         endSelect.options[j] = new Option(text, endOptions[i]['value'], false, isSelected);
         j++;
       }
