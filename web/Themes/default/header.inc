@@ -273,17 +273,42 @@ if ($page == 'edit_entry')
   // translated into the user's language, and formatted the number, taking
   // into account the user's locale.    Note that when using periods one
   // is added to the duration because the model is slightly different
+  //   - from   the start time (in seconds since the start of the day
+  //   - to     the end time (in seconds since the start of the day)
+  //   - days   the number of days difference
   ?>
-  function getDuration(from, to)
+  function getDuration(from, to, days)
   {
-    var duration, durUnits, text;
+    var duration, durUnits;
+    var text = '';
     
     durUnits = '<?php echo ($enable_periods) ? "periods" : "minutes" ?>';
+    duration = to - from;
     duration = Math.floor((to - from) / 60);
+    
+    if (duration < 0)
+    {
+      days--;
+      <?php
+      if ($enable_periods)
+      {
+        // add a day's worth of periods ?>
+        duration += nEndOptions;
+        <?php
+      }
+      else
+      {
+        // add 24 hours (duration is now in minutes)  ?>
+        duration += 24*60;
+        <?php
+      }
+      ?>
+    }
+      
     <?php
     if ($enable_periods)
     {
-      ?>
+      // a period is a period rather than a point ?>
       duration++;
       <?php
     }
@@ -298,14 +323,27 @@ if ($page == 'edit_entry')
       <?php
     }
     ?>
-    text = duration + ' ' + vocab[durUnits];
+    
+    if (days != 0)
+    {
+      text += days + ' ';
+      text += (days == 1) ? vocab['days']['singular'] : vocab['days']['plural'];
+      if (duration != 0)
+      {
+        text +=  ', ';
+      }
+    }
+
+    if (duration != 0)
+    {
+      text += duration + ' ';
+      text +=(duration == 1) ? vocab[durUnits]['singular'] : vocab[durUnits]['plural'];
+    }
     return text;
   }
   
   <?php
-  // Work out whether the start date is before, after or the same
-  // as the end date.  Store the result in dateDifference which can
-  // be tested for being equal (same), negative (after) or positive (before)
+  // Returns the number of days between the start and end dates
   ?>
   function getDateDifference(form)
   {
@@ -315,17 +353,10 @@ if ($page == 'edit_entry')
     var endDay = parseInt(form.end_datepicker_alt_day.value);
     var endMonth = parseInt(form.end_datepicker_alt_month.value);
     var endYear = parseInt(form.end_datepicker_alt_year.value);
- 
-    var diff;
-    diff = endYear - startYear;
-    if (diff == 0)
-    {
-      diff = endMonth - startMonth;
-      if (diff == 0)
-      {
-        diff = endDay - startDay;
-      }
-    }
+    var startDate = new Date(startYear, startMonth - 1, startDay, 12);
+    var endDate = new Date(endYear, endMonth - 1, endDay, 12);    
+    var diff = (endDate - startDate)/(24 * 60 * 60 * 1000);
+
     return diff;
   }
   
@@ -340,7 +371,7 @@ if ($page == 'edit_entry')
     // (c) Make sure that you can't have an end time before the start time.
     // (d) Tidy up the two select boxes so that they are the same width
     ?>
-    var durationText, isSelected, i, j;
+    var isSelected, i, j;
     var nbsp = '\u00A0';
     var errorText = '<?php echo get_vocab("start_after_end")?>';
     var text = errorText;
@@ -395,12 +426,8 @@ if ($page == 'edit_entry')
         isSelected = (endOptions[i]['value'] == endValue);
         if (dateDifference >= 0)
         {
-          text = endOptions[i]['text'];
-          if (dateDifference == 0)
-          {
-            durationText = getDuration(startValue, endOptions[i]['value']);
-            text = text + nbsp + nbsp + '(' + durationText + ')';
-          }
+          text = endOptions[i]['text'] + nbsp + nbsp + '(' +
+                 getDuration(startValue, endOptions[i]['value'], dateDifference) + ')';
         }      
         endSelect.options[j] = new Option(text, endOptions[i]['value'], false, isSelected);
         j++;
@@ -545,10 +572,18 @@ function init()
   // Get the current vocab (in the appropriate language) for periods,
   // minutes, hours
   ?>
-  vocab['periods'] = '<?php echo get_vocab("periods") ?>';
-  vocab['minutes'] = '<?php echo get_vocab("minutes") ?>';
-  vocab['hours'] = '<?php echo get_vocab("hours") ?>';
-  vocab['days'] = '<?php echo get_vocab("days") ?>';
+  vocab['periods'] = new Array();
+  vocab['periods']['singular'] = '<?php echo get_vocab("period_lc") ?>';
+  vocab['periods']['plural'] = '<?php echo get_vocab("periods") ?>';
+  vocab['minutes'] = new Array();
+  vocab['minutes']['singular'] = '<?php echo get_vocab("minute_lc") ?>';
+  vocab['minutes']['plural'] = '<?php echo get_vocab("minutes") ?>';
+  vocab['hours'] = new Array();
+  vocab['hours']['singular'] = '<?php echo get_vocab("hour_lc") ?>';
+  vocab['hours']['plural'] = '<?php echo get_vocab("hours") ?>';
+  vocab['days'] = new Array();
+  vocab['days']['singular'] = '<?php echo get_vocab("day_lc") ?>';
+  vocab['days']['plural'] = '<?php echo get_vocab("days") ?>';
   <?php
   // Get the details of the start and end slot selectors now since
   // they are fully populated with options.  We can then use the details
