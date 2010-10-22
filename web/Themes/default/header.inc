@@ -14,6 +14,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $lang_map_windows, $langs;
   
   $page = basename($PHP_SELF, ".php" );
+  $user = getUserName();
   $is_admin = (authGetUserLevel($user) >= 2);
 
   // If we dont know the right date then make it up 
@@ -410,9 +411,15 @@ if ($page == 'edit_entry')
     }
     prevStartValue = startValue;
     
-    var dateDifference = getDateDifference(form); 
-    startSelect.disabled = startSelect.disabled || (dateDifference < 0);
-    endSelect.disabled = endSelect.disabled || (dateDifference < 0);
+    var dateDifference = getDateDifference(form);
+    
+    if (!form.all_day.checked)
+    {
+      var newState = (dateDifference < 0);
+      startSelect.disabled = newState;
+      endSelect.disabled = newState;
+      form.all_day.disabled = newState;
+    }
 
     <?php // Destroy and rebuild the start select ?>
     while (startSelect.options.length > 0)
@@ -728,7 +735,7 @@ function init()
         <?php
         // Provide a link to the list of outstanding provisional bookings
         // (if there are any areas where we are using provisional bookings)
-        $user = getUserName();
+
         // Build the SQL condition for evaluating whether provisional booking is
         // enabled for an area.   It is enabled if the field is set, or if it's 
         // not set but the default area setting is for it to be enabled.
