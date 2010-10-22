@@ -620,6 +620,7 @@ else
     {
       $first = (($morningstarts * 60) + $morningstarts_minutes) * 60;
       $last = (($eveningends * 60) + $eveningends_minutes) * 60;
+      $last = $last + $resolution;
     }
     echo "<div id=\"div_start_date\">\n";
     echo "<label for=\"start_datepicker\">" . get_vocab("start") . ":</label>\n";
