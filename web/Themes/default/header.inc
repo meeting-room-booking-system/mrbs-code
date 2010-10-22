@@ -399,7 +399,11 @@ if ($page == 'edit_entry')
     var endIndex = endSelect.selectedIndex;
     var endValue = parseInt(endSelect.options[endIndex].value);
     
-    if (prevStartValue)
+    if (form.all_day.checked)
+    {
+      endValue = endOptions[nEndOptions - 1]['value'];
+    }
+    else if (prevStartValue)
     {
       endValue = endValue + (startValue - prevStartValue);
       endValue = Math.min(endValue, endOptions[nEndOptions - 1]['value']);
@@ -407,8 +411,8 @@ if ($page == 'edit_entry')
     prevStartValue = startValue;
     
     var dateDifference = getDateDifference(form); 
-    startSelect.disabled = (dateDifference < 0);
-    endSelect.disabled = (dateDifference < 0);
+    startSelect.disabled = startSelect.disabled || (dateDifference < 0);
+    endSelect.disabled = endSelect.disabled || (dateDifference < 0);
 
     <?php // Destroy and rebuild the start select ?>
     while (startSelect.options.length > 0)

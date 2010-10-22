@@ -534,6 +534,7 @@ function OnAllDayClick(allday)
     old_end = form.end_seconds.selectedIndex;
     form.end_seconds.selectedIndex = form.end_seconds.options.length - 1;
     form.end_seconds.disabled = true;
+    adjustSlotSelectors(form); // need to get the duration right
   }
   else  // restore the old values and re-enable the inputs
   {
