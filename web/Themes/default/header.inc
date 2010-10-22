@@ -414,7 +414,22 @@ if ($page == 'edit_entry')
       }
     }
     
-    
+    <?php 
+    // Make the two select boxes the same width.   Note that we set
+    // the widths of both select boxes, even though it would seem
+    // that just setting the width of the smaller should be sufficient.
+    // But if you don't set both of them then you end up with a few 
+    // pixels difference.  In other words doing a get and then a set 
+    // doesn't leave you where you started - not quite sure why.
+    // The +2 is a fudge factor.   Without it the text of the longest
+    // option is slightly truncated - again, not sure why.
+    ?>
+    var startWidth = $("#start_seconds").width();
+    var endWidth = $("#end_seconds").width();
+    var maxWidth = Math.max(startWidth, endWidth) + 2;
+    $("#end_seconds").width(maxWidth);
+    $("#start_seconds").width(maxWidth);
+      
   }
 <?php
 }
