@@ -322,8 +322,15 @@ else
   // (We do this before we adjust for DST so that the user sees what they expect to see)
   $duration = $endtime - $starttime;
   $date = getdate($starttime);
-  $period = ($date['hours'] - 12) * 60) + $date['minutes'];
-  $enable_periods ? toPeriodString($period, $duration, $dur_units, FALSE) : toTimeString($duration, $dur_units, FALSE);
+  if ($enable_periods)
+  {
+    $period = (($date['hours'] - 12) * 60) + $date['minutes'];
+    toPeriodString($period, $duration, $dur_units, FALSE);
+  }
+  else
+  {
+    toTimeString($duration, $dur_units, FALSE);
+  }
   
   // Adjust the endtime for DST
   $endtime += cross_dst( $starttime, $endtime );
