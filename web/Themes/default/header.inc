@@ -9,11 +9,12 @@ function print_theme_header($day, $month, $year, $area, $room)
          $search_str, $locale_warning, $area_defaults;
   global $tbl_entry, $tbl_room, $tbl_area;
   global $PHP_SELF, $view_week_number, $weekstarts;
-  global $enable_periods;
+  global $enable_periods, $auth;
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   global $lang_map_windows, $langs;
   
   $page = basename($PHP_SELF, ".php" );
+  $is_admin = (authGetUserLevel($user) >= 2);
 
   // If we dont know the right date then make it up 
   if (!$day)
@@ -347,15 +348,29 @@ if ($page == 'edit_entry')
   ?>
   function getDateDifference(form)
   {
+    var diff;
     var startDay = parseInt(form.start_datepicker_alt_day.value);
     var startMonth = parseInt(form.start_datepicker_alt_month.value);
     var startYear = parseInt(form.start_datepicker_alt_year.value);
-    var endDay = parseInt(form.end_datepicker_alt_day.value);
-    var endMonth = parseInt(form.end_datepicker_alt_month.value);
-    var endYear = parseInt(form.end_datepicker_alt_year.value);
-    var startDate = new Date(startYear, startMonth - 1, startDay, 12);
-    var endDate = new Date(endYear, endMonth - 1, endDay, 12);    
-    var diff = (endDate - startDate)/(24 * 60 * 60 * 1000);
+    <?php
+    if (!$is_admin && $auth['only_admin_can_book_multiday'])
+    {
+      ?>
+      diff = 0;
+      <?php
+    }
+    else
+    {
+      ?>
+      var endDay = parseInt(form.end_datepicker_alt_day.value);
+      var endMonth = parseInt(form.end_datepicker_alt_month.value);
+      var endYear = parseInt(form.end_datepicker_alt_year.value);
+      var startDate = new Date(startYear, startMonth - 1, startDay, 12);
+      var endDate = new Date(endYear, endMonth - 1, endDay, 12);    
+      diff = (endDate - startDate)/(24 * 60 * 60 * 1000);
+      <?php
+    }
+    ?>
 
     return diff;
   }
@@ -612,9 +627,9 @@ function init()
   // PENDING.PHP
   if ($page == 'pending')
   {
-  ?>
+    ?>
     activate_sub_tables();
-  <?php
+    <?php
   }
 
   // SEARCH.PHP
@@ -726,7 +741,6 @@ function init()
         $provisional_somewhere = (sql_query1($sql) > 0);
         if ($provisional_somewhere && (authGetUserLevel($user) >= 1))
         {
-          $is_admin = (authGetUserLevel($user) >= 2);
           // Find out how many provisional bookings there are
           // (but only for areas where provisional bookings are enabled)
           $sql = "SELECT COUNT(*)

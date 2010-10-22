@@ -158,6 +158,15 @@ checkAuthorised();
 $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= 2);
 
+// If they're not an admin and multi-day bookings are not allowed, then
+// set the end date to the start date
+if (!$is_admin && $auth['only_admin_can_book_multiday'])
+{
+  $end_day = $day;
+  $end_month = $month;
+  $end_year = $year;
+}
+
 // Check to see whether this is a repeat booking and if so, whether the user
 // is allowed to make/edit repeat bookings.   (The edit_entry form should
 // prevent you ever getting here, but this check is here as a safeguard in 

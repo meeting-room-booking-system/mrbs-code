@@ -115,6 +115,8 @@ $is_admin = (authGetUserLevel($user) >= 2);
 // You're only allowed to make repeat bookings if you're an admin
 // or else if $auth['only_admin_can_book_repeat'] is not set
 $repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
+// Similarly for multi-day
+$multiday_allowed = $is_admin || empty($auth['only_admin_can_book_multiday']);
 
 // This page will either add or modify a booking
 
@@ -642,7 +644,10 @@ else
     echo "<div id=\"div_end_date\">\n";
     echo "<label for=\"start_datepicker\">" . get_vocab("end") . ":</label>\n";
     $date = getdate($end_time);
+    // Don't show the end date selector if multiday is not allowed
+    echo "<div" . (($multiday_allowed) ? '' : " style=\"visibility: hidden\"") . ">\n";
     gendateselector("end_", $date['mday'], $date['mon'], $date['year']);
+    echo "</div>\n";
     // If we're using periods the booking model is slightly different,
     // so subtract one period because the "end" period is actually the beginning
     // of the last period booked
