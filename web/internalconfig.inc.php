@@ -89,6 +89,15 @@ $standard_fields['repeat'] = array('id',
                                    'info_time',
                                    'info_user',
                                    'info_text');
+
+// Boolean fields.    These are fields which are treated as booleans                                
+$boolean_fields['area'] = array('private_enabled',
+                                'private_default',
+                                'private_mandatory',
+                                'min_book_ahead_enabled',
+                                'max_book_ahead_enabled',
+                                'provisional_enabled',
+                                'reminders_enabled');
                                    
 /********************************************************
  * Miscellaneous

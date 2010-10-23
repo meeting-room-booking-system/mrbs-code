@@ -38,12 +38,46 @@ elseif ($type == "area")
   {
     $error = "invalid_area_name";
   }
-  // If so, insert the area into the database.   We just insert the area name
-  // at this stage.  The per-area settings will be NULL, which will be translated
-  // by get_area_settings() into the default values for new areas.
+  // If so, insert the area into the database.   We insert the area name that
+  // we have been given, together with the default values for the per-area settings
   else
   {
-    $sql = "INSERT INTO $tbl_area (area_name) VALUES ('$area_name_q')";
+    // Build arrays of data to be inserted into the table
+    $sql_col = array();
+    $sql_val = array();
+    // Get the information about the fields in the room table
+    $fields = sql_field_info($tbl_area);
+    // Loop through the fields and build up the arrays
+    foreach ($fields as $field)
+    {
+      $key = $field['name'];
+      switch ($key)
+      {
+      case 'area_name':
+        $sql_col[] = $key;
+        $sql_val[] = "'$area_name_q'";
+        break;
+      default:
+        if (array_key_exists($key, $area_defaults))
+        {
+          $sql_col[] = $key;
+          if (in_array($key, $boolean_fields['area']))
+          {
+            $sql_val[] = ($area_defaults[$key]) ? 1 : 0;
+          }
+          elseif ($field['nature'] == 'integer')
+          {
+            $sql_val[] = $area_defaults[$key];
+          }
+          else
+          {
+            $sql_val[] = "'" . addslashes($area_defaults[$key]) . "'";
+          }
+        }
+        break;
+      }
+    }
+    $sql = "INSERT INTO $tbl_area (" . implode(', ',$sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
     if (sql_command($sql) < 0)
     {
       fatal_error(1, sql_error());
