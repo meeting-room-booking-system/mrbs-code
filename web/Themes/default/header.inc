@@ -607,13 +607,16 @@ function init()
     // When we get those we will have to do something different]
   ?>
     var form = document.getElementById('edit_area');
-    enablePeriods = false;
-    if (form.area_enable_periods[0].checked)
+    if (form)
     {
-      toggleMode(form, 0);
+      enablePeriods = false;
+      if (form.area_enable_periods[0].checked)
+      {
+        toggleMode(form, 0);
+      }
+      check_book_ahead();
     }
     
-    check_book_ahead();
   <?php
   }
   
