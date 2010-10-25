@@ -406,6 +406,12 @@ if ($page == 'edit_entry')
     // (c) Make sure that you can't have an end time before the start time.
     // (d) Tidy up the two select boxes so that they are the same width
     ?>
+    
+    if (!form)
+    {
+      return;
+    }
+    
     var isSelected, i, j;
     var nbsp = '\u00A0';
     var errorText = '<?php echo get_vocab("start_after_end")?>';
@@ -624,45 +630,46 @@ function init()
   if (form && form.name && (form.name.value.length == 0))
   {
     form.name.focus();
-  }
-  <?php
-  // Get the current vocab (in the appropriate language) for periods,
-  // minutes, hours
-  ?>
-  vocab['periods'] = new Array();
-  vocab['periods']['singular'] = '<?php echo get_vocab("period_lc") ?>';
-  vocab['periods']['plural'] = '<?php echo get_vocab("periods") ?>';
-  vocab['minutes'] = new Array();
-  vocab['minutes']['singular'] = '<?php echo get_vocab("minute_lc") ?>';
-  vocab['minutes']['plural'] = '<?php echo get_vocab("minutes") ?>';
-  vocab['hours'] = new Array();
-  vocab['hours']['singular'] = '<?php echo get_vocab("hour_lc") ?>';
-  vocab['hours']['plural'] = '<?php echo get_vocab("hours") ?>';
-  vocab['days'] = new Array();
-  vocab['days']['singular'] = '<?php echo get_vocab("day_lc") ?>';
-  vocab['days']['plural'] = '<?php echo get_vocab("days") ?>';
-  <?php
-  // Get the details of the start and end slot selectors now since
-  // they are fully populated with options.  We can then use the details
-  // to rebuild the selectors later on
-  ?>
-  nStartOptions = form.start_seconds.options.length;
-  for (var i=0; i < nStartOptions; i++)
-  {
-    startOptions[i] = new Array();
-    startOptions[i]['text'] = form.start_seconds.options[i].text;
-    startOptions[i]['value'] = parseInt(form.start_seconds.options[i].value);
-  }
+    <?php
+    // Get the current vocab (in the appropriate language) for periods,
+    // minutes, hours
+    ?>
+    vocab['periods'] = new Array();
+    vocab['periods']['singular'] = '<?php echo get_vocab("period_lc") ?>';
+    vocab['periods']['plural'] = '<?php echo get_vocab("periods") ?>';
+    vocab['minutes'] = new Array();
+    vocab['minutes']['singular'] = '<?php echo get_vocab("minute_lc") ?>';
+    vocab['minutes']['plural'] = '<?php echo get_vocab("minutes") ?>';
+    vocab['hours'] = new Array();
+    vocab['hours']['singular'] = '<?php echo get_vocab("hour_lc") ?>';
+    vocab['hours']['plural'] = '<?php echo get_vocab("hours") ?>';
+    vocab['days'] = new Array();
+    vocab['days']['singular'] = '<?php echo get_vocab("day_lc") ?>';
+    vocab['days']['plural'] = '<?php echo get_vocab("days") ?>';
+    <?php
+    // Get the details of the start and end slot selectors now since
+    // they are fully populated with options.  We can then use the details
+    // to rebuild the selectors later on
+    ?>
+    nStartOptions = form.start_seconds.options.length;
+    for (var i=0; i < nStartOptions; i++)
+    {
+      startOptions[i] = new Array();
+      startOptions[i]['text'] = form.start_seconds.options[i].text;
+      startOptions[i]['value'] = parseInt(form.start_seconds.options[i].value);
+    }
   
-  nEndOptions = form.end_seconds.options.length;
-  for (var i=0; i < nEndOptions; i++)
-  {
-    endOptions[i] = new Array();
-    endOptions[i]['text'] = form.end_seconds.options[i].text;
-    endOptions[i]['value'] = parseInt(form.end_seconds.options[i].value);
-  }
+    nEndOptions = form.end_seconds.options.length;
+    for (var i=0; i < nEndOptions; i++)
+    {
+      endOptions[i] = new Array();
+      endOptions[i]['text'] = form.end_seconds.options[i].text;
+      endOptions[i]['value'] = parseInt(form.end_seconds.options[i].value);
+    }
   
-  adjustSlotSelectors(form);
+    adjustSlotSelectors(form);
+  }
+
   <?php
   }
   
