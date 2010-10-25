@@ -441,20 +441,28 @@ function validate(form)
     }
     echo "var mandatory_fields = [".implode(', ', $m_fields)."];\n";
   ?>
-    for (i = 0; i < mandatory_fields.length; i++)
-    {
-      if (form[mandatory_fields[i]].value == '')
-      {
-        label = $("label[for="+mandatory_fields[i]+"]").html();
-        label = label.replace(/:$/, '');
-        alert('"' + label + '" ' +
-              <?php echo '"'.
+
+    var return_val = true;
+
+    $.each(mandatory_fields,
+           function(index, value)
+           {
+             if ($("#"+value).val() == '')
+             {
+               label = $("label[for="+value+"]").html();
+               label = label.replace(/:$/, '');
+               alert('"' + label + '" ' +
+                 <?php echo '"'.
                          str_replace('"', '\\"',
                                      get_vocab("is_mandatory_field")
                                     ).
                          '"'; ?>);
-        return false;
-      }
+               return_val = false;
+             }
+           });
+    if (!return_val)
+    {
+      return return_val;
     }
   <?php
    
