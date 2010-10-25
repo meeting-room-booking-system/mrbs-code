@@ -41,7 +41,8 @@ CREATE TABLE mrbs_area
   max_book_ahead_secs    int,
   custom_html            text,
   provisional_enabled    smallint,
-  reminders_enabled      smallint
+  reminders_enabled      smallint,
+  enable_periods         smallint
 );
 
 CREATE TABLE mrbs_room
@@ -120,6 +121,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '14');
+  VALUES ('db_version', '16');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');

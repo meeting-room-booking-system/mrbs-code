@@ -39,6 +39,7 @@ CREATE TABLE mrbs_area
   custom_html            text,
   provisional_enabled    tinyint(1),
   reminders_enabled      tinyint(1),
+  enable_periods         tinyint(1),
 
   PRIMARY KEY (id)
 );
@@ -129,6 +130,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '14');
+  VALUES ( 'db_version', '16');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
