@@ -127,7 +127,9 @@ $theme = "default";
 // been created and to have meaningful entries.  This is due to differences
 // in the way that the data is stored.
 
-$enable_periods = FALSE;
+// $enable_periods is settable on a per-area basis.
+
+$enable_periods = FALSE;  // Default value for new areas
 
 
 // TIMES SETTINGS
