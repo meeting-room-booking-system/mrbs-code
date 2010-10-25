@@ -503,7 +503,7 @@ if ($page == 'edit_entry')
     var endWidth = $("#end_seconds").width();
     var maxWidth = Math.max(startWidth, endWidth) + 2;
     $("#end_seconds").width(maxWidth);
-    $("#start_seconds").width(maxWidth);     
+    $("#start_seconds").width(maxWidth);
   }
 <?php
 }
@@ -627,9 +627,12 @@ function init()
   {
   ?>
   var form = document.getElementById('main');
-  if (form && form.name && (form.name.value.length == 0))
+  if (form)
   {
-    form.name.focus();
+    if (form.name && (form.name.value.length == 0))
+    {
+      form.name.focus();
+    }
     <?php
     // Get the current vocab (in the appropriate language) for periods,
     // minutes, hours
@@ -668,6 +671,21 @@ function init()
     }
   
     adjustSlotSelectors(form);
+    
+    <?php
+    // If this is an All Day booking then check the All Day box and disable the 
+    // start and end time boxes
+    ?>
+    if (!form.all_day.disabled && 
+        (parseInt(form.start_seconds.options[form.start_seconds.selectedIndex].value) == startOptions[0]['value']) &&
+        (parseInt(form.end_seconds.options[form.end_seconds.selectedIndex].value) == endOptions[nEndOptions - 1]['value']))
+    {
+      form.all_day.checked = true;
+      form.start_seconds.disabled = true;
+      form.end_seconds.disabled = true;
+      old_start = form.start_seconds.selectedIndex;
+      old_end = form.end_seconds.selectedIndex;
+    }
   }
 
   <?php
