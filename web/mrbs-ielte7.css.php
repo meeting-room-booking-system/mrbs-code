@@ -27,6 +27,7 @@ expires_header(60*30); // 30 minute expiry
 .form_general#edit_room select {margin-bottom: 0.2em}
 .form_general textarea {margin-top: 0.25em} /* IE7 and below don't understand margin-bottom */
                                             /* so use the top margin instead */
+div#mode {margin-top: 0.5em} /* this div comes just below a textarea */
 
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/
 

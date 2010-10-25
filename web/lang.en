@@ -341,7 +341,10 @@ $vocab["max_book_ahead"]          = "Advance booking - maximum";
 $vocab["custom_html"]             = "Custom HTML";
 $vocab["custom_html_note"]        = "This field can be used for displaying your own HTML, for example an embedded Google map";
 $vocab["email_list_note"]         = "Enter a list of email addresses separated by commas or newlines";
-                     
+$vocab["mode"]                    = "Mode";
+$vocab["mode_periods"]            = "Periods";
+$vocab["mode_times"]              = "Times";
+$vocab["times_only"]              = "Times mode only";               
 
 // Used in edit_users.php
 $vocab["name_empty"]         = "You must enter a name.";

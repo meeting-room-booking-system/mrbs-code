@@ -78,6 +78,7 @@ $area_private_mandatory = get_form_var('area_private_mandatory', 'string');
 $area_private_override = get_form_var('area_private_override', 'string');
 $area_provisional_enabled = get_form_var('area_provisional_enabled', 'string');
 $area_reminders_enabled = get_form_var('area_reminders_enabled', 'string');
+$area_enable_periods = get_form_var('area_enable_periods', 'string');
 $custom_html = get_form_var('custom_html', 'string');  // Used for both area and room, but you only ever have one or the other
 $change_done = get_form_var('change_done', 'string');
 $change_room = get_form_var('change_room', 'string');
@@ -325,6 +326,7 @@ if ($phase == 2)
     $area_private_mandatory = (!empty($area_private_mandatory)) ? 1 : 0;
     $area_provisional_enabled = (!empty($area_provisional_enabled)) ? 1 : 0;
     $area_reminders_enabled = (!empty($area_reminders_enabled)) ? 1 : 0;
+    $area_enable_periods = (!empty($area_enable_periods)) ? 1 : 0;
     
     if (!$enable_periods)
     { 
@@ -389,6 +391,7 @@ if ($phase == 2)
       $assign_array[] = "private_override='" . $area_private_override . "'";
       $assign_array[] = "provisional_enabled=" . $area_provisional_enabled;
       $assign_array[] = "reminders_enabled=" . $area_reminders_enabled;
+      $assign_array[] = "enable_periods=" . $area_enable_periods;
             
       $sql .= implode(",", $assign_array) . " WHERE id=$area";
       if (sql_command($sql) < 0)
@@ -663,262 +666,280 @@ if (isset($change_area) &&!empty($area))
         echo htmlspecialchars($row['custom_html']);
         echo "</textarea>\n";
         echo "</div>\n";
+        
+        // Mode - Times or Periods
+        echo "<div id=\"mode\">\n";
+        echo "<label>" . get_vocab("mode") . ":</label>\n";
+        echo "<div class=\"group\">\n";
+        echo "<label>\n";
+        $checked = ($enable_periods) ? " checked=\"checked\"" : "";
+        echo "<input class=\"radio\" type=\"radio\" name=\"area_enable_periods\" value=\"1\" onClick=\"toggleMode(this.form)\"$checked>\n";
+        echo get_vocab("mode_periods") . "</label>\n";
+        echo "<label>\n";
+        $checked = ($enable_periods) ? "" : " checked=\"checked\"";
+        echo "<input class=\"radio\" type=\"radio\" name=\"area_enable_periods\" value=\"0\" onClick=\"toggleMode(this.form)\"$checked>\n";
+        echo get_vocab("mode_times") . "</label>\n";
+        echo "</div>\n";
+        echo "</div>\n";
       
       echo "</fieldset>\n";
-    
-      if (!$enable_periods)
-      {
-      ?>
-        <script type="text/javascript">
-        //<![CDATA[
       
-          function getTimeString(time, twentyfourhour_format)
-          {
-             // Converts a time (in minutes since midnight) into a string
-             // of the form hh:mm if twentyfourhour_format is true,
-             // otherwise of the form hh:mm am/pm.
+      
+      ?>
+      <script type="text/javascript">
+      //<![CDATA[
+      
+        function getTimeString(time, twentyfourhour_format)
+        {
+           // Converts a time (in minutes since midnight) into a string
+           // of the form hh:mm if twentyfourhour_format is true,
+           // otherwise of the form hh:mm am/pm.
            
-             // This function doesn't do a great job of replicating the PHP
-             // internationalised format, but is probably sufficient for a 
-             // rarely used admin page.
+           // This function doesn't do a great job of replicating the PHP
+           // internationalised format, but is probably sufficient for a 
+           // rarely used admin page.
            
-             var minutes = time % 60;
-             time -= minutes;
-             var hour = time/60;
-             if (!twentyfourhour_format)
-             {
-               var ap = "AM";
-               if (hour > 11) {ap = "PM";}
-               if (hour > 12) {hour = hour - 12;}
-               if (hour == 0) {hour = 12;}
-             }
-             if (hour < 10) {hour   = "0" + hour;}
-             if (minutes < 10) {minutes = "0" + minutes;}
-             var timeString = hour + ':' + minutes;
-             if (!twentyfourhour_format)
-             {
-               timeString += ap;
-             }
-             return timeString;
-          } // function getTimeString()
+           var minutes = time % 60;
+           time -= minutes;
+           var hour = time/60;
+           if (!twentyfourhour_format)
+           {
+             var ap = "AM";
+             if (hour > 11) {ap = "PM";}
+             if (hour > 12) {hour = hour - 12;}
+             if (hour == 0) {hour = 12;}
+           }
+           if (hour < 10) {hour   = "0" + hour;}
+           if (minutes < 10) {minutes = "0" + minutes;}
+           var timeString = hour + ':' + minutes;
+           if (!twentyfourhour_format)
+           {
+             timeString += ap;
+           }
+           return timeString;
+        } // function getTimeString()
 
         
-          function writeSelect(morningstarts, morningstarts_minutes, eveningends, eveningends_minutes, res_mins)
-          {
-            // generates the HTML for the drop-down for the last slot time and
-            // puts it in the element with id 'last_slot'
-            if (res_mins == 0) return;  // avoid endless loops
+        function writeSelect(morningstarts, morningstarts_minutes, eveningends, eveningends_minutes, res_mins)
+        {
+          // generates the HTML for the drop-down for the last slot time and
+          // puts it in the element with id 'last_slot'
+          if (res_mins == 0) return;  // avoid endless loops
           
-            var first_slot = (morningstarts * 60) + morningstarts_minutes;
-            var last_slot = (eveningends * 60) + eveningends_minutes;
-            var last_possible = (24 * 60) - res_mins;
-            var html = '<label for="area_eveningends_t"><?php echo get_vocab("area_last_slot_start")?>:<\/label>\n';
-            html += '<select id="area_eveningends_t" name="area_eveningends_t">\n';
-            for (var t=first_slot; t <= last_possible; t += res_mins)
+          var first_slot = (morningstarts * 60) + morningstarts_minutes;
+          var last_slot = (eveningends * 60) + eveningends_minutes;
+          var last_possible = (24 * 60) - res_mins;
+          var html = '<label for="area_eveningends_t"><?php echo get_vocab("area_last_slot_start")?>:<\/label>\n';
+          html += '<select id="area_eveningends_t" name="area_eveningends_t">\n';
+          for (var t=first_slot; t <= last_possible; t += res_mins)
+          {
+            html += '<option value="' + t + '"';
+            if (t == last_slot)
             {
-              html += '<option value="' + t + '"';
-              if (t == last_slot)
-              {
-                html += ' selected="selected"';
-              }
-              html += ">" + getTimeString(t, <?php echo ($twentyfourhour_format ? "true" : "false") ?>) + "<\/option>\n";
+              html += ' selected="selected"';
             }
-            html += "<\/select>\n";
-            document.getElementById('last_slot').innerHTML = html;
-          }  // function writeSelect
+            html += ">" + getTimeString(t, <?php echo ($twentyfourhour_format ? "true" : "false") ?>) + "<\/option>\n";
+          }
+          html += "<\/select>\n";
+          document.getElementById('last_slot').innerHTML = html;
+        }  // function writeSelect
         
       
-          function changeSelect(formObj)
+        function changeSelect(formObj)
+        {
+          // re-generates the dropdown given changed form values
+          var res_mins = parseInt(formObj.area_res_mins.value);
+          if (res_mins == 0) return;  // avoid endless loops and divide by zero errors
+          var morningstarts = parseInt(formObj.area_morningstarts.value);
+          var morningstarts_minutes = parseInt(formObj.area_morningstarts_minutes.value);
+          var eveningends_t = parseInt(formObj.area_eveningends_t.value);
+          var morningstarts_t = (morningstarts * 60) + morningstarts_minutes;
+          var ampm = "am";
+          if (formObj.area_morning_ampm && formObj.area_morning_ampm[1].checked)
           {
-            // re-generates the dropdown given changed form values
-            var res_mins = parseInt(formObj.area_res_mins.value);
-            if (res_mins == 0) return;  // avoid endless loops and divide by zero errors
-            var morningstarts = parseInt(formObj.area_morningstarts.value);
-            var morningstarts_minutes = parseInt(formObj.area_morningstarts_minutes.value);
-            var eveningends_t = parseInt(formObj.area_eveningends_t.value);
-            var morningstarts_t = (morningstarts * 60) + morningstarts_minutes;
-            var ampm = "am";
-            if (formObj.area_morning_ampm && formObj.area_morning_ampm[1].checked)
+            ampm = "pm";
+          }        
+          if (<?php echo (!$twentyfourhour_format ? "true" : "false") ?>)
+          {
+            if ((ampm == "pm") && (morningstarts < 12))
             {
-              ampm = "pm";
-            }        
-            if (<?php echo (!$twentyfourhour_format ? "true" : "false") ?>)
-            {
-              if ((ampm == "pm") && (morningstarts < 12))
-              {
-                morningstarts += 12;
-              }
-              if ((ampm == "am") && (morningstarts>11))
-              {
-                morningstarts -= 12;
-              }
+              morningstarts += 12;
             }
-            // Find valid values for eveningends
-            var remainder = (eveningends_t - morningstarts_t) % res_mins;
-            // round up to the nearest slot boundary
-            if (remainder != 0)
+            if ((ampm == "am") && (morningstarts>11))
             {
-              eveningends_t += res_mins - remainder;
+              morningstarts -= 12;
             }
-            // and then step back to make sure that the end of the slot isn't past midnight (and the beginning isn't before the morning start)
-            while ((eveningends_t + res_mins > 1440) && (eveningends_t > morningstarts_t + res_mins))  // 1440 minutes in a day
-            {
-              eveningends_t -= res_mins;
-            }
-            // convert into hours and minutes
-            var eveningends_minutes = eveningends_t % 60;
-            var eveningends = (eveningends_t - eveningends_minutes) / 60;
-            writeSelect (morningstarts, morningstarts_minutes, eveningends, eveningends_minutes, res_mins);
-          } // function changeSelect
+          }
+          // Find valid values for eveningends
+          var remainder = (eveningends_t - morningstarts_t) % res_mins;
+          // round up to the nearest slot boundary
+          if (remainder != 0)
+          {
+            eveningends_t += res_mins - remainder;
+          }
+          // and then step back to make sure that the end of the slot isn't past midnight (and the beginning isn't before the morning start)
+          while ((eveningends_t + res_mins > 1440) && (eveningends_t > morningstarts_t + res_mins))  // 1440 minutes in a day
+          {
+            eveningends_t -= res_mins;
+          }
+          // convert into hours and minutes
+          var eveningends_minutes = eveningends_t % 60;
+          var eveningends = (eveningends_t - eveningends_minutes) / 60;
+          writeSelect (morningstarts, morningstarts_minutes, eveningends, eveningends_minutes, res_mins);
+        } // function changeSelect
         
-        //]]>
-        </script>
+      //]]>
+      </script>
       
-        <fieldset>
-        <legend><?php echo get_vocab("time_settings")?></legend>
-        <div class="div_time">
-          <label><?php echo get_vocab("area_first_slot_start")?>:</label>
-          <?php
-          echo "<input class=\"time_hour\" type=\"text\" id=\"area_morningstarts\" name=\"area_morningstarts\" value=\"";
-          if ($twentyfourhour_format)
-          {
-            printf("%02d", $morningstarts);
-          }
-          elseif ($morningstarts > 12)
-          {
-            echo ($morningstarts - 12);
-          } 
-          elseif ($morningstarts == 0)
-          {
-            echo "12";
-          }
-          else
-          {
-            echo $morningstarts;
-          } 
-          echo "\" maxlength=\"2\" onChange=\"changeSelect(this.form)\">\n";
-          ?>
-          <span>:</span>
-          <input class="time_minute" type="text" id="area_morningstarts_minutes" name="area_morningstarts_minutes" value="<?php printf("%02d", $morningstarts_minutes) ?>" maxlength="2" onChange="changeSelect(this.form)">
-          <?php
-          if (!$twentyfourhour_format)
-          {
-            echo "<div class=\"group ampm\">\n";
-            $checked = ($morningstarts < 12) ? "checked=\"checked\"" : "";
-            echo "      <label><input name=\"area_morning_ampm\" type=\"radio\" value=\"am\" onClick=\"changeSelect(this.form)\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
-            $checked = ($morningstarts >= 12) ? "checked=\"checked\"" : "";
-            echo "      <label><input name=\"area_morning_ampm\" type=\"radio\" value=\"pm\" onClick=\"changeSelect(this.form)\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
-            echo "</div>\n";
-          }
-          ?>
-        </div>
-      
-        <div class="div_dur_mins">
-        <label for="area_res_mins"><?php echo get_vocab("area_res_mins") ?>:</label>
-        <input type="text" id="area_res_mins" name="area_res_mins" value="<?php echo $resolution/60 ?>" onChange="changeSelect(this.form)">
-        </div>
-      
-        <div class="div_dur_mins">
-        <label for="area_def_duration_mins"><?php echo get_vocab("area_def_duration_mins") ?>:</label>
-        <input type="text" id="area_def_duration_mins" name="area_def_duration_mins" value="<?php echo $default_duration/60 ?>">
-        </div>
+      <fieldset id="time_settings">
+      <legend></legend>
+      <fieldset >
+      <legend><?php echo get_vocab("time_settings")?>
+      <span class="js_none">&nbsp;&nbsp;(<?php echo get_vocab("times_only") ?>)</span>
+      </legend>
+      <div class="div_time">
+        <label><?php echo get_vocab("area_first_slot_start")?>:</label>
         <?php
-        echo "<div id=\"last_slot\">\n";
-        // The contents of this div will be overwritten by JavaScript if enabled.    The JavaScript version is a drop-down
-        // select input with options limited to those times for the last slot start that are valid.   The options are
-        // dynamically regenerated if the start of the first slot or the resolution change.    The code below is
-        // therefore an alternative for non-JavaScript browsers.
-        echo "<div class=\"div_time\">\n";
-          echo "<label>" . get_vocab("area_last_slot_start") . ":</label>\n";
-          echo "<input class=\"time_hour\" type=\"text\" id=\"area_eveningends\" name=\"area_eveningends\" value=\"";
-          if ($twentyfourhour_format)
-          {
-            printf("%02d", $eveningends);
-          }
-          elseif ($eveningends > 12)
-          {
-            echo ($eveningends - 12);
-          } 
-          elseif ($eveningends == 0)
-          {
-            echo "12";
-          }
-          else
-          {
-            echo $eveningends;
-          } 
-          echo "\" maxlength=\"2\" onChange=\"changeSelect(this.form)\">\n";
-
-          echo "<span>:</span>\n";
-          echo "<input class=\"time_minute\" type=\"text\" id=\"area_eveningends_minutes\" name=\"area_eveningends_minutes\" value=\""; 
-          printf("%02d", $eveningends_minutes);
-          echo "\" maxlength=\"2\" onChange=\"changeSelect(this.form)\">\n";
-          if (!$twentyfourhour_format)
-          {
-            echo "<div class=\"group ampm\">\n";
-            $checked = ($eveningends < 12) ? "checked=\"checked\"" : "";
-            echo "      <label><input name=\"area_evening_ampm\" type=\"radio\" value=\"am\" onClick=\"changeSelect(this.form)\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
-            $checked = ($eveningends >= 12) ? "checked=\"checked\"" : "";
-            echo "      <label><input name=\"area_evening_ampm\" type=\"radio\" value=\"pm\" onClick=\"changeSelect(this.form)\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
-            echo "</div>\n";
-          }
-        echo "</div>\n";  
-        echo "</div>\n";  // last_slot
+        echo "<input class=\"time_hour\" type=\"text\" id=\"area_morningstarts\" name=\"area_morningstarts\" value=\"";
+        if ($twentyfourhour_format)
+        {
+          printf("%02d", $morningstarts);
+        }
+        elseif ($morningstarts > 12)
+        {
+          echo ($morningstarts - 12);
+        } 
+        elseif ($morningstarts == 0)
+        {
+          echo "12";
+        }
+        else
+        {
+          echo $morningstarts;
+        } 
+        echo "\" maxlength=\"2\" onChange=\"changeSelect(this.form)\">\n";
         ?>
-      
-        <script type="text/javascript">
-        //<![CDATA[
-          writeSelect(<?php echo "$morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes, $resolution/60" ?>);
-        //]]>
-        </script>
-        </fieldset>
-        
+        <span>:</span>
+        <input class="time_minute" type="text" id="area_morningstarts_minutes" name="area_morningstarts_minutes" value="<?php printf("%02d", $morningstarts_minutes) ?>" maxlength="2" onChange="changeSelect(this.form)">
         <?php
-        // Booking policies
-        $min_ba_value = $min_book_ahead_secs;
-        toTimeString($min_ba_value, $min_ba_units);
-        $max_ba_value = $max_book_ahead_secs;
-        toTimeString($max_ba_value, $max_ba_units);
-        echo "<fieldset id=\"booking_policies\">\n";
-        echo "<legend>" . get_vocab("booking_policies") . "</legend>\n";
-        // Minimum book ahead
-        echo "<div>\n";
-        echo "<label for=\"area_min_book_ahead\">" . get_vocab("min_book_ahead") . ":</label>\n";
-        echo "<input class=\"checkbox\" type=\"checkbox\" id=\"area_min_ba_enabled\" name=\"area_min_ba_enabled\"" .
-             (($min_book_ahead_enabled) ? " checked=\"checked\"" : "") .
-             " onChange=\"check_book_ahead()\">\n";
-        echo "<input class=\"text\" type=\"text\" name=\"area_min_ba_value\" value=\"$min_ba_value\">";
-        echo "<select id=\"area_min_ba_units\" name=\"area_min_ba_units\">\n";
-        $units = array("seconds", "minutes", "hours", "days", "weeks");
-        foreach ($units as $unit)
+        if (!$twentyfourhour_format)
         {
-          echo "<option value=\"$unit\"" .
-               (($min_ba_units == get_vocab($unit)) ? " selected=\"selected\"" : "") .
-               ">" . get_vocab($unit) . "</option>\n";
+          echo "<div class=\"group ampm\">\n";
+          $checked = ($morningstarts < 12) ? "checked=\"checked\"" : "";
+          echo "      <label><input name=\"area_morning_ampm\" type=\"radio\" value=\"am\" onClick=\"changeSelect(this.form)\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
+          $checked = ($morningstarts >= 12) ? "checked=\"checked\"" : "";
+          echo "      <label><input name=\"area_morning_ampm\" type=\"radio\" value=\"pm\" onClick=\"changeSelect(this.form)\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
+          echo "</div>\n";
         }
-        echo "</select>\n";
-        echo "</div>\n";
-        // Maximum book ahead
-        echo "<div>\n";
-        echo "<label for=\"area_max_book_ahead\">" . get_vocab("max_book_ahead") . ":</label>\n";
-        echo "<input class=\"checkbox\" type=\"checkbox\" id=\"area_max_ba_enabled\" name=\"area_max_ba_enabled\"" .
-             (($max_book_ahead_enabled) ? " checked=\"checked\"" : "") .
-             " onChange=\"check_book_ahead()\">\n";
-        echo "<input class=\"text\" type=\"text\" name=\"area_max_ba_value\" value=\"$max_ba_value\">";
-        echo "<select id=\"area_max_ba_units\" name=\"area_max_ba_units\">\n";
-        $units = array("seconds", "minutes", "hours", "days", "weeks");
-        foreach ($units as $unit)
+        ?>
+      </div>
+      
+      <div class="div_dur_mins">
+      <label for="area_res_mins"><?php echo get_vocab("area_res_mins") ?>:</label>
+      <input type="text" id="area_res_mins" name="area_res_mins" value="<?php echo $resolution/60 ?>" onChange="changeSelect(this.form)">
+      </div>
+      
+      <div class="div_dur_mins">
+      <label for="area_def_duration_mins"><?php echo get_vocab("area_def_duration_mins") ?>:</label>
+      <input type="text" id="area_def_duration_mins" name="area_def_duration_mins" value="<?php echo $default_duration/60 ?>">
+      </div>
+      <?php
+      echo "<div id=\"last_slot\">\n";
+      // The contents of this div will be overwritten by JavaScript if enabled.    The JavaScript version is a drop-down
+      // select input with options limited to those times for the last slot start that are valid.   The options are
+      // dynamically regenerated if the start of the first slot or the resolution change.    The code below is
+      // therefore an alternative for non-JavaScript browsers.
+      echo "<div class=\"div_time\">\n";
+        echo "<label>" . get_vocab("area_last_slot_start") . ":</label>\n";
+        echo "<input class=\"time_hour\" type=\"text\" id=\"area_eveningends\" name=\"area_eveningends\" value=\"";
+        if ($twentyfourhour_format)
         {
-          echo "<option value=\"$unit\"" .
-               (($max_ba_units == get_vocab($unit)) ? " selected=\"selected\"" : "") .
-               ">" . get_vocab($unit) . "</option>\n";
+          printf("%02d", $eveningends);
         }
-        echo "</select>\n";
-        echo "</div>\n";
-        echo "</fieldset>\n";
-      } // end if (!$enable_periods)
-    
+        elseif ($eveningends > 12)
+        {
+          echo ($eveningends - 12);
+        } 
+        elseif ($eveningends == 0)
+        {
+          echo "12";
+        }
+        else
+        {
+          echo $eveningends;
+        } 
+        echo "\" maxlength=\"2\" onChange=\"changeSelect(this.form)\">\n";
+
+        echo "<span>:</span>\n";
+        echo "<input class=\"time_minute\" type=\"text\" id=\"area_eveningends_minutes\" name=\"area_eveningends_minutes\" value=\""; 
+        printf("%02d", $eveningends_minutes);
+        echo "\" maxlength=\"2\" onChange=\"changeSelect(this.form)\">\n";
+        if (!$twentyfourhour_format)
+        {
+          echo "<div class=\"group ampm\">\n";
+          $checked = ($eveningends < 12) ? "checked=\"checked\"" : "";
+          echo "      <label><input name=\"area_evening_ampm\" type=\"radio\" value=\"am\" onClick=\"changeSelect(this.form)\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
+          $checked = ($eveningends >= 12) ? "checked=\"checked\"" : "";
+          echo "      <label><input name=\"area_evening_ampm\" type=\"radio\" value=\"pm\" onClick=\"changeSelect(this.form)\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
+          echo "</div>\n";
+        }
+      echo "</div>\n";  
+      echo "</div>\n";  // last_slot
       ?>
+      
+      <script type="text/javascript">
+      //<![CDATA[
+        writeSelect(<?php echo "$morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes, $resolution/60" ?>);
+      //]]>
+      </script>
+      </fieldset>
+        
+      <?php
+      // Booking policies
+      $min_ba_value = $min_book_ahead_secs;
+      toTimeString($min_ba_value, $min_ba_units);
+      $max_ba_value = $max_book_ahead_secs;
+      toTimeString($max_ba_value, $max_ba_units);
+      echo "<fieldset id=\"booking_policies\">\n";
+      echo "<legend>" . get_vocab("booking_policies") . 
+           "<span class=\"js_none\">&nbsp;&nbsp;(" . get_vocab("times_only") . ")</span></legend>\n";
+      // Minimum book ahead
+      echo "<div>\n";
+      echo "<label for=\"area_min_book_ahead\">" . get_vocab("min_book_ahead") . ":</label>\n";
+      echo "<input class=\"checkbox\" type=\"checkbox\" id=\"area_min_ba_enabled\" name=\"area_min_ba_enabled\"" .
+           (($min_book_ahead_enabled) ? " checked=\"checked\"" : "") .
+           " onChange=\"check_book_ahead()\">\n";
+      echo "<input class=\"text\" type=\"text\" name=\"area_min_ba_value\" value=\"$min_ba_value\">";
+      echo "<select id=\"area_min_ba_units\" name=\"area_min_ba_units\">\n";
+      $units = array("seconds", "minutes", "hours", "days", "weeks");
+      foreach ($units as $unit)
+      {
+        echo "<option value=\"$unit\"" .
+             (($min_ba_units == get_vocab($unit)) ? " selected=\"selected\"" : "") .
+             ">" . get_vocab($unit) . "</option>\n";
+      }
+      echo "</select>\n";
+      echo "</div>\n";
+      // Maximum book ahead
+      echo "<div>\n";
+      echo "<label for=\"area_max_book_ahead\">" . get_vocab("max_book_ahead") . ":</label>\n";
+      echo "<input class=\"checkbox\" type=\"checkbox\" id=\"area_max_ba_enabled\" name=\"area_max_ba_enabled\"" .
+           (($max_book_ahead_enabled) ? " checked=\"checked\"" : "") .
+           " onChange=\"check_book_ahead()\">\n";
+      echo "<input class=\"text\" type=\"text\" name=\"area_max_ba_value\" value=\"$max_ba_value\">";
+      echo "<select id=\"area_max_ba_units\" name=\"area_max_ba_units\">\n";
+      $units = array("seconds", "minutes", "hours", "days", "weeks");
+      foreach ($units as $unit)
+      {
+        echo "<option value=\"$unit\"" .
+             (($max_ba_units == get_vocab($unit)) ? " selected=\"selected\"" : "") .
+             ">" . get_vocab($unit) . "</option>\n";
+      }
+      echo "</select>\n";
+      echo "</div>\n";
+      echo "</fieldset>\n";
+      ?>
+      </fieldset>
       
       <fieldset>
       <legend><?php echo get_vocab("provisional_settings")?></legend>
@@ -950,20 +971,16 @@ if (isset($change_area) &&!empty($area))
           <?php echo get_vocab("default_settings")?>:
         </label>
         <div class="group">
-          <div>
-            <label>
-              <?php $checked = ($private_default) ? " checked=\"checked\"" : "" ?>
-              <input class="radio" type="radio" name="area_private_default" value="1"<?php echo $checked ?>>
-              <?php echo get_vocab("default_private")?>
-            </label>
-          </div>
-          <div>
-            <label>
-              <?php $checked = ($private_default) ? "" : " checked=\"checked\"" ?>
-              <input class="radio" type="radio" name="area_private_default" value="0"<?php echo $checked ?>>
-              <?php echo get_vocab("default_public")?>
-            </label>
-          </div>
+          <label>
+            <?php $checked = ($private_default) ? " checked=\"checked\"" : "" ?>
+            <input class="radio" type="radio" name="area_private_default" value="1"<?php echo $checked ?>>
+            <?php echo get_vocab("default_private")?>
+          </label>
+          <label>
+            <?php $checked = ($private_default) ? "" : " checked=\"checked\"" ?>
+            <input class="radio" type="radio" name="area_private_default" value="0"<?php echo $checked ?>>
+            <?php echo get_vocab("default_public")?>
+          </label>
         </div>
       </fieldset>
     
