@@ -958,20 +958,16 @@ if (isset($change_area) &&!empty($area))
           <?php echo get_vocab("default_settings_conf")?>:
         </label>
         <div class="group">
-          <div>
-            <label>
-              <?php $checked = ($confirmed_default) ? " checked=\"checked\"" : "" ?>
-              <input class="radio" type="radio" name="area_confirmed_default" value="1"<?php echo $checked ?>>
-              <?php echo get_vocab("default_confirmed")?>
-            </label>
-          </div>
-          <div>
-            <label>
-              <?php $checked = ($confirmed_default) ? "" : " checked=\"checked\"" ?>
-              <input class="radio" type="radio" name="area_confirmed_default" value="0"<?php echo $checked ?>>
-              <?php echo get_vocab("default_tentative")?>
-            </label>
-          </div>
+          <label>
+            <?php $checked = ($confirmed_default) ? " checked=\"checked\"" : "" ?>
+            <input class="radio" type="radio" name="area_confirmed_default" value="1"<?php echo $checked ?>>
+            <?php echo get_vocab("default_confirmed")?>
+          </label>
+          <label>
+            <?php $checked = ($confirmed_default) ? "" : " checked=\"checked\"" ?>
+            <input class="radio" type="radio" name="area_confirmed_default" value="0"<?php echo $checked ?>>
+            <?php echo get_vocab("default_tentative")?>
+          </label>
         </div>
       </fieldset>
       
