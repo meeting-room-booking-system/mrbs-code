@@ -328,7 +328,7 @@ if ($phase == 2)
     $area_reminders_enabled = (!empty($area_reminders_enabled)) ? 1 : 0;
     $area_enable_periods = (!empty($area_enable_periods)) ? 1 : 0;
     
-    if (!$enable_periods)
+    if (!$area_enable_periods)
     { 
       // Avoid divide by zero errors
       if ($area_res_mins == 0)
@@ -364,7 +364,7 @@ if ($phase == 2)
       $assign_array[] = "area_name='" . addslashes($area_name) . "'";
       $assign_array[] = "area_admin_email='" . addslashes($area_admin_email) . "'";
       $assign_array[] = "custom_html='" . addslashes($custom_html) . "'";
-      if (!$enable_periods)
+      if (!$area_enable_periods)
       {
         // only update the min and max book_ahead_secs fields if the form values
         // are set;  they might be NULL because they've been disabled by JavaScript
