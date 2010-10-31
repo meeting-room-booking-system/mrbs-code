@@ -792,7 +792,7 @@ function mrbsConfirmEntry($id, $series)
   }
   else
   {
-    $sql .= " AND id=$id LIMIT 1";
+    $sql .= " AND id=$id";
   }
   return (sql_command($sql) >= 0);
 }
