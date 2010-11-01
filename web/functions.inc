@@ -11,7 +11,7 @@ if (isset($timezone))
 {
   if (function_exists("date_default_timezone_set"))
   {
-    date_default_timezone_set($timezone);
+    date_default_timezone_set($timezone) or die("Configuration error: invalid timezone.");
   }
   else
   {
