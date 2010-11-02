@@ -175,7 +175,7 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
          WHERE E.room_id = M.id
            AND M.area_id = A.id
            AND $sql_approval_enabled
-           AND E.status&" . STATUS_AWAITING_APPROVAL;
+           AND (E.status&" . STATUS_AWAITING_APPROVAL . " != 0)";
 
 // Ordinary users can only see their own bookings       
 if (!$is_admin)

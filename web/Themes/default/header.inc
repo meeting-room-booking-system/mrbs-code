@@ -475,7 +475,7 @@ function init()
           // (but only for areas where approval is required)
           $sql = "SELECT COUNT(*)
                     FROM $tbl_entry E, $tbl_room R, $tbl_area A
-                   WHERE status&" . STATUS_AWAITING_APPROVAL . "
+                   WHERE (status&" . STATUS_AWAITING_APPROVAL . " != 0)
                      AND E.room_id = R.id
                      AND R.area_id = A.id
                      AND $sql_approval_enabled";

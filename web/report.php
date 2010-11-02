@@ -1106,27 +1106,29 @@ if (isset($areamatch))
   
   // (In the next three cases, you will get the empty string if that part
   // of the form was not displayed - which means that you need all bookings)
+  // Note that although you can say eg "status&STATUS_PRIVATE" in MySQL, you get
+  // an error in PostgreSQL as the expression is of the wrong type.
   
   // Match the privacy status
   if (($match_private != PRIVATE_BOTH) && ($match_private != ''))
   {
     $sql .= " AND ";
-    $sql .= ($match_private) ? '' : '!';  // Note that private works the other way round to the next two
-    $sql .= "(status&" . STATUS_PRIVATE . ")";
+    $sql .= "(status&" . STATUS_PRIVATE;
+    $sql .= ($match_private) ? "!=0)" : "=0)";  // Note that private works the other way round to the next two
   }
   // Match the confirmation status
   if (($match_confirmed != CONFIRMED_BOTH) && ($match_confirmed != ''))
   {
     $sql .= " AND ";
-    $sql .= ($match_confirmed) ? '!' : '';
-    $sql .= "(status&" . STATUS_TENTATIVE . ")";
+    $sql .= "(status&" . STATUS_TENTATIVE;
+    $sql .= ($match_confirmed) ? "=0)" : "!=0)";
   }
   // Match the approval status
   if (($match_approved != APPROVED_BOTH) && ($match_approved != ''))
   {
     $sql .= " AND ";
-    $sql .= ($match_approved) ? '!' : '';
-    $sql .= "(status&" . STATUS_AWAITING_APPROVAL . ")";
+    $sql .= "(status&" . STATUS_AWAITING_APPROVAL;
+    $sql .= ($match_approved) ? "=0)" : "!=0)";
   }
   
   // Now do the custom fields
@@ -1173,7 +1175,7 @@ if (isset($areamatch))
       //   - their own bookings, and others' public bookings if private_override is set to 'none'
       //   - just their own bookings, if private_override is set to 'private'
       $sql .= " AND ((A.private_override='public') OR
-                     (A.private_override='none' AND (!(E.status&" . STATUS_PRIVATE . ") OR E.create_by = '" . addslashes($user) . "')) OR
+                     (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = '" . addslashes($user) . "')) OR
                      (A.private_override='private' AND E.create_by = '" . addslashes($user) . "'))";                
     }
     else
@@ -1182,7 +1184,7 @@ if (isset($areamatch))
       //   - all bookings, if private_override is set to 'public'
       //   - public bookings if private_override is set to 'none'
       $sql .= " AND ((A.private_override='public') OR
-                     (A.private_override='none' AND !(E.status&" . STATUS_PRIVATE . ")))";
+                     (A.private_override='none' AND (E.status&" . STATUS_PRIVATE . "=0)))";
     }
   }
    

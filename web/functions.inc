@@ -619,7 +619,7 @@ function some_area_predicate($field)
 {
   global $area_defaults;
   
-  $predicate = "($field IS NOT NULL AND $field > 0)";
+  $predicate = "(($field IS NOT NULL) AND ($field > 0))";
   if ($area_defaults[$field])
   {
     $predicate = "(" . $predicate . " OR ($field IS NULL))";
