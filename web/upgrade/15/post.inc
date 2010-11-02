@@ -28,12 +28,12 @@ foreach ($fields as $field)
       $sql_val = "'" . addslashes($area_defaults[$key]) . "'";
     }
     $sql = "UPDATE $tbl_area SET $key=$sql_val WHERE $key IS NULL";
-  }
-  $res = sql_command($sql);
-  if ($res == -1)
-  {
-    // No need to localise, should never happen
-    print "<span class=\"error\">Failed to set default value for column '$key' in area table.</span><br>";
+    $res = sql_command($sql);
+    if ($res == -1)
+    {
+      // No need to localise, should never happen
+      print "<span class=\"error\">Failed to set default value for column '$key' in area table.</span><br>";
+    }
   }
 }
 
