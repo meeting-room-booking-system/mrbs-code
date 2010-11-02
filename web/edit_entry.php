@@ -523,6 +523,7 @@ var old_dur_units = 0;  // This is the index number
 var old_hour = '<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>';
 var old_minute = '<?php echo $start_min;?>';
 var old_period = 0; // This is the index number
+var old_end_datepicker, old_end_datepicker_alt_day, old_end_datepicker_alt_month, old_end_datepicker_alt_year;
 
 // Executed when the user clicks on the all_day checkbox.
 function OnAllDayClick(allday)
@@ -538,6 +539,19 @@ function OnAllDayClick(allday)
     old_end = form.end_seconds.selectedIndex;
     form.end_seconds.selectedIndex = form.end_seconds.options.length - 1;
     form.end_seconds.disabled = true;
+    
+    old_end_datepicker_alt_day = form.end_datepicker_alt_day.value;
+    form.end_datepicker_alt_day.value = form.start_datepicker_alt_day.value;
+    
+    old_end_datepicker_alt_month = form.end_datepicker_alt_month.value;
+    form.end_datepicker_alt_month.value = form.start_datepicker_alt_month.value;
+    
+    old_end_datepicker_alt_year = form.end_datepicker_alt_year.value;
+    form.end_datepicker_alt_year.value = form.start_datepicker_alt_year.value;
+    
+    old_end_datepicker = form.end_datepicker.value;
+    form.end_datepicker.value = form.start_datepicker.value;
+    form.end_datepicker.disabled = true;
     adjustSlotSelectors(form); // need to get the duration right
   }
   else  // restore the old values and re-enable the inputs
@@ -546,6 +560,11 @@ function OnAllDayClick(allday)
     form.start_seconds.disabled = false;
     form.end_seconds.selectedIndex = old_end;
     form.end_seconds.disabled = false;
+    form.end_datepicker_alt_day.value = old_end_datepicker_alt_day;
+    form.end_datepicker_alt_month.value = old_end_datepicker_alt_month;
+    form.end_datepicker_alt_year.value = old_end_datepicker_alt_year;
+    form.end_datepicker.value = old_end_datepicker;
+    form.end_datepicker.disabled = false;
   }
 }
 //]]>
