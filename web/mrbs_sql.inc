@@ -699,8 +699,7 @@ function mrbsApproveEntry($id, $series)
     // First update the repeat table
     $sql = "UPDATE $tbl_repeat 
                SET status=status&". ~STATUS_AWAITING_APPROVAL . "
-             WHERE id=$id
-             LIMIT 1";
+             WHERE id=$id";
     if (sql_command($sql) > 0)  // We expect there to be one row affected
     {
       // Then update the entry table
@@ -720,8 +719,7 @@ function mrbsApproveEntry($id, $series)
   {
     $sql = "UPDATE $tbl_entry 
                SET status=status&". ~STATUS_AWAITING_APPROVAL . "
-             WHERE id=$id
-             LIMIT 1";
+             WHERE id=$id";
     return (sql_command($sql) > 0);  // We expect there to be one row affected
   }
 }
