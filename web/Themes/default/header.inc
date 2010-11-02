@@ -368,9 +368,7 @@ if ($page == 'edit_entry')
   function getDateDifference(form)
   {
     var diff;
-    var startDay = parseInt(form.start_datepicker_alt_day.value);
-    var startMonth = parseInt(form.start_datepicker_alt_month.value);
-    var startYear = parseInt(form.start_datepicker_alt_year.value);
+
     <?php
     if (!$is_admin && $auth['only_admin_can_book_multiday'])
     {
@@ -381,11 +379,16 @@ if ($page == 'edit_entry')
     else
     {
       ?>
-      var endDay = parseInt(form.end_datepicker_alt_day.value);
-      var endMonth = parseInt(form.end_datepicker_alt_month.value);
-      var endYear = parseInt(form.end_datepicker_alt_year.value);
+      var startDay = parseInt(form.start_datepicker_alt_day.value, 10);
+      var startMonth = parseInt(form.start_datepicker_alt_month.value, 10);
+      var startYear = parseInt(form.start_datepicker_alt_year.value, 10);
       var startDate = new Date(startYear, startMonth - 1, startDay, 12);
-      var endDate = new Date(endYear, endMonth - 1, endDay, 12);    
+      
+      var endDay = parseInt(form.end_datepicker_alt_day.value, 10);
+      var endMonth = parseInt(form.end_datepicker_alt_month.value, 10);
+      var endYear = parseInt(form.end_datepicker_alt_year.value, 10);
+      var endDate = new Date(endYear, endMonth - 1, endDay, 12);
+        
       diff = (endDate - startDate)/(24 * 60 * 60 * 1000);
       diff = Math.round(diff);
       <?php
