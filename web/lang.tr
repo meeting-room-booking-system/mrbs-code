@@ -112,11 +112,12 @@ $vocab["returncal"]          = "Takvim görünümüne dönün";
 $vocab["failed_to_acquire"]  = "VeriTabanýna eriþim hatasý";
 $vocab["invalid_booking"]    = "Geçersiz YerAyýrtma";
 $vocab["must_set_description"] = "Yer ayýrtma için kýsa tanýmlama yapmalýsýnýz. Geri dönün ve bir kayýt ekleyiniz.";
-$vocab["mail_subject_entry"] = "konu";
-$vocab["mail_body_new_entry"] = "yeni kayýt";
-$vocab["mail_body_del_entry"] = "sil kayýt";
+$vocab["mail_subject_new_entry"]     = "konu";
+$vocab["mail_subject_changed_entry"] = "konu";
+$vocab["mail_subject_delete"]        = "konu sil";
+$vocab["mail_body_new_entry"]     = "yeni kayýt";
 $vocab["mail_body_changed_entry"] = "deðiþtir kayýt";
-$vocab["mail_subject_delete"] = "konu sil";
+$vocab["mail_body_del_entry"]     = "sil kayýt";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Eriþim Engellendi";

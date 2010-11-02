@@ -111,11 +111,12 @@ $vocab["returncal"]          = "Ritorna al calendario";
 $vocab["failed_to_acquire"]  = "Fallito accesso esclusivo sul DB"; 
 $vocab["invalid_booking"]    = "Prenotazione non valida";
 $vocab["must_set_description"] = "Devi inserire una breve descrizione per la prenotazione. Per favore torna indietro e inseriscine una.";
-$vocab["mail_subject_entry"] = "Prenotazione aggiunta/modificata per $mrbs_company MRBS";
-$vocab["mail_body_new_entry"] = "E' stata registrata una nuova prenotazione, questi i dettagli:";
-$vocab["mail_body_del_entry"] = "Una prenotazione e' stata cancellata, questi i dettagli:";
+$vocab["mail_subject_new_entry"]     = "Prenotazione aggiunta per $mrbs_company MRBS";
+$vocab["mail_subject_changed_entry"] = "Prenotazione modificata per $mrbs_company MRBS";
+$vocab["mail_subject_delete"]        = "Prenotazione cancellata per $mrbs_company MRBS";
+$vocab["mail_body_new_entry"]     = "E' stata registrata una nuova prenotazione, questi i dettagli:";
 $vocab["mail_body_changed_entry"] = "Una prenotazione e' stata modificata, questi i dettagli:";
-$vocab["mail_subject_delete"] = "Prenotazione cancellata per $mrbs_company MRBS";
+$vocab["mail_body_del_entry"]     = "Una prenotazione e' stata cancellata, questi i dettagli:";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Accesso Negato";

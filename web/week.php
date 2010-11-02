@@ -209,7 +209,7 @@ print $before_after_links_html;
 // row['name'] = Entry name (brief description)
 // row['entry_id'] = Entry ID
 // row['entry_description'] = Complete description
-// row['entry_private'] = entry marked as "Private"
+// row['status'] = status code
 // row['entry_create_by'] = User who created entry
 // This data will be retrieved day-by-day
 
@@ -219,7 +219,7 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
 {
   $sql = "SELECT room_id, start_time, end_time, type, name, status, repeat_id,
                  id AS entry_id, description AS entry_description,
-                 private AS entry_private, create_by AS entry_create_by
+                 create_by AS entry_create_by
             FROM $tbl_entry
            WHERE room_id = $room
              AND start_time <= $pm7[$j] AND end_time > $am7[$j]

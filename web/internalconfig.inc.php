@@ -21,13 +21,21 @@
  * ENTRY STATUS CODES - internal use, do not change
  *************************************************/
 
-// The booking status codes that are used in the status column in the
-// entry table.   Although there are only two codes at the moment, the
-// codes can be added to later if additional status types are required.
-// The default code in the database table is 1, ie a confirmed booking.
+// The status code field for an entry is a tinyint (smallint on PostgreSQL)
+// with individual bits set to record the various possible boolean properties
+// of a booking:
+//
+// Bit 0:  Privacy status (set = private)
+// Bit 1:  Approval status (set = not yet approved)
+// Bit 2:  Confirmation status (set = not yet confirmed)
+//
+// A "standard" booking has status 0x00;
 
-define('STATUS_PROVISIONAL', 0);
-define('STATUS_CONFIRMED',   1);
+
+define('STATUS_PRIVATE',           0x01);
+define('STATUS_AWAITING_APPROVAL', 0x02);
+define('STATUS_TENTATIVE',         0x04);
+
 
 /*************************************************
  * REPEAT TYPE CODES - internal use, do not change
@@ -64,7 +72,6 @@ $standard_fields['entry'] = array('id',
                                   'name',
                                   'type',
                                   'description',
-                                  'private',
                                   'status',
                                   'reminded',
                                   'info_time',
@@ -84,7 +91,7 @@ $standard_fields['repeat'] = array('id',
                                    'type',
                                    'description',
                                    'rep_num_weeks',
-                                   'private',
+                                   'status',
                                    'reminded',
                                    'info_time',
                                    'info_user',
@@ -96,9 +103,11 @@ $boolean_fields['area'] = array('private_enabled',
                                 'private_mandatory',
                                 'min_book_ahead_enabled',
                                 'max_book_ahead_enabled',
-                                'provisional_enabled',
+                                'approval_enabled',
                                 'reminders_enabled',
-                                'enable_periods');
+                                'enable_periods',
+                                'confirmation_enabled',
+                                'confirmed_default');
                                    
 /********************************************************
  * Miscellaneous
@@ -124,10 +133,11 @@ $area_defaults['min_book_ahead_enabled'] = $min_book_ahead_enabled;
 $area_defaults['max_book_ahead_enabled'] = $max_book_ahead_enabled;
 $area_defaults['min_book_ahead_secs']    = $min_book_ahead_secs;
 $area_defaults['max_book_ahead_secs']    = $max_book_ahead_secs;
-$area_defaults['provisional_enabled']    = $provisional_enabled;
+$area_defaults['approval_enabled']       = $approval_enabled;
 $area_defaults['reminders_enabled']      = $reminders_enabled;
 $area_defaults['enable_periods']         = $enable_periods;
- 
+$area_defaults['confirmation_enabled']   = $confirmation_enabled;
+$area_defaults['confirmed_default']      = $confirmed_default;
                                
 /********************************************************
  * PHP System Configuration - internal use, do not change

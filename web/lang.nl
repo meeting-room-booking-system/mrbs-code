@@ -111,11 +111,12 @@ $vocab["returncal"]          = "Terug naar kalender overzicht";
 $vocab["failed_to_acquire"]  = "Het is niet gelukt om exclusive toegang tot de database te verkrijgen"; 
 $vocab["invalid_booking"]    = "Verkeerde boeking";
 $vocab["must_set_description"] = "Er moet een korte omschrijving worden gegeven. Ga terug een en geef korte omschrijving.";
-$vocab["mail_subject_entry"] = "Boeking toegevoegd/aangepast voor Uw Organisatie MRBS";
-$vocab["mail_body_new_entry"] = "Er is een nieuwe boeking geplaatst, dit zijn de details:";
-$vocab["mail_body_del_entry"] = "Er is een boeking verdwijderd, dit zijn de details:";
+$vocab["mail_subject_new_entry"]     = "Boeking toegevoegd voor Uw Organisatie MRBS";
+$vocab["mail_subject_changed_entry"] = "Boeking aangepast voor Uw Organisatie MRBS";
+$vocab["mail_subject_delete"]        = "Boeking gewist voor Uw Organisatie MRBS";
+$vocab["mail_body_new_entry"]     = "Er is een nieuwe boeking geplaatst, dit zijn de details:";
 $vocab["mail_body_changed_entry"] = "Een boeking is gewijzigd, dit zijn de details:";
-$vocab["mail_subject_delete"] = "Boeking gewist voor Uw Organisatie MRBS";
+$vocab["mail_body_del_entry"]     = "Er is een boeking verdwijderd, dit zijn de details:";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Geen Toegang";

@@ -22,14 +22,14 @@ function display_buttons($row, $is_series)
   
   if (auth_book_admin($user, $row['room_id']))
   {
-    // accept
-    echo "<form action=\"confirm_entry_handler.php\" method=\"post\">\n";
+    // approve
+    echo "<form action=\"approve_entry_handler.php\" method=\"post\">\n";
     echo "<div>\n";
-    echo "<input type=\"hidden\" name=\"action\" value=\"accept\">\n";
+    echo "<input type=\"hidden\" name=\"action\" value=\"approve\">\n";
     echo "<input type=\"hidden\" name=\"id\" value=\"$target_id\">\n";
     echo "<input type=\"hidden\" name=\"series\" value=\"$is_series\">\n";
     echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-    echo "<input type=\"submit\" value=\"" . get_vocab("accept") . "\">\n";
+    echo "<input type=\"submit\" value=\"" . get_vocab("approve") . "\">\n";
     echo "</div>\n";
     echo "</form>\n";
     // reject
@@ -72,7 +72,7 @@ function display_buttons($row, $is_series)
     if ($reminders_enabled  && 
         (working_time_diff(time(), $last_reminded) >= $reminder_interval))
     {
-      echo "<form action=\"confirm_entry_handler.php\" method=\"post\">\n";
+      echo "<form action=\"approve_entry_handler.php\" method=\"post\">\n";
       echo "<div>\n";
       echo "<input type=\"hidden\" name=\"action\" value=\"remind_admin\">\n";
       echo "<input type=\"hidden\" name=\"id\" value=\"" . $row['id'] . "\">\n";
@@ -159,17 +159,10 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 echo "<h1>" . get_vocab("pending") . "</h1>\n";
 
-// Get a list of all the provisional bookings
-// We are only interested in areas where provisional bookings are enabled
+// Get a list of all bookings awaiting approval
+// We are only interested in areas where approval is required
 
-// Build the SQL condition for evaluating whether provisional booking is
-// enabled for an area.   It is enabled if the field is set, or if it's 
-// not set but the default area setting is for it to be enabled.
-$sql_provisional_enabled = "(provisional_enabled IS NOT NULL AND provisional_enabled > 0)";
-if ($area_defaults['provisional_enabled'])
-{
-  $sql_provisional_enabled = "(" . $sql_provisional_enabled . " OR (provisional_enabled IS NULL))";
-}
+$sql_approval_enabled = some_area_predicate('approval_enabled');
         
 $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
                sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
@@ -181,8 +174,8 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
      LEFT JOIN $tbl_repeat AS T ON E.repeat_id=T.id
          WHERE E.room_id = M.id
            AND M.area_id = A.id
-           AND $sql_provisional_enabled
-           AND status=" . STATUS_PROVISIONAL;
+           AND $sql_approval_enabled
+           AND (E.status&" . STATUS_AWAITING_APPROVAL . " != 0)";
 
 // Ordinary users can only see their own bookings       
 if (!$is_admin)

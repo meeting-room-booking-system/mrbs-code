@@ -111,11 +111,12 @@ $vocab["returncal"]          = "Volver a Vista de Calendario";
 $vocab["failed_to_acquire"]  = "Error al obtener acceso a la Base de Datos"; 
 $vocab["invalid_booking"]    = "Reserva Incorrecta";
 $vocab["must_set_description"] = "Debes introducir una breve descripción para la Reserva. Por favor, vuelve atrás e introduce una.";
-$vocab["mail_subject_entry"] = "Reserva creada/modificada en el MRBS de tu Compañía";
-$vocab["mail_body_new_entry"] = "Nueva Reserva añadida, aquí están los detalles:";
-$vocab["mail_body_del_entry"] = "Reserva borrada, aquí están los detalles:";
+$vocab["mail_subject_new_entry"]     = "Reserva creada en el MRBS de tu Compañía";
+$vocab["mail_subject_changed_entry"] = "Reserva modificada en el MRBS de tu Compañía";
+$vocab["mail_subject_delete"]        = "Reserva borrada en el MRBS de tu Compañía";
+$vocab["mail_body_new_entry"]     = "Nueva Reserva añadida, aquí están los detalles:";
 $vocab["mail_body_changed_entry"] = "Reserva modificada, aquí están los detalles:";
-$vocab["mail_subject_delete"] = "Reserva borrada en el MRBS de tu Compañía";
+$vocab["mail_body_del_entry"]     = "Reserva borrada, aquí están los detalles:";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Acceso Denegado";

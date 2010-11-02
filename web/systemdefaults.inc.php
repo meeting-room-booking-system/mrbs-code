@@ -458,21 +458,19 @@ $is_private_field['entry.description'] = TRUE;
 $is_private_field['entry.create_by'] = TRUE;
 
                   
-// PROVISIONAL BOOKINGS SETTINGS - PER-AREA
+// SETTINGS FOR APPROVING BOOKINGS - PER-AREA
 
-// These settings control whether provisional bookings should be used.
-// If provisional bookings are enabled then ordinary users must have their
-// bookings confirmed by an admin.   The settings here are the default
-// settings for new areas.   The settings for individual areas can be
-// changed from within MRBS.
+// These settings control whether bookings made by ordinary users need to be
+// approved by an admin.   The settings here are the default settings for new
+// areas.  The settings for individual areas can be changed from within MRBS.
 
-$provisional_enabled = FALSE;  // Set to TRUE to enable provisional bookings
+$approval_enabled = FALSE;  // Set to TRUE to enable booking approval
 
 // Set to FALSE if you don't want users to be able to send reminders
-// to admins if provisional bookings have not been approved
+// to admins when bookings are still awaiting approval.
 $reminders_enabled = TRUE;
 
-// PROVISIONAL BOOKINGS SETTINGS - GLOBAL
+// SETTINGS FOR APPROVING BOOKINGS - GLOBAL
 
 // These settings are system-wide and control the behaviour in all areas.
 
@@ -483,6 +481,17 @@ $reminder_interval = 60*60*24*2;  // 2 working days
 // Days of the week that are working days (Sunday = 0, etc.)
 $working_days = array(1,2,3,4,5);  // Mon-Fri
 
+// SETTINGS FOR BOOKING CONFIRMATION
+
+// Allows bookings to be marked as "tentative", ie not yet 100% certain,
+// and confirmed later.   Useful if you want to reserve a slot but at the same
+// time let other people know that there's a possibility it may not be needed.
+$confirmation_enabled = TRUE;
+
+// The default confirmation status for new bookings.  (TRUE: confirmed, FALSE: tentative)
+// Only used if $confirmation_enabled is TRUE.   If $confirmation_enabled is 
+// FALSE, then all new bookings are confirmed automatically.
+$confirmed_default = TRUE;
 
 /***********************************************
  * Form values
@@ -700,13 +709,13 @@ $auth['deny_public_access'] = FALSE;
 // Set to TRUE or FALSE as required
 // (Note:  the email addresses for the room and area administrators are set from the
 // edit_area_room.php page in MRBS)
-$mail_settings['admin_on_bookings']         = FALSE;  // the addresses defined by $mail_settings['recipients'] below
-$mail_settings['area_admin_on_bookings']    = FALSE;  // the area administrator
-$mail_settings['room_admin_on_bookings']    = FALSE;  // the room administrator
-$mail_settings['booker']                    = FALSE;  // the person making the booking
-$mail_settings['book_admin_on_provisional'] = FALSE;  // the booking administrator when provisional bookings are enabled
-                                                      // (which is the MRBS admin, but this setting allows MRBS
-                                                      // to be extended to have separate booking approvers)     
+$mail_settings['admin_on_bookings']      = FALSE;  // the addresses defined by $mail_settings['recipients'] below
+$mail_settings['area_admin_on_bookings'] = FALSE;  // the area administrator
+$mail_settings['room_admin_on_bookings'] = FALSE;  // the room administrator
+$mail_settings['booker']                 = FALSE;  // the person making the booking
+$mail_settings['book_admin_on_approval'] = FALSE;  // the booking administrator when booking approval is enabled
+                                                   // (which is the MRBS admin, but this setting allows MRBS
+                                                   // to be extended to have separate booking approvers)     
 
 // WHEN TO EMAIL
 // -------------

@@ -115,11 +115,12 @@ $vocab["returncal"]          = "Paluu kalenterinäkymään";
 $vocab["failed_to_acquire"]  = "Tietokantaan ei saatu (varauksetonta) yhteyttä."; 
 $vocab["invalid_booking"]    = "Virheellinen varaus";
 $vocab["must_set_description"] = "Varaukselle tulee asettaa kuvaus. Palaa takaisin ja korjaa puutteet.";
-$vocab["mail_subject_entry"] = "Varaus lisätty/muutettu yritykselle $mrbs_company MRBS-järjestelmässä";
-$vocab["mail_body_new_entry"] = "Uusi varaus lisätty:";
-$vocab["mail_body_del_entry"] = "Varaus poistettu:";
+$vocab["mail_subject_new_entry"]     = "Varaus lisätty yritykselle $mrbs_company MRBS-järjestelmässä";
+$vocab["mail_subject_changed_entry"] = "Varaus muutettu yritykselle $mrbs_company MRBS-järjestelmässä";
+$vocab["mail_subject_delete"]        = "Varaus poistettu yritykselle $mrbs_company MRBS-järjestelmässä";
+$vocab["mail_body_new_entry"]     = "Uusi varaus lisätty:";
 $vocab["mail_body_changed_entry"] = "Varauksen tietoja muokattu:";
-$vocab["mail_subject_delete"] = "Varaus poistettu yritykselle $mrbs_company MRBS-järjestelmässä";
+$vocab["mail_body_del_entry"]     = "Varaus poistettu:";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Pääsy kielletty";
