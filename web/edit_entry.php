@@ -61,7 +61,6 @@ $id = get_form_var('id', 'int');
 $copy = get_form_var('copy', 'int');
 $edit_type = get_form_var('edit_type', 'string');
 $returl = get_form_var('returl', 'string');
-$private = get_form_var('private', 'string');
 
 if (!isset($edit_type))
 {
@@ -130,7 +129,7 @@ if (isset($id))
   $area = get_area($row['room_id']);
   get_area_settings($area);
   
-  $private = $row['private'];
+  $private = $row['status'] & STATUS_PRIVATE;
   if ($private_mandatory) 
   {
     $private = $private_default;
@@ -152,12 +151,10 @@ if (isset($id))
       // Don't bother with these columns
       case 'id':
       case 'timestamp':
-      case 'status':
       case 'reminded':
       case 'info_time':
       case 'info_user':
       case 'info_text':
-      case 'private':    // We've already got the privacy status above
         break;
         
       case 'name':
@@ -166,6 +163,12 @@ if (isset($id))
       case 'room_id':
       case 'entry_type':
         $$column = ($keep_private && $is_private_field["entry.$column"]) ? '' : $row[$column];
+        break;
+        
+      case 'status':
+        // No need to do the privacy status as we've already done that.
+        // Just do the confirmation status
+        $confirmed = !($row['status'] & STATUS_TENTATIVE);
         break;
       
       case 'repeat_id':
@@ -296,6 +299,7 @@ else
   $rep_end_year  = $year;
   $rep_day       = array(0, 0, 0, 0, 0, 0, 0);
   $private       = $private_default;
+  $confirmed     = $confirmed_default;
   // now initialise the custom fields
   foreach ($fields as $field)
   {
@@ -597,7 +601,7 @@ else
     }
     else
     {
-      generate_input($label_text, 'name', $name, $maxlength['entry.name']);
+      generate_input($label_text, 'name', $name, FALSE, $maxlength['entry.name']);
     }
     echo "</div>\n";
     
@@ -866,8 +870,7 @@ else
       </div>
     </div>
     <div id="div_type">
-      <label for="type"><?php echo get_vocab("type")?>:</label>
-     <div class="group">    
+      <label for="type"><?php echo get_vocab("type")?>:</label>  
       <select id="type" name="type">
         <?php
         for ($c = "A"; $c <= "Z"; $c++)
@@ -879,27 +882,48 @@ else
         }
         ?>
       </select>
-      <?php 
-      if ($private_enabled) 
-      { ?>
-        <div id="div_private">
-          <input id="private" class="checkbox" name="private" type="checkbox" value="yes"<?php 
-          if($private) 
-          {
-            echo " checked=\"checked\"";
-          }
-          if($private_mandatory) 
-          {
-            echo " disabled=\"true\"";
-          }
-          ?>>
-          <label for="private"><?php echo get_vocab("private") ?></label>
-        </div><?php 
-      } ?>
-     </div>
     </div>
     
     <?php
+    // Status
+    if ($private_enabled || $confirmation_enabled) 
+    { 
+      echo "<div id=\"div_status\">\n";
+      echo "<label>" . get_vocab("status") . ":</label>\n";
+      echo "<div class=\"group\">\n";
+      
+      // Privacy status
+      if ($private_enabled)
+      {    
+        echo "<input id=\"private\" class=\"checkbox\" name=\"private\" type=\"checkbox\" value=\"yes\"";
+        if ($private) 
+        {
+          echo " checked=\"checked\"";
+        }
+        if ($private_mandatory) 
+        {
+          echo " disabled=\"true\"";
+        }
+        echo ">\n";
+        echo "<label for=\"private\">" . get_vocab("private") . "</label>\n";
+      }
+      
+      // Confirmation status
+      if ($confirmation_enabled)
+      {
+        echo "<input id=\"confirmed\" class=\"checkbox\" name=\"confirmed\" type=\"checkbox\" value=\"yes\"";
+        if ($confirmed) 
+        {
+          echo " checked=\"checked\"";
+        }
+        echo ">\n";
+        echo "<label for=\"confirmed\">" . get_vocab("confirmed") . "</label>\n";
+      }
+
+      echo "</div>\n";
+      echo "</div>\n";
+    }
+
     
     // CUSTOM FIELDS
 

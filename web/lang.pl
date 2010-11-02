@@ -111,11 +111,12 @@ $vocab["returncal"]          = "Powrót do widoku kalendarza";
 $vocab["failed_to_acquire"]  = "Błąd podczas uzyskania wyłącznego dostępu do bazy.";
 $vocab["invalid_booking"]    = "Niewłaściwa rezerwacja";
 $vocab["must_set_description"] = "Musisz podać krótki opis rezerwacji. Proszę, wróć i wprowadź go.";
-$vocab["mail_subject_entry"] = "Wpis wprowadzony/zmieniony w $mrbs_company MRBS";
-$vocab["mail_body_new_entry"] = "Wpis został utworzony, oto szczegóły operacji:";
-$vocab["mail_body_del_entry"] = "Wpis został usunięty, oto szczegóły operacji:";
+$vocab["mail_subject_new_entry"]     = "Wpis wprowadzony w $mrbs_company MRBS";
+$vocab["mail_subject_changed_entry"] = "Wpis zmieniony w $mrbs_company MRBS";
+$vocab["mail_subject_delete"]        = "Wpis usunięty z $mrbs_company MRBS";
+$vocab["mail_body_new_entry"]     = "Wpis został utworzony, oto szczegóły operacji:";
 $vocab["mail_body_changed_entry"] = "Wpis został zmieniony, oto szczegóły operacji:";
-$vocab["mail_subject_delete"] = "Wpis usunięty z $mrbs_company MRBS";
+$vocab["mail_body_del_entry"]     = "Wpis został usunięty, oto szczegóły operacji:";
 
 // Autentykacja
 $vocab["accessdenied"]       = "Dostęp Wzbroniony";

@@ -37,9 +37,11 @@ CREATE TABLE mrbs_area
   max_book_ahead_enabled tinyint(1),
   max_book_ahead_secs    int,
   custom_html            text,
-  provisional_enabled    tinyint(1),
+  approval_enabled       tinyint(1),
   reminders_enabled      tinyint(1),
   enable_periods         tinyint(1),
+  confirmation_enabled   tinyint(1),
+  confirmed_default      tinyint(1),
 
   PRIMARY KEY (id)
 );
@@ -72,8 +74,7 @@ CREATE TABLE mrbs_entry
   name        varchar(80) DEFAULT '' NOT NULL,
   type        char DEFAULT 'E' NOT NULL,
   description text,
-  private     TINYINT(1) NOT NULL DEFAULT 0,
-  status      tinyint NOT NULL DEFAULT 1,
+  status      tinyint unsigned NOT NULL DEFAULT 0,
   reminded    int,
   info_time   int,
   info_user   varchar(80),
@@ -99,7 +100,7 @@ CREATE TABLE mrbs_repeat
   type        char DEFAULT 'E' NOT NULL,
   description text,
   rep_num_weeks smallint NULL, 
-  private     TINYINT(1) NOT NULL DEFAULT 0,
+  status      tinyint unsigned NOT NULL DEFAULT 0,
   reminded    int,
   info_time   int,
   info_user   varchar(80),
@@ -130,6 +131,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '16');
+  VALUES ( 'db_version', '21');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

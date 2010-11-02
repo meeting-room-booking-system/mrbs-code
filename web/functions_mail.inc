@@ -217,8 +217,8 @@ function get_email_address($user)
   return $email;
 }
 
-// get the list of email addresses that are allowed to approve
-// provisional bookings for the room with id $room_id
+// get the list of email addresses that are allowed to approve bookings
+// for the room with id $room_id
 // (At the moment this is just the admin email address, but this could
 // be extended.)
 function get_approvers_email($room_id)
@@ -298,23 +298,14 @@ function get_room_admin_email($id, $series=FALSE)
  * @param int     $new_id       used for create a link to the new entry
  * @return bool                 TRUE or PEAR error object if fails
  */
-function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
+function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
 {
-  global $url_base, $returl, $name, $description, $area_name;
-  global $room_name, $room_id, $starttime, $duration, $dur_units, $end_date, $endtime;
-  global $rep_enddate, $typel, $type, $status, $create_by, $rep_type, $enable_periods;
-  global $rep_opt, $rep_num_weeks, $custom_fields, $standard_fields;
-  global $mail_previous, $auth, $note;
-  global $mail_settings, $weekstarts, $provisional_enabled;
+  global $data, $mail_previous, $note;
+  global $url_base, $returl;
+  global $auth, $weekstarts, $typel, $mail_settings, $standard_fields;
+  global $enable_periods, $approval_enabled, $confirmation_enabled;
   global $tbl_entry;
   
-  // We will treat Accept, Reject and More_info mailings as new entries because the
-  // data hasn't changed since the previous time.
-  if (($action == "accept") || ($action == "more_info") || ($action == "remind"))
-  {
-    $new_entry = TRUE;
-  }
-
   $recipients = array();
   $cc = array();
   $cc[] = $mail_settings['cc'];
@@ -335,11 +326,11 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
     $from = $mail_settings['from'];
   }
   
-  // if we're using provisional bookings and this user needs approval
+  // if we're requiring bookings to be approved and this user needs approval
   // for this room, then get the email addresses of the approvers
-  if ($provisional_enabled && !auth_book_admin($user, $room_id))
+  if ($approval_enabled && !auth_book_admin($user, $data['room_id']))
   {
-    $recipients[] = get_approvers_email($room_id);
+    $recipients[] = get_approvers_email($data['room_id']);
   }
   
   ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
@@ -349,7 +340,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
     // Look for list of area admins emails addresses
     if ($new_entry)
     {
-      $email = get_area_admin_email($new_id, ($rep_type != REP_NONE));
+      $email = get_area_admin_email($new_id, ($data['rep_type'] != REP_NONE));
       if (!empty($email))
       {
         $recipients[] = $email;
@@ -368,7 +359,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
     // Look for list of room admins email addresses
     if ($new_entry)
     {
-      $email = get_room_admin_email($new_id, ($rep_type != REP_NONE));
+      $email = get_room_admin_email($new_id, ($data['rep_type'] != REP_NONE));
       if (!empty($email))
       {
         $recipients[] = $email;
@@ -384,14 +375,14 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
   
   if ($mail_settings['booker'])
   {
-    if (($action == "accept")  || ($action == "more_info"))
+    if (($action == "approve")  || ($action == "more_info"))
     {
       // Put the recipients on the cc line and the booker will go
       // on the to line
       $cc = array_merge($cc, $recipients);
       $recipients = array();
     }
-    $booker = ($new_entry) ? $create_by : $mail_previous['createdby'];
+    $booker = ($new_entry) ? $data['create_by'] : $mail_previous['createdby'];
     $booker_email = get_email_address($booker);
     if (!empty($booker_email))
     {
@@ -409,9 +400,9 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
   // set up the subject and body
   switch ($action)
   {
-    case "accept":
-      $subject = get_mail_vocab("mail_subject_accepted");
-      $body = get_mail_vocab("mail_body_accepted") . "\n\n";
+    case "approve":
+      $subject = get_mail_vocab("mail_subject_approved");
+      $body = get_mail_vocab("mail_body_approved") . "\n\n";
       break;
     case "more_info":
       $subject = get_mail_vocab("mail_subject_more_info");
@@ -424,13 +415,14 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
       $body = get_mail_vocab("mail_body_reminder") . "\n\n";
       break;
     default:
-      $subject = get_mail_vocab("mail_subject_entry");
       if ($new_entry)
       {
+        $subject = get_mail_vocab("mail_subject_new_entry");
         $body = get_mail_vocab("mail_body_new_entry") . "\n\n";
       }
       else
       {
+        $subject = get_mail_vocab("mail_subject_changed_entry");
         $body = get_mail_vocab("mail_body_changed_entry") . "\n\n";
       }
       break;
@@ -455,100 +447,98 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
   if ($mail_settings['details'])
   {
     $body .= "\n" . get_mail_vocab("namebooker") . ": ";
-    $body .= compareEntries(convertToMailCharset($name),
+    $body .= compareEntries(convertToMailCharset($data['name']),
                             convertToMailCharset($mail_previous['namebooker']),
                             $new_entry)  . "\n";
         
     // Description:
     $body .= get_mail_vocab("description") . ": ";
-    $body .= compareEntries(convertToMailCharset($description),
+    $body .= compareEntries(convertToMailCharset($data['description']),
                             convertToMailCharset($mail_previous['description']),
                             $new_entry) . "\n";
                             
-    if  ($provisional_enabled)
+    if ($confirmation_enabled)
     {                        
-      // Status:
-      $body .= get_mail_vocab("status") . ": ";
-      $body .= ($status == STATUS_CONFIRMED) ? get_mail_vocab("confirmed") : get_mail_vocab("provisional");
-      $body .= "\n";
+      // Confirmation status:
+      $body .= get_mail_vocab("confirmation_status") . ": ";
+      $old_status = ($mail_previous['status'] & STATUS_TENTATIVE) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
+      $new_status = ($data['status'] & STATUS_TENTATIVE) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
+      $body .= compareEntries($new_status, $old_status, $new_entry) . "\n";
+    }
+                            
+    if ($approval_enabled)
+    {                        
+      // Approval status:
+      $body .= get_mail_vocab("approval_status") . ": ";
+      $old_status = ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
+      $new_status = ($data['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
+      $body .= compareEntries($new_status, $old_status, $new_entry) . "\n";
     }
                                
     // Room:
     $body .= get_mail_vocab("room") . ": " .
-      compareEntries(convertToMailCharset($area_name),
+      compareEntries(convertToMailCharset($data['area_name']),
                      convertToMailCharset($mail_previous['area_name']),
                      $new_entry);
-    $body .= " - " . compareEntries(convertToMailCharset($room_name),
+    $body .= " - " . compareEntries(convertToMailCharset($data['room_name']),
                                     convertToMailCharset($mail_previous['room_name']),
                                     $new_entry) . "\n";
         
     // Start time
-    if ( $enable_periods )
+    if ($enable_periods)
     {
-      list( $start_period, $start_date) =
-        getMailPeriodDateString($starttime);
-      $body .= get_mail_vocab("start_date") . ": ";
-      $body .= compareEntries($start_date,
-                              $mail_previous['start_date'],
-                              $new_entry) . "\n";
+      list( $start_period, $entry_start_date) = getMailPeriodDateString($data['start_time']);
     }
     else
     {
-      $start_date = getMailTimeDateString($starttime);
-      $body .= get_mail_vocab("start_date") . ": " .
-        compareEntries($start_date,
-                       $mail_previous['start_date'],
-                       $new_entry) . "\n";
+      $entry_start_date = getMailTimeDateString($data['start_time']);
     }
+    $body .= get_mail_vocab("start_date") . ": ";
+    $body .= compareEntries($entry_start_date,
+                            $mail_previous['entry_start_date'],
+                            $new_entry) . "\n";
         
     // Duration
     $body .= get_mail_vocab("duration") . ": " .
-      compareEntries($duration,
+      compareEntries($data['duration'],
                      $mail_previous['duration'],
                      $new_entry);
-    $body .= " " . compareEntries(get_mail_vocab("$dur_units"),
+    $body .= " " . compareEntries(get_mail_vocab($data['dur_units']),
                                   $mail_previous['dur_units'],
                                   $new_entry) . "\n";
         
     // End time
+    $myendtime = $data['end_time'];
     if ( $enable_periods )
     {
-      $myendtime = $endtime;
-      $mod_time = -1;
-      list($end_period, $end_date) =  getMailPeriodDateString($myendtime,
-                                                              $mod_time);
-      $body .= get_mail_vocab("end_date") . ": ";
-      $body .= compareEntries($end_date,
-                              $mail_previous['end_date'],
-                              $new_entry) ."\n";
+      list($end_period, $entry_end_date) =  getMailPeriodDateString($myendtime, -1);
     }
     else
     {
-      $myendtime = $endtime;
-      $end_date = getMailTimeDateString($myendtime);
-      $body .= get_mail_vocab("end_date") . ": " .
-        compareEntries($end_date,
-                       $mail_previous['end_date'],
-                       $new_entry) . "\n";
+      $entry_end_date = getMailTimeDateString($myendtime);
     }
+    $body .= get_mail_vocab("end_date") . ": ";
+    $body .= compareEntries($entry_end_date,
+                            $mail_previous['entry_end_date'],
+                            $new_entry) ."\n";
     
     // Type of booking
     $body .= get_mail_vocab("type") . ": ";
     if ($new_entry)
     {
-      $body .= $typel[$type];
+      $body .= $typel[$data['type']];
     }
     else
     {
       $temp = $mail_previous['type'];
-      $body .= compareEntries($typel[$type],
+      $body .= compareEntries($typel[$data['type']],
                               $typel[$temp],
                               $new_entry);
     }
         
     // Created by
     $body .= "\n" . get_mail_vocab("createdby") . ": " .
-      compareEntries(convertToMailCharset($create_by),
+      compareEntries(convertToMailCharset($data['create_by']),
                      convertToMailCharset($mail_previous['createdby']),
                      $new_entry) . "\n";
                      
@@ -559,7 +549,7 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
       if (!in_array($field['name'], $standard_fields['entry']))
       {
         $key = $field['name'];
-        $value = (isset($custom_fields[$key])) ? $custom_fields[$key] : '';
+        $value = (isset($data['custom_fields'][$key])) ? $data['custom_fields'][$key] : '';
         // Convert any booleans or pseudo-booleans to text strings (in the mail language)
         if (($field['nature'] == 'boolean') || 
             (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
@@ -587,36 +577,36 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
     $body .= "\n" . get_mail_vocab("rep_type");
     if ($new_entry)
     {
-      $body .= ": " . get_mail_vocab("rep_type_$rep_type");
+      $body .= ": " . get_mail_vocab("rep_type_" . $data['rep_type']);
     }
     else
     {
       $temp = $mail_previous['rep_type'];
-      $body .=  ": " . compareEntries(get_mail_vocab("rep_type_$rep_type"),
+      $body .=  ": " . compareEntries(get_mail_vocab("rep_type_" . $data['rep_type']),
                                       get_mail_vocab("rep_type_$temp"),
                                       $new_entry);
     }
         
     // Details if a series
-    if ($rep_type != REP_NONE)
+    if ($data['rep_type'] != REP_NONE)
     {
       $opt = "";
-      if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
+      if (($data['rep_type'] == REP_WEEKLY) || ($data['rep_type'] == REP_N_WEEKLY))
       {
         // Display day names according to language and preferred weekday start.
         for ($i = 0; $i < 7; $i++)
         {
           $daynum = ($i + $weekstarts) % 7;
-          if ($rep_opt[$daynum])
+          if ($data['rep_opt'][$daynum])
           {
             $opt .= day_name($daynum) . " ";
           }
         }
       }
-      if ($rep_type == REP_N_WEEKLY)
+      if ($data['rep_type'] == REP_N_WEEKLY)
       {
         $body .= "\n" . get_mail_vocab("rep_num_weeks");
-        $body .=  ": " . compareEntries($rep_num_weeks,
+        $body .=  ": " . compareEntries($data['rep_num_weeks'],
                                         $mail_previous["rep_num_weeks"],
                                         $new_entry);
       }
@@ -632,14 +622,14 @@ function notifyAdminOnBooking($new_entry , $new_id, $series, $action="book")
       $body .= "\n" . get_mail_vocab("rep_end_date");
       if ($new_entry)
       {
-        $body .= ": " . mail_strftime('%A %d %B %Y',$rep_enddate);
+        $body .= ": " . mail_strftime('%A %d %B %Y',$data['end_date']);
       }
       else
       {
-        $temp = mail_strftime('%A %d %B %Y',$rep_enddate);
+        $temp = mail_strftime('%A %d %B %Y',$data['end_date']);
         $body .=  ": " . 
           compareEntries($temp,
-                         $mail_previous['rep_end_date'],
+                         $mail_previous['end_date'],
                          $new_entry) . "\n";
       }
     }
@@ -673,6 +663,7 @@ function notifyAdminOnDelete($mail_previous)
 {
   global $typel, $enable_periods, $auth;
   global $mail_settings, $standard_fields, $tbl_entry;
+  global $approval_enabled, $confirmation_enabled;
   
   // Get any extra arguments
   $action = (func_num_args() > 1) ? func_get_arg(1) : "delete";
@@ -751,36 +742,43 @@ function notifyAdminOnDelete($mail_previous)
   // Displays deleted entry details
   $body .= "\n" . get_mail_vocab("namebooker") . ': ';
   $body .= convertToMailCharset($mail_previous['namebooker']) . "\n";
+  
   $body .= get_mail_vocab("description") . ": ";
   $body .= convertToMailCharset($mail_previous['description']) . "\n";
+  
+  if ($confirmation_enabled)
+  {                        
+    // Confirmation status:
+    $body .= get_mail_vocab("confirmation_status") . ": ";
+    $body .= ($mail_previous['status'] & STATUS_TENTATIVE) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
+    $body .= "\n";
+  }
+                            
+  if ($approval_enabled)
+  {                        
+    // Approval status:
+    $body .= get_mail_vocab("approval_status") . ": ";
+    $body .= ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
+    $body .= "\n";
+  }
+  
   $body .= get_mail_vocab("room") . ": ";
   $body .= convertToMailCharset($mail_previous['area_name']);
   $body .= " - " . convertToMailCharset($mail_previous['room_name']) . "\n";
+  
   $body .= get_mail_vocab("start_date") . ': ';
-  if ( $enable_periods )
-  {
-    $body .= convertToMailCharset($mail_previous['start_date']) . "\n";
-  }
-  else
-  {
-    $body .= convertToMailCharset($mail_previous['start_date']) . "\n";
-  }
+  $body .= convertToMailCharset($mail_previous['entry_start_date']) . "\n";
+
   $body .= get_mail_vocab("duration") . ': ' . $mail_previous['duration'] . ' ';
   $body .= $mail_previous['dur_units'] . "\n";
-  if ( $enable_periods )
-  {
-    $body .= get_mail_vocab("end_date") . ": ";
-    $body .= convertToMailCharset($mail_previous['end_date']) ."\n";
-  }
-  else
-  {
-    $body .= get_mail_vocab("end_date") . ": " .
-      convertToMailCharset($mail_previous['end_date']);
-    $body .= "\n";
-  }
+
+  $body .= get_mail_vocab("end_date") . ": ";
+  $body .= convertToMailCharset($mail_previous['entry_end_date']) ."\n";
+
   $body .= get_mail_vocab("type") . ": ";
   $body .=  (empty($typel[$mail_previous['type']])) ? "?" .
     $mail_previous['type'] . "?" : $typel[$mail_previous['type']];
+    
   $body .= "\n" . get_mail_vocab("createdby") . ": ";
   $body .= convertToMailCharset($mail_previous['createdby']) . "\n";
   
@@ -803,9 +801,11 @@ function notifyAdminOnDelete($mail_previous)
   }
     
   $body .= get_mail_vocab("lastupdate") . ": " . convertToMailCharset($mail_previous['updated']);
+  
   $body .= "\n" . get_mail_vocab("rep_type");
   $temp = $mail_previous['rep_type'];
   $body .=  ": " . get_mail_vocab("rep_type_$temp");
+  
   if ($mail_previous['rep_type'] != REP_NONE)
   {
     if ($mail_previous['rep_type'] == REP_N_WEEKLY)
@@ -821,7 +821,7 @@ function notifyAdminOnDelete($mail_previous)
     }
 
     $body .= "\n" . get_mail_vocab("rep_end_date");
-    $body .=  ": " . $mail_previous['rep_end_date'] . "\n";
+    $body .=  ": " . $mail_previous['end_date'] . "\n";
   }
   $body .= "\n";
   // End of mail details
@@ -837,207 +837,88 @@ function notifyAdminOnDelete($mail_previous)
  * entry state.
  *
  * @param int     $id       entry id to get data
- * @param int     $series   1 if this is a series or 0
+ * @param int     $series   TRUE if this is the id of an entry in the repeat table
+                            FALSE if this is the id of an entry in the entry table
  * @return bool             TRUE or PEAR error object if fails
  */
 function getPreviousEntryData($id, $series)
 {
-  global $tbl_area, $tbl_entry, $tbl_repeat, $tbl_room, $enable_periods, $weekstarts;
-  global $standard_fields;
-  //
-  $sql = "
-    SELECT  e.name,
-            e.description,
-            e.create_by,
-            r.room_name,
-            a.area_name,
-            e.type,
-            e.room_id,
-            e.repeat_id, " .
-            sql_syntax_timestamp_to_unix("e.timestamp") . " AS last_updated,
-            (e.end_time - e.start_time) AS tbl_e_duration,
-            e.start_time AS tbl_e_start_time,
-            e.end_time AS tbl_e_end_time,
-            a.area_admin_email,
-            r.room_admin_email";
-  // Get the custom fields
-  $fields = sql_field_info($tbl_entry);
-  foreach ($fields as $field)
-  {
-    if (!in_array($field['name'], $standard_fields['entry']))
-    {
-      $sql .= ", e." . $field['name'];
-    }
-  }
+  global $enable_periods, $weekstarts;
   
-  // Here we could just use $tbl_repeat.start_time, and not use alias,
-  // as the last column will take precedence using mysql_fetch_array,
-  // but for portability purpose I will not use it.
-  if (1 == $series)
-  {
-    $sql .= ", re.rep_type, re.rep_opt, re.rep_num_weeks,
-               (re.end_time - re.start_time) AS tbl_r_duration,
-               re.start_time AS tbl_r_start_time,
-               re.end_time AS tbl_r_end_time,
-               re.end_date AS tbl_r_end_date";
-  }
-  $sql .= "
-    FROM $tbl_entry e, $tbl_room r, $tbl_area a ";
-  (1 == $series) ? $sql .= ', ' . $tbl_repeat . ' re ' : '';
-  $sql .= "
-    WHERE e.room_id = r.id
-    AND r.area_id = a.id
-    AND e.id=$id";
-  (1 == $series) ? $sql .= " AND e.repeat_id = re.id" : '';
-  //
-  $res = sql_query($sql);
-  (! $res) ? fatal_error(0, sql_error()) : '';
-  (sql_count($res) < 1) ? fatal_error(0, get_vocab("invalid_entry_id")) : '';
-  $row = sql_row_keyed($res, 0);
-  sql_free($res);
+  // Get the data for the booking
+  $data = mrbsGetBookingInfo($id, $series);
   
-  // Store all needed values in $mail_previous array to pass to
-  // notifyAdminOnDelete function (shorter than individual variables -:) )
-  $mail_previous['namebooker']    = $row['name'];
-  $mail_previous['description']   = $row['description'];
-  $mail_previous['createdby']     = $row['create_by'];
-  $mail_previous['room_name']     = $row['room_name'];
-  $mail_previous['area_name']     = $row['area_name'];
-  $mail_previous['type']          = $row['type'];
-  $mail_previous['room_id']       = $row['room_id'];
-  $mail_previous['repeat_id']     = $row['repeat_id'];
-  $mail_previous['updated']       = getMailTimeDateString($row['last_updated']);
-  $mail_previous['area_admin_email'] = $row['area_admin_email'];
-  $mail_previous['room_admin_email'] = $row['room_admin_email'];
-  // Add in the custom fields
-  foreach ($fields as $field)
+  // Now process some special fields
+  $data['namebooker'] = $data['name'];
+  $data['createdby']  = $data['create_by'];
+  $data['updated']    = getMailTimeDateString($data['last_updated']);
+
+  // Now get the start time, end time and duration.
+  if ($enable_periods)
   {
-    if (!in_array($field['name'], $standard_fields['entry']))
-    {
-      $mail_previous[$field['name']] = $row[$field['name']];
-    }
-  }
-  
-  // Now get the start time, end time and duration.   The way this is done
-  // depends on (a) whether we're using periods and (b) whether this is a series.
-  // If we use periods
-  if ( $enable_periods )
-  {
-    // If we delete a series, start_time and end_time must
-    // come from $tbl_repeat, not $tbl_entry.
-    //
-    // This is not a series
-    if (1 != $series)
-    {
-      list( $mail_previous['start_period'], $mail_previous['start_date']) =
-        getMailPeriodDateString($row['tbl_e_start_time']);
-      list( $mail_previous['end_period'] , $mail_previous['end_date']) =
-        getMailPeriodDateString($row['tbl_e_end_time'], -1);
-      // need to make DST correct in opposite direction to entry creation
-      // so that user see what he expects to see
-      $mail_previous['duration'] = $row['tbl_e_duration'] -
-        cross_dst($row['tbl_e_start_time'], $row['tbl_e_end_time']);
-    }
-    // This is a series
-    else
-    {
-      list( $mail_previous['start_period'], $mail_previous['start_date']) =
-        getMailPeriodDateString($row['tbl_r_start_time']);
-      list( $mail_previous['end_period'] , $mail_previous['end_date']) =
-        getMailPeriodDateString($row['tbl_r_end_time'], 0);   
-      // need to make DST correct in opposite direction to entry creation
-      // so that user see what he expects to see
-      $mail_previous['duration'] = $row['tbl_r_duration'] -
-        cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_time']);    
-    }
+    list( $data['start_period'], $data['entry_start_date']) = getMailPeriodDateString($data['start_time']);
+    list( $data['end_period'] , $data['entry_end_date'])    = getMailPeriodDateString($data['end_time'], -1);
+    // need to make DST correct in opposite direction to entry creation
+    // so that user see what he expects to see
+    $data['duration'] -= cross_dst($data['start_time'], $data['end_time']);
     // Don't translate the units at this stage, as they'll get translated into the
     // browser language rather than the mail language.   We'll translate them later.
-    toPeriodString($mail_previous['start_period'],
-                   $mail_previous['duration'], $mail_previous['dur_units'], FALSE);
+    toPeriodString($data['start_period'], $data['duration'], $data['dur_units'], FALSE);
   }
-  // If we don't use periods
   else
   {
-    // This is not a series
-    if (1 != $series)
-    {
-      $mail_previous['start_date'] =
-        getMailTimeDateString($row['tbl_e_start_time']);
-      $mail_previous['end_date'] =
-        getMailTimeDateString($row['tbl_e_end_time']);
-      // need to make DST correct in opposite direction to entry creation
-      // so that user see what he expects to see
-      $mail_previous['duration'] = $row['tbl_e_duration'] -
-        cross_dst($row['tbl_e_start_time'], $row['tbl_e_end_time']);
-    }
-    // This is a series
-    else
-    {
-      $mail_previous['start_date'] =
-        getMailTimeDateString($row['tbl_r_start_time']);
-      $mail_previous['end_date'] =
-        getMailTimeDateString($row['tbl_r_end_time']);
-      // need to make DST correct in opposite direction to entry creation
-      // so that user see what he expects to see
-      $mail_previous['duration'] = $row['tbl_r_duration'] -
-        cross_dst($row['tbl_r_start_time'], $row['tbl_r_end_time']);
-    }
+    $data['entry_start_date'] = getMailTimeDateString($data['start_time']);
+    $data['entry_end_date']   = getMailTimeDateString($data['end_time']);
+    // need to make DST correct in opposite direction to entry creation
+    // so that user see what he expects to see
+    $data['duration'] -= cross_dst($data['start_time'], $data['end_time']);
     // Don't translate the units at this stage, as they'll get translated into the
     // browser language rather than the mail language.   We'll translate them later.
-    toTimeString($mail_previous['duration'], $mail_previous['dur_units'], FALSE);
+    toTimeString($data['duration'], $data['dur_units'], FALSE);
   }
   // Now translate the duration units into the mail language
-  $mail_previous['dur_units'] = get_mail_vocab($mail_previous['dur_units']);
+  $data['dur_units'] = get_mail_vocab($data['dur_units']);
   
-  
-  // Next, get the repeat information if it's a series (and if it's not
-  // a series, we still need to set rep_type to show that it's not a series)
-  if (1 != $series)
-  {
-    $mail_previous['rep_type'] = REP_NONE;
-  }
-  else
-  {
-    $mail_previous['rep_type'] = $row['rep_type'];
-    
+  // Next, process any repeat information
+  if ($data['rep_type'] != REP_NONE)
+  { 
+    // get the repeat end date
     // use getMailTimeDateString as all I want is the date
-    $mail_previous['rep_end_date'] =
-        getMailTimeDateString($row['tbl_r_end_date'], FALSE);
-    $mail_previous['rep_opt'] = "";
-    switch($row['rep_type'])
+    $data['end_date'] = getMailTimeDateString($data['end_date'], FALSE);
+    
+    // get the names of the repeat days 
+    switch($data['rep_type'])
     {
       case 2:
       case 6:
-        $rep_day[0] = $row['rep_opt'][0] != "0";
-        $rep_day[1] = $row['rep_opt'][1] != "0";
-        $rep_day[2] = $row['rep_opt'][2] != "0";
-        $rep_day[3] = $row['rep_opt'][3] != "0";
-        $rep_day[4] = $row['rep_opt'][4] != "0";
-        $rep_day[5] = $row['rep_opt'][5] != "0";
-        $rep_day[6] = $row['rep_opt'][6] != "0";     
+        $rep_day[0] = $data['rep_opt'][0] != "0";
+        $rep_day[1] = $data['rep_opt'][1] != "0";
+        $rep_day[2] = $data['rep_opt'][2] != "0";
+        $rep_day[3] = $data['rep_opt'][3] != "0";
+        $rep_day[4] = $data['rep_opt'][4] != "0";
+        $rep_day[5] = $data['rep_opt'][5] != "0";
+        $rep_day[6] = $data['rep_opt'][6] != "0";     
         break; 
       default:
         $rep_day = array(0, 0, 0, 0, 0, 0, 0);
     }
+    $data['rep_opt'] = "";
     for ($i = 0; $i < 7; $i++)
     {
       $wday = ($i + $weekstarts) % 7;
       if ($rep_day[$wday])
-        $mail_previous['rep_opt'] .= day_name($wday) . " ";
+        $data['rep_opt'] .= day_name($wday) . " ";
     }
     
-    if ($row['rep_type'] == REP_N_WEEKLY)
+    // Sanitise the rep_num_weeks
+    if ($data['rep_type'] != REP_N_WEEKLY)
     {
-      $mail_previous['rep_num_weeks'] = $row['rep_num_weeks'];
+      $data['rep_num_weeks'] = "";
     }
-    else
-    {
-      $mail_previous['rep_num_weeks'] = "";
-    }   
   }
-  
+
   // return entry previous data as an array
-  return $mail_previous;
+  return $data;
 }
 
 // }}}

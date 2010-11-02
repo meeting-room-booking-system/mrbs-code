@@ -257,7 +257,7 @@ $all_day = preg_replace("/ /", "&nbsp;", get_vocab("all_day"));
 for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
 {
   $sql = "SELECT start_time, end_time, id, name, type,
-                 repeat_id, status, private, create_by
+                 repeat_id, status, create_by
             FROM $tbl_entry
            WHERE room_id=$room
              AND start_time <= $midnight_tonight[$day_num] AND end_time > $midnight[$day_num]
@@ -287,9 +287,11 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
         echo "<br>DEBUG: Entry ".$row['id']." day $day_num\n";
       }
       $d[$day_num]["id"][] = $row['id'];
+      $d[$day_num]["color"][] = $row['type'];
+      $d[$day_num]["is_repeat"][] = !empty($row['repeat_id']);
       
       // Handle private events
-      if (is_private_event($row['private'])) 
+      if (is_private_event($row['status'] & STATUS_PRIVATE)) 
       {
         if (getWritable($row['create_by'], $user, $room)) 
         {
@@ -307,17 +309,15 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
 
       if ($private & $is_private_field['entry.name']) 
       {
+        $d[$day_num]["status"][] = $row['status'] | STATUS_PRIVATE;  // Set the private bit
         $d[$day_num]["shortdescrip"][] = '['.get_vocab('unavailable').']';
       }
       else
       {
+        $d[$day_num]["status"][] = $row['status'] & ~STATUS_PRIVATE;  // Clear the private bit
         $d[$day_num]["shortdescrip"][] = htmlspecialchars($row['name']);
       }
       
-      $d[$day_num]["is_private"][] = $private;
-      $d[$day_num]["is_repeat"][] = !empty($row['repeat_id']);
-      $d[$day_num]["status"][] = $row['status'];
-      $d[$day_num]["color"][] = $row['type'];
 
       // Describe the start and end time, accounting for "all day"
       // and for entries starting before/ending after today.
@@ -540,15 +540,19 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
       {
         // give the enclosing div the appropriate width: full width if both,
         // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
-        $class = $d[$cday]["color"][$i];
-        if ($provisional_enabled && ($d[$cday]["status"][$i] == STATUS_PROVISIONAL))
-        {
-          $class .= " provisional";
-        }   
-        if ($d[$cday]["is_private"][$i])
+        $class = $d[$cday]["color"][$i]; 
+        if ($d[$cday]["status"][$i] & STATUS_PRIVATE)
         {
           $class .= " private";
         }
+        if ($approval_enabled && ($d[$cday]["status"][$i] & STATUS_AWAITING_APPROVAL))
+        {
+          $class .= " awaiting_approval";
+        }
+        if ($confirmation_enabled && ($d[$cday]["status"][$i] & STATUS_TENTATIVE))
+        {
+          $class .= " tentative";
+        }  
         echo "<div class=\"" . $class . "\"" .
           " style=\"width: " . (($monthly_view_entries_details == "both") ? '100%' : '49.9%') . "\">\n";
         $booking_link = "view_entry.php?id=" . $d[$cday]["id"][$i] . "&amp;day=$cday&amp;month=$month&amp;year=$year";

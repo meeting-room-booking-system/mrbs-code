@@ -298,29 +298,39 @@ function fromPeriodString($start_period, &$units, $dur_units)
 
 
 // Generate an input field with an associated label
-// Optional fourth parameter: $maxlength - the maximum length of input allowed
-function generate_input($label_text, $name, $value)
+// Optional fifth parameter: $maxlength - the maximum length of input allowed
+function generate_input($label_text, $name, $value, $disabled=FALSE)
 {
-  // get any optional fourth parameter
-  if (func_num_args() > 3)
+  // get any optional fifth parameter
+  if (func_num_args() > 4)
   {
-    $maxlength = func_get_arg(3);
+    $maxlength = func_get_arg(4);
   }
   // generate the HTML
   $html  = "<label for=\"$name\">$label_text</label>\n";
   $html .= "<input id=\"$name\" name=\"$name\" type=\"text\"";
+  $html .= ($disabled) ? " disabled=\"disabled\"" : '';
   $html .= (isset($maxlength)) ? " maxlength=\"$maxlength\"" : '';
   $html .= " value=\"" . htmlspecialchars($value) . "\">\n";
+  // and a hidden input if the input box is disabled
+  if ($disabled)
+  {
+    $html .= "<input type=\"hidden\" name=\"$name\" value=\"$value\">\n";
+  }
   echo $html;
 }
 
 // Generates a select box from $options, an array of options
-function generate_select($label_text, $name, $value, $options,
-                         $mandatory = false)
+// If $disabled is TRUE, then the select box is disabled and a hidden
+// input is generated to pass through $value
+function generate_select($label_text, $name, $value, $options, 
+                         $mandatory = FALSE, $disabled=FALSE)
 {
   // generate the HTML
   $html  = "<label for=\"$name\">$label_text</label>\n";
-  $html .= "<select id=\"$name\" name=\"$name\">\n";
+  $html .= "<select id=\"$name\" name=\"$name\"";
+  $html .= ($disabled) ? " disabled=\"disabled\"" : '';
+  $html .= ">\n";
   if ($mandatory)
   {
     $options = array_merge(array(""),$options);
@@ -332,16 +342,31 @@ function generate_select($label_text, $name, $value, $options,
     $html .= ">$option</option>\n";
   }
   $html .= "</select>\n";
+  // and a hidden input if the select box is disabled
+  if ($disabled)
+  {
+    $html .= "<input type=\"hidden\" name=\"$name\" value=\"$value\">\n";
+  }
+  
   echo $html;
 }
 
 // Generate a textarea with an associated label
-function generate_textarea($label_text, $name, $value)
+// If $disabled is TRUE, then the textarea is disabled and a hidden
+// input is generated to pass through $value
+function generate_textarea($label_text, $name, $value, $disabled=FALSE)
 {
   // generate the HTML
   $html  = "<label for=\"$name\">$label_text</label>\n";
   // textarea rows and cols are overridden by CSS height and width
-  $html .= "<textarea id=\"$name\" name=\"$name\" rows=\"8\" cols=\"40\">" . htmlspecialchars($value) . "</textarea>\n";
+  $html .= "<textarea id=\"$name\" name=\"$name\" rows=\"8\" cols=\"40\"";
+  $html .= ($disabled) ? " disabled=\"disabled\"" : '';
+  $html .= ">" . htmlspecialchars($value) . "</textarea>\n";
+  // and a hidden input if the textarea is disabled
+  if ($disabled)
+  {
+    $html .= "<input type=\"hidden\" name=\"$name\" value=\"$value\">\n";
+  }
   echo $html;
 }
 
@@ -547,7 +572,8 @@ function get_area_settings($area)
   global $resolution, $default_duration, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $private_enabled, $private_default, $private_mandatory, $private_override;
   global $min_book_ahead_enabled, $max_book_ahead_enabled, $min_book_ahead_secs, $max_book_ahead_secs;
-  global $provisional_enabled, $reminders_enabled, $enable_periods, $boolean_fields;
+  global $approval_enabled, $reminders_enabled, $enable_periods, $boolean_fields;
+  global $confirmation_enabled, $confirmed_default;
   
   // Get all the "per area" config settings                  
   $sql = "SELECT resolution, default_duration, morningstarts, morningstarts_minutes,
@@ -555,10 +581,11 @@ function get_area_settings($area)
                  private_enabled, private_default, private_mandatory, private_override,
                  min_book_ahead_enabled, max_book_ahead_enabled,
                  min_book_ahead_secs, max_book_ahead_secs,
-                 provisional_enabled, reminders_enabled, enable_periods
-            FROM $tbl_area 
-           WHERE id=$area 
-           LIMIT 1";
+                 approval_enabled, reminders_enabled, enable_periods,
+                 confirmation_enabled, confirmed_default
+          FROM $tbl_area 
+          WHERE id=$area 
+          LIMIT 1";
   $res = sql_query($sql);
   if (!$res || (sql_count($res) == 0))
   {
@@ -584,6 +611,36 @@ function get_area_settings($area)
       }
     }
   }
+}
+
+// generate the predicate for use in an SQL query to test whether
+// an area has $field set
+function some_area_predicate($field)
+{
+  global $area_defaults;
+  
+  $predicate = "(($field IS NOT NULL) AND ($field > 0))";
+  if ($area_defaults[$field])
+  {
+    $predicate = "(" . $predicate . " OR ($field IS NULL))";
+  }
+  return $predicate;
+}
+
+// Determines whether there is at least one area with the relevant $field
+// set (eg 'approval_enabled' or 'confirmation_enabled')
+//
+// Returns: boolean
+function some_area($field)
+{
+  global $tbl_area;
+  
+  $predicate = some_area_predicate($field);   
+  $sql = "SELECT COUNT(*)
+                  FROM $tbl_area
+                 WHERE $predicate
+                 LIMIT 1";                                
+  return (sql_query1($sql) > 0);
 }
 
 // Get the local day name based on language. Note 2000-01-02 is a Sunday.
@@ -1045,20 +1102,20 @@ function is_hidden_day ($dow)
 }
 
 // returns true if event should be considered private based on
-// config settings and event's "private" flag (passed to function)
-function is_private_event($event_flag) 
+// config settings and event's privacy status (passed to function)
+function is_private_event($privacy_status) 
 {
   global $private_override;
   if ($private_override == "private" )
   {
-    $event_flag = TRUE;
+    $privacy_status = TRUE;
   }
   elseif ($private_override == "public" )
   {
-    $event_flag = FALSE;
+    $privacy_status = FALSE;
   }
 
-  return $event_flag;
+  return $privacy_status;
 }
 
 
@@ -1082,14 +1139,12 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   //       entry_id
   //       type
   //       entry_description
-  //       entry_private
   //       entry_create_by
   //       status
   
   // $column is a column of the map of the screen that will be displayed
   // It looks like:
   //     $column[Time][n][id]
-  //                     [is_private]
   //                     [is_repeat]
   //                     [color]
   //                     [data]
@@ -1130,10 +1185,10 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   global $is_private_field;
   
   $user = getUserName();
-  if (is_private_event($row['entry_private']) &&
+  if (is_private_event($row['status'] & STATUS_PRIVATE) &&
          !getWritable($row['entry_create_by'], $user, $row['room_id']))
   {
-    $is_private = TRUE;
+    $row['status'] |= STATUS_PRIVATE;   // Set the private bit
     if ($is_private_field['entry.name'])
     {
       $row['name']= "[".get_vocab('unavailable')."]";
@@ -1145,7 +1200,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   }
   else
   {
-    $is_private = FALSE;
+    $row['status'] &= ~STATUS_PRIVATE;  // Clear the private bit
   }
 
   $start_t = max(round_t_down($row['start_time'], $resolution, $am7), $am7);
@@ -1168,7 +1223,6 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     
     // fill in the id, type and start time
     $column[$time_t][$n]["id"] = $row['entry_id'];
-    $column[$time_t][$n]["is_private"] = $is_private;
     $column[$time_t][$n]["is_repeat"] = !empty($row['repeat_id']);
     $column[$time_t][$n]["status"] = $row['status'];
     $column[$time_t][$n]["color"] = $row['type'];
@@ -1300,7 +1354,6 @@ function draw_cell($cell, $query_strings, $cell_class)
   // display and looks like this:
   // 
   // $cell[n][id]
-  //         [is_private]
   //         [is_repeat]
   //         [color]
   //         [data]
@@ -1330,7 +1383,7 @@ function draw_cell($cell, $query_strings, $cell_class)
   global $main_cell_height, $main_table_cell_border_width;
   global $area, $year, $month, $timetohighlight;
   global $javascript_cursor, $enable_periods, $times_along_top;
-  global $provisional_enabled;
+  global $approval_enabled, $confirmation_enabled;
   
   // if the time slot has got multiple bookings, then draw a mini-table
   if(isset($cell[1]["id"]))
@@ -1370,20 +1423,23 @@ function draw_cell($cell, $query_strings, $cell_class)
     for ($n=0; $n<$n_bookings; $n++)
     {
       $id         = $cell[$n]["id"];
-      $is_private = $cell[$n]["is_private"];
       $is_repeat  = $cell[$n]["is_repeat"];
       $status     = $cell[$n]["status"];
       $color      = $cell[$n]["color"];
       $descr      = htmlspecialchars($cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
-      if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
-      {
-        $class .= " provisional";
-      }
-      if ($is_private)
+      if ($status & STATUS_PRIVATE)
       {
         $class .= " private";
+      }
+      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
+      {
+        $class .= " awaiting_approval";
+      }
+      if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
+      {
+        $class .= " tentative";
       }
       echo "<tr>\n";
       echo "<td class=\"$class\"" .
@@ -1417,21 +1473,24 @@ function draw_cell($cell, $query_strings, $cell_class)
     for ($n=0; $n<$n_bookings; $n++)
     {
       $id         = $cell[$n]["id"];
-      $is_private = $cell[$n]["is_private"];
       $is_repeat  = $cell[$n]["is_repeat"];
       $status     = $cell[$n]["status"];
       $color      = $cell[$n]["color"];
       $descr      = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
       $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
-      if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
-      {
-        $class .= " provisional";
-      }    
-      if ($is_private)
+      if ($status & STATUS_PRIVATE)
       {
         $class .= " private";
       }
+      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
+      {
+        $class .= " awaiting_approval";
+      }
+      if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
+      {
+        $class .= " tentative";
+      }    
       echo "<tr>\n";
       echo "<td class=\"$class\"" .
            (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
@@ -1458,7 +1517,6 @@ function draw_cell($cell, $query_strings, $cell_class)
     if(isset($cell[0]["id"]))
     {       
       $id         = $cell[0]["id"];
-      $is_private = $cell[0]["is_private"];
       $is_repeat  = $cell[0]["is_repeat"];
       $status     = $cell[0]["status"];
       $color      = $cell[0]["color"];
@@ -1479,14 +1537,18 @@ function draw_cell($cell, $query_strings, $cell_class)
     if (isset($id))
     {
       $c = $color;
-      if ($provisional_enabled && ($status == STATUS_PROVISIONAL))
-      {
-        $c .= " provisional";
-      } 
-      if ($is_private)
+      if ($status & STATUS_PRIVATE)
       {
         $c .= " private";
       }
+      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
+      {
+        $c .= " awaiting_approval";
+      }
+      if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
+      {
+        $c .= " tentative";
+      } 
     }
     else
     {

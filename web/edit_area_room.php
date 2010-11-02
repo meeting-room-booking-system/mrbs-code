@@ -76,9 +76,11 @@ $area_private_enabled = get_form_var('area_private_enabled', 'string');
 $area_private_default = get_form_var('area_private_default', 'int');
 $area_private_mandatory = get_form_var('area_private_mandatory', 'string');
 $area_private_override = get_form_var('area_private_override', 'string');
-$area_provisional_enabled = get_form_var('area_provisional_enabled', 'string');
+$area_approval_enabled = get_form_var('area_approval_enabled', 'string');
 $area_reminders_enabled = get_form_var('area_reminders_enabled', 'string');
 $area_enable_periods = get_form_var('area_enable_periods', 'string');
+$area_confirmation_enabled = get_form_var('area_confirmation_enabled', 'string');
+$area_confirmed_default = get_form_var('area_confirmed_default', 'string');
 $custom_html = get_form_var('custom_html', 'string');  // Used for both area and room, but you only ever have one or the other
 $change_done = get_form_var('change_done', 'string');
 $change_room = get_form_var('change_room', 'string');
@@ -324,9 +326,11 @@ if ($phase == 2)
     $area_private_enabled = (!empty($area_private_enabled)) ? 1 : 0;
     $area_private_default = (!empty($area_private_default)) ? 1 : 0;
     $area_private_mandatory = (!empty($area_private_mandatory)) ? 1 : 0;
-    $area_provisional_enabled = (!empty($area_provisional_enabled)) ? 1 : 0;
+    $area_approval_enabled = (!empty($area_approval_enabled)) ? 1 : 0;
     $area_reminders_enabled = (!empty($area_reminders_enabled)) ? 1 : 0;
     $area_enable_periods = (!empty($area_enable_periods)) ? 1 : 0;
+    $area_confirmation_enabled = (!empty($area_confirmation_enabled)) ? 1 : 0;
+    $area_confirmed_default = (!empty($area_confirmed_default)) ? 1 : 0;
     
     if (!$area_enable_periods)
     { 
@@ -389,9 +393,11 @@ if ($phase == 2)
       $assign_array[] = "private_default=" . $area_private_default;
       $assign_array[] = "private_mandatory=" . $area_private_mandatory;
       $assign_array[] = "private_override='" . $area_private_override . "'";
-      $assign_array[] = "provisional_enabled=" . $area_provisional_enabled;
+      $assign_array[] = "approval_enabled=" . $area_approval_enabled;
       $assign_array[] = "reminders_enabled=" . $area_reminders_enabled;
       $assign_array[] = "enable_periods=" . $area_enable_periods;
+      $assign_array[] = "confirmation_enabled=" . $area_confirmation_enabled;
+      $assign_array[] = "confirmed_default=" . $area_confirmed_default;
             
       $sql .= implode(",", $assign_array) . " WHERE id=$area";
       if (sql_command($sql) < 0)
@@ -942,11 +948,35 @@ if (isset($change_area) &&!empty($area))
       </fieldset>
       
       <fieldset>
-      <legend><?php echo get_vocab("provisional_settings")?></legend>
+      <legend><?php echo get_vocab("confirmation_settings")?></legend>
         <div>
-          <label for="area_provisional_enabled"><?php echo get_vocab("enable_provisional")?>:</label>
-          <?php $checked = ($provisional_enabled) ? " checked=\"checked\"" : "" ?>
-          <input class="checkbox" type="checkbox"<?php echo $checked ?> id="area_provisional_enabled" name="area_provisional_enabled">
+          <label for="area_confirmation_enabled"><?php echo get_vocab("allow_confirmation")?>:</label>
+          <?php $checked = ($confirmation_enabled) ? " checked=\"checked\"" : "" ?>
+          <input class="checkbox" type="checkbox"<?php echo $checked ?> id="area_confirmation_enabled" name="area_confirmation_enabled">
+        </div>
+        <label>
+          <?php echo get_vocab("default_settings_conf")?>:
+        </label>
+        <div class="group">
+          <label>
+            <?php $checked = ($confirmed_default) ? " checked=\"checked\"" : "" ?>
+            <input class="radio" type="radio" name="area_confirmed_default" value="1"<?php echo $checked ?>>
+            <?php echo get_vocab("default_confirmed")?>
+          </label>
+          <label>
+            <?php $checked = ($confirmed_default) ? "" : " checked=\"checked\"" ?>
+            <input class="radio" type="radio" name="area_confirmed_default" value="0"<?php echo $checked ?>>
+            <?php echo get_vocab("default_tentative")?>
+          </label>
+        </div>
+      </fieldset>
+      
+      <fieldset>
+      <legend><?php echo get_vocab("approval_settings")?></legend>
+        <div>
+          <label for="area_approval_enabled"><?php echo get_vocab("enable_approval")?>:</label>
+          <?php $checked = ($approval_enabled) ? " checked=\"checked\"" : "" ?>
+          <input class="checkbox" type="checkbox"<?php echo $checked ?> id="area_approval_enabled" name="area_approval_enabled">
         </div>
         <div>
           <label for="area_reminders_enabled"><?php echo get_vocab("enable_reminders")?>:</label>

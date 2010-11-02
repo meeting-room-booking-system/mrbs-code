@@ -29,6 +29,7 @@ $rep_id = get_form_var('rep_id', 'int');
 $rep_day = get_form_var('rep_day', 'array'); // array of bools
 $rep_num_weeks = get_form_var('rep_num_weeks', 'int');
 $private = get_form_var('private', 'string'); // bool, actually
+$confirmed = get_form_var('confirmed', 'string');
 // Get the start day/month/year and make them the current day/month/year
 $day = get_form_var('start_day', 'int');
 $month = get_form_var('start_month', 'int');
@@ -362,13 +363,13 @@ if (isset($rep_type) && ($rep_type != REP_NONE) &&
     isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
 {
   // Get the repeat entry settings
-  $rep_enddate = mktime($hour, $minute, 0,
-                        $rep_end_month, $rep_end_day, $rep_end_year);
+  $end_date = mktime($hour, $minute, 0,
+                     $rep_end_month, $rep_end_day, $rep_end_year);
 }
 else
 {
   $rep_type = REP_NONE;
-  $rep_enddate = 0;  // to avoid an undefined variable notice
+  $end_date = 0;  // to avoid an undefined variable notice
 }
 
 if (!isset($rep_day))
@@ -402,7 +403,7 @@ if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
 if ($rep_type != REP_NONE)
 {
   $reps = mrbsGetRepeatEntryList($starttime,
-                                 isset($rep_enddate) ? $rep_enddate : 0,
+                                 isset($end_date) ? $end_date : 0,
                                  $rep_type, $rep_opt, $max_rep_entrys,
                                  $rep_num_weeks);
 }
@@ -502,134 +503,115 @@ foreach ( $rooms as $room_id )
 
 } // end foreach rooms
 
-
 // If the rooms were free, go ahead an process the bookings
 if ($valid_booking)
 {
-  foreach ( $rooms as $room_id )
-  {
-    // If we're using provisional booking then we need to work out whether the
-    // status of this booking is confirmed.   If the user is allowed to confirm
-    // bookings for this room, then the status will be confirmed , since they are
-    // in effect immediately confirming their own booking.
-    if ($provisional_enabled)
+  foreach ($rooms as $room_id)
+  { 
+    // Set the various bits in the status field as appropriate
+    $status = 0;
+    // Privacy status
+    if ($isprivate)
     {
-      $status = (auth_book_admin($user, $room_id)) ? STATUS_CONFIRMED : STATUS_PROVISIONAL;
+      $status |= STATUS_PRIVATE;  // Set the private bit
     }
-    else
+    // If we are using booking approvals then we need to work out whether the
+    // status of this booking is approved.   If the user is allowed to approve
+    // bookings for this room, then the status will be approved, since they are
+    // in effect immediately approving their own booking.  Otherwise the booking
+    // will need to approved.
+    if ($approval_enabled && !auth_book_admin($user, $room_id))
     {
-      $status = STATUS_CONFIRMED;
+      $status |= STATUS_AWAITING_APPROVAL;
+    }
+    // Confirmation status
+    if ($confirmation_enabled && !$confirmed)
+    {
+      $status |= STATUS_TENTATIVE;
     }
     
+    // Assemble the data in an array
+    $data = array();
+    $data['start_time'] = $starttime;
+    $data['end_time'] = $endtime;
+    $data['room_id'] = $room_id;
+    $data['create_by'] = $create_by;
+    $data['name'] = $name;
+    $data['type'] = $type;
+    $data['description'] = $description;
+    $data['status'] = $status;
+    $data['custom_fields'] = $custom_fields;
+    $data['rep_type'] = $rep_type;
     if ($edit_type == "series")
     {
-      $booking = mrbsCreateRepeatingEntrys($starttime,
-                                           $endtime,
-                                           $rep_type,
-                                           $rep_enddate,
-                                           $rep_opt,
-                                           $room_id,
-                                           $create_by,
-                                           $name,
-                                           $type,
-                                           $description,
-                                           isset($rep_num_weeks) ? $rep_num_weeks : 0,
-                                           $isprivate,
-                                           $status,
-                                           $custom_fields);
-      $new_id = $booking['id'];
-
-      // Send a mail to the Administrator
-      if ($need_to_send_mail)
-      {
-        require_once "functions_mail.inc";
-        // Send a mail only if this a new entry, or if this is an
-        // edited entry but we have to send mail on every change,
-        // and if mrbsCreateRepeatingEntrys is successful
-        if ( ( (isset($id) && $mail_settings['admin_all']) or !isset($id) ) &&
-             (0 != $new_id) )
-        {
-          // Get room name and area name. Would be better to avoid
-          // a database access just for that. Ran only if we need
-          // details
-          if ($mail_settings['details'])
-          {
-            $sql = "SELECT r.id AS room_id, r.room_name, r.area_id, a.area_name ";
-            $sql .= "FROM $tbl_room r, $tbl_area a ";
-            $sql .= "WHERE r.id=$room_id AND r.area_id = a.id";
-            $res = sql_query($sql);
-            $row = sql_row_keyed($res, 0);
-            $room_name = $row['room_name'];
-            $area_name = $row['area_name'];
-          }
-          // If this is a modified entry then call
-          // getPreviousEntryData to prepare entry comparison.
-          if ( isset($id) )
-          {
-            $mail_previous = getPreviousEntryData($id, 1);
-          }
-          $result = notifyAdminOnBooking(!isset($id), $new_id, $booking['series']);
-        }
-      }
+      $data['end_date'] = $end_date;
+      $data['rep_opt'] = $rep_opt;
+      $data['rep_num_weeks'] = (isset($rep_num_weeks)) ? $rep_num_weeks : 0;
     }
     else
     {
       // Mark changed entry in a series with entry_type 2:
-      if ($repeat_id > 0)
-      {
-        $entry_type = 2;
-      }
-      else
-      {
-        $entry_type = 0;
-      }
+      $data['entry_type'] = ($repeat_id > 0) ? 2 : 0;
+      $data['repeat_id'] = $repeat_id;
+    }
+    // The following elements are needed for email notifications
+    $data['duration'] = $duration;
+    $data['dur_units'] = $dur_units;
 
+    if ($edit_type == "series")
+    {
+      $booking = mrbsCreateRepeatingEntrys($data);
+      $new_id = $booking['id'];
+      $is_repeat_table = $booking['series'];
+    }
+    else
+    {
       // Create the entry:
-      $new_id = mrbsCreateSingleEntry($starttime,
-                                      $endtime,
-                                      $entry_type,
-                                      $repeat_id,
-                                      $room_id,
-                                      $create_by,
-                                      $name,
-                                      $type,
-                                      $description,
-                                      $isprivate,
-                                      $status,
-                                      $custom_fields);
-
-      // Send a mail to the Administrator
-      if ($need_to_send_mail)
+      $new_id = mrbsCreateSingleEntry($data);
+      $is_repeat_table = FALSE;
+    }
+    
+    // Send a mail to the Administrator
+    if ($need_to_send_mail)
+    {
+      // Send a mail only if this a new entry, or if this is an
+      // edited entry but we have to send mail on every change,
+      // and if the entry creation is successful
+      if ( ( (isset($id) && $mail_settings['admin_all']) or !isset($id) ) &&
+           (0 != $new_id) )
       {
         require_once "functions_mail.inc";
-        // Send a mail only if this a new entry, or if this is an
-        // edited entry but we have to send mail on every change,
-        // and if mrbsCreateRepeatingEntrys is successful
-        if ( ( (isset($id) && $mail_settings['admin_all']) or !isset($id) ) && (0 != $new_id) )
+        // Get room name and area name for email notifications.
+        // Would be better to avoid a database access just for that.
+        // Ran only if we need details
+        if ($mail_settings['details'])
         {
-          // Get room name and are name. Would be better to avoid
-          // a database access just for that. Ran only if we need
-          // details.
-          if ($mail_settings['details'])
-          {
-            $sql = "SELECT r.id AS room_id, r.room_name, r.area_id, a.area_name ";
-            $sql .= "FROM $tbl_room r, $tbl_area a ";
-            $sql .= "WHERE r.id=$room_id AND r.area_id = a.id";
-            $res = sql_query($sql);
-            $row = sql_row_keyed($res, 0);
-            $room_name = $row['room_name'];
-            $area_name = $row['area_name'];
-          }
-          // If this is a modified entry then call
-          // getPreviousEntryData to prepare entry comparison.
-          if ( isset($id) )
-          {
-            $mail_previous = getPreviousEntryData($id, 0);
-          }
-          $result = notifyAdminOnBooking(!isset($id), $new_id, ($edit_type == "series"));
+          $sql = "SELECT R.room_name, A.area_name
+                    FROM $tbl_room R, $tbl_area A
+                   WHERE R.id=$room_id AND R.area_id = A.id
+                   LIMIT 1";
+          $res = sql_query($sql);
+          $row = sql_row_keyed($res, 0);
+          $data['room_name'] = $row['room_name'];
+          $data['area_name'] = $row['area_name'];
         }
+        // If this is a modified entry then call
+        // getPreviousEntryData to prepare entry comparison.
+        if (isset($id))
+        {
+          if ($edit_type == "series")
+          {
+            $mail_previous = getPreviousEntryData($repeat_id, TRUE);
+          }
+          else
+          {
+            $mail_previous = getPreviousEntryData($id, FALSE);
+          }
+        }
+        // Send the email
+        $result = notifyAdminOnBooking(!isset($id), $new_id, $is_repeat_table);
       }
-    }
+    }   
   } // end foreach $rooms
 
   // Delete the original entry

@@ -28,6 +28,8 @@ body {font-size: small;
 
 .current {color: <?php echo $highlight_font_color ?>}                        /* used to highlight the current item */
 .error   {color: <?php echo $highlight_font_color ?>; font-weight: bold}     /* for error messages */
+.warning {color: <?php echo $highlight_font_color ?>}                        /* for warning messages */
+
 
 h1 {font-size: x-large}
 h2 {font-size: large}
@@ -432,13 +434,16 @@ div:hover.multiple_control {cursor: pointer}
 .minimized div.mini {display: block}
 .minimized div.maxi {display: none}
 
-/* private bookings */
+/* booking privacy status */
 .private {opacity: 0.6; font-style: italic}
 
-/* provisional bookings */
-.provisional {opacity: 0.6}
-.provisional a {font-weight: normal}
-.provisional a:before {content: "? "}
+/* booking approval status */
+.awaiting_approval {opacity: 0.6}
+.awaiting_approval a:before {content: "? "}
+
+/* booking confirmation status */
+.tentative {opacity: 0.6}
+.tentative a {font-weight: normal}
 
 
 /* ------------ DEL.PHP -----------------------------*/
@@ -596,7 +601,6 @@ div#edit_area_room_submit_save {float: left; clear: none; width: auto}
 .form_general div#ad {float: left}
 .form_general #ad label {clear: none; text-align: left; font-weight: normal}
 .form_general input#all_day {width: auto; margin-left: 1.0em; margin-right: 0.5em}
-.form_general input#private {width: auto; margin-left: 3.0em; margin-right: 0.5em}
 .form_general #div_rooms select, .form_general #div_typematch select {float: left; margin-right: 2.0em}
 fieldset#rep_info {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.7em}
 .form_general input#rep_num_weeks {width: 2.0em}
@@ -737,7 +741,7 @@ table#pending_list {width: 100%}
 .div_report h3 {border-top: 1px solid <?php echo $report_h3_border_color ?>;
     padding-top: 0.5em; margin-bottom: 0}
 .div_report table {clear: both; width: 100%; margin-top: 0.5em}
-.div_report col.col1 {width: 8em}
+.div_report col.col1 {width: 11em}
 .div_report td:first-child {text-align: right; font-weight: bold}
 .div_report .createdby td, .div_report .lastupdate td {font-size: x-small}
 div.report_entry_title {width: 100%; float: left;
@@ -755,6 +759,9 @@ div.report_entry_when  {width: 60%;  float: right; text-align: right}
 #div_summary td.count {border-right-width: 0}
 #div_summary td:first-child {font-weight: bold}
 p.report_entries {font-weight: bold}
+.report .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
+.report .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
+
 
 /* ------------ SEARCH.PHP ----------------------*/
 span#search_str {color: <?php echo $highlight_font_color ?>}
@@ -798,10 +805,10 @@ div#simple_trailer {clear: both; width: 100%; text-align: center; padding-top: 1
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 .view_entry #entry td:first-child {text-align: right; font-weight: bold; padding-right: 1.0em}
 .view_entry div#view_entry_nav {margin-top: 1.0em}
-.view_entry #confirm_buttons form {float: left; margin-right: 2em}
-.view_entry #confirm_buttons legend {font-size: 0}
-#confirm_buttons td {vertical-align: middle; padding-top: 1em}
-#confirm_buttons td#caption {text-align: left}
-#confirm_buttons td#note {padding-top: 0}
-#confirm_buttons td#note form {width: 100%}
-#confirm_buttons td#note textarea {width: 100%; height: 6em}
+.view_entry #approve_buttons form {float: left; margin-right: 2em}
+.view_entry #approve_buttons legend {font-size: 0}
+#approve_buttons td {vertical-align: middle; padding-top: 1em}
+#approve_buttons td#caption {text-align: left}
+#approve_buttons td#note {padding-top: 0}
+#approve_buttons td#note form {width: 100%}
+#approve_buttons td#note textarea {width: 100%; height: 6em}

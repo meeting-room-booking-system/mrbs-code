@@ -112,11 +112,12 @@ $vocab["returncal"]          = "Vrnitev na pogled koledarja";
 $vocab["failed_to_acquire"]  = "Napaka pri dostopu do baze";
 $vocab["invalid_booking"]    = "Napačna rezervacija";
 $vocab["must_set_description"] = "Vnesti morate kratek opis rezervacije. Prosimo vrnite se in jo vnesite.";
-$vocab["mail_subject_entry"] = "Vnos dodan/spremenjen za vaš MRBS";
-$vocab["mail_body_new_entry"] = "Dodan je bil nov vnos in tukaj so podrobnosti:";
-$vocab["mail_body_del_entry"] = "Vnos je bil izbrisan in tukaj so podrobnosti:";
+$vocab["mail_subject_new_entry"]     = "Vnos dodan/spremenjen za vaš MRBS";
+$vocab["mail_subject_changed_entry"] = "Vnos dodan/spremenjen za vaš MRBS";
+$vocab["mail_subject_delete"]        = "Vnos za vaš MRBS je bil izbrisan";
+$vocab["mail_body_new_entry"]     = "Dodan je bil nov vnos in tukaj so podrobnosti:";
 $vocab["mail_body_changed_entry"] = "Vnos je bil spremenjen in tukaj so podrobnosti:";
-$vocab["mail_subject_delete"] = "Vnos za vaš MRBS je bil izbrisan";
+$vocab["mail_body_del_entry"]     = "Vnos je bil izbrisan in tukaj so podrobnosti:";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Dostop zavrnjen";
