@@ -80,8 +80,7 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   // Set the approval status for each one
   $sql = "UPDATE $tbl_repeat
              SET status=status|" . STATUS_AWAITING_APPROVAL . "
-           WHERE id=" . $row['repeat_id'] . "
-           LIMIT 1";
+           WHERE id=" . $row['repeat_id'];
   if (sql_command($sql) != 1)
   {
     fatal_error(FALSE, "Failed to update status column in repeat table with approval status.");
