@@ -9,40 +9,45 @@ with rights to create and alter tables.
 It would be a sensible precaution to take a backup of your database before
 the upgrade.
 
-MRBS database upgrades are intended to be backwards compatible, so that you
-should still be able to run the old version of MRBS against the new database
-schema.   This will allow you to install the new version of MRBS in a separate
-directory while you configure and test it.   When you are happy with the
-new release you can switch the directory to be your production directory.
+MRBS database upgrades are in general intended to be backwards compatible,
+so that you should still be able to run the old version of MRBS against the
+new database schema.   This will allow you to install the new version of MRBS
+in a separate directory while you configure and test it.   When you are happy
+with the new release you can switch the directory to be your production
+directory.
+
+There are however some exceptions to this backward compatiblity, namely at
+the following transitions:
+
+MRBS 1.4.4.1 -> 1.4.5
+
+In these cases you will not be able to run the old version of MRBS against
+the upgraded database.   You may therefore choose to make a copy of the
+database for test purposes and check that the upgrade process works before
+performing the upgrade on your production database.
 
 
-Upgrading from prior to mrbs 0.7
-================================
-There was a change to the database schema at version 0.7. See the
-information in INSTALL on using the upgrade.my.sql script.
+Upgrading from prior MRBS 1.4.5
+===============================
+MRBS 1.4.5 introduces the concept of tentative bookings, or bookings that
+require confirmation.   To avoid confusion, what were previously known as
+"provisional bookings" have now been renamed "bookings requiring approval"
+and the config variable $provisional_enabled has been renamed
+$approval_enabled.   You should update your config file accordingly.
 
-Upgrading from prior to mrbs 1.0-pre1
-======================================
+Please also see the note about database compatibility above.
 
-A change in version 1.0-pre1 might affect the appearance of entries in your
-existing database. Prior versions of MRBS did an extra and unnecessary
-level of backslash-escaping on room, area, and entry names and
-descriptions. This applied to certain characters such as single quote
-mark(') and backslash(\). As of version 1.0-pre1, these characters are
-handled correctly. If you see extra backslashes when MRBS displays names or
-descriptions, it is because these are in actually your database.  You can
-edit the entries in MRBS or directly with your database SQL tool, or just
-ignore them.
 
-Upgrading from prior to mrbs 1.0 final
-======================================
+Upgrading from prior MRBS 1.2-pre3
+==================================
 
-Please apply the upgrade2.my.sql (if using MySQL) or the
-the upgrade2.pg.sql (if using PostgreSQL) script, which
-adds a new column to the 'mrbs_repeat' table to support
-"n-weekly" repeats.
+mrbs 1.2-pre3 introduced area and room administrator email fields.
 
-Upgrading from prior mrbs 1.2-pre2
+Please apply the upgrade3.my.sql to add these fields. This file should work 
+both with mysql and pgsql.
+
+
+Upgrading from prior MRBS 1.2-pre2
 ==================================
 
 Upgrading mysql database from previous charsets to Unicode :
@@ -56,12 +61,34 @@ Upgrading mysql database from previous charsets to Unicode :
 	  Running it more than once will make a right mess of any non-ASCII 
 	  text in the database. 
 	  
-Upgrading from prior mrbs 1.2-pre3
-==================================
+	  
+Upgrading from prior to MRBS 1.0 final
+======================================
 
-mrbs 1.2-pre3 introduced area and room administrator email fields.
+Please apply the upgrade2.my.sql (if using MySQL) or the
+the upgrade2.pg.sql (if using PostgreSQL) script, which
+adds a new column to the 'mrbs_repeat' table to support
+"n-weekly" repeats.
 
-Please apply the upgrade3.my.sql to add these fields. This file should work 
-both with mysql and pgsql.
+
+Upgrading from prior to MRBS 1.0-pre1
+======================================
+
+A change in version 1.0-pre1 might affect the appearance of entries in your
+existing database. Prior versions of MRBS did an extra and unnecessary
+level of backslash-escaping on room, area, and entry names and
+descriptions. This applied to certain characters such as single quote
+mark(') and backslash(\). As of version 1.0-pre1, these characters are
+handled correctly. If you see extra backslashes when MRBS displays names or
+descriptions, it is because these are in actually your database.  You can
+edit the entries in MRBS or directly with your database SQL tool, or just
+ignore them.
+
+
+Upgrading from prior to MRBS 0.7
+================================
+There was a change to the database schema at version 0.7. See the
+information in INSTALL on using the upgrade.my.sql script.
+
 	  
 $Id$
