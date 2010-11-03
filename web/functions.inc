@@ -229,6 +229,12 @@ function toPeriodString($start_period, &$dur, &$units, $translate=TRUE)
   $mins_in_day = 24*60;
   $days = $dur / $mins_in_day;
   $remainder = $dur % $mins_in_day;
+  // strip out any gap between the end of the last period on one day
+  // and the beginning of the first on the next
+  if ($remainder > $max_periods)
+  {
+    $remainder += $max_periods - $mins_in_day;
+  }
   
   // We'll express the duration as an integer, in days if possible, otherwise periods
   if (($remainder == 0) || (($start_period == 0) && ($remainder == $max_periods)))
