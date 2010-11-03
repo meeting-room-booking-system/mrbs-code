@@ -230,6 +230,7 @@ function toPeriodString($start_period, &$dur, &$units, $translate=TRUE)
   $days = $dur / $mins_in_day;
   $remainder = $dur % $mins_in_day;
   
+  // We'll express the duration as an integer, in days if possible, otherwise periods
   if (($remainder == 0) || (($start_period == 0) && ($remainder == $max_periods)))
   {
     $dur = (int) $days;
