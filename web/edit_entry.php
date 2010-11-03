@@ -503,12 +503,12 @@ function validate(form)
   <?php
    
   }
-  ?>
 
   // Form submit can take some times, especially if mails are enabled and
   // there are more than one recipient. To avoid users doing weird things
   // like clicking more than one time on submit button, we hide it as soon
   // it is clicked.
+  ?>
   form.save_button.disabled="true";
 
   // would be nice to also check date to not allow Feb 31, etc...
@@ -517,50 +517,57 @@ function validate(form)
 }
 
 // set up some global variables for use by OnAllDayClick(). 
-var old_start, old_end, old_end_datepicker;
-var old_end_datepicker_alt_day, old_end_datepicker_alt_month, old_end_datepicker_alt_year;
+var old_start, old_end;
 
 // Executed when the user clicks on the all_day checkbox.
 function OnAllDayClick(allday)
 {
   var form = document.forms["main"];
-  if (form.all_day.checked) // If checking the box...
+  if (form)
   {
-    // save the old values, disable the inputs and, to avoid user confusion,
-    // show the start time as the beginning of the day and the duration as one day
-    old_start = form.start_seconds.selectedIndex;
-    form.start_seconds.selectedIndex = 0;
-    form.start_seconds.disabled = true;
-    old_end = form.end_seconds.selectedIndex;
-    form.end_seconds.selectedIndex = form.end_seconds.options.length - 1;
-    form.end_seconds.disabled = true;
+    var startSelect = form.start_seconds;
+    var endSelect = form.end_seconds;
+    var i;
+    if (form.all_day.checked) // If checking the box...
+    {
+      <?php
+      // Save the old values, disable the inputs and, to avoid user confusion,
+      // show the start and end times as the beginning and end of the booking
+      // (Note that we save the value rather than the index because the number
+      // of options in the select box will change)
+      ?>
+      old_start = startSelect.options[startSelect.selectedIndex].value;
+      startSelect.selectedIndex = 0;
+      startSelect.disabled = true;
     
-    old_end_datepicker_alt_day = form.end_datepicker_alt_day.value;
-    form.end_datepicker_alt_day.value = form.start_datepicker_alt_day.value;
-    
-    old_end_datepicker_alt_month = form.end_datepicker_alt_month.value;
-    form.end_datepicker_alt_month.value = form.start_datepicker_alt_month.value;
-    
-    old_end_datepicker_alt_year = form.end_datepicker_alt_year.value;
-    form.end_datepicker_alt_year.value = form.start_datepicker_alt_year.value;
-    
-    old_end_datepicker = form.end_datepicker.value;
-    form.end_datepicker.value = form.start_datepicker.value;
-    form.end_datepicker.disabled = true;
+      old_end = endSelect.options[endSelect.selectedIndex].value;
+      endSelect.selectedIndex = endSelect.options.length - 1;
+      endSelect.disabled = true;
+    }
+    else  <?php // restore the old values and re-enable the inputs ?>
+    {
+      startSelect.disabled = false;
+      for (i=0; i<startSelect.options.length; i++)
+      {
+        if (startSelect.options[i].value == old_start)
+        {
+          startSelect.options.selectedIndex = i;
+          break;
+        }
+      }     
+      endSelect.disabled = false;
+      for (i=0; i<endSelect.options.length; i++)
+      {
+        if (endSelect.options[i].value == old_end)
+        {
+          endSelect.options.selectedIndex = i;
+          break;
+        }
+      } 
+      prevStartValue = undefined;  <?php // because we don't want adjustSlotSelectors() to change the end time ?>
+    }
+    adjustSlotSelectors(form); <?php // need to get the duration right ?>
   }
-  else  // restore the old values and re-enable the inputs
-  {
-    form.start_seconds.disabled = false;
-    form.start_seconds.selectedIndex = old_start;
-    form.end_seconds.disabled = false;
-    form.end_seconds.selectedIndex = old_end;
-    form.end_datepicker_alt_day.value = old_end_datepicker_alt_day;
-    form.end_datepicker_alt_month.value = old_end_datepicker_alt_month;
-    form.end_datepicker_alt_year.value = old_end_datepicker_alt_year;
-    form.end_datepicker.disabled = false;
-    form.end_datepicker.value = old_end_datepicker;
-  }
-  adjustSlotSelectors(form); // need to get the duration right
 }
 //]]>
 </script>

@@ -273,7 +273,7 @@ if (isset($all_day) && ($all_day == "yes"))
   {
     $max_periods = count($periods);
     $starttime = mktime(12, 0, 0, $month, $day, $year);
-    $endtime   = mktime(12, $max_periods, 0, $month, $day, $year);
+    $endtime   = mktime(12, $max_periods, 0, $end_month, $end_day, $end_year);
     // We need to set the duration and units because they are needed for email notifications
     $duration = $max_periods;
     $dur_units = "periods";
@@ -285,7 +285,7 @@ if (isset($all_day) && ($all_day == "yes"))
                         $month, $day, $year,
                         is_dst($month, $day, $year, $morningstarts));
     $endtime   = mktime($eveningends, $eveningends_minutes, 0,
-                        $month, $day, $year,
+                        $end_month, $end_day, $end_year,
                         is_dst($month, $day, $year, $eveningends));
     $endtime += $resolution;                // add on the duration (in seconds) of the last slot as
                                             // $eveningends and $eveningends_minutes specify the 

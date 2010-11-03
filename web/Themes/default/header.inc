@@ -635,6 +635,9 @@ function init()
   var form = document.getElementById('main');
   if (form)
   {
+    var startSelect = form.start_seconds;
+    var endSelect = form.end_seconds;
+    
     if (form.name && (form.name.value.length == 0))
     {
       form.name.focus();
@@ -660,20 +663,20 @@ function init()
     // they are fully populated with options.  We can then use the details
     // to rebuild the selectors later on
     ?>
-    nStartOptions = form.start_seconds.options.length;
+    nStartOptions = startSelect.options.length;
     for (var i=0; i < nStartOptions; i++)
     {
       startOptions[i] = new Array();
-      startOptions[i]['text'] = form.start_seconds.options[i].text;
-      startOptions[i]['value'] = parseInt(form.start_seconds.options[i].value);
+      startOptions[i]['text'] = startSelect.options[i].text;
+      startOptions[i]['value'] = parseInt(startSelect.options[i].value);
     }
   
-    nEndOptions = form.end_seconds.options.length;
+    nEndOptions = endSelect.options.length;
     for (var i=0; i < nEndOptions; i++)
     {
       endOptions[i] = new Array();
-      endOptions[i]['text'] = form.end_seconds.options[i].text;
-      endOptions[i]['value'] = parseInt(form.end_seconds.options[i].value);
+      endOptions[i]['text'] = endSelect.options[i].text;
+      endOptions[i]['value'] = parseInt(endSelect.options[i].value);
     }
   
     adjustSlotSelectors(form);
@@ -683,14 +686,14 @@ function init()
     // start and end time boxes
     ?>
     if (!form.all_day.disabled && 
-        (parseInt(form.start_seconds.options[form.start_seconds.selectedIndex].value) == startOptions[0]['value']) &&
-        (parseInt(form.end_seconds.options[form.end_seconds.selectedIndex].value) == endOptions[nEndOptions - 1]['value']))
+        (parseInt(startSelect.options[startSelect.selectedIndex].value) == startOptions[0]['value']) &&
+        (parseInt(endSelect.options[endSelect.selectedIndex].value) == endOptions[nEndOptions - 1]['value']))
     {
       form.all_day.checked = true;
-      form.start_seconds.disabled = true;
-      form.end_seconds.disabled = true;
-      old_start = form.start_seconds.selectedIndex;
-      old_end = form.end_seconds.selectedIndex;
+      startSelect.disabled = true;
+      endSelect.disabled = true;
+      old_start = startSelect.options[startSelect.selectedIndex].value;
+      old_end = endSelect.options[endSelect.selectedIndex].value;
     }
   }
 
