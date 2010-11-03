@@ -179,6 +179,7 @@ function toTimeString(&$dur, &$units, $translate=TRUE)
   if (is_float($dur))
   {
     $dur = sprintf('%.3f', $dur);
+    $dur = (string) (float) $dur;  // removes trailing zeros
   }
   
   // Translate into local language if required
