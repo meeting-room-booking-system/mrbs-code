@@ -368,7 +368,7 @@ $start_min   = strftime('%M', $start_time);
 // If we have not been provided with a room_id
 if (empty( $room_id ) )
 {
-  $sql = "select id from $tbl_room limit 1";
+  $sql = "SELECT id FROM $tbl_room LIMIT 1";
   $res = sql_query($sql);
   $row = sql_row_keyed($res, 0);
   $room_id = $row['id'];
@@ -689,19 +689,44 @@ else
     <?php
     // Determine the area id of the room in question first
     $area_id = mrbsGetRoomArea($room_id);
-    // determine if there is more than one area
-    $sql = "select id from $tbl_area";
+    
+    // Get the details of all the rooms
+    $rooms = array();
+    $sql = "SELECT id, room_name, area_id
+              FROM $tbl_room
+          ORDER BY area_id, sort_key";
     $res = sql_query($sql);
-    $num_areas = sql_count($res);
+    if ($res)
+    {
+      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      {
+        $rooms[$row['id']] = $row;
+      }
+    }
+    
+    // Get the details of all the areas
+    $areas = array();
+    $sql = "SELECT id, area_name, resolution, enable_periods
+              FROM $tbl_area
+          ORDER BY area_name";
+    $res = sql_query($sql);
+    if ($res)
+    {
+      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      {
+        $areas[$row['id']] = $row;
+      }
+    }
+    
     // if there is more than one area then give the option
     // to choose areas.
-    if( $num_areas > 1 )
-    {
-    
-    ?>
-    
+    if (count($areas) > 1)
+    { 
+      ?> 
       <script type="text/javascript">
       //<![CDATA[
+      
+      var area = <?php echo $area_id ?>;
       
       function changeRooms( formObj )
       {
@@ -719,35 +744,29 @@ else
         // add entries based on area selected
         switch (area){
           <?php
-          // get the area id for case statement
-          $sql = "select id, area_name from $tbl_area order by area_name";
-          $res = sql_query($sql);
-          if ($res)
+          foreach ($areas as $a)
           {
-            for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+            print "case \"" . $a['id'] . "\":\n";
+            // get rooms for this area
+            $i = 0;
+            foreach ($rooms as $r)
             {
-              print "      case \"".$row['id']."\":\n";
-              // get rooms for this area
-              $sql2 = "select id, room_name from $tbl_room where area_id='".$row['id']."' order by sort_key";
-              $res2 = sql_query($sql2);
-              if ($res2)
+              if ($r['area_id'] == $a['id'])
               {
-                for ($j = 0; ($row2 = sql_row_keyed($res2, $j)); $j++)
-                {
-                  $clean_room_name = str_replace('\\', '\\\\', $row2['room_name']);  // escape backslash
-                  $clean_room_name = str_replace('"', '\\"', $clean_room_name);      // escape double quotes
-                  $clean_room_name = str_replace('/', '\\/', $clean_room_name);      // prevent '/' being parsed as markup (eg </p>)
-                  print "        roomsObj.options[$j] = new Option(\"".$clean_room_name."\",".$row2['id'] .");\n";
-                }
-                // select the first entry by default to ensure
-                // that one room is selected to begin with
-                if ($j > 0)  // but only do this if there is a room
-                {
-                  print "        roomsObj.options[0].selected = true;\n";
-                }
-                print "        break;\n";
+                $clean_room_name = str_replace('\\', '\\\\', $r['room_name']);  // escape backslash
+                $clean_room_name = str_replace('"', '\\"', $clean_room_name);      // escape double quotes
+                $clean_room_name = str_replace('/', '\\/', $clean_room_name);      // prevent '/' being parsed as markup (eg </p>)
+                print "roomsObj.options[$i] = new Option(\"" . $clean_room_name . "\"," . $r['id'] . ");\n";
+                $i++;
               }
             }
+            // select the first entry by default to ensure
+            // that one room is selected to begin with
+            if ($i > 0)  // but only do this if there is a room
+            {
+              print "roomsObj.options[0].selected = true;\n";
+            }
+            print "break;\n";
           }
           ?>
         } //switch
@@ -770,29 +789,24 @@ else
       var option;
       var option_text
       <?php
-      // get list of areas
-      $sql = "select id, area_name from $tbl_area order by area_name";
-      $res = sql_query($sql);
-      if ($res)
+      // go through the areas and create the options
+      foreach ($areas as $a)
       {
-        for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+        ?>
+        option = document.createElement('option');
+        option.value = <?php echo $a['id'] ?>;
+        option_text = document.createTextNode('<?php echo $a['area_name'] ?>');
+        <?php
+        if ($a['id'] == $area_id)
         {
           ?>
-          option = document.createElement('option');
-          option.value = <?php echo $row['id'] ?>;
-          option_text = document.createTextNode('<?php echo $row['area_name'] ?>');
-          <?php
-          if ($row['id'] == $area_id)
-          {
-            ?>
-            option.selected = true;
-            <?php
-          }
-          ?>
-          option.appendChild(option_text);
-          area_select.appendChild(option);
+          option.selected = true;
           <?php
         }
+        ?>
+        option.appendChild(option_text);
+        area_select.appendChild(option);
+        <?php
       }
       ?>
       // insert the <select> which we've just assembled into the <div>
@@ -803,7 +817,7 @@ else
       
       
       <?php
-    } // if $num_areas
+    } // if count($areas)
     ?>
     
     
@@ -812,21 +826,14 @@ else
     <div class="group">
       <select id="rooms" name="rooms[]" multiple="multiple" size="5">
         <?php 
-        // select the rooms in the area determined above
-        $sql = "select id, room_name from $tbl_room where area_id=$area_id order by sort_key";
-        $res = sql_query($sql);
-        if ($res)
+        foreach ($rooms as $r)
         {
-          for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+          if ($r['area_id'] == $area_id)
           {
-            $selected = "";
-            if ($row['id'] == $room_id)
-            {
-              $selected = "selected=\"selected\"";
-            }
-            echo "              <option $selected value=\"" . $row['id'] . "\">" . htmlspecialchars($row['room_name']) . "</option>\n";
+            $selected = ($r['id'] == $room_id) ? "selected=\"selected\"" : "";
+            echo "<option $selected value=\"" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</option>\n";
             // store room names for emails
-            $room_names[$i] = $row['room_name'];
+            $room_names[$i] = $r['room_name'];
           }
         }
         ?>
@@ -842,7 +849,7 @@ else
         {
           if (!empty($typel[$c]))
           { 
-            echo "        <option value=\"$c\"" . ($type == $c ? " selected=\"selected\"" : "") . ">$typel[$c]</option>\n";
+            echo "<option value=\"$c\"" . ($type == $c ? " selected=\"selected\"" : "") . ">$typel[$c]</option>\n";
           }
         }
         ?>
