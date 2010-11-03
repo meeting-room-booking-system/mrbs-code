@@ -225,35 +225,23 @@ function toPeriodString($start_period, &$dur, &$units, $translate=TRUE)
   global $periods;
 
   $max_periods = count($periods);
-
-  $dur /= 60;
-
-  if ( $dur >= $max_periods || $start_period == 0 )
+  $dur /= 60;  // duration now in minutes
+  $mins_in_day = 24*60;
+  $days = $dur / $mins_in_day;
+  $remainder = $dur % $mins_in_day;
+  
+  if (($remainder == 0) || (($start_period == 0) && ($remainder == $max_periods)))
   {
-    if( $start_period == 0 && $dur == $max_periods )
+    $dur = (int) $days;
+    if ($remainder == $max_periods)
     {
-      $units = $translate ? get_vocab("days") : "days";
-      $dur = 1;
-      return;
+      $dur++;
     }
-
-    $dur /= 60;
-    if(($dur >= 24) && is_int($dur))
-    {
-      $dur /= 24;
-      $units = $translate ? get_vocab("days") : "days";
-      return;
-    }
-    else
-    {
-      $dur *= 60;
-      $dur = ($dur % $max_periods) + floor( $dur/(24*60) ) * $max_periods;
-      $units = $translate ? get_vocab("periods") : "periods";
-      return;
-    }
+    $units = $translate ? get_vocab("days") : "days";
   }
   else
   {
+    $dur = (intval($days) * $max_periods) + $remainder;
     $units = $translate ? get_vocab("periods") : "periods";
   }
 }
