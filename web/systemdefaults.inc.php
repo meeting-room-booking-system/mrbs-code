@@ -510,6 +510,7 @@ $confirmed_default = TRUE;
 //     - Entry table: name, description and custom fields
 //     - Users table: custom fields
 
+$is_mandatory_field = array();
 // You can define custom entry fields to be mandatory by setting
 // items in the array $is_mandatory_field. For example:
 
