@@ -51,7 +51,45 @@
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-global $twentyfourhour_format;
+// Generate a time or period selector starting with $first and ending with $last.
+// $time is a full Unix timestamp and is the current value.  The selector returns
+// the start time in seconds since the beginning of the day for the start of that slot
+// The $display parameter sets the display style of the <select>
+function genslotselector($area, $prefix, $first, $last, $time, $display="block")
+{
+  global $twentyfourhour_format, $periods;
+  
+  $html = '';
+  // Get the settings for this area.   Note that the variables below are
+  // local variables, not globals.
+  $enable_periods = $area['enable_periods'];
+  $resolution = ($enable_periods) ? 60 : $area['resolution'];
+  // If they've asked for "display: none" then we'll also disable the select so
+  // hat there is only one select passing through the variable to the handler
+  $disabled = (strtolower($display) == "none") ? " disabled=\"disabled\"" : "";
+  
+  $date = getdate($time);
+  $time_zero = mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']);
+  if ($enable_periods)
+  {
+    $base = 12*60*60;  // The start of the first period of the day
+  }
+  else
+  {
+    $format = ($twentyfourhour_format) ? "%R" : "%l:%M %P";
+  }
+  $html .= "<select style=\"display: $display\" id = \"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\"$disabled>\n";
+  for ($t = $first; $t <= $last; $t = $t + $resolution)
+  {
+    $timestamp = $t + $time_zero;
+    $slot_string = ($enable_periods) ? $periods[intval(($t-$base)/60)] : utf8_strftime($format, $timestamp);
+    $html .= "<option value=\"$t\"";
+    $html .= ($timestamp == $time) ? " selected=\"selected\"" : "";
+    $html .= ">$slot_string</option>\n";
+  }
+  $html .= "</select>\n";
+  echo $html;
+}
 
 // Get non-standard form variables
 $hour = get_form_var('hour', 'int');
@@ -86,6 +124,8 @@ $is_admin = (authGetUserLevel($user) >= 2);
 // You're only allowed to make repeat bookings if you're an admin
 // or else if $auth['only_admin_can_book_repeat'] is not set
 $repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
+// Similarly for multi-day
+$multiday_allowed = $is_admin || empty($auth['only_admin_can_book_multiday']);
 
 // This page will either add or modify a booking
 
@@ -182,14 +222,11 @@ if (isset($id))
         break;
         
       case 'start_time':
-        $start_day   = strftime('%d', $row['start_time']);
-        $start_month = strftime('%m', $row['start_time']);
-        $start_year  = strftime('%Y', $row['start_time']);
-        $start_hour  = strftime('%H', $row['start_time']);
-        $start_min   = strftime('%M', $row['start_time']);
+        $start_time = $row['start_time'];
         break;
         
       case 'end_time':
+        $end_time = $row['end_time'];
         $duration = $row['end_time'] - $row['start_time'] - cross_dst($row['start_time'], $row['end_time']);
         break;
         
@@ -202,7 +239,7 @@ if (isset($id))
 
   if($entry_type >= 1)
   {
-    $sql = "SELECT rep_type, start_time, end_date, rep_opt, rep_num_weeks
+    $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_num_weeks
               FROM $tbl_repeat 
              WHERE id=$rep_id
              LIMIT 1";
@@ -226,12 +263,12 @@ if (isset($id))
     // If it's a repeating entry get the repeat details
     if (isset($rep_type) && ($rep_type != REP_NONE))
     {
-      // but don't overwrite the start time if we're not editing the series
+      // If we're editing the series we want the start_time and end_time to be the
+      // start and of the first entry of the series, not the start of this entry
       if ($edit_type == "series")
       {
-        $start_day   = (int)strftime('%d', $row['start_time']);
-        $start_month = (int)strftime('%m', $row['start_time']);
-        $start_year  = (int)strftime('%Y', $row['start_time']);
+        $start_time = $row['start_time'];
+        $end_time = $row['end_time'];
       }
       
       $rep_end_day   = (int)strftime('%d', $row['end_date']);
@@ -277,21 +314,8 @@ else
   $name        = "";
   $create_by   = $user;
   $description = "";
-  $start_day   = $day;
-  $start_month = $month;
-  $start_year  = $year;
-  // Avoid notices for $hour and $minute if periods is enabled
-  (isset($hour)) ? $start_hour = $hour : '';
-  (isset($minute)) ? $start_min = $minute : '';
-  if (!isset($default_duration))
-  {
-    $default_duration = (60 * 60);
-  }
-  $duration    = ($enable_periods ? 60 : $default_duration);
   $type        = "I";
   $room_id     = $room;
-  unset($id);
-
   $rep_id        = 0;
   $rep_type      = REP_NONE;
   $rep_end_day   = $day;
@@ -300,6 +324,7 @@ else
   $rep_day       = array(0, 0, 0, 0, 0, 0, 0);
   $private       = $private_default;
   $confirmed     = $confirmed_default;
+  
   // now initialise the custom fields
   foreach ($fields as $field)
   {
@@ -308,7 +333,43 @@ else
       $custom_fields[$field['name']] = '';
     }
   }
+
+  // Get the hour and minute, converting a period to its MRBS time
+  // Set some sensible defaults
+  if ($enable_periods)
+  {
+    if (isset($period))
+    {
+      $hour = 12 + intval($period/60);
+      $minute = $period % 60;
+    }
+    else
+    {
+      $hour = 0;
+      $minute = 0;
+    }
+  }
+  else
+  {
+    if (!isset($hour) || !isset($minute))
+    {
+      $hour = $morningstarts;
+      $minute = $morningstarts_minutes;
+    }
+  }
+
+  $start_time = mktime($hour, $minute, 0, $month, $day, $year);
+
+  if (!isset($default_duration))
+  {
+    $default_duration = (60 * 60);
+  }
+  $duration    = ($enable_periods ? 60 : $default_duration);
+  $end_time = $start_time + $duration;
 }
+
+$start_hour  = strftime('%H', $start_time);
+$start_min   = strftime('%M', $start_time);
 
 // These next 4 if statements handle the situation where
 // this page has been accessed directly and no arguments have
@@ -316,28 +377,15 @@ else
 // If we have not been provided with a room_id
 if (empty( $room_id ) )
 {
-  $sql = "select id from $tbl_room limit 1";
+  $sql = "SELECT id FROM $tbl_room LIMIT 1";
   $res = sql_query($sql);
   $row = sql_row_keyed($res, 0);
   $room_id = $row['id'];
 
 }
+// Determine the area id of the room in question first
+$area_id = mrbsGetRoomArea($room_id);
 
-// If we have not been provided with starting time
-if ( empty( $start_hour ) && $morningstarts < 10 )
-{
-  $start_hour = "0$morningstarts";
-}
-
-if ( empty( $start_hour ) )
-{
-  $start_hour = "$morningstarts";
-}
-
-if ( empty( $start_min ) )
-{
-  $start_min = "00";
-}
 
 // Remove "Undefined variable" notice
 if (!isset($rep_num_weeks))
@@ -357,10 +405,63 @@ if (!getWritable($create_by, $user, $room_id))
 
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
+// Get the details of all the rooms
+$rooms = array();
+$sql = "SELECT id, room_name, area_id
+          FROM $tbl_room
+      ORDER BY area_id, sort_key";
+$res = sql_query($sql);
+if ($res)
+{
+  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  {
+    $rooms[$row['id']] = $row;
+  }
+}
+    
+// Get the details of all the areas
+$areas = array();
+$sql = "SELECT id, area_name, resolution, default_duration, enable_periods,
+               morningstarts, morningstarts_minutes, eveningends , eveningends_minutes
+          FROM $tbl_area
+      ORDER BY area_name";
+$res = sql_query($sql);
+if ($res)
+{
+  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  {
+    $areas[$row['id']] = $row;
+  }
+}
+
 ?>
 
 <script type="text/javascript">
 //<![CDATA[
+
+var currentArea = <?php echo $area_id ?>;
+var areas = new Array();
+<?php
+// give JavaScript a copy of the PHP array $areas
+foreach ($areas as $area)
+{
+  echo "areas[${area['id']}] = new Array();\n";
+  foreach ($area as $key => $value)
+  {
+    if ($key == "area_name")
+    {
+      // Enclose strings in quotes
+      $value = "'$value'";
+    }
+    elseif (in_array($key, $boolean_fields['area']))
+    {
+      // Convert booleans
+      $value = ($value) ? 'true' : 'false';
+    }
+    echo "areas[${area['id']}]['$key'] = $value;\n";
+  }
+}
+?>
 
 // do a little form verifying
 function validate(form)
@@ -380,17 +481,16 @@ function validate(form)
       return false;
     }
   }
-  <?php if( ! $enable_periods ) { ?>
-
-  h = parseInt(form.hour.value);
-  m = parseInt(form.minute.value);
-
-  if(h > 23 || m > 59)
+  
+  <?php
+  // Check that the start date is not after the end date
+  ?>
+  var dateDiff = getDateDifference(form);
+  if (dateDiff < 0)
   {
-    alert ("<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("valid_time_of_day") ?>");
+    alert('<?php echo get_vocab("start_after_end_long")?>');
     return false;
   }
-  <?php } ?>
 
   // check form element exist before trying to access it
   if (form.id )
@@ -467,12 +567,12 @@ function validate(form)
   <?php
    
   }
-  ?>
 
   // Form submit can take some times, especially if mails are enabled and
   // there are more than one recipient. To avoid users doing weird things
   // like clicking more than one time on submit button, we hide it as soon
   // it is clicked.
+  ?>
   form.save_button.disabled="true";
 
   // would be nice to also check date to not allow Feb 31, etc...
@@ -480,75 +580,57 @@ function validate(form)
   return true;
 }
 
-// set up some global variables for use by OnAllDayClick().   (It doesn't really
-// matter about the initial values, but we might as well put in some sensible ones).
-var old_duration = '<?php echo $duration;?>';
-var old_dur_units = 0;  // This is the index number
-var old_hour = '<?php if (!$twentyfourhour_format && ($start_hour > 12)){ echo ($start_hour - 12);} else { echo $start_hour;} ?>';
-var old_minute = '<?php echo $start_min;?>';
-var old_period = 0; // This is the index number
+// set up some global variables for use by OnAllDayClick(). 
+var old_start, old_end;
 
 // Executed when the user clicks on the all_day checkbox.
 function OnAllDayClick(allday)
 {
   var form = document.forms["main"];
-  if (form.all_day.checked) // If checking the box...
+  if (form)
   {
-    // save the old values, disable the inputs and, to avoid user confusion,
-    // show the start time as the beginning of the day and the duration as one day
-    <?php 
-    if ($enable_periods )
+    var startSelect = form["start_seconds" + currentArea];
+    var endSelect = form["end_seconds" + currentArea];
+    var i;
+    if (form.all_day.checked) // If checking the box...
     {
-      ?>
-      old_period = form.period.selectedIndex;
-      form.period.value = 0;
-      form.period.disabled = true;
       <?php
-    }
-    else
-    { 
+      // Save the old values, disable the inputs and, to avoid user confusion,
+      // show the start and end times as the beginning and end of the booking
+      // (Note that we save the value rather than the index because the number
+      // of options in the select box will change)
       ?>
-      old_hour = form.hour.value;
-      form.hour.value = '<?php echo $morningstarts; ?>';
-      old_minute = form.minute.value;
-      form.minute.value = '<?php printf("%02d", $morningstarts_minutes); ?>';
-      form.hour.disabled = true;
-      form.minute.disabled = true;
-      <?php 
-    } 
-    ?>
+      old_start = startSelect.options[startSelect.selectedIndex].value;
+      startSelect.selectedIndex = 0;
+      startSelect.disabled = true;
     
-    old_duration = form.duration.value;
-    form.duration.value = '1';  
-    old_dur_units = form.dur_units.selectedIndex;
-    form.dur_units.value = 'days';  
-    form.duration.disabled = true;
-    form.dur_units.disabled = true;
-  }
-  else  // restore the old values and re-enable the inputs
-  {
-    <?php 
-    if ($enable_periods)
-    {
-      ?>
-      form.period.selectedIndex = old_period;
-      form.period.disabled = false;
-      <?php
+      old_end = endSelect.options[endSelect.selectedIndex].value;
+      endSelect.selectedIndex = endSelect.options.length - 1;
+      endSelect.disabled = true;
     }
-    else
-    { 
-      ?>
-      form.hour.value = old_hour;
-      form.minute.value = old_minute;
-      form.hour.disabled = false;
-      form.minute.disabled = false;
-      <?php 
-    } 
-    ?>
-    form.duration.value = old_duration;
-    form.dur_units.selectedIndex = old_dur_units;  
-    form.duration.disabled = false;
-    form.dur_units.disabled = false;
+    else  <?php // restore the old values and re-enable the inputs ?>
+    {
+      startSelect.disabled = false;
+      for (i=0; i<startSelect.options.length; i++)
+      {
+        if (startSelect.options[i].value == old_start)
+        {
+          startSelect.options.selectedIndex = i;
+          break;
+        }
+      }     
+      endSelect.disabled = false;
+      for (i=0; i<endSelect.options.length; i++)
+      {
+        if (endSelect.options[i].value == old_end)
+        {
+          endSelect.options.selectedIndex = i;
+          break;
+        }
+      } 
+      prevStartValue = undefined;  <?php // because we don't want adjustSlotSelectors() to change the end time ?>
+    }
+    adjustSlotSelectors(form); <?php // need to get the duration right ?>
   }
 }
 //]]>
@@ -616,127 +698,91 @@ else
       generate_textarea($label_text, 'description', $description);
     }
     echo "</div>\n";
-    ?>
 
-    <div id="div_date">
-      <?php
-      echo "<label for=\"start_datepicker\">" . get_vocab("date") . ":</label>\n";
-      gendateselector("start_", $start_day, $start_month, $start_year);
-      ?>
-    </div>
 
-    <?php 
-    if(! $enable_periods ) 
-    { 
-      echo "<div class=\"div_time\">\n";
-      echo "<label>" . get_vocab("time") . ":</label>\n";
-      echo "<input type=\"text\" class=\"time_hour\" name=\"hour\" value=\"";
-      if ($twentyfourhour_format)
+    echo "<div id=\"div_start_date\">\n";
+    echo "<label for=\"start_datepicker\">" . get_vocab("start") . ":</label>\n";
+    $date = getdate($start_time);
+    gendateselector("start_", $date['mday'], $date['mon'], $date['year']);
+    // If we're using periods the booking model is slightly different:
+    // you're allowed to specify the last period as your first period.
+    // This is why we don't substract the resolution
+    
+    foreach ($areas as $a)
+    {
+      if ($a['enable_periods'])
       {
-        echo $start_hour;
-      }
-      elseif ($start_hour > 12)
-      {
-        echo ($start_hour - 12);
-      } 
-      elseif ($start_hour == 0)
-      {
-        echo "12";
+        $a['resolution'] = 60;
+        $first = 12*60*60;
+        // If we're using periods we just go to the beginning of the last slot
+        $last = $first + ((count($periods) - 1) * $a['resolution']);
       }
       else
       {
-        echo $start_hour;
-      } 
-      echo "\" maxlength=\"2\">\n";
-      echo "<span>:</span>\n";
-      echo "<input type=\"text\" class=\"time_minute\" name=\"minute\" value=\"" . $start_min . "\" maxlength=\"2\">\n";
-      if (!$twentyfourhour_format)
-      {
-        echo "<div class=\"group ampm\">\n";
-        $checked = ($start_hour < 12) ? "checked=\"checked\"" : "";
-        echo "      <label><input name=\"ampm\" type=\"radio\" value=\"am\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
-        $checked = ($start_hour >= 12) ? "checked=\"checked\"" : "";
-        echo "      <label><input name=\"ampm\" type=\"radio\" value=\"pm\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
-        echo "</div>\n";
+        $first = (($a['morningstarts'] * 60) + $a['morningstarts_minutes']) * 60;
+        $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
+        $last = $last + $a['resolution'];
       }
-      echo "</div>\n";
+      $start_last = ($a['enable_periods']) ? $last : $last - $a['resolution'];
+      $display = ($a['id'] == $area_id) ? "block" : "none";
+      genslotselector($a, "start_", $first, $start_last, $start_time, $display);
     }
-    
-    else
-    {
-      ?>
-      <div id="div_period">
-        <label for="period" ><?php echo get_vocab("period")?>:</label>
-        <select id="period" name="period">
-          <?php
-          foreach ($periods as $p_num => $p_val)
-          {
-            echo "<option value=\"$p_num\"";
-            if( ( isset( $period ) && $period == $p_num ) || $p_num == $start_min)
-            {
-              echo " selected=\"selected\"";
-            }
-            echo ">$p_val</option>\n";
-          }
-          ?>
-        </select>
-      </div>
 
-    <?php
-    }
     ?>
-    <div id="div_duration">
-      <label for="duration"><?php echo get_vocab("duration");?>:</label>
-      <div class="group">
-        <input id="duration" name="duration" value="<?php echo $duration;?>">
-        <select id="dur_units" name="dur_units">
-          <?php
-          if( $enable_periods )
-          {
-            $units = array("periods", "days");
-          }
-          else
-          {
-            $units = array("minutes", "hours", "days", "weeks", "years");
-          }
-
-          while (list(,$unit) = each($units))
-          {
-            echo "        <option value=\"$unit\"";
-            if ($dur_units == get_vocab($unit))
-            {
-              echo " selected=\"selected\"";
-            }
-            echo ">".get_vocab($unit)."</option>\n";
-          }
-          ?>
-        </select>
-        <div id="ad">
-          <input id="all_day" class="checkbox" name="all_day" type="checkbox" value="yes" onclick="OnAllDayClick(this)">
-          <label for="all_day"><?php echo get_vocab("all_day"); ?></label>
-        </div>
+    <div class="group">
+      <div id="ad">
+        <input id="all_day" class="checkbox" name="all_day" type="checkbox" value="yes" onclick="OnAllDayClick(this)">
+        <label for="all_day"><?php echo get_vocab("all_day"); ?></label>
       </div>
     </div>
+    <?php
+    echo "</div>\n";
     
+    echo "<div id=\"div_end_date\">\n";
+    echo "<label for=\"start_datepicker\">" . get_vocab("end") . ":</label>\n";
+    $date = getdate($end_time);
+    // Don't show the end date selector if multiday is not allowed
+    echo "<div" . (($multiday_allowed) ? '' : " style=\"visibility: hidden\"") . ">\n";
+    gendateselector("end_", $date['mday'], $date['mon'], $date['year']);
+    echo "</div>\n";
+    // If we're using periods the booking model is slightly different,
+    // so subtract one period because the "end" period is actually the beginning
+    // of the last period booked
+    foreach ($areas as $a)
+    {
+      if ($a['enable_periods'])
+      {
+        $a['resolution'] = 60;
+        $first = 12*60*60;
+        // If we're using periods we just go to the beginning of the last slot
+        $last = $first + ((count($periods) - 1) * $a['resolution']);
+      }
+      else
+      {
+        $first = (($a['morningstarts'] * 60) + $a['morningstarts_minutes']) * 60;
+        $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
+        $last = $last + $a['resolution'];
+      }
+      $end_value = ($a['enable_periods']) ? $end_time - $a['resolution'] : $end_time;
+      $display = ($a['id'] == $area_id) ? "block" : "none";
+      genslotselector($a, "end_", $first, $last, $end_value, $display);
+    }
+    echo "</div>\n";
+    
+    ?>  
     <div id="div_areas">
     </div>
 
-    <?php
-    // Determine the area id of the room in question first
-    $area_id = mrbsGetRoomArea($room_id);
-    // determine if there is more than one area
-    $sql = "select id from $tbl_area";
-    $res = sql_query($sql);
-    $num_areas = sql_count($res);
+    <?php   
     // if there is more than one area then give the option
     // to choose areas.
-    if( $num_areas > 1 )
-    {
-    
-    ?>
-    
+    if (count($areas) > 1)
+    { 
+      ?> 
       <script type="text/javascript">
       //<![CDATA[
+      
+      var area = <?php echo $area_id ?>;
       
       function changeRooms( formObj )
       {
@@ -754,38 +800,63 @@ else
         // add entries based on area selected
         switch (area){
           <?php
-          // get the area id for case statement
-          $sql = "select id, area_name from $tbl_area order by area_name";
-          $res = sql_query($sql);
-          if ($res)
+          foreach ($areas as $a)
           {
-            for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+            print "case \"" . $a['id'] . "\":\n";
+            // get rooms for this area
+            $i = 0;
+            foreach ($rooms as $r)
             {
-              print "      case \"".$row['id']."\":\n";
-              // get rooms for this area
-              $sql2 = "select id, room_name from $tbl_room where area_id='".$row['id']."' order by sort_key";
-              $res2 = sql_query($sql2);
-              if ($res2)
+              if ($r['area_id'] == $a['id'])
               {
-                for ($j = 0; ($row2 = sql_row_keyed($res2, $j)); $j++)
-                {
-                  $clean_room_name = str_replace('\\', '\\\\', $row2['room_name']);  // escape backslash
-                  $clean_room_name = str_replace('"', '\\"', $clean_room_name);      // escape double quotes
-                  $clean_room_name = str_replace('/', '\\/', $clean_room_name);      // prevent '/' being parsed as markup (eg </p>)
-                  print "        roomsObj.options[$j] = new Option(\"".$clean_room_name."\",".$row2['id'] .");\n";
-                }
-                // select the first entry by default to ensure
-                // that one room is selected to begin with
-                if ($j > 0)  // but only do this if there is a room
-                {
-                  print "        roomsObj.options[0].selected = true;\n";
-                }
-                print "        break;\n";
+                $clean_room_name = str_replace('\\', '\\\\', $r['room_name']);  // escape backslash
+                $clean_room_name = str_replace('"', '\\"', $clean_room_name);      // escape double quotes
+                $clean_room_name = str_replace('/', '\\/', $clean_room_name);      // prevent '/' being parsed as markup (eg </p>)
+                print "roomsObj.options[$i] = new Option(\"" . $clean_room_name . "\"," . $r['id'] . ");\n";
+                $i++;
               }
             }
+            // select the first entry by default to ensure
+            // that one room is selected to begin with
+            if ($i > 0)  // but only do this if there is a room
+            {
+              print "roomsObj.options[0].selected = true;\n";
+            }
+            print "break;\n";
           }
           ?>
         } //switch
+        
+        <?php 
+        // Replace the start and end selectors with those for the new area
+        // (1) We set the display for the old elements to "none" and the new
+        // elements to "block".   (2) We also need to disable the old selectors and
+        // enable the new ones: they all have the same name, so we only want
+        // one passed through with the form.  (3) We take a note of the currently
+        // selected start and end values so that we can have a go at finding a
+        // similar time/period in the new area. (4) We also take a note of the old
+        // area id because we'll need that when trying to match up slots: it only
+        // makes sense to match up slots if both old and new area used the same
+        // mode (periods/times).
+        ?>
+        var oldStartId = "start_seconds" + currentArea;
+        var oldEndId = "end_seconds" + currentArea;
+        var newStartId = "start_seconds" + area;
+        var newEndId = "end_seconds" + area;
+        var oldAreaStartValue = formObj[oldStartId].options[formObj[oldStartId].selectedIndex].value;
+        var oldAreaEndValue = formObj[oldEndId].options[formObj[oldEndId].selectedIndex].value;
+        $("#" + oldStartId).css({display: "none"});
+        $("#" + oldStartId).attr('disabled', 'disabled');
+        $("#" + oldEndId).css({display: "none"});
+        $("#" + oldEndId).attr('disabled', 'disabled');
+        $("#" + newStartId).css({display: "block"});
+        $("#" + newStartId).removeAttr('disabled');
+        $("#" + newEndId).css({display: "block"});
+        $("#" + newEndId).removeAttr('disabled');
+        var oldArea = currentArea;
+        currentArea = area;
+        prevStartValue = undefined;
+        adjustSlotSelectors(formObj, oldArea, oldAreaStartValue, oldAreaEndValue);
       }
 
       // Create area selector, only if we have Javascript
@@ -805,29 +876,24 @@ else
       var option;
       var option_text
       <?php
-      // get list of areas
-      $sql = "select id, area_name from $tbl_area order by area_name";
-      $res = sql_query($sql);
-      if ($res)
+      // go through the areas and create the options
+      foreach ($areas as $a)
       {
-        for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+        ?>
+        option = document.createElement('option');
+        option.value = <?php echo $a['id'] ?>;
+        option_text = document.createTextNode('<?php echo $a['area_name'] ?>');
+        <?php
+        if ($a['id'] == $area_id)
         {
           ?>
-          option = document.createElement('option');
-          option.value = <?php echo $row['id'] ?>;
-          option_text = document.createTextNode('<?php echo $row['area_name'] ?>');
-          <?php
-          if ($row['id'] == $area_id)
-          {
-            ?>
-            option.selected = true;
-            <?php
-          }
-          ?>
-          option.appendChild(option_text);
-          area_select.appendChild(option);
+          option.selected = true;
           <?php
         }
+        ?>
+        option.appendChild(option_text);
+        area_select.appendChild(option);
+        <?php
       }
       ?>
       // insert the <select> which we've just assembled into the <div>
@@ -838,7 +904,7 @@ else
       
       
       <?php
-    } // if $num_areas
+    } // if count($areas)
     ?>
     
     
@@ -847,21 +913,14 @@ else
     <div class="group">
       <select id="rooms" name="rooms[]" multiple="multiple" size="5">
         <?php 
-        // select the rooms in the area determined above
-        $sql = "select id, room_name from $tbl_room where area_id=$area_id order by sort_key";
-        $res = sql_query($sql);
-        if ($res)
+        foreach ($rooms as $r)
         {
-          for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+          if ($r['area_id'] == $area_id)
           {
-            $selected = "";
-            if ($row['id'] == $room_id)
-            {
-              $selected = "selected=\"selected\"";
-            }
-            echo "              <option $selected value=\"" . $row['id'] . "\">" . htmlspecialchars($row['room_name']) . "</option>\n";
+            $selected = ($r['id'] == $room_id) ? "selected=\"selected\"" : "";
+            echo "<option $selected value=\"" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</option>\n";
             // store room names for emails
-            $room_names[$i] = $row['room_name'];
+            $room_names[$i] = $r['room_name'];
           }
         }
         ?>
@@ -870,14 +929,14 @@ else
       </div>
     </div>
     <div id="div_type">
-      <label for="type"><?php echo get_vocab("type")?>:</label>  
+      <label for="type"><?php echo get_vocab("type")?>:</label>
       <select id="type" name="type">
         <?php
         for ($c = "A"; $c <= "Z"; $c++)
         {
           if (!empty($typel[$c]))
           { 
-            echo "        <option value=\"$c\"" . ($type == $c ? " selected=\"selected\"" : "") . ">$typel[$c]</option>\n";
+            echo "<option value=\"$c\"" . ($type == $c ? " selected=\"selected\"" : "") . ">$typel[$c]</option>\n";
           }
         }
         ?>

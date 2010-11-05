@@ -88,7 +88,6 @@ $vocab["repeat_id"]          = "Tekrar ID ";
 $vocab["you_have_not_entered"] = "Girmediniz";
 $vocab["you_have_not_selected"] = "Seçmediniz";
 $vocab["valid_room"]         = "Yer.";
-$vocab["valid_time_of_day"]  = "Günün geçerli zamaný.";
 $vocab["brief_description"]  = "Kýsa Taným.";
 $vocab["useful_n-weekly_value"] = "faydali n-haftalýk deðer.";
 

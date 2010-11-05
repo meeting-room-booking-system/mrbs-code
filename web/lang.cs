@@ -85,7 +85,6 @@ $vocab["repeat_id"]          = "ID pro opakování";
 $vocab["you_have_not_entered"] = "Nevložil jste";
 $vocab["you_have_not_selected"] = "Nevybral jste";
 $vocab["valid_room"]         = "prostøedek.";
-$vocab["valid_time_of_day"]  = "platný èasový úsek dne.";
 $vocab["brief_description"]  = "Krátký popis.";
 $vocab["useful_n-weekly_value"] = "použitelná x-týdenní hodnota.";
 

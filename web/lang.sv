@@ -86,7 +86,6 @@ $vocab["repeat_id"]          = "Repetions-ID ";
 $vocab["you_have_not_entered"] = "Du har inte angivit";
 $vocab["you_have_not_selected"] = "Du har inte valt";
 $vocab["valid_room"]         = "ett giltigt rum.";
-$vocab["valid_time_of_day"]  = "en giltig tidpunkt på dagen.";
 $vocab["brief_description"]  = "en kort beskrivning.";
 $vocab["useful_n-weekly_value"] = "ett användbart n-veckovist värde.";
 

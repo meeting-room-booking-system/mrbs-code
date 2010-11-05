@@ -87,7 +87,6 @@ $vocab["repeat_id"]          = "Herhalings-ID ";
 $vocab["you_have_not_entered"] = "U heeft het volgende niet ingevoerd : ";
 $vocab["you_have_not_selected"] = "U heeft het volgende niet geselecteerd : ";
 $vocab["valid_room"]         = "kamer.";
-$vocab["valid_time_of_day"]  = "geldige tijd.";
 $vocab["brief_description"]  = "Korte Omschrijving.";
 $vocab["useful_n-weekly_value"] = "bruikbaar n-wekelijks aantal.";
 

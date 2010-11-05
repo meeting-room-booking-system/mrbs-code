@@ -89,7 +89,6 @@ $vocab["repeat_id"]          = "Périodicité N°";
 $vocab["you_have_not_entered"] = "Vous n'avez pas saisi";
 $vocab["you_have_not_selected"] = "Vous n'avez pas sélectionné";
 $vocab["valid_room"]         = "salle.";
-$vocab["valid_time_of_day"]  = "une heure valide.";
 $vocab["brief_description"]  = "la description brève.";
 $vocab["useful_n-weekly_value"] = "un intervalle de semaines valide.";
 

@@ -36,7 +36,7 @@ if (isset($provisional_enabled))
   echo ' once this upgrade is complete.';
   if (!$area_defaults['approval_enabled']  && $provisional_enabled)
   {
-    echo '<p class="warning">As you have <code>$provisional_enabled = TRUE;</code> MRBS is assuming that
+    echo '<p class="warning">As you have <code>$provisional_enabled = TRUE;</code> MRBS is assuming
           <code>$approval_enabled = TRUE;</code> as the default setting during this upgrade.</p>';
     $area_defaults['approval_enabled'] = TRUE;
   }

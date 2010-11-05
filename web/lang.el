@@ -85,7 +85,6 @@ $vocab["repeat_id"]          = "Αναγνωριστικός αριθμός επανάληψης ";
 $vocab["you_have_not_entered"] = "Δεν εισάγατε το (τα)";
 $vocab["you_have_not_selected"] = "You have not selected a";
 $vocab["valid_room"]         = "room.";
-$vocab["valid_time_of_day"]  = "έγκυρη ώρα.";
 $vocab["brief_description"]  = "Σύντομη Περιγραφή.";
 $vocab["useful_n-weekly_value"] = "χρήσιμη n-εβδομαδιαία τιμή.";
 

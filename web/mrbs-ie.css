@@ -24,7 +24,8 @@ div.booking_list {overflow-x: hidden}       /* we don't want IE to give us the h
 
 /* margin-bottom on some form controls does not work, so put it on the relevant divs instead */
 .form_general div#div_description, 
-.form_general div#div_date,
+.form_general div#div_start_date,
+.form_general div#div_end_date,
 .form_general div#div_period,
 .form_general div#div_areas,
 .form_general div#div_rooms,

@@ -9,10 +9,13 @@ function print_theme_header($day, $month, $year, $area, $room)
          $search_str, $locale_warning;
   global $tbl_entry, $tbl_room, $tbl_area;
   global $PHP_SELF, $view_week_number, $weekstarts;
+  global $auth;
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   global $lang_map_windows, $langs;
   
   $page = basename($PHP_SELF, ".php" );
+  $user = getUserName();
+  $is_admin = (authGetUserLevel($user) >= 2);
 
   // If we dont know the right date then make it up 
   if (!$day)
@@ -178,6 +181,9 @@ $(function() {
 // Blur the datepicker input field on close, so that the datepicker will reappear
 // if you select it.    (Not quite sure why you need this.  It only seems
 // to be necessary when you are using Firefox and the datepicker is draggable).
+//
+// Then go and adjust the start and end time/period select options, because
+// they are dependent on the start and end dates
 ?>
 function datepicker_close(dateText, inst)
 {
@@ -187,6 +193,14 @@ function datepicker_close(dateText, inst)
   document.getElementById(alt_id + '_month').value = date[1];
   document.getElementById(alt_id + '_day').value   = date[2];
   document.getElementById(inst.id).blur();
+  <?php
+  if ($page == 'edit_entry')
+  {
+    ?>
+    adjustSlotSelectors(document.getElementById('main'));
+    <?php
+  }
+  ?>
 }
 
 
@@ -235,6 +249,378 @@ if ($page == 'edit_area_room')
   }
 <?php
 } // edit_area_room
+
+
+if ($page == 'edit_entry')
+{
+  // Declare some variables to hold details of the slot selectors for each area.
+  // We are going to store the contents of the selectors on page load
+  // (when they will be fully populated with options) so that we can
+  // rebuild the arrays later
+  // Also declare a variable to hold text strings with the current
+  // locale translations for periods,minutes, hours, etc.
+  // The nStartOptions and nEndOptions array are indexed by area id
+  // The startOptions and endOptions are multi-dimensional arrays indexed as follows:
+  // [area_id][option number][text|value]
+  ?>
+  var nStartOptions = new Array;  
+  var nEndOptions = new Array;
+  var startOptions = new Array();
+  var endOptions = new Array();
+  var vocab = new Array();
+  var prevStartValue;
+
+  function durFormat(r)
+  {
+    r = r.toFixed(2);
+    r = parseFloat(r);
+    r = r.toLocaleString();
+
+    if ((r.indexOf('.') >= 0) || (r.indexOf(',') >= 0))
+    {
+      while (r.substr(r.length -1) == '0')
+      {
+        r = r.substr(0, r.length - 1);
+      }
+
+      if ((r.substr(r.length -1) == '.') || (r.substr(r.length -1) == ','))
+      {
+        r = r.substr(0, r.length - 1);
+      }
+    }
+    
+    return r;
+  }
+  
+  <?php
+  // Returns a string giving the duration having chosen sensible units,
+  // translated into the user's language, and formatted the number, taking
+  // into account the user's locale.    Note that when using periods one
+  // is added to the duration because the model is slightly different
+  //   - from   the start time (in seconds since the start of the day
+  //   - to     the end time (in seconds since the start of the day)
+  //   - days   the number of days difference
+  ?>
+  function getDuration(from, to, days)
+  {
+    var duration, durUnits;
+    var text = '';
+    var enablePeriods = areas[currentArea]['enable_periods'];
+
+    durUnits = (enablePeriods) ? '<?php echo "periods" ?>' : '<?php echo "minutes" ?>';
+    duration = to - from;
+    duration = Math.floor((to - from) / 60);
+    
+    if (duration < 0)
+    {
+      days--;
+      if (enablePeriods)
+      {
+        duration += nEndOptions[currentArea];  <?php // add a day's worth of periods ?>
+      }
+      else
+      {
+        duration += 24*60;  <?php // add 24 hours (duration is now in minutes)  ?>
+      }
+    }
+      
+    if (enablePeriods)
+    {
+      duration++;  <?php // a period is a period rather than a point ?>
+    }
+    else
+    {
+      if (duration >= 60)
+      {
+        durUnits = "hours";
+        duration = durFormat(duration/60);
+      }
+    }
+    
+    if (days != 0)
+    {
+      text += days + ' ';
+      text += (days == 1) ? vocab['days']['singular'] : vocab['days']['plural'];
+      if (duration != 0)
+      {
+        text +=  ', ';
+      }
+    }
+
+    if (duration != 0)
+    {
+      text += duration + ' ';
+      text +=(duration == 1) ? vocab[durUnits]['singular'] : vocab[durUnits]['plural'];
+    }
+    return text;
+  }
+  
+  <?php
+  // Returns the number of days between the start and end dates
+  ?>
+  function getDateDifference(form)
+  {
+    var diff;
+
+    <?php
+    if (!$is_admin && $auth['only_admin_can_book_multiday'])
+    {
+      ?>
+      diff = 0;
+      <?php
+    }
+    else
+    {
+      ?>
+      var startDay = parseInt(form.start_datepicker_alt_day.value, 10);
+      var startMonth = parseInt(form.start_datepicker_alt_month.value, 10);
+      var startYear = parseInt(form.start_datepicker_alt_year.value, 10);
+      var startDate = new Date(startYear, startMonth - 1, startDay, 12);
+      
+      var endDay = parseInt(form.end_datepicker_alt_day.value, 10);
+      var endMonth = parseInt(form.end_datepicker_alt_month.value, 10);
+      var endYear = parseInt(form.end_datepicker_alt_year.value, 10);
+      var endDate = new Date(endYear, endMonth - 1, endDay, 12);
+        
+      diff = (endDate - startDate)/(24 * 60 * 60 * 1000);
+      diff = Math.round(diff);
+      <?php
+    }
+    ?>
+
+    return diff;
+  }
+  
+  function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
+  {
+    <?php
+    // Adjust the start and end time slot select boxes.
+    // (a) If the start time has changed then adjust the end time so
+    //     that the duration is still the same, provided that the endtime
+    //     does not go past the start of the booking day
+    // (b) If the end time has changed then adjust the duration.
+    // (c) Make sure that you can't have an end time before the start time.
+    // (d) Tidy up the two select boxes so that they are the same width
+    // (e) if oldArea etc. are set, then we've switched areas and we want
+    //     to have a go at finding a time/period in the new area as close
+    //     as possible to the one that was selected in the old area.
+    ?>
+    
+    if (!form)
+    {
+      return;
+    }
+
+    var area = currentArea;
+    var enablePeriods = areas[area]['enable_periods'];
+
+    var isSelected, i, j, option, defaultDuration;
+    var nbsp = '\u00A0';
+    var errorText = '<?php echo get_vocab("start_after_end")?>';
+    var text = errorText;
+    
+    var startSelect = form["start_seconds" + area];
+    var endSelect = form["end_seconds" + area];
+    var startIndex, startValue, endIndex, endValue;
+    
+    <?php 
+    // If All Day is checked then just set the start and end values to the first
+    // and last possible options.
+    ?>
+    if (form.all_day.checked)
+    {
+      startValue = startOptions[area][0]['value']
+      endValue = endOptions[area][nEndOptions[area] - 1]['value'];
+      <?php
+      // If we've come here from another area then we need to make sure that the
+      // start and end selectors are disabled.  (We won't change the old_end and old_start
+      // values, because there's a chance the existing ones may still work - for example if
+      // the user flicks from Area A to Area B and then back to Area A, or else if the time/
+      // period slots in Area B match those in Area.)
+      ?>
+      if (oldArea != null)
+      {
+        startSelect.disabled = true;
+        endSelect.disabled = true;
+      }
+    }
+    <?php
+    // Otherwise what we do depends on whether we've come here as a result
+    // of the area being changed
+    ?>
+    else if ((oldArea != null) && (oldAreaStartValue != null) && (oldAreaStartValue != null))
+    {
+      <?php 
+      // If we've changed areas and the modes are the same, we can try and match times/periods.
+      // We will try and be conservative and find a start time that includes the previous start time
+      // and an end time that includes the previous end time.   This means that by default the 
+      // booking period will include the old boioking period (unless we've hit the start or
+      // end of day).   But it does mean that as you switch between areas the booking period
+      // tends to get bigger:  if you switch fromn Area 1 to Area 2 and then bavk again it's
+      // possible that the booking period for Area 1 is longer than it was originally.
+      ?>
+      if (areas[oldArea]['enable_periods'] == areas[area]['enable_periods'])
+      {
+        <?php
+        // Step back through the start options until we find one that is less than or equal to the previous value,
+        // or else we've got to the first option
+        ?>
+        option = startOptions[area];
+        for (i = nStartOptions[area] - 1; i >= 0; i--)
+        {
+          if ((i == 0) || (option[i]['value'] <= oldAreaStartValue))
+          {
+            startValue = option[i]['value'];
+            break;
+          }
+        }
+        <?php
+        // And step forward through the end options until we find one that is greater than
+        // or equal to the previous value, or else we've got to the last option
+        ?>
+        option = endOptions[area];
+        for (i = 0; i < nEndOptions[area]; i++)
+        {
+          if ((i == nEndOptions[area] - 1) || (option[i]['value'] >= oldAreaEndValue))
+          {
+            endValue = option[i]['value'];
+            break;
+          }
+        }     
+      }
+      <?php
+      // The modes are different, so it doesn't make any sense to match up old and new
+      // times/periods.   The best we can do is choose some sensible defaults, which
+      // is to set the start to the first possible start, and the end to the start + the
+      // default duration (or the last possible end value if that is less)
+      ?>
+      else
+      {
+        startValue = startOptions[area][0]['value'];
+        if (enablePeriods)
+        {
+          endValue = startValue;
+        }
+        else
+        {
+          if ((areas[area]['default_duration'] == null) || (areas[area]['default_duration'] == 0))
+          {
+            defaultDuration = 60 * 60;
+          }
+          else
+          {
+            defaultDuration = areas[area]['default_duration'];
+          }
+          endValue = startValue + defaultDuration;
+          endValue = Math.min(endValue, endOptions[area][nEndOptions[area] - 1]['value']);
+        }
+      }
+    }
+    <?php 
+    // We haven't changed areas.  In this case get the currently selected start and
+    // end values
+    ?>
+    else  
+    {
+      startIndex = startSelect.selectedIndex;
+      startValue = parseInt(startSelect.options[startIndex].value);
+      endIndex = endSelect.selectedIndex;
+      endValue = parseInt(endSelect.options[endIndex].value);
+      <?php
+      // If the start value has changed then we adjust the endvalue
+      // to keep the duration the same.  (If the end value has changed
+      // then the duration will be changed when we recalculate durations below)
+      ?>
+      if (prevStartValue)
+      {
+        endValue = endValue + (startValue - prevStartValue);
+        endValue = Math.min(endValue, endOptions[area][nEndOptions[area] - 1]['value']);
+      }
+    }
+
+    prevStartValue = startValue; <? // Update the previous start value ?>
+    
+    var dateDifference = getDateDifference(form);
+    
+    <?php
+    // If All Day isn't checked then we need to work out whether the start
+    // and end dates are valid.   If the end date is before the start date
+    // then we disable all the time selectors (start, end and All Day) until
+    // the dates are fixed.
+    ?>
+    if (!form.all_day.checked)
+    {
+      var newState = (dateDifference < 0);
+      startSelect.disabled = newState;
+      endSelect.disabled = newState;
+      form.all_day.disabled = newState;
+    }
+
+    <?php // Destroy and rebuild the start select ?>
+    while (startSelect.options.length > 0)
+    {
+      startSelect.remove(0);
+    }
+
+    for (i = 0; i < nStartOptions[area]; i++)
+    {
+      isSelected = (startOptions[area][i]['value'] == startValue);
+      if (dateDifference >= 0)
+      {
+        text = startOptions[area][i]['text'];
+      }
+      startSelect.options[i] = new Option(text, startOptions[area][i]['value'], false, isSelected);
+    }
+    
+    <?php // Destroy and rebuild the end select ?>
+    while (endSelect.options.length > 0)
+    {
+      endSelect.remove(0);
+    }
+
+    j = 0;
+    for (i = 0; i < nEndOptions[area]; i++)
+    {
+      if ((endOptions[area][i]['value'] > startValue) ||
+          ((endOptions[area][i]['value'] == startValue) && enablePeriods) ||
+          (dateDifference != 0))
+      {
+        isSelected = (endOptions[area][i]['value'] == endValue);
+        if (dateDifference >= 0)
+        {
+          text = endOptions[area][i]['text'] + nbsp + nbsp + '(' +
+                 getDuration(startValue, endOptions[area][i]['value'], dateDifference) + ')';
+        }      
+        endSelect.options[j] = new Option(text, endOptions[area][i]['value'], false, isSelected);
+        j++;
+      }
+    }
+    
+    <?php 
+    // Make the two select boxes the same width.   Note that we set
+    // the widths of both select boxes, even though it would seem
+    // that just setting the width of the smaller should be sufficient.
+    // But if you don't set both of them then you end up with a few 
+    // pixels difference.  In other words doing a get and then a set 
+    // doesn't leave you where you started - not quite sure why.
+    // The + 2 is a fudge factor to make sure that the option text isn't
+    // truncated - not quite sure why it is necessary.
+    // The width: auto is necessary to get the boxes to resize themselves
+    // according to their new contents.
+    ?>
+    var startId = "#start_seconds" + area;
+    var endId = "#end_seconds" + area;
+    $(startId).css({width: "auto"});
+    $(endId).css({width: "auto"});
+    var startWidth = $(startId).width();
+    var endWidth = $(endId).width();
+    var maxWidth = Math.max(startWidth, endWidth) + 2;
+    $(startId).width(maxWidth);
+    $(endId).width(maxWidth);
+  } <?php // function adjustSlotSelectors() ?>
+  
+<?php
+}
 
 
 if ($page == 'pending')
@@ -349,27 +735,97 @@ function init()
   }
   
   // EDIT_ENTRY.PHP
-  // put the booking name field in focus (but only for new bookings,
+  // (1) put the booking name field in focus (but only for new bookings,
   // ie when the field is empty:  if it's a new booking you have to
   // complete that field, but if it's an existing booking you might
   // want to edit any field)
+  // (2) Adjust the slot selectors
   if ($page == 'edit_entry')
   {
   ?>
   var form = document.getElementById('main');
-  if (form && form.name && (form.name.value.length == 0))
-  {
-    form.name.focus();
+  if (form)
+  { 
+    if (form.name && (form.name.value.length == 0))
+    {
+      form.name.focus();
+    }
+    <?php
+    // Get the current vocab (in the appropriate language) for periods,
+    // minutes, hours
+    ?>
+    vocab['periods'] = new Array();
+    vocab['periods']['singular'] = '<?php echo get_vocab("period_lc") ?>';
+    vocab['periods']['plural'] = '<?php echo get_vocab("periods") ?>';
+    vocab['minutes'] = new Array();
+    vocab['minutes']['singular'] = '<?php echo get_vocab("minute_lc") ?>';
+    vocab['minutes']['plural'] = '<?php echo get_vocab("minutes") ?>';
+    vocab['hours'] = new Array();
+    vocab['hours']['singular'] = '<?php echo get_vocab("hour_lc") ?>';
+    vocab['hours']['plural'] = '<?php echo get_vocab("hours") ?>';
+    vocab['days'] = new Array();
+    vocab['days']['singular'] = '<?php echo get_vocab("day_lc") ?>';
+    vocab['days']['plural'] = '<?php echo get_vocab("days") ?>';
+    <?php
+    // Get the details of the start and end slot selectors now since
+    // they are fully populated with options.  We can then use the details
+    // to rebuild the selectors later on
+    ?>
+    var i, j, area, startSelect, endSelect;
+    for (i in areas)
+    {
+      area = i;
+      startSelect = form["start_seconds" + area];
+      endSelect = form["end_seconds" + area];
+      
+      startOptions[area] = new Array();
+      nStartOptions[area] = startSelect.options.length;
+      for (j=0; j < nStartOptions[area]; j++)
+      {
+        startOptions[area][j] = new Array();
+        startOptions[area][j]['text'] = startSelect.options[j].text;
+        startOptions[area][j]['value'] = parseInt(startSelect.options[j].value);
+      }
+      
+      endOptions[area] = new Array();
+      nEndOptions[area] = endSelect.options.length;
+      for (j=0; j < nEndOptions[area]; j++)
+      {
+        endOptions[area][j] = new Array();
+        endOptions[area][j]['text'] = endSelect.options[j].text;
+        endOptions[area][j]['value'] = parseInt(endSelect.options[j].value);
+      }
+    }
+  
+    adjustSlotSelectors(form);
+    
+    <?php
+    // If this is an All Day booking then check the All Day box and disable the 
+    // start and end time boxes
+    ?>
+    startSelect = form["start_seconds" + currentArea];
+    endSelect = form["end_seconds" + currentArea];
+    if (!form.all_day.disabled && 
+        (parseInt(startSelect.options[startSelect.selectedIndex].value) == startOptions[currentArea][0]['value']) &&
+        (parseInt(endSelect.options[endSelect.selectedIndex].value) == endOptions[currentArea][nEndOptions[currentArea] - 1]['value']))
+    {
+      form.all_day.checked = true;
+      startSelect.disabled = true;
+      endSelect.disabled = true;
+      old_start = startSelect.options[startSelect.selectedIndex].value;
+      old_end = endSelect.options[endSelect.selectedIndex].value;
+    }
   }
+
   <?php
   }
   
   // PENDING.PHP
   if ($page == 'pending')
   {
-  ?>
+    ?>
     activate_sub_tables();
-  <?php
+    <?php
   }
 
   // SEARCH.PHP
@@ -464,13 +920,12 @@ function init()
         <?php
         // Provide a link to the list of bookings awaiting approval
         // (if there are any areas where we require bookings to be approved)
-        $user = getUserName();
+
 
         $approval_somewhere = some_area('approval_enabled');
         if ($approval_somewhere && (authGetUserLevel($user) >= 1))
         {
           $sql_approval_enabled = some_area_predicate('approval_enabled');
-          $is_admin = (authGetUserLevel($user) >= 2);
           // Find out how many bookings are awaiting approval
           // (but only for areas where approval is required)
           $sql = "SELECT COUNT(*)
