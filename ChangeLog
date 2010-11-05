@@ -1,3 +1,289 @@
+2010-11-05 14:40  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1590] web/version.inc:
+	  
+	  * Updated version number for 1.4.5rc2 release.
+
+2010-11-05 13:43  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1589] web/Themes/default/header.inc:
+	  
+	  Fixed incorrect PHP script marker
+
+2010-11-05 12:49  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1588] ., web/Themes/default/header.inc, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/functions.inc, web/lang.ca,
+	  web/lang.cs, web/lang.da, web/lang.de, web/lang.el, web/lang.en,
+	  web/lang.es, web/lang.eu, web/lang.fi, web/lang.fr, web/lang.it,
+	  web/lang.ja, web/lang.ko, web/lang.nl, web/lang.no, web/lang.pl,
+	  web/lang.pt, web/lang.sl, web/lang.sv, web/lang.tr,
+	  web/lang.zh-cn, web/lang.zh-tw, web/mrbs-ie.css,
+	  web/mrbs.css.php, web/systemdefaults.inc.php,
+	  web/upgrade/21/post.inc, web/upgrade/5/pgsql.sql:
+	  
+	  Merged the from_to_bookings branch back into the trunk.
+
+2010-11-05 12:07  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1587] web/edit_users.php, web/systemdefaults.inc.php:
+	  
+	  Added a config variable $auth['only_admin_can_see_other_users']
+	  to allow visibility of other users' details to be restricted when
+	  using the 'db' authentication scheme. See SF tracker ID: 3102887.
+
+2010-11-05 11:49  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1586] INSTALL, web/config.inc.php, web/systemdefaults.inc.php:
+	  
+	  Expanded the documentation on timezones. See SF tracker ID:
+	  3102895
+
+2010-11-03 14:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1582] web/systemdefaults.inc.php:
+	  
+	  Declared the empty array $is_mandatory_field to avoid warning
+	  messages later on when used with array_key_exists()
+
+2010-11-03 11:08  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1577] web/functions.inc:
+	  
+	  Removed any trailing decimal zeros from the duration
+
+2010-11-02 15:10  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1571] ., UPGRADE, tables.my.sql, tables.pg.pre73.sql,
+	  tables.pg.sql, web/Themes/classic126/styling.inc,
+	  web/Themes/default/header.inc, web/Themes/default/styling.inc,
+	  web/approve_entry_handler.php[CPY],
+	  web/confirm_entry_handler.php[DEL], web/day.php, web/dbsys.inc,
+	  web/edit_area_room.php, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/edit_users.php,
+	  web/functions.inc, web/functions_mail.inc,
+	  web/internalconfig.inc.php, web/lang.en, web/lang.es,
+	  web/lang.fi, web/lang.fr, web/lang.it, web/lang.ja, web/lang.nl,
+	  web/lang.pl, web/lang.sl, web/lang.tr, web/language.inc,
+	  web/month.php, web/mrbs.css.php, web/mrbs_auth.inc,
+	  web/mrbs_sql.inc, web/pending.php, web/report.php,
+	  web/search.php, web/systemdefaults.inc.php, web/upgrade/17[CPY],
+	  web/upgrade/17/mysql.sql[CPY], web/upgrade/17/pgsql.sql[CPY],
+	  web/upgrade/17/post.inc[CPY], web/upgrade/18[CPY],
+	  web/upgrade/18/mysql.sql[CPY], web/upgrade/18/pgsql.sql[CPY],
+	  web/upgrade/19[CPY], web/upgrade/19/mysql.sql[CPY],
+	  web/upgrade/19/pgsql.sql[CPY], web/upgrade/20[CPY],
+	  web/upgrade/20/mysql.sql[CPY], web/upgrade/20/pgsql.sql[CPY],
+	  web/upgrade/21[CPY], web/upgrade/21/mysql.sql[CPY],
+	  web/upgrade/21/pgsql.sql[CPY], web/upgrade/21/post.inc[CPY],
+	  web/upgrade/5/pgsql.sql, web/view_entry.php, web/week.php:
+	  
+	  Merged the provisional_bookings_new_style branch back into the
+	  trunk. MRBS now has the ability to make "tentative" bookings, ie
+	  bookings which are not 100% certain to happen, but where the user
+	  wants to reserve the slot in the meantime.
+
+2010-11-02 11:27  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1565] web/upgrade/15/post.inc:
+	  
+	  Fixed bug causing upgrade error using PostgreSQL
+
+2010-11-01 19:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1561] web/functions.inc:
+	  
+	  Added a check to see that $timezone is set to a valid timezone
+	  identifier
+
+2010-10-31 08:16  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1560] web/mrbs_sql.inc:
+	  
+	  * Fixed confirmation of bookings for people using the Postgresql
+	  backend. Postgresql doesn't accept LIMIT in UPDATE statements.
+
+2010-10-31 08:14  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1559] web/upgrade/15/pgsql.sql:
+	  
+	  * Fix for a NULL upgrade, Postgresql doesn't like an SQL file
+	  with no query.
+
+2010-10-26 14:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1555] web/edit_area_room.php:
+	  
+	  Fixed bug whereby values might not get updated
+
+2010-10-25 16:58  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1548] web/Themes/default/header.inc:
+	  
+	  Fixed JavaScript undefined object problem
+
+2010-10-25 11:40  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1544] web/systemdefaults.inc.php:
+	  
+	  Added comment that $enable_periods is now settable per-area
+
+2010-10-25 11:30  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1542] tables.my.sql, tables.pg.pre73.sql, tables.pg.sql,
+	  web/Themes/default/header.inc, web/dbsys.inc,
+	  web/edit_area_room.php, web/functions.inc,
+	  web/internalconfig.inc.php, web/lang.en, web/mrbs-ielte7.css.php,
+	  web/mrbs.css.php, web/upgrade/16[ADD],
+	  web/upgrade/16/mysql.sql[ADD], web/upgrade/16/pgsql.sql[ADD],
+	  web/upgrade/16/post.inc[ADD]:
+	  
+	  Implemented $enable_periods on a per-area basis. This means that
+	  sites can now have some areas using periods and others using time
+	  slots.
+
+2010-10-23 13:10  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1541] tables.my.sql, tables.pg.pre73.sql, tables.pg.sql,
+	  web/dbsys.inc, web/upgrade/15[ADD],
+	  web/upgrade/15/mysql.sql[ADD], web/upgrade/15/pgsql.sql[ADD],
+	  web/upgrade/15/post.inc[ADD]:
+	  
+	  Update the area table replacing any NULLs with the per-area
+	  settings defaults. This is the second and final part of a fix to
+	  a bug which caused Search and Report not to find all the results
+	  that they should have done if you were not logged in as an admin.
+
+2010-10-23 12:25  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1540] web/add.php, web/functions.inc,
+	  web/internalconfig.inc.php:
+	  
+	  Changed Add Area so that it writes the default area settings to
+	  the database rather than NULL. This is the first part of a fix to
+	  a bug which caused Search and Report not to find all the results
+	  that they should have done if you were not logged in as an admin.
+	  (Second part will be to update existing rows in the area table
+	  replacing NULLs with the area defaults).
+
+2010-10-21 16:49  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1527] web/lang.ca, web/lang.es:
+	  
+	  Removed duplicate definitions ("valid_time_of_day")
+
+2010-10-20 11:42  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1517] web/edit_entry.php:
+	  
+	  * Made the new mandatory field checking Javascript code
+	  compatible with IE, by using jQuery.
+
+2010-10-19 10:40  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1515] INSTALL:
+	  
+	  Added documentation on making custom fields private.
+
+2010-10-19 08:36  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1514] INSTALL, web/edit_entry.php, web/edit_entry_handler.php,
+	  web/systemdefaults.inc.php:
+	  
+	  * Renamed the new config array $mandatory_fields to
+	  $is_mandatory_field to match the existing convention. Also added
+	  some documentation of this new configuration option into
+	  systemdefaults.inc.php.
+
+2010-10-18 16:44  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1513] web/session_cookie.inc, web/systemdefaults.inc.php:
+	  
+	  * Fixed accidental checkin of debug code. Documented the new
+	  $auth["session_cookie"]["session_expire_time"] fucntionality in
+	  systemdefaults.inc.php.
+
+2010-10-18 16:32  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1512] web/session_cookie.inc:
+	  
+	  * Added support for setting 'cookie' session scheme to use only
+	  session cookies. For this set
+	  $auth["session_cookie"]["session_expire_time"] to 0. Fixed token
+	  checking code, so this it takes notice of this variable.
+
+2010-10-18 16:07  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1510] web/session_cookie.inc:
+	  
+	  * Fixed an unescaped / in a regular expression.
+
+2010-10-18 16:06  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1509] web/systemdefaults.inc.php:
+	  
+	  * Changed default value of $cookie_path_override to unset.
+
+2010-10-18 15:25  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1508] web/session_php.inc:
+	  
+	  Reversed the order of session_name() and
+	  session_set_cookie_params() for safety (see PHP manual)
+
+2010-10-18 15:16  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1507] web/session_php.inc:
+	  
+	  Fixed problem which gave a warning in regular expression
+
+2010-10-18 11:30  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1506] INSTALL, web/edit_entry.php, web/edit_entry_handler.php,
+	  web/functions.inc, web/lang.en:
+	  
+	  * Added the ability to make a custom entry field mandatory.
+	  Introduces the config variable $mandatory_fields.
+	  
+	  * Documented $select_options and $mandatory_fields in INSTALL.
+
+2010-10-15 16:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1504] web/functions_mail.inc:
+	  
+	  Fixed problem with internationalisation of email notifications
+
+2010-10-15 09:44  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1501] web/edit_area_room.php, web/functions_mail.inc,
+	  web/lang.en, web/mrbs.css.php:
+	  
+	  - Made the area and room admin email address boxes textareas -
+	  Allowed newlines to be used as address separators as well as
+	  commas - Added a title tooltip explaining this - Made formatting
+	  of textareas consistent in the edit_area_room page
+
+2010-10-14 17:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1499] web/Themes/default/header.inc:
+	  
+	  Improved the localisation of the datepicker calendar so that if
+	  the broswer language is set to xx-YY, MRBS will try and use the
+	  datepicker xx localisation if there isn't one for xx-YY.
+
+2010-10-13 07:46  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1495] web/mrbs-ie8.css, web/mrbs.css.php:
+	  
+	  Fixed a problem with the formatting of radio button labels on the
+	  edit area page in IE8.
+
+2010-10-08 09:28  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1490] ChangeLog, NEWS:
+	  
+	  * Updated NEWS and ChangeLog for 1.4.5rc1 release.
+
 2010-10-08 09:05  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r1489] web/version.inc:

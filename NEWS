@@ -7,6 +7,39 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.4.5rc2 (Fri Nov 5 15:00:00 GMT 2010):
+
+[-] Fixed a problem with the formatting of radio button labels on the
+ edit area page in IE8.
+[*] Improved the localisation of the datepicker calendar so that it will
+ utilise an xx-YY language specifier if that translation exists.
+[*] Made the area and room admin email address boxes textareas, and
+ allowed newlines to be used as address separators.
+[-] Fixed problem with internationalisation of email notifications
+[+] Added the ability to make a custom entry field mandatory, introduces
+ the config array variable $is_mandatory_field.
+[-] Fixed problem which gave a warning in regular expression in PHP session
+ scheme.
+[*] Some fixes/improvements in session/cookie handling in PPS and cookie
+ session schemes.
+[-] Fixed setting of area defaults, and created a database schema update
+ to fix existing settings.
+[+] Implemented $enable_periods on a per-area basis. This means that
+ sites can now have some areas using periods and others using time
+ slots.
+[-] Some fixes to support Postgresql, including a fix for a problem
+ reported on the mailing list with confirming bookings.
+[+] Added the ability to have "tentative" bookings, i.e. bookings which are
+ not 100% certain to happen, but where the user wants to reserve the slot
+ in the meantime.
+[*] Expanded the documentation on timezones. See SF tracker ID: 3102895.
+[+] Added a config variable $auth['only_admin_can_see_other_users']
+ to allow visibility of other users' details to be restricted when
+ using the 'db' authentication scheme. See SF tracker ID: 3102887.
+[+] Improved the way in which meeting times are specified. You now specify
+ the start date/time and also the end date/time.
+
+-------------------------------------------------------------------------------
 Version 1.4.5rc1 (Fri Oct 8 11:00:00 BST 2010):
 
 [*] Optimised SQL to improve performance.
