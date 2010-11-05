@@ -54,9 +54,19 @@ require_once "mrbs_sql.inc";
 // Generate a time or period selector starting with $first and ending with $last.
 // $time is a full Unix timestamp and is the current value.  The selector returns
 // the start time in seconds since the beginning of the day for the start of that slot
-function genslotselector($prefix, $first, $last, $time)
+// The $display parameter sets the display style of the <select>
+function genslotselector($area, $prefix, $first, $last, $time, $display="block")
 {
-  global $resolution, $twentyfourhour_format, $periods, $enable_periods;
+  global $twentyfourhour_format, $periods;
+  
+  $html = '';
+  // Get the settings for this area.   Note that the variables below are
+  // local variables, not globals.
+  $enable_periods = $area['enable_periods'];
+  $resolution = ($enable_periods) ? 60 : $area['resolution'];
+  // If they've asked for "display: none" then we'll also disable the select so
+  // hat there is only one select passing through the variable to the handler
+  $disabled = (strtolower($display) == "none") ? " disabled=\"disabled\"" : "";
   
   $date = getdate($time);
   $time_zero = mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']);
@@ -68,7 +78,7 @@ function genslotselector($prefix, $first, $last, $time)
   {
     $format = ($twentyfourhour_format) ? "%R" : "%l:%M %P";
   }
-  $html .= "<select id = \"${prefix}seconds\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\">\n";
+  $html .= "<select style=\"display: $display\" id = \"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\"$disabled>\n";
   for ($t = $first; $t <= $last; $t = $t + $resolution)
   {
     $timestamp = $t + $time_zero;
@@ -304,6 +314,25 @@ else
   $name        = "";
   $create_by   = $user;
   $description = "";
+  $type        = "I";
+  $room_id     = $room;
+  $rep_id        = 0;
+  $rep_type      = REP_NONE;
+  $rep_end_day   = $day;
+  $rep_end_month = $month;
+  $rep_end_year  = $year;
+  $rep_day       = array(0, 0, 0, 0, 0, 0, 0);
+  $private       = $private_default;
+  $confirmed     = $confirmed_default;
+  
+  // now initialise the custom fields
+  foreach ($fields as $field)
+  {
+    if (!in_array($field['name'], $standard_fields['entry']))
+    {
+      $custom_fields[$field['name']] = '';
+    }
+  }
 
   // Get the hour and minute, converting a period to its MRBS time
   // Set some sensible defaults
@@ -337,26 +366,6 @@ else
   }
   $duration    = ($enable_periods ? 60 : $default_duration);
   $end_time = $start_time + $duration;
-  $type        = "I";
-  $room_id     = $room;
-  unset($id);
-
-  $rep_id        = 0;
-  $rep_type      = REP_NONE;
-  $rep_end_day   = $day;
-  $rep_end_month = $month;
-  $rep_end_year  = $year;
-  $rep_day       = array(0, 0, 0, 0, 0, 0, 0);
-  $private       = $private_default;
-  $confirmed     = $confirmed_default;
-  // now initialise the custom fields
-  foreach ($fields as $field)
-  {
-    if (!in_array($field['name'], $standard_fields['entry']))
-    {
-      $custom_fields[$field['name']] = '';
-    }
-  }
 }
 
 $start_hour  = strftime('%H', $start_time);
@@ -374,6 +383,8 @@ if (empty( $room_id ) )
   $room_id = $row['id'];
 
 }
+// Determine the area id of the room in question first
+$area_id = mrbsGetRoomArea($room_id);
 
 
 // Remove "Undefined variable" notice
@@ -394,10 +405,63 @@ if (!getWritable($create_by, $user, $room_id))
 
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
+// Get the details of all the rooms
+$rooms = array();
+$sql = "SELECT id, room_name, area_id
+          FROM $tbl_room
+      ORDER BY area_id, sort_key";
+$res = sql_query($sql);
+if ($res)
+{
+  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  {
+    $rooms[$row['id']] = $row;
+  }
+}
+    
+// Get the details of all the areas
+$areas = array();
+$sql = "SELECT id, area_name, resolution, default_duration, enable_periods,
+               morningstarts, morningstarts_minutes, eveningends , eveningends_minutes
+          FROM $tbl_area
+      ORDER BY area_name";
+$res = sql_query($sql);
+if ($res)
+{
+  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  {
+    $areas[$row['id']] = $row;
+  }
+}
+
 ?>
 
 <script type="text/javascript">
 //<![CDATA[
+
+var currentArea = <?php echo $area_id ?>;
+var areas = new Array();
+<?php
+// give JavaScript a copy of the PHP array $areas
+foreach ($areas as $area)
+{
+  echo "areas[${area['id']}] = new Array();\n";
+  foreach ($area as $key => $value)
+  {
+    if ($key == "area_name")
+    {
+      // Enclose strings in quotes
+      $value = "'$value'";
+    }
+    elseif (in_array($key, $boolean_fields['area']))
+    {
+      // Convert booleans
+      $value = ($value) ? 'true' : 'false';
+    }
+    echo "areas[${area['id']}]['$key'] = $value;\n";
+  }
+}
+?>
 
 // do a little form verifying
 function validate(form)
@@ -525,8 +589,8 @@ function OnAllDayClick(allday)
   var form = document.forms["main"];
   if (form)
   {
-    var startSelect = form.start_seconds;
-    var endSelect = form.end_seconds;
+    var startSelect = form["start_seconds" + currentArea];
+    var endSelect = form["end_seconds" + currentArea];
     var i;
     if (form.all_day.checked) // If checking the box...
     {
@@ -635,28 +699,34 @@ else
     }
     echo "</div>\n";
 
-    if ($enable_periods)
-    {
-      $resolution = 60;
-      $first = 12*60*60;
-      // If we're using periods we just go to the beginning of the last slot
-      $last = $first + ((count($periods) - 1) * $resolution);
-    }
-    else
-    {
-      $first = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-      $last = (($eveningends * 60) + $eveningends_minutes) * 60;
-      $last = $last + $resolution;
-    }
+
     echo "<div id=\"div_start_date\">\n";
     echo "<label for=\"start_datepicker\">" . get_vocab("start") . ":</label>\n";
     $date = getdate($start_time);
     gendateselector("start_", $date['mday'], $date['mon'], $date['year']);
     // If we're using periods the booking model is slightly different:
     // you're allowed to specify the last period as your first period.
-    // This is why we don't substract the $resolution
-    $start_last = ($enable_periods) ? $last : $last - $resolution;
-    genslotselector("start_", $first, $start_last, $start_time);
+    // This is why we don't substract the resolution
+    
+    foreach ($areas as $a)
+    {
+      if ($a['enable_periods'])
+      {
+        $a['resolution'] = 60;
+        $first = 12*60*60;
+        // If we're using periods we just go to the beginning of the last slot
+        $last = $first + ((count($periods) - 1) * $a['resolution']);
+      }
+      else
+      {
+        $first = (($a['morningstarts'] * 60) + $a['morningstarts_minutes']) * 60;
+        $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
+        $last = $last + $a['resolution'];
+      }
+      $start_last = ($a['enable_periods']) ? $last : $last - $a['resolution'];
+      $display = ($a['id'] == $area_id) ? "block" : "none";
+      genslotselector($a, "start_", $first, $start_last, $start_time, $display);
+    }
 
     ?>
     <div class="group">
@@ -678,46 +748,32 @@ else
     // If we're using periods the booking model is slightly different,
     // so subtract one period because the "end" period is actually the beginning
     // of the last period booked
-    $end_value = ($enable_periods) ? $end_time - $resolution : $end_time;
-    genslotselector("end_", $first, $last, $end_value);
+    foreach ($areas as $a)
+    {
+      if ($a['enable_periods'])
+      {
+        $a['resolution'] = 60;
+        $first = 12*60*60;
+        // If we're using periods we just go to the beginning of the last slot
+        $last = $first + ((count($periods) - 1) * $a['resolution']);
+      }
+      else
+      {
+        $first = (($a['morningstarts'] * 60) + $a['morningstarts_minutes']) * 60;
+        $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
+        $last = $last + $a['resolution'];
+      }
+      $end_value = ($a['enable_periods']) ? $end_time - $a['resolution'] : $end_time;
+      $display = ($a['id'] == $area_id) ? "block" : "none";
+      genslotselector($a, "end_", $first, $last, $end_value, $display);
+    }
     echo "</div>\n";
     
     ?>  
     <div id="div_areas">
     </div>
 
-    <?php
-    // Determine the area id of the room in question first
-    $area_id = mrbsGetRoomArea($room_id);
-    
-    // Get the details of all the rooms
-    $rooms = array();
-    $sql = "SELECT id, room_name, area_id
-              FROM $tbl_room
-          ORDER BY area_id, sort_key";
-    $res = sql_query($sql);
-    if ($res)
-    {
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-      {
-        $rooms[$row['id']] = $row;
-      }
-    }
-    
-    // Get the details of all the areas
-    $areas = array();
-    $sql = "SELECT id, area_name, resolution, enable_periods
-              FROM $tbl_area
-          ORDER BY area_name";
-    $res = sql_query($sql);
-    if ($res)
-    {
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-      {
-        $areas[$row['id']] = $row;
-      }
-    }
-    
+    <?php   
     // if there is more than one area then give the option
     // to choose areas.
     if (count($areas) > 1)
@@ -770,6 +826,37 @@ else
           }
           ?>
         } //switch
+        
+        <?php 
+        // Replace the start and end selectors with those for the new area
+        // (1) We set the display for the old elements to "none" and the new
+        // elements to "block".   (2) We also need to disable the old selectors and
+        // enable the new ones: they all have the same name, so we only want
+        // one passed through with the form.  (3) We take a note of the currently
+        // selected start and end values so that we can have a go at finding a
+        // similar time/period in the new area. (4) We also take a note of the old
+        // area id because we'll need that when trying to match up slots: it only
+        // makes sense to match up slots if both old and new area used the same
+        // mode (periods/times).
+        ?>
+        var oldStartId = "start_seconds" + currentArea;
+        var oldEndId = "end_seconds" + currentArea;
+        var newStartId = "start_seconds" + area;
+        var newEndId = "end_seconds" + area;
+        var oldAreaStartValue = formObj[oldStartId].options[formObj[oldStartId].selectedIndex].value;
+        var oldAreaEndValue = formObj[oldEndId].options[formObj[oldEndId].selectedIndex].value;
+        $("#" + oldStartId).css({display: "none"});
+        $("#" + oldStartId).attr('disabled', 'disabled');
+        $("#" + oldEndId).css({display: "none"});
+        $("#" + oldEndId).attr('disabled', 'disabled');
+        $("#" + newStartId).css({display: "block"});
+        $("#" + newStartId).removeAttr('disabled');
+        $("#" + newEndId).css({display: "block"});
+        $("#" + newEndId).removeAttr('disabled');
+        var oldArea = currentArea;
+        currentArea = area;
+        prevStartValue = undefined;
+        adjustSlotSelectors(formObj, oldArea, oldAreaStartValue, oldAreaEndValue);
       }
 
       // Create area selector, only if we have Javascript
