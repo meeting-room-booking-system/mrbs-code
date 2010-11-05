@@ -538,7 +538,7 @@ if ($page == 'edit_entry')
       }
     }
 
-    prevStartValue = startValue; <? // Update the previous start value ?>
+    prevStartValue = startValue; <?php // Update the previous start value ?>
     
     var dateDifference = getDateDifference(form);
     
