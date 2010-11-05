@@ -17,7 +17,7 @@
 // in are offset by the DST offset incorrectly.
 //
 // When upgrading an existing installation, this should be set to the
-// timezone the web server runs in.
+// timezone the web server runs in.  See the INSTALL document for more information.
 //
 // A list of valid timezones can be found at http://php.net/manual/timezones.php
 // The following line must be uncommented by removing the '//' at the beginning

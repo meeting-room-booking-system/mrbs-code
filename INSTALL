@@ -306,6 +306,32 @@ by removing the '//' at the beginning.   Note that the timezone to use is the
 timezone in which your meeting rooms are located, not the timezone of your
 server in case they are different.
 
+However, if you already have bookings in your system which were made under
+a different timezone (perhaps if you are upgrading from a previous version
+of MRBS where the timezone wasn't set explicitly and the timzone defaulted to
+that of the server) then you have two choices:
+
+(a) to set the timezone to be the same as the previous timezone.   This will
+ensure that all your existing bookings still appear correctly, but you will
+have to continue to put up with some minor inconveniences.   For example 
+"Go to Today" will not always go to the today for your rooms, if you happen 
+to be using MRBS at a time of day when the rooms are on one day but the 
+timezone you have selected is on the day before or after.   Also if you are
+using the min and max book ahead facility then you will find that this is out
+by the difference between the timezone of your rooms and the timezone you have
+chosen.
+
+(b) to set the timezone to the timezone of your rooms, having first corrected
+the start and end times of all your existing bookings, in both the entry and
+repeat tables.   This is not a trivial exercise and you should back up your
+database before starting.   Note also that it is not necessarily as simple as
+adding or subtracting a fixed number of hours to existing bookings since the
+dates at which your rooms change between summer and winter time may be different
+to the dates at which your previous timezone made the DST change.   This can
+happen for example if your rooms are in Europe and your server is in the USA,
+as there is usually a week when Europe has changed but the USA has not.
+
+
 2.  Database Settings:
 
 First, select your database system. Define one of the following:
