@@ -135,7 +135,7 @@ function freeze_panes_table_html($info, $columns, $class, $action=FALSE)
 {
   global $tbl_users, $PHP_SELF;
   global $user, $level, $min_user_editing_level, $max_content_length;
-  global $fields;
+  global $fields, $auth;
   
   $html = '';
   $html .= "<div class=\"$class\">\n";
@@ -165,6 +165,15 @@ function freeze_panes_table_html($info, $columns, $class, $action=FALSE)
   $row_class = "odd_row";
   foreach ($info as $line)
   {
+    // Check whether ordinary users are allowed to see other users' details.  If not,
+    // then skip past this row if it's not the current user or the user is not an admin
+    if ($auth['only_admin_can_see_other_users'] &&
+        ($level < $min_user_editing_level) &&
+        (strcasecmp($line['name'], $user) != 0))
+    {
+      continue;
+    }
+    
     $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
     $html .= "<tr class=\"$row_class\">\n";
     if ($action)

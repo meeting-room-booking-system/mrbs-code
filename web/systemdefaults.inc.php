@@ -693,6 +693,9 @@ $auth['only_admin_can_book'] = FALSE;
 // If you want only administrators to be able to make repeat bookings,
 // set this variable to TRUE
 $auth['only_admin_can_book_repeat'] = FALSE;
+// If you don't want ordinary users to be able to see the other users'
+// details then set this to TRUE.  (Only relevant when using 'db' authentication]
+$auth['only_admin_can_see_other_users'] = FALSE;
 // If you want to prevent the public (ie un-logged in users) from
 // being able to view bookings, set this variable to TRUE
 $auth['deny_public_access'] = FALSE;
