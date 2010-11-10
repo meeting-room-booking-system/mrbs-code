@@ -126,6 +126,8 @@ $is_admin = (authGetUserLevel($user) >= 2);
 $repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
 // Similarly for multi-day
 $multiday_allowed = $is_admin || empty($auth['only_admin_can_book_multiday']);
+// Similarly for multiple room selection
+$multiselect_allowed = $is_admin || empty($auth['only_admin_can_select_multiple']);
 
 // This page will either add or modify a booking
 
@@ -911,21 +913,26 @@ else
     <div id="div_rooms">
     <label for="rooms"><?php echo get_vocab("rooms") ?>:</label>
     <div class="group">
-      <select id="rooms" name="rooms[]" multiple="multiple" size="5">
-        <?php 
-        foreach ($rooms as $r)
+      <?php
+      echo "<select id=\"rooms\" name=\"rooms[]\"" .
+           (($multiselect_allowed) ? " multiple=\"multiple\"" : "") .
+           " size=\"5\">\n";  
+      foreach ($rooms as $r)
+      {
+        if ($r['area_id'] == $area_id)
         {
-          if ($r['area_id'] == $area_id)
-          {
-            $selected = ($r['id'] == $room_id) ? "selected=\"selected\"" : "";
-            echo "<option $selected value=\"" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</option>\n";
-            // store room names for emails
-            $room_names[$i] = $r['room_name'];
-          }
+          $selected = ($r['id'] == $room_id) ? "selected=\"selected\"" : "";
+          echo "<option $selected value=\"" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</option>\n";
+          // store room names for emails
+          $room_names[$i] = $r['room_name'];
         }
-        ?>
-      </select>
-      <span><?php echo get_vocab("ctrl_click") ?></span>
+      }
+      echo "</select>\n";
+      if ($multiselect_allowed)
+      {
+        echo "<span>" . get_vocab("ctrl_click") . "</span>\n";
+      }
+      ?>
       </div>
     </div>
     <div id="div_type">
