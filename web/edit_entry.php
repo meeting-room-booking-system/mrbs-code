@@ -127,7 +127,7 @@ $repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
 // Similarly for multi-day
 $multiday_allowed = $is_admin || empty($auth['only_admin_can_book_multiday']);
 // Similarly for multiple room selection
-$multiselect_allowed = $is_admin || empty($auth['only_admin_can_select_multiple']);
+$multiroom_allowed = $is_admin || empty($auth['only_admin_can_select_multiroom']);
 
 // This page will either add or modify a booking
 
@@ -915,7 +915,7 @@ else
     <div class="group">
       <?php
       echo "<select id=\"rooms\" name=\"rooms[]\"" .
-           (($multiselect_allowed) ? " multiple=\"multiple\"" : "") .
+           (($multiroom_allowed) ? " multiple=\"multiple\"" : "") .
            " size=\"5\">\n";  
       foreach ($rooms as $r)
       {
@@ -928,7 +928,7 @@ else
         }
       }
       echo "</select>\n";
-      if ($multiselect_allowed)
+      if ($multiroom_allowed)
       {
         echo "<span>" . get_vocab("ctrl_click") . "</span>\n";
       }

@@ -694,12 +694,12 @@ $auth['only_admin_can_book'] = FALSE;
 // set this variable to TRUE
 $auth['only_admin_can_book_repeat'] = FALSE;
 // If you want only administrators to be able to make bookings spanning
-// more than one day, set this variable to TRUE
+// more than one day, set this variable to TRUE.
 $auth['only_admin_can_book_multiday'] = FALSE;
 // If you want only administrators to be able to select multiple rooms
 // on the booking form then set this to TRUE.  (It doesn't stop ordinary users
 // making separate bookings for the same time slot, but it does slow them down).
-$auth['only_admin_can_select_multiple'] = FALSE;
+$auth['only_admin_can_select_multiroom'] = FALSE;
 // If you don't want ordinary users to be able to see the other users'
 // details then set this to TRUE.  (Only relevant when using 'db' authentication]
 $auth['only_admin_can_see_other_users'] = FALSE;
