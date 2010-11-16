@@ -140,6 +140,7 @@ $(function() {
       if (!empty($datepicker_locale))  // in case the array_search() returned FALSE
       {
         $datepicker_locale = locale_format($datepicker_locale, '-');
+        $datepicker_locale = substr($datepicker_locale, 0, 5);  // strip off anything after the country (eg charset)
         $datepicker_lang = substr($datepicker_locale, 0, 2);
         // First we'll try and get the correct language and then we'll try and
         // overwrite that with the correct country variant
