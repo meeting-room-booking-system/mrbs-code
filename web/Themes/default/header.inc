@@ -64,9 +64,13 @@ function print_theme_header($day, $month, $year, $area, $room)
     <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
     <?php
     // The Portuguese (-pt) file below is a non-standard addition to the regional
-    // variants.   The standard package only has a pt-BR variant at the moment.  The
-    // file has been kept separate to avoid problems with merging new releases of UI
+    // variants.   The standard package only has a pt-BR variant at the moment.
+    // Similarly the English (-en) and English-US (-en-US) files, which do not
+    // exist explicitly.   The files have been kept separate to avoid problems with
+    // merging new releases of UI
     ?>
+    <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en.js"></script>
+    <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-US.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-pt.js"></script>
     
     <script type="text/javascript">
@@ -95,17 +99,7 @@ $(function() {
   // changing is disabled, we fall back to a browser specified locale if the locale
   // in the config file is not available in datepicker.
   
-  // Some special cases
   $default_lang = strtolower($default_language_tokens);
-  switch ($default_lang)
-  {
-    case 'en':
-      // There is no 'en' localisation!  It is the default.
-      $default_lang = '';
-      break;
-    default:
-      break;
-  }
   
   echo "$.datepicker.setDefaults($.datepicker.regional['$default_lang']);\n";
   $datepicker_langs = $langs;
