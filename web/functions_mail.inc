@@ -196,7 +196,7 @@ function clean_address_list($string)
 // returns an empty string in the event of an error
 function get_email_address($user)
 {
-  global $mail_settings, $auth, $tbl_users;
+  global $mail_settings, $auth, $tbl_users, $ldap_get_user_email;
   
   if ('db' == $auth['type'])
   {
@@ -208,6 +208,10 @@ function get_email_address($user)
     {
       $email = "";
     }
+  }
+  else if (('ldap' == $auth['type']) && $ldap_get_user_email)
+  {
+    $email = authLdapGetEmail($user);
   }
   else
   {
