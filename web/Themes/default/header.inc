@@ -179,8 +179,10 @@ $(function() {
 //
 // Then go and adjust the start and end time/period select options, because
 // they are dependent on the start and end dates
+//
+// Finally, if formId is defined, submit the form
 ?>
-function datepicker_close(dateText, inst)
+function datepicker_close(dateText, inst, formId)
 {
   var alt_id = inst.id + '_alt';
   var date = document.getElementById(alt_id).value.split('-');
@@ -196,6 +198,11 @@ function datepicker_close(dateText, inst)
     <?php
   }
   ?>
+  if (formId)
+  {
+    var form = document.getElementById(formId);
+    form.submit();
+  }
 }
 
 
@@ -898,7 +905,9 @@ function init()
         <form action="day.php" method="get" id="Form1">
           <div>
             <?php
-            genDateSelector("", $day, $month, $year);
+            // Give the form id as the optional fifth parameter because we want
+            // the form to be automatically submitted when the datepicker is closed
+            genDateSelector("", $day, $month, $year, "Form1");
             if (!empty($area))
             {
               echo "<input type=\"hidden\" name=\"area\" value=\"$area\">\n";
@@ -907,10 +916,12 @@ function init()
             {
               echo "<input type=\"hidden\" name=\"room\" value=\"$room\">\n";
             }
-  
+            // We set class = "js_none" because if JavaScript is enabled we want the
+            // submit button to disappear because the form will be automatically submitted
+            // when the datepicker closes
+            echo "<input class=\"js_none\" type=\"submit\" value=\"" . get_vocab("goto") . "\">\n";
             ?>
-            <input type="submit" value="<?php echo get_vocab("goto") ?>">
-          </div>
+           </div>
         </form>
         <?php
         // Provide a link to the list of bookings awaiting approval

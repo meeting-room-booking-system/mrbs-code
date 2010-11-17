@@ -370,13 +370,16 @@ function generate_textarea($label_text, $name, $value, $disabled=FALSE)
 // then it will generate a calendar picker using jQuery UI datepicker.   If not,
 // it will generate three separate select boxes, one each for day, month and year.
 //
+// $form_id is an optional fifth parameter.   If set it specifies the id of
+// a form to submit when the datepicker is closed.
+//
 // Whether or not JavaScript is enabled the date is passed back in three separate
 // variables:  ${prefix}day, ${prefix}month and ${prefix}year
 //
 // The function passes back three separate variables, rather than a single date 
 // variable, partly for compatibility with previous implementations of genDateSelector()
 // and partly because it's easier to do this for the non-JavaScript version.
-function genDateSelector($prefix, $day, $month, $year)
+function genDateSelector($prefix, $day, $month, $year, $form_id='')
 {
   // Make sure we've got a date
   if (empty($day) or empty($month) or empty($year))
@@ -437,6 +440,12 @@ function genDateSelector($prefix, $day, $month, $year)
 	$(function() {
 		$("#<?php echo $datepicker_baseid ?>").datepicker({yearRange: <?php echo "'$min:$max'" ?>,
 		                                                   altField: '#<?php echo $datepicker_baseid ?>_alt'
+		                                                   <?php
+		                                                   if (!empty($form_id))
+		                                                   {
+		                                                     echo ", onClose: function(dateText, inst) {datepicker_close(dateText, inst, '$form_id');}";
+		                                                   }
+		                                                   ?>
 		                                                  });
 		<?php
 	  // Populate the input fields with the initial values
