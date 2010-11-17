@@ -197,7 +197,7 @@ function authLdapGetEmail($user)
 }
 
 
-/* authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
+/* authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
                             $user, &$object)
  * 
  * Checks if the specified username/password pair are valid
