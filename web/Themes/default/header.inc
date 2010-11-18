@@ -64,9 +64,13 @@ function print_theme_header($day, $month, $year, $area, $room)
     <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
     <?php
     // The Portuguese (-pt) file below is a non-standard addition to the regional
-    // variants.   The standard package only has a pt-BR variant at the moment.  The
-    // file has been kept separate to avoid problems with merging new releases of UI
+    // variants.   The standard package only has a pt-BR variant at the moment.
+    // Similarly the English (-en) and English-US (-en-US) files, which do not
+    // exist explicitly.   The files have been kept separate to avoid problems with
+    // merging new releases of UI
     ?>
+    <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en.js"></script>
+    <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-US.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-pt.js"></script>
     
     <script type="text/javascript">
@@ -95,17 +99,7 @@ $(function() {
   // changing is disabled, we fall back to a browser specified locale if the locale
   // in the config file is not available in datepicker.
   
-  // Some special cases
-  $default_lang = strtolower($default_language_tokens);
-  switch ($default_lang)
-  {
-    case 'en':
-      // There is no 'en' localisation!  It is the default.
-      $default_lang = '';
-      break;
-    default:
-      break;
-  }
+  $default_lang = locale_format($default_language_tokens, '-');
   
   echo "$.datepicker.setDefaults($.datepicker.regional['$default_lang']);\n";
   $datepicker_langs = $langs;
@@ -146,6 +140,7 @@ $(function() {
       if (!empty($datepicker_locale))  // in case the array_search() returned FALSE
       {
         $datepicker_locale = locale_format($datepicker_locale, '-');
+        $datepicker_locale = substr($datepicker_locale, 0, 5);  // strip off anything after the country (eg charset)
         $datepicker_lang = substr($datepicker_locale, 0, 2);
         // First we'll try and get the correct language and then we'll try and
         // overwrite that with the correct country variant
@@ -184,8 +179,10 @@ $(function() {
 //
 // Then go and adjust the start and end time/period select options, because
 // they are dependent on the start and end dates
+//
+// Finally, if formId is defined, submit the form
 ?>
-function datepicker_close(dateText, inst)
+function datepicker_close(dateText, inst, formId)
 {
   var alt_id = inst.id + '_alt';
   var date = document.getElementById(alt_id).value.split('-');
@@ -201,6 +198,11 @@ function datepicker_close(dateText, inst)
     <?php
   }
   ?>
+  if (formId)
+  {
+    var form = document.getElementById(formId);
+    form.submit();
+  }
 }
 
 
@@ -903,7 +905,9 @@ function init()
         <form action="day.php" method="get" id="Form1">
           <div>
             <?php
-            genDateSelector("", $day, $month, $year);
+            // Give the form id as the optional fifth parameter because we want
+            // the form to be automatically submitted when the datepicker is closed
+            genDateSelector("", $day, $month, $year, "Form1");
             if (!empty($area))
             {
               echo "<input type=\"hidden\" name=\"area\" value=\"$area\">\n";
@@ -912,10 +916,12 @@ function init()
             {
               echo "<input type=\"hidden\" name=\"room\" value=\"$room\">\n";
             }
-  
+            // We set class = "js_none" because if JavaScript is enabled we want the
+            // submit button to disappear because the form will be automatically submitted
+            // when the datepicker closes
+            echo "<input class=\"js_none\" type=\"submit\" value=\"" . get_vocab("goto") . "\">\n";
             ?>
-            <input type="submit" value="<?php echo get_vocab("goto") ?>">
-          </div>
+           </div>
         </form>
         <?php
         // Provide a link to the list of bookings awaiting approval

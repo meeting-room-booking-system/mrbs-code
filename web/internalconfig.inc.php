@@ -2,9 +2,45 @@
 
 // $Id$
 
-// This file contains internal configuration settings.   You should not need 
-// to change them unless you are making changes to the MRBS code.
+// This file contains internal configuration settings and checking.   You should not
+// need to change this file unless you are making changes to the MRBS code.
 
+/********************************************************
+ * Checking
+ ********************************************************/
+// Do some consistency checking of user settings from config.inc.php
+// (and redefine $max_slots if we're using periods)
+if ($enable_periods)
+{
+  $max_slots = count($periods);  // We know exactly how many we need
+  if (count($periods) > 60)
+  {
+    die('Configuration error: too many periods defined');
+  }
+}
+else
+{
+  if (!isset($resolution))
+  {
+    die('Configuration error: $resolution has not been set.');
+  }
+  if ($resolution <= 0)
+  {
+    die('Configuration error: $resolution is less than or equal to zero.');
+  }
+  if ($resolution%60 != 0)
+  {
+    die('Configuration error: $resolution is not an integral number of minutes.');
+  }
+  $start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
+  $start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
+  $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
+  if (($start_difference < 0) or ($start_difference%$resolution != 0))
+  {
+    die('Configuration error: make sure that $eveningends is after $morningstarts
+         and that the length of the booking day is an integral multiple of $resolution.');
+  }
+}
 
 /***************************************
  * DOCTYPE - internal use, do not change
@@ -148,7 +184,7 @@ $area_defaults['reminders_enabled']      = $reminders_enabled;
 $area_defaults['enable_periods']         = $enable_periods;
 $area_defaults['confirmation_enabled']   = $confirmation_enabled;
 $area_defaults['confirmed_default']      = $confirmed_default;
-                               
+                       
 /********************************************************
  * PHP System Configuration - internal use, do not change
  ********************************************************/

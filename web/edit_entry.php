@@ -64,8 +64,14 @@ function genslotselector($area, $prefix, $first, $last, $time, $display="block")
   // local variables, not globals.
   $enable_periods = $area['enable_periods'];
   $resolution = ($enable_periods) ? 60 : $area['resolution'];
+  // Check that $resolution is positive to avoid an infinite loop below.
+  // (Shouldn't be possible, but just in case ...)
+  if (empty($resolution) || ($resolution < 0))
+  {
+    fatal_error(FALSE, "Internal error - resolution is NULL or <= 0");
+  }
   // If they've asked for "display: none" then we'll also disable the select so
-  // hat there is only one select passing through the variable to the handler
+  // that there is only one select passing through the variable to the handler
   $disabled = (strtolower($display) == "none") ? " disabled=\"disabled\"" : "";
   
   $date = getdate($time);

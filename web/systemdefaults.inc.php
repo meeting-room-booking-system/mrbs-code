@@ -657,6 +657,20 @@ $ldap_tls = false;
 // they are a valid user of mrbs.
 //$ldap_filter = "mrbsuser=y";
 
+// Set to TRUE to tell MRBS to look up a user's email address in LDAP.
+// Utilises $ldap_email_attrib below
+$ldap_get_user_email = FALSE;
+// The LDAP attribute which holds a user's email address
+$ldap_email_attrib = 'mail';
+
+// Set to TRUE if you want MRBS to call ldap_unbind() between successive
+// attempts to bind. Unbinding while still connected upsets some
+// LDAP servers
+$ldap_unbind_between_attempts = FALSE;
+
+// Output debugging information for LDAP actions
+$ldap_debug = FALSE;
+
 // 'auth_imap' configuration settings
 // See AUTHENTICATION for details of how check against multiple servers
 // Where is the IMAP server

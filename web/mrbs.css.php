@@ -679,7 +679,7 @@ table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
 #banner a:link    {color: <?php echo $anchor_link_color_banner ?>;    text-decoration: none; font-weight: normal}
 #banner a:visited {color: <?php echo $anchor_visited_color_banner ?>; text-decoration: none; font-weight: normal}
 #banner a:hover   {color: <?php echo $anchor_hover_color_banner ?>;   text-decoration:underline; font-weight: normal}
-#banner input.date {width: 6.5em}
+#banner input.date {width: 6.5em; text-align: center}
 
 table#colour_key {clear: both; border-spacing: 0; border-collapse: collapse}
 #colour_key td {width: 7.0em; padding: 2px; font-weight: bold;
