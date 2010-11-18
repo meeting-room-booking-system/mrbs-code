@@ -99,7 +99,7 @@ $(function() {
   // changing is disabled, we fall back to a browser specified locale if the locale
   // in the config file is not available in datepicker.
   
-  $default_lang = strtolower($default_language_tokens);
+  $default_lang = locale_format($default_language_tokens, '-');
   
   echo "$.datepicker.setDefaults($.datepicker.regional['$default_lang']);\n";
   $datepicker_langs = $langs;
