@@ -81,6 +81,9 @@ div.freeze_panes {width: 100%; float: left}
 .freeze_panes th div {height: 1.5em; max-height: 1.5em; min-height: 1.5em}
 .freeze_panes td div {height: 2em; max-height: 2em; min-height: 2em}
 .freeze_panes td.int div {width: 6em; text-align: right; padding-right: 0.5em}
+.freeze_panes td.boolean {text-align: center}
+.freeze_panes td.boolean div {display: block}
+.freeze_panes td.boolean img {margin-top: 3px}
    
 select.room_area_select {margin-right: 0.5em}
 

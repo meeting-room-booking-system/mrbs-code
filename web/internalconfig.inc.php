@@ -97,6 +97,16 @@ $standard_fields['repeat'] = array('id',
                                    'info_user',
                                    'info_text');
 
+$standard_fields['room'] = array('id',
+                                 'disabled',
+                                 'area_id',
+                                 'room_name',
+                                 'sort_key',
+                                 'description',
+                                 'capacity',
+                                 'room_admin_email',
+                                 'custom_html');
+
 // Boolean fields.    These are fields which are treated as booleans                                
 $boolean_fields['area'] = array('private_enabled',
                                 'private_default',

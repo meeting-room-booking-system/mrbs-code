@@ -36,6 +36,7 @@
 CREATE TABLE mrbs_area
 (
   id                     serial primary key,
+  disabled               smallint DEFAULT 0 NOT NULL,
   area_name              varchar(30),
   area_admin_email       text,
   resolution             int,
@@ -63,6 +64,7 @@ CREATE TABLE mrbs_area
 CREATE TABLE mrbs_room
 (
   id                serial primary key,
+  disabled          smallint DEFAULT 0 NOT NULL,
   area_id           int DEFAULT 0 NOT NULL,
   room_name         varchar(25) NOT NULL,
   sort_key          varchar(25) NOT NULL,
@@ -135,6 +137,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '21');
+  VALUES ('db_version', '22');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
