@@ -322,7 +322,7 @@ else
   $name        = "";
   $create_by   = $user;
   $description = "";
-  $type        = "I";
+  $type        = $default_type;
   $room_id     = $room;
   $rep_id        = 0;
   $rep_type      = REP_NONE;
