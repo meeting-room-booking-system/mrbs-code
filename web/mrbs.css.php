@@ -29,10 +29,10 @@ body {font-size: small;
 .current {color: <?php echo $highlight_font_color ?>}                        /* used to highlight the current item */
 .error   {color: <?php echo $highlight_font_color ?>; font-weight: bold}     /* for error messages */
 .warning {color: <?php echo $highlight_font_color ?>}                        /* for warning messages */
+.note    {font-style: italic}
 
-
-h1 {font-size: x-large}
-h2 {font-size: large}
+h1 {font-size: x-large; clear: both}
+h2 {font-size: large; clear: both}
 
 img {border: 0}
 

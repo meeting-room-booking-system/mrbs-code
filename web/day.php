@@ -66,7 +66,10 @@ $pm7=mktime($eveningends,$eveningends_minutes,0,
       
 <?php
 
-$sql = "select id, area_name from $tbl_area order by area_name";
+$sql = "SELECT id, area_name
+          FROM $tbl_area
+         WHERE disabled=0
+      ORDER BY area_name";
 $res = sql_query($sql);
 // Show all available areas
 // but only if there's more than one of them, otherwise there's no point
@@ -132,23 +135,27 @@ $tm = date("m",$i);
 $td = date("d",$i);
 
 
-//We want to build an array containing all the data we want to show
-//and then spit it out. 
+// We want to build an array containing all the data we want to show
+// and then spit it out. 
 
-//Get all appointments for today in the area that we care about
-//Note: The predicate clause 'start_time <= ...' is an equivalent but simpler
-//form of the original which had 3 BETWEEN parts. It selects all entries which
-//occur on or cross the current day.
+// Get all appointments for today in the area that we care about.  We
+// only get the data for enabled rooms.  (If the whole area is disabled
+// then the main table won't get displayed anyway).
+
+// Note: The predicate clause 'start_time <= ...' is an equivalent but simpler
+// form of the original which had 3 BETWEEN parts. It selects all entries which
+// occur on or cross the current day.
 $sql = "SELECT R.id AS room_id, start_time, end_time, name, repeat_id,
                E.id AS entry_id, type,
                E.description AS entry_description, status,
                E.create_by AS entry_create_by
           FROM $tbl_entry E, $tbl_room R
          WHERE E.room_id = R.id
-           AND area_id = $area
+           AND R.area_id = $area
+           AND R.disabled = 0
            AND start_time <= $pm7 AND end_time > $am7
       ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
-   
+
 $res = sql_query($sql);
 if (! $res)
 {
@@ -201,11 +208,17 @@ if ($debug_flag)
   echo "</pre><p>\n";
 }
 
-// We need to know what all the rooms area called, so we can show them all
-// pull the data from the db and store it. Convienently we can print the room
+// We need to know what all the rooms are called, so we can show them all.
+// Pull the data from the db and store it. Convienently we can print the room
 // headings and capacities at the same time
 
-$sql = "SELECT room_name, capacity, id, description FROM $tbl_room WHERE area_id=$area ORDER BY sort_key";
+$sql = "SELECT R.room_name, R.capacity, R.id, R.description
+          FROM $tbl_room R, $tbl_area A
+         WHERE R.area_id=$area
+           AND R.area_id = A.id
+           AND R.disabled = 0
+           AND A.disabled = 0
+         ORDER BY sort_key";
 
 $res = sql_query($sql);
 

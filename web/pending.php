@@ -174,6 +174,8 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
      LEFT JOIN $tbl_repeat AS T ON E.repeat_id=T.id
          WHERE E.room_id = M.id
            AND M.area_id = A.id
+           AND M.disabled = 0
+           AND A.disabled = 0
            AND $sql_approval_enabled
            AND (E.status&" . STATUS_AWAITING_APPROVAL . " != 0)";
 

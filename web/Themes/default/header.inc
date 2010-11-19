@@ -925,10 +925,9 @@ function init()
         </form>
         <?php
         // Provide a link to the list of bookings awaiting approval
-        // (if there are any areas where we require bookings to be approved)
+        // (if there are any enabled areas where we require bookings to be approved)
 
-
-        $approval_somewhere = some_area('approval_enabled');
+        $approval_somewhere = some_area('approval_enabled', TRUE);
         if ($approval_somewhere && (authGetUserLevel($user) >= 1))
         {
           $sql_approval_enabled = some_area_predicate('approval_enabled');
@@ -939,6 +938,8 @@ function init()
                    WHERE (status&" . STATUS_AWAITING_APPROVAL . " != 0)
                      AND E.room_id = R.id
                      AND R.area_id = A.id
+                     AND R.disabled = 0
+                     AND A.disabled = 0
                      AND $sql_approval_enabled";
           if (!$is_admin)
           {

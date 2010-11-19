@@ -62,7 +62,9 @@ if (!empty($error))
 
 // TOP SECTION:  THE FORM FOR SELECTING AN AREA
 echo "<div id=\"area_form\">\n";
-$sql = "select id, area_name, disabled from $tbl_area order by area_name";
+$sql = "SELECT id, area_name, disabled
+          FROM $tbl_area
+      ORDER BY disabled, area_name";
 $res = sql_query($sql);
 $areas_defined = $res && (sql_count($res) > 0);
 if (!$areas_defined)
@@ -99,13 +101,36 @@ else
     // The area selector
     echo "<label id=\"area_label\" for=\"area_select\">" . get_vocab("area") . ":</label>\n";
     echo "<select class=\"room_area_select\" id=\"area_select\" name=\"area\" onchange=\"this.form.submit()\">";
+    if ($is_admin)
+    {
+      if ($areas[0]['disabled'])
+      {
+        $done_change = TRUE;
+        echo "<optgroup label=\"" . get_vocab("disabled") . "\">\n";
+      }
+      else
+      {
+        $done_change = FALSE;
+        echo "<optgroup label=\"" . get_vocab("enabled") . "\">\n";
+      }
+    }
     foreach ($areas as $a)
     {
       if ($is_admin || !$a['disabled'])
       {
+        if ($is_admin && !$done_change && $a['disabled'])
+        {
+          echo "</optgroup>\n";
+          echo "<optgroup label=\"" . get_vocab("disabled") . "\">\n";
+          $done_change = TRUE;
+        }
         $selected = ($a['id'] == $area) ? "selected=\"selected\"" : "";
         echo "<option $selected value=\"". $a['id']. "\">" . htmlspecialchars($a['area_name']) . "</option>";
       }
+    }
+    if ($is_admin)
+    {
+      echo "</optgroup>\n";
     }
     echo "</select>\n";
   
