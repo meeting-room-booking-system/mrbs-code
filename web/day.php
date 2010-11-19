@@ -65,39 +65,8 @@ $pm7=mktime($eveningends,$eveningends_minutes,0,
   <div id="dwm_header">
       
 <?php
-
-$sql = "SELECT id, area_name
-          FROM $tbl_area
-         WHERE disabled=0
-      ORDER BY area_name";
-$res = sql_query($sql);
 // Show all available areas
-// but only if there's more than one of them, otherwise there's no point
-if ($res && (sql_count($res)>1))
-{
-  echo "<div id=\"dwm_areas\">\n";
-  echo "<h3>".get_vocab("areas")."</h3>";
-  
-  // need to show either a select box or a normal html list,
-  // depending on the settings in config.inc.php
-  if ($area_list_format == "select")
-  {
-    echo make_area_select_html('day.php', $area, $year, $month, $day);
-  }
-  else
-  {
-    // show the standard html list
-    echo ("<ul>\n");
-    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-    {
-      echo "<li><a href=\"day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$row['id']."\">";
-      echo "<span" . (($row['id'] == $area) ? ' class="current"' : '') . ">";
-      echo htmlspecialchars($row['area_name']) . "</span></a></li>\n";
-    }  
-    echo ("</ul>\n");
-  }
-  echo "</div>\n";
-}
+echo make_area_select_html('day.php', $area, $year, $month, $day);
 
 // Draw the three month calendars
 minicals($year, $month, $day, $area, $room, 'day');
