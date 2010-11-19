@@ -784,6 +784,8 @@ function utf8_strftime($format, $time)
 
     $format = preg_replace('/%p/', $ampm, $format);
   }
+  // %R not supported on Windows
+  $format = str_replace("%R", "%H:%M", $format);
 
   $result = strftime($format,$time);
   return utf8_convert_from_locale($result);

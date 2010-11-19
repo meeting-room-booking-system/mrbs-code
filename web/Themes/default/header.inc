@@ -916,10 +916,11 @@ function init()
             {
               echo "<input type=\"hidden\" name=\"room\" value=\"$room\">\n";
             }
-            // We set class = "js_none" because if JavaScript is enabled we want the
-            // submit button to disappear because the form will be automatically submitted
-            // when the datepicker closes
-            echo "<input class=\"js_none\" type=\"submit\" value=\"" . get_vocab("goto") . "\">\n";
+            // Although the datepicker will automatically go to the new date when
+            // the date is changed, we still need a submit button because there
+            // are occasions when you want to go to the date without changing it -
+            // for example when you've been on a Search or Report page
+            echo "<input type=\"submit\" value=\"" . get_vocab("goto") . "\">\n";
             ?>
            </div>
         </form>

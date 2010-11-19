@@ -10,6 +10,10 @@
 .form_general label {overflow-y: visible}
 .form_general #ad label {overflow-y: auto} /* undo for all-day checkbox */
 .edit_area_room div.group {width: 25em} /* not necessary in IE7 or IE9 ?! */
+.edit_entry div.group {width: 50em} /* not necessary in IE7 or IE9 ?! */
+.edit_entry #div_start_date div.group {width: 20em}
+.report div.group {width: 40em} /* not necessary in IE7 or IE9 ?! */
+
 
 /* ------------ TRAILER.INC ---------------------*/
 

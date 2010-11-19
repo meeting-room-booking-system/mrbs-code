@@ -82,7 +82,7 @@ function genslotselector($area, $prefix, $first, $last, $time, $display="block")
   }
   else
   {
-    $format = ($twentyfourhour_format) ? "%R" : "%l:%M %P";
+    $format = ($twentyfourhour_format) ? "%H:%M" : "%l:%M %P";
   }
   $html .= "<select style=\"display: $display\" id = \"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\"$disabled>\n";
   for ($t = $first; $t <= $last; $t = $t + $resolution)
@@ -322,7 +322,7 @@ else
   $name        = "";
   $create_by   = $user;
   $description = "";
-  $type        = "I";
+  $type        = $default_type;
   $room_id     = $room;
   $rep_id        = 0;
   $rep_type      = REP_NONE;

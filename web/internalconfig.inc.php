@@ -9,10 +9,8 @@
  * Checking
  ********************************************************/
 // Do some consistency checking of user settings from config.inc.php
-// (and redefine $max_slots if we're using periods)
 if ($enable_periods)
 {
-  $max_slots = count($periods);  // We know exactly how many we need
   if (count($periods) > 60)
   {
     die('Configuration error: too many periods defined');

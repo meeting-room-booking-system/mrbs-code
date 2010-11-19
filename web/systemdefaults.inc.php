@@ -916,4 +916,7 @@ $typel["E"] = "E";
 $typel["I"] = "I";
 // $typel["J"] = "J";
 
+// Default type for new bookings
+$default_type = "I";
+
 ?>
