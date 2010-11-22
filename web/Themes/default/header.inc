@@ -429,7 +429,7 @@ if ($page == 'edit_entry')
     // If All Day is checked then just set the start and end values to the first
     // and last possible options.
     ?>
-    if (form.all_day.checked)
+    if (form.all_day && form.all_day.checked)
     {
       startValue = startOptions[area][0]['value']
       endValue = endOptions[area][nEndOptions[area] - 1]['value'];
@@ -550,12 +550,15 @@ if ($page == 'edit_entry')
     // then we disable all the time selectors (start, end and All Day) until
     // the dates are fixed.
     ?>
-    if (!form.all_day.checked)
+    if (!form.all_day || !form.all_day.checked)
     {
       var newState = (dateDifference < 0);
       startSelect.disabled = newState;
       endSelect.disabled = newState;
-      form.all_day.disabled = newState;
+      if (form.all_day)
+      {
+        form.all_day.disabled = newState;
+      }
     }
 
     <?php // Destroy and rebuild the start select ?>
@@ -807,7 +810,8 @@ function init()
     ?>
     startSelect = form["start_seconds" + currentArea];
     endSelect = form["end_seconds" + currentArea];
-    if (!form.all_day.disabled && 
+    if (form.all_day &&
+        !form.all_day.disabled && 
         (parseInt(startSelect.options[startSelect.selectedIndex].value) == startOptions[currentArea][0]['value']) &&
         (parseInt(endSelect.options[endSelect.selectedIndex].value) == endOptions[currentArea][nEndOptions[currentArea] - 1]['value']))
     {
