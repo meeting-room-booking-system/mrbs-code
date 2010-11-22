@@ -65,8 +65,13 @@ function print_theme_header($day, $month, $year, $area, $room)
     <?php
     // The Portuguese (-pt) file below is a non-standard addition to the regional
     // variants.   The standard package only has a pt-BR variant at the moment.
+    // This was reported as ticket #6102 and the Portuguese file has now been
+    // included as standard in Release 1.8.6 of UI.   When we upgrade to 1.8.6
+    // we can remove the separate -pt file.
+    
     // Similarly the English (-en) and English-US (-en-US) files, which do not
-    // exist explicitly.   The files have been kept separate to avoid problems with
+    // exist explicitly.   A ticket (#6682) has been raised to request their
+    // inclusion.    The files have been kept separate to avoid problems with
     // merging new releases of UI
     ?>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en.js"></script>
