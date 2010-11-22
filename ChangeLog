@@ -1,3 +1,226 @@
+2010-11-22 14:39  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1628] web/Themes/default/header.inc:
+	  
+	  Expanded comments on datepicker
+
+2010-11-22 14:39  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1627] web/jquery/ui/jquery-ui-datepicker-en-US.js:
+	  
+	  Fixed problem with the en-US datepicker setting
+
+2010-11-22 10:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1625] web/Themes/default/header.inc:
+	  
+	  Removed the assumption by the JavaScript that the All Day
+	  checkbox exists, just in case anybody wants to remove it from the
+	  HTML.
+
+2010-11-21 22:00  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1624] web/version.inc:
+	  
+	  * Updated version number for 1.4.5 release.
+
+2010-11-18 21:59  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1620] web/lang.fr:
+	  
+	  Replaced HTML entities (eg &eacute;) with characters - the HTML
+	  entities don't work in email notifications.
+
+2010-11-18 21:35  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1619] web/edit_entry.php, web/systemdefaults.inc.php:
+	  
+	  Added config setting $default_type
+
+2010-11-18 19:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1618] web/Themes/default/header.inc:
+	  
+	  Restored the "Goto" button in the header. MRBS will still
+	  automatically go to the new date when it is changed in the
+	  datepicker, but there are occasions when you just want to go to
+	  the date that is already there - for example if you been on the
+	  Search or Report pages.
+
+2010-11-18 19:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1617] web/mrbs-ie8.css:
+	  
+	  Fixed layout problems in IE8 on the edit_entry and report pages
+
+2010-11-18 17:30  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1616] web/edit_entry.php, web/language.inc:
+	  
+	  Fixed a bug which meant that the start and end times did not
+	  appear on the edit_entry form when using Windows servers.
+
+2010-11-18 17:05  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1615] web/internalconfig.inc.php:
+	  
+	  Fixed bug which prevented converting area to times mode if the
+	  default mode is periods
+
+2010-11-18 10:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1612] web/Themes/default/header.inc:
+	  
+	  Fixed a bug which meant that datepicker wasn't setting the
+	  correct regional setting if the $default_language_tokens was of
+	  the form xx-yy, eg "zh-cn";
+
+2010-11-17 20:47  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1611] web/lang.es, web/lang.fr:
+	  
+	  * Added updated French translation from Jonathan Verbaere and
+	  updated Spanish translation from Jose Luis Martin Jimenez.
+
+2010-11-17 18:59  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1610] web/auth_ldap.inc:
+	  
+	  * Fixed a function introduction comment.
+
+2010-11-17 18:54  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1609] web/auth_ldap.inc, web/functions_mail.inc,
+	  web/systemdefaults.inc.php:
+	  
+	  * Introduced the ability to get a user's email address from LDAP
+	  if the system is configured to use LDAP for authentication. Adds
+	  the config variables: $ldap_get_user_email, $ldap_email_attrib.
+	  As part of this work also added two new LDAP config variables:
+	  $ldap_unbind_between_attempts and $ldap_debug.
+
+2010-11-17 17:59  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1608] web/Themes/default/header.inc, web/functions.inc,
+	  web/mrbs.css.php:
+	  
+	  Removed the "go to" button from the date selector in the header
+	  when JavaScript is enabled. Now when the datepicker is closed
+	  MRBS automatically goes to the new date. Following a usability
+	  suggestion from Matthew Hilling on the mailing list.
+
+2010-11-16 22:33  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1607] web/Themes/default/header.inc:
+	  
+	  Fixed a problem whereby MRBS wasn't properly recognising the
+	  override_locale when initialising datepicker if the locale
+	  contained a character set (eg "en_GB.utf-8").
+
+2010-11-16 21:48  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1606] web/Themes/default/header.inc,
+	  web/jquery/ui/jquery-ui-datepicker-en-US.js[ADD],
+	  web/jquery/ui/jquery-ui-datepicker-en.js[ADD]:
+	  
+	  Added 'en' and 'en-US' datepicker regional settings, which use a
+	  US format. The standard jQuery UI package does not have an
+	  explicit 'en' or 'en-US' setting: it is the default. However this
+	  means that if your browser language preference order is say
+	  en-US, en-GB you will get a GB datepicker rather than a US
+	  datepicker.
+
+2010-11-16 18:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1605] web/edit_entry.php, web/internalconfig.inc.php,
+	  web/theme.inc:
+	  
+	  - Added some checks for a valid setting of $resolution - Moved
+	  internal checking out of theme.inc and into
+	  internalconfig.inc.php
+
+2010-11-16 17:14  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1604] web/language.inc:
+	  
+	  * Reverted my recent change in email notifications, the logic was
+	  wrong. Kept the formatting changes, to remove the overly long
+	  lines.
+
+2010-11-16 14:16  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1603] web/language.inc:
+	  
+	  * Proposed fix to allow sending only delete notifications to the
+	  administrator by email, problem reported on the mailing list.
+
+2010-11-15 21:52  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1602] web/lang.de:
+	  
+	  * Updated German translation from Michael Fladerer.
+
+2010-11-15 00:01  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1600] checklang.php:
+	  
+	  * Updated checklang.php script, with ideas from Pål Monstad.
+
+2010-11-14 19:54  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1599] web/lang.no:
+	  
+	  * Updated Norwegian translation from Pål Monstad.
+
+2010-11-13 23:25  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1598] web/lang.nl:
+	  
+	  * Fixed a typo in the Dutch translation I introduced.
+
+2010-11-13 23:19  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1597] web/lang.sv:
+	  
+	  * Updated Swedish translation, received by KerstinS in June!
+
+2010-11-13 23:12  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1596] web/lang.nl:
+	  
+	  * Updated Dutch translation from Cor Marjee.
+
+2010-11-11 16:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1595] web/lang.pt:
+	  
+	  Updated Portuguese translation
+
+2010-11-11 09:29  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1594] web/edit_entry.php, web/systemdefaults.inc.php:
+	  
+	  Changed the name of the config variable for preventing multiple
+	  room selection from $auth['only_admin_can_select_multiple'] to
+	  $auth['only_admin_can_select_multiroom']. (Slightly more
+	  meaningful and also consistent with
+	  $auth['only_admin_can_book_multiday'])
+
+2010-11-10 17:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1593] web/edit_entry.php, web/systemdefaults.inc.php:
+	  
+	  Added the ability to prevent ordinary users from selecting
+	  multiple rooms on the edit_entry form, controlled by the config
+	  variable $auth['only_admin_can_select_multiple']. Thanks to a
+	  patch from Chris Cook on the mailing list.
+
+2010-11-05 14:56  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1591] ChangeLog, NEWS:
+	  
+	  * Updated NEWS and ChangeLog for 1.4.5rc2 release.
+
 2010-11-05 14:40  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r1590] web/version.inc:

@@ -7,10 +7,23 @@
 [============================]
 
 -------------------------------------------------------------------------------
-Version 1.4.5rc2 (Fri Nov 5 15:00:00 GMT 2010):
+Version 1.4.5 (Mon Nov 22 22:00:00 GMT 2010):
 
+[+] Added the ability to prevent ordinary users from selecting multiple
+ rooms when making a booking. Controlled by the config variable
+ $auth['only_admin_can_select_multiroom'].
+[*] Updated translations for: Portugese, Dutch, Swedish, Norwegian,
+ German, French.
+[+] Added a new configuration variable to set the default booking 'type',
+ $default_type.
+[*] Improved the translation helper script, checklang.php.
 [-] Fixed a problem with the formatting of radio button labels on the
  edit area page in IE8.
+[*] Improved selection of language to use in the Javascript date pickers.
+[*] Made the day change automatically when the date picker in the
+ page header is used.
+[+] Introduced the ability to get a user's email address from LDAP
+ if the system is configured to use LDAP for authentication.
 [*] Improved the localisation of the datepicker calendar so that it will
  utilise an xx-YY language specifier if that translation exists.
 [*] Made the area and room admin email address boxes textareas, and
@@ -38,10 +51,6 @@ Version 1.4.5rc2 (Fri Nov 5 15:00:00 GMT 2010):
  using the 'db' authentication scheme. See SF tracker ID: 3102887.
 [+] Improved the way in which meeting times are specified. You now specify
  the start date/time and also the end date/time.
-
--------------------------------------------------------------------------------
-Version 1.4.5rc1 (Fri Oct 8 11:00:00 BST 2010):
-
 [*] Optimised SQL to improve performance.
 [*] Japanese translation update from Takanori MATSUURA.
 [*] Clarified the edit booking form somewhat, SF tracker #3011370.
