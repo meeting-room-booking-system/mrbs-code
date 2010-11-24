@@ -50,12 +50,14 @@ $phase = get_form_var('phase', 'int');
 $new_area = get_form_var('new_area', 'int');
 $old_area = get_form_var('old_area', 'int');
 $room_name = get_form_var('room_name', 'string');
+$room_disabled = get_form_var('room_disabled', 'string');
 $sort_key = get_form_var('sort_key', 'string');
 $old_room_name = get_form_var('old_room_name', 'string');
 $area_name = get_form_var('area_name', 'string');
 $description = get_form_var('description', 'string');
 $capacity = get_form_var('capacity', 'int');
 $room_admin_email = get_form_var('room_admin_email', 'string');
+$area_disabled = get_form_var('area_disabled', 'string');
 $area_admin_email = get_form_var('area_admin_email', 'string');
 $area_morningstarts = get_form_var('area_morningstarts', 'int');
 $area_morningstarts_minutes = get_form_var('area_morningstarts_minutes', 'int');
@@ -198,6 +200,8 @@ if ($phase == 2)
       // If everything is still OK, update the databasae
       else
       {
+        // Convert booleans into 0/1 (necessary for PostgreSQL)
+        $room_disabled = (!empty($room_disabled)) ? 1 : 0;
         $sql = "UPDATE $tbl_room SET ";
         $n_fields = count($fields);
         $assign_array = array();
@@ -210,6 +214,9 @@ if ($phase == 2)
               // first of all deal with the standard MRBS fields
               case 'area_id':
                 $assign_array[] = "area_id=$new_area";
+                break;
+              case 'disabled':
+                $assign_array[] = "disabled=$room_disabled";
                 break;
               case 'room_name':
                 $assign_array[] = "room_name='" . addslashes($room_name) . "'";
@@ -321,6 +328,7 @@ if ($phase == 2)
     fromTimeString($area_max_ba_value, $area_max_ba_units);
   
     // Convert booleans into 0/1 (necessary for PostgreSQL)
+    $area_disabled = (!empty($area_disabled)) ? 1 : 0;
     $area_min_ba_enabled = (!empty($area_min_ba_enabled)) ? 1 : 0;
     $area_max_ba_enabled = (!empty($area_max_ba_enabled)) ? 1 : 0;
     $area_private_enabled = (!empty($area_private_enabled)) ? 1 : 0;
@@ -366,6 +374,7 @@ if ($phase == 2)
       $sql = "UPDATE $tbl_area SET ";
       $assign_array = array();
       $assign_array[] = "area_name='" . addslashes($area_name) . "'";
+      $assign_array[] = "disabled=" . $area_disabled;
       $assign_array[] = "area_admin_email='" . addslashes($area_admin_email) . "'";
       $assign_array[] = "custom_html='" . addslashes($custom_html) . "'";
       if (!$area_enable_periods)
@@ -489,87 +498,109 @@ if (isset($change_room) && !empty($room))
       echo "</select>\n";
       echo "<input type=\"hidden\" name=\"old_area\" value=\"" . $row['area_id'] . "\">\n";
       echo "</div>\n";
+      
+      // First of all deal with the standard MRBS fields
+      // Room name
+      echo "<div>\n";
+      echo "<label for=\"room_name\">" . get_vocab("name") . ":</label>\n";
+      echo "<input type=\"text\" id=\"room_name\" name=\"room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\"$disabled>\n";
+      echo "<input type=\"hidden\" name=\"old_room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\">\n";
+      echo "</div>\n";
+      
+      // Status (Enabled or Disabled)
+      echo "<div>\n";
+      echo "<label title=\"" . get_vocab("disabled_room_note") . "\">" . get_vocab("status") . ":</label>\n";
+      echo "<div class=\"group\">\n";
+      echo "<label>\n";
+      $checked = ($row['disabled']) ? "" : " checked=\"checked\"";
+      echo "<input class=\"radio\" type=\"radio\" name=\"room_disabled\" value=\"0\"$checked>\n";
+      echo get_vocab("enabled") . "</label>\n";
+      echo "<label>\n";
+      $checked = ($row['disabled']) ? " checked=\"checked\"" : "";
+      echo "<input class=\"radio\" type=\"radio\" name=\"room_disabled\" value=\"1\"$checked>\n";
+      echo get_vocab("disabled") . "</label>\n";
+      echo "</div>\n";
+      echo "</div>\n";
+
+      // Sort key
+      if ($is_admin)
+      {
+        echo "<div>\n";
+        echo "<label for=\"sort_key\" title=\"" . get_vocab("sort_key_note") . "\">" . get_vocab("sort_key") . ":</label>\n";
+        echo "<input type=\"text\" id=\"sort_key\" name=\"sort_key\" value=\"" . htmlspecialchars($row["sort_key"]) . "\"$disabled>\n";
+        echo "</div>\n";
+      }
+
+      // Description
+      echo "<div>\n";
+      echo "<label for=\"description\">" . get_vocab("description") . ":</label>\n";
+      echo "<input type=\"text\" id=\"description\" name=\"description\" value=\"" . htmlspecialchars($row["description"]) . "\"$disabled>\n";
+      echo "</div>\n";
+      
+      // Capacity
+      echo "<div>\n";
+      echo "<label for=\"capacity\">" . get_vocab("capacity") . ":</label>\n";
+      echo "<input type=\"text\" id=\"capacity\" name=\"capacity\" value=\"" . $row["capacity"] . "\"$disabled>\n";
+      echo "</div>\n";
+      
+      // Room admin email
+      echo "<div>\n";
+      echo "<label for=\"room_admin_email\" title=\"" . get_vocab("email_list_note") . "\">" . get_vocab("room_admin_email") . ":</label>\n";
+      echo "<textarea id=\"room_admin_email\" name=\"room_admin_email\" rows=\"4\" cols=\"40\"$disabled>" . htmlspecialchars($row["room_admin_email"]) . "</textarea>\n";
+      echo "</div>\n";
+      
+      // Custom HTML
+      if ($is_admin)
+      {
+        // Only show the raw HTML to admins.  Non-admins will see the rendered HTML
+        echo "<div>\n";
+        echo "<label for=\"room_custom_html\" title=\"" . get_vocab("custom_html_note") . "\">" . get_vocab("custom_html") . ":</label>\n";
+        echo "<textarea id=\"room_custom_html\" name=\"custom_html\" rows=\"4\" cols=\"40\"$disabled>\n";
+        echo htmlspecialchars($row['custom_html']);
+        echo "</textarea>\n";
+        echo "</div>\n";
+      }
     
+      // then look at any user defined fields  
       foreach ($fields as $field)
       {
-        if (!in_array($field['name'], array('id', 'area_id')))  // Ignore certain fields
+        if (!in_array($field['name'], $standard_fields['room']))
         {
           echo "<div>\n";
-          switch($field['name'])
+          $label_text = get_loc_field_name($tbl_room, $field['name']);
+          $var_name = VAR_PREFIX . $field['name'];
+          echo "<label for=\"$var_name\">$label_text:</label>\n";
+          // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+          // assume are intended to be booleans)
+          if (($field['nature'] == 'boolean') || 
+              (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
           {
-            // first of all deal with the standard MRBS fields
-            case 'room_name':
-              echo "<label for=\"room_name\">" . get_vocab("name") . ":</label>\n";
-              echo "<input type=\"text\" id=\"room_name\" name=\"room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\"$disabled>\n";
-              echo "<input type=\"hidden\" name=\"old_room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\">\n";
-              break;
-            case 'sort_key':
-              if ($is_admin)
-              {
-                echo "<label for=\"sort_key\" title=\"" . get_vocab("sort_key_note") . "\">" . get_vocab("sort_key") . ":</label>\n";
-                echo "<input type=\"text\" id=\"sort_key\" name=\"sort_key\" value=\"" . htmlspecialchars($row["sort_key"]) . "\"$disabled>\n";
-              }
-              break;
-            case 'description':
-              echo "<label for=\"description\">" . get_vocab("description") . ":</label>\n";
-              echo "<input type=\"text\" id=\"description\" name=\"description\" value=\"" . htmlspecialchars($row["description"]) . "\"$disabled>\n";
-              break;
-            case 'capacity':
-              echo "<label for=\"capacity\">" . get_vocab("capacity") . ":</label>\n";
-              echo "<input type=\"text\" id=\"capacity\" name=\"capacity\" value=\"" . $row["capacity"] . "\"$disabled>\n";
-              break;
-            case 'room_admin_email':
-              echo "<label for=\"room_admin_email\" title=\"" . get_vocab("email_list_note") . "\">" . get_vocab("room_admin_email") . ":</label>\n";
-              echo "<textarea id=\"room_admin_email\" name=\"room_admin_email\" rows=\"4\" cols=\"40\"$disabled>" . htmlspecialchars($row["room_admin_email"]) . "</textarea>\n";
-              break;
-            case 'custom_html':
-              if ($is_admin)
-              {
-                // Only show the raw HTML to admins.  Non-admins will see the rendered HTML
-                echo "<label for=\"room_custom_html\" title=\"" . get_vocab("custom_html_note") . "\">" . get_vocab("custom_html") . ":</label>\n";
-                echo "<textarea id=\"room_custom_html\" name=\"custom_html\" rows=\"4\" cols=\"40\"$disabled>\n";
-                echo htmlspecialchars($row['custom_html']);
-                echo "</textarea>\n";
-              }
-              break;
-            // then look at any user defined fields
-            default:
-              $label_text = get_loc_field_name($tbl_room, $field['name']);
-              $var_name = VAR_PREFIX . $field['name'];
-              echo "<label for=\"$var_name\">$label_text:</label>\n";
-              // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
-              // assume are intended to be booleans)
-              if (($field['nature'] == 'boolean') || 
-                  (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
-              {
-                echo "<input type=\"checkbox\" class=\"checkbox\" " .
-                      "id=\"$var_name\" " .
-                      "name=\"$var_name\" " .
-                      "value=\"1\" " .
-                      ((!empty($row[$field['name']])) ? " checked=\"checked\"" : "") .
-                      "$disabled>\n";
-              }
-              // Output a textarea if it's a character string longer than the limit for a
-              // text input
-              elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
-              {
-                echo "<textarea rows=\"8\" cols=\"40\" " .
-                      "id=\"$var_name\" " .
-                      "name=\"$var_name\" " .
-                      "$disabled>\n";
-                echo htmlspecialchars($row[$field['name']]);
-                echo "</textarea>\n";
-              }
-              // Otherwise output a text input
-              else
-              {
-                echo "<input type=\"text\" " .
-                      "id=\"$var_name\" " .
-                      "name=\"$var_name\" " .
-                      "value=\"" . htmlspecialchars($row[$field['name']]) . "\"" .
-                      "$disabled>\n";
-              }
-              break;
+            echo "<input type=\"checkbox\" class=\"checkbox\" " .
+                  "id=\"$var_name\" " .
+                  "name=\"$var_name\" " .
+                  "value=\"1\" " .
+                  ((!empty($row[$field['name']])) ? " checked=\"checked\"" : "") .
+                  "$disabled>\n";
+          }
+          // Output a textarea if it's a character string longer than the limit for a
+          // text input
+          elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
+          {
+            echo "<textarea rows=\"8\" cols=\"40\" " .
+                  "id=\"$var_name\" " .
+                  "name=\"$var_name\" " .
+                  "$disabled>\n";
+            echo htmlspecialchars($row[$field['name']]);
+            echo "</textarea>\n";
+          }
+          // Otherwise output a text input
+          else
+          {
+            echo "<input type=\"text\" " .
+                  "id=\"$var_name\" " .
+                  "name=\"$var_name\" " .
+                  "value=\"" . htmlspecialchars($row[$field['name']]) . "\"" .
+                  "$disabled>\n";
           }
           echo "</div>\n";
         }
@@ -656,6 +687,23 @@ if (isset($change_area) &&!empty($area))
         <label for="area_name"><?php echo get_vocab("name") ?>:</label>
         <input type="text" id="area_name" name="area_name" value="<?php echo htmlspecialchars($row["area_name"]); ?>">
         </div>
+        
+        <?php
+        // Status - Enabled or Disabled
+        echo "<div id=\"status\">\n";
+        echo "<label title=\"" . get_vocab("disabled_area_note") . "\">" . get_vocab("status") . ":</label>\n";
+        echo "<div class=\"group\">\n";
+        echo "<label>\n";
+        $checked = ($row['disabled']) ? "" : " checked=\"checked\"";
+        echo "<input class=\"radio\" type=\"radio\" name=\"area_disabled\" value=\"0\"$checked>\n";
+        echo get_vocab("enabled") . "</label>\n";
+        echo "<label>\n";
+        $checked = ($row['disabled']) ? " checked=\"checked\"" : "";
+        echo "<input class=\"radio\" type=\"radio\" name=\"area_disabled\" value=\"1\"$checked>\n";
+        echo get_vocab("disabled") . "</label>\n";
+        echo "</div>\n";
+        echo "</div>\n";
+        ?>
     
         <div>
         <?php

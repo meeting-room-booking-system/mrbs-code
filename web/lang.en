@@ -301,6 +301,7 @@ $vocab["delete"]             = "Delete";
 $vocab["rooms"]              = "Rooms";
 $vocab["in"]                 = "in";
 $vocab["noareas"]            = "No areas have been defined.";
+$vocab["noareas_enabled"]    = "No areas have been enabled.";
 $vocab["addarea"]            = "Add Area";
 $vocab["name"]               = "Name";
 $vocab["noarea"]             = "No area selected";
@@ -308,6 +309,7 @@ $vocab["browserlang"]        = "Your browser is set with the following language 
 $vocab["addroom"]            = "Add Room";
 $vocab["capacity"]           = "Capacity";
 $vocab["norooms"]            = "No rooms have been defined.";
+$vocab["norooms_enabled"]    = "No rooms have been enabled.";
 $vocab["administration"]     = "Room Details";
 $vocab["invalid_area_name"]  = "This area name has already been used!";
 $vocab["empty_name"]         = "You have not entered a name!";
@@ -368,7 +370,15 @@ $vocab["email_list_note"]         = "Enter a list of email addresses separated b
 $vocab["mode"]                    = "Mode";
 $vocab["mode_periods"]            = "Periods";
 $vocab["mode_times"]              = "Times";
-$vocab["times_only"]              = "Times mode only";               
+$vocab["times_only"]              = "Times mode only";
+$vocab["enabled"]                 = "Enabled";
+$vocab["disabled"]                = "Disabled";
+$vocab["disabled_area_note"]      = "If this area is disabled, it will not appear in the calendar views " .
+                                    "and it will not be possible to book rooms in it.   However existing bookings " .
+                                    "will be preserved and will be visible in Search and Report results.";
+$vocab["disabled_room_note"]      = "If this room is disabled, it will not appear in the calendar views " .
+                                    "and it will not be possible to book it.   However existing bookings " .
+                                    "will be preserved and will be visible in Search and Report results.";
 
 // Used in edit_users.php
 $vocab["name_empty"]         = "You must enter a name.";

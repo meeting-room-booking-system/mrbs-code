@@ -519,24 +519,36 @@ function unslashes($s)
 }
 
 // Return a default area; used if no area is already known. This returns the
-// area that contains the default room (if it is set and valid) otherwise the
+// area that contains the default room (if it is set, valid and enabled) otherwise the
 // first area in alphabetical order in the database (no guarantee there is an area 1).
+// The area must be enabled for it to be considered.
 // This could be changed to implement something like per-user defaults.
 function get_default_area()
 {
   global $tbl_area, $tbl_room, $default_room;
   
-  // If the $default_room is set and exists, then return the corresponding area
+  // If the $default_room is set and exists and enabled, then return the
+  // corresponding area
   if (isset($default_room))
   {
-    $area = sql_query1("SELECT area_id FROM $tbl_room WHERE id=$default_room LIMIT 1");
+    $area = sql_query1("SELECT area_id
+                          FROM $tbl_room R, $tbl_area A
+                         WHERE R.id=$default_room
+                           AND R.area_id = A.id
+                           AND R.disabled = 0
+                           AND A.disabled = 0
+                         LIMIT 1");
     if ($area >= 0)
     {
       return $area;
     }
   }
-  // Otherwise return the first area in alphabetical order in the database
-  $area = sql_query1("SELECT id FROM $tbl_area ORDER BY area_name LIMIT 1");
+  // Otherwise return the first enabled area in alphabetical order in the database
+  $area = sql_query1("SELECT id
+                        FROM $tbl_area
+                       WHERE disabled=0
+                    ORDER BY area_name
+                       LIMIT 1");
   return ((!isset($area) || ($area < 0)) ? 0 : $area);
 }
 
@@ -550,14 +562,24 @@ function get_default_room($area)
   // Check to see whether this area contains $default_room
   if (isset($default_room))
   {
-    $room = sql_query1("SELECT id FROM $tbl_room WHERE id=$default_room AND area_id=$area LIMIT 1");
+    $room = sql_query1("SELECT id
+                          FROM $tbl_room
+                         WHERE id=$default_room
+                           AND area_id=$area
+                           AND disabled=0
+                         LIMIT 1");
     if ($room >= 0)
     {
       return $room;
     }
   }
   // Otherwise just return the first room (in sortkey order) in the area
-  $room = sql_query1("SELECT id FROM $tbl_room WHERE area_id=$area ORDER BY sort_key LIMIT 1");
+  $room = sql_query1("SELECT id
+                        FROM $tbl_room
+                       WHERE area_id=$area
+                         AND disabled=0
+                    ORDER BY sort_key
+                       LIMIT 1");
   return ($room < 0 ? 0 : $room);
 }
 
@@ -633,18 +655,18 @@ function some_area_predicate($field)
 }
 
 // Determines whether there is at least one area with the relevant $field
-// set (eg 'approval_enabled' or 'confirmation_enabled')
+// set (eg 'approval_enabled' or 'confirmation_enabled').   If $enabled
+// is TRUE then the search is limited to enabled areas
 //
 // Returns: boolean
-function some_area($field)
+function some_area($field, $enabled=FALSE)
 {
   global $tbl_area;
   
   $predicate = some_area_predicate($field);   
-  $sql = "SELECT COUNT(*)
-                  FROM $tbl_area
-                 WHERE $predicate
-                 LIMIT 1";                                
+  $sql = "SELECT COUNT(*) FROM $tbl_area WHERE $predicate";
+  $sql .= ($enabled) ? " AND disabled=0" : "";
+  $sql .= " LIMIT 1";                                
   return (sql_query1($sql) > 0);
 }
 
@@ -878,71 +900,113 @@ function round_t_up($t, $resolution, $am7)
 
 // generates some html that can be used to select which area should be
 // displayed.
-function make_area_select_html( $link, $current, $year, $month, $day )
+function make_area_select_html($link, $current, $year, $month, $day)
 {
-  global $tbl_area;
-  $out_html = "
-<form id=\"areaChangeForm\" method=\"get\" action=\"$link\">
-  <div>
-    <select class=\"room_area_select\" id=\"area_select\" name=\"area\" onchange=\"this.form.submit()\">";
+  global $tbl_area, $area_list_format;
   
-    $sql = "select id, area_name from $tbl_area order by area_name";
-    $res = sql_query($sql);
-    if ($res)
+  $out_html = '';
+  $sql = "SELECT id, area_name 
+            FROM $tbl_area
+           WHERE disabled=0
+        ORDER BY area_name";
+  $res = sql_query($sql);
+  // Only show the areas if there's more than one of them, otherwise
+  // there's no point
+  if ($res  && (sql_count($res) > 1))
+  {
+    $out_html .= "<div id=\"dwm_areas\">\n";
+    $out_html .= "<h3>" . get_vocab("areas") . "</h3>\n";
+    if ($area_list_format == "select")
     {
+      $out_html .= "<form id=\"areaChangeForm\" method=\"get\" action=\"$link\">\n" .
+                   "<div>\n" .
+                   "<select class=\"room_area_select\" id=\"area_select\" name=\"area\" onchange=\"this.form.submit()\">";
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
         $selected = ($row['id'] == $current) ? "selected=\"selected\"" : "";
-        $out_html .= "
-      <option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['area_name']) . "</option>";
+        $out_html .= "<option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['area_name']) . "</option>\n";
       }
+      // Note:  the submit button will not be displayed if JavaScript is enabled
+      $out_html .= "</select>\n" .
+                   "<input type=\"hidden\" name=\"day\"   value=\"$day\">\n" .
+                   "<input type=\"hidden\" name=\"month\" value=\"$month\">\n" .
+                   "<input type=\"hidden\" name=\"year\"  value=\"$year\">\n" .
+                   "<input type=\"submit\" class=\"js_none\" value=\"".get_vocab("change")."\">\n" .
+                   "</div>\n" .
+                   "</form>\n";
     }
-    // Note:  the submit button will not be displayed if JavaScript is enabled
-    $out_html .= "
-    </select>
-  
-    <input type=\"hidden\" name=\"day\"   value=\"$day\">
-    <input type=\"hidden\" name=\"month\" value=\"$month\">
-    <input type=\"hidden\" name=\"year\"  value=\"$year\">
-    <input type=\"submit\" class=\"js_none\" value=\"".get_vocab("change")."\">
-    </div>
-</form>\n";
-
+    else // list format
+    {
+      $out_html .= "<ul>\n";
+      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      {
+        $out_html .= "<li><a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=${row['id']}\">";
+        $out_html .= "<span" . (($row['id'] == $current) ? ' class="current"' : '') . ">";
+        $out_html .= htmlspecialchars($row['area_name']) . "</span></a></li>\n";
+      }
+      $out_html .= "</ul>\n";
+    }
+    $out_html .= "</div>\n";
+  }
   return $out_html;
 } // end make_area_select_html
 
-function make_room_select_html( $link, $area, $current, $year, $month, $day )
+
+function make_room_select_html ($link, $area, $current, $year, $month, $day)
 {
-  global $tbl_room;
-  $out_html = "
-<form id=\"roomChangeForm\" method=\"get\" action=\"$link\">
-  <div>
-    <select class=\"room_area_select\" name=\"room\" onchange=\"this.form.submit()\">";
+  global $tbl_room, $tbl_area, $area_list_format;
   
-    $sql = "select id, room_name from $tbl_room where area_id=$area order by sort_key";
-    $res = sql_query($sql);
-    if ($res)
+  $out_html = '';
+  $sql = "SELECT R.id, R.room_name
+            FROM $tbl_room R, $tbl_area A
+           WHERE R.area_id=$area
+             AND R.area_id=A.id
+             AND R.disabled=0
+             AND A.disabled=0
+        ORDER BY R.sort_key";
+  $res = sql_query($sql);
+  // Only show the rooms if there's more than one of them, otherwise
+  // there's no point
+  if ($res && (sql_count($res) > 1))
+  {
+    $out_html .= "<div id=\"dwm_rooms\">\n";
+    $out_html .= "<h3>" . get_vocab("rooms") . "</h3>";
+    if ($area_list_format == "select")
     {
+      $out_html .= "<form id=\"roomChangeForm\" method=\"get\" action=\"$link\">\n" .
+                   "<div>\n" .
+                   "<select class=\"room_area_select\" name=\"room\" onchange=\"this.form.submit()\">\n";
+  
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
         $selected = ($row['id'] == $current) ? "selected=\"selected\"" : "";
-        $out_html .= "
-      <option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['room_name']) . "</option>";
+        $out_html .= "<option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['room_name']) . "</option>\n";
       }
+      // Note:  the submit button will not be displayed if JavaScript is enabled
+      $out_html .= "</select>\n" .
+                   "<input type=\"hidden\" name=\"day\"   value=\"$day\">\n" .
+                   "<input type=\"hidden\" name=\"month\" value=\"$month\">\n" .
+                   "<input type=\"hidden\" name=\"year\"  value=\"$year\">\n" .
+                   "<input type=\"hidden\" name=\"area\"  value=\"$area\">\n" .
+                   "<input type=\"submit\" class=\"js_none\" value=\"".get_vocab("change")."\">\n" .
+                   "</div>\n" .
+                   "</form>\n";
     }
-    // Note:  the submit button will not be displayed if JavaScript is enabled
-    $out_html .= "
-    </select>
-    <input type=\"hidden\" name=\"day\"   value=\"$day\">
-    <input type=\"hidden\" name=\"month\" value=\"$month\">
-    <input type=\"hidden\" name=\"year\"  value=\"$year\">
-    <input type=\"hidden\" name=\"area\"  value=\"$area\">
-    <input type=\"submit\" class=\"js_none\" value=\"".get_vocab("change")."\">
-  </div>
-</form>\n";
-
+    else  // list format
+    {
+      $out_html .= "<ul>\n";
+      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      {
+        $out_html .= "<li><a href=\"month.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\">";
+        $out_html .= "<span" . (($row['id'] == $current) ? ' class="current"' : '') . ">";
+        $out_html .= htmlspecialchars($row['room_name']) . "</span></a></li>\n";
+      }
+      $out_html .= "</ul>\n";
+    }
+    $out_html .= "</div>\n";
+  }
   return $out_html;
-} // end make_area_select_html
+} // end make_room_select_html
 
 
 // This will return the appropriate value for isdst for mktime().

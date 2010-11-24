@@ -767,7 +767,9 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
                  "M.room_admin_email",
                  "M.area_id",
                  "A.area_name",
-                 "A.area_admin_email",              
+                 "A.area_admin_email",
+                 "M.disabled AS room_disabled",
+                 "A.disabled AS area_disabled",
                  "(end_time - start_time) AS duration");
                  
   foreach ($table_fields as $field)

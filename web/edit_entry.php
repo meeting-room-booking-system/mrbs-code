@@ -385,12 +385,12 @@ $start_min   = strftime('%M', $start_time);
 // If we have not been provided with a room_id
 if (empty( $room_id ) )
 {
-  $sql = "SELECT id FROM $tbl_room LIMIT 1";
+  $sql = "SELECT id FROM $tbl_room WHERE disabled=0 LIMIT 1";
   $res = sql_query($sql);
   $row = sql_row_keyed($res, 0);
   $room_id = $row['id'];
-
 }
+
 // Determine the area id of the room in question first
 $area_id = mrbsGetRoomArea($room_id);
 
@@ -413,11 +413,14 @@ if (!getWritable($create_by, $user, $room_id))
 
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
-// Get the details of all the rooms
+// Get the details of all the enabled rooms
 $rooms = array();
-$sql = "SELECT id, room_name, area_id
-          FROM $tbl_room
-      ORDER BY area_id, sort_key";
+$sql = "SELECT R.id, R.room_name, R.area_id
+          FROM $tbl_room R, $tbl_area A
+         WHERE R.area_id = A.id
+           AND R.disabled=0
+           AND A.disabled=0
+      ORDER BY R.area_id, R.sort_key";
 $res = sql_query($sql);
 if ($res)
 {
@@ -427,11 +430,12 @@ if ($res)
   }
 }
     
-// Get the details of all the areas
+// Get the details of all the enabled areas
 $areas = array();
 $sql = "SELECT id, area_name, resolution, default_duration, enable_periods,
                morningstarts, morningstarts_minutes, eveningends , eveningends_minutes
           FROM $tbl_area
+         WHERE disabled=0
       ORDER BY area_name";
 $res = sql_query($sql);
 if ($res)

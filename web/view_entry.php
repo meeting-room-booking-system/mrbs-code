@@ -188,6 +188,11 @@ foreach ($row as $column => $value)
     case 'end_time':
       break;
       
+    case 'room_disabled':
+    case 'area_disabled':
+      $$column = !empty($row[$column]);
+      break;
+      
     case 'name':
     case 'description':
     case 'create_by':
@@ -347,9 +352,10 @@ if (!empty($error))
   echo "<tr><td>&nbsp;</td><td class=\"error\">" . get_vocab($error) . "</td></tr>\n";
 }
 
-// If bookings require approval, put the buttons to do with managing
-// the bookings in the footer
-if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
+// If bookings require approval, and the room is enabled, put the buttons
+// to do with managing the bookings in the footer
+if ($approval_enabled && !$room_disabled &&!$area_disabled &&
+    ($status & STATUS_AWAITING_APPROVAL))
 {
   echo "<tfoot id=\"approve_buttons\">\n";
   // PHASE 2 - REJECT
@@ -450,23 +456,31 @@ if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
   ?>
   <tr>
     <td><?php echo get_vocab("room") ?>:</td>
-    <td><?php    echo  mrbs_nl2br(htmlspecialchars($area_name . " - " . $room_name)) ?></td>
+    <?php
+    echo "<td>";
+    echo  mrbs_nl2br(htmlspecialchars($area_name . " - " . $room_name));
+    if ($room_disabled || $area_disabled)
+    {
+      echo "<span class=\"note\"> (" . get_vocab("disabled") . ")</span>";
+    }
+    echo "</td>\n";
+    ?>
   </tr>
   <tr>
     <td><?php echo get_vocab("start_date") ?>:</td>
-    <td><?php    echo $start_date ?></td>
+    <td><?php echo $start_date ?></td>
   </tr>
   <tr>
     <td><?php echo get_vocab("duration") ?>:</td>
-    <td><?php    echo $duration . " " . $dur_units ?></td>
+    <td><?php echo $duration . " " . $dur_units ?></td>
   </tr>
   <tr>
     <td><?php echo get_vocab("end_date") ?>:</td>
-    <td><?php    echo $end_date ?></td>
+    <td><?php echo $end_date ?></td>
   </tr>
   <tr>
     <td><?php echo get_vocab("type") ?>:</td>
-    <td><?php    echo empty($typel[$type]) ? "?$type?" : $typel[$type] ?></td>
+    <td><?php echo empty($typel[$type]) ? "?$type?" : $typel[$type] ?></td>
   </tr>
   <tr>
     <td><?php echo get_vocab("createdby") ?>:</td>
@@ -476,7 +490,7 @@ if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
   </tr>
   <tr>
     <td><?php echo get_vocab("lastupdate") ?>:</td>
-    <td><?php    echo $updated ?></td>
+    <td><?php echo $updated ?></td>
   </tr>
   <?php
   // The custom fields
@@ -514,7 +528,7 @@ if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
   ?>
   <tr>
     <td><?php echo get_vocab("rep_type") ?>:</td>
-    <td><?php    echo get_vocab($repeat_key) ?></td>
+    <td><?php echo get_vocab($repeat_key) ?></td>
   </tr>
 <?php
 
@@ -551,65 +565,61 @@ if($rep_type != REP_NONE)
 </table>
 
 <div id="view_entry_nav">
-  <div>
-    <?php
+  <?php
+  // Only show the links for Edit/Copy/Delete if the room is enabled.    We're
+  // allowed to view existing bookings in disabled rooms, but not to modify or
+  // delete them.
+  if (!$room_disabled && !$area_disabled)
+  {
+    // Edit and Edit Series
+    echo "<div>\n";
     if (!$series)
     {
       echo "<a href=\"edit_entry.php?id=$id&amp;returl=$link_returl\">". get_vocab("editentry") ."</a>";
-    }
-    
+    } 
     if (!empty($repeat_id)  && !$series && $repeats_allowed)
     {
       echo " - ";
-    }
-    
+    }  
     if ((!empty($repeat_id) || $series) && $repeats_allowed)
     {
       echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$link_returl\">".get_vocab("editseries")."</a>";
     }
+    echo "</div>\n";
     
-     ?>
-  </div>
-  <div>
-    <?php
-    
-    // Copy and Copy series
+    // Copy and Copy Series
+    echo "<div>\n";
     if (!$series)
     {
       echo "<a href=\"edit_entry.php?id=$id&amp;copy=1&amp;returl=$link_returl\">". get_vocab("copyentry") ."</a>";
-    }
-       
+    }      
     if (!empty($repeat_id) && !$series && $repeats_allowed)
     {
       echo " - ";
-    }
-       
+    }     
     if ((!empty($repeat_id) || $series) && $repeats_allowed) 
     {
       echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=1&amp;returl=$link_returl\">".get_vocab("copyseries")."</a>";
     }
+    echo "</div>\n";
     
-    ?>
-  </div>
-  <div>
-    <?php
+    // Delete and Delete Series
+    echo "<div>\n";
     if (!$series)
     {
       echo "<a href=\"del_entry.php?id=$id&amp;series=0&amp;returl=$link_returl\" onclick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</a>";
     }
-    
     if (!empty($repeat_id) && !$series && $repeats_allowed)
     {
       echo " - ";
     }
-    
     if ((!empty($repeat_id) || $series) && $repeats_allowed)
     {
       echo "<a href=\"del_entry.php?id=$id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$link_returl\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteseries")."</a>";
     }
-    
-    ?>
-  </div>
+    echo "</div>\n";
+  }
+  ?>
   <div>
     <?php
     if (isset($HTTP_REFERER)) //remove the link if displayed from an email

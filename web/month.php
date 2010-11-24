@@ -91,64 +91,16 @@ for ($j = 1; $j<=$days_in_month; $j++)
 // Get the area and room names (we will need them later for the heading)
 $this_area_name = "";
 $this_room_name = "";
-$this_area_name = htmlspecialchars(sql_query1("SELECT area_name FROM $tbl_area WHERE id=$area LIMIT 1"));
-$this_room_name = htmlspecialchars(sql_query1("SELECT room_name FROM $tbl_room WHERE id=$room LIMIT 1"));
-                                  
-$sql = "select id, area_name from $tbl_area order by area_name";
-$res = sql_query($sql);
+$this_area_name = sql_query1("SELECT area_name FROM $tbl_area WHERE id=$area AND disabled=0 LIMIT 1");
+$this_room_name = sql_query1("SELECT room_name FROM $tbl_room WHERE id=$room AND disabled=0 LIMIT 1");
+// The room is invalid if it doesn't exist, or else it has been disabled, either explicitly
+// or implicitly because the area has been disabled
+$room_invalid = ($this_area_name === -1) || ($this_room_name === -1);
+                          
 // Show all available areas
-// but only if there's more than one of them, otherwise there's no point
-if ($res && (sql_count($res)>1))
-{
-  echo "<div id=\"dwm_areas\"><h3>".get_vocab("areas")."</h3>";
-  
-  // show either a select box or the normal html list
-  if ($area_list_format == "select")
-  {
-    echo make_area_select_html('month.php', $area, $year, $month, $day);
-  }
-  else
-  {
-    echo "<ul>\n";
-    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-    {
-      echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;day=$day&amp;area=${row['id']}\">";
-      echo "<span" . (($row['id'] == $area) ? ' class="current"' : '') . ">";
-      echo htmlspecialchars($row['area_name']) . "</span></a></li>\n";
-    }
-    echo "</ul>\n";
-  } // end select if
-  
-  echo "</div>\n";
-}
-    
-// Show all rooms in the current area:
-echo "<div id=\"dwm_rooms\"><h3>".get_vocab("rooms")."</h3>";
-
-// should we show a drop-down for the room list, or not?
-if ($area_list_format == "select")
-{
-  echo make_room_select_html('month.php', $area, $room, $year, $month, $day);
-}
-else
-{
-  $sql = "select id, room_name from $tbl_room
-          where area_id=$area order by sort_key";
-  $res = sql_query($sql);
-  if ($res)
-  {
-    echo "<ul>\n";
-    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-    {
-      echo "<li><a href=\"month.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\">";
-      echo "<span" . (($row['id'] == $room) ? ' class="current"' : '') . ">";
-      echo htmlspecialchars($row['room_name']) . "</span></a></li>\n";
-    }
-    echo "</ul>\n";
-  }
-} // end select if
-
-echo "</div>\n";
+echo make_area_select_html('month.php', $area, $year, $month, $day);  
+// Show all available rooms in the current area:
+echo make_room_select_html('month.php', $area, $room, $year, $month, $day);
     
 // Draw the three month calendars
 minicals($year, $month, $day, $area, $room, 'month');
@@ -157,8 +109,9 @@ echo "</div>\n";
 // End of "screenonly" div
 echo "</div>\n";
 
-// Don't continue if this area has no rooms:
-if ($room <= 0)
+// Don't continue if this room is invalid, which could be because the area
+// has no rooms, or else the room or area has been disabled
+if ($room_invalid)
 {
   echo "<h1>".get_vocab("no_rooms_for_area")."</h1>";
   require_once "trailer.inc";
@@ -168,7 +121,7 @@ if ($room <= 0)
 // Show Month, Year, Area, Room header:
 echo "<div id=\"dwm\">\n";
 echo "<h2>" . utf8_strftime("%B %Y", $month_start)
-  . " - $this_area_name - $this_room_name</h2>\n";
+  . " - " . htmlspecialchars("$this_area_name - $this_room_name") . "</h2>\n";
 echo "</div>\n";
 
 // Show Go to month before and after links
