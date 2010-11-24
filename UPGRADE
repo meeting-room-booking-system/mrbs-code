@@ -27,6 +27,18 @@ database for test purposes and check that the upgrade process works before
 performing the upgrade on your production database.
 
 
+Upgrading from prior MRBS 1.4.6
+===============================
+The following configuration variables are now deprecated.   Their use is
+supported for the moment but you should change your config file now to
+use the new variables as support for the old variables may be dropped in the
+future:
+
+$mail_settings['admin_all']        replaced by  $mail_settings['on_new'] and
+                                                $mail_settings['on_change']
+$mail_settings['admin_on_delete']  replaced by  $mail_settings['on_delete']
+
+
 Upgrading from prior MRBS 1.4.5
 ===============================
 MRBS 1.4.5 introduces the concept of tentative bookings, or bookings that

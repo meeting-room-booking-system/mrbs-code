@@ -182,7 +182,28 @@ $area_defaults['reminders_enabled']      = $reminders_enabled;
 $area_defaults['enable_periods']         = $enable_periods;
 $area_defaults['confirmation_enabled']   = $confirmation_enabled;
 $area_defaults['confirmed_default']      = $confirmed_default;
-                       
+
+/********************************************************
+ * Deprecated configuration variables
+ ********************************************************/
+
+// If they are still using some of the old configuration variables
+// then replace them with their new equivalents.   (Should maybe warn
+// the site admin somehow if they are being used?   Perhaps when a 
+// database upgrade is performed?)
+
+// Variables deprecated in versions of MRBS > 1.4.5
+
+if (!empty($mail_settings['admin_all']))
+{
+  $mail_settings['on_new'] = TRUE;
+  $mail_settings['on_change'] = TRUE;
+}
+if (!empty($mail_settings['admin_on_delete']))
+{
+  $mail_settings['on_delete'] = TRUE;
+}
+               
 /********************************************************
  * PHP System Configuration - internal use, do not change
  ********************************************************/

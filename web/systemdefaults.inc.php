@@ -743,11 +743,20 @@ $mail_settings['book_admin_on_approval'] = FALSE;  // the booking administrator 
 
 // WHEN TO EMAIL
 // -------------
-// These settings determine when an email should be sent (an email is always sent for new
-// bookings provided at least on of the "Who" settings above is set to TRUE).
+// These settings determine when an email should be sent.
 // Set to TRUE or FALSE as required
-$mail_settings['admin_on_delete'] = FALSE;  // when an entry is deleted
-$mail_settings['admin_all']       = FALSE;  // edits as well as new bookings
+//
+// (Note:  (a) the variables $mail_settings['admin_on_delete'] and
+// $mail_settings['admin_all'], which were used in MRBS versions 1.4.5 and
+// before are now deprecated.   They are still supported for reasons of backward
+// compatibility, but they may be withdrawn in the future.  (b)  the default 
+// value of $mail_settings['on_new'] is TRUE for compatibility with MRBS 1.4.5
+// and before, where there was no explicit config setting, but mails were always sent
+// for new bookings if there was somebody to send them to)
+
+$mail_settings['on_new']    = TRUE;   // when an entry is created
+$mail_settings['on_change'] = FALSE;  // when an entry is changed
+$mail_settings['on_delete'] = FALSE;  // when an entry is deleted
 
 
 // WHAT TO EMAIL

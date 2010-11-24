@@ -557,14 +557,13 @@ if ($valid_booking)
       $is_repeat_table = FALSE;
     }
     
-    // Send a mail to the Administrator
-    if ($need_to_send_mail)
+    // Send an email if neccessary, provided that the entry creation was successful
+    if ($need_to_send_mail && !empty($new_id))
     {
-      // Send a mail only if this a new entry, or if this is an
-      // edited entry but we have to send mail on every change,
-      // and if the entry creation is successful
-      if ( ( (isset($id) && $mail_settings['admin_all']) or !isset($id) ) &&
-           (0 != $new_id) )
+      // Only send an email if (a) this is a changed entry and we have to send emails
+      // on change or (b) it's a new entry and we have to send emails for new entries
+      if ((isset($id) && $mail_settings['on_change']) || 
+          (!isset($id) && $mail_settings['on_new']))
       {
         require_once "functions_mail.inc";
         // Get room name and area name for email notifications.
