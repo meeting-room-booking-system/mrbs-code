@@ -55,12 +55,13 @@ function print_theme_header($day, $month, $year, $area, $room)
     //   - Mouse
     //   - Draggable
     //   - Datepicker
+    //   - Sunny theme
     // If you need any other components you will need to rebuild the custom UI library
     // See http://jqueryui.com/
     ?>
     
     <script type="text/javascript" src="jquery/jquery-1.4.2.min.js"></script>
-    <script type="text/javascript" src="jquery/ui/jquery-ui-1.8.4.custom.min.js"></script>
+    <script type="text/javascript" src="jquery/ui/jquery-ui-1.8.6.custom.min.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
     <?php
     // The Portuguese (-pt) file below is a non-standard addition to the regional
@@ -69,14 +70,14 @@ function print_theme_header($day, $month, $year, $area, $room)
     // included as standard in Release 1.8.6 of UI.   When we upgrade to 1.8.6
     // we can remove the separate -pt file.
     
-    // Similarly the English (-en) and English-US (-en-US) files, which do not
-    // exist explicitly.   A ticket (#6682) has been raised to request their
-    // inclusion.    The files have been kept separate to avoid problems with
-    // merging new releases of UI
+    // The English (-en) and English-US (-en-US) files are non-standard additions,
+    // which do not exist explicitly.   Although datepicker defaults to US English, it
+    // helps when choosing the regional settings to have explicit settings.  A ticket
+    // (#6682) has been raised to request their inclusion.    The files have been kept
+    // separate to avoid problems with merging new releases of UI
     ?>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-US.js"></script>
-    <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-pt.js"></script>
     
     <script type="text/javascript">
 
