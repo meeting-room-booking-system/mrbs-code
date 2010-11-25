@@ -698,16 +698,14 @@ function mrbsApproveEntry($id, $series)
   {
     // First update the repeat table
     $sql = "UPDATE $tbl_repeat 
-               SET status=status" . sql_syntax_bitwise_xor() . STATUS_AWAITING_APPROVAL . "
-             WHERE id=$id
-               AND status&" . STATUS_AWAITING_APPROVAL . ">0";
+               SET status=status&(~" . STATUS_AWAITING_APPROVAL . ")
+             WHERE id=$id";
     if (sql_command($sql) > 0)  // We expect there to be one row affected
     {
       // Then update the entry table
       $sql = "UPDATE $tbl_entry 
-                 SET status=status" . sql_syntax_bitwise_xor() . STATUS_AWAITING_APPROVAL . "
-               WHERE repeat_id=$id
-                 AND status&" . STATUS_AWAITING_APPROVAL . ">0";
+                 SET status=status&(~" . STATUS_AWAITING_APPROVAL . ")
+               WHERE repeat_id=$id";
       // It's possible that there will be no rows affected if all the
       // entries have previously been individually approved
       return (sql_command($sql) >= 0);
@@ -720,9 +718,8 @@ function mrbsApproveEntry($id, $series)
   else
   {
     $sql = "UPDATE $tbl_entry 
-               SET status=status" . sql_syntax_bitwise_xor() . STATUS_AWAITING_APPROVAL . "
-             WHERE id=$id
-               AND status&" . STATUS_AWAITING_APPROVAL . ">0";
+               SET status=status&(~" . STATUS_AWAITING_APPROVAL . ")
+             WHERE id=$id";
     return (sql_command($sql) > 0);  // We expect there to be one row affected
   }
 }
