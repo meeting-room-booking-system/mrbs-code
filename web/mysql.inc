@@ -290,6 +290,15 @@ function sql_mysql_syntax_createtable_autoincrementcolumn($db_conn = null)
 }
 
 
+// Returns the syntax for a bitwise XOR operator
+function sql_mysql_syntax_bitwise_xor($db_conn = null)
+{
+  sql_mysql_ensure_handle($db_conn);
+
+  return "^";
+}
+
+
 // Returns the name of a field.
 function sql_mysql_field_name($result, $index, $db_conn = null)
 {

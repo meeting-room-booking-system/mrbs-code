@@ -297,6 +297,16 @@ function sql_mysqli_syntax_createtable_autoincrementcolumn($db_conn = null)
   return "int NOT NULL auto_increment";
 }
 
+
+// Returns the syntax for a bitwise XOR operator
+function sql_mysqli_syntax_bitwise_xor($db_conn = null)
+{
+  sql_mysqli_ensure_handle($db_conn);
+
+  return "^";
+}
+
+
 // Returns the name of a field.
 function sql_mysqli_field_name($result, $index, $db_conn = null)
 {

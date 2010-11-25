@@ -460,6 +460,28 @@ function sql_syntax_createtable_autoincrementcolumn()
 }
 
 
+// Returns the syntax for a bitwise XOR operator
+function sql_syntax_bitwise_xor()
+{
+  if (func_num_args() > 0)
+  {
+    $handle = func_get_arg(0);
+    $db_sys = $handle['system'];
+    $db_conn = $handle['connection'];
+  }
+  else
+  {
+    global $dbsys;
+
+    $db_sys = $dbsys;
+    $db_conn = null;
+  }
+
+  $f = "sql_${db_sys}_syntax_bitwise_xor";
+  return $f($db_conn);
+}
+
+
 // Return the name of a column in a result object
 function sql_field_name($result, $index)
 {
