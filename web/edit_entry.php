@@ -961,45 +961,41 @@ else
     </div>
     
     <?php
-    // Status
-    if ($private_enabled || $confirmation_enabled) 
-    { 
-      echo "<div id=\"div_status\">\n";
-      echo "<label>" . get_vocab("status") . ":</label>\n";
+    // Confirmation status
+    if ($confirmation_enabled)
+    {
+      echo "<div id=\"div_confirmation_status\">\n";
+      echo "<label>" . get_vocab("confirmation_status") . ":</label>\n";
       echo "<div class=\"group\">\n";
-      
-      // Privacy status
-      if ($private_enabled)
-      {    
-        echo "<input id=\"private\" class=\"checkbox\" name=\"private\" type=\"checkbox\" value=\"yes\"";
-        if ($private) 
-        {
-          echo " checked=\"checked\"";
-        }
-        if ($private_mandatory) 
-        {
-          echo " disabled=\"true\"";
-        }
-        echo ">\n";
-        echo "<label for=\"private\">" . get_vocab("private") . "</label>\n";
-      }
-      
-      // Confirmation status
-      if ($confirmation_enabled)
-      {
-        echo "<input id=\"confirmed\" class=\"checkbox\" name=\"confirmed\" type=\"checkbox\" value=\"yes\"";
-        if ($confirmed) 
-        {
-          echo " checked=\"checked\"";
-        }
-        echo ">\n";
-        echo "<label for=\"confirmed\">" . get_vocab("confirmed") . "</label>\n";
-      }
-
+      echo "<label><input class=\"radio\" name=\"confirmed\" type=\"radio\" value=\"1\"" .
+           (($confirmed) ? " checked=\"checked\"" : "") .
+           ">" . get_vocab("confirmed") . "</label>\n";
+      echo "<label><input class=\"radio\" name=\"confirmed\" type=\"radio\" value=\"0\"" .
+           (($confirmed) ? "" : " checked=\"checked\"") .
+           ">" . get_vocab("tentative") . "</label>\n";
       echo "</div>\n";
       echo "</div>\n";
     }
-
+    
+    // Privacy status
+    if ($private_enabled)
+    {
+      // No need to pass through a hidden variable if disabled because the handler will sort it out
+      echo "<div id=\"div_privacy_status\">\n";
+      echo "<label>" . get_vocab("privacy_status") . ":</label>\n";
+      echo "<div class=\"group\">\n";
+      echo "<label><input class=\"radio\" name=\"private\" type=\"radio\" value=\"0\"" .
+           (($private) ? "" : " checked=\"checked\"") .
+           (($private_mandatory) ? " disabled=\"disabled\"" : "") .
+           ">" . get_vocab("public") . "</label>\n";
+      echo "<label><input class=\"radio\" name=\"private\" type=\"radio\" value=\"1\"" .
+           (($private) ? " checked=\"checked\"" : "") .
+           (($private_mandatory) ? " disabled=\"disabled\"" : "") .
+           ">" . get_vocab("private") . "</label>\n";
+      echo "</div>\n";
+      echo "</div>\n";
+    }
+    
     
     // CUSTOM FIELDS
 

@@ -149,7 +149,7 @@ if ($private_mandatory)
 }
 else
 {
-  $isprivate = ((isset($private) && ($private == "yes")));
+  $isprivate = ($private) ? TRUE : FALSE;
 }
 
 // Check the user is authorised for this page

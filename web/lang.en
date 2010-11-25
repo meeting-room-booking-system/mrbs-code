@@ -101,6 +101,7 @@ $vocab["valid_room"]         = "room.";
 $vocab["brief_description"]  = "Brief Description.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 $vocab["status"]             = "Status";
+$vocab["public"]             = "Public";
 $vocab["private"]            = "Private";
 $vocab["unavailable"]        = "Private";
 $vocab["is_mandatory_field"] = "is a mandatory field, please supply a value";
