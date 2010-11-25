@@ -20,6 +20,12 @@ $note = get_form_var('note', 'string');
 checkAuthorised();
 $user = getUserName();
 
+// Give the return URL a query string if it doesn't already have one
+if (strpos($returl, '?') === FALSE)
+{
+  $returl .= "?year=$year&month=$month&day=$day&area=$area&room=$room";
+}
+
                   
 if (isset($action))
 {                     
