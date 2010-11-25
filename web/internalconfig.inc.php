@@ -5,6 +5,37 @@
 // This file contains internal configuration settings and checking.   You should not
 // need to change this file unless you are making changes to the MRBS code.
 
+
+/********************************************************
+ * Deprecated configuration variables
+ ********************************************************/
+
+// If they are still using some of the old configuration variables
+// then replace them with their new equivalents.   (Should maybe warn
+// the site admin somehow if they are being used?   Perhaps when a 
+// database upgrade is performed?)
+
+// Variables deprecated in versions of MRBS > 1.4.4.1
+if (isset($provisional_enabled))
+{
+  $approval_enabled = ($provisional_enabled) ? TRUE : FALSE;
+}
+
+// Variables deprecated in versions of MRBS > 1.4.5
+
+if (isset($mail_settings['admin_all']))
+{
+  // We won't set $mail_settings['on_new'] because the default is TRUE
+  // which gives the same behaviour as before, and if it's been set to FALSE
+  // it means the site admin has deliberately changed it.
+  $mail_settings['on_change'] = ($mail_settings['admin_all']) ? TRUE : FALSE;
+}
+if (isset($mail_settings['admin_on_delete']))
+{
+  $mail_settings['on_delete'] = ($mail_settings['admin_on_delete']) ? TRUE : FALSE;
+}
+
+
 /********************************************************
  * Checking
  ********************************************************/
@@ -183,26 +214,6 @@ $area_defaults['enable_periods']         = $enable_periods;
 $area_defaults['confirmation_enabled']   = $confirmation_enabled;
 $area_defaults['confirmed_default']      = $confirmed_default;
 
-/********************************************************
- * Deprecated configuration variables
- ********************************************************/
-
-// If they are still using some of the old configuration variables
-// then replace them with their new equivalents.   (Should maybe warn
-// the site admin somehow if they are being used?   Perhaps when a 
-// database upgrade is performed?)
-
-// Variables deprecated in versions of MRBS > 1.4.5
-
-if (!empty($mail_settings['admin_all']))
-{
-  $mail_settings['on_new'] = TRUE;
-  $mail_settings['on_change'] = TRUE;
-}
-if (!empty($mail_settings['admin_on_delete']))
-{
-  $mail_settings['on_delete'] = TRUE;
-}
                
 /********************************************************
  * PHP System Configuration - internal use, do not change
