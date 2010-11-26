@@ -61,7 +61,10 @@ $maxlength['users.email']      = 75;  // characters   (email field in users tabl
  * Site identification information
  *********************************/
 $mrbs_admin = "Your Administrator";
-$mrbs_admin_email = "admin_email@your.org";  // NOTE:  there are more email addresses in $mail_settings below
+$mrbs_admin_email = "admin_email@your.org";
+// NOTE:  there are more email addresses in $mail_settings below.    You can also give
+// email addresses in the format "Full Name"<address>, for example
+// $mrbs_admin_email = "\"Booking System\"<admin_email@your.org>";  // Note the escaping of the double quotes
 
 // The company name is mandatory.   It is used in the header and also for email notifications.
 // The company logo, additional information and URL are all optional.
