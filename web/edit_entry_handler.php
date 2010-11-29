@@ -549,12 +549,14 @@ if ($valid_booking)
       $booking = mrbsCreateRepeatingEntrys($data);
       $new_id = $booking['id'];
       $is_repeat_table = $booking['series'];
+      $data['id'] = $new_id;  // Add in the id now we know it
     }
     else
     {
       // Create the entry:
       $new_id = mrbsCreateSingleEntry($data);
       $is_repeat_table = FALSE;
+      $data['id'] = $new_id;  // Add in the id now we know it
     }
     
     // Send an email if neccessary, provided that the entry creation was successful

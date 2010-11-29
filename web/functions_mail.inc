@@ -290,6 +290,50 @@ function get_room_admin_email($id, $series=FALSE)
   }
   return $email;
 }
+
+
+// Creates an iCalendar object in RFC 5545 format
+function create_vcalendar($data, $method)
+{
+  require_once "version.inc";
+  
+  global $timezone;
+  
+  define ('RFC5545_FORMAT', 'Ymd\THis');
+  define ('EOL', "\r\n");
+  
+  $results = array();
+  $results[] = "BEGIN:VCALENDAR";
+  // Compulsory properties
+  $results[] = "PRODID:-//MRBS//NONSGML " . get_mrbs_version() . " //EN";
+  $results[] = "VERSION:2.0";
+  // Optional properties
+  $results[] = "CALSCALE:GREGORIAN";
+  $results[] = "METHOD:$method";
+  
+  // The event
+  $results[] = "BEGIN:VEVENT";
+  $results[] = "UID:" . $data['id'];  // STILL TO DO:  make this globally unique
+  $results[] = "DTSTAMP:" . gmdate(RFC5545_FORMAT . '\Z');
+  $results[] = "DTSTART;TZID=$timezone:" . date(RFC5545_FORMAT, $data['start_time']);
+  $results[] = "DTEND;TZID=$timezone:" . date(RFC5545_FORMAT, $data['end_time']);
+  $results[] = "SUMMARY:" . $data['name'];
+  $results[] = "DESCRIPTION:" . $data['description'];
+  $results[] = "LOCATION:" . $data['area_name'] . " - " . $data['room_name'];
+  // Set the Sequence number to be 0, unless we are cancelling in which case
+  // it will be 1 (the next in sequence).  This works because if an event is
+  // modified it gets a new id, rather than keeping the same id and having the
+  // sequence number incremented.
+  $results[] = "SEQUENCE:" . (($method=="CANCEL") ? "1" : "0");
+  $results[] = "END:VEVENT";
+  
+  $results[] = "END:VCALENDAR";
+  
+  $result = implode(EOL, $results);
+  $result .= EOL;
+  
+  return $result;
+}
       
 
 // }}}
@@ -639,6 +683,16 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     }
     $body .= "\n";
   }
+  
+  // Create the vcalendar if required
+  $attachment = array();
+  if ($mail_settings['ics'])
+  {
+    $attachment['method']   = "REQUEST";
+    $attachment['content']  = create_vcalendar($data, $attachment['method']);
+    $attachment['name']     = "meeting.ics";
+  }
+
   // If the subject contains any non-ASCII characters...
   if (!preg_match('/^[[:ascii:]]*$/', $subject))
   {
@@ -649,6 +703,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
                      $subject,
                      $body,
                      NULL,
+                     $attachment,
                      get_mail_charset(),
                      $from,
                      $cc_list);
@@ -829,8 +884,18 @@ function notifyAdminOnDelete($mail_previous)
     $body .=  ": " . $mail_previous['end_date'] . "\n";
   }
   $body .= "\n";
+  
+  // Set up the attachment
+  $attachment = array();
+  if ($mail_settings['ics'])
+  {
+    $attachment['method']   = "CANCEL";
+    $attachment['content']  = create_vcalendar($mail_previous, $attachment['method']);
+    $attachment['name']     = "meeting.ics";
+  }
+  
   // End of mail details
-  $result = sendMail($recipient_list, $subject, $body, NULL, get_mail_charset(), $from, $cc_list);
+  $result = sendMail($recipient_list, $subject, $body, NULL, $attachment, get_mail_charset(), $from, $cc_list);
   return $result;
 }
 
@@ -854,6 +919,7 @@ function getPreviousEntryData($id, $series)
   $data = mrbsGetBookingInfo($id, $series);
   
   // Now process some special fields
+  $data['id']         = $id;
   $data['namebooker'] = $data['name'];
   $data['createdby']  = $data['create_by'];
   $data['updated']    = getMailTimeDateString($data['last_updated']);
@@ -968,17 +1034,22 @@ function compareEntries($new_value, $previous_value, $new_entry)
  * @param string  $subject          email subject
  * @param string  $text_body        text part of body
  * @param string  $text_html        HTML part of body
+ * @param string  $attachment       file to attach.   An array consisting of
+ *                                    'content' the file or data to attach
+ *                                    'method'  the vcalendar METHOD
+ *                                    'name'    the name to give it
  * @param string  $charset          character set used in body
  * @param string  $cc               Carbon Copy
  * @param string  $bcc              Blind Carbon Copy
  * @param string  $from             from field
  * @return bool                     TRUE or PEAR error object if fails
  */
-function sendMail($recipients, $subject, $text_body, $html_body,
+function sendMail($recipients, $subject, $text_body, $html_body, $attachment,
                   $charset = 'us-ascii', $from, $cc = NULL, $bcc = NULL)
 {
   require_once "Mail.php";
   require_once "Mail/mime.php";
+  require_once "Mail/mimePart.php";
   
   global $mail_settings, $sendmail_settings, $smtp_settings;
   
@@ -1033,27 +1104,45 @@ function sendMail($recipients, $subject, $text_body, $html_body,
   (NULL != $cc) ? $headers['Cc'] = $cc : '';
   (NULL != $bcc) ? $headers['Bcc'] = $bcc : '';
   $headers['Subject'] = $subject;
+  $headers['Mime-Version'] = '1.0';
   
-  // Parameters for the get()
-  $get_params = array();
-  $get_params['text_encoding'] = 'quoted-printable';
-  $get_params['text_charset'] = $charset;
+  // Build the email
+  $mime_params = array();
+  $mime_params['content_type'] = "multipart/alternative";
+  $mime = new Mail_mimePart('', $mime_params);
   
-  // Build the mime object
-  $mime = new Mail_mime("\n");
-  $mime->setTXTBody($text_body);
+  // Add the text part
+  $mime_params['content_type'] = "text/plain";
+  $mime_params['encoding']     = "7bit";
+  $mime_params['charset']      = $charset;
+  $text = $mime->addSubPart($text_body, $mime_params);
+  
+  if ($mail_settings['ics'])
+  {
+    // Add the text version of the vcalendar
+    $mime_params['content_type'] = "text/calendar; method=" . $attachment['method'];
+    $text = $mime->addSubPart($attachment['content'], $mime_params);
+    // And add it as a file as well
+    $mime_params['content_type'] = "application/ics";
+    $mime_params['encoding']     = "base64";
+    $mime_params['disposition']  = "attachment";
+    $mime_params['dfilename']    = $attachment['name'];
+    unset($mime_params['charset']);
+    $text = $mime->addSubPart($attachment['content'], $mime_params);
+  }
+
   if (!empty($html_body))
   {
-    $mime->setHTMLBody($html_body);
+    // do something
   }
-  
-  // get() must be called before headers()
-  $body = $mime->get($get_params);
-  $hdrs = $mime->headers($headers);
+
+  $mime = $mime->encode();
+  // Add in the extra headers
+  $mime['headers'] = array_merge($mime['headers'], $headers);
 
   // Call to the PEAR::Mail class
   $mail_object =& Mail::factory($backend, $params);
-  $result = $mail_object->send($recipients, $hdrs, $body);
+  $result = $mail_object->send($recipients, $mime['headers'], $mime['body']);
 
   if (is_object($result))
   {

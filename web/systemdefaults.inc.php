@@ -771,6 +771,8 @@ $mail_settings['on_delete'] = FALSE;  // when an entry is deleted
 // Set to TRUE or FALSE as required
 $mail_settings['details'] = FALSE;  // Set to TRUE if you want full booking details;
                                     // otherwise you just get a link to the entry
+$mail_settings['ics'] = FALSE;      // Set to TRUE to include a .ics attachment
+                                    // which can be imported into a calendar
 
 // HOW TO EMAIL - CHARACTER SET AND LANGUAGE
 // -----------------------------------------
