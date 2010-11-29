@@ -648,6 +648,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
   $result = sendMail($recipient_list,
                      $subject,
                      $body,
+                     NULL,
                      get_mail_charset(),
                      $from,
                      $cc_list);
@@ -829,7 +830,7 @@ function notifyAdminOnDelete($mail_previous)
   }
   $body .= "\n";
   // End of mail details
-  $result = sendMail($recipient_list, $subject, $body, get_mail_charset(), $from, $cc_list);
+  $result = sendMail($recipient_list, $subject, $body, NULL, get_mail_charset(), $from, $cc_list);
   return $result;
 }
 
@@ -954,30 +955,26 @@ function compareEntries($new_value, $previous_value, $new_entry)
 // {{{ sendMail()
 
 /**
- * Send emails using PEAR::Mail class.
- * How to use this class -> http://www.pear.php.net/package/Mail then link
- * "View documentation".
+ * Send emails using PEAR::Mail and PEAR::Mail_mime classes.
+ * How to use these classes:
+ *   -> http://www.pear.php.net/package/Mail 
+ *   -> http://www.pear.php.net/package/Mail_Mime
+ * then link "View documentation".
  * Currently implemented version: Mail 1.1.3 and its dependancies
  * Net_SMTP 1.2.6 and Net_Socket 1.0.2
+ * Mail_Mime 1.8.0
  *
  * @param string  $recipients       comma separated list of recipients or array
  * @param string  $subject          email subject
- * @param string  $body             text message
+ * @param string  $text_body        text part of body
+ * @param string  $text_html        HTML part of body
  * @param string  $charset          character set used in body
  * @param string  $cc               Carbon Copy
  * @param string  $bcc              Blind Carbon Copy
  * @param string  $from             from field
- * @param string  $backend          'mail', 'smtp' or 'sendmail'
- * @param string  $sendmail_path    ie. "/usr/bin/sendmail"
- * @param string  $sendmail_args    ie. "-t -i"
- * @param string  $host             smtp server hostname
- * @param string  $port             smtp server port
- * @param string  $auth             smtp server authentication, TRUE/FALSE
- * @param string  $username         smtp server username
- * @param string  $password         smtp server password
  * @return bool                     TRUE or PEAR error object if fails
  */
-function sendMail($recipients, $subject, $text,
+function sendMail($recipients, $subject, $text_body, $html_body,
                   $charset = 'us-ascii', $from, $cc = NULL, $bcc = NULL)
 {
   require_once "Mail.php";
@@ -1044,7 +1041,11 @@ function sendMail($recipients, $subject, $text,
   
   // Build the mime object
   $mime = new Mail_mime("\n");
-  $mime->setTXTBody($text);
+  $mime->setTXTBody($text_body);
+  if (!empty($html_body))
+  {
+    $mime->setHTMLBody($html_body);
+  }
   
   // get() must be called before headers()
   $body = $mime->get($get_params);
