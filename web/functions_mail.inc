@@ -977,10 +977,11 @@ function compareEntries($new_value, $previous_value, $new_entry)
  * @param string  $password         smtp server password
  * @return bool                     TRUE or PEAR error object if fails
  */
-function sendMail($recipients, $subject, $body, 
+function sendMail($recipients, $subject, $text,
                   $charset = 'us-ascii', $from, $cc = NULL, $bcc = NULL)
 {
   require_once "Mail.php";
+  require_once "Mail/mime.php";
   
   global $mail_settings, $sendmail_settings, $smtp_settings;
   
@@ -1009,21 +1010,8 @@ function sendMail($recipients, $subject, $body,
   $username = $smtp_settings['username'];
   $password = $smtp_settings['password'];
   
-  $params = array();  // to avoid an undefined variable message
-
-  // Headers part
-  $headers['From']         = $from;
-  if ( $backend != 'mail' )
-  {
-    $headers['To']           = $recipients;
-  }
-  (NULL != $cc) ? $headers['Cc'] = $cc : '';
-  (NULL != $bcc) ? $headers['Bcc'] = $bcc : '';
-  $headers['Subject']      = $subject;
-  $headers['MIME-Version'] = '1.0';
-  $headers['Content-Type'] = 'text/plain; charset=' . $charset;
-
   // Parameters part
+  $params = array();  // to avoid an undefined variable message
   if ( $backend == 'sendmail' )
   {
     $params['sendmail_path'] = $sendmail_path;
@@ -1037,10 +1025,34 @@ function sendMail($recipients, $subject, $body,
     $params['username']      = $username;
     $params['password']      = $password;
   }
+  
+  // Headers part (extra headers - the standard headers will already be there)
+  $headers = array();
+  $headers['From'] = $from;
+  if ($backend != 'mail')
+  {
+    $headers['To'] = $recipients;
+  }
+  (NULL != $cc) ? $headers['Cc'] = $cc : '';
+  (NULL != $bcc) ? $headers['Bcc'] = $bcc : '';
+  $headers['Subject'] = $subject;
+  
+  // Parameters for the get()
+  $get_params = array();
+  $get_params['text_encoding'] = 'quoted-printable';
+  $get_params['text_charset'] = $charset;
+  
+  // Build the mime object
+  $mime = new Mail_mime("\n");
+  $mime->setTXTBody($text);
+  
+  // get() must be called before headers()
+  $body = $mime->get($get_params);
+  $hdrs = $mime->headers($headers);
 
   // Call to the PEAR::Mail class
   $mail_object =& Mail::factory($backend, $params);
-  $result = $mail_object->send($recipients, $headers, $body);
+  $result = $mail_object->send($recipients, $hdrs, $body);
 
   if (is_object($result))
   {
