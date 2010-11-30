@@ -16,6 +16,8 @@
 //
 // $Id$
 
+define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing Vcalendar dates
+
 // {{{ convertToMailCharset()
 
 /**
@@ -291,16 +293,83 @@ function get_room_admin_email($id, $series=FALSE)
   return $email;
 }
 
+// Create an iCalendar Recurrence Rule
+function create_rrule($data)
+{
+  // Create an array which can be used to map day of the week numbers (0..6)
+  // onto days of the week as defined in RFC 5545
+  $RFC_5545_days = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
+  $rule = '';
+  if (!isset($data['rep_type']))
+  {
+    return $rule;
+  }
+  switch($data['rep_type'])
+  {
+    case REP_NONE:
+      return $rule;
+      break;
+    case REP_DAILY:
+      $rule .= "FREQ=DAILY";
+      break;
+    case REP_WEEKLY:
+    case REP_N_WEEKLY;
+      $rule .= "FREQ=WEEKLY";
+      // Interval for N_WEEKLY (Interval defaults to 1)
+      if ($data['rep_type'] == REP_N_WEEKLY)
+      {
+        $rule .= ";INTERVAL=" . $data['rep_num_weeks'];
+      }
+      // Get the repeat days of the week
+      $days_of_week = array();
+      for ($i = 0; $i < 7; $i++)
+      {
+        if ($data['rep_opt'][$i])
+        {
+          $days_of_week[] = $RFC_5545_days[$i];
+        }
+      }
+      $dow_list = implode(',', $days_of_week);
+      if (!empty($dow_list))
+      {
+        $rule .= ";BYDAY=$dow_list";
+      }
+      break;
+    case REP_MONTHLY_SAMEDAY:
+      $dow = date('w', $data['start_time']);  // day of the week
+      $dom = date('j', $data['start_time']);  // day of the month
+      // Work out the week of the month.    If this is the fifth week of the month
+      // then make it -1 (last week of the month in RFC 5545 terms)
+      $wom = intval($dom/7) + 1;
+      if ($wom > 4)
+      {
+        $wom = -1;
+      }
+      $wom = sprintf('%+d', $wom);
+      $rule .= ";BYDAY=";
+      $rule .= $wom;
+      $rule .= $RFC_5545_days[$dow];
+    case REP_MONTHLY:
+      $rule .= "FREQ=MONTHLY";
+      break;
+    case REP_YEARLY:
+      $rule .= "FREQ=YEARLY";
+      break;
+  }
+  $rule .= ";UNTIL=" . gmdate(RFC5545_FORMAT . '\Z', $data['end_date']);
+
+  
+  return $rule;
+}
 
 // Creates an iCalendar object in RFC 5545 format
-function create_vcalendar($data, $method)
+function create_icalendar($data, $method, $series=FALSE)
 {
   require_once "version.inc";
   
-  global $timezone;
+  global $timezone, $confirmation_enabled;
   
-  define ('RFC5545_FORMAT', 'Ymd\THis');
-  define ('EOL', "\r\n");
+  $eol = "\r\n";
   
   $results = array();
   $results[] = "BEGIN:VCALENDAR";
@@ -315,6 +384,10 @@ function create_vcalendar($data, $method)
   $results[] = "BEGIN:VEVENT";
   $results[] = "UID:" . $data['id'];  // STILL TO DO:  make this globally unique
   $results[] = "DTSTAMP:" . gmdate(RFC5545_FORMAT . '\Z');
+  if ($series)
+  {
+    $results[] = "RRULE:" . create_rrule($data);
+  }
   $results[] = "DTSTART;TZID=$timezone:" . date(RFC5545_FORMAT, $data['start_time']);
   $results[] = "DTEND;TZID=$timezone:" . date(RFC5545_FORMAT, $data['end_time']);
   $results[] = "SUMMARY:" . $data['name'];
@@ -325,12 +398,16 @@ function create_vcalendar($data, $method)
   // modified it gets a new id, rather than keeping the same id and having the
   // sequence number incremented.
   $results[] = "SEQUENCE:" . (($method=="CANCEL") ? "1" : "0");
+  if ($confirmation_enabled)
+  {
+    $results[] = "STATUS:". (($data['status'] & STATUS_TENTATIVE) ? "TENTATIVE" : "CONFIRMED");
+  }
   $results[] = "END:VEVENT";
   
   $results[] = "END:VCALENDAR";
   
-  $result = implode(EOL, $results);
-  $result .= EOL;
+  $result = implode($eol, $results);
+  $result .= $eol;  // Has to end with a CRLF
   
   return $result;
 }
@@ -659,37 +736,37 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
                                         $new_entry);
       }
       
-      if($opt || $mail_previous["rep_opt"])
+      if($opt || $mail_previous["rep_opt_list"])
       {
         $body .= "\n" . get_mail_vocab("rep_rep_day");
         $body .=  ": " . compareEntries($opt,
-                                        $mail_previous["rep_opt"],
+                                        $mail_previous["rep_opt_list"],
                                         $new_entry);
       }
 
       $body .= "\n" . get_mail_vocab("rep_end_date");
       if ($new_entry)
       {
-        $body .= ": " . mail_strftime('%A %d %B %Y',$data['end_date']);
+        $body .= ": " . getMailTimeDateString($data['end_date'], FALSE);
       }
       else
       {
-        $temp = mail_strftime('%A %d %B %Y',$data['end_date']);
+        $temp = getMailTimeDateString($data['end_date'], FALSE);
         $body .=  ": " . 
           compareEntries($temp,
-                         $mail_previous['end_date'],
+                         getMailTimeDateString($mail_previous['end_date'], FALSE),
                          $new_entry) . "\n";
       }
     }
     $body .= "\n";
   }
   
-  // Create the vcalendar if required
+  // Create the iCalendar if required
   $attachment = array();
   if ($mail_settings['ics'])
   {
     $attachment['method']   = "REQUEST";
-    $attachment['content']  = create_vcalendar($data, $attachment['method']);
+    $attachment['content']  = create_icalendar($data, $attachment['method'], $series);
     $attachment['name']     = "meeting.ics";
   }
 
@@ -719,16 +796,12 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
  * @param   array   $mail_previous  contains deleted entry data forr email body
  * @return  bool    TRUE or PEAR error object if fails
  */
-function notifyAdminOnDelete($mail_previous)
+function notifyAdminOnDelete($mail_previous, $series=FALSE, $action="delete", $note="")
 {
   global $typel, $enable_periods, $auth;
   global $mail_settings, $standard_fields, $tbl_entry;
   global $approval_enabled, $confirmation_enabled;
   
-  // Get any extra arguments
-  $action = (func_num_args() > 1) ? func_get_arg(1) : "delete";
-  $note   = (func_num_args() > 2) ? func_get_arg(2) : "";
-
   $recipients = array();
   $cc = array();
   $cc[] = $mail_settings['cc'];
@@ -874,14 +947,14 @@ function notifyAdminOnDelete($mail_previous)
       $body .=  ": " . $mail_previous["rep_num_weeks"];
     }
    
-    if($mail_previous["rep_opt"])
+    if($mail_previous["rep_opt_list"])
     {
       $body .= "\n" . get_mail_vocab("rep_rep_day");
-      $body .=  ": " . $mail_previous["rep_opt"];
+      $body .=  ": " . $mail_previous["rep_opt_list"];
     }
 
     $body .= "\n" . get_mail_vocab("rep_end_date");
-    $body .=  ": " . $mail_previous['end_date'] . "\n";
+    $body .=  ": " . getMailTimeDateString($mail_previous['end_date'], FALSE) . "\n";
   }
   $body .= "\n";
   
@@ -890,7 +963,7 @@ function notifyAdminOnDelete($mail_previous)
   if ($mail_settings['ics'])
   {
     $attachment['method']   = "CANCEL";
-    $attachment['content']  = create_vcalendar($mail_previous, $attachment['method']);
+    $attachment['content']  = create_icalendar($mail_previous, $attachment['method'], $series);
     $attachment['name']     = "meeting.ics";
   }
   
@@ -953,10 +1026,6 @@ function getPreviousEntryData($id, $series)
   // Next, process any repeat information
   if ($data['rep_type'] != REP_NONE)
   { 
-    // get the repeat end date
-    // use getMailTimeDateString as all I want is the date
-    $data['end_date'] = getMailTimeDateString($data['end_date'], FALSE);
-    
     // get the names of the repeat days 
     switch($data['rep_type'])
     {
@@ -973,12 +1042,12 @@ function getPreviousEntryData($id, $series)
       default:
         $rep_day = array(0, 0, 0, 0, 0, 0, 0);
     }
-    $data['rep_opt'] = "";
+    $data['rep_opt_list'] = "";
     for ($i = 0; $i < 7; $i++)
     {
       $wday = ($i + $weekstarts) % 7;
       if ($rep_day[$wday])
-        $data['rep_opt'] .= day_name($wday) . " ";
+        $data['rep_opt_list'] .= day_name($wday) . " ";
     }
     
     // Sanitise the rep_num_weeks
@@ -1036,7 +1105,7 @@ function compareEntries($new_value, $previous_value, $new_entry)
  * @param string  $text_html        HTML part of body
  * @param string  $attachment       file to attach.   An array consisting of
  *                                    'content' the file or data to attach
- *                                    'method'  the vcalendar METHOD
+ *                                    'method'  the iCalendar METHOD
  *                                    'name'    the name to give it
  * @param string  $charset          character set used in body
  * @param string  $cc               Carbon Copy
@@ -1106,7 +1175,10 @@ function sendMail($recipients, $subject, $text_body, $html_body, $attachment,
   $headers['Subject'] = $subject;
   $headers['Mime-Version'] = '1.0';
   
-  // Build the email
+  // Build the email.   We're going to use the "alternative" subtype which means
+  // that we order the sub parts according to how faithful they are to the original,
+  // putting the least faithful first, ie the ordinary plain text version.   The
+  // email client then uses the most faithful version that it can handle.
   $mime_params = array();
   $mime_params['content_type'] = "multipart/alternative";
   $mime = new Mail_mimePart('', $mime_params);
@@ -1117,9 +1189,15 @@ function sendMail($recipients, $subject, $text_body, $html_body, $attachment,
   $mime_params['charset']      = $charset;
   $text = $mime->addSubPart($text_body, $mime_params);
   
+  // Add the HTML mail
+  if (!empty($html_body))
+  {
+    // do something
+  }
+  
   if ($mail_settings['ics'])
   {
-    // Add the text version of the vcalendar
+    // Add the text version of the iCalendar
     $mime_params['content_type'] = "text/calendar; method=" . $attachment['method'];
     $text = $mime->addSubPart($attachment['content'], $mime_params);
     // And add it as a file as well
@@ -1131,11 +1209,7 @@ function sendMail($recipients, $subject, $text_body, $html_body, $attachment,
     $text = $mime->addSubPart($attachment['content'], $mime_params);
   }
 
-  if (!empty($html_body))
-  {
-    // do something
-  }
-
+  // Encode the result
   $mime = $mime->encode();
   // Add in the extra headers
   $mime['headers'] = array_merge($mime['headers'], $headers);

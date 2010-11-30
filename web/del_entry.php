@@ -84,13 +84,21 @@ if ($info = mrbsGetBookingInfo($id, FALSE, TRUE))
       // Send a mail to the Administrator
       if ($notify_by_email)
       {
+        // Now that we've finished with mrbsDelEntry, change the id so that it's
+        // the repeat_id if we're looking at a series.   (This is a complete hack, 
+        // but brings us back into line with the rest of MRBS until the anomaly
+        // of del_entry is fixed) 
+        if ($series)
+        {
+          $mail_previous['id'] = $mail_previous['repeat_id'];
+        }
         if (isset($action) && ($action == "reject"))
         {
-          $result = notifyAdminOnDelete($mail_previous, $action, $note);
+          $result = notifyAdminOnDelete($mail_previous, $series, $action, $note);
         }
         else
         {
-          $result = notifyAdminOnDelete($mail_previous);
+          $result = notifyAdminOnDelete($mail_previous, $series);
         }
       }
       Header("Location: $returl");

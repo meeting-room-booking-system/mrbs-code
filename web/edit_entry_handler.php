@@ -381,9 +381,27 @@ if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
 {
   for ($i = 0; $i < 7; $i++)
   {
-    $rep_opt .= empty($rep_day[$i]) ? "0" : "1";
+    $rep_opt .= empty($rep_day[$i]) ? "0" : "1";  // $rep_opt is a string
+  }
+  
+  // Make sure that the starttime and endtime coincide with a repeat day.  In
+  // other words make sure that the first starttime and endtime define an actual
+  // entry.   We need to do this because if we are going to construct an iCalendar
+  // object, RFC 5545 demands that the start and end time are the first events of
+  // a series.  ["The "DTSTART" property for a "VEVENT" specifies the inclusive
+  // start of the event.  For recurring events, it also specifies the very first
+  // instance in the recurrence set."]
+  while (!$rep_opt[date('w', $starttime)])
+  {
+    $start = getdate($starttime);
+    $end = getdate($endtime);
+    $starttime = mktime($start['hours'], $start['minutes'], $start['seconds'],
+                        $start['mon'], $start['mday'] + 1, $start['year']);
+    $endtime = mktime($end['hours'], $end['minutes'], $end['seconds'],
+                      $end['mon'], $end['mday'] + 1, $end['year']);
   }
 }
+
 
 // Expand a series into a list of start times:
 if ($rep_type != REP_NONE)
