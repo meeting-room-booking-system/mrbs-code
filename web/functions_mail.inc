@@ -392,6 +392,11 @@ function create_icalendar($data, $method, $series=FALSE)
   $results[] = "DESCRIPTION:" . $data['description'];
   $results[] = "LOCATION:" . $data['area_name'] . " - " . $data['room_name'];
   $results[] = "SEQUENCE:" . $data['ical_sequence'];
+  // If this is an individual member of a series then set the recurrence id
+  if ($data['entry_type'] == 2)
+  {
+    $results[] = "RECURRENCE-ID:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
+  }
   if ($confirmation_enabled)
   {
     $results[] = "STATUS:". (($data['status'] & STATUS_TENTATIVE) ? "TENTATIVE" : "CONFIRMED");
