@@ -291,262 +291,35 @@ function get_room_admin_email($id, $series=FALSE)
   return $email;
 }
 
-// Create an iCalendar Recurrence Rule
-function create_rrule($data)
+
+function create_text_body($data, $new_entry, $new_id, $series, $action)
 {
-  // Create an array which can be used to map day of the week numbers (0..6)
-  // onto days of the week as defined in RFC 5545
-  $RFC_5545_days = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
-  $rule = '';
-  if (!isset($data['rep_type']))
-  {
-    return $rule;
-  }
-  switch($data['rep_type'])
-  {
-    case REP_NONE:
-      return $rule;
-      break;
-    case REP_DAILY:
-      $rule .= "FREQ=DAILY";
-      break;
-    case REP_WEEKLY:
-    case REP_N_WEEKLY;
-      $rule .= "FREQ=WEEKLY";
-      // Interval for N_WEEKLY (Interval defaults to 1)
-      if ($data['rep_type'] == REP_N_WEEKLY)
-      {
-        $rule .= ";INTERVAL=" . $data['rep_num_weeks'];
-      }
-      // Get the repeat days of the week
-      $days_of_week = array();
-      for ($i = 0; $i < 7; $i++)
-      {
-        if ($data['rep_opt'][$i])
-        {
-          $days_of_week[] = $RFC_5545_days[$i];
-        }
-      }
-      $dow_list = implode(',', $days_of_week);
-      if (!empty($dow_list))
-      {
-        $rule .= ";BYDAY=$dow_list";
-      }
-      break;
-    case REP_MONTHLY_SAMEDAY:
-      $dow = date('w', $data['start_time']);  // day of the week
-      $dom = date('j', $data['start_time']);  // day of the month
-      // Work out the week of the month.    If this is the fifth week of the month
-      // then make it -1 (last week of the month in RFC 5545 terms)
-      $wom = intval($dom/7) + 1;
-      if ($wom > 4)
-      {
-        $wom = -1;
-      }
-      $wom = sprintf('%+d', $wom);
-      $rule .= ";BYDAY=";
-      $rule .= $wom;
-      $rule .= $RFC_5545_days[$dow];
-    case REP_MONTHLY:
-      $rule .= "FREQ=MONTHLY";
-      break;
-    case REP_YEARLY:
-      $rule .= "FREQ=YEARLY";
-      break;
-  }
-  $rule .= ";UNTIL=" . gmdate(RFC5545_FORMAT . '\Z', $data['end_date']);
-
-  
-  return $rule;
-}
-
-// Creates an iCalendar object in RFC 5545 format
-function create_icalendar($data, $method, $series=FALSE)
-{
-  require_once "version.inc";
-  
-  global $timezone, $confirmation_enabled;
-  
-  $eol = "\r\n";
-  
-  $results = array();
-  $results[] = "BEGIN:VCALENDAR";
-  // Compulsory properties
-  $results[] = "PRODID:-//MRBS//NONSGML " . get_mrbs_version() . " //EN";
-  $results[] = "VERSION:2.0";
-  // Optional properties
-  $results[] = "CALSCALE:GREGORIAN";
-  $results[] = "METHOD:$method";
-  
-  // The event
-  $results[] = "BEGIN:VEVENT";
-  $results[] = "UID:" . $data['ical_uid'];  // compulsory
-  $results[] = "DTSTAMP:" . gmdate(RFC5545_FORMAT . '\Z');  // compulsory
-  if ($series)
-  {
-    $results[] = "RRULE:" . create_rrule($data);
-  }
-  $results[] = "DTSTART;TZID=$timezone:" . date(RFC5545_FORMAT, $data['start_time']);
-  $results[] = "DTEND;TZID=$timezone:" . date(RFC5545_FORMAT, $data['end_time']);
-  $results[] = "SUMMARY:" . $data['name'];
-  $results[] = "DESCRIPTION:" . $data['description'];
-  $results[] = "LOCATION:" . $data['area_name'] . " - " . $data['room_name'];
-  $results[] = "SEQUENCE:" . $data['ical_sequence'];
-  // If this is an individual member of a series then set the recurrence id
-  if ($data['entry_type'] == 2)
-  {
-    $results[] = "RECURRENCE-ID:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
-  }
-  if ($confirmation_enabled)
-  {
-    $results[] = "STATUS:". (($data['status'] & STATUS_TENTATIVE) ? "TENTATIVE" : "CONFIRMED");
-  }
-  $results[] = "END:VEVENT";
-  
-  $results[] = "END:VCALENDAR";
-  
-  $result = implode($eol, $results);
-  $result .= $eol;  // Has to end with a CRLF
-  
-  return $result;
-}
-      
-
-// }}}
-// {{{ notifyAdminOnBooking()
-
-/**
- * Send email to administrator to notify a new/changed entry.
- *
- * @param bool    $new_entry    to know if this is a new entry or not
- * @param int     $new_id       used for create a link to the new entry
- * @return bool                 TRUE or PEAR error object if fails
- */
-function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
-{
-  global $data, $mail_previous, $note;
-  global $url_base, $returl;
-  global $auth, $weekstarts, $typel, $mail_settings, $standard_fields;
+  global $mail_previous, $note, $returl;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
+  global $typel, $mail_settings, $standard_fields, $weekstarts, $url_base;
   global $tbl_entry;
   
-  $recipients = array();
-  $cc = array();
-  $cc[] = $mail_settings['cc'];
-  
-  // set the from address
-  $user = getUserName();
-  if (isset($user) && (($action == "remind")  || ($action == "more_info")))
-  {
-    $from = get_email_address($user);
-    if (empty($from))
-    {
-      // there was an error:  use a sensible default
-      $from = $mail_settings['from'];
-    }
-  }
-  else
-  {
-    $from = $mail_settings['from'];
-  }
-  
-  // if we're requiring bookings to be approved and this user needs approval
-  // for this room, then get the email addresses of the approvers
-  if ($approval_enabled && !auth_book_admin($user, $data['room_id']))
-  {
-    $recipients[] = get_approvers_email($data['room_id']);
-  }
-  
-  ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
-  
-  if ($mail_settings['area_admin_on_bookings'])
-  {
-    // Look for list of area admins emails addresses
-    if ($new_entry)
-    {
-      $email = get_area_admin_email($new_id, ($data['rep_type'] != REP_NONE));
-      if (!empty($email))
-      {
-        $recipients[] = $email;
-      }
-    }
-    elseif (!empty($mail_previous['area_admin_email']))
-    {
-      // if this is an edited entry, we already have area_admin_email,
-      // avoiding a database hit.
-      $recipients[] = $mail_previous['area_admin_email'];
-    }
-  }
-  
-  if ($mail_settings['room_admin_on_bookings'])
-  {
-    // Look for list of room admins email addresses
-    if ($new_entry)
-    {
-      $email = get_room_admin_email($new_id, ($data['rep_type'] != REP_NONE));
-      if (!empty($email))
-      {
-        $recipients[] = $email;
-      }
-    }
-    elseif (!empty($mail_previous['room_admin_email']))
-    {
-      // if this is an edited entry, we already have room_admin_email,
-      // avoiding a database hit.
-      $recipients[] = $mail_previous['room_admin_email'];
-    }
-  }
-  
-  if ($mail_settings['booker'])
-  {
-    if (($action == "approve")  || ($action == "more_info"))
-    {
-      // Put the recipients on the cc line and the booker will go
-      // on the to line
-      $cc = array_merge($cc, $recipients);
-      $recipients = array();
-    }
-    $booker = ($new_entry) ? $data['create_by'] : $mail_previous['createdby'];
-    $booker_email = get_email_address($booker);
-    if (!empty($booker_email))
-    {
-      $recipients[] = $booker_email;
-    }
-  }
-  // In case $recipients is empty, no need to go further
-  if (empty($recipients))
-  {
-    return FALSE;
-  }
-  $recipient_list = get_address_list($recipients);
-  $cc_list = get_address_list($cc);
-  
-  // set up the subject and body
+  // set up the body
   switch ($action)
   {
     case "approve":
-      $subject = get_mail_vocab("mail_subject_approved");
       $body = get_mail_vocab("mail_body_approved") . "\n\n";
       break;
     case "more_info":
-      $subject = get_mail_vocab("mail_subject_more_info");
       $body = get_mail_vocab("mail_body_more_info") . "\n\n";
       $body .= get_mail_vocab("info_requested") . ": ";
       $body .= convertToMailCharset($note) . "\n\n";
       break;
     case "remind":
-      $subject = get_mail_vocab("mail_subject_reminder");
       $body = get_mail_vocab("mail_body_reminder") . "\n\n";
       break;
     default:
       if ($new_entry)
       {
-        $subject = get_mail_vocab("mail_subject_new_entry");
         $body = get_mail_vocab("mail_body_new_entry") . "\n\n";
       }
       else
       {
-        $subject = get_mail_vocab("mail_subject_changed_entry");
         $body = get_mail_vocab("mail_body_changed_entry") . "\n\n";
       }
       break;
@@ -759,13 +532,283 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     }
     $body .= "\n";
   }
+  return $body;
+}
+
+// Escape text for use in an iCalendar object
+function ical_escape_text($str)
+{
+  // Escape '\'
+  $str = str_replace("\\", "\\\\", $str);
+  // Escape ';'
+  $str = str_replace(";", "\;", $str);
+  // Escape ','
+  $str = str_replace(",", "\,", $str);
+  // Escape '\n'
+  $str = str_replace("\n", "\\n", $str);
+  return $str;
+}
+
+// Create an iCalendar Recurrence Rule
+function create_rrule($data)
+{
+  // Create an array which can be used to map day of the week numbers (0..6)
+  // onto days of the week as defined in RFC 5545
+  $RFC_5545_days = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
+  $rule = '';
+  if (!isset($data['rep_type']))
+  {
+    return $rule;
+  }
+  switch($data['rep_type'])
+  {
+    case REP_NONE:
+      return $rule;
+      break;
+    case REP_DAILY:
+      $rule .= "FREQ=DAILY";
+      break;
+    case REP_WEEKLY:
+    case REP_N_WEEKLY;
+      $rule .= "FREQ=WEEKLY";
+      // Interval for N_WEEKLY (Interval defaults to 1)
+      if ($data['rep_type'] == REP_N_WEEKLY)
+      {
+        $rule .= ";INTERVAL=" . $data['rep_num_weeks'];
+      }
+      // Get the repeat days of the week
+      $days_of_week = array();
+      for ($i = 0; $i < 7; $i++)
+      {
+        if ($data['rep_opt'][$i])
+        {
+          $days_of_week[] = $RFC_5545_days[$i];
+        }
+      }
+      $dow_list = implode(',', $days_of_week);
+      if (!empty($dow_list))
+      {
+        $rule .= ";BYDAY=$dow_list";
+      }
+      break;
+    case REP_MONTHLY_SAMEDAY:
+      $dow = date('w', $data['start_time']);  // day of the week
+      $dom = date('j', $data['start_time']);  // day of the month
+      // Work out the week of the month.    If this is the fifth week of the month
+      // then make it -1 (last week of the month in RFC 5545 terms)
+      $wom = intval($dom/7) + 1;
+      if ($wom > 4)
+      {
+        $wom = -1;
+      }
+      $wom = sprintf('%+d', $wom);
+      $rule .= ";BYDAY=";
+      $rule .= $wom;
+      $rule .= $RFC_5545_days[$dow];
+    case REP_MONTHLY:
+      $rule .= "FREQ=MONTHLY";
+      break;
+    case REP_YEARLY:
+      $rule .= "FREQ=YEARLY";
+      break;
+  }
+  $rule .= ";UNTIL=" . gmdate(RFC5545_FORMAT . '\Z', $data['end_date']);
+
+  return $rule;
+}
+
+
+// Creates an iCalendar object in RFC 5545 format
+function create_icalendar($method, $data, $description, $series=FALSE)
+{
+  require_once "version.inc";
+  
+  global $timezone, $confirmation_enabled;
+  
+  $eol = "\r\n";
+  
+  $results = array();
+  $results[] = "BEGIN:VCALENDAR";
+  // Compulsory properties
+  $results[] = "PRODID:-//MRBS//NONSGML " . get_mrbs_version() . " //EN";
+  $results[] = "VERSION:2.0";
+  // Optional properties
+  $results[] = "CALSCALE:GREGORIAN";
+  $results[] = "METHOD:$method";
+  
+  // The event
+  $results[] = "BEGIN:VEVENT";
+  $results[] = "UID:" . $data['ical_uid'];  // compulsory
+  $results[] = "DTSTAMP:" . gmdate(RFC5545_FORMAT . '\Z');  // compulsory
+  if ($series)
+  {
+    $results[] = "RRULE:" . create_rrule($data);
+  }
+  $results[] = "DTSTART;TZID=$timezone:" . date(RFC5545_FORMAT, $data['start_time']);
+  $results[] = "DTEND;TZID=$timezone:" . date(RFC5545_FORMAT, $data['end_time']);
+  $results[] = "SUMMARY:" . ical_escape_text($data['name']);
+  $results[] = "DESCRIPTION:" . ical_escape_text($description);
+  $results[] = "LOCATION:" . ical_escape_text($data['area_name'] . " - " . $data['room_name']);
+  $results[] = "SEQUENCE:" . $data['ical_sequence'];
+  // If this is an individual member of a series then set the recurrence id
+  if ($data['entry_type'] == 2)
+  {
+    $results[] = "RECURRENCE-ID:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
+  }
+  if ($confirmation_enabled)
+  {
+    $results[] = "STATUS:". (($data['status'] & STATUS_TENTATIVE) ? "TENTATIVE" : "CONFIRMED");
+  }
+  $results[] = "END:VEVENT";
+  
+  $results[] = "END:VCALENDAR";
+  
+  $result = implode($eol, $results);
+  $result .= $eol;  // Has to end with a CRLF
+
+  return $result;
+}
+      
+
+// }}}
+// {{{ notifyAdminOnBooking()
+
+/**
+ * Send email to administrator to notify a new/changed entry.
+ *
+ * @param bool    $new_entry    to know if this is a new entry or not
+ * @param int     $new_id       used for create a link to the new entry
+ * @return bool                 TRUE or PEAR error object if fails
+ */
+function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
+{
+  global $data, $mail_previous;
+  global $auth, $mail_settings, $approval_enabled;
+  
+  $recipients = array();
+  $cc = array();
+  $cc[] = $mail_settings['cc'];
+  
+  // set the from address
+  $user = getUserName();
+  if (isset($user) && (($action == "remind")  || ($action == "more_info")))
+  {
+    $from = get_email_address($user);
+    if (empty($from))
+    {
+      // there was an error:  use a sensible default
+      $from = $mail_settings['from'];
+    }
+  }
+  else
+  {
+    $from = $mail_settings['from'];
+  }
+  
+  // if we're requiring bookings to be approved and this user needs approval
+  // for this room, then get the email addresses of the approvers
+  if ($approval_enabled && !auth_book_admin($user, $data['room_id']))
+  {
+    $recipients[] = get_approvers_email($data['room_id']);
+  }
+  
+  ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
+  
+  if ($mail_settings['area_admin_on_bookings'])
+  {
+    // Look for list of area admins emails addresses
+    if ($new_entry)
+    {
+      $email = get_area_admin_email($new_id, ($data['rep_type'] != REP_NONE));
+      if (!empty($email))
+      {
+        $recipients[] = $email;
+      }
+    }
+    elseif (!empty($mail_previous['area_admin_email']))
+    {
+      // if this is an edited entry, we already have area_admin_email,
+      // avoiding a database hit.
+      $recipients[] = $mail_previous['area_admin_email'];
+    }
+  }
+  
+  if ($mail_settings['room_admin_on_bookings'])
+  {
+    // Look for list of room admins email addresses
+    if ($new_entry)
+    {
+      $email = get_room_admin_email($new_id, ($data['rep_type'] != REP_NONE));
+      if (!empty($email))
+      {
+        $recipients[] = $email;
+      }
+    }
+    elseif (!empty($mail_previous['room_admin_email']))
+    {
+      // if this is an edited entry, we already have room_admin_email,
+      // avoiding a database hit.
+      $recipients[] = $mail_previous['room_admin_email'];
+    }
+  }
+  
+  if ($mail_settings['booker'])
+  {
+    if (($action == "approve")  || ($action == "more_info"))
+    {
+      // Put the recipients on the cc line and the booker will go
+      // on the to line
+      $cc = array_merge($cc, $recipients);
+      $recipients = array();
+    }
+    $booker = ($new_entry) ? $data['create_by'] : $mail_previous['createdby'];
+    $booker_email = get_email_address($booker);
+    if (!empty($booker_email))
+    {
+      $recipients[] = $booker_email;
+    }
+  }
+  // In case $recipients is empty, no need to go further
+  if (empty($recipients))
+  {
+    return FALSE;
+  }
+  $recipient_list = get_address_list($recipients);
+  $cc_list = get_address_list($cc);
+  
+  // set up the subject
+  switch ($action)
+  {
+    case "approve":
+      $subject = get_mail_vocab("mail_subject_approved");
+      break;
+    case "more_info":
+      $subject = get_mail_vocab("mail_subject_more_info");
+      break;
+    case "remind":
+      $subject = get_mail_vocab("mail_subject_reminder");
+      break;
+    default:
+      if ($new_entry)
+      {
+        $subject = get_mail_vocab("mail_subject_new_entry");
+      }
+      else
+      {
+        $subject = get_mail_vocab("mail_subject_changed_entry");
+      }
+      break;
+  }
+
+  // Create the text body
+  $body = create_text_body($data, $new_entry, $new_id, $series, $action);
   
   // Create the iCalendar if required
   $attachment = array();
   if ($mail_settings['icalendar'])
   {
     $attachment['method']   = "REQUEST";
-    $attachment['content']  = create_icalendar($data, $attachment['method'], $series);
+    $attachment['content']  = create_icalendar($attachment['method'], $data, $body, $series);
     $attachment['name']     = "meeting.ics";
   }
 
@@ -962,7 +1005,7 @@ function notifyAdminOnDelete($mail_previous, $series=FALSE, $action="delete", $n
   if ($mail_settings['icalendar'])
   {
     $attachment['method']   = "CANCEL";
-    $attachment['content']  = create_icalendar($mail_previous, $attachment['method'], $series);
+    $attachment['content']  = create_icalendar($attachment['method'], $mail_previous, $mail_previous['description'], $series);
     $attachment['name']     = "meeting.ics";
   }
   
