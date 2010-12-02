@@ -16,8 +16,6 @@
 //
 // $Id$
 
-define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing Vcalendar dates
-
 // {{{ convertToMailCharset()
 
 /**
@@ -382,8 +380,8 @@ function create_icalendar($data, $method, $series=FALSE)
   
   // The event
   $results[] = "BEGIN:VEVENT";
-  $results[] = "UID:" . $data['id'];  // STILL TO DO:  make this globally unique
-  $results[] = "DTSTAMP:" . gmdate(RFC5545_FORMAT . '\Z');
+  $results[] = "UID:" . $data['ical_uid'];  // compulsory
+  $results[] = "DTSTAMP:" . gmdate(RFC5545_FORMAT . '\Z');  // compulsory
   if ($series)
   {
     $results[] = "RRULE:" . create_rrule($data);
@@ -393,11 +391,7 @@ function create_icalendar($data, $method, $series=FALSE)
   $results[] = "SUMMARY:" . $data['name'];
   $results[] = "DESCRIPTION:" . $data['description'];
   $results[] = "LOCATION:" . $data['area_name'] . " - " . $data['room_name'];
-  // Set the Sequence number to be 0, unless we are cancelling in which case
-  // it will be 1 (the next in sequence).  This works because if an event is
-  // modified it gets a new id, rather than keeping the same id and having the
-  // sequence number incremented.
-  $results[] = "SEQUENCE:" . (($method=="CANCEL") ? "1" : "0");
+  $results[] = "SEQUENCE:" . $data['ical_sequence'];
   if ($confirmation_enabled)
   {
     $results[] = "STATUS:". (($data['status'] & STATUS_TENTATIVE) ? "TENTATIVE" : "CONFIRMED");
@@ -763,7 +757,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
   
   // Create the iCalendar if required
   $attachment = array();
-  if ($mail_settings['ics'])
+  if ($mail_settings['icalendar'])
   {
     $attachment['method']   = "REQUEST";
     $attachment['content']  = create_icalendar($data, $attachment['method'], $series);
@@ -960,7 +954,7 @@ function notifyAdminOnDelete($mail_previous, $series=FALSE, $action="delete", $n
   
   // Set up the attachment
   $attachment = array();
-  if ($mail_settings['ics'])
+  if ($mail_settings['icalendar'])
   {
     $attachment['method']   = "CANCEL";
     $attachment['content']  = create_icalendar($mail_previous, $attachment['method'], $series);
@@ -1195,7 +1189,7 @@ function sendMail($recipients, $subject, $text_body, $html_body, $attachment,
     // do something
   }
   
-  if ($mail_settings['ics'])
+  if ($mail_settings['icalendar'])
   {
     // Add the text version of the iCalendar
     $mime_params['content_type'] = "text/calendar; method=" . $attachment['method'];

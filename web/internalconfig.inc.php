@@ -114,6 +114,14 @@ define('REP_YEARLY',          4);
 define('REP_MONTHLY_SAMEDAY', 5);
 define('REP_N_WEEKLY',        6);
 
+
+/***************************************************
+ * iCalendar constants - internal use, do not change
+ ***************************************************/
+
+define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
+
+
 /****************************************************************
  * DATABASE TABLES  - internal use, do not change
  ****************************************************************/
@@ -141,7 +149,9 @@ $standard_fields['entry'] = array('id',
                                   'reminded',
                                   'info_time',
                                   'info_user',
-                                  'info_text');
+                                  'info_text',
+                                  'ical_uid',
+                                  'ical_sequence');
                                   
 $standard_fields['repeat'] = array('id',
                                    'start_time',
@@ -160,7 +170,9 @@ $standard_fields['repeat'] = array('id',
                                    'reminded',
                                    'info_time',
                                    'info_user',
-                                   'info_text');
+                                   'info_text',
+                                   'ical_uid',
+                                   'ical_sequence');
 
 $standard_fields['room'] = array('id',
                                  'disabled',

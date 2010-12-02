@@ -254,6 +254,7 @@ function mrbsCreateEntry($table, $data)
       case 'end_date':
       case 'room_id':
       case 'status':
+      case 'ical_sequence':
         $sql_col[] = $key;
         $sql_val[] = $data[$key];
         break;
@@ -263,6 +264,7 @@ function mrbsCreateEntry($table, $data)
       case 'name':
       case 'type':
       case 'description':
+      case 'ical_uid':
         $sql_col[] = $key;
         $sql_val[] = "'" . addslashes($data[$key]) . "'";
         break;
