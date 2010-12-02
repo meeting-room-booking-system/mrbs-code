@@ -313,6 +313,19 @@ function create_text_body($data, $new_entry, $new_id, $series, $action)
     case "remind":
       $body = get_mail_vocab("mail_body_reminder") . "\n\n";
       break;
+    case "reject":
+      $body = get_mail_vocab("mail_body_rej_entry") . "\n\n";
+      $body .= get_mail_vocab("reason") . ': ';
+      $body .= convertToMailCharset($note) . "\n\n";
+      break;
+    case "delete":
+      $body = get_mail_vocab("mail_body_del_entry") . "\n\n";
+      // Give the name of the person deleting the entry (might not
+      // be the same as the creator)
+      $body .= get_mail_vocab("deleted_by") . ': ';
+      $user = getUserName();
+      $body .= convertToMailCharset($user) . "\n";
+      break;
     default:
       if ($new_entry)
       {
@@ -325,35 +338,42 @@ function create_text_body($data, $new_entry, $new_id, $series, $action)
       break;
   }
 
-  // Set the link to view entry page
-  if (isset($url_base) && ($url_base != ""))
+  // Create a link to the entry, unless we're deleting it of course,
+  // because then there won't be one.
+  if (($action != "delete") && ($action != "reject"))
   {
-    $body .= "$url_base/view_entry.php?id=$new_id";
+    // Set the link to view entry page
+    if (isset($url_base) && ($url_base != ""))
+    {
+      $body .= "$url_base/view_entry.php?id=$new_id";
+    }
+    else
+    {
+      ('' != $returl) ? $url = explode(basename($returl), $returl) : '';
+      $body .= $url[0] . "view_entry.php?id=$new_id";
+    }
+    if ($series)
+    {
+      $body .= "&series=1";
+    }
+    $body .= "\n";
   }
-  else
-  {
-    ('' != $returl) ? $url = explode(basename($returl), $returl) : '';
-    $body .= $url[0] . "view_entry.php?id=$new_id";
-  }
-  if ($series)
-  {
-    $body .= "&series=1";
-  }
-  $body .= "\n";
+  
+  // Always display the brief description
+  $body .= "\n" . get_mail_vocab("namebooker") . ": ";
+  $body .= compareEntries(convertToMailCharset($data['name']),
+                          convertToMailCharset($mail_previous['namebooker']),
+                          $new_entry)  . "\n";
+  
   // Displays/don't displays entry details
   if ($mail_settings['details'])
   {
-    $body .= "\n" . get_mail_vocab("namebooker") . ": ";
-    $body .= compareEntries(convertToMailCharset($data['name']),
-                            convertToMailCharset($mail_previous['namebooker']),
-                            $new_entry)  . "\n";
-        
     // Description:
     $body .= get_mail_vocab("description") . ": ";
     $body .= compareEntries(convertToMailCharset($data['description']),
                             convertToMailCharset($mail_previous['description']),
                             $new_entry) . "\n";
-                            
+                                                        
     if ($confirmation_enabled)
     {                        
       // Confirmation status:
@@ -896,116 +916,26 @@ function notifyAdminOnDelete($mail_previous, $series=FALSE, $action="delete", $n
   $recipient_list = get_address_list($recipients);
   $cc_list = get_address_list($cc);
   
-  // Set the subject and body
+  // Set the subject
   if ($action == "reject")
   {
     $subject = get_mail_vocab("mail_subject_rejected");
-    $body = get_mail_vocab("mail_body_rej_entry") . "\n\n";
-    $body .= get_mail_vocab("reason") . ': ';
-    $body .= convertToMailCharset($note) . "\n\n";
   }
   else
   {
     $subject = get_mail_vocab("mail_subject_delete");
-    $body = get_mail_vocab("mail_body_del_entry") . "\n\n";
-    // Give the name of the person deleting the entry (might not
-    // be the same as the creator)
-    $body .= get_mail_vocab("deleted_by") . ': ';
-    $body .= convertToMailCharset($user) . "\n";
   }
   
-  // Displays deleted entry details
-  $body .= "\n" . get_mail_vocab("namebooker") . ': ';
-  $body .= convertToMailCharset($mail_previous['namebooker']) . "\n";
-  
-  $body .= get_mail_vocab("description") . ": ";
-  $body .= convertToMailCharset($mail_previous['description']) . "\n";
-  
-  if ($confirmation_enabled)
-  {                        
-    // Confirmation status:
-    $body .= get_mail_vocab("confirmation_status") . ": ";
-    $body .= ($mail_previous['status'] & STATUS_TENTATIVE) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
-    $body .= "\n";
-  }
-                            
-  if ($approval_enabled)
-  {                        
-    // Approval status:
-    $body .= get_mail_vocab("approval_status") . ": ";
-    $body .= ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
-    $body .= "\n";
-  }
-  
-  $body .= get_mail_vocab("room") . ": ";
-  $body .= convertToMailCharset($mail_previous['area_name']);
-  $body .= " - " . convertToMailCharset($mail_previous['room_name']) . "\n";
-  
-  $body .= get_mail_vocab("start_date") . ': ';
-  $body .= convertToMailCharset($mail_previous['entry_start_date']) . "\n";
-
-  $body .= get_mail_vocab("duration") . ': ' . $mail_previous['duration'] . ' ';
-  $body .= $mail_previous['dur_units'] . "\n";
-
-  $body .= get_mail_vocab("end_date") . ": ";
-  $body .= convertToMailCharset($mail_previous['entry_end_date']) ."\n";
-
-  $body .= get_mail_vocab("type") . ": ";
-  $body .=  (empty($typel[$mail_previous['type']])) ? "?" .
-    $mail_previous['type'] . "?" : $typel[$mail_previous['type']];
-    
-  $body .= "\n" . get_mail_vocab("createdby") . ": ";
-  $body .= convertToMailCharset($mail_previous['createdby']) . "\n";
-  
-  // Custom fields
-  $fields = sql_field_info($tbl_entry);
-  foreach ($fields as $field)
-  {
-    if (!in_array($field['name'], $standard_fields['entry']))
-    {
-      $key = $field['name'];
-      // Convert any booleans or pseudo-booleans to text strings (in the mail language)
-      if (($field['nature'] == 'boolean') || 
-          (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
-      {
-        $mail_previous[$key] = ($mail_previous[$key]) ? get_mail_vocab("yes") : get_mail_vocab("no");
-      }
-      $body .= get_mail_field_name($tbl_entry, $key) . ": ";
-      $body .= convertToMailCharset($mail_previous[$key]) . "\n";
-    }
-  }
-    
-  $body .= get_mail_vocab("lastupdate") . ": " . convertToMailCharset($mail_previous['updated']);
-  
-  $body .= "\n" . get_mail_vocab("rep_type");
-  $temp = $mail_previous['rep_type'];
-  $body .=  ": " . get_mail_vocab("rep_type_$temp");
-  
-  if ($mail_previous['rep_type'] != REP_NONE)
-  {
-    if ($mail_previous['rep_type'] == REP_N_WEEKLY)
-    {
-      $body .= "\n" . get_mail_vocab("rep_num_weeks");
-      $body .=  ": " . $mail_previous["rep_num_weeks"];
-    }
-   
-    if($mail_previous["rep_opt_list"])
-    {
-      $body .= "\n" . get_mail_vocab("rep_rep_day");
-      $body .=  ": " . $mail_previous["rep_opt_list"];
-    }
-
-    $body .= "\n" . get_mail_vocab("rep_end_date");
-    $body .=  ": " . getMailTimeDateString($mail_previous['end_date'], FALSE) . "\n";
-  }
-  $body .= "\n";
+  // Create the text body
+  $data = $mail_previous;
+  $body = create_text_body($data, TRUE, 0, $series, $action);
   
   // Set up the attachment
   $attachment = array();
   if ($mail_settings['icalendar'])
   {
     $attachment['method']   = "CANCEL";
-    $attachment['content']  = create_icalendar($attachment['method'], $mail_previous, $mail_previous['description'], $series);
+    $attachment['content']  = create_icalendar($attachment['method'], $mail_previous, $body, $series);
     $attachment['name']     = "meeting.ics";
   }
   
