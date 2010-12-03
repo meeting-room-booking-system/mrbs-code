@@ -5,6 +5,42 @@
 
 define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
 
+// "Folds" lines longer than 75 octets
+//
+// "Lines of text SHOULD NOT be longer than 75 octets, excluding the line
+// break.  Long content lines SHOULD be split into a multiple line
+// representations using a line "folding" technique.  That is, a long
+// line can be split between any two characters by inserting a CRLF
+// immediately followed by a single linear white-space character (i.e.,
+// SPACE or HTAB).  Any sequence of CRLF followed immediately by a
+// single linear white-space character is ignored (i.e., removed) when
+// processing the content type."  (RFC 5545)
+function ical_fold($str)
+{
+  $result = '';
+  $col = 0;
+  for ($i=0; $i<strlen($str); $i++)
+  {
+    // If we've reached a CRLF reset the column counter 
+    // to the beginning of the line
+    if (($str[$i] == "\r")  && 
+        (($i+1) < strlen($str)) &&
+        ($str[$i+1] == "\n"))
+    {
+      $col = -2;  // -2 because we'll then be at 0 after the \r\n
+    }
+    // Otherwise if we've already had 75 characters, insert
+    // a CRLF followed by a space (and so the column counter will be 1)
+    elseif ($col >= 75)
+    {
+      $result .= "\r\n ";
+      $col = 1;
+    }
+    $result .= $str[$i];
+    $col++;
+  }
+  return $result;
+}
 
 // Escape text for use in an iCalendar object
 function ical_escape_text($str)
@@ -138,7 +174,8 @@ function create_icalendar($method, $data, $description, $series=FALSE, $html_cid
   
   $result = implode($eol, $results);
   $result .= $eol;  // Has to end with a CRLF
-
+  
+  $result = ical_fold($result);
   return $result;
 }
 
