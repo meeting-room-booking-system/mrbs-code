@@ -769,8 +769,9 @@ $mail_settings['on_delete'] = FALSE;  // when an entry is deleted
 // -------------
 // These settings determine what should be included in the email
 // Set to TRUE or FALSE as required
-$mail_settings['details'] = FALSE;   // Set to TRUE if you want full booking details;
+$mail_settings['details']   = FALSE; // Set to TRUE if you want full booking details;
                                      // otherwise you just get a link to the entry
+$mail_settings['html']      = FALSE; // Set to true if you want HTML mail
 $mail_settings['icalendar'] = FALSE; // Set to TRUE to include iCalendar details
                                      // which can be imported into a calendar
 

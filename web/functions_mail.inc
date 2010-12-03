@@ -16,6 +16,12 @@
 //
 // $Id$
 
+ 
+if ($mail_settings['icalendar'])
+{
+  require_once "functions_ical.inc";
+}
+
 // {{{ convertToMailCharset()
 
 /**
@@ -26,6 +32,7 @@
  * @return string   $string   string converted to $mail_charset, or in
  *                            original UTF-8 if mail_charset isn't set.
  */
+
 function convertToMailCharset($string)
 {
   global $unicode_encoding, $mail_charset;
@@ -291,49 +298,101 @@ function get_room_admin_email($id, $series=FALSE)
   return $email;
 }
 
+function create_body_table_row($label, $new, $old, $compare, $as_html=FALSE)
+{
+  $result  = ($as_html) ? "<tr>\n" : "";
+  
+  // The label
+  $result .= ($as_html) ? "<td>" : "";
+  $result .= ($as_html) ? htmlspecialchars($label) : "$label: ";
+  $result .= ($as_html) ? "</td>\n" : "";
+  // The new value
+  $result .= ($as_html) ? "<td>" : "";
+  $result .= ($as_html) ? htmlspecialchars($new) : "$new";
+  $result .= ($as_html) ? "</td>\n" : "";
+  // The old value (if we're doing a comparison)
+  if ($compare)
+  {
+    $result .= ($as_html) ? "<td>" : "";
+    if ($new == $old)
+    {
+      $result .= ($as_html) ? "&nbsp;" : "";
+    }
+    else
+    {
+      $result .= ($as_html) ? htmlspecialchars($old) : " ($old)";
+    }
+    $result .= ($as_html) ? "<td>\n" : "";
+  }
+  
+  $result .= ($as_html) ? "<tr>\n" : "\n";
+  return $result;
+}
 
-function create_text_body($data, $new_entry, $new_id, $series, $action)
+function create_body($data, $compare, $new_id, $series, $action, $as_html=FALSE)
 {
   global $mail_previous, $note, $returl;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
   global $typel, $mail_settings, $standard_fields, $weekstarts, $url_base;
   global $tbl_entry;
-  
+
   // set up the body
+  $body = "";
+  if ($as_html)
+  {
+    $body .= "<html>\n";
+    $body .= "<head>\n";
+    $body .= "<title></title>\n";
+    $body .= "<style type=\"text/css\">\n";
+    $css_file = 'mrbs-mail.css';
+    if (file_exists($css_file))
+    {
+      $fh = fopen($css_file, 'r');
+      $body .= fread($fh, filesize($css_file));
+    }
+    $body .= "</style>\n";
+    $body .= "</head>\n";
+    $body .= "<body>\n";
+    $body .= "<div id=\"mrbs\">\n";
+  }
+  $body .= ($as_html) ? "<p>" : "";
   switch ($action)
   {
     case "approve":
-      $body = get_mail_vocab("mail_body_approved") . "\n\n";
+      $body .= get_mail_vocab("mail_body_approved");
       break;
     case "more_info":
-      $body = get_mail_vocab("mail_body_more_info") . "\n\n";
+      $body .= get_mail_vocab("mail_body_more_info");
+      $body .= ($as_html) ? "</p><p>" : "\n\n";
       $body .= get_mail_vocab("info_requested") . ": ";
-      $body .= convertToMailCharset($note) . "\n\n";
+      $body .= convertToMailCharset($note);
       break;
     case "remind":
-      $body = get_mail_vocab("mail_body_reminder") . "\n\n";
+      $body .= get_mail_vocab("mail_body_reminder");
       break;
     case "reject":
-      $body = get_mail_vocab("mail_body_rej_entry") . "\n\n";
+      $body .= get_mail_vocab("mail_body_rej_entry");
+      $body .= ($as_html) ? "</p><p>" : "\n\n";
       $body .= get_mail_vocab("reason") . ': ';
-      $body .= convertToMailCharset($note) . "\n\n";
+      $body .= convertToMailCharset($note);
       break;
     case "delete":
-      $body = get_mail_vocab("mail_body_del_entry") . "\n\n";
+      $body .= get_mail_vocab("mail_body_del_entry");
+      $body .= ($as_html) ? "</p><p>" : "\n\n";
       // Give the name of the person deleting the entry (might not
       // be the same as the creator)
       $body .= get_mail_vocab("deleted_by") . ': ';
       $user = getUserName();
-      $body .= convertToMailCharset($user) . "\n";
+      $body .= convertToMailCharset($user);
       break;
     default:
-      if ($new_entry)
+      if ($compare)
       {
-        $body = get_mail_vocab("mail_body_new_entry") . "\n\n";
+        $body .= get_mail_vocab("mail_body_changed_entry");
       }
       else
       {
-        $body = get_mail_vocab("mail_body_changed_entry") . "\n\n";
+        $body .= get_mail_vocab("mail_body_new_entry");
       }
       break;
   }
@@ -342,6 +401,8 @@ function create_text_body($data, $new_entry, $new_id, $series, $action)
   // because then there won't be one.
   if (($action != "delete") && ($action != "reject"))
   {
+    $body .= ($as_html) ? "</p><p>" : "\n\n";
+    $body .= ($as_html) ? "<a href=\"" : "";
     // Set the link to view entry page
     if (isset($url_base) && ($url_base != ""))
     {
@@ -356,74 +417,87 @@ function create_text_body($data, $new_entry, $new_id, $series, $action)
     {
       $body .= "&series=1";
     }
+    $body .= ($as_html) ? "\">" . convertToMailCharset($data['name']) . "</a>" : "";
+  }
+  $body .= ($as_html) ? "</p>" : "\n\n";
+  
+  if ($as_html)
+  {
+    $body .= "<table>\n";
+    $body .= "<tbody>\n";
+  }
+  else
+  {
     $body .= "\n";
   }
   
   // Always display the brief description
-  $body .= "\n" . get_mail_vocab("namebooker") . ": ";
-  $body .= compareEntries(convertToMailCharset($data['name']),
-                          convertToMailCharset($mail_previous['namebooker']),
-                          $new_entry)  . "\n";
+  $body .= create_body_table_row (get_mail_vocab("namebooker"),
+                                  convertToMailCharset($data['name']),
+                                  convertToMailCharset($mail_previous['namebooker']),
+                                  $compare, $as_html);
   
   // Displays/don't displays entry details
   if ($mail_settings['details'])
   {
     // Description:
-    $body .= get_mail_vocab("description") . ": ";
-    $body .= compareEntries(convertToMailCharset($data['description']),
-                            convertToMailCharset($mail_previous['description']),
-                            $new_entry) . "\n";
-                                                        
+    $body .= create_body_table_row (get_mail_vocab("description"),
+                                    convertToMailCharset($data['description']),
+                                    convertToMailCharset($mail_previous['description']),
+                                    $compare, $as_html);
+                                                                                         
     if ($confirmation_enabled)
     {                        
       // Confirmation status:
-      $body .= get_mail_vocab("confirmation_status") . ": ";
-      $old_status = ($mail_previous['status'] & STATUS_TENTATIVE) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
       $new_status = ($data['status'] & STATUS_TENTATIVE) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
-      $body .= compareEntries($new_status, $old_status, $new_entry) . "\n";
+      $old_status = ($mail_previous['status'] & STATUS_TENTATIVE) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
+      $body .= create_body_table_row (get_mail_vocab("confirmation_status"),
+                                      $new_status,
+                                      $old_status,
+                                      $compare, $as_html);
     }
                             
     if ($approval_enabled)
     {                        
       // Approval status:
-      $body .= get_mail_vocab("approval_status") . ": ";
-      $old_status = ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
       $new_status = ($data['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
-      $body .= compareEntries($new_status, $old_status, $new_entry) . "\n";
+      $old_status = ($mail_previous['status'] & STATUS_AWAITING_APPROVAL) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
+      $body .= create_body_table_row (get_mail_vocab("approval_status"),
+                                      $new_status,
+                                      $old_status,
+                                      $compare, $as_html);
     }
                                
     // Room:
-    $body .= get_mail_vocab("room") . ": " .
-      compareEntries(convertToMailCharset($data['area_name']),
-                     convertToMailCharset($mail_previous['area_name']),
-                     $new_entry);
-    $body .= " - " . compareEntries(convertToMailCharset($data['room_name']),
-                                    convertToMailCharset($mail_previous['room_name']),
-                                    $new_entry) . "\n";
+    $new_room = $data['area_name'] . " - " . $data['room_name'];
+    $old_room = $mail_previous['area_name'] . " - " . $mail_previous['room_name'];
+    $body .= create_body_table_row (get_mail_vocab("room"),
+                                    $new_room,
+                                    $old_room,
+                                    $compare, $as_html);
         
     // Start time
     if ($enable_periods)
     {
-      list( $start_period, $entry_start_date) = getMailPeriodDateString($data['start_time']);
+      list($start_period, $entry_start_date) = getMailPeriodDateString($data['start_time']);
     }
     else
     {
       $entry_start_date = getMailTimeDateString($data['start_time']);
     }
-    $body .= get_mail_vocab("start_date") . ": ";
-    $body .= compareEntries($entry_start_date,
-                            $mail_previous['entry_start_date'],
-                            $new_entry) . "\n";
+    $body .= create_body_table_row (get_mail_vocab("start_date"),
+                                    $entry_start_date,
+                                    $mail_previous['entry_start_date'],
+                                    $compare, $as_html);
         
     // Duration
-    $body .= get_mail_vocab("duration") . ": " .
-      compareEntries($data['duration'],
-                     $mail_previous['duration'],
-                     $new_entry);
-    $body .= " " . compareEntries(get_mail_vocab($data['dur_units']),
-                                  $mail_previous['dur_units'],
-                                  $new_entry) . "\n";
-        
+    $new_duration = $data['duration'] . " " . $data['dur_units'];
+    $old_duration = $mail_previous['duration'] . " " . $mail_previous['dur_units'];
+    $body .= create_body_table_row (get_mail_vocab("duration"),
+                                    $new_duration,
+                                    $old_duration,
+                                    $compare, $as_html);
+                                        
     // End time
     $myendtime = $data['end_time'];
     if ( $enable_periods )
@@ -434,30 +508,22 @@ function create_text_body($data, $new_entry, $new_id, $series, $action)
     {
       $entry_end_date = getMailTimeDateString($myendtime);
     }
-    $body .= get_mail_vocab("end_date") . ": ";
-    $body .= compareEntries($entry_end_date,
-                            $mail_previous['entry_end_date'],
-                            $new_entry) ."\n";
+    $body .= create_body_table_row (get_mail_vocab("end_date"),
+                                    $entry_end_date,
+                                    $mail_previous['entry_end_date'],
+                                    $compare, $as_html);
     
     // Type of booking
-    $body .= get_mail_vocab("type") . ": ";
-    if ($new_entry)
-    {
-      $body .= $typel[$data['type']];
-    }
-    else
-    {
-      $temp = $mail_previous['type'];
-      $body .= compareEntries($typel[$data['type']],
-                              $typel[$temp],
-                              $new_entry);
-    }
-        
+    $body .= create_body_table_row (get_mail_vocab("type"),
+                                    $typel[$data['type']],
+                                    $typel[$mail_previous['type']],
+                                    $compare, $as_html);
+                                         
     // Created by
-    $body .= "\n" . get_mail_vocab("createdby") . ": " .
-      compareEntries(convertToMailCharset($data['create_by']),
-                     convertToMailCharset($mail_previous['createdby']),
-                     $new_entry) . "\n";
+    $body .= create_body_table_row (get_mail_vocab("createdby"),
+                                    convertToMailCharset($data['create_by']),
+                                    convertToMailCharset($mail_previous['createdby']),
+                                    $compare, $as_html);
                      
     // Custom fields
     $fields = sql_field_info($tbl_entry);
@@ -472,45 +538,48 @@ function create_text_body($data, $new_entry, $new_id, $series, $action)
             (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
         {
           $value = ($value) ? get_mail_vocab("yes") : get_mail_vocab("no");
-          if (!$new_entry)
+          if (!$compare)
           {
             $mail_previous[$key] = ($mail_previous[$key]) ? get_mail_vocab("yes") : get_mail_vocab("no");
           }
         }
-        $body .= get_mail_field_name($tbl_entry, $key) . ": ";
-        $body .= compareEntries(convertToMailCharset($value), 
-                                convertToMailCharset($mail_previous[$key]),
-                                $new_entry) . "\n";
+        $body .= create_body_table_row (get_mail_field_name($tbl_entry, $key),
+                                        convertToMailCharset($value),
+                                        convertToMailCharset($mail_previous[$key]),
+                                        $compare, $as_html);
       }
     }
     
     // Last updated
-    $body .= get_mail_vocab("lastupdate") . ": " .
-      compareEntries(getMailTimeDateString(time()),
-                     $mail_previous['updated'],
-                     $new_entry);
+    $body .= create_body_table_row (get_mail_vocab("lastupdate"),
+                                    getMailTimeDateString(time()),
+                                    $mail_previous['updated'],
+                                    $compare, $as_html);
         
     // Repeat Type
-    $body .= "\n" . get_mail_vocab("rep_type");
-    if ($new_entry)
-    {
-      $body .= ": " . get_mail_vocab("rep_type_" . $data['rep_type']);
-    }
-    else
-    {
-      $temp = $mail_previous['rep_type'];
-      $body .=  ": " . compareEntries(get_mail_vocab("rep_type_" . $data['rep_type']),
-                                      get_mail_vocab("rep_type_$temp"),
-                                      $new_entry);
-    }
-        
+    $body .= create_body_table_row (get_mail_vocab("rep_type"),
+                                    get_mail_vocab("rep_type_" . $data['rep_type']),
+                                    get_mail_vocab("rep_type_" . $mail_previous['rep_type']),
+                                    $compare, $as_html);
+                                       
     // Details if a series
     if ($data['rep_type'] != REP_NONE)
-    {
-      $opt = "";
+    {     
+      // Repeat number of weeks
+      if ($data['rep_type'] == REP_N_WEEKLY)
+      {
+      
+        $body .= create_body_table_row (get_mail_vocab("rep_num_weeks"),
+                                        $data['rep_num_weeks'],
+                                        $mail_previous["rep_num_weeks"],
+                                        $compare, $as_html);
+      }
+      
+      // Repeat days
       if (($data['rep_type'] == REP_WEEKLY) || ($data['rep_type'] == REP_N_WEEKLY))
       {
         // Display day names according to language and preferred weekday start.
+        $opt = "";
         for ($i = 0; $i < 7; $i++)
         {
           $daynum = ($i + $weekstarts) % 7;
@@ -519,176 +588,31 @@ function create_text_body($data, $new_entry, $new_id, $series, $action)
             $opt .= day_name($daynum) . " ";
           }
         }
-      }
-      if ($data['rep_type'] == REP_N_WEEKLY)
-      {
-        $body .= "\n" . get_mail_vocab("rep_num_weeks");
-        $body .=  ": " . compareEntries($data['rep_num_weeks'],
-                                        $mail_previous["rep_num_weeks"],
-                                        $new_entry);
+        $body .= create_body_table_row (get_mail_vocab("rep_rep_day"),
+                                        $opt,
+                                        $mail_previous["rep_opt_list"],
+                                        $compare, $as_html);
       }
       
-      if($opt || $mail_previous["rep_opt_list"])
-      {
-        $body .= "\n" . get_mail_vocab("rep_rep_day");
-        $body .=  ": " . compareEntries($opt,
-                                        $mail_previous["rep_opt_list"],
-                                        $new_entry);
-      }
-
-      $body .= "\n" . get_mail_vocab("rep_end_date");
-      if ($new_entry)
-      {
-        $body .= ": " . getMailTimeDateString($data['end_date'], FALSE);
-      }
-      else
-      {
-        $temp = getMailTimeDateString($data['end_date'], FALSE);
-        $body .=  ": " . 
-          compareEntries($temp,
-                         getMailTimeDateString($mail_previous['end_date'], FALSE),
-                         $new_entry) . "\n";
-      }
+      // Repeat end date
+      $body .= create_body_table_row (get_mail_vocab("rep_end_date"),
+                                      getMailTimeDateString($data['end_date'], FALSE),
+                                      getMailTimeDateString($mail_previous['end_date'], FALSE),
+                                      $compare, $as_html);                                      
     }
-    $body .= "\n";
   }
+  
+  if ($as_html)
+  {
+    $body .= "</tbody>\n";
+    $body .= "</table>\n";
+    $body .= "</div>\n";
+    $body .= "</body>\n";
+    $body .= "</html>\n";
+  }
+
   return $body;
 }
-
-// Escape text for use in an iCalendar object
-function ical_escape_text($str)
-{
-  // Escape '\'
-  $str = str_replace("\\", "\\\\", $str);
-  // Escape ';'
-  $str = str_replace(";", "\;", $str);
-  // Escape ','
-  $str = str_replace(",", "\,", $str);
-  // Escape '\n'
-  $str = str_replace("\n", "\\n", $str);
-  return $str;
-}
-
-// Create an iCalendar Recurrence Rule
-function create_rrule($data)
-{
-  // Create an array which can be used to map day of the week numbers (0..6)
-  // onto days of the week as defined in RFC 5545
-  $RFC_5545_days = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
-  $rule = '';
-  if (!isset($data['rep_type']))
-  {
-    return $rule;
-  }
-  switch($data['rep_type'])
-  {
-    case REP_NONE:
-      return $rule;
-      break;
-    case REP_DAILY:
-      $rule .= "FREQ=DAILY";
-      break;
-    case REP_WEEKLY:
-    case REP_N_WEEKLY;
-      $rule .= "FREQ=WEEKLY";
-      // Interval for N_WEEKLY (Interval defaults to 1)
-      if ($data['rep_type'] == REP_N_WEEKLY)
-      {
-        $rule .= ";INTERVAL=" . $data['rep_num_weeks'];
-      }
-      // Get the repeat days of the week
-      $days_of_week = array();
-      for ($i = 0; $i < 7; $i++)
-      {
-        if ($data['rep_opt'][$i])
-        {
-          $days_of_week[] = $RFC_5545_days[$i];
-        }
-      }
-      $dow_list = implode(',', $days_of_week);
-      if (!empty($dow_list))
-      {
-        $rule .= ";BYDAY=$dow_list";
-      }
-      break;
-    case REP_MONTHLY_SAMEDAY:
-      $dow = date('w', $data['start_time']);  // day of the week
-      $dom = date('j', $data['start_time']);  // day of the month
-      // Work out the week of the month.    If this is the fifth week of the month
-      // then make it -1 (last week of the month in RFC 5545 terms)
-      $wom = intval($dom/7) + 1;
-      if ($wom > 4)
-      {
-        $wom = -1;
-      }
-      $wom = sprintf('%+d', $wom);
-      $rule .= ";BYDAY=";
-      $rule .= $wom;
-      $rule .= $RFC_5545_days[$dow];
-    case REP_MONTHLY:
-      $rule .= "FREQ=MONTHLY";
-      break;
-    case REP_YEARLY:
-      $rule .= "FREQ=YEARLY";
-      break;
-  }
-  $rule .= ";UNTIL=" . gmdate(RFC5545_FORMAT . '\Z', $data['end_date']);
-
-  return $rule;
-}
-
-
-// Creates an iCalendar object in RFC 5545 format
-function create_icalendar($method, $data, $description, $series=FALSE)
-{
-  require_once "version.inc";
-  
-  global $timezone, $confirmation_enabled;
-  
-  $eol = "\r\n";
-  
-  $results = array();
-  $results[] = "BEGIN:VCALENDAR";
-  // Compulsory properties
-  $results[] = "PRODID:-//MRBS//NONSGML " . get_mrbs_version() . " //EN";
-  $results[] = "VERSION:2.0";
-  // Optional properties
-  $results[] = "CALSCALE:GREGORIAN";
-  $results[] = "METHOD:$method";
-  
-  // The event
-  $results[] = "BEGIN:VEVENT";
-  $results[] = "UID:" . $data['ical_uid'];  // compulsory
-  $results[] = "DTSTAMP:" . gmdate(RFC5545_FORMAT . '\Z');  // compulsory
-  if ($series)
-  {
-    $results[] = "RRULE:" . create_rrule($data);
-  }
-  $results[] = "DTSTART;TZID=$timezone:" . date(RFC5545_FORMAT, $data['start_time']);
-  $results[] = "DTEND;TZID=$timezone:" . date(RFC5545_FORMAT, $data['end_time']);
-  $results[] = "SUMMARY:" . ical_escape_text($data['name']);
-  $results[] = "DESCRIPTION:" . ical_escape_text($description);
-  $results[] = "LOCATION:" . ical_escape_text($data['area_name'] . " - " . $data['room_name']);
-  $results[] = "SEQUENCE:" . $data['ical_sequence'];
-  // If this is an individual member of a series then set the recurrence id
-  if ($data['entry_type'] == 2)
-  {
-    $results[] = "RECURRENCE-ID:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
-  }
-  if ($confirmation_enabled)
-  {
-    $results[] = "STATUS:". (($data['status'] & STATUS_TENTATIVE) ? "TENTATIVE" : "CONFIRMED");
-  }
-  $results[] = "END:VEVENT";
-  
-  $results[] = "END:VCALENDAR";
-  
-  $result = implode($eol, $results);
-  $result .= $eol;  // Has to end with a CRLF
-
-  return $result;
-}
-      
 
 // }}}
 // {{{ notifyAdminOnBooking()
@@ -821,14 +745,23 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
   }
 
   // Create the text body
-  $body = create_text_body($data, $new_entry, $new_id, $series, $action);
+  $compare = !$new_entry;
+  $text_body = create_body($data, $compare, $new_id, $series, $action);
+  
+  // Create the HTML body
+  $html_body = array();
+  if ($mail_settings['html'])
+  {
+    $html_body['text'] = create_body($data, $compare, $new_id, $series, $action, TRUE);
+    $html_body['cid'] = generate_global_uid("html");
+  }
   
   // Create the iCalendar if required
   $attachment = array();
   if ($mail_settings['icalendar'])
   {
     $attachment['method']   = "REQUEST";
-    $attachment['content']  = create_icalendar($attachment['method'], $data, $body, $series);
+    $attachment['content']  = create_icalendar($attachment['method'], $data, $text_body, $series, $html_body['cid']);
     $attachment['name']     = "meeting.ics";
   }
 
@@ -840,8 +773,8 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
   }
   $result = sendMail($recipient_list,
                      $subject,
-                     $body,
-                     NULL,
+                     $text_body,
+                     $html_body,
                      $attachment,
                      get_mail_charset(),
                      $from,
@@ -928,19 +861,27 @@ function notifyAdminOnDelete($mail_previous, $series=FALSE, $action="delete", $n
   
   // Create the text body
   $data = $mail_previous;
-  $body = create_text_body($data, TRUE, 0, $series, $action);
+  $text_body = create_body($data, FALSE, 0, $series, $action, FALSE);
+  
+  // Create the HTML body
+  $html_body = array();
+  if ($mail_settings['html'])
+  {
+    $html_body['text'] = create_body($data, FALSE, $new_id, $series, $action, TRUE);
+    $html_body['cid'] = generate_global_uid("html");
+  }
   
   // Set up the attachment
   $attachment = array();
   if ($mail_settings['icalendar'])
   {
     $attachment['method']   = "CANCEL";
-    $attachment['content']  = create_icalendar($attachment['method'], $mail_previous, $body, $series);
+    $attachment['content']  = create_icalendar($attachment['method'], $mail_previous, $text_body, $series, $html_body['cid']);
     $attachment['name']     = "meeting.ics";
   }
   
   // End of mail details
-  $result = sendMail($recipient_list, $subject, $body, NULL, $attachment, get_mail_charset(), $from, $cc_list);
+  $result = sendMail($recipient_list, $subject, $text_body, $html_body, $attachment, get_mail_charset(), $from, $cc_list);
   return $result;
 }
 
@@ -1031,31 +972,6 @@ function getPreviousEntryData($id, $series)
 
   // return entry previous data as an array
   return $data;
-}
-
-// }}}
-// {{{ compareEntries()
-
-/**
- * Compare entries fields to show in emails.
- *
- * @param string  $new_value       new field value
- * @param string  $previous_value  previous field value
- * @return string                  new value if no difference, new value and
- *                                 previous value in brackets otherwise
- */
-function compareEntries($new_value, $previous_value, $new_entry)
-{
-  $suffix = "";
-  if ($new_entry)
-  {
-    return $new_value;
-  }
-  if ($new_value != $previous_value)
-  {
-    $suffix = " ($previous_value)";
-  }
-  return($new_value . $suffix);
 }
 
 // }}}
@@ -1164,7 +1080,10 @@ function sendMail($recipients, $subject, $text_body, $html_body, $attachment,
   // Add the HTML mail
   if (!empty($html_body))
   {
-    // do something
+    $mime_params['content_type'] = "text/html";
+    $mime_params['cid'] = $html_body['cid'];
+    $text = $mime->addSubPart($html_body['text'], $mime_params);
+    unset($mime_params['charset']);
   }
   
   if ($mail_settings['icalendar'])

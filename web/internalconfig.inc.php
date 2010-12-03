@@ -115,13 +115,6 @@ define('REP_MONTHLY_SAMEDAY', 5);
 define('REP_N_WEEKLY',        6);
 
 
-/***************************************************
- * iCalendar constants - internal use, do not change
- ***************************************************/
-
-define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
-
-
 /****************************************************************
  * DATABASE TABLES  - internal use, do not change
  ****************************************************************/
