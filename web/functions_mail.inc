@@ -329,7 +329,7 @@ function create_body_table_row($label, $new, $old, $compare, $as_html=FALSE)
   return $result;
 }
 
-function create_body($data, $compare, $new_id, $series, $action, $as_html=FALSE)
+function create_body($data, $compare, $series, $action, $as_html=FALSE)
 {
   global $mail_previous, $note, $returl;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
@@ -406,12 +406,12 @@ function create_body($data, $compare, $new_id, $series, $action, $as_html=FALSE)
     // Set the link to view entry page
     if (isset($url_base) && ($url_base != ""))
     {
-      $body .= "$url_base/view_entry.php?id=$new_id";
+      $body .= "$url_base/view_entry.php?id=" . $data['id'];
     }
     else
     {
       ('' != $returl) ? $url = explode(basename($returl), $returl) : '';
-      $body .= $url[0] . "view_entry.php?id=$new_id";
+      $body .= $url[0] . "view_entry.php?id=" . $data['id'];
     }
     if ($series)
     {
@@ -621,14 +621,13 @@ function create_body($data, $compare, $new_id, $series, $action, $as_html=FALSE)
  * Send email to administrator to notify a new/changed entry.
  *
  * @param bool    $new_entry    to know if this is a new entry or not
- * @param int     $new_id       used for create a link to the new entry
  * @return bool                 TRUE or PEAR error object if fails
  */
-function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
+function notifyAdminOnBooking($new_entry, $series, $action="book")
 {
   global $data, $mail_previous;
   global $auth, $mail_settings, $approval_enabled;
-  
+
   $recipients = array();
   $cc = array();
   $cc[] = $mail_settings['cc'];
@@ -663,7 +662,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     // Look for list of area admins emails addresses
     if ($new_entry)
     {
-      $email = get_area_admin_email($new_id, ($data['rep_type'] != REP_NONE));
+      $email = get_area_admin_email($data['id'], ($data['rep_type'] != REP_NONE));
       if (!empty($email))
       {
         $recipients[] = $email;
@@ -682,7 +681,7 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
     // Look for list of room admins email addresses
     if ($new_entry)
     {
-      $email = get_room_admin_email($new_id, ($data['rep_type'] != REP_NONE));
+      $email = get_room_admin_email($data['id'], ($data['rep_type'] != REP_NONE));
       if (!empty($email))
       {
         $recipients[] = $email;
@@ -746,13 +745,14 @@ function notifyAdminOnBooking($new_entry, $new_id, $series, $action="book")
 
   // Create the text body
   $compare = !$new_entry;
-  $text_body = create_body($data, $compare, $new_id, $series, $action);
+  $text_body = array();
+  $text_body['text'] = create_body($data, $compare, $series, $action);
   
   // Create the HTML body
   $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['text'] = create_body($data, $compare, $new_id, $series, $action, TRUE);
+    $html_body['text'] = create_body($data, $compare, $series, $action, TRUE);
     $html_body['cid'] = generate_global_uid("html");
   }
   
@@ -861,13 +861,14 @@ function notifyAdminOnDelete($mail_previous, $series=FALSE, $action="delete", $n
   
   // Create the text body
   $data = $mail_previous;
-  $text_body = create_body($data, FALSE, 0, $series, $action, FALSE);
+  $text_body = array();
+  $text_body['text'] = create_body($data, FALSE, $series, $action, FALSE);
   
   // Create the HTML body
   $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['text'] = create_body($data, FALSE, $new_id, $series, $action, TRUE);
+    $html_body['text'] = create_body($data, FALSE, $series, $action, TRUE);
     $html_body['cid'] = generate_global_uid("html");
   }
   
@@ -1075,7 +1076,7 @@ function sendMail($recipients, $subject, $text_body, $html_body, $attachment,
   $mime_params['content_type'] = "text/plain";
   $mime_params['encoding']     = "7bit";
   $mime_params['charset']      = $charset;
-  $text = $mime->addSubPart($text_body, $mime_params);
+  $text = $mime->addSubPart($text_body['text'], $mime_params);
   
   // Add the HTML mail
   if (!empty($html_body))

@@ -778,7 +778,6 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   {
     switch ($field['name'])
     {
-      case 'id':
       case 'entry_type':
         // Nothing to do
         break;

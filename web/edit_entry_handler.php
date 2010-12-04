@@ -646,7 +646,7 @@ if ($valid_booking)
           }
         }
         // Send the email
-        $result = notifyAdminOnBooking(!isset($id), $new_id, $is_repeat_table);
+        $result = notifyAdminOnBooking(!isset($id), $is_repeat_table);
       }
     }   
   } // end foreach $rooms

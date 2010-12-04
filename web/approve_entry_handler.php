@@ -119,7 +119,7 @@ if (isset($action))
     // in an undefined index error.
     $enable_periods ? toPeriodString($start_period, $data['duration'], $data['dur_units'], FALSE) : toTimeString($data['duration'], $data['dur_units'], FALSE);
 
-    $result = notifyAdminOnBooking($is_new_entry, $id, $series, $action);
+    $result = notifyAdminOnBooking($is_new_entry, $series, $action);
   }
 }
 
