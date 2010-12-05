@@ -434,7 +434,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE)
   // Always display the brief description
   $body .= create_body_table_row (get_mail_vocab("namebooker"),
                                   convertToMailCharset($data['name']),
-                                  convertToMailCharset($mail_previous['namebooker']),
+                                  convertToMailCharset($mail_previous['name']),
                                   $compare, $as_html);
   
   // Displays/don't displays entry details
@@ -522,7 +522,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE)
     // Created by
     $body .= create_body_table_row (get_mail_vocab("createdby"),
                                     convertToMailCharset($data['create_by']),
-                                    convertToMailCharset($mail_previous['createdby']),
+                                    convertToMailCharset($mail_previous['create_by']),
                                     $compare, $as_html);
                      
     // Custom fields
@@ -553,7 +553,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE)
     // Last updated
     $body .= create_body_table_row (get_mail_vocab("lastupdate"),
                                     getMailTimeDateString(time()),
-                                    $mail_previous['updated'],
+                                    getMailTimeDateString($mail_previous['last_updated']),
                                     $compare, $as_html);
         
     // Repeat Type
@@ -614,27 +614,27 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE)
   return $body;
 }
 
-// }}}
-// {{{ notifyAdminOnBooking()
-
-/**
- * Send email to administrator to notify a new/changed entry.
- *
- * @param bool    $new_entry    to know if this is a new entry or not
- * @return bool                 TRUE or PEAR error object if fails
- */
-function notifyAdminOnBooking($new_entry, $series, $action="book")
+// create_addresses($data, $action)
+//
+// Returns an array indexed by 'from', 'to' and 'cc' with each element
+// consisting of a comma separated list of email addresses
+//
+// Parameters:
+//   $data     an array containing all the data concerning this booking
+//   $action   the action that has caused this email to be sent
+//
+function create_addresses($data, $action)
 {
-  global $data, $mail_previous;
-  global $auth, $mail_settings, $approval_enabled;
-
-  $recipients = array();
+  global $approval_enabled, $mail_settings;
+  
+  $to = array();
   $cc = array();
+  
   $cc[] = $mail_settings['cc'];
   
   // set the from address
   $user = getUserName();
-  if (isset($user) && (($action == "remind")  || ($action == "more_info")))
+  if (isset($user) && in_array($action, array("more_info", "reject", "remind")))
   {
     $from = get_email_address($user);
     if (empty($from))
@@ -650,74 +650,106 @@ function notifyAdminOnBooking($new_entry, $series, $action="book")
   
   // if we're requiring bookings to be approved and this user needs approval
   // for this room, then get the email addresses of the approvers
-  if ($approval_enabled && !auth_book_admin($user, $data['room_id']))
+  if (!in_array($action, array("delete", "reject")) &&
+      $approval_enabled && 
+      !auth_book_admin($user, $data['room_id']))
   {
-    $recipients[] = get_approvers_email($data['room_id']);
+    $to[] = get_approvers_email($data['room_id']);
   }
   
-  ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
+  ($mail_settings['admin_on_bookings']) ? $to[] = $mail_settings['addresses'] : '';
   
   if ($mail_settings['area_admin_on_bookings'])
   {
-    // Look for list of area admins emails addresses
-    if ($new_entry)
+    // Look for list of area admins email addresses
+    if (empty($data['area_admin_email']))
     {
       $email = get_area_admin_email($data['id'], ($data['rep_type'] != REP_NONE));
       if (!empty($email))
       {
-        $recipients[] = $email;
+        $to[] = $email;
       }
     }
-    elseif (!empty($mail_previous['area_admin_email']))
+    else
     {
-      // if this is an edited entry, we already have area_admin_email,
-      // avoiding a database hit.
-      $recipients[] = $mail_previous['area_admin_email'];
+      $to[] = $data['area_admin_email'];
     }
   }
   
   if ($mail_settings['room_admin_on_bookings'])
   {
     // Look for list of room admins email addresses
-    if ($new_entry)
+    if (empty($data['room_admin_email']))
     {
       $email = get_room_admin_email($data['id'], ($data['rep_type'] != REP_NONE));
       if (!empty($email))
       {
-        $recipients[] = $email;
+        $to[] = $email;
       }
     }
-    elseif (!empty($mail_previous['room_admin_email']))
+    else
     {
-      // if this is an edited entry, we already have room_admin_email,
-      // avoiding a database hit.
-      $recipients[] = $mail_previous['room_admin_email'];
+      $to[] = $data['room_admin_email'];
     }
   }
   
   if ($mail_settings['booker'])
   {
-    if (($action == "approve")  || ($action == "more_info"))
+    if (in_array($action, array("approve", "more_info", "reject")))
     {
-      // Put the recipients on the cc line and the booker will go
+      // Put the addresses on the cc line and the booker will go
       // on the to line
-      $cc = array_merge($cc, $recipients);
-      $recipients = array();
+      $cc = array_merge($cc, $to);
+      $to = array();
     }
-    $booker = ($new_entry) ? $data['create_by'] : $mail_previous['createdby'];
+    $booker = $data['create_by'];
     $booker_email = get_email_address($booker);
     if (!empty($booker_email))
     {
-      $recipients[] = $booker_email;
+      $to[] = $booker_email;
     }
   }
-  // In case $recipients is empty, no need to go further
-  if (empty($recipients))
+  // In case $to is empty, no need to go further
+  if (empty($to))
   {
     return FALSE;
   }
-  $recipient_list = get_address_list($recipients);
-  $cc_list = get_address_list($cc);
+  
+  $addresses = array();
+  $addresses['from'] = $from;
+  $addresses['to']   = get_address_list($to);
+  $addresses['cc'] = get_address_list($cc);
+  return $addresses;
+}
+
+
+// }}}
+// {{{ notifyAdminOnBooking()
+
+/**
+ * Send email to administrator to notify a new/changed entry.
+ *
+ * @param bool    $new_entry    to know if this is a new entry or not
+ * @return bool                 TRUE or PEAR error object if fails
+ */
+function notifyAdminOnBooking($new_entry, $series, $action="book")
+{
+  global $data, $mail_previous;
+  global $auth, $mail_settings;
+
+  // Add some values to the $data array before we go and create the addresses
+  if (!$new_entry)
+  {
+    $data['area_admin_email'] = (!empty($mail_previous['area_admin_email'])) ? $mail_previous['area_admin_email'] : NULL;
+    $data['room_admin_email'] = (!empty($mail_previous['room_admin_email'])) ? $mail_previous['room_admin_email'] : NULL;
+  }
+  
+  // Set up the addresses (from, to and cc)
+  $addresses = create_addresses($data, $action);
+  if ($addresses === FALSE)
+  {
+    return;
+  }
   
   // set up the subject
   switch ($action)
@@ -771,14 +803,12 @@ function notifyAdminOnBooking($new_entry, $series, $action="book")
     // ...communicate the charset and encode it correctly
     $subject = "=?".get_mail_charset()."?B?".base64_encode($subject)."?=";
   }
-  $result = sendMail($recipient_list,
+  $result = sendMail($addresses,
                      $subject,
                      $text_body,
                      $html_body,
                      $attachment,
-                     get_mail_charset(),
-                     $from,
-                     $cc_list);
+                     get_mail_charset());
   return $result;
 }
 
@@ -797,57 +827,12 @@ function notifyAdminOnDelete($mail_previous, $series=FALSE, $action="delete", $n
   global $mail_settings, $standard_fields, $tbl_entry;
   global $approval_enabled, $confirmation_enabled;
   
-  $recipients = array();
-  $cc = array();
-  $cc[] = $mail_settings['cc'];
-  
-  // set the from address
-  $user = getUserName();
-  if (isset($user) && ($action == "reject"))
+  // Set up the addresses (from, to and cc)
+  $addresses = create_addresses($mail_previous, $action);
+  if ($addresses === FALSE)
   {
-    $from = get_email_address($user);
-    if (empty($from))
-    {
-      // there was an error:  use a sensible default
-      $from = $mail_settings['from'];
-    }
+    return;
   }
-  else
-  {
-    $from = $mail_settings['from'];
-  }
-  
-  ($mail_settings['admin_on_bookings']) ? $recipients[] = $mail_settings['recipients'] : '';
-  if ($mail_settings['area_admin_on_bookings']  && !empty($mail_previous['area_admin_email']))
-  {
-    $recipients[] = $mail_previous['area_admin_email'];
-  }
-  if ($mail_settings['room_admin_on_bookings']  && !empty($mail_previous['room_admin_email']))
-  {
-    $recipients[] = $mail_previous['room_admin_email'];
-  }
-  if ($mail_settings['booker'])
-  {
-    if ($action == "reject")
-    {
-      // Put the recipients on the cc line and the booker will go
-      // on the to line
-      $cc = array_merge($cc, $recipients);
-      $recipients = array();
-    }
-    $booker_email = get_email_address($mail_previous['createdby']);
-    if (!empty($booker_email))
-    {
-      $recipients[] = $booker_email;
-    }
-  }
-  // In case mail is allowed but someone forgot to supply email addresses...
-  if (empty($recipients))
-  {
-    return FALSE;
-  }
-  $recipient_list = get_address_list($recipients);
-  $cc_list = get_address_list($cc);
   
   // Set the subject
   if ($action == "reject")
@@ -881,8 +866,12 @@ function notifyAdminOnDelete($mail_previous, $series=FALSE, $action="delete", $n
     $attachment['name']     = "meeting.ics";
   }
   
-  // End of mail details
-  $result = sendMail($recipient_list, $subject, $text_body, $html_body, $attachment, get_mail_charset(), $from, $cc_list);
+  $result = sendMail($addresses,
+                     $subject,
+                     $text_body,
+                     $html_body,
+                     $attachment,
+                     get_mail_charset());
   return $result;
 }
 
@@ -907,9 +896,6 @@ function getPreviousEntryData($id, $series)
   
   // Now process some special fields
   $data['id']         = $id;
-  $data['namebooker'] = $data['name'];
-  $data['createdby']  = $data['create_by'];
-  $data['updated']    = getMailTimeDateString($data['last_updated']);
 
   // Now get the start time, end time and duration.
   if ($enable_periods)
@@ -988,79 +974,73 @@ function getPreviousEntryData($id, $series)
  * Net_SMTP 1.2.6 and Net_Socket 1.0.2
  * Mail_Mime 1.8.0
  *
- * @param string  $recipients       comma separated list of recipients or array
+ * @param array   $addresses        an array of addresses, each being a comma
+ *                                  separated list of email addreses.  Indexed by
+ *                                    'from'
+ *                                    'to'
+ *                                    'cc'
+ *                                    'bcc'
  * @param string  $subject          email subject
  * @param string  $text_body        text part of body
  * @param string  $text_html        HTML part of body
- * @param string  $attachment       file to attach.   An array consisting of
+ * @param array   $attachment       file to attach.   An array consisting of
  *                                    'content' the file or data to attach
  *                                    'method'  the iCalendar METHOD
  *                                    'name'    the name to give it
  * @param string  $charset          character set used in body
- * @param string  $cc               Carbon Copy
- * @param string  $bcc              Blind Carbon Copy
- * @param string  $from             from field
  * @return bool                     TRUE or PEAR error object if fails
  */
-function sendMail($recipients, $subject, $text_body, $html_body, $attachment,
-                  $charset = 'us-ascii', $from, $cc = NULL, $bcc = NULL)
+function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $charset = 'us-ascii')
 {
   require_once "Mail.php";
   require_once "Mail/mime.php";
   require_once "Mail/mimePart.php";
-  
+
   global $mail_settings, $sendmail_settings, $smtp_settings;
   
   // for cases where the mail server refuses
   // to send emails with cc or bcc set, put the cc
   // addresses on the to line
-  if (isset($cc) && $mail_settings['treat_cc_as_to'])
+  if (!empty($addresses['cc']) && $mail_settings['treat_cc_as_to'])
   {
-    $recipients_array = array_merge(explode(',', $recipients),
-                                    explode(',', $cc));
-    $recipients = get_address_list($recipients_array);
-    $cc = NULL;
+    $recipients_array = array_merge(explode(',', $addresses['to']),
+                                    explode(',', $addresses['cc']));
+    $addresses['to'] = get_address_list($recipients_array);
+    $addresses['cc'] = NULL;
+  }
+  if (empty($addresses['from']))
+  {
+    $addresses['from'] = $mail_settings['from'];
   }
   
   // Set up configuration settings
-  if (empty($from))
-  {
-    $from = $mail_settings['from'];
-  }
   $backend = $mail_settings['admin_backend'];
-  $sendmail_path = $sendmail_settings['path'];
-  $sendmail_args = $sendmail_settings['args'];
-  $host = $smtp_settings['host'];
-  $port = $smtp_settings['port'];
-  $auth = $smtp_settings['auth'];
-  $username = $smtp_settings['username'];
-  $password = $smtp_settings['password'];
   
   // Parameters part
   $params = array();  // to avoid an undefined variable message
-  if ( $backend == 'sendmail' )
+  if ($backend == 'sendmail')
   {
-    $params['sendmail_path'] = $sendmail_path;
-    $params['sendmail_args'] = $sendmail_args;
+    $params['sendmail_path'] = $sendmail_settings['path'];
+    $params['sendmail_args'] = $sendmail_settings['args'];
   }
-  if ( $backend == "smtp" )
+  if ($backend == 'smtp')
   {
-    $params['host']          = $host;
-    $params['port']          = $port;
-    $params['auth']          = $auth;
-    $params['username']      = $username;
-    $params['password']      = $password;
+    $params['host']     = $smtp_settings['host'];
+    $params['port']     = $smtp_settings['port'];
+    $params['auth']     = $smtp_settings['auth'];
+    $params['username'] = $smtp_settings['username'];
+    $params['password'] = $smtp_settings['password'];
   }
   
   // Headers part (extra headers - the standard headers will already be there)
   $headers = array();
-  $headers['From'] = $from;
+  $headers['From'] = $addresses['from'];
   if ($backend != 'mail')
   {
-    $headers['To'] = $recipients;
+    $headers['To'] = $addresses['to'];
   }
-  (NULL != $cc) ? $headers['Cc'] = $cc : '';
-  (NULL != $bcc) ? $headers['Bcc'] = $bcc : '';
+  (!empty($addresses['cc'])) ? $headers['Cc'] = $addresses['cc'] : '';
+  (!empty($addresses['bcc'])) ? $headers['Bcc'] = $addresses['bcc'] : '';
   $headers['Subject'] = $subject;
   $headers['Mime-Version'] = '1.0';
   
@@ -1076,14 +1056,14 @@ function sendMail($recipients, $subject, $text_body, $html_body, $attachment,
   $mime_params['content_type'] = "text/plain";
   $mime_params['encoding']     = "7bit";
   $mime_params['charset']      = $charset;
-  $text = $mime->addSubPart($text_body['text'], $mime_params);
+  $mime->addSubPart($text_body['text'], $mime_params);
   
   // Add the HTML mail
   if (!empty($html_body))
   {
     $mime_params['content_type'] = "text/html";
     $mime_params['cid'] = $html_body['cid'];
-    $text = $mime->addSubPart($html_body['text'], $mime_params);
+    $mime->addSubPart($html_body['text'], $mime_params);
     unset($mime_params['charset']);
   }
   
@@ -1091,14 +1071,14 @@ function sendMail($recipients, $subject, $text_body, $html_body, $attachment,
   {
     // Add the text version of the iCalendar
     $mime_params['content_type'] = "text/calendar; method=" . $attachment['method'];
-    $text = $mime->addSubPart($attachment['content'], $mime_params);
+    $mime->addSubPart($attachment['content'], $mime_params);
     // And add it as a file as well
     $mime_params['content_type'] = "application/ics";
     $mime_params['encoding']     = "base64";
     $mime_params['disposition']  = "attachment";
     $mime_params['dfilename']    = $attachment['name'];
     unset($mime_params['charset']);
-    $text = $mime->addSubPart($attachment['content'], $mime_params);
+    $mime->addSubPart($attachment['content'], $mime_params);
   }
 
   // Encode the result
@@ -1108,7 +1088,7 @@ function sendMail($recipients, $subject, $text_body, $html_body, $attachment,
 
   // Call to the PEAR::Mail class
   $mail_object =& Mail::factory($backend, $params);
-  $result = $mail_object->send($recipients, $mime['headers'], $mime['body']);
+  $result = $mail_object->send($addresses['to'], $mime['headers'], $mime['body']);
 
   if (is_object($result))
   {
