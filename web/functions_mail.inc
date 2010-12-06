@@ -778,13 +778,13 @@ function notifyAdminOnBooking($new_entry, $series, $action="book")
   // Create the text body
   $compare = !$new_entry;
   $text_body = array();
-  $text_body['text'] = create_body($data, $compare, $series, $action);
+  $text_body['content'] = create_body($data, $compare, $series, $action);
   
   // Create the HTML body
   $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['text'] = create_body($data, $compare, $series, $action, TRUE);
+    $html_body['content'] = create_body($data, $compare, $series, $action, TRUE);
     $html_body['cid'] = generate_global_uid("html");
   }
   
@@ -793,7 +793,7 @@ function notifyAdminOnBooking($new_entry, $series, $action="book")
   if ($mail_settings['icalendar'])
   {
     $attachment['method']   = "REQUEST";
-    $attachment['content']  = create_icalendar($attachment['method'], $data, $text_body, $series, $html_body['cid']);
+    $attachment['content']  = create_icalendar($attachment['method'], $data, $text_body['content'], $series, $html_body['cid']);
     $attachment['name']     = "meeting.ics";
   }
 
@@ -847,13 +847,13 @@ function notifyAdminOnDelete($mail_previous, $series=FALSE, $action="delete", $n
   // Create the text body
   $data = $mail_previous;
   $text_body = array();
-  $text_body['text'] = create_body($data, FALSE, $series, $action, FALSE);
+  $text_body['content'] = create_body($data, FALSE, $series, $action, FALSE);
   
   // Create the HTML body
   $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['text'] = create_body($data, FALSE, $series, $action, TRUE);
+    $html_body['content'] = create_body($data, FALSE, $series, $action, TRUE);
     $html_body['cid'] = generate_global_uid("html");
   }
   
@@ -862,7 +862,7 @@ function notifyAdminOnDelete($mail_previous, $series=FALSE, $action="delete", $n
   if ($mail_settings['icalendar'])
   {
     $attachment['method']   = "CANCEL";
-    $attachment['content']  = create_icalendar($attachment['method'], $mail_previous, $text_body, $series, $html_body['cid']);
+    $attachment['content']  = create_icalendar($attachment['method'], $mail_previous, $text_body['content'], $series, $html_body['cid']);
     $attachment['name']     = "meeting.ics";
   }
   
@@ -981,8 +981,12 @@ function getPreviousEntryData($id, $series)
  *                                    'cc'
  *                                    'bcc'
  * @param string  $subject          email subject
- * @param string  $text_body        text part of body
- * @param string  $text_html        HTML part of body
+ * @param array   $text_body        text part of body, an array consisting of
+ *                                    'content'  the content itself
+ *                                    'cid'      the content id
+ * @param array   $text_html        HTML part of body, an array consisting of
+ *                                    'content'  the content itself
+ *                                    'cid'      the content id
  * @param array   $attachment       file to attach.   An array consisting of
  *                                    'content' the file or data to attach
  *                                    'method'  the iCalendar METHOD
@@ -1056,15 +1060,14 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   $mime_params['content_type'] = "text/plain";
   $mime_params['encoding']     = "7bit";
   $mime_params['charset']      = $charset;
-  $mime->addSubPart($text_body['text'], $mime_params);
+  $mime->addSubPart($text_body['content'], $mime_params);
   
   // Add the HTML mail
   if (!empty($html_body))
   {
     $mime_params['content_type'] = "text/html";
     $mime_params['cid'] = $html_body['cid'];
-    $mime->addSubPart($html_body['text'], $mime_params);
-    unset($mime_params['charset']);
+    $mime->addSubPart($html_body['content'], $mime_params);
   }
   
   if ($mail_settings['icalendar'])
@@ -1077,7 +1080,6 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     $mime_params['encoding']     = "base64";
     $mime_params['disposition']  = "attachment";
     $mime_params['dfilename']    = $attachment['name'];
-    unset($mime_params['charset']);
     $mime->addSubPart($attachment['content'], $mime_params);
   }
 
