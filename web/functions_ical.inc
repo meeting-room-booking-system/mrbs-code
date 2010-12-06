@@ -126,12 +126,12 @@ function create_rrule($data)
 
 
 // Creates an iCalendar object in RFC 5545 format
-function create_icalendar($method, $data, $description, $series=FALSE, $html_cid)
+function create_icalendar($method, $data, $text_description, $html_description, $series=FALSE)
 {
   require_once "version.inc";
   
   global $timezone, $confirmation_enabled, $mail_settings;
-  
+
   $eol = "\r\n";
   
   $results = array();
@@ -154,9 +154,14 @@ function create_icalendar($method, $data, $description, $series=FALSE, $html_cid
   $results[] = "DTSTART;TZID=$timezone:" . date(RFC5545_FORMAT, $data['start_time']);
   $results[] = "DTEND;TZID=$timezone:" . date(RFC5545_FORMAT, $data['end_time']);
   $results[] = "SUMMARY:" . ical_escape_text($data['name']);
+  // Put the HTML version in an ALTREP, just in case there are any Calendars out there
+  // that support it (although at the time of writing, Dec 2010, none are known)
   $results[] = "DESCRIPTION" .
-               (($mail_settings['html']) ? ";ALTREP=\"CID:$html_cid\"" : "") . ":" .
-               ical_escape_text($description);
+               ((($mail_settings['html']) ? ";ALTREP=\"CID:" . $html_description['cid'] . "\"" : "") . ":" .
+               ical_escape_text($text_description['content']));
+  // This is another way of getting an HTML description, used by Outlook.  However it 
+  // seems to be very limited
+  $results[] = "X-ALT-DESC;FMTTYPE=text/html:" . ical_escape_text($html_description['content']);
   $results[] = "LOCATION:" . ical_escape_text($data['area_name'] . " - " . $data['room_name']);
   $results[] = "SEQUENCE:" . $data['ical_sequence'];
   // If this is an individual member of a series then set the recurrence id

@@ -304,7 +304,7 @@ function create_body_table_row($label, $new, $old, $compare, $as_html=FALSE)
   
   // The label
   $result .= ($as_html) ? "<td>" : "";
-  $result .= ($as_html) ? htmlspecialchars($label) : "$label: ";
+  $result .= ($as_html) ? htmlspecialchars("$label: ") : "$label: ";
   $result .= ($as_html) ? "</td>\n" : "";
   // The new value
   $result .= ($as_html) ? "<td>" : "";
@@ -320,7 +320,10 @@ function create_body_table_row($label, $new, $old, $compare, $as_html=FALSE)
     }
     else
     {
-      $result .= ($as_html) ? htmlspecialchars($old) : " ($old)";
+      // Put parentheses around the HTML version as well as the plain text
+      // version in case the table is not rendered properly in HTML.  The
+      // parentheses will make the old value stand out.
+      $result .= ($as_html) ? htmlspecialchars(" ($old)") : " ($old)";
     }
     $result .= ($as_html) ? "<td>\n" : "";
   }
@@ -340,15 +343,20 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE)
   $body = "";
   if ($as_html)
   {
+    $body .= DOCTYPE . "\n";
     $body .= "<html>\n";
     $body .= "<head>\n";
+    $body .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" . get_mail_charset() . "\">\n";
     $body .= "<title></title>\n";
     $body .= "<style type=\"text/css\">\n";
     $css_file = 'mrbs-mail.css';
     if (file_exists($css_file))
     {
       $fh = fopen($css_file, 'r');
-      $body .= fread($fh, filesize($css_file));
+      $css .= fread($fh, filesize($css_file));
+      $css = preg_replace('!/\*.*?\*/!s', '', $css);  // Remove comments
+      $css = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $css);  // Remove blank lines
+      $body .= $css;
     }
     $body .= "</style>\n";
     $body .= "</head>\n";
@@ -419,17 +427,22 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE)
     }
     $body .= ($as_html) ? "\">" . convertToMailCharset($data['name']) . "</a>" : "";
   }
-  $body .= ($as_html) ? "</p>" : "\n\n";
+  $body .= ($as_html) ? "</p>\n" : "\n\n";
   
-  if ($as_html)
+  $body .= ($as_html) ? "<table>\n" : "\n";
+  if ($compare && $as_html)
   {
-    $body .= "<table>\n";
-    $body .= "<tbody>\n";
+    $body .= "<thead>\n";
+    $body .= "<tr>\n";
+    $body .= "<th>&nbsp;</th>\n";
+    $body .= "<th>" . get_vocab("new_value") . "</th>\n";
+    $body .= "<th>(" . get_vocab("old_value") . ")</th>\n";
+    $body .= "</tr>\n";
+    $body .= "</thead>\n";
   }
-  else
-  {
-    $body .= "\n";
-  }
+    
+  $body .= ($as_html) ? "<tbody>\n" : "";
+
   
   // Always display the brief description
   $body .= create_body_table_row (get_mail_vocab("namebooker"),
@@ -793,7 +806,7 @@ function notifyAdminOnBooking($new_entry, $series, $action="book")
   if ($mail_settings['icalendar'])
   {
     $attachment['method']   = "REQUEST";
-    $attachment['content']  = create_icalendar($attachment['method'], $data, $text_body['content'], $series, $html_body['cid']);
+    $attachment['content']  = create_icalendar($attachment['method'], $data, $text_body, $html_body, $series);
     $attachment['name']     = "meeting.ics";
   }
 
@@ -862,7 +875,7 @@ function notifyAdminOnDelete($mail_previous, $series=FALSE, $action="delete", $n
   if ($mail_settings['icalendar'])
   {
     $attachment['method']   = "CANCEL";
-    $attachment['content']  = create_icalendar($attachment['method'], $mail_previous, $text_body['content'], $series, $html_body['cid']);
+    $attachment['content']  = create_icalendar($attachment['method'], $mail_previous, $text_body, $html_body, $series);
     $attachment['name']     = "meeting.ics";
   }
   
