@@ -5,7 +5,7 @@
 
 define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
 
-// "Folds" lines longer than 75 octets
+// "Folds" lines longer than 75 octets.  Multi-byte safe.
 //
 // "Lines of text SHOULD NOT be longer than 75 octets, excluding the line
 // break.  Long content lines SHOULD be split into a multiple line
@@ -17,27 +17,35 @@ define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
 // processing the content type."  (RFC 5545)
 function ical_fold($str)
 {
+  // Get the internal encoding of the string.  (This seems to be necessary
+  // even though the mb string functions are supposed to auto-detect the
+  // encoding by default).
+  $encoding = mb_detect_encoding($str);
+  
   $result = '';
-  $col = 0;
-  for ($i=0; $i<strlen($str); $i++)
+  $octets = 0;
+  $n_chars = mb_strlen($str, $encoding);
+  for ($i=0; $i<$n_chars; $i++)
   {
     // If we've reached a CRLF reset the column counter 
     // to the beginning of the line
-    if (($str[$i] == "\r")  && 
-        (($i+1) < strlen($str)) &&
-        ($str[$i+1] == "\n"))
+    $char = mb_substr($str, $i, 1, $encoding);  // Get the next multi-byte character
+    $char_octets = mb_strlen($char, '8bit');  // Get the string length in bytes
+    if (($char == "\r")  && 
+        (($i+1) < $n_chars) &&
+        (mb_substr($str, $i+1, 1, $encoding) == "\n"))
     {
-      $col = -2;  // -2 because we'll then be at 0 after the \r\n
+      $octets = -2;  // -2 because we'll then be at 0 after the \r\n
     }
-    // Otherwise if we've already had 75 characters, insert
+    // Otherwise if this character will take us over 75 octets, insert
     // a CRLF followed by a space (and so the column counter will be 1)
-    elseif ($col >= 75)
+    elseif (($octets + $char_octets) > 75)
     {
       $result .= "\r\n ";
-      $col = 1;
+      $octets = 1;
     }
-    $result .= $str[$i];
-    $col++;
+    $result .= $char;
+    $octets += $char_octets;
   }
   return $result;
 }
