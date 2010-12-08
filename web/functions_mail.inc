@@ -1030,6 +1030,11 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     $addresses['from'] = $mail_settings['from'];
   }
   
+  // Need to put all the addresses into $recipients
+  $recipients = $addresses['to'];
+  $recipients .= (!empty($addresses['cc'])) ? "," . $addresses['cc'] : "";
+  $recipients .= (!empty($addresses['bcc'])) ? "," . $addresses['bcc'] : "";
+  
   // Set up configuration settings
   $backend = $mail_settings['admin_backend'];
   
@@ -1144,7 +1149,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
 
   // Call to the PEAR::Mail class
   $mail_object =& Mail::factory($backend, $params);
-  $result = $mail_object->send($addresses['to'], $mime['headers'], $mime['body']);
+  $result = $mail_object->send($recipients, $mime['headers'], $mime['body']);
 
   if (is_object($result))
   {
