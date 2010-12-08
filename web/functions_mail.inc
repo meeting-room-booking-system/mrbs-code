@@ -328,7 +328,7 @@ function create_body_table_row($label, $new, $old, $compare, $as_html=FALSE)
     $result .= ($as_html) ? "<td>\n" : "";
   }
   
-  $result .= ($as_html) ? "<tr>\n" : "\n";
+  $result .= ($as_html) ? "</tr>\n" : "\n";
   return $result;
 }
 
@@ -1065,30 +1065,71 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   // that we order the sub parts according to how faithful they are to the original,
   // putting the least faithful first, ie the ordinary plain text version.   The
   // email client then uses the most faithful version that it can handle.
+  // 
+  // If we are also adding the iCalendar information then we enclose this alternative
+  // mime subtype in an outer mime type which is mixed.    This is necessary so that
+  // the widest variety of calendar applications can access the calendar information.
+  // So depending on whether we are sending iCalendar information we will have a Mime
+  // structure that looks like this:
+  //
+  //    With iCalendar info                 Without iCalendar info
+  //    -------------------                 ----------------------
+  //
+  //    multipart/mixed                     mutlipart/alternative
+  //      multipart/alternative               text/plain
+  //        text/plain                        text/html
+  //        text/html
+  //        text/calendar
+  //      application/ics
+  
+  // First of all build the inner mime type, ie the multipart/alternative type.
+  // If we're not sending iCalendar information this will become the outer,
+  // otherwise we'll then enclose it in an outer mime type.
   $mime_params = array();
   $mime_params['content_type'] = "multipart/alternative";
-  $mime = new Mail_mimePart('', $mime_params);
+  $mime_inner = new Mail_mimePart('', $mime_params);
   
   // Add the text part
   $mime_params['content_type'] = "text/plain";
   $mime_params['encoding']     = "7bit";
   $mime_params['charset']      = $charset;
-  $mime->addSubPart($text_body['content'], $mime_params);
+  $mime_inner->addSubPart($text_body['content'], $mime_params);
   
   // Add the HTML mail
   if (!empty($html_body))
   {
     $mime_params['content_type'] = "text/html";
     $mime_params['cid'] = $html_body['cid'];
-    $mime->addSubPart($html_body['content'], $mime_params);
+    $mime_inner->addSubPart($html_body['content'], $mime_params);
+    unset($mime_params['cid']);
   }
   
-  if ($mail_settings['icalendar'])
+  if (!$mail_settings['icalendar'])
   {
-    // Add the text version of the iCalendar
+    // If we're not sending iCalendar information we've now got everything,
+    // so we'll make the "inner" section the complete mime.
+    $mime = $mime_inner;
+  }
+  else
+  {
+    // Otherwise we need to carry on and add the text version of the iCalendar
     $mime_params['content_type'] = "text/calendar; method=" . $attachment['method'];
-    $mime->addSubPart($attachment['content'], $mime_params);
-    // And add it as a file as well
+    $mime_inner->addSubPart($attachment['content'], $mime_params);
+
+    // and then enclose the inner section in a multipart/mixed outer section.
+    // First create the outer section
+    $mime_params = array();
+    $mime_params['content_type'] = "multipart/mixed";
+    $mime = new Mail_mimePart('', $mime_params);
+
+    // Now add the inner section as the first sub part
+    $mime_inner = $mime_inner->encode();
+    $mime_params = array();
+    $mime_params['encoding'] = "7bit";
+    $mime_params['content_type'] = $mime_inner['headers']['Content-Type'];
+    $mime->addSubPart($mime_inner['body'], $mime_params);
+    
+    // And add the attachment as the second sub part
     $mime_params['content_type'] = "application/ics";
     $mime_params['encoding']     = "base64";
     $mime_params['disposition']  = "attachment";
@@ -1099,7 +1140,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   // Encode the result
   $mime = $mime->encode();
   // Add in the extra headers
-  $mime['headers'] = array_merge($mime['headers'], $headers);
+  $mime['headers'] = array_merge($headers, $mime['headers']);
 
   // Call to the PEAR::Mail class
   $mail_object =& Mail::factory($backend, $params);
