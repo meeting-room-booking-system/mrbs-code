@@ -2,5 +2,6 @@
 
 /* CSS to be used for email messages  */
 
+body#mrbs {background-color: #e7ebee; color: #0B263B; font-family: 'Arial, Verdana, sans-serif'}
 #mrbs tr {padding: 0; margin: 0}
 #mrbs th, #mrbs td {text-align: left; padding: 1px 1em; margin 0}

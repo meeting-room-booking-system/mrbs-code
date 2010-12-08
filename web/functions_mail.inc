@@ -360,8 +360,8 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE)
     }
     $body .= "</style>\n";
     $body .= "</head>\n";
-    $body .= "<body>\n";
-    $body .= "<div id=\"mrbs\">\n";
+    $body .= "<body id=\"mrbs\">\n";
+    $body .= "<div>\n";
   }
   $body .= ($as_html) ? "<p>" : "";
   switch ($action)
