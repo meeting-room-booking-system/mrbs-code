@@ -852,6 +852,10 @@ $mail_settings['cc'] = '';
 // fields are set)
 $mail_settings['treat_cc_as_to'] = FALSE;
 
+// The filename to be used for iCalendar attachments.   Will always have the
+// extension '.ics'
+$mail_settings['ics_filename'] = "booking";
+
 
 
 /**********

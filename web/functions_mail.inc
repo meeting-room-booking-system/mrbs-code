@@ -807,7 +807,7 @@ function notifyAdminOnBooking($new_entry, $series, $action="book")
   {
     $attachment['method']   = "REQUEST";
     $attachment['content']  = create_icalendar($attachment['method'], $data, $text_body, $html_body, $series);
-    $attachment['name']     = "meeting.ics";
+    $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
   }
 
   // If the subject contains any non-ASCII characters...
