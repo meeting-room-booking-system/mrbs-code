@@ -334,7 +334,7 @@ function create_body_table_row($label, $new, $old, $compare, $as_html=FALSE)
 
 function create_body($data, $compare, $series, $action, $as_html=FALSE)
 {
-  global $mail_previous, $note, $returl;
+  global $mail_previous, $note, $returl, $mrbs_company;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
   global $typel, $mail_settings, $standard_fields, $weekstarts, $url_base;
   global $tbl_entry;
@@ -361,7 +361,8 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE)
     $body .= "</style>\n";
     $body .= "</head>\n";
     $body .= "<body id=\"mrbs\">\n";
-    $body .= "<div>\n";
+    $body .= "<div id=\"header\">$mrbs_company - " . get_vocab("mrbs") . "</div>\n";
+    $body .= "<div id=\"contents\">\n";
   }
   $body .= ($as_html) ? "<p>" : "";
   switch ($action)
@@ -410,7 +411,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE)
   if (($action != "delete") && ($action != "reject"))
   {
     $body .= ($as_html) ? "</p><p>" : "\n\n";
-    $body .= ($as_html) ? "<a href=\"" : "";
+    $body .= ($as_html) ? "<a target=\"_blank\" href=\"" : "";
     // Set the link to view entry page
     if (isset($url_base) && ($url_base != ""))
     {
