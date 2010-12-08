@@ -995,6 +995,10 @@ function sendMail($recipients, $subject, $body,
     $cc = NULL;
   }
   
+  // Need to put all the addresses into $recipients
+  $recipients .= (!empty($cc)) ? ",$cc" : "";
+  $recipients .= (!empty($bcc)) ? ",$bcc" : "";
+  
   // Set up configuration settings
   if (empty($from))
   {
