@@ -134,7 +134,7 @@ function create_rrule($data)
 
 
 // Creates an iCalendar object in RFC 5545 format
-function create_icalendar($method, $data, $text_description, $html_description, $series=FALSE)
+function create_icalendar($method, $data, $text_description, $html_description, $addresses, $series=FALSE)
 {
   require_once "version.inc";
   
@@ -181,6 +181,34 @@ function create_icalendar($method, $data, $text_description, $html_description, 
   {
     $results[] = "STATUS:". (($data['status'] & STATUS_TENTATIVE) ? "TENTATIVE" : "CONFIRMED");
   }
+  
+  // Put the people on the "to" list as required participants and those on the cc
+  // list as non particpants.   In theory the email client can then decide whether
+  // to enter the booking automaticaly on the user's calendar - although at the
+  // time of writing (Dec 2010) there don't seem to be any that do so!
+  $keys = array('to', 'cc');  // We won't do 'bcc' as they need to stay blind
+  foreach ($keys as $key)
+  {
+    if (!empty($addresses[$key]))
+    {
+      $address_list = $addresses[$key];
+      $address_array = explode(',', $address_list);
+      foreach ($address_array as $address)
+      {
+        switch ($key)
+        {
+          case 'to':
+            $role = "REQ-PARTICIPANT";
+            break;
+          default:
+            $role = "NON-PARTICIPANT";
+            break;
+        }
+        $results[] = "ATTENDEE;ROLE=$role:mailto:" . trim($address);
+      }
+    }
+  }
+
   $results[] = "END:VEVENT";
   
   $results[] = "END:VCALENDAR";

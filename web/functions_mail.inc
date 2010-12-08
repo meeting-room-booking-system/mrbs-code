@@ -807,7 +807,7 @@ function notifyAdminOnBooking($new_entry, $series, $action="book")
   if ($mail_settings['icalendar'])
   {
     $attachment['method']   = "REQUEST";
-    $attachment['content']  = create_icalendar($attachment['method'], $data, $text_body, $html_body, $series);
+    $attachment['content']  = create_icalendar($attachment['method'], $data, $text_body, $html_body, $addresses, $series);
     $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
   }
 
@@ -876,7 +876,7 @@ function notifyAdminOnDelete($mail_previous, $series=FALSE, $action="delete", $n
   if ($mail_settings['icalendar'])
   {
     $attachment['method']   = "CANCEL";
-    $attachment['content']  = create_icalendar($attachment['method'], $mail_previous, $text_body, $html_body, $series);
+    $attachment['content']  = create_icalendar($attachment['method'], $mail_previous, $text_body, $html_body, $addresses, $series);
     $attachment['name']     = "meeting.ics";
   }
   
