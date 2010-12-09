@@ -824,6 +824,7 @@ function utf8_next($str)
   return utf8_substr($str, 1);
 }
 
+
 // Takes a UTF-8 string, and returns the number of _characters_ in the
 // string
 function utf8_strlen($str)
