@@ -95,6 +95,10 @@ if (isset($action))
   {
     // Retrieve the booking details which we will need for the email
     $data = mrbsGetBookingInfo($id, $series);
+    // Get the area settings for this area (we will need to know if periods are enabled
+    // so that we will kniow whether to include iCalendar information in the email)
+    get_area_settings($data['area_id']);
+    // Send the email
     $result = notifyAdminOnBooking($data, $mail_previous, $is_new_entry, $series, $action, $note);
   }
 }
