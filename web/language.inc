@@ -806,6 +806,29 @@ function utf8_substr($str,$start)
   }
 }
 
+
+// Takes a UTF-8 string and returns the string with one Unicode character
+// removed from the front
+function utf8_next($str)
+{
+  return utf8_substr($str, 1);
+}
+
+// Takes a UTF-8 string, and returns the number of _characters_ in the
+// string
+function utf8_strlen($str)
+{
+  $nchars = 0;
+
+  while ($str != "")
+  {
+    $str = utf8_next($str);
+    $nchars++;
+  }
+  return $nchars;
+}
+
+
 // Format a locale which could be xx-xX or xx_Xx or xx_XxXx (etc.) into a
 // standardised format consiting of a lower case language followed, if applicable,
 // by an upper case country, separated by $separator.    Typically the separator
