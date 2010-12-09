@@ -807,6 +807,16 @@ function utf8_substr($str,$start)
 }
 
 
+// Takes a string (which may be UTF-8) and returns how long it is in
+// _bytes_
+function utf8_bytecount($str)
+{
+  preg_match_all("/./s", $str, $ar);
+
+  return count($ar[0]);
+}
+
+
 // Takes a UTF-8 string and returns the string with one Unicode character
 // removed from the front
 function utf8_next($str)
