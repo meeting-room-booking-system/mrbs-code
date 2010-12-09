@@ -828,14 +828,9 @@ function utf8_next($str)
 // string
 function utf8_strlen($str)
 {
-  $nchars = 0;
+  preg_match_all("/./su", $str, $ar);
 
-  while ($str != "")
-  {
-    $str = utf8_next($str);
-    $nchars++;
-  }
-  return $nchars;
+  return count($ar[0]);
 }
 
 
