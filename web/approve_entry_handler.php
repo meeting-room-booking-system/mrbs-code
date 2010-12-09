@@ -20,6 +20,9 @@ $note = get_form_var('note', 'string');
 checkAuthorised();
 $user = getUserName();
 
+// Initialise $mail_previous so that we can use it as a parameter for notifyAdminOnBooking
+$mail_previous = array();
+
 // Give the return URL a query string if it doesn't already have one
 if (strpos($returl, '?') === FALSE)
 {
@@ -51,7 +54,7 @@ if (isset($action))
       {
         $is_new_entry = FALSE;
         // Get the current booking data, before we change anything, for use in emails
-        $mail_previous = getPreviousEntryData($id, $series);
+        $mail_previous = mrbsGetBookingInfo($id, $series);
       }
       $result = mrbsApproveEntry($id, $series);
       if (!$result)
@@ -92,34 +95,7 @@ if (isset($action))
   {
     // Retrieve the booking details which we will need for the email
     $data = mrbsGetBookingInfo($id, $series);
-    
-    // Process some special fields
-    $data['duration'] = ($data['end_time'] - $data['start_time']) - cross_dst($data['start_time'], $data['end_time']);
-    
-    if ($enable_periods)
-    {
-      list($start_period, $start_date) =  period_date_string($data['start_time']);
-    }
-    else
-    {
-      $start_date = time_date_string($data['start_time']);
-    }
-
-    if ($enable_periods)
-    {
-      list( , $end_date) =  period_date_string($data['end_time'], -1);
-    }
-    else
-    {
-      $end_date = time_date_string($data['end_time']);
-    }
-  
-    // The optional last parameters below are set to FALSE because we don't want the units
-    // translated - otherwise they will end up getting translated twice, resulting
-    // in an undefined index error.
-    $enable_periods ? toPeriodString($start_period, $data['duration'], $data['dur_units'], FALSE) : toTimeString($data['duration'], $data['dur_units'], FALSE);
-
-    $result = notifyAdminOnBooking($is_new_entry, $series, $action);
+    $result = notifyAdminOnBooking($data, $mail_previous, $is_new_entry, $series, $action, $note);
   }
 }
 

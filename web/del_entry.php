@@ -69,7 +69,7 @@ if ($info = mrbsGetBookingInfo($id, FALSE, TRUE))
     {
       require_once "functions_mail.inc";
       // Gather all fields values for use in emails.
-      $mail_previous = getPreviousEntryData($id, FALSE);
+      $mail_previous = mrbsGetBookingInfo($id, FALSE);
       // If this is an individual entry of a series then force the entry_type
       // to be 2, so that when we create the iCalendar object we know that
       // we only want to delete the individual entry

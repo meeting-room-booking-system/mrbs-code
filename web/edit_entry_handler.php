@@ -632,21 +632,25 @@ if ($valid_booking)
           $data['room_name'] = $row['room_name'];
           $data['area_name'] = $row['area_name'];
         }
-        // If this is a modified entry then call
-        // getPreviousEntryData to prepare entry comparison.
+        // If this is a modified entry then get the previous entry data
+        // so that we can highlight the changes
         if (isset($id))
         {
           if ($edit_type == "series")
           {
-            $mail_previous = getPreviousEntryData($repeat_id, TRUE);
+            $mail_previous = mrbsGetBookingInfo($repeat_id, TRUE);
           }
           else
           {
-            $mail_previous = getPreviousEntryData($id, FALSE);
+            $mail_previous = mrbsGetBookingInfo($id, FALSE);
           }
         }
+        else
+        {
+          $mail_previous = array();
+        }
         // Send the email
-        $result = notifyAdminOnBooking(!isset($id), $is_repeat_table);
+        $result = notifyAdminOnBooking($data, $mail_previous, !isset($id), $is_repeat_table);
       }
     }   
   } // end foreach $rooms
