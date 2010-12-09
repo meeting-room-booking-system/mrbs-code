@@ -779,7 +779,7 @@ function create_addresses($data, $action)
  */
 function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $action="book", $note='')
 {
-  global $mail_settings;
+  global $mail_settings, $enable_periods;
 
   // Add some values to the $data array before we go and create the addresses
   if (!$new_entry)
@@ -834,7 +834,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $actio
   
   // Create the iCalendar if required
   $attachment = array();
-  if ($mail_settings['icalendar'])
+  if ($mail_settings['icalendar'] && !$enable_periods)
   {
     $attachment['method']   = "REQUEST";
     $attachment['content']  = create_icalendar($attachment['method'], $data, $text_body, $html_body, $addresses, $series);
@@ -870,7 +870,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $actio
  */
 function notifyAdminOnDelete($data, $series=FALSE, $action="delete", $note="")
 {
-  global $mail_settings;
+  global $mail_settings, $enable_periods;
 
   // Set up the addresses (from, to and cc)
   $addresses = create_addresses($data, $action);
@@ -903,7 +903,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $action="delete", $note="")
   
   // Set up the attachment
   $attachment = array();
-  if ($mail_settings['icalendar'])
+  if ($mail_settings['icalendar'] && !$enable_periods)
   {
     $attachment['method']   = "CANCEL";
     $attachment['content']  = create_icalendar($attachment['method'], $data, $text_body, $html_body, $addresses, $series);
@@ -959,7 +959,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   require_once "Mail/mime.php";
   require_once "Mail/mimePart.php";
 
-  global $mail_settings, $sendmail_settings, $smtp_settings;
+  global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
   
   // for cases where the mail server refuses
   // to send emails with cc or bcc set, put the cc
@@ -1055,7 +1055,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     unset($mime_params['cid']);
   }
   
-  if (!$mail_settings['icalendar'])
+  if (!$mail_settings['icalendar'] || $enable_periods)
   {
     // If we're not sending iCalendar information we've now got everything,
     // so we'll make the "inner" section the complete mime.
