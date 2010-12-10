@@ -940,7 +940,7 @@ function make_area_select_html($link, $current, $year, $month, $day)
       $out_html .= "<ul>\n";
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
-        $out_html .= "<li><a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=${row['id']}\">";
+        $out_html .= "<li><a href=\"$link?year=$year&amp;month=$month&amp;day=$day&amp;area=${row['id']}\">";
         $out_html .= "<span" . (($row['id'] == $current) ? ' class="current"' : '') . ">";
         $out_html .= htmlspecialchars($row['area_name']) . "</span></a></li>\n";
       }
@@ -997,7 +997,7 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
       $out_html .= "<ul>\n";
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
-        $out_html .= "<li><a href=\"month.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\">";
+        $out_html .= "<li><a href=\"$link?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\">";
         $out_html .= "<span" . (($row['id'] == $current) ? ' class="current"' : '') . ">";
         $out_html .= htmlspecialchars($row['room_name']) . "</span></a></li>\n";
       }
