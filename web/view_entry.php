@@ -566,9 +566,9 @@ if($rep_type != REP_NONE)
 
 <div id="view_entry_nav">
   <?php
-  // Only show the links for Edit/Copy/Delete if the room is enabled.    We're
-  // allowed to view existing bookings in disabled rooms, but not to modify or
-  // delete them.
+  // Only show the links for Edit and Delete if the room is enabled.    We're
+  // allowed to view and copy existing bookings in disabled rooms, but not to
+  // modify or delete them.
   if (!$room_disabled && !$area_disabled)
   {
     // Edit and Edit Series
@@ -584,22 +584,6 @@ if($rep_type != REP_NONE)
     if ((!empty($repeat_id) || $series) && $repeats_allowed)
     {
       echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$link_returl\">".get_vocab("editseries")."</a>";
-    }
-    echo "</div>\n";
-    
-    // Copy and Copy Series
-    echo "<div>\n";
-    if (!$series)
-    {
-      echo "<a href=\"edit_entry.php?id=$id&amp;copy=1&amp;returl=$link_returl\">". get_vocab("copyentry") ."</a>";
-    }      
-    if (!empty($repeat_id) && !$series && $repeats_allowed)
-    {
-      echo " - ";
-    }     
-    if ((!empty($repeat_id) || $series) && $repeats_allowed) 
-    {
-      echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=1&amp;returl=$link_returl\">".get_vocab("copyseries")."</a>";
     }
     echo "</div>\n";
     
@@ -619,6 +603,22 @@ if($rep_type != REP_NONE)
     }
     echo "</div>\n";
   }
+  
+  // Copy and Copy Series
+  echo "<div>\n";
+  if (!$series)
+  {
+    echo "<a href=\"edit_entry.php?id=$id&amp;copy=1&amp;returl=$link_returl\">". get_vocab("copyentry") ."</a>";
+  }      
+  if (!empty($repeat_id) && !$series && $repeats_allowed)
+  {
+    echo " - ";
+  }     
+  if ((!empty($repeat_id) || $series) && $repeats_allowed) 
+  {
+    echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=1&amp;returl=$link_returl\">".get_vocab("copyseries")."</a>";
+  }
+  echo "</div>\n";
   ?>
   <div>
     <?php
