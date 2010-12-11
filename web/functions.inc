@@ -676,6 +676,27 @@ function day_name($daynumber)
   return utf8_strftime("%A", mktime(0,0,0,1,2+$daynumber,2000));
 }
 
+// Returns a list of repeat days as a string (eg "Thursday Friday")
+//
+//    $rep_opt     an array of repeat days or
+//                 a string of repeat days that can be used as an array
+function get_rep_day_list($rep_opt)
+{
+  global $weekstarts;
+  
+  $rep_day_list = "";
+  for ($i = 0; $i < 7; $i++)
+  {
+    $daynum = ($i + $weekstarts) % 7;
+    if ($rep_opt[$daynum])
+    {
+      $rep_day_list .= day_name($daynum) . " ";
+    }
+  }
+  return $rep_day_list;
+}
+
+
 function hour_min_format()
 {
   global $twentyfourhour_format;
@@ -1741,6 +1762,7 @@ function draw_day_cell($text, $link)
   echo "<a href=\"$link\" title=\"" . get_vocab("viewday") . "\">$text</a>\n";
   echo "</div></td>\n";
 }
+
 
 // Generate a globally unique id
 //

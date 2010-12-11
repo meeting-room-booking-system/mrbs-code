@@ -316,28 +316,11 @@ function get_room_admin_email($id, $series=FALSE)
 }
 
 
-// Returns a list of repeat days as a string (eg "Thursday Friday")
-//
-//    $rep_opt     an array of repeat days or
-//                 a string of repeat days that can be used as an array
-function get_rep_day_list($rep_opt)
-{
-  global $weekstarts;
-  
-  $rep_day_list = "";
-  for ($i = 0; $i < 7; $i++)
-  {
-    $daynum = ($i + $weekstarts) % 7;
-    if ($rep_opt[$daynum])
-    {
-      $rep_day_list .= day_name($daynum) . " ";
-    }
-  }
-  return $rep_day_list;
-}
-        
-        
-function create_body_table_row($label, $new, $old, $compare, $as_html=FALSE)
+// Create a row of a table in either plain text or HTML format.
+// Plain text:  returns "$label: $new\n"
+// HTML:        returns "<tr><td>$label: </td><td>$new</td></tr>\n"
+// If $compare is TRUE then a third column is output with $old in parentheses
+function create_body_table_row($label, $new, $old='', $compare=FALSE, $as_html=FALSE)
 {
   $result  = ($as_html) ? "<tr>\n" : "";
   
@@ -370,6 +353,7 @@ function create_body_table_row($label, $new, $old, $compare, $as_html=FALSE)
   $result .= ($as_html) ? "</tr>\n" : "\n";
   return $result;
 }
+
 
 function create_body($data, $compare, $series, $action, $as_html=FALSE, $note='')
 {
@@ -836,8 +820,10 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $actio
   $attachment = array();
   if ($mail_settings['icalendar'] && !$enable_periods)
   {
+    $ical_components = array();
+    $ical_components[] = create_ical_event($data, $text_body, $html_body, $addresses, $series);
     $attachment['method']   = "REQUEST";
-    $attachment['content']  = create_icalendar($attachment['method'], $data, $text_body, $html_body, $addresses, $series);
+    $attachment['content']  = create_icalendar($attachment['method'], $ical_components);
     $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
   }
 
@@ -905,9 +891,11 @@ function notifyAdminOnDelete($data, $series=FALSE, $action="delete", $note="")
   $attachment = array();
   if ($mail_settings['icalendar'] && !$enable_periods)
   {
+    $ical_components = array();
+    $ical_components[] = create_icalendar($data, $text_body, $html_body, $addresses, $series);
     $attachment['method']   = "CANCEL";
-    $attachment['content']  = create_icalendar($attachment['method'], $data, $text_body, $html_body, $addresses, $series);
-    $attachment['name']     = "meeting.ics";
+    $attachment['content']  = create_icalendar($attachment['method'], $ical_components);
+    $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
   }
 
   $result = sendMail($addresses,

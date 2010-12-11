@@ -96,7 +96,138 @@ function generateTextArea($form_action, $id, $series, $action_type, $returl, $su
   echo "</td>\n";
   echo "<tr>\n";
 }
-    
+
+function create_details_row($label, $value, $as_html=FALSE, $class='')
+{
+  $result = '';
+  if ($as_html)
+  {
+    $result .= "<tr>\n";
+    $result .= "<td>$label:</td>\n";
+    $result .= "<td" .
+               ((!empty($class)) ? " class=\"$class\"" : "") .
+               ">" . mrbs_nl2br(htmlspecialchars($value)) . "</td>\n";
+    $result .= "</tr>\n";
+  }
+  else
+  {
+    $result .= "$label: $value\n";
+  }
+  return $result;
+}
+
+function create_details($data, $as_html=FALSE)
+{
+  global $enable_periods, $confirmation_enabled, $approval_enabled, $standard_fields, $typel;
+  global $keep_private, $room_disabled, $area_disabled;
+  
+  $tbody = '';
+  $tbody .= "<tbody>\n";
+  // Description
+  $class = ($keep_private & $is_private_field['entry.description']) ? "private" : "";
+  $tbody .= create_details_row(get_vocab("description"), $data['description'], $as_html, $class);
+  // Confirmation status
+  if ($confirmation_enabled)
+  {
+    $value = ($data['status'] & STATUS_TENTATIVE) ? get_vocab("tentative") : get_vocab("confirmed");
+    $tbody .= create_details_row(get_vocab("confirmation_status"), $value, $as_html);
+  }
+  // Approval status
+  if ($approval_enabled)
+  {
+    $value = ($data['status'] & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved");
+    $tbody .= create_details_row(get_vocab("approval_status"), $value, $as_html);
+  }
+  // Room
+  $value = $data['area_name'] . " - " . $data['room_name'];
+  if ($room_disabled || $area_disabled)
+  {
+    $value .= "<span class=\"note\"> (" . get_vocab("disabled") . ")</span>";
+  }
+  $tbody .= create_details_row(get_vocab("room"), $value, $as_html);
+  // Start date
+  if ($enable_periods)
+  {
+    list($start_period, $start_date) =  period_date_string($data['start_time']);
+  }
+  else
+  {
+    $start_date = time_date_string($data['start_time']);
+  }
+  $tbody .= create_details_row(get_vocab("start_date"), $start_date, $as_html);
+  // Duration
+  $tbody .= create_details_row(get_vocab("duration"), $data['duration'] . " " . $data['dur_units'], $as_html);
+  // End date
+  if ($enable_periods)
+  {
+    list( , $end_date) =  period_date_string($data['end_time'], -1);
+  }
+  else
+  {
+    $end_date = time_date_string($data['end_time']);
+  }
+  $tbody .= create_details_row(get_vocab("end_date"), $end_date, $as_html);
+  // Type
+  $value = (empty($typel[$data['type']])) ? "?${data['type']}?" : $typel[$data['type']];
+  $tbody .= create_details_row(get_vocab("type"), $value, $as_html);
+  // Created by
+  $class = ($keep_private && $is_private_field['entry.create_by']) ? "private" : "";
+  $tbody .= create_details_row(get_vocab("createdby"), $data['create_by'], $as_html, $class);
+  // Last updated
+  $tbody .= create_details_row(get_vocab("lastupdate"), time_date_string($data['last_updated']), $as_html);
+  // The custom fields
+  $fields = sql_field_info($tbl_entry);
+  foreach ($fields as $field)
+  {
+    $key = $field['name'];
+    if (!in_array($key, $standard_fields['entry']))
+    {
+      $label = get_loc_field_name($tbl_entry, $key);
+      // Output a yes/no if it's a boolean or integer <= 2 bytes (which we will
+      // assume are intended to be booleans)
+      if (($field['nature'] == 'boolean') || 
+          (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+      {
+        if ($keep_private && $is_private_field["entry.$key"])
+        {
+          $value = $data[$key];  // Will have been set previously
+        }
+        else
+        {
+          $value = empty($data[$key]) ? get_vocab("no") : get_vocab("yes");
+        }
+      }
+      // Otherwise output a string
+      else
+      {
+        $value = (isset($data[$key])) ? $data[$key] : "&nbsp;"; 
+      }
+      $class = ($keep_private && $is_private_field["entry.$key"]) ? "private" : "";
+      $tbody .= create_details_row($label, $value, $as_html, $class);
+    }
+  }
+  // Repeat type
+  $tbody .= create_details_row(get_vocab("rep_type"), get_vocab("rep_type_" . $data['rep_type']), $as_html);
+  // Repeat details
+  if($data['rep_type'] != REP_NONE)
+  {
+    if (($data['rep_type'] == REP_WEEKLY) || ($data['rep_type'] == REP_N_WEEKLY))
+    {
+      if ($data['rep_type'] == REP_N_WEEKLY)
+      {
+        // Repeat number of weeks
+        $tbody .= create_details_row(get_vocab("rep_num_weeks")." ".get_vocab("rep_for_nweekly"), $data['rep_num_weeks'], $as_html);
+      }
+      // Repeat days
+      $tbody .= create_details_row(get_vocab("rep_rep_day"), get_rep_day_list($data['rep_opt']), $as_html);
+    }
+    // Repeat end date
+    $tbody .= create_details_row(get_vocab("rep_end_date"), utf8_strftime('%A %d %B %Y',$data['end_date']), $as_html);
+  }
+  $tbody .= "</tbody>\n";
+  
+  return $tbody;
+}
 
 // Get non-standard form variables
 //
@@ -117,6 +248,146 @@ $is_admin = (authGetUserLevel($user) >= 2);
 // You're only allowed to make repeat bookings if you're an admin
 // or else if $auth['only_admin_can_book_repeat'] is not set
 $repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
+
+$row = mrbsGetBookingInfo($id, $series);
+
+// Get the area settings for the entry's area.   In particular we want
+// to know how to display private/public bookings in this area.
+get_area_settings($row['area_id']);
+
+// Work out whether the room and area are disabled
+$room_disabled = $row['room_disabled'];
+$area_disabled = $row['area_disabled'];
+// Get the status
+$status = $row['status'];
+// Work out whether this event should be kept private
+$private = $row['status'] & STATUS_PRIVATE;
+$writeable = getWritable($row['create_by'], $user, $row['room_id']);
+$keep_private = (is_private_event($private) && !$writeable);
+$private_text = "[" . get_vocab("private") . "]";
+// Work out when the last reminder was sent
+$last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
+
+// Go throuh each of the columns and for each of them that can be made private
+// substitute the private text if the user is not allowed to see the data
+foreach ($row as $key => $value)
+{
+  // We could just test each column against $is_private_field["entry.$key"]
+  // but restricting the test to the columns below guards against the possibility
+  // that somebody has accidentally configured a 'system' field to be private
+  switch ($key)
+  { 
+    case 'name':
+    case 'description':
+    case 'create_by':
+    case 'room_name':
+    case 'area_name':
+    case 'type':
+    case 'room_id':
+    case 'entry_info_time':
+    case 'entry_info_user':
+    case 'entry_info_text':
+    case 'repeat_info_time':
+    case 'repeat_info_user':
+    case 'repeat_info_text':
+      $row[$key] = ($keep_private && $is_private_field["entry.$key"]) ? $private_text : $row[$key];
+      break;
+      
+    default:
+      if (!in_array($key, $standard_fields['entry']))
+      {
+        $row[$key] = ($keep_private && $is_private_field["entry.$key"]) ? $private_text : $row[$key];
+      }
+      break;
+  }
+}
+
+
+if ($series == 1)
+{
+  $repeat_id = $id;  // Save the repeat_id
+  // I also need to set $id to the value of a single entry as it is a
+  // single entry from a series that is used by del_entry.php and
+  // edit_entry.php
+  // So I will look for the first entry in the series where the entry is
+  // as per the original series settings
+  $sql = "SELECT id
+          FROM $tbl_entry
+          WHERE repeat_id=\"$id\" AND entry_type=\"1\"
+          ORDER BY start_time
+          LIMIT 1";
+  $id = sql_query1($sql);
+  if ($id < 1)
+  {
+    // if all entries in series have been modified then
+    // as a fallback position just select the first entry
+    // in the series
+    // hopefully this code will never be reached as
+    // this page will display the start time of the series
+    // but edit_entry.php will display the start time of the entry
+    $sql = "SELECT id
+            FROM $tbl_entry
+            WHERE repeat_id=\"$id\"
+            ORDER BY start_time
+            LIMIT 1";
+    $id = sql_query1($sql);
+  }
+}
+else
+{
+  $repeat_id = $row['repeat_id'];
+}
+
+
+// PHASE 2 - DOWNLOADING ICALENDAR FILES
+// -------------------------------------
+
+if (isset($action) && ($action == "download"))
+{
+  if ($keep_private)
+  {
+    // should never normally be able to get here, but if we have then
+    // go somewhere safe.
+    header("Location: index.php");
+    exit;
+  }
+  else
+  {
+    require_once "functions_ical.inc";
+    header("Content-Type: application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"");
+    header("Content-Disposition: attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"");
+    $text_body = array();
+    $text_body['content'] = create_details($row, FALSE);
+    $html_body = array();
+    $html_body['content'] = "<table>\n" . create_details($row, TRUE) . "</table>\n";
+    $addresses = array();
+    $ical_components = array();
+    $ical_components[] = create_ical_event($row, $text_body, $html_body, $addresses, $series);
+    // If it's a series we need to find out which of the individual entries have been changed
+    // and include them in the iCalendar object
+    if ($series)
+    {
+      $sql = "SELECT id FROM $tbl_entry WHERE repeat_id=$repeat_id AND entry_type=2";
+      $res = sql_query($sql);
+      if ($res && (sql_count($res) > 0))
+      {
+        for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+        {
+          $data = mrbsGetBookingInfo($row['id'], FALSE);
+          $text_body['content'] = create_details($data, FALSE);
+          $html_body['content'] = "<table>\n" . create_details($data, TRUE) . "</table>\n";
+          $ical_components[] = create_ical_event($data, $text_body, $html_body, $addresses, FALSE);
+        }
+      }
+    }
+    $icalendar = create_icalendar("REQUEST", $ical_components);
+    echo $icalendar;
+    exit;
+  }
+}
+
+// PHASE 1 - VIEW THE ENTRY
+// ------------------------
 
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
@@ -157,186 +428,11 @@ else
   $series = 1;
 }
 
-$row = mrbsGetBookingInfo($id, $series);
-
-// Get the area settings for the entry's area.   In particular we want
-// to know how to display private/public bookings in this area.
-get_area_settings($row['area_id']);
-
-// Work out whether this event should be kept private
-$private = $row['status'] & STATUS_PRIVATE;
-$writeable = getWritable($row['create_by'], $user, $row['room_id']);
-$keep_private = (is_private_event($private) && !$writeable);
-$private_text = "[" . get_vocab("private") . "]";
-
-
-$custom_fields = array();
-foreach ($row as $column => $value)
-{
-  switch ($column)
-  {
-    // Don't bother with these columns
-    case 'area_id':
-    case 'duration':
-    case 'repeat_id':
-    case 'reminded':
-    case 'rep_type':
-    case 'end_date':
-    case 'rep_opt':
-    case 'rep_num_weeks':
-    case 'start_time':
-    case 'end_time':
-      break;
-      
-    case 'room_disabled':
-    case 'area_disabled':
-      $$column = !empty($row[$column]);
-      break;
-      
-    case 'name':
-    case 'description':
-    case 'create_by':
-    case 'room_name':
-    case 'area_name':
-    case 'type':
-    case 'room_id':
-    case 'entry_info_time':
-    case 'entry_info_user':
-    case 'entry_info_text':
-    case 'repeat_info_time':
-    case 'repeat_info_user':
-    case 'repeat_info_text':
-      $$column = ($keep_private && $is_private_field["entry.$column"]) ? $private_text : $row[$column];
-      break;
-      
-    case 'status':
-      $status = $row['status'];
-      $private = $row['status'] & STATUS_PRIVATE;
-      break;
-
-    case 'last_updated':
-      $updated = time_date_string($row['last_updated']);
-      break;
-
-    default:
-      $custom_fields[$column] = ($keep_private && $is_private_field["entry.$column"]) ? $private_text : $row[$column];
-      break;
-  }
-}
-
-// Very special cases
-$last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
-
-// need to make DST correct in opposite direction to entry creation
-// so that user see what he expects to see
-$duration      = $row['duration'] - cross_dst($row['start_time'],
-                                              $row['end_time']);
-
-
-
-if ($enable_periods)
-{
-  list($start_period, $start_date) =  period_date_string($row['start_time']);
-}
-else
-{
-  $start_date = time_date_string($row['start_time']);
-}
-
-if ($enable_periods)
-{
-  list( , $end_date) =  period_date_string($row['end_time'], -1);
-}
-else
-{
-  $end_date = time_date_string($row['end_time']);
-}
-
-
-$rep_type = REP_NONE;
-
-if ($series == 1)
-{
-  $rep_type     = $row['rep_type'];
-  $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
-  $rep_opt      = $row['rep_opt'];
-  $rep_num_weeks = $row['rep_num_weeks'];
-  // I also need to set $id to the value of a single entry as it is a
-  // single entry from a series that is used by del_entry.php and
-  // edit_entry.php
-  // So I will look for the first entry in the series where the entry is
-  // as per the original series settings
-  $sql = "SELECT id
-          FROM $tbl_entry
-          WHERE repeat_id=\"$id\" AND entry_type=\"1\"
-          ORDER BY start_time
-          LIMIT 1";
-  $res = sql_query($sql);
-  if (! $res)
-  {
-    fatal_error(0, sql_error());
-  }
-  if (sql_count($res) < 1)
-  {
-    // if all entries in series have been modified then
-    // as a fallback position just select the first entry
-    // in the series
-    // hopefully this code will never be reached as
-    // this page will display the start time of the series
-    // but edit_entry.php will display the start time of the entry
-    sql_free($res);
-    $sql = "SELECT id
-            FROM $tbl_entry
-            WHERE repeat_id=\"$id\"
-            ORDER BY start_time
-            LIMIT 1";
-    $res = sql_query($sql);
-    if (! $res)
-    {
-      fatal_error(0, sql_error());
-    }
-  }
-  $row = sql_row_keyed($res, 0);
-  $repeat_id = $id;  // Save the repeat_id
-  $id = $row['id'];
-  sql_free($res);
-}
-else
-{
-  $repeat_id = $row['repeat_id'];
-
-  if ($repeat_id != 0)
-  {
-    $res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks
-                      FROM $tbl_repeat WHERE id=$repeat_id LIMIT 1");
-    if (! $res)
-    {
-      fatal_error(0, sql_error());
-    }
-
-    if (sql_count($res) == 1)
-    {
-      $row = sql_row_keyed($res, 0);
-
-      $rep_type     = $row['rep_type'];
-      $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
-      $rep_opt      = $row['rep_opt'];
-      $rep_num_weeks = $row['rep_num_weeks'];
-    }
-    sql_free($res);
-  }
-}
-
-
-$enable_periods ? toPeriodString($start_period, $duration, $dur_units) : toTimeString($duration, $dur_units);
-
-$repeat_key = "rep_type_" . $rep_type;
 
 // Now that we know all the data we start drawing it
 
-
 echo "<h3" . (($keep_private && $is_private_field['entry.name']) ? " class=\"private\"" : "") . ">\n";
-echo htmlspecialchars($name);
+echo htmlspecialchars($row['name']);
 if (is_private_event($private) && $writeable) 
 {
   echo ' ('.get_vocab("private").')';
@@ -429,139 +525,10 @@ if ($approval_enabled && !$room_disabled &&!$area_disabled &&
   }
   echo "</tfoot>\n";
 }
-?>
 
-<tbody>
-  <tr>
-    <td><?php echo get_vocab("description") ?>:</td>
-    <?php
-    echo "<td" . (($keep_private & $is_private_field['entry.description']) ? " class=\"private\"" : "") . ">" . mrbs_nl2br(htmlspecialchars($description)) . "</td>\n";
-    ?>
-  </tr>
-  <?php
-  if ($confirmation_enabled)
-  {
-    echo "<tr>\n";
-    echo "<td>" . get_vocab("confirmation_status") . ":</td>\n";
-    echo "<td>" . (($status & STATUS_TENTATIVE) ? get_vocab("tentative") : get_vocab("confirmed")) . "</td>\n";
-    echo "</tr>\n";
-  }
-  if ($approval_enabled)
-  {
-    echo "<tr>\n";
-    echo "<td>" . get_vocab("approval_status") . ":</td>\n";
-    echo "<td>" . (($status & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved")) . "</td>\n";
-    echo "</tr>\n";
-  }
-  ?>
-  <tr>
-    <td><?php echo get_vocab("room") ?>:</td>
-    <?php
-    echo "<td>";
-    echo  mrbs_nl2br(htmlspecialchars($area_name . " - " . $room_name));
-    if ($room_disabled || $area_disabled)
-    {
-      echo "<span class=\"note\"> (" . get_vocab("disabled") . ")</span>";
-    }
-    echo "</td>\n";
-    ?>
-  </tr>
-  <tr>
-    <td><?php echo get_vocab("start_date") ?>:</td>
-    <td><?php echo $start_date ?></td>
-  </tr>
-  <tr>
-    <td><?php echo get_vocab("duration") ?>:</td>
-    <td><?php echo $duration . " " . $dur_units ?></td>
-  </tr>
-  <tr>
-    <td><?php echo get_vocab("end_date") ?>:</td>
-    <td><?php echo $end_date ?></td>
-  </tr>
-  <tr>
-    <td><?php echo get_vocab("type") ?>:</td>
-    <td><?php echo empty($typel[$type]) ? "?$type?" : $typel[$type] ?></td>
-  </tr>
-  <tr>
-    <td><?php echo get_vocab("createdby") ?>:</td>
-    <?php
-    echo "<td" . (($keep_private && $is_private_field['entry.create_by']) ? " class=\"private\"" : "") . ">" . htmlspecialchars($create_by) . "</td>\n";
-    ?>
-  </tr>
-  <tr>
-    <td><?php echo get_vocab("lastupdate") ?>:</td>
-    <td><?php echo $updated ?></td>
-  </tr>
-  <?php
-  // The custom fields
-  $fields = sql_field_info($tbl_entry);
-  foreach ($fields as $field)
-  {
-    $key = $field['name'];
-    if (!in_array($key, $standard_fields['entry']))
-    {
-      echo "<tr>\n";
-      echo "<td>" . get_loc_field_name($tbl_entry, $key) . ":</td>\n";
-      // Output a yes/no if it's a boolean or integer <= 2 bytes (which we will
-      // assume are intended to be booleans)
-      if (($field['nature'] == 'boolean') || 
-          (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
-      {
-        if ($keep_private && $is_private_field["entry.$key"])
-        {
-          $shown_value = $custom_fields[$key];  // Will have been set previously
-        }
-        else
-        {
-          $shown_value = empty($custom_fields[$key]) ? get_vocab("no") : get_vocab("yes");
-        }
-      }
-      // Otherwise output a string
-      else
-      {
-        $shown_value = (isset($custom_fields[$key])) ? mrbs_nl2br(htmlspecialchars($custom_fields[$key])): "&nbsp;"; 
-      }
-      echo "<td" . (($keep_private && $is_private_field["entry.$key"]) ? " class=\"private\"" : "") . ">$shown_value</td>\n";
-      echo "</tr>\n";
-    }
-  }
-  ?>
-  <tr>
-    <td><?php echo get_vocab("rep_type") ?>:</td>
-    <td><?php echo get_vocab($repeat_key) ?></td>
-  </tr>
-<?php
-
-if($rep_type != REP_NONE)
-{
-  $opt = "";
-  if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
-  {
-    // Display day names according to language and preferred weekday start.
-    for ($i = 0; $i < 7; $i++)
-    {
-      $daynum = ($i + $weekstarts) % 7;
-      if ($rep_opt[$daynum])
-      {
-        $opt .= day_name($daynum) . " ";
-      }
-    }
-  }
-  if ($rep_type == REP_N_WEEKLY)
-  {
-    echo "<tr><td>".get_vocab("rep_num_weeks")." ".get_vocab("rep_for_nweekly").":</td><td>$rep_num_weeks</td></tr>\n";
-  }
-
-  if ($opt)
-  {
-    echo "<tr><td>".get_vocab("rep_rep_day").":</td><td>$opt</td></tr>\n";
-  }
-
-  echo "<tr><td>".get_vocab("rep_end_date").":</td><td>$rep_end_date</td></tr>\n";
-}
+echo create_details($row, TRUE);
 
 ?>
-</tbody>
 </table>
 
 <div id="view_entry_nav">
@@ -619,8 +586,29 @@ if($rep_type != REP_NONE)
     echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=1&amp;returl=$link_returl\">".get_vocab("copyseries")."</a>";
   }
   echo "</div>\n";
+  
+  // Download and Download Series
+  if (!$keep_private)
+  {
+    // The iCalendar information has the full booking details in it, so we will not allow
+    // it to be downloaded if it is private and the user is not authorised to see it.
+    echo "<div>\n";
+    if (!$series)
+    {
+      echo "<a href=\"view_entry.php?action=download&amp;id=$id&amp;returl=$link_returl\">". get_vocab("downloadentry") ."</a>";
+    } 
+    if (!empty($repeat_id)  && !$series)
+    {
+      echo " - ";
+    }  
+    if (!empty($repeat_id) || $series)
+    {
+      echo "<a href=\"view_entry.php?action=download&amp;id=$repeat_id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$link_returl\">".get_vocab("downloadseries")."</a>";
+    }
+    echo "</div>\n";
+  }
   ?>
-  <div>
+  <div id="returl">
     <?php
     if (isset($HTTP_REFERER)) //remove the link if displayed from an email
     {

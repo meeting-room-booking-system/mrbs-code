@@ -796,12 +796,9 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   {
     switch ($field['name'])
     {
+      // repeat_id and entry_type only exist in the entry table
       case 'entry_type':
-        // Nothing to do
-        break;
-        
       case 'repeat_id':
-        // repeat_id only exists in the entry table
         array_push($terms, $field['name']);
         break;
 

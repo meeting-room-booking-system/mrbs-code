@@ -4,6 +4,7 @@
 
 
 define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
+define ('ICAL_EOL', "\r\n");            // Lines must be terminated by CRLF
 
 // "Folds" lines longer than 75 octets.  Multi-byte safe.
 //
@@ -131,25 +132,15 @@ function create_rrule($data)
 }
 
 
-// Creates an iCalendar object in RFC 5545 format
-function create_icalendar($method, $data, $text_description, $html_description, $addresses, $series=FALSE)
+// Create an RFC 5545 iCalendar Event component
+function create_ical_event($data, $text_description, $html_description, $addresses, $series=FALSE)
 {
-  require_once "version.inc";
-  
   global $timezone, $confirmation_enabled, $mail_settings;
-
-  $eol = "\r\n";
+  
+  $use_html = $mail_settings['html'] && !empty($html_description);
   
   $results = array();
-  $results[] = "BEGIN:VCALENDAR";
-  // Compulsory properties
-  $results[] = "PRODID:-//MRBS//NONSGML " . get_mrbs_version() . " //EN";
-  $results[] = "VERSION:2.0";
-  // Optional properties
-  $results[] = "CALSCALE:GREGORIAN";
-  $results[] = "METHOD:$method";
-  
-  // The event
+
   $results[] = "BEGIN:VEVENT";
   $results[] = "UID:" . $data['ical_uid'];  // compulsory
   $results[] = "DTSTAMP:" . gmdate(RFC5545_FORMAT . '\Z');  // compulsory
@@ -163,11 +154,14 @@ function create_icalendar($method, $data, $text_description, $html_description, 
   // Put the HTML version in an ALTREP, just in case there are any Calendars out there
   // that support it (although at the time of writing, Dec 2010, none are known)
   $results[] = "DESCRIPTION" .
-               ((($mail_settings['html']) ? ";ALTREP=\"CID:" . $html_description['cid'] . "\"" : "") . ":" .
+               ((($use_html && !empty($html_description['cid'])) ? ";ALTREP=\"CID:" . $html_description['cid'] . "\"" : "") . ":" .
                ical_escape_text($text_description['content']));
   // This is another way of getting an HTML description, used by Outlook.  However it 
   // seems to be very limited
-  $results[] = "X-ALT-DESC;FMTTYPE=text/html:" . ical_escape_text($html_description['content']);
+  if ($use_html)
+  {
+    $results[] = "X-ALT-DESC;FMTTYPE=text/html:" . ical_escape_text($html_description['content']);
+  }
   $results[] = "LOCATION:" . ical_escape_text($data['area_name'] . " - " . $data['room_name']);
   $results[] = "SEQUENCE:" . $data['ical_sequence'];
   // If this is an individual member of a series then set the recurrence id
@@ -184,35 +178,66 @@ function create_icalendar($method, $data, $text_description, $html_description, 
   // list as non particpants.   In theory the email client can then decide whether
   // to enter the booking automaticaly on the user's calendar - although at the
   // time of writing (Dec 2010) there don't seem to be any that do so!
-  $keys = array('to', 'cc');  // We won't do 'bcc' as they need to stay blind
-  foreach ($keys as $key)
+  if (!empty($addresses))
   {
-    if (!empty($addresses[$key]))
+    $keys = array('to', 'cc');  // We won't do 'bcc' as they need to stay blind
+    foreach ($keys as $key)
     {
-      $address_list = $addresses[$key];
-      $address_array = explode(',', $address_list);
-      foreach ($address_array as $address)
+      if (!empty($addresses[$key]))
       {
-        switch ($key)
+        $address_list = $addresses[$key];
+        $address_array = explode(',', $address_list);
+        foreach ($address_array as $address)
         {
-          case 'to':
-            $role = "REQ-PARTICIPANT";
-            break;
-          default:
-            $role = "NON-PARTICIPANT";
-            break;
+          switch ($key)
+          {
+            case 'to':
+              $role = "REQ-PARTICIPANT";
+              break;
+            default:
+              $role = "NON-PARTICIPANT";
+              break;
+          }
+          $results[] = "ATTENDEE;ROLE=$role:mailto:" . trim($address);
         }
-        $results[] = "ATTENDEE;ROLE=$role:mailto:" . trim($address);
       }
     }
   }
 
   $results[] = "END:VEVENT";
   
+  $result = implode(ICAL_EOL, $results);  // No CRLF at end: that will be added later
+
+  return $result;
+}
+
+
+// Creates an iCalendar object in RFC 5545 format
+//    $method      string   the RFC 5545 METHOD (eg "REQUEST", "PUBLISH", "CANCEL")
+//    $components  array    an array of iCalendar components, each a string  
+function create_icalendar($method, $components)
+{
+  require_once "version.inc";
+
+  $results = array();
+  $results[] = "BEGIN:VCALENDAR";
+  // Compulsory properties
+  $results[] = "PRODID:-//MRBS//NONSGML " . get_mrbs_version() . " //EN";
+  $results[] = "VERSION:2.0";
+  // Optional properties
+  $results[] = "CALSCALE:GREGORIAN";
+  $results[] = "METHOD:$method";
+  
+  // Add in each component
+  foreach ($components as $component)
+  {
+    $results[] = $component;
+  }
+
   $results[] = "END:VCALENDAR";
   
-  $result = implode($eol, $results);
-  $result .= $eol;  // Has to end with a CRLF
+  $result = implode(ICAL_EOL, $results);
+  $result .= ICAL_EOL;  // Has to end with a CRLF
   
   $result = ical_fold($result);
   return $result;

@@ -810,6 +810,7 @@ div#simple_trailer {clear: both; width: 100%; text-align: center; padding-top: 1
 .view_entry div#view_entry_nav {margin-top: 1.0em}
 .view_entry #approve_buttons form {float: left; margin-right: 2em}
 .view_entry #approve_buttons legend {font-size: 0}
+.view_entry div#returl {margin-top: 1em}
 #approve_buttons td {vertical-align: middle; padding-top: 1em}
 #approve_buttons td#caption {text-align: left}
 #approve_buttons td#note {padding-top: 0}
