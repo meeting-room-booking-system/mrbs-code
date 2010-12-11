@@ -586,8 +586,8 @@ if ($valid_booking)
     }
     else
     {
-      // Mark changed entry in a series with entry_type 2:
-      $data['entry_type'] = ($repeat_id > 0) ? 2 : 0;
+      // Mark changed entry in a series with entry_type:
+      $data['entry_type'] = ($repeat_id > 0) ? ENTRY_RPT_CHANGED : ENTRY_SINGLE;
       $data['repeat_id'] = $repeat_id;
     }
     // The following elements are needed for email notifications

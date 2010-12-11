@@ -71,11 +71,11 @@ if ($info = mrbsGetBookingInfo($id, FALSE, TRUE))
       // Gather all fields values for use in emails.
       $mail_previous = mrbsGetBookingInfo($id, FALSE);
       // If this is an individual entry of a series then force the entry_type
-      // to be 2, so that when we create the iCalendar object we know that
+      // to be a changed entry, so that when we create the iCalendar object we know that
       // we only want to delete the individual entry
       if (!$series && ($mail_previous['rep_type'] != REP_NONE))
       {
-        $mail_previous['entry_type'] = 2;
+        $mail_previous['entry_type'] = ENTRY_RPT_CHANGED;
       }
     }
     sql_begin();

@@ -81,7 +81,20 @@ else
  // that is used;  it is merely used when the code needs to know the DOCTYPE, for example
  // in calls to nl2br.   TRUE means XHTML, FALSE means HTML.
  define('IS_XHTML', FALSE);
+ 
+ 
+ /*************************************************
+ * ENTRY TYPES - internal use, do not change
+ *************************************************/
+ 
+ // The entry_type field in the entry table records the type of
+ // booking as follows:
+ 
+ define('ENTRY_SINGLE',       0);  // A single entry that is not part of a series
+ define('ENTRY_RPT_ORIGINAL', 1);  // An entry that is part of a series and has not been modified
+ define('ENTRY_RPT_CHANGED',  2);  // An entry that is part of a series and has been modified
 
+ 
 /*************************************************
  * ENTRY STATUS CODES - internal use, do not change
  *************************************************/

@@ -165,7 +165,7 @@ function create_ical_event($data, $text_description, $html_description, $address
   $results[] = "LOCATION:" . ical_escape_text($data['area_name'] . " - " . $data['room_name']);
   $results[] = "SEQUENCE:" . $data['ical_sequence'];
   // If this is an individual member of a series then set the recurrence id
-  if ($data['entry_type'] == 2)
+  if ($data['entry_type'] == ENTRY_RPT_CHANGED)
   {
     $results[] = "RECURRENCE-ID:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
   }

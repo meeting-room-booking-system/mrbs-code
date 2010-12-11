@@ -265,7 +265,7 @@ if (isset($id))
   }
   
 
-  if($entry_type >= 1)
+  if(($entry_type == ENTRY_RPT_ORIGINAL) || ($entry_type == ENTRY_RPT_CHANGED))
   {
     $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_num_weeks
               FROM $tbl_repeat 

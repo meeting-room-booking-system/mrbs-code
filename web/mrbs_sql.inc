@@ -189,7 +189,7 @@ function mrbsDelEntry($user, $id, $series, $all)
       continue;
     }
    
-    if ($series && $row['entry_type'] == 2 && !$all)
+    if ($series && $row['entry_type'] == ENTRY_RPT_CHANGED && !$all)
     {
       continue;
     }
@@ -591,7 +591,7 @@ function mrbsCreateRepeatingEntrys($data)
 
   if (empty($reps))
   {
-    $data['entry_type'] = 0;
+    $data['entry_type'] = ENTRY_SINGLE;
     $data['repeat_id'] = 0;
     $id = mrbsCreateSingleEntry($data);
     $result['id'] = $id;
@@ -603,7 +603,7 @@ function mrbsCreateRepeatingEntrys($data)
     
   if ($id)
   {
-    $data['entry_type'] = 1;
+    $data['entry_type'] = ENTRY_RPT_ORIGINAL;
     $data['repeat_id'] = $id;
     $starttime = $data['start_time'];
     $endtime = $data['end_time'];

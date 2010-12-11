@@ -313,7 +313,7 @@ if ($series == 1)
   // as per the original series settings
   $sql = "SELECT id
           FROM $tbl_entry
-          WHERE repeat_id=\"$id\" AND entry_type=\"1\"
+          WHERE repeat_id=\"$id\" AND entry_type=" . ENTRY_RPT_ORIGINAL . "
           ORDER BY start_time
           LIMIT 1";
   $id = sql_query1($sql);
@@ -367,7 +367,7 @@ if (isset($action) && ($action == "download"))
     // and include them in the iCalendar object
     if ($series)
     {
-      $sql = "SELECT id FROM $tbl_entry WHERE repeat_id=$repeat_id AND entry_type=2";
+      $sql = "SELECT id FROM $tbl_entry WHERE repeat_id=$repeat_id AND entry_type=" . ENTRY_RPT_CHANGED;
       $res = sql_query($sql);
       if ($res && (sql_count($res) > 0))
       {
