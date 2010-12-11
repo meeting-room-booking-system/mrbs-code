@@ -135,7 +135,7 @@ function create_rrule($data)
 // Create an RFC 5545 iCalendar Event component
 function create_ical_event($data, $text_description, $html_description, $addresses, $series=FALSE)
 {
-  global $timezone, $confirmation_enabled, $mail_settings;
+  global $confirmation_enabled, $mail_settings;
   
   $use_html = $mail_settings['html'] && !empty($html_description);
   
@@ -148,8 +148,12 @@ function create_ical_event($data, $text_description, $html_description, $address
   {
     $results[] = "RRULE:" . create_rrule($data);
   }
-  $results[] = "DTSTART;TZID=$timezone:" . date(RFC5545_FORMAT, $data['start_time']);
-  $results[] = "DTEND;TZID=$timezone:" . date(RFC5545_FORMAT, $data['end_time']);
+  // Note: we use UTC time here.  If you are going to use a timezone and the TZID
+  // parameter then RFC 5545 says you MUST provide a corresponding VTIMEZONE component.
+  // Some calendar apps, eg Microsoft Exchange, enforce the standard and fail to import
+  // calendar objects that use TZID without a corresponding VTIMEZONE.
+  $results[] = "DTSTART:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
+  $results[] = "DTEND:" . gmdate(RFC5545_FORMAT . '\Z', $data['end_time']);
   $results[] = "SUMMARY:" . ical_escape_text($data['name']);
   // Put the HTML version in an ALTREP, just in case there are any Calendars out there
   // that support it (although at the time of writing, Dec 2010, none are known)
