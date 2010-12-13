@@ -892,7 +892,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $action="delete", $note="")
   if ($mail_settings['icalendar'] && !$enable_periods)
   {
     $ical_components = array();
-    $ical_components[] = create_icalendar($data, $text_body, $html_body, $addresses, $series);
+    $ical_components[] = create_ical_event($data, $text_body, $html_body, $addresses, $series);
     $attachment['method']   = "CANCEL";
     $attachment['content']  = create_icalendar($attachment['method'], $ical_components);
     $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
