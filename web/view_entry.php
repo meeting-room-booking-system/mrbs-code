@@ -344,7 +344,7 @@ else
 
 if (isset($action) && ($action == "download"))
 {
-  if ($keep_private)
+  if ($keep_private  || $enable_periods)
   {
     // should never normally be able to get here, but if we have then
     // go somewhere safe.
@@ -588,10 +588,11 @@ echo create_details($row, TRUE);
   echo "</div>\n";
   
   // Download and Download Series
-  if (!$keep_private)
+  if (!$keep_private && !$enable_periods)
   {
     // The iCalendar information has the full booking details in it, so we will not allow
     // it to be downloaded if it is private and the user is not authorised to see it.
+    // iCalendar information doesn't work with periods at the moment (no periods to times mapping)
     echo "<div>\n";
     if (!$series)
     {
