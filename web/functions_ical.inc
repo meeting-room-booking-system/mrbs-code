@@ -3,9 +3,6 @@
 // $Id$
 
 
-define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
-define ('ICAL_EOL', "\r\n");            // Lines must be terminated by CRLF
-
 // "Folds" lines longer than 75 octets.  Multi-byte safe.
 //
 // "Lines of text SHOULD NOT be longer than 75 octets, excluding the line
@@ -171,7 +168,7 @@ function create_ical_event($data, $text_description, $html_description, $address
   // If this is an individual member of a series then set the recurrence id
   if ($data['entry_type'] == ENTRY_RPT_CHANGED)
   {
-    $results[] = "RECURRENCE-ID:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
+    $results[] = "RECURRENCE-ID:" . $data['ical_recur_id'];
   }
   if ($confirmation_enabled)
   {

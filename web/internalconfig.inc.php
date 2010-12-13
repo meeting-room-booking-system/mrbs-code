@@ -128,6 +128,14 @@ define('REP_MONTHLY_SAMEDAY', 5);
 define('REP_N_WEEKLY',        6);
 
 
+/*************************************************
+ * ICALENDAR CONSTANTS - internal use, do not change
+ *************************************************/
+ 
+define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
+define ('ICAL_EOL', "\r\n");            // Lines must be terminated by CRLF
+
+
 /****************************************************************
  * DATABASE TABLES  - internal use, do not change
  ****************************************************************/
@@ -157,7 +165,8 @@ $standard_fields['entry'] = array('id',
                                   'info_user',
                                   'info_text',
                                   'ical_uid',
-                                  'ical_sequence');
+                                  'ical_sequence',
+                                  'ical_recur_id');
                                   
 $standard_fields['repeat'] = array('id',
                                    'start_time',

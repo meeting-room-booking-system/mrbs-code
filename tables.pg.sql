@@ -94,7 +94,8 @@ CREATE TABLE mrbs_entry
   info_user      varchar(80),
   info_text      text,
   ical_uid       varchar(255) DEFAULT '' NOT NULL,
-  ical_sequence  smallint DEFAULT 0 NOT NULL
+  ical_sequence  smallint DEFAULT 0 NOT NULL,
+  ical_recur_id  varchar(16) DEFAULT '' NOT NULL
 );
 create index mrbs_idxStartTime on mrbs_entry(start_time);
 create index mrbs_idxEndTime on mrbs_entry(end_time);
@@ -141,6 +142,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '23');
+  VALUES ('db_version', '24');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');

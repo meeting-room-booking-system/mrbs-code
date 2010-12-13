@@ -265,6 +265,7 @@ function mrbsCreateEntry($table, $data)
       case 'type':
       case 'description':
       case 'ical_uid':
+      case 'ical_recur_id':
         $sql_col[] = $key;
         $sql_val[] = "'" . addslashes($data[$key]) . "'";
         break;
@@ -358,6 +359,13 @@ function mrbsCreateSingleEntry($data)
   // into effect
   if ($data['end_time'] > $data['start_time'])
   {
+    // If we're about to create an individual member of a series for the first time
+    // then give it a recurrence-id equivalent to the start time.  It should always
+    // keep this value, even if the start time is subsequently changed.
+    if ($data['entry_type'] == ENTRY_RPT_ORIGINAL)
+    {
+      $data['ical_recur_id'] = gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
+    }
     $result = mrbsCreateEntry($tbl_entry, $data);
     return $result;
   }
@@ -796,9 +804,10 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   {
     switch ($field['name'])
     {
-      // repeat_id and entry_type only exist in the entry table
+      // these fields only exist in the entry table
       case 'entry_type':
       case 'repeat_id':
+      case 'ical_recur_id':
         array_push($terms, $field['name']);
         break;
 

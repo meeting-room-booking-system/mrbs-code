@@ -18,6 +18,7 @@ $rooms = get_form_var('rooms', 'array');
 $original_room_id = get_form_var('original_room_id', 'int');
 $ical_uid = get_form_var('ical_uid', 'string');
 $ical_sequence = get_form_var('ical_sequence', 'int');
+$ical_recur_id = get_form_var('ical_recur_id', 'string');
 $returl = get_form_var('returl', 'string');
 $rep_id = get_form_var('rep_id', 'int');
 $edit_type = get_form_var('edit_type', 'string');
@@ -586,7 +587,17 @@ if ($valid_booking)
     }
     else
     {
-      // Mark changed entry in a series with entry_type:
+      if ($repeat_id > 0)
+      {
+        // Mark changed entry in a series with entry_type:
+        $data['entry_type'] = ENTRY_RPT_CHANGED;
+        // Keep the same recurrence id (this never changes once an entry has been made)
+        $data['ical_recur_id'] = $ical_recur_id;
+      }
+      else
+      {
+        $data['entry_type'] = ENTRY_SINGLE;
+      }
       $data['entry_type'] = ($repeat_id > 0) ? ENTRY_RPT_CHANGED : ENTRY_SINGLE;
       $data['repeat_id'] = $repeat_id;
     }

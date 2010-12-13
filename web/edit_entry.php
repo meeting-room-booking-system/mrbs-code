@@ -221,6 +221,7 @@ if (isset($id))
         $original_room_id = $row['room_id'];
       case 'ical_uid':
       case 'ical_sequence':
+      case 'ical_recur_id':
       case 'entry_type':
         $$column = $row[$column];
         break;
@@ -1192,6 +1193,7 @@ else
       echo "<input type=\"hidden\" name=\"original_room_id\" value=\"$original_room_id\">\n";
       echo "<input type=\"hidden\" name=\"ical_uid\" value=\"$ical_uid\">\n";
       echo "<input type=\"hidden\" name=\"ical_sequence\" value=\"$ical_sequence\">\n";
+      echo "<input type=\"hidden\" name=\"ical_recur_id\" value=\"$ical_recur_id\">\n";
     }
     if(isset($id) && !isset($copy))
     {
