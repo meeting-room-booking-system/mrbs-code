@@ -952,7 +952,11 @@ function utf8_seq($str, &$byte_index)
 // string
 function utf8_strlen($str)
 {
-  $len = 0;
+  if (!isset($str) || ($str == ""))
+  {
+    return 0;
+  }
+  $len = 1;
   $next = 0;
   while ($next = utf8_next_index($str, $next))
   {
