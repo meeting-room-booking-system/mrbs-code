@@ -770,7 +770,9 @@ function utf8_convert_from_locale($string)
   }
   return $string;
 }
-  
+
+
+//  
 function utf8_strftime($format, $time)
 {
   // %p doesn't actually work in some locales, we have to patch it up ourselves
@@ -794,7 +796,7 @@ function utf8_strftime($format, $time)
 
 // UTF-8 compatible substr function obtained from a contribution by
 // "frank at jkelloggs dot dk" in the PHP online manual for substr()
-function utf8_substr($str,$start)
+function utf8_substr_old($str,$start)
 {
   preg_match_all("/./su", $str, $ar);
 
@@ -806,14 +808,59 @@ function utf8_substr($str,$start)
   }
 }
 
+function utf8_substr($str, $start)
+{
+  $i = 0;
+  $index = 0;
+  while ((ord($str[$index]) != 0) && ($i < $start))
+  {
+    $index = utf8_next_index($str, $index);
+    $i++;
+  }
+
+  if (!isset($index))
+  {
+    return NULL;
+  }
+  if (func_num_args() >= 3)
+  {
+    $length = func_get_arg(2);
+    $end_index = $index;
+
+    $j = 0;
+    while (isset($end_index) && ($j < $length))
+    {
+      $end_index = utf8_next_index($str, $end_index);
+      $j++;
+    }
+    $j = 0;
+    $ret = "."; // dummy to fool PHP
+    for ($i = $index;
+         (ord($str[$i]) != 0) && (!isset($end_index) || ($i < $end_index));
+         $i++)
+    { 
+      $ret[$j++] = $str[$i];
+    }
+    return $ret;
+  }
+  else
+  {
+    $j = 0;
+    $ret = "."; // dummy to fool PHP
+    for ($i = $index; ord($str[$i]) != 0; $i++)
+    {
+      $ret[$j++] = $str[$i];
+    }
+    return $ret;
+  }
+}
+
 
 // Takes a string (which may be UTF-8) and returns how long it is in
 // _bytes_
 function utf8_bytecount($str)
 {
-  preg_match_all("/./s", $str, $ar);
-
-  return count($ar[0]);
+  return count(str_split($str));
 }
 
 
@@ -821,17 +868,97 @@ function utf8_bytecount($str)
 // removed from the front
 function utf8_next($str)
 {
-  return utf8_substr($str, 1);
+  $ret = NULL;
+
+  if (isset($str))
+  {
+    $index = utf8_next_index($str, 0);
+
+    if ($index)
+    {
+      $i = 0;
+      $ret = "."; // dummy to fool PHP
+      while (ord($str[$index]) != 0)
+      {
+        $ret[$i++] = $str[$index++];
+      }
+    }
+  }
+  return $ret;
 }
 
 
+// Takes a UTF-8 string and returns the string with one Unicode character
+// removed from the front
+function utf8_next_index($str, $start)
+{
+  $ret = NULL;
+
+  $i = $start;
+
+  if (isset($str))
+  {
+    if (ord($str[$i]) < 0xc0)
+    {
+      $i++;
+    }
+    else
+    {
+      $i++;
+      while ((ord($str[$i]) & 0xc0) == 0x80)
+      {
+        $i++;
+      }
+    }
+    if (ord($str[$i]) != 0)
+    {
+      $ret = $i;
+    }
+  }
+  return $ret;
+}
+
+
+function utf8_seq($str, &$byte_index)
+{
+  $ret = "."; // dummy to fool PHP
+
+  $next = utf8_next_index($str, $byte_index);
+
+  if (isset($next))
+  {
+    $j = 0;
+    for ($i = $byte_index; $i < $next; $i++)
+    {
+      $ret[$j] = $str[$i];
+      $j++;
+    }
+  }
+  else
+  {
+    $j = 0;
+    for ($i = $byte_index; ord($str[$i]) != 0; $i++)
+    {
+      $ret[$j] = $str[$i];
+      $j++;
+    }
+  }
+  $byte_index = $next;
+  return $ret;
+}
+
+  
 // Takes a UTF-8 string, and returns the number of _characters_ in the
 // string
 function utf8_strlen($str)
 {
-  preg_match_all("/./su", $str, $ar);
-
-  return count($ar[0]);
+  $len = 0;
+  $next = 0;
+  while ($next = utf8_next_index($str, $next))
+  {
+    $len++;
+  }
+  return $len;
 }
 
 
