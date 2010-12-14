@@ -362,7 +362,7 @@ if (isset($action) && ($action == "download"))
     $html_body['content'] = "<table>\n" . create_details($row, TRUE) . "</table>\n";
     $addresses = array();
     $ical_components = array();
-    $ical_components[] = create_ical_event($row, $text_body, $html_body, $addresses, $series);
+    $ical_components[] = create_ical_event("REQUEST", $row, $text_body, $html_body, $addresses, $series);
     // If it's a series we need to find out which of the individual entries have been changed
     // and include them in the iCalendar object
     if ($series)
@@ -376,7 +376,7 @@ if (isset($action) && ($action == "download"))
           $data = mrbsGetBookingInfo($row['id'], FALSE);
           $text_body['content'] = create_details($data, FALSE);
           $html_body['content'] = "<table>\n" . create_details($data, TRUE) . "</table>\n";
-          $ical_components[] = create_ical_event($data, $text_body, $html_body, $addresses, FALSE);
+          $ical_components[] = create_ical_event("REQUEST", $data, $text_body, $html_body, $addresses, FALSE);
         }
       }
     }

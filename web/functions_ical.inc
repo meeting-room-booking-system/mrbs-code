@@ -149,7 +149,7 @@ function create_rrule($data)
 
 
 // Create an RFC 5545 iCalendar Event component
-function create_ical_event($data, $text_description, $html_description, $addresses, $series=FALSE)
+function create_ical_event($method, $data, $text_description, $html_description, $addresses, $series=FALSE)
 {
   global $confirmation_enabled, $mail_settings;
   
@@ -189,7 +189,17 @@ function create_ical_event($data, $text_description, $html_description, $address
   {
     $results[] = "RECURRENCE-ID:" . $data['ical_recur_id'];
   }
-  if ($confirmation_enabled)
+  // STATUS:  As we can have confirmed and tentative bookings we will send that information
+  // in the Status property.   There don't seem to be many apps that do anything with it though,
+  // but we might as well send it.   However having sent it we need to send a STATUS:CANCELLED
+  // on cancellation.    It's not clear to me from the spec whether this is strictly necessary
+  // but it can do no harm and there are some apps that seem to need it - for example Outlook
+  // 2003 (but not 2007)
+  if ($method == "CANCEL")
+  {
+    $results[] = "STATUS:CANCELLED";
+  }
+  elseif ($confirmation_enabled)
   {
     $results[] = "STATUS:". (($data['status'] & STATUS_TENTATIVE) ? "TENTATIVE" : "CONFIRMED");
   }
