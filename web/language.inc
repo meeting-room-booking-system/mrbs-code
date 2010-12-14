@@ -808,8 +808,35 @@ function utf8_substr_old($str,$start)
   }
 }
 
+
+// UTF-8 compatible substr function
 function utf8_substr($str, $start)
 {
+  if (func_num_args() >= 3)
+  {
+    $length = func_get_arg(2);
+  }
+  else
+  {
+    $length = PHP_INT_MAX;
+  }
+
+  if (function_exists('mb_substr'))
+  {
+    // If we have mb_substr, use it - it's much quicker than our
+    // routines, as it's native code
+
+    $encoding = mb_detect_encoding($str);
+
+    return mb_substr($str, $start, $length, $encoding);
+  }
+  if (strlen($str) > 1000)
+  {
+    // If the string is long, the old routine is quicker. :(
+    
+    return utf8_substr_old($str, $start, $length);
+  }
+
   $i = 0;
   $index = 0;
   while ((ord($str[$index]) != 0) && ($i < $start))
@@ -824,7 +851,6 @@ function utf8_substr($str, $start)
   }
   if (func_num_args() >= 3)
   {
-    $length = func_get_arg(2);
     $end_index = $index;
 
     $j = 0;
@@ -888,8 +914,9 @@ function utf8_next($str)
 }
 
 
-// Takes a UTF-8 string and returns the string with one Unicode character
-// removed from the front
+// Takes a UTF-8 string and and a byte index into that string, and
+// returns the byte index of the next UTF-8 sequence. When the end
+// of the string is encountered, the function returns NULL
 function utf8_next_index($str, $start)
 {
   $ret = NULL;
@@ -919,6 +946,10 @@ function utf8_next_index($str, $start)
 }
 
 
+// Given a UTF-8 string and a byte index, return the UTF-8 sequence
+// at this index as a string, and update the byte index to point to
+// the next sequence. When the end of the string is encountered, the
+// last sequence is returned, and the byte index set to NULL
 function utf8_seq($str, &$byte_index)
 {
   $ret = "."; // dummy to fool PHP
@@ -955,6 +986,11 @@ function utf8_strlen($str)
   if (!isset($str) || ($str == ""))
   {
     return 0;
+  }
+  if (function_exists('mb_strlen'))
+  {
+    // If we have mb_strlen(), use it - it'll be quicker
+    return mb_strlen($str);
   }
   $len = 1;
   $next = 0;
