@@ -28,40 +28,39 @@ function ical_fold($str)
     // Get the next character
     $prev_byte_index = $byte_index;
     $char = utf8_seq($str, $byte_index);
-    if (isset($byte_index))
+
+    $char_octets = $byte_index - $prev_byte_index;
+    // If it's a CR then look ahead to the following character, if there is one
+    if (($char == "\r") && isset($byte_index))
     {
-      $char_octets = $byte_index - $prev_byte_index;
-      // If it's a CR then look ahead to the following character
-      if ($char == "\r")
+      $this_byte_index = $byte_index;
+      $next_char = utf8_seq($str, $byte_index);
+      // If that's a LF then take the CR, and advance by one character
+      if ($next_char == "\n")
       {
-        $this_byte_index = $byte_index;
-        $next_char = utf8_seq($str, $byte_index);
-        if (isset($byte_index))
-        {
-          // If that's a LF then reset the octet count to 0 (ie the beginning of a line)
-          // otherwise step back one character
-          if ($next_char == "\n")
-          {
-            $octets = 0;
-          }
-          else
-          {
-            $byte_index = $this_byte_index;
-          }
-        }
+        $result .= $char;    // take the CR
+        $char = $next_char;  // advance by one character
+        $octets = 0;         // reset the octet counter to the beginning of the line
+        $char_octets = 0;    // and pretend the LF is zero octets long so that after
+                             // we've added it in we're still at the beginning of the line
       }
-      // otherwise if this character will take us over the octet limit for this line
-      // fold the line and set the octet count to however many octets a space takes
-      // (the folding involves adding a CRLF followed by one character, a space or a tab)
-      elseif (($octets + $char_octets) > $octets_max)
+      // otherwise stay where we were
+      else
       {
-        $result .= $line_split;
-        $octets = $space_octets;
+        $byte_index = $this_byte_index;
       }
-      // finally add the character to the result string and up the octet count
-      $result .= $char;
-      $octets += $char_octets;
     }
+    // otherwise if this character will take us over the octet limit for the line,
+    // fold the line and set the octet count to however many octets a space takes
+    // (the folding involves adding a CRLF followed by one character, a space or a tab)
+    elseif (($octets + $char_octets) > $octets_max)
+    {
+      $result .= $line_split;
+      $octets = $space_octets;
+    }
+    // finally add the character to the result string and up the octet count
+    $result .= $char;
+    $octets += $char_octets;
   }
   return $result;
 }
