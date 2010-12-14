@@ -15,33 +15,53 @@
 // processing the content type."  (RFC 5545)
 function ical_fold($str)
 { 
-  $line_split = "\r\n ";
+  $line_split = "\r\n ";  // The RFC also allows a tab instead of a space
+  $space_octets = utf8_bytecount(' ');  // Could be two bytes if we're using UTF-16
   $octets_max = 75;
   
   $result = '';
   $octets = 0;
-  $n_chars = utf8_strlen($str);
-  for ($i=0; $i<$n_chars; $i++)
+  $byte_index = 0;
+  
+  while (isset($byte_index))
   {
-    // If we've reached a CRLF, reset the column counter 
-    // to the beginning of the line
-    $char = utf8_substr($str, $i, 1);  // Get the next multi-byte character
-    $char_octets = utf8_bytecount($char);  // Get the string length in bytes
-    if (($char == "\r")  && 
-        (($i+1) < $n_chars) &&
-        (utf8_substr($str, $i+1, 1) == "\n"))
+    // Get the next character
+    $prev_byte_index = $byte_index;
+    $char = utf8_seq($str, $byte_index);
+    if (isset($byte_index))
     {
-      $octets = -2;  // -2 because we'll then be at 0 after the \r\n
+      $char_octets = $byte_index - $prev_byte_index;
+      // If it's a CR then look ahead to the following character
+      if ($char == "\r")
+      {
+        $this_byte_index = $byte_index;
+        $next_char = utf8_seq($str, $byte_index);
+        if (isset($byte_index))
+        {
+          // If that's a LF then reset the octet count to 0 (ie the beginning of a line)
+          // otherwise step back one character
+          if ($next_char == "\n")
+          {
+            $octets = 0;
+          }
+          else
+          {
+            $byte_index = $this_byte_index;
+          }
+        }
+      }
+      // otherwise if this character will take us over the octet limit for this line
+      // fold the line and set the octet count to however many octets a space takes
+      // (the folding involves adding a CRLF followed by one character, a space or a tab)
+      elseif (($octets + $char_octets) > $octets_max)
+      {
+        $result .= $line_split;
+        $octets = $space_octets;
+      }
+      // finally add the character to the result string and up the octet count
+      $result .= $char;
+      $octets += $char_octets;
     }
-    // Otherwise if this character will take us over 75 octets, insert
-    // a CRLF followed by a space (and so the column counter will be 1)
-    elseif (($octets + $char_octets) > $octets_max)
-    {
-      $result .= $line_split;
-      $octets = 1;
-    }
-    $result .= $char;
-    $octets += $char_octets;
   }
   return $result;
 }
@@ -241,6 +261,7 @@ function create_icalendar($method, $components)
   $result .= ICAL_EOL;  // Has to end with a CRLF
   
   $result = ical_fold($result);
+
   return $result;
 }
 
