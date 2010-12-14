@@ -914,7 +914,7 @@ function utf8_next($str)
 }
 
 
-// Takes a UTF-8 string and and a byte index into that string, and
+// Takes a UTF-8 string and a byte index into that string, and
 // returns the byte index of the next UTF-8 sequence. When the end
 // of the string is encountered, the function returns NULL
 function utf8_next_index($str, $start)
