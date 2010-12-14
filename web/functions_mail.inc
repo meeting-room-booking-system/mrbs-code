@@ -384,7 +384,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
     $body .= "</style>\n";
     $body .= "</head>\n";
     $body .= "<body id=\"mrbs\">\n";
-    $body .= "<div id=\"header\">$mrbs_company - " . get_vocab("mrbs") . "</div>\n";
+    $body .= "<div id=\"header\">" . convertToMailCharset($mrbs_company) . " - " . get_mail_vocab("mrbs") . "</div>\n";
     $body .= "<div id=\"contents\">\n";
   }
   $body .= ($as_html) ? "<p>" : "";
