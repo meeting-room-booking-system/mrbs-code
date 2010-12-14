@@ -857,6 +857,10 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $actio
 function notifyAdminOnDelete($data, $series=FALSE, $action="delete", $note="")
 {
   global $mail_settings, $enable_periods;
+  
+  // As we are going to cancel this booking we need to increment the iCalendar
+  // sequence number
+  $data['ical_sequence']++;
 
   // Set up the addresses (from, to and cc)
   $addresses = create_addresses($data, $action);
