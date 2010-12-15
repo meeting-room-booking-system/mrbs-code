@@ -190,11 +190,11 @@ function create_ical_event($method, $data, $text_description, $html_description,
     $results[] = "RECURRENCE-ID:" . $data['ical_recur_id'];
   }
   // STATUS:  As we can have confirmed and tentative bookings we will send that information
-  // in the Status property.   There don't seem to be many apps that do anything with it though,
-  // but we might as well send it.   However having sent it we need to send a STATUS:CANCELLED
-  // on cancellation.    It's not clear to me from the spec whether this is strictly necessary
-  // but it can do no harm and there are some apps that seem to need it - for example Outlook
-  // 2003 (but not 2007)
+  // in the Status property, as some calendar apps will use it.   For example Outlook 2007 will
+  // distinguish between tentative and confirmed bookings.  However, having sent it we need to
+  // send a STATUS:CANCELLED on cancellation.    It's not clear to me from the spec whether this
+  // is strictly necessary but it can do no harm and there are some apps that seem to need it -
+  // for example Outlook 2003 (but not 2007).
   if ($method == "CANCEL")
   {
     $results[] = "STATUS:CANCELLED";
