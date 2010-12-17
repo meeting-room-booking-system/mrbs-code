@@ -272,84 +272,72 @@ if ($enable_periods)
   $resolution = 60;
 }
 
+// When All Day is checked, $start_seconds and $end_seconds are disabled and so won't
+// get passed through by the form.   We therefore need to set them.
 if (isset($all_day) && ($all_day == "yes"))
 {
   if ($enable_periods)
   {
-    $max_periods = count($periods);
-    $starttime = mktime(12, 0, 0, $month, $day, $year);
-    $endtime   = mktime(12, $max_periods, 0, $end_month, $end_day, $end_year);
-    // We need to set the duration and units because they are needed for email notifications
-    $duration = $max_periods;
-    $dur_units = "periods";
-    // No need to convert into something sensible, because they already are
+    $start_seconds = 12 * 60 * 60;
+    // This is actually the start of the last period, which is what the form would
+    // have returned.   It will get corrected in a moment.
+    $end_seconds = $start_seconds + ((count($periods) - 1) * 60);
   }
   else
   {
-    $starttime = mktime($morningstarts, $morningstarts_minutes, 0,
-                        $month, $day, $year,
-                        is_dst($month, $day, $year, $morningstarts));
-    $endtime   = mktime($eveningends, $eveningends_minutes, 0,
-                        $end_month, $end_day, $end_year,
-                        is_dst($month, $day, $year, $eveningends));
-    $endtime += $resolution;                // add on the duration (in seconds) of the last slot as
-                                            // $eveningends and $eveningends_minutes specify the 
-                                            // beginning of the last slot
-    // We need to set the duration and units because they are needed for email notifications
-    $duration = $endtime - $starttime;
-    $dur_units = "seconds";
-    // Convert them into something sensible (but don't translate because
-    // that's done later)
-    toTimeString($duration, $dur_units, FALSE);
+    $start_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+    $end_seconds = (($eveningends * 60) + $eveningends_minutes) *60;
+    $end_seconds += $resolution;  // We want the end of the last slot, not the beginning
   }
+}
+
+// Now work out the start and times
+$starttime = mktime(0, 0, 0,
+                    $month, $day, $year,
+                    is_dst($month, $day, $year, intval($start_seconds/3600))) + $start_seconds;
+$endtime   = mktime(0, 0, 0,
+                    $end_month, $end_day, $end_year,
+                    is_dst($end_month, $end_day, $end_year, intval($end_seconds/3600))) + $end_seconds;
+// If we're using periods then the endtime we've been returned by the form is actually
+// the beginning of the last period in the booking (it's more intuitive for users this way)
+// so we need to add on 60 seconds (1 period)
+if ($enable_periods)
+{
+  $endtime = $endtime + 60;
+}
+
+// Round down the starttime and round up the endtime to the nearest slot boundaries
+// (This step is probably unnecesary now that MRBS always returns times aligned
+// on slot boundaries, but is left in for good measure).                  
+$am7 = mktime($morningstarts, $morningstarts_minutes, 0,
+              $month, $day, $year, is_dst($month, $day, $year, $morningstarts));
+$starttime = round_t_down($starttime, $resolution, $am7);
+$endtime = round_t_up($endtime, $resolution, $am7);
+  
+// If they asked for 0 minutes, and even after the rounding the slot length is still
+// 0 minutes, push that up to 1 resolution unit.
+if ($endtime == $starttime)
+{
+  $endtime += $resolution;
+}
+
+// Now get the duration, which will be needed for email notifications
+// (We do this before we adjust for DST so that the user sees what they expect to see)
+$duration = $endtime - $starttime;
+$date = getdate($starttime);
+if ($enable_periods)
+{
+  $period = (($date['hours'] - 12) * 60) + $date['minutes'];
+  toPeriodString($period, $duration, $dur_units, FALSE);
 }
 else
 {
-  $starttime = mktime(0, 0, 0,
-                      $month, $day, $year,
-                      is_dst($month, $day, $year, intval($start_seconds/3600))) + $start_seconds;
-  $endtime   = mktime(0, 0, 0,
-                      $end_month, $end_day, $end_year,
-                      is_dst($end_month, $end_day, $end_year, intval($end_seconds/3600))) + $end_seconds;
-  // If we're using periods then the endtime we've been returned by the form is actually
-  // the beginning of the last period in the booking (it's more intuitive for users this way)
-  // so we need to add on 60 seconds (1 period)
-  if ($enable_periods)
-  {
-    $endtime = $endtime + 60;
-  }
-
-  // Round down the starttime and round up the endtime to the nearest slot boundaries                   
-  $am7=mktime($morningstarts,$morningstarts_minutes,0,
-              $month,$day,$year,is_dst($month,$day,$year,$morningstarts));
-  $starttime = round_t_down($starttime, $resolution, $am7);
-  $endtime = round_t_up($endtime, $resolution, $am7);
-  
-  // If they asked for 0 minutes, and even after the rounding the slot length is still
-  // 0 minutes, push that up to 1 resolution unit.
-  if ($endtime == $starttime)
-  {
-    $endtime += $resolution;
-  }
-
-  // Now adjust the duration in line with the adjustments to start and end time
-  // so that the email notifications report the adjusted duration
-  // (We do this before we adjust for DST so that the user sees what they expect to see)
-  $duration = $endtime - $starttime;
-  $date = getdate($starttime);
-  if ($enable_periods)
-  {
-    $period = (($date['hours'] - 12) * 60) + $date['minutes'];
-    toPeriodString($period, $duration, $dur_units, FALSE);
-  }
-  else
-  {
-    toTimeString($duration, $dur_units, FALSE);
-  }
-  
-  // Adjust the endtime for DST
-  $endtime += cross_dst( $starttime, $endtime );
+  toTimeString($duration, $dur_units, FALSE);
 }
+  
+// Adjust the endtime for DST
+$endtime += cross_dst( $starttime, $endtime );
+
 
 if (isset($rep_type) && ($rep_type != REP_NONE) &&
     isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
