@@ -681,7 +681,7 @@ function create_addresses($data, $action)
     $to[] = get_approvers_email($data['room_id']);
   }
   
-  ($mail_settings['admin_on_bookings']) ? $to[] = $mail_settings['addresses'] : '';
+  ($mail_settings['admin_on_bookings']) ? $to[] = $mail_settings['recipients'] : '';
   
   if ($mail_settings['area_admin_on_bookings'])
   {
