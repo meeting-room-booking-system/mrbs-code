@@ -269,9 +269,12 @@ if ($enable_periods)
 
 if (isset($all_day) && ($all_day == "yes"))
 {
+  // We need to set $start_seconds because it won't have been passed through by the
+  // form and it is needed later on.
   if ($enable_periods)
   {
     $max_periods = count($periods);
+    $start_seconds = 12 * 60 * 60;
     $starttime = mktime(12, 0, 0, $month, $day, $year);
     $endtime   = mktime(12, $max_periods, 0, $end_month, $end_day, $end_year);
     // We need to set the duration and units because they are needed for email notifications
@@ -281,6 +284,7 @@ if (isset($all_day) && ($all_day == "yes"))
   }
   else
   {
+    $start_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
     $starttime = mktime($morningstarts, $morningstarts_minutes, 0,
                         $month, $day, $year,
                         is_dst($month, $day, $year, $morningstarts));
