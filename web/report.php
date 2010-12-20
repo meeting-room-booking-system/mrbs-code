@@ -6,9 +6,13 @@ require_once "defaultincludes.inc";
 // Constant definitions for the value of the summarize parameter.   These are used
 // for bit-wise comparisons.    For example summarize=3 means produce both
 // a report and a summary; summaraize=5 means produce a report as a CSV file
-define('REPORT',  01);
-define('SUMMARY', 02);
-define('CSV',     04);
+define('REPORT',      0x01);
+define('SUMMARY',     0x02);
+// a series of constants defining the ouput format.   These are in the same
+// bit series as the output contents above, though not all combinations are sensible
+define('OUTPUT_HTML', 0x04);
+define('OUTPUT_CSV',  0x08);
+define('OUTPUT_ICAL', 0x10);
 
 // Constants for booking privacy matching
 define('PRIVATE_NO',   0);
@@ -24,7 +28,6 @@ define('CONFIRMED_BOTH', 2);  // Can be anything other than 0 or 1
 define('APPROVED_NO',   0);
 define('APPROVED_YES',  1);
 define('APPROVED_BOTH', 2);  // Can be anything other than 0 or 1
-
 
 
 function date_time_string($t)
@@ -273,7 +276,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   
     echo "<div class=\"report_entry_name\">\n";
     // Brief Description (title), linked to view_entry:
-    echo "<a href=\"view_entry.php?id=".$row['entry_id']."\">" . htmlspecialchars($row['name']) . "</a>\n";
+    echo "<a href=\"view_entry.php?id=".$row['id']."\">" . htmlspecialchars($row['name']) . "</a>\n";
     echo "</div>\n";
   }
   echo $output_as_csv ? '' : "<div class=\"report_entry_when\">\n";
@@ -679,10 +682,12 @@ $is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
 
 if (empty($summarize))
 {
-  $summarize = REPORT;
+  $summarize = REPORT + OUTPUT_HTML;
 }
 
-$output_as_csv = $summarize & CSV;
+$output_as_html = (!isset($summarize)) || ($summarize & OUTPUT_HTML);
+$output_as_csv = $summarize & OUTPUT_CSV;
+$output_as_ical = $summarize & OUTPUT_ICAL;
 
 // Get information about custom fields
 $fields = sql_field_info($tbl_entry);
@@ -722,7 +727,13 @@ if ($output_as_csv)
   header("Content-Type: text/csv; charset=" . get_charset());
   header("Content-Disposition: attachment; filename=\"$filename\"");
 }
-else
+elseif ($output_as_ical)
+{
+  require_once "functions_ical.inc";
+  header("Content-Type: application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"");
+  header("Content-Disposition: attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"");
+}
+else // assumed to be $output_as_html
 {
   print_header($day, $month, $year, $area, isset($room) ? $room : "");
 }
@@ -781,9 +792,10 @@ if (empty($display))
 $private_somewhere = some_area('private_enabled') || some_area('private_mandatory');
 $approval_somewhere = some_area('approval_enabled');
 $confirmation_somewhere = some_area('confirmation_enabled');
+$times_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods=0") > 0);
 
 // Upper part: The form.
-if (!$output_as_csv)
+if ($output_as_html)
 {
   ?>
   <div class="screenonly">
@@ -948,17 +960,30 @@ if (!$output_as_csv)
         <legend><?php echo get_vocab("presentation_options");?></legend>  
         <div id="div_summarize">
           <label><?php echo get_vocab("include");?>:</label>
-          <div class="group">
-            <?php
-            // Radio buttons to choose the value of the summarize parameter
-            // Set up an array mapping the button value to the description
-            $buttons = array(REPORT         => "report_only",
-                             SUMMARY        => "summary_only",
-                             REPORT+SUMMARY => "report_and_summary",
-                             REPORT+CSV     => "report_as_csv",
-                             SUMMARY+CSV    => "summary_as_csv");
+          <?php
+          // Radio buttons to choose the value of the summarize parameter
+          // Set up an array of arrays mapping the button value to the description
+          // Each outer array represents a different group of buttons
+          $buttons = array();
+          // The HTML output buttons
+          $buttons[] = array(REPORT + OUTPUT_HTML           => "report_only",
+                             SUMMARY + OUTPUT_HTML          => "summary_only",
+                             REPORT + SUMMARY + OUTPUT_HTML => "report_and_summary");
+          // The CSV output buttons
+          $buttons[] = array(REPORT + OUTPUT_CSV            => "report_as_csv",
+                             SUMMARY + OUTPUT_CSV           => "summary_as_csv");
+          // The iCal output button
+          if ($times_somewhere) // We can't do iCalendars for periods yet
+          {
+            $buttons[] = array(REPORT + OUTPUT_ICAL           => "report_as_ical");
+          }
+          
+          echo "<div class=\"group_container\">\n";
+          foreach ($buttons as $button_group)
+          {
+            echo "<div class=\"group\">\n";
             // Output each radio button
-            foreach ($buttons as $value => $token)
+            foreach ($button_group as $value => $token)
             {
               echo "<label>";
               echo "<input class=\"radio\" type=\"radio\" name=\"summarize\" value=\"$value\"";          
@@ -966,8 +991,10 @@ if (!$output_as_csv)
               echo ">" . get_vocab($token);
               echo "</label>\n";
             }
-            ?>
-          </div>
+            echo "</div>\n";
+          }
+          echo "</div>\n";
+          ?>
         </div>
       
         <div id="div_sortby"> 
@@ -1046,21 +1073,31 @@ if (isset($areamatch))
   $report_end = mktime(0, 0, 0, $To_month+0, $To_day+1, $To_year+0);
   
   // Construct the SQL query
-  $sql = "SELECT E.id AS entry_id, E.start_time, E.end_time, E.name, E.description, "
-       . "E.type, E.create_by, E.status, "
+  $sql = "SELECT E.*, "
        .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
        . "A.area_name, R.room_name, "
        . "A.approval_enabled, A.confirmation_enabled";
-  // Get any custom fields
-  foreach ($custom_fields as $custom_field => $value)
+  if ($output_as_ical)
   {
-    $sql .= ", E.$custom_field";
+    // If we're producing an iCalendar then we'll also need the repeat
+    // information in order to construct the recurrence rule
+    $sql .= ", T.rep_type, T.end_date, T.rep_opt, T.rep_num_weeks";
   }
-
-  $sql .= " FROM $tbl_entry E, $tbl_area A, $tbl_room R"
-        . " WHERE E.room_id = R.id AND R.area_id = A.id"
+  $sql .= " FROM $tbl_area A, $tbl_room R, $tbl_entry E";
+  if ($output_as_ical)
+  {
+    // We do a LEFT JOIN because we still want the single entries, ie the ones
+    // that won't have a match in the repeat table
+    $sql .= " LEFT JOIN $tbl_repeat T ON E.repeat_id=T.id";
+  }
+  $sql .= " WHERE E.room_id=R.id AND R.area_id=A.id"
         . " AND E.start_time < $report_end AND E.end_time > $report_start";
-
+  if ($output_as_ical)
+  {
+    // We can't export periods in an iCalendar yet
+    $sql .= " AND A.enable_periods=0";
+  }
+  
   if (!empty($areamatch))
   {
     // sql_syntax_caseless_contains() does the SQL escaping
@@ -1187,8 +1224,14 @@ if (isset($areamatch))
                      (A.private_override='none' AND (E.status&" . STATUS_PRIVATE . "=0)))";
     }
   }
-   
-  if ( $sortby == "r" )
+  
+  if ($summarize & OUTPUT_ICAL)
+  {
+    // If we're producing an iCalendar then we'll want the entries ordered by
+    // repeat_id and then recurrence_id
+    $sql .= " ORDER BY repeat_id, ical_recur_id";
+  }
+  elseif ($sortby == "r")
   {
     // Order by Area, Room, Start date/time
     $sql .= " ORDER BY area_name, sort_key, start_time";
@@ -1216,7 +1259,7 @@ if (isset($areamatch))
   {
     $last_area_room = "";
     $last_date = "";
-    if (!$output_as_csv)
+    if ($output_as_html)
     {
       echo "<p class=\"report_entries\">" . $nmatch . " "
       . ($nmatch == 1 ? get_vocab("entry_found") : get_vocab("entries_found"))
@@ -1228,12 +1271,91 @@ if (isset($areamatch))
     {
       csv_report_header($display);
     }
+    
+    if ($output_as_ical)
+    {
+      // If we're producing an iCalendar then initialize an array to hold the events
+      // and a variable to keep track of the last repeat id we've seen
+      $ical_events = array();
+      $last_repeat_id = 0;
+    }
 
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
       if ($summarize & REPORT)
       {
-        reporton($row, $last_area_room, $last_date, $sortby, $display);
+        if ($output_as_ical)
+        {
+          $text_body = array();
+          $html_body = array();
+          // If this is an individual entry, then construct an event
+          if ($row['repeat_id'] == 0)
+          {
+            $text_body['content'] = $row['description'];
+            $ical_events[] = create_ical_event("REQUEST", $row, $text_body, $html_body, NULL, FALSE);
+          }
+          // Otherwise it's a series
+          else
+          {
+            // if it's a series that we haven't seen yet, then construct an event
+            if ($row['repeat_id'] != $last_repeat_id)
+            {
+              $last_repeat_id = $row['repeat_id'];
+              // We need to set the repeat start and end dates because we've only been
+              // asked to export dates in the report range.  The end date will be the
+              // report end date.  The start date of the series will be the recurrence-id
+              // of the first entry in the series, which is this one thanks to the
+              // SQL query which ordered the entries by recurrence-id.
+              $start_row = $row;  // Make a copy of the data because we are going to tweak it.
+              $start_row['end_date'] = $report_end;
+              $duration = $start_row['end_time'] - $start_row['start_time'];
+              $start_row['start_time'] = strtotime($row['ical_recur_id']);
+              $start_row['end_time'] = $start_row['start_time'] + $duration;
+              // However, if this is a series member that has been changed, then we 
+              // cannot trust the rest of the data (eg the description).   We will
+              // use this data for now in case we don't get anything better, but we
+              // will make a note that we really need an unchanged member of the series, 
+              // which will have the correct data for the series which we can use to
+              // replace this event.
+              if ($row['entry_type'] == ENTRY_RPT_CHANGED)
+              {
+                // Record the index number of the event that needs to be replaced.
+                // As we have not yet added that event to the array, it will be
+                // the current length of the array.
+                $replace_index = count($ical_events);
+              }
+              $text_body['content'] = $start_row['description'];
+              $ical_events[] = create_ical_event("REQUEST", $start_row, $text_body, $html_body, NULL, TRUE);
+            }
+            // And if it's a series member that has been altered
+            if ($row['entry_type'] == ENTRY_RPT_CHANGED)
+            {
+              $text_body['content'] = $row['description'];
+              $ical_events[] = create_ical_event("REQUEST", $row, $text_body, $html_body, NULL, FALSE);
+            }
+            // Otherwise it must be an original member, in which case check
+            // to see if we were looking out for one
+            elseif (isset($replace_index))
+            {
+              // Use this row to define the sequence as it has got all the original
+              // data, except that we need to change the start and end times, keeping
+              // the original duration.   We get the start time from the recurrence
+              // id of the first member of the series, which we saved earlier on.
+              $duration = $row['end_time'] - $row['start_time'];
+              $row['start_time'] = $start_row['start_time'];
+              $row['end_time'] = $row['start_time'] + $duration;
+              $row['end_date'] = $report_end;
+              $text_body['content'] = $row['description'];
+              $ical_events[$replace_index] = create_ical_event("REQUEST", $row, $text_body, $html_body, NULL, TRUE);
+              // Clear the $replace_index now that we've found an original entry
+              unset ($replace_index);
+            }
+          }
+        }
+        else
+        {
+          reporton($row, $last_area_room, $last_date, $sortby, $display);
+        }
       }
 
       if ($summarize & SUMMARY)
@@ -1246,6 +1368,15 @@ if (isset($areamatch))
           );
       }
     }
+    
+    if ($output_as_ical)
+    {
+      // Build the iCalendar from the array of events and output it
+      $icalendar = create_icalendar("REQUEST", $ical_events);
+      echo $icalendar;
+      exit;
+    }
+    
     if ($summarize & SUMMARY)
     {
       do_summary($count, $hours, $room_hash, $name_hash);
@@ -1253,7 +1384,7 @@ if (isset($areamatch))
   }
 }
 
-if (!$output_as_csv)
+if ($output_as_html)
 {
   require_once "trailer.inc";
 }

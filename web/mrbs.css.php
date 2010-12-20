@@ -532,6 +532,8 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 .form_general div {float: left; clear: left; width: 100%}
 .form_general div div {float: none; clear: none; width: auto}
 .form_general div.group {float: left}
+.form_general div.group_container {float: left}
+.form_general .group_container div.group {clear: left}
 .form_general div.group.ampm {width: <?php echo $edit_entry_ampm_width ?>em}
 .edit_area_room div.group {clear: none; width: auto}
 .edit_area_room div.group#private_override div {clear: left}

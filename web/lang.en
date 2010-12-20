@@ -266,6 +266,7 @@ $vocab["summary_only"]          = "Summary only";
 $vocab["report_and_summary"]    = "Report and Summary";
 $vocab["report_as_csv"]         = "Report as CSV";
 $vocab["summary_as_csv"]        = "Summary as CSV";
+$vocab["report_as_ical"]        = "Report as iCalendar (.ics file) - excluding periods";
 $vocab["summarize_by"]          = "Summarize by";
 $vocab["sum_by_descrip"]        = "Brief description";
 $vocab["sum_by_creator"]        = "Creator";
@@ -285,7 +286,7 @@ $vocab["fulldescription_short"] = "Full Description";
 $vocab["both"]                  = "All";
 $vocab["privacy_status"]        = "Privacy status";
 $vocab["search_criteria"]       = "Search criteria";
-$vocab["presentation_options"]  = "Presentation options";
+$vocab["presentation_options"]  = "Output options";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Go To Week Before";
