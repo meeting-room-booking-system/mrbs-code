@@ -3,6 +3,7 @@
 
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
+require_once "functions_view.inc";
 
 // Generates a single button
 function generateButton($form_action, $id, $series, $action_type, $returl, $submit_value, $title='')
@@ -97,140 +98,6 @@ function generateTextArea($form_action, $id, $series, $action_type, $returl, $su
   echo "<tr>\n";
 }
 
-function create_details_row($label, $value, $as_html=FALSE, $class='')
-{
-  $result = '';
-  if ($as_html)
-  {
-    $result .= "<tr>\n";
-    $result .= "<td>$label:</td>\n";
-    $result .= "<td" .
-               ((!empty($class)) ? " class=\"$class\"" : "") .
-               ">" . mrbs_nl2br(htmlspecialchars($value)) . "</td>\n";
-    $result .= "</tr>\n";
-  }
-  else
-  {
-    $result .= "$label: $value\n";
-  }
-  return $result;
-}
-
-function create_details($data, $as_html=FALSE)
-{
-  global $enable_periods, $confirmation_enabled, $approval_enabled;
-  global $is_private_field, $standard_fields, $typel;
-  global $keep_private, $room_disabled, $area_disabled;
-  
-  $tbody = '';
-  $tbody .= ($as_html) ? "<tbody>\n" : "";
-  // Description
-  $class = ($keep_private & $is_private_field['entry.description']) ? "private" : "";
-  $tbody .= create_details_row(get_vocab("description"), $data['description'], $as_html, $class);
-  // Confirmation status
-  if ($confirmation_enabled)
-  {
-    $value = ($data['status'] & STATUS_TENTATIVE) ? get_vocab("tentative") : get_vocab("confirmed");
-    $tbody .= create_details_row(get_vocab("confirmation_status"), $value, $as_html);
-  }
-  // Approval status
-  if ($approval_enabled)
-  {
-    $value = ($data['status'] & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved");
-    $tbody .= create_details_row(get_vocab("approval_status"), $value, $as_html);
-  }
-  // Room
-  $value = $data['area_name'] . " - " . $data['room_name'];
-  if ($room_disabled || $area_disabled)
-  {
-    $value .= ($as_html) ? "<span class=\"note\">" : "";
-    $value .= " (" . get_vocab("disabled") . ")";
-    $value .= ($as_html) ? "</span>" : "";
-  }
-  $tbody .= create_details_row(get_vocab("room"), $value, $as_html);
-  // Start date
-  if ($enable_periods)
-  {
-    list($start_period, $start_date) =  period_date_string($data['start_time']);
-  }
-  else
-  {
-    $start_date = time_date_string($data['start_time']);
-  }
-  $tbody .= create_details_row(get_vocab("start_date"), $start_date, $as_html);
-  // Duration
-  $tbody .= create_details_row(get_vocab("duration"), $data['duration'] . " " . $data['dur_units'], $as_html);
-  // End date
-  if ($enable_periods)
-  {
-    list( , $end_date) =  period_date_string($data['end_time'], -1);
-  }
-  else
-  {
-    $end_date = time_date_string($data['end_time']);
-  }
-  $tbody .= create_details_row(get_vocab("end_date"), $end_date, $as_html);
-  // Type
-  $value = (empty($typel[$data['type']])) ? "?${data['type']}?" : $typel[$data['type']];
-  $tbody .= create_details_row(get_vocab("type"), $value, $as_html);
-  // Created by
-  $class = ($keep_private && $is_private_field['entry.create_by']) ? "private" : "";
-  $tbody .= create_details_row(get_vocab("createdby"), $data['create_by'], $as_html, $class);
-  // Last updated
-  $tbody .= create_details_row(get_vocab("lastupdate"), time_date_string($data['last_updated']), $as_html);
-  // The custom fields
-  $fields = sql_field_info($tbl_entry);
-  foreach ($fields as $field)
-  {
-    $key = $field['name'];
-    if (!in_array($key, $standard_fields['entry']))
-    {
-      $label = get_loc_field_name($tbl_entry, $key);
-      // Output a yes/no if it's a boolean or integer <= 2 bytes (which we will
-      // assume are intended to be booleans)
-      if (($field['nature'] == 'boolean') || 
-          (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
-      {
-        if ($keep_private && $is_private_field["entry.$key"])
-        {
-          $value = $data[$key];  // Will have been set previously
-        }
-        else
-        {
-          $value = empty($data[$key]) ? get_vocab("no") : get_vocab("yes");
-        }
-      }
-      // Otherwise output a string
-      else
-      {
-        $value = (isset($data[$key])) ? $data[$key] : "&nbsp;"; 
-      }
-      $class = ($keep_private && $is_private_field["entry.$key"]) ? "private" : "";
-      $tbody .= create_details_row($label, $value, $as_html, $class);
-    }
-  }
-  // Repeat type
-  $tbody .= create_details_row(get_vocab("rep_type"), get_vocab("rep_type_" . $data['rep_type']), $as_html);
-  // Repeat details
-  if($data['rep_type'] != REP_NONE)
-  {
-    if (($data['rep_type'] == REP_WEEKLY) || ($data['rep_type'] == REP_N_WEEKLY))
-    {
-      if ($data['rep_type'] == REP_N_WEEKLY)
-      {
-        // Repeat number of weeks
-        $tbody .= create_details_row(get_vocab("rep_num_weeks")." ".get_vocab("rep_for_nweekly"), $data['rep_num_weeks'], $as_html);
-      }
-      // Repeat days
-      $tbody .= create_details_row(get_vocab("rep_rep_day"), get_rep_day_list($data['rep_opt']), $as_html);
-    }
-    // Repeat end date
-    $tbody .= create_details_row(get_vocab("rep_end_date"), utf8_strftime('%A %d %B %Y',$data['end_date']), $as_html);
-  }
-  $tbody .= ($as_html) ? "</tbody>\n" : "";
-  
-  return $tbody;
-}
 
 // Get non-standard form variables
 //
@@ -258,9 +125,8 @@ $row = mrbsGetBookingInfo($id, $series);
 // to know how to display private/public bookings in this area.
 get_area_settings($row['area_id']);
 
-// Work out whether the room and area are disabled
-$room_disabled = $row['room_disabled'];
-$area_disabled = $row['area_disabled'];
+// Work out whether the room or area is disabled
+$room_disabled = $row['room_disabled'] || $row['area_disabled'];
 // Get the status
 $status = $row['status'];
 // Work out whether this event should be kept private
@@ -360,9 +226,9 @@ if (isset($action) && ($action == "download"))
     header("Content-Type: application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"");
     header("Content-Disposition: attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"");
     $text_body = array();
-    $text_body['content'] = create_details($row, FALSE);
+    $text_body['content'] = create_details_body($row, FALSE, $keep_private, $room_disabled);
     $html_body = array();
-    $html_body['content'] = "<table>\n" . create_details($row, TRUE) . "</table>\n";
+    $html_body['content'] = "<table>\n" . create_details_body($row, TRUE, $keep_private, $room_disabled) . "</table>\n";
     $addresses = array();
     $ical_components = array();
     $ical_components[] = create_ical_event("REQUEST", $row, $text_body, $html_body, $addresses, $series);
@@ -377,8 +243,8 @@ if (isset($action) && ($action == "download"))
         for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
         {
           $data = mrbsGetBookingInfo($row['id'], FALSE);
-          $text_body['content'] = create_details($data, FALSE);
-          $html_body['content'] = "<table>\n" . create_details($data, TRUE) . "</table>\n";
+          $text_body['content'] = create_details_body($data, FALSE, $keep_private, $room_disabled);
+          $html_body['content'] = "<table>\n" . create_details_body($data, TRUE, $keep_private, $room_disabled) . "</table>\n";
           $ical_components[] = create_ical_event("REQUEST", $data, $text_body, $html_body, $addresses, FALSE);
         }
       }
@@ -453,8 +319,7 @@ if (!empty($error))
 
 // If bookings require approval, and the room is enabled, put the buttons
 // to do with managing the bookings in the footer
-if ($approval_enabled && !$room_disabled &&!$area_disabled &&
-    ($status & STATUS_AWAITING_APPROVAL))
+if ($approval_enabled && !$room_disabled && ($status & STATUS_AWAITING_APPROVAL))
 {
   echo "<tfoot id=\"approve_buttons\">\n";
   // PHASE 2 - REJECT
@@ -529,7 +394,7 @@ if ($approval_enabled && !$room_disabled &&!$area_disabled &&
   echo "</tfoot>\n";
 }
 
-echo create_details($row, TRUE);
+echo create_details_body($row, TRUE, $keep_private, $room_disabled);
 
 ?>
 </table>
@@ -539,7 +404,7 @@ echo create_details($row, TRUE);
   // Only show the links for Edit and Delete if the room is enabled.    We're
   // allowed to view and copy existing bookings in disabled rooms, but not to
   // modify or delete them.
-  if (!$room_disabled && !$area_disabled)
+  if (!$room_disabled)
   {
     // Edit and Edit Series
     echo "<div>\n";

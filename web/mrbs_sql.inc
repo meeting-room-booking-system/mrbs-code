@@ -878,22 +878,12 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   $row = sql_row_keyed($res, 0);
   sql_free($res);
   
-  // Now get the start time, end time and duration.
-  // Need to make DST correct in opposite direction to entry creation
-  // so that user see what he expects to see
-  $row['duration'] -= cross_dst($row['start_time'], $row['end_time']);
+  // Now get the duration.
   // Don't translate the units at this stage.   We'll translate them later.
-  if ($enable_periods)
-  {
-    $time = getdate($row['start_time']);
-    $start_period = $time['minutes'];
-    toPeriodString($start_period, $row['duration'], $row['dur_units'], FALSE);
-  }
-  else
-  {
-    toTimeString($row['duration'], $row['dur_units'], FALSE);
-  }
-  
+  $d = get_duration($row['start_time'], $row['end_time'], FALSE);
+  $row['duration'] = $d['duration'];
+  $row['dur_units'] = $d['dur_units'];
+    
   // Get some extra information
   if ($series)
   {

@@ -730,6 +730,7 @@ if ($output_as_csv)
 elseif ($output_as_ical)
 {
   require_once "functions_ical.inc";
+  require_once "functions_view.inc";
   header("Content-Type: application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"");
   header("Content-Disposition: attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"");
 }
@@ -1291,7 +1292,8 @@ if (isset($areamatch))
           // If this is an individual entry, then construct an event
           if ($row['repeat_id'] == 0)
           {
-            $text_body['content'] = $row['description'];
+            $text_body['content'] = create_details_body($row, FALSE);
+            $html_body['content'] = create_details_body($row, TRUE);
             $ical_events[] = create_ical_event("REQUEST", $row, $text_body, $html_body, NULL, FALSE);
           }
           // Otherwise it's a series
@@ -1324,13 +1326,15 @@ if (isset($areamatch))
                 // the current length of the array.
                 $replace_index = count($ical_events);
               }
-              $text_body['content'] = $start_row['description'];
+              $text_body['content'] = create_details_body($start_row, FALSE);
+              $html_body['content'] = create_details_body($start_row, TRUE);
               $ical_events[] = create_ical_event("REQUEST", $start_row, $text_body, $html_body, NULL, TRUE);
             }
             // And if it's a series member that has been altered
             if ($row['entry_type'] == ENTRY_RPT_CHANGED)
             {
-              $text_body['content'] = $row['description'];
+              $text_body['content'] = create_details_body($row, FALSE);
+              $html_body['content'] = create_details_body($row, TRUE);
               $ical_events[] = create_ical_event("REQUEST", $row, $text_body, $html_body, NULL, FALSE);
             }
             // Otherwise it must be an original member, in which case check
@@ -1345,7 +1349,8 @@ if (isset($areamatch))
               $row['start_time'] = $start_row['start_time'];
               $row['end_time'] = $row['start_time'] + $duration;
               $row['end_date'] = $report_end;
-              $text_body['content'] = $row['description'];
+              $text_body['content'] = create_details_body($row, FALSE);
+              $html_body['content'] = create_details_body($row, TRUE);
               $ical_events[$replace_index] = create_ical_event("REQUEST", $row, $text_body, $html_body, NULL, TRUE);
               // Clear the $replace_index now that we've found an original entry
               unset ($replace_index);

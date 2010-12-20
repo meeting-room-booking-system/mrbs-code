@@ -293,6 +293,38 @@ function fromPeriodString($start_period, &$units, $dur_units)
 }
 
 
+// Get the duration of an interval given a start time and end time.  Corrects for
+// DST changes so that the duration is what the user would expect to see.  For
+// example 12 noon to 12 noon crossing a DST boundary is 24 hours.
+//
+// Returns an array indexed by 'duration' and 'dur_units'
+//
+//    $start_time   int     start time as a Unix timestamp
+//    $end_time     int     end time as a Unix timestamp
+//    $translate    boolean whether to translate into the browser language
+function get_duration($start_time, $end_time, $translate=TRUE)
+{
+  global $enable_periods;
+  
+  $result = array();
+  $result['duration'] = $end_time - $start_time;
+  // Need to make DST correct in opposite direction to entry creation
+  // so that user see what he expects to see
+  $result['duration'] -= cross_dst($start_time, $end_time);
+  if ($enable_periods)
+  {
+    $time = getdate($start_time);
+    $start_period = $time['minutes'];
+    toPeriodString($start_period, $result['duration'], $result['dur_units'], $translate);
+  }
+  else
+  {
+    toTimeString($result['duration'], $result['dur_units'], $translate);
+  }
+  return $result;
+}
+
+
 // Generate an input field with an associated label
 // Optional fifth parameter: $maxlength - the maximum length of input allowed
 function generate_input($label_text, $name, $value, $disabled=FALSE)
