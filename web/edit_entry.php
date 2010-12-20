@@ -218,7 +218,13 @@ if (isset($id))
         // edit_entry_handler and the original room isn't among them, then we will 
         // just have to make an arbitrary choice as to which is the room containing
         // the original booking.)
-        $original_room_id = $row['room_id'];
+        // NOTE:  We do not set the original_room_id if we are copying an entry,
+        // because when we are copying we are effectively making a new entry and
+        // so we want edit_entry_handler to assign a new UID, etc.
+        if (!$copy)
+        {
+          $original_room_id = $row['room_id'];
+        }
       case 'ical_uid':
       case 'ical_sequence':
       case 'ical_recur_id':
