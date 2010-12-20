@@ -118,7 +118,8 @@ function create_details_row($label, $value, $as_html=FALSE, $class='')
 
 function create_details($data, $as_html=FALSE)
 {
-  global $enable_periods, $confirmation_enabled, $approval_enabled, $standard_fields, $typel;
+  global $enable_periods, $confirmation_enabled, $approval_enabled;
+  global $is_private_field, $standard_fields, $typel;
   global $keep_private, $room_disabled, $area_disabled;
   
   $tbody = '';
