@@ -74,6 +74,8 @@ function ical_escape_text($str)
   $str = str_replace(";", "\;", $str);
   // Escape ','
   $str = str_replace(",", "\,", $str);
+  // EOL can only be \n
+  $str = str_replace("\r\n", "\n", $str);
   // Escape '\n'
   $str = str_replace("\n", "\\n", $str);
   return $str;
