@@ -201,10 +201,17 @@ function create_ical_event($method, $data, $text_description, $html_description,
   {
     $results[] = "STATUS:CANCELLED";
   }
-  elseif ($confirmation_enabled)
+  else
   {
-    $results[] = "STATUS:". (($data['status'] & STATUS_TENTATIVE) ? "TENTATIVE" : "CONFIRMED");
+    $results[] = "STATUS:" . (($data['status'] & STATUS_TENTATIVE) ? "TENTATIVE" : "CONFIRMED");
   }
+  /*  
+  Class is commented out for the moment.  To be useful it probably needs to go
+  hand in hand with an ORGANIZER, otherwise people won't be able to see their own
+  bookings
+  // CLASS
+  $results[] = "CLASS:" . (($data['status'] & STATUS_PRIVATE) ? "PRIVATE" : "PUBLIC");
+  */
   
   // Put the people on the "to" list as required participants and those on the cc
   // list as non particpants.   In theory the email client can then decide whether
