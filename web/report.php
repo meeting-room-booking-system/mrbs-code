@@ -731,6 +731,7 @@ elseif ($output_as_ical)
 {
   require_once "functions_ical.inc";
   require_once "functions_view.inc";
+  require_once "mrbs_sql.inc";
   header("Content-Type: application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"");
   header("Content-Disposition: attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"");
 }
@@ -1302,6 +1303,22 @@ if (isset($areamatch))
             // if it's a series that we haven't seen yet, then construct an event
             if ($row['repeat_id'] != $last_repeat_id)
             {
+              // Unless is the very first series, check to see whether we got
+              // all the entries we would have expected in the last series and
+              // issue cancellations for those that are missing
+              if (isset($actual_entries))
+              {
+                $missing_entries = array_diff($expected_entries, $actual_entries);
+                foreach ($missing_entries as $missing_entry)
+                {
+                  $duration = $start_row['end_time'] - $start_row['start_time'];
+                  $start_row['start_time'] = $missing_entry;
+                  $start_row['end_time'] = $start_row['start_time'] + $duration;
+                  $start_row['ical_recur_id'] = gmdate(RFC5545_FORMAT . '\Z', $missing_entry);
+                  $ical_events[] = create_ical_event("CANCEL", $start_row, NULL, NULL, NULL, FALSE);
+                }
+              }
+              // Initialise for the new series
               $last_repeat_id = $row['repeat_id'];
               unset($replace_index);
               // We need to set the repeat start and end dates because we've only been
@@ -1319,7 +1336,9 @@ if (isset($areamatch))
               // use this data for now in case we don't get anything better, but we
               // will make a note that we really need an unchanged member of the series, 
               // which will have the correct data for the series which we can use to
-              // replace this event.
+              // replace this event.   (Of course, if we don't get an unchanged member
+              // then it doesn't matter because all the original members will have been
+              // changed and so there's no longer any need for the original data.)
               if ($row['entry_type'] == ENTRY_RPT_CHANGED)
               {
                 // Record the index number of the event that needs to be replaced.
@@ -1327,10 +1346,25 @@ if (isset($areamatch))
                 // the current length of the array.
                 $replace_index = count($ical_events);
               }
+              // Construct an array of the entries we'd expect to see in this series so that
+              // we can check whether any are missing and if so set their status to cancelled.
+              // (We use PHP_INT_MAX rather than $max_rep_entrys because $max_rep_entrys may
+              // have changed since the series was created.)
+              $expected_entries = mrbsGetRepeatEntryList($start_row['start_time'], 
+                                                         $start_row['end_date'],
+                                                         $start_row['rep_type'],
+                                                         $start_row['rep_opt'],
+                                                         PHP_INT_MAX,
+                                                         $start_row['rep_num_weeks']);
+              // And keep an array of all the entries we actually see
+              $actual_entries = array();
+              // Create the series event
               $text_body['content'] = create_details_body($start_row, FALSE);
               $html_body['content'] = create_details_body($start_row, TRUE);
               $ical_events[] = create_ical_event("REQUEST", $start_row, $text_body, $html_body, NULL, TRUE);
             }
+            // Add this entry to the array of ones we've seen
+            $actual_entries[] = strtotime($row['ical_recur_id']);
             // And if it's a series member that has been altered
             if ($row['entry_type'] == ENTRY_RPT_CHANGED)
             {
@@ -1377,6 +1411,21 @@ if (isset($areamatch))
     
     if ($output_as_ical)
     {
+      // We've got to the end of the rows, so check to see whether there were
+      // any entries missing from the very last series, if there was one, and
+      // issue cancellations for the missing entries
+      if (isset($actual_entries))
+      {
+        $missing_entries = array_diff($expected_entries, $actual_entries);
+        foreach ($missing_entries as $missing_entry)
+        {
+          $duration = $start_row['end_time'] - $start_row['start_time'];
+          $start_row['start_time'] = $missing_entry;
+          $start_row['end_time'] = $start_row['start_time'] + $duration;
+          $start_row['ical_recur_id'] = gmdate(RFC5545_FORMAT . '\Z', $missing_entry);
+          $ical_events[] = create_ical_event("CANCEL", $start_row, NULL, NULL, NULL, FALSE);
+        }
+      }
       // Build the iCalendar from the array of events and output it
       $icalendar = create_icalendar("REQUEST", $ical_events);
       echo $icalendar;
