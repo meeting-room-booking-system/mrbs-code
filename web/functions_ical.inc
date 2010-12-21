@@ -436,7 +436,6 @@ function export_icalendar($res, $keep_private, $export_end=PHP_INT_MAX)
   // Build the iCalendar from the array of events and output it
   $icalendar = create_icalendar("REQUEST", $ical_events);
   echo $icalendar;
-  exit;
 }
 
 ?>

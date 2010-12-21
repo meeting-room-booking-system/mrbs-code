@@ -1283,6 +1283,7 @@ if (isset($areamatch))
       // We set $keep_private to FALSE here because we excluded all private
       // events in the SQL query
       export_icalendar($res, FALSE, $report_end);
+      exit;
     }
 
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
