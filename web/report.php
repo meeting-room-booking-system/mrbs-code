@@ -1304,12 +1304,12 @@ if (isset($areamatch))
             {
               $last_repeat_id = $row['repeat_id'];
               // We need to set the repeat start and end dates because we've only been
-              // asked to export dates in the report range.  The end date will be the
-              // report end date.  The start date of the series will be the recurrence-id
-              // of the first entry in the series, which is this one thanks to the
-              // SQL query which ordered the entries by recurrence-id.
+              // asked to export dates in the report range.  The end date will be the earlier
+              // of the series end date and the report end date.  The start date of the series
+              // will be the recurrence-id of the first entry in the series, which is this one
+              // thanks to the SQL query which ordered the entries by recurrence-id.
               $start_row = $row;  // Make a copy of the data because we are going to tweak it.
-              $start_row['end_date'] = $report_end;
+              $start_row['end_date'] = min($report_end, $start_row['end_date']);
               $duration = $start_row['end_time'] - $start_row['start_time'];
               $start_row['start_time'] = strtotime($row['ical_recur_id']);
               $start_row['end_time'] = $start_row['start_time'] + $duration;
@@ -1348,7 +1348,7 @@ if (isset($areamatch))
               $duration = $row['end_time'] - $row['start_time'];
               $row['start_time'] = $start_row['start_time'];
               $row['end_time'] = $row['start_time'] + $duration;
-              $row['end_date'] = $report_end;
+              $row['end_date'] = min($report_end, $row['end_date']);
               $text_body['content'] = create_details_body($row, FALSE);
               $html_body['content'] = create_details_body($row, TRUE);
               $ical_events[$replace_index] = create_ical_event("REQUEST", $row, $text_body, $html_body, NULL, TRUE);
