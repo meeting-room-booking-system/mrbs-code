@@ -1303,6 +1303,7 @@ if (isset($areamatch))
             if ($row['repeat_id'] != $last_repeat_id)
             {
               $last_repeat_id = $row['repeat_id'];
+              unset($replace_index);
               // We need to set the repeat start and end dates because we've only been
               // asked to export dates in the report range.  The end date will be the earlier
               // of the series end date and the report end date.  The start date of the series
