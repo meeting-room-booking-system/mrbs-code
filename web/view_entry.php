@@ -174,10 +174,10 @@ else
 }
 
 
-// PHASE 2 - DOWNLOADING ICALENDAR FILES
+// PHASE 2 - EXPORTING ICALENDAR FILES
 // -------------------------------------
 
-if (isset($action) && ($action == "download"))
+if (isset($action) && ($action == "export"))
 {
   if ($keep_private  || $enable_periods)
   {
@@ -268,7 +268,7 @@ else
 // Now that we know all the data we start drawing it
 
 echo "<h3" . (($keep_private && $is_private_field['entry.name']) ? " class=\"private\"" : "") . ">\n";
-echo htmlspecialchars($row['name']);
+echo ($keep_private && $is_private_field['entry.name']) ? "[" . get_vocab("private") . "]" : htmlspecialchars($row['name']);
 if (is_private_event($private) && $writeable) 
 {
   echo ' ('.get_vocab("private").')';
@@ -422,16 +422,16 @@ echo create_details_body($row, TRUE, $keep_private, $room_disabled);
   }
   echo "</div>\n";
   
-  // Download and Download Series
+  // Export and Export Series
   if (!$keep_private && !$enable_periods)
   {
     // The iCalendar information has the full booking details in it, so we will not allow
-    // it to be downloaded if it is private and the user is not authorised to see it.
+    // it to be exported if it is private and the user is not authorised to see it.
     // iCalendar information doesn't work with periods at the moment (no periods to times mapping)
     echo "<div>\n";
     if (!$series)
     {
-      echo "<a href=\"view_entry.php?action=download&amp;id=$id&amp;returl=$link_returl\">". get_vocab("downloadentry") ."</a>";
+      echo "<a href=\"view_entry.php?action=export&amp;id=$id&amp;returl=$link_returl\">". get_vocab("exportentry") ."</a>";
     } 
     if (!empty($repeat_id)  && !$series)
     {
@@ -439,7 +439,7 @@ echo create_details_body($row, TRUE, $keep_private, $room_disabled);
     }  
     if (!empty($repeat_id) || $series)
     {
-      echo "<a href=\"view_entry.php?action=download&amp;id=$repeat_id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$link_returl\">".get_vocab("downloadseries")."</a>";
+      echo "<a href=\"view_entry.php?action=export&amp;id=$repeat_id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$link_returl\">".get_vocab("exportseries")."</a>";
     }
     echo "</div>\n";
   }
