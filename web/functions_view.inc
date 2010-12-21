@@ -54,6 +54,43 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
     $data['rep_type'] = REP_NONE;
   }
   
+  // Go throuh each of the columns and for each of them that can be made private
+  // substitute the private text if the user is not allowed to see the data
+  $private_text = "[" . get_vocab("private") . "]";
+  
+  foreach ($data as $key => $value)
+  {
+    // We could just test each column against $is_private_field["entry.$key"]
+    // but restricting the test to the columns below guards against the possibility
+    // that somebody has accidentally configured a 'system' field to be private
+    switch ($key)
+    { 
+      case 'name':
+      case 'description':
+      case 'create_by':
+      case 'room_name':
+      case 'area_name':
+      case 'type':
+      case 'room_id':
+      case 'entry_info_time':
+      case 'entry_info_user':
+      case 'entry_info_text':
+      case 'repeat_info_time':
+      case 'repeat_info_user':
+      case 'repeat_info_text':
+        $data[$key] = ($keep_private && $is_private_field["entry.$key"]) ? $private_text : $data[$key];
+        break;
+      
+      default:
+        if (!in_array($key, $standard_fields['entry']))
+        {
+          $data[$key] = ($keep_private && $is_private_field["entry.$key"]) ? $private_text : $data[$key];
+        }
+        break;
+    }
+  }
+
+  
   $tbody = '';
   $tbody .= ($as_html) ? "<tbody>\n" : "";
   // Description

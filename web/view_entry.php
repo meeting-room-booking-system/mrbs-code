@@ -133,43 +133,9 @@ $status = $row['status'];
 $private = $row['status'] & STATUS_PRIVATE;
 $writeable = getWritable($row['create_by'], $user, $row['room_id']);
 $keep_private = (is_private_event($private) && !$writeable);
-$private_text = "[" . get_vocab("private") . "]";
+
 // Work out when the last reminder was sent
 $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
-
-// Go throuh each of the columns and for each of them that can be made private
-// substitute the private text if the user is not allowed to see the data
-foreach ($row as $key => $value)
-{
-  // We could just test each column against $is_private_field["entry.$key"]
-  // but restricting the test to the columns below guards against the possibility
-  // that somebody has accidentally configured a 'system' field to be private
-  switch ($key)
-  { 
-    case 'name':
-    case 'description':
-    case 'create_by':
-    case 'room_name':
-    case 'area_name':
-    case 'type':
-    case 'room_id':
-    case 'entry_info_time':
-    case 'entry_info_user':
-    case 'entry_info_text':
-    case 'repeat_info_time':
-    case 'repeat_info_user':
-    case 'repeat_info_text':
-      $row[$key] = ($keep_private && $is_private_field["entry.$key"]) ? $private_text : $row[$key];
-      break;
-      
-    default:
-      if (!in_array($key, $standard_fields['entry']))
-      {
-        $row[$key] = ($keep_private && $is_private_field["entry.$key"]) ? $private_text : $row[$key];
-      }
-      break;
-  }
-}
 
 
 if ($series == 1)
@@ -225,32 +191,33 @@ if (isset($action) && ($action == "download"))
     require_once "functions_ical.inc";
     header("Content-Type: application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"");
     header("Content-Disposition: attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"");
-    $text_body = array();
-    $text_body['content'] = create_details_body($row, FALSE, $keep_private, $room_disabled);
-    $html_body = array();
-    $html_body['content'] = "<table>\n" . create_details_body($row, TRUE, $keep_private, $room_disabled) . "</table>\n";
-    $addresses = array();
-    $ical_components = array();
-    $ical_components[] = create_ical_event("REQUEST", $row, $text_body, $html_body, $addresses, $series);
-    // If it's a series we need to find out which of the individual entries have been changed
-    // and include them in the iCalendar object
+    
+    // Construct the SQL query
+    $sql = "SELECT E.*, "
+         .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
+         . "A.area_name, R.room_name, "
+         . "A.approval_enabled, A.confirmation_enabled";
     if ($series)
     {
-      $sql = "SELECT id FROM $tbl_entry WHERE repeat_id=$repeat_id AND entry_type=" . ENTRY_RPT_CHANGED;
-      $res = sql_query($sql);
-      if ($res && (sql_count($res) > 0))
-      {
-        for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-        {
-          $data = mrbsGetBookingInfo($row['id'], FALSE);
-          $text_body['content'] = create_details_body($data, FALSE, $keep_private, $room_disabled);
-          $html_body['content'] = "<table>\n" . create_details_body($data, TRUE, $keep_private, $room_disabled) . "</table>\n";
-          $ical_components[] = create_ical_event("REQUEST", $data, $text_body, $html_body, $addresses, FALSE);
-        }
-      }
+      // If it's a series we want the repeat information
+      $sql .= ", T.rep_type, T.end_date, T.rep_opt, T.rep_num_weeks";
     }
-    $icalendar = create_icalendar("REQUEST", $ical_components);
-    echo $icalendar;
+    $sql .= " FROM $tbl_area A, $tbl_room R, $tbl_entry E";
+    if ($series)
+    {
+      $sql .= ", $tbl_repeat T"
+            . " WHERE E.repeat_id=$repeat_id"
+            . " AND E.repeat_id=T.id"
+            . " ORDER BY E.ical_recur_id";
+    }
+    else
+    {
+      $sql .= " WHERE E.id=$id";
+    }
+    $res = sql_query($sql);
+    
+    // Export the calendar
+    export_icalendar($res, $keep_private);
     exit;
   }
 }
