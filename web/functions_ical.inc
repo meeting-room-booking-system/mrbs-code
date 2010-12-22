@@ -286,9 +286,9 @@ function create_icalendar($method, $components)
 
 // outputs an iCalendar based on the data in $res, the result of an SQL query.
 //
-//    $res        resource  the result of an SQL query on the entry table
+//    &$res       resource  the result of an SQL query on the entry table
 //    $export_end int       a Unix timestamp giving the end limit for the export
-function export_icalendar($res, $keep_private, $export_end=PHP_INT_MAX)
+function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
 {
   require_once "functions_view.inc";
   require_once "mrbs_sql.inc";
