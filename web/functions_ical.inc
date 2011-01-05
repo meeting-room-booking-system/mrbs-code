@@ -219,14 +219,17 @@ function create_ical_event($method, $data, $text_description, $html_description,
   // time of writing (Dec 2010) there don't seem to be any that do so!
   if (!empty($addresses))
   {
+    $attendees = $addresses;  // take a copy of $addresses as we're going to alter it
     $keys = array('to', 'cc');  // We won't do 'bcc' as they need to stay blind
     foreach ($keys as $key)
     {
-      if (!empty($addresses[$key]))
+      $attendees[$key] = explode(',', $attendees[$key]);  // convert the list into an array
+    }
+    foreach ($keys as $key)
+    {
+      foreach ($attendees[$key] as $attendee)
       {
-        $address_list = $addresses[$key];
-        $address_array = explode(',', $address_list);
-        foreach ($address_array as $address)
+        if (!empty($attendee))
         {
           switch ($key)
           {
@@ -234,10 +237,19 @@ function create_ical_event($method, $data, $text_description, $html_description,
               $role = "REQ-PARTICIPANT";
               break;
             default:
+              if (in_array($attendee, $attendees['to']))
+              {
+                // It's possible that an address could appear on more than one
+                // line, in which case we only want to have one ATTENDEE property
+                // for that address and we'll chose the REQ-PARTICIPANT.   (Apart
+                // from two conflicting ATTENDEES not making sense, it also breaks
+                // some applications, eg Apple Mail/iCal)
+                continue 2;  // Move on to the next attendeee
+              }
               $role = "NON-PARTICIPANT";
               break;
           }
-          $results[] = "ATTENDEE;ROLE=$role:mailto:" . trim($address);
+          $results[] = "ATTENDEE;ROLE=$role:mailto:" . trim($attendee);
         }
       }
     }
