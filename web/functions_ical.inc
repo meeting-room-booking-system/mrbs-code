@@ -168,6 +168,8 @@ function create_rrule($data)
 // Create an RFC 5545 iCalendar Event component
 function create_ical_event($method, $data, $text_description, $html_description, $addresses, $series=FALSE)
 {
+  require_once "functions_mail.inc";
+  
   global $confirmation_enabled, $mail_settings;
   
   $use_html = $mail_settings['html'] && !empty($html_description);
@@ -239,7 +241,7 @@ function create_ical_event($method, $data, $text_description, $html_description,
   {
     $results[] = "ORGANIZER;CN=\"" . ical_escape_quoted_string($data['create_by']) . "\":mailto:$organizer_email";
   }
-  else
+  elseif (!empty($addresses['from']))
   {
     $results[] = "ORGANIZER:mailto:" . $addresses['from'];
   }
