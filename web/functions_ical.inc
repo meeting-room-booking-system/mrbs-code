@@ -65,7 +65,7 @@ function ical_fold($str)
   return $result;
 }
 
-// Escape text for use in an iCalendar object
+// Escape text for use in an iCalendar text value
 function ical_escape_text($str)
 {
   // Escape '\'
@@ -78,6 +78,21 @@ function ical_escape_text($str)
   $str = str_replace("\r\n", "\n", $str);
   // Escape '\n'
   $str = str_replace("\n", "\\n", $str);
+  return $str;
+}
+
+// Escape text for use in an iCalendar quoted string
+function ical_escape_quoted_string($str)
+{
+  // From RFC 5545:
+  //    quoted-string = DQUOTE *QSAFE-CHAR DQUOTE
+
+  //    QSAFE-CHAR    = WSP / %x21 / %x23-7E / NON-US-ASCII
+  //    ; Any character except CONTROL and DQUOTE
+  
+  // We'll just get rid of any double quotes, replacing them with a space.
+  // (There is no way of escaping double quotes)
+  $str = str_replace('"', ' ', $str);
   return $str;
 }
 
@@ -209,6 +224,7 @@ function create_ical_event($method, $data, $text_description, $html_description,
   {
     $results[] = "STATUS:" . (($data['status'] & STATUS_TENTATIVE) ? "TENTATIVE" : "CONFIRMED");
   }
+  
   /*  
   Class is commented out for the moment.  To be useful it probably needs to go
   hand in hand with an ORGANIZER, otherwise people won't be able to see their own
@@ -217,6 +233,16 @@ function create_ical_event($method, $data, $text_description, $html_description,
   $results[] = "CLASS:" . (($data['status'] & STATUS_PRIVATE) ? "PRIVATE" : "PUBLIC");
   */
   
+  // ORGANIZER
+  $organizer_email = get_email_address($data['create_by']);
+  if (!empty($organizer_email))
+  {
+    $results[] = "ORGANIZER;CN=\"" . ical_escape_quoted_string($data['create_by']) . "\":mailto:$organizer_email";
+  }
+  else
+  {
+    $results[] = "ORGANIZER:mailto:" . $addresses['from'];
+  }
   // Put the people on the "to" list as required participants and those on the cc
   // list as non particpants.   In theory the email client can then decide whether
   // to enter the booking automaticaly on the user's calendar - although at the
