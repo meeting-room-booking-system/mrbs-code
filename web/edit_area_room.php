@@ -493,7 +493,7 @@ if (isset($change_room) && !empty($room))
           {
             echo " selected=\"selected\"";
           }
-          echo ">" . $row_area['area_name'] . "</option>\n";
+          echo ">" . htmlspecialchars($row_area['area_name']) . "</option>\n";
         }  
       echo "</select>\n";
       echo "<input type=\"hidden\" name=\"old_area\" value=\"" . $row['area_id'] . "\">\n";
