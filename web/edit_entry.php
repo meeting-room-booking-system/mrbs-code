@@ -463,7 +463,7 @@ foreach ($areas as $area)
     if ($key == "area_name")
     {
       // Enclose strings in quotes
-      $value = "'$value'";
+      $value = "'" . escape_js($value) . "'";
     }
     elseif (in_array($key, $boolean_fields['area']))
     {
@@ -821,10 +821,7 @@ else
             {
               if ($r['area_id'] == $a['id'])
               {
-                $clean_room_name = str_replace('\\', '\\\\', $r['room_name']);  // escape backslash
-                $clean_room_name = str_replace('"', '\\"', $clean_room_name);      // escape double quotes
-                $clean_room_name = str_replace('/', '\\/', $clean_room_name);      // prevent '/' being parsed as markup (eg </p>)
-                print "roomsObj.options[$i] = new Option(\"" . $clean_room_name . "\"," . $r['id'] . ");\n";
+                print "roomsObj.options[$i] = new Option(\"" . escape_js($r['room_name']) . "\"," . $r['id'] . ");\n";
                 $i++;
               }
             }
@@ -894,7 +891,7 @@ else
         ?>
         option = document.createElement('option');
         option.value = <?php echo $a['id'] ?>;
-        option_text = document.createTextNode('<?php echo $a['area_name'] ?>');
+        option_text = document.createTextNode('<?php echo escape_js($a['area_name']) ?>');
         <?php
         if ($a['id'] == $area_id)
         {
