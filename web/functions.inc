@@ -534,6 +534,17 @@ function fatal_error($need_header, $message)
   exit;
 }
 
+
+// Escape a PHP string for use in JavaScript
+//
+// Based on a function contributed by kongaspar at gmail dot com at 
+// http://www.php.net/manual/function.addcslashes.php
+function escape_js($str)
+{
+  return addcslashes($str, "\\\'\"&\n\r<>");
+}
+
+
 // Remove backslash-escape quoting if PHP is configured to do it with
 // magic_quotes_gpc. Use this whenever you need the actual value of a GET/POST
 // form parameter (which might have special characters) regardless of PHP's
