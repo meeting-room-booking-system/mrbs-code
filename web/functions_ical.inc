@@ -96,6 +96,7 @@ function ical_escape_quoted_string($str)
   return $str;
 }
 
+
 // Create an iCalendar Recurrence Rule
 function create_rrule($data)
 {
@@ -236,15 +237,33 @@ function create_ical_event($method, $data, $text_description, $html_description,
   */
   
   // ORGANIZER
+  // The organizer is the booking creator if we've got an email address for him/her.
+  // Otherwise we'll make the 'from' address the organizer.   In both cases we'll try
+  // and extract the common name from the email address.
   $organizer_email = get_email_address($data['create_by']);
-  if (!empty($organizer_email))
+  if (empty($organizer_email))
   {
-    $results[] = "ORGANIZER;CN=\"" . ical_escape_quoted_string($data['create_by']) . "\":mailto:$organizer_email";
+    $organizer = parse_address($addresses['from']);
+    if (empty($organizer['common_name']))
+    {
+      $organizer['common_name'] = $organizer['address'];
+    }
   }
-  elseif (!empty($addresses['from']))
+  else
   {
-    $results[] = "ORGANIZER:mailto:" . $addresses['from'];
+    $organizer = parse_address($organizer_email);
+    if (empty($organizer['common_name']))
+    {
+      // If the email address doesn't have a common name
+      // then we can use the creator's username
+      $organizer['common_name'] = $data['create_by'];
+    }
   }
+  if (!empty($organizer['address']))
+  {
+    $results[] = "ORGANIZER;CN=\"" . ical_escape_quoted_string($organizer['common_name']) . "\":mailto:" . $organizer['address'];
+  }
+  
   // Put the people on the "to" list as required participants and those on the cc
   // list as non particpants.   In theory the email client can then decide whether
   // to enter the booking automaticaly on the user's calendar - although at the
@@ -281,7 +300,11 @@ function create_ical_event($method, $data, $text_description, $html_description,
               $role = "NON-PARTICIPANT";
               break;
           }
-          $results[] = "ATTENDEE;ROLE=$role:mailto:" . trim($attendee);
+          // Use the common name if there is one
+          $attendee = parse_address($attendee);
+          $results[] = "ATTENDEE;" .
+                       ((!empty($attendee['common_name'])) ? "CN=\"" . ical_escape_quoted_string($attendee['common_name']) . "\";" : "") .
+                       "ROLE=$role:mailto:" . $attendee['address'];
         }
       }
     }

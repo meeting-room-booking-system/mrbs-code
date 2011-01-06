@@ -177,6 +177,37 @@ function mail_strftime($format,$t)
   return convertToMailCharset($string);
 }
 
+
+// Splits an email address of the form 'common_name <address>',
+// '"common_name" <address>' or just 'address' into a common name and an address.
+// Returns the result as an array index by 'common_name' and 'address'.
+function parse_address($email_address)
+{
+  if (strpos($email_address, '<') === FALSE)
+  {
+    $cn = '';
+    $addr = $email_address;
+  }
+  else
+  {
+    list($cn, $addr) = explode('<', $email_address, 2);
+  
+    $cn = trim($cn);
+    $cn = trim($cn, '"');
+    $cn = trim($cn);
+  
+    $addr = trim($addr);
+    $addr = rtrim($addr, '>');
+    $addr = trim($addr);
+  }
+  
+  $result = array();
+  $result['common_name'] = $cn;
+  $result['address'] = $addr; 
+  return $result;
+}
+
+
 // get_address_list($array)
 //
 // Takes an array of email addresses and returns a comma separated
