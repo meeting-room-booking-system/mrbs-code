@@ -69,7 +69,14 @@ if ($info = mrbsGetBookingInfo($id, FALSE, TRUE))
     {
       require_once "functions_mail.inc";
       // Gather all fields values for use in emails.
-      $mail_previous = getPreviousEntryData($id, FALSE);
+      $mail_previous = mrbsGetBookingInfo($id, FALSE);
+      // If this is an individual entry of a series then force the entry_type
+      // to be a changed entry, so that when we create the iCalendar object we know that
+      // we only want to delete the individual entry
+      if (!$series && ($mail_previous['rep_type'] != REP_NONE))
+      {
+        $mail_previous['entry_type'] = ENTRY_RPT_CHANGED;
+      }
     }
     sql_begin();
     $result = mrbsDelEntry(getUserName(), $id, $series, 1);
@@ -84,13 +91,21 @@ if ($info = mrbsGetBookingInfo($id, FALSE, TRUE))
       // Send a mail to the Administrator
       if ($notify_by_email)
       {
+        // Now that we've finished with mrbsDelEntry, change the id so that it's
+        // the repeat_id if we're looking at a series.   (This is a complete hack, 
+        // but brings us back into line with the rest of MRBS until the anomaly
+        // of del_entry is fixed) 
+        if ($series)
+        {
+          $mail_previous['id'] = $mail_previous['repeat_id'];
+        }
         if (isset($action) && ($action == "reject"))
         {
-          $result = notifyAdminOnDelete($mail_previous, $action, $note);
+          $result = notifyAdminOnDelete($mail_previous, $series, $action, $note);
         }
         else
         {
-          $result = notifyAdminOnDelete($mail_previous);
+          $result = notifyAdminOnDelete($mail_previous, $series);
         }
       }
       Header("Location: $returl");

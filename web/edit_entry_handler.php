@@ -3,6 +3,7 @@
 
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
+require_once "functions_ical.inc";
 
 // Get non-standard form variables
 $create_by = get_form_var('create_by', 'string');
@@ -14,6 +15,10 @@ $end_seconds = get_form_var('end_seconds', 'int');
 $all_day = get_form_var('all_day', 'string'); // bool, actually
 $type = get_form_var('type', 'string');
 $rooms = get_form_var('rooms', 'array');
+$original_room_id = get_form_var('original_room_id', 'int');
+$ical_uid = get_form_var('ical_uid', 'string');
+$ical_sequence = get_form_var('ical_sequence', 'int');
+$ical_recur_id = get_form_var('ical_recur_id', 'string');
 $returl = get_form_var('returl', 'string');
 $rep_id = get_form_var('rep_id', 'int');
 $edit_type = get_form_var('edit_type', 'string');
@@ -351,25 +356,40 @@ if (!isset($rep_day))
   $rep_day = array();
 }
 
-// If there's a weekly or n-weekly repeat and no repeat day has
-// been set, then set a default repeat day as the day of
-// the week of the start of the period
+$rep_opt = "";
+
+// Processing for weekly and n-weekly repeats
 if (isset($rep_type) && (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY)))
 {
+  // If no repeat day has been set, then set a default repeat day
+  // as the day of the week of the start of the period
   if (count($rep_day) == 0)
   {
     $start_day = date('w', $starttime);
     $rep_day[$start_day] = TRUE;
   }
-}
-
-// For weekly and n-weekly repeats, build string of weekdays to repeat on:
-$rep_opt = "";
-if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
-{
+  
+  // Build string of weekdays to repeat on:
   for ($i = 0; $i < 7; $i++)
   {
-    $rep_opt .= empty($rep_day[$i]) ? "0" : "1";
+    $rep_opt .= empty($rep_day[$i]) ? "0" : "1";  // $rep_opt is a string
+  }
+  
+  // Make sure that the starttime and endtime coincide with a repeat day.  In
+  // other words make sure that the first starttime and endtime define an actual
+  // entry.   We need to do this because if we are going to construct an iCalendar
+  // object, RFC 5545 demands that the start and end time are the first events of
+  // a series.  ["The "DTSTART" property for a "VEVENT" specifies the inclusive
+  // start of the event.  For recurring events, it also specifies the very first
+  // instance in the recurrence set."]
+  while (!$rep_opt[date('w', $starttime)])
+  {
+    $start = getdate($starttime);
+    $end = getdate($endtime);
+    $starttime = mktime($start['hours'], $start['minutes'], $start['seconds'],
+                        $start['mon'], $start['mday'] + 1, $start['year']);
+    $endtime = mktime($end['hours'], $end['minutes'], $end['seconds'],
+                      $end['mon'], $end['mday'] + 1, $end['year']);
   }
 }
 
@@ -506,6 +526,37 @@ if ($valid_booking)
     
     // Assemble the data in an array
     $data = array();
+   
+    // We need to work out whether this is the original booking being modified,
+    // because, if it is, we keep the ical_uid and increment the ical_sequence.
+    // We consider this to be the original booking if there was an original
+    // booking in the first place (in which case the original room id will be set) and
+    //      (a) this is the same room as the original booking
+    //   or (b) there is only one room in the new set of bookings, in which case
+    //          what has happened is that the booking has been changed to be in
+    //          a new room
+    //   or (c) the new set of rooms does not include the original room, in which
+    //          case we will make the arbitrary assumption that the original booking
+    //          has been moved to the first room in the list and the bookings in the
+    //          other rooms are clones and will be treated as new bookings.
+    
+    if (isset($original_room_id) && 
+        (($original_room_id == $room_id) ||
+         (count($rooms) == 1) ||
+         (($rooms[0] == $room_id) && !in_array($original_room_id, $rooms))))
+    {
+      // This is an existing booking which has been changed.   Keep the
+      // original ical_uid and increment the sequence number.
+      $data['ical_uid'] = $ical_uid;
+      $data['ical_sequence'] = $ical_sequence + 1;
+    }
+    else
+    {
+      // This is a new booking.   We generate a new ical_uid and start
+      // the sequence at 0.
+      $data['ical_uid'] = generate_global_uid($name);
+      $data['ical_sequence'] = 0;
+    }
     $data['start_time'] = $starttime;
     $data['end_time'] = $endtime;
     $data['room_id'] = $room_id;
@@ -524,8 +575,18 @@ if ($valid_booking)
     }
     else
     {
-      // Mark changed entry in a series with entry_type 2:
-      $data['entry_type'] = ($repeat_id > 0) ? 2 : 0;
+      if ($repeat_id > 0)
+      {
+        // Mark changed entry in a series with entry_type:
+        $data['entry_type'] = ENTRY_RPT_CHANGED;
+        // Keep the same recurrence id (this never changes once an entry has been made)
+        $data['ical_recur_id'] = $ical_recur_id;
+      }
+      else
+      {
+        $data['entry_type'] = ENTRY_SINGLE;
+      }
+      $data['entry_type'] = ($repeat_id > 0) ? ENTRY_RPT_CHANGED : ENTRY_SINGLE;
       $data['repeat_id'] = $repeat_id;
     }
     // The following elements are needed for email notifications
@@ -537,12 +598,14 @@ if ($valid_booking)
       $booking = mrbsCreateRepeatingEntrys($data);
       $new_id = $booking['id'];
       $is_repeat_table = $booking['series'];
+      $data['id'] = $new_id;  // Add in the id now we know it
     }
     else
     {
       // Create the entry:
       $new_id = mrbsCreateSingleEntry($data);
       $is_repeat_table = FALSE;
+      $data['id'] = $new_id;  // Add in the id now we know it
     }
     
     // Send an email if neccessary, provided that the entry creation was successful
@@ -568,21 +631,25 @@ if ($valid_booking)
           $data['room_name'] = $row['room_name'];
           $data['area_name'] = $row['area_name'];
         }
-        // If this is a modified entry then call
-        // getPreviousEntryData to prepare entry comparison.
+        // If this is a modified entry then get the previous entry data
+        // so that we can highlight the changes
         if (isset($id))
         {
           if ($edit_type == "series")
           {
-            $mail_previous = getPreviousEntryData($repeat_id, TRUE);
+            $mail_previous = mrbsGetBookingInfo($repeat_id, TRUE);
           }
           else
           {
-            $mail_previous = getPreviousEntryData($id, FALSE);
+            $mail_previous = mrbsGetBookingInfo($id, FALSE);
           }
         }
+        else
+        {
+          $mail_previous = array();
+        }
         // Send the email
-        $result = notifyAdminOnBooking(!isset($id), $new_id, $is_repeat_table);
+        $result = notifyAdminOnBooking($data, $mail_previous, !isset($id), $is_repeat_table);
       }
     }   
   } // end foreach $rooms

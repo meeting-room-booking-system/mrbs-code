@@ -81,7 +81,20 @@ else
  // that is used;  it is merely used when the code needs to know the DOCTYPE, for example
  // in calls to nl2br.   TRUE means XHTML, FALSE means HTML.
  define('IS_XHTML', FALSE);
+ 
+ 
+ /*************************************************
+ * ENTRY TYPES - internal use, do not change
+ *************************************************/
+ 
+ // The entry_type field in the entry table records the type of
+ // booking as follows:
+ 
+ define('ENTRY_SINGLE',       0);  // A single entry that is not part of a series
+ define('ENTRY_RPT_ORIGINAL', 1);  // An entry that is part of a series and has not been modified
+ define('ENTRY_RPT_CHANGED',  2);  // An entry that is part of a series and has been modified
 
+ 
 /*************************************************
  * ENTRY STATUS CODES - internal use, do not change
  *************************************************/
@@ -114,6 +127,15 @@ define('REP_YEARLY',          4);
 define('REP_MONTHLY_SAMEDAY', 5);
 define('REP_N_WEEKLY',        6);
 
+
+/*************************************************
+ * ICALENDAR CONSTANTS - internal use, do not change
+ *************************************************/
+ 
+define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
+define ('ICAL_EOL', "\r\n");            // Lines must be terminated by CRLF
+
+
 /****************************************************************
  * DATABASE TABLES  - internal use, do not change
  ****************************************************************/
@@ -141,7 +163,10 @@ $standard_fields['entry'] = array('id',
                                   'reminded',
                                   'info_time',
                                   'info_user',
-                                  'info_text');
+                                  'info_text',
+                                  'ical_uid',
+                                  'ical_sequence',
+                                  'ical_recur_id');
                                   
 $standard_fields['repeat'] = array('id',
                                    'start_time',
@@ -160,7 +185,9 @@ $standard_fields['repeat'] = array('id',
                                    'reminded',
                                    'info_time',
                                    'info_user',
-                                   'info_text');
+                                   'info_text',
+                                   'ical_uid',
+                                   'ical_sequence');
 
 $standard_fields['room'] = array('id',
                                  'disabled',

@@ -204,12 +204,39 @@ if (isset($id))
       case 'info_user':
       case 'info_text':
         break;
-        
+      
+      // These columns cannot be made private  
+      case 'room_id':
+        // We need to preserve the original room_id for existing bookings and pass
+        // it through to edit_entry_handler.    We need this because we need to know
+        // in edit_entry_handler which room contains the original booking.   It's
+        // possible in this form to select multiple rooms, or even change the room.
+        // We will need to know which booking is the "original booking" because the 
+        // original booking will keep the same ical_uid and have the ical_sequence
+        // incremented, whereas new bookings will have a new ical_uid and start with 
+        // an ical_sequence of 0.    (If there is more than one room when we get to
+        // edit_entry_handler and the original room isn't among them, then we will 
+        // just have to make an arbitrary choice as to which is the room containing
+        // the original booking.)
+        // NOTE:  We do not set the original_room_id if we are copying an entry,
+        // because when we are copying we are effectively making a new entry and
+        // so we want edit_entry_handler to assign a new UID, etc.
+        if (!$copy)
+        {
+          $original_room_id = $row['room_id'];
+        }
+      case 'ical_uid':
+      case 'ical_sequence':
+      case 'ical_recur_id':
+      case 'entry_type':
+        $$column = $row[$column];
+        break;
+      
+      // These columns can be made private [not sure about 'type' though - haven't
+      // checked whether it makes sense/works to make the 'type' column private]
       case 'name':
       case 'description':
       case 'type':
-      case 'room_id':
-      case 'entry_type':
         $$column = ($keep_private && $is_private_field["entry.$column"]) ? '' : $row[$column];
         break;
         
@@ -245,7 +272,7 @@ if (isset($id))
   }
   
 
-  if($entry_type >= 1)
+  if(($entry_type == ENTRY_RPT_ORIGINAL) || ($entry_type == ENTRY_RPT_CHANGED))
   {
     $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_num_weeks
               FROM $tbl_repeat 
@@ -318,12 +345,12 @@ if (isset($id))
 else
 {
   // It is a new booking. The data comes from whichever button the user clicked
-  $edit_type   = "series";
-  $name        = "";
-  $create_by   = $user;
-  $description = "";
-  $type        = $default_type;
-  $room_id     = $room;
+  $edit_type     = "series";
+  $name          = "";
+  $create_by     = $user;
+  $description   = "";
+  $type          = $default_type;
+  $room_id       = $room;
   $rep_id        = 0;
   $rep_type      = REP_NONE;
   $rep_end_day   = $day;
@@ -1157,7 +1184,20 @@ else
     <input type="hidden" name="create_by" value="<?php echo $create_by?>">
     <input type="hidden" name="rep_id" value="<?php echo $rep_id?>">
     <input type="hidden" name="edit_type" value="<?php echo $edit_type?>">
-    <?php 
+    <?php
+    // The original_room_id will only be set if this was an existing booking.
+    // If it is an existing booking then edit_entry_handler needs to know the
+    // original room id and the ical_uid and the ical_sequence, because it will
+    // have to keep the ical_uid and increment the ical_sequence for the room that
+    // contained the original booking.  If it's a new booking it will generate a new
+    // ical_uid and start the ical_sequence at 0.
+    if (isset($original_room_id))
+    {
+      echo "<input type=\"hidden\" name=\"original_room_id\" value=\"$original_room_id\">\n";
+      echo "<input type=\"hidden\" name=\"ical_uid\" value=\"$ical_uid\">\n";
+      echo "<input type=\"hidden\" name=\"ical_sequence\" value=\"$ical_sequence\">\n";
+      echo "<input type=\"hidden\" name=\"ical_recur_id\" value=\"$ical_recur_id\">\n";
+    }
     if(isset($id) && !isset($copy))
     {
       echo "<input type=\"hidden\" name=\"id\" value=\"$id\">\n";

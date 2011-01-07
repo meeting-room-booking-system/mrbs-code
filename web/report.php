@@ -6,9 +6,13 @@ require_once "defaultincludes.inc";
 // Constant definitions for the value of the summarize parameter.   These are used
 // for bit-wise comparisons.    For example summarize=3 means produce both
 // a report and a summary; summaraize=5 means produce a report as a CSV file
-define('REPORT',  01);
-define('SUMMARY', 02);
-define('CSV',     04);
+define('REPORT',      0x01);
+define('SUMMARY',     0x02);
+// a series of constants defining the ouput format.   These are in the same
+// bit series as the output contents above, though not all combinations are sensible
+define('OUTPUT_HTML', 0x04);
+define('OUTPUT_CSV',  0x08);
+define('OUTPUT_ICAL', 0x10);
 
 // Constants for booking privacy matching
 define('PRIVATE_NO',   0);
@@ -24,7 +28,6 @@ define('CONFIRMED_BOTH', 2);  // Can be anything other than 0 or 1
 define('APPROVED_NO',   0);
 define('APPROVED_YES',  1);
 define('APPROVED_BOTH', 2);  // Can be anything other than 0 or 1
-
 
 
 function date_time_string($t)
@@ -273,7 +276,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   
     echo "<div class=\"report_entry_name\">\n";
     // Brief Description (title), linked to view_entry:
-    echo "<a href=\"view_entry.php?id=".$row['entry_id']."\">" . htmlspecialchars($row['name']) . "</a>\n";
+    echo "<a href=\"view_entry.php?id=".$row['id']."\">" . htmlspecialchars($row['name']) . "</a>\n";
     echo "</div>\n";
   }
   echo $output_as_csv ? '' : "<div class=\"report_entry_when\">\n";
@@ -679,10 +682,12 @@ $is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
 
 if (empty($summarize))
 {
-  $summarize = REPORT;
+  $summarize = REPORT + OUTPUT_HTML;
 }
 
-$output_as_csv = $summarize & CSV;
+$output_as_html = (!isset($summarize)) || ($summarize & OUTPUT_HTML);
+$output_as_csv = $summarize & OUTPUT_CSV;
+$output_as_ical = $summarize & OUTPUT_ICAL;
 
 // Get information about custom fields
 $fields = sql_field_info($tbl_entry);
@@ -714,18 +719,211 @@ foreach ($custom_fields as $key => $value)
   $$var = get_form_var($var, $var_type);
 }
 
+// PHASE 2:  SQL QUERY.  We do the SQL query now to see if there's anything there
+if (isset($areamatch))
+{
+  // Start and end times are also used to clip the times for summary info.
+  $report_start = mktime(0, 0, 0, $From_month+0, $From_day+0, $From_year+0);
+  $report_end = mktime(0, 0, 0, $To_month+0, $To_day+1, $To_year+0);
+  
+  // Construct the SQL query
+  $sql = "SELECT E.*, "
+       .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
+       . "A.area_name, R.room_name, "
+       . "A.approval_enabled, A.confirmation_enabled";
+  if ($output_as_ical)
+  {
+    // If we're producing an iCalendar then we'll also need the repeat
+    // information in order to construct the recurrence rule
+    $sql .= ", T.rep_type, T.end_date, T.rep_opt, T.rep_num_weeks";
+  }
+  $sql .= " FROM $tbl_area A, $tbl_room R, $tbl_entry E";
+  if ($output_as_ical)
+  {
+    // We do a LEFT JOIN because we still want the single entries, ie the ones
+    // that won't have a match in the repeat table
+    $sql .= " LEFT JOIN $tbl_repeat T ON E.repeat_id=T.id";
+  }
+  $sql .= " WHERE E.room_id=R.id AND R.area_id=A.id"
+        . " AND E.start_time < $report_end AND E.end_time > $report_start";
+  if ($output_as_ical)
+  {
+    // We can't export periods in an iCalendar yet
+    $sql .= " AND A.enable_periods=0";
+  }
+  
+  if (!empty($areamatch))
+  {
+    // sql_syntax_caseless_contains() does the SQL escaping
+    $sql .= " AND" .  sql_syntax_caseless_contains("A.area_name", $areamatch);
+  }
+  if (!empty($roommatch))
+  {
+    // sql_syntax_caseless_contains() does the SQL escaping
+    $sql .= " AND" .  sql_syntax_caseless_contains("R.room_name", $roommatch);
+  }
+  if (!empty($typematch))
+  {
+    $sql .= " AND ";
+    if ( count( $typematch ) > 1 )
+    {
+      $or_array = array();
+      foreach ( $typematch as $type )
+      {
+        $or_array[] = "E.type = '".addslashes($type)."'";
+      }
+      $sql .= "(". implode( " OR ", $or_array ) .")";
+    }
+    else
+    {
+      $sql .= "E.type = '".addslashes($typematch[0])."'";
+    }
+  }
+  if (!empty($namematch))
+  {
+    // sql_syntax_caseless_contains() does the SQL escaping
+    $sql .= " AND" .  sql_syntax_caseless_contains("E.name", $namematch);
+  }
+  if (!empty($descrmatch))
+  {
+    // sql_syntax_caseless_contains() does the SQL escaping
+    $sql .= " AND" .  sql_syntax_caseless_contains("E.description", $descrmatch);
+  }
+  if (!empty($creatormatch))
+  {
+    // sql_syntax_caseless_contains() does the SQL escaping
+    $sql .= " AND" .  sql_syntax_caseless_contains("E.create_by", $creatormatch);
+  }
+  
+  // (In the next three cases, you will get the empty string if that part
+  // of the form was not displayed - which means that you need all bookings)
+  // Note that although you can say eg "status&STATUS_PRIVATE" in MySQL, you get
+  // an error in PostgreSQL as the expression is of the wrong type.
+  
+  // Match the privacy status
+  if (($match_private != PRIVATE_BOTH) && ($match_private != ''))
+  {
+    $sql .= " AND ";
+    $sql .= "(status&" . STATUS_PRIVATE;
+    $sql .= ($match_private) ? "!=0)" : "=0)";  // Note that private works the other way round to the next two
+  }
+  // Match the confirmation status
+  if (($match_confirmed != CONFIRMED_BOTH) && ($match_confirmed != ''))
+  {
+    $sql .= " AND ";
+    $sql .= "(status&" . STATUS_TENTATIVE;
+    $sql .= ($match_confirmed) ? "=0)" : "!=0)";
+  }
+  // Match the approval status
+  if (($match_approved != APPROVED_BOTH) && ($match_approved != ''))
+  {
+    $sql .= " AND ";
+    $sql .= "(status&" . STATUS_AWAITING_APPROVAL;
+    $sql .= ($match_approved) ? "=0)" : "!=0)";
+  }
+  
+  // Now do the custom fields
+  foreach ($custom_fields as $key => $value)
+  {
+    $var = "match_$key";
+    // Booleans (or integers <= 2 bytes which we assume are intended to be booleans)
+    if (($field_natures[$key] == 'boolean') || 
+       (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+    {
+      if (!empty($$var))
+      {
+        $sql .= " AND E.$key!=0";
+      }
+    }
+    // Integers
+    elseif (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] > 2))
+    {
+      if (isset($$var) && $$var !== '')  // get_form_var() returns an empty string if no input
+      {
+        $sql .= " AND E.$key=" . $$var;
+      }
+    }
+    // Strings
+    else
+    {
+      if (!empty($$var))
+      {
+        $sql .= " AND" . sql_syntax_caseless_contains("E.$key", $$var);
+      }
+    }
+  }
+
+  // If we're not an admin (they are allowed to see everything), then we need
+  // to make sure we respect the privacy settings.  (We rely on the privacy fields
+  // in the area table being not NULL.   If they are by some chance NULL, then no
+  // entries will be found, which is at least safe from the privacy viewpoint)
+  if (!$is_admin)
+  {
+    if (isset($user))
+    {
+      // if the user is logged in they can see:
+      //   - all bookings, if private_override is set to 'public'
+      //   - their own bookings, and others' public bookings if private_override is set to 'none'
+      //   - just their own bookings, if private_override is set to 'private'
+      $sql .= " AND ((A.private_override='public') OR
+                     (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = '" . addslashes($user) . "')) OR
+                     (A.private_override='private' AND E.create_by = '" . addslashes($user) . "'))";                
+    }
+    else
+    {
+      // if the user is not logged in they can see:
+      //   - all bookings, if private_override is set to 'public'
+      //   - public bookings if private_override is set to 'none'
+      $sql .= " AND ((A.private_override='public') OR
+                     (A.private_override='none' AND (E.status&" . STATUS_PRIVATE . "=0)))";
+    }
+  }
+  
+  if ($summarize & OUTPUT_ICAL)
+  {
+    // If we're producing an iCalendar then we'll want the entries ordered by
+    // repeat_id and then recurrence_id
+    $sql .= " ORDER BY repeat_id, ical_recur_id";
+  }
+  elseif ($sortby == "r")
+  {
+    // Order by Area, Room, Start date/time
+    $sql .= " ORDER BY area_name, sort_key, start_time";
+  }
+  else
+  {
+    // Order by Start date/time, Area, Room
+    $sql .= " ORDER BY start_time, area_name, sort_key";
+  }
+
+  // echo "<p>DEBUG: SQL: <tt> $sql </tt></p>\n";
+
+  $res = sql_query($sql);
+  if (! $res)
+  {
+    fatal_error(0, sql_error());
+  }
+  $nmatch = sql_count($res);
+}
 
 // print the page header
-if ($output_as_csv)
+if ($output_as_html || empty($nmatch))
+{
+  print_header($day, $month, $year, $area, isset($room) ? $room : "");
+}
+elseif ($output_as_csv)
 {
   $filename = ($summarize & REPORT) ? $report_filename : $summary_filename;
   header("Content-Type: text/csv; charset=" . get_charset());
   header("Content-Disposition: attachment; filename=\"$filename\"");
 }
-else
+else // Assumed to be output_as_ical
 {
-  print_header($day, $month, $year, $area, isset($room) ? $room : "");
+  require_once "functions_ical.inc";
+  header("Content-Type: application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"");
+  header("Content-Disposition: attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"");
 }
+
 
 if (isset($areamatch))
 {
@@ -781,9 +979,11 @@ if (empty($display))
 $private_somewhere = some_area('private_enabled') || some_area('private_mandatory');
 $approval_somewhere = some_area('approval_enabled');
 $confirmation_somewhere = some_area('confirmation_enabled');
+$times_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods=0") > 0);
+
 
 // Upper part: The form.
-if (!$output_as_csv)
+if ($output_as_html || empty($nmatch))
 {
   ?>
   <div class="screenonly">
@@ -948,17 +1148,30 @@ if (!$output_as_csv)
         <legend><?php echo get_vocab("presentation_options");?></legend>  
         <div id="div_summarize">
           <label><?php echo get_vocab("include");?>:</label>
-          <div class="group">
-            <?php
-            // Radio buttons to choose the value of the summarize parameter
-            // Set up an array mapping the button value to the description
-            $buttons = array(REPORT         => "report_only",
-                             SUMMARY        => "summary_only",
-                             REPORT+SUMMARY => "report_and_summary",
-                             REPORT+CSV     => "report_as_csv",
-                             SUMMARY+CSV    => "summary_as_csv");
+          <?php
+          // Radio buttons to choose the value of the summarize parameter
+          // Set up an array of arrays mapping the button value to the description
+          // Each outer array represents a different group of buttons
+          $buttons = array();
+          // The HTML output buttons
+          $buttons[] = array(REPORT + OUTPUT_HTML           => "report_only",
+                             SUMMARY + OUTPUT_HTML          => "summary_only",
+                             REPORT + SUMMARY + OUTPUT_HTML => "report_and_summary");
+          // The CSV output buttons
+          $buttons[] = array(REPORT + OUTPUT_CSV            => "report_as_csv",
+                             SUMMARY + OUTPUT_CSV           => "summary_as_csv");
+          // The iCal output button
+          if ($times_somewhere) // We can't do iCalendars for periods yet
+          {
+            $buttons[] = array(REPORT + OUTPUT_ICAL           => "report_as_ical");
+          }
+          
+          echo "<div class=\"group_container\">\n";
+          foreach ($buttons as $button_group)
+          {
+            echo "<div class=\"group\">\n";
             // Output each radio button
-            foreach ($buttons as $value => $token)
+            foreach ($button_group as $value => $token)
             {
               echo "<label>";
               echo "<input class=\"radio\" type=\"radio\" name=\"summarize\" value=\"$value\"";          
@@ -966,8 +1179,10 @@ if (!$output_as_csv)
               echo ">" . get_vocab($token);
               echo "</label>\n";
             }
-            ?>
-          </div>
+            echo "</div>\n";
+          }
+          echo "</div>\n";
+          ?>
         </div>
       
         <div id="div_sortby"> 
@@ -1038,175 +1253,9 @@ if (!$output_as_csv)
   <?php
 }
 
-// Lower part: Results, if called with parameters:
+// PHASE 2:  Output the results, if called with parameters:
 if (isset($areamatch))
 {
-  // Start and end times are also used to clip the times for summary info.
-  $report_start = mktime(0, 0, 0, $From_month+0, $From_day+0, $From_year+0);
-  $report_end = mktime(0, 0, 0, $To_month+0, $To_day+1, $To_year+0);
-  
-  // Construct the SQL query
-  $sql = "SELECT E.id AS entry_id, E.start_time, E.end_time, E.name, E.description, "
-       . "E.type, E.create_by, E.status, "
-       .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
-       . "A.area_name, R.room_name, "
-       . "A.approval_enabled, A.confirmation_enabled";
-  // Get any custom fields
-  foreach ($custom_fields as $custom_field => $value)
-  {
-    $sql .= ", E.$custom_field";
-  }
-
-  $sql .= " FROM $tbl_entry E, $tbl_area A, $tbl_room R"
-        . " WHERE E.room_id = R.id AND R.area_id = A.id"
-        . " AND E.start_time < $report_end AND E.end_time > $report_start";
-
-  if (!empty($areamatch))
-  {
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("A.area_name", $areamatch);
-  }
-  if (!empty($roommatch))
-  {
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("R.room_name", $roommatch);
-  }
-  if (!empty($typematch))
-  {
-    $sql .= " AND ";
-    if ( count( $typematch ) > 1 )
-    {
-      $or_array = array();
-      foreach ( $typematch as $type )
-      {
-        $or_array[] = "E.type = '".addslashes($type)."'";
-      }
-      $sql .= "(". implode( " OR ", $or_array ) .")";
-    }
-    else
-    {
-      $sql .= "E.type = '".addslashes($typematch[0])."'";
-    }
-  }
-  if (!empty($namematch))
-  {
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("E.name", $namematch);
-  }
-  if (!empty($descrmatch))
-  {
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("E.description", $descrmatch);
-  }
-  if (!empty($creatormatch))
-  {
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("E.create_by", $creatormatch);
-  }
-  
-  // (In the next three cases, you will get the empty string if that part
-  // of the form was not displayed - which means that you need all bookings)
-  // Note that although you can say eg "status&STATUS_PRIVATE" in MySQL, you get
-  // an error in PostgreSQL as the expression is of the wrong type.
-  
-  // Match the privacy status
-  if (($match_private != PRIVATE_BOTH) && ($match_private != ''))
-  {
-    $sql .= " AND ";
-    $sql .= "(status&" . STATUS_PRIVATE;
-    $sql .= ($match_private) ? "!=0)" : "=0)";  // Note that private works the other way round to the next two
-  }
-  // Match the confirmation status
-  if (($match_confirmed != CONFIRMED_BOTH) && ($match_confirmed != ''))
-  {
-    $sql .= " AND ";
-    $sql .= "(status&" . STATUS_TENTATIVE;
-    $sql .= ($match_confirmed) ? "=0)" : "!=0)";
-  }
-  // Match the approval status
-  if (($match_approved != APPROVED_BOTH) && ($match_approved != ''))
-  {
-    $sql .= " AND ";
-    $sql .= "(status&" . STATUS_AWAITING_APPROVAL;
-    $sql .= ($match_approved) ? "=0)" : "!=0)";
-  }
-  
-  // Now do the custom fields
-  foreach ($custom_fields as $key => $value)
-  {
-    $var = "match_$key";
-    // Booleans (or integers <= 2 bytes which we assume are intended to be booleans)
-    if (($field_natures[$key] == 'boolean') || 
-       (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
-    {
-      if (!empty($$var))
-      {
-        $sql .= " AND E.$key!=0";
-      }
-    }
-    // Integers
-    elseif (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] > 2))
-    {
-      if (isset($$var) && $$var !== '')  // get_form_var() returns an empty string if no input
-      {
-        $sql .= " AND E.$key=" . $$var;
-      }
-    }
-    // Strings
-    else
-    {
-      if (!empty($$var))
-      {
-        $sql .= " AND" . sql_syntax_caseless_contains("E.$key", $$var);
-      }
-    }
-  }
-
-  // If we're not an admin (they are allowed to see everything), then we need
-  // to make sure we respect the privacy settings.  (We rely on the privacy fields
-  // in the area table being not NULL.   If they are by some chance NULL, then no
-  // entries will be found, which is at least safe from the privacy viewpoint)
-  if (!$is_admin)
-  {
-    if (isset($user))
-    {
-      // if the user is logged in they can see:
-      //   - all bookings, if private_override is set to 'public'
-      //   - their own bookings, and others' public bookings if private_override is set to 'none'
-      //   - just their own bookings, if private_override is set to 'private'
-      $sql .= " AND ((A.private_override='public') OR
-                     (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = '" . addslashes($user) . "')) OR
-                     (A.private_override='private' AND E.create_by = '" . addslashes($user) . "'))";                
-    }
-    else
-    {
-      // if the user is not logged in they can see:
-      //   - all bookings, if private_override is set to 'public'
-      //   - public bookings if private_override is set to 'none'
-      $sql .= " AND ((A.private_override='public') OR
-                     (A.private_override='none' AND (E.status&" . STATUS_PRIVATE . "=0)))";
-    }
-  }
-   
-  if ( $sortby == "r" )
-  {
-    // Order by Area, Room, Start date/time
-    $sql .= " ORDER BY area_name, sort_key, start_time";
-  }
-  else
-  {
-    // Order by Start date/time, Area, Room
-    $sql .= " ORDER BY start_time, area_name, sort_key";
-  }
-
-  // echo "<p>DEBUG: SQL: <tt> $sql </tt></p>\n";
-
-  $res = sql_query($sql);
-  if (! $res)
-  {
-    fatal_error(0, sql_error());
-  }
-  $nmatch = sql_count($res);
   if ($nmatch == 0)
   {
     echo "<p class=\"report_entries\">" . get_vocab("nothing_found") . "</p>\n";
@@ -1216,7 +1265,7 @@ if (isset($areamatch))
   {
     $last_area_room = "";
     $last_date = "";
-    if (!$output_as_csv)
+    if ($output_as_html)
     {
       echo "<p class=\"report_entries\">" . $nmatch . " "
       . ($nmatch == 1 ? get_vocab("entry_found") : get_vocab("entries_found"))
@@ -1227,6 +1276,14 @@ if (isset($areamatch))
     if ($output_as_csv && ($summarize & REPORT))
     {
       csv_report_header($display);
+    }
+    
+    if ($output_as_ical)
+    {
+      // We set $keep_private to FALSE here because we excluded all private
+      // events in the SQL query
+      export_icalendar($res, FALSE, $report_end);
+      exit;
     }
 
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
@@ -1246,6 +1303,7 @@ if (isset($areamatch))
           );
       }
     }
+    
     if ($summarize & SUMMARY)
     {
       do_summary($count, $hours, $room_hash, $name_hash);
@@ -1253,7 +1311,7 @@ if (isset($areamatch))
   }
 }
 
-if (!$output_as_csv)
+if ($output_as_html || empty($nmatch))
 {
   require_once "trailer.inc";
 }

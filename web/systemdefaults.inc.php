@@ -769,8 +769,15 @@ $mail_settings['on_delete'] = FALSE;  // when an entry is deleted
 // -------------
 // These settings determine what should be included in the email
 // Set to TRUE or FALSE as required
-$mail_settings['details'] = FALSE;  // Set to TRUE if you want full booking details;
-                                    // otherwise you just get a link to the entry
+$mail_settings['details']   = FALSE; // Set to TRUE if you want full booking details;
+                                     // otherwise you just get a link to the entry
+$mail_settings['html']      = FALSE; // Set to true if you want HTML mail
+$mail_settings['icalendar'] = FALSE; // Set to TRUE to include iCalendar details
+                                     // which can be imported into a calendar.  (Note:
+                                     // iCalendar details will not be sent for areas
+                                     // that use periods as there isn't a mapping between
+                                     // periods and time of day, so the calendar would not
+                                     // be able to import the booking)
 
 // HOW TO EMAIL - CHARACTER SET AND LANGUAGE
 // -----------------------------------------
@@ -848,6 +855,10 @@ $mail_settings['cc'] = '';
 // (Some email servers are configured not to send emails if the cc or bcc
 // fields are set)
 $mail_settings['treat_cc_as_to'] = FALSE;
+
+// The filename to be used for iCalendar attachments.   Will always have the
+// extension '.ics'
+$mail_settings['ics_filename'] = "booking";
 
 
 

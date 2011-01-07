@@ -189,7 +189,7 @@ function mrbsDelEntry($user, $id, $series, $all)
       continue;
     }
    
-    if ($series && $row['entry_type'] == 2 && !$all)
+    if ($series && $row['entry_type'] == ENTRY_RPT_CHANGED && !$all)
     {
       continue;
     }
@@ -254,6 +254,7 @@ function mrbsCreateEntry($table, $data)
       case 'end_date':
       case 'room_id':
       case 'status':
+      case 'ical_sequence':
         $sql_col[] = $key;
         $sql_val[] = $data[$key];
         break;
@@ -263,6 +264,8 @@ function mrbsCreateEntry($table, $data)
       case 'name':
       case 'type':
       case 'description':
+      case 'ical_uid':
+      case 'ical_recur_id':
         $sql_col[] = $key;
         $sql_val[] = "'" . addslashes($data[$key]) . "'";
         break;
@@ -356,6 +359,13 @@ function mrbsCreateSingleEntry($data)
   // into effect
   if ($data['end_time'] > $data['start_time'])
   {
+    // If we're about to create an individual member of a series for the first time
+    // then give it a recurrence-id equivalent to the start time.  It should always
+    // keep this value, even if the start time is subsequently changed.
+    if ($data['entry_type'] == ENTRY_RPT_ORIGINAL)
+    {
+      $data['ical_recur_id'] = gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
+    }
     $result = mrbsCreateEntry($tbl_entry, $data);
     return $result;
   }
@@ -589,7 +599,7 @@ function mrbsCreateRepeatingEntrys($data)
 
   if (empty($reps))
   {
-    $data['entry_type'] = 0;
+    $data['entry_type'] = ENTRY_SINGLE;
     $data['repeat_id'] = 0;
     $id = mrbsCreateSingleEntry($data);
     $result['id'] = $id;
@@ -601,7 +611,7 @@ function mrbsCreateRepeatingEntrys($data)
     
   if ($id)
   {
-    $data['entry_type'] = 1;
+    $data['entry_type'] = ENTRY_RPT_ORIGINAL;
     $data['repeat_id'] = $id;
     $starttime = $data['start_time'];
     $endtime = $data['end_time'];
@@ -638,22 +648,34 @@ function mrbsUpdateLastReminded($id, $series)
   $now = time();
   if ($series)
   {
-    $sql = "UPDATE $tbl_repeat SET reminded=$now WHERE id=$id";
+    $sql = "UPDATE $tbl_repeat
+               SET reminded=$now,
+                   ical_sequence=ical_sequence+1
+             WHERE id=$id";
     if (sql_command($sql) >= 0)
     {
-      $sql = "UPDATE $tbl_entry SET reminded=$now WHERE repeat_id=$id";
+      $sql = "UPDATE $tbl_entry
+                 SET reminded=$now,
+                     ical_sequence=ical_sequence+1
+               WHERE repeat_id=$id";
       return sql_command($sql);
     }
   }
   else
   {
-    $sql = "UPDATE $tbl_entry SET reminded=$now WHERE id=$id";
+    $sql = "UPDATE $tbl_entry
+               SET reminded=$now,
+                   ical_sequence=ical_sequence+1
+             WHERE id=$id";
     if (sql_command($sql) > 0)
     {
       $repeat_id = sql_query1("SELECT repeat_id FROM $tbl_entry WHERE id=$id LIMIT 1");
       if ($repeat_id >= 0)
       {
-        $sql = "UPDATE $tbl_repeat SET reminded=$now WHERE id=$repeat_id";
+        $sql = "UPDATE $tbl_repeat
+                   SET reminded=$now,
+                       ical_sequence=ical_sequence+1
+                 WHERE id=$repeat_id";
         return sql_command($sql);
       }
     }
@@ -689,6 +711,9 @@ function mrbsUpdateMoreInfo($id, $series, $user, $note)
 // Approve an entry with id $id.   If series is set to TRUE
 // then the id is the id in the repeat table and we must approve
 // all the individual entries.
+// We also update the ical_sequence number so that any emails that
+// are generated will be treated by calendar clients as referring 
+// to the same meeting, rather than a new meeting.
 // Returns FALSE on failure, TRUE on success
 function mrbsApproveEntry($id, $series)
 {
@@ -698,13 +723,15 @@ function mrbsApproveEntry($id, $series)
   {
     // First update the repeat table
     $sql = "UPDATE $tbl_repeat 
-               SET status=status&(~" . STATUS_AWAITING_APPROVAL . ")
+               SET status=status&(~" . STATUS_AWAITING_APPROVAL . "),
+                   ical_sequence=ical_sequence+1
              WHERE id=$id";
     if (sql_command($sql) > 0)  // We expect there to be one row affected
     {
       // Then update the entry table
       $sql = "UPDATE $tbl_entry 
-                 SET status=status&(~" . STATUS_AWAITING_APPROVAL . ")
+                 SET status=status&(~" . STATUS_AWAITING_APPROVAL . "),
+                     ical_sequence=ical_sequence+1
                WHERE repeat_id=$id";
       // It's possible that there will be no rows affected if all the
       // entries have previously been individually approved
@@ -718,7 +745,8 @@ function mrbsApproveEntry($id, $series)
   else
   {
     $sql = "UPDATE $tbl_entry 
-               SET status=status&(~" . STATUS_AWAITING_APPROVAL . ")
+               SET status=status&(~" . STATUS_AWAITING_APPROVAL . "),
+                   ical_sequence=ical_sequence+1
              WHERE id=$id";
     return (sql_command($sql) > 0);  // We expect there to be one row affected
   }
@@ -776,13 +804,10 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   {
     switch ($field['name'])
     {
-      case 'id':
+      // these fields only exist in the entry table
       case 'entry_type':
-        // Nothing to do
-        break;
-        
       case 'repeat_id':
-        // repeat_id only exists in the entry table
+      case 'ical_recur_id':
         array_push($terms, $field['name']);
         break;
 
@@ -853,6 +878,12 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   $row = sql_row_keyed($res, 0);
   sql_free($res);
   
+  // Now get the duration.
+  // Don't translate the units at this stage.   We'll translate them later.
+  $d = get_duration($row['start_time'], $row['end_time'], FALSE);
+  $row['duration'] = $d['duration'];
+  $row['dur_units'] = $d['dur_units'];
+    
   // Get some extra information
   if ($series)
   {

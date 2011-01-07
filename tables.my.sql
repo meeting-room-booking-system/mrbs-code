@@ -65,22 +65,25 @@ CREATE TABLE mrbs_room
 
 CREATE TABLE mrbs_entry
 (
-  id          int NOT NULL auto_increment,
-  start_time  int DEFAULT '0' NOT NULL,
-  end_time    int DEFAULT '0' NOT NULL,
-  entry_type  int DEFAULT '0' NOT NULL,
-  repeat_id   int DEFAULT '0' NOT NULL,
-  room_id     int DEFAULT '1' NOT NULL,
-  timestamp   timestamp,
-  create_by   varchar(80) DEFAULT '' NOT NULL,
-  name        varchar(80) DEFAULT '' NOT NULL,
-  type        char DEFAULT 'E' NOT NULL,
-  description text,
-  status      tinyint unsigned NOT NULL DEFAULT 0,
-  reminded    int,
-  info_time   int,
-  info_user   varchar(80),
-  info_text   text,
+  id             int NOT NULL auto_increment,
+  start_time     int DEFAULT '0' NOT NULL,
+  end_time       int DEFAULT '0' NOT NULL,
+  entry_type     int DEFAULT '0' NOT NULL,
+  repeat_id      int DEFAULT '0' NOT NULL,
+  room_id        int DEFAULT '1' NOT NULL,
+  timestamp      timestamp,
+  create_by      varchar(80) DEFAULT '' NOT NULL,
+  name           varchar(80) DEFAULT '' NOT NULL,
+  type           char DEFAULT 'E' NOT NULL,
+  description    text,
+  status         tinyint unsigned NOT NULL DEFAULT 0,
+  reminded       int,
+  info_time      int,
+  info_user      varchar(80),
+  info_text      text,
+  ical_uid       varchar(255) DEFAULT '' NOT NULL,
+  ical_sequence  smallint DEFAULT 0 NOT NULL,
+  ical_recur_id  varchar(16) DEFAULT '' NOT NULL,
 
   PRIMARY KEY (id),
   KEY idxStartTime (start_time),
@@ -89,24 +92,26 @@ CREATE TABLE mrbs_entry
 
 CREATE TABLE mrbs_repeat
 (
-  id          int NOT NULL auto_increment,
-  start_time  int DEFAULT '0' NOT NULL,
-  end_time    int DEFAULT '0' NOT NULL,
-  rep_type    int DEFAULT '0' NOT NULL,
-  end_date    int DEFAULT '0' NOT NULL,
-  rep_opt     varchar(32) DEFAULT '' NOT NULL,
-  room_id     int DEFAULT '1' NOT NULL,
-  timestamp   timestamp,
-  create_by   varchar(80) DEFAULT '' NOT NULL,
-  name        varchar(80) DEFAULT '' NOT NULL,
-  type        char DEFAULT 'E' NOT NULL,
-  description text,
-  rep_num_weeks smallint NULL, 
-  status      tinyint unsigned NOT NULL DEFAULT 0,
-  reminded    int,
-  info_time   int,
-  info_user   varchar(80),
-  info_text   text,
+  id             int NOT NULL auto_increment,
+  start_time     int DEFAULT '0' NOT NULL,
+  end_time       int DEFAULT '0' NOT NULL,
+  rep_type       int DEFAULT '0' NOT NULL,
+  end_date       int DEFAULT '0' NOT NULL,
+  rep_opt        varchar(32) DEFAULT '' NOT NULL,
+  room_id        int DEFAULT '1' NOT NULL,
+  timestamp      timestamp,
+  create_by      varchar(80) DEFAULT '' NOT NULL,
+  name           varchar(80) DEFAULT '' NOT NULL,
+  type           char DEFAULT 'E' NOT NULL,
+  description    text,
+  rep_num_weeks  smallint NULL, 
+  status         tinyint unsigned NOT NULL DEFAULT 0,
+  reminded       int,
+  info_time      int,
+  info_user      varchar(80),
+  info_text      text,
+  ical_uid       varchar(255) DEFAULT '' NOT NULL,
+  ical_sequence  smallint DEFAULT 0 NOT NULL,
   
   PRIMARY KEY (id)
 );
@@ -133,6 +138,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '22');
+  VALUES ( 'db_version', '25');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

@@ -770,7 +770,9 @@ function utf8_convert_from_locale($string)
   }
   return $string;
 }
-  
+
+
+//  
 function utf8_strftime($format, $time)
 {
   // %p doesn't actually work in some locales, we have to patch it up ourselves
@@ -794,7 +796,7 @@ function utf8_strftime($format, $time)
 
 // UTF-8 compatible substr function obtained from a contribution by
 // "frank at jkelloggs dot dk" in the PHP online manual for substr()
-function utf8_substr($str,$start)
+function utf8_substr_old($str,$start)
 {
   preg_match_all("/./su", $str, $ar);
 
@@ -805,6 +807,200 @@ function utf8_substr($str,$start)
     return join("", array_slice($ar[0], $start));
   }
 }
+
+
+// UTF-8 compatible substr function
+function utf8_substr($str, $start)
+{
+  if (func_num_args() >= 3)
+  {
+    $length = func_get_arg(2);
+  }
+  else
+  {
+    $length = PHP_INT_MAX;
+  }
+
+  if (function_exists('mb_substr'))
+  {
+    // If we have mb_substr, use it - it's much quicker than our
+    // routines, as it's native code
+
+    $encoding = mb_detect_encoding($str);
+
+    return mb_substr($str, $start, $length, $encoding);
+  }
+  if (strlen($str) > 1000)
+  {
+    // If the string is long, the old routine is quicker. :(
+    
+    return utf8_substr_old($str, $start, $length);
+  }
+
+  $i = 0;
+  $index = 0;
+  while ((ord($str[$index]) != 0) && ($i < $start))
+  {
+    $index = utf8_next_index($str, $index);
+    $i++;
+  }
+
+  if (!isset($index))
+  {
+    return NULL;
+  }
+  if (func_num_args() >= 3)
+  {
+    $end_index = $index;
+
+    $j = 0;
+    while (isset($end_index) && ($j < $length))
+    {
+      $end_index = utf8_next_index($str, $end_index);
+      $j++;
+    }
+    $j = 0;
+    $ret = "."; // dummy to fool PHP
+    for ($i = $index;
+         (ord($str[$i]) != 0) && (!isset($end_index) || ($i < $end_index));
+         $i++)
+    { 
+      $ret[$j++] = $str[$i];
+    }
+    return $ret;
+  }
+  else
+  {
+    $j = 0;
+    $ret = "."; // dummy to fool PHP
+    for ($i = $index; ord($str[$i]) != 0; $i++)
+    {
+      $ret[$j++] = $str[$i];
+    }
+    return $ret;
+  }
+}
+
+
+// Takes a string (which may be UTF-8) and returns how long it is in
+// _bytes_
+function utf8_bytecount($str)
+{
+  return count(str_split($str));
+}
+
+
+// Takes a UTF-8 string and returns the string with one Unicode character
+// removed from the front
+function utf8_next($str)
+{
+  $ret = NULL;
+
+  if (isset($str))
+  {
+    $index = utf8_next_index($str, 0);
+
+    if ($index)
+    {
+      $i = 0;
+      $ret = "."; // dummy to fool PHP
+      while (ord($str[$index]) != 0)
+      {
+        $ret[$i++] = $str[$index++];
+      }
+    }
+  }
+  return $ret;
+}
+
+
+// Takes a UTF-8 string and a byte index into that string, and
+// returns the byte index of the next UTF-8 sequence. When the end
+// of the string is encountered, the function returns NULL
+function utf8_next_index($str, $start)
+{
+  $ret = NULL;
+
+  $i = $start;
+
+  if (isset($str))
+  {
+    if (ord($str[$i]) < 0xc0)
+    {
+      $i++;
+    }
+    else
+    {
+      $i++;
+      while ((ord($str[$i]) & 0xc0) == 0x80)
+      {
+        $i++;
+      }
+    }
+    if (ord($str[$i]) != 0)
+    {
+      $ret = $i;
+    }
+  }
+  return $ret;
+}
+
+
+// Given a UTF-8 string and a byte index, return the UTF-8 sequence
+// at this index as a string, and update the byte index to point to
+// the next sequence. When the end of the string is encountered, the
+// last sequence is returned, and the byte index set to NULL
+function utf8_seq($str, &$byte_index)
+{
+  $ret = "."; // dummy to fool PHP
+
+  $next = utf8_next_index($str, $byte_index);
+
+  if (isset($next))
+  {
+    $j = 0;
+    for ($i = $byte_index; $i < $next; $i++)
+    {
+      $ret[$j] = $str[$i];
+      $j++;
+    }
+  }
+  else
+  {
+    $j = 0;
+    for ($i = $byte_index; ord($str[$i]) != 0; $i++)
+    {
+      $ret[$j] = $str[$i];
+      $j++;
+    }
+  }
+  $byte_index = $next;
+  return $ret;
+}
+
+  
+// Takes a UTF-8 string, and returns the number of _characters_ in the
+// string
+function utf8_strlen($str)
+{
+  if (!isset($str) || ($str == ""))
+  {
+    return 0;
+  }
+  if (function_exists('mb_strlen'))
+  {
+    // If we have mb_strlen(), use it - it'll be quicker
+    return mb_strlen($str);
+  }
+  $len = 1;
+  $next = 0;
+  while ($next = utf8_next_index($str, $next))
+  {
+    $len++;
+  }
+  return $len;
+}
+
 
 // Format a locale which could be xx-xX or xx_Xx or xx_XxXx (etc.) into a
 // standardised format consiting of a lower case language followed, if applicable,

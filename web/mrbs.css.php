@@ -532,6 +532,8 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 .form_general div {float: left; clear: left; width: 100%}
 .form_general div div {float: none; clear: none; width: auto}
 .form_general div.group {float: left}
+.form_general div.group_container {float: left}
+.form_general .group_container div.group {clear: left}
 .form_general div.group.ampm {width: <?php echo $edit_entry_ampm_width ?>em}
 .edit_area_room div.group {clear: none; width: auto}
 .edit_area_room div.group#private_override div {clear: left}
@@ -810,6 +812,7 @@ div#simple_trailer {clear: both; width: 100%; text-align: center; padding-top: 1
 .view_entry div#view_entry_nav {margin-top: 1.0em}
 .view_entry #approve_buttons form {float: left; margin-right: 2em}
 .view_entry #approve_buttons legend {font-size: 0}
+.view_entry div#returl {margin-top: 1em}
 #approve_buttons td {vertical-align: middle; padding-top: 1em}
 #approve_buttons td#caption {text-align: left}
 #approve_buttons td#note {padding-top: 0}
