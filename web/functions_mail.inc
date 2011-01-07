@@ -984,6 +984,8 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
 
   global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
   
+  $eol = "\n";  // EOL sequence to use in mail headers.  Need "\n" for mail backend
+  
   // for cases where the mail server refuses
   // to send emails with cc or bcc set, put the cc
   // addresses on the to line
@@ -1060,6 +1062,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   // If we're not sending iCalendar information this will become the outer,
   // otherwise we'll then enclose it in an outer mime type.
   $mime_params = array();
+  $mime_params['eol'] = $eol;
   $mime_params['content_type'] = "multipart/alternative";
   $mime_inner = new Mail_mimePart('', $mime_params);
   
@@ -1093,12 +1096,14 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     // and then enclose the inner section in a multipart/mixed outer section.
     // First create the outer section
     $mime_params = array();
+    $mime_params['eol'] = $eol;
     $mime_params['content_type'] = "multipart/mixed";
     $mime = new Mail_mimePart('', $mime_params);
 
     // Now add the inner section as the first sub part
     $mime_inner = $mime_inner->encode();
     $mime_params = array();
+    $mime_params['eol'] = $eol;
     $mime_params['encoding'] = "7bit";
     $mime_params['content_type'] = $mime_inner['headers']['Content-Type'];
     $mime->addSubPart($mime_inner['body'], $mime_params);
