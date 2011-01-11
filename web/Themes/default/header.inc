@@ -64,20 +64,25 @@ function print_theme_header($day, $month, $year, $area, $room)
     <script type="text/javascript" src="jquery/ui/jquery-ui-1.8.6.custom.min.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
     <?php
-    // The Portuguese (-pt) file below is a non-standard addition to the regional
-    // variants.   The standard package only has a pt-BR variant at the moment.
-    // This was reported as ticket #6102 and the Portuguese file has now been
-    // included as standard in Release 1.8.6 of UI.   When we upgrade to 1.8.6
-    // we can remove the separate -pt file.
-    
     // The English (-en) and English-US (-en-US) files are non-standard additions,
     // which do not exist explicitly.   Although datepicker defaults to US English, it
     // helps when choosing the regional settings to have explicit settings.  A ticket
     // (#6682) has been raised to request their inclusion.    The files have been kept
     // separate to avoid problems with merging new releases of UI
+    //
+    // Similarly there are no explicit en-AU or en-NZ initialisations.  A ticket (#6828)
+    // has been raised.
+    //
+    // The Norwegian initialisation is a correction to the standard initialisation.
+    // Discussions are underway (Jan 2011) with the author of the standard initialisation
+    // with a view to getting a resolution incorporated in the standard jQuery UI package
     ?>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-US.js"></script>
+    <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-AU.js"></script>
+    <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-NZ.js"></script>
+    <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-no.js"></script>
+    
     
     <script type="text/javascript">
 
