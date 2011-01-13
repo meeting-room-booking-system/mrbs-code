@@ -53,6 +53,11 @@ function ical_fold($str)
     // otherwise if this character will take us over the octet limit for the line,
     // fold the line and set the octet count to however many octets a space takes
     // (the folding involves adding a CRLF followed by one character, a space or a tab)
+    //
+    // [Note:  It's not entirely clear from the RFC whether the octet that is introduced
+    // when folding counts towards the 75 octets.   Some implementations (eg Google
+    // Calendar as of Jan 2011) do not count it.   However it can do no harm to err on
+    // the safe side and include the initial whitespace in the count.]
     elseif (($octets + $char_octets) > $octets_max)
     {
       $result .= $line_split;
