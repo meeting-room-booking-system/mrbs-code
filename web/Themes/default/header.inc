@@ -230,7 +230,8 @@ if ($page == 'edit_area_room')
     {
       speed = 'slow';
     }
-    if (form.area_enable_periods[0].checked != enablePeriods)
+    var periodsChecked = form.area_enable_periods[0].checked;
+    if (periodsChecked != enablePeriods)
     {
       enablePeriods = !enablePeriods;
       $('#time_settings').animate({
@@ -238,10 +239,19 @@ if ($page == 'edit_area_room')
         height: 'toggle'
         }, speed);
     }
+    <? // Show or Hide the note about periods as appropriate ?>
+    if (periodsChecked)
+    {
+      $('#book_ahead_periods_note').show(speed);
+    }
+    else
+    {
+      $('#book_ahead_periods_note').hide(speed);
+    }
   }
   
   // disable the min and max book ahead values and units if the corresponding
-  // checkbox isn't checkd;  and enable it it is.
+  // checkbox isn't checked;  and enable it it is.
   function check_book_ahead()
   {
     var form = document.getElementById('edit_area');
@@ -733,6 +743,7 @@ function init()
     // We need to hide the sections of the form relating to times
     // slots if the form is loaded with periods enabled.   We hide
     // the times sections instantly by setting speed = 0;
+    // Also show or hide the periods note as appropriate
     // [This method works if there are no periods-specific settings.
     // When we get those we will have to do something different]
   ?>
@@ -743,6 +754,11 @@ function init()
       if (form.area_enable_periods[0].checked)
       {
         toggleMode(form, 0);
+        $('#book_ahead_periods_note').show();
+      }
+      else
+      {
+        $('#book_ahead_periods_note').hide();
       }
       check_book_ahead();
     }

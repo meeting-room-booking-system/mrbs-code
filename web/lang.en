@@ -385,6 +385,7 @@ $vocab["disabled_area_note"]      = "If this area is disabled, it will not appea
 $vocab["disabled_room_note"]      = "If this room is disabled, it will not appear in the calendar views " .
                                     "and it will not be possible to book it.   However existing bookings " .
                                     "will be preserved and will be visible in Search and Report results.";
+$vocab["book_ahead_note_periods"] = "When using periods, book ahead times are rounded down to the nearest whole day.";
 
 // Used in edit_users.php
 $vocab["name_empty"]         = "You must enter a name.";

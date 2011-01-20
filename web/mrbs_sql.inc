@@ -106,17 +106,23 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 function mrbsCheckPolicy($starttime, $delete=FALSE)
 {
   global $min_book_ahead_enabled, $max_book_ahead_enabled, $enable_periods;
-  global $min_book_ahead_secs, $max_book_ahead_secs, $min_book_ahead_days, $max_book_ahead_days;
+  global $min_book_ahead_secs, $max_book_ahead_secs;
 
   $error = "";
+  $secs_in_day = 60*60*24;
   
   // Because MRBS has no notion of where we are in the day if we're using periods,
   // we'll just assume that we're at the beginning of the day.
   $now = ($enable_periods) ? mktime(0, 0, 0) : time();
+  // We'll also round $min_book_ahead_secs and $max_book_ahead_secs down to the nearest whole day
   
   if ($min_book_ahead_enabled)
   {
-    $min_book_ahead = ($enable_periods) ? ($min_book_ahead_days * 60*60*24) : $min_book_ahead_secs;
+    if ($enable_periods)
+    {
+      $min_book_ahead_secs -=  $min_book_ahead_secs%$secs_in_day;
+    }
+    $min_book_ahead = $min_book_ahead_secs;
     if (($starttime - $now) < $min_book_ahead)
     {
       toTimeString($min_book_ahead, $units);
@@ -127,7 +133,11 @@ function mrbsCheckPolicy($starttime, $delete=FALSE)
   
   if ($max_book_ahead_enabled)
   {
-    $max_book_ahead = ($enable_periods) ? ($max_book_ahead_days * 60*60*24) : $max_book_ahead_secs;
+    if ($enable_periods)
+    {
+      $max_book_ahead_secs -=  $max_book_ahead_secs%$secs_in_day;
+    }
+    $max_book_ahead = $max_book_ahead_secs;
     if (($starttime - $now) > $max_book_ahead)
     {
       toTimeString($max_book_ahead, $units);

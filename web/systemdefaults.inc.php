@@ -242,43 +242,30 @@ $periods[] = "Period&nbsp;2";
 // book more than so far in advance.  How the times are determined depends on whether Periods
 // or Times are being used.   These settings also apply to the deletion of bookings.
 
-// DEFAULT VALUES FOR NEW AREAS (WHEN USING TIMES)
+// DEFAULT VALUES FOR NEW AREAS
 $min_book_ahead_enabled = FALSE;    // set to TRUE to enforce a minimum advance booking time
 $max_book_ahead_enabled = FALSE;    // set to TRUE to enforce a maximum advance booking time
 
-// TIMES SETTINGS
-// --------------
-// When times are being used the advance booking limits are measured in seconds and are
-// set by the two variables below.  The relevant time for determining whether a booking is
-// allowed is the start time of the booking.  Values may be negative: for example setting
-// $min_book_ahead_secs = -300 means that users cannot book more than 5 minutes in the past.
+// The advance booking limits are measured in seconds and are set by the two variables below.
+// The relevant time for determining whether a booking is allowed is the start time of the
+// booking.  Values may be negative: for example setting $min_book_ahead_secs = -300 means
+// that users cannot book more than 5 minutes in the past.
 
 // DEFAULT VALUES FOR NEW AREAS
 $min_book_ahead_secs = 0;           // (seconds) cannot book in the past
 $max_book_ahead_secs = 60*60*24*7;  // (seconds) no more than one week ahead
 
-// NOTE:  When times are being used, the four book_ahead settings are all set per area through
-// MRBS and the values are held in the database.   They can be set or unset for each area
-// when editing the area using the web browser.    The variables above are in fact
-// the default settings that are used when a new area is created.
-//
-//
-// PERIODS SETTINGS
-// ----------------
-// If you are using periods, MRBS has no notion of when the periods occur during the
+// NOTE:  If you are using periods, MRBS has no notion of when the periods occur during the
 // day, and so cannot impose policies of the kind "users must book at least one period
 // in advance".    However it can impose policies such as "users must book at least
-// one day in advance" and this is done by setting the two variables below.   As MRBS does
-// not know when the periods occur in the day, there is no way of specifying, for example,
-// that bookings must be made at least 24 hours in advance.    Setting $min_book_ahead_days=1
+// one day in advance".   The two values above are rounded down to the nearest whole 
+// number of days when using periods.   For example 86401 will be rounded down to 86400
+// (one day) and 1 will be rounded down to 0.
+//
+// As MRBS does not know when the periods occur in the day, there is no way of specifying, for example,
+// that bookings must be made at least 24 hours in advance.    Setting $min_book_ahead_secs=86400
 // will allow somebody to make a booking at 11:59 pm for the first period the next day, which
 // which may occur at 8.00 am.
-//
-$min_book_ahead_days = 0;   // (days) cannot book in the past
-$max_book_ahead_days = 7;   // (days) no more than one week ahead
-//
-// Currently MRBS does not store periods settings per area.   So the values above are
-// applied globally to all periods if they are being used.
 
 
 /******************

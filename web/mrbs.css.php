@@ -464,6 +464,7 @@ span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; fo
 .edit_area_room .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
 .edit_area_room fieldset#time_settings {padding:0; margin 0}
 span#private_display_caution {display: block; margin-top: 1em; font-style: italic; font-weight: normal}
+#book_ahead_periods_note span {display: block; float: left; width: 24em; margin: 0 0 1em 1em; font-style: italic}
 .edit_area_room .form_general textarea {height: 6em; width: 25em}
 .edit_area_room div#custom_html {margin-top: 8px}
 

@@ -326,6 +326,21 @@ if ($phase == 2)
     // Convert the book ahead times into seconds
     fromTimeString($area_min_ba_value, $area_min_ba_units);
     fromTimeString($area_max_ba_value, $area_max_ba_units);
+    
+    // If we are using periods, round these down to the nearest whole day
+    // (anything less than a day is meaningless when using periods)
+    if ($area_enable_periods)
+    {
+      $secs_in_day = 60*60*24;
+      if (isset($area_min_ba_value))
+      {
+        $area_min_ba_value -= $area_min_ba_value%$secs_in_day;
+      }
+      if (isset($area_max_ba_value))
+      {
+        $area_max_ba_value -= $area_max_ba_value%$secs_in_day;
+      }
+    }
   
     // Convert booleans into 0/1 (necessary for PostgreSQL)
     $area_disabled = (!empty($area_disabled)) ? 1 : 0;
@@ -379,25 +394,27 @@ if ($phase == 2)
       $assign_array[] = "custom_html='" . addslashes($custom_html) . "'";
       if (!$area_enable_periods)
       {
-        // only update the min and max book_ahead_secs fields if the form values
-        // are set;  they might be NULL because they've been disabled by JavaScript
         $assign_array[] = "resolution=" . $area_res_mins * 60;
         $assign_array[] = "default_duration=" . $area_def_duration_mins * 60;
         $assign_array[] = "morningstarts=" . $area_morningstarts;
         $assign_array[] = "morningstarts_minutes=" . $area_morningstarts_minutes;
         $assign_array[] = "eveningends=" . $area_eveningends;
         $assign_array[] = "eveningends_minutes=" . $area_eveningends_minutes;
-        $assign_array[] = "min_book_ahead_enabled=" . $area_min_ba_enabled;
-        $assign_array[] = "max_book_ahead_enabled=" . $area_max_ba_enabled;
-        if (isset($area_min_ba_value))
-        {
-          $assign_array[] = "min_book_ahead_secs=" . $area_min_ba_value;
-        }
-        if (isset($area_max_ba_value))
-        {
-          $assign_array[] = "max_book_ahead_secs=" . $area_max_ba_value;
-        }
       }
+      
+      // only update the min and max book_ahead_secs fields if the form values
+      // are set;  they might be NULL because they've been disabled by JavaScript
+      $assign_array[] = "min_book_ahead_enabled=" . $area_min_ba_enabled;
+      $assign_array[] = "max_book_ahead_enabled=" . $area_max_ba_enabled;
+      if (isset($area_min_ba_value))
+      {
+        $assign_array[] = "min_book_ahead_secs=" . $area_min_ba_value;
+      }
+      if (isset($area_max_ba_value))
+      {
+        $assign_array[] = "max_book_ahead_secs=" . $area_max_ba_value;
+      }
+      
       $assign_array[] = "private_enabled=" . $area_private_enabled;
       $assign_array[] = "private_default=" . $area_private_default;
       $assign_array[] = "private_mandatory=" . $area_private_mandatory;
@@ -845,9 +862,7 @@ if (isset($change_area) &&!empty($area))
       //]]>
       </script>
       
-      <fieldset id="time_settings">
-      <legend></legend>
-      <fieldset >
+      <fieldset  id="time_settings">
       <legend><?php echo get_vocab("time_settings")?>
       <span class="js_none">&nbsp;&nbsp;(<?php echo get_vocab("times_only") ?>)</span>
       </legend>
@@ -955,8 +970,11 @@ if (isset($change_area) &&!empty($area))
       $max_ba_value = $max_book_ahead_secs;
       toTimeString($max_ba_value, $max_ba_units);
       echo "<fieldset id=\"booking_policies\">\n";
-      echo "<legend>" . get_vocab("booking_policies") . 
-           "<span class=\"js_none\">&nbsp;&nbsp;(" . get_vocab("times_only") . ")</span></legend>\n";
+      echo "<legend>" . get_vocab("booking_policies") . "</legend>\n";
+      // Note when using periods
+      echo "<div id=\"book_ahead_periods_note\">\n";
+      echo "<label></label><span>" . get_vocab("book_ahead_note_periods") . "</span>";
+      echo "</div>\n";
       // Minimum book ahead
       echo "<div>\n";
       echo "<label for=\"area_min_book_ahead\">" . get_vocab("min_book_ahead") . ":</label>\n";
@@ -993,7 +1011,6 @@ if (isset($change_area) &&!empty($area))
       echo "</div>\n";
       echo "</fieldset>\n";
       ?>
-      </fieldset>
       
       <fieldset>
       <legend><?php echo get_vocab("confirmation_settings")?></legend>
