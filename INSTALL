@@ -412,17 +412,9 @@ to "Computer", then look for the appropriate string in the lang files and edit i
 INTERNATIONALISATION
 ---------------------------------------------------------------------------
 
-From mrbs-1.2-pre2, MRBS is internationalised as long as the config
-variable $unicode_encoding is set to 1 (which is the default setting). 
-If this is set, then MRBS serves all of its pages in UTF-8 and stores
-everything in the database in UTF-8. This means that all languages work
-together.
-
-IF THIS DOES NOT WORK for you (your server may not have unicode support),
-just set $unicode_encoding to 0. MRBS will run the old way, with pages
-being served in an encoding based on the language, and the encoding of data
-in the database being a mess of different encodings based on the users'
-preferred language.
+From MRBS 1.4.7, MRBS is internationalised and uses UTF-8 throughout.
+MRBS will serve all of its pages in UTF-8 and stores everything in the
+database in UTF-8. This means that all languages work together.
 
 To use Unicode, php should be built with 'iconv' support ('--with-iconv'
 directive), or have the iconv extension installed and enabled. On Windows,
@@ -442,11 +434,10 @@ For PHP 4 on Windows, three things are needed :
 Note: Upgrading mysql database from previous charsets to Unicode :
 
   You can use convert_db_to_utf8.php script to convert text in the
-  database to UTF8, to use MRBS with $unicode_encoding set to 1. The
-  administrator should copy it into the web directory, run it (choosing
-  the encoding to convert from) ONCE, and then move it back out of the
-  web directory. We recommend you backup your database before running
-  this script if you are at all worried.
+  database to UTF8. The administrator should copy this file into the web
+  directory, run it (choosing the encoding to convert from) ONCE, and then
+  move it back out of the web directory. We recommend you backup your
+  database before running this script if you are at all worried.
 
   
 PERIODS

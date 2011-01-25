@@ -10,9 +10,6 @@
 //
 // This file is PHP code. Treat it as such.
 
-// The charset to use in "Content-type" header
-$vocab["charset"]            = "UTF-8";
-
 // Used in style.inc
 $vocab["mrbs"]               = "会議室予約システム";
 

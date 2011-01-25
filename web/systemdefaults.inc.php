@@ -768,10 +768,9 @@ $mail_settings['icalendar'] = FALSE; // Set to TRUE to include iCalendar details
 
 // HOW TO EMAIL - CHARACTER SET AND LANGUAGE
 // -----------------------------------------
-// You can override the charset used in emails if $unicode_encoding is 1
-// (utf-8) if you like, but be sure the charset you choose can handle all
-// the characters in the translation and that anyone may use in a
-// booking description
+// You can override the charset used in emails if you like, but be sure
+// the charset you choose can handle all the characters in the translation
+// and that anyone may use in a booking description
 //$mail_charset = "iso-8859-1";
 
 // Set the language used for emails (choose an available lang.* file).
@@ -853,11 +852,6 @@ $mail_settings['ics_filename'] = "booking";
  * Language
  **********/
 
-// Set this to 1 to use UTF-8 in all pages and in the database, otherwise
-// text gets entered in the database in different encodings, dependent
-// on the users' language
-$unicode_encoding = 1;
-
 // Set this to 1 to disable the automatic language changing MRBS performs
 // based on the user's browser language settings. It will ensure that
 // the language displayed is always the value of $default_language_tokens,
@@ -874,8 +868,7 @@ $default_language_tokens = "en";
 // Set this to a valid locale (for the OS you run the MRBS server on)
 // if you want to override the automatic locale determination MRBS
 // performs.   Remember to include the codeset if appropriate.   For example,
-// on a UNIX system with $unicode_encoding set to TRUE you would use
-// "en_GB.utf-8" for English/GB.
+// on a UNIX system you would use "en_GB.utf-8" for English/GB.
 $override_locale = "";
 
 // faq file language selection. IF not set, use the default english file.

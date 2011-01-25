@@ -31,8 +31,7 @@ echo '
 
     <p>
       This script will convert all the text in the database from a selected encoding to
-      UTF-8, to use with MRBS\'s new Unicode feature ($unicode_encoding in config.inc.php
-      set to 1).<br>
+      UTF-8, to use with MRBS\'s default encoding.<br>
       <b>NOTE: Only run this script <u>once</u>. Running it more than once will
       make a right mess of any non-ASCII text in the database. I\'d recommend you
       backup your database before running this script if you\'re at all worried.</b>

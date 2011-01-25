@@ -431,7 +431,7 @@ if (!$disable_automatic_language_changing)
 $windows_locale = "eng";
 
 // 2003/11/09 JF Larvoire: Help new admins understand what to do in case the iconv error occurs...
-if (($unicode_encoding) && (!function_exists('iconv')))
+if (!function_exists('iconv'))
 {
   exit('
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -450,30 +450,22 @@ installed on your system.
   English. Without Unicode, support for non-English-speaking users will
   be crippled.
 </p>
-<p>To fix this error, do one of the following:</p>
-<ul>
-  <li>
-    Install and enable the iconv module.
-    <ul>
-      <li>
-        On a Windows server, enable php_iconv.dll in %windir%\php.ini,
-        and make sure both %phpdir%\dlls\iconv.dll and
-        %phpdir%\extensions\php_iconv.dll are in the path. One way to
-        do this is to copy these two files to %windir%.
-      </li>
-      <li>
-        On a Unix server, recompile your PHP module with the appropriate
-        option for enabling the iconv extension. Consult your PHP server
-        documentation for more information about enabling iconv support.
-      </li>
-    </ul>
-  </li>
-  <li>
-    Disable Unicode support by modifying config.inc.php and setting the
-    variable $unicode_encoding to 0. If your MRBS installation is on a
-    shared host, then this may be your only option.
-  </li>
-</ul>
+<p>
+  To fix this error, you need to install and enable the iconv module.
+  <ul>
+    <li>
+      On a Windows server, enable php_iconv.dll in %windir%\php.ini,
+      and make sure both %phpdir%\dlls\iconv.dll and
+      %phpdir%\extensions\php_iconv.dll are in the path. One way to
+      do this is to copy these two files to %windir%.
+    </li>
+    <li>
+      On a Unix server, recompile your PHP module with the appropriate
+      option for enabling the iconv extension. Consult your PHP server
+      documentation for more information about enabling iconv support.
+    </li>
+  </ul>
+</p>
 </body>
 </html>
 ');
@@ -534,20 +526,17 @@ else
       // dependent on the machine's installed locales
       $locale = locale_format($locale, '_');
     }
-    if ($unicode_encoding)
+    switch ($server_os)
     {
-      switch ($server_os)
-      {
-        case "sunos":
-        case "linux":
-        case "bsd":
-          $locale .= ".UTF-8";
-          break;
+      case "sunos":
+      case "linux":
+      case "bsd":
+        $locale .= ".UTF-8";
+        break;
 
-        case "macosx":
-          $locale .= ".utf-8";
-          break;
-      }
+      case "macosx":
+        $locale .= ".utf-8";
+        break;
     }
     if (setlocale(LC_ALL, $locale) == FALSE)
     {
@@ -560,11 +549,7 @@ else
 
 function get_charset()
 {
-  global $unicode_encoding, $vocab;
-  // We use $vocab directly instead of get_vocab() because we have
-  // no requirement to convert the vocab text, we just output
-  // the charset
-  return ($unicode_encoding) ? "utf-8" : $vocab["charset"];
+  return 'utf-8';
 }
 
 function get_server_os()
@@ -625,44 +610,11 @@ function get_aix_character_encoding($character_encoding)
   return $gnu_iconv_to_aix_iconv_codepage_map[$character_encoding];
 }
 
-function get_vocab_utf8_aix($vocab_array, $tag)
-{
-  global $aix_utf8_converters;
 
-  // Attempt to translate character encoding name
-  $aix_character_set = get_aix_character_encoding($vocab_array['charset']);
-
-  // Check if character encoding name translation was successful
-  if ($aix_character_set === FALSE)
-  {
-    // Unsuccessful; just use the original character encoding name
-    $aix_character_set = $vocab_array['charset'];
-
-  }
-  else
-  {
-    // Successful; check that a corresponding UTF-8 converter exists
-    if (!in_array($aix_character_set, $aix_utf8_converters, TRUE))
-    {
-      // Corresponding UTF-8 converter does not exist; just use the original character encoding name
-      $aix_character_set = $vocab_array['charset'];
-
-    }
-    else
-    {
-      // Success; the translated character encoding name is ready to use
-    }
-  }
-
-  return iconv($aix_character_set, 'UTF-8', $vocab_array[$tag]);
-}
-
-
-// Get a vocab item, in UTF-8 or a local encoding, depending on
-// the setting of $unicode_encoding
+// Get a vocab item, in UTF-8
 function get_vocab($tag)
 {
-  global $vocab, $unicode_encoding;
+  global $vocab;
 
   if (func_num_args() > 1)
   {
@@ -673,24 +625,7 @@ function get_vocab($tag)
     $vocab_array = $vocab;
   }
 
-  if ($unicode_encoding && (strcasecmp($vocab_array["charset"], "utf-8") != 0))
-  {
-    if ((get_server_os() == 'aix') &&
-        (strcasecmp(ICONV_IMPL, 'unknown') == 0) &&
-        (strcasecmp(ICONV_VERSION, 'unknown') == 0))
-    {
-      $translated = get_vocab_utf8_aix($vocab_array, $tag);
-    }
-    else
-    {
-      $translated = iconv($vocab_array["charset"],"utf-8",$vocab_array[$tag]);
-    }
-  }
-  else
-  {
-    $translated = $vocab_array[$tag];
-  }
-  return $translated;
+  return $vocab_array[$tag];
 }
 
 
@@ -715,7 +650,7 @@ function get_loc_field_name($table, $name)
 // NOTE: Uses the LC_TIME category for determining the current locale setting, so should preferrably be used on date/time input only!
 function utf8_convert_aix($string)
 {
-  global $aixlocale_codepage_map, $aix_utf8_converters, $unicode_encoding;
+  global $aixlocale_codepage_map, $aix_utf8_converters;
 
   // Retrieve current locale setting
   $aix_locale = setlocale(LC_TIME, '0');
@@ -751,22 +686,19 @@ function utf8_convert_aix($string)
 
 function utf8_convert_from_locale($string)
 {
-  global $windows_locale, $unicode_encoding, $winlocale_codepage_map;
+  global $windows_locale, $winlocale_codepage_map;
 
-  if ($unicode_encoding)
+  if (get_server_os() == "windows")
   {
-    if (get_server_os() == "windows")
+    if ($winlocale_codepage_map[$windows_locale])
     {
-      if ($winlocale_codepage_map[$windows_locale])
-      {
-        $string = iconv($winlocale_codepage_map[$windows_locale],"utf-8",
-                        $string);
-      }
+      $string = iconv($winlocale_codepage_map[$windows_locale],"utf-8",
+                      $string);
     }
-    else if (get_server_os() == "aix")
-    {
-      $string = utf8_convert_aix($string);
-    }
+  }
+  else if (get_server_os() == "aix")
+  {
+    $string = utf8_convert_aix($string);
   }
   return $string;
 }

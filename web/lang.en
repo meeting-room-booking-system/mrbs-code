@@ -1,4 +1,4 @@
-<?php // -*-mode: PHP; coding:iso-8859-1;-*-
+<?php // -*-mode: PHP; coding:utf-8;-*-
 // $Id$
 
 // This file contains PHP code that specifies language specific strings
@@ -9,9 +9,6 @@
 //
 //
 // This file is PHP code. Treat it as such.
-
-// The charset to use in "Content-type" header
-$vocab["charset"]            = "iso-8859-1";
 
 // Used in style.inc
 $vocab["mrbs"]               = "Meeting Room Booking System";

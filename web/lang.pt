@@ -1,4 +1,4 @@
-<?php // -*-mode: PHP; coding:iso-8859-1;-*-
+<?php // -*-mode: PHP; coding:utf-8;-*-
 
 // $Id$
 
@@ -11,54 +11,51 @@
 //
 // This file is PHP code. Treat it as such.
 
-// The charset to use in "Content-type" header
-$vocab["charset"]            = "iso-8859-1";
-
 // Used in style.inc
 $vocab["mrbs"]               = "Reserva de Salas";
 
 // Used in functions.inc
-$vocab["report"]             = "RelatÛrios";
-$vocab["admin"]              = "AdministraÁ„o";
+$vocab["report"]             = "Relat√≥rios";
+$vocab["admin"]              = "Administra√ß√£o";
 $vocab["help"]               = "Ajuda";
 $vocab["search"]             = "Pesquisa";
-$vocab["not_php3"]           = "AVISO: Isto provavelmente n„o funciona com php3";
+$vocab["not_php3"]           = "AVISO: Isto provavelmente n√£o funciona com php3";
 $vocab["outstanding"]        = "reservas pendentes";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "Reservas para";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
-$vocab["areas"]              = "¡reas";
+$vocab["areas"]              = "√Åreas";
 $vocab["daybefore"]          = "Ir para Dia Anterior";
 $vocab["dayafter"]           = "Ir para Dia Seguinte";
 $vocab["gototoday"]          = "Ir para dia de hoje";
 $vocab["goto"]               = "ir para";
 $vocab["highlight_line"]     = "Destaque esta linha";
-$vocab["click_to_reserve"]   = "Prima nesta cÈÁlula para reservar.";
-$vocab["timezone"]           = "Fuso hor·rio";
+$vocab["click_to_reserve"]   = "Prima nesta c√©√ßlula para reservar.";
+$vocab["timezone"]           = "Fuso hor√°rio";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Ver Dia";
 $vocab["viewweek"]           = "Ver Semana";
-$vocab["viewmonth"]          = "Ver MÍs";
-$vocab["ppreview"]           = "PrÈ-visualizar Inpress„o";
+$vocab["viewmonth"]          = "Ver M√™s";
+$vocab["ppreview"]           = "Pr√©-visualizar Inpress√£o";
 
 // Used in edit_entry.php
 $vocab["addentry"]           = "Nova reserva";
 $vocab["editentry"]          = "Editar reserva";
 $vocab["copyentry"]          = "Copiar reserva";
-$vocab["editseries"]         = "Editar sÈrie";
-$vocab["copyseries"]         = "Copiar sÈries";
-$vocab["namebooker"]         = "DescriÁ„o breve";
-$vocab["fulldescription"]    = "DescriÁ„o completa:<br>&nbsp;&nbsp;(Numero de Pessoas,<br>&nbsp;&nbsp;Internas/Externas etc)";
+$vocab["editseries"]         = "Editar s√©rie";
+$vocab["copyseries"]         = "Copiar s√©ries";
+$vocab["namebooker"]         = "Descri√ß√£o breve";
+$vocab["fulldescription"]    = "Descri√ß√£o completa:<br>&nbsp;&nbsp;(Numero de Pessoas,<br>&nbsp;&nbsp;Internas/Externas etc)";
 $vocab["date"]               = "Data";
-$vocab["start"]              = "InÌcio";
+$vocab["start"]              = "In√≠cio";
 $vocab["end"]                = "Termo";
-$vocab["start_date"]         = "InÌcio";
+$vocab["start_date"]         = "In√≠cio";
 $vocab["end_date"]           = "Termo";
 $vocab["time"]               = "Hora";
-$vocab["period"]             = "PerÌodo";
-$vocab["duration"]           = "DuraÁ„o";
+$vocab["period"]             = "Per√≠odo";
+$vocab["duration"]           = "Dura√ß√£o";
 $vocab["second_lc"]          = "segundo";
 $vocab["seconds"]            = "segundos";
 $vocab["minute_lc"]          = "minuto";
@@ -71,10 +68,10 @@ $vocab["week_lc"]            = "semana";
 $vocab["weeks"]              = "semanas";
 $vocab["year_lc"]            = "ano";
 $vocab["years"]              = "anos";
-$vocab["period_lc"]          = "perÌodo";
-$vocab["periods"]            = "perÌodos";
+$vocab["period_lc"]          = "per√≠odo";
+$vocab["periods"]            = "per√≠odos";
 $vocab["all_day"]            = "Todo o dia";
-$vocab["area"]               = "¡rea";
+$vocab["area"]               = "√Årea";
 $vocab["type"]               = "Tipo";
 $vocab["internal"]           = "Interno";
 $vocab["external"]           = "Externo";
@@ -90,74 +87,74 @@ $vocab["rep_type_6"]         = "n-semanalmente";
 $vocab["rep_end_date"]       = "Repetir Termo";
 $vocab["rep_rep_day"]        = "Repetir Dia";
 $vocab["rep_for_weekly"]     = "(durante (n-)semanalmente)";
-$vocab["rep_freq"]           = "FrequÍncia";
+$vocab["rep_freq"]           = "Frequ√™ncia";
 $vocab["rep_num_weeks"]      = "Numero de semanas";
 $vocab["rep_for_nweekly"]    = "(durante n-semanalmente)";
 $vocab["ctrl_click"]         = "Carregue Control-Click para seleccionar mais de uma sala";
 $vocab["entryid"]            = "ID de entrada";
 $vocab["repeat_id"]          = "Repetir ID "; 
-$vocab["you_have_not_entered"] = "N„o introduziu um";
-$vocab["you_have_not_selected"] = "Ainda n„o seleccionou a";
+$vocab["you_have_not_entered"] = "N√£o introduziu um";
+$vocab["you_have_not_selected"] = "Ainda n√£o seleccionou a";
 $vocab["valid_room"]         = "sala.";
-$vocab["brief_description"]  = "DescriÁ„o breve.";
-$vocab["useful_n-weekly_value"] = "valor n-semanal vi·vel.";
+$vocab["brief_description"]  = "Descri√ß√£o breve.";
+$vocab["useful_n-weekly_value"] = "valor n-semanal vi√°vel.";
 $vocab["status"]             = "Estado";
 $vocab["private"]            = "Privado";
-$vocab["unavailable"]        = "N„o disponÌvel";
-$vocab["is_mandatory_field"] = "È de preenchimento obrigatÛrio.";
-$vocab["missing_mandatory_field"] = "Este campo È de preenchimento obrigatÛrio";
+$vocab["unavailable"]        = "N√£o dispon√≠vel";
+$vocab["is_mandatory_field"] = "√© de preenchimento obrigat√≥rio.";
+$vocab["missing_mandatory_field"] = "Este campo √© de preenchimento obrigat√≥rio";
 $vocab["confirmed"]          = "Confirmado";
 
 // Used in view_entry.php
-$vocab["description"]        = "DescriÁ„o";
+$vocab["description"]        = "Descri√ß√£o";
 $vocab["room"]               = "Sala";
 $vocab["createdby"]          = "Marcado por";
-$vocab["lastupdate"]         = "⁄ltima ActualizaÁ„o";
+$vocab["lastupdate"]         = "√öltima Actualiza√ß√£o";
 $vocab["deleteentry"]        = "Apagar entrada";
-$vocab["deleteseries"]       = "Apagar sÈries";
+$vocab["deleteseries"]       = "Apagar s√©ries";
 $vocab["confirmdel"]         = "Tem a certeza\\nque quer\\napagar esta entrada?\\n\\n";
-$vocab["returnprev"]         = "Voltar ‡ p·gina anterior";
-$vocab["invalid_entry_id"]   = "Id inv·lido.";
-$vocab["invalid_series_id"]  = "ID da sÈrie inv·lido.";
+$vocab["returnprev"]         = "Voltar √† p√°gina anterior";
+$vocab["invalid_entry_id"]   = "Id inv√°lido.";
+$vocab["invalid_series_id"]  = "ID da s√©rie inv√°lido.";
 $vocab["confirmation_status"]= "Estado da reserva";
-$vocab["tentative"]           = "N„o reservado";
+$vocab["tentative"]           = "N√£o reservado";
 $vocab["approval_status"]     = "Estado da reserva";
 $vocab["approved"]            = "Aprovado";
-$vocab["awaiting_approval"]   = "Aguarda aprovaÁ„o";
+$vocab["awaiting_approval"]   = "Aguarda aprova√ß√£o";
 $vocab["approve"]             = "Aprovado";
 $vocab["reject"]             = "Rejeitar";
-$vocab["more_info"]          = "Mais informaÁ„o";
+$vocab["more_info"]          = "Mais informa√ß√£o";
 $vocab["remind_admin"]       = "Alertar o Administrador";
-$vocab["series"]             = "SÈries";
-$vocab["request_more_info"]  = "Por favor insira mais informaÁıes para a sua reserva";
-$vocab["reject_reason"]      = "Por favor qual a raz„o da rejeiÁ„o desta reserva";
+$vocab["series"]             = "S√©ries";
+$vocab["request_more_info"]  = "Por favor insira mais informa√ß√µes para a sua reserva";
+$vocab["reject_reason"]      = "Por favor qual a raz√£o da rejei√ß√£o desta reserva";
 $vocab["send"]               = "Enviar";
-$vocab["approve_failed"]     = "A reserva n„o pode se aprovada.";
+$vocab["approve_failed"]     = "A reserva n√£o pode se aprovada.";
 $vocab["no_request_yet"]     = "Nenhum pedido foi ainda enviado"; // Used for the title tooltip on More Info button
-$vocab["last_request"]       = "⁄ltimo pedido enviado em";        // Used for the title tooltip on More Info button
+$vocab["last_request"]       = "√öltimo pedido enviado em";        // Used for the title tooltip on More Info button
 $vocab["by"]                 = "Por";                             // Used for the title tooltip on More Info button
 $vocab["sent_at"]            = "enviado em ";
 $vocab["yes"]                = "Sim";
-$vocab["no"]                 = "N„o";
+$vocab["no"]                 = "N√£o";
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Erro";
 $vocab["sched_conflict"]     = "Conflito de reservas";
 $vocab["conflict"]           = "A nova reserva entra em confito com as seguintes entrada(s)";
-$vocab["rules_broken"]       = "Esta reserva entra em conflito com as seguintes polÌticas";
-$vocab["too_may_entrys"]     = "A opÁ„o selecionada criar· demasiadas entradas.<br>Use outras opÁıes por favor!";
-$vocab["returncal"]          = "Voltar ‡ vista de Calend·rio";
-$vocab["failed_to_acquire"]  = "A tentativa de adquirir acesso exclusivo ‡ base de dados falhou!";
-$vocab["invalid_booking"]    = "Reserva inv·lida";
-$vocab["must_set_description"] = "A reserva tem que ter uma breve descriÁ„o. Por favor volte atr·s para inserir uma.";
+$vocab["rules_broken"]       = "Esta reserva entra em conflito com as seguintes pol√≠ticas";
+$vocab["too_may_entrys"]     = "A op√ß√£o selecionada criar√° demasiadas entradas.<br>Use outras op√ß√µes por favor!";
+$vocab["returncal"]          = "Voltar √† vista de Calend√°rio";
+$vocab["failed_to_acquire"]  = "A tentativa de adquirir acesso exclusivo √† base de dados falhou!";
+$vocab["invalid_booking"]    = "Reserva inv√°lida";
+$vocab["must_set_description"] = "A reserva tem que ter uma breve descri√ß√£o. Por favor volte atr√°s para inserir uma.";
 $vocab["mail_subject_approved"]  = "Esta reserva foi aprovada";
 $vocab["mail_subject_rejected"]  = "Esta reserva foi rejeitada";
-$vocab["mail_subject_more_info"] = "$mrbs_company MRBS: pedido de mais informaÁıes";
+$vocab["mail_subject_more_info"] = "$mrbs_company MRBS: pedido de mais informa√ß√µes";
 $vocab["mail_subject_reminder"]  = "Alerta para $mrbs_company MRBS";
 $vocab["mail_body_approved"]     = "Uma reserva foi aprovada pelo administrador, mais detalhes:";
 $vocab["mail_body_rej_entry"]    = "Uma reserva foi rejeitada pelo administrador, mais detalhes:";
 $vocab["mail_body_more_info"]    = "The administrators require more information about an entry; here are the details:";
-$vocab["mail_body_reminder"]     = "Alerta - Uma reserva aguarda aprovaÁ„o; detalhes:";
+$vocab["mail_body_reminder"]     = "Alerta - Uma reserva aguarda aprova√ß√£o; detalhes:";
 $vocab["mail_subject_new_entry"] = "Reserva de Salas";
 $vocab["mail_subject_changed_entry"] = "Reserva de Salas";
 $vocab["mail_subject_delete"]     = "Esta reserva foi eliminada";
@@ -165,35 +162,35 @@ $vocab["mail_body_new_entry"]     = "Uma reserva foi efectuada, detalhes:";
 $vocab["mail_body_changed_entry"] = "Uma reserva foi alterada, veja os detalhes:";
 $vocab["mail_body_del_entry"] = "Uma reserva foi eliminada, detalhes:";
 $vocab["deleted_by"]          = "Eliminado por";
-$vocab["reason"]              = "Raz„o";
-$vocab["info_requested"]      = "Pedido de InformaÁ„o";
-$vocab["min_time_before"]     = "O intervalo mÌnimo entre hoje e o inÌcio da reserva È";
-$vocab["max_time_before"]     = "O intervalo m·ximo entre hoje e o inÌcio da reserva È";
+$vocab["reason"]              = "Raz√£o";
+$vocab["info_requested"]      = "Pedido de Informa√ß√£o";
+$vocab["min_time_before"]     = "O intervalo m√≠nimo entre hoje e o in√≠cio da reserva √©";
+$vocab["max_time_before"]     = "O intervalo m√°ximo entre hoje e o in√≠cio da reserva √©";
 
 // Used in pending.php
 $vocab["pending"]            = "Reservas pendentes";
-$vocab["none_outstanding"]   = "N„o existem reservas para aprovaÁ„o.";
+$vocab["none_outstanding"]   = "N√£o existem reservas para aprova√ß√£o.";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Acesso Negado";
-$vocab["norights"]           = "N„o tem permissıes para visualizar/alterar este item.";
+$vocab["norights"]           = "N√£o tem permiss√µes para visualizar/alterar este item.";
 $vocab["please_login"]       = "Dados de acesso";
 $vocab["users.name"]         = "Nome utilizador";
 $vocab["users.password"]     = "Senha acesso";
 $vocab["users.level"]        = "Direitos";
-$vocab["unknown_user"]       = "Utilizador n„o identificado";
+$vocab["unknown_user"]       = "Utilizador n√£o identificado";
 $vocab["you_are"]            = "";
 $vocab["login"]              = "Aceder";
 $vocab["logoff"]             = "Sair";
 
 // Database upgrade code
 $vocab["database_login"]           = "Login na base de dados";
-$vocab["upgrade_required"]         = "A base de dados necessita de uma subida de vers„o.";
-$vocab["supply_userpass"]          = "Por favor insira um utilizador e senha de acesso com direitos de administraÁ„o.";
-$vocab["contact_admin"]            = "Se n„o È o administrador deste sistema por contacte $mrbs_admin.";
-$vocab["upgrade_to_version"]       = "Subida de vers„o";
-$vocab["upgrade_to_local_version"] = "Subida de vers„o para vers„o local"; 
-$vocab["upgrade_completed"]        = "Subida de vers„o completa.";
+$vocab["upgrade_required"]         = "A base de dados necessita de uma subida de vers√£o.";
+$vocab["supply_userpass"]          = "Por favor insira um utilizador e senha de acesso com direitos de administra√ß√£o.";
+$vocab["contact_admin"]            = "Se n√£o √© o administrador deste sistema por contacte $mrbs_admin.";
+$vocab["upgrade_to_version"]       = "Subida de vers√£o";
+$vocab["upgrade_to_local_version"] = "Subida de vers√£o para vers√£o local"; 
+$vocab["upgrade_completed"]        = "Subida de vers√£o completa.";
 
 // User access levels
 $vocab["level_0"]            = "nenhum";
@@ -205,81 +202,81 @@ $vocab["level_3"]            = "admin utilizadores";
 $vocab["user_list"]          = "Lista utilizadores";
 $vocab["edit_user"]          = "Editar utilizador";
 $vocab["delete_user"]        = "Eliminar utilizador";
-//$vocab["users.name"]       = Utilize o mesmo que em cima, para consistÍncia.
-//$vocab["users.password"]   = Utilize o mesmo que em cima, para consistÍncia.
-$vocab["users.email"]        = "EndereÁo de Email";
+//$vocab["users.name"]       = Utilize o mesmo que em cima, para consist√™ncia.
+//$vocab["users.password"]   = Utilize o mesmo que em cima, para consist√™ncia.
+$vocab["users.email"]        = "Endere√ßo de Email";
 $vocab["password_twice"]     = "Se quiser alterar a senha de acesso, por favor insira-o duas vezes";
-$vocab["passwords_not_eq"]   = "Erro: As senhas de acesso n„o s„o iguais.";
-$vocab["password_invalid"]   = "A senha n„o est· conforme a polÌtica definida. Tem que conter no mÌnimo:";
+$vocab["passwords_not_eq"]   = "Erro: As senhas de acesso n√£o s√£o iguais.";
+$vocab["password_invalid"]   = "A senha n√£o est√° conforme a pol√≠tica definida. Tem que conter no m√≠nimo:";
 $vocab["policy_length"]      = "caractere(s)";
 $vocab["policy_alpha"]       = "carta(s)";
-$vocab["policy_lower"]       = "Letra(s) em min˙sculas";
-$vocab["policy_upper"]       = "Letra(s) em mai˙sculas";
-$vocab["policy_numeric"]     = "Caracteres numÈricos";
+$vocab["policy_lower"]       = "Letra(s) em min√∫sculas";
+$vocab["policy_upper"]       = "Letra(s) em mai√∫sculas";
+$vocab["policy_numeric"]     = "Caracteres num√©ricos";
 $vocab["policy_special"]     = "caracter especial";
 $vocab["add_new_user"]       = "Inserir novo utilizador";
-$vocab["action"]             = "AcÁ„o";
+$vocab["action"]             = "Ac√ß√£o";
 $vocab["user"]               = "Utilizador";
 $vocab["administrator"]      = "Administrador";
-$vocab["unknown"]            = "N„o identificado";
+$vocab["unknown"]            = "N√£o identificado";
 $vocab["ok"]                 = "Ok";
 $vocab["show_my_entries"]    = "Prima para mostrar todas as entradas";
-$vocab["no_users_initial"]   = "N„o existem utilizadores na base de dados, permitir a criaÁ„o";
-$vocab["no_users_create_first_admin"] = "Crie um utilizador com direitos de administraÁ„o depois efectue o log in e crie mais utilizadores.";
-$vocab["warning_last_admin"] = "AtenÁ„o! ⁄ltimo administrador, n„o pode eliminar ou remover direitos, caso contr·rio perde o acesso ao sistema.";
+$vocab["no_users_initial"]   = "N√£o existem utilizadores na base de dados, permitir a cria√ß√£o";
+$vocab["no_users_create_first_admin"] = "Crie um utilizador com direitos de administra√ß√£o depois efectue o log in e crie mais utilizadores.";
+$vocab["warning_last_admin"] = "Aten√ß√£o! √öltimo administrador, n√£o pode eliminar ou remover direitos, caso contr√°rio perde o acesso ao sistema.";
 
 // Used in search.php
-$vocab["invalid_search"]     = "Dados para pesquisa vazios ou inv·lidos.";
+$vocab["invalid_search"]     = "Dados para pesquisa vazios ou inv√°lidos.";
 $vocab["search_results"]     = "Resultados da pesquisa para";
-$vocab["nothing_found"]      = "N„o foram encontrados registos.";
+$vocab["nothing_found"]      = "N√£o foram encontrados registos.";
 $vocab["records"]            = "Registos ";
-$vocab["through"]            = " atÈ ";
+$vocab["through"]            = " at√© ";
 $vocab["of"]                 = " de ";
 $vocab["previous"]           = "Anterior";
-$vocab["next"]               = "PrÛximo";
+$vocab["next"]               = "Pr√≥ximo";
 $vocab["entry"]              = "Entrada";
 $vocab["view"]               = "Ver";
-$vocab["advanced_search"]    = "Pesquyisa AvanÁada";
+$vocab["advanced_search"]    = "Pesquyisa Avan√ßada";
 $vocab["search_button"]      = "Perquisar";
 $vocab["search_for"]         = "Pesquisar por";
 $vocab["from"]               = "De";
 
 // Used in report.php
-$vocab["report_on"]          = "RelatÛrio de Reservas";
-$vocab["report_start"]       = "Data inÌcio";
+$vocab["report_on"]          = "Relat√≥rio de Reservas";
+$vocab["report_start"]       = "Data in√≠cio";
 $vocab["report_end"]         = "Data termo";
-$vocab["match_area"]         = "¡rea";
+$vocab["match_area"]         = "√Årea";
 $vocab["match_room"]         = "Sala";
 $vocab["match_type"]         = "Tipo";
 $vocab["ctrl_click_type"]    = "Utilize Control-Click para escolher mais de um tipo";
-$vocab["match_entry"]        = "Breve DescriÁ„o";
-$vocab["match_descr"]        = "DescriÁ„o completa";
+$vocab["match_entry"]        = "Breve Descri√ß√£o";
+$vocab["match_descr"]        = "Descri√ß√£o completa";
 $vocab["include"]            = "Incluir";
-$vocab["report_only"]        = "Apenas relatÛrio";
-$vocab["summary_only"]       = "Apenas sum·rio";
-$vocab["report_and_summary"] = "RelatÛrio e sum·rio";
-$vocab["report_as_csv"]      = "RelatÛrio em formato CSV";
-$vocab["summary_as_csv"]     = "Sum·rio em formato CSV";
-$vocab["summarize_by"]       = "Sum·rio por";
-$vocab["sum_by_descrip"]     = "DescriÁ„o por";
+$vocab["report_only"]        = "Apenas relat√≥rio";
+$vocab["summary_only"]       = "Apenas sum√°rio";
+$vocab["report_and_summary"] = "Relat√≥rio e sum√°rio";
+$vocab["report_as_csv"]      = "Relat√≥rio em formato CSV";
+$vocab["summary_as_csv"]     = "Sum√°rio em formato CSV";
+$vocab["summarize_by"]       = "Sum√°rio por";
+$vocab["sum_by_descrip"]     = "Descri√ß√£o por";
 $vocab["sum_by_creator"]     = "Criador";
 $vocab["entry_found"]        = "entrada encontrada";
 $vocab["entries_found"]      = "entradas encontradas";
-$vocab["summary_header"]     = "Sum·rio de (entradas) Horas";
-$vocab["summary_header_per"] = "Sum·rio de (entradas) PerÌodos";
+$vocab["summary_header"]     = "Sum√°rio de (entradas) Horas";
+$vocab["summary_header_per"] = "Sum√°rio de (entradas) Per√≠odos";
 $vocab["entries"]            = "reservas";
 $vocab["total"]              = "Total";
-$vocab["submitquery"]        = "Executar relatÛrio";
-$vocab["sort_rep"]           = "Ordenar relatÛrio por";
-$vocab["sort_rep_time"]      = "InÌcio Data/Horas";
-$vocab["rep_dsp"]            = "Mostrar no relatÛrio";
-$vocab["rep_dsp_dur"]        = "DuraÁ„o";
+$vocab["submitquery"]        = "Executar relat√≥rio";
+$vocab["sort_rep"]           = "Ordenar relat√≥rio por";
+$vocab["sort_rep_time"]      = "In√≠cio Data/Horas";
+$vocab["rep_dsp"]            = "Mostrar no relat√≥rio";
+$vocab["rep_dsp_dur"]        = "Dura√ß√£o";
 $vocab["rep_dsp_end"]        = "Termo";
-$vocab["fulldescription_short"] = "DescriÁ„o";
+$vocab["fulldescription_short"] = "Descri√ß√£o";
 $vocab["both"]                  = "Todos";
 $vocab["privacy_status"]        = "Estado da privacidade";
-$vocab["search_criteria"]       = "CritÈrio de pesquisa";
-$vocab["presentation_options"]  = "opÁıes de apresentaÁ„o";
+$vocab["search_criteria"]       = "Crit√©rio de pesquisa";
+$vocab["presentation_options"]  = "op√ß√µes de apresenta√ß√£o";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Ir para a semana Anterior";
@@ -287,98 +284,98 @@ $vocab["weekafter"]          = "Ir para a semana seguinte";
 $vocab["gotothisweek"]       = "Ir para esta semana";
 
 // Used in month.php
-$vocab["monthbefore"]        = "Ir para o mÍs Anterior";
-$vocab["monthafter"]         = "Ir para o mÍs seguinte";
-$vocab["gotothismonth"]      = "Ir para este mÍs";
+$vocab["monthbefore"]        = "Ir para o m√™s Anterior";
+$vocab["monthafter"]         = "Ir para o m√™s seguinte";
+$vocab["gotothismonth"]      = "Ir para este m√™s";
 
 // Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "N„o h· salas definidas para esta ¡rea";
+$vocab["no_rooms_for_area"]  = "N√£o h√° salas definidas para esta √Årea";
 
 // Used in admin.php
 $vocab["edit"]               = "Editar";
 $vocab["delete"]             = "Apagar";
 $vocab["rooms"]              = "Salas";
 $vocab["in"]                 = "em";
-$vocab["noareas"]            = "N„o h· ¡reas";
-$vocab["addarea"]            = "Acrescentar ¡rea";
+$vocab["noareas"]            = "N√£o h√° √Åreas";
+$vocab["addarea"]            = "Acrescentar √Årea";
 $vocab["name"]               = "Nome";
-$vocab["noarea"]             = "¡rea n„o selecionada";
-$vocab["browserlang"]        = "O seu browser est· preparado para usar";
+$vocab["noarea"]             = "√Årea n√£o selecionada";
+$vocab["browserlang"]        = "O seu browser est√° preparado para usar";
 $vocab["addroom"]            = "Acrescentar Sala";
 $vocab["capacity"]           = "Capacidade";
-$vocab["norooms"]            = "N„o h· salas.";
-$vocab["administration"]     = "AdministraÁ„o";
-$vocab["invalid_area_name"]  = "O nome desta ·rea j· est· em uso!";
+$vocab["norooms"]            = "N√£o h√° salas.";
+$vocab["administration"]     = "Administra√ß√£o";
+$vocab["invalid_area_name"]  = "O nome desta √°rea j√° est√° em uso!";
 $vocab["empty_name"]         = "Por favor introduza um nome!";
 
 // Used in edit_area_room.php
-$vocab["editarea"]           = "¡rea";
+$vocab["editarea"]           = "√Årea";
 $vocab["change"]             = "Guardar";
-$vocab["backadmin"]          = "Voltar ‡ administraÁ„o";
-$vocab["editroomarea"]       = "Editar a descriÁ„o da ¡rea ou Sala";
+$vocab["backadmin"]          = "Voltar √† administra√ß√£o";
+$vocab["editroomarea"]       = "Editar a descri√ß√£o da √Årea ou Sala";
 $vocab["editroom"]           = "Sala";
 $vocab["viewroom"]           = "Ver sala";
-$vocab["update_room_failed"] = "ActualizaÁ„o da sala falhou: ";
+$vocab["update_room_failed"] = "Actualiza√ß√£o da sala falhou: ";
 $vocab["error_room"]         = "Erro: sala ";
-$vocab["not_found"]          = " n„o encontrado";
-$vocab["update_area_failed"] = "ActualizaÁ„o da ·rea falhou: ";
-$vocab["error_area"]         = "Erro: ·rea ";
+$vocab["not_found"]          = " n√£o encontrado";
+$vocab["update_area_failed"] = "Actualiza√ß√£o da √°rea falhou: ";
+$vocab["error_area"]         = "Erro: √°rea ";
 $vocab["room_admin_email"]   = "Email do administrador";
 $vocab["area_admin_email"]   = "Email do administrador";
-$vocab["area_first_slot_start"]   = "InÌcio do 1∫ slot";
-$vocab["area_last_slot_start"]    = "InÌcio do ˙ltimo slot";
-$vocab["area_res_mins"]           = "ResoluÁ„o (minutos)";
-$vocab["area_def_duration_mins"]  = "DuraÁ„o padr„o (minutos)";
-$vocab["invalid_area"]            = "¡rea inv·lida!";
-$vocab["invalid_room_name"]       = "Esta sala j· existe nesta ·rea!";
-$vocab["invalid_email"]           = "Email inv·lido!";
-$vocab["invalid_resolution"]      = "CombinaÁ„o inv·lida do 1∫ slot, ˙ltimo slot e resoluÁ„o!";
-$vocab["too_many_slots"]          = 'Precisa de aumentar o valor de $max_slots no ficheiro de configuraÁ„o!';
+$vocab["area_first_slot_start"]   = "In√≠cio do 1¬∫ slot";
+$vocab["area_last_slot_start"]    = "In√≠cio do √∫ltimo slot";
+$vocab["area_res_mins"]           = "Resolu√ß√£o (minutos)";
+$vocab["area_def_duration_mins"]  = "Dura√ß√£o padr√£o (minutos)";
+$vocab["invalid_area"]            = "√Årea inv√°lida!";
+$vocab["invalid_room_name"]       = "Esta sala j√° existe nesta √°rea!";
+$vocab["invalid_email"]           = "Email inv√°lido!";
+$vocab["invalid_resolution"]      = "Combina√ß√£o inv√°lida do 1¬∫ slot, √∫ltimo slot e resolu√ß√£o!";
+$vocab["too_many_slots"]          = 'Precisa de aumentar o valor de $max_slots no ficheiro de configura√ß√£o!';
 $vocab["general_settings"]        = "Geral";
 $vocab["time_settings"]           = "Tempo do Slot";
-$vocab["confirmation_settings"]   = "ConfirmaÁ„o";
-$vocab["allow_confirmation"]      = "Permitir a confirmaÁ„o de reservas";
-$vocab["default_settings_conf"]   = "DefiniÁıes por omiss„o";
+$vocab["confirmation_settings"]   = "Confirma√ß√£o";
+$vocab["allow_confirmation"]      = "Permitir a confirma√ß√£o de reservas";
+$vocab["default_settings_conf"]   = "Defini√ß√µes por omiss√£o";
 $vocab["default_confirmed"]       = "Confirmado";
-$vocab["default_tentative"]       = "N„o confirmado";
-$vocab["approval_settings"]       = "AprovaÁ„o";
-$vocab["enable_approval"]         = "Requerer aprovaÁ„o de reservas";
+$vocab["default_tentative"]       = "N√£o confirmado";
+$vocab["approval_settings"]       = "Aprova√ß√£o";
+$vocab["enable_approval"]         = "Requerer aprova√ß√£o de reservas";
 $vocab["enable_reminders"]        = "Permitir os ulizadores de relembrarem o admin";
 $vocab["private_settings"]        = "Reservas privadas";
 $vocab["allow_private"]           = "Permitir reservads privadas";
-$vocab["force_private"]           = "ForÁar reservas privadas";
-$vocab["default_settings"]        = "DefiniÁıes por omiss„o/forÁadas";
+$vocab["force_private"]           = "For√ßar reservas privadas";
+$vocab["default_settings"]        = "Defini√ß√µes por omiss√£o/for√ßadas";
 $vocab["default_private"]         = "Privado";
-$vocab["default_public"]          = "P˙blico";
+$vocab["default_public"]          = "P√∫blico";
 $vocab["private_display"]         = "Reservas privadas (mostrar)";
 $vocab["private_display_label"]   = "Como as reservas privadas devem ser mostradas?";
-$vocab["private_display_caution"] = "ATEN«√O: Pense bem acerca das implicaÁıes na privacidade antes de alterar estes paramÍtros!";
+$vocab["private_display_caution"] = "ATEN√á√ÉO: Pense bem acerca das implica√ß√µes na privacidade antes de alterar estes param√™tros!";
 $vocab["treat_respect"]           = "Respeite o caracter privado da reserva";
-$vocab["treat_private"]           = "Tratar todas as reservadas como privadas, ignorando os paramÍtros de privacidade";
-$vocab["treat_public"]            = "Tratar todas as reservadas como p˙blicas, ignorando os paramÍtros de privacidade";
-$vocab["sort_key"]                = "Chave de classificaÁ„o";
-$vocab["sort_key_note"]           = "Esta chave È utilizada para ordenar as salas";
+$vocab["treat_private"]           = "Tratar todas as reservadas como privadas, ignorando os param√™tros de privacidade";
+$vocab["treat_public"]            = "Tratar todas as reservadas como p√∫blicas, ignorando os param√™tros de privacidade";
+$vocab["sort_key"]                = "Chave de classifica√ß√£o";
+$vocab["sort_key_note"]           = "Esta chave √© utilizada para ordenar as salas";
 $vocab["booking_policies"]        = "Regras para reservas";
-$vocab["min_book_ahead"]          = "Reservas avanÁadas - mÌnimo";
-$vocab["max_book_ahead"]          = "Reservas avanÁadas - m·ximo";
+$vocab["min_book_ahead"]          = "Reservas avan√ßadas - m√≠nimo";
+$vocab["max_book_ahead"]          = "Reservas avan√ßadas - m√°ximo";
 $vocab["custom_html"]             = "HTML personalizado";
 $vocab["custom_html_note"]        = "Este campo pode ser utilizado para inserir HTML personalizado, por exemplo um mapa do Google embutido";
-$vocab["email_list_note"]         = "Introduza uma lista de endereÁos de email separados por vÌrgulas ou por uma nova linha";
+$vocab["email_list_note"]         = "Introduza uma lista de endere√ßos de email separados por v√≠rgulas ou por uma nova linha";
 $vocab["mode"]                    = "Modo";
-$vocab["mode_periods"]            = "PerÌodos";
+$vocab["mode_periods"]            = "Per√≠odos";
 $vocab["mode_times"]              = "Tempo";
 $vocab["times_only"]              = "Apenas tempo";
 
 // Used in edit_users.php
 $vocab["name_empty"]         = "Insira um nome.";
-$vocab["name_not_unique"]    = "j· existe. Por favor escolha outro nome.";
+$vocab["name_not_unique"]    = "j√° existe. Por favor escolha outro nome.";
 
 // Used in del.php
-$vocab["deletefollowing"]    = "Esta acÁ„o apagar· as seguintes MarcaÁıes";
+$vocab["deletefollowing"]    = "Esta ac√ß√£o apagar√° as seguintes Marca√ß√µes";
 $vocab["sure"]               = "Tem a certeza?";
 $vocab["YES"]                = "Sim";
-$vocab["NO"]                 = "N„o";
-$vocab["delarea"]            = "Tem que apagar todas as salas nesta ·rea antes de a poder apagar<p>";
+$vocab["NO"]                 = "N√£o";
+$vocab["delarea"]            = "Tem que apagar todas as salas nesta √°rea antes de a poder apagar<p>";
 
 // Used in help.php
 $vocab["about_mrbs"]         = "Sobre o MRBS";
@@ -386,9 +383,9 @@ $vocab["database"]           = "Base de Dados";
 $vocab["system"]             = "Sistema operativo";
 $vocab["servertime"]         = "Data/Horas no servido";
 $vocab["please_contact"]     = "Contacte por favor ";
-$vocab["for_any_questions"]  = "para qualquer informaÁ„o adicional.";
+$vocab["for_any_questions"]  = "para qualquer informa√ß√£o adicional.";
 
 // Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Erro: Failha ao ligar ‡ base de dados";
+$vocab["failed_connect_db"]  = "Erro: Failha ao ligar √† base de dados";
 
 ?>

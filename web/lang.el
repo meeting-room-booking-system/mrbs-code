@@ -1,4 +1,4 @@
-<?php // -*-mode: PHP; coding:iso-8859-7;-*-
+<?php // -*-mode: PHP; coding:utf-8;-*-
 
 // $Id$
 
@@ -11,114 +11,111 @@
 //
 // This file is PHP code. Treat it as such.
 
-// The charset to use in "Content-type" header
-$vocab["charset"]            = "iso-8859-7";
-
 // Used in style.inc
-$vocab["mrbs"]               = "Σύστημα Κρατήσεων Αιθουσών (MRBS)";
+$vocab["mrbs"]               = "Ξ£ΟΟƒΟ„Ξ·ΞΌΞ± ΞΟΞ±Ο„Ξ®ΟƒΞµΟ‰Ξ½ Ξ‘ΞΉΞΈΞΏΟ…ΟƒΟΞ½ (MRBS)";
 
 // Used in functions.inc
-$vocab["report"]             = "Αναφορά";
-$vocab["admin"]              = "Διαχείριση";
-$vocab["help"]               = "Βοήθεια";
-$vocab["search"]             = "Αναζήτηση";
-$vocab["not_php3"]           = "Προσοχή: Αυτή η σελίδα δεν δουλεύει με PHP3";
+$vocab["report"]             = "Ξ‘Ξ½Ξ±Ο†ΞΏΟΞ¬";
+$vocab["admin"]              = "Ξ”ΞΉΞ±Ο‡ΞµΞ―ΟΞΉΟƒΞ·";
+$vocab["help"]               = "Ξ’ΞΏΞ®ΞΈΞµΞΉΞ±";
+$vocab["search"]             = "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·";
+$vocab["not_php3"]           = "Ξ ΟΞΏΟƒΞΏΟ‡Ξ®: Ξ‘Ο…Ο„Ξ® Ξ· ΟƒΞµΞ»Ξ―Ξ΄Ξ± Ξ΄ΞµΞ½ Ξ΄ΞΏΟ…Ξ»ΞµΟΞµΞΉ ΞΌΞµ PHP3";
 
 // Used in day.php
-$vocab["bookingsfor"]        = "Κρατήσεις για";
+$vocab["bookingsfor"]        = "ΞΟΞ±Ο„Ξ®ΟƒΞµΞΉΟ‚ Ξ³ΞΉΞ±";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
-$vocab["areas"]              = "Περιοχές";
-$vocab["daybefore"]          = "Μετάβαση στην προηγούμενη μέρα";
-$vocab["dayafter"]           = "Μετάβαση στην επόμενη μέρα";
-$vocab["gototoday"]          = "Μετάβαση στη σημερινή μέρα";
-$vocab["goto"]               = "Μετάβαση";
+$vocab["areas"]              = "Ξ ΞµΟΞΉΞΏΟ‡Ξ­Ο‚";
+$vocab["daybefore"]          = "ΞΞµΟ„Ξ¬Ξ²Ξ±ΟƒΞ· ΟƒΟ„Ξ·Ξ½ Ο€ΟΞΏΞ·Ξ³ΞΏΟΞΌΞµΞ½Ξ· ΞΌΞ­ΟΞ±";
+$vocab["dayafter"]           = "ΞΞµΟ„Ξ¬Ξ²Ξ±ΟƒΞ· ΟƒΟ„Ξ·Ξ½ ΞµΟ€ΟΞΌΞµΞ½Ξ· ΞΌΞ­ΟΞ±";
+$vocab["gototoday"]          = "ΞΞµΟ„Ξ¬Ξ²Ξ±ΟƒΞ· ΟƒΟ„Ξ· ΟƒΞ·ΞΌΞµΟΞΉΞ½Ξ® ΞΌΞ­ΟΞ±";
+$vocab["goto"]               = "ΞΞµΟ„Ξ¬Ξ²Ξ±ΟƒΞ·";
 $vocab["highlight_line"]     = "Highlight this line";
 $vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 
 // Used in trailer.inc
-$vocab["viewday"]            = "Προβολή ανά ημέρα";
-$vocab["viewweek"]           = "Προβολή ανά εβδομάδα";
-$vocab["viewmonth"]          = "Προβολή ανά μήνα";
-$vocab["ppreview"]           = "Προεπισκόπηση εκτύπωσης";
+$vocab["viewday"]            = "Ξ ΟΞΏΞ²ΞΏΞ»Ξ® Ξ±Ξ½Ξ¬ Ξ·ΞΌΞ­ΟΞ±";
+$vocab["viewweek"]           = "Ξ ΟΞΏΞ²ΞΏΞ»Ξ® Ξ±Ξ½Ξ¬ ΞµΞ²Ξ΄ΞΏΞΌΞ¬Ξ΄Ξ±";
+$vocab["viewmonth"]          = "Ξ ΟΞΏΞ²ΞΏΞ»Ξ® Ξ±Ξ½Ξ¬ ΞΌΞ®Ξ½Ξ±";
+$vocab["ppreview"]           = "Ξ ΟΞΏΞµΟ€ΞΉΟƒΞΊΟΟ€Ξ·ΟƒΞ· ΞµΞΊΟ„ΟΟ€Ο‰ΟƒΞ·Ο‚";
 
 // Used in edit_entry.php
-$vocab["addentry"]           = "Προσθήκη εγγραφής";
-$vocab["editentry"]          = "Τροποποίηση εγγραφής";
-$vocab["editseries"]         = "Τροποποίηση σειράς";
-$vocab["namebooker"]         = "Σύντομη περιγραφή";
-$vocab["fulldescription"]    = "Πλήρης περιγραφή:<br>&nbsp;&nbsp;(Αριθμός θέσεων,<br>&nbsp;&nbsp;Εσωτερική/Εξωτερική κλπ.)";
-$vocab["date"]               = "Ημερομηνία";
-$vocab["start_date"]         = "Ώρα έναρξης";
-$vocab["end_date"]           = "Ώρα λήξης";
-$vocab["time"]               = "Ώρα";
+$vocab["addentry"]           = "Ξ ΟΞΏΟƒΞΈΞ®ΞΊΞ· ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚";
+$vocab["editentry"]          = "Ξ¤ΟΞΏΟ€ΞΏΟ€ΞΏΞ―Ξ·ΟƒΞ· ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚";
+$vocab["editseries"]         = "Ξ¤ΟΞΏΟ€ΞΏΟ€ΞΏΞ―Ξ·ΟƒΞ· ΟƒΞµΞΉΟΞ¬Ο‚";
+$vocab["namebooker"]         = "Ξ£ΟΞ½Ο„ΞΏΞΌΞ· Ο€ΞµΟΞΉΞ³ΟΞ±Ο†Ξ®";
+$vocab["fulldescription"]    = "Ξ Ξ»Ξ®ΟΞ·Ο‚ Ο€ΞµΟΞΉΞ³ΟΞ±Ο†Ξ®:<br>&nbsp;&nbsp;(Ξ‘ΟΞΉΞΈΞΌΟΟ‚ ΞΈΞ­ΟƒΞµΟ‰Ξ½,<br>&nbsp;&nbsp;Ξ•ΟƒΟ‰Ο„ΞµΟΞΉΞΊΞ®/Ξ•ΞΎΟ‰Ο„ΞµΟΞΉΞΊΞ® ΞΊΞ»Ο€.)";
+$vocab["date"]               = "Ξ—ΞΌΞµΟΞΏΞΌΞ·Ξ½Ξ―Ξ±";
+$vocab["start_date"]         = "ΞΟΞ± Ξ­Ξ½Ξ±ΟΞΎΞ·Ο‚";
+$vocab["end_date"]           = "ΞΟΞ± Ξ»Ξ®ΞΎΞ·Ο‚";
+$vocab["time"]               = "ΞΟΞ±";
 $vocab["period"]             = "Period";
-$vocab["duration"]           = "Διάρκεια";
-$vocab["seconds"]            = "δευτερόλεπτα";
-$vocab["minutes"]            = "λεπτά";
-$vocab["hours"]              = "ώρες";
-$vocab["days"]               = "ημέρες";
-$vocab["weeks"]              = "εβδομάδες";
-$vocab["years"]              = "χρόνια";
+$vocab["duration"]           = "Ξ”ΞΉΞ¬ΟΞΊΞµΞΉΞ±";
+$vocab["seconds"]            = "Ξ΄ΞµΟ…Ο„ΞµΟΟΞ»ΞµΟ€Ο„Ξ±";
+$vocab["minutes"]            = "Ξ»ΞµΟ€Ο„Ξ¬";
+$vocab["hours"]              = "ΟΟΞµΟ‚";
+$vocab["days"]               = "Ξ·ΞΌΞ­ΟΞµΟ‚";
+$vocab["weeks"]              = "ΞµΞ²Ξ΄ΞΏΞΌΞ¬Ξ΄ΞµΟ‚";
+$vocab["years"]              = "Ο‡ΟΟΞ½ΞΉΞ±";
 $vocab["periods"]            = "periods";
-$vocab["all_day"]            = "Ολόκληρη μέρα";
-$vocab["type"]               = "Τύπος";
-$vocab["internal"]           = "Εσωτερικά";
-$vocab["external"]           = "Εξωτερικά";
-$vocab["save"]               = "Αποθήκευση";
-$vocab["rep_type"]           = "Τύπος επανάληψης";
-$vocab["rep_type_0"]         = "Τίποτα";
-$vocab["rep_type_1"]         = "Ημερήσια";
-$vocab["rep_type_2"]         = "Εβδομαδιαία";
-$vocab["rep_type_3"]         = "Μηνιαία";
-$vocab["rep_type_4"]         = "Χρόνια";
-$vocab["rep_type_5"]         = "Μηνιαία, αντίστοιχη ημέρα";
-$vocab["rep_type_6"]         = "n-Εβδομαδιαία";
-$vocab["rep_end_date"]       = "Ημερομηνία ολοκλήρωσης επανάληψης";
-$vocab["rep_rep_day"]        = "Ημέρα επανάληψης";
-$vocab["rep_for_weekly"]     = "(για (n-)εβδομαδιαία)";
-$vocab["rep_freq"]           = "Συχνότητα";
-$vocab["rep_num_weeks"]      = "Αριθμός εβδομάδων";
-$vocab["rep_for_nweekly"]    = "(για n-εβδομαδιαία)";
-$vocab["ctrl_click"]         = "Χρησιμοποιήστε Control-Click για να επιλέξετε περισσότερες από μία αίθουσες";
-$vocab["entryid"]            = "Αναγνωριστικός αριθμός εγγραφής ";
-$vocab["repeat_id"]          = "Αναγνωριστικός αριθμός επανάληψης "; 
-$vocab["you_have_not_entered"] = "Δεν εισάγατε το (τα)";
+$vocab["all_day"]            = "ΞΞ»ΟΞΊΞ»Ξ·ΟΞ· ΞΌΞ­ΟΞ±";
+$vocab["type"]               = "Ξ¤ΟΟ€ΞΏΟ‚";
+$vocab["internal"]           = "Ξ•ΟƒΟ‰Ο„ΞµΟΞΉΞΊΞ¬";
+$vocab["external"]           = "Ξ•ΞΎΟ‰Ο„ΞµΟΞΉΞΊΞ¬";
+$vocab["save"]               = "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ·";
+$vocab["rep_type"]           = "Ξ¤ΟΟ€ΞΏΟ‚ ΞµΟ€Ξ±Ξ½Ξ¬Ξ»Ξ·ΟΞ·Ο‚";
+$vocab["rep_type_0"]         = "Ξ¤Ξ―Ο€ΞΏΟ„Ξ±";
+$vocab["rep_type_1"]         = "Ξ—ΞΌΞµΟΞ®ΟƒΞΉΞ±";
+$vocab["rep_type_2"]         = "Ξ•Ξ²Ξ΄ΞΏΞΌΞ±Ξ΄ΞΉΞ±Ξ―Ξ±";
+$vocab["rep_type_3"]         = "ΞΞ·Ξ½ΞΉΞ±Ξ―Ξ±";
+$vocab["rep_type_4"]         = "Ξ§ΟΟΞ½ΞΉΞ±";
+$vocab["rep_type_5"]         = "ΞΞ·Ξ½ΞΉΞ±Ξ―Ξ±, Ξ±Ξ½Ο„Ξ―ΟƒΟ„ΞΏΞΉΟ‡Ξ· Ξ·ΞΌΞ­ΟΞ±";
+$vocab["rep_type_6"]         = "n-Ξ•Ξ²Ξ΄ΞΏΞΌΞ±Ξ΄ΞΉΞ±Ξ―Ξ±";
+$vocab["rep_end_date"]       = "Ξ—ΞΌΞµΟΞΏΞΌΞ·Ξ½Ξ―Ξ± ΞΏΞ»ΞΏΞΊΞ»Ξ®ΟΟ‰ΟƒΞ·Ο‚ ΞµΟ€Ξ±Ξ½Ξ¬Ξ»Ξ·ΟΞ·Ο‚";
+$vocab["rep_rep_day"]        = "Ξ—ΞΌΞ­ΟΞ± ΞµΟ€Ξ±Ξ½Ξ¬Ξ»Ξ·ΟΞ·Ο‚";
+$vocab["rep_for_weekly"]     = "(Ξ³ΞΉΞ± (n-)ΞµΞ²Ξ΄ΞΏΞΌΞ±Ξ΄ΞΉΞ±Ξ―Ξ±)";
+$vocab["rep_freq"]           = "Ξ£Ο…Ο‡Ξ½ΟΟ„Ξ·Ο„Ξ±";
+$vocab["rep_num_weeks"]      = "Ξ‘ΟΞΉΞΈΞΌΟΟ‚ ΞµΞ²Ξ΄ΞΏΞΌΞ¬Ξ΄Ο‰Ξ½";
+$vocab["rep_for_nweekly"]    = "(Ξ³ΞΉΞ± n-ΞµΞ²Ξ΄ΞΏΞΌΞ±Ξ΄ΞΉΞ±Ξ―Ξ±)";
+$vocab["ctrl_click"]         = "Ξ§ΟΞ·ΟƒΞΉΞΌΞΏΟ€ΞΏΞΉΞ®ΟƒΟ„Ξµ Control-Click Ξ³ΞΉΞ± Ξ½Ξ± ΞµΟ€ΞΉΞ»Ξ­ΞΎΞµΟ„Ξµ Ο€ΞµΟΞΉΟƒΟƒΟΟ„ΞµΟΞµΟ‚ Ξ±Ο€Ο ΞΌΞ―Ξ± Ξ±Ξ―ΞΈΞΏΟ…ΟƒΞµΟ‚";
+$vocab["entryid"]            = "Ξ‘Ξ½Ξ±Ξ³Ξ½Ο‰ΟΞΉΟƒΟ„ΞΉΞΊΟΟ‚ Ξ±ΟΞΉΞΈΞΌΟΟ‚ ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ";
+$vocab["repeat_id"]          = "Ξ‘Ξ½Ξ±Ξ³Ξ½Ο‰ΟΞΉΟƒΟ„ΞΉΞΊΟΟ‚ Ξ±ΟΞΉΞΈΞΌΟΟ‚ ΞµΟ€Ξ±Ξ½Ξ¬Ξ»Ξ·ΟΞ·Ο‚ "; 
+$vocab["you_have_not_entered"] = "Ξ”ΞµΞ½ ΞµΞΉΟƒΞ¬Ξ³Ξ±Ο„Ξµ Ο„ΞΏ (Ο„Ξ±)";
 $vocab["you_have_not_selected"] = "You have not selected a";
 $vocab["valid_room"]         = "room.";
-$vocab["brief_description"]  = "Σύντομη Περιγραφή.";
-$vocab["useful_n-weekly_value"] = "χρήσιμη n-εβδομαδιαία τιμή.";
+$vocab["brief_description"]  = "Ξ£ΟΞ½Ο„ΞΏΞΌΞ· Ξ ΞµΟΞΉΞ³ΟΞ±Ο†Ξ®.";
+$vocab["useful_n-weekly_value"] = "Ο‡ΟΞ®ΟƒΞΉΞΌΞ· n-ΞµΞ²Ξ΄ΞΏΞΌΞ±Ξ΄ΞΉΞ±Ξ―Ξ± Ο„ΞΉΞΌΞ®.";
 
 // Used in view_entry.php
-$vocab["description"]        = "Περιγραφή";
-$vocab["room"]               = "Αίθουσα";
-$vocab["createdby"]          = "Δημιουργήθηκε από";
-$vocab["lastupdate"]         = "Τελευταία ενημέρωση";
-$vocab["deleteentry"]        = "Διαγραφή εγγραφής";
-$vocab["deleteseries"]       = "Διαγραφή σειράς επανάληψης";
-$vocab["confirmdel"]         = "Είστε βέβαιοι\\nότι θέλετε να\\nδιαγράψετε αυτή την εγγραφή;\\n\\n";
-$vocab["returnprev"]         = "Επιστροφή στην προηγούμενη σελίδα";
-$vocab["invalid_entry_id"]   = "Λάθος αναγνωριστικός αριθμός αίτησης.";
+$vocab["description"]        = "Ξ ΞµΟΞΉΞ³ΟΞ±Ο†Ξ®";
+$vocab["room"]               = "Ξ‘Ξ―ΞΈΞΏΟ…ΟƒΞ±";
+$vocab["createdby"]          = "Ξ”Ξ·ΞΌΞΉΞΏΟ…ΟΞ³Ξ®ΞΈΞ·ΞΊΞµ Ξ±Ο€Ο";
+$vocab["lastupdate"]         = "Ξ¤ΞµΞ»ΞµΟ…Ο„Ξ±Ξ―Ξ± ΞµΞ½Ξ·ΞΌΞ­ΟΟ‰ΟƒΞ·";
+$vocab["deleteentry"]        = "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚";
+$vocab["deleteseries"]       = "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΟƒΞµΞΉΟΞ¬Ο‚ ΞµΟ€Ξ±Ξ½Ξ¬Ξ»Ξ·ΟΞ·Ο‚";
+$vocab["confirmdel"]         = "Ξ•Ξ―ΟƒΟ„Ξµ Ξ²Ξ­Ξ²Ξ±ΞΉΞΏΞΉ\\nΟΟ„ΞΉ ΞΈΞ­Ξ»ΞµΟ„Ξµ Ξ½Ξ±\\nΞ΄ΞΉΞ±Ξ³ΟΞ¬ΟΞµΟ„Ξµ Ξ±Ο…Ο„Ξ® Ο„Ξ·Ξ½ ΞµΞ³Ξ³ΟΞ±Ο†Ξ®;\\n\\n";
+$vocab["returnprev"]         = "Ξ•Ο€ΞΉΟƒΟ„ΟΞΏΟ†Ξ® ΟƒΟ„Ξ·Ξ½ Ο€ΟΞΏΞ·Ξ³ΞΏΟΞΌΞµΞ½Ξ· ΟƒΞµΞ»Ξ―Ξ΄Ξ±";
+$vocab["invalid_entry_id"]   = "Ξ›Ξ¬ΞΈΞΏΟ‚ Ξ±Ξ½Ξ±Ξ³Ξ½Ο‰ΟΞΉΟƒΟ„ΞΉΞΊΟΟ‚ Ξ±ΟΞΉΞΈΞΌΟΟ‚ Ξ±Ξ―Ο„Ξ·ΟƒΞ·Ο‚.";
 $vocab["invalid_series_id"]  = "Invalid series id.";
 
 // Used in edit_entry_handler.php
-$vocab["error"]              = "Σφάλμα";
-$vocab["sched_conflict"]     = "Αντικρουόμενος Προγραμματισμός";
-$vocab["conflict"]           = "Η νέα κράτηση αντικρούει με τις ακόλουθες εγγραφές";
-$vocab["too_may_entrys"]     = "Οι επιλογές θα δημιουργήσουν υπερβολικό αριθμό εγγραφών.<br>Παρακαλώ χρησιμοποιείστε διαφορετικές επιλογές!";
-$vocab["returncal"]          = "Επιστροφή σε προβολή ημερολογίου";
-$vocab["failed_to_acquire"]  = "Αποτυχία εξασφάλισης αποκλειστικής πρόσβασης στην βάση δεδομένων"; 
+$vocab["error"]              = "Ξ£Ο†Ξ¬Ξ»ΞΌΞ±";
+$vocab["sched_conflict"]     = "Ξ‘Ξ½Ο„ΞΉΞΊΟΞΏΟ…ΟΞΌΞµΞ½ΞΏΟ‚ Ξ ΟΞΏΞ³ΟΞ±ΞΌΞΌΞ±Ο„ΞΉΟƒΞΌΟΟ‚";
+$vocab["conflict"]           = "Ξ— Ξ½Ξ­Ξ± ΞΊΟΞ¬Ο„Ξ·ΟƒΞ· Ξ±Ξ½Ο„ΞΉΞΊΟΞΏΟΞµΞΉ ΞΌΞµ Ο„ΞΉΟ‚ Ξ±ΞΊΟΞ»ΞΏΟ…ΞΈΞµΟ‚ ΞµΞ³Ξ³ΟΞ±Ο†Ξ­Ο‚";
+$vocab["too_may_entrys"]     = "ΞΞΉ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ ΞΈΞ± Ξ΄Ξ·ΞΌΞΉΞΏΟ…ΟΞ³Ξ®ΟƒΞΏΟ…Ξ½ Ο…Ο€ΞµΟΞ²ΞΏΞ»ΞΉΞΊΟ Ξ±ΟΞΉΞΈΞΌΟ ΞµΞ³Ξ³ΟΞ±Ο†ΟΞ½.<br>Ξ Ξ±ΟΞ±ΞΊΞ±Ξ»Ο Ο‡ΟΞ·ΟƒΞΉΞΌΞΏΟ€ΞΏΞΉΞµΞ―ΟƒΟ„Ξµ Ξ΄ΞΉΞ±Ο†ΞΏΟΞµΟ„ΞΉΞΊΞ­Ο‚ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ­Ο‚!";
+$vocab["returncal"]          = "Ξ•Ο€ΞΉΟƒΟ„ΟΞΏΟ†Ξ® ΟƒΞµ Ο€ΟΞΏΞ²ΞΏΞ»Ξ® Ξ·ΞΌΞµΟΞΏΞ»ΞΏΞ³Ξ―ΞΏΟ…";
+$vocab["failed_to_acquire"]  = "Ξ‘Ο€ΞΏΟ„Ο…Ο‡Ξ―Ξ± ΞµΞΎΞ±ΟƒΟ†Ξ¬Ξ»ΞΉΟƒΞ·Ο‚ Ξ±Ο€ΞΏΞΊΞ»ΞµΞΉΟƒΟ„ΞΉΞΊΞ®Ο‚ Ο€ΟΟΟƒΞ²Ξ±ΟƒΞ·Ο‚ ΟƒΟ„Ξ·Ξ½ Ξ²Ξ¬ΟƒΞ· Ξ΄ΞµΞ΄ΞΏΞΌΞ­Ξ½Ο‰Ξ½"; 
 
 // Authentication stuff
-$vocab["accessdenied"]       = "Απαγορεύεται η πρόσβαση";
-$vocab["norights"]           = "Δεν έχετε δικαιώματα πρόσβασης για να τροποποιήσετε αυτό το αντικείμενο.";
-$vocab["please_login"]       = "Παρακαλώ κάνετε εισαγωγή (log in)";
-$vocab["users.name"]          = "Όνομα Χρήστη";
-$vocab["users.password"]      = "Κωδικός Πρόσβασης";
+$vocab["accessdenied"]       = "Ξ‘Ο€Ξ±Ξ³ΞΏΟΞµΟΞµΟ„Ξ±ΞΉ Ξ· Ο€ΟΟΟƒΞ²Ξ±ΟƒΞ·";
+$vocab["norights"]           = "Ξ”ΞµΞ½ Ξ­Ο‡ΞµΟ„Ξµ Ξ΄ΞΉΞΊΞ±ΞΉΟΞΌΞ±Ο„Ξ± Ο€ΟΟΟƒΞ²Ξ±ΟƒΞ·Ο‚ Ξ³ΞΉΞ± Ξ½Ξ± Ο„ΟΞΏΟ€ΞΏΟ€ΞΏΞΉΞ®ΟƒΞµΟ„Ξµ Ξ±Ο…Ο„Ο Ο„ΞΏ Ξ±Ξ½Ο„ΞΉΞΊΞµΞ―ΞΌΞµΞ½ΞΏ.";
+$vocab["please_login"]       = "Ξ Ξ±ΟΞ±ΞΊΞ±Ξ»Ο ΞΊΞ¬Ξ½ΞµΟ„Ξµ ΞµΞΉΟƒΞ±Ξ³Ο‰Ξ³Ξ® (log in)";
+$vocab["users.name"]          = "ΞΞ½ΞΏΞΌΞ± Ξ§ΟΞ®ΟƒΟ„Ξ·";
+$vocab["users.password"]      = "ΞΟ‰Ξ΄ΞΉΞΊΟΟ‚ Ξ ΟΟΟƒΞ²Ξ±ΟƒΞ·Ο‚";
 $vocab["users.level"]         = "Rights";
-$vocab["unknown_user"]       = "Αγνωστος χρήστης";
-$vocab["you_are"]            = "Είστε";
-$vocab["login"]              = "Εισαγωγή (Log in)";
-$vocab["logoff"]             = "Έξοδος (Log Off)";
+$vocab["unknown_user"]       = "Ξ‘Ξ³Ξ½Ο‰ΟƒΟ„ΞΏΟ‚ Ο‡ΟΞ®ΟƒΟ„Ξ·Ο‚";
+$vocab["you_are"]            = "Ξ•Ξ―ΟƒΟ„Ξµ";
+$vocab["login"]              = "Ξ•ΞΉΟƒΞ±Ξ³Ο‰Ξ³Ξ® (Log in)";
+$vocab["logoff"]             = "ΞΞΎΞΏΞ΄ΞΏΟ‚ (Log Off)";
 
 // Authentication database
 $vocab["user_list"]          = "User list";
@@ -138,44 +135,44 @@ $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Click to display all my upcoming entries";
 
 // Used in search.php
-$vocab["invalid_search"]     = "Κενό ή λανθασμένο κείμενο αναζήτησης.";
-$vocab["search_results"]     = "Αποτελέσματα αναζήτησης για";
-$vocab["nothing_found"]      = "Δεν βρέθηκαν εγγραφές που να ταιριάζουν.";
-$vocab["records"]            = "Καταχώρηση ";
-$vocab["through"]            = " έως ";
-$vocab["of"]                 = " από ";
-$vocab["previous"]           = "Προηγούμενη";
-$vocab["next"]               = "Επόμενη";
-$vocab["entry"]              = "Αίτηση";
-$vocab["view"]               = "Προβολή";
-$vocab["advanced_search"]    = "Προηγμένη αναζήτηση";
-$vocab["search_button"]      = "Αναζήτηση";
-$vocab["search_for"]         = "Αναζήτηση για";
-$vocab["from"]               = "Από";
+$vocab["invalid_search"]     = "ΞΞµΞ½Ο Ξ® Ξ»Ξ±Ξ½ΞΈΞ±ΟƒΞΌΞ­Ξ½ΞΏ ΞΊΞµΞ―ΞΌΞµΞ½ΞΏ Ξ±Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·Ο‚.";
+$vocab["search_results"]     = "Ξ‘Ο€ΞΏΟ„ΞµΞ»Ξ­ΟƒΞΌΞ±Ο„Ξ± Ξ±Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·Ο‚ Ξ³ΞΉΞ±";
+$vocab["nothing_found"]      = "Ξ”ΞµΞ½ Ξ²ΟΞ­ΞΈΞ·ΞΊΞ±Ξ½ ΞµΞ³Ξ³ΟΞ±Ο†Ξ­Ο‚ Ο€ΞΏΟ… Ξ½Ξ± Ο„Ξ±ΞΉΟΞΉΞ¬Ξ¶ΞΏΟ…Ξ½.";
+$vocab["records"]            = "ΞΞ±Ο„Ξ±Ο‡ΟΟΞ·ΟƒΞ· ";
+$vocab["through"]            = " Ξ­Ο‰Ο‚ ";
+$vocab["of"]                 = " Ξ±Ο€Ο ";
+$vocab["previous"]           = "Ξ ΟΞΏΞ·Ξ³ΞΏΟΞΌΞµΞ½Ξ·";
+$vocab["next"]               = "Ξ•Ο€ΟΞΌΞµΞ½Ξ·";
+$vocab["entry"]              = "Ξ‘Ξ―Ο„Ξ·ΟƒΞ·";
+$vocab["view"]               = "Ξ ΟΞΏΞ²ΞΏΞ»Ξ®";
+$vocab["advanced_search"]    = "Ξ ΟΞΏΞ·Ξ³ΞΌΞ­Ξ½Ξ· Ξ±Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·";
+$vocab["search_button"]      = "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·";
+$vocab["search_for"]         = "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ· Ξ³ΞΉΞ±";
+$vocab["from"]               = "Ξ‘Ο€Ο";
 
 // Used in report.php
-$vocab["report_on"]          = "Αναφορά για Συναντήσεις";
-$vocab["report_start"]       = "Ημερομηνία έναρξης αναφοράς";
-$vocab["report_end"]         = "Ημερομηνία λήξης αναφοράς";
-$vocab["match_area"]         = "Ταίριασμα περιοχής";
-$vocab["match_room"]         = "Ταίριασμα αίθουσας";
+$vocab["report_on"]          = "Ξ‘Ξ½Ξ±Ο†ΞΏΟΞ¬ Ξ³ΞΉΞ± Ξ£Ο…Ξ½Ξ±Ξ½Ο„Ξ®ΟƒΞµΞΉΟ‚";
+$vocab["report_start"]       = "Ξ—ΞΌΞµΟΞΏΞΌΞ·Ξ½Ξ―Ξ± Ξ­Ξ½Ξ±ΟΞΎΞ·Ο‚ Ξ±Ξ½Ξ±Ο†ΞΏΟΞ¬Ο‚";
+$vocab["report_end"]         = "Ξ—ΞΌΞµΟΞΏΞΌΞ·Ξ½Ξ―Ξ± Ξ»Ξ®ΞΎΞ·Ο‚ Ξ±Ξ½Ξ±Ο†ΞΏΟΞ¬Ο‚";
+$vocab["match_area"]         = "Ξ¤Ξ±Ξ―ΟΞΉΞ±ΟƒΞΌΞ± Ο€ΞµΟΞΉΞΏΟ‡Ξ®Ο‚";
+$vocab["match_room"]         = "Ξ¤Ξ±Ξ―ΟΞΉΞ±ΟƒΞΌΞ± Ξ±Ξ―ΞΈΞΏΟ…ΟƒΞ±Ο‚";
 $vocab["match_type"]         = "Match type";
 $vocab["ctrl_click_type"]    = "Use Control-Click to select more than one type";
-$vocab["match_entry"]        = "Ταίριασμα σύντομης περιγραφής";
-$vocab["match_descr"]        = "Ταίριασμα αναλυτικής περιγραφής";
-$vocab["include"]            = "Να συμπεριληφθούν";
-$vocab["report_only"]        = "Αναφορά μόνο";
-$vocab["summary_only"]       = "Περίληψη μόνο";
-$vocab["report_and_summary"] = "Αναφορά και περίληψη";
-$vocab["summarize_by"]       = "Σύνοψη κατά";
-$vocab["sum_by_descrip"]     = "Σύντομη περιγραφή";
-$vocab["sum_by_creator"]     = "Δημιουργός";
-$vocab["entry_found"]        = "καταχώρηση βρέθηκε";
-$vocab["entries_found"]      = "καταχωρήσεις βρέθηκαν";
-$vocab["summary_header"]     = "Περίληψη ωρών εγγραφών";
+$vocab["match_entry"]        = "Ξ¤Ξ±Ξ―ΟΞΉΞ±ΟƒΞΌΞ± ΟƒΟΞ½Ο„ΞΏΞΌΞ·Ο‚ Ο€ΞµΟΞΉΞ³ΟΞ±Ο†Ξ®Ο‚";
+$vocab["match_descr"]        = "Ξ¤Ξ±Ξ―ΟΞΉΞ±ΟƒΞΌΞ± Ξ±Ξ½Ξ±Ξ»Ο…Ο„ΞΉΞΊΞ®Ο‚ Ο€ΞµΟΞΉΞ³ΟΞ±Ο†Ξ®Ο‚";
+$vocab["include"]            = "ΞΞ± ΟƒΟ…ΞΌΟ€ΞµΟΞΉΞ»Ξ·Ο†ΞΈΞΏΟΞ½";
+$vocab["report_only"]        = "Ξ‘Ξ½Ξ±Ο†ΞΏΟΞ¬ ΞΌΟΞ½ΞΏ";
+$vocab["summary_only"]       = "Ξ ΞµΟΞ―Ξ»Ξ·ΟΞ· ΞΌΟΞ½ΞΏ";
+$vocab["report_and_summary"] = "Ξ‘Ξ½Ξ±Ο†ΞΏΟΞ¬ ΞΊΞ±ΞΉ Ο€ΞµΟΞ―Ξ»Ξ·ΟΞ·";
+$vocab["summarize_by"]       = "Ξ£ΟΞ½ΞΏΟΞ· ΞΊΞ±Ο„Ξ¬";
+$vocab["sum_by_descrip"]     = "Ξ£ΟΞ½Ο„ΞΏΞΌΞ· Ο€ΞµΟΞΉΞ³ΟΞ±Ο†Ξ®";
+$vocab["sum_by_creator"]     = "Ξ”Ξ·ΞΌΞΉΞΏΟ…ΟΞ³ΟΟ‚";
+$vocab["entry_found"]        = "ΞΊΞ±Ο„Ξ±Ο‡ΟΟΞ·ΟƒΞ· Ξ²ΟΞ­ΞΈΞ·ΞΊΞµ";
+$vocab["entries_found"]      = "ΞΊΞ±Ο„Ξ±Ο‡Ο‰ΟΞ®ΟƒΞµΞΉΟ‚ Ξ²ΟΞ­ΞΈΞ·ΞΊΞ±Ξ½";
+$vocab["summary_header"]     = "Ξ ΞµΟΞ―Ξ»Ξ·ΟΞ· Ο‰ΟΟΞ½ ΞµΞ³Ξ³ΟΞ±Ο†ΟΞ½";
 $vocab["summary_header_per"] = "Summary of (Entries) Periods";
-$vocab["total"]              = "Σύνολο";
-$vocab["submitquery"]        = "Εκτέλεση αναφοράς";
+$vocab["total"]              = "Ξ£ΟΞ½ΞΏΞ»ΞΏ";
+$vocab["submitquery"]        = "Ξ•ΞΊΟ„Ξ­Ξ»ΞµΟƒΞ· Ξ±Ξ½Ξ±Ο†ΞΏΟΞ¬Ο‚";
 $vocab["sort_rep"]           = "Sort Report by";
 $vocab["sort_rep_time"]      = "Start Date/Time";
 $vocab["rep_dsp"]            = "Display in report";
@@ -183,63 +180,63 @@ $vocab["rep_dsp_dur"]        = "Duration";
 $vocab["rep_dsp_end"]        = "End Time";
 
 // Used in week.php
-$vocab["weekbefore"]         = "Μετάβαση στην προηγούμενη εβδομάδα";
-$vocab["weekafter"]          = "Μετάβαση στην επόμενη εβδομάδα";
-$vocab["gotothisweek"]       = "Μετάβαση στην τρέχουσα εβδομάδα";
+$vocab["weekbefore"]         = "ΞΞµΟ„Ξ¬Ξ²Ξ±ΟƒΞ· ΟƒΟ„Ξ·Ξ½ Ο€ΟΞΏΞ·Ξ³ΞΏΟΞΌΞµΞ½Ξ· ΞµΞ²Ξ΄ΞΏΞΌΞ¬Ξ΄Ξ±";
+$vocab["weekafter"]          = "ΞΞµΟ„Ξ¬Ξ²Ξ±ΟƒΞ· ΟƒΟ„Ξ·Ξ½ ΞµΟ€ΟΞΌΞµΞ½Ξ· ΞµΞ²Ξ΄ΞΏΞΌΞ¬Ξ΄Ξ±";
+$vocab["gotothisweek"]       = "ΞΞµΟ„Ξ¬Ξ²Ξ±ΟƒΞ· ΟƒΟ„Ξ·Ξ½ Ο„ΟΞ­Ο‡ΞΏΟ…ΟƒΞ± ΞµΞ²Ξ΄ΞΏΞΌΞ¬Ξ΄Ξ±";
 
 // Used in month.php
-$vocab["monthbefore"]        = "Μετάβαση στον προηγούμενο μήνα";
-$vocab["monthafter"]         = "Μετάβαση στον επόμενο μήνα";
-$vocab["gotothismonth"]      = "Μετάβαση στον τρέχοντα μήνα";
+$vocab["monthbefore"]        = "ΞΞµΟ„Ξ¬Ξ²Ξ±ΟƒΞ· ΟƒΟ„ΞΏΞ½ Ο€ΟΞΏΞ·Ξ³ΞΏΟΞΌΞµΞ½ΞΏ ΞΌΞ®Ξ½Ξ±";
+$vocab["monthafter"]         = "ΞΞµΟ„Ξ¬Ξ²Ξ±ΟƒΞ· ΟƒΟ„ΞΏΞ½ ΞµΟ€ΟΞΌΞµΞ½ΞΏ ΞΌΞ®Ξ½Ξ±";
+$vocab["gotothismonth"]      = "ΞΞµΟ„Ξ¬Ξ²Ξ±ΟƒΞ· ΟƒΟ„ΞΏΞ½ Ο„ΟΞ­Ο‡ΞΏΞ½Ο„Ξ± ΞΌΞ®Ξ½Ξ±";
 
 // Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Δεν έχουν οριστεί αίθουσες για αυτή την περιοχή";
+$vocab["no_rooms_for_area"]  = "Ξ”ΞµΞ½ Ξ­Ο‡ΞΏΟ…Ξ½ ΞΏΟΞΉΟƒΟ„ΞµΞ― Ξ±Ξ―ΞΈΞΏΟ…ΟƒΞµΟ‚ Ξ³ΞΉΞ± Ξ±Ο…Ο„Ξ® Ο„Ξ·Ξ½ Ο€ΞµΟΞΉΞΏΟ‡Ξ®";
 
 // Used in admin.php
-$vocab["edit"]               = "Τροποποίηση";
-$vocab["delete"]             = "Διαγραφή";
-$vocab["rooms"]              = "Αίθουσες";
-$vocab["in"]                 = "στο";
-$vocab["noareas"]            = "Καμία περιοχή";
-$vocab["addarea"]            = "Προσθήκη περιοχής";
-$vocab["name"]               = "Όνομα";
-$vocab["noarea"]             = "Δεν έχει επιλεχθεί περιοχή";
-$vocab["browserlang"]        = "Ο φυλλομετρητής σας χρησιμοποιεί";
-$vocab["addroom"]            = "Προσθήκη αίθουσας";
-$vocab["capacity"]           = "Χωρητικότητα";
-$vocab["norooms"]            = "Καμιά αίθουσα.";
-$vocab["administration"]     = "Διαχείριση";
+$vocab["edit"]               = "Ξ¤ΟΞΏΟ€ΞΏΟ€ΞΏΞ―Ξ·ΟƒΞ·";
+$vocab["delete"]             = "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ®";
+$vocab["rooms"]              = "Ξ‘Ξ―ΞΈΞΏΟ…ΟƒΞµΟ‚";
+$vocab["in"]                 = "ΟƒΟ„ΞΏ";
+$vocab["noareas"]            = "ΞΞ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΏΟ‡Ξ®";
+$vocab["addarea"]            = "Ξ ΟΞΏΟƒΞΈΞ®ΞΊΞ· Ο€ΞµΟΞΉΞΏΟ‡Ξ®Ο‚";
+$vocab["name"]               = "ΞΞ½ΞΏΞΌΞ±";
+$vocab["noarea"]             = "Ξ”ΞµΞ½ Ξ­Ο‡ΞµΞΉ ΞµΟ€ΞΉΞ»ΞµΟ‡ΞΈΞµΞ― Ο€ΞµΟΞΉΞΏΟ‡Ξ®";
+$vocab["browserlang"]        = "Ξ Ο†Ο…Ξ»Ξ»ΞΏΞΌΞµΟ„ΟΞ·Ο„Ξ®Ο‚ ΟƒΞ±Ο‚ Ο‡ΟΞ·ΟƒΞΉΞΌΞΏΟ€ΞΏΞΉΞµΞ―";
+$vocab["addroom"]            = "Ξ ΟΞΏΟƒΞΈΞ®ΞΊΞ· Ξ±Ξ―ΞΈΞΏΟ…ΟƒΞ±Ο‚";
+$vocab["capacity"]           = "Ξ§Ο‰ΟΞ·Ο„ΞΉΞΊΟΟ„Ξ·Ο„Ξ±";
+$vocab["norooms"]            = "ΞΞ±ΞΌΞΉΞ¬ Ξ±Ξ―ΞΈΞΏΟ…ΟƒΞ±.";
+$vocab["administration"]     = "Ξ”ΞΉΞ±Ο‡ΞµΞ―ΟΞΉΟƒΞ·";
 
 // Used in edit_area_room.php
-$vocab["editarea"]           = "Τροποποίηση περιοχής";
-$vocab["change"]             = "Αλλαγή";
-$vocab["backadmin"]          = "Επιστροφή στην διαχείριση";
-$vocab["editroomarea"]       = "Τροποποίηση περιγραφής περιοχής ή αίθουσας";
-$vocab["editroom"]           = "Τροποποίηση αίθουσας";
-$vocab["update_room_failed"] = "Η ενημέρωση της αίθουσας απέτυχε: ";
-$vocab["error_room"]         = "Σφάλμα: Η αίθουσα ";
-$vocab["not_found"]          = " δεν βρέθηκε";
-$vocab["update_area_failed"] = "Η ενημέρωση της πειοχής απέτυχε: ";
-$vocab["error_area"]         = "Σφάλμα: Η περιοχή ";
+$vocab["editarea"]           = "Ξ¤ΟΞΏΟ€ΞΏΟ€ΞΏΞ―Ξ·ΟƒΞ· Ο€ΞµΟΞΉΞΏΟ‡Ξ®Ο‚";
+$vocab["change"]             = "Ξ‘Ξ»Ξ»Ξ±Ξ³Ξ®";
+$vocab["backadmin"]          = "Ξ•Ο€ΞΉΟƒΟ„ΟΞΏΟ†Ξ® ΟƒΟ„Ξ·Ξ½ Ξ΄ΞΉΞ±Ο‡ΞµΞ―ΟΞΉΟƒΞ·";
+$vocab["editroomarea"]       = "Ξ¤ΟΞΏΟ€ΞΏΟ€ΞΏΞ―Ξ·ΟƒΞ· Ο€ΞµΟΞΉΞ³ΟΞ±Ο†Ξ®Ο‚ Ο€ΞµΟΞΉΞΏΟ‡Ξ®Ο‚ Ξ® Ξ±Ξ―ΞΈΞΏΟ…ΟƒΞ±Ο‚";
+$vocab["editroom"]           = "Ξ¤ΟΞΏΟ€ΞΏΟ€ΞΏΞ―Ξ·ΟƒΞ· Ξ±Ξ―ΞΈΞΏΟ…ΟƒΞ±Ο‚";
+$vocab["update_room_failed"] = "Ξ— ΞµΞ½Ξ·ΞΌΞ­ΟΟ‰ΟƒΞ· Ο„Ξ·Ο‚ Ξ±Ξ―ΞΈΞΏΟ…ΟƒΞ±Ο‚ Ξ±Ο€Ξ­Ο„Ο…Ο‡Ξµ: ";
+$vocab["error_room"]         = "Ξ£Ο†Ξ¬Ξ»ΞΌΞ±: Ξ— Ξ±Ξ―ΞΈΞΏΟ…ΟƒΞ± ";
+$vocab["not_found"]          = " Ξ΄ΞµΞ½ Ξ²ΟΞ­ΞΈΞ·ΞΊΞµ";
+$vocab["update_area_failed"] = "Ξ— ΞµΞ½Ξ·ΞΌΞ­ΟΟ‰ΟƒΞ· Ο„Ξ·Ο‚ Ο€ΞµΞΉΞΏΟ‡Ξ®Ο‚ Ξ±Ο€Ξ­Ο„Ο…Ο‡Ξµ: ";
+$vocab["error_area"]         = "Ξ£Ο†Ξ¬Ξ»ΞΌΞ±: Ξ— Ο€ΞµΟΞΉΞΏΟ‡Ξ® ";
 $vocab["room_admin_email"]   = "Room admin email";
 $vocab["area_admin_email"]   = "Area admin email";
 $vocab["invalid_email"]      = "Invalid email!";
 
 // Used in del.php
-$vocab["deletefollowing"]    = "Η ενέργεια αυτή θα διαγράψει τις ακόλουθες κρατήσεις";
-$vocab["sure"]               = "Είστε σίγουροι;";
-$vocab["YES"]                = "ΝΑΙ";
-$vocab["NO"]                 = "ΟΧΙ";
-$vocab["delarea"]            = "Πρέπει να διαγράψετε όλες τις αίθουσες σε αυτή τη περιοχή για να μπορέσετε να την διαγράψετε<p>";
+$vocab["deletefollowing"]    = "Ξ— ΞµΞ½Ξ­ΟΞ³ΞµΞΉΞ± Ξ±Ο…Ο„Ξ® ΞΈΞ± Ξ΄ΞΉΞ±Ξ³ΟΞ¬ΟΞµΞΉ Ο„ΞΉΟ‚ Ξ±ΞΊΟΞ»ΞΏΟ…ΞΈΞµΟ‚ ΞΊΟΞ±Ο„Ξ®ΟƒΞµΞΉΟ‚";
+$vocab["sure"]               = "Ξ•Ξ―ΟƒΟ„Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞΏΞΉ;";
+$vocab["YES"]                = "ΞΞ‘Ξ™";
+$vocab["NO"]                 = "ΞΞ§Ξ™";
+$vocab["delarea"]            = "Ξ ΟΞ­Ο€ΞµΞΉ Ξ½Ξ± Ξ΄ΞΉΞ±Ξ³ΟΞ¬ΟΞµΟ„Ξµ ΟΞ»ΞµΟ‚ Ο„ΞΉΟ‚ Ξ±Ξ―ΞΈΞΏΟ…ΟƒΞµΟ‚ ΟƒΞµ Ξ±Ο…Ο„Ξ® Ο„Ξ· Ο€ΞµΟΞΉΞΏΟ‡Ξ® Ξ³ΞΉΞ± Ξ½Ξ± ΞΌΟ€ΞΏΟΞ­ΟƒΞµΟ„Ξµ Ξ½Ξ± Ο„Ξ·Ξ½ Ξ΄ΞΉΞ±Ξ³ΟΞ¬ΟΞµΟ„Ξµ<p>";
 
 // Used in help.php
-$vocab["about_mrbs"]         = "Σχετικά με το MRBS";
-$vocab["database"]           = "Βάση δεδομένων";
-$vocab["system"]             = "Σύστημα";
-$vocab["please_contact"]     = "Παρακαλώ επικοινωνήστε με ";
-$vocab["for_any_questions"]  = "για όσες ερωτήσεις δεν απαντώνται εδώ.";
+$vocab["about_mrbs"]         = "Ξ£Ο‡ΞµΟ„ΞΉΞΊΞ¬ ΞΌΞµ Ο„ΞΏ MRBS";
+$vocab["database"]           = "Ξ’Ξ¬ΟƒΞ· Ξ΄ΞµΞ΄ΞΏΞΌΞ­Ξ½Ο‰Ξ½";
+$vocab["system"]             = "Ξ£ΟΟƒΟ„Ξ·ΞΌΞ±";
+$vocab["please_contact"]     = "Ξ Ξ±ΟΞ±ΞΊΞ±Ξ»Ο ΞµΟ€ΞΉΞΊΞΏΞΉΞ½Ο‰Ξ½Ξ®ΟƒΟ„Ξµ ΞΌΞµ ";
+$vocab["for_any_questions"]  = "Ξ³ΞΉΞ± ΟΟƒΞµΟ‚ ΞµΟΟ‰Ο„Ξ®ΟƒΞµΞΉΟ‚ Ξ΄ΞµΞ½ Ξ±Ο€Ξ±Ξ½Ο„ΟΞ½Ο„Ξ±ΞΉ ΞµΞ΄Ο.";
 
 // Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Κρίσιμο σφάλμα: Αποτυχία σύνδεσης στη βάση δεδομένων";
+$vocab["failed_connect_db"]  = "ΞΟΞ―ΟƒΞΉΞΌΞΏ ΟƒΟ†Ξ¬Ξ»ΞΌΞ±: Ξ‘Ο€ΞΏΟ„Ο…Ο‡Ξ―Ξ± ΟƒΟΞ½Ξ΄ΞµΟƒΞ·Ο‚ ΟƒΟ„Ξ· Ξ²Ξ¬ΟƒΞ· Ξ΄ΞµΞ΄ΞΏΞΌΞ­Ξ½Ο‰Ξ½";
 
 ?>
