@@ -21,7 +21,7 @@
 //
 // A list of valid timezones can be found at http://php.net/manual/timezones.php
 // The following line must be uncommented by removing the '//' at the beginning
-$timezone = "Europe/London";
+//$timezone = "Europe/London";
 
 
 /*******************
@@ -49,22 +49,9 @@ $db_tbl_prefix = "mrbs_";
 /* Add lines from systemdefaults.inc.php here to change the default
    configuration. Do _NOT_ modify systemdefaults.inc.php. */
 
-//$is_mandatory_field['entry.small_text'] = true;
 
 
-$ldap_host = 'ad-ldap-1.pace.co.uk';
-$ldap_base_dn = array('dc=foo', 'dc=pace,dc=internal');
-$ldap_dn_search_attrib = 'sAMAccountName';
-$ldap_get_user_email = TRUE;
-$ldap_email_attrib = 'mail';
-$ldap_debug = TRUE;
 
-$mail_settings['booker'] = TRUE;
-$mail_settings['details'] = TRUE;
-
-$auth['type'] = 'ldap';
-
-$auth["admin"][] = "beranej1";
 
 // This next section must come at the end of the config file - ie after any
 // language and mail settings, as the definitions are used in the included file
