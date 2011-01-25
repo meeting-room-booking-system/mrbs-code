@@ -873,7 +873,9 @@ $default_language_tokens = "en";
 
 // Set this to a valid locale (for the OS you run the MRBS server on)
 // if you want to override the automatic locale determination MRBS
-// performs
+// performs.   Remember to include the codeset if appropriate.   For example,
+// on a UNIX system with $unicode_encoding set to TRUE you would use
+// "en_GB.utf-8" for English/GB.
 $override_locale = "";
 
 // faq file language selection. IF not set, use the default english file.
