@@ -94,14 +94,14 @@ procedure might be:
 
 Create the MRBS tables using the supplied tables.*.sql file:
 
-[MySQL]         $ mysql mrbs < tables.my.sql
-[PostgreSQL]    $ psql -a -f tables.pg.sql mrbs
+[MySQL]             $ mysql mrbs < tables.my.sql
+[MySQL < 4.1]       $ mysql mrbs < tables.my.pre41.sql
+[PostgreSQL]        $ psql -a -f tables.pg.sql mrbs
+[PostgreSQL < 7.3]  $ psql -a -f tables.pg.sql mrbs
 
 where "mrbs" is the name of your database (mentioned above).
 This will create all the needed tables.
 You may need to set rights on the tables; for PostgreSQL see "grant.pg.sql".
-If you use a PHP version less than 4.2, you will also need to replace the pgsql
-driver file pgsql.inc with pgsql.before_php42.inc, and rename it to pgsql.inc.
 If you need to delete the tables, for PostgreSQL see "destroy.pg.sql".
 
 The tables are now empty and ready for use. If you want to add a few sample
@@ -120,7 +120,7 @@ For an upgrade:
 If you are upgrading from MRBS 1.2-pre3 or later, your database will be
 upgraded automatically if necessary when you first run MRBS.   You will
 be prompted for a database (not MRBS) username and password with rights
-to create and alter tables.     Otherwise, please se the UPGRADE file.
+to create and alter tables.     Otherwise, please see the UPGRADE file.
 
 For a second installation or to use different table names:
 
@@ -412,11 +412,11 @@ to "Computer", then look for the appropriate string in the lang files and edit i
 INTERNATIONALISATION
 ---------------------------------------------------------------------------
 
-From MRBS 1.4.7, MRBS is internationalised and uses UTF-8 throughout.
+From MRBS 1.4.6, MRBS is internationalised and uses UTF-8 throughout.
 MRBS will serve all of its pages in UTF-8 and stores everything in the
 database in UTF-8. This means that all languages work together.
 
-To use Unicode, php should be built with 'iconv' support ('--with-iconv'
+To use Unicode, PHP should be built with 'iconv' support ('--with-iconv'
 directive), or have the iconv extension installed and enabled. On Windows,
 if you are using PHP 5, iconv support is built-in.
 
@@ -431,7 +431,7 @@ For PHP 4 on Windows, three things are needed :
   \%phpdir%\extensions\
 
 
-Note: Upgrading mysql database from previous charsets to Unicode :
+Note: Upgrading MySQL database from previous charsets to Unicode :
 
   You can use convert_db_to_utf8.php script to convert text in the
   database to UTF8. The administrator should copy this file into the web
