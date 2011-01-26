@@ -11,7 +11,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $PHP_SELF, $view_week_number, $weekstarts;
   global $auth;
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
-  global $lang_map_windows, $langs;
+  global $lang_map_windows, $langs, $server_os;
   
   $page = basename($PHP_SELF, ".php" );
   $user = getUserName();
@@ -137,7 +137,6 @@ $(function() {
     echo "$.datepicker.setDefaults($.datepicker.regional['$default_lang']);\n";
     if (!empty($override_locale))
     {
-      $server_os = get_server_os();
       if ($server_os == 'windows')
       {
         // If the server is running on Windows we'll have to try and translate the 

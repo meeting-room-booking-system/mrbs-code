@@ -471,6 +471,8 @@ installed on your system.
 ');
 }
 
+$server_os = get_server_os();  // used globally
+
 if ($override_locale != "")
 {
   if (setlocale(LC_ALL,$override_locale) == FALSE)
@@ -482,8 +484,6 @@ if ($override_locale != "")
 }
 else
 {
-  $server_os = get_server_os();
-
   if ($server_os == "windows")
   {
     if ($lang_map_windows[strtolower($locale)])
@@ -707,6 +707,16 @@ function utf8_convert_from_locale($string)
 //  
 function utf8_strftime($format, $time)
 {
+  global $server_os;
+
+  if ($server_os == "windows")
+  {
+    // Some formats not supported on Windows.   Replace with suitable alternatives
+    $format = str_replace("%R", "%H:%M", $format);
+    $format = str_replace("%P", "%p", $format);
+    $format = str_replace("%l", "%I", $format);
+  }
+  
   // %p doesn't actually work in some locales, we have to patch it up ourselves
   if (preg_match('/%p/', $format))
   {
@@ -718,10 +728,8 @@ function utf8_strftime($format, $time)
 
     $format = preg_replace('/%p/', $ampm, $format);
   }
-  // %R not supported on Windows
-  $format = str_replace("%R", "%H:%M", $format);
 
-  $result = strftime($format,$time);
+  $result = strftime($format, $time);
   return utf8_convert_from_locale($result);
 }
 
