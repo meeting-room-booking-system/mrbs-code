@@ -57,11 +57,11 @@ $vocab["days"]               = "dny";
 $vocab["weeks"]              = "týdny";
 $vocab["years"]              = "roky";
 $vocab["periods"]            = "period";
-$vocab["all_day"]            = "Vechny dny";
+$vocab["all_day"]            = "Všechny dny";
 $vocab["type"]               = "Typ";
 $vocab["internal"]           = "Volná místa";
 $vocab["external"]           = "Obsazeno";
-$vocab["save"]               = "Uloit";
+$vocab["save"]               = "Uložit";
 $vocab["rep_type"]           = "Typ opakování";
 $vocab["rep_type_0"]         = "Nikdy";
 $vocab["rep_type_1"]         = "Denně";
@@ -76,26 +76,26 @@ $vocab["rep_for_weekly"]     = "(pro (n-)týdnů)";
 $vocab["rep_freq"]           = "Frekvence";
 $vocab["rep_num_weeks"]      = "Čislo týdne";
 $vocab["rep_for_nweekly"]    = "(pro n-týdnů)";
-$vocab["ctrl_click"]         = "Uít CTRL pro výběr více místností";
+$vocab["ctrl_click"]         = "Užít CTRL pro výběr více místností";
 $vocab["entryid"]            = "Vstupní ID ";
 $vocab["repeat_id"]          = "ID pro opakování"; 
-$vocab["you_have_not_entered"] = "Nevloil jste";
+$vocab["you_have_not_entered"] = "Nevložil jste";
 $vocab["you_have_not_selected"] = "Nevybral jste";
 $vocab["valid_room"]         = "prostředek.";
 $vocab["brief_description"]  = "Krátký popis.";
-$vocab["useful_n-weekly_value"] = "pouitelná x-týdenní hodnota.";
+$vocab["useful_n-weekly_value"] = "použitelná x-týdenní hodnota.";
 
 // Used in view_entry.php
 $vocab["description"]        = "Popis";
 $vocab["room"]               = "Místnost";
-$vocab["createdby"]          = "Vytvořil uivatel";
+$vocab["createdby"]          = "Vytvořil uživatel";
 $vocab["lastupdate"]         = "Poslední změna";
 $vocab["deleteentry"]        = "Smazat záznam";
 $vocab["deleteseries"]       = "Smazat sérii";
 $vocab["confirmdel"]         = "Jste si jistý\\nsmazáním tohoto záznamu?\\n\\n";
 $vocab["returnprev"]         = "Návrat na předchozí stránku";
-$vocab["invalid_entry_id"]   = "patné ID záznamu.";
-$vocab["invalid_series_id"]  = "patné ID skupiny.";
+$vocab["invalid_entry_id"]   = "Špatné ID záznamu.";
+$vocab["invalid_series_id"]  = "Špatné ID skupiny.";
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Chyba";
@@ -107,32 +107,32 @@ $vocab["failed_to_acquire"]  = "Chyba výhradního přístupu do databáze";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Přístup zamítnut";
-$vocab["norights"]           = "Nemáte přístupové právo pro změnu této poloky.";
-$vocab["please_login"]       = "Prosím, přihlate se";
+$vocab["norights"]           = "Nemáte přístupové právo pro změnu této položky.";
+$vocab["please_login"]       = "Prosím, přihlašte se";
 $vocab["users.name"]          = "Jméno";
 $vocab["users.password"]      = "Heslo";
 $vocab["users.level"]         = "Práva";
-$vocab["unknown_user"]       = "Neznámý uivatel";
+$vocab["unknown_user"]       = "Neznámý uživatel";
 $vocab["you_are"]            = "Jste";
 $vocab["login"]              = "Přihlásit se";
 $vocab["logoff"]             = "Odhlásit se";
 
 // Authentication database
-$vocab["user_list"]          = "Seznam uivatelů";
-$vocab["edit_user"]          = "Editovat uivatele";
-$vocab["delete_user"]        = "Smazat tohoto uivatele";
+$vocab["user_list"]          = "Seznam uživatelů";
+$vocab["edit_user"]          = "Editovat uživatele";
+$vocab["delete_user"]        = "Smazat tohoto uživatele";
 //$vocab["users.name"]         = Use the same as above, for consistency.
 //$vocab["users.password"]     = Use the same as above, for consistency.
 $vocab["users.email"]         = "Emailová adresa";
-$vocab["password_twice"]     = "Pokud chcete změnit heslo, prosím napite ho dvakrát";
-$vocab["passwords_not_eq"]   = "Chyba: Vloená hesla se neshodují.";
-$vocab["add_new_user"]       = "Přidat nového uivatele";
+$vocab["password_twice"]     = "Pokud chcete změnit heslo, prosím napište ho dvakrát";
+$vocab["passwords_not_eq"]   = "Chyba: Vložená hesla se neshodují.";
+$vocab["add_new_user"]       = "Přidat nového uživatele";
 $vocab["action"]             = "Akce";
-$vocab["user"]               = "Uivatel";
+$vocab["user"]               = "Uživatel";
 $vocab["administrator"]      = "Administrátor";
 $vocab["unknown"]            = "Neznámý";
 $vocab["ok"]                 = "Ano";
-$vocab["show_my_entries"]    = "Klepnout pro zobrazání vech nadcházejících záznamů";
+$vocab["show_my_entries"]    = "Klepnout pro zobrazání všech nadcházejících záznamů";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Prázdný nebo neplatný hledaný řetězec.";
@@ -142,10 +142,10 @@ $vocab["records"]            = "Záznam";
 $vocab["through"]            = " skrze ";
 $vocab["of"]                 = " o ";
 $vocab["previous"]           = "Předchozi";
-$vocab["next"]               = "Dalí";
+$vocab["next"]               = "Další";
 $vocab["entry"]              = "Záznam";
 $vocab["view"]               = "Náhled";
-$vocab["advanced_search"]    = "Rozířené hledání";
+$vocab["advanced_search"]    = "Rozšířené hledání";
 $vocab["search_button"]      = "Hledat";
 $vocab["search_for"]         = "Hledat co";
 $vocab["from"]               = "Od";
@@ -157,7 +157,7 @@ $vocab["report_end"]         = "Výpis konců";
 $vocab["match_area"]         = "Hledaná oblast";
 $vocab["match_room"]         = "Hledaná místnost";
 $vocab["match_type"]         = "Hledaný typ";
-$vocab["ctrl_click_type"]    = "Uít CTRL pro výběr více typů";
+$vocab["ctrl_click_type"]    = "Užít CTRL pro výběr více typů";
 $vocab["match_entry"]        = "Hledat v popisu";
 $vocab["match_descr"]        = "Hledat v celém popisu";
 $vocab["include"]            = "Zahrnovat";
@@ -190,21 +190,21 @@ $vocab["monthafter"]         = "Měsic dopředu";
 $vocab["gotothismonth"]      = "Tento měsíc";
 
 // Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Pro tuto místnost není definována adná oblast!";
+$vocab["no_rooms_for_area"]  = "Pro tuto místnost není definována žadná oblast!";
 
 // Used in admin.php
 $vocab["edit"]               = "Editovat";
 $vocab["delete"]             = "Smazat";
 $vocab["rooms"]              = "Místnosti";
 $vocab["in"]                 = "v";
-$vocab["noareas"]            = "ádné oblasti";
+$vocab["noareas"]            = "Žádné oblasti";
 $vocab["addarea"]            = "Přidat oblast";
 $vocab["name"]               = "Jméno";
-$vocab["noarea"]             = "Není vybrána ádná oblast";
-$vocab["browserlang"]        = "Prohlíec je nastaven k pouití";
+$vocab["noarea"]             = "Není vybrána žádná oblast";
+$vocab["browserlang"]        = "Prohlížec je nastaven k použití";
 $vocab["addroom"]            = "Přidat místnost";
 $vocab["capacity"]           = "Kapacita";
-$vocab["norooms"]            = "ádná místnost.";
+$vocab["norooms"]            = "Žádná místnost.";
 $vocab["administration"]     = "Administrace";
 
 // Used in edit_area_room.php
@@ -220,21 +220,21 @@ $vocab["update_area_failed"] = "Chyba editace oblasti: ";
 $vocab["error_area"]         = "Chyba: oblast ";
 $vocab["room_admin_email"]   = "Email administrátora místnosti";
 $vocab["area_admin_email"]   = "Email administrátora oblasti";
-$vocab["invalid_email"]      = "patný email!";
+$vocab["invalid_email"]      = "Špatný email!";
 
 // Used in del.php
 $vocab["deletefollowing"]    = "Bylo smazáno rezervování";
 $vocab["sure"]               = "Jste si jistý?";
 $vocab["YES"]                = "ANO";
 $vocab["NO"]                 = "NE";
-$vocab["delarea"]            = "Musíte smazat vechny místnosti v této oblasti předtím ne ji můete smazat<p>";
+$vocab["delarea"]            = "Musíte smazat všechny místnosti v této oblasti předtím než ji můžete smazat<p>";
 
 // Used in help.php
 $vocab["about_mrbs"]         = "O MRBS";
 $vocab["database"]           = "Databáze";
 $vocab["system"]             = "Systém";
 $vocab["please_contact"]     = "Prosím kontaktujte ";
-$vocab["for_any_questions"]  = "pokud máte nějaké dalí otázky.";
+$vocab["for_any_questions"]  = "pokud máte nějaké další otázky.";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatalní chyba: Nepodařilo se připojit do databáze";
