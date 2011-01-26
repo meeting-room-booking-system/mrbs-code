@@ -1,4 +1,4 @@
-<?php // -*-mode: PHP; coding:iso-8859-9;-*-
+<?php // -*-mode: PHP; coding:utf-8;-*-
 
 // $Id$
 
@@ -11,249 +11,246 @@
 //
 // This file is PHP code. Treat it as such.
 
-// The charset to use in "Content-type" header
-$vocab["charset"]            = "iso-8859-9";
-
 // Used in style.inc
-$vocab["mrbs"]               = "Toplantı Odası Ayırtma Sistemi";
+$vocab["mrbs"]               = "ToplantÄ± OdasÄ± AyÄ±rtma Sistemi";
 
 // Used in functions.inc
 $vocab["report"]             = "Rapor";
-$vocab["admin"]              = "Yönetici";
-$vocab["help"]               = "Yardım";
+$vocab["admin"]              = "YÃ¶netici";
+$vocab["help"]               = "YardÄ±m";
 $vocab["search"]             = "Arama";
-$vocab["not_php3"]           = "UYARI: Yüksek ihtimalle PHP3 ile çalışmaz";
+$vocab["not_php3"]           = "UYARI: YÃ¼ksek ihtimalle PHP3 ile Ã§alÄ±ÅŸmaz";
 
 // Used in day.php
-$vocab["bookingsfor"]        = "Yer ayırtmak için";
+$vocab["bookingsfor"]        = "Yer ayÄ±rtmak iÃ§in";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Alanlar";
-$vocab["daybefore"]          = "Dün";
-$vocab["dayafter"]           = "Yarın";
-$vocab["gototoday"]          = "Bugün";
+$vocab["daybefore"]          = "DÃ¼n";
+$vocab["dayafter"]           = "YarÄ±n";
+$vocab["gototoday"]          = "BugÃ¼n";
 $vocab["goto"]               = "Git";
-$vocab["highlight_line"]     = "Satırı belirgin hale getir";
-$vocab["click_to_reserve"]   = "Yer ayırtmak için bu hücreye tıklayın.";
+$vocab["highlight_line"]     = "SatÄ±rÄ± belirgin hale getir";
+$vocab["click_to_reserve"]   = "Yer ayÄ±rtmak iÃ§in bu hÃ¼creye tÄ±klayÄ±n.";
 
 // Used in trailer.inc
-$vocab["viewday"]            = "Günlük gösterim";
-$vocab["viewweek"]           = "Haftalık gösterim";
-$vocab["viewmonth"]          = "Aylık gösterim";
-$vocab["ppreview"]           = "Önizleme";
+$vocab["viewday"]            = "GÃ¼nlÃ¼k gÃ¶sterim";
+$vocab["viewweek"]           = "HaftalÄ±k gÃ¶sterim";
+$vocab["viewmonth"]          = "AylÄ±k gÃ¶sterim";
+$vocab["ppreview"]           = "Ã–nizleme";
 
 // Used in edit_entry.php
-$vocab["addentry"]           = "Kayıt Ekle";
-$vocab["editentry"]          = "Kayıt Düzelt";
-$vocab["copyentry"]          = "Kayıt Kopyala";
-$vocab["editseries"]         = "Seri Düzenle";
+$vocab["addentry"]           = "KayÄ±t Ekle";
+$vocab["editentry"]          = "KayÄ±t DÃ¼zelt";
+$vocab["copyentry"]          = "KayÄ±t Kopyala";
+$vocab["editseries"]         = "Seri DÃ¼zenle";
 $vocab["copyseries"]         = "Serileri Kopyala";
-$vocab["namebooker"]         = "Kısa Tanım";
-$vocab["fulldescription"]    = "Tam Tanım:<br>&nbsp;&nbsp;(Kişi sayısı,<br>&nbsp;&nbsp;İç/Dış/Karma vb.)";
+$vocab["namebooker"]         = "KÄ±sa TanÄ±m";
+$vocab["fulldescription"]    = "Tam TanÄ±m:<br>&nbsp;&nbsp;(KiÅŸi sayÄ±sÄ±,<br>&nbsp;&nbsp;Ä°Ã§/DÄ±ÅŸ/Karma vb.)";
 $vocab["date"]               = "Tarih";
-$vocab["start_date"]         = "Başlama Zamanı";
-$vocab["end_date"]           = "Bitiş Zamanı";
+$vocab["start_date"]         = "BaÅŸlama ZamanÄ±";
+$vocab["end_date"]           = "BitiÅŸ ZamanÄ±";
 $vocab["time"]               = "Zaman";
-$vocab["period"]             = "Dönem";
-$vocab["duration"]           = "Devam Süresi";
+$vocab["period"]             = "DÃ¶nem";
+$vocab["duration"]           = "Devam SÃ¼resi";
 $vocab["seconds"]            = "saniye";
 $vocab["minutes"]            = "dakika";
 $vocab["hours"]              = "saat";
-$vocab["days"]               = "gün";
+$vocab["days"]               = "gÃ¼n";
 $vocab["weeks"]              = "hafta";
-$vocab["years"]              = "yıl";
-$vocab["periods"]            = "dönem";
-$vocab["all_day"]            = "Tüm Gün";
+$vocab["years"]              = "yÄ±l";
+$vocab["periods"]            = "dÃ¶nem";
+$vocab["all_day"]            = "TÃ¼m GÃ¼n";
 $vocab["type"]               = "Tip";
-$vocab["internal"]           = "İç";
-$vocab["external"]           = "Dış";
-$vocab["Mix"]                = "Karma İç+Dış";
+$vocab["internal"]           = "Ä°Ã§";
+$vocab["external"]           = "DÄ±ÅŸ";
+$vocab["Mix"]                = "Karma Ä°Ã§+DÄ±ÅŸ";
 $vocab["save"]               = "Kaydet";
 $vocab["rep_type"]           = "Tekrar Tipi";
-$vocab["rep_type_0"]         = "Hiçbiri";
-$vocab["rep_type_1"]         = "Günlük";
-$vocab["rep_type_2"]         = "Haftalık";
-$vocab["rep_type_3"]         = "Aylık";
-$vocab["rep_type_4"]         = "Yıllık";
-$vocab["rep_type_5"]         = "Aylık, denk gelen gün";
-$vocab["rep_type_6"]         = "n-Haftalık";
-$vocab["rep_end_date"]       = "Tekrarın solanma tarihi";
-$vocab["rep_rep_day"]        = "Tekrar Eden Gün";
-$vocab["rep_for_weekly"]     = "((n-)Haftalık için)";
-$vocab["rep_freq"]           = "Sıklık";
-$vocab["rep_num_weeks"]      = "Hafta sayısı";
-$vocab["rep_for_nweekly"]    = "(n-haftalık)";
-$vocab["ctrl_click"]         = "Klavyede Ctrl tuşuna basılı iken fare ile tıklıyarak birden fazla oda seçebilirsiniz.";
-$vocab["entryid"]            = "Kayıt ID ";
+$vocab["rep_type_0"]         = "HiÃ§biri";
+$vocab["rep_type_1"]         = "GÃ¼nlÃ¼k";
+$vocab["rep_type_2"]         = "HaftalÄ±k";
+$vocab["rep_type_3"]         = "AylÄ±k";
+$vocab["rep_type_4"]         = "YÄ±llÄ±k";
+$vocab["rep_type_5"]         = "AylÄ±k, denk gelen gÃ¼n";
+$vocab["rep_type_6"]         = "n-HaftalÄ±k";
+$vocab["rep_end_date"]       = "TekrarÄ±n solanma tarihi";
+$vocab["rep_rep_day"]        = "Tekrar Eden GÃ¼n";
+$vocab["rep_for_weekly"]     = "((n-)HaftalÄ±k iÃ§in)";
+$vocab["rep_freq"]           = "SÄ±klÄ±k";
+$vocab["rep_num_weeks"]      = "Hafta sayÄ±sÄ±";
+$vocab["rep_for_nweekly"]    = "(n-haftalÄ±k)";
+$vocab["ctrl_click"]         = "Klavyede Ctrl tuÅŸuna basÄ±lÄ± iken fare ile tÄ±klÄ±yarak birden fazla oda seÃ§ebilirsiniz.";
+$vocab["entryid"]            = "KayÄ±t ID ";
 $vocab["repeat_id"]          = "Tekrar ID ";
 $vocab["you_have_not_entered"] = "Girmediniz";
-$vocab["you_have_not_selected"] = "Seçmediniz";
+$vocab["you_have_not_selected"] = "SeÃ§mediniz";
 $vocab["valid_room"]         = "Yer.";
-$vocab["brief_description"]  = "Kısa Tanım.";
-$vocab["useful_n-weekly_value"] = "faydali n-haftalık değer.";
+$vocab["brief_description"]  = "KÄ±sa TanÄ±m.";
+$vocab["useful_n-weekly_value"] = "faydali n-haftalÄ±k deÄŸer.";
 
 // Used in view_entry.php
-$vocab["description"]        = "Tanım";
+$vocab["description"]        = "TanÄ±m";
 $vocab["room"]               = "Yer";
-$vocab["createdby"]          = "Ayırtan kişi";
-$vocab["lastupdate"]         = "Son güncelleme zamanı";
-$vocab["deleteentry"]        = "Kayıt Sil";
+$vocab["createdby"]          = "AyÄ±rtan kiÅŸi";
+$vocab["lastupdate"]         = "Son gÃ¼ncelleme zamanÄ±";
+$vocab["deleteentry"]        = "KayÄ±t Sil";
 $vocab["deleteseries"]       = "Seri Sil";
-$vocab["confirmdel"]         = "Emin misiniz?\\nistiyormusunuz\\nBu kaydı sil\\n\\n";
-$vocab["returnprev"]         = "Önceki sayfaya dön";
-$vocab["invalid_entry_id"]   = "Geçersiz kayıt id.";
-$vocab["invalid_series_id"]  = "Geçersiz seri id.";
+$vocab["confirmdel"]         = "Emin misiniz?\\nistiyormusunuz\\nBu kaydÄ± sil\\n\\n";
+$vocab["returnprev"]         = "Ã–nceki sayfaya dÃ¶n";
+$vocab["invalid_entry_id"]   = "GeÃ§ersiz kayÄ±t id.";
+$vocab["invalid_series_id"]  = "GeÃ§ersiz seri id.";
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Hata";
-$vocab["sched_conflict"]     = "Program çakışması";
-$vocab["conflict"]           = "Yeni ayırtma işlemi önceki kayıt(lar) ile uyuşmazlık yapacak";
-$vocab["too_may_entrys"]     = "Seçili seçenek çok fazla kayıt girişi yaratacak!";
-$vocab["returncal"]          = "Takvim görünümüne dönün";
-$vocab["failed_to_acquire"]  = "VeriTabanına erişim hatası";
-$vocab["invalid_booking"]    = "Geçersiz YerAyırtma";
-$vocab["must_set_description"] = "Yer ayırtma için kısa tanımlama yapmalısınız. Geri dönün ve bir kayıt ekleyiniz.";
+$vocab["sched_conflict"]     = "Program Ã§akÄ±ÅŸmasÄ±";
+$vocab["conflict"]           = "Yeni ayÄ±rtma iÅŸlemi Ã¶nceki kayÄ±t(lar) ile uyuÅŸmazlÄ±k yapacak";
+$vocab["too_may_entrys"]     = "SeÃ§ili seÃ§enek Ã§ok fazla kayÄ±t giriÅŸi yaratacak!";
+$vocab["returncal"]          = "Takvim gÃ¶rÃ¼nÃ¼mÃ¼ne dÃ¶nÃ¼n";
+$vocab["failed_to_acquire"]  = "VeriTabanÄ±na eriÅŸim hatasÄ±";
+$vocab["invalid_booking"]    = "GeÃ§ersiz YerAyÄ±rtma";
+$vocab["must_set_description"] = "Yer ayÄ±rtma iÃ§in kÄ±sa tanÄ±mlama yapmalÄ±sÄ±nÄ±z. Geri dÃ¶nÃ¼n ve bir kayÄ±t ekleyiniz.";
 $vocab["mail_subject_new_entry"]     = "konu";
 $vocab["mail_subject_changed_entry"] = "konu";
 $vocab["mail_subject_delete"]        = "konu sil";
-$vocab["mail_body_new_entry"]     = "yeni kayıt";
-$vocab["mail_body_changed_entry"] = "değiştir kayıt";
-$vocab["mail_body_del_entry"]     = "sil kayıt";
+$vocab["mail_body_new_entry"]     = "yeni kayÄ±t";
+$vocab["mail_body_changed_entry"] = "deÄŸiÅŸtir kayÄ±t";
+$vocab["mail_body_del_entry"]     = "sil kayÄ±t";
 
 // Authentication stuff
-$vocab["accessdenied"]       = "Erişim Engellendi";
-$vocab["norights"]           = "Bunu değiştirecek giriş haklarınız yoktur.";
-$vocab["please_login"]       = "Lütfen girin";
+$vocab["accessdenied"]       = "EriÅŸim Engellendi";
+$vocab["norights"]           = "Bunu deÄŸiÅŸtirecek giriÅŸ haklarÄ±nÄ±z yoktur.";
+$vocab["please_login"]       = "LÃ¼tfen girin";
 $vocab["users.name"]          = "Ad";
-$vocab["users.password"]      = "Şifre";
+$vocab["users.password"]      = "Åifre";
 $vocab["users.level"]         = "Haklar";
-$vocab["unknown_user"]       = "Bilinmeyen kullanıcı";
+$vocab["unknown_user"]       = "Bilinmeyen kullanÄ±cÄ±";
 $vocab["you_are"]            = "Siz";
-$vocab["login"]              = "Giriş";
-$vocab["logoff"]             = "Çıkış";
+$vocab["login"]              = "GiriÅŸ";
+$vocab["logoff"]             = "Ã‡Ä±kÄ±ÅŸ";
 
 // Authentication database
-$vocab["user_list"]          = "Kullanıcı listesi";
-$vocab["edit_user"]          = "Kullanıcı düzenle";
-$vocab["delete_user"]        = "Bu kullanıcıyı sil";
-//$vocab["users.name"]         = Tutarlılık için yukardaki ayarın aynısını kullan.
-//$vocab["users.password"]     = Tutarlılık için yukardaki ayarın aynısını kullan.
+$vocab["user_list"]          = "KullanÄ±cÄ± listesi";
+$vocab["edit_user"]          = "KullanÄ±cÄ± dÃ¼zenle";
+$vocab["delete_user"]        = "Bu kullanÄ±cÄ±yÄ± sil";
+//$vocab["users.name"]         = TutarlÄ±lÄ±k iÃ§in yukardaki ayarÄ±n aynÄ±sÄ±nÄ± kullan.
+//$vocab["users.password"]     = TutarlÄ±lÄ±k iÃ§in yukardaki ayarÄ±n aynÄ±sÄ±nÄ± kullan.
 $vocab["users.email"]         = "Eposta adresi";
-$vocab["password_twice"]     = "Eğer şifremnizi değiştirmek istiyorsanız, lütfen yeni şifrenizi iki kez giriniz.";
-$vocab["passwords_not_eq"]   = "Hata: Şifreler uyuşmadı.";
-$vocab["add_new_user"]       = "Yeni kullanıcı ekle";
+$vocab["password_twice"]     = "EÄŸer ÅŸifremnizi deÄŸiÅŸtirmek istiyorsanÄ±z, lÃ¼tfen yeni ÅŸifrenizi iki kez giriniz.";
+$vocab["passwords_not_eq"]   = "Hata: Åifreler uyuÅŸmadÄ±.";
+$vocab["add_new_user"]       = "Yeni kullanÄ±cÄ± ekle";
 $vocab["action"]             = "Faaliyet";
-$vocab["user"]               = "Kullanıcı";
-$vocab["administrator"]      = "Yönetici";
+$vocab["user"]               = "KullanÄ±cÄ±";
+$vocab["administrator"]      = "YÃ¶netici";
 $vocab["unknown"]            = "Bilinmeyen";
 $vocab["ok"]                 = "Tamam";
-$vocab["show_my_entries"]    = "Tüm kayıtlarımı Göster";
-$vocab["no_users_initial"]   = "VeriTabanında kullanıcı tanımlı değil, ilk kullanıcı oluşturmaya izin ver";
-$vocab["no_users_create_first_admin"] = "Yönetici olarak bir kullanıcı tanımla ve giriş yaparak yeni kullanıcılar oluşturunuz.";
+$vocab["show_my_entries"]    = "TÃ¼m kayÄ±tlarÄ±mÄ± GÃ¶ster";
+$vocab["no_users_initial"]   = "VeriTabanÄ±nda kullanÄ±cÄ± tanÄ±mlÄ± deÄŸil, ilk kullanÄ±cÄ± oluÅŸturmaya izin ver";
+$vocab["no_users_create_first_admin"] = "YÃ¶netici olarak bir kullanÄ±cÄ± tanÄ±mla ve giriÅŸ yaparak yeni kullanÄ±cÄ±lar oluÅŸturunuz.";
 
 // Used in search.php
-$vocab["invalid_search"]     = "Boş yada geçersiz arama kelimesi .";
-$vocab["search_results"]     = "Arama sonuçları";
-$vocab["nothing_found"]      = "Aranan kayıt bulunamadı.";
-$vocab["records"]            = "Kayıtlar ";
+$vocab["invalid_search"]     = "BoÅŸ yada geÃ§ersiz arama kelimesi .";
+$vocab["search_results"]     = "Arama sonuÃ§larÄ±";
+$vocab["nothing_found"]      = "Aranan kayÄ±t bulunamadÄ±.";
+$vocab["records"]            = "KayÄ±tlar ";
 $vocab["through"]            = " nedeniyle ";
 $vocab["of"]                 = " da ";
-$vocab["previous"]           = "Önceki";
+$vocab["previous"]           = "Ã–nceki";
 $vocab["next"]               = "Sonraki";
-$vocab["entry"]              = "Kayıt";
-$vocab["view"]               = "Görünüm";
-$vocab["advanced_search"]    = "Detaylı arama";
+$vocab["entry"]              = "KayÄ±t";
+$vocab["view"]               = "GÃ¶rÃ¼nÃ¼m";
+$vocab["advanced_search"]    = "DetaylÄ± arama";
 $vocab["search_button"]      = "Arama";
 $vocab["search_for"]         = "Anahtar kelime";
 $vocab["from"]               = "den";
 
 // Used in report.php
-$vocab["report_on"]          = "Toplantıların Raporları";
-$vocab["report_start"]       = "Rapor Başlama Tarihi";
-$vocab["report_end"]         = "Rapor Bitiş Tarihi";
-$vocab["match_area"]         = "Uygun bölge";
-$vocab["match_room"]         = "Uygun Toplantı Salonu";
+$vocab["report_on"]          = "ToplantÄ±larÄ±n RaporlarÄ±";
+$vocab["report_start"]       = "Rapor BaÅŸlama Tarihi";
+$vocab["report_end"]         = "Rapor BitiÅŸ Tarihi";
+$vocab["match_area"]         = "Uygun bÃ¶lge";
+$vocab["match_room"]         = "Uygun ToplantÄ± Salonu";
 $vocab["match_type"]         = "Uygun tip";
-$vocab["ctrl_click_type"]    = "Klavyede Ctrl tuşuna basılı iken fare ile tıklıyarak birden fazla tip seçebilirsiniz.";
-$vocab["match_entry"]        = "Uygun kısa tanım";
-$vocab["match_descr"]        = "Uygun tam tanım";
+$vocab["ctrl_click_type"]    = "Klavyede Ctrl tuÅŸuna basÄ±lÄ± iken fare ile tÄ±klÄ±yarak birden fazla tip seÃ§ebilirsiniz.";
+$vocab["match_entry"]        = "Uygun kÄ±sa tanÄ±m";
+$vocab["match_descr"]        = "Uygun tam tanÄ±m";
 $vocab["include"]            = "Kapsam";
 $vocab["report_only"]        = "Sadece Rapor";
-$vocab["summary_only"]       = "Sadece Özet";
-$vocab["report_and_summary"] = "Rapor ve Özet";
-$vocab["summarize_by"]       = "Özetleyen";
-$vocab["sum_by_descrip"]     = "Kısa tanım";
-$vocab["sum_by_creator"]     = "Oluşturan";
-$vocab["entry_found"]        = "kayıt bulundu";
-$vocab["entries_found"]      = "kayıtlar bulundu";
-$vocab["summary_header"]     = "Kayıtların saatlik özeti.";
-$vocab["summary_header_per"] = "Kayıtların dönemlik özeti.";
+$vocab["summary_only"]       = "Sadece Ã–zet";
+$vocab["report_and_summary"] = "Rapor ve Ã–zet";
+$vocab["summarize_by"]       = "Ã–zetleyen";
+$vocab["sum_by_descrip"]     = "KÄ±sa tanÄ±m";
+$vocab["sum_by_creator"]     = "OluÅŸturan";
+$vocab["entry_found"]        = "kayÄ±t bulundu";
+$vocab["entries_found"]      = "kayÄ±tlar bulundu";
+$vocab["summary_header"]     = "KayÄ±tlarÄ±n saatlik Ã¶zeti.";
+$vocab["summary_header_per"] = "KayÄ±tlarÄ±n dÃ¶nemlik Ã¶zeti.";
 $vocab["total"]              = "Toplam";
-$vocab["submitquery"]        = "Raporu Çalıştır";
-$vocab["sort_rep"]           = "Rapora göre sırala";
-$vocab["sort_rep_time"]      = "Başlama Zamanı";
-$vocab["rep_dsp"]            = "Raporda Görüntüle";
-$vocab["rep_dsp_dur"]        = "Devam Süresi";
-$vocab["rep_dsp_end"]        = "Bitiş Zamanı";
+$vocab["submitquery"]        = "Raporu Ã‡alÄ±ÅŸtÄ±r";
+$vocab["sort_rep"]           = "Rapora gÃ¶re sÄ±rala";
+$vocab["sort_rep_time"]      = "BaÅŸlama ZamanÄ±";
+$vocab["rep_dsp"]            = "Raporda GÃ¶rÃ¼ntÃ¼le";
+$vocab["rep_dsp_dur"]        = "Devam SÃ¼resi";
+$vocab["rep_dsp_end"]        = "BitiÅŸ ZamanÄ±";
 
 // Used in week.php
-$vocab["weekbefore"]         = "Önceki Haftaya Git";
+$vocab["weekbefore"]         = "Ã–nceki Haftaya Git";
 $vocab["weekafter"]          = "Sonraki Haftaya Git";
 $vocab["gotothisweek"]       = "Bu Haftaya Git";
 
 // Used in month.php
-$vocab["monthbefore"]        = "Bir önceki ayı görüntüle";
-$vocab["monthafter"]         = "Bir sonraki ayı görüntüle";
-$vocab["gotothismonth"]      = "Bu ayı görüntüle";
+$vocab["monthbefore"]        = "Bir Ã¶nceki ayÄ± gÃ¶rÃ¼ntÃ¼le";
+$vocab["monthafter"]         = "Bir sonraki ayÄ± gÃ¶rÃ¼ntÃ¼le";
+$vocab["gotothismonth"]      = "Bu ayÄ± gÃ¶rÃ¼ntÃ¼le";
 
 // Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Bu bölge için Toplantı Salonu tanımlı değil.";
+$vocab["no_rooms_for_area"]  = "Bu bÃ¶lge iÃ§in ToplantÄ± Salonu tanÄ±mlÄ± deÄŸil.";
 
 // Used in admin.php
-$vocab["edit"]               = "Düzenle";
+$vocab["edit"]               = "DÃ¼zenle";
 $vocab["delete"]             = "Sil";
 $vocab["rooms"]              = "Salonlar";
 $vocab["in"]                 = "da";
-$vocab["noareas"]            = "Bölge yok";
-$vocab["addarea"]            = "Bölge ekle";
+$vocab["noareas"]            = "BÃ¶lge yok";
+$vocab["addarea"]            = "BÃ¶lge ekle";
 $vocab["name"]               = "Ad";
-$vocab["noarea"]             = "Seçili bölge yok";
-$vocab["browserlang"]        = "Tarayıcınız kullanım için kurulu değil.";
-$vocab["addroom"]            = "Toplantı Salonu Ekle";
+$vocab["noarea"]             = "SeÃ§ili bÃ¶lge yok";
+$vocab["browserlang"]        = "TarayÄ±cÄ±nÄ±z kullanÄ±m iÃ§in kurulu deÄŸil.";
+$vocab["addroom"]            = "ToplantÄ± Salonu Ekle";
 $vocab["capacity"]           = "Kapasite";
-$vocab["norooms"]            = "Toplantı Salonu Yok.";
-$vocab["administration"]     = "Yönetici";
+$vocab["norooms"]            = "ToplantÄ± Salonu Yok.";
+$vocab["administration"]     = "YÃ¶netici";
 
 // Used in edit_area_room.php
-$vocab["editarea"]           = "Bölge düzenle";
-$vocab["change"]             = "Değiştir";
-$vocab["backadmin"]          = "Yönetim'e git";
-$vocab["editroomarea"]       = "Bölge düzenle veya Toplantı Salonu tanımı.";
-$vocab["editroom"]           = "Toplantı Salonu Düzenle";
-$vocab["update_room_failed"] = "Toplantı Salonu güncelleme hatası: ";
-$vocab["error_room"]         = "Hata: Toplantı Salonu ";
-$vocab["not_found"]          = " bulunamadı";
-$vocab["update_area_failed"] = "Bölge güncelleme hatası: ";
-$vocab["error_area"]         = "Hata: Bölge ";
-$vocab["room_admin_email"]   = "Toplantı Salonu yönetici epostası";
-$vocab["area_admin_email"]   = "Bölge yönetici epostası";
-$vocab["invalid_email"]      = "Geçersiz eposta!";
+$vocab["editarea"]           = "BÃ¶lge dÃ¼zenle";
+$vocab["change"]             = "DeÄŸiÅŸtir";
+$vocab["backadmin"]          = "YÃ¶netim'e git";
+$vocab["editroomarea"]       = "BÃ¶lge dÃ¼zenle veya ToplantÄ± Salonu tanÄ±mÄ±.";
+$vocab["editroom"]           = "ToplantÄ± Salonu DÃ¼zenle";
+$vocab["update_room_failed"] = "ToplantÄ± Salonu gÃ¼ncelleme hatasÄ±: ";
+$vocab["error_room"]         = "Hata: ToplantÄ± Salonu ";
+$vocab["not_found"]          = " bulunamadÄ±";
+$vocab["update_area_failed"] = "BÃ¶lge gÃ¼ncelleme hatasÄ±: ";
+$vocab["error_area"]         = "Hata: BÃ¶lge ";
+$vocab["room_admin_email"]   = "ToplantÄ± Salonu yÃ¶netici epostasÄ±";
+$vocab["area_admin_email"]   = "BÃ¶lge yÃ¶netici epostasÄ±";
+$vocab["invalid_email"]      = "GeÃ§ersiz eposta!";
 
 // Used in del.php
 $vocab["deletefollowing"]    = "Bu hareket rezervasyonu silecek";
 $vocab["sure"]               = "Emin misiniz?";
 $vocab["YES"]                = "Evet";
-$vocab["NO"]                 = "Hayır";
-$vocab["delarea"]            = "Silmeden önce bu bölgedeki tüm Toplantı Salonlarını silmelisiniz.<p>";
+$vocab["NO"]                 = "HayÄ±r";
+$vocab["delarea"]            = "Silmeden Ã¶nce bu bÃ¶lgedeki tÃ¼m ToplantÄ± SalonlarÄ±nÄ± silmelisiniz.<p>";
 
 // Used in help.php
-$vocab["about_mrbs"]         = "MRBS hakkında";
-$vocab["database"]           = "VeriTabanı";
+$vocab["about_mrbs"]         = "MRBS hakkÄ±nda";
+$vocab["database"]           = "VeriTabanÄ±";
 $vocab["system"]             = "Sistem";
-$vocab["servertime"]         = "Sunucu zamanı";
-$vocab["please_contact"]     = "Lütfen bağlantıya geçiniz ";
-$vocab["for_any_questions"]  = "henüz cevaplanmamış her bir soru için.";
+$vocab["servertime"]         = "Sunucu zamanÄ±";
+$vocab["please_contact"]     = "LÃ¼tfen baÄŸlantÄ±ya geÃ§iniz ";
+$vocab["for_any_questions"]  = "henÃ¼z cevaplanmamÄ±ÅŸ her bir soru iÃ§in.";
 
 // Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Ciddi Hata: VeriTabanına bağlanılamadı.";
+$vocab["failed_connect_db"]  = "Ciddi Hata: VeriTabanÄ±na baÄŸlanÄ±lamadÄ±.";
 
 ?>

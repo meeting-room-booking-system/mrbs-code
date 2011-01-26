@@ -59,7 +59,7 @@ $pwd_invalid = get_form_var('pwd_invalid', 'string');
 // an add-in library).
 function validate_password($password)
 {
-  global $pwd_policy, $unicode_encoding;
+  global $pwd_policy;
           
   if (isset($pwd_policy))
   {
@@ -84,11 +84,9 @@ function validate_password($password)
           }
           break;
         default:
-          if ($unicode_encoding)
-          {
-            // turn on Unicode matching
-            $pattern[$rule] .= 'u';
-          }
+          // turn on Unicode matching
+          $pattern[$rule] .= 'u';
+
           $n = preg_match_all($pattern[$rule], $password, $matches);
           if (($n === FALSE) || ($n < $pwd_policy[$rule]))
           {

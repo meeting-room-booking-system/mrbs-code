@@ -35,9 +35,9 @@ if ($mail_settings['icalendar'])
 
 function convertToMailCharset($string)
 {
-  global $unicode_encoding, $mail_charset;
+  global $mail_charset;
   //
-  if ($unicode_encoding && isset($mail_charset) &&
+  if (isset($mail_charset) &&
       (strcasecmp($mail_charset, "utf-8") != 0))
   {
     return iconv("utf-8", $mail_charset, $string);
@@ -51,7 +51,7 @@ function convertToMailCharset($string)
 
 function get_mail_charset()
 {
-  global $unicode_encoding, $mail_charset, $mail_vocab;
+  global $mail_charset, $mail_vocab;
 
   if (isset($mail_charset))
   {
@@ -60,10 +60,6 @@ function get_mail_charset()
   else
   {
     $charset = "utf-8";
-    if (!$unicode_encoding)
-    {
-      $charset = $mail_vocab["charset"];
-    }
   }
   return $charset;
 }

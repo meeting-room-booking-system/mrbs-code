@@ -1,4 +1,4 @@
-<?php // -*-mode: PHP; coding:iso-8859-1;-*-
+<?php // -*-mode: PHP; coding:utf-8;-*-
 
 // $Id$
 
@@ -10,9 +10,6 @@
 //
 //
 // This file is PHP code. Treat it as such.
-
-// The charset to use in "Content-type" header
-$vocab["charset"]            = "iso-8859-1";
 
 // Used in style.inc
 $vocab["mrbs"]               = "Vergaderruimte Boekingssysteem";
@@ -46,9 +43,9 @@ $vocab["ppreview"]           = "Afdruk Voorbeeld";
 // Used in edit_entry.php
 $vocab["addentry"]           = "Boeking Toevoegen";
 $vocab["editentry"]          = "Boeking Wijzigen";
-$vocab["copyentry"]          = "Kopiëer Boeking";
+$vocab["copyentry"]          = "KopiÃ«er Boeking";
 $vocab["editseries"]         = "Wijzig Reeks";
-$vocab["copyseries"]         = "Kopiëer Serie";
+$vocab["copyseries"]         = "KopiÃ«er Serie";
 $vocab["namebooker"]         = "Korte Omschrijving";
 $vocab["fulldescription"]    = "Volledige Omschrijving:<br>&nbsp;&nbsp;(Aantal mensen,<br>&nbsp;&nbsp;Intern/Extern etc)";
 $vocab["date"]               = "Datum";
@@ -102,7 +99,7 @@ $vocab["valid_room"]         = "kamer.";
 $vocab["brief_description"]  = "Korte Omschrijving.";
 $vocab["useful_n-weekly_value"] = "bruikbaar n-wekelijks aantal.";
 $vocab["status"]             = "Status";
-$vocab["private"]            = "Privé";
+$vocab["private"]            = "PrivÃ©";
 $vocab["unavailable"]        = "Niet beschikbaar";
 $vocab["is_mandatory_field"] = "is een verplicht veld, geef aub een waarde in";
 $vocab["missing_mandatory_field"] = "Geen waarde gegeven voor een verplicht veld";
@@ -293,7 +290,7 @@ $vocab["monthafter"]         = "Ga naar volgende maand";
 $vocab["gotothismonth"]      = "Ga naar deze maand";
 
 // Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Nog geen kamers gedefiniëerd voor dit gebouw";
+$vocab["no_rooms_for_area"]  = "Nog geen kamers gedefiniÃ«erd voor dit gebouw";
 
 // Used in admin.php
 $vocab["edit"]               = "Wijzig";
@@ -346,16 +343,16 @@ $vocab["approval_settings"]       = "Goedkeuring instellingen";
 $vocab["enable_approval"]         = "Vereist goedkeuring voor boekingen";
 $vocab["enable_reminders"]        = "Sta gebruikers toe de administror te herinneren";
 $vocab["private_settings"]        = "Privacy instellingen";
-$vocab["allow_private"]           = "Sta privé boekingen toe";
-$vocab["force_private"]           = "Forceer privé boekingen";
+$vocab["allow_private"]           = "Sta privÃ© boekingen toe";
+$vocab["force_private"]           = "Forceer privÃ© boekingen";
 $vocab["default_settings"]        = "Standaard/geforceerde instellingen";
-$vocab["default_private"]         = "Privé";
+$vocab["default_private"]         = "PrivÃ©";
 $vocab["default_public"]          = "Openbaar";
 $vocab["private_display"]         = "Privacy instellingen (presentatie)";
-$vocab["private_display_label"]   = "Hoe moeten privé boekingen worden getoond?";
+$vocab["private_display_label"]   = "Hoe moeten privÃ© boekingen worden getoond?";
 $vocab["private_display_caution"] = "WAARSCHUWING: Denk goed na over de gevolgen voor de privacy voor de instellingen aan te passen!";
 $vocab["treat_respect"]           = "Respecteer de privacy instellingen voor de boeking";
-$vocab["treat_private"]           = "Behandel alle boekings als privé, negeer de privacy instellingen";
+$vocab["treat_private"]           = "Behandel alle boekings als privÃ©, negeer de privacy instellingen";
 $vocab["treat_public"]            = "Behandel alle boekings als openbaar, negeer de privacy instellingen";
 $vocab["sort_key"]                = "Sorteervolgorde";
 $vocab["sort_key_note"]           = "Deze volgorde word gebruikt bij het sorteren van kamers";

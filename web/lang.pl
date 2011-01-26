@@ -10,9 +10,6 @@
 //
 // Ten plik to kod PHP i proszę traktować go jako taki.
 
-// Kodowanie do użycia w nagłówku "Content-type"
-$vocab["charset"]            = "utf-8";
-
 // Uzyte w style.inc
 $vocab["mrbs"]               = "Meeting Room Booking System";
 
