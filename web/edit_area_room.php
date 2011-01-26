@@ -775,8 +775,8 @@ if (isset($change_area) &&!empty($area))
            var hour = time/60;
            if (!twentyfourhour_format)
            {
-             var ap = "AM";
-             if (hour > 11) {ap = "PM";}
+             var ap = "<?php echo utf8_strftime($strftime_format['ampm'], mktime(10, 0, 0)) ?>";
+             if (hour > 11) {ap = "<?php echo utf8_strftime($strftime_format['ampm'], mktime(14, 0, 0)) ?>";}
              if (hour > 12) {hour = hour - 12;}
              if (hour == 0) {hour = 12;}
            }
@@ -895,9 +895,13 @@ if (isset($change_area) &&!empty($area))
         {
           echo "<div class=\"group ampm\">\n";
           $checked = ($morningstarts < 12) ? "checked=\"checked\"" : "";
-          echo "      <label><input name=\"area_morning_ampm\" type=\"radio\" value=\"am\" onClick=\"changeSelect(this.form)\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
+          echo "<label><input name=\"area_morning_ampm\" type=\"radio\" value=\"am\" onClick=\"changeSelect(this.form)\" $checked>" .
+               utf8_strftime($strftime_format['ampm'], mktime(1,0,0,1,1,2000)) .
+               "</label>\n";
           $checked = ($morningstarts >= 12) ? "checked=\"checked\"" : "";
-          echo "      <label><input name=\"area_morning_ampm\" type=\"radio\" value=\"pm\" onClick=\"changeSelect(this.form)\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
+          echo "<label><input name=\"area_morning_ampm\" type=\"radio\" value=\"pm\" onClick=\"changeSelect(this.form)\" $checked>" .
+               utf8_strftime($strftime_format['ampm'], mktime(13,0,0,1,1,2000)) .
+               "</label>\n";
           echo "</div>\n";
         }
         ?>
@@ -947,9 +951,13 @@ if (isset($change_area) &&!empty($area))
         {
           echo "<div class=\"group ampm\">\n";
           $checked = ($eveningends < 12) ? "checked=\"checked\"" : "";
-          echo "      <label><input name=\"area_evening_ampm\" type=\"radio\" value=\"am\" onClick=\"changeSelect(this.form)\" $checked>" . utf8_strftime("%p",mktime(1,0,0,1,1,2000)) . "</label>\n";
+          echo "<label><input name=\"area_evening_ampm\" type=\"radio\" value=\"am\" onClick=\"changeSelect(this.form)\" $checked>" . 
+               utf8_strftime($strftime_format['ampm'], mktime(1,0,0,1,1,2000)) . 
+               "</label>\n";
           $checked = ($eveningends >= 12) ? "checked=\"checked\"" : "";
-          echo "      <label><input name=\"area_evening_ampm\" type=\"radio\" value=\"pm\" onClick=\"changeSelect(this.form)\" $checked>". utf8_strftime("%p",mktime(13,0,0,1,1,2000)) . "</label>\n";
+          echo "<label><input name=\"area_evening_ampm\" type=\"radio\" value=\"pm\" onClick=\"changeSelect(this.form)\" $checked>" .
+               utf8_strftime($strftime_format['ampm'], mktime(13,0,0,1,1,2000)) .
+               "</label>\n";
           echo "</div>\n";
         }
       echo "</div>\n";  

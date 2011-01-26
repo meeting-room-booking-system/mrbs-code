@@ -120,7 +120,7 @@ if ($room_invalid)
 
 // Show Month, Year, Area, Room header:
 echo "<div id=\"dwm\">\n";
-echo "<h2>" . utf8_strftime("%B %Y", $month_start)
+echo "<h2>" . utf8_strftime($strftime_format['monthyear'], $month_start)
   . " - " . htmlspecialchars("$this_area_name - $this_room_name") . "</h2>\n";
 echo "</div>\n";
 

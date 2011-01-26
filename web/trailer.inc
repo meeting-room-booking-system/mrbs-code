@@ -60,7 +60,7 @@ else
   {
     $ctime = mktime(0, 0, 0, $month, $day + $i, $year);
   
-    $str = utf8_strftime(empty($dateformat)? "%b %d" : "%d %b", $ctime);
+    $str = utf8_strftime($strftime_format['daymonth'], $ctime);
     $class = "";
   
     $cyear  = date("Y", $ctime);
@@ -142,7 +142,7 @@ else
     }
     else
     {
-      $str = utf8_strftime(empty($dateformat)? "%b %d" : "%d %b", $ctime);
+      $str = utf8_strftime($strftime_format['daymonth'], $ctime);
     }
     if ($i == 0)
     {
@@ -169,7 +169,7 @@ else
   for ($i = -2; $i <= 6; $i++)
   {
     $ctime = mktime(0, 0, 0, $month + $i, 1, $year);
-    $str = utf8_strftime("%b %Y", $ctime);
+    $str = utf8_strftime($strftime_format['monyear'], $ctime);
      
     $cmonth = date("m", $ctime);
     $cyear  = date("Y", $ctime);

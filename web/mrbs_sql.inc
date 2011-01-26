@@ -18,8 +18,8 @@
 function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 {
   global $tbl_entry;
-  global $enable_periods;
-  global $periods;
+  global $enable_periods, $periods, $twentyfourhour_format;
+  global $strftime_format;
 
   $user = getUserName();
   // Select any meetings which overlap ($starttime,$endtime) for this room:
@@ -63,12 +63,12 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
     if ($enable_periods)
     {
       $p_num =$starts['minutes'];
-      $startstr = utf8_strftime('%A %d %B %Y, ',
+      $startstr = utf8_strftime($strftime_format['date'] . ", ",
                                 $row['start_time']) . $periods[$p_num];
     }
     else
     {
-      $startstr = utf8_strftime('%A %d %B %Y %H:%M:%S',
+      $startstr = utf8_strftime(($twentyfourhour_format) ? $strftime_format['datetime24'] : $strftime_format['datetime12'],
                                 $row['start_time']);
     }
 

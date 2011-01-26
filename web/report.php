@@ -30,42 +30,14 @@ define('APPROVED_YES',  1);
 define('APPROVED_BOTH', 2);  // Can be anything other than 0 or 1
 
 
-function date_time_string($t)
-{
-  global $twentyfourhour_format;
-  if ($twentyfourhour_format)
-  {
-    $timeformat = "%H:%M:%S";
-  }
-  else
-  {
-    $timeformat = "%I:%M:%S%p";
-  }
-  return utf8_strftime("%A %d %B %Y ".$timeformat, $t);
-}
-
-function hours_minutes_seconds_format()
-{
-  global $twentyfourhour_format;
-
-  if ($twentyfourhour_format)
-  {
-    $timeformat = "%H:%M:%S";
-  }
-  else
-  {
-    $timeformat = "%I:%M:%S%p";
-  }
-  return $timeformat;
-}
-
 // Convert a start time and end time to a plain language description.
 // This is similar but different from the way it is done in view_entry.
 function describe_span($starts, $ends)
 {
-  global $twentyfourhour_format;
-  $start_date = utf8_strftime('%A %d %B %Y', $starts);
-  $start_time = utf8_strftime(hours_minutes_seconds_format(), $starts);
+  global $twentyfourhour_format, $strftime_format;
+  
+  $start_date = utf8_strftime($strftime_format['date'], $starts);
+  $start_time = utf8_strftime(hour_min_format(), $starts);
   $duration = $ends - $starts;
   if ($start_time == "00:00:00" && $duration == 60*60*24)
   {
@@ -90,12 +62,13 @@ function describe_period_span($starts, $ends)
 // date/time of an entry
 function start_to_end($starts, $ends)
 {
-  global $twentyfourhour_format;
-  $start_date = utf8_strftime('%A %d %B %Y', $starts);
-  $start_time = utf8_strftime(hours_minutes_seconds_format(), $starts);
+  global $twentyfourhour_format, $strftime_format;
+  
+  $start_date = utf8_strftime($strftime_format['date'], $starts);
+  $start_time = utf8_strftime(hour_min_format(), $starts);
 
-  $end_date = utf8_strftime('%A %d %B %Y', $ends);
-  $end_time = utf8_strftime(hours_minutes_seconds_format(), $ends);
+  $end_date = utf8_strftime($strftime_format['date'], $ends);
+  $end_time = utf8_strftime(hour_min_format(), $ends);
   return $start_date . " " . $start_time . " - " . $end_date . " " . $end_time;
 }
 
@@ -215,13 +188,14 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   global $csv_row_sep;
   global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
+  global $strftime_format;
   
   // Initialise the line for CSV reports
   $line = "";
   
   // Display Area/Room, but only when it changes:
   $area_room = $row['area_name'] . " - " . $row['room_name'];
-  $date = utf8_strftime("%d-%b-%Y", $row['start_time']);
+  $date = utf8_strftime($strftime_format['date'], $row['start_time']);
   
   // entries to be sorted on area/room
   echo $output_as_csv ? '' : "<div class=\"div_report\">\n";
@@ -437,13 +411,13 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   // Last updated:
   if ($output_as_csv)
   {
-    $line = csv_row_add_value($line, date_time_string($row['last_updated']));
+    $line = csv_row_add_value($line, time_date_string($row['last_updated']));
   }
   else
   {
     echo "<tr>\n";
     echo "<td>" . get_vocab("lastupdate") . ":</td>\n";
-    echo "<td>" . date_time_string($row['last_updated']) . "</td>\n";
+    echo "<td>" . time_date_string($row['last_updated']) . "</td>\n";
     echo "</tr>\n";
   }
 

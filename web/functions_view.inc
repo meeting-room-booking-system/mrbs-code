@@ -38,6 +38,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
 {
   global $enable_periods, $confirmation_enabled, $approval_enabled;
   global $is_private_field, $standard_fields, $typel;
+  global $strftime_format;
   
   // Get the duration if we haven't got it already
   if (!isset($data['duration']))
@@ -194,7 +195,10 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
       $tbody .= create_details_row(get_vocab("rep_rep_day"), get_rep_day_list($data['rep_opt']), $as_html);
     }
     // Repeat end date
-    $tbody .= create_details_row(get_vocab("rep_end_date"), utf8_strftime('%A %d %B %Y',$data['end_date']), $as_html);
+    $tbody .= create_details_row(get_vocab("rep_end_date"),
+                                 utf8_strftime($strftime_format['date'],
+                                 $data['end_date']),
+                                 $as_html);
   }
   $tbody .= ($as_html) ? "</tbody>\n" : "";
   

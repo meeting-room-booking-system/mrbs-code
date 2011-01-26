@@ -298,6 +298,26 @@ $dateformat = 0;
 // in 24 hour format
 $twentyfourhour_format = 1;
 
+// Formats used for dates and times.   For formatting options
+// see http://php.net/manual/function.strftime.php
+$strftime_format['date']         = "%A %d %B %Y";  // Used in Day view
+$strftime_format['dayname']      = "%A";           // Used in Month view and edit_entry form
+$strftime_format['dayname_cal']  = "%a";           // Used in mini calendars
+$strftime_format['month_cal']    = "%B";           // Used in mini calendars
+$strftime_format['mon']          = "%b";           // Used in date selectors
+$strftime_format['ampm']         = "%p";
+$strftime_format['time12']       = "%I:%M%p";      // 12 hour clock
+$strftime_format['time24']       = "%H:%M";        // 24 hour clock
+$strftime_format['datetime']     = "%c";           // Used in Help
+$strftime_format['datetime12']   = "%I:%M:%S%p - %A %d %B %Y";  // 12 hour clock
+$strftime_format['datetime24']   = "%H:%M:%S - %A %d %B %Y";    // 24 hour clock
+// If you prefer dates as "10 Jul" instead of "Jul 10" ($dateformat = TRUE in
+// MRBS 1.4.5 and earlier) then use
+// $strftime_format['daymonth']     = "%d %b";
+$strftime_format['daymonth']     = "%b %d";        // Used in trailer
+$strftime_format['monyear']      = "%b %Y";        // Used in trailer
+$strftime_format['monthyear']    = "%B %Y";        // Used in Month view
+
 // Whether or not to display the timezone
 $display_timezone = FALSE;
 

@@ -207,7 +207,7 @@ else
 {
   // Show current date and timezone
   echo "<div id=\"dwm\">\n";
-  echo "<h2>" . utf8_strftime("%A %d %B %Y", $am7) . "</h2>\n";
+  echo "<h2>" . utf8_strftime($strftime_format['date'], $am7) . "</h2>\n";
   if ($display_timezone)
   {
     echo "<div class=\"timezone\">";

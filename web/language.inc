@@ -720,10 +720,10 @@ function utf8_strftime($format, $time)
   // %p doesn't actually work in some locales, we have to patch it up ourselves
   if (preg_match('/%p/', $format))
   {
-    $ampm = strftime('%p', $time);
+    $ampm = strftime('%p', $time);  // Don't relace the %p with the $strftime_format variable!!
     if ($ampm == '')
     {
-      $ampm = date('a',$time);
+      $ampm = date('a', $time);
     }
 
     $format = preg_replace('/%p/', $ampm, $format);

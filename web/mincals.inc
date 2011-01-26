@@ -91,13 +91,13 @@ class Calendar
 
     function getFirstDays()
     {
-      global $weekstarts;
+      global $weekstarts, $strftime_format;
 
       $basetime = mktime(12,0,0,6,11+$weekstarts,2000);
       for ($i = 0, $s = ""; $i < 7; $i++)
       {
         $show = $basetime + ($i * 24 * 60 * 60);
-        $fl = utf8_strftime('%a',$show);
+        $fl = utf8_strftime($strftime_format['dayname_cal'], $show);
         // add a class if it's a hidden day so that we can apply special styling
         if (is_hidden_day(($i + $weekstarts) % 7))
         {
@@ -115,10 +115,9 @@ class Calendar
     {
       global $weekstarts;
       global $PHP_SELF;
-      global $day;
-      global $month;
-      global $year;
+      global $day, $month, $year;
       global $mincals_week_numbers;
+      global $strftime_format;
 
       if (!isset($weekstarts)) $weekstarts = 0;
       $s = "";
@@ -156,7 +155,7 @@ class Calendar
       $date = mktime(12, 0, 0, $this->month, 1, $this->year);
       
       $first = (strftime("%w",$date) + 7 - $weekstarts) % 7;  // day number of the first day of the month
-      $monthName = utf8_strftime("%B",$date);
+      $monthName = utf8_strftime($strftime_format['month_cal'], $date);
       
       //$prevMonth = $this->getCalendarLink($this->month - 1 >   0 ? $this->month - 1 : 12, $this->month - 1 >   0 ? $this->year : $this->year - 1);
       //$nextMonth = $this->getCalendarLink($this->month + 1 <= 12 ? $this->month + 1 :  1, $this->month + 1 <= 12 ? $this->year : $this->year + 1);

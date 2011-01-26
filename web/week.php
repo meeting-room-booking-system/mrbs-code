@@ -241,15 +241,7 @@ echo "<table class=\"dwm_main\" id=\"week_main\">";
 echo "<thead>\n";
 $header = "<tr>\n";
 
-if (empty($dateformat))
-{
-  $dformat = "%a<br>%b %d";
-}
-else
-{
-  $dformat = "%a<br>%d %b";
-}
-
+$dformat = "%a<br>" . $strftime_format['daymonth'];
 // If we've got a table with times along the top then put everything on the same line
 // (ie replace the <br> with a space).   It looks slightly better
 if ($times_along_top)
@@ -308,7 +300,7 @@ else
     {
       // These days are to be hidden in the display (as they are hidden, just give the
       // day of the week in the header row 
-      $header .= "<th class=\"hidden_day\">" . utf8_strftime('%a', $t) . "</th>\n";
+      $header .= "<th class=\"hidden_day\">" . utf8_strftime($strftime_format['dayname_cal'], $t) . "</th>\n";
     }
   
     else  

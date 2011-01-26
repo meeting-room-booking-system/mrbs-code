@@ -413,6 +413,8 @@ function generate_textarea($label_text, $name, $value, $disabled=FALSE)
 // and partly because it's easier to do this for the non-JavaScript version.
 function genDateSelector($prefix, $day, $month, $year, $form_id='')
 {
+  global $strftime_format;
+  
   // Make sure we've got a date
   if (empty($day) or empty($month) or empty($year))
   {
@@ -452,7 +454,7 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='')
   echo "<select name=\"${prefix}month\">\n";
   for ($i = 1; $i <= 12; $i++)
   {
-    $m = utf8_strftime("%b", mktime(0, 0, 0, $i, 1, $year));  
+    $m = utf8_strftime($strftime_format['mon'], mktime(0, 0, 0, $i, 1, $year));  
     echo "<option value=\"$i\"" . ($i == $month ? " selected=\"selected\"" : "") . ">$m</option>\n";
   }
   echo "</select>\n";
@@ -716,7 +718,10 @@ function some_area($field, $enabled=FALSE)
 // Get the local day name based on language. Note 2000-01-02 is a Sunday.
 function day_name($daynumber)
 {
-  return utf8_strftime("%A", mktime(0,0,0,1,2+$daynumber,2000));
+  global $strftime_format;
+  
+  return utf8_strftime($strftime_format['dayname'],
+                       mktime(0,0,0,1,2+$daynumber,2000));
 }
 
 // Returns a list of repeat days as a string (eg "Thursday Friday")
@@ -742,20 +747,21 @@ function get_rep_day_list($rep_opt)
 
 function hour_min_format()
 {
-  global $twentyfourhour_format;
+  global $twentyfourhour_format, $strftime_format;
+  
   if ($twentyfourhour_format)
   {
-    return "%H:%M";
+    return $strftime_format['time24'];
   }
   else
   {
-    return "%I:%M%p";
+    return $strftime_format['time12'];
   }
 }
 
 function period_date_string($t, $mod_time=0)
 {
-  global $periods;
+  global $periods, $strftime_format;
 
   $time = getdate($t);
   $p_num = $time["minutes"] + $mod_time;
@@ -767,9 +773,9 @@ function period_date_string($t, $mod_time=0)
   {
     $p_num = count($periods ) - 1;
   }
-  // I have made the separater a ',' as a '-' leads to an ambiguious
+  // I have made the separator a ',' as a '-' leads to an ambiguious
   // display in report.php when showing end times.
-  return array($p_num, $periods[$p_num] . utf8_strftime(", %A %d %B %Y",$t));
+  return array($p_num, $periods[$p_num] . utf8_strftime(", " . $strftime_format['day'], $t));
 }
 
 function period_time_string($t, $mod_time=0)
@@ -791,15 +797,15 @@ function period_time_string($t, $mod_time=0)
 
 function time_date_string($t)
 {
-  global $twentyfourhour_format;
+  global $twentyfourhour_format, $strftime_format;
 
   if ($twentyfourhour_format)
   {
-    return utf8_strftime("%H:%M:%S - %A %d %B %Y",$t);
+    return utf8_strftime($strftime_format['datetime24'], $t);
   }
   else
   {
-    return utf8_strftime("%I:%M:%S%p - %A %d %B %Y",$t);
+    return utf8_strftime($strftime_format['datetime12'], $t);
   }
 }
 

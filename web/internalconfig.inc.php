@@ -34,6 +34,10 @@ if (isset($mail_settings['admin_on_delete']))
 {
   $mail_settings['on_delete'] = ($mail_settings['admin_on_delete']) ? TRUE : FALSE;
 }
+if (!empty($dateformat))
+{
+  $strftime_format['daymonth']     = "%d %b";
+}
 
 
 /********************************************************

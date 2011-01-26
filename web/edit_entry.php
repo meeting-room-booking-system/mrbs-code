@@ -57,7 +57,7 @@ require_once "mrbs_sql.inc";
 // The $display parameter sets the display style of the <select>
 function genslotselector($area, $prefix, $first, $last, $time, $display="block")
 {
-  global $twentyfourhour_format, $periods;
+  global $periods;
   
   $html = '';
   // Get the settings for this area.   Note that the variables below are
@@ -82,7 +82,7 @@ function genslotselector($area, $prefix, $first, $last, $time, $display="block")
   }
   else
   {
-    $format = ($twentyfourhour_format) ? "%H:%M" : "%l:%M %P";
+    $format = hour_min_format();
   }
   $html .= "<select style=\"display: $display\" id = \"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\"$disabled>\n";
   for ($t = $first; $t <= $last; $t = $t + $resolution)

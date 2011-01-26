@@ -102,7 +102,7 @@ function get_mail_field_name($table, $name)
  */
 function getMailPeriodDateString($t, $mod_time=0)
 {
-  global $periods;
+  global $periods, $strftime_format;
   //
   $time = getdate($t);
   $p_num = $time['minutes'] + $mod_time;
@@ -116,7 +116,7 @@ function getMailPeriodDateString($t, $mod_time=0)
   $mailperiod = $periods[$p_num];
   $mailperiod = mrbs_entity_decode($mailperiod, ENT_COMPAT, get_mail_charset());
   $mailperiod = strip_tags($mailperiod);
-  return array($p_num, $mailperiod . strftime(", %A %d %B %Y",$t));
+  return array($p_num, $mailperiod . strftime(", " . $strftime_format['date'], $t));
 }
 
 // }}}
@@ -131,22 +131,22 @@ function getMailPeriodDateString($t, $mod_time=0)
  */
 function getMailTimeDateString($t, $inc_time=TRUE)
 {
-  global $twentyfourhour_format;
+  global $twentyfourhour_format, $strftime_format;
 
   if ($inc_time)
   {
     if ($twentyfourhour_format)
     {
-      return mail_strftime("%H:%M:%S - %A %d %B %Y",$t);
+      return mail_strftime($strftime_format['datetime24'], $t);
     }
     else
     {
-      return mail_strftime("%I:%M:%S%p - %A %d %B %Y",$t);
+      return mail_strftime($strftime_format['datetime12'], $t);
     }
   }
   else
   {
-    return mail_strftime("%A %d %B %Y",$t);
+    return mail_strftime($strftime_format['date'], $t);
   }
 }
 
