@@ -61,6 +61,7 @@ future:
 $mail_settings['admin_all']        replaced by  $mail_settings['on_new'] and
                                                 $mail_settings['on_change']
 $mail_settings['admin_on_delete']  replaced by  $mail_settings['on_delete']
+$dateformat                        replaced by  $strftime_format['daymonth']
 
 
 Upgrading from prior MRBS 1.4.5
