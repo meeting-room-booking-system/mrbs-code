@@ -180,18 +180,19 @@ At the moment only text, varchar, int, smallint and tinyint columns are
 supported, displayed as textarea, text or checkbox fields as appropriate.
 Whether a varchar is displayed as a text or textarea input depends on its
 maximum length, with the breakpoint determined by a configuration variable.
-Smallints and tinyints are assumed to be booleans and are displayed as checkboxes.
+Ints are treated as integer types, as you would expect.   However smallints
+and tinyints are assumed to be booleans and are displayed as checkboxes.
+
+[Note:  smallints are assumed to be booleans because the boolean type in 
+PostgreSQL presents some problems in PHP when trying to process the results
+of a query in a database independent way, so it is more convenient to use a 
+smallint instead of a boolean in PostgreSQL.]
 
 Text descriptions are looked for in the lang files with the tag room.column_name,
 eg room.coffee_machine, or users.phone enabling translations to be provided.   
 If not present, the column name will be used for labels etc.  If you are adding
 columns to the entry and repeat tables then you only need to add the 
 entry.column_name tags:  you don't need to add a repeat.column_name tag.
-
-[Note:  smallints are assumed to be booleans because the boolean type in 
-PostgreSQL presents some problems in PHP when trying to process the results
-of a query in a database independent way, so it is more convenient to use a 
-smallint instead of a boolean in PostgreSQL.]
 
 As an example, to add a field to the room table recording whether or not
 there is a coffee machine you would, in MySQL, add the column 
