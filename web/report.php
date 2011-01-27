@@ -183,7 +183,6 @@ function csv_report_header($display)
 function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
 {
   global $typel;
-  global $enable_periods;
   global $output_as_csv;
   global $csv_row_sep;
   global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
@@ -259,14 +258,14 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   if( $display == "d" )
   {
     // Start date/time and duration:
-    $when = (empty($enable_periods) ? 
+    $when = (empty($row['enable_periods']) ? 
              describe_span($row['start_time'], $row['end_time']) : 
              describe_period_span($row['start_time'], $row['end_time']));
   }
   else
   {
     // Start date/time and End date/time:
-    $when = (empty($enable_periods) ? 
+    $when = (empty($row['enable_periods']) ? 
              start_to_end($row['start_time'], $row['end_time']) :
              start_to_end_period($row['start_time'], $row['end_time']));
   }
@@ -704,7 +703,7 @@ if (isset($areamatch))
   $sql = "SELECT E.*, "
        .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
        . "A.area_name, R.room_name, "
-       . "A.approval_enabled, A.confirmation_enabled";
+       . "A.approval_enabled, A.confirmation_enabled, A.enable_periods";
   if ($output_as_ical)
   {
     // If we're producing an iCalendar then we'll also need the repeat
