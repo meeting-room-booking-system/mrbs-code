@@ -474,7 +474,7 @@ function accumulate_periods(&$row, &$count, &$hours, $report_start,
   $room .= escape($row['room_name']);
   // Accumulate the number of bookings for this room and name:
   @$count[$room][$name]++;
-  // Accumulate hours used, clipped to report range dates:
+  // Accumulate periods used, clipped to report range dates:
   $dur = (min((int)$row['end_time'], $report_end) - max((int)$row['start_time'], $report_start))/60;
   @$hours[$room][$name] += ($dur % $max_periods) + floor( $dur/(24*60) ) * $max_periods;
   $room_hash[$room] = 1;
@@ -504,23 +504,9 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
   global $output_as_csv;
   global $csv_row_sep, $csv_col_sep;
         
-  // Make a sorted array of area/rooms, and of names, to use for column
-  // and row indexes. Use the rooms and names hashes built by accumulate().
-  // At PHP4 we could use array_keys().
-  reset($room_hash);
-  while (list($room_key) = each($room_hash))
-  {
-    $rooms[] = $room_key;
-  }
-  ksort($rooms);
-  reset($name_hash);
-  while (list($name_key) = each($name_hash))
-  {
-    $names[] = $name_key;
-  }
-  ksort($names);
-  $n_rooms = sizeof($rooms);
-  $n_names = sizeof($names);
+  // Sort the room and name arrays
+  ksort($room_hash);
+  ksort($name_hash);
 
   if (!$output_as_csv)
   {
@@ -533,23 +519,23 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
   }
   echo ($output_as_csv) ? '""' . $csv_col_sep : "<th>&nbsp;</th>\n";
 
-  for ($c = 0; $c < $n_rooms; $c++)
+  foreach ($room_hash as $room => $mode)
   {
     echo ($output_as_csv) ? '"'  : "<th colspan=\"2\">";
     if ($output_as_csv)
     {
-      echo $rooms[$c] . ' - ' . get_vocab("entries");
+      echo $room . ' - ' . get_vocab("entries");
       echo '"' . $csv_col_sep . '"';
-      echo $rooms[$c] . ' - ';
+      echo $room . ' - ';
       echo ($enable_periods) ? get_vocab("periods") : get_vocab("hours");
     }
     else
     {
-      echo $rooms[$c];
+      echo $room;
     }
     echo ($output_as_csv) ? '"' . $csv_col_sep : "</th>\n";
-    $col_count_total[$c] = 0;
-    $col_hours_total[$c] = 0.0;
+    $col_count_total[$room] = 0;
+    $col_hours_total[$room] = 0.0;
   }
   echo ($output_as_csv) ? '"'  : "<th colspan=\"2\"><br>";
   if ($output_as_csv)
@@ -570,17 +556,15 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
   echo ($output_as_csv) ? ''   : "</thead>\n";
   
   echo ($output_as_csv) ? ''   : "<tbody>\n";
-  for ($r = 0; $r < $n_names; $r++)
+  foreach ($name_hash as $name => $is_present)
   {
     $row_count_total = 0;
     $row_hours_total = 0.0;
-    $name = $names[$r];
     echo ($output_as_csv) ? '"'  : "<tr><td>";
     echo $name;
     echo ($output_as_csv) ? '"' : "</td>\n";
-    for ($c = 0; $c < $n_rooms; $c++)
+    foreach ($room_hash as $room => $is_present)
     {
-      $room = $rooms[$c];
       if (isset($count[$room][$name]))
       {
         $count_val = $count[$room][$name];
@@ -588,8 +572,8 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
         cell($count_val, $hours_val);
         $row_count_total += $count_val;
         $row_hours_total += $hours_val;
-        $col_count_total[$c] += $count_val;
-        $col_hours_total[$c] += $hours_val;
+        $col_count_total[$room] += $count_val;
+        $col_hours_total[$room] += $hours_val;
       }
       else
       {
@@ -611,9 +595,9 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
   echo ($output_as_csv) ? '"'  : "<tr><td>";
   echo get_vocab("total");
   echo ($output_as_csv) ? '"' : "</td>\n";
-  for ($c = 0; $c < $n_rooms; $c++)
+  foreach ($room_hash as $room => $mode)
   {
-    cell($col_count_total[$c], $col_hours_total[$c]);
+    cell($col_count_total[$room], $col_hours_total[$room]);
   }
   cell($grand_count_total, $grand_hours_total);
   echo ($output_as_csv) ? $csv_row_sep : "</tr>\n";
@@ -1268,7 +1252,7 @@ if (isset($areamatch))
 
       if ($summarize & SUMMARY)
       {
-        (empty($enable_periods) ?
+        (empty($row['enable_periods']) ?
          accumulate($row, $count, $hours, $report_start, $report_end,
                     $room_hash, $name_hash) :
          accumulate_periods($row, $count, $hours, $report_start, $report_end,
