@@ -397,11 +397,14 @@ if (!$disable_automatic_language_changing)
   {
     $lang_file = "lang." . strtolower($lang);
 
+    // Set the locale even if MRBS hasn't got a translation, at least
+    // we'll get time formats right
+    $locale = $lang;
+
     if (file_exists($lang_file))
     {
       include $lang_file;
       $doneit = 1;
-      $locale = $lang;
       break;
     }
   }
