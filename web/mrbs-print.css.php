@@ -40,3 +40,9 @@ table.dwm_main {
 ?>
 table#colour_key {margin-top: 1em}
 
+<?php
+// Generate the classes to give the colour coding by booking type in the day/week/month views
+foreach ($color_types as $type => $col)
+{
+  echo "td.$type, .$type .celldiv {border: 2px solid $col}\n";         // used in the day and week views
+}
