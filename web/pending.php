@@ -112,8 +112,6 @@ function display_series_header($row, $table_id)
 // display an entry in a row
 function display_entry_row($row)
 {
-  global $enable_periods;
-  
   echo "<tr>\n";
   echo "<td class=\"control\">&nbsp;</td>\n";
     
@@ -130,7 +128,7 @@ function display_entry_row($row)
   $link = getdate($row['start_time']);
   echo "<td>";
   echo "<a href=\"day.php?day=$link[mday]&amp;month=$link[mon]&amp;year=$link[year]&amp;area=".$row['area_id']."\">";
-  if(empty($enable_periods))
+  if(empty($row['enable_periods']))
   {
     $link_str = time_date_string($row['start_time']);
   }
@@ -167,7 +165,7 @@ $sql_approval_enabled = some_area_predicate('approval_enabled');
 $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
                sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
                E.reminded, E.repeat_id,
-               M.room_name, M.area_id, A.area_name,
+               M.room_name, M.area_id, A.area_name, A.enable_periods,
                E.info_time AS entry_info_time, E.info_user AS entry_info_user,
                T.info_time AS repeat_info_time, T.info_user AS repeat_info_user
           FROM $tbl_room AS M, $tbl_area AS A, $tbl_entry AS E
