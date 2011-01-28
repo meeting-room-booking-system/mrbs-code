@@ -775,7 +775,7 @@ function period_date_string($t, $mod_time=0)
   }
   // I have made the separator a ',' as a '-' leads to an ambiguious
   // display in report.php when showing end times.
-  return array($p_num, $periods[$p_num] . utf8_strftime(", " . $strftime_format['day'], $t));
+  return array($p_num, $periods[$p_num] . utf8_strftime(", " . $strftime_format['date'], $t));
 }
 
 function period_time_string($t, $mod_time=0)
