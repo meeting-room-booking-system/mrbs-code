@@ -98,10 +98,18 @@ function print_header($day, $month, $year, $area, $room)
 // TRUE to exit afterwards
 function print_footer($and_exit)
 {
+  global $theme;
+  @include_once "Themes/$theme/footer.inc";
+  if (function_exists("print_theme_footer"))
+  {
+    print_theme_footer();
+  }
+  else {
 ?>
 </body>
 </html>
 <?php
+  }
   if ($and_exit)
   {
     exit(0);
