@@ -277,7 +277,7 @@ if ($is_admin || ($n_displayable_areas > 0))
             {
               // Delete link
               echo "<td><div>\n";
-              echo "<a href=\"del.php?type=room&amp;room=" . $r['id'] . "\">\n";
+              echo "<a href=\"del.php?type=room&amp;area=$area&amp;room=" . $r['id'] . "\">\n";
               echo "<img src=\"images/delete.png\" width=\"16\" height=\"16\" 
                          alt=\"" . get_vocab("delete") . "\"
                          title=\"" . get_vocab("delete") . "\">\n";

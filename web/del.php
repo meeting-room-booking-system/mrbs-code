@@ -30,7 +30,7 @@ if ($type == "room")
     sql_commit();
    
     // Go back to the admin page
-    Header("Location: admin.php");
+    Header("Location: admin.php?area=$area");
   }
   else
   {
@@ -66,7 +66,7 @@ if ($type == "room")
     echo "<div id=\"del_room_confirm\">\n";
     echo "<p>" .  get_vocab("sure") . "</p>\n";
     echo "<div id=\"del_room_confirm_links\">\n";
-    echo "<a href=\"del.php?type=room&amp;room=$room&amp;confirm=Y\"><span id=\"del_yes\">" . get_vocab("YES") . "!</span></a>\n";
+    echo "<a href=\"del.php?type=room&amp;area=$area&amp;room=$room&amp;confirm=Y\"><span id=\"del_yes\">" . get_vocab("YES") . "!</span></a>\n";
     echo "<a href=\"admin.php\"><span id=\"del_no\">" . get_vocab("NO") . "!</span></a>\n";
     echo "</div>\n";
     echo "</div>\n";
