@@ -154,10 +154,11 @@ else if($search_pos >= $total)
 }
 
 // Now we set up the "real" query using LIMIT to just get the stuff we want.
-$sql = "SELECT E.id AS entry_id, E.create_by, E.name, E.description, E.start_time, R.area_id
-        FROM $tbl_entry E, $tbl_room R, $tbl_area A
-        WHERE $sql_pred
-        ORDER BY E.start_time asc "
+$sql = "SELECT E.id AS entry_id, E.create_by, E.name, E.description, E.start_time,
+               R.area_id, A.enable_periods
+          FROM $tbl_entry E, $tbl_room R, $tbl_area A
+         WHERE $sql_pred
+      ORDER BY E.start_time asc "
   . sql_syntax_limit($search["count"], $search_pos);
 
 // this is a flag to tell us not to display a "Next" link
@@ -236,7 +237,7 @@ for ($i = 0; ($row = sql_row_keyed($result, $i)); $i++)
   // generate a link to the day.php
   $link = getdate($row['start_time']);
   echo "<td><a href=\"day.php?day=$link[mday]&amp;month=$link[mon]&amp;year=$link[year]&amp;area=".$row['area_id']."\">";
-  if(empty($enable_periods))
+  if(empty($row['enable_periods']))
   {
     $link_str = time_date_string($row['start_time']);
   }
