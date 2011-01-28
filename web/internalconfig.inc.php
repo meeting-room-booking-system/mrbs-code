@@ -251,7 +251,17 @@ $area_defaults['confirmed_default']      = $confirmed_default;
  ********************************************************/
 
 // Disable magic quoting on database returns:
-set_magic_quotes_runtime(0);
+if (get_magic_quotes_runtime())
+{
+  if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+  {
+    ini_set('magic_quotes_runtime', 0);
+  }
+  else
+  {
+    set_magic_quotes_runtime(false);
+  }
+}
 
 // Make sure notice errors are not reported, they can break mrbs code:
 $error_level = E_ALL ^ E_NOTICE;
