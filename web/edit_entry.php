@@ -348,7 +348,7 @@ else
   $edit_type     = "series";
   $name          = "";
   $create_by     = $user;
-  $description   = "";
+  $description   = $default_description;
   $type          = $default_type;
   $room_id       = $room;
   $rep_id        = 0;
