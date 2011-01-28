@@ -271,6 +271,7 @@ $vocab["entry_found"]           = "entry found";
 $vocab["entries_found"]         = "entries found";
 $vocab["summary_header"]        = "Summary of (Entries) Hours";
 $vocab["summary_header_per"]    = "Summary of (Entries) Periods";
+$vocab["summary_header_both"]   = "Summary of (Entries) Hours/Periods";
 $vocab["entries"]               = "entries";
 $vocab["total"]                 = "Total";
 $vocab["submitquery"]           = "Run Report";

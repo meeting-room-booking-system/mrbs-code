@@ -761,8 +761,11 @@ div.report_entry_when  {width: 60%;  float: right; text-align: right}
     border-color: <?php echo $report_table_border_color ?>; border-style: solid;
     border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
 #div_summary th {background-color: transparent; font-weight: bold; text-align: center}
+#div_summary thead tr:nth-child(2) th {font-weight: normal; font-style: italic}
+#div_summary th:first-child {text-align: right}
+#div_summary tfoot th {text-align: right}
 #div_summary td {text-align: right}
-#div_summary td.count {border-right-width: 0}
+#div_summary tbody td:nth-child(even), #div_summary tfoot th:nth-child(even) {border-right-width: 0}
 #div_summary td:first-child {font-weight: bold}
 p.report_entries {font-weight: bold}
 .report .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}

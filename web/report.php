@@ -29,6 +29,14 @@ define('APPROVED_NO',   0);
 define('APPROVED_YES',  1);
 define('APPROVED_BOTH', 2);  // Can be anything other than 0 or 1
 
+// Constants for mode
+define('MODE_TIMES',   1);
+define('MODE_PERIODS', 2);
+
+// Formats for sprintf
+define('FORMAT_TIMES',   "%.2f");
+define('FORMAT_PERIODS', "%d");
+
 
 // Convert a start time and end time to a plain language description.
 // This is similar but different from the way it is done in view_entry.
@@ -453,7 +461,7 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
   // Accumulate hours used, clipped to report range dates:
   @$hours[$room][$name] += (min((int)$row['end_time'], $report_end)
                             - max((int)$row['start_time'], $report_start)) / 3600.0;
-  $room_hash[$room] = 1;
+  $room_hash[$room] = MODE_TIMES;
   $name_hash[$name] = 1;
 }
 
@@ -477,136 +485,288 @@ function accumulate_periods(&$row, &$count, &$hours, $report_start,
   // Accumulate periods used, clipped to report range dates:
   $dur = (min((int)$row['end_time'], $report_end) - max((int)$row['start_time'], $report_start))/60;
   @$hours[$room][$name] += ($dur % $max_periods) + floor( $dur/(24*60) ) * $max_periods;
-  $room_hash[$room] = 1;
+  $room_hash[$room] = MODE_PERIODS;
   $name_hash[$name] = 1;
 }
 
-// Output a table cell containing a count (integer) and hours (float):
-// (actually output two cells, so that we can style the counts and hours)
-function cell($count, $hours)
+
+// Takes an array of cells and implodes them into either a CSV row
+// or an HTML row, depending on the value of the $output_as_csv.
+// If an HTML row, then the cells can be either <td> (the default)
+// or <th> cells depending on $tag.   Additionally an attribute $attr
+// can be added to the oipening tag - eg 'colspan="2"'
+function implode_cells($cells, $tag='td', $attr=NULL)
+{
+  global $output_as_csv, $csv_col_sep;
+  
+  if ($output_as_csv)
+  {
+    $row = '"' . implode("\"$csv_col_sep\"", $cells) . '"';
+  }
+  else
+  {
+    $open_tag = $tag;
+    if (!empty($attr))
+    {
+      $open_tag .= " $attr";
+    }
+    $row = "<$open_tag>" . implode("</$tag>\n<$open_tag>", $cells) . "</$tag>\n";
+  }
+  return $row;
+}
+
+
+// Takes an array of rows and implodes them into either a set of CSV rows
+// or an HTML table section (<thead>, <tbody> or <tfoot>).
+function implode_rows($rows, $tag='tbody')
+{
+  global $output_as_csv, $csv_row_sep;
+  
+  if ($output_as_csv)
+  {
+    $section = implode($csv_row_sep, $rows) . $csv_row_sep;
+  }
+  else
+  {
+    $section = "<$tag>\n<tr>\n" . implode("</tr>\n<tr>\n", $rows) . "</tr>\n</$tag>\n";
+  }
+  return $section;
+}
+
+
+// Format an entries value depending on whether it's destined for a CSV file or
+// HTML output.   If it's HTML output then we enclose it in parentheses.
+function entries_format($str)
 {
   global $output_as_csv;
-  global $csv_col_sep;
   
-  echo ($output_as_csv) ? $csv_col_sep . '"'  : "<td class=\"count\">(";
-  echo $count;
-  echo ($output_as_csv) ? '"' . $csv_col_sep . '"' : ")</td><td>";
-  echo sprintf("%.2f", $hours);
-  echo ($output_as_csv) ? '"'   : "</td>\n";
+  if ($output_as_csv)
+  {
+    return $str;
+  }
+  else
+  {
+    return "($str)";
+  }
 }
+
 
 // Output the summary table (a "cross-tab report"). $count and $hours are
 // 2-dimensional sparse arrays indexed by [area/room][name].
 // $room_hash & $name_hash are arrays with indexes naming unique rooms and names.
 function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 {
-  global $enable_periods;
-  global $output_as_csv;
-  global $csv_row_sep, $csv_col_sep;
+  global $output_as_csv, $csv_col_sep;
+  global $times_somewhere, $periods_somewhere;
         
   // Sort the room and name arrays
   ksort($room_hash);
   ksort($name_hash);
-
-  if (!$output_as_csv)
+  // Initialise grand total counters
+  foreach (array(MODE_TIMES, MODE_PERIODS) as $m)
   {
-    echo "<div id=\"div_summary\">\n";
-    echo "<h1>" . (empty($enable_periods) ? get_vocab("summary_header") : get_vocab("summary_header_per")). "</h1>\n";
-    echo "<table>\n";
-  
-    echo "<thead>\n";
-    echo "<tr>\n";
+    $grand_count_total[$m] = 0;
+    $grand_hours_total[$m] = 0;
   }
-  echo ($output_as_csv) ? '""' . $csv_col_sep : "<th>&nbsp;</th>\n";
+  
+  
+  // TABLE HEAD
+  // ----------
+  $head_rows = array();
+  $row1_cells = array();
+  $row2_cells = array();
 
   foreach ($room_hash as $room => $mode)
   {
-    echo ($output_as_csv) ? '"'  : "<th colspan=\"2\">";
+    $col_count_total[$room] = 0;
+    $col_hours_total[$room] = 0.0;
+    $mode_text = ($mode == MODE_TIMES) ? get_vocab("mode_times") : get_vocab("mode_periods");
     if ($output_as_csv)
     {
-      echo $room . ' - ' . get_vocab("entries");
-      echo '"' . $csv_col_sep . '"';
-      echo $room . ' - ';
-      echo ($enable_periods) ? get_vocab("periods") : get_vocab("hours");
+      $row1_cells[] = $room . ' - ' . get_vocab("entries");
+      $row1_cells[] = $room . ' - ' .
+                      (($mode == MODE_PERIODS) ? get_vocab("periods") : get_vocab("hours"));
+      $row2_cells[] = $mode_text;
+      $row2_cells[] = $mode_text;
     }
     else
     {
-      echo $room;
+      $row1_cells[] = $room;
+      $row2_cells[] = $mode_text;
     }
-    echo ($output_as_csv) ? '"' . $csv_col_sep : "</th>\n";
-    $col_count_total[$room] = 0;
-    $col_hours_total[$room] = 0.0;
   }
-  echo ($output_as_csv) ? '"'  : "<th colspan=\"2\"><br>";
+  // Add the total column(s) onto the end
   if ($output_as_csv)
   {
-    echo get_vocab("total") . ' - ' . get_vocab("entries");
-    echo '"' . $csv_col_sep . '"';
-    echo get_vocab("total") . ' - ';
-    echo ($enable_periods) ? get_vocab("periods") : get_vocab("hours");
+    if ($times_somewhere)
+    {
+      $row1_cells[] = get_vocab("mode_times") . ": " . 
+                      get_vocab("total") . ' - ' . 
+                      get_vocab("entries");
+      $row1_cells[] = get_vocab("mode_times") . ": " .
+                      get_vocab("total") . ' - ' .
+                      get_vocab("hours");
+      $row2_cells[] = '';
+      $row2_cells[] = '';
+    }
+    if ($periods_somewhere)
+    {
+      $row1_cells[] = get_vocab("mode_periods") . ": " . 
+                      get_vocab("total") . ' - ' . 
+                      get_vocab("entries");
+      $row1_cells[] = get_vocab("mode_periods") . ": " .
+                      get_vocab("total") . ' - ' .
+                      get_vocab("hours");
+      $row2_cells[] = '';
+      $row2_cells[] = '';
+    }
   }
   else
   {
-    echo get_vocab("total");
+    if ($times_somewhere)
+    {
+      $row1_cells[] = get_vocab("total") . "<br>" . get_vocab("mode_times");
+      $row2_cells[] = "&nbsp;";
+    }
+    if ($periods_somewhere)
+    {
+      $row1_cells[] = get_vocab("total") . "<br>" . get_vocab("mode_periods");
+      $row2_cells[] = "&nbsp;";
+    }
   }
-  echo ($output_as_csv) ? '"'  : "</th>\n";
-  echo ($output_as_csv) ? $csv_row_sep : "</tr>\n";
-  $grand_count_total = 0;
-  $grand_hours_total = 0;
-  echo ($output_as_csv) ? ''   : "</thead>\n";
+  // Implode the cells and add a label column on to the beginning (we have to
+  // do it this way because the head is a bit more complicated than the body and
+  // the foot as it has cells which span two columns)
+  if ($output_as_csv)
+  {
+    $row1 = '""' . $csv_col_sep . implode_cells($row1_cells);
+    $row2 = '"Mode"' . $csv_col_sep . implode_cells($row2_cells);
+  }
+  else
+  {
+    $row1  = "<th>&nbsp;</th>\n";
+    $row1 .= implode_cells($row1_cells, 'th', 'colspan="2"');
+    $row2  = "<th>" . get_vocab("mode") . "</th>\n";
+    $row2 .= implode_cells($row2_cells, 'th', 'colspan="2"'); 
+  }
+  $head_rows[] = $row1;
+  // Only use the second row if we need to, that is if we have both times and periods
+  if ($times_somewhere && $periods_somewhere)
+  {
+    $head_rows[] = $row2;
+  }
+  $head = implode_rows($head_rows, 'thead');
   
-  echo ($output_as_csv) ? ''   : "<tbody>\n";
+
+  // TABLE BODY
+  // ----------
+  $body_rows = array();
   foreach ($name_hash as $name => $is_present)
   {
-    $row_count_total = 0;
-    $row_hours_total = 0.0;
-    echo ($output_as_csv) ? '"'  : "<tr><td>";
-    echo $name;
-    echo ($output_as_csv) ? '"' : "</td>\n";
-    foreach ($room_hash as $room => $is_present)
+    foreach (array(MODE_TIMES, MODE_PERIODS) as $m)
+    {
+      $row_count_total[$m] = 0;
+      $row_hours_total[$m] = 0;
+    }
+    $cells = array();
+    $cells[] = $name;
+    foreach ($room_hash as $room => $mode)
     {
       if (isset($count[$room][$name]))
       {
         $count_val = $count[$room][$name];
         $hours_val = $hours[$room][$name];
-        cell($count_val, $hours_val);
-        $row_count_total += $count_val;
-        $row_hours_total += $hours_val;
+        $cells[] = entries_format($count_val);
+        $format = ($mode == MODE_TIMES) ? FORMAT_TIMES : FORMAT_PERIODS;
+        $cells[] = sprintf($format, $hours_val);
+        $row_count_total[$mode] += $count_val;
+        $row_hours_total[$mode] += $hours_val;
         $col_count_total[$room] += $count_val;
         $col_hours_total[$room] += $hours_val;
       }
       else
       {
-        if ($output_as_csv)
-        {
-          echo $csv_col_sep . $csv_col_sep;
-        }
-        else
-        {
-          echo "<td class=\"count\">&nbsp;</td><td>&nbsp;</td>\n";
-        }
+        $cells[] = ($output_as_csv) ? '' : "&nbsp;";
+        $cells[] = ($output_as_csv) ? '' : "&nbsp;";
       }
     }
-    cell($row_count_total, $row_hours_total);
-    echo ($output_as_csv) ? $csv_row_sep : "</tr>\n";
-    $grand_count_total += $row_count_total;
-    $grand_hours_total += $row_hours_total;
+    // Add the total column(s) onto the end
+    if ($times_somewhere)
+    {
+      $cells[] = entries_format($row_count_total[MODE_TIMES]);
+      $cells[] = sprintf(FORMAT_TIMES, $row_hours_total[MODE_TIMES]);
+    }
+    if ($periods_somewhere)
+    {
+      $cells[] = entries_format($row_count_total[MODE_PERIODS]);
+      $cells[] = sprintf(FORMAT_PERIODS, $row_hours_total[MODE_PERIODS]);
+    }
+    $body_rows[] = implode_cells($cells, 'td');
+    foreach (array(MODE_TIMES, MODE_PERIODS) as $m)
+    {
+      $grand_count_total[$m] += $row_count_total[$m];
+      $grand_hours_total[$m] += $row_hours_total[$m];
+    }
   }
-  echo ($output_as_csv) ? '"'  : "<tr><td>";
-  echo get_vocab("total");
-  echo ($output_as_csv) ? '"' : "</td>\n";
+  $body = implode_rows($body_rows, 'tbody');
+  
+  
+  // TABLE FOOT
+  // ----------
+  $foot_rows = array();
+  $cells = array();
+  $cells[] = get_vocab("total");
   foreach ($room_hash as $room => $mode)
   {
-    cell($col_count_total[$room], $col_hours_total[$room]);
+    $cells[] = entries_format($col_count_total[$room]);
+    $format = ($mode == MODE_TIMES) ? FORMAT_TIMES : FORMAT_PERIODS;
+    $cells[] = sprintf($format, $col_hours_total[$room]);
   }
-  cell($grand_count_total, $grand_hours_total);
-  echo ($output_as_csv) ? $csv_row_sep : "</tr>\n";
-  if (!$output_as_csv)
+  // Add the total column(s) onto the end
+  if ($times_somewhere)
   {
-    echo "</tbody></table>\n";
+    $cells[] = entries_format($grand_count_total[MODE_TIMES]);
+    $cells[] = sprintf(FORMAT_TIMES, $grand_hours_total[MODE_TIMES]);
+  }
+  if ($periods_somewhere)
+  {
+    $cells[] = entries_format($grand_count_total[MODE_PERIODS]);
+    $cells[] = sprintf(FORMAT_PERIODS, $grand_hours_total[MODE_PERIODS]);
+  }
+  $foot_rows[] = implode_cells($cells, 'th');
+  $foot = implode_rows($foot_rows, 'tfoot');
+  
+  
+  // OUTPUT THE TABLE
+  // ----------------
+  if ($output_as_csv)
+  {
+    echo $head;
+    echo $body;
+    echo $foot;
+  }
+  else
+  {
+    echo "<div id=\"div_summary\">\n";
+    echo "<h1>";
+    if ($times_somewhere)
+    {
+      echo ($periods_somewhere) ?  get_vocab("summary_header_both") : get_vocab("summary_header");
+    }
+    else
+    {
+      echo get_vocab("summary_header_per");
+    }
+    echo "</h1>\n";
+    echo "<table>\n";
+    echo $head;
+    echo $foot;  // <tfoot> has to come before <tbody>
+    echo $body;
+    echo "</table>\n";
     echo "</div>\n";
   }
 }
+
 
 // Get non-standard form variables
 $From_day = get_form_var('From_day', 'int');
@@ -937,6 +1097,7 @@ $private_somewhere = some_area('private_enabled') || some_area('private_mandator
 $approval_somewhere = some_area('approval_enabled');
 $confirmation_somewhere = some_area('confirmation_enabled');
 $times_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods=0") > 0);
+$periods_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods!=0") > 0);
 
 
 // Upper part: The form.
