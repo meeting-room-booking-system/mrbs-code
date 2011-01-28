@@ -13,7 +13,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   global $lang_map_windows, $langs, $server_os;
   
-  $page = basename($PHP_SELF, ".php" );
+  $page = preg_replace('/\.php$/', '', $PHP_SELF);
   $user = getUserName();
   $is_admin = (authGetUserLevel($user) >= 2);
 
@@ -882,7 +882,7 @@ function init()
   <?php
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
-  echo "<body class=\"$page\" onLoad =\"init()\">\n";
+  echo "<body class=\"".htmlspecialchars($page)."\" onLoad =\"init()\">\n";
   ?>
     <div class="screenonly">
 
@@ -1016,7 +1016,7 @@ function init()
         <form id="header_search" method="get" action="search.php">
           <div>
             <a href="search.php?advanced=1"><?php echo get_vocab("search") ?>:</a>
-            <input type="text"   name="search_str" value="<?php echo $search_str ?>">
+            <input type="text"   name="search_str" value="<?php echo htmlspecialchars($search_str) ?>">
             <input type="hidden" name="day"        value="<?php echo $day        ?>">
             <input type="hidden" name="month"      value="<?php echo $month      ?>">
             <input type="hidden" name="year"       value="<?php echo $year       ?>">

@@ -234,7 +234,7 @@ function PrintLogonBox()
     $search_string = "report.php?From_day=$day&amp;From_month=$month&amp;".
       "From_year=$year&amp;To_day=1&amp;To_month=12&amp;To_year=2030&amp;areamatch=&amp;".
       "roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;sortby=r&amp;display=d&amp;".
-      "sumby=d&amp;creatormatch=$user"; ?>
+      "sumby=d&amp;creatormatch=".urlencode($user); ?>
 
                 <a name="logonBox" href="<?php echo "$search_string\" title=\""
          . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
