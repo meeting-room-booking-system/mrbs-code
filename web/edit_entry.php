@@ -1181,7 +1181,7 @@ else
     
     ?>
     <input type="hidden" name="returl" value="<?php echo htmlspecialchars($returl) ?>">
-    <input type="hidden" name="create_by" value="<?php echo $create_by?>">
+    <input type="hidden" name="create_by" value="<?php echo htmlspecialchars($create_by)?>">
     <input type="hidden" name="rep_id" value="<?php echo $rep_id?>">
     <input type="hidden" name="edit_type" value="<?php echo $edit_type?>">
     <?php
@@ -1193,10 +1193,14 @@ else
     // ical_uid and start the ical_sequence at 0.
     if (isset($original_room_id))
     {
-      echo "<input type=\"hidden\" name=\"original_room_id\" value=\"$original_room_id\">\n";
-      echo "<input type=\"hidden\" name=\"ical_uid\" value=\"$ical_uid\">\n";
-      echo "<input type=\"hidden\" name=\"ical_sequence\" value=\"$ical_sequence\">\n";
-      echo "<input type=\"hidden\" name=\"ical_recur_id\" value=\"$ical_recur_id\">\n";
+      echo "<input type=\"hidden\" name=\"original_room_id\" ".
+        "value=\"$original_room_id\">\n";
+      echo "<input type=\"hidden\" name=\"ical_uid\" value=\"".
+        htmlspecialchars($ical_uid)."\">\n";
+      echo "<input type=\"hidden\" name=\"ical_sequence\" value=\"".
+        htmlspecialchars($ical_sequence)."\">\n";
+      echo "<input type=\"hidden\" name=\"ical_recur_id\" value=\"".
+        htmlspecialchars($ical_recur_id)."\">\n";
     }
     if(isset($id) && !isset($copy))
     {
@@ -1205,7 +1209,8 @@ else
 
     // The Submit button
     echo "<div id=\"edit_entry_submit\">\n";
-    echo "<input class=\"submit\" type=\"submit\" name=\"save_button\" value=\"" . get_vocab("save") . "\">\n";
+    echo "<input class=\"submit\" type=\"submit\" name=\"save_button\" value=\"".
+      get_vocab("save") . "\">\n";
     echo "</div>\n";
     ?>
   </fieldset>
