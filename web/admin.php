@@ -43,7 +43,11 @@ print_header($day, $month, $year, isset($area) ? $area : "", isset($room) ? $roo
 if (isset($area))
 {
   $res = sql_query("SELECT area_name, custom_html FROM $tbl_area WHERE id=$area LIMIT 1");
-  if (! $res) fatal_error(0, sql_error());
+  if (! $res)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
+  }
   if (sql_count($res) == 1)
   {
     $row = sql_row_keyed($res, 0);
@@ -210,7 +214,8 @@ if ($is_admin || ($n_displayable_areas > 0))
     $res = sql_query("SELECT * FROM $tbl_room WHERE area_id=$area ORDER BY sort_key");
     if (! $res)
     {
-      fatal_error(0, sql_error());
+      trigger_error(sql_error(), E_USER_WARNING);
+      fatal_error(FALSE, get_vocab("fatal_db_error"));
     }
     if (sql_count($res) == 0)
     {

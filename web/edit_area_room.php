@@ -264,7 +264,9 @@ if ($phase == 2)
         $sql .= implode(",", $assign_array) . " WHERE id=$room";
         if (sql_command($sql) < 0)
         {
-          fatal_error(0, get_vocab("update_room_failed") . sql_error());
+          echo get_vocab("update_room_failed") . "<br>\n";
+          trigger_error(sql_error(), E_USER_WARNING);
+          fatal_error(FALSE, get_vocab("fatal_db_error"));
         }
         // if everything is OK, release the mutex and go back to
         // the admin page (for the new area)
@@ -428,7 +430,9 @@ if ($phase == 2)
       $sql .= implode(",", $assign_array) . " WHERE id=$area";
       if (sql_command($sql) < 0)
       {
-        fatal_error(0, get_vocab("update_area_failed") . sql_error());
+        echo get_vocab("update_area_failed") . "<br>\n";
+        trigger_error(sql_error(), E_USER_WARNING);
+        fatal_error(FALSE, get_vocab("fatal_db_error"));
       }
       // If the database update worked OK, go back to the admin page
       Header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
@@ -492,7 +496,8 @@ if (isset($change_room) && !empty($room))
       $res = sql_query("SELECT id, area_name FROM $tbl_area");
       if (!$res)
       {
-        fatal_error(FALSE, "Fatal error: " . sql_error);  // should not happen
+        trigger_error(sql_error(), E_USER_WARNING);
+        fatal_error(FALSE, get_vocab("fatal_db_error"));
       }
       if (sql_count($res) == 0)
       {

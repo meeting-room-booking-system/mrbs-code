@@ -135,7 +135,8 @@ if (!isset($total))
 }
 if ($total < 0)
 {
-  fatal_error(0, sql_error());
+  trigger_error(sql_error(), E_USER_WARNING);
+  fatal_error(FALSE, get_vocab("fatal_db_error"));
 }
 if ($total <= 0)
 {
@@ -165,7 +166,8 @@ $sql = "SELECT E.id AS entry_id, E.create_by, E.name, E.description, E.start_tim
 $result = sql_query($sql);
 if (! $result)
 {
-  fatal_error(0, sql_error());
+  trigger_error(sql_error(), E_USER_WARNING);
+  fatal_error(FALSE, get_vocab("fatal_db_error"));
 }
 $num_records = sql_count($result);
 

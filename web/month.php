@@ -224,7 +224,8 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
   $res = sql_query($sql);
   if (! $res)
   {
-    echo sql_error();
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(TRUE, get_vocab("fatal_db_error"));
   }
   else
   {

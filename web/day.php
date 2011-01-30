@@ -128,7 +128,8 @@ $sql = "SELECT R.id AS room_id, start_time, end_time, name, repeat_id,
 $res = sql_query($sql);
 if (! $res)
 {
-  fatal_error(0, sql_error());
+  trigger_error(sql_error(), E_USER_WARNING);
+  fatal_error(FALSE, get_vocab("fatal_db_error"));
 }
 
 $today = array();
@@ -196,7 +197,8 @@ $res = sql_query($sql);
 // else
 if (! $res)
 {
-  fatal_error(0, sql_error());
+  trigger_error(sql_error(), E_USER_WARNING);
+  fatal_error(FALSE, get_vocab("fatal_db_error"));
 }
 if (sql_count($res) == 0)
 {

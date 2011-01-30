@@ -162,7 +162,8 @@ if (isset($id))
   $res = sql_query($sql);
   if (! $res)
   {
-    fatal_error(1, sql_error());
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(TRUE, get_vocab("fatal_db_error"));
   }
   if (sql_count($res) != 1)
   {
@@ -282,7 +283,8 @@ if (isset($id))
     $res = sql_query($sql);
     if (! $res)
     {
-      fatal_error(1, sql_error());
+      trigger_error(sql_error(), E_USER_WARNING);
+      fatal_error(TRUE, get_vocab("fatal_db_error"));
     }
     if (sql_count($res) != 1)
     {

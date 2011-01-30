@@ -194,7 +194,8 @@ if (isset($id))
   $target_room = sql_query1("SELECT room_id FROM $tbl_entry WHERE id=$id LIMIT 1");
   if ($target_room < 0)
   {
-    fatal_error(0, sql_error());
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
 }
 else

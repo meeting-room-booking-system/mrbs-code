@@ -407,4 +407,7 @@ $vocab["for_any_questions"]  = "for any questions that aren't answered here.";
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatal Error: Failed to connect to database";
 
+// General
+$vocab["fatal_db_error"]     = "Fatal error: unfortunately the database is not available at the moment.";
+
 ?>

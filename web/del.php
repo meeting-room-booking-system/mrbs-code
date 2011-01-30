@@ -36,14 +36,15 @@ if ($type == "room")
   {
     print_header($day, $month, $year, $area, isset($room) ? $room : "");
    
-    // We tell them how bad what theyre about to do is
+    // We tell them how bad what they're about to do is
     // Find out how many appointments would be deleted
    
     $sql = "select name, start_time, end_time from $tbl_entry where room_id=$room";
     $res = sql_query($sql);
     if (! $res)
     {
-      echo sql_error();
+      trigger_error(sql_error(), E_USER_WARNING);
+      fatal_error(FALSE, get_vocab("fatal_db_error"));
     }
     else if (sql_count($res) > 0)
     {

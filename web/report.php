@@ -1018,7 +1018,8 @@ if (isset($areamatch))
   $res = sql_query($sql);
   if (! $res)
   {
-    fatal_error(0, sql_error());
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
   $nmatch = sql_count($res);
 }

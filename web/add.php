@@ -80,7 +80,8 @@ elseif ($type == "area")
     $sql = "INSERT INTO $tbl_area (" . implode(', ',$sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
     if (sql_command($sql) < 0)
     {
-      fatal_error(1, sql_error());
+      trigger_error(sql_error(), E_USER_WARNING);
+      fatal_error(TRUE, get_vocab("fatal_db_error"));
     }
     $area = sql_insert_id("$tbl_area", "id");
   }
@@ -117,7 +118,8 @@ elseif ($type == "room")
             VALUES ('$room_name_q', '$room_name_q', $area, '$description_q',$capacity)";
     if (sql_command($sql) < 0)
     {
-      fatal_error(1, sql_error());
+      trigger_error(sql_error(), E_USER_WARNING);
+      fatal_error(TRUE, get_vocab("fatal_db_error"));
     }
   }
   // Release the mutex

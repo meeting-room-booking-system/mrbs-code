@@ -42,7 +42,9 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
   $res = sql_query($sql);
   if (! $res)
   {
-    fatal_error(TRUE, "Fatal error: " . sql_error());  // probably because the table hasn't been created properly
+    // probably because the table hasn't been created properly
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(TRUE, get_vocab("fatal_db_error"));
   }
   if (sql_count($res) == 0)
   {
@@ -344,7 +346,9 @@ function mrbsCreateEntry($table, $data)
 
   if (sql_command($sql) < 0)
   {
-    fatal_error(TRUE, "Fatal error: " . sql_error());  // probably because the table hasn't been created properly
+    // probably because the table hasn't been created properly
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(TRUE, get_vocab("fatal_db_error"));
   }
 
   return sql_insert_id($table, "id");
@@ -869,7 +873,8 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
     }
     else
     {
-      fatal_error(0, sql_error());
+      trigger_error(sql_error(), E_USER_WARNING);
+      fatal_error(FALSE, get_vocab("fatal_db_error"));
     }
   }
 

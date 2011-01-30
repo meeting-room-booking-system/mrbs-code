@@ -195,7 +195,8 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
   $res = sql_query($sql);
   if (! $res)
   {
-    echo sql_error();
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(TRUE, get_vocab("fatal_db_error"));
   }
   else
   {
