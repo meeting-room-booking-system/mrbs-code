@@ -351,7 +351,8 @@ function generate_input($label_text, $name, $value, $disabled=FALSE)
   // and a hidden input if the input box is disabled
   if ($disabled)
   {
-    $html .= "<input type=\"hidden\" name=\"$name\" value=\"$value\">\n";
+    $html .= "<input type=\"hidden\" name=\"$name\" value=\"".
+      htmlspecialchars($value)."\">\n";
   }
   echo $html;
 }
@@ -375,13 +376,14 @@ function generate_select($label_text, $name, $value, $options,
   {
     $html .= "<option";
     $html .= (isset($value) && ($value == $option)) ? " selected=\"selected\"" : '';
-    $html .= ">$option</option>\n";
+    $html .= ">".htmlspecialchars($option)."</option>\n";
   }
   $html .= "</select>\n";
   // and a hidden input if the select box is disabled
   if ($disabled)
   {
-    $html .= "<input type=\"hidden\" name=\"$name\" value=\"$value\">\n";
+    $html .= "<input type=\"hidden\" name=\"$name\" value=\"".
+      htmlspecialchars($value)."\">\n";
   }
   
   echo $html;
@@ -401,7 +403,8 @@ function generate_textarea($label_text, $name, $value, $disabled=FALSE)
   // and a hidden input if the textarea is disabled
   if ($disabled)
   {
-    $html .= "<input type=\"hidden\" name=\"$name\" value=\"$value\">\n";
+    $html .= "<input type=\"hidden\" name=\"$name\" value=\"".
+      htmlspecialchars($value)."\">\n";
   }
   echo $html;
 }
