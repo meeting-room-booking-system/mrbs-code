@@ -94,7 +94,8 @@ else
   else
   {
     // If there are some areas displayable, then show the area form
-    echo "<form id=\"areaChangeForm\" method=\"get\" action=\"$PHP_SELF\">\n";
+    echo "<form id=\"areaChangeForm\" method=\"get\" action=\"".
+      htmlspecialchars($PHP_SELF)."\">\n";
     echo "<fieldset>\n";
     echo "<legend></legend>\n";
   
