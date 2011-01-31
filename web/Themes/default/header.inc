@@ -13,7 +13,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   global $lang_map_windows, $langs, $server_os;
   
-  $page = basename(preg_replace('/\.php$/', '', $PHP_SELF));
+  $page = basename($PHP_SELF, ".php");
   $user = getUserName();
   $is_admin = (authGetUserLevel($user) >= 2);
 
