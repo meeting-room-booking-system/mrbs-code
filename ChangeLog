@@ -1,3 +1,591 @@
+2011-02-09 20:08  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1784] web/version.inc:
+	  
+	  * Updated version number for 1.4.6 release.
+
+2011-02-03 12:42  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1783] web/lang.es:
+	  
+	  * Updated Spanish translation received from Jose Luis Martin
+	  Jimenez.
+
+2011-01-31 16:56  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1782] web/Themes/default/header.inc:
+	  
+	  * Reverted one of the $PHP_SELF handling changes, which was
+	  unnecessary.
+
+2011-01-31 11:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1781] web/Themes/default/footer.inc:
+	  
+	  Fixed an HTML validation error
+
+2011-01-31 10:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1780] web/Themes/default/header.inc:
+	  
+	  Fixed bug introduced in Rev 1775, causing styling errors and lack
+	  of JavaScript functionality
+
+2011-01-30 10:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1779] web/add.php, web/admin.php, web/day.php, web/del.php,
+	  web/edit_area_room.php, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/edit_users.php, web/lang.en,
+	  web/month.php, web/mrbs_sql.inc, web/pending.php, web/report.php,
+	  web/search.php, web/week.php:
+	  
+	  Improved handling of SQL errors
+
+2011-01-30 09:33  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1778] web/edit_entry.php:
+	  
+	  * Fixed a few more HTML escaping issues, and rewrapped a few long
+	  lines.
+
+2011-01-30 08:18  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1777] web/functions.inc:
+	  
+	  * Fixed a few more cases where things weren't correctly escaped.
+
+2011-01-30 08:00  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1776] web/admin.php, web/view_entry.php:
+	  
+	  * Fixed two more places where $PHP_SELF was used in HTML without
+	  being properly escaped.
+
+2011-01-28 23:46  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1775] web/Themes/default/header.inc, web/session_php.inc:
+	  
+	  * Fixed some XSS/escaping bugs reported by 'kevan_' in SF
+	  #3167226.
+
+2011-01-28 22:02  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1774] web/language.inc:
+	  
+	  * Possibly corrected the new locale selection logic from r1773.
+
+2011-01-28 21:54  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1773] web/language.inc:
+	  
+	  * Now chooses a determined locale wven if MRBS doesn't have a
+	  translation for that locale. It's better than nothing to get
+	  dates/times right. Reported by 'corn_kid' as SF #2934313.
+
+2011-01-28 21:45  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1772] web/edit_entry.php, web/systemdefaults.inc.php:
+	  
+	  * Implemented the ability to configure the default booking
+	  description with $default_description, as requested in SF
+	  #3001740.
+
+2011-01-28 21:33  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1771] web/Themes/default/footer.inc[ADD], web/functions.inc:
+	  
+	  * Added the ability to specify a footer in the theme. Patch
+	  submitted by rudd_j in SF #3166889.
+
+2011-01-28 21:15  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1770] web/functions.inc:
+	  
+	  * Added error logging into fatal_error(). Patch submitted by
+	  'shallot' in SF #2955546.
+
+2011-01-28 21:07  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1769] web/mrbs-print.css.php:
+	  
+	  * Coloured borders for booking types in the printing style sheet.
+	  Submitted by tuomas_ in SF #3003248.
+
+2011-01-28 20:44  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1768] web/admin.php, web/del.php:
+	  
+	  * Made it so that you return to the right area after deleting a
+	  room. Based on a patch in SF #3019525.
+
+2011-01-28 20:11  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1767] web/internalconfig.inc.php:
+	  
+	  * Removed a possible deprecation warning, SF #3165269.
+
+2011-01-28 09:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1766] web/pending.php:
+	  
+	  Fixed pending so that it can cope with mixed periods and times
+
+2011-01-28 09:42  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1765] web/search.php:
+	  
+	  Fixed search so that it can handle mixed periods and times
+
+2011-01-28 09:40  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1764] web/functions.inc:
+	  
+	  Fixed bug introduced in Rev 1756
+
+2011-01-28 09:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1763] web/mrbs.css.php:
+	  
+	  Fixed CSS error
+
+2011-01-28 09:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1762] web/lang.en, web/mrbs.css.php, web/report.php:
+	  
+	  Fixed summary table so that it can cope with mixed periods and
+	  times.
+
+2011-01-27 11:26  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1761] web/report.php:
+	  
+	  Fixed bug whereby summaries were not sorted properly by name
+
+2011-01-27 09:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1760] web/report.php:
+	  
+	  Fixed bug whereby start and end times were incorrectly presented
+	  in reports when using mixed periods and times.
+
+2011-01-27 08:34  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1759] UPGRADE:
+	  
+	  Updated Upgrade documentation to reflect changes in Rev 1756
+
+2011-01-27 08:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1758] INSTALL:
+	  
+	  Clarified documentation on custom fields.
+
+2011-01-26 18:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1757] web/lang.fr:
+	  
+	  Minor tweak to capitalisation
+
+2011-01-26 17:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1756] web/day.php, web/edit_area_room.php, web/edit_entry.php,
+	  web/functions.inc, web/functions_mail.inc,
+	  web/functions_view.inc, web/help.php, web/internalconfig.inc.php,
+	  web/language.inc, web/mincals.inc, web/month.php,
+	  web/mrbs_sql.inc, web/report.php, web/systemdefaults.inc.php,
+	  web/trailer.inc, web/week.php:
+	  
+	  Removed hard-coded formats for strftime() and put them in
+	  systemdefaults in order to make it easier to tweak time and date
+	  formats to meet local expectations.
+
+2011-01-26 16:12  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1755] UPGRADE:
+	  
+	  * Removed some stray tabs.
+
+2011-01-26 16:08  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1754] INSTALL:
+	  
+	  * Small documentation fix.
+
+2011-01-26 16:04  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1753] INSTALL, UPGRADE, convert_db_to_utf8.php,
+	  tables.my.pre41.sql[ADD], tables.my.sql, tables.pg.pre73.sql,
+	  tables.pg.sql, web/dbsys.inc, web/upgrade/26[ADD],
+	  web/upgrade/26/mysql.sql[ADD], web/upgrade/26/pgsql.sql[ADD],
+	  web/upgrade/26/post.inc[ADD]:
+	  
+	  * Updated the MySQL table installation SQL files to utilise MySQL
+	  4.1 features. A version for older versions of MySQL is retained
+	  tables.my.pre41.sql.
+	  
+	  * Added a warning when upgrading the database, to inform
+	  adninistrators that they may need to update their database to
+	  UTF-8 encoding, using the convert_db_to_utf8.php script.
+	  
+	  * Updated the INSTALL and UPGRADE documentation to match the new
+	  Unicode-only behaviour of MRBS, and to mention the new MySQL
+	  installation SQL files.
+	  
+	  * Improved the convert_db_to_utf8.php quite a bit. Updated the
+	  list of columns that need converting to UTF-8. Added support for
+	  converting the database collation in a MySQL MRBS database.
+
+2011-01-26 12:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1752] web/Themes/default/header.inc, web/language.inc:
+	  
+	  Fixed problem where start and end times do not appear correctly
+	  in the select boxes on the edit_entry form when using 12 hour
+	  format and running on a Windows server.
+
+2011-01-26 11:30  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1751] web/lang.cs:
+	  
+	  * Updated/fixed Czech translation from Marek Grác.
+
+2011-01-26 11:27  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1750] ., INSTALL, UPGRADE, web/edit_users.php,
+	  web/functions_mail.inc, web/lang.ca, web/lang.cs, web/lang.da,
+	  web/lang.de, web/lang.el, web/lang.en, web/lang.es, web/lang.eu,
+	  web/lang.fi, web/lang.fr, web/lang.it, web/lang.ja, web/lang.ko,
+	  web/lang.nl, web/lang.no, web/lang.pl, web/lang.pt, web/lang.sl,
+	  web/lang.sv, web/lang.tr, web/lang.zh-cn, web/lang.zh-tw,
+	  web/language.inc, web/mysql.inc, web/mysqli.inc,
+	  web/systemdefaults.inc.php, web/upgrade/5/pgsql.sql:
+	  
+	  * Merged the 'only_unicode' branch, which removes MRBS
+	  non-Unicode mode. To come is an improved convert_db_to_utf8.php
+	  script that I have been working on.
+
+2011-01-25 14:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1746] web/systemdefaults.inc.php:
+	  
+	  Added to comments for $override_locale
+
+2011-01-20 11:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1745] web/Themes/default/header.inc, web/edit_area_room.php,
+	  web/lang.en, web/mrbs.css.php, web/mrbs_sql.inc,
+	  web/systemdefaults.inc.php:
+	  
+	  - Fixed a bug whereby book ahead policies would not be applied
+	  when using periods, depending on what settings were already in
+	  the database. See SF Support Request #3161926 - At the same time
+	  removed the restriction that book ahead policies cannot be set
+	  per-area when using periods
+
+2011-01-13 11:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1744] web/functions_ical.inc:
+	  
+	  Added a comment.
+
+2011-01-11 09:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1743] web/Themes/default/header.inc,
+	  web/jquery/ui/jquery-ui-datepicker-en-AU.js[ADD],
+	  web/jquery/ui/jquery-ui-datepicker-en-NZ.js[ADD],
+	  web/jquery/ui/jquery-ui-datepicker-no.js[ADD]:
+	  
+	  - added explicit en-AU and en-NZ initialisations for jQuery UI
+	  datepicker. (Meanwhile a ticket, #6828, has been raised
+	  requesting their inclusion in the standard package) - added a
+	  correction for the Norwegian initialisation for datepicker
+	  (pending discussions with the author of the original
+	  initialisation with a view to incorporating the changes in the
+	  standard package)
+
+2011-01-07 17:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1742] ., tables.my.sql, tables.pg.pre73.sql, tables.pg.sql,
+	  web/Mail/mime.php[CPY], web/Mail/mimePart.php[CPY],
+	  web/approve_entry_handler.php, web/dbsys.inc, web/del_entry.php,
+	  web/edit_entry.php, web/edit_entry_handler.php,
+	  web/functions.inc, web/functions_ical.inc[CPY],
+	  web/functions_mail.inc, web/functions_view.inc[CPY],
+	  web/internalconfig.inc.php, web/lang.en, web/language.inc,
+	  web/mrbs-mail.css[CPY], web/mrbs.css.php, web/mrbs_sql.inc,
+	  web/report.php, web/systemdefaults.inc.php, web/upgrade/23[CPY],
+	  web/upgrade/23/mysql.sql[CPY], web/upgrade/23/pgsql.sql[CPY],
+	  web/upgrade/24[CPY], web/upgrade/24/mysql.sql[CPY],
+	  web/upgrade/24/pgsql.sql[CPY], web/upgrade/24/post.inc[CPY],
+	  web/upgrade/25[CPY], web/upgrade/25/mysql.sql[CPY],
+	  web/upgrade/25/pgsql.sql[CPY], web/upgrade/5/pgsql.sql,
+	  web/view_entry.php:
+	  
+	  Merged the ics_attachments branch back into the trunk. MRBS now
+	  supports: - HTML emails - emails containing iCalendar details
+	  that can be imported automatically into calendar apps (eg
+	  Outlook, iCal, Thunderbird/Lightning, Google Calendar) - export
+	  of bookings as iCalendar files (.ics) from view_entry.php and
+	  report.php
+
+2011-01-06 13:51  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1739] web/edit_area_room.php:
+	  
+	  Added missing HTML escaping
+
+2011-01-06 13:46  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1738] web/edit_entry.php, web/functions.inc:
+	  
+	  Added escaping of JavaScript strings (see SF Bug ID 3152394)
+
+2010-12-19 17:11  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1715] web/lang.fr:
+	  
+	  Updated French translation provided by Philippe Levi.
+
+2010-12-17 16:24  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1713] web/lang.pt:
+	  
+	  Updated Portuguese translation
+
+2010-12-17 12:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1711] web/edit_entry_handler.php:
+	  
+	  Simplified code
+
+2010-12-17 11:30  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1710] web/edit_entry_handler.php:
+	  
+	  Fixed bug which caused repeat, all-day bookings not to book the
+	  last day of a series.
+
+2010-12-10 11:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1691] web/view_entry.php:
+	  
+	  Allowed entries for disabled rooms to be copied (but still not
+	  deleted or edited).
+
+2010-12-10 08:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1688] web/functions.inc:
+	  
+	  Fixed bug that caused the room and area links in the day, week
+	  and month views to operate incorrectly when using "list" format.
+	  See SF Tracker ID: 3134046.
+
+2010-12-08 15:24  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1675] web/functions_mail.inc:
+	  
+	  Fixed bug whereby mail was not being sent to those on the cc and
+	  bcc lists.
+
+2010-12-08 14:59  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1674] web/Mail.php, web/Mail/RFC822.php, web/Mail/mail.php,
+	  web/Mail/null.php, web/Mail/sendmail.php, web/Mail/smtp.php,
+	  web/Net/SMTP.php:
+	  
+	  Updated PEAR Mail package to Release 1.2.0 and Net_SMTP to
+	  Release 1.4.4
+
+2010-11-26 12:24  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1651] web/systemdefaults.inc.php:
+	  
+	  - Tidied example email address discussion.
+
+2010-11-26 11:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1650] web/systemdefaults.inc.php:
+	  
+	  Added a comment on email address formats
+
+2010-11-25 17:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1649] web/internalconfig.inc.php, web/upgrade/21/post.inc:
+	  
+	  - Removed the warning about the use of $provisional_enabled -
+	  Added $provisional_enabled to the list of deprecated config
+	  variables that are now replaced by something else, but still
+	  supported for the moment in order to make upgrading easier -
+	  Changed the way that the $mail_settings deprecated variables are
+	  treated and stopped trying to do anything too smart
+
+2010-11-25 10:40  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1648] web/edit_entry.php, web/edit_entry_handler.php,
+	  web/lang.en:
+	  
+	  Changed the privacy and confirmation status fields to be radio
+	  buttons rather than checkboxes to make it slightly clearer what
+	  they do.
+
+2010-11-25 09:18  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1647] web/mrbs_sql.inc:
+	  
+	  Better fix (again!) for Rev 1642 (bug causing approval of entries
+	  not to work when using PostgreSQL)
+
+2010-11-25 07:39  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1646] web/dbsys.inc, web/mrbs_sql.inc, web/mysql.inc,
+	  web/mysqli.inc, web/pgsql.inc:
+	  
+	  Better fix for Rev 1642 (bug causing approval of entries not to
+	  work when using PostgreSQL)
+
+2010-11-25 04:49  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1645] web/lang.en:
+	  
+	  Fixed minor typo
+
+2010-11-25 04:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1644] web/lang.fr:
+	  
+	  Corrected French translation for rejected bookings.
+
+2010-11-25 04:35  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1643] web/approve_entry_handler.php:
+	  
+	  Fixed error handling if there's an SQL error when approving an
+	  entry
+
+2010-11-25 04:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1642] web/mrbs_sql.inc:
+	  
+	  Fixed bug causing approval of entries not to work when using
+	  PostgreSQL
+
+2010-11-24 19:07  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1641] UPGRADE, web/del_entry.php, web/edit_entry_handler.php,
+	  web/internalconfig.inc.php, web/systemdefaults.inc.php:
+	  
+	  Following the suggestion of Céline Grousson, added a new config
+	  variable to enable email notifications for new bookings to be
+	  turned off. At the same time took the opportunity to rationalise
+	  the naming of some of the mail settings, so the variables that
+	  control when an email should be sent are now called
+	  $mail_settings['on_new'], $mail_settings['on_change'] and
+	  $mail_settings['on_delete']. The old variables,
+	  $mail_settings['admin_all'] and
+	  $mail_settings['admin_on_delete'], are still supported for
+	  compatibility but their use is deprecated.
+
+2010-11-24 17:50  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1640] auth_ldap.pl, auth_ldapsearch.pl, auth_pam.pl, badpw.pl,
+	  checklang.php, convert_db_to_utf8.php, crypt_passwd.pl,
+	  testdata.php, web/Mail.php, web/PEAR.php,
+	  web/Themes/classic126/styling.inc, web/Themes/default/header.inc,
+	  web/Themes/default/styling.inc, web/add.php, web/admin.php,
+	  web/approve_entry_handler.php, web/auth_config.inc,
+	  web/auth_db.inc, web/auth_db_ext.inc, web/auth_ext.inc,
+	  web/auth_imap.inc, web/auth_imap_php.inc, web/auth_ldap.inc,
+	  web/auth_nis.inc, web/auth_none.inc, web/auth_nw.inc,
+	  web/auth_pop3.inc, web/auth_smtp.inc, web/config.inc.php,
+	  web/dbsys.inc, web/defaultincludes.inc, web/del.php,
+	  web/del_entry.php, web/edit_area_room.php, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/edit_users.php,
+	  web/escapeshellarg.inc, web/functions.inc,
+	  web/functions_mail.inc, web/grab_globals.inc.php, web/help.php,
+	  web/index.php, web/lang.ca, web/lang.cs, web/lang.da,
+	  web/lang.de, web/lang.el, web/lang.en, web/lang.es, web/lang.eu,
+	  web/lang.fi, web/lang.fr, web/lang.it, web/lang.ja, web/lang.ko,
+	  web/lang.nl, web/lang.no, web/lang.pl, web/lang.pt, web/lang.sl,
+	  web/lang.sv, web/lang.tr, web/lang.zh-cn, web/lang.zh-tw,
+	  web/language.inc, web/mincals.inc, web/month.php,
+	  web/mrbs_auth.inc, web/mrbs_sql.inc, web/mysql.inc,
+	  web/mysqli.inc, web/pending.php, web/pgsql.inc, web/report.php,
+	  web/search.php, web/session_cookie.inc, web/session_host.inc,
+	  web/session_http.inc, web/session_ip.inc, web/session_nt.inc,
+	  web/session_omni.inc, web/session_php.inc,
+	  web/session_remote_user.inc, web/style.inc, web/theme.inc,
+	  web/trailer.inc, web/upgrade.inc, web/upgrade/13/post.inc,
+	  web/upgrade/15/post.inc, web/upgrade/16/post.inc,
+	  web/upgrade/17/post.inc, web/upgrade/2/post.inc,
+	  web/upgrade/21/post.inc, web/upgrade/4/post.inc,
+	  web/upgrade/5/post.inc, web/upgrade/6/post.inc,
+	  web/upgrade/7/post.inc, web/upgrade/8/post.inc,
+	  web/view_entry.php, web/week.php:
+	  
+	  - svn:mime-type tidying.
+
+2010-11-24 16:09  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1639] web/version.inc:
+	  
+	  - One further test of svn:mime-type behaviour.
+
+2010-11-24 16:07  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1638] web/day.php:
+	  
+	  - Testing the effects of svn:mime-type on ViewVC behaviour.
+
+2010-11-24 13:08  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1637] web/jquery/ui/css/sunny/jquery-ui-1.8.6.custom.css,
+	  web/jquery/ui/jquery-ui-1.8.6.custom.min.js:
+	  
+	  - Set svn:eol-style for new files.
+
+2010-11-24 10:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1636] web/Themes/default/header.inc,
+	  web/jquery/ui/css/sunny/images/ui-bg_gloss-wave_60_fece2f_500x100.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_gloss-wave_70_ffdd57_500x100.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_ed9f26_256x240.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_fadc7a_256x240.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_ffe180_256x240.png,
+	  web/jquery/ui/css/sunny/jquery-ui-1.8.4.custom.css[DEL],
+	  web/jquery/ui/css/sunny/jquery-ui-1.8.6.custom.css[ADD],
+	  web/jquery/ui/jquery-ui-1.8.4.custom.min.js[DEL],
+	  web/jquery/ui/jquery-ui-1.8.6.custom.min.js[ADD],
+	  web/jquery/ui/jquery-ui-datepicker-pt.js[DEL],
+	  web/jquery/ui/jquery-ui-i18n.js, web/style.inc:
+	  
+	  - Updated jQuery UI from 1.8.4 to 1.8.6 - Removed the separate
+	  Portuguese regional setting for datepicker as it is now included
+	  as standard in 1.8.6
+
+2010-11-24 09:50  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1635] ., tables.my.sql, tables.pg.pre73.sql, tables.pg.sql,
+	  web/Themes/default/header.inc, web/admin.php, web/day.php,
+	  web/dbsys.inc, web/edit_area_room.php, web/edit_entry.php,
+	  web/functions.inc, web/internalconfig.inc.php, web/lang.en,
+	  web/month.php, web/mrbs.css.php, web/mrbs_sql.inc,
+	  web/pending.php, web/upgrade/22[CPY],
+	  web/upgrade/22/mysql.sql[CPY], web/upgrade/22/pgsql.sql[CPY],
+	  web/upgrade/5/pgsql.sql, web/view_entry.php, web/week.php:
+	  
+	  Merged the disabled_rooms branch back into the trunk. Rooms and
+	  areas can now be disabled, meaning that they will not appear in
+	  the day/week/month views and bookings cannot be made for them.
+	  Any existing bookings will be preserved in the system, will be
+	  returned in Search and Report results and can be viewed in
+	  view_entry.php - but they will be read only.
+
+2010-11-22 21:21  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1629] ChangeLog, NEWS:
+	  
+	  * Updated NEWS and ChangeLog for 1.4.5 release.
+
 2010-11-22 14:39  Campbell Morrison <cimorrison@users.sourceforge.net>
 
 	* [r1628] web/Themes/default/header.inc:

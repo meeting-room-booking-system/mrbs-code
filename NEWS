@@ -7,6 +7,83 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.4.6 (Wed Feb 09 22:00:00 GMT 2011):
+
+[+] Areas and rooms can now be disabled.
+[*] Updated bundled version of jQuery UI to 1.8.6.
+[+] Added the ability to disable the new booking email notifications,
+ and tidying the configuration variables defining the email configuration.
+[-] Fixed bug causing approval of entries not to work when using
+ PostgreSQL.
+[*] Fixed error handling if there's an SQL error when approving an
+ entry.
+[*] Changed the privacy and confirmation status fields to be radio
+ buttons rather than checkboxes to make it slightly clearer what
+ they do.
+[*] Updated PEAR Mail package to Release 1.2.0 and Net_SMTP to
+ Release 1.4.4.
+[-] Fixed bug whereby mail was not being sent to those on the cc and
+ bcc lists.
+[-] Fixed bug that caused the room and area links in the day, week
+ and month views to operate incorrectly when using "list" format.
+ See SF Tracker ID: 3134046.
+[-] Fixed bug which caused repeat, all-day bookings not to book the
+ last day of a series.
+[*] Updated Portuguese translation
+[*] Updated French translation provided by Philippe Levi.
+[-] Added escaping of JavaScript strings.
+[-] Added missing HTML escaping in a number of places to solve possible
+ XSS attacks.
+[+] Added support for HTML emails, optionally with ICS attachments for
+ "invitation" support. You can also download bookings in ICS format from
+  the web interface.
+[*] Added datepicker localisations for English (New Zealand) and English
+ (Australia). Also corrected the localisation for Norwegian.
+[-] Fixed a bug whereby book ahead policies would not be applied
+ when using periods. [SF Support Request #3161926]
+[*] Removed MRBS's non-Unicode mode. All installations will now run
+ in Unicode, with all pages served as UTF-8 and all data in the database
+ as UTF-8. If you upgrade an installation running in non-Unicode mode
+ you must run the improved convert_db_to_utf8.php script, as detailed
+ in UPGRADE.
+[*] Updated/fixed Czech translation from Marek Grác.
+[-] Fixed problem where start and end times do not appear correctly
+ in the select boxes on the edit_entry form when using 12 hour
+ format and running on a Windows server.
+[*] Updated the MySQL table installation SQL files to utilise MySQL
+ 4.1 features. A version for older versions of MySQL is retained
+ as tables.my.pre41.sql.
+[*] Removed hard-coded formats for dates/times and made them configuration
+ variables.
+[*] Clarified documentation on custom fields.
+[-] Fixed bug whereby start and end times were incorrectly presented
+ in reports when using mixed periods and times.
+[-] Fixed bug whereby report summaries were not sorted properly by name.
+[-] Fixed report summary table so that it can cope with mixed periods and
+ times.
+[-] Fixed search so that it can handle mixed periods and times.
+[-] Fixed pending bookings functionality so that it can cope with
+ mixed periods and times.
+[*] Removed a possible PHP deprecation warning, SF #3165269.
+[*] Made it so that you return to the right area after deleting a
+ room. Based on a patch in SF #3019525.
+[*] Added coloured borders for booking types in the printing style sheet.
+ Submitted by tuomas_ in SF #3003248.
+[*] Added error logging into fatal_error(). Patch submitted by
+ 'shallot' in SF #2955546.
+[+] Added the ability to specify a footer in the theme. Patch
+ submitted by rudd_j in SF #3166889.
+[+] Implemented the ability to configure the default booking
+ description with $default_description, as requested in SF
+ #3001740.
+[*] Now chooses a determined locale wven if MRBS doesn't have a
+ translation for that locale. It's better than nothing to get
+ dates/times right. Reported by 'corn_kid' as SF #2934313.
+[*] Improved handling of SQL errors.
+[*] Updated Spanish translation received from Jose Luis Martin
+ Jimenez.
+
+-------------------------------------------------------------------------------
 Version 1.4.5 (Mon Nov 22 22:00:00 GMT 2010):
 
 [+] Added the ability to prevent ordinary users from selecting multiple
