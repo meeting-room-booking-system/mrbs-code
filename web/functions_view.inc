@@ -39,6 +39,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   global $enable_periods, $confirmation_enabled, $approval_enabled;
   global $is_private_field, $standard_fields, $typel;
   global $strftime_format;
+  global $tbl_entry;
   
   // Get the duration if we haven't got it already
   if (!isset($data['duration']))
