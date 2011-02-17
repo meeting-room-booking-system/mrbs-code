@@ -797,14 +797,27 @@ checkAuthorised();
 $user = getUserName();
 $is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
 
+// Set some defaults
+if (!isset($match_approved))
+{
+  $match_approved = APPROVED_BOTH;
+}
+if (!isset($match_confirmed))
+{
+  $match_confirmed = CONFIRMED_BOTH;
+}
+if (!isset($match_private))
+{
+  $match_private = PRIVATE_BOTH;
+}
 if (empty($summarize))
 {
   $summarize = REPORT + OUTPUT_HTML;
 }
 
-$output_as_html = (!isset($summarize)) || ($summarize & OUTPUT_HTML);
 $output_as_csv = $summarize & OUTPUT_CSV;
 $output_as_ical = $summarize & OUTPUT_ICAL;
+$output_as_html = ($summarize & OUTPUT_HTML) || !($output_as_csv || $output_as_ical);
 
 // Get information about custom fields
 $fields = sql_field_info($tbl_entry);
