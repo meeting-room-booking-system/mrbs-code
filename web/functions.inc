@@ -561,7 +561,7 @@ function fatal_error($need_header, $message)
 // http://www.php.net/manual/function.addcslashes.php
 function escape_js($str)
 {
-  return addcslashes($str, "\\\'\"&\n\r<>");
+  return addcslashes($str, "\\\'\"&\n\r<>/");
 }
 
 
