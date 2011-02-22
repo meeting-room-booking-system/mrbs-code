@@ -915,7 +915,9 @@ $csv_col_sep = ",";   // Separator between columns/fields
  * Entry Types
  *************/
 
-// This array maps entry type codes (letters A through J) into descriptions.
+// This array maps entry type codes into descriptions.   The key to the $typel array
+// is a single char in the MRBS database, and so the array key can be any permitted
+// PHP array key character.
 //
 // This is a basic default array which ensures there are at least some types defined.
 // The proper type definitions should be made in config.inc.php:  they have to go there
@@ -938,6 +940,7 @@ $csv_col_sep = ",";   // Separator between columns/fields
 // $typel["C"] = "C";
 // $typel["D"] = "D";
 $typel["E"] = "E";
+$typel["e"] = "lower case e";
 // $typel["F"] = "F";
 // $typel["G"] = "G";
 // $typel["H"] = "H";

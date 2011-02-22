@@ -975,12 +975,9 @@ else
       <label for="type"><?php echo get_vocab("type")?>:</label>
       <select id="type" name="type">
         <?php
-        for ($c = "A"; $c <= "Z"; $c++)
+        foreach ($typel as $key => $value)
         {
-          if (!empty($typel[$c]))
-          { 
-            echo "<option value=\"$c\"" . ($type == $c ? " selected=\"selected\"" : "") . ">$typel[$c]</option>\n";
-          }
+          echo "<option value=\"$key\"" . (($type == $key) ? " selected=\"selected\"" : "") . ">$value</option>\n";
         }
         ?>
       </select>

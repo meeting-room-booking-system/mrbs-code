@@ -939,27 +939,24 @@ function show_colour_key()
       $table_width = 5;
   }
   echo "<table id=\"colour_key\"><tr>\n";
-  $nct = 0;
-  for ($ct = "A"; $ct <= "Z"; $ct++)
+  $n = 0;
+  foreach ($typel as $key => $value)
   {
-    if (!empty($typel[$ct]))
+    if (++$n > $table_width)
     {
-      if (++$nct > $table_width)
-      {
-        $nct = 1;
-        echo "</tr><tr>";
-      }
-      tdcell($ct, 1);
-      echo "<div class=\"celldiv slots1\" " .  // put the description inside a div which will give clipping in case of long names
-      "title=\"$typel[$ct]\">\n";        // but put the name in the title so you can still read it all if you hover over it
-      echo "$typel[$ct]</div></td>\n";
+      $n = 1;
+      echo "</tr><tr>";
     }
+    tdcell($key, 1);
+    echo "<div class=\"celldiv slots1\" " .  // put the description inside a div which will give clipping in case of long names
+    "title=\"$value\">\n";        // but put the name in the title so you can still read it all if you hover over it
+    echo "$value</div></td>\n";
   }
   // If there is more than one row and the bottom row isn't complete then 
   // pad it out with a single merged cell
-  if ((count($typel) > $table_width) && ($nct < $table_width))
+  if ((count($typel) > $table_width) && ($n < $table_width))
   {
-    echo "<td colspan=\"" . ($table_width - $nct) . "\"" .
+    echo "<td colspan=\"" . ($table_width - $n) . "\"" .
         " id=\"row_padding\">&nbsp;</td>\n";
   }
   echo "</tr></table>\n";
