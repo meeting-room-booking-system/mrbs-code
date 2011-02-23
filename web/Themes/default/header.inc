@@ -238,7 +238,7 @@ if ($page == 'edit_area_room')
         height: 'toggle'
         }, speed);
     }
-    <? // Show or Hide the note about periods as appropriate ?>
+    <?php // Show or Hide the note about periods as appropriate ?>
     if (periodsChecked)
     {
       $('#book_ahead_periods_note').show(speed);
