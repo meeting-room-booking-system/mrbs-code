@@ -37,19 +37,23 @@ function authValidateUser($user, $pass)
   global $tbl_users;
 
   $user = strtolower(addslashes($user));
-
   // No addslashes() required because it's put in the database as an MD5,
   // which is safe.
   $pass = md5($pass);
+  
+  $result = sql_query1("SELECT COUNT(*) FROM $tbl_users WHERE name='$user' AND password='$pass' LIMIT 1");
+  if ($result == -1)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    return 0;
+  }
 
-  return max(0, sql_query1("SELECT COUNT(*) FROM $tbl_users WHERE name='$user' AND password='$pass' LIMIT 1"));
-  // The max is used to cover the case when there's an SQL Query error (ie -1), probably because $tbl_users
-  // hasn't been set up yet.   In that case we want to return 0 (ie validation failed)  
+  return $result;
 }
 
 /* authGetUserLevel($user)
  * 
- * Determines the users access level
+ * Determines the user's access level
  * 
  * $user - The user name
  *
@@ -65,10 +69,14 @@ function authGetUserLevel($user)
     return 0;
   }
   
-  return max (0, sql_query1("SELECT level FROM $tbl_users WHERE name='" . addslashes($user) . "' LIMIT 1"));
-  // The max is used to cover the case when there's an SQL Query error (ie -1), probably because
-  // the database hasn't yet been upgraded and there's no 'level' column.   In that case we want 
-  // to return 0 (ie the user has no rights)
+  $result = sql_query1("SELECT level FROM $tbl_users WHERE name='" . addslashes($user) . "' LIMIT 1");
+  if ($result == -1)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    return 0;
+  }
+
+  return $result;
 }
 
 ?>
