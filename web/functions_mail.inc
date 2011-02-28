@@ -51,7 +51,7 @@ function convertToMailCharset($string)
 
 function get_mail_charset()
 {
-  global $mail_charset, $mail_vocab;
+  global $mail_charset;
 
   if (isset($mail_charset))
   {
