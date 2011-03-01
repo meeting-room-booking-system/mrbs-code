@@ -84,9 +84,16 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   $sql = "UPDATE $tbl_repeat
              SET status=status|" . STATUS_AWAITING_APPROVAL . "
            WHERE id=" . $row['repeat_id'];
-  if (sql_command($sql) != 1)
+  $result = sql_command($sql);
+  if ($result == -1)
   {
+    // We've got an SQL error, so report it
     trigger_error(sql_error(), E_USER_WARNING);
+  }
+  if ($result != 1)
+  {
+    // Something's gone wrong.   There's either been an SQL error, or else no rows have been
+    // affected, which should not be the case
     fatal_error(FALSE, "Failed to update status column in repeat table with approval status.");
   }
 }  
