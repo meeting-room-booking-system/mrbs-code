@@ -35,6 +35,7 @@ $sql = "UPDATE $tbl_entry SET status=(((~status)&1)<<1)|(private&1)";
 $res = sql_command($sql);
 if ($res == -1)
 {
+  trigger_error(sql_error(), E_USER_WARNING);
   // No need to localise, should never happen
   print "<span class=\"error\">Failed to update status column in entry table.</span>";
 }
@@ -60,6 +61,7 @@ $res = sql_command($sql);
 
 if ($res == -1)
 {
+  trigger_error(sql_error(), E_USER_WARNING);
   // No need to localise, should never happen
   print "<span class=\"error\">Failed to update status column in repeat table with privacy status.</span>";
 }
@@ -72,6 +74,7 @@ $sql = "SELECT DISTINCT repeat_id FROM $tbl_entry WHERE repeat_id!=" . REP_NONE 
 $res = sql_query($sql);
 if ($res === FALSE)
 {
+  trigger_error(sql_error(), E_USER_WARNING);
   fatal_error(FALSE, "Failed to update status column in repeat table with approval status.");
 }
 
@@ -83,6 +86,7 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
            WHERE id=" . $row['repeat_id'];
   if (sql_command($sql) != 1)
   {
+    trigger_error(sql_error(), E_USER_WARNING);
     fatal_error(FALSE, "Failed to update status column in repeat table with approval status.");
   }
 }  
