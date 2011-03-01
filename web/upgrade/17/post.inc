@@ -70,7 +70,7 @@ if ($res == -1)
 // awaiting approval if any one of its individual members is awaiting approval.
 
 // Find all the rows in the entry table that are members of a series and are awaiting approval
-$sql = "SELECT DISTINCT repeat_id FROM $tbl_entry WHERE repeat_id!=" . REP_NONE . " AND status=0";
+$sql = "SELECT DISTINCT repeat_id FROM $tbl_entry WHERE repeat_id!=0 AND (status&" . STATUS_AWAITING_APPROVAL . " != 0)";
 $res = sql_query($sql);
 if ($res === FALSE)
 {
