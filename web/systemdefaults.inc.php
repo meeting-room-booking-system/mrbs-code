@@ -527,9 +527,10 @@ $confirmed_default = TRUE;
 
 $is_mandatory_field = array();
 // You can define custom entry fields to be mandatory by setting
-// items in the array $is_mandatory_field. For example:
+// items in the array $is_mandatory_field.   (Note that making a checkbox
+// field mandatory means that the box must be checked.)   For example:
 
-// $is_mandatory_field['entry.coffee_required'] = true;
+// $is_mandatory_field['entry.terms_and_conditions'] = true;
 
  
 /***********************************************

@@ -233,6 +233,11 @@ would define the 'conference_facilities' custom field to be mandatory.
 In the case of a select field, this adds an empty value to the dropdown
 list.
 
+Making a checkbox field mandatory is possible and requires the
+checkbox to be ticked before the form can be submitted.   This can be
+useful for example for requiring users to accept terms of service or
+terms and conditions.
+
 3)
 
 You can also specify that a field is private, ensuring that the contents

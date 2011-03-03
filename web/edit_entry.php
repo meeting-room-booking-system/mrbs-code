@@ -588,7 +588,13 @@ function validate(form)
     $.each(mandatory_fields,
            function(index, value)
            {
-             if ($("#"+value).val() == '')
+             var field = $("#"+value);
+             <?php
+             // If it's a checkbox then it needs to be checked.    If it's
+             // an ordinary field then it must have some content.
+             ?>
+             if ( ((field.attr('type').toLowerCase() == 'checkbox') && !field.attr('checked')) ||
+                  (field.val() == '') )
              {
                label = $("label[for="+value+"]").html();
                label = label.replace(/:$/, '');
