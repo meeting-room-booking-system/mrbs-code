@@ -536,7 +536,7 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='')
 // caller did that. Alway outputs the bottom of the page and exits.
 function fatal_error($need_header, $message)
 {
-  global $simple_trailer, $weekstarts, $view_week_number;
+  global $simple_trailer, $weekstarts, $view_week_number, $strftime_format;
   
   if ($need_header)
   {
