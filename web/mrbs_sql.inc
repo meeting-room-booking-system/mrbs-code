@@ -789,7 +789,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
     }
     else
     {
-      fatal_error(0, ($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
+      fatal_error(TRUE, ($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
     }
   }
 
@@ -886,7 +886,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
     }
     else
     {
-      fatal_error(0, ($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
+      fatal_error(TRUE, ($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
     }
   }
 
