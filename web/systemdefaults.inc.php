@@ -941,7 +941,6 @@ $csv_col_sep = ",";   // Separator between columns/fields
 // $typel["C"] = "C";
 // $typel["D"] = "D";
 $typel["E"] = "E";
-$typel["e"] = "lower case e";
 // $typel["F"] = "F";
 // $typel["G"] = "G";
 // $typel["H"] = "H";
