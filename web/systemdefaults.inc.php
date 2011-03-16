@@ -818,7 +818,7 @@ $mail_settings['username_suffix'] = '';
 // HOW TO EMAIL - BACKEND
 // ----------------------
 // Set the name of the backend used to transport your mails. Either 'mail',
-// 'smtp' or 'sendmail'. Default is 'mail'. See INSTALL for more details.
+// 'smtp' or 'sendmail'. Default is 'mail'.
 $mail_settings['admin_backend'] = 'mail';
 
 /*******************
