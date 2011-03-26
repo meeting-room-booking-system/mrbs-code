@@ -46,7 +46,7 @@ $db_tbl_prefix = "mrbs_";
 // $db_nopersist = 1;
 
 
-/* Add lines from systemdefaults.inc.php here to change the default
+/* Add lines from systemdefaults.inc.php below here to change the default
    configuration. Do _NOT_ modify systemdefaults.inc.php. */
 
 
@@ -55,6 +55,9 @@ $db_tbl_prefix = "mrbs_";
 
 // This next section must come at the end of the config file - ie after any
 // language and mail settings, as the definitions are used in the included file
+//
+// IMPORTANT NOTE: Do NOT put any configuration apart from the "Entry Types"
+// below this section
 require_once "language.inc";   // DO NOT DELETE THIS LINE
 
 /*************
