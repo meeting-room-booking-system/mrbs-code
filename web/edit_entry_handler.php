@@ -293,12 +293,10 @@ if (isset($all_day) && ($all_day == "yes"))
 }
 
 // Now work out the start and times
-$starttime = mktime(0, 0, 0,
-                    $month, $day, $year,
-                    is_dst($month, $day, $year, intval($start_seconds/3600))) + $start_seconds;
-$endtime   = mktime(0, 0, 0,
-                    $end_month, $end_day, $end_year,
-                    is_dst($end_month, $end_day, $end_year, intval($end_seconds/3600))) + $end_seconds;
+$starttime = mktime(intval($start_seconds/3600), intval(($start_seconds%3600)/60), 0,
+                    $month, $day, $year);
+$endtime   = mktime(intval($end_seconds/3600), intval(($end_seconds%3600)/60), 0,
+                    $end_month, $end_day, $end_year);
 // If we're using periods then the endtime we've been returned by the form is actually
 // the beginning of the last period in the booking (it's more intuitive for users this way)
 // so we need to add on 60 seconds (1 period)
@@ -344,7 +342,8 @@ if (isset($rep_type) && ($rep_type != REP_NONE) &&
     isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
 {
   // Get the repeat entry settings
-  $end_date = $start_seconds + mktime(0, 0, 0, $rep_end_month, $rep_end_day, $rep_end_year);
+  $end_date = mktime(intval($start_seconds/3600), intval(($start_seconds%3600)/60), 0,
+                     $rep_end_month, $rep_end_day, $rep_end_year);
 }
 else
 {

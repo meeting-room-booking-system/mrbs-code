@@ -53,7 +53,11 @@ require_once "mrbs_sql.inc";
 
 // Generate a time or period selector starting with $first and ending with $last.
 // $time is a full Unix timestamp and is the current value.  The selector returns
-// the start time in seconds since the beginning of the day for the start of that slot
+// the start time in seconds since the beginning of the day for the start of that slot.
+// Note that these are nominal seconds and do not take account of any DST changes that
+// may have happened earlier in the day.  (It's this way because we don't know what day
+// it is as that's controlled by the date selector - and we can't assume that we have
+// JavaScript enabled to go and read it)
 // The $display parameter sets the display style of the <select>
 function genslotselector($area, $prefix, $first, $last, $time, $display="block")
 {
@@ -74,8 +78,11 @@ function genslotselector($area, $prefix, $first, $last, $time, $display="block")
   // that there is only one select passing through the variable to the handler
   $disabled = (strtolower($display) == "none") ? " disabled=\"disabled\"" : "";
   
+  // Get the current hour and minute and convert it into nominal (ie ignoring any
+  // DST effects) seconds since the start of the day
   $date = getdate($time);
-  $time_zero = mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']);
+  $current_t = (($date['hours'] * 60) + $date['minutes']) * 60;
+  
   if ($enable_periods)
   {
     $base = 12*60*60;  // The start of the first period of the day
@@ -87,10 +94,13 @@ function genslotselector($area, $prefix, $first, $last, $time, $display="block")
   $html .= "<select style=\"display: $display\" id = \"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\"$disabled>\n";
   for ($t = $first; $t <= $last; $t = $t + $resolution)
   {
-    $timestamp = $t + $time_zero;
+    // The date used below is completely arbitrary.   All that matters is that it
+    // is a day that does not contain a DST boundary.   (We need a real date so that
+    // we can use strftime to get an hour and minute formatted according to the locale)
+    $timestamp = $t + mktime(0, 0, 0, 1, 1, 2000);
     $slot_string = ($enable_periods) ? $periods[intval(($t-$base)/60)] : utf8_strftime($format, $timestamp);
     $html .= "<option value=\"$t\"";
-    $html .= ($timestamp == $time) ? " selected=\"selected\"" : "";
+    $html .= ($t == $current_t) ? " selected=\"selected\"" : "";
     $html .= ">$slot_string</option>\n";
   }
   $html .= "</select>\n";
