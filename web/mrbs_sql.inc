@@ -308,7 +308,7 @@ function mrbsCreateEntry($table, $data)
           switch ($field['nature'])
           {
             case 'integer':
-              if (!isset($data['custom_fields'][$key]) || ($data['custom_fields'][$key] === ''))
+              if (!isset($data[$key]) || ($data[$key] === ''))
               {
                 // Try and set it to NULL when we can because there will be cases when we
                 // want to distinguish between NULL and 0 - especially when the field
@@ -317,17 +317,17 @@ function mrbsCreateEntry($table, $data)
               }
               else
               {
-                $value = $data['custom_fields'][$key];
+                $value = $data[$key];
               }
               break;
             default:
-              if (!isset($data['custom_fields'][$key]))
+              if (!isset($data[$key]))
               {
                 $value = '';
               }
               else
               {
-                $value = "'" . addslashes($data['custom_fields'][$key]) . "'";
+                $value = "'" . addslashes($data[$key]) . "'";
               }
               break;
           } // switch ($field_natures[$key])

@@ -565,7 +565,10 @@ if ($valid_booking)
     $data['type'] = $type;
     $data['description'] = $description;
     $data['status'] = $status;
-    $data['custom_fields'] = $custom_fields;
+    foreach ($custom_fields as $key => $value)
+    {
+      $data[$key] = $value;
+    }
     $data['rep_type'] = $rep_type;
     if ($edit_type == "series")
     {

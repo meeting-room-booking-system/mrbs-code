@@ -589,7 +589,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
       if (!in_array($field['name'], $standard_fields['entry']))
       {
         $key = $field['name'];
-        $value = (isset($data['custom_fields'][$key])) ? $data['custom_fields'][$key] : '';
+        $value = (isset($data[$key])) ? $data[$key] : '';
         // Convert any booleans or pseudo-booleans to text strings (in the mail language)
         if (($field['nature'] == 'boolean') || 
             (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
