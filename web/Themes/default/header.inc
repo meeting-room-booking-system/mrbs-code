@@ -68,10 +68,7 @@ function print_theme_header($day, $month, $year, $area, $room)
     // which do not exist explicitly.   Although datepicker defaults to US English, it
     // helps when choosing the regional settings to have explicit settings.  A ticket
     // (#6682) has been raised to request their inclusion.    The files have been kept
-    // separate to avoid problems with merging new releases of UI
-    //
-    // Similarly there are no explicit en-AU or en-NZ initialisations.  A ticket (#6828)
-    // has been raised.
+    // separate to avoid problems with merging new releases of UI.
     //
     // The Norwegian initialisation is a correction to the standard initialisation.
     // Discussions are underway (Jan 2011) with the author of the standard initialisation
@@ -79,8 +76,6 @@ function print_theme_header($day, $month, $year, $area, $room)
     ?>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-US.js"></script>
-    <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-AU.js"></script>
-    <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-NZ.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-no.js"></script>
     
     
