@@ -70,14 +70,9 @@ function print_theme_header($day, $month, $year, $area, $room)
     // (#6682) has been raised to request their inclusion.    The files have been kept
     // separate to avoid problems with merging new releases of UI.
     //
-    // The Norwegian initialisation is a correction to the standard initialisation.
-    // Discussions are underway (Jan 2011) with the author of the standard initialisation
-    // with a view to getting a resolution incorporated in the standard jQuery UI package
     ?>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-US.js"></script>
-    <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-no.js"></script>
-    
     
     <script type="text/javascript">
 
