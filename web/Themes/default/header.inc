@@ -43,7 +43,7 @@ function generate_autocomplete($id, $sql)
     // because the browser doesn't render the autocomplete box properly - it
     // gets hidden behind other elements.   Although there are fixes for this,
     // it's not worth it ...
-    $js .= "if ($('#iegt6').length > 0)\n";
+    $js .= "if ($('#ielte6').length == 0)\n";
     $js .= "{\n";
     $js .= "  $('#$id').autocomplete({\n";
     $js .= "    source: [$names_string],\n";
@@ -778,26 +778,7 @@ if ($page == 'pending')
 ?>
 
 $(document).ready(function() {
-  <?php
-  if ($page == 'report')
-  {
-    // Make the area match input on the report page into an auto-complete input
-    $sql = "SELECT area_name FROM $tbl_area ORDER BY area_name";
-    echo generate_autocomplete('areamatch', $sql);
 
-    // Make the room match input on the report page into an auto-complete input
-    // (We need DISTINCT because it's possible to have two rooms of the same name
-    // in different areas)
-    $sql = "SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name";
-    echo generate_autocomplete('roommatch', $sql);
-  }
-  ?>
-});
-
-
-// actions to be taken on page load
-function init()
-{
   <?php // ALL PAGES ?>
   // if there's a logon box, set the username input field in focus
   var logonForm = document.getElementById('logon');
@@ -931,6 +912,20 @@ function init()
     <?php
   }
 
+  // REPORT.PHP
+  if ($page == 'report')
+  {
+    // Make the area match input on the report page into an auto-complete input
+    $sql = "SELECT area_name FROM $tbl_area ORDER BY area_name";
+    echo generate_autocomplete('areamatch', $sql);
+
+    // Make the room match input on the report page into an auto-complete input
+    // (We need DISTINCT because it's possible to have two rooms of the same name
+    // in different areas)
+    $sql = "SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name";
+    echo generate_autocomplete('roommatch', $sql);
+  }
+
   // SEARCH.PHP
   // put the search string field in focus
   if ($page == 'search')
@@ -944,7 +939,8 @@ function init()
   <?php
   }
   ?>
-}
+
+});
 
 
 //]]>
@@ -953,7 +949,7 @@ function init()
   <?php
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
-  echo "<body class=\"".htmlspecialchars($page)."\" onLoad =\"init()\">\n";
+  echo "<body class=\"".htmlspecialchars($page)."\">\n";
   ?>
 
 
@@ -963,9 +959,9 @@ function init()
     // Add in some markers so that the JavaScript can work out
     // which browser we're using
     ?>
-    <![if gt IE 6]>
-    <span id="iegt6"></span>
-    <![endif]>
+    <!--[if lte IE 6 ]>
+    <span id="ielte6"></span>
+    <![endif]-->
 
 <?php // show a warning if this is using a low version of php
   if (substr(phpversion(), 0, 1) == 3)
