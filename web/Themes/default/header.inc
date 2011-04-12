@@ -2,6 +2,69 @@
 
 // $Id$
 
+// Generates the JavaScript code to turn the input with id $id
+// into an autocomplete box.  The options will be contained in the
+// first element of each row of the result from the SQL query $sql
+// (eg "SELECT area_name FROM $tbl_area ORDER BY area_name")
+function generate_autocomplete($id, $sql)
+{
+  global $autocomplete_length_breaks;
+  
+  $js = '';
+
+  $res = sql_query($sql);
+  if ($res && (sql_count($res) > 0))
+  {
+    $names = array();
+    for ($i = 0; ($row = sql_row($res, $i)); $i++)
+    {
+      $names[] = escape_js($row[0]);
+    }
+    // Work out a suitable value for the autocomplete minLength
+    // option, ie the number of characters that must be typed before
+    // a list of options appears.   We want to avoid presenting a huge 
+    // list of options.
+    $n_names = count($names);
+    $min_length = 0;
+    if (isset($autocomplete_length_breaks) && is_array($autocomplete_length_breaks))
+    {
+      foreach ($autocomplete_length_breaks as $break)
+      {
+        if ($n_names < $break)
+        {
+          break;
+        }
+        $min_length++;
+      }
+    }
+    // Start forming the array literal
+    $names_string = "'" . implode("','", $names) . "'";
+    // Build the JavaScript.   We don't support autocomplete in IE6 and below
+    // because the browser doesn't render the autocomplete box properly - it
+    // gets hidden behind other elements.   Although there are fixes for this,
+    // it's not worth it ...
+    $js .= "if ($('#iegt6').length > 0)\n";
+    $js .= "{\n";
+    $js .= "  $('#$id').autocomplete({\n";
+    $js .= "    source: [$names_string],\n";
+    $js .= "    minLength: $min_length\n";
+    $js .= "  })";
+    // If the minLength is 0, then the autocomplete widget doesn't do
+    // quite what you might expect and you need to force it to display
+    // the available options when it receives focus
+    if ($min_length == 0)
+    {
+      $js .= ".focus(function() {\n";
+      $js .= "    $(this).autocomplete('search', '');\n";
+      $js .= "  })";
+    }
+    $js .= "  ;\n";
+    $js .= "}\n";
+  }
+
+  return $js;
+}
+
 // Print the page header
 function print_theme_header($day, $month, $year, $area, $room)
 {
@@ -714,6 +777,24 @@ if ($page == 'pending')
 } // pending
 ?>
 
+$(document).ready(function() {
+  <?php
+  if ($page == 'report')
+  {
+    // Make the area match input on the report page into an auto-complete input
+    $sql = "SELECT area_name FROM $tbl_area ORDER BY area_name";
+    echo generate_autocomplete('areamatch', $sql);
+
+    // Make the room match input on the report page into an auto-complete input
+    // (We need DISTINCT because it's possible to have two rooms of the same name
+    // in different areas)
+    $sql = "SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name";
+    echo generate_autocomplete('roommatch', $sql);
+  }
+  ?>
+});
+
+
 // actions to be taken on page load
 function init()
 {
@@ -874,7 +955,17 @@ function init()
   // (Use a class rather than id to avoid specificity problems)
   echo "<body class=\"".htmlspecialchars($page)."\" onLoad =\"init()\">\n";
   ?>
+
+
     <div class="screenonly">
+    
+    <?php
+    // Add in some markers so that the JavaScript can work out
+    // which browser we're using
+    ?>
+    <![if gt IE 6]>
+    <span id="iegt6"></span>
+    <![endif]>
 
 <?php // show a warning if this is using a low version of php
   if (substr(phpversion(), 0, 1) == 3)

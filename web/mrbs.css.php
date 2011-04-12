@@ -822,3 +822,15 @@ div#simple_trailer {clear: both; width: 100%; text-align: center; padding-top: 1
 #approve_buttons td#note {padding-top: 0}
 #approve_buttons td#note form {width: 100%}
 #approve_buttons td#note textarea {width: 100%; height: 6em}
+
+/* ------------ jQuery UI additions -------------*/
+
+.ui-autocomplete {
+  max-height: 150px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+  /* add padding to account for vertical scrollbar */
+  padding-right: 20px;
+}
+

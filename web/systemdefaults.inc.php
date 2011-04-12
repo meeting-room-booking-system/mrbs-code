@@ -400,7 +400,18 @@ $max_content_length = 20;  // characters
 // The maximum length of a database field for which a text input can be used on a form
 // (eg when editing a user or room).  If longer than this a text area will be used.
 $text_input_max = 70;  // characters
-                                
+
+// For inputs that have autocomplete options, eg the area and room match inputs on
+// the report page, we can define how many characters need to be input before the 
+// options are displayed.  This enables us to prevent a huge long list of options
+// being presented.   We define the breakpoints in an array.   For example if we set
+// $autocomplete_length_breaks = array(25, 250, 2500); this means that if the number of options
+// is less than 25 then they will be displayed when 0 characters are input, ie the input
+// receives focus.   If the number of options is less than 250 then they will be displayed
+// when 1 character is input and so on.    The array can be as long as you like.   If it
+// is empty then the options are displayed when 0 characters are input.
+$autocomplete_length_breaks = array(25, 250, 2500);
+
 
 /************************
  * Miscellaneous settings
