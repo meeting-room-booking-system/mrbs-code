@@ -19,30 +19,31 @@
 
 CREATE TABLE mrbs_area
 (
-  id                     int NOT NULL auto_increment,
-  disabled               tinyint(1) DEFAULT 0 NOT NULL,
-  area_name              varchar(30),
-  area_admin_email       text,
-  resolution             int,
-  default_duration       int,
-  morningstarts          int,
-  morningstarts_minutes  int,
-  eveningends            int,
-  eveningends_minutes    int,
-  private_enabled        tinyint(1),
-  private_default        tinyint(1),
-  private_mandatory      tinyint(1),
-  private_override       varchar(32),
-  min_book_ahead_enabled tinyint(1),
-  min_book_ahead_secs    int,
-  max_book_ahead_enabled tinyint(1),
-  max_book_ahead_secs    int,
-  custom_html            text,
-  approval_enabled       tinyint(1),
-  reminders_enabled      tinyint(1),
-  enable_periods         tinyint(1),
-  confirmation_enabled   tinyint(1),
-  confirmed_default      tinyint(1),
+  id                        int NOT NULL auto_increment,
+  disabled                  tinyint(1) DEFAULT 0 NOT NULL,
+  area_name                 varchar(30),
+  area_admin_email          text,
+  resolution                int,
+  default_duration          int,
+  default_duration_all_day  tinyint(1) DEFAULT 0 NOT NULL,
+  morningstarts             int,
+  morningstarts_minutes     int,
+  eveningends               int,
+  eveningends_minutes       int,
+  private_enabled           tinyint(1),
+  private_default           tinyint(1),
+  private_mandatory         tinyint(1),
+  private_override          varchar(32),
+  min_book_ahead_enabled    tinyint(1),
+  min_book_ahead_secs       int,
+  max_book_ahead_enabled    tinyint(1),
+  max_book_ahead_secs       int,
+  custom_html               text,
+  approval_enabled          tinyint(1),
+  reminders_enabled         tinyint(1),
+  enable_periods            tinyint(1),
+  confirmation_enabled      tinyint(1),
+  confirmed_default         tinyint(1),
 
   PRIMARY KEY (id)
 );
@@ -138,6 +139,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '26');
+  VALUES ( 'db_version', '27');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

@@ -204,7 +204,8 @@ $standard_fields['room'] = array('id',
                                  'custom_html');
 
 // Boolean fields.    These are fields which are treated as booleans                                
-$boolean_fields['area'] = array('private_enabled',
+$boolean_fields['area'] = array('default_duration_all_day',
+                                'private_enabled',
                                 'private_default',
                                 'private_mandatory',
                                 'min_book_ahead_enabled',
@@ -225,25 +226,26 @@ $boolean_fields['area'] = array('private_enabled',
 // per-area settings and perhaps ought to be revisited at some stage]
 
 $area_defaults = array();
-$area_defaults['resolution']             = $resolution;
-$area_defaults['default_duration']       = $default_duration;
-$area_defaults['morningstarts']          = $morningstarts;
-$area_defaults['morningstarts_minutes']  = $morningstarts_minutes;
-$area_defaults['eveningends']            = $eveningends;
-$area_defaults['eveningends_minutes']    = $eveningends_minutes;
-$area_defaults['private_enabled']        = $private_enabled;
-$area_defaults['private_default']        = $private_default;
-$area_defaults['private_mandatory']      = $private_mandatory;
-$area_defaults['private_override']       = $private_override;
-$area_defaults['min_book_ahead_enabled'] = $min_book_ahead_enabled;
-$area_defaults['max_book_ahead_enabled'] = $max_book_ahead_enabled;
-$area_defaults['min_book_ahead_secs']    = $min_book_ahead_secs;
-$area_defaults['max_book_ahead_secs']    = $max_book_ahead_secs;
-$area_defaults['approval_enabled']       = $approval_enabled;
-$area_defaults['reminders_enabled']      = $reminders_enabled;
-$area_defaults['enable_periods']         = $enable_periods;
-$area_defaults['confirmation_enabled']   = $confirmation_enabled;
-$area_defaults['confirmed_default']      = $confirmed_default;
+$area_defaults['resolution']               = $resolution;
+$area_defaults['default_duration']         = $default_duration;
+$area_defaults['default_duration_all_day'] = $default_duration_all_day;
+$area_defaults['morningstarts']            = $morningstarts;
+$area_defaults['morningstarts_minutes']    = $morningstarts_minutes;
+$area_defaults['eveningends']              = $eveningends;
+$area_defaults['eveningends_minutes']      = $eveningends_minutes;
+$area_defaults['private_enabled']          = $private_enabled;
+$area_defaults['private_default']          = $private_default;
+$area_defaults['private_mandatory']        = $private_mandatory;
+$area_defaults['private_override']         = $private_override;
+$area_defaults['min_book_ahead_enabled']   = $min_book_ahead_enabled;
+$area_defaults['max_book_ahead_enabled']   = $max_book_ahead_enabled;
+$area_defaults['min_book_ahead_secs']      = $min_book_ahead_secs;
+$area_defaults['max_book_ahead_secs']      = $max_book_ahead_secs;
+$area_defaults['approval_enabled']         = $approval_enabled;
+$area_defaults['reminders_enabled']        = $reminders_enabled;
+$area_defaults['enable_periods']           = $enable_periods;
+$area_defaults['confirmation_enabled']     = $confirmation_enabled;
+$area_defaults['confirmed_default']        = $confirmed_default;
 
                
 /********************************************************

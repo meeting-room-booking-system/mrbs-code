@@ -15,7 +15,7 @@ $tbl_users     = $db_tbl_prefix . "users";
 $tbl_variables = $db_tbl_prefix . "variables";
 
 
-$db_schema_version = 26;
+$db_schema_version = 27;
 $local_db_schema_version = 1;
 
 

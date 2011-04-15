@@ -75,6 +75,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $auth;
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   global $lang_map_windows, $langs, $server_os;
+  global $default_duration_all_day;
   
   $page = basename($PHP_SELF, ".php");
   $user = getUserName();
@@ -458,13 +459,13 @@ if ($page == 'edit_entry')
       var endMonth = parseInt(form.end_datepicker_alt_month.value, 10);
       var endYear = parseInt(form.end_datepicker_alt_year.value, 10);
       var endDate = new Date(endYear, endMonth - 1, endDay, 12);
-        
+
       diff = (endDate - startDate)/(24 * 60 * 60 * 1000);
       diff = Math.round(diff);
       <?php
     }
     ?>
-
+    
     return diff;
   }
   
@@ -698,9 +699,9 @@ if ($page == 'edit_entry')
     $(startId).width(maxWidth);
     $(endId).width(maxWidth);
   } <?php // function adjustSlotSelectors() ?>
-  
+
 <?php
-}
+}  // edit_entry
 
 
 if ($page == 'pending')
@@ -835,6 +836,7 @@ $(window).load(function() {
     {
       form.name.focus();
     }
+    
     <?php
     // Get the current vocab (in the appropriate language) for periods,
     // minutes, hours
@@ -904,7 +906,19 @@ $(window).load(function() {
   }
 
   <?php
+  // Check the All Day box if that's the default and then call the function
+  // that handles changes
+  if ($default_duration_all_day)
+  {
+    ?>
+    $('#all_day').attr('checked', true);
+    OnAllDayClick(true);
+    <?php
   }
+  ?>
+
+  <?php
+  }  // EDIT_ENTRY
   
   // PENDING.PHP
   if ($page == 'pending')

@@ -22,30 +22,31 @@
 
 CREATE TABLE mrbs_area
 (
-  id                     serial primary key,
-  disabled               smallint DEFAULT 0 NOT NULL,
-  area_name              varchar(30),
-  area_admin_email       text,
-  resolution             int,
-  default_duration       int,
-  morningstarts          int,
-  morningstarts_minutes  int,
-  eveningends            int,
-  eveningends_minutes    int,
-  private_enabled        smallint,
-  private_default        smallint,
-  private_mandatory      smallint,
-  private_override       varchar(32),
-  min_book_ahead_enabled smallint,
-  min_book_ahead_secs    int,
-  max_book_ahead_enabled smallint,
-  max_book_ahead_secs    int,
-  custom_html            text,
-  approval_enabled       smallint,
-  reminders_enabled      smallint,
-  enable_periods         smallint,
-  confirmation_enabled   smallint,
-  confirmed_default      smallint
+  id                        serial primary key,
+  disabled                  smallint DEFAULT 0 NOT NULL,
+  area_name                 varchar(30),
+  area_admin_email          text,
+  resolution                int,
+  default_duration          int,
+  default_duration_all_day  smallint DEFAULT 0 NOT NULL,
+  morningstarts             int,
+  morningstarts_minutes     int,
+  eveningends               int,
+  eveningends_minutes       int,
+  private_enabled           smallint,
+  private_default           smallint,
+  private_mandatory         smallint,
+  private_override          varchar(32),
+  min_book_ahead_enabled    smallint,
+  min_book_ahead_secs       int,
+  max_book_ahead_enabled    smallint,
+  max_book_ahead_secs       int,
+  custom_html               text,
+  approval_enabled          smallint,
+  reminders_enabled         smallint,
+  enable_periods            smallint,
+  confirmation_enabled      smallint,
+  confirmed_default         smallint
 );
 
 CREATE TABLE mrbs_room
@@ -129,6 +130,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '26');
+  VALUES ('db_version', '27');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');

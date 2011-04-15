@@ -163,6 +163,11 @@ $force_resolution = FALSE;
 // Default duration - default length (in seconds) of a booking.
 // Defaults to (60 * 60) seconds, i.e. an hour
 $default_duration = (60 * 60);  // DEFAULT VALUE FOR NEW AREAS
+// Whether the "All Day" checkbox should be checked by default.  (Note
+// that even if this is set to true, $default_duration should still
+// be set as that is the duration that will be used when the All Day
+// checkbox is unchecked)
+$default_duration_all_day = FALSE;  // DEFAULT VALUR FOR NEW AREAS
 
 // Start and end of day.
 // NOTE:  The time between the beginning of the last and first

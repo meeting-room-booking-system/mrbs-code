@@ -64,6 +64,7 @@ $area_morningstarts_minutes = get_form_var('area_morningstarts_minutes', 'int');
 $area_morning_ampm = get_form_var('area_morning_ampm', 'string');
 $area_res_mins = get_form_var('area_res_mins', 'int');
 $area_def_duration_mins = get_form_var('area_def_duration_mins', 'int');
+$area_def_duration_all_day = get_form_var('area_def_duration_all_day', 'string');
 $area_eveningends = get_form_var('area_eveningends', 'int');
 $area_eveningends_minutes = get_form_var('area_eveningends_minutes', 'int');
 $area_evening_ampm = get_form_var('area_evening_ampm', 'string');
@@ -346,6 +347,7 @@ if ($phase == 2)
   
     // Convert booleans into 0/1 (necessary for PostgreSQL)
     $area_disabled = (!empty($area_disabled)) ? 1 : 0;
+    $area_def_duration_all_day = (!empty($area_def_duration_all_day)) ? 1 : 0;
     $area_min_ba_enabled = (!empty($area_min_ba_enabled)) ? 1 : 0;
     $area_max_ba_enabled = (!empty($area_max_ba_enabled)) ? 1 : 0;
     $area_private_enabled = (!empty($area_private_enabled)) ? 1 : 0;
@@ -398,6 +400,7 @@ if ($phase == 2)
       {
         $assign_array[] = "resolution=" . $area_res_mins * 60;
         $assign_array[] = "default_duration=" . $area_def_duration_mins * 60;
+        $assign_array[] = "default_duration_all_day=" . $area_def_duration_all_day;
         $assign_array[] = "morningstarts=" . $area_morningstarts;
         $assign_array[] = "morningstarts_minutes=" . $area_morningstarts_minutes;
         $assign_array[] = "eveningends=" . $area_eveningends;
@@ -920,6 +923,12 @@ if (isset($change_area) &&!empty($area))
       <div class="div_dur_mins">
       <label for="area_def_duration_mins"><?php echo get_vocab("area_def_duration_mins") ?>:</label>
       <input type="text" id="area_def_duration_mins" name="area_def_duration_mins" value="<?php echo $default_duration/60 ?>">
+      <?php
+      echo "<input type=\"checkbox\" id=\"area_def_duration_all_day\" name=\"area_def_duration_all_day\"" .
+           (($default_duration_all_day) ? " checked=\"checked\"" : "") .
+           ">\n";
+      ?>
+      <label class="secondary" "for="area_def_duration_all_day"><?php echo get_vocab("all_day") ?></label>
       </div>
       <?php
       echo "<div id=\"last_slot\">\n";
