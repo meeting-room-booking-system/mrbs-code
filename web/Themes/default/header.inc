@@ -116,7 +116,9 @@ function print_theme_header($day, $month, $year, $area, $room)
     //   - Core
     //   - Widget
     //   - Mouse
+    //   - Position
     //   - Draggable
+    //   - Autocomplete
     //   - Datepicker
     //   - Sunny theme
     // If you need any other components you will need to rebuild the custom UI library
