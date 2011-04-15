@@ -779,7 +779,7 @@ if ($page == 'pending')
 } // pending
 ?>
 
-$(document).ready(function() {
+$(window).load(function() {
 
   <?php // ALL PAGES ?>
   // if there's a logon box, set the username input field in focus
