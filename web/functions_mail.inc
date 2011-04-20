@@ -1064,7 +1064,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   
   // Add the text part
   $mime_params['content_type'] = "text/plain";
-  $mime_params['encoding']     = "7bit";
+  $mime_params['encoding']     = "8bit";
   $mime_params['charset']      = $charset;
   $mime_inner->addSubPart($text_body['content'], $mime_params);
   
@@ -1103,7 +1103,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     $mime_inner = $mime_inner->encode();
     $mime_params = array();
     $mime_params['eol'] = $eol;
-    $mime_params['encoding'] = "7bit";
+    $mime_params['encoding'] = "8bit";
     $mime_params['content_type'] = $mime_inner['headers']['Content-Type'];
     $mime->addSubPart($mime_inner['body'], $mime_params);
     
