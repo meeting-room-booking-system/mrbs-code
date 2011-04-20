@@ -1087,6 +1087,9 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   {
     // Otherwise we need to carry on and add the text version of the iCalendar
     $mime_params['content_type'] = "text/calendar; method=" . $attachment['method'];
+    // The encoding needs to be base64, because Postfix will otherwise not preserve
+    // CRLF sequences and these are mandatory terminators in the iCalendar file
+    $mime_params['encoding'] = "base64";
     $mime_inner->addSubPart($attachment['content'], $mime_params);
 
     // and then enclose the inner section in a multipart/mixed outer section.
