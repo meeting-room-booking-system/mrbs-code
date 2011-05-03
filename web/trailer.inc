@@ -52,7 +52,7 @@ else
   // DAYS
   echo "<div id=\"viewday\">\n";
   echo "<div class=\"trailer_label\">\n";
-  echo "<span><a href=\"day.php?year=$year&amp;month=$month&amp;day=$day$params\">" . get_vocab("viewday") .":</a></span>\n";
+  echo "<a href=\"day.php?year=$year&amp;month=$month&amp;day=$day$params\">" . get_vocab("viewday") .":</a>\n";
   echo "</div>\n";
   
   echo "<div class=\"trailer_links\">\n";
@@ -107,7 +107,7 @@ else
   // WEEKS
   echo "<div id=\"viewweek\">\n";
   echo "<div class=\"trailer_label\">\n";
-  echo "  <span><a href=\"week.php?year=$year&amp;month=$month&amp;day=$day$params\">".get_vocab("viewweek").":</a></span>\n";
+  echo "<a href=\"week.php?year=$year&amp;month=$month&amp;day=$day$params\">".get_vocab("viewweek").":</a>\n";
   echo "</div>\n";
  
   $ctime = mktime(0, 0, 0, $month, $day, $year);
@@ -162,7 +162,7 @@ else
   // MONTHS
   echo "<div id=\"viewmonth\">\n";
   echo "<div class=\"trailer_label\">\n";
-  echo "  <span><a href=\"month.php?year=$year&amp;month=$month&amp;day=$day$params\">".get_vocab("viewmonth").":</a></span>\n";
+  echo "<a href=\"month.php?year=$year&amp;month=$month&amp;day=$day$params\">".get_vocab("viewmonth").":</a>\n";
   echo "</div>\n";
   
   echo "<div class=\"trailer_links\">\n";
