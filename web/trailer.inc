@@ -96,8 +96,8 @@ else
       {
         $class .= " current";
       }
-    }   
-    echo "<span class=\"$class\">$str</span>\n";
+    } 
+    echo "<span" . ((empty($class)) ? '' : " class=\"$class\"") . ">$str</span>\n";
   }
   echo "</div>\n";
   
