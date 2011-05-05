@@ -10,14 +10,17 @@
  *
  * $auth["realm"]  = "MRBS";    // Or any other string
  * $auth["type"]   = "ext";
- * $auth["prog"]   = "authenticationprogram";  // The full path to the external
+ * $auth["prog"]   = "authenticationprogram"; // The full path to the external
  *                                            // script
- * $auth["params"] = "#USERNAME# #PASSWORD# other-params" // Parameters to pass to
- *                                                        // the script, #USERNAME#
- *                                                        // and #PASSWORD#
- *                                                        // will be expanded to
- *                                                        // the values typed by
- *                                                        // the user.
+ * $auth["params"] = "<...>"                  // Parameters to pass to
+ *                                            // the script, #USERNAME#
+ *                                            // and #PASSWORD#
+ *                                            // will be expanded to
+ *                                            // the values typed by
+ *                                            // the user.
+ *
+ *                                            // e.g.
+ *                                            // "/etc/htpasswd #USERNAME# #PASSWORD#"
  *
  * Then, you may configure admin users:
  *
