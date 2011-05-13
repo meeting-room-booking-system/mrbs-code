@@ -791,6 +791,11 @@ function create_addresses($data, $action)
 function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $action="book", $note='')
 {
   global $mail_settings, $enable_periods;
+  
+  if ($mail_settings['debug'])
+  {
+    echo "[DEBUG] Preparing email for new or changed booking ... <br>";
+  }
 
   // Add some values to the $data array before we go and create the addresses
   if (!$new_entry)
@@ -803,6 +808,10 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $actio
   $addresses = create_addresses($data, $action);
   if ($addresses === FALSE)
   {
+    if ($mail_settings['debug'])
+    {
+      echo "[DEBUG] Email abandoned:  no addresses.<br>";
+    }
     return;
   }
   
@@ -885,6 +894,11 @@ function notifyAdminOnDelete($data, $series=FALSE, $action="delete", $note="")
 {
   global $mail_settings, $enable_periods;
   
+  if ($mail_settings['debug'])
+  {
+    echo "[DEBUG] Preparing email for deleted booking ... <br>";
+  }
+  
   // As we are going to cancel this booking we need to increment the iCalendar
   // sequence number
   $data['ical_sequence']++;
@@ -893,6 +907,10 @@ function notifyAdminOnDelete($data, $series=FALSE, $action="delete", $note="")
   $addresses = create_addresses($data, $action);
   if ($addresses === FALSE)
   {
+    if ($mail_settings['debug'])
+    {
+      echo "[DEBUG] Email abandoned:  no addresses.<br>";
+    }
     return;
   }
   
@@ -979,6 +997,11 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   require_once "Mail/mimePart.php";
 
   global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
+  
+  if ($mail_settings['debug'])
+  {
+    echo "[DEBUG] Preparing to send email ... <br>";
+  }
   
   $eol = "\n";  // EOL sequence to use in mail headers.  Need "\n" for mail backend
   
@@ -1120,6 +1143,13 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   // Add in the extra headers
   $mime['headers'] = array_merge($headers, $mime['headers']);
 
+  // Debug info if required
+  if ($mail_settings['debug'])
+  {
+    echo "[DEBUG] Using backend '$backend'<br>";
+    echo "[DEBUG] Recipients: '" . htmlspecialchars($recipients) . "'<br>";
+  }
+  
   // Call to the PEAR::Mail class
   $mail_object =& Mail::factory($backend, $params);
   $result = $mail_object->send($recipients, $mime['headers'], $mime['body']);
@@ -1128,6 +1158,20 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   {
     error_log("Error sending email: ".$result->getMessage());
   }
+  
+  // Debug info if required
+  if ($mail_settings['debug'])
+  {
+    if (is_object($result))
+    {
+      echo "[DEBUG] Failed to send email: " . htmlspecialchars($result->getMessage()) . "<br>";
+    }
+    else
+    {
+      echo "[DEBUG] Email sent successfully<br>";
+    }
+  }
+  
   return $result;
 }
 
