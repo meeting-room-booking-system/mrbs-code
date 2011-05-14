@@ -337,22 +337,30 @@ $aix_utf8_converters = array
 ////////////////////////////////////////////////////////////////////////
 // Language token handling
 
+// Get a default set of language tokens, you can change this if you like.
+// Always include English as the fallback language, in case the selected language
+// is missing some translated tokens
+include "lang.en";
+// include_once just to avoid reloading the 'en' file
+include_once "lang." . $default_language_tokens;
+
+
 // Get first default set of language tokens for emails.
 $need_to_send_mail = ($mail_settings['admin_on_bookings'] or
                       $mail_settings['area_admin_on_bookings'] or
                       $mail_settings['room_admin_on_bookings'] or
                       $mail_settings['booker'] or
                       $mail_settings['book_admin_on_approval']);
+                      
 if ($need_to_send_mail)
 {
-  include "lang." . $default_language_tokens;
+  $web_vocab = $vocab;   // Save $vocab before it gets overwritten
   include "lang." . $mail_settings['admin_lang'];
   $mail_vocab = $vocab;
-  unset ($vocab);
+  $vocab = $web_vocab;  // Restore $vocab
 }
 
-// Get a default set of language tokens, you can change this if you like
-include "lang." . $default_language_tokens;
+
 
 // Define the default locale here. For a list of supported
 // locales on your system do "locale -a"
