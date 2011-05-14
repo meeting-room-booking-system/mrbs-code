@@ -441,6 +441,29 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   }
 }
 
+
+function get_sumby_name_from_row(&$row)
+{
+  global $sumby, $typel;
+  
+  // Use brief description, created by or type as the name:
+  switch( $sumby )
+  {
+    case 'd':
+      $name = $row['name'];
+      break;
+    case 't':
+      $name = $typel[ $row['type'] ];
+      break;
+    case 'c':
+    default:
+      $name = $row['create_by'];
+      break;
+  }
+  return escape($name);
+}
+
+
 // Collect summary statistics on one entry. See below for columns in $row[].
 // $sumby selects grouping on brief description (d) or created by (c).
 // This also builds hash tables of all unique names and rooms. When sorted,
@@ -448,10 +471,9 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
 function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
                     &$room_hash, &$name_hash)
 {
-  global $sumby;
   global $output_as_csv;
-  // Use brief description or created by as the name:
-  $name = escape($row[($sumby == "d" ? 'name' : 'create_by')]);
+  // Use brief description, created by or type as the name:
+  $name = get_sumby_name_from_row($row);
   // Area and room separated by break (if not CSV):
   $room = escape($row['area_name']);
   $room .= ($output_as_csv) ? '/' : "<br>";
@@ -468,14 +490,14 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
 function accumulate_periods(&$row, &$count, &$hours, $report_start,
                             $report_end, &$room_hash, &$name_hash)
 {
-  global $sumby;
   global $periods;
   global $output_as_csv;
   
   $max_periods = count($periods);
 
-  // Use brief description or created by as the name:
-  $name = escape($row[($sumby == "d" ? 'name' : 'create_by')]);
+  // Use brief description, created by or type as the name:
+  $name = get_sumby_name_from_row($row);
+
   // Area and room separated by break (if not CSV):
   $room = escape($row['area_name']);
   $room .= ($output_as_csv) ? '/' : "<br>";
@@ -1091,7 +1113,7 @@ else
   $match_confirmed = CONFIRMED_BOTH;
 }
 
-// $sumby: d=by brief description, c=by creator.
+// $sumby: d=by brief description, c=by creator, t=by type.
 if (empty($sumby))
 {
   $sumby = "d";
@@ -1368,6 +1390,13 @@ if ($output_as_html || empty($nmatch))
               <?php 
               if ($sumby=="c") echo " checked=\"checked\"";
               echo ">" . get_vocab("sum_by_creator");
+              ?>
+            </label>
+            <label>
+              <input class="radio" type="radio" name="sumby" value="t"
+              <?php 
+              if ($sumby=="t") echo " checked=\"checked\"";
+              echo ">" . get_vocab("sum_by_type");
               ?>
             </label>
           </div>

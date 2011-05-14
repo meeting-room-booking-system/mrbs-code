@@ -267,6 +267,7 @@ $vocab["report_as_ical"]        = "Report as iCalendar (.ics file) - excluding p
 $vocab["summarize_by"]          = "Summarize by";
 $vocab["sum_by_descrip"]        = "Brief description";
 $vocab["sum_by_creator"]        = "Creator";
+$vocab["sum_by_type"]           = "Type";
 $vocab["entry_found"]           = "entry found";
 $vocab["entries_found"]         = "entries found";
 $vocab["summary_header"]        = "Summary of (Entries) Hours";

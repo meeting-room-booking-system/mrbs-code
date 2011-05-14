@@ -264,6 +264,7 @@ $vocab["summary_as_csv"]     = "Zusammenfassung als CSV";
 $vocab["summarize_by"]       = "Zusammenfassung nach";
 $vocab["sum_by_descrip"]     = "Kurzbeschreibung";
 $vocab["sum_by_creator"]     = "Ersteller";
+$vocab["sum_by_type"]        = "Typ";
 $vocab["entry_found"]        = "Eintrag gefunden";
 $vocab["entries_found"]      = "Einträge gefunden";
 $vocab["summary_header"]     = "Stundenzusammenfassung der Einträge";
