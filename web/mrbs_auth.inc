@@ -82,7 +82,7 @@ function getAuthorised($level)
  * Checks to see that a user is authorised to access the current page.
  * If they are not, then shows an Access Denied message and exits.
  *
- * Required page level authorisations are defined in systemdefaults/config
+ * Required page level authorisations are defined above.
  * If they are not defined then the function plays safe and requires the
  * highest level of authorisation.
  */

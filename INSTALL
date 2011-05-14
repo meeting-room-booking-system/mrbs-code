@@ -301,8 +301,16 @@ Next, you will need to customize the file "config.inc.php"...
 
 As a minimum you will need to set the timezone and the database variables.
 Other settings can be changed by copying lines from systemdefaults.inc.php and
-oasting them into config.inc.php.   Do not edit systemdefaults.inc.php as it
-will make it harder for you to upgrade when new versions are released.
+areadefaults.inc.php and pasting them into config.inc.php.   Do not edit
+systemdefaults.inc.php or areadefaults.inc.php as it will make it harder for
+you to upgrade when new versions are released.
+
+Note that there are two different defaults files (systemdefaults.inc.php and
+areadefaults.inc.php) to draw attention to the fact that the settings in
+areadefaults just determine the settings for NEW areas.   Settings for existing
+areas are set using a web browser by following the "Rooms" link in MRBS.  (It
+can be a little frustrating editing the area settings to find that they have no
+effect on existing areas!)
 
 1.  Timezone
 
@@ -376,10 +384,11 @@ then you will need to set the value of:
     
 3.  Other Settings
 
-Now go through systemdefaults.inc.php and see which other configuration settings 
-you would like to change.   Do this by copying them to config.inc.php and changing
-them there.   This should make the task of upgrading to new releases easier as all 
-your site-specific configuration changes will be confined to config.inc.php.
+Now go through systemdefaults.inc.php and areadefaults.inc.php and see which other
+configuration settings you would like to change.   Do this by copying them to
+config.inc.php and changing them there.   This should make the task of upgrading to
+new releases easier as all your site-specific configuration changes will be confined
+to config.inc.php.
 
 There is a wide variety of settings that can be changed, including
 
@@ -396,11 +405,11 @@ There is a wide variety of settings that can be changed, including
 - report settings
 - entry types
 
-The comments in the systemdefaults.inc.php file should explain the purpose of the
-various configuration variables and how to change them.    (Note that some of the
-settinngs can be set on a per-area basis through the area administration page in MRBS.
-In this case the setting in the systemdefaults.inc.php/config.inc.php file defines
-the default settings for new areas.)
+The comments in the systemdefaults.inc.php and areadefaults.inc.php files should
+explain the purpose of the various configuration variables and how to change them. 
+(Note that some of the settings can be set on a per-area basis through the area
+administration page in MRBS.   In this case the setting in the areadefaults.inc.php
+and config.inc.php files defines the default settings for new areas.)
 
 The Help information is held in the site_faq files, one per language.  You may well
 want to customise it by editing the files.
