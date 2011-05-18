@@ -135,7 +135,7 @@ function authLdapAction($callback, $user, &$object)
           if (@ldap_count_entries($ldap, $res) == 1)
           {
             authLdapDebug("authLdapAction: Found one entry using ".
-                          "\$ldap_dn_search_attrib");
+                          "$ldap_dn_search_attrib");
             $entries = ldap_get_entries($ldap, $res);
             $dn = $entries[0]["dn"];
             $user_search = "distinguishedName=" . $dn;
@@ -143,7 +143,7 @@ function authLdapAction($callback, $user, &$object)
           else
           {
             authLdapDebug("authLdapAction: Didn't find entry using ".
-                          "\$ldap_dn_search_attrib");
+                          "$ldap_dn_search_attrib");
           }
           authLdapDebug("authLdapAction: base_dn $base_dn user $user ".
                         "dn $dn");
@@ -223,9 +223,9 @@ function authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
 
   if ($ldap && $base_dn && $dn && $user_search)
   {
-    $res = @ldap_search($ldap,
-                        $base_dn,
-                        "($user_search)",
+	$res = @ldap_read($ldap,
+                        $dn,
+                        "(objectclass=*)",
                         array($ldap_email_attrib)
                        );
     if (@ldap_count_entries($ldap, $res) > 0)
@@ -306,7 +306,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
     if (! $ldap_filter)
     {
       authLdapDebug("authValidateUserCallback: Successful authenticated ".
-                    "bind with no $ldap_filter");
+                    "bind with no \$ldap_filter");
       return 1;
     }
     else
@@ -314,11 +314,11 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
       authLdapDebug("authValidateUserCallback: Successful authenticated ".
                     "bind checking $ldap_filter");
 
-      $res = @ldap_search($ldap,
-                          $base_dn,
-                          "(&($user_search)($ldap_filter))",
-                          array()
-                         );
+      $res = @ldap_read($ldap,
+                        $dn,
+                        "($ldap_filter)",
+                        array()
+                       );
       if (@ldap_count_entries($ldap, $res) > 0)
       {
         authLdapDebug("authValidateUserCallback: Found entry with filter");
