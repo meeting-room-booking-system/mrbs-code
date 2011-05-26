@@ -69,7 +69,7 @@ function authGetUserLevel($user)
     return 0;
   }
   
-  $result = sql_query1("SELECT level FROM $tbl_users WHERE name='" . addslashes($user) . "' LIMIT 1");
+  $result = sql_query1("SELECT level FROM $tbl_users WHERE name='" . strtolower(addslashes($user)) . "' LIMIT 1");
   if ($result == -1)
   {
     trigger_error(sql_error(), E_USER_WARNING);
