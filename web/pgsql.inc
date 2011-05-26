@@ -279,6 +279,15 @@ function sql_pgsql_syntax_timestamp_to_unix($fieldname, $db_conn = null)
 }
 
 
+// Returns the syntax for a case sensitive string "equals" function
+function sql_pgsql_syntax_casesensitive_equals($fieldname, $s, $db_conn = null)
+{
+  sql_pgsql_ensure_handle($db_conn);
+
+  return " \"$fieldname\"='" . addslashes($s) . "'";
+}
+
+
 // Generate non-standard SQL to match a string anywhere in a field's value
 // in a case insensitive manner. $s is the un-escaped/un-slashed string.
 // In PostgreSQL, we can do case insensitive regexp with ~*, but not case

@@ -386,6 +386,29 @@ function sql_syntax_timestamp_to_unix($fieldname)
 }
 
 
+// Returns the syntax for a case sensitive string "equals" function
+// (By default MySQL is case insensitive, whereas PostgreSQL is not)
+function sql_syntax_casesensitive_equals($fieldname, $s)
+{
+  if (func_num_args() > 2)
+  {
+    $handle = func_get_arg(2);
+    $db_sys = $handle['system'];
+    $db_conn = $handle['connection'];
+  }
+  else
+  {
+    global $dbsys;
+
+    $db_sys = $dbsys;
+    $db_conn = null;
+  }
+
+  $f = "sql_${db_sys}_syntax_casesensitive_equals";
+  return $f($fieldname, $s, $db_conn);
+}
+
+
 // Returns the syntax for a caseless "contains" function
 function sql_syntax_caseless_contains($fieldname, $s)
 {

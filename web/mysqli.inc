@@ -262,6 +262,15 @@ function sql_mysqli_syntax_timestamp_to_unix($fieldname, $db_conn = null)
 }
 
 
+// Returns the syntax for a case sensitive string "equals" function
+// (By default MySQL is case insensitive, so we force a binary comparison)
+function sql_mysqli_syntax_casesensitive_equals($fieldname, $s, $db_conn = null)
+{
+  sql_mysqli_ensure_handle($db_conn);
+
+  return " BINARY `$fieldname`='" . addslashes($s) . "'";
+}
+
 // Generate non-standard SQL to match a string anywhere in a field's value
 // in a case insensitive manner. $s is the un-escaped/un-slashed string.
 // In MySQL, REGEXP seems to be case sensitive, so use LIKE instead. But this

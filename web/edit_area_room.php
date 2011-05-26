@@ -193,8 +193,13 @@ if ($phase == 2)
       // (only do this if you're changing the room name or the area - if you're
       // just editing the other details for an existing room we don't want to reject
       // the edit because the room already exists!)
+      // [SQL escaping done by sql_syntax_casesensitive_equals()]
       elseif ( (($new_area != $old_area) || ($room_name != $old_room_name))
-              && sql_query1("SELECT COUNT(*) FROM $tbl_room WHERE room_name='" . addslashes($room_name) . "' AND area_id=$new_area LIMIT 1") > 0)
+              && sql_query1("SELECT COUNT(*)
+                               FROM $tbl_room
+                              WHERE" . sql_syntax_casesensitive_equals("room_name", $room_name) . "
+                                AND area_id=$new_area
+                              LIMIT 1") > 0)
       {
         $valid_room_name = FALSE;
       }
