@@ -201,8 +201,15 @@ $periods[] = "Period&nbsp;2";
  * Booking policies
  ******************/
 
-// Booking policies can all be be configured on a per-area basis, so these variables
+// Most booking policies can be configured on a per-area basis, so these variables
 // appear in the areadefaults.inc.php file.
+
+// The settings below are global policy settings
+
+// Set a maximum duration for bookings
+$max_duration_enabled = FALSE; // Set to TRUE if you want to enforce a maximum duration
+$max_duration_secs = 60*60*2;  // (seconds) - when using "times"
+$max_duration_periods = 2;     // (periods) - when using "periods"
 
 
 /******************

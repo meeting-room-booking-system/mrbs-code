@@ -165,13 +165,14 @@ $vocab["mail_subject_delete"]        = "Entry deleted for $mrbs_company MRBS";
 $vocab["mail_body_new_entry"]     = "A new entry has been booked, here are the details:";
 $vocab["mail_body_changed_entry"] = "An entry has been modified, here are the details:";
 $vocab["mail_body_del_entry"]     = "An entry has been deleted, here are the details:";
-$vocab["new_value"]           = "New";
-$vocab["old_value"]           = "Old";
-$vocab["deleted_by"]          = "Deleted by";
-$vocab["reason"]              = "Reason";
-$vocab["info_requested"]      = "Information requested";
-$vocab["min_time_before"]     = "The minimum interval between now and the start of a booking is";
-$vocab["max_time_before"]     = "The maximum interval between now and the start of a booking is";
+$vocab["new_value"]               = "New";
+$vocab["old_value"]               = "Old";
+$vocab["deleted_by"]              = "Deleted by";
+$vocab["reason"]                  = "Reason";
+$vocab["info_requested"]          = "Information requested";
+$vocab["min_time_before"]         = "The minimum interval between now and the start of a booking is";
+$vocab["max_time_before"]         = "The maximum interval between now and the start of a booking is";
+$vocab["max_booking_duration"]    = "The maximum duration of a booking is";
 
 // Used in pending.php
 $vocab["pending"]            = "Bookings awaiting approval";

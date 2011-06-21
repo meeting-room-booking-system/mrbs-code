@@ -98,19 +98,22 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
  * to creation)
  * 
  * $starttime - The start of period
+ * $duration  - The duration in seconds
  * $delete    - TRUE: We're intending to delete an entry
  *            - FALSE:  We're intending to create or edit an entry (the default)
  * 
  * Returns:
- *   nothing   - The booking is OK
- *   something - An error occured, the return value is human readable
+ *            - An array of human readable errors.   If no errors the array has
+ *              length 0
  */
-function mrbsCheckPolicy($starttime, $delete=FALSE)
+function mrbsCheckPolicy($starttime, $duration, $delete=FALSE)
 {
-  global $min_book_ahead_enabled, $max_book_ahead_enabled, $enable_periods;
-  global $min_book_ahead_secs, $max_book_ahead_secs;
+  global $periods, $enable_periods;
+  global $min_book_ahead_enabled, $min_book_ahead_secs;
+  global $max_book_ahead_enabled, $max_book_ahead_secs;
+  global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
 
-  $error = "";
+  $errors = array();
   $secs_in_day = 60*60*24;
   
   // Because MRBS has no notion of where we are in the day if we're using periods,
@@ -118,6 +121,7 @@ function mrbsCheckPolicy($starttime, $delete=FALSE)
   $now = ($enable_periods) ? mktime(0, 0, 0) : time();
   // We'll also round $min_book_ahead_secs and $max_book_ahead_secs down to the nearest whole day
   
+  // Check min_book_ahead
   if ($min_book_ahead_enabled)
   {
     if ($enable_periods)
@@ -128,11 +132,11 @@ function mrbsCheckPolicy($starttime, $delete=FALSE)
     if (($starttime - $now) < $min_book_ahead)
     {
       toTimeString($min_book_ahead, $units);
-      $error = get_vocab("min_time_before"). " $min_book_ahead $units";
-      return $error;
+      $errors[] = get_vocab("min_time_before") . " $min_book_ahead $units";
     }
   }
   
+  // Check max_book_ahead
   if ($max_book_ahead_enabled)
   {
     if ($enable_periods)
@@ -143,11 +147,44 @@ function mrbsCheckPolicy($starttime, $delete=FALSE)
     if (($starttime - $now) > $max_book_ahead)
     {
       toTimeString($max_book_ahead, $units);
-      $error = get_vocab("max_time_before"). " $max_book_ahead $units";
-      return $error;
+      $errors[] = get_vocab("max_time_before") . " $max_book_ahead $units";
     }
   }
-  return $error;
+  
+  // Check max_duration
+  if ($max_duration_enabled)
+  {
+    if ($enable_periods)
+    {
+      // Instead of calculating the difference between the start and end times and
+      // comparing that with the maximum duration, we add the maximum duration to the
+      // start time and compare that with the actual end time
+      $start = getdate($starttime);
+      $start['minutes'] += $max_duration_periods;
+      $n_periods = count($periods);
+      // If we've gone over into another day, adjust the minutes and days accordingly
+      while ($start['minutes'] >= $n_periods)
+      {
+        $start['minutes'] -= $n_periods;
+        $start['mday']++;
+      }
+      $max_endtime = mktime($start['hours'], $start['minutes'], $start['seconds'],
+                            $start['mon'], $start['mday'], $start['year']);
+      if (($starttime + $duration) > $max_endtime)
+      {
+        $errors[] = get_vocab("max_booking_duration") . " $max_duration_periods " .
+                    (($max_duration_periods > 1) ? get_vocab("periods") : get_vocab("period_lc"));
+      }
+    }
+    elseif ($duration > $max_duration_secs)
+    {
+      $max_duration = $max_duration_secs;
+      toTimeString($max_duration, $units);
+      $errors[] = get_vocab("max_booking_duration") . " $max_duration $units";
+    }
+  }
+  
+  return $errors;
 }
 
 /** mrbsDelEntry()

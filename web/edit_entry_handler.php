@@ -323,6 +323,7 @@ if ($endtime == $starttime)
 // Now get the duration, which will be needed for email notifications
 // (We do this before we adjust for DST so that the user sees what they expect to see)
 $duration = $endtime - $starttime;
+$duration_seconds = $endtime - $starttime;  // Preserve the duration in seconds - we need it later
 $date = getdate($starttime);
 if ($enable_periods)
 {
@@ -428,7 +429,7 @@ if (!sql_mutex_lock("$tbl_entry"))
 $valid_booking = TRUE;
 $conflicts = "";          // Holds a list of all the conflicts (ideally this would be an array)
 $rules_broken = array();  // Holds an array of the rules that have been broken
- 
+
 // Check for any schedule conflicts in each room we're going to try and
 // book in;  also check that the booking conforms to the policy
 foreach ( $rooms as $room_id )
@@ -441,7 +442,7 @@ foreach ( $rooms as $room_id )
       {
         // calculate diff each time and correct where events
         // cross DST
-        $diff = $endtime - $starttime;
+        $diff = $duration_seconds;
         $diff += cross_dst($reps[$i], $reps[$i] + $diff);
 
         $tmp = mrbsCheckFree($room_id,
@@ -459,11 +460,11 @@ foreach ( $rooms as $room_id )
         // conforms to the booking policy
         if (!auth_book_admin($user, $room_id))
         {
-          $tmp = mrbsCheckPolicy($reps[$i]);
-          if (!empty($tmp))
+          $errors = mrbsCheckPolicy($reps[$i], $duration_seconds);
+          if (count($errors) > 0)
           {
             $valid_booking = FALSE;
-            $rules_broken[] = $tmp;
+            $rules_broken = $rules_broken + $errors;  // array union
           }
         }
       }
@@ -486,11 +487,11 @@ foreach ( $rooms as $room_id )
       // conforms to the booking policy
       if (!auth_book_admin($user, $room_id))
       {
-        $tmp = mrbsCheckPolicy($starttime);
-        if (!empty($tmp))
+        $errors = mrbsCheckPolicy($starttime, $duration_seconds);
+        if (count($errors) > 0)
         {
           $valid_booking = FALSE;
-          $rules_broken[] = $tmp;
+          $rules_broken = $rules_broken + $errors;  // Array union
         }
       }
   }
