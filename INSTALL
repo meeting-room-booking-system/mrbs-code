@@ -221,6 +221,20 @@ $select_options['entry.conference_facilities'] = array('Video',
 would define the 'conference_facilities' custom field to have three
 possible values.
 
+For custom fields only (will be extended later) it is also possible to use
+an associative array for $select_options, for example
+
+$select_options['entry.catering'] = array('c' => 'Coffee', 
+                                          's' => 'Sandwiches',
+                                          'h' => 'Hot Lunch');
+
+In this case the key (eg 'c') is stored in the database, but the value
+(eg 'Coffee') is displayed and can be searched for using Search and Report.
+This allows you to alter the displayed values, for example changing 'Coffee'
+to 'Coffee, Tea and Biscuits', without having to alter the database.   It can also
+be useful if the database table is being shared with another application.
+MRBS will auto-detect whether the array is associative.
+
 2)
 
 You can specify that a field is mandatory. This will ensure that the

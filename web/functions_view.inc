@@ -40,6 +40,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   global $is_private_field, $standard_fields, $typel;
   global $strftime_format;
   global $tbl_entry;
+  global $select_options;
   
   // Get the duration if we haven't got it already
   if (!isset($data['duration']))
@@ -174,7 +175,24 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
       // Otherwise output a string
       else
       {
-        $value = (isset($data[$key])) ? $data[$key] : "&nbsp;"; 
+        if (isset($data[$key]))
+        {
+          // If the custom field is an associative array then we want
+          // the value rather than the array key
+          if (is_assoc($select_options["entry.$key"]) && 
+              array_key_exists($data[$key], $select_options["entry.$key"]))
+          {
+            $value = $select_options["entry.$key"][$data[$key]];
+          }
+          else
+          {
+            $value = $data[$key];
+          }
+        }
+        else
+        {
+          $value = "&nbsp;";
+        }
       }
       $class = ($keep_private && $is_private_field["entry.$key"]) ? "private" : "";
       $tbody .= create_details_row($label, $value, $as_html, $class);

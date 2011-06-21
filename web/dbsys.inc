@@ -99,6 +99,35 @@ function sql_query1($sql)
 }
 
 
+// Run an SQL query that returns a simple one dimensional array of results.
+// The SQL query must select only one column.   Returns an empty array if
+// no results, or FALSE if there's an error
+function sql_query_array($sql)
+{
+  if (func_num_args() > 1)
+  {
+    $handle = func_get_arg(1);
+    $db_conn = $handle['connection'];
+  }
+  
+  $res = ($db_conn) ? sql_query($sql, $db_conn) : sql_query($sql);
+  
+  if ($res === FALSE)
+  {
+    return FALSE;
+  }
+  else
+  {
+    $result = array();
+    for ($i = 0; ($row = sql_row($res, $i)); $i++)
+    {
+      $result[] = $row[0];
+    }
+    return $result;
+  }
+}
+
+
 // Run a SQL query, returns a result object
 function sql_query($sql)
 {
@@ -115,7 +144,6 @@ function sql_query($sql)
     $db_sys = $dbsys;
     $db_conn = null;
   }
-
   $f = "sql_${db_sys}_query";
   return $f($sql, $db_conn);
 }

@@ -196,6 +196,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
   global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
   global $strftime_format;
+  global $select_options;
   
   // Initialise the line for CSV reports
   $line = "";
@@ -397,9 +398,23 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
       $output = empty($row[$key]) ? get_vocab("no") : get_vocab("yes");
     }
     // Otherwise output a string
+    elseif (isset($row[$key]))
+    {
+      // If the custom field is an associative array then we want
+      // the value rather than the array key
+      if (is_assoc($select_options["entry.$key"]) && 
+          array_key_exists($row[$key], $select_options["entry.$key"]))
+      {
+        $output = $select_options["entry.$key"][$row[$key]];
+      }
+      else
+      {
+        $output = $row[$key]; 
+      }
+    }
     else
     {
-      $output = (isset($row[$key])) ? $row[$key] : ''; 
+      $output = '';
     }
     
     if ($output_as_csv)
@@ -978,8 +993,31 @@ if (isset($areamatch))
   foreach ($custom_fields as $key => $value)
   {
     $var = "match_$key";
+    // Associative arrays
+    if (!empty($var) && is_assoc($select_options["entry.$key"]))
+    {
+      $sql .= " AND ";
+      $or_array = array();
+      foreach($select_options["entry.$key"] as $option_key => $option_value)
+      {
+        // We have to use strpos() rather than stripos() because we cannot
+        // assume PHP5
+        if (strpos(strtolower($option_value), strtolower($$var)) !== FALSE)
+        {
+          $or_array[] = "E.$key='" . addslashes($option_key) . "'";
+        }
+      }
+      if (count($or_array) > 0)
+      {
+        $sql .= "(". implode( " OR ", $or_array ) .")";
+      }
+      else
+      {
+        $sql .= "FALSE";
+      }
+    }
     // Booleans (or integers <= 2 bytes which we assume are intended to be booleans)
-    if (($field_natures[$key] == 'boolean') || 
+    elseif (($field_natures[$key] == 'boolean') || 
        (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
     {
       if (!empty($$var))

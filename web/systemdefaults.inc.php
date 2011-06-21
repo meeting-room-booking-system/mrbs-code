@@ -429,9 +429,23 @@ $working_days = array(1,2,3,4,5);  // Mon-Fri
 
 //$select_options['entry.name'] = array('Physics', 'Chemistry', 'Biology');
 
-// At the moment this feature is only supported as follows:
+// At the moment $select_options is only supported as follows:
 //     - Entry table: name, description and custom fields
 //     - Users table: custom fields
+
+// For custom fields only (will be extended later) it is also possible to use
+// an associative array for $select_options, for example
+
+//$select_options['entry.catering'] = array('c' => 'Coffee', 
+//                                          's' => 'Sandwiches',
+//                                          'h' => 'Hot Lunch');
+
+// In this case the key (eg 'c') is stored in the database, but the value
+// (eg 'Coffee') is displayed and can be searched for using Search and Report.
+// This allows you to alter the displayed values, for example changing 'Coffee'
+// to 'Coffee, Tea and Biscuits', without having to alter the database.   It can also
+// be useful if the database table is being shared with another application.
+// MRBS will auto-detect whether the array is associative.
 
 $is_mandatory_field = array();
 // You can define custom entry fields to be mandatory by setting

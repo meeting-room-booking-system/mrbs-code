@@ -134,6 +134,7 @@ function freeze_panes_table_html($info, $columns, $class, $action=FALSE)
   global $tbl_users, $PHP_SELF;
   global $user, $level, $min_user_editing_level, $max_content_length;
   global $fields, $auth;
+  global $select_options;
   
   $html = '';
   $html .= "<div class=\"$class\">\n";
@@ -216,7 +217,14 @@ function freeze_panes_table_html($info, $columns, $class, $action=FALSE)
             $html .= "<td><div>" . htmlspecialchars($col_value) . "</div></td>\n";
             break;
           default:
-            if (($field['nature'] == 'boolean') || 
+            // Where there's an associative array of options, display
+            // the value rather than the key
+            if (is_assoc($select_options["users.$key"]))
+            {
+              $col_value = $select_options["users.$key"][$line[$key]];
+              $html .= "<td><div>" . htmlspecialchars($col_value) . "</div></td>\n";
+            }
+            elseif (($field['nature'] == 'boolean') || 
                 (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
             {
               // booleans: represent by a checkmark

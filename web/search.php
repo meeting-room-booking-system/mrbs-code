@@ -81,13 +81,28 @@ $sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_str)
   . " OR " . sql_syntax_caseless_contains("E.name", $search_str)
   . " OR " . sql_syntax_caseless_contains("E.description", $search_str);
 
-// Also need to search custom fields (but only those with character data)
+// Also need to search custom fields (but only those with character data,
+// which can include fields that have an associative array of options)
 $fields = sql_field_info($tbl_entry);
 foreach ($fields as $field)
 {
   if (!in_array($field['name'], $standard_fields['entry']))
   {
-    if ($field['nature'] == 'character')
+    // If we've got a field that is represented by an associative array of options
+    // then we have to search for the keys whose values match the search string
+    if (is_assoc($select_options["entry." . $field['name']]))
+    {
+      foreach($select_options["entry." . $field['name']] as $key => $value)
+      {
+        // We have to use strpos() rather than stripos() because we cannot
+        // assume PHP5
+        if (strpos(strtolower($value), strtolower($search_str)) !== FALSE)
+        {
+          $sql_pred .= " OR E." . $field['name'] . "='" . addslashes($key) . "'";
+        }
+      }
+    }
+    elseif ($field['nature'] == 'character')
     {
       $sql_pred .= " OR " . sql_syntax_caseless_contains("E." . $field['name'], $search_str);
     }
@@ -161,6 +176,7 @@ $sql = "SELECT E.id AS entry_id, E.create_by, E.name, E.description, E.start_tim
          WHERE $sql_pred
       ORDER BY E.start_time asc "
   . sql_syntax_limit($search["count"], $search_pos);
+
 
 // this is a flag to tell us not to display a "Next" link
 $result = sql_query($sql);

@@ -359,8 +359,8 @@ function generate_input($label_text, $name, $value, $disabled=FALSE)
 
 // Generates a select box from $options, an array of options
 // If $disabled is TRUE, then the select box is disabled and a hidden
-// input is generated to pass through $value
-function generate_select($label_text, $name, $value, $options, 
+// input is generated to pass through $current
+function generate_select($label_text, $name, $current, $options, 
                          $mandatory = FALSE, $disabled=FALSE)
 {
   // generate the HTML
@@ -370,20 +370,33 @@ function generate_select($label_text, $name, $value, $options,
   $html .= ">\n";
   if ($mandatory)
   {
-    $options = array_merge(array(""),$options);
+    $options = array_merge(array('' => ''),$options);
   }
-  foreach ($options as $option)
+  // We can cope with both associative and ordinary arrays
+  if (is_assoc($options))
   {
-    $html .= "<option";
-    $html .= (isset($value) && ($value == $option)) ? " selected=\"selected\"" : '';
-    $html .= ">".htmlspecialchars($option)."</option>\n";
+    foreach ($options as $key => $value)
+    {
+      $html .= "<option value=\"$key\"";
+      $html .= (isset($current) && ($current == $key)) ? " selected=\"selected\"" : '';
+      $html .= ">".htmlspecialchars($value)."</option>\n";
+    }
+  }
+  else
+  {
+    foreach ($options as $option)
+    {
+      $html .= "<option";
+      $html .= (isset($current) && ($current == $option)) ? " selected=\"selected\"" : '';
+      $html .= ">".htmlspecialchars($option)."</option>\n";
+    }
   }
   $html .= "</select>\n";
   // and a hidden input if the select box is disabled
   if ($disabled)
   {
     $html .= "<input type=\"hidden\" name=\"$name\" value=\"".
-      htmlspecialchars($value)."\">\n";
+      htmlspecialchars($current)."\">\n";
   }
   
   echo $html;
@@ -1859,4 +1872,11 @@ function generate_global_uid($str)
   return $uid;
 }
 
+// Tests whether an array is associative
+//
+// Thanks to magentix at gmail dot com at http://php.net/manual/function.is-array.php
+function is_assoc($arr)
+{
+  return (is_array($arr) && count(array_filter(array_keys($arr),'is_string')) == count($arr));
+}
 ?>

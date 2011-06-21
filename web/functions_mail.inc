@@ -388,6 +388,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
   global $enable_periods, $approval_enabled, $confirmation_enabled;
   global $typel, $mail_settings, $standard_fields, $url_base;
   global $tbl_entry;
+  global $select_options;
 
   // set up the body
   $body = "";
@@ -595,9 +596,20 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
             (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
         {
           $value = ($value) ? get_mail_vocab("yes") : get_mail_vocab("no");
-          if (!$compare)
+          if ($compare)
           {
             $mail_previous[$key] = ($mail_previous[$key]) ? get_mail_vocab("yes") : get_mail_vocab("no");
+          }
+        }
+        // For any associative arrays we want the value rather than the key
+        if (is_assoc($select_options["entry.$key"]) && 
+            array_key_exists($value, $select_options["entry.$key"]))
+        {
+          $value = $select_options["entry.$key"][$value];
+          if ($compare &&
+              array_key_exists($mail_previous[$key], $select_options["entry.$key"]))
+          {
+            $mail_previous[$key] = $select_options["entry.$key"][$mail_previous[$key]];
           }
         }
         $body .= create_body_table_row (get_mail_field_name($tbl_entry, $key),
