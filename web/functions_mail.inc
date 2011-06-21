@@ -827,28 +827,41 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $actio
     return;
   }
   
-  // set up the subject
-  switch ($action)
+  // Set up the subject
+  //
+  // If we're sending iCalendar notifications, then it seems that some calendar
+  // applications use the email subject as the booking title instead of the iCal
+  // SUMMARY field.   As far as I can see this is wrong, but as a circumvention
+  // we'll put the booking title in the email subject line.   (See also
+  // SF Tracker id 3297799)
+  if ($mail_settings['icalendar'] && !$enable_periods)
   {
-    case "approve":
-      $subject = get_mail_vocab("mail_subject_approved");
-      break;
-    case "more_info":
-      $subject = get_mail_vocab("mail_subject_more_info");
-      break;
-    case "remind":
-      $subject = get_mail_vocab("mail_subject_reminder");
-      break;
-    default:
-      if ($new_entry)
-      {
-        $subject = get_mail_vocab("mail_subject_new_entry");
-      }
-      else
-      {
-        $subject = get_mail_vocab("mail_subject_changed_entry");
-      }
-      break;
+    $subject = $data['name'];
+  }
+  else
+  {
+    switch ($action)
+    {
+      case "approve":
+        $subject = get_mail_vocab("mail_subject_approved");
+        break;
+      case "more_info":
+        $subject = get_mail_vocab("mail_subject_more_info");
+        break;
+      case "remind":
+        $subject = get_mail_vocab("mail_subject_reminder");
+        break;
+      default:
+        if ($new_entry)
+        {
+          $subject = get_mail_vocab("mail_subject_new_entry");
+        }
+        else
+        {
+          $subject = get_mail_vocab("mail_subject_changed_entry");
+        }
+        break;
+    }
   }
 
   // Create the text body
@@ -927,7 +940,17 @@ function notifyAdminOnDelete($data, $series=FALSE, $action="delete", $note="")
   }
   
   // Set the subject
-  if ($action == "reject")
+  //
+  // If we're sending iCalendar notifications, then it seems that some calendar
+  // applications use the email subject as the booking title instead of the iCal
+  // SUMMARY field.   As far as I can see this is wrong, but as a circumvention
+  // we'll put the booking title in the email subject line.   (See also
+  // SF Tracker id 3297799)
+  if ($mail_settings['icalendar'] && !$enable_periods)
+  {
+    $subject = $data['name'];
+  }
+  elseif ($action == "reject")
   {
     $subject = get_mail_vocab("mail_subject_rejected");
   }
