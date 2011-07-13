@@ -435,6 +435,7 @@ $working_days = array(1,2,3,4,5);  // Mon-Fri
 // to 'Physics', 'Chemistry' or 'Biology' uncomment the line below.
 
 //$select_options['entry.name'] = array('Physics', 'Chemistry', 'Biology');
+$select_options  = array();
 
 // At the moment $select_options is only supported as follows:
 //     - Entry table: name, description and custom fields
