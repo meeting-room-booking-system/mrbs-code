@@ -7,6 +7,78 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.4.7 (Wed Jul 13 21:20:00 BST 2011):
+
+[-] Fixed display of custom fields in the "view entry" screen.
+[-] Fixed report link in the "You are <user>" header element.
+[*] Allowed for more than 26 booking types.
+[-] Fixed Javascript escaping function.
+[-] Fixed incomplete PHP tag in one file.
+[*] Added error handling to the auth_db database queries.
+[-] Fixed bug whereby the approval status in the repeat table wasn't
+ being set properly.
+[-] Fixed client side booking validation to check for mandatory custom
+ checkbox inputs.
+[*] Updated Spanish translation provided by Jose Luis Martin
+ Jimenez.
+[-] Fixed a bug whereby the header wasn't displayed in some
+ circumstances
+[-] Fixed a bug whereby the trailer wasn't being displayed properly
+ in the case of a fatal error.
+[*] Hopefully clarified config.inc.php a little more.
+[-] Fixed problem in the time selectors for bookings that occur during
+ a DST changeover
+[-] Fixed bug causing custom fields not to be reported properly in
+ delete email notifications
+[*] Upgraded to jQuery 1.5.2 and jQuery UI 1.8.11.
+[+] Made the inputs for Match Area and Match Room on the Report page
+ into autocomplete fields.
+[+] Added an option to make the default duration All Day.
+[-] Changed the encoding of the text calendar in email notifications
+ to base64 in order to CRLF sequences. Thanks to Thomas Bleher for
+ the patch.
+[*] Changed encoding of mail messages from 7bit to 8bit.
+[*] Removed unnecessary <span> in the trailer. Thanks to patch from
+ Thomas Bleher.
+[*] Updated German translation, thanks to SF tracker #3293801.
+[*] Clarified documention in auth_ext.php a little.
+[*] Added some email debug information to help diagnose problems when
+ sending emails.
+[*] Extracted the per-area default settings from systemdefaults and
+ put them into a new file, areadefaults.inc.php, to make it more
+ obvious that these are the default settings for new areas and
+ will have no effect on existing areas.
+[*] Added lang.en as the fall-back language, in order that something
+ is shown even when the $default_language_tokens file does not
+ have a translated token. Based on a patch by Thomas Bleher.
+[+] Added an option to report.php to summarize by type. Thamks to a
+ patch submitted by Thomas Bleher.
+[-] LDAP authentication change to fix (particular) configurations
+ using $ldap_filter. Patch provided by rudd_j in SF tracker
+ #3299258.
+[-] Fixed bug preventing a room name being changed when only the case
+ of letters in the name was being changed.
+[-] Fixed bug which meant that a user logging in with an upper case
+ version of his name. This only occurred in certain database
+ configuratations.
+[-] Fixed bug that caused durations to be formatted incorrectly in
+ some languages (eg German). See SF tracker #3313655.
+[+] On the Report page, converted input fields into auto-complete
+ fields for custom fields that have select_options defined - For
+ custom fields allowed $select_options to be an associative array,
+ thus making it easy to change the displayed value without having
+ to change the database. (See SF #3315966)
+[+] Implemented an optional limit on the maximum length of a booking
+ for non-admins. At the moment it is a global limit rather than
+ per-area. It also does not yet prevent invalid booking lengths
+ being shown in the edit_entry form.
+[*] Tweaked iCalendar email data. (See also SF Tracker id 3297799)
+[+] Added two new auth methods, 'crypt' and 'auth_basic'.
+[-] A fix for use an uninitialised array in
+ Themes/default/header.inc, as reported (and fix provided) by
+ Henry Thompson on the mailing list.
+ 
+-------------------------------------------------------------------------------
 Version 1.4.6 (Wed Feb 09 22:00:00 GMT 2011):
 
 [+] Areas and rooms can now be disabled.

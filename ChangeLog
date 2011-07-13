@@ -1,3 +1,407 @@
+2011-07-13 19:46  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1841] web/systemdefaults.inc.php:
+	  
+	  * A fix for use an uninitialised array in
+	  Themes/default/header.inc, as reported (and fix provided) by
+	  Henry Thompson on the mailing list.
+
+2011-07-13 19:39  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1840] web/File[ADD], web/File/Passwd[ADD],
+	  web/File/Passwd.php[ADD], web/File/Passwd/Authbasic.php[ADD],
+	  web/File/Passwd/Authdigest.php[ADD],
+	  web/File/Passwd/Common.php[ADD], web/File/Passwd/Custom.php[ADD],
+	  web/File/Passwd/Cvs.php[ADD], web/File/Passwd/Smb.php[ADD],
+	  web/File/Passwd/Unix.php[ADD], web/auth_auth_basic.inc[ADD],
+	  web/auth_crypt.inc[ADD]:
+	  
+	  * Added two new auth methods, 'crypt' and 'auth_basic'. The
+	  former uses PHP's crypt() function to interpret a password file.
+	  The other uses the PEAR package File_Passwd to interpret an "auth
+	  basic" file, like one created by Apache's htpasswd programme.
+	  Neither are documented in AUTHENTICATION yet.
+
+2011-06-21 18:36  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1839] web/functions_mail.inc:
+	  
+	  If we're sending iCalendar notifications, then it seems that some
+	  calendar applications use the email subject as the booking title
+	  instead of the iCal SUMMARY field. As far as I can see this is
+	  wrong, but as a circumvention we'll put the booking title in the
+	  email subject line instead of the standard subject. (See also SF
+	  Tracker id 3297799)
+
+2011-06-21 15:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1838] web/edit_entry_handler.php, web/lang.en,
+	  web/mrbs_sql.inc, web/systemdefaults.inc.php:
+	  
+	  Implemented an optional limit on the maximum length of a booking
+	  for non-admins. At the moment it is a global limit rather than
+	  per-area. It also does not yet prevent invalid booking lengths
+	  being shown in the edit_entry form.
+
+2011-06-21 08:51  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1837] INSTALL, web/Themes/default/header.inc, web/dbsys.inc,
+	  web/edit_users.php, web/functions.inc, web/functions_mail.inc,
+	  web/functions_view.inc, web/report.php, web/search.php,
+	  web/systemdefaults.inc.php:
+	  
+	  - On the Report page, converted input fields into auto-complete
+	  fields for custom fields that have select_options defined - For
+	  custom fields allowed $select_options to be an associative array,
+	  thus making it easy to change the displayed value without having
+	  to change the database. (See SF #3315966)
+
+2011-06-08 10:31  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1836] web/functions.inc:
+	  
+	  Fixed bug that caused durations to be formatted incorrectly in
+	  some languages (eg German). See SF tracker #3313655.
+
+2011-05-26 11:36  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1831] web/auth_db.inc:
+	  
+	  Fixed bug which meant that a user logging in with an upper case
+	  version of his name (eg "John" instead of "john" was denied
+	  access to some pages in MySQL when the collation of the username
+	  field is set to binary and PostgreSQL always)
+
+2011-05-26 09:05  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1830] web/dbsys.inc, web/edit_area_room.php, web/mysql.inc,
+	  web/mysqli.inc, web/pgsql.inc:
+	  
+	  Fixed bug preventing a room name being changed when only the case
+	  of letters in the name was being changed.
+
+2011-05-18 16:17  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1828] web/auth_ldap.inc:
+	  
+	  * LDAP authentication change to fix (particular) configurations
+	  using $ldap_filter. Patch provided by rudd_j in SF tracker
+	  #3299258.
+
+2011-05-14 11:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1827] web/lang.de, web/lang.en, web/report.php:
+	  
+	  Added an option to report.php to summarize by type. Thamks to a
+	  patch submitted by Thomas Bleher.
+
+2011-05-14 10:15  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1826] web/language.inc:
+	  
+	  Added lang.en as the fall-back language, in order that something
+	  is shown even when the $default_language_tokens file does not
+	  have a translated token. Based on a patch by Thomas Bleher.
+
+2011-05-14 09:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1825] INSTALL, web/areadefaults.inc.php[ADD],
+	  web/config.inc.php, web/defaultincludes.inc, web/mrbs_auth.inc,
+	  web/systemdefaults.inc.php:
+	  
+	  Extracted the per-area default settings from systemdefaults and
+	  put them into a new file, areadefaults.inc.php, to make it more
+	  obvious that these are the default settings for new areas and
+	  will have no effect on existing areas.
+
+2011-05-13 10:19  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1824] web/functions_mail.inc, web/systemdefaults.inc.php:
+	  
+	  Added some email debug information to help diagnose problems when
+	  sending emails.
+
+2011-05-05 19:47  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1823] web/auth_ext.inc:
+	  
+	  Clarified documention in auth_ext.php a little
+
+2011-05-03 08:48  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1822] web/lang.de:
+	  
+	  Added missing entries based on SF tracker #3293801
+
+2011-05-03 08:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1821] web/trailer.inc:
+	  
+	  Removed unnecessary class attribute
+
+2011-05-03 08:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1820] web/trailer.inc:
+	  
+	  Removed unnecessary <span>. Thanks to patch from Thomas Bleher.
+
+2011-04-20 14:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1819] web/functions_mail.inc:
+	  
+	  Changed encoding of mail messages from 7bit to 8bit
+
+2011-04-20 14:33  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1818] web/functions_mail.inc:
+	  
+	  Changed the encoding of the text calendar to base64 so that
+	  Postfix will preserve CRLF sequences (which are mandatory
+	  terminators according to RFC 5545). Thanks to Thomas Bleher for
+	  the patch.
+
+2011-04-15 17:55  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1817] tables.my.pre41.sql, tables.my.sql, tables.pg.pre73.sql,
+	  tables.pg.sql, web/Themes/default/header.inc, web/dbsys.inc,
+	  web/edit_area_room.php, web/functions.inc,
+	  web/internalconfig.inc.php, web/mrbs.css.php,
+	  web/systemdefaults.inc.php, web/upgrade/27[ADD],
+	  web/upgrade/27/mysql.sql[ADD], web/upgrade/27/pgsql.sql[ADD]:
+	  
+	  Added an option to make the default duration All Day
+
+2011-04-15 17:40  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1816] web/Themes/default/header.inc:
+	  
+	  Fixed bug introduced in Rev 1814 that caused the time selectors
+	  on the edit_entry form not to be displayed properly
+
+2011-04-15 07:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1815] web/Themes/default/header.inc:
+	  
+	  Updated comments following Rev 1813
+
+2011-04-12 13:50  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1814] web/Themes/default/header.inc:
+	  
+	  - Tidied up the code - Changed the way IE6 conditional comments
+	  are used in the last revision to avoid HTML validation errors
+
+2011-04-12 13:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1813] web/Themes/default/header.inc,
+	  web/jquery/ui/css/sunny/images/ui-bg_diagonals-medium_20_d34d17_40x40.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_gloss-wave_70_ffdd57_500x100.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_d19405_256x240.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_eb990f_256x240.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_ffe180_256x240.png,
+	  web/jquery/ui/css/sunny/jquery-ui-1.8.11.custom.css,
+	  web/jquery/ui/jquery-ui-1.8.11.custom.min.js, web/mrbs.css.php,
+	  web/systemdefaults.inc.php:
+	  
+	  Made the inputs for Match Area and Match Room on the Report page
+	  into autocomplete fields, meaning that you can either choose from
+	  a list of areas or rooms or else enter your own text. (As well as
+	  saving typing if you want a particular area or room it also has
+	  the added advantage of letting you see in advance what the
+	  results of a match would be). Not supported in IE6 and below as
+	  the autocomplete box doesn't render properly.
+
+2011-04-11 13:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1812] web/Themes/default/header.inc,
+	  web/jquery/ui/jquery-ui-datepicker-no.js[DEL]:
+	  
+	  Removed the explicit Norwegian datepicker initialisation as it
+	  has now been incorporated by the jQuery UI team in the standard
+	  product.
+
+2011-04-11 13:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1811] web/Themes/default/header.inc,
+	  web/jquery/ui/jquery-ui-datepicker-en-AU.js[DEL],
+	  web/jquery/ui/jquery-ui-datepicker-en-NZ.js[DEL]:
+	  
+	  Removed the explicit en-AU and en-NZ datepicker initialisations
+	  as they have now been incorporated by the jQuery UI team in the
+	  standard product.
+
+2011-04-11 13:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1810] web/Themes/default/header.inc,
+	  web/jquery/ui/css/sunny/images/ui-bg_diagonals-medium_20_d34d17_40x40.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_gloss-wave_60_fece2f_500x100.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_eb990f_256x240.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_fadc7a_256x240.png,
+	  web/jquery/ui/css/sunny/jquery-ui-1.8.11.custom.css[ADD],
+	  web/jquery/ui/css/sunny/jquery-ui-1.8.6.custom.css[DEL],
+	  web/jquery/ui/jquery-ui-1.8.11.custom.min.js[ADD],
+	  web/jquery/ui/jquery-ui-1.8.6.custom.min.js[DEL],
+	  web/jquery/ui/jquery-ui-i18n.js, web/style.inc:
+	  
+	  Upgraded to jQuery UI 1.8.11
+
+2011-04-11 11:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1809] web/Themes/default/header.inc,
+	  web/jquery/jquery-1.4.2.min.js[DEL],
+	  web/jquery/jquery-1.5.2.min.js[ADD]:
+	  
+	  Upgraded to jQuery 1.5.2
+
+2011-03-30 07:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1808] web/edit_entry_handler.php, web/functions_mail.inc,
+	  web/mrbs_sql.inc:
+	  
+	  Fixed bug causing custom fields not to be reported properly in
+	  delete email notifications
+
+2011-03-27 22:14  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1807] web/edit_entry.php, web/edit_entry_handler.php:
+	  
+	  Fixed a problem whereby the range of the time selectors was an
+	  hour out if you tried to make a booking for a DST changeover day
+	  (the booking was being made for the requested time, but the
+	  selectors prevented you from choosing the first/last hour of the
+	  booking day). [ In the process also removed a couple of instances
+	  of the use of the deprecated is_dst parameter to mktime() ]
+
+2011-03-26 15:04  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1806] web/config.inc.php:
+	  
+	  * Hopefully clarified config.inc.php a little more.
+
+2011-03-16 08:03  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1805] web/systemdefaults.inc.php:
+	  
+	  Removed reference to INSTALL file for further details on setting
+	  up email notifications (as there are none!)
+
+2011-03-15 16:42  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1804] web/systemdefaults.inc.php:
+	  
+	  Removed a type which had accidentally got into the trunk during
+	  testing
+
+2011-03-14 14:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1803] web/functions.inc:
+	  
+	  Fixed a bug whereby the trailer wasn't being displayed properly
+	  in the case of a fatal error.
+
+2011-03-14 14:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1802] web/mrbs_sql.inc:
+	  
+	  Fixed a bug whereby the header wasn't displayed in some
+	  circumstances (eg view an entry unlogged in, then log in and
+	  reject the entry)
+
+2011-03-09 17:00  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1801] web/lang.es:
+	  
+	  * Updated Spanish translation provided by Jose Luis Martin
+	  Jimenez.
+
+2011-03-03 10:29  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1800] INSTALL, web/edit_entry.php, web/systemdefaults.inc.php:
+	  
+	  Fixed client side validation to check for mandatory custom
+	  checkbox inputs.
+
+2011-03-01 09:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1799] web/upgrade/17/post.inc:
+	  
+	  Fixed bug whereby the approval status in the repeat table wasn't
+	  being set properly.
+
+2011-03-01 09:11  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1798] web/upgrade/17/post.inc:
+	  
+	  Improved error reporting in previous change
+
+2011-03-01 08:45  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1797] web/upgrade/17/post.inc:
+	  
+	  Added some error reporting to upgrade 17
+
+2011-02-28 20:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1796] web/functions_mail.inc:
+	  
+	  Removed redundant global declaration
+
+2011-02-24 09:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1795] web/auth_db.inc:
+	  
+	  Added some error handling to the auth_db database queries
+
+2011-02-23 09:30  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1794] web/Themes/default/header.inc:
+	  
+	  Fixed incomplete php tag causing JavaScript errors on some
+	  systems
+
+2011-02-22 10:46  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1793] web/functions.inc:
+	  
+	  Added a '/' to the list of characters escaped in JavaScript
+	  strings to prevent HTML validation errors being generated on the
+	  edit_entry page if there's a '/' in the room or area name.
+
+2011-02-22 10:26  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1792] web/edit_entry.php, web/functions.inc,
+	  web/systemdefaults.inc.php:
+	  
+	  Removed the assumption that the key for the $typel array is a
+	  single character in the range 'A'..'Z', thus paving the way for
+	  increasing the number of meeting types allowed.
+
+2011-02-17 15:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1791] web/report.php:
+	  
+	  Fixed bug whereby the "You are <user>" link was not generating
+	  reports properly.
+
+2011-02-11 22:51  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1790] web/version.inc:
+	  
+	  * Updated version number post-release.
+
+2011-02-11 20:49  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1789] web/functions_view.inc:
+	  
+	  * Fix from the mailing list so that custom fields are shown in
+	  the "view entry" screen.
+
+2011-02-09 20:45  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1785] ChangeLog, NEWS:
+	  
+	  * Updated NEWS and ChangeLog for 1.4.6 release.
+
 2011-02-09 20:08  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r1784] web/version.inc:
