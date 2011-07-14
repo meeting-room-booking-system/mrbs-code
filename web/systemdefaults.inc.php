@@ -427,6 +427,7 @@ $working_days = array(1,2,3,4,5);  // Mon-Fri
  * Form values
  ***********************************************/
 
+ $select_options  = array();
 // It is possible to constrain some form values to be selected from a drop-
 // down select box, rather than allowing free form input.   This is done by
 // putting the permitted options in an array as part of the $select_options
@@ -435,7 +436,6 @@ $working_days = array(1,2,3,4,5);  // Mon-Fri
 // to 'Physics', 'Chemistry' or 'Biology' uncomment the line below.
 
 //$select_options['entry.name'] = array('Physics', 'Chemistry', 'Biology');
-$select_options  = array();
 
 // At the moment $select_options is only supported as follows:
 //     - Entry table: name, description and custom fields
