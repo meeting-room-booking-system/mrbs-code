@@ -994,7 +994,7 @@ if (isset($areamatch))
   {
     $var = "match_$key";
     // Associative arrays
-    if (!empty($var) && is_assoc($select_options["entry.$key"]))
+    if (!empty($$var) && is_assoc($select_options["entry.$key"]))
     {
       $sql .= " AND ";
       $or_array = array();
