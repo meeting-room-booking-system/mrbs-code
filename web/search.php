@@ -28,7 +28,7 @@ $user = getUserName();
 $is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
 
 // Need all these different versions with different escaping.
-if (!empty($search_str)) 
+if (isset($search_str) && ($search_str != '')) 
 {
   $search_url = urlencode($search_str);
   $search_html = htmlspecialchars($search_str);
@@ -62,7 +62,7 @@ if (!empty($advanced))
   exit;
 }
 
-if (!$search_str)
+if (!isset($search_str) || ($search_str == ''))
 {
   echo "<p class=\"error\">" . get_vocab("invalid_search") . "</p>";
   require_once "trailer.inc";

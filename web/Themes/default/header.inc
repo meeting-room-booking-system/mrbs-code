@@ -94,7 +94,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   {
     $year  = date("Y");
   }
-  if (empty($search_str))
+  if (!isset($search_str))
   {
     $search_str = "";
   }
