@@ -196,7 +196,12 @@ function create_ical_event($method, $data, $text_description, $html_description,
   // Note: we use UTC time here.  If you are going to use a timezone and the TZID
   // parameter then RFC 5545 says you MUST provide a corresponding VTIMEZONE component.
   // Some calendar apps, eg Microsoft Exchange, enforce the standard and fail to import
-  // calendar objects that use TZID without a corresponding VTIMEZONE.
+  // calendar objects that use TZID without a corresponding VTIMEZONE.    However, there
+  // are also some applications (eg Outlook 2010/Exchange 2007) that don't work properly
+  // with UTC times and treat UTC times as local times.   So for these applications it
+  // would really be better to use TZID times, but that means having to generate
+  // VTIMEZONE components, and there's no obvious simple way to do this as far as I
+  // can see ...
   $results[] = "DTSTART:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
   $results[] = "DTEND:" . gmdate(RFC5545_FORMAT . '\Z', $data['end_time']);
   $results[] = "SUMMARY:" . ical_escape_text($data['name']);
