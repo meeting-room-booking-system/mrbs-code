@@ -195,13 +195,20 @@ function create_ical_event($method, $data, $text_description, $html_description,
   }
   // Note: we use UTC time here.  If you are going to use a timezone and the TZID
   // parameter then RFC 5545 says you MUST provide a corresponding VTIMEZONE component.
-  // Some calendar apps, eg Microsoft Exchange, enforce the standard and fail to import
-  // calendar objects that use TZID without a corresponding VTIMEZONE.    However, there
-  // are also some applications (eg Outlook 2010/Exchange 2007) that don't work properly
-  // with UTC times and treat UTC times as local times.   So for these applications it
-  // would really be better to use TZID times, but that means having to generate
-  // VTIMEZONE components, and there's no obvious simple way to do this as far as I
-  // can see ...
+  // Although some calendar apps will work if you use a TZID without a corresponding
+  // VTIMEZONE component, this does not conform to the standard and will not work with
+  // other applications such as Microsoft Exchange.
+  //
+  // Note also that RFC 2445, which was the predecessor of RFC 5545 states that 'When
+  // used with a recurrence rule, the "DTSTART" and "DTEND" properties MUST be specified
+  // in local time and the appropriate set of "VTIMEZONE" calendar components MUST be
+  // included.'    Although this requirement was removed in RFC 5545 (see Appendix A.2),
+  // applications such as Exchange 2007 implement the method specified in RFC 2445, so
+  // in order to support them MRBS should really specify times using a TZID parameter
+  // and a corresponding VTIMEZONE component.   However it's not immediately obvious
+  // what the best way is of generating VTIMEZONE components, in particular the RRULE
+  // for DST transitions ...
+  
   $results[] = "DTSTART:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
   $results[] = "DTEND:" . gmdate(RFC5545_FORMAT . '\Z', $data['end_time']);
   $results[] = "SUMMARY:" . ical_escape_text($data['name']);
