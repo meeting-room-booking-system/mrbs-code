@@ -207,7 +207,7 @@ function create_ical_event($method, $data, $text_description, $html_description,
   // in order to support them MRBS should really specify times using a TZID parameter
   // and a corresponding VTIMEZONE component.   However it's not immediately obvious
   // what the best way is of generating VTIMEZONE components, in particular the RRULE
-  // for DST transitions ...
+  // for DST transitions.  One way could be to get them from http://tzurl.org/
   
   $results[] = "DTSTART:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
   $results[] = "DTEND:" . gmdate(RFC5545_FORMAT . '\Z', $data['end_time']);
