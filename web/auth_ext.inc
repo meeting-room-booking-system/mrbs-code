@@ -72,8 +72,8 @@ function authValidateUser($user, $pass)
    
   // Generate the command line
   $cmd = $auth["prog"] . ' ' . $auth["params"];
-  $cmd = preg_replace('/#USERNAME#/',escapeshellarg($user),$cmd);
-  $cmd = preg_replace('/#PASSWORD#/',escapeshellarg($pass),$cmd);
+  $cmd = str_replace('#USERNAME#', escapeshellarg($user), $cmd);
+  $cmd = str_replace('#PASSWORD#', escapeshellarg($pass), $cmd);
    
   // Run the program
   exec($cmd, $output, $ret);
