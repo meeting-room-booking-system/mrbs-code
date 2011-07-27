@@ -136,8 +136,9 @@ function mrbsCheckPolicy($starttime, $duration, $delete=FALSE)
     }
   }
   
-  // Check max_book_ahead
-  if ($max_book_ahead_enabled)
+  // Check max_book_ahead (but not if we're deleting a booking because
+  // nobody's going to mind if a booking beyond the max_book_ahead date is deleted)
+  if ($max_book_ahead_enabled && !$delete)
   {
     if ($enable_periods)
     {
@@ -151,8 +152,8 @@ function mrbsCheckPolicy($starttime, $duration, $delete=FALSE)
     }
   }
   
-  // Check max_duration
-  if ($max_duration_enabled)
+  // Check max_duration (but not if we're deleting a booking)
+  if ($max_duration_enabled && !$delete)
   {
     if ($enable_periods)
     {
@@ -216,7 +217,7 @@ function mrbsDelEntry($user, $id, $series, $all)
   
   $is_book_admin = auth_book_admin($user, $room_id);
 
-  $sql = "SELECT start_time, create_by, id, entry_type FROM $tbl_entry WHERE ";
+  $sql = "SELECT start_time, end_time, create_by, id, entry_type FROM $tbl_entry WHERE ";
    
   if ($series)
   {
@@ -246,7 +247,11 @@ function mrbsDelEntry($user, $id, $series, $all)
     // check that the booking policies allow us to delete this entry
     if (!$is_book_admin)
     {
-      $tmp = mrbsCheckPolicy($row['start_time'], TRUE);
+      // We supply the duration as a parameter to mrbsCheckPolicy, even though
+      // it's not normally needed - but it may be in the future
+      $tmp = mrbsCheckPolicy($row['start_time'], 
+                             $row['end_time'] - $row['start_time'],
+                             TRUE);
       if (!empty($tmp))
       {
         continue;

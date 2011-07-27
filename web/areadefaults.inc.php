@@ -101,7 +101,10 @@ $eveningends_minutes   = 30;   // must be integer in range 0-59
 // minimum advance booking time allows you to set a policy saying that users must book
 // at least so far in advance.  The maximum allows you to set a policy saying that they cannot
 // book more than so far in advance.  How the times are determined depends on whether Periods
-// or Times are being used.   These settings also apply to the deletion of bookings.
+// or Times are being used.   The min_book_ahead settings also apply to the deletion of bookings
+// (to prevent users deleting bookings that have taken place and trying to avoid being charged; if
+// it's a booking in the future past the max_book_ahead time then presumaly nobody minds if the
+// booking is deleted)
 
 // DEFAULT VALUES FOR NEW AREAS
 $min_book_ahead_enabled = FALSE;    // set to TRUE to enforce a minimum advance booking time
