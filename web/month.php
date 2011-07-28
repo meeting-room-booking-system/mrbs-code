@@ -133,41 +133,26 @@ $i= mktime(12,0,0,$month-1,1,$year);
 $yy = date("Y",$i);
 $ym = date("n",$i);
 $yd = $day;
-while (!checkdate($ym, $yd, $yy))
+while (!checkdate($ym, $yd, $yy) && ($yd > 1))
 {
   $yd--;
-  if ($yd == 0)
-  {
-    $yd   = 1;
-    break;
-  }
 }
 
 $i= mktime(12,0,0,$month+1,1,$year);
 $ty = date("Y",$i);
 $tm = date("n",$i);
 $td = $day;
-while (!checkdate($tm, $td, $ty))
+while (!checkdate($tm, $td, $ty) && ($td > 1))
 {
   $td--;
-  if ($td == 0)
-  {
-    $td   = 1;
-    break;
-  }
 }
 
 $cy = date("Y");
 $cm = date("m");
 $cd = $day;    // preserve the day information
-while (!checkdate($cm, $cd, $cy))
+while (!checkdate($cm, $cd, $cy) && ($cd > 1))
 {
   $cd--;
-  if ($cd == 0)
-  {
-    $cd   = 1;
-    break;
-  }
 }
 
 

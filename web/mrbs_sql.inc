@@ -586,15 +586,9 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
         // decremented it to make it a valid date last time round)
         $day = $start_dom;
         // Make the date valid if day is more than number of days in month:
-        while (!checkdate($month, $day, $year))
+        while (!checkdate($month, $day, $year) && ($day > 1))
         {
           $day--;
-          if ($day == 0)
-          {
-            // should never happen (so not internationalised), but
-            // just in case it does, stop an infinite loop 
-            fatal_error(TRUE, "Error generating series");
-          }
         }
         break;
    

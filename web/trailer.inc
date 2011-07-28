@@ -176,14 +176,9 @@ else
     $cday   = $day;
     // decrement day until it's a valid one for the month, in case you're moving to a month with fewer
     // days than the current one
-    while (!checkdate($cmonth, $cday, $cyear))
+    while (!checkdate($cmonth, $cday, $cyear) && ($cday > 1))
     {
       $cday--;
-      if ($cday == 0)
-      {
-        $cday   = 1;
-        break;
-      }
     }
     if ($i != -2)
     {
