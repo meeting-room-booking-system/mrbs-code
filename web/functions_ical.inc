@@ -2,6 +2,44 @@
 
 // $Id$
 
+global $timezone;
+
+// Get the VTIMEZONE component because we'll need it for creating events
+// and the calendar
+$vtimezone = get_vtimezone($timezone);
+
+// Get a VTIMEZONE component for the timezone $tz.
+// If none available returns FALSE.
+function get_vtimezone($tz)
+{
+  $tz_dir = "tzurl/zoneinfo-outlook";  // We use the Outlook compatible versions
+  $vcalendar_file = "$tz_dir/$tz.ics";
+  if (file_exists($vcalendar_file))
+  {
+    $vcalendar = file_get_contents($vcalendar_file);
+    if ($vcalendar)
+    {
+      // The VTIMEZONE components are enclosed in a VCALENDAR, so we want to
+      // extract the VTIMEZONE component.
+      $vtimezone = strstr($vcalendar, "BEGIN:VTIMEZONE");
+      // Would be simpler to use strstr() again, but the optional
+      // third parameter was only introduced in PHP 5.3.0
+      $pos = strpos($vtimezone, "END:VTIMEZONE");
+      if ($pos !== FALSE)
+      {
+        $vtimezone = substr($vtimezone, 0, $pos);
+        if (!empty($vtimezone))
+        {
+          $vtimezone .= "END:VTIMEZONE";
+          return $vtimezone;
+        }
+      }
+    }
+  }
+
+  return FALSE;
+}
+
 
 // "Folds" lines longer than 75 octets.  Multi-byte safe.
 //
@@ -176,7 +214,7 @@ function create_ical_event($method, $data, $text_description, $html_description,
 {
   require_once "functions_mail.inc";
   
-  global $confirmation_enabled, $mail_settings;
+  global $confirmation_enabled, $mail_settings, $timezone, $vtimezone;
   
   $use_html = $mail_settings['html'] && !empty($html_description);
   
@@ -189,28 +227,38 @@ function create_ical_event($method, $data, $text_description, $html_description,
   {
     $results[] = "LAST-MODIFIED:" . gmdate(RFC5545_FORMAT . '\Z', $data['last_updated']);
   }
+
+  // Note: we try and write the event times in the format of a local time with
+  // a timezone reference (ie RFC 5545 Form #3).   Only if we can't do that do we
+  // fall back to a UTC time (ie RFC 5545 Form #2).
+  //
+  // The reason for this is that although this is not required by RFC 5545 (see
+  // Appendix A.2), its predecessor, RFC 2445, did require it for recurring
+  // wvents and is the standard against which older applications, notably Exchange
+  // 2007, are written.   Note also that when using a local timezone format the
+  // VTIMEZONE component must be provided (this is done in create_icalendar() ).  Some
+  // applications will work without the VTIMEZONE component, but many follow the
+  // standard and do require it.  Here is an extract from RFC 2445:
+  
+  // 'When used with a recurrence rule, the "DTSTART" and "DTEND" properties MUST be 
+  // specified in local time and the appropriate set of "VTIMEZONE" calendar components
+  // MUST be included.' 
+  
+  if ($vtimezone === FALSE)
+  {
+    $results[] = "DTSTART:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
+    $results[] = "DTEND:" . gmdate(RFC5545_FORMAT . '\Z', $data['end_time']);
+  }
+  else
+  {
+    $results[] = "DTSTART;TZID=$timezone:" . date(RFC5545_FORMAT, $data['start_time']);
+    $results[] = "DTEND;TZID=$timezone:" . date(RFC5545_FORMAT, $data['end_time']);
+  }
+  
   if ($series)
   {
     $results[] = "RRULE:" . create_rrule($data);
   }
-  // Note: we use UTC time here.  If you are going to use a timezone and the TZID
-  // parameter then RFC 5545 says you MUST provide a corresponding VTIMEZONE component.
-  // Although some calendar apps will work if you use a TZID without a corresponding
-  // VTIMEZONE component, this does not conform to the standard and will not work with
-  // other applications such as Microsoft Exchange.
-  //
-  // Note also that RFC 2445, which was the predecessor of RFC 5545 states that 'When
-  // used with a recurrence rule, the "DTSTART" and "DTEND" properties MUST be specified
-  // in local time and the appropriate set of "VTIMEZONE" calendar components MUST be
-  // included.'    Although this requirement was removed in RFC 5545 (see Appendix A.2),
-  // applications such as Exchange 2007 implement the method specified in RFC 2445, so
-  // in order to support them MRBS should really specify times using a TZID parameter
-  // and a corresponding VTIMEZONE component.   However it's not immediately obvious
-  // what the best way is of generating VTIMEZONE components, in particular the RRULE
-  // for DST transitions.  One way could be to get them from http://tzurl.org/
-  
-  $results[] = "DTSTART:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
-  $results[] = "DTEND:" . gmdate(RFC5545_FORMAT . '\Z', $data['end_time']);
   $results[] = "SUMMARY:" . ical_escape_text($data['name']);
   // Put the HTML version in an ALTREP, just in case there are any Calendars out there
   // that support it (although at the time of writing, Dec 2010, none are known)
@@ -330,7 +378,7 @@ function create_ical_event($method, $data, $text_description, $html_description,
   $results[] = "END:VEVENT";
   
   $result = implode(ICAL_EOL, $results);  // No CRLF at end: that will be added later
-
+  
   return $result;
 }
 
@@ -341,6 +389,8 @@ function create_ical_event($method, $data, $text_description, $html_description,
 function create_icalendar($method, $components)
 {
   require_once "version.inc";
+  
+  global $vtimezone;
 
   $results = array();
   $results[] = "BEGIN:VCALENDAR";
@@ -350,6 +400,13 @@ function create_icalendar($method, $components)
   // Optional properties
   $results[] = "CALSCALE:GREGORIAN";
   $results[] = "METHOD:$method";
+  
+  // Add in the VTIMEZONE component if there is one (see the comment in
+  // create_ical_event() above)
+  if ($vtimezone)
+  {
+    $results[] = $vtimezone;
+  }
   
   // Add in each component
   foreach ($components as $component)
@@ -543,5 +600,6 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
   $icalendar = create_icalendar("REQUEST", $ical_events);
   echo $icalendar;
 }
+
 
 ?>
