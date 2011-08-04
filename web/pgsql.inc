@@ -412,15 +412,20 @@ function sql_pgsql_field_info($table, $db_conn = null)
                       'smallint'          => 'integer',
                       'text'              => 'character');
   
-  $fields = array();
   $res = sql_pgsql_query("SELECT column_name, data_type, numeric_precision,
                                  character_maximum_length, character_octet_length,
                                  is_nullable
                             FROM information_schema.columns
                            WHERE table_name ='$table'
                         ORDER BY ordinal_position");
-  if ($res && (sql_pgsql_count($res) > 0))
+  if ($res === FALSE)
   {
+    trigger_error(pg_result_error($res), E_USER_WARNING);
+    fatal_error(TRUE, get_vocab("fatal_db_error"));
+  }
+  else
+  {
+    $fields = array();
     for ($i = 0; ($row = sql_pgsql_row_keyed($res, $i)); $i++)
     {
       $name = $row['column_name'];
@@ -449,8 +454,8 @@ function sql_pgsql_field_info($table, $db_conn = null)
       $fields[$i]['length'] = $length;
       $fields[$i]['is_nullable'] = $is_nullable;
     }
+    return $fields;
   }
-  return $fields;
 }
 
 

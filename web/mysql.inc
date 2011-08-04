@@ -386,10 +386,15 @@ function sql_mysql_field_info($table, $db_conn = null)
                      'smallint'  => 2,
                      'tinyint'   => 1);
   
-  $fields = array();
   $res = sql_mysql_query("SHOW COLUMNS FROM $table");
-  if ($res && (sql_mysql_count($res) > 0))
+  if ($res === FALSE)
   {
+    trigger_error(mysql_error($db_conn), E_USER_WARNING);
+    fatal_error(TRUE, get_vocab("fatal_db_error"));
+  }
+  else
+  {
+    $fields = array();
     for ($i = 0; ($row = sql_mysql_row_keyed($res, $i)); $i++)
     {
       $name = $row['Field'];
@@ -431,8 +436,8 @@ function sql_mysql_field_info($table, $db_conn = null)
       $fields[$i]['length'] = $length;
       $fields[$i]['is_nullable'] = $is_nullable;
     }
+    return $fields;
   }
-  return $fields;
 }
 
 
