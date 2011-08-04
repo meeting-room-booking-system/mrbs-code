@@ -630,7 +630,7 @@ function validate(form)
   // like clicking more than one time on submit button, we hide it as soon
   // it is clicked.
   ?>
-  form.save_button.disabled="true";
+  form.save_button.disabled = true;
 
   // would be nice to also check date to not allow Feb 31, etc...
 
