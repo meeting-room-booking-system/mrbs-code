@@ -8,36 +8,188 @@ global $timezone;
 // and the calendar
 $vtimezone = get_vtimezone($timezone);
 
+
+// Extracts a VTIMEZONE component from a VCALENDAR.
+function extract_vtimezone($vcalendar)
+{
+  // The VTIMEZONE components are enclosed in a VCALENDAR, so we want to
+  // extract the VTIMEZONE component.
+  $vtimezone = strstr($vcalendar, "BEGIN:VTIMEZONE");
+  // Would be simpler to use strstr() again, but the optional
+  // third parameter was only introduced in PHP 5.3.0
+  $pos = strpos($vtimezone, "END:VTIMEZONE");
+  if ($pos !== FALSE)
+  {
+    $vtimezone = substr($vtimezone, 0, $pos);
+    if (!empty($vtimezone))
+    {
+      $vtimezone .= "END:VTIMEZONE";
+      return $vtimezone;
+    }
+  }
+  return '';  // There wasn't a VTIMEZONE component
+}
+
+
+// download the contents of the web page at $url and return it as a string
+function download($url)
+{
+  global $proxy;
+  
+  $connect_timeout  = 2;  // seconds
+  $transfer_timeout = 2;  // seconds
+  $curlopt_timeout  = 3;  // seconds
+  
+  // If we can we use cURL to download the page because it allows us to
+  // set a timeout on establishing a connection as well as on the transfer time.
+  // (We can only set a timeout on transfer time with file_get_contents()).  The
+  // connection timeout is important because MRBS may be being used in sites
+  // where direct access to the internet is not allowed.
+  if (function_exists('curl_init'))
+  {
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $connect_timeout);
+    curl_setopt($ch, CURLOPT_LOW_SPEED_TIME, $transfer_timeout);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $curlopt_timeout);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    $contents = curl_exec($ch);
+    curl_close($ch);
+  }
+  
+  // If there's no cURL then use file_get_contents()
+  else
+  {
+    // Create the stream context so that we can (a) make sure the connection is closed,
+    // because file_get_contents() does not return the contents when all the bytes
+    // have been sent, but when the connection is closed and (b) set a timeout in case
+    // the transfer is slow
+    $context = stream_context_create(array('http' => array('header'=>'Connection: close',
+                                                           'timeout' => $transfer_timeout)));
+    // Suppress any timeout warnings
+    $contents = @file_get_contents($url);
+  }
+  
+  return $contents;
+}
+
+
 // Get a VTIMEZONE component for the timezone $tz.
 // If none available returns FALSE.
+//
+// We cache the latest VTIMEZONE component in the database.  If it has expired
+// we go to the web for the latest version or if there's nothing in the database
+// in the first place we try and populate it from the VTIMEZONE definitions in
+// the filesystem.
 function get_vtimezone($tz)
 {
-  $tz_dir = "tzurl/zoneinfo-outlook";  // We use the Outlook compatible versions
-  $vcalendar_file = "$tz_dir/$tz.ics";
-  if (file_exists($vcalendar_file))
+  global $tbl_zoneinfo, $zoneinfo_update, $zoneinfo_expiry;
+  
+  $outlook_compatible = TRUE;    // We use the Outlook compatible versions
+  $tz_dir = ($outlook_compatible) ? "tzurl/zoneinfo-outlook" : "tzurl/zoneinfo";  
+  $tz_file = "$tz_dir/$tz.ics";  // A fallback for a VTIMEZONE definition
+  
+  $vtimezone = FALSE;  // Default value in case we don't find one
+  
+  // Convert booleans into 1 or 0 (necessary for the database)
+  $outlook_compatible = ($outlook_compatible) ? 1 : 0;
+  
+  // Acquire a mutex to lock out others who might be accessing 
+  // the table, to stop somebody inserting a record at the same
+  // time as us (we want just one entry per timezone)
+  if (!sql_mutex_lock("$tbl_zoneinfo"))
   {
-    $vcalendar = file_get_contents($vcalendar_file);
-    if ($vcalendar)
+    fatal_error(TRUE, get_vocab("failed_to_acquire"));
+  }
+  
+  // Look and see if there's a component in the database
+  $sql = "SELECT vtimezone, last_updated
+            FROM $tbl_zoneinfo
+           WHERE timezone='" . addslashes($tz) . "'
+             AND outlook_compatible=$outlook_compatible
+           LIMIT 1";
+  $res = sql_query($sql);
+  if ($res === FALSE)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
+  }
+  elseif (sql_count($res) > 0)
+  {
+    // If there's something in the database and it hasn't expired, then
+    // that's it.
+    $row = sql_row_keyed($res, 0);
+    $vtimezone = $row['vtimezone'];
+    if ($zoneinfo_update && ((time() - $row['last_updated']) >= $zoneinfo_expiry))
     {
-      // The VTIMEZONE components are enclosed in a VCALENDAR, so we want to
-      // extract the VTIMEZONE component.
-      $vtimezone = strstr($vcalendar, "BEGIN:VTIMEZONE");
-      // Would be simpler to use strstr() again, but the optional
-      // third parameter was only introduced in PHP 5.3.0
-      $pos = strpos($vtimezone, "END:VTIMEZONE");
-      if ($pos !== FALSE)
+      // Otherwise, provided that the config variable $zoneinfo_update
+      // is true, we get the URL of the latest version on the web,
+      // and update the database.
+      //
+      // (Note that a VTIMEZONE component can contain a TZURL property which
+      // gives the URL of the most up to date version.  Calendar applications
+      // should be able to check this themselves, but we might as well give them
+      // the most up to date version in the first place).
+      $properties = explode("\r\n", ical_unfold($vtimezone));
+      foreach ($properties as $property)
       {
-        $vtimezone = substr($vtimezone, 0, $pos);
-        if (!empty($vtimezone))
+        if (strpos($property, "TZURL:") === 0)
         {
-          $vtimezone .= "END:VTIMEZONE";
-          return $vtimezone;
+          $tz_url = substr($property, 6);  // 6 is the length of "TZURL:"
+        }
+      }
+      
+      $vcalendar = download($tz_url);
+      
+      if ($vcalendar)
+      {
+        $new_vtimezone = extract_vtimezone($vcalendar);
+        if (!empty($new_vtimezone))
+        {
+          // We've got a valid VTIMEZONE, so we can overwrite $vtimezone
+          $vtimezone = $new_vtimezone;
+          // Update the database
+          $sql = "UPDATE $tbl_zoneinfo
+                     SET vtimezone='" . addslashes($vtimezone) . "',
+                         last_updated=" . time() . "
+                   WHERE timezone='" . addslashes($tz) . "'
+                     AND outlook_compatible=$outlook_compatible";
+          if (sql_command($sql) < 0)
+          {
+            trigger_error(sql_error(), E_USER_WARNING);
+            fatal_error(FALSE, get_vocab("fatal_db_error"));
+          }
         }
       }
     }
   }
-
-  return FALSE;
+  // There's nothing in the database, so try and get a VTIMEZONE component
+  // from the filesystem.
+  else
+  {
+    $vcalendar = file_get_contents($tz_file);
+    
+    if ($vcalendar)
+    {
+      $vtimezone = extract_vtimezone($vcalendar);
+      if (!empty($vtimezone))
+      {
+        $sql = "INSERT INTO $tbl_zoneinfo
+                (timezone, outlook_compatible, vtimezone, last_updated)
+                VALUES ('" . addslashes($tz) . "', 
+                        $outlook_compatible,
+                        '" . addslashes($vtimezone) . "', " .
+                        time() . ")";
+        if (sql_command($sql) < 0)
+        {
+          trigger_error(sql_error(), E_USER_WARNING);
+          fatal_error(FALSE, get_vocab("fatal_db_error"));
+        }
+      }
+    }
+  }
+  // Tidy up and return
+  sql_mutex_unlock("$tbl_zoneinfo");  // Release the mutex
+  return $vtimezone;
 }
 
 
@@ -107,6 +259,59 @@ function ical_fold($str)
   }
   return $result;
 }
+
+
+// Reverse the RFC 5545 folding process, which splits lines into groups
+// of max 75 octets separated by 'CRLFspace' or 'CRLFtab'
+function ical_unfold($str)
+{
+  // Deal with the trivial cases
+  if (!isset($str))
+  {
+    return NULL;
+  }
+  if ($str == '')
+  {
+    return $str;
+  }
+  
+  // We've got a non-zero length string
+  $result = '';
+  $byte_index = 0;
+  
+  while (isset($byte_index))
+  {
+    // Get the next character
+    $char = utf8_seq($str, $byte_index);
+    // If it's a CR then look ahead to the following character, if there is one
+    if (($char == "\r") && isset($byte_index))
+    {
+      $char = utf8_seq($str, $byte_index);
+      // If that's a LF then look ahead to the next character, if there is one
+      if (($char == "\n") && isset($byte_index))
+      {
+        $char = utf8_seq($str, $byte_index);
+        // If that's a space or a tab then ignore it because we've just had a fold
+        // sequence.    Otherwise add the characters into the result string.
+        if (($char != " ") && ($char != "\t"))
+        {
+          $result .= "\r\n" . $char;
+        }
+      }
+      else
+      {
+        $result .= "\r" . $char;
+      }
+    }
+    else
+    {
+      $result .= $char;
+    }
+  }
+  
+  return $result;
+}
+
 
 // Escape text for use in an iCalendar text value
 function ical_escape_text($str)

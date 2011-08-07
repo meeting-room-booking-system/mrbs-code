@@ -12,6 +12,10 @@
  *
  **************************************************************************/
 
+/**********
+ * Timezone
+ **********/
+ 
 // The timezone your meeting rooms run in. It is especially important
 // to set this if you're using PHP 5 on Linux. In this configuration
 // if you don't, meetings in a different DST than you are currently
@@ -23,6 +27,21 @@
 // A list of valid timezones can be found at http://php.net/manual/timezones.php
 // The following line must be uncommented by removing the '//' at the beginning
 //$timezone = "Europe/London";
+
+// If you are using iCalendar notifications of bookings (see the mail settings below)
+// then the iCalendar attachment includes a definition of your timezone in 
+// VTIMEZONE format.   This defines the timezone, including the rules for Daylight
+// Saving Time transitions.    This information is included in the MRBS distribution.
+// However, as governments can change the rules periodically, MRBS will check from
+// time to time to see if there is a later version available on the web.   If your
+// site prevents external access to the web, this check will time out.  However
+// you can avoid the timeout and stop MRBS checking for up to date versions by
+// setting $zoneinfo_update = FALSE;
+$zoneinfo_update = TRUE;
+
+// The VTIMEZONE definitions are cached in the database with an expiry time
+// of $zoneinfo_expiry seconds
+$zoneinfo_expiry = 60*60*24*28;    // 28 days
 
 /*******************
  * Database settings
@@ -803,7 +822,8 @@ $mail_settings['ics_filename'] = "booking";
 //(b) whether there are addresses to send email to and (c) the result of the mail
 // sending operation.
 $mail_settings['debug'] = FALSE;
-
+ 
+ 
 /**********
  * Language
  **********/

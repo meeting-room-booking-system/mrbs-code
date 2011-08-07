@@ -126,6 +126,17 @@ CREATE TABLE mrbs_variables
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE mrbs_zoneinfo
+(
+  id                 int NOT NULL auto_increment,
+  timezone           varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
+  outlook_compatible tinyint unsigned NOT NULL DEFAULT 0,
+  vtimezone          text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  last_updated       int NOT NULL DEFAULT 0,
+      
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE mrbs_users
 (
   /* The first four fields are required. Don't remove. */
@@ -139,6 +150,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '27');
+  VALUES ( 'db_version', '28');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

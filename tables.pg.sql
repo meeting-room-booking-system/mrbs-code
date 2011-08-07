@@ -103,7 +103,7 @@ create index mrbs_idxEndTime on mrbs_entry(end_time);
 
 CREATE TABLE mrbs_repeat
 (
-  id          serial primary key,
+  id             serial primary key,
   start_time     int DEFAULT 0 NOT NULL,
   end_time       int DEFAULT 0 NOT NULL,
   rep_type       int DEFAULT 0 NOT NULL,
@@ -132,6 +132,15 @@ CREATE TABLE mrbs_variables
   variable_content text
 );
 
+CREATE TABLE mrbs_zoneinfo
+(
+  id                 serial primary key,
+  timezone           varchar(255) DEFAULT '' NOT NULL,
+  outlook_compatible smallint NOT NULL DEFAULT 0,
+  vtimezone          text,
+  last_updated       int NOT NULL DEFAULT 0
+);
+
 CREATE TABLE mrbs_users
 (
   /* The first four fields are required. Don't remove. */
@@ -143,6 +152,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '27');
+  VALUES ('db_version', '28');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');

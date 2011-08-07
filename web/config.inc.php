@@ -11,6 +11,10 @@
  *   Booking System", "room" and "area").
  **************************************************************************/
 
+/**********
+ * Timezone
+ **********/
+ 
 // The timezone your meeting rooms run in. It is especially important
 // to set this if you're using PHP 5 on Linux. In this configuration
 // if you don't, meetings in a different DST than you are currently
