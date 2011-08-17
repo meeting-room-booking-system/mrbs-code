@@ -662,7 +662,7 @@ form#form_edit_users {width: auto; margin-top: 2.0em}
 #form_delete_users input.submit {left: 2.0em}                                  /* and put the Delete on the left */
 #form_edit_users input.checkbox {width: auto; margin-left: <?php echo $edit_users_gap ?>em}
 form.edit_users_error {width: 10em; margin-top: 2.0em}
-div#user_list {float: left; width: 95%; padding: 2em 0 2em 1em}
+div#user_list {float: left; max-width: 100%; padding: 2em 0 2em 1em}
 form#add_new_user {margin-left: 1em}
 
 

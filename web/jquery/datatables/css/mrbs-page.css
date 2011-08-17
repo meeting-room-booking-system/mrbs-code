@@ -1,0 +1,19 @@
+/* $Id$
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * General page setup
+ */
+
+.css_right {
+  float: right;
+}
+
+.css_left {
+  float: left;
+}
+
+.demo_links {
+  float: left;
+  width: 50%;
+  margin-bottom: 1em;
+}

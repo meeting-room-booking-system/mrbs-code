@@ -563,6 +563,79 @@ else
 }
 
 
+// Returns the pathname of the language file to use for the dataTables
+// jQuery plugin.    If no suitable language file exists then returns FALSE
+function get_datatable_lang()
+{
+  global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
+  global $langs, $lang_map_windows, $server_os;
+  
+  $found_lang = FALSE;
+  $language_dir = "jquery/datatables/language";  // location of dataTables language files
+  
+  // If automatic language changing is disabled, then use the $override_locale
+  // as the first choice of language, and then second the default language tokens
+  if ($disable_automatic_language_changing)
+  {
+    $preferred_langs = array();
+    if (!empty($override_locale))
+    {
+      if ($server_os == 'windows')
+      {
+        // If the server is running on Windows we'll have to try and translate the 
+        // Windows style locale back into an xx-YY locale
+        $locale = array_search($override_locale, $lang_map_windows);
+      }
+      else
+      {
+        $locale = $override_locale;
+      }
+      $preferred_langs[$locale] = 1.0;
+    }
+    $preferred_langs[$default_language_tokens] = 0.5;
+  }
+  // Otherwise use the browser preferences
+  else
+  {
+    $preferred_langs = $langs;
+  }
+  
+  // Sort the array in reverse order, ie so that the preferred language
+  // is at the start of the array
+  arsort($preferred_langs, SORT_NUMERIC);
+  // First try for an exact match, so if the user specified en-gb, look
+  // for en-gb.txt
+  foreach ($preferred_langs as $lang => $qual)
+  {
+    $lang_file = strtolower(locale_format($lang, '-'));
+    $lang_file = "$language_dir/$lang_file.txt";
+    if (file_exists($lang_file))
+    {
+      $found_lang = TRUE;
+      break;
+    }
+  }
+  if (!$found_lang)
+  {
+    // None of the user's preferred languages was available, so try to
+    // find a lang file for one of the base languages, e.g. look for
+    // lang.en if "en-ca" was specified.
+    foreach ($preferred_langs as $lang => $qual)
+    {
+      $lang_file = strtolower(substr($lang,0,2));
+      $lang_file = "$language_dir/$lang_file.txt";
+      if (file_exists($lang_file))
+      {
+        $found_lang = TRUE;
+        break;
+      }
+    }
+  }
+  
+  return ($found_lang) ? $lang_file : FALSE;
+}
+
+
 function get_charset()
 {
   return 'utf-8';

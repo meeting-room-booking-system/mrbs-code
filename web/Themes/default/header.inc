@@ -140,6 +140,32 @@ function print_theme_header($day, $month, $year, $area, $room)
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-US.js"></script>
     
+    <?php
+    // dataTables initialisation
+    if (in_array($page, array('edit_users')))
+    {
+
+      // Include the JavaScript for those pages that use dataTables
+      ?>
+      <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.min.js"></script>
+      <script type="text/javascript">
+        //<![CDATA[
+        var dataTablesDefaults = {};
+        <?php
+        // Set the language file to be used
+        if ($lang_file = get_datatable_lang())
+        {
+          ?>
+          dataTablesDefaults.oLanguage = {"sUrl": "<?php echo $lang_file ?>"};
+          <?php
+        }
+        ?>
+        //]]>
+      </script>
+      <?php
+    }
+    
+    ?>
     <script type="text/javascript">
 
 //<![CDATA[
@@ -920,6 +946,16 @@ $(window).load(function() {
   <?php
   }  // EDIT_ENTRY
   
+  // EDIT_USERS.PHP
+  if ($page == 'edit_users')
+  {
+    // Turn the table into a datatable
+    ?>
+    var dataTablesOptions = $.extend({}, dataTablesDefaults);
+    $('#users_table').dataTable(dataTablesOptions);
+    <?php
+  }
+  
   // PENDING.PHP
   if ($page == 'pending')
   {
@@ -959,15 +995,16 @@ $(window).load(function() {
   }
 
   // SEARCH.PHP
-  // put the search string field in focus
   if ($page == 'search')
   {
+  // put the search string field in focus
   ?>
   var form = document.getElementById('search_form');
   if (form && form.search_str)
   {
     form.search_str.focus();
   }
+  
   <?php
   }
   ?>

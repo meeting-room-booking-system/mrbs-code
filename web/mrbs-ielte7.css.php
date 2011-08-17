@@ -21,6 +21,15 @@ expires_header(60*30); // 30 minute expiry
 #areaChangeForm button {margin-top: -0.1em}
 
 
+/* ------------ EDIT_USERS.PHP ------------------*/
+
+<?php
+// IE7 and below do not understand max-width, treating it as width.  So just let
+// the user table be as wide as necessary and the users will have to scroll across
+?>
+div#user_list {max-width: auto; position relative}
+
+
 /* ------------ FORM_GENERAL ------------------------*/
 
 .form_general#edit_room legend {font-size: 0}   /* no legend in edit_room, so stop IE allocating space */

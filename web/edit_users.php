@@ -880,6 +880,129 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
 {
   // Get the user information
   $res = sql_query("SELECT * FROM $tbl_users ORDER BY level DESC, name");
+  
+  // Display the data in a table
+  $ignore_columns = array('id', 'password'); // We don't display these columns
+  
+  echo "<div id=\"user_list\">\n";
+  echo "<table class=\"admin_table dataTables\" id=\"users_table\">\n";
+  
+  // The table header
+  echo "<thead>\n";
+  echo "<tr>";
+  // First column which is an action button
+  echo "<th><div>" . get_vocab("action") . "</div></th>";
+  // Column headers
+  foreach ($fields as $field)
+  {
+    $fieldname = $field['name'];
+    
+    if (!in_array($fieldname, $ignore_columns))
+    {
+      echo "<th><div>" . get_loc_field_name($tbl_users, $fieldname) . "</div></th>";
+    }
+  }
+  echo "</tr>\n";
+  echo "</thead>\n";
+  
+  // The table body
+  echo "<tbody>\n";
+  $row_class = "odd_row";
+  while ($row = sql_row_keyed($res, $i))
+  {
+    // Check whether ordinary users are allowed to see other users' details.  If not,
+    // then skip past this row if it's not the current user or the user is not an admin
+    if ($auth['only_admin_can_see_other_users'] &&
+        ($level < $min_user_editing_level) &&
+        (strcasecmp($row['name'], $user) != 0))
+    {
+      continue;
+    }
+    
+    $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
+    echo "<tr class=\"$row_class\">\n";
+
+    // First column (the action button)
+    echo "<td class=\"action\"><div>\n";
+    // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
+    if (($level >= $min_user_editing_level) || (strcasecmp($row['name'], $user) == 0))
+    {
+      echo "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+      echo "<div>\n";
+      echo "<input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
+      echo "<input type=\"hidden\" name=\"Id\" value=\"" . $row['id'] . "\">\n";
+      echo "<input type=\"image\" class=\"button\" src=\"images/edit.png\"
+                 title=\"" . get_vocab("edit") . "\" alt=\"" . get_vocab("edit") . "\">\n";
+      echo "</div>\n";
+      echo "</form>\n";
+    }
+    else
+    {
+      echo "&nbsp;\n";
+    }
+    echo "</div></td>\n";
+    
+    // Other columns
+    foreach ($fields as $field)
+    {
+      $key = $field['name'];
+      if (!in_array($key, $ignore_columns))
+      {
+        $col_value = $row[$key];
+        switch($key)
+        {
+          // special treatment for some fields
+          case 'level':
+            // the level field contains a code and we want to display a string
+            echo "<td><div>" . get_vocab("level_$col_value") . "</div></td>\n";
+            break;
+          case 'email':
+            // we don't want to truncate the email address
+            echo "<td><div>" . htmlspecialchars($col_value) . "</div></td>\n";
+            break;
+          default:
+            // Where there's an associative array of options, display
+            // the value rather than the key
+            if (is_assoc($select_options["users.$key"]))
+            {
+              $col_value = $select_options["users.$key"][$row[$key]];
+              echo "<td><div>" . htmlspecialchars($col_value) . "</div></td>\n";
+            }
+            elseif (($field['nature'] == 'boolean') || 
+                (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+            {
+              // booleans: represent by a checkmark
+              echo "<td class=\"int\"><div>";
+              echo (!empty($col_value)) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;";
+              echo "</div></td>\n";
+            }
+            elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
+            {
+              // integer values
+              echo "<td class=\"int\"><div>" . $col_value . "</div></td>\n";
+            }
+            else
+            {
+               // strings
+              echo "<td title=\"" . htmlspecialchars($col_value) . "\"><div>";
+              echo htmlspecialchars($col_value);
+              echo "</div></td>\n";
+            }
+            break;
+        }  // end switch
+      }
+    }  // end foreach
+    
+    echo "</tr>\n";
+    
+  }  // end while
+  
+  echo "</tbody>\n";
+  
+  echo "</table>\n";
+  echo "</div>\n";
+  
+  /*
   // Build an array with the user info
   $info = array();
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
@@ -909,6 +1032,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   echo freeze_panes_table_html($info, $columns, 'body_columns', FALSE);
   echo "</div>\n";   // freeze_panes
   echo "</div>\n";
+  */
 }   // ($initial_user_creation != 1)
 
 require_once "trailer.inc";
