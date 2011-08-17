@@ -148,6 +148,7 @@ function print_theme_header($day, $month, $year, $area, $room)
       // Include the JavaScript for those pages that use dataTables
       ?>
       <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.min.js"></script>
+      <script type="text/javascript" src="jquery/datatables/js/ColReorder.min.js"></script>
       <script type="text/javascript">
         //<![CDATA[
         var dataTablesDefaults = {};
@@ -157,6 +158,7 @@ function print_theme_header($day, $month, $year, $area, $room)
         {
           ?>
           dataTablesDefaults.oLanguage = {"sUrl": "<?php echo $lang_file ?>"};
+          dataTablesDefaults.sDom = 'Rlfrtip';
           <?php
         }
         ?>
