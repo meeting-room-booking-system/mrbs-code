@@ -160,8 +160,10 @@ function print_theme_header($day, $month, $year, $area, $room)
           ?>
           dataTablesDefaults.oLanguage = {"sUrl": "<?php echo $lang_file ?>"};
           dataTablesDefaults.sDom = 'RClfrtip';
-          dataTablesDefaults.oColVis = new Object();
-          dataTablesDefaults.oColVis.sSize = "css";
+          dataTablesDefaults.oColVis = {sSize: "css",
+                                        buttonText: '<?php echo get_vocab("show_hide_columns") ?>',
+                                        bRestore: true,
+                                        sRestore: '<?php echo get_vocab("restore_original") ?>'};
           <?php
         }
         ?>
@@ -962,8 +964,7 @@ $(window).load(function() {
     // "Action - Name - Rights" and not "Action - Rights - Name"
     ?>
     var nColumns = $('#users_table tr:first th').length;
-    dataTablesOptions.oColReorder = new Object();
-    dataTablesOptions.oColReorder.aiOrder = [0, 2, 1];
+    dataTablesOptions.oColReorder = {aiOrder: [0, 2, 1]};
     for (var i=3; i < nColumns; i++)
     {
       dataTablesOptions.oColReorder.aiOrder.push(i);

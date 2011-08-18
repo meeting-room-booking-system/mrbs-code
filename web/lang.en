@@ -409,6 +409,10 @@ $vocab["for_any_questions"]  = "for any questions that aren't answered here.";
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatal error: failed to connect to database";
 
+// Used in DataTables
+$vocab["show_hide_columns"]  = "Show / hide columns";
+$vocab["restore_original"]   = "Restore original";
+
 // General
 $vocab["fatal_db_error"]     = "Fatal error: unfortunately the database is not available at the moment.";
 
