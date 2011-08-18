@@ -954,6 +954,17 @@ $(window).load(function() {
     // Turn the table into a datatable
     ?>
     var dataTablesOptions = $.extend({}, dataTablesDefaults);
+    <?php
+    // Set the initial order of columns (we want it to go
+    // "Action - Name - Rights" and not "Action - Rights - Name"
+    ?>
+    var nColumns = $('#users_table tr:first th').length;
+    dataTablesOptions.oColReorder = new Object();
+    dataTablesOptions.oColReorder.aiOrder = [0, 2, 1];
+    for (var i=3; i < nColumns; i++)
+    {
+      dataTablesOptions.oColReorder.aiOrder.push(i);
+    }
     $('#users_table').dataTable(dataTablesOptions);
     <?php
   }
