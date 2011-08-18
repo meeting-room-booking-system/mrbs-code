@@ -159,14 +159,14 @@ function print_theme_header($day, $month, $year, $area, $room)
         {
           ?>
           dataTablesDefaults.oLanguage = {"sUrl": "<?php echo $lang_file ?>"};
-          dataTablesDefaults.sDom = 'RClfrtip';
-          dataTablesDefaults.oColVis = {sSize: "css",
-                                        buttonText: '<?php echo get_vocab("show_hide_columns") ?>',
-                                        bRestore: true,
-                                        sRestore: '<?php echo get_vocab("restore_original") ?>'};
           <?php
         }
         ?>
+        dataTablesDefaults.sDom = 'RClfrtip';
+        dataTablesDefaults.oColVis = {sSize: "css",
+                                      buttonText: '<?php echo get_vocab("show_hide_columns") ?>',
+                                      bRestore: true,
+                                      sRestore: '<?php echo get_vocab("restore_original") ?>'};
         //]]>
       </script>
       <?php
