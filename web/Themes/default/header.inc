@@ -149,6 +149,7 @@ function print_theme_header($day, $month, $year, $area, $room)
       ?>
       <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.min.js"></script>
       <script type="text/javascript" src="jquery/datatables/js/ColReorder.min.js"></script>
+      <script type="text/javascript" src="jquery/datatables/js/ColVis.min.js"></script>
       <script type="text/javascript">
         //<![CDATA[
         var dataTablesDefaults = {};
@@ -158,7 +159,9 @@ function print_theme_header($day, $month, $year, $area, $room)
         {
           ?>
           dataTablesDefaults.oLanguage = {"sUrl": "<?php echo $lang_file ?>"};
-          dataTablesDefaults.sDom = 'Rlfrtip';
+          dataTablesDefaults.sDom = 'RClfrtip';
+          dataTablesDefaults.oColVis = new Object();
+          dataTablesDefaults.oColVis.sSize = "css";
           <?php
         }
         ?>
