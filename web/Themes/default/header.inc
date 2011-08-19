@@ -151,6 +151,21 @@ function print_theme_header($day, $month, $year, $area, $room)
       <script type="text/javascript" src="jquery/datatables/js/ColReorder.min.js"></script>
       <script type="text/javascript" src="jquery/datatables/js/ColVis.min.js"></script>
       <script type="text/javascript" src="jquery/datatables/js/FixedColumns.min.js"></script>
+      
+      <?php // Work out if we're using IE6 or below ?>
+      <script type="text/javascript">
+        //<![CDATA[
+        var lteIE6 = false;
+        //]]>
+      </script>
+      <!--[if lte IE 6]>
+      <script type="text/javascript">
+        //<![CDATA[
+        var lteIE6 = true;
+        //]]>
+      </script>
+      <![endif]-->
+      
       <script type="text/javascript">
         //<![CDATA[
         var dataTablesDefaults = {};
@@ -958,40 +973,43 @@ $(document).ready(function() {
   // EDIT_USERS.PHP
   if ($page == 'edit_users')
   {
-    // Turn the table into a datatable
+    // Turn the table into a datatable, but not if we're using IE6 because
+    // DataTables don't work well there (they can be made to work, but
+    // it's not worth it)
     ?>
-    var dataTablesOptions = $.extend({}, dataTablesDefaults);
-    <?php
-    // Set the initial order of columns (we want it to go
-    // "Action - Name - Rights" and not "Action - Rights - Name"
-    ?>
-    var nColumns = $('#users_table tr:first th').length;
-    dataTablesOptions.oColReorder = {aiOrder: [0, 2, 1]};
-    for (var i=3; i < nColumns; i++)
+    if (!lteIE6)
     {
-      dataTablesOptions.oColReorder.aiOrder.push(i);
-    }
-    <?php 
-    // Fix the left hand two columns.  This has to be done when 
-    // initialisation is complete as the language files are loaded
-    // asynchronously
-    ?>
-    dataTablesOptions.fnInitComplete = function(){
-        new FixedColumns(oTable, {"iLeftColumns": 2});
-      };
-    <?php
-    // Remove the first two columns from the column visibility
-    // list because these two are fixed
-    ?>
-    dataTablesOptions.oColVis.aiExclude = [0,1];
-    <?php
-    // and stop those first two columns being reordered
-    ?>
-    dataTablesOptions.oColReorder.iFixedColumns = 2;
-      
-    var oTable = $('#users_table').dataTable(dataTablesOptions);
+      var dataTablesOptions = $.extend({}, dataTablesDefaults);
+      <?php
+      // Set the initial order of columns (we want it to go
+      // "Action - Name - Rights" and not "Action - Rights - Name"
+      ?>
+      var nColumns = $('#users_table tr:first th').length;
+      dataTablesOptions.oColReorder = {aiOrder: [0, 2, 1]};
+      for (var i=3; i < nColumns; i++)
+      {
+        dataTablesOptions.oColReorder.aiOrder.push(i);
+      }
+      <?php 
+      // Fix the left hand two columns.  This has to be done when 
+      // initialisation is complete as the language files are loaded
+      // asynchronously
+      ?>
+      dataTablesOptions.fnInitComplete = function(){
+          new FixedColumns(oTable, {"iLeftColumns": 2});
+        };
+      <?php
+      // Remove the first two columns from the column visibility
+      // list because these two are fixed
+      ?>
+      dataTablesOptions.oColVis.aiExclude = [0,1];
+      <?php
+      // and stop those first two columns being reordered
+      ?>
+      dataTablesOptions.oColReorder.iFixedColumns = 2;
     
-
+      var oTable = $('#users_table').dataTable(dataTablesOptions);
+    }
     <?php
   }
   
