@@ -150,6 +150,7 @@ function print_theme_header($day, $month, $year, $area, $room)
       <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.min.js"></script>
       <script type="text/javascript" src="jquery/datatables/js/ColReorder.min.js"></script>
       <script type="text/javascript" src="jquery/datatables/js/ColVis.min.js"></script>
+      <script type="text/javascript" src="jquery/datatables/js/FixedColumns.min.js"></script>
       <script type="text/javascript">
         //<![CDATA[
         var dataTablesDefaults = {};
@@ -162,7 +163,7 @@ function print_theme_header($day, $month, $year, $area, $room)
           <?php
         }
         ?>
-        dataTablesDefaults.sDom = 'RClfrtip';
+        dataTablesDefaults.sDom = 'RC<"clear">lfrtip';
         dataTablesDefaults.sScrollX = "100%";
         dataTablesDefaults.oColVis = {sSize: "css",
                                       buttonText: '<?php echo get_vocab("show_hide_columns") ?>',
@@ -970,7 +971,26 @@ $(document).ready(function() {
     {
       dataTablesOptions.oColReorder.aiOrder.push(i);
     }
+    <?php 
+    // Fix the left hand two columns.  This has to be done when 
+    // initialisation is complete as the language files are loaded
+    // asynchronously
+    ?>
+    dataTablesOptions.fnInitComplete = function(){
+        new FixedColumns(oTable, {"iLeftColumns": 2});
+      };
+    <?php
+    // Remove the first two columns from the column visibility
+    // list because these two are fixed
+    ?>
+    dataTablesOptions.oColVis.aiExclude = [0,1];
+    <?php
+    // and stop those first two columns being reordered
+    ?>
+    dataTablesOptions.oColReorder.iFixedColumns = 2;
+      
     var oTable = $('#users_table').dataTable(dataTablesOptions);
+    
 
     <?php
   }

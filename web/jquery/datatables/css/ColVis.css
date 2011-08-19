@@ -4,9 +4,8 @@
  * ColVis styles
  */
 .ColVis {
-  position: absolute;
-  top: 0;
-  right: 0;
+	float: right;
+	margin-bottom: 1em;
 }
 
 .ColVis_Button {
