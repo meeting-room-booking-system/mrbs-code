@@ -178,6 +178,7 @@ function print_theme_header($day, $month, $year, $area, $room)
           <?php
         }
         ?>
+        dataTablesDefaults.bStateSave = true;
         dataTablesDefaults.sDom = 'RC<"clear">lfrtip';
         dataTablesDefaults.sScrollX = "100%";
         dataTablesDefaults.oColVis = {sSize: "css",
