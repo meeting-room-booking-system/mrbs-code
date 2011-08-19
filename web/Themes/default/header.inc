@@ -163,6 +163,7 @@ function print_theme_header($day, $month, $year, $area, $room)
         }
         ?>
         dataTablesDefaults.sDom = 'RClfrtip';
+        dataTablesDefaults.sScrollX = "100%";
         dataTablesDefaults.oColVis = {sSize: "css",
                                       buttonText: '<?php echo get_vocab("show_hide_columns") ?>',
                                       bRestore: true,
@@ -813,7 +814,7 @@ if ($page == 'pending')
 } // pending
 ?>
 
-$(window).load(function() {
+$(document).ready(function() {
 
   <?php // ALL PAGES ?>
   // if there's a logon box, set the username input field in focus
@@ -969,7 +970,8 @@ $(window).load(function() {
     {
       dataTablesOptions.oColReorder.aiOrder.push(i);
     }
-    $('#users_table').dataTable(dataTablesOptions);
+    var oTable = $('#users_table').dataTable(dataTablesOptions);
+
     <?php
   }
   

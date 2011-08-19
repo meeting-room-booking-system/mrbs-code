@@ -35,7 +35,6 @@
  table.dataTables {
    float: left;
    clear: both;
-   margin-top: 3em;
  }
 
 .dataTables th div, .dataTables td div {
@@ -52,7 +51,10 @@
   position: relative;
   float: left;
   clear: both;
-  padding: 2.5em 0 2em 0;
+  padding: 5.5em 0 2em 0;
+  max-width: 98%;
+  min-height: 302px;
+  _height: 302px;
   zoom: 1; /* Feeling sorry for IE */
 }
 

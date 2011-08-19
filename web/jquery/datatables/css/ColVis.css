@@ -16,6 +16,7 @@
   height: 30px;
   background-color: #fff;
   border: 1px solid #d0d0d0;
+  white-space: nowrap;
   cursor: pointer;
   *cursor: hand;
 }
