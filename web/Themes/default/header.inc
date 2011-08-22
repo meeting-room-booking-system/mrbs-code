@@ -168,23 +168,57 @@ function print_theme_header($day, $month, $year, $area, $room)
       
       <script type="text/javascript">
         //<![CDATA[
-        var dataTablesDefaults = {};
+        
         <?php
-        // Set the language file to be used
-        if ($lang_file = get_datatable_lang())
-        {
-          ?>
-          dataTablesDefaults.oLanguage = {"sUrl": "<?php echo $lang_file ?>"};
-          <?php
-        }
+        // Turn the table with id 'id' into a DataTable, using specificOptions
+        // which are merged with the default options.   If the browser is IE6 or less
+        // we don't bother making a dataTable:  it can be done, but it's not worth it.
+        //
+        // [We've created a specific function to make a data table rather than just 
+        // using the dataTable() method directly, because if we're using options such as
+        // FixedColumns we have to set up the FixedColumns using a call back function
+        // after initialisation is complete, because the setting of the language text
+        // strings, which happens asynchronously, needs to happen first.    When we're
+        // setting up the call back function we need to know the name of the dataTable
+        // object.   Having the makeDataTable() function allows us to keep the lines of
+        // code that use the object name together in one place.   It also allows us 
+        // to keep the browser conditional code in one place.]
         ?>
-        dataTablesDefaults.bStateSave = true;
-        dataTablesDefaults.sDom = 'RC<"clear">lfrtip';
-        dataTablesDefaults.sScrollX = "100%";
-        dataTablesDefaults.oColVis = {sSize: "css",
+        function makeDataTable(id, specificOptions)
+        {
+          if (lteIE6)
+          {
+            return FALSE;
+          }
+          else
+          {
+            <?php // Set up the default options ?>
+            var defaultOptions = {};
+            <?php
+            // Set the language file to be used
+            if ($lang_file = get_datatable_lang())
+            {
+              ?>
+              defaultOptions.oLanguage = {"sUrl": "<?php echo $lang_file ?>"};
+              <?php
+            }
+            ?>
+            defaultOptions.bStateSave = true;
+            defaultOptions.sDom = 'RC<"clear">lfrtip';
+            defaultOptions.sScrollX = "100%";
+            defaultOptions.oColVis = {sSize: "css",
                                       buttonText: '<?php echo get_vocab("show_hide_columns") ?>',
                                       bRestore: true,
                                       sRestore: '<?php echo get_vocab("restore_original") ?>'};
+            <?php
+            // Merge the specific options with the default options.  We do a deep
+            // merge.
+            ?>
+            var mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);  
+            return $(id).dataTable(mergedOptions);
+          }
+        }
+        
         //]]>
       </script>
       <?php
@@ -974,43 +1008,39 @@ $(document).ready(function() {
   // EDIT_USERS.PHP
   if ($page == 'edit_users')
   {
-    // Turn the table into a datatable, but not if we're using IE6 because
-    // DataTables don't work well there (they can be made to work, but
-    // it's not worth it)
+    // Turn the list of users into a dataTable
     ?>
-    if (!lteIE6)
+    var tableOptions = new Object();
+    <?php
+    // Set the initial order of columns (we want it to go
+    // "Action - Name - Rights" and not "Action - Rights - Name"
+    ?>
+    var nColumns = $('#users_table tr:first th').length;
+    tableOptions.oColReorder = {aiOrder: [0, 2, 1]};
+    for (var i=3; i < nColumns; i++)
     {
-      var dataTablesOptions = $.extend({}, dataTablesDefaults);
-      <?php
-      // Set the initial order of columns (we want it to go
-      // "Action - Name - Rights" and not "Action - Rights - Name"
-      ?>
-      var nColumns = $('#users_table tr:first th').length;
-      dataTablesOptions.oColReorder = {aiOrder: [0, 2, 1]};
-      for (var i=3; i < nColumns; i++)
-      {
-        dataTablesOptions.oColReorder.aiOrder.push(i);
-      }
-      <?php 
-      // Fix the left hand two columns.  This has to be done when 
-      // initialisation is complete as the language files are loaded
-      // asynchronously
-      ?>
-      dataTablesOptions.fnInitComplete = function(){
-          new FixedColumns(oTable, {"iLeftColumns": 2});
-        };
-      <?php
-      // Remove the first two columns from the column visibility
-      // list because these two are fixed
-      ?>
-      dataTablesOptions.oColVis.aiExclude = [0,1];
-      <?php
-      // and stop those first two columns being reordered
-      ?>
-      dataTablesOptions.oColReorder.iFixedColumns = 2;
-    
-      var oTable = $('#users_table').dataTable(dataTablesOptions);
+      tableOptions.oColReorder.aiOrder.push(i);
     }
+    <?php 
+    // Fix the left hand two columns.  This has to be done when 
+    // initialisation is complete as the language files are loaded
+    // asynchronously
+    ?>
+    tableOptions.fnInitComplete = function(){
+        new FixedColumns(usersTable, {"iLeftColumns": 2});
+      };
+    <?php
+    // Remove the first two columns from the column visibility
+    // list because these two are fixed
+    ?>
+    tableOptions.oColVis = {aiExclude: [0,1]};
+    <?php
+    // and stop those first two columns being reordered
+    ?>
+    tableOptions.oColReorder.iFixedColumns = 2;
+    
+    var usersTable = makeDataTable('#users_table', tableOptions);
+
     <?php
   }
   
