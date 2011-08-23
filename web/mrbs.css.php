@@ -76,15 +76,6 @@ table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color:
 .admin_table td.action div {display: inline-block}
 .admin_table td.action div div {display: table-cell} 
 
-div.freeze_panes {width: 100%; float: left}
-.freeze_panes th div, .freeze_panes td div {display: table-cell; vertical-align: middle; white-space: nowrap; overflow: hidden}
-.freeze_panes th div {height: 1.5em; max-height: 1.5em; min-height: 1.5em}
-.freeze_panes td div {height: 2em; max-height: 2em; min-height: 2em}
-.freeze_panes td.int div {width: 6em; text-align: right; padding-right: 0.5em}
-.freeze_panes td.boolean {text-align: center}
-.freeze_panes td.boolean div {display: block}
-.freeze_panes td.boolean img {margin-top: 3px}
-   
 select.room_area_select {margin-right: 0.5em}
 
 /* ------------ ADMIN.PHP ---------------------------*/
