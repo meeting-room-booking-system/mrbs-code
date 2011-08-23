@@ -246,14 +246,14 @@ if ($is_admin || ($n_displayable_areas > 0))
       }
       else
       {
-        // Display them in a table [Actually two tables side by side so that we can
-        // achieve a "Freeze Panes" effect: there doesn't seem to be a good way of
-        // getting a colgroup to scroll, so we have to distort the mark-up a little]
-    
-        echo "<div id=\"room_info\" class=\"freeze_panes\">\n";
-        // (a) the "header" columns containing the room names
-        echo "<div class=\"header_columns\">\n";
-        echo "<table class=\"admin_table\">\n";
+        echo "<div id=\"room_info\">\n";
+        // Build the table.    We deal with the name and disabled columns
+        // first because they are not necessarily the first two columns in
+        // the table (eg if you are running PostgreSQL and have upgraded your
+        // database)
+        echo "<table id=\"rooms_table\" class=\"admin_table display\">\n";
+        
+        // The header
         echo "<thead>\n";
         echo "<tr>\n";
         if ($is_admin)
@@ -264,11 +264,36 @@ if ($is_admin || ($n_displayable_areas > 0))
         echo "<th><div>" . get_vocab("name") . "</div></th>\n";
         if ($is_admin)
         {
-          // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
+        // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
           echo "<th><div>" . get_vocab("enabled") . "</div></th>\n";
+        }
+        // ignore these columns, either because we don't want to display them,
+        // or because we have already displayed them in the header column
+        $ignore = array('id', 'area_id', 'room_name', 'disabled', 'sort_key', 'custom_html');
+        foreach($fields as $field)
+        {
+          if (!in_array($field['name'], $ignore))
+          {
+            switch ($field['name'])
+            {
+              // the standard MRBS fields
+              case 'description':
+              case 'capacity':
+              case 'room_admin_email':
+                $text = get_vocab($field['name']);
+                break;
+              // any user defined fields
+              default:
+                $text = get_loc_field_name($tbl_room, $field['name']);
+                break;
+            }
+            echo "<th><div>" . htmlspecialchars($text) . "</div></th>\n";
+          }
         }
         echo "</tr>\n";
         echo "</thead>\n";
+        
+        // The body
         echo "<tbody>\n";
         $row_class = "odd_row";
         foreach ($rooms as $r)
@@ -304,52 +329,6 @@ if ($is_admin || ($n_displayable_areas > 0))
               // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
               echo "<td class=\"boolean\"><div>" . ((!$r['disabled']) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;") . "</div></td>\n";
             }
-            echo "</tr>\n";
-          }
-        }
-        echo "</tbody>\n";
-        echo "</table>\n";
-        echo "</div>\n";
-    
-        // (b) the "body" columns containing the room info
-        echo "<div class=\"body_columns\">\n";
-        echo "<table class=\"admin_table\">\n";
-        echo "<thead>\n";
-        echo "<tr>\n";
-        // ignore these columns, either because we don't want to display them,
-        // or because we have already displayed them in the header column
-        $ignore = array('id', 'area_id', 'room_name', 'disabled', 'sort_key', 'custom_html');
-        foreach($fields as $field)
-        {
-          if (!in_array($field['name'], $ignore))
-          {
-            switch ($field['name'])
-            {
-              // the standard MRBS fields
-              case 'description':
-              case 'capacity':
-              case 'room_admin_email':
-                $text = get_vocab($field['name']);
-                break;
-              // any user defined fields
-              default:
-                $text = get_loc_field_name($tbl_room, $field['name']);
-                break;
-            }
-            echo "<th><div>" . htmlspecialchars($text) . "</div></th>\n";
-          }
-        }
-        echo "</tr>\n";
-        echo "</thead>\n";
-        echo "<tbody>\n";
-        $row_class = "odd_row";
-        foreach ($rooms as $r)
-        {
-          // Don't show ordinary users disabled rooms
-          if ($is_admin || !$r['disabled'])
-          {
-            $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
-            echo "<tr class=\"$row_class\">\n";
             foreach($fields as $field)
             {
               if (!in_array($field['name'], $ignore))
@@ -391,16 +370,17 @@ if ($is_admin || ($n_displayable_areas > 0))
                       echo $html;
                     }
                     break;
-                }
-              }
-            }
+                }  // switch
+              }  // if
+            }  // foreach
             echo "</tr>\n";
           }
         }
+
         echo "</tbody>\n";
         echo "</table>\n";
         echo "</div>\n";
-        echo "</div>\n";
+        
       }
     }
   }

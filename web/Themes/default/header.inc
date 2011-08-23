@@ -142,7 +142,7 @@ function print_theme_header($day, $month, $year, $area, $room)
     
     <?php
     // dataTables initialisation
-    if (in_array($page, array('edit_users')))
+    if (in_array($page, array('admin', 'edit_users')))
     {
 
       // Include the JavaScript for those pages that use dataTables
@@ -876,6 +876,42 @@ $(document).ready(function() {
   }
 
   <?php
+  // ADMIN.PHP
+  if ($page == 'admin')
+  {
+    // Turn the list of users into a dataTable
+    ?>
+    var tableOptions = new Object();
+    <?php
+    // If we're an ordinary user we only see the Name column.   If we're
+    // an admin we also see the Delete, Edit and Disabled columns
+    ?>
+    var nFixedColumns = <?php echo ($is_admin) ? 4 : 1 ?>;
+    <?php 
+    // Fix the left hand columns.  This has to be done when 
+    // initialisation is complete as the language files are loaded
+    // asynchronously
+    ?>
+    tableOptions.fnInitComplete = function(){
+        new FixedColumns(roomsTable, {"iLeftColumns": nFixedColumns});
+      };
+    <?php
+    // Remove the fixed columns from the column visibility
+    ?>
+    tableOptions.oColVis = {aiExclude: []};
+    for (var i=0; i<nFixedColumns; i++)
+    {
+      tableOptions.oColVis.aiExclude.push(i);
+    }
+    <?php
+    // and stop those columns being reordered
+    ?>
+    tableOptions.oColReorder = {iFixedColumns: nFixedColumns};
+    
+    var roomsTable = makeDataTable('#rooms_table', tableOptions);
+    <?php
+  }  
+    
   // EDIT_AREA_ROOM.PHP
   if ($page == 'edit_area_room')
   {
