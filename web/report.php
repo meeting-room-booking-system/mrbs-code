@@ -84,8 +84,8 @@ function report_header()
   $values[] = get_vocab("area") . ' - ' . get_vocab("room");
   $values[] = get_vocab("namebooker");
   $values[] = get_vocab("start_date");
-  $values[] = get_vocab("duration");
   $values[] = get_vocab("end_date");
+  $values[] = get_vocab("duration");
   $values[] = get_vocab("fulldescription_short");
   $values[] = get_vocab("type"); 
   $values[] = get_vocab("createdby");

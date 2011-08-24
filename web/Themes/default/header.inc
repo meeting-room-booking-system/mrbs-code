@@ -142,7 +142,7 @@ function print_theme_header($day, $month, $year, $area, $room)
     
     <?php
     // dataTables initialisation
-    if (in_array($page, array('admin', 'edit_users')))
+    if (in_array($page, array('admin', 'edit_users', 'report')))
     {
 
       // Include the JavaScript for those pages that use dataTables
@@ -1116,6 +1116,30 @@ $(document).ready(function() {
         echo generate_autocomplete('match_' . substr($field, strlen('entry.')), $options);
       }
     }
+    
+    // Turn the list of users into a dataTable
+    ?>
+    var tableOptions = new Object();
+    <?php 
+    // Fix the left hand two columns.  This has to be done when 
+    // initialisation is complete as the language files are loaded
+    // asynchronously
+    ?>
+    tableOptions.fnInitComplete = function(){
+        new FixedColumns(reportTable, {"iLeftColumns": 2});
+      };
+    <?php
+    // Remove the first two columns from the column visibility
+    // list because these two are fixed
+    ?>
+    tableOptions.oColVis = {aiExclude: [0,1]};
+    <?php
+    // and stop those first two columns being reordered
+    ?>
+    tableOptions.oColReorder = {iFixedColumns: 2};
+    
+    var reportTable = makeDataTable('#report_table', tableOptions);
+    <?php
   }
 
   // SEARCH.PHP
