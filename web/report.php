@@ -197,7 +197,16 @@ function report_row(&$row, $sortby)
   {
     $start_date = time_date_string($row['start_time']);
   }
-  $values[] = escape($start_date);
+  if ($output_as_csv)
+  {
+    $values[] = escape($start_date);
+  }
+  else
+  {
+    // Include the numeric start time in a non-displayed span so that
+    // the column can be sorted properly
+    $values[] = "<span>" . $row['start_time'] . "</span>" . escape($start_date);
+  }
   
   // End date
   if ($enable_periods)
@@ -208,7 +217,16 @@ function report_row(&$row, $sortby)
   {
     $end_date = time_date_string($row['end_time']);
   }
-  $values[] = escape($end_date);
+  if ($output_as_csv)
+  {
+    $values[] = escape($end_date);
+  }
+  else
+  {
+    // Include the numeric start time in a non-displayed span so that
+    // the column can be sorted properly
+    $values[] = "<span>" . $row['end_time'] . "</span>" . escape($end_date);
+  }
   
   // Duration
   $d = get_duration($row['start_time'], $row['end_time']);
