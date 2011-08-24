@@ -747,6 +747,7 @@ table#pending_list {width: 100%}
 #div_summary td {text-align: right}
 #div_summary tbody td:nth-child(even), #div_summary tfoot th:nth-child(even) {border-right-width: 0}
 #div_summary td:first-child {font-weight: bold}
+div#report_output {width: 98%}
 p.report_entries {font-weight: bold}
 .report .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
 .report .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}

@@ -113,9 +113,15 @@
  * DataTables display
  */
 table.display {
-  margin: 0 auto;
+  margin: 0;
   clear: both;
   width: 100%;
+}
+
+.DTFC_LeftBodyWrapper table {
+  table-layout: fixed;
+}
+
   
   /* Note Firefox 3.5 and before have a bug with border-collapse
    * ( https://bugzilla.mozilla.org/show%5Fbug.cgi?id=155955 ) 
@@ -129,12 +135,13 @@ table.display {
    * If you want that effect I'd suggest setting a border-top/left on th/td's and 
    * then filling in the gaps with other borders.
    */
-}
 
 table.display th, table.display td {
   height: 2em;
   white-space: nowrap;
+  overflow: hidden;
 }
+
 
 table.display th {
   padding: 3px 24px 3px 3px;

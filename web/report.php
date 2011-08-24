@@ -152,7 +152,8 @@ function open_report()
   
   if ($output_as_html)
   {
-    echo "<table class=\"admin_general display\" id=\"report_table\">\n";
+    echo "<div id=\"report_output\">\n";
+    echo "<table class=\"admin_table display\" id=\"report_table\">\n";
   }
   report_header();
 }
@@ -164,7 +165,9 @@ function close_report()
   
   if ($output_as_html)
   {
-    echo "</tbody>\n</table>\n";
+    echo "</tbody>\n";
+    echo "</table>\n";
+    echo "</div>\n";
   }
 }
 

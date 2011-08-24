@@ -1128,6 +1128,7 @@ $(document).ready(function() {
     tableOptions.fnInitComplete = function(){
         new FixedColumns(reportTable, {"iLeftColumns": 2});
       };
+
     <?php
     // Remove the first two columns from the column visibility
     // list because these two are fixed
