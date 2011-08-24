@@ -41,11 +41,10 @@ $main_table_body_v_border_color_print = "#879AA8";    // border colour for day/w
 $report_table_border_color      = $standard_font_color;
 $report_h2_border_color         = $banner_back_color;     // border colour for <h2> in report.php
 $report_h3_border_color         = "#879AA8";              // border colour for <h2> in report.php
-$report_entry_border_color      = "#C3CCD3";              // used to separate individual bookings in report.php
 
 $search_table_border_color      = $standard_font_color;
 
-$site_faq_entry_border_color    = $report_entry_border_color;    // used to separate individual FAQ's in help.php
+$site_faq_entry_border_color    = "#C3CCD3";              // used to separate individual FAQ's in help.php
 
 $trailer_border_color           = $standard_font_color;
 

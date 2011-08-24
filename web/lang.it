@@ -187,9 +187,6 @@ $vocab["total"]              = "Totale";
 $vocab["submitquery"]        = "Esegui Report";
 $vocab["sort_rep"]           = "Ordina Report per";
 $vocab["sort_rep_time"]      = "Inizio Data/Ora";
-$vocab["rep_dsp"]            = "Visualizza sul report";
-$vocab["rep_dsp_dur"]        = "Durata";
-$vocab["rep_dsp_end"]        = "Ora fine";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Vai alla Settimana Precedente";

@@ -175,9 +175,6 @@ $vocab["total"]              = "Σύνολο";
 $vocab["submitquery"]        = "Εκτέλεση αναφοράς";
 $vocab["sort_rep"]           = "Sort Report by";
 $vocab["sort_rep_time"]      = "Start Date/Time";
-$vocab["rep_dsp"]            = "Display in report";
-$vocab["rep_dsp_dur"]        = "Duration";
-$vocab["rep_dsp_end"]        = "End Time";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Μετάβαση στην προηγούμενη εβδομάδα";

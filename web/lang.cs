@@ -175,9 +175,6 @@ $vocab["total"]              = "Celkem";
 $vocab["submitquery"]        = "Vytvořit sestavu";
 $vocab["sort_rep"]           = "Seřadit výpis podle";
 $vocab["sort_rep_time"]      = "Výchozí den/čas";
-$vocab["rep_dsp"]            = "Zobrazit ve výpisu";
-$vocab["rep_dsp_dur"]        = "Trvání";
-$vocab["rep_dsp_end"]        = "Čas ukončení";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Týden dozadu";

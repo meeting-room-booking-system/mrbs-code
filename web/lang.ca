@@ -176,9 +176,6 @@ $vocab["total"]              = "Total";
 $vocab["submitquery"]        = "Executar informe";
 $vocab["sort_rep"]           = "Ordenar informe per";
 $vocab["sort_rep_time"]      = "Inici data/hora";
-$vocab["rep_dsp"]            = "Ensenya en l'informe";
-$vocab["rep_dsp_dur"]        = "Duració";
-$vocab["rep_dsp_end"]        = "Temps esgotat";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Anar a la setmana anterior";

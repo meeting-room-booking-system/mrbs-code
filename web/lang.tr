@@ -188,9 +188,6 @@ $vocab["total"]              = "Toplam";
 $vocab["submitquery"]        = "Raporu Çalıştır";
 $vocab["sort_rep"]           = "Rapora göre sırala";
 $vocab["sort_rep_time"]      = "Başlama Zamanı";
-$vocab["rep_dsp"]            = "Raporda Görüntüle";
-$vocab["rep_dsp_dur"]        = "Devam Süresi";
-$vocab["rep_dsp_end"]        = "Bitiş Zamanı";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Önceki Haftaya Git";

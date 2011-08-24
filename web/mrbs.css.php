@@ -734,18 +734,6 @@ table#pending_list {width: 100%}
 #pending_list table th.header_start_time {text-transform: uppercase}
 
 /* ------------ REPORT.PHP ----------------------*/
-.div_report h2, #div_summary h1 {border-top: 2px solid <?php echo $report_h2_border_color ?>;
-    padding-top: 0.5em; margin-top: 2.0em}
-.div_report h3 {border-top: 1px solid <?php echo $report_h3_border_color ?>;
-    padding-top: 0.5em; margin-bottom: 0}
-.div_report table {clear: both; width: 100%; margin-top: 0.5em}
-.div_report col.col1 {width: 11em}
-.div_report td:first-child {text-align: right; font-weight: bold}
-.div_report .createdby td, .div_report .lastupdate td {font-size: x-small}
-div.report_entry_title {width: 100%; float: left;
-    border-top: 1px solid <?php echo $report_entry_border_color ?>; margin-top: 0.8em}
-div.report_entry_name  {width: 40%;  float: left; font-weight: bold}
-div.report_entry_when  {width: 60%;  float: right; text-align: right}
 #div_summary table {border-spacing: 1px; border-collapse: collapse;
     border-color: <?php echo $report_table_border_color ?>; border-style: solid;
     border-top-width: 1px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 1px}

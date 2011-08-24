@@ -175,9 +175,6 @@ $vocab["total"]              = "全部";
 $vocab["submitquery"]        = "產生報表";
 $vocab["sort_rep"]           = "排序";
 $vocab["sort_rep_time"]      = "起始日/時";
-$vocab["rep_dsp"]            = "顯示在報表";
-$vocab["rep_dsp_dur"]        = "持續時間";
-$vocab["rep_dsp_end"]        = "結束時間";
 
 // Used in week.php
 $vocab["weekbefore"]         = "前一週";

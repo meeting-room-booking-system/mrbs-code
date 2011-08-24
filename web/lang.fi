@@ -207,9 +207,6 @@ $vocab["total"]              = "Kaikkiaan";
 $vocab["submitquery"]        = "Tee raportti";
 $vocab["sort_rep"]           = "Raporttien lajittelun peruste";
 $vocab["sort_rep_time"]      = "Aloitusaika";
-$vocab["rep_dsp"]            = "Näytä raportissa";
-$vocab["rep_dsp_dur"]        = "Kesto";
-$vocab["rep_dsp_end"]        = "Loppumisaika";
  
 // Used in week.php
 $vocab["weekbefore"]         = "Edelliseen viikkoon";

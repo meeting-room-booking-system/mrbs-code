@@ -249,9 +249,6 @@ $vocab["total"]              = "Totalt";
 $vocab["submitquery"]        = "Skapa rapport";
 $vocab["sort_rep"]           = "Sortera rapport efter";
 $vocab["sort_rep_time"]      = "Startdatum/starttid";
-$vocab["rep_dsp"]            = "Visa i rapport";
-$vocab["rep_dsp_dur"]        = "Längd";
-$vocab["rep_dsp_end"]        = "Sluttid";
 $vocab["fulldescription_short"] = "Fullständig beskrivning";
 
 // Used in week.php

@@ -187,9 +187,6 @@ $vocab["total"]              = "Skupaj";
 $vocab["submitquery"]        = "Naredi poročilo";
 $vocab["sort_rep"]           = "Uredi poročilo po";
 $vocab["sort_rep_time"]      = "Začetni datum/ura";
-$vocab["rep_dsp"]            = "V poročilu prikaži";
-$vocab["rep_dsp_dur"]        = "Trajanje";
-$vocab["rep_dsp_end"]        = "Začetni - končni čas";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Prejšni teden";

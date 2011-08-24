@@ -188,9 +188,6 @@ $vocab["total"]              = "Totalt";
 $vocab["submitquery"]        = "Kjør rapport";
 $vocab["sort_rep"]           = "Sorter rapport etter";
 $vocab["sort_rep_time"]      = "Dato/tid";
-$vocab["rep_dsp"]            = "Vis i rapport";
-$vocab["rep_dsp_dur"]        = "Varighet";
-$vocab["rep_dsp_end"]        = "Slutt-tid";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Gå til uken før";
