@@ -203,6 +203,7 @@ function print_theme_header($day, $month, $year, $area, $room)
               <?php
             }
             ?>
+            defaultOptions.bDeferRender = true;
             defaultOptions.bPaginate = true;
             defaultOptions.bProcessing = true;
             defaultOptions.bScrollCollapse = true;
@@ -1132,7 +1133,6 @@ $(document).ready(function() {
       $ajax_url = "http://" . $HTTP_HOST . $PHP_SELF . "?" . $QUERY_STRING . "&ajax=1";
       ?>
       tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
-      tableOptions.bDeferRender = true;
       <?php
     }
     // Add in a hidden input to the form so that we can tell if we have
