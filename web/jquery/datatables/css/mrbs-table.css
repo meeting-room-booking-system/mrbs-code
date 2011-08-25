@@ -118,10 +118,6 @@ table.display {
   width: 100%;
 }
 
-.DTFC_LeftBodyWrapper table {
-  table-layout: fixed;
-}
-
   
   /* Note Firefox 3.5 and before have a bug with border-collapse
    * ( https://bugzilla.mozilla.org/show%5Fbug.cgi?id=155955 ) 
