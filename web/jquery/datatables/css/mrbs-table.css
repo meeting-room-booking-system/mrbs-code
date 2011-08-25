@@ -42,8 +42,9 @@
 
 .dataTables_processing {
   position: absolute;
-  top: 50%;
+  top: 200px;
   left: 50%;
+  z-index: 100;
   width: 250px;
   height: 30px;
   margin-left: -125px;

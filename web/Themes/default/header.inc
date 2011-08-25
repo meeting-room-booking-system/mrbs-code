@@ -203,6 +203,7 @@ function print_theme_header($day, $month, $year, $area, $room)
               <?php
             }
             ?>
+            defaultOptions.bProcessing = true;
             defaultOptions.bStateSave = true;
             defaultOptions.sDom = 'RC<"clear">lfrtip';
             defaultOptions.sScrollX = "100%";
