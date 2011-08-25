@@ -203,10 +203,13 @@ function print_theme_header($day, $month, $year, $area, $room)
               <?php
             }
             ?>
+            defaultOptions.bPaginate = true;
             defaultOptions.bProcessing = true;
+            defaultOptions.bScrollCollapse = true;
             defaultOptions.bStateSave = true;
             defaultOptions.sDom = 'RC<"clear">lfrtip';
             defaultOptions.sScrollX = "100%";
+            defaultOptions.sPaginationType = "full_numbers";
             defaultOptions.oColVis = {sSize: "css",
                                       buttonText: '<?php echo get_vocab("show_hide_columns") ?>',
                                       bRestore: true,
