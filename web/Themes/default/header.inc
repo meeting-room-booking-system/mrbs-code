@@ -70,7 +70,8 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $mrbs_company, $mrbs_company_logo, $mrbs_company_url, $mrbs_company_more_info,
          $search_str, $locale_warning;
   global $tbl_entry, $tbl_room, $tbl_area;
-  global $PHP_SELF, $view_week_number, $weekstarts;
+  global $PHP_SELF, $HTTP_HOST, $QUERY_STRING;
+  global $view_week_number, $weekstarts;
   global $auth;
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   global $lang_map_windows, $langs, $server_os;
@@ -144,7 +145,6 @@ function print_theme_header($day, $month, $year, $area, $room)
     // dataTables initialisation
     if (in_array($page, array('admin', 'edit_users', 'report')))
     {
-
       // Include the JavaScript for those pages that use dataTables
       ?>
       <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.min.js"></script>
@@ -1124,7 +1124,27 @@ $(document).ready(function() {
     // Turn the list of users into a dataTable
     ?>
     var tableOptions = new Object();
-    <?php 
+    <?php
+    // Use an Ajax source if we're able to - gives much better
+    // performance for large tables
+    if (function_exists('json_encode'))
+    {
+      $ajax_url = "http://" . $HTTP_HOST . $PHP_SELF . "?" . $QUERY_STRING . "&ajax=1";
+      ?>
+      tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
+      <?php
+    }
+    // Add in a hidden input to the form so that we can tell if we have
+    // JavaScript enabled.   We need to know this because when we're using
+    // an Ajax data source we don't want to send the HTML version of the table
+    // data.
+    ?>
+    $('<input>').attr({
+        type: 'hidden',
+        name: 'js',
+        value: '1',
+      }).appendTo('#report_form');
+    <?php
     // Fix the left hand two columns.  This has to be done when 
     // initialisation is complete as the language files are loaded
     // asynchronously

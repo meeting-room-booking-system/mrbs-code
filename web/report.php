@@ -74,10 +74,16 @@ function csv_row_add_value($row, $value)
 // Output the first row (header row) for CSV reports
 function report_header()
 {
-  global $output_as_csv, $output_as_html;
+  global $output_as_csv, $output_as_html, $ajax;
   global $csv_row_sep;
   global $custom_fields, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
+  
+  // Don't do anything if this is an Ajax request: we only want to send the data
+  if ($ajax)
+  {
+    return;
+  }
   
   // Build an array of values to go into the header row
   $values = array();
@@ -148,9 +154,14 @@ function report_header()
 
 function open_report()
 {
-  global $output_as_html;
+  global $output_as_html, $ajax, $json_data;
   
-  if ($output_as_html)
+  // If this is an Ajax request, initialise the $json_data variable
+  if ($ajax)
+  {
+    $json_data['aaData'] = array();
+  }
+  elseif ($output_as_html)
   {
     echo "<div id=\"report_output\">\n";
     echo "<table class=\"admin_table display\" id=\"report_table\">\n";
@@ -161,9 +172,14 @@ function open_report()
 
 function close_report()
 {
-  global $output_as_html;
+  global $output_as_html, $ajax, $json_data;
   
-  if ($output_as_html)
+  // If this is an Ajax request, we can now send the JSON data
+  if ($ajax)
+  {
+    echo json_encode($json_data);
+  }
+  elseif ($output_as_html)
   {
     echo "</tbody>\n";
     echo "</table>\n";
@@ -175,12 +191,20 @@ function close_report()
 function report_row(&$row, $sortby)
 {
   global $typel;
-  global $output_as_csv;
+  global $output_as_csv, $ajax, $ajax_capable, $json_data;
   global $csv_row_sep, $csv_col_sep;
   global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
   global $strftime_format;
   global $select_options, $enable_periods;
+  
+  // If we're capable of delivering an Ajax request and this is not Ajax request,
+  // then don't do anything.  We're going to save sending the data until we actually
+  // get the Ajax request;  we just send the rest of the page at this stage.
+  if ($ajax_capable && !$ajax)
+  {
+    return;
+  }
   
   $values = array();
   
@@ -310,7 +334,11 @@ function report_row(&$row, $sortby)
   // Last updated:
   $values[] = time_date_string($row['last_updated']);
 
-  if ($output_as_csv)
+  if ($ajax)
+  {
+    $json_data['aaData'][] = $values;
+  }
+  elseif ($output_as_csv)
   {
     $line = '"';
     $line .= implode("\"$csv_col_sep\"", $values);
@@ -694,7 +722,8 @@ $sumby = get_form_var('sumby', 'string');
 $match_approved = get_form_var('match_approved', 'string');
 $match_confirmed = get_form_var('match_confirmed', 'string');
 $match_private = get_form_var('match_private', 'string');
-
+$ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
+$js = get_form_var('js', 'int');  // Will only be set if JavaScript is enabled in the browser
 
 // Check the user is authorised for this page
 checkAuthorised();
@@ -702,6 +731,16 @@ checkAuthorised();
 // Also need to know whether they have admin rights
 $user = getUserName();
 $is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
+
+// Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
+// requests, which will only be if (a) JavaScript is enabled in the browser and (b)
+// we can do JSON encoding.    We also need to initialise the JSON data array.
+$ajax_capable = $js && function_exists('json_encode');
+
+if ($ajax)
+{
+  $json_data = array();
+}
 
 // Set some defaults
 if (!isset($match_approved))
@@ -967,7 +1006,11 @@ if (isset($areamatch))
 }
 
 // print the page header
-if ($output_as_html || empty($nmatch))
+if ($ajax)
+{
+  // don't do anything if this is an Ajax request:  we only want the data
+}
+elseif ($output_as_html || empty($nmatch))
 {
   print_header($day, $month, $year, $area, isset($room) ? $room : "");
 }
@@ -1039,12 +1082,12 @@ $periods_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_pe
 
 
 // Upper part: The form.
-if ($output_as_html || empty($nmatch))
+if (($output_as_html || empty($nmatch)) && !$ajax)  // We don't want the form if this is an Ajax request
 {
   ?>
   <div class="screenonly">
  
-    <form class="form_general" method="get" action="report.php">
+    <form class="form_general" id="report_form" method="get" action="report.php">
       <fieldset>
       <legend><?php echo get_vocab("report_on");?></legend>
       
@@ -1316,7 +1359,7 @@ if (isset($areamatch))
       exit;
     }
     
-    if ($output_as_html)
+    if ($output_as_html & !$ajax)
     {
       echo "<p class=\"report_entries\">" . $nmatch . " "
       . ($nmatch == 1 ? get_vocab("entry_found") : get_vocab("entries_found"))
@@ -1358,7 +1401,7 @@ if (isset($areamatch))
   }
 }
 
-if ($output_as_html || empty($nmatch))
+if (($output_as_html || empty($nmatch)) & !$ajax)
 {
   require_once "trailer.inc";
 }
