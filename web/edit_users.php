@@ -768,7 +768,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   // The table body
   echo "<tbody>\n";
   $row_class = "odd_row";
-  while ($row = sql_row_keyed($res, $i))
+  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   {
     // Check whether ordinary users are allowed to see other users' details.  If not,
     // then skip past this row if it's not the current user or the user is not an admin
