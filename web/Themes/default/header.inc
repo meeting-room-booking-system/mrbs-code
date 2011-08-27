@@ -1167,7 +1167,7 @@ $(document).ready(function() {
         if ($is_admin && $auth['show_bulk_delete'])
         {
           ?>
-          $('<button id="delete_button"><?php echo get_vocab("delete_entries") ?></button>')
+          $('<button id="delete_button"><?php echo get_vocab("delete_entries") ?><\/button>')
                 .click(function() {
                     var aData = reportTable.fnGetFilteredData();
                     var nEntries = aData.length;
