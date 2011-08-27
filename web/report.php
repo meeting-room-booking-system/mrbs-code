@@ -53,29 +53,12 @@ function escape($string)
   return $string;
 }
 
-// Add $value to a CSV row, escaping the value as well
-// Return the new row
-function csv_row_add_value($row, $value)
-{
-  global $csv_col_sep;
-  
-  // if it's not the first entry add a column separator
-  if (!empty($row))
-  {
-    $row .= $csv_col_sep;
-  }
-  $row .= '"';
-  $row .= escape($value);
-  $row .= '"';
-  return $row;
-}
-
 
 // Output the first row (header row) for CSV reports
 function report_header()
 {
   global $output_as_csv, $output_as_html, $ajax;
-  global $csv_row_sep;
+  global $csv_row_sep, $csv_col_sep;
   global $custom_fields, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
 
@@ -117,7 +100,7 @@ function report_header()
   
   if ($output_as_csv)
   {
-    // Remove any HTML entities from the values
+    // Remove any HTML entities from the values, and escape the strings
     $n_values = count($values);
     $charset = get_charset();
     // Find out what the non-breaking space is in this character set
@@ -129,15 +112,13 @@ function report_header()
       $values[$i] = trim($values[$i], $nbsp);
       // And do an ordinary trim
       $values[$i] = trim($values[$i]);
+      $values[$i] = escape($values[$i]);
     }
   
     // Now turn the array of values into a CSV row
-    $line = "";  // initialise the row
-    foreach ($values as $v)
-    {
-      $line = csv_row_add_value($line, $v);
-    }
-    $line .= $csv_row_sep;  // terminate the row
+    $line = '"';
+    $line .= implode("\"$csv_col_sep\"", $values);
+    $line .= '"' . $csv_row_sep;
   
     // Output the row
     echo $line;
@@ -338,7 +319,7 @@ function report_row(&$row, $sortby)
   }
 
   // Last updated:
-  $values[] = time_date_string($row['last_updated']);
+  $values[] = escape(time_date_string($row['last_updated']));
 
   if ($ajax)
   {
