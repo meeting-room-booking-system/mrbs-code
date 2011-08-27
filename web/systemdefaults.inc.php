@@ -683,6 +683,9 @@ $auth['only_admin_can_see_other_users'] = FALSE;
 // If you want to prevent the public (ie un-logged in users) from
 // being able to view bookings, set this variable to TRUE
 $auth['deny_public_access'] = FALSE;
+// Set to TRUE if you want admins to be able to perform bulk deletions
+// on the Report page.  (It also only shows up if JavaScript is enabled)
+$auth['show_bulk_delete'] = FALSE;
 
 
 /**********************************************

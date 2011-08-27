@@ -78,7 +78,7 @@ function report_header()
   global $csv_row_sep;
   global $custom_fields, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
-  
+
   // Don't do anything if this is an Ajax request: we only want to send the data
   if ($ajax)
   {
@@ -87,6 +87,11 @@ function report_header()
   
   // Build an array of values to go into the header row
   $values = array();
+
+  if (!$output_as_csv)
+  {
+    $values[] = "id"; // No need to translate:  this column will be hidden
+  }
   $values[] = get_vocab("area") . ' - ' . get_vocab("room");
   $values[] = get_vocab("namebooker");
   $values[] = get_vocab("start_date");
@@ -154,14 +159,9 @@ function report_header()
 
 function open_report()
 {
-  global $output_as_html, $ajax, $json_data;
+  global $output_as_html, $ajax;
   
-  // If this is an Ajax request, initialise the $json_data variable
-  if ($ajax)
-  {
-    $json_data['aaData'] = array();
-  }
-  elseif ($output_as_html)
+  if ($output_as_html && !$ajax)
   {
     echo "<div id=\"report_output\">\n";
     echo "<table class=\"admin_table display\" id=\"report_table\">\n";
@@ -207,6 +207,12 @@ function report_row(&$row, $sortby)
   }
   
   $values = array();
+  
+  // Id
+  if (!$output_as_csv)
+  {
+    $values[] = $row['id'];  // This column will be hidden by CSS
+  }
   
   // Area-room
   $area_room = $row['area_name'] . " - " . $row['room_name'];
@@ -723,7 +729,7 @@ $match_approved = get_form_var('match_approved', 'string');
 $match_confirmed = get_form_var('match_confirmed', 'string');
 $match_private = get_form_var('match_private', 'string');
 $ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
-$js = get_form_var('js', 'int');  // Will only be set if JavaScript is enabled in the browser
+$datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 
 // Check the user is authorised for this page
 checkAuthorised();
@@ -733,13 +739,13 @@ $user = getUserName();
 $is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
 
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
-// requests, which will only be if (a) JavaScript is enabled in the browser and (b)
+// requests, which will only be if (a) the browser is using DataTables and (b)
 // we can do JSON encoding.    We also need to initialise the JSON data array.
-$ajax_capable = $js && function_exists('json_encode');
+$ajax_capable = $datatable && function_exists('json_encode');
 
 if ($ajax)
 {
-  $json_data = array();
+  $json_data['aaData'] = array();
 }
 
 // Set some defaults
@@ -1346,7 +1352,14 @@ if (isset($areamatch))
 {
   if ($nmatch == 0)
   {
-    echo "<p class=\"report_entries\">" . get_vocab("nothing_found") . "</p>\n";
+    if ($ajax)
+    {
+      echo json_encode($json_data);
+    }
+    elseif ($output_as_html)
+    {
+      echo "<p class=\"report_entries\">" . get_vocab("nothing_found") . "</p>\n";
+    }
     sql_free($res);
   }
   else
@@ -1361,7 +1374,7 @@ if (isset($areamatch))
     
     if ($output_as_html & !$ajax)
     {
-      echo "<p class=\"report_entries\">" . $nmatch . " "
+      echo "<p class=\"report_entries\"><span id=\"n_entries\">" . $nmatch . "</span> "
       . ($nmatch == 1 ? get_vocab("entry_found") : get_vocab("entries_found"))
       .  "</p>\n";
     }

@@ -284,6 +284,12 @@ $vocab["both"]                  = "All";
 $vocab["privacy_status"]        = "Privacy status";
 $vocab["search_criteria"]       = "Search criteria";
 $vocab["presentation_options"]  = "Output options";
+$vocab["delete_entries"]        = "Delete entries";
+$vocab["delete_entries_warning"] = "WARNING!  This will delete all the entries matching " .
+                                   "the search string.  The operation cannot be undone.  Are " .
+                                   "you sure you want to continue?\n\n" .
+                                   "Total number of entries that will be deleted: ";
+$vocab["delete_entries_failed"] = "The entries could not be deleted.";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Go To Week Before";

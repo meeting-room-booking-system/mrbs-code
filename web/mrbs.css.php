@@ -733,6 +733,7 @@ table#pending_list {width: 100%}
 #pending_list th.header_action     {width: 20em}
 #pending_list table th.header_start_time {text-transform: uppercase}
 
+
 /* ------------ REPORT.PHP ----------------------*/
 #div_summary table {border-spacing: 1px; border-collapse: collapse;
     border-color: <?php echo $report_table_border_color ?>; border-style: solid;
@@ -751,6 +752,9 @@ div#report_output {width: 98%}
 p.report_entries {font-weight: bold}
 .report .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
 .report .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
+button#delete_button {float: left; clear: left; margin-top: 1em}
+<?php // Stop the first column ("id") in the table from being displayed ?>
+.report table.display th:first-child, .report table.display td:first-child {display: none}
 
 
 /* ------------ SEARCH.PHP ----------------------*/
