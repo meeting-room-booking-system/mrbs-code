@@ -247,6 +247,11 @@ $area_defaults['enable_periods']           = $enable_periods;
 $area_defaults['confirmation_enabled']     = $confirmation_enabled;
 $area_defaults['confirmed_default']        = $confirmed_default;
 
+// We send Ajax requests to del_entry_ajax.php with data as an array of ids.
+// In order to stop the POST request getting too large and triggering a 406
+// error, we split the requests into batches with a maximum number of ids
+// in the array defined below.
+define('DEL_ENTRY_AJAX_BATCH_SIZE', 100);
                
 /********************************************************
  * PHP System Configuration - internal use, do not change
