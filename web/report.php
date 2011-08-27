@@ -1391,7 +1391,7 @@ if (isset($areamatch))
         report_row($row, $sortby);
       }
 
-      if ($summarize & SUMMARY)
+      if (!$ajax && ($summarize & SUMMARY))
       {
         (empty($row['enable_periods']) ?
          accumulate($row, $count, $hours, $report_start, $report_end,
@@ -1407,7 +1407,7 @@ if (isset($areamatch))
       close_report();
     }
     
-    if ($summarize & SUMMARY)
+    if (!$ajax && ($summarize & SUMMARY))
     {
       do_summary($count, $hours, $room_hash, $name_hash);
     }
