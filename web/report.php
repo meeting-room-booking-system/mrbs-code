@@ -201,7 +201,7 @@ function report_row(&$row, $sortby)
   // If we're capable of delivering an Ajax request and this is not Ajax request,
   // then don't do anything.  We're going to save sending the data until we actually
   // get the Ajax request;  we just send the rest of the page at this stage.
-  if ($ajax_capable && !$ajax)
+  if (!$output_as_csv && $ajax_capable && !$ajax)
   {
     return;
   }
@@ -348,7 +348,7 @@ function report_row(&$row, $sortby)
   {
     $line = '"';
     $line .= implode("\"$csv_col_sep\"", $values);
-    $line .= $csv_row_sep;
+    $line .= '"' . $csv_row_sep;
   }
   else
   {
