@@ -735,6 +735,7 @@ table#pending_list {width: 100%}
 
 
 /* ------------ REPORT.PHP ----------------------*/
+div#div_summary {padding-top: 3em}
 #div_summary table {border-spacing: 1px; border-collapse: collapse;
     border-color: <?php echo $report_table_border_color ?>; border-style: solid;
     border-top-width: 1px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 1px}
@@ -752,7 +753,7 @@ div#report_output {width: 98%}
 p.report_entries {font-weight: bold}
 .report .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
 .report .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
-button#delete_button {float: left; clear: left; margin-top: 1em}
+button#delete_button {float: left; clear: left; margin: 1em 0 3em 0}
 <?php // Stop the first column ("id") in the table from being displayed ?>
 .report table.display th:first-child, .report table.display td:first-child {display: none}
 
