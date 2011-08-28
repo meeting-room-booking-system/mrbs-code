@@ -437,7 +437,7 @@ function generate_textarea($label_text, $name, $value, $disabled=FALSE)
 // and partly because it's easier to do this for the non-JavaScript version.
 function genDateSelector($prefix, $day, $month, $year, $form_id='')
 {
-  global $strftime_format;
+  global $strftime_format, $year_range;
   
   // Make sure we've got a date
   if (empty($day) or empty($month) or empty($year))
@@ -457,8 +457,8 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='')
   $month_js = $month - 1;
   
   // First and last dates to show in year select
-  $min = min($year, date("Y")) - 5;
-  $max = max($year, date("Y")) + 5;
+  $min = min($year, date("Y")) - $year_range['back'];
+  $max = max($year, date("Y")) + $year_range['ahead'];
   
   $datepicker_baseid = "${prefix}datepicker";
   

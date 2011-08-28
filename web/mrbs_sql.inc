@@ -819,6 +819,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   // Check that we've got an id
   if (!isset($id))
   {
+    trigger_error("id not set", E_USER_WARNING);
     if ($silent)
     {
       return FALSE;
@@ -903,19 +904,20 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   $res = sql_query($sql);
   if (! $res)
   {
+    trigger_error(sql_error(), E_USER_WARNING);
     if ($silent)
     {
       return FALSE;
     }
     else
     {
-      trigger_error(sql_error(), E_USER_WARNING);
       fatal_error(FALSE, get_vocab("fatal_db_error"));
     }
   }
 
   if (sql_count($res) < 1)
   {
+    trigger_error("No rows found matching id=$id", E_USER_WARNING);
     if ($silent)
     {
       return FALSE;
@@ -959,6 +961,10 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
                         FROM $tbl_repeat WHERE id=${row['repeat_id']} LIMIT 1");
       if (!$res || (!$extra_row = sql_row_keyed($res, 0)))
       {
+        if (!$res)
+        {
+          trigger_error(sql_error(), E_USER_WARNING);
+        }
         if ($silent)
         {
           return FALSE;
