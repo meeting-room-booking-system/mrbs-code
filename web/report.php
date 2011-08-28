@@ -98,6 +98,7 @@ function report_header()
   }
   $values[] = get_vocab("lastupdate");
   
+  
   if ($output_as_csv)
   {
     // Remove any HTML entities from the values, and escape the strings
@@ -125,6 +126,12 @@ function report_header()
   }
   elseif ($output_as_html)
   {
+    $html .= "<colgroup>";
+    foreach ($values as $value)
+    {
+      $html .= "<col>";
+    }
+    $html .= "</colgroup>\n";
     $html = "<thead>\n";
     $html .= "<tr>\n";
     foreach ($values as $value)
@@ -187,6 +194,7 @@ function report_row(&$row, $sortby)
     return;
   }
   
+  $rows_output++;
   $values = array();
   
   // Id
@@ -320,6 +328,7 @@ function report_row(&$row, $sortby)
 
   // Last updated:
   $values[] = escape(time_date_string($row['last_updated']));
+  
 
   if ($ajax)
   {

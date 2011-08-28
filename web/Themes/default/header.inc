@@ -885,21 +885,25 @@ $(document).ready(function() {
   // ADMIN.PHP
   if ($page == 'admin')
   {
-    // Turn the list of users into a dataTable
+    // Turn the list of rooms into a dataTable
     ?>
     var tableOptions = new Object();
     <?php
     // If we're an ordinary user we only see the Name column.   If we're
-    // an admin we also see the Delete, Edit and Disabled columns
+    // an admin we also see the Delete, Edit and Disabled columns.
+    // [For some weird reason, setting nFixedColumns as 4 causes a JavaScript
+    // error in IE7 and IE8 when you reload the page]
     ?>
-    var nFixedColumns = <?php echo ($is_admin) ? 4 : 1 ?>;
+    var nFixedColumns = <?php echo ($is_admin) ? 3 : 1 ?>;
     <?php 
     // Fix the left hand columns.  This has to be done when 
     // initialisation is complete as the language files are loaded
     // asynchronously
     ?>
     tableOptions.fnInitComplete = function(){
-        new FixedColumns(roomsTable, {"iLeftColumns": nFixedColumns});
+        new FixedColumns(roomsTable, {"iLeftColumns": nFixedColumns,
+                                      "iLeftWidth": 30,
+                                      "sLeftWidth": "relative"});
       };
     <?php
     // Remove the fixed columns from the column visibility
@@ -1069,7 +1073,9 @@ $(document).ready(function() {
     // asynchronously
     ?>
     tableOptions.fnInitComplete = function(){
-        new FixedColumns(usersTable, {"iLeftColumns": 2});
+        new FixedColumns(usersTable, {"iLeftColumns": 2,
+                                      "iLeftWidth": 30,
+                                      "sLeftWidth": "relative"});
       };
     <?php
     // Remove the first two columns from the column visibility
@@ -1146,21 +1152,24 @@ $(document).ready(function() {
       $('<input>').attr({
           type: 'hidden',
           name: 'datatable',
-          value: '1',
+          value: '1'
         }).appendTo('#report_form');
     }
+    <?php 
+    // Stop the first column ("id") from being searchable.   For some reason
+    // using bVisible here does not work, so we will use CSS instead.
+    ?>
+    tableOptions.aoColumnDefs = [{"bSearchable": false, "bVisible": false, "aTargets": [ 0 ]}]; 
+
     <?php
     // Fix the left hand three columns (one of which is the "id" column which
     // is hidden by CSS).  This has to be done when initialisation is complete
     // as the language files are loaded asynchronously
     ?>
     tableOptions.fnInitComplete = function(){
-        new FixedColumns(reportTable, {"iLeftColumns": 3});
-        <?php 
-        // Stop the first column ("id") from being searchable.   For some reason
-        // using bVisible here does not work, so we will use CSS instead.
-        ?>
-        reportTable.fnSettings().aoColumns[0].bSearchable = false;
+        var oFC = new FixedColumns(reportTable, {"iLeftColumns": 3,
+                                                 "iLeftWidth": 30,
+                                                 "sLeftWidth": "relative"});
         <?php 
         // Also add a "Delete entries button", provided that (a) the user is an
         // admin and (b) the configuration allows it

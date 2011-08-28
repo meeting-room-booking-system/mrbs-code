@@ -107,7 +107,8 @@ form.form_admin {float: left; clear: left; margin: 2em 0 0 0}
 .admin h2 {clear: left}
 div#area_form, div#room_form {float: left; padding: 0 0 2em 1em}
 div#area_form {width: auto}
-div#room_form {width: 95%}
+div#room_form {width: 98%}
+div#room_info {width: 100%; float: left}
 div#custom_html {float: left; padding: 0 0 3em 1em}
 #area_form form {float: left; margin-right: 1em}
 #area_form label#area_label {display: block; float: left; font-weight: bold; margin-right: <?php echo $admin_form_gap ?>em}
@@ -653,7 +654,7 @@ form#form_edit_users {width: auto; margin-top: 2.0em}
 #form_delete_users input.submit {left: 2.0em}                                  /* and put the Delete on the left */
 #form_edit_users input.checkbox {width: auto; margin-left: <?php echo $edit_users_gap ?>em}
 form.edit_users_error {width: 10em; margin-top: 2.0em}
-div#user_list {position: relative; float: left; min-width: 50%; max-width: 98%; padding: 2em 0 2em 1em}
+div#user_list {width: 98%; padding: 2em 0 2em 1em}
 form#add_new_user {margin-left: 1em}
 
 
@@ -754,8 +755,11 @@ p.report_entries {font-weight: bold}
 .report .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
 .report .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
 button#delete_button {float: left; clear: left; margin: 1em 0 3em 0}
-<?php // Stop the first column ("id") in the table from being displayed ?>
-.report table.display th:first-child, .report table.display td:first-child {display: none}
+<?php
+// Stop the first column ("id") in the table from being displayed
+// !important needed for Webkit to fix the first row of the body
+?>
+.report .DTFC_LeftWrapper table.display th:first-child, .report .DTFC_LeftWrapper table.display td:first-child {display: none !important}
 
 
 /* ------------ SEARCH.PHP ----------------------*/
