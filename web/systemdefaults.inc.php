@@ -261,6 +261,10 @@ $dateformat = 0;
 // in 24 hour format
 $twentyfourhour_format = 1;
 
+// The number of years back and ahead the date selectors should go
+$year_range['back'] = 5;
+$year_range['ahead'] = 5;
+
 // Formats used for dates and times.   For formatting options
 // see http://php.net/manual/function.strftime.php
 $strftime_format['date']         = "%A %d %B %Y";  // Used in Day view
