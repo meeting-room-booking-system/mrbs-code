@@ -495,50 +495,50 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='')
   ?>
   <script type="text/javascript">
 
-	$(function() {
-		$("#<?php echo $datepicker_baseid ?>").datepicker({yearRange: <?php echo "'$min:$max'" ?>,
-		                                                   altField: '#<?php echo $datepicker_baseid ?>_alt'
-		                                                   <?php
-		                                                   if (!empty($form_id))
-		                                                   {
-		                                                     echo ", onClose: function(dateText, inst) {datepicker_close(dateText, inst, '$form_id');}";
-		                                                   }
-		                                                   ?>
-		                                                  });
-		<?php
-	  // Populate the input fields with the initial values
-	  ?>
-	  var initial_date = new Date(<?php echo "$year, $month_js, $day" ?>);
-	  var dateFormat = $("#<?php echo $datepicker_baseid ?>").datepicker( "option", "dateFormat" );
-	  document.getElementById(<?php echo "'${datepicker_baseid}'" ?>).value = $.datepicker.formatDate(dateFormat, initial_date);
-	  document.getElementById(<?php echo "'${datepicker_baseid}_alt_day'" ?>).value = <?php echo $day ?>;
+  $(function() {
+    $("#<?php echo $datepicker_baseid ?>").datepicker({yearRange: <?php echo "'$min:$max'" ?>,
+                                                       altField: '#<?php echo $datepicker_baseid ?>_alt'
+                                                       <?php
+                                                       if (!empty($form_id))
+                                                       {
+                                                         echo ", onClose: function(dateText, inst) {datepicker_close(dateText, inst, '$form_id');}";
+                                                       }
+                                                       ?>
+                                                      });
+    <?php
+    // Populate the input fields with the initial values
+    ?>
+    var initial_date = new Date(<?php echo "$year, $month_js, $day" ?>);
+    var dateFormat = $("#<?php echo $datepicker_baseid ?>").datepicker( "option", "dateFormat" );
+    document.getElementById(<?php echo "'${datepicker_baseid}'" ?>).value = $.datepicker.formatDate(dateFormat, initial_date);
+    document.getElementById(<?php echo "'${datepicker_baseid}_alt_day'" ?>).value = <?php echo $day ?>;
     document.getElementById(<?php echo "'${datepicker_baseid}_alt_month'" ?>).value = <?php echo $month ?>;
     document.getElementById(<?php echo "'${datepicker_baseid}_alt_year'" ?>).value = <?php echo $year ?>;
-	  $(".ui-datepicker").draggable();
-	});
+    $(".ui-datepicker").draggable();
+  });
  
-	
-	var dateselector = document.getElementById(<?php echo "'${prefix}dateselector'" ?>);
-	var datepicker_html = '<input class="date" type="text" id="<?php echo $datepicker_baseid ?>">\n';
-	<?php
-	// The next input is disabled because we don't need to pass the value through to
+  
+  var dateselector = document.getElementById(<?php echo "'${prefix}dateselector'" ?>);
+  var datepicker_html = '<input class="date" type="text" id="<?php echo $datepicker_baseid ?>">\n';
+  <?php
+  // The next input is disabled because we don't need to pass the value through to
   // the form and we don't want the value cluttering up the URL (it's a GET).
   // It's just used as a holder for the date in a known format so that it can
   // then be used by datepicker_close() to populate the following three inputs.
   ?>
-	datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt"'
-	datepicker_html += ' name="<?php echo $prefix ?>_alt"';
-	datepicker_html += ' value="<?php echo "${year}-${month}-${day}" ?>"';
-	datepicker_html += ' disabled="disabled">\n';
-	<?php
-	// These three inputs we do want
-	?>
-	datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt_day" name="<?php echo $prefix ?>day">\n';
-	datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt_month" name="<?php echo $prefix ?>month">\n';
-	datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt_year" name="<?php echo $prefix ?>year">\n';
-	dateselector.innerHTML = datepicker_html;
-	
-	</script>
+  datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt"'
+  datepicker_html += ' name="<?php echo $prefix ?>_alt"';
+  datepicker_html += ' value="<?php echo "${year}-${month}-${day}" ?>"';
+  datepicker_html += ' disabled="disabled">\n';
+  <?php
+  // These three inputs we do want
+  ?>
+  datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt_day" name="<?php echo $prefix ?>day">\n';
+  datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt_month" name="<?php echo $prefix ?>month">\n';
+  datepicker_html += '<input type="hidden" id="<?php echo $datepicker_baseid ?>_alt_year" name="<?php echo $prefix ?>year">\n';
+  dateselector.innerHTML = datepicker_html;
+  
+  </script>
   <?php
 }
 
