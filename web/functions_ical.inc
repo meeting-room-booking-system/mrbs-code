@@ -408,6 +408,7 @@ function create_rrule($data)
       $rule .= "FREQ=YEARLY";
       break;
   }
+  // The UNTIL date-time "MUST be specified in UTC time"
   $rule .= ";UNTIL=" . gmdate(RFC5545_FORMAT . '\Z', $data['end_date']);
 
   return $rule;
