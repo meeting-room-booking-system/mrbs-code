@@ -29,6 +29,7 @@ $rep_end_year = get_form_var('rep_end_year', 'int');
 $rep_id = get_form_var('rep_id', 'int');
 $rep_day = get_form_var('rep_day', 'array'); // array of bools
 $rep_num_weeks = get_form_var('rep_num_weeks', 'int');
+$skip = get_form_var('skip', 'string');  // bool, actually
 $private = get_form_var('private', 'string'); // bool, actually
 $confirmed = get_form_var('confirmed', 'string');
 // Get the start day/month/year and make them the current day/month/year
@@ -429,11 +430,14 @@ if (!sql_mutex_lock("$tbl_entry"))
 $valid_booking = TRUE;
 $conflicts = "";          // Holds a list of all the conflicts (ideally this would be an array)
 $rules_broken = array();  // Holds an array of the rules that have been broken
-
+$skip_list = array();     // Holds a 2D array of bookings to skip past.  Indexed
+                          // by room id and start time
+                          
 // Check for any schedule conflicts in each room we're going to try and
 // book in;  also check that the booking conforms to the policy
 foreach ( $rooms as $room_id )
 {
+  $skip_list[$room_id] = array();
   if ($rep_type != REP_NONE && !empty($reps))
   {
     if(count($reps) < $max_rep_entrys)
@@ -453,7 +457,20 @@ foreach ( $rooms as $room_id )
 
         if (!empty($tmp))
         {
-          $valid_booking = FALSE;
+          // If we've been told to skip past existing bookings, then add
+          // this start time to the list of start times to skip past.
+          // Otherwise it's an invalid booking
+          if ($skip)
+          {
+            $skip_list[$room_id][] = $reps[$i];
+          }
+          else
+          {
+            $valid_booking = FALSE;
+          }
+          // In both cases remember the conflict data.   (We don't at the
+          // moment do anything with the data if we're skipping, but we might
+          // in the future want to display a list of bookings we've skipped past)
           $conflicts .= $tmp;
         }
         // if we're not an admin for this room, check that the booking
@@ -467,7 +484,7 @@ foreach ( $rooms as $room_id )
             $rules_broken = $rules_broken + $errors;  // array union
           }
         }
-      }
+      } // for
     }
     else
     {
@@ -599,7 +616,7 @@ if ($valid_booking)
 
     if ($edit_type == "series")
     {
-      $booking = mrbsCreateRepeatingEntrys($data);
+      $booking = mrbsCreateRepeatingEntrys($data, $skip_list);
       $new_id = $booking['id'];
       $is_repeat_table = $booking['series'];
       $data['id'] = $new_id;  // Add in the id now we know it
