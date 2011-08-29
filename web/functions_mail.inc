@@ -793,6 +793,8 @@ function create_addresses($data, $action)
  * Send email to administrator to notify a new/changed entry.
  *
  * @param array   $data          contains the data for this entry
+ * @param array   $skip_list     a 2D array containing a list of dates in a series to skip
+ *                               indexed by room_id and start_time
  * @param array   $mail_previous contains the data for the previous entry, or is an empty array
  * @param bool    $new_entry     whether this is a new entry or not
  * @param bool    $series        whether this is a series or not
@@ -800,7 +802,7 @@ function create_addresses($data, $action)
  * @param string  $note          a note that is used with "more_info"
  * @return bool                  TRUE or PEAR error object if fails
  */
-function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $action="book", $note='')
+function notifyAdminOnBooking($data, &$skip_list, $mail_previous, $new_entry, $series, $action="book", $note='')
 {
   global $mail_settings, $enable_periods;
   
@@ -883,7 +885,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $actio
   {
     $attachment['method']   = "REQUEST";
     $ical_components = array();
-    $ical_components[] = create_ical_event($attachment['method'], $data, $text_body, $html_body, $addresses, $series);
+    $ical_components[] = create_ical_event($attachment['method'], $data, $text_body, $html_body, $addresses, $series, $skip_list);
     $attachment['content']  = create_icalendar($attachment['method'], $ical_components);
     $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
   }

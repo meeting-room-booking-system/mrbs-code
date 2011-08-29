@@ -670,7 +670,7 @@ if ($valid_booking)
           $mail_previous = array();
         }
         // Send the email
-        $result = notifyAdminOnBooking($data, $mail_previous, !isset($id), $is_repeat_table);
+        $result = notifyAdminOnBooking($data, $skip_list, $mail_previous, !isset($id), $is_repeat_table);
       }
     }   
   } // end foreach $rooms
