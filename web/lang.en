@@ -160,6 +160,7 @@ $vocab["mail_body_approved"]     = "An entry has been approved by the administra
 $vocab["mail_body_rej_entry"]    = "An entry has been rejected by the administrators, here are the details:";
 $vocab["mail_body_more_info"]    = "The administrators require more information about an entry; here are the details:";
 $vocab["mail_body_reminder"]     = "Reminder - an entry is awaiting approval; here are the details:";
+$vocab["mail_body_exceptions"]   = "The following bookings could not be made due to conflicts:";
 $vocab["mail_subject_new_entry"]     = "Entry added for $mrbs_company MRBS";
 $vocab["mail_subject_changed_entry"] = "Entry changed for $mrbs_company MRBS";
 $vocab["mail_subject_delete"]        = "Entry deleted for $mrbs_company MRBS";

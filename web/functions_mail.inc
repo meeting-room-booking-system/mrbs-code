@@ -382,6 +382,27 @@ function create_body_table_row($label, $new, $old='', $compare=FALSE, $as_html=F
 }
 
 
+// Generate the list of bookings that could not be made due to conflicts
+function create_body_exceptions($skip_list, $as_html)
+{
+  // The introductory text
+  $result = ($as_html) ? "<p>" : "\n\n";
+  $result .= get_vocab("mail_body_exceptions");
+  $result .= ($as_html) ? "</p>\n" : "\n\n";
+  // Now the list of conflicts
+  $result .= ($as_html) ? "<ul>\n" : "";
+  foreach ($skip_list as $date)
+  {
+    $result .= ($as_html) ? "<li>" : "";
+    $result .= getMailDateString($date);
+    $result .= ($as_html) ? "</li>" : "\n";
+  }
+  $result .= ($as_html) ? "</ul>\n" : "";
+  
+  return $result;
+}
+
+
 function create_body($data, $compare, $series, $action, $as_html=FALSE, $note='')
 {
   global $mail_previous, $returl, $mrbs_company;
@@ -661,7 +682,8 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
       $body .= create_body_table_row (get_mail_vocab("rep_end_date"),
                                       getMailTimeDateString($data['end_date'], FALSE),
                                       getMailTimeDateString($mail_previous['end_date'], FALSE),
-                                      $compare, $as_html);                                      
+                                      $compare, $as_html);
+                                                                   
     }
   }
   
@@ -669,6 +691,16 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
   {
     $body .= "</tbody>\n";
     $body .= "</table>\n";
+  }
+  
+  // Now add in the list of repeat bookings that could not be booked
+  if (!empty($data['skip_list']))
+  {
+    $body .= create_body_exceptions($data['skip_list'], $as_html);
+  }
+  
+  if ($as_html)
+  {
     $body .= "</div>\n";
     $body .= "</body>\n";
     $body .= "</html>\n";
