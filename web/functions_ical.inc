@@ -439,16 +439,11 @@ function create_exdate_list($dates)
 
 
 // Create an RFC 5545 iCalendar Event component
-//
-// $skip_list     an optional 7th parameter containing a 2D array of dates to
-//                skip in a series.  Indexed by room_id and start_time
 function create_ical_event($method, $data, $text_description, $html_description, $addresses, $series=FALSE)
 {
   require_once "functions_mail.inc";
   
   global $confirmation_enabled, $mail_settings, $timezone, $vtimezone;
-  
-  $skip_list = (func_num_args() > 6) ? func_get_arg(6) : array();
   
   $use_html = $mail_settings['html'] && !empty($html_description);
   
@@ -492,11 +487,11 @@ function create_ical_event($method, $data, $text_description, $html_description,
   if ($series)
   {
     $results[] = "RRULE:" . create_rrule($data);
-    if (!empty($skip_list[$data['room_id']]))
+    if (!empty($data['skip_list']))
     {
       $results[] = "EXDATE" . 
                    (($vtimezone === FALSE) ? ":" : ";TZID=$timezone:") .
-                   create_exdate_list($skip_list[$data['room_id']]);
+                   create_exdate_list($data['skip_list']);
     }
   }
   $results[] = "SUMMARY:" . ical_escape_text($data['name']);

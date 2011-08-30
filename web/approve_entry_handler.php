@@ -99,8 +99,7 @@ if (isset($action))
     // so that we will kniow whether to include iCalendar information in the email)
     get_area_settings($data['area_id']);
     // Send the email
-    $skip_list = array();
-    $result = notifyAdminOnBooking($data, $skip_list, $mail_previous, $is_new_entry, $series, $action, $note);
+    $result = notifyAdminOnBooking($data, $mail_previous, $is_new_entry, $series, $action, $note);
   }
 }
 

@@ -430,14 +430,14 @@ if (!sql_mutex_lock("$tbl_entry"))
 $valid_booking = TRUE;
 $conflicts = "";          // Holds a list of all the conflicts (ideally this would be an array)
 $rules_broken = array();  // Holds an array of the rules that have been broken
-$skip_list = array();     // Holds a 2D array of bookings to skip past.  Indexed
+$skip_lists = array();    // Holds a 2D array of bookings to skip past.  Indexed
                           // by room id and start time
                           
 // Check for any schedule conflicts in each room we're going to try and
 // book in;  also check that the booking conforms to the policy
 foreach ( $rooms as $room_id )
 {
-  $skip_list[$room_id] = array();
+  $skip_lists[$room_id] = array();
   if ($rep_type != REP_NONE && !empty($reps))
   {
     if(count($reps) < $max_rep_entrys)
@@ -462,7 +462,7 @@ foreach ( $rooms as $room_id )
           // Otherwise it's an invalid booking
           if ($skip)
           {
-            $skip_list[$room_id][] = $reps[$i];
+            $skip_lists[$room_id][] = $reps[$i];
           }
           else
           {
@@ -610,13 +610,18 @@ if ($valid_booking)
       $data['entry_type'] = ($repeat_id > 0) ? ENTRY_RPT_CHANGED : ENTRY_SINGLE;
       $data['repeat_id'] = $repeat_id;
     }
+    // Add in the list of bookings to skip
+    if (!empty($skip_lists) && !empty($skip_lists[$room_id]))
+    {
+      $data['skip_list'] = $skip_lists[$room_id];
+    }
     // The following elements are needed for email notifications
     $data['duration'] = $duration;
     $data['dur_units'] = $dur_units;
 
     if ($edit_type == "series")
     {
-      $booking = mrbsCreateRepeatingEntrys($data, $skip_list);
+      $booking = mrbsCreateRepeatingEntrys($data);
       $new_id = $booking['id'];
       $is_repeat_table = $booking['series'];
       $data['id'] = $new_id;  // Add in the id now we know it
@@ -670,7 +675,7 @@ if ($valid_booking)
           $mail_previous = array();
         }
         // Send the email
-        $result = notifyAdminOnBooking($data, $skip_list, $mail_previous, !isset($id), $is_repeat_table);
+        $result = notifyAdminOnBooking($data, $mail_previous, !isset($id), $is_repeat_table);
       }
     }   
   } // end foreach $rooms
