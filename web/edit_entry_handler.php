@@ -43,7 +43,6 @@ foreach($formvars as $var => $var_type)
 {
   $$var = get_form_var($var, $var_type);
 }
-              
 
 // Get custom form variables
 $custom_fields = array();
@@ -385,14 +384,13 @@ if (isset($rep_type) && (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY
   // as the day of the week of the start of the period
   if (count($rep_day) == 0)
   {
-    $start_day = date('w', $starttime);
-    $rep_day[$start_day] = TRUE;
+    $rep_day[] = date('w', $starttime);
   }
   
   // Build string of weekdays to repeat on:
   for ($i = 0; $i < 7; $i++)
   {
-    $rep_opt .= empty($rep_day[$i]) ? "0" : "1";  // $rep_opt is a string
+    $rep_opt .= in_array($i, $rep_day) ? "1" : "0";  // $rep_opt is a string
   }
   
   // Make sure that the starttime and endtime coincide with a repeat day.  In

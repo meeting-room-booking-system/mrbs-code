@@ -1123,7 +1123,7 @@ else
           for ($i = 0; $i < 7; $i++)
           {
             $wday = ($i + $weekstarts) % 7;
-            echo "      <label><input class=\"checkbox\" name=\"rep_day[$wday]\" type=\"checkbox\"";
+            echo "      <label><input class=\"checkbox\" name=\"rep_day[]\" value=\"$wday\" type=\"checkbox\"";
             if ($rep_day[$wday])
             {
               echo " checked=\"checked\"";
