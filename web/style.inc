@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="mrbs-ielte6.css" type="text/css">
     <![endif]-->
     
-    <link href="jquery/ui/css/sunny/jquery-ui-1.8.11.custom.css" rel="stylesheet" type="text/css">
+    <link href="jquery/ui/css/sunny/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css">
 
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo get_charset(); ?>">
     <meta name="robots" content="noindex">
