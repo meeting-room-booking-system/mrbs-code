@@ -325,18 +325,18 @@ if (isset($id))
       // the input is disabled
       $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
 
+      $rep_day = array();
       switch ($rep_type)
       {
-        case 2:
-        case 6:
-          
-          $rep_day[0] = $row['rep_opt'][0] != "0";
-          $rep_day[1] = $row['rep_opt'][1] != "0";
-          $rep_day[2] = $row['rep_opt'][2] != "0";
-          $rep_day[3] = $row['rep_opt'][3] != "0";
-          $rep_day[4] = $row['rep_opt'][4] != "0";
-          $rep_day[5] = $row['rep_opt'][5] != "0";
-          $rep_day[6] = $row['rep_opt'][6] != "0";
+        case REP_WEEKLY:
+        case REP_N_WEEKLY:
+          for ($i=0; $i<7; $i++)
+          {
+            if ($row['rep_opt'][$i])
+            {
+              $rep_day[] = $i;
+            }
+          }
           // Get the repeat days as an array for use
           // when the input is disabled
           $rep_opt = $row['rep_opt'];
@@ -349,7 +349,7 @@ if (isset($id))
           break;
 
         default:
-          $rep_day = array(0, 0, 0, 0, 0, 0, 0);
+          break;
       }
     }
   }
@@ -1124,7 +1124,7 @@ else
           {
             $wday = ($i + $weekstarts) % 7;
             echo "      <label><input class=\"checkbox\" name=\"rep_day[]\" value=\"$wday\" type=\"checkbox\"";
-            if ($rep_day[$wday])
+            if (in_array($wday, $rep_day))
             {
               echo " checked=\"checked\"";
             }
