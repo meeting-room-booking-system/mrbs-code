@@ -368,7 +368,7 @@ else
   $rep_end_day   = $day;
   $rep_end_month = $month;
   $rep_end_year  = $year;
-  $rep_day       = array(0, 0, 0, 0, 0, 0, 0);
+  $rep_day       = array();
   $private       = $private_default;
   $confirmed     = $confirmed_default;
   
