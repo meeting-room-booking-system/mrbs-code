@@ -175,6 +175,8 @@ $vocab["info_requested"]          = "Information requested";
 $vocab["min_time_before"]         = "The minimum interval between now and the start of a booking is";
 $vocab["max_time_before"]         = "The maximum interval between now and the start of a booking is";
 $vocab["max_booking_duration"]    = "The maximum duration of a booking is";
+$vocab["skip_and_book"]           = "Skip and book";
+$vocab["skip_and_book_note"]      = "Carry on with the booking, skipping past the conflicting entries";
 
 // Used in pending.php
 $vocab["pending"]            = "Bookings awaiting approval";
@@ -413,5 +415,5 @@ $vocab["failed_connect_db"]  = "Fatal error: failed to connect to database";
 
 // General
 $vocab["fatal_db_error"]     = "Fatal error: unfortunately the database is not available at the moment.";
-
+$vocab["back"]               = "Back";
 ?>
