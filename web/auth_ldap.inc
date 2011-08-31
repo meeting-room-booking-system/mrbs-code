@@ -223,7 +223,7 @@ function authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
 
   if ($ldap && $base_dn && $dn && $user_search)
   {
-	$res = @ldap_read($ldap,
+  $res = @ldap_read($ldap,
                         $dn,
                         "(objectclass=*)",
                         array($ldap_email_attrib)

@@ -897,7 +897,9 @@ if (isset($areamatch))
   foreach ($custom_fields as $key => $value)
   {
     $var = "match_$key";
-    // Associative arrays
+    // Associative arrays (we can't just test for the string, because the database
+    // contains the keys, not the values.   So we have to go through each key testing
+    // for a possible match)
     if (!empty($$var) && is_assoc($select_options["entry.$key"]))
     {
       $sql .= " AND ";

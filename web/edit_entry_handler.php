@@ -6,46 +6,51 @@ require_once "mrbs_sql.inc";
 require_once "functions_ical.inc";
 
 // Get non-standard form variables
-$create_by = get_form_var('create_by', 'string');
-$name = get_form_var('name', 'string');
-$rep_type = get_form_var('rep_type', 'int');
-$description = get_form_var('description', 'string');
-$start_seconds = get_form_var('start_seconds', 'int');
-$end_seconds = get_form_var('end_seconds', 'int');
-$all_day = get_form_var('all_day', 'string'); // bool, actually
-$type = get_form_var('type', 'string');
-$rooms = get_form_var('rooms', 'array');
-$original_room_id = get_form_var('original_room_id', 'int');
-$ical_uid = get_form_var('ical_uid', 'string');
-$ical_sequence = get_form_var('ical_sequence', 'int');
-$ical_recur_id = get_form_var('ical_recur_id', 'string');
-$returl = get_form_var('returl', 'string');
-$rep_id = get_form_var('rep_id', 'int');
-$edit_type = get_form_var('edit_type', 'string');
-$id = get_form_var('id', 'int');
-$rep_end_day = get_form_var('rep_end_day', 'int');
-$rep_end_month = get_form_var('rep_end_month', 'int');
-$rep_end_year = get_form_var('rep_end_year', 'int');
-$rep_id = get_form_var('rep_id', 'int');
-$rep_day = get_form_var('rep_day', 'array'); // array of bools
-$rep_num_weeks = get_form_var('rep_num_weeks', 'int');
-$private = get_form_var('private', 'string'); // bool, actually
-$confirmed = get_form_var('confirmed', 'string');
-// Get the start day/month/year and make them the current day/month/year
-$day = get_form_var('start_day', 'int');
-$month = get_form_var('start_month', 'int');
-$year = get_form_var('start_year', 'int');
-// Get the end day/month/year
-$end_day = get_form_var('end_day', 'int');
-$end_month = get_form_var('end_month', 'int');
-$end_year = get_form_var('end_year', 'int');
-
-// Get the information about the fields in the entry table
-$fields = sql_field_info($tbl_entry);
+$formvars = array('create_by'         => 'string',
+                  'name'              => 'string',
+                  'rep_type'          => 'int',
+                  'description'       => 'string',
+                  'start_seconds'     => 'int',
+                  'end_seconds'       => 'int',
+                  'all_day'           => 'string',  // bool, actually
+                  'type'              => 'string',
+                  'rooms'             => 'array',
+                  'original_room_id'  => 'int',
+                  'ical_uid'          => 'string',
+                  'ical_sequence'     => 'int',
+                  'ical_recur_id'     => 'string',
+                  'returl'            => 'string',
+                  'rep_id'            => 'int',
+                  'edit_type'         => 'string',
+                  'id'                => 'int',
+                  'rep_end_day'       => 'int',
+                  'rep_end_month'     => 'int',
+                  'rep_end_year'      => 'int',
+                  'rep_id'            => 'int',
+                  'rep_day'           => 'array',   // array of bools
+                  'rep_num_weeks'     => 'int',
+                  'skip'              => 'string',  // bool, actually
+                  'private'           => 'string',  // bool, actually
+                  'confirmed'         => 'string',
+                  'start_day'         => 'int',
+                  'start_month'       => 'int',
+                  'start_year'        => 'int',
+                  'end_day'           => 'int',
+                  'end_month'         => 'int',
+                  'end_year'          => 'int');
+                  
+foreach($formvars as $var => $var_type)
+{
+  $$var = get_form_var($var, $var_type);
+}
+              
 
 // Get custom form variables
 $custom_fields = array();
-                    
+
+// Get the information about the fields in the entry table
+$fields = sql_field_info($tbl_entry);
+          
 foreach($fields as $field)
 {
   if (!in_array($field['name'], $standard_fields['entry']))
@@ -70,6 +75,19 @@ foreach($fields as $field)
       unset($custom_fields[$field['name']]);
     }
   }
+}
+
+// Get the start day/month/year and make them the current day/month/year
+$day = $start_day;
+$month = $start_month;
+$year = $start_year;
+
+// The id must be either an integer or NULL, so that subsequent code that tests whether
+// isset($id) works.  (I suppose one could use !empty instead, but there's always the
+// possibility that sites have allowed 0 in their auto-increment/serial columns.)
+if (isset($id) && ($id == ''))
+{
+  unset($id);
 }
 
 // Truncate the name field to the maximum length as a precaution.
@@ -184,6 +202,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE) &&
   showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
   exit;
 }
+
 
 // Check that the user has permission to create/edit an entry for this room.
 // Get the id of the room that we are creating/editing
@@ -429,11 +448,14 @@ if (!sql_mutex_lock("$tbl_entry"))
 $valid_booking = TRUE;
 $conflicts = "";          // Holds a list of all the conflicts (ideally this would be an array)
 $rules_broken = array();  // Holds an array of the rules that have been broken
-
+$skip_lists = array();    // Holds a 2D array of bookings to skip past.  Indexed
+                          // by room id and start time
+                          
 // Check for any schedule conflicts in each room we're going to try and
 // book in;  also check that the booking conforms to the policy
 foreach ( $rooms as $room_id )
 {
+  $skip_lists[$room_id] = array();
   if ($rep_type != REP_NONE && !empty($reps))
   {
     if(count($reps) < $max_rep_entrys)
@@ -453,7 +475,20 @@ foreach ( $rooms as $room_id )
 
         if (!empty($tmp))
         {
-          $valid_booking = FALSE;
+          // If we've been told to skip past existing bookings, then add
+          // this start time to the list of start times to skip past.
+          // Otherwise it's an invalid booking
+          if ($skip)
+          {
+            $skip_lists[$room_id][] = $reps[$i];
+          }
+          else
+          {
+            $valid_booking = FALSE;
+          }
+          // In both cases remember the conflict data.   (We don't at the
+          // moment do anything with the data if we're skipping, but we might
+          // in the future want to display a list of bookings we've skipped past)
           $conflicts .= $tmp;
         }
         // if we're not an admin for this room, check that the booking
@@ -467,7 +502,7 @@ foreach ( $rooms as $room_id )
             $rules_broken = $rules_broken + $errors;  // array union
           }
         }
-      }
+      } // for
     }
     else
     {
@@ -593,6 +628,11 @@ if ($valid_booking)
       $data['entry_type'] = ($repeat_id > 0) ? ENTRY_RPT_CHANGED : ENTRY_SINGLE;
       $data['repeat_id'] = $repeat_id;
     }
+    // Add in the list of bookings to skip
+    if (!empty($skip_lists) && !empty($skip_lists[$room_id]))
+    {
+      $data['skip_list'] = $skip_lists[$room_id];
+    }
     // The following elements are needed for email notifications
     $data['duration'] = $duration;
     $data['dur_units'] = $dur_units;
@@ -704,9 +744,58 @@ if (!$valid_booking)
   }
 }
 
-echo "<p>\n";
-echo "<a href=\"" . htmlspecialchars($returl) . "\">" . get_vocab("returncal") . "</a>\n";
-echo "</p>\n";
+echo "<div id=\"submit_buttons\">\n";
+
+// Back button
+echo "<form method=\"post\" action=\"" . htmlspecialchars($returl) . "\">\n";
+echo "<fieldset><legend></legend>\n";
+echo "<input type=\"submit\" value=\"" . get_vocab("back") . "\">\n";
+echo "</fieldset>\n";
+echo "</form>\n";
+
+
+// Skip and Book button (to book the entries that don't conflict)
+// Only show this button if there were no policies broken
+if (empty($rules_broken))
+{
+  echo "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+  echo "<fieldset><legend></legend>\n";
+  // Put the booking data in as hidden inputs
+  $skip = 1;  // Force a skip next time round
+  // First the ordinary fields
+  foreach ($formvars as $var => $var_type)
+  {
+    if ($var_type == 'array')
+    {
+      foreach ($$var as $value)
+      {
+        echo "<input type=\"hidden\" name=\"${var}[]\" value=\"" . htmlspecialchars($value) . "\">\n";
+      }
+    }
+    else
+    {
+      echo "<input type=\"hidden\" name=\"$var\" value=\"" . htmlspecialchars($$var) . "\">\n";
+    }
+  }
+  // Then the custom fields
+  foreach($fields as $field)
+  {
+    if (array_key_exists($field['name'], $custom_fields))
+    {
+      echo "<input type=\"hidden\"" .
+                  "name=\"" . VAR_PREFIX . $field['name'] . "\"" .
+                  "value=\"" . htmlspecialchars($custom_fields[$field['name']]) . "\">\n";
+    }
+  }
+  // Submit button
+  echo "<input type=\"submit\"" .
+              "value=\"" . get_vocab("skip_and_book") . "\"" .
+              "title=\"" . get_vocab("skip_and_book_note") . "\">\n";
+  echo "</fieldset>\n";
+  echo "</form>\n";
+}
+
+echo "</div>\n";
 
 require_once "trailer.inc";
 ?>

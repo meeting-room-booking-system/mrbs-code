@@ -626,7 +626,8 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
  * 
  * Returns:
  *   an array
- *   ['id']      - 0 if an error occurred, otherwise an id
+ *   ['id']      - 0 if an error occurred or if no bookings could be
+ *                 made, otherwise an id
  *   ['series']  - boolean: TRUE if the id refers to the repeat table
  *                          FALSE if the id refers to the entry table
  *
@@ -636,17 +637,26 @@ function mrbsCreateRepeatingEntrys($data)
   global $max_rep_entrys;
   
   $result = array('id' => 0, 'series' => FALSE);
-   
+
+  if (!isset($data['skip_list']))
+  {
+    $data['skip_list'] = array();
+  }
+
   $reps = mrbsGetRepeatEntryList($data['start_time'], $data['end_date'],
                                  $data['rep_type'], $data['rep_opt'],
                                  $max_rep_entrys, $data['rep_num_weeks']);
 
+  // Don't make any bookings if we've been asked to book up
+  // more entries than we are allowed in a single repeat.
   if (count($reps) > $max_rep_entrys)
   {
     $result['id'] = 0;
     return $result;;
   }
-
+  
+  // If $reps is empty, then this is a single booking, so treat
+  // it differently
   if (empty($reps))
   {
     $data['entry_type'] = ENTRY_SINGLE;
@@ -656,7 +666,30 @@ function mrbsCreateRepeatingEntrys($data)
     $result['series'] = FALSE;
     return $result;
   }
-   
+  
+  // This is a repeat booking.   If we've got to skip past all
+  // the entries, then don't make a booking!
+  if (count($reps) == count($data['skip_list']))
+  {
+    $result['id'] = 0;
+    return $result;;
+  }
+  
+  // Maybe one should also consider adjusting the start_time for
+  // the repeat if the first (or more) entries of the series are
+  // to be skipped.    However I haven't done so here and it gives the
+  // maybe slightly strange result that the start date of the series won't
+  // have an entry on that date.   But then this is no different from 
+  // the way MRBS works at present if you create a series and then
+  // delete the first entry.
+  //
+  // Note also that RFC 5545 allows this behaviour in 3.8.5.1:
+  //   'The "EXDATE" property can be used to exclude the value specified
+  //    in "DTSTART".  However, in such cases, the original "DTSTART" date
+  //    MUST still be maintained by the calendaring and scheduling system
+  //    because the original "DTSTART" value has inherent usage
+  //    dependencies by other properties such as the "RECURRENCE-ID".'
+  
   $id = mrbsCreateRepeatEntry($data);
     
   if ($id)
@@ -667,14 +700,19 @@ function mrbsCreateRepeatingEntrys($data)
     $endtime = $data['end_time'];
     for ($i = 0; $i < count($reps); $i++)
     {
-      // calculate diff each time and correct where events
-      // cross DST
-      $diff = $endtime - $starttime;
-      $diff += cross_dst($reps[$i], $reps[$i] + $diff);  
-      $data['start_time'] = $reps[$i];
-      $data['end_time'] = $reps[$i] + $diff;
+      // Provided this isn't one of the entries to skip, go ahead
+      // and make the booking
+      if (!in_array($reps[$i], $data['skip_list']))
+      {
+        // calculate diff each time and correct where events
+        // cross DST
+        $diff = $endtime - $starttime;
+        $diff += cross_dst($reps[$i], $reps[$i] + $diff);  
+        $data['start_time'] = $reps[$i];
+        $data['end_time'] = $reps[$i] + $diff;
 
-      $ent_id = mrbsCreateSingleEntry($data);
+        $ent_id = mrbsCreateSingleEntry($data);
+      }
     }
   }
   $result['id'] = $id;

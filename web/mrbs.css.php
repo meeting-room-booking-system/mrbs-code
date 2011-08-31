@@ -606,7 +606,12 @@ fieldset#rep_info {border-top: 1px solid <?php echo $site_faq_entry_border_color
 .edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}
 
 .form_general label.secondary {font-weight: normal; width: auto}
-    
+
+
+/* ------------ EDIT_ENTRY_HANDLER.PHP ------------------*/
+.edit_entry_handler div#submit_buttons {float: left}
+.edit_entry_handler #submit_buttons form {float: left; margin: 1em 2em 1em 0}
+
 
 /* ------------ EDIT_USERS.PHP ------------------*/
 <?php

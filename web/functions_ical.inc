@@ -408,9 +408,33 @@ function create_rrule($data)
       $rule .= "FREQ=YEARLY";
       break;
   }
+  // The UNTIL date-time "MUST be specified in UTC time"
   $rule .= ";UNTIL=" . gmdate(RFC5545_FORMAT . '\Z', $data['end_date']);
 
   return $rule;
+}
+
+
+// Create a comma separated list of dates for use with the EXDATE property.
+// The TZID parameter if used must be added separately
+function create_exdate_list($dates)
+{
+  global $vtimezone, $timezone;
+  
+  $results = array();
+  
+  foreach ($dates as $date)
+  {
+    if ($vtimezone === FALSE)
+    {
+      $results[] = gmdate(RFC5545_FORMAT . '\Z', $date);
+    }
+    else
+    {
+      $results[] = date(RFC5545_FORMAT, $date);
+    }
+  }
+  return implode(',', $results);
 }
 
 
@@ -463,6 +487,12 @@ function create_ical_event($method, $data, $text_description, $html_description,
   if ($series)
   {
     $results[] = "RRULE:" . create_rrule($data);
+    if (!empty($data['skip_list']))
+    {
+      $results[] = "EXDATE" . 
+                   (($vtimezone === FALSE) ? ":" : ";TZID=$timezone:") .
+                   create_exdate_list($data['skip_list']);
+    }
   }
   $results[] = "SUMMARY:" . ical_escape_text($data['name']);
   // Put the HTML version in an ALTREP, just in case there are any Calendars out there

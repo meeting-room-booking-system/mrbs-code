@@ -7,9 +7,10 @@ body#mrbs {background-color: #e7ebee; color: #0B263B;
            margin: 0; padding: 0}
 div#header {width: 100%; background-color: #4b667b; color: #ffffff;
             margin: 0; padding: 10px}
-div#contents {padding: 10px}
+div#contents {width: 100%; padding: 10px; margin-bottom: 1em}
 #mrbs a:link    {color: #0B263B; text-decoration: none; font-weight: bold}
 #mrbs a:visited {color: #0B263B; text-decoration: none; font-weight: bold}
 #mrbs a:hover   {color: #ff0066; text-decoration: underline; font-weight: bold} 
 #mrbs tr {padding: 0; margin: 0}
 #mrbs th, #mrbs td {text-align: left; padding: 1px 1em; margin 0}
+

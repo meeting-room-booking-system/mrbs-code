@@ -485,6 +485,11 @@ $is_mandatory_field = array();
 
 // $is_mandatory_field['entry.terms_and_conditions'] = true;
 
+// Set $skip_default to TRUE if you want the "Skip past conflicts" box
+// on the edit_entry form to be checked by default.  (This will mean that
+// if you make a repeat booking and some of the repeat dates are already
+// booked, MRBS will just skip past those).
+$skip_default = FALSE;
  
 /***********************************************
  * Authentication settings - read AUTHENTICATION
