@@ -5,6 +5,19 @@ require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 require_once "functions_ical.inc";
 
+// NOTE:  the code on this page assumes that array form variables are passed
+// as an array of values, rather than an array indexed by value.   This is
+// particularly important for checkbox arrays whicgh should be formed like this:
+//
+//    <input type="checkbox" name="foo[]" value="n">
+//    <input type="checkbox" name="foo[]" value="m">
+//
+// and not like this:
+//
+//    <input type="checkbox" name="foo[n]" value="1">
+//    <input type="checkbox" name="foo[m]" value="1">
+
+
 // Get non-standard form variables
 $formvars = array('create_by'         => 'string',
                   'name'              => 'string',
@@ -765,6 +778,7 @@ if (empty($rules_broken))
   {
     if ($var_type == 'array')
     {
+      // See the comment at the top of the page about array formats
       foreach ($$var as $value)
       {
         echo "<input type=\"hidden\" name=\"${var}[]\" value=\"" . htmlspecialchars($value) . "\">\n";
