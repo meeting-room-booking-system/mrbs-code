@@ -773,7 +773,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     // Check whether ordinary users are allowed to see other users' details.  If not,
     // then skip past this row if it's not the current user or the user is not an admin
     if ($auth['only_admin_can_see_other_users'] &&
-        ($level < $min_user_editing_level) &&
+        ($level < $min_user_viewing_level) &&
         (strcasecmp($row['name'], $user) != 0))
     {
       continue;
