@@ -5,6 +5,19 @@ require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 require_once "functions_ical.inc";
 
+// NOTE:  the code on this page assumes that array form variables are passed
+// as an array of values, rather than an array indexed by value.   This is
+// particularly important for checkbox arrays whicgh should be formed like this:
+//
+//    <input type="checkbox" name="foo[]" value="n">
+//    <input type="checkbox" name="foo[]" value="m">
+//
+// and not like this:
+//
+//    <input type="checkbox" name="foo[n]" value="1">
+//    <input type="checkbox" name="foo[m]" value="1">
+
+
 // Get non-standard form variables
 $formvars = array('create_by'         => 'string',
                   'name'              => 'string',
@@ -43,7 +56,6 @@ foreach($formvars as $var => $var_type)
 {
   $$var = get_form_var($var, $var_type);
 }
-              
 
 // Get custom form variables
 $custom_fields = array();
@@ -385,14 +397,13 @@ if (isset($rep_type) && (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY
   // as the day of the week of the start of the period
   if (count($rep_day) == 0)
   {
-    $start_day = date('w', $starttime);
-    $rep_day[$start_day] = TRUE;
+    $rep_day[] = date('w', $starttime);
   }
   
   // Build string of weekdays to repeat on:
   for ($i = 0; $i < 7; $i++)
   {
-    $rep_opt .= empty($rep_day[$i]) ? "0" : "1";  // $rep_opt is a string
+    $rep_opt .= in_array($i, $rep_day) ? "1" : "0";  // $rep_opt is a string
   }
   
   // Make sure that the starttime and endtime coincide with a repeat day.  In
@@ -767,6 +778,7 @@ if (empty($rules_broken))
   {
     if ($var_type == 'array')
     {
+      // See the comment at the top of the page about array formats
       foreach ($$var as $value)
       {
         echo "<input type=\"hidden\" name=\"${var}[]\" value=\"" . htmlspecialchars($value) . "\">\n";
