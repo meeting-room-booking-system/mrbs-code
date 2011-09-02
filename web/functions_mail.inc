@@ -1065,6 +1065,13 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
 
   global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
   
+  // Don't do aything if mail has been disabled.   Useful for testing MRBS without
+  // sending emails to those who don't want them
+  if ($mail_settings['disabled'])
+  {
+    return;
+  }
+  
   if ($mail_settings['debug'])
   {
     echo "[DEBUG] Preparing to send email ... <br>";
