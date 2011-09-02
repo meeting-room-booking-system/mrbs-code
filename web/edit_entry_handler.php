@@ -766,8 +766,9 @@ echo "</form>\n";
 
 
 // Skip and Book button (to book the entries that don't conflict)
-// Only show this button if there were no policies broken
-if (empty($rules_broken))
+// Only show this button if there were no policies broken and it's a series
+if (empty($rules_broken)  &&
+    isset($rep_type) && ($rep_type != REP_NONE))
 {
   echo "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
   echo "<fieldset><legend></legend>\n";
