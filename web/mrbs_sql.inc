@@ -512,8 +512,8 @@ function same_day_next_month($time)
  *   empty     - The entry does not repeat
  *   an array  - This is a list of start times of each of the repeat entrys
  */
-function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt,
-                                $max_ittr, $rep_num_weeks)
+function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $rep_num_weeks,
+                                $max_ittr)
 {
   $sec   = date("s", $time);
   $min   = date("i", $time);
@@ -645,7 +645,7 @@ function mrbsCreateRepeatingEntrys($data)
 
   $reps = mrbsGetRepeatEntryList($data['start_time'], $data['end_date'],
                                  $data['rep_type'], $data['rep_opt'],
-                                 $max_rep_entrys, $data['rep_num_weeks']);
+                                 $data['rep_num_weeks'], $max_rep_entrys);
 
   // Don't make any bookings if we've been asked to book up
   // more entries than we are allowed in a single repeat.

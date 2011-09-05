@@ -157,7 +157,7 @@ else
 }
 
 // BACK:  we didn't really want to be here - send them to the returl
-if (isset($back_button))
+if (!empty($back_button))
 {
   header("Location: $returl");
   exit();
@@ -437,8 +437,8 @@ if ($rep_type != REP_NONE)
 {
   $reps = mrbsGetRepeatEntryList($starttime,
                                  isset($end_date) ? $end_date : 0,
-                                 $rep_type, $rep_opt, $max_rep_entrys,
-                                 $rep_num_weeks);
+                                 $rep_type, $rep_opt, $rep_num_weeks,
+                                 $max_rep_entrys);
 }
 
 // When checking for overlaps, for Edit (not New), ignore this entry and series:
@@ -804,14 +804,14 @@ if (empty($rules_broken)  &&
     if (array_key_exists($field['name'], $custom_fields))
     {
       echo "<input type=\"hidden\"" .
-                  "name=\"" . VAR_PREFIX . $field['name'] . "\"" .
-                  "value=\"" . htmlspecialchars($custom_fields[$field['name']]) . "\">\n";
+                  " name=\"" . VAR_PREFIX . $field['name'] . "\"" .
+                  " value=\"" . htmlspecialchars($custom_fields[$field['name']]) . "\">\n";
     }
   }
   // Submit button
   echo "<input type=\"submit\"" .
-              "value=\"" . get_vocab("skip_and_book") . "\"" .
-              "title=\"" . get_vocab("skip_and_book_note") . "\">\n";
+              " value=\"" . get_vocab("skip_and_book") . "\"" .
+              " title=\"" . get_vocab("skip_and_book_note") . "\">\n";
   echo "</fieldset>\n";
   echo "</form>\n";
 }

@@ -382,22 +382,64 @@ function create_body_table_row($label, $new, $old='', $compare=FALSE, $as_html=F
 }
 
 
-// Generate the list of bookings that could not be made due to conflicts
-function create_body_exceptions($skip_list, $as_html)
+// Generate a list of dates from an array of start times
+//
+//   $dates      an array of start times
+//   $as_html    (boolean) whether the list should be HTML or plain text
+function create_date_list($dates, $as_html)
 {
-  // The introductory text
-  $result = ($as_html) ? "<p>" : "\n\n";
-  $result .= get_vocab("mail_body_exceptions");
-  $result .= ($as_html) ? "</p>\n" : "\n\n";
-  // Now the list of conflicts
-  $result .= ($as_html) ? "<ul>\n" : "";
-  foreach ($skip_list as $date)
+  $result = ($as_html) ? "<ul>\n" : "";
+  foreach ($dates as $date)
   {
     $result .= ($as_html) ? "<li>" : "";
     $result .= getMailDateString($date);
     $result .= ($as_html) ? "</li>" : "\n";
   }
   $result .= ($as_html) ? "</ul>\n" : "";
+  return $result;
+}
+
+
+// Generate a list of repeat dates for a series
+function create_repeat_list($data, $as_html)
+{
+  global $max_rep_entrys;
+  
+  if ($data['rep_type'] == REP_NONE)
+  {
+    return;
+  }
+
+  // The introductory text
+  $result = ($as_html) ? "<p>" : "\n\n";
+  $result .= get_vocab("mail_body_repeats");
+  $result .= ($as_html) ? "</p>\n" : "\n\n";
+  
+  $reps = mrbsGetRepeatEntryList($data['start_time'], 
+                                 $data['end_date'],
+                                 $data['rep_type'], 
+                                 $data['rep_opt'],
+                                 $data['rep_num_weeks'],
+                                 $max_rep_entrys);
+  
+  // Remove any dates that could not be booked due to conflicts                               
+  if (!empty($data['skip_list']))
+  {
+    $reps = array_diff($reps, $data['skip_list']);
+  }
+                                                         
+  $result .= create_date_list($reps, $as_html);
+  
+  // Now add in the list of repeat bookings that could not be booked
+  if (!empty($data['skip_list']))
+  {
+    // The introductory text
+    $result .= ($as_html) ? "<p>" : "\n\n";
+    $result .= get_vocab("mail_body_exceptions");
+    $result .= ($as_html) ? "</p>\n" : "\n\n";
+    // Now the list of conflicts
+    $result .= create_date_list($data['skip_list'], $as_html);
+  }
   
   return $result;
 }
@@ -693,11 +735,11 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
     $body .= "</table>\n";
   }
   
-  // Now add in the list of repeat bookings that could not be booked
-  if (!empty($data['skip_list']))
-  {
-    $body .= create_body_exceptions($data['skip_list'], $as_html);
-  }
+  // Add in a list of repeat dates.  Although we've given them the repeat charateristics
+  // above, it's often helpful to have this expanded out into a list of actual dates to
+  // avoid any confusion.    The repeat list also gives a list of dates that could not
+  // be booked due to conflicts.
+  $body .= create_repeat_list($data, $as_html);
   
   if ($as_html)
   {

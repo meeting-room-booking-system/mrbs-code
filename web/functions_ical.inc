@@ -771,8 +771,8 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
                                                    $start_row['end_date'],
                                                    $start_row['rep_type'],
                                                    $start_row['rep_opt'],
-                                                   PHP_INT_MAX,
-                                                   $start_row['rep_num_weeks']);
+                                                   $start_row['rep_num_weeks'],
+                                                   PHP_INT_MAX);
         // And keep an array of all the entries we actually see
         $actual_entries = array();
         // Create the series event
