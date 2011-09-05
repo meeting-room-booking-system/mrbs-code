@@ -739,7 +739,10 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
   // above, it's often helpful to have this expanded out into a list of actual dates to
   // avoid any confusion.    The repeat list also gives a list of dates that could not
   // be booked due to conflicts.
-  $body .= create_repeat_list($data, $as_html);
+  if ($data['rep_type'] != REP_NONE)
+  {
+    $body .= create_repeat_list($data, $as_html);
+  }
   
   if ($as_html)
   {
