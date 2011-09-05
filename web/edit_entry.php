@@ -515,7 +515,7 @@ foreach ($areas as $area)
 ?>
 
 // do a little form verifying
-function validate(form)
+function validate(form_id)
 {
   <?php
   // First of all check that a name (brief description) has been entered.
@@ -523,6 +523,7 @@ function validate(form)
   // being entered via a SELECT box there's no need to do this because there's
   // bound to be a value and the test below will fail on some browsers (eg IE)
   ?>
+  var form = document.getElementById(form_id);
   if (form.name.tagName.toLowerCase() == 'input')
   {
     // null strings and spaces only strings not allowed
@@ -727,7 +728,7 @@ else
 ?>
 
 
-<form class="form_general" id="main" action="edit_entry_handler.php" method="post" onsubmit="return validate(this)">
+<form class="form_general" id="main" action="edit_entry_handler.php" method="post">
   <fieldset>
   <legend><?php echo get_vocab($token); ?></legend>
 
@@ -1231,11 +1232,20 @@ else
       echo "<input type=\"hidden\" name=\"id\" value=\"$id\">\n";
     }
 
-    // The Submit button
-    echo "<div id=\"edit_entry_submit\">\n";
-    echo "<input class=\"submit\" type=\"submit\" name=\"save_button\" value=\"".
-      get_vocab("save") . "\">\n";
+    // Buttons
+    echo "<fieldset class=\"submit_buttons\">\n";
+    echo "<legend></legend>\n";
+    // The Back button
+    echo "<div id=\"edit_entry_submit_back\">\n";
+    echo "<input class=\"submit\" type=\"submit\" name=\"back_button\" value=\"" . get_vocab("back") . "\">\n";
     echo "</div>\n";
+    
+    // The Submit button
+    echo "<div id=\"edit_entry_submit_save\">\n";
+    echo "<input class=\"submit\" type=\"submit\" name=\"save_button\" value=\"" .
+      get_vocab("save") . "\" onclick=\"return validate('main')\">\n";
+    echo "</div>\n";
+    echo "</fieldset>";
     ?>
   </fieldset>
 </form>

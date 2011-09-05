@@ -50,7 +50,8 @@ $formvars = array('create_by'         => 'string',
                   'start_year'        => 'int',
                   'end_day'           => 'int',
                   'end_month'         => 'int',
-                  'end_year'          => 'int');
+                  'end_year'          => 'int',
+                  'back_button'       => 'string');
                   
 foreach($formvars as $var => $var_type)
 {
@@ -153,6 +154,13 @@ if (empty($returl) || ($returl_base[0] == "edit_entry.php") || ($returl_base[0] 
 else
 {
   $returl = $returl_base[0];
+}
+
+// BACK:  we didn't really want to be here - send them to the returl
+if (isset($back_button))
+{
+  header("Location: $returl");
+  exit();
 }
 
 // If we haven't been given a sensible date then get out of here and don't trey and make a booking
