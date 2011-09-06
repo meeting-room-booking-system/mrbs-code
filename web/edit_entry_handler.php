@@ -50,7 +50,8 @@ $formvars = array('create_by'         => 'string',
                   'start_year'        => 'int',
                   'end_day'           => 'int',
                   'end_month'         => 'int',
-                  'end_year'          => 'int');
+                  'end_year'          => 'int',
+                  'back_button'       => 'string');
                   
 foreach($formvars as $var => $var_type)
 {
@@ -153,6 +154,13 @@ if (empty($returl) || ($returl_base[0] == "edit_entry.php") || ($returl_base[0] 
 else
 {
   $returl = $returl_base[0];
+}
+
+// BACK:  we didn't really want to be here - send them to the returl
+if (!empty($back_button))
+{
+  header("Location: $returl");
+  exit();
 }
 
 // If we haven't been given a sensible date then get out of here and don't trey and make a booking
@@ -429,8 +437,8 @@ if ($rep_type != REP_NONE)
 {
   $reps = mrbsGetRepeatEntryList($starttime,
                                  isset($end_date) ? $end_date : 0,
-                                 $rep_type, $rep_opt, $max_rep_entrys,
-                                 $rep_num_weeks);
+                                 $rep_type, $rep_opt, $rep_num_weeks,
+                                 $max_rep_entrys);
 }
 
 // When checking for overlaps, for Edit (not New), ignore this entry and series:
@@ -796,14 +804,14 @@ if (empty($rules_broken)  &&
     if (array_key_exists($field['name'], $custom_fields))
     {
       echo "<input type=\"hidden\"" .
-                  "name=\"" . VAR_PREFIX . $field['name'] . "\"" .
-                  "value=\"" . htmlspecialchars($custom_fields[$field['name']]) . "\">\n";
+                  " name=\"" . VAR_PREFIX . $field['name'] . "\"" .
+                  " value=\"" . htmlspecialchars($custom_fields[$field['name']]) . "\">\n";
     }
   }
   // Submit button
   echo "<input type=\"submit\"" .
-              "value=\"" . get_vocab("skip_and_book") . "\"" .
-              "title=\"" . get_vocab("skip_and_book_note") . "\">\n";
+              " value=\"" . get_vocab("skip_and_book") . "\"" .
+              " title=\"" . get_vocab("skip_and_book_note") . "\">\n";
   echo "</fieldset>\n";
   echo "</form>\n";
 }

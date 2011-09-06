@@ -577,16 +577,18 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 .edit_area_room .form_general #booking_policies input.text {width: 2.0em}
 .form_general input.submit {display: block; width: auto; float: left; clear: left; margin-top: 1.0em}
 
-div#edit_entry_submit {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $edit_entry_left_col_max_width ?>em}
 div#report_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $report_left_col_max_width ?>em}
 div#search_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $search_left_col_max_width ?>em}
 div#logon_submit      {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $logon_left_col_max_width ?>em}
 div#db_logon_submit   {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $db_logon_left_col_max_width ?>em}
-#edit_entry_submit input, #report_submit input, #search_submit input, #logon_submit input, #db_logon_submit input
+#report_submit input, #search_submit input, #logon_submit input, #db_logon_submit input
     {position: relative; left: 100%; width: auto}
 div#edit_area_room_submit_back {float: left; width: <?php echo $edit_area_room_left_col_width ?>em; max-width: <?php echo $edit_area_room_left_col_max_width ?>em}
 div#edit_area_room_submit_save {float: left; clear: none; width: auto}
 #edit_area_room_submit_back input {float: right}
+div#edit_entry_submit_back {float: left; width: <?php echo $general_left_col_width ?>em; max-width: <?php echo $edit_entry_left_col_max_width ?>em}
+div#edit_entry_submit_save {float: left; clear: none; width: auto}
+#edit_entry_submit_back input {float: right}
 
 .form_general .div_dur_mins input{width: 4.0em}
 .form_general .div_time input {width: 2.0em}
