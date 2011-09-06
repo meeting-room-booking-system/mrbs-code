@@ -1150,12 +1150,11 @@ else
       </div>
      
       <?php
-      // Checkbox for skipping past conflicts
       echo "<div>\n";
       $label_text = get_vocab("rep_num_weeks") . ":<br>" . get_vocab("rep_for_nweekly");
       generate_input($label_text, 'rep_num_weeks', $rep_num_weeks);
       echo "</div>\n";
-      
+      // Checkbox for skipping past conflicts
       echo "<div>\n";
       echo "<label for=\"skip\">" . get_vocab("skip_conflicts") . ":</label>\n";
       echo "<input type=\"checkbox\" class=\"checkbox\" " .
