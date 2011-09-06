@@ -58,8 +58,11 @@ require_once "mrbs_sql.inc";
 // may have happened earlier in the day.  (It's this way because we don't know what day
 // it is as that's controlled by the date selector - and we can't assume that we have
 // JavaScript enabled to go and read it)
-// The $display parameter sets the display style of the <select>
-function genslotselector($area, $prefix, $first, $last, $time, $display="block")
+//
+// The $display_none parameter sets the display style of the <select> to "none"
+// The $disabled parameter will disable the input and also generate a hidden input, provided
+// that $display_none is FALSE.  (This prevents multiple inputs of the same name)
+function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FALSE, $disabled=FALSE)
 {
   global $periods;
   
@@ -74,9 +77,6 @@ function genslotselector($area, $prefix, $first, $last, $time, $display="block")
   {
     fatal_error(FALSE, "Internal error - resolution is NULL or <= 0");
   }
-  // If they've asked for "display: none" then we'll also disable the select so
-  // that there is only one select passing through the variable to the handler
-  $disabled = (strtolower($display) == "none") ? " disabled=\"disabled\"" : "";
   
   // Get the current hour and minute and convert it into nominal (ie ignoring any
   // DST effects) seconds since the start of the day
@@ -91,7 +91,15 @@ function genslotselector($area, $prefix, $first, $last, $time, $display="block")
   {
     $format = hour_min_format();
   }
-  $html .= "<select style=\"display: $display\" id = \"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\"$disabled>\n";
+  $html .= "<select" .
+           (($display_none) ? " style=\"display: none\"" : "") .
+           // If $display_none or $disabled are set then we'll also disable the select so
+           // that there is only one select passing through the variable to the handler
+           (($display_none || $disabled) ? " disabled=\"disabled\"" : "") .
+           // and if $disabled is set, give the element a class so that the JavaScript
+           // knows to keep it disabled
+           (($disabled) ? " class=\"keep_disabled\"" : "") .
+           " id=\"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\">\n";
   for ($t = $first; $t <= $last; $t = $t + $resolution)
   {
     // The date used below is completely arbitrary.   All that matters is that it
@@ -104,6 +112,12 @@ function genslotselector($area, $prefix, $first, $last, $time, $display="block")
     $html .= ">$slot_string</option>\n";
   }
   $html .= "</select>\n";
+  // Add in a hidden input if the select is disabled but displayed
+  if ($disabled && !$display_none)
+  {
+    $html .= "<input type=\"hidden\" name=\"${prefix}seconds\" value=\"$current_t\">\n";
+  }
+  
   echo $html;
 }
 
@@ -782,8 +796,8 @@ else
         $last = $last + $a['resolution'];
       }
       $start_last = ($a['enable_periods']) ? $last : $last - $a['resolution'];
-      $display = ($a['id'] == $area_id) ? "block" : "none";
-      genslotselector($a, "start_", $first, $start_last, $start_time, $display);
+      $display_none = ($a['id'] != $area_id);
+      genSlotSelector($a, "start_", $first, $start_last, $start_time, $display_none);
     }
 
     ?>
@@ -822,8 +836,8 @@ else
         $last = $last + $a['resolution'];
       }
       $end_value = ($a['enable_periods']) ? $end_time - $a['resolution'] : $end_time;
-      $display = ($a['id'] == $area_id) ? "block" : "none";
-      genslotselector($a, "end_", $first, $last, $end_value, $display);
+      $display_none = ($a['id'] != $area_id);
+      genSlotSelector($a, "end_", $first, $last, $end_value, $display_none);
     }
     echo "</div>\n";
     
