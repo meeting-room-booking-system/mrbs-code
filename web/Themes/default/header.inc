@@ -497,8 +497,12 @@ if ($page == 'edit_entry')
     var errorText = '<?php echo get_vocab("start_after_end")?>';
     var text = errorText;
     
-    var startSelect = form["start_seconds" + area];
-    var endSelect = form["end_seconds" + area];
+    var startId = "start_seconds" + area;
+    var startSelect = form[startId];
+    var startKeepDisabled = ($('#' + startId).attr('class') == 'keep_disabled');
+    var endId = "end_seconds" + area;
+    var endSelect = form[endId];
+    var endKeepDisabled = ($('#' + endId).attr('class') == 'keep_disabled');
     var startIndex, startValue, endIndex, endValue;
     
     <?php 
@@ -629,8 +633,8 @@ if ($page == 'edit_entry')
     if (!form.all_day || !form.all_day.checked)
     {
       var newState = (dateDifference < 0);
-      startSelect.disabled = newState;
-      endSelect.disabled = newState;
+      startSelect.disabled = newState || startKeepDisabled;
+      endSelect.disabled = newState || endKeepDisabled;
       if (form.all_day)
       {
         form.all_day.disabled = newState;
