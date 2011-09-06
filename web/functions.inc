@@ -429,13 +429,16 @@ function generate_textarea($label_text, $name, $value, $disabled=FALSE)
 // $form_id is an optional fifth parameter.   If set it specifies the id of
 // a form to submit when the datepicker is closed.
 //
+// $disabled:  TRUE if the SELECT is to be disabled (Note: hidden inputs will be
+// created if the SELECT is disabled)
+//
 // Whether or not JavaScript is enabled the date is passed back in three separate
 // variables:  ${prefix}day, ${prefix}month and ${prefix}year
 //
 // The function passes back three separate variables, rather than a single date 
 // variable, partly for compatibility with previous implementations of genDateSelector()
 // and partly because it's easier to do this for the non-JavaScript version.
-function genDateSelector($prefix, $day, $month, $year, $form_id='')
+function genDateSelector($prefix, $day, $month, $year, $form_id='', $disabled=FALSE)
 {
   global $strftime_format, $year_range;
   
@@ -468,14 +471,18 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='')
   // datepicker calendar.
   echo "<span id=\"${prefix}dateselector\">\n";
   // the day selector
-  echo "<select name=\"${prefix}day\">\n";
+  echo "<select name=\"${prefix}day\"" . 
+       ($disabled ? " disabled=\"disabled\"" : "") .
+       ">\n"; 
   for ($i = 1; $i <= 31; $i++)
   {
     echo "<option" . ($i == $day ? " selected=\"selected\"" : "") . ">$i</option>\n";
   }
   echo "</select>\n";
   // the month selector
-  echo "<select name=\"${prefix}month\">\n";
+  echo "<select name=\"${prefix}month\"" . 
+       ($disabled ? " disabled=\"disabled\"" : "") .
+       ">\n"; 
   for ($i = 1; $i <= 12; $i++)
   {
     $m = utf8_strftime($strftime_format['mon'], mktime(0, 0, 0, $i, 1, $year));  
@@ -483,12 +490,21 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='')
   }
   echo "</select>\n";
   // the year selector
-  echo "<select name=\"${prefix}year\">\n";
+  echo "<select name=\"${prefix}year\"" . 
+       ($disabled ? " disabled=\"disabled\"" : "") .
+       ">\n";
   for ($i = $min; $i <= $max; $i++)
   {
     echo "<option value=\"$i\"" . ($i == $year ? " selected=\"selected\"" : "") . ">$i</option>\n";
   }
   echo "</select>\n";
+  // If the select is disabled we'll still pass through the values as hidden inputs
+  if ($disabled)
+  {
+    echo "<input type=\"hidden\" name=\"${prefix}day\" value=\"$day\">\n";
+    echo "<input type=\"hidden\" name=\"${prefix}month\" value=\"$month\">\n";
+    echo "<input type=\"hidden\" name=\"${prefix}year\" value=\"$year\">\n";
+  }
   echo "</span>\n";
   
   // Now use JavaScript to overwrite the contents of this span with a datepicker calendar
@@ -502,6 +518,10 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='')
                                                        if (!empty($form_id))
                                                        {
                                                          echo ", onClose: function(dateText, inst) {datepicker_close(dateText, inst, '$form_id');}";
+                                                       }
+                                                       if ($disabled)
+                                                       {
+                                                         echo ", disabled: true";
                                                        }
                                                        ?>
                                                       });
@@ -522,7 +542,7 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='')
   var datepicker_html = '<input class="date" type="text" id="<?php echo $datepicker_baseid ?>">\n';
   <?php
   // The next input is disabled because we don't need to pass the value through to
-  // the form and we don't want the value cluttering up the URL (it's a GET).
+  // the form and we don't want the value cluttering up the URL (if it's a GET).
   // It's just used as a holder for the date in a known format so that it can
   // then be used by datepicker_close() to populate the following three inputs.
   ?>
