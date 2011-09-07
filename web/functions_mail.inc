@@ -401,7 +401,7 @@ function create_date_list($dates, $as_html)
 
 
 // Generate a list of repeat dates for a series
-function create_repeat_list($data, $as_html)
+function create_repeat_list($data, $action, $as_html)
 {
   global $max_rep_entrys;
   
@@ -412,7 +412,14 @@ function create_repeat_list($data, $as_html)
 
   // The introductory text
   $result = ($as_html) ? "<p>" : "\n\n";
-  $result .= get_vocab("mail_body_repeats");
+  if (($action == "delete") || ($action == "reject"))
+  {
+    $result .= get_vocab("mail_body_repeats_deleted");
+  }
+  else
+  {
+    $result .= get_vocab("mail_body_repeats_booked");
+  }
   $result .= ($as_html) ? "</p>\n" : "\n\n";
   
   $reps = mrbsGetRepeatEntryList($data['start_time'], 
@@ -741,7 +748,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
   // be booked due to conflicts.
   if ($data['rep_type'] != REP_NONE)
   {
-    $body .= create_repeat_list($data, $as_html);
+    $body .= create_repeat_list($data, $action, $as_html);
   }
   
   if ($as_html)
