@@ -757,7 +757,8 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
 // create_addresses($data, $action)
 //
 // Returns an array indexed by 'from', 'to' and 'cc' with each element
-// consisting of a comma separated list of email addresses
+// consisting of a comma separated list of email addresses, or else
+// FALSE if there are no 'to' or 'cc' addresses
 //
 // Parameters:
 //   $data     an array containing all the data concerning this booking
@@ -849,8 +850,8 @@ function create_addresses($data, $action)
       $to[] = $booker_email;
     }
   }
-  // In case $to is empty, no need to go further
-  if (empty($to))
+  // In case $to and $cc are empty, no need to go further
+  if (empty($to) && empty($cc))
   {
     return FALSE;
   }
