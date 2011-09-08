@@ -726,7 +726,8 @@ checkAuthorised();
 
 // Also need to know whether they have admin rights
 $user = getUserName();
-$is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
+$user_level = authGetUserLevel($user);
+$is_admin =  ($user_level >= 2);
 
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
 // requests, which will only be if (a) the browser is using DataTables and (b)
@@ -1155,20 +1156,31 @@ if (($output_as_html || empty($nmatch)) && !$ajax)  // We don't want the form if
         // Only show this part of the form if there are areas that allow private bookings
         if ($private_somewhere)
         {
-          echo "<div id=\"div_privacystatus\">\n";
-          echo "<label>" . get_vocab("privacy_status") . ":</label>\n";
-          echo "<div class=\"group\">\n";   
-          $options = array(PRIVATE_BOTH => 'both', PRIVATE_NO => 'default_public', PRIVATE_YES => 'default_private');
-          foreach ($options as $option => $token)
+          // If they're not logged in then there's no point in showing this part of the form because
+          // they'll only be able to see public bookings anyway (and we don't want to alert them to
+          // the existence of porivate bookings)
+          if (empty($user_level))
           {
-            echo "<label>";
-            echo "<input class=\"radio\" type=\"radio\" name=\"match_private\" value=\"$option\"" .          
-                 (($match_private == $option) ? " checked=\"checked\"" : "") .
-                 ">" . get_vocab($token);
-            echo "</label>\n";
+            echo "<input type=\"hidden\" name=\"match_private\" value=\"" . PRIVATE_NO . "\">\n";
           }
-          echo "</div>\n";
-          echo "</div>\n";
+          // Otherwise give them the radio buttons
+          else
+          {
+            echo "<div id=\"div_privacystatus\">\n";
+            echo "<label>" . get_vocab("privacy_status") . ":</label>\n";
+            echo "<div class=\"group\">\n";   
+            $options = array(PRIVATE_BOTH => 'both', PRIVATE_NO => 'default_public', PRIVATE_YES => 'default_private');
+            foreach ($options as $option => $token)
+            {
+              echo "<label>";
+              echo "<input class=\"radio\" type=\"radio\" name=\"match_private\" value=\"$option\"" .          
+                   (($match_private == $option) ? " checked=\"checked\"" : "") .
+                   ">" . get_vocab($token);
+              echo "</label>\n";
+            }
+            echo "</div>\n";
+            echo "</div>\n";
+          }
         }
         
         // Confirmation status

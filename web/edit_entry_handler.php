@@ -18,6 +18,9 @@ require_once "functions_ical.inc";
 //    <input type="checkbox" name="foo[m]" value="1">
 
 
+// This page can be called with an Ajax call.  In this case it just checks
+// the validity of a proposed booking and does not make the booking.
+
 // Get non-standard form variables
 $formvars = array('create_by'         => 'string',
                   'name'              => 'string',
@@ -51,7 +54,8 @@ $formvars = array('create_by'         => 'string',
                   'end_day'           => 'int',
                   'end_month'         => 'int',
                   'end_year'          => 'int',
-                  'back_button'       => 'string');
+                  'back_button'       => 'string',
+                  'ajax'              => 'int');
                   
 foreach($formvars as $var => $var_type)
 {
@@ -223,7 +227,6 @@ if (isset($rep_type) && ($rep_type != REP_NONE) &&
   exit;
 }
 
-
 // Check that the user has permission to create/edit an entry for this room.
 // Get the id of the room that we are creating/editing
 if (isset($id))
@@ -258,54 +261,58 @@ if (!getWritable($create_by, $user, $target_room))
   exit;
 }
 
-if ($name == '')
+// Form validation checks.   Normally checked for client side.
+// Don't bother with them if this is an Ajax request.
+if (!$ajax)
 {
-  print_header($day, $month, $year, $area, isset($room) ? $room : "");
-?>
-       <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-       <p>
-         <?php echo get_vocab('must_set_description'); ?>
-       </p>
-<?php
-  // Print footer and exit
-  print_footer(TRUE);
-}       
-
-
-if (($rep_type == REP_N_WEEKLY) && ($rep_num_weeks < 2))
-{
-  print_header($day, $month, $year, $area, isset($room) ? $room : "");
-?>
-       <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-       <p>
-         <?php echo get_vocab('you_have_not_entered')." ".get_vocab("useful_n-weekly_value"); ?>
-       </p>
-<?php
-  // Print footer and exit
-  print_footer(TRUE);
-}
-
-if (count($is_mandatory_field))
-{
-  foreach ($is_mandatory_field as $field => $value)
+  if ($name == '')
   {
-    $field = preg_replace('/^entry\./', '', $field);
-    if ($value && ($custom_fields[$field] == ''))
-    {
-      print_header($day, $month, $year, $area, isset($room) ? $room : "");
-?>
-       <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-       <p>
-         <?php echo get_vocab('missing_mandatory_field')." \"".
-           get_loc_field_name($tbl_entry, $field)."\""; ?>
-       </p>
-<?php
-      // Print footer and exit
-      print_footer(TRUE);
-    }
-  }
-}        
+    print_header($day, $month, $year, $area, isset($room) ? $room : "");
+  ?>
+         <h1><?php echo get_vocab('invalid_booking'); ?></h1>
+         <p>
+           <?php echo get_vocab('must_set_description'); ?>
+         </p>
+  <?php
+    // Print footer and exit
+    print_footer(TRUE);
+  }       
 
+
+  if (($rep_type == REP_N_WEEKLY) && ($rep_num_weeks < 2))
+  {
+    print_header($day, $month, $year, $area, isset($room) ? $room : "");
+  ?>
+         <h1><?php echo get_vocab('invalid_booking'); ?></h1>
+         <p>
+           <?php echo get_vocab('you_have_not_entered')." ".get_vocab("useful_n-weekly_value"); ?>
+         </p>
+  <?php
+    // Print footer and exit
+    print_footer(TRUE);
+  }
+
+  if (count($is_mandatory_field))
+  {
+    foreach ($is_mandatory_field as $field => $value)
+    {
+      $field = preg_replace('/^entry\./', '', $field);
+      if ($value && ($custom_fields[$field] == ''))
+      {
+        print_header($day, $month, $year, $area, isset($room) ? $room : "");
+  ?>
+         <h1><?php echo get_vocab('invalid_booking'); ?></h1>
+         <p>
+           <?php echo get_vocab('missing_mandatory_field')." \"".
+             get_loc_field_name($tbl_entry, $field)."\""; ?>
+         </p>
+  <?php
+        // Print footer and exit
+        print_footer(TRUE);
+      }
+    }
+  }        
+}
 
 if ($enable_periods)
 {
@@ -465,7 +472,7 @@ if (!sql_mutex_lock("$tbl_entry"))
 
 // Validate the booking for (a) conflicting bookings and (b) conformance to rules
 $valid_booking = TRUE;
-$conflicts = "";          // Holds a list of all the conflicts (ideally this would be an array)
+$conflicts = array();     // Holds a list of all the conflicts
 $rules_broken = array();  // Holds an array of the rules that have been broken
 $skip_lists = array();    // Holds a 2D array of bookings to skip past.  Indexed
                           // by room id and start time
@@ -508,7 +515,7 @@ foreach ( $rooms as $room_id )
           // In both cases remember the conflict data.   (We don't at the
           // moment do anything with the data if we're skipping, but we might
           // in the future want to display a list of bookings we've skipped past)
-          $conflicts .= $tmp;
+          $conflicts = $conflicts + $tmp;  // array union
         }
         // if we're not an admin for this room, check that the booking
         // conforms to the booking policy
@@ -532,10 +539,11 @@ foreach ( $rooms as $room_id )
   else
   {
     $tmp = mrbsCheckFree($room_id, $starttime, $endtime-1, $ignore_id, 0);
+
     if (!empty($tmp))
       {
         $valid_booking = FALSE;
-        $conflicts .= $tmp;
+        $conflicts = $conflicts + $tmp;  // array union
       }
       // if we're not an admin for this room, check that the booking
       // conforms to the booking policy
@@ -551,6 +559,19 @@ foreach ( $rooms as $room_id )
   }
 
 } // end foreach rooms
+
+
+// If this is an Ajax request then we're just trying to find out whether the booking
+// would succeed if made.   We now know that, so output the results and exit.
+if ($ajax && function_exists('json_encode'))
+{
+  $result = array();
+  $result['rules_broken'] = $rules_broken;
+  $result['conflicts'] = $conflicts;
+  echo json_encode($result);
+  exit;
+}
+
 
 // If the rooms were free, go ahead an process the bookings
 if ($valid_booking)
@@ -758,7 +779,12 @@ if (!$valid_booking)
     echo get_vocab("conflict").":\n";
     echo "</p>\n";
     echo "<ul>\n";
-    echo $conflicts;
+    // get rid of duplicate messages
+    $conflicts = array_unique($conflicts);
+    foreach ($conflicts as $conflict)
+    {
+      echo "<li>$conflict</li>\n";
+    }
     echo "</ul>\n";
   }
 }
