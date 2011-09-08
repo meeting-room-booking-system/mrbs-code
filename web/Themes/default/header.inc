@@ -364,11 +364,15 @@ if ($page == 'edit_entry')
       
       foreach ($params as $param)
       {
+        // We need to exclude the disabled elements, because otherwise jQuery
+        // will pick them all up
+        ?>
+        formInput = form.find('[name="<?php echo $param ?>"]:not(:disabled)');
+        <?php
         // Scalar parameters (two types - checkboxes and the rest)
         if (strpos($param, '[]') === FALSE)
         {
           ?>
-          formInput = form.find('[name="<?php echo $param ?>"]');
           if (formInput.filter(':checkbox').length > 0)
           {
             params.<?php echo $param ?> = formInput.is(':checked') ? '1' : '';
@@ -383,7 +387,6 @@ if ($page == 'edit_entry')
         else
         {
           ?>
-          formInput = form.find('[name="<?php echo $param ?>"]');
           params['<?php echo $param ?>'] = [];
           if (formInput.filter(':checkbox').length > 0)
           {
@@ -829,6 +832,7 @@ if ($page == 'edit_entry')
     var maxWidth = Math.max(startWidth, endWidth) + 2;
     $(startId).width(maxWidth);
     $(endId).width(maxWidth);
+    
   } <?php // function adjustSlotSelectors() ?>
 
 <?php
