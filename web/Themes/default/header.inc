@@ -262,6 +262,14 @@ function datepicker_close(dateText, inst, formId)
     ?>
     adjustSlotSelectors(document.getElementById('main'));
     <?php
+    if (function_exists('json_encode'))
+    {
+      // If we're doing Ajax checking of the form then we have to validate
+      // the form when the datepicker is closed
+      ?>
+      checkValidBooking();
+      <?php
+    }
   }
   ?>
   if (formId)
@@ -331,6 +339,125 @@ if ($page == 'edit_area_room')
 
 if ($page == 'edit_entry')
 {
+
+  // Add Ajax capabilities (but only if we can return the result as a JSON object)
+  if (function_exists('json_encode'))
+  {
+    // Form an array of all the form parameters that could affect whether a booking can be made, ie
+    // whether it will conflict with another booking or break a policy rule.  (So for example 'name'
+    // and 'description' won't make any difference, but 'type' could be used in policy checking).
+    $params = array('area', 'rooms[]', 'create_by', 'type', 'all_day', 'id', 'rep_id', 'edit_type',
+                    'start_seconds', 'start_day', 'start_month', 'start_year',
+                    'end_seconds', 'end_day', 'end_month', 'end_year',
+                    'rep_type', 'rep_end_day', 'rep_end_month', 'rep_end_year', 'rep_day[]', 'rep_num_weeks');
+    
+    // function to check whether the proposed booking would (a) conflict with any other bookings
+    // and (b) conforms to the booking policies.   Makes an Ajax call to edit_entry_handler but does
+    // not actually make the booking.                
+    ?>
+    function checkValidBooking()
+    {
+      var params = {'ajax': 1}; // This is an Ajax request
+      var form = $('form#main');
+      var formInput;
+      <?php
+      
+      foreach ($params as $param)
+      {
+        // Scalar parameters (two types - checkboxes and the rest)
+        if (strpos($param, '[]') === FALSE)
+        {
+          ?>
+          formInput = form.find('[name="<?php echo $param ?>"]');
+          if (formInput.filter(':checkbox').length > 0)
+          {
+            params.<?php echo $param ?> = formInput.is(':checked') ? '1' : '';
+          }
+          else
+          {
+            params.<?php echo $param ?> = formInput.val();
+          }
+          <?php
+        }
+        // Array parameters (two types - checkboxes and the rest)
+        else
+        {
+          ?>
+          formInput = form.find('[name="<?php echo $param ?>"]');
+          params['<?php echo $param ?>'] = [];
+          if (formInput.filter(':checkbox').length > 0)
+          {
+            formInput.each(function(index) {
+                if ($(this).is(':checked'))
+                {
+                  params['<?php echo $param ?>'].push($(this).val());
+                }
+              });
+          }
+          else
+          {
+            formInput.each(function(index) {
+                params['<?php echo $param ?>'].push($(this).val());
+              });
+          }
+          <?php
+          // For some reason I don't understand, posting an empty array will
+          // give you a PHP array of ('') at the other end.    So to avoid
+          // that problem, delete the property if the array is empty
+          ?>
+          if (params['<?php echo $param ?>'].length == 0)
+          {
+            delete params['<?php echo $param ?>'];
+          }
+          <?php
+        }
+      }
+      ?>
+      $.post('edit_entry_handler.php', params, function(result) {
+          var conflictDiv = $('#conflict_check');
+          var checkMark = "\u2714";
+          var cross = "\u2718";
+          var titleText;
+          var patternSpan = /<span[\s\S]*span>/gi;
+          var patternTags = /<\S[^><]*>/g;
+          if (result.conflicts.length == 0)
+          {
+            conflictDiv.text(checkMark).attr('class', 'good').attr;
+            titleText = '<?php echo get_vocab("no_conflicts") ?>';
+          }
+          else
+          {
+            conflictDiv.text(cross).attr('class', 'bad');
+            titleText = '<?php echo get_vocab("conflict") ?>' + ":  \n\n";
+            for (var i=0; i<result.conflicts.length; i++)
+            {
+              titleText += '(' + (i+1).toString() + ') ';
+              <?php // strip out the <span> and its contents and then all other tags ?>
+              titleText += result.conflicts[i].replace(patternSpan, '').replace(patternTags, '') + "  \n";
+            }
+          }
+          conflictDiv.attr('title', titleText);
+          var policyDiv = $('#policy_check');
+          if (result.rules_broken.length == 0)
+          {
+            policyDiv.text(checkMark).attr('class', 'good');
+            titleText = '<?php echo get_vocab("no_rules_broken") ?>';
+          }
+          else
+          {
+            policyDiv.text(cross).attr('class', 'bad');
+            titleText = '<?php echo get_vocab("rules_broken") ?>' + ":  \n\n";
+            for (var i=0; i<result.rules_broken.length; i++)
+            {
+              titleText += '(' + (i+1).toString() + ') ' + result.rules_broken[i] + "  \n";
+            }
+          }
+          policyDiv.attr('title', titleText);
+        }, 'json');
+    }
+    <?php
+  }
+
   // Declare some variables to hold details of the slot selectors for each area.
   // We are going to store the contents of the selectors on page load
   // (when they will be fully populated with options) so that we can
@@ -830,6 +957,9 @@ $(window).load(function() {
   // complete that field, but if it's an existing booking you might
   // want to edit any field)
   // (2) Adjust the slot selectors
+  // (3) Add some Ajax capabilities to the form (if we can) so that when
+  //  a booking parameter is changed MRBS checks to see whether there would
+  //  be any conflicts
   if ($page == 'edit_entry')
   {
   ?>
@@ -917,6 +1047,43 @@ $(window).load(function() {
     ?>
     $('#all_day').attr('checked', true);
     OnAllDayClick(true);
+    <?php
+  }
+  
+  // Add Ajax capabilities (but only if we can return the result as a JSON object)
+  if (function_exists('json_encode'))
+  {
+    // Add a change event handler to each of the form fields so that when they change
+    // the validity of the booking is re-checked.   Use a click event for checkboxes
+    // as it seems that in some browsers the event fires before the value is changed.
+    
+    // Note that we also need to add change event handlers to the start and end
+    // datepicker input fields, but we have to that in datepicker_close()
+    ?>
+    var form = $('form#main');
+    var formInput;
+    <?php
+    foreach ($params as $param)
+    {
+      ?>
+      formInput = form.find('[name="<?php echo $param ?>"]');
+      if (formInput.filter(':checkbox').length > 0)
+      {
+        formInput.click(function() {
+            checkValidBooking();
+          });
+      }
+      else
+      {
+        formInput.change(function() {
+            checkValidBooking();
+          });
+      }  
+      <?php
+    }
+    ?>
+
+    checkValidBooking();
     <?php
   }
   ?>

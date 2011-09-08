@@ -13,7 +13,7 @@
  * 
  * Returns:
  *   nothing   - The area is free
- *   something - An error occured, the return value is human readable
+ *   something - An error occured, the return value is an array of conflicts
  */
 function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 {
@@ -54,8 +54,8 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
   // Get the room's area ID for linking to day, week, and month views:
   $area = mrbsGetRoomArea($room_id);
 
-  // Build a string listing all the conflicts:
-  $err = "";
+  // Build an listing all the conflicts:
+  $err = array();
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   {
     $starts = getdate($row['start_time']);
@@ -80,11 +80,12 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
        $row['name'] = get_vocab("private");
     }
 
-    $err .= "<li><a href=\"view_entry.php?id=".$row['id']."\">".$row['name']."</a>"
+    // enclose  the viewday etc. links in a span to make it easier for JavaScript to strip them out
+    $err[] = "<a href=\"view_entry.php?id=".$row['id']."\">".$row['name']."</a>"
       . " ( " . $startstr . ") "
-      . "(<a href=\"day.php?$param_ymd\">".get_vocab("viewday")."</a>"
+      . "<span>(<a href=\"day.php?$param_ymd\">".get_vocab("viewday")."</a>"
       . " | <a href=\"week.php?room=$room_id&amp;$param_ymd\">".get_vocab("viewweek")."</a>"
-      . " | <a href=\"month.php?room=$room_id&amp;$param_ym\">".get_vocab("viewmonth")."</a>)</li>\n";
+      . " | <a href=\"month.php?room=$room_id&amp;$param_ym\">".get_vocab("viewmonth")."</a>)</span>";
   }
 
   return $err;
