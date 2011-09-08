@@ -617,8 +617,8 @@ fieldset#rep_info {border-top: 1px solid <?php echo $site_faq_entry_border_color
 
 .form_general label.secondary {font-weight: normal; width: auto}
 
-div#conflict_check, div#policy_check {float: left; clear: none; width: auto; padding: 1em; cursor: default}
-div#conflict_check {margin-left: 2em}
+div#conflict_check, div#policy_check {float: left; clear: none; width: 2em; padding: 1em 0.5em; cursor: default}
+div#conflict_check {margin-left: 3em}
 div.good {color: green}
 div.bad {color: red}
 
