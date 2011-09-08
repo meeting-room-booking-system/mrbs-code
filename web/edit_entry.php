@@ -914,14 +914,14 @@ else
         var newEndId = "end_seconds" + area;
         var oldAreaStartValue = formObj[oldStartId].options[formObj[oldStartId].selectedIndex].value;
         var oldAreaEndValue = formObj[oldEndId].options[formObj[oldEndId].selectedIndex].value;
-        $("#" + oldStartId).css({display: "none"});
-        $("#" + oldStartId).attr('disabled', 'disabled');
-        $("#" + oldEndId).css({display: "none"});
-        $("#" + oldEndId).attr('disabled', 'disabled');
-        $("#" + newStartId).css({display: "block"});
-        $("#" + newStartId).removeAttr('disabled');
-        $("#" + newEndId).css({display: "block"});
-        $("#" + newEndId).removeAttr('disabled');
+        $("#" + oldStartId).hide()
+                           .attr('disabled', 'disabled');
+        $("#" + oldEndId).hide()
+                         .attr('disabled', 'disabled');
+        $("#" + newStartId).show()
+                           .removeAttr('disabled');
+        $("#" + newEndId).show()
+                         .removeAttr('disabled');
         var oldArea = currentArea;
         currentArea = area;
         prevStartValue = undefined;
@@ -1256,7 +1256,7 @@ else
     // The Submit button
     echo "<div id=\"edit_entry_submit_save\">\n";
     echo "<input class=\"submit\" type=\"submit\" name=\"save_button\" value=\"" .
-      get_vocab("save") . "\" onclick=\"return validate('main')\">\n";
+      get_vocab("save") . "\" onclick=\"if (validate('main')) this.form.submit(); return false\">\n";
     echo "</div>\n";
     
     // divs to hold the results of the Ajax checking of the booking
