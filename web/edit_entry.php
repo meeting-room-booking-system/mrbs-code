@@ -1256,7 +1256,7 @@ else
     // The Submit button
     echo "<div id=\"edit_entry_submit_save\">\n";
     echo "<input class=\"submit\" type=\"submit\" name=\"save_button\" value=\"" .
-      get_vocab("save") . "\" onclick=\"return validate('main')\">\n";
+      get_vocab("save") . "\" onclick=\"if (validate('main')) this.form.submit(); return false\">\n";
     echo "</div>\n";
     
     // divs to hold the results of the Ajax checking of the booking

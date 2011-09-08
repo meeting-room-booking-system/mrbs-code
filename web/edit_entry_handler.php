@@ -56,7 +56,7 @@ $formvars = array('create_by'         => 'string',
                   'end_year'          => 'int',
                   'back_button'       => 'string',
                   'ajax'              => 'int');
-                  
+                 
 foreach($formvars as $var => $var_type)
 {
   $$var = get_form_var($var, $var_type);
