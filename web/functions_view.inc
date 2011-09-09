@@ -115,9 +115,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   $value = $data['area_name'] . " - " . $data['room_name'];
   if ($room_disabled)
   {
-    $value .= ($as_html) ? "<span class=\"note\">" : "";
     $value .= " (" . get_vocab("disabled") . ")";
-    $value .= ($as_html) ? "</span>" : "";
   }
   $tbody .= create_details_row(get_vocab("room"), $value, $as_html);
   // Start date
