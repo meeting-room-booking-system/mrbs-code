@@ -143,7 +143,7 @@ function print_theme_header($day, $month, $year, $area, $room)
     
     <?php
     // dataTables initialisation
-    if (in_array($page, array('admin', 'edit_users', 'report')))
+    if (in_array($page, array('admin', 'edit_users', 'pending', 'report')))
     {
       // Include the JavaScript for those pages that use dataTables
       ?>
@@ -1270,8 +1270,32 @@ $(window).load(function() {
   // PENDING.PHP
   if ($page == 'pending')
   {
+    // (1) activate the sub tables
+    // (2) turn the table into a datatable
     ?>
     activate_sub_tables();
+    
+    var tableOptions = new Object();
+    <?php 
+    // Fix the left hand column.  This has to be done when 
+    // initialisation is complete as the language files are loaded
+    // asynchronously
+    ?>
+    tableOptions.fnInitComplete = function(){
+        new FixedColumns(pendingTable, {"iLeftColumns": 1,
+                                      "iLeftWidth": 30,
+                                      "sLeftWidth": "fixed"});
+      };
+    <?php
+    // Remove the first column from the column visibility
+    // list because it is fixed
+    ?>
+    tableOptions.oColVis = {aiExclude: [0]};
+    <?php
+    // and stop the first column being reordered
+    ?>
+    tableOptions.oColReorder = {"iFixedColumns": 1};
+    var pendingTable = makeDataTable('#pending_list', tableOptions);
     <?php
   }
 
