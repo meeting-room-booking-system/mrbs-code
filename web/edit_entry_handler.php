@@ -300,13 +300,13 @@ if (!$ajax)
       if ($value && ($custom_fields[$field] == ''))
       {
         print_header($day, $month, $year, $area, isset($room) ? $room : "");
-  ?>
-         <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-         <p>
-           <?php echo get_vocab('missing_mandatory_field')." \"".
-             get_loc_field_name($tbl_entry, $field)."\""; ?>
-         </p>
-  <?php
+        ?>
+        <h1><?php echo get_vocab('invalid_booking'); ?></h1>
+        <p>
+          <?php echo get_vocab('missing_mandatory_field')." \"".
+                     get_loc_field_name($tbl_entry, $field)."\""; ?>
+        </p>
+        <?php
         // Print footer and exit
         print_footer(TRUE);
       }
@@ -321,7 +321,7 @@ if ($enable_periods)
 
 // When All Day is checked, $start_seconds and $end_seconds are disabled and so won't
 // get passed through by the form.   We therefore need to set them.
-if (isset($all_day) && ($all_day == "yes"))
+if (!empty($all_day))
 {
   if ($enable_periods)
   {
