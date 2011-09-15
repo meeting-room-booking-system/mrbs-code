@@ -722,7 +722,21 @@ td#sticky_day {border: 1px dotted <?php echo $highlight_font_color ?>}
 td.mincals_week_number { opacity: 0.5; font-size: 60%; }
 
 /* ------------ PENDING.PHP ------------------*/
-table#pending_list {width: 100%}
+div#pending_list {width: 98%; padding: 2em 0 2em 1em}
+#pending_list form {float: left}
+#pending_list td.table_container, #pending_list td.sub_table {padding: 0; border: 0; margin: 0}
+#pending_list .control {padding-left: 0; padding-right: 0; text-align: center;
+                        color: <?php echo $standard_font_color ?>}
+#pending_list td.control {background-color: <?php echo $pending_control_color ?>}
+#pending_list td:first-child {width: 1.2em}
+table.admin_table.sub {border-right-width: 0}
+table.sub th {background-color: #788D9C}
+.admin_table table.sub th:first-child {background-color: <?php echo $pending_control_color ?>;
+    border-left-color: <?php echo $admin_table_border_color ?>}
+div.div_buttons {float: left; height: 2em}
+#pending_list form {margin: 2px 4px}
+<?php
+/*
 #pending_list form {float: left; margin: 0 0.5em}
 #pending_list table {width: 100%; border-spacing: 0px; border-collapse: collapse; border: 0}
 #pending_list td.sub_table {padding: 0; margin: 0}
@@ -745,6 +759,8 @@ table#pending_list {width: 100%}
 #pending_list th.header_room       {width: 10%}
 #pending_list th.header_action     {width: 20em}
 #pending_list table th.header_start_time {text-transform: uppercase}
+*/
+?>
 
 
 /* ------------ REPORT.PHP ----------------------*/

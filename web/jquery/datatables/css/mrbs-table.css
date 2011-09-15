@@ -40,6 +40,11 @@
   zoom: 1; /* Feeling sorry for IE */
 }
 
+.table_container .dataTables_wrapper {
+  min-height: 0;
+  _height: 0;
+}
+
 .dataTables_processing {
   position: absolute;
   top: 12em;
@@ -179,11 +184,11 @@ table.display th {
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables row classes
  */
-table.display tr.odd.gradeA {
+table.display.sub tr.odd {
   background-color: #ddffdd;
 }
 
-table.display tr.even.gradeA {
+table.display.sub tr.even {
   background-color: #eeffee;
 }
 
@@ -356,27 +361,27 @@ tr.even td.sorting_3 {
     dd > d1
     ee > e2
  */
-tr.odd.gradeA td.sorting_1 {
+table.sub tr.odd td.sorting_1 {
   background-color: #c4ffc4;
 }
 
-tr.odd.gradeA td.sorting_2 {
+table.sub tr.odd td.sorting_2 {
   background-color: #d1ffd1;
 }
 
-tr.odd.gradeA td.sorting_3 {
+table.sub tr.odd td.sorting_3 {
   background-color: #d1ffd1;
 }
 
-tr.even.gradeA td.sorting_1 {
+table.sub tr.even td.sorting_1 {
   background-color: #d5ffd5;
 }
 
-tr.even.gradeA td.sorting_2 {
+table.sub tr.even td.sorting_2 {
   background-color: #e2ffe2;
 }
 
-tr.even.gradeA td.sorting_3 {
+table.sub tr.even td.sorting_3 {
   background-color: #e2ffe2;
 }
 

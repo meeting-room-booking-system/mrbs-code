@@ -929,82 +929,9 @@ if ($page == 'edit_entry')
 <?php
 }  // edit_entry
 
-
-if ($page == 'pending')
-{
 ?>
-  // test whether array contains element
-  function contains(array, element)
-  {
-    for (var i=0; i<array.length; i++)
-    {
-      if (array[i] == element)
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-  
-  // Remove duplicates from an array
-  function unique(array)
-  {
-    temp = new Array();
-    for (var i=0; i<array.length; i++)
-    {
-      if (!contains(temp, array[i]))
-      {
-        temp.push(array[i]);
-      }
-    }
-    return temp;
-  }
-  
-  // Toggle a sub-table in the pending_list table to make it maximised/minimised
-  function toggle_table(id)
-  { 
-    var table = document.getElementById(id);
-    if (table.className == 'minimised')
-    {
-      table.className = 'maximised';
-      table.firstChild.firstChild.firstChild.innerHTML = '-';
-    }
-    else
-    {
-      table.className = 'minimised';
-      table.firstChild.firstChild.firstChild.innerHTML = '+';
-    }
-  }
 
-  
-  // Put a + control in the first cell of all the series headers on the pending.php page
-  // and minimise the tables (except for those tables listed in the cookie)
-  function activate_sub_tables()
-  {
-    // Go through each sub-table and minimise it
-    var tables = document.getElementsByTagName('table');
-    for (var i = 0; (element = tables[i]) != null; i++)
-    {
-      if (tables[i].className.indexOf('maximised') >= 0)
-      {
-        tables[i].className = 'minimised';
-        tables[i].firstChild.firstChild.firstChild.innerHTML = '+'; 
-      } 
-    }
-     
-    // now make the table visible (if it's there at all - which it won't be when you 
-    // log off from pending.php
-    if (document.getElementById('pending_list'))
-    {
-      document.getElementById('pending_list').style.visibility = 'visible';
-    }
-  }
-  
-  
-  
-<?php
-} // pending
-?>
+
 
 $(window).load(function() {
 
@@ -1270,23 +1197,105 @@ $(window).load(function() {
   // PENDING.PHP
   if ($page == 'pending')
   {
-    // (1) activate the sub tables
-    // (2) turn the table into a datatable
+    // Turn the table into a datatable, with subtables that appear/disappear when
+    // the control is clicked, with the subtables also being datatables.  Note though
+    // that the main and sub-datatables are independent and we only display the main search
+    // box which just applies to the main table rows.  (I suppose it would be possible to do
+    // something clever with the main search box and get it to search the subtables as well)
+    //
     ?>
-    activate_sub_tables();
+    var maintable = $('#pending_table');
+    <?php
+    // Add a '-' control to the subtables and make them close on clicking it
+    ?>
+    maintable.find('table.sub th.control')
+             .text('-')
+             .live('click', function (event) {
+                  var nTr = $(this).parents('.table_container').parent().prev();
+                  var serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
+                  $('#subtable_' + serial + '_wrapper').slideUp( function () {
+                      pendingTable.fnClose(nTr.get(0));
+                      nTr.show();
+                    });
+                });
+    <?php
+    // Detach all the subtables from the DOM (detach keeps a copy) so that they
+    // don't appear, but so that we've got the data when we want to "open" a row
+    ?>
+    var subtables = maintable.find('tr.sub_table').detach();
+    <?php
+    // Set up the column definitions, fixing the widths of the first and last columns
+    ?>
+    var actionWidth = $('div.div_buttons').eq(0).outerWidth() + 30;  <?php // 30 to allow for padding in the <td> ?>
+    var colDefsMain = [{"sWidth": "1.2em", "aTargets": [0] },
+                       {"sWidth": actionWidth + "px", "aTargets": [6] }];
+    var colDefsSub = colDefsMain.slice(0);
+    colDefsSub.push({"bSortable": false, "aTargets": [ 0 ]});
     
+    <?php
+    // Set up a click event that "opens" the table row and inserts the subtable
+    ?>
+    maintable.find('td.control')
+             .text('+')
+             .live('click', function (event) {
+                  var nTr = $(this).parent();
+                  var serial = nTr.attr('id').replace('row_', '');
+                  var subtableId = 'subtable_' + serial;
+                  var subtable = subtables.find('#' + subtableId).parent().clone();
+                                   
+                  var colDefsSub = [{"bAutoWidth": false}];
+                  var columns = [];
+                  
+                  <?php
+                  // We want the columns in the main and sub tables to align.  So
+                  // find the widths of the main table columns and use those values
+                  // to set the widths of the subable columns.   [This doesn't work
+                  // 100% - I'm not sure why - but I have left the code in]
+                  ?>
+                  maintable.find('tr').eq(0).find('th').each(function(i){
+                      var def = new Object();
+                      if (i == 0)
+                      {
+                        def.bSortable = false;
+                      }
+                      def.sWidth = ($(this).innerWidth()) + "px";
+                      columns.push(def);
+                    });
+
+                  nTr.hide();
+                  pendingTable.fnOpen(nTr.get(0), subtable.get(0), 'table_container');
+
+                  $('#' + subtableId).dataTable({"bAutoWidth": false,
+                                                 "sDom": 't',
+                                                 "aoColumns": columns});
+
+                  $('#subtable_' + serial + '_wrapper').hide().slideDown();
+                });
+                  
+    <?php // Turn the table into a datatable ?>
     var tableOptions = new Object();
+    tableOptions.aoColumnDefs = colDefsMain;
+    <?php
+    // For some reason I don't understand, fnOpen() doesn't seem to work when
+    // using FixedColumns.    You also have to disable bStateSave to get it to work.
+    // I have raised this on the dataTables forum.  In the meantime we disable
+    // bStateSave and sScrollX and comment out the FixedColumns.
+    ?>
+    tableOptions.bStateSave = false;
+    tableOptions.sScrollX = '';
     <?php 
     // Fix the left hand column.  This has to be done when 
     // initialisation is complete as the language files are loaded
     // asynchronously
+    /*
     ?>
     tableOptions.fnInitComplete = function(){
         new FixedColumns(pendingTable, {"iLeftColumns": 1,
-                                      "iLeftWidth": 30,
-                                      "sLeftWidth": "fixed"});
+                                        "iLeftWidth": 30,
+                                        "sLeftWidth": "fixed"});
       };
     <?php
+    */
     // Remove the first column from the column visibility
     // list because it is fixed
     ?>
@@ -1295,7 +1304,8 @@ $(window).load(function() {
     // and stop the first column being reordered
     ?>
     tableOptions.oColReorder = {"iFixedColumns": 1};
-    var pendingTable = makeDataTable('#pending_list', tableOptions);
+    var pendingTable = makeDataTable('#pending_table', tableOptions);
+
     <?php
   }
 

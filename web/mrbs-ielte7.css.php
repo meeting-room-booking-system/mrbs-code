@@ -59,6 +59,15 @@ if (!$clipped)
 }
 ?>
 
+/* ------------ PENDING.PHP ---------------------*/
+<?php
+// Not quite sure why this is necessary for IE7.   Without it
+// the subtable is clipped.   With it it's not perfect:  the table and
+// the sub-table expand to the right
+?>
+#pending_list table.sub {
+  table-layout: auto;
+}
 
 /* ------------ TRAILER.INC ---------------------*/
 
