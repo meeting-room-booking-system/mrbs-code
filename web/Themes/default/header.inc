@@ -189,7 +189,7 @@ function print_theme_header($day, $month, $year, $area, $room)
         {
           if (lteIE6)
           {
-            return FALSE;
+            return false;
           }
           else
           {
@@ -461,7 +461,7 @@ if ($page == 'edit_entry')
         formInput = form.find('[name="<?php echo $param ?>"]:not(:disabled)');
         <?php
         // Scalar parameters (two types - checkboxes and the rest)
-        if (strpos($param, '[]') === FALSE)
+        if (strpos($param, '[]') === false)
         {
           ?>
           if (formInput.filter(':checkbox').length > 0)
@@ -1204,108 +1204,110 @@ $(window).load(function() {
     // something clever with the main search box and get it to search the subtables as well)
     //
     ?>
-    var maintable = $('#pending_table');
-    <?php
-    // Add a '-' control to the subtables and make them close on clicking it
-    ?>
-    maintable.find('table.sub th.control')
-             .text('-')
-             .live('click', function (event) {
-                  var nTr = $(this).parents('.table_container').parent().prev();
-                  var serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
-                  $('#subtable_' + serial + '_wrapper').slideUp( function () {
-                      pendingTable.fnClose(nTr.get(0));
-                      nTr.show();
-                    });
-                });
-    <?php
-    // Detach all the subtables from the DOM (detach keeps a copy) so that they
-    // don't appear, but so that we've got the data when we want to "open" a row
-    ?>
-    var subtables = maintable.find('tr.sub_table').detach();
-    <?php
-    // Set up the column definitions, fixing the widths of the first and last columns
-    ?>
-    var actionWidth = $('div.div_buttons').eq(0).outerWidth() + 30;  <?php // 30 to allow for padding in the <td> ?>
-    var colDefsMain = [{"sWidth": "1.2em", "aTargets": [0] },
-                       {"sWidth": actionWidth + "px", "aTargets": [6] }];
-    var colDefsSub = colDefsMain.slice(0);
-    colDefsSub.push({"bSortable": false, "aTargets": [ 0 ]});
+    if (!lteIE6)
+    {
+      var maintable = $('#pending_table');
+      <?php
+      // Add a '-' control to the subtables and make them close on clicking it
+      ?>
+      maintable.find('table.sub th.control')
+               .text('-')
+               .live('click', function (event) {
+                    var nTr = $(this).parents('.table_container').parent().prev();
+                    var serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
+                    $('#subtable_' + serial + '_wrapper').slideUp( function () {
+                        pendingTable.fnClose(nTr.get(0));
+                        nTr.show();
+                      });
+                  });
+      <?php
+      // Detach all the subtables from the DOM (detach keeps a copy) so that they
+      // don't appear, but so that we've got the data when we want to "open" a row
+      ?>
+      var subtables = maintable.find('tr.sub_table').detach();
+      <?php
+      // Set up the column definitions, fixing the widths of the first and last columns
+      ?>
+      var actionWidth = $('div.div_buttons').eq(0).outerWidth() + 30;  <?php // 30 to allow for padding in the <td> ?>
+      var colDefsMain = [{"sWidth": "1.2em", "aTargets": [0] },
+                         {"sWidth": actionWidth + "px", "aTargets": [6] }];
+      var colDefsSub = colDefsMain.slice(0);
+      colDefsSub.push({"bSortable": false, "aTargets": [ 0 ]});
     
-    <?php
-    // Set up a click event that "opens" the table row and inserts the subtable
-    ?>
-    maintable.find('td.control')
-             .text('+')
-             .live('click', function (event) {
-                  var nTr = $(this).parent();
-                  var serial = nTr.attr('id').replace('row_', '');
-                  var subtableId = 'subtable_' + serial;
-                  var subtable = subtables.find('#' + subtableId).parent().clone();
+      <?php
+      // Set up a click event that "opens" the table row and inserts the subtable
+      ?>
+      maintable.find('td.control')
+               .text('+')
+               .live('click', function (event) {
+                    var nTr = $(this).parent();
+                    var serial = nTr.attr('id').replace('row_', '');
+                    var subtableId = 'subtable_' + serial;
+                    var subtable = subtables.find('#' + subtableId).parent().clone();
                                    
-                  var colDefsSub = [{"bAutoWidth": false}];
-                  var columns = [];
+                    var colDefsSub = [{"bAutoWidth": false}];
+                    var columns = [];
                   
-                  <?php
-                  // We want the columns in the main and sub tables to align.  So
-                  // find the widths of the main table columns and use those values
-                  // to set the widths of the subable columns.   [This doesn't work
-                  // 100% - I'm not sure why - but I have left the code in]
-                  ?>
-                  maintable.find('tr').eq(0).find('th').each(function(i){
-                      var def = new Object();
-                      if (i == 0)
-                      {
-                        def.bSortable = false;
-                      }
-                      def.sWidth = ($(this).innerWidth()) + "px";
-                      columns.push(def);
-                    });
+                    <?php
+                    // We want the columns in the main and sub tables to align.  So
+                    // find the widths of the main table columns and use those values
+                    // to set the widths of the subable columns.   [This doesn't work
+                    // 100% - I'm not sure why - but I have left the code in]
+                    ?>
+                    maintable.find('tr').eq(0).find('th').each(function(i){
+                        var def = new Object();
+                        if (i == 0)
+                        {
+                          def.bSortable = false;
+                        }
+                        def.sWidth = ($(this).innerWidth()) + "px";
+                        columns.push(def);
+                      });
 
-                  nTr.hide();
-                  pendingTable.fnOpen(nTr.get(0), subtable.get(0), 'table_container');
+                    nTr.hide();
+                    pendingTable.fnOpen(nTr.get(0), subtable.get(0), 'table_container');
 
-                  $('#' + subtableId).dataTable({"bAutoWidth": false,
-                                                 "sDom": 't',
-                                                 "aoColumns": columns});
+                    $('#' + subtableId).dataTable({"bAutoWidth": false,
+                                                   "sDom": 't',
+                                                   "aoColumns": columns});
 
-                  $('#subtable_' + serial + '_wrapper').hide().slideDown();
-                });
+                    $('#subtable_' + serial + '_wrapper').hide().slideDown();
+                  });
                   
-    <?php // Turn the table into a datatable ?>
-    var tableOptions = new Object();
-    tableOptions.aoColumnDefs = colDefsMain;
-    <?php
-    // For some reason I don't understand, fnOpen() doesn't seem to work when
-    // using FixedColumns.    You also have to disable bStateSave to get it to work.
-    // I have raised this on the dataTables forum.  In the meantime we disable
-    // bStateSave and sScrollX and comment out the FixedColumns.
-    ?>
-    tableOptions.bStateSave = false;
-    tableOptions.sScrollX = '';
-    <?php 
-    // Fix the left hand column.  This has to be done when 
-    // initialisation is complete as the language files are loaded
-    // asynchronously
-    /*
-    ?>
-    tableOptions.fnInitComplete = function(){
-        new FixedColumns(pendingTable, {"iLeftColumns": 1,
-                                        "iLeftWidth": 30,
-                                        "sLeftWidth": "fixed"});
-      };
-    <?php
-    */
-    // Remove the first column from the column visibility
-    // list because it is fixed
-    ?>
-    tableOptions.oColVis = {aiExclude: [0]};
-    <?php
-    // and stop the first column being reordered
-    ?>
-    tableOptions.oColReorder = {"iFixedColumns": 1};
-    var pendingTable = makeDataTable('#pending_table', tableOptions);
-
+      <?php // Turn the table into a datatable ?>
+      var tableOptions = new Object();
+      tableOptions.aoColumnDefs = colDefsMain;
+      <?php
+      // For some reason I don't understand, fnOpen() doesn't seem to work when
+      // using FixedColumns.    You also have to disable bStateSave to get it to work.
+      // I have raised this on the dataTables forum.  In the meantime we disable
+      // bStateSave and sScrollX and comment out the FixedColumns.
+      ?>
+      tableOptions.bStateSave = false;
+      tableOptions.sScrollX = '';
+      <?php 
+      // Fix the left hand column.  This has to be done when 
+      // initialisation is complete as the language files are loaded
+      // asynchronously
+      /*
+      ?>
+      tableOptions.fnInitComplete = function(){
+          new FixedColumns(pendingTable, {"iLeftColumns": 1,
+                                          "iLeftWidth": 30,
+                                          "sLeftWidth": "fixed"});
+        };
+      <?php
+      */
+      // Remove the first column from the column visibility
+      // list because it is fixed
+      ?>
+      tableOptions.oColVis = {aiExclude: [0]};
+      <?php
+      // and stop the first column being reordered
+      ?>
+      tableOptions.oColReorder = {"iFixedColumns": 1};
+      var pendingTable = makeDataTable('#pending_table', tableOptions);
+    }  // if (!lteie6)
     <?php
   }
 
