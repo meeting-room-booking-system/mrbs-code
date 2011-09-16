@@ -66,7 +66,7 @@ if (!$clipped)
 // the sub-table expand to the right
 ?>
 #pending_list table.sub {
-  table-layout: auto;
+  table-layout: fixed;
 }
 
 /* ------------ TRAILER.INC ---------------------*/

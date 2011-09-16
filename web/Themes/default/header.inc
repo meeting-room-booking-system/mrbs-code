@@ -1227,13 +1227,17 @@ $(window).load(function() {
       var subtables = maintable.find('tr.sub_table').detach();
       <?php
       // Set up the column definitions, fixing the widths of the first and last columns
+      // Get the width of the last column by finding the width of the largest content
+      // (assuming all the content is wrapped in the first child)
       ?>
-      var actionWidth = $('div.div_buttons').eq(0).outerWidth() + 30;  <?php // 30 to allow for padding in the <td> ?>
+      var maxActionWidth = 0;
+      $('th:last-child, td:last-child').each(function() {
+          var actionWidth = $(this).children().eq(0).outerWidth(true);
+          maxActionWidth = Math.max(maxActionWidth, actionWidth);
+        });
+      maxActionWidth += 16; <?php // to allow for padding in the <td> ?>
       var colDefsMain = [{"sWidth": "1.2em", "aTargets": [0] },
-                         {"sWidth": actionWidth + "px", "aTargets": [6] }];
-      var colDefsSub = colDefsMain.slice(0);
-      colDefsSub.push({"bSortable": false, "aTargets": [ 0 ]});
-    
+                         {"sWidth": maxActionWidth + "px", "aTargets": [6] }];
       <?php
       // Set up a click event that "opens" the table row and inserts the subtable
       ?>
@@ -1243,11 +1247,8 @@ $(window).load(function() {
                     var nTr = $(this).parent();
                     var serial = nTr.attr('id').replace('row_', '');
                     var subtableId = 'subtable_' + serial;
-                    var subtable = subtables.find('#' + subtableId).parent().clone();
-                                   
-                    var colDefsSub = [{"bAutoWidth": false}];
-                    var columns = [];
-                  
+                    var subtable = subtables.find('#' + subtableId).parent().clone();                                
+                    var columns = [];          
                     <?php
                     // We want the columns in the main and sub tables to align.  So
                     // find the widths of the main table columns and use those values
@@ -1284,7 +1285,7 @@ $(window).load(function() {
       // bStateSave and sScrollX and comment out the FixedColumns.
       ?>
       tableOptions.bStateSave = false;
-      tableOptions.sScrollX = '';
+      tableOptions.sScrollX = '100%';
       <?php 
       // Fix the left hand column.  This has to be done when 
       // initialisation is complete as the language files are loaded

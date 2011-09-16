@@ -66,7 +66,7 @@ table:hover.naked {cursor: pointer}   /* set cursor to pointer; if you don't it 
 table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_border_color ?>; border-style: solid;
     border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
 .admin_table th, .admin_table td {vertical-align: middle; text-align: left;
-    padding: 0.1em 0.5em 0.1em 0.5em;
+    padding: 0.1em 8px 0.1em 8px;
     border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;}
 .admin_table th {color: <?php echo $admin_table_header_font_color ?>; 
     background-color: <?php echo $admin_table_header_back_color ?>}
@@ -723,7 +723,7 @@ td.mincals_week_number { opacity: 0.5; font-size: 60%; }
 
 /* ------------ PENDING.PHP ------------------*/
 div#pending_list {width: 98%; padding: 2em 0 2em 1em}
-#pending_list form {float: left}
+#pending_list form {display: inline-block}
 #pending_list td.table_container, #pending_list td.sub_table {padding: 0; border: 0; margin: 0}
 #pending_list .control {padding-left: 0; padding-right: 0; text-align: center;
                         color: <?php echo $standard_font_color ?>}
