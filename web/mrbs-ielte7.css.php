@@ -68,6 +68,7 @@ if (!$clipped)
 #pending_list table.sub {
   table-layout: fixed;
 }
+#pending_list form {display: inline}
 
 /* ------------ TRAILER.INC ---------------------*/
 
