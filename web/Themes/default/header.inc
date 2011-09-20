@@ -42,7 +42,7 @@ function generate_autocomplete($id, $options)
     // because the browser doesn't render the autocomplete box properly - it
     // gets hidden behind other elements.   Although there are fixes for this,
     // it's not worth it ...
-    $js .= "if ($('#ielte6').length == 0)\n";
+    $js .= "if (!lteIE6)\n";
     $js .= "{\n";
     $js .= "  $('#$id').autocomplete({\n";
     $js .= "    source: [$options_string],\n";
@@ -140,7 +140,21 @@ function print_theme_header($day, $month, $year, $area, $room)
     ?>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-US.js"></script>
-    
+     
+    <?php // Work out if we're using IE6 or below ?>
+    <script type="text/javascript">
+      //<![CDATA[
+      var lteIE6 = false;
+      //]]>
+    </script>
+    <!--[if lte IE 6]>
+    <script type="text/javascript">
+      //<![CDATA[
+      var lteIE6 = true;
+      //]]>
+    </script>
+    <![endif]-->
+      
     <?php
     // dataTables initialisation
     if (in_array($page, array('admin', 'edit_users', 'pending', 'report')))
@@ -152,20 +166,6 @@ function print_theme_header($day, $month, $year, $area, $room)
       <script type="text/javascript" src="jquery/datatables/js/ColVis.min.js"></script>
       <script type="text/javascript" src="jquery/datatables/js/FixedColumns.min.js"></script>
       <script type="text/javascript" src="jquery/datatables/js/plugins.js"></script>
-      
-      <?php // Work out if we're using IE6 or below ?>
-      <script type="text/javascript">
-        //<![CDATA[
-        var lteIE6 = false;
-        //]]>
-      </script>
-      <!--[if lte IE 6]>
-      <script type="text/javascript">
-        //<![CDATA[
-        var lteIE6 = true;
-        //]]>
-      </script>
-      <![endif]-->
       
       <script type="text/javascript">
         //<![CDATA[
@@ -1546,14 +1546,6 @@ $(window).load(function() {
     </script> 
 
     <div class="screenonly">
-    
-    <?php
-    // Add in some markers so that the JavaScript can work out
-    // which browser we're using
-    ?>
-    <!--[if lte IE 6 ]>
-    <span id="ielte6"></span>
-    <![endif]-->
 
 <?php // show a warning if this is using a low version of php
   if (substr(phpversion(), 0, 1) == 3)
