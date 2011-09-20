@@ -9,7 +9,7 @@
 *         $auth["type"]  = "config";
 *
 *          Then for each user, add an entry formatted as:
-*         $auth["user"]["username"] == "userpassword";
+*         $auth["user"]["username"] = "userpassword";
 *
 *   History
 *    Available in the source control system
