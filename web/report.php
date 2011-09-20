@@ -225,9 +225,9 @@ function report_row(&$row, $sortby)
   }
   else
   {
-    // Include the numeric start time in a non-displayed span so that
-    // the column can be sorted properly
-    $values[] = "<span>" . $row['start_time'] . "</span>" . escape($start_date);
+    // Include the numeric start time as a title in an empty span so
+    // that the column can be sorted and filtered properly
+    $values[] = "<span title=\"" . $row['start_time'] . "\"></span>" . escape($start_date);
   }
   
   // End date
@@ -245,9 +245,9 @@ function report_row(&$row, $sortby)
   }
   else
   {
-    // Include the numeric start time in a non-displayed span so that
-    // the column can be sorted properly
-    $values[] = "<span>" . $row['end_time'] . "</span>" . escape($end_date);
+    // Include the numeric end time as a title in an empty span so
+    // that the column can be sorted and filtered properly
+    $values[] = "<span title=\"" . $row['end_time'] . "\"></span>" . escape($end_date);
   }
   
   // Duration
