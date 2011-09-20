@@ -240,7 +240,7 @@ if (sql_count($res) == 0)
 }
 else  // display them in a table
 {
-  echo "<div id=\"pending_list\">\n";
+  echo "<div id=\"pending_list\" class=\"datatable_container\">\n";
   echo "<table id=\"pending_table\" class=\"admin_table display\">\n";
   display_table_head();
   

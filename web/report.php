@@ -151,7 +151,7 @@ function open_report()
   
   if ($output_as_html && !$ajax)
   {
-    echo "<div id=\"report_output\">\n";
+    echo "<div id=\"report_output\" class=\"datatable_container\">\n";
     echo "<table class=\"admin_table display\" id=\"report_table\">\n";
   }
   report_header();

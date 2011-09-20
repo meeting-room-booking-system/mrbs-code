@@ -246,7 +246,7 @@ if ($is_admin || ($n_displayable_areas > 0))
       }
       else
       {
-        echo "<div id=\"room_info\">\n";
+        echo "<div id=\"room_info\" class=\"datatable_container\">\n";
         // Build the table.    We deal with the name and disabled columns
         // first because they are not necessarily the first two columns in
         // the table (eg if you are running PostgreSQL and have upgraded your

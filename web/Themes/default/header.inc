@@ -211,7 +211,6 @@ function print_theme_header($day, $month, $year, $area, $room)
             defaultOptions.bStateSave = true;
             defaultOptions.sDom = 'RC<"clear">lfrtip';
             defaultOptions.sScrollX = "100%";
-            defaultOptions.sScrollXInner = "100%";
             defaultOptions.sPaginationType = "full_numbers";
             defaultOptions.oColVis = {sSize: "css",
                                       buttonText: '<?php echo get_vocab("show_hide_columns") ?>',
@@ -937,7 +936,9 @@ if ($page == 'edit_entry')
 
 ?>
 
-
+$(document).ready(function() {
+  $('.datatable_container').css('visibility', 'none');
+});
 
 $(window).load(function() {
 
@@ -948,6 +949,7 @@ $(window).load(function() {
   {
     logonForm.NewUserName.focus();
   }
+  
 
   <?php
   // ADMIN.PHP
@@ -972,6 +974,7 @@ $(window).load(function() {
         new FixedColumns(roomsTable, {"iLeftColumns": nFixedColumns,
                                       "iLeftWidth": 30,
                                       "sLeftWidth": "relative"});
+        $('.js div.datatable_container').css('visibility', 'visible');
       };
     <?php
     // Remove the fixed columns from the column visibility
@@ -1184,6 +1187,7 @@ $(window).load(function() {
         new FixedColumns(usersTable, {"iLeftColumns": 2,
                                       "iLeftWidth": 30,
                                       "sLeftWidth": "relative"});
+        $('.js div.datatable_container').css('visibility', 'visible');
       };
     <?php
     // Remove the first two columns from the column visibility
@@ -1284,6 +1288,7 @@ $(window).load(function() {
       <?php // Turn the table into a datatable ?>
       var tableOptions = new Object();
       tableOptions.aoColumnDefs = colDefsMain;
+      tableOptions.sScrollXInner = "100%";
       <?php
       // For some reason I don't understand, fnOpen() doesn't seem to work when
       // using FixedColumns.   We also have to turn off bStateSave.  I have raised
@@ -1294,16 +1299,16 @@ $(window).load(function() {
       // Fix the left hand column.  This has to be done when 
       // initialisation is complete as the language files are loaded
       // asynchronously
-
-      /*
       ?>
       tableOptions.fnInitComplete = function(){
+          /*
           new FixedColumns(pendingTable, {"iLeftColumns": 1,
                                           "iLeftWidth": 30,
                                           "sLeftWidth": "fixed"});
+          */
+          $('.js div.datatable_container').css('visibility', 'visible');
         };
       <?php
-      */
       // Remove the first column from the column visibility
       // list because it is fixed
       ?>
@@ -1387,6 +1392,7 @@ $(window).load(function() {
         var oFC = new FixedColumns(reportTable, {"iLeftColumns": 3,
                                                  "iLeftWidth": 30,
                                                  "sLeftWidth": "relative"});
+        $('.js div.datatable_container').css('visibility', 'visible');
         <?php 
         // Also add a "Delete entries button", provided that (a) the user is an
         // admin and (b) the configuration allows it
@@ -1530,8 +1536,14 @@ $(window).load(function() {
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
   echo "<body class=\"".htmlspecialchars($page)."\">\n";
+   
+    // Add a class of "js" so that we know if we're using JavaScript or not
   ?>
-
+    <script type="text/javascript">
+      //<![CDATA[
+      $('body').addClass('js');
+      //]]>
+    </script> 
 
     <div class="screenonly">
     

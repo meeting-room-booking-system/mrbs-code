@@ -114,6 +114,9 @@
 }
 
 
+.js div.datatable_container {
+  visibility: hidden;
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables display

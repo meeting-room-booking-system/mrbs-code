@@ -744,7 +744,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   // Display the data in a table
   $ignore_columns = array('id', 'password'); // We don't display these columns
   
-  echo "<div id=\"user_list\">\n";
+  echo "<div id=\"user_list\" class=\"datatable_container\">\n";
   echo "<table class=\"admin_table display\" id=\"users_table\">\n";
   
   // The table header
