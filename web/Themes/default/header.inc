@@ -222,7 +222,12 @@ function print_theme_header($day, $month, $year, $area, $room)
             // merge.
             ?>
             var mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);  
-            return $(id).dataTable(mergedOptions);
+            var oTable = $(id).dataTable(mergedOptions);
+            <?php // Need to redraw the datatable when the browser window is resized ?>
+            $(window).bind('resize', function () {
+                oTable.fnDraw();
+              });
+            return oTable;
           }
         }
         
