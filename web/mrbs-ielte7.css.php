@@ -65,9 +65,7 @@ if (!$clipped)
 // the subtable is clipped.   With it it's not perfect:  the table and
 // the sub-table expand to the right
 ?>
-#pending_list table.sub {
-  table-layout: fixed;
-}
+
 #pending_list form {display: inline}
 
 /* ------------ TRAILER.INC ---------------------*/

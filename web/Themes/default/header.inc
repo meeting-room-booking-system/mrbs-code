@@ -154,6 +154,20 @@ function print_theme_header($day, $month, $year, $area, $room)
       //]]>
     </script>
     <![endif]-->
+    
+    <?php // Work out if we're using IE7 or below ?>
+    <script type="text/javascript">
+      //<![CDATA[
+      var lteIE7 = false;
+      //]]>
+    </script>
+    <!--[if lte IE 7]>
+    <script type="text/javascript">
+      //<![CDATA[
+      var lteIE7 = true;
+      //]]>
+    </script>
+    <![endif]-->
       
     <?php
     // dataTables initialisation
@@ -189,6 +203,7 @@ function print_theme_header($day, $month, $year, $area, $room)
         {
           if (lteIE6)
           {
+            $('.js div.datatable_container').css('visibility', 'visible');
             return false;
           }
           else
@@ -1213,8 +1228,14 @@ $(window).load(function() {
     // box which just applies to the main table rows.  (I suppose it would be possible to do
     // something clever with the main search box and get it to search the subtables as well)
     //
+    // The datatables with subtables don't seem to work properly in IE7, so don't
+    // bother with them if we're using IE7
     ?>
-    if (!lteIE6)
+    if (lteIE7)
+    {
+      $('.js div.datatable_container').css('visibility', 'visible');
+    }
+    else
     {
       var maintable = $('#pending_table');
       <?php

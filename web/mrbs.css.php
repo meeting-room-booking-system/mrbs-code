@@ -747,6 +747,7 @@ div#pending_list {width: 98%; padding: 2em 0 2em 1em}
                         color: <?php echo $standard_font_color ?>}
 #pending_list td.control {background-color: <?php echo $pending_control_color ?>}
 #pending_list td:first-child {width: 1.2em}
+#pending_list #pending_table td.sub_table {width: auto}
 table.admin_table.sub {border-right-width: 0}
 table.sub th {background-color: #788D9C}
 .admin_table table.sub th:first-child {background-color: <?php echo $pending_control_color ?>;
