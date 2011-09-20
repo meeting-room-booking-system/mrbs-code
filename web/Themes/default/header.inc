@@ -377,6 +377,10 @@ if ($page == 'edit_entry')
           {
             params.<?php echo $param ?> = formInput.is(':checked') ? '1' : '';
           }
+          else if (formInput.filter(':radio').length > 0)
+          {
+            params.<?php echo $param ?> = formInput.filter(':checked').val();
+          }
           else
           {
             params.<?php echo $param ?> = formInput.val();
