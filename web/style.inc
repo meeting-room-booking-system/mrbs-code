@@ -10,11 +10,7 @@
 ?>
     <link rel="stylesheet" href="mrbs.css.php" type="text/css">
     <link rel="stylesheet" media="print" href="mrbs-print.css.php" type="text/css">
-    <?php
-    // JavaScript overrides first, followed by the IE overrides.   This allows
-    // the IE overrides to override the JavaScript overrides.
-    ?>
-    <script src="mrbs-js-overrides.js" type="text/javascript"></script>
+
     <!--[if IE]>
     <link rel="stylesheet" href="mrbs-ie.css" type="text/css">
     <![endif]-->

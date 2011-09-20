@@ -78,6 +78,12 @@ table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color:
 
 select.room_area_select {margin-right: 0.5em}
 
+<?php
+// Don't display anything with a class of js_none (used for example for hiding Submit
+// buttons when we're submitting onchange).  The .js class is added to the <body> by JavaScript
+?>
+.js .js_none {display: none}
+
 /* ------------ ADMIN.PHP ---------------------------*/
 <?php
 // Adjust the label width to suit the longest label - it will depend on the translation being used
@@ -323,6 +329,7 @@ td.row_labels     {background-color: <?php echo $main_table_labels_back_color ?>
 .dwm_main#month_main td:hover.valid {background-color: <?php echo $row_highlight_color ?>}
 
 
+
 <?php
 // (2) JAVASCRIPT HIGHLIGHTING
 //
@@ -428,6 +435,17 @@ div:hover.multiple_control {cursor: pointer}
 .maximized div.maxi {display: block}
 .minimized div.mini {display: block}
 .minimized div.maxi {display: none}
+
+<?php
+// Over-rides for multiple bookings.  If JavaScript is enabled then we want to see the JavaScript controls.
+// And we will need to extend the padding so that the controls don't overwrite the booking text
+?>
+
+.js div.multiple_control {
+    display: block;   /* if JavaScript is enabled then we want to see the JavaScript controls */
+  }
+.js .multiple_booking .maxi a {padding-left: <?php echo $main_cell_height + $main_table_cell_border_width + 2 ?>px}
+
 
 /* booking privacy status */
 .private {opacity: 0.6; font-style: italic}
