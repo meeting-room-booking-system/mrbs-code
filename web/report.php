@@ -327,9 +327,18 @@ function report_row(&$row, $sortby)
   }
 
   // Last updated:
-  $values[] = escape(time_date_string($row['last_updated']));
+  $last_updated = time_date_string($row['last_updated']);
+  if ($output_as_csv)
+  {
+    $values[] = escape($last_updated);
+  }
+  else
+  {
+    // Include the numeric last updated time  as a title in an empty span so
+    // that the column can be sorted and filtered properly
+    $values[] = "<span title=\"" . $row['last_updated'] . "\"></span>" . escape($last_updated);
+  }
   
-
   if ($ajax)
   {
     $json_data['aaData'][] = $values;

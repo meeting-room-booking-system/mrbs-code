@@ -1380,11 +1380,11 @@ $(window).load(function() {
     <?php 
     // Stop the first column ("id") from being searchable.   For some reason
     // using bVisible here does not work, so we will use CSS instead.
-    // Define the type of the start and end time columns (they have the
-    // Unix timestamp in the title of a span for sorting)
+    // Define the type of the start time, end time and last updated columns
+    // (they have the Unix timestamp in the title of a span for sorting)
     ?>
     tableOptions.aoColumnDefs = [{"bSearchable": false, "bVisible": false, "aTargets": [ 0 ]},
-                                 {"sType": "title-numeric", "aTargets": [3, 4]}]; 
+                                 {"sType": "title-numeric", "aTargets": [3, 4, -1]}]; 
 
     <?php
     // Fix the left hand three columns (one of which is the "id" column which
