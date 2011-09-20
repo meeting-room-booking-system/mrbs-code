@@ -211,6 +211,7 @@ function print_theme_header($day, $month, $year, $area, $room)
             defaultOptions.bStateSave = true;
             defaultOptions.sDom = 'RC<"clear">lfrtip';
             defaultOptions.sScrollX = "100%";
+            defaultOptions.sScrollXInner = "100%";
             defaultOptions.sPaginationType = "full_numbers";
             defaultOptions.oColVis = {sSize: "css",
                                       buttonText: '<?php echo get_vocab("show_hide_columns") ?>',
@@ -1280,16 +1281,15 @@ $(window).load(function() {
       tableOptions.aoColumnDefs = colDefsMain;
       <?php
       // For some reason I don't understand, fnOpen() doesn't seem to work when
-      // using FixedColumns.    You also have to disable bStateSave to get it to work.
-      // I have raised this on the dataTables forum.  In the meantime we disable
-      // bStateSave and sScrollX and comment out the FixedColumns.
+      // using FixedColumns.   We also have to turn off bStateSave.  I have raised
+      // this on the dataTables forum.  In the meantime we comment out the FixedColumns.
       ?>
       tableOptions.bStateSave = false;
-      tableOptions.sScrollX = '100%';
-      <?php 
+      <?php
       // Fix the left hand column.  This has to be done when 
       // initialisation is complete as the language files are loaded
       // asynchronously
+
       /*
       ?>
       tableOptions.fnInitComplete = function(){
