@@ -355,69 +355,65 @@ if ($page == 'edit_entry')
     // and (b) conforms to the booking policies.   Makes an Ajax call to edit_entry_handler but does
     // not actually make the booking.                
     ?>
-    function checkValidBooking()
+    function fillParamFromForm(form, params, value)
     {
-      var params = {'ajax': 1}; // This is an Ajax request
-      var form = $('form#main');
-      var formInput;
-      <?php
-      
-      foreach ($params as $param)
-      {
         // We need to exclude the disabled elements, because otherwise jQuery
         // will pick them all up
-        ?>
-        formInput = form.find('[name="<?php echo $param ?>"]:not(:disabled)');
-        <?php
+        var formInput = form.find('[name="' + value + '"]:not(:disabled)');
         // Scalar parameters (two types - checkboxes and the rest)
-        if (strpos($param, '[]') === FALSE)
+        if (value.indexOf('[]') == -1)
         {
-          ?>
           if (formInput.filter(':checkbox').length > 0)
           {
-            params.<?php echo $param ?> = formInput.is(':checked') ? '1' : '';
+            params[value] = formInput.is(':checked') ? '1' : '';
           }
           else if (formInput.filter(':radio').length > 0)
           {
-            params.<?php echo $param ?> = formInput.filter(':checked').val();
+            params[value] = formInput.filter(':checked').val();
           }
           else
           {
-            params.<?php echo $param ?> = formInput.val();
+            params[value] = formInput.val();
           }
-          <?php
         }
         // Array parameters (two types - checkboxes and the rest)
         else
         {
-          ?>
-          params['<?php echo $param ?>'] = [];
+          params[value] = [];
           if (formInput.filter(':checkbox').length > 0)
           {
             formInput.each(function(index) {
                 if ($(this).is(':checked'))
                 {
-                  params['<?php echo $param ?>'].push($(this).val());
+                  params[value].push($(this).val());
                 }
               });
           }
           else
           {
             formInput.each(function(index) {
-                params['<?php echo $param ?>'].push($(this).val());
+                params[value].push($(this).val());
               });
           }
-          <?php
           // For some reason I don't understand, posting an empty array will
           // give you a PHP array of ('') at the other end.    So to avoid
           // that problem, delete the property if the array is empty
-          ?>
-          if (params['<?php echo $param ?>'].length == 0)
+          if (params[value].length == 0)
           {
-            delete params['<?php echo $param ?>'];
+            delete params[value];
           }
-          <?php
         }
+    }
+
+    function checkValidBooking()
+    {
+      var params = {'ajax': 1}; // This is an Ajax request
+      var form = $('form#main');
+<?php
+      
+      foreach ($params as $param)
+      {
+          echo "      fillParamFromForm(form, params, '$param');\n";
       }
       ?>
       $.post('edit_entry_handler.php', params, function(result) {
