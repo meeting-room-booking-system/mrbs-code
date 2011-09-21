@@ -187,11 +187,11 @@ table.display th {
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables row classes
  */
-table.display.sub tr.odd {
+table.display.sub tr.odd, table.display.sub tbody tr:nth-child(2n+1) {
   background-color: #ddffdd;
 }
 
-table.display.sub tr.even {
+table.display.sub tr.even, table.display.sub tbody tr:nth-child(2n){
   background-color: #eeffee;
 }
 

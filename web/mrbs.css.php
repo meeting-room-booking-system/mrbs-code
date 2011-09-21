@@ -743,12 +743,12 @@ td.mincals_week_number { opacity: 0.5; font-size: 60%; }
 #pending_list td.table_container, #pending_list td.sub_table {padding: 0; border: 0; margin: 0}
 #pending_list .control {padding-left: 0; padding-right: 0; text-align: center;
                         color: <?php echo $standard_font_color ?>}
-#pending_list td.control {background-color: <?php echo $pending_control_color ?>}
+.js #pending_list td.control {background-color: <?php echo $pending_control_color ?>}
 #pending_list td:first-child {width: 1.2em}
 #pending_list #pending_table td.sub_table {width: auto}
 table.admin_table.sub {border-right-width: 0}
 table.sub th {background-color: #788D9C}
-.admin_table table.sub th:first-child {background-color: <?php echo $pending_control_color ?>;
+.js .admin_table table.sub th:first-child {background-color: <?php echo $pending_control_color ?>;
     border-left-color: <?php echo $admin_table_border_color ?>}
 div.div_buttons {float: left; height: 2em}
 #pending_list form {margin: 2px 4px}
