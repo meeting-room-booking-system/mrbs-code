@@ -251,8 +251,13 @@ function report_row(&$row, $sortby)
   }
   
   // Duration
+  // Need the duration in seconds for sorting.  Have to correct it for DST
+  // changes so that the user sees what he expects to see
+  $duration_seconds = $row['end_time'] - $row['start_time'];
+  $duration_seconds -= cross_dst($row['start_time'], $row['end_time']);
   $d = get_duration($row['start_time'], $row['end_time']);
-  $values[] = escape($d['duration'] . ' ' . $d['dur_units']);
+  $values[] = "<span title=\"$duration_seconds\"></span>" .
+              escape($d['duration'] . ' ' . $d['dur_units']);
 
   // Description:
   $values[] = escape($row['description']);
