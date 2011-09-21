@@ -143,7 +143,11 @@ function display_series_title_row($row)
   echo "<td>"   . htmlspecialchars($row['area_name']) . "</td>\n";
   echo "<td>"   . htmlspecialchars($row['room_name']) . "</td>\n";
   
-  echo "<td>" . get_vocab("series") . "</td>\n";
+  echo "<td>";
+  // <span> for sorting
+  echo "<span title=\"" . $row['start_time'] . "\"></span>";
+  echo get_vocab("series");
+  echo "</td>\n";
   
   echo "<td>\n";
   display_buttons($row, TRUE);
@@ -169,6 +173,8 @@ function display_entry_row($row)
   // start date, with a link to the day.php
   $link = getdate($row['start_time']);
   echo "<td>";
+  // <span> for sorting
+  echo "<span title=\"" . $row['start_time'] . "\"></span>";
   echo "<a href=\"day.php?day=$link[mday]&amp;month=$link[mon]&amp;year=$link[year]&amp;area=".$row['area_id']."\">";
   if(empty($row['enable_periods']))
   {

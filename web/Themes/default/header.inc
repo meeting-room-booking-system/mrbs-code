@@ -1286,7 +1286,8 @@ $(window).load(function() {
         });
       maxActionWidth += 16; <?php // to allow for padding in the <td> ?>
       var colDefsMain = [{"sWidth": "1.2em", "aTargets": [0] },
-                         {"sWidth": maxActionWidth + "px", "aTargets": [6] }];
+                         {"sWidth": maxActionWidth + "px", "aTargets": [6] },
+                         {"sType": "title-numeric", "aTargets": [5]} ];
       <?php
       // Set up a click event that "opens" the table row and inserts the subtable
       ?>
@@ -1306,9 +1307,14 @@ $(window).load(function() {
                     ?>
                     maintable.find('tr').eq(0).find('th').each(function(i){
                         var def = new Object();
-                        if (i == 0)
+                        switch (i)
                         {
-                          def.bSortable = false;
+                          case 0: <?php // expand control ?>
+                            def.bSortable = false;
+                            break;
+                          case 5: <?php // start-time ?>
+                            def.sType = "title-numeric";
+                            break;
                         }
                         def.sWidth = ($(this).innerWidth()) + "px";
                         columns.push(def);
