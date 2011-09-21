@@ -235,11 +235,11 @@ if ($has_prev || $has_next)
   <table id="search_results">
     <thead>
       <tr>
-        <th><?php echo get_vocab("entry") ?></th>
-        <th><?php echo get_vocab("createdby") ?></th>
         <th><?php echo get_vocab("namebooker") ?></th>
-        <th><?php echo get_vocab("description") ?></th>
+        <th><?php echo get_vocab("createdby") ?></th>
         <th><?php echo get_vocab("start_date") ?></th>
+        <th><?php echo get_vocab("description") ?></th>
+
       </tr>
     </thead>
     
@@ -248,10 +248,8 @@ if ($has_prev || $has_next)
 for ($i = 0; ($row = sql_row_keyed($result, $i)); $i++)
 {
   echo "<tr>\n";
-  echo "<td><a href=\"view_entry.php?id=".$row['entry_id']."\">".get_vocab("view")."</a></td>\n";
+  echo "<td><a href=\"view_entry.php?id=".$row['entry_id']."\">" . htmlspecialchars($row['name']) . "</a></td>\n";
   echo "<td>" . htmlspecialchars($row['create_by']) . "</td>\n";
-  echo "<td>" . htmlspecialchars($row['name']) . "</td>\n";
-  echo "<td>" . htmlspecialchars($row['description']) . "</td>\n";
   // generate a link to the day.php
   $link = getdate($row['start_time']);
   echo "<td><a href=\"day.php?day=$link[mday]&amp;month=$link[mon]&amp;year=$link[year]&amp;area=".$row['area_id']."\">";
@@ -264,6 +262,7 @@ for ($i = 0; ($row = sql_row_keyed($result, $i)); $i++)
     list(,$link_str) = period_date_string($row['start_time']);
   }
   echo "$link_str</a></td>";
+  echo "<td>" . htmlspecialchars($row['description']) . "</td>\n";
   echo "</tr>\n";
 }
 echo "</tbody>\n";
