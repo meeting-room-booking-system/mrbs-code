@@ -1429,15 +1429,14 @@ $(window).load(function() {
     // (they have the Unix timestamp in the title of a span for sorting)
     ?>
     tableOptions.aoColumnDefs = [{"bSearchable": false, "bVisible": false, "aTargets": [ 0 ]},
-                                 {"sType": "title-numeric", "aTargets": [3, 4, 5, -1]}]; 
+                                 {"sType": "title-numeric", "aTargets": [2, 3, 4, -1]}]; 
 
     <?php
-    // Fix the left hand three columns (one of which is the "id" column which
-    // is hidden by CSS).  This has to be done when initialisation is complete
-    // as the language files are loaded asynchronously
+    // Fix the left hand two columns.  This has to be done when initialisation is 
+    // complete as the language files are loaded asynchronously
     ?>
     tableOptions.fnInitComplete = function(){
-        var oFC = new FixedColumns(reportTable, {"iLeftColumns": 3,
+        var oFC = new FixedColumns(reportTable, {"iLeftColumns": 2,
                                                  "iLeftWidth": 30,
                                                  "sLeftWidth": "relative"});
         $('.js div.datatable_container').css('visibility', 'visible');
@@ -1548,11 +1547,11 @@ $(window).load(function() {
     // Remove the first three columns from the column visibility
     // list because these two are fixed
     ?>
-    tableOptions.oColVis = {aiExclude: [0,1,2]};
+    tableOptions.oColVis = {aiExclude: [0,1]};
     <?php
     // and stop those first two columns being reordered
     ?>
-    tableOptions.oColReorder = {iFixedColumns: 3};
+    tableOptions.oColReorder = {iFixedColumns: 2};
     
     var reportTable = makeDataTable('#report_table', tableOptions);
 

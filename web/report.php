@@ -70,11 +70,7 @@ function report_header()
   
   // Build an array of values to go into the header row
   $values = array();
-
-  if (!$output_as_csv)
-  {
-    $values[] = "id"; // No need to translate:  this column will be hidden
-  }
+  
   $values[] = get_vocab("area") . ' - ' . get_vocab("room");
   $values[] = get_vocab("namebooker");
   $values[] = get_vocab("start_date");
@@ -196,12 +192,6 @@ function report_row(&$row, $sortby)
   
   $rows_output++;
   $values = array();
-  
-  // Id
-  if (!$output_as_csv)
-  {
-    $values[] = $row['id'];  // This column will be hidden by CSS
-  }
   
   // Area-room
   $area_room = $row['area_name'] . " - " . $row['room_name'];

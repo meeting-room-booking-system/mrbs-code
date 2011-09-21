@@ -773,11 +773,6 @@ p.report_entries {font-weight: bold}
 .report .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
 .report .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
 button#delete_button {float: left; clear: left; margin: 1em 0 3em 0}
-<?php
-// Stop the first column ("id") in the table from being displayed
-// !important needed for Webkit to fix the first row of the body
-?>
-.report .DTFC_LeftWrapper table.display th:first-child, .report .DTFC_LeftWrapper table.display td:first-child {display: none !important}
 
 
 /* ------------ SEARCH.PHP ----------------------*/
