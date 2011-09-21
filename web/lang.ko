@@ -143,7 +143,6 @@ $vocab["of"]                 = " of ";
 $vocab["previous"]           = "이전";
 $vocab["next"]               = "이후";
 $vocab["entry"]              = "Entry";
-$vocab["view"]               = "View";
 $vocab["advanced_search"]    = "상세 검색";
 $vocab["search_button"]      = "검색";
 $vocab["search_for"]         = "Search For";

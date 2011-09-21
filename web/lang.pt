@@ -235,7 +235,6 @@ $vocab["of"]                 = " de ";
 $vocab["previous"]           = "Anterior";
 $vocab["next"]               = "Próximo";
 $vocab["entry"]              = "Entrada";
-$vocab["view"]               = "Ver";
 $vocab["advanced_search"]    = "Pesquyisa Avançada";
 $vocab["search_button"]      = "Perquisar";
 $vocab["search_for"]         = "Pesquisar por";

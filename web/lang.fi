@@ -176,7 +176,6 @@ $vocab["of"]                 = " tuloksia yhteensä: ";
 $vocab["previous"]           = "Edellinen";
 $vocab["next"]               = "Seuraava";
 $vocab["entry"]              = "Varaus";
-$vocab["view"]               = "Katsele";
 $vocab["advanced_search"]    = "Tarkennettu haku";
 $vocab["search_button"]      = "Hae";
 $vocab["search_for"]         = "Etsi";

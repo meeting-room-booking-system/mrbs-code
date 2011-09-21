@@ -145,7 +145,6 @@ $vocab["of"]                 = " de ";
 $vocab["previous"]           = "Anterior";
 $vocab["next"]               = "Següent";
 $vocab["entry"]              = "Entrada";
-$vocab["view"]               = "Veure";
 $vocab["advanced_search"]    = "Cerca avançada";
 $vocab["search_button"]      = "Cerca";
 $vocab["search_for"]         = "Cerca per";

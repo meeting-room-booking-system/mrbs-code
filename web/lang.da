@@ -144,7 +144,6 @@ $vocab["of"]                 = " af ";
 $vocab["previous"]           = "Forrige";
 $vocab["next"]               = "Næste";
 $vocab["entry"]              = "Post";
-$vocab["view"]               = "Vis";
 $vocab["advanced_search"]    = "Avanceret søgning";
 $vocab["search_button"]      = "Søg";
 $vocab["search_for"]         = "Søg efter";

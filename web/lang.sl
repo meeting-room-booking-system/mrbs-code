@@ -156,7 +156,6 @@ $vocab["of"]                 = " od ";
 $vocab["previous"]           = "Predhodni";
 $vocab["next"]               = "Naslednji";
 $vocab["entry"]              = "Vnos";
-$vocab["view"]               = "Poglej";
 $vocab["advanced_search"]    = "Napredno iskanje";
 $vocab["search_button"]      = "Išči";
 $vocab["search_for"]         = "Iskanje";

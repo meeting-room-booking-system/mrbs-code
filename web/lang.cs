@@ -144,7 +144,6 @@ $vocab["of"]                 = " o ";
 $vocab["previous"]           = "Předchozi";
 $vocab["next"]               = "Další";
 $vocab["entry"]              = "Záznam";
-$vocab["view"]               = "Náhled";
 $vocab["advanced_search"]    = "Rozšířené hledání";
 $vocab["search_button"]      = "Hledat";
 $vocab["search_for"]         = "Hledat co";

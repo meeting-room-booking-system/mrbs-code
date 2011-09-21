@@ -215,7 +215,6 @@ $vocab["of"]                 = " av ";
 $vocab["previous"]           = "Föregående";
 $vocab["next"]               = "Nästa";
 $vocab["entry"]              = "Bokning";
-$vocab["view"]               = "Visa";
 $vocab["advanced_search"]    = "Avancerad sökning";
 $vocab["search_button"]      = "Sök";
 $vocab["search_for"]         = "Sök för";

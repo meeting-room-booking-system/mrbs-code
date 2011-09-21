@@ -157,7 +157,6 @@ $vocab["of"]                 = " av ";
 $vocab["previous"]           = "Forrige";
 $vocab["next"]               = "Neste";
 $vocab["entry"]              = "Post";
-$vocab["view"]               = "Vis";
 $vocab["advanced_search"]    = "Avansert søk";
 $vocab["search_button"]      = "Søk";
 $vocab["search_for"]         = "Søk etter";

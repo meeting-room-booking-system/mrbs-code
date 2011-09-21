@@ -157,7 +157,6 @@ $vocab["of"]                 = " da ";
 $vocab["previous"]           = "Önceki";
 $vocab["next"]               = "Sonraki";
 $vocab["entry"]              = "Kayıt";
-$vocab["view"]               = "Görünüm";
 $vocab["advanced_search"]    = "Detaylı arama";
 $vocab["search_button"]      = "Arama";
 $vocab["search_for"]         = "Anahtar kelime";

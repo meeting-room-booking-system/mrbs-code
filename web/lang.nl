@@ -236,7 +236,6 @@ $vocab["of"]                 = " van ";
 $vocab["previous"]           = "Vorige";
 $vocab["next"]               = "Volgende";
 $vocab["entry"]              = "Boeking";
-$vocab["view"]               = "Overzicht";
 $vocab["advanced_search"]    = "Uitgebreid Zoeken";
 $vocab["search_button"]      = "Zoek";
 $vocab["search_for"]         = "Zoeken naar";

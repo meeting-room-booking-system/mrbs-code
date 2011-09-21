@@ -144,7 +144,6 @@ $vocab["of"]                 = " - Aurkitutako erregistrok guztira: ";
 $vocab["previous"]           = "Aurrekoa";
 $vocab["next"]               = "Hurrengoa";
 $vocab["entry"]              = "Sarrera";
-$vocab["view"]               = "Ikusi";
 $vocab["advanced_search"]    = "Bilaketa aurreratua";
 $vocab["search_button"]      = "Bilatu";
 $vocab["search_for"]         = "Bilaketa aurreratua: ";

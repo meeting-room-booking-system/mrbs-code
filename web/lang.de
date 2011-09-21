@@ -249,7 +249,6 @@ $vocab["of"]                 = " von ";
 $vocab["previous"]           = "Vorige";
 $vocab["next"]               = "Nächste";
 $vocab["entry"]              = "Eintrag";
-$vocab["view"]               = "Öffnen";
 $vocab["advanced_search"]    = "Erweiterte Suche";
 $vocab["search_button"]      = "Suche";
 $vocab["search_for"]         = "Suche nach";

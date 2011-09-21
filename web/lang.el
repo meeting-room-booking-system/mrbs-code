@@ -144,7 +144,6 @@ $vocab["of"]                 = " από ";
 $vocab["previous"]           = "Προηγούμενη";
 $vocab["next"]               = "Επόμενη";
 $vocab["entry"]              = "Αίτηση";
-$vocab["view"]               = "Προβολή";
 $vocab["advanced_search"]    = "Προηγμένη αναζήτηση";
 $vocab["search_button"]      = "Αναζήτηση";
 $vocab["search_for"]         = "Αναζήτηση για";
