@@ -36,7 +36,6 @@ div.ColVis_collectionBackground {
 
 div.ColVis_collection {
 	position: relative;
-	width: 150px;
 	background-color: #f3f3f3;
 	padding: 3px;
 	border: 1px solid #ccc;
@@ -46,7 +45,8 @@ div.ColVis_collection {
 div.ColVis_collection button.ColVis_Button {
 	background-color: white;
 	width: 100%;
-	float: none;
+	float: left;
+	clear: left;
 	margin-bottom: 2px;
 }
 
@@ -71,6 +71,12 @@ div.ColVis_collection button.ColVis_Button:hover {
 }
 
 span.ColVis_radio {
-	display: inline-block;
-	width: 20px;
+	display: block;
+	float: left;
+	width: 30px;
+}
+
+span.ColVis_title {
+	display: block;
+  float: left;
 }
