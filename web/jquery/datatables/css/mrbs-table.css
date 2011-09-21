@@ -219,12 +219,11 @@ table.display tr.even.gradeU {
   background-color: #eee;
 }
 
-
-tr.odd {
+tr.odd, table.display tbody tr:nth-child(2n+1) {
   background-color: #E2E4FF;
 }
 
-tr.even {
+tr.even, table.display tbody tr:nth-child(2n) {
   background-color: white;
 }
 
