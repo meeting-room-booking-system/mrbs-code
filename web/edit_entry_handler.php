@@ -515,7 +515,7 @@ foreach ( $rooms as $room_id )
           // In both cases remember the conflict data.   (We don't at the
           // moment do anything with the data if we're skipping, but we might
           // in the future want to display a list of bookings we've skipped past)
-          $conflicts = $conflicts + $tmp;  // array union
+          $conflicts = array_merge($conflicts, $tmp);  // array union
         }
         // if we're not an admin for this room, check that the booking
         // conforms to the booking policy
@@ -525,7 +525,7 @@ foreach ( $rooms as $room_id )
           if (count($errors) > 0)
           {
             $valid_booking = FALSE;
-            $rules_broken = $rules_broken + $errors;  // array union
+            $rules_broken = array_merge($rules_broken, $errors);  // array union
           }
         }
       } // for
@@ -543,7 +543,7 @@ foreach ( $rooms as $room_id )
     if (!empty($tmp))
       {
         $valid_booking = FALSE;
-        $conflicts = $conflicts + $tmp;  // array union
+        $conflicts = array_merge($conflicts, $tmp);  // array union
       }
       // if we're not an admin for this room, check that the booking
       // conforms to the booking policy
@@ -553,7 +553,7 @@ foreach ( $rooms as $room_id )
         if (count($errors) > 0)
         {
           $valid_booking = FALSE;
-          $rules_broken = $rules_broken + $errors;  // Array union
+          $rules_broken = array_merged($rules_broken, $errors);  // Array union
         }
       }
   }
