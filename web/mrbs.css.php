@@ -113,7 +113,6 @@ form.form_admin {float: left; clear: left; margin: 2em 0 0 0}
 .admin h2 {clear: left}
 div#area_form, div#room_form {float: left; padding: 0 0 2em 1em}
 div#area_form {width: auto}
-div#room_form {width: 98%}
 div#room_info {width: 100%; float: left}
 div#custom_html {float: left; padding: 0 0 3em 1em}
 #area_form form {float: left; margin-right: 1em}
@@ -684,7 +683,7 @@ form#form_edit_users {width: auto; margin-top: 2.0em}
 #form_delete_users input.submit {left: 2.0em}                                  /* and put the Delete on the left */
 #form_edit_users input.checkbox {width: auto; margin-left: <?php echo $edit_users_gap ?>em}
 form.edit_users_error {width: 10em; margin-top: 2.0em}
-div#user_list {width: 98%; padding: 2em 0 2em 1em}
+div#user_list {padding: 2em 0 2em 1em}
 form#add_new_user {margin-left: 1em}
 
 
@@ -740,7 +739,6 @@ td#sticky_day {border: 1px dotted <?php echo $highlight_font_color ?>}
 td.mincals_week_number { opacity: 0.5; font-size: 60%; }
 
 /* ------------ PENDING.PHP ------------------*/
-div#pending_list {width: 98%; padding: 2em 0 2em 1em}
 #pending_list form {display: inline-block}
 #pending_list td.table_container, #pending_list td.sub_table {padding: 0; border: 0; margin: 0}
 #pending_list .control {padding-left: 0; padding-right: 0; text-align: center;
@@ -754,32 +752,6 @@ table.sub th {background-color: #788D9C}
     border-left-color: <?php echo $admin_table_border_color ?>}
 div.div_buttons {float: left; height: 2em}
 #pending_list form {margin: 2px 4px}
-<?php
-/*
-#pending_list form {float: left; margin: 0 0.5em}
-#pending_list table {width: 100%; border-spacing: 0px; border-collapse: collapse; border: 0}
-#pending_list td.sub_table {padding: 0; margin: 0}
-#pending_list table.minimised tbody {display: none}
-#pending_list table th {border-top: 1px solid <?php echo $admin_table_header_sep_color ?>;
-                        background-color: <?php echo $pending_header_back_color ?>}
-#pending_list td {border-top-width: 1px}
-#pending_list .control {padding-left: 0; padding-right: 0; text-align: center;
-                        color: <?php echo $standard_font_color ?>}
-#pending_list th.control + th {border-left-width: 0}
-#pending_list td.control + td {border-left-width: 0}
-#pending_list table th.control{background-color: <?php echo $pending_control_color ?>; cursor: default}
-#pending_list table th a {color: <?php echo $admin_table_header_font_color ?>}
-#pending_list table td {border-color: <?php echo $admin_table_border_color ?>;
-                        background-color: <?php echo $series_entry_back_color ?>}
-#pending_list .control             {width: 1.2em}
-#pending_list th.header_name       {width: 10%}
-#pending_list th.header_create     {width: 10%}
-#pending_list th.header_area       {width: 10%}
-#pending_list th.header_room       {width: 10%}
-#pending_list th.header_action     {width: 20em}
-#pending_list table th.header_start_time {text-transform: uppercase}
-*/
-?>
 
 
 /* ------------ REPORT.PHP ----------------------*/
@@ -797,7 +769,6 @@ div#div_summary {padding-top: 3em}
 #div_summary td {text-align: right}
 #div_summary tbody td:nth-child(even), #div_summary tfoot th:nth-child(even) {border-right-width: 0}
 #div_summary td:first-child {font-weight: bold}
-div#report_output {width: 98%}
 p.report_entries {font-weight: bold}
 .report .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
 .report .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
@@ -814,8 +785,6 @@ span#search_str {color: <?php echo $highlight_font_color ?>}
 p#nothing_found {font-weight: bold}
 div#record_numbers {font-weight: bold}
 div#record_nav {font-weight: bold; margin-bottom: 1.0em}
-table#search_results {border-spacing: 1px; border-collapse: collapse}
-#search_results td, #search_results th {border: 1px solid <?php echo $search_table_border_color ?>; padding: 0.1em 0.2em 0.1em 0.2em}
 
 /* ------------ SITE_FAQ ------------------------*/
 .help q {font-style: italic}
@@ -859,6 +828,9 @@ div#simple_trailer {clear: both; width: 100%; text-align: center; padding-top: 1
 #approve_buttons td#note {padding-top: 0}
 #approve_buttons td#note form {width: 100%}
 #approve_buttons td#note textarea {width: 100%; height: 6em}
+
+/*-------------DtaTables-------------------------*/
+div.datatable_container {width: 98%; padding: 2em 0 2em 1em}
 
 /* ------------ jQuery UI additions -------------*/
 

@@ -171,7 +171,7 @@ function print_theme_header($day, $month, $year, $area, $room)
       
     <?php
     // dataTables initialisation
-    if (in_array($page, array('admin', 'edit_users', 'pending', 'report')))
+    if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search')))
     {
       // Include the JavaScript for those pages that use dataTables
       ?>
@@ -951,9 +951,6 @@ if ($page == 'edit_entry')
 
 ?>
 
-$(document).ready(function() {
-  $('.datatable_container').css('visibility', 'none');
-});
 
 $(window).load(function() {
 
@@ -963,6 +960,21 @@ $(window).load(function() {
   if (logonForm && logonForm.NewUserName)
   {
     logonForm.NewUserName.focus();
+  }
+  
+  <?php
+  // Add in a hidden input to the header search form so that we can tell if we are using DataTables
+  // (which will be if JavaScript is enabled and we're not running IE6 or below).   We
+  // need to know this because when we're using an Ajax data source we don't want to send
+  // the HTML version of the table data.
+  ?>
+  if (!lteIE6)
+  {
+    $('<input>').attr({
+        type: 'hidden',
+        name: 'datatable',
+        value: '1'
+      }).appendTo('#header_search');
   }
   
 
@@ -1538,16 +1550,67 @@ $(window).load(function() {
   // SEARCH.PHP
   if ($page == 'search')
   {
-  // put the search string field in focus
-  ?>
-  var form = document.getElementById('search_form');
-  if (form && form.search_str)
-  {
-    form.search_str.focus();
-  }
-  
-  <?php
-  }
+    // put the search string field in focus
+    ?>
+    var searchForm = $('#search_form');
+    searchForm.find('#search_str').focus();
+    
+    <?php
+    // Turn the list of users into a dataTable, provided that we can use
+    // an Ajax source.  Otherwise they just get the old style search page
+    // with "Next" and "Prev" buttons to get new pages from the server.
+    // [We could of course use dataTables with server side processing, but
+    // that's a lot of work.  A better option would probably be to write one's
+    // own json_encode function for PHP versions that don't have it]
+    if (function_exists('json_encode'))
+    {
+      // Add in a hidden input to the search form so that we can tell if we are using DataTables
+      // (which will be if JavaScript is enabled and we're not running IE6 or below).   We
+      // need to know this because when we're using an Ajax data source we don't want to send
+      // the HTML version of the table data.
+      ?>
+      if (!lteIE6)
+      {
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'datatable',
+            value: '1'
+          }).appendTo(searchForm);
+      }
+      
+      var tableOptions = new Object();
+      <?php
+      // Use an Ajax source - gives much better performance for large tables
+
+      $ajax_url = "http://" . $HTTP_HOST . $PHP_SELF . "?" . $QUERY_STRING . "&ajax=1";
+      ?>
+      tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
+      tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [2]}]; 
+      <?php
+      // Fix the left hand column.  This has to be done when initialisation
+      // is complete as the language files are loaded asynchronously
+      ?>
+      tableOptions.fnInitComplete = function(){
+          var oFC = new FixedColumns(searchTable, {"iLeftColumns": 1,
+                                                   "iLeftWidth": 25,
+                                                   "sLeftWidth": "relative"});
+          $('.js div.datatable_container').css('visibility', 'visible');
+        };
+      <?php
+      // Remove the first column from the column visibility
+      // list because it is fixed
+      ?>
+      tableOptions.oColVis = {aiExclude: [0]};
+      <?php
+      // and stop the first column being reordered
+      ?>
+      tableOptions.oColReorder = {"iFixedColumns": 1};
+      
+      var searchTable = makeDataTable('#search_results', tableOptions);
+
+      <?php
+    }  //  if (function_exists('json_encode'))
+  }  // if ($page == 'search')
   ?>
 
 });

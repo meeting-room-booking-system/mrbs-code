@@ -3,15 +3,116 @@
 
 require_once "defaultincludes.inc";
 
+
+function generate_search_nav_html($search_pos, $total, $num_records, $search_str)
+{
+  global $day, $month, $year;
+  global $search;
+  
+  $html = '';
+  
+  $has_prev = $search_pos > 0;
+  $has_next = $search_pos < ($total-$search["count"]);
+  
+  if ($has_prev || $has_next)
+  {
+    $html .= "<div id=\"record_numbers\">\n";
+    $html .= get_vocab("records") . ($search_pos+1) . get_vocab("through") . ($search_pos+$num_records) . get_vocab("of") . $total;
+    $html .= "</div>\n";
+  
+    $html .= "<div id=\"record_nav\">\n";
+    $base_query_string = "search_str=" . urlencode($search_str) . "&amp;" .
+                         "total=$total&amp;" .
+                         "from_year=$year&amp;" .
+                         "from_month=$month&amp;" .
+                         "from_day=$day";
+    // display a "Previous" button if necessary
+    if($has_prev)
+    {
+      $query_string = $base_query_string . "&amp;search_pos=" . max(0, $search_pos-$search["count"]);
+      $html .= "<a href=\"search.php?$query_string\">";
+    }
+
+    $html .= get_vocab("previous");
+
+    if ($has_prev)
+    {
+      $html .= "</a>";
+    }
+
+    // add a separator for Next and Previous
+    $html .= (" | ");
+
+    // display a "Previous" button if necessary
+    if ($has_next)
+    {
+      $query_string = $base_query_string . "&amp;search_pos=" . max(0, $search_pos+$search["count"]);
+      $html .= "<a href=\"search.php?$query_string\">";
+    }
+
+    $html .= get_vocab("next");
+  
+    if ($has_next)
+    {
+      $html .= "</a>";
+    }
+    $html .= "</div>\n";
+  }
+  
+  return $html;
+}
+
+
+function output_row($row)
+{
+  global $ajax, $json_data;
+  
+  $values = array();
+  // booking name
+  $values[] = "<a href=\"view_entry.php?id=".$row['entry_id']."\">" . htmlspecialchars($row['name']) . "</a>";
+  // created by
+  $values[] = htmlspecialchars($row['create_by']);
+  // start time and link to day view
+  $date = getdate($row['start_time']);
+  $link = "<a href=\"day.php?day=$date[mday]&amp;month=$date[mon]&amp;year=$date[year]&amp;area=".$row['area_id']."\">";
+  if(empty($row['enable_periods']))
+  {
+    $link_str = time_date_string($row['start_time']);
+  }
+  else
+  {
+    list(,$link_str) = period_date_string($row['start_time']);
+  }
+  $link .= "$link_str</a>";
+  //    add a span with the numeric start time in the title for sorting
+  $values[] = "<span title=\"" . $row['start_time'] . "\"></span>" . $link;
+  // description
+  $values[] = htmlspecialchars($row['description']);
+  
+  if ($ajax)
+  {
+    $json_data['aaData'][] = $values;
+  }
+  else
+  {
+    echo "<tr>\n<td>\n";
+    echo implode("</td>\n<td>", $values);
+    echo "</td>\n</tr>\n";
+  }
+}
+  
 // Get non-standard form variables
 $search_str = get_form_var('search_str', 'string');
 $search_pos = get_form_var('search_pos', 'int');
 $total = get_form_var('total', 'int');
 $advanced = get_form_var('advanced', 'int');
+$ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
+$datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 // Get the start day/month/year and make them the current day/month/year
 $day = get_form_var('from_day', 'int');
 $month = get_form_var('from_month', 'int');
 $year = get_form_var('from_year', 'int');
+
 // If we haven't been given a sensible date then use today's
 if (!isset($day) || !isset($month) || !isset($year) || !checkdate($month, $day, $year))
 {
@@ -27,50 +128,65 @@ checkAuthorised();
 $user = getUserName();
 $is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
 
-// Need all these different versions with different escaping.
-if (isset($search_str) && ($search_str != '')) 
+// Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
+// requests, which will only be if (a) the browser is using DataTables and (b)
+// we can do JSON encoding.    We also need to initialise the JSON data array.
+$ajax_capable = $datatable && function_exists('json_encode');
+
+if ($ajax)
 {
-  $search_url = urlencode($search_str);
-  $search_html = htmlspecialchars($search_str);
+  $json_data['aaData'] = array();
 }
 
-print_header($day, $month, $year, $area, isset($room) ? $room : "");
-
-if (!empty($advanced))
+if (!isset($search_str))
 {
-  ?>
-  <form class="form_general" id="search_form" method="get" action="search.php">
-    <fieldset>
-    <legend><?php echo get_vocab("advanced_search") ?></legend>
-      <div id="div_search_str">
-        <label for="search_str"><?php echo get_vocab("search_for") ?>:</label>
-        <input type="text" id="search_str" name="search_str">
-      </div>   
-      <div id="div_search_from">
-        <?php
-        echo "<label for=\"from_datepicker\">" . get_vocab("from") . ":</label>\n";
-        genDateSelector ("from_", $day, $month, $year);
-        ?>
-      </div> 
-      <div id="search_submit">
-        <input class="submit" type="submit" value="<?php echo get_vocab("search_button") ?>">
-      </div>
-    </fieldset>
-  </form>
-  <?php
-  require_once "trailer.inc";
-  exit;
+  $search_str = '';
 }
-
-if (!isset($search_str) || ($search_str == ''))
+  
+if (!$ajax)
 {
-  echo "<p class=\"error\">" . get_vocab("invalid_search") . "</p>";
-  require_once "trailer.inc";
-  exit;
-}
+  print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
-// now is used so that we only display entries newer than the current time
-echo "<h3>" . get_vocab("search_results") . ": \"<span id=\"search_str\">$search_html</span>\"</h3>\n";
+  if (!empty($advanced))
+  {
+    ?>
+    <form class="form_general" id="search_form" method="get" action="search.php">
+      <fieldset>
+      <legend><?php echo get_vocab("advanced_search") ?></legend>
+        <div id="div_search_str">
+          <label for="search_str"><?php echo get_vocab("search_for") ?>:</label>
+          <input type="text" id="search_str" name="search_str">
+        </div>   
+        <div id="div_search_from">
+          <?php
+          echo "<label for=\"from_datepicker\">" . get_vocab("from") . ":</label>\n";
+          genDateSelector ("from_", $day, $month, $year);
+          ?>
+        </div> 
+        <div id="search_submit">
+          <input class="submit" type="submit" value="<?php echo get_vocab("search_button") ?>">
+        </div>
+      </fieldset>
+    </form>
+    <?php
+    require_once "trailer.inc";
+    exit;
+  }
+
+  if (!isset($search_str) || ($search_str == ''))
+  {
+    echo "<p class=\"error\">" . get_vocab("invalid_search") . "</p>";
+    require_once "trailer.inc";
+    exit;
+  }
+
+  // now is used so that we only display entries newer than the current time
+  echo "<h3>";
+  echo get_vocab("search_results") . ": ";
+  echo "\"<span id=\"search_str\">" . htmlspecialchars($search_str) . "</span>\"";
+  echo "</h3>\n";
+}  // if (!$ajax)
+
 
 $now = mktime(0, 0, 0, $month, $day, $year);
 
@@ -153,7 +269,7 @@ if ($total < 0)
   trigger_error(sql_error(), E_USER_WARNING);
   fatal_error(FALSE, get_vocab("fatal_db_error"));
 }
-if ($total <= 0)
+if (($total <= 0) && !$ajax)
 {
   echo "<p id=\"nothing_found\">" . get_vocab("nothing_found") . "</p>\n";
   require_once "trailer.inc";
@@ -169,13 +285,18 @@ else if($search_pos >= $total)
   $search_pos = $total - ($total % $search["count"]);
 }
 
-// Now we set up the "real" query using LIMIT to just get the stuff we want.
+// Now we set up the "real" query
 $sql = "SELECT E.id AS entry_id, E.create_by, E.name, E.description, E.start_time,
                R.area_id, A.enable_periods
           FROM $tbl_entry E, $tbl_room R, $tbl_area A
          WHERE $sql_pred
-      ORDER BY E.start_time asc "
-  . sql_syntax_limit($search["count"], $search_pos);
+      ORDER BY E.start_time asc";
+// If it's an Ajax query we want everything.  Otherwise we use LIMIT to just get
+// the stuff we want.
+if (!$ajax)
+{
+  $sql .= " " . sql_syntax_limit($search["count"], $search_pos);
+}
 
 
 // this is a flag to tell us not to display a "Next" link
@@ -187,85 +308,46 @@ if (! $result)
 }
 $num_records = sql_count($result);
 
-$has_prev = $search_pos > 0;
-$has_next = $search_pos < ($total-$search["count"]);
-
-if ($has_prev || $has_next)
+if (!$ajax_capable)
 {
-  echo "<div id=\"record_numbers\">\n";
-  echo get_vocab("records") . ($search_pos+1) . get_vocab("through") . ($search_pos+$num_records) . get_vocab("of") . $total;
-  echo "</div>\n";
-  
-  echo "<div id=\"record_nav\">\n";
-  $base_query_string = "search_str=$search_url&amp;total=$total&amp;from_year=$year&amp;from_month=$month&amp;from_day=$day";
-  // display a "Previous" button if necessary
-  if($has_prev)
-  {
-    $query_string = $base_query_string . "&amp;search_pos=" . max(0, $search_pos-$search["count"]);
-    echo "<a href=\"search.php?$query_string\">";
-  }
-
-  echo get_vocab("previous");
-
-  if ($has_prev)
-  {
-    echo "</a>";
-  }
-
-  // print a separator for Next and Previous
-  echo(" | ");
-
-  // display a "Previous" button if necessary
-  if ($has_next)
-  {
-    $query_string = $base_query_string . "&amp;search_pos=" . max(0, $search_pos+$search["count"]);
-    echo "<a href=\"search.php?$query_string\">";
-  }
-
-  echo get_vocab("next");
-  
-  if ($has_next)
-  {
-    echo "</a>";
-  }
-  echo "</div>\n";
+  echo generate_search_nav_html($search_pos, $total, $num_records, $search_str);
 }
-?>
 
-  <table id="search_results">
-    <thead>
-      <tr>
-        <th><?php echo get_vocab("namebooker") ?></th>
-        <th><?php echo get_vocab("createdby") ?></th>
-        <th><?php echo get_vocab("start_date") ?></th>
-        <th><?php echo get_vocab("description") ?></th>
-
-      </tr>
-    </thead>
-    
-    <tbody>
-<?php
-for ($i = 0; ($row = sql_row_keyed($result, $i)); $i++)
+if (!$ajax)
 {
+  echo "<div id=\"search_output\" class=\"datatable_container\">\n";
+  echo "<table id=\"search_results\" class=\"admin_table display\">\n";
+  echo "<thead>\n";
   echo "<tr>\n";
-  echo "<td><a href=\"view_entry.php?id=".$row['entry_id']."\">" . htmlspecialchars($row['name']) . "</a></td>\n";
-  echo "<td>" . htmlspecialchars($row['create_by']) . "</td>\n";
-  // generate a link to the day.php
-  $link = getdate($row['start_time']);
-  echo "<td><a href=\"day.php?day=$link[mday]&amp;month=$link[mon]&amp;year=$link[year]&amp;area=".$row['area_id']."\">";
-  if(empty($row['enable_periods']))
-  {
-    $link_str = time_date_string($row['start_time']);
-  }
-  else
-  {
-    list(,$link_str) = period_date_string($row['start_time']);
-  }
-  echo "$link_str</a></td>";
-  echo "<td>" . htmlspecialchars($row['description']) . "</td>\n";
+  echo "<th>" . get_vocab("namebooker") . "</th>\n";
+  echo "<th>" . get_vocab("createdby") . "</th>\n";
+  echo "<th>" . get_vocab("start_date") . "</th>\n";
+  echo "<th>" . get_vocab("description") . "</th>\n";
   echo "</tr>\n";
+  echo "</thead>\n";
+  echo "<tbody>\n";
 }
-echo "</tbody>\n";
-echo "</table>\n";
-require_once "trailer.inc";
+
+// If we're Ajax capable and this is not an Ajax request then don't ouput
+// the table body, because that's going to be sent later in response to
+// an Ajax request
+if (!$ajax_capable || $ajax)
+{
+  for ($i = 0; ($row = sql_row_keyed($result, $i)); $i++)
+  {
+    output_row($row);
+  }
+}
+
+if ($ajax)
+{
+  echo json_encode($json_data);
+}
+else
+{
+  echo "</tbody>\n";
+  echo "</table>\n";
+  echo "</div>\n";
+  require_once "trailer.inc";
+}
 ?>
