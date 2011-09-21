@@ -560,7 +560,10 @@ foreach ( $rooms as $room_id )
 
 } // end foreach rooms
 
-
+// Tidy up the lists of conflicts and rules broken, getting rid of duplicates
+$conflicts = array_values(array_unique($conflicts));
+$rules_broken = array_values(array_unique($rules_broken));
+    
 // If this is an Ajax request then we're just trying to find out whether the booking
 // would succeed if made.   We now know that, so output the results and exit.
 if ($ajax && function_exists('json_encode'))
@@ -765,8 +768,6 @@ if (!$valid_booking)
     echo get_vocab("rules_broken") . ":\n";
     echo "</p>\n";
     echo "<ul>\n";
-    // get rid of duplicate messages
-    $rules_broken = array_unique($rules_broken);
     foreach ($rules_broken as $rule)
     {
       echo "<li>$rule</li>\n";
@@ -779,8 +780,6 @@ if (!$valid_booking)
     echo get_vocab("conflict").":\n";
     echo "</p>\n";
     echo "<ul>\n";
-    // get rid of duplicate messages
-    $conflicts = array_unique($conflicts);
     foreach ($conflicts as $conflict)
     {
       echo "<li>$conflict</li>\n";
