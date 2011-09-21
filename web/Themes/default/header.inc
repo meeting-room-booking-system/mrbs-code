@@ -224,7 +224,13 @@ function print_theme_header($day, $month, $year, $area, $room)
             defaultOptions.bProcessing = true;
             defaultOptions.bScrollCollapse = true;
             defaultOptions.bStateSave = true;
-            defaultOptions.sDom = 'RC<"clear">lfrtip';
+            <?php
+            // If we're using an Ajax data source then don't offer 'R' (column reordering).
+            // This is a problem at the moment in DataTables because if you reorder a column
+            // DataTables doesn't know that the Ajax data is still in the original order.
+            // May be fixed in a future release of DataTables
+            ?>
+            defaultOptions.sDom = (specificOptions.sAjaxSource) ? 'C<"clear">lfrtip' : 'RC<"clear">lfrtip';
             defaultOptions.sScrollX = "100%";
             defaultOptions.sPaginationType = "full_numbers";
             defaultOptions.oColVis = {sSize: "css",
