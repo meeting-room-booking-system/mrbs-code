@@ -285,28 +285,34 @@ else if($search_pos >= $total)
   $search_pos = $total - ($total % $search["count"]);
 }
 
-// Now we set up the "real" query
-$sql = "SELECT E.id AS entry_id, E.create_by, E.name, E.description, E.start_time,
-               R.area_id, A.enable_periods
-          FROM $tbl_entry E, $tbl_room R, $tbl_area A
-         WHERE $sql_pred
-      ORDER BY E.start_time asc";
-// If it's an Ajax query we want everything.  Otherwise we use LIMIT to just get
-// the stuff we want.
-if (!$ajax)
+// If we're Ajax capable and this is not an Ajax request then don't ouput
+// the table body, because that's going to be sent later in response to
+// an Ajax request - so we don't need to do the query
+if (!$ajax_capable || $ajax)
 {
-  $sql .= " " . sql_syntax_limit($search["count"], $search_pos);
-}
+  // Now we set up the "real" query
+  $sql = "SELECT E.id AS entry_id, E.create_by, E.name, E.description, E.start_time,
+                 R.area_id, A.enable_periods
+            FROM $tbl_entry E, $tbl_room R, $tbl_area A
+           WHERE $sql_pred
+        ORDER BY E.start_time asc";
+  // If it's an Ajax query we want everything.  Otherwise we use LIMIT to just get
+  // the stuff we want.
+  if (!$ajax)
+  {
+    $sql .= " " . sql_syntax_limit($search["count"], $search_pos);
+  }
 
 
-// this is a flag to tell us not to display a "Next" link
-$result = sql_query($sql);
-if (! $result)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  fatal_error(FALSE, get_vocab("fatal_db_error"));
+  // this is a flag to tell us not to display a "Next" link
+  $result = sql_query($sql);
+  if (! $result)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
+  }
+  $num_records = sql_count($result);
 }
-$num_records = sql_count($result);
 
 if (!$ajax_capable)
 {
