@@ -1211,6 +1211,10 @@ $(window).load(function() {
     {
       tableOptions.oColReorder.aiOrder.push(i);
     }
+    <?php
+    // The Rights column has a span with title for sorting
+    ?>
+    tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [1]}]; 
     <?php 
     // Fix the left hand two columns.  This has to be done when 
     // initialisation is complete as the language files are loaded

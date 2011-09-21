@@ -21,7 +21,7 @@
 *                          example by having booking admins, user admins     *
 *                          snd system admins.  (System admins might be       *
 *                          necessary in the future if, for example, some     *
-*                          parameters curreently in the config file are      *
+*                          parameters currently in the config file are      *
 *                          made editable from MRBS)                          *
 *                                                                            *
 *                 Only admins with at least user editing rights (level >=    *
@@ -814,7 +814,10 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
           // special treatment for some fields
           case 'level':
             // the level field contains a code and we want to display a string
-            echo "<td><div>" . get_vocab("level_$col_value") . "</div></td>\n";
+            // (but we put the code in a span for sorting)
+            echo "<td>";
+            echo "<span title=\"$col_value\"></span>";
+            echo "<div>" . get_vocab("level_$col_value") . "</div></td>\n";
             break;
           case 'email':
             // we don't want to truncate the email address
