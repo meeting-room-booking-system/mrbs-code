@@ -515,7 +515,7 @@ foreach ( $rooms as $room_id )
           // In both cases remember the conflict data.   (We don't at the
           // moment do anything with the data if we're skipping, but we might
           // in the future want to display a list of bookings we've skipped past)
-          $conflicts = $conflicts + $tmp;  // array union
+          $conflicts = array_merge($conflicts, $tmp);
         }
         // if we're not an admin for this room, check that the booking
         // conforms to the booking policy
@@ -525,7 +525,7 @@ foreach ( $rooms as $room_id )
           if (count($errors) > 0)
           {
             $valid_booking = FALSE;
-            $rules_broken = $rules_broken + $errors;  // array union
+            $rules_broken = array_merge($rules_broken, $errors);
           }
         }
       } // for
@@ -543,7 +543,7 @@ foreach ( $rooms as $room_id )
     if (!empty($tmp))
       {
         $valid_booking = FALSE;
-        $conflicts = $conflicts + $tmp;  // array union
+        $conflicts = array_merge($conflicts, $tmp);
       }
       // if we're not an admin for this room, check that the booking
       // conforms to the booking policy
@@ -553,14 +553,17 @@ foreach ( $rooms as $room_id )
         if (count($errors) > 0)
         {
           $valid_booking = FALSE;
-          $rules_broken = $rules_broken + $errors;  // Array union
+          $rules_broken = array_merge($rules_broken, $errors);
         }
       }
   }
 
 } // end foreach rooms
 
-
+// Tidy up the lists of conflicts and rules broken, getting rid of duplicates
+$conflicts = array_values(array_unique($conflicts));
+$rules_broken = array_values(array_unique($rules_broken));
+    
 // If this is an Ajax request then we're just trying to find out whether the booking
 // would succeed if made.   We now know that, so output the results and exit.
 if ($ajax && function_exists('json_encode'))
@@ -765,8 +768,6 @@ if (!$valid_booking)
     echo get_vocab("rules_broken") . ":\n";
     echo "</p>\n";
     echo "<ul>\n";
-    // get rid of duplicate messages
-    $rules_broken = array_unique($rules_broken);
     foreach ($rules_broken as $rule)
     {
       echo "<li>$rule</li>\n";
@@ -779,8 +780,6 @@ if (!$valid_booking)
     echo get_vocab("conflict").":\n";
     echo "</p>\n";
     echo "<ul>\n";
-    // get rid of duplicate messages
-    $conflicts = array_unique($conflicts);
     foreach ($conflicts as $conflict)
     {
       echo "<li>$conflict</li>\n";
