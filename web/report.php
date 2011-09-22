@@ -132,7 +132,9 @@ function report_header()
     $html .= "<tr>\n";
     foreach ($values as $value)
     {
-      $html .= "<th>" . htmlspecialchars($value) . "</th>\n";
+      // We don't use htmlspecialchars() here because the vocab strings are trusted.
+      // And some of them contain HTML entities such as &nbsp; on purpose
+      $html .= "<th>$value</th>\n";
     }
     $html .= "</tr>\n";
     $html .= "</thead>\n<tbody>\n";
