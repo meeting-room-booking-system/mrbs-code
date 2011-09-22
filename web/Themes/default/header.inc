@@ -77,6 +77,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $lang_map_windows, $langs, $server_os;
   global $default_duration_all_day;
   global $select_options;
+  global $ajax_refresh_rate;
   
   $page = basename($PHP_SELF, ".php");
   $user = getUserName();
@@ -541,12 +542,12 @@ if ($page == 'edit_entry')
           if (result.conflicts.length == 0)
           {
             conflictDiv.text(checkMark).attr('class', 'good').attr;
-            titleText = '<?php echo get_vocab("no_conflicts") ?>';
+            titleText = '<?php echo mrbs_entity_decode(get_vocab("no_conflicts")) ?>';
           }
           else
           {
             conflictDiv.text(cross).attr('class', 'bad');
-            titleText = '<?php echo get_vocab("conflict") ?>' + ":  \n\n";
+            titleText = '<?php echo mrbs_entity_decode(get_vocab("conflict")) ?>' + ":  \n\n";
             for (var i=0; i<result.conflicts.length; i++)
             {
               titleText += '(' + (i+1).toString() + ') ';
@@ -559,12 +560,12 @@ if ($page == 'edit_entry')
           if (result.rules_broken.length == 0)
           {
             policyDiv.text(checkMark).attr('class', 'good');
-            titleText = '<?php echo get_vocab("no_rules_broken") ?>';
+            titleText = '<?php echo mrbs_entity_decode(get_vocab("no_rules_broken")) ?>';
           }
           else
           {
             policyDiv.text(cross).attr('class', 'bad');
-            titleText = '<?php echo get_vocab("rules_broken") ?>' + ":  \n\n";
+            titleText = '<?php echo mrbs_entity_decode(get_vocab("rules_broken")) ?>' + ":  \n\n";
             for (var i=0; i<result.rules_broken.length; i++)
             {
               titleText += '(' + (i+1).toString() + ') ' + result.rules_broken[i] + "  \n";
@@ -1182,12 +1183,27 @@ $(window).load(function() {
           });
       }  
       <?php
-    }
+    }  // foreach
     ?>
 
     checkValidBooking();
+    
     <?php
-  }
+    // Finally set a timer so that the validity of the booking is periodically
+    // checked, in case someone else books that slot before you press Save
+    // (Note the config variable is in seconds, but the setInterval() function
+    // uses milliseconds)
+    if (!empty($ajax_refresh_rate))
+    {
+      ?>
+      window.setInterval(function() {
+        checkValidBooking();
+      }, <?php echo $ajax_refresh_rate * 1000 ?>);
+      <?php
+    }
+
+
+  } // if (function_exists('json_encode'))
   ?>
 
   <?php

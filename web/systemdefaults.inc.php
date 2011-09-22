@@ -294,6 +294,10 @@ $search["count"] = 20;
 // Page refresh time (in seconds). Set to 0 to disable
 $refresh_rate = 0;
 
+// Refresh rate (in seconds) for Ajax checking of valid bookings on the edit_entry page
+// Set to 0 to disable
+$ajax_refresh_rate = 10;
+
 // Trailer type.   FALSE gives a trailer complete with links to days, weeks and months before
 // and after the current date.    TRUE gives a simpler trailer that just has links to the
 // current day, week and month.
