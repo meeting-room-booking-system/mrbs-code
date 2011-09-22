@@ -690,9 +690,10 @@ This method will attempt an authenticated bind to the ldap server using
 the supplied password and a distinguished name, which is formed from the
 base distinguished name, the user attribute and the user name. 
 
-This method supports multiple $ldap_base_dn entries and $ldap_user_attrib
-values.  The authentication is attempted with each base dn in turn until it
-succeeds or it fails to authenticate the user.
+This method supports multiple values for most of the configuration
+parameters, including $ldap_base_dn entries and $ldap_user_attrib
+values.  The authentication is attempted with each set of configuration
+parameters in turn until it succeeds or it fails to authenticate the user.
 
 Multiple base distinguished names with the same user attribute for each
 base dn:

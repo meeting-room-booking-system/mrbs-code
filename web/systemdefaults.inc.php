@@ -602,43 +602,77 @@ $auth['db_ext']['column_name_password'] = 'password';
 $auth['db_ext']['password_format'] = 'md5';
 
 // 'auth_ldap' configuration settings
-// Where is the LDAP server
+
+// Many of the LDAP parameters can be specified as arrays, in order to
+// specify multiple LDAP directories to search within. Each item below
+// will specify whether the item can be specified as an array. If any
+// parameter is specified as an array, then EVERY array configuration
+// parameter must have the same number of elements. You can specify a
+// parameter as an array as in the following example:
+//
+// $ldap_host = array('localhost', 'otherhost.example.com');
+
+// Where is the LDAP server.
+// This can be an array.
 //$ldap_host = "localhost";
-// If you have a non-standard LDAP port, you can define it here
+
+// If you have a non-standard LDAP port, you can define it here.
+// This can be an array.
 //$ldap_port = 389;
-// If you do not want to use LDAP v3, change the following to false
+
+// If you do not want to use LDAP v3, change the following to false.
+// This can be an array.
 $ldap_v3 = true;
-// If you want to use TLS, change the following to true
+
+// If you want to use TLS, change the following to true.
+// This can be an array.
 $ldap_tls = false;
-// LDAP base distinguish name
-// See AUTHENTICATION for details of how check against multiple base dn's
+
+// LDAP base distinguish name.
+// This can be an array.
 //$ldap_base_dn = "ou=organizationalunit,dc=my-domain,dc=com";
+
 // Attribute within the base dn that contains the username
+// This can be an array.
 //$ldap_user_attrib = "uid";
+
 // If you need to search the directory to find the user's DN to bind
 // with, set the following to the attribute that holds the user's
 // "username". In Microsoft AD directories this is "sAMAccountName"
+// This can be an array.
 //$ldap_dn_search_attrib = "sAMAccountName";
+
 // If you need to bind as a particular user to do the search described
 // above, specify the DN and password in the variables below
+// These two parameters can be arrays.
 // $ldap_dn_search_dn = "cn=Search User,ou=Users,dc=some,dc=company";
 // $ldap_dn_search_password = "some-password";
 
 // 'auth_ldap' extra configuration for ldap configuration of who can use
 // the system
-// If it's set, the $ldap_filter will be combined with the value of
-// $ldap_user_attrib like this:
-//   (&($ldap_user_attrib=username)($ldap_filter))
-// After binding to check the password, this check is used to see that
-// they are a valid user of mrbs.
-//$ldap_filter = "mrbsuser=y";
+// If it's set, the $ldap_filter will be used to determine whether a
+// user will be granted access to MRBS
+// This can be an array.
+// An example for Microsoft AD:
+//$ldap_filter = "memberof=cn=whater,ou=whatver,dc=example,dc=com";
 
 // Set to TRUE to tell MRBS to look up a user's email address in LDAP.
 // Utilises $ldap_email_attrib below
 $ldap_get_user_email = FALSE;
 // The LDAP attribute which holds a user's email address
+// This can be an array.
 $ldap_email_attrib = 'mail';
 
+// The DN of the LDAP group that MRBS admins must be in. If this is defined
+// then the $auth["admin"] is not used.
+// This can be an array.
+// $ldap_admin_group_dn = 'cn=admins,ou=whoever,dc=example,dc=com';
+
+// The LDAP attribute that holds group membership details. Used with
+// $ldap_admin_group_dn, above.
+// This can be an array.
+$ldap_group_member_attrib = 'memberof';
+  
 // Set to TRUE if you want MRBS to call ldap_unbind() between successive
 // attempts to bind. Unbinding while still connected upsets some
 // LDAP servers
