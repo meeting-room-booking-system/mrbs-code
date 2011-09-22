@@ -8,6 +8,7 @@ if (!isset($auth['session']))
   $auth['session']='http';
 }
 
+
 /* authLdapAction($callback, $user, &$object)
  * 
  * Connects/binds to all configured LDAP servers/base DNs and
@@ -34,6 +35,10 @@ function authLdapAction($callback, $user, &$object)
   global $ldap_dn_search_attrib;
   global $ldap_dn_search_dn;
   global $ldap_dn_search_password;
+  global $ldap_filter;
+  global $ldap_group_member_attrib;
+  global $ldap_admin_group_dn;
+  global $ldap_email_attrib;
 
   if (!function_exists("ldap_connect"))
   {
@@ -41,83 +46,109 @@ function authLdapAction($callback, $user, &$object)
         "Please check your MRBS and web server configuration.</b></p><hr>\n");
   }
 
-  $all_ldap_base_dn     = array();
-  $all_ldap_user_attrib = array();
+  // Transfer the values from the config variables into a local
+  // associative array, turning them all into arrays
+  
+  $config_items = array(
+                        'ldap_host',
+                        'ldap_port',
+                        'ldap_base_dn',
+                        'ldap_user_attrib',
+                        'ldap_dn_search_attrib',
+                        'ldap_dn_search_dn',
+                        'ldap_dn_search_password',
+                        'ldap_filter',
+                        'ldap_group_member_attrib',
+                        'ldap_admin_group_dn',
+                        'ldap_v3',
+                        'ldap_tls',
+                        'ldap_email_attrib'
+                       );
 
-  // Check that if there is an array of hosts and an array of ports
-  // then the number of each must be the same or the authenication
-  // is forced to fail.
-  if (is_array( $ldap_base_dn ) && is_array( $ldap_user_attrib ) &&
-      count($ldap_user_attrib) != count($ldap_base_dn) )
-  {
-    return 0;
-  }
+  $all_ldap_opts = array();
 
-  // Transfer the based dn(s) to an new value to ensure that
-  // an array is always used.
-  // If a single value is passed then turn it into an array
-  if (is_array( $ldap_base_dn ) )
+  
+  foreach ($config_items as $item)
   {
-    $all_ldap_base_dn = $ldap_base_dn;
-  }
-  else
-  {
-    $all_ldap_base_dn = array($ldap_base_dn);
-  }
-
-  // Transfer the array of user attributes to a new value.
-  // Create an array of the user attributes to match the number of
-  // base dn's if a single user attribute has been passed.
-  if (is_array( $ldap_user_attrib ) )
-  {
-    $all_ldap_user_attrib = $ldap_user_attrib;
-  }
-  else
-  {
-    while ( each($all_ldap_base_dn ) )
+    if (!isset($$item))
     {
-      $all_ldap_user_attrib[] = $ldap_user_attrib;
+      continue;
     }
-  }
-
-  // establish ldap connection
-  // the '@' suppresses errors
-  if (isset($ldap_port))
-  {
-    $ldap = @ldap_connect($ldap_host, $ldap_port);
-  }
-  else
-  {
-    $ldap = @ldap_connect($ldap_host);
-  }
-
-  // Check that connection was established
-  if ($ldap)
-  {
-    authLdapDebug("authLdapAction: Got LDAP connection");
-
-    if ($ldap_v3)
+    if (is_array($$item))
     {
-      ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+      $all_ldap_opts[$item] = $$item;
     }
-    if ($ldap_tls)
-    {
-      ldap_start_tls($ldap);
-    }
+    // The case where the config item _isn't_ an array is handled
+    // further down
+  }
 
-    // now process all base dn's until authentication is achieved
-    // or fail
-    foreach ( $all_ldap_base_dn as $idx => $base_dn)
+  $count = null;
+  foreach ($all_ldap_opts as $key => $value)
+  {
+    if (isset($count))
     {
-      authLdapDebug("authLdapAction: start of foreach $base_dn");
-      if (isset($ldap_dn_search_attrib))
+      if (count($value) != $count)
       {
-        if (isset($ldap_dn_search_dn) &&
-            isset($ldap_dn_search_password))
+        authLdapDebug("Count of LDAP array config variables doesn't match, aborting!");
+        fatal_error(TRUE,
+                    "MRBS configuration error: Count of LDAP array config variables doesn't match, aborting!",
+                    false);
+        return 0;
+      }
+    }
+    $count = count($value);
+  }
+
+  // Turn any non-array config items into arrays in $all_ldap_opts
+  foreach ($config_items as $item)
+  {
+    if (!isset($$item))
+    {
+      continue;
+    }
+    if (!is_array($$item))
+    {
+      $all_ldap_opts[$item] = array_fill(0, $count, $$item);
+    }
+  }
+
+  foreach ($all_ldap_opts['ldap_host'] as $idx => $host)
+  {
+    // establish ldap connection
+    // the '@' suppresses errors
+    if (isset($all_ldap_opts['ldap_port'][$idx]))
+    {
+      $ldap = @ldap_connect($host, $all_ldap_opts['ldap_port'][$idx]);
+    }
+    else
+    {
+      $ldap = @ldap_connect($host);
+    }
+
+    // Check that connection was established
+    if ($ldap)
+    {
+      authLdapDebug("authLdapAction: Got LDAP connection");
+
+      if (isset($all_ldap_opts['ldap_v3'][$idx]) &&
+          $all_ldap_opts['ldap_v3'][$idx])
+      {
+        ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+      }
+      if (isset($all_ldap_opts['ldap_tls'][$idx]) &&
+          $all_ldap_opts['ldap_tls'][$idx])
+      {
+        ldap_start_tls($ldap);
+      }
+
+      if (isset($all_ldap_opts['ldap_dn_search_attrib'][$idx]))
+      {
+        if (isset($all_ldap_opts['ldap_dn_search_dn'][$idx]) &&
+            isset($all_ldap_opts['ldap_dn_search_password'][$idx]))
         {
           // Bind with DN and password
-          $res = @ldap_bind($ldap, $ldap_dn_search_dn,
-                            $ldap_dn_search_password);
+          $res = @ldap_bind($ldap, $all_ldap_opts['ldap_dn_search_dn'][$idx],
+                            $all_ldap_opts['ldap_dn_search_password'][$idx]);
         }
         else
         {
@@ -129,47 +160,57 @@ function authLdapAction($callback, $user, &$object)
         if ($res)
         {
           $res = @ldap_search($ldap,
-                              $base_dn,
-                              "(". $ldap_dn_search_attrib ."=$user)");
+                              $all_ldap_opts['ldap_base_dn'][$idx],
+                              "(". $all_ldap_opts['ldap_dn_search_attrib'][$idx] ."=$user)");
 
           if (@ldap_count_entries($ldap, $res) == 1)
           {
-            authLdapDebug("authLdapAction: Found one entry using ".
-                          "$ldap_dn_search_attrib");
+            authLdapDebug("authLdapAction: Found one entry using '".
+                          $all_ldap_opts['ldap_dn_search_attrib'][$idx]."'");
             $entries = ldap_get_entries($ldap, $res);
             $dn = $entries[0]["dn"];
             $user_search = "distinguishedName=" . $dn;
           }
           else
           {
-            authLdapDebug("authLdapAction: Didn't find entry using ".
-                          "$ldap_dn_search_attrib");
+            authLdapDebug("authLdapAction: Didn't find entry using '".
+                          $all_ldap_opts['ldap_dn_search_attrib'][$idx]."'");
           }
-          authLdapDebug("authLdapAction: base_dn $base_dn user $user ".
-                        "dn $dn");
+          authLdapDebug("authLdapAction: base_dn '".
+                        $all_ldap_opts['ldap_base_dn'][$idx].
+                        "' user $user dn $dn");
         }
       }
       else
       {
         // construct dn for user
-        $user_search = $all_ldap_user_attrib[$idx] . "=" . $user;
-        $dn = $user_search . "," . $base_dn;
+        $user_search = $all_ldap_opts['ldap_user_attrib'][$idx] . "=" . $user;
+        $dn = $user_search . "," . $all_ldap_opts['ldap_base_dn'][$idx];
 
-        authLdapDebug("authLdapAction: Constructed dn $dn and ".
-                      "user_search $user_search using ".
-                      "\$ldap_user_attrib");
+        authLdapDebug("authLdapAction: Constructed dn '$dn' and ".
+                      "user_search '$user_search' using '".
+                      $all_ldap_opts['ldap_user_attrib'][$idx]."'");
       }
 
-      $res = $callback($ldap, $base_dn, $dn, $user_search, $user, $object);
+      foreach ($config_items as $item)
+      {
+        if (isset($all_ldap_opts[$item][$idx]))
+        {
+          $object['config'][$item] = $all_ldap_opts[$item][$idx];
+        }
+      }
+
+      $res = $callback($ldap, $all_ldap_opts['ldap_base_dn'][$idx], $dn,
+                       $user_search, $user, $object);
       if ($res)
       {
         return $res;
       }
 
-    } // foreach
+    } // if ($ldap)
 
     @ldap_unbind($ldap);
-  } // if ($ldap)
+  } // foreach
 }
 
 
@@ -216,23 +257,24 @@ function authLdapGetEmail($user)
 function authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
                                   $user, &$object)
 {
-  global $ldap_email_attrib;
+  $email_attrib = $object['config']['ldap_email_attrib'];
 
-  authLdapDebug("authLdapGetEmailCallback: base_dn $base_dn dn $dn ".
-                "user_search $user_search user $user");
+  authLdapDebug("authLdapGetEmailCallback: base_dn '$base_dn' dn '$dn' ".
+                "user_search '$user_search' user '$user'");
 
   if ($ldap && $base_dn && $dn && $user_search)
   {
-  $res = @ldap_read($ldap,
-                        $dn,
-                        "(objectclass=*)",
-                        array($ldap_email_attrib)
-                       );
+    $res = @ldap_read(
+                      $ldap,
+                      $dn,
+                      "(objectclass=*)",
+                      array(strtolower($email_attrib))
+                     );
     if (@ldap_count_entries($ldap, $res) > 0)
     {
       authLdapDebug("authLdapGetEmailCallback: search successful");
       $entries = ldap_get_entries($ldap, $res);
-      $object['email'] = $entries[0][$ldap_email_attrib][0];
+      $object['email'] = $entries[0][strtolower($email_attrib)][0];
 
       authLdapDebug("authLdapGetEmailCallback: email is '".
                     $object['email']."'");
@@ -242,6 +284,7 @@ function authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
   }
   return 0;
 }
+
 
 /* authValidateUser($user, $pass)
  * 
@@ -291,9 +334,8 @@ function authValidateUser($user, $pass)
 function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
                                   $user, &$object)
 {
-  global $ldap_filter;
-
-  authLdapDebug("authValidateUserCallback: base_dn $base_dn dn $dn user $user");
+  authLdapDebug("authValidateUserCallback: base_dn '$base_dn' ".
+                "dn '$dn' user '$user'");
 
   $pass = $object['pass'];
 
@@ -301,9 +343,11 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
   // use this to confirm that the user/password pair
   if ($dn && @ldap_bind($ldap, $dn, $pass))
   {
+    $filter = $object['config']['ldap_filter'];
+
     // however if there is a filter check that the
     // user is part of the group defined by the filter
-    if (! $ldap_filter)
+    if (! $filter)
     {
       authLdapDebug("authValidateUserCallback: Successful authenticated ".
                     "bind with no \$ldap_filter");
@@ -312,11 +356,11 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
     else
     {
       authLdapDebug("authValidateUserCallback: Successful authenticated ".
-                    "bind checking $ldap_filter");
+                    "bind checking '$filter'");
 
       $res = @ldap_read($ldap,
                         $dn,
-                        "($ldap_filter)",
+                        "($filter)",
                         array()
                        );
       if (@ldap_count_entries($ldap, $res) > 0)
@@ -329,7 +373,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
   }
   else
   {
-    authLdapDebug("authValidateUserCallback: Bind to $dn failed");
+    authLdapDebug("authValidateUserCallback: Bind to '$dn' failed");
   }
 
   if ($ldap_unbind_between_attempts)
@@ -340,6 +384,58 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
   // return failure if no connection is established
   return 0;
 }
+
+
+/* authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
+                            $user, &$object)
+ * 
+ * Checks if the specified username is in an admin group
+ *
+ * &$ldap       - Reference to the LDAP object
+ * $base_dn     - The base DN
+ * $dn          - The user's DN
+ * $user_search - The LDAP filter to find the user
+ * $user        - The user name
+ * &$object     - Reference to the generic object
+ * 
+ * Returns:
+ *   0        - Not in the admin group
+ *   non-zero - In the admin group
+ */
+function authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
+                                         $user, &$object)
+{
+  $admin_group_dn = $object['config']['ldap_admin_group_dn'];
+  $group_member_attrib = $object['config']['ldap_group_member_attrib'];
+
+  authLdapDebug("authLdapCheckAdminGroupCallback: base_dn '$base_dn' ".
+                "dn '$dn' user_search '$user_search' user '$user'");
+
+  if ($ldap && $base_dn && $dn && $user_search)
+  {
+  $res = @ldap_read(
+                    $ldap,
+                    $dn,
+                    "(objectclass=*)",
+                    array(strtolower($group_member_attrib))
+                   );
+    if (@ldap_count_entries($ldap, $res) > 0)
+    {
+      authLdapDebug("authCheckAdminGroupCallback: search successful".
+                    " $group_member_attrib");
+      $entries = ldap_get_entries($ldap, $res);
+      foreach ($entries[0][strtolower($group_member_attrib)] as $group)
+      {
+        if (strcasecmp($group, $admin_group_dn) == 0)
+        {
+          return 1;
+        }
+      }
+    }
+  }
+  return 0;
+}
+
 
 /* authGetUserLevel($user)
  *
@@ -353,17 +449,32 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
 function authGetUserLevel($user)
 {
   global $auth;
+  global $ldap_admin_group_dn;
+
   $admins = $auth['admin'];
   // User not logged in, user level '0'
   if (!isset($user))
   {
     return 0;
   }
-    
-  // Check if the user is can modify
-  for ($i = 0; $admins[$i]; $i++)
+  
+  if ($ldap_admin_group_dn)
   {
-    if (strcasecmp($user, $admins[$i]) == 0)
+    $res = authLdapAction("authLdapCheckAdminGroupCallback", $user, $object);
+    if ($res)
+    {
+      return 2;
+    }
+    else
+    {
+      return 1;
+    }
+  }
+    
+  // Check if the user is an admin
+  foreach ($admins as $admin)
+  {
+    if (strcasecmp($user, $admin) == 0)
     {
       return 2;
     }
@@ -372,6 +483,7 @@ function authGetUserLevel($user)
   // Everybody else is access level '1'
   return 1;
 }
+
 
 /* authLdapDebug($message)
  *

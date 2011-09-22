@@ -567,7 +567,7 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='', $disabled=FA
 // errors which "should never happen", not those caused by bad inputs.
 // If $need_header!=0 output the top of the page too, else assume the
 // caller did that. Alway outputs the bottom of the page and exits.
-function fatal_error($need_header, $message)
+function fatal_error($need_header, $message, $show_form_data = true)
 {
   global $simple_trailer, $weekstarts, $view_week_number, $strftime_format;
   
@@ -576,12 +576,22 @@ function fatal_error($need_header, $message)
     print_header(0, 0, 0, 0, "");
   }
   error_log("MRBS: ".$message);
-  if (!empty($_GET))
-    error_log("MRBS GET: ".print_r($_GET, true));
-  if (!empty($_POST))
-    error_log("MRBS POST: ".print_r($_POST, true));
+
+  if ($show_form_data)
+  {
+    if (!empty($_GET))
+    {
+      error_log("MRBS GET: ".print_r($_GET, true));
+    }
+    if (!empty($_POST))
+    {
+      error_log("MRBS POST: ".print_r($_POST, true));
+    }
+  }
   if (!empty($_SESSION))
+  {
     error_log("MRBS SESSION: ".print_r($_SESSION, true));
+  }
   echo "<p>$message</p>";
   require_once "trailer.inc";
   exit;
