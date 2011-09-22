@@ -885,32 +885,15 @@ function mrbs_nl2br($string)
 // should be sufficient in most MRBS circumstances.   This could
 // always be extended later to do something more sophisticated if
 // necessary.
-function mrbs_entity_decode($string)
+//
+// Note: the charset defaults to UTF-8.  This is slightly different from the
+// behaviour in the PHP html_entity_decode() function where the default charset
+// was only changed from ISO-8859-1 to UTF-8 in PHP 5.4.0
+function mrbs_entity_decode($string, $quote_style=ENT_COMPAT, $charset = 'UTF-8')
 {
-  $n_args = func_num_args();
-  if ($n_args > 1)
-  {
-    $quote_style = func_get_arg(1);
-  }
-  if ($n_args > 2)
-  {
-    $charset = func_get_arg(2);
-  }
-  
   if (function_exists('version_compare') && version_compare(PHP_VERSION, '5.0.0', 'ge'))
   {
-    switch ($n_args)
-    {
-      case 3:
-        $string = html_entity_decode($string, $quote_style, $charset);
-        break;
-      case 2:
-        $string = html_entity_decode($string, $quote_style);
-        break;
-      default:
-        $string = html_entity_decode($string);
-        break;
-    }  
+    $string = html_entity_decode($string, $quote_style, $charset);
   }
   else
   {

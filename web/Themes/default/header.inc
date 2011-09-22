@@ -424,12 +424,12 @@ if ($page == 'edit_entry')
           if (result.conflicts.length == 0)
           {
             conflictDiv.text(checkMark).attr('class', 'good').attr;
-            titleText = '<?php echo get_vocab("no_conflicts") ?>';
+            titleText = '<?php echo mrbs_entity_decode(get_vocab("no_conflicts")) ?>';
           }
           else
           {
             conflictDiv.text(cross).attr('class', 'bad');
-            titleText = '<?php echo get_vocab("conflict") ?>' + ":  \n\n";
+            titleText = '<?php echo mrbs_entity_decode(get_vocab("conflict")) ?>' + ":  \n\n";
             for (var i=0; i<result.conflicts.length; i++)
             {
               titleText += '(' + (i+1).toString() + ') ';
@@ -442,12 +442,12 @@ if ($page == 'edit_entry')
           if (result.rules_broken.length == 0)
           {
             policyDiv.text(checkMark).attr('class', 'good');
-            titleText = '<?php echo get_vocab("no_rules_broken") ?>';
+            titleText = '<?php echo mrbs_entity_decode(get_vocab("no_rules_broken")) ?>';
           }
           else
           {
             policyDiv.text(cross).attr('class', 'bad');
-            titleText = '<?php echo get_vocab("rules_broken") ?>' + ":  \n\n";
+            titleText = '<?php echo mrbs_entity_decode(get_vocab("rules_broken")) ?>' + ":  \n\n";
             for (var i=0; i<result.rules_broken.length; i++)
             {
               titleText += '(' + (i+1).toString() + ') ' + result.rules_broken[i] + "  \n";
