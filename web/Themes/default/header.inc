@@ -76,6 +76,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $lang_map_windows, $langs, $server_os;
   global $default_duration_all_day;
   global $select_options;
+  global $ajax_refresh_rate;
   
   $page = basename($PHP_SELF, ".php");
   $user = getUserName();
@@ -1082,12 +1083,27 @@ $(window).load(function() {
           });
       }  
       <?php
-    }
+    }  // foreach
     ?>
 
     checkValidBooking();
+    
     <?php
-  }
+    // Finally set a timer so that the validity of the booking is periodically
+    // checked, in case someone else books that slot before you press Save
+    // (Note the config variable is in seconds, but the setInterval() function
+    // uses milliseconds)
+    if (!empty($ajax_refresh_rate))
+    {
+      ?>
+      window.setInterval(function() {
+        checkValidBooking();
+      }, <?php echo $ajax_refresh_rate * 1000 ?>);
+      <?php
+    }
+
+
+  } // if (function_exists('json_encode'))
   ?>
 
   <?php
