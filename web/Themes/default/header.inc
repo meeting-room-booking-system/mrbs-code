@@ -391,9 +391,7 @@ if ($page == 'edit_entry')
           }
           else
           {
-            formInput.each(function(index) {
-                params[value].push($(this).val());
-              });
+            params[value] = formInput.val();
           }
           // For some reason I don't understand, posting an empty array will
           // give you a PHP array of ('') at the other end.    So to avoid
