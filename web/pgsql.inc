@@ -490,7 +490,9 @@ function sql_pgsql_connect($host, $username, $password, $db_name,
     echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n</p>\n";
     exit;
   }
-
+  
+  pg_set_client_encoding($db_conn, 'UTF8');
+  
   return $db_conn;
 }
 
