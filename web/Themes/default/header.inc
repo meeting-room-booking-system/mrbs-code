@@ -469,16 +469,18 @@ if ($page == 'edit_entry')
                     'end_seconds', 'end_day', 'end_month', 'end_year',
                     'rep_type', 'rep_end_day', 'rep_end_month', 'rep_end_year', 'rep_day[]', 'rep_num_weeks');
     
-    // function to check whether the proposed booking would (a) conflict with any other bookings
-    // and (b) conforms to the booking policies.   Makes an Ajax call to edit_entry_handler but does
-    // not actually make the booking.                
+    // Fills the params object with a value from the form
+    // (Note:  params is an object, so passed by reference)                          
     ?>
     function fillParamFromForm(form, params, value)
     {
-        // We need to exclude the disabled elements, because otherwise jQuery
-        // will pick them all up
-        var formInput = form.find('[name="' + value + '"]:not(:disabled)');
-        // Scalar parameters (two types - checkboxes and the rest)
+      <?php
+      // We need to exclude the disabled elements, because otherwise jQuery
+      // will pick them all up
+      ?>
+      form.find('[name="' + value + '"]:not(:disabled)').each(function() {
+        <?php // Scalar parameters (two types - checkboxes and the rest) ?>
+        var formInput = $(this);
         if (value.indexOf('[]') == -1)
         {
           if (formInput.filter(':checkbox').length > 0)
@@ -494,7 +496,7 @@ if ($page == 'edit_entry')
             params[value] = formInput.val();
           }
         }
-        // Array parameters (two types - checkboxes and the rest)
+        <?php // Array parameters (two types - checkboxes and the rest) ?>
         else
         {
           params[value] = [];
@@ -511,25 +513,32 @@ if ($page == 'edit_entry')
           {
             params[value] = formInput.val();
           }
+          <?php
           // For some reason I don't understand, posting an empty array will
           // give you a PHP array of ('') at the other end.    So to avoid
           // that problem, delete the property if the array is empty
+          ?>
           if (params[value].length == 0)
           {
             delete params[value];
           }
         }
+      });
     }
 
+    <?php
+    // function to check whether the proposed booking would (a) conflict with any other bookings
+    // and (b) conforms to the booking policies.   Makes an Ajax call to edit_entry_handler but does
+    // not actually make the booking.
+    ?>
     function checkValidBooking()
     {
-      var params = {'ajax': 1}; // This is an Ajax request
+      var params = {'ajax': 1}; <?php // This is an Ajax request ?>
       var form = $('form#main');
-<?php
-      
+      <?php
       foreach ($params as $param)
       {
-          echo "      fillParamFromForm(form, params, '$param');\n";
+          echo "fillParamFromForm(form, params, '$param');\n";
       }
       ?>
       $.post('edit_entry_handler.php', params, function(result) {
@@ -1144,12 +1153,15 @@ $(window).load(function() {
 
   <?php
   // Check the All Day box if that's the default and then call the function
-  // that handles changes
+  // that handles changes.  (Note - the call to OnAllDayClick() comes inside
+  // an each() in case there isn't an all_day checkbox, which there won't be
+  // if we're logging in)
   if ($default_duration_all_day)
   {
     ?>
-    $('#all_day').attr('checked', true);
-    OnAllDayClick(true);
+    $('#all_day').attr('checked', true).each(function() {
+        OnAllDayClick(true);
+      });
     <?php
   }
   
