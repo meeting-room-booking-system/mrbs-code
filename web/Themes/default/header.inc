@@ -1053,12 +1053,15 @@ $(window).load(function() {
 
   <?php
   // Check the All Day box if that's the default and then call the function
-  // that handles changes
+  // that handles changes.  (Note - the call to OnAllDayClick() comes inside
+  // an each() in case there isn't an all_day checkbox, which there won't be
+  // if we're logging in)
   if ($default_duration_all_day)
   {
     ?>
-    $('#all_day').attr('checked', true);
-    OnAllDayClick(true);
+    $('#all_day').attr('checked', true).each(function() {
+        OnAllDayClick(true);
+      });
     <?php
   }
   
