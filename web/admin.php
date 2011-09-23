@@ -287,7 +287,9 @@ if ($is_admin || ($n_displayable_areas > 0))
                 $text = get_loc_field_name($tbl_room, $field['name']);
                 break;
             }
-            echo "<th><div>" . htmlspecialchars($text) . "</div></th>\n";
+            // We don't use htmlspecialchars() here because the column names are
+            // trusted and some of them may deliberately contain HTML entities (eg &nbsp;)
+            echo "<th><div>$text</div></th>\n";
           }
         }
         echo "</tr>\n";
