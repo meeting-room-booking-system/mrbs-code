@@ -128,7 +128,7 @@ function print_theme_header($day, $month, $year, $area, $room)
     // See http://jqueryui.com/
     ?>
     
-    <script type="text/javascript" src="jquery/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="jquery/jquery-1.6.4.min.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-1.8.16.custom.min.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
     <?php
