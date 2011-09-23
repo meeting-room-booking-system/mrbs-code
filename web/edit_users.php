@@ -548,6 +548,16 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
         echo "</div>\n";
         echo "</form>\n";
       }
+      // otherwise (ie when adding, or else editing when not an admin) give them a cancel button
+      // which takes them back to the user list and does nothing
+      else
+      {
+        echo "<form id=\"form_delete_users\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+        echo "<div>\n";
+        echo "<input class=\"submit\" type=\"submit\" value=\"" . get_vocab("back") . "\">\n";
+        echo "</div>\n";
+        echo "</form>\n";
+      }
 ?>
       </div>
 <?php
