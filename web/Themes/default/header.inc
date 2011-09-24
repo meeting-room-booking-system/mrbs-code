@@ -344,69 +344,52 @@ if ($page == 'edit_entry')
   // Add Ajax capabilities (but only if we can return the result as a JSON object)
   if (function_exists('json_encode'))
   {
-    // Form an array of all the form parameters that could affect whether a booking can be made, ie
-    // whether it will conflict with another booking or break a policy rule.  (So for example 'name'
-    // and 'description' won't make any difference, but 'type' could be used in policy checking).
-    $params = array('area', 'rooms[]', 'create_by', 'type', 'all_day', 'id', 'rep_id', 'edit_type',
-                    'start_seconds', 'start_day', 'start_month', 'start_year',
-                    'end_seconds', 'end_day', 'end_month', 'end_year',
-                    'rep_type', 'rep_end_day', 'rep_end_month', 'rep_end_year', 'rep_day[]', 'rep_num_weeks');
     
-    // Fills the params object with a value from the form
-    // (Note:  params is an object, so passed by reference)                          
+    // Get the value of the field in the form
     ?>
-    function fillParamFromForm(form, params, value)
+    function getFormValue(form, field)
     {
       <?php
       // We need to exclude the disabled elements, because otherwise jQuery
       // will pick them all up
       ?>
-      form.find('[name="' + value + '"]:not(:disabled)').each(function() {
-        <?php // Scalar parameters (two types - checkboxes and the rest) ?>
-        var formInput = $(this);
-        if (value.indexOf('[]') == -1)
+      var value;
+      var formInput = form.find('[name="' + field + '"]');
+      <?php // Scalar parameters (two types - checkboxes and the rest) ?>
+      if (field.indexOf('[]') == -1)
+      {
+        if (formInput.filter(':checkbox').length > 0)
         {
-          if (formInput.filter(':checkbox').length > 0)
-          {
-            params[value] = formInput.is(':checked') ? '1' : '';
-          }
-          else if (formInput.filter(':radio').length > 0)
-          {
-            params[value] = formInput.filter(':checked').val();
-          }
-          else
-          {
-            params[value] = formInput.val();
-          }
+          value = formInput.is(':checked') ? '1' : '';
         }
-        <?php // Array parameters (two types - checkboxes and the rest) ?>
+        else if (formInput.filter(':radio').length > 0)
+        {
+          value = formInput.filter(':checked').val();
+        }
         else
         {
-          params[value] = [];
-          if (formInput.filter(':checkbox').length > 0)
-          {
-            formInput.each(function(index) {
-                if ($(this).is(':checked'))
-                {
-                  params[value].push($(this).val());
-                }
-              });
-          }
-          else
-          {
-            params[value] = formInput.val();
-          }
-          <?php
-          // For some reason I don't understand, posting an empty array will
-          // give you a PHP array of ('') at the other end.    So to avoid
-          // that problem, delete the property if the array is empty
-          ?>
-          if (params[value].length == 0)
-          {
-            delete params[value];
-          }
+          value = formInput.val();
         }
-      });
+      }
+      <?php // Array parameters (two types - checkboxes and the rest) ?>
+      else
+      {
+        value = [];
+        if (formInput.filter(':checkbox').length > 0)
+        {
+          formInput.each(function(index) {
+              if ($(this).is(':checked'))
+              {
+                value.push($(this).val());
+              }
+            });
+        }
+        else
+        {
+          value = formInput.val();
+        }
+      }
+      return value;
     }
 
     <?php
@@ -418,12 +401,29 @@ if ($page == 'edit_entry')
     {
       var params = {'ajax': 1}; <?php // This is an Ajax request ?>
       var form = $('form#main');
+      
+      // Load the params object with the values of all the form fields that are not
+      // disabled and are not submit buttons of one kind or another
+      form.find('[name]').not(':disabled, [type="submit"], [type="button"], [type="image"]').each(function() {
+          var fieldName = $(this).attr('name');
+          if (params[fieldName] === undefined)
+          {
+            params[fieldName] = getFormValue(form, fieldName);
+          }
+        });
+        
       <?php
-      foreach ($params as $param)
-      {
-          echo "fillParamFromForm(form, params, '$param');\n";
-      }
+      // For some reason I don't understand, posting an empty array will
+      // give you a PHP array of ('') at the other end.    So to avoid
+      // that problem, delete the property if the array (really an object) is empty
       ?>
+      $.each(params, function(i, val) {
+          if ((typeof(val) == 'object') && (val.length == 0))
+          {
+            delete params[i];
+          }
+        });
+      
       $.post('edit_entry_handler.php', params, function(result) {
           var conflictDiv = $('#conflict_check');
           var checkMark = "\u2714";
@@ -1073,31 +1073,18 @@ $(window).load(function() {
     // as it seems that in some browsers the event fires before the value is changed.
     
     // Note that we also need to add change event handlers to the start and end
-    // datepicker input fields, but we have to that in datepicker_close()
+    // datepicker input fields, but we have to do that in datepicker_close()
     ?>
-    var form = $('form#main');
-    var formInput;
-    <?php
-    foreach ($params as $param)
-    {
-      ?>
-      formInput = form.find('[name="<?php echo $param ?>"]');
-      if (formInput.filter(':checkbox').length > 0)
-      {
-        formInput.click(function() {
-            checkValidBooking();
-          });
-      }
-      else
-      {
-        formInput.change(function() {
-            checkValidBooking();
-          });
-      }  
-      <?php
-    }  // foreach
-    ?>
-
+    var formFields = $('form#main [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
+    formFields.filter(':checkbox')
+              .click(function() {
+                  checkValidBooking();
+                });
+    formFields.not(':checkbox')
+              .change(function() {
+                  checkValidBooking();
+                });
+     
     checkValidBooking();
     
     <?php
