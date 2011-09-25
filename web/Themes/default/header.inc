@@ -265,10 +265,10 @@ function datepicker_close(dateText, inst, formId)
     <?php
     if (function_exists('json_encode'))
     {
-      // If we're doing Ajax checking of the form then we have to validate
-      // the form when the datepicker is closed
+      // If we're doing Ajax checking of the form then we have to check
+      // for conflicts the form when the datepicker is closed
       ?>
-      checkValidBooking();
+      checkConflicts();
       <?php
     }
   }
@@ -397,74 +397,90 @@ if ($page == 'edit_entry')
     // and (b) conforms to the booking policies.   Makes an Ajax call to edit_entry_handler but does
     // not actually make the booking.
     ?>
-    function checkValidBooking()
+    function checkConflicts()
     {
-      var params = {'ajax': 1}; <?php // This is an Ajax request ?>
-      var form = $('form#main');
-      
-      // Load the params object with the values of all the form fields that are not
-      // disabled and are not submit buttons of one kind or another
-      form.find('[name]').not(':disabled, [type="submit"], [type="button"], [type="image"]').each(function() {
-          var fieldName = $(this).attr('name');
-          if (params[fieldName] === undefined)
-          {
-            params[fieldName] = getFormValue(form, fieldName);
-          }
-        });
-        
       <?php
-      // For some reason I don't understand, posting an empty array will
-      // give you a PHP array of ('') at the other end.    So to avoid
-      // that problem, delete the property if the array (really an object) is empty
+      // We set a small timeout on checking the booking in order to allow time for
+      // the click handler on the Submit buttons to set the data in the form.  We then
+      // test the data and if it is set we don't validate the booking because we're going off
+      // somewhere else.  [This isn't an ideal way of doing this.   The problem is that
+      // the change event for a text input can be fired when the user clicks the submit
+      // button - but how can you tell that it was the clicking of the submit button that
+      // caused the change event?]
       ?>
-      $.each(params, function(i, val) {
-          if ((typeof(val) == 'object') && (val.length == 0))
-          {
-            delete params[i];
-          }
-        });
+      var timeout = 200; <?php // ms ?>
+      window.setTimeout(function() {
+        var params = {'ajax': 1}; <?php // This is an Ajax request ?>
+        var form = $('form#main');
+        if (form.data('submit'))
+        {
+          return;
+        }
       
-      $.post('edit_entry_handler.php', params, function(result) {
-          var conflictDiv = $('#conflict_check');
-          var checkMark = "\u2714";
-          var cross = "\u2718";
-          var titleText;
-          var patternSpan = /<span[\s\S]*span>/gi;
-          var patternTags = /<\S[^><]*>/g;
-          if (result.conflicts.length == 0)
-          {
-            conflictDiv.text(checkMark).attr('class', 'good').attr;
-            titleText = '<?php echo mrbs_entity_decode(get_vocab("no_conflicts")) ?>';
-          }
-          else
-          {
-            conflictDiv.text(cross).attr('class', 'bad');
-            titleText = '<?php echo mrbs_entity_decode(get_vocab("conflict")) ?>' + ":  \n\n";
-            for (var i=0; i<result.conflicts.length; i++)
+        // Load the params object with the values of all the form fields that are not
+        // disabled and are not submit buttons of one kind or another
+        form.find('[name]').not(':disabled, [type="submit"], [type="button"], [type="image"]').each(function() {
+            var fieldName = $(this).attr('name');
+            if (params[fieldName] === undefined)
             {
-              titleText += '(' + (i+1).toString() + ') ';
-              <?php // strip out the <span> and its contents and then all other tags ?>
-              titleText += result.conflicts[i].replace(patternSpan, '').replace(patternTags, '') + "  \n";
+              params[fieldName] = getFormValue(form, fieldName);
             }
-          }
-          conflictDiv.attr('title', titleText);
-          var policyDiv = $('#policy_check');
-          if (result.rules_broken.length == 0)
-          {
-            policyDiv.text(checkMark).attr('class', 'good');
-            titleText = '<?php echo mrbs_entity_decode(get_vocab("no_rules_broken")) ?>';
-          }
-          else
-          {
-            policyDiv.text(cross).attr('class', 'bad');
-            titleText = '<?php echo mrbs_entity_decode(get_vocab("rules_broken")) ?>' + ":  \n\n";
-            for (var i=0; i<result.rules_broken.length; i++)
+          });
+        
+        <?php
+        // For some reason I don't understand, posting an empty array will
+        // give you a PHP array of ('') at the other end.    So to avoid
+        // that problem, delete the property if the array (really an object) is empty
+        ?>
+        $.each(params, function(i, val) {
+            if ((typeof(val) == 'object') && (val.length == 0))
             {
-              titleText += '(' + (i+1).toString() + ') ' + result.rules_broken[i] + "  \n";
+              delete params[i];
             }
-          }
-          policyDiv.attr('title', titleText);
-        }, 'json');
+          });
+        
+        $.post('edit_entry_handler.php', params, function(result) {
+            var conflictDiv = $('#conflict_check');
+            var checkMark = "\u2714";
+            var cross = "\u2718";
+            var titleText;
+            var patternSpan = /<span[\s\S]*span>/gi;
+            var patternTags = /<\S[^><]*>/g;
+            if (result.conflicts.length == 0)
+            {
+              conflictDiv.text(checkMark).attr('class', 'good').attr;
+              titleText = '<?php echo mrbs_entity_decode(get_vocab("no_conflicts")) ?>';
+            }
+            else
+            {
+              conflictDiv.text(cross).attr('class', 'bad');
+              titleText = '<?php echo mrbs_entity_decode(get_vocab("conflict")) ?>' + ":  \n\n";
+              for (var i=0; i<result.conflicts.length; i++)
+              {
+                titleText += '(' + (i+1).toString() + ') ';
+                <?php // strip out the <span> and its contents and then all other tags ?>
+                titleText += result.conflicts[i].replace(patternSpan, '').replace(patternTags, '') + "  \n";
+              }
+            }
+            conflictDiv.attr('title', titleText);
+            var policyDiv = $('#policy_check');
+            if (result.rules_broken.length == 0)
+            {
+              policyDiv.text(checkMark).attr('class', 'good');
+              titleText = '<?php echo mrbs_entity_decode(get_vocab("no_rules_broken")) ?>';
+            }
+            else
+            {
+              policyDiv.text(cross).attr('class', 'bad');
+              titleText = '<?php echo mrbs_entity_decode(get_vocab("rules_broken")) ?>' + ":  \n\n";
+              for (var i=0; i<result.rules_broken.length; i++)
+              {
+                titleText += '(' + (i+1).toString() + ') ' + result.rules_broken[i] + "  \n";
+              }
+            }
+            policyDiv.attr('title', titleText);
+          }, 'json');
+      }, timeout);  <?php // setTimeout() ?>
     }
     <?php
   }
@@ -674,7 +690,7 @@ if ($page == 'edit_entry')
       // If we've changed areas and the modes are the same, we can try and match times/periods.
       // We will try and be conservative and find a start time that includes the previous start time
       // and an end time that includes the previous end time.   This means that by default the 
-      // booking period will include the old boioking period (unless we've hit the start or
+      // booking period will include the old booking period (unless we've hit the start or
       // end of day).   But it does mean that as you switch between areas the booking period
       // tends to get bigger:  if you switch fromn Area 1 to Area 2 and then bavk again it's
       // possible that the booking period for Area 1 is longer than it was originally.
@@ -1065,38 +1081,68 @@ $(window).load(function() {
     <?php
   }
   
+  // Set up handlers if anything like a submit button is pressed.   If it's the Save
+  // button we need to validate the form first.  In addition, for all the buttons, if
+  // we are going to submit something we set some data in the form.   This allows
+  // the function that checks for a valid booking to see if the change was triggered
+  // by a Submit button being pressed, and if so, not to send an Ajax request.
+  ?>
+  $('form#main').find('[type="submit"], [type="button"], [type="image"]').click(function() {
+    var trigger = $(this).attr('name');
+    var thisForm = $(this).parents('form').eq(0);
+    thisForm.data('submit', trigger);
+    if (trigger == 'save_button')
+    {
+      if (validate('main'))
+      {
+        thisForm.submit();
+      }
+      thisForm.removeData('submit');
+      return false;
+    }
+    return true;
+  });
+      
+  <?php
   // Add Ajax capabilities (but only if we can return the result as a JSON object)
   if (function_exists('json_encode'))
   {
-    // Add a change event handler to each of the form fields so that when they change
-    // the validity of the booking is re-checked.   Use a click event for checkboxes
-    // as it seems that in some browsers the event fires before the value is changed.
-    
+    // Add a change event handler to each of the form fields - except for those that
+    // are disabled and anything that might be a submit button - so that when they change
+    // the validity of the booking is re-checked.   (This probably causes more checking
+    // than is really necessary, eg when the brief description is changed, but on the other
+    // hand it (a) removes the need to know the names of the fields you want and (b) keeps
+    // the data available for policy checking as complete as possible just in case somebody
+    // decides to set a policy based on for example the brief description, for some reason).
+    //
+    // Use a click event for checkboxes as it seems that in some browsers the event fires
+    // before the value is changed.
+    //
     // Note that we also need to add change event handlers to the start and end
     // datepicker input fields, but we have to do that in datepicker_close()
     ?>
     var formFields = $('form#main [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
     formFields.filter(':checkbox')
               .click(function() {
-                  checkValidBooking();
+                  checkConflicts();
                 });
     formFields.not(':checkbox')
-              .change(function() {
-                  checkValidBooking();
+              .change(function(event) { 
+                  checkConflicts();
                 });
      
-    checkValidBooking();
+    checkConflicts();
     
     <?php
-    // Finally set a timer so that the validity of the booking is periodically
-    // checked, in case someone else books that slot before you press Save
+    // Finally set a timer so that conflicts are periodically checked for,
+    // in case someone else books that slot before you press Save.
     // (Note the config variable is in seconds, but the setInterval() function
     // uses milliseconds)
     if (!empty($ajax_refresh_rate))
     {
       ?>
       window.setInterval(function() {
-        checkValidBooking();
+        checkConflicts();
       }, <?php echo $ajax_refresh_rate * 1000 ?>);
       <?php
     }
