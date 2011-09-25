@@ -62,6 +62,17 @@ foreach($formvars as $var => $var_type)
   $$var = get_form_var($var, $var_type);
 }
 
+// BACK:  we didn't really want to be here - send them to the returl
+if (!empty($back_button))
+{
+  if (empty($returl))
+  {
+    $returl = "index.php";
+  }
+  header("Location: $returl");
+  exit();
+}
+
 // Get custom form variables
 $custom_fields = array();
 
@@ -158,13 +169,6 @@ if (empty($returl) || ($returl_base[0] == "edit_entry.php") || ($returl_base[0] 
 else
 {
   $returl = $returl_base[0];
-}
-
-// BACK:  we didn't really want to be here - send them to the returl
-if (!empty($back_button))
-{
-  header("Location: $returl");
-  exit();
 }
 
 // If we haven't been given a sensible date then get out of here and don't trey and make a booking
