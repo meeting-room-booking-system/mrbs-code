@@ -724,6 +724,7 @@ $sumby = get_form_var('sumby', 'string');
 $match_approved = get_form_var('match_approved', 'string');
 $match_confirmed = get_form_var('match_confirmed', 'string');
 $match_private = get_form_var('match_private', 'string');
+$phase = get_form_var('phase', 'int');
 $ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 
@@ -746,6 +747,11 @@ if ($ajax)
 }
 
 // Set some defaults
+if (!isset($phase))
+{
+  // The default is that we're at Phase 1
+  $phase = 1;
+}
 if (!isset($match_approved))
 {
   $match_approved = APPROVED_BOTH;
@@ -1092,7 +1098,7 @@ if (($output_as_html || empty($nmatch)) && !$ajax)  // We don't want the form if
   ?>
   <div class="screenonly">
  
-    <form class="form_general" id="report_form" method="get" action="report.php">
+    <form class="form_general" id="report_form" method="post" action="report.php">
       <fieldset>
       <legend><?php echo get_vocab("report_on");?></legend>
       
@@ -1347,6 +1353,7 @@ if (($output_as_html || empty($nmatch)) && !$ajax)  // We don't want the form if
         </fieldset>
       
         <div id="report_submit">
+          <input type="hidden" name="phase" value="2">
           <input class="submit" type="submit" value="<?php echo get_vocab("submitquery") ?>">
         </div>
         
@@ -1358,7 +1365,7 @@ if (($output_as_html || empty($nmatch)) && !$ajax)  // We don't want the form if
 }
 
 // PHASE 2:  Output the results, if called with parameters:
-if (isset($areamatch))
+if ($phase == 2)
 {
   if ($nmatch == 0)
   {
