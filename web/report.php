@@ -825,6 +825,7 @@ $sumby = get_form_var('sumby', 'string');
 $match_approved = get_form_var('match_approved', 'string');
 $match_confirmed = get_form_var('match_confirmed', 'string');
 $match_private = get_form_var('match_private', 'string');
+$phase = get_form_var('phase', 'int');
 
 
 // Check the user is authorised for this page
@@ -836,6 +837,11 @@ $user_level = authGetUserLevel($user);
 $is_admin =  ($user_level >= 2);
 
 // Set some defaults
+if (!isset($phase))
+{
+  // The default is that we're at Phase 1
+  $phase = 1;
+}
 if (!isset($match_approved))
 {
   $match_approved = APPROVED_BOTH;
@@ -1456,6 +1462,7 @@ if ($output_as_html || empty($nmatch))
         </fieldset>
       
         <div id="report_submit">
+          <input type="hidden" name="phase" value="2">
           <input class="submit" type="submit" value="<?php echo get_vocab("submitquery") ?>">
         </div>
         
@@ -1467,7 +1474,7 @@ if ($output_as_html || empty($nmatch))
 }
 
 // PHASE 2:  Output the results, if called with parameters:
-if (isset($areamatch))
+if ($phase == 2)
 {
   if ($nmatch == 0)
   {
