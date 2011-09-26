@@ -1189,7 +1189,7 @@ if ($output_as_html || empty($nmatch))
   ?>
   <div class="screenonly">
  
-    <form class="form_general" method="get" action="report.php">
+    <form class="form_general" method="post" action="report.php">
       <fieldset>
       <legend><?php echo get_vocab("report_on");?></legend>
       
