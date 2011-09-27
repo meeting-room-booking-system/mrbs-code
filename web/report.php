@@ -805,59 +805,67 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 }
 
 
+// Work out whether we are running from the command line
+$cli_mode = is_cli();
+
+if ($cli_mode)
+{
+  // Need to set include path if we're running in CLI mode
+  // (because otherwise PHP looks in the current directory rather
+  // than the directory from which the script was called)
+  ini_set("include_path", dirname($PHP_SELF));
+}
+
+$to_date = getdate(mktime(0, 0, 0, $month, $day + $default_report_days, $year));
+
 // Get non-standard form variables
-$From_day = get_form_var('From_day', 'int');
-$From_month = get_form_var('From_month', 'int');
-$From_year = get_form_var('From_year', 'int');
-$To_day = get_form_var('To_day', 'int');
-$To_month = get_form_var('To_month', 'int');
-$To_year = get_form_var('To_year', 'int');
+$from_day = get_form_var('from_day', 'int', $day);
+$from_month = get_form_var('from_month', 'int', $month);
+$from_year = get_form_var('from_year', 'int', $year);
+$to_day = get_form_var('to_day', 'int', $to_date['mday']);
+$to_month = get_form_var('to_month', 'int', $to_date['mon']);
+$to_year = get_form_var('to_year', 'int', $to_date['year']);
 $creatormatch = get_form_var('creatormatch', 'string');
 $areamatch = get_form_var('areamatch', 'string');
 $roommatch = get_form_var('roommatch', 'string');
 $namematch = get_form_var('namematch', 'string');
 $descrmatch = get_form_var('descrmatch', 'string');
-$summarize = get_form_var('summarize', 'int');
+$summarize = get_form_var('summarize', 'int', (($cli_mode) ? REPORT + OUTPUT_CSV : REPORT + OUTPUT_HTML));
 $typematch = get_form_var('typematch', 'array');
-$sortby = get_form_var('sortby', 'string');
-$display = get_form_var('display', 'string');
-$sumby = get_form_var('sumby', 'string');
-$match_approved = get_form_var('match_approved', 'string');
-$match_confirmed = get_form_var('match_confirmed', 'string');
-$match_private = get_form_var('match_private', 'string');
-$phase = get_form_var('phase', 'int');
-
+$sortby = get_form_var('sortby', 'string', 'r');  // $sortby: r=room, s=start date/time.
+$display = get_form_var('display', 'string', 'd');  // $display: d=duration, e=start date/time and end date/time.
+$sumby = get_form_var('sumby', 'string', 'd');  // $sumby: d=by brief description, c=by creator, t=by type.
+$match_approved = get_form_var('match_approved', 'int', APPROVED_BOTH);
+$match_confirmed = get_form_var('match_confirmed', 'int', CONFIRMED_BOTH);
+$match_private = get_form_var('match_private', 'int', PRIVATE_BOTH);
+$phase = get_form_var('phase', 'int', 1);
 
 // Check the user is authorised for this page
-checkAuthorised();
+if ($cli_mode)
+{
+  $is_admin = TRUE;
+}
+else
+{
+  checkAuthorised();
+  // Also need to know whether they have admin rights
+  $user = getUserName();
+  $user_level = authGetUserLevel($user);
+  $is_admin =  ($user_level >= 2);
+}
 
-// Also need to know whether they have admin rights
-$user = getUserName();
-$user_level = authGetUserLevel($user);
-$is_admin =  ($user_level >= 2);
+// If we're running in CLI mode we're passing the parameters in from the command line
+// not the form and we want to go straight to Phase 2 (producing the report)
+if ($cli_mode)
+{
+  $phase = 2;
+}
 
-// Set some defaults
-if (!isset($phase))
-{
-  // The default is that we're at Phase 1
-  $phase = 1;
-}
-if (!isset($match_approved))
-{
-  $match_approved = APPROVED_BOTH;
-}
-if (!isset($match_confirmed))
-{
-  $match_confirmed = CONFIRMED_BOTH;
-}
-if (!isset($match_private))
-{
-  $match_private = PRIVATE_BOTH;
-}
-if (empty($summarize))
-{
-  $summarize = REPORT + OUTPUT_HTML;
-}
+$private_somewhere = some_area('private_enabled') || some_area('private_mandatory');
+$approval_somewhere = some_area('approval_enabled');
+$confirmation_somewhere = some_area('confirmation_enabled');
+$times_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods=0") > 0);
+$periods_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods!=0") > 0);
 
 $output_as_csv = $summarize & OUTPUT_CSV;
 $output_as_ical = $summarize & OUTPUT_ICAL;
@@ -894,11 +902,11 @@ foreach ($custom_fields as $key => $value)
 }
 
 // PHASE 2:  SQL QUERY.  We do the SQL query now to see if there's anything there
-if (isset($areamatch))
+if ($phase == 2)
 {
   // Start and end times are also used to clip the times for summary info.
-  $report_start = mktime(0, 0, 0, $From_month+0, $From_day+0, $From_year+0);
-  $report_end = mktime(0, 0, 0, $To_month+0, $To_day+1, $To_year+0);
+  $report_start = mktime(0, 0, 0, $from_month+0, $from_day+0, $from_year+0);
+  $report_end = mktime(0, 0, 0, $to_month+0, $to_day+1, $to_year+0);
   
   // Construct the SQL query
   $sql = "SELECT E.*, "
@@ -1107,7 +1115,7 @@ if (isset($areamatch))
 }
 
 // print the page header
-if ($output_as_html || empty($nmatch))
+if ($output_as_html || (empty($nmatch) && !$cli_mode))
 {
   print_header($day, $month, $year, $area, isset($room) ? $room : "");
 }
@@ -1125,66 +1133,8 @@ else // Assumed to be output_as_ical
 }
 
 
-if (isset($areamatch))
-{
-  // Resubmit - reapply parameters as defaults.
-  // Make sure these are not escape-quoted:
-
-  // Make default values when the form is reused.
-  $areamatch_default = htmlspecialchars($areamatch);
-  $roommatch_default = htmlspecialchars($roommatch);
-  (isset($typematch)) ? $typematch_default = $typematch :
-    $typematch_default = "";
-  $namematch_default = htmlspecialchars($namematch);
-  $descrmatch_default = htmlspecialchars($descrmatch);
-  $creatormatch_default = htmlspecialchars($creatormatch);
-}
-else
-{
-  // New report - use defaults.
-  $areamatch_default = "";
-  $roommatch_default = "";
-  $typematch_default = array();
-  $namematch_default = "";
-  $descrmatch_default = "";
-  $creatormatch_default = "";
-  $From_day = $day;
-  $From_month = $month;
-  $From_year = $year;
-  $To_time = mktime(0, 0, 0, $month, $day + $default_report_days, $year);
-  $To_day   = date("d", $To_time);
-  $To_month = date("m", $To_time);
-  $To_year  = date("Y", $To_time);
-  $match_private = PRIVATE_BOTH;
-  $match_approved = APPROVED_BOTH;
-  $match_confirmed = CONFIRMED_BOTH;
-}
-
-// $sumby: d=by brief description, c=by creator, t=by type.
-if (empty($sumby))
-{
-  $sumby = "d";
-}
-// $sortby: r=room, s=start date/time.
-if (empty($sortby))
-{
-  $sortby = "r";
-}
-// $display: d=duration, e=start date/time and end date/time.
-if (empty($display))
-{
-  $display = "d";
-}
-
-$private_somewhere = some_area('private_enabled') || some_area('private_mandatory');
-$approval_somewhere = some_area('approval_enabled');
-$confirmation_somewhere = some_area('confirmation_enabled');
-$times_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods=0") > 0);
-$periods_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods!=0") > 0);
-
-
 // Upper part: The form.
-if ($output_as_html || empty($nmatch))
+if ($output_as_html || (empty($nmatch) && !$cli_mode))
 {
   ?>
   <div class="screenonly">
@@ -1198,27 +1148,27 @@ if ($output_as_html || empty($nmatch))
       
         <div id="div_report_start">
           <?php
-          echo "<label for=\"From_datepicker\">" . get_vocab("report_start") . ":</label>\n";
-          genDateSelector("From_", $From_day, $From_month, $From_year);
+          echo "<label for=\"from_datepicker\">" . get_vocab("report_start") . ":</label>\n";
+          genDateSelector("from_", $from_day, $from_month, $from_year);
           ?>
         
         </div>
       
         <div id="div_report_end">
           <?php
-          echo "<label for=\"To_datepicker\">" . get_vocab("report_end") . ":</label>\n";
-          genDateSelector("To_", $To_day, $To_month, $To_year);
+          echo "<label for=\"to_datepicker\">" . get_vocab("report_end") . ":</label>\n";
+          genDateSelector("to_", $to_day, $to_month, $to_year);
           ?>
         </div>
       
         <div id="div_areamatch">                  
           <label for="areamatch"><?php echo get_vocab("match_area");?>:</label>
-          <input type="text" id="areamatch" name="areamatch" value="<?php echo $areamatch_default; ?>">
+          <input type="text" id="areamatch" name="areamatch" value="<?php echo htmlspecialchars($areamatch); ?>">
         </div>   
       
         <div id="div_roommatch">
           <label for="roommatch"><?php echo get_vocab("match_room");?>:</label>
-          <input type="text" id="roommatch" name="roommatch" value="<?php echo $roommatch_default; ?>">
+          <input type="text" id="roommatch" name="roommatch" value="<?php echo htmlspecialchars($roommatch); ?>">
         </div>
       
         <div id="div_typematch">
@@ -1230,7 +1180,7 @@ if ($output_as_html || empty($nmatch))
               if (!empty($val) )
               {
                 echo "                  <option value=\"$key\"" .
-                (is_array($typematch_default) && in_array ( $key, $typematch_default ) ? " selected" : "") .
+                (is_array($typematch) && in_array ($key, $typematch) ? " selected" : "") .
                 ">$val</option>\n";
               }
             }
@@ -1241,17 +1191,17 @@ if ($output_as_html || empty($nmatch))
       
         <div id="div_namematch">     
           <label for="namematch"><?php echo get_vocab("match_entry");?>:</label>
-          <input type="text" id="namematch" name="namematch" value="<?php echo $namematch_default; ?>">
+          <input type="text" id="namematch" name="namematch" value="<?php echo htmlspecialchars($namematch); ?>">
         </div>   
       
         <div id="div_descrmatch">
           <label for="descrmatch"><?php echo get_vocab("match_descr");?>:</label>
-          <input type="text" id="descrmatch" name="descrmatch" value="<?php echo $descrmatch_default; ?>">
+          <input type="text" id="descrmatch" name="descrmatch" value="<?php echo htmlspecialchars($descrmatch); ?>">
         </div>
       
         <div id="div_creatormatch">
           <label for="creatormatch"><?php echo get_vocab("createdby");?>:</label>
-          <input type="text" id="creatormatch" name="creatormatch" value="<?php echo $creatormatch_default; ?>">
+          <input type="text" id="creatormatch" name="creatormatch" value="<?php echo htmlspecialchars($creatormatch); ?>">
         </div>
         
         <?php
@@ -1476,7 +1426,7 @@ if ($output_as_html || empty($nmatch))
 // PHASE 2:  Output the results, if called with parameters:
 if ($phase == 2)
 {
-  if ($nmatch == 0)
+  if (($nmatch == 0) && !$cli_mode)
   {
     echo "<p class=\"report_entries\">" . get_vocab("nothing_found") . "</p>\n";
     sql_free($res);
@@ -1529,6 +1479,11 @@ if ($phase == 2)
       do_summary($count, $hours, $room_hash, $name_hash);
     }
   }
+}
+
+if ($cli_mode)
+{
+  exit(0);
 }
 
 if ($output_as_html || empty($nmatch))

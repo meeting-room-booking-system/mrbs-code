@@ -231,8 +231,8 @@ function PrintLogonBox()
     // words 'you are xxxx' becomes a link to the
     // report page with only entries created by xxx. Past entries are not
     // displayed but this can be changed
-    $search_string = "report.php?From_day=$day&amp;From_month=$month&amp;".
-      "From_year=$year&amp;To_day=1&amp;To_month=12&amp;To_year=2030&amp;areamatch=&amp;".
+    $search_string = "report.php?from_day=$day&amp;from_month=$month&amp;".
+      "from_year=$year&amp;to_day=1&amp;to_month=12&amp;to_year=2030&amp;areamatch=&amp;".
       "roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;sortby=r&amp;display=d&amp;".
       "sumby=d&amp;creatormatch=".urlencode($user); ?>
 

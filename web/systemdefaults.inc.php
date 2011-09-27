@@ -731,6 +731,12 @@ $auth['only_admin_can_see_other_users'] = FALSE;
 // being able to view bookings, set this variable to TRUE
 $auth['deny_public_access'] = FALSE;
 
+// Set to TRUE if you want to allow MRBS to be run from the command line, for example
+// if you want to produce reports from a cron job.   (It is set to FALSE by default
+// as a security measure, because when running from the CLI you are assumed to have
+// full admin access).
+$allow_cli = FALSE;
+
 
 /**********************************************
  * Email settings
@@ -902,6 +908,9 @@ $override_locale = "";
 // end of the file name, including the underscore (ie. for site_faq_fr.html
 // use "_fr"
 $faqfilelang = ""; 
+
+// Language selection when run from the command line
+$cli_language = "en";
 
 
 /*************

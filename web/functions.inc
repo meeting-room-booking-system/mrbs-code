@@ -1892,4 +1892,42 @@ function is_assoc($arr)
 {
   return (is_array($arr) && count(array_filter(array_keys($arr),'is_string')) == count($arr));
 }
+
+
+// Checks whether we are running as a CLI module
+//
+// Based on code from mniewerth at ultimediaos dot com at 
+// http://php.net/manual/features.commandline.php
+function is_cgi()
+{
+  return (substr(PHP_SAPI, 0, 3) == 'cgi');
+}
+
+
+// Checks whether we are running from the CLI
+//
+// Based on code from mniewerth at ultimediaos dot com at 
+// http://php.net/manual/features.commandline.php
+function is_cli()
+{
+  global $allow_cli;
+  
+  if (!$allow_cli)
+  {
+    return FALSE;
+    
+  }
+  if (defined('STDIN'))
+  {
+    return TRUE;
+  }
+  elseif (is_cgi() && getenv('TERM'))
+  {
+    return TRUE;
+  }
+  else
+  {
+    return FALSE;
+  }
+}
 ?>

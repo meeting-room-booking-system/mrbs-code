@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<!-- $Id$ -->
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Help - report.php</title>
+<style type="text/css">
+body {
+  font-size: small;
+  font-family: Arial, Verdana, sans-serif;
+}
+h1 {
+  font-size: medium;
+  margin-top: 2em;
+}
+body > table > tbody > tr:last-child > td {
+  padding-bottom: 1em;
+}
+td {
+  padding: 0 1em 0 0;
+  vertical-align: top;
+}
+table table {
+  margin-left: 2em;
+}
+</style>
+</head>
+
+<body>
+<h1>NAME</h1>
+<p>
+report.php - produce MRBS reports
+</p>
+<h1>SYNOPSIS</h1>
+<p>
+<code>report.php [args]</code>
+</p>
+<p>
+where args is a space separated list of arguments of the form <code>param1=value1&amp;param2=value2</code>.  Spaces 
+in the value string and ampersands can normally be escaped with the backslash character ('\'), depending
+on the shell.  Array parameters can be sent by using the '[]' notation, eg <code>param1[]=valueA&amp;param1[]=valueB</code>.
+Array parameters must all appear in the same argument.
+</p>
+<h1>DESCRIPTION</h1>
+<p>
+  This page describes how to use MRBS reporting from the command line (CLI).   Report.php can
+  either be called directly or as a cron job.   The script report.php should be called
+  as a parameter to the PHP interpreter.   The output of report.php is sent to STDOUT.
+</p>
+<p>
+  The language and locale used for the reports is specified by the config variable
+  $cli_language.  The script can only be run from the command line if the MRBS config
+  variable $allow_cli is set to TRUE.
+</p>
+<h1>OPTIONS</h1>
+<table>
+<tbody>
+<tr>
+  <td><code>summarize</code></td>
+  <td>
+    The type of report to produce.  Permitted values are:
+    <table>
+      <tr><td><code>5</code></td><td>HTML report</td></tr>
+      <tr><td><code>6</code></td><td>HTML summary</td></tr>
+      <tr><td><code>7</code></td><td>HTML report and summary</td></tr>
+      <tr><td><code>9</code></td><td>CSV report<em> (default)</em></td></tr>
+      <tr><td><code>10</code></td><td>CSV summary</td></tr>
+      <tr><td><code>17</code></td><td>iCalendar (.ics file) report - excluding periods</td></tr>
+    </table>
+  </td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+  <td>
+    <code>day</code>
+  </td>
+  <td>
+    The day (1..31) to use as the base date for the reporting
+    period.   If any of day, week and month are not specified
+    then today's date will be used as the base date.
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>month</code>
+  </td>
+  <td>
+    The month (1..12) to use as the base date for the reporting
+    period.   If any of day, week and month are not specified
+    then today's date will be used as the base date.
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>year</code>
+  </td>
+  <td>
+    The year (4 digits) to use as the base date for the reporting
+    period.   If any of day, week and month are not specified
+    then today's date will be used as the base date.
+  </td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+  <td><code>from_day</code></td>
+  <td>
+    The start day (1..31) of the reporting period.  If from_day,
+    from_month and from_year are not specified then the base date will
+    be used.
+  </td>
+</tr>
+<tr>
+  <td><code>from_month</code></td>
+  <td>
+    The start month (1..12) of the reporting period.  If from_day,
+    from_month and from_year are not specified then the base date will
+    be used.
+  </td>
+</tr>
+<tr>
+  <td><code>from_year</code></td>
+  <td>
+    The start year (4 digits) of the reporting period.  If from_day,
+    from_month and from_year are not specified then the base date will
+    be used.
+  </td>
+</tr>
+<tr>
+  <td><code>to_day</code></td>
+  <td>
+    The end day (1..31) of the reporting period.  If to_day,
+    to_month and to_year are not specified then the base date + 
+    $default_report_days (specified in systemdefaults.inc.php and
+    optionally over-ridden in config.in.php) will be used.  Note that
+    the reporting period ends at 0000 on the to_day, so if for example
+    you want a report for all bookings in 2011 the to_date should be
+    1 Jan 2012.
+  </td>
+</tr>
+<tr>
+  <td><code>to_month</code></td>
+  <td>
+    The end month (1..12) of the reporting period.  If to_day,
+    to_month and to_year are not specified then the base date + 
+    $default_report_days (specified in systemdefaults.inc.php and
+    optionally over-ridden in config.in.php) will be used.
+  </td>
+</tr>
+<tr>
+  <td><code>to_year</code></td>
+  <td>
+    The end year (4 digits) of the reporting period.  If to_day,
+    to_month and to_year are not specified then the base date + 
+    $default_report_days (specified in systemdefaults.inc.php and
+    optionally over-ridden in config.in.php) will be used.
+  </td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+  <td><code>creatormatch</code></td>
+  <td>
+    Limit the report to entries where the creator's user name contains the string.
+  </td>
+</tr>
+<tr>
+  <td><code>areamatch</code></td>
+  <td>
+    Limit the report to entries where the area name contains the string.
+  </td>
+</tr>
+<tr>
+  <td><code>roommatch</code></td>
+  <td>
+    Limit the report to entries where the room name contains the string.
+  </td>
+</tr>
+<tr>
+  <td><code>namematch</code></td>
+  <td>
+    Limit the report to entries where the entry name contains the string.
+  </td>
+</tr>
+<tr>
+  <td><code>descrmatch</code></td>
+  <td>
+    Limit the report to entries where the description contains the string.
+  </td>
+</tr>
+<tr>
+  <td><code>typematch[]</code></td>
+  <td>
+    Limit the report to entries of types X,Y,Z (eg typematch[]=X&amp;typematch[]=Y&amp;typematch[]=Z).  Default: all types.
+  </td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+  <td><code>sortby</code></td>
+  <td>
+    Permitted values are:
+    <table>
+      <tr><td><code>r</code></td><td><em>(default)</em> sort by room name</td></tr>
+      <tr><td><code>s</code></td><td>sort by start time</td></tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td><code>display</code></td>
+  <td>
+    Permitted values are:
+    <table>
+      <tr><td><code>d</code></td><td><em>(default)</em> show start time and duration</td></tr>
+      <tr><td><code>e</code></td><td>show start time and end time</td></tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td><code>sumby</code></td>
+  <td>
+    The field to use for the first column of the summary table.
+    Permitted values are:
+    <table>
+      <tr><td><code>d</code></td><td><em>(default)</em> brief description</td></tr>
+      <tr><td><code>c</code></td><td>creator's user name</td></tr>
+      <tr><td><code>t</code></td><td>type</td></tr>
+    </table>
+  </td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+  <td><code>phase</code></td>
+  <td>
+    The phase of report production.  Phase 1 is the gathering of user input from
+    the web page form;  Phase 2 is the production of the report or summary.  When running
+    from the command line it is not necessary to set this option as it is automatically 
+    set to 2 by MRBS.  However when running report.php from the web browser or by using wget,
+    setting phase=2 will force report.php to go straight to the production of a report. 
+  </td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+  <td>custom</td>
+  <td>
+    Custom fields can be searched for using the same syntax as above.
+  </td>
+</tr>
+</tbody>
+</table>
+<h1>RETURN VALUES</h1>
+<p>
+Returns 0 on success.
+</p>
+<h1>EXAMPLES</h1>
+<p>
+  To produce a summary in CSV format of all bookings for 2011, arranged by the creator's 
+  name, and send the summary to the file summary.csv:
+</p>
+<p>
+<code>
+  /usr/local/bin/php /home/mrbs/report.php summarize=10 from_day=1&amp;from_month=1&amp;from_year=2011 to_day=1&amp;to_month=1&amp;to_year=2012 sumby=c > summary.csv
+</code>
+</p>
+<p>
+  The CLI output can be simulated in a browser by putting the parameters in a query string.   But note
+  that the parameter <code>phase=2</code> must be added to tell MRBS that it is on the second
+  phase of report production (the first phase is gathering the user input from the form; if report.php
+  is called from the command line the phase is automatically set to 2).  For example,
+  to simulate the CLI command above enter into the browser:
+</p>
+<p>
+<code>
+  report.php?phase=2&amp;summarize=10&amp;from_day=1&amp;from_month=1&amp;from_year=2011&amp;to_day=1&amp;to_month=1&amp;to_year=2012&amp;sumby=c
+</code>
+</p>
+<p>
+  When using wget, don't forget to escape ampersands with a backslash.  For example:
+</p>
+<p>
+<code>
+  wget -O myreport.csv http://localhost/mrbs/report.php?phase=2\&amp;summarize=10\&amp;sumby=c
+</code>
+</p>
+</body>
+</html>

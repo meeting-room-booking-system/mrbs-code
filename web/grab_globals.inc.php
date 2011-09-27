@@ -21,22 +21,39 @@
 // $Id$
 
 
-//
+// Gets a form variable.   Takes an optional third parameter which
+// is the default value if nothing is found from the form.
 function get_form_var($variable, $type = 'string')
 {
   // We use some functions from here
   require_once "functions.inc";
-
-  if ($type == 'array')
+  
+  global $cli_params, $allow_cli;
+  
+  // Set the default value, and make sure it's the right type
+  if (func_num_args() > 2)
   {
-    $value = array();
+    $value = func_get_arg(2);
+    $value = ($type == 'array') ? (array)$value : $value;
   }
   else
   {
-    $value = NULL;
+    $value = ($type == 'array') ? array() : NULL;
   }
-
-  if (!empty($_POST) && isset($_POST[$variable]))
+  
+   // Get the command line arguments if any (and we're allowed to)
+  if ($allow_cli && (!empty($cli_params) && isset($cli_params[$variable])))
+  {
+    if ($type == 'array')
+    {
+      $value = (array)$cli_params[$variable];
+    }
+    else
+    {
+      $value = $cli_params[$variable];
+    }
+  }
+  else if (!empty($_POST) && isset($_POST[$variable]))
   {
     if ($type == 'array')
     {
@@ -192,4 +209,16 @@ else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['HTTP_HOST']))
   $HTTP_HOST = $HTTP_SERVER_VARS['HTTP_HOST'];
 }
 
+// If we're operating from the command line then build
+// an associative array of the command line parameters
+// (assumes they're in the form 'parameter=value')
+if (!empty($argc))
+{
+  $cli_params = array();
+  for ($i=1; $i<$argc; $i++)
+  {
+    parse_str($argv[$i], $param);
+    $cli_params = array_merge($cli_params, $param);
+  }
+}
 ?>
