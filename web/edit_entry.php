@@ -127,13 +127,9 @@ $minute = get_form_var('minute', 'int');
 $period = get_form_var('period', 'int');
 $id = get_form_var('id', 'int');
 $copy = get_form_var('copy', 'int');
-$edit_type = get_form_var('edit_type', 'string');
+$edit_type = get_form_var('edit_type', 'string', '');
 $returl = get_form_var('returl', 'string');
 
-if (!isset($edit_type))
-{
-  $edit_type = "";
-}
 
 // We might be going through edit_entry more than once, for example if we have to log on on the way.  We
 // still need to preserve the original calling page so that once we've completed edit_entry_handler we can
