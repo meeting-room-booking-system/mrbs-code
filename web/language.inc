@@ -2,6 +2,8 @@
 
 // $Id$
 
+require_once "functions.inc";
+
 // A map is needed to convert from the HTTP language specifier to a
 // locale specifier for Windows
 //
@@ -368,9 +370,15 @@ setlocale(LC_ALL,'C');
 
 // We attempt to make up a sensible locale from the HTTP_ACCEPT_LANGUAGE
 // environment variable.
+$cli_mode = is_cli();
 
-// First we enumerate the user's language preferences...
-if (isset($HTTP_ACCEPT_LANGUAGE)) // Attempt to use $HTTP_ACCEPT_LANGUAGE only when defined.
+// If we're running from the CLI, use the config setting
+if ($cli_mode && !empty($cli_language))
+{
+  $langs[$cli_language] = 1.0;
+}
+// Otherwise we enumerate the user's language preferences...
+elseif (isset($HTTP_ACCEPT_LANGUAGE)) // Attempt to use $HTTP_ACCEPT_LANGUAGE only when defined.
 {
   $lang_specifiers = explode(',',$HTTP_ACCEPT_LANGUAGE);
   foreach ($lang_specifiers as $specifier)
@@ -394,7 +402,7 @@ else // Else use the value from config.inc.php.
 // The following attempts to import a language based on what the client
 // is using.
 
-if (!$disable_automatic_language_changing)
+if (!$disable_automatic_language_changing || $cli_mode)
 {
   $doneit = 0;
 
@@ -411,7 +419,12 @@ if (!$disable_automatic_language_changing)
     {
       $locale = $lang;
     }
-
+    // When in CLI mode, we need to add the full path name as
+    // file_exists() ignores the include path
+    if ($cli_mode)
+    {
+      $lang_file = dirname($PHP_SELF) . "/" . $lang_file;
+    }
     if (file_exists($lang_file))
     {
       include $lang_file;
@@ -429,7 +442,12 @@ if (!$disable_automatic_language_changing)
     foreach ($langs as $lang => $qual)
     {
       $lang_file = "lang." . strtolower(substr($lang,0,2));
-
+      // When in CLI mode, we need to add the full path name as
+      // file_exists() ignores the include path
+      if ($cli_mode)
+      {
+        $lang_file = dirname($PHP_SELF) . "/" . $lang_file;
+      }
       if (file_exists($lang_file))
       {
         include $lang_file;

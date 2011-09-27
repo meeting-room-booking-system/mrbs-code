@@ -242,7 +242,7 @@ function print_theme_header($day, $month, $year, $area, $room)
             // Merge the specific options with the default options.  We do a deep
             // merge.
             ?>
-            var mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);  
+            var mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
             var oTable = $(id).dataTable(mergedOptions);
             <?php // Need to redraw the datatable when the browser window is resized ?>
             $(window).bind('resize', function () {
@@ -1467,7 +1467,7 @@ $(window).load(function() {
     // performance for large tables
     if (function_exists('json_encode'))
     {
-      $ajax_url = "http://" . $HTTP_HOST . $PHP_SELF . "?" . $QUERY_STRING . "&ajax=1";
+      $ajax_url = "http://" . $HTTP_HOST . $PHP_SELF . "?" . $QUERY_STRING . "&ajax=1&phase=2";
       ?>
       tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
       <?php
@@ -1615,7 +1615,7 @@ $(window).load(function() {
     // and stop those first two columns being reordered
     ?>
     tableOptions.oColReorder = {iFixedColumns: 2};
-    
+
     var reportTable = makeDataTable('#report_table', tableOptions);
 
     <?php
