@@ -16,15 +16,10 @@ $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'int');
 $returl = get_form_var('returl', 'string');
 $action = get_form_var('action', 'string');
-$note = get_form_var('note', 'string');
+$note = get_form_var('note', 'string', '');
 
 // Check the user is authorised for this page
 checkAuthorised();
-
-if (!isset($note))
-{
-  $note = "";
-}
 
 if (empty($returl))
 {

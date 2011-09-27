@@ -22,12 +22,6 @@ function cmp3($a, $b)
   return "> ";
 }
 
-// Default parameters:
-if (empty($debug_flag))
-{
-  $debug_flag = 0;
-}
-
 // Check the user is authorised for this page
 checkAuthorised();
 

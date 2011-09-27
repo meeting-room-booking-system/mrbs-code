@@ -9,11 +9,6 @@ require_once "theme.inc";
 $timetohighlight = get_form_var('timetohighlight', 'int');
 $debug_flag = get_form_var('debug_flag', 'int');
 
-if (empty($debug_flag))
-{
-  $debug_flag = 0;
-}
-
 // Check the user is authorised for this page
 checkAuthorised();
 
