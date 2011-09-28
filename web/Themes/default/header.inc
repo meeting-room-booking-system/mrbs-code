@@ -1181,6 +1181,7 @@ $(window).load(function() {
         // http://forum.jquery.com/topic/combining-ui-dialog-and-tabs for the solution.
         ?>
         $('#check_tabs').tabs();
+        $('#check_tabs').tabs("select", tabId);
         $('#check_results').dialog({'width':400, 'height':200, 
                                     'minWidth':300, 'minHeight':150, 
                                     'draggable':true });
