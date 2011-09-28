@@ -1252,6 +1252,8 @@ $(window).load(function() {
 
     $('#conflict_check, #policy_check').click(function() {
         var tabId;
+        var checkResults = $('#check_results');
+        var checkTabs = $('#check_tabs');
         <?php 
         // Work out which tab should be selected
         // (Slightly long-winded using a switch, but there may be more tabs in future)
@@ -1268,11 +1270,16 @@ $(window).load(function() {
         }
         <?php
         // If we've already created the dialog and tabs, then all we have
-        // to do is select the tab corresponding to the div that was clicked
+        // to do is re-open the dialog if it has previously been closed and
+        // select the tab corresponding to the div that was clicked
         ?>
         if (arguments.callee.alreadyExists)
         {
-          $('#check_tabs').tabs("select", tabId);
+          if (!checkResults.dialog("isOpen"))
+          {
+            checkResults.dialog("open");
+          }
+          checkTabs.tabs("select", tabId);
           return;
         }
         <?php
@@ -1280,8 +1287,9 @@ $(window).load(function() {
         // with the whole structure being draggable.   Thanks to dbroox at
         // http://forum.jquery.com/topic/combining-ui-dialog-and-tabs for the solution.
         ?>
-        $('#check_tabs').tabs();
-        $('#check_results').dialog({'width':400, 'height':200, 
+        checkTabs.tabs();
+        checkTabs.tabs("select", tabId);
+        checkResults.dialog({'width':400, 'height':200, 
                                     'minWidth':300, 'minHeight':150, 
                                     'draggable':true });
         <?php //steal the close button ?>
