@@ -617,7 +617,7 @@ fieldset#rep_info {border-top: 1px solid <?php echo $site_faq_entry_border_color
 
 .form_general label.secondary {font-weight: normal; width: auto}
 
-div#conflict_check, div#policy_check {float: left; clear: none; width: 2em; padding: 1em 0.5em; cursor: default}
+div#conflict_check, div#policy_check {float: left; clear: none; width: 2em; padding: 1em 0.5em; cursor: pointer}
 div#conflict_check {margin-left: 3em}
 div.good {color: green}
 div.bad {color: red}
@@ -847,3 +847,8 @@ div#simple_trailer {clear: both; width: 100%; text-align: center; padding-top: 1
   padding-right: 20px;
 }
 
+
+#check_tabs {border:0}
+div#check_tabs {background-image: none}
+.edit_entry #ui-tab-dialog-close {position:absolute; right:0; top:23px}
+.edit_entry #ui-tab-dialog-close a {float:none; padding:0}

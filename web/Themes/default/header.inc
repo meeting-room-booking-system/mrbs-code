@@ -120,7 +120,10 @@ function print_theme_header($day, $month, $year, $area, $room)
     //   - Mouse
     //   - Position
     //   - Draggable
+    //   - Resizable
     //   - Autocomplete
+    //   - Dialog
+    //   - Tabs
     //   - Datepicker
     //   - Sunny theme
     // If you need any other components you will need to rebuild the custom UI library
@@ -441,44 +444,58 @@ if ($page == 'edit_entry')
         
         $.post('edit_entry_handler.php', params, function(result) {
             var conflictDiv = $('#conflict_check');
+            var scheduleDetails = $('#schedule_details');
+            var policyDetails = $('#policy_details');
             var checkMark = "\u2714";
             var cross = "\u2718";
-            var titleText;
+            var titleText, detailsHTML;
             var patternSpan = /<span[\s\S]*span>/gi;
             var patternTags = /<\S[^><]*>/g;
             if (result.conflicts.length == 0)
             {
               conflictDiv.text(checkMark).attr('class', 'good').attr;
               titleText = '<?php echo mrbs_entity_decode(get_vocab("no_conflicts")) ?>';
+              detailsHTML = titleText;
             }
             else
             {
               conflictDiv.text(cross).attr('class', 'bad');
+              detailsHTML = "<p>";
               titleText = '<?php echo mrbs_entity_decode(get_vocab("conflict")) ?>' + ":  \n\n";
+              detailsHTML += titleText + "<\/p><ul>";
               for (var i=0; i<result.conflicts.length; i++)
               {
+                detailsHTML += "<li>" + result.conflicts[i] + "<\/li>";
                 titleText += '(' + (i+1).toString() + ') ';
                 <?php // strip out the <span> and its contents and then all other tags ?>
                 titleText += result.conflicts[i].replace(patternSpan, '').replace(patternTags, '') + "  \n";
               }
+              detailsHTML += "<\/ul>";
             }
             conflictDiv.attr('title', titleText);
+            scheduleDetails.html(detailsHTML);
             var policyDiv = $('#policy_check');
             if (result.rules_broken.length == 0)
             {
               policyDiv.text(checkMark).attr('class', 'good');
               titleText = '<?php echo mrbs_entity_decode(get_vocab("no_rules_broken")) ?>';
+              detailsHTML = titleText
             }
             else
             {
               policyDiv.text(cross).attr('class', 'bad');
+              detailsHTML = "<p>";
               titleText = '<?php echo mrbs_entity_decode(get_vocab("rules_broken")) ?>' + ":  \n\n";
+              detailsHTML += titleText + "<\/p><ul>";
               for (var i=0; i<result.rules_broken.length; i++)
               {
+                detailsHTML += "<li>" + result.rules_broken[i] + "<\/li>";
                 titleText += '(' + (i+1).toString() + ') ' + result.rules_broken[i] + "  \n";
               }
+              detailsHTML += "<\/ul>";
             }
             policyDiv.attr('title', titleText);
+            policyDetails.html(detailsHTML);
           }, 'json');
       }, timeout);  <?php // setTimeout() ?>
     }
@@ -1132,6 +1149,53 @@ $(window).load(function() {
                 });
      
     checkConflicts();
+
+    $('#conflict_check, #policy_check').click(function() {
+        var tabId;
+        <?php 
+        // Work out which tab should be selected
+        // (Slightly long-winded using a switch, but there may be more tabs in future)
+        ?>
+        switch ($(this).attr('id'))
+        {
+          case 'policy_check':
+            tabId = 'policy_details';
+            break;
+          case 'conflict_check':
+          default:
+            tabId = 'schedule_details';
+            break;
+        }
+        <?php
+        // If we've already created the dialog and tabs, then all we have
+        // to do is select the tab corresponding to the div that was clicked
+        ?>
+        if (arguments.callee.alreadyExists)
+        {
+          $('#check_tabs').tabs("select", tabId);
+          return;
+        }
+        <?php
+        // We want to create a set of tabs that appear inside a dialog box,
+        // with the whole structure being draggable.   Thanks to dbroox at
+        // http://forum.jquery.com/topic/combining-ui-dialog-and-tabs for the solution.
+        ?>
+        $('#check_tabs').tabs();
+        $('#check_results').dialog({'width':400, 'height':200, 
+                                    'minWidth':300, 'minHeight':150, 
+                                    'draggable':true });
+        <?php //steal the close button ?>
+        $('#ui-tab-dialog-close').append($('a.ui-dialog-titlebar-close'));
+        <?php //move the tabs out of the content and make them draggable ?>
+        $('.ui-dialog').addClass('ui-tabs')
+                       .prepend($('#details_tabs'))
+                       .draggable('option', 'handle', '#details_tabs');
+        <?php //switch the titlebar class ?>
+        $('.ui-dialog-titlebar').remove();
+        $('#details_tabs').addClass('ui-dialog-titlebar');
+        
+        arguments.callee.alreadyExists=true;
+      });
     
     <?php
     // Finally set a timer so that conflicts are periodically checked for,

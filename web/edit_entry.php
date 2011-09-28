@@ -1263,8 +1263,26 @@ else
     echo "</div>\n";
     
     echo "</fieldset>";
+    
+    // and a div to hold the dialog box which gives more details.    The dialog
+    // box contains a set of tabs.   And because we want the tabs to act as the
+    // dialog box we add an extra tab where we're going to put the dialog close
+    // button and then we hide the dialog itself
+    echo "<div id=\"check_results\" style=\"display: none\">\n";
+    echo "<div id=\"check_tabs\">\n";
+    echo "<ul id=\"details_tabs\">\n";
+    echo "<li><a href=\"#schedule_details\">" . get_vocab("schedule") . "</a></li>\n";
+    echo "<li><a href=\"#policy_details\">" . get_vocab("policy") . "</a></li>\n";
+    echo "<li id=\"ui-tab-dialog-close\"></li>\n";
+    echo "</ul>\n";
+    echo "<div id=\"schedule_details\"></div>\n";
+    echo "<div id=\"policy_details\"></div>\n";
+    echo "</div>\n";
+    echo "</div>\n";
     ?>
   </fieldset>
 </form>
+
+
 
 <?php require_once "trailer.inc" ?>
