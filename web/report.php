@@ -1057,7 +1057,7 @@ if (!$ajax && ($output_as_html || (empty($nmatch) && !$cli_mode)))
   ?>
   <div class="screenonly">
  
-    <form class="form_general" id="report_form" method="post" action="report.php">
+    <form class="form_general" id="report_form" method="get" action="report.php">
       <fieldset>
       <legend><?php echo get_vocab("report_on");?></legend>
       
