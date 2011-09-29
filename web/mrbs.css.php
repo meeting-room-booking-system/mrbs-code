@@ -111,7 +111,7 @@ form.form_admin {float: left; clear: left; margin: 2em 0 0 0}
     width: auto; margin-top: 1.2em; margin-left: <?php echo number_format(($admin_form_gap + $admin_form_label_width), 1, '.', '')?>em
 }
 .admin h2 {clear: left}
-div#area_form, div#room_form {float: left; padding: 0 0 2em 1em}
+div#area_form, div#room_form {float: left; padding: 0 0 2em 0}
 div#area_form {width: auto}
 div#room_form {width: 100%}
 div#custom_html {float: left; padding: 0 0 3em 1em}
