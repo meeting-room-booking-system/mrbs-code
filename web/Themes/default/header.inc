@@ -1567,10 +1567,16 @@ $(window).load(function() {
                                  {"sType": "title-numeric", "aTargets": [3, 4, 5, -1]}]; 
 
     <?php
-    // Fix the left hand two columns.  This has to be done when initialisation is 
+    // Fix the left hand column.  This has to be done when initialisation is 
     // complete as the language files are loaded asynchronously
     ?>
     tableOptions.fnInitComplete = function(){
+        <?php
+        // Try and get a sensible value for the fixed column width, which is the
+        // smaller of the actual column width and a proportion of the overall table
+        // width.   (Unfortunately the actual column width is just the width of the
+        // column on the first page)
+        ?>
         var tableWidth = $('#report_table').outerWidth();
         var leftWidth = $('#report_table th:first-child').outerWidth();
         leftWidth = Math.min(leftWidth, tableWidth/3);

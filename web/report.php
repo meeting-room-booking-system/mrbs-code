@@ -197,7 +197,15 @@ function report_row(&$row, $sortby)
   $values = array();
   
   // Booking name
-  $values[] = ($output_as_csv) ? escape($row['name']) : "<a href=\"view_entry.php?id=".$row['id']."\">" . htmlspecialchars($row['name']) . "</a>";
+  if ($output_as_csv)
+  {
+    $values[] = escape($row['name']);
+  }
+  else
+  {
+    $html_name = htmlspecialchars($row['name']);
+    $values[] = "<a href=\"view_entry.php?id=" . $row['id'] . "\" title=\"$html_name\">$html_name</a>";
+  }
 
   // Area
   $values[] = escape($row['area_name']);
