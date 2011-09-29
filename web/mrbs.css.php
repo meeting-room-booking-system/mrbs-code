@@ -22,6 +22,8 @@ expires_header(60*30); // 30 minute expiry
 /* ------------ GENERAL -----------------------------*/
 
 body {font-size: small;
+    margin: 0;
+    padding: 0;
     color:            <?php echo $standard_font_color ?>;
     font-family:      <?php echo $standard_font_family ?>;
     background-color: <?php echo $body_background_color ?>}
@@ -30,6 +32,8 @@ body {font-size: small;
 .error   {color: <?php echo $highlight_font_color ?>; font-weight: bold}     /* for error messages */
 .warning {color: <?php echo $highlight_font_color ?>}                        /* for warning messages */
 .note    {font-style: italic}
+
+div#contents, div.trailer {padding: 0 2em}
 
 h1 {font-size: x-large; clear: both}
 h2 {font-size: large; clear: both}
@@ -683,7 +687,7 @@ form#form_edit_users {width: auto; margin-top: 2.0em}
 #form_delete_users input.submit {left: 2.0em}                                  /* and put the Delete on the left */
 #form_edit_users input.checkbox {width: auto; margin-left: <?php echo $edit_users_gap ?>em}
 form.edit_users_error {width: 10em; margin-top: 2.0em}
-div#user_list {padding: 2em 0 2em 1em}
+div#user_list {padding: 2em 0}
 form#add_new_user {margin-left: 1em}
 
 
@@ -794,9 +798,9 @@ div#site_faq_body {margin-top: 2.0em}
 /* ------------ TRAILER.INC ---------------------*/
 div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>; 
              border-bottom: 1px solid <?php echo $trailer_border_color ?>; 
-             float: left; width: 100%; 
+             float: left;
              margin-top: 1.5em; margin-bottom: 1.5em;
-             padding: 0.3em 0 0.3em 0}
+             padding-top: 0.3em; padding-bottom: 0.3em}
 #trailer div {float: left; width: 100%}
 #trailer div.trailer_label {float: left; clear: left; width: 20%; max-width: 9.0em; font-weight: bold}
 #trailer div.trailer_links {float: left;              width: 79%}  /* 79 to avoid rounding problems */
@@ -808,7 +812,7 @@ div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>;
     opacity: 0.5}  /* if you change this value, change it in the IE sheets as well */
 #trailer .current a {color: <?php echo $highlight_font_color ?>}
 
-div#simple_trailer {clear: both; width: 100%; text-align: center; padding-top: 1.0em; padding-bottom: 2.0em}
+div#simple_trailer {clear: both; text-align: center; padding-top: 1.0em; padding-bottom: 2.0em}
 #simple_trailer a {padding: 0 1.0em 0 1.0em}
 
 
@@ -824,8 +828,8 @@ div#simple_trailer {clear: both; width: 100%; text-align: center; padding-top: 1
 #approve_buttons td#note form {width: 100%}
 #approve_buttons td#note textarea {width: 100%; height: 6em}
 
-/*-------------DtaTables-------------------------*/
-div.datatable_container {width: 98%; padding: 2em 0 2em 1em}
+/*-------------DataTables-------------------------*/
+div.datatable_container {float: left; width: 100%; padding: 2em 0}
 
 /* ------------ jQuery UI additions -------------*/
 

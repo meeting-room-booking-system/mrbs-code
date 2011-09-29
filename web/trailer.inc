@@ -31,9 +31,10 @@ else
   $params .= "&amp;room=$room";
 }
 
+echo "</div>";  // Close of the contents div
 
 if ($simple_trailer) {
-  echo "<div class=\"screenonly\" id=\"simple_trailer\">\n";
+  echo "<div class=\"screenonly trailer\" id=\"simple_trailer\">\n";
   echo "<div id=\"simple\">\n";
   echo "<a href=\"day.php?year=$year&amp;month=$month&amp;day=$day$params\">";
   echo get_vocab("viewday")."</a>|";
@@ -47,7 +48,7 @@ if ($simple_trailer) {
 
 else
 {
-  echo "<div class=\"screenonly\" id=\"trailer\">\n";
+  echo "<div class=\"screenonly trailer\" id=\"trailer\">\n";
   
   // DAYS
   echo "<div id=\"viewday\">\n";

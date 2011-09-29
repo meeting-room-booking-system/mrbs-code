@@ -1941,6 +1941,8 @@ $(window).load(function() {
     </tr>
   </table>
 </div>
+
+<div id="contents">
 <?php
 
 } // end of print_theme_header()
