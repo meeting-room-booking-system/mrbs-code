@@ -71,8 +71,9 @@ function report_header()
   // Build an array of values to go into the header row
   $values = array();
   
-  $values[] = get_vocab("area") . ' - ' . get_vocab("room");
   $values[] = get_vocab("namebooker");
+  $values[] = get_vocab("area");
+  $values[] = get_vocab("room");
   $values[] = get_vocab("start_date");
   $values[] = get_vocab("end_date");
   $values[] = get_vocab("duration");
@@ -195,12 +196,14 @@ function report_row(&$row, $sortby)
   $rows_output++;
   $values = array();
   
-  // Area-room
-  $area_room = $row['area_name'] . " - " . $row['room_name'];
-  $values[] = escape($area_room);
-  
   // Booking name
   $values[] = ($output_as_csv) ? escape($row['name']) : "<a href=\"view_entry.php?id=".$row['id']."\">" . htmlspecialchars($row['name']) . "</a>";
+
+  // Area
+  $values[] = escape($row['area_name']);
+  
+  // Room
+  $values[] = escape($row['room_name']);
   
   // Start date
   if ($enable_periods)

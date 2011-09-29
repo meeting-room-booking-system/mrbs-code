@@ -1571,8 +1571,8 @@ $(window).load(function() {
     // complete as the language files are loaded asynchronously
     ?>
     tableOptions.fnInitComplete = function(){
-        var oFC = new FixedColumns(reportTable, {"iLeftColumns": 2,
-                                                 "iLeftWidth": 30,
+        var oFC = new FixedColumns(reportTable, {"iLeftColumns": 1,
+                                                 "iLeftWidth": 20,
                                                  "sLeftWidth": "relative"});
         $('.js div.datatable_container').css('visibility', 'visible');
         <?php 
@@ -1679,14 +1679,14 @@ $(window).load(function() {
       };
 
     <?php
-    // Remove the first three columns from the column visibility
-    // list because these two are fixed
+    // Remove the first column from the column visibility
+    // list because it is fixed
     ?>
-    tableOptions.oColVis = {aiExclude: [0,1]};
+    tableOptions.oColVis = {aiExclude: [0]};
     <?php
     // and stop those first two columns being reordered
     ?>
-    tableOptions.oColReorder = {iFixedColumns: 2};
+    tableOptions.oColReorder = {iFixedColumns: 1};
 
     var reportTable = makeDataTable('#report_table', tableOptions);
 
