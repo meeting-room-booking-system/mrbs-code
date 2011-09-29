@@ -193,17 +193,15 @@ function print_theme_header($day, $month, $year, $area, $room)
         // which are merged with the default options.   If the browser is IE6 or less
         // we don't bother making a dataTable:  it can be done, but it's not worth it.
         //
-        // [We've created a specific function to make a data table rather than just 
-        // using the dataTable() method directly, because if we're using options such as
-        // FixedColumns we have to set up the FixedColumns using a call back function
-        // after initialisation is complete, because the setting of the language text
-        // strings, which happens asynchronously, needs to happen first.    When we're
-        // setting up the call back function we need to know the name of the dataTable
-        // object.   Having the makeDataTable() function allows us to keep the lines of
-        // code that use the object name together in one place.   It also allows us 
-        // to keep the browser conditional code in one place.]
+        // leftFixedMax is an optional third parameter, which if present will force the
+        // left hand column to be fixed with a maximum width of leftFixedMax * 100% of
+        // the total table width (eg leftFixedMax = 0.33 gives you a fixed column with a
+        // maximum width of a third of the total table width).
+        //
+        // If you want to do anything else as part of fnInitComplete then you'll need
+        // to define fnInitComplete in specificOptions
         ?>
-        function makeDataTable(id, specificOptions)
+        function makeDataTable(id, specificOptions, leftFixedMax)
         {
           if (lteIE6)
           {
@@ -212,6 +210,7 @@ function print_theme_header($day, $month, $year, $area, $room)
           }
           else
           {
+            var table = $(id);
             <?php // Set up the default options ?>
             var defaultOptions = {};
             <?php
@@ -241,12 +240,43 @@ function print_theme_header($day, $month, $year, $area, $room)
                                       buttonText: '<?php echo get_vocab("show_hide_columns") ?>',
                                       bRestore: true,
                                       sRestore: '<?php echo get_vocab("restore_original") ?>'};
+            if (leftFixedMax !== undefined)
+            {
+              <?php 
+              // Fix the left hand column.  This has to be done when 
+              // initialisation is complete as the language files are loaded
+              // asynchronously
+
+              // Try and get a sensible value for the fixed column width, which is the
+              // smaller of the actual column width and a proportion of the overall table
+              // width.   (Unfortunately the actual column width is just the width of the
+              // column on the first page)
+              ?>
+              var tableWidth = table.outerWidth();
+              var leftWidth = table.find('th:first-child').outerWidth();
+              leftWidth = Math.min(leftWidth, tableWidth*leftFixedMax);
+              defaultOptions.fnInitComplete = function(){
+                  new FixedColumns(oTable, {"iLeftColumns": 1,
+                                            "iLeftWidth": leftWidth,
+                                            "sLeftWidth": "fixed"});
+                  $('.js div.datatable_container').css('visibility', 'visible');
+                };
+              <?php
+              // Remove the first column from the column visibility
+              // list because it is fixed
+              ?>
+              defaultOptions.oColVis = {aiExclude: [0]};
+              <?php
+              // and stop it being reordered
+              ?>
+              defaultOptions.oColReorder = {iFixedColumns: 1};
+            }
             <?php
             // Merge the specific options with the default options.  We do a deep
             // merge.
             ?>
             var mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
-            var oTable = $(id).dataTable(mergedOptions);
+            var oTable = table.dataTable(mergedOptions);
             <?php // Need to redraw the datatable when the browser window is resized ?>
             $(window).bind('resize', function () {
                 oTable.fnDraw();
@@ -1333,42 +1363,11 @@ $(window).load(function() {
     ?>
     var tableOptions = new Object();
     <?php
-    // Set the initial order of columns (we want it to go
-    // "Action - Name - Rights" and not "Action - Rights - Name"
-    ?>
-    var nColumns = $('#users_table tr:first th').length;
-    tableOptions.oColReorder = {aiOrder: [0, 2, 1]};
-    for (var i=3; i < nColumns; i++)
-    {
-      tableOptions.oColReorder.aiOrder.push(i);
-    }
-    <?php
     // The Rights column has a span with title for sorting
     ?>
     tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [1]}]; 
-    <?php 
-    // Fix the left hand two columns.  This has to be done when 
-    // initialisation is complete as the language files are loaded
-    // asynchronously
-    ?>
-    tableOptions.fnInitComplete = function(){
-        new FixedColumns(usersTable, {"iLeftColumns": 2,
-                                      "iLeftWidth": 30,
-                                      "sLeftWidth": "relative"});
-        $('.js div.datatable_container').css('visibility', 'visible');
-      };
-    <?php
-    // Remove the first two columns from the column visibility
-    // list because these two are fixed
-    ?>
-    tableOptions.oColVis = {aiExclude: [0,1]};
-    <?php
-    // and stop those first two columns being reordered
-    ?>
-    tableOptions.oColReorder.iFixedColumns = 2;
     
-    var usersTable = makeDataTable('#users_table', tableOptions);
-
+    var usersTable = makeDataTable('#users_table', tableOptions, 0.33);
     <?php
   }
   

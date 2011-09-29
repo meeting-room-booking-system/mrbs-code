@@ -752,7 +752,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   $res = sql_query("SELECT * FROM $tbl_users ORDER BY level DESC, name");
   
   // Display the data in a table
-  $ignore_columns = array('id', 'password'); // We don't display these columns
+  $ignore_columns = array('id', 'password', 'name'); // We don't display these columns or they get special treatment
   
   echo "<div id=\"user_list\" class=\"datatable_container\">\n";
   echo "<table class=\"admin_table display\" id=\"users_table\">\n";
@@ -760,9 +760,11 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   // The table header
   echo "<thead>\n";
   echo "<tr>";
-  // First column which is an action button
-  echo "<th><div>" . get_vocab("action") . "</div></th>";
-  // Column headers
+  
+  // First column which is the name
+  echo "<th>" . get_vocab("users.name") . "</th>\n";
+  
+  // Other column headers
   foreach ($fields as $field)
   {
     $fieldname = $field['name'];
@@ -772,12 +774,12 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
       echo "<th><div>" . get_loc_field_name($tbl_users, $fieldname) . "</div></th>";
     }
   }
+  
   echo "</tr>\n";
   echo "</thead>\n";
   
   // The table body
   echo "<tbody>\n";
-  $row_class = "odd_row";
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   {
     // Check whether ordinary users are allowed to see other users' details.  If not,
@@ -789,28 +791,20 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
       continue;
     }
     
-    $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
-    echo "<tr class=\"$row_class\">\n";
-
-    // First column (the action button)
-    echo "<td class=\"action\"><div>\n";
+    echo "<tr>\n";
+    
+    // First column, which is the name
+    $html_name = htmlspecialchars($row['name']);
     // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
     if (($level >= $min_user_editing_level) || (strcasecmp($row['name'], $user) == 0))
     {
-      echo "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-      echo "<div>\n";
-      echo "<input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
-      echo "<input type=\"hidden\" name=\"Id\" value=\"" . $row['id'] . "\">\n";
-      echo "<input type=\"image\" class=\"button\" src=\"images/edit.png\"
-                 title=\"" . get_vocab("edit") . "\" alt=\"" . get_vocab("edit") . "\">\n";
-      echo "</div>\n";
-      echo "</form>\n";
+      $link = htmlspecialchars(basename($PHP_SELF)) . "?Action=Edit&amp;Id=" . $row['id'];
+      echo "<td><a title=\"$html_name\" href=\"$link\">$html_name</a></td>\n";
     }
     else
     {
-      echo "&nbsp;\n";
+      echo "<td title=\"$html_name\">$html_name</td>\n";
     }
-    echo "</div></td>\n";
     
     // Other columns
     foreach ($fields as $field)
@@ -865,6 +859,27 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
         }  // end switch
       }
     }  // end foreach
+    /*
+    // Last column (the action button)
+    echo "<td class=\"action\"><div>\n";
+    // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
+    if (($level >= $min_user_editing_level) || (strcasecmp($row['name'], $user) == 0))
+    {
+      echo "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+      echo "<div>\n";
+      echo "<input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
+      echo "<input type=\"hidden\" name=\"Id\" value=\"" . $row['id'] . "\">\n";
+      echo "<input type=\"image\" class=\"button\" src=\"images/edit.png\"
+                 title=\"" . get_vocab("edit") . "\" alt=\"" . get_vocab("edit") . "\">\n";
+      echo "</div>\n";
+      echo "</form>\n";
+    }
+    else
+    {
+      echo "&nbsp;\n";
+    }
+    echo "</div></td>\n";
+    */
     
     echo "</tr>\n";
     
