@@ -188,6 +188,13 @@ function print_theme_header($day, $month, $year, $area, $room)
       <script type="text/javascript">
         //<![CDATA[
         
+        function getFixedColWidth(table, maxProportion)
+        {
+          var tableWidth = table.outerWidth();
+          var leftWidth = table.find('th:first-child').outerWidth();
+          return Math.min(leftWidth, tableWidth*maxProportion);
+        }
+        
         <?php
         // Turn the table with id 'id' into a DataTable, using specificOptions
         // which are merged with the default options.   If the browser is IE6 or less
@@ -252,13 +259,11 @@ function print_theme_header($day, $month, $year, $area, $room)
               // width.   (Unfortunately the actual column width is just the width of the
               // column on the first page)
               ?>
-              var tableWidth = table.outerWidth();
-              var leftWidth = table.find('th:first-child').outerWidth();
-              leftWidth = Math.min(leftWidth, tableWidth*leftFixedMax);
+              var leftWidth = getFixedColWidth(table, leftFixedMax);
               defaultOptions.fnInitComplete = function(){
-                  new FixedColumns(oTable, {"iLeftColumns": 1,
-                                            "iLeftWidth": leftWidth,
-                                            "sLeftWidth": "fixed"});
+                  var oFC = new FixedColumns(oTable, {"iLeftColumns": 1,
+                                                      "iLeftWidth": leftWidth,
+                                                      "sLeftWidth": "fixed"});
                   $('.js div.datatable_container').css('visibility', 'visible');
                 };
               <?php
@@ -1576,9 +1581,8 @@ $(window).load(function() {
         // width.   (Unfortunately the actual column width is just the width of the
         // column on the first page)
         ?>
-        var tableWidth = $('#report_table').outerWidth();
-        var leftWidth = $('#report_table th:first-child').outerWidth();
-        leftWidth = Math.min(leftWidth, tableWidth/3);
+        var table = $('#report_table');
+        leftWidth = getFixedColWidth(table, 0.33);
         var oFC = new FixedColumns(reportTable, {"iLeftColumns": 1,
                                                  "iLeftWidth": leftWidth,
                                                  "sLeftWidth": "fixed"});
