@@ -215,6 +215,9 @@ $boolean_fields['area'] = array('default_duration_all_day',
                                 'enable_periods',
                                 'confirmation_enabled',
                                 'confirmed_default');
+                                
+// Permitted values for 'private_override'
+$private_override_options = array('none', 'public', 'private');
                                    
 /********************************************************
  * Miscellaneous

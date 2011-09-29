@@ -708,6 +708,7 @@ function get_area_settings($area)
   global $min_book_ahead_enabled, $max_book_ahead_enabled, $min_book_ahead_secs, $max_book_ahead_secs;
   global $approval_enabled, $reminders_enabled, $enable_periods, $boolean_fields;
   global $confirmation_enabled, $confirmed_default;
+  global $private_override_options;
   
   // Get all the "per area" config settings                  
   $sql = "SELECT resolution, default_duration, default_duration_all_day,
@@ -745,6 +746,13 @@ function get_area_settings($area)
         $$field = (bool) $$field;
       }
     }
+  }
+  // Do some sanity checking in case the area table is somehow messed up
+  if (!in_array($private_override, $private_override_options))
+  {
+    $private_override = 'private';  // the safest default
+    $message = "Invalid value for 'private_override' in the area table.  Using 'private'.";
+    trigger_error($message, E_USER_WARNING);
   }
 }
 
