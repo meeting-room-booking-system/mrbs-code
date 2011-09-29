@@ -1564,16 +1564,19 @@ $(window).load(function() {
     // (they have the Unix timestamp in the title of a span for sorting)
     ?>
     tableOptions.aoColumnDefs = [{"bSearchable": false, "bVisible": false, "aTargets": [ 0 ]},
-                                 {"sType": "title-numeric", "aTargets": [2, 3, 4, -1]}]; 
+                                 {"sType": "title-numeric", "aTargets": [3, 4, 5, -1]}]; 
 
     <?php
     // Fix the left hand two columns.  This has to be done when initialisation is 
     // complete as the language files are loaded asynchronously
     ?>
     tableOptions.fnInitComplete = function(){
+        var tableWidth = $('#report_table').outerWidth();
+        var leftWidth = $('#report_table th:first-child').outerWidth();
+        leftWidth = Math.min(leftWidth, tableWidth/3);
         var oFC = new FixedColumns(reportTable, {"iLeftColumns": 1,
-                                                 "iLeftWidth": 20,
-                                                 "sLeftWidth": "relative"});
+                                                 "iLeftWidth": leftWidth,
+                                                 "sLeftWidth": "fixed"});
         $('.js div.datatable_container').css('visibility', 'visible');
         <?php 
         // Also add a "Delete entries button", provided that (a) the user is an
