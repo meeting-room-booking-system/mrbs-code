@@ -538,19 +538,22 @@ if (isset($change_room) && !empty($room))
       echo "</div>\n";
       
       // Status (Enabled or Disabled)
-      echo "<div>\n";
-      echo "<label title=\"" . get_vocab("disabled_room_note") . "\">" . get_vocab("status") . ":</label>\n";
-      echo "<div class=\"group\">\n";
-      echo "<label>\n";
-      $checked = ($row['disabled']) ? "" : " checked=\"checked\"";
-      echo "<input class=\"radio\" type=\"radio\" name=\"room_disabled\" value=\"0\"${checked}${disabled}>\n";
-      echo get_vocab("enabled") . "</label>\n";
-      echo "<label>\n";
-      $checked = ($row['disabled']) ? " checked=\"checked\"" : "";
-      echo "<input class=\"radio\" type=\"radio\" name=\"room_disabled\" value=\"1\"${checked}${disabled}>\n";
-      echo get_vocab("disabled") . "</label>\n";
-      echo "</div>\n";
-      echo "</div>\n";
+      if ($is_admin)
+      {
+        echo "<div>\n";
+        echo "<label title=\"" . get_vocab("disabled_room_note") . "\">" . get_vocab("status") . ":</label>\n";
+        echo "<div class=\"group\">\n";
+        echo "<label>\n";
+        $checked = ($row['disabled']) ? "" : " checked=\"checked\"";
+        echo "<input class=\"radio\" type=\"radio\" name=\"room_disabled\" value=\"0\"${checked}${disabled}>\n";
+        echo get_vocab("enabled") . "</label>\n";
+        echo "<label>\n";
+        $checked = ($row['disabled']) ? " checked=\"checked\"" : "";
+        echo "<input class=\"radio\" type=\"radio\" name=\"room_disabled\" value=\"1\"${checked}${disabled}>\n";
+        echo get_vocab("disabled") . "</label>\n";
+        echo "</div>\n";
+        echo "</div>\n";
+      }
 
       // Sort key
       if ($is_admin)
