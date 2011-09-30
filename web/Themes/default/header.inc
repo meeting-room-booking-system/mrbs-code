@@ -209,7 +209,7 @@ function print_theme_header($day, $month, $year, $area, $room)
         // which are merged with the default options.   If the browser is IE6 or less
         // we don't bother making a dataTable:  it can be done, but it's not worth it.
         //
-        // leftCol and rightCol are two objects which if defined will fix the left and/or
+        // leftCol and rightCol are two objects which if defined or not null will fix the left and/or
         // right most columns.  They have properties 'iWidth' and 'sWidth' defining the
         // maximum width of the fixed column.   If sWidth = "fixed" then the iWidth is
         // a pixel value.  If it is "relative" then a percentage.
@@ -253,7 +253,8 @@ function print_theme_header($day, $month, $year, $area, $room)
                                       sRestore: '<?php echo get_vocab("restore_original") ?>'};
 
             defaultOptions.fnInitComplete = function(){
-                if ((leftCol !== undefined) || (rightCol !== undefined))
+                if (((leftCol !== undefined) && (leftCol !== null)) ||
+                    ((rightCol !== undefined) && (rightCol !== null)) )
                 {
                   <?php 
                   // Fix the left and/or right columns.  This has to be done when 
@@ -261,13 +262,13 @@ function print_theme_header($day, $month, $year, $area, $room)
                   // asynchronously
                   ?>
                   var options = {};
-                  if (leftCol !== undefined)
+                  if ((leftCol !== undefined) && (leftCol !== null))
                   {
                     options.iLeftColumns = 1;
                     options.sLeftWidth = "fixed";
                     options.iLeftWidth = getFixedColWidth(table, leftCol);
                   }
-                  if (rightCol !== undefined)
+                  if ((rightCol !== undefined) && (rightCol !== null))
                   {
                     options.iRightColumns = 1;
                     options.sRightWidth = "fixed";
@@ -284,17 +285,29 @@ function print_theme_header($day, $month, $year, $area, $room)
                 $('.js div.datatable_container').css('visibility', 'visible');
               };
               
-            if (leftCol !== undefined)
-            {  
-              <?php
-              // If we've fixed the left hand column, then (a) remove the first column
-              // from the column visibility list because it is fixed and (b) stop it
-              // being reordered
-              ?>
-              defaultOptions.oColVis = {aiExclude: [0]};
+            <?php
+            // If we've fixed the left or right hand columns, then (a) remove it
+            // from the column visibility list because it is fixed and (b) stop it
+            // being reordered
+            ?>
+            var colVisExcludeCols = []
+            if ((leftCol !== undefined) && (leftCol !== null))
+            { 
+              colVisExcludeCols.push(0);
               defaultOptions.oColReorder = {iFixedColumns: 1};
             }
-            
+            if ((rightCol !== undefined) && (rightCol !== null))
+            { 
+              nCols = table.find('tr:first-child th').length;
+              colVisExcludeCols.push(nCols - 1);
+              <?php
+              // Actually we stop them all from being reordered because at the moment
+              // dataTables only has a way of stopping the leftmost n columns from
+              // being reordered.  May be fixed in a future release
+              ?>
+              defaultOptions.oColReorder = {iFixedColumns: nCols};
+            }
+            defaultOptions.oColVis = {aiExclude: colVisExcludeCols};
             <?php
             // Merge the specific options with the default options.  We do a deep
             // merge.
@@ -1115,11 +1128,24 @@ $(window).load(function() {
   if ($page == 'admin')
   {
     // Turn the list of rooms into a dataTable
+    // If we're an admin, then fix the right hand column
+    if ($is_admin)
+    {
+      ?>
+      var rightCol = {sWidth: "fixed", iWidth: 40};
+      <?php
+    }
+    else
+    {
+      ?>
+      var rightCol = null;
+      <?php
+    }
     ?>
     var roomsTable = makeDataTable('#rooms_table',
                                    {},
                                    {sWidth: "relative", iWidth: 33},
-                                   {sWidth: "fixed", iWidth: 40} );
+                                   rightCol);
     <?php
   }  
     
