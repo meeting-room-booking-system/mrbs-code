@@ -543,11 +543,11 @@ if (isset($change_room) && !empty($room))
       echo "<div class=\"group\">\n";
       echo "<label>\n";
       $checked = ($row['disabled']) ? "" : " checked=\"checked\"";
-      echo "<input class=\"radio\" type=\"radio\" name=\"room_disabled\" value=\"0\"$checked>\n";
+      echo "<input class=\"radio\" type=\"radio\" name=\"room_disabled\" value=\"0\"${checked}${disabled}>\n";
       echo get_vocab("enabled") . "</label>\n";
       echo "<label>\n";
       $checked = ($row['disabled']) ? " checked=\"checked\"" : "";
-      echo "<input class=\"radio\" type=\"radio\" name=\"room_disabled\" value=\"1\"$checked>\n";
+      echo "<input class=\"radio\" type=\"radio\" name=\"room_disabled\" value=\"1\"${checked}${disabled}>\n";
       echo get_vocab("disabled") . "</label>\n";
       echo "</div>\n";
       echo "</div>\n";
