@@ -304,6 +304,12 @@ function print_theme_header($day, $month, $year, $area, $room)
                   mergedOptions.aaData = oTable.fnGetData();
                   mergedOptions.sAjaxSource = null;
                 }
+                <?php
+                // Save the language strings, because we don't need to make another Ajax
+                // to fetch the language strings again when we resize
+                ?>
+                $.extend(true, mergedOptions.oLanguage, oTable.fnSettings().oLanguage);
+                
                 oTable.fnDestroy();
                 oTable = table.dataTable(mergedOptions);
               });
