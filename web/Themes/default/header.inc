@@ -188,11 +188,20 @@ function print_theme_header($day, $month, $year, $area, $room)
       <script type="text/javascript">
         //<![CDATA[
         
-        function getFixedColWidth(table, maxProportion)
+        <?php
+        // Try and get a sensible value for the fixed column width, which is the
+        // smaller of the actual column width and either a fixed width or a
+        // proportion of the overall table width.
+        // 
+        // col is an object with two properties:  'iWidth' and 'sWidth', which work in
+        // the same way as the DataTables properties
+        ?>
+        function getFixedColWidth(table, col)
         {
           var tableWidth = table.outerWidth();
           var leftWidth = table.find('th:first-child').outerWidth();
-          return Math.min(leftWidth, tableWidth*maxProportion);
+          var maxWidthPx = (col.sWidth == "relative") ? tableWidth*col.iWidth/100 : col.iWidth;
+          return Math.min(leftWidth, maxWidthPx);
         }
         
         <?php
@@ -200,15 +209,15 @@ function print_theme_header($day, $month, $year, $area, $room)
         // which are merged with the default options.   If the browser is IE6 or less
         // we don't bother making a dataTable:  it can be done, but it's not worth it.
         //
-        // leftFixedMax is an optional third parameter, which if present will force the
-        // left hand column to be fixed with a maximum width of leftFixedMax * 100% of
-        // the total table width (eg leftFixedMax = 0.33 gives you a fixed column with a
-        // maximum width of a third of the total table width).
+        // leftCol and rightCol are two objects which if defined will fix the left and/or
+        // right most columns.  They have properties 'iWidth' and 'sWidth' defining the
+        // maximum width of the fixed column.   If sWidth = "fixed" then the iWidth is
+        // a pixel value.  If it is "relative" then a percentage.
         //
         // If you want to do anything else as part of fnInitComplete then you'll need
         // to define fnInitComplete in specificOptions
         ?>
-        function makeDataTable(id, specificOptions, leftFixedMax)
+        function makeDataTable(id, specificOptions, leftCol, rightCol)
         {
           if (lteIE6)
           {
@@ -244,22 +253,27 @@ function print_theme_header($day, $month, $year, $area, $room)
                                       sRestore: '<?php echo get_vocab("restore_original") ?>'};
 
             defaultOptions.fnInitComplete = function(){
-                if (leftFixedMax !== undefined)
+                if ((leftCol !== undefined) || (rightCol !== undefined))
                 {
                   <?php 
-                  // Fix the left hand column.  This has to be done when 
+                  // Fix the left and/or right columns.  This has to be done when 
                   // initialisation is complete as the language files are loaded
                   // asynchronously
-
-                  // Try and get a sensible value for the fixed column width, which is the
-                  // smaller of the actual column width and a proportion of the overall table
-                  // width.   (Unfortunately the actual column width is just the width of the
-                  // column on the first page)
                   ?>
-                  var leftWidth = getFixedColWidth(table, leftFixedMax);
-                  var oFC = new FixedColumns(oTable, {"iLeftColumns": 1,
-                                                      "iLeftWidth": leftWidth,
-                                                      "sLeftWidth": "fixed"});
+                  var options = {};
+                  if (leftCol !== undefined)
+                  {
+                    options.iLeftColumns = 1;
+                    options.sLeftWidth = "fixed";
+                    options.iLeftWidth = getFixedColWidth(table, leftCol);
+                  }
+                  if (rightCol !== undefined)
+                  {
+                    options.iRightColumns = 1;
+                    options.sRightWidth = "fixed";
+                    options.iRightWidth = getFixedColWidth(table, rightCol);
+                  }
+                  var oFC = new FixedColumns(oTable, options);
                   <?php
                   // Not quite sure why we have to adjust the column sizing here,
                   // but if we don't then the table isn't quite the right width 
@@ -270,7 +284,7 @@ function print_theme_header($day, $month, $year, $area, $room)
                 $('.js div.datatable_container').css('visibility', 'visible');
               };
               
-            if (leftFixedMax !== undefined)
+            if (leftCol !== undefined)
             {  
               <?php
               // If we've fixed the left hand column, then (a) remove the first column
@@ -1102,7 +1116,10 @@ $(window).load(function() {
   {
     // Turn the list of rooms into a dataTable
     ?>
-    var roomsTable = makeDataTable('#rooms_table', {}, 0.33);
+    var roomsTable = makeDataTable('#rooms_table',
+                                   {},
+                                   {sWidth: "relative", iWidth: 33},
+                                   {sWidth: "fixed", iWidth: 40} );
     <?php
   }  
     
@@ -1373,7 +1390,9 @@ $(window).load(function() {
     var tableOptions = new Object();
     <?php // The Rights column has a span with title for sorting ?>
     tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [1]}]; 
-    var usersTable = makeDataTable('#users_table', tableOptions, 0.33);
+    var usersTable = makeDataTable('#users_table',
+                                   tableOptions,
+                                   {sWidth: "relative", iWidth: 33});
     <?php
   }
   
@@ -1583,7 +1602,7 @@ $(window).load(function() {
         // column on the first page)
         ?>
         var table = $('#report_table');
-        leftWidth = getFixedColWidth(table, 0.33);
+        leftWidth = getFixedColWidth(table, {sWidth: "relative", iWidth: 33});
         var oFC = new FixedColumns(reportTable, {"iLeftColumns": 1,
                                                  "iLeftWidth": leftWidth,
                                                  "sLeftWidth": "fixed"});
@@ -1746,7 +1765,9 @@ $(window).load(function() {
       tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
       tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [2]}]; 
       
-      var searchTable = makeDataTable('#search_results', tableOptions, 0.33);
+      var searchTable = makeDataTable('#search_results', 
+                                      tableOptions, 
+                                      {sWidth: "relative", iWidth: 33} );
 
       <?php
     }  //  if (function_exists('json_encode'))
