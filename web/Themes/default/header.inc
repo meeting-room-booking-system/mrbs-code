@@ -322,7 +322,20 @@ function print_theme_header($day, $month, $year, $area, $room)
             ?>
             if (!specificOptions.sAjaxSource)
             {
+              <?php
+              /*
+              // In fact we don't use column reordering at all, because (a) it doesn't
+              // work with an Ajax source (b) there's no way of fixing the right hand column
+              // (c) iFixedColumns doesn't seem to work properly and (d) it's confusing
+              // for the user having reordering enabled sometimes and sometimes not.  Better
+              // to wait for a future release of DataTables when these issues have been
+              // fixed.  In the meantime the line of code we need is there below so we can see
+              // how it is done, but commented out.
+              
               var oCR = new ColReorder(oTable, mergedOptions);
+              
+              */
+              ?>
             }
             <?php
             // Need to re-create the datatable when the browser window is resized.  We
