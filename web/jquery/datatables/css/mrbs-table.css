@@ -35,6 +35,8 @@
 .dataTables_wrapper {
   position: relative;
   min-height: 302px;
+  float: left;
+  width: 100%;
   clear: both;
   _height: 302px;
   zoom: 1; /* Feeling sorry for IE */
@@ -123,6 +125,7 @@
  */
 table.display {
   margin: 0;
+  float: left;
   clear: both;
   width: 100%;
 }

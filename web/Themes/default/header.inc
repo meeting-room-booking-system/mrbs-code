@@ -264,6 +264,12 @@ function print_theme_header($day, $month, $year, $area, $room)
                   var oFC = new FixedColumns(oTable, {"iLeftColumns": 1,
                                                       "iLeftWidth": leftWidth,
                                                       "sLeftWidth": "fixed"});
+                  <?php
+                  // Not quite sure why we have to adjust the column sizing here,
+                  // but if we don't then the table isn't quite the right width 
+                  // when first drawn
+                  ?>
+                  oTable.fnAdjustColumnSizing();
                   $('.js div.datatable_container').css('visibility', 'visible');
                 };
               <?php
@@ -282,9 +288,24 @@ function print_theme_header($day, $month, $year, $area, $room)
             ?>
             var mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
             var oTable = table.dataTable(mergedOptions);
-            <?php // Need to redraw the datatable when the browser window is resized ?>
+            <?php
+            // Need to re-create the datatable when the browser window is resized.  We
+            // can't just do a fnDraw() because that does not redraw the Fixed Columns
+            // properly
+            ?>
             $(window).bind('resize', function () {
-                oTable.fnDraw();
+                <?php
+                // If we're using an Ajax data source then we don't want to have to make
+                // an Ajax call and wait for the data every time we resize.   So retrieve
+                // the data from the table and pass it directly to the new table.
+                ?>
+                if (mergedOptions.sAjaxSource)
+                {
+                  mergedOptions.aaData = oTable.fnGetData();
+                  mergedOptions.sAjaxSource = null;
+                }
+                oTable.fnDestroy();
+                oTable = table.dataTable(mergedOptions);
               });
             return oTable;
           }
@@ -1471,8 +1492,8 @@ $(window).load(function() {
                   
       <?php // Turn the table into a datatable ?>
       var tableOptions = new Object();
-      tableOptions.aoColumnDefs = colDefsMain;
       tableOptions.sScrollXInner = "100%";
+      tableOptions.aoColumnDefs = colDefsMain;
       <?php
       // For some reason I don't understand, fnOpen() doesn't seem to work when
       // using FixedColumns.   We also have to turn off bStateSave.  I have raised
@@ -1744,27 +1765,8 @@ $(window).load(function() {
       ?>
       tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
       tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [2]}]; 
-      <?php
-      // Fix the left hand column.  This has to be done when initialisation
-      // is complete as the language files are loaded asynchronously
-      ?>
-      tableOptions.fnInitComplete = function(){
-          var oFC = new FixedColumns(searchTable, {"iLeftColumns": 1,
-                                                   "iLeftWidth": 25,
-                                                   "sLeftWidth": "relative"});
-          $('.js div.datatable_container').css('visibility', 'visible');
-        };
-      <?php
-      // Remove the first column from the column visibility
-      // list because it is fixed
-      ?>
-      tableOptions.oColVis = {aiExclude: [0]};
-      <?php
-      // and stop the first column being reordered
-      ?>
-      tableOptions.oColReorder = {"iFixedColumns": 1};
       
-      var searchTable = makeDataTable('#search_results', tableOptions);
+      var searchTable = makeDataTable('#search_results', tableOptions, 0.33);
 
       <?php
     }  //  if (function_exists('json_encode'))
