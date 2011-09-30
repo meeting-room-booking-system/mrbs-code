@@ -256,11 +256,7 @@ if ($is_admin || ($n_displayable_areas > 0))
         // The header
         echo "<thead>\n";
         echo "<tr>\n";
-        if ($is_admin)
-        {
-          echo "<th><div>&nbsp;</div></th>\n";
-          echo "<th><div>&nbsp;</div></th>\n";
-        }
+
         echo "<th><div>" . get_vocab("name") . "</div></th>\n";
         if ($is_admin)
         {
@@ -292,6 +288,12 @@ if ($is_admin || ($n_displayable_areas > 0))
             echo "<th><div>$text</div></th>\n";
           }
         }
+        
+        if ($is_admin)
+        {
+          echo "<th><div>&nbsp;</div></th>\n";
+        }
+        
         echo "</tr>\n";
         echo "</thead>\n";
         
@@ -305,27 +307,9 @@ if ($is_admin || ($n_displayable_areas > 0))
           {
             $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
             echo "<tr class=\"$row_class\">\n";
-            // Give admins delete and edit links
-            if ($is_admin)
-            {
-              // Delete link
-              echo "<td><div>\n";
-              echo "<a href=\"del.php?type=room&amp;area=$area&amp;room=" . $r['id'] . "\">\n";
-              echo "<img src=\"images/delete.png\" width=\"16\" height=\"16\" 
-                         alt=\"" . get_vocab("delete") . "\"
-                         title=\"" . get_vocab("delete") . "\">\n";
-              echo "</a>\n";
-              echo "</div></td>\n";
-              // Delete link
-              echo "<td><div>\n";
-              echo "<a href=\"edit_area_room.php?change_room=1&amp;phase=1&amp;room=" . $r['id'] . "\">\n";
-              echo "<img src=\"images/edit.png\" width=\"16\" height=\"16\" 
-                         alt=\"" . get_vocab("edit") . "\"
-                         title=\"" . get_vocab("edit") . "\">\n";
-              echo "</a>\n";
-              echo "</div></td>\n";
-            }
-            echo "<td><div><a href=\"edit_area_room.php?change_room=1&amp;phase=1&amp;room=" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</a></div></td>\n";
+
+            $html_name = htmlspecialchars($r['room_name']);
+            echo "<td><div><a title=\"$html_name\" href=\"edit_area_room.php?change_room=1&amp;phase=1&amp;room=" . $r['id'] . "\">$html_name</a></div></td>\n";
             if ($is_admin)
             {
               // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
@@ -375,6 +359,20 @@ if ($is_admin || ($n_displayable_areas > 0))
                 }  // switch
               }  // if
             }  // foreach
+            
+            // Give admins a delete link
+            if ($is_admin)
+            {
+              // Delete link
+              echo "<td><div>\n";
+              echo "<a href=\"del.php?type=room&amp;area=$area&amp;room=" . $r['id'] . "\">\n";
+              echo "<img src=\"images/delete.png\" width=\"16\" height=\"16\" 
+                         alt=\"" . get_vocab("delete") . "\"
+                         title=\"" . get_vocab("delete") . "\">\n";
+              echo "</a>\n";
+              echo "</div></td>\n";
+            }
+            
             echo "</tr>\n";
           }
         }

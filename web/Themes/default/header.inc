@@ -1102,39 +1102,7 @@ $(window).load(function() {
   {
     // Turn the list of rooms into a dataTable
     ?>
-    var tableOptions = new Object();
-    <?php
-    // If we're an ordinary user we only see the Name column.   If we're
-    // an admin we also see the Delete, Edit and Disabled columns.
-    // [For some weird reason, setting nFixedColumns as 4 causes a JavaScript
-    // error in IE7 and IE8 when you reload the page]
-    ?>
-    var nFixedColumns = <?php echo ($is_admin) ? 3 : 1 ?>;
-    <?php 
-    // Fix the left hand columns.  This has to be done when 
-    // initialisation is complete as the language files are loaded
-    // asynchronously
-    ?>
-    tableOptions.fnInitComplete = function(){
-        new FixedColumns(roomsTable, {"iLeftColumns": nFixedColumns,
-                                      "iLeftWidth": 30,
-                                      "sLeftWidth": "relative"});
-        $('.js div.datatable_container').css('visibility', 'visible');
-      };
-    <?php
-    // Remove the fixed columns from the column visibility
-    ?>
-    tableOptions.oColVis = {aiExclude: []};
-    for (var i=0; i<nFixedColumns; i++)
-    {
-      tableOptions.oColVis.aiExclude.push(i);
-    }
-    <?php
-    // and stop those columns being reordered
-    ?>
-    tableOptions.oColReorder = {iFixedColumns: nFixedColumns};
-    
-    var roomsTable = makeDataTable('#rooms_table', tableOptions);
+    var roomsTable = makeDataTable('#rooms_table', {}, 0.33);
     <?php
   }  
     
