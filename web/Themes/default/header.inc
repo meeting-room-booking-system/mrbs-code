@@ -242,20 +242,21 @@ function print_theme_header($day, $month, $year, $area, $room)
                                       buttonText: '<?php echo get_vocab("show_hide_columns") ?>',
                                       bRestore: true,
                                       sRestore: '<?php echo get_vocab("restore_original") ?>'};
-            if (leftFixedMax !== undefined)
-            {
-              <?php 
-              // Fix the left hand column.  This has to be done when 
-              // initialisation is complete as the language files are loaded
-              // asynchronously
 
-              // Try and get a sensible value for the fixed column width, which is the
-              // smaller of the actual column width and a proportion of the overall table
-              // width.   (Unfortunately the actual column width is just the width of the
-              // column on the first page)
-              ?>
-              var leftWidth = getFixedColWidth(table, leftFixedMax);
-              defaultOptions.fnInitComplete = function(){
+            defaultOptions.fnInitComplete = function(){
+                if (leftFixedMax !== undefined)
+                {
+                  <?php 
+                  // Fix the left hand column.  This has to be done when 
+                  // initialisation is complete as the language files are loaded
+                  // asynchronously
+
+                  // Try and get a sensible value for the fixed column width, which is the
+                  // smaller of the actual column width and a proportion of the overall table
+                  // width.   (Unfortunately the actual column width is just the width of the
+                  // column on the first page)
+                  ?>
+                  var leftWidth = getFixedColWidth(table, leftFixedMax);
                   var oFC = new FixedColumns(oTable, {"iLeftColumns": 1,
                                                       "iLeftWidth": leftWidth,
                                                       "sLeftWidth": "fixed"});
@@ -265,18 +266,21 @@ function print_theme_header($day, $month, $year, $area, $room)
                   // when first drawn
                   ?>
                   oTable.fnAdjustColumnSizing();
-                  $('.js div.datatable_container').css('visibility', 'visible');
-                };
+                }
+                $('.js div.datatable_container').css('visibility', 'visible');
+              };
+              
+            if (leftFixedMax !== undefined)
+            {  
               <?php
-              // Remove the first column from the column visibility
-              // list because it is fixed
+              // If we've fixed the left hand column, then (a) remove the first column
+              // from the column visibility list because it is fixed and (b) stop it
+              // being reordered
               ?>
               defaultOptions.oColVis = {aiExclude: [0]};
-              <?php
-              // and stop it being reordered
-              ?>
               defaultOptions.oColReorder = {iFixedColumns: 1};
             }
+            
             <?php
             // Merge the specific options with the default options.  We do a deep
             // merge.
@@ -1399,11 +1403,8 @@ $(window).load(function() {
     // Turn the list of users into a dataTable
     ?>
     var tableOptions = new Object();
-    <?php
-    // The Rights column has a span with title for sorting
-    ?>
+    <?php // The Rights column has a span with title for sorting ?>
     tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [1]}]; 
-    
     var usersTable = makeDataTable('#users_table', tableOptions, 0.33);
     <?php
   }
@@ -1526,7 +1527,7 @@ $(window).load(function() {
         };
       <?php
       // Remove the first column from the column visibility
-      // list because it is fixed
+      // list because it is the control column
       ?>
       tableOptions.oColVis = {aiExclude: [0]};
       <?php

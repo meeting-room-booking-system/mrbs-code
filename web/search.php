@@ -69,7 +69,8 @@ function output_row($row)
   
   $values = array();
   // booking name
-  $values[] = "<a href=\"view_entry.php?id=".$row['entry_id']."\">" . htmlspecialchars($row['name']) . "</a>";
+  $html_name = htmlspecialchars($row['name']);
+  $values[] = "<a title=\"$html_name\" href=\"view_entry.php?id=" . $row['entry_id'] . "\">$html_name</a>";
   // created by
   $values[] = htmlspecialchars($row['create_by']);
   // start time and link to day view
