@@ -1113,6 +1113,7 @@ $(window).load(function() {
       if (validate('main'))
       {
         thisForm.submit();
+        return true;
       }
       thisForm.removeData('submit');
       return false;
