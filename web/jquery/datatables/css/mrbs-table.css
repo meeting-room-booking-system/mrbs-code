@@ -190,11 +190,20 @@ table.display th {
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables row classes
  */
-table.display.sub tr.odd, table.display.sub tbody tr:nth-child(2n+1) {
+ 
+table.display.sub tbody tr:nth-child(2n+1) {
   background-color: #ddffdd;
 }
 
-table.display.sub tr.even, table.display.sub tbody tr:nth-child(2n){
+table.display.sub tr.odd {
+  background-color: #ddffdd;
+}
+
+table.display.sub tbody tr:nth-child(2n){
+  background-color: #eeffee;
+}
+
+table.display.sub tr.even {
   background-color: #eeffee;
 }
 
@@ -222,11 +231,19 @@ table.display tr.even.gradeU {
   background-color: #eee;
 }
 
-tr.odd, table.display tbody tr:nth-child(2n+1) {
+table.display tbody tr:nth-child(2n+1) {
   background-color: #E2E4FF;
 }
 
-tr.even, table.display tbody tr:nth-child(2n) {
+tr.odd {
+  background-color: #E2E4FF;
+}
+
+table.display tbody tr:nth-child(2n) {
+  background-color: white;
+}
+
+tr.even {
   background-color: white;
 }
 
