@@ -831,6 +831,26 @@ div#simple_trailer {clear: both; text-align: center; padding-top: 1.0em; padding
 /*-------------DataTables-------------------------*/
 div.datatable_container {float: left; width: 100%; padding: 2em 0}
 
+div.ColVis_collection {
+  width: auto;
+}
+
+div.ColVis_collection button.ColVis_Button {
+  float: left;
+  clear: left;
+}
+
+span.ColVis_radio {
+  display: block;
+  float: left;
+  width: 30px;
+}
+
+span.ColVis_title {
+	display: block;
+  float: left;
+}
+
 /* ------------ jQuery UI additions -------------*/
 
 .ui-autocomplete {
