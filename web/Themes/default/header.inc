@@ -277,6 +277,7 @@ function print_theme_header($day, $month, $year, $area, $room)
                 oTable.fnDestroy();
                 oTable = table.dataTable(mergedOptions);
               }, 200);
+            
           }
           
           if (lteIE6)
