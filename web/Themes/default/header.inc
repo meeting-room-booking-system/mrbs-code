@@ -181,8 +181,18 @@ function print_theme_header($day, $month, $year, $area, $room)
       ?>
       <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.min.js"></script>
       <script type="text/javascript" src="jquery/datatables/js/ColReorder.min.js"></script>
+      <?php
+      // We use a customised version of ColVis which fixes a problem to do with the width of the
+      // ColVis collection div meaning that when you have long column names the collection
+      // buttons spill over onto multiple lines.   This problem has been reported in the
+      // DataTables forum and hopefully the fix will appear in a future release (or else an
+      // alternative solution suggested).  In the meantime we use the mrbs version of ColVis,
+      // which is kept separate so that we can identify the differences.
+      /*
       <script type="text/javascript" src="jquery/datatables/js/ColVis.min.js"></script>
-      <script type="text/javascript" src="jquery/datatables/js/FixedColumns.min.js"></script>
+      */
+      ?>
+      <script type="text/javascript" src="jquery/datatables/js/ColVis.mrbs.min.js"></script><script type="text/javascript" src="jquery/datatables/js/FixedColumns.min.js"></script>
       <script type="text/javascript" src="jquery/datatables/js/plugins.js"></script>
       
       <script type="text/javascript">

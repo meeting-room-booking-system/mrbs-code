@@ -10,6 +10,11 @@
 ?>
     <link href="jquery/ui/css/sunny/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css">
     
+    <link href="jquery/datatables/css/mrbs-page.css" rel="stylesheet" type="text/css">
+    <link href="jquery/datatables/css/mrbs-table.css" rel="stylesheet" type="text/css">
+    <link href="jquery/datatables/css/ColReorder.css" rel="stylesheet" type="text/css">
+    <link href="jquery/datatables/css/ColVis.css" rel="stylesheet" type="text/css">
+    
     <link rel="stylesheet" href="mrbs.css.php" type="text/css">
     <link rel="stylesheet" media="print" href="mrbs-print.css.php" type="text/css">
 
@@ -29,10 +34,7 @@
     <link rel="stylesheet" href="mrbs-ielte6.css" type="text/css">
     <![endif]-->
     
-    <link href="jquery/datatables/css/mrbs-page.css" rel="stylesheet" type="text/css">
-    <link href="jquery/datatables/css/mrbs-table.css" rel="stylesheet" type="text/css">
-    <link href="jquery/datatables/css/ColReorder.css" rel="stylesheet" type="text/css">
-    <link href="jquery/datatables/css/ColVis.css" rel="stylesheet" type="text/css">
+
     
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo get_charset(); ?>">
     <meta name="robots" content="noindex">
