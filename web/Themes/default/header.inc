@@ -237,6 +237,10 @@ function print_theme_header($day, $month, $year, $area, $room)
           else
           {
             var table = $(id);
+            if (table.length == 0)
+            {
+              return false;
+            }
             <?php // Set up the default options ?>
             var defaultOptions = {};
             <?php
@@ -323,6 +327,7 @@ function print_theme_header($day, $month, $year, $area, $room)
             // merge.
             ?>
             var mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
+            
             var oTable = table.dataTable(mergedOptions);
             <?php
             // If we're using an Ajax data source then don't offer column reordering.
