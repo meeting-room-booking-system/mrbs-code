@@ -229,6 +229,38 @@ function print_theme_header($day, $month, $year, $area, $room)
         ?>
         function makeDataTable(id, specificOptions, leftCol, rightCol)
         {
+          var windowResizeHandler = function()
+          {
+            <?php
+            // Need to re-create the datatable when the browser window is resized.  We
+            // can't just do a fnDraw() because that does not redraw the Fixed Columns
+            // properly.
+            
+            // We set a timeout to make the resizing a bit smoother, as otherwise it's
+            // fairly CPU intensive
+            ?>
+            window.setTimeout(function() {
+                <?php
+                // If we're using an Ajax data source then we don't want to have to make
+                // an Ajax call and wait for the data every time we resize.   So retrieve
+                // the data from the table and pass it directly to the new table.
+                ?>
+                if (mergedOptions.sAjaxSource)
+                {
+                  mergedOptions.aaData = oTable.fnGetData();
+                  mergedOptions.sAjaxSource = null;
+                }
+                <?php
+                // Save the language strings, because we don't need to make another Ajax
+                // to fetch the language strings again when we resize
+                ?>
+                $.extend(true, mergedOptions.oLanguage, oTable.fnSettings().oLanguage);
+                
+                oTable.fnDestroy();
+                oTable = table.dataTable(mergedOptions);
+              }, 200);
+          }
+          
           if (lteIE6)
           {
             $('.js div.datatable_container').css('visibility', 'visible');
@@ -352,31 +384,8 @@ function print_theme_header($day, $month, $year, $area, $room)
               */
               ?>
             }
-            <?php
-            // Need to re-create the datatable when the browser window is resized.  We
-            // can't just do a fnDraw() because that does not redraw the Fixed Columns
-            // properly
-            ?>
-            $(window).bind('resize', function () {
-                <?php
-                // If we're using an Ajax data source then we don't want to have to make
-                // an Ajax call and wait for the data every time we resize.   So retrieve
-                // the data from the table and pass it directly to the new table.
-                ?>
-                if (mergedOptions.sAjaxSource)
-                {
-                  mergedOptions.aaData = oTable.fnGetData();
-                  mergedOptions.sAjaxSource = null;
-                }
-                <?php
-                // Save the language strings, because we don't need to make another Ajax
-                // to fetch the language strings again when we resize
-                ?>
-                $.extend(true, mergedOptions.oLanguage, oTable.fnSettings().oLanguage);
-                
-                oTable.fnDestroy();
-                oTable = table.dataTable(mergedOptions);
-              });
+
+            $(window).bind('resize', windowResizeHandler);
             return oTable;
           }
         }
@@ -1838,13 +1847,15 @@ $(window).load(function() {
   <?php
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
-  echo "<body class=\"".htmlspecialchars($page)."\">\n";
+  echo "<body class=\"non_js ".htmlspecialchars($page)."\">\n";
    
     // Add a class of "js" so that we know if we're using JavaScript or not
+    // and remove the non_js class (it's sometimes useful to know that we're
+    // not running JavaScript)
   ?>
     <script type="text/javascript">
       //<![CDATA[
-      $('body').addClass('js');
+      $('body').addClass('js').removeClass('non_js');
       //]]>
     </script> 
 
