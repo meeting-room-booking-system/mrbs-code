@@ -299,13 +299,13 @@ if ($is_admin || ($n_displayable_areas > 0))
         
         // The body
         echo "<tbody>\n";
-        $row_class = "odd_row";
+        $row_class = "odd";
         foreach ($rooms as $r)
         {
           // Don't show ordinary users disabled rooms
           if ($is_admin || !$r['disabled'])
           {
-            $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
+            $row_class = ($row_class == "even") ? "odd" : "even";
             echo "<tr class=\"$row_class\">\n";
 
             $html_name = htmlspecialchars($r['room_name']);
