@@ -444,7 +444,7 @@ FixedColumns.prototype = {
     var winHeight = $(window).height();
     
     var windowResizeHandler = function() {
-      // Chck whether it's a genuine window resize (IE7/8 also trigger a
+      // Check whether it's a genuine window resize (IE7/8 also trigger a
       // resize when an element in the window is resized)
       var winNewWidth = $(window).width();
       var winNewHeight = $(window).height();
@@ -558,6 +558,10 @@ FixedColumns.prototype = {
 	{
 		var oGrid = this.dom.grid;
 		var iTotal = $(oGrid.wrapper).width();
+		if (iTotal == 0)
+		{
+		  return;
+		}
 		var iLeft = 0, iRight = 0, iRemainder = 0;
 
 		if ( this.s.sLeftWidth == 'fixed' )
