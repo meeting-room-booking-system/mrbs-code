@@ -172,6 +172,20 @@ function print_theme_header($day, $month, $year, $area, $room)
       //]]>
     </script>
     <![endif]-->
+    
+    <?php // Work out if we're using IE8 or below ?>
+    <script type="text/javascript">
+      //<![CDATA[
+      var lteIE8 = false;
+      //]]>
+    </script>
+    <!--[if lte IE 8]>
+    <script type="text/javascript">
+      //<![CDATA[
+      var lteIE8 = true;
+      //]]>
+    </script>
+    <![endif]-->
       
     <?php
     // dataTables initialisation
@@ -1201,10 +1215,13 @@ $(window).load(function() {
   {
     // Turn the list of rooms into a dataTable
     // If we're an admin, then fix the right hand column
+    // (but not if we're running IE8 or below because for some reason I can't
+    // get a fixed right hand column to work there.  It should do though, as it
+    // works on the DataTables examples page)
     if ($is_admin)
     {
       ?>
-      var rightCol = {sWidth: "fixed", iWidth: 40};
+      var rightCol = (lteIE8) ? null: {sWidth: "fixed", iWidth: 40};
       <?php
     }
     else
