@@ -361,7 +361,7 @@ function print_theme_header($day, $month, $year, $area, $room)
                 }
                 $('.js div.datatable_container').css('visibility', 'visible');
                 <?php // Rebind the handler ?>
-                $(window).unbind('resize', windowResizeHandler);
+                $(window).bind('resize', windowResizeHandler);
               };
               
             <?php
@@ -1609,7 +1609,7 @@ $(window).load(function() {
           */
           $('.js div.datatable_container').css('visibility', 'visible');
           <?php // Rebind the handler ?>
-          $(window).unbind('resize', windowResizeHandler);
+          $(window).bind('resize', windowResizeHandler);
         };
       <?php
       // Remove the first column from the column visibility
@@ -1707,7 +1707,7 @@ $(window).load(function() {
                                                  "sLeftWidth": "fixed"});
         $('.js div.datatable_container').css('visibility', 'visible');
         <?php // Rebind the handler ?>
-        $(window).unbind('resize', windowResizeHandler);
+        $(window).bind('resize', windowResizeHandler);
         <?php 
         // Also add a "Delete entries button", provided that (a) the user is an
         // admin and (b) the configuration allows it
