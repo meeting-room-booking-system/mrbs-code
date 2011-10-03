@@ -235,12 +235,14 @@ function print_theme_header($day, $month, $year, $area, $room)
         // If you want to do anything else as part of fnInitComplete then you'll need
         // to define fnInitComplete in specificOptions
         ?>
+        var windowResizeHandler;
+        
         function makeDataTable(id, specificOptions, leftCol, rightCol)
         {
           var winWidth = $(window).width();
           var winHeight = $(window).height();
           
-          var windowResizeHandler = function()
+          windowResizeHandler = function()
           {
             <?php
             // IE8 and below will trigger $(window).resize not just when the window
