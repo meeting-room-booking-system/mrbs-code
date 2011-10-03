@@ -192,7 +192,15 @@ function print_theme_header($day, $month, $year, $area, $room)
       <script type="text/javascript" src="jquery/datatables/js/ColVis.min.js"></script>
       */
       ?>
-      <script type="text/javascript" src="jquery/datatables/js/ColVis.mrbs.min.js"></script><script type="text/javascript" src="jquery/datatables/js/FixedColumns.min.js"></script>
+      <script type="text/javascript" src="jquery/datatables/js/ColVis.mrbs.min.js"></script>
+      <?php
+      // We also have a customised version of FixedColumns which fixes a problem to do with the
+      // resizing of windows in IE7/8.   The problem has been reported.
+      /*
+      <script type="text/javascript" src="jquery/datatables/js/FixedColumns.min.js"></script>
+      */
+      ?>
+      <script type="text/javascript" src="jquery/datatables/js/FixedColumns.mrbs.js"></script>
       <script type="text/javascript" src="jquery/datatables/js/plugins.js"></script>
       
       <script type="text/javascript">
@@ -248,7 +256,11 @@ function print_theme_header($day, $month, $year, $area, $room)
             }
             winWidth = winNewWidth;
             winHeight = winNewHeight;
-            
+            <?php
+            // This is a genuine resize event.   Unbind the handler to stop any
+            // more resize events while we are dealing with this one
+            ?>
+            $(window).unbind('resize', windowResizeHandler);
             <?php
             // Need to re-create the datatable when the browser window is resized.  We
             // can't just do a fnDraw() because that does not redraw the Fixed Columns
@@ -348,6 +360,8 @@ function print_theme_header($day, $month, $year, $area, $room)
                   oTable.fnAdjustColumnSizing();
                 }
                 $('.js div.datatable_container').css('visibility', 'visible');
+                <?php // Rebind the handler ?>
+                $(window).unbind('resize', windowResizeHandler);
               };
               
             <?php
@@ -1594,6 +1608,8 @@ $(window).load(function() {
                                           "sLeftWidth": "fixed"});
           */
           $('.js div.datatable_container').css('visibility', 'visible');
+          <?php // Rebind the handler ?>
+          $(window).unbind('resize', windowResizeHandler);
         };
       <?php
       // Remove the first column from the column visibility
@@ -1690,6 +1706,8 @@ $(window).load(function() {
                                                  "iLeftWidth": leftWidth,
                                                  "sLeftWidth": "fixed"});
         $('.js div.datatable_container').css('visibility', 'visible');
+        <?php // Rebind the handler ?>
+        $(window).unbind('resize', windowResizeHandler);
         <?php 
         // Also add a "Delete entries button", provided that (a) the user is an
         // admin and (b) the configuration allows it
