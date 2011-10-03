@@ -440,12 +440,12 @@ FixedColumns.prototype = {
 			}
 		} );
 		
-		var winWidth = $(window).width();
+    var winWidth = $(window).width();
     var winHeight = $(window).height();
     
-		var windowResizeHandler = function() {
-		  // Chck whether it's a genuine window resize (IE7/8 also trigger a
-		  // resize when an element in the window is resized
+    var windowResizeHandler = function() {
+      // Chck whether it's a genuine window resize (IE7/8 also trigger a
+      // resize when an element in the window is resized)
       var winNewWidth = $(window).width();
       var winNewHeight = $(window).height();
       if ((winNewWidth == winWidth) && (winNewHeight == winHeight))
@@ -456,10 +456,10 @@ FixedColumns.prototype = {
       winHeight = winNewHeight;
       // Stop any more resize events while we're dealing with this one
       $(window).unbind('resize', windowResizeHandler);
-		  that._fnGridLayout.call( that );
-		  $(window).bind('resize', windowResizeHandler);
-		};
-		
+      that._fnGridLayout.call( that );
+      $(window).bind('resize', windowResizeHandler);
+    };
+    
     $(window).bind('resize', windowResizeHandler);
 		
 		var bFirstDraw = true;
