@@ -144,7 +144,6 @@ $vocab["of"]                 = " of ";
 $vocab["previous"]           = "前一个";
 $vocab["next"]               = "下一个";
 $vocab["entry"]              = "登录";
-$vocab["view"]               = "显示";
 $vocab["advanced_search"]    = "高级查找";
 $vocab["search_button"]      = "查找";
 $vocab["search_for"]         = "查找";
@@ -175,9 +174,6 @@ $vocab["total"]              = "全部";
 $vocab["submitquery"]        = "产生报表";
 $vocab["sort_rep"]           = "排序";
 $vocab["sort_rep_time"]      = "起始日/时";
-$vocab["rep_dsp"]            = "显示在报表";
-$vocab["rep_dsp_dur"]        = "持续时间";
-$vocab["rep_dsp_end"]        = "结束时间";
 
 // Used in week.php
 $vocab["weekbefore"]         = "前一周";

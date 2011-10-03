@@ -246,76 +246,23 @@ if ($is_admin || ($n_displayable_areas > 0))
       }
       else
       {
-        // Display them in a table [Actually two tables side by side so that we can
-        // achieve a "Freeze Panes" effect: there doesn't seem to be a good way of
-        // getting a colgroup to scroll, so we have to distort the mark-up a little]
-    
-        echo "<div id=\"room_info\" class=\"freeze_panes\">\n";
-        // (a) the "header" columns containing the room names
-        echo "<div class=\"header_columns\">\n";
-        echo "<table class=\"admin_table\">\n";
+        echo "<div id=\"room_info\" class=\"datatable_container\">\n";
+        // Build the table.    We deal with the name and disabled columns
+        // first because they are not necessarily the first two columns in
+        // the table (eg if you are running PostgreSQL and have upgraded your
+        // database)
+        echo "<table id=\"rooms_table\" class=\"admin_table display\">\n";
+        
+        // The header
         echo "<thead>\n";
         echo "<tr>\n";
-        if ($is_admin)
-        {
-          echo "<th><div>&nbsp;</div></th>\n";
-          echo "<th><div>&nbsp;</div></th>\n";
-        }
+
         echo "<th><div>" . get_vocab("name") . "</div></th>\n";
         if ($is_admin)
         {
-          // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
+        // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
           echo "<th><div>" . get_vocab("enabled") . "</div></th>\n";
         }
-        echo "</tr>\n";
-        echo "</thead>\n";
-        echo "<tbody>\n";
-        $row_class = "odd_row";
-        foreach ($rooms as $r)
-        {
-          // Don't show ordinary users disabled rooms
-          if ($is_admin || !$r['disabled'])
-          {
-            $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
-            echo "<tr class=\"$row_class\">\n";
-            // Give admins delete and edit links
-            if ($is_admin)
-            {
-              // Delete link
-              echo "<td><div>\n";
-              echo "<a href=\"del.php?type=room&amp;area=$area&amp;room=" . $r['id'] . "\">\n";
-              echo "<img src=\"images/delete.png\" width=\"16\" height=\"16\" 
-                         alt=\"" . get_vocab("delete") . "\"
-                         title=\"" . get_vocab("delete") . "\">\n";
-              echo "</a>\n";
-              echo "</div></td>\n";
-              // Delete link
-              echo "<td><div>\n";
-              echo "<a href=\"edit_area_room.php?change_room=1&amp;phase=1&amp;room=" . $r['id'] . "\">\n";
-              echo "<img src=\"images/edit.png\" width=\"16\" height=\"16\" 
-                         alt=\"" . get_vocab("edit") . "\"
-                         title=\"" . get_vocab("edit") . "\">\n";
-              echo "</a>\n";
-              echo "</div></td>\n";
-            }
-            echo "<td><div><a href=\"edit_area_room.php?change_room=1&amp;phase=1&amp;room=" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</a></div></td>\n";
-            if ($is_admin)
-            {
-              // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
-              echo "<td class=\"boolean\"><div>" . ((!$r['disabled']) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;") . "</div></td>\n";
-            }
-            echo "</tr>\n";
-          }
-        }
-        echo "</tbody>\n";
-        echo "</table>\n";
-        echo "</div>\n";
-    
-        // (b) the "body" columns containing the room info
-        echo "<div class=\"body_columns\">\n";
-        echo "<table class=\"admin_table\">\n";
-        echo "<thead>\n";
-        echo "<tr>\n";
         // ignore these columns, either because we don't want to display them,
         // or because we have already displayed them in the header column
         $ignore = array('id', 'area_id', 'room_name', 'disabled', 'sort_key', 'custom_html');
@@ -336,20 +283,38 @@ if ($is_admin || ($n_displayable_areas > 0))
                 $text = get_loc_field_name($tbl_room, $field['name']);
                 break;
             }
-            echo "<th><div>" . htmlspecialchars($text) . "</div></th>\n";
+            // We don't use htmlspecialchars() here because the column names are
+            // trusted and some of them may deliberately contain HTML entities (eg &nbsp;)
+            echo "<th><div>$text</div></th>\n";
           }
         }
+        
+        if ($is_admin)
+        {
+          echo "<th><div>&nbsp;</div></th>\n";
+        }
+        
         echo "</tr>\n";
         echo "</thead>\n";
+        
+        // The body
         echo "<tbody>\n";
-        $row_class = "odd_row";
+        $row_class = "odd";
         foreach ($rooms as $r)
         {
           // Don't show ordinary users disabled rooms
           if ($is_admin || !$r['disabled'])
           {
-            $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
+            $row_class = ($row_class == "even") ? "odd" : "even";
             echo "<tr class=\"$row_class\">\n";
+
+            $html_name = htmlspecialchars($r['room_name']);
+            echo "<td><div><a title=\"$html_name\" href=\"edit_area_room.php?change_room=1&amp;phase=1&amp;room=" . $r['id'] . "\">$html_name</a></div></td>\n";
+            if ($is_admin)
+            {
+              // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
+              echo "<td class=\"boolean\"><div>" . ((!$r['disabled']) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;") . "</div></td>\n";
+            }
             foreach($fields as $field)
             {
               if (!in_array($field['name'], $ignore))
@@ -391,16 +356,31 @@ if ($is_admin || ($n_displayable_areas > 0))
                       echo $html;
                     }
                     break;
-                }
-              }
+                }  // switch
+              }  // if
+            }  // foreach
+            
+            // Give admins a delete link
+            if ($is_admin)
+            {
+              // Delete link
+              echo "<td><div>\n";
+              echo "<a href=\"del.php?type=room&amp;area=$area&amp;room=" . $r['id'] . "\">\n";
+              echo "<img src=\"images/delete.png\" width=\"16\" height=\"16\" 
+                         alt=\"" . get_vocab("delete") . "\"
+                         title=\"" . get_vocab("delete") . "\">\n";
+              echo "</a>\n";
+              echo "</div></td>\n";
             }
+            
             echo "</tr>\n";
           }
         }
+
         echo "</tbody>\n";
         echo "</table>\n";
         echo "</div>\n";
-        echo "</div>\n";
+        
       }
     }
   }

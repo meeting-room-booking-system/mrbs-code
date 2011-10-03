@@ -38,58 +38,6 @@ define('FORMAT_TIMES',   "%.2f");
 define('FORMAT_PERIODS', "%d");
 
 
-// Convert a start time and end time to a plain language description.
-// This is similar but different from the way it is done in view_entry.
-function describe_span($starts, $ends)
-{
-  global $twentyfourhour_format, $strftime_format;
-  
-  $start_date = utf8_strftime($strftime_format['date'], $starts);
-  $start_time = utf8_strftime(hour_min_format(), $starts);
-  $duration = $ends - $starts;
-  if ($start_time == "00:00:00" && $duration == 60*60*24)
-  {
-    return $start_date . " - " . get_vocab("all_day");
-  }
-  toTimeString($duration, $dur_units);
-  return $start_date . " " . $start_time . " - " . $duration . " " . $dur_units;
-}
-
-// Convert a start period and end period to a plain language description.
-// This is similar but different from the way it is done in view_entry.
-function describe_period_span($starts, $ends)
-{
-  list( $start_period, $start_date) =  period_date_string($starts);
-  list( , $end_date) =  period_date_string($ends, -1);
-  $duration = $ends - $starts;
-  toPeriodString($start_period, $duration, $dur_units);
-  return $start_date . " - " . $duration . " " . $dur_units;
-}
-
-// this is based on describe_span but it displays the start and end
-// date/time of an entry
-function start_to_end($starts, $ends)
-{
-  global $twentyfourhour_format, $strftime_format;
-  
-  $start_date = utf8_strftime($strftime_format['date'], $starts);
-  $start_time = utf8_strftime(hour_min_format(), $starts);
-
-  $end_date = utf8_strftime($strftime_format['date'], $ends);
-  $end_time = utf8_strftime(hour_min_format(), $ends);
-  return $start_date . " " . $start_time . " - " . $end_date . " " . $end_time;
-}
-
-
-// this is based on describe_period_span but it displays the start and end
-// date/period of an entry
-function start_to_end_period($starts, $ends)
-{
-  list( , $start_date) =  period_date_string($starts);
-  list( , $end_date) =  period_date_string($ends, -1);
-  return $start_date . " - " . $end_date;
-}
-
 // Escape a string for either HTML or CSV output
 function escape($string)
 {
@@ -105,42 +53,30 @@ function escape($string)
   return $string;
 }
 
-// Add $value to a CSV row, escaping the value as well
-// Return the new row
-function csv_row_add_value($row, $value)
-{
-  global $csv_col_sep;
-  
-  // if it's not the first entry add a column separator
-  if (!empty($row))
-  {
-    $row .= $csv_col_sep;
-  }
-  $row .= '"';
-  $row .= escape($value);
-  $row .= '"';
-  return $row;
-}
 
 // Output the first row (header row) for CSV reports
-function csv_report_header($display)
+function report_header()
 {
-  global $csv_row_sep;
+  global $output_as_csv, $output_as_html, $ajax;
+  global $csv_row_sep, $csv_col_sep;
   global $custom_fields, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
+
+  // Don't do anything if this is an Ajax request: we only want to send the data
+  if ($ajax)
+  {
+    return;
+  }
   
   // Build an array of values to go into the header row
   $values = array();
-  $values[] = get_vocab("area") . ' - ' . get_vocab("room");
-  $values[] = get_vocab("namebooker"); 
-  if ($display == "d")
-  {
-    $values[] = get_vocab("start_date") . ' - ' . get_vocab("duration");
-  }
-  else
-  {
-    $values[] = get_vocab("start_date") . ' - ' . get_vocab("end_date");
-  }
+  
+  $values[] = get_vocab("namebooker");
+  $values[] = get_vocab("area");
+  $values[] = get_vocab("room");
+  $values[] = get_vocab("start_date");
+  $values[] = get_vocab("end_date");
+  $values[] = get_vocab("duration");
   $values[] = get_vocab("fulldescription_short");
   $values[] = get_vocab("type"); 
   $values[] = get_vocab("createdby");
@@ -159,181 +95,182 @@ function csv_report_header($display)
   }
   $values[] = get_vocab("lastupdate");
   
-  // Remove any HTML entities from the values
-  $n_values = count($values);
-  $charset = get_charset();
-  // Find out what the non-breaking space is in this character set
-  $nbsp = mrbs_entity_decode('&nbsp;', ENT_NOQUOTES, $charset);
-  for ($i=0; $i < $n_values; $i++)
-  {
-    $values[$i] = mrbs_entity_decode($values[$i], ENT_NOQUOTES, $charset);
-    // Trim non-breaking spaces from the string
-    $values[$i] = trim($values[$i], $nbsp);
-    // And do an ordinary trim
-    $values[$i] = trim($values[$i]);
-  }
   
-  // Now turn the array of values into a CSV row
-  $line = "";  // initialise the row
-  foreach ($values as $v)
+  if ($output_as_csv)
   {
-    $line = csv_row_add_value($line, $v);
-  }
-  $line .= $csv_row_sep;  // terminate the row
+    // Remove any HTML entities from the values, and escape the strings
+    $n_values = count($values);
+    $charset = get_charset();
+    // Find out what the non-breaking space is in this character set
+    $nbsp = mrbs_entity_decode('&nbsp;', ENT_NOQUOTES, $charset);
+    for ($i=0; $i < $n_values; $i++)
+    {
+      $values[$i] = mrbs_entity_decode($values[$i], ENT_NOQUOTES, $charset);
+      // Trim non-breaking spaces from the string
+      $values[$i] = trim($values[$i], $nbsp);
+      // And do an ordinary trim
+      $values[$i] = trim($values[$i]);
+      $values[$i] = escape($values[$i]);
+    }
   
-  // Output the row
-  echo $line;
+    // Now turn the array of values into a CSV row
+    $line = '"';
+    $line .= implode("\"$csv_col_sep\"", $values);
+    $line .= '"' . $csv_row_sep;
+  
+    // Output the row
+    echo $line;
+  }
+  elseif ($output_as_html)
+  {
+    $html .= "<colgroup>";
+    foreach ($values as $value)
+    {
+      $html .= "<col>";
+    }
+    $html .= "</colgroup>\n";
+    $html = "<thead>\n";
+    $html .= "<tr>\n";
+    foreach ($values as $value)
+    {
+      // We don't use htmlspecialchars() here because the vocab strings are trusted.
+      // And some of them contain HTML entities such as &nbsp; on purpose
+      $html .= "<th>$value</th>\n";
+    }
+    $html .= "</tr>\n";
+    $html .= "</thead>\n<tbody>\n";
+    echo $html;
+  }
 }
 
-// Report on one entry. See below for columns in $row[].
-// $last_area_room remembers the current area/room.
-// $last_date remembers the current date.
-function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
+
+function open_report()
+{
+  global $output_as_html, $ajax;
+  
+  if ($output_as_html && !$ajax)
+  {
+    echo "<div id=\"report_output\" class=\"datatable_container\">\n";
+    echo "<table class=\"admin_table display\" id=\"report_table\">\n";
+  }
+  report_header();
+}
+
+
+function close_report()
+{
+  global $output_as_html, $ajax, $json_data;
+  
+  // If this is an Ajax request, we can now send the JSON data
+  if ($ajax)
+  {
+    echo json_encode($json_data);
+  }
+  elseif ($output_as_html)
+  {
+    echo "</tbody>\n";
+    echo "</table>\n";
+    echo "</div>\n";
+  }
+}
+
+
+function report_row(&$row, $sortby)
 {
   global $typel;
-  global $output_as_csv;
-  global $csv_row_sep;
+  global $output_as_csv, $ajax, $ajax_capable, $json_data;
+  global $csv_row_sep, $csv_col_sep;
   global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
   global $strftime_format;
-  global $select_options;
+  global $select_options, $enable_periods;
   
-  // Initialise the line for CSV reports
-  $line = "";
-  
-  // Display Area/Room, but only when it changes:
-  $area_room = $row['area_name'] . " - " . $row['room_name'];
-  $date = utf8_strftime($strftime_format['date'], $row['start_time']);
-  
-  // entries to be sorted on area/room
-  echo $output_as_csv ? '' : "<div class=\"div_report\">\n";
-  if( $sortby == "r" )
+  // If we're capable of delivering an Ajax request and this is not Ajax request,
+  // then don't do anything.  We're going to save sending the data until we actually
+  // get the Ajax request;  we just send the rest of the page at this stage.
+  if (!$output_as_csv && $ajax_capable && !$ajax)
   {
-    if ($area_room != $last_area_room)
-    {
-      echo $output_as_csv ? '' : "<h2>". get_vocab("room") . ": " . escape($area_room) . "</h2>\n";
-    }
-    if ($date != $last_date || $area_room != $last_area_room)
-    {
-      echo $output_as_csv ? '' : "<h3>". get_vocab("date") . ": " . $date . "</h3>\n";
-      $last_date = $date;
-    }
-    // remember current area/room that is being processed.
-    // this is done here as the if statement above needs the old
-    // values
-    if ($area_room != $last_area_room)
-    {
-      $last_area_room = $area_room;
-    }
-  }
-  else
-    // entries to be sorted on start date
-  {
-    if ($date != $last_date)
-    {
-      echo $output_as_csv ? '' : "<h2>". get_vocab("date") . ": " . $date . "</h2>\n";
-    }
-    if ($area_room != $last_area_room  || $date != $last_date)
-    {
-      echo $output_as_csv ? '' : "<h3>". get_vocab("room") . ": " . escape($area_room) . "</h3>\n";
-      $last_area_room = $area_room;
-    }
-    // remember current date that is being processed.
-    // this is done here as the if statement above needs the old
-    // values
-    if ($date != $last_date)
-    {
-      $last_date = $date;
-    }
+    return;
   }
   
+  $rows_output++;
+  $values = array();
+  
+  // Booking name
   if ($output_as_csv)
   {
-    $line = csv_row_add_value($line, $area_room); // for the CSV report put the area-room name on every line
-    $line = csv_row_add_value($line, $row['name']);
+    $values[] = escape($row['name']);
   }
   else
   {
-    echo "<div class=\"report_entry_title\">\n";
-  
-    echo "<div class=\"report_entry_name\">\n";
-    // Brief Description (title), linked to view_entry:
-    echo "<a href=\"view_entry.php?id=".$row['id']."\">" . htmlspecialchars($row['name']) . "</a>\n";
-    echo "</div>\n";
+    $html_name = htmlspecialchars($row['name']);
+    $values[] = "<a href=\"view_entry.php?id=" . $row['id'] . "\" title=\"$html_name\">$html_name</a>";
   }
-  echo $output_as_csv ? '' : "<div class=\"report_entry_when\">\n";
 
-  // what do you want to display duration or end date/time
-  if( $display == "d" )
+  // Area
+  $values[] = escape($row['area_name']);
+  
+  // Room
+  $values[] = escape($row['room_name']);
+  
+  // Start date
+  if ($enable_periods)
   {
-    // Start date/time and duration:
-    $when = (empty($row['enable_periods']) ? 
-             describe_span($row['start_time'], $row['end_time']) : 
-             describe_period_span($row['start_time'], $row['end_time']));
+    list($start_period, $start_date) =  period_date_string($row['start_time']);
   }
   else
   {
-    // Start date/time and End date/time:
-    $when = (empty($row['enable_periods']) ? 
-             start_to_end($row['start_time'], $row['end_time']) :
-             start_to_end_period($row['start_time'], $row['end_time']));
+    $start_date = time_date_string($row['start_time']);
   }
   if ($output_as_csv)
   {
-    $line = csv_row_add_value($line, $when);
+    $values[] = escape($start_date);
   }
   else
   {
-    echo "$when\n";
-    echo "</div>\n";
-    echo "</div>\n";
-    
-    echo "<table>\n";
-    echo "<colgroup>\n";
-    echo "<col class=\"col1\">\n";
-    echo "<col class=\"col2\">\n";
-    echo "</colgroup>\n";
+    // Include the numeric start time as a title in an empty span so
+    // that the column can be sorted and filtered properly
+    $values[] = "<span title=\"" . $row['start_time'] . "\"></span>" . escape($start_date);
   }
+  
+  // End date
+  if ($enable_periods)
+  {
+    list( , $end_date) =  period_date_string($row['end_time'], -1);
+  }
+  else
+  {
+    $end_date = time_date_string($row['end_time']);
+  }
+  if ($output_as_csv)
+  {
+    $values[] = escape($end_date);
+  }
+  else
+  {
+    // Include the numeric end time as a title in an empty span so
+    // that the column can be sorted and filtered properly
+    $values[] = "<span title=\"" . $row['end_time'] . "\"></span>" . escape($end_date);
+  }
+  
+  // Duration
+  // Need the duration in seconds for sorting.  Have to correct it for DST
+  // changes so that the user sees what he expects to see
+  $duration_seconds = $row['end_time'] - $row['start_time'];
+  $duration_seconds -= cross_dst($row['start_time'], $row['end_time']);
+  $d = get_duration($row['start_time'], $row['end_time']);
+  $values[] = "<span title=\"$duration_seconds\"></span>" .
+              escape($d['duration'] . ' ' . $d['dur_units']);
 
   // Description:
-  if ($output_as_csv)
-  {
-    $line = csv_row_add_value($line, $row['description']);
-  }
-  else
-  {
-    echo "<tr>\n";
-    echo "<td>" . get_vocab("description") . ":</td>\n";
-    echo "<td>" . escape($row['description']) . "</td>\n";
-    echo "</tr>\n";
-  }
+  $values[] = escape($row['description']);
 
   // Entry Type:
   $et = empty($typel[$row['type']]) ? "?".$row['type']."?" : $typel[$row['type']];
-  if ($output_as_csv)
-  {
-    $line = csv_row_add_value($line, $et);
-  }
-  else
-  {
-    echo "<tr>\n";
-    echo "<td>" . get_vocab("type") . ":</td>\n";
-    echo "<td>" . escape($et) . "</td>\n";
-    echo "</tr>\n";
-  }
+  $values[] = escape($et);
 
   // Created by:
-  if ($output_as_csv)
-  {
-    $line = csv_row_add_value($line, $row['create_by']);
-  }
-  else
-  {
-    echo "<tr>\n";
-    echo "<td>" . get_vocab("createdby") . ":</td>\n";
-    echo "<td>" . escape($row['create_by']) . "</td>\n";
-    echo "</tr>\n";
-  }
+  $values[] = escape($row['create_by']);
   
   // Confirmation status
   if ($confirmation_somewhere)
@@ -347,18 +284,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
     {
       $confirmation_status = '';
     }
-    // Now output the text
-    if ($output_as_csv)
-    {
-      $line = csv_row_add_value($line, $confirmation_status);
-    }
-    else
-    {
-      echo "<tr>\n";
-      echo "<td>" . get_vocab("confirmation_status") . ":</td>\n";
-      echo "<td>" . escape($confirmation_status) . "</td>\n";
-      echo "</tr>\n";
-    }
+    $values[] = escape($confirmation_status);
   }
   
   // Approval status
@@ -373,18 +299,7 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
     {
       $approval_status = '';
     }
-    // Now output the text
-    if ($output_as_csv)
-    {
-      $line = csv_row_add_value($line, $approval_status);
-    }
-    else
-    {
-      echo "<tr>\n";
-      echo "<td>" . get_vocab("approval_status") . ":</td>\n";
-      echo "<td>" . escape($approval_status) . "</td>\n";
-      echo "</tr>\n";
-    }
+    $values[] = escape($approval_status);
   }
   
   // Now do any custom fields
@@ -416,44 +331,40 @@ function reporton(&$row, &$last_area_room, &$last_date, $sortby, $display)
     {
       $output = '';
     }
-    
-    if ($output_as_csv)
-    {
-      $line = csv_row_add_value($line, $output);
-    }
-    else
-    {
-      echo "<tr>\n";
-      echo "<td>" . get_loc_field_name($tbl_entry, $key) . ":</td>\n";
-      echo "<td>" . escape($output) . "</td>\n";
-      echo "</tr>\n";
-    }
+    $values[] = escape($output);
   }
 
   // Last updated:
+  $last_updated = time_date_string($row['last_updated']);
   if ($output_as_csv)
   {
-    $line = csv_row_add_value($line, time_date_string($row['last_updated']));
+    $values[] = escape($last_updated);
   }
   else
   {
-    echo "<tr>\n";
-    echo "<td>" . get_vocab("lastupdate") . ":</td>\n";
-    echo "<td>" . time_date_string($row['last_updated']) . "</td>\n";
-    echo "</tr>\n";
+    // Include the numeric last updated time  as a title in an empty span so
+    // that the column can be sorted and filtered properly
+    $values[] = "<span title=\"" . $row['last_updated'] . "\"></span>" . escape($last_updated);
   }
-
-  if ($output_as_csv)
+  
+  if ($ajax)
   {
-    // terminate and output the line
-    $line .= $csv_row_sep;
-    echo $line;
+    $json_data['aaData'][] = $values;
+  }
+  elseif ($output_as_csv)
+  {
+    $line = '"';
+    $line .= implode("\"$csv_col_sep\"", $values);
+    $line .= '"' . $csv_row_sep;
   }
   else
   {
-    echo "</table>\n";
-    echo "</div>\n\n";
+    $line = "<tr>\n<td>";
+    $line .= implode("</td>\n<td>", $values);
+    $line .= "</td>\n</tr>\n";
   }
+  
+  echo $line;
 }
 
 
@@ -833,12 +744,13 @@ $descrmatch = get_form_var('descrmatch', 'string');
 $summarize = get_form_var('summarize', 'int', (($cli_mode) ? REPORT + OUTPUT_CSV : REPORT + OUTPUT_HTML));
 $typematch = get_form_var('typematch', 'array');
 $sortby = get_form_var('sortby', 'string', 'r');  // $sortby: r=room, s=start date/time.
-$display = get_form_var('display', 'string', 'd');  // $display: d=duration, e=start date/time and end date/time.
 $sumby = get_form_var('sumby', 'string', 'd');  // $sumby: d=by brief description, c=by creator, t=by type.
 $match_approved = get_form_var('match_approved', 'int', APPROVED_BOTH);
 $match_confirmed = get_form_var('match_confirmed', 'int', CONFIRMED_BOTH);
 $match_private = get_form_var('match_private', 'int', PRIVATE_BOTH);
 $phase = get_form_var('phase', 'int', 1);
+$ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
+$datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 
 // Check the user is authorised for this page
 if ($cli_mode)
@@ -859,6 +771,16 @@ else
 if ($cli_mode)
 {
   $phase = 2;
+}
+
+// Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
+// requests, which will only be if (a) the browser is using DataTables and (b)
+// we can do JSON encoding.    We also need to initialise the JSON data array.
+$ajax_capable = $datatable && function_exists('json_encode');
+
+if ($ajax)
+{
+  $json_data['aaData'] = array();
 }
 
 $private_somewhere = some_area('private_enabled') || some_area('private_mandatory');
@@ -1115,7 +1037,11 @@ if ($phase == 2)
 }
 
 // print the page header
-if ($output_as_html || (empty($nmatch) && !$cli_mode))
+if ($ajax)
+{
+  // don't do anything if this is an Ajax request:  we only want the data
+}
+elseif ($output_as_html || (empty($nmatch) && !$cli_mode))
 {
   print_header($day, $month, $year, $area, isset($room) ? $room : "");
 }
@@ -1134,12 +1060,12 @@ else // Assumed to be output_as_ical
 
 
 // Upper part: The form.
-if ($output_as_html || (empty($nmatch) && !$cli_mode))
+if (!$ajax && ($output_as_html || (empty($nmatch) && !$cli_mode)))
 {
   ?>
   <div class="screenonly">
  
-    <form class="form_general" method="post" action="report.php">
+    <form class="form_general" id="report_form" method="get" action="report.php">
       <fieldset>
       <legend><?php echo get_vocab("report_on");?></legend>
       
@@ -1365,24 +1291,6 @@ if ($output_as_html || (empty($nmatch) && !$cli_mode))
           </div>
         </div>
       
-        <div id="div_display">
-          <label><?php echo get_vocab("rep_dsp");?>:</label>
-          <div class="group">
-            <label>
-              <input class="radio" type="radio" name="display" value="d"
-              <?php 
-              if ($display=="d") echo " checked=\"checked\"";
-              echo ">". get_vocab("rep_dsp_dur");?>
-            </label>
-            <label>
-              <input class="radio" type="radio" name="display" value="e"
-              <?php 
-              if ($display=="e") echo " checked=\"checked\"";
-              echo ">". get_vocab("rep_dsp_end");?>
-            </label>
-          </div>
-        </div>
-      
         <div id="div_sumby">
           <label><?php echo get_vocab("summarize_by");?>:</label>
           <div class="group">
@@ -1428,26 +1336,18 @@ if ($phase == 2)
 {
   if (($nmatch == 0) && !$cli_mode)
   {
-    echo "<p class=\"report_entries\">" . get_vocab("nothing_found") . "</p>\n";
+    if ($ajax)
+    {
+      echo json_encode($json_data);
+    }
+    elseif ($output_as_html)
+    {
+      echo "<p class=\"report_entries\">" . get_vocab("nothing_found") . "</p>\n";
+    }
     sql_free($res);
   }
   else
   {
-    $last_area_room = "";
-    $last_date = "";
-    if ($output_as_html)
-    {
-      echo "<p class=\"report_entries\">" . $nmatch . " "
-      . ($nmatch == 1 ? get_vocab("entry_found") : get_vocab("entries_found"))
-      .  "</p>\n";
-    }
-    
-    // Output the header row for CSV reports
-    if ($output_as_csv && ($summarize & REPORT))
-    {
-      csv_report_header($display);
-    }
-    
     if ($output_as_ical)
     {
       // We set $keep_private to FALSE here because we excluded all private
@@ -1455,15 +1355,27 @@ if ($phase == 2)
       export_icalendar($res, FALSE, $report_end);
       exit;
     }
+    
+    if ($output_as_html & !$ajax)
+    {
+      echo "<p class=\"report_entries\"><span id=\"n_entries\">" . $nmatch . "</span> "
+      . ($nmatch == 1 ? get_vocab("entry_found") : get_vocab("entries_found"))
+      .  "</p>\n";
+    }
+    
+    if ($summarize & REPORT)
+    {
+      open_report();
+    }
 
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
       if ($summarize & REPORT)
       {
-        reporton($row, $last_area_room, $last_date, $sortby, $display);
+        report_row($row, $sortby);
       }
 
-      if ($summarize & SUMMARY)
+      if (!$ajax && ($summarize & SUMMARY))
       {
         (empty($row['enable_periods']) ?
          accumulate($row, $count, $hours, $report_start, $report_end,
@@ -1474,7 +1386,12 @@ if ($phase == 2)
       }
     }
     
-    if ($summarize & SUMMARY)
+    if ($summarize & REPORT)
+    {
+      close_report();
+    }
+    
+    if (!$ajax && ($summarize & SUMMARY))
     {
       do_summary($count, $hours, $room_hash, $name_hash);
     }
@@ -1486,7 +1403,7 @@ if ($cli_mode)
   exit(0);
 }
 
-if ($output_as_html || empty($nmatch))
+if (($output_as_html || empty($nmatch)) & !$ajax)
 {
   require_once "trailer.inc";
 }

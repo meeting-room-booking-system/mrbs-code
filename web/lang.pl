@@ -155,7 +155,6 @@ $vocab["of"]                 = " z ";
 $vocab["previous"]           = "Poprzedni";
 $vocab["next"]               = "Następny";
 $vocab["entry"]              = "Wpis";
-$vocab["view"]               = "Widok";
 $vocab["advanced_search"]    = "Wyszukiwanie zaawansowane";
 $vocab["search_button"]      = "Wyszukiwanie";
 $vocab["search_for"]         = "Szukaj";
@@ -186,9 +185,6 @@ $vocab["total"]              = "Razem";
 $vocab["submitquery"]        = "Uruchom Raport";
 $vocab["sort_rep"]           = "Sortuj Raport po";
 $vocab["sort_rep_time"]      = "Start Data/Czas";
-$vocab["rep_dsp"]            = "Wyświetl w raporcie";
-$vocab["rep_dsp_dur"]        = "Trwanie";
-$vocab["rep_dsp_end"]        = "Czas Zakończenia";
 
 // Uzyte w week.php
 $vocab["weekbefore"]         = "Przejdź do Poprzedniego Tygodnia";

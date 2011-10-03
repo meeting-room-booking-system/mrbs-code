@@ -176,7 +176,6 @@ $vocab["of"]                 = " tuloksia yhteensä: ";
 $vocab["previous"]           = "Edellinen";
 $vocab["next"]               = "Seuraava";
 $vocab["entry"]              = "Varaus";
-$vocab["view"]               = "Katsele";
 $vocab["advanced_search"]    = "Tarkennettu haku";
 $vocab["search_button"]      = "Hae";
 $vocab["search_for"]         = "Etsi";
@@ -207,9 +206,6 @@ $vocab["total"]              = "Kaikkiaan";
 $vocab["submitquery"]        = "Tee raportti";
 $vocab["sort_rep"]           = "Raporttien lajittelun peruste";
 $vocab["sort_rep_time"]      = "Aloitusaika";
-$vocab["rep_dsp"]            = "Näytä raportissa";
-$vocab["rep_dsp_dur"]        = "Kesto";
-$vocab["rep_dsp_end"]        = "Loppumisaika";
  
 // Used in week.php
 $vocab["weekbefore"]         = "Edelliseen viikkoon";

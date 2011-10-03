@@ -21,7 +21,7 @@
 *                          example by having booking admins, user admins     *
 *                          snd system admins.  (System admins might be       *
 *                          necessary in the future if, for example, some     *
-*                          parameters curreently in the config file are      *
+*                          parameters currently in the config file are      *
 *                          made editable from MRBS)                          *
 *                                                                            *
 *                 Only admins with at least user editing rights (level >=    *
@@ -120,146 +120,6 @@ function get_form_var_type($field)
       break;
   }
   return $type;
-}
-
-
-// Produce the HTML for a freeze_panes sub-table
-//
-//   $info       an array containing the data
-//   $columns    the columns in that data to display
-//   $class      the class name tio assign to the table
-//   $action     whether an action button is required
-function freeze_panes_table_html($info, $columns, $class, $action=FALSE)
-{
-  global $tbl_users, $PHP_SELF;
-  global $user, $level, $min_user_editing_level, $max_content_length;
-  global $fields, $auth;
-  global $select_options;
-  
-  $html = '';
-  $html .= "<div class=\"$class\">\n";
-  $html .= "<table class=\"admin_table\">\n";
-  $html .= "<thead>\n";
-  $html .= "<tr>";
-  if ($action)
-  {
-    // First column which is an action button
-    $html .= "<th><div>" . get_vocab("action") . "</div></th>";
-  }
-  
-  // Column headers
-  foreach ($fields as $field)
-  {
-    $fieldname = $field['name'];
-    if (in_array($fieldname, $columns))
-    {
-      $html .= "<th><div>" . get_loc_field_name($tbl_users, $fieldname) . "</div></th>";
-    }
-  }
-
-  $html .= "</tr>\n";
-  $html .= "</thead>\n";
-  
-  $html .= "<tbody>\n";
-  $row_class = "odd_row";
-  foreach ($info as $line)
-  {
-    // Check whether ordinary users are allowed to see other users' details.  If not,
-    // then skip past this row if it's not the current user or the user is not an admin
-    if ($auth['only_admin_can_see_other_users'] &&
-        ($level < $min_user_editing_level) &&
-        (strcasecmp($line['name'], $user) != 0))
-    {
-      continue;
-    }
-    
-    $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
-    $html .= "<tr class=\"$row_class\">\n";
-    if ($action)
-    {
-      // First column (the action button)
-      $html .= "<td class=\"action\"><div>\n";
-      // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
-      if (($level >= $min_user_editing_level) || (strcasecmp($line['name'], $user) == 0))
-      {
-        $html .= "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-        $html .= "<div>\n";
-        $html .= "<input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
-        $html .= "<input type=\"hidden\" name=\"Id\" value=\"" . $line['id'] . "\">\n";
-        $html .= "<input type=\"image\" class=\"button\" src=\"images/edit.png\"
-                   title=\"" . get_vocab("edit") . "\" alt=\"" . get_vocab("edit") . "\">\n";
-        $html .= "</div>\n";
-        $html .= "</form>\n";
-      }
-      else
-      {
-        $html .= "&nbsp;\n";
-      }
-      $html .= "</div></td>\n";
-    }
-    
-    // Column contents
-    foreach ($fields as $field)
-    {
-      $key = $field['name'];
-      if (in_array($key, $columns))
-      {
-        $col_value = $line[$key];
-        switch($key)
-        {
-          // special treatment for some fields
-          case 'level':
-            // the level field contains a code and we want to display a string
-            $html .= "<td><div>" . get_vocab("level_$col_value") . "</div></td>\n";
-            break;
-          case 'email':
-            // we don't want to truncate the email address
-            $html .= "<td><div>" . htmlspecialchars($col_value) . "</div></td>\n";
-            break;
-          default:
-            // Where there's an associative array of options, display
-            // the value rather than the key
-            if (is_assoc($select_options["users.$key"]))
-            {
-              $col_value = $select_options["users.$key"][$line[$key]];
-              $html .= "<td><div>" . htmlspecialchars($col_value) . "</div></td>\n";
-            }
-            elseif (($field['nature'] == 'boolean') || 
-                (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
-            {
-              // booleans: represent by a checkmark
-              $html .= "<td class=\"int\"><div>";
-              $html .= (!empty($col_value)) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;";
-              $html .= "</div></td>\n";
-            }
-            elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
-            {
-              // integer values
-              $html .= "<td class=\"int\"><div>" . $col_value . "</div></td>\n";
-            }
-            else
-            {
-               // strings
-              $html .= "<td title=\"" . htmlspecialchars($col_value) . "\"><div>";
-              // Truncate before conversion, otherwise you could chop off in the middle of an entity
-              $html .= htmlspecialchars(substr($col_value, 0, $max_content_length));
-              $html .= (strlen($col_value) > $max_content_length) ? " ..." : "";
-              $html .= "</div></td>\n";
-            }
-            break;
-        }  // end switch
-      }
-    }  // end foreach
-    
-    $html .= "</tr>\n";
-    
-  }  // end while
-  
-  $html .= "</tbody>\n";
-  $html .= "</table>\n";
-  $html .= "</div>\n";
-  
-  return $html;
 }
 
 
@@ -890,35 +750,146 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
 {
   // Get the user information
   $res = sql_query("SELECT * FROM $tbl_users ORDER BY level DESC, name");
-  // Build an array with the user info
-  $info = array();
-  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-  {
-    $info[] = $row;
-  }
-  // Display it in a table [Actually two tables side by side so that we can
-  // achieve a "Freeze Panes" effect: there doesn't seem to be a good way of
-  // getting a colgroup to scroll, so we have to distort the mark-up a little]
-  echo "<div id=\"user_list\">\n";
-  echo "<div class=\"freeze_panes\">\n";
-  // (a) the "header" columns containing the user names
-  // For the header column we just want to use the level and name fields
-  $columns = array('level', 'name');
-  echo freeze_panes_table_html($info, $columns, 'header_columns', TRUE);
   
-  // (b) the "body" columns containing the user info
-  // For the body column we want all the other columns, except the id and password
-  $columns[] = 'id';
-  $columns[] = 'password';
-  $all_columns = array();
+  // Display the data in a table
+  $ignore_columns = array('id', 'password', 'name'); // We don't display these columns or they get special treatment
+  
+  echo "<div id=\"user_list\" class=\"datatable_container\">\n";
+  echo "<table class=\"admin_table display\" id=\"users_table\">\n";
+  
+  // The table header
+  echo "<thead>\n";
+  echo "<tr>";
+  
+  // First column which is the name
+  echo "<th>" . get_vocab("users.name") . "</th>\n";
+  
+  // Other column headers
   foreach ($fields as $field)
   {
-    $all_columns[] = $field['name'];
+    $fieldname = $field['name'];
+    
+    if (!in_array($fieldname, $ignore_columns))
+    {
+      echo "<th><div>" . get_loc_field_name($tbl_users, $fieldname) . "</div></th>";
+    }
   }
-  $columns = array_diff($all_columns, $columns);
-  echo freeze_panes_table_html($info, $columns, 'body_columns', FALSE);
-  echo "</div>\n";   // freeze_panes
+  
+  echo "</tr>\n";
+  echo "</thead>\n";
+  
+  // The table body
+  echo "<tbody>\n";
+  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  {
+    // Check whether ordinary users are allowed to see other users' details.  If not,
+    // then skip past this row if it's not the current user or the user is not an admin
+    if ($auth['only_admin_can_see_other_users'] &&
+        ($level < $min_user_viewing_level) &&
+        (strcasecmp($row['name'], $user) != 0))
+    {
+      continue;
+    }
+    
+    echo "<tr>\n";
+    
+    // First column, which is the name
+    $html_name = htmlspecialchars($row['name']);
+    // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
+    if (($level >= $min_user_editing_level) || (strcasecmp($row['name'], $user) == 0))
+    {
+      $link = htmlspecialchars(basename($PHP_SELF)) . "?Action=Edit&amp;Id=" . $row['id'];
+      echo "<td><a title=\"$html_name\" href=\"$link\">$html_name</a></td>\n";
+    }
+    else
+    {
+      echo "<td title=\"$html_name\">$html_name</td>\n";
+    }
+    
+    // Other columns
+    foreach ($fields as $field)
+    {
+      $key = $field['name'];
+      if (!in_array($key, $ignore_columns))
+      {
+        $col_value = $row[$key];
+        switch($key)
+        {
+          // special treatment for some fields
+          case 'level':
+            // the level field contains a code and we want to display a string
+            // (but we put the code in a span for sorting)
+            echo "<td>";
+            echo "<span title=\"$col_value\"></span>";
+            echo "<div>" . get_vocab("level_$col_value") . "</div></td>\n";
+            break;
+          case 'email':
+            // we don't want to truncate the email address
+            echo "<td><div>" . htmlspecialchars($col_value) . "</div></td>\n";
+            break;
+          default:
+            // Where there's an associative array of options, display
+            // the value rather than the key
+            if (is_assoc($select_options["users.$key"]))
+            {
+              $col_value = $select_options["users.$key"][$row[$key]];
+              echo "<td><div>" . htmlspecialchars($col_value) . "</div></td>\n";
+            }
+            elseif (($field['nature'] == 'boolean') || 
+                (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+            {
+              // booleans: represent by a checkmark
+              echo "<td class=\"int\"><div>";
+              echo (!empty($col_value)) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;";
+              echo "</div></td>\n";
+            }
+            elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
+            {
+              // integer values
+              echo "<td class=\"int\"><div>" . $col_value . "</div></td>\n";
+            }
+            else
+            {
+               // strings
+              echo "<td title=\"" . htmlspecialchars($col_value) . "\"><div>";
+              echo htmlspecialchars($col_value);
+              echo "</div></td>\n";
+            }
+            break;
+        }  // end switch
+      }
+    }  // end foreach
+    /*
+    // Last column (the action button)
+    echo "<td class=\"action\"><div>\n";
+    // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
+    if (($level >= $min_user_editing_level) || (strcasecmp($row['name'], $user) == 0))
+    {
+      echo "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+      echo "<div>\n";
+      echo "<input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
+      echo "<input type=\"hidden\" name=\"Id\" value=\"" . $row['id'] . "\">\n";
+      echo "<input type=\"image\" class=\"button\" src=\"images/edit.png\"
+                 title=\"" . get_vocab("edit") . "\" alt=\"" . get_vocab("edit") . "\">\n";
+      echo "</div>\n";
+      echo "</form>\n";
+    }
+    else
+    {
+      echo "&nbsp;\n";
+    }
+    echo "</div></td>\n";
+    */
+    
+    echo "</tr>\n";
+    
+  }  // end while
+  
+  echo "</tbody>\n";
+  
+  echo "</table>\n";
   echo "</div>\n";
+  
 }   // ($initial_user_creation != 1)
 
 require_once "trailer.inc";

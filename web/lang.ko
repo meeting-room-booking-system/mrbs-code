@@ -143,7 +143,6 @@ $vocab["of"]                 = " of ";
 $vocab["previous"]           = "이전";
 $vocab["next"]               = "이후";
 $vocab["entry"]              = "Entry";
-$vocab["view"]               = "View";
 $vocab["advanced_search"]    = "상세 검색";
 $vocab["search_button"]      = "검색";
 $vocab["search_for"]         = "Search For";
@@ -174,9 +173,6 @@ $vocab["total"]              = "전체";
 $vocab["submitquery"]        = "보고서 실행";
 $vocab["sort_rep"]           = "정렬 순서";
 $vocab["sort_rep_time"]      = "시작 일/시간";
-$vocab["rep_dsp"]            = "Display in report";
-$vocab["rep_dsp_dur"]        = "기간";
-$vocab["rep_dsp_end"]        = "종료 시간";
 
 // Used in week.php
 $vocab["weekbefore"]         = "저번 주로";

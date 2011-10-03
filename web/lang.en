@@ -252,7 +252,6 @@ $vocab["of"]                 = " of ";
 $vocab["previous"]           = "Previous";
 $vocab["next"]               = "Next";
 $vocab["entry"]              = "Entry";
-$vocab["view"]               = "View";
 $vocab["advanced_search"]    = "Advanced search";
 $vocab["search_button"]      = "Search";
 $vocab["search_for"]         = "Search For";
@@ -289,14 +288,17 @@ $vocab["total"]                 = "Total";
 $vocab["submitquery"]           = "Run Report";
 $vocab["sort_rep"]              = "Sort report by";
 $vocab["sort_rep_time"]         = "Start date/time";
-$vocab["rep_dsp"]               = "Display in report";
-$vocab["rep_dsp_dur"]           = "Duration";
-$vocab["rep_dsp_end"]           = "End time";
 $vocab["fulldescription_short"] = "Full Description";
 $vocab["both"]                  = "All";
 $vocab["privacy_status"]        = "Privacy status";
 $vocab["search_criteria"]       = "Search criteria";
 $vocab["presentation_options"]  = "Output options";
+$vocab["delete_entries"]        = "Delete entries";
+$vocab["delete_entries_warning"] = "WARNING!  This will delete all the entries matching " .
+                                   "the search string.  The operation cannot be undone.  Are " .
+                                   "you sure you want to continue?\n\n" .
+                                   "Total number of entries that will be deleted: ";
+$vocab["delete_entries_failed"] = "The entries could not be deleted.";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Go To Week Before";
@@ -418,6 +420,10 @@ $vocab["for_any_questions"]  = "for any questions that aren't answered here.";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatal error: failed to connect to database";
+
+// Used in DataTables
+$vocab["show_hide_columns"]  = "Show / hide columns";
+$vocab["restore_original"]   = "Restore original";
 
 // General
 $vocab["fatal_db_error"]     = "Fatal error: unfortunately the database is not available at the moment.";

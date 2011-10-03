@@ -157,7 +157,6 @@ $vocab["of"]                 = " av ";
 $vocab["previous"]           = "Forrige";
 $vocab["next"]               = "Neste";
 $vocab["entry"]              = "Post";
-$vocab["view"]               = "Vis";
 $vocab["advanced_search"]    = "Avansert søk";
 $vocab["search_button"]      = "Søk";
 $vocab["search_for"]         = "Søk etter";
@@ -188,9 +187,6 @@ $vocab["total"]              = "Totalt";
 $vocab["submitquery"]        = "Kjør rapport";
 $vocab["sort_rep"]           = "Sorter rapport etter";
 $vocab["sort_rep_time"]      = "Dato/tid";
-$vocab["rep_dsp"]            = "Vis i rapport";
-$vocab["rep_dsp_dur"]        = "Varighet";
-$vocab["rep_dsp_end"]        = "Slutt-tid";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Gå til uken før";

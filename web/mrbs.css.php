@@ -22,6 +22,8 @@ expires_header(60*30); // 30 minute expiry
 /* ------------ GENERAL -----------------------------*/
 
 body {font-size: small;
+    margin: 0;
+    padding: 0;
     color:            <?php echo $standard_font_color ?>;
     font-family:      <?php echo $standard_font_family ?>;
     background-color: <?php echo $body_background_color ?>}
@@ -30,6 +32,8 @@ body {font-size: small;
 .error   {color: <?php echo $highlight_font_color ?>; font-weight: bold}     /* for error messages */
 .warning {color: <?php echo $highlight_font_color ?>}                        /* for warning messages */
 .note    {font-style: italic}
+
+div#contents, div.trailer {padding: 0 2em}
 
 h1 {font-size: x-large; clear: both}
 h2 {font-size: large; clear: both}
@@ -66,7 +70,7 @@ table:hover.naked {cursor: pointer}   /* set cursor to pointer; if you don't it 
 table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_border_color ?>; border-style: solid;
     border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
 .admin_table th, .admin_table td {vertical-align: middle; text-align: left;
-    padding: 0.1em 0.5em 0.1em 0.5em;
+    padding: 0.1em 8px 0.1em 8px;
     border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;}
 .admin_table th {color: <?php echo $admin_table_header_font_color ?>; 
     background-color: <?php echo $admin_table_header_back_color ?>}
@@ -76,16 +80,13 @@ table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color:
 .admin_table td.action div {display: inline-block}
 .admin_table td.action div div {display: table-cell} 
 
-div.freeze_panes {width: 100%; float: left}
-.freeze_panes th div, .freeze_panes td div {display: table-cell; vertical-align: middle; white-space: nowrap; overflow: hidden}
-.freeze_panes th div {height: 1.5em; max-height: 1.5em; min-height: 1.5em}
-.freeze_panes td div {height: 2em; max-height: 2em; min-height: 2em}
-.freeze_panes td.int div {width: 6em; text-align: right; padding-right: 0.5em}
-.freeze_panes td.boolean {text-align: center}
-.freeze_panes td.boolean div {display: block}
-.freeze_panes td.boolean img {margin-top: 3px}
-   
 select.room_area_select {margin-right: 0.5em}
+
+<?php
+// Don't display anything with a class of js_none (used for example for hiding Submit
+// buttons when we're submitting onchange).  The .js class is added to the <body> by JavaScript
+?>
+.js .js_none {display: none}
 
 /* ------------ ADMIN.PHP ---------------------------*/
 <?php
@@ -114,9 +115,9 @@ form.form_admin {float: left; clear: left; margin: 2em 0 0 0}
     width: auto; margin-top: 1.2em; margin-left: <?php echo number_format(($admin_form_gap + $admin_form_label_width), 1, '.', '')?>em
 }
 .admin h2 {clear: left}
-div#area_form, div#room_form {float: left; padding: 0 0 2em 1em}
+div#area_form, div#room_form {float: left; padding: 0 0 2em 0}
 div#area_form {width: auto}
-div#room_form {width: 95%}
+div#room_form {width: 100%}
 div#custom_html {float: left; padding: 0 0 3em 1em}
 #area_form form {float: left; margin-right: 1em}
 #area_form label#area_label {display: block; float: left; font-weight: bold; margin-right: <?php echo $admin_form_gap ?>em}
@@ -331,6 +332,7 @@ td.row_labels     {background-color: <?php echo $main_table_labels_back_color ?>
 .dwm_main#month_main td:hover.valid {background-color: <?php echo $row_highlight_color ?>}
 
 
+
 <?php
 // (2) JAVASCRIPT HIGHLIGHTING
 //
@@ -436,6 +438,17 @@ div:hover.multiple_control {cursor: pointer}
 .maximized div.maxi {display: block}
 .minimized div.mini {display: block}
 .minimized div.maxi {display: none}
+
+<?php
+// Over-rides for multiple bookings.  If JavaScript is enabled then we want to see the JavaScript controls.
+// And we will need to extend the padding so that the controls don't overwrite the booking text
+?>
+
+.js div.multiple_control {
+    display: block;   /* if JavaScript is enabled then we want to see the JavaScript controls */
+  }
+.js .multiple_booking .maxi a {padding-left: <?php echo $main_cell_height + $main_table_cell_border_width + 2 ?>px}
+
 
 /* booking privacy status */
 .private {opacity: 0.6; font-style: italic}
@@ -674,7 +687,7 @@ form#form_edit_users {width: auto; margin-top: 2.0em}
 #form_delete_users input.submit {left: 2.0em}                                  /* and put the Delete on the left */
 #form_edit_users input.checkbox {width: auto; margin-left: <?php echo $edit_users_gap ?>em}
 form.edit_users_error {width: 10em; margin-top: 2.0em}
-div#user_list {float: left; width: 95%; padding: 2em 0 2em 1em}
+div#user_list {padding: 2em 0}
 form#add_new_user {margin-left: 1em}
 
 
@@ -730,43 +743,23 @@ td#sticky_day {border: 1px dotted <?php echo $highlight_font_color ?>}
 td.mincals_week_number { opacity: 0.5; font-size: 60%; }
 
 /* ------------ PENDING.PHP ------------------*/
-table#pending_list {width: 100%}
-#pending_list form {float: left; margin: 0 0.5em}
-#pending_list table {width: 100%; border-spacing: 0px; border-collapse: collapse; border: 0}
-#pending_list td.sub_table {padding: 0; margin: 0}
-#pending_list table.minimised tbody {display: none}
-#pending_list table th {border-top: 1px solid <?php echo $admin_table_header_sep_color ?>;
-                        background-color: <?php echo $pending_header_back_color ?>}
-#pending_list td {border-top-width: 1px}
+#pending_list form {display: inline-block}
+#pending_list td.table_container, #pending_list td.sub_table {padding: 0; border: 0; margin: 0}
 #pending_list .control {padding-left: 0; padding-right: 0; text-align: center;
                         color: <?php echo $standard_font_color ?>}
-#pending_list th.control + th {border-left-width: 0}
-#pending_list td.control + td {border-left-width: 0}
-#pending_list table th.control{background-color: <?php echo $pending_control_color ?>; cursor: default}
-#pending_list table th a {color: <?php echo $admin_table_header_font_color ?>}
-#pending_list table td {border-color: <?php echo $admin_table_border_color ?>;
-                        background-color: <?php echo $series_entry_back_color ?>}
-#pending_list .control             {width: 1.2em}
-#pending_list th.header_name       {width: 10%}
-#pending_list th.header_create     {width: 10%}
-#pending_list th.header_area       {width: 10%}
-#pending_list th.header_room       {width: 10%}
-#pending_list th.header_action     {width: 20em}
-#pending_list table th.header_start_time {text-transform: uppercase}
+.js #pending_list td.control {background-color: <?php echo $pending_control_color ?>}
+#pending_list td:first-child {width: 1.2em}
+#pending_list #pending_table td.sub_table {width: auto}
+table.admin_table.sub {border-right-width: 0}
+table.sub th {background-color: #788D9C}
+.js .admin_table table.sub th:first-child {background-color: <?php echo $pending_control_color ?>;
+    border-left-color: <?php echo $admin_table_border_color ?>}
+div.div_buttons {float: left; height: 2em}
+#pending_list form {margin: 2px 4px}
+
 
 /* ------------ REPORT.PHP ----------------------*/
-.div_report h2, #div_summary h1 {border-top: 2px solid <?php echo $report_h2_border_color ?>;
-    padding-top: 0.5em; margin-top: 2.0em}
-.div_report h3 {border-top: 1px solid <?php echo $report_h3_border_color ?>;
-    padding-top: 0.5em; margin-bottom: 0}
-.div_report table {clear: both; width: 100%; margin-top: 0.5em}
-.div_report col.col1 {width: 11em}
-.div_report td:first-child {text-align: right; font-weight: bold}
-.div_report .createdby td, .div_report .lastupdate td {font-size: x-small}
-div.report_entry_title {width: 100%; float: left;
-    border-top: 1px solid <?php echo $report_entry_border_color ?>; margin-top: 0.8em}
-div.report_entry_name  {width: 40%;  float: left; font-weight: bold}
-div.report_entry_when  {width: 60%;  float: right; text-align: right}
+div#div_summary {padding-top: 3em}
 #div_summary table {border-spacing: 1px; border-collapse: collapse;
     border-color: <?php echo $report_table_border_color ?>; border-style: solid;
     border-top-width: 1px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 1px}
@@ -783,6 +776,7 @@ div.report_entry_when  {width: 60%;  float: right; text-align: right}
 p.report_entries {font-weight: bold}
 .report .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
 .report .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
+button#delete_button {float: left; clear: left; margin: 1em 0 3em 0}
 
 
 /* ------------ SEARCH.PHP ----------------------*/
@@ -790,8 +784,6 @@ span#search_str {color: <?php echo $highlight_font_color ?>}
 p#nothing_found {font-weight: bold}
 div#record_numbers {font-weight: bold}
 div#record_nav {font-weight: bold; margin-bottom: 1.0em}
-table#search_results {border-spacing: 1px; border-collapse: collapse}
-#search_results td, #search_results th {border: 1px solid <?php echo $search_table_border_color ?>; padding: 0.1em 0.2em 0.1em 0.2em}
 
 /* ------------ SITE_FAQ ------------------------*/
 .help q {font-style: italic}
@@ -806,9 +798,9 @@ div#site_faq_body {margin-top: 2.0em}
 /* ------------ TRAILER.INC ---------------------*/
 div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>; 
              border-bottom: 1px solid <?php echo $trailer_border_color ?>; 
-             float: left; width: 100%; 
+             float: left;
              margin-top: 1.5em; margin-bottom: 1.5em;
-             padding: 0.3em 0 0.3em 0}
+             padding-top: 0.3em; padding-bottom: 0.3em}
 #trailer div {float: left; width: 100%}
 #trailer div.trailer_label {float: left; clear: left; width: 20%; max-width: 9.0em; font-weight: bold}
 #trailer div.trailer_links {float: left;              width: 79%}  /* 79 to avoid rounding problems */
@@ -820,7 +812,7 @@ div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>;
     opacity: 0.5}  /* if you change this value, change it in the IE sheets as well */
 #trailer .current a {color: <?php echo $highlight_font_color ?>}
 
-div#simple_trailer {clear: both; width: 100%; text-align: center; padding-top: 1.0em; padding-bottom: 2.0em}
+div#simple_trailer {clear: both; text-align: center; padding-top: 1.0em; padding-bottom: 2.0em}
 #simple_trailer a {padding: 0 1.0em 0 1.0em}
 
 
@@ -835,6 +827,29 @@ div#simple_trailer {clear: both; width: 100%; text-align: center; padding-top: 1
 #approve_buttons td#note {padding-top: 0}
 #approve_buttons td#note form {width: 100%}
 #approve_buttons td#note textarea {width: 100%; height: 6em}
+
+/*-------------DataTables-------------------------*/
+div.datatable_container {float: left; width: 100%; padding: 2em 0}
+
+div.ColVis_collection {
+  width: auto;
+}
+
+div.ColVis_collection button.ColVis_Button {
+  float: left;
+  clear: left;
+}
+
+span.ColVis_radio {
+  display: block;
+  float: left;
+  width: 30px;
+}
+
+span.ColVis_title {
+	display: block;
+  float: left;
+}
 
 /* ------------ jQuery UI additions -------------*/
 

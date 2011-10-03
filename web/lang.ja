@@ -212,7 +212,6 @@ $vocab["of"]                 = ", 該当件数";
 $vocab["previous"]           = "前";
 $vocab["next"]               = "次";
 $vocab["entry"]              = "エントリ";
-$vocab["view"]               = "表示";
 $vocab["advanced_search"]    = "高度な検索";
 $vocab["search_button"]      = "検索";
 $vocab["search_for"]         = "検索語";
@@ -246,9 +245,6 @@ $vocab["total"]              = "計";
 $vocab["submitquery"]        = "報告の作成";
 $vocab["sort_rep"]           = "報告の並べ方";
 $vocab["sort_rep_time"]      = "開始日時";
-$vocab["rep_dsp"]            = "報告の表示";
-$vocab["rep_dsp_dur"]        = "使用期間";
-$vocab["rep_dsp_end"]        = "終了時刻";
 $vocab["fulldescription_short"] = "完全な説明";
 
 // Used in week.php

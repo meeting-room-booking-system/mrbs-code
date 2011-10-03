@@ -20,8 +20,8 @@ div.booking_list {overflow: visible}         /* scrollbars don't work properly i
 /* We don't want the controls for multiple bookings for IE6, because they rely on div:hover working   */
 /* which is not supported by IE6.   So reverse the JavaScript overrides and just treat IE6 as though  */
 /* JavaScript was disabled.                                                                           */
-div.multiple_control {display: none}
-.multiple_booking .maxi a {padding-left: 2px}
+.js div.multiple_control {display: none}
+.js .multiple_booking .maxi a {padding-left: 2px}
 .minimized div.mini {display: none}   /* Ignore the minimized class and always display the maxi table */
 .minimized div.maxi {display: block}
 

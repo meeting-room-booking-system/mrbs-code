@@ -42,7 +42,7 @@ function generate_autocomplete($id, $options)
     // because the browser doesn't render the autocomplete box properly - it
     // gets hidden behind other elements.   Although there are fixes for this,
     // it's not worth it ...
-    $js .= "if ($('#ielte6').length == 0)\n";
+    $js .= "if (!lteIE6)\n";
     $js .= "{\n";
     $js .= "  $('#$id').autocomplete({\n";
     $js .= "    source: [$options_string],\n";
@@ -70,8 +70,9 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $mrbs_company, $mrbs_company_logo, $mrbs_company_url, $mrbs_company_more_info,
          $search_str, $locale_warning;
   global $tbl_entry, $tbl_room, $tbl_area;
-  global $PHP_SELF, $view_week_number, $weekstarts;
-  global $auth;
+  global $PHP_SELF, $HTTP_HOST, $QUERY_STRING;
+  global $view_week_number, $weekstarts;
+  global $auth, $max_level;
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   global $lang_map_windows, $langs, $server_os;
   global $default_duration_all_day;
@@ -80,7 +81,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   
   $page = basename($PHP_SELF, ".php");
   $user = getUserName();
-  $is_admin = (authGetUserLevel($user) >= 2);
+  $is_admin = (authGetUserLevel($user) >= $max_level);
 
   // If we dont know the right date then make it up 
   if (!$day)
@@ -130,7 +131,7 @@ function print_theme_header($day, $month, $year, $area, $room)
     // See http://jqueryui.com/
     ?>
     
-    <script type="text/javascript" src="jquery/jquery-1.5.2.min.js"></script>
+    <script type="text/javascript" src="jquery/jquery-1.6.4.min.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-1.8.16.custom.min.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
     <?php
@@ -143,7 +144,307 @@ function print_theme_header($day, $month, $year, $area, $room)
     ?>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en.js"></script>
     <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-US.js"></script>
+     
+    <?php // Work out if we're using IE6 or below ?>
+    <script type="text/javascript">
+      //<![CDATA[
+      var lteIE6 = false;
+      //]]>
+    </script>
+    <!--[if lte IE 6]>
+    <script type="text/javascript">
+      //<![CDATA[
+      var lteIE6 = true;
+      //]]>
+    </script>
+    <![endif]-->
     
+    <?php // Work out if we're using IE7 or below ?>
+    <script type="text/javascript">
+      //<![CDATA[
+      var lteIE7 = false;
+      //]]>
+    </script>
+    <!--[if lte IE 7]>
+    <script type="text/javascript">
+      //<![CDATA[
+      var lteIE7 = true;
+      //]]>
+    </script>
+    <![endif]-->
+    
+    <?php // Work out if we're using IE8 or below ?>
+    <script type="text/javascript">
+      //<![CDATA[
+      var lteIE8 = false;
+      //]]>
+    </script>
+    <!--[if lte IE 8]>
+    <script type="text/javascript">
+      //<![CDATA[
+      var lteIE8 = true;
+      //]]>
+    </script>
+    <![endif]-->
+      
+    <?php
+    // dataTables initialisation
+    if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search')))
+    {
+      // Include the JavaScript for those pages that use dataTables
+      ?>
+      <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.min.js"></script>
+      <script type="text/javascript" src="jquery/datatables/js/ColReorder.min.js"></script>
+      <?php
+      // We use a customised version of ColVis which fixes a problem to do with the width of the
+      // ColVis collection div meaning that when you have long column names the collection
+      // buttons spill over onto multiple lines.   This problem has been reported in the
+      // DataTables forum and hopefully the fix will appear in a future release (or else an
+      // alternative solution suggested).  In the meantime we use the mrbs version of ColVis,
+      // which is kept separate so that we can identify the differences.
+      /*
+      <script type="text/javascript" src="jquery/datatables/js/ColVis.min.js"></script>
+      */
+      ?>
+      <script type="text/javascript" src="jquery/datatables/js/ColVis.mrbs.min.js"></script>
+      <?php
+      // We also have a customised version of FixedColumns which fixes a problem to do with the
+      // resizing of windows in IE7/8.   The problem has been reported.
+      /*
+      <script type="text/javascript" src="jquery/datatables/js/FixedColumns.min.js"></script>
+      */
+      ?>
+      <script type="text/javascript" src="jquery/datatables/js/FixedColumns.mrbs.js"></script>
+      <script type="text/javascript" src="jquery/datatables/js/plugins.js"></script>
+      
+      <script type="text/javascript">
+        //<![CDATA[
+        
+        <?php
+        // Try and get a sensible value for the fixed column width, which is the
+        // smaller of the actual column width and either a fixed width or a
+        // proportion of the overall table width.
+        // 
+        // col is an object with two properties:  'iWidth' and 'sWidth', which work in
+        // the same way as the DataTables properties
+        ?>
+        function getFixedColWidth(table, col)
+        {
+          var tableWidth = table.outerWidth();
+          var leftWidth = table.find('th:first-child').outerWidth();
+          var maxWidthPx = (col.sWidth == "relative") ? tableWidth*col.iWidth/100 : col.iWidth;
+          return Math.min(leftWidth, maxWidthPx);
+        }
+        
+        <?php
+        // Turn the table with id 'id' into a DataTable, using specificOptions
+        // which are merged with the default options.   If the browser is IE6 or less
+        // we don't bother making a dataTable:  it can be done, but it's not worth it.
+        //
+        // leftCol and rightCol are two objects which if defined or not null will fix the left and/or
+        // right most columns.  They have properties 'iWidth' and 'sWidth' defining the
+        // maximum width of the fixed column.   If sWidth = "fixed" then the iWidth is
+        // a pixel value.  If it is "relative" then a percentage.
+        //
+        // If you want to do anything else as part of fnInitComplete then you'll need
+        // to define fnInitComplete in specificOptions
+        ?>
+        var windowResizeHandler;
+        
+        function makeDataTable(id, specificOptions, leftCol, rightCol)
+        {
+          var winWidth = $(window).width();
+          var winHeight = $(window).height();
+          
+          windowResizeHandler = function()
+          {
+            <?php
+            // IE8 and below will trigger $(window).resize not just when the window
+            // is resizedbut also when an element in the window is resized.   We 
+            // therefore need to check that this is a genuine window resize event
+            // otherwise we end up in an infinite loop
+            ?>
+            var winNewWidth = $(window).width();
+            var winNewHeight = $(window).height();
+            if ((winNewWidth == winWidth) && (winNewHeight == winHeight))
+            {
+              return;
+            }
+            winWidth = winNewWidth;
+            winHeight = winNewHeight;
+            <?php
+            // This is a genuine resize event.   Unbind the handler to stop any
+            // more resize events while we are dealing with this one
+            ?>
+            $(window).unbind('resize', windowResizeHandler);
+            <?php
+            // Need to re-create the datatable when the browser window is resized.  We
+            // can't just do a fnDraw() because that does not redraw the Fixed Columns
+            // properly.
+            
+            // We set a timeout to make the resizing a bit smoother, as otherwise it's
+            // fairly CPU intensive
+            ?>
+            window.setTimeout(function() {
+                <?php
+                // If we're using an Ajax data source then we don't want to have to make
+                // an Ajax call and wait for the data every time we resize.   So retrieve
+                // the data from the table and pass it directly to the new table.
+                ?>
+                if (mergedOptions.sAjaxSource)
+                {
+                  mergedOptions.aaData = oTable.fnGetData();
+                  mergedOptions.sAjaxSource = null;
+                }
+                <?php
+                // Save the language strings, because we don't need to make another Ajax
+                // to fetch the language strings again when we resize
+                ?>
+                $.extend(true, mergedOptions.oLanguage, oTable.fnSettings().oLanguage);
+                
+                oTable.fnDestroy();
+                oTable = table.dataTable(mergedOptions);
+              }, 200);
+            
+          }
+          
+          if (lteIE6)
+          {
+            $('.js div.datatable_container').css('visibility', 'visible');
+            return false;
+          }
+          else
+          {
+            var table = $(id);
+            if (table.length == 0)
+            {
+              return false;
+            }
+            <?php // Set up the default options ?>
+            var defaultOptions = {};
+            <?php
+            // Set the language file to be used
+            if ($lang_file = get_datatable_lang())
+            {
+              ?>
+              defaultOptions.oLanguage = {"sUrl": "<?php echo $lang_file ?>"};
+              <?php
+            }
+            ?>
+            defaultOptions.bDeferRender = true;
+            defaultOptions.bPaginate = true;
+            defaultOptions.bProcessing = true;
+            defaultOptions.bScrollCollapse = true;
+            defaultOptions.bStateSave = true;
+            defaultOptions.sDom = 'C<"clear">lfrtip';
+            defaultOptions.sScrollX = "100%";
+            defaultOptions.sPaginationType = "full_numbers";
+            defaultOptions.oColReorder = {};
+            defaultOptions.oColVis = {sSize: "css",
+                                      buttonText: '<?php echo get_vocab("show_hide_columns") ?>',
+                                      bRestore: true,
+                                      sRestore: '<?php echo get_vocab("restore_original") ?>'};
+
+            defaultOptions.fnInitComplete = function(){
+                if (((leftCol !== undefined) && (leftCol !== null)) ||
+                    ((rightCol !== undefined) && (rightCol !== null)) )
+                {
+                  <?php 
+                  // Fix the left and/or right columns.  This has to be done when 
+                  // initialisation is complete as the language files are loaded
+                  // asynchronously
+                  ?>
+                  var options = {};
+                  if ((leftCol !== undefined) && (leftCol !== null))
+                  {
+                    options.iLeftColumns = 1;
+                    options.sLeftWidth = "fixed";
+                    options.iLeftWidth = getFixedColWidth(table, leftCol);
+                  }
+                  if ((rightCol !== undefined) && (rightCol !== null))
+                  {
+                    options.iRightColumns = 1;
+                    options.sRightWidth = "fixed";
+                    options.iRightWidth = getFixedColWidth(table, rightCol);
+                  }
+                  var oFC = new FixedColumns(oTable, options);
+                  <?php
+                  // Not quite sure why we have to adjust the column sizing here,
+                  // but if we don't then the table isn't quite the right width 
+                  // when first drawn
+                  ?>
+                  oTable.fnAdjustColumnSizing();
+                }
+                $('.js div.datatable_container').css('visibility', 'visible');
+                <?php // Rebind the handler ?>
+                $(window).bind('resize', windowResizeHandler);
+              };
+              
+            <?php
+            // If we've fixed the left or right hand columns, then (a) remove it
+            // from the column visibility list because it is fixed and (b) stop it
+            // being reordered
+            ?>
+            var colVisExcludeCols = []
+            if ((leftCol !== undefined) && (leftCol !== null))
+            { 
+              colVisExcludeCols.push(0);
+              defaultOptions.oColReorder = {iFixedColumns: 1};
+            }
+            if ((rightCol !== undefined) && (rightCol !== null))
+            { 
+              nCols = table.find('tr:first-child th').length;
+              colVisExcludeCols.push(nCols - 1);
+              <?php
+              // Actually we stop them all from being reordered because at the moment
+              // dataTables only has a way of stopping the leftmost n columns from
+              // being reordered.  May be fixed in a future release
+              ?>
+              defaultOptions.oColReorder = {iFixedColumns: nCols};
+            }
+            defaultOptions.oColVis = {aiExclude: colVisExcludeCols};
+            <?php
+            // Merge the specific options with the default options.  We do a deep
+            // merge.
+            ?>
+            var mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
+            
+            var oTable = table.dataTable(mergedOptions);
+            <?php
+            // If we're using an Ajax data source then don't offer column reordering.
+            // This is a problem at the moment in DataTables because if you reorder a column
+            // DataTables doesn't know that the Ajax data is still in the original order.
+            // May be fixed in a future release of DataTables
+            ?>
+            if (!specificOptions.sAjaxSource)
+            {
+              <?php
+              /*
+              // In fact we don't use column reordering at all, because (a) it doesn't
+              // work with an Ajax source (b) there's no way of fixing the right hand column
+              // (c) iFixedColumns doesn't seem to work properly and (d) it's confusing
+              // for the user having reordering enabled sometimes and sometimes not.  Better
+              // to wait for a future release of DataTables when these issues have been
+              // fixed.  In the meantime the line of code we need is there below so we can see
+              // how it is done, but commented out.
+              
+              var oCR = new ColReorder(oTable, mergedOptions);
+              
+              */
+              ?>
+            }
+
+            $(window).bind('resize', windowResizeHandler);
+            return oTable;
+          }
+        }
+        
+        //]]>
+      </script>
+      <?php
+    }
+    
+    ?>
     <script type="text/javascript">
 
 //<![CDATA[
@@ -879,82 +1180,8 @@ if ($page == 'edit_entry')
 <?php
 }  // edit_entry
 
-
-if ($page == 'pending')
-{
 ?>
-  // test whether array contains element
-  function contains(array, element)
-  {
-    for (var i=0; i<array.length; i++)
-    {
-      if (array[i] == element)
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-  
-  // Remove duplicates from an array
-  function unique(array)
-  {
-    temp = new Array();
-    for (var i=0; i<array.length; i++)
-    {
-      if (!contains(temp, array[i]))
-      {
-        temp.push(array[i]);
-      }
-    }
-    return temp;
-  }
-  
-  // Toggle a sub-table in the pending_list table to make it maximised/minimised
-  function toggle_table(id)
-  { 
-    var table = document.getElementById(id);
-    if (table.className == 'minimised')
-    {
-      table.className = 'maximised';
-      table.firstChild.firstChild.firstChild.innerHTML = '-';
-    }
-    else
-    {
-      table.className = 'minimised';
-      table.firstChild.firstChild.firstChild.innerHTML = '+';
-    }
-  }
 
-  
-  // Put a + control in the first cell of all the series headers on the pending.php page
-  // and minimise the tables (except for those tables listed in the cookie)
-  function activate_sub_tables()
-  {
-    // Go through each sub-table and minimise it
-    var tables = document.getElementsByTagName('table');
-    for (var i = 0; (element = tables[i]) != null; i++)
-    {
-      if (tables[i].className.indexOf('maximised') >= 0)
-      {
-        tables[i].className = 'minimised';
-        tables[i].firstChild.firstChild.firstChild.innerHTML = '+'; 
-      } 
-    }
-     
-    // now make the table visible (if it's there at all - which it won't be when you 
-    // log off from pending.php
-    if (document.getElementById('pending_list'))
-    {
-      document.getElementById('pending_list').style.visibility = 'visible';
-    }
-  }
-  
-  
-  
-<?php
-} // pending
-?>
 
 $(window).load(function() {
 
@@ -965,8 +1192,52 @@ $(window).load(function() {
   {
     logonForm.NewUserName.focus();
   }
+  
+  <?php
+  // Add in a hidden input to the header search form so that we can tell if we are using DataTables
+  // (which will be if JavaScript is enabled and we're not running IE6 or below).   We
+  // need to know this because when we're using an Ajax data source we don't want to send
+  // the HTML version of the table data.
+  ?>
+  if (!lteIE6)
+  {
+    $('<input>').attr({
+        type: 'hidden',
+        name: 'datatable',
+        value: '1'
+      }).appendTo('#header_search');
+  }
+  
 
   <?php
+  // ADMIN.PHP
+  if ($page == 'admin')
+  {
+    // Turn the list of rooms into a dataTable
+    // If we're an admin, then fix the right hand column
+    // (but not if we're running IE8 or below because for some reason I can't
+    // get a fixed right hand column to work there.  It should do though, as it
+    // works on the DataTables examples page)
+    if ($is_admin)
+    {
+      ?>
+      var rightCol = (lteIE8) ? null: {sWidth: "fixed", iWidth: 40};
+      <?php
+    }
+    else
+    {
+      ?>
+      var rightCol = null;
+      <?php
+    }
+    ?>
+    var roomsTable = makeDataTable('#rooms_table',
+                                   {},
+                                   {sWidth: "relative", iWidth: 33},
+                                   rightCol);
+    <?php
+  }  
+    
   // EDIT_AREA_ROOM.PHP
   if ($page == 'edit_area_room')
   {
@@ -1227,11 +1498,149 @@ $(window).load(function() {
   <?php
   }  // EDIT_ENTRY
   
+  // EDIT_USERS.PHP
+  if ($page == 'edit_users')
+  {
+    // Turn the list of users into a dataTable
+    ?>
+    var tableOptions = new Object();
+    <?php // The Rights column has a span with title for sorting ?>
+    tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [1]}]; 
+    var usersTable = makeDataTable('#users_table',
+                                   tableOptions,
+                                   {sWidth: "relative", iWidth: 33});
+    <?php
+  }
+  
   // PENDING.PHP
   if ($page == 'pending')
   {
+    // Turn the table into a datatable, with subtables that appear/disappear when
+    // the control is clicked, with the subtables also being datatables.  Note though
+    // that the main and sub-datatables are independent and we only display the main search
+    // box which just applies to the main table rows.  (I suppose it would be possible to do
+    // something clever with the main search box and get it to search the subtables as well)
+    //
+    // The datatables with subtables don't seem to work properly in IE7, so don't
+    // bother with them if we're using IE7
     ?>
-    activate_sub_tables();
+    if (lteIE7)
+    {
+      $('.js div.datatable_container').css('visibility', 'visible');
+    }
+    else
+    {
+      var maintable = $('#pending_table');
+      <?php
+      // Add a '-' control to the subtables and make them close on clicking it
+      ?>
+      maintable.find('table.sub th.control')
+               .text('-')
+               .live('click', function (event) {
+                    var nTr = $(this).parents('.table_container').parent().prev();
+                    var serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
+                    $('#subtable_' + serial + '_wrapper').slideUp( function () {
+                        pendingTable.fnClose(nTr.get(0));
+                        nTr.show();
+                      });
+                  });
+      <?php
+      // Detach all the subtables from the DOM (detach keeps a copy) so that they
+      // don't appear, but so that we've got the data when we want to "open" a row
+      ?>
+      var subtables = maintable.find('tr.sub_table').detach();
+      <?php
+      // Set up the column definitions, fixing the widths of the first and last columns
+      // Get the width of the last column by finding the width of the largest content
+      // (assuming all the content is wrapped in the first child)
+      ?>
+      var maxActionWidth = 0;
+      $('th:last-child, td:last-child').each(function() {
+          var actionWidth = $(this).children().eq(0).outerWidth(true);
+          maxActionWidth = Math.max(maxActionWidth, actionWidth);
+        });
+      maxActionWidth += 16; <?php // to allow for padding in the <td> ?>
+      var colDefsMain = [{"sWidth": "1.2em", "aTargets": [0] },
+                         {"sWidth": maxActionWidth + "px", "aTargets": [6] },
+                         {"sType": "title-numeric", "aTargets": [5]} ];
+      <?php
+      // Set up a click event that "opens" the table row and inserts the subtable
+      ?>
+      maintable.find('td.control')
+               .text('+')
+               .live('click', function (event) {
+                    var nTr = $(this).parent();
+                    var serial = nTr.attr('id').replace('row_', '');
+                    var subtableId = 'subtable_' + serial;
+                    var subtable = subtables.find('#' + subtableId).parent().clone();                                
+                    var columns = [];          
+                    <?php
+                    // We want the columns in the main and sub tables to align.  So
+                    // find the widths of the main table columns and use those values
+                    // to set the widths of the subable columns.   [This doesn't work
+                    // 100% - I'm not sure why - but I have left the code in]
+                    ?>
+                    maintable.find('tr').eq(0).find('th').each(function(i){
+                        var def = new Object();
+                        switch (i)
+                        {
+                          case 0: <?php // expand control ?>
+                            def.bSortable = false;
+                            break;
+                          case 5: <?php // start-time ?>
+                            def.sType = "title-numeric";
+                            break;
+                        }
+                        def.sWidth = ($(this).innerWidth()) + "px";
+                        columns.push(def);
+                      });
+
+                    nTr.hide();
+                    pendingTable.fnOpen(nTr.get(0), subtable.get(0), 'table_container');
+
+                    $('#' + subtableId).dataTable({"bAutoWidth": false,
+                                                   "sDom": 't',
+                                                   "aoColumns": columns});
+
+                    $('#subtable_' + serial + '_wrapper').hide().slideDown();
+                  });
+                  
+      <?php // Turn the table into a datatable ?>
+      var tableOptions = new Object();
+      tableOptions.sScrollXInner = "100%";
+      tableOptions.aoColumnDefs = colDefsMain;
+      <?php
+      // For some reason I don't understand, fnOpen() doesn't seem to work when
+      // using FixedColumns.   We also have to turn off bStateSave.  I have raised
+      // this on the dataTables forum.  In the meantime we comment out the FixedColumns.
+      ?>
+      tableOptions.bStateSave = false;
+      <?php
+      // Fix the left hand column.  This has to be done when 
+      // initialisation is complete as the language files are loaded
+      // asynchronously
+      ?>
+      tableOptions.fnInitComplete = function(){
+          /*
+          new FixedColumns(pendingTable, {"iLeftColumns": 1,
+                                          "iLeftWidth": 30,
+                                          "sLeftWidth": "fixed"});
+          */
+          $('.js div.datatable_container').css('visibility', 'visible');
+          <?php // Rebind the handler ?>
+          $(window).bind('resize', windowResizeHandler);
+        };
+      <?php
+      // Remove the first column from the column visibility
+      // list because it is the control column
+      ?>
+      tableOptions.oColVis = {aiExclude: [0]};
+      <?php
+      // and stop the first column being reordered
+      ?>
+      tableOptions.oColReorder = {"iFixedColumns": 1};
+      var pendingTable = makeDataTable('#pending_table', tableOptions);
+    }  // if (!lteie6)
     <?php
   }
 
@@ -1263,20 +1672,226 @@ $(window).load(function() {
         echo generate_autocomplete('match_' . substr($field, strlen('entry.')), $options);
       }
     }
+    
+    // Turn the list of users into a dataTable
+    ?>
+    var tableOptions = new Object();
+    <?php
+    // Use an Ajax source if we're able to - gives much better
+    // performance for large tables
+    if (function_exists('json_encode'))
+    {
+      $ajax_url = "http://" . $HTTP_HOST . $PHP_SELF . "?" . $QUERY_STRING . "&ajax=1&phase=2";
+      ?>
+      tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
+      <?php
+    }
+    // Add in a hidden input to the form so that we can tell if we are using DataTables
+    // (which will be if JavaScript is enabled and we're not running IE6 or below).   We
+    // need to know this because when we're using an Ajax data source we don't want to send
+    // the HTML version of the table data.
+    ?>
+    if (!lteIE6)
+    {
+      $('<input>').attr({
+          type: 'hidden',
+          name: 'datatable',
+          value: '1'
+        }).appendTo('#report_form');
+    }
+    <?php 
+    // Stop the first column ("id") from being searchable.   For some reason
+    // using bVisible here does not work, so we will use CSS instead.
+    // Define the type of the start time, end time, duration and last updated columns
+    // (they have the Unix timestamp in the title of a span for sorting)
+    ?>
+    tableOptions.aoColumnDefs = [{"bSearchable": false, "bVisible": false, "aTargets": [ 0 ]},
+                                 {"sType": "title-numeric", "aTargets": [3, 4, 5, -1]}]; 
+
+    <?php
+    // Fix the left hand column.  This has to be done when initialisation is 
+    // complete as the language files are loaded asynchronously
+    ?>
+    tableOptions.fnInitComplete = function(){
+        <?php
+        // Try and get a sensible value for the fixed column width, which is the
+        // smaller of the actual column width and a proportion of the overall table
+        // width.   (Unfortunately the actual column width is just the width of the
+        // column on the first page)
+        ?>
+        var table = $('#report_table');
+        leftWidth = getFixedColWidth(table, {sWidth: "relative", iWidth: 33});
+        var oFC = new FixedColumns(reportTable, {"iLeftColumns": 1,
+                                                 "iLeftWidth": leftWidth,
+                                                 "sLeftWidth": "fixed"});
+        $('.js div.datatable_container').css('visibility', 'visible');
+        <?php // Rebind the handler ?>
+        $(window).bind('resize', windowResizeHandler);
+        <?php 
+        // Also add a "Delete entries button", provided that (a) the user is an
+        // admin and (b) the configuration allows it
+        if ($is_admin && $auth['show_bulk_delete'])
+        {
+          ?>
+          $('<button id="delete_button"><?php echo get_vocab("delete_entries") ?><\/button>')
+                .click(function() {
+                    var aData = reportTable.fnGetFilteredData();
+                    var nEntries = aData.length;
+                    if (confirm("<?php echo escape_js(get_vocab('delete_entries_warning')) ?>" +
+                                nEntries.toLocaleString()))
+                    {
+                      <?php
+                      // We're going to split the POST requests into batches because
+                      // if a single POST request is too large we could get a 406
+                      // error.    The POST requests are fired off asynchronously
+                      // so we need to count them all back before we know that we've
+                      // finished.  The results will be held in the results array.
+                      ?>
+                      var batchSize = <?php echo DEL_ENTRY_AJAX_BATCH_SIZE ?>;
+                      var batches = [];
+                      var batch = [];
+                      for (var i=0; i<nEntries; i++)
+                      {
+                        batch.push(aData[i][0]);
+                        if (batch.length >= batchSize)
+                        {
+                          batches.push(batch);
+                          batch = [];
+                        }
+                      }
+                      if (batch.length > 0)
+                      {
+                        batches.push(batch);
+                      }
+                      <?php // Dispatch the batches (if any) ?>
+                      var nBatches = batches.length;
+                      if (nBatches > 0)
+                      {
+                        var results = [];
+                        $('#report_table_processing').css('visibility', 'visible');
+                        for (var j=0; j<nBatches; j++)
+                        {
+                          $.post('del_entry_ajax.php',
+                                 {ids: batches[j]},
+                                 function(result) {
+                                    results.push(result);
+                                    <?php // Check whether everything has finished ?>
+                                    if (results.length >= nBatches)
+                                    {
+                                      $('#report_table_processing').css('visibility', 'hidden');
+                                      <?php
+                                      // If all's gone well the result will contain the number of entries deleted
+                                      ?>
+                                      var nDeleted = 0;
+                                      var isInt = /^\s*\d+\s*$/;
+                                      for (var i=0; i<results.length; i++)
+                                      {
+                                        if (!isInt.test(results[i]))
+                                        {
+                                          alert("<?php echo escape_js(get_vocab('delete_entries_failed')) ?>");
+                                          break;
+                                        }
+                                        nDeleted += parseInt(results[i]);
+                                      }
+                                      <?php 
+                                      // Reload the page to get the new dataset.   If we're using
+                                      // an Ajax data source (for true Ajax data sources, not server
+                                      // side processing) and there's no summary table we can be
+                                      // slightly more elegant and just reload the Ajax data source.
+                                      ?>
+                                      var oSettings = reportTable.fnSettings();
+                                      if (oSettings.sAjaxSource && 
+                                          !oSettings.bServerSide &&
+                                          ($('#div_summary').length == 0))
+                                      {
+                                        reportTable.fnReloadAjax();
+                                        <?php
+                                        // We also need to update the count of the number of entries.  We
+                                        // can't just get the length of the data, because the new data is
+                                        // loaded asynchronously and won't be there yet.  So we calculate it
+                                        // by subtracting the number of entries deleted from theee previous count.
+                                        ?>
+                                        var span = $('#n_entries');
+                                        span.text(parseInt(span.text()) - nDeleted);
+                                      }
+                                      else
+                                      {
+                                        window.location.reload();
+                                      }
+                                    }
+                                  });
+                        }
+                      }
+                    }
+                  })
+                .insertAfter('#report_table_paginate');
+          <?php
+        }
+        ?>
+      };
+
+    <?php
+    // Remove the first column from the column visibility
+    // list because it is fixed
+    ?>
+    tableOptions.oColVis = {aiExclude: [0]};
+    <?php
+    // and stop those first two columns being reordered
+    ?>
+    tableOptions.oColReorder = {iFixedColumns: 1};
+
+    var reportTable = makeDataTable('#report_table', tableOptions);
+
+    <?php
   }
 
   // SEARCH.PHP
-  // put the search string field in focus
   if ($page == 'search')
   {
-  ?>
-  var form = document.getElementById('search_form');
-  if (form && form.search_str)
-  {
-    form.search_str.focus();
-  }
-  <?php
-  }
+    // put the search string field in focus
+    ?>
+    var searchForm = $('#search_form');
+    searchForm.find('#search_str').focus();
+    
+    <?php
+    // Turn the list of users into a dataTable, provided that we can use
+    // an Ajax source.  Otherwise they just get the old style search page
+    // with "Next" and "Prev" buttons to get new pages from the server.
+    // [We could of course use dataTables with server side processing, but
+    // that's a lot of work.  A better option would probably be to write one's
+    // own json_encode function for PHP versions that don't have it]
+    if (function_exists('json_encode'))
+    {
+      // Add in a hidden input to the search form so that we can tell if we are using DataTables
+      // (which will be if JavaScript is enabled and we're not running IE6 or below).   We
+      // need to know this because when we're using an Ajax data source we don't want to send
+      // the HTML version of the table data.
+      ?>
+      if (!lteIE6)
+      {
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'datatable',
+            value: '1'
+          }).appendTo(searchForm);
+      }
+      
+      var tableOptions = new Object();
+      <?php
+      // Use an Ajax source - gives much better performance for large tables
+
+      $ajax_url = "http://" . $HTTP_HOST . $PHP_SELF . "?" . $QUERY_STRING . "&ajax=1";
+      ?>
+      tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
+      tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [2]}]; 
+      
+      var searchTable = makeDataTable('#search_results', 
+                                      tableOptions, 
+                                      {sWidth: "relative", iWidth: 33} );
+
+      <?php
+    }  //  if (function_exists('json_encode'))
+  }  // if ($page == 'search')
   ?>
 
 });
@@ -1288,19 +1903,19 @@ $(window).load(function() {
   <?php
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
-  echo "<body class=\"".htmlspecialchars($page)."\">\n";
+  echo "<body class=\"non_js ".htmlspecialchars($page)."\">\n";
+   
+    // Add a class of "js" so that we know if we're using JavaScript or not
+    // and remove the non_js class (it's sometimes useful to know that we're
+    // not running JavaScript)
   ?>
-
+    <script type="text/javascript">
+      //<![CDATA[
+      $('body').addClass('js').removeClass('non_js');
+      //]]>
+    </script> 
 
     <div class="screenonly">
-    
-    <?php
-    // Add in some markers so that the JavaScript can work out
-    // which browser we're using
-    ?>
-    <!--[if lte IE 6 ]>
-    <span id="ielte6"></span>
-    <![endif]-->
 
 <?php // show a warning if this is using a low version of php
   if (substr(phpversion(), 0, 1) == 3)
@@ -1463,6 +2078,8 @@ $(window).load(function() {
     </tr>
   </table>
 </div>
+
+<div id="contents">
 <?php
 
 } // end of print_theme_header()

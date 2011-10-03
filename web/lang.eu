@@ -144,7 +144,6 @@ $vocab["of"]                 = " - Aurkitutako erregistrok guztira: ";
 $vocab["previous"]           = "Aurrekoa";
 $vocab["next"]               = "Hurrengoa";
 $vocab["entry"]              = "Sarrera";
-$vocab["view"]               = "Ikusi";
 $vocab["advanced_search"]    = "Bilaketa aurreratua";
 $vocab["search_button"]      = "Bilatu";
 $vocab["search_for"]         = "Bilaketa aurreratua: ";
@@ -175,9 +174,6 @@ $vocab["total"]              = "Guztira";
 $vocab["submitquery"]        = "Bidali";
 $vocab["sort_rep"]           = "Zeren arabera:";
 $vocab["sort_rep_time"]      = "Hasiera data/ordua";
-$vocab["rep_dsp"]            = "Txostenean erakutsi:";
-$vocab["rep_dsp_dur"]        = "Iraupena";
-$vocab["rep_dsp_end"]        = "Bukaera";
 
 // Used in week.php
 $vocab["weekbefore"]         = "Aurreko astera joan";

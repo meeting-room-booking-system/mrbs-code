@@ -38,6 +38,7 @@ $page_level['pending.php']               = 1;  // Ordinary users can view their 
 // These pages have a minimum access level of 2 as they only contain admin features
 $page_level['add.php']                   = 2;
 $page_level['del.php']                   = 2;
+$page_level['del_entry_ajax.php']        = 2;
 
 
 /* getAuthorised($level)

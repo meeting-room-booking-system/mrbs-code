@@ -574,6 +574,8 @@ $auth["params"] = "";
 // different levels of admin
 $max_level = 2;
 // The lowest level of admin allowed to edit other users
+$min_user_viewing_level = 2;
+// The lowest level of admin allowed to edit other users
 $min_user_editing_level = 2;
 
 // Password policy.  Uncomment the variables and set them to the
@@ -730,6 +732,9 @@ $auth['only_admin_can_see_other_users'] = FALSE;
 // If you want to prevent the public (ie un-logged in users) from
 // being able to view bookings, set this variable to TRUE
 $auth['deny_public_access'] = FALSE;
+// Set to TRUE if you want admins to be able to perform bulk deletions
+// on the Report page.  (It also only shows up if JavaScript is enabled)
+$auth['show_bulk_delete'] = FALSE;
 
 // Set to TRUE if you want to allow MRBS to be run from the command line, for example
 // if you want to produce reports from a cron job.   (It is set to FALSE by default
