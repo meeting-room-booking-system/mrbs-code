@@ -1790,8 +1790,8 @@ function draw_cell($cell, $query_strings)
 //    $t                 the timestamp for the start of the slot
 //    $time_t            the time converted to HHMM format without leading zeros
 //    $time_t_stripped   a stripped version of the time for use with periods
-//    $hilite_url        the url to form the basis of the link in the time cell
-function draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url)
+//    $url               the url to form the basis of the link in the time cell
+function draw_time_cell($t, $time_t, $time_t_stripped, $url)
 {
   global $enable_periods, $periods;
   
@@ -1800,13 +1800,13 @@ function draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url)
   if ( $enable_periods )
   {
     
-    echo "<a href=\"$hilite_url=$time_t\"  title=\""
+    echo "<a href=\"$url\"  title=\""
       . get_vocab("highlight_line") . "\">"
       . $periods[$time_t_stripped] . "</a>\n";
   }
   else
   {
-    echo "<a href=\"$hilite_url=$time_t\" title=\""
+    echo "<a href=\"$url\" title=\""
       . get_vocab("highlight_line") . "\">"
       . utf8_strftime(hour_min_format(),$t) . "</a>\n";
   }

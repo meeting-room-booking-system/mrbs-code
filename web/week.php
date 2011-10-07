@@ -315,7 +315,7 @@ echo "<tbody>\n";
 
 // URL for highlighting a time. Don't use REQUEST_URI or you will get
 // the timetohighlight parameter duplicated each time you click.
-$hilite_url="week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$room&amp;timetohighlight";
+$base_url="week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$room";
 $row_class = "even_row";
 
 // We can display the table in two ways
@@ -411,9 +411,14 @@ else
     if (isset($timetohighlight) && ($time_t == $timetohighlight))
     {
       $class .= " row_highlight";
+      $url = $base_url;
+    }
+    else
+    {
+      $url = $base_url . "&amp;timetohighlight=$time_t";
     }
     echo "<tr class=\"$class\">";
-    draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url);
+    draw_time_cell($t, $time_t, $time_t_stripped, $url);
   
   
     // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
@@ -450,7 +455,7 @@ else
     // next lines to display times on right side
     if ( FALSE != $row_labels_both_sides )
       {
-        draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url);
+        draw_time_cell($t, $time_t, $time_t_stripped, $url);
       }
   
     echo "</tr>\n";

@@ -328,7 +328,7 @@ else
   
   // URL for highlighting a time. Don't use REQUEST_URI or you will get
   // the timetohighlight parameter duplicated each time you click.
-  $hilite_url="day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area$room_param&amp;timetohighlight";
+  $base_url="day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area$room_param";
   
   
    
@@ -402,9 +402,14 @@ else
       if (isset($timetohighlight) && ($time_t == $timetohighlight))
       {
         $class .= " row_highlight";
+        $url = $base_url;
+      }
+      else
+      {
+        $url = $base_url . "&amp;timetohighlight=$time_t";
       }
       echo "<tr class=\"$class\">\n";
-      draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url);
+      draw_time_cell($t, $time_t, $time_t_stripped, $url);
   
       // Loop through the list of rooms we have for this area
       while (list($key, $room_id) = each($rooms))
@@ -425,7 +430,7 @@ else
       // next lines to display times on right side
       if ( FALSE != $row_labels_both_sides )
       {
-        draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url);
+        draw_time_cell($t, $time_t, $time_t_stripped, $url);
       }
   
       echo "</tr>\n";
