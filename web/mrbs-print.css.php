@@ -14,7 +14,7 @@ expires_header(60*30); // 30 minute expiry
 
 div.screenonly { display: none; }
 
-a.new_booking img { display: none; }
+td.new a, a.new_booking img { display: none; }
 
 <?php
 // redefine table and cell border colours so that they are visible in the print view

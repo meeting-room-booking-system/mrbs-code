@@ -340,7 +340,7 @@ else
     // with times along the top and rooms down the side
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++, $row_class = ($row_class == "even_row")?"odd_row":"even_row")
     {
-      echo "<tr>\n";
+      echo "<tr class=\"$row_class\">\n";
       $room_id = $row['id']; 
       $room_cell_link = "week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$room_id";
       draw_room_cell($row, $room_cell_link);
@@ -399,7 +399,12 @@ else
       $minute = date("i",$t);
   
       // Show the time linked to the URL for highlighting that time
-      echo "<tr>";
+      $class = $row_class;
+      if (isset($timetohighlight) && ($time_t == $timetohighlight))
+      {
+        $class .= " row_highlight";
+      }
+      echo "<tr class=\"$class\">";
       draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url);
   
       // Loop through the list of rooms we have for this area
@@ -414,14 +419,6 @@ else
         if (!isset($today[$room_id][$day][$time_t]))
         {
           $today[$room_id][$day][$time_t] = array();  // to avoid an undefined index NOTICE error
-        }
-        if (isset($timetohighlight) && ($time_t == $timetohighlight))
-        {
-          $cell_class = "row_highlight";
-        }
-        else
-        {
-          $cell_class = $row_class;
         }
         draw_cell($today[$room_id][$day][$time_t], $query_strings, $cell_class);
       }

@@ -1742,7 +1742,7 @@ function draw_cell($cell, $query_strings, $cell_class)
     }
     else
     {
-      $c = $cell_class; // Use the default color class (zebra stripes or highlighting).
+      $c = "new";
     }
     
     // Don't put in a <td> cell if the slot is booked and there's no description.
@@ -1758,7 +1758,7 @@ function draw_cell($cell, $query_strings, $cell_class)
       if (!isset($id))
       {
         echo "<div class=\"celldiv slots1\">\n";  // a bookable slot is only one unit high
-        echo "<a class=\"new_booking\" href=\"edit_entry.php?" . 
+        echo "<a href=\"edit_entry.php?" . 
               (($enable_periods) ? $query_strings['new_periods'] : $query_strings['new_times']) . 
               "\">\n";
         if ($show_plus_link)

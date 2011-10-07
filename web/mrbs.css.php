@@ -44,8 +44,8 @@ a:link    {color: <?php echo $anchor_link_color ?>;    text-decoration: none; fo
 a:visited {color: <?php echo $anchor_visited_color ?>; text-decoration: none; font-weight: bold}
 a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration: underline; font-weight: bold} 
 
-tr.even_row {background-color: <?php echo $row_even_color ?>}
-tr.odd_row {background-color: <?php echo $row_odd_color ?>}
+tr.even_row td.new {background-color: <?php echo $row_even_color ?>}
+tr.odd_row td.new {background-color: <?php echo $row_odd_color ?>}
 
 td, th {vertical-align: top}
 
@@ -208,17 +208,11 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
 .dwm_main#month_main a {height: 100%; width: 100%; padding: 0 2px 0 2px}
 
-a.new_booking {display: block; font-size: medium; text-align: center}
-.new_booking img {margin: auto; padding: 4px 0 2px 0}
+td.new a, a.new_booking {display: block; font-size: medium; text-align: center}
+td.new img, .new_booking img {margin: auto; padding: 4px 0 2px 0}
 img.repeat_symbol {float: right; padding: 3px}
 .dwm_main#month_main img.repeat_symbol {padding: 2px}
 
-<?php
-if (!$show_plus_link)
-{
-  echo ".new_booking img {display: none}\n";
-}
-?>
 
 <?php
 // The following section deals with the contents of the table cells in the month view.    It is designed
@@ -273,10 +267,8 @@ td.hidden_day     {background-color: <?php echo $column_hidden_color ?>; /* hidd
       echo (empty($column_hidden_width) ? " display: none" : ""); // if the width is set to zero, then don't display anything at all
     ?>
     }
-td.row_highlight  {background-color: <?php echo $row_highlight_color ?>} /* used for highlighting a row */
-td.even_row       {background-color: <?php echo $row_even_color ?>}      /* even rows in the day view */
-td.odd_row        {background-color: <?php echo $row_odd_color ?>}       /* odd rows in the day view */
-td.row_labels     {background-color: <?php echo $main_table_labels_back_color ?>; white-space: nowrap}    /* used for the row labels column */
+tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /* used for highlighting a row */
+.dwm_main td.row_labels     {background-color: <?php echo $main_table_labels_back_color ?>; white-space: nowrap}    /* used for the row labels column */
 .row_labels a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
 .row_labels a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
 .row_labels a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
@@ -305,9 +297,7 @@ td.row_labels     {background-color: <?php echo $main_table_labels_back_color ?>
 // The *hover classes are applied by JavaScript when running IE6 because IE6 does
 // not support the :hover pseudo class on anything other than an anchor.
 ?>
-.dwm_main td:hover.odd_row, .dwm_main td:hover.even_row, .dwm_main td.hover {background-color: <?php echo $row_highlight_color ?>}
-.dwm_main td:hover.multiple_booking.odd_row {background-color: <?php echo $row_odd_color ?>}
-.dwm_main td:hover.multiple_booking.even_row {background-color: <?php echo $row_even_color ?>}
+.dwm_main td:hover.new, .dwm_main td.new_hover {background-color: <?php echo $row_highlight_color ?>}
 .dwm_main tr:hover td.row_labels, .dwm_main td.row_labels_hover {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
 .dwm_main#month_main td:hover.valid, .dwm_main#month_main td.valid_hover {background-color: <?php echo $row_highlight_color ?>}
 

@@ -1247,10 +1247,13 @@ $(window).load(function() {
     ?>
     if (lteIE6)
     {
-      $('#day_main, #week_main').find('a.new_booking')
-        .parent().parent()
+      var dayWeekTable = $('#day_main, #week_main');
+      dayWeekTable.find('td.new')
         .hover(function() {
-            $(this).not('.multiple_booking').toggleClass('hover');
+            $(this).not('.multiple_booking').toggleClass('new_hover');
+          });
+      dayWeekTable.find('td')
+        .hover(function() {
             $(this).parent().find('td.row_labels').toggleClass('row_labels_hover');
           });
       $('#month_main .valid a.new_booking')
