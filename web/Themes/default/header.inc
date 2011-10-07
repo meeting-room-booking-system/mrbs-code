@@ -1247,11 +1247,17 @@ $(window).load(function() {
     ?>
     if (lteIE6)
     {
-      $('table.dwm_main a.new_booking').parent().parent()
-                                       .hover(function() {
-                                           $(this).not('.multiple_booking').toggleClass('hover');
-                                           $(this).parent().find('td.row_labels').toggleClass('row_labels_hover');
-                                         });
+      $('#day_main, #week_main').find('a.new_booking')
+        .parent().parent()
+        .hover(function() {
+            $(this).not('.multiple_booking').toggleClass('hover');
+            $(this).parent().find('td.row_labels').toggleClass('row_labels_hover');
+          });
+      $('#month_main .valid a.new_booking')
+        .parent().parent()
+        .hover(function() {
+            $(this).toggleClass('valid_hover');
+          });
     }                             
                                      
     <?php

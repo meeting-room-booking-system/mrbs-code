@@ -302,14 +302,14 @@ td.row_labels     {background-color: <?php echo $main_table_labels_back_color ?>
 // in the month view).   However the fifth rule does have the useful effect of highlighting the time slot that
 // corresponds to the start of a booking when you hover over a booked cell.    The sixth rule provides highlighting in the month view.
 //
-// The row_labels_hover class is applied by JavaScript when running IE6 because IE6 does
+// The *hover classes are applied by JavaScript when running IE6 because IE6 does
 // not support the :hover pseudo class on anything other than an anchor.
 ?>
 .dwm_main td:hover.odd_row, .dwm_main td:hover.even_row, .dwm_main td.hover {background-color: <?php echo $row_highlight_color ?>}
 .dwm_main td:hover.multiple_booking.odd_row {background-color: <?php echo $row_odd_color ?>}
 .dwm_main td:hover.multiple_booking.even_row {background-color: <?php echo $row_even_color ?>}
 .dwm_main tr:hover td.row_labels, .dwm_main td.row_labels_hover {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
-.dwm_main#month_main td:hover.valid {background-color: <?php echo $row_highlight_color ?>}
+.dwm_main#month_main td:hover.valid, .dwm_main#month_main td.valid_hover {background-color: <?php echo $row_highlight_color ?>}
 
 <?php
 // would be nicer to use color: inherit in the four rules below, but inherit is not supported by IE until IE8.   
