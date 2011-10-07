@@ -375,8 +375,7 @@ if ($times_along_top)
         {
           $week_map[$room][$thisday][$time_t] = array();  // to avoid an undefined index NOTICE error
         }
-        $cell_class = $row_class;
-        draw_cell($week_map[$room][$thisday][$time_t], $query_strings, $cell_class);
+        draw_cell($week_map[$room][$thisday][$time_t], $query_strings);
       }  // end looping through the time slots
       if ( FALSE != $row_labels_both_sides )
       {
@@ -443,7 +442,7 @@ else
         {
           $week_map[$room][$thisday][$time_t] = array();  // to avoid an undefined index NOTICE error
         }
-        draw_cell($week_map[$room][$thisday][$time_t], $query_strings, $cell_class);
+        draw_cell($week_map[$room][$thisday][$time_t], $query_strings);
       }
   
     }    // for loop

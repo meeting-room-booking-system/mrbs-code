@@ -369,8 +369,7 @@ else
         {
           $today[$room_id][$day][$time_t] = array();  // to avoid an undefined index NOTICE error
         }   
-        $cell_class = $row_class;
-        draw_cell($today[$room_id][$day][$time_t], $query_strings, $cell_class);
+        draw_cell($today[$room_id][$day][$time_t], $query_strings);
       }  // end for (looping through the times)
       if ( FALSE != $row_labels_both_sides )
       {
@@ -404,7 +403,7 @@ else
       {
         $class .= " row_highlight";
       }
-      echo "<tr class=\"$class\">";
+      echo "<tr class=\"$class\">\n";
       draw_time_cell($t, $time_t, $time_t_stripped, $hilite_url);
   
       // Loop through the list of rooms we have for this area
@@ -420,7 +419,7 @@ else
         {
           $today[$room_id][$day][$time_t] = array();  // to avoid an undefined index NOTICE error
         }
-        draw_cell($today[$room_id][$day][$time_t], $query_strings, $cell_class);
+        draw_cell($today[$room_id][$day][$time_t], $query_strings);
       }
       
       // next lines to display times on right side

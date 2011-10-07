@@ -1536,7 +1536,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
 
 
 
-function draw_cell($cell, $query_strings, $cell_class)
+function draw_cell($cell, $query_strings)
 {
   // draws a single cell in the main table of the day and week views
   //
@@ -1566,10 +1566,7 @@ function draw_cell($cell, $query_strings, $cell_class)
   //    ['new_periods']   the string to be used for an empty cell if using periods
   //    ['new_times']     the string to be used for an empty cell if using times
   //    ['booking']       the string to be used for a full cell
-  //
-  // $cell_class specifies the default class for the cell (odd_row, even_row or row_highlight)
-  // so that the zebra stripes can be drawn, or else to allow the whole row to be highlighted.
-  
+    
   global $main_cell_height, $main_table_cell_border_width;
   global $area, $year, $month, $timetohighlight;
   global $enable_periods, $times_along_top, $show_plus_link;
@@ -1595,14 +1592,14 @@ function draw_cell($cell, $query_strings, $cell_class)
     ?>
     <script type="text/javascript">
     //<![CDATA[
-      document.getElementById('<?php echo $td_id ?>').className = "multiple_booking minimized <?php echo $cell_class ?>";
+      document.getElementById('<?php echo $td_id ?>').className = "multiple_booking minimized";
     //]]>
     </script>
     <?php
     
     // First draw the mini table
     echo "<div class=\"celldiv slots1 mini\">\n";
-    echo "<div class=\"multiple_control\" onClick=\"document.getElementById('$td_id').className = 'multiple_booking maximized $cell_class'\">+</div>\n";
+    echo "<div class=\"multiple_control\" onClick=\"document.getElementById('$td_id').className = 'multiple_booking maximized'\">+</div>\n";
     echo "<table>\n";
     echo "<tbody>\n";
     
@@ -1653,7 +1650,7 @@ function draw_cell($cell, $query_strings, $cell_class)
     $total_height = $n_bookings * $main_cell_height;
     $total_height += ($n_bookings - 1) * $main_table_cell_border_width;  // (first row has no top border)
     echo "<div class=\"multiple_control\" " .
-         "onClick=\"document.getElementById('$td_id').className = 'multiple_booking minimized $cell_class'\" " .
+         "onClick=\"document.getElementById('$td_id').className = 'multiple_booking minimized'\" " .
          "style =\"height: " . $total_height . "px; " .
                   "min-height: " . $total_height . "px; " .
                   "max-height: " . $total_height . "px; " .
