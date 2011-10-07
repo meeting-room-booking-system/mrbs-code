@@ -63,10 +63,6 @@ fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
   
-.naked {margin: 0; padding: 0; border-width: 0} /* Invisible tables used for internal needs */
-table.naked {width: 100%; height: 100%}
-table:hover.naked {cursor: pointer}   /* set cursor to pointer; if you don't it doesn't show up when show_plus_link is false */
-
 table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_border_color ?>; border-style: solid;
     border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
 .admin_table th, .admin_table td {vertical-align: middle; text-align: left;
@@ -238,13 +234,10 @@ if (!$show_plus_link)
 // with the small gap at the end of odd rows is probably a small price worth paying to ensure that the date and the 
 // new booking link remain visible when you scroll.]
 ?>
-div.cell_container {position: relative; float: left; width: 100%;        /* the containing div for a.new_booking and the naked table  */ 
+div.cell_container {position: relative; float: left; width: 100%;        /* the containing div for a.new_booking */ 
 <?php echo ($month_cell_scrolling ? 'height:' : 'min-height:') ?> 100px} /* NOTE:  if you change the value of (min-)height, make sure you */
                                                                          /* also change the value of height in mrbs-ielte6.css */
 .month a.new_booking {position: absolute; top: 0; left: 0; z-index: 10}  /* needs to be above the base, but below the date (monthday) */
-
-.dwm_main#month_main table.naked {position: absolute; top: 0; left: 0;  /* used when javascript cursor set - similar to new_booking  */
-    width: 100%; height: 100%; z-index: 10}
        
 div.cell_header {position: relative; width: 2.0em; z-index: 20;         /* needs to be above the new booking anchor */
      min-height: 20%; height: 20%; max-height: 20%; overflow: hidden}
@@ -252,7 +245,7 @@ div.cell_header {position: relative; width: 2.0em; z-index: 20;         /* needs
 a.monthday {display: block; width: 100%; font-size: medium}             /* the date in the top left corner */
 
 div.booking_list {position: relative; z-index: 20;                      /* contains the list of bookings */
-    max-height: 80%; font-size: x-small;                                /* needs to be above new_booking and naked table */
+    max-height: 80%; font-size: x-small;                                /* needs to be above new_booking */
     overflow: <?php echo ($month_cell_scrolling ? 'auto' : 'visible') ?>}
 .booking_list a {font-size: x-small}
 
@@ -290,23 +283,7 @@ td.row_labels     {background-color: <?php echo $main_table_labels_back_color ?>
 
 <?php
 // HIGHLIGHTING:  Set styles for the highlighted cells under the cursor (the time/period cell and the current cell)
-//
-// There are two methods of highlighting:  (1) CSS Highlighting and (2) JavaScript highlighting.    Javascript highlighting
-// has itself three different modes of highlighting:  'class', 'hybrid' and 'bgcolor'.    See xbLib.js for an explanation of
-// the three modes.    JavaScript highlighting was originally the only method of highlighting cells, but now that support is
-// common for the :hover pseudo-class used with elements other than <a>, CSS highlighting is used by default and JavaScript
-// highlighting is only used for old browsers, eg IE6 and before, where the :hover pseudo-class is not supported.
-// Note that CSS highlighting is essential for IE7 and IE8 where the performance of JavaScript highlighting is very poor.  This 
-// is why CSS highlighting was introduced, though it is also simpler and produces smaller pages.
-//
-// (1) CSS HIGHLIGHTING
-//
-// The next four rules are used to implement CSS highlighting.    CSS highlighting is used because the performance 
-// of JavaScript highlighting - both in 'class' and 'hybrid' modes - is very poor in IE7 and IE8Beta2 (the latest version of
-// IE at the time of writing) when there are a large number of table rows, ie when $resolution is small compared to the length
-// of the booking day.   As the performance of CSS highlighting is as good as JavaScript highlighting in recent versions of
-// non-IE browsers, it is used as the default method of highlighting since it is simpler than the JavaScript method.
-//
+
 // The first two rules (both on the same line) highlight the cell that you are actually hovering over.
 // 
 // The next two disable this behaviour for multiple booking cells.   That's because we don't want the highlight colour showing
@@ -324,33 +301,24 @@ td.row_labels     {background-color: <?php echo $main_table_labels_back_color ?>
 // are <th> and not <td>) nor the empty cells in the month view (because odd_row and even_row are not used 
 // in the month view).   However the fifth rule does have the useful effect of highlighting the time slot that
 // corresponds to the start of a booking when you hover over a booked cell.    The sixth rule provides highlighting in the month view.
+//
+// The row_labels_hover class is applied by JavaScript when running IE6 because IE6 does
+// not support the :hover pseudo class on anything other than an anchor.
 ?>
-.dwm_main td:hover.odd_row, .dwm_main td:hover.even_row {background-color: <?php echo $row_highlight_color ?>}
+.dwm_main td:hover.odd_row, .dwm_main td:hover.even_row, .dwm_main td.hover {background-color: <?php echo $row_highlight_color ?>}
 .dwm_main td:hover.multiple_booking.odd_row {background-color: <?php echo $row_odd_color ?>}
 .dwm_main td:hover.multiple_booking.even_row {background-color: <?php echo $row_even_color ?>}
-.dwm_main tr:hover td.row_labels {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
+.dwm_main tr:hover td.row_labels, .dwm_main td.row_labels_hover {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
 .dwm_main#month_main td:hover.valid {background-color: <?php echo $row_highlight_color ?>}
 
-
-
-<?php
-// (2) JAVASCRIPT HIGHLIGHTING
-//
-// See xbLib.js for an explanation.
-?>
-
-td.highlight         {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
 <?php
 // would be nicer to use color: inherit in the four rules below, but inherit is not supported by IE until IE8.   
 // inherit would mean that (1) you didn't have to specify the colour again and (2) you needn't use the tbody selector to
 // stop the header links changing colour.
 ?>
-.highlight a:link    {font-weight: normal; color: <?php echo $standard_font_color ?>}       /* used for JavaScript highlighting  */
-.highlight a:visited {font-weight: normal; color: <?php echo $standard_font_color ?>}       /* used for JavaScript highlighting  */
-.dwm_main tbody tr:hover a:link    {color: <?php echo $anchor_link_color ?>}   /* used for CSS highlighting (but will also be used in JavaScript highlighting */
-.dwm_main tbody tr:hover a:visited {color: <?php echo $anchor_link_color ?>}   /* used for CSS highlighting (but will also be used in JavaScript highlighting */
-.month .highlight a:link    {font-weight: bold}
-.month .highlight a:visited {font-weight: bold}
+
+.dwm_main tbody tr:hover a:link,    td.row_labels_hover a:link    {color: <?php echo $anchor_link_color ?>}
+.dwm_main tbody tr:hover a:visited, td.row_labels_hover a:visited {color: <?php echo $anchor_link_color ?>}
 
 
 <?php

@@ -1572,7 +1572,7 @@ function draw_cell($cell, $query_strings, $cell_class)
   
   global $main_cell_height, $main_table_cell_border_width;
   global $area, $year, $month, $timetohighlight;
-  global $javascript_cursor, $enable_periods, $times_along_top;
+  global $enable_periods, $times_along_top, $show_plus_link;
   global $approval_enabled, $confirmation_enabled;
   
   // if the time slot has got multiple bookings, then draw a mini-table
@@ -1758,37 +1758,14 @@ function draw_cell($cell, $query_strings, $cell_class)
       if (!isset($id))
       {
         echo "<div class=\"celldiv slots1\">\n";  // a bookable slot is only one unit high
-
-        if ($javascript_cursor)
+        echo "<a class=\"new_booking\" href=\"edit_entry.php?" . 
+              (($enable_periods) ? $query_strings['new_periods'] : $query_strings['new_times']) . 
+              "\">\n";
+        if ($show_plus_link)
         {
-          echo "<script type=\"text/javascript\">\n";
-          echo "//<![CDATA[\n";
-          echo "BeginActiveCell();\n";
-          echo "//]]>\n";
-          echo "</script>\n";
-        }
-        
-        if( $enable_periods )
-        {
-          echo "<a class=\"new_booking\" href=\"edit_entry.php?" . $query_strings['new_periods'] . "\">\n";
           echo "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-          echo "</a>\n";
         }
-        else
-        {
-          echo "<a class=\"new_booking\" href=\"edit_entry.php?" . $query_strings['new_times'] . "\">\n";
-          echo "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-          echo "</a>\n";
-        }
-        
-        if ($javascript_cursor)
-        {
-          echo "<script type=\"text/javascript\">\n";
-          echo "//<![CDATA[\n";
-          echo "EndActiveCell();\n";
-          echo "//]]>\n";
-          echo "</script>\n";
-        }
+        echo "</a>\n";
         echo "</div>\n";
       }
       else                 // if it is booked then show the booking

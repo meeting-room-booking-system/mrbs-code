@@ -39,6 +39,11 @@ if (!empty($dateformat))
   $strftime_format['daymonth']     = "%d %b";
 }
 
+// Variables no longer used in versions of MRBS > 1.4.7
+
+// $highlight_method
+// $javascript_cursor
+
 
 /********************************************************
  * Checking

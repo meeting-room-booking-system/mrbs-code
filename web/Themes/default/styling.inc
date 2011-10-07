@@ -65,8 +65,6 @@ $calendar_hidden_color          = "#dae0e4";                          // hidden 
 $row_even_color                 = "#ffffff";        // even rows in the day and week views
 $row_odd_color                  = "#f2f4f6";        // even rows in the day and week views
 $row_highlight_color            = "#ffc0da";        // used for highlighting a row
-                                                    // NOTE: this colour is also used in xbLib.js (in more than one place)and 
-                                                    // if you change it here you will also need to change it there.
 
 $help_highlight_color           = "#ffe6f0";        // highlighting text on the help page
 

@@ -234,24 +234,6 @@ else
   // and output them
   print $before_after_links_html;
 
-  // Include the active cell content management routines.
-  // Must be included before the beginnning of the main table.
-  if ($javascript_cursor) // If authorized in config.inc.php, include the javascript cursor management.
-  {
-    echo "<script type=\"text/javascript\" src=\"xbLib.js\"></script>\n";
-    echo "<script type=\"text/javascript\">\n";
-    echo "//<![CDATA[\n";
-    echo "InitActiveCell("
-      . ($show_plus_link ? "true" : "false") . ", "
-      . "true, "
-      . ((FALSE != $row_labels_both_sides) ? "true" : "false") . ", "
-      . "\"$highlight_method\", "
-      . "\"" . get_vocab("click_to_reserve") . "\""
-      . ");\n";
-    echo "//]]>\n";
-    echo "</script>\n";
-  }
-
   // START DISPLAYING THE MAIN TABLE
   echo "<table class=\"dwm_main\" id=\"day_main\">\n";
   ( $dst_change != -1 ) ? $j = 1 : $j = 0;

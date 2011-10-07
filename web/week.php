@@ -206,26 +206,6 @@ for ($j = 0; $j<=($num_of_days-1) ; $j++)
   }
 } 
 
-
-
-// Include the active cell content management routines. 
-// Must be included before the beginnning of the main table.
-if ($javascript_cursor) // If authorized in config.inc.php, include the javascript cursor management.
-{
-  echo "<script type=\"text/javascript\" src=\"xbLib.js\"></script>\n";
-  echo "<script type=\"text/javascript\">\n";
-  echo "//<![CDATA[\n";
-  echo "InitActiveCell("
-    . ($show_plus_link ? "true" : "false") . ", "
-    . "true, "
-    . ((FALSE != $row_labels_both_sides) ? "true" : "false") . ", "
-    . "\"$highlight_method\", "
-    . "\"" . get_vocab("click_to_reserve") . "\""
-    . ");\n";
-  echo "//]]>\n";
-  echo "</script>\n";
-}
-
   // START DISPLAYING THE MAIN TABLE
 echo "<table class=\"dwm_main\" id=\"week_main\">";
 // if the first day of the week to be displayed contains as DST change then

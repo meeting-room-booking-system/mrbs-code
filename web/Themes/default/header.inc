@@ -113,7 +113,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   require_once "style.inc";
 ?>
     <title><?php echo get_vocab("mrbs") ?></title>
-    
+
     <?php
     // We are using the jQuery UI library, which has been custom built to include the following components:
     //   - Core
@@ -583,8 +583,6 @@ function datepicker_close(dateText, inst, formId)
     form.submit();
   }
 }
-
-
 
 <?php
 if ($page == 'edit_area_room')
@@ -1237,7 +1235,29 @@ $(window).load(function() {
                                    rightCol);
     <?php
   }  
+  
+
+  // DAY.PHP, WEEK.PHP, MONTH.PHP
+  // If we're running IE6 or below then we need to make bookable slots clickable
+  // and respond to a mouse hovering over them (IE6 only supports the :hover pseudo
+  // class on anchors).  We do this by toggling the class of the cell in question and also
+  // the row_labels cells when the cell is hovered over.
+  if (in_array($page, array('day', 'week', 'month')))
+  {
+    ?>
+    if (lteIE6)
+    {
+      $('table.dwm_main a.new_booking').parent().parent()
+                                       .hover(function() {
+                                           $(this).not('.multiple_booking').toggleClass('hover');
+                                           $(this).parent().find('td.row_labels').toggleClass('row_labels_hover');
+                                         });
+    }                             
+                                     
+    <?php
+  }
     
+  
   // EDIT_AREA_ROOM.PHP
   if ($page == 'edit_area_room')
   {

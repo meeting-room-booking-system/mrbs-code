@@ -345,24 +345,6 @@ if ($debug_flag)
   echo "</pre>\n";
 }
 
-// Include the active cell content management routines. 
-// Must be included before the beginnning of the main table.
-if ($javascript_cursor) // If authorized in config.inc.php, include the javascript cursor management.
-{
-  echo "<script type=\"text/javascript\" src=\"xbLib.js\"></script>\n";
-  echo "<script type=\"text/javascript\">\n";
-  echo "//<![CDATA[\n";
-  echo "InitActiveCell("
-    . ($show_plus_link ? "true" : "false") . ", "
-    . "false, "
-    . "false, "
-    . "\"$highlight_method\", "
-    . "\"" . get_vocab("click_to_reserve") . "\""
-    . ");\n";
-  echo "//]]>\n";
-  echo "</script>\n";
-}
-
 echo "<table class=\"dwm_main\" id=\"month_main\">\n";
 
 // Weekday name header row:
@@ -434,34 +416,23 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
     echo "<a class=\"monthday\" href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>\n";
     echo "</div>\n";
     // then the link to make a new booking
-    if ($javascript_cursor)
-    {
-      echo "<script type=\"text/javascript\">\n";
-      echo "//<![CDATA[\n";
-      echo "BeginActiveCell();\n";
-      echo "//]]>\n";
-      echo "</script>\n";
-    }
+    
+    $query_string = "room=$room&amp;area=$area&amp;year=$year&amp;month=$month&amp;day=$cday";
     if ($enable_periods)
     {
-      echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;period=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
-      echo "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-      echo "</a>\n";
+      $query_string .= "&amp;period=0";
     }
     else
     {
-      echo "<a class=\"new_booking\" href=\"edit_entry.php?room=$room&amp;area=$area&amp;hour=$morningstarts&amp;minute=0&amp;year=$year&amp;month=$month&amp;day=$cday\">\n";
-      echo "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-      echo "</a>\n";
+      $query_string .= "&amp;hour=$morningstarts&amp;minute=0";
     }
-    if ($javascript_cursor)
+    
+    echo "<a class=\"new_booking\" href=\"edit_entry.php?$query_string\">\n";
+    if ($show_plus_link)
     {
-      echo "<script type=\"text/javascript\">\n";
-      echo "//<![CDATA[\n";
-      echo "EndActiveCell();\n";
-      echo "//]]>\n";
-      echo "</script>\n";
+      echo "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
     }
+    echo "</a>\n";
     
     // then any bookings for the day
     if (isset($d[$cday]["id"][0]))

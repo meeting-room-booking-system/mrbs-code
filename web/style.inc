@@ -2,11 +2,6 @@
 
 // $Id$
 
-// NOTE:  The filename for the stylesheet for <= IE6 must contain the string 'ielte6'.
-// The href strings in the <link> tags below are used by InitActiveCell in xbLib.js to 
-// test whether the browser is IE6 or below - and therefore whether to use JavaScript
-// highlighting instead of CSS highlighting.   In particular the href string for the
-// stylesheet for browsers IE6 or below must contain the string 'ielte6'.
 ?>
     <link href="jquery/ui/css/sunny/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css">
     
