@@ -88,7 +88,7 @@ If you are using a Unix/Linux webserver to which you have access, then the
 procedure might be:
 
 [MySQL]         $ mysqladmin create mrbs
-[PostgreSQL]    $ createdb mrbs
+[PostgreSQL]    $ createdb -E UTF8 -T template0 mrbs
 
 (This will create a database named "mrbs", but you can use any name.)
 
