@@ -1433,7 +1433,6 @@ $(window).load(function() {
                     .width($(this).width())
                     .height($(this).height())
                     .resizable({handles: 'all',
-                                //helper: 'ui-resizable-helper',
                                 resize: divResize,
                                 start: divResizeStart,
                                 stop: divResizeStop})
