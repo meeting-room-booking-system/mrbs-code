@@ -1973,7 +1973,9 @@ $(window).load(function() {
           }
           else
           {
-            $logo_size = getimagesize($mrbs_company_logo);
+            // Suppress error messages in case the logo is a URL and allow_url_fopen
+            // is not enabled in php.ini
+            $logo_size = @getimagesize($mrbs_company_logo);
             echo "<img src=\"$mrbs_company_logo\" " . $logo_size[3] . " alt=\"$mrbs_company\">\n";
           }
           if (!empty($mrbs_company_url))
