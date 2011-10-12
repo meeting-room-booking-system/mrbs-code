@@ -78,6 +78,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $default_duration_all_day;
   global $select_options;
   global $ajax_refresh_rate;
+  global $main_table_cell_border_width;
   
   $page = basename($PHP_SELF, ".php");
   $user = getUserName();
@@ -1236,7 +1237,216 @@ $(window).load(function() {
     <?php
   }  
   
+  // DAY.PHP, WEEK.PHP, MONTH.PHP
+  // Draggable bookings
+  if (in_array($page, array('day', 'week', 'month')))
+  {
+    ?>
+    if (!lteIE6)
+    {
+      var table = $('table.dwm_main');
+      var tableCoordsX = [];
+      var tableCoordsY = [];
+      table.find('thead tr:first-child th').each(function() {
+          tableCoordsX.push(Math.round($(this).offset().left) + <?php echo $main_table_cell_border_width ?>);
+        });
+      table.find('tr').not('.multiple_booking tr').each(function() {
+          tableCoordsY.push(Math.round($(this).offset().top) + <?php echo $main_table_cell_border_width ?>);
+        });
+      <?php
+      // Get all the booking cells, excluding (a) the row labels columns, (b) any empty
+      // cells and (c) any cells to do with multiple bookings
+      ?>
+      table.find('td').not('.row_labels, .new, .multiple_booking, .multiple_booking td')
+        .each(function() {
+        
+            <?php
+            // Snap the side with X or Y coordinate coord in the direction specified
+            // (can be 'left', 'right', 'top' or 'bottom').  If force is true, then the
+            // side is snapped regardless of where it is.
+            //
+            // We have to provide our own snapToGrid function instead of using the grid
+            // option in the jQuery UI resize widget because our table may not have uniform
+            // row heights and column widths - so we can't specify a grid in terms of a simple
+            // array as required by the resize widget.
+            ?>
+            function snapToGrid(ui, coord, direction, force)
+            {
+              var snapGap = (force) ? 100000: 20; <?php // px ?>
+                
+              aCoords = ((direction=='left') || (direction=='right')) ? tableCoordsX : tableCoordsY;
 
+              for (var i=0; i<(aCoords.length - 1); i++)
+              {
+                var topLeft = aCoords[i];
+                var bottomRight = aCoords[i+1];
+                if ((coord>topLeft) && (coord<bottomRight))
+                {
+                  var gap = bottomRight - topLeft;
+                  var gapTopLeft = Math.round(coord - topLeft);
+                  var gapBottomRight = Math.round(bottomRight - coord);
+                  if ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap))
+                  {
+                    switch (direction)
+                    {
+                      case 'left':
+                        divClone.offset({top: divClone.offset().top, left: topLeft});
+                        divClone.width(divClone.width() + gapTopLeft);
+                        break;
+                      case 'right':
+                        divClone.width(divClone.width() - gapTopLeft);
+                        break;
+                      case 'top':
+                        divClone.offset({top: topLeft, left: divClone.offset().left});
+                        divClone.height(divClone.height() + gapTopLeft);
+                        break;
+                      case 'bottom':
+                        divClone.height(divClone.height() - gapTopLeft);
+                        break;
+                    }
+                    return;
+                  }
+                  else if ((gapBottomRight <= gap/2) && (gapBottomRight < snapGap))
+                  {
+                    switch (direction)
+                    {
+                      case 'left':
+                        divClone.offset({top: divClone.offset().top, left: bottomRight});
+                        divClone.width(divClone.width() - gapBottomRight);
+                        break;
+                      case 'right':
+                        divClone.width(divClone.width() + gapBottomRight);
+                        break;
+                      case 'top':
+                        divClone.offset({top: bottomRight, left: divClone.offset().left});
+                        divClone.height(divClone.height() - gapBottomRight);
+                        break;
+                      case 'bottom':
+                        divClone.height(divClone.height() + gapBottomRight);
+                        break;
+                    }
+                    return;
+                  }
+                }
+              }  <?php // for ?>
+            }  <?php // snapToGrid() ?>
+   
+        
+            <?php
+            // resize event callback function
+            ?>
+            var divResize = function (event, ui)
+            {
+           
+              if (divResize.origin === undefined)
+              {
+                divResize.origin = $(this).offset();
+                divResize.lastPosition = $.extend({}, divClone.position());
+                divResize.lastSize = {width: divClone.width(),
+                                      height: divClone.height()};
+              }
+              <?php
+              // Check to see if any of the four sides of the div have moved since the last time
+              // and if so, see if they've got close enough to the next boundary that we can snap
+              // them to the grid
+              ?>
+              
+              <?php // left edge ?>
+              if (divClone.position().left != divResize.lastPosition.left)
+              {
+                snapToGrid(ui, divResize.origin.left + divClone.position().left, 'left');
+              }
+              <?php // right edge ?>
+              if ((divClone.position().left + ui.size.width) != (divResize.lastPosition.left + divResize.lastSize.width))
+              {
+                snapToGrid(ui, divResize.origin.left + divClone.position().left + divClone.width(), 'right');
+              }
+              <?php // top edge ?>
+              if (divClone.position().top != divResize.lastPosition.top)
+              {
+                snapToGrid(ui, divResize.origin.top + divClone.position().top, 'top');
+              }
+              <?php // bottom edge ?>
+              if ((divClone.position().top + divClone.height()) != (divResize.lastPosition.top + divResize.lastSize.height))
+              {
+                snapToGrid(ui, divResize.origin.top + divClone.position().top + divClone.height(), 'bottom');
+              }
+
+              divResize.lastPosition = $.extend({}, divClone.position());
+              divResize.lastSize = {width: divClone.width(),
+                                    height: divClone.height()};
+                                    
+            }  <?php // divResize ?>
+            
+            
+            <?php
+            // callback function called when the resize starts
+            ?>
+            var divResizeStart = function (event, ui)
+            {
+              <?php
+              // Add a wrapper so that we can disable the highlighting when we are
+              // resizing (the flickering is a bit annoying)
+              ?>
+              $('table.dwm_main').wrap('<div class="resizing"></div>');
+              <?php
+              // Add an outline to the original booking so that we can see where it
+              // was.   The width and height are 2 pixels short of the original to allow
+              // for a 1 pixel border all round.
+              ?>
+              $('<div class="outline"></div>')
+                  .width(divClone.width() - 2)
+                  .height(divClone.height() - 2)
+                  .offset(divClone.offset())
+                  .appendTo($('div.resizing'));
+            }  <?php // divResizeStop ?>
+            
+            
+            <?php
+            // callback function called when the resize stops
+            ?>
+            var divResizeStop = function (event, ui)
+            {
+              <?php
+              // Snap the edges to the grid, regardless of where they are.
+              ?>
+              snapToGrid(ui, divResize.origin.left + divClone.position().left, 'left', true);
+              snapToGrid(ui, divResize.origin.left + divClone.position().left + divClone.width(), 'right', true);
+              snapToGrid(ui, divResize.origin.top + divClone.position().top, 'top', true);
+              snapToGrid(ui, divResize.origin.top + divClone.position().top + divClone.height(), 'bottom', true);
+              <?php // Remove the outline ?>
+              $('div.outline').remove();
+              <?php // Remove the resizing wrapper so that highlighting comes back on ?>
+              $('table.dwm_main').unwrap();
+            }  <?php // divResizeStop ?>
+            
+
+            var divBooking = $(this).children('div');
+            var divClone = divBooking.clone();
+            divBooking.css('visibility', 'hidden');
+            divClone.css('z-index', '500')
+                    .css('position', 'absolute')
+                    .css('top', '0')
+                    .css('left', '0')
+                    .css('background-color', $(this).css('background-color'))
+                    .css('max-height', 'none')
+                    .width($(this).width())
+                    .height($(this).height())
+                    .resizable({handles: 'all',
+                                //helper: 'ui-resizable-helper',
+                                resize: divResize,
+                                start: divResizeStart,
+                                stop: divResizeStop})
+                    .appendTo($(this));
+            $(this).css('background-color', 'transparent')
+                   .wrapInner('<div style="position: relative"><\/div>');
+          });
+    }
+    <?php
+  }
+  
+  
+  
   // DAY.PHP, WEEK.PHP, MONTH.PHP
   // If we're running IE6 or below then we need to make bookable slots clickable
   // and respond to a mouse hovering over them (IE6 only supports the :hover pseudo

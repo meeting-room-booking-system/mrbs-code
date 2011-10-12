@@ -271,7 +271,7 @@ tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /
 .dwm_main td.row_labels     {background-color: <?php echo $main_table_labels_back_color ?>; white-space: nowrap}    /* used for the row labels column */
 .row_labels a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
 .row_labels a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
-.row_labels a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
+.row_labels a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration: underline; font-weight: normal}
 
 <?php
 // HIGHLIGHTING:  Set styles for the highlighted cells under the cursor (the time/period cell and the current cell)
@@ -282,7 +282,6 @@ tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /
 .dwm_main td:hover.new, .dwm_main td.new_hover {background-color: <?php echo $row_highlight_color ?>}
 .dwm_main tr:hover td.row_labels, .dwm_main td.row_labels_hover {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
 .dwm_main#month_main td:hover.valid, .dwm_main#month_main td.valid_hover {background-color: <?php echo $row_highlight_color ?>}
-
 <?php
 // would be nicer to use color: inherit in the four rules below, but inherit is not supported by IE until IE8.   
 // inherit would mean that (1) you didn't have to specify the colour again and (2) you needn't use the tbody selector to
@@ -291,6 +290,28 @@ tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /
 
 .dwm_main tbody tr:hover a:link,    td.row_labels_hover a:link    {color: <?php echo $anchor_link_color ?>}
 .dwm_main tbody tr:hover a:visited, td.row_labels_hover a:visited {color: <?php echo $anchor_link_color ?>}
+<?php // Disable the highlighting when we're in resize mode ?>
+.resizing .dwm_main tr.even_row td:hover.new {background-color: <?php echo $row_even_color ?>}
+.resizing .dwm_main tr.odd_row td:hover.new {background-color: <?php echo $row_odd_color ?>}
+.resizing .dwm_main tr:hover td.row_labels {background-color: <?php echo $main_table_labels_back_color ?>; color: <?php echo $anchor_link_color_header ?>}
+.resizing .row_labels a:hover {text-decoration: none}
+.resizing .dwm_main tbody tr:hover td.row_labels a:link {color: <?php echo $anchor_link_color_header ?>}
+.resizing .dwm_main tbody tr:hover td.row_labels a:visited {color: <?php echo $anchor_link_color_header ?>}
+
+.dwm_main .ui-resizable-handle {z-index: 1000}
+.dwm_main .ui-resizable-n {top: -1px}
+.dwm_main .ui-resizable-e {right: -1px}
+.dwm_main .ui-resizable-s {bottom: -1px}
+.dwm_main .ui-resizable-w {left: -1px}
+.dwm_main .ui-resizable-sw {bottom: -1px; left: -1px}
+.dwm_main .ui-resizable-ne {top: -1px; right: -1px}
+.dwm_main .ui-resizable-nw {top: -1px; left: -1px}
+
+div.outline {
+  position: absolute;
+  border: 1px dotted <?php echo $header_back_color ?>;
+  z-index: 700;
+}
 
 
 <?php
