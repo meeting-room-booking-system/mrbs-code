@@ -1491,8 +1491,8 @@ $(window).load(function() {
               // for a 1 pixel border all round.
               ?>
               $('<div class="outline"><\/div>')
-                  .width(divClone.width() - 2)
-                  .height(divClone.height() - 2)
+                  .width(divClone.outerWidth() - 2)
+                  .height(divClone.outerHeight() - 2)
                   .offset(divClone.offset())
                   .appendTo($('div.resizing'));
               <?php
@@ -1521,8 +1521,8 @@ $(window).load(function() {
                 ?>
                 divClone.resizable('enable');
                 divClone.offset(divBooking.offset())
-                        .width(divBooking.width())
-                        .height(divBooking.height());
+                        .width(divBooking.outerWidth())
+                        .height(divBooking.outerHeight());
               }
               else
               {
@@ -1530,9 +1530,9 @@ $(window).load(function() {
                 // Snap the edges to the grid, regardless of where they are.
                 ?>
                 snapToGrid(divResize.origin.left + divClone.position().left, 'left', true);
-                snapToGrid(divResize.origin.left + divClone.position().left + divClone.width(), 'right', true);
+                snapToGrid(divResize.origin.left + divClone.position().left + divClone.outerWidth(), 'right', true);
                 snapToGrid(divResize.origin.top + divClone.position().top, 'top', true);
-                snapToGrid(divResize.origin.top + divClone.position().top + divClone.height(), 'bottom', true);
+                snapToGrid(divResize.origin.top + divClone.position().top + divClone.outerHeight(), 'bottom', true);
               }
               
               <?php // Remove the outline ?>
@@ -1551,8 +1551,8 @@ $(window).load(function() {
                     .css('left', '0')
                     .css('background-color', $(this).css('background-color'))
                     .css('max-height', 'none')
-                    .width(divBooking.width())
-                    .height(divBooking.height())
+                    .width(divBooking.outerWidth())
+                    .height(divBooking.outerHeight())
                     .resizable({handles: 'all',
                                 resize: divResize,
                                 start: divResizeStart,
