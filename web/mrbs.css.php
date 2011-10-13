@@ -313,7 +313,6 @@ div.outline {
   z-index: 700;
 }
 
-
 <?php
 
 /* SLOTS CLASSES
