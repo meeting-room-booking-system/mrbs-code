@@ -1339,6 +1339,8 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   //                     [color]
   //                     [data]
   //                     [long_descr]
+  //                     [create_by]
+  //                     [room_id]
   //                     [start_time]
   //                     [slots]
   //                     [status]
@@ -1423,12 +1425,16 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     {
       $column[$time_t][$n]["data"] = $row['name'];
       $column[$time_t][$n]["long_descr"] = $row['entry_description'];
+      $column[$time_t][$n]["create_by"] = $row['entry_create_by'];
+      $column[$time_t][$n]["room_id"] = $row['room_id'];
     }
     // otherwise just leave them blank (we'll fill in the first whole slot later)
     else
     {
       $column[$time_t][$n]["data"] = "";
-      $column[$time_t][$n]["long_descr"] = ""; 
+      $column[$time_t][$n]["long_descr"] = "";
+      $column[$time_t][$n]["create_by"] = "";
+      $column[$time_t][$n]["room_id"] = "";
     }
   } // end for
   
@@ -1461,6 +1467,8 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
         // Move the name and description into the new first slot and decrement the number of slots
         $column[date($format, $end_t + $resolution)][0]["data"] = $column[$time_end_t][0]["data"];
         $column[date($format, $end_t + $resolution)][0]["long_descr"] = $column[$time_end_t][0]["long_descr"];
+        $column[date($format, $end_t + $resolution)][0]["create_by"] = $column[$time_end_t][0]["create_by"];
+        $column[date($format, $end_t + $resolution)][0]["room_id"] = $column[$time_end_t][0]["room_id"];
         $column[date($format, $end_t + $resolution)][0]["slots"] = $column[$time_end_t][0]["slots"] - 1;
       }
     }
@@ -1519,7 +1527,8 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
       // and put the name and description in the multiply booked slot
       $column[$time_start_t][0]["data"] = $column[date($format,$s)][$i]["data"];
       $column[$time_start_t][0]["long_descr"] = $column[date($format,$s)][$i]["long_descr"];
-
+      $column[$time_start_t][0]["create_by"] = $column[date($format,$s)][$i]["create_by"];
+      $column[$time_start_t][0]["room_id"] = $column[date($format,$s)][$i]["room_id"];
     }
   }
  
@@ -1529,6 +1538,8 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   {
     $column[date($format,$first_slot)][0]["data"] = $row['name'];
     $column[date($format,$first_slot)][0]["long_descr"] = $row['entry_description'];
+    $column[date($format,$first_slot)][0]["create_by"] = $row['entry_create_by']; 
+    $column[date($format,$first_slot)][0]["room_id"] = $row['room_id']; 
     $column[date($format,$first_slot)][0]["slots"] = $n_slots;
   }
 
@@ -1548,6 +1559,8 @@ function draw_cell($cell, $query_strings)
   //         [color]
   //         [data]
   //         [long_descr]
+  //         [create_by]
+  //         [room_id]
   //         [start_time]
   //         [slots]
   //         [status]
@@ -1571,6 +1584,8 @@ function draw_cell($cell, $query_strings)
   global $area, $year, $month, $timetohighlight;
   global $enable_periods, $times_along_top, $show_plus_link;
   global $approval_enabled, $confirmation_enabled;
+  
+  $user = getUserName();
   
   // if the time slot has got multiple bookings, then draw a mini-table
   if(isset($cell[1]["id"]))
@@ -1735,7 +1750,11 @@ function draw_cell($cell, $query_strings)
       if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
       {
         $c .= " tentative";
-      } 
+      }
+      if (getWritable($cell[0]['create_by'], $user, $cell[0]['room_id']))
+      {
+        $c .= " writable";
+      }
     }
     else
     {

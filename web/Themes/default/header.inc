@@ -1298,10 +1298,9 @@ $(window).load(function() {
       var bookedMap = [];
 
       <?php
-      // Get all the booking cells, excluding (a) the row labels columns, (b) any empty
-      // cells and (c) any cells to do with multiple bookings
+      // Turn all the writable cells into resizable bookings
       ?>
-      table.find('td').not('.row_labels, .new, .multiple_booking, .multiple_booking td')
+      table.find('td.writable')
         .each(function() {
         
             <?php
