@@ -1244,18 +1244,14 @@ $(window).load(function() {
     ?>
     if (!lteIE6)
     {
-      function getCorners(jqObject)
+      function getSides(jqObject)
       {
-        var corners = {};
-        corners.nw = {x: Math.round(jqObject.offset().left), 
-                      y: Math.round(jqObject.offset().top)};
-        corners.ne = {x: corners.nw.x + Math.round(jqObject.width()),
-                      y: corners.nw.y};
-        corners.sw = {x: corners.nw.x,
-                      y: corners.nw.y + Math.round(jqObject.height())};
-        corners.se = {x: corners.ne.x,
-                      y: corners.sw.y};
-        return corners;
+        var sides = {};
+        sides.n = Math.round(jqObject.offset().top);
+        sides.w = Math.round(jqObject.offset().left);
+        sides.s = sides.n + Math.round(jqObject.outerHeight());
+        sides.e = sides.w + Math.round(jqObject.outerWidth());
+        return sides;
       }
       
       var table = $('table.dwm_main');
@@ -1288,8 +1284,8 @@ $(window).load(function() {
         
       <?php
       // bookedMap is an array of booked slots.   Each member of the array is an
-      // object with four corners (nw, ne, sw, se) and each corner is an object
-      // with x and y properties.   We will use this array to test whether a proposed
+      // object with four properties (n, s, e, w) representing the cooordinates (x or y)
+      // of the side.   We will use this array to test whether a proposed
       // booking overlaps an existing booking.   We save populating this array until
       // the resize starts, because we want to exclude the bokked slot that is being
       // resized.
@@ -1315,7 +1311,7 @@ $(window).load(function() {
             // row heights and column widths - so we can't specify a grid in terms of a simple
             // array as required by the resize widget.
             ?>
-            function snapToGrid(ui, coord, direction, force)
+            function snapToGrid(coord, direction, force)
             {
               var snapGap = (force) ? 100000: 20; <?php // px ?>
                 
@@ -1382,32 +1378,29 @@ $(window).load(function() {
             
             <?php
             // Check whether the rectangle (with sides n,s,e,w) overlaps any
-            // of the booked slots in the table.   The enabled parameter specifies
-            // whether the resize is currently disabled: we set a different tolerance 
-            // depending on whether the resize is disabled, so that we don't flick
-            // between an enabled and disabled state.
+            // of the booked slots in the table.
             ?>
             function overlapsBooked(rectangle, enabled)
             {
-              var tolerance = (enabled) ? 5 : 10; <?php // px ?>
-              
               <?php
-              // If any corner of any of the booked slots lies within the rectangle
-              // then there is an overlap
+              // Check each of the booked cells in turn to see if it overlaps
+              // the rectangle.  If it does return true immediately.
               ?>
               for (var i=0; i<bookedMap.length; i++)
               {
+                <?php
+                // We check whether a booked cell overlaps the rectangle by checking 
+                // whether any of the sides of the cell intersect with the sides of the rectangle.
+                // In the condition below, we are checking on the first line to see if either
+                // of the vertical sides of the cell intersects either of the horizontal sides
+                // of the rectangle.  The second line checks for intersection of the horizontal
+                // sides of the cell with the vertical lines of the rectangle.
+                ?>
                 var bookedCell = bookedMap[i];
-                for (var key in bookedCell)
+                if ( (( ((bookedCell.w > rectangle.w) && (bookedCell.w < rectangle.e)) || ((bookedCell.e > rectangle.w) && (bookedCell.e < rectangle.e)) ) && (bookedCell.n < rectangle.s) && (bookedCell.s > rectangle.n)) ||
+                     (( ((bookedCell.n > rectangle.n) && (bookedCell.n < rectangle.s)) || ((bookedCell.s > rectangle.n) && (bookedCell.s < rectangle.s)) ) && (bookedCell.w < rectangle.e) && (bookedCell.e > rectangle.w)) )
                 {
-                  var corner = bookedCell[key];
-                  if (((rectangle.w + tolerance) <= corner.x) && 
-                      ((rectangle.e - tolerance) >= corner.x) &&
-                      ((rectangle.n + tolerance) <= corner.y) &&
-                      ((rectangle.s - tolerance) >= corner.y))
-                  {
-                    return true;
-                  }
+                  return true;
                 }
               }
               return false;
@@ -1434,7 +1427,7 @@ $(window).load(function() {
               rectangle.s = rectangle.n + Math.round(divClone.height());
               rectangle.e = rectangle.w + Math.round(divClone.width());
                             
-              if (overlapsBooked(rectangle, divClone.resizable('option', 'disabled')))
+              if (overlapsBooked(rectangle))
               {
                 divClone.resizable("disable");
               }
@@ -1451,22 +1444,22 @@ $(window).load(function() {
               <?php // left edge ?>
               if (divClone.position().left != divResize.lastPosition.left)
               {
-                snapToGrid(ui, divResize.origin.left + divClone.position().left, 'left');
+                snapToGrid(divResize.origin.left + divClone.position().left, 'left');
               }
               <?php // right edge ?>
               if ((divClone.position().left + ui.size.width) != (divResize.lastPosition.left + divResize.lastSize.width))
               {
-                snapToGrid(ui, divResize.origin.left + divClone.position().left + divClone.width(), 'right');
+                snapToGrid(divResize.origin.left + divClone.position().left + divClone.width(), 'right');
               }
               <?php // top edge ?>
               if (divClone.position().top != divResize.lastPosition.top)
               {
-                snapToGrid(ui, divResize.origin.top + divClone.position().top, 'top');
+                snapToGrid(divResize.origin.top + divClone.position().top, 'top');
               }
               <?php // bottom edge ?>
               if ((divClone.position().top + divClone.height()) != (divResize.lastPosition.top + divResize.lastSize.height))
               {
-                snapToGrid(ui, divResize.origin.top + divClone.position().top + divClone.height(), 'bottom');
+                snapToGrid(divResize.origin.top + divClone.position().top + divClone.height(), 'bottom');
               }
 
               divResize.lastPosition = $.extend({}, divClone.position());
@@ -1500,7 +1493,7 @@ $(window).load(function() {
               // allowed to be in our own cell
               ?>
               table.find('td').not('td.new, td.row_labels').not(divBooking.parents('td')).each(function() {
-                  bookedMap.push(getCorners($(this)));
+                  bookedMap.push(getSides($(this)));
                 });
 
             }  <?php // divResizeStop ?>
@@ -1529,10 +1522,10 @@ $(window).load(function() {
                 <?php
                 // Snap the edges to the grid, regardless of where they are.
                 ?>
-                snapToGrid(ui, divResize.origin.left + divClone.position().left, 'left', true);
-                snapToGrid(ui, divResize.origin.left + divClone.position().left + divClone.width(), 'right', true);
-                snapToGrid(ui, divResize.origin.top + divClone.position().top, 'top', true);
-                snapToGrid(ui, divResize.origin.top + divClone.position().top + divClone.height(), 'bottom', true);
+                snapToGrid(divResize.origin.left + divClone.position().left, 'left', true);
+                snapToGrid(divResize.origin.left + divClone.position().left + divClone.width(), 'right', true);
+                snapToGrid(divResize.origin.top + divClone.position().top, 'top', true);
+                snapToGrid(divResize.origin.top + divClone.position().top + divClone.height(), 'bottom', true);
               }
               
               <?php // Remove the outline ?>
