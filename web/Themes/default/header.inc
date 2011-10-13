@@ -1238,11 +1238,16 @@ $(window).load(function() {
   }  
   
   // DAY.PHP, WEEK.PHP, MONTH.PHP
-  // Draggable bookings
+  // Resizable bookings
   if (in_array($page, array('day', 'week', 'month')))
   {
+    // We don't allow resizable bookings for IE8 and below.   In theory they should
+    // be OK, but there seems to be a problem getting the resizing working properly.
+    // (It looks as though it's probably something to do with the way .offset()
+    // works in IE8 and below:  it seems to be giving some strange figures for the 
+    // table coordinates.)
     ?>
-    if (!lteIE6)
+    if (!lteIE8)
     {
       function getSides(jqObject)
       {
