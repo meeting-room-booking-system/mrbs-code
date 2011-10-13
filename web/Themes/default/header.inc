@@ -1313,6 +1313,7 @@ $(window).load(function() {
             ?>
             function snapToGrid(coord, direction, force)
             {
+              console.log("Entering snap:  (" + coord + ", " + direction + ", " + force + ")");
               var snapGap = (force) ? 100000: 20; <?php // px ?>
                 
               aCoords = ((direction=='left') || (direction=='right')) ? tableCoordsX : tableCoordsY;
@@ -1331,42 +1332,44 @@ $(window).load(function() {
                   var gap = bottomRight - topLeft;
                   if ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap))
                   {
+                    console.log("TopLeft snap: " + direction + ", gapTopLeft: " + gapTopLeft);
                     switch (direction)
                     {
                       case 'left':
                         divClone.offset({top: divClone.offset().top, left: topLeft});
-                        divClone.width(divClone.width() + gapTopLeft);
+                        divClone.width(divClone.outerWidth() + gapTopLeft);
                         break;
                       case 'right':
-                        divClone.width(divClone.width() - gapTopLeft);
+                        divClone.width(divClone.outerWidth() - gapTopLeft);
                         break;
                       case 'top':
                         divClone.offset({top: topLeft, left: divClone.offset().left});
-                        divClone.height(divClone.height() + gapTopLeft);
+                        divClone.height(divClone.outerHeight() + gapTopLeft);
                         break;
                       case 'bottom':
-                        divClone.height(divClone.height() - gapTopLeft);
+                        divClone.height(divClone.outerHeight() - gapTopLeft);
                         break;
                     }
                     return;
                   }
                   else if ((gapBottomRight <= gap/2) && (gapBottomRight < snapGap))
                   {
+                    console.log("BottomRight snap: " + direction+ ", gapBottomRight: " + gapBottomRight);
                     switch (direction)
                     {
                       case 'left':
                         divClone.offset({top: divClone.offset().top, left: bottomRight});
-                        divClone.width(divClone.width() - gapBottomRight);
+                        divClone.width(divClone.outerWidth() - gapBottomRight);
                         break;
                       case 'right':
-                        divClone.width(divClone.width() + gapBottomRight);
+                        divClone.width(divClone.outerWidth() + gapBottomRight);
                         break;
                       case 'top':
                         divClone.offset({top: bottomRight, left: divClone.offset().left});
-                        divClone.height(divClone.height() - gapBottomRight);
+                        divClone.height(divClone.outerHeight() - gapBottomRight);
                         break;
                       case 'bottom':
-                        divClone.height(divClone.height() + gapBottomRight);
+                        divClone.height(divClone.outerHeight() + gapBottomRight);
                         break;
                     }
                     return;
@@ -1412,20 +1415,20 @@ $(window).load(function() {
             ?>
             var divResize = function (event, ui)
             {
-           
+              console.log("Entering resize");
               if (divResize.origin === undefined)
               {
                 divResize.origin = divBooking.offset();
                 divResize.lastPosition = $.extend({}, divClone.position());
-                divResize.lastSize = {width: divClone.width(),
-                                      height: divClone.height()};
+                divResize.lastSize = {width: divClone.outerWidth(),
+                                      height: divClone.outerHeight()};
               }
               
               var rectangle = {};
               rectangle.n = Math.round(divResize.origin.top + divClone.position().top);
               rectangle.w = Math.round(divResize.origin.left + divClone.position().left);
-              rectangle.s = rectangle.n + Math.round(divClone.height());
-              rectangle.e = rectangle.w + Math.round(divClone.width());
+              rectangle.s = rectangle.n + Math.round(divClone.outerHeight());
+              rectangle.e = rectangle.w + Math.round(divClone.outerWidth());
                             
               if (overlapsBooked(rectangle))
               {
@@ -1444,27 +1447,31 @@ $(window).load(function() {
               <?php // left edge ?>
               if (divClone.position().left != divResize.lastPosition.left)
               {
+                console.log("left edge has changed");
                 snapToGrid(divResize.origin.left + divClone.position().left, 'left');
               }
               <?php // right edge ?>
-              if ((divClone.position().left + divClone.width()) != (divResize.lastPosition.left + divResize.lastSize.width))
+              if ((divClone.position().left + divClone.outerWidth()) != (divResize.lastPosition.left + divResize.lastSize.width))
               {
-                snapToGrid(divResize.origin.left + divClone.position().left + divClone.width(), 'right');
+                console.log("right edge has changed");
+                snapToGrid(divResize.origin.left + divClone.position().left + divClone.outerWidth(), 'right');
               }
               <?php // top edge ?>
               if (divClone.position().top != divResize.lastPosition.top)
               {
+                console.log("top edge has changed");
                 snapToGrid(divResize.origin.top + divClone.position().top, 'top');
               }
               <?php // bottom edge ?>
-              if ((divClone.position().top + divClone.height()) != (divResize.lastPosition.top + divResize.lastSize.height))
+              if ((divClone.position().top + divClone.outerHeight()) != (divResize.lastPosition.top + divResize.lastSize.height))
               {
-                snapToGrid(divResize.origin.top + divClone.position().top + divClone.height(), 'bottom');
+                console.log("bottom edge has changed");
+                snapToGrid(divResize.origin.top + divClone.position().top + divClone.outerHeight(), 'bottom');
               }
 
               divResize.lastPosition = $.extend({}, divClone.position());
-              divResize.lastSize = {width: divClone.width(),
-                                    height: divClone.height()};           
+              divResize.lastSize = {width: divClone.outerWidth(),
+                                    height: divClone.outerHeight()};           
             }  <?php // divResize ?>
             
             
