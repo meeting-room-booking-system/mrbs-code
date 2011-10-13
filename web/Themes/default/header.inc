@@ -1447,7 +1447,7 @@ $(window).load(function() {
                 snapToGrid(divResize.origin.left + divClone.position().left, 'left');
               }
               <?php // right edge ?>
-              if ((divClone.position().left + ui.size.width) != (divResize.lastPosition.left + divResize.lastSize.width))
+              if ((divClone.position().left + divClone.width()) != (divResize.lastPosition.left + divResize.lastSize.width))
               {
                 snapToGrid(divResize.origin.left + divClone.position().left + divClone.width(), 'right');
               }
