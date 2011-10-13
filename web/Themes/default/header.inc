@@ -78,7 +78,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $default_duration_all_day;
   global $select_options;
   global $ajax_refresh_rate;
-  global $main_table_cell_border_width;
+  global $main_table_cell_border_width, $main_cell_height;
   
   $page = basename($PHP_SELF, ".php");
   $user = getUserName();
@@ -1318,7 +1318,6 @@ $(window).load(function() {
             ?>
             function snapToGrid(coord, direction, force)
             {
-              console.log("Entering snap:  (" + coord + ", " + direction + ", " + force + ")");
               var snapGap = (force) ? 100000: 20; <?php // px ?>
                 
               aCoords = ((direction=='left') || (direction=='right')) ? tableCoordsX : tableCoordsY;
@@ -1337,7 +1336,6 @@ $(window).load(function() {
                   var gap = bottomRight - topLeft;
                   if ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap))
                   {
-                    console.log("TopLeft snap: " + direction + ", gapTopLeft: " + gapTopLeft);
                     switch (direction)
                     {
                       case 'left':
@@ -1359,7 +1357,6 @@ $(window).load(function() {
                   }
                   else if ((gapBottomRight <= gap/2) && (gapBottomRight < snapGap))
                   {
-                    console.log("BottomRight snap: " + direction+ ", gapBottomRight: " + gapBottomRight);
                     switch (direction)
                     {
                       case 'left':
@@ -1420,7 +1417,6 @@ $(window).load(function() {
             ?>
             var divResize = function (event, ui)
             {
-              console.log("Entering resize");
               if (divResize.origin === undefined)
               {
                 divResize.origin = divBooking.offset();
@@ -1452,25 +1448,21 @@ $(window).load(function() {
               <?php // left edge ?>
               if (divClone.position().left != divResize.lastPosition.left)
               {
-                console.log("left edge has changed");
                 snapToGrid(divResize.origin.left + divClone.position().left, 'left');
               }
               <?php // right edge ?>
               if ((divClone.position().left + divClone.outerWidth()) != (divResize.lastPosition.left + divResize.lastSize.width))
               {
-                console.log("right edge has changed");
                 snapToGrid(divResize.origin.left + divClone.position().left + divClone.outerWidth(), 'right');
               }
               <?php // top edge ?>
               if (divClone.position().top != divResize.lastPosition.top)
               {
-                console.log("top edge has changed");
                 snapToGrid(divResize.origin.top + divClone.position().top, 'top');
               }
               <?php // bottom edge ?>
               if ((divClone.position().top + divClone.outerHeight()) != (divResize.lastPosition.top + divResize.lastSize.height))
               {
-                console.log("bottom edge has changed");
                 snapToGrid(divResize.origin.top + divClone.position().top + divClone.outerHeight(), 'bottom');
               }
 
@@ -1556,6 +1548,7 @@ $(window).load(function() {
                     .css('left', '0')
                     .css('background-color', $(this).css('background-color'))
                     .css('max-height', 'none')
+                    .css('min-height', '<?php echo $main_cell_height ?>px')
                     .width(divBooking.outerWidth())
                     .height(divBooking.outerHeight())
                     .resizable({handles: 'all',
