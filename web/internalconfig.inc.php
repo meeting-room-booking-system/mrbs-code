@@ -84,7 +84,7 @@ else
  * DOCTYPE - internal use, do not change
  ***************************************/
 
- define('DOCTYPE', '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">');
+ define('DOCTYPE', '<!DOCTYPE html>');
  
  // Records which DOCTYPE is being used.    Do not change - it will not change the DOCTYPE
  // that is used;  it is merely used when the code needs to know the DOCTYPE, for example

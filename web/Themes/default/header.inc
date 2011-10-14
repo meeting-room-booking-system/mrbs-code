@@ -110,6 +110,7 @@ function print_theme_header($day, $month, $year, $area, $room)
 
 <html>
   <head>
+  <meta charset="<?php echo get_charset(); ?>">
 <?php
   require_once "style.inc";
 ?>
@@ -1409,6 +1410,15 @@ $(window).load(function() {
               }
               return false;
             }
+            
+            
+            function getBookingParams(div)
+            {
+              var xStart = div.offset().left;
+              var xEnd = xStart + div.outerWidth();
+              var yStart = div.offset().top;
+              var yEnd = yStart + div.outerHeight();
+            }
 
             
             <?php
@@ -1535,6 +1545,8 @@ $(window).load(function() {
               $('div.outline').remove();
               <?php // Remove the resizing wrapper so that highlighting comes back on ?>
               $('table.dwm_main').unwrap();
+              
+              
             }  <?php // divResizeStop ?>
             
 

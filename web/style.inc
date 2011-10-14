@@ -29,9 +29,6 @@
     <link rel="stylesheet" href="mrbs-ielte6.css" type="text/css">
     <![endif]-->
     
-
-    
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo get_charset(); ?>">
     <meta name="robots" content="noindex">
 <?php
 
