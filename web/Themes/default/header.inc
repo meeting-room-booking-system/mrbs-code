@@ -1250,6 +1250,9 @@ $(window).load(function() {
     ?>
     if (!lteIE8)
     {
+      <?php
+      // Get the sides of the rectangle represented by the jQuery object jqObject
+      ?>
       function getSides(jqObject)
       {
         var sides = {};
@@ -1260,34 +1263,73 @@ $(window).load(function() {
         return sides;
       }
       
-      var table = $('table.dwm_main');
-      <?php 
-      // Get the positions of the row and column boundaries of the actual booking
-      // area, ie ignoring the header and footer and also the row labels in the first,
-      // and possibly also the last, columns.   (Also need to ignore the multiple booking
-      // sub-tables)
+      <?php
+      // Get the name of the data attribute in this jQuery object.
       ?>
-      var tableCoordsX = [];
-      var tableCoordsY = [];
+      function getDataName(jqObject)
+      {
+        possibleNames = ['room', 'time', 'seconds'];
+        for (var i=0; i<possibleNames.length; i++)
+        {
+          if (jqObject.data(possibleNames[i]) !== undefined)
+          {
+            return possibleNames[i];
+          }
+        }
+        return false;
+      }
+
       
+      var table = $('table.dwm_main');
+      
+      var tableData = {};
+      
+      <?php 
+      // Build an object holding all the data we need about the table, which is
+      // the coordinates of the cell boundaries and the names and values of the
+      // data attributes.    The object has two properties, x and y, which in turn
+      // are objects containing the data for the x and y axes.  Each of these
+      // objects has a key property which holds the name of the data attribute and a
+      // data object, which is an array of objects holding the coordinate and data
+      // value at each cell boundary.
+      ?>
+      tableData.x = {};
+      tableData.x.data = [];
       var columns = table.find('thead tr:first-child th').not('.first_last');
       columns.each(function() {
-          tableCoordsX.push(Math.round($(this).offset().left));
+          if (tableData.x.key === undefined)
+          {
+            tableData.x.key = getDataName($(this));
+          }
+          tableData.x.data.push({coord: Math.round($(this).offset().left),
+                                 value: $(this).data(tableData.x.key)});
         });
-      <?php // and also get the right hand edge ?>
+      <?php 
+      // and also get the right hand edge (note there's no value - the values are
+      // the data attribute values for the cdells defined by the left hand edge)
+      ?>
       columns.filter(':last').each(function() {
-          tableCoordsX.push(Math.round($(this).offset().left + $(this).outerWidth()));
+          tableData.x.data.push({coord: Math.round($(this).offset().left + $(this).outerWidth()),
+                                 value: undefined});
         });
-        
-      var rows = table.find('tbody tr').not('.multiple_booking tr');
+
+      tableData.y = {};
+      tableData.y.data = [];
+      var rows = table.find('tbody td:first-child').not('.multiple_booking td');
       rows.each(function() {
-          tableCoordsY.push(Math.round($(this).offset().top));
+          if (tableData.y.key === undefined)
+          {
+            tableData.y.key = getDataName($(this));
+          }
+          tableData.y.data.push({coord: Math.round($(this).offset().top),
+                                 value: $(this).data(tableData.y.key)});
         });
       <?php // and also get the bottom edge ?>
       rows.filter(':last').each(function() {
-          tableCoordsY.push(Math.round($(this).offset().top + $(this).outerHeight()));
+          tableData.y.data.push({coord: Math.round($(this).offset().top + $(this).outerHeight()),
+                                 value: undefined});
         });
-        
+     
       <?php
       // bookedMap is an array of booked slots.   Each member of the array is an
       // object with four properties (n, s, e, w) representing the cooordinates (x or y)
@@ -1320,18 +1362,18 @@ $(window).load(function() {
             {
               var snapGap = (force) ? 100000: 20; <?php // px ?>
                 
-              aCoords = ((direction=='left') || (direction=='right')) ? tableCoordsX : tableCoordsY;
+              data = ((direction=='left') || (direction=='right')) ? tableData.x.data : tableData.y.data;
 
-              for (var i=0; i<(aCoords.length -1); i++)
+              for (var i=0; i<(data.length -1); i++)
               {
-                var topLeft = aCoords[i] + <?php echo $main_table_cell_border_width ?>;
-                var bottomRight = aCoords[i+1];
+                var topLeft = data[i].coord + <?php echo $main_table_cell_border_width ?>;
+                var bottomRight = data[i+1].coord;
                 var gapTopLeft = coord - topLeft;
                 var gapBottomRight = bottomRight - coord;
                 if (((gapTopLeft>0) && (gapBottomRight>0)) ||
                     <?php // containment tests ?>
                     ((i==0) && (gapTopLeft<0)) ||
-                    ((i==(aCoords.length-2)) && (gapBottomRight<0)) )
+                    ((i==(data.length-2)) && (gapBottomRight<0)) )
                 {
                   var gap = bottomRight - topLeft;
                   if ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap))
