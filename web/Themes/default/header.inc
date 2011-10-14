@@ -1454,12 +1454,42 @@ $(window).load(function() {
             }
             
             
+            <?php
+            // Return the parameters for the booking represented by div
+            // The result is an object with property of the data name (eg
+            // 'seconds', 'time', 'room') and each property is an array of
+            // the values for that booking (for example an array of room ids)
+            ?>
             function getBookingParams(div)
             {
-              var xStart = div.offset().left;
-              var xEnd = xStart + div.outerWidth();
-              var yStart = div.offset().top;
-              var yEnd = yStart + div.outerHeight();
+              var params = {};
+              var data;
+              var tolerance = 2; <?php //px ?>
+              var cell = {x: {}, y: {}}
+              cell.x.start = div.offset().left;
+              cell.y.start = div.offset().top;
+              cell.x.end = cell.x.start + div.outerWidth();
+              cell.y.end = cell.y.start + div.outerHeight();
+              for (var axis in cell)
+              {
+                data = tableData[axis].data;
+                for (var i=0; i<data.length; i++)
+                {
+                  if ((data[i].coord + tolerance) > cell[axis].end)
+                  {
+                    break;
+                  }
+                  if ((data[i].coord + tolerance) > cell[axis].start)
+                  {
+                    if (params[tableData[axis].key] === undefined)
+                    {
+                      params[tableData[axis].key] = [];
+                    }
+                    params[tableData[axis].key].push(data[i].value);
+                  }
+                }
+              }
+              return params;
             }
 
             
@@ -1588,7 +1618,7 @@ $(window).load(function() {
               <?php // Remove the resizing wrapper so that highlighting comes back on ?>
               $('table.dwm_main').unwrap();
               
-              
+              var newParams = getBookingParams(divClone);
             }  <?php // divResizeStop ?>
             
 
