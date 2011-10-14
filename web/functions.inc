@@ -945,14 +945,28 @@ function validate_email_list($list)
 // $colclass is an entry type (A-J), zebra stripes if
 // empty or row_highlight if highlighted.
 // $slots is the number of time slots high that the cell should be
+//
+// $data is an optional third parameter which if set passes the data name and value
+// for use in the data- attribute.  It is an associative array with two elements,
+// data['name'] and data['value'].
 function tdcell($colclass, $slots)
 {
   global $times_along_top;
+  
+  if (func_num_args() > 2)
+  {
+    $data = func_get_arg(2);
+  }
+  
   echo "<td class=\"$colclass\"";
   if ($slots > 1)
   // No need to output more HTML than necessary
   {
     echo " " . (($times_along_top) ? "colspan" : "rowspan") . "=\"$slots\"";
+  }
+  if (isset($data))
+  {
+    echo " data-" . $data['name'] . "=\"" . $data['value'] . "\"";
   }
   echo ">\n";
 }
@@ -1809,12 +1823,13 @@ function draw_cell($cell, $query_strings)
 //    $t                 the timestamp for the start of the slot
 //    $time_t            the time converted to HHMM format without leading zeros
 //    $time_t_stripped   a stripped version of the time for use with periods
+//    $slot_seconds      the number of seconds since the start of the day (nominal - not adjusted for DST)
 //    $url               the url to form the basis of the link in the time cell
-function draw_time_cell($t, $time_t, $time_t_stripped, $url)
+function draw_time_cell($t, $time_t, $time_t_stripped, $slot_seconds, $url)
 {
   global $enable_periods, $periods;
   
-  tdcell("row_labels", 1);
+  tdcell("row_labels", 1, array('name' => 'seconds', 'value' => $slot_seconds));
   echo "<div class=\"celldiv slots1\">\n";
   if ( $enable_periods )
   {
@@ -1837,7 +1852,7 @@ function draw_time_cell($t, $time_t, $time_t_stripped, $url)
 //    $link    the href to be used for the link
 function draw_room_cell($row, $link)
 {
-  tdcell("row_labels", 1);
+  tdcell("row_labels", 1, array('name' => 'room', 'value' => $row['id']));
   echo "<div class=\"celldiv slots1\">\n";
   echo "<a href=\"$link\" title=\"" . get_vocab("viewweek") . " &#10;&#10;" . $row['description'] . "\">";
   echo htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "");
@@ -1848,9 +1863,10 @@ function draw_room_cell($row, $link)
 // Draw a day cell to be used in the first and last columns of the week view
 //    $text    contains the date, formatted as a string
 //    $link    the href to be used for the link
-function draw_day_cell($text, $link)
+//    $t       the time stamp
+function draw_day_cell($text, $link, $t)
 {
-  tdcell("row_labels", 1);
+  tdcell("row_labels", 1, array('name' => 'time', 'value' => $t));
   echo "<div class=\"celldiv slots1\">\n";
   echo "<a href=\"$link\" title=\"" . get_vocab("viewday") . "\">$text</a>\n";
   echo "</div></td>\n";

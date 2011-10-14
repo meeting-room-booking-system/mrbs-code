@@ -237,12 +237,16 @@ if ($times_along_top)
   $column_width = (int)(95 / $n_slots);
   $header .= "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
   for (
-       $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year);
+       $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year),
+         $slot_seconds = $start_first_slot * 60;
        $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
-       $t += $resolution
+       $t += $resolution,
+         $slot_seconds += $resolution
       )
   {
-    $header .= "<th style=\"width: $column_width%\">";
+    // Put the seconds since the start of the day (nominal, not adjusted for DST)
+    // into a data attribute so that it can be picked up by JavaScript
+    $header .= "<th data-seconds=\"$slot_seconds\" style=\"width: $column_width%\">";
     if ( $enable_periods )
     {
       // convert timestamps to HHMM format without leading zeros
@@ -280,8 +284,9 @@ else
     }
   
     else  
-    {  
-      $header .= "<th><a href=\"day.php?year=" . strftime("%Y", $t) . 
+    {
+      // Put the timestamp into a data attribute so that it can be picked up by JavaScript
+      $header .= "<th data-time=\"$t\"><a href=\"day.php?year=" . strftime("%Y", $t) . 
                  "&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) . 
                  "&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">" .
                  utf8_strftime($dformat, $t) . "</a></th>\n";
@@ -348,7 +353,7 @@ if ($times_along_top)
                        "&amp;day=" . strftime("%d", $wt) . 
                        "&amp;area=$area";
                        
-      draw_day_cell($day_cell_text, $day_cell_link);
+      draw_day_cell($day_cell_text, $day_cell_link, $wt);
       for (
            $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year);
            $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
@@ -379,7 +384,7 @@ if ($times_along_top)
       }  // end looping through the time slots
       if ( FALSE != $row_labels_both_sides )
       {
-        draw_day_cell($day_cell_text, $day_cell_link);
+        draw_day_cell($day_cell_text, $day_cell_link, $wt);
       }
       echo "</tr>\n";
     }
@@ -392,9 +397,12 @@ else
 {
   // the standard view, with days of the week along the top and times down the side
   for (
-       $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year);
+       $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year),
+         $slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
        $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
-       $t += $resolution, $row_class = ($row_class == "even_row")?"odd_row":"even_row"
+       $t += $resolution,
+         $slot_seconds += $resolution,
+         $row_class = ($row_class == "even_row") ? "odd_row" : "even_row"
   )
   {
     // use hour:minute format
@@ -418,7 +426,7 @@ else
       $url = $base_url . "&amp;timetohighlight=$time_t";
     }
     echo "<tr class=\"$class\">";
-    draw_time_cell($t, $time_t, $time_t_stripped, $url);
+    draw_time_cell($t, $time_t, $time_t_stripped, $slot_seconds, $url);
   
   
     // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
@@ -455,7 +463,7 @@ else
     // next lines to display times on right side
     if ( FALSE != $row_labels_both_sides )
       {
-        draw_time_cell($t, $time_t, $time_t_stripped, $url);
+        draw_time_cell($t, $time_t, $time_t_stripped, $slot_seconds, $url);
       }
   
     echo "</tr>\n";

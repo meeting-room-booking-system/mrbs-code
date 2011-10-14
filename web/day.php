@@ -254,12 +254,16 @@ else
     $column_width = (int)(95 / $n_slots);
     $header .= "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
     for (
-         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
+         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year),
+           $slot_seconds = $start_first_slot * 60;
          $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
-         $t += $resolution
+         $t += $resolution,
+           $slot_seconds += $resolution
         )
     {
-      $header .= "<th style=\"width: $column_width%\">";
+      // Put the number of seconds since the start of the day (nominal, ignoring DST)
+      // in a data attribure so that JavaScript can pick it up
+      $header .= "<th data-seconds=\"$slot_seconds\" style=\"width: $column_width%\">";
       if ( $enable_periods )
       {
         // convert timestamps to HHMM format without leading zeros
@@ -289,7 +293,8 @@ else
     $column_width = (int)(95 / sql_count($res));
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      $header .= "<th style=\"width: $column_width%\">
+      // Put the room_id in a data attrribute so that JavaScript can pick it up
+      $header .= "<th data-room=\"" . $row['id'] . "\" style=\"width: $column_width%\">
                   <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\"
                   title=\"" . get_vocab("viewweek") . " &#10;&#10;".$row['description']."\">" .
                   htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "") . "</a></th>";
@@ -383,9 +388,12 @@ else
   {
     // the standard view, with rooms along the top and times down the side
     for (
-         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
+         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year),
+           $slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
          $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
-         $t += $resolution, $row_class = ($row_class == "even_row")?"odd_row":"even_row"
+         $t += $resolution,
+           $slot_seconds += $resolution,
+           $row_class = ($row_class == "even_row") ? "odd_row" : "even_row"
         )
     {
       // convert timestamps to HHMM format without leading zeros
@@ -409,7 +417,7 @@ else
         $url = $base_url . "&amp;timetohighlight=$time_t";
       }
       echo "<tr class=\"$class\">\n";
-      draw_time_cell($t, $time_t, $time_t_stripped, $url);
+      draw_time_cell($t, $time_t, $time_t_stripped, $slot_seconds, $url);
   
       // Loop through the list of rooms we have for this area
       while (list($key, $room_id) = each($rooms))
@@ -430,7 +438,7 @@ else
       // next lines to display times on right side
       if ( FALSE != $row_labels_both_sides )
       {
-        draw_time_cell($t, $time_t, $time_t_stripped, $url);
+        draw_time_cell($t, $time_t, $time_t_stripped, $slot_seconds, $url);
       }
   
       echo "</tr>\n";
