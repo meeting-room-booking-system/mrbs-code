@@ -1423,11 +1423,40 @@ $(window).load(function() {
             }  <?php // snapToGrid() ?>
    
             
+            <?php // Checks to see whether two rectangles occupy the same space ?>
+            function rectanglesIdentical(r1, r2)
+            {
+              var tolerance = 2;  <?php //px ?>
+              return ((Math.abs(r1.n - r2.n) < tolerance) &&
+                      (Math.abs(r1.s - r2.s) < tolerance) &&
+                      (Math.abs(r1.e - r2.e) < tolerance) &&
+                      (Math.abs(r1.w - r2.w) < tolerance));
+            }
+            
+                              
+            <?php // Checks whether two rectangles overlap ?>         
+            function rectanglesOverlap(r1, r2)
+            {
+              <?php
+              // We check whether two rectangles overlap by checking whether any of the
+              // sides of one rectangle intersect the sides of the other.   In the condition
+              // below, we are checking on the first line to see if either of the vertical
+              // sides of r1 intersects either of the horizontal sides of r2.  The second line
+              // checks for intersection of the horizontal sides r1 with the vertical sides of r2.
+              ?>
+              if ( (( ((r1.w > r2.w) && (r1.w < r2.e)) || ((r1.e > r2.w) && (r1.e < r2.e)) ) && (r1.n < r2.s) && (r1.s > r2.n)) ||
+                   (( ((r1.n > r2.n) && (r1.n < r2.s)) || ((r1.s > r2.n) && (r1.s < r2.s)) ) && (r1.w < r2.e) && (r1.e > r2.w)) )
+              {
+                return true;
+              }
+            }
+            
+            
             <?php
             // Check whether the rectangle (with sides n,s,e,w) overlaps any
             // of the booked slots in the table.
             ?>
-            function overlapsBooked(rectangle, enabled)
+            function overlapsBooked(rectangle)
             {
               <?php
               // Check each of the booked cells in turn to see if it overlaps
@@ -1435,17 +1464,7 @@ $(window).load(function() {
               ?>
               for (var i=0; i<bookedMap.length; i++)
               {
-                <?php
-                // We check whether a booked cell overlaps the rectangle by checking 
-                // whether any of the sides of the cell intersect with the sides of the rectangle.
-                // In the condition below, we are checking on the first line to see if either
-                // of the vertical sides of the cell intersects either of the horizontal sides
-                // of the rectangle.  The second line checks for intersection of the horizontal
-                // sides of the cell with the vertical lines of the rectangle.
-                ?>
-                var bookedCell = bookedMap[i];
-                if ( (( ((bookedCell.w > rectangle.w) && (bookedCell.w < rectangle.e)) || ((bookedCell.e > rectangle.w) && (bookedCell.e < rectangle.e)) ) && (bookedCell.n < rectangle.s) && (bookedCell.s > rectangle.n)) ||
-                     (( ((bookedCell.n > rectangle.n) && (bookedCell.n < rectangle.s)) || ((bookedCell.s > rectangle.n) && (bookedCell.s < rectangle.s)) ) && (bookedCell.w < rectangle.e) && (bookedCell.e > rectangle.w)) )
+                if (rectanglesOverlap(bookedMap[i], rectangle))
                 {
                   return true;
                 }
@@ -1618,7 +1637,16 @@ $(window).load(function() {
               <?php // Remove the resizing wrapper so that highlighting comes back on ?>
               $('table.dwm_main').unwrap();
               
-              var newParams = getBookingParams(divClone);
+              var r1 = getSides(divBooking);
+              var r2 = getSides(divClone);
+              if (!rectanglesIdentical(r1, r2))
+              {
+                <?php 
+                // We've got a change to the booking, so we need to send an Ajax
+                // request to the server to make the new booking
+                ?>
+                var newParams = getBookingParams(divClone);
+              }
             }  <?php // divResizeStop ?>
             
 
