@@ -1256,10 +1256,10 @@ $(window).load(function() {
       function getSides(jqObject)
       {
         var sides = {};
-        sides.n = Math.round(jqObject.offset().top);
-        sides.w = Math.round(jqObject.offset().left);
-        sides.s = sides.n + Math.round(jqObject.outerHeight());
-        sides.e = sides.w + Math.round(jqObject.outerWidth());
+        sides.n = jqObject.offset().top;
+        sides.w = jqObject.offset().left;
+        sides.s = sides.n + jqObject.outerHeight();
+        sides.e = sides.w + jqObject.outerWidth();
         return sides;
       }
       
@@ -1476,7 +1476,7 @@ $(window).load(function() {
               ?>
               for (var i=0; i<bookedMap.length; i++)
               {
-                if (rectanglesOverlap(bookedMap[i], rectangle))
+                if (rectanglesOverlap(rectangle, bookedMap[i]))
                 {
                   return true;
                 }
