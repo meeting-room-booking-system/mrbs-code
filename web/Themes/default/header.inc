@@ -1239,8 +1239,8 @@ $(window).load(function() {
   }  
   
   // DAY.PHP, WEEK.PHP, MONTH.PHP
-  // Resizable bookings
-  if (in_array($page, array('day', 'week', 'month')))
+  // Resizable bookings (needs json_encode())
+  if (in_array($page, array('day', 'week', 'month')) && function_exists('json_encode'))
   {
     // We don't allow resizable bookings for IE8 and below.   In theory they should
     // be OK, but there seems to be a problem getting the resizing working properly.
@@ -1305,12 +1305,18 @@ $(window).load(function() {
                                  value: $(this).data(tableData.x.key)});
         });
       <?php 
-      // and also get the right hand edge (note there's no value - the values are
-      // the data attribute values for the cdells defined by the left hand edge)
+      // and also get the right hand edge.   If we're dealing with seconds we need to
+      // know what the end time of the slot would be
       ?>
       columns.filter(':last').each(function() {
+          var value = null;
+          if (tableData.x.key == 'seconds')
+          {
+            value = tableData.x.data[tableData.x.data.length - 1].value +
+                    tableData.x.data[1].value - tableData.x.data[0].value;
+          }
           tableData.x.data.push({coord: Math.round($(this).offset().left + $(this).outerWidth()),
-                                 value: undefined});
+                                 value: value});
         });
 
       tableData.y = {};
@@ -1326,8 +1332,14 @@ $(window).load(function() {
         });
       <?php // and also get the bottom edge ?>
       rows.filter(':last').each(function() {
+          var value = null;
+          if (tableData.y.key == 'seconds')
+          {
+            value = tableData.y.data[tableData.y.data.length - 1].value + 
+                    tableData.y.data[1].value - tableData.y.data[0].value;
+          }
           tableData.y.data.push({coord: Math.round($(this).offset().top + $(this).outerHeight()),
-                                 value: undefined});
+                                 value: value});
         });
      
       <?php
@@ -1496,6 +1508,14 @@ $(window).load(function() {
                 {
                   if ((data[i].coord + tolerance) > cell[axis].end)
                   {
+                    <?php
+                    // 'seconds' behaves slightly differently to the other parameters:
+                    // we need to know the end time for the new slot
+                    ?>
+                    if (tableData[axis].key == 'seconds')
+                    {
+                      params[tableData[axis].key].push(data[i].value);
+                    }
                     break;
                   }
                   if ((data[i].coord + tolerance) > cell[axis].start)
@@ -1645,7 +1665,55 @@ $(window).load(function() {
                 // We've got a change to the booking, so we need to send an Ajax
                 // request to the server to make the new booking
                 ?>
+                var data = {ajax: 1, commit: 1};
+                <?php // get the booking id ?>
+                data.id = divClone.data('id');
+                <?php // get the other parameters ?>
                 var newParams = getBookingParams(divClone);
+                if (newParams.seconds !== undefined)
+                {
+                  data.start_seconds = newParams.seconds[0];
+                  data.end_seconds = newParams.seconds[newParams.seconds.length - 1];
+                }
+                <?php
+                if ($page == 'day')
+                {
+                  ?>
+                  data.start_day = <?php echo $day ?>;
+                  data.start_month = <?php echo $month ?>;
+                  data.start_year = <?php echo $year ?>;
+                  <?php
+                }
+                ?>
+                data.end_day = data.start_day;
+                data.end_month = data.start_month;
+                data.end_year = data.start_year;
+                if (newParams.room !== undefined)
+                {
+                  data.rooms = newParams.room;
+                }
+                $.post('edit_entry_handler.php',
+                       data,
+                       function(result) {
+                          console.log ("Still need to do something if failure");
+                          if (!result.valid_booking)
+                          {
+                          }
+                          else
+                          {
+                            <?php
+                            // The new booking succeeded - reload the page.  [We could maybe get a slightly
+                            // smoother result by adjusting the DOM for the table to reflect the new bookings,
+                            // but that would be a lot of work as we'd have to (a) remove the old bookings, (b)
+                            // adjust the colspans/rowspans, (c) add in blank new booking cells where the old
+                            // booking was removed, (d) add in the new bookings with the correct rowspans/colspans
+                            // (e) remove the new booking cells where the new bookings have been put and (f) insert
+                            // the correect data-ids.]
+                            ?>
+                            window.location.reload();
+                          }
+                        },
+                       'json');
               }
             }  <?php // divResizeStop ?>
             

@@ -55,6 +55,7 @@ $formvars = array('create_by'         => 'string',
                   'end_month'         => 'int',
                   'end_year'          => 'int',
                   'back_button'       => 'string',
+                  'commit'            => 'string',
                   'ajax'              => 'int');
                  
 foreach($formvars as $var => $var_type)
@@ -101,6 +102,51 @@ foreach($fields as $field)
     if (($f_type == 'int') && ($custom_fields[$field['name']] === ''))
     {
       unset($custom_fields[$field['name']]);
+    }
+  }
+}
+
+
+// If this is an Ajax request and we're being asked to commit the booking, then
+// we'll only have been supplied with parameters that need to be changed.  Fill in
+// the rest from the existing boking information.
+// Note: we assume that 
+// (1) this is not a series (we can't cope with them yet
+// (2) we always get passed start_seconds and end_seconds in the Ajax data
+if ($ajax && $commit)
+{
+  $old_booking = mrbsGetBookingInfo($id, $series);
+  foreach ($formvars as $var => $var_type)
+  {
+    if (!isset($$var) || (($var_type == 'array') && empty($$var)))
+    {
+      switch ($var)
+      {
+        case 'rooms':
+          $rooms = array($old_booking['room_id']);
+          break;
+        case 'original_room_id':
+          $$var = $old_booking['room_id'];
+          break;
+        case 'private':
+          $$var = $old_booking['status'] & STATUS_PRIVATE;
+          break;
+        case 'confirmed':
+          $$var = !($old_booking['status'] & STATUS_TENTATIVE);
+          break;
+        default:
+          $$var = $old_booking[$var];
+          break;
+      }
+    }
+  }
+  // Now the custom fields
+  $custom_fields = array();
+  foreach ($fields as $field)
+  {
+    if (!in_array($field['name'], $standard_fields['entry']))
+    {
+      $custom_fields[$field['name']] = $old_booking[$field['name']];
     }
   }
 }
@@ -171,7 +217,7 @@ else
   $returl = $returl_base[0];
 }
 
-// If we haven't been given a sensible date then get out of here and don't trey and make a booking
+// If we haven't been given a sensible date then get out of here and don't try and make a booking
 if (!isset($day) || !isset($month) || !isset($year) || !checkdate($month, $day, $year))
 {
   header("Location: $returl");
@@ -347,6 +393,7 @@ $starttime = mktime(intval($start_seconds/3600), intval(($start_seconds%3600)/60
                     $month, $day, $year);
 $endtime   = mktime(intval($end_seconds/3600), intval(($end_seconds%3600)/60), 0,
                     $end_month, $end_day, $end_year);
+
 // If we're using periods then the endtime we've been returned by the form is actually
 // the beginning of the last period in the booking (it's more intuitive for users this way)
 // so we need to add on 60 seconds (1 period)
@@ -362,7 +409,7 @@ $am7 = mktime($morningstarts, $morningstarts_minutes, 0,
               $month, $day, $year, is_dst($month, $day, $year, $morningstarts));
 $starttime = round_t_down($starttime, $resolution, $am7);
 $endtime = round_t_up($endtime, $resolution, $am7);
-  
+
 // If they asked for 0 minutes, and even after the rounding the slot length is still
 // 0 minutes, push that up to 1 resolution unit.
 if ($endtime == $starttime)
@@ -568,21 +615,26 @@ foreach ( $rooms as $room_id )
 $conflicts = array_values(array_unique($conflicts));
 $rules_broken = array_values(array_unique($rules_broken));
     
-// If this is an Ajax request then we're just trying to find out whether the booking
-// would succeed if made.   We now know that, so output the results and exit.
+// If this is an Ajax request and if it's not a valid booking which we want
+// to commit, then output the results and exit.   Otherwise we go on to commit the
+// booking
 if ($ajax && function_exists('json_encode'))
 {
-  $result = array();
-  $result['rules_broken'] = $rules_broken;
-  $result['conflicts'] = $conflicts;
-  echo json_encode($result);
-  exit;
+  if (!($commit && $valid_booking))
+  {
+    $result = array();
+    $result['valid_booking'] = FALSE;
+    $result['rules_broken'] = $rules_broken;
+    $result['conflicts'] = $conflicts;
+    echo json_encode($result);
+    exit;
+  }
 }
 
-
-// If the rooms were free, go ahead an process the bookings
+// If the rooms were free, go ahead and process the bookings
 if ($valid_booking)
 {
+  $new_details = array(); // We will pass this array in the Ajax result
   foreach ($rooms as $room_id)
   { 
     // Set the various bits in the status field as appropriate
@@ -689,15 +741,15 @@ if ($valid_booking)
       $booking = mrbsCreateRepeatingEntrys($data);
       $new_id = $booking['id'];
       $is_repeat_table = $booking['series'];
-      $data['id'] = $new_id;  // Add in the id now we know it
     }
     else
     {
       // Create the entry:
       $new_id = mrbsCreateSingleEntry($data);
       $is_repeat_table = FALSE;
-      $data['id'] = $new_id;  // Add in the id now we know it
     }
+    $new_details[] = array('id' => $new_id, 'room_id' => $room_id);
+    $data['id'] = $new_id;  // Add in the id now we know it
     
     // Send an email if neccessary, provided that the entry creation was successful
     if ($need_to_send_mail && !empty($new_id))
@@ -752,10 +804,23 @@ if ($valid_booking)
   }
 
   sql_mutex_unlock("$tbl_entry");
-    
-  // Now it's all done go back to the previous view
-  header("Location: $returl");
-  exit;
+  
+  // Now it's all done.  Send the results if this was an Ajax booking
+  // or else go back to the previous view
+  if ($ajax)
+  {
+    $result = array();
+    $result['valid_booking'] = TRUE;
+    $result['new_details'] = $new_details;
+    $result['slots'] = intval(($data['end_time'] - $data['start_time'])/$resolution);
+    echo json_encode($result);
+    exit;
+  }
+  else
+  {
+    header("Location: $returl");
+    exit;
+  }
 }
 
 // The room was not free.

@@ -1800,14 +1800,9 @@ function draw_cell($cell, $query_strings)
       }
       else                 // if it is booked then show the booking
       {
-        if ($times_along_top)
-        {
-          echo "<div class=\"celldiv slots1\">\n";
-        }
-        else
-        {
-          echo "<div class=\"celldiv slots" . $slots . "\">\n";     // we want clipping of overflow
-        }
+        echo "<div data-id=\"$id\" class=\"celldiv slots" .
+             (($times_along_top) ? "1" : $slots) .
+             "\">\n";
         echo "<a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">";
         echo ($is_repeat) ? "<img class=\"repeat_symbol $c\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
         echo "$descr</a>\n";
