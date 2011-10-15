@@ -1605,6 +1605,13 @@ $(window).load(function() {
               ?>
               $('table.dwm_main').wrap('<div class="resizing"><\/div>');
               <?php
+              // Remove the constraint on the max width of the clone.  (We've had
+              // to keep it there up until now because otherwise the div is 
+              // sometimes 1px too wide.  Don't quite understand why - something to do
+              // with rounding)
+              ?>
+              divClone.css('max-width', 'none');
+              <?php
               // Add an outline to the original booking so that we can see where it
               // was.   The width and height are 2 pixels short of the original to allow
               // for a 1 pixel border all round.
@@ -1636,10 +1643,10 @@ $(window).load(function() {
               if (divClone.resizable('option', 'disabled'))
               { 
                 <?php
-                // If the resize was disabled then just restore the original positionnnn
+                // If the resize was disabled then just restore the original position
                 ?>
-                divClone.resizable('enable');
-                divClone.offset(divBooking.offset())
+                divClone.resizable('enable')
+                        .offset(divBooking.offset())
                         .width(divBooking.outerWidth())
                         .height(divBooking.outerHeight());
               }
