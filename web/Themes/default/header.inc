@@ -1252,14 +1252,16 @@ $(window).load(function() {
     {
       <?php
       // Get the sides of the rectangle represented by the jQuery object jqObject
+      // We round down the size of the rectangle to avoid any spurious overlaps
+      // caused by rounding errors
       ?>
       function getSides(jqObject)
       {
         var sides = {};
-        sides.n = jqObject.offset().top;
-        sides.w = jqObject.offset().left;
-        sides.s = sides.n + jqObject.outerHeight();
-        sides.e = sides.w + jqObject.outerWidth();
+        sides.n = Math.ceil(jqObject.offset().top);
+        sides.w = Math.ceil(jqObject.offset().left);
+        sides.s = Math.floor(sides.n + jqObject.outerHeight());
+        sides.e = Math.floor(sides.w + jqObject.outerWidth());
         return sides;
       }
       
@@ -1301,7 +1303,7 @@ $(window).load(function() {
           {
             tableData.x.key = getDataName($(this));
           }
-          tableData.x.data.push({coord: Math.round($(this).offset().left),
+          tableData.x.data.push({coord: $(this).offset().left,
                                  value: $(this).data(tableData.x.key)});
         });
       <?php 
@@ -1315,7 +1317,7 @@ $(window).load(function() {
             value = tableData.x.data[tableData.x.data.length - 1].value +
                     tableData.x.data[1].value - tableData.x.data[0].value;
           }
-          tableData.x.data.push({coord: Math.round($(this).offset().left + $(this).outerWidth()),
+          tableData.x.data.push({coord: $(this).offset().left + $(this).outerWidth(),
                                  value: value});
         });
 
@@ -1327,7 +1329,7 @@ $(window).load(function() {
           {
             tableData.y.key = getDataName($(this));
           }
-          tableData.y.data.push({coord: Math.round($(this).offset().top),
+          tableData.y.data.push({coord: $(this).offset().top,
                                  value: $(this).data(tableData.y.key)});
         });
       <?php // and also get the bottom edge ?>
@@ -1338,7 +1340,7 @@ $(window).load(function() {
             value = tableData.y.data[tableData.y.data.length - 1].value + 
                     tableData.y.data[1].value - tableData.y.data[0].value;
           }
-          tableData.y.data.push({coord: Math.round($(this).offset().top + $(this).outerHeight()),
+          tableData.y.data.push({coord: $(this).offset().top + $(this).outerHeight(),
                                  value: value});
         });
      
