@@ -1238,9 +1238,9 @@ $(window).load(function() {
     <?php
   }  
   
-  // DAY.PHP, WEEK.PHP, MONTH.PHP
+  // DAY.PHP, WEEK.PHP
   // Resizable bookings (needs json_encode())
-  if (in_array($page, array('day', 'week', 'month')) && function_exists('json_encode'))
+  if (in_array($page, array('day', 'week')) && function_exists('json_encode'))
   {
     // We don't allow resizable bookings for IE8 and below.   In theory they should
     // be OK, but there seems to be a problem getting the resizing working properly.
@@ -1270,7 +1270,7 @@ $(window).load(function() {
       ?>
       function getDataName(jqObject)
       {
-        possibleNames = ['room', 'time', 'seconds'];
+        possibleNames = ['room', 'date', 'seconds'];
         for (var i=0; i<possibleNames.length; i++)
         {
           if (jqObject.data(possibleNames[i]) !== undefined)
@@ -1688,9 +1688,28 @@ $(window).load(function() {
                 if ($page == 'day')
                 {
                   ?>
+                  data.page = 'day';
                   data.start_day = <?php echo $day ?>;
                   data.start_month = <?php echo $month ?>;
                   data.start_year = <?php echo $year ?>;
+                  <?php
+                }
+                else  // it's 'week'
+                {
+                  ?>
+                  data.page = 'week';
+                  var startDate = newParams.date[0].split('-');
+                  data.start_year = startDate[0];
+                  data.start_month = startDate[1];
+                  data.start_day = startDate[2];
+                  if (newParams.date.length > 1)
+                  {
+                    data.rep_type = <?php echo REP_DAILY ?>;
+                    var repEndDate = newParams.date[newParams.date.length - 1].split('-');
+                    data.rep_end_year = repEndDate[0];
+                    data.rep_end_month = repEndDate[1];
+                    data.rep_end_day = repEndDate[2];
+                  }
                   <?php
                 }
                 ?>
@@ -1705,21 +1724,21 @@ $(window).load(function() {
                        data,
                        function(result) {
                           console.log ("Still need to do something if failure");
-                          if (!result.valid_booking)
+                          if (result.valid_booking)
                           {
+                            <?php
+                            // The new booking succeeded.   (1) Empty the existing
+                            // table in order to get rid of events and data and
+                            // prevent memory leaks (2) insert the updated table HTML
+                            // and then (3) trigger a window load event so that the
+                            // resizable bookings are re-created.
+                            ?>
+                            table.empty();
+                            table.html(result.table_innerhtml);
+                            $(window).trigger('load');
                           }
                           else
                           {
-                            <?php
-                            // The new booking succeeded - reload the page.  [We could maybe get a slightly
-                            // smoother result by adjusting the DOM for the table to reflect the new bookings,
-                            // but that would be a lot of work as we'd have to (a) remove the old bookings, (b)
-                            // adjust the colspans/rowspans, (c) add in blank new booking cells where the old
-                            // booking was removed, (d) add in the new bookings with the correct rowspans/colspans
-                            // (e) remove the new booking cells where the new bookings have been put and (f) insert
-                            // the correect data-ids.]
-                            ?>
-                            window.location.reload();
                           }
                         },
                        'json');

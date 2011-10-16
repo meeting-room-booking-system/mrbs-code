@@ -24,10 +24,15 @@ require_once "functions_ical.inc";
 // Get non-standard form variables
 $formvars = array('create_by'         => 'string',
                   'name'              => 'string',
-                  'rep_type'          => 'int',
                   'description'       => 'string',
                   'start_seconds'     => 'int',
+                  'start_day'         => 'int',
+                  'start_month'       => 'int',
+                  'start_year'        => 'int',
                   'end_seconds'       => 'int',
+                  'end_day'           => 'int',
+                  'end_month'         => 'int',
+                  'end_year'          => 'int',
                   'all_day'           => 'string',  // bool, actually
                   'type'              => 'string',
                   'rooms'             => 'array',
@@ -36,9 +41,10 @@ $formvars = array('create_by'         => 'string',
                   'ical_sequence'     => 'int',
                   'ical_recur_id'     => 'string',
                   'returl'            => 'string',
+                  'id'                => 'int',
                   'rep_id'            => 'int',
                   'edit_type'         => 'string',
-                  'id'                => 'int',
+                  'rep_type'          => 'int',
                   'rep_end_day'       => 'int',
                   'rep_end_month'     => 'int',
                   'rep_end_year'      => 'int',
@@ -48,13 +54,8 @@ $formvars = array('create_by'         => 'string',
                   'skip'              => 'string',  // bool, actually
                   'private'           => 'string',  // bool, actually
                   'confirmed'         => 'string',
-                  'start_day'         => 'int',
-                  'start_month'       => 'int',
-                  'start_year'        => 'int',
-                  'end_day'           => 'int',
-                  'end_month'         => 'int',
-                  'end_year'          => 'int',
                   'back_button'       => 'string',
+                  'page'              => 'string',
                   'commit'            => 'string',
                   'ajax'              => 'int');
                  
@@ -705,7 +706,7 @@ if ($valid_booking)
       $data[$key] = $value;
     }
     $data['rep_type'] = $rep_type;
-    if ($edit_type == "series")
+    if ($rep_type != REP_NONE)
     {
       $data['end_date'] = $end_date;
       $data['rep_opt'] = $rep_opt;
@@ -736,7 +737,7 @@ if ($valid_booking)
     $data['duration'] = $duration;
     $data['dur_units'] = $dur_units;
 
-    if ($edit_type == "series")
+    if ($rep_type != REP_NONE)
     {
       $booking = mrbsCreateRepeatingEntrys($data);
       $new_id = $booking['id'];
@@ -809,10 +810,19 @@ if ($valid_booking)
   // or else go back to the previous view
   if ($ajax)
   {
+    require_once "functions_table.inc";
     $result = array();
     $result['valid_booking'] = TRUE;
     $result['new_details'] = $new_details;
     $result['slots'] = intval(($data['end_time'] - $data['start_time'])/$resolution);
+    if ($page == 'day')
+    {
+      $result['table_innerhtml'] = day_table_innerhtml($day, $month, $year, $room, $area);
+    }
+    else
+    {
+      $result['table_innerhtml'] = week_table_innerhtml($day, $month, $year, $room, $area);
+    }
     echo json_encode($result);
     exit;
   }
