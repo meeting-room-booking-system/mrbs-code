@@ -591,7 +591,6 @@ foreach ( $rooms as $room_id )
   else
   {
     $tmp = mrbsCheckFree($room_id, $starttime, $endtime-1, $ignore_id, 0);
-
     if (!empty($tmp))
       {
         $valid_booking = FALSE;
@@ -624,7 +623,7 @@ if ($ajax && function_exists('json_encode'))
   if (!($commit && $valid_booking))
   {
     $result = array();
-    $result['valid_booking'] = FALSE;
+    $result['valid_booking'] = $valid_booking;
     $result['rules_broken'] = $rules_broken;
     $result['conflicts'] = $conflicts;
     echo json_encode($result);
@@ -812,7 +811,7 @@ if ($valid_booking)
   {
     require_once "functions_table.inc";
     $result = array();
-    $result['valid_booking'] = TRUE;
+    $result['valid_booking'] = $valid_booking;
     $result['new_details'] = $new_details;
     $result['slots'] = intval(($data['end_time'] - $data['start_time'])/$resolution);
     if ($page == 'day')

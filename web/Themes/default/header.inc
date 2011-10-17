@@ -450,6 +450,24 @@ function print_theme_header($day, $month, $year, $area, $room)
     <script type="text/javascript">
 
 //<![CDATA[
+
+function getErrorList(errors)
+{
+  var result = {html: '', text: ''};
+  var patternSpan = /<span[\s\S]*span>/gi;
+  var patternTags = /<\S[^><]*>/g;
+  result.html += "<ul>";
+  for (var i=0; i<errors.length; i++)
+  {
+    result.html += "<li>" + errors[i] + "<\/li>";
+    result.text += '(' + (i+1).toString() + ') ';
+    <?php // strip out the <span> and its contents and then all other tags ?>
+    result.text += errors[i].replace(patternSpan, '').replace(patternTags, '') + "  \n";
+  }
+  result.html += "<\/ul>";
+  return result;
+}
+
 <?php
 // Set the default values for datepicker, including the default regional setting
 ?>
@@ -652,16 +670,11 @@ if ($page == 'edit_entry')
     
     // Get the value of the field in the form
     ?>
-    function getFormValue(form, field)
+    function getFormValue(formInput)
     {
-      <?php
-      // We need to exclude the disabled elements, because otherwise jQuery
-      // will pick them all up
-      ?>
       var value;
-      var formInput = form.find('[name="' + field + '"]');
       <?php // Scalar parameters (two types - checkboxes and the rest) ?>
-      if (field.indexOf('[]') == -1)
+      if ($(this).attr('name').indexOf('[]') == -1)
       {
         if (formInput.filter(':checkbox').length > 0)
         {
@@ -728,7 +741,7 @@ if ($page == 'edit_entry')
             var fieldName = $(this).attr('name');
             if (params[fieldName] === undefined)
             {
-              params[fieldName] = getFormValue(form, fieldName);
+              params[fieldName] = getFormValue($(this));
             }
           });
         
@@ -751,8 +764,6 @@ if ($page == 'edit_entry')
             var checkMark = "\u2714";
             var cross = "\u2718";
             var titleText, detailsHTML;
-            var patternSpan = /<span[\s\S]*span>/gi;
-            var patternTags = /<\S[^><]*>/g;
             if (result.conflicts.length == 0)
             {
               conflictDiv.text(checkMark).attr('class', 'good').attr;
@@ -764,15 +775,10 @@ if ($page == 'edit_entry')
               conflictDiv.text(cross).attr('class', 'bad');
               detailsHTML = "<p>";
               titleText = '<?php echo mrbs_entity_decode(get_vocab("conflict")) ?>' + ":  \n\n";
-              detailsHTML += titleText + "<\/p><ul>";
-              for (var i=0; i<result.conflicts.length; i++)
-              {
-                detailsHTML += "<li>" + result.conflicts[i] + "<\/li>";
-                titleText += '(' + (i+1).toString() + ') ';
-                <?php // strip out the <span> and its contents and then all other tags ?>
-                titleText += result.conflicts[i].replace(patternSpan, '').replace(patternTags, '') + "  \n";
-              }
-              detailsHTML += "<\/ul>";
+              detailsHTML += titleText + "<\/p>";
+              var conflictsList = getErrorList(result.conflicts);
+              detailsHTML += conflictsList.html;
+              titleText += conflictsList.text;
             }
             conflictDiv.attr('title', titleText);
             scheduleDetails.html(detailsHTML);
@@ -781,20 +787,17 @@ if ($page == 'edit_entry')
             {
               policyDiv.text(checkMark).attr('class', 'good');
               titleText = '<?php echo mrbs_entity_decode(get_vocab("no_rules_broken")) ?>';
-              detailsHTML = titleText
+              detailsHTML = titleText;
             }
             else
             {
               policyDiv.text(cross).attr('class', 'bad');
               detailsHTML = "<p>";
               titleText = '<?php echo mrbs_entity_decode(get_vocab("rules_broken")) ?>' + ":  \n\n";
-              detailsHTML += titleText + "<\/p><ul>";
-              for (var i=0; i<result.rules_broken.length; i++)
-              {
-                detailsHTML += "<li>" + result.rules_broken[i] + "<\/li>";
-                titleText += '(' + (i+1).toString() + ') ' + result.rules_broken[i] + "  \n";
-              }
-              detailsHTML += "<\/ul>";
+              detailsHTML += titleText + "<\/p>";
+              var rulesList = getErrorList(result.rules_broken);
+              detailsHTML += rulesList.html;
+              titleText += rulesList.text;
             }
             policyDiv.attr('title', titleText);
             policyDetails.html(detailsHTML);
@@ -1735,7 +1738,6 @@ $(window).load(function() {
                 $.post('edit_entry_handler.php',
                        data,
                        function(result) {
-                          console.log ("Still need to do something if failure");
                           if (result.valid_booking)
                           {
                             <?php
@@ -1754,6 +1756,24 @@ $(window).load(function() {
                             divClone.offset(divBooking.offset())
                                     .width(divBooking.outerWidth())
                                     .height(divBooking.outerHeight());
+                            var alertMessage = '';
+                            if (result.conflicts.length > 0)
+                            {
+                              alertMessage += '<?php echo mrbs_entity_decode(get_vocab("conflict")) ?>' + ":  \n\n";
+                              var conflictsList = getErrorList(result.conflicts);
+                              alertMessage += conflictsList.text;
+                            }
+                            if (result.rules_broken.length > 0)
+                            {
+                              if (result.conflicts.length > 0)
+                              {
+                                alertMessage += "\n\n";
+                              }
+                              alertMessage += '<?php echo mrbs_entity_decode(get_vocab("rules_broken")) ?>' + ":  \n\n";
+                              var rulesList = getErrorList(result.rules_broken);
+                              alertMessage += rulesList.text;
+                            }
+                            alert(alertMessage);
                           }
                         },
                        'json');
