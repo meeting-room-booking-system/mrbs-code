@@ -71,7 +71,7 @@ function print_theme_header($day, $month, $year, $area, $room)
          $search_str, $locale_warning;
   global $tbl_entry, $tbl_room, $tbl_area;
   global $PHP_SELF, $HTTP_HOST, $QUERY_STRING;
-  global $view_week_number, $weekstarts;
+  global $view_week_number, $weekstarts, $times_along_top;
   global $auth, $max_level;
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   global $lang_map_windows, $langs, $server_os;
@@ -1708,15 +1708,20 @@ $(window).load(function() {
                   data.start_year = startDate[0];
                   data.start_month = startDate[1];
                   data.start_day = startDate[2];
-                  if (newParams.date.length > 1)
-                  {
-                    data.rep_type = <?php echo REP_DAILY ?>;
-                    var repEndDate = newParams.date[newParams.date.length - 1].split('-');
-                    data.rep_end_year = repEndDate[0];
-                    data.rep_end_month = repEndDate[1];
-                    data.rep_end_day = repEndDate[2];
-                  }
                   <?php
+                  if ($is_admin || !$auth['only_admin_can_book_repeat'])
+                  {
+                    ?>
+                    if (newParams.date.length > 1)
+                    {
+                      data.rep_type = <?php echo REP_DAILY ?>;
+                      var repEndDate = newParams.date[newParams.date.length - 1].split('-');
+                      data.rep_end_year = repEndDate[0];
+                      data.rep_end_month = repEndDate[1];
+                      data.rep_end_day = repEndDate[2];
+                    }
+                    <?php
+                  }
                 }
                 ?>
                 data.end_day = data.start_day;
@@ -1751,7 +1756,32 @@ $(window).load(function() {
               }
             }  <?php // divResizeStop ?>
             
-
+            <?php
+            if ($page == 'week')
+            {
+              // If we're in the week view then if non-admins aren't allowed to
+              // make repeat bookings then we want to restrict the handles we
+              // offer them so that they can't get that far.
+              if ($is_admin || !$auth['only_admin_can_book_repeat'])
+              {
+                ?>
+                var handles = 'all';
+                <?php
+              }
+              elseif ($times_along_top)
+              {
+                ?>
+                var handles = 'e, w';
+                <?php
+              }
+              else
+              {
+                ?>
+                var handles = 'n, s';
+                <?php
+              }
+            }
+            ?>
             var divBooking = $(this).children('div');
             var divClone = divBooking.clone();
             divBooking.css('visibility', 'hidden');
@@ -1764,7 +1794,7 @@ $(window).load(function() {
                     .css('min-height', '<?php echo $main_cell_height ?>px')
                     .width(divBooking.outerWidth())
                     .height(divBooking.outerHeight())
-                    .resizable({handles: 'all',
+                    .resizable({handles: handles,
                                 resize: divResize,
                                 start: divResizeStart,
                                 stop: divResizeStop})
