@@ -734,6 +734,9 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       // Put the number of seconds since the start of the day (nominal, ignoring DST)
       // in a data attribure so that JavaScript can pick it up
       $header_inner .= "<th data-seconds=\"$slot_seconds\" style=\"width: $column_width%\">";
+      // We need the span so that we can apply some padding.   We can't apply it
+      // to the <th> because that is used by jQuery.offset() in resizable bookings
+      $header_inner .= "<span>";
       if ( $enable_periods )
       {
         // convert timestamps to HHMM format without leading zeros
@@ -746,6 +749,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       {
         $header_inner .= utf8_strftime(hour_min_format(),$t);
       }
+      $header_inner .= "</span>";
       $header_inner .= "</th>\n";
     }
     // next: line to display times on right side
@@ -1062,6 +1066,9 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
       // Put the seconds since the start of the day (nominal, not adjusted for DST)
       // into a data attribute so that it can be picked up by JavaScript
       $header_inner .= "<th data-seconds=\"$slot_seconds\" style=\"width: $column_width%\">";
+      // We need the span so that we can apply some padding.   We can't apply it
+      // to the <th> because that is used by jQuery.offset() in resizable bookings
+      $header_inner .= "<span>";
       if ( $enable_periods )
       {
         // convert timestamps to HHMM format without leading zeros
@@ -1074,6 +1081,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
       {
         $header_inner .= utf8_strftime(hour_min_format(),$t);
       }
+      $header_inner .= "</span>";
       $header_inner .= "</th>\n";
     }
     // next: line to display times on right side

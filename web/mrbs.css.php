@@ -188,10 +188,17 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
     border-bottom: 0;
     border-right: 0}
 .dwm_main td:first-child {border-left: 0}
-.dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0 2px;
+<?php
+// Note that it is important to have zero padding-left and padding-top on the th cells and the celldiv divs.
+// These elements are used to calculate the offset top and left of the position of bookings in
+// the grid when using resizable bookings.   jQuery.offset() measures to the content.  If you
+// need padding put it on the contained element.
+?>
+.dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0;
     color: <?php echo $header_font_color ?>; 
     background-color: <?php echo $header_back_color ?>;
     border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
+.dwm_main th.first_last, .dwm_main th span {padding: 0 2px}
 .dwm_main th:first-child {border-left: 0}
 .dwm_main a {display: block; min-height: inherit}
 .dwm_main tbody a {padding: 0 2px}

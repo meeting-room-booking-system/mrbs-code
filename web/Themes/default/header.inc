@@ -1294,6 +1294,12 @@ $(window).load(function() {
       // objects has a key property which holds the name of the data attribute and a
       // data object, which is an array of objects holding the coordinate and data
       // value at each cell boundary.
+      //
+      // Note that jQuery.offset() measures to the top left hand corner of the content
+      // and does not take into account padding.   So we need to make sure that the padding-top
+      // and padding-left is the same for all elements that we are going to measure so
+      // that we can compare them properly.   It is simplest to use zero and put any
+      // padding required on the contained element.
       ?>
       tableData.x = {};
       tableData.x.data = [];
