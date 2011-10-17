@@ -310,9 +310,10 @@ tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /
 .dwm_main .ui-resizable-e {right: -1px}
 .dwm_main .ui-resizable-s {bottom: -1px}
 .dwm_main .ui-resizable-w {left: -1px}
-.dwm_main .ui-resizable-sw {bottom: -1px; left: -1px}
-.dwm_main .ui-resizable-ne {top: -1px; right: -1px}
-.dwm_main .ui-resizable-nw {top: -1px; left: -1px}
+.dwm_main .ui-resizable-se {bottom: 0; right: 0}
+.dwm_main .ui-resizable-sw {bottom: -2px; left: -1px}
+.dwm_main .ui-resizable-ne {top: -2px; right: -1px}
+.dwm_main .ui-resizable-nw {top: -2px; left: -1px}
 
 div.outline {
   position: absolute;
