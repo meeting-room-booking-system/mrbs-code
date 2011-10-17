@@ -586,6 +586,7 @@ function datepicker_close(dateText, inst, formId)
   }
 }
 
+
 <?php
 if ($page == 'edit_area_room')
 {
@@ -1750,6 +1751,9 @@ $(window).load(function() {
                           }
                           else
                           {
+                            divClone.offset(divBooking.offset())
+                                    .width(divBooking.outerWidth())
+                                    .height(divBooking.outerHeight());
                           }
                         },
                        'json');
