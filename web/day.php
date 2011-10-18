@@ -81,7 +81,6 @@ if ($n_rooms < 0)
 elseif ($n_rooms == 0)
 {
   echo "<h1>".get_vocab("no_rooms_for_area")."</h1>";
-  sql_free($res);
 }
 else
 {
