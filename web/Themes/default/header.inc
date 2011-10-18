@@ -71,7 +71,7 @@ function print_theme_header($day, $month, $year, $area, $room)
          $search_str, $locale_warning;
   global $tbl_entry, $tbl_room, $tbl_area;
   global $PHP_SELF, $HTTP_HOST, $QUERY_STRING;
-  global $view_week_number, $weekstarts, $times_along_top;
+  global $view_week_number, $weekstarts, $times_along_top, $enable_periods;
   global $auth, $max_level;
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   global $lang_map_windows, $langs, $server_os;
@@ -1693,6 +1693,17 @@ $(window).load(function() {
                 {
                   data.start_seconds = newParams.seconds[0];
                   data.end_seconds = newParams.seconds[newParams.seconds.length - 1];
+                  <?php
+                  if ($enable_periods)
+                  {
+                    // When we're dealing with periods the end time is defined as
+                    // the end of the last period (as opposed to the start of the
+                    // next slot in times mode)
+                    ?>
+                    data.end_seconds -= 60;
+                    <?php
+                  }
+                  ?>
                 }
                 <?php
                 if ($page == 'day')
