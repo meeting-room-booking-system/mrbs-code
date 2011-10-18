@@ -1791,29 +1791,28 @@ $(window).load(function() {
               }
             }  <?php // divResizeStop ?>
             
+            
+            var handles = 'all';
             <?php
             if ($page == 'week')
             {
               // If we're in the week view then if non-admins aren't allowed to
               // make repeat bookings then we want to restrict the handles we
               // offer them so that they can't get that far.
-              if ($is_admin || !$auth['only_admin_can_book_repeat'])
+              if (!$is_admin && $auth['only_admin_can_book_repeat'])
               {
-                ?>
-                var handles = 'all';
-                <?php
-              }
-              elseif ($times_along_top)
-              {
-                ?>
-                var handles = 'e, w';
-                <?php
-              }
-              else
-              {
-                ?>
-                var handles = 'n, s';
-                <?php
+                if ($times_along_top)
+                {
+                  ?>
+                  handles = 'e, w';
+                  <?php
+                }
+                else
+                {
+                  ?>
+                  handles = 'n, s';
+                  <?php
+                }
               }
             }
             ?>
