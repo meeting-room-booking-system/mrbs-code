@@ -1371,9 +1371,9 @@ $(window).load(function() {
         .each(function() {
         
             <?php
-            // Snap the side with X or Y coordinate coord in the direction specified
-            // (can be 'left', 'right', 'top' or 'bottom').  If force is true, then the
-            // side is snapped regardless of where it is.
+            // Snap the side specified (can be 'left', 'right', 'top' or 'bottom') with X or Y
+            // coordinate coord to the nearest grid line, if the side is within the snapping range.
+            // If force is true, then the side is snapped regardless of where it is.
             //
             // We also contain the resize within the set of bookable cells
             //
@@ -1382,11 +1382,12 @@ $(window).load(function() {
             // row heights and column widths - so we can't specify a grid in terms of a simple
             // array as required by the resize widget.
             ?>
-            function snapToGrid(coord, direction, force)
+            function snapToGrid(coord, side, force)
             {
               var snapGap = (force) ? 100000: 20; <?php // px ?>
+              var tolerance = 2; <?php //px ?>
                 
-              data = ((direction=='left') || (direction=='right')) ? tableData.x.data : tableData.y.data;
+              data = ((side=='left') || (side=='right')) ? tableData.x.data : tableData.y.data;
 
               for (var i=0; i<(data.length -1); i++)
               {
@@ -1394,6 +1395,8 @@ $(window).load(function() {
                 var bottomRight = data[i+1].coord;
                 var gapTopLeft = coord - topLeft;
                 var gapBottomRight = bottomRight - coord;
+                var cloneWidth = divClone.outerWidth();
+                var cloneHeight = divClone.outerHeight();
                 if (((gapTopLeft>0) && (gapBottomRight>0)) ||
                     <?php // containment tests ?>
                     ((i==0) && (gapTopLeft<0)) ||
@@ -1402,42 +1405,64 @@ $(window).load(function() {
                   var gap = bottomRight - topLeft;
                   if ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap))
                   {
-                    switch (direction)
+                    switch (side)
                     {
                       case 'left':
                         divClone.offset({top: divClone.offset().top, left: topLeft});
-                        divClone.width(divClone.outerWidth() + gapTopLeft);
+                        divClone.width(cloneWidth + gapTopLeft);
                         break;
                       case 'right':
-                        divClone.width(divClone.outerWidth() - gapTopLeft);
+                        <?php
+                        // Don't let the width become zero.   (We don't need to do
+                        // this for height because that's protected by a min-height
+                        // rule.   Unfortunately we can't rely on uniform column widths
+                        // so we can't use a min-width rule.
+                        ?>
+                        if ((cloneWidth - gapTopLeft) < tolerance)
+                        {
+                          divClone.width(cloneWidth + gapBottomRight);
+                        }
+                        else
+                        {
+                          divClone.width(cloneWidth - gapTopLeft);
+                        }
                         break;
                       case 'top':
                         divClone.offset({top: topLeft, left: divClone.offset().left});
-                        divClone.height(divClone.outerHeight() + gapTopLeft);
+                        divClone.height(cloneHeight + gapTopLeft);
                         break;
                       case 'bottom':
-                        divClone.height(divClone.outerHeight() - gapTopLeft);
+                        divClone.height(cloneHeight - gapTopLeft);
                         break;
                     }
                     return;
                   }
                   else if ((gapBottomRight <= gap/2) && (gapBottomRight < snapGap))
                   {
-                    switch (direction)
+                    switch (side)
                     {
                       case 'left':
-                        divClone.offset({top: divClone.offset().top, left: bottomRight});
-                        divClone.width(divClone.outerWidth() - gapBottomRight);
+                        <?php // Don't let the width become zero.  ?>
+                        if ((cloneWidth - gapBottomRight) < tolerance)
+                        {
+                          divClone.offset({top: divClone.offset().top, left: topLeft});
+                          divClone.width(cloneWidth + gapTopLeft);
+                        }
+                        else
+                        {
+                          divClone.offset({top: divClone.offset().top, left: bottomRight});
+                          divClone.width(cloneWidth - gapBottomRight);
+                        }
                         break;
                       case 'right':
-                        divClone.width(divClone.outerWidth() + gapBottomRight);
+                        divClone.width(cloneWidth + gapBottomRight);
                         break;
                       case 'top':
                         divClone.offset({top: bottomRight, left: divClone.offset().left});
-                        divClone.height(divClone.outerHeight() - gapBottomRight);
+                        divClone.height(cloneHeight - gapBottomRight);
                         break;
                       case 'bottom':
-                        divClone.height(divClone.outerHeight() + gapBottomRight);
+                        divClone.height(cloneHeight + gapBottomRight);
                         break;
                     }
                     return;
