@@ -649,16 +649,11 @@ if ($page == 'edit_entry')
     
     // Get the value of the field in the form
     ?>
-    function getFormValue(form, field)
+    function getFormValue(formInput)
     {
-      <?php
-      // We need to exclude the disabled elements, because otherwise jQuery
-      // will pick them all up
-      ?>
       var value;
-      var formInput = form.find('[name="' + field + '"]');
       <?php // Scalar parameters (two types - checkboxes and the rest) ?>
-      if (field.indexOf('[]') == -1)
+      if ($(this).attr('name').indexOf('[]') == -1)
       {
         if (formInput.filter(':checkbox').length > 0)
         {
@@ -725,7 +720,7 @@ if ($page == 'edit_entry')
             var fieldName = $(this).attr('name');
             if (params[fieldName] === undefined)
             {
-              params[fieldName] = getFormValue(form, fieldName);
+              params[fieldName] = getFormValue($(this));
             }
           });
         
