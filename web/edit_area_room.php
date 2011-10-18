@@ -936,7 +936,7 @@ if (isset($change_area) &&!empty($area))
            (($default_duration_all_day) ? " checked=\"checked\"" : "") .
            ">\n";
       ?>
-      <label class="secondary" "for="area_def_duration_all_day"><?php echo get_vocab("all_day") ?></label>
+      <label class="secondary" for="area_def_duration_all_day"><?php echo get_vocab("all_day") ?></label>
       </div>
       <?php
       echo "<div id=\"last_slot\">\n";
