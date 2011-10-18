@@ -55,6 +55,7 @@ $formvars = array('create_by'         => 'string',
                   'private'           => 'string',  // bool, actually
                   'confirmed'         => 'string',
                   'back_button'       => 'string',
+                  'timetohighlight'   => 'int',
                   'page'              => 'string',
                   'commit'            => 'string',
                   'ajax'              => 'int');
@@ -816,11 +817,11 @@ if ($valid_booking)
     $result['slots'] = intval(($data['end_time'] - $data['start_time'])/$resolution);
     if ($page == 'day')
     {
-      $result['table_innerhtml'] = day_table_innerhtml($day, $month, $year, $room, $area);
+      $result['table_innerhtml'] = day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
     }
     else
     {
-      $result['table_innerhtml'] = week_table_innerhtml($day, $month, $year, $room, $area);
+      $result['table_innerhtml'] = week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
     }
     echo json_encode($result);
     exit;
