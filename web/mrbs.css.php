@@ -417,6 +417,12 @@ div:hover.multiple_control {cursor: pointer}
   }
 .js .multiple_booking .maxi a {padding-left: <?php echo $main_cell_height + $main_table_cell_border_width + 2 ?>px}
 
+div.div_select {
+  position: absolute;
+  border: 0;
+  opacity: 0.2;
+  background-color: <?php echo $main_table_labels_back_color ?>;
+}    
 
 /* booking privacy status */
 .private {opacity: 0.6; font-style: italic}

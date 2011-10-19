@@ -129,6 +129,34 @@ $id = get_form_var('id', 'int');
 $copy = get_form_var('copy', 'int');
 $edit_type = get_form_var('edit_type', 'string', '');
 $returl = get_form_var('returl', 'string');
+// The following variables are used when coming via JavaScript
+$start_seconds = get_form_var('start_seconds', 'int');
+$end_seconds = get_form_var('end_seconds', 'int');
+$selected_rooms = get_form_var('rooms', 'array');
+$start_date = get_form_var('start_date', 'string');
+$end_date = get_form_var('end_date', 'string');
+
+$minutes = intval($start_seconds/60);
+if ($enable_periods)
+{
+  $period = $minutes - (12*60);
+}
+else
+{
+  $hour = intval($minutes/60);
+  $minute = $minutes%60;
+}
+
+if (isset($start_date))
+{
+  list($year, $month, $day) = explode('-', $start_date);
+  if (isset($end_date) && ($start_date != $end_date))
+  {
+    $rep_type = REP_DAILY;
+    list($rep_end_year, $rep_end_month, $rep_end_day) = explode('-', $end_date);
+  }
+}
+
 
 
 // We might be going through edit_entry more than once, for example if we have to log on on the way.  We
@@ -374,10 +402,13 @@ else
   $type          = $default_type;
   $room_id       = $room;
   $rep_id        = 0;
-  $rep_type      = REP_NONE;
-  $rep_end_day   = $day;
-  $rep_end_month = $month;
-  $rep_end_year  = $year;
+  if (!isset($rep_type))  // We might have set it through a drag selection
+  {
+    $rep_type      = REP_NONE;
+    $rep_end_day   = $day;
+    $rep_end_month = $month;
+    $rep_end_year  = $year;
+  }
   $rep_day       = array();
   $private       = $private_default;
   $confirmed     = $confirmed_default;
@@ -417,12 +448,23 @@ else
 
   $start_time = mktime($hour, $minute, 0, $month, $day, $year);
 
-  if (!isset($default_duration))
+  if (isset($end_seconds))
   {
-    $default_duration = (60 * 60);
+    $end_minutes = intval($end_seconds/60);
+    $end_hour = intval($end_minutes/60);
+    $end_minute = $end_minutes%60;
+    $end_time = mktime($end_hour, $end_minute, 0, $month, $day, $year);
+    $duration = $end_time - $start_time - cross_dst($start_time, $end_time);
   }
-  $duration    = ($enable_periods ? 60 : $default_duration);
-  $end_time = $start_time + $duration;
+  else
+  {
+    if (!isset($default_duration))
+    {
+      $default_duration = (60 * 60);
+    }
+    $duration    = ($enable_periods ? 60 : $default_duration);
+    $end_time = $start_time + $duration;
+  }
 }
 
 $start_hour  = strftime('%H', $start_time);
@@ -984,7 +1026,16 @@ else
       {
         if ($r['area_id'] == $area_id)
         {
-          $selected = ($r['id'] == $room_id) ? "selected=\"selected\"" : "";
+          if (isset($selected_rooms))
+          {
+            // We've come from a drag selection
+            $is_selected = in_array($r['id'], $selected_rooms);
+          }
+          else
+          {
+            $is_selected = ($r['id'] == $room_id);
+          }
+          $selected = ($is_selected) ? "selected=\"selected\"" : "";
           echo "<option $selected value=\"" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</option>\n";
           // store room names for emails
           $room_names[$i] = $r['room_name'];

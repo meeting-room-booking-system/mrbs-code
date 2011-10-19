@@ -1402,6 +1402,155 @@ $(window).load(function() {
         }
         
         
+        <?php
+        // Given 'div', snap the side specified (can be 'left', 'right', 'top' or 'bottom') with X or Y
+        // coordinate coord to the nearest grid line, if the side is within the snapping range.
+        // If force is true, then the side is snapped regardless of where it is.
+        //
+        // We also contain the resize within the set of bookable cells
+        //
+        // We have to provide our own snapToGrid function instead of using the grid
+        // option in the jQuery UI resize widget because our table may not have uniform
+        // row heights and column widths - so we can't specify a grid in terms of a simple
+        // array as required by the resize widget.
+        ?>
+        function snapToGrid(div, coord, side, force)
+        {
+          var snapGap = (force) ? 100000: 20; <?php // px ?>
+          var tolerance = 2; <?php //px ?>
+                
+          data = ((side=='left') || (side=='right')) ? tableData.x.data : tableData.y.data;
+
+          for (var i=0; i<(data.length -1); i++)
+          {
+            var topLeft = data[i].coord + <?php echo $main_table_cell_border_width ?>;
+            var bottomRight = data[i+1].coord;
+            var gapTopLeft = coord - topLeft;
+            var gapBottomRight = bottomRight - coord;
+            var divWidth = div.outerWidth();
+            var divHeight = div.outerHeight();
+            if (((gapTopLeft>0) && (gapBottomRight>0)) ||
+                <?php // containment tests ?>
+                ((i==0) && (gapTopLeft<0)) ||
+                ((i==(data.length-2)) && (gapBottomRight<0)) )
+            {
+              var gap = bottomRight - topLeft;
+              if ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap))
+              {
+                switch (side)
+                {
+                  case 'left':
+                    div.offset({top: div.offset().top, left: topLeft});
+                    div.width(divWidth + gapTopLeft);
+                    break;
+                  case 'right':
+                    <?php
+                    // Don't let the width become zero.   (We don't need to do
+                    // this for height because that's protected by a min-height
+                    // rule.   Unfortunately we can't rely on uniform column widths
+                    // so we can't use a min-width rule.
+                    ?>
+                    if ((divWidth - gapTopLeft) < tolerance)
+                    {
+                      div.width(divWidth + gapBottomRight);
+                    }
+                    else
+                    {
+                      div.width(divWidth - gapTopLeft);
+                    }
+                    break;
+                  case 'top':
+                    div.offset({top: topLeft, left: div.offset().left});
+                    div.height(divHeight + gapTopLeft);
+                    break;
+                  case 'bottom':
+                    div.height(divHeight - gapTopLeft);
+                    break;
+                }
+                return;
+              }
+              else if ((gapBottomRight <= gap/2) && (gapBottomRight < snapGap))
+              {
+                switch (side)
+                {
+                  case 'left':
+                    <?php // Don't let the width become zero.  ?>
+                    if ((divWidth - gapBottomRight) < tolerance)
+                    {
+                      div.offset({top: div.offset().top, left: topLeft});
+                      div.width(divWidth + gapTopLeft);
+                    }
+                    else
+                    {
+                      div.offset({top: div.offset().top, left: bottomRight});
+                      div.width(divWidth - gapBottomRight);
+                    }
+                    break;
+                  case 'right':
+                    div.width(divWidth + gapBottomRight);
+                    break;
+                  case 'top':
+                    div.offset({top: bottomRight, left: div.offset().left});
+                    div.height(divHeight - gapBottomRight);
+                    break;
+                  case 'bottom':
+                    div.height(divHeight + gapBottomRight);
+                    break;
+                }
+                return;
+              }
+            }
+          }  <?php // for ?>
+        }  <?php // snapToGrid() ?>
+              
+
+        <?php
+        // Return the parameters for the booking represented by div
+        // The result is an object with property of the data name (eg
+        // 'seconds', 'time', 'room') and each property is an array of
+        // the values for that booking (for example an array of room ids)
+        ?>
+        function getBookingParams(div)
+        {
+          var params = {};
+          var data;
+          var tolerance = 2; <?php //px ?>
+          var cell = {x: {}, y: {}}
+          cell.x.start = div.offset().left;
+          cell.y.start = div.offset().top;
+          cell.x.end = cell.x.start + div.outerWidth();
+          cell.y.end = cell.y.start + div.outerHeight();
+          for (var axis in cell)
+          {
+            data = tableData[axis].data;
+            if (params[tableData[axis].key] === undefined)
+            {
+              params[tableData[axis].key] = [];
+            }
+            for (var i=0; i<data.length; i++)
+            {
+              if ((data[i].coord + tolerance) > cell[axis].end)
+              {
+                <?php
+                // 'seconds' behaves slightly differently to the other parameters:
+                // we need to know the end time for the new slot
+                ?>
+                if (tableData[axis].key == 'seconds')
+                {
+                  params[tableData[axis].key].push(data[i].value);
+                }
+                break;
+              }
+              if ((data[i].coord + tolerance) > cell[axis].start)
+              {
+                params[tableData[axis].key].push(data[i].value);
+              }
+            }
+          }
+          return params;
+        }
+              
+              
         var tableData = {};
         getTableData(table, tableData);
       
@@ -1415,114 +1564,103 @@ $(window).load(function() {
         ?>
         var bookedMap = [];
 
+        var downHandler = function(e) {
+            <?php // Apply a wrapper to turn off highlighting ?>
+            table.wrap('<div class="resizing"><\/div>');
+            downHandler.origin = $(e.target).offset();
+            downHandler.box = $('<div class="div_select">');
+            downHandler.box.offset(downHandler.origin);
+            $(document.body).append(downHandler.box);
+          };
+          
+        var moveHandler = function(e) {
+            var box = downHandler.box;
+            if (e.pageX < downHandler.origin.left)
+            {
+              if (e.pageY < downHandler.origin.top)
+              {
+                box.offset({top: e.pageY, left: e.pageX})
+              }
+              else
+              {
+                box.offset({top: downHandler.origin.top, left: e.pageX})
+              }
+            }
+            else if (e.pageY < downHandler.origin.top)
+            {
+              box.offset({top: e.pageY, left: downHandler.origin.left})
+            }
+            else
+            {
+              box.offset(downHandler.origin);
+            }
+            box.width(Math.abs(e.pageX - downHandler.origin.left))
+            box.height(Math.abs(e.pageY - downHandler.origin.top));
+            boxSides = getSides(box);
+            snapToGrid(box, boxSides.n, 'top');
+            snapToGrid(box, boxSides.s, 'bottom');
+            snapToGrid(box, boxSides.e, 'right');
+            snapToGrid(box, boxSides.w, 'left');
+          };
+ 
+               
+        var upHandler = function(e) {
+            var box = downHandler.box;
+            e.preventDefault();
+            $(document).unbind('mousemove',moveHandler);
+            $(document).unbind('mouseup', upHandler);
+            <?php // Remove the resizing wrapper so that highlighting comes back on ?>
+            $('table.dwm_main').unwrap();
+            params = getBookingParams(box);
+            var queryString = 'area=<?php echo $area ?>';
+            queryString += '&start_seconds=' + params.seconds[0];
+            queryString += '&end_seconds=' + params.seconds[params.seconds.length - 1];
+            <?php
+            if ($page == 'day')
+            {
+              ?>
+              for (var i=0; i<params.room.length; i++)
+              {
+                queryString += '&rooms[]=' + params.room[i];
+              }
+              queryString += '&day=<?php echo $day ?>';
+              queryString += '&month=<?php echo $month ?>';
+              queryString += '&year=<?php echo $year ?>';
+              <?php
+            }
+            else // it's a week
+            {
+              ?>
+              queryString += '&rooms[]=<?php echo $room ?>';
+              queryString += '&start_date=' + params.date[0];
+              queryString += '&end_date=' + params.date[params.date.length - 1];
+              <?php
+            }
+            ?>
+            window.location = 'edit_entry.php?' + queryString;
+          };
+
+                
+        table.find('td.new').each(function() {
+            $(this).find('a').click(function(event) {
+                event.preventDefault();
+              });
+            $(this).mousedown(function(event) {
+                event.preventDefault();
+                downHandler(event);
+                $(document).bind('mousemove', moveHandler);
+                $(document).bind('mouseup', upHandler);
+              })
+          });
+            
+          
+          
         <?php
         // Turn all the writable cells into resizable bookings
         ?>
         table.find('td.writable')
           .each(function() {
-        
-              <?php
-              // Snap the side specified (can be 'left', 'right', 'top' or 'bottom') with X or Y
-              // coordinate coord to the nearest grid line, if the side is within the snapping range.
-              // If force is true, then the side is snapped regardless of where it is.
-              //
-              // We also contain the resize within the set of bookable cells
-              //
-              // We have to provide our own snapToGrid function instead of using the grid
-              // option in the jQuery UI resize widget because our table may not have uniform
-              // row heights and column widths - so we can't specify a grid in terms of a simple
-              // array as required by the resize widget.
-              ?>
-              function snapToGrid(coord, side, force)
-              {
-                var snapGap = (force) ? 100000: 20; <?php // px ?>
-                var tolerance = 2; <?php //px ?>
-                
-                data = ((side=='left') || (side=='right')) ? tableData.x.data : tableData.y.data;
-
-                for (var i=0; i<(data.length -1); i++)
-                {
-                  var topLeft = data[i].coord + <?php echo $main_table_cell_border_width ?>;
-                  var bottomRight = data[i+1].coord;
-                  var gapTopLeft = coord - topLeft;
-                  var gapBottomRight = bottomRight - coord;
-                  var cloneWidth = divClone.outerWidth();
-                  var cloneHeight = divClone.outerHeight();
-                  if (((gapTopLeft>0) && (gapBottomRight>0)) ||
-                      <?php // containment tests ?>
-                      ((i==0) && (gapTopLeft<0)) ||
-                      ((i==(data.length-2)) && (gapBottomRight<0)) )
-                  {
-                    var gap = bottomRight - topLeft;
-                    if ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap))
-                    {
-                      switch (side)
-                      {
-                        case 'left':
-                          divClone.offset({top: divClone.offset().top, left: topLeft});
-                          divClone.width(cloneWidth + gapTopLeft);
-                          break;
-                        case 'right':
-                          <?php
-                          // Don't let the width become zero.   (We don't need to do
-                          // this for height because that's protected by a min-height
-                          // rule.   Unfortunately we can't rely on uniform column widths
-                          // so we can't use a min-width rule.
-                          ?>
-                          if ((cloneWidth - gapTopLeft) < tolerance)
-                          {
-                            divClone.width(cloneWidth + gapBottomRight);
-                          }
-                          else
-                          {
-                            divClone.width(cloneWidth - gapTopLeft);
-                          }
-                          break;
-                        case 'top':
-                          divClone.offset({top: topLeft, left: divClone.offset().left});
-                          divClone.height(cloneHeight + gapTopLeft);
-                          break;
-                        case 'bottom':
-                          divClone.height(cloneHeight - gapTopLeft);
-                          break;
-                      }
-                      return;
-                    }
-                    else if ((gapBottomRight <= gap/2) && (gapBottomRight < snapGap))
-                    {
-                      switch (side)
-                      {
-                        case 'left':
-                          <?php // Don't let the width become zero.  ?>
-                          if ((cloneWidth - gapBottomRight) < tolerance)
-                          {
-                            divClone.offset({top: divClone.offset().top, left: topLeft});
-                            divClone.width(cloneWidth + gapTopLeft);
-                          }
-                          else
-                          {
-                            divClone.offset({top: divClone.offset().top, left: bottomRight});
-                            divClone.width(cloneWidth - gapBottomRight);
-                          }
-                          break;
-                        case 'right':
-                          divClone.width(cloneWidth + gapBottomRight);
-                          break;
-                        case 'top':
-                          divClone.offset({top: bottomRight, left: divClone.offset().left});
-                          divClone.height(cloneHeight - gapBottomRight);
-                          break;
-                        case 'bottom':
-                          divClone.height(cloneHeight + gapBottomRight);
-                          break;
-                      }
-                      return;
-                    }
-                  }
-                }  <?php // for ?>
-              }  <?php // snapToGrid() ?>
-   
-            
+          
               <?php // Checks to see whether two rectangles occupy the same space ?>
               function rectanglesIdentical(r1, r2)
               {
@@ -1572,54 +1710,7 @@ $(window).load(function() {
                 return false;
               }
             
-            
-              <?php
-              // Return the parameters for the booking represented by div
-              // The result is an object with property of the data name (eg
-              // 'seconds', 'time', 'room') and each property is an array of
-              // the values for that booking (for example an array of room ids)
-              ?>
-              function getBookingParams(div)
-              {
-                var params = {};
-                var data;
-                var tolerance = 2; <?php //px ?>
-                var cell = {x: {}, y: {}}
-                cell.x.start = div.offset().left;
-                cell.y.start = div.offset().top;
-                cell.x.end = cell.x.start + div.outerWidth();
-                cell.y.end = cell.y.start + div.outerHeight();
-                for (var axis in cell)
-                {
-                  data = tableData[axis].data;
-                  for (var i=0; i<data.length; i++)
-                  {
-                    if ((data[i].coord + tolerance) > cell[axis].end)
-                    {
-                      <?php
-                      // 'seconds' behaves slightly differently to the other parameters:
-                      // we need to know the end time for the new slot
-                      ?>
-                      if (tableData[axis].key == 'seconds')
-                      {
-                        params[tableData[axis].key].push(data[i].value);
-                      }
-                      break;
-                    }
-                    if ((data[i].coord + tolerance) > cell[axis].start)
-                    {
-                      if (params[tableData[axis].key] === undefined)
-                      {
-                        params[tableData[axis].key] = [];
-                      }
-                      params[tableData[axis].key].push(data[i].value);
-                    }
-                  }
-                }
-                return params;
-              }
-
-            
+               
               <?php
               // resize event callback function
               ?>
@@ -1656,22 +1747,22 @@ $(window).load(function() {
                 <?php // left edge ?>
                 if (divClone.position().left != divResize.lastPosition.left)
                 {
-                  snapToGrid(divResize.origin.left + divClone.position().left, 'left');
+                  snapToGrid(divClone, divResize.origin.left + divClone.position().left, 'left');
                 }
                 <?php // right edge ?>
                 if ((divClone.position().left + divClone.outerWidth()) != (divResize.lastPosition.left + divResize.lastSize.width))
                 {
-                  snapToGrid(divResize.origin.left + divClone.position().left + divClone.outerWidth(), 'right');
+                  snapToGrid(divClone, divResize.origin.left + divClone.position().left + divClone.outerWidth(), 'right');
                 }
                 <?php // top edge ?>
                 if (divClone.position().top != divResize.lastPosition.top)
                 {
-                  snapToGrid(divResize.origin.top + divClone.position().top, 'top');
+                  snapToGrid(divClone, divResize.origin.top + divClone.position().top, 'top');
                 }
                 <?php // bottom edge ?>
                 if ((divClone.position().top + divClone.outerHeight()) != (divResize.lastPosition.top + divResize.lastSize.height))
                 {
-                  snapToGrid(divResize.origin.top + divClone.position().top + divClone.outerHeight(), 'bottom');
+                  snapToGrid(divClone, divResize.origin.top + divClone.position().top + divClone.outerHeight(), 'bottom');
                 }
 
                 divResize.lastPosition = $.extend({}, divClone.position());
@@ -1689,7 +1780,7 @@ $(window).load(function() {
                 // Add a wrapper so that we can disable the highlighting when we are
                 // resizing (the flickering is a bit annoying)
                 ?>
-                $('table.dwm_main').wrap('<div class="resizing"><\/div>');
+                table.wrap('<div class="resizing"><\/div>');
                 <?php
                 // Remove the constraint on the max width of the clone.  (We've had
                 // to keep it there up until now because otherwise the div is 
@@ -1741,10 +1832,10 @@ $(window).load(function() {
                   <?php
                   // Snap the edges to the grid, regardless of where they are.
                   ?>
-                  snapToGrid(divResize.origin.left + divClone.position().left, 'left', true);
-                  snapToGrid(divResize.origin.left + divClone.position().left + divClone.outerWidth(), 'right', true);
-                  snapToGrid(divResize.origin.top + divClone.position().top, 'top', true);
-                  snapToGrid(divResize.origin.top + divClone.position().top + divClone.outerHeight(), 'bottom', true);
+                  snapToGrid(divClone, divResize.origin.left + divClone.position().left, 'left', true);
+                  snapToGrid(divClone, divResize.origin.left + divClone.position().left + divClone.outerWidth(), 'right', true);
+                  snapToGrid(divClone, divResize.origin.top + divClone.position().top, 'top', true);
+                  snapToGrid(divClone, divResize.origin.top + divClone.position().top + divClone.outerHeight(), 'bottom', true);
                 }
               
                 <?php // Remove the outline ?>
