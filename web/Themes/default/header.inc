@@ -1640,6 +1640,7 @@ $(window).load(function() {
               <?php
             }
             ?>
+            box.remove();
             window.location = 'edit_entry.php?' + queryString;
           };
 
