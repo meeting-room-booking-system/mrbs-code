@@ -1271,7 +1271,16 @@ $(window).load(function() {
                                           
      
     <?php
-    // Resizable bookings (needs json_encode())
+    // Resizable bookings (needs json_encode()).   These work by creating a div which 
+    // is a clone of the real booking div and making it resizable.   We can't make the
+    // real div resizable because it is bound by the table cell walls.   So we give
+    // the clone an absolute position and a positive z-index.    We work out what
+    // new booking the user is requesting by comparing the coordinates of the clone
+    // with the table grid.   We also put the booking parameters (eg room id) as HTML5
+    // data attributes in the cells of the header row and the column labels, so that we
+    // can then get a set of parameters to send to edit_entry_handler as an Ajax request.
+    // The result is a JSON object containg a success/failure boolean and the new table
+    // HTML if successful or the reasons for failure if not.
     if (function_exists('json_encode'))
     {
       // 
@@ -1313,73 +1322,91 @@ $(window).load(function() {
           }
           return false;
         }
+        
+        
+        function redrawClones()
+        {
+          table.find('div.clone').each(function() {
+              var clone = $(this);
+              var original = clone.prev();
+              clone.width(original.outerWidth())
+                   .height(original.outerHeight())
+            });
+        }
+        
+        function getTableData(table, tableData)
+        {
+          <?php 
+          // Build an object holding all the data we need about the table, which is
+          // the coordinates of the cell boundaries and the names and values of the
+          // data attributes.    The object has two properties, x and y, which in turn
+          // are objects containing the data for the x and y axes.  Each of these
+          // objects has a key property which holds the name of the data attribute and a
+          // data object, which is an array of objects holding the coordinate and data
+          // value at each cell boundary.
+          //
+          // Note that jQuery.offset() measures to the top left hand corner of the content
+          // and does not take into account padding.   So we need to make sure that the padding-top
+          // and padding-left is the same for all elements that we are going to measure so
+          // that we can compare them properly.   It is simplest to use zero and put any
+          // padding required on the contained element.
+          ?>
+          tableData.x = {};
+          tableData.x.data = [];
+          var columns = table.find('thead tr:first-child th').not('.first_last');
+          columns.each(function() {
+              if (tableData.x.key === undefined)
+              {
+                tableData.x.key = getDataName($(this));
+              }
+              tableData.x.data.push({coord: $(this).offset().left,
+                                     value: $(this).data(tableData.x.key)});
+            });
+          <?php 
+          // and also get the right hand edge.   If we're dealing with seconds we need to
+          // know what the end time of the slot would be
+          ?>
+          columns.filter(':last').each(function() {
+              var value = null;
+              if (tableData.x.key == 'seconds')
+              {
+                value = tableData.x.data[tableData.x.data.length - 1].value +
+                        tableData.x.data[1].value - tableData.x.data[0].value;
+              }
+              tableData.x.data.push({coord: $(this).offset().left + $(this).outerWidth(),
+                                     value: value});
+            });
 
-      
+          tableData.y = {};
+          tableData.y.data = [];
+          var rows = table.find('tbody td:first-child').not('.multiple_booking td');
+          rows.each(function() {
+              if (tableData.y.key === undefined)
+              {
+                tableData.y.key = getDataName($(this));
+              }
+              tableData.y.data.push({coord: $(this).offset().top,
+                                     value: $(this).data(tableData.y.key)});
+            });
+          <?php // and also get the bottom edge ?>
+          rows.filter(':last').each(function() {
+              var value = null;
+              if (tableData.y.key == 'seconds')
+              {
+                value = tableData.y.data[tableData.y.data.length - 1].value + 
+                        tableData.y.data[1].value - tableData.y.data[0].value;
+              }
+              tableData.y.data.push({coord: $(this).offset().top + $(this).outerHeight(),
+                                     value: value});
+            });
+        }
+        
+        
         var tableData = {};
+        
+        getTableData(table, tableData);
       
-        <?php 
-        // Build an object holding all the data we need about the table, which is
-        // the coordinates of the cell boundaries and the names and values of the
-        // data attributes.    The object has two properties, x and y, which in turn
-        // are objects containing the data for the x and y axes.  Each of these
-        // objects has a key property which holds the name of the data attribute and a
-        // data object, which is an array of objects holding the coordinate and data
-        // value at each cell boundary.
-        //
-        // Note that jQuery.offset() measures to the top left hand corner of the content
-        // and does not take into account padding.   So we need to make sure that the padding-top
-        // and padding-left is the same for all elements that we are going to measure so
-        // that we can compare them properly.   It is simplest to use zero and put any
-        // padding required on the contained element.
-        ?>
-        tableData.x = {};
-        tableData.x.data = [];
-        var columns = table.find('thead tr:first-child th').not('.first_last');
-        columns.each(function() {
-            if (tableData.x.key === undefined)
-            {
-              tableData.x.key = getDataName($(this));
-            }
-            tableData.x.data.push({coord: $(this).offset().left,
-                                   value: $(this).data(tableData.x.key)});
-          });
-        <?php 
-        // and also get the right hand edge.   If we're dealing with seconds we need to
-        // know what the end time of the slot would be
-        ?>
-        columns.filter(':last').each(function() {
-            var value = null;
-            if (tableData.x.key == 'seconds')
-            {
-              value = tableData.x.data[tableData.x.data.length - 1].value +
-                      tableData.x.data[1].value - tableData.x.data[0].value;
-            }
-            tableData.x.data.push({coord: $(this).offset().left + $(this).outerWidth(),
-                                   value: value});
-          });
 
-        tableData.y = {};
-        tableData.y.data = [];
-        var rows = table.find('tbody td:first-child').not('.multiple_booking td');
-        rows.each(function() {
-            if (tableData.y.key === undefined)
-            {
-              tableData.y.key = getDataName($(this));
-            }
-            tableData.y.data.push({coord: $(this).offset().top,
-                                   value: $(this).data(tableData.y.key)});
-          });
-        <?php // and also get the bottom edge ?>
-        rows.filter(':last').each(function() {
-            var value = null;
-            if (tableData.y.key == 'seconds')
-            {
-              value = tableData.y.data[tableData.y.data.length - 1].value + 
-                      tableData.y.data[1].value - tableData.y.data[0].value;
-            }
-            tableData.y.data.push({coord: $(this).offset().top + $(this).outerHeight(),
-                                   value: value});
-          });
      
         <?php
         // bookedMap is an array of booked slots.   Each member of the array is an
@@ -1608,7 +1635,7 @@ $(window).load(function() {
                   divResize.lastSize = {width: divClone.outerWidth(),
                                         height: divClone.outerHeight()};
                 }
-              
+
                 var rectangle = {};
                 rectangle.n = Math.round(divResize.origin.top + divClone.position().top);
                 rectangle.w = Math.round(divResize.origin.left + divClone.position().left);
@@ -1886,6 +1913,7 @@ $(window).load(function() {
                       .css('background-color', $(this).css('background-color'))
                       .css('max-height', 'none')
                       .css('min-height', '<?php echo $main_cell_height ?>px')
+                      .addClass('clone')
                       .width(divBooking.outerWidth())
                       .height(divBooking.outerHeight())
                       .resizable({handles: handles,
@@ -1897,6 +1925,10 @@ $(window).load(function() {
                      .wrapInner('<div style="position: relative"><\/div>');
             });
       }
+      
+      $(window).resize(function() {
+          //redrawClones();
+        });
       <?php
     } // if function_exists('json_encode')
   }
