@@ -292,23 +292,14 @@ function cell_html($cell, $query_strings)
       $n_bookings++;
     }
     
-    // Give the cell a unique id so that the JavaScript can use it
-    $td_id = uniqid('td', true);
-    
     // Make the class maximized by default so that if you don't have JavaScript then
     // you can still see all the bookings.    If you have JavaScript it will overwrite
     // the class and make it minimized.
-    $html .= "<td class=\"multiple_booking maximized\" id=\"$td_id\">\n";
-
-    $html .= "<script type=\"text/javascript\">\n";
-    $html .= "//<![CDATA[\n";
-    $html .= "document.getElementById('$td_id').className = \"multiple_booking minimized\"\n";
-    $html .= "//]]>\n";
-    $html .= "</script>\n";
+    $html .= "<td class=\"multiple_booking maximized\">\n";
     
     // First draw the mini table
     $html .= "<div class=\"celldiv slots1 mini\">\n";
-    $html .= "<div class=\"multiple_control\" onClick=\"document.getElementById('$td_id').className = 'multiple_booking maximized'\">+</div>\n";
+    $html .= "<div class=\"multiple_control\">+</div>\n";
     $html .= "<table>\n";
     $html .= "<tbody>\n";
     
@@ -359,7 +350,6 @@ function cell_html($cell, $query_strings)
     $total_height = $n_bookings * $main_cell_height;
     $total_height += ($n_bookings - 1) * $main_table_cell_border_width;  // (first row has no top border)
     $html .= "<div class=\"multiple_control\" " .
-             "onClick=\"document.getElementById('$td_id').className = 'multiple_booking minimized'\" " .
              "style =\"height: " . $total_height . "px; " .
                       "min-height: " . $total_height . "px; " .
                       "max-height: " . $total_height . "px; " .
