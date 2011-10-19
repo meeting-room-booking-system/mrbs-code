@@ -1533,9 +1533,12 @@ $(window).load(function() {
               {
                 <?php
                 // 'seconds' behaves slightly differently to the other parameters:
-                // we need to know the end time for the new slot
+                // we need to know the end time for the new slot.    Also it's possible
+                // for us to have a zero div, eg when selecting a new booking, and if
+                // so we need to make sure there's something returned
                 ?>
-                if (tableData[axis].key == 'seconds')
+                if ((tableData[axis].key == 'seconds') ||
+                    (params[tableData[axis].key].length == 0))
                 {
                   params[tableData[axis].key].push(data[i].value);
                 }
