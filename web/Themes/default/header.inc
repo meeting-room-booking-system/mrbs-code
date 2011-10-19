@@ -1711,7 +1711,7 @@ $(window).load(function() {
                 // Build the map of booked cells, excluding this cell (because we're
                 // allowed to be in our own cell
                 ?>
-                table.find('td').not('td.new, td.row_labels').not(divBooking.parents('td')).each(function() {
+                table.find('td').not('td.new, td.row_labels').not(divBooking.closest('td')).each(function() {
                     bookedMap.push(getSides($(this)));
                   });
 
@@ -2118,7 +2118,7 @@ $(window).load(function() {
   ?>
   $('form#main').find('[type="submit"], [type="button"], [type="image"]').click(function() {
     var trigger = $(this).attr('name');
-    var thisForm = $(this).parents('form').eq(0);
+    var thisForm = $(this).closest('form');
     thisForm.data('submit', trigger);
     if (trigger == 'save_button')
     {
@@ -2278,7 +2278,7 @@ $(window).load(function() {
       maintable.find('table.sub th.control')
                .text('-')
                .live('click', function (event) {
-                    var nTr = $(this).parents('.table_container').parent().prev();
+                    var nTr = $(this).closest('.table_container').parent().prev();
                     var serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
                     $('#subtable_' + serial + '_wrapper').slideUp( function () {
                         pendingTable.fnClose(nTr.get(0));
