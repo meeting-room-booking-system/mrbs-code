@@ -1403,11 +1403,8 @@ $(window).load(function() {
         
         
         var tableData = {};
-        
         getTableData(table, tableData);
       
-
-     
         <?php
         // bookedMap is an array of booked slots.   Each member of the array is an
         // object with four properties (n, s, e, w) representing the cooordinates (x or y)
@@ -1924,11 +1921,21 @@ $(window).load(function() {
               $(this).css('background-color', 'transparent')
                      .wrapInner('<div style="position: relative"><\/div>');
             });
-      }
+            
+        $(window).resize(function(event) {
+            if (event.target == this)  <?php // don't want the ui-resizable event bubbling up ?>
+            {
+              <?php
+              // The table dimensions have changed, so we need to redraw the clones
+              // and re map the table
+              ?>
+              redrawClones();
+              getTableData(table, tableData);
+            }
+          });
+          
+      }  <?php // if (!lteIE8) ?>
       
-      $(window).resize(function() {
-          //redrawClones();
-        });
       <?php
     } // if function_exists('json_encode')
   }
