@@ -2,6 +2,7 @@
 
 // $Id$
 
+require_once "theme.inc";
 
 function map_add_booking ($row, &$column, $am7, $pm7, $format)
 {

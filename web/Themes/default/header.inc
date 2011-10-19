@@ -1676,7 +1676,7 @@ $(window).load(function() {
 
                 divResize.lastPosition = $.extend({}, divClone.position());
                 divResize.lastSize = {width: divClone.outerWidth(),
-                                      height: divClone.outerHeight()};           
+                                      height: divClone.outerHeight()};
               }  <?php // divResize ?>
             
             
@@ -1921,7 +1921,7 @@ $(window).load(function() {
               $(this).css('background-color', 'transparent')
                      .wrapInner('<div style="position: relative"><\/div>');
             });
-            
+
         $(window).resize(function(event) {
             if (event.target == this)  <?php // don't want the ui-resizable event bubbling up ?>
             {
@@ -1933,7 +1933,14 @@ $(window).load(function() {
               getTableData(table, tableData);
             }
           });
-          
+
+        <?php // also need to redraw and recalibrate if the multiple bookings are clicked ?>
+        table.find('div.multiple_control')
+            .click(function() {
+                redrawClones();
+                getTableData(table, tableData);
+              });
+
       }  <?php // if (!lteIE8) ?>
       
       <?php
