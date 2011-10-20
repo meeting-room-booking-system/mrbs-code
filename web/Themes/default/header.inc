@@ -1582,6 +1582,12 @@ $(window).load(function() {
             <?php // Apply a wrapper to turn off highlighting ?>
             table.wrap('<div class="resizing"><\/div>');
             downHandler.origin = $(e.target).offset();
+            downHandler.firstPosition = {x: e.pageX, y: e.pageY};
+            <?php
+            // Get the original link in case we need it later.    We can't be sure whether
+            // the target was the <a> or the <td> so play safe and get all possibilities
+            ?>
+            downHandler.originalLink = $(e.target).find('a').andSelf('a').attr('href');
             downHandler.box = $('<div class="div_select">');
             downHandler.box.offset(downHandler.origin);
             $(document.body).append(downHandler.box);
@@ -1635,6 +1641,7 @@ $(window).load(function() {
                
         var upHandler = function(e) {
             var box = downHandler.box;
+            var tolerance = 2; <?php // px ?>
             e.preventDefault();
             $(document).unbind('mousemove',moveHandler);
             $(document).unbind('mouseup', upHandler);
@@ -1644,13 +1651,27 @@ $(window).load(function() {
             box.remove();
             <?php
             // If the user has released the button while outside the table it means
-            // they want to canel, so just return.   Otherwise go to the edit_entry
-            // page with the right parameters
+            // they want to canel, so just return. 
             ?>
             if (outsideTable({x: e.pageX, y: e.pageY}))
             {
               return;
             }
+            <?php
+            // If the user has hardly moved the mouse then just treat this as a
+            // traditional click and follow the original link.   This will mean
+            // that things such as the default duration are used.
+            
+            ?>
+            else if ((Math.abs(e.pageX - downHandler.firstPosition.x) <= tolerance) &&
+                     (Math.abs(e.pageY - downHandler.firstPosition.y) <= tolerance))
+            {
+              window.location = downHandler.originalLink;
+              return;
+            }
+            <?php
+            // Otherwise get the selected parameters and go to the edit_entry page
+            ?>
             var queryString = 'area=<?php echo $area ?>';
             queryString += '&start_seconds=' + params.seconds[0];
             queryString += '&end_seconds=' + params.seconds[params.seconds.length - 1];
@@ -1677,6 +1698,7 @@ $(window).load(function() {
             }
             ?>
             window.location = 'edit_entry.php?' + queryString;
+            return;
           };
 
         <?php

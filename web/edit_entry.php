@@ -136,15 +136,18 @@ $selected_rooms = get_form_var('rooms', 'array');
 $start_date = get_form_var('start_date', 'string');
 $end_date = get_form_var('end_date', 'string');
 
-$minutes = intval($start_seconds/60);
-if ($enable_periods)
+if (isset($start_seconds))
 {
-  $period = $minutes - (12*60);
-}
-else
-{
-  $hour = intval($minutes/60);
-  $minute = $minutes%60;
+  $minutes = intval($start_seconds/60);
+  if ($enable_periods)
+  {
+    $period = $minutes - (12*60);
+  }
+  else
+  {
+    $hour = intval($minutes/60);
+    $minute = $minutes%60;
+  }
 }
 
 if (isset($start_date))
