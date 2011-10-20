@@ -1306,6 +1306,56 @@ $(window).load(function() {
           sides.e = Math.floor(sides.w + jqObject.outerWidth());
           return sides;
         }
+        
+        
+        <?php // Checks to see whether two rectangles occupy the same space ?>
+        function rectanglesIdentical(r1, r2)
+        {
+          var tolerance = 2;  <?php //px ?>
+          return ((Math.abs(r1.n - r2.n) < tolerance) &&
+                  (Math.abs(r1.s - r2.s) < tolerance) &&
+                  (Math.abs(r1.e - r2.e) < tolerance) &&
+                  (Math.abs(r1.w - r2.w) < tolerance));
+        }
+            
+                              
+        <?php // Checks whether two rectangles overlap ?>         
+        function rectanglesOverlap(r1, r2)
+        {
+          <?php
+          // We check whether two rectangles overlap by checking whether any of the
+          // sides of one rectangle intersect the sides of the other.   In the condition
+          // below, we are checking on the first line to see if either of the vertical
+          // sides of r1 intersects either of the horizontal sides of r2.  The second line
+          // checks for intersection of the horizontal sides r1 with the vertical sides of r2.
+          ?>
+          if ( (( ((r1.w > r2.w) && (r1.w < r2.e)) || ((r1.e > r2.w) && (r1.e < r2.e)) ) && (r1.n < r2.s) && (r1.s > r2.n)) ||
+               (( ((r1.n > r2.n) && (r1.n < r2.s)) || ((r1.s > r2.n) && (r1.s < r2.s)) ) && (r1.w < r2.e) && (r1.e > r2.w)) )
+          {
+            return true;
+          }
+        }
+            
+            
+        <?php
+        // Check whether the rectangle (with sides n,s,e,w) overlaps any
+        // of the booked slots in the table.
+        ?>
+        function overlapsBooked(rectangle)
+        {
+          <?php
+          // Check each of the booked cells in turn to see if it overlaps
+          // the rectangle.  If it does return true immediately.
+          ?>
+          for (var i=0; i<bookedMap.length; i++)
+          {
+            if (rectanglesOverlap(rectangle, bookedMap[i]))
+            {
+              return true;
+            }
+          }
+          return false;
+        }
       
         <?php
         // Get the name of the data attribute in this jQuery object.
@@ -1600,6 +1650,10 @@ $(window).load(function() {
         var bookedMap = [];
 
         var downHandler = function(e) {
+            <?php // Build the map of booked cells ?>
+            table.find('td').not('td.new, td.row_labels').each(function() {
+                bookedMap.push(getSides($(this)));
+              });
             <?php // Apply a wrapper to turn off highlighting ?>
             table.wrap('<div class="resizing"><\/div>');
             var jqTarget = $(e.target);
@@ -1647,6 +1701,10 @@ $(window).load(function() {
           
         var moveHandler = function(e) {
             var box = downHandler.box;
+            var oldBoxOffset = box.offset();
+            var oldBoxWidth = box.outerWidth();
+            var oldBoxHeight = box.outerHeight();
+            
             <?php 
             // Check to see if we've moved outside the table and if we have
             // then give some visual feedback.   If we've moved back into the box
@@ -1698,6 +1756,16 @@ $(window).load(function() {
             snapToGrid(box, 'bottom');
             snapToGrid(box, 'right');
             snapToGrid(box, 'left');
+            <?php
+            // If the new box overlaps a booked cell, then undo the changes
+            ?>
+            if (overlapsBooked(getSides(box)))
+            {
+              box.offset(oldBoxOffset)
+                 .width(oldBoxWidth)
+                 .height(oldBoxHeight);
+              return;
+            }
           };
  
                
@@ -1788,57 +1856,6 @@ $(window).load(function() {
         ?>
         table.find('td.writable')
           .each(function() {
-          
-              <?php // Checks to see whether two rectangles occupy the same space ?>
-              function rectanglesIdentical(r1, r2)
-              {
-                var tolerance = 2;  <?php //px ?>
-                return ((Math.abs(r1.n - r2.n) < tolerance) &&
-                        (Math.abs(r1.s - r2.s) < tolerance) &&
-                        (Math.abs(r1.e - r2.e) < tolerance) &&
-                        (Math.abs(r1.w - r2.w) < tolerance));
-              }
-            
-                              
-              <?php // Checks whether two rectangles overlap ?>         
-              function rectanglesOverlap(r1, r2)
-              {
-                <?php
-                // We check whether two rectangles overlap by checking whether any of the
-                // sides of one rectangle intersect the sides of the other.   In the condition
-                // below, we are checking on the first line to see if either of the vertical
-                // sides of r1 intersects either of the horizontal sides of r2.  The second line
-                // checks for intersection of the horizontal sides r1 with the vertical sides of r2.
-                ?>
-                if ( (( ((r1.w > r2.w) && (r1.w < r2.e)) || ((r1.e > r2.w) && (r1.e < r2.e)) ) && (r1.n < r2.s) && (r1.s > r2.n)) ||
-                     (( ((r1.n > r2.n) && (r1.n < r2.s)) || ((r1.s > r2.n) && (r1.s < r2.s)) ) && (r1.w < r2.e) && (r1.e > r2.w)) )
-                {
-                  return true;
-                }
-              }
-            
-            
-              <?php
-              // Check whether the rectangle (with sides n,s,e,w) overlaps any
-              // of the booked slots in the table.
-              ?>
-              function overlapsBooked(rectangle)
-              {
-                <?php
-                // Check each of the booked cells in turn to see if it overlaps
-                // the rectangle.  If it does return true immediately.
-                ?>
-                for (var i=0; i<bookedMap.length; i++)
-                {
-                  if (rectanglesOverlap(rectangle, bookedMap[i]))
-                  {
-                    return true;
-                  }
-                }
-                return false;
-              }
-            
-               
               <?php
               // resize event callback function
               ?>
