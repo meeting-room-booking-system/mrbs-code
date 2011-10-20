@@ -1645,6 +1645,19 @@ $(window).load(function() {
           }
           return params;
         }
+        
+        
+        function getRowNumber(y)
+        {
+          for (var i=0; i<tableData.y.data.length - 1; i++)
+          {
+            if (y >= tableData.y.data[i].coord && y < tableData.y.data[i+1].coord)
+            {
+              return i;
+            }
+          }
+          return null;
+        }
               
               
         var tableData = {};
@@ -1664,6 +1677,13 @@ $(window).load(function() {
             <?php // Build the map of booked cells ?>
             table.find('td').not('td.new, td.row_labels').each(function() {
                 bookedMap.push(getSides($(this)));
+              });
+            <?php // Cache the row label cells in an array ?>
+            downHandler.rowLabels = [];
+            downHandler.nRows = 0;
+            table.find('tbody tr').each(function() {
+                downHandler.rowLabels.push($(this).find('td.row_labels'));
+                downHandler.nRows++;
               });
             <?php // Apply a wrapper to turn off highlighting ?>
             table.wrap('<div class="resizing"><\/div>');
@@ -1716,21 +1736,6 @@ $(window).load(function() {
             var oldBoxWidth = box.outerWidth();
             var oldBoxHeight = box.outerHeight();
             
-            <?php 
-            // Check to see if we've moved outside the table and if we have
-            // then give some visual feedback.   If we've moved back into the box
-            // remove the feedback.
-            ?>
-            if (outsideTable({x: e.pageX, y: e.pageY}))
-            {
-              box.addClass('outside');
-              moveHandler.outside = true;
-            }
-            else if (moveHandler.outside)
-            {
-              box.removeClass('outside');
-              moveHandler.outside = false;
-            }
             <?php
             // Check to see if we're only allowed to go one slot wide/high
             // and have gone over that limit.  If so, do nothing and return
@@ -1775,7 +1780,50 @@ $(window).load(function() {
               box.offset(oldBoxOffset)
                  .width(oldBoxWidth)
                  .height(oldBoxHeight);
-              return;
+            }
+            <?php 
+            // Check to see if we've moved outside the table and if we have
+            // then give some visual feedback.   If we've moved back into the box
+            // remove the feedback.
+            ?>
+            if (outsideTable({x: e.pageX, y: e.pageY}))
+            {
+              if (!moveHandler.outside)
+              {
+                box.addClass('outside');
+                moveHandler.outside = true;
+                <?php // and remove the row highlighting ?>
+                for (var i=0; i<downHandler.nRows; i++)
+                {
+                  downHandler.rowLabels[i].removeClass('selected');
+                }
+              }
+            }
+            else if (moveHandler.outside)
+            {
+              box.removeClass('outside');
+              moveHandler.outside = false;
+            }
+            <?php 
+            // Highlight the corresponding row label cells (provided we are 
+            // inside the table
+            ?>
+            if (!moveHandler.outside)
+            {
+              var boxStartRow = getRowNumber(box.offset().top);
+              var boxEndRow = getRowNumber(box.offset().top + box.outerHeight());
+              for (var i=0; i<downHandler.nRows ; i++)
+              {
+                if (((boxStartRow === null) || (boxStartRow <= i)) && 
+                    ((boxEndRow === null) || (i < boxEndRow)))
+                {
+                  downHandler.rowLabels[i].addClass('selected');
+                }
+                else
+                {
+                  downHandler.rowLabels[i].removeClass('selected');
+                }
+              }
             }
           };
  
