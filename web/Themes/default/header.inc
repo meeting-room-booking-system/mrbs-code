@@ -1795,7 +1795,7 @@ $(window).load(function() {
             ?>
             if (outsideTable({x: e.pageX, y: e.pageY}))
             {
-              box.remove();
+              
               return;
             }
             <?php
@@ -1807,7 +1807,14 @@ $(window).load(function() {
             else if ((Math.abs(e.pageX - downHandler.firstPosition.x) <= tolerance) &&
                      (Math.abs(e.pageY - downHandler.firstPosition.y) <= tolerance))
             {
-              window.location = downHandler.originalLink;
+              if (downHandler.originalLink !== undefined)
+              {
+                window.location = downHandler.originalLink;
+              }
+              else
+              {
+                box.remove();
+              }
               return;
             }
             <?php
