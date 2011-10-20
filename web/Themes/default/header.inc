@@ -1403,6 +1403,17 @@ $(window).load(function() {
         
         
         <?php
+        // Tests whether the point p with coordinates x and y is outside the table
+        ?>
+        function outsideTable(p)
+        {
+          return ((p.x < tableData.x.data[0].coord) ||
+                  (p.y < tableData.y.data[0].coord) ||
+                  (p.x > tableData.x.data[tableData.x.data.length - 1].coord) ||
+                  (p.y > tableData.y.data[tableData.y.data.length - 1].coord) );
+        }
+        
+        <?php
         // Given 'div', snap the side specified (can be 'left', 'right', 'top' or 'bottom') with X or Y
         // coordinate coord to the nearest grid line, if the side is within the snapping range.
         // If force is true, then the side is snapped regardless of where it is.
@@ -1578,6 +1589,21 @@ $(window).load(function() {
           
         var moveHandler = function(e) {
             var box = downHandler.box;
+            <?php 
+            // Check to see if we've moved outside the table and if we have
+            // then give some visual feedback.   If we've moved back into the box
+            // remove the feedback.
+            ?>
+            if (outsideTable({x: e.pageX, y: e.pageY}))
+            {
+              box.addClass('outside');
+              moveHandler.outside = true;
+            }
+            else if (moveHandler.outside)
+            {
+              box.removeClass('outside');
+              moveHandler.ourside = false;
+            }
             if (e.pageX < downHandler.origin.left)
             {
               if (e.pageY < downHandler.origin.top)
@@ -1599,7 +1625,7 @@ $(window).load(function() {
             }
             box.width(Math.abs(e.pageX - downHandler.origin.left))
             box.height(Math.abs(e.pageY - downHandler.origin.top));
-            boxSides = getSides(box);
+            var boxSides = getSides(box);
             snapToGrid(box, boxSides.n, 'top');
             snapToGrid(box, boxSides.s, 'bottom');
             snapToGrid(box, boxSides.e, 'right');
@@ -1615,6 +1641,16 @@ $(window).load(function() {
             <?php // Remove the resizing wrapper so that highlighting comes back on ?>
             $('table.dwm_main').unwrap();
             params = getBookingParams(box);
+            box.remove();
+            <?php
+            // If the user has released the button while outside the table it means
+            // they want to canel, so just return.   Otherwise go to the edit_entry
+            // page with the right parameters
+            ?>
+            if (outsideTable({x: e.pageX, y: e.pageY}))
+            {
+              return;
+            }
             var queryString = 'area=<?php echo $area ?>';
             queryString += '&start_seconds=' + params.seconds[0];
             queryString += '&end_seconds=' + params.seconds[params.seconds.length - 1];
@@ -1640,11 +1676,13 @@ $(window).load(function() {
               <?php
             }
             ?>
-            box.remove();
             window.location = 'edit_entry.php?' + queryString;
           };
 
-                
+        <?php
+        // Turn all the empty cells where a new multi-cell selection
+        // can be created by dragging the mouse
+        ?>     
         table.find('td.new').each(function() {
             $(this).find('a').click(function(event) {
                 event.preventDefault();

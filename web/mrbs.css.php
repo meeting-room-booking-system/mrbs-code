@@ -422,7 +422,11 @@ div.div_select {
   border: 0;
   opacity: 0.2;
   background-color: <?php echo $main_table_labels_back_color ?>;
-}    
+}
+
+div.div_select.outside {
+  background-color: transparent;
+}   
 
 /* booking privacy status */
 .private {opacity: 0.6; font-style: italic}
