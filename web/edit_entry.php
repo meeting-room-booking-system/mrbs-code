@@ -820,7 +820,7 @@ else
 
 
     echo "<div id=\"div_start_date\">\n";
-    echo "<label for=\"start_datepicker\">" . get_vocab("start") . ":</label>\n";
+    echo "<label>" . get_vocab("start") . ":</label>\n";
     $date = getdate($start_time);
     gendateselector("start_", $date['mday'], $date['mon'], $date['year']);
     // If we're using periods the booking model is slightly different:
@@ -858,7 +858,7 @@ else
     echo "</div>\n";
     
     echo "<div id=\"div_end_date\">\n";
-    echo "<label for=\"start_datepicker\">" . get_vocab("end") . ":</label>\n";
+    echo "<label>" . get_vocab("end") . ":</label>\n";
     $date = getdate($end_time);
     // Don't show the end date selector if multiday is not allowed
     echo "<div" . (($multiday_allowed) ? '' : " style=\"visibility: hidden\"") . ">\n";

@@ -732,7 +732,6 @@ table.admin_table.sub {border-right-width: 0}
 table.sub th {background-color: #788D9C}
 .js .admin_table table.sub th:first-child {background-color: <?php echo $pending_control_color ?>;
     border-left-color: <?php echo $admin_table_border_color ?>}
-div.div_buttons {float: left; height: 2em}
 #pending_list form {margin: 2px 4px}
 
 

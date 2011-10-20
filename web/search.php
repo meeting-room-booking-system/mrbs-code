@@ -160,7 +160,7 @@ if (!$ajax)
         </div>   
         <div id="div_search_from">
           <?php
-          echo "<label for=\"from_datepicker\">" . get_vocab("from") . ":</label>\n";
+          echo "<label>" . get_vocab("from") . ":</label>\n";
           genDateSelector ("from_", $day, $month, $year);
           ?>
         </div> 

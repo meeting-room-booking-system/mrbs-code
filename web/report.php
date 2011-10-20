@@ -1074,7 +1074,7 @@ if (!$ajax && ($output_as_html || (empty($nmatch) && !$cli_mode)))
       
         <div id="div_report_start">
           <?php
-          echo "<label for=\"from_datepicker\">" . get_vocab("report_start") . ":</label>\n";
+          echo "<label>" . get_vocab("report_start") . ":</label>\n";
           genDateSelector("from_", $from_day, $from_month, $from_year);
           ?>
         
@@ -1082,7 +1082,7 @@ if (!$ajax && ($output_as_html || (empty($nmatch) && !$cli_mode)))
       
         <div id="div_report_end">
           <?php
-          echo "<label for=\"to_datepicker\">" . get_vocab("report_end") . ":</label>\n";
+          echo "<label>" . get_vocab("report_end") . ":</label>\n";
           genDateSelector("to_", $to_day, $to_month, $to_year);
           ?>
         </div>
