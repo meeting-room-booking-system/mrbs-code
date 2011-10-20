@@ -129,7 +129,8 @@ $id = get_form_var('id', 'int');
 $copy = get_form_var('copy', 'int');
 $edit_type = get_form_var('edit_type', 'string', '');
 $returl = get_form_var('returl', 'string');
-// The following variables are used when coming via JavaScript
+// The following variables are used when coming via a JavaScript drag select
+$drag = get_form_var('drag', 'int');
 $start_seconds = get_form_var('start_seconds', 'int');
 $end_seconds = get_form_var('end_seconds', 'int');
 $selected_rooms = get_form_var('rooms', 'array');

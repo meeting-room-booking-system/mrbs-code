@@ -1643,11 +1643,11 @@ $(window).load(function() {
             var box = downHandler.box;
             var tolerance = 2; <?php // px ?>
             e.preventDefault();
+            params = getBookingParams(box);
             $(document).unbind('mousemove',moveHandler);
             $(document).unbind('mouseup', upHandler);
             <?php // Remove the resizing wrapper so that highlighting comes back on ?>
             $('table.dwm_main').unwrap();
-            params = getBookingParams(box);
             box.remove();
             <?php
             // If the user has released the button while outside the table it means
@@ -1672,7 +1672,8 @@ $(window).load(function() {
             <?php
             // Otherwise get the selected parameters and go to the edit_entry page
             ?>
-            var queryString = 'area=<?php echo $area ?>';
+            var queryString = 'drag=1';  <?php // Says that we've come from a drag select ?>
+            queryString += '&area=<?php echo $area ?>';
             queryString += '&start_seconds=' + params.seconds[0];
             queryString += '&end_seconds=' + params.seconds[params.seconds.length - 1];
             <?php
@@ -2256,7 +2257,10 @@ $(window).load(function() {
   // that handles changes.  (Note - the call to OnAllDayClick() comes inside
   // an each() in case there isn't an all_day checkbox, which there won't be
   // if we're logging in)
-  if ($default_duration_all_day)
+  // However don't check it if $drag is set, because that means we've
+  // come from a drag select and don't want the defaults
+  global $drag;
+  if ($default_duration_all_day && !isset($drag))
   {
     ?>
     $('#all_day').attr('checked', true).each(function() {
