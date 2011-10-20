@@ -1024,12 +1024,12 @@ else
       <?php
       echo "<select id=\"rooms\" name=\"rooms[]\"" .
            (($multiroom_allowed) ? " multiple=\"multiple\"" : "") .
-           " size=\"5\">\n";  
+           " size=\"5\">\n";
       foreach ($rooms as $r)
       {
         if ($r['area_id'] == $area_id)
         {
-          if (isset($selected_rooms))
+          if (!empty($selected_rooms))
           {
             // We've come from a drag selection
             $is_selected = in_array($r['id'], $selected_rooms);
