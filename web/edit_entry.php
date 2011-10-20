@@ -1181,7 +1181,7 @@ else
 
       <div id="rep_end_date">
         <?php
-        echo "<label for=\"rep_end_datepicker\">" . get_vocab("rep_end_date") . ":</label>\n";
+        echo "<label>" . get_vocab("rep_end_date") . ":</label>\n";
         genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year);
         ?>
       </div>
