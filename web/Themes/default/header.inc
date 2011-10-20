@@ -1334,6 +1334,17 @@ $(window).load(function() {
           {
             return true;
           }
+          <?php // they also overlap if r1 is inside r2 ?>
+          if ((r1.w >= r2.w) && (r1.n >= r2.n) && (r1.e <= r2.e) && (r1.s <= r2.s))
+          {
+            return true;
+          }
+          <?php // or r2 is inside r1 ?>
+          if ((r2.w >= r1.w) && (r2.n >= r1.n) && (r2.e <= r1.e) && (r2.s <= r1.s))
+          {
+            return true;
+          }
+          return false;
         }
             
             
