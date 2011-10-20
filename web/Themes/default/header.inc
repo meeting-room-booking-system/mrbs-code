@@ -752,7 +752,7 @@ if ($page == 'edit_entry')
         // that problem, delete the property if the array (really an object) is empty
         ?>
         $.each(params, function(i, val) {
-            if ((typeof(val) == 'object') && (val.length == 0))
+            if ((typeof(val) == 'object') && ((val === null) || (val.length == 0)))
             {
               delete params[i];
             }
