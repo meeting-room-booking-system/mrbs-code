@@ -1648,13 +1648,13 @@ $(window).load(function() {
             $(document).unbind('mouseup', upHandler);
             <?php // Remove the resizing wrapper so that highlighting comes back on ?>
             $('table.dwm_main').unwrap();
-            box.remove();
             <?php
             // If the user has released the button while outside the table it means
             // they want to canel, so just return. 
             ?>
             if (outsideTable({x: e.pageX, y: e.pageY}))
             {
+              box.remove();
               return;
             }
             <?php
