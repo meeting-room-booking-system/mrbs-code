@@ -1702,6 +1702,7 @@ $(window).load(function() {
             return;
           };
 
+          
         <?php
         // Turn all the empty cells where a new multi-cell selection
         // can be created by dragging the mouse
@@ -2034,25 +2035,18 @@ $(window).load(function() {
             
               var handles = 'all';
               <?php
-              if ($page == 'week')
+              if (!$is_admin)
               {
-                // If we're in the week view then if non-admins aren't allowed to
-                // make repeat bookings then we want to restrict the handles we
-                // offer them so that they can't get that far.
-                if (!$is_admin && $auth['only_admin_can_book_repeat'])
+                if ((($page == 'week') && $auth['only_admin_can_book_repeat']) ||
+                    (($page == 'day') && $auth['only_admin_can_select_multiroom']))
                 {
-                  if ($times_along_top)
-                  {
-                    ?>
-                    handles = 'e, w';
-                    <?php
-                  }
-                  else
-                  {
-                    ?>
-                    handles = 'n, s';
-                    <?php
-                  }
+                  // If we're in the week view then if non-admins aren't allowed to
+                  // make repeat bookings, or else if we're in the day view and they
+                  // aren't allowed to select multiple rooms, then we want to restrict
+                  // the handles we offer them so that they can't get that far.
+                  ?>
+                  handles = '<?php echo ($times_along_top) ? "e,w" : "n,s" ?>';
+                  <?php
                 }
               }
               ?>
