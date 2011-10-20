@@ -1414,8 +1414,9 @@ $(window).load(function() {
         }
         
         <?php
-        // Given 'div', snap the side specified (can be 'left', 'right', 'top' or 'bottom') with X or Y
-        // coordinate coord to the nearest grid line, if the side is within the snapping range.
+        // Given 'div', snap the side specified (can be 'left', 'right', 'top' or 'bottom') to 
+        // the nearest grid line, if the side is within the snapping range.
+        //
         // If force is true, then the side is snapped regardless of where it is.
         //
         // We also contain the resize within the set of bookable cells
@@ -1425,21 +1426,40 @@ $(window).load(function() {
         // row heights and column widths - so we can't specify a grid in terms of a simple
         // array as required by the resize widget.
         ?>
-        function snapToGrid(div, coord, side, force)
+        function snapToGrid(div, side, force)
         {
           var snapGap = (force) ? 100000: 20; <?php // px ?>
           var tolerance = 2; <?php //px ?>
+          var isLR = (side=='left') || (side=='right');
                 
-          data = ((side=='left') || (side=='right')) ? tableData.x.data : tableData.y.data;
+          data = (isLR) ? tableData.x.data : tableData.y.data;
 
           for (var i=0; i<(data.length -1); i++)
           {
             var topLeft = data[i].coord + <?php echo $main_table_cell_border_width ?>;
             var bottomRight = data[i+1].coord;
-            var gapTopLeft = coord - topLeft;
-            var gapBottomRight = bottomRight - coord;
+            var divTop = div.offset().top;
+            var divLeft = div.offset().left;
             var divWidth = div.outerWidth();
             var divHeight = div.outerHeight();
+            switch (side)
+            {
+              case 'top':
+                thisCoord = divTop;
+                break;
+              case 'bottom':
+                thisCoord = divTop + divHeight;
+                break;
+              case 'left':
+                thisCoord = divLeft;
+                break;
+              case 'right':
+                thisCoord = divLeft + divWidth;
+                break;
+            }
+            var gapTopLeft = thisCoord - topLeft;
+            var gapBottomRight = bottomRight - thisCoord;
+            
             if (((gapTopLeft>0) && (gapBottomRight>0)) ||
                 <?php // containment tests ?>
                 ((i==0) && (gapTopLeft<0)) ||
@@ -1451,7 +1471,7 @@ $(window).load(function() {
                 switch (side)
                 {
                   case 'left':
-                    div.offset({top: div.offset().top, left: topLeft});
+                    div.offset({top: divTop, left: topLeft});
                     div.width(divWidth + gapTopLeft);
                     break;
                   case 'right':
@@ -1471,7 +1491,7 @@ $(window).load(function() {
                     }
                     break;
                   case 'top':
-                    div.offset({top: topLeft, left: div.offset().left});
+                    div.offset({top: topLeft, left: divLeft});
                     div.height(divHeight + gapTopLeft);
                     break;
                   case 'bottom':
@@ -1488,12 +1508,12 @@ $(window).load(function() {
                     <?php // Don't let the width become zero.  ?>
                     if ((divWidth - gapBottomRight) < tolerance)
                     {
-                      div.offset({top: div.offset().top, left: topLeft});
+                      div.offset({top: div.Top, left: topLeft});
                       div.width(divWidth + gapTopLeft);
                     }
                     else
                     {
-                      div.offset({top: div.offset().top, left: bottomRight});
+                      div.offset({top: divTop, left: bottomRight});
                       div.width(divWidth - gapBottomRight);
                     }
                     break;
@@ -1501,7 +1521,7 @@ $(window).load(function() {
                     div.width(divWidth + gapBottomRight);
                     break;
                   case 'top':
-                    div.offset({top: bottomRight, left: div.offset().left});
+                    div.offset({top: bottomRight, left: divLeft});
                     div.height(divHeight - gapBottomRight);
                     break;
                   case 'bottom':
@@ -1632,10 +1652,10 @@ $(window).load(function() {
             box.width(Math.abs(e.pageX - downHandler.origin.left))
             box.height(Math.abs(e.pageY - downHandler.origin.top));
             var boxSides = getSides(box);
-            snapToGrid(box, boxSides.n, 'top');
-            snapToGrid(box, boxSides.s, 'bottom');
-            snapToGrid(box, boxSides.e, 'right');
-            snapToGrid(box, boxSides.w, 'left');
+            snapToGrid(box, 'top');
+            snapToGrid(box, 'bottom');
+            snapToGrid(box, 'right');
+            snapToGrid(box, 'left');
           };
  
                
@@ -1813,22 +1833,22 @@ $(window).load(function() {
                 <?php // left edge ?>
                 if (divClone.position().left != divResize.lastPosition.left)
                 {
-                  snapToGrid(divClone, divResize.origin.left + divClone.position().left, 'left');
+                  snapToGrid(divClone, 'left');
                 }
                 <?php // right edge ?>
                 if ((divClone.position().left + divClone.outerWidth()) != (divResize.lastPosition.left + divResize.lastSize.width))
                 {
-                  snapToGrid(divClone, divResize.origin.left + divClone.position().left + divClone.outerWidth(), 'right');
+                  snapToGrid(divClone, 'right');
                 }
                 <?php // top edge ?>
                 if (divClone.position().top != divResize.lastPosition.top)
                 {
-                  snapToGrid(divClone, divResize.origin.top + divClone.position().top, 'top');
+                  snapToGrid(divClone, 'top');
                 }
                 <?php // bottom edge ?>
                 if ((divClone.position().top + divClone.outerHeight()) != (divResize.lastPosition.top + divResize.lastSize.height))
                 {
-                  snapToGrid(divClone, divResize.origin.top + divClone.position().top + divClone.outerHeight(), 'bottom');
+                  snapToGrid(divClone, 'bottom');
                 }
 
                 divResize.lastPosition = $.extend({}, divClone.position());
@@ -1898,10 +1918,10 @@ $(window).load(function() {
                   <?php
                   // Snap the edges to the grid, regardless of where they are.
                   ?>
-                  snapToGrid(divClone, divResize.origin.left + divClone.position().left, 'left', true);
-                  snapToGrid(divClone, divResize.origin.left + divClone.position().left + divClone.outerWidth(), 'right', true);
-                  snapToGrid(divClone, divResize.origin.top + divClone.position().top, 'top', true);
-                  snapToGrid(divClone, divResize.origin.top + divClone.position().top + divClone.outerHeight(), 'bottom', true);
+                  snapToGrid(divClone, 'left', true);
+                  snapToGrid(divClone, 'right', true);
+                  snapToGrid(divClone, 'top', true);
+                  snapToGrid(divClone, 'bottom', true);
                 }
               
                 <?php // Remove the outline ?>
