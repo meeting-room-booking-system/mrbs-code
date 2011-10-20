@@ -1608,7 +1608,7 @@ $(window).load(function() {
             else if (moveHandler.outside)
             {
               box.removeClass('outside');
-              moveHandler.ourside = false;
+              moveHandler.outside = false;
             }
             if (e.pageX < downHandler.origin.left)
             {
