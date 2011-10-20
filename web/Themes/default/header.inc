@@ -1431,7 +1431,7 @@ $(window).load(function() {
           var snapGap = (force) ? 100000: 20; <?php // px ?>
           var tolerance = 2; <?php //px ?>
           var isLR = (side=='left') || (side=='right');
-                
+ 
           data = (isLR) ? tableData.x.data : tableData.y.data;
 
           for (var i=0; i<(data.length -1); i++)
@@ -1466,6 +1466,7 @@ $(window).load(function() {
                 ((i==(data.length-2)) && (gapBottomRight<0)) )
             {
               var gap = bottomRight - topLeft;
+              
               if ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap))
               {
                 switch (side)
@@ -1601,14 +1602,45 @@ $(window).load(function() {
         var downHandler = function(e) {
             <?php // Apply a wrapper to turn off highlighting ?>
             table.wrap('<div class="resizing"><\/div>');
-            downHandler.origin = $(e.target).offset();
+            var jqTarget = $(e.target);
+            downHandler.origin = jqTarget.offset();
             downHandler.firstPosition = {x: e.pageX, y: e.pageY};
             <?php
             // Get the original link in case we need it later.    We can't be sure whether
             // the target was the <a> or the <td> so play safe and get all possibilities
             ?>
-            downHandler.originalLink = $(e.target).find('a').andSelf('a').attr('href');
+            downHandler.originalLink = jqTarget.find('a').andSelf('a').attr('href');
             downHandler.box = $('<div class="div_select">');
+            <?php
+            if (!$is_admin)
+            {
+              // If we're not an admin and we're not allowed to book repeats (in
+              // the week view) or select multiple rooms (in the day view) then 
+              // constrain the box to fit in the current slot width/height
+              if ((($page == 'week') && $auth['only_admin_can_book_repeat']) ||
+                  (($page == 'day') && $auth['only_admin_can_select_multiroom']))
+              {
+                if ($times_along_top)
+                {
+                  ?>
+                  var slotHeight = jqTarget.outerHeight();
+                  downHandler.maxHeight = true;
+                  downHandler.box.css('max-height', slotHeight + 'px');
+                  downHandler.box.css('min-height', slotHeight + 'px');
+                  <?php
+                }
+                else
+                {
+                  ?>
+                  var slotWidth = jqTarget.outerWidth();
+                  downHandler.maxWidth = true;
+                  downHandler.box.css('max-width', slotWidth + 'px');
+                  downHandler.box.css('min-width', slotWidth + 'px');
+                  <?php
+                }
+              }
+            }
+            ?>  
             downHandler.box.offset(downHandler.origin);
             $(document.body).append(downHandler.box);
           };
@@ -1630,6 +1662,16 @@ $(window).load(function() {
               box.removeClass('outside');
               moveHandler.outside = false;
             }
+            <?php
+            // Check to see if we're only allowed to go one slot wide/high
+            // and have gone over that limit.  If so, do nothing and return
+            ?>
+            if ((downHandler.maxWidth && (e.pageX < downHandler.origin.left)) ||
+                (downHandler.maxHeight && (e.pageY < downHandler.origin.top)))
+            {
+              return;
+            }
+            <?php // Otherwise redraw the box ?>
             if (e.pageX < downHandler.origin.left)
             {
               if (e.pageY < downHandler.origin.top)

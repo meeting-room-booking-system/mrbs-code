@@ -137,6 +137,23 @@ $selected_rooms = get_form_var('rooms', 'array');
 $start_date = get_form_var('start_date', 'string');
 $end_date = get_form_var('end_date', 'string');
 
+
+// Check the user is authorised for this page
+checkAuthorised();
+
+// Also need to know whether they have admin rights
+$user = getUserName();
+$is_admin = (authGetUserLevel($user) >= 2);
+// You're only allowed to make repeat bookings if you're an admin
+// or else if $auth['only_admin_can_book_repeat'] is not set
+$repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
+// Similarly for multi-day
+$multiday_allowed = $is_admin || empty($auth['only_admin_can_book_multiday']);
+// Similarly for multiple room selection
+$multiroom_allowed = $is_admin || empty($auth['only_admin_can_select_multiroom']);
+
+
+
 if (isset($start_seconds))
 {
   $minutes = intval($start_seconds/60);
@@ -154,7 +171,7 @@ if (isset($start_seconds))
 if (isset($start_date))
 {
   list($year, $month, $day) = explode('-', $start_date);
-  if (isset($end_date) && ($start_date != $end_date))
+  if (isset($end_date) && ($start_date != $end_date) && $repeats_allowed)
   {
     $rep_type = REP_DAILY;
     list($rep_end_year, $rep_end_month, $rep_end_day) = explode('-', $end_date);
@@ -173,19 +190,7 @@ if (!isset($returl))
   $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
 }
     
-// Check the user is authorised for this page
-checkAuthorised();
 
-// Also need to know whether they have admin rights
-$user = getUserName();
-$is_admin = (authGetUserLevel($user) >= 2);
-// You're only allowed to make repeat bookings if you're an admin
-// or else if $auth['only_admin_can_book_repeat'] is not set
-$repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
-// Similarly for multi-day
-$multiday_allowed = $is_admin || empty($auth['only_admin_can_book_multiday']);
-// Similarly for multiple room selection
-$multiroom_allowed = $is_admin || empty($auth['only_admin_can_select_multiroom']);
 
 // This page will either add or modify a booking
 
