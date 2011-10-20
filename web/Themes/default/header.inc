@@ -1795,7 +1795,7 @@ $(window).load(function() {
             ?>
             if (outsideTable({x: e.pageX, y: e.pageY}))
             {
-              
+              box.remove();
               return;
             }
             <?php
