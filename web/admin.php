@@ -257,11 +257,11 @@ if ($is_admin || ($n_displayable_areas > 0))
         echo "<thead>\n";
         echo "<tr>\n";
 
-        echo "<th><div>" . get_vocab("name") . "</div></th>\n";
+        echo "<th>" . get_vocab("name") . "</th>\n";
         if ($is_admin)
         {
         // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
-          echo "<th><div>" . get_vocab("enabled") . "</div></th>\n";
+          echo "<th>" . get_vocab("enabled") . "</th>\n";
         }
         // ignore these columns, either because we don't want to display them,
         // or because we have already displayed them in the header column
@@ -285,13 +285,13 @@ if ($is_admin || ($n_displayable_areas > 0))
             }
             // We don't use htmlspecialchars() here because the column names are
             // trusted and some of them may deliberately contain HTML entities (eg &nbsp;)
-            echo "<th><div>$text</div></th>\n";
+            echo "<th>$text</th>\n";
           }
         }
         
         if ($is_admin)
         {
-          echo "<th><div>&nbsp;</div></th>\n";
+          echo "<th>&nbsp;</th>\n";
         }
         
         echo "</tr>\n";
