@@ -2426,19 +2426,24 @@ $(window).load(function() {
   // Check the All Day box if that's the default and then call the function
   // that handles changes.  (Note - the call to OnAllDayClick() comes inside
   // an each() in case there isn't an all_day checkbox, which there won't be
-  // if we're logging in)
-  // However don't check it if $drag is set, because that means we've
-  // come from a drag select and don't want the defaults
+  // if we're logging in).   However don't check it if (a) $drag is set, because
+  // that means we've come from a drag select and don't want the defaults or 
+  // (b) the checkbox has been given a class of "no_default", probably because
+  // it's an existing booking that we are editing or copying.
   global $drag;
   if ($default_duration_all_day && !isset($drag))
   {
     ?>
-    $('#all_day').attr('checked', true).each(function() {
-        OnAllDayClick(true);
+    $('#all_day').each(function() {
+        if (!$(this).hasClass('no_default'))
+        {
+          $(this).attr('checked', true);
+          OnAllDayClick(true);
+        }
       });
     <?php
   }
-  
+
   // Set up handlers if anything like a submit button is pressed.   If it's the Save
   // button we need to validate the form first.  In addition, for all the buttons, if
   // we are going to submit something we set some data in the form.   This allows

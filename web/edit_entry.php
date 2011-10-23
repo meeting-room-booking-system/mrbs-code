@@ -847,14 +847,18 @@ else
       genSlotSelector($a, "start_", $first, $start_last, $start_time, $display_none);
     }
 
-    ?>
-    <div class="group">
-      <div id="ad">
-        <input id="all_day" class="checkbox" name="all_day" type="checkbox" value="yes" onclick="OnAllDayClick(this)">
-        <label for="all_day"><?php echo get_vocab("all_day"); ?></label>
-      </div>
-    </div>
-    <?php
+    echo "<div class=\"group\">\n";
+    echo "<div id=\"ad\">\n";
+    echo "<input id=\"all_day\" class=\"checkbox" .
+         // If this is an existing booking that we are editing or copying, then we do
+         // not want the JavaScript to apply the default setting to the all day checkbox,
+         // so add a class that will tell the JavaScript that
+         ((isset($id)) ? " no_default" : "") .
+         "\" name=\"all_day\" type=\"checkbox\" value=\"yes\" onclick=\"OnAllDayClick(this)\">\n";
+    echo "<label for=\"all_day\">" . get_vocab("all_day") . "</label>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+
     echo "</div>\n";
     
     echo "<div id=\"div_end_date\">\n";
