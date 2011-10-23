@@ -93,7 +93,7 @@ function PrintLogonBox()
 ?>
 
 
-      <a name="logonBox" href="<?php echo "$search_string\" title=\""
+      <a href="<?php echo "$search_string\" title=\""
          . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
          . htmlspecialchars($user) ?></a>
 <?php
@@ -101,7 +101,7 @@ function PrintLogonBox()
   else
   {
 ?>
-    <a name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></a>
+    <a href=""><?php echo get_vocab('unknown_user'); ?></a>
     <form method="post" action="admin.php">
       <div>
         <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">

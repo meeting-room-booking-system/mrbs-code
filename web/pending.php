@@ -20,7 +20,6 @@ function display_buttons($row, $is_series)
   $query_string = "id=$target_id";
   $query_string .= ($is_series) ? "&amp;series=1" : "";
   
-  echo "<div class=\"div_buttons\">\n";
   if (auth_book_admin($user, $row['room_id']))
   {
     // approve
@@ -87,7 +86,6 @@ function display_buttons($row, $is_series)
       echo "&nbsp";
     }
   }
-  echo "</div>\n";
 }
 
 
@@ -122,9 +120,7 @@ function display_subtable_head($row)
   
   echo "<th>" . get_vocab("series") . "</th>\n";
   
-  echo "<th>\n";
-  display_buttons($row, TRUE);
-  echo "</th>\n";
+  echo "<th>&nbsp;</th>\n";
   echo "</tr>\n";
   echo "</thead>\n";
 }
@@ -263,7 +259,7 @@ else  // display them in a table
       {
         // end the last series table if there was one
         $is_series = FALSE;
-        echo "</tbody></table></td></tr>\n";
+        echo "</tbody></table></div></td></tr>\n";
       }
     
       if (!empty($row['repeat_id']))

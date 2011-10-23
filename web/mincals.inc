@@ -209,7 +209,7 @@ class Calendar
 
       if ($mincals_week_numbers)
       {
-          $s .= "<td valign=\"middle\" class=\"mincals_week_number\">";
+          $s .= "<td class=\"mincals_week_number\">";
           $link = $this->getDateLink($d, $this->month, $this->year, 'week');
           $s .= "<a href=\"$link\">";
           $s .= date("W",gmmktime (12, 0, 0, $this->month, $d, $this->year));

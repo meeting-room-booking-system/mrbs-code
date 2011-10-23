@@ -188,10 +188,17 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
     border-bottom: 0;
     border-right: 0}
 .dwm_main td:first-child {border-left: 0}
-.dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0 2px;
+<?php
+// Note that it is important to have zero padding-left and padding-top on the th cells and the celldiv divs.
+// These elements are used to calculate the offset top and left of the position of bookings in
+// the grid when using resizable bookings.   jQuery.offset() measures to the content.  If you
+// need padding put it on the contained element.
+?>
+.dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0;
     color: <?php echo $header_font_color ?>; 
     background-color: <?php echo $header_back_color ?>;
     border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
+.dwm_main th.first_last, .dwm_main th span {padding: 0 2px}
 .dwm_main th:first-child {border-left: 0}
 .dwm_main a {display: block; min-height: inherit}
 .dwm_main tbody a {padding: 0 2px}
@@ -271,7 +278,7 @@ tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /
 .dwm_main td.row_labels     {background-color: <?php echo $main_table_labels_back_color ?>; white-space: nowrap}    /* used for the row labels column */
 .row_labels a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
 .row_labels a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
-.row_labels a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
+.row_labels a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration: underline; font-weight: normal}
 
 <?php
 // HIGHLIGHTING:  Set styles for the highlighted cells under the cursor (the time/period cell and the current cell)
@@ -282,7 +289,6 @@ tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /
 .dwm_main td:hover.new, .dwm_main td.new_hover {background-color: <?php echo $row_highlight_color ?>}
 .dwm_main tr:hover td.row_labels, .dwm_main td.row_labels_hover {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
 .dwm_main#month_main td:hover.valid, .dwm_main#month_main td.valid_hover {background-color: <?php echo $row_highlight_color ?>}
-
 <?php
 // would be nicer to use color: inherit in the four rules below, but inherit is not supported by IE until IE8.   
 // inherit would mean that (1) you didn't have to specify the colour again and (2) you needn't use the tbody selector to
@@ -291,7 +297,34 @@ tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /
 
 .dwm_main tbody tr:hover a:link,    td.row_labels_hover a:link    {color: <?php echo $anchor_link_color ?>}
 .dwm_main tbody tr:hover a:visited, td.row_labels_hover a:visited {color: <?php echo $anchor_link_color ?>}
+<?php // Disable the highlighting when we're in resize mode ?>
+.resizing .dwm_main tr.even_row td:hover.new {background-color: <?php echo $row_even_color ?>}
+.resizing .dwm_main tr.odd_row td:hover.new {background-color: <?php echo $row_odd_color ?>}
+.resizing .dwm_main tr:hover td.row_labels {background-color: <?php echo $main_table_labels_back_color ?>; color: <?php echo $anchor_link_color_header ?>}
+.resizing .row_labels a:hover {text-decoration: none}
+.resizing .dwm_main tbody tr:hover td.row_labels a:link {color: <?php echo $anchor_link_color_header ?>}
+.resizing .dwm_main tbody tr:hover td.row_labels a:visited {color: <?php echo $anchor_link_color_header ?>}
+.resizing .dwm_main tr td.row_labels.selected {background-color: <?php echo $row_highlight_color ?>}
+.resizing .dwm_main tr:hover td.row_labels.selected,
+.resizing .dwm_main tr td.row_labels.selected a:link,
+.resizing .dwm_main tr td.row_labels.selected a:visited {color: <?php echo $standard_font_color ?>}
 
+
+.dwm_main .ui-resizable-handle {z-index: 1000}
+.dwm_main .ui-resizable-n {top: -1px}
+.dwm_main .ui-resizable-e {right: -1px}
+.dwm_main .ui-resizable-s {bottom: -1px}
+.dwm_main .ui-resizable-w {left: -1px}
+.dwm_main .ui-resizable-se {bottom: 0; right: 0}
+.dwm_main .ui-resizable-sw {bottom: -2px; left: -1px}
+.dwm_main .ui-resizable-ne {top: -2px; right: -1px}
+.dwm_main .ui-resizable-nw {top: -2px; left: -1px}
+
+div.outline {
+  position: absolute;
+  border: 1px dotted <?php echo $header_back_color ?>;
+  z-index: 700;
+}
 
 <?php
 
@@ -348,7 +381,7 @@ for ($i=1; $i<=$classes_required; $i++)
 }
 
 ?>
-div.celldiv {overflow: hidden; margin: 0; padding: 0}
+div.celldiv {max-width: 100%; overflow: hidden; margin: 0; padding: 0}
 .row_labels div.celldiv {overflow: visible}  /* we want to see the content in the row label columns */
 <?php
 
@@ -389,6 +422,16 @@ div:hover.multiple_control {cursor: pointer}
   }
 .js .multiple_booking .maxi a {padding-left: <?php echo $main_cell_height + $main_table_cell_border_width + 2 ?>px}
 
+div.div_select {
+  position: absolute;
+  border: 0;
+  opacity: 0.2;
+  background-color: <?php echo $main_table_labels_back_color ?>;
+}
+
+div.div_select.outside {
+  background-color: transparent;
+}   
 
 /* booking privacy status */
 .private {opacity: 0.6; font-style: italic}
@@ -694,7 +737,6 @@ table.admin_table.sub {border-right-width: 0}
 table.sub th {background-color: #788D9C}
 .js .admin_table table.sub th:first-child {background-color: <?php echo $pending_control_color ?>;
     border-left-color: <?php echo $admin_table_border_color ?>}
-div.div_buttons {float: left; height: 2em}
 #pending_list form {margin: 2px 4px}
 
 

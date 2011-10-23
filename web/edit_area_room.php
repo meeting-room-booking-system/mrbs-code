@@ -1007,7 +1007,7 @@ if (isset($change_area) &&!empty($area))
       echo "</div>\n";
       // Minimum book ahead
       echo "<div>\n";
-      echo "<label for=\"area_min_book_ahead\">" . get_vocab("min_book_ahead") . ":</label>\n";
+      echo "<label>" . get_vocab("min_book_ahead") . ":</label>\n";
       echo "<input class=\"checkbox\" type=\"checkbox\" id=\"area_min_ba_enabled\" name=\"area_min_ba_enabled\"" .
            (($min_book_ahead_enabled) ? " checked=\"checked\"" : "") .
            " onChange=\"check_book_ahead()\">\n";
@@ -1024,7 +1024,7 @@ if (isset($change_area) &&!empty($area))
       echo "</div>\n";
       // Maximum book ahead
       echo "<div>\n";
-      echo "<label for=\"area_max_book_ahead\">" . get_vocab("max_book_ahead") . ":</label>\n";
+      echo "<label>" . get_vocab("max_book_ahead") . ":</label>\n";
       echo "<input class=\"checkbox\" type=\"checkbox\" id=\"area_max_ba_enabled\" name=\"area_max_ba_enabled\"" .
            (($max_book_ahead_enabled) ? " checked=\"checked\"" : "") .
            " onChange=\"check_book_ahead()\">\n";

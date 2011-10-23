@@ -771,7 +771,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     
     if (!in_array($fieldname, $ignore_columns))
     {
-      echo "<th><div>" . get_loc_field_name($tbl_users, $fieldname) . "</div></th>";
+      echo "<th>" . get_loc_field_name($tbl_users, $fieldname) . "</th>";
     }
   }
   

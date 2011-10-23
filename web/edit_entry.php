@@ -129,18 +129,15 @@ $id = get_form_var('id', 'int');
 $copy = get_form_var('copy', 'int');
 $edit_type = get_form_var('edit_type', 'string', '');
 $returl = get_form_var('returl', 'string');
+// The following variables are used when coming via a JavaScript drag select
+$drag = get_form_var('drag', 'int');
+$start_seconds = get_form_var('start_seconds', 'int');
+$end_seconds = get_form_var('end_seconds', 'int');
+$selected_rooms = get_form_var('rooms', 'array');
+$start_date = get_form_var('start_date', 'string');
+$end_date = get_form_var('end_date', 'string');
 
 
-// We might be going through edit_entry more than once, for example if we have to log on on the way.  We
-// still need to preserve the original calling page so that once we've completed edit_entry_handler we can
-// go back to the page we started at (rather than going to the default view).  If this is the first time 
-// through, then $HTTP_REFERER holds the original caller.    If this is the second time through we will have 
-// stored it in $returl.
-if (!isset($returl))
-{
-  $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
-}
-    
 // Check the user is authorised for this page
 checkAuthorised();
 
@@ -154,6 +151,46 @@ $repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
 $multiday_allowed = $is_admin || empty($auth['only_admin_can_book_multiday']);
 // Similarly for multiple room selection
 $multiroom_allowed = $is_admin || empty($auth['only_admin_can_select_multiroom']);
+
+
+
+if (isset($start_seconds))
+{
+  $minutes = intval($start_seconds/60);
+  if ($enable_periods)
+  {
+    $period = $minutes - (12*60);
+  }
+  else
+  {
+    $hour = intval($minutes/60);
+    $minute = $minutes%60;
+  }
+}
+
+if (isset($start_date))
+{
+  list($year, $month, $day) = explode('-', $start_date);
+  if (isset($end_date) && ($start_date != $end_date) && $repeats_allowed)
+  {
+    $rep_type = REP_DAILY;
+    list($rep_end_year, $rep_end_month, $rep_end_day) = explode('-', $end_date);
+  }
+}
+
+
+
+// We might be going through edit_entry more than once, for example if we have to log on on the way.  We
+// still need to preserve the original calling page so that once we've completed edit_entry_handler we can
+// go back to the page we started at (rather than going to the default view).  If this is the first time 
+// through, then $HTTP_REFERER holds the original caller.    If this is the second time through we will have 
+// stored it in $returl.
+if (!isset($returl))
+{
+  $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
+}
+    
+
 
 // This page will either add or modify a booking
 
@@ -374,10 +411,13 @@ else
   $type          = $default_type;
   $room_id       = $room;
   $rep_id        = 0;
-  $rep_type      = REP_NONE;
-  $rep_end_day   = $day;
-  $rep_end_month = $month;
-  $rep_end_year  = $year;
+  if (!isset($rep_type))  // We might have set it through a drag selection
+  {
+    $rep_type      = REP_NONE;
+    $rep_end_day   = $day;
+    $rep_end_month = $month;
+    $rep_end_year  = $year;
+  }
   $rep_day       = array();
   $private       = $private_default;
   $confirmed     = $confirmed_default;
@@ -417,12 +457,23 @@ else
 
   $start_time = mktime($hour, $minute, 0, $month, $day, $year);
 
-  if (!isset($default_duration))
+  if (isset($end_seconds))
   {
-    $default_duration = (60 * 60);
+    $end_minutes = intval($end_seconds/60);
+    $end_hour = intval($end_minutes/60);
+    $end_minute = $end_minutes%60;
+    $end_time = mktime($end_hour, $end_minute, 0, $month, $day, $year);
+    $duration = $end_time - $start_time - cross_dst($start_time, $end_time);
   }
-  $duration    = ($enable_periods ? 60 : $default_duration);
-  $end_time = $start_time + $duration;
+  else
+  {
+    if (!isset($default_duration))
+    {
+      $default_duration = (60 * 60);
+    }
+    $duration    = ($enable_periods ? 60 : $default_duration);
+    $end_time = $start_time + $duration;
+  }
 }
 
 $start_hour  = strftime('%H', $start_time);
@@ -769,7 +820,7 @@ else
 
 
     echo "<div id=\"div_start_date\">\n";
-    echo "<label for=\"start_datepicker\">" . get_vocab("start") . ":</label>\n";
+    echo "<label>" . get_vocab("start") . ":</label>\n";
     $date = getdate($start_time);
     gendateselector("start_", $date['mday'], $date['mon'], $date['year']);
     // If we're using periods the booking model is slightly different:
@@ -796,18 +847,22 @@ else
       genSlotSelector($a, "start_", $first, $start_last, $start_time, $display_none);
     }
 
-    ?>
-    <div class="group">
-      <div id="ad">
-        <input id="all_day" class="checkbox" name="all_day" type="checkbox" value="yes" onclick="OnAllDayClick(this)">
-        <label for="all_day"><?php echo get_vocab("all_day"); ?></label>
-      </div>
-    </div>
-    <?php
+    echo "<div class=\"group\">\n";
+    echo "<div id=\"ad\">\n";
+    echo "<input id=\"all_day\" class=\"checkbox" .
+         // If this is an existing booking that we are editing or copying, then we do
+         // not want the JavaScript to apply the default setting to the all day checkbox,
+         // so add a class that will tell the JavaScript that
+         ((isset($id)) ? " no_default" : "") .
+         "\" name=\"all_day\" type=\"checkbox\" value=\"yes\" onclick=\"OnAllDayClick(this)\">\n";
+    echo "<label for=\"all_day\">" . get_vocab("all_day") . "</label>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+
     echo "</div>\n";
     
     echo "<div id=\"div_end_date\">\n";
-    echo "<label for=\"start_datepicker\">" . get_vocab("end") . ":</label>\n";
+    echo "<label>" . get_vocab("end") . ":</label>\n";
     $date = getdate($end_time);
     // Don't show the end date selector if multiday is not allowed
     echo "<div" . (($multiday_allowed) ? '' : " style=\"visibility: hidden\"") . ">\n";
@@ -979,12 +1034,21 @@ else
       <?php
       echo "<select id=\"rooms\" name=\"rooms[]\"" .
            (($multiroom_allowed) ? " multiple=\"multiple\"" : "") .
-           " size=\"5\">\n";  
+           " size=\"5\">\n";
       foreach ($rooms as $r)
       {
         if ($r['area_id'] == $area_id)
         {
-          $selected = ($r['id'] == $room_id) ? "selected=\"selected\"" : "";
+          if (!empty($selected_rooms))
+          {
+            // We've come from a drag selection
+            $is_selected = in_array($r['id'], $selected_rooms);
+          }
+          else
+          {
+            $is_selected = ($r['id'] == $room_id);
+          }
+          $selected = ($is_selected) ? "selected=\"selected\"" : "";
           echo "<option $selected value=\"" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</option>\n";
           // store room names for emails
           $room_names[$i] = $r['room_name'];
@@ -1121,7 +1185,7 @@ else
 
       <div id="rep_end_date">
         <?php
-        echo "<label for=\"rep_end_datepicker\">" . get_vocab("rep_end_date") . ":</label>\n";
+        echo "<label>" . get_vocab("rep_end_date") . ":</label>\n";
         genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year);
         ?>
       </div>
