@@ -305,7 +305,8 @@ tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /
 .resizing .dwm_main tbody tr:hover td.row_labels a:link {color: <?php echo $anchor_link_color_header ?>}
 .resizing .dwm_main tbody tr:hover td.row_labels a:visited {color: <?php echo $anchor_link_color_header ?>}
 .resizing .dwm_main tr td.row_labels.selected {background-color: <?php echo $row_highlight_color ?>}
-.resizing .dwm_main tr td.row_labels.selected a:link {color: <?php echo $standard_font_color ?>}
+.resizing .dwm_main tr:hover td.row_labels.selected,
+.resizing .dwm_main tr td.row_labels.selected a:link,
 .resizing .dwm_main tr td.row_labels.selected a:visited {color: <?php echo $standard_font_color ?>}
 
 

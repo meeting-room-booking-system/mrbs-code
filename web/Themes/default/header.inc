@@ -1659,7 +1659,50 @@ $(window).load(function() {
           return null;
         }
               
-              
+        <?php
+        // function to highlight the row labels in the table that are level
+        // with div
+        ?>
+        var highlightRowLabels = function (div)
+        {
+          if (highlightRowLabels.rows === undefined)
+          {
+            <?php // Cache the row label cells in an array ?>
+            highlightRowLabels.rows = [];
+            table.find('tbody tr').each(function() {
+                highlightRowLabels.rows.push($(this).find('td.row_labels'));
+              });
+          }
+          var divStartRow = getRowNumber(div.offset().top);
+          var divEndRow = getRowNumber(div.offset().top + div.outerHeight());
+          for (var i=0; i<highlightRowLabels.rows.length ; i++)
+          {
+            if (((divStartRow === null) || (divStartRow <= i)) && 
+                ((divEndRow === null) || (i < divEndRow)))
+            {
+              highlightRowLabels.rows[i].addClass('selected');
+            }
+            else
+            {
+              highlightRowLabels.rows[i].removeClass('selected');
+            }
+          }
+        }
+        
+        
+        <?php // Remove any highlighting that has been applied to the row labels ?>
+        function clearRowLabels()
+        {
+          if (highlightRowLabels.rows !== undefined)
+          {
+            for (var i=0; i<highlightRowLabels.rows.length; i++)
+            {
+              highlightRowLabels.rows[i].removeClass('selected');
+            }
+          }
+        }
+        
+        
         var tableData = {};
         getTableData(table, tableData);
       
@@ -1677,13 +1720,6 @@ $(window).load(function() {
             <?php // Build the map of booked cells ?>
             table.find('td').not('td.new, td.row_labels').each(function() {
                 bookedMap.push(getSides($(this)));
-              });
-            <?php // Cache the row label cells in an array ?>
-            downHandler.rowLabels = [];
-            downHandler.nRows = 0;
-            table.find('tbody tr').each(function() {
-                downHandler.rowLabels.push($(this).find('td.row_labels'));
-                downHandler.nRows++;
               });
             <?php // Apply a wrapper to turn off highlighting ?>
             table.wrap('<div class="resizing"><\/div>');
@@ -1792,11 +1828,7 @@ $(window).load(function() {
               {
                 box.addClass('outside');
                 moveHandler.outside = true;
-                <?php // and remove the row highlighting ?>
-                for (var i=0; i<downHandler.nRows; i++)
-                {
-                  downHandler.rowLabels[i].removeClass('selected');
-                }
+                clearRowLabels();
               }
             }
             else if (moveHandler.outside)
@@ -1806,24 +1838,11 @@ $(window).load(function() {
             }
             <?php 
             // Highlight the corresponding row label cells (provided we are 
-            // inside the table
+            // inside the table)
             ?>
             if (!moveHandler.outside)
             {
-              var boxStartRow = getRowNumber(box.offset().top);
-              var boxEndRow = getRowNumber(box.offset().top + box.outerHeight());
-              for (var i=0; i<downHandler.nRows ; i++)
-              {
-                if (((boxStartRow === null) || (boxStartRow <= i)) && 
-                    ((boxEndRow === null) || (i < boxEndRow)))
-                {
-                  downHandler.rowLabels[i].addClass('selected');
-                }
-                else
-                {
-                  downHandler.rowLabels[i].removeClass('selected');
-                }
-              }
+              highlightRowLabels(box);
             }
           };
  
@@ -1975,7 +1994,9 @@ $(window).load(function() {
                 {
                   snapToGrid(divClone, 'bottom');
                 }
-
+                
+                highlightRowLabels(divClone);
+                
                 divResize.lastPosition = $.extend({}, divClone.position());
                 divResize.lastSize = {width: divClone.outerWidth(),
                                       height: divClone.outerHeight()};
@@ -2179,6 +2200,16 @@ $(window).load(function() {
             
             
               var handles = 'all';
+              if ($(this).hasClass('series'))
+              {
+                <?php
+                // We only only members of a series to have their duration changed.
+                // It would be a bit confusing to have an individual member of a 
+                // series dragged across days to make it a new daily series, or rooms
+                // to create new bookings in other rooms.
+                ?>
+                handles = '<?php echo ($times_along_top) ? "e,w" : "n,s" ?>';
+              }
               <?php
               if (!$is_admin)
               {

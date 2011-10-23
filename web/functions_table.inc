@@ -436,12 +436,15 @@ function cell_html($cell, $query_strings)
       {
         $c .= " tentative";
       }
-      // Add a class to single entry bookings (ie not series members) that this
-      // user is allowed to edit so that the JavaScript can turn them into resizable
-      // bookings
-      if (!$is_repeat && getWritable($cell[0]['create_by'], $user, $cell[0]['room_id']))
+      // Add a class to bookings that this user is allowed to edit so that the
+      // JavaScript can turn them into resizable bookings
+      if (getWritable($cell[0]['create_by'], $user, $cell[0]['room_id']))
       {
         $c .= " writable";
+        if ($is_repeat)
+        {
+          $c .= " series";
+        }
       }
     }
     else
