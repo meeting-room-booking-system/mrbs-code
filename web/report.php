@@ -259,8 +259,18 @@ function report_row(&$row, $sortby)
   $duration_seconds = $row['end_time'] - $row['start_time'];
   $duration_seconds -= cross_dst($row['start_time'], $row['end_time']);
   $d = get_duration($row['start_time'], $row['end_time']);
-  $values[] = "<span title=\"$duration_seconds\"></span>" .
-              escape($d['duration'] . ' ' . $d['dur_units']);
+  $d_string = $d['duration'] . ' ' . $d['dur_units'];
+  if ($output_as_csv)
+  {
+    $values[] = escape($d_string);
+  }
+  else
+  {
+    // Include the duration in a seconds as a title in an empty span so
+    // that the column can be sorted and filtered properly
+    $values[] = "<span title=\"$duration_seconds\"></span>" . escape($d_string);
+  }
+  
 
   // Description:
   $values[] = escape($row['description']);
