@@ -973,12 +973,6 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $actio
     $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
   }
 
-  // If the subject contains any non-ASCII characters...
-  if (!preg_match('/^[[:ascii:]]*$/', $subject))
-  {
-    // ...communicate the charset and encode it correctly
-    $subject = "=?".get_mail_charset()."?B?".base64_encode($subject)."?=";
-  }
   $result = sendMail($addresses,
                      $subject,
                      $text_body,
@@ -1180,6 +1174,12 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   }
   (!empty($addresses['cc'])) ? $headers['Cc'] = $addresses['cc'] : '';
   (!empty($addresses['bcc'])) ? $headers['Bcc'] = $addresses['bcc'] : '';
+  // If the subject contains any non-ASCII characters...
+  if (!preg_match('/^[[:ascii:]]*$/', $subject))
+  {
+    // ...communicate the charset and encode it correctly
+    $subject = "=?".get_mail_charset()."?B?".base64_encode($subject)."?=";
+  }
   $headers['Subject'] = $subject;
   $headers['Mime-Version'] = '1.0';
   
