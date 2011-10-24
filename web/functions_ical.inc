@@ -604,7 +604,7 @@ function create_ical_event($method, $data, $text_description, $html_description,
           $attendee = parse_address($attendee);
           $results[] = "ATTENDEE;" .
                        ((!empty($attendee['common_name'])) ? "CN=\"" . ical_escape_quoted_string($attendee['common_name']) . "\";" : "") .
-                       "ROLE=$role:mailto:" . $attendee['address'];
+                       "PARTSTAT=NEEDS-ACTION;ROLE=$role:mailto:" . $attendee['address'];
         }
       }
     }
