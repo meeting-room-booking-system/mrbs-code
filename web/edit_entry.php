@@ -849,12 +849,11 @@ else
 
     echo "<div class=\"group\">\n";
     echo "<div id=\"ad\">\n";
-    echo "<input id=\"all_day\" class=\"checkbox" .
+    echo "<input id=\"all_day\" class=\"checkbox\"" .
          // If this is an existing booking that we are editing or copying, then we do
-         // not want the JavaScript to apply the default setting to the all day checkbox,
-         // so add a class that will tell the JavaScript that
-         ((isset($id)) ? " no_default" : "") .
-         "\" name=\"all_day\" type=\"checkbox\" value=\"yes\" onclick=\"OnAllDayClick(this)\">\n";
+         // not want the default duration applied
+         (($default_duration_all_day && !isset($id) && !$drag) ? " checked=\"checked\"" : "") .
+         " name=\"all_day\" type=\"checkbox\" value=\"yes\" onclick=\"OnAllDayClick(this)\">\n";
     echo "<label for=\"all_day\">" . get_vocab("all_day") . "</label>\n";
     echo "</div>\n";
     echo "</div>\n";

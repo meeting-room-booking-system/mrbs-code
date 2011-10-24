@@ -75,7 +75,6 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $auth, $max_level;
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   global $lang_map_windows, $langs, $server_os;
-  global $default_duration_all_day;
   global $select_options;
   global $ajax_refresh_rate;
   global $main_table_cell_border_width, $main_cell_height;
@@ -2422,28 +2421,8 @@ $(window).load(function() {
     }
   }
 
-  <?php
-  // Check the All Day box if that's the default and then call the function
-  // that handles changes.  (Note - the call to OnAllDayClick() comes inside
-  // an each() in case there isn't an all_day checkbox, which there won't be
-  // if we're logging in).   However don't check it if (a) $drag is set, because
-  // that means we've come from a drag select and don't want the defaults or 
-  // (b) the checkbox has been given a class of "no_default", probably because
-  // it's an existing booking that we are editing or copying.
-  global $drag;
-  if ($default_duration_all_day && !isset($drag))
-  {
-    ?>
-    $('#all_day').each(function() {
-        if (!$(this).hasClass('no_default'))
-        {
-          $(this).attr('checked', true);
-          OnAllDayClick(true);
-        }
-      });
-    <?php
-  }
 
+  <?php
   // Set up handlers if anything like a submit button is pressed.   If it's the Save
   // button we need to validate the form first.  In addition, for all the buttons, if
   // we are going to submit something we set some data in the form.   This allows
