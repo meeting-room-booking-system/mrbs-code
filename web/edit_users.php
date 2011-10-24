@@ -859,28 +859,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
         }  // end switch
       }
     }  // end foreach
-    /*
-    // Last column (the action button)
-    echo "<td class=\"action\"><div>\n";
-    // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
-    if (($level >= $min_user_editing_level) || (strcasecmp($row['name'], $user) == 0))
-    {
-      echo "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-      echo "<div>\n";
-      echo "<input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
-      echo "<input type=\"hidden\" name=\"Id\" value=\"" . $row['id'] . "\">\n";
-      echo "<input type=\"image\" class=\"button\" src=\"images/edit.png\"
-                 title=\"" . get_vocab("edit") . "\" alt=\"" . get_vocab("edit") . "\">\n";
-      echo "</div>\n";
-      echo "</form>\n";
-    }
-    else
-    {
-      echo "&nbsp;\n";
-    }
-    echo "</div></td>\n";
-    */
-    
+
     echo "</tr>\n";
     
   }  // end while
