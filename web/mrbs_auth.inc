@@ -30,8 +30,8 @@ $page_level['admin.php']                 = 1;  // Ordinary users can view room d
 $page_level['approve_entry_handler.php'] = 1;  // Ordinary users are allowed to remind admins
 $page_level['del_entry.php']             = 1;  // Ordinary users can delete their own entries
 $page_level['edit_area_room.php']        = 1;  // Ordinary users can view room details
-$page_level['edit_entry.php']            = 1;  // Ordinary users can edit their own entries
-$page_level['edit_entry_handler.php']    = 1;  // Ordinary users can edit their own entries
+$page_level['edit_entry.php']            = ($auth['only_admin_can_book']) ? 2 : 1;
+$page_level['edit_entry_handler.php']    = ($auth['only_admin_can_book']) ? 2 : 1;
 $page_level['edit_users.php']            = 1;  // Ordinary users can edit their own details
 $page_level['pending.php']               = 1;  // Ordinary users can view their own entries
 
@@ -53,8 +53,6 @@ $page_level['del_entry_ajax.php']        = 2;
  */
 function getAuthorised($level)
 {
-  global $auth;
-  
   // If the minimum level is zero (or not set) then they are
   // authorised, whoever they are
   if (empty($level))
@@ -68,11 +66,6 @@ function getAuthorised($level)
   {
     authGet();
     return 0;
-  }
-
-  if (isset($auth['only_admin_can_book']) && $auth['only_admin_can_book'])
-  {
-    $level = 2;
   }
 
   return authGetUserLevel($user) >= $level;
