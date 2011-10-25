@@ -3,9 +3,9 @@
 
 // mrbs/month.php - Month-at-a-time view
 
+require_once "functions_table.inc";
 require_once "defaultincludes.inc";
 require_once "mincals.inc";
-require_once "functions_table.inc";
 
 $debug_flag = get_form_var('debug_flag', 'int');
 
