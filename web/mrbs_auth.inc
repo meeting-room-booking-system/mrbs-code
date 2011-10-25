@@ -28,7 +28,7 @@ $page_level['week.php']                  = ($auth['deny_public_access']) ? 1 : 0
 // made within the page to prevent ordinary users gaining access to admin features.
 $page_level['admin.php']                 = 1;  // Ordinary users can view room details 
 $page_level['approve_entry_handler.php'] = 1;  // Ordinary users are allowed to remind admins
-$page_level['del_entry.php']             = 1;  // Ordinary users can delete their own entries
+$page_level['del_entry.php']             = ($auth['only_admin_can_book']) ? 2 : 1;
 $page_level['edit_area_room.php']        = 1;  // Ordinary users can view room details
 $page_level['edit_entry.php']            = ($auth['only_admin_can_book']) ? 2 : 1;
 $page_level['edit_entry_handler.php']    = ($auth['only_admin_can_book']) ? 2 : 1;

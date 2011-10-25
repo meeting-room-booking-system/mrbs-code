@@ -701,8 +701,8 @@ $pop3_port = "110";
 $auth['smtp']['server'] = 'myserver.example.org';
 
 // General settings
-// If you want only administrators to be able to book slots, set this
-// variable to TRUE
+// If you want only administrators to be able to make and delete bookings,
+// set this variable to TRUE
 $auth['only_admin_can_book'] = FALSE;
 // If you want only administrators to be able to make repeat bookings,
 // set this variable to TRUE
