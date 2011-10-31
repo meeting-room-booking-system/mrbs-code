@@ -466,9 +466,11 @@ if (!$disable_automatic_language_changing || $cli_mode)
 // Locale handling
 
 $windows_locale = "eng";
+$server_os = get_server_os();  // used globally
 
 // 2003/11/09 JF Larvoire: Help new admins understand what to do in case the iconv error occurs...
-if (!function_exists('iconv'))
+if (!function_exists('iconv') && 
+    (($server_os == 'windows') || ($server_os == 'aix')) )
 {
   exit('
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -507,8 +509,6 @@ installed on your system.
 </html>
 ');
 }
-
-$server_os = get_server_os();  // used globally
 
 if ($override_locale != "")
 {
@@ -796,9 +796,9 @@ function utf8_convert_aix($string)
 
 function utf8_convert_from_locale($string)
 {
-  global $windows_locale, $winlocale_codepage_map;
+  global $windows_locale, $winlocale_codepage_map, $server_os;
 
-  if (get_server_os() == "windows")
+  if ($server_os == "windows")
   {
     if ($winlocale_codepage_map[$windows_locale])
     {
@@ -806,7 +806,7 @@ function utf8_convert_from_locale($string)
                       $string);
     }
   }
-  else if (get_server_os() == "aix")
+  else if ($server_os == "aix")
   {
     $string = utf8_convert_aix($string);
   }
