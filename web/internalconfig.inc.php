@@ -43,6 +43,7 @@ if (!empty($dateformat))
 
 // $highlight_method
 // $javascript_cursor
+// $mail_charset
 
 
 /********************************************************

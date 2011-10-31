@@ -782,12 +782,8 @@ $mail_settings['icalendar'] = FALSE; // Set to TRUE to include iCalendar details
                                      // periods and time of day, so the calendar would not
                                      // be able to import the booking)
 
-// HOW TO EMAIL - CHARACTER SET AND LANGUAGE
+// HOW TO EMAIL - LANGUAGE
 // -----------------------------------------
-// You can override the charset used in emails if you like, but be sure
-// the charset you choose can handle all the characters in the translation
-// and that anyone may use in a booking description
-//$mail_charset = "iso-8859-1";
 
 // Set the language used for emails (choose an available lang.* file).
 $mail_settings['admin_lang'] = 'en';   // Default is 'en'.

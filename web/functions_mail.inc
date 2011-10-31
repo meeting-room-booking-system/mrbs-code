@@ -22,46 +22,10 @@ if ($mail_settings['icalendar'])
   require_once "functions_ical.inc";
 }
 
-// {{{ convertToMailCharset()
-
-/**
- * Convert already utf-8 encoded strings to charset defined for mails in
- * config.inc.php.
- *
- * @param string    $string   string to convert
- * @return string   $string   string converted to $mail_charset, or in
- *                            original UTF-8 if mail_charset isn't set.
- */
-
-function convertToMailCharset($string)
-{
-  global $mail_charset;
-  //
-  if (isset($mail_charset) &&
-      (strcasecmp($mail_charset, "utf-8") != 0))
-  {
-    return iconv("utf-8", $mail_charset, $string);
-  }
-  else
-  {
-    return $string;
-  }
-}
-
 
 function get_mail_charset()
 {
-  global $mail_charset;
-
-  if (isset($mail_charset))
-  {
-    $charset = $mail_charset;
-  }
-  else
-  {
-    $charset = "utf-8";
-  }
-  return $charset;
+  return 'utf-8';
 }
 
 function get_mail_vocab($token)
@@ -70,9 +34,7 @@ function get_mail_vocab($token)
 
   $string = get_vocab($token, $mail_vocab);
 
-  $unescaped_string = str_replace('&nbsp;', ' ', $string);
-
-  return convertToMailCharset($unescaped_string);
+  return str_replace('&nbsp;', ' ', $string);
 }
 
 // Get localized (for email) field name for a user defined table column
@@ -137,16 +99,16 @@ function getMailTimeDateString($t, $inc_time=TRUE)
   {
     if ($twentyfourhour_format)
     {
-      return mail_strftime($strftime_format['datetime24'], $t);
+      return utf8_strftime($strftime_format['datetime24'], $t);
     }
     else
     {
-      return mail_strftime($strftime_format['datetime12'], $t);
+      return utf8_strftime($strftime_format['datetime12'], $t);
     }
   }
   else
   {
-    return mail_strftime($strftime_format['date'], $t);
+    return utf8_strftime($strftime_format['date'], $t);
   }
 }
 
@@ -164,13 +126,6 @@ function getMailDateString($time)
     $entry_date = getMailTimeDateString($time);
   }
   return $entry_date;
-}
-
-
-function mail_strftime($format,$t)
-{
-  $string = utf8_strftime($format,$t);
-  return convertToMailCharset($string);
 }
 
 
@@ -482,7 +437,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
     $body .= "</style>\n";
     $body .= "</head>\n";
     $body .= "<body id=\"mrbs\">\n";
-    $body .= "<div id=\"header\">" . convertToMailCharset($mrbs_company) . " - " . get_mail_vocab("mrbs") . "</div>\n";
+    $body .= "<div id=\"header\">" . $mrbs_company . " - " . get_mail_vocab("mrbs") . "</div>\n";
     $body .= "<div id=\"contents\">\n";
   }
   $body .= ($as_html) ? "<p>" : "";
@@ -495,7 +450,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
       $body .= get_mail_vocab("mail_body_more_info");
       $body .= ($as_html) ? "</p><p>" : "\n\n";
       $body .= get_mail_vocab("info_requested") . ": ";
-      $body .= convertToMailCharset($note);
+      $body .= $note;
       break;
     case "remind":
       $body .= get_mail_vocab("mail_body_reminder");
@@ -504,7 +459,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
       $body .= get_mail_vocab("mail_body_rej_entry");
       $body .= ($as_html) ? "</p><p>" : "\n\n";
       $body .= get_mail_vocab("reason") . ': ';
-      $body .= convertToMailCharset($note);
+      $body .= $note;
       break;
     case "delete":
       $body .= get_mail_vocab("mail_body_del_entry");
@@ -513,7 +468,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
       // be the same as the creator)
       $body .= get_mail_vocab("deleted_by") . ': ';
       $user = getUserName();
-      $body .= convertToMailCharset($user);
+      $body .= $user;
       break;
     default:
       if ($compare)
@@ -547,7 +502,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
     {
       $body .= "&series=1";
     }
-    $body .= ($as_html) ? "\">" . convertToMailCharset($data['name']) . "</a>" : "";
+    $body .= ($as_html) ? "\">" . $data['name'] . "</a>" : "";
   }
   $body .= ($as_html) ? "</p>\n" : "\n\n";
   
@@ -568,8 +523,8 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
   
   // Always display the brief description
   $body .= create_body_table_row (get_mail_vocab("namebooker"),
-                                  convertToMailCharset($data['name']),
-                                  convertToMailCharset($mail_previous['name']),
+                                  $data['name'],
+                                  $mail_previous['name'],
                                   $compare, $as_html);
   
   // Displays/don't displays entry details
@@ -577,8 +532,8 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
   {
     // Description:
     $body .= create_body_table_row (get_mail_vocab("description"),
-                                    convertToMailCharset($data['description']),
-                                    convertToMailCharset($mail_previous['description']),
+                                    $data['description'],
+                                    $mail_previous['description'],
                                     $compare, $as_html);
                                                                                          
     if ($confirmation_enabled)
@@ -649,8 +604,8 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
                                          
     // Created by
     $body .= create_body_table_row (get_mail_vocab("createdby"),
-                                    convertToMailCharset($data['create_by']),
-                                    convertToMailCharset($mail_previous['create_by']),
+                                    $data['create_by'],
+                                    $mail_previous['create_by'],
                                     $compare, $as_html);
                      
     // Custom fields
@@ -683,8 +638,8 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
           }
         }
         $body .= create_body_table_row (get_mail_field_name($tbl_entry, $key),
-                                        convertToMailCharset($value),
-                                        convertToMailCharset($mail_previous[$key]),
+                                        $value,
+                                        $mail_previous[$key],
                                         $compare, $as_html);
       }
     }
