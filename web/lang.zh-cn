@@ -59,8 +59,6 @@ $vocab["years"]              = "年";
 $vocab["periods"]            = "periods";
 $vocab["all_day"]            = "整天";
 $vocab["type"]               = "种类";
-$vocab["internal"]           = "内部使用";
-$vocab["external"]           = "外部使用";
 $vocab["save"]               = "保存";
 $vocab["rep_type"]           = "重复预订";
 $vocab["rep_type_0"]         = "不重复";
@@ -234,5 +232,9 @@ $vocab["for_any_questions"]  = ",关于任何无法在此解决的问题.";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatal Error: 无法连接数据库";
+
+// Entry types
+$vocab["type.I"]             = "内部使用";
+$vocab["type.E"]             = "外部使用";
 
 ?>

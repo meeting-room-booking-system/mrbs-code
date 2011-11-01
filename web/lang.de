@@ -73,8 +73,6 @@ $vocab["periods"]            = "Serien";
 $vocab["all_day"]            = "Ganztägig";
 $vocab["area"]               = "Bereich";
 $vocab["type"]               = "Kategorie";
-$vocab["internal"]           = "Intern";
-$vocab["external"]           = "Extern";
 $vocab["save"]               = "Speichern";
 $vocab["rep_type"]           = "Serientyp";
 $vocab["rep_type_0"]         = "Keine";
@@ -425,6 +423,10 @@ $vocab["failed_connect_db"]  = "Fataler Fehler: Verbindung zur Datenbank fehlges
 // Used in DataTables
 $vocab["show_hide_columns"]  = "Anzeigen / Ausblenden von Spalten";
 $vocab["restore_original"]   = "Standard wieder herstellen";
+
+// Entry types
+$vocab["type.I"]             = "Intern";
+$vocab["type.E"]             = "Extern";
 
 // General
 $vocab["fatal_db_error"]     = "Fataler Fehler: Leider steht die Datenbank im Moment nicht zur Verfügung.";

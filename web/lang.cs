@@ -59,8 +59,6 @@ $vocab["years"]              = "roky";
 $vocab["periods"]            = "period";
 $vocab["all_day"]            = "Všechny dny";
 $vocab["type"]               = "Typ";
-$vocab["internal"]           = "Volná místa";
-$vocab["external"]           = "Obsazeno";
 $vocab["save"]               = "Uložit";
 $vocab["rep_type"]           = "Typ opakování";
 $vocab["rep_type_0"]         = "Nikdy";
@@ -234,5 +232,9 @@ $vocab["for_any_questions"]  = "pokud máte nějaké další otázky.";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatalní chyba: Nepodařilo se připojit do databáze";
+
+// Entry types
+$vocab["type.I"]            = "Volná místa";
+$vocab["type.E"]            = "Obsazeno";
 
 ?>

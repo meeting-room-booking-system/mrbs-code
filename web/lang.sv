@@ -64,8 +64,6 @@ $vocab["periods"]            = "perioder";
 $vocab["all_day"]            = "hela dagen";
 $vocab["area"]               = "Område";
 $vocab["type"]               = "Typ";
-$vocab["internal"]           = "Internt";
-$vocab["external"]           = "Externt";
 $vocab["save"]               = "Spara";
 $vocab["rep_type"]           = "Repetitionstyp";
 $vocab["rep_type_0"]         = "ingen";
@@ -348,5 +346,9 @@ $vocab["for_any_questions"]  = "för eventuella frågor som ej besvaras här.";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatalt fel: Kunde ej ansluta till databasen!";
+
+// Entry types
+$vocab["type.I"]             = "Internt";
+$vocab["type.E"]             = "Externt";
 
 ?>

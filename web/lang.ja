@@ -62,8 +62,6 @@ $vocab["periods"]            = "期間";
 $vocab["all_day"]            = "終日";
 $vocab["area"]               = "部署";
 $vocab["type"]               = "種別";
-$vocab["internal"]           = "内部会議";
-$vocab["external"]           = "外部会議";
 $vocab["save"]               = "保存";
 $vocab["rep_type"]           = "繰り返しの様式";
 $vocab["rep_type_0"]         = "なし";
@@ -346,5 +344,9 @@ $vocab["for_any_questions"]  = "にお尋ねください。";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "致命的なエラー: データベースに接続できません。";
+
+// Entry types
+$vocab["type.I"]             = "内部会議";
+$vocab["type.E"]             = "外部会議";
 
 ?>

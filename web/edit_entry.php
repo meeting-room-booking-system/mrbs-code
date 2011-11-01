@@ -1065,9 +1065,9 @@ else
       <label for="type"><?php echo get_vocab("type")?>:</label>
       <select id="type" name="type">
         <?php
-        foreach ($typel as $key => $value)
+        foreach ($booking_types as $key)
         {
-          echo "<option value=\"$key\"" . (($type == $key) ? " selected=\"selected\"" : "") . ">$value</option>\n";
+          echo "<option value=\"$key\"" . (($type == $key) ? " selected=\"selected\"" : "") . ">".get_type_vocab($key)."</option>\n";
         }
         ?>
       </select>

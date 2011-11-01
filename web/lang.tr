@@ -61,8 +61,6 @@ $vocab["years"]              = "yıl";
 $vocab["periods"]            = "dönem";
 $vocab["all_day"]            = "Tüm Gün";
 $vocab["type"]               = "Tip";
-$vocab["internal"]           = "İç";
-$vocab["external"]           = "Dış";
 $vocab["Mix"]                = "Karma İç+Dış";
 $vocab["save"]               = "Kaydet";
 $vocab["rep_type"]           = "Tekrar Tipi";
@@ -248,5 +246,9 @@ $vocab["for_any_questions"]  = "henüz cevaplanmamış her bir soru için.";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Ciddi Hata: VeriTabanına bağlanılamadı.";
+
+// Entry types
+$vocab["type.I"]             = "İç";
+$vocab["type.E"]             = "Dış";
 
 ?>

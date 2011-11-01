@@ -72,8 +72,6 @@ $vocab["periods"]            = "periods";
 $vocab["all_day"]            = "All day";
 $vocab["area"]               = "Area";
 $vocab["type"]               = "Type";
-$vocab["internal"]           = "Internal";
-$vocab["external"]           = "External";
 $vocab["save"]               = "Save";
 $vocab["rep_type"]           = "Repeat type";
 $vocab["rep_type_0"]         = "None";
@@ -425,6 +423,10 @@ $vocab["failed_connect_db"]  = "Fatal error: failed to connect to database";
 $vocab["show_hide_columns"]  = "Show / hide columns";
 $vocab["restore_original"]   = "Restore original";
 
+// Entry types
+$vocab["type.I"]            = "Internal";
+$vocab["type.E"]            = "External";
+ 
 // General
 $vocab["fatal_db_error"]     = "Fatal error: unfortunately the database is not available at the moment.";
 $vocab["back"]               = "Back";

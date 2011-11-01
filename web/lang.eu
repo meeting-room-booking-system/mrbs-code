@@ -1,4 +1,4 @@
-<?php // -*-mode: PHP; coding:iso-utf-8;-*-
+<?php // -*-mode: PHP; coding:utf-8;-*-
 
 // $Id$
 
@@ -59,8 +59,6 @@ $vocab["years"]              = "urteak";
 $vocab["periods"]            = "tarte ordu erdikoak";
 $vocab["all_day"]            = "Egun osorako";
 $vocab["type"]               = "Mota";
-$vocab["internal"]           = "Arrunta";
-$vocab["external"]           = "Berezia";
 $vocab["save"]               = "Gorde";
 $vocab["rep_type"]           = "Errepikapen mota";
 $vocab["rep_type_0"]         = "Ezein ez";
@@ -234,5 +232,9 @@ $vocab["for_any_questions"]  = "hemen erantzuten ez den edozein galdera egiteko.
 
 // Used in mysql.php AND pgsql.php
 $vocab["failed_connect_db"]  = "Errorea: Ezin izan da datubasearekiko konexioa burutu";
+
+// Entry types
+$vocab["type.I"]            = "Arrunta";
+$vocab["type.E"]            = "Berezia";
 
 ?>

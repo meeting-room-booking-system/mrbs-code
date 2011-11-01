@@ -59,8 +59,6 @@ $vocab["years"]              = "年";
 $vocab["periods"]            = "periods";
 $vocab["all_day"]            = "整天";
 $vocab["type"]               = "種類";
-$vocab["internal"]           = "內部使用";
-$vocab["external"]           = "外部使用";
 $vocab["save"]               = "儲存";
 $vocab["rep_type"]           = "重覆預約";
 $vocab["rep_type_0"]         = "不重覆";
@@ -234,5 +232,9 @@ $vocab["for_any_questions"]  = ",關於任何在這裡找不到答案的問題."
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatal Error: 無法連上資料庫";
+
+// Entry types
+$vocab["type.I"]             = "內部使用";
+$vocab["type.E"]             = "外部使用";
 
 ?>

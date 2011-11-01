@@ -177,7 +177,6 @@ function close_report()
 
 function report_row(&$row, $sortby)
 {
-  global $typel;
   global $output_as_csv, $ajax, $ajax_capable, $json_data;
   global $csv_row_sep, $csv_col_sep;
   global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
@@ -276,7 +275,8 @@ function report_row(&$row, $sortby)
   $values[] = escape($row['description']);
 
   // Entry Type:
-  $et = empty($typel[$row['type']]) ? "?".$row['type']."?" : $typel[$row['type']];
+  $type = get_type_vocab($row['type']);
+  $et = empty($type) ? "?".$row['type']."?" : $type;
   $values[] = escape($et);
 
   // Created by:
@@ -380,7 +380,7 @@ function report_row(&$row, $sortby)
 
 function get_sumby_name_from_row(&$row)
 {
-  global $sumby, $typel;
+  global $sumby;
   
   // Use brief description, created by or type as the name:
   switch( $sumby )
@@ -389,7 +389,7 @@ function get_sumby_name_from_row(&$row)
       $name = $row['name'];
       break;
     case 't':
-      $name = $typel[ $row['type'] ];
+      $name = get_type_vocab($row['type']);
       break;
     case 'c':
     default:
@@ -1111,8 +1111,9 @@ if (!$ajax && ($output_as_html || (empty($nmatch) && !$cli_mode)))
           <label for="typematch"><?php echo get_vocab("match_type")?>:</label>
           <select id="typematch" name="typematch[]" multiple="multiple" size="5">
             <?php
-            foreach ( $typel as $key => $val )
+            foreach ( $booking_types as $key )
             {
+              $val = get_type_vocab($key);
               if (!empty($val) )
               {
                 echo "                  <option value=\"$key\"" .

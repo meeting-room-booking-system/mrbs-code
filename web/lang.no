@@ -63,8 +63,6 @@ $vocab["years"]              = "år";
 $vocab["periods"]            = "timer";
 $vocab["all_day"]            = "hele dagen";
 $vocab["type"]               = "Type reservasjon";
-$vocab["internal"]           = "Intern";
-$vocab["external"]           = "Ekstern";
 $vocab["save"]               = "Lagre";
 $vocab["rep_type"]           = "Repetisjon";
 $vocab["rep_type_0"]         = "ingen";
@@ -248,5 +246,9 @@ $vocab["for_any_questions"]  = "for spørsmål som ikke er besvart her.";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Alvorlig feil: Kunne ikke koble til database";
+
+// Entry types
+$vocab["type.I"]             = "Intern";
+$vocab["type.E"]             = "Ekstern";
 
 ?>

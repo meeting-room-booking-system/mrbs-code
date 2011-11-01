@@ -37,7 +37,7 @@ function create_details_row($label, $value, $as_html=FALSE, $class='')
 function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_disabled=FALSE)
 {
   global $enable_periods, $confirmation_enabled, $approval_enabled;
-  global $is_private_field, $standard_fields, $typel;
+  global $is_private_field, $standard_fields;
   global $strftime_format;
   global $tbl_entry;
   global $select_options;
@@ -141,7 +141,8 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   }
   $tbody .= create_details_row(get_vocab("end_date"), $end_date, $as_html);
   // Type
-  $value = (empty($typel[$data['type']])) ? "?${data['type']}?" : $typel[$data['type']];
+  $type = get_type_vocab($data['type']);
+  $value = (empty($type)) ? "?${data['type']}?" : $type;
   $tbody .= create_details_row(get_vocab("type"), $value, $as_html);
   // Created by
   $class = ($keep_private && $is_private_field['entry.create_by']) ? "private" : "";

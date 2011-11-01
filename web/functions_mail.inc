@@ -411,7 +411,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
 {
   global $mail_previous, $returl, $mrbs_company;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
-  global $typel, $mail_settings, $standard_fields, $url_base;
+  global $mail_settings, $standard_fields, $url_base;
   global $tbl_entry;
   global $select_options;
 
@@ -598,8 +598,8 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
     
     // Type of booking
     $body .= create_body_table_row (get_mail_vocab("type"),
-                                    $typel[$data['type']],
-                                    $typel[$mail_previous['type']],
+                                    get_type_vocab($data['type']),
+                                    get_type_vocab($mail_previous['type']),
                                     $compare, $as_html);
                                          
     // Created by

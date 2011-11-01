@@ -73,8 +73,6 @@ $vocab["periods"]            = "períodos";
 $vocab["all_day"]            = "Todo o dia";
 $vocab["area"]               = "Área";
 $vocab["type"]               = "Tipo";
-$vocab["internal"]           = "Interno";
-$vocab["external"]           = "Externo";
 $vocab["save"]               = "Gravar";
 $vocab["rep_type"]           = "Repetir Tipo";
 $vocab["rep_type_0"]         = "Nenhum";
@@ -383,5 +381,9 @@ $vocab["for_any_questions"]  = "para qualquer informação adicional.";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Erro: Failha ao ligar à base de dados";
+
+// Entry types
+$vocab["type.I"]             = "Interno";
+$vocab["type.E"]             = "Externo";
 
 ?>

@@ -919,36 +919,23 @@ $csv_col_sep = ",";   // Separator between columns/fields
  * Entry Types
  *************/
 
-// This array maps entry type codes into descriptions.   The key to the $typel array
-// is a single char in the MRBS database, and so the array key can be any permitted
-// PHP array key character.
+// This array lists the configured entry type codes. The values map to a
+// single char in the MRBS database, and so can be any permitted PHP array
+// character.
+//
+// The description of the entry types are localised in the language files
+// as "type.X" where 'X' is the entry type.
 //
 // This is a basic default array which ensures there are at least some types defined.
-// The proper type definitions should be made in config.inc.php:  they have to go there
-// because they use get_vocab which requires language.inc which uses settings which might
-// be made in config.inc.php.
+// The proper type definitions should be made in config.inc.php.
 //
 // Each type has a color which is defined in the array $color_types in the Themes
 // directory - just edit whichever include file corresponds to the theme you
 // have chosen in the config settings. (The default is default.inc, unsurprisingly!)
 //
-// The value for each type is a short (one word is best) description of the
-// type. The values must be escaped for HTML output ("R&amp;D").
-// Please leave I and E alone for compatibility.
-// If a type's entry is unset or empty, that type is not defined; it will not
-// be shown in the day view color-key, and not offered in the type selector
-// for new or edited entries.
 
-// $typel["A"] = "A";
-// $typel["B"] = "B";
-// $typel["C"] = "C";
-// $typel["D"] = "D";
-$typel["E"] = "E";
-// $typel["F"] = "F";
-// $typel["G"] = "G";
-// $typel["H"] = "H";
-$typel["I"] = "I";
-// $typel["J"] = "J";
+$booking_types[] = "E";
+$booking_types[] = "I";
 
 // Default type for new bookings
 $default_type = "I";

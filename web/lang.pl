@@ -60,8 +60,6 @@ $vocab["years"]              = "lata";
 $vocab["periods"]            = "okresy";
 $vocab["all_day"]            = "Cały dzień";
 $vocab["type"]               = "Typ";
-$vocab["internal"]           = "Wewnętrzny";
-$vocab["external"]           = "Zewnętrzny";
 $vocab["save"]               = "Zapisz";
 $vocab["rep_type"]           = "Powtórz Typ";
 $vocab["rep_type_0"]         = "Żaden";
@@ -250,3 +248,7 @@ $vocab["for_any_questions"]  = "W sprawie pytań na które brak tu odpowiedzi.";
 
 // Uzyte w mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Błąd Krytyczny: Błąd połączenia z bazą danych";
+
+// Entry types
+$vocab["type.I"]             = "Wewnętrzny";
+$vocab["type.E"]             = "Zewnętrzny";

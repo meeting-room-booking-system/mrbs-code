@@ -59,8 +59,6 @@ $vocab["years"]              = "χρόνια";
 $vocab["periods"]            = "periods";
 $vocab["all_day"]            = "Ολόκληρη μέρα";
 $vocab["type"]               = "Τύπος";
-$vocab["internal"]           = "Εσωτερικά";
-$vocab["external"]           = "Εξωτερικά";
 $vocab["save"]               = "Αποθήκευση";
 $vocab["rep_type"]           = "Τύπος επανάληψης";
 $vocab["rep_type_0"]         = "Τίποτα";
@@ -234,5 +232,9 @@ $vocab["for_any_questions"]  = "για όσες ερωτήσεις δεν απα
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Κρίσιμο σφάλμα: Αποτυχία σύνδεσης στη βάση δεδομένων";
+
+// Entry types
+$vocab["type.I"]             = "Εσωτερικά";
+$vocab["type.E"]             = "Εξωτερικά";
 
 ?>

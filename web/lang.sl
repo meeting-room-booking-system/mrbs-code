@@ -61,8 +61,6 @@ $vocab["years"]              = "let";
 $vocab["periods"]            = "ponavljanj";
 $vocab["all_day"]            = "Vse dni";
 $vocab["type"]               = "Tip";
-$vocab["internal"]           = "Interno";
-$vocab["external"]           = "Zunanje";
 $vocab["save"]               = "Shrani";
 $vocab["rep_type"]           = "Način ponavljanja";
 $vocab["rep_type_0"]         = "Brez";
@@ -247,6 +245,10 @@ $vocab["for_any_questions"]  = ".";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "NAPAKA: ni se možno povezati v podatkovno bazo";
+
+// Entry types
+$vocab["type.I"]             = "Interno";
+$vocab["type.E"]             = "Zunanje";
 
 ?>
 

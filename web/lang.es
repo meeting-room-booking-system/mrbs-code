@@ -73,8 +73,6 @@ $vocab["periods"]            = "Periodos";
 $vocab["all_day"]            = "Día Completo";
 $vocab["area"]               = "Agrupación";
 $vocab["type"]               = "Tipo";
-$vocab["internal"]           = "Interna";
-$vocab["external"]           = "Externa";
 $vocab["save"]               = "Guardar";
 $vocab["rep_type"]           = "Tipo Repetición";
 $vocab["rep_type_0"]         = "Ninguna";
@@ -403,6 +401,10 @@ $vocab["for_any_questions"]  = "para cualquier duda.";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Error: No se pudo conectar a la Base de Datos";
+
+// Entry types
+$vocab["type.I"]             = "Interna";
+$vocab["type.E"]             = "Externa";
 
 // General
 $vocab["fatal_db_error"]     = "Error: la base de datos no está disponible en este momento.";

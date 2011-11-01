@@ -777,6 +777,13 @@ function get_vocab($tag)
 }
 
 
+// Get localised booking type name
+function get_type_vocab($type)
+{
+  return get_vocab("type.$type");
+}
+
+
 // Get localized field name for a user defined table column
 // Looks for a tag of the format tablename.columnname (where tablename is
 // stripped of the table prefix) and if can't find a string for that tag will

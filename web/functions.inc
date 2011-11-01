@@ -945,9 +945,9 @@ function validate_email_list($list)
 // Display the entry-type color key. This has up to 2 rows, up to 5 columns.
 function show_colour_key()
 {
-  global $typel;
+  global $booking_types;
   // set the table width.   Default is 5, but try and avoid rows of unequal length
-  switch (count($typel))
+  switch (count($booking_types))
   {
     case '6':
       $table_width = 3;
@@ -961,8 +961,9 @@ function show_colour_key()
   }
   echo "<table id=\"colour_key\"><tr>\n";
   $n = 0;
-  foreach ($typel as $key => $value)
+  foreach ($booking_types as $key)
   {
+    $value = get_type_vocab($key);
     if (++$n > $table_width)
     {
       $n = 1;
@@ -975,7 +976,7 @@ function show_colour_key()
   }
   // If there is more than one row and the bottom row isn't complete then 
   // pad it out with a single merged cell
-  if ((count($typel) > $table_width) && ($n < $table_width))
+  if ((count($booking_types) > $table_width) && ($n < $table_width))
   {
     echo "<td colspan=\"" . ($table_width - $n) . "\"" .
         " id=\"row_padding\">&nbsp;</td>\n";

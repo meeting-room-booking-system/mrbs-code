@@ -62,8 +62,6 @@ $vocab["periods"]            = "jaksoa";
 $vocab["all_day"]            = "Koko päivän";
 $vocab["area"]               = "Alue";
 $vocab["type"]               = "Tyyppi";
-$vocab["internal"]           = "Sisäinen";
-$vocab["external"]           = "Ulkoinen";
 $vocab["save"]               = "Tallenna";
 $vocab["rep_type"]           = "Toiston tyyppi";
 $vocab["rep_type_0"]         = "Ei toistoa";
@@ -294,5 +292,9 @@ $vocab["for_any_questions"]  = "antaa lisätietoja mikäli et löydä vastausta 
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Järjestelmävirhe: Tietokantayhteyden avaaminen ei onnistu.";
+
+// Entry types
+$vocab["type.I"]             = "Sisäinen";
+$vocab["type.E"]             = "Ulkoinen";
 
 ?>

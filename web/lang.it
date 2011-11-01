@@ -61,8 +61,6 @@ $vocab["years"]              = "anni";
 $vocab["periods"]            = "periodi";
 $vocab["all_day"]            = "Tutto il giorno";
 $vocab["type"]               = "Tipo";
-$vocab["internal"]           = "Interno";
-$vocab["external"]           = "Esterno";
 $vocab["save"]               = "Salva";
 $vocab["rep_type"]           = "Tipo ripetizione";
 $vocab["rep_type_0"]         = "Nessuno";
@@ -247,5 +245,9 @@ $vocab["for_any_questions"]  = "per qualsiasi altra domanda.";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Errore fatale: Fallita connessione al database";
+
+// Entry types
+$vocab["type.I"]             = "Interno";
+$vocab["type.E"]             = "Esterno";
 
 ?>

@@ -58,8 +58,6 @@ $vocab["years"]              = "년";
 $vocab["periods"]            = "기간";
 $vocab["all_day"]            = "하루종일";
 $vocab["type"]               = "회의 종류";
-$vocab["internal"]           = "내부회의";
-$vocab["external"]           = "외부회의";
 $vocab["save"]               = "보존";
 $vocab["rep_type"]           = "반복 타입";
 $vocab["rep_type_0"]         = "없음";
@@ -233,5 +231,9 @@ $vocab["for_any_questions"]  = " ";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "심각한 에러: 데이터베이스에 접속할 수 없습니다.";
+
+// Entry types
+$vocab["type.I"]            = "내부회의";
+$vocab["type.E"]            = "외부회의";
 
 ?>

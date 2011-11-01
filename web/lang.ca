@@ -59,8 +59,6 @@ $vocab["years"]              = "anys";
 $vocab["periods"]            = "períodes";
 $vocab["all_day"]            = "Dia complet";
 $vocab["type"]               = "Entitat";
-$vocab["internal"]           = "Intern";
-$vocab["external"]           = "Extern";
 $vocab["save"]               = "Guardar";
 $vocab["rep_type"]           = "Tipus de repetició";
 $vocab["rep_type_0"]         = "Cap";
@@ -235,5 +233,9 @@ $vocab["for_any_questions"]  = "per a altres consultes.";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Error Fatal: Fallada al conectar a la base de dades";
+
+// Entry types
+$vocab["type.I"]             = "Intern";
+$vocab["type.E"]             = "Extern";
 
 ?>

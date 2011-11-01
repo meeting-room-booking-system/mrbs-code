@@ -73,8 +73,6 @@ $vocab["periods"]            = "Perioden";
 $vocab["all_day"]            = "Hele Dag";
 $vocab["area"]               = "Ruimte";
 $vocab["type"]               = "Soort";
-$vocab["internal"]           = "Intern";
-$vocab["external"]           = "Extern";
 $vocab["save"]               = "Opslaan";
 $vocab["rep_type"]           = "Soort Herhaling";
 $vocab["rep_type_0"]         = "Geen";
@@ -384,5 +382,9 @@ $vocab["for_any_questions"]  = "Voor alle vragen die hier niet worden beantwoord
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatale Fout: Verbinding naar database server mislukt";
+
+// Entry types
+$vocab["type.I"]             = "Intern";
+$vocab["type.E"]             = "Extern";
 
 ?>
