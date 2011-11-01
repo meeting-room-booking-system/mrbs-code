@@ -465,7 +465,6 @@ if (!$disable_automatic_language_changing || $cli_mode)
 //////////////////////////////////////////////////////////////////////
 // Locale handling
 
-$windows_locale = "eng";
 $server_os = get_server_os();  // used globally
 
 // 2003/11/09 JF Larvoire: Help new admins understand what to do in case the iconv error occurs...
@@ -510,75 +509,114 @@ installed on your system.
 ');
 }
 
-if ($override_locale != "")
+$locale_warning = '';
+$windows_locale = "eng";
+set_mrbs_locale();
+
+
+// Works out what locale should be used by MRBS depending on the config settings
+// and the user's browser preferences.
+// Returns the locale, or FALSE if no locale can be determined
+function determine_mrbs_locale()
 {
-  if (setlocale(LC_ALL,$override_locale) == FALSE)
+  global $override_locale;
+  global $locale_warning, $locale, $windows_locale, $server_os;
+  global $lang_map_unix, $lang_map_windows;
+  
+  $mrbs_locale = FALSE;
+  
+  if ($override_locale != "")
   {
-    $locale_warning = "Server failed to set locale to
- \"".$override_locale."\" (Override locale)";
+    $mrbs_locale = $override_locale;
+    $windows_locale = $mrbs_locale;
   }
-  $windows_locale = $override_locale;
-}
-else
-{
-  if ($server_os == "windows")
+  else
   {
-    if ($lang_map_windows[strtolower($locale)])
+    if ($server_os == "windows")
     {
-      if (setlocale(LC_ALL, $lang_map_windows[strtolower($locale)]) == FALSE)
+      if ($lang_map_windows[strtolower($locale)])
       {
-        $locale_warning = "Server failed to set locale to
- \"".$lang_map_windows[strtolower($locale)]."\" (Windows)";
-      }
-      $windows_locale = $lang_map_windows[strtolower($locale)];
-    }
-    else
-    {
-      $locale_warning = "Server failed to map browser language
- \"".$locale."\" to a Windows locale specifier";
-    }
-  }
-  /* All of these Unix OSes work in mostly the same way... */
-  else if (($server_os == "linux") ||
-           ($server_os == "sunos") ||
-           ($server_os == "bsd") ||
-           ($server_os == "aix") ||
-           ($server_os == "macosx"))
-  {
-    if (strlen($locale) == 2)
-    {
-      if (isset($lang_map_unix[$locale]) && ($lang_map_unix[$locale]))
-      {
-        $locale = $lang_map_unix[$locale];
+        $mrbs_locale = $lang_map_windows[strtolower($locale)];
+        $windows_locale = $mrbs_locale;
       }
       else
       {
-        // Convert locale=xx to xx_XX
-        $locale = strtolower($locale)."_".strtoupper($locale);
+        $locale_warning = "Server failed to map browser language \"" .
+                          $locale .
+                          "\" to a Windows locale specifier";
       }
     }
-    else
+    /* All of these Unix OSes work in mostly the same way... */
+    else if (($server_os == "linux") ||
+             ($server_os == "sunos") ||
+             ($server_os == "bsd") ||
+             ($server_os == "aix") ||
+             ($server_os == "macosx"))
     {
-      // Convert locale=xx-xX or xx_Xx or xx_XxXx (etc.) to xx_XX[XX]; this is highly
-      // dependent on the machine's installed locales
-      $locale = locale_format($locale, '_');
-    }
-    switch ($server_os)
-    {
-      case "sunos":
-      case "linux":
-      case "bsd":
-        $locale .= ".UTF-8";
-        break;
+      if (strlen($locale) == 2)
+      {
+        if (isset($lang_map_unix[$locale]) && ($lang_map_unix[$locale]))
+        {
+          $mrbs_locale = $lang_map_unix[$locale];
+        }
+        else
+        {
+          // Convert locale=xx to xx_XX
+          $mrbs_locale = strtolower($locale)."_".strtoupper($locale);
+        }
+      }
+      else
+      {
+        // Convert locale=xx-xX or xx_Xx or xx_XxXx (etc.) to xx_XX[XX]; this is highly
+        // dependent on the machine's installed locales
+        $mrbs_locale = locale_format($locale, '_');
+      }
+      switch ($server_os)
+      {
+        case "sunos":
+        case "linux":
+        case "bsd":
+          $mrbs_locale .= ".UTF-8";
+          break;
 
-      case "macosx":
-        $locale .= ".utf-8";
-        break;
+        case "macosx":
+          $mrbs_locale .= ".utf-8";
+          break;
+      }
     }
-    if (setlocale(LC_ALL, $locale) == FALSE)
+  }
+  return $mrbs_locale;
+}
+
+
+// Sets the locale according to the MRBS config seetings and the user's
+// browser preferences
+function set_mrbs_locale()
+{
+  global $locale_warning;
+  
+  static $locale = '';
+  static $have_locale = FALSE;
+  static $have_valid_locale = FALSE;
+  
+  // If we've tried this before and have got a good locale, then set it.
+  if ($have_locale)
+  {
+    if ($have_valid_locale)
     {
-      $locale_warning = "Server failed to set locale to \"".$locale."\"
-(Unix)";
+      setlocale(LC_ALL, $locale);
+    }
+    return;
+  }
+  // Otherwise work out what the locale should be and set it.
+  $locale = determine_mrbs_locale();
+  $have_locale = TRUE;
+  if ($locale !== FALSE)
+  {
+    $have_valid_locale = (setlocale(LC_ALL, $locale) !== FALSE);
+    if (!$have_valid_locale)
+    {
+      $locale_warning = "Server failed to set locale to '$locale'";
     }
   }
 }
@@ -794,6 +832,7 @@ function utf8_convert_aix($string)
   return $string;
 }
 
+
 function utf8_convert_from_locale($string)
 {
   global $windows_locale, $winlocale_codepage_map, $server_os;
@@ -825,6 +864,17 @@ function utf8_strftime($format, $time)
     $format = str_replace("%R", "%H:%M", $format);
     $format = str_replace("%P", "%p", $format);
     $format = str_replace("%l", "%I", $format);
+    // If we are running Windows we have to set the locale again in case another script
+    // running in the same process has changed the locale since we first set it.  See the
+    // warning on the PHP manual page for setlocale():
+    //
+    // "The locale information is maintained per process, not per thread. If you are 
+    // running PHP on a multithreaded server API like IIS or Apache on Windows, you may
+    // experience sudden changes in locale settings while a script is running, though
+    // the script itself never called setlocale(). This happens due to other scripts
+    // running in different threads of the same process at the same time, changing the
+    // process-wide locale using setlocale()."
+    set_mrbs_locale();
   }
   
   // %p doesn't actually work in some locales, we have to patch it up ourselves
