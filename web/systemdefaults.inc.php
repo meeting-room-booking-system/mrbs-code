@@ -925,6 +925,9 @@ $csv_col_sep = ",";   // Separator between columns/fields
 //
 // The description of the entry types are localised in the language files
 // as "type.X" where 'X' is the entry type.
+// So, if you add a new booking type 'C' the minimum you need to do is add
+// a line to lang.en like:
+// $vocab["type.C"] =           "New booking type";
 //
 // This is a basic default array which ensures there are at least some types defined.
 // The proper type definitions should be made in config.inc.php.
