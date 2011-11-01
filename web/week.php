@@ -3,9 +3,9 @@
 
 // mrbs/week.php - Week-at-a-time view
 
-require_once "functions_table.inc";
 require_once "defaultincludes.inc";
 require_once "mincals.inc";
+require_once "functions_table.inc";
 
 // Get non-standard form variables
 $timetohighlight = get_form_var('timetohighlight', 'int');
