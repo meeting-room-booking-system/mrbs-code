@@ -324,6 +324,12 @@ function print_theme_header($day, $month, $year, $area, $room)
             {
               return false;
             }
+            <?php
+            // Remove the <colgroup>.  This is only needed to assist in the formatting
+            // of the non-datatable version of the table.   When we have a datatable,
+            // the datatable sorts out its own formatting.
+            ?>
+            table.find('colgroup').remove();
             <?php // Set up the default options ?>
             var defaultOptions = {};
             <?php
