@@ -4,13 +4,15 @@
 
 // Generates the JavaScript code to turn the input with id $id
 // into an autocomplete box, with options contained in the
-// array $options.
+// array $options.  $options can be a simple or an associative array.
 function generate_autocomplete($id, $options)
 {
   global $autocomplete_length_breaks;
-  
+
   $js = '';
 
+  // Turn the array into a simple, numerically indexed, array
+  $options = array_values($options);
   $n_options = count($options);
   if ($n_options > 0)
   {
