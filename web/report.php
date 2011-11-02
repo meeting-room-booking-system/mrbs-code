@@ -123,13 +123,13 @@ function report_header()
   }
   elseif ($output_as_html)
   {
-    $html .= "<colgroup>";
+    $html = "<colgroup>";
     foreach ($values as $value)
     {
       $html .= "<col>";
     }
     $html .= "</colgroup>\n";
-    $html = "<thead>\n";
+    $html .= "<thead>\n";
     $html .= "<tr>\n";
     foreach ($values as $value)
     {
@@ -192,7 +192,6 @@ function report_row(&$row, $sortby)
     return;
   }
   
-  $rows_output++;
   $values = array();
   
   // Booking name
@@ -327,7 +326,8 @@ function report_row(&$row, $sortby)
     {
       // If the custom field is an associative array then we want
       // the value rather than the array key
-      if (is_assoc($select_options["entry.$key"]) && 
+      if (isset($select_options["entry.$key"]) &&
+          is_assoc($select_options["entry.$key"]) && 
           array_key_exists($row[$key], $select_options["entry.$key"]))
       {
         $output = $select_options["entry.$key"][$row[$key]];
@@ -361,20 +361,22 @@ function report_row(&$row, $sortby)
   {
     $json_data['aaData'][] = $values;
   }
-  elseif ($output_as_csv)
-  {
-    $line = '"';
-    $line .= implode("\"$csv_col_sep\"", $values);
-    $line .= '"' . $csv_row_sep;
-  }
   else
   {
-    $line = "<tr>\n<td>";
-    $line .= implode("</td>\n<td>", $values);
-    $line .= "</td>\n</tr>\n";
+    if ($output_as_csv)
+    {
+      $line = '"';
+      $line .= implode("\"$csv_col_sep\"", $values);
+      $line .= '"' . $csv_row_sep;
+    }
+    else
+    {
+      $line = "<tr>\n<td>";
+      $line .= implode("</td>\n<td>", $values);
+      $line .= "</td>\n</tr>\n";
+    }
+    echo $line;
   }
-  
-  echo $line;
 }
 
 
