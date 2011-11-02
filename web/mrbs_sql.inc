@@ -82,7 +82,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 
     // enclose  the viewday etc. links in a span to make it easier for JavaScript to strip them out
     $err[] = "<a href=\"view_entry.php?id=".$row['id']."\">".$row['name']."</a>"
-      . " ( " . $startstr . ") "
+      . " (" . $startstr . ") "
       . "<span>(<a href=\"day.php?$param_ymd\">".get_vocab("viewday")."</a>"
       . " | <a href=\"week.php?room=$room_id&amp;$param_ymd\">".get_vocab("viewweek")."</a>"
       . " | <a href=\"month.php?room=$room_id&amp;$param_ym\">".get_vocab("viewmonth")."</a>)</span>";
