@@ -178,7 +178,8 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
         {
           // If the custom field is an associative array then we want
           // the value rather than the array key
-          if (is_assoc($select_options["entry.$key"]) && 
+          if (isset($select_options["entry.$key"]) &&
+              is_assoc($select_options["entry.$key"]) && 
               array_key_exists($data[$key], $select_options["entry.$key"]))
           {
             $value = $select_options["entry.$key"][$data[$key]];

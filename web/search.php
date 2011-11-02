@@ -207,7 +207,8 @@ foreach ($fields as $field)
   {
     // If we've got a field that is represented by an associative array of options
     // then we have to search for the keys whose values match the search string
-    if (is_assoc($select_options["entry." . $field['name']]))
+    if (isset($select_options["entry." . $field['name']]) && 
+        is_assoc($select_options["entry." . $field['name']]))
     {
       foreach($select_options["entry." . $field['name']] as $key => $value)
       {

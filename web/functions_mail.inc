@@ -627,7 +627,8 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
           }
         }
         // For any associative arrays we want the value rather than the key
-        if (is_assoc($select_options["entry.$key"]) && 
+        if (isset($select_options["entry.$key"]) &&
+            is_assoc($select_options["entry.$key"]) && 
             array_key_exists($value, $select_options["entry.$key"]))
         {
           $value = $select_options["entry.$key"][$value];

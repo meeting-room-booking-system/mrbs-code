@@ -830,7 +830,8 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
           default:
             // Where there's an associative array of options, display
             // the value rather than the key
-            if (is_assoc($select_options["users.$key"]))
+            if (isset($select_options["users.$key"]) &&
+                is_assoc($select_options["users.$key"]))
             {
               if (isset($select_options["users.$key"][$row[$key]]))
               {
