@@ -914,6 +914,19 @@ $summary_filename = "summary.csv";
 $csv_row_sep = "\n";  // Separator between rows/records
 $csv_col_sep = ",";   // Separator between columns/fields
 
+// CSV charset
+// Set the character set to be used for CSV files.   If $csv_charset is not set
+// then CSV files are written using the MRBS default charset (utf-8).  However
+// Microsoft Excel (at least up to Excel 2010 on Windows and 2011 on Mac) is not
+// guaranteed to recognise utf-8, but does recognise utf-16, so the default setting
+// for $csv_charset is 'utf-16'.   This does however require that you have the iconv
+// module installed and enabled on your PHP system.   If this is not possible, setting
+// $csv_charset to 'utf-8' and $csv_bom to TRUE (ie requiring MRBS to output a Byte
+// Order Mark) will make Excel 2010 on Windows, and maybe earlier versions, work. 
+// But utf-8 with, or without, a BOM will not work on Excel 2011 for Mac.
+$csv_charset = 'utf-16';
+$csv_bom = FALSE;
+
 
 /*************
  * Entry Types

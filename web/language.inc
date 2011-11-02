@@ -469,7 +469,7 @@ $server_os = get_server_os();  // used globally
 
 // 2003/11/09 JF Larvoire: Help new admins understand what to do in case the iconv error occurs...
 if (!function_exists('iconv') && 
-    (($server_os == 'windows') || ($server_os == 'aix')) )
+    (($server_os == 'windows') || ($server_os == 'aix') || (get_charset() != get_csv_charset())) )
 {
   exit('
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -699,6 +699,38 @@ function get_charset()
 {
   return 'utf-8';
 }
+
+
+function get_csv_charset()
+{
+  global $csv_charset;
+  if (empty($csv_charset))
+  {
+    return get_charset();
+  }
+  else
+  {
+    return $csv_charset;
+  }
+}
+
+
+function get_bom($charset)
+{
+  switch(strtolower($charset))
+  {
+    case 'utf-8':
+      return "\xEF\xBB\xBF";
+      break;
+    case 'utf-16':
+      return "\xFE\xFF";
+      break;
+    default:
+      return '';
+      break;
+  }
+}
+
 
 function get_server_os()
 {

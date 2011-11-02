@@ -38,6 +38,23 @@ define('FORMAT_TIMES',   "%.2f");
 define('FORMAT_PERIODS', "%d");
 
 
+// Converts a string from the standard MRBS character set to the character set
+// to be used for CSV files
+function csv_conv($string)
+{
+  $in_charset = strtoupper(get_charset());
+  $out_charset = strtoupper(get_csv_charset());
+  if ($in_charset == $out_charset)
+  {
+    return $string;
+  }
+  else
+  {
+    return iconv($in_charset, $out_charset, $string);
+  }
+}
+
+
 // Escape a string for either HTML or CSV output
 function escape($string)
 {
@@ -119,6 +136,7 @@ function report_header()
     $line .= '"' . $csv_row_sep;
   
     // Output the row
+    $line = csv_conv($line);
     echo $line;
   }
   elseif ($output_as_html)
@@ -368,6 +386,7 @@ function report_row(&$row, $sortby)
       $line = '"';
       $line .= implode("\"$csv_col_sep\"", $values);
       $line .= '"' . $csv_row_sep;
+      $line = csv_conv($line);
     }
     else
     {
@@ -1060,8 +1079,12 @@ elseif ($output_as_html || (empty($nmatch) && !$cli_mode))
 elseif ($output_as_csv)
 {
   $filename = ($summarize & REPORT) ? $report_filename : $summary_filename;
-  header("Content-Type: text/csv; charset=" . get_charset());
+  header("Content-Type: text/csv; charset=" . get_csv_charset());
   header("Content-Disposition: attachment; filename=\"$filename\"");
+  if ($csv_bom)
+  {
+    echo get_bom(get_csv_charset());
+  }
 }
 else // Assumed to be output_as_ical
 {
