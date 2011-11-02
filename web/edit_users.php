@@ -309,7 +309,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                             ">\n";
                     }
                     // Output a select box if they want one
-                    elseif (count($select_options["users.$key"]) > 0)
+                    elseif (!empty($select_options["users.$key"]))
                     {
                       generate_select($label_text, $var_name, $data[$key], $select_options["users.$key"]);
                     }
@@ -832,7 +832,14 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
             // the value rather than the key
             if (is_assoc($select_options["users.$key"]))
             {
-              $col_value = $select_options["users.$key"][$row[$key]];
+              if (isset($select_options["users.$key"][$row[$key]]))
+              {
+                $col_value = $select_options["users.$key"][$row[$key]];
+              }
+              else
+              {
+                $col_value = '';
+              }
               echo "<td><div>" . htmlspecialchars($col_value) . "</div></td>\n";
             }
             elseif (($field['nature'] == 'boolean') || 

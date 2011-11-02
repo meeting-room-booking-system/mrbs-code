@@ -796,7 +796,7 @@ else
     <?php  
     echo "<div id=\"div_name\">\n";
     $label_text = get_vocab("namebooker") . ":";
-    if (count($select_options['entry.name']) > 0)
+    if (!empty($select_options['entry.name']))
     {
       generate_select($label_text, 'name', $name, $select_options['entry.name']);  
     }
@@ -808,7 +808,7 @@ else
     
     echo "<div id=\"div_description\">\n";
     $label_text = get_vocab("fulldescription");
-    if (count($select_options['entry.description']) > 0)
+    if (!empty($select_options['entry.description']))
     {
       generate_select($label_text, 'description', $description, $select_options['entry.description']);
     }
@@ -1133,7 +1133,7 @@ else
                 ">\n";
         }
         // Output a select box if they want one
-        elseif (count($select_options["entry.$key"]) > 0)
+        elseif (!empty($select_options["entry.$key"]))
         {
           $mandatory = (array_key_exists("entry.$key", $is_mandatory_field) &&
                         $is_mandatory_field["entry.$key"]) ? true : false;
