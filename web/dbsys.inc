@@ -110,6 +110,10 @@ function sql_query_array($sql)
     $handle = func_get_arg(1);
     $db_conn = $handle['connection'];
   }
+  else
+  {
+    $db_conn = NULL;
+  }
   
   $res = ($db_conn) ? sql_query($sql, $db_conn) : sql_query($sql);
   
