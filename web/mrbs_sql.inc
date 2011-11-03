@@ -294,93 +294,96 @@ function mrbsCreateEntry($table, $data)
   $table_no_prefix = substr($table, strlen($db_tbl_prefix));  // strip the prefix off the table name
     
   $fields = sql_field_info($table);
-    
+
   foreach ($fields as $field)
   {
     $key = $field['name'];
-    switch ($key)
+    if (array_key_exists($key, $data))
     {
-      // integers
-      case 'start_time':
-      case 'end_time':
-      case 'entry_type':
-      case 'repeat_id':
-      case 'rep_type':
-      case 'end_date':
-      case 'room_id':
-      case 'status':
-      case 'ical_sequence':
-        $sql_col[] = $key;
-        $sql_val[] = $data[$key];
-        break;
-        
-      // strings  
-      case 'create_by':
-      case 'name':
-      case 'type':
-      case 'description':
-      case 'ical_uid':
-      case 'ical_recur_id':
-        $sql_col[] = $key;
-        $sql_val[] = "'" . addslashes($data[$key]) . "'";
-        break;
-      
-      // special case - rep_opt
-      case 'rep_opt':
-        // pgsql doesn't like empty strings
-        $sql_col[] = $key;
-        $sql_val[] = (empty($data[$key])) ? "'0'" : "'" . addslashes($data[$key]) . "'";
-        break;
-          
-      // special case - rep_num_weeks
-      case 'rep_num_weeks':
-        if (!empty($data[$key]))
-        {
+      switch ($key)
+      {
+        // integers
+        case 'start_time':
+        case 'end_time':
+        case 'entry_type':
+        case 'repeat_id':
+        case 'rep_type':
+        case 'end_date':
+        case 'room_id':
+        case 'status':
+        case 'ical_sequence':
           $sql_col[] = $key;
           $sql_val[] = $data[$key];
-        }
-        break;
+          break;
         
-      default:
-        // custom fields
-        if (!in_array($key, $standard_fields[$table_no_prefix]))
-        {
+        // strings  
+        case 'create_by':
+        case 'name':
+        case 'type':
+        case 'description':
+        case 'ical_uid':
+        case 'ical_recur_id':
           $sql_col[] = $key;
-            
-          // Depending on the nature of the custom field the treatment will vary
-          switch ($field['nature'])
-          {
-            case 'integer':
-              if (!isset($data[$key]) || ($data[$key] === ''))
-              {
-                // Try and set it to NULL when we can because there will be cases when we
-                // want to distinguish between NULL and 0 - especially when the field
-                // is a genuine integer.
-                $value = ($field['is_nullable']) ? 'NULL' : 0;
-              }
-              else
-              {
-                $value = $data[$key];
-              }
-              break;
-            default:
-              if (!isset($data[$key]))
-              {
-                $value = '';
-              }
-              else
-              {
-                $value = "'" . addslashes($data[$key]) . "'";
-              }
-              break;
-          } // switch ($field_natures[$key])
-            
-          $sql_val[] = $value;
-        }
-        // do nothing for fields that aren't custom or otherwise listed above
-        break;
+          $sql_val[] = "'" . addslashes($data[$key]) . "'";
+          break;
+      
+        // special case - rep_opt
+        case 'rep_opt':
+          // pgsql doesn't like empty strings
+          $sql_col[] = $key;
+          $sql_val[] = (empty($data[$key])) ? "'0'" : "'" . addslashes($data[$key]) . "'";
+          break;
           
-    } // switch ($key)
+        // special case - rep_num_weeks
+        case 'rep_num_weeks':
+          if (!empty($data[$key]))
+          {
+            $sql_col[] = $key;
+            $sql_val[] = $data[$key];
+          }
+          break;
+        
+        default:
+          // custom fields
+          if (!in_array($key, $standard_fields[$table_no_prefix]))
+          {
+            $sql_col[] = $key;
+            
+            // Depending on the nature of the custom field the treatment will vary
+            switch ($field['nature'])
+            {
+              case 'integer':
+                if (!isset($data[$key]) || ($data[$key] === ''))
+                {
+                  // Try and set it to NULL when we can because there will be cases when we
+                  // want to distinguish between NULL and 0 - especially when the field
+                  // is a genuine integer.
+                  $value = ($field['is_nullable']) ? 'NULL' : 0;
+                }
+                else
+                {
+                  $value = $data[$key];
+                }
+                break;
+              default:
+                if (!isset($data[$key]))
+                {
+                  $value = '';
+                }
+                else
+                {
+                  $value = "'" . addslashes($data[$key]) . "'";
+                }
+                break;
+            } // switch ($field_natures[$key])
+            
+            $sql_val[] = $value;
+          }
+          // do nothing for fields that aren't custom or otherwise listed above
+          break;
+          
+      } // switch ($key)
+    } // if
   } // foreach
   
   // Note that we don't have to escape or quote the fieldname
