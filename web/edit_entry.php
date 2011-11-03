@@ -249,6 +249,10 @@ if (isset($id))
     $privatewriteable = getWritable($row['create_by'], $user, $row['room_id']);
     $keep_private = (is_private_event($private) && !$privatewriteable);
   }
+  else
+  {
+    $keep_private = FALSE;
+  }
   
   foreach ($row as $column => $value)
   {
