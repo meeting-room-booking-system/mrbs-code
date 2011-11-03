@@ -1076,7 +1076,7 @@ function utf8_next_index($str, $start)
         $i++;
       }
     }
-    if (ord($str[$i]) != 0)
+    if (isset($str[$i]) && (ord($str[$i]) != 0))
     {
       $ret = $i;
     }
@@ -1107,7 +1107,7 @@ function utf8_seq($str, &$byte_index)
   else
   {
     $j = 0;
-    for ($i = $byte_index; ord($str[$i]) != 0; $i++)
+    for ($i = $byte_index; isset($str[$i]) && (ord($str[$i]) != 0); $i++)
     {
       $ret[$j] = $str[$i];
       $j++;
