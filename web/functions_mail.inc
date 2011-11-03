@@ -415,6 +415,13 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
   global $tbl_entry;
   global $select_options;
 
+  // If we haven't got a previous entry just give it one.   It won't get used,
+  // but will prevent a series if undefined index notices.
+  if (empty($mail_previous))
+  {
+    $mail_previous = $data;
+  }
+
   // set up the body
   $body = "";
   if ($as_html)
@@ -640,7 +647,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
         }
         $body .= create_body_table_row (get_mail_field_name($tbl_entry, $key),
                                         $value,
-                                        $mail_previous[$key],
+                                        ($compare) ? $mail_previous[$key] : '',
                                         $compare, $as_html);
       }
     }
@@ -648,7 +655,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
     // Last updated
     $body .= create_body_table_row (get_mail_vocab("lastupdate"),
                                     getMailTimeDateString(time()),
-                                    getMailTimeDateString($mail_previous['last_updated']),
+                                    ($compare) ? getMailTimeDateString($mail_previous['last_updated']) : '',
                                     $compare, $as_html);
         
     // Repeat Type
