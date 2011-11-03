@@ -168,10 +168,17 @@ if ($series == 1)
             LIMIT 1";
     $id = sql_query1($sql);
   }
+  $repeat_info_time = $row['repeat_info_time'];
+  $repeat_info_user = $row['repeat_info_user'];
+  $repeat_info_text = $row['repeat_info_text'];
 }
 else
 {
   $repeat_id = $row['repeat_id'];
+  
+  $entry_info_time = $row['entry_info_time'];
+  $entry_info_user = $row['entry_info_user'];
+  $entry_info_text = $row['entry_info_text'];
 }
 
 
