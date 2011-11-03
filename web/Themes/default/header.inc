@@ -346,6 +346,7 @@ function print_theme_header($day, $month, $year, $area, $room)
             defaultOptions.bProcessing = true;
             defaultOptions.bScrollCollapse = true;
             defaultOptions.bStateSave = true;
+            defaultOptions.iDisplayLength = 25;
             defaultOptions.sDom = 'C<"clear">lfrtip';
             defaultOptions.sScrollX = "100%";
             defaultOptions.sPaginationType = "full_numbers";
@@ -458,16 +459,6 @@ function print_theme_header($day, $month, $year, $area, $room)
     <script type="text/javascript">
 
 //<![CDATA[
-
-var defaultTableOptions = new Object();
-<?php
-// Below you can set default values for all data tables; eg you can uncomment
-// the following two lines to display 50 entries by default and add an option
-// to view all entries at once (though be warned that displaying all entries
-// may be very slow)
-?>
-//defaultTableOptions.aLengthMenu = [[10,25,50,100,10000],[10,25,50,100,"All"]];
-//defaultTableOptions.iDisplayLength = 50;
 
 function getErrorList(errors)
 {
@@ -1253,9 +1244,8 @@ $(window).load(function() {
       <?php
     }
     ?>
-    var tableOptions = jQuery.extend(true, {}, defaultTableOptions); // deep copy
     var roomsTable = makeDataTable('#rooms_table',
-                                   tableOptions,
+                                   {},
                                    {sWidth: "relative", iWidth: 33},
                                    rightCol);
     <?php
@@ -2576,7 +2566,7 @@ $(window).load(function() {
   {
     // Turn the list of users into a dataTable
     ?>
-    var tableOptions = jQuery.extend(true, {}, defaultTableOptions); // deep copy
+    var tableOptions = new Object();
     <?php // The Rights column has a span with title for sorting ?>
     tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [1]}]; 
     var usersTable = makeDataTable('#users_table',
@@ -2679,7 +2669,7 @@ $(window).load(function() {
                   });
                   
       <?php // Turn the table into a datatable ?>
-      var tableOptions = jQuery.extend(true, {}, defaultTableOptions); // deep copy
+      var tableOptions = new Object();
       tableOptions.sScrollXInner = "100%";
       tableOptions.aoColumnDefs = colDefsMain;
       <?php
@@ -2748,7 +2738,7 @@ $(window).load(function() {
     
     // Turn the list of users into a dataTable
     ?>
-    var tableOptions = jQuery.extend(true, {}, defaultTableOptions); // deep copy
+    var tableOptions = new Object();
     <?php
     // Use an Ajax source if we're able to - gives much better
     // performance for large tables
@@ -2949,7 +2939,7 @@ $(window).load(function() {
           }).appendTo(searchForm);
       }
       
-      var tableOptions = jQuery.extend(true, {}, defaultTableOptions); // deep copy
+      var tableOptions = new Object();
       <?php
       // Use an Ajax source - gives much better performance for large tables
 
