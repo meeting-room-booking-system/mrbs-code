@@ -683,7 +683,7 @@ if ($page == 'edit_entry')
     {
       var value;
       <?php // Scalar parameters (two types - checkboxes and the rest) ?>
-      if ($(this).attr('name').indexOf('[]') == -1)
+      if (formInput.attr('name').indexOf('[]') == -1)
       {
         if (formInput.filter(':checkbox').length > 0)
         {
@@ -751,7 +751,12 @@ if ($page == 'edit_entry')
             if (params[fieldName] === undefined)
             {
               params[fieldName] = getFormValue($(this));
-            }
+	    } else {
+	      if( $.isArray( params[fieldName] ) ) {
+		var value = getFormValue($(this));
+		$.merge( params[fieldName], value );
+	      }
+	    }
           });
         
         <?php
