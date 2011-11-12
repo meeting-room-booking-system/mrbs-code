@@ -918,7 +918,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   global $enable_periods, $periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
-  global $weekstarts;
+  global $weekstarts, $strftime_format;
 
   $num_of_days=7; // days in a week
   
