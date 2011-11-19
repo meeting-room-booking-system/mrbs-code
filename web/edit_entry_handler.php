@@ -136,12 +136,27 @@ if ($ajax && $commit)
         case 'confirmed':
           $$var = !($old_booking['status'] & STATUS_TENTATIVE);
           break;
+        case 'start_seconds';
+          $date = getdate($old_booking['start_time']);
+          $start_year = $date['year'];
+          $start_month = $date['mon'];
+          $start_day = $date['mday'];
+          $start_seconds = $old_booking['start_time'] - mktime(0, 0, 0, $start_month, $start_day, $start_year);
+          break;
+        case 'end_seconds';
+          $date = getdate($old_booking['end_time']);
+          $end_year = $date['year'];
+          $end_month = $date['mon'];
+          $end_day = $date['mday'];
+          $end_seconds = $old_booking['end_time'] - mktime(0, 0, 0, $end_month, $end_day, $end_year);
+          break;
         default:
           $$var = $old_booking[$var];
           break;
       }
     }
   }
+
   // Now the custom fields
   $custom_fields = array();
   foreach ($fields as $field)

@@ -1861,10 +1861,10 @@ $(window).load(function() {
  
                
         var upHandler = function(e) {
-            var box = downHandler.box;
-            var tolerance = 2; <?php // px ?>
             e.preventDefault();
-            params = getBookingParams(box);
+            var tolerance = 2; <?php // px ?>
+            var box = downHandler.box;
+            var params = getBookingParams(box);
             $(document).unbind('mousemove',moveHandler);
             $(document).unbind('mouseup', upHandler);
             <?php // Remove the resizing wrapper so that highlighting comes back on ?>
@@ -2100,22 +2100,36 @@ $(window).load(function() {
                   <?php // get the booking id ?>
                   data.id = divClone.data('id');
                   <?php // get the other parameters ?>
+                  var oldParams = getBookingParams(divBooking);
                   var newParams = getBookingParams(divClone);
                   if (newParams.seconds !== undefined)
                   {
-                    data.start_seconds = newParams.seconds[0];
-                    data.end_seconds = newParams.seconds[newParams.seconds.length - 1];
                     <?php
-                    if ($enable_periods)
-                    {
-                      // When we're dealing with periods the end time is defined as
-                      // the end of the last period (as opposed to the start of the
-                      // next slot in times mode)
-                      ?>
-                      data.end_seconds -= 60;
-                      <?php
-                    }
+                    // We only send through the time parameters that have changed.
+                    // This is so that edit_entry_handler.php knows whether to use
+                    // the original booking parameters.    We need to do this so that
+                    // we can properly handle multi-day bookings in the week view.
                     ?>
+                    if (newParams.seconds[0] != oldParams.seconds[0])
+                    {
+                      data.start_seconds = newParams.seconds[0];
+                    }
+                    if (newParams.seconds[newParams.seconds.length - 1] !=
+                        oldParams.seconds[oldParams.seconds.length - 1])
+                    {
+                      data.end_seconds = newParams.seconds[newParams.seconds.length - 1];
+                      <?php
+                      if ($enable_periods)
+                      {
+                        // When we're dealing with periods the end time is defined as
+                        // the end of the last period (as opposed to the start of the
+                        // next slot in times mode)
+                        ?>
+                        data.end_seconds -= 60;
+                        <?php
+                      }
+                      ?>
+                    }
                   }
                   <?php
                   if ($page == 'day')
