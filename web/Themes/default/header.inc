@@ -2261,6 +2261,19 @@ $(window).load(function() {
                   directions.otherMinus = false;
                   <?php
                 }
+                if ($auth['only_admin_can_book_multiday'])
+                {
+                  // Don't let non-admins drag multi-day bookings if
+                  // $auth['only_admin_can_book_multiday'] is set
+                  ?>
+                  if ($(this).hasClass('multiday_start') ||
+                      $(this).hasClass('multiday_end'))
+                  {
+                    directions.timesPlus = false;
+                    directions.timesMinus = false;
+                  }
+                  <?php
+                }
               }
               // Don't allow multiday bookings to be moved at the end
               // which is joined to another day nor along the other axis
