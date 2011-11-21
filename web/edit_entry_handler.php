@@ -168,10 +168,13 @@ if ($ajax && $commit)
   }
 }
 
-// Get the start day/month/year and make them the current day/month/year
-$day = $start_day;
-$month = $start_month;
-$year = $start_year;
+if (!$ajax || !$commit)
+{
+  // Get the start day/month/year and make them the current day/month/year
+  $day = $start_day;
+  $month = $start_month;
+  $year = $start_year;
+}
 
 // The id must be either an integer or NULL, so that subsequent code that tests whether
 // isset($id) works.  (I suppose one could use !empty instead, but there's always the
@@ -407,7 +410,7 @@ if (!empty($all_day))
 
 // Now work out the start and times
 $starttime = mktime(intval($start_seconds/3600), intval(($start_seconds%3600)/60), 0,
-                    $month, $day, $year);
+                    $start_month, $start_day, $start_year);
 $endtime   = mktime(intval($end_seconds/3600), intval(($end_seconds%3600)/60), 0,
                     $end_month, $end_day, $end_year);
 

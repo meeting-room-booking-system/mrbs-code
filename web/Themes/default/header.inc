@@ -2096,7 +2096,11 @@ $(window).load(function() {
                   // We've got a change to the booking, so we need to send an Ajax
                   // request to the server to make the new booking
                   ?>
-                  var data = {ajax: 1, commit: 1};
+                  var data = {ajax: 1, 
+                              commit: 1,
+                              day: <?php echo $day ?>,
+                              month: <?php echo $month ?>,
+                              year: <?php echo $year ?>};
                   <?php // get the booking id ?>
                   data.id = divClone.data('id');
                   <?php // get the other parameters ?>
