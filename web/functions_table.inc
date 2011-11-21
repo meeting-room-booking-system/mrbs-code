@@ -29,6 +29,10 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   // It looks like:
   //     $column[Time][n][id]
   //                     [is_repeat]
+  //                     [is_multiday_start]  a boolean indicating if the booking stretches
+  //                                          beyond the day start
+  //                     [is_multiday_end]    a boolean indicating if the booking stretches
+  //                                          beyond the day end
   //                     [color]
   //                     [data]
   //                     [long_descr]
@@ -88,6 +92,9 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     $row['status'] &= ~STATUS_PRIVATE;  // Clear the private bit
   }
 
+  $is_multiday_start = ($row['start_time'] < $am7);
+  $is_multiday_end = ($row['end_time'] > ($pm7 + $resolution));
+              
   $start_t = max(round_t_down($row['start_time'], $resolution, $am7), $am7);
   $end_t = min(round_t_up($row['end_time'], $resolution, $am7) - $resolution, $pm7);
   // calculate the times used for indexing
@@ -109,6 +116,8 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     // fill in the id, type and start time
     $column[$time_t][$n]["id"] = $row['entry_id'];
     $column[$time_t][$n]["is_repeat"] = !empty($row['repeat_id']);
+    $column[$time_t][$n]["is_multiday_start"] = $is_multiday_start;
+    $column[$time_t][$n]["is_multiday_end"] = $is_multiday_end;
     $column[$time_t][$n]["status"] = $row['status'];
     $column[$time_t][$n]["color"] = $row['type'];
     $column[$time_t][$n]["start_time"] = utf8_strftime(hour_min_format(), $row['start_time']);
@@ -249,6 +258,8 @@ function cell_html($cell, $query_strings)
   // 
   // $cell[n][id]
   //         [is_repeat]
+  //         [is_multiday_start]
+  //         [is_multiday_end]
   //         [color]
   //         [data]
   //         [long_descr]
@@ -308,12 +319,14 @@ function cell_html($cell, $query_strings)
                                             // and (b) each stripe is at least 1 unit high
     for ($n=0; $n<$n_bookings; $n++)
     {
-      $id         = $cell[$n]["id"];
-      $is_repeat  = $cell[$n]["is_repeat"];
-      $status     = $cell[$n]["status"];
-      $color      = $cell[$n]["color"];
-      $descr      = htmlspecialchars($cell[$n]["data"]);
-      $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
+      $id          = $cell[$n]["id"];
+      $is_repeat   = $cell[$n]["is_repeat"];
+      $is_multiday_start = $cell[$n]["is_multiday_start"];
+      $is_multiday_end   = $cell[$n]["is_multiday_end"];
+      $status      = $cell[$n]["status"];
+      $color       = $cell[$n]["color"];
+      $descr       = htmlspecialchars($cell[$n]["data"]);
+      $long_descr  = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
       if ($status & STATUS_PRIVATE)
       {
@@ -327,6 +340,15 @@ function cell_html($cell, $query_strings)
       {
         $class .= " tentative";
       }
+      if ($is_multiday_start)
+      {
+        $class .= " multiday_start";
+      }
+      if ($is_multiday_end)
+      {
+        $class .= " multiday_end";
+      }
+
       $html .= "<tr>\n";
       $html .= "<td class=\"$class\"" .
                (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
@@ -357,12 +379,14 @@ function cell_html($cell, $query_strings)
     $html .= "<tbody>\n";
     for ($n=0; $n<$n_bookings; $n++)
     {
-      $id         = $cell[$n]["id"];
-      $is_repeat  = $cell[$n]["is_repeat"];
-      $status     = $cell[$n]["status"];
-      $color      = $cell[$n]["color"];
-      $descr      = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
-      $long_descr = htmlspecialchars($cell[$n]["long_descr"]);
+      $id          = $cell[$n]["id"];
+      $is_repeat   = $cell[$n]["is_repeat"];
+      $is_multiday_start = $cell[$n]["is_multiday_start"];
+      $is_multiday_end   = $cell[$n]["is_multiday_end"];
+      $status      = $cell[$n]["status"];
+      $color       = $cell[$n]["color"];
+      $descr       = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
+      $long_descr  = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
       if ($status & STATUS_PRIVATE)
       {
@@ -375,7 +399,15 @@ function cell_html($cell, $query_strings)
       if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
       {
         $class .= " tentative";
-      }    
+      }
+      if ($is_multiday_start)
+      {
+        $class .= " multiday_start";
+      }
+      if ($is_multiday_end)
+      {
+        $class .= " multiday_end";
+      }
       $html .= "<tr>\n";
       $html .= "<td class=\"$class\"" .
                (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
@@ -403,6 +435,8 @@ function cell_html($cell, $query_strings)
     {       
       $id         = $cell[0]["id"];
       $is_repeat  = $cell[0]["is_repeat"];
+      $is_multiday_start = $cell[0]["is_multiday_start"];
+      $is_multiday_end   = $cell[0]["is_multiday_end"];
       $status     = $cell[0]["status"];
       $color      = $cell[0]["color"];
       $descr      = htmlspecialchars($cell[0]["data"]);
@@ -433,6 +467,14 @@ function cell_html($cell, $query_strings)
       if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
       {
         $c .= " tentative";
+      }
+      if ($is_multiday_start)
+      {
+        $c .= " multiday_start";
+      }
+      if ($is_multiday_end)
+      {
+        $c .= " multiday_end";
       }
       // Add a class to bookings that this user is allowed to edit so that the
       // JavaScript can turn them into resizable bookings

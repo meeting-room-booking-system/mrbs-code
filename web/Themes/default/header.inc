@@ -2225,8 +2225,16 @@ $(window).load(function() {
                 }
               }  <?php // divResizeStop ?>
             
-            
-              var handles = 'all';
+              <?php
+              // Get the set of directions in which we are allowed to drag the
+              // box.   At this stage we will do it by reference to the axes.
+              // Then later we will turn it into n/s/e/w handles (this will depend
+              // on $times_along_top
+              ?>  
+              var directions = {timesPlus: true,
+                                timesMinus: true,
+                                otherPlus: true,
+                                otherMinus: true};
               if ($(this).hasClass('series'))
               {
                 <?php
@@ -2235,7 +2243,8 @@ $(window).load(function() {
                 // series dragged across days to make it a new daily series, or rooms
                 // to create new bookings in other rooms.
                 ?>
-                handles = '<?php echo ($times_along_top) ? "e,w" : "n,s" ?>';
+                directions.otherPlus = false;
+                directions.otherMinus = false;
               }
               <?php
               if (!$is_admin)
@@ -2248,11 +2257,62 @@ $(window).load(function() {
                   // aren't allowed to select multiple rooms, then we want to restrict
                   // the handles we offer them so that they can't get that far.
                   ?>
-                  handles = '<?php echo ($times_along_top) ? "e,w" : "n,s" ?>';
+                  directions.otherPlus = false;
+                  directions.otherMinus = false;
                   <?php
                 }
               }
+              // Don't allow multiday bookings to be moved at the end
+              // which is joined to another day nor along the other axis
               ?>
+              if ($(this).hasClass('multiday_start'))
+              {
+                directions.timesMinus = false;
+                directions.otherPlus = false;
+                directions.otherMinus = false;
+              }
+              if ($(this).hasClass('multiday_end'))
+              {
+                directions.timesPlus = false;
+                directions.otherPlus = false;
+                directions.otherMinus = false;
+              }
+              <?php
+              // Now turn the directions in which we are allowed to move the 
+              // boxes into an array of n/s/e/w handles, depending on the
+              // setting of $times_along_top
+              ?>
+              var aHandles = [];
+              if (directions.timesPlus)
+              {
+                aHandles.push('<?php echo ($times_along_top) ? "e" : "s" ?>');
+              }
+              if (directions.timesMinus)
+              {
+                aHandles.push('<?php echo ($times_along_top) ? "w" : "n" ?>');
+              }
+              if (directions.otherPlus)
+              {
+                aHandles.push('<?php echo ($times_along_top) ? "s" : "e" ?>');
+              }
+              if (directions.otherMinus)
+              {
+                aHandles.push('<?php echo ($times_along_top) ? "n" : "w" ?>');
+              }
+              <?php
+              // Test each corner.  If we've got both the side handles then
+              // add in the corner handle
+              ?>
+              var corners = ['nw', 'ne', 'se', 'sw'];
+              for (var i=0; i<corners.length; i++)
+              {
+                if ((aHandles.indexOf(corners[i][0]) >= 0) &&
+                    (aHandles.indexOf(corners[i][1]) >= 0))
+                {
+                  aHandles.push(corners[i]);
+                }
+              }
+              var handles = aHandles.join(',');
               var divBooking = $(this).children('div');
               var divClone = divBooking.clone();
               divBooking.css('visibility', 'hidden');
@@ -2266,11 +2326,14 @@ $(window).load(function() {
                       .addClass('clone')
                       .width(divBooking.outerWidth())
                       .height(divBooking.outerHeight())
-                      .resizable({handles: handles,
-                                  resize: divResize,
-                                  start: divResizeStart,
-                                  stop: divResizeStop})
-                      .appendTo($(this));
+              if (handles)
+              {
+                divClone.resizable({handles: handles,
+                                    resize: divResize,
+                                    start: divResizeStart,
+                                    stop: divResizeStop});
+              }
+              divClone.appendTo($(this));
               $(this).css('background-color', 'transparent')
                      .wrapInner('<div style="position: relative"><\/div>');
             });
