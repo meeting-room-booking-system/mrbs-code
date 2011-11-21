@@ -2231,14 +2231,13 @@ $(window).load(function() {
             
               <?php
               // Get the set of directions in which we are allowed to drag the
-              // box.   At this stage we will do it by reference to the axes.
+              // box.   At this stage we will do it by reference to the two axes,
+              // the times axis and the other axis, which will be days or rooms.
               // Then later we will turn it into n/s/e/w handles (this will depend
-              // on $times_along_top
-              ?>  
-              var directions = {timesPlus: true,
-                                timesMinus: true,
-                                otherPlus: true,
-                                otherMinus: true};
+              // on $times_along_top)
+              ?>
+              var directions = {times: {plus: true, minus: true},
+                                other: {plus: true, minus: true}};
               if ($(this).hasClass('series'))
               {
                 <?php
@@ -2247,8 +2246,7 @@ $(window).load(function() {
                 // series dragged across days to make it a new daily series, or rooms
                 // to create new bookings in other rooms.
                 ?>
-                directions.otherPlus = false;
-                directions.otherMinus = false;
+                directions.other = {plus: false, minus: false};
               }
               <?php
               if (!$is_admin)
@@ -2261,8 +2259,7 @@ $(window).load(function() {
                   // aren't allowed to select multiple rooms, then we want to restrict
                   // the handles we offer them so that they can't get that far.
                   ?>
-                  directions.otherPlus = false;
-                  directions.otherMinus = false;
+                  directions.other = {plus: false, minus: false};
                   <?php
                 }
                 if ($auth['only_admin_can_book_multiday'])
@@ -2273,8 +2270,7 @@ $(window).load(function() {
                   if ($(this).hasClass('multiday_start') ||
                       $(this).hasClass('multiday_end'))
                   {
-                    directions.timesPlus = false;
-                    directions.timesMinus = false;
+                    directions.times = {plus: false, minus: false};
                   }
                   <?php
                 }
@@ -2284,15 +2280,13 @@ $(window).load(function() {
               ?>
               if ($(this).hasClass('multiday_start'))
               {
-                directions.timesMinus = false;
-                directions.otherPlus = false;
-                directions.otherMinus = false;
+                directions.times.minus = false;
+                directions.other = {plus: false, minus: false};
               }
               if ($(this).hasClass('multiday_end'))
               {
-                directions.timesPlus = false;
-                directions.otherPlus = false;
-                directions.otherMinus = false;
+                directions.times.plus = false;
+                directions.other = {plus: false, minus: false};
               }
               <?php
               // Now turn the directions in which we are allowed to move the 
@@ -2300,19 +2294,19 @@ $(window).load(function() {
               // setting of $times_along_top
               ?>
               var aHandles = [];
-              if (directions.timesPlus)
+              if (directions.times.plus)
               {
                 aHandles.push('<?php echo ($times_along_top) ? "e" : "s" ?>');
               }
-              if (directions.timesMinus)
+              if (directions.times.minus)
               {
                 aHandles.push('<?php echo ($times_along_top) ? "w" : "n" ?>');
               }
-              if (directions.otherPlus)
+              if (directions.other.plus)
               {
                 aHandles.push('<?php echo ($times_along_top) ? "s" : "e" ?>');
               }
-              if (directions.otherMinus)
+              if (directions.other.minus)
               {
                 aHandles.push('<?php echo ($times_along_top) ? "n" : "w" ?>');
               }
