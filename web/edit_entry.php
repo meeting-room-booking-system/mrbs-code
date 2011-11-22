@@ -959,6 +959,11 @@ foreach ($areas as $area)
     }
     echo "areas[${area['id']}]['$key'] = $value;\n";
   }
+  // Add in the maximum durations.   These are not per area at the moment
+  // but they might be in the future
+  echo "areas[${area['id']}]['max_duration_enabled'] = $max_duration_enabled;\n";
+  echo "areas[${area['id']}]['max_duration_secs'] = $max_duration_secs;\n";
+  echo "areas[${area['id']}]['max_duration_periods'] = $max_duration_periods;\n";
 }
 ?>
 

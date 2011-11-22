@@ -981,8 +981,11 @@ if ($page == 'edit_entry')
 
     var area = currentArea;
     var enablePeriods = areas[area]['enable_periods'];
+    var maxDurationEnabled = areas[area]['max_duration_enabled'];
+    var maxDurationSecs = areas[area]['max_duration_secs'];
+    var maxDurationPeriods = areas[area]['max_duration_periods'];
 
-    var isSelected, i, j, option, defaultDuration;
+    var isSelected, i, j, option, defaultDuration, maxDuration;
     var nbsp = '\u00A0';
     var errorText = '<?php echo get_vocab("start_after_end")?>';
     var text = errorText;
@@ -1053,7 +1056,8 @@ if ($page == 'edit_entry')
         option = endOptions[area];
         for (i = 0; i < nEndOptions[area]; i++)
         {
-          if ((i == nEndOptions[area] - 1) || (option[i]['value'] >= oldAreaEndValue))
+          if ((i == nEndOptions[area] - 1) ||
+              (option[i]['value'] >= oldAreaEndValue))
           {
             endValue = option[i]['value'];
             break;
@@ -1156,6 +1160,24 @@ if ($page == 'edit_entry')
     j = 0;
     for (i = 0; i < nEndOptions[area]; i++)
     {
+      <?php
+      // Limit the end slots to the maximum duration if that is enabled, if the
+      // user is not an admin
+      if (!$is_admin)
+      {
+        ?>
+        if (maxDurationEnabled)
+        {
+          maxDuration = (enablePeriods) ? (maxDurationPeriods - 1) * 60 : maxDurationSecs
+          if ((endOptions[area][i]['value'] - startValue) > maxDuration)
+          {
+            break;
+          }
+        }
+        <?php
+      }
+      ?>
+      
       if ((endOptions[area][i]['value'] > startValue) ||
           ((endOptions[area][i]['value'] == startValue) && enablePeriods) ||
           (dateDifference != 0))
