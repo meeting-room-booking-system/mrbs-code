@@ -482,7 +482,21 @@ $is_mandatory_field = array();
 // if you make a repeat booking and some of the repeat dates are already
 // booked, MRBS will just skip past those).
 $skip_default = FALSE;
- 
+
+// $edit_entry_field_order can be used to change the order of fields in the 
+// edit_entry page. This is useful to insert custom fields somewhere other than 
+// the end. For example: To place a custom field 'in_charge' directly after the 
+// booking name, set the following in config.inc.php:
+// 
+// $edit_entry_field_order = array('name', 'in_charge');
+// 
+// Valid entries in this array are: 'name', 'description', 'start_date', 
+// 'end_date', 'areas', 'rooms', 'type', 'confirmation_status', 
+// 'privacy_status', plus any custom fields you may have defined. Fields that 
+// are not mentionend in the array are appended at the end, in their usual 
+// order.
+$edit_entry_field_order = array();
+
 /***********************************************
  * Authentication settings - read AUTHENTICATION
  ***********************************************/

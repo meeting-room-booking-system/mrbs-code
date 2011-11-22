@@ -1180,28 +1180,75 @@ else
   <fieldset>
   <legend><?php echo get_vocab($token); ?></legend>
 
-<?php  
-create_field_entry_name();
-create_field_entry_description();
-create_field_entry_start_date();
-create_field_entry_end_date();
-create_field_entry_areas();
-create_field_entry_rooms();
-create_field_entry_type();
-create_field_entry_confirmation_status();
-create_field_entry_privacy_status();
+<?php
+
+// Fill $edit_entry_field_order with not yet specified entries.
+$entry_fields = array('name', 'description', 'start_date', 'end_date', 'areas',
+  'rooms', 'type', 'confirmation_status', 'privacy_status');
+foreach( $entry_fields as $field )
+{
+  if( ! in_array( $field, $edit_entry_field_order ) )
+    $edit_entry_field_order[] = $field;
+}
 
 // CUSTOM FIELDS
+$custom_fields_map = array();
 foreach ($fields as $field)
 {
   $key = $field['name'];
   if (!in_array($key, $standard_fields['entry']))
   {
-    create_field_entry_custom_field($field, $key);
+    $custom_fields_map[$key] = $field;
+    if( ! in_array( $key, $edit_entry_field_order ) )
+      $edit_entry_field_order[] = $key;
   }
 }
 
-    
+foreach( $edit_entry_field_order as $key )
+{
+  switch( $key )
+  {
+  case 'name':
+    create_field_entry_name();
+    break;
+
+  case 'description':
+    create_field_entry_description();
+    break;
+
+  case 'start_date':
+    create_field_entry_start_date();
+    break;
+
+  case 'end_date':
+    create_field_entry_end_date();
+    break;
+
+  case 'areas':
+    create_field_entry_areas();
+    break;
+
+  case 'rooms':
+    create_field_entry_rooms();
+    break;
+
+  case 'type':
+    create_field_entry_type();
+    break;
+
+  case 'confirmation_status':
+    create_field_entry_confirmation_status();
+    break;
+
+  case 'privacy_status':
+    create_field_entry_privacy_status();
+    break;
+
+  default:
+    create_field_entry_custom_field($custom_fields_map[$key], $key);
+    break;
+  }
+}
     
     // REPEAT BOOKING INPUTS
     if (($edit_type == "series") && $repeats_allowed)
