@@ -1724,7 +1724,7 @@ $(window).load(function() {
         // object with four properties (n, s, e, w) representing the cooordinates (x or y)
         // of the side.   We will use this array to test whether a proposed
         // booking overlaps an existing booking.   We save populating this array until
-        // the resize starts, because we want to exclude the bokked slot that is being
+        // the resize starts, because we want to exclude the booked slot that is being
         // resized.
         ?>
         var bookedMap = [];
@@ -1871,7 +1871,7 @@ $(window).load(function() {
             $('table.dwm_main').unwrap();
             <?php
             // If the user has released the button while outside the table it means
-            // they want to canel, so just return. 
+            // they want to cancel, so just return. 
             ?>
             if (outsideTable({x: e.pageX, y: e.pageY}))
             {

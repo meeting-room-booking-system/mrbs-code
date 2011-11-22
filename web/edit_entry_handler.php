@@ -113,7 +113,7 @@ foreach($fields as $field)
 // we'll only have been supplied with parameters that need to be changed.  Fill in
 // the rest from the existing boking information.
 // Note: we assume that 
-// (1) this is not a series (we can't cope with them yet
+// (1) this is not a series (we can't cope with them yet)
 // (2) we always get passed start_seconds and end_seconds in the Ajax data
 if ($ajax && $commit)
 {
