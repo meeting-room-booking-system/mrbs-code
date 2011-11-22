@@ -121,6 +121,389 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
   echo $html;
 }
 
+function create_field_entry_name()
+{
+  global $name, $select_options, $maxlength;
+  echo "    <div id=\"div_name\">\n";
+  $label_text = get_vocab("namebooker") . ":";
+  if (!empty($select_options['entry.name']))
+  {
+    generate_select($label_text, 'name', $name, $select_options['entry.name']);  
+  }
+  else
+  {
+    generate_input($label_text, 'name', $name, FALSE, $maxlength['entry.name']);
+  }
+  echo "</div>\n";
+}
+
+function create_field_entry_description()
+{
+  global $description, $select_options;
+  echo "<div id=\"div_description\">\n";
+  $label_text = get_vocab("fulldescription");
+  if (!empty($select_options['entry.description']))
+  {
+    generate_select($label_text, 'description', $description, $select_options['entry.description']);
+  }
+  else
+  {
+    generate_textarea($label_text, 'description', $description);
+  }
+  echo "</div>\n";
+}
+
+function create_field_entry_start_date()
+{
+  global $start_time, $areas, $area_id, $periods, $default_duration_all_day, $id, $drag;
+  echo "<div id=\"div_start_date\">\n";
+  echo "<label>" . get_vocab("start") . ":</label>\n";
+  $date = getdate($start_time);
+  gendateselector("start_", $date['mday'], $date['mon'], $date['year']);
+  // If we're using periods the booking model is slightly different:
+  // you're allowed to specify the last period as your first period.
+  // This is why we don't substract the resolution
+
+  foreach ($areas as $a)
+  {
+    if ($a['enable_periods'])
+    {
+      $a['resolution'] = 60;
+      $first = 12*60*60;
+      // If we're using periods we just go to the beginning of the last slot
+      $last = $first + ((count($periods) - 1) * $a['resolution']);
+    }
+    else
+    {
+      $first = (($a['morningstarts'] * 60) + $a['morningstarts_minutes']) * 60;
+      $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
+      $last = $last + $a['resolution'];
+    }
+    $start_last = ($a['enable_periods']) ? $last : $last - $a['resolution'];
+    $display_none = ($a['id'] != $area_id);
+    genSlotSelector($a, "start_", $first, $start_last, $start_time, $display_none);
+  }
+
+  echo "<div class=\"group\">\n";
+  echo "<div id=\"ad\">\n";
+  echo "<input id=\"all_day\" class=\"checkbox\"" .
+    // If this is an existing booking that we are editing or copying, then we do
+    // not want the default duration applied
+    (($default_duration_all_day && !isset($id) && !$drag) ? " checked=\"checked\"" : "") .
+    " name=\"all_day\" type=\"checkbox\" value=\"yes\" onclick=\"OnAllDayClick(this)\">\n";
+  echo "<label for=\"all_day\">" . get_vocab("all_day") . "</label>\n";
+  echo "</div>\n";
+  echo "</div>\n";
+
+  echo "</div>\n";
+}
+
+function create_field_entry_end_date()
+{
+  global $end_time, $areas, $area_id, $periods, $multiday_allowed;
+  echo "<div id=\"div_end_date\">\n";
+  echo "<label>" . get_vocab("end") . ":</label>\n";
+  $date = getdate($end_time);
+  // Don't show the end date selector if multiday is not allowed
+  echo "<div" . (($multiday_allowed) ? '' : " style=\"visibility: hidden\"") . ">\n";
+  gendateselector("end_", $date['mday'], $date['mon'], $date['year']);
+  echo "</div>\n";
+  // If we're using periods the booking model is slightly different,
+  // so subtract one period because the "end" period is actually the beginning
+  // of the last period booked
+  foreach ($areas as $a)
+  {
+    if ($a['enable_periods'])
+    {
+      $a['resolution'] = 60;
+      $first = 12*60*60;
+      // If we're using periods we just go to the beginning of the last slot
+      $last = $first + ((count($periods) - 1) * $a['resolution']);
+    }
+    else
+    {
+      $first = (($a['morningstarts'] * 60) + $a['morningstarts_minutes']) * 60;
+      $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
+      $last = $last + $a['resolution'];
+    }
+    $end_value = ($a['enable_periods']) ? $end_time - $a['resolution'] : $end_time;
+    $display_none = ($a['id'] != $area_id);
+    genSlotSelector($a, "end_", $first, $last, $end_value, $display_none);
+  }
+  echo "</div>\n";
+}
+
+function create_field_entry_areas()
+{
+  global $areas, $area_id, $rooms;
+  echo "  \n    <div id=\"div_areas\">\n    </div>\n";
+  // if there is more than one area then give the option
+  // to choose areas.
+  if (count($areas) > 1)
+  { 
+    ?> 
+      <script type="text/javascript">
+      //<![CDATA[
+      
+      var area = <?php echo $area_id ?>;
+      
+      function changeRooms( formObj )
+      {
+        areasObj = eval( "formObj.area" );
+
+        area = areasObj[areasObj.selectedIndex].value;
+        roomsObj = eval( "formObj.elements['rooms']" );
+
+        // remove all entries
+        roomsNum = roomsObj.length;
+        for (i=(roomsNum-1); i >= 0; i--)
+        {
+          roomsObj.options[i] = null;
+        }
+        // add entries based on area selected
+        switch (area){
+          <?php
+          foreach ($areas as $a)
+          {
+            print "case \"" . $a['id'] . "\":\n";
+            // get rooms for this area
+            $i = 0;
+            foreach ($rooms as $r)
+            {
+              if ($r['area_id'] == $a['id'])
+              {
+        	print "roomsObj.options[$i] = new Option(\"" . escape_js($r['room_name']) . "\"," . $r['id'] . ");\n";
+        	$i++;
+              }
+            }
+            // select the first entry by default to ensure
+            // that one room is selected to begin with
+            if ($i > 0)  // but only do this if there is a room
+            {
+              print "roomsObj.options[0].selected = true;\n";
+            }
+            print "break;\n";
+          }
+          ?>
+        } //switch
+        
+        <?php 
+        // Replace the start and end selectors with those for the new area
+        // (1) We set the display for the old elements to "none" and the new
+        // elements to "block".   (2) We also need to disable the old selectors and
+        // enable the new ones: they all have the same name, so we only want
+        // one passed through with the form.  (3) We take a note of the currently
+        // selected start and end values so that we can have a go at finding a
+        // similar time/period in the new area. (4) We also take a note of the old
+        // area id because we'll need that when trying to match up slots: it only
+        // makes sense to match up slots if both old and new area used the same
+        // mode (periods/times).
+        ?>
+        var oldStartId = "start_seconds" + currentArea;
+        var oldEndId = "end_seconds" + currentArea;
+        var newStartId = "start_seconds" + area;
+        var newEndId = "end_seconds" + area;
+        var oldAreaStartValue = formObj[oldStartId].options[formObj[oldStartId].selectedIndex].value;
+        var oldAreaEndValue = formObj[oldEndId].options[formObj[oldEndId].selectedIndex].value;
+        $("#" + oldStartId).hide()
+                           .attr('disabled', 'disabled');
+        $("#" + oldEndId).hide()
+                         .attr('disabled', 'disabled');
+        $("#" + newStartId).show()
+                           .removeAttr('disabled');
+        $("#" + newEndId).show()
+                         .removeAttr('disabled');
+        var oldArea = currentArea;
+        currentArea = area;
+        prevStartValue = undefined;
+        adjustSlotSelectors(formObj, oldArea, oldAreaStartValue, oldAreaEndValue);
+      }
+
+      // Create area selector, only if we have Javascript
+      var div_areas = document.getElementById('div_areas');
+      // First of all create a label and insert it into the <div>
+      var area_label = document.createElement('label');
+      var area_label_text = document.createTextNode('<?php echo get_vocab("area") ?>:');
+      area_label.appendChild(area_label_text);
+      area_label.setAttribute('for', 'area');
+      div_areas.appendChild(area_label);
+      // Now give it a select box
+      var area_select = document.createElement('select');
+      area_select.setAttribute('id', 'area');
+      area_select.setAttribute('name', 'area');
+      area_select.onchange = function(){changeRooms(this.form)}; // setAttribute doesn't work for onChange with IE6
+      // populated with options
+      var option;
+      var option_text
+      <?php
+      // go through the areas and create the options
+      foreach ($areas as $a)
+      {
+        ?>
+        option = document.createElement('option');
+        option.value = <?php echo $a['id'] ?>;
+        option_text = document.createTextNode('<?php echo escape_js($a['area_name']) ?>');
+        <?php
+        if ($a['id'] == $area_id)
+        {
+          ?>
+          option.selected = true;
+          <?php
+        }
+        ?>
+        option.appendChild(option_text);
+        area_select.appendChild(option);
+        <?php
+      }
+      ?>
+      // insert the <select> which we've just assembled into the <div>
+      div_areas.appendChild(area_select);
+      
+      //]]>
+      </script>
+      
+      
+      <?php
+    } // if count($areas)
+}
+
+function create_field_entry_rooms()
+{
+  global $rooms, $multiroom_allowed, $area_id, $selected_rooms;
+  global $room_names, $room_id;
+
+  echo "\n    <div id=\"div_rooms\">\n";
+  echo "    <label for=\"rooms\">" . get_vocab("rooms") . ":</label>\n";
+  echo "    <div class=\"group\">\n";
+  echo "      <select id=\"rooms\" name=\"rooms[]\"" .
+    (($multiroom_allowed) ? " multiple=\"multiple\"" : "") .
+    " size=\"5\">\n";
+  foreach ($rooms as $r)
+  {
+    if ($r['area_id'] == $area_id)
+    {
+      if (!empty($selected_rooms))
+      {
+	// We've come from a drag selection
+	$is_selected = in_array($r['id'], $selected_rooms);
+      }
+      else
+      {
+	$is_selected = ($r['id'] == $room_id);
+      }
+      $selected = ($is_selected) ? "selected=\"selected\"" : "";
+      echo "<option $selected value=\"" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</option>\n";
+      // store room names for emails
+      $room_names[$i] = $r['room_name'];
+    }
+  }
+  echo "</select>\n";
+  if ($multiroom_allowed)
+  {
+    echo "<span>" . get_vocab("ctrl_click") . "</span>\n";
+  }
+  echo "      </div>\n    </div>\n";
+}
+
+function create_field_entry_type()
+{
+  global $booking_types, $type;
+  echo "    <div id=\"div_type\">\n";
+  echo "      <label for=\"type\">" . get_vocab("type") . ":</label>\n";
+  echo "      <select id=\"type\" name=\"type\">\n        ";
+  foreach ($booking_types as $key)
+  {
+    echo "<option value=\"$key\"" . (($type == $key) ? " selected=\"selected\"" : "") . ">".get_type_vocab($key)."</option>\n";
+  }
+  echo "      </select>\n    </div>\n\n";
+}
+
+function create_field_entry_confirmation_status()
+{
+  global $confirmation_enabled, $confirmed;
+  // Confirmation status
+  if ($confirmation_enabled)
+  {
+    echo "    <div id=\"div_confirmation_status\">\n";
+    echo "<label>" . get_vocab("confirmation_status") . ":</label>\n";
+    echo "<div class=\"group\">\n";
+    echo "<label><input class=\"radio\" name=\"confirmed\" type=\"radio\" value=\"1\"" .
+      (($confirmed) ? " checked=\"checked\"" : "") .
+      ">" . get_vocab("confirmed") . "</label>\n";
+    echo "<label><input class=\"radio\" name=\"confirmed\" type=\"radio\" value=\"0\"" .
+      (($confirmed) ? "" : " checked=\"checked\"") .
+      ">" . get_vocab("tentative") . "</label>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+  }
+}
+
+function create_field_entry_privacy_status()
+{
+  global $private_enabled, $private, $private_mandatory;
+  // Privacy status
+  if ($private_enabled)
+  {
+    // No need to pass through a hidden variable if disabled because the handler will sort it out
+    echo "<div id=\"div_privacy_status\">\n";
+    echo "<label>" . get_vocab("privacy_status") . ":</label>\n";
+    echo "<div class=\"group\">\n";
+    echo "<label><input class=\"radio\" name=\"private\" type=\"radio\" value=\"0\"" .
+      (($private) ? "" : " checked=\"checked\"") .
+      (($private_mandatory) ? " disabled=\"disabled\"" : "") .
+      ">" . get_vocab("public") . "</label>\n";
+    echo "<label><input class=\"radio\" name=\"private\" type=\"radio\" value=\"1\"" .
+      (($private) ? " checked=\"checked\"" : "") .
+      (($private_mandatory) ? " disabled=\"disabled\"" : "") .
+      ">" . get_vocab("private") . "</label>\n";
+    echo "</div>\n";
+    echo "</div>\n";
+  }
+}
+
+function create_field_entry_custom_field($field, $key)
+{
+  global $custom_fields, $tbl_entry, $select_options;
+  global $is_mandatory_field, $text_input_max;
+
+  $var_name = VAR_PREFIX . $key;
+  $value = $custom_fields[$key];
+  $label_text = get_loc_field_name($tbl_entry, $key) . ":";
+  echo "<div>\n";
+  // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+  // assume are intended to be booleans)
+  if (($field['nature'] == 'boolean') || 
+    (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+  {
+    echo "<label for=\"$var_name\">$label_text</label>\n";
+    echo "<input type=\"checkbox\" class=\"checkbox\" " .
+      "id=\"$var_name\" name=\"$var_name\" value=\"1\" " .
+      ((!empty($value)) ? " checked=\"checked\"" : "") .
+      ">\n";
+  }
+  // Output a select box if they want one
+  elseif (!empty($select_options["entry.$key"]))
+  {
+    $mandatory = (array_key_exists("entry.$key", $is_mandatory_field) &&
+      $is_mandatory_field["entry.$key"]) ? true : false;
+    generate_select($label_text, $var_name, $value,
+      $select_options["entry.$key"], $mandatory);
+  }
+  // Output a textarea if it's a character string longer than the limit for a
+  // text input
+  elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
+  {
+    generate_textarea($label_text, $var_name, $value);   
+  }
+  // Otherwise output a text input
+  else
+  {
+    generate_input($label_text, $var_name, $value);
+  }
+  echo "</div>\n";
+}
+
+
 // Get non-standard form variables
 $hour = get_form_var('hour', 'int');
 $minute = get_form_var('minute', 'int');
@@ -797,369 +1180,29 @@ else
   <fieldset>
   <legend><?php echo get_vocab($token); ?></legend>
 
-    <?php  
-    echo "<div id=\"div_name\">\n";
-    $label_text = get_vocab("namebooker") . ":";
-    if (!empty($select_options['entry.name']))
-    {
-      generate_select($label_text, 'name', $name, $select_options['entry.name']);  
-    }
-    else
-    {
-      generate_input($label_text, 'name', $name, FALSE, $maxlength['entry.name']);
-    }
-    echo "</div>\n";
-    
-    echo "<div id=\"div_description\">\n";
-    $label_text = get_vocab("fulldescription");
-    if (!empty($select_options['entry.description']))
-    {
-      generate_select($label_text, 'description', $description, $select_options['entry.description']);
-    }
-    else
-    {
-      generate_textarea($label_text, 'description', $description);
-    }
-    echo "</div>\n";
+<?php  
+create_field_entry_name();
+create_field_entry_description();
+create_field_entry_start_date();
+create_field_entry_end_date();
+create_field_entry_areas();
+create_field_entry_rooms();
+create_field_entry_type();
+create_field_entry_confirmation_status();
+create_field_entry_privacy_status();
 
+// CUSTOM FIELDS
+foreach ($fields as $field)
+{
+  $key = $field['name'];
+  if (!in_array($key, $standard_fields['entry']))
+  {
+    create_field_entry_custom_field($field, $key);
+  }
+}
 
-    echo "<div id=\"div_start_date\">\n";
-    echo "<label>" . get_vocab("start") . ":</label>\n";
-    $date = getdate($start_time);
-    gendateselector("start_", $date['mday'], $date['mon'], $date['year']);
-    // If we're using periods the booking model is slightly different:
-    // you're allowed to specify the last period as your first period.
-    // This is why we don't substract the resolution
-    
-    foreach ($areas as $a)
-    {
-      if ($a['enable_periods'])
-      {
-        $a['resolution'] = 60;
-        $first = 12*60*60;
-        // If we're using periods we just go to the beginning of the last slot
-        $last = $first + ((count($periods) - 1) * $a['resolution']);
-      }
-      else
-      {
-        $first = (($a['morningstarts'] * 60) + $a['morningstarts_minutes']) * 60;
-        $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
-        $last = $last + $a['resolution'];
-      }
-      $start_last = ($a['enable_periods']) ? $last : $last - $a['resolution'];
-      $display_none = ($a['id'] != $area_id);
-      genSlotSelector($a, "start_", $first, $start_last, $start_time, $display_none);
-    }
-
-    echo "<div class=\"group\">\n";
-    echo "<div id=\"ad\">\n";
-    echo "<input id=\"all_day\" class=\"checkbox\"" .
-         // If this is an existing booking that we are editing or copying, then we do
-         // not want the default duration applied
-         (($default_duration_all_day && !isset($id) && !$drag) ? " checked=\"checked\"" : "") .
-         " name=\"all_day\" type=\"checkbox\" value=\"yes\" onclick=\"OnAllDayClick(this)\">\n";
-    echo "<label for=\"all_day\">" . get_vocab("all_day") . "</label>\n";
-    echo "</div>\n";
-    echo "</div>\n";
-
-    echo "</div>\n";
-    
-    echo "<div id=\"div_end_date\">\n";
-    echo "<label>" . get_vocab("end") . ":</label>\n";
-    $date = getdate($end_time);
-    // Don't show the end date selector if multiday is not allowed
-    echo "<div" . (($multiday_allowed) ? '' : " style=\"visibility: hidden\"") . ">\n";
-    gendateselector("end_", $date['mday'], $date['mon'], $date['year']);
-    echo "</div>\n";
-    // If we're using periods the booking model is slightly different,
-    // so subtract one period because the "end" period is actually the beginning
-    // of the last period booked
-    foreach ($areas as $a)
-    {
-      if ($a['enable_periods'])
-      {
-        $a['resolution'] = 60;
-        $first = 12*60*60;
-        // If we're using periods we just go to the beginning of the last slot
-        $last = $first + ((count($periods) - 1) * $a['resolution']);
-      }
-      else
-      {
-        $first = (($a['morningstarts'] * 60) + $a['morningstarts_minutes']) * 60;
-        $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
-        $last = $last + $a['resolution'];
-      }
-      $end_value = ($a['enable_periods']) ? $end_time - $a['resolution'] : $end_time;
-      $display_none = ($a['id'] != $area_id);
-      genSlotSelector($a, "end_", $first, $last, $end_value, $display_none);
-    }
-    echo "</div>\n";
-    
-    ?>  
-    <div id="div_areas">
-    </div>
-
-    <?php   
-    // if there is more than one area then give the option
-    // to choose areas.
-    if (count($areas) > 1)
-    { 
-      ?> 
-      <script type="text/javascript">
-      //<![CDATA[
-      
-      var area = <?php echo $area_id ?>;
-      
-      function changeRooms( formObj )
-      {
-        areasObj = eval( "formObj.area" );
-
-        area = areasObj[areasObj.selectedIndex].value;
-        roomsObj = eval( "formObj.elements['rooms']" );
-
-        // remove all entries
-        roomsNum = roomsObj.length;
-        for (i=(roomsNum-1); i >= 0; i--)
-        {
-          roomsObj.options[i] = null;
-        }
-        // add entries based on area selected
-        switch (area){
-          <?php
-          foreach ($areas as $a)
-          {
-            print "case \"" . $a['id'] . "\":\n";
-            // get rooms for this area
-            $i = 0;
-            foreach ($rooms as $r)
-            {
-              if ($r['area_id'] == $a['id'])
-              {
-                print "roomsObj.options[$i] = new Option(\"" . escape_js($r['room_name']) . "\"," . $r['id'] . ");\n";
-                $i++;
-              }
-            }
-            // select the first entry by default to ensure
-            // that one room is selected to begin with
-            if ($i > 0)  // but only do this if there is a room
-            {
-              print "roomsObj.options[0].selected = true;\n";
-            }
-            print "break;\n";
-          }
-          ?>
-        } //switch
-        
-        <?php 
-        // Replace the start and end selectors with those for the new area
-        // (1) We set the display for the old elements to "none" and the new
-        // elements to "block".   (2) We also need to disable the old selectors and
-        // enable the new ones: they all have the same name, so we only want
-        // one passed through with the form.  (3) We take a note of the currently
-        // selected start and end values so that we can have a go at finding a
-        // similar time/period in the new area. (4) We also take a note of the old
-        // area id because we'll need that when trying to match up slots: it only
-        // makes sense to match up slots if both old and new area used the same
-        // mode (periods/times).
-        ?>
-        var oldStartId = "start_seconds" + currentArea;
-        var oldEndId = "end_seconds" + currentArea;
-        var newStartId = "start_seconds" + area;
-        var newEndId = "end_seconds" + area;
-        var oldAreaStartValue = formObj[oldStartId].options[formObj[oldStartId].selectedIndex].value;
-        var oldAreaEndValue = formObj[oldEndId].options[formObj[oldEndId].selectedIndex].value;
-        $("#" + oldStartId).hide()
-                           .attr('disabled', 'disabled');
-        $("#" + oldEndId).hide()
-                         .attr('disabled', 'disabled');
-        $("#" + newStartId).show()
-                           .removeAttr('disabled');
-        $("#" + newEndId).show()
-                         .removeAttr('disabled');
-        var oldArea = currentArea;
-        currentArea = area;
-        prevStartValue = undefined;
-        adjustSlotSelectors(formObj, oldArea, oldAreaStartValue, oldAreaEndValue);
-      }
-
-      // Create area selector, only if we have Javascript
-      var div_areas = document.getElementById('div_areas');
-      // First of all create a label and insert it into the <div>
-      var area_label = document.createElement('label');
-      var area_label_text = document.createTextNode('<?php echo get_vocab("area") ?>:');
-      area_label.appendChild(area_label_text);
-      area_label.setAttribute('for', 'area');
-      div_areas.appendChild(area_label);
-      // Now give it a select box
-      var area_select = document.createElement('select');
-      area_select.setAttribute('id', 'area');
-      area_select.setAttribute('name', 'area');
-      area_select.onchange = function(){changeRooms(this.form)}; // setAttribute doesn't work for onChange with IE6
-      // populated with options
-      var option;
-      var option_text
-      <?php
-      // go through the areas and create the options
-      foreach ($areas as $a)
-      {
-        ?>
-        option = document.createElement('option');
-        option.value = <?php echo $a['id'] ?>;
-        option_text = document.createTextNode('<?php echo escape_js($a['area_name']) ?>');
-        <?php
-        if ($a['id'] == $area_id)
-        {
-          ?>
-          option.selected = true;
-          <?php
-        }
-        ?>
-        option.appendChild(option_text);
-        area_select.appendChild(option);
-        <?php
-      }
-      ?>
-      // insert the <select> which we've just assembled into the <div>
-      div_areas.appendChild(area_select);
-      
-      //]]>
-      </script>
-      
-      
-      <?php
-    } // if count($areas)
-    ?>
     
     
-    <div id="div_rooms">
-    <label for="rooms"><?php echo get_vocab("rooms") ?>:</label>
-    <div class="group">
-      <?php
-      echo "<select id=\"rooms\" name=\"rooms[]\"" .
-           (($multiroom_allowed) ? " multiple=\"multiple\"" : "") .
-           " size=\"5\">\n";
-      foreach ($rooms as $r)
-      {
-        if ($r['area_id'] == $area_id)
-        {
-          if (!empty($selected_rooms))
-          {
-            // We've come from a drag selection
-            $is_selected = in_array($r['id'], $selected_rooms);
-          }
-          else
-          {
-            $is_selected = ($r['id'] == $room_id);
-          }
-          $selected = ($is_selected) ? "selected=\"selected\"" : "";
-          echo "<option $selected value=\"" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</option>\n";
-          // store room names for emails
-          $room_names[$i] = $r['room_name'];
-        }
-      }
-      echo "</select>\n";
-      if ($multiroom_allowed)
-      {
-        echo "<span>" . get_vocab("ctrl_click") . "</span>\n";
-      }
-      ?>
-      </div>
-    </div>
-    <div id="div_type">
-      <label for="type"><?php echo get_vocab("type")?>:</label>
-      <select id="type" name="type">
-        <?php
-        foreach ($booking_types as $key)
-        {
-          echo "<option value=\"$key\"" . (($type == $key) ? " selected=\"selected\"" : "") . ">".get_type_vocab($key)."</option>\n";
-        }
-        ?>
-      </select>
-    </div>
-    
-    <?php
-    // Confirmation status
-    if ($confirmation_enabled)
-    {
-      echo "<div id=\"div_confirmation_status\">\n";
-      echo "<label>" . get_vocab("confirmation_status") . ":</label>\n";
-      echo "<div class=\"group\">\n";
-      echo "<label><input class=\"radio\" name=\"confirmed\" type=\"radio\" value=\"1\"" .
-           (($confirmed) ? " checked=\"checked\"" : "") .
-           ">" . get_vocab("confirmed") . "</label>\n";
-      echo "<label><input class=\"radio\" name=\"confirmed\" type=\"radio\" value=\"0\"" .
-           (($confirmed) ? "" : " checked=\"checked\"") .
-           ">" . get_vocab("tentative") . "</label>\n";
-      echo "</div>\n";
-      echo "</div>\n";
-    }
-    
-    // Privacy status
-    if ($private_enabled)
-    {
-      // No need to pass through a hidden variable if disabled because the handler will sort it out
-      echo "<div id=\"div_privacy_status\">\n";
-      echo "<label>" . get_vocab("privacy_status") . ":</label>\n";
-      echo "<div class=\"group\">\n";
-      echo "<label><input class=\"radio\" name=\"private\" type=\"radio\" value=\"0\"" .
-           (($private) ? "" : " checked=\"checked\"") .
-           (($private_mandatory) ? " disabled=\"disabled\"" : "") .
-           ">" . get_vocab("public") . "</label>\n";
-      echo "<label><input class=\"radio\" name=\"private\" type=\"radio\" value=\"1\"" .
-           (($private) ? " checked=\"checked\"" : "") .
-           (($private_mandatory) ? " disabled=\"disabled\"" : "") .
-           ">" . get_vocab("private") . "</label>\n";
-      echo "</div>\n";
-      echo "</div>\n";
-    }
-    
-    
-    // CUSTOM FIELDS
-
-    foreach ($fields as $field)
-    {
-      $key = $field['name'];
-      if (!in_array($key, $standard_fields['entry']))
-      {
-        $var_name = VAR_PREFIX . $key;
-        $value = $custom_fields[$key];
-        $label_text = get_loc_field_name($tbl_entry, $key) . ":";
-        echo "<div>\n";
-        // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
-        // assume are intended to be booleans)
-        if (($field['nature'] == 'boolean') || 
-            (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
-        {
-          echo "<label for=\"$var_name\">$label_text</label>\n";
-          echo "<input type=\"checkbox\" class=\"checkbox\" " .
-                "id=\"$var_name\" name=\"$var_name\" value=\"1\" " .
-                ((!empty($value)) ? " checked=\"checked\"" : "") .
-                ">\n";
-        }
-        // Output a select box if they want one
-        elseif (!empty($select_options["entry.$key"]))
-        {
-          $mandatory = (array_key_exists("entry.$key", $is_mandatory_field) &&
-                        $is_mandatory_field["entry.$key"]) ? true : false;
-          generate_select($label_text, $var_name, $value,
-                          $select_options["entry.$key"], $mandatory);
-        }
-        // Output a textarea if it's a character string longer than the limit for a
-        // text input
-        elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
-        {
-          generate_textarea($label_text, $var_name, $value);   
-        }
-        // Otherwise output a text input
-        else
-        {
-          generate_input($label_text, $var_name, $value);
-        }
-        echo "</div>\n";
-      }
-    }
-
-
     // REPEAT BOOKING INPUTS
     if (($edit_type == "series") && $repeats_allowed)
     {
