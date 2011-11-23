@@ -191,7 +191,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
         }
         else
         {
-          $value = "&nbsp;";
+          $value = "";
         }
       }
       $class = ($keep_private && $is_private_field["entry.$key"]) ? "private" : "";
