@@ -436,7 +436,7 @@ function create_body($data, $compare, $series, $action, $as_html=FALSE, $note=''
     if (file_exists($css_file))
     {
       $fh = fopen($css_file, 'r');
-      $css .= fread($fh, filesize($css_file));
+      $css = fread($fh, filesize($css_file));
       $css = preg_replace('!/\*.*?\*/!s', '', $css);  // Remove comments
       $css = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $css);  // Remove blank lines
       $body .= $css;
