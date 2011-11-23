@@ -46,3 +46,9 @@ foreach ($color_types as $type => $col)
 {
   echo "td.$type, .$type .celldiv {border: 2px solid $col}\n";         // used in the day and week views
 }
+
+// hide DataTable buttons in print
+?>
+
+.ColVis_Button, .dataTables_filter, .dataTables_length, .dataTables_paginate {display: none; }
+
