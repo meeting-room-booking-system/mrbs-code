@@ -230,6 +230,7 @@ function create_field_entry_end_date()
     $display_none = ($a['id'] != $area_id);
     genSlotSelector($a, "end_", $first, $last, $end_value, $display_none);
   }
+  echo "<span id=\"end_time_error\" class=\"error\"></span>\n";
   echo "</div>\n";
 }
 
@@ -964,6 +965,10 @@ foreach ($areas as $area)
   echo "areas[${area['id']}]['max_duration_enabled'] = $max_duration_enabled;\n";
   echo "areas[${area['id']}]['max_duration_secs'] = $max_duration_secs;\n";
   echo "areas[${area['id']}]['max_duration_periods'] = $max_duration_periods;\n";
+  $max_duration_qty = $max_duration_secs;
+  toTimeString($max_duration_qty, $max_duration_units);
+  echo "areas[${area['id']}]['max_duration_qty'] = $max_duration_qty;\n";
+  echo "areas[${area['id']}]['max_duration_units'] = '$max_duration_units';\n";
 }
 ?>
 

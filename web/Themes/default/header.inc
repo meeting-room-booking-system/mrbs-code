@@ -73,7 +73,7 @@ function print_theme_header($day, $month, $year, $area, $room)
          $search_str, $locale_warning;
   global $tbl_entry, $tbl_room, $tbl_area;
   global $PHP_SELF, $HTTP_HOST, $QUERY_STRING;
-  global $view_week_number, $weekstarts, $times_along_top, $enable_periods;
+  global $view_week_number, $weekstarts, $times_along_top, $periods, $enable_periods;
   global $auth, $max_level;
   global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   global $lang_map_windows, $langs, $server_os;
@@ -984,8 +984,10 @@ if ($page == 'edit_entry')
     var maxDurationEnabled = areas[area]['max_duration_enabled'];
     var maxDurationSecs = areas[area]['max_duration_secs'];
     var maxDurationPeriods = areas[area]['max_duration_periods'];
+    var maxDurationQty = areas[area]['max_duration_qty'];
+    var maxDurationUnits = areas[area]['max_duration_units'];
 
-    var isSelected, i, j, option, defaultDuration, maxDuration;
+    var isSelected, i, j, option, duration, defaultDuration, maxDuration;
     var nbsp = '\u00A0';
     var errorText = '<?php echo get_vocab("start_after_end")?>';
     var text = errorText;
@@ -1157,6 +1159,7 @@ if ($page == 'edit_entry')
       endSelect.remove(0);
     }
 
+    $('#end_time_error').text('');  <?php  // Clear the error message ?>
     j = 0;
     for (i = 0; i < nEndOptions[area]; i++)
     {
@@ -1168,10 +1171,41 @@ if ($page == 'edit_entry')
         ?>
         if (maxDurationEnabled)
         {
-          maxDuration = (enablePeriods) ? (maxDurationPeriods - 1) * 60 : maxDurationSecs
-          if ((endOptions[area][i]['value'] - startValue) > maxDuration)
+          <?php
+          // Calculate the duration in periods or seconds
+          ?>
+          duration = endOptions[area][i]['value'] - startValue;
+          if (enablePeriods)
           {
-            break;
+            duration = duration/60 + 1;  <?php // because of the way periods work ?>
+            duration += dateDifference * <?php echo count($periods) ?>;
+          }
+          else
+          {
+            duration += dateDifference * 60 * 60 *24;
+          }
+          maxDuration = (enablePeriods) ? maxDurationPeriods : maxDurationSecs;
+          if (duration > maxDuration)
+          {
+            if (i == 0)
+            {
+              endSelect.options[j] = new Option(nbsp, endOptions[area][i]['value'], false, isSelected);
+              var errorMessage = '<?php echo get_vocab("max_booking_duration") ?>' + nbsp;
+              if (enablePeriods)
+              {
+                errorMessage += maxDurationPeriods + nbsp;
+                errorMessage += (maxDurationPeriods > 1) ? '<?php echo get_vocab("periods") ?>' : '<?php get_vocab("period_lc") ?>';
+              }
+              else
+              {
+                errorMessage += maxDurationQty + nbsp + maxDurationUnits;
+              }
+              $('#end_time_error').text(errorMessage);
+            }
+            else
+            {
+              break;
+            }
           }
         }
         <?php

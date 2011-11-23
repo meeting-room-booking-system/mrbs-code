@@ -594,6 +594,7 @@ div#edit_entry_submit_back {float: left; width: <?php echo $general_left_col_wid
 div#edit_entry_submit_save {float: left; clear: none; width: auto}
 #edit_entry_submit_back input {float: right}
 
+
 .form_general .div_dur_mins input{width: 4.0em}
 .form_general .div_time input {width: 2.0em}
 .form_general .div_time input.time_hour {text-align: right}
@@ -609,6 +610,7 @@ div#edit_entry_submit_save {float: left; clear: none; width: auto}
 fieldset#rep_info {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.7em}
 .form_general input#rep_num_weeks {width: 2.0em}
 
+.edit_entry span#end_time_error {display: block; float: left; margin-left: 2em; font-weight: normal}
 .edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}
 
 .form_general label.secondary {font-weight: normal; width: auto}
