@@ -1193,7 +1193,6 @@ else
 <?php
 
 // Fill $edit_entry_field_order with not yet specified entries.
-$edit_entry_field_order = array();
 $entry_fields = array('name', 'description', 'start_date', 'end_date', 'areas',
   'rooms', 'type', 'confirmation_status', 'privacy_status');
 foreach( $entry_fields as $field )
