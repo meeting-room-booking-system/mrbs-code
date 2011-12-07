@@ -352,9 +352,9 @@ function print_theme_header($day, $month, $year, $area, $room)
             defaultOptions.sPaginationType = "full_numbers";
             defaultOptions.oColReorder = {};
             defaultOptions.oColVis = {sSize: "css",
-                                      buttonText: '<?php echo get_vocab("show_hide_columns") ?>',
+                                      buttonText: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>',
                                       bRestore: true,
-                                      sRestore: '<?php echo get_vocab("restore_original") ?>'};
+                                      sRestore: '<?php echo escape_js(get_vocab("restore_original")) ?>'};
 
             defaultOptions.fnInitComplete = function(){
                 if (((leftCol !== undefined) && (leftCol !== null)) ||
@@ -781,14 +781,14 @@ if ($page == 'edit_entry')
             if (result.conflicts.length == 0)
             {
               conflictDiv.text(checkMark).attr('class', 'good').attr;
-              titleText = '<?php echo mrbs_entity_decode(get_vocab("no_conflicts")) ?>';
+              titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("no_conflicts"))) ?>';
               detailsHTML = titleText;
             }
             else
             {
               conflictDiv.text(cross).attr('class', 'bad');
               detailsHTML = "<p>";
-              titleText = '<?php echo mrbs_entity_decode(get_vocab("conflict")) ?>' + ":  \n\n";
+              titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("conflict"))) ?>' + ":  \n\n";
               detailsHTML += titleText + "<\/p>";
               var conflictsList = getErrorList(result.conflicts);
               detailsHTML += conflictsList.html;
@@ -800,14 +800,14 @@ if ($page == 'edit_entry')
             if (result.rules_broken.length == 0)
             {
               policyDiv.text(checkMark).attr('class', 'good');
-              titleText = '<?php echo mrbs_entity_decode(get_vocab("no_rules_broken")) ?>';
+              titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("no_rules_broken"))) ?>';
               detailsHTML = titleText;
             }
             else
             {
               policyDiv.text(cross).attr('class', 'bad');
               detailsHTML = "<p>";
-              titleText = '<?php echo mrbs_entity_decode(get_vocab("rules_broken")) ?>' + ":  \n\n";
+              titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("rules_broken"))) ?>' + ":  \n\n";
               detailsHTML += titleText + "<\/p>";
               var rulesList = getErrorList(result.rules_broken);
               detailsHTML += rulesList.html;
@@ -989,7 +989,7 @@ if ($page == 'edit_entry')
 
     var isSelected, i, j, option, duration, defaultDuration, maxDuration;
     var nbsp = '\u00A0';
-    var errorText = '<?php echo get_vocab("start_after_end")?>';
+    var errorText = '<?php echo escape_js(get_vocab("start_after_end"))?>';
     var text = errorText;
     
     var startId = "start_seconds" + area;
@@ -1190,11 +1190,11 @@ if ($page == 'edit_entry')
             if (i == 0)
             {
               endSelect.options[j] = new Option(nbsp, endOptions[area][i]['value'], false, isSelected);
-              var errorMessage = '<?php echo get_vocab("max_booking_duration") ?>' + nbsp;
+              var errorMessage = '<?php echo escape_js(get_vocab("max_booking_duration")) ?>' + nbsp;
               if (enablePeriods)
               {
                 errorMessage += maxDurationPeriods + nbsp;
-                errorMessage += (maxDurationPeriods > 1) ? '<?php echo get_vocab("periods") ?>' : '<?php get_vocab("period_lc") ?>';
+                errorMessage += (maxDurationPeriods > 1) ? '<?php echo escape_js(get_vocab("periods")) ?>' : '<?php escape_js(get_vocab("period_lc")) ?>';
               }
               else
               {
@@ -2264,7 +2264,7 @@ $(window).load(function() {
                               var alertMessage = '';
                               if (result.conflicts.length > 0)
                               {
-                                alertMessage += '<?php echo mrbs_entity_decode(get_vocab("conflict")) ?>' + ":  \n\n";
+                                alertMessage += '<?php echo escape_js(mrbs_entity_decode(get_vocab("conflict"))) ?>' + ":  \n\n";
                                 var conflictsList = getErrorList(result.conflicts);
                                 alertMessage += conflictsList.text;
                               }
@@ -2274,7 +2274,7 @@ $(window).load(function() {
                                 {
                                   alertMessage += "\n\n";
                                 }
-                                alertMessage += '<?php echo mrbs_entity_decode(get_vocab("rules_broken")) ?>' + ":  \n\n";
+                                alertMessage += '<?php echo escape_js(mrbs_entity_decode(get_vocab("rules_broken"))) ?>' + ":  \n\n";
                                 var rulesList = getErrorList(result.rules_broken);
                                 alertMessage += rulesList.text;
                               }
@@ -2516,17 +2516,17 @@ $(window).load(function() {
     // minutes, hours
     ?>
     vocab['periods'] = new Array();
-    vocab['periods']['singular'] = '<?php echo get_vocab("period_lc") ?>';
-    vocab['periods']['plural'] = '<?php echo get_vocab("periods") ?>';
+    vocab['periods']['singular'] = '<?php echo escape_js(get_vocab("period_lc")) ?>';
+    vocab['periods']['plural'] = '<?php echo escape_js(get_vocab("periods")) ?>';
     vocab['minutes'] = new Array();
-    vocab['minutes']['singular'] = '<?php echo get_vocab("minute_lc") ?>';
-    vocab['minutes']['plural'] = '<?php echo get_vocab("minutes") ?>';
+    vocab['minutes']['singular'] = '<?php echo escape_js(get_vocab("minute_lc")) ?>';
+    vocab['minutes']['plural'] = '<?php echo escape_js(get_vocab("minutes")) ?>';
     vocab['hours'] = new Array();
-    vocab['hours']['singular'] = '<?php echo get_vocab("hour_lc") ?>';
-    vocab['hours']['plural'] = '<?php echo get_vocab("hours") ?>';
+    vocab['hours']['singular'] = '<?php echo escape_js(get_vocab("hour_lc")) ?>';
+    vocab['hours']['plural'] = '<?php echo escape_js(get_vocab("hours")) ?>';
     vocab['days'] = new Array();
-    vocab['days']['singular'] = '<?php echo get_vocab("day_lc") ?>';
-    vocab['days']['plural'] = '<?php echo get_vocab("days") ?>';
+    vocab['days']['singular'] = '<?php echo escape_js(get_vocab("day_lc")) ?>';
+    vocab['days']['plural'] = '<?php echo escape_js(get_vocab("days")) ?>';
     <?php
     // Get the details of the start and end slot selectors now since
     // they are fully populated with options.  We can then use the details
@@ -2945,7 +2945,7 @@ $(window).load(function() {
         if ($is_admin && $auth['show_bulk_delete'])
         {
           ?>
-          $('<button id="delete_button"><?php echo get_vocab("delete_entries") ?><\/button>')
+          $('<button id="delete_button"><?php echo escape_js(get_vocab("delete_entries")) ?><\/button>')
                 .click(function() {
                     var aData = reportTable.fnGetFilteredData();
                     var nEntries = aData.length;
