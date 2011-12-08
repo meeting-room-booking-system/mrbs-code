@@ -382,6 +382,10 @@ $vocab["for_any_questions"]  = "si vous avez une question qui n'est pas traitée
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Erreur grave&nbsp;: échec de la connexion à la base de données";
 
+// Used in DataTables
+$vocab["show_hide_columns"]  = "Afficher/Masquer";
+$vocab["restore_original"]   = "Restaurer l'original";
+
 // Entry types
 $vocab["type.I"]            = "Régulier";
 $vocab["type.E"]            = "Occasionnel";
