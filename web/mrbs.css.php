@@ -816,6 +816,7 @@ div#simple_trailer {clear: both; text-align: center; padding-top: 1.0em; padding
 div.datatable_container {float: left; width: 100%; padding: 2em 0}
 
 div.ColVis_collection {
+  float: left;
   width: auto;
 }
 
