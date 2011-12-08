@@ -351,7 +351,7 @@ function print_theme_header($day, $month, $year, $area, $room)
             defaultOptions.sScrollX = "100%";
             defaultOptions.sPaginationType = "full_numbers";
             defaultOptions.oColReorder = {};
-            defaultOptions.oColVis = {sSize: "css",
+            defaultOptions.oColVis = {sSize: "auto",
                                       buttonText: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>',
                                       bRestore: true,
                                       sRestore: '<?php echo escape_js(get_vocab("restore_original")) ?>'};
@@ -413,7 +413,7 @@ function print_theme_header($day, $month, $year, $area, $room)
               ?>
               defaultOptions.oColReorder = {iFixedColumns: nCols};
             }
-            defaultOptions.oColVis = {aiExclude: colVisExcludeCols};
+            defaultOptions.oColVis.aiExclude = colVisExcludeCols;
             <?php
             // Merge the specific options with the default options.  We do a deep
             // merge.

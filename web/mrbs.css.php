@@ -833,6 +833,7 @@ span.ColVis_radio {
 span.ColVis_title {
 	display: block;
   float: left;
+  white-space: nowrap;
 }
 
 /* ------------ jQuery UI additions -------------*/
