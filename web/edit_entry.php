@@ -990,7 +990,7 @@ function validate(form_id)
     // null strings and spaces only strings not allowed
     if(/(^$)|(^\s+$)/.test(form.name.value))
     {
-      alert ( "<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("brief_description") ?>");
+      alert("<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('brief_description')) ?>");
       return false;
     }
   }
@@ -1001,7 +1001,7 @@ function validate(form_id)
   var dateDiff = getDateDifference(form);
   if (dateDiff < 0)
   {
-    alert('<?php echo get_vocab("start_after_end_long")?>');
+    alert("<?php echo escape_js(get_vocab('start_after_end_long'))?>");
     return false;
   }
 
@@ -1026,7 +1026,7 @@ function validate(form_id)
       form.rep_type[<?php echo REP_N_WEEKLY ?>].checked && 
       (!n || n < 2))
   {
-    alert("<?php echo get_vocab("you_have_not_entered") . '\n' . get_vocab("useful_n-weekly_value") ?>");
+    alert("<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('useful_n-weekly_value')) ?>");
     return false;
   }
   
@@ -1036,7 +1036,7 @@ function validate(form_id)
   // has been chosen
   if (form.elements['rooms'].selectedIndex == -1 )
   {
-    alert("<?php echo get_vocab("you_have_not_selected") . '\n' . get_vocab("valid_room") ?>");
+    alert("<?php echo escape_js(get_vocab('you_have_not_selected')) . '\n' . escape_js(get_vocab('valid_room')) ?>");
     return false;
   }
   
@@ -1071,11 +1071,7 @@ function validate(form_id)
                label = $("label[for="+value+"]").html();
                label = label.replace(/:$/, '');
                alert('"' + label + '" ' +
-                 <?php echo '"'.
-                         str_replace('"', '\\"',
-                                     get_vocab("is_mandatory_field")
-                                    ).
-                         '"'; ?>);
+                 <?php echo '"' . escape_js(get_vocab('is_mandatory_field')) . '"'; ?>);
                return_val = false;
              }
            });
