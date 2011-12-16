@@ -861,6 +861,9 @@ else
     }
     $duration    = ($enable_periods ? 60 : $default_duration);
     $end_time = $start_time + $duration;
+    // The end time can't be past the end of the booking day
+    $pm7 = mktime($eveningends, $eveningends_minutes, 0, $month, $day, $year);
+    $end_time = min($end_time, $pm7 + $resolution);
   }
 }
 
