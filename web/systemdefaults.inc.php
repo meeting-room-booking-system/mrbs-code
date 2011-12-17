@@ -660,6 +660,10 @@ $ldap_tls = false;
 // An example for Microsoft AD:
 //$ldap_filter = "memberof=cn=whater,ou=whatver,dc=example,dc=com";
 
+// If you need to disable client referrals, this should be set to TRUE.
+// Note: Active Directory for Windows 2003 forward requires this.
+// $ldap_disable_referrals = TRUE;
+
 // Set to TRUE to tell MRBS to look up a user's email address in LDAP.
 // Utilises $ldap_email_attrib below
 $ldap_get_user_email = FALSE;

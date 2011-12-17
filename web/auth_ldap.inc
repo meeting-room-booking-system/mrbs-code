@@ -39,6 +39,7 @@ function authLdapAction($callback, $user, &$object)
   global $ldap_group_member_attrib;
   global $ldap_admin_group_dn;
   global $ldap_email_attrib;
+  global $ldap_disable_referrals;
 
   if (!function_exists("ldap_connect"))
   {
@@ -62,7 +63,8 @@ function authLdapAction($callback, $user, &$object)
                         'ldap_admin_group_dn',
                         'ldap_v3',
                         'ldap_tls',
-                        'ldap_email_attrib'
+                        'ldap_email_attrib',
+                        'ldap_disable_referrals'
                        );
 
   $all_ldap_opts = array();
@@ -140,7 +142,12 @@ function authLdapAction($callback, $user, &$object)
       {
         ldap_start_tls($ldap);
       }
-
+      if(isset($all_ldap_opts['ldap_disable_referrals'][$idx]) && $all_ldap_opts['ldap_disable_referrals'][$idx])
+      {
+        // Required to do a search on Active Directory for Win 2003+
+        ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
+      }
+      
       if (isset($all_ldap_opts['ldap_dn_search_attrib'][$idx]))
       {
         if (isset($all_ldap_opts['ldap_dn_search_dn'][$idx]) &&
