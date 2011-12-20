@@ -751,12 +751,15 @@ if ($page == 'edit_entry')
             if (params[fieldName] === undefined)
             {
               params[fieldName] = getFormValue($(this));
-	    } else {
-	      if( $.isArray( params[fieldName] ) ) {
-		var value = getFormValue($(this));
-		$.merge( params[fieldName], value );
-	      }
-	    }
+            }
+            else
+            {
+              if ($.isArray(params[fieldName]))
+              {
+                var value = getFormValue($(this));
+                $.merge(params[fieldName], value);
+              }
+            }
           });
         
         <?php
