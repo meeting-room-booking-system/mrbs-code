@@ -124,7 +124,7 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
 function create_field_entry_name()
 {
   global $name, $select_options, $maxlength;
-  echo "    <div id=\"div_name\">\n";
+  echo "<div id=\"div_name\">\n";
   $label_text = get_vocab("namebooker") . ":";
   if (!empty($select_options['entry.name']))
   {
@@ -237,7 +237,8 @@ function create_field_entry_end_date()
 function create_field_entry_areas()
 {
   global $areas, $area_id, $rooms;
-  echo "  \n    <div id=\"div_areas\">\n    </div>\n";
+  echo "<div id=\"div_areas\">\n";
+  echo "</div>\n";
   // if there is more than one area then give the option
   // to choose areas.
   if (count($areas) > 1)
@@ -373,10 +374,10 @@ function create_field_entry_rooms()
   global $rooms, $multiroom_allowed, $area_id, $selected_rooms;
   global $room_names, $room_id;
 
-  echo "\n    <div id=\"div_rooms\">\n";
-  echo "    <label for=\"rooms\">" . get_vocab("rooms") . ":</label>\n";
-  echo "    <div class=\"group\">\n";
-  echo "      <select id=\"rooms\" name=\"rooms[]\"" .
+  echo "<div id=\"div_rooms\">\n";
+  echo "<label for=\"rooms\">" . get_vocab("rooms") . ":</label>\n";
+  echo "<div class=\"group\">\n";
+  echo "<select id=\"rooms\" name=\"rooms[]\"" .
     (($multiroom_allowed) ? " multiple=\"multiple\"" : "") .
     " size=\"5\">\n";
   foreach ($rooms as $r)
@@ -385,12 +386,12 @@ function create_field_entry_rooms()
     {
       if (!empty($selected_rooms))
       {
-	// We've come from a drag selection
-	$is_selected = in_array($r['id'], $selected_rooms);
+        // We've come from a drag selection
+        $is_selected = in_array($r['id'], $selected_rooms);
       }
       else
       {
-	$is_selected = ($r['id'] == $room_id);
+        $is_selected = ($r['id'] == $room_id);
       }
       $selected = ($is_selected) ? "selected=\"selected\"" : "";
       echo "<option $selected value=\"" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</option>\n";
@@ -403,20 +404,22 @@ function create_field_entry_rooms()
   {
     echo "<span>" . get_vocab("ctrl_click") . "</span>\n";
   }
-  echo "      </div>\n    </div>\n";
+  echo "</div>\n";
+  echo "</div>\n";
 }
 
 function create_field_entry_type()
 {
   global $booking_types, $type;
-  echo "    <div id=\"div_type\">\n";
-  echo "      <label for=\"type\">" . get_vocab("type") . ":</label>\n";
-  echo "      <select id=\"type\" name=\"type\">\n        ";
+  echo "<div id=\"div_type\">\n";
+  echo "<label for=\"type\">" . get_vocab("type") . ":</label>\n";
+  echo "<select id=\"type\" name=\"type\">\n";
   foreach ($booking_types as $key)
   {
     echo "<option value=\"$key\"" . (($type == $key) ? " selected=\"selected\"" : "") . ">".get_type_vocab($key)."</option>\n";
   }
-  echo "      </select>\n    </div>\n\n";
+  echo "</select>\n";
+  echo "</div>\n";
 }
 
 function create_field_entry_confirmation_status()
@@ -425,7 +428,7 @@ function create_field_entry_confirmation_status()
   // Confirmation status
   if ($confirmation_enabled)
   {
-    echo "    <div id=\"div_confirmation_status\">\n";
+    echo "<div id=\"div_confirmation_status\">\n";
     echo "<label>" . get_vocab("confirmation_status") . ":</label>\n";
     echo "<div class=\"group\">\n";
     echo "<label><input class=\"radio\" name=\"confirmed\" type=\"radio\" value=\"1\"" .
