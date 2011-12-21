@@ -140,9 +140,11 @@ function create_field_entry_name($disabled=FALSE)
   echo "</div>\n";
 }
 
+
 function create_field_entry_description($disabled=FALSE)
 {
   global $description, $select_options, $is_mandatory_field;
+  
   echo "<div id=\"div_description\">\n";
   $label_text = get_vocab("fulldescription");
   if (!empty($select_options['entry.description']))
@@ -157,9 +159,11 @@ function create_field_entry_description($disabled=FALSE)
   echo "</div>\n";
 }
 
+
 function create_field_entry_start_date($disabled=FALSE)
 {
   global $start_time, $areas, $area_id, $periods, $default_duration_all_day, $id, $drag;
+  
   echo "<div id=\"div_start_date\">\n";
   echo "<label>" . get_vocab("start") . ":</label>\n";
   $date = getdate($start_time);
@@ -204,9 +208,11 @@ function create_field_entry_start_date($disabled=FALSE)
   echo "</div>\n";
 }
 
+
 function create_field_entry_end_date($disabled=FALSE)
 {
   global $end_time, $areas, $area_id, $periods, $multiday_allowed;
+  
   echo "<div id=\"div_end_date\">\n";
   echo "<label>" . get_vocab("end") . ":</label>\n";
   $date = getdate($end_time);
@@ -240,9 +246,11 @@ function create_field_entry_end_date($disabled=FALSE)
   echo "</div>\n";
 }
 
+
 function create_field_entry_areas($disabled=FALSE)
 {
   global $areas, $area_id, $rooms;
+  
   echo "<div id=\"div_areas\">\n";
   echo "</div>\n";
   // if there is more than one area then give the option
@@ -390,6 +398,7 @@ function create_field_entry_areas($disabled=FALSE)
     } // if count($areas)
 }
 
+
 function create_field_entry_rooms($disabled=FALSE)
 {
   global $rooms, $multiroom_allowed, $room_id, $area_id, $selected_rooms;
@@ -416,7 +425,9 @@ function create_field_entry_rooms($disabled=FALSE)
     }
   }
   echo "</select>\n";
-  if ($multiroom_allowed)
+  // No point telling them how to select multiple rooms if the input
+  // is disabled
+  if ($multiroom_allowed && !$disabled)
   {
     echo "<span>" . get_vocab("ctrl_click") . "</span>\n";
   }
@@ -431,9 +442,11 @@ function create_field_entry_rooms($disabled=FALSE)
   echo "</div>\n";
 }
 
+
 function create_field_entry_type($disabled=FALSE)
 {
   global $booking_types, $type;
+  
   echo "<div id=\"div_type\">\n";
   echo "<label for=\"type\">" . get_vocab("type") . ":</label>\n";
   echo "<select id=\"type\" name=\"type\"" .
@@ -451,9 +464,11 @@ function create_field_entry_type($disabled=FALSE)
   echo "</div>\n";
 }
 
+
 function create_field_entry_confirmation_status($disabled=FALSE)
 {
   global $confirmation_enabled, $confirmed;
+  
   // Confirmation status
   if ($confirmation_enabled)
   {
@@ -479,9 +494,11 @@ function create_field_entry_confirmation_status($disabled=FALSE)
   }
 }
 
+
 function create_field_entry_privacy_status($disabled=FALSE)
 {
   global $private_enabled, $private, $private_mandatory;
+  
   // Privacy status
   if ($private_enabled)
   {
@@ -507,6 +524,7 @@ function create_field_entry_privacy_status($disabled=FALSE)
     echo "</div>\n";
   }
 }
+
 
 function create_field_entry_custom_field($field, $key, $disabled=FALSE)
 {
