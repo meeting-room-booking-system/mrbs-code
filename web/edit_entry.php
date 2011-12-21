@@ -408,7 +408,7 @@ function create_field_entry_rooms($disabled=FALSE)
   echo "<div class=\"group\">\n";
   echo "<select id=\"rooms\" name=\"rooms[]\"" .
     (($multiroom_allowed) ? " multiple=\"multiple\"" : "") .
-    (($disabled) ? "disabled=\"disabled\"" : "") .
+    (($disabled) ? " disabled=\"disabled\"" : "") .
     " size=\"5\">\n";
   // $selected_rooms will be populated if we've come from a drag selection
   if (empty($selected_rooms))
