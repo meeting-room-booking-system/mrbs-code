@@ -121,45 +121,49 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
   echo $html;
 }
 
-function create_field_entry_name()
+
+function create_field_entry_name($disabled=FALSE)
 {
-  global $name, $select_options, $maxlength;
+  global $name, $select_options, $maxlength, $is_mandatory_field;
+  
   echo "<div id=\"div_name\">\n";
   $label_text = get_vocab("namebooker") . ":";
   if (!empty($select_options['entry.name']))
   {
-    generate_select($label_text, 'name', $name, $select_options['entry.name']);  
+    generate_select($label_text, 'name', $name, $select_options['entry.name'],
+                    $is_mandatory_field['entry.name'], $disabled);
   }
   else
   {
-    generate_input($label_text, 'name', $name, FALSE, $maxlength['entry.name']);
+    generate_input($label_text, 'name', $name, $disabled, $maxlength['entry.name']);
   }
   echo "</div>\n";
 }
 
-function create_field_entry_description()
+function create_field_entry_description($disabled=FALSE)
 {
-  global $description, $select_options;
+  global $description, $select_options, $is_mandatory_field;
   echo "<div id=\"div_description\">\n";
   $label_text = get_vocab("fulldescription");
   if (!empty($select_options['entry.description']))
   {
-    generate_select($label_text, 'description', $description, $select_options['entry.description']);
+    generate_select($label_text, 'description', $description, $select_options['entry.description'],
+                    $is_mandatory_field['entry.description'], $disabled);
   }
   else
   {
-    generate_textarea($label_text, 'description', $description);
+    generate_textarea($label_text, 'description', $description, $disabled);
   }
   echo "</div>\n";
 }
 
-function create_field_entry_start_date()
+function create_field_entry_start_date($disabled=FALSE)
 {
   global $start_time, $areas, $area_id, $periods, $default_duration_all_day, $id, $drag;
   echo "<div id=\"div_start_date\">\n";
   echo "<label>" . get_vocab("start") . ":</label>\n";
   $date = getdate($start_time);
-  gendateselector("start_", $date['mday'], $date['mon'], $date['year']);
+  gendateselector("start_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
   // If we're using periods the booking model is slightly different:
   // you're allowed to specify the last period as your first period.
   // This is why we don't substract the resolution
@@ -181,7 +185,7 @@ function create_field_entry_start_date()
     }
     $start_last = ($a['enable_periods']) ? $last : $last - $a['resolution'];
     $display_none = ($a['id'] != $area_id);
-    genSlotSelector($a, "start_", $first, $start_last, $start_time, $display_none);
+    genSlotSelector($a, "start_", $first, $start_last, $start_time, $display_none, $disabled);
   }
 
   echo "<div class=\"group\">\n";
@@ -190,7 +194,9 @@ function create_field_entry_start_date()
     // If this is an existing booking that we are editing or copying, then we do
     // not want the default duration applied
     (($default_duration_all_day && !isset($id) && !$drag) ? " checked=\"checked\"" : "") .
-    " name=\"all_day\" type=\"checkbox\" value=\"yes\" onclick=\"OnAllDayClick(this)\">\n";
+    " name=\"all_day\" type=\"checkbox\" value=\"yes\" onclick=\"OnAllDayClick(this)\"" .
+    ($disabled ? " disabled=\"disabled\"" : "") .
+    ">\n";
   echo "<label for=\"all_day\">" . get_vocab("all_day") . "</label>\n";
   echo "</div>\n";
   echo "</div>\n";
@@ -198,7 +204,7 @@ function create_field_entry_start_date()
   echo "</div>\n";
 }
 
-function create_field_entry_end_date()
+function create_field_entry_end_date($disabled=FALSE)
 {
   global $end_time, $areas, $area_id, $periods, $multiday_allowed;
   echo "<div id=\"div_end_date\">\n";
@@ -206,7 +212,7 @@ function create_field_entry_end_date()
   $date = getdate($end_time);
   // Don't show the end date selector if multiday is not allowed
   echo "<div" . (($multiday_allowed) ? '' : " style=\"visibility: hidden\"") . ">\n";
-  gendateselector("end_", $date['mday'], $date['mon'], $date['year']);
+  gendateselector("end_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
   echo "</div>\n";
   // If we're using periods the booking model is slightly different,
   // so subtract one period because the "end" period is actually the beginning
@@ -228,13 +234,13 @@ function create_field_entry_end_date()
     }
     $end_value = ($a['enable_periods']) ? $end_time - $a['resolution'] : $end_time;
     $display_none = ($a['id'] != $area_id);
-    genSlotSelector($a, "end_", $first, $last, $end_value, $display_none);
+    genSlotSelector($a, "end_", $first, $last, $end_value, $display_none, $disabled);
   }
   echo "<span id=\"end_time_error\" class=\"error\"></span>\n";
   echo "</div>\n";
 }
 
-function create_field_entry_areas()
+function create_field_entry_areas($disabled=FALSE)
 {
   global $areas, $area_id, $rooms;
   echo "<div id=\"div_areas\">\n";
@@ -274,8 +280,8 @@ function create_field_entry_areas()
             {
               if ($r['area_id'] == $a['id'])
               {
-        	print "roomsObj.options[$i] = new Option(\"" . escape_js($r['room_name']) . "\"," . $r['id'] . ");\n";
-        	$i++;
+                print "roomsObj.options[$i] = new Option(\"" . escape_js($r['room_name']) . "\"," . $r['id'] . ");\n";
+                $i++;
               }
             }
             // select the first entry by default to ensure
@@ -320,7 +326,7 @@ function create_field_entry_areas()
         prevStartValue = undefined;
         adjustSlotSelectors(formObj, oldArea, oldAreaStartValue, oldAreaEndValue);
       }
-
+      
       // Create area selector, only if we have Javascript
       var div_areas = document.getElementById('div_areas');
       // First of all create a label and insert it into the <div>
@@ -361,6 +367,21 @@ function create_field_entry_areas()
       // insert the <select> which we've just assembled into the <div>
       div_areas.appendChild(area_select);
       
+      <?php
+      if ($disabled)
+      {
+        // If the field is disabled we need to disable the select box and
+        // add in a hidden input containing the value
+        ?>
+        $('#area').attr('disabled', 'disabled');
+        $('<input>').attr('type', 'hidden')
+                    .attr('name', 'area')
+                    .val('<?php echo $area_id ?>')
+                    .appendTo('#div_areas');
+        <?php
+      }
+      ?>
+      
       //]]>
       </script>
       
@@ -369,34 +390,29 @@ function create_field_entry_areas()
     } // if count($areas)
 }
 
-function create_field_entry_rooms()
+function create_field_entry_rooms($disabled=FALSE)
 {
-  global $rooms, $multiroom_allowed, $area_id, $selected_rooms;
-  global $room_names, $room_id;
+  global $rooms, $multiroom_allowed, $room_id, $area_id, $selected_rooms;
 
   echo "<div id=\"div_rooms\">\n";
   echo "<label for=\"rooms\">" . get_vocab("rooms") . ":</label>\n";
   echo "<div class=\"group\">\n";
   echo "<select id=\"rooms\" name=\"rooms[]\"" .
     (($multiroom_allowed) ? " multiple=\"multiple\"" : "") .
+    (($disabled) ? "disabled=\"disabled\"" : "") .
     " size=\"5\">\n";
+  // $selected_rooms will be populated if we've come from a drag selection
+  if (empty($selected_rooms))
+  {
+    $selected_rooms = array($room_id);
+  }
   foreach ($rooms as $r)
   {
     if ($r['area_id'] == $area_id)
     {
-      if (!empty($selected_rooms))
-      {
-        // We've come from a drag selection
-        $is_selected = in_array($r['id'], $selected_rooms);
-      }
-      else
-      {
-        $is_selected = ($r['id'] == $room_id);
-      }
+      $is_selected = in_array($r['id'], $selected_rooms);
       $selected = ($is_selected) ? "selected=\"selected\"" : "";
       echo "<option $selected value=\"" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</option>\n";
-      // store room names for emails
-      $room_names[$i] = $r['room_name'];
     }
   }
   echo "</select>\n";
@@ -405,24 +421,37 @@ function create_field_entry_rooms()
     echo "<span>" . get_vocab("ctrl_click") . "</span>\n";
   }
   echo "</div>\n";
+  if ($disabled)
+  {
+    foreach ($selected_rooms as $selected_room)
+    {
+      echo "<input type=\"hidden\" name=\"rooms[]\" value=\"$selected_room\">\n";
+    }
+  }
   echo "</div>\n";
 }
 
-function create_field_entry_type()
+function create_field_entry_type($disabled=FALSE)
 {
   global $booking_types, $type;
   echo "<div id=\"div_type\">\n";
   echo "<label for=\"type\">" . get_vocab("type") . ":</label>\n";
-  echo "<select id=\"type\" name=\"type\">\n";
+  echo "<select id=\"type\" name=\"type\"" .
+       (($disabled) ? " disabled=\"disabled\"" : "") .
+       ">\n";
   foreach ($booking_types as $key)
   {
     echo "<option value=\"$key\"" . (($type == $key) ? " selected=\"selected\"" : "") . ">".get_type_vocab($key)."</option>\n";
   }
   echo "</select>\n";
+  if ($disabled)
+  {
+    echo "<input type=\"hidden\" name=\"type\" value=\"$type\">\n";
+  }
   echo "</div>\n";
 }
 
-function create_field_entry_confirmation_status()
+function create_field_entry_confirmation_status($disabled=FALSE)
 {
   global $confirmation_enabled, $confirmed;
   // Confirmation status
@@ -433,16 +462,24 @@ function create_field_entry_confirmation_status()
     echo "<div class=\"group\">\n";
     echo "<label><input class=\"radio\" name=\"confirmed\" type=\"radio\" value=\"1\"" .
       (($confirmed) ? " checked=\"checked\"" : "") .
+      (($disabled) ? " disabled=\"disabled\"" : "") .
       ">" . get_vocab("confirmed") . "</label>\n";
     echo "<label><input class=\"radio\" name=\"confirmed\" type=\"radio\" value=\"0\"" .
       (($confirmed) ? "" : " checked=\"checked\"") .
+      (($disabled) ? " disabled=\"disabled\"" : "") .
       ">" . get_vocab("tentative") . "</label>\n";
     echo "</div>\n";
+    if ($disabled)
+    {
+      echo "<input type=\"hidden\" name=\"confirmed\" value=\"" .
+           (($confirmed) ? "1" : "0") .
+           "\">\n";
+    }
     echo "</div>\n";
   }
 }
 
-function create_field_entry_privacy_status()
+function create_field_entry_privacy_status($disabled=FALSE)
 {
   global $private_enabled, $private, $private_mandatory;
   // Privacy status
@@ -454,18 +491,24 @@ function create_field_entry_privacy_status()
     echo "<div class=\"group\">\n";
     echo "<label><input class=\"radio\" name=\"private\" type=\"radio\" value=\"0\"" .
       (($private) ? "" : " checked=\"checked\"") .
-      (($private_mandatory) ? " disabled=\"disabled\"" : "") .
+      (($private_mandatory || $disabled) ? " disabled=\"disabled\"" : "") .
       ">" . get_vocab("public") . "</label>\n";
     echo "<label><input class=\"radio\" name=\"private\" type=\"radio\" value=\"1\"" .
       (($private) ? " checked=\"checked\"" : "") .
-      (($private_mandatory) ? " disabled=\"disabled\"" : "") .
+      (($private_mandatory || $disabled) ? " disabled=\"disabled\"" : "") .
       ">" . get_vocab("private") . "</label>\n";
     echo "</div>\n";
+    if ($disabled)
+    {
+      echo "<input type=\"hidden\" name=\"private\" value=\"" .
+           (($private) ? "1" : "0") .
+           "\">\n";
+    }
     echo "</div>\n";
   }
 }
 
-function create_field_entry_custom_field($field, $key)
+function create_field_entry_custom_field($field, $key, $disabled=FALSE)
 {
   global $custom_fields, $tbl_entry, $select_options;
   global $is_mandatory_field, $text_input_max;
@@ -483,6 +526,7 @@ function create_field_entry_custom_field($field, $key)
     echo "<input type=\"checkbox\" class=\"checkbox\" " .
       "id=\"$var_name\" name=\"$var_name\" value=\"1\" " .
       ((!empty($value)) ? " checked=\"checked\"" : "") .
+      (($disabled) ? " disabled=\"disabled\"" : "") .
       ">\n";
   }
   // Output a select box if they want one
@@ -491,18 +535,22 @@ function create_field_entry_custom_field($field, $key)
     $mandatory = (array_key_exists("entry.$key", $is_mandatory_field) &&
       $is_mandatory_field["entry.$key"]) ? true : false;
     generate_select($label_text, $var_name, $value,
-      $select_options["entry.$key"], $mandatory);
+      $select_options["entry.$key"], $mandatory, $disabled);
   }
   // Output a textarea if it's a character string longer than the limit for a
   // text input
   elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
   {
-    generate_textarea($label_text, $var_name, $value);   
+    generate_textarea($label_text, $var_name, $value, $disabled);   
   }
   // Otherwise output a text input
   else
   {
-    generate_input($label_text, $var_name, $value);
+    generate_input($label_text, $var_name, $value, $disabled);
+  }
+  if ($disabled)
+  {
+    echo "<input type=\"hidden\" name=\"$var_name\" value=\"$value\">\n";
   }
   echo "</div>\n";
 }
