@@ -156,6 +156,7 @@ function printLoginForm($TargetURL)
   </fieldset>
 </form>
 <?php
+  echo "</div>";  // Close of the contents div
   // Print footer and exit
   print_footer(TRUE);
 }
