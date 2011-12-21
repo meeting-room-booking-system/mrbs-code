@@ -130,6 +130,8 @@ get_area_settings($row['area_id']);
 $room_disabled = $row['room_disabled'] || $row['area_disabled'];
 // Get the status
 $status = $row['status'];
+// Get the creator
+$create_by = $row['create_by'];
 // Work out whether this event should be kept private
 $private = $row['status'] & STATUS_PRIVATE;
 $writeable = getWritable($row['create_by'], $user, $row['room_id']);
