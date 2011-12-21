@@ -682,7 +682,9 @@ if ($page == 'edit_entry')
     function getFormValue(formInput)
     {
       var value;
-      <?php // Scalar parameters (two types - checkboxes and the rest) ?>
+      <?php 
+      // Scalar parameters (three types - checkboxes, radio buttons and the rest)
+      ?>
       if (formInput.attr('name').indexOf('[]') == -1)
       {
         if (formInput.filter(':checkbox').length > 0)
@@ -698,23 +700,27 @@ if ($page == 'edit_entry')
           value = formInput.val();
         }
       }
-      <?php // Array parameters (two types - checkboxes and the rest) ?>
+      <?php
+      // Array parameters (two types - checkboxes and the rest, which could be
+      // <select> elements or else multiple ordinary inputs with a *[] name
+      ?>
       else
       {
         value = [];
-        if (formInput.filter(':checkbox').length > 0)
-        {
-          formInput.each(function(index) {
-              if ($(this).is(':checked'))
+        formInput.each(function(index) {
+            if ((formInput.filter(':checkbox').length == 0) || $(this).is(':checked'))
+            {
+              var thisValue = $(this).val();
+              if ($.isArray(thisValue))
+              {
+                $.merge(value, thisValue);
+              }
+              else
               {
                 value.push($(this).val());
               }
-            });
-        }
-        else
-        {
-          value = formInput.val();
-        }
+            }
+          });
       }
       return value;
     }
@@ -744,21 +750,21 @@ if ($page == 'edit_entry')
           return;
         }
       
+        <?php
         // Load the params object with the values of all the form fields that are not
         // disabled and are not submit buttons of one kind or another
-        form.find('[name]').not(':disabled, [type="submit"], [type="button"], [type="image"]').each(function() {
+        ?>
+        var relevantFields = form.find('[name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
+        relevantFields.each(function() {
+            <?php
+            // Go through each of the fields and if we haven't got the value for a name
+            // then go and get it.  (Remember that arrays can give more than one field
+            // with the same name
+            ?>
             var fieldName = $(this).attr('name');
             if (params[fieldName] === undefined)
             {
-              params[fieldName] = getFormValue($(this));
-            }
-            else
-            {
-              if ($.isArray(params[fieldName]))
-              {
-                var value = getFormValue($(this));
-                $.merge(params[fieldName], value);
-              }
+              params[fieldName] = getFormValue(relevantFields.filter('[name=' + fieldName.replace('[', '\\[').replace(']', '\\]') + ']'))
             }
           });
         
