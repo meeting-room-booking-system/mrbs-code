@@ -20,6 +20,10 @@
 // if you don't, meetings in a different DST than you are currently
 // in are offset by the DST offset incorrectly.
 //
+// Note that timezones can be set on a per-area basis, so strictly speaking this
+// setting should be in areadefaults.inc.php, but as it is so important to set
+// the right timezone it is included here.
+//
 // When upgrading an existing installation, this should be set to the
 // timezone the web server runs in.  See the INSTALL document for more information.
 //

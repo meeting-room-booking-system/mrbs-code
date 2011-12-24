@@ -45,6 +45,73 @@
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
+
+function create_field_entry_timezone()
+{
+  global $timezone;
+  
+  $special_group = "Others";
+  
+  echo "<div>\n";
+  echo "<label for=\"area_timezone\">" . get_vocab("timezone") . ":</label>\n";
+
+  // If possible we'll present a list of timezones that this server supports.
+  // Otherwise we'll just have to let the user type in a timezone, which introduces
+  // the possibility of an invalid timezone.
+  if (function_exists('timezone_identifiers_list'))
+  {
+    $timezones = array();
+    $timezone_identifiers = timezone_identifiers_list();
+    foreach ($timezone_identifiers as $value)
+    {
+      // Note: timezone identifiers can have three components, eg
+      // America/Argentina/Tucuman.    To keep things simple we will
+      // treat anything after the first '/' as a single city and
+      // limit the explosion to two
+      list($continent, $city) = explode('/', $value, 2);
+      // There are some timezone identifiers (eg 'UTC') on some operating
+      // systems that don't fit the Continent/City model.   We'll put them
+      // into the special group
+      if (!isset($city))
+      {
+        $city = $continent;
+        $continent = $special_group;
+      }
+      $timezones[$continent][] = $city;
+    }
+    
+    echo "<select id=\"area_timezone\" name=\"area_timezone\">\n";
+    foreach ($timezones as $continent => $cities)
+    {
+      echo "<optgroup label=\"" . htmlspecialchars($continent) . "\">\n";
+      foreach ($cities as $city)
+      {
+        if ($continent == $special_group)
+        {
+          $timezone_identifier = $city;
+        }
+        else
+        {
+          $timezone_identifier = "$continent/$city";
+        }
+        echo "<option value=\"" . htmlspecialchars($timezone_identifier) . "\"" .
+             (($timezone_identifier == $timezone) ? " selected=\"selected\"" : "") .
+             ">" . htmlspecialchars($city) . "</option>\n";
+      }
+      echo "</optgroup>\n";
+    }
+    echo "</select>\n";
+  }
+  // There is no timezone_identifiers_list() function so we'll just let the
+  // user type in a timezone
+  else
+  {
+    echo "<input id=\"area_timezone\" name=\"area_timezone\" value=\"" . htmlspecialchars($timezone) . "\">\n";
+  }
+  
+  echo "</div>\n";
+}
+
 // Get non-standard form variables
 $phase = get_form_var('phase', 'int');
 $new_area = get_form_var('new_area', 'int');
@@ -58,6 +125,7 @@ $description = get_form_var('description', 'string');
 $capacity = get_form_var('capacity', 'int');
 $room_admin_email = get_form_var('room_admin_email', 'string');
 $area_disabled = get_form_var('area_disabled', 'string');
+$area_timezone = get_form_var('area_timezone', 'string');
 $area_admin_email = get_form_var('area_admin_email', 'string');
 $area_morningstarts = get_form_var('area_morningstarts', 'int');
 $area_morningstarts_minutes = get_form_var('area_morningstarts_minutes', 'int');
@@ -399,6 +467,7 @@ if ($phase == 2)
       $assign_array = array();
       $assign_array[] = "area_name='" . addslashes($area_name) . "'";
       $assign_array[] = "disabled=" . $area_disabled;
+      $assign_array[] = "timezone='" . addslashes($area_timezone) . "'";
       $assign_array[] = "area_admin_email='" . addslashes($area_admin_email) . "'";
       $assign_array[] = "custom_html='" . addslashes($custom_html) . "'";
       if (!$area_enable_periods)
@@ -736,6 +805,9 @@ if (isset($change_area) &&!empty($area))
         echo get_vocab("disabled") . "</label>\n";
         echo "</div>\n";
         echo "</div>\n";
+        
+        // Timezone
+        create_field_entry_timezone();
         ?>
     
         <div>

@@ -164,7 +164,7 @@ function get_vtimezone($tz)
   }
   // There's nothing in the database, so try and get a VTIMEZONE component
   // from the filesystem.
-  else
+  elseif (file_exists($tz_file))
   {
     $vcalendar = file_get_contents($tz_file);
     

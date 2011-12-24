@@ -2,26 +2,50 @@
 
 // $Id$
 
-/////////////////////////////////////////
-// Set timezone, if one has been provided
 
-global $timezone;
-
-if (isset($timezone))
+// Set the default timezone.   Caters for PHP servers that don't
+// have date_default_timezone_set()
+function mrbs_default_timezone_set($timezone)
 {
-  if (function_exists("date_default_timezone_set"))
+  global $area_defaults;
+  
+  if (!isset($timezone))
   {
-    date_default_timezone_set($timezone) or die("Configuration error: invalid timezone.");
+    // to prevent people running into DST problems
+    $message = 'Configuration error: $timezone has not been set.';
+    trigger_error($message, E_USER_WARNING);
+    fatal_error(TRUE, $message);
   }
   else
   {
-    putenv("TZ=$timezone");
+    if (function_exists("date_default_timezone_set"))
+    {
+      // We try and set the timezone to $timezone, which is the timezone setting
+      // for the area.   If that fails we try the default for new areas.   And if
+      // that fails we try the server timezone.
+      if (!date_default_timezone_set($timezone))
+      {
+        $fallback_timezone = $area_defaults['timezone'];
+        if (!date_default_timezone_set($fallback_timezone))
+        {
+          // date_default_timezone_get() was introduced at the same time as
+          // date_default_timezone_set(), so it will exist
+          $fallback_timezone = date_default_timezone_get();
+          if (!date_default_timezone_set($fallback_timezone))
+          {
+            $message = "Could not set any timezone";
+            trigger_error($message, E_USER_WARNING);
+            fatal_error(TRUE, $message);
+          }
+        }
+        trigger_error("Could not set timezone to '$timezone'; using '$fallback_timezone' instead", E_USER_WARNING);
+      }
+    }
+    else
+    {
+      putenv("TZ=$timezone");
+    }
   }
-}
-else
-{
-  // to prevent people running into DST problems
-  die('Configuration error: $timezone has not been set.');
 }
 
 // Deal with $private_xxxx overrides.  Simplifies
@@ -707,11 +731,11 @@ function get_area_settings($area)
   global $private_enabled, $private_default, $private_mandatory, $private_override;
   global $min_book_ahead_enabled, $max_book_ahead_enabled, $min_book_ahead_secs, $max_book_ahead_secs;
   global $approval_enabled, $reminders_enabled, $enable_periods, $boolean_fields;
-  global $confirmation_enabled, $confirmed_default;
+  global $confirmation_enabled, $confirmed_default, $timezone;
   global $private_override_options;
   
   // Get all the "per area" config settings                  
-  $sql = "SELECT resolution, default_duration, default_duration_all_day,
+  $sql = "SELECT timezone, resolution, default_duration, default_duration_all_day,
                  morningstarts, morningstarts_minutes,
                  eveningends, eveningends_minutes,
                  private_enabled, private_default, private_mandatory, private_override,
@@ -754,6 +778,9 @@ function get_area_settings($area)
     $message = "Invalid value for 'private_override' in the area table.  Using 'private'.";
     trigger_error($message, E_USER_WARNING);
   }
+  
+  // Set the timezone
+  mrbs_default_timezone_set($timezone);
 }
 
 // generate the predicate for use in an SQL query to test whether

@@ -235,6 +235,7 @@ $private_override_options = array('none', 'public', 'private');
 // per-area settings and perhaps ought to be revisited at some stage]
 
 $area_defaults = array();
+$area_defaults['timezone']                 = $timezone;
 $area_defaults['resolution']               = $resolution;
 $area_defaults['default_duration']         = $default_duration;
 $area_defaults['default_duration_all_day'] = $default_duration_all_day;
