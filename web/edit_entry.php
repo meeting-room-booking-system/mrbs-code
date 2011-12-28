@@ -163,7 +163,7 @@ function create_field_entry_description($disabled=FALSE)
 function create_field_entry_start_date($disabled=FALSE)
 {
   global $start_time, $areas, $area_id, $periods, $default_duration_all_day, $id, $drag;
-  global $periods;
+  global $periods, $is_admin;
   
   echo "<div id=\"div_start_date\">\n";
   echo "<label>" . get_vocab("start") . ":</label>\n";
