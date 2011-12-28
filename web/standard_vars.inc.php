@@ -12,6 +12,19 @@ $year = get_form_var('year', 'int');
 $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');
 
+if (empty($area))
+{
+  $area = get_default_area();
+}
+
+if (empty($room))
+{
+  $room = get_default_room($area);
+}
+
+// Get the settings (resolution, etc.) for this area
+get_area_settings($area);
+
 // If we don't know the right date then use today's date
 if (empty($day) or empty($month) or empty($year))
 {
@@ -34,18 +47,5 @@ else
     }
   }
 }
-
-if (empty($area))
-{
-  $area = get_default_area();
-}
-
-if (empty($room))
-{
-  $room = get_default_room($area);
-}
-
-// Get the settings (resolution, etc.) for this area
-get_area_settings($area);
 
 ?>
