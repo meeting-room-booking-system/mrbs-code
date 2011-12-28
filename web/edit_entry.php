@@ -163,6 +163,7 @@ function create_field_entry_description($disabled=FALSE)
 function create_field_entry_start_date($disabled=FALSE)
 {
   global $start_time, $areas, $area_id, $periods, $default_duration_all_day, $id, $drag;
+  global $periods;
   
   echo "<div id=\"div_start_date\">\n";
   echo "<label>" . get_vocab("start") . ":</label>\n";
@@ -190,21 +191,29 @@ function create_field_entry_start_date($disabled=FALSE)
     $start_last = ($a['enable_periods']) ? $last : $last - $a['resolution'];
     $display_none = ($a['id'] != $area_id);
     genSlotSelector($a, "start_", $first, $start_last, $start_time, $display_none, $disabled);
+    
+    echo "<div class=\"group\">\n";
+    echo "<div id=\"ad{$a['id']}\"".($display_none ? " style=\"display: none\" " : "") .">\n";
+    // We don't show the all day checkbox if it's going to result in bookings that
+    // contravene the policy - ie if max_duration is enabled and an all day booking
+    // would be longer than the maximum duration allowed
+    $show_all_day = $is_admin || !$a['max_duration_enabled'] ||
+                    ( ($a['enable_periods'] && ($a['max_duration_periods'] >= count($periods))) ||
+                        (!$a['enable_periods'] && ($a['max_duration_secs'] >= ($last - $first))) );
+    echo "<input id=\"all_day{$a['id']}\" class=\"checkbox\"" .
+         // If this is an existing booking that we are editing or copying, then we do
+         // not want the default duration applied
+         (($default_duration_all_day && !isset($id) && !$drag) ? " checked=\"checked\"" : "") .
+         " name=\"all_day\" type=\"checkbox\" value=\"yes\" onclick=\"OnAllDayClick(this)\"".
+         ($show_all_day? "" : " style=\"display: none;\" ").
+         ">\n";
+    if($show_all_day)
+    {
+      echo "<label for=\"all_day\">" . get_vocab("all_day") . "</label>\n";
+    }
+    echo "</div>\n";
+    echo "</div>\n";
   }
-
-  echo "<div class=\"group\">\n";
-  echo "<div id=\"ad\">\n";
-  echo "<input id=\"all_day\" class=\"checkbox\"" .
-    // If this is an existing booking that we are editing or copying, then we do
-    // not want the default duration applied
-    (($default_duration_all_day && !isset($id) && !$drag) ? " checked=\"checked\"" : "") .
-    " name=\"all_day\" type=\"checkbox\" value=\"yes\" onclick=\"OnAllDayClick(this)\"" .
-    ($disabled ? " disabled=\"disabled\"" : "") .
-    ">\n";
-  echo "<label for=\"all_day\">" . get_vocab("all_day") . "</label>\n";
-  echo "</div>\n";
-  echo "</div>\n";
-
   echo "</div>\n";
 }
 
@@ -314,11 +323,21 @@ function create_field_entry_areas($disabled=FALSE)
         // area id because we'll need that when trying to match up slots: it only
         // makes sense to match up slots if both old and new area used the same
         // mode (periods/times).
+        
+        // For the "all day" checkbox, the process is slightly different.  This
+        // is because the checkboxes themselves are visible or not depending on
+        // the time restrictions for that particular area. (1) We set the display 
+        // for the old *container* element to "none" and the new elements to 
+        // "block".  (2) We disable the old checkboxes and enable the new ones for
+        // the same reasons as above.  (3) We copy the value of the old check box
+        // to the new check box
         ?>
         var oldStartId = "start_seconds" + currentArea;
         var oldEndId = "end_seconds" + currentArea;
         var newStartId = "start_seconds" + area;
         var newEndId = "end_seconds" + area;
+        var oldAllDayId = "ad" + currentArea;
+        var newAllDayId = "ad" + area;
         var oldAreaStartValue = formObj[oldStartId].options[formObj[oldStartId].selectedIndex].value;
         var oldAreaEndValue = formObj[oldEndId].options[formObj[oldEndId].selectedIndex].value;
         $("#" + oldStartId).hide()
@@ -329,6 +348,17 @@ function create_field_entry_areas($disabled=FALSE)
                            .removeAttr('disabled');
         $("#" + newEndId).show()
                          .removeAttr('disabled');
+                         +        $("#" + oldAllDayId).hide();
+        $("#" + newAllDayId).show();
+        if($("#all_day" + currentArea).attr('checked') == 'checked')
+        { 
+          $("#all_day" + area).attr('checked', 'checked').removeAttr('disabled');
+        }
+        else
+        {
+          $("#all_day" + area).removeAttr('checked').removeAttr('disabled');
+        }
+        $("#all_day" + currentArea).removeAttr('disabled');
         var oldArea = currentArea;
         currentArea = area;
         prevStartValue = undefined;
@@ -1003,6 +1033,14 @@ if ($res)
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   {
     $areas[$row['id']] = $row;
+    // The following config settings aren't yet per-area, but we'll treat them as if
+    // they are to make it easier to change them to per-area settings in the future.
+    $areas[$row['id']]['max_duration_enabled'] = $max_duration_enabled;
+    $areas[$row['id']]['max_duration_secs']    = $max_duration_secs;
+    $areas[$row['id']]['max_duration_periods'] = $max_duration_periods;
+    // Generate some derived settings
+    $areas[$row['id']]['max_duration_qty'] = $areas[$row['id']]['max_duration_secs'];
+    toTimeString($areas[$row['id']]['max_duration_qty'], $areas[$row['id']]['max_duration_units']);
   }
 }
 
@@ -1020,7 +1058,7 @@ foreach ($areas as $area)
   echo "areas[${area['id']}] = new Array();\n";
   foreach ($area as $key => $value)
   {
-    if ($key == "area_name")
+    if (in_array($key, array('area_name', 'max_duration_units')))
     {
       // Enclose strings in quotes
       $value = "'" . escape_js($value) . "'";
@@ -1032,15 +1070,6 @@ foreach ($areas as $area)
     }
     echo "areas[${area['id']}]['$key'] = $value;\n";
   }
-  // Add in the maximum durations.   These are not per area at the moment
-  // but they might be in the future
-  echo "areas[${area['id']}]['max_duration_enabled'] = " . (($max_duration_enabled) ? "true" : "false") . ";\n";
-  echo "areas[${area['id']}]['max_duration_secs'] = $max_duration_secs;\n";
-  echo "areas[${area['id']}]['max_duration_periods'] = $max_duration_periods;\n";
-  $max_duration_qty = $max_duration_secs;
-  toTimeString($max_duration_qty, $max_duration_units);
-  echo "areas[${area['id']}]['max_duration_qty'] = $max_duration_qty;\n";
-  echo "areas[${area['id']}]['max_duration_units'] = '$max_duration_units';\n";
 }
 ?>
 
@@ -1168,15 +1197,16 @@ function validate(form_id)
 var old_start, old_end;
 
 // Executed when the user clicks on the all_day checkbox.
-function OnAllDayClick(allday)
+function OnAllDayClick(el)
 {
   var form = document.forms["main"];
   if (form)
   {
     var startSelect = form["start_seconds" + currentArea];
     var endSelect = form["end_seconds" + currentArea];
+    var allDay = form["all_day" + currentArea];
     var i;
-    if (form.all_day.checked) // If checking the box...
+    if (allDay.checked) // If checking the box...
     {
       <?php
       // Save the old values, disable the inputs and, to avoid user confusion,

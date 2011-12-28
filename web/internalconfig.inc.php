@@ -216,6 +216,7 @@ $boolean_fields['area'] = array('default_duration_all_day',
                                 'private_mandatory',
                                 'min_book_ahead_enabled',
                                 'max_book_ahead_enabled',
+                                'max_duration_enabled',  // not yet a per-area setting, but will be sometime
                                 'approval_enabled',
                                 'reminders_enabled',
                                 'enable_periods',

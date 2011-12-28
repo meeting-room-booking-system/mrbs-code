@@ -1009,6 +1009,8 @@ if ($page == 'edit_entry')
     var startKeepDisabled = ($('#' + startId).attr('class') == 'keep_disabled');
     var endId = "end_seconds" + area;
     var endSelect = form[endId];
+    var allDayId = "all_day" + area;
+    var allDay = form[allDayId];
     var endKeepDisabled = ($('#' + endId).attr('class') == 'keep_disabled');
     var startIndex, startValue, endIndex, endValue;
     
@@ -1016,7 +1018,7 @@ if ($page == 'edit_entry')
     // If All Day is checked then just set the start and end values to the first
     // and last possible options.
     ?>
-    if (form.all_day && form.all_day.checked)
+    if (allDay && allDay.checked)
     {
       startValue = startOptions[area][0]['value']
       endValue = endOptions[area][nEndOptions[area] - 1]['value'];
@@ -1138,14 +1140,14 @@ if ($page == 'edit_entry')
     // then we disable all the time selectors (start, end and All Day) until
     // the dates are fixed.
     ?>
-    if (!form.all_day || !form.all_day.checked)
+    if (!allDay || !allDay.checked)
     {
       var newState = (dateDifference < 0);
       startSelect.disabled = newState || startKeepDisabled;
       endSelect.disabled = newState || endKeepDisabled;
-      if (form.all_day)
+      if (allDay)
       {
-        form.all_day.disabled = newState;
+        allDay.disabled = newState;
       }
     }
 
@@ -2578,12 +2580,13 @@ $(window).load(function() {
     ?>
     startSelect = form["start_seconds" + currentArea];
     endSelect = form["end_seconds" + currentArea];
-    if (form.all_day &&
-        !form.all_day.disabled && 
+    allDay = form["all_day" + currentArea];
+    if (allDay &&
+        !allDay.disabled && 
         (parseInt(startSelect.options[startSelect.selectedIndex].value) == startOptions[currentArea][0]['value']) &&
         (parseInt(endSelect.options[endSelect.selectedIndex].value) == endOptions[currentArea][nEndOptions[currentArea] - 1]['value']))
     {
-      form.all_day.checked = true;
+      allDay.checked = true;
       startSelect.disabled = true;
       endSelect.disabled = true;
       old_start = startSelect.options[startSelect.selectedIndex].value;
