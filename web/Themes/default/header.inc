@@ -85,6 +85,9 @@ function print_theme_header($day, $month, $year, $area, $room)
   $page = basename($PHP_SELF, ".php");
   $user = getUserName();
   $is_admin = (authGetUserLevel($user) >= $max_level);
+  
+  // Need to set the timezone before we can use date()
+  get_area_settings($area);
 
   // If we dont know the right date then make it up 
   if (!$day)

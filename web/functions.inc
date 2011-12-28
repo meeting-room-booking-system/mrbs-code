@@ -722,7 +722,8 @@ function get_area($room)
 }
 
 // Update the default area settings with the ones specific to this area.
-// If no value is set in the database, use the value from the config file
+// If no value is set in the database, use the value from the config file.
+// If $area is empty, use the default area
 function get_area_settings($area)
 {
   global $tbl_area, $force_resolution;
@@ -733,6 +734,11 @@ function get_area_settings($area)
   global $approval_enabled, $reminders_enabled, $enable_periods, $boolean_fields;
   global $confirmation_enabled, $confirmed_default, $timezone;
   global $private_override_options;
+  
+  if (empty($area))
+  {
+    $area = get_default_area();
+  }
   
   // Get all the "per area" config settings                  
   $sql = "SELECT timezone, resolution, default_duration, default_duration_all_day,
