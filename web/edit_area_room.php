@@ -64,18 +64,21 @@ function create_field_entry_timezone()
     $timezone_identifiers = timezone_identifiers_list();
     foreach ($timezone_identifiers as $value)
     {
-      // Note: timezone identifiers can have three components, eg
-      // America/Argentina/Tucuman.    To keep things simple we will
-      // treat anything after the first '/' as a single city and
-      // limit the explosion to two
-      list($continent, $city) = explode('/', $value, 2);
-      // There are some timezone identifiers (eg 'UTC') on some operating
-      // systems that don't fit the Continent/City model.   We'll put them
-      // into the special group
-      if (!isset($city))
+      if (strpos($value, '/') === FALSE)
       {
-        $city = $continent;
+        // There are some timezone identifiers (eg 'UTC') on some operating
+        // systems that don't fit the Continent/City model.   We'll put them
+        // into the special group
         $continent = $special_group;
+        $city = $value;
+      }
+      else
+      {
+        // Note: timezone identifiers can have three components, eg
+        // America/Argentina/Tucuman.    To keep things simple we will
+        // treat anything after the first '/' as a single city and
+        // limit the explosion to two
+        list($continent, $city) = explode('/', $value, 2);
       }
       $timezones[$continent][] = $city;
     }
