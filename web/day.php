@@ -20,21 +20,19 @@ $timestamp = mktime(12, 0, 0, $month, $day, $year);
 // print the page header
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
-?>
-<div class="screenonly">
-  <div id="dwm_header">
-      
-<?php
+echo "<div id=\"dwm_header\" class=\"screenonly\">\n";
+
 // Show all available areas
 echo make_area_select_html('day.php', $area, $year, $month, $day);
 
 // Draw the three month calendars
-minicals($year, $month, $day, $area, $room, 'day');
-echo "</div>";
+if (!$display_calendar_bottom)
+{
+  minicals($year, $month, $day, $area, $room, 'day');
+}
 
-?>
-</div>
-<?php
+echo "</div>\n";
+
 
 //y? are year, month and day of yesterday
 //t? are year, month and day of tomorrow
@@ -122,6 +120,11 @@ else
   echo $before_after_links_html;
 
   show_colour_key();
+  // Draw the three month calendars
+  if ($display_calendar_bottom)
+  {
+    minicals($year, $month, $day, $area, $room, 'day');
+  }
 }
 
 require_once "trailer.inc";

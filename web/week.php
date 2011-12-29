@@ -18,10 +18,7 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 // Section with areas, rooms, minicals.
 
-?>
-<div class="screenonly">
-  <div id="dwm_header">
-<?php
+echo "<div id=\"dwm_header\" class=\"screenonly\">\n";
 
 // Get the area and room names (we will need them later for the heading)
 $this_area_name = "";
@@ -38,10 +35,11 @@ echo make_area_select_html('week.php', $area, $year, $month, $day);
 echo make_room_select_html('week.php', $area, $room, $year, $month, $day);
 
 // Draw the three month calendars
-minicals($year, $month, $day, $area, $room, 'week');
-echo "</div>\n";
+if (!$display_calendar_bottom)
+{
+  minicals($year, $month, $day, $area, $room, 'week');
+}
 
-// End of "screenonly" div
 echo "</div>\n";
 
 // Don't continue if this room is invalid, which could be because the area
@@ -103,6 +101,11 @@ echo "</table>\n";
 print $before_after_links_html;
 
 show_colour_key();
+// Draw the three month calendars
+if ($display_calendar_bottom)
+{
+  minicals($year, $month, $day, $area, $room, 'week');
+}
 
 require_once "trailer.inc"; 
 ?>

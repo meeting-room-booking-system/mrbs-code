@@ -695,7 +695,7 @@ table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
 #banner a:hover   {color: <?php echo $anchor_hover_color_banner ?>;   text-decoration:underline; font-weight: normal}
 #banner input.date {width: 6.5em; text-align: center}
 
-table#colour_key {clear: both; border-spacing: 0; border-collapse: collapse}
+table#colour_key {clear: both; float: left; border-spacing: 0; border-collapse: collapse; margin-bottom: 0.5em}
 #colour_key td {width: 7.0em; padding: 2px; font-weight: bold;
     color: <?php echo $colour_key_font_color ?>;
     border: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>}
@@ -783,7 +783,7 @@ div#site_faq_body {margin-top: 2.0em}
 div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>; 
              border-bottom: 1px solid <?php echo $trailer_border_color ?>; 
              float: left;
-             margin-top: 1.5em; margin-bottom: 1.5em;
+             margin-top: 1.0em; margin-bottom: 1.5em;
              padding-top: 0.3em; padding-bottom: 0.3em}
 #trailer div {float: left; width: 100%}
 #trailer div.trailer_label {float: left; clear: left; width: 20%; max-width: 9.0em; font-weight: bold}

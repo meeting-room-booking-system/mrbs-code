@@ -341,6 +341,10 @@ $row_labels_both_sides = FALSE;
 // well as the top in the day and week views, set to TRUE;
 $column_labels_both_ends = FALSE;
 
+// To display the mini caldandars at the bottom of the day week and month views
+// set this value to TRUE
+$display_calendar_bottom = FALSE; 
+
 // Define default starting view (month, week or day)
 // Default is day
 $default_view = "day";
