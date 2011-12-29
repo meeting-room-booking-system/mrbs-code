@@ -240,10 +240,12 @@ div.cell_container {position: relative; float: left; width: 100%;        /* the 
                                                                          /* also change the value of height in mrbs-ielte6.css */
 .month a.new_booking {position: absolute; top: 0; left: 0; z-index: 10}  /* needs to be above the base, but below the date (monthday) */
        
-div.cell_header {position: relative; width: 2.0em; z-index: 20;         /* needs to be above the new booking anchor */
+div.cell_header {position: relative; width: 100%; z-index: 20;         /* needs to be above the new booking anchor */
      min-height: 20%; height: 20%; max-height: 20%; overflow: hidden}
-                                                                                  
-a.monthday {display: block; width: 100%; font-size: medium}             /* the date in the top left corner */
+
+#month_main div.cell_header a {display: block; width: auto; float: left}                                                                               
+#month_main div.cell_header a.monthday {font-size: medium}  /* the date in the top left corner */
+#month_main div.cell_header a.week_number {opacity: 0.5; padding: 2px 4px 0 4px}
 
 div.booking_list {position: relative; z-index: 20;                      /* contains the list of bookings */
     max-height: 80%; font-size: x-small;                                /* needs to be above new_booking */
@@ -783,6 +785,7 @@ div#site_faq_body {margin-top: 2.0em}
 div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>; 
              border-bottom: 1px solid <?php echo $trailer_border_color ?>; 
              float: left;
+             clear: left;
              margin-top: 1.0em; margin-bottom: 1.5em;
              padding-top: 0.3em; padding-bottom: 0.3em}
 #trailer div {float: left; width: 100%}

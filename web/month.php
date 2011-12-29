@@ -412,11 +412,19 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
     echo "<div class=\"cell_container\">\n";
     
     echo "<div class=\"cell_header\">\n";
-    // first put in the day of the month
+    // If it's a Monday (the start of the ISO week), show the week number
+    if ($view_week_number && (($weekcol + $weekstarts)%7 == 1))
+    {
+      echo "<a class=\"week_number\" href=\"week.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area&amp;room=$room\">";
+      echo date("W", gmmktime(12, 0, 0, $month, $cday, $year));
+      echo "</a>\n";
+    }
+    // then put in the day of the month
     echo "<a class=\"monthday\" href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>\n";
+
     echo "</div>\n";
-    // then the link to make a new booking
     
+    // then the link to make a new booking
     $query_string = "room=$room&amp;area=$area&amp;year=$year&amp;month=$month&amp;day=$cday";
     if ($enable_periods)
     {

@@ -318,7 +318,8 @@ $area_list_format = "list";
 $monthly_view_entries_details = "both";
 
 // To view weeks in the bottom (trailer.inc) as week numbers (42) instead of
-// 'first day of the week' (13 Oct), set this to TRUE
+// 'first day of the week' (13 Oct), set this to TRUE.  Will also give week
+// numbers in the month view
 $view_week_number = FALSE;
 
 // To display week numbers in the mini-calendars, set this to true. The week
