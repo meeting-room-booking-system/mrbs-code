@@ -1038,6 +1038,8 @@ if ($res)
     $areas[$row['id']]['max_duration_enabled'] = $max_duration_enabled;
     $areas[$row['id']]['max_duration_secs']    = $max_duration_secs;
     $areas[$row['id']]['max_duration_periods'] = $max_duration_periods;
+    // Clean up the settings, getting rid of any nulls and casting boolean fields into bools
+    $areas[$row['id']] = clean_area_row($areas[$row['id']]);
     // Generate some derived settings
     $areas[$row['id']]['max_duration_qty'] = $areas[$row['id']]['max_duration_secs'];
     toTimeString($areas[$row['id']]['max_duration_qty'], $areas[$row['id']]['max_duration_units']);

@@ -721,19 +721,61 @@ function get_area($room)
   return ($area < 0 ? 0 : $area);
 }
 
+
+function clean_area_row($row)
+{
+  global $force_resolution, $area_defaults, $boolean_fields, $private_override_options;
+  
+  foreach ($row as $key => $value)
+  {
+    // If the "per area" setting is in the database, then use that.   Otherwise
+    // just stick with the default setting from the config file.
+    // (don't use the database setting if $force_resolution is TRUE 
+    // and we're looking at the resolution field)
+    if (($key != 'resolution') || empty($force_resolution))
+    {
+      $row[$key] = (isset($row[$key])) ? $value : $area_defaults[$key];
+    }
+    // Cast those fields which are booleans into booleans
+    if (in_array($key, $boolean_fields['area']))
+    {
+      $row[$key] = (bool) $row[$key];
+    }
+  }
+  // Do some sanity checking in case the area table is somehow messed up
+  // (1) 'private_override' must be a valid value
+  if (array_key_exists('private_override', $row) &&
+      !in_array($row['private_override'], $private_override_options))
+  {
+    $row['private_override'] = 'private';  // the safest default
+    $message = "Invalid value for 'private_override' in the area table.  Using '${row['private_override']}'.";
+    trigger_error($message, E_USER_WARNING);
+  }
+  // (2) 'resolution' must be positive
+  if (array_key_exists('resolution', $row) &&
+      (empty($row['resolution']) || ($row['resolution'] < 0)))
+  {
+    $row['resolution'] = 30*60;  // 30 minutes, a reasonable fallback
+    $message = "Invalid value for 'resolution' in the area table.   Using ${row['resolution']} seconds.";
+    trigger_error($message, E_USER_WARNING);
+  }
+  
+  return $row;
+}
+
+
 // Update the default area settings with the ones specific to this area.
 // If no value is set in the database, use the value from the config file.
 // If $area is empty, use the default area
 function get_area_settings($area)
 {
-  global $tbl_area, $force_resolution;
+  global $tbl_area;
   global $resolution, $default_duration, $default_duration_all_day;
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $private_enabled, $private_default, $private_mandatory, $private_override;
   global $min_book_ahead_enabled, $max_book_ahead_enabled, $min_book_ahead_secs, $max_book_ahead_secs;
   global $approval_enabled, $reminders_enabled, $enable_periods, $boolean_fields;
   global $confirmation_enabled, $confirmed_default, $timezone;
-  global $private_override_options;
   
   if (empty($area))
   {
@@ -759,35 +801,16 @@ function get_area_settings($area)
   }
   else
   {
-    $row = sql_row_keyed($res, 0);
-    foreach ($row as $field => $value)
+    $row = clean_area_row(sql_row_keyed($res, 0));
+    foreach ($row as $key => $value)
     {
-      // If the "per area" setting is in the database, then use that.   Otherwise
-      // just stick with the default setting from the config file.
-      // (don't use the database setting if $force_resolution is TRUE 
-      // and we're looking at the resolution field)
-      if (($field != 'resolution') || empty($force_resolution))
-      {
-        $$field = (isset($row[$field])) ? $value : $$field;
-      }
-      // Cast those fields which are booleans into booleans
-      if (in_array($field, $boolean_fields['area']))
-      {
-        $$field = (bool) $$field;
-      }
+      $$key = $value;
     }
   }
-  // Do some sanity checking in case the area table is somehow messed up
-  if (!in_array($private_override, $private_override_options))
-  {
-    $private_override = 'private';  // the safest default
-    $message = "Invalid value for 'private_override' in the area table.  Using 'private'.";
-    trigger_error($message, E_USER_WARNING);
-  }
-  
   // Set the timezone
   mrbs_default_timezone_set($timezone);
 }
+
 
 // generate the predicate for use in an SQL query to test whether
 // an area has $field set
