@@ -776,7 +776,7 @@ function get_area_settings($area)
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $private_enabled, $private_default, $private_mandatory, $private_override;
   global $min_book_ahead_enabled, $max_book_ahead_enabled, $min_book_ahead_secs, $max_book_ahead_secs;
-  global $approval_enabled, $reminders_enabled, $enable_periods, $boolean_fields;
+  global $approval_enabled, $reminders_enabled, $enable_periods;
   global $confirmation_enabled, $confirmed_default, $timezone;
   
   if (empty($area))
