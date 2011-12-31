@@ -117,7 +117,7 @@ foreach($fields as $field)
 // (2) we always get passed start_seconds and end_seconds in the Ajax data
 if ($ajax && $commit)
 {
-  $old_booking = mrbsGetBookingInfo($id, $series);
+  $old_booking = mrbsGetBookingInfo($id, FALSE);
   foreach ($formvars as $var => $var_type)
   {
     if (!isset($$var) || (($var_type == 'array') && empty($$var)))
