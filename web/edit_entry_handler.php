@@ -103,7 +103,7 @@ foreach($fields as $field)
     $custom_fields[$field['name']] = get_form_var($var, $f_type);
     if (($f_type == 'int') && ($custom_fields[$field['name']] === ''))
     {
-      unset($custom_fields[$field['name']]);
+      $custom_fields[$field['name']] = NULL;
     }
   }
 }
@@ -367,7 +367,7 @@ if (!$ajax)
     foreach ($is_mandatory_field as $field => $value)
     {
       $field = preg_replace('/^entry\./', '', $field);
-      if ($value && ($custom_fields[$field] == ''))
+      if ($value && array_key_exists($field, $custom_fields) && ($custom_fields[$field] == ''))
       {
         print_header($day, $month, $year, $area, isset($room) ? $room : "");
         ?>
