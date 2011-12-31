@@ -206,6 +206,12 @@ function create_field_entry_start_date($disabled=FALSE)
          (($default_duration_all_day && !isset($id) && !$drag) ? " checked=\"checked\"" : "") .
          " name=\"all_day\" type=\"checkbox\" value=\"yes\" onclick=\"OnAllDayClick(this)\"".
          ($show_all_day? "" : " style=\"display: none;\" ").
+         // If $display_none or $disabled are set then we'll also disable the select so
+         // that there is only one select passing through the variable to the handler
+         (($display_none || $disabled) ? " disabled=\"disabled\"" : "") .
+         // and if $disabled is set, give the element a class so that the JavaScript
+         // knows to keep it disabled
+         (($disabled) ? " class=\"keep_disabled\"" : "") .
          ">\n";
     if($show_all_day)
     {

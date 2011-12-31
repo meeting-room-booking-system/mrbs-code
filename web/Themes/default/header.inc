@@ -1009,9 +1009,10 @@ if ($page == 'edit_entry')
     var startKeepDisabled = ($('#' + startId).attr('class') == 'keep_disabled');
     var endId = "end_seconds" + area;
     var endSelect = form[endId];
+    var endKeepDisabled = ($('#' + endId).attr('class') == 'keep_disabled');
     var allDayId = "all_day" + area;
     var allDay = form[allDayId];
-    var endKeepDisabled = ($('#' + endId).attr('class') == 'keep_disabled');
+    var allDayKeepDisabled = $('#' + allDayId).hasClass('keep_disabled');
     var startIndex, startValue, endIndex, endValue;
     
     <?php 
@@ -1147,7 +1148,7 @@ if ($page == 'edit_entry')
       endSelect.disabled = newState || endKeepDisabled;
       if (allDay)
       {
-        allDay.disabled = newState;
+        allDay.disabled = newState || allDayKeepDisabled;
       }
     }
 
