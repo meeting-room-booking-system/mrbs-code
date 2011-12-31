@@ -151,7 +151,10 @@ if ($ajax && $commit)
           $end_seconds = $old_booking['end_time'] - mktime(0, 0, 0, $end_month, $end_day, $end_year);
           break;
         default:
-          $$var = $old_booking[$var];
+          if (array_key_exists($var, $old_booking))
+          {
+            $$var = $old_booking[$var];
+          }
           break;
       }
     }
