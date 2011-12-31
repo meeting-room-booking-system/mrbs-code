@@ -799,6 +799,9 @@ function get_area_settings($area)
   $res = sql_query($sql);
   if (!$res || (sql_count($res) == 0))
   {
+    // We still need to set the timezone even if the query didn't
+    // return any results
+    mrbs_default_timezone_set($timezone);
     return;
   }
   else
