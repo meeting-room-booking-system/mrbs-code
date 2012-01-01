@@ -82,16 +82,15 @@ function download($url)
 // the filesystem.
 function get_vtimezone($tz)
 {
-  global $tbl_zoneinfo, $zoneinfo_update, $zoneinfo_expiry;
+  global $tbl_zoneinfo, $zoneinfo_update, $zoneinfo_expiry, $zoneinfo_outlook_compatible;
   
-  $outlook_compatible = TRUE;    // We use the Outlook compatible versions
-  $tz_dir = ($outlook_compatible) ? "tzurl/zoneinfo-outlook" : "tzurl/zoneinfo";  
+  $tz_dir = ($zoneinfo_outlook_compatible) ? TZDIR_OUTLOOK : TZDIR;  
   $tz_file = "$tz_dir/$tz.ics";  // A fallback for a VTIMEZONE definition
   
   $vtimezone = FALSE;  // Default value in case we don't find one
   
   // Convert booleans into 1 or 0 (necessary for the database)
-  $outlook_compatible = ($outlook_compatible) ? 1 : 0;
+  $zoneinfo_outlook_compatible = ($zoneinfo_outlook_compatible) ? 1 : 0;
   
   // Acquire a mutex to lock out others who might be accessing 
   // the table, to stop somebody inserting a record at the same
@@ -105,7 +104,7 @@ function get_vtimezone($tz)
   $sql = "SELECT vtimezone, last_updated
             FROM $tbl_zoneinfo
            WHERE timezone='" . addslashes($tz) . "'
-             AND outlook_compatible=$outlook_compatible
+             AND outlook_compatible=$zoneinfo_outlook_compatible
            LIMIT 1";
   $res = sql_query($sql);
   if ($res === FALSE)
@@ -152,7 +151,7 @@ function get_vtimezone($tz)
                      SET vtimezone='" . addslashes($vtimezone) . "',
                          last_updated=" . time() . "
                    WHERE timezone='" . addslashes($tz) . "'
-                     AND outlook_compatible=$outlook_compatible";
+                     AND outlook_compatible=$zoneinfo_outlook_compatible";
           if (sql_command($sql) < 0)
           {
             trigger_error(sql_error(), E_USER_WARNING);
@@ -176,7 +175,7 @@ function get_vtimezone($tz)
         $sql = "INSERT INTO $tbl_zoneinfo
                 (timezone, outlook_compatible, vtimezone, last_updated)
                 VALUES ('" . addslashes($tz) . "', 
-                        $outlook_compatible,
+                        $zoneinfo_outlook_compatible,
                         '" . addslashes($vtimezone) . "', " .
                         time() . ")";
         if (sql_command($sql) < 0)

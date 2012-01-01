@@ -139,6 +139,14 @@ define('REP_N_WEEKLY',        6);
 
 
 /*************************************************
+ * DIRECTORIES - internal use, do not change
+ *************************************************/
+ 
+define('TZDIR',           'tzurl/zoneinfo');          // Directory containing TZURL definitions
+define('TZDIR_OUTLOOK',   'tzurl/zoneinfo-outlook');  // Outlook compatible TZURL definitions
+
+
+/*************************************************
  * ICALENDAR CONSTANTS - internal use, do not change
  *************************************************/
  

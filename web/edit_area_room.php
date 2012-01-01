@@ -48,14 +48,15 @@ require_once "mrbs_sql.inc";
 
 function create_field_entry_timezone()
 {
-  global $timezone;
+  global $timezone, $zoneinfo_outlook_compatible;
   
   $special_group = "Others";
   
   echo "<div>\n";
   echo "<label for=\"area_timezone\">" . get_vocab("timezone") . ":</label>\n";
 
-  // If possible we'll present a list of timezones that this server supports.
+  // If possible we'll present a list of timezones that this server supports and
+  // which also have a corresponding VTIMEZONE definition.
   // Otherwise we'll just have to let the user type in a timezone, which introduces
   // the possibility of an invalid timezone.
   if (function_exists('timezone_identifiers_list'))
@@ -80,28 +81,38 @@ function create_field_entry_timezone()
         // limit the explosion to two
         list($continent, $city) = explode('/', $value, 2);
       }
-      $timezones[$continent][] = $city;
+      // Check that there's a VTIMEZONE definition
+      $tz_dir = ($zoneinfo_outlook_compatible) ? TZDIR_OUTLOOK : TZDIR;  
+      $tz_file = "$tz_dir/$value.ics";
+      // UTC is a special case because we can always produce UTC times in iCalendar
+      if (($city=='UTC') || file_exists($tz_file))
+      {
+        $timezones[$continent][] = $city;
+      }
     }
     
     echo "<select id=\"area_timezone\" name=\"area_timezone\">\n";
     foreach ($timezones as $continent => $cities)
     {
-      echo "<optgroup label=\"" . htmlspecialchars($continent) . "\">\n";
-      foreach ($cities as $city)
+      if (count($cities) > 0)
       {
-        if ($continent == $special_group)
+        echo "<optgroup label=\"" . htmlspecialchars($continent) . "\">\n";
+        foreach ($cities as $city)
         {
-          $timezone_identifier = $city;
+          if ($continent == $special_group)
+          {
+            $timezone_identifier = $city;
+          }
+          else
+          {
+            $timezone_identifier = "$continent/$city";
+          }
+          echo "<option value=\"" . htmlspecialchars($timezone_identifier) . "\"" .
+               (($timezone_identifier == $timezone) ? " selected=\"selected\"" : "") .
+               ">" . htmlspecialchars($city) . "</option>\n";
         }
-        else
-        {
-          $timezone_identifier = "$continent/$city";
-        }
-        echo "<option value=\"" . htmlspecialchars($timezone_identifier) . "\"" .
-             (($timezone_identifier == $timezone) ? " selected=\"selected\"" : "") .
-             ">" . htmlspecialchars($city) . "</option>\n";
+        echo "</optgroup>\n";
       }
-      echo "</optgroup>\n";
     }
     echo "</select>\n";
   }

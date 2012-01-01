@@ -43,6 +43,10 @@
 // setting $zoneinfo_update = FALSE;
 $zoneinfo_update = TRUE;
 
+// The VTIMEZONE definitions exist in two forms - normal and Outlook compatible.
+// $zoneinfo_outlook_compatible determines which ones to use.
+$zoneinfo_outlook_compatible = TRUE;
+
 // The VTIMEZONE definitions are cached in the database with an expiry time
 // of $zoneinfo_expiry seconds
 $zoneinfo_expiry = 60*60*24*28;    // 28 days
