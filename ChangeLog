@@ -1,3 +1,4063 @@
+2012-01-01 16:16  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2229] web/version.inc:
+	  
+	  * Updated version number to 1.4.8.
+
+2012-01-01 13:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2228] web/edit_area_room.php, web/functions_ical.inc,
+	  web/internalconfig.inc.php, web/systemdefaults.inc.php:
+	  
+	  Limited the timezones presented in the timezone drop-down box on
+	  the Edit Area page to those that have a corresponding VTIMEZONE
+	  definition
+
+2011-12-31 13:41  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2227] web/edit_entry_handler.php:
+	  
+	  Eliminated undefined index messages
+
+2011-12-31 13:35  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2226] web/edit_entry_handler.php:
+	  
+	  Eliminated undefined variable message
+
+2011-12-31 13:24  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2225] web/Themes/default/header.inc, web/edit_entry.php:
+	  
+	  Preserved the disabled state of the All Day checkbox when
+	  switching between areas
+
+2011-12-31 11:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2224] web/edit_entry_handler.php:
+	  
+	  Fixed two bugs: (1) Undefined index error if a mandatory field is
+	  defined in the config file but doesn't exist in the database (2)
+	  MRBS not picking up mandatory integer fields when JavaScript is
+	  disabled
+
+2011-12-31 11:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2223] web/auth_db.inc:
+	  
+	  Fixed problem with spurious error message being triggered
+
+2011-12-31 10:45  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2222] web/functions.inc:
+	  
+	  Fixed another instance of date() being called before the timezone
+	  had been set, resulting in PHP warning
+
+2011-12-30 10:28  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2221] web/functions.inc:
+	  
+	  Removed redundant global declaration
+
+2011-12-30 10:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2220] web/functions.inc:
+	  
+	  Added comment
+
+2011-12-30 10:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2219] web/edit_entry.php, web/functions.inc:
+	  
+	  Made MRBS more resilient to NULL values for resolution in the
+	  area table
+
+2011-12-29 18:25  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2218] web/edit_area_room.php:
+	  
+	  Eliminated undefined index error
+
+2011-12-29 17:14  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2217] web/month.php, web/mrbs.css.php,
+	  web/systemdefaults.inc.php:
+	  
+	  Added support for displaying the week number in the month view if
+	  $view_week_number is set
+
+2011-12-29 15:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2216] web/day.php, web/mincals.inc, web/month.php,
+	  web/mrbs.css.php, web/systemdefaults.inc.php, web/week.php:
+	  
+	  Added the ability to display the mini calendars at the bottom, if
+	  $display_calendars_bottom is set to true. Based on a patch from
+	  Daniel Yule.
+
+2011-12-28 21:50  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2215] web/edit_entry.php:
+	  
+	  Fixed bug in last commit: the all_day checkbox would not be
+	  displayed if the user was an admin
+
+2011-12-28 21:41  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2214] web/Themes/default/header.inc, web/edit_entry.php,
+	  web/internalconfig.inc.php:
+	  
+	  Ensured that the “all day” check box only appears if the maximum
+	  booking duration allows that length of booking. Based on a patch
+	  from Daniel Yule
+
+2011-12-28 21:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2213] web/Themes/default/header.inc, web/functions.inc:
+	  
+	  Fixed another instance of date() being called before the timezone
+	  had been set, resulting in PHP warning
+
+2011-12-28 17:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2212] web/standard_vars.inc.php:
+	  
+	  Fixed bug where date() was being called before the timezone had
+	  been set, resulting in PHP warning
+
+2011-12-24 09:27  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2211] tables.my.pre41.sql, tables.my.sql, tables.pg.pre73.sql,
+	  tables.pg.sql, web/config.inc.php, web/dbsys.inc,
+	  web/edit_area_room.php, web/functions.inc,
+	  web/functions_ical.inc, web/internalconfig.inc.php,
+	  web/systemdefaults.inc.php, web/upgrade/29[ADD],
+	  web/upgrade/29/mysql.sql[ADD], web/upgrade/29/pgsql.sql[ADD]:
+	  
+	  Made $timezone a per-area setting. Based on input from Chris
+	  Thompson.
+
+2011-12-21 22:44  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2210] web/view_entry.php:
+	  
+	  Fixed bug which prevented owner buttons appearing
+
+2011-12-21 22:18  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2209] web/Themes/default/header.inc:
+	  
+	  Fixed the Ajax checking so that it can cope with array fields
+	  consisting of multiple inputs, which will arise when the rooms
+	  field is disabled, eg <input type="hidden" name="rooms[]"
+	  value="1"> <input type="hidden" name="rooms[]" value="2"> etc.
+
+2011-12-21 17:07  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2208] web/edit_entry.php:
+	  
+	  Fixed HTML error when using disabled rooms field
+
+2011-12-21 16:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2207] web/session_cookie.inc, web/session_php.inc:
+	  
+	  Fixed HTML validation errors
+
+2011-12-21 16:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2206] web/edit_entry.php:
+	  
+	  Removed explanation of how to use the All Day checkbox if it's
+	  disabled
+
+2011-12-21 15:39  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2205] web/edit_entry.php:
+	  
+	  - Removed the $room_names variable, which as far as I can see was
+	  introduced in MRBS 1.2.1 but has never been used for anything and
+	  was causing undefined variable errors now that it's inside a
+	  function (or rather the index $i was undefined) - Added an
+	  optional $disabled parameter (defaulting to FALSE) to the
+	  create_field_entry_*() functions to allow the field to be
+	  disabled
+
+2011-12-20 15:59  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2204] web/edit_entry.php:
+	  
+	  Removed some HTML whitespace and replaced some tabs by spaces
+
+2011-12-20 15:50  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2203] web/Themes/default/header.inc:
+	  
+	  Replaced some tabs by spaces
+
+2011-12-17 20:05  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2202] web/auth_ldap.inc, web/systemdefaults.inc.php:
+	  
+	  * Added option to auth_ldap to disable client referrals. Provided
+	  by Daniel Yule.
+
+2011-12-16 19:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2201] web/lang.fr:
+	  
+	  Updated French translation
+
+2011-12-16 18:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2200] web/edit_entry.php:
+	  
+	  Escaped JavaScript strings
+
+2011-12-16 16:24  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2199] web/edit_entry.php:
+	  
+	  Ensured that if a new booking is selected and the default
+	  duration takes the booking past the end of the booking day, then
+	  the default end time is the end of the booking day (rather than
+	  the start time + resolution, as at present)
+
+2011-12-08 22:03  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2198] web/mrbs.css.php:
+	  
+	  Tweaked formatting of ColVis menu
+
+2011-12-08 20:35  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2197] web/Themes/default/header.inc, web/mrbs.css.php:
+	  
+	  Fixed bug which prevented localised text strings appearing in the
+	  Column Visibility menu in Report
+
+2011-12-08 20:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2196] web/lang.fr:
+	  
+	  Updated French translation
+
+2011-12-07 16:50  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2195] web/Themes/default/header.inc:
+	  
+	  Fixed some unescaped JavaScript strings
+
+2011-11-23 20:56  tbleher
+
+	* [r2194] web/functions_view.inc:
+	  
+	  Remove non-breaking space in display of custom fields - was
+	  escaped later and displayed literally
+
+2011-11-23 17:42  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2193] web/edit_entry.php:
+	  
+	  Fixed JavaScript error when $max_duration_enabled is false.
+	  Thanks to Henry Thompson.
+
+2011-11-23 10:19  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2192] web/functions_mail.inc:
+	  
+	  Fixed undefined variable notice
+
+2011-11-23 06:40  tbleher
+
+	* [r2191] web/mrbs-print.css.php:
+	  
+	  hide DataTable buttons in print
+
+2011-11-23 06:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2190] web/edit_entry.php:
+	  
+	  Reverted last change
+
+2011-11-23 04:46  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2189] web/edit_entry.php:
+	  
+	  Fixed undefined variable notice
+
+2011-11-23 04:36  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2188] web/Themes/default/header.inc, web/edit_entry.php,
+	  web/mrbs.css.php:
+	  
+	  Took account of days in calculating the duration when maximum
+	  duration is enabled
+
+2011-11-22 23:14  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2187] web/Themes/default/header.inc, web/edit_entry.php:
+	  
+	  Restricted the options available in the end time selector to
+	  those permitted if a maximum duration has been specified
+
+2011-11-22 20:49  tbleher
+
+	* [r2186] web/edit_entry.php, web/systemdefaults.inc.php:
+	  
+	  Make it possible to reorder fields in edit_entry (useful for
+	  custom fields)
+
+2011-11-22 20:46  tbleher
+
+	* [r2185] web/edit_entry.php:
+	  
+	  edit_entry: move creation of form elements into function (except
+	  options for repeat), so they can later be reordered.
+	  
+	  HTML output is the same (except some whitespace)
+
+2011-11-22 19:10  tbleher
+
+	* [r2184] web/Themes/default/header.inc, web/edit_entry.php,
+	  web/edit_entry_handler.php:
+	  
+	  Spelling fixes
+
+2011-11-22 19:08  tbleher
+
+	* [r2183] web/lang.de:
+	  
+	  Corrections to German language file
+
+2011-11-21 19:58  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2182] web/Themes/default/header.inc:
+	  
+	  Simplified code
+
+2011-11-21 05:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2181] web/Themes/default/header.inc,
+	  web/edit_entry_handler.php:
+	  
+	  Fixed bug which was causing the table for the wrong day to be
+	  displayed after dragging the last day of a multi-day booking in
+	  the week view
+
+2011-11-21 04:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2180] web/Themes/default/header.inc:
+	  
+	  Stopped multiday bookings being dragged by non-admins if
+	  $auth['only_admin_can_book_multiday'] is set.
+
+2011-11-21 03:41  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2179] web/Themes/default/header.inc, web/functions_table.inc:
+	  
+	  Disabled dragging on multi-day bookings except for extending the
+	  start and end times
+
+2011-11-19 04:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2178] web/Themes/default/header.inc,
+	  web/edit_entry_handler.php:
+	  
+	  Fixed bug whereby dragging multi-day bookings in the week view
+	  wasn't working properly.
+
+2011-11-12 07:19  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2177] web/functions_table.inc:
+	  
+	  Fixed bug with time format being incorrectly displayed in the
+	  week view
+
+2011-11-12 06:45  tbleher
+
+	* [r2176] web/Themes/default/header.inc:
+	  
+	  edit_entry: make ajax calls send rep_day[] correctly, so that
+	  weekly repeats are properly checked
+	  
+	  Before this change, rep_day[] was not correctly set, which led to
+	  edit_entry_handler assuming that weekly repeats all were on a
+	  sunday (only on ajax requests, the normal booking worked
+	  correctly)
+	  
+	  This change affects two things: - the correct name is now checked
+	  when deciding if the input has an array type - multiple checkbox
+	  entries with the same name are merged. There are probably
+	  better/more elegant ways to do this (suggestions welcome).
+
+2011-11-03 16:36  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2175] web/view_entry.php:
+	  
+	  Fixed bug causing the reminder intervals for bookings that need
+	  to be approved to be ignored
+
+2011-11-03 16:18  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2174] web/jquery/datatables/css/mrbs-table.css:
+	  
+	  Fixed formatting of buttons on view_entry page
+
+2011-11-03 16:10  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2173] web/edit_entry.php:
+	  
+	  Eliminated undefined variable notices
+
+2011-11-03 14:54  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2172] web/language.inc:
+	  
+	  Eliminated uninitialized string offset notices
+
+2011-11-03 14:41  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2171] web/functions_mail.inc:
+	  
+	  Eliminated undefined index errors
+
+2011-11-03 14:21  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2170] web/mrbs_sql.inc:
+	  
+	  Eliminated an undefined index notice
+
+2011-11-03 14:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2169] web/Themes/default/header.inc:
+	  
+	  Moved the new default datatables options into the existing
+	  default options object. Set the default display length at 25
+	  rows.
+
+2011-11-02 21:56  tbleher
+
+	* [r2168] web/Themes/default/header.inc:
+	  
+	  Add default tableOptions object for datatables, so it is easier
+	  to add options to all datatables at once.
+
+2011-11-02 21:54  tbleher
+
+	* [r2167] web/mrbs_sql.inc:
+	  
+	  mrbsCheckFree(): Remove space in date view, so the braces are
+	  symmetric
+
+2011-11-02 17:56  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2166] web/edit_users.php, web/functions_mail.inc,
+	  web/functions_view.inc, web/search.php:
+	  
+	  Removed a few undefined index errors
+
+2011-11-02 16:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2165] web/view_entry.php:
+	  
+	  Fixed bug - incorrect room id being used in authorisation check
+	  (no impact on standard MRBS, but will affect sites where
+	  $auth_book_admin() has been modified to use the room id)
+
+2011-11-02 15:31  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2164] web/Themes/default/header.inc:
+	  
+	  Fixed a bug introduced in Rev 2162 which stopped the Report
+	  datatable displaying the first column properly.
+
+2011-11-02 15:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2163] web/language.inc, web/report.php,
+	  web/systemdefaults.inc.php:
+	  
+	  Fixed a problem whereby "foreign" characters in CSV reports
+	  opened by Microsoft Excel did not display properly. This is
+	  actually an Excel problem, rather than an MRBS problem, but there
+	  is now a circumvention in MRBS. CSV reports are now output by
+	  default in UTF-16 rather than UTF-8 which means that Excel 2010
+	  on Windows and Excel 2011 on Mac, and probably some earlier
+	  versions as well, now open CSV reports properly. This requires
+	  the iconv module to be installed. If this is not possible, then
+	  CSV reports can be made to open correctly on Excel 2010 for
+	  Windows (but not Excel 2011 for Mac) by using UTF-8 and
+	  outputting a BOM. Two new config variables are introduced:
+	  $csv_charset (default 'utf-16') and $csv_bom (default FALSE).
+	  (CSV reports can always be made to open correctly in Excel by
+	  renaming the file from a .csv to a .txt file. Then when the file
+	  is opened an import dialogue appears which allows the user to
+	  choose the character set).
+
+2011-11-02 10:45  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2162] web/report.php:
+	  
+	  Fixed some undefined variable errors
+
+2011-11-02 10:26  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2161] web/Themes/default/header.inc:
+	  
+	  Fixed minor bug in the generation of autocomplete options for
+	  custom fields that have $select_options defined (extra blank
+	  options were being generated)
+
+2011-11-02 10:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2160] web/dbsys.inc:
+	  
+	  Got rid of an undefined variable message
+
+2011-11-02 09:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2159] web/edit_entry.php, web/edit_users.php:
+	  
+	  Got rid of some undefined index notices
+
+2011-11-02 09:34  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2158] web/defaultincludes.inc:
+	  
+	  Fixed bug causing JavaScript error in day and week views, and
+	  hence draggable bookings not to work. (The fix in Rev 2154 did
+	  not work!)
+
+2011-11-01 23:33  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2157] web/systemdefaults.inc.php:
+	  
+	  * Added more description into systemdefaults.inc.php for the
+	  $booking_types array.
+
+2011-11-01 23:27  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2156] web/config.inc.php, web/defaultincludes.inc,
+	  web/edit_entry.php, web/functions.inc, web/functions_mail.inc,
+	  web/functions_view.inc, web/lang.ca, web/lang.cs, web/lang.da,
+	  web/lang.de, web/lang.el, web/lang.en, web/lang.es, web/lang.eu,
+	  web/lang.fi, web/lang.fr, web/lang.it, web/lang.ja, web/lang.ko,
+	  web/lang.nl, web/lang.no, web/lang.pl, web/lang.pt, web/lang.ru,
+	  web/lang.sl, web/lang.sv, web/lang.tr, web/lang.zh-cn,
+	  web/lang.zh-tw, web/language.inc, web/report.php,
+	  web/systemdefaults.inc.php:
+	  
+	  * Removed the code that had to exist in config.inc.php in a
+	  particular place. Booking entry types are now configured by the
+	  simple array $booking_types, which contains elements like "E" and
+	  "I". The entry types are now localised in the translation files
+	  as "type.X" where X is the booking type. config.inc.php no longer
+	  needs to include language.inc, and the $typel configuration array
+	  has been removed.
+
+2011-11-01 17:44  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2155] web/language.inc:
+	  
+	  Fixed, or at least ameliorated, a problem that can occur on
+	  Windows servers where the dates can randomly change language, due
+	  to other scripts running in a different thread in the same
+	  process calling setlocale().
+
+2011-11-01 15:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2154] web/day.php, web/functions_table.inc, web/month.php,
+	  web/week.php:
+	  
+	  Fixed bug which meant that the day, week and month views were
+	  displayed in the wrong locale (bug introduced in Revs 2150 and
+	  2151)
+
+2011-10-31 07:34  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2153] web/language.inc:
+	  
+	  Restricted the requirement for the iconv module to those cases
+	  when it is really needed, ie when the server is running AIX or
+	  Windows.
+
+2011-10-31 07:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2152] web/functions_mail.inc, web/internalconfig.inc.php,
+	  web/systemdefaults.inc.php:
+	  
+	  Got rid of the $mail_charset config variable. All emails now sent
+	  as UTF-8.
+
+2011-10-25 10:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2151] web/month.php:
+	  
+	  Fixed bug causing JavaScript syntax error if you have to login to
+	  see the month view
+
+2011-10-25 10:18  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2150] web/day.php, web/week.php:
+	  
+	  Fixed bug causing JavaScript syntax error if you have to login to
+	  see the day or week views
+
+2011-10-25 09:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2149] web/mrbs_auth.inc, web/systemdefaults.inc.php:
+	  
+	  Made $auth['only_admin_can_book'] apply to deletions as well
+
+2011-10-25 09:35  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2148] web/mrbs_auth.inc:
+	  
+	  Fixed bug. $auth['only_admin_can_book'] does not work as required
+	  if $auth['deny_public_access'] is set.
+
+2011-10-24 21:17  tbleher
+
+	* [r2147] web/functions_ical.inc:
+	  
+	  Set PARTSTAT=NEEDS-ACTION in ical output
+	  
+	  I got some bug reports from Outlook 2010 users that bookings that
+	  they received via mrbs mails were automatically imported into
+	  their calender, without any user action. Apparently this change
+	  fixes it.
+	  
+	  Google Calender and Outlook 2003 also set this field, even though
+	  the relevant RFC says that NEEDS-ACTION is the default value and
+	  can be omitted.
+
+2011-10-24 21:14  tbleher
+
+	* [r2146] web/functions_mail.inc:
+	  
+	  Correctly encode subject in delete notification mails
+
+2011-10-24 10:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2145] web/edit_users.php:
+	  
+	  Removed section of commented out code
+
+2011-10-24 08:26  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2144] web/report.php:
+	  
+	  Fixed bug in CSV report output: a <span> was appearing in the
+	  duration field.
+
+2011-10-24 07:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2143] web/Themes/default/header.inc, web/edit_entry.php:
+	  
+	  Slightly better version of fix in Rev 2141
+
+2011-10-23 18:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2142] ., web/Themes/default/header.inc, web/admin.php,
+	  web/day.php, web/edit_area_room.php, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/edit_users.php,
+	  web/functions.inc, web/functions_table.inc[CPY],
+	  web/internalconfig.inc.php, web/mincals.inc, web/month.php,
+	  web/mrbs.css.php, web/pending.php, web/report.php,
+	  web/search.php, web/session_cookie.inc, web/session_http.inc,
+	  web/session_php.inc, web/session_remote_user.inc,
+	  web/site_faq.html, web/site_faq_de.html, web/site_faq_es.html,
+	  web/site_faq_fr.html, web/site_faq_it.html, web/site_faq_nl.html,
+	  web/style.inc, web/upgrade/5/pgsql.sql, web/week.php:
+	  
+	  Reintegrated the draggable bookings branch. MRBS now supports
+	  (except for IE8 and below) (a) the selection of new bookings by
+	  dragging over empty cells on the day and week views and (b) the
+	  adjustment of existing bookings by dragging their sides or
+	  corners.
+
+2011-10-18 09:33  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2110] web/Themes/default/header.inc:
+	  
+	  Fixed bug where the Ajax advance booking checking on the
+	  edit_entry form wasn't picking up start and end times properly.
+
+2011-10-12 08:34  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2077] web/Themes/default/header.inc:
+	  
+	  Added an error suppression operator on the call to getimagesize()
+	  in case the logo is a remote URL and allow_url_fopen is set to
+	  false in php.ini. Thanks to dwpoon. See SF ID 3420435
+
+2011-10-11 07:30  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2076] web/Themes/default/header.inc:
+	  
+	  Changed alt text on logo. Thanks to dwpoon. See SF ID 3420435.
+
+2011-10-10 14:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2075] web/edit_area_room.php:
+	  
+	  Fixed HTML validation error
+
+2011-10-10 13:45  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2073] web/lang.de:
+	  
+	  Updated German translation. Thanks to Jörg Wiemann. See SF ID
+	  3418914
+
+2011-10-10 09:24  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2072] INSTALL:
+	  
+	  Updated installation instructions for a PostgreSQL database to
+	  create a database with UTF8 encoding. See SF ID: 3413080.
+
+2011-10-07 15:34  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2071] web/day.php, web/functions.inc, web/week.php:
+	  
+	  Allowed the highlight line in the day and week views to be
+	  toggled on and off (previously once a line had been highlighted
+	  you could not get rid of it)
+
+2011-10-07 15:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2070] web/day.php, web/functions.inc, web/week.php:
+	  
+	  Simplified code
+
+2011-10-07 14:56  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2069] web/mrbs.css.php:
+	  
+	  Fixed comment to reflect last change
+
+2011-10-07 14:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2068] web/Themes/default/header.inc, web/day.php,
+	  web/functions.inc, web/mrbs-print.css.php, web/mrbs.css.php,
+	  web/week.php:
+	  
+	  Simplified the markup in the day and week views
+
+2011-10-07 12:25  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2067] web/Themes/default/header.inc, web/mrbs.css.php:
+	  
+	  Restored highlighting of the cell in the month view when you
+	  hover over it (got lost in the last revision)
+
+2011-10-07 10:43  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2066] web/Themes/classic126/styling.inc,
+	  web/Themes/default/header.inc, web/Themes/default/styling.inc,
+	  web/day.php, web/functions.inc, web/internalconfig.inc.php,
+	  web/month.php, web/mrbs.css.php, web/style.inc,
+	  web/systemdefaults.inc.php, web/week.php, web/xbLib.js[DEL]:
+	  
+	  Improved the performance of the day/week/month views, especially
+	  the day view in IE with large tables (many rooms and many
+	  periods/time slots). xbLib.js is now redundant and has been
+	  removed (jQuery is the new cross browser library) and the config
+	  variables $highlight_method and $javascript_cursor are also now
+	  redundant. See also SF ID 3419007.
+
+2011-10-04 10:18  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2065] web/lang.ru[ADD], web/language.inc:
+	  
+	  Added Russian translation supplied by Capitan Nemo
+
+2011-10-03 13:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2064] ., web/Themes/classic126/styling.inc,
+	  web/Themes/default/header.inc, web/Themes/default/styling.inc,
+	  web/admin.php, web/del_entry_ajax.php[CPY], web/edit_users.php,
+	  web/internalconfig.inc.php, web/jquery/datatables[CPY],
+	  web/jquery/datatables/css[CPY],
+	  web/jquery/datatables/css/ColReorder.css[CPY],
+	  web/jquery/datatables/css/ColVis.css[CPY],
+	  web/jquery/datatables/css/ColVisAlt.css[CPY],
+	  web/jquery/datatables/css/mrbs-page.css[CPY],
+	  web/jquery/datatables/css/mrbs-table.css[CPY],
+	  web/jquery/datatables/images[CPY],
+	  web/jquery/datatables/images/Sorting icons.psd[CPY],
+	  web/jquery/datatables/images/back_disabled.jpg[CPY],
+	  web/jquery/datatables/images/back_enabled.jpg[CPY],
+	  web/jquery/datatables/images/button.png[CPY],
+	  web/jquery/datatables/images/favicon.ico[CPY],
+	  web/jquery/datatables/images/forward_disabled.jpg[CPY],
+	  web/jquery/datatables/images/forward_enabled.jpg[CPY],
+	  web/jquery/datatables/images/insert.png[CPY],
+	  web/jquery/datatables/images/sort_asc.png[CPY],
+	  web/jquery/datatables/images/sort_asc_disabled.png[CPY],
+	  web/jquery/datatables/images/sort_both.png[CPY],
+	  web/jquery/datatables/images/sort_desc.png[CPY],
+	  web/jquery/datatables/images/sort_desc_disabled.png[CPY],
+	  web/jquery/datatables/js[CPY],
+	  web/jquery/datatables/js/ColReorder.min.js[CPY],
+	  web/jquery/datatables/js/ColVis.min.js[CPY],
+	  web/jquery/datatables/js/ColVis.mrbs.min.js[CPY],
+	  web/jquery/datatables/js/FixedColumns.min.js[CPY],
+	  web/jquery/datatables/js/FixedColumns.mrbs.js[CPY],
+	  web/jquery/datatables/js/jquery.dataTables.min.js[CPY],
+	  web/jquery/datatables/js/plugins.js[CPY],
+	  web/jquery/datatables/language[CPY],
+	  web/jquery/datatables/language/ar.txt[CPY],
+	  web/jquery/datatables/language/bg.txt[CPY],
+	  web/jquery/datatables/language/ca.txt[CPY],
+	  web/jquery/datatables/language/cs.txt[CPY],
+	  web/jquery/datatables/language/da.txt[CPY],
+	  web/jquery/datatables/language/de.txt[CPY],
+	  web/jquery/datatables/language/el.txt[CPY],
+	  web/jquery/datatables/language/en.txt[CPY],
+	  web/jquery/datatables/language/es.txt[CPY],
+	  web/jquery/datatables/language/et.txt[CPY],
+	  web/jquery/datatables/language/fa.txt[CPY],
+	  web/jquery/datatables/language/fi.txt[CPY],
+	  web/jquery/datatables/language/fr.txt[CPY],
+	  web/jquery/datatables/language/gd-ie.txt[CPY],
+	  web/jquery/datatables/language/he.txt[CPY],
+	  web/jquery/datatables/language/hi.txt[CPY],
+	  web/jquery/datatables/language/hr.txt[CPY],
+	  web/jquery/datatables/language/hu.txt[CPY],
+	  web/jquery/datatables/language/id.txt[CPY],
+	  web/jquery/datatables/language/it.txt[CPY],
+	  web/jquery/datatables/language/ka.txt[CPY],
+	  web/jquery/datatables/language/lt.txt[CPY],
+	  web/jquery/datatables/language/lv.txt[CPY],
+	  web/jquery/datatables/language/nl.txt[CPY],
+	  web/jquery/datatables/language/no.txt[CPY],
+	  web/jquery/datatables/language/pl.txt[CPY],
+	  web/jquery/datatables/language/pt-br.txt[CPY],
+	  web/jquery/datatables/language/pt-pt.txt[CPY],
+	  web/jquery/datatables/language/pt.txt[CPY],
+	  web/jquery/datatables/language/ro.txt[CPY],
+	  web/jquery/datatables/language/ru.txt[CPY],
+	  web/jquery/datatables/language/sk.txt[CPY],
+	  web/jquery/datatables/language/sl.txt[CPY],
+	  web/jquery/datatables/language/sr.txt[CPY],
+	  web/jquery/datatables/language/sv.txt[CPY],
+	  web/jquery/datatables/language/th.txt[CPY],
+	  web/jquery/datatables/language/tr.txt[CPY],
+	  web/jquery/datatables/language/uk.txt[CPY],
+	  web/jquery/datatables/language/ur.txt[CPY],
+	  web/jquery/datatables/language/vi.txt[CPY],
+	  web/jquery/datatables/language/zh.txt[CPY],
+	  web/jquery/jquery-1.5.2.min.js[DEL],
+	  web/jquery/jquery-1.6.4.min.js[CPY], web/lang.ca, web/lang.cs,
+	  web/lang.da, web/lang.de, web/lang.el, web/lang.en, web/lang.es,
+	  web/lang.eu, web/lang.fi, web/lang.fr, web/lang.it, web/lang.ja,
+	  web/lang.ko, web/lang.nl, web/lang.no, web/lang.pl, web/lang.pt,
+	  web/lang.sl, web/lang.sv, web/lang.tr, web/lang.zh-cn,
+	  web/lang.zh-tw, web/language.inc, web/mrbs-ielte6.css,
+	  web/mrbs-ielte7.css.php, web/mrbs-js-overrides.css.php[DEL],
+	  web/mrbs-js-overrides.js[DEL], web/mrbs.css.php,
+	  web/mrbs_auth.inc, web/pending.php, web/report.php,
+	  web/search.php, web/style.inc, web/systemdefaults.inc.php,
+	  web/trailer.inc, web/upgrade/5/pgsql.sql:
+	  
+	  Reintegrated the datatables branch back into the trunk. The
+	  report results, search results, users list, rooms list and
+	  pending list are now sortable, searchable tables. In addition
+	  admins can do bulk deletes of the entries returned in a report.
+
+2011-10-01 09:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2046] web/Themes/default/header.inc:
+	  
+	  Fixed bug causing the Ajax booking check to be performed on form
+	  submit
+
+2011-09-30 16:03  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2044] web/edit_area_room.php:
+	  
+	  Stopped ordinary users seeing the disabled/enabled status of a
+	  room (there's no point - we only show them enabled rooms anyway)
+
+2011-09-30 15:51  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2042] web/edit_area_room.php:
+	  
+	  Fixed bug whereby the room disabled/enabled buttons were not
+	  disabled for ordinary users (though as there was no Save button
+	  they weren't able to change the status)
+
+2011-09-29 16:27  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2026] web/functions.inc, web/internalconfig.inc.php:
+	  
+	  Added a sanity check to check that 'private_override' is one of
+	  the three valid values in case the database has somehow got
+	  messed up
+
+2011-09-28 13:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2022] web/Themes/default/header.inc:
+	  
+	  Fixed bug preventing the schedule/policy details dialog from
+	  being re-opened if it had previously been closed
+
+2011-09-28 12:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2021] web/Themes/default/header.inc:
+	  
+	  Made the correct tab be selected on launch of the schedule/policy
+	  check results dialog
+
+2011-09-28 12:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2019] web/Themes/default/header.inc, web/edit_entry.php,
+	  web/jquery/ui/css/sunny/images/ui-bg_gloss-wave_60_fece2f_500x100.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_gloss-wave_70_ffdd57_500x100.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_3d3d3d_256x240.png,
+	  web/jquery/ui/css/sunny/jquery-ui-1.8.16.custom.css,
+	  web/jquery/ui/jquery-ui-1.8.16.custom.min.js, web/lang.en,
+	  web/mrbs.css.php, web/style.inc:
+	  
+	  Added a tabbed dialog that can be displayed to give more details
+	  of schedule and policy checks on the edit_entry page. This has
+	  the advantage that it contains clickable links to conflicting
+	  bookings, which the tooltips cannot.
+
+2011-09-27 11:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2017] web/day.php, web/del_entry.php, web/edit_entry.php,
+	  web/month.php, web/week.php:
+	  
+	  Tidied up the use of default values for form parameters, using
+	  the optional third parameter to get_form_var()
+
+2011-09-27 09:42  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2015] help_report.html[ADD], web/functions.inc,
+	  web/grab_globals.inc.php, web/language.inc, web/report.php,
+	  web/session_cookie.inc, web/session_http.inc,
+	  web/session_php.inc, web/session_remote_user.inc,
+	  web/systemdefaults.inc.php:
+	  
+	  Added the ability to run report.php from the command line (useful
+	  for example for setting up reports as cron jobs). Provided a
+	  manual page at help_report.html. The ability to run from the
+	  command line is disabled by default in systemdefaults.inc.php and
+	  has to be deliberately enabled.
+	  
+	  Added an optional third parameter to get_form_var() which is the
+	  default value
+
+2011-09-26 10:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2013] web/report.php:
+	  
+	  Changed the report from method from "get" to "post" to make it
+	  possible to accommodate complicated search criteria, especially
+	  with many custom fields
+
+2011-09-26 09:57  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2012] web/report.php:
+	  
+	  Added an explicit Phase variable to the Report form, rather than
+	  relying on the areamatch variable to determine whether one is in
+	  Phase 1 or Phase 2. This makes it easier to adapt the Report page
+	  to being run from the CLI (eg for producing reports from a cron
+	  job).
+
+2011-09-25 06:21  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2010] web/Themes/default/header.inc, web/edit_entry.php:
+	  
+	  Stopped MRBS sending an Ajax request to check for booking
+	  conflicts if the Back or Save buttons have just been pressed.
+
+2011-09-25 06:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2009] web/edit_entry_handler.php:
+	  
+	  Fixed bug causing Back button on the edit_entry page to go to the
+	  wrong page
+
+2011-09-24 10:25  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2008] web/Themes/default/header.inc:
+	  
+	  Fixed bug introduced in Rev 1998 and at the same time
+	  restructured code so that it does not need to know the names of
+	  the form fields.
+
+2011-09-23 16:35  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2005] web/tzurl/zoneinfo-outlook/Africa/Juba.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Metlakatla.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Kaliningrad.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Ponape.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Truk.ics,
+	  web/tzurl/zoneinfo/Africa/Dar_es_Salaam.ics,
+	  web/tzurl/zoneinfo/Africa/Juba.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Kampala.ics,
+	  web/tzurl/zoneinfo/Africa/Nairobi.ics,
+	  web/tzurl/zoneinfo/America/Goose_Bay.ics,
+	  web/tzurl/zoneinfo/America/Metlakatla.ics,
+	  web/tzurl/zoneinfo/America/Resolute.ics,
+	  web/tzurl/zoneinfo/America/St_Johns.ics,
+	  web/tzurl/zoneinfo/Europe/Kaliningrad.ics,
+	  web/tzurl/zoneinfo/Pacific/Apia.ics,
+	  web/tzurl/zoneinfo/Pacific/Ponape.ics,
+	  web/tzurl/zoneinfo/Pacific/Truk.ics:
+	  
+	  Updated timezone files with Sep 12 2011 versions
+
+2011-09-23 13:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2002] web/edit_users.php:
+	  
+	  Added a Back button to the Add/Edit users form
+
+2011-09-23 11:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2000] web/pgsql.inc:
+	  
+	  Set PostgreSQL client encoding to UTF8. Thanks to Andreas Lange
+	  for the patch (SF ID 3413080)
+
+2011-09-23 10:51  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1999] web/Themes/default/header.inc:
+	  
+	  Fixed bug resulting in a JavaScript error if you try and go to
+	  the edit_entry page when not logged in and the default duration
+	  is All Day
+
+2011-09-23 10:43  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1998] web/Themes/default/header.inc:
+	  
+	  Fixed bug resulting in a JavaScript error on the edit_entry page
+	  if some form inputs are absent (eg if
+	  $auth['only_admin_can_book_repeat'] is set)
+
+2011-09-22 14:41  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1996] AUTHENTICATION, web/auth_ldap.inc, web/functions.inc,
+	  web/systemdefaults.inc.php:
+	  
+	  Revamped the LDAP authentication scheme somewhat. You can now
+	  specify most of the configuration parameters as arrays, so that
+	  you can have multiple servers or multiple base DNs that are
+	  configured in different ways.
+	  
+	  Additionally, you can now determine whether a user is an
+	  administrator by defining LDAP configuration parameters:
+	  $ldap_group_member_attrib and $ldap_admin_group_dn. See
+	  systemdefaults.inc.php for details.
+
+2011-09-22 09:28  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1994] web/Themes/default/header.inc,
+	  web/systemdefaults.inc.php:
+	  
+	  Added a timer so that a potential booking on the edit_entry form
+	  can be periodically rechecked for validity, in case someone else
+	  makes or releases a booking while the page is open. Can be
+	  disabled and the interval set by means of a config variable.
+	  Default enabled, 10 second interval.
+
+2011-09-22 09:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1993] web/Themes/default/header.inc, web/functions.inc:
+	  
+	  Decoded HTML entities in Ajax tooltip messages on the edit_entry
+	  page
+
+2011-09-22 07:32  tbleher
+
+	* [r1990] web/Themes/default/header.inc:
+	  
+	  Correctly handle multiple selected rooms in Ajax calls
+	  
+	  val() already returns an array on multi-select boxes, so we can
+	  simply use that.
+
+2011-09-21 20:29  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1988] web/site_faq_de.html, web/site_faq_nl.html:
+	  
+	  Converted to UTF-8
+
+2011-09-21 20:15  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1987] web/site_faq_it.html:
+	  
+	  Converted to UTF-8
+
+2011-09-21 20:08  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1986] web/site_faq_es.html:
+	  
+	  Converted to UTF-8
+
+2011-09-21 19:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1985] web/site_faq_fr.html:
+	  
+	  Converted to UTF-8
+
+2011-09-21 08:34  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1970] web/edit_entry_handler.php:
+	  
+	  Moved the de-duplication of rules and conflicts to before the
+	  Ajax output
+
+2011-09-21 08:25  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1969] web/edit_entry_handler.php:
+	  
+	  Corrected typo in last change (array_merged)
+
+2011-09-21 06:13  tbleher
+
+	* [r1968] web/edit_entry_handler.php:
+	  
+	  edit_entry_handler: use array_merge instead of operator+ for
+	  array union
+	  
+	  operator+ discards any members of the second array when their key
+	  is already found in the first array. In contrast, array_merge
+	  renumbers numeric arrays. The old behaviour led to some conflicts
+	  not being displayed.
+
+2011-09-20 20:11  tbleher
+
+	* [r1966] web/site_faq_de.html:
+	  
+	  Clean up umlauts in german faq
+
+2011-09-20 20:09  tbleher
+
+	* [r1965] web/Themes/default/header.inc:
+	  
+	  Generate shorter JavaScript for the checkValidBooking() function
+
+2011-09-20 20:05  tbleher
+
+	* [r1964] web/Themes/default/header.inc:
+	  
+	  Correctly handle the radio buttons in the ajax code for
+	  edit_entry
+	  
+	  This is needed at least on Firefox so radio buttons are read
+	  correctly.
+
+2011-09-13 08:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1950] web/auth_config.inc:
+	  
+	  Corrected typo in comment that could lead to confusion
+
+2011-09-12 14:49  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1947] web/edit_entry_handler.php:
+	  
+	  Fixed bug where Ajax policy checking was not working if "All day"
+	  was checked
+
+2011-09-09 10:28  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1945] web/functions_view.inc:
+	  
+	  Fixed bug causing disabled rooms to be displayed incorrectly in
+	  view_entry.php
+
+2011-09-08 23:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1943] web/edit_entry.php:
+	  
+	  Tidied code
+
+2011-09-08 23:03  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1942] web/Themes/default/header.inc:
+	  
+	  Fixed bug whereby the Ajax policy checking wasn't working
+	  properly after a change of area
+
+2011-09-08 21:14  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1941] web/edit_entry.php, web/edit_entry_handler.php:
+	  
+	  Fixed bug which prevented the edit_entry form being submitted
+	  when using Chrome
+
+2011-09-08 18:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1939] web/mrbs.css.php:
+	  
+	  Minor tweak to styling
+
+2011-09-08 18:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1937] web/Themes/default/header.inc, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/lang.en, web/mrbs.css.php,
+	  web/mrbs_sql.inc:
+	  
+	  Added an Ajax capability to the edit_entry form so that a booking
+	  is checked for scheduling and policy conflicts as the booking
+	  parameters are changed. [ Only available for PHP versions >=
+	  5.2.0 as it relies on json_encode() ]
+
+2011-09-08 08:55  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1936] web/report.php:
+	  
+	  Removed the privacy radio buttons from the Report form when the
+	  user is not logged in as they're then redundant because only the
+	  "user" will only be able to see public bookings. Thanks to a
+	  suggestion from Jörg Wiemann in SF Tracker ID: 3405402
+
+2011-09-07 09:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1933] web/functions_mail.inc, web/lang.en:
+	  
+	  Improved the message in email notifications for a list of deleted
+	  repeat bookings
+
+2011-09-07 08:42  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1932] web/functions_mail.inc:
+	  
+	  Fixed bug whereby email notifications would not be sent if MRBS
+	  failed to find an address for those on the "To" line but there
+	  addresses on the "Cc" line.
+
+2011-09-06 15:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1931] web/edit_entry.php:
+	  
+	  Moved comment
+
+2011-09-06 14:30  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1929] web/Themes/default/header.inc, web/edit_entry.php:
+	  
+	  Added an optional $disabled parameter to genSlotSelector()
+
+2011-09-06 13:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1927] web/functions.inc:
+	  
+	  Added an optional $disabled parameter to genDateSelector()
+
+2011-09-05 18:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1925] web/functions_mail.inc:
+	  
+	  Minor code change - no change to MRBS function.
+
+2011-09-05 18:03  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1924] web/edit_entry_handler.php, web/functions_ical.inc,
+	  web/functions_mail.inc, web/lang.en, web/mrbs_sql.inc:
+	  
+	  Added a list of dates of repeat bookings to email notifications.
+
+2011-09-05 15:57  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1923] web/edit_entry.php, web/edit_entry_handler.php,
+	  web/mrbs-ielte6.css, web/mrbs.css.php:
+	  
+	  Added a Back button to the edit_entry page
+
+2011-09-02 13:21  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1921] web/edit_entry_handler.php:
+	  
+	  Fixed bug where the "Skip and Book" button was being shown if
+	  there was a conflict for a non-repeating booking.
+
+2011-09-02 13:10  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1920] web/functions_mail.inc, web/systemdefaults.inc.php:
+	  
+	  Added a config setting to disable email sending, overriding any
+	  other settings. Useful for testing MRBS without having to worry
+	  about sending mail to people not expecting it.
+
+2011-09-01 07:35  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1917] web/edit_entry_handler.php:
+	  
+	  Added comment
+
+2011-08-31 22:50  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1916] web/edit_entry.php:
+	  
+	  Fix, following previous fixes, to stop Sunday being selected by
+	  default as a repeat day.
+
+2011-08-31 22:31  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1915] web/edit_entry.php:
+	  
+	  Tidied code following last fix to make the use of $rep_day
+	  consistent. (Should be no change to functionality)
+
+2011-08-31 22:05  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1914] web/edit_entry.php, web/edit_entry_handler.php:
+	  
+	  Fixed bug in skipping bookings when making weekly repeat bookings
+	  (bookings were made for the wrong day of the week). Thanks to
+	  John O'Donnell for spotting the problem.
+
+2011-08-31 14:21  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1912] web/Themes/default/header.inc,
+	  web/jquery/ui/css/sunny/images/ui-bg_diagonals-medium_20_d34d17_40x40.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_gloss-wave_60_fece2f_500x100.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_d19405_256x240.png,
+	  web/jquery/ui/css/sunny/jquery-ui-1.8.11.custom.css[DEL],
+	  web/jquery/ui/css/sunny/jquery-ui-1.8.16.custom.css[ADD],
+	  web/jquery/ui/jquery-ui-1.8.11.custom.min.js[DEL],
+	  web/jquery/ui/jquery-ui-1.8.16.custom.min.js[ADD],
+	  web/jquery/ui/jquery-ui-i18n.js, web/style.inc:
+	  
+	  Upgraded jQuery UI from version 1.8.11 to 1.8.16
+
+2011-08-31 09:28  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1910] web/report.php:
+	  
+	  Added comment
+
+2011-08-31 08:59  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1909] web/edit_entry_handler.php, web/lang.en,
+	  web/mrbs.css.php:
+	  
+	  Added a "Skip and book" button to the page listing conflicting
+	  entries if you try and make a repeat booking where some of the
+	  entries have conflicts.
+
+2011-08-30 10:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1908] web/functions_mail.inc, web/lang.en, web/mrbs-mail.css:
+	  
+	  Added the list of skipped bookings to ordinary email
+	  notifications.
+
+2011-08-30 09:07  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1907] web/approve_entry_handler.php,
+	  web/edit_entry_handler.php, web/functions_ical.inc,
+	  web/functions_mail.inc, web/mrbs_sql.inc:
+	  
+	  Restructured code
+
+2011-08-29 18:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1906] web/functions_ical.inc:
+	  
+	  Added comment
+
+2011-08-29 18:15  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1905] web/approve_entry_handler.php,
+	  web/edit_entry_handler.php, web/functions_ical.inc,
+	  web/functions_mail.inc:
+	  
+	  Added list of skipped bookings to iCal notifications. (Still to
+	  come - adding them to ordinary email notifications)
+
+2011-08-29 12:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1904] web/edit_entry.php, web/edit_entry_handler.php,
+	  web/lang.en, web/mrbs_sql.inc, web/systemdefaults.inc.php:
+	  
+	  Added an option on the booking form to skip past conflicting
+	  bookings when making repeat bookings. (To come: an option on the
+	  error page to skip past conflicting bookings if you've forgotten
+	  to check the box on the booking form)
+
+2011-08-29 09:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1903] web/auth_ldap.inc, web/functions.inc:
+	  
+	  Replaced some tabs by spaces
+
+2011-08-28 19:11  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1900] web/functions.inc, web/systemdefaults.inc.php:
+	  
+	  Made the date range for the date selectors a config variable
+	  (default +/- 5 years as at present)
+
+2011-08-15 17:59  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1865] web/mrbs_sql.inc:
+	  
+	  Improved error reporting
+
+2011-08-07 17:27  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1862] tables.my.pre41.sql, tables.my.sql, tables.pg.pre73.sql,
+	  tables.pg.sql, web/config.inc.php, web/dbsys.inc,
+	  web/functions_ical.inc, web/systemdefaults.inc.php,
+	  web/upgrade/28[ADD], web/upgrade/28/mysql.sql[ADD],
+	  web/upgrade/28/pgsql.sql[ADD]:
+	  
+	  Added checking of the web for more up to date versions of the
+	  VTIMEZONE components used in iCalendar notifications. (Useful if
+	  countries change their timezone or DST rules). Also added caching
+	  of the latest version in the database. Web checking will timeout
+	  if there is no connection, and it can also be disabled
+	  completely.
+
+2011-08-05 10:56  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1861] web/lang.en:
+	  
+	  Minor tweaks to language strings. See SF 3386679.
+
+2011-08-04 14:08  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1860] web/edit_entry.php:
+	  
+	  Corrected a minor error in JavaScript. Thanks to Guenter Böhm.
+
+2011-08-04 11:18  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1859] web/mysql.inc, web/mysqli.inc, web/pgsql.inc:
+	  
+	  Added database error checking and handling to sql_*_field_info()
+
+2011-08-03 16:34  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1858] web/tzurl/zoneinfo-outlook/Africa/Abidjan.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Accra.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Addis_Ababa.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Algiers.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Asmara.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Bamako.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Bangui.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Banjul.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Bissau.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Blantyre.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Brazzaville.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Bujumbura.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Cairo.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Casablanca.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Ceuta.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Conakry.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Dakar.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Dar_es_Salaam.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Djibouti.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Douala.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/El_Aaiun.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Freetown.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Gaborone.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Harare.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Johannesburg.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Kampala.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Khartoum.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Kigali.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Kinshasa.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Lagos.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Libreville.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Lome.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Luanda.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Lubumbashi.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Lusaka.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Malabo.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Maputo.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Maseru.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Mbabane.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Mogadishu.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Monrovia.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Nairobi.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Ndjamena.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Niamey.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Nouakchott.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Ouagadougou.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Porto-Novo.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Sao_Tome.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Tripoli.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Tunis.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Windhoek.ics,
+	  web/tzurl/zoneinfo-outlook/America/Adak.ics,
+	  web/tzurl/zoneinfo-outlook/America/Anchorage.ics,
+	  web/tzurl/zoneinfo-outlook/America/Anguilla.ics,
+	  web/tzurl/zoneinfo-outlook/America/Antigua.ics,
+	  web/tzurl/zoneinfo-outlook/America/Araguaina.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Buenos_Aires.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Catamarca.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Cordoba.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Jujuy.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/La_Rioja.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Mendoza.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Rio_Gallegos.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Salta.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/San_Juan.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/San_Luis.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Tucuman.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Ushuaia.ics,
+	  web/tzurl/zoneinfo-outlook/America/Aruba.ics,
+	  web/tzurl/zoneinfo-outlook/America/Asuncion.ics,
+	  web/tzurl/zoneinfo-outlook/America/Atikokan.ics,
+	  web/tzurl/zoneinfo-outlook/America/Bahia.ics,
+	  web/tzurl/zoneinfo-outlook/America/Bahia_Banderas.ics,
+	  web/tzurl/zoneinfo-outlook/America/Barbados.ics,
+	  web/tzurl/zoneinfo-outlook/America/Belem.ics,
+	  web/tzurl/zoneinfo-outlook/America/Belize.ics,
+	  web/tzurl/zoneinfo-outlook/America/Blanc-Sablon.ics,
+	  web/tzurl/zoneinfo-outlook/America/Boa_Vista.ics,
+	  web/tzurl/zoneinfo-outlook/America/Bogota.ics,
+	  web/tzurl/zoneinfo-outlook/America/Boise.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cambridge_Bay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Campo_Grande.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cancun.ics,
+	  web/tzurl/zoneinfo-outlook/America/Caracas.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cayenne.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cayman.ics,
+	  web/tzurl/zoneinfo-outlook/America/Chicago.ics,
+	  web/tzurl/zoneinfo-outlook/America/Chihuahua.ics,
+	  web/tzurl/zoneinfo-outlook/America/Costa_Rica.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cuiaba.ics,
+	  web/tzurl/zoneinfo-outlook/America/Curacao.ics,
+	  web/tzurl/zoneinfo-outlook/America/Danmarkshavn.ics,
+	  web/tzurl/zoneinfo-outlook/America/Dawson.ics,
+	  web/tzurl/zoneinfo-outlook/America/Dawson_Creek.ics,
+	  web/tzurl/zoneinfo-outlook/America/Denver.ics,
+	  web/tzurl/zoneinfo-outlook/America/Detroit.ics,
+	  web/tzurl/zoneinfo-outlook/America/Dominica.ics,
+	  web/tzurl/zoneinfo-outlook/America/Edmonton.ics,
+	  web/tzurl/zoneinfo-outlook/America/Eirunepe.ics,
+	  web/tzurl/zoneinfo-outlook/America/El_Salvador.ics,
+	  web/tzurl/zoneinfo-outlook/America/Fortaleza.ics,
+	  web/tzurl/zoneinfo-outlook/America/Glace_Bay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Godthab.ics,
+	  web/tzurl/zoneinfo-outlook/America/Goose_Bay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Grand_Turk.ics,
+	  web/tzurl/zoneinfo-outlook/America/Grenada.ics,
+	  web/tzurl/zoneinfo-outlook/America/Guadeloupe.ics,
+	  web/tzurl/zoneinfo-outlook/America/Guatemala.ics,
+	  web/tzurl/zoneinfo-outlook/America/Guayaquil.ics,
+	  web/tzurl/zoneinfo-outlook/America/Guyana.ics,
+	  web/tzurl/zoneinfo-outlook/America/Halifax.ics,
+	  web/tzurl/zoneinfo-outlook/America/Havana.ics,
+	  web/tzurl/zoneinfo-outlook/America/Hermosillo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Indianapolis.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Knox.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Marengo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Petersburg.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Tell_City.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Vevay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Vincennes.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Winamac.ics,
+	  web/tzurl/zoneinfo-outlook/America/Inuvik.ics,
+	  web/tzurl/zoneinfo-outlook/America/Iqaluit.ics,
+	  web/tzurl/zoneinfo-outlook/America/Jamaica.ics,
+	  web/tzurl/zoneinfo-outlook/America/Juneau.ics,
+	  web/tzurl/zoneinfo-outlook/America/Kentucky/Louisville.ics,
+	  web/tzurl/zoneinfo-outlook/America/Kentucky/Monticello.ics,
+	  web/tzurl/zoneinfo-outlook/America/Kralendijk.ics,
+	  web/tzurl/zoneinfo-outlook/America/La_Paz.ics,
+	  web/tzurl/zoneinfo-outlook/America/Lima.ics,
+	  web/tzurl/zoneinfo-outlook/America/Los_Angeles.ics,
+	  web/tzurl/zoneinfo-outlook/America/Lower_Princes.ics,
+	  web/tzurl/zoneinfo-outlook/America/Maceio.ics,
+	  web/tzurl/zoneinfo-outlook/America/Managua.ics,
+	  web/tzurl/zoneinfo-outlook/America/Manaus.ics,
+	  web/tzurl/zoneinfo-outlook/America/Marigot.ics,
+	  web/tzurl/zoneinfo-outlook/America/Martinique.ics,
+	  web/tzurl/zoneinfo-outlook/America/Matamoros.ics,
+	  web/tzurl/zoneinfo-outlook/America/Mazatlan.ics,
+	  web/tzurl/zoneinfo-outlook/America/Menominee.ics,
+	  web/tzurl/zoneinfo-outlook/America/Merida.ics,
+	  web/tzurl/zoneinfo-outlook/America/Metlakatla.ics,
+	  web/tzurl/zoneinfo-outlook/America/Mexico_City.ics,
+	  web/tzurl/zoneinfo-outlook/America/Miquelon.ics,
+	  web/tzurl/zoneinfo-outlook/America/Moncton.ics,
+	  web/tzurl/zoneinfo-outlook/America/Monterrey.ics,
+	  web/tzurl/zoneinfo-outlook/America/Montevideo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Montreal.ics,
+	  web/tzurl/zoneinfo-outlook/America/Montserrat.ics,
+	  web/tzurl/zoneinfo-outlook/America/Nassau.ics,
+	  web/tzurl/zoneinfo-outlook/America/New_York.ics,
+	  web/tzurl/zoneinfo-outlook/America/Nipigon.ics,
+	  web/tzurl/zoneinfo-outlook/America/Nome.ics,
+	  web/tzurl/zoneinfo-outlook/America/Noronha.ics,
+	  web/tzurl/zoneinfo-outlook/America/North_Dakota/Beulah.ics,
+	  web/tzurl/zoneinfo-outlook/America/North_Dakota/Center.ics,
+	  web/tzurl/zoneinfo-outlook/America/North_Dakota/New_Salem.ics,
+	  web/tzurl/zoneinfo-outlook/America/Ojinaga.ics,
+	  web/tzurl/zoneinfo-outlook/America/Panama.ics,
+	  web/tzurl/zoneinfo-outlook/America/Pangnirtung.ics,
+	  web/tzurl/zoneinfo-outlook/America/Paramaribo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Phoenix.ics,
+	  web/tzurl/zoneinfo-outlook/America/Port-au-Prince.ics,
+	  web/tzurl/zoneinfo-outlook/America/Port_of_Spain.ics,
+	  web/tzurl/zoneinfo-outlook/America/Porto_Velho.ics,
+	  web/tzurl/zoneinfo-outlook/America/Puerto_Rico.ics,
+	  web/tzurl/zoneinfo-outlook/America/Rainy_River.ics,
+	  web/tzurl/zoneinfo-outlook/America/Rankin_Inlet.ics,
+	  web/tzurl/zoneinfo-outlook/America/Recife.ics,
+	  web/tzurl/zoneinfo-outlook/America/Regina.ics,
+	  web/tzurl/zoneinfo-outlook/America/Resolute.ics,
+	  web/tzurl/zoneinfo-outlook/America/Rio_Branco.ics,
+	  web/tzurl/zoneinfo-outlook/America/Santa_Isabel.ics,
+	  web/tzurl/zoneinfo-outlook/America/Santarem.ics,
+	  web/tzurl/zoneinfo-outlook/America/Santiago.ics,
+	  web/tzurl/zoneinfo-outlook/America/Santo_Domingo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Sao_Paulo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Scoresbysund.ics,
+	  web/tzurl/zoneinfo-outlook/America/Sitka.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Barthelemy.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Johns.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Kitts.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Lucia.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Thomas.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Vincent.ics,
+	  web/tzurl/zoneinfo-outlook/America/Swift_Current.ics,
+	  web/tzurl/zoneinfo-outlook/America/Tegucigalpa.ics,
+	  web/tzurl/zoneinfo-outlook/America/Thule.ics,
+	  web/tzurl/zoneinfo-outlook/America/Thunder_Bay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Tijuana.ics,
+	  web/tzurl/zoneinfo-outlook/America/Toronto.ics,
+	  web/tzurl/zoneinfo-outlook/America/Tortola.ics,
+	  web/tzurl/zoneinfo-outlook/America/Vancouver.ics,
+	  web/tzurl/zoneinfo-outlook/America/Whitehorse.ics,
+	  web/tzurl/zoneinfo-outlook/America/Winnipeg.ics,
+	  web/tzurl/zoneinfo-outlook/America/Yakutat.ics,
+	  web/tzurl/zoneinfo-outlook/America/Yellowknife.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Casey.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Davis.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/DumontDUrville.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Macquarie.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Mawson.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/McMurdo.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Palmer.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Rothera.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/South_Pole.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Syowa.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Vostok.ics,
+	  web/tzurl/zoneinfo-outlook/Arctic/Longyearbyen.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Aden.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Almaty.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Amman.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Anadyr.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Aqtau.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Aqtobe.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Ashgabat.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Baghdad.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Bahrain.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Baku.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Bangkok.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Beirut.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Bishkek.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Brunei.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Choibalsan.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Chongqing.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Colombo.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Damascus.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Dhaka.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Dili.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Dubai.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Dushanbe.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Gaza.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Harbin.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Ho_Chi_Minh.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Hong_Kong.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Hovd.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Irkutsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Istanbul.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Jakarta.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Jayapura.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Jerusalem.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kabul.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kamchatka.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Karachi.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kashgar.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kathmandu.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kolkata.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Krasnoyarsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kuala_Lumpur.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kuching.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kuwait.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Macau.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Magadan.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Makassar.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Manila.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Muscat.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Nicosia.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Novokuznetsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Novosibirsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Omsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Oral.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Phnom_Penh.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Pontianak.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Pyongyang.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Qatar.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Qyzylorda.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Rangoon.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Riyadh.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Sakhalin.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Samarkand.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Seoul.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Shanghai.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Singapore.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Taipei.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Tashkent.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Tbilisi.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Tehran.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Thimphu.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Tokyo.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Ulaanbaatar.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Urumqi.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Vientiane.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Vladivostok.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Yakutsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Yekaterinburg.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Yerevan.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Azores.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Bermuda.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Canary.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Cape_Verde.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Faroe.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Madeira.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Reykjavik.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/South_Georgia.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/St_Helena.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Stanley.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Adelaide.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Brisbane.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Currie.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Darwin.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Eucla.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Hobart.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Lindeman.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Lord_Howe.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Melbourne.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Perth.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Sydney.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Amsterdam.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Andorra.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Athens.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Belgrade.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Berlin.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Bratislava.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Brussels.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Bucharest.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Budapest.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Chisinau.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Copenhagen.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Dublin.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Gibraltar.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Guernsey.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Helsinki.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Isle_of_Man.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Istanbul.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Jersey.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Kaliningrad.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Kiev.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Lisbon.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Ljubljana.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/London.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Luxembourg.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Madrid.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Malta.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Mariehamn.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Minsk.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Monaco.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Moscow.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Nicosia.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Oslo.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Paris.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Podgorica.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Prague.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Riga.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Rome.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Samara.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/San_Marino.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Sarajevo.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Simferopol.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Skopje.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Sofia.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Stockholm.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Tallinn.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Uzhgorod.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Vaduz.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Vatican.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Vienna.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Vilnius.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Volgograd.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Warsaw.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Zagreb.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Zaporozhye.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Zurich.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Antananarivo.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Chagos.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Christmas.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Cocos.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Comoro.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Kerguelen.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Mahe.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Maldives.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Mauritius.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Mayotte.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Reunion.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Apia.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Auckland.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Chatham.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Chuuk.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Easter.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Efate.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Enderbury.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Fakaofo.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Fiji.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Funafuti.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Galapagos.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Gambier.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Guadalcanal.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Guam.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Honolulu.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Johnston.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Kiritimati.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Kosrae.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Kwajalein.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Majuro.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Marquesas.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Midway.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Nauru.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Niue.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Norfolk.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Noumea.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Pago_Pago.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Palau.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Pitcairn.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Pohnpei.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Ponape.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Port_Moresby.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Rarotonga.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Saipan.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Tahiti.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Tarawa.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Tongatapu.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Truk.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Wake.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Wallis.ics,
+	  web/tzurl/zoneinfo/Africa/Abidjan.ics,
+	  web/tzurl/zoneinfo/Africa/Accra.ics,
+	  web/tzurl/zoneinfo/Africa/Addis_Ababa.ics,
+	  web/tzurl/zoneinfo/Africa/Algiers.ics,
+	  web/tzurl/zoneinfo/Africa/Asmara.ics,
+	  web/tzurl/zoneinfo/Africa/Bamako.ics,
+	  web/tzurl/zoneinfo/Africa/Bangui.ics,
+	  web/tzurl/zoneinfo/Africa/Banjul.ics,
+	  web/tzurl/zoneinfo/Africa/Bissau.ics,
+	  web/tzurl/zoneinfo/Africa/Blantyre.ics,
+	  web/tzurl/zoneinfo/Africa/Brazzaville.ics,
+	  web/tzurl/zoneinfo/Africa/Bujumbura.ics,
+	  web/tzurl/zoneinfo/Africa/Cairo.ics,
+	  web/tzurl/zoneinfo/Africa/Casablanca.ics,
+	  web/tzurl/zoneinfo/Africa/Ceuta.ics,
+	  web/tzurl/zoneinfo/Africa/Conakry.ics,
+	  web/tzurl/zoneinfo/Africa/Dakar.ics,
+	  web/tzurl/zoneinfo/Africa/Dar_es_Salaam.ics,
+	  web/tzurl/zoneinfo/Africa/Djibouti.ics,
+	  web/tzurl/zoneinfo/Africa/Douala.ics,
+	  web/tzurl/zoneinfo/Africa/El_Aaiun.ics,
+	  web/tzurl/zoneinfo/Africa/Freetown.ics,
+	  web/tzurl/zoneinfo/Africa/Gaborone.ics,
+	  web/tzurl/zoneinfo/Africa/Harare.ics,
+	  web/tzurl/zoneinfo/Africa/Johannesburg.ics,
+	  web/tzurl/zoneinfo/Africa/Kampala.ics,
+	  web/tzurl/zoneinfo/Africa/Khartoum.ics,
+	  web/tzurl/zoneinfo/Africa/Kigali.ics,
+	  web/tzurl/zoneinfo/Africa/Kinshasa.ics,
+	  web/tzurl/zoneinfo/Africa/Lagos.ics,
+	  web/tzurl/zoneinfo/Africa/Libreville.ics,
+	  web/tzurl/zoneinfo/Africa/Lome.ics,
+	  web/tzurl/zoneinfo/Africa/Luanda.ics,
+	  web/tzurl/zoneinfo/Africa/Lubumbashi.ics,
+	  web/tzurl/zoneinfo/Africa/Lusaka.ics,
+	  web/tzurl/zoneinfo/Africa/Malabo.ics,
+	  web/tzurl/zoneinfo/Africa/Maputo.ics,
+	  web/tzurl/zoneinfo/Africa/Maseru.ics,
+	  web/tzurl/zoneinfo/Africa/Mbabane.ics,
+	  web/tzurl/zoneinfo/Africa/Mogadishu.ics,
+	  web/tzurl/zoneinfo/Africa/Monrovia.ics,
+	  web/tzurl/zoneinfo/Africa/Nairobi.ics,
+	  web/tzurl/zoneinfo/Africa/Ndjamena.ics,
+	  web/tzurl/zoneinfo/Africa/Niamey.ics,
+	  web/tzurl/zoneinfo/Africa/Nouakchott.ics,
+	  web/tzurl/zoneinfo/Africa/Ouagadougou.ics,
+	  web/tzurl/zoneinfo/Africa/Porto-Novo.ics,
+	  web/tzurl/zoneinfo/Africa/Sao_Tome.ics,
+	  web/tzurl/zoneinfo/Africa/Tripoli.ics,
+	  web/tzurl/zoneinfo/Africa/Tunis.ics,
+	  web/tzurl/zoneinfo/Africa/Windhoek.ics,
+	  web/tzurl/zoneinfo/America/Adak.ics,
+	  web/tzurl/zoneinfo/America/Anchorage.ics,
+	  web/tzurl/zoneinfo/America/Anguilla.ics,
+	  web/tzurl/zoneinfo/America/Antigua.ics,
+	  web/tzurl/zoneinfo/America/Araguaina.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Buenos_Aires.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Catamarca.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Cordoba.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Jujuy.ics,
+	  web/tzurl/zoneinfo/America/Argentina/La_Rioja.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Mendoza.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Rio_Gallegos.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Salta.ics,
+	  web/tzurl/zoneinfo/America/Argentina/San_Juan.ics,
+	  web/tzurl/zoneinfo/America/Argentina/San_Luis.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Tucuman.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Ushuaia.ics,
+	  web/tzurl/zoneinfo/America/Aruba.ics,
+	  web/tzurl/zoneinfo/America/Asuncion.ics,
+	  web/tzurl/zoneinfo/America/Atikokan.ics,
+	  web/tzurl/zoneinfo/America/Bahia.ics,
+	  web/tzurl/zoneinfo/America/Bahia_Banderas.ics,
+	  web/tzurl/zoneinfo/America/Barbados.ics,
+	  web/tzurl/zoneinfo/America/Belem.ics,
+	  web/tzurl/zoneinfo/America/Belize.ics,
+	  web/tzurl/zoneinfo/America/Blanc-Sablon.ics,
+	  web/tzurl/zoneinfo/America/Boa_Vista.ics,
+	  web/tzurl/zoneinfo/America/Bogota.ics,
+	  web/tzurl/zoneinfo/America/Boise.ics,
+	  web/tzurl/zoneinfo/America/Cambridge_Bay.ics,
+	  web/tzurl/zoneinfo/America/Campo_Grande.ics,
+	  web/tzurl/zoneinfo/America/Cancun.ics,
+	  web/tzurl/zoneinfo/America/Caracas.ics,
+	  web/tzurl/zoneinfo/America/Cayenne.ics,
+	  web/tzurl/zoneinfo/America/Cayman.ics,
+	  web/tzurl/zoneinfo/America/Chicago.ics,
+	  web/tzurl/zoneinfo/America/Chihuahua.ics,
+	  web/tzurl/zoneinfo/America/Costa_Rica.ics,
+	  web/tzurl/zoneinfo/America/Cuiaba.ics,
+	  web/tzurl/zoneinfo/America/Curacao.ics,
+	  web/tzurl/zoneinfo/America/Danmarkshavn.ics,
+	  web/tzurl/zoneinfo/America/Dawson.ics,
+	  web/tzurl/zoneinfo/America/Dawson_Creek.ics,
+	  web/tzurl/zoneinfo/America/Denver.ics,
+	  web/tzurl/zoneinfo/America/Detroit.ics,
+	  web/tzurl/zoneinfo/America/Dominica.ics,
+	  web/tzurl/zoneinfo/America/Edmonton.ics,
+	  web/tzurl/zoneinfo/America/Eirunepe.ics,
+	  web/tzurl/zoneinfo/America/El_Salvador.ics,
+	  web/tzurl/zoneinfo/America/Fortaleza.ics,
+	  web/tzurl/zoneinfo/America/Glace_Bay.ics,
+	  web/tzurl/zoneinfo/America/Godthab.ics,
+	  web/tzurl/zoneinfo/America/Goose_Bay.ics,
+	  web/tzurl/zoneinfo/America/Grand_Turk.ics,
+	  web/tzurl/zoneinfo/America/Grenada.ics,
+	  web/tzurl/zoneinfo/America/Guadeloupe.ics,
+	  web/tzurl/zoneinfo/America/Guatemala.ics,
+	  web/tzurl/zoneinfo/America/Guayaquil.ics,
+	  web/tzurl/zoneinfo/America/Guyana.ics,
+	  web/tzurl/zoneinfo/America/Halifax.ics,
+	  web/tzurl/zoneinfo/America/Havana.ics,
+	  web/tzurl/zoneinfo/America/Hermosillo.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Indianapolis.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Knox.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Marengo.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Petersburg.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Tell_City.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Vevay.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Vincennes.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Winamac.ics,
+	  web/tzurl/zoneinfo/America/Inuvik.ics,
+	  web/tzurl/zoneinfo/America/Iqaluit.ics,
+	  web/tzurl/zoneinfo/America/Jamaica.ics,
+	  web/tzurl/zoneinfo/America/Juneau.ics,
+	  web/tzurl/zoneinfo/America/Kentucky/Louisville.ics,
+	  web/tzurl/zoneinfo/America/Kentucky/Monticello.ics,
+	  web/tzurl/zoneinfo/America/Kralendijk.ics,
+	  web/tzurl/zoneinfo/America/La_Paz.ics,
+	  web/tzurl/zoneinfo/America/Lima.ics,
+	  web/tzurl/zoneinfo/America/Los_Angeles.ics,
+	  web/tzurl/zoneinfo/America/Lower_Princes.ics,
+	  web/tzurl/zoneinfo/America/Maceio.ics,
+	  web/tzurl/zoneinfo/America/Managua.ics,
+	  web/tzurl/zoneinfo/America/Manaus.ics,
+	  web/tzurl/zoneinfo/America/Marigot.ics,
+	  web/tzurl/zoneinfo/America/Martinique.ics,
+	  web/tzurl/zoneinfo/America/Matamoros.ics,
+	  web/tzurl/zoneinfo/America/Mazatlan.ics,
+	  web/tzurl/zoneinfo/America/Menominee.ics,
+	  web/tzurl/zoneinfo/America/Merida.ics,
+	  web/tzurl/zoneinfo/America/Metlakatla.ics,
+	  web/tzurl/zoneinfo/America/Mexico_City.ics,
+	  web/tzurl/zoneinfo/America/Miquelon.ics,
+	  web/tzurl/zoneinfo/America/Moncton.ics,
+	  web/tzurl/zoneinfo/America/Monterrey.ics,
+	  web/tzurl/zoneinfo/America/Montevideo.ics,
+	  web/tzurl/zoneinfo/America/Montreal.ics,
+	  web/tzurl/zoneinfo/America/Montserrat.ics,
+	  web/tzurl/zoneinfo/America/Nassau.ics,
+	  web/tzurl/zoneinfo/America/New_York.ics,
+	  web/tzurl/zoneinfo/America/Nipigon.ics,
+	  web/tzurl/zoneinfo/America/Nome.ics,
+	  web/tzurl/zoneinfo/America/Noronha.ics,
+	  web/tzurl/zoneinfo/America/North_Dakota/Beulah.ics,
+	  web/tzurl/zoneinfo/America/North_Dakota/Center.ics,
+	  web/tzurl/zoneinfo/America/North_Dakota/New_Salem.ics,
+	  web/tzurl/zoneinfo/America/Ojinaga.ics,
+	  web/tzurl/zoneinfo/America/Panama.ics,
+	  web/tzurl/zoneinfo/America/Pangnirtung.ics,
+	  web/tzurl/zoneinfo/America/Paramaribo.ics,
+	  web/tzurl/zoneinfo/America/Phoenix.ics,
+	  web/tzurl/zoneinfo/America/Port-au-Prince.ics,
+	  web/tzurl/zoneinfo/America/Port_of_Spain.ics,
+	  web/tzurl/zoneinfo/America/Porto_Velho.ics,
+	  web/tzurl/zoneinfo/America/Puerto_Rico.ics,
+	  web/tzurl/zoneinfo/America/Rainy_River.ics,
+	  web/tzurl/zoneinfo/America/Rankin_Inlet.ics,
+	  web/tzurl/zoneinfo/America/Recife.ics,
+	  web/tzurl/zoneinfo/America/Regina.ics,
+	  web/tzurl/zoneinfo/America/Resolute.ics,
+	  web/tzurl/zoneinfo/America/Rio_Branco.ics,
+	  web/tzurl/zoneinfo/America/Santa_Isabel.ics,
+	  web/tzurl/zoneinfo/America/Santarem.ics,
+	  web/tzurl/zoneinfo/America/Santiago.ics,
+	  web/tzurl/zoneinfo/America/Santo_Domingo.ics,
+	  web/tzurl/zoneinfo/America/Sao_Paulo.ics,
+	  web/tzurl/zoneinfo/America/Scoresbysund.ics,
+	  web/tzurl/zoneinfo/America/Sitka.ics,
+	  web/tzurl/zoneinfo/America/St_Barthelemy.ics,
+	  web/tzurl/zoneinfo/America/St_Johns.ics,
+	  web/tzurl/zoneinfo/America/St_Kitts.ics,
+	  web/tzurl/zoneinfo/America/St_Lucia.ics,
+	  web/tzurl/zoneinfo/America/St_Thomas.ics,
+	  web/tzurl/zoneinfo/America/St_Vincent.ics,
+	  web/tzurl/zoneinfo/America/Swift_Current.ics,
+	  web/tzurl/zoneinfo/America/Tegucigalpa.ics,
+	  web/tzurl/zoneinfo/America/Thule.ics,
+	  web/tzurl/zoneinfo/America/Thunder_Bay.ics,
+	  web/tzurl/zoneinfo/America/Tijuana.ics,
+	  web/tzurl/zoneinfo/America/Toronto.ics,
+	  web/tzurl/zoneinfo/America/Tortola.ics,
+	  web/tzurl/zoneinfo/America/Vancouver.ics,
+	  web/tzurl/zoneinfo/America/Whitehorse.ics,
+	  web/tzurl/zoneinfo/America/Winnipeg.ics,
+	  web/tzurl/zoneinfo/America/Yakutat.ics,
+	  web/tzurl/zoneinfo/America/Yellowknife.ics,
+	  web/tzurl/zoneinfo/Antarctica/Casey.ics,
+	  web/tzurl/zoneinfo/Antarctica/Davis.ics,
+	  web/tzurl/zoneinfo/Antarctica/DumontDUrville.ics,
+	  web/tzurl/zoneinfo/Antarctica/Macquarie.ics,
+	  web/tzurl/zoneinfo/Antarctica/Mawson.ics,
+	  web/tzurl/zoneinfo/Antarctica/McMurdo.ics,
+	  web/tzurl/zoneinfo/Antarctica/Palmer.ics,
+	  web/tzurl/zoneinfo/Antarctica/Rothera.ics,
+	  web/tzurl/zoneinfo/Antarctica/South_Pole.ics,
+	  web/tzurl/zoneinfo/Antarctica/Syowa.ics,
+	  web/tzurl/zoneinfo/Antarctica/Vostok.ics,
+	  web/tzurl/zoneinfo/Arctic/Longyearbyen.ics,
+	  web/tzurl/zoneinfo/Asia/Aden.ics,
+	  web/tzurl/zoneinfo/Asia/Almaty.ics,
+	  web/tzurl/zoneinfo/Asia/Amman.ics,
+	  web/tzurl/zoneinfo/Asia/Anadyr.ics,
+	  web/tzurl/zoneinfo/Asia/Aqtau.ics,
+	  web/tzurl/zoneinfo/Asia/Aqtobe.ics,
+	  web/tzurl/zoneinfo/Asia/Ashgabat.ics,
+	  web/tzurl/zoneinfo/Asia/Baghdad.ics,
+	  web/tzurl/zoneinfo/Asia/Bahrain.ics,
+	  web/tzurl/zoneinfo/Asia/Baku.ics,
+	  web/tzurl/zoneinfo/Asia/Bangkok.ics,
+	  web/tzurl/zoneinfo/Asia/Beirut.ics,
+	  web/tzurl/zoneinfo/Asia/Bishkek.ics,
+	  web/tzurl/zoneinfo/Asia/Brunei.ics,
+	  web/tzurl/zoneinfo/Asia/Choibalsan.ics,
+	  web/tzurl/zoneinfo/Asia/Chongqing.ics,
+	  web/tzurl/zoneinfo/Asia/Colombo.ics,
+	  web/tzurl/zoneinfo/Asia/Damascus.ics,
+	  web/tzurl/zoneinfo/Asia/Dhaka.ics,
+	  web/tzurl/zoneinfo/Asia/Dili.ics,
+	  web/tzurl/zoneinfo/Asia/Dubai.ics,
+	  web/tzurl/zoneinfo/Asia/Dushanbe.ics,
+	  web/tzurl/zoneinfo/Asia/Gaza.ics,
+	  web/tzurl/zoneinfo/Asia/Harbin.ics,
+	  web/tzurl/zoneinfo/Asia/Ho_Chi_Minh.ics,
+	  web/tzurl/zoneinfo/Asia/Hong_Kong.ics,
+	  web/tzurl/zoneinfo/Asia/Hovd.ics,
+	  web/tzurl/zoneinfo/Asia/Irkutsk.ics,
+	  web/tzurl/zoneinfo/Asia/Istanbul.ics,
+	  web/tzurl/zoneinfo/Asia/Jakarta.ics,
+	  web/tzurl/zoneinfo/Asia/Jayapura.ics,
+	  web/tzurl/zoneinfo/Asia/Jerusalem.ics,
+	  web/tzurl/zoneinfo/Asia/Kabul.ics,
+	  web/tzurl/zoneinfo/Asia/Kamchatka.ics,
+	  web/tzurl/zoneinfo/Asia/Karachi.ics,
+	  web/tzurl/zoneinfo/Asia/Kashgar.ics,
+	  web/tzurl/zoneinfo/Asia/Kathmandu.ics,
+	  web/tzurl/zoneinfo/Asia/Kolkata.ics,
+	  web/tzurl/zoneinfo/Asia/Krasnoyarsk.ics,
+	  web/tzurl/zoneinfo/Asia/Kuala_Lumpur.ics,
+	  web/tzurl/zoneinfo/Asia/Kuching.ics,
+	  web/tzurl/zoneinfo/Asia/Kuwait.ics,
+	  web/tzurl/zoneinfo/Asia/Macau.ics,
+	  web/tzurl/zoneinfo/Asia/Magadan.ics,
+	  web/tzurl/zoneinfo/Asia/Makassar.ics,
+	  web/tzurl/zoneinfo/Asia/Manila.ics,
+	  web/tzurl/zoneinfo/Asia/Muscat.ics,
+	  web/tzurl/zoneinfo/Asia/Nicosia.ics,
+	  web/tzurl/zoneinfo/Asia/Novokuznetsk.ics,
+	  web/tzurl/zoneinfo/Asia/Novosibirsk.ics,
+	  web/tzurl/zoneinfo/Asia/Omsk.ics,
+	  web/tzurl/zoneinfo/Asia/Oral.ics,
+	  web/tzurl/zoneinfo/Asia/Phnom_Penh.ics,
+	  web/tzurl/zoneinfo/Asia/Pontianak.ics,
+	  web/tzurl/zoneinfo/Asia/Pyongyang.ics,
+	  web/tzurl/zoneinfo/Asia/Qatar.ics,
+	  web/tzurl/zoneinfo/Asia/Qyzylorda.ics,
+	  web/tzurl/zoneinfo/Asia/Rangoon.ics,
+	  web/tzurl/zoneinfo/Asia/Riyadh.ics,
+	  web/tzurl/zoneinfo/Asia/Sakhalin.ics,
+	  web/tzurl/zoneinfo/Asia/Samarkand.ics,
+	  web/tzurl/zoneinfo/Asia/Seoul.ics,
+	  web/tzurl/zoneinfo/Asia/Shanghai.ics,
+	  web/tzurl/zoneinfo/Asia/Singapore.ics,
+	  web/tzurl/zoneinfo/Asia/Taipei.ics,
+	  web/tzurl/zoneinfo/Asia/Tashkent.ics,
+	  web/tzurl/zoneinfo/Asia/Tbilisi.ics,
+	  web/tzurl/zoneinfo/Asia/Tehran.ics,
+	  web/tzurl/zoneinfo/Asia/Thimphu.ics,
+	  web/tzurl/zoneinfo/Asia/Tokyo.ics,
+	  web/tzurl/zoneinfo/Asia/Ulaanbaatar.ics,
+	  web/tzurl/zoneinfo/Asia/Urumqi.ics,
+	  web/tzurl/zoneinfo/Asia/Vientiane.ics,
+	  web/tzurl/zoneinfo/Asia/Vladivostok.ics,
+	  web/tzurl/zoneinfo/Asia/Yakutsk.ics,
+	  web/tzurl/zoneinfo/Asia/Yekaterinburg.ics,
+	  web/tzurl/zoneinfo/Asia/Yerevan.ics,
+	  web/tzurl/zoneinfo/Atlantic/Azores.ics,
+	  web/tzurl/zoneinfo/Atlantic/Bermuda.ics,
+	  web/tzurl/zoneinfo/Atlantic/Canary.ics,
+	  web/tzurl/zoneinfo/Atlantic/Cape_Verde.ics,
+	  web/tzurl/zoneinfo/Atlantic/Faroe.ics,
+	  web/tzurl/zoneinfo/Atlantic/Madeira.ics,
+	  web/tzurl/zoneinfo/Atlantic/Reykjavik.ics,
+	  web/tzurl/zoneinfo/Atlantic/South_Georgia.ics,
+	  web/tzurl/zoneinfo/Atlantic/St_Helena.ics,
+	  web/tzurl/zoneinfo/Atlantic/Stanley.ics,
+	  web/tzurl/zoneinfo/Australia/Adelaide.ics,
+	  web/tzurl/zoneinfo/Australia/Brisbane.ics,
+	  web/tzurl/zoneinfo/Australia/Currie.ics,
+	  web/tzurl/zoneinfo/Australia/Darwin.ics,
+	  web/tzurl/zoneinfo/Australia/Eucla.ics,
+	  web/tzurl/zoneinfo/Australia/Hobart.ics,
+	  web/tzurl/zoneinfo/Australia/Lindeman.ics,
+	  web/tzurl/zoneinfo/Australia/Lord_Howe.ics,
+	  web/tzurl/zoneinfo/Australia/Melbourne.ics,
+	  web/tzurl/zoneinfo/Australia/Perth.ics,
+	  web/tzurl/zoneinfo/Australia/Sydney.ics,
+	  web/tzurl/zoneinfo/Europe/Amsterdam.ics,
+	  web/tzurl/zoneinfo/Europe/Andorra.ics,
+	  web/tzurl/zoneinfo/Europe/Athens.ics,
+	  web/tzurl/zoneinfo/Europe/Belgrade.ics,
+	  web/tzurl/zoneinfo/Europe/Berlin.ics,
+	  web/tzurl/zoneinfo/Europe/Bratislava.ics,
+	  web/tzurl/zoneinfo/Europe/Brussels.ics,
+	  web/tzurl/zoneinfo/Europe/Bucharest.ics,
+	  web/tzurl/zoneinfo/Europe/Budapest.ics,
+	  web/tzurl/zoneinfo/Europe/Chisinau.ics,
+	  web/tzurl/zoneinfo/Europe/Copenhagen.ics,
+	  web/tzurl/zoneinfo/Europe/Dublin.ics,
+	  web/tzurl/zoneinfo/Europe/Gibraltar.ics,
+	  web/tzurl/zoneinfo/Europe/Guernsey.ics,
+	  web/tzurl/zoneinfo/Europe/Helsinki.ics,
+	  web/tzurl/zoneinfo/Europe/Isle_of_Man.ics,
+	  web/tzurl/zoneinfo/Europe/Istanbul.ics,
+	  web/tzurl/zoneinfo/Europe/Jersey.ics,
+	  web/tzurl/zoneinfo/Europe/Kaliningrad.ics,
+	  web/tzurl/zoneinfo/Europe/Kiev.ics,
+	  web/tzurl/zoneinfo/Europe/Lisbon.ics,
+	  web/tzurl/zoneinfo/Europe/Ljubljana.ics,
+	  web/tzurl/zoneinfo/Europe/London.ics,
+	  web/tzurl/zoneinfo/Europe/Luxembourg.ics,
+	  web/tzurl/zoneinfo/Europe/Madrid.ics,
+	  web/tzurl/zoneinfo/Europe/Malta.ics,
+	  web/tzurl/zoneinfo/Europe/Mariehamn.ics,
+	  web/tzurl/zoneinfo/Europe/Minsk.ics,
+	  web/tzurl/zoneinfo/Europe/Monaco.ics,
+	  web/tzurl/zoneinfo/Europe/Moscow.ics,
+	  web/tzurl/zoneinfo/Europe/Nicosia.ics,
+	  web/tzurl/zoneinfo/Europe/Oslo.ics,
+	  web/tzurl/zoneinfo/Europe/Paris.ics,
+	  web/tzurl/zoneinfo/Europe/Podgorica.ics,
+	  web/tzurl/zoneinfo/Europe/Prague.ics,
+	  web/tzurl/zoneinfo/Europe/Riga.ics,
+	  web/tzurl/zoneinfo/Europe/Rome.ics,
+	  web/tzurl/zoneinfo/Europe/Samara.ics,
+	  web/tzurl/zoneinfo/Europe/San_Marino.ics,
+	  web/tzurl/zoneinfo/Europe/Sarajevo.ics,
+	  web/tzurl/zoneinfo/Europe/Simferopol.ics,
+	  web/tzurl/zoneinfo/Europe/Skopje.ics,
+	  web/tzurl/zoneinfo/Europe/Sofia.ics,
+	  web/tzurl/zoneinfo/Europe/Stockholm.ics,
+	  web/tzurl/zoneinfo/Europe/Tallinn.ics,
+	  web/tzurl/zoneinfo/Europe/Uzhgorod.ics,
+	  web/tzurl/zoneinfo/Europe/Vaduz.ics,
+	  web/tzurl/zoneinfo/Europe/Vatican.ics,
+	  web/tzurl/zoneinfo/Europe/Vienna.ics,
+	  web/tzurl/zoneinfo/Europe/Vilnius.ics,
+	  web/tzurl/zoneinfo/Europe/Volgograd.ics,
+	  web/tzurl/zoneinfo/Europe/Warsaw.ics,
+	  web/tzurl/zoneinfo/Europe/Zagreb.ics,
+	  web/tzurl/zoneinfo/Europe/Zaporozhye.ics,
+	  web/tzurl/zoneinfo/Europe/Zurich.ics,
+	  web/tzurl/zoneinfo/Indian/Antananarivo.ics,
+	  web/tzurl/zoneinfo/Indian/Chagos.ics,
+	  web/tzurl/zoneinfo/Indian/Christmas.ics,
+	  web/tzurl/zoneinfo/Indian/Cocos.ics,
+	  web/tzurl/zoneinfo/Indian/Comoro.ics,
+	  web/tzurl/zoneinfo/Indian/Kerguelen.ics,
+	  web/tzurl/zoneinfo/Indian/Mahe.ics,
+	  web/tzurl/zoneinfo/Indian/Maldives.ics,
+	  web/tzurl/zoneinfo/Indian/Mauritius.ics,
+	  web/tzurl/zoneinfo/Indian/Mayotte.ics,
+	  web/tzurl/zoneinfo/Indian/Reunion.ics,
+	  web/tzurl/zoneinfo/Pacific/Apia.ics,
+	  web/tzurl/zoneinfo/Pacific/Auckland.ics,
+	  web/tzurl/zoneinfo/Pacific/Chatham.ics,
+	  web/tzurl/zoneinfo/Pacific/Chuuk.ics,
+	  web/tzurl/zoneinfo/Pacific/Easter.ics,
+	  web/tzurl/zoneinfo/Pacific/Efate.ics,
+	  web/tzurl/zoneinfo/Pacific/Enderbury.ics,
+	  web/tzurl/zoneinfo/Pacific/Fakaofo.ics,
+	  web/tzurl/zoneinfo/Pacific/Fiji.ics,
+	  web/tzurl/zoneinfo/Pacific/Funafuti.ics,
+	  web/tzurl/zoneinfo/Pacific/Galapagos.ics,
+	  web/tzurl/zoneinfo/Pacific/Gambier.ics,
+	  web/tzurl/zoneinfo/Pacific/Guadalcanal.ics,
+	  web/tzurl/zoneinfo/Pacific/Guam.ics,
+	  web/tzurl/zoneinfo/Pacific/Honolulu.ics,
+	  web/tzurl/zoneinfo/Pacific/Johnston.ics,
+	  web/tzurl/zoneinfo/Pacific/Kiritimati.ics,
+	  web/tzurl/zoneinfo/Pacific/Kosrae.ics,
+	  web/tzurl/zoneinfo/Pacific/Kwajalein.ics,
+	  web/tzurl/zoneinfo/Pacific/Majuro.ics,
+	  web/tzurl/zoneinfo/Pacific/Marquesas.ics,
+	  web/tzurl/zoneinfo/Pacific/Midway.ics,
+	  web/tzurl/zoneinfo/Pacific/Nauru.ics,
+	  web/tzurl/zoneinfo/Pacific/Niue.ics,
+	  web/tzurl/zoneinfo/Pacific/Norfolk.ics,
+	  web/tzurl/zoneinfo/Pacific/Noumea.ics,
+	  web/tzurl/zoneinfo/Pacific/Pago_Pago.ics,
+	  web/tzurl/zoneinfo/Pacific/Palau.ics,
+	  web/tzurl/zoneinfo/Pacific/Pitcairn.ics,
+	  web/tzurl/zoneinfo/Pacific/Pohnpei.ics,
+	  web/tzurl/zoneinfo/Pacific/Ponape.ics,
+	  web/tzurl/zoneinfo/Pacific/Port_Moresby.ics,
+	  web/tzurl/zoneinfo/Pacific/Rarotonga.ics,
+	  web/tzurl/zoneinfo/Pacific/Saipan.ics,
+	  web/tzurl/zoneinfo/Pacific/Tahiti.ics,
+	  web/tzurl/zoneinfo/Pacific/Tarawa.ics,
+	  web/tzurl/zoneinfo/Pacific/Tongatapu.ics,
+	  web/tzurl/zoneinfo/Pacific/Truk.ics,
+	  web/tzurl/zoneinfo/Pacific/Wake.ics,
+	  web/tzurl/zoneinfo/Pacific/Wallis.ics:
+	  
+	  Changed eol-style from native to CRLF, as it's important in RFC
+	  5545 that lines are terminated by CRLF.
+
+2011-08-03 16:11  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1857] web/tzurl/zoneinfo-outlook/Africa/Abidjan.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Accra.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Addis_Ababa.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Algiers.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Asmara.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Bamako.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Bangui.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Banjul.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Bissau.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Blantyre.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Brazzaville.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Bujumbura.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Cairo.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Casablanca.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Ceuta.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Conakry.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Dakar.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Dar_es_Salaam.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Djibouti.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Douala.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/El_Aaiun.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Freetown.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Gaborone.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Harare.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Johannesburg.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Kampala.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Khartoum.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Kigali.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Kinshasa.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Lagos.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Libreville.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Lome.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Luanda.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Lubumbashi.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Lusaka.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Malabo.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Maputo.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Maseru.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Mbabane.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Mogadishu.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Monrovia.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Nairobi.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Ndjamena.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Niamey.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Nouakchott.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Ouagadougou.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Porto-Novo.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Sao_Tome.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Tripoli.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Tunis.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Windhoek.ics,
+	  web/tzurl/zoneinfo-outlook/America/Adak.ics,
+	  web/tzurl/zoneinfo-outlook/America/Anchorage.ics,
+	  web/tzurl/zoneinfo-outlook/America/Anguilla.ics,
+	  web/tzurl/zoneinfo-outlook/America/Antigua.ics,
+	  web/tzurl/zoneinfo-outlook/America/Araguaina.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Buenos_Aires.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Catamarca.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Cordoba.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Jujuy.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/La_Rioja.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Mendoza.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Rio_Gallegos.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Salta.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/San_Juan.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/San_Luis.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Tucuman.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Ushuaia.ics,
+	  web/tzurl/zoneinfo-outlook/America/Aruba.ics,
+	  web/tzurl/zoneinfo-outlook/America/Asuncion.ics,
+	  web/tzurl/zoneinfo-outlook/America/Atikokan.ics,
+	  web/tzurl/zoneinfo-outlook/America/Bahia.ics,
+	  web/tzurl/zoneinfo-outlook/America/Bahia_Banderas.ics,
+	  web/tzurl/zoneinfo-outlook/America/Barbados.ics,
+	  web/tzurl/zoneinfo-outlook/America/Belem.ics,
+	  web/tzurl/zoneinfo-outlook/America/Belize.ics,
+	  web/tzurl/zoneinfo-outlook/America/Blanc-Sablon.ics,
+	  web/tzurl/zoneinfo-outlook/America/Boa_Vista.ics,
+	  web/tzurl/zoneinfo-outlook/America/Bogota.ics,
+	  web/tzurl/zoneinfo-outlook/America/Boise.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cambridge_Bay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Campo_Grande.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cancun.ics,
+	  web/tzurl/zoneinfo-outlook/America/Caracas.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cayenne.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cayman.ics,
+	  web/tzurl/zoneinfo-outlook/America/Chicago.ics,
+	  web/tzurl/zoneinfo-outlook/America/Chihuahua.ics,
+	  web/tzurl/zoneinfo-outlook/America/Costa_Rica.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cuiaba.ics,
+	  web/tzurl/zoneinfo-outlook/America/Curacao.ics,
+	  web/tzurl/zoneinfo-outlook/America/Danmarkshavn.ics,
+	  web/tzurl/zoneinfo-outlook/America/Dawson.ics,
+	  web/tzurl/zoneinfo-outlook/America/Dawson_Creek.ics,
+	  web/tzurl/zoneinfo-outlook/America/Denver.ics,
+	  web/tzurl/zoneinfo-outlook/America/Detroit.ics,
+	  web/tzurl/zoneinfo-outlook/America/Dominica.ics,
+	  web/tzurl/zoneinfo-outlook/America/Edmonton.ics,
+	  web/tzurl/zoneinfo-outlook/America/Eirunepe.ics,
+	  web/tzurl/zoneinfo-outlook/America/El_Salvador.ics,
+	  web/tzurl/zoneinfo-outlook/America/Fortaleza.ics,
+	  web/tzurl/zoneinfo-outlook/America/Glace_Bay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Godthab.ics,
+	  web/tzurl/zoneinfo-outlook/America/Goose_Bay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Grand_Turk.ics,
+	  web/tzurl/zoneinfo-outlook/America/Grenada.ics,
+	  web/tzurl/zoneinfo-outlook/America/Guadeloupe.ics,
+	  web/tzurl/zoneinfo-outlook/America/Guatemala.ics,
+	  web/tzurl/zoneinfo-outlook/America/Guayaquil.ics,
+	  web/tzurl/zoneinfo-outlook/America/Guyana.ics,
+	  web/tzurl/zoneinfo-outlook/America/Halifax.ics,
+	  web/tzurl/zoneinfo-outlook/America/Havana.ics,
+	  web/tzurl/zoneinfo-outlook/America/Hermosillo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Indianapolis.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Knox.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Marengo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Petersburg.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Tell_City.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Vevay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Vincennes.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Winamac.ics,
+	  web/tzurl/zoneinfo-outlook/America/Inuvik.ics,
+	  web/tzurl/zoneinfo-outlook/America/Iqaluit.ics,
+	  web/tzurl/zoneinfo-outlook/America/Jamaica.ics,
+	  web/tzurl/zoneinfo-outlook/America/Juneau.ics,
+	  web/tzurl/zoneinfo-outlook/America/Kentucky/Louisville.ics,
+	  web/tzurl/zoneinfo-outlook/America/Kentucky/Monticello.ics,
+	  web/tzurl/zoneinfo-outlook/America/Kralendijk.ics,
+	  web/tzurl/zoneinfo-outlook/America/La_Paz.ics,
+	  web/tzurl/zoneinfo-outlook/America/Lima.ics,
+	  web/tzurl/zoneinfo-outlook/America/Los_Angeles.ics,
+	  web/tzurl/zoneinfo-outlook/America/Lower_Princes.ics,
+	  web/tzurl/zoneinfo-outlook/America/Maceio.ics,
+	  web/tzurl/zoneinfo-outlook/America/Managua.ics,
+	  web/tzurl/zoneinfo-outlook/America/Manaus.ics,
+	  web/tzurl/zoneinfo-outlook/America/Marigot.ics,
+	  web/tzurl/zoneinfo-outlook/America/Martinique.ics,
+	  web/tzurl/zoneinfo-outlook/America/Matamoros.ics,
+	  web/tzurl/zoneinfo-outlook/America/Mazatlan.ics,
+	  web/tzurl/zoneinfo-outlook/America/Menominee.ics,
+	  web/tzurl/zoneinfo-outlook/America/Merida.ics,
+	  web/tzurl/zoneinfo-outlook/America/Metlakatla.ics,
+	  web/tzurl/zoneinfo-outlook/America/Mexico_City.ics,
+	  web/tzurl/zoneinfo-outlook/America/Miquelon.ics,
+	  web/tzurl/zoneinfo-outlook/America/Moncton.ics,
+	  web/tzurl/zoneinfo-outlook/America/Monterrey.ics,
+	  web/tzurl/zoneinfo-outlook/America/Montevideo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Montreal.ics,
+	  web/tzurl/zoneinfo-outlook/America/Montserrat.ics,
+	  web/tzurl/zoneinfo-outlook/America/Nassau.ics,
+	  web/tzurl/zoneinfo-outlook/America/New_York.ics,
+	  web/tzurl/zoneinfo-outlook/America/Nipigon.ics,
+	  web/tzurl/zoneinfo-outlook/America/Nome.ics,
+	  web/tzurl/zoneinfo-outlook/America/Noronha.ics,
+	  web/tzurl/zoneinfo-outlook/America/North_Dakota/Beulah.ics,
+	  web/tzurl/zoneinfo-outlook/America/North_Dakota/Center.ics,
+	  web/tzurl/zoneinfo-outlook/America/North_Dakota/New_Salem.ics,
+	  web/tzurl/zoneinfo-outlook/America/Ojinaga.ics,
+	  web/tzurl/zoneinfo-outlook/America/Panama.ics,
+	  web/tzurl/zoneinfo-outlook/America/Pangnirtung.ics,
+	  web/tzurl/zoneinfo-outlook/America/Paramaribo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Phoenix.ics,
+	  web/tzurl/zoneinfo-outlook/America/Port-au-Prince.ics,
+	  web/tzurl/zoneinfo-outlook/America/Port_of_Spain.ics,
+	  web/tzurl/zoneinfo-outlook/America/Porto_Velho.ics,
+	  web/tzurl/zoneinfo-outlook/America/Puerto_Rico.ics,
+	  web/tzurl/zoneinfo-outlook/America/Rainy_River.ics,
+	  web/tzurl/zoneinfo-outlook/America/Rankin_Inlet.ics,
+	  web/tzurl/zoneinfo-outlook/America/Recife.ics,
+	  web/tzurl/zoneinfo-outlook/America/Regina.ics,
+	  web/tzurl/zoneinfo-outlook/America/Resolute.ics,
+	  web/tzurl/zoneinfo-outlook/America/Rio_Branco.ics,
+	  web/tzurl/zoneinfo-outlook/America/Santa_Isabel.ics,
+	  web/tzurl/zoneinfo-outlook/America/Santarem.ics,
+	  web/tzurl/zoneinfo-outlook/America/Santiago.ics,
+	  web/tzurl/zoneinfo-outlook/America/Santo_Domingo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Sao_Paulo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Scoresbysund.ics,
+	  web/tzurl/zoneinfo-outlook/America/Sitka.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Barthelemy.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Johns.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Kitts.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Lucia.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Thomas.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Vincent.ics,
+	  web/tzurl/zoneinfo-outlook/America/Swift_Current.ics,
+	  web/tzurl/zoneinfo-outlook/America/Tegucigalpa.ics,
+	  web/tzurl/zoneinfo-outlook/America/Thule.ics,
+	  web/tzurl/zoneinfo-outlook/America/Thunder_Bay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Tijuana.ics,
+	  web/tzurl/zoneinfo-outlook/America/Toronto.ics,
+	  web/tzurl/zoneinfo-outlook/America/Tortola.ics,
+	  web/tzurl/zoneinfo-outlook/America/Vancouver.ics,
+	  web/tzurl/zoneinfo-outlook/America/Whitehorse.ics,
+	  web/tzurl/zoneinfo-outlook/America/Winnipeg.ics,
+	  web/tzurl/zoneinfo-outlook/America/Yakutat.ics,
+	  web/tzurl/zoneinfo-outlook/America/Yellowknife.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Casey.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Davis.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/DumontDUrville.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Macquarie.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Mawson.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/McMurdo.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Palmer.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Rothera.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/South_Pole.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Syowa.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Vostok.ics,
+	  web/tzurl/zoneinfo-outlook/Arctic/Longyearbyen.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Aden.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Almaty.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Amman.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Anadyr.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Aqtau.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Aqtobe.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Ashgabat.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Baghdad.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Bahrain.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Baku.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Bangkok.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Beirut.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Bishkek.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Brunei.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Choibalsan.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Chongqing.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Colombo.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Damascus.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Dhaka.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Dili.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Dubai.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Dushanbe.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Gaza.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Harbin.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Ho_Chi_Minh.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Hong_Kong.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Hovd.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Irkutsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Istanbul.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Jakarta.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Jayapura.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Jerusalem.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kabul.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kamchatka.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Karachi.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kashgar.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kathmandu.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kolkata.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Krasnoyarsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kuala_Lumpur.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kuching.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kuwait.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Macau.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Magadan.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Makassar.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Manila.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Muscat.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Nicosia.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Novokuznetsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Novosibirsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Omsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Oral.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Phnom_Penh.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Pontianak.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Pyongyang.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Qatar.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Qyzylorda.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Rangoon.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Riyadh.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Sakhalin.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Samarkand.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Seoul.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Shanghai.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Singapore.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Taipei.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Tashkent.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Tbilisi.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Tehran.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Thimphu.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Tokyo.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Ulaanbaatar.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Urumqi.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Vientiane.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Vladivostok.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Yakutsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Yekaterinburg.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Yerevan.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Azores.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Bermuda.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Canary.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Cape_Verde.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Faroe.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Madeira.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Reykjavik.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/South_Georgia.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/St_Helena.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Stanley.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Adelaide.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Brisbane.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Currie.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Darwin.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Eucla.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Hobart.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Lindeman.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Lord_Howe.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Melbourne.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Perth.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Sydney.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Amsterdam.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Andorra.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Athens.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Belgrade.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Berlin.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Bratislava.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Brussels.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Bucharest.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Budapest.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Chisinau.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Copenhagen.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Dublin.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Gibraltar.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Guernsey.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Helsinki.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Isle_of_Man.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Istanbul.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Jersey.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Kaliningrad.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Kiev.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Lisbon.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Ljubljana.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/London.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Luxembourg.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Madrid.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Malta.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Mariehamn.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Minsk.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Monaco.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Moscow.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Nicosia.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Oslo.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Paris.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Podgorica.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Prague.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Riga.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Rome.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Samara.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/San_Marino.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Sarajevo.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Simferopol.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Skopje.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Sofia.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Stockholm.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Tallinn.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Uzhgorod.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Vaduz.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Vatican.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Vienna.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Vilnius.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Volgograd.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Warsaw.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Zagreb.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Zaporozhye.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Zurich.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Antananarivo.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Chagos.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Christmas.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Cocos.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Comoro.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Kerguelen.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Mahe.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Maldives.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Mauritius.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Mayotte.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Reunion.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Apia.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Auckland.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Chatham.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Chuuk.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Easter.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Efate.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Enderbury.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Fakaofo.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Fiji.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Funafuti.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Galapagos.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Gambier.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Guadalcanal.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Guam.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Honolulu.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Johnston.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Kiritimati.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Kosrae.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Kwajalein.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Majuro.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Marquesas.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Midway.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Nauru.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Niue.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Norfolk.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Noumea.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Pago_Pago.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Palau.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Pitcairn.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Pohnpei.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Ponape.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Port_Moresby.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Rarotonga.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Saipan.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Tahiti.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Tarawa.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Tongatapu.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Truk.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Wake.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Wallis.ics,
+	  web/tzurl/zoneinfo/Africa/Abidjan.ics,
+	  web/tzurl/zoneinfo/Africa/Accra.ics,
+	  web/tzurl/zoneinfo/Africa/Addis_Ababa.ics,
+	  web/tzurl/zoneinfo/Africa/Algiers.ics,
+	  web/tzurl/zoneinfo/Africa/Asmara.ics,
+	  web/tzurl/zoneinfo/Africa/Bamako.ics,
+	  web/tzurl/zoneinfo/Africa/Bangui.ics,
+	  web/tzurl/zoneinfo/Africa/Banjul.ics,
+	  web/tzurl/zoneinfo/Africa/Bissau.ics,
+	  web/tzurl/zoneinfo/Africa/Blantyre.ics,
+	  web/tzurl/zoneinfo/Africa/Brazzaville.ics,
+	  web/tzurl/zoneinfo/Africa/Bujumbura.ics,
+	  web/tzurl/zoneinfo/Africa/Cairo.ics,
+	  web/tzurl/zoneinfo/Africa/Casablanca.ics,
+	  web/tzurl/zoneinfo/Africa/Ceuta.ics,
+	  web/tzurl/zoneinfo/Africa/Conakry.ics,
+	  web/tzurl/zoneinfo/Africa/Dakar.ics,
+	  web/tzurl/zoneinfo/Africa/Dar_es_Salaam.ics,
+	  web/tzurl/zoneinfo/Africa/Djibouti.ics,
+	  web/tzurl/zoneinfo/Africa/Douala.ics,
+	  web/tzurl/zoneinfo/Africa/El_Aaiun.ics,
+	  web/tzurl/zoneinfo/Africa/Freetown.ics,
+	  web/tzurl/zoneinfo/Africa/Gaborone.ics,
+	  web/tzurl/zoneinfo/Africa/Harare.ics,
+	  web/tzurl/zoneinfo/Africa/Johannesburg.ics,
+	  web/tzurl/zoneinfo/Africa/Kampala.ics,
+	  web/tzurl/zoneinfo/Africa/Khartoum.ics,
+	  web/tzurl/zoneinfo/Africa/Kigali.ics,
+	  web/tzurl/zoneinfo/Africa/Kinshasa.ics,
+	  web/tzurl/zoneinfo/Africa/Lagos.ics,
+	  web/tzurl/zoneinfo/Africa/Libreville.ics,
+	  web/tzurl/zoneinfo/Africa/Lome.ics,
+	  web/tzurl/zoneinfo/Africa/Luanda.ics,
+	  web/tzurl/zoneinfo/Africa/Lubumbashi.ics,
+	  web/tzurl/zoneinfo/Africa/Lusaka.ics,
+	  web/tzurl/zoneinfo/Africa/Malabo.ics,
+	  web/tzurl/zoneinfo/Africa/Maputo.ics,
+	  web/tzurl/zoneinfo/Africa/Maseru.ics,
+	  web/tzurl/zoneinfo/Africa/Mbabane.ics,
+	  web/tzurl/zoneinfo/Africa/Mogadishu.ics,
+	  web/tzurl/zoneinfo/Africa/Monrovia.ics,
+	  web/tzurl/zoneinfo/Africa/Nairobi.ics,
+	  web/tzurl/zoneinfo/Africa/Ndjamena.ics,
+	  web/tzurl/zoneinfo/Africa/Niamey.ics,
+	  web/tzurl/zoneinfo/Africa/Nouakchott.ics,
+	  web/tzurl/zoneinfo/Africa/Ouagadougou.ics,
+	  web/tzurl/zoneinfo/Africa/Porto-Novo.ics,
+	  web/tzurl/zoneinfo/Africa/Sao_Tome.ics,
+	  web/tzurl/zoneinfo/Africa/Tripoli.ics,
+	  web/tzurl/zoneinfo/Africa/Tunis.ics,
+	  web/tzurl/zoneinfo/Africa/Windhoek.ics,
+	  web/tzurl/zoneinfo/America/Adak.ics,
+	  web/tzurl/zoneinfo/America/Anchorage.ics,
+	  web/tzurl/zoneinfo/America/Anguilla.ics,
+	  web/tzurl/zoneinfo/America/Antigua.ics,
+	  web/tzurl/zoneinfo/America/Araguaina.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Buenos_Aires.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Catamarca.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Cordoba.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Jujuy.ics,
+	  web/tzurl/zoneinfo/America/Argentina/La_Rioja.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Mendoza.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Rio_Gallegos.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Salta.ics,
+	  web/tzurl/zoneinfo/America/Argentina/San_Juan.ics,
+	  web/tzurl/zoneinfo/America/Argentina/San_Luis.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Tucuman.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Ushuaia.ics,
+	  web/tzurl/zoneinfo/America/Aruba.ics,
+	  web/tzurl/zoneinfo/America/Asuncion.ics,
+	  web/tzurl/zoneinfo/America/Atikokan.ics,
+	  web/tzurl/zoneinfo/America/Bahia.ics,
+	  web/tzurl/zoneinfo/America/Bahia_Banderas.ics,
+	  web/tzurl/zoneinfo/America/Barbados.ics,
+	  web/tzurl/zoneinfo/America/Belem.ics,
+	  web/tzurl/zoneinfo/America/Belize.ics,
+	  web/tzurl/zoneinfo/America/Blanc-Sablon.ics,
+	  web/tzurl/zoneinfo/America/Boa_Vista.ics,
+	  web/tzurl/zoneinfo/America/Bogota.ics,
+	  web/tzurl/zoneinfo/America/Boise.ics,
+	  web/tzurl/zoneinfo/America/Cambridge_Bay.ics,
+	  web/tzurl/zoneinfo/America/Campo_Grande.ics,
+	  web/tzurl/zoneinfo/America/Cancun.ics,
+	  web/tzurl/zoneinfo/America/Caracas.ics,
+	  web/tzurl/zoneinfo/America/Cayenne.ics,
+	  web/tzurl/zoneinfo/America/Cayman.ics,
+	  web/tzurl/zoneinfo/America/Chicago.ics,
+	  web/tzurl/zoneinfo/America/Chihuahua.ics,
+	  web/tzurl/zoneinfo/America/Costa_Rica.ics,
+	  web/tzurl/zoneinfo/America/Cuiaba.ics,
+	  web/tzurl/zoneinfo/America/Curacao.ics,
+	  web/tzurl/zoneinfo/America/Danmarkshavn.ics,
+	  web/tzurl/zoneinfo/America/Dawson.ics,
+	  web/tzurl/zoneinfo/America/Dawson_Creek.ics,
+	  web/tzurl/zoneinfo/America/Denver.ics,
+	  web/tzurl/zoneinfo/America/Detroit.ics,
+	  web/tzurl/zoneinfo/America/Dominica.ics,
+	  web/tzurl/zoneinfo/America/Edmonton.ics,
+	  web/tzurl/zoneinfo/America/Eirunepe.ics,
+	  web/tzurl/zoneinfo/America/El_Salvador.ics,
+	  web/tzurl/zoneinfo/America/Fortaleza.ics,
+	  web/tzurl/zoneinfo/America/Glace_Bay.ics,
+	  web/tzurl/zoneinfo/America/Godthab.ics,
+	  web/tzurl/zoneinfo/America/Goose_Bay.ics,
+	  web/tzurl/zoneinfo/America/Grand_Turk.ics,
+	  web/tzurl/zoneinfo/America/Grenada.ics,
+	  web/tzurl/zoneinfo/America/Guadeloupe.ics,
+	  web/tzurl/zoneinfo/America/Guatemala.ics,
+	  web/tzurl/zoneinfo/America/Guayaquil.ics,
+	  web/tzurl/zoneinfo/America/Guyana.ics,
+	  web/tzurl/zoneinfo/America/Halifax.ics,
+	  web/tzurl/zoneinfo/America/Havana.ics,
+	  web/tzurl/zoneinfo/America/Hermosillo.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Indianapolis.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Knox.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Marengo.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Petersburg.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Tell_City.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Vevay.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Vincennes.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Winamac.ics,
+	  web/tzurl/zoneinfo/America/Inuvik.ics,
+	  web/tzurl/zoneinfo/America/Iqaluit.ics,
+	  web/tzurl/zoneinfo/America/Jamaica.ics,
+	  web/tzurl/zoneinfo/America/Juneau.ics,
+	  web/tzurl/zoneinfo/America/Kentucky/Louisville.ics,
+	  web/tzurl/zoneinfo/America/Kentucky/Monticello.ics,
+	  web/tzurl/zoneinfo/America/Kralendijk.ics,
+	  web/tzurl/zoneinfo/America/La_Paz.ics,
+	  web/tzurl/zoneinfo/America/Lima.ics,
+	  web/tzurl/zoneinfo/America/Los_Angeles.ics,
+	  web/tzurl/zoneinfo/America/Lower_Princes.ics,
+	  web/tzurl/zoneinfo/America/Maceio.ics,
+	  web/tzurl/zoneinfo/America/Managua.ics,
+	  web/tzurl/zoneinfo/America/Manaus.ics,
+	  web/tzurl/zoneinfo/America/Marigot.ics,
+	  web/tzurl/zoneinfo/America/Martinique.ics,
+	  web/tzurl/zoneinfo/America/Matamoros.ics,
+	  web/tzurl/zoneinfo/America/Mazatlan.ics,
+	  web/tzurl/zoneinfo/America/Menominee.ics,
+	  web/tzurl/zoneinfo/America/Merida.ics,
+	  web/tzurl/zoneinfo/America/Metlakatla.ics,
+	  web/tzurl/zoneinfo/America/Mexico_City.ics,
+	  web/tzurl/zoneinfo/America/Miquelon.ics,
+	  web/tzurl/zoneinfo/America/Moncton.ics,
+	  web/tzurl/zoneinfo/America/Monterrey.ics,
+	  web/tzurl/zoneinfo/America/Montevideo.ics,
+	  web/tzurl/zoneinfo/America/Montreal.ics,
+	  web/tzurl/zoneinfo/America/Montserrat.ics,
+	  web/tzurl/zoneinfo/America/Nassau.ics,
+	  web/tzurl/zoneinfo/America/New_York.ics,
+	  web/tzurl/zoneinfo/America/Nipigon.ics,
+	  web/tzurl/zoneinfo/America/Nome.ics,
+	  web/tzurl/zoneinfo/America/Noronha.ics,
+	  web/tzurl/zoneinfo/America/North_Dakota/Beulah.ics,
+	  web/tzurl/zoneinfo/America/North_Dakota/Center.ics,
+	  web/tzurl/zoneinfo/America/North_Dakota/New_Salem.ics,
+	  web/tzurl/zoneinfo/America/Ojinaga.ics,
+	  web/tzurl/zoneinfo/America/Panama.ics,
+	  web/tzurl/zoneinfo/America/Pangnirtung.ics,
+	  web/tzurl/zoneinfo/America/Paramaribo.ics,
+	  web/tzurl/zoneinfo/America/Phoenix.ics,
+	  web/tzurl/zoneinfo/America/Port-au-Prince.ics,
+	  web/tzurl/zoneinfo/America/Port_of_Spain.ics,
+	  web/tzurl/zoneinfo/America/Porto_Velho.ics,
+	  web/tzurl/zoneinfo/America/Puerto_Rico.ics,
+	  web/tzurl/zoneinfo/America/Rainy_River.ics,
+	  web/tzurl/zoneinfo/America/Rankin_Inlet.ics,
+	  web/tzurl/zoneinfo/America/Recife.ics,
+	  web/tzurl/zoneinfo/America/Regina.ics,
+	  web/tzurl/zoneinfo/America/Resolute.ics,
+	  web/tzurl/zoneinfo/America/Rio_Branco.ics,
+	  web/tzurl/zoneinfo/America/Santa_Isabel.ics,
+	  web/tzurl/zoneinfo/America/Santarem.ics,
+	  web/tzurl/zoneinfo/America/Santiago.ics,
+	  web/tzurl/zoneinfo/America/Santo_Domingo.ics,
+	  web/tzurl/zoneinfo/America/Sao_Paulo.ics,
+	  web/tzurl/zoneinfo/America/Scoresbysund.ics,
+	  web/tzurl/zoneinfo/America/Sitka.ics,
+	  web/tzurl/zoneinfo/America/St_Barthelemy.ics,
+	  web/tzurl/zoneinfo/America/St_Johns.ics,
+	  web/tzurl/zoneinfo/America/St_Kitts.ics,
+	  web/tzurl/zoneinfo/America/St_Lucia.ics,
+	  web/tzurl/zoneinfo/America/St_Thomas.ics,
+	  web/tzurl/zoneinfo/America/St_Vincent.ics,
+	  web/tzurl/zoneinfo/America/Swift_Current.ics,
+	  web/tzurl/zoneinfo/America/Tegucigalpa.ics,
+	  web/tzurl/zoneinfo/America/Thule.ics,
+	  web/tzurl/zoneinfo/America/Thunder_Bay.ics,
+	  web/tzurl/zoneinfo/America/Tijuana.ics,
+	  web/tzurl/zoneinfo/America/Toronto.ics,
+	  web/tzurl/zoneinfo/America/Tortola.ics,
+	  web/tzurl/zoneinfo/America/Vancouver.ics,
+	  web/tzurl/zoneinfo/America/Whitehorse.ics,
+	  web/tzurl/zoneinfo/America/Winnipeg.ics,
+	  web/tzurl/zoneinfo/America/Yakutat.ics,
+	  web/tzurl/zoneinfo/America/Yellowknife.ics,
+	  web/tzurl/zoneinfo/Antarctica/Casey.ics,
+	  web/tzurl/zoneinfo/Antarctica/Davis.ics,
+	  web/tzurl/zoneinfo/Antarctica/DumontDUrville.ics,
+	  web/tzurl/zoneinfo/Antarctica/Macquarie.ics,
+	  web/tzurl/zoneinfo/Antarctica/Mawson.ics,
+	  web/tzurl/zoneinfo/Antarctica/McMurdo.ics,
+	  web/tzurl/zoneinfo/Antarctica/Palmer.ics,
+	  web/tzurl/zoneinfo/Antarctica/Rothera.ics,
+	  web/tzurl/zoneinfo/Antarctica/South_Pole.ics,
+	  web/tzurl/zoneinfo/Antarctica/Syowa.ics,
+	  web/tzurl/zoneinfo/Antarctica/Vostok.ics,
+	  web/tzurl/zoneinfo/Arctic/Longyearbyen.ics,
+	  web/tzurl/zoneinfo/Asia/Aden.ics,
+	  web/tzurl/zoneinfo/Asia/Almaty.ics,
+	  web/tzurl/zoneinfo/Asia/Amman.ics,
+	  web/tzurl/zoneinfo/Asia/Anadyr.ics,
+	  web/tzurl/zoneinfo/Asia/Aqtau.ics,
+	  web/tzurl/zoneinfo/Asia/Aqtobe.ics,
+	  web/tzurl/zoneinfo/Asia/Ashgabat.ics,
+	  web/tzurl/zoneinfo/Asia/Baghdad.ics,
+	  web/tzurl/zoneinfo/Asia/Bahrain.ics,
+	  web/tzurl/zoneinfo/Asia/Baku.ics,
+	  web/tzurl/zoneinfo/Asia/Bangkok.ics,
+	  web/tzurl/zoneinfo/Asia/Beirut.ics,
+	  web/tzurl/zoneinfo/Asia/Bishkek.ics,
+	  web/tzurl/zoneinfo/Asia/Brunei.ics,
+	  web/tzurl/zoneinfo/Asia/Choibalsan.ics,
+	  web/tzurl/zoneinfo/Asia/Chongqing.ics,
+	  web/tzurl/zoneinfo/Asia/Colombo.ics,
+	  web/tzurl/zoneinfo/Asia/Damascus.ics,
+	  web/tzurl/zoneinfo/Asia/Dhaka.ics,
+	  web/tzurl/zoneinfo/Asia/Dili.ics,
+	  web/tzurl/zoneinfo/Asia/Dubai.ics,
+	  web/tzurl/zoneinfo/Asia/Dushanbe.ics,
+	  web/tzurl/zoneinfo/Asia/Gaza.ics,
+	  web/tzurl/zoneinfo/Asia/Harbin.ics,
+	  web/tzurl/zoneinfo/Asia/Ho_Chi_Minh.ics,
+	  web/tzurl/zoneinfo/Asia/Hong_Kong.ics,
+	  web/tzurl/zoneinfo/Asia/Hovd.ics,
+	  web/tzurl/zoneinfo/Asia/Irkutsk.ics,
+	  web/tzurl/zoneinfo/Asia/Istanbul.ics,
+	  web/tzurl/zoneinfo/Asia/Jakarta.ics,
+	  web/tzurl/zoneinfo/Asia/Jayapura.ics,
+	  web/tzurl/zoneinfo/Asia/Jerusalem.ics,
+	  web/tzurl/zoneinfo/Asia/Kabul.ics,
+	  web/tzurl/zoneinfo/Asia/Kamchatka.ics,
+	  web/tzurl/zoneinfo/Asia/Karachi.ics,
+	  web/tzurl/zoneinfo/Asia/Kashgar.ics,
+	  web/tzurl/zoneinfo/Asia/Kathmandu.ics,
+	  web/tzurl/zoneinfo/Asia/Kolkata.ics,
+	  web/tzurl/zoneinfo/Asia/Krasnoyarsk.ics,
+	  web/tzurl/zoneinfo/Asia/Kuala_Lumpur.ics,
+	  web/tzurl/zoneinfo/Asia/Kuching.ics,
+	  web/tzurl/zoneinfo/Asia/Kuwait.ics,
+	  web/tzurl/zoneinfo/Asia/Macau.ics,
+	  web/tzurl/zoneinfo/Asia/Magadan.ics,
+	  web/tzurl/zoneinfo/Asia/Makassar.ics,
+	  web/tzurl/zoneinfo/Asia/Manila.ics,
+	  web/tzurl/zoneinfo/Asia/Muscat.ics,
+	  web/tzurl/zoneinfo/Asia/Nicosia.ics,
+	  web/tzurl/zoneinfo/Asia/Novokuznetsk.ics,
+	  web/tzurl/zoneinfo/Asia/Novosibirsk.ics,
+	  web/tzurl/zoneinfo/Asia/Omsk.ics,
+	  web/tzurl/zoneinfo/Asia/Oral.ics,
+	  web/tzurl/zoneinfo/Asia/Phnom_Penh.ics,
+	  web/tzurl/zoneinfo/Asia/Pontianak.ics,
+	  web/tzurl/zoneinfo/Asia/Pyongyang.ics,
+	  web/tzurl/zoneinfo/Asia/Qatar.ics,
+	  web/tzurl/zoneinfo/Asia/Qyzylorda.ics,
+	  web/tzurl/zoneinfo/Asia/Rangoon.ics,
+	  web/tzurl/zoneinfo/Asia/Riyadh.ics,
+	  web/tzurl/zoneinfo/Asia/Sakhalin.ics,
+	  web/tzurl/zoneinfo/Asia/Samarkand.ics,
+	  web/tzurl/zoneinfo/Asia/Seoul.ics,
+	  web/tzurl/zoneinfo/Asia/Shanghai.ics,
+	  web/tzurl/zoneinfo/Asia/Singapore.ics,
+	  web/tzurl/zoneinfo/Asia/Taipei.ics,
+	  web/tzurl/zoneinfo/Asia/Tashkent.ics,
+	  web/tzurl/zoneinfo/Asia/Tbilisi.ics,
+	  web/tzurl/zoneinfo/Asia/Tehran.ics,
+	  web/tzurl/zoneinfo/Asia/Thimphu.ics,
+	  web/tzurl/zoneinfo/Asia/Tokyo.ics,
+	  web/tzurl/zoneinfo/Asia/Ulaanbaatar.ics,
+	  web/tzurl/zoneinfo/Asia/Urumqi.ics,
+	  web/tzurl/zoneinfo/Asia/Vientiane.ics,
+	  web/tzurl/zoneinfo/Asia/Vladivostok.ics,
+	  web/tzurl/zoneinfo/Asia/Yakutsk.ics,
+	  web/tzurl/zoneinfo/Asia/Yekaterinburg.ics,
+	  web/tzurl/zoneinfo/Asia/Yerevan.ics,
+	  web/tzurl/zoneinfo/Atlantic/Azores.ics,
+	  web/tzurl/zoneinfo/Atlantic/Bermuda.ics,
+	  web/tzurl/zoneinfo/Atlantic/Canary.ics,
+	  web/tzurl/zoneinfo/Atlantic/Cape_Verde.ics,
+	  web/tzurl/zoneinfo/Atlantic/Faroe.ics,
+	  web/tzurl/zoneinfo/Atlantic/Madeira.ics,
+	  web/tzurl/zoneinfo/Atlantic/Reykjavik.ics,
+	  web/tzurl/zoneinfo/Atlantic/South_Georgia.ics,
+	  web/tzurl/zoneinfo/Atlantic/St_Helena.ics,
+	  web/tzurl/zoneinfo/Atlantic/Stanley.ics,
+	  web/tzurl/zoneinfo/Australia/Adelaide.ics,
+	  web/tzurl/zoneinfo/Australia/Brisbane.ics,
+	  web/tzurl/zoneinfo/Australia/Currie.ics,
+	  web/tzurl/zoneinfo/Australia/Darwin.ics,
+	  web/tzurl/zoneinfo/Australia/Eucla.ics,
+	  web/tzurl/zoneinfo/Australia/Hobart.ics,
+	  web/tzurl/zoneinfo/Australia/Lindeman.ics,
+	  web/tzurl/zoneinfo/Australia/Lord_Howe.ics,
+	  web/tzurl/zoneinfo/Australia/Melbourne.ics,
+	  web/tzurl/zoneinfo/Australia/Perth.ics,
+	  web/tzurl/zoneinfo/Australia/Sydney.ics,
+	  web/tzurl/zoneinfo/Europe/Amsterdam.ics,
+	  web/tzurl/zoneinfo/Europe/Andorra.ics,
+	  web/tzurl/zoneinfo/Europe/Athens.ics,
+	  web/tzurl/zoneinfo/Europe/Belgrade.ics,
+	  web/tzurl/zoneinfo/Europe/Berlin.ics,
+	  web/tzurl/zoneinfo/Europe/Bratislava.ics,
+	  web/tzurl/zoneinfo/Europe/Brussels.ics,
+	  web/tzurl/zoneinfo/Europe/Bucharest.ics,
+	  web/tzurl/zoneinfo/Europe/Budapest.ics,
+	  web/tzurl/zoneinfo/Europe/Chisinau.ics,
+	  web/tzurl/zoneinfo/Europe/Copenhagen.ics,
+	  web/tzurl/zoneinfo/Europe/Dublin.ics,
+	  web/tzurl/zoneinfo/Europe/Gibraltar.ics,
+	  web/tzurl/zoneinfo/Europe/Guernsey.ics,
+	  web/tzurl/zoneinfo/Europe/Helsinki.ics,
+	  web/tzurl/zoneinfo/Europe/Isle_of_Man.ics,
+	  web/tzurl/zoneinfo/Europe/Istanbul.ics,
+	  web/tzurl/zoneinfo/Europe/Jersey.ics,
+	  web/tzurl/zoneinfo/Europe/Kaliningrad.ics,
+	  web/tzurl/zoneinfo/Europe/Kiev.ics,
+	  web/tzurl/zoneinfo/Europe/Lisbon.ics,
+	  web/tzurl/zoneinfo/Europe/Ljubljana.ics,
+	  web/tzurl/zoneinfo/Europe/London.ics,
+	  web/tzurl/zoneinfo/Europe/Luxembourg.ics,
+	  web/tzurl/zoneinfo/Europe/Madrid.ics,
+	  web/tzurl/zoneinfo/Europe/Malta.ics,
+	  web/tzurl/zoneinfo/Europe/Mariehamn.ics,
+	  web/tzurl/zoneinfo/Europe/Minsk.ics,
+	  web/tzurl/zoneinfo/Europe/Monaco.ics,
+	  web/tzurl/zoneinfo/Europe/Moscow.ics,
+	  web/tzurl/zoneinfo/Europe/Nicosia.ics,
+	  web/tzurl/zoneinfo/Europe/Oslo.ics,
+	  web/tzurl/zoneinfo/Europe/Paris.ics,
+	  web/tzurl/zoneinfo/Europe/Podgorica.ics,
+	  web/tzurl/zoneinfo/Europe/Prague.ics,
+	  web/tzurl/zoneinfo/Europe/Riga.ics,
+	  web/tzurl/zoneinfo/Europe/Rome.ics,
+	  web/tzurl/zoneinfo/Europe/Samara.ics,
+	  web/tzurl/zoneinfo/Europe/San_Marino.ics,
+	  web/tzurl/zoneinfo/Europe/Sarajevo.ics,
+	  web/tzurl/zoneinfo/Europe/Simferopol.ics,
+	  web/tzurl/zoneinfo/Europe/Skopje.ics,
+	  web/tzurl/zoneinfo/Europe/Sofia.ics,
+	  web/tzurl/zoneinfo/Europe/Stockholm.ics,
+	  web/tzurl/zoneinfo/Europe/Tallinn.ics,
+	  web/tzurl/zoneinfo/Europe/Uzhgorod.ics,
+	  web/tzurl/zoneinfo/Europe/Vaduz.ics,
+	  web/tzurl/zoneinfo/Europe/Vatican.ics,
+	  web/tzurl/zoneinfo/Europe/Vienna.ics,
+	  web/tzurl/zoneinfo/Europe/Vilnius.ics,
+	  web/tzurl/zoneinfo/Europe/Volgograd.ics,
+	  web/tzurl/zoneinfo/Europe/Warsaw.ics,
+	  web/tzurl/zoneinfo/Europe/Zagreb.ics,
+	  web/tzurl/zoneinfo/Europe/Zaporozhye.ics,
+	  web/tzurl/zoneinfo/Europe/Zurich.ics,
+	  web/tzurl/zoneinfo/Indian/Antananarivo.ics,
+	  web/tzurl/zoneinfo/Indian/Chagos.ics,
+	  web/tzurl/zoneinfo/Indian/Christmas.ics,
+	  web/tzurl/zoneinfo/Indian/Cocos.ics,
+	  web/tzurl/zoneinfo/Indian/Comoro.ics,
+	  web/tzurl/zoneinfo/Indian/Kerguelen.ics,
+	  web/tzurl/zoneinfo/Indian/Mahe.ics,
+	  web/tzurl/zoneinfo/Indian/Maldives.ics,
+	  web/tzurl/zoneinfo/Indian/Mauritius.ics,
+	  web/tzurl/zoneinfo/Indian/Mayotte.ics,
+	  web/tzurl/zoneinfo/Indian/Reunion.ics,
+	  web/tzurl/zoneinfo/Pacific/Apia.ics,
+	  web/tzurl/zoneinfo/Pacific/Auckland.ics,
+	  web/tzurl/zoneinfo/Pacific/Chatham.ics,
+	  web/tzurl/zoneinfo/Pacific/Chuuk.ics,
+	  web/tzurl/zoneinfo/Pacific/Easter.ics,
+	  web/tzurl/zoneinfo/Pacific/Efate.ics,
+	  web/tzurl/zoneinfo/Pacific/Enderbury.ics,
+	  web/tzurl/zoneinfo/Pacific/Fakaofo.ics,
+	  web/tzurl/zoneinfo/Pacific/Fiji.ics,
+	  web/tzurl/zoneinfo/Pacific/Funafuti.ics,
+	  web/tzurl/zoneinfo/Pacific/Galapagos.ics,
+	  web/tzurl/zoneinfo/Pacific/Gambier.ics,
+	  web/tzurl/zoneinfo/Pacific/Guadalcanal.ics,
+	  web/tzurl/zoneinfo/Pacific/Guam.ics,
+	  web/tzurl/zoneinfo/Pacific/Honolulu.ics,
+	  web/tzurl/zoneinfo/Pacific/Johnston.ics,
+	  web/tzurl/zoneinfo/Pacific/Kiritimati.ics,
+	  web/tzurl/zoneinfo/Pacific/Kosrae.ics,
+	  web/tzurl/zoneinfo/Pacific/Kwajalein.ics,
+	  web/tzurl/zoneinfo/Pacific/Majuro.ics,
+	  web/tzurl/zoneinfo/Pacific/Marquesas.ics,
+	  web/tzurl/zoneinfo/Pacific/Midway.ics,
+	  web/tzurl/zoneinfo/Pacific/Nauru.ics,
+	  web/tzurl/zoneinfo/Pacific/Niue.ics,
+	  web/tzurl/zoneinfo/Pacific/Norfolk.ics,
+	  web/tzurl/zoneinfo/Pacific/Noumea.ics,
+	  web/tzurl/zoneinfo/Pacific/Pago_Pago.ics,
+	  web/tzurl/zoneinfo/Pacific/Palau.ics,
+	  web/tzurl/zoneinfo/Pacific/Pitcairn.ics,
+	  web/tzurl/zoneinfo/Pacific/Pohnpei.ics,
+	  web/tzurl/zoneinfo/Pacific/Ponape.ics,
+	  web/tzurl/zoneinfo/Pacific/Port_Moresby.ics,
+	  web/tzurl/zoneinfo/Pacific/Rarotonga.ics,
+	  web/tzurl/zoneinfo/Pacific/Saipan.ics,
+	  web/tzurl/zoneinfo/Pacific/Tahiti.ics,
+	  web/tzurl/zoneinfo/Pacific/Tarawa.ics,
+	  web/tzurl/zoneinfo/Pacific/Tongatapu.ics,
+	  web/tzurl/zoneinfo/Pacific/Truk.ics,
+	  web/tzurl/zoneinfo/Pacific/Wake.ics,
+	  web/tzurl/zoneinfo/Pacific/Wallis.ics:
+	  
+	  Added the property eol-style: native
+
+2011-08-03 15:39  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1856] web/functions_ical.inc, web/tzurl[ADD],
+	  web/tzurl/zoneinfo[ADD], web/tzurl/zoneinfo-outlook[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Abidjan.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Accra.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Addis_Ababa.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Algiers.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Asmara.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Bamako.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Bangui.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Banjul.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Bissau.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Blantyre.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Brazzaville.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Bujumbura.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Cairo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Casablanca.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Ceuta.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Conakry.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Dakar.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Dar_es_Salaam.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Djibouti.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Douala.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/El_Aaiun.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Freetown.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Gaborone.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Harare.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Johannesburg.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Kampala.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Khartoum.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Kigali.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Kinshasa.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Lagos.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Libreville.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Lome.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Luanda.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Lubumbashi.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Lusaka.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Malabo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Maputo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Maseru.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Mbabane.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Mogadishu.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Monrovia.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Nairobi.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Ndjamena.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Niamey.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Nouakchott.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Ouagadougou.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Porto-Novo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Sao_Tome.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Tripoli.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Tunis.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Africa/Windhoek.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Adak.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Anchorage.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Anguilla.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Antigua.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Araguaina.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Argentina[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Buenos_Aires.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Catamarca.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Cordoba.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Jujuy.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Argentina/La_Rioja.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Mendoza.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Rio_Gallegos.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Salta.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Argentina/San_Juan.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Argentina/San_Luis.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Tucuman.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Ushuaia.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Aruba.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Asuncion.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Atikokan.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Bahia.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Bahia_Banderas.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Barbados.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Belem.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Belize.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Blanc-Sablon.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Boa_Vista.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Bogota.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Boise.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Cambridge_Bay.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Campo_Grande.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Cancun.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Caracas.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Cayenne.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Cayman.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Chicago.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Chihuahua.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Costa_Rica.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Cuiaba.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Curacao.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Danmarkshavn.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Dawson.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Dawson_Creek.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Denver.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Detroit.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Dominica.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Edmonton.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Eirunepe.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/El_Salvador.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Fortaleza.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Glace_Bay.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Godthab.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Goose_Bay.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Grand_Turk.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Grenada.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Guadeloupe.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Guatemala.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Guayaquil.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Guyana.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Halifax.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Havana.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Hermosillo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Indiana[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Indianapolis.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Knox.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Marengo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Petersburg.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Tell_City.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Vevay.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Vincennes.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Winamac.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Inuvik.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Iqaluit.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Jamaica.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Juneau.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Kentucky[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Kentucky/Louisville.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Kentucky/Monticello.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Kralendijk.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/La_Paz.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Lima.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Los_Angeles.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Lower_Princes.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Maceio.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Managua.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Manaus.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Marigot.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Martinique.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Matamoros.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Mazatlan.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Menominee.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Merida.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Metlakatla.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Mexico_City.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Miquelon.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Moncton.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Monterrey.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Montevideo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Montreal.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Montserrat.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Nassau.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/New_York.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Nipigon.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Nome.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Noronha.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/North_Dakota[ADD],
+	  web/tzurl/zoneinfo-outlook/America/North_Dakota/Beulah.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/North_Dakota/Center.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/North_Dakota/New_Salem.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Ojinaga.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Panama.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Pangnirtung.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Paramaribo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Phoenix.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Port-au-Prince.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Port_of_Spain.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Porto_Velho.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Puerto_Rico.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Rainy_River.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Rankin_Inlet.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Recife.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Regina.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Resolute.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Rio_Branco.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Santa_Isabel.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Santarem.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Santiago.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Santo_Domingo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Sao_Paulo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Scoresbysund.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Sitka.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/St_Barthelemy.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/St_Johns.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/St_Kitts.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/St_Lucia.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/St_Thomas.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/St_Vincent.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Swift_Current.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Tegucigalpa.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Thule.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Thunder_Bay.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Tijuana.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Toronto.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Tortola.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Vancouver.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Whitehorse.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Winnipeg.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Yakutat.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Yellowknife.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Antarctica[ADD],
+	  web/tzurl/zoneinfo-outlook/Antarctica/Casey.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Antarctica/Davis.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Antarctica/DumontDUrville.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Antarctica/Macquarie.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Antarctica/Mawson.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Antarctica/McMurdo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Antarctica/Palmer.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Antarctica/Rothera.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Antarctica/South_Pole.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Antarctica/Syowa.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Antarctica/Vostok.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Arctic[ADD],
+	  web/tzurl/zoneinfo-outlook/Arctic/Longyearbyen.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Aden.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Almaty.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Amman.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Anadyr.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Aqtau.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Aqtobe.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Ashgabat.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Baghdad.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Bahrain.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Baku.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Bangkok.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Beirut.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Bishkek.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Brunei.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Choibalsan.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Chongqing.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Colombo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Damascus.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Dhaka.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Dili.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Dubai.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Dushanbe.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Gaza.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Harbin.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Ho_Chi_Minh.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Hong_Kong.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Hovd.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Irkutsk.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Istanbul.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Jakarta.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Jayapura.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Jerusalem.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Kabul.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Kamchatka.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Karachi.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Kashgar.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Kathmandu.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Kolkata.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Krasnoyarsk.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Kuala_Lumpur.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Kuching.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Kuwait.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Macau.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Magadan.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Makassar.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Manila.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Muscat.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Nicosia.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Novokuznetsk.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Novosibirsk.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Omsk.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Oral.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Phnom_Penh.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Pontianak.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Pyongyang.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Qatar.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Qyzylorda.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Rangoon.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Riyadh.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Sakhalin.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Samarkand.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Seoul.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Shanghai.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Singapore.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Taipei.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Tashkent.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Tbilisi.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Tehran.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Thimphu.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Tokyo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Ulaanbaatar.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Urumqi.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Vientiane.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Vladivostok.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Yakutsk.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Yekaterinburg.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Yerevan.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Atlantic[ADD],
+	  web/tzurl/zoneinfo-outlook/Atlantic/Azores.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Atlantic/Bermuda.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Atlantic/Canary.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Atlantic/Cape_Verde.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Atlantic/Faroe.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Atlantic/Madeira.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Atlantic/Reykjavik.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Atlantic/South_Georgia.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Atlantic/St_Helena.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Atlantic/Stanley.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Australia[ADD],
+	  web/tzurl/zoneinfo-outlook/Australia/Adelaide.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Australia/Brisbane.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Australia/Currie.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Australia/Darwin.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Australia/Eucla.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Australia/Hobart.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Australia/Lindeman.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Australia/Lord_Howe.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Australia/Melbourne.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Australia/Perth.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Australia/Sydney.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Amsterdam.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Andorra.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Athens.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Belgrade.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Berlin.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Bratislava.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Brussels.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Bucharest.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Budapest.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Chisinau.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Copenhagen.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Dublin.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Gibraltar.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Guernsey.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Helsinki.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Isle_of_Man.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Istanbul.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Jersey.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Kaliningrad.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Kiev.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Lisbon.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Ljubljana.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/London.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Luxembourg.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Madrid.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Malta.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Mariehamn.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Minsk.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Monaco.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Moscow.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Nicosia.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Oslo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Paris.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Podgorica.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Prague.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Riga.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Rome.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Samara.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/San_Marino.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Sarajevo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Simferopol.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Skopje.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Sofia.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Stockholm.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Tallinn.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Uzhgorod.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Vaduz.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Vatican.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Vienna.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Vilnius.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Volgograd.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Warsaw.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Zagreb.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Zaporozhye.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Zurich.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Indian[ADD],
+	  web/tzurl/zoneinfo-outlook/Indian/Antananarivo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Indian/Chagos.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Indian/Christmas.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Indian/Cocos.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Indian/Comoro.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Indian/Kerguelen.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Indian/Mahe.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Indian/Maldives.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Indian/Mauritius.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Indian/Mayotte.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Indian/Reunion.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Apia.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Auckland.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Chatham.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Chuuk.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Easter.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Efate.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Enderbury.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Fakaofo.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Fiji.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Funafuti.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Galapagos.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Gambier.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Guadalcanal.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Guam.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Honolulu.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Johnston.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Kiritimati.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Kosrae.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Kwajalein.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Majuro.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Marquesas.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Midway.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Nauru.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Niue.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Norfolk.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Noumea.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Pago_Pago.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Palau.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Pitcairn.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Pohnpei.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Ponape.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Port_Moresby.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Rarotonga.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Saipan.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Tahiti.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Tarawa.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Tongatapu.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Truk.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Wake.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Pacific/Wallis.ics[ADD],
+	  web/tzurl/zoneinfo/Africa[ADD],
+	  web/tzurl/zoneinfo/Africa/Abidjan.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Accra.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Addis_Ababa.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Algiers.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Asmara.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Bamako.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Bangui.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Banjul.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Bissau.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Blantyre.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Brazzaville.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Bujumbura.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Cairo.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Casablanca.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Ceuta.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Conakry.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Dakar.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Dar_es_Salaam.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Djibouti.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Douala.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/El_Aaiun.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Freetown.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Gaborone.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Harare.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Johannesburg.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Kampala.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Khartoum.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Kigali.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Kinshasa.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Lagos.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Libreville.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Lome.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Luanda.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Lubumbashi.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Lusaka.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Malabo.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Maputo.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Maseru.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Mbabane.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Mogadishu.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Monrovia.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Nairobi.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Ndjamena.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Niamey.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Nouakchott.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Ouagadougou.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Porto-Novo.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Sao_Tome.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Tripoli.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Tunis.ics[ADD],
+	  web/tzurl/zoneinfo/Africa/Windhoek.ics[ADD],
+	  web/tzurl/zoneinfo/America[ADD],
+	  web/tzurl/zoneinfo/America/Adak.ics[ADD],
+	  web/tzurl/zoneinfo/America/Anchorage.ics[ADD],
+	  web/tzurl/zoneinfo/America/Anguilla.ics[ADD],
+	  web/tzurl/zoneinfo/America/Antigua.ics[ADD],
+	  web/tzurl/zoneinfo/America/Araguaina.ics[ADD],
+	  web/tzurl/zoneinfo/America/Argentina[ADD],
+	  web/tzurl/zoneinfo/America/Argentina/Buenos_Aires.ics[ADD],
+	  web/tzurl/zoneinfo/America/Argentina/Catamarca.ics[ADD],
+	  web/tzurl/zoneinfo/America/Argentina/Cordoba.ics[ADD],
+	  web/tzurl/zoneinfo/America/Argentina/Jujuy.ics[ADD],
+	  web/tzurl/zoneinfo/America/Argentina/La_Rioja.ics[ADD],
+	  web/tzurl/zoneinfo/America/Argentina/Mendoza.ics[ADD],
+	  web/tzurl/zoneinfo/America/Argentina/Rio_Gallegos.ics[ADD],
+	  web/tzurl/zoneinfo/America/Argentina/Salta.ics[ADD],
+	  web/tzurl/zoneinfo/America/Argentina/San_Juan.ics[ADD],
+	  web/tzurl/zoneinfo/America/Argentina/San_Luis.ics[ADD],
+	  web/tzurl/zoneinfo/America/Argentina/Tucuman.ics[ADD],
+	  web/tzurl/zoneinfo/America/Argentina/Ushuaia.ics[ADD],
+	  web/tzurl/zoneinfo/America/Aruba.ics[ADD],
+	  web/tzurl/zoneinfo/America/Asuncion.ics[ADD],
+	  web/tzurl/zoneinfo/America/Atikokan.ics[ADD],
+	  web/tzurl/zoneinfo/America/Bahia.ics[ADD],
+	  web/tzurl/zoneinfo/America/Bahia_Banderas.ics[ADD],
+	  web/tzurl/zoneinfo/America/Barbados.ics[ADD],
+	  web/tzurl/zoneinfo/America/Belem.ics[ADD],
+	  web/tzurl/zoneinfo/America/Belize.ics[ADD],
+	  web/tzurl/zoneinfo/America/Blanc-Sablon.ics[ADD],
+	  web/tzurl/zoneinfo/America/Boa_Vista.ics[ADD],
+	  web/tzurl/zoneinfo/America/Bogota.ics[ADD],
+	  web/tzurl/zoneinfo/America/Boise.ics[ADD],
+	  web/tzurl/zoneinfo/America/Cambridge_Bay.ics[ADD],
+	  web/tzurl/zoneinfo/America/Campo_Grande.ics[ADD],
+	  web/tzurl/zoneinfo/America/Cancun.ics[ADD],
+	  web/tzurl/zoneinfo/America/Caracas.ics[ADD],
+	  web/tzurl/zoneinfo/America/Cayenne.ics[ADD],
+	  web/tzurl/zoneinfo/America/Cayman.ics[ADD],
+	  web/tzurl/zoneinfo/America/Chicago.ics[ADD],
+	  web/tzurl/zoneinfo/America/Chihuahua.ics[ADD],
+	  web/tzurl/zoneinfo/America/Costa_Rica.ics[ADD],
+	  web/tzurl/zoneinfo/America/Cuiaba.ics[ADD],
+	  web/tzurl/zoneinfo/America/Curacao.ics[ADD],
+	  web/tzurl/zoneinfo/America/Danmarkshavn.ics[ADD],
+	  web/tzurl/zoneinfo/America/Dawson.ics[ADD],
+	  web/tzurl/zoneinfo/America/Dawson_Creek.ics[ADD],
+	  web/tzurl/zoneinfo/America/Denver.ics[ADD],
+	  web/tzurl/zoneinfo/America/Detroit.ics[ADD],
+	  web/tzurl/zoneinfo/America/Dominica.ics[ADD],
+	  web/tzurl/zoneinfo/America/Edmonton.ics[ADD],
+	  web/tzurl/zoneinfo/America/Eirunepe.ics[ADD],
+	  web/tzurl/zoneinfo/America/El_Salvador.ics[ADD],
+	  web/tzurl/zoneinfo/America/Fortaleza.ics[ADD],
+	  web/tzurl/zoneinfo/America/Glace_Bay.ics[ADD],
+	  web/tzurl/zoneinfo/America/Godthab.ics[ADD],
+	  web/tzurl/zoneinfo/America/Goose_Bay.ics[ADD],
+	  web/tzurl/zoneinfo/America/Grand_Turk.ics[ADD],
+	  web/tzurl/zoneinfo/America/Grenada.ics[ADD],
+	  web/tzurl/zoneinfo/America/Guadeloupe.ics[ADD],
+	  web/tzurl/zoneinfo/America/Guatemala.ics[ADD],
+	  web/tzurl/zoneinfo/America/Guayaquil.ics[ADD],
+	  web/tzurl/zoneinfo/America/Guyana.ics[ADD],
+	  web/tzurl/zoneinfo/America/Halifax.ics[ADD],
+	  web/tzurl/zoneinfo/America/Havana.ics[ADD],
+	  web/tzurl/zoneinfo/America/Hermosillo.ics[ADD],
+	  web/tzurl/zoneinfo/America/Indiana[ADD],
+	  web/tzurl/zoneinfo/America/Indiana/Indianapolis.ics[ADD],
+	  web/tzurl/zoneinfo/America/Indiana/Knox.ics[ADD],
+	  web/tzurl/zoneinfo/America/Indiana/Marengo.ics[ADD],
+	  web/tzurl/zoneinfo/America/Indiana/Petersburg.ics[ADD],
+	  web/tzurl/zoneinfo/America/Indiana/Tell_City.ics[ADD],
+	  web/tzurl/zoneinfo/America/Indiana/Vevay.ics[ADD],
+	  web/tzurl/zoneinfo/America/Indiana/Vincennes.ics[ADD],
+	  web/tzurl/zoneinfo/America/Indiana/Winamac.ics[ADD],
+	  web/tzurl/zoneinfo/America/Inuvik.ics[ADD],
+	  web/tzurl/zoneinfo/America/Iqaluit.ics[ADD],
+	  web/tzurl/zoneinfo/America/Jamaica.ics[ADD],
+	  web/tzurl/zoneinfo/America/Juneau.ics[ADD],
+	  web/tzurl/zoneinfo/America/Kentucky[ADD],
+	  web/tzurl/zoneinfo/America/Kentucky/Louisville.ics[ADD],
+	  web/tzurl/zoneinfo/America/Kentucky/Monticello.ics[ADD],
+	  web/tzurl/zoneinfo/America/Kralendijk.ics[ADD],
+	  web/tzurl/zoneinfo/America/La_Paz.ics[ADD],
+	  web/tzurl/zoneinfo/America/Lima.ics[ADD],
+	  web/tzurl/zoneinfo/America/Los_Angeles.ics[ADD],
+	  web/tzurl/zoneinfo/America/Lower_Princes.ics[ADD],
+	  web/tzurl/zoneinfo/America/Maceio.ics[ADD],
+	  web/tzurl/zoneinfo/America/Managua.ics[ADD],
+	  web/tzurl/zoneinfo/America/Manaus.ics[ADD],
+	  web/tzurl/zoneinfo/America/Marigot.ics[ADD],
+	  web/tzurl/zoneinfo/America/Martinique.ics[ADD],
+	  web/tzurl/zoneinfo/America/Matamoros.ics[ADD],
+	  web/tzurl/zoneinfo/America/Mazatlan.ics[ADD],
+	  web/tzurl/zoneinfo/America/Menominee.ics[ADD],
+	  web/tzurl/zoneinfo/America/Merida.ics[ADD],
+	  web/tzurl/zoneinfo/America/Metlakatla.ics[ADD],
+	  web/tzurl/zoneinfo/America/Mexico_City.ics[ADD],
+	  web/tzurl/zoneinfo/America/Miquelon.ics[ADD],
+	  web/tzurl/zoneinfo/America/Moncton.ics[ADD],
+	  web/tzurl/zoneinfo/America/Monterrey.ics[ADD],
+	  web/tzurl/zoneinfo/America/Montevideo.ics[ADD],
+	  web/tzurl/zoneinfo/America/Montreal.ics[ADD],
+	  web/tzurl/zoneinfo/America/Montserrat.ics[ADD],
+	  web/tzurl/zoneinfo/America/Nassau.ics[ADD],
+	  web/tzurl/zoneinfo/America/New_York.ics[ADD],
+	  web/tzurl/zoneinfo/America/Nipigon.ics[ADD],
+	  web/tzurl/zoneinfo/America/Nome.ics[ADD],
+	  web/tzurl/zoneinfo/America/Noronha.ics[ADD],
+	  web/tzurl/zoneinfo/America/North_Dakota[ADD],
+	  web/tzurl/zoneinfo/America/North_Dakota/Beulah.ics[ADD],
+	  web/tzurl/zoneinfo/America/North_Dakota/Center.ics[ADD],
+	  web/tzurl/zoneinfo/America/North_Dakota/New_Salem.ics[ADD],
+	  web/tzurl/zoneinfo/America/Ojinaga.ics[ADD],
+	  web/tzurl/zoneinfo/America/Panama.ics[ADD],
+	  web/tzurl/zoneinfo/America/Pangnirtung.ics[ADD],
+	  web/tzurl/zoneinfo/America/Paramaribo.ics[ADD],
+	  web/tzurl/zoneinfo/America/Phoenix.ics[ADD],
+	  web/tzurl/zoneinfo/America/Port-au-Prince.ics[ADD],
+	  web/tzurl/zoneinfo/America/Port_of_Spain.ics[ADD],
+	  web/tzurl/zoneinfo/America/Porto_Velho.ics[ADD],
+	  web/tzurl/zoneinfo/America/Puerto_Rico.ics[ADD],
+	  web/tzurl/zoneinfo/America/Rainy_River.ics[ADD],
+	  web/tzurl/zoneinfo/America/Rankin_Inlet.ics[ADD],
+	  web/tzurl/zoneinfo/America/Recife.ics[ADD],
+	  web/tzurl/zoneinfo/America/Regina.ics[ADD],
+	  web/tzurl/zoneinfo/America/Resolute.ics[ADD],
+	  web/tzurl/zoneinfo/America/Rio_Branco.ics[ADD],
+	  web/tzurl/zoneinfo/America/Santa_Isabel.ics[ADD],
+	  web/tzurl/zoneinfo/America/Santarem.ics[ADD],
+	  web/tzurl/zoneinfo/America/Santiago.ics[ADD],
+	  web/tzurl/zoneinfo/America/Santo_Domingo.ics[ADD],
+	  web/tzurl/zoneinfo/America/Sao_Paulo.ics[ADD],
+	  web/tzurl/zoneinfo/America/Scoresbysund.ics[ADD],
+	  web/tzurl/zoneinfo/America/Sitka.ics[ADD],
+	  web/tzurl/zoneinfo/America/St_Barthelemy.ics[ADD],
+	  web/tzurl/zoneinfo/America/St_Johns.ics[ADD],
+	  web/tzurl/zoneinfo/America/St_Kitts.ics[ADD],
+	  web/tzurl/zoneinfo/America/St_Lucia.ics[ADD],
+	  web/tzurl/zoneinfo/America/St_Thomas.ics[ADD],
+	  web/tzurl/zoneinfo/America/St_Vincent.ics[ADD],
+	  web/tzurl/zoneinfo/America/Swift_Current.ics[ADD],
+	  web/tzurl/zoneinfo/America/Tegucigalpa.ics[ADD],
+	  web/tzurl/zoneinfo/America/Thule.ics[ADD],
+	  web/tzurl/zoneinfo/America/Thunder_Bay.ics[ADD],
+	  web/tzurl/zoneinfo/America/Tijuana.ics[ADD],
+	  web/tzurl/zoneinfo/America/Toronto.ics[ADD],
+	  web/tzurl/zoneinfo/America/Tortola.ics[ADD],
+	  web/tzurl/zoneinfo/America/Vancouver.ics[ADD],
+	  web/tzurl/zoneinfo/America/Whitehorse.ics[ADD],
+	  web/tzurl/zoneinfo/America/Winnipeg.ics[ADD],
+	  web/tzurl/zoneinfo/America/Yakutat.ics[ADD],
+	  web/tzurl/zoneinfo/America/Yellowknife.ics[ADD],
+	  web/tzurl/zoneinfo/Antarctica[ADD],
+	  web/tzurl/zoneinfo/Antarctica/Casey.ics[ADD],
+	  web/tzurl/zoneinfo/Antarctica/Davis.ics[ADD],
+	  web/tzurl/zoneinfo/Antarctica/DumontDUrville.ics[ADD],
+	  web/tzurl/zoneinfo/Antarctica/Macquarie.ics[ADD],
+	  web/tzurl/zoneinfo/Antarctica/Mawson.ics[ADD],
+	  web/tzurl/zoneinfo/Antarctica/McMurdo.ics[ADD],
+	  web/tzurl/zoneinfo/Antarctica/Palmer.ics[ADD],
+	  web/tzurl/zoneinfo/Antarctica/Rothera.ics[ADD],
+	  web/tzurl/zoneinfo/Antarctica/South_Pole.ics[ADD],
+	  web/tzurl/zoneinfo/Antarctica/Syowa.ics[ADD],
+	  web/tzurl/zoneinfo/Antarctica/Vostok.ics[ADD],
+	  web/tzurl/zoneinfo/Arctic[ADD],
+	  web/tzurl/zoneinfo/Arctic/Longyearbyen.ics[ADD],
+	  web/tzurl/zoneinfo/Asia[ADD],
+	  web/tzurl/zoneinfo/Asia/Aden.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Almaty.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Amman.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Anadyr.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Aqtau.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Aqtobe.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Ashgabat.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Baghdad.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Bahrain.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Baku.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Bangkok.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Beirut.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Bishkek.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Brunei.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Choibalsan.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Chongqing.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Colombo.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Damascus.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Dhaka.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Dili.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Dubai.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Dushanbe.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Gaza.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Harbin.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Ho_Chi_Minh.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Hong_Kong.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Hovd.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Irkutsk.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Istanbul.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Jakarta.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Jayapura.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Jerusalem.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Kabul.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Kamchatka.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Karachi.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Kashgar.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Kathmandu.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Kolkata.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Krasnoyarsk.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Kuala_Lumpur.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Kuching.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Kuwait.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Macau.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Magadan.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Makassar.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Manila.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Muscat.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Nicosia.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Novokuznetsk.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Novosibirsk.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Omsk.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Oral.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Phnom_Penh.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Pontianak.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Pyongyang.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Qatar.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Qyzylorda.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Rangoon.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Riyadh.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Sakhalin.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Samarkand.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Seoul.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Shanghai.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Singapore.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Taipei.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Tashkent.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Tbilisi.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Tehran.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Thimphu.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Tokyo.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Ulaanbaatar.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Urumqi.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Vientiane.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Vladivostok.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Yakutsk.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Yekaterinburg.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Yerevan.ics[ADD],
+	  web/tzurl/zoneinfo/Atlantic[ADD],
+	  web/tzurl/zoneinfo/Atlantic/Azores.ics[ADD],
+	  web/tzurl/zoneinfo/Atlantic/Bermuda.ics[ADD],
+	  web/tzurl/zoneinfo/Atlantic/Canary.ics[ADD],
+	  web/tzurl/zoneinfo/Atlantic/Cape_Verde.ics[ADD],
+	  web/tzurl/zoneinfo/Atlantic/Faroe.ics[ADD],
+	  web/tzurl/zoneinfo/Atlantic/Madeira.ics[ADD],
+	  web/tzurl/zoneinfo/Atlantic/Reykjavik.ics[ADD],
+	  web/tzurl/zoneinfo/Atlantic/South_Georgia.ics[ADD],
+	  web/tzurl/zoneinfo/Atlantic/St_Helena.ics[ADD],
+	  web/tzurl/zoneinfo/Atlantic/Stanley.ics[ADD],
+	  web/tzurl/zoneinfo/Australia[ADD],
+	  web/tzurl/zoneinfo/Australia/Adelaide.ics[ADD],
+	  web/tzurl/zoneinfo/Australia/Brisbane.ics[ADD],
+	  web/tzurl/zoneinfo/Australia/Currie.ics[ADD],
+	  web/tzurl/zoneinfo/Australia/Darwin.ics[ADD],
+	  web/tzurl/zoneinfo/Australia/Eucla.ics[ADD],
+	  web/tzurl/zoneinfo/Australia/Hobart.ics[ADD],
+	  web/tzurl/zoneinfo/Australia/Lindeman.ics[ADD],
+	  web/tzurl/zoneinfo/Australia/Lord_Howe.ics[ADD],
+	  web/tzurl/zoneinfo/Australia/Melbourne.ics[ADD],
+	  web/tzurl/zoneinfo/Australia/Perth.ics[ADD],
+	  web/tzurl/zoneinfo/Australia/Sydney.ics[ADD],
+	  web/tzurl/zoneinfo/Europe[ADD],
+	  web/tzurl/zoneinfo/Europe/Amsterdam.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Andorra.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Athens.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Belgrade.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Berlin.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Bratislava.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Brussels.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Bucharest.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Budapest.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Chisinau.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Copenhagen.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Dublin.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Gibraltar.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Guernsey.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Helsinki.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Isle_of_Man.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Istanbul.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Jersey.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Kaliningrad.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Kiev.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Lisbon.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Ljubljana.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/London.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Luxembourg.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Madrid.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Malta.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Mariehamn.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Minsk.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Monaco.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Moscow.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Nicosia.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Oslo.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Paris.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Podgorica.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Prague.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Riga.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Rome.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Samara.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/San_Marino.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Sarajevo.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Simferopol.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Skopje.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Sofia.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Stockholm.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Tallinn.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Uzhgorod.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Vaduz.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Vatican.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Vienna.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Vilnius.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Volgograd.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Warsaw.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Zagreb.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Zaporozhye.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Zurich.ics[ADD],
+	  web/tzurl/zoneinfo/Indian[ADD],
+	  web/tzurl/zoneinfo/Indian/Antananarivo.ics[ADD],
+	  web/tzurl/zoneinfo/Indian/Chagos.ics[ADD],
+	  web/tzurl/zoneinfo/Indian/Christmas.ics[ADD],
+	  web/tzurl/zoneinfo/Indian/Cocos.ics[ADD],
+	  web/tzurl/zoneinfo/Indian/Comoro.ics[ADD],
+	  web/tzurl/zoneinfo/Indian/Kerguelen.ics[ADD],
+	  web/tzurl/zoneinfo/Indian/Mahe.ics[ADD],
+	  web/tzurl/zoneinfo/Indian/Maldives.ics[ADD],
+	  web/tzurl/zoneinfo/Indian/Mauritius.ics[ADD],
+	  web/tzurl/zoneinfo/Indian/Mayotte.ics[ADD],
+	  web/tzurl/zoneinfo/Indian/Reunion.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific[ADD],
+	  web/tzurl/zoneinfo/Pacific/Apia.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Auckland.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Chatham.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Chuuk.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Easter.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Efate.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Enderbury.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Fakaofo.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Fiji.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Funafuti.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Galapagos.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Gambier.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Guadalcanal.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Guam.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Honolulu.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Johnston.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Kiritimati.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Kosrae.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Kwajalein.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Majuro.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Marquesas.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Midway.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Nauru.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Niue.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Norfolk.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Noumea.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Pago_Pago.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Palau.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Pitcairn.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Pohnpei.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Ponape.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Port_Moresby.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Rarotonga.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Saipan.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Tahiti.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Tarawa.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Tongatapu.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Truk.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Wake.ics[ADD],
+	  web/tzurl/zoneinfo/Pacific/Wallis.ics[ADD]:
+	  
+	  Fixed a problem whereby iCalendar notifications of repeating
+	  events would be imported into the calendar by some applications
+	  (eg Exchange 2007) interpreting the UTC time as a local time. The
+	  problem was caused by a difference between RFC 2445, against
+	  which older applications were written, and the newer RFC 5545.
+	  See also SF tracker 3324122.
+	  
+	  This solution does not yet check for updated VTIMEZONE
+	  definitions, but should be sufficient in the majority of cases.
+
+2011-07-28 09:33  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1855] web/mincals.inc, web/month.php, web/mrbs_sql.inc,
+	  web/trailer.inc:
+	  
+	  Made the week numbers and months in the mini calendars into
+	  links, following a suggestion by Marco Tedaldi. At the same time
+	  simplified the code used elsewhere in MRBS to make sure that a
+	  date is valid.
+
+2011-07-27 13:14  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1854] web/areadefaults.inc.php, web/mrbs_sql.inc:
+	  
+	  Allowed entries to be deleted even if they are longer than the
+	  max_duration or beyond the max_book_ahead date. Following
+	  suggestion from Marco Tedaldi
+
+2011-07-22 21:33  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1853] web/auth_ext.inc:
+	  
+	  Fixed auth_ext authentication for users or passwords that contain
+	  a $ character followed by a number. Tracked down via a discussion
+	  on the mailing list.
+
+2011-07-19 22:48  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1852] web/functions_ical.inc:
+	  
+	  Updated comment
+
+2011-07-18 21:35  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1851] web/functions_ical.inc:
+	  
+	  Updated comment explaining (but not solving!) a bug whereby
+	  repeat events will be imported into Outlook when using Exchange
+	  2007 with the wrong time (the UTC time interpreted as a local
+	  time). See also SF ID: 3324122.
+
+2011-07-14 10:44  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1850] web/functions_ical.inc:
+	  
+	  Added comment
+
+2011-07-14 09:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1849] web/Themes/default/header.inc, web/search.php:
+	  
+	  Fixed bug that meant that '0' was treated as an invalid search
+	  string
+
+2011-07-14 09:03  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1848] web/report.php:
+	  
+	  Fixed bug that resulted in a PHP warning when a custom field with
+	  $select_options was left empty in the report form
+
+2011-07-14 08:54  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r1847] web/systemdefaults.inc.php:
+	  
+	  Moved position of $select_options initialisation so that it comes
+	  before the commented examples (just in case somebody puts their
+	  options in the same place)
+
+2011-07-13 20:15  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1845] web/version.inc:
+	  
+	  Updated version number post-release.
+
+2011-07-13 20:13  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1843] ChangeLog, NEWS:
+	  
+	  Updated NEWS and ChangeLog for 1.4.7 release.
+
+2011-07-13 19:52  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r1842] web/version.inc:
+	  
+	  * Updated version number to 1.4.7.
+
 2011-07-13 19:46  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r1841] web/systemdefaults.inc.php:

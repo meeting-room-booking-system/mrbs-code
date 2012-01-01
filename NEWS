@@ -7,6 +7,156 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.4.8 (Sun Jan 01 22:00:00 GMT 2012):
+
+[-] Fixed bug that meant that '0' was treated as an invalid search
+ string.
+[-] Fixed auth_ext authentication for users or passwords that contain
+ a $ character followed by a number.
+[*] Allowed entries to be deleted even if they are longer than the
+ max_duration or beyond the max_book_ahead date. Following
+ suggestion from Marco Tedaldi.
+[*] Made the week numbers and months in the mini calendars into
+ links, following a suggestion by Marco Tedaldi.
+[-] iCalendar notifications expanded to allow more applications to 
+ understand times/time zone information. See SF tracker 3324122.
+[*] Added database error checking and handling to sql_*_field_info().
+[-] Corrected a minor error in edit_entry Javascript, thanks to Guenter
+ Boehm.
+[*] Improved SQL error reporting.
+[*] Made the date range for the date selectors a config variable.
+[*] Added an option on the booking form to skip past conflicting
+ bookings when making repeat bookings.
+[+] Added a "Skip and book" button to the page listing conflicting
+ entries if you try and make a repeat booking where some of the
+ entries have conflicts.
+[*] Upgraded jQuery UI from version 1.8.11 to 1.8.16.
+[+] Added a config setting to disable email sending, overriding any
+ other settings. Useful for testing MRBS without having to worry
+ about sending mail to people not expecting it.
+[*] Added a Back button to the edit_entry page.
+[*] Added a list of dates of repeat bookings to email notifications.
+[-] Fixed bug whereby email notifications would not be sent if MRBS
+ failed to find an address for those on the "To" line but there
+ addresses on the "Cc" line.
+[*] Improved the message in email notifications for a list of deleted
+ repeat bookings
+[*] Removed the privacy radio buttons from the Report form when the
+ user is not logged in as they're then redundant because only the
+ "user" will only be able to see public bookings. Thanks to a
+ suggestion from Jörg Wiemann in SF Tracker ID: 3405402
+[*] Added an Ajax capability to the edit_entry form so that a booking
+ is checked for scheduling and policy conflicts as the booking
+ parameters are changed.
+[-] Fixed bug causing disabled rooms to be displayed incorrectly in
+ view_entry.php
+[*] Converted language FAQs to UTF-8.
+[*] Added a timer so that a potential booking on the edit_entry form
+ can be periodically rechecked for validity, in case someone else
+ makes or releases a booking while the page is open. Can be
+ disabled and the interval set by means of a config variable.
+[*] Revamped the LDAP authentication scheme somewhat. You can now
+ specify most of the configuration parameters as arrays, so that
+ you can have multiple servers or multiple base DNs that are
+ configured in different ways.
+ 
+ Additionally, you can now determine whether a user is an
+ administrator by defining LDAP configuration parameters:
+ $ldap_group_member_attrib and $ldap_admin_group_dn. See
+ systemdefaults.inc.php for details.
+[-] Set PostgreSQL client encoding to UTF8. Thanks to Andreas Lange
+ for the patch (SF ID 3413080)
+[*] Added a Back button to the Add/Edit users form.
+[*] Changed the report from method from "get" to "post" to make it
+ possible to accommodate complicated search criteria, especially
+ with many custom fields
+[+] Added the ability to run report.php from the command line (useful
+ for example for setting up reports as cron jobs). Provided a
+ manual page at help_report.html. The ability to run from the
+ command line is disabled by default in systemdefaults.inc.php and
+ has to be deliberately enabled.
+[*] Added a tabbed dialog that can be displayed to give more details
+ of schedule and policy checks on the edit_entry page. This has
+ the advantage that it contains clickable links to conflicting
+ bookings, which the tooltips cannot.
+[*] Added a sanity check to check that 'private_override' is one of
+ the three valid values in case the database has somehow got
+ messed up.
+[*] Stopped ordinary users seeing the disabled/enabled status of a
+ room.
+[+] The
+ report results, search results, users list, rooms list and
+ pending list are now sortable, searchable tables. In addition
+ admins can do bulk deletes of the entries returned in a report.
+[*] Added Russian translation supplied by Capitan Nemo.
+[*] Improved the performance of the day/week/month views, especially
+ the day view in IE with large tables (many rooms and many
+ periods/time slots).
+[*] Updated installation instructions for a PostgreSQL database to
+ create a database with UTF8 encoding. See SF ID: 3413080.
+[*] Updated German translation, thanks to Jörg Wiemann.
+[*] Changed alt text on logo. Thanks to dwpoon. See SF ID 3420435.
+[+] MRBS now supports
+ (except for IE8 and below) (a) the selection of new bookings by
+ dragging over empty cells on the day and week views and (b) the
+ adjustment of existing bookings by dragging their sides or
+ corners.
+[-] Correctly encode subject in delete notification mails.
+[-] Changed ical output so that some email clients no longer get
+ booking automatically imported into their calender, without any
+ user action.
+[-] Fixed bug whereby $auth['only_admin_can_book'] didn't work as required
+ if $auth['deny_public_access'] was set.
+[*] Got rid of the $mail_charset config variable. All emails now sent
+ as UTF-8.
+[*] Restricted the requirement for the iconv module to those cases
+ when it is really needed, ie when the server is running AIX or
+ Windows.
+[-] Fixed, or at least ameliorated, a problem that can occur on
+ Windows servers where the dates can randomly change language, due
+ to other scripts running in a different thread in the same
+ process calling setlocale().
+[*] Removed the code that had to exist in config.inc.php in a
+ particular place. Booking entry types are now configured by the
+ simple array $booking_types, which contains elements like "E" and
+ "I". The entry types are now localised in the translation files
+ as "type.X" where X is the booking type. config.inc.php no longer
+ needs to include language.inc, and the $typel configuration array
+ has been removed.
+[-] Removed a number of undefined variables warnings.
+[-] Fixed a problem whereby "foreign" characters in CSV reports
+ opened by Microsoft Excel did not display properly. This is
+ actually an Excel problem, rather than an MRBS problem, but there
+ is now a circumvention in MRBS.
+[*] Restricted the options available in the end time selector to
+ those permitted if a maximum duration has been specified.
+[*] Updated French translation.
+[*] Ensured that if a new booking is selected and the default
+ duration takes the booking past the end of the booking day, then
+ the default end time is the end of the booking day (rather than
+ the start time + resolution, as at present).
+[-] Escaped some Javascript strings.
+[+] Added option to auth_ldap to disable client referrals. Provided
+ by Daniel Yule.
+[+] Made $timezone a per-area setting. Based on input from Chris
+ Thompson.
+[*] Ensured that the “all day” check box only appears if the maximum
+ booking duration allows that length of booking. Based on a patch
+ from Daniel Yule.
+[*] Added the ability to display the mini calendars at the bottom, if
+ $display_calendars_bottom is set to true. Based on a patch from
+ Daniel Yule.
+[+] Added support for displaying the week number in the month view if
+ $view_week_number is set.
+[-] Fixed two bugs: (1) Undefined index error if a mandatory field is
+ defined in the config file but doesn't exist in the database (2)
+ MRBS not picking up mandatory integer fields when JavaScript is
+ disabled.
+[*] Limited the timezones presented in the timezone drop-down box on
+ the Edit Area page to those that have a corresponding VTIMEZONE
+ definition.
+ 
+-------------------------------------------------------------------------------
 Version 1.4.7 (Wed Jul 13 21:20:00 BST 2011):
 
 [-] Fixed display of custom fields in the "view entry" screen.
