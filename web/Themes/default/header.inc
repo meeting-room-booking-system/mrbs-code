@@ -80,7 +80,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $select_options;
   global $ajax_refresh_rate;
   global $main_table_cell_border_width, $main_cell_height;
-  global $timetohighlight;
+  global $timetohighlight, $using_rtl;
   
   $page = basename($PHP_SELF, ".php");
   $user = getUserName();
@@ -1365,7 +1365,10 @@ $(window).load(function() {
     // can then get a set of parameters to send to edit_entry_handler as an Ajax request.
     // The result is a JSON object containg a success/failure boolean and the new table
     // HTML if successful or the reasons for failure if not.
-    if (function_exists('json_encode'))
+    //
+    // For the moment we don't support resizable bookings with RTL languages (eg Hebrew).
+    // That's because the code below assumes a LTR model and needs to be fixed 
+    if (function_exists('json_encode') && !$using_rtl)
     {
       // 
       // We don't allow resizable bookings for IE8 and below.   In theory they should

@@ -1,0 +1,20 @@
+
+/* $Id$ */
+
+/* Modifications to the standard CSS when using RTL languages (eg Hebrew) */
+
+/* ------------ EDIT_USERS.PHP ------------------*/
+#form_edit_users fieldset {
+  float: left; 
+  width: 500px;
+} 
+
+#edit_room fieldset.submit_buttons {
+  padding-top: 460px;
+  margin-top: 1em
+}
+
+.edit_area_room div.group {
+  clear: none;
+  width: auto;
+}

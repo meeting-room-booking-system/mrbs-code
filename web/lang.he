@@ -1,0 +1,421 @@
+<?php // -*-mode: PHP; coding:utf-8;-*-
+
+// Hebrew lang file
+// by Michal Kastro
+
+// $Id$
+
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.en, and anything in a locale
+// specific file will overwrite the default. This is a US/UK English file.
+//
+//
+//
+//
+// This file is PHP code. Treat it as such.
+
+// Used in style.inc
+$vocab["mrbs"]               = "לוח חדרים";
+
+// Used in functions.inc
+$vocab["report"]             = "דוחות";
+$vocab["admin"]              = "מנהל מערכת";
+$vocab["help"]               = "עזרה";
+$vocab["search"]             = "חיפוש";
+$vocab["not_php3"]           = "אזהרה: נראה כי יש חוסר תאימות עם PHP3";
+$vocab["outstanding"]        = "הזמנות לאישור";
+
+// Used in day.php
+$vocab["bookingsfor"]        = "הזמנה ל";
+$vocab["bookingsforpost"]    = ""; // Goes after the date
+$vocab["areas"]              = "אזורים";
+$vocab["daybefore"]          = "היום הקודם";
+$vocab["dayafter"]           = "היום הבא";
+$vocab["gototoday"]          = "היום";
+$vocab["goto"]               = "עבור ליום";
+$vocab["highlight_line"]     = "סמן שורה זו";
+$vocab["click_to_reserve"]   = "לחץ על התא כדי להזמין חדר";
+$vocab["timezone"]           = "אזור זמן";
+
+// Used in trailer.inc
+$vocab["viewday"]            = "הצג לפי יום";
+$vocab["viewweek"]           = "הצג לפי שבוע";
+$vocab["viewmonth"]          = "הצג לפי חודש";
+$vocab["ppreview"]           = "תצוגה מקדימה";
+
+// Used in edit_entry.php
+$vocab["addentry"]           = "הזמן חדר";
+$vocab["editentry"]          = "עדכן הזמנת חדר";
+$vocab["copyentry"]          = "העתק הזמנת חדר";
+$vocab["editseries"]         = "עדכן סדרה";
+$vocab["copyseries"]         = "העתק סדרה";
+$vocab["namebooker"]         = "שם המזמין";
+$vocab["fulldescription"]    = "תיאור מלא:";
+$vocab["date"]               = "תאריך";
+$vocab["start"]              = "התחלה";
+$vocab["end"]                = "סיום";
+$vocab["start_date"]         = "זמן התחלה";
+$vocab["end_date"]           = "זמן סיום";
+$vocab["time"]               = "זמן";
+$vocab["period"]             = "תקופה";
+$vocab["duration"]           = "משך זמן";
+$vocab["second_lc"]          = "שנייה";
+$vocab["seconds"]            = "שניות";
+$vocab["minute_lc"]          = "דקה";
+$vocab["minutes"]            = "דקות";
+$vocab["hour_lc"]            = "שעה";
+$vocab["hours"]              = "שעות";
+$vocab["day_lc"]             = "יום";
+$vocab["days"]               = "ימים";
+$vocab["week_lc"]            = "שבוע";
+$vocab["weeks"]              = "שבועות";
+$vocab["year_lc"]            = "שנה";
+$vocab["years"]              = "שנים";
+$vocab["period_lc"]          = "תקופה";
+$vocab["periods"]            = "תקופות";
+$vocab["all_day"]            = "כל היום";
+$vocab["area"]               = "אזור";
+$vocab["type"]               = "סוג הפגישה";
+$vocab["internal"]           = "פנימי";
+$vocab["external"]           = "חיצוני";
+$vocab["group"]           = "קבוצה";
+$vocab["unknown"]           = "לא ידוע";
+$vocab["other"]           = "אחר";
+$vocab["save"]               = "שמור";
+$vocab["rep_type"]           = "תדירות הזמנת חדר";
+$vocab["rep_type_0"]         = "לא";
+$vocab["rep_type_1"]         = "יום יומי";
+$vocab["rep_type_2"]         = "שבועי";
+$vocab["rep_type_3"]         = "חודשי";
+$vocab["rep_type_4"]         = "שנתי";
+$vocab["rep_type_5"]         = "חודשי ביום המתאים";
+$vocab["rep_type_6"]         = "מספר שבועות";
+$vocab["rep_end_date"]       = "סיום הזמנת חדר בתאריך";
+$vocab["rep_rep_day"]        = "ביום";
+$vocab["rep_for_weekly"]     = " ";
+$vocab["rep_freq"]           = "תדירות";
+$vocab["rep_num_weeks"]      = "מספר שבועות";
+$vocab["rep_for_nweekly"]    = " ";
+$vocab["ctrl_click"]         = "לחץ על מקש הקונטרול כדי לבחור יותר מחדר אחד";
+$vocab["entryid"]            = "Entry ID ";
+$vocab["repeat_id"]          = "Repeat ID "; 
+$vocab["you_have_not_entered"] = "לא הכנסת";
+$vocab["you_have_not_selected"] = "לא בחרת";
+$vocab["valid_room"]         = "חדר";
+$vocab["brief_description"]  = "תיאור קצר";
+$vocab["useful_n-weekly_value"] = "תאריך סיום";
+$vocab["status"]             = "סטאטוס";
+$vocab["public"]             = "ציבורי";
+$vocab["private"]            = "פרטי";
+$vocab["unavailable"]        = "לא זמין";
+$vocab["is_mandatory_field"] = "זהו שדה נדרש, אנא הזן ערך";
+$vocab["missing_mandatory_field"] = "לא הוזן ערך לשדה נדרש";
+$vocab["confirmed"]          = "מאושר";
+$vocab["start_after_end"]    = "יום פתיחה לאחר יום סיום";
+$vocab["start_after_end_long"] = "תקלה: יום הפתיחה הוא לאחר יום הסיום";
+
+// Used in view_entry.php
+$vocab["description"]         = "תיאור";
+$vocab["room"]                = "חדר";
+$vocab["createdby"]           = "נוצר על ידי";
+$vocab["lastupdate"]          = "עודכן לאחרונה";
+$vocab["deleteentry"]         = "מחק הזמנת חדר";
+$vocab["deleteseries"]        = "מחק סדרה";
+$vocab["exportentry"]         = "יצא הזמנת חדר";
+$vocab["exportseries"]        = "יצא סדרה";
+$vocab["confirmdel"]          = "האם אתה בטוח\\nשאתה רוצה\\nלמחוק הזמנה זו?\\n\\n";
+$vocab["returnprev"]          = "חזור לעמוד קודם";
+$vocab["invalid_entry_id"]    = "Invalid entry id.";
+$vocab["invalid_series_id"]   = "Invalid series id.";
+$vocab["confirmation_status"] = "האם אתה בטוח שאתה זקוק לחדר?";
+$vocab["tentative"]           = "אולי";
+$vocab["approval_status"]     = "סטאטוס מאושר";
+$vocab["approved"]            = "מאושר";
+$vocab["awaiting_approval"]   = "ממתין לאישור";
+$vocab["approve"]             = "מאושר";
+$vocab["reject"]              = "נדחה";
+$vocab["more_info"]           = "מידע נוסף";
+$vocab["remind_admin"]        = "הזכר למנהל מערכת";
+$vocab["series"]              = "סדרה";
+$vocab["request_more_info"]   = "בבקשה כתוב את המידע הנוסף לו אתה זקוק";
+$vocab["reject_reason"]       = "בבקשה כתוב את הסיבה לדחייה של בקשת ההזמנה";
+$vocab["send"]                = "שלח";
+$vocab["approve_failed"]      = "הזמנת החדר לא אושרה";
+$vocab["no_request_yet"]      = "לא נשלחה בקשה עד כה"; // Used for the title tooltip on More Info button
+$vocab["last_request"]        = "בקשה אחרונה נשלחה ב";         // Used for the title tooltip on More Info button
+$vocab["by"]                  = "על ידי";                           // Used for the title tooltip on More Info button
+$vocab["sent_at"]             = "נשלח ב";
+$vocab["yes"]                 = "כן";
+$vocab["no"]                  = "לא";
+
+// Used in edit_entry_handler.php
+$vocab["error"]              = "תקלה";
+$vocab["sched_conflict"]     = "הזמנה זו מתנגשת עם הזמנה אחרת";
+$vocab["conflict"]           = "ההזמנה החדשה מתנגשת עם ההזמנות הבאות";
+$vocab["rules_broken"]       = "ההזמנה החדשה מתנגשת עם מדיניות זו";
+$vocab["too_may_entrys"]     = "אפשרויות אלו יצרו יותר מדי הזמנות<br>בבקשה בחר אפשרויות אחרות!";
+$vocab["returncal"]          = "חזור לתצוגת לוח שנה";
+$vocab["failed_to_acquire"]  = "לא ניתן לקבל זכויות גישה בלעדיות למסד הנתונים";
+$vocab["invalid_booking"]    = "הזמנת חדר לא תקינה";
+$vocab["must_set_description"] = "יש להוסיף תאור קצר להזמנה. אנא חזור והוסף תיאור";
+$vocab["mail_subject_approved"]  = "הזמנה אושרה עבור $mrbs_company MRBS";
+$vocab["mail_subject_rejected"]  = "הזמנה נדחתה עבור $mrbs_company MRBS";
+$vocab["mail_subject_more_info"] = "$mrbs_company MRBS: נדרש מידע נוסף";
+$vocab["mail_subject_reminder"]  = "תזכורת עבור $mrbs_company MRBS";
+$vocab["mail_body_approved"]     = "הזמנה אושרה על ידי מנהל המערכת, להלן הפרטים:";
+$vocab["mail_body_rej_entry"]    = "הזמנה נדחתה על ידי מנהל המערכת, להלן הפרטים:";
+$vocab["mail_body_more_info"]    = "מנהל המערכת זקוק למידע נוסף בנוגע להזמנה, להלן הפרטים:";
+$vocab["mail_body_reminder"]     = "תזכורת: הזמנה ממתינה לאישור, להלן הפרטים:";
+$vocab["mail_subject_new_entry"]     = "נוספה הזמנה עבור $mrbs_company MRBS";
+$vocab["mail_subject_changed_entry"] = "עודכנה הזמנה עבור $mrbs_company MRBS";
+$vocab["mail_subject_delete"]        = "נמחקה הזמנה עבור $mrbs_company MRBS";
+$vocab["mail_body_new_entry"]     = "נוצרה הזמנה חדשה, להלן הפרטים:";
+$vocab["mail_body_changed_entry"] = "עודכנה הזמנה, להלן הפרטים:";
+$vocab["mail_body_del_entry"]     = "בוטלה הזמנה, להלן הפרטים:";
+$vocab["new_value"]           = "חדש";
+$vocab["old_value"]           = "ישן";
+$vocab["deleted_by"]          = "נמחק על ידי";
+$vocab["reason"]              = "סיבה";
+$vocab["info_requested"]      = "דרושים פרטים";
+$vocab["min_time_before"]     = "על זמן הזמנת החדר להיות מאוחר לזמן הביצוע לפחות ב:";
+$vocab["max_time_before"]     = "על זמן הזמנת החדר להיות מוקדם מזמן הביצוע לפחות ב";
+
+// Used in pending.php
+$vocab["pending"]            = "הזמנות שמחכות לאישור";
+$vocab["none_outstanding"]   = "אין לך הזמנות שמחכות לאישור";
+
+// Authentication stuff
+$vocab["accessdenied"]       = "בקשתך נדחתה";
+$vocab["norights"]           = "אין לך הרשאה לעדכן פריט זה";
+$vocab["please_login"]       = "בבקשה הרשם למערכת";
+$vocab["users.name"]          = "שם";
+$vocab["users.password"]      = "סיסמא";
+$vocab["users.level"]         = "סוג משתמש";
+$vocab["unknown_user"]       = "נא להתחבר בבקשה";
+$vocab["you_are"]            = "שלום";
+$vocab["login"]              = "התחבר למערכת";
+$vocab["logoff"]             = "התנתק מהמערכת";
+
+// Database upgrade code
+$vocab["database_login"]           = "כניסה למסד הנתונים";
+$vocab["upgrade_required"]         = "מסד הנתונים צריך שדרוג, נא לגבות את מסד הנתונים לפני ההמשך";
+$vocab["supply_userpass"]          = "נא הקלד שם משתמש וסיסמא עם הרשאות מנהל מערכת עבור מסד הנתונים";
+$vocab["contact_admin"]            = "אם אינך מנהל מערכת, אנא צור קשר עם $mrbs_admin.";
+$vocab["upgrade_to_version"]       = "מעדכן את גירסת מסד הנתונים";
+$vocab["upgrade_to_local_version"] = "Upgrading to database local version";
+$vocab["upgrade_completed"]        = "עדכון מסד הנתונים הסתיים";
+
+// User access levels
+$vocab["level_0"]            = "קריאה בלבד";
+$vocab["level_1"]            = "משתמש";
+$vocab["level_2"]            = "מנהל מערכת";
+$vocab["level_3"]            = "מנהל משתמשים";
+
+// Authentication database
+$vocab["user_list"]          = "רשימת משתמשים";
+$vocab["edit_user"]          = "עדכן משתמש";
+$vocab["delete_user"]        = "מחק משתמש";
+//$vocab["users.name"]         = Use the same as above, for consistency.
+//$vocab["users.password"]     = Use the same as above, for consistency.
+$vocab["users.email"]         = "כתובת דואל:";
+$vocab["password_twice"]     = "בבקשה כתוב פעמיים סיסמא חדשה. עדכן את מנהל המערכת בשינוי";
+$vocab["passwords_not_eq"]   = "הסיסמאות לא תואמות!";
+$vocab["password_invalid"]   = "הסיסמא הזו לא מאושרת. סיסמא חייבת לכלול:";
+$vocab["policy_length"]      = "תוים";
+$vocab["policy_alpha"]       = "אותיות";
+$vocab["policy_lower"]       = "אותיות קטנות";
+$vocab["policy_upper"]       = "אותיות גדולות";
+$vocab["policy_numeric"]     = "מספרים";
+$vocab["policy_special"]     = "תוים מיוחדים";
+$vocab["add_new_user"]       = "הוסף משתמש חדש";
+$vocab["action"]             = "פעולה";
+$vocab["user"]               = "משתמש";
+$vocab["administrator"]      = "מנהל מערכת";
+$vocab["unknown"]            = "לא ידוע";
+$vocab["ok"]                 = "אוקי";
+$vocab["show_my_entries"]    = "לחץ כדי להציג את כל ההזמנות העתידיות שלך";
+$vocab["no_users_initial"]   = "לא רשומים משתמשים במסד הנתונים. מאפשר יצירת משתמש ראשון";
+$vocab["no_users_create_first_admin"] = "צור משתמש המוגדר מנהל מערכת ואז תוכל להתחבר בעזרתו וליצור משתמשים נוספים";
+$vocab["warning_last_admin"] = "אסור למחוק מנהל מערכת זה";
+
+// Used in search.php
+$vocab["invalid_search"]     = "חיפוש ריק או לא חוקי";
+$vocab["search_results"]     = "תוצאות חיפוש ל";
+$vocab["nothing_found"]      = "לא נמצאו הזמנות תואמות";
+$vocab["records"]            = "תוצאה";
+$vocab["through"]            = "עד";
+$vocab["of"]                 = "מתוך";
+$vocab["previous"]           = "קודם";
+$vocab["next"]               = "הבא";
+$vocab["entry"]              = "הזמן חדר";
+$vocab["view"]               = "הצג";
+$vocab["advanced_search"]    = "חיפוש";
+$vocab["search_button"]      = "חיפוש";
+$vocab["search_for"]         = "חפש את";
+$vocab["from"]               = "מתאריך";
+
+// Used in report.php
+$vocab["report_on"]             = "דוח פגישות";
+$vocab["report_start"]          = "תאריך תחילת דוח";
+$vocab["report_end"]            = "תאריך סוף דוח";
+$vocab["match_area"]            = "מתאים לאזור";
+$vocab["match_room"]            = "מתאים לחדר";
+$vocab["match_type"]            = "מתאים לסוג";
+$vocab["ctrl_click_type"]       = "השתמש במקש הקונטרול כדי לבחור יותר מסוג אחד";
+$vocab["match_entry"]           = "מתאים לתיאור קצר";
+$vocab["match_descr"]           = "מתאים לתיאור מלא";
+$vocab["include"]               = "כולל";
+$vocab["report_only"]           = "רק דוח";
+$vocab["summary_only"]          = "רק סיכום";
+$vocab["report_and_summary"]    = "דוח וסיכום";
+$vocab["report_as_csv"]         = "דוח בסגנון CSV";
+$vocab["summary_as_csv"]        = "סיכום בסגנון CSV";
+$vocab["report_as_ical"]        = "דוח בסגנון iCalendar (.ics file) - excluding periods";
+$vocab["summarize_by"]          = "סוכם על ידי";
+$vocab["sum_by_descrip"]        = "תיאור קצר";
+$vocab["sum_by_creator"]        = "יוצר";
+$vocab["entry_found"]           = "-מספר ההזמנות שנמצאו";
+$vocab["entries_found"]         = "-מספר ההזמנות שנמצאו";
+$vocab["summary_header"]        = "סיכום שעות";
+$vocab["summary_header_per"]    = "סיכום תקופות";
+$vocab["summary_header_both"]   = "סיכום שעות/תקופות";
+$vocab["entries"]               = "הזמנות";
+$vocab["total"]                 = "סך הכל";
+$vocab["submitquery"]           = "בצע";
+$vocab["sort_rep"]              = "מיין דוח לפי";
+$vocab["sort_rep_time"]         = "תאריך/שעה";
+$vocab["rep_dsp"]               = "הראה בדוח";
+$vocab["rep_dsp_dur"]           = "תדירות";
+$vocab["rep_dsp_end"]           = "זמן סיום";
+$vocab["fulldescription_short"] = "תיאור מלא";
+$vocab["both"]                  = "הכל";
+$vocab["privacy_status"]        = "סטטוס פרטיות";
+$vocab["search_criteria"]       = "קריטריון לחיפוש";
+$vocab["presentation_options"]  = "אפשרויות פלט";
+
+// Used in week.php
+$vocab["weekbefore"]         = "עבור לשבוע הקודם";
+$vocab["weekafter"]          = "עבור לשבוע הבא";
+$vocab["gotothisweek"]       = "עבור לשבוע הנוכחי";
+
+// Used in month.php
+$vocab["monthbefore"]        = "עבור לחודש הקודם";
+$vocab["monthafter"]         = "עבור לחודש הבא";
+$vocab["gotothismonth"]      = "עבור לחודש הנוכחי";
+
+// Used in {day week month}.php
+$vocab["no_rooms_for_area"]  = "לא הוגדרו חדרים לאזור זה";
+
+// Used in admin.php
+$vocab["edit"]               = "עדכן";
+$vocab["delete"]             = "מחק";
+$vocab["rooms"]              = "חדרים";
+$vocab["in"]                 = "ב";
+$vocab["in"]                 = "ב";
+$vocab["noareas"]            = "לא הוגדרו אזורים";
+$vocab["noareas_enabled"]    = "אין אזורים במצב פעיל";
+$vocab["addarea"]            = "הוסף אזור";
+$vocab["name"]               = "שם";
+$vocab["noarea"]             = "לא נבחר שום אזור";
+$vocab["browserlang"]        = "Your browser is set with the following language preference order";
+$vocab["addroom"]            = "הוסף חדר";
+$vocab["capacity"]           = "קיבולת";
+$vocab["norooms"]            = "לא הוגדרו חדרים";
+$vocab["norooms_enabled"]    = "אין חדרים במצב פעיל";
+$vocab["administration"]     = "פרטי חדר";
+$vocab["invalid_area_name"]  = "קיים כבר שם כזה לאזור";
+$vocab["empty_name"]         = "לא הכנסת שם";
+
+// Used in edit_area_room.php
+$vocab["editarea"]                = "עדכן אזור";
+$vocab["change"]                  = "עדכן";
+$vocab["backadmin"]               = "חזור לחדרים";
+$vocab["editroomarea"]            = "עדכן תיאור אזור או חדר";
+$vocab["editroom"]                = "עדכן חדר";
+$vocab["viewroom"]                = "הצג חדר";
+$vocab["update_room_failed"]      = "עדכון חדר נכשל";
+$vocab["error_room"]              = "תקלה: חדר";
+$vocab["not_found"]               = "לא נמצא";
+$vocab["update_area_failed"]      = "עדכון אזור נכשל";
+$vocab["error_area"]              = "תקלה: אזור";
+$vocab["room_admin_email"]        = "דואר אלקטרוני של מנהל חדר";
+$vocab["area_admin_email"]        = "דואר אלקטרוני של מנהל אזור";
+$vocab["area_first_slot_start"]   = "שעה התחלתית";
+$vocab["area_last_slot_start"]    = "שעה סופית";
+$vocab["area_res_mins"]           = "קפיצות בדקות";
+$vocab["area_def_duration_mins"]  = "תדירות בדקות";
+$vocab["invalid_area"]            = "אזור לא חוקי!";
+$vocab["invalid_room_name"]       = "קיים כבר שם כזה לחדר באזור זה";
+$vocab["invalid_email"]           = "כתובת דואר אלקטרוני לא נכונה";
+$vocab["invalid_resolution"]      = "Invalid combination of first slot, last slot and resolution!";
+$vocab["too_many_slots"]          = 'You need to increase the value of $max_slots in the config file!';
+$vocab["general_settings"]        = "הגדרות כללי";
+$vocab["time_settings"]           = "זמני שימוש בחדר";
+$vocab["confirmation_settings"]   = "הגדרות הזמנות";
+$vocab["allow_confirmation"]      = "אפשר הזמנה טנטטיבית";
+$vocab["default_settings_conf"]   = "ברירת מחדל לסוג ההזמנה";
+$vocab["default_confirmed"]       = "הזמנה סגורה";
+$vocab["default_tentative"]       = "הזמנה טנטטיבית";
+$vocab["approval_settings"]       = "הגדרות אישורים";
+$vocab["enable_approval"]         = "חייב אישור הזמנות";
+$vocab["enable_reminders"]        = "אפשר תזכורות למנהל מערכת";
+$vocab["private_settings"]        = "הגדרות פרטיות";
+$vocab["allow_private"]           = "אפשר הזמנות פרטיות";
+$vocab["force_private"]           = "חייב הזמנות פרטיות";
+$vocab["default_settings"]        = "ברירת המחדל";
+$vocab["default_private"]         = "פרטי";
+$vocab["default_public"]          = "ציבורי";
+$vocab["private_display"]         = "תצוגת הזמנות פרטיות";
+$vocab["private_display_label"]   = "איך צריכה להראות תצוגת ההזמנות הפרטיות?";
+$vocab["private_display_caution"] = "שים לב: אנא שקול היטב את הגדרות הפרטיות לפני שינוי ההגדרות";
+$vocab["treat_respect"]           = "כבד הגדרות פרטיות בהזמנה";
+$vocab["treat_private"]           = "נהג בכל ההזמנות כפרטיות והתעלם מהגדרות הפרטיות";
+$vocab["treat_public"]            = "נהג בכל ההזמנות כציבוריות והתעלם מהגדרות הפרטיות";
+$vocab["sort_key"]                = "מספר למיון חדרים";
+$vocab["sort_key_note"]           = "החדרים ימוינו על פי מפתח זה";
+$vocab["booking_policies"]        = "תנאי הזמנת חדר";
+$vocab["min_book_ahead"]          = "מינימום זמן להזמנה עתידית";
+$vocab["max_book_ahead"]          = "מקסימום זמן להזמנה עתידית";
+$vocab["custom_html"]             = "Custom HTML";
+$vocab["custom_html_note"]        = "בשדה זה תוכל להוסיף קוד משלך למשל, קישור למפה";
+$vocab["email_list_note"]         = "הכנס רשימה של כתובות דואל, מופרדות בפסיקים או בשורות נפרדות.";
+$vocab["mode"]                    = "אופן פעולה";
+$vocab["mode_periods"]            = "תקופות";
+$vocab["mode_times"]              = "זמנים";
+$vocab["times_only"]              = "זמנים בלבד";
+$vocab["enabled"]                 = "פעיל";
+$vocab["disabled"]                = "לא פעיל";
+$vocab["disabled_area_note"]      = "אם אזור זה לא פעיל, הוא לא יופיע בתצוגת לוח שנה " .
+                                    "ולא יהיה אפשרי להזמין חדר השייך לו. אבל הזמנות קיימות " .
+                                    "יישמרו ויהיה פשר לראותם בתוצאות חיפוש ובדוחות.";
+$vocab["disabled_room_note"]      = "אם החדר הזה אינו פעיל, הוא לא יופיע בתצוגת לוח שנה " .
+                                    "ולא יהיה אפשרי להזמין אותו. אבל הזמנות קיימות " .
+                                    "יישמרו ויהיה אפשר לראותם בתוצאות חיפוש ובדוחות";
+$vocab["book_ahead_note_periods"] = "When using periods, book ahead times are rounded down to the nearest whole day.";
+
+// Used in edit_users.php
+$vocab["name_empty"]         = "אתה חייב להכניס שם";
+$vocab["name_not_unique"]    = "שם זה כבר קיים. בבקשה בחר שם אחר";
+
+// Used in del.php
+$vocab["deletefollowing"]    = "פעולה זו תמחוק את ההזמנות הבאות";
+$vocab["sure"]               = "האם אתה בטוח?";
+$vocab["YES"]                = "כן";
+$vocab["NO"]                 = "לא";
+$vocab["delarea"]            = "אתה חייב למחוק את כל החדרים שבאזור זה לפי שתוכל למחוק את האזור<p>";
+
+// Used in help.php
+$vocab["about_mrbs"]         = "About MRBS";
+$vocab["database"]           = "Database";
+$vocab["system"]             = "System";
+$vocab["servertime"]         = "Server time";
+$vocab["please_contact"]     = "Please contact ";
+$vocab["for_any_questions"]  = "for any questions that aren't answered here.";
+
+// Used in mysql.inc AND pgsql.inc
+$vocab["failed_connect_db"]  = "תקלה: ההתחברות למערכת נכשלה.";
+
+// General
+$vocab["fatal_db_error"]     = "תקלה: המערכת אינה זמינה כרגע. נסה שוב מאוחר יותר.";
+
+?>

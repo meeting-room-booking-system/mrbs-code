@@ -58,6 +58,8 @@ $lang_map_windows = array
   'fr-ca' => 'frc',
   'fr-ch' => 'frs',
   'fr-fr' => 'fra',
+  'he' => 'heb',
+  'he-il' => 'heb',
   'hr' => 'hrv',
   'hr-hr' => 'hrv',
   'hu' => 'hun',
@@ -138,6 +140,7 @@ $winlocale_codepage_map = array
   'frb' => 'CP1252',
   'frc' => 'CP1252',
   'frs' => 'CP1252',
+  'heb' => 'CP1255',
   'hrv' => 'CP1250',
   'hun' => 'CP1250',
   'ita' => 'CP1252',
@@ -337,7 +340,8 @@ $aix_utf8_converters = array
   'TIS-620'
 );
 
-
+// A list of languages that use Right to Left text
+$rtl_languages = array('he');
 
 ////////////////////////////////////////////////////////////////////////
 // Language token handling
@@ -432,6 +436,9 @@ if (!$disable_automatic_language_changing || $cli_mode)
     {
       include $lang_file;
       $locale = $lang;
+      // Work out if we're using a RTL language.   This variable is used
+      // globally so that we can include the correct stylesheet
+      $using_rtl = in_array(strtolower($lang), $rtl_languages);
       $doneit = 1;
       break;
     }
