@@ -1808,6 +1808,11 @@ $(window).load(function() {
             <?php // Apply a wrapper to turn off highlighting ?>
             table.wrap('<div class="resizing"><\/div>');
             var jqTarget = $(e.target);
+            <?php // If we've landed on the + symbol we want the parent ?>
+            if (e.target.nodeName.toLowerCase() == "img")
+            {
+              jqTarget = jqTarget.parent();
+            }
             downHandler.origin = jqTarget.offset();
             downHandler.firstPosition = {x: e.pageX, y: e.pageY};
             <?php
