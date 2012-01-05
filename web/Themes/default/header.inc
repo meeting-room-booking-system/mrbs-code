@@ -1365,10 +1365,7 @@ $(window).load(function() {
     // can then get a set of parameters to send to edit_entry_handler as an Ajax request.
     // The result is a JSON object containg a success/failure boolean and the new table
     // HTML if successful or the reasons for failure if not.
-    //
-    // For the moment we don't support resizable bookings with RTL languages (eg Hebrew).
-    // That's because the code below assumes a LTR model and needs to be fixed 
-    if (function_exists('json_encode') && !$using_rtl)
+    if (function_exists('json_encode'))
     {
       // 
       // We don't allow resizable bookings for IE8 and below.   In theory they should
@@ -1379,6 +1376,11 @@ $(window).load(function() {
       ?>
       if (!lteIE8)
       {
+        <?php
+        // function to reverse a collection of jQuery objects
+        ?>
+        $.fn.reverse = [].reverse;
+        
         <?php
         // Get the sides of the rectangle represented by the jQuery object jqObject
         // We round down the size of the rectangle to avoid any spurious overlaps
@@ -1499,9 +1501,19 @@ $(window).load(function() {
           // that we can compare them properly.   It is simplest to use zero and put any
           // padding required on the contained element.
           ?>
+          var rtl = (table.css('direction').toLowerCase() == 'rtl');
           tableData.x = {};
           tableData.x.data = [];
           var columns = table.find('thead tr:first-child th').not('.first_last');
+          <?php
+          // If the table has direction rtl, as it may do if you're using a RTL language
+          // such as Hebrew, then the columns will have been presented in the order right
+          // to left and we'll need to reverse the columns.
+          ?>
+          if (rtl)
+          {
+            columns.reverse();
+          }
           columns.each(function() {
               if (tableData.x.key === undefined)
               {
@@ -1511,20 +1523,36 @@ $(window).load(function() {
                                      value: $(this).data(tableData.x.key)});
             });
           <?php 
-          // and also get the right hand edge.   If we're dealing with seconds we need to
-          // know what the end time of the slot would be
+          // and also get the right hand edge (and also the left hand edge if the
+          // direction is RTL, as in Hebrew).  If we're dealing with seconds
+          // we need to know what the end time of the slot would be
           ?>
+          if (rtl)
+          {
+            columns.filter(':first').each(function() {
+                var value = null;
+                if (tableData.x.key == 'seconds')
+                {
+                  value = tableData.x.data[0].value;
+                  value += tableData.x.data[0].value - tableData.x.data[1].value;
+                }
+                var edge = $(this).offset().left;
+                tableData.x.data.unshift({coord: edge, value: value});
+              });
+          }
+
           columns.filter(':last').each(function() {
               var value = null;
               if (tableData.x.key == 'seconds')
               {
-                value = tableData.x.data[tableData.x.data.length - 1].value +
-                        tableData.x.data[1].value - tableData.x.data[0].value;
+                value = tableData.x.data[tableData.x.data.length - 1].value;
+                value += tableData.x.data[1].value - tableData.x.data[0].value;
               }
-              tableData.x.data.push({coord: $(this).offset().left + $(this).outerWidth(),
-                                     value: value});
+              var edge = $(this).offset().left + $(this).outerWidth();
+              tableData.x.data.push({coord: edge, value: value});
             });
 
+    
           tableData.y = {};
           tableData.y.data = [];
           var rows = table.find('tbody td:first-child').not('.multiple_booking td');
@@ -1691,7 +1719,8 @@ $(window).load(function() {
         // the values for that booking (for example an array of room ids)
         ?>
         function getBookingParams(div)
-        {
+        { 
+          var rtl = (table.css('direction').toLowerCase() == 'rtl');
           var params = {};
           var data;
           var tolerance = 2; <?php //px ?>
@@ -1707,26 +1736,54 @@ $(window).load(function() {
             {
               params[tableData[axis].key] = [];
             }
-            for (var i=0; i<data.length; i++)
+            if (rtl && (axis=='x'))
             {
-              if ((data[i].coord + tolerance) > cell[axis].end)
+              for (var i = data.length - 1; i >= 0; i--)
               {
-                <?php
-                // 'seconds' behaves slightly differently to the other parameters:
-                // we need to know the end time for the new slot.    Also it's possible
-                // for us to have a zero div, eg when selecting a new booking, and if
-                // so we need to make sure there's something returned
-                ?>
-                if ((tableData[axis].key == 'seconds') ||
-                    (params[tableData[axis].key].length == 0))
+                if ((data[i].coord + tolerance) < cell[axis].start)
+                {
+                  <?php
+                  // 'seconds' behaves slightly differently to the other parameters:
+                  // we need to know the end time for the new slot.    Also it's possible
+                  // for us to have a zero div, eg when selecting a new booking, and if
+                  // so we need to make sure there's something returned
+                  ?>
+                  if ((tableData[axis].key == 'seconds') ||
+                      (params[tableData[axis].key].length == 0))
+                  {
+                    params[tableData[axis].key].push(data[i].value);
+                  }
+                  break;
+                }
+                if ((data[i].coord + tolerance) < cell[axis].end)
                 {
                   params[tableData[axis].key].push(data[i].value);
                 }
-                break;
               }
-              if ((data[i].coord + tolerance) > cell[axis].start)
+            }
+            else
+            {
+              for (var i=0; i<data.length; i++)
               {
-                params[tableData[axis].key].push(data[i].value);
+                if ((data[i].coord + tolerance) > cell[axis].end)
+                {
+                  <?php
+                  // 'seconds' behaves slightly differently to the other parameters:
+                  // we need to know the end time for the new slot.    Also it's possible
+                  // for us to have a zero div, eg when selecting a new booking, and if
+                  // so we need to make sure there's something returned
+                  ?>
+                  if ((tableData[axis].key == 'seconds') ||
+                      (params[tableData[axis].key].length == 0))
+                  {
+                    params[tableData[axis].key].push(data[i].value);
+                  }
+                  break;
+                }
+                if ((data[i].coord + tolerance) > cell[axis].start)
+                {
+                  params[tableData[axis].key].push(data[i].value);
+                }
               }
             }
           }
@@ -2137,7 +2194,7 @@ $(window).load(function() {
               // callback function called when the resize stops
               ?>
               var divResizeStop = function (event, ui)
-              {
+              {          
                 <?php // Clear the map of booked cells ?>
                 bookedMap = [];
               
