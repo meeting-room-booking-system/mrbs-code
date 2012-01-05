@@ -80,7 +80,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $select_options;
   global $ajax_refresh_rate;
   global $main_table_cell_border_width, $main_cell_height;
-  global $timetohighlight, $using_rtl;
+  global $timetohighlight;
   
   $page = basename($PHP_SELF, ".php");
   $user = getUserName();
