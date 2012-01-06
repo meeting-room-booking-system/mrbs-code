@@ -1504,7 +1504,8 @@ $(window).load(function() {
           var rtl = (table.css('direction').toLowerCase() == 'rtl');
           tableData.x = {};
           tableData.x.data = [];
-          var columns = table.find('thead tr:first-child th').not('.first_last');
+          <?php // We need :visible because there might be hidden days // ?>
+          var columns = table.find('thead tr:first-child th:visible').not('.first_last');
           <?php
           // If the table has direction rtl, as it may do if you're using a RTL language
           // such as Hebrew, then the columns will have been presented in the order right
