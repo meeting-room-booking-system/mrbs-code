@@ -1,0 +1,403 @@
+﻿<?php // -*-mode: PHP; coding:utf-8;-*-
+// $Id$
+
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.en, and anything in a locale
+// specific file will overwrite the default. This is a US/UK English file.
+//
+//
+//
+//
+// This file is PHP code. Treat it as such.
+
+// Used in style.inc
+$vocab["mrbs"]               = "ระบบจองการใช้ห้อง";
+
+// Used in functions.inc
+$vocab["report"]             = "รายงาน";
+$vocab["admin"]              = "ผู้ดูแลระบบ";
+$vocab["help"]               = "ช่วยเหลือ";
+$vocab["search"]             = "ค้นหา";
+$vocab["not_php3"]           = "คำเตือน : ระบบนี้อาจจะไม่ได้ทำงานกับ PHP3";                                                                                          
+$vocab["outstanding"]        = "การจองที่รอดำเนินการ";
+
+// Used in day.php
+$vocab["bookingsfor"]        = "จองสำหรับ";
+$vocab["bookingsforpost"]    = "ไปหลังจากวันที่";
+$vocab["areas"]              = "พื้นที่";
+$vocab["daybefore"]          = "ก่อนหน้า";
+$vocab["dayafter"]           = "ถัดไป";
+$vocab["gototoday"]          = "วันนี้";
+$vocab["goto"]               = "ไปยัง";
+$vocab["highlight_line"]     = "ไฮไลน์บรรทัดนี้";
+$vocab["click_to_reserve"]   = "คลิกที่เซลล์เพื่อทำการสำรองห้อง";
+$vocab["timezone"]           = "เขต";
+
+// Used in trailer.inc
+$vocab["viewday"]            = "มุมมองรายวัน";
+$vocab["viewweek"]           = "มุมมองรายสัปดาห์";
+$vocab["viewmonth"]          = "มุมมองรายเดือน";
+$vocab["ppreview"]           = "ดูตัวอย่างก่อนพิมพ์";
+
+// Used in edit_entry.php
+$vocab["addentry"]           = "เพิ่มข้อมูล";
+$vocab["editentry"]          = "แก้ไขข้อมูล";
+$vocab["copyentry"]          = "คัดลอก";
+$vocab["editseries"]         = "ชุดแก้ไข";
+$vocab["copyseries"]         = "ชุดคัดลอก";
+$vocab["namebooker"]         = "คำอธิบายโดยย่อ";
+$vocab["fulldescription"]    = "คำอธิบายโดยละเอียด:<br>&nbsp;&nbsp;(จำนวนคน,<br>&nbsp;&nbsp;ภายใน/ภายนอก เป็นต้น.)";
+$vocab["date"]               = "วัน";
+$vocab["start"]              = "เริ่มต้น";
+$vocab["end"]                = "สิ้นสุด";
+$vocab["start_date"]         = "เวลาเริ่มต้น";
+$vocab["end_date"]           = "เวลาสิ้นสุด";
+$vocab["time"]               = "เวลา";
+$vocab["period"]             = "ระยะเวลา";
+$vocab["duration"]           = "ช่วงเวลา";
+$vocab["second_lc"]          = "วินาที";
+$vocab["seconds"]            = "หลายวินาที";
+$vocab["minute_lc"]          = "นาที";
+$vocab["minutes"]            = "หลายนาที";
+$vocab["hour_lc"]            = "ชั่วโมง";
+$vocab["hours"]              = "หลายชั่วโมง";
+$vocab["day_lc"]             = "วัน";
+$vocab["days"]               = "หลายวัน";
+$vocab["week_lc"]            = "สัปดาห์";
+$vocab["weeks"]              = "หลายสัปดาห์";
+$vocab["year_lc"]            = "ปี";
+$vocab["years"]              = "หลายปี";
+$vocab["period_lc"]          = "ระยะเวลา";
+$vocab["periods"]            = "ระยะเวลานาน";
+$vocab["all_day"]            = "ทั้งวัน";
+$vocab["area"]               = "พื้นที่";
+$vocab["type"]               = "ชนิด";
+$vocab["internal"]           = "ภายใน";
+$vocab["external"]           = "ภายนอก";
+$vocab["save"]               = "บันทึก";
+$vocab["rep_type"]           = "ทำซ้ำประเภท ";
+$vocab["rep_type_0"]         = "ไม่";
+$vocab["rep_type_1"]         = "ทุกวัน";
+$vocab["rep_type_2"]         = "ทุกสัปดาห์";
+$vocab["rep_type_3"]         = "ทุกเดือน";
+$vocab["rep_type_4"]         = "ทุกปี";
+$vocab["rep_type_5"]         = "ทุกเดือน, วันเดียวกัน";
+$vocab["rep_type_6"]         = "n-ทุกสัปดาห์";
+$vocab["rep_end_date"]       = "ทำซ้ำวันสิ้นสุด";
+$vocab["rep_rep_day"]        = "ทำซ้ำวัน";
+$vocab["rep_for_weekly"]     = "(สำหรับทุกสัปดาห์หรือ n-ทุกสัปดาห์)";
+$vocab["rep_freq"]           = "สม่ำเสมอ";
+$vocab["rep_num_weeks"]      = "จำนวนสัปดาห์";
+$vocab["rep_for_nweekly"]    = "(สำหรับ n-ทุกสัปดาห์)";
+$vocab["ctrl_click"]         = "ใช้ คอลโทรล คลิก เพื่อเลือกมากว่า 1 ห้อง";
+$vocab["entryid"]            = "เพิ่มหมายเลขประจำตัว ";
+$vocab["repeat_id"]          = "ใส่หมายเลขประจำตัวอีกครั้ง ";
+$vocab["you_have_not_entered"] = "คุณไม่เพิ่ม";
+$vocab["you_have_not_selected"] = "คุณไม่เลือก";   
+$vocab["valid_room"]         =  "ห้อง ";
+$vocab["brief_description"]  = "คำอธิบายโดยย่อ ";			                  
+$vocab["useful_n-weekly_value"] = "ประโยชน์ของ n - ทุกสัปดาห์ที่มีคุณค่า.";
+$vocab["status"]             = "สถานะ";
+$vocab["public"]             = "สาธารณะ";
+$vocab["private"]            = "ส่วนตัว";
+$vocab["unavailable"]        = "ส่วนตัว";
+$vocab["is_mandatory_field"] = "เป็นเขตที่ได้รับคำสั่ง, กรุณาตั้งคุณค่า";
+$vocab["missing_mandatory_field"] = "คุณไม่ได้ตั้งคุณค่าสำหรับเขตที่ได้รับคำสั่ง";
+$vocab["confirmed"]          = "ยืนยัน";
+$vocab["start_after_end"]    = "เริ่มหลังจากวันสุดท้าย";
+$vocab["start_after_end_long"] = "ล้มเหลว: วันเริ่มต้นคือต้องเริ่มจากวันสุดท้าย";
+
+// Used in view_entry.php
+$vocab["description"]         = "รายละเอียด";
+$vocab["room"]                = "ห้อง";
+$vocab["createdby"]           = "สร้างโดย";
+$vocab["lastupdate"]          = "อัพเดทล่าสุด";
+$vocab["deleteentry"]         = "ลบ";
+$vocab["deleteseries"]        = "ลบชุด";
+$vocab["exportentry"]         = "กรอกข้อมูลส่งออก";		
+$vocab["exportseries"]        = "ชุดการส่งออก";
+$vocab["confirmdel"]          = "คุณแน่ใจแล้วหรือไม่ว่าคุณจะลบการกรอกข้อมูลเหล่านี้";
+$vocab["returnprev"]          = "ย้อนกลับไปยังก่อนหน้า";
+$vocab["invalid_entry_id"]    = "กรอก id ไม่ครบถ้วน";
+$vocab["invalid_series_id"]   = "id ชุดที่ไม่สมบูรณ์.";
+$vocab["confirmation_status"] = "ยืนยันสถานะ";
+$vocab["tentative"]           = "ยังไม่แน่นอน";
+$vocab["approval_status"]     = "อนุมัติสถานะ";				
+$vocab["approved"]            = "ถูกอนุมัติ";
+$vocab["awaiting_approval"]   = "กำลังรออนุมัติ";
+$vocab["approve"]             = "อนุมัติ";
+$vocab["reject"]              = "ปฏิเสธ";
+$vocab["more_info"]           = "ข้อมูลเพิ่มเติ่ม";
+$vocab["remind_admin"]        = "เตือนผู้ใช้ระบบ";
+$vocab["series"]              = "ชุด";
+$vocab["request_more_info"]   = "กรุณาใส่ข้อมูลพิเศษที่คุณต้องการ";
+$vocab["reject_reason"]       = "กรุณาให้เหตุผลเกี่ยวกับการปฏิเสธความต้องการในการของของคุณในครั้งนี้";
+$vocab["send"]                = "ส่ง";
+$vocab["approve_failed"]      = "การจองไม่สามารถอนุมัติได้";
+$vocab["no_request_yet"]      = "ไม่ต้องการส่งข้อมูล";//ที่ใช้สำหรับเป็นปุ่มข้อมูลเพิ่มเติมในส่วนเครื่องมือบนสุด
+$vocab["last_request"]        = "ส่งข้อมูลที่ต้องการล่าสุดที่"; //ที่ใช้สำหรับเป็นปุ่มข้อมูลเพิ่มเติมในส่วนเครื่องมือบนสุด
+$vocab["by"]                  = "โดย"; // ที่ใช้สำหรับเป็นปุ่มข้อมูลเพิ่มเติมในส่วนเครื่องมือบนสุด
+$vocab["sent_at"]             = "ส่งที่ ";
+$vocab["yes"]                 = "ใช่";
+$vocab["no"]                  = "ไม่";
+
+// Used in edit_entry_handler.php
+$vocab["error"]              = "ล้มเหลว";
+$vocab["sched_conflict"]     = "ความขัดแย้งการตั้งเวลา";
+$vocab["conflict"]           = "การจองห้องใหม่จะขัดแย้งกับรายการต่อไปนี้";
+$vocab["rules_broken"]       = "การจองห้องใหม่จะขัดแย้งกับนโยบายต่อไปนี้";
+$vocab["too_may_entrys"]     = "ตัวเลือกที่เลือกจะสร้างรายการที่มากเกินไป <br> กรุณาใช้ตัวเลือกที่แตกต่างกัน.!";
+$vocab["returncal"]          = "กลับไปที่มุมมองปฏิทิน";
+$vocab["failed_to_acquire"]  = "ล้มเหลวที่จะได้รับการเข้าถึงฐานข้อมูล แต่เพียงผู้เดียว";
+$vocab["invalid_booking"]    = "การจองไม่สมบูรณ์";
+$vocab["must_set_description"] = "คุณต้องตั้งค่าคำอธิบายสั้น ๆ สำหรับการจองห้องพักโปรดกลับไปและกรอกอีก 1 ครั้ง";
+$vocab["mail_subject_approved"]  = "การกรอกข้อมูลถูกอนุมัติสำหรับ $mrbs_company MRBS ";
+$vocab["mail_subject_rejected"]  = "การกรอกข้อมูลถูกปฏิเสธสำหรับระบบ $mrbs_company MRBS";
+$vocab["mail_subject_more_info"] = "$mrbs_company MRBS: ข้อมูลเพิ่มเติมที่ถูกร้องขอ";
+$vocab["mail_subject_reminder"]  = "เครื่องเตือนสำหรับระบบ $mrbs_company MRBS";
+$vocab["mail_body_approved"]     = "รายการได้รับการอนุมัติโดยผู้ดูแลระบบ;รายละเอียดที่นี่ :";
+$vocab["mail_body_rej_entry"]    = "รายการได้รับการปฏิเสธโดยผู้ดูแลระบบ ;รายละเอียดที่นี่:";
+$vocab["mail_body_more_info"]    = "ผู้ดูแลระบบร้องขอข้อมูลเกี่ยวกับการกรอกข้อมูล; รายละเอียดที่นี่:";
+$vocab["mail_body_reminder"]     = "เครื่องเตือน- การกรอกข้อมูลกำลังรอการอนุมัติ ; รายละเอียดที่นี่:";
+$vocab["mail_subject_new_entry"]     = "กรอกข้อมูลเพิ่มสำหรับระบบ $mrbs_company MRBS";
+$vocab["mail_subject_changed_entry"] = "เปลี่ยนข้อมูลสำหรับระบบ$mrbs_company MRBS";
+$vocab["mail_subject_delete"]        = "ลบข้อมูลสำหรับระบบ $mrbs_company MRBS";
+$vocab["mail_body_new_entry"]     = "การกรอกข้อมูลใหม่ถูกจอง,รายละอียดที่นี่:";
+$vocab["mail_body_changed_entry"] = "การกรอกข้อมูลถูกแก้ไข,รายละอียดที่นี่:";
+$vocab["mail_body_del_entry"]     = "การกรอกข้อมูลถูกลบ,รายละอียดที่นี่:";
+$vocab["new_value"]               = "ใหม่";
+$vocab["old_value"]               = "อายุ";
+$vocab["deleted_by"]              = "ลบโดย";
+$vocab["reason"]                  = "เหตุผล";
+$vocab["info_requested"]          = "ร้องขอข้อมูล";
+$vocab["min_time_before"]         = "ช่วงเวลาขั้นต่ำในขณะนี้และระหว่างการเริ่มต้นของการจองเป็น";
+$vocab["max_time_before"]         = "ช่วงเวลาสูงสุดในขณะนี้และระหว่างการเริ่มต้นของการจองเป็น";
+$vocab["max_booking_duration"]    = "ช่วงเวลาสูงสุดของการจองคือ";
+
+// Used in pending.php
+$vocab["pending"]            = "การจองกำลังรอการอนุมัติ";
+$vocab["none_outstanding"]   = "คุณไม่มีการจองที่ต้องรอการอนุมัติ";
+
+// Authentication stuff
+$vocab["accessdenied"]       = "การเข้าถึงถูกปฏิเสธ ";
+$vocab["norights"]           = "คุณไม่ได้รับสิทธิ์ในการปรับเปลี่ยนรายการนี้.";
+$vocab["please_login"]       = "กรุณาล๊อคอิน";
+$vocab["users.name"]          = "ชื่อ";
+$vocab["users.password"]      = "พาสเวิร์ด";
+$vocab["users.level"]         = "สิทธิ";
+$vocab["unknown_user"]       = "ไม่รู้จักผู้ใช้";
+$vocab["you_are"]            = "คุณคือ";
+$vocab["login"]              = "เข้าสู้ระบบ";
+$vocab["logoff"]             = "ออกจากระบบ";
+
+// Database upgrade code
+$vocab["database_login"]           = "เข้าสู่ระบบฐานข้อมูล";
+$vocab["upgrade_required"]         = "ระบบฐานข้อมูลต้องการที่จะอัพเกรด.  กรุณาสำรองฐานข้อมูลของคุณก่อนที่จะดำเนินการ.";
+$vocab["supply_userpass"]          = "กรุณาจัดหาฐานข้อมูลของผู้ใช้และพาสเวิร์ดที่เป็นสิทธิผู้ดูแลระบบ";
+$vocab["contact_admin"]            = " ถ้าคุณไม่ใช่ผู้ดูระบบจองการใช้ห้อง กรุณาติอต่อผู้ดูแลระบบ";
+$vocab["upgrade_to_version"]       = "ปรับปรุงฐานข้อมูล";
+$vocab["upgrade_to_local_version"] = "อัพเกรดฐานข้อมูลพื้นฐาน";
+$vocab["upgrade_completed"]        = "ฐานข้อมูลอัพเกรดเรียบร้อยแล้ว";
+
+// User access levels
+$vocab["level_0"]            = "ไม่";
+$vocab["level_1"]            = "ผู้ใช้งาน";
+$vocab["level_2"]            = "ผู้ดูแลระบบ";
+$vocab["level_3"]            = "ผู้ใช้ระบบ";
+
+// Authentication database
+$vocab["user_list"]          = "รายชื่อผู้ใช้งาน";			                  
+$vocab["edit_user"]          = "แก้ไขผู้ใช้งาน";			                  
+$vocab["delete_user"]        = "ลบผู้ใช้รายนี้";			                
+//$vocab["users.name"]         = การใช้งานเช่นเดียวกับข้างต้น,สำหรับความสอดคล้อง				
+//$vocab["users.password"]     = การใช้งานเช่นเดียวกับข้างต้น,สำหรับความสอดคล้อง				
+$vocab["users.email"]         = "อีเมล์";				
+$vocab["password_twice"]     = "ถ้าคุณต้องการเปลี่ยนพาสเวิร์ด กรุณาพิมพ์ พาสเวิร์ดใหม่ 2 ครั้ง";
+$vocab["passwords_not_eq"]   = "พาสเวิร์ดไม่ตรง!";
+$vocab["password_invalid"]   = "พาสเวิร์ดไม่ตรงกันกับระบบ จะต้องใส่อย่างน้อย:";
+$vocab["policy_length"]      = "อักขระ";
+$vocab["policy_alpha"]       = "ตัวอักษร";
+$vocab["policy_lower"]       = "อักษรตัวเล็ก";
+$vocab["policy_upper"]       = "อักษรตัวใหญ่";
+$vocab["policy_numeric"]     = "ตัวเลข";
+$vocab["policy_special"]     = "สัญลักษณ์พิเศษ";
+$vocab["add_new_user"]       = "เพิ่มผู้ใช้งาน";
+$vocab["action"]             = "ดำเนินการ";
+$vocab["user"]               = "ผู้ใช้งาน";
+$vocab["administrator"]      = "ผู้ดูแลระบบ";
+$vocab["unknown"]            = "ไม่รู้จัก";
+$vocab["ok"]                 = "ตกลง";
+$vocab["show_my_entries"]    = "คลิกเพื่อแสดงรายการที่จะเกิดขึ้นทั้งหมดของฉัน";
+$vocab["no_users_initial"]   = "ไม่มีผู้ใช้ในระบบฐานข้อมูล, สร้างผู้ใช้เบื้องต้น ";
+$vocab["no_users_create_first_admin"] = "สร้างการกำหนดค่าของผู้ใช้เป็นผู้ดูแลระบบแล้วคุณสามารถล๊อคอินและสร้างผู้ใช้มากขึ้น.";
+$vocab["warning_last_admin"] = "คำเตือน! นี้คือผู้ดูแลระบบครั้งล่าสุดและเพื่อให้คุณไม่สามารถลบผู้ใช้นี้หรือลบสิทธิผู้ดูแลระบบ,มิฉะนั้นคุณจะถูกล็อคออกจากระบบ.";
+// Used in search.php
+$vocab["invalid_search"]     = "ว่างเปล่าหรือการค้นหาไม่ถูกต้อง.";
+$vocab["search_results"]     = "ผลการค้นหาสำหรับ";
+$vocab["nothing_found"]      = "ไม่มีรายการที่ตรงกับข้อมูลที่ค้นพบ.";
+$vocab["records"]            = "บันทึก ";
+$vocab["through"]            = "ผ่าน ";
+$vocab["of"]                 = "ของ ";
+$vocab["previous"]           = "ก่อนหน้า";
+$vocab["next"]               = "ถัดไป";
+$vocab["entry"]              = "เข้า";
+$vocab["view"]               = "มุมมอง";
+$vocab["advanced_search"]    = "การค้นหาขั้นสูง";
+$vocab["search_button"]      = "ค้นหา";
+$vocab["search_for"]         = "ค้นหาเพื่อ";
+$vocab["from"]               = "จาก";
+// Used in report.php
+$vocab["report_on"]             = "รายงานเกี่ยวกับการประชุม";
+$vocab["report_start"]          = "วันเริ่มต้นรายงาน";
+$vocab["report_end"]            = "วันสิ้นสุดรายงาน";
+$vocab["match_area"]            = "จับคู่พื้นที่";
+$vocab["match_room"]            = "จับคู่ห้อง";
+$vocab["match_type"]            = "จับคู่ชนิด";
+$vocab["ctrl_click_type"]       = "ใช้ คอลโทรล คลิก เพื่อเลือกมากกว่า 1 ชนิด";
+$vocab["match_entry"]           = "ตรงกับคำอธิบายโดยย่อ ";
+$vocab["match_descr"]           = "ตรงกับคำอธิบายทั้งหมด";
+$vocab["include"]               = "ประกอบ";
+$vocab["report_only"]           = "รายงานเท่านั้น";
+$vocab["summary_only"]          = "สรุปเท่านั้น";
+$vocab["report_and_summary"]    = "รายงานและสรุป";
+$vocab["report_as_csv"]         = "รายงานเป็น CSV";
+$vocab["summary_as_csv"]        = "สรุปเป็น CSV";
+$vocab["report_as_ical"]        = "รายงานเป็น ปฎิทิน-ไม่รวมระยะเวลา";
+$vocab["summarize_by"]          = "สรุปโดย";
+$vocab["sum_by_descrip"]        = "รายละเอียดโดยย่อ";
+$vocab["sum_by_creator"]        = "ผู้สร้าง";
+$vocab["sum_by_type"]           = "ชนิด";
+$vocab["entry_found"]           = "ค้นพบการกรอกข้อมูล";
+$vocab["entries_found"]         = "ค้นพบการกรอกข้อมูล";
+$vocab["summary_header"]        = "สรุป(กรอกข้อมูล) รายชั่วโมง";
+$vocab["summary_header_per"]    = "สรุป(กรอกข้อมูล) ช่วงระยะเวลา";
+$vocab["summary_header_both"]   = "สรุป (กรอกข้อมูล) รายชั่วโมง/ช่วงระยะเวลา";
+$vocab["entries"]               = "กรอกข้อมูล";
+$vocab["total"]                 = "ทั้งหมด";
+$vocab["submitquery"]           = "อ่านรายงาน";
+$vocab["sort_rep"]              = "แยกประเภทการรายงานโดย";
+$vocab["sort_rep_time"]         = "เริ่ม วันที่/เวลา";
+$vocab["rep_dsp"]               = "แสดงผลในรายงาน";
+$vocab["rep_dsp_dur"]           = "ช่วงเวลา";
+$vocab["rep_dsp_end"]           = "สิ้นสุดเวลา";
+$vocab["fulldescription_short"] = "รายละเอียดเต็ม";
+$vocab["both"]                  = "ทั้งหมด";
+$vocab["privacy_status"]        = "สถานะความเป้นส่วนตัว";
+$vocab["search_criteria"]       = "กฎเกณฑ์การค้นหา";
+$vocab["presentation_options"]  = "ตัวเลือกเอาท์พุท";
+// Used in week.php
+
+$vocab["weekbefore"]         = "ไปยังสัปดาห์ก่อนหน้า";
+$vocab["weekafter"]          = "ไปยังสัปดาห์ถัดไป";
+$vocab["gotothisweek"]       = "ไปยังสัปดาห์นี้";
+// Used in month.php
+
+$vocab["monthbefore"]        = "ไปยังเดือนก่อนหน้า";
+$vocab["monthafter"]         = "ไปยังเดือนถัดไป";
+$vocab["gotothismonth"]      = "ไปยังเดือนนี้";
+// Used in {day week month}.php
+$vocab["no_rooms_for_area"]  = "ไม่มีห้องที่กำหนดให้พื้นที่นี้";
+// Used in admin.php
+$vocab["edit"]               = "แก้ไข";
+$vocab["delete"]             = "ลบ";
+$vocab["rooms"]              = "ห้อง";
+$vocab["in"]                 = "ใน";
+$vocab["noareas"]            = "พื้นที่ไม่ได้ถูกกำหนด.";
+$vocab["noareas_enabled"]    = "พื้นที่ไม่ได้ถูกให้สิทธิ.";
+$vocab["addarea"]            = "เพิ่มพื้นที่";
+$vocab["name"]               = "ชื่อ";
+$vocab["noarea"]             = "ไม่มีพื้นที่ถูกเลือก";
+$vocab["browserlang"]        = "เบราว์เซอร์ของคุณติดตั้งคำสั้งภาษาพิเศษ";
+$vocab["addroom"]            = "เพิ่มห้อง";
+$vocab["capacity"]           = "ความจุ";
+$vocab["norooms"]            = "ห้องไม่ได้ถูกกำหนด.";
+$vocab["norooms_enabled"]    = "ห้องไม่ได้ถูกให้สิทธิ.";
+$vocab["administration"]     = "ลบห้อง";
+$vocab["invalid_area_name"]  = "ชื่อพื้นที่นี้ถูกใช้งานแล้ว";
+$vocab["empty_name"]         = "คุณยังไม่ได้ป้อนชื่อ!";
+// Used in edit_area_room.php
+
+$vocab["editarea"]                = "แก้ไขพื้นที่";
+$vocab["change"]                  = "เปลี่ยน";
+$vocab["backadmin"]               = "กลับไปยังห้อง";
+$vocab["editroomarea"]            = "แก้ไขรายละเอียดพื้นที่หรือแก้ไขรายละเอียดห้อง";
+$vocab["editroom"]                = "แก้ไขห้อง";
+$vocab["viewroom"]                = "ดูห้อง";
+$vocab["update_room_failed"]      = "อัพเดทห้องล้มเหลว: ";
+$vocab["error_room"]              = "ล้มเหลว: ห้อง";
+$vocab["not_found"]               = "ไม่พบ";
+$vocab["update_area_failed"]      = "อัพเดท พื้นที่ล้มเหลว: ";
+$vocab["error_area"]              = "ล้มเหลว: พื้นที่ ";
+$vocab["room_admin_email"]        = "อีเมล์ผู้ดูแลห้อง";
+$vocab["area_admin_email"]        = "พื้นที่อีเมล์ผู้ใช้งาน";
+$vocab["area_first_slot_start"]   = "เริ่มกำหนดเวลาแรก";
+$vocab["area_last_slot_start"]    = "เริ่มกำหนดเวลาสุดท้าย";
+$vocab["area_res_mins"]           = "การแก้ไขปัญหา (หลายนาที)";
+$vocab["area_def_duration_mins"]  = "ระยะเวลาเริ่มต้น (นาที)";
+$vocab["invalid_area"]            = "พื้นที่ใช้งานไม่ได้!";
+$vocab["invalid_room_name"]       = "ชื่อห้องนี้ถูกใช้ในพื้นที่นี้แล้ว!";
+				           "ถูกใช้ในพื้นที่นี้!";
+$vocab["invalid_email"]           = "อีเมล์ ใช้งานไม่ได้!";
+$vocab["invalid_resolution"]      = "การผสมผสานที่ไม่ถูกต้องจากเวลาในตารางแรก, เวลาในตารางล่าสุดและการแก้ไขปัญหา!";
+$vocab["too_many_slots"]          = 'คุณจำเป็นต้องเพิ่มค่าของ  $max_slots ในไฟล์ config!';
+$vocab["general_settings"]        = "ทั่วไป";
+$vocab["time_settings"]           = "ตารางเวลา";
+$vocab["confirmation_settings"]   = "ยืนยันการตั้งค่า";
+$vocab["allow_confirmation"]      = "อนุญาตให้จองชั่วคราว";
+$vocab["default_settings_conf"]   = "การตั้งค่าเริ่มต้น";
+$vocab["default_confirmed"]       = "ยืนยัน";
+$vocab["default_tentative"]       = "ยังไม่แน่นอน";
+$vocab["approval_settings"]       = "อนุมัติการตั้งค่า";
+$vocab["enable_approval"]         = "การจองได้รับการอนุมัติ";
+$vocab["enable_reminders"]        = "ผู้ใช้งานอนุญาตให้ผู้ดูแลระบบเตือน";
+$vocab["private_settings"]        = "ตั้งค่าความเป็นส่วนตัว";
+$vocab["allow_private"]           = "อนุญาตการจองส่วนตัว";
+$vocab["force_private"]           = "กำลังจองส่วนตัว";
+$vocab["default_settings"]        = "เริ่มต้น/กำลังตั้งค่า";
+$vocab["default_private"]         = "ส่วนตัว";
+$vocab["default_public"]          = "สาธารณะ";
+$vocab["private_display"]         = "ตั้งค่าความเป็นส่วนตัว (แสดงผล)";
+$vocab["private_display_label"]   = "การจองส่วนตัวจะถูกแสดงผลอย่างไร";
+$vocab["private_display_caution"] = "ระบบความปลอดภัย:คิดอย่างรอบคอบเกี่ยวกับความเป็นส่วนตัวก่อนจะเปลี่ยนการตั้งค่าเหล่านี้ !";
+$vocab["treat_respect"]           = "เคารพการตั้งค่าความเป็นส่วนตัวของการจอง";
+$vocab["treat_private"]           = "ดูแลการจองทั้งหมดพักเป็นส่วนตัวโดยไม่คำนึงถึงการตั้งค่าความเป็นส่วนตัวของพวกเขา";
+$vocab["treat_public"]            = "ดูแลการจองทั้งหมดพักเป็นส่วนตัวโดยไม่คำนึงถึงการตั้งค่าความเป็นส่วนตัวของพวกเขา";
+$vocab["sort_key"]                = "แยกประเภท คีย์";
+$vocab["sort_key_note"]           = "นี่คือคีย์ที่ใช้สำหรับการสั่งจองห้อง";
+$vocab["booking_policies"]        = "นโยบายจอง";
+$vocab["min_book_ahead"]          = "การจองล่วงหน้า - ต่ำสุด";
+$vocab["max_book_ahead"]          = "การจองล่วงหน้า - สูงสุด";
+$vocab["custom_html"]             = "ลูกค้า HTML";
+$vocab["custom_html_note"]        = "เขตนี้สามารถใช้สำหรับการแสดงผลของ HTML ของคุณเอง, ตัวอย่างเช่น ระบบฝังตัวของ Google map";				
+$vocab["email_list_note"]         = "ป้อนรายการอีเมล์ แอดเดรสคั่นด้วยเครื่องหมายจุลภาคหรือขึ้นบรรทัดใหม่";
+$vocab["mode"]                    = "รูปแบบ";
+$vocab["mode_periods"]            = "ช่วงเวลา";
+$vocab["mode_times"]              = "เวลา";
+$vocab["times_only"]              = "เฉพาะรูปแบบเวลาเท่านั้น";
+$vocab["enabled"]                 = "ระบบฝังตัว";
+$vocab["disabled"]                = "ช่วยแก้ไขข้อผิดพลาด";
+$vocab["disabled_area_note"]      = "ถ้าพื้นที่นี้ถูกปิดใช้งาน,จะไม่ปรากฏในมุมมองปฏิทินและมันจะเป็นไปได้ที่จะจองห้องในระบบ"."อย่างไรก็ตามต้องออกจากระบบการจอง ข้อมูลจะถูกเก็บไว้และจะปรากฏในการค้นหาและผลของรายงาน";
+$vocab["disabled_room_note"]      = "ถ้าพื้นที่นี้ถูกปิดใช้งาน,จะไม่ปรากฏในมุมมองปฏิทินและมันจะเป็นไปได้ที่จะจองในระบบ"."อย่างไรก็ตามต้องออกจากระบบการจอง ข้อมูลจะถูกเก็บไว้และจะปรากฏในการค้นหาและผลของรายงาน";
+$vocab["book_ahead_note_periods"] = "เมื่อใช้ระยะเวลา, การจองครั้งก่อนจะถูกปัดไปยังวันที่ ที่ใกล้ที่สุด";
+// Used in edit_users.php
+$vocab["name_empty"]         = "คุณต้องใส่ชื่อ.";
+$vocab["name_not_unique"]    = "ถูกใช้ไปแล้ว โปรดเลือกชื่ออื่น.";
+// Used in del.php
+$vocab["deletefollowing"]    = "จะลบการจองนี้ดังต่อไปนี้";
+$vocab["sure"]               = "คุณแน่ใจหรือไม่?";
+$vocab["YES"]                = "ใช่";
+$vocab["NO"]                 = "ไม่";
+$vocab["delarea"]            = "คุณต้องลบห้องทุกห้องในพื้นที่นี้ก่อนที่คุณจะสามารถลบออกได้ <p>";
+// Used in help.php
+$vocab["about_mrbs"]         = "เกี่ยวกับระบบจองห้อง";
+$vocab["database"]           = "ฐานข้อมูล";
+$vocab["system"]             = "ระบบ";
+$vocab["servertime"]         = "เวลา เซิร์ฟเวอร์";
+$vocab["please_contact"]     = "กรุณาติดต่อ ";
+$vocab["for_any_questions"]  = "สำหรับคำถามใด ๆ ที่ไม่ถูกตอบคำถามที่นี่.";			                   
+// Used in mysql.inc AND pgsql.inc
+$vocab["failed_connect_db"]  = "ข้อผิดพลาดร้ายแรง : ไม่สามารถเชื่อมต่อกับฐานข้อมูล";			                   
+// General
+$vocab["fatal_db_error"]     = "ข้อผิดพลาดร้ายแรง: น่าเสียดายที่ฐานข้อมูลจะไม่สามารถใช้ได้ในขณะนี้.";
+				
+?>
