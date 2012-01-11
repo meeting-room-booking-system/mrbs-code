@@ -1171,7 +1171,9 @@ function validate(form_id)
              // If it's a checkbox then it needs to be checked.    If it's
              // an ordinary field then it must have some content.
              ?>
-             if ( ((field.attr('type').toLowerCase() == 'checkbox') && !field.attr('checked')) ||
+             if ( ((field.attr('type') !== undefined) && 
+                   (field.attr('type').toLowerCase() == 'checkbox') && 
+                   !field.attr('checked')) ||
                   (field.val() == '') )
              {
                label = $("label[for="+value+"]").html();
