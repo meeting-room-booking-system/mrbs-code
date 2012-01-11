@@ -139,6 +139,10 @@ function mrbsCheckPolicy($starttime, $duration, $delete=FALSE)
   
   // Check max_book_ahead (but not if we're deleting a booking because
   // nobody's going to mind if a booking beyond the max_book_ahead date is deleted)
+  //
+  // For the max_book_ahead case we check the endtime of the booking rather than the starttime.
+  // This prevents somebody booking the slot they want by nbooking a starttime within the period
+  // and then using a very long duration.
   if ($max_book_ahead_enabled && !$delete)
   {
     if ($enable_periods)
@@ -146,7 +150,7 @@ function mrbsCheckPolicy($starttime, $duration, $delete=FALSE)
       $max_book_ahead_secs -=  $max_book_ahead_secs%$secs_in_day;
     }
     $max_book_ahead = $max_book_ahead_secs;
-    if (($starttime - $now) > $max_book_ahead)
+    if (($starttime + $duration - $now) > $max_book_ahead)
     {
       toTimeString($max_book_ahead, $units);
       $errors[] = get_vocab("max_time_before") . " $max_book_ahead $units";
