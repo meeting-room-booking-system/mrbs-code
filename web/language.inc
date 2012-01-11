@@ -671,7 +671,7 @@ function get_datatable_lang()
   
   // Sort the array in reverse order, ie so that the preferred language
   // is at the start of the array
-  arsort($preferred_langs, SORT_NUMERIC);
+  langs_arsort($preferred_langs);
   // First try for an exact match, so if the user specified en-gb, look
   // for en-gb.txt
   foreach ($preferred_langs as $lang => $qual)
