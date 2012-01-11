@@ -215,7 +215,7 @@ function create_field_entry_start_date($disabled=FALSE)
          ">\n";
     if($show_all_day)
     {
-      echo "<label for=\"all_day\">" . get_vocab("all_day") . "</label>\n";
+      echo "<label for=\"all_day{$a['id']}\">" . get_vocab("all_day") . "</label>\n";
     }
     echo "</div>\n";
     echo "</div>\n";
