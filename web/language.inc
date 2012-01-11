@@ -395,14 +395,14 @@ elseif (isset($HTTP_ACCEPT_LANGUAGE)) // Attempt to use $HTTP_ACCEPT_LANGUAGE on
   {
     if (preg_match('/([a-zA-Z\-]+);q=([0-9\.]+)/', $specifier, $matches))
     {
-      $langs[$matches[1]] = $matches[2];
+      $langs[$matches[1]] = (float) $matches[2];
     }
     else if (preg_match("/([a-zA-Z\-]+)/", $specifier, $matches))
     {
       $langs[$matches[1]] = 1.0;
     }
   }
-  arsort($langs,SORT_NUMERIC);
+  langs_arsort($langs);
 }
 else // Else use the value from config.inc.php.
 {
@@ -1166,6 +1166,43 @@ function locale_format($locale, $separator)
     $locale = strtolower(substr($locale,0,2)) . $separator . strtoupper(substr($locale,3));
   }
   return $locale;
+}
+
+
+// Sort an associative array of the form language => qualifier, where qualifier
+// is a float, eg "en" => 0.6 in reverse order, ie in decreasing order of
+// preference.   The key feature of this function is that if two languages have the
+// same qualifier it preserves the browser's original preference order.
+//
+// Returns TRUE on success, FALSE on failure
+function langs_arsort(&$langs)
+{
+  // First of all build an array indexed by qualifier.    Each element will
+  // contain an array of languages with that qualifier (in the order presented
+  // by the browser, ie descending order of preference)
+  $qualifiers = array();
+  foreach ($langs as $lang => $qual)
+  {
+    $qual = (string) $qual; // We need a string for the array index
+    $qualifiers[$qual][] = $lang;
+  }
+  // Sort the $qualifiers array so that it is in descending order (but we're
+  // not sorting the language arays, so they'll still be in descending order)
+  if (krsort($qualifiers, SORT_NUMERIC) === FALSE)
+  {
+    return FALSE;
+  }
+  // Then reconstruct $langs
+  $langs = array();
+  foreach ($qualifiers as $qual => $languages)
+  {
+    foreach ($languages as $language)
+    {
+      $langs[$language] = (float) $qual;  // Turn the qualifier back to a float
+    }
+  }
+
+  return TRUE;
 }
 
 ?>
