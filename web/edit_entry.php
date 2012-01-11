@@ -200,7 +200,7 @@ function create_field_entry_start_date($disabled=FALSE)
     $show_all_day = $is_admin || !$a['max_duration_enabled'] ||
                     ( ($a['enable_periods'] && ($a['max_duration_periods'] >= count($periods))) ||
                         (!$a['enable_periods'] && ($a['max_duration_secs'] >= ($last - $first))) );
-    echo "<input id=\"all_day{$a['id']}\" class=\"checkbox\"" .
+    echo "<input id=\"all_day{$a['id']}\" class=\"all_day checkbox\"" .
          // If this is an existing booking that we are editing or copying, then we do
          // not want the default duration applied
          (($default_duration_all_day && !isset($id) && !$drag) ? " checked=\"checked\"" : "") .
