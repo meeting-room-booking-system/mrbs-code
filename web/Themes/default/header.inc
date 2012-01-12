@@ -1501,7 +1501,8 @@ $(window).load(function() {
           // that we can compare them properly.   It is simplest to use zero and put any
           // padding required on the contained element.
           ?>
-          var rtl = (table.css('direction').toLowerCase() == 'rtl');
+          var rtl = ((table.css('direction') !== undefined) &&
+                     table.css('direction').toLowerCase() == 'rtl');
           tableData.x = {};
           tableData.x.data = [];
           <?php // We need :visible because there might be hidden days // ?>
