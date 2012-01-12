@@ -733,7 +733,7 @@ if (isset($change_room) && !empty($room))
       { 
         echo "<div id=\"edit_area_room_submit_save\">\n";
         echo "<input type=\"hidden\" name=\"phase\" value=\"2\">";
-        echo "<input class=\"submit\" type=\"submit\" name=\"change_room\" value=\"" . get_vocab("change") . "\">\n";
+        echo "<input class=\"submit default_action\" type=\"submit\" name=\"change_room\" value=\"" . get_vocab("change") . "\">\n";
         echo "</div>\n";
       }
       echo "</fieldset>\n";
@@ -1235,7 +1235,7 @@ if (isset($change_area) &&!empty($area))
         </div>
         <div id="edit_area_room_submit_save">
           <input type="hidden" name="phase" value="2">
-          <input class="submit" type="submit" name="change_area" value="<?php echo get_vocab("change") ?>">
+          <input class="submit default_action" type="submit" name="change_area" value="<?php echo get_vocab("change") ?>">
         </div>
       </fieldset>
     

@@ -389,7 +389,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           }
           ?>
           <input type="hidden" name="Action" value="Update">    
-          <input class="submit" type="submit" value="<?php echo(get_vocab("save")); ?>">
+          <input class="submit default_action" type="submit" value="<?php echo(get_vocab("save")); ?>">
           
         </div>
         </fieldset>

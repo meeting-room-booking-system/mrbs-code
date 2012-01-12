@@ -1526,7 +1526,7 @@ foreach( $edit_entry_field_order as $key )
     
     // The Submit button
     echo "<div id=\"edit_entry_submit_save\">\n";
-    echo "<input class=\"submit\" type=\"submit\" name=\"save_button\" value=\"" .
+    echo "<input class=\"submit default_action\" type=\"submit\" name=\"save_button\" value=\"" .
       get_vocab("save") . "\">\n";
     echo "</div>\n";
     
