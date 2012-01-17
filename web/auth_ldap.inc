@@ -102,6 +102,10 @@ function authLdapAction($callback, $user, &$object)
   }
 
   // Turn any non-array config items into arrays in $all_ldap_opts
+  if (!isset($count))
+  {
+    $count = 1;
+  }
   foreach ($config_items as $item)
   {
     if (!isset($$item))
