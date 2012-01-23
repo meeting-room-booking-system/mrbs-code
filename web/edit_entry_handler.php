@@ -440,21 +440,6 @@ if ($endtime == $starttime)
   $endtime += $resolution;
 }
 
-// Now get the duration, which will be needed for email notifications
-// (We do this before we adjust for DST so that the user sees what they expect to see)
-$duration = $endtime - $starttime;
-$duration_seconds = $endtime - $starttime;  // Preserve the duration in seconds - we need it later
-$date = getdate($starttime);
-if ($enable_periods)
-{
-  $period = (($date['hours'] - 12) * 60) + $date['minutes'];
-  toPeriodString($period, $duration, $dur_units, FALSE);
-}
-else
-{
-  toTimeString($duration, $dur_units, FALSE);
-}
-  
 // Adjust the endtime for DST
 $endtime += cross_dst( $starttime, $endtime );
 
@@ -513,329 +498,78 @@ if (isset($rep_type) && (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY
   }
 }
 
-// Expand a series into a list of start times:
-if ($rep_type != REP_NONE)
-{
-  $reps = mrbsGetRepeatEntryList($starttime,
-                                 isset($end_date) ? $end_date : 0,
-                                 $rep_type, $rep_opt, $rep_num_weeks,
-                                 $max_rep_entrys);
-}
 
-// When checking for overlaps, for Edit (not New), ignore this entry and series:
-$repeat_id = 0;
-if (isset($id))
+// Assemble an array of bookings, one for each room
+$bookings = array();
+foreach ($rooms as $room_id)
 {
-  $ignore_id = $id;
-  $repeat_id = sql_query1("SELECT repeat_id FROM $tbl_entry WHERE id=$id LIMIT 1");
-  if ($repeat_id < 0)
+  $booking = array();
+  $booking['create_by'] = $create_by;
+  $booking['name'] = $name;
+  $booking['type'] = $type;
+  $booking['description'] = $description;
+  $booking['room_id'] = $room_id;
+  $booking['start_time'] = $starttime;
+  $booking['end_time'] = $endtime;
+  $booking['rep_type'] = $rep_type;
+  $booking['rep_opt'] = $rep_opt;
+  $booking['rep_num_weeks'] = $rep_num_weeks;
+  $booking['end_date'] = $end_date;
+  $booking['ical_uid'] = $ical_uid;
+  $booking['ical_sequence'] = $ical_sequence;
+  $booking['ical_recur_id'] = $ical_recur_id;
+  // Do the custom fields
+  foreach ($custom_fields as $key => $value)
   {
-    $repeat_id = 0;
+    $booking[$key] = $value;
   }
-}
-else
-{
-  $ignore_id = 0;
-}
-
-// Acquire mutex to lock out others trying to book the same slot(s).
-if (!sql_mutex_lock("$tbl_entry"))
-{
-  fatal_error(1, get_vocab("failed_to_acquire"));
-}
-
-// Validate the booking for (a) conflicting bookings and (b) conformance to rules
-$valid_booking = TRUE;
-$conflicts = array();     // Holds a list of all the conflicts
-$rules_broken = array();  // Holds an array of the rules that have been broken
-$skip_lists = array();    // Holds a 2D array of bookings to skip past.  Indexed
-                          // by room id and start time
-                          
-// Check for any schedule conflicts in each room we're going to try and
-// book in;  also check that the booking conforms to the policy
-foreach ( $rooms as $room_id )
-{
-  $skip_lists[$room_id] = array();
-  if ($rep_type != REP_NONE && !empty($reps))
+  
+  // Set the various bits in the status field as appropriate
+  // (Note: the status field is the only one that can differ by room)
+  $status = 0;
+  // Privacy status
+  if ($isprivate)
   {
-    if(count($reps) < $max_rep_entrys)
-    {
-      for ($i = 0; $i < count($reps); $i++)
-      {
-        // calculate diff each time and correct where events
-        // cross DST
-        $diff = $duration_seconds;
-        $diff += cross_dst($reps[$i], $reps[$i] + $diff);
-
-        $tmp = mrbsCheckFree($room_id,
-                             $reps[$i],
-                             $reps[$i] + $diff,
-                             $ignore_id,
-                             $repeat_id);
-
-        if (!empty($tmp))
-        {
-          // If we've been told to skip past existing bookings, then add
-          // this start time to the list of start times to skip past.
-          // Otherwise it's an invalid booking
-          if ($skip)
-          {
-            $skip_lists[$room_id][] = $reps[$i];
-          }
-          else
-          {
-            $valid_booking = FALSE;
-          }
-          // In both cases remember the conflict data.   (We don't at the
-          // moment do anything with the data if we're skipping, but we might
-          // in the future want to display a list of bookings we've skipped past)
-          $conflicts = array_merge($conflicts, $tmp);
-        }
-        // if we're not an admin for this room, check that the booking
-        // conforms to the booking policy
-        if (!auth_book_admin($user, $room_id))
-        {
-          $errors = mrbsCheckPolicy($reps[$i], $duration_seconds);
-          if (count($errors) > 0)
-          {
-            $valid_booking = FALSE;
-            $rules_broken = array_merge($rules_broken, $errors);
-          }
-        }
-      } // for
-    }
-    else
-    {
-      $valid_booking = FALSE;
-      $rules_broken[] = get_vocab("too_may_entrys");
-    }
+    $status |= STATUS_PRIVATE;  // Set the private bit
   }
-  else
+  // If we are using booking approvals then we need to work out whether the
+  // status of this booking is approved.   If the user is allowed to approve
+  // bookings for this room, then the status will be approved, since they are
+  // in effect immediately approving their own booking.  Otherwise the booking
+  // will need to approved.
+  if ($approval_enabled && !auth_book_admin($user, $room_id))
   {
-    $tmp = mrbsCheckFree($room_id, $starttime, $endtime-1, $ignore_id, 0);
-    if (!empty($tmp))
-      {
-        $valid_booking = FALSE;
-        $conflicts = array_merge($conflicts, $tmp);
-      }
-      // if we're not an admin for this room, check that the booking
-      // conforms to the booking policy
-      if (!auth_book_admin($user, $room_id))
-      {
-        $errors = mrbsCheckPolicy($starttime, $duration_seconds);
-        if (count($errors) > 0)
-        {
-          $valid_booking = FALSE;
-          $rules_broken = array_merge($rules_broken, $errors);
-        }
-      }
+    $status |= STATUS_AWAITING_APPROVAL;
   }
+  // Confirmation status
+  if ($confirmation_enabled && !$confirmed)
+  {
+    $status |= STATUS_TENTATIVE;
+  }
+  $booking['status'] = $status;
+  
+  $bookings[] = $booking;
+}
 
-} // end foreach rooms
+$just_check = $ajax && function_exists('json_encode') && !$commit;
+$this_id = (isset($id)) ? $id : NULL;
+$result = mrbsMakeBookings($bookings, $this_id, $just_check, $original_room_id, $need_to_send_mail, $edit_type);
 
-// Tidy up the lists of conflicts and rules broken, getting rid of duplicates
-$conflicts = array_values(array_unique($conflicts));
-$rules_broken = array_values(array_unique($rules_broken));
-    
-// If this is an Ajax request and if it's not a valid booking which we want
-// to commit, then output the results and exit.   Otherwise we go on to commit the
-// booking
+// If we weren't just checking and this was a succesful booking and
+// we were editing an existing booking, then delete the old booking
+if (!$just_check && $result['valid_booking'] && isset($id))
+{
+  mrbsDelEntry($user, $id, ($edit_type == "series"), 1);
+}
+
+// If this is an Ajax request, output the result and finish
 if ($ajax && function_exists('json_encode'))
 {
-  if (!($commit && $valid_booking))
+  // If this was a successful commit generate the new HTML
+  if ($result['valid_booking'] && $commit)
   {
-    $result = array();
-    $result['valid_booking'] = $valid_booking;
-    $result['rules_broken'] = $rules_broken;
-    $result['conflicts'] = $conflicts;
-    echo json_encode($result);
-    exit;
-  }
-}
-
-// If the rooms were free, go ahead and process the bookings
-if ($valid_booking)
-{
-  $new_details = array(); // We will pass this array in the Ajax result
-  foreach ($rooms as $room_id)
-  { 
-    // Set the various bits in the status field as appropriate
-    $status = 0;
-    // Privacy status
-    if ($isprivate)
-    {
-      $status |= STATUS_PRIVATE;  // Set the private bit
-    }
-    // If we are using booking approvals then we need to work out whether the
-    // status of this booking is approved.   If the user is allowed to approve
-    // bookings for this room, then the status will be approved, since they are
-    // in effect immediately approving their own booking.  Otherwise the booking
-    // will need to approved.
-    if ($approval_enabled && !auth_book_admin($user, $room_id))
-    {
-      $status |= STATUS_AWAITING_APPROVAL;
-    }
-    // Confirmation status
-    if ($confirmation_enabled && !$confirmed)
-    {
-      $status |= STATUS_TENTATIVE;
-    }
-    
-    // Assemble the data in an array
-    $data = array();
-   
-    // We need to work out whether this is the original booking being modified,
-    // because, if it is, we keep the ical_uid and increment the ical_sequence.
-    // We consider this to be the original booking if there was an original
-    // booking in the first place (in which case the original room id will be set) and
-    //      (a) this is the same room as the original booking
-    //   or (b) there is only one room in the new set of bookings, in which case
-    //          what has happened is that the booking has been changed to be in
-    //          a new room
-    //   or (c) the new set of rooms does not include the original room, in which
-    //          case we will make the arbitrary assumption that the original booking
-    //          has been moved to the first room in the list and the bookings in the
-    //          other rooms are clones and will be treated as new bookings.
-    
-    if (isset($original_room_id) && 
-        (($original_room_id == $room_id) ||
-         (count($rooms) == 1) ||
-         (($rooms[0] == $room_id) && !in_array($original_room_id, $rooms))))
-    {
-      // This is an existing booking which has been changed.   Keep the
-      // original ical_uid and increment the sequence number.
-      $data['ical_uid'] = $ical_uid;
-      $data['ical_sequence'] = $ical_sequence + 1;
-    }
-    else
-    {
-      // This is a new booking.   We generate a new ical_uid and start
-      // the sequence at 0.
-      $data['ical_uid'] = generate_global_uid($name);
-      $data['ical_sequence'] = 0;
-    }
-    $data['start_time'] = $starttime;
-    $data['end_time'] = $endtime;
-    $data['room_id'] = $room_id;
-    $data['create_by'] = $create_by;
-    $data['name'] = $name;
-    $data['type'] = $type;
-    $data['description'] = $description;
-    $data['status'] = $status;
-    foreach ($custom_fields as $key => $value)
-    {
-      $data[$key] = $value;
-    }
-    $data['rep_type'] = $rep_type;
-    if ($rep_type != REP_NONE)
-    {
-      $data['end_date'] = $end_date;
-      $data['rep_opt'] = $rep_opt;
-      $data['rep_num_weeks'] = (isset($rep_num_weeks)) ? $rep_num_weeks : 0;
-    }
-    else
-    {
-      if ($repeat_id > 0)
-      {
-        // Mark changed entry in a series with entry_type:
-        $data['entry_type'] = ENTRY_RPT_CHANGED;
-        // Keep the same recurrence id (this never changes once an entry has been made)
-        $data['ical_recur_id'] = $ical_recur_id;
-      }
-      else
-      {
-        $data['entry_type'] = ENTRY_SINGLE;
-      }
-      $data['entry_type'] = ($repeat_id > 0) ? ENTRY_RPT_CHANGED : ENTRY_SINGLE;
-      $data['repeat_id'] = $repeat_id;
-    }
-    // Add in the list of bookings to skip
-    if (!empty($skip_lists) && !empty($skip_lists[$room_id]))
-    {
-      $data['skip_list'] = $skip_lists[$room_id];
-    }
-    // The following elements are needed for email notifications
-    $data['duration'] = $duration;
-    $data['dur_units'] = $dur_units;
-
-    if ($rep_type != REP_NONE)
-    {
-      $booking = mrbsCreateRepeatingEntrys($data);
-      $new_id = $booking['id'];
-      $is_repeat_table = $booking['series'];
-    }
-    else
-    {
-      // Create the entry:
-      $new_id = mrbsCreateSingleEntry($data);
-      $is_repeat_table = FALSE;
-    }
-    $new_details[] = array('id' => $new_id, 'room_id' => $room_id);
-    $data['id'] = $new_id;  // Add in the id now we know it
-    
-    // Send an email if neccessary, provided that the entry creation was successful
-    if ($need_to_send_mail && !empty($new_id))
-    {
-      // Only send an email if (a) this is a changed entry and we have to send emails
-      // on change or (b) it's a new entry and we have to send emails for new entries
-      if ((isset($id) && $mail_settings['on_change']) || 
-          (!isset($id) && $mail_settings['on_new']))
-      {
-        require_once "functions_mail.inc";
-        // Get room name and area name for email notifications.
-        // Would be better to avoid a database access just for that.
-        // Ran only if we need details
-        if ($mail_settings['details'])
-        {
-          $sql = "SELECT R.room_name, A.area_name
-                    FROM $tbl_room R, $tbl_area A
-                   WHERE R.id=$room_id AND R.area_id = A.id
-                   LIMIT 1";
-          $res = sql_query($sql);
-          $row = sql_row_keyed($res, 0);
-          $data['room_name'] = $row['room_name'];
-          $data['area_name'] = $row['area_name'];
-        }
-        // If this is a modified entry then get the previous entry data
-        // so that we can highlight the changes
-        if (isset($id))
-        {
-          if ($edit_type == "series")
-          {
-            $mail_previous = mrbsGetBookingInfo($repeat_id, TRUE);
-          }
-          else
-          {
-            $mail_previous = mrbsGetBookingInfo($id, FALSE);
-          }
-        }
-        else
-        {
-          $mail_previous = array();
-        }
-        // Send the email
-        $result = notifyAdminOnBooking($data, $mail_previous, !isset($id), $is_repeat_table);
-      }
-    }   
-  } // end foreach $rooms
-
-  // Delete the original entry
-  if (isset($id))
-  {
-    mrbsDelEntry($user, $id, ($edit_type == "series"), 1);
-  }
-
-  sql_mutex_unlock("$tbl_entry");
-  
-  // Now it's all done.  Send the results if this was an Ajax booking
-  // or else go back to the previous view
-  if ($ajax)
-  {
+    // Generate the new HTML
     require_once "functions_table.inc";
-    $result = array();
-    $result['valid_booking'] = $valid_booking;
-    $result['new_details'] = $new_details;
-    $result['slots'] = intval(($data['end_time'] - $data['start_time'])/$resolution);
     if ($page == 'day')
     {
       $result['table_innerhtml'] = day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
@@ -844,43 +578,42 @@ if ($valid_booking)
     {
       $result['table_innerhtml'] = week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
     }
-    echo json_encode($result);
-    exit;
   }
-  else
-  {
-    header("Location: $returl");
-    exit;
-  }
+  echo json_encode($result);
+  exit;
 }
 
-// The room was not free.
-sql_mutex_unlock("$tbl_entry");
+// Everything was OK.   Go back to where we came from
+if ($result['valid_booking'])
+{
+  header("Location: $returl");
+  exit;
+}
 
-if (!$valid_booking)
+else
 {
   print_header($day, $month, $year, $area, isset($room) ? $room : "");
     
   echo "<h2>" . get_vocab("sched_conflict") . "</h2>\n";
-  if (!empty($rules_broken))
+  if (!empty($result['rules_broken']))
   {
     echo "<p>\n";
     echo get_vocab("rules_broken") . ":\n";
     echo "</p>\n";
     echo "<ul>\n";
-    foreach ($rules_broken as $rule)
+    foreach ($result['rules_broken'] as $rule)
     {
       echo "<li>$rule</li>\n";
     }
     echo "</ul>\n";
   }
-  if (!empty($conflicts))
+  if (!empty($result['conflicts']))
   {
     echo "<p>\n";
     echo get_vocab("conflict").":\n";
     echo "</p>\n";
     echo "<ul>\n";
-    foreach ($conflicts as $conflict)
+    foreach ($result['conflicts'] as $conflict)
     {
       echo "<li>$conflict</li>\n";
     }
@@ -900,7 +633,7 @@ echo "</form>\n";
 
 // Skip and Book button (to book the entries that don't conflict)
 // Only show this button if there were no policies broken and it's a series
-if (empty($rules_broken)  &&
+if (empty($result['rules_broken'])  &&
     isset($rep_type) && ($rep_type != REP_NONE))
 {
   echo "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";

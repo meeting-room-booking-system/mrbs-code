@@ -407,9 +407,9 @@ function create_repeat_list($data, $action, $as_html)
 }
 
 
-function create_body($data, $compare, $series, $action, $as_html=FALSE, $note='')
+function create_body($data, $mail_previous, $compare, $series, $action, $as_html=FALSE, $note='')
 {
-  global $mail_previous, $returl, $mrbs_company;
+  global $returl, $mrbs_company;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
   global $mail_settings, $standard_fields, $url_base;
   global $tbl_entry;
@@ -915,13 +915,13 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $actio
   // Create the text body
   $compare = !$new_entry;
   $text_body = array();
-  $text_body['content'] = create_body($data, $compare, $series, $action, FALSE, $note);
+  $text_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, FALSE, $note);
   
   // Create the HTML body
   $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['content'] = create_body($data, $compare, $series, $action, TRUE, $note);
+    $html_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, TRUE, $note);
     $html_body['cid'] = generate_global_uid("html");
   }
   
@@ -1003,13 +1003,13 @@ function notifyAdminOnDelete($data, $series=FALSE, $action="delete", $note="")
   
   // Create the text body
   $text_body = array();
-  $text_body['content'] = create_body($data, FALSE, $series, $action, FALSE, $note);
+  $text_body['content'] = create_body($data, NULL, FALSE, $series, $action, FALSE, $note);
   
   // Create the HTML body
   $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['content'] = create_body($data, FALSE, $series, $action, TRUE, $note);
+    $html_body['content'] = create_body($data, NULL, FALSE, $series, $action, TRUE, $note);
     $html_body['cid'] = generate_global_uid("html");
   }
   
