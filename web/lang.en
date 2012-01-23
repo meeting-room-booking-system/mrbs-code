@@ -416,6 +416,31 @@ $vocab["servertime"]         = "Server time";
 $vocab["please_contact"]     = "Please contact ";
 $vocab["for_any_questions"]  = "for any questions that aren't answered here.";
 
+// Used in import.php
+$vocab["import_icalendar"]      = "Import an iCalendar file";
+$vocab["import_intro"]          = "This form allows you to import an RFC 5545 compliant " .
+                                  "iCalendar file into MRBS.   Only those repeating events " .
+                                  "that have a recurrence rule with an equivalent repeat type in " .
+                                  "MRBS will be imported.";
+$vocab["file_name"]             = "File";
+$vocab["import"]                = "Import";
+$vocab["test"]                  = "Test";
+$vocab["upload_failed"]         = "Upload failed";
+$vocab["max_allowed_file_size"] = "The maximum allowed file size is";
+$vocab["no_file"]               = "No file was uploaded";
+$vocab["badly_formed_ics"]      = "Badly formed VCALENDAR file";
+$vocab["area_room_order"]       = "Order";
+$vocab["area_room"]             = "Area-Room";
+$vocab["room_area"]             = "Room-Area";
+$vocab["area_room_delimiter"]   = "Delimiter";
+$vocab["area_room_create"]      = "Create rooms if necessary";
+$vocab["area_does_not_exist"]   = "Non-existent area:";
+$vocab["room_does_not_exist"]   = "Non-existent room:";
+$vocab["creating_new_area"]     = "Creating new area:";
+$vocab["creating_new_room"]     = "Creating new room:";
+$vocab["could_not_create_area"] = "Could not create area";
+$vocab["could_not_create_room"] = "Could not create room";
+
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatal error: failed to connect to database";
 

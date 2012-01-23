@@ -8,6 +8,9 @@ global $timezone;
 // and the calendar
 $vtimezone = get_vtimezone($timezone);
 
+// Create an array which can be used to map day of the week numbers (0..6)
+// onto days of the week as defined in RFC 5545
+$RFC_5545_days = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
 
 // Extracts a VTIMEZONE component from a VCALENDAR.
 function extract_vtimezone($vcalendar)
@@ -192,6 +195,236 @@ function get_vtimezone($tz)
 }
 
 
+// Returns a UNIX timestamp given an RFC5545 date or date-time
+// $params is an optional second argument and is an array of property parameters
+function get_time($value)
+{
+  if (func_num_args() > 1)
+  {
+    $params = func_get_arg(1);
+  }
+  // If we haven't got any parameters default to "UTC".   Not strictly correct,
+  // but in most cases it will be true.  Need to do something better.
+  if (empty($params))
+  {
+    $this_timezone = "UTC";
+  }
+  
+  $value_type = "DATE_TIME";  // the default
+
+  
+  // Work out which, if any, parameters have been set
+  if (isset($params))
+  {
+    foreach ($params as $param_name => $param_value)
+    {
+      switch ($param_name)
+      {
+        case 'VALUE':
+          $value_type = $param_value;
+          break;
+        case 'TZID':
+          $this_timezone = $param_value;
+          break;
+      }
+    }
+  }
+  
+  if (strpos($value, 'Z') !== FALSE)
+  {
+    $value = str_replace('Z', '', $value);
+    $this_timezone = 'UTC';
+  }
+  if ($value_type == "DATE_TIME")
+  {
+    list($date, $time) = explode('T', $value, 2);
+  }
+  else
+  {
+    $date = $value;
+    $time = '000000';
+  }
+  $year = substr($date, 0, 4);
+  $month = substr($date, 4, 2);
+  $day = substr($date, 6, 2);
+  $hour = substr($time, 0, 2);
+  $minute = substr($time, 2, 2);
+  $second = substr($time, 4, 2);
+  if (isset($this_timezone))
+  {
+    if (strtoupper($this_timezone) == 'UTC')
+    {
+      $result = gmmktime($hour, $minute, $second, $month, $day, $year);
+    }
+    else
+    {
+      $old_timezone = mrbs_default_timezone_get();
+      mrbs_default_timezone_set($this_timezone);
+      $result = mktime($hour, $minute, $second, $month, $day, $year);
+      mrbs_default_timezone_set($old_timezone);
+    }
+  }
+  else
+  {
+    if ($value_type == "DATE_TIME")
+    {
+      trigger_error("Floating times not supported", E_USER_WARNING);
+    }
+    $result = mktime($hour, $minute, $second, $month, $day, $year);
+  }
+  return $result;
+}
+
+
+// Returns an MRBS rep_opt string given an array of RFC 5545 days
+function get_rep_opt($byday_days)
+{
+  global $RFC_5545_days;
+  
+  $rep_opt = '';
+  foreach ($RFC_5545_days as $day)
+  {
+    $rep_opt .= (in_array($day, $byday_days)) ? '1' : '0';
+  }
+  return $rep_opt;
+}
+
+
+// Given an RFC 5545 recurrence rule, returns an array giving the MRBS repeat
+// details.   Indexed by rep_type, rep_num_weeks, rep_opt, end_date
+function get_repeat_details($rrule, $start_time)
+{
+  global $RFC_5545_days;
+  
+  $result = array();
+  $rules = array();
+  $recur_rule_parts = explode(';', $rrule);
+  foreach ($recur_rule_parts as $recur_rule_part)
+  {
+    list($name, $value) = explode('=', $recur_rule_part);
+    $rules[$name] = $value;
+  }
+
+  if (!isset($rules['FREQ']))
+  {
+    trigger_error("Invalid RRULE: missing FREQ part");
+    return FALSE;
+  }
+  
+  switch ($rules['FREQ'])
+  {
+    case 'DAILY':
+      $result['rep_type'] = REP_DAILY;
+      break;
+    case 'WEEKLY':
+      if (isset($rules['interval']) && ($rules['interval'] > 1))
+      {
+        $result['rep_type'] = REP_N_WEEKLY;
+        $result['rep_num_weeks'] = $rules['interval'];
+      }
+      else
+      {
+        $result['rep_type'] = REP_WEEKLY;
+      }
+      if (isset($rules['BYDAY']))
+      {
+        $byday_days = explode(',', $rules['BYDAY']);
+      }
+      else
+      {
+        // If there's no repeat day specified in the RRULE then
+        // 'the day is gotten from "DTSTART"'
+        $byday_days = array($RFC_5545_days[date('w', $start_time)]);
+      }
+      $result['rep_opt'] = get_rep_opt($byday_days);
+      break;
+    case 'MONTHLY':
+      if (!isset($rules['BYDAY']))
+      {
+        $result['rep_type'] = REP_MONTHLY;
+      }
+      else
+      {
+        $result['rep_type'] = REP_MONTHLY_SAMEDAY;
+        $byday_days = explode(',', $rules['BYDAY']);
+        if (count($byday_days) > 1)
+        {
+          trigger_error("MRBS does not support more than one BYDAY value when FREQ=${result['freq']}");
+        }
+        foreach ($byday_days as $byday_day)
+        {
+          $day = substr($byday_day, -2);     // the last two characters of the string
+          $nth = substr($byday_day, 0, -2);  // everything except the last two characters
+          if ($nth === FALSE)
+          {
+            // "If an integer modifier is not present, it means all days of this
+            // type within the specified frequency.  For example, within a MONTHLY
+            // rule, MO represents all Mondays within the month." [RFC 5545]
+            // So that comes to the same thing as a WEEKLY repeat
+            $result['rep_type'] = REP_WEEKLY;
+            $result['rep_opt'] = get_rep_opt(array($day));
+          }
+          else
+          {
+            if ((int) $nth < 0)
+            {
+              trigger_error("MRBS does not support negative BYDAY values ($nth$day)", E_USER_WARNING);
+              $unsupported_rules = TRUE;
+            }
+            elseif ($nth == '5')
+            {
+              trigger_error("MRBS does not support a BYDAY value of 5 ($nth$day)", E_USER_WARNING);
+              $unsupported_rules = TRUE;
+            }
+            // otherwise we're OK and we don't need to do anything more because we know
+            // we've only got one day and the REP_MONTHLY_SAMEDAY repeat type will work
+            // out the day from the start date
+          }
+        }
+      }
+      break;
+    case 'YEARLY':
+      $result['rep_type'] = REP_YEARLY;
+      break;
+    default:
+      trigger_error("FREQ=${rules['FREQ']} not supported by MRBS", E_USER_WARNING);
+      $unsupported_rules = TRUE;
+      break;
+  }
+  
+  if (isset($rules['interval']) && ($rules['interval'] > 1) && 
+      !in_array($rules['FREQ'], array('WEEKLY')))
+  {
+    trigger_error("MRBS does not support INTERVAL>1 with FREQ=${rules['FREQ']}", E_USER_WARNING);
+    $unsupported_rules = TRUE;
+  }
+  
+  if (isset($rules['UNTIL']))
+  {
+    // Strictly speaking "the value of the UNTIL rule part MUST have the same
+    // value type as the "DTSTART" property".   So we should really tell get_time()
+    // the value type.  But "if the "DTSTART" property is specified as a date with UTC
+    // time or a date with local time and time zone reference, then the UNTIL rule
+    // part MUST be specified as a date with UTC time" - so in nearly all cases
+    // supported by MRBS the value will be a UTC time.
+    $result['end_date'] = get_time($rules['UNTIL']);
+  }
+  elseif (isset($rules['COUNT']))
+  {
+    // It would be quite easy to support COUNT, but we haven't done so yet
+    trigger_error("COUNT not yet supported by MRBS");
+    $unsupported_rules = TRUE;
+  }
+  else
+  {
+    trigger_error("Indefinite repeats not yet supported by MRBS");
+    $unsupported_rules = TRUE;
+  }
+  
+  return (empty($unsupported_rules)) ? $result: FALSE;
+}
+
+
 // "Folds" lines longer than 75 octets.  Multi-byte safe.
 //
 // "Lines of text SHOULD NOT be longer than 75 octets, excluding the line
@@ -328,6 +561,13 @@ function ical_escape_text($str)
   return $str;
 }
 
+
+function ical_unescape_text($str)
+{
+  return stripcslashes($str);
+}
+
+
 // Escape text for use in an iCalendar quoted string
 function ical_escape_quoted_string($str)
 {
@@ -344,12 +584,52 @@ function ical_escape_quoted_string($str)
 }
 
 
+function ical_unescape_quoted_string($str)
+{
+  return trim($str, '"');
+}
+
+
+// Parse a content line which is a property (ie is inside a component).   Returns
+// an associative array:
+//   'name'       the property name
+//   'params'     an associative array of parameters indexed by parameter name
+//   'value'      the property value.  The value will have escaping reversed
+function parse_ical_property($line)
+{
+  $result = array();
+  // First of all get the string up to the first colon or semicolon.   This will
+  // be the property name.   We also want to get the delimiter so that we know
+  // whether there are any parameters to come.   The split will return an array
+  // with three elements:  0 - the string before the delimiter, 1 - the delimiter
+  // and 2 the rest of the string
+  $tmp = preg_split('/([;:])/' , $line, 2, PREG_SPLIT_DELIM_CAPTURE);
+  $result['name'] = $tmp[0];
+  $params = array();
+  if ($tmp[1] != ':')
+  {
+    // Get all the property parameters
+    do 
+    {
+      $tmp = preg_split('/([;:])/' , $tmp[2], 2, PREG_SPLIT_DELIM_CAPTURE);
+      $param = array();
+      list($param_name, $param_value) = explode('=', $tmp[0], 2);
+      // The parameter value can be a quoted string, so get rid of any double quotes
+      $param[$param_name] = ical_unescape_quoted_string($param_value);
+    }
+    while ($tmp[1] != ':');
+  }
+  $result['params'] = $params;
+  $result['value'] = ical_unescape_text($tmp[2]);
+  return $result;
+}
+
+
 // Create an iCalendar Recurrence Rule
 function create_rrule($data)
 {
-  // Create an array which can be used to map day of the week numbers (0..6)
-  // onto days of the week as defined in RFC 5545
-  $RFC_5545_days = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
+  global $RFC_5545_days;
+
   $rule = '';
   if (!isset($data['rep_type']))
   {
