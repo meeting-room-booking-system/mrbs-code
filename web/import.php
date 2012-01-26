@@ -7,41 +7,8 @@ require_once "mrbs_sql.inc";
 
 function get_room_id($location)
 {
-  global $area_room_order, $area_room_delimiter, $area_room_create, $test;
+  global $area_room_order, $area_room_delimiter, $area_room_create;
   global $tbl_room, $tbl_area;
-  
-  // We cache the contents of the room and area tables so that we can do a test
-  // import.   It will also help a little with performance.
-  static $rooms = array();
-  static $areas = array();
-  static $room_ids = array();
-  static $area_ids = array();
-  
-  $sql = "SELECT id, room_name, area_id FROM $tbl_room";
-  $res = sql_query($sql);
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
-  for ($i = 0; ($row = sql_mysql_row_keyed($res, $i)); $i++)
-  {
-    $rooms[] = $row;
-    $room_ids[] = $row['id'];
-  }
-  
-  $sql = "SELECT id, area_name FROM $tbl_area";
-  $res = sql_query($sql);
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
-  for ($i = 0; ($row = sql_mysql_row_keyed($res, $i)); $i++)
-  {
-    $areas[] = $row;
-    $area_ids[] = $row['id'];
-  }
   
   // If there's no delimiter we assume we've just been given a room name (that will
   // have to be unique).   Otherwise we split the location into its area and room parts
@@ -69,58 +36,64 @@ function get_room_id($location)
   // know which area to put it in.
   if ($location_area == '')
   {
-    $ids = array();
-    foreach ($rooms as $room)
+    $sql = "SELECT COUNT(*) FROM $tbl_room WHERE room_name='" . addslashes($location_room) . "'";
+    $count = sql_query1($sql);
+    if ($count < 0)
     {
-      if ($room['room_name'] == $location_room)
-      {
-        $ids[] = $room['id'];
-      }
+      trigger_error(sql_error(), E_USER_WARNING);
+      fatal_error(FALSE, get_vocab("fatal_db_error"));
     }
-    if (count($ids) == 1)
-    {
-      return $ids[0];
-    }
-    elseif (count($ids) == 0)
+    elseif ($count == 0)
     {
       echo "Room '$location_room' does not exist and cannot be added - no area given.<br>\n";
       return FALSE;
     }
-    else
+    elseif ($count > 1)
     {
       echo "There is more than one room called '$location_room'.  Cannot choose which one without an area.<br>\n";
       return FALSE;
     }
+    else // we've got a unique room name
+    {
+      $sql = "SELECT id FROM $tbl_room WHERE room_name='" . addslashes($location_room) . "' LIMIT 1";
+      $id = sql_query1($sql);
+      if ($id < 0)
+      {
+        trigger_error(sql_error(), E_USER_WARNING);
+        fatal_error(FALSE, get_vocab("fatal_db_error"));
+      }
+      return $id;
+    }
   }
+  
   // Case 2:  we've got an area and room name
   else
   {
-    // First of all get the area_id
-    $area_id = NULL;
-    foreach ($areas as $area)
+    // First of all get the area id
+    $sql = "SELECT id
+              FROM $tbl_area
+             WHERE area_name='" . addslashes($location_area) . "'
+             LIMIT 1";
+    $area_id = sql_query1($sql);
+    if ($area_id < 0)
     {
-      if ($area['area_name'] == $location_area)
+      $sql_error = sql_error();
+      if (!empty($sql_error))
       {
-        $area_id = $area['id'];
-        break;
-      }
-    }
-    if (!isset($area_id))
-    {
-      if (!$area_room_create)
-      {
-        echo get_vocab("area_does_not_exist") . " '$location_area'<br>\n";
-        return FALSE;
+        trigger_error(sql_error(), E_USER_WARNING);
+        fatal_error(FALSE, get_vocab("fatal_db_error"));
       }
       else
       {
-        echo get_vocab("creating_new_area") . " '$location_area'<br>\n";
-        if ($test)
+        // The area does not exist - create it if we are allowed to
+        if (!$area_room_create)
         {
-          $area_id = max($area_ids) + 1;
+          echo get_vocab("area_does_not_exist") . " '$location_area'<br>\n";
+          return FALSE;
         }
         else
         {
+          echo get_vocab("creating_new_area") . " '$location_area'<br>\n";
           $error = '';
           $area_id = mrbsAddArea($location_area, $error);
           if ($area_id === FALSE)
@@ -129,58 +102,52 @@ function get_room_id($location)
             return FALSE;
           }
         }
-        $areas[] = array('id' => $area_id, 'area_name' => $location_area);
-        $area_ids[] = $area_id;
       }
     }
-    // Now we've got the area_id we can find the room_id
-    $room_id = NULL;
-    foreach ($rooms as $room)
+  }
+  // Now we've got the area_id get the room_id
+  $sql = "SELECT id
+            FROM $tbl_room
+           WHERE room_name='" . addslashes($location_room) . "'
+             AND area_id=$area_id
+           LIMIT 1";
+  $room_id = sql_query1($sql);
+  if ($room_id < 0)
+  {
+    $sql_error = sql_error();
+    if (!empty($sql_error))
     {
-      if (($room['room_name'] == $location_room) && ($room['area_id'] == $area_id))
-      {
-        $room_id = $room['id'];
-        break;
-      }
+      trigger_error(sql_error(), E_USER_WARNING);
+      fatal_error(FALSE, get_vocab("fatal_db_error"));
     }
-    if (!isset($room_id))
+    else
     {
+      // The room does not exist - create it if we are allowed to
       if (!$area_room_create)
       {
-        echo get_vocab("area") . " $location_area. " . 
-             get_vocab("room_does_not_exist") . " '$location_room'<br>\n";
+        echo get_vocab("room_does_not_exist") . " '$location_room'<br>\n";
         return FALSE;
       }
       else
       {
-        echo get_vocab("area") . " $location_area. " .
-             get_vocab("creating_new_room") . " '$location_room'<br>\n";
-        if ($test)
+        echo get_vocab("creating_new_room") . " '$location_room'<br>\n";
+        $error = '';
+        $room_id = mrbsAddRoom($location_room, $area_id, $error);
+        if ($room_id === FALSE)
         {
-          $room_id = max($room_ids) + 1;
+          echo get_vocab("could_not_create_room") . " '$location_room'<br>\n";
+          return FALSE;
         }
-        else
-        {
-          $error = '';
-          $room_id = mrbsAddRoom($location_room, $area_id, $error);
-          if ($room_id === FALSE)
-          {
-            echo get_vocab("could_not_create_room") . " '$location_room'<br>\n";
-            return FALSE;
-          }
-        }
-        $rooms[] = array('id' => $room_id, 'room_name' => $location_room, 'area_id' => $area_id);
-        $room_ids[] = $room_id;
       }
     }
-    return $room_id;
   }
+  return $room_id;
 }
 
 
 function process_event($vevent)
 {
-  global $import_default_type, $test, $skip;
+  global $import_default_type, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
   
   // We are going to cache the settings ($resolution etc.) for the rooms
@@ -298,7 +265,7 @@ function process_event($vevent)
                                       $am7);
     // Make the bookings
     $bookings = array($booking);
-    $result = mrbsMakeBookings($bookings, NULL, $test, $skip);
+    $result = mrbsMakeBookings($bookings, NULL, FALSE, $skip);
     if ($result['valid_booking'])
     {
       return TRUE;
@@ -345,7 +312,6 @@ checkAuthorised();
 print_header($day, $month, $year, $area, $room);
 
 $import = get_form_var('import', 'string');
-$test = get_form_var('test', 'string');
 $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
 $area_room_delimiter = get_form_var('area_room_delimiter', 'string', ';');
 $area_room_create = get_form_var('area_room_create', 'string', '0');
@@ -356,7 +322,7 @@ $skip = get_form_var('skip', 'string', ((empty($skip_default)) ? '0' : '1'));
 // PHASE 2 - Process the files
 // ---------------------------
 
-if (!empty($test) || !empty($import))
+if (!empty($import))
 {
   if ($_FILES['ics_file']['error'] !== UPLOAD_ERR_OK)
   {
@@ -504,7 +470,6 @@ echo "</div>\n";
 
 // The Submit button
 echo "<div id=\"import_submit\">\n";
-echo "<input class=\"submit default_action\" type=\"submit\" name=\"test\" value=\"" . get_vocab("test") . "\">\n";
 echo "<input class=\"submit\" type=\"submit\" name=\"import\" value=\"" . get_vocab("import") . "\">\n";
 echo "</div>\n";
 

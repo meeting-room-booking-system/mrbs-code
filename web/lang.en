@@ -424,7 +424,6 @@ $vocab["import_intro"]          = "This form allows you to import an RFC 5545 co
                                   "MRBS will be imported.";
 $vocab["file_name"]             = "File";
 $vocab["import"]                = "Import";
-$vocab["test"]                  = "Test";
 $vocab["upload_failed"]         = "Upload failed";
 $vocab["max_allowed_file_size"] = "The maximum allowed file size is";
 $vocab["no_file"]               = "No file was uploaded";
