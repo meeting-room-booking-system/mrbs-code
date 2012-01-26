@@ -2999,7 +2999,7 @@ $(window).load(function() {
     // performance for large tables
     if (function_exists('json_encode'))
     {
-      $ajax_url = "http://" . $HTTP_HOST . $PHP_SELF . "?" . $QUERY_STRING . "&ajax=1&phase=2";
+      $ajax_url = basename($PHP_SELF) . "?" . $QUERY_STRING . "&ajax=1&phase=2";
       ?>
       tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
       <?php
@@ -3197,8 +3197,7 @@ $(window).load(function() {
       var tableOptions = new Object();
       <?php
       // Use an Ajax source - gives much better performance for large tables
-
-      $ajax_url = "http://" . $HTTP_HOST . $PHP_SELF . "?" . $QUERY_STRING . "&ajax=1";
+      $ajax_url = basename($PHP_SELF) . "?" . $QUERY_STRING . "&ajax=1";
       ?>
       tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
       tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [2]}]; 
