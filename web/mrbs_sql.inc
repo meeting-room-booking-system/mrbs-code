@@ -21,6 +21,8 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
   global $enable_periods, $periods, $twentyfourhour_format;
   global $strftime_format;
 
+  get_area_settings(get_area($room_id));
+  
   $user = getUserName();
   // Select any meetings which overlap ($starttime,$endtime) for this room:
   $sql = "SELECT id, name, start_time, create_by, status
@@ -1177,8 +1179,11 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='')
   return $room;
 }
 
-// $id is the id of the current booking when editing an existing entry
-function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $original_room_id=NULL, $send_mail=FALSE, $edit_type='')
+
+// Makes bookings
+//    $bookings     an array of bookings
+//    $id           the id of the current booking when editing an existing entry
+function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $original_room_id=NULL, $send_mail=FALSE, $edit_type='')
 {
   global $max_rep_entrys, $enable_periods, $resolution, $mail_settings;
   global $tbl_entry, $tbl_room, $tbl_area;
@@ -1474,6 +1479,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $original_room
       
   $result['new_details'] = $new_details;
   $result['slots'] = intval(($common['end_time'] - $common['start_time'])/$resolution);
+
   return $result;
 }
 

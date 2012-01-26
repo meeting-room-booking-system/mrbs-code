@@ -553,7 +553,7 @@ foreach ($rooms as $room_id)
 
 $just_check = $ajax && function_exists('json_encode') && !$commit;
 $this_id = (isset($id)) ? $id : NULL;
-$result = mrbsMakeBookings($bookings, $this_id, $just_check, $original_room_id, $need_to_send_mail, $edit_type);
+$result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_room_id, $need_to_send_mail, $edit_type);
 
 // If we weren't just checking and this was a succesful booking and
 // we were editing an existing booking, then delete the old booking

@@ -5,7 +5,6 @@ require_once "defaultincludes.inc";
 require_once "functions_ical.inc";
 require_once "mrbs_sql.inc";
 
-
 function get_room_id($location)
 {
   global $area_room_order, $area_room_delimiter, $area_room_create, $test;
@@ -181,12 +180,23 @@ function get_room_id($location)
 
 function process_event($vevent)
 {
+  global $import_default_type, $test, $skip;
+  global $morningstarts, $morningstarts_minutes, $resolution;
+  
+  // We are going to cache the settings ($resolution etc.) for the rooms
+  // in order to avoid lots of database lookups
+  static $room_settings = array();
+  
+  // Set up the booking with some defaults
   $booking = array();
   $booking['status'] = 0;
   $booking['rep_type'] = REP_NONE;
-  $properties = array();
+  $booking['create_by'] = getUserName();
+  $booking['type'] = $import_default_type;
   // Parse all the lines first because we'll need to get the start date
   // for calculating some of the other settings
+  $properties = array();
+  $problems = array();
   foreach ($vevent as $line)
   {
     $property = parse_ical_property($line);
@@ -217,6 +227,10 @@ function process_event($vevent)
         break;
       case 'LOCATION':
         $booking['room_id'] = get_room_id($details['value']);
+        if (empty($booking['room_id']))
+        {
+          $problems[] = get_vocab("could_not_find_room") . " '${details['value']}'";
+        }
         break;
       case 'DTEND':
         $booking['end_time'] = get_time($details['value'], $details['params']);
@@ -225,11 +239,11 @@ function process_event($vevent)
         trigger_error("DURATION not yet supported by MRBS", E_USER_WARNING);
         break;
       case 'RRULE':
-        $repeat_details = get_repeat_details($details['value'], $booking['start_time']);
+        $rrule_errors = array();
+        $repeat_details = get_repeat_details($details['value'], $booking['start_time'], $rrule_errors);
         if ($repeat_details === FALSE)
         {
-          echo "Could not import event with UID ${booking['ical_uid']}.   Recurrence rule not supported";
-          return;
+          $problems = array_merge($problems, $rrule_errors);
         }
         else
         {
@@ -257,7 +271,71 @@ function process_event($vevent)
     }
   }
 
-  mrbsMakeBooking($booking);
+  if (empty($problems))
+  {
+    // Get the area settings for this room, if we haven't got them already
+    if (!isset($room_settings[$booking['room_id']]))
+    {
+      get_area_settings(get_area($booking['room_id']));
+      $room_settings[$booking['room_id']]['morningstarts'] = $morningstarts;
+      $room_settings[$booking['room_id']]['morningstarts_minutes'] = $morningstarts_minutes;
+      $room_settings[$booking['room_id']]['resolution'] = $resolution;
+    }
+    // Round the start and end times to slot boundaries
+    $date = getdate($booking['start_time']);
+    $m = $date['mon'];
+    $d = $date['mday'];
+    $y = $date['year'];
+    $am7 = mktime($room_settings[$booking['room_id']]['morningstarts'],
+                  $room_settings[$booking['room_id']]['morningstarts_minutes'],
+                  0, $m, $d, $y,
+                  is_dst($m, $d, $y, $room_settings[$booking['room_id']]['morningstarts']));
+    $booking['start_time'] = round_t_down($booking['start_time'],
+                                          $room_settings[$booking['room_id']]['resolution'],
+                                          $am7);
+    $booking['end_time'] = round_t_up($booking['end_time'],
+                                      $room_settings[$booking['room_id']]['resolution'],
+                                      $am7);
+    // Make the bookings
+    $bookings = array($booking);
+    $result = mrbsMakeBookings($bookings, NULL, $test, $skip);
+    if ($result['valid_booking'])
+    {
+      return TRUE;
+    }
+  }
+  // There were problems - list them
+  echo "<div class=\"problem_report\">\n";
+  echo get_vocab("could_not_import") . " UID:" . htmlspecialchars($booking['ical_uid']);
+  echo "<ul>\n";
+  foreach ($problems as $problem)
+  {
+    echo "<li>" . htmlspecialchars($problem) . "</li>\n";
+  }
+  if (!empty($result['rules_broken']))
+  {
+    echo "<li>" . get_vocab("rules_broken") . "</li>\n";
+    echo "<li><ul>\n";
+    foreach ($result['rules_broken'] as $rule)
+    {
+      echo "<li>$rule</li>\n";
+    }
+    echo "</ul></li>\n";
+  }
+  if (!empty($result['conflicts']))
+  {
+    echo "<li>" . get_vocab("conflict"). "</li>\n";
+    echo "<li><ul>\n";
+    foreach ($result['conflicts'] as $conflict)
+    {
+      echo "<li>$conflict</li>\n";
+    }
+    echo "</ul></li>\n";
+  }
+  echo "</ul>\n";
+  echo "</div>\n";
+  
+  return FALSE;
 }
 
 
@@ -268,23 +346,12 @@ print_header($day, $month, $year, $area, $room);
 
 $import = get_form_var('import', 'string');
 $test = get_form_var('test', 'string');
-$area_room_order = get_form_var('area_room_order', 'string');
-$area_room_delimiter = get_form_var('area_room_delimiter', 'string');
-$area_room_create = get_form_var('area_room_create', 'string');
+$area_room_order = get_form_var('area_room_order', 'string', 'area_room');
+$area_room_delimiter = get_form_var('area_room_delimiter', 'string', ';');
+$area_room_create = get_form_var('area_room_create', 'string', '0');
+$import_default_type = get_form_var('import_default_type', 'string', $default_type);
+$skip = get_form_var('skip', 'string', ((empty($skip_default)) ? '0' : '1'));
 
-// Set defaults
-if (!isset($area_room_order))
-{
-  $area_room_order = 'area_room';
-}
-if (!isset($area_room_delimiter))
-{
-  $area_room_delimiter = ';';
-}
-if (!isset($area_room_create))
-{
-  $area_room_crete = FALSE;
-}
 
 // PHASE 2 - Process the files
 // ---------------------------
@@ -354,10 +421,19 @@ if (!empty($test) || !empty($import))
         }
       }
       // Process each event, putting it in the database
+      $n_success = 0;
+      $n_failure = 0;
       foreach ($vevents as $vevent)
       {
-        process_event($vevent);
+        (process_event($vevent)) ? $n_success++ : $n_failure++;
       }
+      echo "<p>\n";
+      echo "$n_success " . get_vocab("events_imported");
+      if ($n_failure > 0)
+      {
+        echo "<br>\n$n_failure " . get_vocab("events_not_imported");
+      }
+      echo "</p>\n";
     }
   }
 }
@@ -405,6 +481,26 @@ echo "<input type=\"checkbox\" name=\"area_room_create\" id=\"area_room_create\"
 echo "</div>\n";
 
 echo "</fieldset>\n";
+
+echo "<div>\n";
+echo "<label for=\"import_default_type\">" . get_vocab("default_type") . ":</label>\n";
+echo "<select name=\"import_default_type\" id=\"import_default_type\">\n";
+foreach ($booking_types as $type)
+{
+  echo "<option value=\"$type\"" .
+       (($type == $import_default_type) ? " selected=\"selected\"" : '') .
+       ">" . get_vocab("type.$type") . "</option>\n";
+}
+echo "</select>\n";
+echo "</div>\n";
+
+echo "<div>\n";
+echo "<label for=\"skip\">" . get_vocab("skip_conflicts") . ":</label>\n";
+echo "<input type=\"checkbox\" class=\"checkbox\" " .
+          "id=\"skip\" name=\"skip\" value=\"1\" " .
+          (($skip) ? " checked=\"checked\"" : "") .
+          ">\n";
+echo "</div>\n";
 
 // The Submit button
 echo "<div id=\"import_submit\">\n";

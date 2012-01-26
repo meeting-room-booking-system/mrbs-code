@@ -292,11 +292,15 @@ function get_rep_opt($byday_days)
 
 // Given an RFC 5545 recurrence rule, returns an array giving the MRBS repeat
 // details.   Indexed by rep_type, rep_num_weeks, rep_opt, end_date
-function get_repeat_details($rrule, $start_time)
+function get_repeat_details($rrule, $start_time, &$errors)
 {
   global $RFC_5545_days;
   
-  $result = array();
+  // Set up the result aeeay with safe defaults
+  $result = array('rep_type' => REP_NONE,
+                  'rep_opt' => '0000000',
+                  'rep_num_weeks' => 0,
+                  'end_date' => 0);
   $rules = array();
   $recur_rule_parts = explode(';', $rrule);
   foreach ($recur_rule_parts as $recur_rule_part)
@@ -307,8 +311,7 @@ function get_repeat_details($rrule, $start_time)
 
   if (!isset($rules['FREQ']))
   {
-    trigger_error("Invalid RRULE: missing FREQ part");
-    return FALSE;
+    $errors[] = get_vocab("invalid_RRULE");
   }
   
   switch ($rules['FREQ'])
@@ -349,7 +352,7 @@ function get_repeat_details($rrule, $start_time)
         $byday_days = explode(',', $rules['BYDAY']);
         if (count($byday_days) > 1)
         {
-          trigger_error("MRBS does not support more than one BYDAY value when FREQ=${result['freq']}");
+          $errors[] = get_vocab("more_than_one_BYDAY") . $result['freq'];
         }
         foreach ($byday_days as $byday_day)
         {
@@ -368,13 +371,11 @@ function get_repeat_details($rrule, $start_time)
           {
             if ((int) $nth < 0)
             {
-              trigger_error("MRBS does not support negative BYDAY values ($nth$day)", E_USER_WARNING);
-              $unsupported_rules = TRUE;
+              $errors[] = get_vocab("negative_BYDAY") . " $nth$day";
             }
             elseif ($nth == '5')
             {
-              trigger_error("MRBS does not support a BYDAY value of 5 ($nth$day)", E_USER_WARNING);
-              $unsupported_rules = TRUE;
+              $errors[] = get_vocab("BYDAY_equals_5") . " $nth$day";
             }
             // otherwise we're OK and we don't need to do anything more because we know
             // we've only got one day and the REP_MONTHLY_SAMEDAY repeat type will work
@@ -387,16 +388,14 @@ function get_repeat_details($rrule, $start_time)
       $result['rep_type'] = REP_YEARLY;
       break;
     default:
-      trigger_error("FREQ=${rules['FREQ']} not supported by MRBS", E_USER_WARNING);
-      $unsupported_rules = TRUE;
+      $errors[] = get_vocab("unsupported_FREQ") . $rules['FREQ'];
       break;
   }
   
   if (isset($rules['interval']) && ($rules['interval'] > 1) && 
       !in_array($rules['FREQ'], array('WEEKLY')))
   {
-    trigger_error("MRBS does not support INTERVAL>1 with FREQ=${rules['FREQ']}", E_USER_WARNING);
-    $unsupported_rules = TRUE;
+    $errors[] = get_vocab("unsupported_INTERVAL") . $rules['FREQ'];
   }
   
   if (isset($rules['UNTIL']))
@@ -412,16 +411,14 @@ function get_repeat_details($rrule, $start_time)
   elseif (isset($rules['COUNT']))
   {
     // It would be quite easy to support COUNT, but we haven't done so yet
-    trigger_error("COUNT not yet supported by MRBS");
-    $unsupported_rules = TRUE;
+    $errors[] = get_vocab("unsupported_COUNT");
   }
   else
   {
-    trigger_error("Indefinite repeats not yet supported by MRBS");
-    $unsupported_rules = TRUE;
+    $errors[] = get_vocab("no_indefinite_repeats");
   }
   
-  return (empty($unsupported_rules)) ? $result: FALSE;
+  return (empty($errors)) ? $result: FALSE;
 }
 
 
