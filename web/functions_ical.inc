@@ -250,6 +250,7 @@ function get_time($value)
   $hour = substr($time, 0, 2);
   $minute = substr($time, 2, 2);
   $second = substr($time, 4, 2);
+
   if (isset($this_timezone))
   {
     if (strtoupper($this_timezone) == 'UTC')
@@ -609,10 +610,9 @@ function parse_ical_property($line)
     do 
     {
       $tmp = preg_split('/([;:])/' , $tmp[2], 2, PREG_SPLIT_DELIM_CAPTURE);
-      $param = array();
       list($param_name, $param_value) = explode('=', $tmp[0], 2);
       // The parameter value can be a quoted string, so get rid of any double quotes
-      $param[$param_name] = ical_unescape_quoted_string($param_value);
+      $params[$param_name] = ical_unescape_quoted_string($param_value);
     }
     while ($tmp[1] != ':');
   }
