@@ -359,10 +359,22 @@ if (!empty($import))
     $vcalendar = file_get_contents($_FILES['ics_file']['tmp_name']);
     if ($vcalendar !== FALSE)
     {
+      $vevents = array();
       $lines = explode("\r\n", ical_unfold($vcalendar));
+      $first_line = array_shift($lines);
+      if (isset($first_line))
+      {
+        // Get rid of empty lines at the end of the file
+        do
+        {
+          $last_line = array_pop($lines);
+        }
+        while (isset($last_line) && ($last_line == ''));
+      }
       // Check that this bears some resemblance to a VCALENDAR
-      if ((array_shift($lines) != "BEGIN:VCALENDAR") ||
-          (array_pop($lines) != "END:VCALENDAR"))
+      if (!isset($last_line) ||
+          ($first_line != "BEGIN:VCALENDAR") ||
+          ($last_line != "END:VCALENDAR"))
       {
         echo "<p>\n" . get_vocab("badly_formed_ics") . "</p>\n";
       }
@@ -372,7 +384,6 @@ if (!empty($import))
       // a VEVENT but we will use the PHP definition of the timezone)
       else
       {
-        $vevents = array();
         while ($line = array_shift($lines))
         {
           if ($line == "BEGIN:VEVENT")
