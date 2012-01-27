@@ -158,7 +158,6 @@ function process_event($vevent)
   $booking = array();
   $booking['status'] = 0;
   $booking['rep_type'] = REP_NONE;
-  $booking['create_by'] = getUserName();
   $booking['type'] = $import_default_type;
   // Parse all the lines first because we'll need to get the start date
   // for calculating some of the other settings
@@ -185,6 +184,9 @@ function process_event($vevent)
   {
     switch ($name)
     {
+      case 'ORGANIZER':
+        $booking['create_by'] = get_create_by($details['value']);
+        break;
       case 'SUMMARY':
         $booking['name'] = $details['value'];
         break;
@@ -239,7 +241,14 @@ function process_event($vevent)
         break;
     }
   }
-
+  
+  // If we didn't manage to work out a username then just put the booking
+  // under the name of the current user
+  if (!isset($booking['create_by']))
+  {
+    $booking['create_by'] = getUserName();
+  }
+  
   // A SUMMARY is optional in RFC 5545, however a brief description is mandatory
   // in MRBS.   So if the VEVENT didn't include a name, we'll give it one
   if (!isset($booking['name']))

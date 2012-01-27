@@ -277,6 +277,62 @@ function get_time($value)
 }
 
 
+// Gets a username given an ORGANIZER value.   Returns NULL if none found
+function get_create_by($organizer)
+{
+  global $auth, $mail_settings, $tbl_users;
+  
+  // Get the email address.   Stripping off the 'mailto' is a very simplistic
+  // method.  It will work in the majority of cases, but this needs to be improved
+  $email = preg_replace('/^mailto:/', '', $organizer);
+  
+  // If we're using the 'db' auth rtpe, then look the username up in the users table
+  if ($auth['type'] == 'db')
+  {
+    $sql = "SELECT name FROM $tbl_users WHERE email='" . addslashes($email) . "'";
+    $res = sql_query($sql);
+    if ($res === FALSE)
+    {
+      trigger_error(sql_error(), E_USER_WARNING);
+      fatal_error(FALSE, get_vocab("fatal_db_error"));
+    }
+    elseif (sql_count($res) == 0)
+    {
+      return NULL;
+    }
+    else
+    {
+      if (sql_count($res) > 1)
+      {
+        // Could maybe do something better here
+        trigger_error("ORGANIZER email address not unique", E_USER_NOTICE);
+      }
+      $row = sql_row_keyed($res, 0);
+      return $row['name'];
+    }
+  }
+  // If we're using LDAP we can get the username given the email address
+  else if($auth['type'] == 'ldap')
+  {
+    // We need a function that is the inverse of authLdapGetEmail()
+    trigger_error("Cannot yet get username when using LDAP", E_USER_WARNING);
+    return NULL;
+  }
+  // Otherwise we derive the username from the email address
+  else
+  {
+    // We just want the string up to the '@'
+    $name = preg_replace('/@.*$/', '', $email);
+    // And add on the suffix if there is one
+    if (isset($mail_settings['username_suffix']))
+    {
+      $name .= $mail_settings['username_suffix'];
+    }
+    return $name;
+  }
+}
+
+
 // Returns an MRBS rep_opt string given an array of RFC 5545 days
 function get_rep_opt($byday_days)
 {

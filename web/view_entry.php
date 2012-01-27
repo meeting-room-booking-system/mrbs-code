@@ -197,11 +197,7 @@ if (isset($action) && ($action == "export"))
     exit;
   }
   else
-  {
-    require_once "functions_ical.inc";
-    header("Content-Type: application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"");
-    header("Content-Disposition: attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"");
-    
+  {    
     // Construct the SQL query
     $sql = "SELECT E.*, "
          .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
@@ -217,16 +213,32 @@ if (isset($action) && ($action == "export"))
     {
       $sql .= ", $tbl_repeat T"
             . " WHERE E.repeat_id=$repeat_id"
-            . " AND E.repeat_id=T.id"
-            . " ORDER BY E.ical_recur_id";
+            . " AND E.repeat_id=T.id";
     }
     else
     {
       $sql .= " WHERE E.id=$id";
     }
+    
+    $sql .= " AND E.room_id=R.id
+              AND R.area_id=A.id";
+              
+    if ($series)
+    {
+      $sql .= " ORDER BY E.ical_recur_id";
+    }
     $res = sql_query($sql);
+    if ($res === FALSE)
+    {
+      trigger_error(sql_error(), E_USER_WARNING);
+      fatal_error(FALSE, get_vocab("fatal_db_error"));
+    }
     
     // Export the calendar
+    require_once "functions_ical.inc";
+    header("Content-Type: application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"");
+    header("Content-Disposition: attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"");
+
     export_icalendar($res, $keep_private);
     exit;
   }

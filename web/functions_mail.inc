@@ -16,6 +16,7 @@
 //
 // $Id$
 
+global $mail_settings;
  
 if ($mail_settings['icalendar'])
 {
