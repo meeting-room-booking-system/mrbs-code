@@ -588,6 +588,25 @@ function ical_unescape_quoted_string($str)
 }
 
 
+// Splits a string at the first colon or semicolon (the delimiter) unless the delimiter
+// is inside a quoted string.  Used for parsing iCalendar lines to get property parameters
+// It assumes the string will always have at least one more delimiter to come, so can 
+// only be used when you know you've still got the colon to come.
+//
+// Returns an array of three elements (the second is the delimiter)
+// or just one element if the delimiter is not found
+function ical_split($string)
+{
+  // We want to split the string up to the first delimiter whch isn't inside a quoted
+  // string.   So the look ahead must not contain exactly one double quote before the next
+  // delimiter.   Note that (a) you cannot escape double quotes inside a quoted string, so we
+  // we don't have to worry about that complication (b) we assume there will always be a
+  // second delimiter
+  return preg_split('/([:;](?![^"]*"{1}[:;]))/', $string, 2, PREG_SPLIT_DELIM_CAPTURE);
+}
+
+
+
 // Parse a content line which is a property (ie is inside a component).   Returns
 // an associative array:
 //   'name'       the property name
@@ -601,7 +620,7 @@ function parse_ical_property($line)
   // whether there are any parameters to come.   The split will return an array
   // with three elements:  0 - the string before the delimiter, 1 - the delimiter
   // and 2 the rest of the string
-  $tmp = preg_split('/([;:])/' , $line, 2, PREG_SPLIT_DELIM_CAPTURE);
+  $tmp = ical_split($line);
   $result['name'] = $tmp[0];
   $params = array();
   if ($tmp[1] != ':')
@@ -609,7 +628,7 @@ function parse_ical_property($line)
     // Get all the property parameters
     do 
     {
-      $tmp = preg_split('/([;:])/' , $tmp[2], 2, PREG_SPLIT_DELIM_CAPTURE);
+      $tmp = ical_split($tmp[2]);
       list($param_name, $param_value) = explode('=', $tmp[0], 2);
       // The parameter value can be a quoted string, so get rid of any double quotes
       $params[$param_name] = ical_unescape_quoted_string($param_value);
