@@ -486,6 +486,9 @@ $edit_entry_ampm_width         = '16';      // em
 $edit_entry_form_min_width     = $edit_entry_left_col_max_width + $edit_entry_textarea_width + $general_gap;
 $edit_entry_form_min_width     = number_format($edit_entry_form_min_width, 1, '.', '');   // get rid of any commas
 
+// Specific to the "import" form
+$import_left_col_max_width     = '12';      // em
+
 // Specific to the "report" form
 $report_left_col_max_width     = '12';      // em
 $report_input_width            = '12';      // em
@@ -548,6 +551,7 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 }
 
 .edit_entry     .form_general label {max-width: <?php echo $edit_entry_left_col_max_width ?>em}
+.import         .form_general label {max-width: <?php echo $import_left_col_max_width ?>em}
 .report         .form_general label {max-width: <?php echo $report_left_col_max_width ?>em}
 .search         .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
 .edit_area_room .form_general label {max-width: <?php echo $edit_area_room_left_col_max_width ?>em; width: <?php echo $edit_area_room_left_col_width ?>em}
@@ -583,11 +587,12 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 .edit_area_room .form_general #booking_policies input.text {width: 2.0em}
 .form_general input.submit {display: block; width: auto; float: left; clear: left; margin-top: 1.0em}
 
+div#import_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $import_left_col_max_width ?>em}
 div#report_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $report_left_col_max_width ?>em}
 div#search_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $search_left_col_max_width ?>em}
 div#logon_submit      {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $logon_left_col_max_width ?>em}
 div#db_logon_submit   {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $db_logon_left_col_max_width ?>em}
-#report_submit input, #search_submit input, #logon_submit input, #db_logon_submit input
+#import_submit input, #report_submit input, #search_submit input, #logon_submit input, #db_logon_submit input
     {position: relative; left: 100%; width: auto}
 div#edit_area_room_submit_back {float: left; width: <?php echo $edit_area_room_left_col_width ?>em; max-width: <?php echo $edit_area_room_left_col_max_width ?>em}
 div#edit_area_room_submit_save {float: left; clear: none; width: auto}
@@ -710,6 +715,11 @@ div#n_outstanding {margin-top: 0.5em}
 table#version_info {border-spacing: 0; border-collapse: collapse}
 #version_info td {padding: 0 1.0em 0 0; vertical-align: bottom}
 #version_info td:first-child {text-align: right}
+
+
+/* ------------ IMPORT.PHP ------------------------*/
+.import .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
+
 
 /* ------------ MINCALS.PHP ---------------------*/
 div#cals {float: right}

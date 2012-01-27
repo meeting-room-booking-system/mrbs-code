@@ -458,7 +458,7 @@ echo "<input type=\"file\" name=\"ics_file\" id=\"ics_file\">\n";
 echo "</div>\n";
 
 echo "<fieldset>\n";
-echo "<legend>hhh</legend>\n";
+echo "<legend>" . get_vocab("area_room_settings") . "</legend>\n";
 
 echo "<div>\n";
 echo "<label>" . get_vocab("area_room_order") . ":</label>\n";
@@ -487,6 +487,9 @@ echo "</div>\n";
 
 echo "</fieldset>\n";
 
+echo "<fieldset>\n";
+echo "<legend>" . get_vocab("other_settings") . "</legend>\n";
+
 echo "<div>\n";
 echo "<label for=\"import_default_type\">" . get_vocab("default_type") . ":</label>\n";
 echo "<select name=\"import_default_type\" id=\"import_default_type\">\n";
@@ -506,6 +509,8 @@ echo "<input type=\"checkbox\" class=\"checkbox\" " .
           (($skip) ? " checked=\"checked\"" : "") .
           ">\n";
 echo "</div>\n";
+
+echo "</fieldset>\n";
 
 // The Submit button
 echo "<div id=\"import_submit\">\n";

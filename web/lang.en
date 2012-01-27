@@ -418,6 +418,8 @@ $vocab["for_any_questions"]  = "for any questions that aren't answered here.";
 
 // Used in import.php
 $vocab["import_icalendar"]      = "Import an iCalendar file";
+$vocab["area_room_settings"]    = "Areas and rooms";
+$vocab["other_settings"]        = "Other settings";
 $vocab["import_intro"]          = "This form allows you to import an RFC 5545 compliant " .
                                   "iCalendar file into MRBS.   Only those repeating events " .
                                   "that have a recurrence rule with an equivalent repeat type in " .
