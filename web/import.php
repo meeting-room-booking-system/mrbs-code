@@ -461,7 +461,8 @@ echo "<fieldset>\n";
 echo "<legend>" . get_vocab("area_room_settings") . "</legend>\n";
 
 echo "<div>\n";
-echo "<label>" . get_vocab("area_room_order") . ":</label>\n";
+echo "<label title=\"" . get_vocab("area_room_order_note") . "\">" . 
+     get_vocab("area_room_order") . ":</label>\n";
 echo "<div class=\"group\">\n";
 echo "<label><input type=\"radio\" name=\"area_room_order\" value=\"area_room\"" .
      (($area_room_order == "area_room") ? " checked=\"checked\"" : "") . ">" .
@@ -473,7 +474,9 @@ echo "</div>\n";
 echo "</div>\n";
 
 echo "<div>\n";
-echo "<label for=\"area_room_delimiter\">" . get_vocab("area_room_delimiter") . ":</label>\n";
+echo "<label for=\"area_room_delimiter\"" .
+     " title=\"" . get_vocab("area_room_delimiter_note") . "\">" . 
+     get_vocab("area_room_delimiter") . ":</label>\n";
 echo "<input type=\"text\" name=\"area_room_delimiter\" id=\"area_room_delimiter\"" .
      " value=\"" . htmlspecialchars($area_room_delimiter) . "\">\n";
 echo "</div>\n";
