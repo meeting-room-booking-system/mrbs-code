@@ -170,7 +170,7 @@ function process_event($vevent)
     $properties[$property['name']] = array('params' => $property['params'],
                                            'value' => $property['value']);
   }
-  // Get the start time and UID, because we'll need them later
+  // Get the start time because we'll need it later
   if (!isset($properties['DTSTART']))
   {
     trigger_error("No DTSTART", E_USER_WARNING);
@@ -180,7 +180,6 @@ function process_event($vevent)
     $booking['start_time'] = get_time($properties['DTSTART']['value'],
                                       $properties['DTSTART']['params']);
   }
-  $booking['ical_uid'] = (isset($properties['UID'])) ? $properties['UID']['value'] : "unknown UID";
   // Now go through the rest of the properties
   foreach($properties as $name => $details)
   {
@@ -232,12 +231,30 @@ function process_event($vevent)
           $booking['status'] |= STATUS_TENTATIVE;
         }
         break;
+      case 'UID':
+        $booking['ical_uid'] = $details['value'];
+        break;
       case 'SEQUENCE':
         $booking['ical_sequence'] = $details['value'];
         break;
     }
   }
 
+  // A SUMMARY is optional in RFC 5545, however a brief description is mandatory
+  // in MRBS.   So if the VEVENT didn't include a name, we'll give it one
+  if (!isset($booking['name']))
+  {
+    $booking['name'] = "Imported event - no SUMMARY name";
+  }
+  
+  // On the other hand a UID is mandatory in RFC 5545.   We'll be lenient and
+  // provide one if it is missing
+  if (!isset($booking['ical_uid']))
+  {
+    $booking['ical_uid'] = generate_global_uid($booking['name']);
+    $booking['sequence'] = 0;  // and we'll start the sequence from 0
+  }
+  
   if (empty($problems))
   {
     // Get the area settings for this room, if we haven't got them already
@@ -365,6 +382,8 @@ if (!empty($import))
       if (isset($first_line))
       {
         // Get rid of empty lines at the end of the file
+        // (Strictly speaking there must be a CRLF at the end of the file, but
+        // we will be tolerant and accept files without one)
         do
         {
           $last_line = array_pop($lines);
