@@ -435,7 +435,9 @@ $vocab["area_room_order_note"]      = "The order of the area and room names in t
 $vocab["area_room"]                 = "Area-Room";
 $vocab["room_area"]                 = "Room-Area";
 $vocab["area_room_delimiter"]       = "Delimiter";
-$vocab["area_room_delimiter_note"]  = "The string separating the area and room names in the LOCATION property";
+$vocab["area_room_delimiter_note"]  = "The string separating the area and room names in the LOCATION property.  " .
+                                      "If no delimiter is found MRBS will look for a unique room with the same " .
+                                      "name as the LOCATION";
 $vocab["area_room_create"]          = "Create rooms if necessary";
 $vocab["default_type"]              = "Default type";
 $vocab["area_does_not_exist"]       = "Non-existent area:";
