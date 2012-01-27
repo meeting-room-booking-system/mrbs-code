@@ -200,7 +200,7 @@ function report_row(&$row, $sortby)
   global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
   global $strftime_format;
-  global $select_options, $enable_periods;
+  global $select_options;
   
   // If we're capable of delivering an Ajax request and this is not Ajax request,
   // then don't do anything.  We're going to save sending the data until we actually
@@ -230,7 +230,7 @@ function report_row(&$row, $sortby)
   $values[] = escape($row['room_name']);
   
   // Start date
-  if ($enable_periods)
+  if ($row['enable_periods'])
   {
     list($start_period, $start_date) =  period_date_string($row['start_time']);
   }
@@ -250,7 +250,7 @@ function report_row(&$row, $sortby)
   }
   
   // End date
-  if ($enable_periods)
+  if ($row['enable_periods'])
   {
     list( , $end_date) =  period_date_string($row['end_time'], -1);
   }
@@ -274,7 +274,7 @@ function report_row(&$row, $sortby)
   // changes so that the user sees what he expects to see
   $duration_seconds = $row['end_time'] - $row['start_time'];
   $duration_seconds -= cross_dst($row['start_time'], $row['end_time']);
-  $d = get_duration($row['start_time'], $row['end_time']);
+  $d = get_duration($row['start_time'], $row['end_time'], $row['enable_periods']);
   $d_string = $d['duration'] . ' ' . $d['dur_units'];
   if ($output_as_csv)
   {

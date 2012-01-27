@@ -48,6 +48,22 @@ function mrbs_default_timezone_set($timezone)
   }
 }
 
+
+// Get the default timezone.  Caters for PHP servers that don't
+// have date_default_timezone_get()
+function mrbs_default_timezone_get()
+{
+  if (function_exists("date_default_timezone_get"))
+  {
+    return date_default_timezone_get();
+  }
+  else
+  {
+    return getenv('TZ');
+  }
+}
+
+
 // Deal with $private_xxxx overrides.  Simplifies
 // logic related to private bookings.
 global $private_override;
@@ -331,13 +347,12 @@ function fromPeriodString($start_period, &$units, $dur_units)
 //
 // Returns an array indexed by 'duration' and 'dur_units'
 //
-//    $start_time   int     start time as a Unix timestamp
-//    $end_time     int     end time as a Unix timestamp
-//    $translate    boolean whether to translate into the browser language
-function get_duration($start_time, $end_time, $translate=TRUE)
+//    $start_time     int     start time as a Unix timestamp
+//    $end_time       int     end time as a Unix timestamp
+//    $enable_periods boolean whether we are using periods
+//    $translate      boolean whether to translate into the browser language
+function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
 {
-  global $enable_periods;
-  
   $result = array();
   $result['duration'] = $end_time - $start_time;
   // Need to make DST correct in opposite direction to entry creation

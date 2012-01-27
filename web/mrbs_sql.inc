@@ -21,6 +21,8 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
   global $enable_periods, $periods, $twentyfourhour_format;
   global $strftime_format;
 
+  get_area_settings(get_area($room_id));
+  
   $user = getUserName();
   // Select any meetings which overlap ($starttime,$endtime) for this room:
   $sql = "SELECT id, name, start_time, create_by, status
@@ -860,7 +862,7 @@ function mrbsApproveEntry($id, $series)
 function mrbsGetBookingInfo($id, $series, $silent=FALSE)
 {
   global $tbl_entry, $tbl_repeat, $tbl_room, $tbl_area;
-  global $approval_enabled;
+  global $approval_enabled, $enable_periods;
 
   // Check that we've got an id
   if (!isset($id))
@@ -979,7 +981,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   
   // Now get the duration.
   // Don't translate the units at this stage.   We'll translate them later.
-  $d = get_duration($row['start_time'], $row['end_time'], FALSE);
+  $d = get_duration($row['start_time'], $row['end_time'], $enable_periods, FALSE);
   $row['duration'] = $d['duration'];
   $row['dur_units'] = $d['dur_units'];
     
@@ -1045,6 +1047,440 @@ function mrbsGetRoomArea($id)
   }
 
   return $id;
+}
+
+
+// Adds an area, returning the new id, or FALSE on failute with the
+// error in $error
+function mrbsAddArea($name, &$error)
+{
+  global $maxlength, $tbl_area, $area_defaults, $boolean_fields;
+  
+  // First of all check that we've got a name
+  if (!isset($name) || ($name === ''))
+  {
+    $error = "empty_name";
+    return FALSE;
+  }
+  
+  // Truncate the name field to the maximum length as a precaution.
+  $name = substr($name, 0, $maxlength['area.area_name']);
+  $area_name_q = addslashes($name);
+  // Acquire a mutex to lock out others who might be editing the area
+  if (!sql_mutex_lock("$tbl_area"))
+  {
+    fatal_error(TRUE, get_vocab("failed_to_acquire"));
+  }
+  // Check that the area name is unique
+  if (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE area_name='$area_name_q' LIMIT 1") > 0)
+  {
+    sql_mutex_unlock("$tbl_area");
+    $error = "invalid_area_name";
+    return FALSE;
+  }
+  // If so, insert the area into the database.   We insert the area name that
+  // we have been given, together with the default values for the per-area settings
+
+  // Build arrays of data to be inserted into the table
+  $sql_col = array();
+  $sql_val = array();
+  // Get the information about the fields in the room table
+  $fields = sql_field_info($tbl_area);
+  // Loop through the fields and build up the arrays
+  foreach ($fields as $field)
+  {
+    $key = $field['name'];
+    switch ($key)
+    {
+    case 'area_name':
+      $sql_col[] = $key;
+      $sql_val[] = "'$area_name_q'";
+      break;
+    default:
+      if (array_key_exists($key, $area_defaults))
+      {
+        $sql_col[] = $key;
+        if (in_array($key, $boolean_fields['area']))
+        {
+          $sql_val[] = ($area_defaults[$key]) ? 1 : 0;
+        }
+        elseif ($field['nature'] == 'integer')
+        {
+          $sql_val[] = $area_defaults[$key];
+        }
+        else
+        {
+          $sql_val[] = "'" . addslashes($area_defaults[$key]) . "'";
+        }
+      }
+      break;
+    }
+  }
+  $sql = "INSERT INTO $tbl_area (" . implode(', ',$sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
+  if (sql_command($sql) < 0)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(TRUE, get_vocab("fatal_db_error"));
+  }
+  $area = sql_insert_id($tbl_area, 'id');
+
+  // Release the mutex
+  sql_mutex_unlock("$tbl_area");
+  return $area;
+}
+
+
+// Adds a room, returning the new id, or FALSE on failute with the
+// error in $error
+function mrbsAddRoom($name, $area, &$error, $description='', $capacity='')
+{
+  global $maxlength, $tbl_room;
+  
+  // First of all check that we've got a name
+  if (!isset($name) || ($name === ''))
+  {
+    $error = "empty_name";
+    return FALSE;
+  }
+  
+  // Truncate the name and description fields to the maximum length as a precaution.
+  $name = substr($name, 0, $maxlength['room.room_name']);
+  $description = substr($description, 0, $maxlength['room.description']);
+  // Add SQL escaping
+  $room_name_q = addslashes($name);
+  $description_q = addslashes($description);
+  if (empty($capacity))
+  {
+    $capacity = 0;
+  }
+  // Acquire a mutex to lock out others who might be editing rooms
+  if (!sql_mutex_lock("$tbl_room"))
+  {
+    fatal_error(TRUE, get_vocab("failed_to_acquire"));
+  }
+  // Check that the room name is unique within the area
+  if (sql_query1("SELECT COUNT(*) FROM $tbl_room WHERE room_name='$room_name_q' AND area_id=$area LIMIT 1") > 0)
+  {
+    sql_mutex_unlock("$tbl_room");
+    $error = "invalid_room_name";
+    return FALSE;
+  }
+  // If so, insert the room into the database
+  $sql = "INSERT INTO $tbl_room (room_name, sort_key, area_id, description, capacity)
+          VALUES ('$room_name_q', '$room_name_q', $area, '$description_q',$capacity)";
+  if (sql_command($sql) < 0)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(TRUE, get_vocab("fatal_db_error"));
+  }
+  $room = sql_insert_id($tbl_room, 'id');
+  // Release the mutex
+  sql_mutex_unlock("$tbl_room");
+  return $room;
+}
+
+
+// Makes bookings
+//    $bookings     an array of bookings
+//    $id           the id of the current booking when editing an existing entry
+function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $original_room_id=NULL, $send_mail=FALSE, $edit_type='')
+{
+  global $max_rep_entrys, $enable_periods, $resolution, $mail_settings;
+  global $tbl_entry, $tbl_room, $tbl_area;
+  
+  $user = getUserName();
+  // All the data, except for the status and room id, will be common
+  // across the bookings
+  $common = $bookings[0];
+  // Work out the duration in seconds, but adjust it for DST changes so that
+  // the user will still see, for example, "24 hours" when a booking goes from
+  // 1200 one day to 1200 the next, crosing a DST boundary.
+  $duration_seconds = $common['end_time'] - $common['start_time'];
+  $duration_seconds -= cross_dst($common['start_time'], $common['end_time']);
+  // Now get the duration, which will be needed for email notifications
+  // (We do this before we adjust for DST so that the user sees what they expect to see)
+  $duration = $duration_seconds;
+  $date = getdate($common['start_time']);
+  if ($enable_periods)
+  {
+    $period = (($date['hours'] - 12) * 60) + $date['minutes'];
+    toPeriodString($period, $duration, $dur_units, FALSE);
+  }
+  else
+  {
+    toTimeString($duration, $dur_units, FALSE);
+  }
+  // Expand a series into a list of start times:
+  if ($bookings[0]['rep_type'] != REP_NONE)
+  {
+    $reps = mrbsGetRepeatEntryList($common['start_time'],
+                                   isset($common['end_date']) ? $common['end_date'] : 0,
+                                   $common['rep_type'],
+                                   $common['rep_opt'],
+                                   $common['rep_num_weeks'],
+                                   $max_rep_entrys);
+  }
+
+  // When checking for overlaps, for Edit (not New), ignore this entry and series:
+  $repeat_id = 0;
+  if (isset($id))
+  {
+    $ignore_id = $id;
+    $repeat_id = sql_query1("SELECT repeat_id FROM $tbl_entry WHERE id=$id LIMIT 1");
+    if ($repeat_id < 0)
+    {
+      $repeat_id = 0;
+    }
+  }
+  else
+  {
+    $ignore_id = 0;
+  }
+
+  // Acquire mutex to lock out others trying to book the same slot(s).
+  if (!sql_mutex_lock("$tbl_entry"))
+  {
+    fatal_error(1, get_vocab("failed_to_acquire"));
+  }
+
+  // Validate the booking for (a) conflicting bookings and (b) conformance to rules
+  $valid_booking = TRUE;
+  $conflicts = array();     // Holds a list of all the conflicts
+  $rules_broken = array();  // Holds an array of the rules that have been broken
+  $skip_lists = array();    // Holds a 2D array of bookings to skip past.  Indexed
+                            // by room id and start time
+                          
+  // Check for any schedule conflicts in each room we're going to try and
+  // book in;  also check that the booking conforms to the policy
+  foreach ($bookings as $booking)
+  {
+    $skip_lists[$booking['room_id']] = array();
+    if ($booking['rep_type'] != REP_NONE && !empty($reps))
+    {
+      if(count($reps) < $max_rep_entrys)
+      {
+        for ($i = 0; $i < count($reps); $i++)
+        {
+          // calculate diff each time and correct where events
+          // cross DST
+          $diff = $duration_seconds;
+          $diff += cross_dst($reps[$i], $reps[$i] + $diff);
+
+          $tmp = mrbsCheckFree($booking['room_id'],
+                               $reps[$i],
+                               $reps[$i] + $diff,
+                               $ignore_id,
+                               $repeat_id);
+
+          if (!empty($tmp))
+          {
+            // If we've been told to skip past existing bookings, then add
+            // this start time to the list of start times to skip past.
+            // Otherwise it's an invalid booking
+            if ($skip)
+            {
+              $skip_lists[$booking['room_id']][] = $reps[$i];
+            }
+            else
+            {
+              $valid_booking = FALSE;
+            }
+            // In both cases remember the conflict data.   (We don't at the
+            // moment do anything with the data if we're skipping, but we might
+            // in the future want to display a list of bookings we've skipped past)
+            $conflicts = array_merge($conflicts, $tmp);
+          }
+          // if we're not an admin for this room, check that the booking
+          // conforms to the booking policy
+          if (!auth_book_admin($user, $booking['room_id']))
+          {
+            $errors = mrbsCheckPolicy($reps[$i], $duration_seconds);
+            if (count($errors) > 0)
+            {
+              $valid_booking = FALSE;
+              $rules_broken = array_merge($rules_broken, $errors);
+            }
+          }
+        } // for
+      }
+      else
+      {
+        $valid_booking = FALSE;
+        $rules_broken[] = get_vocab("too_may_entrys");
+      }
+    }
+    else
+    {
+      $tmp = mrbsCheckFree($booking['room_id'],
+                           $booking['start_time'],
+                           $booking['end_time'] - 1,
+                           $ignore_id, 0);
+      if (!empty($tmp))
+        {
+          $valid_booking = FALSE;
+          $conflicts = array_merge($conflicts, $tmp);
+        }
+        // if we're not an admin for this room, check that the booking
+        // conforms to the booking policy
+        if (!auth_book_admin($user, $booking['room_id']))
+        {
+          $errors = mrbsCheckPolicy($booking['start_time'], $duration_seconds);
+          if (count($errors) > 0)
+          {
+            $valid_booking = FALSE;
+            $rules_broken = array_merge($rules_broken, $errors);
+          }
+        }
+    }
+
+  } // end foreach bookings
+
+  // Tidy up the lists of conflicts and rules broken, getting rid of duplicates
+  $conflicts = array_values(array_unique($conflicts));
+  $rules_broken = array_values(array_unique($rules_broken));
+  
+  $result = array();
+  $result['valid_booking'] = $valid_booking;
+  $result['rules_broken'] = $rules_broken;
+  $result['conflicts'] = $conflicts;
+  
+  // If we've just been asked to check the bookings, or if it wasn't a valid
+  // booking, then stop here and return the results
+  if ($just_check || !$valid_booking)
+  {
+    sql_mutex_unlock("$tbl_entry");
+    return $result;
+  }
+    
+  
+  // Otherwise we go on to commit the booking
+  
+  $new_details = array(); // We will pass this array in the Ajax result
+  $rooms = array();
+  foreach ($bookings as $booking)
+  {
+    $rooms[] = $booking['room_id'];
+  }
+  foreach ($bookings as $booking)
+  { 
+    // We need to work out whether this is the original booking being modified,
+    // because, if it is, we keep the ical_uid and increment the ical_sequence.
+    // We consider this to be the original booking if there was an original
+    // booking in the first place (in which case the original room id will be set) and
+    //      (a) this is the same room as the original booking
+    //   or (b) there is only one room in the new set of bookings, in which case
+    //          what has happened is that the booking has been changed to be in
+    //          a new room
+    //   or (c) the new set of rooms does not include the original room, in which
+    //          case we will make the arbitrary assumption that the original booking
+    //          has been moved to the first room in the list and the bookings in the
+    //          other rooms are clones and will be treated as new bookings.
+    
+    if (isset($original_room_id) && 
+        (($original_room_id == $booking['room_id']) ||
+         (count($rooms) == 1) ||
+         (($rooms[0] == $booking['room_id']) && !in_array($original_room_id, $rooms))))
+    {
+      // This is an existing booking which has been changed.   Keep the
+      // original ical_uid and increment the sequence number.
+      $booking['ical_sequence']++;
+    }
+    else
+    {
+      // This is a new booking.   We generate a new ical_uid and start
+      // the sequence at 0 - unless there already are uid and sequence
+      // numbers, for example when importing an iCalendar file
+      if (empty($booking['ical_uid']))
+      {
+        $booking['ical_uid'] = generate_global_uid($booking['name']);
+      }
+      if (empty($booking['ical_sequence']))
+      {
+        $booking['ical_sequence'] = 0;
+      }
+    }
+
+    if ($booking['rep_type'] == REP_NONE)
+    {
+      $booking['entry_type'] = ($repeat_id > 0) ? ENTRY_RPT_CHANGED : ENTRY_SINGLE;
+      $booking['repeat_id'] = $repeat_id;
+    }
+    // Add in the list of bookings to skip
+    if (!empty($skip_lists) && !empty($skip_lists[$booking['room_id']]))
+    {
+      $booking['skip_list'] = $skip_lists[$booking['room_id']];
+    }
+    // The following elements are needed for email notifications
+    $booking['duration'] = $duration;
+    $booking['dur_units'] = $dur_units;
+
+    if ($booking['rep_type'] != REP_NONE)
+    {
+      $details = mrbsCreateRepeatingEntrys($booking);
+      $new_id = $details['id'];
+      $is_repeat_table = $details['series'];
+    }
+    else
+    {
+      // Create the entry:
+      $new_id = mrbsCreateSingleEntry($booking);
+      $is_repeat_table = FALSE;
+    }
+    $new_details[] = array('id' => $new_id, 'room_id' => $booking['room_id']);
+    $booking['id'] = $new_id;  // Add in the id now we know it
+    
+    // Send an email if neccessary, provided that the entry creation was successful
+    if ($send_mail && !empty($new_id))
+    {
+      // Only send an email if (a) this is a changed entry and we have to send emails
+      // on change or (b) it's a new entry and we have to send emails for new entries
+      if ((isset($id) && $mail_settings['on_change']) || 
+          (!isset($id) && $mail_settings['on_new']))
+      {
+        require_once "functions_mail.inc";
+        // Get room name and area name for email notifications.
+        // Would be better to avoid a database access just for that.
+        // Ran only if we need details
+        if ($mail_settings['details'])
+        {
+          $sql = "SELECT R.room_name, A.area_name
+                    FROM $tbl_room R, $tbl_area A
+                   WHERE R.id=${booking['room_id']} AND R.area_id = A.id
+                   LIMIT 1";
+          $res = sql_query($sql);
+          $row = sql_row_keyed($res, 0);
+          $booking['room_name'] = $row['room_name'];
+          $booking['area_name'] = $row['area_name'];
+        }
+        // If this is a modified entry then get the previous entry data
+        // so that we can highlight the changes
+        if (isset($id))
+        {
+          if ($edit_type == "series")
+          {
+            $mail_previous = mrbsGetBookingInfo($repeat_id, TRUE);
+          }
+          else
+          {
+            $mail_previous = mrbsGetBookingInfo($id, FALSE);
+          }
+        }
+        else
+        {
+          $mail_previous = array();
+        }
+        // Send the email
+        notifyAdminOnBooking($booking, $mail_previous, !isset($id), $is_repeat_table);
+      }
+    }   
+  } // end foreach $bookings
+
+  sql_mutex_unlock("$tbl_entry");
+      
+  $result['new_details'] = $new_details;
+  $result['slots'] = intval(($common['end_time'] - $common['start_time'])/$resolution);
+
+  return $result;
 }
 
 ?>
