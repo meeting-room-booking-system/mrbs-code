@@ -3197,7 +3197,6 @@ $(window).load(function() {
       var tableOptions = new Object();
       <?php
       // Use an Ajax source - gives much better performance for large tables
-
       $ajax_url = basename($PHP_SELF) . "?" . $QUERY_STRING . "&ajax=1";
       ?>
       tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
