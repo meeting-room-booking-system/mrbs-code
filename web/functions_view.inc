@@ -46,7 +46,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   if (!isset($data['duration']))
   {
     // We will translate the units later
-    $d = get_duration($data['start_time'], $data['end_time'], FALSE);
+    $d = get_duration($data['start_time'], $data['end_time'], $enable_periods, FALSE);
     $data['duration'] = $d['duration'];
     $data['dur_units'] = $d['dur_units'];
   }
