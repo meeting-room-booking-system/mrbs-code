@@ -448,6 +448,7 @@ $vocab["could_not_create_area"]     = "Could not create area";
 $vocab["could_not_create_room"]     = "Could not create room";
 $vocab["could_not_find_room"]       = "Could not find room";
 $vocab["could_not_import"]          = "Could not import";
+$vocab["no_LOCATION"]               = "The VEVENT did not include a LOCATION property";
 $vocab["invalid_RRULE"]             = "Invalid RRULE: missing FREQ part";
 $vocab["more_than_one_BYDAY"]       = "MRBS does not support more than one BYDAY value when FREQ=";
 $vocab["negative_BYDAY"]            = "MRBS does not support negative BYDAY values";

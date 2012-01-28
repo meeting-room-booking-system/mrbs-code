@@ -5,6 +5,7 @@ require_once "defaultincludes.inc";
 require_once "functions_ical.inc";
 require_once "mrbs_sql.inc";
 
+
 function get_room_id($location)
 {
   global $area_room_order, $area_room_delimiter, $area_room_create;
@@ -195,7 +196,7 @@ function process_event($vevent)
         break;
       case 'LOCATION':
         $booking['room_id'] = get_room_id($details['value']);
-        if (empty($booking['room_id']))
+        if ($booking['room_id'] === FALSE)
         {
           $problems[] = get_vocab("could_not_find_room") . " '${details['value']}'";
         }
@@ -239,6 +240,12 @@ function process_event($vevent)
       case 'SEQUENCE':
         $booking['ical_sequence'] = $details['value'];
         break;
+      case 'LAST-MODIFIED':
+        // We probably ought to do something with LAST-MODIFIED and use it
+        // for the timestamp field
+        break;
+      default:
+        break;
     }
   }
   
@@ -262,6 +269,13 @@ function process_event($vevent)
   {
     $booking['ical_uid'] = generate_global_uid($booking['name']);
     $booking['sequence'] = 0;  // and we'll start the sequence from 0
+  }
+  
+  if (!isset($booking['room_id']))
+  {
+    // LOCATION is optional in RFC 5545 but is obviously mandatory in MRBS.
+    // We could maybe have a default room pon the form and use that
+    $problems[] = get_vocab("no_LOCATION");
   }
   
   if (empty($problems))
