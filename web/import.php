@@ -271,10 +271,10 @@ function process_event($vevent)
     $booking['sequence'] = 0;  // and we'll start the sequence from 0
   }
   
+  // LOCATION is optional in RFC 5545 but is obviously mandatory in MRBS.
+  // We could maybe have a default room on the form and use that
   if (!isset($booking['room_id']))
   {
-    // LOCATION is optional in RFC 5545 but is obviously mandatory in MRBS.
-    // We could maybe have a default room pon the form and use that
     $problems[] = get_vocab("no_LOCATION");
   }
   
