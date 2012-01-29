@@ -719,7 +719,7 @@ table#version_info {border-spacing: 0; border-collapse: collapse}
 
 /* ------------ IMPORT.PHP ------------------------*/
 .import .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
-
+div.problem_report {border-bottom: 1px solid <?php echo $site_faq_entry_border_color ?>; margin-top: 1em}
 
 /* ------------ MINCALS.PHP ---------------------*/
 div#cals {float: right}

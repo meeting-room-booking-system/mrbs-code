@@ -6,7 +6,7 @@ require_once "functions_ical.inc";
 require_once "mrbs_sql.inc";
 
 
-function get_room_id($location)
+function get_room_id($location, &$error)
 {
   global $area_room_order, $area_room_delimiter, $area_room_create;
   global $tbl_room, $tbl_area;
@@ -46,12 +46,12 @@ function get_room_id($location)
     }
     elseif ($count == 0)
     {
-      echo "Room '$location_room' does not exist and cannot be added - no area given.<br>\n";
+      $error = "Room '$location_room' does not exist and cannot be added - no area given.";
       return FALSE;
     }
     elseif ($count > 1)
     {
-      echo "There is more than one room called '$location_room'.  Cannot choose which one without an area.<br>\n";
+      $error = "There is more than one room called '$location_room'.  Cannot choose which one without an area.";
       return FALSE;
     }
     else // we've got a unique room name
@@ -89,17 +89,17 @@ function get_room_id($location)
         // The area does not exist - create it if we are allowed to
         if (!$area_room_create)
         {
-          echo get_vocab("area_does_not_exist") . " '$location_area'<br>\n";
+          $error = get_vocab("area_does_not_exist") . " '$location_area'";
           return FALSE;
         }
         else
         {
           echo get_vocab("creating_new_area") . " '$location_area'<br>\n";
-          $error = '';
-          $area_id = mrbsAddArea($location_area, $error);
+          $error_add_area = '';
+          $area_id = mrbsAddArea($location_area, $error_add_area);
           if ($area_id === FALSE)
           {
-            echo get_vocab("could_not_create_area") . " '$location_area'<br>\n";
+            $error = get_vocab("could_not_create_area") . " '$location_area'";
             return FALSE;
           }
         }
@@ -126,17 +126,17 @@ function get_room_id($location)
       // The room does not exist - create it if we are allowed to
       if (!$area_room_create)
       {
-        echo get_vocab("room_does_not_exist") . " '$location_room'<br>\n";
+        $error = get_vocab("room_does_not_exist") . " '$location_room'";
         return FALSE;
       }
       else
       {
         echo get_vocab("creating_new_room") . " '$location_room'<br>\n";
-        $error = '';
-        $room_id = mrbsAddRoom($location_room, $area_id, $error);
+        $error_add_room = '';
+        $room_id = mrbsAddRoom($location_room, $area_id, $error_add_room);
         if ($room_id === FALSE)
         {
-          echo get_vocab("could_not_create_room") . " '$location_room'<br>\n";
+          $error = get_vocab("could_not_create_room") . " '$location_room'";
           return FALSE;
         }
       }
@@ -195,10 +195,11 @@ function process_event($vevent)
         $booking['description'] = $details['value'];
         break;
       case 'LOCATION':
-        $booking['room_id'] = get_room_id($details['value']);
+        $error = '';
+        $booking['room_id'] = get_room_id($details['value'], $error);
         if ($booking['room_id'] === FALSE)
         {
-          $problems[] = get_vocab("could_not_find_room") . " '${details['value']}'";
+          $problems[] = $error;
         }
         break;
       case 'DTEND':
@@ -321,8 +322,8 @@ function process_event($vevent)
   }
   if (!empty($result['rules_broken']))
   {
-    echo "<li>" . get_vocab("rules_broken") . "</li>\n";
-    echo "<li><ul>\n";
+    echo "<li>" . get_vocab("rules_broken") . "\n";
+    echo "<ul>\n";
     foreach ($result['rules_broken'] as $rule)
     {
       echo "<li>$rule</li>\n";
@@ -331,8 +332,8 @@ function process_event($vevent)
   }
   if (!empty($result['conflicts']))
   {
-    echo "<li>" . get_vocab("conflict"). "</li>\n";
-    echo "<li><ul>\n";
+    echo "<li>" . get_vocab("conflict"). "\n";
+    echo "<ul>\n";
     foreach ($result['conflicts'] as $conflict)
     {
       echo "<li>$conflict</li>\n";
