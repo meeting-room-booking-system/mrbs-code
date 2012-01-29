@@ -349,6 +349,7 @@ function get_rep_opt($byday_days)
 
 // Given an RFC 5545 recurrence rule, returns an array giving the MRBS repeat
 // details.   Indexed by rep_type, rep_num_weeks, rep_opt, end_date
+// Returns FALSE on failure with error messahes being returned in the array $errors
 function get_repeat_details($rrule, $start_time, &$errors)
 {
   global $RFC_5545_days;

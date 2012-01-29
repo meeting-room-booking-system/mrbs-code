@@ -6,6 +6,9 @@ require_once "functions_ical.inc";
 require_once "mrbs_sql.inc";
 
 
+// Gets the id of the area/room with the LOCATION property value of $location,
+// creating an area and room if allowed.
+// Returns FALSE if it can't find an id or create an id, with an error message in $error
 function get_room_id($location, &$error)
 {
   global $area_room_order, $area_room_delimiter, $area_room_create;
@@ -46,12 +49,12 @@ function get_room_id($location, &$error)
     }
     elseif ($count == 0)
     {
-      $error = "Room '$location_room' does not exist and cannot be added - no area given.";
+      $error = "'$location_room': " . get_vocab("room_does_not_exist_no_area");
       return FALSE;
     }
     elseif ($count > 1)
     {
-      $error = "There is more than one room called '$location_room'.  Cannot choose which one without an area.";
+      $error = "'$location_room': " . get_vocab("room_not_unique_no_area");
       return FALSE;
     }
     else // we've got a unique room name
@@ -146,6 +149,7 @@ function get_room_id($location, &$error)
 }
 
 
+// Add a VEVENT to MRBS.   Returns TRUE on success, FALSE on failure
 function process_event($vevent)
 {
   global $import_default_type, $skip;

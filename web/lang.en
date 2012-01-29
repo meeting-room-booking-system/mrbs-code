@@ -417,48 +417,50 @@ $vocab["please_contact"]     = "Please contact ";
 $vocab["for_any_questions"]  = "for any questions that aren't answered here.";
 
 // Used in import.php
-$vocab["import_icalendar"]          = "Import an iCalendar file";
-$vocab["area_room_settings"]        = "Areas and rooms";
-$vocab["other_settings"]            = "Other settings";
-$vocab["import_intro"]              = "This form allows you to import an RFC 5545 compliant " .
-                                     "iCalendar file into MRBS.   Only those repeating events " .
-                                     "that have a recurrence rule with an equivalent repeat type in " .
-                                     "MRBS will be imported.";
-$vocab["file_name"]                 = "File";
-$vocab["import"]                    = "Import";
-$vocab["upload_failed"]             = "Upload failed";
-$vocab["max_allowed_file_size"]     = "The maximum allowed file size is";
-$vocab["no_file"]                   = "No file was uploaded";
-$vocab["badly_formed_ics"]          = "Badly formed VCALENDAR file";
-$vocab["area_room_order"]           = "Order";
-$vocab["area_room_order_note"]      = "The order of the area and room names in the LOCATION property";
-$vocab["area_room"]                 = "Area-Room";
-$vocab["room_area"]                 = "Room-Area";
-$vocab["area_room_delimiter"]       = "Delimiter";
-$vocab["area_room_delimiter_note"]  = "The string separating the area and room names in the LOCATION property.  " .
-                                      "If no delimiter is found MRBS will look for a unique room with the same " .
-                                      "name as the LOCATION";
-$vocab["area_room_create"]          = "Create rooms if necessary";
-$vocab["default_type"]              = "Default type";
-$vocab["area_does_not_exist"]       = "Non-existent area:";
-$vocab["room_does_not_exist"]       = "Non-existent room:";
-$vocab["creating_new_area"]         = "Creating new area:";
-$vocab["creating_new_room"]         = "Creating new room:";
-$vocab["could_not_create_area"]     = "Could not create area";
-$vocab["could_not_create_room"]     = "Could not create room";
-$vocab["could_not_find_room"]       = "Could not find room";
-$vocab["could_not_import"]          = "Could not import";
-$vocab["no_LOCATION"]               = "The VEVENT did not include a LOCATION property";
-$vocab["invalid_RRULE"]             = "Invalid RRULE: missing FREQ part";
-$vocab["more_than_one_BYDAY"]       = "MRBS does not support more than one BYDAY value when FREQ=";
-$vocab["negative_BYDAY"]            = "MRBS does not support negative BYDAY values";
-$vocab["BYDAY_equals_5"]            = "MRBS does not support a BYDAY value of 5";
-$vocab["unsupported_FREQ"]          = "MRBS does not support FREQ=";
-$vocab["unsupported_INTERVAL"]      = "MRBS does not support INTERVAL>1 with FREQ=";
-$vocab["unsupported_COUNT"]         = "COUNT not yet supported by MRBS";
-$vocab["no_indefinite_repeats"]     = "Indefinite repeats not yet supported by MRBS";
-$vocab["events_imported"]           = "events imported";
-$vocab["events_not_imported"]       = "events not imported";
+$vocab["import_icalendar"]            = "Import an iCalendar file";
+$vocab["area_room_settings"]          = "Areas and rooms";
+$vocab["other_settings"]              = "Other settings";
+$vocab["import_intro"]                = "This form allows you to import an RFC 5545 compliant " .
+                                        "iCalendar file into MRBS.   Only those repeating events " .
+                                        "that have a recurrence rule with an equivalent repeat type in " .
+                                        "MRBS will be imported.";
+$vocab["file_name"]                   = "File";
+$vocab["import"]                      = "Import";
+$vocab["upload_failed"]               = "Upload failed";
+$vocab["max_allowed_file_size"]       = "The maximum allowed file size is";
+$vocab["no_file"]                     = "No file was uploaded";
+$vocab["badly_formed_ics"]            = "Badly formed VCALENDAR file";
+$vocab["area_room_order"]             = "Order";
+$vocab["area_room_order_note"]        = "The order of the area and room names in the LOCATION property";
+$vocab["area_room"]                   = "Area-Room";
+$vocab["room_area"]                   = "Room-Area";
+$vocab["area_room_delimiter"]         = "Delimiter";
+$vocab["area_room_delimiter_note"]    = "The string separating the area and room names in the LOCATION property.  " .
+                                        "If no delimiter is found MRBS will look for a unique room with the same " .
+                                        "name as the LOCATION";
+$vocab["area_room_create"]            = "Create rooms if necessary";
+$vocab["default_type"]                = "Default type";
+$vocab["room_does_not_exist_no_area"] = "room does not exist and cannot be added - no area given";
+$vocab["room_not_unique_no_area"]     = "room name is not unique.  Cannot choose which one without an area.";
+$vocab["area_does_not_exist"]         = "Non-existent area:";
+$vocab["room_does_not_exist"]         = "Non-existent room:";
+$vocab["creating_new_area"]           = "Creating new area:";
+$vocab["creating_new_room"]           = "Creating new room:";
+$vocab["could_not_create_area"]       = "Could not create area";
+$vocab["could_not_create_room"]       = "Could not create room";
+$vocab["could_not_find_room"]         = "Could not find room";
+$vocab["could_not_import"]            = "Could not import";
+$vocab["no_LOCATION"]                 = "The VEVENT did not include a LOCATION property";
+$vocab["invalid_RRULE"]               = "Invalid RRULE: missing FREQ part";
+$vocab["more_than_one_BYDAY"]         = "MRBS does not support more than one BYDAY value when FREQ=";
+$vocab["negative_BYDAY"]              = "MRBS does not support negative BYDAY values";
+$vocab["BYDAY_equals_5"]              = "MRBS does not support a BYDAY value of 5";
+$vocab["unsupported_FREQ"]            = "MRBS does not support FREQ=";
+$vocab["unsupported_INTERVAL"]        = "MRBS does not support INTERVAL>1 with FREQ=";
+$vocab["unsupported_COUNT"]           = "COUNT not yet supported by MRBS";
+$vocab["no_indefinite_repeats"]       = "Indefinite repeats not yet supported by MRBS";
+$vocab["events_imported"]             = "events imported";
+$vocab["events_not_imported"]         = "events not imported";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatal error: failed to connect to database";
