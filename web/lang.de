@@ -178,7 +178,7 @@ $vocab["deleted_by"]          = "Gelöscht von";
 $vocab["reason"]              = "Begründung";
 $vocab["info_requested"]      = "Informationen angefordert";
 $vocab["min_time_before"]     = "Die minimale Zeit zwischen jetzt und dem Beginn des Eintrags ist";
-$vocab["max_time_before"]     = "Die maximale Zeit zwischen jetzt und dem Beginn des Eintrags ist";
+$vocab["max_time_before"]     = "Die maximale Zeit zwischen jetzt und dem Ende des Eintrags ist";
 $vocab["max_booking_duration"]    = "Die maximale Dauer einer Buchung beträgt";
 $vocab["skip_and_book"]           = "Überspringen und buchen";
 $vocab["skip_and_book_note"]      = "Buchung eintragen, dabei Buchungstermine mit Konflikten überspringen";
@@ -416,6 +416,52 @@ $vocab["system"]             = "System";
 $vocab["servertime"]         = "Serverzeit";
 $vocab["please_contact"]     = "Bitte kontaktieren Sie ";
 $vocab["for_any_questions"]  = "für Fragen die hier nicht beantwortet sind.";
+
+// Used in import.php
+$vocab["import_icalendar"]          = "iCalendar-Datei importieren";
+$vocab["area_room_settings"]        = "Bereiche und Räume";
+$vocab["other_settings"]            = "Weitere Einstellungen";
+$vocab["import_intro"]              = "Dieses Formular erlaubt Ihnen eine RFC 5545 kompatibles " .
+                                     "iCalendar-Datei zu importieren.   Nur die Serientermine, " .
+                                     "die einer MRBS-Regel entsprechen werden korrekt ins" .
+                                     "MRBS importiert.";
+$vocab["file_name"]                 = "Datei";
+$vocab["import"]                    = "Importieren";
+$vocab["upload_failed"]             = "Hochladen mit Fehler abgebrochen";
+$vocab["max_allowed_file_size"]     = "Die naximale Dateigröße beträgt";
+$vocab["no_file"]                   = "Keine Datei hochgeladen";
+$vocab["badly_formed_ics"]          = "Fehlerhaft formatierte VCALENDAR-Datei";
+$vocab["area_room_order"]           = "Reihenfolge";
+$vocab["area_room_order_note"]      = "Reihenfolg der Bereichs- und Raumnamen in der LOCATION Eigenschaft";
+$vocab["area_room"]                 = "Bereich - Raum";
+$vocab["room_area"]                 = "Raum - Bereich";
+$vocab["area_room_delimiter"]       = "Begrenzer";
+$vocab["area_room_delimiter_note"]  = "Trenn-Zeichen für die Bereichs- und Raumnamen in der LOCATION Eigenschaft.  " .
+                                      "Wird kein Trenn-Zeichen erkannt, wird nach einem eindeutigen Raum mit dem selben " .
+                                      "Namen wie die LOCATION gesucht";
+$vocab["area_room_create"]          = "Räume anlegen, wenn notwendig";
+$vocab["default_type"]              = "Standardtyp";
+$vocab["room_does_not_exist_no_area"] = "Raum existiert nicht - kein Bereich vorhanden";
+$vocab["room_not_unique_no_area"]     = "Raumname nicht eindeutig. Ohne Bereichsangabe keine Zuordnung möglich.";
+$vocab["area_does_not_exist"]       = "Bereich existiert nicht:";
+$vocab["room_does_not_exist"]       = "Raum existiert nicht:";
+$vocab["creating_new_area"]         = "Bereich wird angelegt:";
+$vocab["creating_new_room"]         = "Raum wird angelegt:";
+$vocab["could_not_create_area"]     = "Bereich konnte nicht angelegt werden";
+$vocab["could_not_create_room"]     = "Raum konnte nicht angelegt werden";
+$vocab["could_not_find_room"]       = "Raum wurde nicht gefunden";
+$vocab["could_not_import"]          = "Import gescheitert";
+$vocab["no_LOCATION"]               = "Das VEVENT behinhaltet keine LOCATION Eigenschaft";
+$vocab["invalid_RRULE"]             = "Fehlerhafte RRULE: FREQ Bereich fehlt";
+$vocab["more_than_one_BYDAY"]       = "MRBS unterstützt keine mehrfachen BYDAY Werte, wenn FREQ=";
+$vocab["negative_BYDAY"]            = "MRBS unterstützt keine negativen BYDAY Werte";
+$vocab["BYDAY_equals_5"]            = "MRBS unterstützt keinen BYDAY Wert von 5";
+$vocab["unsupported_FREQ"]          = "MRBS unterstützt kein FREQ=";
+$vocab["unsupported_INTERVAL"]      = "MRBS unterstützt kein INTERVAL>1 wenn FREQ=";
+$vocab["unsupported_COUNT"]         = "COUNT wird nicht durch unterstützt";
+$vocab["no_indefinite_repeats"]     = "Wiederholungen ohne Begrenzungen werden nicht unterstützt";
+$vocab["events_imported"]           = "Veranstaltungen importiert";
+$vocab["events_not_imported"]       = "Veranstaltungen nicht importiert";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fataler Fehler: Verbindung zur Datenbank fehlgeschlagen";
