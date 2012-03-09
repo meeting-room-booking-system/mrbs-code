@@ -932,6 +932,19 @@ $faqfilelang = "";
 // Language selection when run from the command line
 $cli_language = "en";
 
+// Vocab overrides
+// ---------------
+
+// You can override the text strings that appear in the lang.* files by setting
+// $vocab_override[LANG][TOKEN] in your config file, where LANG is the language,
+// for example 'en' and TOKEN is the key of the $vocab array.  For example to
+// alter the string "Meeting Room Booking System" in English set
+//
+// $vocab_override['en']['mrbs'] = "My Resource Booking System";
+//
+// Applying vocab overrides in the config file rather than editing the lang files
+// mean that your changes will be preserved whenb you upgrade to the next version of
+// and you won't have to re-edit the lang file.
 
 /*************
  * Reports

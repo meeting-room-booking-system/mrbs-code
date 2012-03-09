@@ -26,6 +26,14 @@ the upgraded database.   You may therefore choose to make a copy of the
 database for test purposes and check that the upgrade process works before
 performing the upgrade on your production database.
 
+Upgrading from prior MRBS 1.4.9
+===============================
+
+MRBS now supports the $vocab_override config variable.   See
+systemdefaults.inc.php for more details.  If you have customised your version
+of MRBS by editing the lang files, you are advised to use $vocab_override instead.
+This will make future upgrades easier.
+
 
 Upgrading from prior MRBS 1.4.6
 ===============================

@@ -34,18 +34,18 @@
 // in MySQL.
 //
 // You can put a description of the column that will be used as the label in
-// the form in the appropriate lang file(s) using the tag 'entry.[columnname]'.
-// (Note that it is not necessary to add a 'repeat.[columnname]' tag.   The 
-// entry tag is sufficient.)
+// the form in the $vocab_override variable in the config file using the tag
+// 'entry.[columnname]'.   (Note that it is not necessary to add a
+// 'repeat.[columnname]' tag.   The entry tag is sufficient.)
 //
 // For example if you want to add a column recording the number of participants
 // you could add a column to the entry and repeat tables called 'participants'
 // of type int.  Then in the appropriate lang file(s) you would add the line
 //
-// $vocab["entry.participants"] = "Participants";  // or appropriate translation
+// $vocab_override['en']['entry.participants'] = "Participants";  // or appropriate translation
 //
-// If MRBS can't find an entry for the field in the lang file, then it will use
-// the fieldname, eg 'coffee_machine'. 
+// If MRBS can't find an entry for the field in the lang file or $vocab_override,
+// then it will use the fieldname, eg 'coffee_machine'. 
 
 
 require_once "defaultincludes.inc";

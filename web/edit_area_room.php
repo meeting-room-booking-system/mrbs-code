@@ -31,16 +31,18 @@
 // in MySQL.
 //
 // You can put a description of the column that will be used as the label in
-// the form in the appropriate lang file(s) using the tag 'room.[columnname]'.
+// the form in the $vocab_override variable in the config file using the tag
+// 'room.[columnname]'.
+//
 // For example if you want to add a column specifying whether or not a room
 // has a coffee machine you could add a column to the room table called
 // 'coffee_machine' of type tinyint(1), in MySQL, or smallint in PostgreSQL.
-// Then in the appropriate lang file(s) you would add the line
+// Then in the config file you would add the line
 //
-// vocab["room.coffee_machine"] = "Coffee machine";  // or appropriate translation
+// $vocab_override['en']['room.coffee_machine'] = "Coffee machine";  // or appropriate translation
 //
-// If MRBS can't find an entry for the field in the lang file, then it will use
-// the fieldname, eg 'coffee_machine'.
+// If MRBS can't find an entry for the field in the lang file or vocab overrides, then
+// it will use the fieldname, eg 'coffee_machine'.
 
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";

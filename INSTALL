@@ -188,7 +188,8 @@ PostgreSQL presents some problems in PHP when trying to process the results
 of a query in a database independent way, so it is more convenient to use a 
 smallint instead of a boolean in PostgreSQL.]
 
-Text descriptions are looked for in the lang files with the tag room.column_name,
+Text descriptions are set in the config file using the $vocab_override variable
+using the appropriate language(s) and with the tag room.column_name,
 eg room.coffee_machine, or users.phone enabling translations to be provided.   
 If not present, the column name will be used for labels etc.  If you are adding
 columns to the entry and repeat tables then you only need to add the 
@@ -201,9 +202,9 @@ coffee_machine     tinyint(1)
 
 to the room table and add the line
 
-vocab["room.coffee_machine"] = "Coffee machine";
+$vocab_override['en']['room.coffee_machine'] = "Coffee machine";
 
-to the lang.en file and similarly for other languages as required.   MRBS
+to the config file and similarly for other languages as required.   MRBS
 should then do the rest and display your coffee machine field on the room
 pages.
 
@@ -433,9 +434,16 @@ CHANGING TEXT STRINGS
 ---------------------------------------------------------------------------
 
 All the text strings used by MRBS, except those used on the Help page, are held in a
-series of lang.* files, for example lang.en for English, or lang.fr for French.   If
-you want to change some of the text strings used by MRBS, for example change "Room" 
-to "Computer", then look for the appropriate string in the lang files and edit it.
+series of lang.* files, for example lang.en for English, or lang.fr for French.   They
+are overridden by the $vocab_override array in the config file.  If you want to change
+some of the text strings used by MRBS, for example change "Room" to "Computer", then
+look for the appropriate string in the lang files, remember its tag and set the 
+$vocab_override variable in the config file.    For example
+
+$vocab_override['en']['ctrl_click'] = "Use Control-Click to select more than one computer";
+
+Doing it this way, rather than editing the lang files, will mean that when you upgrade to
+the next version of MRBS you will not have to re-edit the lang files.
 
 
 INTERNATIONALISATION

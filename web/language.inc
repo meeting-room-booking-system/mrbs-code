@@ -352,10 +352,8 @@ $rtl_languages = array('he');
 // Get a default set of language tokens, you can change this if you like.
 // Always include English as the fallback language, in case the selected language
 // is missing some translated tokens
-include "lang.en";
-// include_once just to avoid reloading the 'en' file
-include_once "lang." . $default_language_tokens;
-
+set_vocab('en');
+set_vocab($default_language_tokens);
 
 // Get first default set of language tokens for emails.
 $need_to_send_mail = ($mail_settings['admin_on_bookings'] or
@@ -367,7 +365,7 @@ $need_to_send_mail = ($mail_settings['admin_on_bookings'] or
 if ($need_to_send_mail)
 {
   $web_vocab = $vocab;   // Save $vocab before it gets overwritten
-  include "lang." . $mail_settings['admin_lang'];
+  set_vocab($mail_settings['admin_lang']);
   $mail_vocab = $vocab;
   $vocab = $web_vocab;  // Restore $vocab
 }
@@ -437,7 +435,7 @@ if (!$disable_automatic_language_changing || $cli_mode)
     }
     if (file_exists($lang_file))
     {
-      include $lang_file;
+      set_vocab($lang);
       $locale = $lang;
       // Work out if we're using a RTL language.   This variable is used
       // globally so that we can include the correct stylesheet
@@ -463,7 +461,7 @@ if (!$disable_automatic_language_changing || $cli_mode)
       }
       if (file_exists($lang_file))
       {
-        include $lang_file;
+        set_vocab(substr($lang,0,2));
         // If we have found a translation, update the locale to match
         $locale = $lang;
         break;
@@ -702,6 +700,24 @@ function get_datatable_lang()
   }
   
   return ($found_lang) ? $lang_file : FALSE;
+}
+
+
+function set_vocab($lang)
+{
+  global $vocab, $vocab_override;
+  
+  $lang = strtolower($lang);
+  // Get the standard language tokens
+  include "lang.$lang";
+  // Apply any site overrides
+  if (isset($vocab_override[$lang]))
+  {
+    foreach ($vocab_override[$lang] as $tag => $str)
+    {
+      $vocab[$tag] = $str;
+    }
+  }
 }
 
 
