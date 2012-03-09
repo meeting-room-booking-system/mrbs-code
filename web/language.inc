@@ -353,7 +353,10 @@ $rtl_languages = array('he');
 // Always include English as the fallback language, in case the selected language
 // is missing some translated tokens
 set_vocab('en');
-set_vocab($default_language_tokens);
+if ($default_language_tokens != 'en')
+{
+  set_vocab($default_language_tokens);
+}
 
 // Get first default set of language tokens for emails.
 $need_to_send_mail = ($mail_settings['admin_on_bookings'] or
