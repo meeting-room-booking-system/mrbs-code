@@ -427,15 +427,9 @@ if (!$disable_automatic_language_changing || $cli_mode)
     {
       $locale = $lang;
     }
-    // When in CLI mode, we need to add the full path name as
-    // file_exists() ignores the include path
-    if ($cli_mode)
+
+    if (set_vocab($lang))
     {
-      $lang_file = dirname($PHP_SELF) . "/" . $lang_file;
-    }
-    if (file_exists($lang_file))
-    {
-      set_vocab($lang);
       $locale = $lang;
       // Work out if we're using a RTL language.   This variable is used
       // globally so that we can include the correct stylesheet
@@ -449,19 +443,10 @@ if (!$disable_automatic_language_changing || $cli_mode)
     // None of the user's preferred languages was available, so try to
     // find a lang file for one of the base languages, e.g. look for
     // lang.en if "en-ca" was specified.
-
     foreach ($langs as $lang => $qual)
     {
-      $lang_file = "lang." . strtolower(substr($lang,0,2));
-      // When in CLI mode, we need to add the full path name as
-      // file_exists() ignores the include path
-      if ($cli_mode)
+      if (set_vocab(substr($lang,0,2)))
       {
-        $lang_file = dirname($PHP_SELF) . "/" . $lang_file;
-      }
-      if (file_exists($lang_file))
-      {
-        set_vocab(substr($lang,0,2));
         // If we have found a translation, update the locale to match
         $locale = $lang;
         break;
@@ -703,21 +688,35 @@ function get_datatable_lang()
 }
 
 
+// Set $vocab.   Returns TRUE if a lang file is found, otherwise FALSE
 function set_vocab($lang)
 {
-  global $vocab, $vocab_override;
+  global $vocab, $vocab_override, $cli_mode;
+  global $PHP_SELF;
   
   $lang = strtolower($lang);
-  // Get the standard language tokens
-  include "lang.$lang";
-  // Apply any site overrides
-  if (isset($vocab_override[$lang]))
+  $lang_file = "lang.$lang";
+  // When in CLI mode, we need to add the full path name as
+  // file_exists() ignores the include path
+  if ($cli_mode)
   {
-    foreach ($vocab_override[$lang] as $tag => $str)
-    {
-      $vocab[$tag] = $str;
-    }
+    $lang_file = dirname($PHP_SELF) . "/" . $lang_file;
   }
+  if (file_exists($lang_file))
+  {
+    // Get the standard language tokens
+    include "$lang_file";
+    // Apply any site overrides
+    if (isset($vocab_override[$lang]))
+    {
+      foreach ($vocab_override[$lang] as $tag => $str)
+      {
+        $vocab[$tag] = $str;
+      }
+    }
+    return TRUE;
+  }
+  return FALSE;
 }
 
 
