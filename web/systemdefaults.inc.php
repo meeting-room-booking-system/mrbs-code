@@ -980,13 +980,15 @@ $csv_bom = FALSE;
 // single char in the MRBS database, and so can be any permitted PHP array
 // character.
 //
-// The description of the entry types are localised in the language files
-// as "type.X" where 'X' is the entry type.
-// So, if you add a new booking type 'C' the minimum you need to do is add
-// a line to lang.en like:
-// $vocab["type.C"] =           "New booking type";
+// The default descriptions of the entry types are held in the language files
+// as "type.X" where 'X' is the entry type.  If you want to change the description
+// you can override the default descriptions by setting the $vocab_override config
+// variable.   For example, if you add a new booking type 'C' the minimum you need
+// to do is add a line to config.inc.php like:
+// 
+// $vocab_override["en"]["type.C"] =     "New booking type";
 //
-// This is a basic default array which ensures there are at least some types defined.
+// Below is a basic default array which ensures there are at least some types defined.
 // The proper type definitions should be made in config.inc.php.
 //
 // Each type has a color which is defined in the array $color_types in the Themes
