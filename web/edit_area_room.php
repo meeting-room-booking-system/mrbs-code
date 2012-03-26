@@ -309,22 +309,22 @@ if ($phase == 2)
                 $assign_array[] = "disabled=$room_disabled";
                 break;
               case 'room_name':
-                $assign_array[] = "room_name='" . addslashes($room_name) . "'";
+                $assign_array[] = "room_name='" . sql_escape($room_name) . "'";
                 break;
               case 'sort_key':
-                $assign_array[] = "sort_key='" . addslashes($sort_key) . "'";
+                $assign_array[] = "sort_key='" . sql_escape($sort_key) . "'";
                 break;
               case 'description':
-                $assign_array[] = "description='" . addslashes($description) . "'";
+                $assign_array[] = "description='" . sql_escape($description) . "'";
                 break;
               case 'capacity':
                 $assign_array[] = "capacity=$capacity";
                 break;
               case 'room_admin_email':
-                $assign_array[] = "room_admin_email='" . addslashes($room_admin_email) . "'";
+                $assign_array[] = "room_admin_email='" . sql_escape($room_admin_email) . "'";
                 break;
               case 'custom_html':
-                $assign_array[] = "custom_html='" . addslashes($custom_html) . "'";
+                $assign_array[] = "custom_html='" . sql_escape($custom_html) . "'";
                 break;
               // then look at any user defined fields
               default:
@@ -341,7 +341,7 @@ if ($phase == 2)
                     }
                     break;
                   default:
-                    $$var = "'" . addslashes($$var) . "'";
+                    $$var = "'" . sql_escape($$var) . "'";
                     break;
                 }
                 // Note that we don't have to escape or quote the fieldname
@@ -481,11 +481,11 @@ if ($phase == 2)
     {
       $sql = "UPDATE $tbl_area SET ";
       $assign_array = array();
-      $assign_array[] = "area_name='" . addslashes($area_name) . "'";
+      $assign_array[] = "area_name='" . sql_escape($area_name) . "'";
       $assign_array[] = "disabled=" . $area_disabled;
-      $assign_array[] = "timezone='" . addslashes($area_timezone) . "'";
-      $assign_array[] = "area_admin_email='" . addslashes($area_admin_email) . "'";
-      $assign_array[] = "custom_html='" . addslashes($custom_html) . "'";
+      $assign_array[] = "timezone='" . sql_escape($area_timezone) . "'";
+      $assign_array[] = "area_admin_email='" . sql_escape($area_admin_email) . "'";
+      $assign_array[] = "custom_html='" . sql_escape($custom_html) . "'";
       if (!$area_enable_periods)
       {
         $assign_array[] = "resolution=" . $area_res_mins * 60;

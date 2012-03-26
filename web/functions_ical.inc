@@ -106,7 +106,7 @@ function get_vtimezone($tz)
   // Look and see if there's a component in the database
   $sql = "SELECT vtimezone, last_updated
             FROM $tbl_zoneinfo
-           WHERE timezone='" . addslashes($tz) . "'
+           WHERE timezone='" . sql_escape($tz) . "'
              AND outlook_compatible=$zoneinfo_outlook_compatible
            LIMIT 1";
   $res = sql_query($sql);
@@ -151,9 +151,9 @@ function get_vtimezone($tz)
           $vtimezone = $new_vtimezone;
           // Update the database
           $sql = "UPDATE $tbl_zoneinfo
-                     SET vtimezone='" . addslashes($vtimezone) . "',
+                     SET vtimezone='" . sql_escape($vtimezone) . "',
                          last_updated=" . time() . "
-                   WHERE timezone='" . addslashes($tz) . "'
+                   WHERE timezone='" . sql_escape($tz) . "'
                      AND outlook_compatible=$zoneinfo_outlook_compatible";
           if (sql_command($sql) < 0)
           {
@@ -177,9 +177,9 @@ function get_vtimezone($tz)
       {
         $sql = "INSERT INTO $tbl_zoneinfo
                 (timezone, outlook_compatible, vtimezone, last_updated)
-                VALUES ('" . addslashes($tz) . "', 
+                VALUES ('" . sql_escape($tz) . "', 
                         $zoneinfo_outlook_compatible,
-                        '" . addslashes($vtimezone) . "', " .
+                        '" . sql_escape($vtimezone) . "', " .
                         time() . ")";
         if (sql_command($sql) < 0)
         {
@@ -289,7 +289,7 @@ function get_create_by($organizer)
   // If we're using the 'db' auth rtpe, then look the username up in the users table
   if ($auth['type'] == 'db')
   {
-    $sql = "SELECT name FROM $tbl_users WHERE email='" . addslashes($email) . "'";
+    $sql = "SELECT name FROM $tbl_users WHERE email='" . sql_escape($email) . "'";
     $res = sql_query($sql);
     if ($res === FALSE)
     {

@@ -34,6 +34,22 @@ function sql_mysqli_free ($r, $db_conn = null)
 }
 
 
+// Escapes special characters in a string for use in an SQL statement
+function sql_mysqli_escape($str, $db_conn = null)
+{
+  sql_mysqli_ensure_handle($db_conn);
+  
+  if (function_exists('mysqli_real_escape_string'))
+  {
+    return mysqli_real_escape_string($db_conn, $str);
+  }
+  else
+  {
+    return addslashes($str);
+  }
+}
+
+
 // Execute a non-SELECT SQL command (insert/update/delete).
 // Returns the number of tuples affected if OK (a number >= 0).
 // Returns -1 on error; use sql_error to get the error message.
@@ -268,7 +284,7 @@ function sql_mysqli_syntax_casesensitive_equals($fieldname, $s, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  return " BINARY `$fieldname`='" . addslashes($s) . "'";
+  return " BINARY `$fieldname`='" . sql_mysqli_escape($s) . "'";
 }
 
 // Generate non-standard SQL to match a string anywhere in a field's value
@@ -370,7 +386,7 @@ function sql_mysqli_table_exists($table, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  $res = sql_mysqli_query1("SHOW TABLES LIKE '".addslashes($table)."'");
+  $res = sql_mysqli_query1("SHOW TABLES LIKE '".sql_mysqli_escape($table)."'");
 
   return ($res == -1) ? FALSE : TRUE;
 }

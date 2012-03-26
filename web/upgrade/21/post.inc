@@ -23,7 +23,7 @@ foreach ($fields as $field)
     }
     else
     {
-      $sql_val = "'" . addslashes($area_defaults[$key]) . "'";
+      $sql_val = "'" . sql_escape($area_defaults[$key]) . "'";
     }
     $sql = "UPDATE $tbl_area SET $key=$sql_val WHERE $key IS NULL";
     $res = sql_command($sql);

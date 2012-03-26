@@ -40,7 +40,7 @@ function get_room_id($location, &$error)
   // know which area to put it in.
   if ($location_area == '')
   {
-    $sql = "SELECT COUNT(*) FROM $tbl_room WHERE room_name='" . addslashes($location_room) . "'";
+    $sql = "SELECT COUNT(*) FROM $tbl_room WHERE room_name='" . sql_escape($location_room) . "'";
     $count = sql_query1($sql);
     if ($count < 0)
     {
@@ -59,7 +59,7 @@ function get_room_id($location, &$error)
     }
     else // we've got a unique room name
     {
-      $sql = "SELECT id FROM $tbl_room WHERE room_name='" . addslashes($location_room) . "' LIMIT 1";
+      $sql = "SELECT id FROM $tbl_room WHERE room_name='" . sql_escape($location_room) . "' LIMIT 1";
       $id = sql_query1($sql);
       if ($id < 0)
       {
@@ -76,7 +76,7 @@ function get_room_id($location, &$error)
     // First of all get the area id
     $sql = "SELECT id
               FROM $tbl_area
-             WHERE area_name='" . addslashes($location_area) . "'
+             WHERE area_name='" . sql_escape($location_area) . "'
              LIMIT 1";
     $area_id = sql_query1($sql);
     if ($area_id < 0)
@@ -112,7 +112,7 @@ function get_room_id($location, &$error)
   // Now we've got the area_id get the room_id
   $sql = "SELECT id
             FROM $tbl_room
-           WHERE room_name='" . addslashes($location_room) . "'
+           WHERE room_name='" . sql_escape($location_room) . "'
              AND area_id=$area_id
            LIMIT 1";
   $room_id = sql_query1($sql);

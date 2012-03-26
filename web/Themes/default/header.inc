@@ -3325,7 +3325,7 @@ $(window).load(function() {
           if (!$is_admin)
           {
             // Ordinary users can only see their own
-            $sql .= " AND create_by='" . addslashes($user) . "'";
+            $sql .= " AND create_by='" . sql_escape($user) . "'";
           }
           $n_outstanding = sql_query1($sql);
           echo "<div id=\"n_outstanding\"" .

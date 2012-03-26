@@ -433,7 +433,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 if (isset($Action) && ($Action == "Update"))
 {
   // If you haven't got the rights to do this, then exit
-  $my_id = sql_query1("SELECT id FROM $tbl_users WHERE name='".addslashes($user)."' LIMIT 1");
+  $my_id = sql_query1("SELECT id FROM $tbl_users WHERE name='".sql_escape($user)."' LIMIT 1");
   if (($level < $min_user_editing_level) && ($Id != $my_id ))
   {
     Header("Location: edit_users.php");
@@ -528,7 +528,7 @@ if (isset($Action) && ($Action == "Update"))
           // If it's a new user, then to check to see if there are any rows with that name.
           // If it's an update, then check to see if there are any rows with that name, except
           // for that user.
-          $query = "SELECT id FROM $tbl_users WHERE name='" . addslashes($value) . "'";
+          $query = "SELECT id FROM $tbl_users WHERE name='" . sql_escape($value) . "'";
           if ($Id >= 0)
           {
             $query .= " AND id!='$Id'";
@@ -607,7 +607,7 @@ if (isset($Action) && ($Action == "Update"))
             }
             break;
           default:
-            $value = "'" . addslashes($value) . "'";
+            $value = "'" . sql_escape($value) . "'";
             break;
         }
        

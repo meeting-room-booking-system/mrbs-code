@@ -36,8 +36,8 @@ function authValidateUser($user, $pass)
 {
   global $tbl_users;
 
-  $user = strtolower(addslashes($user));
-  // No addslashes() required because it's put in the database as an MD5,
+  $user = strtolower(sql_escape($user));
+  // No sql_escape() required because it's put in the database as an MD5,
   // which is safe.
   $pass = md5($pass);
   
@@ -69,7 +69,7 @@ function authGetUserLevel($user)
     return 0;
   }
   
-  $result = sql_query1("SELECT level FROM $tbl_users WHERE name='" . strtolower(addslashes($user)) . "' LIMIT 1");
+  $result = sql_query1("SELECT level FROM $tbl_users WHERE name='" . strtolower(sql_escape($user)) . "' LIMIT 1");
   if ($result == -1)
   {
     $sql_error = sql_error();

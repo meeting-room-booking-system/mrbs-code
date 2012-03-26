@@ -330,14 +330,14 @@ function mrbsCreateEntry($table, $data)
         case 'ical_uid':
         case 'ical_recur_id':
           $sql_col[] = $key;
-          $sql_val[] = "'" . addslashes($data[$key]) . "'";
+          $sql_val[] = "'" . sql_escape($data[$key]) . "'";
           break;
       
         // special case - rep_opt
         case 'rep_opt':
           // pgsql doesn't like empty strings
           $sql_col[] = $key;
-          $sql_val[] = (empty($data[$key])) ? "'0'" : "'" . addslashes($data[$key]) . "'";
+          $sql_val[] = (empty($data[$key])) ? "'0'" : "'" . sql_escape($data[$key]) . "'";
           break;
           
         // special case - rep_num_weeks
@@ -378,7 +378,7 @@ function mrbsCreateEntry($table, $data)
                 }
                 else
                 {
-                  $value = "'" . addslashes($data[$key]) . "'";
+                  $value = "'" . sql_escape($data[$key]) . "'";
                 }
                 break;
             } // switch ($field_natures[$key])
@@ -798,8 +798,8 @@ function mrbsUpdateMoreInfo($id, $series, $user, $note)
   $now = time();
   $sql = "UPDATE $table SET";
   $sql .= " info_time=$now";
-  $sql .= ", info_user='" . addslashes($user) . "'";
-  $sql .= ", info_text='" . addslashes($note) . "'";
+  $sql .= ", info_user='" . sql_escape($user) . "'";
+  $sql .= ", info_text='" . sql_escape($note) . "'";
   $sql .= " WHERE id=$id";
   return sql_command($sql);
 }
@@ -1065,7 +1065,7 @@ function mrbsAddArea($name, &$error)
   
   // Truncate the name field to the maximum length as a precaution.
   $name = substr($name, 0, $maxlength['area.area_name']);
-  $area_name_q = addslashes($name);
+  $area_name_q = sql_escape($name);
   // Acquire a mutex to lock out others who might be editing the area
   if (!sql_mutex_lock("$tbl_area"))
   {
@@ -1110,7 +1110,7 @@ function mrbsAddArea($name, &$error)
         }
         else
         {
-          $sql_val[] = "'" . addslashes($area_defaults[$key]) . "'";
+          $sql_val[] = "'" . sql_escape($area_defaults[$key]) . "'";
         }
       }
       break;
@@ -1147,8 +1147,8 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='')
   $name = substr($name, 0, $maxlength['room.room_name']);
   $description = substr($description, 0, $maxlength['room.description']);
   // Add SQL escaping
-  $room_name_q = addslashes($name);
-  $description_q = addslashes($description);
+  $room_name_q = sql_escape($name);
+  $description_q = sql_escape($description);
   if (empty($capacity))
   {
     $capacity = 0;

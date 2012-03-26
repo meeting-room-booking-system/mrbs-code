@@ -42,6 +42,22 @@ function sql_pgsql_free ($r, $db_conn = null)
 }
 
 
+// Escapes special characters in a string for use in an SQL statement
+function sql_pgsql_escape($str, $db_conn = null)
+{
+  sql_pgsql_ensure_handle($db_conn);
+  
+  if (function_exists('pg_escape_string'))
+  {
+    return pg_escape_string($db_conn, $str);
+  }
+  else
+  {
+    return addslashes($str);
+  }
+}
+
+
 // Execute a non-SELECT SQL command (insert/update/delete).
 // Returns the number of tuples affected if OK (a number >= 0).
 // Returns -1 on error; use sql_error to get the error message.
@@ -284,7 +300,7 @@ function sql_pgsql_syntax_casesensitive_equals($fieldname, $s, $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  return " \"$fieldname\"='" . addslashes($s) . "'";
+  return " \"$fieldname\"='" . sql_pgsql_escape($s) . "'";
 }
 
 
@@ -374,7 +390,7 @@ function sql_pgsql_table_exists($table, $db_conn = null)
   sql_pgsql_ensure_handle($db_conn);
 
   $res = sql_pgsql_query1("SELECT relname FROM pg_class ".
-                          "WHERE relname = '".addslashes($table)."'");
+                          "WHERE relname = '".sql_pgsql_escape($table)."'");
 
   return ($res == -1) ? FALSE : TRUE;
 }

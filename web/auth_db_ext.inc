@@ -50,7 +50,7 @@ function authValidateUser($user, $pass)
                       $auth['db_ext']['db_password'],
                       $auth['db_ext']['db_name']);
 
-  $user = addslashes($user);
+  $user = sql_escape($user);
 
   $query = "SELECT " . $auth['db_ext']['column_name_password'] .
            " FROM " . $auth['db_ext']['db_table'] .

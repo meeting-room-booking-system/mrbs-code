@@ -216,7 +216,7 @@ foreach ($fields as $field)
         // assume PHP5
         if (strpos(strtolower($value), strtolower($search_str)) !== FALSE)
         {
-          $sql_pred .= " OR E." . $field['name'] . "='" . addslashes($key) . "'";
+          $sql_pred .= " OR E." . $field['name'] . "='" . sql_escape($key) . "'";
         }
       }
     }
@@ -244,8 +244,8 @@ if (!$is_admin)
     //   - their own bookings, and others' public bookings if private_override is set to 'none'
     //   - just their own bookings, if private_override is set to 'private'
     $sql_pred .= " AND ((A.private_override='public') OR
-                        (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = '" . addslashes($user) . "')) OR
-                        (A.private_override='private' AND E.create_by = '" . addslashes($user) . "'))";                
+                        (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = '" . sql_escape($user) . "')) OR
+                        (A.private_override='private' AND E.create_by = '" . sql_escape($user) . "'))";                
   }
   else
   {

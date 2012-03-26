@@ -37,7 +37,7 @@ if ($r == 0)
   // Now populate the table with the existing admins
   foreach ($auth['admin'] as $admin_name)
   {
-    $sql = "UPDATE $tbl_users SET level=$max_level WHERE name='".addslashes($admin_name)."'";
+    $sql = "UPDATE $tbl_users SET level=$max_level WHERE name='".sql_escape($admin_name)."'";
     if (sql_command($sql) < 0)
     {
       fatal_error(0, "Error adding existing admins. " . sql_error());

@@ -905,13 +905,13 @@ if ($phase == 2)
       $or_array = array();
       foreach ( $typematch as $type )
       {
-        $or_array[] = "E.type = '".addslashes($type)."'";
+        $or_array[] = "E.type = '".sql_escape($type)."'";
       }
       $sql .= "(". implode( " OR ", $or_array ) .")";
     }
     else
     {
-      $sql .= "E.type = '".addslashes($typematch[0])."'";
+      $sql .= "E.type = '".sql_escape($typematch[0])."'";
     }
   }
   if (!empty($namematch))
@@ -974,7 +974,7 @@ if ($phase == 2)
         // assume PHP5
         if (strpos(strtolower($option_value), strtolower($$var)) !== FALSE)
         {
-          $or_array[] = "E.$key='" . addslashes($option_key) . "'";
+          $or_array[] = "E.$key='" . sql_escape($option_key) . "'";
         }
       }
       if (count($or_array) > 0)
@@ -1026,8 +1026,8 @@ if ($phase == 2)
       //   - their own bookings, and others' public bookings if private_override is set to 'none'
       //   - just their own bookings, if private_override is set to 'private'
       $sql .= " AND ((A.private_override='public') OR
-                     (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = '" . addslashes($user) . "')) OR
-                     (A.private_override='private' AND E.create_by = '" . addslashes($user) . "'))";                
+                     (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = '" . sql_escape($user) . "')) OR
+                     (A.private_override='private' AND E.create_by = '" . sql_escape($user) . "'))";                
     }
     else
     {

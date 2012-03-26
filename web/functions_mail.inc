@@ -209,7 +209,7 @@ function get_email_address($user)
   {
     $email = sql_query1("SELECT email 
                          FROM $tbl_users 
-                         WHERE name='" . addslashes($user) . "'
+                         WHERE name='" . sql_escape($user) . "'
                          LIMIT 1");
     if ($email == -1)
     {
