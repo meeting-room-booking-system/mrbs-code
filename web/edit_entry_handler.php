@@ -148,19 +148,28 @@ if ($ajax && $commit)
         case 'confirmed':
           $$var = !($old_booking['status'] & STATUS_TENTATIVE);
           break;
+        // In the calculation of $start_seconds and $end_seconds below we need to take
+        // care of the case when 0000 on the day in question is across a DST boundary
+        // from the current time, ie the days on which DST starts and ends.
         case 'start_seconds';
           $date = getdate($old_booking['start_time']);
           $start_year = $date['year'];
           $start_month = $date['mon'];
           $start_day = $date['mday'];
-          $start_seconds = $old_booking['start_time'] - mktime(0, 0, 0, $start_month, $start_day, $start_year);
+          $start_daystart = mktime(0, 0, 0, $start_month, $start_day, $start_year);
+          $old_start = $old_booking['start_time'];
+          $start_seconds = $old_start - $start_daystart;
+          $start_seconds -= cross_dst($start_daystart, $old_start);
           break;
         case 'end_seconds';
           $date = getdate($old_booking['end_time']);
           $end_year = $date['year'];
           $end_month = $date['mon'];
           $end_day = $date['mday'];
-          $end_seconds = $old_booking['end_time'] - mktime(0, 0, 0, $end_month, $end_day, $end_year);
+          $end_daystart = mktime(0, 0, 0, $end_month, $end_day, $end_year);
+          $old_end = $old_booking['end_time'];
+          $end_seconds = $old_end - $end_daystart;
+          $end_seconds -= cross_dst($end_daystart, $old_end);
           break;
         default:
           if (array_key_exists($var, $old_booking))
