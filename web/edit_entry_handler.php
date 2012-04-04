@@ -109,6 +109,18 @@ foreach($fields as $field)
 }
 
 
+// Make sure the area corresponds to the room that is being booked
+if (!empty($rooms[0]))
+{
+  $area = get_area($rooms[0]);
+  get_area_settings($area);  // Update the area settings
+}
+// and that $room is in $area
+if (get_area($room) != $area)
+{
+  $room = get_default_room($area);
+}
+
 // If this is an Ajax request and we're being asked to commit the booking, then
 // we'll only have been supplied with parameters that need to be changed.  Fill in
 // the rest from the existing boking information.
@@ -195,18 +207,6 @@ if (isset($id) && ($id == ''))
 // databases (eg some versions of PostgreSQL) results in an SQL error,
 // rather than silent truncation of the string.
 $name = substr($name, 0, $maxlength['entry.name']);
-
-// Make sure the area corresponds to the room that is being booked
-if (!empty($rooms[0]))
-{
-  $area = get_area($rooms[0]);
-  get_area_settings($area);  // Update the area settings
-}
-// and that $room is in $area
-if (get_area($room) != $area)
-{
-  $room = get_default_room($area);
-}
 
 
 // Set up the return URL.    As the user has tried to book a particular room and a particular
