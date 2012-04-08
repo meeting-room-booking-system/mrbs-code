@@ -55,3 +55,4 @@ foreach ($color_types as $type => $col)
 
 .ColVis_Button, .dataTables_filter, .dataTables_length, .dataTables_paginate {display: none; }
 
+.ui-resizable-handle {display: none}
