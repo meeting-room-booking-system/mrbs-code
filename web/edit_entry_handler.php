@@ -379,7 +379,7 @@ if (!$ajax)
     foreach ($is_mandatory_field as $field => $value)
     {
       $field = preg_replace('/^entry\./', '', $field);
-      if ($value && array_key_exists($field, $custom_fields) && ($custom_fields[$field] == ''))
+      if ($value && array_key_exists($field, $custom_fields) && ($custom_fields[$field] === ''))
       {
         print_header($day, $month, $year, $area, isset($room) ? $room : "");
         ?>
