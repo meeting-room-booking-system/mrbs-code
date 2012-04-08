@@ -122,7 +122,10 @@ function print_header($day, $month, $year, $area, $room)
   
   // Load the print_theme_header function appropriate to the theme.    If there
   // isn't one then fall back to the default header.
-  @include_once "Themes/$theme/header.inc";
+  if (file_exists("Themes/$theme/header.inc"))
+  {
+    include_once "Themes/$theme/header.inc";
+  }
   if (!function_exists("print_theme_header"))
   {
     require_once "Themes/default/header.inc";
@@ -139,7 +142,10 @@ function print_header($day, $month, $year, $area, $room)
 function print_footer($and_exit)
 {
   global $theme;
-  @include_once "Themes/$theme/footer.inc";
+  if (file_exists("Themes/$theme/footer.inc"))
+  {
+    include_once "Themes/$theme/footer.inc";
+  }
   if (function_exists("print_theme_footer"))
   {
     print_theme_footer();
