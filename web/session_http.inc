@@ -46,23 +46,32 @@ function getAuthPassword()
 function getUserName()
 {
   global $PHP_AUTH_USER;
+  
+  // We save the results of the user validation so that we avoid any performance
+  // penalties in authValidateUser, which can be severe if for example we are using
+  // LDAP authentication
+  static $authorised_user = NULL;
+
   if (isset($PHP_AUTH_USER))
   {
     $user = unslashes($PHP_AUTH_USER);
 
-    if (authValidateUser($user,getAuthPassword()))
+    if ((isset($authorised_user) && ($authorised_user == $user)) ||
+        authValidateUser($user,getAuthPassword()))
     {
-      return $user;
+      $authorised_user = $user;
     }
     else
     {
-      return null;
+      $authorised_user = NULL;
     }
   }
   else
   {
-    return null;
+    $authorised_user = NULL;
   }
+  
+  return $authorised_user;
 }
 
 // Print the logon entry on the top banner.
