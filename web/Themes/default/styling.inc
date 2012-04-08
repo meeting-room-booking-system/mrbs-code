@@ -38,6 +38,10 @@ $main_table_header_border_color_print = "#879AA8";    // border colour for day/w
 $main_table_body_h_border_color_print = "#879AA8";    // border colour for day/week/month tables - body, horizontal (print view)
 $main_table_body_v_border_color_print = "#879AA8";    // border colour for day/week/month tables - body, vertical (print view)
 
+// font colours for the main table when it is printed
+$header_font_color_print        = "#0B263B";
+$anchor_link_color_header_print = "#0B263B";
+
 $report_table_border_color      = $standard_font_color;
 $report_h2_border_color         = $banner_back_color;     // border colour for <h2> in report.php
 $report_h3_border_color         = "#879AA8";              // border colour for <h2> in report.php
