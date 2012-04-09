@@ -694,8 +694,9 @@ function get_datatable_lang()
 // Set $vocab.   Returns TRUE if a lang file is found, otherwise FALSE
 function set_vocab($lang)
 {
-  global $vocab, $vocab_override, $cli_mode;
+  global $vocab_override, $cli_mode;
   global $PHP_SELF;
+  global $vocab, $mrbs_admin, $mrbs_company;  // Used in lang files
   
   $lang = strtolower($lang);
   $lang_file = "lang.$lang";
