@@ -5,7 +5,7 @@
 function generate_trailer()
 {
   global $year, $month, $day, $area, $room;
-  global $strftime_format, $weekstarts, $simple_trailer;
+  global $strftime_format, $weekstarts, $simple_trailer, $view_week_number;
 
   $output = "";
 
