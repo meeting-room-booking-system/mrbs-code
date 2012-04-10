@@ -638,7 +638,7 @@ function fatal_error($need_header, $message, $show_form_data = true)
     error_log("MRBS SESSION: ".print_r($_SESSION, true));
   }
   echo "<p>$message</p>";
-  require_once "trailer.inc";
+  output_trailer();
   exit;
 }
 

@@ -879,6 +879,6 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   
 }   // ($initial_user_creation != 1)
 
-require_once "trailer.inc";
+output_trailer();
 
 ?>

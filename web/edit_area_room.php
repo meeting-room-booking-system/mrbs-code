@@ -1246,4 +1246,5 @@ if (isset($change_area) &&!empty($area))
   <?php
 }
 
-require_once "trailer.inc" ?>
+output_trailer();
+?>

@@ -289,5 +289,5 @@ else  // display them in a table
   echo "</div>\n";
 }
 
-require_once "trailer.inc";
+output_trailer();
 ?>

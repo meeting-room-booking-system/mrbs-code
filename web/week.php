@@ -47,7 +47,7 @@ echo "</div>\n";
 if ($room_invalid)
 {
   echo "<h1>".get_vocab("no_rooms_for_area")."</h1>";
-  require_once "trailer.inc";
+  output_trailer();
   exit;
 }
 
@@ -107,5 +107,5 @@ if ($display_calendar_bottom)
   minicals($year, $month, $day, $area, $room, 'week');
 }
 
-require_once "trailer.inc"; 
+output_trailer(); 
 ?>

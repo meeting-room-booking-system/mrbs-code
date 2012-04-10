@@ -685,5 +685,5 @@ if (empty($result['rules_broken'])  &&
 
 echo "</div>\n";
 
-require_once "trailer.inc";
+output_trailer();
 ?>

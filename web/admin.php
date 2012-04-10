@@ -427,6 +427,5 @@ if ($is_admin || ($n_displayable_areas > 0))
   echo "</div>\n";
 }
 
-
-require_once "trailer.inc"
+output_trailer();
 ?>

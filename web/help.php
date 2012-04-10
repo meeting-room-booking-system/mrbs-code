@@ -36,5 +36,5 @@ echo "</p>\n";
  
 require_once "site_faq" . $faqfilelang . ".html";
 
-require_once "trailer.inc";
+output_trailer();
 ?>

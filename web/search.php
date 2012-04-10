@@ -170,14 +170,14 @@ if (!$ajax)
       </fieldset>
     </form>
     <?php
-    require_once "trailer.inc";
+    output_trailer();
     exit;
   }
 
   if (!isset($search_str) || ($search_str == ''))
   {
     echo "<p class=\"error\">" . get_vocab("invalid_search") . "</p>";
-    require_once "trailer.inc";
+    output_trailer();
     exit;
   }
 
@@ -274,7 +274,7 @@ if ($total < 0)
 if (($total <= 0) && !$ajax)
 {
   echo "<p id=\"nothing_found\">" . get_vocab("nothing_found") . "</p>\n";
-  require_once "trailer.inc";
+  output_trailer();
   exit;
 }
 
@@ -356,6 +356,6 @@ else
   echo "</tbody>\n";
   echo "</table>\n";
   echo "</div>\n";
-  require_once "trailer.inc";
+  output_trailer();
 }
 ?>

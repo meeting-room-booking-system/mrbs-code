@@ -479,5 +479,5 @@ echo create_details_body($row, TRUE, $keep_private, $room_disabled);
 </div>
 
 <?php
-require_once "trailer.inc";
+output_trailer();
 ?>

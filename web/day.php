@@ -127,5 +127,6 @@ else
   }
 }
 
-require_once "trailer.inc";
+output_trailer();
+
 ?>

@@ -50,7 +50,15 @@ function csv_conv($string)
   }
   else
   {
-    return iconv($in_charset, $out_charset, $string);
+    if (($in_charset == 'UTF-8') &&
+        ($out_charset == 'UTF-16'))
+    {
+      return utf8_to_utf16($string);
+    }
+    else
+    {
+      return iconv($in_charset, $out_charset, $string);
+    }
   }
 }
 
@@ -1441,6 +1449,6 @@ if ($cli_mode)
 
 if (($output_as_html || empty($nmatch)) & !$ajax)
 {
-  require_once "trailer.inc";
+  output_trailer();
 }
 ?>

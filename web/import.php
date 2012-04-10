@@ -543,5 +543,5 @@ echo "</fieldset>\n";
 
 echo "</form>\n";
   
-require_once "trailer.inc";
+output_trailer();
 ?>

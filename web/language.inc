@@ -752,7 +752,8 @@ function get_bom($charset)
       return "\xEF\xBB\xBF";
       break;
     case 'utf-16':
-      return "\xFE\xFF";
+      // Little-endian
+      return "\xFF\xFE";
       break;
     default:
       return '';
@@ -1146,7 +1147,71 @@ function utf8_seq($str, &$byte_index)
   return $ret;
 }
 
-  
+
+// Takes a UTF-8 string and converts it to UTF-16 without using iconv
+function utf8_to_utf16($string)
+{
+  $ucs2 = array();
+  $byte_index = 0;
+      
+  while (!is_null($byte_index))
+  {
+    $next = utf8_seq($string, $byte_index);
+
+    $c0 = ord($next[0]);
+
+    // Easy case, code is 0xxxxxxx - just use it as is
+    if ($c0 < 0x80)
+    {
+      array_push($ucs2, $c0);
+      continue;
+    }
+    $cn = ord($next[1]) ^ 0x80;
+    $ucs = ($c0 << 6) | $cn;
+
+    // Two byte codes: 110xxxxx 10xxxxxx
+    if ($c0 < 0xE0)
+    {
+      $ucs &= ~0x3000;
+      array_push($ucs2, $ucs);
+      continue;
+    }
+
+    $cn = ord($next[2]) ^ 0x80;
+    $ucs = ($ucs << 6) | $cn;
+
+    // Three byte codes: 1110xxxx 10xxxxxx 10xxxxxx
+    if ($c0 < 0xF0)
+    {
+      $ucs &= ~0xE0000;
+      array_push($ucs2, $ucs);
+      continue;
+    }
+        
+    $cn = ord($next[3]) ^ 0x80;
+    $ucs = ($ucs << 6) | $cn;
+    
+    // Four byte codes: 11110xxx 10xxxxxxx 10xxxxxx 10xxxxxx
+    if ($c0 < 0xF8)
+    {
+      $ucs &= ~0x3C00000;
+      array_push($ucs2, $ucs);
+      continue;
+    }
+    die("Shouldn't get here!");
+  }
+
+  $out = "";
+  foreach ($ucs2 as $char)
+  {
+    $ucs_string = pack("v", $char);
+    //error_log(sprintf("UCS %04x -> %02x,%02x",$char,ord($ucs_string[0]),ord($ucs_string[1])));
+    $out .= $ucs_string;
+  }
+  return $out;
+}
+
+
 // Takes a UTF-8 string, and returns the number of _characters_ in the
 // string
 function utf8_strlen($str)

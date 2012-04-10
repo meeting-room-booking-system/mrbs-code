@@ -1558,6 +1558,4 @@ foreach( $edit_entry_field_order as $key )
   </fieldset>
 </form>
 
-
-
-<?php require_once "trailer.inc" ?>
+<?php output_trailer() ?>

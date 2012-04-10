@@ -321,7 +321,7 @@ $area_list_format = "list";
 // of 12.
 $monthly_view_entries_details = "both";
 
-// To view weeks in the bottom (trailer.inc) as week numbers (42) instead of
+// To view weeks in the bottom trailer as week numbers (42) instead of
 // 'first day of the week' (13 Oct), set this to TRUE.  Will also give week
 // numbers in the month view
 $view_week_number = FALSE;
@@ -963,13 +963,12 @@ $csv_col_sep = ",";   // Separator between columns/fields
 // then CSV files are written using the MRBS default charset (utf-8).  However
 // Microsoft Excel (at least up to Excel 2010 on Windows and 2011 on Mac) is not
 // guaranteed to recognise utf-8, but does recognise utf-16, so the default setting
-// for $csv_charset is 'utf-16'.   This does however require that you have the iconv
-// module installed and enabled on your PHP system.   If this is not possible, setting
-// $csv_charset to 'utf-8' and $csv_bom to TRUE (ie requiring MRBS to output a Byte
-// Order Mark) will make Excel 2010 on Windows, and maybe earlier versions, work. 
+// for $csv_charset is 'utf-16'. Setting $csv_charset to 'utf-8' and $csv_bom
+// to TRUE (ie requiring MRBS to output a Byte Order Mark) will make Excel
+// 2010 on Windows, and maybe earlier versions, work. 
 // But utf-8 with, or without, a BOM will not work on Excel 2011 for Mac.
 $csv_charset = 'utf-16';
-$csv_bom = FALSE;
+$csv_bom = TRUE;
 
 
 /*************

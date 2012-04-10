@@ -71,7 +71,7 @@ if ($type == "room")
     echo "<a href=\"admin.php\"><span id=\"del_no\">" . get_vocab("NO") . "!</span></a>\n";
     echo "</div>\n";
     echo "</div>\n";
-    require_once "trailer.inc";
+    output_trailer();
   }
 }
 
@@ -96,7 +96,7 @@ if ($type == "area")
     echo get_vocab("delarea");
     echo "<a href=\"admin.php\">" . get_vocab("backadmin") . "</a>";
     echo "</p>\n";
-    require_once "trailer.inc";
+    output_trailer();
   }
 }
 
