@@ -14,7 +14,7 @@ function mrbs_default_timezone_set($timezone)
     // to prevent people running into DST problems
     $message = 'Configuration error: $timezone has not been set.';
     trigger_error($message, E_USER_WARNING);
-    fatal_error(TRUE, $message);
+    fatal_error(FALSE, $message);
   }
   else
   {
@@ -615,7 +615,7 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='', $disabled=FA
 function fatal_error($need_header, $message, $show_form_data = true)
 {
   global $simple_trailer, $weekstarts, $view_week_number, $strftime_format;
-  
+
   if ($need_header)
   {
     print_header(0, 0, 0, 0, "");
