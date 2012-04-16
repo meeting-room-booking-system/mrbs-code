@@ -5,9 +5,7 @@
  * 
  * Check to see if the time period specified is free
  * 
- * $room_id   - Which room are we checking
- * $starttime - The start of period
- * $endtime   - The end of the period
+ * $booking   - The booking in question - an associative array
  * $ignore    - An entry ID to ignore, 0 to ignore no entries
  * $repignore - A repeat ID to ignore everything in the series, 0 to ignore no series
  * 
@@ -15,20 +13,22 @@
  *   nothing   - The area is free
  *   something - An error occured, the return value is an array of conflicts
  */
-function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
+function mrbsCheckFree(&$booking, $ignore, $repignore)
 {
   global $tbl_entry;
   global $enable_periods, $periods, $twentyfourhour_format;
   global $strftime_format;
 
-  get_area_settings(get_area($room_id));
-  
+  $room_id = $booking['room_id'];
   $user = getUserName();
-  // Select any meetings which overlap ($starttime,$endtime) for this room:
+  
+  get_area_settings(get_area($room_id));
+
+  // Select any meetings which overlap for this room:
   $sql = "SELECT id, name, start_time, create_by, status
             FROM $tbl_entry
-           WHERE start_time < $endtime
-             AND end_time > $starttime
+           WHERE start_time < ${booking['end_time']}
+             AND end_time > ${booking['start_time']}
              AND room_id = $room_id";
 
   if ($ignore > 0)
@@ -100,8 +100,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
  * (it's possible that in future some policies might apply to deletion and others
  * to creation)
  * 
- * $starttime - The start of period
- * $duration  - The duration in seconds
+ * $booking   - The booking in question - an associative array
  * $delete    - TRUE: We're intending to delete an entry
  *            - FALSE:  We're intending to create or edit an entry (the default)
  * 
@@ -109,7 +108,7 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
  *            - An array of human readable errors.   If no errors the array has
  *              length 0
  */
-function mrbsCheckPolicy($starttime, $duration, $delete=FALSE)
+function mrbsCheckPolicy(&$booking, $delete=FALSE)
 {
   global $periods, $enable_periods;
   global $min_book_ahead_enabled, $min_book_ahead_secs;
@@ -118,7 +117,7 @@ function mrbsCheckPolicy($starttime, $duration, $delete=FALSE)
 
   $errors = array();
   $secs_in_day = 60*60*24;
-  
+   
   // Because MRBS has no notion of where we are in the day if we're using periods,
   // we'll just assume that we're at the beginning of the day.
   $now = ($enable_periods) ? mktime(0, 0, 0) : time();
@@ -132,7 +131,7 @@ function mrbsCheckPolicy($starttime, $duration, $delete=FALSE)
       $min_book_ahead_secs -=  $min_book_ahead_secs%$secs_in_day;
     }
     $min_book_ahead = $min_book_ahead_secs;
-    if (($starttime - $now) < $min_book_ahead)
+    if (($booking['start_time'] - $now) < $min_book_ahead)
     {
       toTimeString($min_book_ahead, $units);
       $errors[] = get_vocab("min_time_before") . " $min_book_ahead $units";
@@ -152,7 +151,7 @@ function mrbsCheckPolicy($starttime, $duration, $delete=FALSE)
       $max_book_ahead_secs -=  $max_book_ahead_secs%$secs_in_day;
     }
     $max_book_ahead = $max_book_ahead_secs;
-    if (($starttime + $duration - $now) > $max_book_ahead)
+    if (($booking['end_time'] - $now) > $max_book_ahead)
     {
       toTimeString($max_book_ahead, $units);
       $errors[] = get_vocab("max_time_before") . " $max_book_ahead $units";
@@ -167,7 +166,7 @@ function mrbsCheckPolicy($starttime, $duration, $delete=FALSE)
       // Instead of calculating the difference between the start and end times and
       // comparing that with the maximum duration, we add the maximum duration to the
       // start time and compare that with the actual end time
-      $start = getdate($starttime);
+      $start = getdate($booking['start_time']);
       $start['minutes'] += $max_duration_periods;
       $n_periods = count($periods);
       // If we've gone over into another day, adjust the minutes and days accordingly
@@ -178,13 +177,13 @@ function mrbsCheckPolicy($starttime, $duration, $delete=FALSE)
       }
       $max_endtime = mktime($start['hours'], $start['minutes'], $start['seconds'],
                             $start['mon'], $start['mday'], $start['year']);
-      if (($starttime + $duration) > $max_endtime)
+      if ($booking['end_time'] > $max_endtime)
       {
         $errors[] = get_vocab("max_booking_duration") . " $max_duration_periods " .
                     (($max_duration_periods > 1) ? get_vocab("periods") : get_vocab("period_lc"));
       }
     }
-    elseif ($duration > $max_duration_secs)
+    elseif ($booking['end_time'] - $booking['start_time'] > $max_duration_secs)
     {
       $max_duration = $max_duration_secs;
       toTimeString($max_duration, $units);
@@ -254,11 +253,7 @@ function mrbsDelEntry($user, $id, $series, $all)
     // check that the booking policies allow us to delete this entry
     if (!$is_book_admin)
     {
-      // We supply the duration as a parameter to mrbsCheckPolicy, even though
-      // it's not normally needed - but it may be in the future
-      $tmp = mrbsCheckPolicy($row['start_time'], 
-                             $row['end_time'] - $row['start_time'],
-                             TRUE);
+      $tmp = mrbsCheckPolicy($row, TRUE);
       if (!empty($tmp))
       {
         continue;
@@ -1265,12 +1260,12 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
           // cross DST
           $diff = $duration_seconds;
           $diff += cross_dst($reps[$i], $reps[$i] + $diff);
+          
+          $this_booking = $booking;
+          $this_booking['start_time'] = $reps[$i];
+          $this_booking['end_time'] = $reps[$i] + $diff;
 
-          $tmp = mrbsCheckFree($booking['room_id'],
-                               $reps[$i],
-                               $reps[$i] + $diff,
-                               $ignore_id,
-                               $repeat_id);
+          $tmp = mrbsCheckFree($this_booking, $ignore_id, $repeat_id);
 
           if (!empty($tmp))
           {
@@ -1279,7 +1274,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
             // Otherwise it's an invalid booking
             if ($skip)
             {
-              $skip_lists[$booking['room_id']][] = $reps[$i];
+              $skip_lists[$this_booking['room_id']][] = $this_booking['start_time'];
             }
             else
             {
@@ -1292,9 +1287,9 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
           }
           // if we're not an admin for this room, check that the booking
           // conforms to the booking policy
-          if (!auth_book_admin($user, $booking['room_id']))
+          if (!auth_book_admin($user, $this_booking['room_id']))
           {
-            $errors = mrbsCheckPolicy($reps[$i], $duration_seconds);
+            $errors = mrbsCheckPolicy($this_booking);
             if (count($errors) > 0)
             {
               $valid_booking = FALSE;
@@ -1311,10 +1306,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
     }
     else
     {
-      $tmp = mrbsCheckFree($booking['room_id'],
-                           $booking['start_time'],
-                           $booking['end_time'] - 1,
-                           $ignore_id, 0);
+      $tmp = mrbsCheckFree($booking, $ignore_id, 0);
       if (!empty($tmp))
         {
           $valid_booking = FALSE;
@@ -1324,7 +1316,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
         // conforms to the booking policy
         if (!auth_book_admin($user, $booking['room_id']))
         {
-          $errors = mrbsCheckPolicy($booking['start_time'], $duration_seconds);
+          $errors = mrbsCheckPolicy($booking);
           if (count($errors) > 0)
           {
             $valid_booking = FALSE;
