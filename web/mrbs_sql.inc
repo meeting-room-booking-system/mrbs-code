@@ -114,6 +114,8 @@ function mrbsCheckPolicy(&$booking, $delete=FALSE)
   global $min_book_ahead_enabled, $min_book_ahead_secs;
   global $max_book_ahead_enabled, $max_book_ahead_secs;
   global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
+  global $max_n_per_day_global_enabled, $max_n_per_day_global;
+  global $tbl_entry;
 
   $errors = array();
   $secs_in_day = 60*60*24;
@@ -189,6 +191,58 @@ function mrbsCheckPolicy(&$booking, $delete=FALSE)
       toTimeString($max_duration, $units);
       $errors[] = get_vocab("max_booking_duration") . " $max_duration $units";
     }
+  }
+  
+  // Check max number of bookings allowed per day for this user
+  if ($max_n_per_day_global_enabled)
+  {
+    // Set up arrays recording the number of existing and proposed bookings for a day,
+    // indexed by the Unix time at the start of that day.  These are static variables
+    // because we test all the proposed bookings, which could be for multiple rooms,
+    // before making the booking.   (In theory, if MRBS ever supports repeats with a granularity
+    // of less than a day, eg repeating every hour, then there could also be multiple
+    // bookings on the same day).
+    static $existing = array();
+    static $proposed = array();
+    // Loop through all the days in the proposed booking, counting how many bookings
+    // already exist for that day, and incrementing the number of proposed bookings
+    // by one
+    $start_date = getdate($booking['start_time']);
+    $i = 0;
+    $day_start = mktime(0, 0, 0, $start_date['mon'], $start_date['mday'], $start_date['year']);
+    while ($day_start < $booking['end_time'])
+    {
+      $day_end = mktime(0, 0, 0, $start_date['mon'], $start_date['mday'] + $i + 1, $start_date['year']);
+      
+      if (!isset($existing[$day_start]))
+      {
+        $sql = "SELECT COUNT(*)
+                  FROM $tbl_entry
+                 WHERE start_time<$day_end
+                   AND end_time>$day_start
+                   AND create_by='" . sql_escape($booking['create_by']) . "'";
+        $existing[$day_start] = sql_query1($sql);
+        if ($existing[$day_start] < 0)
+        {
+          trigger_error(sql_error(), E_USER_WARNING);
+          fatal_error(FALSE, get_vocab("fatal_db_error"));
+        }
+        $proposed[$day_start] = 1;
+      }
+      else
+      {
+        $proposed[$day_start]++;
+      }
+      
+      if (($existing[$day_start] + $proposed[$day_start]) > $max_n_per_day_global)
+      {
+        $errors[] = get_vocab("max_n_per_day_global") . " $max_n_per_day_global";
+      }
+      
+      $day_start = $day_end;
+      $i++;
+    }
+
   }
   
   return $errors;
@@ -1267,6 +1321,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
 
           $tmp = mrbsCheckFree($this_booking, $ignore_id, $repeat_id);
 
+          $skip_this_booking = FALSE;
           if (!empty($tmp))
           {
             // If we've been told to skip past existing bookings, then add
@@ -1275,6 +1330,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
             if ($skip)
             {
               $skip_lists[$this_booking['room_id']][] = $this_booking['start_time'];
+              $skip_this_booking = TRUE;
             }
             else
             {
@@ -1285,9 +1341,12 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
             // in the future want to display a list of bookings we've skipped past)
             $conflicts = array_merge($conflicts, $tmp);
           }
-          // if we're not an admin for this room, check that the booking
-          // conforms to the booking policy
-          if (!auth_book_admin($user, $this_booking['room_id']))
+          // If we're not going to skip past this booking and we're not an admin for
+          // this room, check that the booking conforms to the booking policy.
+          // (If we're going to skip past this booking then it doesn't matter whether
+          // it conforms to the policy or not because we're never going to make it)
+          if (!$skip_this_booking &&
+              !auth_book_admin($user, $this_booking['room_id']))
           {
             $errors = mrbsCheckPolicy($this_booking);
             if (count($errors) > 0)

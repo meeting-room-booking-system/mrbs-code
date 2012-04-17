@@ -238,6 +238,12 @@ $max_duration_enabled = FALSE; // Set to TRUE if you want to enforce a maximum d
 $max_duration_secs = 60*60*2;  // (seconds) - when using "times"
 $max_duration_periods = 2;     // (periods) - when using "periods"
 
+// Set the maximum number of bookings that can be made by any one user.   These are 
+// global settings, but you can additionally configure per area settings.   This would
+// allow you to set policies such as allowing a maximum of 2 bookings per day in total
+// with a maximum of 1 in Area A.
+$max_n_per_day_global_enabled = FALSE;
+$max_n_per_day_global = 2;  // max 2 bookings per day in total
 
 /******************
  * Display settings
