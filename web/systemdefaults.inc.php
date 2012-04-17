@@ -238,12 +238,26 @@ $max_duration_enabled = FALSE; // Set to TRUE if you want to enforce a maximum d
 $max_duration_secs = 60*60*2;  // (seconds) - when using "times"
 $max_duration_periods = 2;     // (periods) - when using "periods"
 
-// Set the maximum number of bookings that can be made by any one user.   These are 
-// global settings, but you can additionally configure per area settings.   This would
-// allow you to set policies such as allowing a maximum of 2 bookings per day in total
-// with a maximum of 1 in Area A.
-$max_n_per_day_global_enabled = FALSE;
-$max_n_per_day_global = 2;  // max 2 bookings per day in total
+// Set the maximum number of bookings that can be made by any one user, in an interval,
+// which can be a day, week, month or year, or else in the future.  (A week is defined
+// by the $weekstarts setting).   These are global settings, but you can additionally
+// configure per area settings.   This would allow you to set policies such as allowing
+// a maximum of 10 bookings per month in total with a maximum of 1 per day in Area A.
+$max_per_interval_global_enabled['day']    = FALSE;
+$max_per_interval_global['day'] = 1;      // max 1 bookings per day in total
+
+$max_per_interval_global_enabled['week']   = FALSE;
+$max_per_interval_global['week'] = 5;     // max 5 bookings per week in total
+
+$max_per_interval_global_enabled['month']  = FALSE;
+$max_per_interval_global['month'] = 10;   // max 10 bookings per month in total
+
+$max_per_interval_global_enabled['year']   = FALSE;
+$max_per_interval_global['year'] = 50;    // max 50 bookings per year in total
+
+$max_per_interval_global_enabled['future'] = FALSE;
+$max_per_interval_global['future'] = 100; // max 100 bookings in the future in total
+
 
 /******************
  * Display settings

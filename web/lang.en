@@ -179,7 +179,11 @@ $vocab["info_requested"]          = "Information requested";
 $vocab["min_time_before"]         = "The minimum interval between now and the start of a booking is";
 $vocab["max_time_before"]         = "The maximum interval between now and the end of a booking is";
 $vocab["max_booking_duration"]    = "The maximum duration of a booking is";
-$vocab["max_n_per_day_global"]    = "The maximum number of bookings per day per user across the whole system is";
+$vocab["max_per_day_global"]      = "The maximum number of bookings per day per user across the whole system is";
+$vocab["max_per_week_global"]     = "The maximum number of bookings per week per user across the whole system is";
+$vocab["max_per_month_global"]    = "The maximum number of bookings per month per user across the whole system is";
+$vocab["max_per_year_global"]     = "The maximum number of bookings per year per user across the whole system is";
+$vocab["max_per_future_global"]   = "The maximum number of outstanding bookings per user across the whole system is";
 $vocab["skip_and_book"]           = "Skip and book";
 $vocab["skip_and_book_note"]      = "Carry on with the booking, skipping past the conflicting entries";
 

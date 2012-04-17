@@ -1,6 +1,8 @@
 <?php
 // $Id$
 
+define('INTERVAL_DAY', 0);
+
 /** mrbsCheckFree()
  * 
  * Check to see if the time period specified is free
@@ -93,6 +95,101 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
   return $err;
 }
 
+
+// Checks whether the proposed booking $booking would exceed the maximum number of
+// bookings in the interval of type $interval_type (can be 'day', 'week', 'month' or
+// 'year').   Returns NULL if OK, otherwise an error string.
+function checkInterval(&$booking, $interval_type='day')
+{
+  global $max_per_interval_global;
+  global $tbl_entry;
+  
+  // Set up arrays recording the number of existing and proposed bookings for the interval,
+  // indexed by the interval type and the Unix time at the start of that interval.  These 
+  // are static variables because we test all the proposed bookings, which could be for
+  // multiple rooms and/or for repeat bookings, before making the booking. 
+  static $existing = array();
+  static $proposed = array();
+  
+  // Loop through all the intervals in the proposed booking, counting how many bookings
+  // already exist for that interval, and incrementing the number of proposed bookings
+  // by one
+  $start_date = getdate($booking['start_time']);
+  $i = 1;
+  switch ($interval_type)
+  {
+    case 'day':
+      $interval_start = mktime(0, 0, 0, $start_date['mon'], $start_date['mday'], $start_date['year']);
+      break;
+    case 'week':
+      $skipback = day_of_MRBS_week($booking['start_time']);
+      $interval_start = mktime(0, 0, 0, $start_date['mon'], $start_date['mday'] - $skipback, $start_date['year']);
+      break;
+    case 'month':
+      $interval_start = mktime(0, 0, 0, $start_date['mon'], 1, $start_date['year']);
+      break;
+    case 'year':
+      $interval_start = mktime(0, 0, 0, 1, 1, $start_date['year']);
+      break;
+    case 'future':
+      $interval_start = time();
+      break;
+  }
+  while ($interval_start < $booking['end_time'])
+  {
+    switch ($interval_type)
+    {
+      case 'day':
+        $interval_end = mktime(0, 0, 0, $start_date['mon'], $start_date['mday'] + $i, $start_date['year']);
+        break;
+      case 'week':
+        $interval_end = mktime(0, 0, 0, $start_date['mon'], $start_date['mday'] + ($i * 7) - $skipback, $start_date['year']);
+        break;
+      case 'month':
+        $interval_end = mktime(0, 0, 0, $start_date['mon'] + $i, 1, $start_date['year']);
+        break;
+      case 'year':
+        $interval_end = mktime(0, 0, 0, 1, 1, $start_date['year'] + $i);
+        break;
+      case 'future':
+        $interval_end = PHP_INT_MAX;
+        break;
+    }
+      
+    if (!isset($existing[$interval_type][$interval_start]))
+    {
+      $sql = "SELECT COUNT(*)
+                FROM $tbl_entry
+               WHERE start_time<$interval_end
+                 AND end_time>$interval_start
+                 AND create_by='" . sql_escape($booking['create_by']) . "'";
+      $existing[$interval_type][$interval_start] = sql_query1($sql);
+      if ($existing[$interval_type][$interval_start] < 0)
+      {
+        trigger_error(sql_error(), E_USER_WARNING);
+        fatal_error(FALSE, get_vocab("fatal_db_error"));
+      }
+      $proposed[$interval_type][$interval_start] = 1;
+    }
+    else
+    {
+      $proposed[$interval_type][$interval_start]++;
+    }
+      
+    if (($existing[$interval_type][$interval_start] + $proposed[$interval_type][$interval_start]) >
+         $max_per_interval_global[$interval_type])
+    {
+      return get_vocab("max_per_${interval_type}_global") . " $max_per_interval_global[$interval_type]";
+    }
+      
+    $interval_start = $interval_end;
+    $i++;
+  }
+  
+  return NULL;
+}
+
+
 /** mrbsCheckPolicy()
  * 
  * Check to see if a proposed booking conforms to any booking policies in force.,
@@ -114,8 +211,7 @@ function mrbsCheckPolicy(&$booking, $delete=FALSE)
   global $min_book_ahead_enabled, $min_book_ahead_secs;
   global $max_book_ahead_enabled, $max_book_ahead_secs;
   global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
-  global $max_n_per_day_global_enabled, $max_n_per_day_global;
-  global $tbl_entry;
+  global $max_per_interval_global_enabled;
 
   $errors = array();
   $secs_in_day = 60*60*24;
@@ -193,56 +289,18 @@ function mrbsCheckPolicy(&$booking, $delete=FALSE)
     }
   }
   
-  // Check max number of bookings allowed per day for this user
-  if ($max_n_per_day_global_enabled)
+  // Check max number of bookings allowed per interval for this user for each of
+  // the interval types
+  foreach (array('day', 'week', 'month', 'year', 'future') as $interval_type)
   {
-    // Set up arrays recording the number of existing and proposed bookings for a day,
-    // indexed by the Unix time at the start of that day.  These are static variables
-    // because we test all the proposed bookings, which could be for multiple rooms,
-    // before making the booking.   (In theory, if MRBS ever supports repeats with a granularity
-    // of less than a day, eg repeating every hour, then there could also be multiple
-    // bookings on the same day).
-    static $existing = array();
-    static $proposed = array();
-    // Loop through all the days in the proposed booking, counting how many bookings
-    // already exist for that day, and incrementing the number of proposed bookings
-    // by one
-    $start_date = getdate($booking['start_time']);
-    $i = 0;
-    $day_start = mktime(0, 0, 0, $start_date['mon'], $start_date['mday'], $start_date['year']);
-    while ($day_start < $booking['end_time'])
+    if (!empty($max_per_interval_global_enabled[$interval_type]) && !$delete)
     {
-      $day_end = mktime(0, 0, 0, $start_date['mon'], $start_date['mday'] + $i + 1, $start_date['year']);
-      
-      if (!isset($existing[$day_start]))
+      $tmp = checkInterval($booking, $interval_type);
+      if (isset($tmp))
       {
-        $sql = "SELECT COUNT(*)
-                  FROM $tbl_entry
-                 WHERE start_time<$day_end
-                   AND end_time>$day_start
-                   AND create_by='" . sql_escape($booking['create_by']) . "'";
-        $existing[$day_start] = sql_query1($sql);
-        if ($existing[$day_start] < 0)
-        {
-          trigger_error(sql_error(), E_USER_WARNING);
-          fatal_error(FALSE, get_vocab("fatal_db_error"));
-        }
-        $proposed[$day_start] = 1;
+        $errors[] = $tmp;
       }
-      else
-      {
-        $proposed[$day_start]++;
-      }
-      
-      if (($existing[$day_start] + $proposed[$day_start]) > $max_n_per_day_global)
-      {
-        $errors[] = get_vocab("max_n_per_day_global") . " $max_n_per_day_global";
-      }
-      
-      $day_start = $day_end;
-      $i++;
     }
-
   }
   
   return $errors;

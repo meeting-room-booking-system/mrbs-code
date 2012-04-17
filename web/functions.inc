@@ -1198,6 +1198,17 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
 } // end make_room_select_html
 
 
+// returns the numeric day of the week (0-6) in terms of the MRBS week as defined by 
+// $weekstarts.   For example if $weekstarts is set to 2 (Tuesday) and a $time for
+// a Wednesday is given, then 1 is returned.
+function day_of_MRBS_week($time)
+{
+  global $weekstarts;
+  
+  return (date('w', $time) - $weekstarts + 7) % 7;
+}
+
+
 // This will return the appropriate value for isdst for mktime().
 // The order of the arguments was chosen to match those of mktime.
 // hour is added so that this function can when necessary only be

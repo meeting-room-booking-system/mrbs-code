@@ -983,7 +983,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   
   // Calculate how many days to skip back to get to the start of the week
   $time = mktime(12, 0, 0, $month, $day, $year);
-  $skipback = (date("w", $time) - $weekstarts + 7) % 7;
+  $skipback = day_of_MRBS_week($time);
   $day_start_week = $day - $skipback;
   // We will use $day for links and $day_start_week for anything to do with showing the bookings,
   // because we want the booking display to start on the first day of the week (eg Sunday if $weekstarts is 0)
