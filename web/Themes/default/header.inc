@@ -649,26 +649,6 @@ if ($page == 'edit_area_room')
     }
   }
   
-  // disable the min and max book ahead values and units if the corresponding
-  // checkbox isn't checked;  and enable it it is.
-  function check_book_ahead()
-  {
-    var form = document.getElementById('edit_area');
-    
-    if (form)
-    {
-      if (form.area_min_ba_enabled)
-      {
-        form.area_min_ba_value.disabled = !form.area_min_ba_enabled.checked;
-        form.area_min_ba_units.disabled = !form.area_min_ba_enabled.checked;
-      }
-      if (form.area_max_ba_enabled)
-      {
-        form.area_max_ba_value.disabled = !form.area_max_ba_enabled.checked;
-        form.area_max_ba_units.disabled = !form.area_max_ba_enabled.checked;
-      }
-    }
-  }
 <?php
 } // edit_area_room
 
@@ -2576,7 +2556,7 @@ $(window).load(function() {
     // Also show or hide the periods note as appropriate
     // [This method works if there are no periods-specific settings.
     // When we get those we will have to do something different]
-  ?>
+    ?>
     var form = document.getElementById('edit_area');
     if (form)
     {
@@ -2590,10 +2570,20 @@ $(window).load(function() {
       {
         $('#book_ahead_periods_note').hide();
       }
-      check_book_ahead();
     }
     
-  <?php
+    <?php
+    // Where we've got enabling checkboxes, apply a change event to them so that
+    // when the enabling checkbox is changed the associated inputs are enabled or
+    // disabled as appropriate.   Also trigger the change event when the page is loaded
+    // so that the inputs are enabled/disabled correctly initially.
+    ?>
+    $('.enabler').change(function(){
+        $(this).nextAll('input, select').attr('disabled', !$(this).is(':checked'));
+      })
+      .change();
+    
+    <?php
   }
   
   // EDIT_ENTRY.PHP

@@ -39,6 +39,16 @@ CREATE TABLE mrbs_area
   min_book_ahead_secs       int,
   max_book_ahead_enabled    tinyint(1),
   max_book_ahead_secs       int,
+  max_per_day_enabled       tinyint(1) DEFAULT 0 NOT NULL,
+  max_per_day               int DEFAULT 0 NOT NULL,
+  max_per_week_enabled      tinyint(1) DEFAULT 0 NOT NULL,
+  max_per_week              int DEFAULT 0 NOT NULL,
+  max_per_month_enabled     tinyint(1) DEFAULT 0 NOT NULL,
+  max_per_month             int DEFAULT 0 NOT NULL,
+  max_per_year_enabled      tinyint(1) DEFAULT 0 NOT NULL,
+  max_per_year              int DEFAULT 0 NOT NULL,
+  max_per_future_enabled    tinyint(1) DEFAULT 0 NOT NULL,
+  max_per_future            int DEFAULT 0 NOT NULL,
   custom_html               text,
   approval_enabled          tinyint(1),
   reminders_enabled         tinyint(1),
@@ -151,6 +161,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '29');
+  VALUES ( 'db_version', '30');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

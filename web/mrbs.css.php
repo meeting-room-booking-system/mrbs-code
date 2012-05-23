@@ -514,7 +514,7 @@ $db_logon_form_min_width       = $db_logon_left_col_max_width + $db_logon_input_
 $db_logon_form_min_width       = number_format($db_logon_form_min_width, 1, '.', '');   // get rid of any commas
 
 // Specific to the "edit_area_room" form
-$edit_area_room_left_col_width      = '15';      // em
+$edit_area_room_left_col_width      = '17';      // em
 $edit_area_room_left_col_max_width  = '30';      // em
 $edit_area_room_input_width         = '12';      // em
 $edit_area_room_form_min_width      = $edit_area_room_left_col_width + $edit_area_room_input_width + $general_gap;
@@ -584,7 +584,7 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 .form_general input.radio {margin-top: 0.1em; margin-right: 2px}
 .form_general input.checkbox {width: auto; margin-top: 0.2em}
 .edit_area_room .form_general input.checkbox {margin-left: <?php echo $general_gap ?>em}
-.edit_area_room .form_general #booking_policies input.text {width: 2.0em}
+.edit_area_room .form_general #booking_policies input.text {width: 4em}
 .form_general input.submit {display: block; width: auto; float: left; clear: left; margin-top: 1.0em}
 
 div#import_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $import_left_col_max_width ?>em}
@@ -626,6 +626,10 @@ div#conflict_check, div#policy_check {float: left; clear: none; width: 2em; padd
 div#conflict_check {margin-left: 3em}
 div.good {color: green}
 div.bad {color: red}
+
+.form_general table {border-collapse: collapse}
+.form_general table, .form_general tr, .form_general th, .form_general td {padding: 0; margin: 0; border: 0}
+.form_general th {font-weight: normal; font-style: italic; text-align: left; padding: 0.2em 0 0.2em 1em}
 
 
 /* ------------ EDIT_ENTRY_HANDLER.PHP ------------------*/

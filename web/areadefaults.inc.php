@@ -131,6 +131,26 @@ $max_book_ahead_secs = 60*60*24*7;  // (seconds) no more than one week ahead
 // will allow somebody to make a booking at 11:59 pm for the first period the next day, which
 // which may occur at 8.00 am.
 
+// DEFAULT VALUES FOR NEW AREAS
+// Set the maximum number of bookings that can be made in an area by any one user, in an
+// interval, which can be a day, week, month or year, or else in the future.  (A week is
+// defined by the $weekstarts setting).   These are per-area settings but you can use them
+// in conjunction with the global settings.   This would allow you to set policies such as
+// allowing a maximum of 10 bookings per month in total with a maximum of 1 per day in Area A.
+$max_per_interval_area_enabled['day']    = FALSE;
+$max_per_interval_area['day'] = 1;      // max 1 bookings per day in an area
+
+$max_per_interval_area_enabled['week']   = FALSE;
+$max_per_interval_area['week'] = 5;     // max 5 bookings per week in an area
+
+$max_per_interval_area_enabled['month']  = FALSE;
+$max_per_interval_area['month'] = 10;   // max 10 bookings per month in an area
+
+$max_per_interval_area_enabled['year']   = FALSE;
+$max_per_interval_area['year'] = 50;    // max 50 bookings per year in an area
+
+$max_per_interval_area_enabled['future'] = FALSE;
+$max_per_interval_area['future'] = 100; // max 100 bookings in the future in an area
 
 /************************
  * Miscellaneous settings

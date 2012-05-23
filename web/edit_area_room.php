@@ -173,6 +173,15 @@ $change_done = get_form_var('change_done', 'string');
 $change_room = get_form_var('change_room', 'string');
 $change_area = get_form_var('change_area', 'string');
 
+// Get the max_per_interval form variables
+foreach ($interval_types as $interval_type)
+{
+  $var = "area_max_per_${interval_type}";
+  $$var = get_form_var($var, 'int');
+  $var = "area_max_per_${interval_type}_enabled";
+  $$var = get_form_var($var, 'string');
+}
+
 // Get the information about the fields in the room table
 $fields = sql_field_info($tbl_room);
 
@@ -447,6 +456,11 @@ if ($phase == 2)
     $area_enable_periods = (!empty($area_enable_periods)) ? 1 : 0;
     $area_confirmation_enabled = (!empty($area_confirmation_enabled)) ? 1 : 0;
     $area_confirmed_default = (!empty($area_confirmed_default)) ? 1 : 0;
+    foreach ($interval_types as $interval_type)
+    {
+      $var = "area_max_per_${interval_type}_enabled";
+      $$var = (!empty($$var)) ? 1 : 0;
+    }
     
     if (!$area_enable_periods)
     { 
@@ -508,6 +522,22 @@ if ($phase == 2)
       if (isset($area_max_ba_value))
       {
         $assign_array[] = "max_book_ahead_secs=" . $area_max_ba_value;
+      }
+      
+      foreach($interval_types as $interval_type)
+      {
+        $var = "max_per_${interval_type}_enabled";
+        $area_var = "area_" . $var;
+        $assign_array[] = "$var=" . $$area_var;
+        
+        $var = "max_per_${interval_type}";
+        $area_var = "area_" . $var;
+        if (isset($$area_var))
+        {
+          // only update these fields if they are set;  they might be NULL because
+          // they have been disabled by JavaScript
+          $assign_array[] = "$var=" . $$area_var;
+        }
       }
       
       $assign_array[] = "private_enabled=" . $area_private_enabled;
@@ -1096,10 +1126,9 @@ if (isset($change_area) &&!empty($area))
       // Minimum book ahead
       echo "<div>\n";
       echo "<label>" . get_vocab("min_book_ahead") . ":</label>\n";
-      echo "<input class=\"checkbox\" type=\"checkbox\" id=\"area_min_ba_enabled\" name=\"area_min_ba_enabled\"" .
-           (($min_book_ahead_enabled) ? " checked=\"checked\"" : "") .
-           " onChange=\"check_book_ahead()\">\n";
-      echo "<input class=\"text\" type=\"text\" name=\"area_min_ba_value\" value=\"$min_ba_value\">";
+      echo "<input class=\"enabler checkbox\" type=\"checkbox\" id=\"area_min_ba_enabled\" name=\"area_min_ba_enabled\"" .
+           (($min_book_ahead_enabled) ? " checked=\"checked\"" : "") . ">\n";
+      echo "<input class=\"text\" type=\"number\" min=\"0\" step=\"1\" name=\"area_min_ba_value\" value=\"$min_ba_value\">";
       echo "<select id=\"area_min_ba_units\" name=\"area_min_ba_units\">\n";
       $units = array("seconds", "minutes", "hours", "days", "weeks");
       foreach ($units as $unit)
@@ -1113,10 +1142,9 @@ if (isset($change_area) &&!empty($area))
       // Maximum book ahead
       echo "<div>\n";
       echo "<label>" . get_vocab("max_book_ahead") . ":</label>\n";
-      echo "<input class=\"checkbox\" type=\"checkbox\" id=\"area_max_ba_enabled\" name=\"area_max_ba_enabled\"" .
-           (($max_book_ahead_enabled) ? " checked=\"checked\"" : "") .
-           " onChange=\"check_book_ahead()\">\n";
-      echo "<input class=\"text\" type=\"text\" name=\"area_max_ba_value\" value=\"$max_ba_value\">";
+      echo "<input class=\"enabler checkbox\" type=\"checkbox\" id=\"area_max_ba_enabled\" name=\"area_max_ba_enabled\"" .
+           (($max_book_ahead_enabled) ? " checked=\"checked\"" : "") . ">\n";
+      echo "<input class=\"text\" type=\"number\" min=\"0\" step=\"1\" name=\"area_max_ba_value\" value=\"$max_ba_value\">";
       echo "<select id=\"area_max_ba_units\" name=\"area_max_ba_units\">\n";
       $units = array("seconds", "minutes", "hours", "days", "weeks");
       foreach ($units as $unit)
@@ -1127,6 +1155,42 @@ if (isset($change_area) &&!empty($area))
       }
       echo "</select>\n";
       echo "</div>\n";
+      
+      // The max_per booking policies
+      echo "<table>\n";
+      
+      echo "<thead>\n";
+      echo "<tr>\n";
+      echo "<th></th>\n";
+      echo "<th>" . get_vocab("this_area") . "</th>\n";
+      echo "<th title=\"" . get_vocab("whole_system_note") . "\">" . get_vocab("whole_system") . "</th>\n";
+      echo "</tr>\n";
+      echo "</thead>\n";
+      
+      echo "<tbody>\n";
+      foreach ($interval_types as $interval_type)
+      {
+        echo "<tr>\n";
+        echo "<td><label>" . get_vocab("max_per_${interval_type}") . ":</label></td>\n";
+        $var = "max_per_${interval_type}_enabled";
+        echo "<td><input class=\"enabler checkbox\" type=\"checkbox\" id=\"area_max_per_${interval_type}_enabled\" name=\"area_max_per_${interval_type}_enabled\"" .
+             (($max_per_interval_area_enabled[$interval_type]) ? " checked=\"checked\"" : "") .
+             ">\n";
+        $var = "max_per_${interval_type}";
+        echo "<input class=\"text\" type=\"number\" min=\"0\" step=\"1\" name=\"area_max_per_${interval_type}\" value=\"$max_per_interval_area[$interval_type]\"></td>\n"; 
+        echo "<td>\n";
+        echo "<input class=\"checkbox\" type=\"checkbox\" disabled=\"disabled\"" .
+             (($max_per_interval_global_enabled[$interval_type]) ? " checked=\"checked\"" : "") .
+             ">\n";
+        echo "<input class=\"text\" disabled=\"disabled\" value=\"" . $max_per_interval_global[$interval_type] . "\">\n";
+        echo "</td>\n";
+        echo "</tr>\n";
+      }
+      echo "</tbody>\n";
+      
+      echo "</table>\n";
+      
+      
       echo "</fieldset>\n";
       ?>
       

@@ -98,11 +98,24 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
 
 // Checks whether the proposed booking $booking would exceed the maximum number of
 // bookings in the interval of type $interval_type (can be 'day', 'week', 'month' or
-// 'year').   Returns NULL if OK, otherwise an error string.
-function checkInterval(&$booking, $interval_type='day')
+// 'year').   If $only_area is set then only the bookings in the same are considered.
+// Returns NULL if OK, otherwise an error string.
+function checkInterval(&$booking, $interval_type='day', $only_area=FALSE)
 {
-  global $max_per_interval_global;
-  global $tbl_entry;
+  global $max_per_interval_global, $max_per_interval_area;
+  global $tbl_entry, $tbl_room;
+  
+  // Get the area id.   We only need to do this once as all bookings will be
+  // in the same area.
+  static $area_id = NULL;
+  if (!isset($area_id))
+  {
+    $area_id = get_area($booking['room_id']);
+  }
+  
+  // Get the location for indexing the $existing and $proposed arrays.   If it's a 
+  // global check then $location = 0, otherwise use the area_id.
+  $location = ($only_area) ? $area_id : 0;
   
   // Set up arrays recording the number of existing and proposed bookings for the interval,
   // indexed by the interval type and the Unix time at the start of that interval.  These 
@@ -155,31 +168,45 @@ function checkInterval(&$booking, $interval_type='day')
         $interval_end = PHP_INT_MAX;
         break;
     }
-      
-    if (!isset($existing[$interval_type][$interval_start]))
+
+    if (!isset($existing[$location][$interval_type][$interval_start]))
     {
       $sql = "SELECT COUNT(*)
-                FROM $tbl_entry
-               WHERE start_time<$interval_end
-                 AND end_time>$interval_start
-                 AND create_by='" . sql_escape($booking['create_by']) . "'";
-      $existing[$interval_type][$interval_start] = sql_query1($sql);
-      if ($existing[$interval_type][$interval_start] < 0)
+                FROM $tbl_entry E, $tbl_room R
+               WHERE E.start_time<$interval_end
+                 AND E.end_time>$interval_start
+                 AND E.create_by='" . sql_escape($booking['create_by']) . "'
+                 AND E.room_id=R.id
+                 AND R.disabled=0";
+      if ($only_area)
+      {
+        $sql .= " AND R.area_id=$area_id";
+      }
+      $existing[$location][$interval_type][$interval_start] = sql_query1($sql);
+      if ($existing[$location][$interval_type][$interval_start] < 0)
       {
         trigger_error(sql_error(), E_USER_WARNING);
         fatal_error(FALSE, get_vocab("fatal_db_error"));
       }
-      $proposed[$interval_type][$interval_start] = 1;
+      $proposed[$location][$interval_type][$interval_start] = 1;
     }
     else
     {
-      $proposed[$interval_type][$interval_start]++;
+      $proposed[$location][$interval_type][$interval_start]++;
     }
-      
-    if (($existing[$interval_type][$interval_start] + $proposed[$interval_type][$interval_start]) >
-         $max_per_interval_global[$interval_type])
+    
+    $max_allowed = ($only_area) ? $max_per_interval_area[$interval_type] : $max_per_interval_global[$interval_type];
+    if (($existing[$location][$interval_type][$interval_start] + $proposed[$location][$interval_type][$interval_start]) >
+         $max_allowed)
     {
-      return get_vocab("max_per_${interval_type}_global") . " $max_per_interval_global[$interval_type]";
+      if ($only_area)
+      {
+        return get_vocab("max_per_${interval_type}_area") . " $max_per_interval_area[$interval_type]";
+      }
+      else
+      {
+        return get_vocab("max_per_${interval_type}_global") . " $max_per_interval_global[$interval_type]";
+      }
     }
       
     $interval_start = $interval_end;
@@ -211,7 +238,8 @@ function mrbsCheckPolicy(&$booking, $delete=FALSE)
   global $min_book_ahead_enabled, $min_book_ahead_secs;
   global $max_book_ahead_enabled, $max_book_ahead_secs;
   global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
-  global $max_per_interval_global_enabled;
+  global $max_per_interval_global_enabled, $max_per_interval_area_enabled;
+  global $interval_types;
 
   $errors = array();
   $secs_in_day = 60*60*24;
@@ -290,12 +318,22 @@ function mrbsCheckPolicy(&$booking, $delete=FALSE)
   }
   
   // Check max number of bookings allowed per interval for this user for each of
-  // the interval types
-  foreach (array('day', 'week', 'month', 'year', 'future') as $interval_type)
+  // the interval types, both globally and for the area
+  foreach ($interval_types as $interval_type)
   {
+    // globally
     if (!empty($max_per_interval_global_enabled[$interval_type]) && !$delete)
     {
-      $tmp = checkInterval($booking, $interval_type);
+      $tmp = checkInterval($booking, $interval_type, FALSE);
+      if (isset($tmp))
+      {
+        $errors[] = $tmp;
+      }
+    }
+    // for the area
+    if (!empty($max_per_interval_area_enabled[$interval_type]) && !$delete)
+    {
+      $tmp = checkInterval($booking, $interval_type, TRUE);
       if (isset($tmp))
       {
         $errors[] = $tmp;
@@ -1157,7 +1195,7 @@ function mrbsGetRoomArea($id)
 }
 
 
-// Adds an area, returning the new id, or FALSE on failute with the
+// Adds an area, returning the new id, or FALSE on failure with the
 // error in $error
 function mrbsAddArea($name, &$error)
 {

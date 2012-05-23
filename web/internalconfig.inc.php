@@ -224,6 +224,11 @@ $boolean_fields['area'] = array('default_duration_all_day',
                                 'private_mandatory',
                                 'min_book_ahead_enabled',
                                 'max_book_ahead_enabled',
+                                'max_per_day_enabled',
+                                'max_per_week_enabled',
+                                'max_per_month_enabled',
+                                'max_per_year_enabled',
+                                'max_per_future_enabled',
                                 'max_duration_enabled',  // not yet a per-area setting, but will be sometime
                                 'approval_enabled',
                                 'reminders_enabled',
@@ -260,6 +265,16 @@ $area_defaults['min_book_ahead_enabled']   = $min_book_ahead_enabled;
 $area_defaults['max_book_ahead_enabled']   = $max_book_ahead_enabled;
 $area_defaults['min_book_ahead_secs']      = $min_book_ahead_secs;
 $area_defaults['max_book_ahead_secs']      = $max_book_ahead_secs;
+$area_defaults['max_per_day_enabled']      = $max_per_interval_area_enabled['day'];
+$area_defaults['max_per_day']              = $max_per_interval_area['day'];
+$area_defaults['max_per_week_enabled']     = $max_per_interval_area_enabled['week'];
+$area_defaults['max_per_week']             = $max_per_interval_area['week'];
+$area_defaults['max_per_month_enabled']    = $max_per_interval_area_enabled['month'];
+$area_defaults['max_per_month']            = $max_per_interval_area['month'];
+$area_defaults['max_per_year_enabled']     = $max_per_interval_area_enabled['year'];
+$area_defaults['max_per_year']             = $max_per_interval_area['year'];
+$area_defaults['max_per_future_enabled']   = $max_per_interval_area_enabled['future'];
+$area_defaults['max_per_future']           = $max_per_interval_area['future'];
 $area_defaults['approval_enabled']         = $approval_enabled;
 $area_defaults['reminders_enabled']        = $reminders_enabled;
 $area_defaults['enable_periods']           = $enable_periods;
@@ -271,6 +286,9 @@ $area_defaults['confirmed_default']        = $confirmed_default;
 // error, we split the requests into batches with a maximum number of ids
 // in the array defined below.
 define('DEL_ENTRY_AJAX_BATCH_SIZE', 100);
+
+// Interval types used in booking policies
+$interval_types = array('day', 'week', 'month', 'year', 'future');
                
 /********************************************************
  * PHP System Configuration - internal use, do not change

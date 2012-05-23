@@ -799,6 +799,8 @@ function get_area_settings($area)
   global $min_book_ahead_enabled, $max_book_ahead_enabled, $min_book_ahead_secs, $max_book_ahead_secs;
   global $approval_enabled, $reminders_enabled, $enable_periods;
   global $confirmation_enabled, $confirmed_default, $timezone;
+  global $max_per_interval_area_enabled, $max_per_interval_area;
+  global $interval_types;
   
   if (empty($area))
   {
@@ -812,6 +814,11 @@ function get_area_settings($area)
                  private_enabled, private_default, private_mandatory, private_override,
                  min_book_ahead_enabled, max_book_ahead_enabled,
                  min_book_ahead_secs, max_book_ahead_secs,
+                 max_per_day_enabled, max_per_day,
+                 max_per_week_enabled, max_per_week,
+                 max_per_month_enabled, max_per_month,
+                 max_per_year_enabled, max_per_year,
+                 max_per_future_enabled, max_per_future,
                  approval_enabled, reminders_enabled, enable_periods,
                  confirmation_enabled, confirmed_default
           FROM $tbl_area 
@@ -835,6 +842,17 @@ function get_area_settings($area)
   }
   // Set the timezone
   mrbs_default_timezone_set($timezone);
+  
+  // Set the $max_per_interval_area_enabled and $max_per_interval_area arrays,
+  // which are handled slightly differently
+  foreach ($interval_types as $interval_type)
+  {
+    $var = "max_per_${interval_type}_enabled";
+    $max_per_interval_area_enabled[$interval_type] = $$var;
+    $var = "max_per_${interval_type}";
+    $max_per_interval_area[$interval_type] = $$var;
+  }
+  
 }
 
 
