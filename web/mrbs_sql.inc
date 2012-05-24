@@ -100,7 +100,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
 // bookings in the interval of type $interval_type (can be 'day', 'week', 'month' or
 // 'year').   If $only_area is set then only the bookings in the same are considered.
 // Returns NULL if OK, otherwise an error string.
-function checkInterval(&$booking, $interval_type='day', $only_area=FALSE)
+function checkInterval(&$booking, $ignore, $repignore, $interval_type='day', $only_area=FALSE)
 {
   global $max_per_interval_global, $max_per_interval_area;
   global $tbl_entry, $tbl_room;
@@ -182,6 +182,15 @@ function checkInterval(&$booking, $interval_type='day', $only_area=FALSE)
       {
         $sql .= " AND R.area_id=$area_id";
       }
+      if ($ignore > 0)
+      {
+        $sql .= " AND E.id <> $ignore";
+      }
+      if ($repignore > 0)
+      {
+        $sql .= " AND E.repeat_id <> $repignore";
+      }
+      
       $existing[$location][$interval_type][$interval_start] = sql_query1($sql);
       if ($existing[$location][$interval_type][$interval_start] < 0)
       {
@@ -194,7 +203,7 @@ function checkInterval(&$booking, $interval_type='day', $only_area=FALSE)
     {
       $proposed[$location][$interval_type][$interval_start]++;
     }
-    
+
     $max_allowed = ($only_area) ? $max_per_interval_area[$interval_type] : $max_per_interval_global[$interval_type];
     if (($existing[$location][$interval_type][$interval_start] + $proposed[$location][$interval_type][$interval_start]) >
          $max_allowed)
@@ -232,7 +241,7 @@ function checkInterval(&$booking, $interval_type='day', $only_area=FALSE)
  *            - An array of human readable errors.   If no errors the array has
  *              length 0
  */
-function mrbsCheckPolicy(&$booking, $delete=FALSE)
+function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
 {
   global $periods, $enable_periods;
   global $min_book_ahead_enabled, $min_book_ahead_secs;
@@ -324,7 +333,7 @@ function mrbsCheckPolicy(&$booking, $delete=FALSE)
     // globally
     if (!empty($max_per_interval_global_enabled[$interval_type]) && !$delete)
     {
-      $tmp = checkInterval($booking, $interval_type, FALSE);
+      $tmp = checkInterval($booking, $ignore, $repignore, $interval_type, FALSE);
       if (isset($tmp))
       {
         $errors[] = $tmp;
@@ -333,7 +342,7 @@ function mrbsCheckPolicy(&$booking, $delete=FALSE)
     // for the area
     if (!empty($max_per_interval_area_enabled[$interval_type]) && !$delete)
     {
-      $tmp = checkInterval($booking, $interval_type, TRUE);
+      $tmp = checkInterval($booking, $ignore, $repignore, $interval_type, TRUE);
       if (isset($tmp))
       {
         $errors[] = $tmp;
@@ -403,7 +412,7 @@ function mrbsDelEntry($user, $id, $series, $all)
     // check that the booking policies allow us to delete this entry
     if (!$is_book_admin)
     {
-      $tmp = mrbsCheckPolicy($row, TRUE);
+      $tmp = mrbsCheckPolicy($row, 0, 0, TRUE);
       if (!empty($tmp))
       {
         continue;
@@ -1444,7 +1453,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
           if (!$skip_this_booking &&
               !auth_book_admin($user, $this_booking['room_id']))
           {
-            $errors = mrbsCheckPolicy($this_booking);
+            $errors = mrbsCheckPolicy($this_booking, $ignore_id, $repeat_id);
             if (count($errors) > 0)
             {
               $valid_booking = FALSE;
@@ -1471,7 +1480,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
         // conforms to the booking policy
         if (!auth_book_admin($user, $booking['room_id']))
         {
-          $errors = mrbsCheckPolicy($booking);
+          $errors = mrbsCheckPolicy($booking, $ignore_id, 0);
           if (count($errors) > 0)
           {
             $valid_booking = FALSE;
