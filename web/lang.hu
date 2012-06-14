@@ -1,0 +1,442 @@
+<?php // -*-mode: PHP; coding:utf-8;-*-
+// $Id$
+
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.en, and anything in a locale
+// specific file will overwrite the default. This is a US/UK English file.
+//
+//
+//
+//
+// This file is PHP code. Treat it as such.
+
+// Translation by Gergely Kiss <gergely.kiss@kirowskiisobar.com>
+// 2012-06-04 - please update the date if you make changes to the file
+
+
+// Used in style.inc
+$vocab["mrbs"]               = "Meeting Room Booking System";
+
+// Used in functions.inc
+$vocab["report"]             = "Riport";
+$vocab["admin"]              = "Admin";
+$vocab["help"]               = "Segítség";
+$vocab["search"]             = "Keresés";
+$vocab["not_php3"]           = "FIGYELEM: Ez valószínűleg nem működik PHP3-mal.";
+$vocab["outstanding"]        = "függőben lévő foglalások";
+
+// Used in day.php
+$vocab["bookingsfor"]        = "Foglalások a következőhöz:";
+$vocab["bookingsforpost"]    = ""; // Goes after the date
+$vocab["areas"]              = "Helyek";
+$vocab["daybefore"]          = "Előző nap";
+$vocab["dayafter"]           = "Következő nap";
+$vocab["gototoday"]          = "Mai nap";
+$vocab["goto"]               = "Ugrás";
+$vocab["highlight_line"]     = "Sor kiemelése";
+$vocab["click_to_reserve"]   = "Kattints a cellára a foglaláshoz!";
+$vocab["timezone"]           = "Időzóna";
+
+// Used in trailer.inc
+$vocab["viewday"]            = "Napi nézet";
+$vocab["viewweek"]           = "Heti nézet";
+$vocab["viewmonth"]          = "Havi nézet";
+$vocab["ppreview"]           = "Nyomtatási kép";
+
+// Used in edit_entry.php
+$vocab["addentry"]           = "Új bejegyzés";
+$vocab["editentry"]          = "Bejegyzés szerkesztése";
+$vocab["copyentry"]          = "Bejegyzés másolása";
+$vocab["editseries"]         = "Sorozat szerkesztése";
+$vocab["copyseries"]         = "Sorozat másolása";
+$vocab["namebooker"]         = "Rövid leírás";
+$vocab["fulldescription"]    = "Teljes leírás:<br>&nbsp;&nbsp;(Résztvevők száma,<br>&nbsp;&nbsp;Belső/külső stb.)";
+$vocab["date"]               = "Dátum";
+$vocab["start"]              = "Kezdet";
+$vocab["end"]                = "Vég";
+$vocab["start_date"]         = "Kezdés időpontja";
+$vocab["end_date"]           = "Befejezés időpontja";
+$vocab["time"]               = "Idő";
+$vocab["period"]             = "Ismétlődés";
+$vocab["duration"]           = "Időtartam";
+$vocab["second_lc"]          = "másodperc";
+$vocab["seconds"]            = "másodperc";
+$vocab["minute_lc"]          = "perc";
+$vocab["minutes"]            = "perc";
+$vocab["hour_lc"]            = "óra";
+$vocab["hours"]              = "óra";
+$vocab["day_lc"]             = "nap";
+$vocab["days"]               = "nap";
+$vocab["week_lc"]            = "hét";
+$vocab["weeks"]              = "hét";
+$vocab["year_lc"]            = "év";
+$vocab["years"]              = "év";
+// gkiss - ez nem biztos hogy jó!
+$vocab["period_lc"]          = "ismétlődés";
+$vocab["periods"]            = "ismétlődés";
+$vocab["all_day"]            = "Egész nap";
+$vocab["area"]               = "Hely";
+$vocab["type"]               = "Típus";
+$vocab["save"]               = "Mentés";
+$vocab["rep_type"]           = "Ismétlődés típusa";
+$vocab["rep_type_0"]         = "Nincs";
+$vocab["rep_type_1"]         = "Naponta";
+$vocab["rep_type_2"]         = "Hetente";
+$vocab["rep_type_3"]         = "Havonta";
+$vocab["rep_type_4"]         = "Évente";
+$vocab["rep_type_5"]         = "Havonta, a megfelelő napon";
+$vocab["rep_type_6"]         = "n-hetente";
+$vocab["rep_end_date"]       = "Ismétlődés vége";
+$vocab["rep_rep_day"]        = "Ismétlődés napja";
+$vocab["rep_for_weekly"]     = "(heti vagy n-heti ütemezéshez)";
+$vocab["rep_freq"]           = "Gyakoriság";
+$vocab["rep_num_weeks"]      = "Hetek száma";
+$vocab["rep_for_nweekly"]    = "(n-heti ütemezéshez)";
+$vocab["skip_conflicts"]     = "Múltbéli ütközések figyelmen kívül hagyása";
+$vocab["ctrl_click"]         = "A Ctrl gomb nyomva tartásával több helyet is kijelölhetsz.";
+$vocab["entryid"]            = "Bejegyzés azonosító ";
+$vocab["repeat_id"]          = "Ismétlődés azonosító "; 
+$vocab["you_have_not_entered"] = "Nem adtad meg a(z)";
+$vocab["you_have_not_selected"] = "Nem választottad ki a(z)";
+$vocab["valid_room"]         = "hely.";
+$vocab["brief_description"]  = "rövid leírás.";
+$vocab["useful_n-weekly_value"] = "értelmezhető n-heti érték.";
+$vocab["status"]             = "Állapot";
+$vocab["public"]             = "Nyilvános";
+$vocab["private"]            = "Privát";
+$vocab["unavailable"]        = "Privát";
+$vocab["is_mandatory_field"] = "kötelezően kitöltendő, kérlek, adj meg egy értéket.";
+$vocab["missing_mandatory_field"] = "Nem adtál meg értéket egy kötelezően kitöltendő mezőnek: ";
+$vocab["confirmed"]          = "Megerősített";
+$vocab["start_after_end"]    = "Befejezési nap utáni kezdőnap";
+$vocab["start_after_end_long"] = "Hiba: a kezdeti nap nem lehet a befejezési nap után.";
+
+// Used in view_entry.php
+$vocab["description"]         = "Leírás";
+$vocab["room"]                = "Hely";
+$vocab["createdby"]           = "Létrehozó";
+$vocab["lastupdate"]          = "Utoljára frissítve";
+$vocab["deleteentry"]         = "Bejegyzés törlése";
+$vocab["deleteseries"]        = "Sorozat törlése";
+$vocab["exportentry"]         = "Bejegyzés exportálása";
+$vocab["exportseries"]        = "Sorozat exportálása";
+$vocab["confirmdel"]          = "Biztosan törlöd\\na kiválasztott bejegyzést?\\n\\n";
+$vocab["returnprev"]          = "Vissza az előző oldalra";
+$vocab["invalid_entry_id"]    = "Érvénytelen bejegyzésazonosító.";
+$vocab["invalid_series_id"]   = "Érvénytelen sorozatazonosító.";
+$vocab["confirmation_status"] = "Megerősítés állapota";
+$vocab["tentative"]           = "Függőben";
+$vocab["approval_status"]     = "Jóváhagyás státusza";
+$vocab["approved"]            = "Jóváhagyott";
+$vocab["awaiting_approval"]   = "Jóváhagyásra várva";
+$vocab["approve"]             = "Jóváhagyás";
+$vocab["reject"]              = "Visszautasítás";
+$vocab["more_info"]           = "Több információ";
+$vocab["remind_admin"]        = "Adminisztrátor értesítése";
+$vocab["series"]              = "Sorozat";
+$vocab["request_more_info"]   = "Kérlek, sorold fel a pluszinfókat";
+$vocab["reject_reason"]       = "Kérlek, indokold meg a foglalási kérés visszautasítását";
+$vocab["send"]                = "Küldés";
+$vocab["approve_failed"]      = "A foglalás nem hagyható jóvá.";
+$vocab["no_request_yet"]      = "Nincs korábbi foglalás"; // Used for the title tooltip on More Info button
+$vocab["last_request"]        = "Legutóbbi foglalás időpontja:";         // Used for the title tooltip on More Info button
+$vocab["by"]                  = "foglaló:";                           // Used for the title tooltip on More Info button
+$vocab["sent_at"]             = "Küldés időpontja: ";
+$vocab["yes"]                 = "Igen";
+$vocab["no"]                  = "Nem";
+
+// Used in edit_entry_handler.php
+$vocab["error"]              = "Hiba";
+$vocab["sched_conflict"]     = "Ütköző ütemezések";
+$vocab["conflict"]           = "A kért foglalás ütközik az alábbi foglalásokkal:";
+$vocab["no_conflicts"]       = "Nincs ütközés a foglalás ütemezésében";
+$vocab["rules_broken"]       = "A foglalás ütközik az alábbi házirendekkel:";
+$vocab["no_rules_broken"]    = "Nincs házirendütközés";
+$vocab["schedule"]           = "Ütemezés";
+$vocab["policy"]             = "Házirend";
+$vocab["too_may_entrys"]     = "A kiválasztott beállítások mellett túl sok bejegyzés létrehozására lenne szükség.<br>Kérlek, módosítsd az opciókat!";
+$vocab["returncal"]          = "Vissza a naptárhoz";
+$vocab["failed_to_acquire"]  = "Nem sikerült exkluzív módon hozzáférni az adatbázishoz";
+$vocab["invalid_booking"]    = "Érvénytelen foglalás";
+$vocab["must_set_description"] = "You must set a brief description for the booking. Please go back and enter one.";
+$vocab["must_set_description"] = "Meg kell adnod egy rövid leírást a foglaláshoz. Kérlek, lépj vissza és pótold a hiányosságot.";
+$vocab["mail_subject_approved"]  = "A bejegyzés jóváhagyva - $mrbs_company tárgyalófoglaló";
+$vocab["mail_subject_rejected"]  = "A bejegyzés vissza lett utasítva - $mrbs_company tárgyalófoglaló";
+$vocab["mail_subject_more_info"] = "$mrbs_company tárgyalófoglaló: plusz információkra van szükség";
+$vocab["mail_subject_reminder"]  = "Emlékeztető - $mrbs_company tárgyalófoglaló";
+$vocab["mail_body_approved"]     = "A bejegyzés jóváhagyásra került az adminisztrátorok által. A jóváhagyás részletei:";
+$vocab["mail_body_rej_entry"]    = "A bejegyzés vissza lett utasítva az adminisztrátorok által. A visszautasítás részletei:";
+$vocab["mail_body_more_info"]    = "Az adminisztrátoroknak több információra van szükségük a foglalás elbírálásához:";
+$vocab["mail_body_reminder"]     = "Emlékeztető - egy foglalás jóváhagyásra vár. A foglalás részletei:";
+$vocab["mail_body_repeats_booked"]   = "A következő dátumok lettek lefoglalva:";
+$vocab["mail_body_repeats_deleted"]  = "A következő foglalások törölve lettek:";
+$vocab["mail_body_exceptions"]       = "A következő dátumok nem foglalhatók ütközés miatt:";
+$vocab["mail_subject_new_entry"]     = "Bejegyzés hozzáadva - $mrbs_company tárgyalófoglaló";
+$vocab["mail_subject_changed_entry"] = "Bejegyzés módosítva - $mrbs_company tárgyalófoglaló";
+$vocab["mail_subject_delete"]        = "Bejegyzés törölve - $mrbs_company tárgyalófoglaló";
+$vocab["mail_body_new_entry"]     = "Új foglalás érkezett:";
+$vocab["mail_body_changed_entry"] = "A bejegyzés módosításra került:";
+$vocab["mail_body_del_entry"]     = "A bejegyzés törölve lett:";
+$vocab["new_value"]               = "Új";
+$vocab["old_value"]               = "Régi";
+$vocab["deleted_by"]              = "Törölte:";
+$vocab["reason"]                  = "Ok";
+$vocab["info_requested"]          = "Információ szükséges";
+$vocab["min_time_before"]         = "Az aktuális dátum és a foglalás kezdete közötti legkisebb megengedett időintervallum:";
+$vocab["max_time_before"]         = "Az aktuális dátum és a foglalás kezdete közötti legnagyobb megengedett időintervallum:";
+$vocab["max_booking_duration"]    = "A foglalások legnagyobb megengedett időtartama:";
+$vocab["skip_and_book"]           = "Tovább és foglalás";
+$vocab["skip_and_book_note"]      = "A foglalás folytatása az ütközések mellőzésével";
+
+// Used in pending.php
+$vocab["pending"]            = "Megerősítésre váró foglalások";
+$vocab["none_outstanding"]   = "Nincs megerősítésre váró foglalás.";
+
+// Authentication stuff
+$vocab["accessdenied"]       = "Hozzáférés megtagadva";
+$vocab["norights"]           = "Nincs jogosultságod az oldal megtekintéséhez.";
+$vocab["please_login"]       = "Kérlek, jelentkezz be";
+$vocab["users.name"]          = "Felhasználónév";
+$vocab["users.password"]      = "Jelszó";
+$vocab["users.level"]         = "Jogosultságok";
+$vocab["unknown_user"]       = "Ismeretlen felhasználó";
+$vocab["you_are"]            = "Belépett felhasználó:";
+$vocab["login"]              = "Bejelentkezés";
+$vocab["logoff"]             = "Kijelentkezés";
+
+// Database upgrade code
+$vocab["database_login"]           = "Adatbázis-hozzáférés";
+$vocab["upgrade_required"]         = "Az adatbázis frissítésére van szükség. Kérlek, készíts mentést az adatbázisról, mielőtt folytatod!";
+$vocab["supply_userpass"]          = "Kérlek, add meg a DB-adminisztrátor hozzáférését.";
+$vocab["contact_admin"]            = "Ha nem te vagy a tárgyalófoglaló-rendszer adminisztrátora, akkor írj a $mrbs_admin címre.";
+$vocab["upgrade_to_version"]       = "Adatbázis-verzió frissítése:";
+$vocab["upgrade_to_local_version"] = "Helyi adatbázis-verzió frissítése:";
+$vocab["upgrade_completed"]        = "Az adatbázis frissítése megtörtént.";
+
+// User access levels
+$vocab["level_0"]            = "nincs";
+$vocab["level_1"]            = "felhasználó";
+$vocab["level_2"]            = "adminisztrátor";
+$vocab["level_3"]            = "user adminisztrátor";
+
+// Authentication database
+$vocab["user_list"]          = "Felhasználók listája";
+$vocab["edit_user"]          = "Felhasználó szerkesztése";
+$vocab["delete_user"]        = "Felhasználó törlése";
+//$vocab["users.name"]         = Use the same as above, for consistency.
+//$vocab["users.password"]     = Use the same as above, for consistency.
+$vocab["users.email"]         = "Email";
+$vocab["password_twice"]     = "A jelszó módosításához add meg kétszer egymás után az új jelszót.";
+$vocab["passwords_not_eq"]   = "A megadott jelszavak nem egyeznek!";
+$vocab["password_invalid"]   = "A jelszó nem felel meg a házirendnek. A jelszó legalább:";
+$vocab["policy_length"]      = "karakter";
+$vocab["policy_alpha"]       = "betű";
+$vocab["policy_lower"]       = "kisbetű";
+$vocab["policy_upper"]       = "nagybetű";
+$vocab["policy_numeric"]     = "szám";
+$vocab["policy_special"]     = "speciális karakter";
+$vocab["add_new_user"]       = "Új felhasználó";
+$vocab["action"]             = "Művelet";
+$vocab["user"]               = "Felhasználó";
+$vocab["administrator"]      = "Adminisztrátor";
+$vocab["unknown"]            = "Ismeretlen";
+$vocab["ok"]                 = "OK";
+$vocab["show_my_entries"]    = "Kattints ide az összes bejegyzés megjelenítéséhez";
+$vocab["no_users_initial"]   = "Az adatbázis nem tartalmaz felhasználókat, az első felhasználó létrehozását most megteheted.";
+$vocab["no_users_create_first_admin"] = "Hozz létre egy adminisztrátori jogokkal rendelkező felhasználót, majd jelentkezz be, ha más felhasználókat is szeretnél létrehozni.";
+$vocab["warning_last_admin"] = "Figyelem! Ez az utolsó adminisztrátor jogú felhasználó, ezért nem törölhető.";
+
+// Used in search.php
+$vocab["invalid_search"]     = "Érvénytelen keresési kulcsszó.";
+$vocab["search_results"]     = "Találatok a következőhöz:";
+$vocab["nothing_found"]      = "Nincs találat.";
+$vocab["records"]            = "Rekordok ";
+$vocab["through"]            = " - ";
+$vocab["of"]                 = " / ";
+$vocab["previous"]           = "Előző";
+$vocab["next"]               = "Következő";
+$vocab["entry"]              = "Bejegyzés";
+$vocab["advanced_search"]    = "Fejlett keresés";
+$vocab["search_button"]      = "Keresés";
+$vocab["search_for"]         = "Kulcsszó:";
+// gkiss - tesztelendő!
+$vocab["from"]               = "";
+
+// Used in report.php
+$vocab["report_on"]             = "Meetingek riportja";
+$vocab["report_start"]          = "Riport kezdete";
+$vocab["report_end"]            = "Riport vége";
+$vocab["match_area"]            = "Szűrés helyszínre";
+$vocab["match_room"]            = "Szűrés tárgyalóra";
+$vocab["match_type"]            = "Szűrés típusa";
+$vocab["ctrl_click_type"]       = "Tartsd lenyomva a Ctrl billentyűt több típus kijelöléséhez.";
+$vocab["match_entry"]           = "Szűrés rövid leírásra";
+$vocab["match_descr"]           = "Szűrés részletes leírásra";
+$vocab["include"]               = "Riport tartalma";
+$vocab["report_only"]           = "Csak riport";
+$vocab["summary_only"]          = "Csak összesítés";
+$vocab["report_and_summary"]    = "Riport és összesítés";
+$vocab["report_as_csv"]         = "Riport CSV formátumban";
+$vocab["summary_as_csv"]        = "Összesítés CSV formátumban";
+$vocab["report_as_ical"]        = "Riport iCalendar formátumban (.ics fájl) - ismétlődések kiszűrésével";
+$vocab["summarize_by"]          = "Összesítés";
+$vocab["sum_by_descrip"]        = "Rövid leírás";
+$vocab["sum_by_creator"]        = "Létrehozó";
+$vocab["sum_by_type"]           = "Típus";
+$vocab["entry_found"]           = "bejegyzés";
+$vocab["entries_found"]         = "bejegyzés";
+// gkiss - ezt csekkolni kell...
+$vocab["summary_header"]        = "Óraszámok szerinti összesítés";
+$vocab["summary_header_per"]    = "Ismétlődés szerinti összesítés";
+$vocab["summary_header_both"]   = "Ismétlődésenkénti óraszámok szerinti összesítés";
+$vocab["entries"]               = "bejegyzés";
+$vocab["total"]                 = "Összesítés";
+$vocab["submitquery"]           = "Riport futtatása";
+$vocab["sort_rep"]              = "Riport rendezése";
+$vocab["sort_rep_time"]         = "Kezdeti dátum/idő";
+$vocab["fulldescription_short"] = "Teljes leírás";
+$vocab["both"]                  = "Mind";
+$vocab["privacy_status"]        = "Privacy állapot szerint (publikus/privát)";
+$vocab["search_criteria"]       = "Keresési kritérium";
+$vocab["presentation_options"]  = "Kimeneti opciók";
+$vocab["delete_entries"]        = "Bejegyzések törlése";
+$vocab["delete_entries_warning"] = "FIGYELEM! Ez a művelet törölni fogja az összes olyan rekordot " .
+                                   "amire illeszkednek a keresési feltételek. Ez a művelet nem vonható vissza. " .
+                                   "Biztos vagy benne, hogy törlöd a bejegyzéseket?\n\n" .
+                                   "Törlendő rekordok száma: ";
+$vocab["delete_entries_failed"] = "A bejegyzéseket nem sikerült törölni.";
+
+// Used in week.php
+$vocab["weekbefore"]         = "Előző hét";
+$vocab["weekafter"]          = "Következő hét";
+$vocab["gotothisweek"]       = "Aktuális hét";
+
+// Used in month.php
+$vocab["monthbefore"]        = "Előző hónap";
+$vocab["monthafter"]         = "Következő hónap";
+$vocab["gotothismonth"]      = "Aktuális hónap";
+
+// Used in {day week month}.php
+$vocab["no_rooms_for_area"]  = "Nincsenek tárgyalók definiálva ehhez a területhez.";
+
+// Used in admin.php
+$vocab["edit"]               = "Szerkesztés";
+$vocab["delete"]             = "Törlés";
+$vocab["rooms"]              = "Tárgyalók";
+$vocab["in"]                 = " a következő helyen:";
+$vocab["noareas"]            = "Nincsenek helyszínek definiálva.";
+$vocab["noareas_enabled"]    = "Nincsenek engedélyezett helyszínek.";
+$vocab["addarea"]            = "Helyszín hozzáadása";
+$vocab["name"]               = "Név";
+$vocab["noarea"]             = "Nincs kiválasztott helyszín.";
+$vocab["browserlang"]        = "A böngésződ az alábbi sorrend szerint részesíti előnyben a nyelveket";
+$vocab["addroom"]            = "Új tárgyaló";
+$vocab["capacity"]           = "Férőhelyek száma";
+$vocab["norooms"]            = "Nincsenek tárgyalók definiálva.";
+$vocab["norooms_enabled"]    = "Nincsenek engedélyezett tárgyalók.";
+$vocab["administration"]     = "Tárgyalók részletei";
+$vocab["invalid_area_name"]  = "Ez a helyszínnév már használatban van!";
+$vocab["empty_name"]         = "Nem adtál meg nevet!";
+
+// Used in edit_area_room.php
+$vocab["editarea"]                = "Helyszín szerkesztése";
+$vocab["change"]                  = "Módosítás";
+$vocab["backadmin"]               = "Vissza a tárgyalókhoz";
+$vocab["editroomarea"]            = "Helyszín vagy tárgyaló leírásának szerkesztése";
+$vocab["editroom"]                = "Tárgyaló szerkesztése";
+$vocab["viewroom"]                = "Tárgyaló megtekintése";
+$vocab["update_room_failed"]      = "A tárgyaló frissítése nem sikerült: ";
+$vocab["error_room"]              = "Hiba: a tárgyaló ";
+$vocab["not_found"]               = " nem található.";
+$vocab["update_area_failed"]      = "A helyszín frissítése nem sikerült: ";
+$vocab["error_area"]              = "Hiba: A helyszín ";
+$vocab["room_admin_email"]        = "Tárgyaló admin email címe";
+$vocab["area_admin_email"]        = "Helszín admin email címe";
+$vocab["area_first_slot_start"]   = "Első slot kezdete";
+$vocab["area_last_slot_start"]    = "Utolsó slot kezdete";
+$vocab["area_res_mins"]           = "Részletesség (percben kifejezve)";
+$vocab["area_def_duration_mins"]  = "Alapértelmezett időtartam (percben kifejezve)";
+$vocab["invalid_area"]            = "Érvénytelen helyszín!";
+$vocab["invalid_room_name"]       = "A megadott tárgyalónév már foglalt ezen a helyszínen!";
+$vocab["invalid_email"]           = "Érvénytelen email cím.";
+$vocab["invalid_resolution"]      = "Érvénytelen beállítás, ellenőrizd a slotoknál és a részletességnél megadott értékeket!";
+$vocab["too_many_slots"]          = 'Növeld meg a $max_slots értékét a konfigurációs fájlban!';
+$vocab["general_settings"]        = "Általános";
+$vocab["time_settings"]           = "Slot idők";
+$vocab["confirmation_settings"]   = "Megerősítés beállításai";
+$vocab["allow_confirmation"]      = "Függőben lévő foglalások engedélyezése";
+$vocab["default_settings_conf"]   = "Alapértelmezett beállítások";
+$vocab["default_confirmed"]       = "Megerősítve";
+$vocab["default_tentative"]       = "Függőben";
+$vocab["approval_settings"]       = "Jóváhagyási beállítások";
+$vocab["enable_approval"]         = "Jóváhagyása szükséges a foglaláshoz";
+$vocab["enable_reminders"]        = "A felhasználók küldhetnek emlékeztetőt az adminisztrátornak";
+$vocab["private_settings"]        = "Privacy beállítások";
+$vocab["allow_private"]           = "Privát foglalások engedélyezése";
+$vocab["force_private"]           = "Privát foglalások kikényszerítése";
+$vocab["default_settings"]        = "Alapértelmezett/kikényszerített beállítások";
+$vocab["default_private"]         = "Privát";
+$vocab["default_public"]          = "Nyilvános";
+$vocab["private_display"]         = "Privacy beállítások (megjelenés)";
+$vocab["private_display_label"]   = "Hogyan jelenjenek meg a privát foglalások?";
+$vocab["private_display_caution"] = "FIGYELEM: kérlek, vedd figyelembe a privacy szempontokat, mielőtt bármit is átállítasz itt!";
+$vocab["treat_respect"]           = "A foglalás privacy beállításának megtartása";
+$vocab["treat_private"]           = "Minden foglalás privátként kezelendő, figyelmen kívül hagyva a foglalás beállításait";
+$vocab["treat_public"]            = "Minden foglalás nyilvánosként kezelendő, figyelmen kívül hagyva a foglalás beállításait";
+$vocab["sort_key"]                = "Rendezési kulcs";
+$vocab["sort_key_note"]           = "A tárgyalók rendezéséhez használatos kulcs";
+$vocab["booking_policies"]        = "Foglalási házirendek";
+$vocab["min_book_ahead"]          = "Előrefoglalás minimuma";
+$vocab["max_book_ahead"]          = "Előrefoglalás maximuma";
+$vocab["custom_html"]             = "Saját HTML-kód";
+$vocab["custom_html_note"]        = "Itt megadhatsz egy egyedi HTML-kódot, ami a tárgyaló oldalán fog megjelenni (pl. beágyazott Google térkép).";
+$vocab["email_list_note"]         = "Itt adhatod meg az email címek listáját vesszővel vagy újsor-karakterekkel elválasztva";
+$vocab["mode"]                    = "Mód";
+$vocab["mode_periods"]            = "(ismétlődések)";
+$vocab["mode_times"]              = "(óraszám)";
+// gkiss - ez mit jelent??
+$vocab["times_only"]              = "Csak idők";
+$vocab["enabled"]                 = "Engedélyezve";
+$vocab["disabled"]                = "Letiltva";
+$vocab["disabled_area_note"]      = "A helyszín letiltása azt eredményezi, hogy nem fog megjelenni a naptáras nézetekben, " .
+                                    "illetve nem lehet majd tárgyalókat foglalni ezen a helyszínen. A meglévő foglalások " .
+                                    "megmaradnak és szerepelni fognak a keresések és riportok kimeneteiben.";
+$vocab["disabled_room_note"]      = "Ha letiltod a tárgyalót, akkor az nem fog megjelenni a naptári nézetekben " .
+                                    "és nem is lehet majd foglalásokat felvinni a letiltott tárgyalóhoz. Ezzel szemben a meglévő foglalások " .
+                                    "megmaradnak, és szerepelni fognak a keresések és a riportok kimeneteiben.";
+$vocab["book_ahead_note_periods"] = "Ismétlődések használatakor az előre foglalások lefelé kerekítve fognak megjelenni a hozzájuk legközelebb eső nap irányába.";
+
+// Used in edit_users.php
+$vocab["name_empty"]         = "A név megadása kötelező.";
+$vocab["name_not_unique"]    = "már létező név. Kérlek, válassz egy másik nevet.";
+
+// Used in del.php
+$vocab["deletefollowing"]    = "Ez a művelet törli az alábbi foglalásokat";
+$vocab["sure"]               = "Biztos vagy benne?";
+$vocab["YES"]                = "IGEN";
+$vocab["NO"]                 = "NEM";
+$vocab["delarea"]            = "A helyszín törlése előtt törölnöd kell a helyszínhez tartozó tárgyalókat<p>";
+
+// Used in help.php
+$vocab["about_mrbs"]         = "Az MRBS-ről";
+$vocab["database"]           = "Adatbázis";
+$vocab["system"]             = "Rendszer";
+$vocab["servertime"]         = "Rendszeridő";
+$vocab["please_contact"]     = "Kérlek, vedd fel a kapcsolatot az adminisztrátorral (";
+$vocab["for_any_questions"]  = "), ha kérdésed van a rendszer működésével kapcsolatban.";
+
+// Used in mysql.inc AND pgsql.inc
+$vocab["failed_connect_db"]  = "Súlyos hiba történt: nem sikerült kapcsolódni az adatbázishoz.";
+
+// Used in DataTables
+$vocab["show_hide_columns"]  = "Oszlopok megjelenítése / elrejtése";
+$vocab["restore_original"]   = "Eredeti állapot visszaállítása";
+
+// Entry types
+$vocab["type.I"]            = "Belső";
+$vocab["type.E"]            = "Külső";
+ 
+// General
+$vocab["fatal_db_error"]     = "Súlyos hiba történt: az adatbázis nem érhető el jelen pillanatban, kérlek, próbáld újra később.";
+$vocab["back"]               = "Vissza";
+?>
