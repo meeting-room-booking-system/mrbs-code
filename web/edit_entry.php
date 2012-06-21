@@ -649,6 +649,10 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
   {
     // If it's a mandatory field then add the HTML5 required and pattern attributes
     $attributes = (isset($is_mandatory_field["entry.$key"]) && $is_mandatory_field["entry.$key"]) ? 'type="text" required pattern="' . REGEX_TEXT_POS . '"' : NULL;
+    if (($field['nature'] == 'integer') && ($field['length'] > 2))
+    {
+      $attributes .= 'type="number" step="1"';
+    }
     generate_input($label_text, $var_name, $value, $disabled, NULL, $attributes);
   }
   if ($disabled)

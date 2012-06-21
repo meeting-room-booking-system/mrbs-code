@@ -392,7 +392,13 @@ function generate_input($label_text, $name, $value, $disabled=FALSE, $maxlength=
   $html .= "<input" . ((isset($attributes)) ? " $attributes" : "") . " id=\"$name\" name=\"$name\"";
   $html .= ($disabled) ? " disabled=\"disabled\"" : '';
   $html .= (isset($maxlength)) ? " maxlength=\"$maxlength\"" : '';
-  $html .= " value=\"" . htmlspecialchars($value) . "\">\n";
+  // Don't give an empty string if it's a number as that's not a valid floating point number
+  // and will fail HTML5 validation
+  if (isset($attributes) && (strpos($attributes, 'type="number"') !== FALSE) && ($value != ''))
+  {
+    $html .= " value=\"" . htmlspecialchars($value) . "\"";
+  }
+  $html .= ">\n";
   // and a hidden input if the input box is disabled
   if ($disabled)
   {
