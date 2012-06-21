@@ -1,4 +1,4 @@
-﻿<?php // -*-mode: PHP; coding:utf-8;-*-
+<?php // -*-mode: PHP; coding:utf-8;-*-
 // $Id$
 
 // This file contains PHP code that specifies language specific strings
@@ -93,8 +93,6 @@ $vocab["ctrl_click"]         = "ใช้ คอลโทรล คลิก เ
 $vocab["entryid"]            = "เพิ่มหมายเลขประจำตัว ";
 $vocab["repeat_id"]          = "ใส่หมายเลขประจำตัวอีกครั้ง ";
 $vocab["you_have_not_entered"] = "คุณไม่เพิ่ม";
-$vocab["you_have_not_selected"] = "คุณไม่เลือก";   
-$vocab["valid_room"]         =  "ห้อง ";
 $vocab["brief_description"]  = "คำอธิบายโดยย่อ ";			                  
 $vocab["useful_n-weekly_value"] = "ประโยชน์ของ n - ทุกสัปดาห์ที่มีคุณค่า.";
 $vocab["status"]             = "สถานะ";

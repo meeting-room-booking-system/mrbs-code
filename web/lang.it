@@ -80,8 +80,6 @@ $vocab["ctrl_click"]         = "Usa il tasto Ctrl per selezionare piu' di una st
 $vocab["entryid"]            = "Entry ID ";
 $vocab["repeat_id"]          = "Repeat ID "; 
 $vocab["you_have_not_entered"] = "Non hai inserito";
-$vocab["you_have_not_selected"] = "Non hai selezionato";
-$vocab["valid_room"]         = "stanza.";
 $vocab["brief_description"]  = "Breve descrizione.";
 $vocab["useful_n-weekly_value"] = "utile valore n-settimanale.";
 

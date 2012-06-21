@@ -379,17 +379,17 @@ function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
 
 
 // Generate an input field with an associated label
-// Optional fifth parameter: $maxlength - the maximum length of input allowed
-function generate_input($label_text, $name, $value, $disabled=FALSE)
+
+//   $maxlength   the maximum length of input allowed
+
+//   $attributes  additional attributes, allowing HTML5 input types such as number and
+//                email to be used.   Note that additional attributes such as min, etc.
+//                can also be included in the string, eg 'type="number" min="1" step="1"'.
+function generate_input($label_text, $name, $value, $disabled=FALSE, $maxlength=NULL, $attributes=NULL)
 {
-  // get any optional fifth parameter
-  if (func_num_args() > 4)
-  {
-    $maxlength = func_get_arg(4);
-  }
   // generate the HTML
   $html  = "<label for=\"$name\">$label_text</label>\n";
-  $html .= "<input id=\"$name\" name=\"$name\" type=\"text\"";
+  $html .= "<input" . ((isset($attributes)) ? " $attributes" : "") . " id=\"$name\" name=\"$name\"";
   $html .= ($disabled) ? " disabled=\"disabled\"" : '';
   $html .= (isset($maxlength)) ? " maxlength=\"$maxlength\"" : '';
   $html .= " value=\"" . htmlspecialchars($value) . "\">\n";
@@ -411,12 +411,10 @@ function generate_select($label_text, $name, $current, $options,
   // generate the HTML
   $html  = "<label for=\"$name\">$label_text</label>\n";
   $html .= "<select id=\"$name\" name=\"$name\"";
-  $html .= ($disabled) ? " disabled=\"disabled\"" : '';
+  $html .= ($disabled) ? " disabled=\"disabled\"" : "";
+  $html .= ($mandatory) ? " required" : "";
   $html .= ">\n";
-  if ($mandatory)
-  {
-    $options = array_merge(array('' => ''),$options);
-  }
+
   // We can cope with both associative and ordinary arrays
   if (is_assoc($options))
   {
@@ -450,12 +448,15 @@ function generate_select($label_text, $name, $current, $options,
 // Generate a textarea with an associated label
 // If $disabled is TRUE, then the textarea is disabled and a hidden
 // input is generated to pass through $value
-function generate_textarea($label_text, $name, $value, $disabled=FALSE)
+//
+//   $attributes  additional attributes, allowing HTML5 input types such as required
+function generate_textarea($label_text, $name, $value, $disabled=FALSE, $attributes=NULL)
 {
   // generate the HTML
   $html  = "<label for=\"$name\">$label_text</label>\n";
   // textarea rows and cols are overridden by CSS height and width
   $html .= "<textarea id=\"$name\" name=\"$name\" rows=\"8\" cols=\"40\"";
+  $html .= (isset($attributes)) ? " $attributes" : "";
   $html .= ($disabled) ? " disabled=\"disabled\"" : '';
   $html .= ">" . htmlspecialchars($value) . "</textarea>\n";
   // and a hidden input if the textarea is disabled

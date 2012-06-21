@@ -80,8 +80,6 @@ $vocab["ctrl_click"]         = "Uporabite Ctrl+klik za izbiro več prostorov";
 $vocab["entryid"]            = "ID vnosa ";
 $vocab["repeat_id"]          = "ID ponavljanj"; 
 $vocab["you_have_not_entered"] = "Niste vnesli";
-$vocab["you_have_not_selected"] = "Niste izbrali";
-$vocab["valid_room"]         = "prostor.";
 $vocab["brief_description"]  = "kratek opis.";
 $vocab["useful_n-weekly_value"] = "prave vrednosti za n-tednov.";
 

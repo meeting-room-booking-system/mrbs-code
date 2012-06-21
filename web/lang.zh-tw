@@ -78,8 +78,6 @@ $vocab["ctrl_click"]         = "用Control+滑鼠右鍵可以重覆選擇";
 $vocab["entryid"]            = "登記序號 ";
 $vocab["repeat_id"]          = "重覆序號 "; 
 $vocab["you_have_not_entered"] = "你沒有輸入";
-$vocab["you_have_not_selected"] = "你沒有選";
-$vocab["valid_room"]         = "會議室/設備.";
 $vocab["brief_description"]  = "簡要說明.";
 $vocab["useful_n-weekly_value"] = "可以提供預約的星期.";
 

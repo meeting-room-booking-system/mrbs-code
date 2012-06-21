@@ -208,6 +208,8 @@ if (isset($id) && ($id == ''))
   unset($id);
 }
 
+// Trim the name field to get rid of any leading or trailing whitespace
+$name = trim($name);
 // Truncate the name field to the maximum length as a precaution.
 // Although the MAXLENGTH attribute is used in the <input> tag, this can
 // sometimes be ignored by the browser, for example by Firefox when 

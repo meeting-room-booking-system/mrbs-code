@@ -502,6 +502,14 @@ $working_days = array(1,2,3,4,5);  // Mon-Fri
 // to 'Coffee, Tea and Biscuits', without having to alter the database.   It can also
 // be useful if the database table is being shared with another application.
 // MRBS will auto-detect whether the array is associative.
+//
+// If you want to make the select field a mandatory field (see below) then include
+// an empty string as one of the values, eg
+//
+//$select_options['entry.catering'] = array(''  => 'Please select one option',
+//                                          'c' => 'Coffee', 
+//                                          's' => 'Sandwiches',
+//                                          'h' => 'Hot Lunch');
 
 $is_mandatory_field = array();
 // You can define custom entry fields to be mandatory by setting

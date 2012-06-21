@@ -615,7 +615,7 @@ div#edit_entry_submit_save {float: left; clear: none; width: auto}
 .form_general input.all_day, .form_general input#area_def_duration_all_day {width: auto; margin-left: 3.0em; margin-right: 0.5em}
 .form_general #div_rooms select, .form_general #div_typematch select {float: left; margin-right: 2.0em}
 fieldset#rep_info {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.7em}
-.form_general input#rep_num_weeks {width: 2.0em}
+.form_general input#rep_num_weeks {width: 4em}
 
 .edit_entry span#end_time_error {display: block; float: left; margin-left: 2em; font-weight: normal}
 .edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}

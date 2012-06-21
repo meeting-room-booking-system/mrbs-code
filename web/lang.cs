@@ -78,8 +78,6 @@ $vocab["ctrl_click"]         = "Užít CTRL pro výběr více místností";
 $vocab["entryid"]            = "Vstupní ID ";
 $vocab["repeat_id"]          = "ID pro opakování"; 
 $vocab["you_have_not_entered"] = "Nevložil jste";
-$vocab["you_have_not_selected"] = "Nevybral jste";
-$vocab["valid_room"]         = "prostředek.";
 $vocab["brief_description"]  = "Krátký popis.";
 $vocab["useful_n-weekly_value"] = "použitelná x-týdenní hodnota.";
 

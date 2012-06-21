@@ -78,8 +78,6 @@ $vocab["ctrl_click"]         = "用Ctrl+鼠标右键可以重复选择";
 $vocab["entryid"]            = "登记序号 ";
 $vocab["repeat_id"]          = "重复序号 "; 
 $vocab["you_have_not_entered"] = "你没有输入";
-$vocab["you_have_not_selected"] = "你没有选择";
-$vocab["valid_room"]         = "会议室/设备.";
 $vocab["brief_description"]  = "简要说明.";
 $vocab["useful_n-weekly_value"] = "可以提供预订的星期.";
 

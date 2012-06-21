@@ -78,8 +78,6 @@ $vocab["ctrl_click"]         = "Elementu bat gehiago aukeratzeko Kontrol-klik eg
 $vocab["entryid"]            = "IDa sartu";
 $vocab["repeat_id"]          = "IDa errepikatu"; 
 $vocab["you_have_not_entered"] = "Ez duzu sartu ";
-$vocab["you_have_not_selected"] = "Ez duzu aukeratu ";
-$vocab["valid_room"]         = "baliabidea.";
 $vocab["brief_description"]  = "Deskribapen laburra.";
 $vocab["useful_n-weekly_value"] = "n astetan baliagarria.";
 

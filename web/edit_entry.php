@@ -51,6 +51,45 @@
 require_once "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
+// Regular expressions used to define mandatory text fields, eg the 'name' field.   The first
+// is a positive version used in the HTML5 pattern attribute.   The second is a negative version
+// used by JavaScript for client side validation if the browser does not support pattern validation.
+define('REGEX_TEXT_POS', '\s*\S+.*');        // At least one non-whitespace character (we will trim in the handler)
+define('REGEX_TEXT_NEG', '/(^$)|(^\s+$)/');  // Cannot be blank or all whitespaces
+
+// Minimum useful value for rep_num_weeks
+define('REP_NUM_WEEKS_MIN',  2);  // In theory 1 would be OK, but then you'd use Weekly
+
+
+$fields = sql_field_info($tbl_entry);
+$custom_fields = array();
+
+// Fill $edit_entry_field_order with not yet specified entries.
+$entry_fields = array('name', 'description', 'start_date', 'end_date', 'areas',
+                      'rooms', 'type', 'confirmation_status', 'privacy_status');
+                      
+foreach ($entry_fields as $field)
+{
+  if (!in_array($field, $edit_entry_field_order))
+  {
+    $edit_entry_field_order[] = $field;
+  }
+}
+
+$custom_fields_map = array();
+foreach ($fields as $field)
+{
+  $key = $field['name'];
+  if (!in_array($key, $standard_fields['entry']))
+  {
+    $custom_fields_map[$key] = $field;
+    if (!in_array($key, $edit_entry_field_order))
+    {
+      $edit_entry_field_order[] = $key;
+    }
+  }
+}
+
 // Generate a time or period selector starting with $first and ending with $last.
 // $time is a full Unix timestamp and is the current value.  The selector returns
 // the start time in seconds since the beginning of the day for the start of that slot.
@@ -135,7 +174,11 @@ function create_field_entry_name($disabled=FALSE)
   }
   else
   {
-    generate_input($label_text, 'name', $name, $disabled, $maxlength['entry.name']);
+    // 'required' is there to prevent null input (pattern doesn't seem to be triggered until
+    // there is sonething there).   [\S]+.* is any non-whitespace character followed by any number
+    // of other characters except a line terminator
+    generate_input($label_text, 'name', $name, $disabled, $maxlength['entry.name'], 'type="text" required pattern="' . REGEX_TEXT_POS . '"');
+    //generate_input($label_text, 'name', $name, $disabled, $maxlength['entry.name'], 'required pattern="[\S]+.*"');
   }
   echo "</div>\n";
 }
@@ -154,7 +197,8 @@ function create_field_entry_description($disabled=FALSE)
   }
   else
   {
-    generate_textarea($label_text, 'description', $description, $disabled);
+    $attributes = (isset($is_mandatory_field['entry.description']) && $is_mandatory_field['entry.description']) ? "required" : "";
+    generate_textarea($label_text, 'description', $description, $disabled, $attributes);
   }
   echo "</div>\n";
 }
@@ -442,7 +486,7 @@ function create_field_entry_rooms($disabled=FALSE)
   echo "<div id=\"div_rooms\">\n";
   echo "<label for=\"rooms\">" . get_vocab("rooms") . ":</label>\n";
   echo "<div class=\"group\">\n";
-  echo "<select id=\"rooms\" name=\"rooms[]\"" .
+  echo "<select id=\"rooms\" name=\"rooms[]\" required" .
     (($multiroom_allowed) ? " multiple=\"multiple\"" : "") .
     (($disabled) ? " disabled=\"disabled\"" : "") .
     " size=\"5\">\n";
@@ -570,6 +614,8 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
   $var_name = VAR_PREFIX . $key;
   $value = $custom_fields[$key];
   $label_text = get_loc_field_name($tbl_entry, $key) . ":";
+  $mandatory = (array_key_exists("entry.$key", $is_mandatory_field) &&
+                $is_mandatory_field["entry.$key"]) ? true : false;
   echo "<div>\n";
   // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
   // assume are intended to be booleans)
@@ -581,13 +627,12 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
       "id=\"$var_name\" name=\"$var_name\" value=\"1\" " .
       ((!empty($value)) ? " checked=\"checked\"" : "") .
       (($disabled) ? " disabled=\"disabled\"" : "") .
+      (($mandatory) ? " required" : "") .
       ">\n";
   }
   // Output a select box if they want one
   elseif (!empty($select_options["entry.$key"]))
   {
-    $mandatory = (array_key_exists("entry.$key", $is_mandatory_field) &&
-      $is_mandatory_field["entry.$key"]) ? true : false;
     generate_select($label_text, $var_name, $value,
       $select_options["entry.$key"], $mandatory, $disabled);
   }
@@ -595,12 +640,16 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
   // text input
   elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
   {
-    generate_textarea($label_text, $var_name, $value, $disabled);   
+    // HTML5 does not allow a pattern attribute for the textarea element
+    $attributes = (isset($is_mandatory_field["entry.$key"]) && $is_mandatory_field["entry.$key"]) ? "required" : "";
+    generate_textarea($label_text, $var_name, $value, $disabled, $attributes);   
   }
   // Otherwise output a text input
   else
   {
-    generate_input($label_text, $var_name, $value, $disabled);
+    // If it's a mandatory field then add the HTML5 required and pattern attributes
+    $attributes = (isset($is_mandatory_field["entry.$key"]) && $is_mandatory_field["entry.$key"]) ? 'type="text" required pattern="' . REGEX_TEXT_POS . '"' : NULL;
+    generate_input($label_text, $var_name, $value, $disabled, NULL, $attributes);
   }
   if ($disabled)
   {
@@ -690,9 +739,6 @@ if (!isset($returl))
 //  Time
 //  Duration
 //  Internal/External
-
-$fields = sql_field_info($tbl_entry);
-$custom_fields = array();
 
 // Firstly we need to know if this is a new booking or modifying an old one
 // and if it's a modification we need to get all the old data from the db.
@@ -904,6 +950,7 @@ else
   $type          = $default_type;
   $room_id       = $room;
   $rep_id        = 0;
+  $rep_num_weeks = REP_NUM_WEEKS_MIN;     // We need to set this so that HTML5 validates the field properly
   if (!isset($rep_type))  // We might have set it through a drag selection
   {
     $rep_type      = REP_NONE;
@@ -1079,129 +1126,226 @@ foreach ($areas as $area)
     echo "areas[${area['id']}]['$key'] = $value;\n";
   }
 }
-?>
 
-// do a little form verifying
-function validate(form_id)
+
+// Set the error messages to be used for the various fields.     We do this twice:
+// once to redefine the HTML5 error message and once for JavaScript alerts, for those
+// browsers not supporting HTML5 field validation.
+?>
+function validationMessages()
 {
   <?php
-  // First of all check that a name (brief description) has been entered.
-  // Only do this if the name is being entered via an INPUT box.   If it's
-  // being entered via a SELECT box there's no need to do this because there's
-  // bound to be a value and the test below will fail on some browsers (eg IE)
+  // First of all create a property in the vocab object for each of the mandatory
+  // fields.    These will be the 'name' and 'rooms' fields and any other fields
+  // defined by the config variable $is_mandatory_field
   ?>
-  var form = document.getElementById(form_id);
-  if (form.name.tagName.toLowerCase() == 'input')
+  validationMessages.vocab = new Object();
+  validationMessages.vocab['name'] = '';
+  validationMessages.vocab['rooms'] = '';
+  <?php
+  foreach ($is_mandatory_field as $key => $value)
   {
-    // null strings and spaces only strings not allowed
-    if(/(^$)|(^\s+$)/.test(form.name.value))
+    list($table, $fieldname) = explode('.', $key, 2);
+    if ($table == 'entry')
     {
-      alert("<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('brief_description')) ?>");
+      ?>
+      validationMessages.vocab['<?php echo escape_js(VAR_PREFIX . $fieldname) ?>'] = '';
+      <?php
+    }
+  }
+
+  // Then (a) fill each of those properties with an error message and (b) redefine
+  // the HTML5 error message
+  ?>
+  for (var key in validationMessages.vocab)
+  {
+    validationMessages.vocab[key] = $("label[for=" + key + "]").html();
+    validationMessages.vocab[key] = '"' + validationMessages.vocab[key].replace(/:$/, '') + '" ';
+    validationMessages.vocab[key] += '<?php echo escape_js(get_vocab("is_mandatory_field")) ?>';
+    
+    var field = document.getElementById(key);
+    if (field.setCustomValidity && field.willValidate)
+    {
+      <?php
+      // We define our own custom event called 'validate' that is triggered on the
+      // 'change' event for checkboxes and select elements, and the 'input' even
+      // for all others.   We cannot use the change event for text input because the
+      // change event is only triggered when the element loses focus and we want the
+      // validation to happen whenever a character is input.   And we cannot use the
+      // 'input' event for checkboxes or select elements because it is not triggered
+      // on them.
+      ?>
+      $(field).bind('validate', function(e) {
+        <?php
+        // need to clear the custom error message otherwise the browser will
+        // assume the field is invalid
+        ?>
+        e.target.setCustomValidity("");
+        if (!e.target.validity.valid)
+        {
+          e.target.setCustomValidity(validationMessages.vocab[key]);
+        }
+      });
+      $(field).filter('select, [type="checkbox"]').bind('change', function(e) {
+        $(this).trigger('validate');
+      });
+      $(field).not('select, [type="checkbox"]').bind('input', function(e) {
+        $(this).trigger('validate');
+      });
+      <?php
+      // Trigger the validate event when the form is first loaded
+      ?>
+      $(field).trigger('validate');
+    }
+  }
+}
+
+
+<?php
+// do a little form verifying
+?>
+function validate(form)
+{
+  var testInput = document.createElement("input");
+  var testSelect = document.createElement("select");
+  var validForm = true;
+  
+  <?php
+  // Mandatory fields (INPUT elements, except for checkboxes).
+  // Only necessary if the browser doesn't support the HTML5 pattern or
+  // required attributes
+  ?>
+  if (!("pattern" in testInput) || !("required" in testInput))
+  {
+    form.find('input').not('[type="checkbox"]').each(function() {
+      var id = $(this).attr('id');
+      if (validationMessages.vocab[id])
+      {
+        if (<?php echo REGEX_TEXT_NEG ?>.test($(this).val()))
+        {
+          alert(validationMessages.vocab[id]);
+          validForm = false;
+          return false;
+        }
+      }
+    });
+    if (!validForm)
+    {
       return false;
     }
   }
   
   <?php
-  // Check that the start date is not after the end date
+  // Mandatory fields (INPUT elements, checkboxes only).
+  // Only necessary if the browser doesn't support the HTML5 required attribute
   ?>
-  var dateDiff = getDateDifference(form);
+  if (!("required" in testInput))
+  {
+    form.find('input').filter('[type="checkbox"]').each(function() {
+      var id = $(this).attr('id');
+      if (validationMessages.vocab[id])
+      {
+        if (!$(this).is(':checked'))
+        {
+          alert(validationMessages.vocab[id]);
+          validForm = false;
+          return false;
+        }
+      }
+    });
+    if (!validForm)
+    {
+      return false;
+    }
+  }
+  
+  <?php
+  // Mandatory fields (TEXTAREA elements).
+  // Note that the TEXTAREA element only supports the "required" attribute and not
+  // the "pattern" attribute.    So we need to do these tests in all cases because
+  // the browser will let through a string consisting only of whitespace.
+  ?>
+  form.find('textarea').each(function() {
+    var id = $(this).attr('id');
+    if (validationMessages.vocab[id])
+    {
+      if (<?php echo REGEX_TEXT_NEG ?>.test($(this).val()))
+      {
+        alert(validationMessages.vocab[id]);
+        validForm = false;
+        return false;
+      }
+    }
+  });
+  if (!validForm)
+  {
+    return false;
+  }
+  
+  <?php
+  // Mandatory fields (SELECT elements).
+  // Only necessary if the browser doesn't support the HTML5 required attribute
+  ?>
+  if (!("required" in testSelect))
+  {
+    form.find('select').each(function() {
+      var id = $(this).attr('id');
+      if (validationMessages.vocab[id])
+      {
+        if ($(this).val() == '')
+        {
+          alert(validationMessages.vocab[id]);
+          validForm = false;
+          return false;
+        }
+      }
+    });
+    if (!validForm)
+    {
+      return false;
+    }
+  }
+  
+
+  var formEl = form.get(0);
+  
+  <?php // Check that the start date is not after the end date ?>
+  var dateDiff = getDateDifference(formEl);
   if (dateDiff < 0)
   {
     alert("<?php echo escape_js(get_vocab('start_after_end_long'))?>");
     return false;
   }
-
-  // check form element exist before trying to access it
-  if (form.id )
-  {
-    i1 = parseInt(form.id.value);
-  }
-  else
-  {
-    i1 = 0;
-  }
-
-  i2 = parseInt(form.rep_id.value);
-  if (form.rep_num_weeks)
-  {
-     n = parseInt(form.rep_num_weeks.value);
-  }
-  if ((!i1 || (i1 && i2)) &&
-      form.rep_type &&
-      (form.rep_type.value != <?php echo REP_NONE ?>) && 
-      form.rep_type[<?php echo REP_N_WEEKLY ?>].checked && 
-      (!n || n < 2))
-  {
-    alert("<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('useful_n-weekly_value')) ?>");
-    return false;
-  }
-  
-
-  // check that a room(s) has been selected
-  // this is needed as edit_entry_handler does not check that a room(s)
-  // has been chosen
-  if (form.elements['rooms'].selectedIndex == -1 )
-  {
-    alert("<?php echo escape_js(get_vocab('you_have_not_selected')) . '\n' . escape_js(get_vocab('valid_room')) ?>");
-    return false;
-  }
   
   <?php
-  if (count($is_mandatory_field))
-  {
-    $m_fields = array();
-    foreach ($is_mandatory_field as $field => $value)
-    {
-      if ($value)
-      {
-        $field = preg_replace('/^entry\./', 'f_', $field);
-        $m_fields[] = "'".str_replace("'", "\\'", $field)."'";
-      }
-    }
-    echo "var mandatory_fields = [".implode(', ', $m_fields)."];\n";
+  // Check that there's a sensible value for rep_num_weeks.   Only necessary
+  // if the browser doesn't support the HTML5 min and step attrubutes
   ?>
-
-    var return_val = true;
-
-    $.each(mandatory_fields,
-           function(index, value)
-           {
-             var field = $("#"+value);
-             <?php
-             // If it's a checkbox then it needs to be checked.    If it's
-             // an ordinary field then it must have some content.
-             ?>
-             if ( ((field.attr('type') !== undefined) && 
-                   (field.attr('type').toLowerCase() == 'checkbox') && 
-                   !field.attr('checked')) ||
-                  (field.val() == '') )
-             {
-               label = $("label[for="+value+"]").html();
-               label = label.replace(/:$/, '');
-               alert('"' + label + '" ' +
-                 <?php echo '"' . escape_js(get_vocab('is_mandatory_field')) . '"'; ?>);
-               return_val = false;
-             }
-           });
-    if (!return_val)
+  if (!("min" in testInput) || !(("step" in testInput)))
+  {
+    if ((form.find('input:radio[name=rep_type]:checked').val() == <?php echo REP_N_WEEKLY ?>)
+        && (form.find('#rep_num_weeks').val() < <?php echo REP_NUM_WEEKS_MIN ?>))
     {
-      return return_val;
+      alert("<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('useful_n-weekly_value')) ?>");
+      return false;
     }
-  <?php
-   
   }
-
-  // Form submit can take some times, especially if mails are enabled and
+    
+  <?php
+  // Form submit can take some time, especially if mails are enabled and
   // there are more than one recipient. To avoid users doing weird things
   // like clicking more than one time on submit button, we hide it as soon
   // it is clicked.
   ?>
-  form.save_button.disabled = true;
-
+  form.find('input[type=submit]').attr('disabled', 'disabled');
+  
+  <?php
   // would be nice to also check date to not allow Feb 31, etc...
-
+  ?>
+  
   return true;
 }
+
 
 // set up some global variables for use by OnAllDayClick(). 
 var old_start, old_end;
@@ -1300,29 +1444,7 @@ else
 
 <?php
 
-// Fill $edit_entry_field_order with not yet specified entries.
-$entry_fields = array('name', 'description', 'start_date', 'end_date', 'areas',
-  'rooms', 'type', 'confirmation_status', 'privacy_status');
-foreach( $entry_fields as $field )
-{
-  if( ! in_array( $field, $edit_entry_field_order ) )
-    $edit_entry_field_order[] = $field;
-}
-
-// CUSTOM FIELDS
-$custom_fields_map = array();
-foreach ($fields as $field)
-{
-  $key = $field['name'];
-  if (!in_array($key, $standard_fields['entry']))
-  {
-    $custom_fields_map[$key] = $field;
-    if( ! in_array( $key, $edit_entry_field_order ) )
-      $edit_entry_field_order[] = $key;
-  }
-}
-
-foreach( $edit_entry_field_order as $key )
+foreach ($edit_entry_field_order as $key)
 {
   switch( $key )
   {
@@ -1423,7 +1545,8 @@ foreach( $edit_entry_field_order as $key )
       <?php
       echo "<div>\n";
       $label_text = get_vocab("rep_num_weeks") . ":<br>" . get_vocab("rep_for_nweekly");
-      generate_input($label_text, 'rep_num_weeks', $rep_num_weeks);
+      $attributes = 'type="number" min="' . REP_NUM_WEEKS_MIN . '" step="1"';
+      generate_input($label_text, 'rep_num_weeks', $rep_num_weeks, FALSE, NULL, $attributes);
       echo "</div>\n";
       // Checkbox for skipping past conflicts
       echo "<div>\n";
@@ -1521,7 +1644,7 @@ foreach( $edit_entry_field_order as $key )
     echo "<legend></legend>\n";
     // The Back button
     echo "<div id=\"edit_entry_submit_back\">\n";
-    echo "<input class=\"submit\" type=\"submit\" name=\"back_button\" value=\"" . get_vocab("back") . "\">\n";
+    echo "<input class=\"submit\" type=\"submit\" name=\"back_button\" value=\"" . get_vocab("back") . "\" formnovalidate>\n";
     echo "</div>\n";
     
     // The Submit button

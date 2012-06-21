@@ -156,7 +156,7 @@ if (!$ajax)
       <legend><?php echo get_vocab("advanced_search") ?></legend>
         <div id="div_search_str">
           <label for="search_str"><?php echo get_vocab("search_for") ?>:</label>
-          <input type="text" id="search_str" name="search_str">
+          <input type="search" id="search_str" name="search_str">
         </div>   
         <div id="div_search_from">
           <?php

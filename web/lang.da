@@ -78,8 +78,6 @@ $vocab["ctrl_click"]         = "Hold kontroltasten nede for at vælge mere end e
 $vocab["entryid"]            = "Entry ID ";
 $vocab["repeat_id"]          = "Repeat ID "; 
 $vocab["you_have_not_entered"] = "Du har ikke indtastet et";
-$vocab["you_have_not_selected"] = "You have not selected a";
-$vocab["valid_room"]         = "room.";
 $vocab["brief_description"]  = "Kort beskrivelse.";
 $vocab["useful_n-weekly_value"] = "nyttig n-ugentlig værdi.";
 

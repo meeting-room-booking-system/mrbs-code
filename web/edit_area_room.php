@@ -1043,12 +1043,12 @@ if (isset($change_area) &&!empty($area))
       
       <div class="div_dur_mins">
       <label for="area_res_mins"><?php echo get_vocab("area_res_mins") ?>:</label>
-      <input type="text" id="area_res_mins" name="area_res_mins" value="<?php echo $resolution/60 ?>" onChange="changeSelect(this.form)">
+      <input type="number" min="1" step="1" id="area_res_mins" name="area_res_mins" value="<?php echo $resolution/60 ?>" onChange="changeSelect(this.form)">
       </div>
       
       <div class="div_dur_mins">
       <label for="area_def_duration_mins"><?php echo get_vocab("area_def_duration_mins") ?>:</label>
-      <input type="text" id="area_def_duration_mins" name="area_def_duration_mins" value="<?php echo $default_duration/60 ?>">
+      <input type="number" min="1" step="1" id="area_def_duration_mins" name="area_def_duration_mins" value="<?php echo $default_duration/60 ?>">
       <?php
       echo "<input type=\"checkbox\" id=\"area_def_duration_all_day\" name=\"area_def_duration_all_day\"" .
            (($default_duration_all_day) ? " checked=\"checked\"" : "") .

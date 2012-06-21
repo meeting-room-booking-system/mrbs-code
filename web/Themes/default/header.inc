@@ -2677,28 +2677,38 @@ $(window).load(function() {
 
 
   <?php
-  // Set up handlers if anything like a submit button is pressed.   If it's the Save
-  // button we need to validate the form first.  In addition, for all the buttons, if
-  // we are going to submit something we set some data in the form.   This allows
-  // the function that checks for a valid booking to see if the change was triggered
-  // by a Submit button being pressed, and if so, not to send an Ajax request.
+  // Set up the validation messages, but only if the function exists (which it
+  // won't if we're on the login page)
+  ?>
+  if (typeof validationMessages === 'function')
+  {
+    validationMessages();
+  }
+  
+  <?php
+  // If anything like a submit button is pressed then add a data flag to the form so
+  // that the function that checks for a valid booking can see if the change was
+  // triggered by a Submit button being pressed, and if so, not to send an Ajax request.
   ?>
   $('form#main').find('[type="submit"], [type="button"], [type="image"]').click(function() {
     var trigger = $(this).attr('name');
-    var thisForm = $(this).closest('form');
-    thisForm.data('submit', trigger);
-    if (trigger == 'save_button')
-    {
-      if (validate('main'))
-      {
-        thisForm.submit();
-        return true;
-      }
-      thisForm.removeData('submit');
-      return false;
-    }
-    return true;
+    $(this).closest('form').data('submit', trigger);
   });
+
+  $('form#main').bind('submit', function(e) {
+      if ($(this).data('submit') == 'save_button')
+      {
+        <?php // Only validate the form if the Save button was pressed ?>
+        var result = validate($(this));
+        if (!result)
+        {
+          <?php // Clear the data flag if the validation failed ?>
+          $(this).removeData('submit');
+        }
+        return result;
+      }
+      return true;
+    });
       
   <?php
   // Add Ajax capabilities (but only if we can return the result as a JSON object)
@@ -3356,7 +3366,7 @@ $(window).load(function() {
         <form id="header_search" method="get" action="search.php">
           <div>
             <a href="search.php?advanced=1"><?php echo get_vocab("search") ?>:</a>
-            <input type="text"   name="search_str" value="<?php echo htmlspecialchars($search_str) ?>">
+            <input type="search" name="search_str" value="<?php echo htmlspecialchars($search_str) ?>">
             <input type="hidden" name="day"        value="<?php echo $day        ?>">
             <input type="hidden" name="month"      value="<?php echo $month      ?>">
             <input type="hidden" name="year"       value="<?php echo $year       ?>">
