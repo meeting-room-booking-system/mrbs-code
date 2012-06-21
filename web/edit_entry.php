@@ -954,7 +954,6 @@ else
   $type          = $default_type;
   $room_id       = $room;
   $rep_id        = 0;
-  $rep_num_weeks = REP_NUM_WEEKS_MIN;     // We need to set this so that HTML5 validates the field properly
   if (!isset($rep_type))  // We might have set it through a drag selection
   {
     $rep_type      = REP_NONE;
