@@ -1196,7 +1196,7 @@ function validationMessages()
         e.target.setCustomValidity("");
         if (!e.target.validity.valid)
         {
-          e.target.setCustomValidity(validationMessages.vocab[key]);
+          e.target.setCustomValidity(validationMessages.vocab[$(e.target).attr('id')]);
         }
       });
       $(field).filter('select, [type="checkbox"]').bind('change', function(e) {
