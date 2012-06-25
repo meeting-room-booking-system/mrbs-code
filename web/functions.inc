@@ -394,7 +394,7 @@ function generate_input($label_text, $name, $value, $disabled=FALSE, $maxlength=
   $html .= (isset($maxlength)) ? " maxlength=\"$maxlength\"" : '';
   // Don't give an empty string if it's a number as that's not a valid floating point number
   // and will fail HTML5 validation
-  if (isset($attributes) && (strpos($attributes, 'type="number"') !== FALSE) && ($value != ''))
+  if (!isset($attributes) || (strpos($attributes, 'type="number"') === FALSE) || ($value != '') )
   {
     $html .= " value=\"" . htmlspecialchars($value) . "\"";
   }
