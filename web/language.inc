@@ -422,7 +422,7 @@ if (!$disable_automatic_language_changing || $cli_mode)
 
   foreach ($langs as $lang => $qual)
   {
-    $lang_file = "lang." . strtolower($lang);
+    $lang_file = "lang/lang." . strtolower($lang);
 
     // Set the locale even if MRBS hasn't got a translation, at least
     // we'll get time formats right
@@ -699,7 +699,7 @@ function set_vocab($lang)
   global $vocab, $mrbs_admin, $mrbs_company;  // Used in lang files
   
   $lang = strtolower($lang);
-  $lang_file = "lang.$lang";
+  $lang_file = "lang/lang.$lang";
   // When in CLI mode, we need to add the full path name as
   // file_exists() ignores the include path
   if ($cli_mode)
