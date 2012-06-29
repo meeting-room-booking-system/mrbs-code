@@ -850,8 +850,9 @@ function get_vocab($tag)
   {
     $vocab_array = $vocab;
   }
-
-  return $vocab_array[$tag];
+  
+  // Return the tag itself if we can't find a vocab string
+  return (isset($vocab_array[$tag])) ? $vocab_array[$tag] : $tag;
 }
 
 
