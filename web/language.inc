@@ -433,8 +433,6 @@ if (!$disable_automatic_language_changing || $cli_mode)
 
   foreach ($langs as $lang => $qual)
   {
-    $lang_file = "lang/lang." . strtolower($lang);
-
     // Set the locale even if MRBS hasn't got a translation, at least
     // we'll get time formats right
     if (!isset($locale))
