@@ -433,7 +433,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
     $body .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" . get_mail_charset() . "\">\n";
     $body .= "<title></title>\n";
     $body .= "<style type=\"text/css\">\n";
-    $css_file = 'mrbs-mail.css';
+    $css_file = 'css/mrbs-mail.css';
     if (file_exists($css_file))
     {
       $fh = fopen($css_file, 'r');
