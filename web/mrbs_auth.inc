@@ -2,7 +2,7 @@
 // $Id$
 
 // include the authentification wrappers
-require_once "auth_$auth[type].inc";
+require_once "auth/auth_$auth[type].inc";
 
 if (isset($auth['session']))
 {
