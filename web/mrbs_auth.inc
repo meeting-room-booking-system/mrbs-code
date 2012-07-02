@@ -6,7 +6,7 @@ require_once "auth_$auth[type].inc";
 
 if (isset($auth['session']))
 {
-  require_once "session_$auth[session].inc";
+  require_once "session/session_$auth[session].inc";
 }
 
 // MINIMUM PAGE ACCESS LEVELS
