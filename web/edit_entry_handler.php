@@ -170,6 +170,11 @@ if ($ajax && $commit)
           $old_end = $old_booking['end_time'];
           $end_seconds = $old_end - $end_daystart;
           $end_seconds -= cross_dst($end_daystart, $old_end);
+          // When using periods end_seconds is actually the start of the last period
+          if ($enable_periods)
+          {
+            $end_seconds -= 60;
+          }
           break;
         default:
           if (array_key_exists($var, $old_booking))
