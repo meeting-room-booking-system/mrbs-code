@@ -980,7 +980,8 @@ if ($phase == 2)
       {
         // We have to use strpos() rather than stripos() because we cannot
         // assume PHP5
-        if (strpos(strtolower($option_value), strtolower($$var)) !== FALSE)
+        if (($option_key != '') &&
+            (strpos(strtolower($option_value), strtolower($$var)) !== FALSE))
         {
           $or_array[] = "E.$key='" . sql_escape($option_key) . "'";
         }

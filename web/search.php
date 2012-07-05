@@ -214,7 +214,7 @@ foreach ($fields as $field)
       {
         // We have to use strpos() rather than stripos() because we cannot
         // assume PHP5
-        if (strpos(strtolower($value), strtolower($search_str)) !== FALSE)
+        if (($key != '') && (strpos(strtolower($value), strtolower($search_str)) !== FALSE))
         {
           $sql_pred .= " OR E." . $field['name'] . "='" . sql_escape($key) . "'";
         }
