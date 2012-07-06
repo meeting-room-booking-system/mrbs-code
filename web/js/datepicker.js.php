@@ -10,73 +10,7 @@ expires_header(60*30); // 30 minute expiry
 
 // Set the default values for datepicker, including the default regional setting
 ?>
-/*
 $(function() {
-
-});
-*/
-
-<?php
-// Writes out the day, month and year values to the three hidden inputs
-// created by the PHP function genDateSelector().    It gets the date values
-// from the _alt input, which is the alternate field populated by datepicker
-// and is populated by datepicker with a date in yy-mm-dd format.
-//
-// (datepicker can only have one alternate field, which is why we need to write
-// to the three fields ourselves).
-//
-// Blur the datepicker input field on close, so that the datepicker will reappear
-// if you select it.    (Not quite sure why you need this.  It only seems
-// to be necessary when you are using Firefox and the datepicker is draggable).
-//
-// Then go and adjust the start and end time/period select options, because
-// they are dependent on the start and end dates
-//
-// Finally, if formId is defined, submit the form
-?>
-function datepicker_close(dateText, inst, formId)
-{
-  var alt_id = inst.id + '_alt';
-  var date = document.getElementById(alt_id).value.split('-');
-  document.getElementById(alt_id + '_year').value  = date[0];
-  document.getElementById(alt_id + '_month').value = date[1];
-  document.getElementById(alt_id + '_day').value   = date[2];
-  document.getElementById(inst.id).blur();
-  
-  if ($('body').hasClass('edit_entry'))
-  {
-    adjustSlotSelectors(document.getElementById('main'));
-    <?php
-    if (function_exists('json_encode'))
-    {
-      // If we're doing Ajax checking of the form then we have to check
-      // for conflicts the form when the datepicker is closed
-      ?>
-      checkConflicts();
-      <?php
-    }
-    ?>
-  }
-
-  if (formId)
-  {
-    var form = document.getElementById(formId);
-    form.submit();
-  }
-}
-
-
-
-<?php
-// =================================================================================
-
-// Extend the init() function 
-?>
-
-var oldInitDatepicker = init;
-init = function(args) {
-  oldInitDatepicker.apply(this, [args]);
-
   <?php
   // We set the regional setting by setting locales in reverse order of priority.
   // If you try and set a datepicker locale that doesn't exist, then nothing is
@@ -145,7 +79,6 @@ init = function(args) {
       }
     }
   }
-  
   ?>
   $.datepicker.setDefaults({
     showOtherMonths: true,
@@ -158,4 +91,52 @@ init = function(args) {
     altFormat: 'yy-mm-dd',
     onClose: function(dateText, inst) {datepicker_close(dateText, inst);}
   });
+});
+
+
+<?php
+// Writes out the day, month and year values to the three hidden inputs
+// created by the PHP function genDateSelector().    It gets the date values
+// from the _alt input, which is the alternate field populated by datepicker
+// and is populated by datepicker with a date in yy-mm-dd format.
+//
+// (datepicker can only have one alternate field, which is why we need to write
+// to the three fields ourselves).
+//
+// Blur the datepicker input field on close, so that the datepicker will reappear
+// if you select it.    (Not quite sure why you need this.  It only seems
+// to be necessary when you are using Firefox and the datepicker is draggable).
+//
+// Then go and adjust the start and end time/period select options, because
+// they are dependent on the start and end dates
+//
+// Finally, if formId is defined, submit the form
+?>
+function datepicker_close(dateText, inst, formId)
+{
+  var alt_id = inst.id + '_alt';
+  var date = document.getElementById(alt_id).value.split('-');
+  document.getElementById(alt_id + '_year').value  = date[0];
+  document.getElementById(alt_id + '_month').value = date[1];
+  document.getElementById(alt_id + '_day').value   = date[2];
+  document.getElementById(inst.id).blur();
+  if ($('body').hasClass('edit_entry'))
+  {
+    adjustSlotSelectors(document.getElementById('main'));
+    <?php
+    if (function_exists('json_encode'))
+    {
+      // If we're doing Ajax checking of the form then we have to check
+      // for conflicts the form when the datepicker is closed
+      ?>
+      checkConflicts();
+      <?php
+    }
+    ?>
+  }
+  if (formId)
+  {
+    var form = document.getElementById(formId);
+    form.submit();
+  }
 }
