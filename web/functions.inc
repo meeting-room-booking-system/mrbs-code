@@ -174,9 +174,13 @@ function rfc1123_date($timestamp)
 
 // A little helper function to send an "Expires" header. Just one
 // parameter, the number of seconds in the future to set the expiry
+// (We also send a couple of extra headers as the "Expires" header alone
+// does not always result in caching.)
 function expires_header($seconds)
 {
   header("Expires: ".rfc1123_date(time()+$seconds));
+  header("Pragma: cache");
+  header("Cache-Control: max-age=$seconds");
 }
 
 // Converts a duration of $dur seconds into a duration of
