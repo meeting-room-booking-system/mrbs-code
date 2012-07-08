@@ -272,15 +272,7 @@ $vocab["match_type"]         = "Uygun tip";
 $vocab["ctrl_click_type"]    = "Klavyede Ctrl tuşuna basılı iken fare ile tıklıyarak birden fazla tip seçebilirsiniz.";
 $vocab["match_entry"]        = "Uygun kısa tanım";
 $vocab["match_descr"]        = "Uygun tam tanım";
-$vocab["include"]            = "Kapsam";
-$vocab["report_only"]        = "Sadece Rapor";
-$vocab["summary_only"]       = "Sadece Özet";
-
-$vocab["report_and_summary"] = "Rapor ve Özet";
-$vocab["report_as_csv"]         = "Rapor CSV";
-$vocab["summary_as_csv"]        = "Özet CSV";
-$vocab["report_as_ical"]        = "Rapor iCalendar (.ics dosyası) - hariç dönemler";
-   
+$vocab["ical"]               = "Rapor iCalendar (.ics dosyası) - hariç dönemler";
 $vocab["summarize_by"]       = "Özetleyen";
 $vocab["sum_by_descrip"]     = "Kısa tanım";
 $vocab["sum_by_creator"]     = "Oluşturan";

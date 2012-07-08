@@ -3,40 +3,6 @@
 
 require_once "defaultincludes.inc";
 
-// Constant definitions for the value of the summarize parameter.   These are used
-// for bit-wise comparisons.    For example summarize=3 means produce both
-// a report and a summary; summaraize=5 means produce a report as a CSV file
-define('REPORT',      0x01);
-define('SUMMARY',     0x02);
-// a series of constants defining the ouput format.   These are in the same
-// bit series as the output contents above, though not all combinations are sensible
-define('OUTPUT_HTML', 0x04);
-define('OUTPUT_CSV',  0x08);
-define('OUTPUT_ICAL', 0x10);
-
-// Constants for booking privacy matching
-define('PRIVATE_NO',   0);
-define('PRIVATE_YES',  1);
-define('PRIVATE_BOTH', 2);  // Can be anything other than 0 or 1
-
-// Constants for booking confirmation matching
-define('CONFIRMED_NO',   0);
-define('CONFIRMED_YES',  1);
-define('CONFIRMED_BOTH', 2);  // Can be anything other than 0 or 1
-
-// Constants for booking approval matching
-define('APPROVED_NO',   0);
-define('APPROVED_YES',  1);
-define('APPROVED_BOTH', 2);  // Can be anything other than 0 or 1
-
-// Constants for mode
-define('MODE_TIMES',   1);
-define('MODE_PERIODS', 2);
-
-// Formats for sprintf
-define('FORMAT_TIMES',   "%.2f");
-define('FORMAT_PERIODS', "%d");
-
 
 // Converts a string from the standard MRBS character set to the character set
 // to be used for CSV files
@@ -66,8 +32,8 @@ function csv_conv($string)
 // Escape a string for either HTML or CSV output
 function escape($string)
 {
-  global $output_as_csv;
-  if ($output_as_csv)
+  global $output_format;
+  if ($output_format == OUTPUT_CSV)
   {
     $string = str_replace('"', '""', $string);
   }
@@ -82,7 +48,7 @@ function escape($string)
 // Output the first row (header row) for CSV reports
 function report_header()
 {
-  global $output_as_csv, $output_as_html, $ajax;
+  global $output_format, $ajax;
   global $csv_row_sep, $csv_col_sep;
   global $custom_fields, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
@@ -121,7 +87,7 @@ function report_header()
   $values[] = get_vocab("lastupdate");
   
   
-  if ($output_as_csv)
+  if ($output_format == OUTPUT_CSV)
   {
     // Remove any HTML entities from the values, and escape the strings
     $n_values = count($values);
@@ -147,7 +113,7 @@ function report_header()
     $line = csv_conv($line);
     echo $line;
   }
-  elseif ($output_as_html)
+  elseif ($output_format == OUTPUT_HTML)
   {
     $html = "<colgroup>";
     foreach ($values as $value)
@@ -172,9 +138,9 @@ function report_header()
 
 function open_report()
 {
-  global $output_as_html, $ajax;
+  global $output_format, $ajax;
   
-  if ($output_as_html && !$ajax)
+  if ($output_format == OUTPUT_HTML && !$ajax)
   {
     echo "<div id=\"report_output\" class=\"datatable_container\">\n";
     echo "<table class=\"admin_table display\" id=\"report_table\">\n";
@@ -185,14 +151,14 @@ function open_report()
 
 function close_report()
 {
-  global $output_as_html, $ajax, $json_data;
+  global $output_format, $ajax, $json_data;
   
   // If this is an Ajax request, we can now send the JSON data
   if ($ajax)
   {
     echo json_encode($json_data);
   }
-  elseif ($output_as_html)
+  elseif ($output_format == OUTPUT_HTML)
   {
     echo "</tbody>\n";
     echo "</table>\n";
@@ -203,7 +169,7 @@ function close_report()
 
 function report_row(&$row, $sortby)
 {
-  global $output_as_csv, $ajax, $ajax_capable, $json_data;
+  global $output_format, $ajax, $ajax_capable, $json_data;
   global $csv_row_sep, $csv_col_sep;
   global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
@@ -213,7 +179,7 @@ function report_row(&$row, $sortby)
   // If we're capable of delivering an Ajax request and this is not Ajax request,
   // then don't do anything.  We're going to save sending the data until we actually
   // get the Ajax request;  we just send the rest of the page at this stage.
-  if (!$output_as_csv && $ajax_capable && !$ajax)
+  if (($output_format != OUTPUT_CSV) && $ajax_capable && !$ajax)
   {
     return;
   }
@@ -221,7 +187,7 @@ function report_row(&$row, $sortby)
   $values = array();
   
   // Booking name
-  if ($output_as_csv)
+  if ($output_format == OUTPUT_CSV)
   {
     $values[] = escape($row['name']);
   }
@@ -246,7 +212,7 @@ function report_row(&$row, $sortby)
   {
     $start_date = time_date_string($row['start_time']);
   }
-  if ($output_as_csv)
+  if ($output_format == OUTPUT_CSV)
   {
     $values[] = escape($start_date);
   }
@@ -266,7 +232,7 @@ function report_row(&$row, $sortby)
   {
     $end_date = time_date_string($row['end_time']);
   }
-  if ($output_as_csv)
+  if ($output_format == OUTPUT_CSV)
   {
     $values[] = escape($end_date);
   }
@@ -284,7 +250,7 @@ function report_row(&$row, $sortby)
   $duration_seconds -= cross_dst($row['start_time'], $row['end_time']);
   $d = get_duration($row['start_time'], $row['end_time'], $row['enable_periods']);
   $d_string = $d['duration'] . ' ' . $d['dur_units'];
-  if ($output_as_csv)
+  if ($output_format == OUTPUT_CSV)
   {
     $values[] = escape($d_string);
   }
@@ -372,7 +338,7 @@ function report_row(&$row, $sortby)
 
   // Last updated:
   $last_updated = time_date_string($row['last_updated']);
-  if ($output_as_csv)
+  if ($output_format == OUTPUT_CSV)
   {
     $values[] = escape($last_updated);
   }
@@ -389,7 +355,7 @@ function report_row(&$row, $sortby)
   }
   else
   {
-    if ($output_as_csv)
+    if ($output_format == OUTPUT_CSV)
     {
       $line = '"';
       $line .= implode("\"$csv_col_sep\"", $values);
@@ -436,12 +402,12 @@ function get_sumby_name_from_row(&$row)
 function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
                     &$room_hash, &$name_hash)
 {
-  global $output_as_csv;
+  global $output_format;
   // Use brief description, created by or type as the name:
   $name = get_sumby_name_from_row($row);
   // Area and room separated by break (if not CSV):
   $room = escape($row['area_name']);
-  $room .= ($output_as_csv) ? '/' : "<br>";
+  $room .= ($output_format == OUTPUT_CSV) ? '/' : "<br>";
   $room .= escape($row['room_name']);
   // Accumulate the number of bookings for this room and name:
   @$count[$room][$name]++;
@@ -456,7 +422,7 @@ function accumulate_periods(&$row, &$count, &$hours, $report_start,
                             $report_end, &$room_hash, &$name_hash)
 {
   global $periods;
-  global $output_as_csv;
+  global $output_format;
   
   $max_periods = count($periods);
 
@@ -465,7 +431,7 @@ function accumulate_periods(&$row, &$count, &$hours, $report_start,
 
   // Area and room separated by break (if not CSV):
   $room = escape($row['area_name']);
-  $room .= ($output_as_csv) ? '/' : "<br>";
+  $room .= ($output_format == OUTPUT_CSV) ? '/' : "<br>";
   $room .= escape($row['room_name']);
   // Accumulate the number of bookings for this room and name:
   @$count[$room][$name]++;
@@ -478,15 +444,15 @@ function accumulate_periods(&$row, &$count, &$hours, $report_start,
 
 
 // Takes an array of cells and implodes them into either a CSV row
-// or an HTML row, depending on the value of the $output_as_csv.
+// or an HTML row, depending on the value of $output_format.
 // If an HTML row, then the cells can be either <td> (the default)
 // or <th> cells depending on $tag.   Additionally an attribute $attr
 // can be added to the oipening tag - eg 'colspan="2"'
 function implode_cells($cells, $tag='td', $attr=NULL)
 {
-  global $output_as_csv, $csv_col_sep;
+  global $output_format, $csv_col_sep;
   
-  if ($output_as_csv)
+  if ($output_format == OUTPUT_CSV)
   {
     $row = '"' . implode("\"$csv_col_sep\"", $cells) . '"';
   }
@@ -507,9 +473,9 @@ function implode_cells($cells, $tag='td', $attr=NULL)
 // or an HTML table section (<thead>, <tbody> or <tfoot>).
 function implode_rows($rows, $tag='tbody')
 {
-  global $output_as_csv, $csv_row_sep;
+  global $output_format, $csv_row_sep;
   
-  if ($output_as_csv)
+  if ($output_format == OUTPUT_CSV)
   {
     $section = implode($csv_row_sep, $rows) . $csv_row_sep;
   }
@@ -525,9 +491,9 @@ function implode_rows($rows, $tag='tbody')
 // HTML output.   If it's HTML output then we enclose it in parentheses.
 function entries_format($str)
 {
-  global $output_as_csv;
+  global $output_format;
   
-  if ($output_as_csv)
+  if ($output_format == OUTPUT_CSV)
   {
     return $str;
   }
@@ -543,7 +509,7 @@ function entries_format($str)
 // $room_hash & $name_hash are arrays with indexes naming unique rooms and names.
 function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 {
-  global $output_as_csv, $csv_col_sep;
+  global $output_format, $csv_col_sep;
   global $times_somewhere, $periods_somewhere;
         
   // Sort the room and name arrays
@@ -568,7 +534,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
     $col_count_total[$room] = 0;
     $col_hours_total[$room] = 0.0;
     $mode_text = ($mode == MODE_TIMES) ? get_vocab("mode_times") : get_vocab("mode_periods");
-    if ($output_as_csv)
+    if ($output_format == OUTPUT_CSV)
     {
       $row1_cells[] = $room . ' - ' . get_vocab("entries");
       $row1_cells[] = $room . ' - ' .
@@ -583,7 +549,7 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
     }
   }
   // Add the total column(s) onto the end
-  if ($output_as_csv)
+  if ($output_format == OUTPUT_CSV)
   {
     if ($times_somewhere)
     {
@@ -621,10 +587,11 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
       $row2_cells[] = "&nbsp;";
     }
   }
+    
   // Implode the cells and add a label column on to the beginning (we have to
   // do it this way because the head is a bit more complicated than the body and
   // the foot as it has cells which span two columns)
-  if ($output_as_csv)
+  if ($output_format == OUTPUT_CSV)
   {
     $row1 = '""' . $csv_col_sep . implode_cells($row1_cells);
     $row2 = '"Mode"' . $csv_col_sep . implode_cells($row2_cells);
@@ -673,8 +640,8 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
       }
       else
       {
-        $cells[] = ($output_as_csv) ? '' : "&nbsp;";
-        $cells[] = ($output_as_csv) ? '' : "&nbsp;";
+        $cells[] = ($output_format == OUTPUT_CSV) ? '' : "&nbsp;";
+        $cells[] = ($output_format == OUTPUT_CSV) ? '' : "&nbsp;";
       }
     }
     // Add the total column(s) onto the end
@@ -726,11 +693,11 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
   
   // OUTPUT THE TABLE
   // ----------------
-  if ($output_as_csv)
+  if ($output_format == OUTPUT_CSV)
   {
-    echo $head;
-    echo $body;
-    echo $foot;
+    echo csv_conv($head);
+    echo csv_conv($body);
+    echo csv_conv($foot);
   }
   else
   {
@@ -780,7 +747,8 @@ $areamatch = get_form_var('areamatch', 'string');
 $roommatch = get_form_var('roommatch', 'string');
 $namematch = get_form_var('namematch', 'string');
 $descrmatch = get_form_var('descrmatch', 'string');
-$summarize = get_form_var('summarize', 'int', (($cli_mode) ? REPORT + OUTPUT_CSV : REPORT + OUTPUT_HTML));
+$output = get_form_var('output', 'int', REPORT);
+$output_format = get_form_var('output_format', 'int', (($cli_mode) ? OUTPUT_CSV : OUTPUT_HTML));
 $typematch = get_form_var('typematch', 'array');
 $sortby = get_form_var('sortby', 'string', 'r');  // $sortby: r=room, s=start date/time.
 $sumby = get_form_var('sumby', 'string', 'd');  // $sumby: d=by brief description, c=by creator, t=by type.
@@ -828,10 +796,6 @@ $confirmation_somewhere = some_area('confirmation_enabled');
 $times_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods=0") > 0);
 $periods_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods!=0") > 0);
 
-$output_as_csv = $summarize & OUTPUT_CSV;
-$output_as_ical = $summarize & OUTPUT_ICAL;
-$output_as_html = ($summarize & OUTPUT_HTML) || !($output_as_csv || $output_as_ical);
-
 // Get information about custom fields
 $fields = sql_field_info($tbl_entry);
 $custom_fields = array();
@@ -874,14 +838,14 @@ if ($phase == 2)
        .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
        . "A.area_name, R.room_name, "
        . "A.approval_enabled, A.confirmation_enabled, A.enable_periods";
-  if ($output_as_ical)
+  if ($output_format == OUTPUT_ICAL)
   {
     // If we're producing an iCalendar then we'll also need the repeat
     // information in order to construct the recurrence rule
     $sql .= ", T.rep_type, T.end_date, T.rep_opt, T.rep_num_weeks";
   }
   $sql .= " FROM $tbl_area A, $tbl_room R, $tbl_entry E";
-  if ($output_as_ical)
+  if ($output_format == OUTPUT_ICAL)
   {
     // We do a LEFT JOIN because we still want the single entries, ie the ones
     // that won't have a match in the repeat table
@@ -889,7 +853,7 @@ if ($phase == 2)
   }
   $sql .= " WHERE E.room_id=R.id AND R.area_id=A.id"
         . " AND E.start_time < $report_end AND E.end_time > $report_start";
-  if ($output_as_ical)
+  if ($output_format == OUTPUT_ICAL)
   {
     // We can't export periods in an iCalendar yet
     $sql .= " AND A.enable_periods=0";
@@ -1048,7 +1012,7 @@ if ($phase == 2)
     }
   }
   
-  if ($summarize & OUTPUT_ICAL)
+  if ($output_format == OUTPUT_ICAL)
   {
     // If we're producing an iCalendar then we'll want the entries ordered by
     // repeat_id and then recurrence_id
@@ -1076,18 +1040,20 @@ if ($phase == 2)
   $nmatch = sql_count($res);
 }
 
+$combination_not_supported = ($output == SUMMARY) && ($output_format == OUTPUT_ICAL);
+
 // print the page header
 if ($ajax)
 {
   // don't do anything if this is an Ajax request:  we only want the data
 }
-elseif ($output_as_html || (empty($nmatch) && !$cli_mode))
+elseif (($output_format == OUTPUT_HTML) || (empty($nmatch) && !$cli_mode) || $combination_not_supported)
 {
   print_header($day, $month, $year, $area, isset($room) ? $room : "");
 }
-elseif ($output_as_csv)
+elseif ($output_format == OUTPUT_CSV)
 {
-  $filename = ($summarize & REPORT) ? $report_filename : $summary_filename;
+  $filename = ($output == REPORT) ? $report_filename : $summary_filename;
   header("Content-Type: text/csv; charset=" . get_csv_charset());
   header("Content-Disposition: attachment; filename=\"$filename\"");
   if ($csv_bom)
@@ -1104,7 +1070,7 @@ else // Assumed to be output_as_ical
 
 
 // Upper part: The form.
-if (!$ajax && ($output_as_html || (empty($nmatch) && !$cli_mode)))
+if (!$ajax && (($output_format == OUTPUT_HTML) || (empty($nmatch) && !$cli_mode) || $combination_not_supported))
 {
   ?>
   <div class="screenonly">
@@ -1278,45 +1244,27 @@ if (!$ajax && ($output_as_html || (empty($nmatch) && !$cli_mode)))
         </fieldset>
       
         <fieldset>
-        <legend><?php echo get_vocab("presentation_options");?></legend>  
-        <div id="div_summarize">
-          <label><?php echo get_vocab("include");?>:</label>
-          <?php
-          // Radio buttons to choose the value of the summarize parameter
-          // Set up an array of arrays mapping the button value to the description
-          // Each outer array represents a different group of buttons
-          $buttons = array();
-          // The HTML output buttons
-          $buttons[] = array(REPORT + OUTPUT_HTML           => "report_only",
-                             SUMMARY + OUTPUT_HTML          => "summary_only",
-                             REPORT + SUMMARY + OUTPUT_HTML => "report_and_summary");
-          // The CSV output buttons
-          $buttons[] = array(REPORT + OUTPUT_CSV            => "report_as_csv",
-                             SUMMARY + OUTPUT_CSV           => "summary_as_csv");
-          // The iCal output button
-          if ($times_somewhere) // We can't do iCalendars for periods yet
-          {
-            $buttons[] = array(REPORT + OUTPUT_ICAL           => "report_as_ical");
-          }
-          
-          echo "<div class=\"group_container\">\n";
-          foreach ($buttons as $button_group)
-          {
-            echo "<div class=\"group\">\n";
-            // Output each radio button
-            foreach ($button_group as $value => $token)
-            {
-              echo "<label>";
-              echo "<input class=\"radio\" type=\"radio\" name=\"summarize\" value=\"$value\"";          
-              if ($summarize == $value) echo " checked=\"checked\"";
-              echo ">" . get_vocab($token);
-              echo "</label>\n";
-            }
-            echo "</div>\n";
-          }
-          echo "</div>\n";
-          ?>
-        </div>
+        <legend><?php echo get_vocab("presentation_options");?></legend>
+        
+        <?php
+        echo "<div id=\"div_output\">\n";
+        $buttons = array(REPORT  => "report",
+                         SUMMARY => "summary");
+        generate_radio_group(get_vocab('output'), 'output', $output, $buttons);                  
+        echo "</div>\n";
+        
+        echo "<div id=\"div_format\">\n";
+        $buttons = array(OUTPUT_HTML => "html",
+                         OUTPUT_CSV  => "csv");
+        // The iCal output button
+        if ($times_somewhere) // We can't do iCalendars for periods yet
+        {
+          $buttons[OUTPUT_ICAL] = "ical";
+        }
+        generate_radio_group(get_vocab("format"), 'output_format', $output_format, $buttons);
+        echo "</div>\n";
+        ?>
+
       
         <div id="div_sortby"> 
           <label><?php echo get_vocab("sort_rep");?>:</label>
@@ -1385,15 +1333,20 @@ if ($phase == 2)
     {
       echo json_encode($json_data);
     }
-    elseif ($output_as_html)
+    elseif ($output_format == OUTPUT_HTML)
     {
       echo "<p class=\"report_entries\">" . get_vocab("nothing_found") . "</p>\n";
     }
     sql_free($res);
   }
+  elseif ($combination_not_supported)
+  {
+    echo "<p>" . get_vocab("combination_not_supported") . "</p>\n";
+    sql_free($res);
+  }
   else
   {
-    if ($output_as_ical)
+    if ($output_format == OUTPUT_ICAL)
     {
       // We set $keep_private to FALSE here because we excluded all private
       // events in the SQL query
@@ -1401,26 +1354,26 @@ if ($phase == 2)
       exit;
     }
     
-    if ($output_as_html & !$ajax)
+    if (($output_format == OUTPUT_HTML) & !$ajax)
     {
       echo "<p class=\"report_entries\"><span id=\"n_entries\">" . $nmatch . "</span> "
       . ($nmatch == 1 ? get_vocab("entry_found") : get_vocab("entries_found"))
       .  "</p>\n";
     }
     
-    if ($summarize & REPORT)
+    if ($output == REPORT)
     {
       open_report();
     }
 
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      if ($summarize & REPORT)
+      if ($output == REPORT)
       {
         report_row($row, $sortby);
       }
 
-      if (!$ajax && ($summarize & SUMMARY))
+      if (!$ajax && ($output == SUMMARY))
       {
         (empty($row['enable_periods']) ?
          accumulate($row, $count, $hours, $report_start, $report_end,
@@ -1431,12 +1384,12 @@ if ($phase == 2)
       }
     }
     
-    if ($summarize & REPORT)
+    if ($output == REPORT)
     {
       close_report();
     }
     
-    if (!$ajax && ($summarize & SUMMARY))
+    if (!$ajax && ($output == SUMMARY))
     {
       do_summary($count, $hours, $room_hash, $name_hash);
     }
@@ -1448,7 +1401,7 @@ if ($cli_mode)
   exit(0);
 }
 
-if (($output_as_html || empty($nmatch)) & !$ajax)
+if ((($output_format == OUTPUT_HTML) || empty($nmatch) || $combination_not_supported) & !$ajax)
 {
   output_trailer();
 }

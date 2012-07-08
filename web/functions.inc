@@ -412,6 +412,30 @@ function generate_input($label_text, $name, $value, $disabled=FALSE, $maxlength=
   echo $html;
 }
 
+
+// Generate a group of radio buttons
+// $buttons is an associative array where the key is the value of the button
+// and the value is the button text
+function generate_radio_group($label_text, $name, $current, $buttons)
+{
+  echo "<label>$label_text:</label>\n";
+  echo "<div class=\"group\">\n";
+  // Output each radio button
+  foreach ($buttons as $value => $token)
+  {
+    echo "<label>";
+    echo "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"$value\"";          
+    if ($current == $value)
+    {
+      echo " checked=\"checked\"";
+    }
+    echo ">" . get_vocab($token);
+    echo "</label>\n";
+  }
+  echo "</div>\n";
+}
+
+
 // Generates a select box from $options, an array of options
 // If $disabled is TRUE, then the select box is disabled and a hidden
 // input is generated to pass through $current

@@ -91,8 +91,45 @@ else
  // that is used;  it is merely used when the code needs to know the DOCTYPE, for example
  // in calls to nl2br.   TRUE means XHTML, FALSE means HTML.
  define('IS_XHTML', FALSE);
+
  
+/*************************************************
+ * REPORT constants - internal use, do not change
+ *************************************************/
  
+// Constant definitions for the value of the output parameter. 
+define('REPORT',       0);
+define('SUMMARY',      1);
+
+// Constants defining the ouput format.
+define('OUTPUT_HTML',  0);
+define('OUTPUT_CSV',   1);
+define('OUTPUT_ICAL',  2);
+
+// Constants for booking privacy matching
+define('PRIVATE_NO',   0);
+define('PRIVATE_YES',  1);
+define('PRIVATE_BOTH', 2);  // Can be anything other than 0 or 1
+
+// Constants for booking confirmation matching
+define('CONFIRMED_NO',   0);
+define('CONFIRMED_YES',  1);
+define('CONFIRMED_BOTH', 2);  // Can be anything other than 0 or 1
+
+// Constants for booking approval matching
+define('APPROVED_NO',   0);
+define('APPROVED_YES',  1);
+define('APPROVED_BOTH', 2);  // Can be anything other than 0 or 1
+
+// Constants for mode
+define('MODE_TIMES',   1);
+define('MODE_PERIODS', 2);
+
+// Formats for sprintf
+define('FORMAT_TIMES',   "%.2f");
+define('FORMAT_PERIODS', "%d");
+
+
  /*************************************************
  * ENTRY TYPES - internal use, do not change
  *************************************************/

@@ -112,7 +112,30 @@ init = function(args) {
       echo generate_autocomplete('match_' . substr($field, strlen('entry.')), $options);
     }
   }
-    
+  
+  // We don't support iCal output for the Summary.   So if the Summary button is pressed
+  // disable the iCal button and, if iCal output is checked, check another format.  If the
+  // Report button is pressed then re-enable the iCal button.
+  ?>
+  $('input[name="output"]').change(function() {
+      var output = $(this).filter(':checked').val();
+      var formatButtons = $('input[name="output_format"]');
+      var icalButton = formatButtons.filter('[value="' + <?php echo OUTPUT_ICAL ?> + '"]');
+      if (output == <?php echo SUMMARY ?>)
+      {
+        icalButton.attr('disabled', 'disabled');
+        if (icalButton.is(':checked'))
+        {
+          formatButtons.filter('[value="' + <?php echo OUTPUT_HTML ?> + '"]').attr('checked', 'checked');
+        }
+      }
+      else
+      {
+        icalButton.removeAttr('disabled');
+      }
+    }).trigger('change');
+  
+  <?php
   // Turn the list of users into a dataTable
   ?>
   var tableOptions = new Object();
