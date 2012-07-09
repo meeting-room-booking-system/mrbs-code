@@ -913,10 +913,6 @@ $mail_settings['cc'] = '';
 // fields are set)
 $mail_settings['treat_cc_as_to'] = FALSE;
 
-// The filename to be used for iCalendar attachments.   Will always have the
-// extension '.ics'
-$mail_settings['ics_filename'] = "booking";
-
 // Set this to TRUE if you want MRBS to output debug information to the browser
 // when you are sending email.   If you are not getting emails it can be helpful
 // by telling you (a) whether the mail functions are being called in the first place
@@ -978,9 +974,9 @@ $cli_language = "en";
  * Reports
  *************/
  
-// Default CSV file names
-$report_filename  = "report.csv";
-$summary_filename = "summary.csv";
+// Default file names
+$report_filename  = "report";
+$summary_filename = "summary";
 
 // CSV format
 $csv_row_sep = "\n";  // Separator between rows/records

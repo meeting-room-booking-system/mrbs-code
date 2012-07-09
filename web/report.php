@@ -1051,21 +1051,28 @@ elseif (($output_format == OUTPUT_HTML) || (empty($nmatch) && !$cli_mode) || $co
 {
   print_header($day, $month, $year, $area, isset($room) ? $room : "");
 }
-elseif ($output_format == OUTPUT_CSV)
+else
 {
   $filename = ($output == REPORT) ? $report_filename : $summary_filename;
-  header("Content-Type: text/csv; charset=" . get_csv_charset());
+  switch ($output_format)
+  {
+    case OUTPUT_CSV:
+      $filename .= '.csv';
+      $content_type = "text/csv; charset=" . get_csv_charset();
+      break;
+    default:
+      require_once "functions_ical.inc";
+      $filename .= '.ics';
+      $content_type = "application/ics; charset=" . get_charset() . "; name=\"$filename\"";
+      break;
+  }
+  header("Content-Type: $content_type");
   header("Content-Disposition: attachment; filename=\"$filename\"");
-  if ($csv_bom)
+
+  if (($output_format == OUTPUT_CSV) && $csv_bom)
   {
     echo get_bom(get_csv_charset());
   }
-}
-else // Assumed to be output_as_ical
-{
-  require_once "functions_ical.inc";
-  header("Content-Type: application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"");
-  header("Content-Disposition: attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"");
 }
 
 
