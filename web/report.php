@@ -400,49 +400,39 @@ function get_sumby_name_from_row(&$row)
 
 
 // Collect summary statistics on one entry. See below for columns in $row[].
-// $sumby selects grouping on brief description (d) or created by (c).
 // This also builds hash tables of all unique names and rooms. When sorted,
 // these will become the column and row headers of the summary table.
 function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
                     &$room_hash, &$name_hash)
 {
-  global $output_format;
-  // Use brief description, created by or type as the name:
-  $name = get_sumby_name_from_row($row);
-  // Area and room separated by break (if not CSV):
-  $room = escape($row['area_name']);
-  $room .= ($output_format == OUTPUT_CSV) ? '/' : "<br>";
-  $room .= escape($row['room_name']);
-  // Accumulate the number of bookings for this room and name:
-  @$count[$room][$name]++;
-  // Accumulate hours used, clipped to report range dates:
-  @$hours[$room][$name] += (min((int)$row['end_time'], $report_end)
-                            - max((int)$row['start_time'], $report_start)) / 3600.0;
-  $room_hash[$room] = MODE_TIMES;
-  $name_hash[$name] = 1;
-}
-
-function accumulate_periods(&$row, &$count, &$hours, $report_start,
-                            $report_end, &$room_hash, &$name_hash)
-{
-  global $periods;
-  global $output_format;
+  global $periods, $output_format;
   
   $max_periods = count($periods);
-
+  
+  $row['enable_periods']; ////////////////////////
   // Use brief description, created by or type as the name:
   $name = get_sumby_name_from_row($row);
-
   // Area and room separated by break (if not CSV):
   $room = escape($row['area_name']);
   $room .= ($output_format == OUTPUT_CSV) ? '/' : "<br>";
   $room .= escape($row['room_name']);
   // Accumulate the number of bookings for this room and name:
   @$count[$room][$name]++;
-  // Accumulate periods used, clipped to report range dates:
-  $dur = (min((int)$row['end_time'], $report_end) - max((int)$row['start_time'], $report_start))/60;
-  @$hours[$room][$name] += ($dur % $max_periods) + floor( $dur/(24*60) ) * $max_periods;
-  $room_hash[$room] = MODE_PERIODS;
+  // Accumulate hours/periods used, clipped to report range dates:
+  if ($row['enable_periods'])
+  {
+    $dur = (min((int)$row['end_time'], $report_end) - 
+            max((int)$row['start_time'], $report_start)) / 60;
+    $increment = ($dur % $max_periods) + floor( $dur/(24*60) ) * $max_periods;
+    $room_hash[$room] = MODE_PERIODS;
+  }
+  else
+  {
+    $increment = (min((int)$row['end_time'], $report_end) -
+                  max((int)$row['start_time'], $report_start)) / 3600.0;
+    $room_hash[$room] = MODE_TIMES;
+  }
+  @$hours[$room][$name] += $increment;
   $name_hash[$name] = 1;
 }
 
@@ -1399,12 +1389,9 @@ if ($phase == 2)
     {
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
-        (empty($row['enable_periods']) ?
-         accumulate($row, $count, $hours, $report_start, $report_end,
-                    $room_hash, $name_hash) :
-         accumulate_periods($row, $count, $hours, $report_start, $report_end,
-                            $room_hash, $name_hash)
-          );
+        accumulate($row, $count, $hours,
+                   $report_start, $report_end,
+                   $room_hash, $name_hash);
       }
       do_summary($count, $hours, $room_hash, $name_hash);
     }
