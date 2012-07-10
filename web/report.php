@@ -29,18 +29,23 @@ function csv_conv($string)
 }
 
 
-// Escape a string for either HTML or CSV output
+// Escape a string for output
 function escape($string)
 {
   global $output_format;
-  if ($output_format == OUTPUT_CSV)
+  
+  switch ($output_format)
   {
-    $string = str_replace('"', '""', $string);
+    case OUTPUT_HTML:
+      $string = mrbs_nl2br(htmlspecialchars($string));
+      break;
+    case OUTPUT_CSV:
+      $string = str_replace('"', '""', $string);
+      break;
+    default:  // do nothing
+      break;
   }
-  else
-  {
-    $string = mrbs_nl2br(htmlspecialchars($string));
-  }
+
   return $string;
 }
 
@@ -49,9 +54,9 @@ function escape($string)
 function report_header()
 {
   global $output_format, $ajax;
-  global $csv_row_sep, $csv_col_sep;
   global $custom_fields, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
+  global $field_order_list;
 
   // Don't do anything if this is an Ajax request: we only want to send the data
   if ($ajax)
@@ -62,77 +67,82 @@ function report_header()
   // Build an array of values to go into the header row
   $values = array();
   
-  $values[] = get_vocab("namebooker");
-  $values[] = get_vocab("area");
-  $values[] = get_vocab("room");
-  $values[] = get_vocab("start_date");
-  $values[] = get_vocab("end_date");
-  $values[] = get_vocab("duration");
-  $values[] = get_vocab("fulldescription_short");
-  $values[] = get_vocab("type"); 
-  $values[] = get_vocab("createdby");
-  if ($confirmation_somewhere)
+  foreach ($field_order_list as $field)
   {
-    $values[] = get_vocab("confirmation_status");
-  }
-  if ($approval_somewhere)
-  {
-    $values[] = get_vocab("approval_status");
-  }
-  // Now do the custom fields
-  foreach ($custom_fields as $key => $value)
-  {
-    $values[] = get_loc_field_name($tbl_entry, $key);
-  }
-  $values[] = get_vocab("lastupdate");
-  
-  
-  if ($output_format == OUTPUT_CSV)
-  {
-    // Remove any HTML entities from the values, and escape the strings
-    $n_values = count($values);
-    $charset = get_charset();
-    // Find out what the non-breaking space is in this character set
-    $nbsp = mrbs_entity_decode('&nbsp;', ENT_NOQUOTES, $charset);
-    for ($i=0; $i < $n_values; $i++)
+    switch ($field)
     {
+      case 'name':
+        $values[] = get_vocab("namebooker");
+        break;
+      case 'area_name':
+        $values[] = get_vocab("area");
+        break;
+      case 'room_name':
+        $values[] = get_vocab("room");
+        break;
+      case 'start_time':
+        $values[] = get_vocab("start_date");
+        break;
+      case 'end_time':
+        $values[] = get_vocab("end_date");
+        $values[] = get_vocab("duration");
+        break;
+      case 'description':
+        $values[] = get_vocab("fulldescription_short");
+        break;
+      case 'type':
+        $values[] = get_vocab("type");
+        break;
+      case 'create_by': 
+        $values[] = get_vocab("createdby");
+        break;
+      case 'confirmation_enabled':
+        if ($confirmation_somewhere)
+        {
+          $values[] = get_vocab("confirmation_status");
+        }
+        break;
+      case 'approval_enabled':
+        if ($approval_somewhere)
+        {
+          $values[] = get_vocab("approval_status");
+        }
+        break;
+      case 'last_updated':
+        $values[] = get_vocab("lastupdate");
+        break;
+      default:
+        // the custom fields
+        if (array_key_exists($field, $custom_fields))
+        {
+          $values[] = get_loc_field_name($tbl_entry, $field);
+        }
+        break;
+    }  // switch
+  }  // foreach
+  
+  
+  // Find out what the non-breaking space is in this character set
+  $charset = get_charset();
+  $nbsp = mrbs_entity_decode('&nbsp;', ENT_NOQUOTES, $charset);
+  for ($i=0; $i < count($values); $i++)
+  {
+    if ($output_format != OUTPUT_HTML)
+    {
+      // Remove any HTML entities from the values
       $values[$i] = mrbs_entity_decode($values[$i], ENT_NOQUOTES, $charset);
       // Trim non-breaking spaces from the string
       $values[$i] = trim($values[$i], $nbsp);
       // And do an ordinary trim
       $values[$i] = trim($values[$i]);
+      // We don't escape HTML output here because the vocab strings are trusted.
+      // And some of them contain HTML entities such as &nbsp; on purpose
       $values[$i] = escape($values[$i]);
     }
-  
-    // Now turn the array of values into a CSV row
-    $line = '"';
-    $line .= implode("\"$csv_col_sep\"", $values);
-    $line .= '"' . $csv_row_sep;
-  
-    // Output the row
-    $line = csv_conv($line);
-    echo $line;
+    
   }
-  elseif ($output_format == OUTPUT_HTML)
-  {
-    $html = "<colgroup>";
-    foreach ($values as $value)
-    {
-      $html .= "<col>";
-    }
-    $html .= "</colgroup>\n";
-    $html .= "<thead>\n";
-    $html .= "<tr>\n";
-    foreach ($values as $value)
-    {
-      // We don't use htmlspecialchars() here because the vocab strings are trusted.
-      // And some of them contain HTML entities such as &nbsp; on purpose
-      $html .= "<th>$value</th>\n";
-    }
-    $html .= "</tr>\n";
-    $html .= "</thead>\n<tbody>\n";
-    echo $html;
-  }
+  
+  output_report_row($values, $output_format, TRUE);
 }
 
 
@@ -167,189 +177,12 @@ function close_report()
 }
 
 
-function report_row(&$row, $sortby)
+// Output a report row.
+function output_report_row(&$values, $output_format, $header_row = FALSE)
 {
-  global $output_format, $ajax, $ajax_capable, $json_data;
-  global $csv_row_sep, $csv_col_sep;
-  global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
-  global $approval_somewhere, $confirmation_somewhere;
-  global $strftime_format;
-  global $select_options;
+  global $json_data, $ajax, $csv_col_sep, $csv_row_sep;
   
-  // If we're capable of delivering an Ajax request and this is not Ajax request,
-  // then don't do anything.  We're going to save sending the data until we actually
-  // get the Ajax request;  we just send the rest of the page at this stage.
-  if (($output_format != OUTPUT_CSV) && $ajax_capable && !$ajax)
-  {
-    return;
-  }
-  
-  $values = array();
-  
-  // Booking name
-  if ($output_format == OUTPUT_CSV)
-  {
-    $values[] = escape($row['name']);
-  }
-  else
-  {
-    $html_name = htmlspecialchars($row['name']);
-    $values[] = "<a href=\"view_entry.php?id=" . $row['id'] . "\" title=\"$html_name\">$html_name</a>";
-  }
-
-  // Area
-  $values[] = escape($row['area_name']);
-  
-  // Room
-  $values[] = escape($row['room_name']);
-  
-  // Start date
-  if ($row['enable_periods'])
-  {
-    list($start_period, $start_date) =  period_date_string($row['start_time']);
-  }
-  else
-  {
-    $start_date = time_date_string($row['start_time']);
-  }
-  if ($output_format == OUTPUT_CSV)
-  {
-    $values[] = escape($start_date);
-  }
-  else
-  {
-    // Include the numeric start time as a title in an empty span so
-    // that the column can be sorted and filtered properly
-    $values[] = "<span title=\"" . $row['start_time'] . "\"></span>" . escape($start_date);
-  }
-  
-  // End date
-  if ($row['enable_periods'])
-  {
-    list( , $end_date) =  period_date_string($row['end_time'], -1);
-  }
-  else
-  {
-    $end_date = time_date_string($row['end_time']);
-  }
-  if ($output_format == OUTPUT_CSV)
-  {
-    $values[] = escape($end_date);
-  }
-  else
-  {
-    // Include the numeric end time as a title in an empty span so
-    // that the column can be sorted and filtered properly
-    $values[] = "<span title=\"" . $row['end_time'] . "\"></span>" . escape($end_date);
-  }
-  
-  // Duration
-  // Need the duration in seconds for sorting.  Have to correct it for DST
-  // changes so that the user sees what he expects to see
-  $duration_seconds = $row['end_time'] - $row['start_time'];
-  $duration_seconds -= cross_dst($row['start_time'], $row['end_time']);
-  $d = get_duration($row['start_time'], $row['end_time'], $row['enable_periods']);
-  $d_string = $d['duration'] . ' ' . $d['dur_units'];
-  if ($output_format == OUTPUT_CSV)
-  {
-    $values[] = escape($d_string);
-  }
-  else
-  {
-    // Include the duration in a seconds as a title in an empty span so
-    // that the column can be sorted and filtered properly
-    $values[] = "<span title=\"$duration_seconds\"></span>" . escape($d_string);
-  }
-  
-
-  // Description:
-  $values[] = escape($row['description']);
-
-  // Entry Type:
-  $type = get_type_vocab($row['type']);
-  $et = empty($type) ? "?".$row['type']."?" : $type;
-  $values[] = escape($et);
-
-  // Created by:
-  $values[] = escape($row['create_by']);
-  
-  // Confirmation status
-  if ($confirmation_somewhere)
-  {
-    // Translate the status field bit into meaningful text
-    if ($row['confirmation_enabled'])
-    {
-      $confirmation_status = ($row['status'] & STATUS_TENTATIVE) ? get_vocab("tentative") : get_vocab("confirmed");
-    }
-    else
-    {
-      $confirmation_status = '';
-    }
-    $values[] = escape($confirmation_status);
-  }
-  
-  // Approval status
-  if ($approval_somewhere)
-  {
-    // Translate the status field bit into meaningful text
-    if ($row['approval_enabled'])
-    {
-      $approval_status = ($row['status'] & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved");
-    }
-    else
-    {
-      $approval_status = '';
-    }
-    $values[] = escape($approval_status);
-  }
-  
-  // Now do any custom fields
-  foreach ($custom_fields as $key => $value)
-  {
-    // Output a yes/no if it's a boolean or integer <= 2 bytes (which we will
-    // assume are intended to be booleans)
-    if (($field_natures[$key] == 'boolean') || 
-        (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
-    {
-      $output = empty($row[$key]) ? get_vocab("no") : get_vocab("yes");
-    }
-    // Otherwise output a string
-    elseif (isset($row[$key]))
-    {
-      // If the custom field is an associative array then we want
-      // the value rather than the array key
-      if (isset($select_options["entry.$key"]) &&
-          is_assoc($select_options["entry.$key"]) && 
-          array_key_exists($row[$key], $select_options["entry.$key"]))
-      {
-        $output = $select_options["entry.$key"][$row[$key]];
-      }
-      else
-      {
-        $output = $row[$key]; 
-      }
-    }
-    else
-    {
-      $output = '';
-    }
-    $values[] = escape($output);
-  }
-
-  // Last updated:
-  $last_updated = time_date_string($row['last_updated']);
-  if ($output_format == OUTPUT_CSV)
-  {
-    $values[] = escape($last_updated);
-  }
-  else
-  {
-    // Include the numeric last updated time  as a title in an empty span so
-    // that the column can be sorted and filtered properly
-    $values[] = "<span title=\"" . $row['last_updated'] . "\"></span>" . escape($last_updated);
-  }
-  
-  if ($ajax)
+  if ($ajax && !$header_row)
   {
     $json_data['aaData'][] = $values;
   }
@@ -362,14 +195,185 @@ function report_row(&$row, $sortby)
       $line .= '"' . $csv_row_sep;
       $line = csv_conv($line);
     }
-    else
+    elseif ($output_format == OUTPUT_HTML)
     {
-      $line = "<tr>\n<td>";
-      $line .= implode("</td>\n<td>", $values);
-      $line .= "</td>\n</tr>\n";
+      $cell_tag = ($header_row) ? 'th' : 'td';
+      if ($header_row)
+      {
+        // If it's a header row we need to generate a colgroup first
+        $line = "<colgroup>";
+        foreach ($values as $value)
+        {
+          $line .= "<col>";
+        }
+        $line .= "</colgroup>\n";
+        $line .= "<thead>\n";
+      }
+      
+      $line .= "<tr>\n<$cell_tag>";
+      $line .= implode("</$cell_tag>\n<$cell_tag>", $values);
+      $line .= "</$cell_tag>\n</tr>\n";
+      
+      if ($header_row)
+      {
+        $line .= "</thead>\n<tbody>\n";
+      }
     }
     echo $line;
   }
+}
+
+  
+function report_row(&$row, $sortby)
+{
+  global $output_format, $ajax, $ajax_capable;
+  global $csv_row_sep, $csv_col_sep;
+  global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
+  global $approval_somewhere, $confirmation_somewhere;
+  global $strftime_format;
+  global $select_options;
+  global $field_order_list;
+  
+  // If we're capable of delivering an Ajax request and this is not Ajax request,
+  // then don't do anything.  We're going to save sending the data until we actually
+  // get the Ajax request;  we just send the rest of the page at this stage.
+  if (($output_format == OUTPUT_HTML) && $ajax_capable && !$ajax)
+  {
+    return;
+  }
+  
+  $values = array();
+  
+  foreach ($field_order_list as $field)
+  {
+    $value = $row[$field];
+    
+    // Some fields need some special processing to turn the raw value into something
+    // more meaningful
+    switch ($field)
+    {
+      case 'end_time':
+        // Calculate the duration and then fall through to calculating the end date
+        // Need the duration in seconds for sorting.  Have to correct it for DST
+        // changes so that the user sees what he expects to see
+        $duration_seconds = $row['end_time'] - $row['start_time'];
+        $duration_seconds -= cross_dst($row['start_time'], $row['end_time']);
+        $d = get_duration($row['start_time'], $row['end_time'], $row['enable_periods']);
+        $d_string = $d['duration'] . ' ' . $d['dur_units'];
+        $d_string = escape($d_string);
+      case 'start_time':
+        $mod_time = ($field == 'start_time') ? 0 : -1;
+        if ($row['enable_periods'])
+        {
+          list( , $date) =  period_date_string($value, $mod_time);
+        }
+        else
+        {
+          $date = time_date_string($value);
+        }
+        $value = $date;
+        break;
+      case 'type':
+        $value = get_type_vocab($value);
+        break;
+      case 'confirmation_enabled':
+        // Translate the status field bit into meaningful text
+        if ($row['confirmation_enabled'])
+        {
+          $value = ($row['status'] & STATUS_TENTATIVE) ? get_vocab("tentative") : get_vocab("confirmed");
+        }
+        else
+        {
+          $value = '';
+        }
+        break;
+      case 'approval_enabled':
+        // Translate the status field bit into meaningful text
+        if ($row['approval_enabled'])
+        {
+          $value = ($row['status'] & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved");
+        }
+        else
+        {
+          $value = '';
+        }
+        break;
+      case 'last_updated':
+        $value = time_date_string($value);
+        break;
+      default:
+        // Custom fields
+        if (array_key_exists($field, $custom_fields))
+        {
+          // Output a yes/no if it's a boolean or integer <= 2 bytes (which we will
+          // assume are intended to be booleans)
+          if (($field_natures[$field] == 'boolean') || 
+              (($field_natures[$field] == 'integer') && isset($field_lengths[$field]) && ($field_lengths[$field] <= 2)) )
+          {
+            $value = empty($value) ? get_vocab("no") : get_vocab("yes");
+          }
+          // Otherwise output a string
+          elseif (isset($value))
+          {
+            // If the custom field is an associative array then we want
+            // the value rather than the array key
+            if (isset($select_options["entry.$field"]) &&
+                is_assoc($select_options["entry.$field"]) && 
+                array_key_exists($value, $select_options["entry.$field"]))
+            {
+              $value = $select_options["entry.$field"][$value];
+            }
+          }
+          else
+          {
+            $value = '';
+          }
+        }
+        break;
+    }
+    $value = escape($value);
+    
+    // For HTML output we take special action for some fields
+    if ($output_format == OUTPUT_HTML)
+    {
+      switch ($field)
+      {
+        case 'name':
+          // Add a link to the entry
+          $value = "<a href=\"view_entry.php?id=" . $row['id'] . "\" title=\"$value\">$value</a>";
+          break;
+        case 'end_time':
+          // Process the duration and then fall through to the end_time
+          // Include the duration in a seconds as a title in an empty span so
+          // that the column can be sorted and filtered properly
+          $d_string = "<span title=\"$duration_seconds\"></span>$d_string";
+        case 'start_time':
+        case 'last_updated':
+          // Include the numeric time as a title in an empty span so
+          // that the column can be sorted and filtered properly
+          $value = "<span title=\"${row[$field]}\"></span>$value";
+          break;
+        default:
+          break;
+      }
+    }
+    
+    // Add the value to the array.   We don't bother with some fields if
+    // they are going to be irrelevant
+    if (($confirmation_somewhere || ($field != 'confirmation_enabled')) &&
+        ($approval_somewhere || ($field != 'approval_enabled')) )
+    {
+      $values[] = $value;
+    }
+    // Special action for the duration
+    if ($field == 'end_time')
+    {
+      $values[] = $d_string;
+    }
+    
+  }  // foreach
+  
+  output_report_row($values, $output_format);
 }
 
 
@@ -825,6 +829,18 @@ foreach ($custom_fields as $key => $value)
   }
   $$var = get_form_var($var, $var_type);
 }
+
+// Set the field order list
+$field_order_list = array('name', 'area_name', 'room_name', 'start_time', 'end_time',
+                          'description', 'type', 'create_by', 'confirmation_enabled',
+                          'approval_enabled');
+foreach ($custom_fields as $key => $value)
+{
+  $field_order_list[] = $key;
+}
+$field_order_list[] = 'last_updated';
+
+
 
 // PHASE 2:  SQL QUERY.  We do the SQL query now to see if there's anything there
 if ($phase == 2)
@@ -1368,19 +1384,20 @@ if ($phase == 2)
       .  "</p>\n";
     }
     
+    // Report
     if ($output == REPORT)
     {
       open_report();
-    }
-
-    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-    {
-      if ($output == REPORT)
+      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
         report_row($row, $sortby);
       }
-
-      if (!$ajax && ($output == SUMMARY))
+      close_report();
+    }
+    // Summary
+    elseif (!$ajax)
+    {
+      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
         (empty($row['enable_periods']) ?
          accumulate($row, $count, $hours, $report_start, $report_end,
@@ -1389,15 +1406,6 @@ if ($phase == 2)
                             $room_hash, $name_hash)
           );
       }
-    }
-    
-    if ($output == REPORT)
-    {
-      close_report();
-    }
-    
-    if (!$ajax && ($output == SUMMARY))
-    {
       do_summary($count, $hours, $room_hash, $name_hash);
     }
   }
