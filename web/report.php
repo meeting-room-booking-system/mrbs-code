@@ -399,6 +399,20 @@ function get_sumby_name_from_row(&$row)
 }
 
 
+// Increments a two dimensional array by $increment
+function increment_count(&$array, $index1, $index2, $increment)
+{
+  if (!isset($array[$index1]))
+  {
+    $array[$index1] = array();
+  }
+  if (!isset($array[$index1][$index2]))
+  {
+    $array[$index1][$index2] = 0;
+  }
+  $array[$index1][$index2] += $increment;
+}
+
 // Collect summary statistics on one entry. See below for columns in $row[].
 // This also builds hash tables of all unique names and rooms. When sorted,
 // these will become the column and row headers of the summary table.
@@ -417,7 +431,7 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
   $room .= ($output_format == OUTPUT_CSV) ? '/' : "<br>";
   $room .= escape($row['room_name']);
   // Accumulate the number of bookings for this room and name:
-  @$count[$room][$name]++;
+  increment_count($count, $room, $name, 1);
   // Accumulate hours/periods used, clipped to report range dates:
   if ($row['enable_periods'])
   {
@@ -432,7 +446,7 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
                   max((int)$row['start_time'], $report_start)) / 3600.0;
     $room_hash[$room] = MODE_TIMES;
   }
-  @$hours[$room][$name] += $increment;
+  increment_count($hours, $room, $name, $increment);
   $name_hash[$name] = 1;
 }
 
