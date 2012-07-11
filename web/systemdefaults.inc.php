@@ -979,6 +979,8 @@ $report_filename  = "report";
 $summary_filename = "summary";
 
 // CSV format
+// By default Excel expects a tab as the column separator, so if you are opening
+// CSV files with Excel you may want to change $csv_col_sep to be '\t'
 $csv_row_sep = "\n";  // Separator between rows/records
 $csv_col_sep = ",";   // Separator between columns/fields
 
