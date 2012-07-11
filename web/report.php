@@ -503,9 +503,9 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
   $row['enable_periods']; ////////////////////////
   // Use brief description, created by or type as the name:
   $name = get_sumby_name_from_row($row);
-  // Area and room separated by break (if not CSV):
+  // Area and room separated by break (if HTML):
   $room = escape($row['area_name']);
-  $room .= ($output_format == OUTPUT_CSV) ? '/' : "<br>";
+  $room .= ($output_format == OUTPUT_HTML) ? "<br>" : '/';
   $room .= escape($row['room_name']);
   // Accumulate the number of bookings for this room and name:
   increment_count($count, $room, $name, 1);
@@ -534,13 +534,13 @@ function entries_format($str)
 {
   global $output_format;
   
-  if ($output_format == OUTPUT_CSV)
+  if ($output_format == OUTPUT_HTML)
   {
-    return $str;
+    return "($str)";
   }
   else
   {
-    return "($str)";
+    return $str;
   }
 }
 
@@ -635,8 +635,8 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
       }
       else
       {
-        $cells[] = ($output_format == OUTPUT_CSV) ? '' : "&nbsp;";
-        $cells[] = ($output_format == OUTPUT_CSV) ? '' : "&nbsp;";
+        $cells[] = ($output_format == OUTPUT_HTML) ? "&nbsp;" : '';
+        $cells[] = ($output_format == OUTPUT_HTML) ? "&nbsp;" : '';
       }
     }
     // Add the total column(s) onto the end
