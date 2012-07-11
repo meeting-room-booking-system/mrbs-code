@@ -393,10 +393,12 @@ function report_row(&$rows, &$data, $sortby)
           elseif (isset($value))
           {
             // If the custom field is an associative array then we want
-            // the value rather than the array key
+            // the value rather than the array key (provided the key is not
+            // an empty string)
             if (isset($select_options["entry.$field"]) &&
                 is_assoc($select_options["entry.$field"]) && 
-                array_key_exists($value, $select_options["entry.$field"]))
+                array_key_exists($value, $select_options["entry.$field"]) &&
+                ($value != ''))
             {
               $value = $select_options["entry.$field"][$value];
             }
