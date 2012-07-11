@@ -601,13 +601,8 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
   
   // Add the rows to the array of header rows, for output later
   $head_rows[] = $row1_cells;
-  // Only use the second row if we need to, that is if we have both times and periods
-  if ($times_somewhere && $periods_somewhere)
-  {
-    $head_rows[] = $row2_cells;
-  }
+  $head_rows[] = $row2_cells;
 
-  
 
   // TABLE BODY
   // ----------
