@@ -87,6 +87,20 @@ init = function(args) {
   oldInitReport.apply(this, [args]);
   
   <?php
+  // Tidy up the presentation of the first header row by merging the cells.
+  // The div is hidden while we are manipulating it so that it doesn't flicker;
+  // we have to make it visible when we have finished
+  ?>
+  var summaryDiv = $('#div_summary');
+  var summaryHead = summaryDiv.find('thead');
+  summaryHead.find('tr:first th:odd').attr('colspan', '2');
+  summaryHead.find('tr:first th:even').not(':first').remove();
+  summaryHead.find('tr:first th:first').attr('rowspan', '2');
+  summaryHead.find('tr:eq(1) th:first').remove();
+  summaryDiv.css('visibility', 'visible');
+  
+  
+  <?php
   // Make the area match input on the report page into an auto-complete input
   $options = sql_query_array("SELECT area_name FROM $tbl_area ORDER BY area_name");
   if ($options !== FALSE)

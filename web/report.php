@@ -142,7 +142,9 @@ function report_header()
     
   }
   
-  output_report_row($values, $output_format, TRUE);
+  $head_rows = array();
+  $head_rows[] = $values;
+  output_head_rows($head_rows, $output_format);
 }
 
 
@@ -155,7 +157,6 @@ function open_report()
     echo "<div id=\"report_output\" class=\"datatable_container\">\n";
     echo "<table class=\"admin_table display\" id=\"report_table\">\n";
   }
-  report_header();
 }
 
 
@@ -170,19 +171,52 @@ function close_report()
   }
   elseif ($output_format == OUTPUT_HTML)
   {
-    echo "</tbody>\n";
     echo "</table>\n";
     echo "</div>\n";
   }
 }
 
 
-// Output a report row.
-function output_report_row(&$values, $output_format, $header_row = FALSE)
+function open_summary()
+{
+  global $output_format, $times_somewhere, $periods_somewhere;
+  
+  if ($output_format == OUTPUT_HTML)
+  {
+    echo "<div id=\"div_summary\" class=\"js_hidden\">\n";
+    echo "<h1>";
+    if ($times_somewhere)
+    {
+      echo ($periods_somewhere) ?  get_vocab("summary_header_both") : get_vocab("summary_header");
+    }
+    else
+    {
+      echo get_vocab("summary_header_per");
+    }
+    echo "</h1>\n";
+    echo "<table>\n";
+  }
+}
+
+
+function close_summary()
+{
+  global $output_format;
+  
+  if ($output_format == OUTPUT_HTML)
+  {
+    echo "</table>\n";
+    echo "</div>\n";
+  }
+}
+
+
+// Output a table row.
+function output_row(&$values, $output_format, $body_row = TRUE)
 {
   global $json_data, $ajax, $csv_col_sep, $csv_row_sep;
   
-  if ($ajax && !$header_row)
+  if ($ajax && $body_row)
   {
     $json_data['aaData'][] = $values;
   }
@@ -197,34 +231,77 @@ function output_report_row(&$values, $output_format, $header_row = FALSE)
     }
     elseif ($output_format == OUTPUT_HTML)
     {
-      $cell_tag = ($header_row) ? 'th' : 'td';
-      if ($header_row)
-      {
-        // If it's a header row we need to generate a colgroup first
-        $line = "<colgroup>";
-        foreach ($values as $value)
-        {
-          $line .= "<col>";
-        }
-        $line .= "</colgroup>\n";
-        $line .= "<thead>\n";
-      }
-      
+      $line = '';
+      $cell_tag = ($body_row) ? 'td' : 'th';
       $line .= "<tr>\n<$cell_tag>";
       $line .= implode("</$cell_tag>\n<$cell_tag>", $values);
       $line .= "</$cell_tag>\n</tr>\n";
-      
-      if ($header_row)
-      {
-        $line .= "</thead>\n<tbody>\n";
-      }
     }
     echo $line;
   }
 }
 
+
+function output_head_rows(&$rows, $format)
+{
+  if (count($rows) == 0)
+  {
+    return;
+  }
   
-function report_row(&$row, $sortby)
+  if ($format == OUTPUT_HTML)
+  {
+    echo "<colgroup>";
+    foreach ($rows[0] as $cell)
+    {
+      echo "<col>";
+    }
+    echo "</colgroup>\n";
+  }
+  echo ($format == OUTPUT_HTML) ? "<thead>\n" : "";
+  foreach ($rows as $row)
+  {
+    output_row($row, $format, FALSE);
+  }
+  echo ($format == OUTPUT_HTML) ? "</thead>\n" : "";
+}
+
+
+function output_body_rows(&$rows, $format)
+{
+  global $ajax;
+  
+  if (count($rows) == 0)
+  {
+    return;
+  }
+  
+  echo (($format == OUTPUT_HTML) && !$ajax) ? "<tbody>\n" : "";
+  foreach ($rows as $row)
+  {
+    output_row($row, $format, TRUE);
+  }
+  echo (($format == OUTPUT_HTML) && !$ajax) ? "</tbody>\n" : "";
+}
+
+
+function output_foot_rows(&$rows, $format)
+{
+  if (count($rows) == 0)
+  {
+    return;
+  }
+  
+  echo ($format == OUTPUT_HTML) ? "<tfoot>\n" : "";
+  foreach ($rows as $row)
+  {
+    output_row($row, $format, FALSE);
+  }
+  echo ($format == OUTPUT_HTML) ? "</tfoot>\n" : "";
+}
+
+
+function report_row(&$rows, &$data, $sortby)
 {
   global $output_format, $ajax, $ajax_capable;
   global $csv_row_sep, $csv_col_sep;
@@ -246,7 +323,7 @@ function report_row(&$row, $sortby)
   
   foreach ($field_order_list as $field)
   {
-    $value = $row[$field];
+    $value = $data[$field];
     
     // Some fields need some special processing to turn the raw value into something
     // more meaningful
@@ -256,14 +333,14 @@ function report_row(&$row, $sortby)
         // Calculate the duration and then fall through to calculating the end date
         // Need the duration in seconds for sorting.  Have to correct it for DST
         // changes so that the user sees what he expects to see
-        $duration_seconds = $row['end_time'] - $row['start_time'];
-        $duration_seconds -= cross_dst($row['start_time'], $row['end_time']);
-        $d = get_duration($row['start_time'], $row['end_time'], $row['enable_periods']);
+        $duration_seconds = $data['end_time'] - $data['start_time'];
+        $duration_seconds -= cross_dst($data['start_time'], $data['end_time']);
+        $d = get_duration($data['start_time'], $data['end_time'], $data['enable_periods']);
         $d_string = $d['duration'] . ' ' . $d['dur_units'];
         $d_string = escape($d_string);
       case 'start_time':
         $mod_time = ($field == 'start_time') ? 0 : -1;
-        if ($row['enable_periods'])
+        if ($data['enable_periods'])
         {
           list( , $date) =  period_date_string($value, $mod_time);
         }
@@ -278,9 +355,9 @@ function report_row(&$row, $sortby)
         break;
       case 'confirmation_enabled':
         // Translate the status field bit into meaningful text
-        if ($row['confirmation_enabled'])
+        if ($data['confirmation_enabled'])
         {
-          $value = ($row['status'] & STATUS_TENTATIVE) ? get_vocab("tentative") : get_vocab("confirmed");
+          $value = ($data['status'] & STATUS_TENTATIVE) ? get_vocab("tentative") : get_vocab("confirmed");
         }
         else
         {
@@ -289,9 +366,9 @@ function report_row(&$row, $sortby)
         break;
       case 'approval_enabled':
         // Translate the status field bit into meaningful text
-        if ($row['approval_enabled'])
+        if ($data['approval_enabled'])
         {
-          $value = ($row['status'] & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved");
+          $value = ($data['status'] & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved");
         }
         else
         {
@@ -340,7 +417,7 @@ function report_row(&$row, $sortby)
       {
         case 'name':
           // Add a link to the entry
-          $value = "<a href=\"view_entry.php?id=" . $row['id'] . "\" title=\"$value\">$value</a>";
+          $value = "<a href=\"view_entry.php?id=" . $data['id'] . "\" title=\"$value\">$value</a>";
           break;
         case 'end_time':
           // Process the duration and then fall through to the end_time
@@ -351,7 +428,7 @@ function report_row(&$row, $sortby)
         case 'last_updated':
           // Include the numeric time as a title in an empty span so
           // that the column can be sorted and filtered properly
-          $value = "<span title=\"${row[$field]}\"></span>$value";
+          $value = "<span title=\"${data[$field]}\"></span>$value";
           break;
         default:
           break;
@@ -373,7 +450,7 @@ function report_row(&$row, $sortby)
     
   }  // foreach
   
-  output_report_row($values, $output_format);
+  $rows[] = $values;
 }
 
 
@@ -451,50 +528,6 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
 }
 
 
-// Takes an array of cells and implodes them into either a CSV row
-// or an HTML row, depending on the value of $output_format.
-// If an HTML row, then the cells can be either <td> (the default)
-// or <th> cells depending on $tag.   Additionally an attribute $attr
-// can be added to the oipening tag - eg 'colspan="2"'
-function implode_cells($cells, $tag='td', $attr=NULL)
-{
-  global $output_format, $csv_col_sep;
-  
-  if ($output_format == OUTPUT_CSV)
-  {
-    $row = '"' . implode("\"$csv_col_sep\"", $cells) . '"';
-  }
-  else
-  {
-    $open_tag = $tag;
-    if (!empty($attr))
-    {
-      $open_tag .= " $attr";
-    }
-    $row = "<$open_tag>" . implode("</$tag>\n<$open_tag>", $cells) . "</$tag>\n";
-  }
-  return $row;
-}
-
-
-// Takes an array of rows and implodes them into either a set of CSV rows
-// or an HTML table section (<thead>, <tbody> or <tfoot>).
-function implode_rows($rows, $tag='tbody')
-{
-  global $output_format, $csv_row_sep;
-  
-  if ($output_format == OUTPUT_CSV)
-  {
-    $section = implode($csv_row_sep, $rows) . $csv_row_sep;
-  }
-  else
-  {
-    $section = "<$tag>\n<tr>\n" . implode("</tr>\n<tr>\n", $rows) . "</tr>\n</$tag>\n";
-  }
-  return $section;
-}
-
-
 // Format an entries value depending on whether it's destined for a CSV file or
 // HTML output.   If it's HTML output then we enclose it in parentheses.
 function entries_format($str)
@@ -534,90 +567,44 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
   // TABLE HEAD
   // ----------
   $head_rows = array();
-  $row1_cells = array();
-  $row2_cells = array();
+  $row1_cells = array('');
+  $row2_cells = array('');
 
   foreach ($room_hash as $room => $mode)
   {
     $col_count_total[$room] = 0;
     $col_hours_total[$room] = 0.0;
     $mode_text = ($mode == MODE_TIMES) ? get_vocab("mode_times") : get_vocab("mode_periods");
-    if ($output_format == OUTPUT_CSV)
-    {
-      $row1_cells[] = $room . ' - ' . get_vocab("entries");
-      $row1_cells[] = $room . ' - ' .
-                      (($mode == MODE_PERIODS) ? get_vocab("periods") : get_vocab("hours"));
-      $row2_cells[] = $mode_text;
-      $row2_cells[] = $mode_text;
-    }
-    else
-    {
-      $row1_cells[] = $room;
-      $row2_cells[] = $mode_text;
-    }
+    $row1_cells[] = $room;
+    $row1_cells[] = '';  // The cell before is really spanning two columns.   We'll sort it out with JavaScript
+    $row2_cells[] = get_vocab("entries");
+    $row2_cells[] = ($mode == MODE_PERIODS) ? get_vocab("periods") : get_vocab("hours");
   }
+  
   // Add the total column(s) onto the end
-  if ($output_format == OUTPUT_CSV)
+  if ($times_somewhere)
   {
-    if ($times_somewhere)
-    {
-      $row1_cells[] = get_vocab("mode_times") . ": " . 
-                      get_vocab("total") . ' - ' . 
-                      get_vocab("entries");
-      $row1_cells[] = get_vocab("mode_times") . ": " .
-                      get_vocab("total") . ' - ' .
-                      get_vocab("hours");
-      $row2_cells[] = '';
-      $row2_cells[] = '';
-    }
-    if ($periods_somewhere)
-    {
-      $row1_cells[] = get_vocab("mode_periods") . ": " . 
-                      get_vocab("total") . ' - ' . 
-                      get_vocab("entries");
-      $row1_cells[] = get_vocab("mode_periods") . ": " .
-                      get_vocab("total") . ' - ' .
-                      get_vocab("hours");
-      $row2_cells[] = '';
-      $row2_cells[] = '';
-    }
+    $row1_cells[] = get_vocab("total") . " (" . get_vocab("mode_times") . ")";
+    $row1_cells[] = '';
+    $row2_cells[] = get_vocab("entries");
+    $row2_cells[] = get_vocab("hours");
   }
-  else
+  if ($periods_somewhere)
   {
-    if ($times_somewhere)
-    {
-      $row1_cells[] = get_vocab("total") . "<br>" . get_vocab("mode_times");
-      $row2_cells[] = "&nbsp;";
-    }
-    if ($periods_somewhere)
-    {
-      $row1_cells[] = get_vocab("total") . "<br>" . get_vocab("mode_periods");
-      $row2_cells[] = "&nbsp;";
-    }
+    $row1_cells[] = get_vocab("total") . " (" . get_vocab("mode_periods") . ")";
+    $row1_cells[] = '';
+    $row2_cells[] = get_vocab("entries");
+    $row2_cells[] = get_vocab("periods");
   }
-    
-  // Implode the cells and add a label column on to the beginning (we have to
-  // do it this way because the head is a bit more complicated than the body and
-  // the foot as it has cells which span two columns)
-  if ($output_format == OUTPUT_CSV)
-  {
-    $row1 = '""' . $csv_col_sep . implode_cells($row1_cells);
-    $row2 = '"Mode"' . $csv_col_sep . implode_cells($row2_cells);
-  }
-  else
-  {
-    $row1  = "<th>&nbsp;</th>\n";
-    $row1 .= implode_cells($row1_cells, 'th', 'colspan="2"');
-    $row2  = "<th>" . get_vocab("mode") . "</th>\n";
-    $row2 .= implode_cells($row2_cells, 'th', 'colspan="2"'); 
-  }
-  $head_rows[] = $row1;
+  
+  // Add the rows to the array of header rows, for output later
+  $head_rows[] = $row1_cells;
   // Only use the second row if we need to, that is if we have both times and periods
   if ($times_somewhere && $periods_somewhere)
   {
-    $head_rows[] = $row2;
+    $head_rows[] = $row2_cells;
   }
-  $head = implode_rows($head_rows, 'thead');
+
   
 
   // TABLE BODY
@@ -663,14 +650,13 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
       $cells[] = entries_format($row_count_total[MODE_PERIODS]);
       $cells[] = sprintf(FORMAT_PERIODS, $row_hours_total[MODE_PERIODS]);
     }
-    $body_rows[] = implode_cells($cells, 'td');
+    $body_rows[] = $cells;
     foreach (array(MODE_TIMES, MODE_PERIODS) as $m)
     {
       $grand_count_total[$m] += $row_count_total[$m];
       $grand_hours_total[$m] += $row_hours_total[$m];
     }
   }
-  $body = implode_rows($body_rows, 'tbody');
   
   
   // TABLE FOOT
@@ -695,37 +681,23 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
     $cells[] = entries_format($grand_count_total[MODE_PERIODS]);
     $cells[] = sprintf(FORMAT_PERIODS, $grand_hours_total[MODE_PERIODS]);
   }
-  $foot_rows[] = implode_cells($cells, 'th');
-  $foot = implode_rows($foot_rows, 'tfoot');
+  $foot_rows[] = $cells;
   
   
   // OUTPUT THE TABLE
   // ----------------
-  if ($output_format == OUTPUT_CSV)
+  if ($output_format == OUTPUT_HTML)
   {
-    echo csv_conv($head);
-    echo csv_conv($body);
-    echo csv_conv($foot);
+    // <tfoot> has to come before <tbody>
+    output_head_rows($head_rows, $output_format);
+    output_foot_rows($foot_rows, $output_format);
+    output_body_rows($body_rows, $output_format);
   }
   else
   {
-    echo "<div id=\"div_summary\">\n";
-    echo "<h1>";
-    if ($times_somewhere)
-    {
-      echo ($periods_somewhere) ?  get_vocab("summary_header_both") : get_vocab("summary_header");
-    }
-    else
-    {
-      echo get_vocab("summary_header_per");
-    }
-    echo "</h1>\n";
-    echo "<table>\n";
-    echo $head;
-    echo $foot;  // <tfoot> has to come before <tbody>
-    echo $body;
-    echo "</table>\n";
-    echo "</div>\n";
+    output_head_rows($head_rows, $output_format);
+    output_body_rows($body_rows, $output_format);
+    output_foot_rows($foot_rows, $output_format);
   }
 }
 
@@ -1392,15 +1364,19 @@ if ($phase == 2)
     if ($output == REPORT)
     {
       open_report();
+      report_header();
+      $body_rows = array();
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
-        report_row($row, $sortby);
+        report_row($body_rows, $row, $sortby);
       }
+      output_body_rows($body_rows, $output_format);
       close_report();
     }
     // Summary
-    elseif (!$ajax)
+    else
     {
+      open_summary();
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
         accumulate($row, $count, $hours,
@@ -1408,6 +1384,7 @@ if ($phase == 2)
                    $room_hash, $name_hash);
       }
       do_summary($count, $hours, $room_hash, $name_hash);
+      close_summary();
     }
   }
 }

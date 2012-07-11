@@ -83,6 +83,7 @@ select.room_area_select {margin-right: 0.5em}
 // buttons when we're submitting onchange).  The .js class is added to the <body> by JavaScript
 ?>
 .js .js_none {display: none}
+.js .js_hidden {visibility: hidden}
 
 /* ------------ ADMIN.PHP ---------------------------*/
 <?php
