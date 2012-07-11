@@ -1353,7 +1353,7 @@ if ($phase == 2)
       exit;
     }
     
-    if (($output_format == OUTPUT_HTML) & !$ajax)
+    if (($output_format == OUTPUT_HTML) && !$ajax)
     {
       echo "<p class=\"report_entries\"><span id=\"n_entries\">" . $nmatch . "</span> "
       . ($nmatch == 1 ? get_vocab("entry_found") : get_vocab("entries_found"))
