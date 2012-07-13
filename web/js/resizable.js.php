@@ -170,6 +170,7 @@ init = function(args) {
         ?>
         var rtl = ((table.css('direction') !== undefined) &&
                    table.css('direction').toLowerCase() == 'rtl');
+        var resolution = table.data('resolution');
         tableData.x = {};
         tableData.x.data = [];
         <?php // We need :visible because there might be hidden days // ?>
@@ -202,8 +203,7 @@ init = function(args) {
               var value = null;
               if (tableData.x.key == 'seconds')
               {
-                value = tableData.x.data[0].value;
-                value += tableData.x.data[0].value - tableData.x.data[1].value;
+                value = tableData.x.data[0].value + resolution;
               }
               var edge = $(this).offset().left;
               tableData.x.data.unshift({coord: edge, value: value});
@@ -214,8 +214,7 @@ init = function(args) {
             var value = null;
             if (tableData.x.key == 'seconds')
             {
-              value = tableData.x.data[tableData.x.data.length - 1].value;
-              value += tableData.x.data[1].value - tableData.x.data[0].value;
+              value = tableData.x.data[tableData.x.data.length - 1].value + resolution;
             }
             var edge = $(this).offset().left + $(this).outerWidth();
             tableData.x.data.push({coord: edge, value: value});
@@ -238,8 +237,7 @@ init = function(args) {
             var value = null;
             if (tableData.y.key == 'seconds')
             {
-              value = tableData.y.data[tableData.y.data.length - 1].value + 
-                      tableData.y.data[1].value - tableData.y.data[0].value;
+              value = tableData.y.data[tableData.y.data.length - 1].value + resolution;
             }
             tableData.y.data.push({coord: $(this).offset().top + $(this).outerHeight(),
                                    value: value});

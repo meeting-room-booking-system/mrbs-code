@@ -113,7 +113,7 @@ else
   // and output them
   echo $before_after_links_html;
 
-  echo "<table class=\"dwm_main\" id=\"day_main\">\n";
+  echo "<table class=\"dwm_main\" id=\"day_main\" data-resolution=\"$resolution\">\n";
   echo day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
   echo "</table>\n";
   

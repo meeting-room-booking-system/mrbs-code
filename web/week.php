@@ -94,7 +94,7 @@ $before_after_links_html = "
 
 print $before_after_links_html;
 
-echo "<table class=\"dwm_main\" id=\"week_main\">";
+echo "<table class=\"dwm_main\" id=\"week_main\" data-resolution=\"$resolution\">";
 echo week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
 echo "</table>\n";
 
