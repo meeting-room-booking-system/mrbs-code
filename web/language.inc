@@ -715,7 +715,16 @@ function set_vocab($lang)
   
   $lang = strtolower($lang);
   
-  $lang_file = "lang/lang.$lang";
+  if (file_exists('lang'))
+  {
+    $lang_file = "lang/lang.$lang";
+  }
+  else
+  {
+    // The JavaScript files in the js directory wnd up including language.inc.
+    // In this case we need to adjust the path
+    $lang_file = "../lang/lang.$lang";
+  }
   // When in CLI mode, we need to add the full path name as
   // file_exists() ignores the include path
   if ($cli_mode)
