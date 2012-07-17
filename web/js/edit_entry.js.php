@@ -82,7 +82,11 @@ if (function_exists('json_encode'))
     window.setTimeout(function() {
       var params = {'ajax': 1}; <?php // This is an Ajax request ?>
       var form = $('form#main');
-      if (form.data('submit'))
+      <?php
+      // Don't do anything if (a) the form doesn't exist (which it won't if the user
+      // hasn't logged in) or (b) if the submit button has been pressed
+      ?>
+      if ((form.length == 0) || form.data('submit'))
       {
         return;
       }
