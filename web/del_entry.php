@@ -8,7 +8,7 @@
 // means that $id is the id of an entry in the repeat table.   This
 // should be fixed sometime.]
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
 // Get non-standard form variables

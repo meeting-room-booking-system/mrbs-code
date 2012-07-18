@@ -3,7 +3,7 @@
 
 // mrbs/month.php - Month-at-a-time view
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 require_once "mincals.inc";
 require_once "functions_table.inc";
 

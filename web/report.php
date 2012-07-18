@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 
 
 // Converts a string from the standard MRBS character set to the character set

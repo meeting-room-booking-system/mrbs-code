@@ -44,7 +44,7 @@
 // If MRBS can't find an entry for the field in the lang file or vocab overrides, then
 // it will use the fieldname, eg 'coffee_machine'.
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
 

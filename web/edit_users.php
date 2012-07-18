@@ -38,7 +38,7 @@
 
 // $Id$
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 
 // Get non-standard form variables
 $Action = get_form_var('Action', 'string');

@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 require_once "functions_ical.inc";
 require_once "mrbs_sql.inc";
 

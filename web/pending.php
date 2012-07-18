@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 
 function display_buttons($row, $is_series)
 {

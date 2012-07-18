@@ -3,7 +3,7 @@
 
 // Handles actions on bookings awaiting approval
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 require_once "functions_mail.inc";
 

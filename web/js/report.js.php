@@ -2,10 +2,10 @@
 
 // $Id$
 
-require_once "../defaultincludes.inc";
+require "../defaultincludes.inc";
 
 header("Content-type: application/x-javascript");
-expires_header(60*30); // 30 minute expiry
+expires_header(0); // Cannot cache file because it depends on $HTTP_REFERER
 
 // Generates the JavaScript code to turn the input with id $id
 // into an autocomplete box, with options contained in the

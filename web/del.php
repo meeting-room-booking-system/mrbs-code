@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 
 // Get non-standard form variables
 $type = get_form_var('type', 'string');

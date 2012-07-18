@@ -2,7 +2,7 @@
 
 // $Id$
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 
 // Get non-standard form variables
 $area_name = get_form_var('area_name', 'string');

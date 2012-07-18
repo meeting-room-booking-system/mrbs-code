@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 require_once "mincals.inc";
 require_once "functions_table.inc";
 

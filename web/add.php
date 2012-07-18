@@ -2,7 +2,7 @@
 
 // $Id$
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
 // Get non-standard form variables

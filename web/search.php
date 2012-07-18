@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 
 
 function generate_search_nav_html($search_pos, $total, $num_records, $search_str)

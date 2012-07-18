@@ -21,7 +21,7 @@
 //     seconds could overwhelm many mail servers, or break the usage policies
 //     on hosted systems.
 
-require_once "defaultincludes.inc";
+require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
 // Check the user is authorised for this page
