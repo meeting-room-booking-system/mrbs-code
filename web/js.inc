@@ -167,6 +167,7 @@ if (in_array($page, array('day', 'week', 'month')))
 ?>
 <script type="text/javascript" src="js/functions.js.php?<?php echo $standard_query_string ?>"></script>
 <script type="text/javascript" src="js/datepicker.js.php?<?php echo $standard_query_string ?>"></script>
+<script type="text/javascript" src="js/general.js.php?<?php echo $standard_query_string ?>"></script>
     
 <script type="text/javascript">
 
