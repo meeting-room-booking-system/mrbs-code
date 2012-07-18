@@ -47,7 +47,7 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
   {
     <?php
     // IE8 and below will trigger $(window).resize not just when the window
-    // is resizedbut also when an element in the window is resized.   We 
+    // is resized but also when an element in the window is resized.   We 
     // therefore need to check that this is a genuine window resize event
     // otherwise we end up in an infinite loop
     ?>
