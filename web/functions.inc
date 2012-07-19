@@ -80,6 +80,19 @@ elseif ($private_override == "public" )
 
 $done_header = FALSE;
 
+
+// Outputs the HTTP headers
+function http_headers()
+{
+  header("Content-Type: text/html; charset=" . get_charset());
+  // We want to prevent IE8 offering "Compatability View" as that really
+  // messes up MRBS, especially on the Report page
+  header("X-UA-Compatible: IE=Edge");
+  header("Pragma: no-cache");                          // HTTP 1.0
+  header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the pastt
+}
+
+
 // Prints a very simple header.  This may be necessary on occasions, such as
 // during a database upgrade, when some of the features that the normal
 // header uses are not yet available.
@@ -92,10 +105,7 @@ function print_simple_header()
     return;
   } 
   
-  header("Content-Type: text/html; charset=" . get_charset());
-  header("X-UA-Compatible: IE=Edge");
-  header("Pragma: no-cache");                          // HTTP 1.0
-  header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
+  http_headers();
   echo DOCTYPE;
  ?>
 
@@ -110,6 +120,7 @@ function print_simple_header()
   <?php
   $done_header = TRUE; 
 }
+
 
 // Print the page header
 function print_header($day, $month, $year, $area, $room)
