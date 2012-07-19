@@ -45,6 +45,9 @@ function print_theme_header($day, $month, $year, $area, $room)
   }
   
   header("Content-Type: text/html; charset=" . get_charset());
+  // We want to prevent IE8 offering "Compatability View" as that really
+  // messes up MRBS, especially on the Report page
+  header("X-UA-Compatible: IE=Edge");
   header("Pragma: no-cache");                          // HTTP 1.0
   header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
   echo DOCTYPE;
@@ -52,8 +55,9 @@ function print_theme_header($day, $month, $year, $area, $room)
 
 <html>
   <head>
-  <meta charset="<?php echo get_charset(); ?>">
+  
   <title><?php echo get_vocab("mrbs") ?></title>
+  <meta charset="<?php echo get_charset(); ?>">
   
   <?php
   require_once "style.inc";

@@ -93,6 +93,7 @@ function print_simple_header()
   } 
   
   header("Content-Type: text/html; charset=" . get_charset());
+  header("X-UA-Compatible: IE=Edge");
   header("Pragma: no-cache");                          // HTTP 1.0
   header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
   echo DOCTYPE;
