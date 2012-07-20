@@ -266,7 +266,7 @@ function PrintLogonBox()
   } 
   if (isset($user_list_link))
   {
-    print "<a href=\"$user_list_link\">" . get_vocab('user_list') . "</a>\n";
+    print "<a id=\"user_list_link\" href=\"$user_list_link\">" . get_vocab('user_list') . "</a>\n";
   }
 }
 ?>

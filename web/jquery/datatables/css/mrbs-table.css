@@ -563,3 +563,9 @@ table.display span {
   display: none;
 }
 
+table.display span.normal {
+  display: inline;
+}
+
+
+

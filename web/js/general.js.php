@@ -29,6 +29,8 @@ init = function(args) {
   // (which will be if JavaScript is enabled and we're not running IE6 or below).   We
   // need to know this because when we're using an Ajax data source we don't want to send
   // the HTML version of the table data.
+  //
+  // Also add 'datatable=1' to the link for the user list for the same reason
   ?>
   if (!lteIE6)
   {
@@ -37,6 +39,12 @@ init = function(args) {
         name: 'datatable',
         value: '1'
       }).appendTo('#header_search');
+      
+    var userList = $('#user_list_link');
+    href = userList.attr('href');
+    href += (href.indexOf('?') < 0) ? '?' : '&';
+    href += 'datatable=1';
+    userList.attr('href', href);
   }
   
   <?php
