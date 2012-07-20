@@ -129,21 +129,12 @@ function get_form_var_type($field)
 function output_row(&$row)
 {
   global $ajax, $json_data;
-  global $level, $min_user_viewing_level, $min_user_editing_level, $user;
-  global $auth, $fields, $ignore_columns, $select_options;
+  global $level, $min_user_editing_level, $user;
+  global $fields, $ignore_columns, $select_options;
   global $PHP_SELF;
   
   $values = array();
   
-  // Check whether ordinary users are allowed to see other users' details.  If not,
-  // then skip past this row if it's not the current user or the user is not an admin
-  if ($auth['only_admin_can_see_other_users'] &&
-      ($level < $min_user_viewing_level) &&
-      (strcasecmp($row['name'], $user) != 0))
-  {
-    continue;
-  }
-    
   // First column, which is the name
   $html_name = htmlspecialchars($row['name']);
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
@@ -910,7 +901,14 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   {
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      output_row($row);
+      // You can only see this row if (a) we allow everybody to see all rows or
+      // (b) you are an admin or (c) you are this user
+      if (!$auth['only_admin_can_see_other_users'] ||
+          ($level >= $min_user_viewing_level) ||
+          (strcasecmp($row['name'], $user) == 0))
+      {
+        output_row($row);
+      }
     }
   }
   
