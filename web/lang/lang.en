@@ -176,6 +176,7 @@ $vocab["reason"]                  = "Reason";
 $vocab["info_requested"]          = "Information requested";
 $vocab["min_time_before"]         = "The minimum interval between now and the start of a booking is";
 $vocab["max_time_before"]         = "The maximum interval between now and the end of a booking is";
+$vocab["latest_booking_date"]     = "The latest booking date is";
 $vocab["max_booking_duration"]    = "The maximum duration of a booking is";
 $vocab["max_per_day_global"]      = "The maximum number of bookings per day per user across the whole system is";
 $vocab["max_per_week_global"]     = "The maximum number of bookings per week per user across the whole system is";

@@ -258,6 +258,14 @@ $max_per_interval_global['year'] = 50;    // max 50 bookings per year in total
 $max_per_interval_global_enabled['future'] = FALSE;
 $max_per_interval_global['future'] = 100; // max 100 bookings in the future in total
 
+// Set the latest date for which you can make a booking.    This can be useful if you
+// want to set an absolute date, eg the end of term, beyond which bookings cannot be made.
+// If you want to set a relative date, eg no more than a week away, then this can be done
+// using the area settings.   Note that it is possible to have both a relative and absolute
+// date, eg "no more than a week away and in any casae not past the end of term".
+// Note that bookings are allowed on the $max_booking_date, but not after it.
+$max_booking_date_enabled = FALSE;
+$max_booking_date = "2012-07-23";  // Must be a string in the format "yyyy-mm-dd"
 
 /******************
  * Display settings
