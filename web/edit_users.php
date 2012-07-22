@@ -347,11 +347,11 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                 break;
               default:
                 echo "<div>\n";
-                $label_text = get_loc_field_name($tbl_users, $key);
+                $label_text = get_loc_field_name($tbl_users, $key) . ':';
                 switch($key)
                 {
                   case 'level':
-                    echo "<label for=\"$var_name\">$label_text:</label>\n";
+                    echo "<label for=\"$var_name\">$label_text</label>\n";
                     echo "<select id=\"$var_name\" name=\"$var_name\"" . ($disable_select ? " disabled=\"disabled\"" : "") . ">\n";
                     // Only display options up to and including one's own level (you can't upgrade yourself).
                     // If you're not some kind of admin then the select will also be disabled.
@@ -389,7 +389,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                     break;
                   case 'name':
                     // you cannot change a username (even your own) unless you have user editing rights
-                    echo "<label for=\"$var_name\">$label_text:</label>\n";
+                    echo "<label for=\"$var_name\">$label_text</label>\n";
                     echo "<input id=\"$var_name\" name=\"$var_name\" type=\"text\" required aria-required " .
                          ((isset($maxlength["users.$key"])) ? "maxlength=\"" . $maxlength["users.$key"] . "\" " : '') .
                          (($level < $min_user_editing_level) ? "disabled=\"disabled\" " : "") .
@@ -409,7 +409,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                     if (($field['nature'] == 'boolean') || 
                         (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
                     {
-                      echo "<label for=\"$var_name\">$label_text:</label>\n";
+                      echo "<label for=\"$var_name\">$label_text</label>\n";
                       echo "<input type=\"checkbox\" class=\"checkbox\" " .
                             "id=\"$var_name\" name=\"$var_name\" value=\"1\"" .
                             ((!empty($data[$key])) ? " checked=\"checked\"" : "") .
