@@ -390,10 +390,11 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                   case 'name':
                     // you cannot change a username (even your own) unless you have user editing rights
                     echo "<label for=\"$var_name\">$label_text</label>\n";
-                    echo "<input id=\"$var_name\" name=\"$var_name\" type=\"text\" required aria-required " .
-                         ((isset($maxlength["users.$key"])) ? "maxlength=\"" . $maxlength["users.$key"] . "\" " : '') .
-                         (($level < $min_user_editing_level) ? "disabled=\"disabled\" " : "") .
-                          "value=\"" . htmlspecialchars($data[$key]) . "\">\n";
+                    echo "<input id=\"$var_name\" name=\"$var_name\" type=\"text\" required aria-required=\"true\"" .
+                         ((isset($maxlength["users.$key"])) ? " maxlength=\"" . $maxlength["users.$key"] . "\"" : '') .
+                         (($level < $min_user_editing_level) ? " disabled=\"disabled\" " : "") .
+                         (($data[$key] == '') ? '' : " value=\"" . htmlspecialchars($data[$key]) . "\"") .
+                         ">\n";
                     // if the field was disabled then we still need to pass through the value as a hidden input
                     if ($level < $min_user_editing_level)
                     {
@@ -530,7 +531,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 <?php
 
   // Print footer and exit
-  print_footer(TRUE);
+  output_trailer();
+  exit;
 }
 
 /*---------------------------------------------------------------------------*\
