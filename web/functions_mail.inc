@@ -690,11 +690,12 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                         $opt_previous,
                                         $compare, $as_html);
       }
-      
+
       // Repeat end date
+      $end_previous = ($mail_previous['rep_type'] == REP_NONE) ? '' : getMailTimeDateString($mail_previous['end_date'], FALSE);
       $body .= create_body_table_row (get_mail_vocab("rep_end_date"),
                                       getMailTimeDateString($data['end_date'], FALSE),
-                                      getMailTimeDateString($mail_previous['end_date'], FALSE),
+                                      $end_previous,
                                       $compare, $as_html);
                                                                    
     }
