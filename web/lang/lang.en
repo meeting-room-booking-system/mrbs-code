@@ -190,6 +190,7 @@ $vocab["max_per_year_area"]       = "The maximum number of bookings per year per
 $vocab["max_per_future_area"]     = "The maximum number of outstanding bookings per user in this area is";
 $vocab["skip_and_book"]           = "Skip and book";
 $vocab["skip_and_book_note"]      = "Carry on with the booking, skipping past the conflicting entries";
+$vocab["changes_saved"]           = "Changes saved";
 
 // Used in pending.php
 $vocab["pending"]            = "Bookings awaiting approval";

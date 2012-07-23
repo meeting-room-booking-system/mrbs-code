@@ -991,11 +991,27 @@ init = function(args) {
                             // table in order to get rid of events and data and
                             // prevent memory leaks (2) insert the updated table HTML
                             // and then (3) trigger a window load event so that the
-                            // resizable bookings are re-created.
+                            // resizable bookings are re-created and then (4) give the
+                            // user some positive visual feedback that the change has 
+                            // been saved
                             ?>
                             table.empty();
                             table.html(result.table_innerhtml);
                             $(window).trigger('load');
+                            <?php // Now for the visual feedback ?>
+                            $.each(result.new_details, function(i, value) {
+                                var cell = $('[data-id="' + value.id + '"]');
+                                var cellAnchor = cell.find('a');
+                                var oldHTML = cellAnchor.html();
+                                var duration = 1000; <?php // ms ?>
+                                cellAnchor.fadeOut(duration, function(){
+                                    cellAnchor.html('<?php echo get_vocab("changes_saved")?>').fadeIn(duration, function() {
+                                        cellAnchor.fadeOut(duration, function() {
+                                            cellAnchor.html(oldHTML).fadeIn(duration);
+                                          })
+                                      });
+                                  });
+                              });
                           }
                           else
                           {
