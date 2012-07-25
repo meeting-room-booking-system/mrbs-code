@@ -50,7 +50,7 @@ init = function(args) {
     <?php
     // Use an Ajax source - gives much better performance for large tables
     list( ,$query_string) = explode('?', $HTTP_REFERER, 2);
-    $ajax_url = "search.php?" . $query_string . "&ajax=1";
+    $ajax_url = "search.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1";
     ?>
     tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
     tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [2]}]; 

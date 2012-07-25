@@ -27,7 +27,7 @@ init = function(args) {
     {
       list( ,$query_string) = explode('?', $HTTP_REFERER, 2);
     }
-    $ajax_url = "edit_users.php?" . (empty($query_string) ? '' : '&') . "ajax=1";
+    $ajax_url = "edit_users.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1";
     ?>
     tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
     <?php

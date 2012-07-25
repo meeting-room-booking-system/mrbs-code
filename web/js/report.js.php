@@ -159,7 +159,7 @@ init = function(args) {
   if (function_exists('json_encode'))
   {
     list( ,$query_string) = explode('?', $HTTP_REFERER, 2);
-    $ajax_url = "report.php?" . $query_string . "&ajax=1&phase=2";
+    $ajax_url = "report.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1&phase=2";
     ?>
     tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
     <?php
