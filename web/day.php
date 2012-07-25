@@ -11,7 +11,7 @@ $timetohighlight = get_form_var('timetohighlight', 'int');
 // Check the user is authorised for this page
 checkAuthorised();
 
-// form the room parameter for use in query strings.    We want to preserve room information
+// Form the room parameter for use in query strings.    We want to preserve room information
 // if possible when switching between views
 $room_param = (empty($room)) ? "" : "&amp;room=$room";
 
