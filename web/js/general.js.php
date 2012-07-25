@@ -40,11 +40,12 @@ init = function(args) {
         value: '1'
       }).appendTo('#header_search');
       
-    var userList = $('#user_list_link');
-    href = userList.attr('href');
-    href += (href.indexOf('?') < 0) ? '?' : '&';
-    href += 'datatable=1';
-    userList.attr('href', href);
+    $('#user_list_link').each(function() {
+        var href = $(this).attr('href');
+        href += (href.indexOf('?') < 0) ? '?' : '&';
+        href += 'datatable=1';
+        $(this).attr('href', href);
+      });
   }
   
   <?php
