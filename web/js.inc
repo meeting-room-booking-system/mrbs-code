@@ -28,7 +28,7 @@ $standard_query_string = "area=$area";
 ?>
     
 <script type="text/javascript" src="jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="jquery/ui/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="jquery/ui/jquery-ui-1.8.22.custom.min.js"></script>
 <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
 <?php
 // The English (-en) and English-US (-en-US) files are non-standard additions,
