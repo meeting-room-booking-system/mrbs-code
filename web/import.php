@@ -21,7 +21,7 @@ function get_room_id($location, &$error)
     $location_area = '';
     $location_room = $location;
   }
-  elseif ($area_room_order = 'area_room')
+  elseif ($area_room_order == 'area_room')
   {
     list($location_area, $location_room) = explode($area_room_delimiter, $location);
   }
