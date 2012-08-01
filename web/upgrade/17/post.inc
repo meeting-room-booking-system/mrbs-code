@@ -31,6 +31,23 @@ if (!sql_mutex_lock("$tbl_entry"))
   fatal_error(1, get_vocab("failed_to_acquire"));
 }
 
+$sql = "ALTER TABLE $tbl_entry ADD COLUMN saved_ts DATETIME";
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to add saved_ts column in entry table.</
+}
+$sql = "UPDATE $tbl_entry SET saved_ts=timestamp"l
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to set saved_ts column in entry table.</
+}
+
 $sql = "UPDATE $tbl_entry SET status=(((~status)&1)<<1)|(private&1)";
 $res = sql_command($sql);
 if ($res == -1)
@@ -38,6 +55,23 @@ if ($res == -1)
   trigger_error(sql_error(), E_USER_WARNING);
   // No need to localise, should never happen
   print "<span class=\"error\">Failed to update status column in entry table.</span>";
+}
+
+$sql = "UPDATE $tbl_entry SET timestamp=saved_ts";
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to update timestamp column in entry table.</span>";
+}
+$sql = "ALTER TABLE $tbl_entry DROP COLUMN saved_ts";
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to delete saved_ts column in entry table.</span>";
 }
 
 sql_mutex_unlock("$tbl_entry");
@@ -54,6 +88,23 @@ sql_mutex_unlock("$tbl_entry");
 if (!sql_mutex_lock("$tbl_repeat"))
 {
   fatal_error(1, get_vocab("failed_to_acquire"));
+}
+
+$sql = "ALTER TABLE $tbl_repeat ADD COLUMN saved_ts DATETIME";
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to add saved_ts column in repeat table.</
+}
+$sql = "UPDATE $tbl_repeat SET saved_ts=timestamp"l
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to set saved_ts column in repeat table.</
 }
 
 $sql = "UPDATE $tbl_repeat SET status=private&1";
@@ -97,6 +148,23 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     fatal_error(FALSE, "Failed to update status column in repeat table with approval status.");
   }
 }  
+
+$sql = "UPDATE $tbl_repeat SET timestamp=saved_ts";
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to update timestamp column in repeat table.</span>";
+}
+$sql = "ALTER TABLE $tbl_repeat DROP COLUMN saved_ts";
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to delete saved_ts column in repeat table.</span>";
+}
 
 sql_mutex_unlock("$tbl_repeat");
 

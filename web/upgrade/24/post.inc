@@ -51,6 +51,39 @@ if ($display_timing)
 
 $start_clock = get_microtime();
 
+$sql = "ALTER TABLE $tbl_entry ADD COLUMN saved_ts DATETIME";
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to add saved_ts column in entry table.</
+}
+$sql = "UPDATE $tbl_entry SET saved_ts=timestamp"l
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to set saved_ts column in entry table.</
+}
+$sql = "ALTER TABLE $tbl_repeat ADD COLUMN saved_ts DATETIME";
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to add saved_ts column in repeat table.</
+}
+$sql = "UPDATE $tbl_repeat SET saved_ts=timestamp"l
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to set saved_ts column in repeat table.</
+}
+
 // MySQL (mysql and mysqli)
 // ------------------------
 if ($dbsys != "pgsql")
@@ -138,6 +171,39 @@ else
            WHERE repeat_id!=0
              AND ical_recur_id=''";
   do_sql_command($sql, 4);
+}
+
+$sql = "UPDATE $tbl_entry SET timestamp=saved_ts";
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to update timestamp column in entry table.</span>";
+}
+$sql = "ALTER TABLE $tbl_entry DROP COLUMN saved_ts";
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to delete saved_ts column in entry table.</span>";
+}
+$sql = "UPDATE $tbl_repeat SET timestamp=saved_ts";
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to update timestamp column in repeat table.</span>";
+}
+$sql = "ALTER TABLE $tbl_repeat DROP COLUMN saved_ts";
+$res = sql_command($sql);
+if ($res == -1)
+{
+  trigger_error(sql_error(), E_USER_WARNING);
+  // No need to localise, should never happen
+  print "<span class=\"error\">Failed to delete saved_ts column in repeat table.</span>";
 }
 
 $stop_clock = get_microtime();
