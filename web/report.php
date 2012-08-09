@@ -1031,12 +1031,16 @@ if ($phase == 2)
 
 $combination_not_supported = ($output == SUMMARY) && ($output_format == OUTPUT_ICAL);
 
+$output_form = (($output_format == OUTPUT_HTML) && !$ajax &&!$cli_mode) ||
+               $combination_not_supported;
+               
+               
 // print the page header
 if ($ajax)
 {
   // don't do anything if this is an Ajax request:  we only want the data
 }
-elseif (($output_format == OUTPUT_HTML) || (empty($nmatch) && !$cli_mode) || $combination_not_supported)
+elseif ($output_form)
 {
   print_header($day, $month, $year, $area, isset($room) ? $room : "");
 }
@@ -1066,7 +1070,7 @@ else
 
 
 // Upper part: The form.
-if (!$ajax && (($output_format == OUTPUT_HTML) || (empty($nmatch) && !$cli_mode) || $combination_not_supported))
+if ($output_form)
 {
   ?>
   <div class="screenonly">
@@ -1323,13 +1327,13 @@ if (!$ajax && (($output_format == OUTPUT_HTML) || (empty($nmatch) && !$cli_mode)
 // PHASE 2:  Output the results, if called with parameters:
 if ($phase == 2)
 {
-  if (($nmatch == 0) && !$cli_mode)
+  if (($nmatch == 0) && !$cli_mode && ($output_format == OUTPUT_HTML))
   {
     if ($ajax)
     {
       echo json_encode($json_data);
     }
-    elseif ($output_format == OUTPUT_HTML)
+    else
     {
       echo "<p class=\"report_entries\">" . get_vocab("nothing_found") . "</p>\n";
     }
@@ -1374,13 +1378,23 @@ if ($phase == 2)
     else
     {
       open_summary();
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      if ($nmatch > 0)
       {
-        accumulate($row, $count, $hours,
-                   $report_start, $report_end,
-                   $room_hash, $name_hash);
+        for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+        {
+          accumulate($row, $count, $hours,
+                     $report_start, $report_end,
+                     $room_hash, $name_hash);
+        }
+        do_summary($count, $hours, $room_hash, $name_hash);
       }
-      do_summary($count, $hours, $room_hash, $name_hash);
+      else
+      {
+        // Excel doesn't seem to like an empty file with just a BOM, so give
+        // it an empty row as well to keep it happy
+        $values = array();
+        output_row($values, $output_format);
+      }
       close_summary();
     }
   }
@@ -1391,7 +1405,7 @@ if ($cli_mode)
   exit(0);
 }
 
-if ((($output_format == OUTPUT_HTML) || empty($nmatch) || $combination_not_supported) & !$ajax)
+if ($output_form)
 {
   output_trailer();
 }
