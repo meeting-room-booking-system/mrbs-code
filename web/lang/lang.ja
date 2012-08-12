@@ -31,6 +31,7 @@ $vocab["gototoday"]          = "本日に移動";
 $vocab["goto"]               = "移動";
 $vocab["highlight_line"]     = "この行を強調";
 $vocab["click_to_reserve"]   = "予約を入れたいセルをクリックしてください。";
+$vocab["timezone"]           = "時間帯";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "日で表示";
@@ -47,17 +48,26 @@ $vocab["copyseries"]         = "定例予約をコピー";
 $vocab["namebooker"]         = "概要";
 $vocab["fulldescription"]    = "詳細な説明<br>(人数,<br>内部会議/外部会議 等)";
 $vocab["date"]               = "日付";
+$vocab["start"]              = "開始";
+$vocab["end"]                = "終了";
 $vocab["start_date"]         = "開始時刻";
 $vocab["end_date"]           = "終了時刻";
 $vocab["time"]               = "時間";
 $vocab["period"]             = "期間";
 $vocab["duration"]           = "所要時間";
-$vocab["seconds"]            = "秒";
-$vocab["minutes"]            = "分";
+$vocab["second_lc"]          = "秒間";
+$vocab["seconds"]            = "秒間";
+$vocab["minute_lc"]          = "分間";
+$vocab["minutes"]            = "分間";
+$vocab["hour_lc"]            = "時間";
 $vocab["hours"]              = "時間";
-$vocab["days"]               = "日";
-$vocab["weeks"]              = "週";
-$vocab["years"]              = "年";
+$vocab["day_lc"]             = "日間";
+$vocab["days"]               = "日間";
+$vocab["week_lc"]            = "週間";
+$vocab["weeks"]              = "週間";
+$vocab["year_lc"]            = "年間";
+$vocab["years"]              = "年間";
+$vocab["period_lc"]          = "期間";
 $vocab["periods"]            = "期間";
 $vocab["all_day"]            = "終日";
 $vocab["area"]               = "部署";
@@ -77,44 +87,66 @@ $vocab["rep_for_weekly"]     = "(毎週/n週毎 選択時)";
 $vocab["rep_freq"]           = "頻度";
 $vocab["rep_num_weeks"]      = "繰り返し周期";
 $vocab["rep_for_nweekly"]    = "(n週毎 選択時)";
+$vocab["skip_conflicts"]     = "過去の競合をスキップする";
 $vocab["ctrl_click"]         = "複数の部屋を選択するときは、<br>Controlキーを押しながらクリックしてください。";
 $vocab["entryid"]            = "予約ID ";
 $vocab["repeat_id"]          = "定例予約ID "; 
 $vocab["you_have_not_entered"] = "以下の項目が入力されていません:";
 $vocab["brief_description"]  = "簡単な説明";
 $vocab["useful_n-weekly_value"] = "有効なn週毎の値。";
-$vocab["private"]            = "私用";
-$vocab["unavailable"]        = "私用";
+$vocab["status"]             = "状況";
+$vocab["public"]             = "公開";
+$vocab["private"]            = "非公開";
+$vocab["unavailable"]        = "非公開";
+$vocab["is_mandatory_field"] = "は必須のフィールドです。値を指定して下さい。";
+$vocab["missing_mandatory_field"] = "必須フィールドの値が入力されていません";
+$vocab["confirmed"]          = "確認";
+$vocab["start_after_end"]    = "開始日を終了日の後にすることはできません。";
+$vocab["start_after_end_long"] = "エラー: 開始日が終了日の後になっています";
 
 // Used in view_entry.php
-$vocab["description"]        = "説明";
-$vocab["room"]               = "部屋";
-$vocab["createdby"]          = "予約者";
-$vocab["lastupdate"]         = "最終更新";
-$vocab["deleteentry"]        = "予約を削除";
-$vocab["deleteseries"]       = "定例予約を削除";
-$vocab["confirmdel"]         = "このエントリを削除してもよろしいですか?";
-$vocab["returnprev"]         = "前のページに戻る";
-$vocab["invalid_entry_id"]   = "無効な予約IDです。";
-$vocab["invalid_series_id"]  = "無効な定例予約IDです。";
-$vocab["status"]             = "状況";
-$vocab["approved"]           = "確認予約";
-$vocab["awaiting_approval"]  = "仮予約";
-$vocab["approve"]            = "承認";
-$vocab["reject"]             = "棄却";
-$vocab["more_info"]          = "詳細情報";
-$vocab["remind_admin"]       = "管理者に通知";
-$vocab["series"]             = "定例";
-$vocab["request_more_info"]  = "必要な追加情報を記入してください";
-$vocab["reject_reason"]      = "この予約情報を棄却した理由を記入してください";
-$vocab["send"]               = "送信";
-$vocab["approve_failed"]     = "予約が確認できませんでした。";
+$vocab["description"]         = "説明";
+$vocab["room"]                = "部屋";
+$vocab["createdby"]           = "予約者";
+$vocab["lastupdate"]          = "最終更新";
+$vocab["deleteentry"]         = "予約を削除";
+$vocab["deleteseries"]        = "定例予約を削除";
+$vocab["exportentry"]         = "予約をエクスポート";
+$vocab["exportseries"]        = "定例予約をエクスポート";
+$vocab["confirmdel"]          = "このエントリを削除してもよろしいですか?";
+$vocab["returnprev"]          = "前のページに戻る";
+$vocab["invalid_entry_id"]    = "無効な予約IDです。";
+$vocab["invalid_series_id"]   = "無効な定例予約IDです。";
+$vocab["confirmation_status"] = "確定状況";
+$vocab["tentative"]           = "仮予約";
+$vocab["approval_status"]     = "承認状況";
+$vocab["approved"]            = "承認";
+$vocab["awaiting_approval"]   = "承認待ち";
+$vocab["approve"]             = "承認";
+$vocab["reject"]              = "棄却";
+$vocab["more_info"]           = "詳細情報";
+$vocab["remind_admin"]        = "管理者に通知";
+$vocab["series"]              = "定例";
+$vocab["request_more_info"]   = "必要な追加情報を記入してください";
+$vocab["reject_reason"]       = "この予約情報を棄却した理由を記入してください";
+$vocab["send"]                = "送信";
+$vocab["approve_failed"]      = "予約が確認できませんでした。";
+$vocab["no_request_yet"]      = "要求はまだ送信されていません"; // Used for the title tooltip on More Info button
+$vocab["last_request"]        = "最新の要求は以下のとおり送信されています。日時";         // Used for the title tooltip on More Info button
+$vocab["by"]                  = "送信者";                           // Used for the title tooltip on More Info button
+$vocab["sent_at"]             = "送信先 ";
+$vocab["yes"]                 = "はい";
+$vocab["no"]                  = "いいえ";
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "エラー";
-$vocab["sched_conflict"]     = "予定の重複";
-$vocab["conflict"]           = "新しい予約は、以下の登録と重複しています:";
+$vocab["sched_conflict"]     = "予定の競合";
+$vocab["conflict"]           = "新しい予約は、以下の登録と競合しています:";
+$vocab["no_conflicts"]       = "予定の競合はありません";
 $vocab["rules_broken"]       = "新しい予約は、以下の方針と競合します";
+$vocab["no_rules_broken"]    = "指針の競合はありません";
+$vocab["schedule"]           = "予定";
+$vocab["policy"]             = "指針";
 $vocab["too_may_entrys"]     = "選択されたオプションは大量のエントリーを作成します。<br>別のオプションを使用して下さい!";
 $vocab["returncal"]          = "カレンダー表示に戻る";
 $vocab["failed_to_acquire"]  = "データベースへの排他的なアクセスの確保に失敗しました"; 
@@ -124,21 +156,40 @@ $vocab["mail_subject_approved"]  = "$mrbs_company MRBSのエントリが承認�
 $vocab["mail_subject_rejected"]  = "$mrbs_company MRBSのエントリが棄却されました";
 $vocab["mail_subject_more_info"] = "$mrbs_company MRBS: 詳細情報を必要としています";
 $vocab["mail_subject_reminder"]  = "$mrbs_company MRBS備忘通知";
-$vocab["mail_body_approved"]     = "エントリは管理者に承認されました。詳細は以下のとおりです:";
-$vocab["mail_body_rej_entry"]    = "エントリは管理者に棄却されました。詳細は以下のとおりです:";
-$vocab["mail_body_more_info"]    = "管理者はエントリについて詳細情報を要求しています。詳細は以下のとおりです:";
-$vocab["mail_body_reminder"]     = "備忘通知 - エントリは承認待ちです。詳細は以下のとおりです:";
+$vocab["mail_body_approved"]     = "エントリーは管理者に承認されました。詳細は以下のとおりです:";
+$vocab["mail_body_rej_entry"]    = "エントリーは管理者に棄却されました。詳細は以下のとおりです:";
+$vocab["mail_body_more_info"]    = "管理者はエントリーについて詳細情報を要求しています。詳細は以下のとおりです:";
+$vocab["mail_body_reminder"]     = "備忘通知 - エントリーは承認待ちです。詳細は以下のとおりです:";
+$vocab["mail_body_repeats_booked"]   = "以下の日取りが予約されました:";
+$vocab["mail_body_repeats_deleted"]  = "以下の予約は削除されました:";
+$vocab["mail_body_exceptions"]       = "以下の日取りは、競合のため予約できませんでした:";
 $vocab["mail_subject_new_entry"]     = "$mrbs_company MRBSエントリの追加/変更";
 $vocab["mail_subject_changed_entry"] = "$mrbs_company MRBSエントリの追加/変更";
 $vocab["mail_subject_delete"]        = "$mrbs_company MRBSエントリの削除";
 $vocab["mail_body_new_entry"]     = "新規エントリが予約されました。詳細は以下のとおりです:";
 $vocab["mail_body_changed_entry"] = "エントリが変更されました。詳細は以下のとおりです:";
 $vocab["mail_body_del_entry"]     = "エントリが削除されました。詳細は以下のとおりです:";
-$vocab["deleted_by"]          = "削除者";
-$vocab["reason"]              = "理由";
-$vocab["info_requested"]      = "情報が必要です";
-$vocab["min_time_before"]     = "予約開始時刻を、現在時刻から以下の時間以上離して予約してください - ";
-$vocab["max_time_before"]     = "予約開始時刻を、現在時刻から以下の時間以上離して予約しないでください - ";
+$vocab["new_value"]               = "新しい内容";
+$vocab["old_value"]               = "以前の内容";
+$vocab["deleted_by"]              = "削除者";
+$vocab["reason"]                  = "理由";
+$vocab["info_requested"]          = "情報が必要です";
+$vocab["min_time_before"]         = "予約開始時刻は、現在時刻から以下の時間以上空けてください - ";
+$vocab["max_time_before"]         = "予約終了時刻は、現在時刻から以下の時間以上空けないでください - ";
+$vocab["latest_booking_date"]     = "最新の予約の日取り: ";
+$vocab["max_booking_duration"]    = "予約の最大期間は以下のとおりです。";
+$vocab["max_per_day_global"]      = "システム全体の、ユーザーあたりの1日の最大予約数: ";
+$vocab["max_per_week_global"]     = "システム全体の、ユーザーあたりの1週間の最大予約数: ";
+$vocab["max_per_month_global"]    = "システム全体の、ユーザーあたりの1か月の最大予約数: ";
+$vocab["max_per_year_global"]     = "システム全体の、ユーザーあたりの1年の最大予約数: ";
+$vocab["max_per_future_global"]   = "システム全体の、ユーザーあたりの未決予約数: ";
+$vocab["max_per_day_area"]        = "この部署の、ユーザーあたりの1日の最大予約数: ";
+$vocab["max_per_week_area"]       = "この部署の、ユーザーあたりの1週間の最大予約数: ";
+$vocab["max_per_month_area"]      = "この部署の、ユーザーあたりの1か月の最大予約数: ";
+$vocab["max_per_year_area"]       = "この部署の、ユーザーあたりの1年の最大予約数: ";
+$vocab["max_per_future_area"]     = "この部署の、ユーザーあたりの未決予約数: ";
+$vocab["skip_and_book"]           = "スキップして予約する";
+$vocab["skip_and_book_note"]      = "過去の競合するエントリーを無視して、予約を続行します";
 
 // Used in pending.php
 $vocab["pending"]            = "承認待ちの仮予約";
@@ -146,7 +197,7 @@ $vocab["none_outstanding"]   = "承認待ちの仮予約はありません。";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "アクセスが拒否されました";
-$vocab["norights"]           = "この項目を変更するアクセス権がありません。";
+$vocab["norights"]           = "このページを表示するために必要な権限がありません。";
 $vocab["please_login"]       = "ログインしてください";
 $vocab["users.name"]          = "名前";
 $vocab["users.password"]      = "パスワード";
@@ -180,7 +231,7 @@ $vocab["delete_user"]        = "このユーザを削除";
 $vocab["users.email"]         = "Eメールアドレス";
 $vocab["password_twice"]     = "パスワードを変更したい場合は、新しいパスワードを2回入力してください";
 $vocab["passwords_not_eq"]   = "パスワードが一致しませんでした!";
-$vocab["password_invalid"]   = "パスワードが規程を満たしていません。少なくとも以下の文字を含む必要があります:";
+$vocab["password_invalid"]   = "パスワードが指針を満たしていません。少なくとも以下の文字を含む必要があります:";
 $vocab["policy_length"]      = "文字";
 $vocab["policy_alpha"]       = "文字のアルファベット";
 $vocab["policy_lower"]       = "文字の小文字";
@@ -214,28 +265,47 @@ $vocab["search_for"]         = "検索語";
 $vocab["from"]               = "始点";
 
 // Used in report.php
-$vocab["report_on"]          = "会合の報告";
-$vocab["report_start"]       = "報告開始日";
-$vocab["report_end"]         = "報告終了日";
-$vocab["match_area"]         = "部署の一致";
-$vocab["match_room"]         = "部屋の一致";
-$vocab["match_type"]         = "形態の一致";
-$vocab["ctrl_click_type"]    = "複数の形態を選択するときは、Controlキーを押しながらクリックしてください。";
-$vocab["match_entry"]        = "簡単な説明との一致";
-$vocab["match_descr"]        = "詳細な説明との一致";
-$vocab["summarize_by"]       = "要約のまとめ方";
-$vocab["sum_by_descrip"]     = "簡単な説明";
-$vocab["sum_by_creator"]     = "予約者";
-$vocab["entry_found"]        = "件のエントリーが見つかりました";
-$vocab["entries_found"]      = "件のエントリーが見つかりました";
-$vocab["summary_header"]     = "予約時間数の要約 (括弧内はエントリー数)";
-$vocab["summary_header_per"] = "予約時間帯数の要約 (括弧内はエントリー数)";
-$vocab["entries"]            = "件";
-$vocab["total"]              = "計";
-$vocab["submitquery"]        = "報告の作成";
-$vocab["sort_rep"]           = "報告の並べ方";
-$vocab["sort_rep_time"]      = "開始日時";
+$vocab["report_on"]             = "会合の報告";
+$vocab["report_start"]          = "報告開始日";
+$vocab["report_end"]            = "報告終了日";
+$vocab["match_area"]            = "部署の一致";
+$vocab["match_room"]            = "部屋の一致";
+$vocab["match_type"]            = "形態の一致";
+$vocab["ctrl_click_type"]       = "複数の形態を選択するときは、Controlキーを押しながらクリックしてください。";
+$vocab["match_entry"]           = "簡単な説明との一致";
+$vocab["match_descr"]           = "詳細な説明との一致";
+$vocab["output"]                = "出力";
+$vocab["summary"]               = "要約";
+$vocab["format"]                = "形式";
+$vocab["html"]                  = "HTML";
+$vocab["csv"]                   = "CSV";
+$vocab["ical"]                  = "iCalendar (.ics file) - 時間帯を除く";
+$vocab["combination_not_supported"] = "This output is not supported in this format";
+$vocab["summarize_by"]          = "要約のまとめ方";
+$vocab["sum_by_descrip"]        = "簡単な説明";
+$vocab["sum_by_creator"]        = "予約者";
+$vocab["sum_by_type"]           = "タイプ";
+$vocab["entry_found"]           = "件のエントリーが見つかりました";
+$vocab["entries_found"]         = "件のエントリーが見つかりました";
+$vocab["summary_header"]        = "予約時間数の要約 (括弧内はエントリー数)";
+$vocab["summary_header_per"]    = "予約時間帯数の要約 (括弧内はエントリー数)";
+$vocab["summary_header_both"]   = "予約時間数/時間帯数の要約 (括弧内はエントリー数)";
+$vocab["entries"]               = "件";
+$vocab["total"]                 = "計";
+$vocab["submitquery"]           = "報告の作成";
+$vocab["sort_rep"]              = "報告の並べ方";
+$vocab["sort_rep_time"]         = "開始日時";
 $vocab["fulldescription_short"] = "完全な説明";
+$vocab["both"]                  = "全て";
+$vocab["privacy_status"]        = "プライバシー状況";
+$vocab["search_criteria"]       = "検索の基準";
+$vocab["presentation_options"]  = "出力オプション";
+$vocab["delete_entries"]        = "エントリーを削除する";
+$vocab["delete_entries_warning"] = "警告! この操作は、検索文字列に一致する全てのエントリーを削除します。 " .
+                                   "操作を取り消すことはできません。" .
+                                   "継続してもよろしいですが\n\n" .
+                                   "削除されるエントリーの合計: ";
+$vocab["delete_entries_failed"] = "エントリーを削除することができませんでした。";
 
 // Used in week.php
 $vocab["weekbefore"]         = "前の週に移動";
@@ -256,6 +326,7 @@ $vocab["delete"]             = "削除";
 $vocab["rooms"]              = "部屋";
 $vocab["in"]                 = "-";
 $vocab["noareas"]            = "部署がありません。";
+$vocab["noareas_enabled"]    = "有効な部署がありません。";
 $vocab["addarea"]            = "部署を追加";
 $vocab["name"]               = "名称";
 $vocab["noarea"]             = "部署が選択されていません";
@@ -263,8 +334,10 @@ $vocab["browserlang"]        = "お使いのブラウザの言語設定は、次
 $vocab["addroom"]            = "部屋を追加";
 $vocab["capacity"]           = "収容人数";
 $vocab["norooms"]            = "部屋がありません。";
+$vocab["norooms_enabled"]    = "有効な部屋がありません。";
 $vocab["administration"]     = "部屋の詳細";
 $vocab["invalid_area_name"]  = "この部署名は既に使用されています!";
+$vocab["empty_name"]         = "名前が入力されていません!";
 
 // Used in edit_area_room.php
 $vocab["editarea"]                = "部署を編集";
@@ -291,29 +364,55 @@ $vocab["invalid_resolution"]      = "最初の時間枠の開始時刻, 最後�
 $vocab["too_many_slots"]          = '設定ファイルの\$max_slotsの値を増やす必要があります!';
 $vocab["general_settings"]        = "一般";
 $vocab["time_settings"]           = "時間枠";
-$vocab["approval_settings"]       = "仮予約";
-$vocab["enable_approval"]         = "仮予約を有効にする";
+$vocab["confirmation_settings"]   = "確定状況";
+$vocab["allow_confirmation"]      = "仮予約を許可する";
+$vocab["default_settings_conf"]   = "既定の設定";
+$vocab["default_confirmed"]       = "確定";
+$vocab["default_tentative"]       = "仮予約";
+$vocab["approval_settings"]       = "承認設定";
+$vocab["enable_approval"]         = "予約には承認が必要";
 $vocab["enable_reminders"]        = "ユーザに管理者へ備忘通知することを許可する";
-$vocab["private_settings"]        = "私用予約";
-$vocab["allow_private"]           = "私用予約を許可する";
-$vocab["force_private"]           = "強制的に私用予約とする";
+$vocab["private_settings"]        = "非公開予約";
+$vocab["allow_private"]           = "非公開予約を許可する";
+$vocab["force_private"]           = "強制的に非公開予約とする";
 $vocab["default_settings"]        = "既定/強制の設定";
-$vocab["default_private"]         = "公用";
-$vocab["default_public"]          = "私用";
-$vocab["private_display"]         = "私用予約 (表示)";
-$vocab["private_display_label"]   = "私用予約の表示方法";
+$vocab["default_private"]         = "公開";
+$vocab["default_public"]          = "非公開";
+$vocab["private_display"]         = "非公開予約 (表示)";
+$vocab["private_display_label"]   = "非公開予約の表示方法";
 $vocab["private_display_caution"] = "警告: これらの設定を変更する前に、プライバシーへの影響を慎重に検討してください!";
 $vocab["treat_respect"]           = "予約のプライバシー設定を尊重する";
-$vocab["treat_private"]           = "全ての予約を私的なものとして取り扱う。予約のプライバシー設定を無視する";
-$vocab["treat_public"]            = "全ての予約を公的なものとして取り扱う。予約のプライバシー設定を無視する";
+$vocab["treat_private"]           = "全ての予約を非公開として取り扱う。予約のプライバシー設定を無視する";
+$vocab["treat_public"]            = "全ての予約を公開として取り扱う。予約のプライバシー設定を無視する";
 $vocab["sort_key"]                = "ソート キー";
 $vocab["sort_key_note"]           = "これは、部屋の表示順序を決めるためのキーワードです";
 $vocab["booking_policies"]        = "予約ポリシー";
 $vocab["min_book_ahead"]          = "事前予約 - 最短";
 $vocab["max_book_ahead"]          = "事前予約 - 最長";
+$vocab["this_area"]               = "この部署";
+$vocab["whole_system"]            = "システム全体";
+$vocab["whole_system_note"]       = "システム全体の値は、configファイルで設定されています。";
+$vocab["max_per_day"]             = "1日あたりの最大値";
+$vocab["max_per_week"]            = "1週間あたりの最大値";
+$vocab["max_per_month"]           = "1か月あたりの最大値";
+$vocab["max_per_year"]            = "1年あたりの最大値";
+$vocab["max_per_future"]          = "将来の最大値";
 $vocab["custom_html"]             = "カスタムHTML";
-$vocab["custom_html_note"]        = "この欄は、埋め込みのGoogle map等で独自のHTMLを表示するために使用します";
-                     
+$vocab["custom_html_note"]        = "この欄は、埋め込みのGoogle mapなどで独自のHTMLを表示するために使用します";
+$vocab["email_list_note"]         = "コンマか改行で分割して、Eメールアドレスを入力して下さい";
+$vocab["mode"]                    = "モード";
+$vocab["mode_periods"]            = "期間";
+$vocab["mode_times"]              = "回数";
+$vocab["times_only"]              = "回数モードのみ";
+$vocab["enabled"]                 = "有効";
+$vocab["disabled"]                = "無効";
+$vocab["disabled_area_note"]      = "この部署が無効になっている場合は、カレンダーに表示されず、" .
+                                    "部署に属する部屋を予約することはできません。しかし、存在している予約は保持されるため、" .
+                                    "検索や報告の結果には表示されます。";
+$vocab["disabled_room_note"]      = "この部屋が無効になっている場合は、カレンダーに表示されず、" .
+                                    "予約することはできません。しかし、存在している予約は保持されるため、" .
+                                    "検索や報告の結果には表示されます。" .
+$vocab["book_ahead_note_periods"] = "期間を使用すると、この先の予約は最も近い週日で丸められます。";
 
 // Used in edit_users.php
 $vocab["name_empty"]         = "名前を入力する必要があります。";
@@ -334,11 +433,64 @@ $vocab["servertime"]         = "サーバ時間";
 $vocab["please_contact"]     = "ここに答えがない質問は、";
 $vocab["for_any_questions"]  = "にお尋ねください。";
 
+// Used in import.php
+$vocab["import_icalendar"]            = "iCalendarファイルをインポートする";
+$vocab["area_room_settings"]          = "部署と部屋";
+$vocab["other_settings"]              = "他の設定";
+$vocab["import_intro"]                = "このフォームでは、RFC 5545に準拠したiCalendarファイルをMRBSに" .
+                                        "インポートすることができます。MRBSの繰り返し型と同じ再帰ルールを持つ" .
+                                        "繰り返しイベントのみが、インポートされます。" .
+                                        "";
+$vocab["file_name"]                   = "ファイル";
+$vocab["import"]                      = "インポート";
+$vocab["upload_failed"]               = "アップロードに失敗しました";
+$vocab["max_allowed_file_size"]       = "最大許容ファイルサイズ: ";
+$vocab["no_file"]                     = "ファイルがアップロードされませんでした";
+$vocab["badly_formed_ics"]            = "フォーマットが壊れたVCALENDARファイルです";
+$vocab["area_room_order"]             = "順序";
+$vocab["area_room_order_note"]        = "LOCATION属性における、部署名と場所名の順序";
+$vocab["area_room"]                   = "部署-部屋";
+$vocab["room_area"]                   = "部屋-部署";
+$vocab["area_room_delimiter"]         = "区切り文字";
+$vocab["area_room_delimiter_note"]    = "LOCATION属性で、部署と部屋とを区切る文字です。" .
+                                        "区切り文字が見つからなければ、MRBSはLOCATIONと同じ名前で部屋を探します。" .
+                                        "";
+$vocab["area_room_create"]            = "必要であれば、部屋を作る";
+$vocab["default_type"]                = "既定のタイプ";
+$vocab["room_does_not_exist_no_area"] = "部屋は存在せず、追加することができません - 部署が指定されていません";
+$vocab["room_not_unique_no_area"]     = "部屋名が一意ではありません。部署の選択されていない状態で、一方を選択することはできません。";
+$vocab["area_does_not_exist"]         = "存在しない部署:";
+$vocab["room_does_not_exist"]         = "存在しない部屋:";
+$vocab["creating_new_area"]           = "新しい部署を作る:";
+$vocab["creating_new_room"]           = "新しい部屋を作る:";
+$vocab["could_not_create_area"]       = "部署を作ることができませんでした";
+$vocab["could_not_create_room"]       = "部屋を作ることができませんでした";
+$vocab["could_not_find_room"]         = "部屋を見つけることができませんでした";
+$vocab["could_not_import"]            = "インポートできませんでした";
+$vocab["no_LOCATION"]                 = "VEVENTがLOCATION属性を含んでいませんでした";
+$vocab["invalid_RRULE"]               = "RRULEが不正: FREQパートが見当たりません";
+$vocab["more_than_one_BYDAY"]         = "MRBS does not support more than one BYDAY value when FREQ=";
+$vocab["negative_BYDAY"]              = "MRBSは負の値のBYDAYをサポートしていません";
+$vocab["BYDAY_equals_5"]              = "MRBS値が5のBYDAYをサポートしていません";
+$vocab["unsupported_FREQ"]            = "MRBS does not support FREQ=";
+$vocab["unsupported_INTERVAL"]        = "MRBS does not support INTERVAL>1 with FREQ=";
+$vocab["unsupported_COUNT"]           = "COUNTは、MRBSではまだサポートされていません";
+$vocab["no_indefinite_repeats"]       = "期間が限定されていない繰り返しは、MRBSではまだサポートされていません";
+$vocab["events_imported"]             = "イベントをインポートしました";
+$vocab["events_not_imported"]         = "イベントをインポートできませんました";
+
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "致命的なエラー: データベースに接続できません。";
 
-// Entry types
-$vocab["type.I"]             = "内部会議";
-$vocab["type.E"]             = "外部会議";
+// Used in DataTables
+$vocab["show_hide_columns"]  = "カラムを表示する/隠す";
+$vocab["restore_original"]   = "元に戻す";
 
+// Entry types
+$vocab["type.I"]            = "内部";
+$vocab["type.E"]            = "外部";
+ 
+// General
+$vocab["fatal_db_error"]     = "致命的なエラー: 残念ながら、データベースは現在利用可能ではありません。";
+$vocab["back"]               = "戻る";
 ?>
