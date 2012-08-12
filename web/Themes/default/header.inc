@@ -51,8 +51,8 @@ function print_theme_header($day, $month, $year, $area, $room)
 <html>
   <head>
   
-  <title><?php echo get_vocab("mrbs") ?></title>
   <meta charset="<?php echo get_charset(); ?>">
+  <title><?php echo get_vocab("mrbs") ?></title>
   
   <?php
   require_once "style.inc";
