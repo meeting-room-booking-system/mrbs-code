@@ -7,9 +7,18 @@ require_once "functions_table.inc";
 
 // Get non-standard form variables
 $timetohighlight = get_form_var('timetohighlight', 'int');
+$ajax = get_form_var('ajax', 'int');
 
 // Check the user is authorised for this page
 checkAuthorised();
+
+$inner_html = day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
+
+if ($ajax)
+{
+  echo $inner_html;
+  exit;
+}
 
 // Form the room parameter for use in query strings.    We want to preserve room information
 // if possible when switching between views
@@ -61,39 +70,21 @@ $ty = date("Y",$i);
 $tm = date("m",$i);
 $td = date("d",$i);
 
-$sql = "SELECT COUNT(*)
-          FROM $tbl_room R, $tbl_area A
-         WHERE R.area_id=$area
-           AND R.area_id = A.id
-           AND R.disabled = 0
-           AND A.disabled = 0";
-           
-$n_rooms = sql_query1($sql);
 
-if ($n_rooms < 0)
+
+// Show current date and timezone
+echo "<div id=\"dwm\">\n";
+echo "<h2>" . utf8_strftime($strftime_format['date'], $timestamp) . "</h2>\n";
+if ($display_timezone)
 {
-  trigger_error(sql_error(), E_USER_WARNING);
-  fatal_error(FALSE, get_vocab("fatal_db_error"));
-}
-elseif ($n_rooms == 0)
-{
-  echo "<h1>".get_vocab("no_rooms_for_area")."</h1>";
-}
-else
-{
-  // Show current date and timezone
-  echo "<div id=\"dwm\">\n";
-  echo "<h2>" . utf8_strftime($strftime_format['date'], $timestamp) . "</h2>\n";
-  if ($display_timezone)
-  {
-    echo "<div class=\"timezone\">";
-    echo get_vocab("timezone") . ": " . date('T', $timestamp) . " (UTC" . date('O', $timestamp) . ")";
-    echo "</div>\n";
-  }
+  echo "<div class=\"timezone\">";
+  echo get_vocab("timezone") . ": " . date('T', $timestamp) . " (UTC" . date('O', $timestamp) . ")";
   echo "</div>\n";
+}
+echo "</div>\n";
   
-  // Generate Go to day before and after links
-  $before_after_links_html = "
+// Generate Go to day before and after links
+$before_after_links_html = "
 <div class=\"screenonly\">
   <div class=\"date_nav\">
     <div class=\"date_before\">
@@ -110,22 +101,22 @@ else
   </div>
 </div>\n";
 
-  // and output them
-  echo $before_after_links_html;
+// and output them
+echo $before_after_links_html;
 
-  echo "<table class=\"dwm_main\" id=\"day_main\" data-resolution=\"$resolution\">\n";
-  echo day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
-  echo "</table>\n";
+echo "<table class=\"dwm_main\" id=\"day_main\" data-resolution=\"$resolution\">\n";
+echo $inner_html;
+echo "</table>\n";
   
-  echo $before_after_links_html;
+echo $before_after_links_html;
 
-  show_colour_key();
-  // Draw the three month calendars
-  if ($display_calendar_bottom)
-  {
-    minicals($year, $month, $day, $area, $room, 'day');
-  }
+show_colour_key();
+// Draw the three month calendars
+if ($display_calendar_bottom)
+{
+  minicals($year, $month, $day, $area, $room, 'day');
 }
+
 
 output_trailer();
 

@@ -636,6 +636,26 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   
+  $sql = "SELECT COUNT(*)
+            FROM $tbl_room R, $tbl_area A
+           WHERE R.area_id=$area
+             AND R.area_id = A.id
+             AND R.disabled = 0
+             AND A.disabled = 0";
+           
+  $n_rooms = sql_query1($sql);
+
+  if ($n_rooms < 0)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
+  }
+  elseif ($n_rooms == 0)
+  {
+    // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
+    return "<tbody data-empty=1><tr><td><h1>".get_vocab("no_rooms_for_area")."</h1></td></tr></tbody>";
+  }
+
   $format = ($enable_periods) ? "i" : "Gi";
   
   // form the room parameter for use in query strings.    We want to preserve room information
@@ -956,12 +976,26 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
 
 function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight=NULL)
 {
-  global $tbl_entry;
+  global $tbl_entry, $tbl_room, $tbl_area;
   global $enable_periods, $periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $weekstarts, $strftime_format;
 
+  // Check that we've gor a valid, enabled room
+  $sql = "SELECT COUNT(*)
+            FROM $tbl_room R, $tbl_area A
+           WHERE R.id=$room
+             AND R.area_id=A.id
+             AND R.disabled=0
+             AND A.disabled = 0";
+             
+  if (sql_query1($sql) != 1)
+  {
+    // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
+    return "<tbody data-empty=1><tr><td><h1>".get_vocab("no_rooms_for_area")."</h1></td></tr></tbody>";
+  }
+  
   $num_of_days=7; // days in a week
   
   $format = ($enable_periods) ? "i" : "Gi";

@@ -146,12 +146,13 @@ if (file_exists("js/$page.js.php"))
 }
     
     
-// We need the resizable booking and the multiple bookings code for the day and week pages
+// We need the resizable booking, multiple bookings and refresh code for the day and week pages
 if (in_array($page, array('day', 'week')))
 {
   ?>
   <script type="text/javascript" src="js/resizable.js.php?<?php echo $standard_query_string ?>"></script>
   <script type="text/javascript" src="js/multiple.js.php?<?php echo $standard_query_string ?>"></script>
+  <script type="text/javascript" src="js/refresh.js.php?<?php echo $standard_query_string ?>"></script>
   <?php
 }
     
@@ -185,6 +186,16 @@ $(window).load(function() {
               area: '<?php echo $area?>',
               room: '<?php echo $room?>',
               page: '<?php echo $page?>'};
+  <?php
+  // We need $timetohighlight for the day and week pages
+  $timetohighlight = get_form_var('timetohighlight', 'int');
+  if (isset($timetohighlight))
+  {
+    ?>
+    args.timetohighlight = '<?php echo $timetohighlight?>';
+    <?php
+  }
+  ?>
   init(args);
 
 });

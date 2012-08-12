@@ -9,9 +9,18 @@ require_once "functions_table.inc";
 
 // Get non-standard form variables
 $timetohighlight = get_form_var('timetohighlight', 'int');
+$ajax = get_form_var('ajax', 'int');
 
 // Check the user is authorised for this page
 checkAuthorised();
+
+$inner_html = week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
+
+if ($ajax)
+{
+  echo $inner_html;
+  exit;
+}
 
 // print the page header
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
@@ -19,15 +28,6 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 // Section with areas, rooms, minicals.
 
 echo "<div id=\"dwm_header\" class=\"screenonly\">\n";
-
-// Get the area and room names (we will need them later for the heading)
-$this_area_name = "";
-$this_room_name = "";
-$this_area_name = sql_query1("SELECT area_name FROM $tbl_area WHERE id=$area AND disabled=0 LIMIT 1");
-$this_room_name = sql_query1("SELECT room_name FROM $tbl_room WHERE id=$room AND disabled=0 LIMIT 1");
-// The room is invalid if it doesn't exist, or else it has been disabled, either explicitly
-// or implicitly because the area has been disabled
-$room_invalid = ($this_area_name === -1) || ($this_room_name === -1);
 
 // Show all available areas
 echo make_area_select_html('week.php', $area, $year, $month, $day);   
@@ -42,16 +42,20 @@ if (!$display_calendar_bottom)
 
 echo "</div>\n";
 
-// Don't continue if this room is invalid, which could be because the area
-// has no rooms, or else the room or area has been disabled
-if ($room_invalid)
-{
-  echo "<h1>".get_vocab("no_rooms_for_area")."</h1>";
-  output_trailer();
-  exit;
-}
-
 // Show area and room:
+// Get the area and room names
+$this_area_name = sql_query1("SELECT area_name FROM $tbl_area WHERE id=$area AND disabled=0 LIMIT 1");
+$this_room_name = sql_query1("SELECT room_name FROM $tbl_room WHERE id=$room AND disabled=0 LIMIT 1");
+// The room is invalid if it doesn't exist, or else it has been disabled, either explicitly
+// or implicitly because the area has been disabled
+if ($this_area_name === -1)
+{
+  $this_area_name = '';
+}
+if ($this_room_name === -1)
+{
+  $this_room_name = '';
+}
 echo "<div id=\"dwm\">\n";
 echo "<h2>" . htmlspecialchars("$this_area_name - $this_room_name") . "</h2>\n";
 echo "</div>\n";
@@ -95,7 +99,7 @@ $before_after_links_html = "
 print $before_after_links_html;
 
 echo "<table class=\"dwm_main\" id=\"week_main\" data-resolution=\"$resolution\">";
-echo week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
+echo $inner_html;
 echo "</table>\n";
 
 print $before_after_links_html;

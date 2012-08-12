@@ -50,9 +50,14 @@ global $using_rtl, $refresh_rate, $PHP_SELF;
     
     <meta name="robots" content="noindex">
 <?php
-if (($refresh_rate != 0) &&
-    preg_match("/(day|week|month)\.php/",$PHP_SELF))
+if (($refresh_rate != 0) && preg_match("/(day|week|month)\.php/", $PHP_SELF))
 {
-  echo "    <meta http-equiv=\"Refresh\" content=\"$refresh_rate\">\n";
+  // If we're using JavaScript and on the day or week pages we'll do the refresh by 
+  // getting a new table using Ajax requests, which means we only have to download
+  // the table not the whole page each time
+  $ajax_capable = preg_match("/(day|week)\.php/", $PHP_SELF);
+  echo ($ajax_capable) ? "<noscript>\n" : '';
+  echo "<meta http-equiv=\"Refresh\" content=\"$refresh_rate\">\n";
+  echo ($ajax_capable) ? "</noscript>\n" : '';
 }
 ?>

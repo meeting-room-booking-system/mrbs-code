@@ -42,6 +42,12 @@ init = function(args) {
     if (!lteIE8)
     {
       var table = $('table.dwm_main');
+      
+      <?php // Don't do anything if this is an empty table ?>
+      if (table.find('tbody').data('empty'))
+      {
+        return;
+      }
        
       <?php
       // function to reverse a collection of jQuery objects
