@@ -454,9 +454,9 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   else  
   {
     startIndex = startSelect.selectedIndex;
-    startValue = parseInt(startSelect.options[startIndex].value);
+    startValue = parseInt(startSelect.options[startIndex].value, 10);
     endIndex = endSelect.selectedIndex;
-    endValue = parseInt(endSelect.options[endIndex].value);
+    endValue = parseInt(endSelect.options[endIndex].value, 10);
     <?php
     // If the start value has changed then we adjust the endvalue
     // to keep the duration the same.  (If the end value has changed
@@ -668,7 +668,7 @@ init = function() {
       {
         startOptions[area][j] = [];
         startOptions[area][j]['text'] = startSelect.options[j].text;
-        startOptions[area][j]['value'] = parseInt(startSelect.options[j].value);
+        startOptions[area][j]['value'] = parseInt(startSelect.options[j].value, 10);
       }
       
       endOptions[area] = [];
@@ -677,7 +677,7 @@ init = function() {
       {
         endOptions[area][j] = [];
         endOptions[area][j]['text'] = endSelect.options[j].text;
-        endOptions[area][j]['value'] = parseInt(endSelect.options[j].value);
+        endOptions[area][j]['value'] = parseInt(endSelect.options[j].value, 10);
       }
     }
   
@@ -692,8 +692,8 @@ init = function() {
     allDay = form["all_day" + currentArea];
     if (allDay &&
         !allDay.disabled && 
-        (parseInt(startSelect.options[startSelect.selectedIndex].value) == startOptions[currentArea][0]['value']) &&
-        (parseInt(endSelect.options[endSelect.selectedIndex].value) == endOptions[currentArea][nEndOptions[currentArea] - 1]['value']))
+        (parseInt(startSelect.options[startSelect.selectedIndex].value, 10) == startOptions[currentArea][0]['value']) &&
+        (parseInt(endSelect.options[endSelect.selectedIndex].value, 10) == endOptions[currentArea][nEndOptions[currentArea] - 1]['value']))
     {
       allDay.checked = true;
       startSelect.disabled = true;
