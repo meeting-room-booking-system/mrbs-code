@@ -181,11 +181,11 @@ if (function_exists('json_encode'))
 // The startOptions and endOptions are multi-dimensional arrays indexed as follows:
 // [area_id][option number][text|value]
 ?>
-var nStartOptions = new Array;  
-var nEndOptions = new Array;
-var startOptions = new Array();
-var endOptions = new Array();
-var vocab = new Array();
+var nStartOptions = [];  
+var nEndOptions = [];
+var startOptions = [];
+var endOptions = [];
+var vocab = [];
 var prevStartValue;
 
 function durFormat(r)
@@ -638,16 +638,16 @@ init = function() {
     // Get the current vocab (in the appropriate language) for periods,
     // minutes, hours
     ?>
-    vocab['periods'] = new Array();
+    vocab['periods'] = [];
     vocab['periods']['singular'] = '<?php echo escape_js(get_vocab("period_lc")) ?>';
     vocab['periods']['plural'] = '<?php echo escape_js(get_vocab("periods")) ?>';
-    vocab['minutes'] = new Array();
+    vocab['minutes'] = [];
     vocab['minutes']['singular'] = '<?php echo escape_js(get_vocab("minute_lc")) ?>';
     vocab['minutes']['plural'] = '<?php echo escape_js(get_vocab("minutes")) ?>';
-    vocab['hours'] = new Array();
+    vocab['hours'] = [];
     vocab['hours']['singular'] = '<?php echo escape_js(get_vocab("hour_lc")) ?>';
     vocab['hours']['plural'] = '<?php echo escape_js(get_vocab("hours")) ?>';
-    vocab['days'] = new Array();
+    vocab['days'] = [];
     vocab['days']['singular'] = '<?php echo escape_js(get_vocab("day_lc")) ?>';
     vocab['days']['plural'] = '<?php echo escape_js(get_vocab("days")) ?>';
     <?php
@@ -662,20 +662,20 @@ init = function() {
       startSelect = form["start_seconds" + area];
       endSelect = form["end_seconds" + area];
       
-      startOptions[area] = new Array();
+      startOptions[area] = [];
       nStartOptions[area] = startSelect.options.length;
       for (j=0; j < nStartOptions[area]; j++)
       {
-        startOptions[area][j] = new Array();
+        startOptions[area][j] = [];
         startOptions[area][j]['text'] = startSelect.options[j].text;
         startOptions[area][j]['value'] = parseInt(startSelect.options[j].value);
       }
       
-      endOptions[area] = new Array();
+      endOptions[area] = [];
       nEndOptions[area] = endSelect.options.length;
       for (j=0; j < nEndOptions[area]; j++)
       {
-        endOptions[area][j] = new Array();
+        endOptions[area][j] = [];
         endOptions[area][j]['text'] = endSelect.options[j].text;
         endOptions[area][j]['value'] = parseInt(endSelect.options[j].value);
       }
