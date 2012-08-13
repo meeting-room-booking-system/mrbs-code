@@ -143,4 +143,4 @@ init = function(args) {
     tableOptions.oColReorder = {"iFixedColumns": 1};
     var pendingTable = makeDataTable('#pending_table', tableOptions);
   }  // if (!lteie6)
-}
+};

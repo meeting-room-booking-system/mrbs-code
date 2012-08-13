@@ -1195,4 +1195,5 @@ init = function(args) {
   } // if function_exists('json_encode')
   ?>
   
-}
+};
+

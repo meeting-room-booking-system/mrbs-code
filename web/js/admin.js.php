@@ -42,5 +42,5 @@ init = function(args) {
                                  {},
                                  {sWidth: "relative", iWidth: 33},
                                  rightCol);
-}
+};
 

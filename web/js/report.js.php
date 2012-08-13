@@ -320,4 +320,4 @@ init = function(args) {
 
   var reportTable = makeDataTable('#report_table', tableOptions);
   
-}
+};

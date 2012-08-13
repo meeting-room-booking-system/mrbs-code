@@ -40,4 +40,4 @@ init = function(args) {
             cell.addClass('maximized');
           }
         });
-}
+};

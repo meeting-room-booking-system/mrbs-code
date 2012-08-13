@@ -41,4 +41,4 @@ init = function(args) {
           $(this).toggleClass('valid_hover');
         });
   }                             
-}     
+};

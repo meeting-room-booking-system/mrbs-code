@@ -71,4 +71,4 @@ init = function(args) {
           }
         });
     });
-}
+};

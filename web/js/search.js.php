@@ -61,4 +61,5 @@ init = function(args) {
 
     <?php
   }  //  if (function_exists('json_encode')) ?>
-}
+};
+

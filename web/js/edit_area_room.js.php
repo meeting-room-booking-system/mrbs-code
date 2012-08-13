@@ -81,4 +81,4 @@ init = function() {
       $(this).nextAll('input, select').attr('disabled', !$(this).is(':checked'));
     })
     .change();
-}
+};

@@ -53,4 +53,5 @@ init = function(args) {
     <?php
   } // if (!empty($refresh_rate))
   ?>
-}
+};
+

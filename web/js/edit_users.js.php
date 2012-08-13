@@ -38,4 +38,5 @@ init = function(args) {
   var usersTable = makeDataTable('#users_table',
                                  tableOptions,
                                  {sWidth: "relative", iWidth: 33});
-}
+};
+
