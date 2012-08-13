@@ -105,7 +105,7 @@ if (function_exists('json_encode'))
           var fieldName = $(this).attr('name');
           if (params[fieldName] === undefined)
           {
-            params[fieldName] = getFormValue(relevantFields.filter('[name=' + fieldName.replace('[', '\\[').replace(']', '\\]') + ']'))
+            params[fieldName] = getFormValue(relevantFields.filter('[name=' + fieldName.replace('[', '\\[').replace(']', '\\]') + ']'));
           }
         });
         
@@ -130,7 +130,7 @@ if (function_exists('json_encode'))
           var titleText, detailsHTML;
           if (result.conflicts.length == 0)
           {
-            conflictDiv.text(checkMark).attr('class', 'good').attr;
+            conflictDiv.text(checkMark).attr('class', 'good');
             titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("no_conflicts"))) ?>';
             detailsHTML = titleText;
           }
