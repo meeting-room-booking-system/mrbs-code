@@ -14,7 +14,154 @@ if ($use_strict)
 
 $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= $max_level);
+
+
+// do a little form verifying
+?>
+function validate(form)
+{
+  var testInput = document.createElement("input");
+  var testSelect = document.createElement("select");
+  var validForm = true;
   
+  <?php
+  // Mandatory fields (INPUT elements, except for checkboxes).
+  // Only necessary if the browser doesn't support the HTML5 pattern or
+  // required attributes
+  ?>
+  if (!("pattern" in testInput) || !("required" in testInput))
+  {
+    form.find('input').not('[type="checkbox"]').each(function() {
+      var id = $(this).attr('id');
+      if (validationMessages.vocab[id])
+      {
+        if (<?php echo REGEX_TEXT_NEG ?>.test($(this).val()))
+        {
+          alert(validationMessages.vocab[id]);
+          validForm = false;
+          return false;
+        }
+      }
+    });
+    if (!validForm)
+    {
+      return false;
+    }
+  }
+  
+  <?php
+  // Mandatory fields (INPUT elements, checkboxes only).
+  // Only necessary if the browser doesn't support the HTML5 required attribute
+  ?>
+  if (!("required" in testInput))
+  {
+    form.find('input').filter('[type="checkbox"]').each(function() {
+      var id = $(this).attr('id');
+      if (validationMessages.vocab[id])
+      {
+        if (!$(this).is(':checked'))
+        {
+          alert(validationMessages.vocab[id]);
+          validForm = false;
+          return false;
+        }
+      }
+    });
+    if (!validForm)
+    {
+      return false;
+    }
+  }
+  
+  <?php
+  // Mandatory fields (TEXTAREA elements).
+  // Note that the TEXTAREA element only supports the "required" attribute and not
+  // the "pattern" attribute.    So we need to do these tests in all cases because
+  // the browser will let through a string consisting only of whitespace.
+  ?>
+  form.find('textarea').each(function() {
+    var id = $(this).attr('id');
+    if (validationMessages.vocab[id])
+    {
+      if (<?php echo REGEX_TEXT_NEG ?>.test($(this).val()))
+      {
+        alert(validationMessages.vocab[id]);
+        validForm = false;
+        return false;
+      }
+    }
+  });
+  if (!validForm)
+  {
+    return false;
+  }
+  
+  <?php
+  // Mandatory fields (SELECT elements).
+  // Only necessary if the browser doesn't support the HTML5 required attribute
+  ?>
+  if (!("required" in testSelect))
+  {
+    form.find('select').each(function() {
+      var id = $(this).attr('id');
+      if (validationMessages.vocab[id])
+      {
+        if ($(this).val() == '')
+        {
+          alert(validationMessages.vocab[id]);
+          validForm = false;
+          return false;
+        }
+      }
+    });
+    if (!validForm)
+    {
+      return false;
+    }
+  }
+  
+
+  var formEl = form.get(0);
+  
+  <?php // Check that the start date is not after the end date ?>
+  var dateDiff = getDateDifference(formEl);
+  if (dateDiff < 0)
+  {
+    alert("<?php echo escape_js(get_vocab('start_after_end_long'))?>");
+    return false;
+  }
+  
+  <?php
+  // Check that there's a sensible value for rep_num_weeks.   Only necessary
+  // if the browser doesn't support the HTML5 min and step attrubutes
+  ?>
+  if (!("min" in testInput) || !(("step" in testInput)))
+  {
+    if ((form.find('input:radio[name=rep_type]:checked').val() == <?php echo REP_N_WEEKLY ?>)
+        && (form.find('#rep_num_weeks').val() < <?php echo REP_NUM_WEEKS_MIN ?>))
+    {
+      alert("<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('useful_n-weekly_value')) ?>");
+      return false;
+    }
+  }
+    
+  <?php
+  // Form submit can take some time, especially if mails are enabled and
+  // there are more than one recipient. To avoid users doing weird things
+  // like clicking more than one time on submit button, we hide it as soon
+  // it is clicked.
+  ?>
+  form.find('input[type=submit]').attr('disabled', 'disabled');
+  
+  <?php
+  // would be nice to also check date to not allow Feb 31, etc...
+  ?>
+  
+  return true;
+}
+
+
+<?php
 // Add Ajax capabilities (but only if we can return the result as a JSON object)
 if (function_exists('json_encode'))
 {
