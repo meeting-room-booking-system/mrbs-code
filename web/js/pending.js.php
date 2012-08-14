@@ -82,7 +82,7 @@ init = function(args) {
                   // 100% - I'm not sure why - but I have left the code in]
                   ?>
                   maintable.find('tr').eq(0).find('th').each(function(i){
-                      var def = new Object();
+                      var def = {};
                       switch (i)
                       {
                         case 0: <?php // expand control ?>
@@ -108,7 +108,7 @@ init = function(args) {
                 });
                   
     <?php // Turn the table into a datatable ?>
-    var tableOptions = new Object();
+    var tableOptions = {};
     tableOptions.sScrollXInner = "100%";
     tableOptions.aoColumnDefs = colDefsMain;
     <?php

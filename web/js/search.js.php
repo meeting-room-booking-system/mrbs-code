@@ -46,7 +46,7 @@ init = function(args) {
         }).appendTo(searchForm);
     }
       
-    var tableOptions = new Object();
+    var tableOptions = {};
     <?php
     // Use an Ajax source - gives much better performance for large tables
     list( ,$query_string) = explode('?', $HTTP_REFERER, 2);

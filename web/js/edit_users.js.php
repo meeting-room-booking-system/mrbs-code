@@ -18,7 +18,7 @@ init = function(args) {
 
   <?php // Turn the list of users into a dataTable ?>
   
-  var tableOptions = new Object();
+  var tableOptions = {};
   <?php
   // Use an Ajax source if we can - gives much better performance for large tables
   if (function_exists('json_encode'))

@@ -1118,12 +1118,12 @@ if ($res)
 //<![CDATA[
 
 var currentArea = <?php echo $area_id ?>;
-var areas = new Array();
+var areas = [];
 <?php
 // give JavaScript a copy of the PHP array $areas
 foreach ($areas as $area)
 {
-  echo "areas[${area['id']}] = new Array();\n";
+  echo "areas[${area['id']}] = [];\n";
   foreach ($area as $key => $value)
   {
     if (in_array($key, array('area_name', 'max_duration_units')))
@@ -1152,7 +1152,7 @@ function validationMessages()
   // fields.    These will be the 'name' and 'rooms' fields and any other fields
   // defined by the config variable $is_mandatory_field
   ?>
-  validationMessages.vocab = new Object();
+  validationMessages.vocab = {};
   validationMessages.vocab['name'] = '';
   validationMessages.vocab['rooms'] = '';
   <?php
