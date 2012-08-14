@@ -203,7 +203,7 @@ init = function(args) {
       // column on the first page)
       ?>
       var table = $('#report_table');
-      leftWidth = getFixedColWidth(table, {sWidth: "relative", iWidth: 33});
+      var leftWidth = getFixedColWidth(table, {sWidth: "relative", iWidth: 33});
       var oFC = new FixedColumns(reportTable, {"iLeftColumns": 1,
                                                "iLeftWidth": leftWidth,
                                                "sLeftWidth": "fixed"});
