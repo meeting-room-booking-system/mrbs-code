@@ -269,7 +269,7 @@ init = function(args) {
                                         alert("<?php echo escape_js(get_vocab('delete_entries_failed')) ?>");
                                         break;
                                       }
-                                      nDeleted += parseInt(results[i]);
+                                      nDeleted += parseInt(results[i], 10);
                                     }
                                     <?php 
                                     // Reload the page to get the new dataset.   If we're using
@@ -290,7 +290,7 @@ init = function(args) {
                                       // by subtracting the number of entries deleted from theee previous count.
                                       ?>
                                       var span = $('#n_entries');
-                                      span.text(parseInt(span.text()) - nDeleted);
+                                      span.text(parseInt(span.text(), 10) - nDeleted);
                                     }
                                     else
                                     {

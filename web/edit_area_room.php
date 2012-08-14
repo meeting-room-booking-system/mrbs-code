@@ -953,11 +953,11 @@ if (isset($change_area) &&!empty($area))
         function changeSelect(formObj)
         {
           // re-generates the dropdown given changed form values
-          var res_mins = parseInt(formObj.area_res_mins.value);
+          var res_mins = parseInt(formObj.area_res_mins.value, 10);
           if (res_mins == 0) return;  // avoid endless loops and divide by zero errors
-          var morningstarts = parseInt(formObj.area_morningstarts.value);
-          var morningstarts_minutes = parseInt(formObj.area_morningstarts_minutes.value);
-          var eveningends_t = parseInt(formObj.area_eveningends_t.value);
+          var morningstarts = parseInt(formObj.area_morningstarts.value, 10);
+          var morningstarts_minutes = parseInt(formObj.area_morningstarts_minutes.value, 10);
+          var eveningends_t = parseInt(formObj.area_eveningends_t.value, 10);
           var morningstarts_t = (morningstarts * 60) + morningstarts_minutes;
           var ampm = "am";
           if (formObj.area_morning_ampm && formObj.area_morning_ampm[1].checked)
