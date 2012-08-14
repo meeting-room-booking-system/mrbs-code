@@ -326,7 +326,17 @@ define('DEL_ENTRY_AJAX_BATCH_SIZE', 100);
 
 // Interval types used in booking policies
 $interval_types = array('day', 'week', 'month', 'year', 'future');
-               
+
+
+/********************************************************
+ * JavaScript - internal use, do not change
+ ********************************************************/
+
+// Setting $use_strict = TRUE will put the MRBS JavaScript into strict mode.  Useful
+// for debugging.
+$use_strict = FALSE;
+       
+
 /********************************************************
  * PHP System Configuration - internal use, do not change
  ********************************************************/

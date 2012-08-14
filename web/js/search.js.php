@@ -7,6 +7,11 @@ require "../defaultincludes.inc";
 header("Content-type: application/x-javascript");
 expires_header(0); // Cannot cache file because it depends on $HTTP_REFERER
 
+if ($use_strict)
+{
+  echo "'use strict';\n";
+}
+
 // =================================================================================
 
 

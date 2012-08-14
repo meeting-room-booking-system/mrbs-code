@@ -7,6 +7,10 @@ require "../defaultincludes.inc";
 header("Content-type: application/x-javascript");
 expires_header(60*30); // 30 minute expiry
 
+if ($use_strict)
+{
+  echo "'use strict';\n";
+}
 
 // Try and get a sensible value for the fixed column width, which is the
 // smaller of the actual column width and either a fixed width or a
