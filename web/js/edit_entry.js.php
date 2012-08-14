@@ -660,7 +660,7 @@ init = function() {
     // they are fully populated with options.  We can then use the details
     // to rebuild the selectors later on
     ?>
-    var i, j, area, startSelect, endSelect;
+    var i, j, area, startSelect, endSelect, allDay;
     for (i in areas)
     {
       area = i;
