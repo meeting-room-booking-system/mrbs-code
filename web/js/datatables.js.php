@@ -193,7 +193,7 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
     }
     if ((rightCol !== undefined) && (rightCol !== null))
     { 
-      nCols = table.find('tr:first-child th').length;
+      var nCols = table.find('tr:first-child th').length;
       colVisExcludeCols.push(nCols - 1);
       <?php
       // Actually we stop them all from being reordered because at the moment
