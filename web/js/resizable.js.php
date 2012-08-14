@@ -15,6 +15,13 @@ if ($use_strict)
 $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= $max_level);
 
+
+// function to reverse a collection of jQuery objects
+?>
+$.fn.reverse = [].reverse;
+      
+
+<?php
 // Get the sides of the rectangle represented by the jQuery object jqObject
 // We round down the size of the rectangle to avoid any spurious overlaps
 // caused by rounding errors
@@ -523,12 +530,7 @@ init = function(args) {
       {
         return;
       }
-       
-      <?php
-      // function to reverse a collection of jQuery objects
-      ?>
-      $.fn.reverse = [].reverse;
-           
+         
       var tableData = {};
       getTableData(table, tableData);
       
