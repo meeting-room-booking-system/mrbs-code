@@ -894,7 +894,7 @@ $sendmail_settings['args'] = '';
  * SMTP settings
  */
 
-// These settings are only used with the "smtp" backend"
+// These settings are only used with the "smtp" backend
 $smtp_settings['host'] = 'localhost';  // SMTP server
 $smtp_settings['port'] = 25;           // SMTP port number
 $smtp_settings['auth'] = FALSE;        // Whether to use SMTP authentication
