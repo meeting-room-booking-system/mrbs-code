@@ -210,8 +210,16 @@ function sql_mysqli_mutex_lock($name, $db_conn = null)
   sql_mysqli_ensure_handle($db_conn);
 
   global $sql_mutex_shutdown_registered, $sql_mutex_unlock_name;
-  if (!sql_mysqli_query1("SELECT GET_LOCK('$name', 20)", $db_conn))
+  
+  $r = sql_mysqli_query("SELECT GET_LOCK('$name', 20)", $db_conn);
+  if (!$r)
   {
+    // Distinguish between a timeout (GET_LOCK returns 0)
+    // and an error (GET_LOCK returns NULL)
+    if (!isset($r))
+    {
+      trigger_error(sql_mysqli_error($db_conn), E_USER_WARNING);
+    }
     return 0;
   }
   $sql_mysqli_mutex_unlock_name = $name;
