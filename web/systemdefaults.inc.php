@@ -48,7 +48,9 @@ $zoneinfo_update = TRUE;
 $zoneinfo_outlook_compatible = TRUE;
 
 // The VTIMEZONE definitions are cached in the database with an expiry time
-// of $zoneinfo_expiry seconds
+// of $zoneinfo_expiry seconds.   If your server does not have external internet
+// access set $zoneinfo_expiry to PHP_INT_MAX to prevent MRBS from trying to
+// update the VTIMEZONE definitions.
 $zoneinfo_expiry = 60*60*24*28;    // 28 days
 
 /*******************

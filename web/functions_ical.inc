@@ -35,6 +35,7 @@ function extract_vtimezone($vcalendar)
 
 
 // download the contents of the web page at $url and return it as a string
+// Returns the contents of the URL, or else FALSE on failure
 function download($url)
 {
   global $proxy;
@@ -42,7 +43,7 @@ function download($url)
   $connect_timeout  = 2;  // seconds
   $transfer_timeout = 2;  // seconds
   $curlopt_timeout  = 3;  // seconds
-  
+
   // If we can we use cURL to download the page because it allows us to
   // set a timeout on establishing a connection as well as on the transfer time.
   // (We can only set a timeout on transfer time with file_get_contents()).  The
@@ -56,6 +57,10 @@ function download($url)
     curl_setopt($ch, CURLOPT_TIMEOUT, $curlopt_timeout);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     $contents = curl_exec($ch);
+    if ($contents === FALSE)
+    {
+      trigger_error(curl_error($ch), E_USER_WARNING);
+    }
     curl_close($ch);
   }
   
@@ -70,6 +75,10 @@ function download($url)
                                                            'timeout' => $transfer_timeout)));
     // Suppress any timeout warnings
     $contents = @file_get_contents($url);
+    if ($contents === FALSE)
+    {
+      trigger_error("MRBS: could not get contents of $url", E_USER_WARNING);
+    }
   }
   
   return $contents;
@@ -142,26 +151,42 @@ function get_vtimezone($tz)
       
       $vcalendar = download($tz_url);
       
-      if ($vcalendar)
+      if ($vcalendar === FALSE)
+      {
+        trigger_error("MRBS: failed to download a new timezone definition from $tz_url", E_USER_WARNING);
+      }
+      else
       {
         $new_vtimezone = extract_vtimezone($vcalendar);
-        if (!empty($new_vtimezone))
+        if (empty($new_vtimezone))
+        {
+          trigger_error("MRBS: $tz_url did not contain a valid VTIMEZONE", E_USER_WARNING);
+        }
+        else
         {
           // We've got a valid VTIMEZONE, so we can overwrite $vtimezone
           $vtimezone = $new_vtimezone;
-          // Update the database
-          $sql = "UPDATE $tbl_zoneinfo
-                     SET vtimezone='" . sql_escape($vtimezone) . "',
-                         last_updated=" . time() . "
-                   WHERE timezone='" . sql_escape($tz) . "'
-                     AND outlook_compatible=$zoneinfo_outlook_compatible";
-          if (sql_command($sql) < 0)
-          {
-            trigger_error(sql_error(), E_USER_WARNING);
-            fatal_error(FALSE, get_vocab("fatal_db_error"));
-          }
         }
       }
+
+      // Update the database, whether we've successfully got a new VTIMEZONE or not.
+      // If we didn't manage to get a new VTIMEZONE, updating the database will update
+      // the last_updated field and mean that MRBS will not try again until after the
+      // expiry interval has passed.  This will mean that we don't introduce a few
+      // seconds delay every time this file is included.  (The most likely reason that
+      // we couldn't get a new VTIMEZONE is that the site doesn't have external internet
+      // access, so there's no point in retrying for a while).
+      $sql = "UPDATE $tbl_zoneinfo
+                 SET vtimezone='" . sql_escape($vtimezone) . "',
+                     last_updated=" . time() . "
+               WHERE timezone='" . sql_escape($tz) . "'
+                 AND outlook_compatible=$zoneinfo_outlook_compatible";
+      if (sql_command($sql) < 0)
+      {
+        trigger_error(sql_error(), E_USER_WARNING);
+        fatal_error(FALSE, get_vocab("fatal_db_error"));
+      }
+
     }
   }
   // There's nothing in the database, so try and get a VTIMEZONE component
