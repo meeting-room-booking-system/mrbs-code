@@ -218,9 +218,29 @@ if (function_exists('json_encode'))
   // function to check whether the proposed booking would (a) conflict with any other bookings
   // and (b) conforms to the booking policies.   Makes an Ajax call to edit_entry_handler but does
   // not actually make the booking.
+  //
+  // If optional is true then the check is not carried out if there's already an
+  // outstanding request in the queue
   ?>
-  function checkConflicts()
+  function checkConflicts(optional)
   {
+    <?php
+    // Keep track of how many requests are still with the server.   We don't want
+    // to keep sending them if they're not coming back
+    ?>
+    if (checkConflicts.nOutstanding === undefined)
+    {
+      checkConflicts.nOutstanding = 0;
+    }
+    <?php
+    // If this is an optional request and there are already some check requests
+    // in the queue, then don't bother with this one.
+    ?>
+    if (optional && checkConflicts.nOutstanding)
+    {
+      return;
+    }
+    
     <?php
     // We set a small timeout on checking the booking in order to allow time for
     // the click handler on the Submit buttons to set the data in the form.  We then
@@ -272,8 +292,10 @@ if (function_exists('json_encode'))
             delete params[i];
           }
         });
-        
+      
+      checkConflicts.nOutstanding++; 
       $.post('edit_entry_handler.php', params, function(result) {
+          checkConflicts.nOutstanding--;
           var conflictDiv = $('#conflict_check');
           var scheduleDetails = $('#schedule_details');
           var policyDetails = $('#policy_details');
@@ -984,7 +1006,7 @@ init = function() {
     {
       ?>
       window.setInterval(function() {
-        checkConflicts();
+        checkConflicts(true);
       }, <?php echo $ajax_refresh_rate * 1000 ?>);
       <?php
     }
