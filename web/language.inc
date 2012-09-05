@@ -1081,7 +1081,16 @@ function utf8_substr($str, $start)
 // _bytes_
 function utf8_bytecount($str)
 {
-  return count(str_split($str));
+  // We cannot rely on strlen() to return the number of bytes because it might
+  // have been overloaded by mb_strlen() which returns characters
+  if (function_exists('mb_strlen'))
+  {
+    return mb_strlen($str, '8bit');
+  }
+  else
+  {
+    return strlen($str);
+  }
 }
 
 
