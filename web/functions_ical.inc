@@ -519,13 +519,13 @@ function ical_fold($str)
 { 
   $line_split = "\r\n ";  // The RFC also allows a tab instead of a space
   
-  // We assume that the string is in ASCII or UTF-8 and therefore that a space
-  // character is one octet long.   If we ever switched for some reason to using
-  // for example UTF-16 this assumption would be invalid.
+  // We assume that we are using UTF-8 and therefore that a space character
+  // is one octet long.   If we ever switched for some reason to using for
+  // example UTF-16 this assumption would be invalid.
   if (function_exists('mb_detect_encoding'))
   {
-    $encoding = mb_detect_encoding($str);
-    if (!in_array($encoding, array('ASCII', 'UTF-8')))
+    $encoding = mb_detect_encoding($str, 'UTF-8', TRUE);
+    if ($encoding != 'UTF-8')
     {
       trigger_error("MRBS: internal error - using unsupported character set", E_USER_WARNING);
     }
