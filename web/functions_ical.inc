@@ -522,13 +522,9 @@ function ical_fold($str)
   // We assume that we are using UTF-8 and therefore that a space character
   // is one octet long.   If we ever switched for some reason to using for
   // example UTF-16 this assumption would be invalid.
-  if (function_exists('mb_detect_encoding'))
+  if ((get_charset() != 'utf-8') || (get_mail_charset() != 'utf-8'))
   {
-    $encoding = mb_detect_encoding($str, 'UTF-8', TRUE);
-    if ($encoding != 'UTF-8')
-    {
-      trigger_error("MRBS: internal error - using unsupported character set", E_USER_WARNING);
-    }
+    trigger_error("MRBS: internal error - using unsupported character set", E_USER_WARNING);
   }
   $space_octets = 1;
 
