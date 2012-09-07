@@ -106,6 +106,9 @@ if (isset($Action) && ($Action == "SetName"))
       $TargetURL .= "&returl=" . urlencode($returl);
     }
   }
+  // Problems have been reported on Windows IIS with session data not being
+  // written out without a call to session_write_close()
+  session_write_close();
   header ("Location: $TargetURL"); /* Redirect browser to initial page */
   /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
     which allows to work around problems with DNS inconsistencies in the server name.
