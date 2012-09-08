@@ -686,6 +686,8 @@ form#form_edit_users {width: auto; margin-top: 2.0em}
 form.edit_users_error {width: 10em; margin-top: 2.0em}
 div#user_list {padding: 2em 0}
 form#add_new_user {margin-left: 1em}
+#users_table td {text-align: right}
+#users_table td div.string {text-align: left}
 
 
 

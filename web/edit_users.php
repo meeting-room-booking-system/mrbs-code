@@ -162,11 +162,11 @@ function output_row(&$row)
           // the level field contains a code and we want to display a string
           // (but we put the code in a span for sorting)
           $values[] = "<span title=\"$col_value\"></span>" .
-                      "<div>" . get_vocab("level_$col_value") . "</div>";
+                      "<div class=\"string\">" . get_vocab("level_$col_value") . "</div>";
           break;
         case 'email':
           // we don't want to truncate the email address
-          $values[] = "<div>" . htmlspecialchars($col_value) . "</div>";
+          $values[] = "<div class=\"string\">" . htmlspecialchars($col_value) . "</div>";
           break;
         default:
           // Where there's an associative array of options, display
@@ -182,25 +182,23 @@ function output_row(&$row)
             {
               $col_value = '';
             }
-            $values[] = "<div>" . htmlspecialchars($col_value) . "</div>";
+            $values[] = "<div class=\"string\">" . htmlspecialchars($col_value) . "</div>";
           }
           elseif (($field['nature'] == 'boolean') || 
               (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
           {
             // booleans: represent by a checkmark
-            $values[] = "<div class=\"int\">" .
-                        ((!empty($col_value)) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;") .
-                         "</div>";
+            $values[] = (!empty($col_value)) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;";
           }
           elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
           {
             // integer values
-            $values[] = "<div class=\"int\">" . $col_value . "</div>";
+            $values[] = $col_value;
           }
           else
           {
              // strings
-            $values[] = "<div title=\"" . htmlspecialchars($col_value) . "\">" .
+            $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($col_value) . "\">" .
                         htmlspecialchars($col_value) . "</div>";
           }
           break;
