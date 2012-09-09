@@ -16,6 +16,80 @@ $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= $max_level);
 
 
+// Set the error messages to be used for the various fields.     We do this twice:
+// once to redefine the HTML5 error message and once for JavaScript alerts, for those
+// browsers not supporting HTML5 field validation.
+?>
+function validationMessages()
+{
+  <?php
+  // First of all create a property in the vocab object for each of the mandatory
+  // fields.    These will be the 'name' and 'rooms' fields and any other fields
+  // defined by the config variable $is_mandatory_field
+  ?>
+  validationMessages.vocab = {};
+  validationMessages.vocab['name'] = '';
+  validationMessages.vocab['rooms'] = '';
+  <?php
+  foreach ($is_mandatory_field as $key => $value)
+  {
+    list($table, $fieldname) = explode('.', $key, 2);
+    if ($table == 'entry')
+    {
+      ?>
+      validationMessages.vocab['<?php echo escape_js(VAR_PREFIX . $fieldname) ?>'] = '';
+      <?php
+    }
+  }
+
+  // Then (a) fill each of those properties with an error message and (b) redefine
+  // the HTML5 error message
+  ?>
+  for (var key in validationMessages.vocab)
+  {
+    validationMessages.vocab[key] = $("label[for=" + key + "]").html();
+    validationMessages.vocab[key] = '"' + validationMessages.vocab[key].replace(/:$/, '') + '" ';
+    validationMessages.vocab[key] += '<?php echo escape_js(get_vocab("is_mandatory_field")) ?>';
+    
+    var field = document.getElementById(key);
+    if (field.setCustomValidity && field.willValidate)
+    {
+      <?php
+      // We define our own custom event called 'validate' that is triggered on the
+      // 'change' event for checkboxes and select elements, and the 'input' even
+      // for all others.   We cannot use the change event for text input because the
+      // change event is only triggered when the element loses focus and we want the
+      // validation to happen whenever a character is input.   And we cannot use the
+      // 'input' event for checkboxes or select elements because it is not triggered
+      // on them.
+      ?>
+      $(field).bind('validate', function(e) {
+        <?php
+        // need to clear the custom error message otherwise the browser will
+        // assume the field is invalid
+        ?>
+        e.target.setCustomValidity("");
+        if (!e.target.validity.valid)
+        {
+          e.target.setCustomValidity(validationMessages.vocab[$(e.target).attr('id')]);
+        }
+      });
+      $(field).filter('select, [type="checkbox"]').bind('change', function(e) {
+        $(this).trigger('validate');
+      });
+      $(field).not('select, [type="checkbox"]').bind('input', function(e) {
+        $(this).trigger('validate');
+      });
+      <?php
+      // Trigger the validate event when the form is first loaded
+      ?>
+      $(field).trigger('validate');
+    }
+  }
+}
+
+
+<?php
 // do a little form verifying
 ?>
 function validate(form)
