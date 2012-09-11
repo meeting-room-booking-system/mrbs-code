@@ -635,7 +635,7 @@ function get_datatable_lang()
   global $langs, $lang_map_windows, $server_os;
   
   $found_lang = FALSE;
-  $language_dir = "jquery/datatables/language";  // location of dataTables language files
+  $language_dir = "../jquery/datatables/language";  // location of dataTables language files
   
   // If automatic language changing is disabled, then use the $override_locale
   // as the first choice of language, and then second the default language tokens
@@ -696,7 +696,8 @@ function get_datatable_lang()
     }
   }
   
-  return ($found_lang) ? $lang_file : FALSE;
+  // We need to strip the "../" off the start of the $lang_file, hence 3
+  return ($found_lang) ? substr($lang_file, 3) : FALSE;
 }
 
 
