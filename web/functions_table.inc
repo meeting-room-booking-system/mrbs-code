@@ -684,10 +684,19 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   //  0 => entering DST
   //  1 => leaving DST
   $dst_change = is_dst($month, $day, $year);
+  // Work out if $evening_ends is really on the next day
+  if ((($eveningends*60) + $eveningends_minutes) < (($morningstarts*60) + $morningstarts_minutes))
+  {
+    $day_increment = 1;
+  }
+  else
+  {
+    $day_increment = 0;
+  }
   $am7=mktime($morningstarts, $morningstarts_minutes, 0,
               $month, $day, $year, is_dst($month,$day,$year,$morningstarts));
   $pm7=mktime($eveningends, $eveningends_minutes, 0,
-              $month, $day, $year, is_dst($month,$day,$year,$eveningends));
+              $month, $day+$day_increment, $year, is_dst($month,$day+$day_increment,$year,$eveningends));
             
   // We want to build an array containing all the data we want to show
   // and then spit it out. 
@@ -771,8 +780,8 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   if ($times_along_top)
   {
     // with times along the top and rooms down the side
-    $start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
-    $start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
+    $start_first_slot = ($morningstarts * 60) + $morningstarts_minutes;   // minutes
+    $start_last_slot  = (($eveningends + ($day_increment*24)) * 60) + $eveningends_minutes;       // minutes
     $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
     $n_slots = ($start_difference/$resolution) + 1;
     $column_width = (int)(95 / $n_slots);
@@ -780,7 +789,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     for (
          $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year),
            $slot_seconds = $start_first_slot * 60;
-         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
+         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j+$day_increment, $year);
          $t += $resolution,
            $slot_seconds += $resolution
         )
@@ -873,7 +882,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       $tbody .= room_cell_html($row, $room_cell_link);
       for (
            $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
-           $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
+           $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j+$day_increment, $year);
            $t += $resolution
           )
       {
@@ -912,7 +921,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     for (
          $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year),
            $slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
+         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j+$day_increment, $year);
          $t += $resolution,
            $slot_seconds += $resolution,
            $row_class = ($row_class == "even_row") ? "odd_row" : "even_row"
