@@ -74,10 +74,9 @@ else
   $start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
   $start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
   $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
-  if (($start_difference < 0) or ($start_difference%$resolution != 0))
+  if ($start_difference%$resolution != 0)
   {
-    die('Configuration error: make sure that $eveningends is after $morningstarts
-         and that the length of the booking day is an integral multiple of $resolution.');
+    die('Configuration error: make sure that the length of the booking day is an integral multiple of $resolution.');
   }
 }
 
