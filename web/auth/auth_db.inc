@@ -36,12 +36,21 @@ function authValidateUser($user, $pass)
 {
   global $tbl_users;
 
-  $user = strtolower(sql_escape($user));
-  // No sql_escape() required because it's put in the database as an MD5,
-  // which is safe.
+  // No sql_escape() required on $pass because it's put in the database as an MD5,
+  // which is safe.  The escaping for $user is done by sql_syntax_casesensitive_equals()
   $pass = md5($pass);
   
-  $result = sql_query1("SELECT COUNT(*) FROM $tbl_users WHERE name='$user' AND password='$pass' LIMIT 1");
+  // We use sql_syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
+  // permits trailing spacings, eg 'john' = 'john '.   We could use LIKE, but that then
+  // permits wildcards, so we could use a comnination of LIKE and '=' but that's a bit
+  // messy.  WE could use STRCMP, but that's MySQL only.
+  $sql = "SELECT COUNT(*)
+            FROM $tbl_users
+           WHERE " . sql_syntax_casesensitive_equals('name', strtolower($user)) . "
+             AND password='$pass'
+           LIMIT 1";
+
+  $result = sql_query1($sql);
   if ($result == -1)
   {
     trigger_error(sql_error(), E_USER_WARNING);
