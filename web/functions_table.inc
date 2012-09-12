@@ -629,6 +629,42 @@ function tdcell($colclass, $slots)
 }
 
 
+// Returns TRUE if $evening_ends is on the day after $morning_starts
+function day_past_midnight()
+{
+  global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+  
+  return (($eveningends*60) + $eveningends_minutes) < (($morningstarts*60) + $morningstarts_minutes);
+}
+
+
+// Gets the UNIX timestamp for the start of the first slot on the given day
+function get_start_first_slot($year, $month, $day)
+{
+  global $morningstarts, $morningstarts_minutes;
+  
+  $t = mktime($morningstarts, $morningstarts_minutes, 0,
+              $month, $day, $year, is_dst($month,$day,$year,$morningstarts));
+  return $t;
+}
+
+
+// Gets the UNIX timestamp for the start of the last slot on the given day
+function get_start_last_slot($year, $month, $day)
+{
+  global $eveningends, $eveningends_minutes;
+  
+  // Work out if $evening_ends is really on the next day
+  if (day_past_midnight())
+  {
+    $day++;
+  }
+  $t = mktime($eveningends, $eveningends_minutes, 0,
+              $month, $day, $year, is_dst($month,$day,$year,$eveningends));
+  return $t;
+}
+
+
 function get_query_strings($area, $room, $year, $month, $day, $t, $time_t_stripped)
 {
   $query_strings = array();
@@ -699,18 +735,9 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   //  1 => leaving DST
   $dst_change = is_dst($month, $day, $year);
   // Work out if $evening_ends is really on the next day
-  if ((($eveningends*60) + $eveningends_minutes) < (($morningstarts*60) + $morningstarts_minutes))
-  {
-    $day_increment = 1;
-  }
-  else
-  {
-    $day_increment = 0;
-  }
-  $am7=mktime($morningstarts, $morningstarts_minutes, 0,
-              $month, $day, $year, is_dst($month,$day,$year,$morningstarts));
-  $pm7=mktime($eveningends, $eveningends_minutes, 0,
-              $month, $day+$day_increment, $year, is_dst($month,$day+$day_increment,$year,$eveningends));
+  $day_increment = (day_past_midnight()) ? 1 : 0;
+  $am7 = get_start_first_slot($year, $month, $day);
+  $pm7 = get_start_last_slot($year, $month, $day);
             
   // We want to build an array containing all the data we want to show
   // and then spit it out. 
@@ -1033,7 +1060,10 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   // We will use $day for links and $day_start_week for anything to do with showing the bookings,
   // because we want the booking display to start on the first day of the week (eg Sunday if $weekstarts is 0)
   // but we want to preserve the notion of the current day (or 'sticky day') when switching between pages
-
+  
+  // Work out if $evening_ends is really on the next day
+  $day_increment = (day_past_midnight()) ? 1 : 0;
+  
   // Define the start and end of each day of the week in a way which is not
   // affected by daylight saving...
   for ($j = 0; $j<=($num_of_days-1); $j++)
@@ -1044,16 +1074,8 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     //  0 => entering DST
     //  1 => leaving DST
     $dst_change[$j] = is_dst($month, $day_start_week+$j, $year);
-    $am7[$j]=mktime($morningstarts, $morningstarts_minutes, 0,
-                    $month, $day_start_week+$j, $year,is_dst($month,
-                                                  $day_start_week+$j,
-                                                  $year,
-                                                  $morningstarts));
-    $pm7[$j]=mktime($eveningends, $eveningends_minutes, 0,
-                    $month, $day_start_week+$j, $year, is_dst($month,
-                                                  $day_start_week+$j,
-                                                  $year,
-                                                  $eveningends));
+    $am7[$j] = get_start_first_slot($year, $month, $day_start_week+$j);
+    $pm7[$j] = get_start_last_slot($year, $month, $day_start_week+$j);
   }
 
   // Get all appointments for this week in the room that we care about.
@@ -1137,7 +1159,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     for (
          $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year),
            $slot_seconds = $start_first_slot * 60;
-         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
+         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j+$day_increment, $year);
          $t += $resolution,
            $slot_seconds += $resolution
         )
@@ -1253,7 +1275,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
         $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
         for (
              $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year);
-             $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
+             $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j+$day_increment, $year);
              $t += $resolution
             )
         {
@@ -1289,7 +1311,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     for (
          $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year),
            $slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
+         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j+$day_increment, $year);
          $t += $resolution,
            $slot_seconds += $resolution,
            $row_class = ($row_class == "even_row") ? "odd_row" : "even_row"
