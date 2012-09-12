@@ -629,6 +629,20 @@ function tdcell($colclass, $slots)
 }
 
 
+function get_query_strings($area, $room, $year, $month, $day, $t, $time_t_stripped)
+{
+  $query_strings = array();
+  
+  $hour = date("H", $t);
+  $minute = date("i", $t);
+  $query_strings['new_periods'] = "area=$area&amp;room=$room&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day";
+  $query_strings['new_times']   = "area=$area&amp;room=$room&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";
+  $query_strings['booking']     = "area=$area&amp;day=$day&amp;month=$month&amp;year=$year";
+ 
+  return $query_strings;
+}
+
+
 function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight=NULL)
 {
   global $tbl_entry, $tbl_room, $tbl_area;
@@ -891,15 +905,9 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
         // and get a stripped version of the time for use with periods
         $time_t_stripped = preg_replace( "/^0/", "", $time_t );
         
-        // calculate hour and minute (needed for links)
-        $hour = date("H", $t);
-        $minute = date("i", $t);
-        
         // set up the query strings to be used for the link in the cell
-        $query_strings = array();
-        $query_strings['new_periods'] = "area=$area&amp;room=$room_id&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day";
-        $query_strings['new_times']   = "area=$area&amp;room=$room_id&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";
-        $query_strings['booking']     = "area=$area&amp;day=$day&amp;month=$month&amp;year=$year";
+        $query_strings = get_query_strings($area, $room_id, $year, $month, $day, $t, $time_t_stripped);
+
         // and then draw the cell
         if (!isset($today[$room_id][$day][$time_t]))
         {
@@ -931,10 +939,6 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       $time_t = date($format, $t);
       // and get a stripped version of the time for use with periods
       $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-      
-      // calculate hour and minute (needed for links)
-      $hour = date("H", $t);
-      $minute = date("i", $t);
   
       // Show the time linked to the URL for highlighting that time
       $class = $row_class;
@@ -954,10 +958,8 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       while (list($key, $room_id) = each($rooms))
       {
         // set up the query strings to be used for the link in the cell
-        $query_strings = array();
-        $query_strings['new_periods'] = "area=$area&amp;room=$room_id&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day";
-        $query_strings['new_times']   = "area=$area&amp;room=$room_id&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";
-        $query_strings['booking']     = "area=$area&amp;day=$day&amp;month=$month&amp;year=$year";
+        $query_strings = get_query_strings($area, $room_id, $year, $month, $day, $t, $time_t_stripped);
+        
         // and then draw the cell
         if (!isset($today[$room_id][$day][$time_t]))
         {
@@ -1260,16 +1262,9 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
           // and get a stripped version for use with periods
           $time_t_stripped = preg_replace( "/^0/", "", $time_t );
         
-          // calculate hour and minute (needed for links)
-          $hour = date("H",$t);
-          $minute  = date("i",$t);
-        
           // set up the query strings to be used for the link in the cell
-          $query_strings = array();
-          $query_strings['new_periods'] = "room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
-          $query_strings['new_times']   = "room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
-          $query_strings['booking']     = "area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear";
-        
+          $query_strings = get_query_strings($area, $room, $wyear, $wmonth, $wday, $t, $time_t_stripped);
+
           // and then draw the cell
           if (!isset($week_map[$room][$thisday][$time_t]))
           {
