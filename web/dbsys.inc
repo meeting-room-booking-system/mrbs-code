@@ -443,6 +443,9 @@ function sql_syntax_timestamp_to_unix($fieldname)
 
 // Returns the syntax for a case sensitive string "equals" function
 // (By default MySQL is case insensitive, whereas PostgreSQL is not)
+// NB:  This function is also assumed to do a strict comparison, ie
+// take account of training spaces.  (The '=' comparison in MySQL allows
+// trailing spaces, eg 'john' = 'john ').
 function sql_syntax_casesensitive_equals($fieldname, $s)
 {
   if (func_num_args() > 2)
