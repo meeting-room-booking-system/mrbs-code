@@ -629,17 +629,27 @@ function tdcell($colclass, $slots)
 }
 
 
+// Returns TRUE if the time $hm1 is before $hm2
+// $hm1 and $hm2 are associative arrays indexed by 'h' (hour) and 'm' (minute)
+function hm_before($hm1, $hm2)
+{
+  return ($hm1['h'] < $hm2['h']) ||
+         (($hm1['h'] == $hm2['h']) && ($hm1['m'] < $hm2['m']));
+}
+
+
 // Returns TRUE if $evening_ends is on the day after $morning_starts
 function day_past_midnight()
 {
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   
-  return (($eveningends*60) + $eveningends_minutes) < (($morningstarts*60) + $morningstarts_minutes);
+  return hm_before(array('h' => $eveningends, 'm' => $eveningends_minutes),
+                   array('h' => $morningstarts, 'm' => $morningstarts_minutes));
 }
 
 
 // Gets the UNIX timestamp for the start of the first slot on the given day
-function get_start_first_slot($year, $month, $day)
+function get_start_first_slot($month, $day, $year)
 {
   global $morningstarts, $morningstarts_minutes;
   
@@ -650,7 +660,7 @@ function get_start_first_slot($year, $month, $day)
 
 
 // Gets the UNIX timestamp for the start of the last slot on the given day
-function get_start_last_slot($year, $month, $day)
+function get_start_last_slot($month, $day, $year)
 {
   global $eveningends, $eveningends_minutes;
   
@@ -665,12 +675,30 @@ function get_start_last_slot($year, $month, $day)
 }
 
 
-function get_query_strings($area, $room, $year, $month, $day, $t, $time_t_stripped)
+function get_query_strings($area, $room, $month, $day, $year, $t, $time_t_stripped)
 {
+  global $morningstarts, $morningstarts_minutes;
+  
   $query_strings = array();
   
   $hour = date("H", $t);
   $minute = date("i", $t);
+  // check to see if the time is really on the next day
+  if (hm_before(array('h' => $hour, 'm' => $minute),
+                array('h' => $morningstarts, 'm' => $morningstarts_minutes)))
+  {
+    $day++;
+    if (!checkdate($month, $day, $year))
+    {
+      $day = 1;
+      $month++;
+      if (!checkdate($month, $day, $year))
+      {
+        $month = 1;
+        $year++;
+      }
+    }
+  }
   $query_strings['new_periods'] = "area=$area&amp;room=$room&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day";
   $query_strings['new_times']   = "area=$area&amp;room=$room&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";
   $query_strings['booking']     = "area=$area&amp;day=$day&amp;month=$month&amp;year=$year";
@@ -736,8 +764,8 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   $dst_change = is_dst($month, $day, $year);
   // Work out if $evening_ends is really on the next day
   $day_increment = (day_past_midnight()) ? 1 : 0;
-  $am7 = get_start_first_slot($year, $month, $day);
-  $pm7 = get_start_last_slot($year, $month, $day);
+  $am7 = get_start_first_slot($month, $day, $year);
+  $pm7 = get_start_last_slot($month, $day, $year);
             
   // We want to build an array containing all the data we want to show
   // and then spit it out. 
@@ -933,7 +961,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
         $time_t_stripped = preg_replace( "/^0/", "", $time_t );
         
         // set up the query strings to be used for the link in the cell
-        $query_strings = get_query_strings($area, $room_id, $year, $month, $day, $t, $time_t_stripped);
+        $query_strings = get_query_strings($area, $room_id, $month, $day, $year, $t, $time_t_stripped);
 
         // and then draw the cell
         if (!isset($today[$room_id][$day][$time_t]))
@@ -985,7 +1013,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       while (list($key, $room_id) = each($rooms))
       {
         // set up the query strings to be used for the link in the cell
-        $query_strings = get_query_strings($area, $room_id, $year, $month, $day, $t, $time_t_stripped);
+        $query_strings = get_query_strings($area, $room_id, $month, $day, $year, $t, $time_t_stripped);
         
         // and then draw the cell
         if (!isset($today[$room_id][$day][$time_t]))
@@ -1074,8 +1102,8 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     //  0 => entering DST
     //  1 => leaving DST
     $dst_change[$j] = is_dst($month, $day_start_week+$j, $year);
-    $am7[$j] = get_start_first_slot($year, $month, $day_start_week+$j);
-    $pm7[$j] = get_start_last_slot($year, $month, $day_start_week+$j);
+    $am7[$j] = get_start_first_slot($month, $day_start_week+$j, $year);
+    $pm7[$j] = get_start_last_slot($month, $day_start_week+$j, $year);
   }
 
   // Get all appointments for this week in the room that we care about.
@@ -1285,7 +1313,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
           $time_t_stripped = preg_replace( "/^0/", "", $time_t );
         
           // set up the query strings to be used for the link in the cell
-          $query_strings = get_query_strings($area, $room, $wyear, $wmonth, $wday, $t, $time_t_stripped);
+          $query_strings = get_query_strings($area, $room, $wmonth, $wday, $wyear, $t, $time_t_stripped);
 
           // and then draw the cell
           if (!isset($week_map[$room][$thisday][$time_t]))
