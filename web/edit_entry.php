@@ -50,6 +50,7 @@
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
+require_once "functions_table.inc";
 
 
 $fields = sql_field_info($tbl_entry);
@@ -95,7 +96,7 @@ foreach ($fields as $field)
 function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FALSE, $disabled=FALSE)
 {
   global $periods;
-  
+
   $html = '';
   // Get the settings for this area.   Note that the variables below are
   // local variables, not globals.
@@ -130,7 +131,33 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
            // knows to keep it disabled
            (($disabled) ? " class=\"keep_disabled\"" : "") .
            " id=\"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\">\n";
-  for ($t = $first; $t <= $last; $t = $t + $resolution)
+  
+  // Construct an array of times
+  $ts = array();
+  if ($first <= $last)
+  {
+    // The simple case where the booking day is contained within the calendar day
+    for ($t = $first; $t <= $last; $t = $t + $resolution)
+    {
+      $ts[] = $t;
+    }
+  }
+  else
+  {
+    // The complex case where the booking day spans midnight.    In this case we have
+    // to get the possible times from the start of the first slot after midnight to the
+    // "last" time, and then from the "first" time to midnight
+    for ($t = $last%$resolution; $t <= $last; $t = $t + $resolution)
+    {
+      $ts[] = $t;
+    }
+    for ($t = $first; $t < 24*60*60; $t = $t + $resolution)
+    {
+      $ts[] = $t;
+    }
+  }
+  
+  foreach ($ts as $t)
   {
     // The date used below is completely arbitrary.   All that matters is that it
     // is a day that does not contain a DST boundary.   (We need a real date so that
@@ -1018,7 +1045,7 @@ else
     $duration    = ($enable_periods ? 60 : $default_duration);
     $end_time = $start_time + $duration;
     // The end time can't be past the end of the booking day
-    $pm7 = mktime($eveningends, $eveningends_minutes, 0, $month, $day, $year);
+    $pm7 = get_start_last_slot($month, $day, $year);
     $end_time = min($end_time, $pm7 + $resolution);
   }
 }
