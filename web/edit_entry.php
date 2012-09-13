@@ -50,7 +50,6 @@
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
-require_once "functions_table.inc";
 
 
 $fields = sql_field_info($tbl_entry);

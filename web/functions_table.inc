@@ -629,52 +629,6 @@ function tdcell($colclass, $slots)
 }
 
 
-// Returns TRUE if the time $hm1 is before $hm2
-// $hm1 and $hm2 are associative arrays indexed by 'h' (hour) and 'm' (minute)
-function hm_before($hm1, $hm2)
-{
-  return ($hm1['h'] < $hm2['h']) ||
-         (($hm1['h'] == $hm2['h']) && ($hm1['m'] < $hm2['m']));
-}
-
-
-// Returns TRUE if $evening_ends is on the day after $morning_starts
-function day_past_midnight()
-{
-  global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
-  
-  return hm_before(array('h' => $eveningends, 'm' => $eveningends_minutes),
-                   array('h' => $morningstarts, 'm' => $morningstarts_minutes));
-}
-
-
-// Gets the UNIX timestamp for the start of the first slot on the given day
-function get_start_first_slot($month, $day, $year)
-{
-  global $morningstarts, $morningstarts_minutes;
-  
-  $t = mktime($morningstarts, $morningstarts_minutes, 0,
-              $month, $day, $year, is_dst($month,$day,$year,$morningstarts));
-  return $t;
-}
-
-
-// Gets the UNIX timestamp for the start of the last slot on the given day
-function get_start_last_slot($month, $day, $year)
-{
-  global $eveningends, $eveningends_minutes;
-  
-  // Work out if $evening_ends is really on the next day
-  if (day_past_midnight())
-  {
-    $day++;
-  }
-  $t = mktime($eveningends, $eveningends_minutes, 0,
-              $month, $day, $year, is_dst($month,$day,$year,$eveningends));
-  return $t;
-}
-
-
 // Gets the number of time slots between the beginning and end of the booking
 // day.   (This is the normal number on a non-DST transition day)
 function get_n_time_slots()

@@ -443,9 +443,8 @@ if ($enable_periods)
 
 // Round down the starttime and round up the endtime to the nearest slot boundaries
 // (This step is probably unnecesary now that MRBS always returns times aligned
-// on slot boundaries, but is left in for good measure).                  
-$am7 = mktime($morningstarts, $morningstarts_minutes, 0,
-              $month, $day, $year, is_dst($month, $day, $year, $morningstarts));
+// on slot boundaries, but is left in for good measure).
+$am7 = get_start_first_slot($month, $day, $year);                 
 $starttime = round_t_down($starttime, $resolution, $am7);
 $endtime = round_t_up($endtime, $resolution, $am7);
 
