@@ -1285,7 +1285,7 @@ function day_of_MRBS_week($time)
 // hour is added so that this function can when necessary only be
 // run if the time is between midnight and 3am (all DST changes
 // occur in this period.
-function is_dst ( $month, $day, $year, $hour="-1" )
+function is_dst($month, $day, $year, $hour="-1")
 {
   if ( $hour != -1  && $hour > 3)
   {
@@ -1313,7 +1313,7 @@ function is_dst ( $month, $day, $year, $hour="-1" )
 
 // if crossing dst determine if you need to make a modification
 // of 3600 seconds (1 hour) in either direction
-function cross_dst ( $start, $end )
+function cross_dst($start, $end)
 {
   // entering DST
   if ( !date( "I", $start) &&  date( "I", $end))

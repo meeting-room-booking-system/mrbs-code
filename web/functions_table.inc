@@ -849,15 +849,19 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   if ($times_along_top)
   {
     // with times along the top and rooms down the side
-    $start_first_slot = ($morningstarts * 60) + $morningstarts_minutes;   // minutes
-    $start_last_slot  = (($eveningends + ($day_increment*24)) * 60) + $eveningends_minutes;       // minutes
-    $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
+    $morning = ($morningstarts * 60) + $morningstarts_minutes;   // minutes
+    $evening = (($eveningends + ($day_increment*24)) * 60) + $eveningends_minutes;  // minutes
+    if (day_past_midnight())
+    {
+      $evening += 24*60;
+    }
+    $start_difference = ($evening - $morning) * 60;    // seconds
     $n_slots = ($start_difference/$resolution) + 1;
     $column_width = (int)(95 / $n_slots);
     $header_inner .= "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
     for (
          $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year),
-           $slot_seconds = $start_first_slot * 60;
+           $slot_seconds = $morning * 60;
          $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j+$day_increment, $year);
          $t += $resolution,
            $slot_seconds += $resolution
@@ -1178,19 +1182,19 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   if ($times_along_top)
   {
     // with times along the top and days of the week down the side
-    $start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
-    $start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
+    $morning = ($morningstarts*60) + $morningstarts_minutes;   // minutes
+    $evening = ($eveningends*60) + $eveningends_minutes;       // minutes
     if (day_past_midnight())
     {
-      $start_last_slot += 24*60;
+      $evening += 24*60;
     }
-    $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
+    $start_difference = ($evening - $morning) * 60;    // seconds
     $n_slots = ($start_difference/$resolution) + 1;
     $column_width = (int)(95 / $n_slots);
     $header_inner .= "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
     for (
          $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year),
-           $slot_seconds = $start_first_slot * 60;
+           $slot_seconds = $morning * 60;
          $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j+$day_increment, $year);
          $t += $resolution,
            $slot_seconds += $resolution
