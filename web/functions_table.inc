@@ -811,25 +811,26 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
 
   
   ($dst_change != -1) ? $j = 1 : $j = 0;
+  $n_time_slots = get_n_time_slots();
+  $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+  $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
   
   // TABLE HEADER
   $thead = "<thead>\n";
   $header_inner = "<tr>\n";
   
-  
   // We can display the table in two ways
   if ($times_along_top)
   {
     // with times along the top and rooms down the side
-    $column_width = (int)(95 / get_n_time_slots());
+
+    $column_width = (int)(95 / $n_time_slots);
     $header_inner .= "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
-    for ($t = get_start_first_slot($month, $day+$j, $year),
-           $slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-         $t <= get_start_last_slot($month, $day+$j, $year);
-         $t += $resolution,
-           $slot_seconds += $resolution
-        )
+    for ($slot_seconds = $morning_slot_seconds;
+         $slot_seconds <= $evening_slot_seconds;
+         $slot_seconds += $resolution)
     {
+      $t = mktime(0, 0, $slot_seconds, $month, $day+$j, $year);
       // Put the number of seconds since the start of the day (nominal, ignoring DST)
       // in a data attribure so that JavaScript can pick it up
       $header_inner .= "<th data-seconds=\"$slot_seconds\" style=\"width: $column_width%\">";
@@ -916,11 +917,11 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       $room_id = $row['id']; 
       $room_cell_link = "week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$room_id";
       $tbody .= room_cell_html($row, $room_cell_link);
-      for ($t = get_start_first_slot($month, $day+$j, $year);
-           $t <= get_start_last_slot($month, $day+$j, $year);
-           $t += $resolution
-          )
+      for ($slot_seconds = $morning_slot_seconds;
+           $slot_seconds <= $evening_slot_seconds;
+           $slot_seconds += $resolution)
       {
+        $t = mktime(0, 0, $slot_seconds, $month, $day+$j, $year);
         // convert timestamps to HHMM format without leading zeros
         $time_t = date($format, $t);
         // and get a stripped version of the time for use with periods
@@ -947,14 +948,12 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   else
   {
     // the standard view, with rooms along the top and times down the side
-    for ($t = get_start_first_slot($month, $day+$j, $year),
-           $slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-         $t <= get_start_last_slot($month, $day+$j, $year);
-         $t += $resolution,
-           $slot_seconds += $resolution,
-           $row_class = ($row_class == "even_row") ? "odd_row" : "even_row"
-        )
+    for ($slot_seconds = $morning_slot_seconds;
+         $slot_seconds <= $evening_slot_seconds;
+         $slot_seconds += $resolution,
+           $row_class = ($row_class == "even_row") ? "odd_row" : "even_row")
     {
+      $t = mktime(0, 0, $slot_seconds, $month, $day+$j, $year);
       // convert timestamps to HHMM format without leading zeros
       $time_t = date($format, $t);
       // and get a stripped version of the time for use with periods
@@ -1121,7 +1120,9 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   // if the first day of the week to be displayed contains a DST change then
   // move to the next day to get the hours in the day.
   ( $dst_change[0] != -1 ) ? $j = 1 : $j = 0;
-
+  $n_time_slots = get_n_time_slots();
+  $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+  $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
   // TABLE HEADER
   $thead = "<thead>\n";
@@ -1140,15 +1141,13 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   if ($times_along_top)
   {
     // with times along the top and days of the week down the side
-    $column_width = (int)(95 / get_n_time_slots());
+    $column_width = (int)(95 / $n_time_slots);
     $header_inner .= "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
-    for ($t = get_start_first_slot($month, $day_start_week+$j, $year),
-           $slot_seconds = (($morningstarts*60) + $morningstarts_minutes) * 60;
-         $t <= get_start_last_slot($month, $day_start_week+$j, $year);
-         $t += $resolution,
-           $slot_seconds += $resolution
-        )
+    for ($slot_seconds = $morning_slot_seconds;
+         $slot_seconds <= $evening_slot_seconds;
+         $slot_seconds += $resolution)
     {
+      $t = mktime(0, 0, $slot_seconds, $month, $day_start_week+$j, $year);
       // Put the seconds since the start of the day (nominal, not adjusted for DST)
       // into a data attribute so that it can be picked up by JavaScript
       $header_inner .= "<th data-seconds=\"$slot_seconds\" style=\"width: $column_width%\">";
@@ -1258,11 +1257,11 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
                          "&amp;area=$area";
                        
         $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
-        for ($t = get_start_first_slot($month, $day_start_week+$j, $year);
-             $t <= get_start_last_slot($month, $day_start_week+$j, $year);
-             $t += $resolution
-            )
+        for ($slot_seconds = $morning_slot_seconds;
+             $slot_seconds <= $evening_slot_seconds;
+             $slot_seconds += $resolution)
         {
+          $t = mktime(0, 0, $slot_seconds, $month, $day_start_week+$j, $year);
           // use hour:minute format
           $time_t = date($format, $t);
           // and get a stripped version for use with periods
@@ -1292,14 +1291,12 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   else
   {
     // the standard view, with days of the week along the top and times down the side
-    for ($t = get_start_first_slot($month, $day_start_week+$j, $year),
-           $slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-         $t <= get_start_last_slot($month, $day_start_week+$j, $year);
-         $t += $resolution,
-           $slot_seconds += $resolution,
-           $row_class = ($row_class == "even_row") ? "odd_row" : "even_row"
-    )
+    for ($slot_seconds = $morning_slot_seconds;
+         $slot_seconds <= $evening_slot_seconds;
+         $slot_seconds += $resolution,
+           $row_class = ($row_class == "even_row") ? "odd_row" : "even_row")
     {
+      $t = mktime(0, 0, $slot_seconds, $month, $day_start_week+$j, $year);
       // use hour:minute format
       $time_t = date($format, $t);
       // and get a stripped version for use with periods
