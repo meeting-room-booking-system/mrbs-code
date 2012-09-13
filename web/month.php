@@ -46,10 +46,11 @@ $days_in_month = date("t", $month_start);
 
 $month_end = mktime(23, 59, 59, $month, $days_in_month, $year);
 
-if ( $enable_periods )
+if ($enable_periods)
 {
   $resolution = 60;
   $morningstarts = 12;
+  $morningstarts_minutes = 0;
   $eveningends = 12;
   $eveningends_minutes = count($periods)-1;
 }
@@ -64,17 +65,9 @@ for ($j = 1; $j<=$days_in_month; $j++)
   // -1 => no change
   //  0 => entering DST
   //  1 => leaving DST
-  $dst_change[$j] = is_dst($month,$j,$year);
-  if (empty( $enable_periods ))
-  {
-    $am7[$j] = mktime(0,0,0,$month,$j,$year, is_dst($month,$j,$year, 0));
-    $pm7[$j] = mktime(23,59,59,$month,$j,$year, is_dst($month,$j,$year, 23));
-  }
-  else
-  {
-    $am7[$j] = mktime(12,0,0,$month,$j,$year, is_dst($month,$j,$year, 0));
-    $pm7[$j] = mktime(12,count($periods),59,$month,$j,$year, is_dst($month,$j,$year, 23));
-  }
+  $dst_change[$j] = is_dst($month, $j, $year);
+  $am7[$j] = get_start_first_slot($month, $j, $year);
+  $pm7[$j] = get_start_last_slot($month, $j, $year);
 }
 
 // Section with areas, rooms, minicals.
