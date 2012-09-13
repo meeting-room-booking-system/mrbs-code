@@ -387,8 +387,8 @@ function get_start_first_slot($month, $day, $year)
 {
   global $morningstarts, $morningstarts_minutes;
   
-  $t = mktime($morningstarts, $morningstarts_minutes, 0,
-              $month, $day, $year, is_dst($month,$day,$year,$morningstarts));
+  $t = mrbs_mktime($morningstarts, $morningstarts_minutes, 0,
+                   $month, $day, $year);
   return $t;
 }
 
@@ -403,8 +403,8 @@ function get_start_last_slot($month, $day, $year)
   {
     $day++;
   }
-  $t = mktime($eveningends, $eveningends_minutes, 0,
-              $month, $day, $year, is_dst($month,$day,$year,$eveningends));
+  $t = mrbs_mktime($eveningends, $eveningends_minutes, 0,
+                   $month, $day, $year);
   return $t;
 }
 
@@ -1356,6 +1356,23 @@ function is_dst($month, $day, $year, $hour="-1")
     return( -1 );
   }
 }
+
+
+// A PHP version independent version of mktime().   (The $is_dst parameter
+// became deporecated at PHP 5.1.0)
+function mrbs_mktime($hour, $minute, $second, $month, $day, $year)
+{
+  if (version_compare(PHP_VERSION, '5.1.0') >= 0)
+  {
+    return mktime($hour, $minute, $second, $month, $day, $year);
+  }
+  else
+  {
+    return mktime($hour, $minute, $second, $month, $day, $year,
+                  is_dst($month, $day, $year, $hour));
+  }
+}
+
 
 // if crossing dst determine if you need to make a modification
 // of 3600 seconds (1 hour) in either direction
