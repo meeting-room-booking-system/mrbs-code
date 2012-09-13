@@ -782,8 +782,6 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   //  0 => entering DST
   //  1 => leaving DST
   $dst_change = is_dst($month, $day, $year);
-  // Work out if $evening_ends is really on the next day
-  $day_increment = (day_past_midnight()) ? 1 : 0;
   $am7 = get_start_first_slot($month, $day, $year);
   $pm7 = get_start_last_slot($month, $day, $year);
             
@@ -871,10 +869,9 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     // with times along the top and rooms down the side
     $column_width = (int)(95 / get_n_time_slots());
     $header_inner .= "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
-    for (
-         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year),
+    for ($t = get_start_first_slot($month, $day+$j, $year),
            $slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j+$day_increment, $year);
+         $t <= get_start_last_slot($month, $day+$j, $year);
          $t += $resolution,
            $slot_seconds += $resolution
         )
@@ -965,9 +962,8 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       $room_id = $row['id']; 
       $room_cell_link = "week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$room_id";
       $tbody .= room_cell_html($row, $room_cell_link);
-      for (
-           $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
-           $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j+$day_increment, $year);
+      for ($t = get_start_first_slot($month, $day+$j, $year);
+           $t <= get_start_last_slot($month, $day+$j, $year);
            $t += $resolution
           )
       {
@@ -997,10 +993,9 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   else
   {
     // the standard view, with rooms along the top and times down the side
-    for (
-         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year),
+    for ($t = get_start_first_slot($month, $day+$j, $year),
            $slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j+$day_increment, $year);
+         $t <= get_start_last_slot($month, $day+$j, $year);
          $t += $resolution,
            $slot_seconds += $resolution,
            $row_class = ($row_class == "even_row") ? "odd_row" : "even_row"
@@ -1105,9 +1100,6 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   // because we want the booking display to start on the first day of the week (eg Sunday if $weekstarts is 0)
   // but we want to preserve the notion of the current day (or 'sticky day') when switching between pages
   
-  // Work out if $evening_ends is really on the next day
-  $day_increment = (day_past_midnight()) ? 1 : 0;
-  
   // Define the start and end of each day of the week in a way which is not
   // affected by daylight saving...
   for ($j = 0; $j<=($num_of_days-1); $j++)
@@ -1196,10 +1188,9 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     // with times along the top and days of the week down the side
     $column_width = (int)(95 / get_n_time_slots());
     $header_inner .= "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
-    for (
-         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year),
+    for ($t = get_start_first_slot($month, $day_start_week+$j, $year),
            $slot_seconds = (($morningstarts*60) + $morningstarts_minutes) * 60;
-         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j+$day_increment, $year);
+         $t <= get_start_last_slot($month, $day_start_week+$j, $year);
          $t += $resolution,
            $slot_seconds += $resolution
         )
@@ -1313,9 +1304,8 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
                          "&amp;area=$area";
                        
         $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
-        for (
-             $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year);
-             $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j+$day_increment, $year);
+        for ($t = get_start_first_slot($month, $day_start_week+$j, $year);
+             $t <= get_start_last_slot($month, $day_start_week+$j, $year);
              $t += $resolution
             )
         {
@@ -1348,10 +1338,9 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   else
   {
     // the standard view, with days of the week along the top and times down the side
-    for (
-         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year),
+    for ($t = get_start_first_slot($month, $day_start_week+$j, $year),
            $slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j+$day_increment, $year);
+         $t <= get_start_last_slot($month, $day_start_week+$j, $year);
          $t += $resolution,
            $slot_seconds += $resolution,
            $row_class = ($row_class == "even_row") ? "odd_row" : "even_row"
