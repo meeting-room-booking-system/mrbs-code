@@ -675,6 +675,26 @@ function get_start_last_slot($month, $day, $year)
 }
 
 
+// Gets the number of time slots between the beginning and end of the booking
+// day.   (This is the normal number on a non-DST transition day)
+function get_n_time_slots()
+{
+  global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+  global $resolution;
+  
+  $morning = ($morningstarts * 60) + $morningstarts_minutes;   // minutes
+  $evening = ($eveningends * 60) + $eveningends_minutes;  // minutes
+  if (day_past_midnight())
+  {
+    $evening += 24*60;
+  }
+  $difference = ($evening - $morning) * 60;    // seconds
+  $n_slots = ($difference/$resolution) + 1;
+  
+  return $n_slots;
+}
+
+
 function get_query_strings($area, $room, $month, $day, $year, $t, $time_t_stripped)
 {
   global $morningstarts, $morningstarts_minutes;
@@ -849,19 +869,11 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   if ($times_along_top)
   {
     // with times along the top and rooms down the side
-    $morning = ($morningstarts * 60) + $morningstarts_minutes;   // minutes
-    $evening = (($eveningends + ($day_increment*24)) * 60) + $eveningends_minutes;  // minutes
-    if (day_past_midnight())
-    {
-      $evening += 24*60;
-    }
-    $start_difference = ($evening - $morning) * 60;    // seconds
-    $n_slots = ($start_difference/$resolution) + 1;
-    $column_width = (int)(95 / $n_slots);
+    $column_width = (int)(95 / get_n_time_slots());
     $header_inner .= "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
     for (
          $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year),
-           $slot_seconds = $morning * 60;
+           $slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
          $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j+$day_increment, $year);
          $t += $resolution,
            $slot_seconds += $resolution
@@ -1182,19 +1194,11 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   if ($times_along_top)
   {
     // with times along the top and days of the week down the side
-    $morning = ($morningstarts*60) + $morningstarts_minutes;   // minutes
-    $evening = ($eveningends*60) + $eveningends_minutes;       // minutes
-    if (day_past_midnight())
-    {
-      $evening += 24*60;
-    }
-    $start_difference = ($evening - $morning) * 60;    // seconds
-    $n_slots = ($start_difference/$resolution) + 1;
-    $column_width = (int)(95 / $n_slots);
+    $column_width = (int)(95 / get_n_time_slots());
     $header_inner .= "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
     for (
          $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year),
-           $slot_seconds = $morning * 60;
+           $slot_seconds = (($morningstarts*60) + $morningstarts_minutes) * 60;
          $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j+$day_increment, $year);
          $t += $resolution,
            $slot_seconds += $resolution
