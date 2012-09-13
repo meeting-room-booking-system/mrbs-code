@@ -1180,6 +1180,10 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     // with times along the top and days of the week down the side
     $start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
     $start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
+    if (day_past_midnight())
+    {
+      $start_last_slot += 24*60;
+    }
     $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
     $n_slots = ($start_difference/$resolution) + 1;
     $column_width = (int)(95 / $n_slots);
