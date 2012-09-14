@@ -676,17 +676,7 @@ function get_query_strings($area, $room, $month, $day, $year, $t, $time_t_stripp
   if (hm_before(array('h' => $hour, 'm' => $minute),
                 array('h' => $morningstarts, 'm' => $morningstarts_minutes)))
   {
-    $day++;
-    if (!checkdate($month, $day, $year))
-    {
-      $day = 1;
-      $month++;
-      if (!checkdate($month, $day, $year))
-      {
-        $month = 1;
-        $year++;
-      }
-    }
+    $hour += 24;
   }
   $query_strings['new_periods'] = "area=$area&amp;room=$room&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day";
   $query_strings['new_times']   = "area=$area&amp;room=$room&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";

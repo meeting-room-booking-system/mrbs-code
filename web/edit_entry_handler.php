@@ -197,6 +197,23 @@ if ($ajax && $commit)
   }
 }
 
+
+// If we're operating on a booking day that stretches past midnight, it's more convenient
+// for the sections past midnight to be shown as being on the day before.  That way the
+// $returl will end up taking us back to the day we started on
+if (day_past_midnight())
+{
+  if ($start_seconds < (((($eveningends * 60) + $eveningends_minutes) *60) + $resolution))
+  {
+    $start_seconds += 24*60*60;
+    $day_before = getdate(mktime(0, 0, 0, $start_month, $start_day-1, $start_year));
+    $start_day = $day_before['mday'];
+    $start_month = $day_before['mon'];
+    $start_year = $day_before['year'];
+  }
+}
+
+
 if (!$ajax || !$commit)
 {
   // Get the start day/month/year and make them the current day/month/year
