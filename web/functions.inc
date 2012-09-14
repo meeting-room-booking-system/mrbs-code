@@ -1373,25 +1373,39 @@ function mrbs_mktime($hour, $minute, $second, $month, $day, $year)
   }
 }
 
-
-// if crossing dst determine if you need to make a modification
-// of 3600 seconds (1 hour) in either direction
+// returns the modification (in seconds) necessary on account of any DST
+// transitions when going from $start to $end
 function cross_dst($start, $end)
 {
-  // entering DST
-  if ( !date( "I", $start) &&  date( "I", $end))
+  global $timezone;
+  
+  // Ideally we calculate the modification using the DateTimeZone information
+  // in PHP, because not all DST transitions are 1 hour.  For example, Lord Howe
+  // Island in Australia has a 30 minute transition
+  if (class_exists('DateTimeZone'))
   {
-    $modification = -3600;
+    $thisDateTimeZone = new DateTimeZone($timezone);
+    $startDateTime = new DateTime(date('c', $start), $thisDateTimeZone);
+    $endDateTime = new DateTime(date('c', $end), $thisDateTimeZone);
+    $modification = $startDateTime->getOffset() - $endDateTime->getOffset();
   }
-
-  // leaving DST
-  else if(  date( "I", $start) && !date( "I", $end))
-  {
-    $modification = 3600;
-  }
+  // Otherwise we have to assume that the transition is 1 hour.
   else
   {
-    $modification = 0;
+    // entering DST
+    if (!date( "I", $start) &&  date( "I", $end))
+    {
+      $modification = -3600;
+    }
+    // leaving DST
+    else if (date( "I", $start) && !date( "I", $end))
+    {
+      $modification = 3600;
+    }
+    else
+    {
+      $modification = 0;
+    }
   }
 
   return $modification;
