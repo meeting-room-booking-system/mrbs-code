@@ -101,11 +101,24 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   $time_start_t = date($format,$start_t);
   $time_end_t = date($format,$end_t);
   
-
   for ($t = $start_t; $t <= $end_t; $t += $resolution)
   { 
     $time_t = date($format,$t);
     
+    // We need to watch out for the transition from daylight saving time to standard time
+    // when we can get two entries for a slot as the hour is repeated.  Just skip the
+    // second entry
+    $this_day = date('j', $t);
+    if (isset($last_time_t))
+    {
+      if ((intval($time_t) <= intval($last_time_t)) && ($this_day == $last_day))
+      {
+        continue;
+      }
+    }
+    $last_time_t = $time_t;
+    $last_day = $this_day;
+
     // find the first free index (in case there are multiple bookings in a timeslot)
     $n = 0;
     while (!empty($column[$time_t][$n]["id"]))
@@ -147,7 +160,9 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
 
   // Find the number of time slots that the booking occupies, and the index
   // of the first slot that this booking has entirely to itself
-  $n_slots = intval(($end_t - $start_t)/$resolution) + 1;
+  // We need to adjust the start and end times for DST transitions as the display
+  // ignores DST
+  $n_slots = intval((($end_t - $start_t) - cross_dst($start_t, $end_t))/$resolution) + 1;
   $first_slot = $start_t;
   
   // If the last time slot is already occupied, we have a multiple
@@ -832,7 +847,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     {
       $t = mktime(0, 0, $slot_seconds, $month, $day+$j, $year);
       // Put the number of seconds since the start of the day (nominal, ignoring DST)
-      // in a data attribure so that JavaScript can pick it up
+      // in a data attribute so that JavaScript can pick it up
       $header_inner .= "<th data-seconds=\"$slot_seconds\" style=\"width: $column_width%\">";
       // We need the span so that we can apply some padding.   We can't apply it
       // to the <th> because that is used by jQuery.offset() in resizable bookings
@@ -934,7 +949,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
         if (!isset($today[$room_id][$day][$time_t]))
         {
           $today[$room_id][$day][$time_t] = array();  // to avoid an undefined index NOTICE error
-        }   
+        }
         $tbody .= cell_html($today[$room_id][$day][$time_t], $query_strings);
       }  // end for (looping through the times)
       if ( FALSE != $row_labels_both_sides )
