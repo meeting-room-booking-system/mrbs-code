@@ -428,10 +428,8 @@ if (!empty($all_day))
 }
 
 // Now work out the start and times
-$starttime = mktime(intval($start_seconds/3600), intval(($start_seconds%3600)/60), 0,
-                    $start_month, $start_day, $start_year);
-$endtime   = mktime(intval($end_seconds/3600), intval(($end_seconds%3600)/60), 0,
-                    $end_month, $end_day, $end_year);
+$starttime = mktime(0, 0, $start_seconds, $start_month, $start_day, $start_year);
+$endtime   = mktime(0, 0, $end_seconds, $end_month, $end_day, $end_year);
 
 // If we're using periods then the endtime we've been returned by the form is actually
 // the beginning of the last period in the booking (it's more intuitive for users this way)
@@ -454,10 +452,6 @@ if ($endtime == $starttime)
 {
   $endtime += $resolution;
 }
-
-// Adjust the endtime for DST
-$endtime += cross_dst( $starttime, $endtime );
-
 
 if (isset($rep_type) && ($rep_type != REP_NONE) &&
     isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
