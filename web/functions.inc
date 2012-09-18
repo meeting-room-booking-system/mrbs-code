@@ -1358,6 +1358,21 @@ function is_dst($month, $day, $year, $hour="-1")
 }
 
 
+// Returns TRUE if $t is in that part of daylight saving time that will have
+// the same nominal time as another timestamp shortly after the DST transition.
+// For example, will return TRUE for the $t equivalent to the first occurence
+// of 0230 on Sunday 27th October 2013 in timezone Europe/London
+function is_dst_first_duplicate($t)
+{
+  if (date('I', $t))
+  {
+    $change = cross_dst($t, $t+(24*60*60));
+    return !date('I', $t + $change);
+  }
+  return false;
+}
+
+
 // A PHP version independent version of mktime().   (The $is_dst parameter
 // became deporecated at PHP 5.1.0)
 function mrbs_mktime($hour, $minute, $second, $month, $day, $year)

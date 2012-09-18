@@ -103,22 +103,15 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   
   for ($t = $start_t; $t <= $end_t; $t += $resolution)
   { 
-    $time_t = date($format,$t);
-    
     // We need to watch out for the transition from daylight saving time to standard time
     // when we can get two entries for a slot as the hour is repeated.  Just skip the
-    // second entry
-    $this_day = date('j', $t);
-    if (isset($last_time_t))
+    // first entry
+    if (is_dst_first_duplicate($t))
     {
-      if ((intval($time_t) <= intval($last_time_t)) && ($this_day == $last_day))
-      {
-        continue;
-      }
+      continue;
     }
-    $last_time_t = $time_t;
-    $last_day = $this_day;
-
+    $time_t = date($format,$t);
+    
     // find the first free index (in case there are multiple bookings in a timeslot)
     $n = 0;
     while (!empty($column[$time_t][$n]["id"]))
