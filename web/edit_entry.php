@@ -158,11 +158,7 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
   
   foreach ($ts as $t)
   {
-    // The date used below is completely arbitrary.   All that matters is that it
-    // is a day that does not contain a DST boundary.   (We need a real date so that
-    // we can use strftime to get an hour and minute formatted according to the locale)
-    $timestamp = $t + mktime(0, 0, 0, 1, 1, 2000);
-    $slot_string = ($enable_periods) ? $periods[intval(($t-$base)/60)] : utf8_strftime($format, $timestamp);
+    $slot_string = ($enable_periods) ? $periods[intval(($t-$base)/60)] : hour_min($t);
     $html .= "<option value=\"$t\"";
     $html .= ($t == $current_t) ? " selected=\"selected\"" : "";
     $html .= ">$slot_string</option>\n";

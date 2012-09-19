@@ -364,11 +364,13 @@ function fromPeriodString($start_period, &$units, $dur_units)
 
 
 // Returns TRUE if the time $hm1 is before $hm2
-// $hm1 and $hm2 are associative arrays indexed by 'h' (hour) and 'm' (minute)
+// $hm1 and $hm2 are associative arrays indexed by 'hours' and 'minutes'.
+// The indices are chosen to allow the result of the PHP getdate() function
+// to be passed as parameters
 function hm_before($hm1, $hm2)
 {
-  return ($hm1['h'] < $hm2['h']) ||
-         (($hm1['h'] == $hm2['h']) && ($hm1['m'] < $hm2['m']));
+  return ($hm1['hours'] < $hm2['hours']) ||
+         (($hm1['hours'] == $hm2['hours']) && ($hm1['minutes'] < $hm2['minutes']));
 }
 
 
@@ -377,8 +379,8 @@ function day_past_midnight()
 {
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   
-  return hm_before(array('h' => $eveningends, 'm' => $eveningends_minutes),
-                   array('h' => $morningstarts, 'm' => $morningstarts_minutes));
+  return hm_before(array('hours' => $eveningends, 'minutes' => $eveningends_minutes),
+                   array('hours' => $morningstarts, 'minutes' => $morningstarts_minutes));
 }
 
 
@@ -1029,6 +1031,18 @@ function hour_min_format()
   }
 }
 
+
+// Returms a string representing the hour and minute for the nominal
+// seconds since the start of the day, $s
+function hour_min($s)
+{
+  $s = $s%(24*60*60);  // in case $s is on the next day
+  // Choose a day that doesn't have any DST transitions in any timezone
+  $t = mktime(0, 0, $s, 1, 1, 2000);
+  return utf8_strftime(hour_min_format(), $t);  
+}
+
+
 function period_date_string($t, $mod_time=0)
 {
   global $periods, $strftime_format;
@@ -1190,6 +1204,7 @@ function round_t_down($t, $resolution, $am7)
                             % $resolution);
 }
 
+
 // Round time up to the nearest resolution
 function round_t_up($t, $resolution, $am7)
 {
@@ -1203,6 +1218,42 @@ function round_t_up($t, $resolution, $am7)
     return $t;
   }
 }
+
+
+// Returns the nominal (ie ignoring DST transitions) seconds since the start of
+// the calendar day on the start of the booking day
+function nominal_seconds($t)
+{
+  global $morningstarts, $morningstarts_minutes;
+  
+  $date = getdate($t);
+  // check to see if the time is really on the next day
+  if (hm_before($date,
+                array('hours' => $morningstarts, 'minutes' => $morningstarts_minutes)))
+  {
+    $date['hours'] += 24;
+  }
+  return (($date['hours'] * 60) + $date['minutes']) * 60;
+}
+
+
+// Returns the index of the period represented by $s nominal seconds
+function period_index($s)
+{
+  // Periods are counted as minutes from noon, ie 1200 is $period[0],
+  // 1201 $period[1], etc.
+  return intval($s/60) - (12*60);
+}
+
+
+// Returns the name of the period represented by nominal seconds $s
+function period_name($s)
+{
+  global $periods;
+  
+  return $periods[period_index($s)];
+}
+
 
 // generates some html that can be used to select which area should be
 // displayed.
