@@ -121,7 +121,7 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
   {
     $format = hour_min_format();
   }
-  $html .= "<select" .
+  $html .= "<select data-first=\"$first\" data-last=\"$last\"" .
            (($display_none) ? " style=\"display: none\"" : "") .
            // If $display_none or $disabled are set then we'll also disable the select so
            // that there is only one select passing through the variable to the handler
@@ -261,7 +261,7 @@ function create_field_entry_start_date($disabled=FALSE)
          // If this is an existing booking that we are editing or copying, then we do
          // not want the default duration applied
          (($default_duration_all_day && !isset($id) && !$drag) ? " checked=\"checked\"" : "") .
-         " name=\"all_day\" type=\"checkbox\" value=\"yes\" onclick=\"OnAllDayClick(this)\"".
+         " name=\"all_day\" type=\"checkbox\" value=\"yes\"".
          ($show_all_day? "" : " style=\"display: none;\" ").
          // If $display_none or $disabled are set then we'll also disable the select so
          // that there is only one select passing through the variable to the handler
@@ -1154,58 +1154,7 @@ foreach ($areas as $area)
 }
 ?>
 
-// Executed when the user clicks on the all_day checkbox.
-function OnAllDayClick(el)
-{
-  
-  var form = document.forms["main"];
-  if (form)
-  {
-    var startSelect = form["start_seconds" + currentArea];
-    var endSelect = form["end_seconds" + currentArea];
-    var allDay = form["all_day" + currentArea];
-    var i;
-    if (allDay.checked) // If checking the box...
-    {
-      <?php
-      // Save the old values, disable the inputs and, to avoid user confusion,
-      // show the start and end times as the beginning and end of the booking
-      // (Note that we save the value rather than the index because the number
-      // of options in the select box will change)
-      ?>
-      OnAllDayClick.oldStart = startSelect.options[startSelect.selectedIndex].value;
-      startSelect.selectedIndex = 0;
-      startSelect.disabled = true;
-    
-      OnAllDayClick.oldEnd = endSelect.options[endSelect.selectedIndex].value;
-      endSelect.selectedIndex = endSelect.options.length - 1;
-      endSelect.disabled = true;
-    }
-    else  <?php // restore the old values and re-enable the inputs ?>
-    {
-      startSelect.disabled = false;
-      for (i=0; i<startSelect.options.length; i++)
-      {
-        if (startSelect.options[i].value == OnAllDayClick.oldStart)
-        {
-          startSelect.options.selectedIndex = i;
-          break;
-        }
-      }     
-      endSelect.disabled = false;
-      for (i=0; i<endSelect.options.length; i++)
-      {
-        if (endSelect.options[i].value == OnAllDayClick.oldEnd)
-        {
-          endSelect.options.selectedIndex = i;
-          break;
-        }
-      } 
-      prevStartValue = undefined;  <?php // because we don't want adjustSlotSelectors() to change the end time ?>
-    }
-    adjustSlotSelectors(form); <?php // need to get the duration right ?>
-  }
-}
+
 //]]>
 </script>
 

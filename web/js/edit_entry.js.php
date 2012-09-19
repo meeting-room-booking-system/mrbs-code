@@ -16,6 +16,50 @@ $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= $max_level);
 
 
+// Executed when the user clicks on the all_day checkbox.
+?>
+function onAllDayClick()
+{
+  var form = $('#main');
+  if (form.length == 0)
+  {
+    return;
+  }
+
+  var startSelect = form.find('select[name="start_seconds"]:visible');
+  var endSelect = form.find('select[name="end_seconds"]:visible');
+  var allDay = form.find('input[name="all_day"]:visible');
+  var i;
+  if (allDay.is(':checked')) // If checking the box...
+  {
+    <?php
+    // Save the old values, disable the inputs and, to avoid user confusion,
+    // show the start and end times as the beginning and end of the booking
+    // (Note that we save the value rather than the index because the number
+    // of options in the select box will change)
+    ?>
+    onAllDayClick.oldStart = startSelect.val();
+    startSelect.val(startSelect.data('first'));
+    startSelect.attr('disabled', 'disabled');
+    onAllDayClick.oldEnd = endSelect.val();
+    endSelect.val(endSelect.data('last'));
+    endSelect.attr('disabled', 'disabled');
+  }
+  else  <?php // restore the old values and re-enable the inputs ?>
+  {
+    startSelect.val(onAllDayClick.oldStart);
+    startSelect.removeAttr('disabled');
+    endSelect.val(onAllDayClick.oldEnd);
+    endSelect.removeAttr('disabled');
+
+    prevStartValue = undefined;  <?php // because we don't want adjustSlotSelectors() to change the end time ?>
+  }
+
+  adjustSlotSelectors(form.get(0)); <?php // need to get the duration right ?>
+
+}
+
+<?php
 // Set the error messages to be used for the various fields.     We do this twice:
 // once to redefine the HTML5 error message and once for JavaScript alerts, for those
 // browsers not supporting HTML5 field validation.
@@ -591,10 +635,10 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   var text = errorText;
     
   var startId = "start_seconds" + area;
-  var startSelect = form[startId];
+  var startSelect = $('select[name="start_seconds"]:visible');
   var startKeepDisabled = ($('#' + startId).attr('class') == 'keep_disabled');
   var endId = "end_seconds" + area;
-  var endSelect = form[endId];
+  var endSelect = $('select[name="end_seconds"]:visible');
   var endKeepDisabled = ($('#' + endId).attr('class') == 'keep_disabled');
   var allDayId = "all_day" + area;
   var allDay = form[allDayId];
@@ -607,8 +651,8 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   ?>
   if (allDay && allDay.checked)
   {
-    startValue = startOptions[area][0]['value']
-    endValue = endOptions[area][nEndOptions[area] - 1]['value'];
+    startValue = startSelect.data('first');
+    endValue = endSelect.data('last');
     <?php
     // If we've come here from another area then we need to make sure that the
     // start and end selectors are disabled.  (We won't change the old_end and old_start
@@ -618,8 +662,8 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
     ?>
     if (oldArea != null)
     {
-      startSelect.disabled = true;
-      endSelect.disabled = true;
+      startSelect.attr('disabled', 'disabled');
+      endSelect.attr('disabled', 'disabled');
     }
   }
   <?php
@@ -675,7 +719,7 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
     ?>
     else
     {
-      startValue = startOptions[area][0]['value'];
+      startValue = startSelect.data('first');
       if (enablePeriods)
       {
         endValue = startValue;
@@ -701,10 +745,8 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   ?>
   else  
   {
-    startIndex = startSelect.selectedIndex;
-    startValue = parseInt(startSelect.options[startIndex].value, 10);
-    endIndex = endSelect.selectedIndex;
-    endValue = parseInt(endSelect.options[endIndex].value, 10);
+    startValue = parseInt(startSelect.val(), 10);
+    endValue = parseInt(endSelect.val(), 10);
     <?php
     // If the start value has changed then we adjust the endvalue
     // to keep the duration the same.  (If the end value has changed
@@ -730,8 +772,22 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   if (!allDay || !allDay.checked)
   {
     var newState = (dateDifference < 0);
-    startSelect.disabled = newState || startKeepDisabled;
-    endSelect.disabled = newState || endKeepDisabled;
+    if (newState || startKeepDisabled)
+    {
+      startSelect.attr('disabled', 'disabled');
+    }
+    else
+    {
+      startSelect.removeAttr('disabled');
+    }
+    if (newState || endKeepDisabled)
+    {
+      endSelect.attr('disabled', 'disabled');
+    }
+    else
+    {
+      endSelect.removeAttr('disabled');
+    }
     if (allDay)
     {
       allDay.disabled = newState || allDayKeepDisabled;
@@ -739,26 +795,16 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   }
 
   <?php // Destroy and rebuild the start select ?>
-  while (startSelect.options.length > 0)
-  {
-    startSelect.remove(0);
-  }
-
+  startSelect.empty();
   for (i = 0; i < nStartOptions[area]; i++)
   {
-    isSelected = (startOptions[area][i]['value'] == startValue);
-    if (dateDifference >= 0)
-    {
-      text = startOptions[area][i]['text'];
-    }
-    startSelect.options[i] = new Option(text, startOptions[area][i]['value'], false, isSelected);
+    startSelect.append($('<option>').val(startOptions[area][i]['value'])
+                                    .text(startOptions[area][i]['text']));
   }
-    
+  startSelect.val(startValue);
+  
   <?php // Destroy and rebuild the end select ?>
-  while (endSelect.options.length > 0)
-  {
-    endSelect.remove(0);
-  }
+  endSelect.empty();
 
   $('#end_time_error').text('');  <?php  // Clear the error message ?>
   j = 0;
@@ -790,7 +836,8 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
         {
           if (i == 0)
           {
-            endSelect.options[j] = new Option(nbsp, endOptions[area][i]['value'], false, isSelected);
+            endSelect.append($('<option>').val(endOptions[area][i]['value'])
+                                          .text(nbsp));
             var errorMessage = '<?php echo escape_js(get_vocab("max_booking_duration")) ?>' + nbsp;
             if (enablePeriods)
             {
@@ -822,10 +869,12 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
       {
         text = endOptions[area][i]['text'] + nbsp + nbsp + '(' +
                getDuration(startValue, endOptions[area][i]['value'], dateDifference) + ')';
-      }      
-      endSelect.options[j] = new Option(text, endOptions[area][i]['value'], false, isSelected);
+      }
+      endSelect.append($('<option>').val(endOptions[area][i]['value'])
+                                    .text(text));
       j++;
     }
+    endSelect.val(endValue);
   }
     
   <?php 
@@ -864,6 +913,10 @@ var oldInitEditEntry = init;
 init = function() {
   oldInitEditEntry.apply(this);
   
+  $('input[name="all_day"]').click(function() {
+      onAllDayClick();
+    });
+    
   <?php
   // (1) put the booking name field in focus (but only for new bookings,
   // ie when the field is empty:  if it's a new booking you have to
