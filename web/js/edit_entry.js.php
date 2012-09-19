@@ -636,10 +636,9 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
     
   var startId = "start_seconds" + area;
   var startSelect = $('select[name="start_seconds"]:visible');
-  var startKeepDisabled = ($('#' + startId).attr('class') == 'keep_disabled');
-  var endId = "end_seconds" + area;
+  var startKeepDisabled = startSelect.hasClass('keep_disabled');
   var endSelect = $('select[name="end_seconds"]:visible');
-  var endKeepDisabled = ($('#' + endId).attr('class') == 'keep_disabled');
+  var endKeepDisabled = endSelect.hasClass('keep_disabled');
   var allDayId = "all_day" + area;
   var allDay = form[allDayId];
   var allDayKeepDisabled = $('#' + allDayId).hasClass('keep_disabled');
@@ -889,15 +888,13 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   // The width: auto is necessary to get the boxes to resize themselves
   // according to their new contents.
   ?>
-  var startId = "#start_seconds" + area;
-  var endId = "#end_seconds" + area;
-  $(startId).css({width: "auto"});
-  $(endId).css({width: "auto"});
-  var startWidth = $(startId).width();
-  var endWidth = $(endId).width();
+  startSelect.css({width: "auto"});
+  endSelect.css({width: "auto"});
+  var startWidth = startSelect.width();
+  var endWidth = endSelect.width();
   var maxWidth = Math.max(startWidth, endWidth) + 2;
-  $(startId).width(maxWidth);
-  $(endId).width(maxWidth);
+  startSelect.width(maxWidth);
+  endSelect.width(maxWidth);
     
 } <?php // function adjustSlotSelectors()
 
