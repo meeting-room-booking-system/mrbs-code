@@ -1154,12 +1154,10 @@ foreach ($areas as $area)
 }
 ?>
 
-// set up some global variables for use by OnAllDayClick(). 
-var old_start, old_end;
-
 // Executed when the user clicks on the all_day checkbox.
 function OnAllDayClick(el)
 {
+  
   var form = document.forms["main"];
   if (form)
   {
@@ -1175,11 +1173,11 @@ function OnAllDayClick(el)
       // (Note that we save the value rather than the index because the number
       // of options in the select box will change)
       ?>
-      old_start = startSelect.options[startSelect.selectedIndex].value;
+      OnAllDayClick.oldStart = startSelect.options[startSelect.selectedIndex].value;
       startSelect.selectedIndex = 0;
       startSelect.disabled = true;
     
-      old_end = endSelect.options[endSelect.selectedIndex].value;
+      OnAllDayClick.oldEnd = endSelect.options[endSelect.selectedIndex].value;
       endSelect.selectedIndex = endSelect.options.length - 1;
       endSelect.disabled = true;
     }
@@ -1188,7 +1186,7 @@ function OnAllDayClick(el)
       startSelect.disabled = false;
       for (i=0; i<startSelect.options.length; i++)
       {
-        if (startSelect.options[i].value == old_start)
+        if (startSelect.options[i].value == OnAllDayClick.oldStart)
         {
           startSelect.options.selectedIndex = i;
           break;
@@ -1197,7 +1195,7 @@ function OnAllDayClick(el)
       endSelect.disabled = false;
       for (i=0; i<endSelect.options.length; i++)
       {
-        if (endSelect.options[i].value == old_end)
+        if (endSelect.options[i].value == OnAllDayClick.oldEnd)
         {
           endSelect.options.selectedIndex = i;
           break;
