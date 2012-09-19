@@ -110,6 +110,7 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     {
       continue;
     }
+    
     $time_t = date($format,$t);
     
     // find the first free index (in case there are multiple bookings in a timeslot)
@@ -727,13 +728,6 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     $eveningends_minutes = count($periods) - 1;
   }
 
-  // Define the start and end of each day in a way which is not affected by
-  // daylight saving...
-  // dst_change:
-  // -1 => no change
-  //  0 => entering DST
-  //  1 => leaving DST
-  $dst_change = is_dst($month, $day, $year);
   $am7 = get_start_first_slot($month, $day, $year);
   $pm7 = get_start_last_slot($month, $day, $year);
             
@@ -807,8 +801,6 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
 
-  
-  ($dst_change != -1) ? $j = 1 : $j = 0;
   $n_time_slots = get_n_time_slots();
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
@@ -828,7 +820,9 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
          $slot_seconds <= $evening_slot_seconds;
          $slot_seconds += $resolution)
     {
-      $t = mktime(0, 0, $slot_seconds, $month, $day+$j, $year);
+      // We are only interested the hours and minutes, so we choose a day that is
+      // not going to have a DST transition
+      $t = mktime(0, 0, $slot_seconds, 1, 1, 2000);
       // Put the number of seconds since the start of the day (nominal, ignoring DST)
       // in a data attribute so that JavaScript can pick it up
       $header_inner .= "<th data-seconds=\"$slot_seconds\" style=\"width: $column_width%\">";
@@ -919,9 +913,12 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
            $slot_seconds <= $evening_slot_seconds;
            $slot_seconds += $resolution)
       {
-        $t = mktime(0, 0, $slot_seconds, $month, $day+$j, $year);
+        // Choose a day without a DST transition
+        $t = mktime(0, 0, $slot_seconds, 1, 1, 2000);
+        
         // convert timestamps to HHMM format without leading zeros
         $time_t = date($format, $t);
+
         // and get a stripped version of the time for use with periods
         $time_t_stripped = preg_replace( "/^0/", "", $time_t );
         
@@ -951,7 +948,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
          $slot_seconds += $resolution,
            $row_class = ($row_class == "even_row") ? "odd_row" : "even_row")
     {
-      $t = mktime(0, 0, $slot_seconds, $month, $day+$j, $year);
+      $t = mktime(0, 0, $slot_seconds, 1, 1, 2000);
       // convert timestamps to HHMM format without leading zeros
       $time_t = date($format, $t);
       // and get a stripped version of the time for use with periods
