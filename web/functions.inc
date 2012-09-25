@@ -1409,6 +1409,96 @@ function is_dst($month, $day, $year, $hour="-1")
 }
 
 
+// Compares two nominal dates which are indexed by'hours', 'minutes', 'seconds', 
+// 'mon', 'mday' and 'year', ie as in the ouput of getdate().  Returns -1 if the
+// first date is before the second, 0 if they are equal and +1 if the first date
+// is after the second.   NULL if a comparison can't be done.
+//
+// (Note that internally the function uses gmmktime() so the parameters do not
+// have to represent valid values.   For example you could pass '32' for day and
+// that would be interpreted as 4 days after '28'.)
+function nominal_date_compare($d1, $d2)
+{
+  // We compare the dates using gmmktime() because we are trying to compare nominal
+  // dates and so do not want DST transitions
+  $t1 = gmmktime($d1['hours'], $d1['minutes'], $d1['seconds'],
+                 $d1['mon'], $d1['mday'], $d1['year']);
+  $t2 = gmmktime($d2['hours'], $d2['minutes'], $d2['seconds'],
+                 $d2['mon'], $d2['mday'], $d2['year']);
+  if ($t1 < $t2)
+  {
+    return -1;
+  }
+  elseif ($t1 == $t2)
+  {
+    return 0;
+  }
+  else
+  {
+    return 1;
+  }
+}
+
+
+// Checks whether the nominal time given is a valid date and time with respect to
+// DST transitions.   When entering DST there is a set of times that don't exist, for
+// example from 0200 to 0259 in Europe/London.
+function is_valid_datetime($hour, $minute, $second, $month, $day, $year)
+{
+  global $timezone;
+  
+  // If the day before is in DST then the datetime must be valid, because
+  // you only get the gap when entering DST.
+  $dayBefore = mktime($hour, $minute, $second, $month, $day-1, $year);
+  if (date('I', $dayBefore))
+  {
+    return TRUE;
+  }
+  // The day before is not in DST.   If the day after is also not in DST,
+  // then there can have been no transition, so again the datetime must be valid.
+  $dayAfter = mktime($hour, $minute, $second, $month, $day+1, $year);
+  if (!date('I', $dayAfter))
+  {
+    return TRUE;
+  }
+  // We are in a transition into DST, so we need to check more carefully.
+  // However we can only do this efficiently in PHP 5.3.0 or greater
+  if (version_compare(PHP_VERSION, '5.3.0') < 0)
+  {
+    return NULL;
+  }
+  // Get the transition data (we assume there is one and only one transition),
+  // in particular the time at which the transition happens and the new offset
+  $thisDateTimeZone = new DateTimeZone($timezone);
+  $transitions = $thisDateTimeZone->getTransitions($dayBefore, $dayAfter);
+  // According to my reading of the PHP manual, getTransitions() should return
+  // all transitions between the start and end date.   However what it seems to do
+  // is return an array consisting of the time data for the start date followed by
+  // the transition data.   So as a precaution we take the last element of the array
+  // (we were only expecting one element, but seem to get two).
+  $transition = array_pop($transitions);
+  // If we failed for some reason to get any transition data, return NULL
+  if (!isset($transition))
+  {
+    return NULL;
+  }
+  
+  // Get the old offset and work out how many seconds the clocks change by
+  $beforeDateTime = new DateTime(date('c', $dayBefore), $thisDateTimeZone);
+  $change = $transition['offset'] - $beforeDateTime->getOffset();
+  
+  // See if the nominal date falls outside the gap
+  $lastValidSecond = getdate($transition['ts'] - 1);
+  $lastInvalidSecond = $lastValidSecond;
+  $lastInvalidSecond['seconds'] += $change;
+  $thisDate = array('hours' => $hour, 'minutes' => $minute, 'seconds' => $second,
+                    'mon' => $month, 'mday' => $day, 'year' => $year);
+                  
+  return ((nominal_date_compare($thisDate, $lastValidSecond) <= 0) || 
+          (nominal_date_compare($thisDate, $lastInvalidSecond) > 0));
+}
+
+
 // Returns TRUE if $t is in that part of daylight saving time that will have
 // the same nominal time as another timestamp shortly after the DST transition.
 // For example, will return TRUE for the $t equivalent to the first occurence

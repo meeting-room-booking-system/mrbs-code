@@ -252,7 +252,7 @@ function map_add_booking ($row, &$column, $am7, $pm7)
 
 
 
-function cell_html($cell, $query_strings)
+function cell_html($cell, $query_strings, $is_valid = TRUE)
 {
   // draws a single cell in the main table of the day and week views
   //
@@ -286,6 +286,9 @@ function cell_html($cell, $query_strings)
   //    ['new_periods']   the string to be used for an empty cell if using periods
   //    ['new_times']     the string to be used for an empty cell if using times
   //    ['booking']       the string to be used for a full cell
+  //
+  // $is_valid specifies whether the slot actually exists or is one of the non-existent
+  // slots in the transition to DST
     
   global $main_cell_height, $main_table_cell_border_width;
   global $area, $year, $month, $timetohighlight;
@@ -492,7 +495,7 @@ function cell_html($cell, $query_strings)
     }
     else
     {
-      $c = "new";
+      $c = ($is_valid) ? "new" : "invalid";
     }
     
     // Don't put in a <td> cell if the slot is booked and there's no description.
@@ -507,16 +510,20 @@ function cell_html($cell, $query_strings)
       // If the room isn't booked then allow it to be booked
       if (!isset($id))
       {
-        $html .= "<div class=\"celldiv slots1\">\n";  // a bookable slot is only one unit high
-        $html .= "<a href=\"edit_entry.php?" . 
-                 (($enable_periods) ? $query_strings['new_periods'] : $query_strings['new_times']) . 
-                 "\">\n";
-        if ($show_plus_link)
+        // Don't provide a link if the slot doesn't really exist
+        if ($is_valid)
         {
-          $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          $html .= "<div class=\"celldiv slots1\">\n";  // a bookable slot is only one unit high
+          $html .= "<a href=\"edit_entry.php?" . 
+                   (($enable_periods) ? $query_strings['new_periods'] : $query_strings['new_times']) . 
+                   "\">\n";
+          if ($show_plus_link)
+          {
+            $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          }
+          $html .= "</a>\n";
+          $html .= "</div>\n";
         }
-        $html .= "</a>\n";
-        $html .= "</div>\n";
       }
       else                 // if it is booked then show the booking
       {
@@ -722,6 +729,13 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
 
   $am7 = get_start_first_slot($month, $day, $year);
   $pm7 = get_start_last_slot($month, $day, $year);
+  
+  // Work out whether there's a possibility that a time slot is invalid,
+  // in other words whether the booking day includes a transition into DST.
+  // If we know that there's no transition into DST then all slots are
+  // definitely valid and this saves us bothering to do the detailed calculations
+  // of which slots are invalid.
+  $is_definitely_valid = cross_dst($am7, $pm7) >= 0;
             
   // We want to build an array containing all the data we want to show
   // and then spit it out. 
@@ -894,10 +908,17 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       $room_id = $row['id']; 
       $room_cell_link = "week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$room_id";
       $tbody .= room_cell_html($row, $room_cell_link);
+      $is_valid = array();
       for ($s = $morning_slot_seconds;
            $s <= $evening_slot_seconds;
            $s += $resolution)
       {
+        // Work out whether this timeslot is valid and save the result, so that we
+        // don't have to repeat the calculation for every room
+        if (!isset($is_valid[$s]))
+        {
+          $is_valid[$s] = $is_definitely_valid || is_valid_datetime(0, 0, $s, $month, $day, $year);
+        }
         // set up the query strings to be used for the link in the cell
         $query_strings = get_query_strings($area, $room_id, $month, $day, $year, $s);
 
@@ -906,7 +927,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
         {
           $today[$room_id][$day][$s] = array();  // to avoid an undefined index NOTICE error
         }
-        $tbody .= cell_html($today[$room_id][$day][$s], $query_strings);
+        $tbody .= cell_html($today[$room_id][$day][$s], $query_strings, $is_valid[$s]);
       }  // end for (looping through the times)
       if ( FALSE != $row_labels_both_sides )
       {
@@ -937,7 +958,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       }
       $tbody .= "<tr class=\"$class\">\n";
       $tbody .= time_cell_html($s, $url);
-  
+      $is_valid = $is_definitely_valid || is_valid_datetime(0, 0, $s, $month, $day, $year);
       // Loop through the list of rooms we have for this area
       while (list($key, $room_id) = each($rooms))
       {
@@ -949,7 +970,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
         {
           $today[$room_id][$day][$s] = array();  // to avoid an undefined index NOTICE error
         }
-        $tbody .= cell_html($today[$room_id][$day][$s], $query_strings);
+        $tbody .= cell_html($today[$room_id][$day][$s], $query_strings, $is_valid);
       }
       
       // next lines to display times on right side
@@ -1022,6 +1043,12 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   {
     $am7[$j] = get_start_first_slot($month, $day_start_week+$j, $year);
     $pm7[$j] = get_start_last_slot($month, $day_start_week+$j, $year);
+    // Work out whether there's a possibility that a time slot is invalid,
+    // in other words whether the booking day includes a transition into DST.
+    // If we know that there's no transition into DST then all slots are
+    // definitely valid and this saves us bothering to do the detailed calculations
+    // of which slots are invalid.
+    $is_definitely_valid[$j] = cross_dst($am7[$j], $pm7[$j]) >= 0;
   }
   unset($j);  // Just so that we pick up any accidental attempt to use it later
 
@@ -1099,6 +1126,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     // with times along the top and days of the week down the side
     $column_width = (int)(95 / $n_time_slots);
     $header_inner .= "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
+    
     for ($s = $morning_slot_seconds;
          $s <= $evening_slot_seconds;
          $s += $resolution)
@@ -1214,6 +1242,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
              $s <= $evening_slot_seconds;
              $s += $resolution)
         {
+          $is_valid = $is_definitely_valid[$thisday] || is_valid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
           // set up the query strings to be used for the link in the cell
           $query_strings = get_query_strings($area, $room, $wmonth, $wday, $wyear, $s);
 
@@ -1222,7 +1251,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
           {
             $week_map[$room][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
           }
-          $tbody .= cell_html($week_map[$room][$thisday][$s], $query_strings);
+          $tbody .= cell_html($week_map[$room][$thisday][$s], $query_strings, $is_valid);
         }  // end looping through the time slots
         if ( FALSE != $row_labels_both_sides )
         {
@@ -1273,6 +1302,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
           $wday = date("d", $wt);
           $wmonth = date("m", $wt);
           $wyear = date("Y", $wt);
+          $is_valid = $is_definitely_valid[$thisday] || is_valid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
           $query_strings = get_query_strings($area, $room, $wmonth, $wday, $wyear, $s);
      
           // and then draw the cell
@@ -1280,7 +1310,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
           {
             $week_map[$room][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
           }
-          $tbody .= cell_html($week_map[$room][$thisday][$s], $query_strings);
+          $tbody .= cell_html($week_map[$room][$thisday][$s], $query_strings, $is_valid);
         }
   
       }    // for loop
