@@ -111,7 +111,7 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
   // Get the current hour and minute and convert it into nominal (ie ignoring any
   // DST effects) seconds since the start of the day
   $date = getdate($time);
-  $current_t = (($date['hours'] * 60) + $date['minutes']) * 60;
+  $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
   
   if ($enable_periods)
   {
@@ -132,13 +132,13 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
            " id=\"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\">\n";
   
   // Construct an array of times
-  $ts = array();
+  $s_array = array();
   if ($first <= $last)
   {
     // The simple case where the booking day is contained within the calendar day
-    for ($t = $first; $t <= $last; $t = $t + $resolution)
+    for ($s = $first; $s <= $last; $s += $resolution)
     {
-      $ts[] = $t;
+      $s_array[] = $s;
     }
   }
   else
@@ -146,28 +146,28 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
     // The complex case where the booking day spans midnight.    In this case we have
     // to get the possible times from the start of the first slot after midnight to the
     // "last" time, and then from the "first" time to midnight
-    for ($t = $last%$resolution; $t <= $last; $t = $t + $resolution)
+    for ($s = $last%$resolution; $s <= $last; $s += $resolution)
     {
-      $ts[] = $t;
+      $s_array[] = $s;
     }
-    for ($t = $first; $t < 24*60*60; $t = $t + $resolution)
+    for ($s = $first; $s < 24*60*60; $s += $resolution)
     {
-      $ts[] = $t;
+      $s_array[] = $s;
     }
   }
   
-  foreach ($ts as $t)
+  foreach ($s_array as $s)
   {
-    $slot_string = ($enable_periods) ? $periods[intval(($t-$base)/60)] : hour_min($t);
-    $html .= "<option value=\"$t\"";
-    $html .= ($t == $current_t) ? " selected=\"selected\"" : "";
+    $slot_string = ($enable_periods) ? $periods[intval(($s-$base)/60)] : hour_min($s);
+    $html .= "<option value=\"$s\"";
+    $html .= ($s == $current_s) ? " selected=\"selected\"" : "";
     $html .= ">$slot_string</option>\n";
   }
   $html .= "</select>\n";
   // Add in a hidden input if the select is disabled but displayed
   if ($disabled && !$display_none)
   {
-    $html .= "<input type=\"hidden\" name=\"${prefix}seconds\" value=\"$current_t\">\n";
+    $html .= "<input type=\"hidden\" name=\"${prefix}seconds\" value=\"$current_s\">\n";
   }
   
   echo $html;

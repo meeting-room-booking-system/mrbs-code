@@ -1440,26 +1440,33 @@ function nominal_date_compare($d1, $d2)
 }
 
 
-// Checks whether the nominal time given is a valid date and time with respect to
+// Checks whether the nominal time given is an invalid date and time with respect to
 // DST transitions.   When entering DST there is a set of times that don't exist, for
 // example from 0200 to 0259 in Europe/London.
-function is_valid_datetime($hour, $minute, $second, $month, $day, $year)
+// Returns NULL if MRBS is unable to determine an answer, otherwise TRUE or FALSE (so
+// a simple equality test will default to a valid time if MRBS can't determine an answer)
+function is_invalid_datetime($hour, $minute, $second, $month, $day, $year, $tz=NULL)
 {
   global $timezone;
+  
+  if (!isset($tz))
+  {
+    $tz = $timezone;  // default to the current timezone
+  }
   
   // If the day before is in DST then the datetime must be valid, because
   // you only get the gap when entering DST.
   $dayBefore = mktime($hour, $minute, $second, $month, $day-1, $year);
   if (date('I', $dayBefore))
   {
-    return TRUE;
+    return FALSE;
   }
   // The day before is not in DST.   If the day after is also not in DST,
   // then there can have been no transition, so again the datetime must be valid.
   $dayAfter = mktime($hour, $minute, $second, $month, $day+1, $year);
   if (!date('I', $dayAfter))
   {
-    return TRUE;
+    return FALSE;
   }
   // We are in a transition into DST, so we need to check more carefully.
   // However we can only do this efficiently in PHP 5.3.0 or greater
@@ -1469,7 +1476,7 @@ function is_valid_datetime($hour, $minute, $second, $month, $day, $year)
   }
   // Get the transition data (we assume there is one and only one transition),
   // in particular the time at which the transition happens and the new offset
-  $thisDateTimeZone = new DateTimeZone($timezone);
+  $thisDateTimeZone = new DateTimeZone($tz);
   $transitions = $thisDateTimeZone->getTransitions($dayBefore, $dayAfter);
   // According to my reading of the PHP manual, getTransitions() should return
   // all transitions between the start and end date.   However what it seems to do
@@ -1494,8 +1501,8 @@ function is_valid_datetime($hour, $minute, $second, $month, $day, $year)
   $thisDate = array('hours' => $hour, 'minutes' => $minute, 'seconds' => $second,
                     'mon' => $month, 'mday' => $day, 'year' => $year);
                   
-  return ((nominal_date_compare($thisDate, $lastValidSecond) <= 0) || 
-          (nominal_date_compare($thisDate, $lastInvalidSecond) > 0));
+  return ((nominal_date_compare($thisDate, $lastValidSecond) > 0) && 
+          (nominal_date_compare($thisDate, $lastInvalidSecond) <= 0));
 }
 
 
