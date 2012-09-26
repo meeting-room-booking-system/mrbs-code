@@ -110,11 +110,11 @@ $(function() {
 // Blur the datepicker input field on close, so that the datepicker will reappear
 // if you select it.    (Not quite sure why you need this.  It only seems
 // to be necessary when you are using Firefox and the datepicker is draggable).
+
+// If formId is defined, submit the form
 //
-// Then go and adjust the start and end time/period select options, because
-// they are dependent on the start and end dates
-//
-// Finally, if formId is defined, submit the form
+// Finally, trigger a datePickerUpdated event so that it can be dealt with elsewhere
+// by code that relies on having updated values in the alt fields
 ?>
 function datepicker_close(dateText, inst, formId)
 {
@@ -124,23 +124,12 @@ function datepicker_close(dateText, inst, formId)
   document.getElementById(alt_id + '_month').value = date[1];
   document.getElementById(alt_id + '_day').value   = date[2];
   document.getElementById(inst.id).blur();
-  if ($('body').hasClass('edit_entry'))
-  {
-    adjustSlotSelectors(document.getElementById('main'));
-    <?php
-    if (function_exists('json_encode'))
-    {
-      // If we're doing Ajax checking of the form then we have to check
-      // for conflicts the form when the datepicker is closed
-      ?>
-      checkConflicts();
-      <?php
-    }
-    ?>
-  }
+  
   if (formId)
   {
     var form = document.getElementById(formId);
     form.submit();
   }
+  
+  $('#' + inst.id).trigger('datePickerUpdated');
 }

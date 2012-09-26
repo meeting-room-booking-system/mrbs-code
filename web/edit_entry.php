@@ -225,7 +225,9 @@ function create_field_entry_start_date($disabled=FALSE)
   echo "<div id=\"div_start_date\">\n";
   echo "<label>" . get_vocab("start") . ":</label>\n";
   $date = getdate($start_time);
+  echo "<div>\n"; // Needed so that the structure is the same as for the end date to help the JavaScript
   gendateselector("start_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
+  echo "</div>\n";
   // If we're using periods the booking model is slightly different:
   // you're allowed to specify the last period as your first period.
   // This is why we don't substract the resolution
@@ -1101,7 +1103,7 @@ if ($res)
     
 // Get the details of all the enabled areas
 $areas = array();
-$sql = "SELECT id, area_name, resolution, default_duration, enable_periods,
+$sql = "SELECT id, area_name, resolution, default_duration, enable_periods, timezone,
                morningstarts, morningstarts_minutes, eveningends , eveningends_minutes
           FROM $tbl_area
          WHERE disabled=0
@@ -1139,7 +1141,7 @@ foreach ($areas as $area)
   echo "areas[${area['id']}] = [];\n";
   foreach ($area as $key => $value)
   {
-    if (in_array($key, array('area_name', 'max_duration_units')))
+    if (in_array($key, array('area_name', 'max_duration_units', 'timezone')))
     {
       // Enclose strings in quotes
       $value = "'" . escape_js($value) . "'";

@@ -601,6 +601,33 @@ function getDateDifference(form)
   return diff;
 }
   
+
+<?php
+// Make two jQuery objects the same width.
+?>
+function adjustWidth(a, b)
+{
+  <?php 
+  // Note that we set the widths of both objects, even though it would seem
+  // that just setting the width of the smaller should be sufficient.
+  // But if you don't set both of them then you end up with a few 
+  // pixels difference.  In other words doing a get and then a set 
+  // doesn't leave you where you started - not quite sure why.
+  // The + 2 is a fudge factor to make sure that the option text in select
+  // elements isn't truncated - not quite sure why it is necessary.
+  // The width: auto is necessary to get the elements to resize themselves
+  // according to their new contents.
+  ?>
+  a.css({width: "auto"});
+  b.css({width: "auto"});
+  var aWidth = a.width();
+  var bWidth = b.width();
+  var maxWidth = Math.max(aWidth, bWidth) + 2;
+  a.width(maxWidth);
+  b.width(maxWidth);
+}
+  
+  
 function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
 {
   <?php
@@ -875,26 +902,9 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
     }
     endSelect.val(endValue);
   }
-    
-  <?php 
-  // Make the two select boxes the same width.   Note that we set
-  // the widths of both select boxes, even though it would seem
-  // that just setting the width of the smaller should be sufficient.
-  // But if you don't set both of them then you end up with a few 
-  // pixels difference.  In other words doing a get and then a set 
-  // doesn't leave you where you started - not quite sure why.
-  // The + 2 is a fudge factor to make sure that the option text isn't
-  // truncated - not quite sure why it is necessary.
-  // The width: auto is necessary to get the boxes to resize themselves
-  // according to their new contents.
-  ?>
-  startSelect.css({width: "auto"});
-  endSelect.css({width: "auto"});
-  var startWidth = startSelect.width();
-  var endWidth = endSelect.width();
-  var maxWidth = Math.max(startWidth, endWidth) + 2;
-  startSelect.width(maxWidth);
-  endSelect.width(maxWidth);
+  
+  adjustWidth(startSelect, endSelect);
+
     
 } <?php // function adjustSlotSelectors()
 
@@ -1050,9 +1060,6 @@ init = function() {
     //
     // Use a click event for checkboxes as it seems that in some browsers the event fires
     // before the value is changed.
-    //
-    // Note that we also need to add change event handlers to the start and end
-    // datepicker input fields, but we have to do that in datepicker_close()
     ?>
     var formFields = $('form#main [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
     formFields.filter(':checkbox')
@@ -1122,7 +1129,7 @@ init = function() {
       });
     
     <?php
-    // Finally set a timer so that conflicts are periodically checked for,
+    // Finally, set a timer so that conflicts are periodically checked for,
     // in case someone else books that slot before you press Save.
     // (Note the config variable is in seconds, but the setInterval() function
     // uses milliseconds)
@@ -1135,7 +1142,56 @@ init = function() {
       <?php
     }
 
-
   } // if (function_exists('json_encode'))
+
+  
+  // Actions to take when the start and end datepickers are closed
   ?>
+  $('#start_datepicker, #end_datepicker').bind('datePickerUpdated', function() {
+    // (1) Go and adjust the start and end time/period select options, because
+    //     they are dependent on the start and end dates
+    adjustSlotSelectors(document.getElementById('main'));
+    <?php
+    if (function_exists('json_encode'))
+    {
+      // (2) If we're doing Ajax checking of the form then we have to check
+      //     for conflicts when the datepicker is closed
+      ?>
+      checkConflicts();
+      
+      <?php
+      // (3) Check to see whether any time slots should be removed from the time
+      //     select on the grounds that they don't exist due to a transition into DST
+      ?>
+      var siblings = $(this).siblings();
+      var select = $(this).parent().parent().siblings('select:visible');
+      var slots = [];
+      select.find('option').each(function() {
+          slots.push($(this).val());
+        });
+      <?php
+      // We pass the id of the element as the request id so that we can match
+      // the result to the request
+      ?>
+      var params = {id: select.attr('id'),
+                    day: parseInt(siblings.filter('input[id*="day"]').val(), 10),
+                    month: parseInt(siblings.filter('input[id*="month"]').val(), 10),
+                    year: parseInt(siblings.filter('input[id*="year"]').val(), 10),
+                    tz: areas[currentArea]['timezone'],
+                    slots: slots};
+      $.post('check_slot_ajax.php', params, function(result) {
+          $.each(result.slots, function(key, value) {
+              $('#' + result.id + ':visible').find('option[value="' + value + '"]').remove();
+            });
+          <?php
+          // Now that we've removed some options we need to equalise the widths
+          ?>
+          adjustWidth($('select[name="start_seconds"]:visible'),
+                      $('select[name="end_seconds"]:visible'));
+        }, 'json');
+    
+      <?php
+    }  // if (function_exists('json_encode'))
+    ?>
+  }).trigger('datePickerUpdated');
 };
