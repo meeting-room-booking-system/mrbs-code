@@ -1161,34 +1161,38 @@ init = function() {
       
       <?php
       // (3) Check to see whether any time slots should be removed from the time
-      //     select on the grounds that they don't exist due to a transition into DST
+      //     select on the grounds that they don't exist due to a transition into DST.
+      //     Don't do this if we're using periods, because it doesn't apply then
       ?>
-      var siblings = $(this).siblings();
-      var select = $(this).parent().parent().siblings('select:visible');
-      var slots = [];
-      select.find('option').each(function() {
-          slots.push($(this).val());
-        });
-      <?php
-      // We pass the id of the element as the request id so that we can match
-      // the result to the request
-      ?>
-      var params = {id: select.attr('id'),
-                    day: parseInt(siblings.filter('input[id*="day"]').val(), 10),
-                    month: parseInt(siblings.filter('input[id*="month"]').val(), 10),
-                    year: parseInt(siblings.filter('input[id*="year"]').val(), 10),
-                    tz: areas[currentArea]['timezone'],
-                    slots: slots};
-      $.post('check_slot_ajax.php', params, function(result) {
-          $.each(result.slots, function(key, value) {
-              $('#' + result.id + ':visible').find('option[value="' + value + '"]').remove();
-            });
-          <?php
-          // Now that we've removed some options we need to equalise the widths
-          ?>
-          adjustWidth($('select[name="start_seconds"]:visible'),
-                      $('select[name="end_seconds"]:visible'));
-        }, 'json');
+      if (!areas[currentArea]['enable_periods'])
+      {
+        var siblings = $(this).siblings();
+        var select = $(this).parent().parent().siblings('select:visible');
+        var slots = [];
+        select.find('option').each(function() {
+            slots.push($(this).val());
+          });
+        <?php
+        // We pass the id of the element as the request id so that we can match
+        // the result to the request
+        ?>
+        var params = {id: select.attr('id'),
+                      day: parseInt(siblings.filter('input[id*="day"]').val(), 10),
+                      month: parseInt(siblings.filter('input[id*="month"]').val(), 10),
+                      year: parseInt(siblings.filter('input[id*="year"]').val(), 10),
+                      tz: areas[currentArea]['timezone'],
+                      slots: slots};
+        $.post('check_slot_ajax.php', params, function(result) {
+            $.each(result.slots, function(key, value) {
+                $('#' + result.id + ':visible').find('option[value="' + value + '"]').remove();
+              });
+            <?php
+            // Now that we've removed some options we need to equalise the widths
+            ?>
+            adjustWidth($('select[name="start_seconds"]:visible'),
+                        $('select[name="end_seconds"]:visible'));
+          }, 'json');
+      } <?php // if (!areas[currentArea]['enable_periods']) ?>
     
       <?php
     }  // if (function_exists('json_encode'))
