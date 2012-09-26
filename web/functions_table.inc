@@ -735,7 +735,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   // If we know that there's a transition into DST then some of the slots are
   // going to be invalid.   Knowing whether or not there are possibly invalid slots
   // saves us bothering to do the detailed calculations of which slots are invalid.
-  $is_possibly_invalid = cross_dst($am7, $pm7) < 0;
+  $is_possibly_invalid = !$enable_periods && cross_dst($am7, $pm7) < 0;
             
   // We want to build an array containing all the data we want to show
   // and then spit it out. 
@@ -1020,7 +1020,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     $morningstarts_minutes = 0;
   }
   
-  if( $enable_periods )
+  if ($enable_periods)
   {
     $resolution = 60;
     $morningstarts = 12;
@@ -1048,7 +1048,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     // If we know that there's a transition into DST then some of the slots are
     // going to be invalid.   Knowing whether or not there are possibly invalid slots
     // saves us bothering to do the detailed calculations of which slots are invalid.
-    $is_possibly_invalid[$j] = cross_dst($am7[$j], $pm7[$j]) < 0;
+    $is_possibly_invalid[$j] = !$enable_periods && cross_dst($am7[$j], $pm7[$j]) < 0;
   }
   unset($j);  // Just so that we pick up any accidental attempt to use it later
 
