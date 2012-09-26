@@ -900,21 +900,21 @@ if ($phase == 2)
   if (($match_private != PRIVATE_BOTH) && ($match_private != ''))
   {
     $sql .= " AND ";
-    $sql .= "(status&" . STATUS_PRIVATE;
+    $sql .= "(E.status&" . STATUS_PRIVATE;
     $sql .= ($match_private) ? "!=0)" : "=0)";  // Note that private works the other way round to the next two
   }
   // Match the confirmation status
   if (($match_confirmed != CONFIRMED_BOTH) && ($match_confirmed != ''))
   {
     $sql .= " AND ";
-    $sql .= "(status&" . STATUS_TENTATIVE;
+    $sql .= "(E.status&" . STATUS_TENTATIVE;
     $sql .= ($match_confirmed) ? "=0)" : "!=0)";
   }
   // Match the approval status
   if (($match_approved != APPROVED_BOTH) && ($match_approved != ''))
   {
     $sql .= " AND ";
-    $sql .= "(status&" . STATUS_AWAITING_APPROVAL;
+    $sql .= "(E.status&" . STATUS_AWAITING_APPROVAL;
     $sql .= ($match_approved) ? "=0)" : "!=0)";
   }
   
