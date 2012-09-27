@@ -28,28 +28,53 @@ function onAllDayClick()
 
   var startSelect = form.find('select[name="start_seconds"]:visible');
   var endSelect = form.find('select[name="end_seconds"]:visible');
+  var startDatepicker = form.find('#start_datepicker');
+  var endDatepicker = form.find('#end_datepicker');
   var allDay = form.find('input[name="all_day"]:visible');
-  var i;
+  var date;
   if (allDay.is(':checked')) // If checking the box...
   {
     <?php
     // Save the old values, disable the inputs and, to avoid user confusion,
     // show the start and end times as the beginning and end of the booking
-    // (Note that we save the value rather than the index because the number
-    // of options in the select box will change)
     ?>
-    onAllDayClick.oldStart = startSelect.val();
-    startSelect.val(startSelect.data('first'));
+    var firstSlot = parseInt(startSelect.data('first'), 10);
+    var lastSlot = parseInt(endSelect.data('last'), 10);
+    onAllDayClick.oldStart = parseInt(startSelect.val(), 10);
+    onAllDayClick.oldStartDatepicker = startDatepicker.datepicker('getDate');
+    startSelect.val(firstSlot);
     startSelect.attr('disabled', 'disabled');
-    onAllDayClick.oldEnd = endSelect.val();
-    endSelect.val(endSelect.data('last'));
+    onAllDayClick.oldEnd = parseInt(endSelect.val(), 10);
+    onAllDayClick.oldEndDatepicker = endDatepicker.datepicker('getDate');
+    endSelect.val(lastSlot);
+    if (lastSlot < firstSlot)
+    {
+      <?php
+      // If the booking day spans midnight then the first and last slots
+      // are going to be on different days
+      ?>
+      if (onAllDayClick.oldStart < firstSlot)
+      {
+        date = new Date(onAllDayClick.oldStartDatepicker);
+        date.setDate(date.getDate() - 1);
+        startDatepicker.datepicker('setDate', date);
+      }
+      else
+      {
+        date = new Date(onAllDayClick.oldEndDatepicker);
+        date.setDate(date.getDate() + 1);
+        endDatepicker.datepicker('setDate', date);
+      }
+    }
     endSelect.attr('disabled', 'disabled');
   }
   else  <?php // restore the old values and re-enable the inputs ?>
   {
     startSelect.val(onAllDayClick.oldStart);
+    startDatepicker.datepicker('setDate', onAllDayClick.oldStartDatepicker);
     startSelect.removeAttr('disabled');
     endSelect.val(onAllDayClick.oldEnd);
+    endDatepicker.datepicker('setDate', onAllDayClick.oldEndDatepicker);
     endSelect.removeAttr('disabled');
 
     prevStartValue = undefined;  <?php // because we don't want adjustSlotSelectors() to change the end time ?>
@@ -582,15 +607,17 @@ function getDateDifference(form)
   else
   {
     ?>
-    var startDay = parseInt(form.start_datepicker_alt_day.value, 10);
-    var startMonth = parseInt(form.start_datepicker_alt_month.value, 10);
-    var startYear = parseInt(form.start_datepicker_alt_year.value, 10);
-    var startDate = new Date(startYear, startMonth - 1, startDay, 12);
-      
-    var endDay = parseInt(form.end_datepicker_alt_day.value, 10);
-    var endMonth = parseInt(form.end_datepicker_alt_month.value, 10);
-    var endYear = parseInt(form.end_datepicker_alt_year.value, 10);
-    var endDate = new Date(endYear, endMonth - 1, endDay, 12);
+    var start = $(form).find('#start_datepicker_alt').val().split('-');
+    var startDate = new Date(parseInt(start[0], 10), 
+                             parseInt(start[1], 10) - 1,
+                             parseInt(start[2], 10),
+                             12);
+    
+    var end = $(form).find('#end_datepicker_alt').val().split('-'); 
+    var endDate = new Date(parseInt(end[0], 10), 
+                           parseInt(end[1], 10) - 1,
+                           parseInt(end[2], 10),
+                           12);
 
     diff = (endDate - startDate)/(24 * 60 * 60 * 1000);
     diff = Math.round(diff);
@@ -885,12 +912,10 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
       <?php
     }
     ?>
-      
     if ((endOptions[area][i]['value'] > startValue) ||
         ((endOptions[area][i]['value'] == startValue) && enablePeriods) ||
         (dateDifference != 0))
     {
-      isSelected = (endOptions[area][i]['value'] == endValue);
       if (dateDifference >= 0)
       {
         text = endOptions[area][i]['text'] + nbsp + nbsp + '(' +
@@ -900,8 +925,8 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
                                     .text(text));
       j++;
     }
-    endSelect.val(endValue);
   }
+  endSelect.val(endValue);
   
   adjustWidth(startSelect, endSelect);
 
