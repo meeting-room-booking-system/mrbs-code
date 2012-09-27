@@ -197,6 +197,24 @@ if ($ajax && $commit)
   }
 }
 
+// When All Day is checked, $start_seconds and $end_seconds are disabled and so won't
+// get passed through by the form.   We therefore need to set them.
+if (!empty($all_day))
+{
+  if ($enable_periods)
+  {
+    $start_seconds = 12 * 60 * 60;
+    // This is actually the start of the last period, which is what the form would
+    // have returned.   It will get corrected in a moment.
+    $end_seconds = $start_seconds + ((count($periods) - 1) * 60);
+  }
+  else
+  {
+    $start_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+    $end_seconds = (($eveningends * 60) + $eveningends_minutes) *60;
+    $end_seconds += $resolution;  // We want the end of the last slot, not the beginning
+  }
+}
 
 // If we're operating on a booking day that stretches past midnight, it's more convenient
 // for the sections past midnight to be shown as being on the day before.  That way the
@@ -423,25 +441,6 @@ if (!$ajax)
 if ($enable_periods)
 {
   $resolution = 60;
-}
-
-// When All Day is checked, $start_seconds and $end_seconds are disabled and so won't
-// get passed through by the form.   We therefore need to set them.
-if (!empty($all_day))
-{
-  if ($enable_periods)
-  {
-    $start_seconds = 12 * 60 * 60;
-    // This is actually the start of the last period, which is what the form would
-    // have returned.   It will get corrected in a moment.
-    $end_seconds = $start_seconds + ((count($periods) - 1) * 60);
-  }
-  else
-  {
-    $start_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-    $end_seconds = (($eveningends * 60) + $eveningends_minutes) *60;
-    $end_seconds += $resolution;  // We want the end of the last slot, not the beginning
-  }
 }
 
 // Now work out the start and times
