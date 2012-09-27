@@ -268,7 +268,7 @@ function validate(form)
   var formEl = form.get(0);
   
   <?php // Check that the start date is not after the end date ?>
-  var dateDiff = getDateDifference(formEl);
+  var dateDiff = getDateDifference();
   if (dateDiff < 0)
   {
     alert("<?php echo escape_js(get_vocab('start_after_end_long'))?>");
@@ -594,7 +594,7 @@ function getDuration(from, to, days)
 <?php
 // Returns the number of days between the start and end dates
 ?>
-function getDateDifference(form)
+function getDateDifference()
 {
   var diff;
 
@@ -608,13 +608,13 @@ function getDateDifference(form)
   else
   {
     ?>
-    var start = $(form).find('#start_datepicker_alt').val().split('-');
+    var start = $('#start_datepicker_alt').val().split('-');
     var startDate = new Date(parseInt(start[0], 10), 
                              parseInt(start[1], 10) - 1,
                              parseInt(start[2], 10),
                              12);
     
-    var end = $(form).find('#end_datepicker_alt').val().split('-'); 
+    var end = $('#end_datepicker_alt').val().split('-'); 
     var endDate = new Date(parseInt(end[0], 10), 
                            parseInt(end[1], 10) - 1,
                            parseInt(end[2], 10),
@@ -815,7 +815,7 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
 
   prevStartValue = startValue; <?php // Update the previous start value ?>
     
-  var dateDifference = getDateDifference(form);
+  var dateDifference = getDateDifference();
     
   <?php
   // If All Day isn't checked then we need to work out whether the start
