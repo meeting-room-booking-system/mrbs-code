@@ -47,7 +47,8 @@ function onAllDayClick()
     onAllDayClick.oldEnd = parseInt(endSelect.val(), 10);
     onAllDayClick.oldEndDatepicker = endDatepicker.datepicker('getDate');
     endSelect.val(lastSlot);
-    if (lastSlot < firstSlot)
+    if ((lastSlot < firstSlot) && 
+        (onAllDayClick.oldStartDatepicker == onAllDayClick.oldEndDatepicker))
     {
       <?php
       // If the booking day spans midnight then the first and last slots
