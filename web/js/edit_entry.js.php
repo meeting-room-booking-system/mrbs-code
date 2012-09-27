@@ -1021,19 +1021,20 @@ init = function() {
     // If this is an All Day booking then check the All Day box and disable the 
     // start and end time boxes
     ?>
-    startSelect = form["start_seconds" + currentArea];
-    endSelect = form["end_seconds" + currentArea];
-    allDay = form["all_day" + currentArea];
-    if (allDay &&
-        !allDay.disabled && 
-        (parseInt(startSelect.options[startSelect.selectedIndex].value, 10) == startOptions[currentArea][0]['value']) &&
-        (parseInt(endSelect.options[endSelect.selectedIndex].value, 10) == endOptions[currentArea][nEndOptions[currentArea] - 1]['value']))
+    startSelect = $(form).find('select[name="start_seconds"]:visible');
+    endSelect = $(form).find('select[name="end_seconds"]:visible');
+    allDay = $(form).find('input[name="all_day"]:visible');
+    if ((allDay.is(':disabled') === false) && 
+        (startSelect.val() == startSelect.data('first')) &&
+        (endSelect.val() == endSelect.data('last')))
     {
-      allDay.checked = true;
-      startSelect.disabled = true;
-      endSelect.disabled = true;
-      old_start = startSelect.options[startSelect.selectedIndex].value;
-      old_end = endSelect.options[endSelect.selectedIndex].value;
+      allDay.attr('checked', 'checked');
+      startSelect.attr('disabled', 'disabled');
+      endSelect.attr('disabled', 'disabled');
+      onAllDayClick.oldStart = startSelect.val();
+      onAllDayClick.oldEnd = endSelect.val();
+      onAllDayClick.oldStartDatepicker = $(form).find('#start_datepicker').datepicker('getDate');
+      onAllDayClick.oldEndDatepicker = $(form).find('#end_datepicker').datepicker('getDate');
     }
   }
 
