@@ -1036,10 +1036,16 @@ function hour_min_format()
 // seconds since the start of the day, $s
 function hour_min($s)
 {
+  $following_day = ($s >= (24*60*60));
   $s = $s%(24*60*60);  // in case $s is on the next day
   // Choose a day that doesn't have any DST transitions in any timezone
   $t = mktime(0, 0, $s, 1, 1, 2000);
-  return utf8_strftime(hour_min_format(), $t);  
+  $result = utf8_strftime(hour_min_format(), $t);
+  if ($following_day)
+  {
+    $result = "* " . $result;
+  }
+  return $result;
 }
 
 
