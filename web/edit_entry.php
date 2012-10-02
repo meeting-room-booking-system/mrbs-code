@@ -133,7 +133,7 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
   
   // Construct an array of times
   $s_array = array();
-  if ($first <= $last)
+  if ($first < $last)
   {
     // The simple case where the booking day is contained within the calendar day
     for ($s = $first; $s <= $last; $s += $resolution)
