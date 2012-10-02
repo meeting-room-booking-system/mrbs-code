@@ -5,6 +5,13 @@ require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 require_once "functions_ical.inc";
 
+// Check the user is authorised for this page
+checkAuthorised();
+
+// Also need to know whether they have admin rights
+$user = getUserName();
+$is_admin = (authGetUserLevel($user) >= 2);
+
 // NOTE:  the code on this page assumes that array form variables are passed
 // as an array of values, rather than an array indexed by value.   This is
 // particularly important for checkbox arrays whicgh should be formed like this:
@@ -119,6 +126,15 @@ if (!empty($rooms[0]))
 if (get_area($room) != $area)
 {
   $room = get_default_room($area);
+}
+
+// If they're not an admin and multi-day bookings are not allowed, then
+// set the end date to the start date
+if (!$is_admin && $auth['only_admin_can_book_multiday'])
+{
+  $end_day = $start_day;
+  $end_month = $start_month;
+  $end_year = $start_year;
 }
 
 // If this is an Ajax request and we're being asked to commit the booking, then
@@ -321,22 +337,6 @@ if ($private_mandatory)
 else
 {
   $isprivate = ($private) ? TRUE : FALSE;
-}
-
-// Check the user is authorised for this page
-checkAuthorised();
-
-// Also need to know whether they have admin rights
-$user = getUserName();
-$is_admin = (authGetUserLevel($user) >= 2);
-
-// If they're not an admin and multi-day bookings are not allowed, then
-// set the end date to the start date
-if (!$is_admin && $auth['only_admin_can_book_multiday'])
-{
-  $end_day = $day;
-  $end_month = $month;
-  $end_year = $year;
 }
 
 // Check to see whether this is a repeat booking and if so, whether the user
