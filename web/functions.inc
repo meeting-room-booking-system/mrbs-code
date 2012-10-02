@@ -1036,8 +1036,9 @@ function hour_min_format()
 // seconds since the start of the day, $s
 function hour_min($s)
 {
-  $following_day = ($s >= (24*60*60));
-  $s = $s%(24*60*60);  // in case $s is on the next day
+  $seconds_per_day = 24*60*60;
+  $following_day = ($s >= $seconds_per_day);
+  $s = $s % $seconds_per_day;  // in case $s is on the next day
   // Choose a day that doesn't have any DST transitions in any timezone
   $t = mktime(0, 0, $s, 1, 1, 2000);
   $result = utf8_strftime(hour_min_format(), $t);
