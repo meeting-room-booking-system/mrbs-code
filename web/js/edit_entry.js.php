@@ -1175,8 +1175,10 @@ init = function() {
   // Actions to take when the start and end datepickers are closed
   ?>
   $('#start_datepicker, #end_datepicker').bind('datePickerUpdated', function() {
+    <?php
     // (1) Go and adjust the start and end time/period select options, because
     //     they are dependent on the start and end dates
+    ?>
     adjustSlotSelectors(document.getElementById('main'));
     <?php
     if (function_exists('json_encode'))

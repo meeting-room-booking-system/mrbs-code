@@ -81,6 +81,26 @@ foreach ($fields as $field)
   }
 }
 
+
+// Returns the booking date for a given time.   If the booking day spans midnight and
+// $t is in the interval between midnight and the end of the day then the booking date
+// is really the day before.
+function getbookingdate($t)
+{
+  global $eveningends, $eveningends_minutes;
+  
+  $date = getdate($t);
+  if (day_past_midnight() &&
+      !hm_before(array('hours' => $eveningends, 'minutes' => $eveningends_minutes), $date))
+  {
+    $date = getdate(mktime($date['hours'], $date['minutes'], $date['seconds'],
+                           $date['mon'], $date['mday'] -1, $date['year']));
+    $date['hours'] += 24;
+  }
+  return $date;
+}
+
+
 // Generate a time or period selector starting with $first and ending with $last.
 // $time is a full Unix timestamp and is the current value.  The selector returns
 // the start time in seconds since the beginning of the day for the start of that slot.
@@ -89,12 +109,13 @@ foreach ($fields as $field)
 // it is as that's controlled by the date selector - and we can't assume that we have
 // JavaScript enabled to go and read it)
 //
-// The $display_none parameter sets the display style of the <select> to "none"
-// The $disabled parameter will disable the input and also generate a hidden input, provided
-// that $display_none is FALSE.  (This prevents multiple inputs of the same name)
-function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FALSE, $disabled=FALSE)
+//    $display_none parameter     sets the display style of the <select> to "none"
+//    $disabled parameter         disables the input and also generate a hidden input, provided
+//                                that $display_none is FALSE.  (This prevents multiple inputs
+//                                of the same name)
+function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_none=FALSE, $disabled=FALSE)
 {
-  global $periods;
+  global $periods, $auth, $is_admin;
 
   $html = '';
   // Get the settings for this area.   Note that the variables below are
@@ -107,11 +128,6 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
   {
     fatal_error(FALSE, "Internal error - resolution is NULL or <= 0");
   }
-  
-  // Get the current hour and minute and convert it into nominal (ie ignoring any
-  // DST effects) seconds since the start of the day
-  $date = getdate($time);
-  $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
   
   if ($enable_periods)
   {
@@ -131,32 +147,13 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
            (($disabled) ? " class=\"keep_disabled\"" : "") .
            " id=\"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\">\n";
   
-  // Construct an array of times
-  $s_array = array();
-  if ($first < $last)
+  // If the last time is the same as or before the start time, then it's really on the next day
+  if ($first >= $last)
   {
-    // The simple case where the booking day is contained within the calendar day
-    for ($s = $first; $s <= $last; $s += $resolution)
-    {
-      $s_array[] = $s;
-    }
+    $last += 24*60*60;
   }
-  else
-  {
-    // The complex case where the booking day spans midnight.    In this case we have
-    // to get the possible times from the start of the first slot after midnight to the
-    // "last" time, and then from the "first" time to midnight
-    for ($s = $last%$resolution; $s <= $last; $s += $resolution)
-    {
-      $s_array[] = $s;
-    }
-    for ($s = $first; $s < 24*60*60; $s += $resolution)
-    {
-      $s_array[] = $s;
-    }
-  }
-  
-  foreach ($s_array as $s)
+
+  for ($s = $first; $s < $last; $s += $resolution)
   {
     $slot_string = ($enable_periods) ? $periods[intval(($s-$base)/60)] : hour_min($s);
     $html .= "<option value=\"$s\"";
@@ -222,9 +219,11 @@ function create_field_entry_start_date($disabled=FALSE)
   global $start_time, $areas, $area_id, $periods, $default_duration_all_day, $id, $drag;
   global $periods, $is_admin;
   
+  $date = getbookingdate($start_time);
+  $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
+
   echo "<div id=\"div_start_date\">\n";
   echo "<label>" . get_vocab("start") . ":</label>\n";
-  $date = getdate($start_time);
   echo "<div>\n"; // Needed so that the structure is the same as for the end date to help the JavaScript
   gendateselector("start_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
   echo "</div>\n";
@@ -249,7 +248,7 @@ function create_field_entry_start_date($disabled=FALSE)
     }
     $start_last = ($a['enable_periods']) ? $last : $last - $a['resolution'];
     $display_none = ($a['id'] != $area_id);
-    genSlotSelector($a, "start_", $first, $start_last, $start_time, $display_none, $disabled);
+    genSlotSelector($a, "start_", $first, $start_last, $current_s, $display_none, $disabled);
     
     echo "<div class=\"group\">\n";
     echo "<div id=\"ad{$a['id']}\"".($display_none ? " style=\"display: none\" " : "") .">\n";
@@ -287,9 +286,10 @@ function create_field_entry_end_date($disabled=FALSE)
 {
   global $end_time, $areas, $area_id, $periods, $multiday_allowed;
   
+  $date = getbookingdate($end_time);
+  $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
   echo "<div id=\"div_end_date\">\n";
   echo "<label>" . get_vocab("end") . ":</label>\n";
-  $date = getdate($end_time);
   // Don't show the end date selector if multiday is not allowed
   echo "<div" . (($multiday_allowed) ? '' : " style=\"visibility: hidden\"") . ">\n";
   gendateselector("end_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
@@ -312,7 +312,8 @@ function create_field_entry_end_date($disabled=FALSE)
       $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
       $last = $last + $a['resolution'];
     }
-    $end_value = ($a['enable_periods']) ? $end_time - $a['resolution'] : $end_time;
+    $end_value = (($date['hours'] * 60) + $date['minutes']) * 60;
+    $end_value = ($a['enable_periods']) ? $end_value - $a['resolution'] : $end_value;
     $display_none = ($a['id'] != $area_id);
     genSlotSelector($a, "end_", $first, $last, $end_value, $display_none, $disabled);
   }
