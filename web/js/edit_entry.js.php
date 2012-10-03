@@ -16,6 +16,55 @@ $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= $max_level);
 
 
+// Check to see whether any time slots should be removed from the time
+// select on the grounds that they don't exist due to a transition into DST.
+// Don't do this if we're using periods, because it doesn't apply then
+//
+//    date          a jQuery object for the datepicker in question
+//    areaConfig    the config settings for the current area
+?>
+function checkTimeSlots(jqDate, areaConfig)
+{
+  <?php
+  // Only do something if we can return a JSON result
+  if (function_exists('json_encode'))
+  {
+    ?>
+    if (!areaConfig['enable_periods'])
+    {
+      var siblings = jqDate.siblings();
+      var select = jqDate.parent().parent().siblings('select:visible');
+      var slots = [];
+      select.find('option').each(function() {
+          slots.push($(this).val());
+        });
+      <?php
+      // We pass the id of the element as the request id so that we can match
+      // the result to the request
+      ?>
+      var params = {id: select.attr('id'),
+                    day: parseInt(siblings.filter('input[id*="day"]').val(), 10),
+                    month: parseInt(siblings.filter('input[id*="month"]').val(), 10),
+                    year: parseInt(siblings.filter('input[id*="year"]').val(), 10),
+                    tz: areaConfig['timezone'],
+                    slots: slots};
+      $.post('check_slot_ajax.php', params, function(result) {
+          $.each(result.slots, function(key, value) {
+              $('#' + result.id + ':visible').find('option[value="' + value + '"]').remove();
+            });
+          <?php
+          // Now that we've removed some options we need to equalise the widths
+          ?>
+          adjustWidth($('select[name="start_seconds"]:visible'),
+                      $('select[name="end_seconds"]:visible'));
+        }, 'json');
+    } <?php // if (!areaConfig['enable_periods'])
+  } // if (function_exists('json_encode'))
+  ?>
+}
+  
+  
+<?php
 // Executed when the user clicks on the all_day checkbox.
 ?>
 function onAllDayClick()
@@ -306,69 +355,68 @@ function validate(form)
 
 
 <?php
-// Add Ajax capabilities (but only if we can return the result as a JSON object)
-if (function_exists('json_encode'))
+// function to check whether the proposed booking would (a) conflict with any other bookings
+// and (b) conforms to the booking policies.   Makes an Ajax call to edit_entry_handler but does
+// not actually make the booking.
+//
+// If optional is true then the check is not carried out if there's already an
+// outstanding request in the queue
+?>
+function checkConflicts(optional)
 {
-    
-  // Get the value of the field in the form
-  ?>
-  function getFormValue(formInput)
+  <?php
+  // Only do something if we can the result as a JSON object
+  if (function_exists('json_encode'))
   {
-    var value;
-    <?php 
-    // Scalar parameters (three types - checkboxes, radio buttons and the rest)
+    // Get the value of the field in the form
     ?>
-    if (formInput.attr('name').indexOf('[]') == -1)
+    function getFormValue(formInput)
     {
-      if (formInput.filter(':checkbox').length > 0)
+      var value;
+      <?php 
+      // Scalar parameters (three types - checkboxes, radio buttons and the rest)
+      ?>
+      if (formInput.attr('name').indexOf('[]') == -1)
       {
-        value = formInput.is(':checked') ? '1' : '';
+        if (formInput.filter(':checkbox').length > 0)
+        {
+          value = formInput.is(':checked') ? '1' : '';
+        }
+        else if (formInput.filter(':radio').length > 0)
+        {
+          value = formInput.filter(':checked').val();
+        }
+        else
+        {
+          value = formInput.val();
+        }
       }
-      else if (formInput.filter(':radio').length > 0)
-      {
-        value = formInput.filter(':checked').val();
-      }
+      <?php
+      // Array parameters (two types - checkboxes and the rest, which could be
+      // <select> elements or else multiple ordinary inputs with a *[] name
+      ?>
       else
       {
-        value = formInput.val();
+        value = [];
+        formInput.each(function(index) {
+            if ((formInput.filter(':checkbox').length == 0) || $(this).is(':checked'))
+            {
+              var thisValue = $(this).val();
+              if ($.isArray(thisValue))
+              {
+                $.merge(value, thisValue);
+              }
+              else
+              {
+                value.push($(this).val());
+              }
+            }
+          });
       }
-    }
-    <?php
-    // Array parameters (two types - checkboxes and the rest, which could be
-    // <select> elements or else multiple ordinary inputs with a *[] name
-    ?>
-    else
-    {
-      value = [];
-      formInput.each(function(index) {
-          if ((formInput.filter(':checkbox').length == 0) || $(this).is(':checked'))
-          {
-            var thisValue = $(this).val();
-            if ($.isArray(thisValue))
-            {
-              $.merge(value, thisValue);
-            }
-            else
-            {
-              value.push($(this).val());
-            }
-          }
-        });
-    }
-    return value;
-  }
+      return value;
+    } <?php // function getFormValue()
 
-  <?php
-  // function to check whether the proposed booking would (a) conflict with any other bookings
-  // and (b) conforms to the booking policies.   Makes an Ajax call to edit_entry_handler but does
-  // not actually make the booking.
-  //
-  // If optional is true then the check is not carried out if there's already an
-  // outstanding request in the queue
-  ?>
-  function checkConflicts(optional)
-  {
-    <?php
+
     // Keep track of how many requests are still with the server.   We don't want
     // to keep sending them if they're not coming back
     ?>
@@ -484,10 +532,12 @@ if (function_exists('json_encode'))
           policyDiv.attr('title', titleText);
           policyDetails.html(detailsHTML);
         }, 'json');
-    }, timeout);  <?php // setTimeout() ?>
-  }
-  <?php
-}
+    }, timeout);  <?php // setTimeout()
+  } // if (function_exists('json_encode')) ?>
+  
+} <?php // function checkConflicts()
+
+
 
 // Declare some variables to hold details of the slot selectors for each area.
 // We are going to store the contents of the selectors on page load
@@ -1191,37 +1241,9 @@ init = function() {
       <?php
       // (3) Check to see whether any time slots should be removed from the time
       //     select on the grounds that they don't exist due to a transition into DST.
-      //     Don't do this if we're using periods, because it doesn't apply then
       ?>
-      if (!areas[currentArea]['enable_periods'])
-      {
-        var siblings = $(this).siblings();
-        var select = $(this).parent().parent().siblings('select:visible');
-        var slots = [];
-        select.find('option').each(function() {
-            slots.push($(this).val());
-          });
-        <?php
-        // We pass the id of the element as the request id so that we can match
-        // the result to the request
-        ?>
-        var params = {id: select.attr('id'),
-                      day: parseInt(siblings.filter('input[id*="day"]').val(), 10),
-                      month: parseInt(siblings.filter('input[id*="month"]').val(), 10),
-                      year: parseInt(siblings.filter('input[id*="year"]').val(), 10),
-                      tz: areas[currentArea]['timezone'],
-                      slots: slots};
-        $.post('check_slot_ajax.php', params, function(result) {
-            $.each(result.slots, function(key, value) {
-                $('#' + result.id + ':visible').find('option[value="' + value + '"]').remove();
-              });
-            <?php
-            // Now that we've removed some options we need to equalise the widths
-            ?>
-            adjustWidth($('select[name="start_seconds"]:visible'),
-                        $('select[name="end_seconds"]:visible'));
-          }, 'json');
-      } <?php // if (!areas[currentArea]['enable_periods']) ?>
+      checkTimeSlots($(this), areas[currentArea]);
+
     
       <?php
     }  // if (function_exists('json_encode'))
