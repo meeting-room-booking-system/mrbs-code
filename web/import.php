@@ -319,8 +319,7 @@ function process_event($vevent)
     $y = $date['year'];
     $am7 = mktime($room_settings[$booking['room_id']]['morningstarts'],
                   $room_settings[$booking['room_id']]['morningstarts_minutes'],
-                  0, $m, $d, $y,
-                  is_dst($m, $d, $y, $room_settings[$booking['room_id']]['morningstarts']));
+                  0, $m, $d, $y);
     $booking['start_time'] = round_t_down($booking['start_time'],
                                           $room_settings[$booking['room_id']]['resolution'],
                                           $am7);
