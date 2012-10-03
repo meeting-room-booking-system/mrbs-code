@@ -137,7 +137,7 @@ function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_non
   {
     $format = hour_min_format();
   }
-  $html .= "<select data-first=\"$first\" data-last=\"$last\"" .
+  $html .= "<select" .
            (($display_none) ? " style=\"display: none\"" : "") .
            // If $display_none or $disabled are set then we'll also disable the select so
            // that there is only one select passing through the variable to the handler

@@ -87,8 +87,8 @@ function onAllDayClick()
     // Save the old values, disable the inputs and, to avoid user confusion,
     // show the start and end times as the beginning and end of the booking
     ?>
-    var firstSlot = parseInt(startSelect.data('first'), 10);
-    var lastSlot = parseInt(endSelect.data('last'), 10);
+    var firstSlot = parseInt(startSelect.find('option').first().val(), 10);
+    var lastSlot = parseInt(endSelect.find('option').last().val(), 10);
     onAllDayClick.oldStart = parseInt(startSelect.val(), 10);
     onAllDayClick.oldStartDatepicker = startDatepicker.datepicker('getDate');
     startSelect.val(firstSlot);
@@ -739,24 +739,22 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   var errorText = '<?php echo escape_js(get_vocab("start_after_end"))?>';
   var text = errorText;
     
-  var startId = "start_seconds" + area;
   var startSelect = $('select[name="start_seconds"]:visible');
   var startKeepDisabled = startSelect.hasClass('keep_disabled');
   var endSelect = $('select[name="end_seconds"]:visible');
   var endKeepDisabled = endSelect.hasClass('keep_disabled');
-  var allDayId = "all_day" + area;
-  var allDay = form[allDayId];
-  var allDayKeepDisabled = $('#' + allDayId).hasClass('keep_disabled');
+  var allDay = $('input[name="all_day"]:visible');
+  var allDayKeepDisabled = allDay.hasClass('keep_disabled');
   var startIndex, startValue, endIndex, endValue;
     
   <?php 
   // If All Day is checked then just set the start and end values to the first
   // and last possible options.
   ?>
-  if (allDay && allDay.checked)
+  if (allDay.is(':checked'))
   {
-    startValue = startSelect.data('first');
-    endValue = endSelect.data('last');
+    startValue = startSelect.find('option').first().val();
+    endValue = endSelect.find('option').last().val();
     <?php
     // If we've come here from another area then we need to make sure that the
     // start and end selectors are disabled.  (We won't change the old_end and old_start
@@ -823,7 +821,7 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
     ?>
     else
     {
-      startValue = startSelect.data('first');
+      startValue = startSelect.find('option').first().val();
       if (enablePeriods)
       {
         endValue = startValue;
@@ -873,7 +871,7 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   // then we disable all the time selectors (start, end and All Day) until
   // the dates are fixed.
   ?>
-  if (!allDay || !allDay.checked)
+  if (!allDay.is(':checked'))
   {
     var newState = (dateDifference < 0);
     if (newState || startKeepDisabled)
@@ -892,9 +890,13 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
     {
       endSelect.removeAttr('disabled');
     }
-    if (allDay)
+    if (newState || allDayKeepDisabled)
     {
-      allDay.disabled = newState || allDayKeepDisabled;
+      allDay.attr('disabled', 'disabled');
+    }
+    else
+    {
+      allDay.removeAttr('disabled');
     }
   }
 
@@ -1075,8 +1077,8 @@ init = function() {
     endSelect = $(form).find('select[name="end_seconds"]:visible');
     allDay = $(form).find('input[name="all_day"]:visible');
     if ((allDay.is(':disabled') === false) && 
-        (startSelect.val() == startSelect.data('first')) &&
-        (endSelect.val() == endSelect.data('last')))
+        (startSelect.val() == startSelect.find('option').first().val()) &&
+        (endSelect.val() == endSelect.find('option').last().val()))
     {
       allDay.attr('checked', 'checked');
       startSelect.attr('disabled', 'disabled');
