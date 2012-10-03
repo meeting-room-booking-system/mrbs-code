@@ -1244,5 +1244,10 @@ init = function() {
     ?>
     checkTimeSlots($(this), areas[currentArea]);
 
-  }).trigger('datePickerUpdated');
+  });
+  
+  $('#start_datepicker, #end_datepicker').each(function() {
+      checkTimeSlots($(this), areas[currentArea]);
+    });
+    
 };
