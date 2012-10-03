@@ -146,13 +146,7 @@ function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_non
            // knows to keep it disabled
            (($disabled) ? " class=\"keep_disabled\"" : "") .
            " id=\"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors()\">\n";
-  
-  // If the last time is the same as or before the start time, then it's really on the next day
-  if ($first >= $last)
-  {
-    $last += 24*60*60;
-  }
-
+ 
   for ($s = $first; $s <= $last; $s += $resolution)
   {
     $slot_string = ($enable_periods) ? $periods[intval(($s-$base)/60)] : hour_min($s);
@@ -246,8 +240,14 @@ function create_field_entry_start_date($disabled=FALSE)
       $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
       $last = $last + $a['resolution'];
     }
+    // If the last time is the same as or before the start time, then it's really on the next day
+    if ($first >= $last)
+    {
+      $last += 24*60*60;
+    }
     $start_last = ($a['enable_periods']) ? $last : $last - $a['resolution'];
     $display_none = ($a['id'] != $area_id);
+
     genSlotSelector($a, "start_", $first, $start_last, $current_s, $display_none, $disabled);
     
     echo "<div class=\"group\">\n";
@@ -311,6 +311,11 @@ function create_field_entry_end_date($disabled=FALSE)
       $first = (($a['morningstarts'] * 60) + $a['morningstarts_minutes']) * 60;
       $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
       $last = $last + $a['resolution'];
+    }
+    // If the last time is the same as or before the start time, then it's really on the next day
+    if ($first >= $last)
+    {
+      $last += 24*60*60;
     }
     $end_value = (($date['hours'] * 60) + $date['minutes']) * 60;
     $end_value = ($a['enable_periods']) ? $end_value - $a['resolution'] : $end_value;
