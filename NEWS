@@ -7,6 +7,112 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.4.9 (Wed Oct 03 22:00:00 BST 2012):
+
+[-] Fixed bug that caused the '+' button for a booking to not work correctly.
+[+] Added Hebrew support, as contributed by Michal Kastro.
+[+] Added Thai language support, as contributed by Suthep.
+[*] Improved language detection code.
+[-] Fixed JavaScript error produced if you have a mandatory textarea
+ field. Thanks to Neil Brown. See SF ID 3472380
+[*] Changed "max_book_ahead" to stop people getting around the restriction
+ with long bookings.
+[-] Fixed a number of user interaction problems.
+[-] Fixed auth_ldap configuration variable handling, thanks to Kevan
+ Carstensen.
+[-] DataTables AJAX requests now use relative URLs in order to stop
+ cross-domain requests.
+[+] Added ability to import iCalendar (.ics) files.
+[*] Updated Turkish translation from Ahmet YILDIZ.
+[*] Updated German translation - thanks to JWiemann.
+[+] Introduced the $vocab_override config variable, allowing MRBS
+ text strings to be customised without editing the lang files.
+ Thanks to dwpoon.
+[-] Improved SQL escaping so that it uses the database escaping
+ routines and not PHP's addslashes() function. Thanks to
+ Henry S. Thompson.
+[-] Fixed bug which meant that the correct timezone wasn't
+ necessarily being used when dragging a booking.
+[-] Fixed performance issue when using LDAP authentication and HTTP
+ sessions. Thanks to dwpoon.
+[-] Fixed bug causing an entry of '0' in a mandatory custom field to
+ be rejected.
+[*] Changed font colour for row and column labels in the calendar
+ view when printing to make them show up better in Google Chrome
+[*] Improved CSV output, including removal of the requirement
+ of having PHP's 'iconv' extension.
+[-] Fixed infinite loop in setting the time zone when
+ $timezone configuratation variable wasn't set.
+[+] Added support for setting limits on the maximum number of
+ bookings that can be made per day, week, month, year and for any time
+ in the future. You can set limits globally as well per area,
+ enabling you to set policies of the sort "Max 2 bookings per week
+ in this area and max 5 bookings per week across the system". Note
+ also that setting 0 bookings per period for an area is a way of
+ stopping ordinary users from making bookings in a particular
+ area.
+[-] Fixed bug that caused the ticks and crosses on the edit_entry
+ page not to appear properly in some browsers (eg Chrome and IE8)
+ on some systems.
+[+] Added Portuguese Brazilian translation - thanks to Gleise S. O.
+ Teixeira
+[+] Added Hungarian translation. Thanks to Gergely Kiss.
+[*] Made use of HTML5 form element attributes (eg "required") so that
+ client-side form validation can be done by the browser where
+ possible, instead of by JavaScript.
+[*] Tidied the MRBS distribution, so that different types of files
+ live in different directories.
+[*] Updated Norwegian translation. Thanks to Thomas Haukland.
+[+] Added an array of substitute languages, for example to substitute
+ 'no' for 'nb-NO'.
+[-] Fixed bug causing resizable bookings not to work properly when
+ using periods.
+[*] Added a couple of extra headers to expires_header() to encourage
+ caching.
+[*] Simplified presentation of output options on report form.
+[*] Improved reports.
+[-] Fixed bug preventing resizable bookings from working when there's
+ only one time slot or period in the day.
+[*] Added an HTTP header to prevent IE going into Compatibility View.
+[+] Added a new config setting, $max_booking_date, to prevent
+ bookings after a certain date, eg the end of term. Thanks to a
+ suggestion by Matthew Hilling.
+[*] Made the users table use an Ajax data source for better
+ performance with large numbers of users
+[-] Fixed bug on pending page where only a maximum of 10 members of a
+ series were being displayed
+[*] Added some positive visual feedback when bookings are altered by
+ dragging the cell border.
+[-] Fixed bug giving incorrect previous repeat end date in email
+ notification when a booking is changed from an individual booking
+ to a series.
+[*] Upgraded jQuery and jQuery UI.
+[-] Fixed some issues in the some of the upgrade steps.
+[*] Updated Japanese translation. Thanks to Takanori Matsuura.
+[*] Updated Czech translation. Thanks to Ondřej Kopka.
+[*] Implemented page refresh in the day and week views using Ajax
+ requests if possible instead of through a <meta> tag.
+[*] Improved Javascript code correctness.
+[-] Improved error handling when updating VTIMEZONE definitions. Now
+ if MRBS is unable to download a new definition from the web, as
+ will happen on sites that do not have external internet access,
+ the last_updated field is updated anyway so that MRBS does not
+ attempt to retry for another 28 days.
+[*] Kept track of how many Ajax requests are outstanding on the
+ server so that we don't swamp the server with requests if for
+ some reason the server is taking a long time to process them.
+[-] Made utf8_bytecount() PHP4-safe.
+[-] Fixed problem with users being unable to login when MRBS is
+ running on IIS
+[-] Fixed sorting and styling of integer custom fields in
+ edit_users.php
+[-] Fixed a bug in 'db' and 'db_ext' authentication schemes when
+ using MySQL whereby a login was validated successfully even if
+ the username contained trailing spaces. This then caused problems
+ subsequently when comparing the creator of a booking with the
+ user. See SF Bugs #245.
+
+-------------------------------------------------------------------------------
 Version 1.4.8 (Sun Jan 01 22:00:00 GMT 2012):
 
 [-] Fixed bug that meant that '0' was treated as an invalid search
