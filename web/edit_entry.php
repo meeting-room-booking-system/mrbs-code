@@ -153,7 +153,7 @@ function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_non
     $last += 24*60*60;
   }
 
-  for ($s = $first; $s < $last; $s += $resolution)
+  for ($s = $first; $s <= $last; $s += $resolution)
   {
     $slot_string = ($enable_periods) ? $periods[intval(($s-$base)/60)] : hour_min($s);
     $html .= "<option value=\"$s\"";
