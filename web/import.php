@@ -491,7 +491,7 @@ echo "<p>\n" . get_vocab("import_intro") . "</p>\n";
   
 echo "<div>\n";
 echo "<label for=\"ics_file\">" . get_vocab("file_name") . ":</label>\n";
-echo "<input type=\"file\" name=\"ics_file\" id=\"ics_file\">\n";
+echo "<input type=\"file\" accept=\"text/calendar\" name=\"ics_file\" id=\"ics_file\">\n";
 echo "</div>\n";
 
 echo "<fieldset>\n";
