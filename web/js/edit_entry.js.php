@@ -1230,23 +1230,18 @@ init = function() {
     //     they are dependent on the start and end dates
     ?>
     adjustSlotSelectors(document.getElementById('main'));
-    <?php
-    if (function_exists('json_encode'))
-    {
-      // (2) If we're doing Ajax checking of the form then we have to check
-      //     for conflicts when the datepicker is closed
-      ?>
-      checkConflicts();
-      
-      <?php
-      // (3) Check to see whether any time slots should be removed from the time
-      //     select on the grounds that they don't exist due to a transition into DST.
-      ?>
-      checkTimeSlots($(this), areas[currentArea]);
-
     
-      <?php
-    }  // if (function_exists('json_encode'))
+    <?php
+    // (2) If we're doing Ajax checking of the form then we have to check
+    //     for conflicts when the datepicker is closed
     ?>
+    checkConflicts();
+      
+    <?php
+    // (3) Check to see whether any time slots should be removed from the time
+    //     select on the grounds that they don't exist due to a transition into DST.
+    ?>
+    checkTimeSlots($(this), areas[currentArea]);
+
   }).trigger('datePickerUpdated');
 };
