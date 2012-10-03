@@ -145,7 +145,7 @@ function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_non
            // and if $disabled is set, give the element a class so that the JavaScript
            // knows to keep it disabled
            (($disabled) ? " class=\"keep_disabled\"" : "") .
-           " id=\"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\">\n";
+           " id=\"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors()\">\n";
   
   // If the last time is the same as or before the start time, then it's really on the next day
   if ($first >= $last)
@@ -428,7 +428,7 @@ function create_field_entry_areas($disabled=FALSE)
         var oldArea = currentArea;
         currentArea = area;
         prevStartValue = undefined;
-        adjustSlotSelectors(formObj, oldArea, oldAreaStartValue, oldAreaEndValue);
+        adjustSlotSelectors(oldArea, oldAreaStartValue, oldAreaEndValue);
       }
       
       // Create area selector, only if we have Javascript

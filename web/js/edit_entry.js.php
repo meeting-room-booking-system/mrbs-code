@@ -130,7 +130,7 @@ function onAllDayClick()
     prevStartValue = undefined;  <?php // because we don't want adjustSlotSelectors() to change the end time ?>
   }
 
-  adjustSlotSelectors(form.get(0)); <?php // need to get the duration right ?>
+  adjustSlotSelectors(); <?php // need to get the duration right ?>
 
 }
 
@@ -706,7 +706,7 @@ function adjustWidth(a, b)
 }
   
   
-function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
+function adjustSlotSelectors(oldArea, oldAreaStartValue, oldAreaEndValue)
 {
   <?php
   // Adjust the start and end time slot select boxes.
@@ -720,12 +720,6 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   //     to have a go at finding a time/period in the new area as close
   //     as possible to the one that was selected in the old area.
   ?>
-    
-  if (!form)
-  {
-    return;
-  }
-
   var area = currentArea;
   var enablePeriods = areas[area]['enable_periods'];
   var maxDurationEnabled = areas[area]['max_duration_enabled'];
@@ -746,6 +740,11 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   var allDay = $('input[name="all_day"]:visible');
   var allDayKeepDisabled = allDay.hasClass('keep_disabled');
   var startIndex, startValue, endIndex, endValue;
+  
+  if (startSelect.length === 0)
+  {
+    return;
+  }
     
   <?php 
   // If All Day is checked then just set the start and end values to the first
@@ -1067,7 +1066,7 @@ init = function() {
       }
     }
   
-    adjustSlotSelectors(form);
+    adjustSlotSelectors();
     
     <?php
     // If this is an All Day booking then check the All Day box and disable the 
@@ -1231,7 +1230,7 @@ init = function() {
     // (1) Go and adjust the start and end time/period select options, because
     //     they are dependent on the start and end dates
     ?>
-    adjustSlotSelectors(document.getElementById('main'));
+    adjustSlotSelectors();
     
     <?php
     // (2) If we're doing Ajax checking of the form then we have to check
