@@ -1447,9 +1447,21 @@ function nominal_date_compare($d1, $d2)
 }
 
 
+// Determines whether there's a possibility that the interval between the two Unix 
+// timestamps could contain nominal times that don't exist, for example from 0100 to
+// 0159 in Europe/London when entering DST.
+function is_possibly_invalid($start, $end)
+{
+  // We err on the side of caution by widening the interval by a day at each end.   This
+  // allows for the possibility that the start or end times have been calculated by using
+  // mktime() on an invalid time!
+  return (cross_dst($start - 86400, $end + 86400) < 0);
+}
+
+
 // Checks whether the nominal time given is an invalid date and time with respect to
 // DST transitions.   When entering DST there is a set of times that don't exist, for
-// example from 0200 to 0259 in Europe/London.
+// example from 0100 to 0159 in Europe/London.
 // Returns NULL if MRBS is unable to determine an answer, otherwise TRUE or FALSE (so
 // a simple equality test will default to a valid time if MRBS can't determine an answer)
 function is_invalid_datetime($hour, $minute, $second, $month, $day, $year, $tz=NULL)
