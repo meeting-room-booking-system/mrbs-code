@@ -992,7 +992,7 @@ else
     $rep_end_month = $month;
     $rep_end_year  = $year;
   }
-  $rep_day       = array();
+  $rep_day       = array(date('w', mktime(12, 0, 0, $month, $day, $year)));
   $private       = $private_default;
   $confirmed     = $confirmed_default;
   
