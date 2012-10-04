@@ -5,6 +5,13 @@ require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 require_once "functions_ical.inc";
 
+// Check the user is authorised for this page
+checkAuthorised();
+
+// Also need to know whether they have admin rights
+$user = getUserName();
+$is_admin = (authGetUserLevel($user) >= 2);
+
 // NOTE:  the code on this page assumes that array form variables are passed
 // as an array of values, rather than an array indexed by value.   This is
 // particularly important for checkbox arrays whicgh should be formed like this:
@@ -121,6 +128,15 @@ if (get_area($room) != $area)
   $room = get_default_room($area);
 }
 
+// If they're not an admin and multi-day bookings are not allowed, then
+// set the end date to the start date
+if (!$is_admin && $auth['only_admin_can_book_multiday'])
+{
+  $end_day = $start_day;
+  $end_month = $start_month;
+  $end_year = $start_year;
+}
+
 // If this is an Ajax request and we're being asked to commit the booking, then
 // we'll only have been supplied with parameters that need to be changed.  Fill in
 // the rest from the existing boking information.
@@ -196,6 +212,41 @@ if ($ajax && $commit)
     }
   }
 }
+
+// When All Day is checked, $start_seconds and $end_seconds are disabled and so won't
+// get passed through by the form.   We therefore need to set them.
+if (!empty($all_day))
+{
+  if ($enable_periods)
+  {
+    $start_seconds = 12 * 60 * 60;
+    // This is actually the start of the last period, which is what the form would
+    // have returned.   It will get corrected in a moment.
+    $end_seconds = $start_seconds + ((count($periods) - 1) * 60);
+  }
+  else
+  {
+    $start_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+    $end_seconds = (($eveningends * 60) + $eveningends_minutes) *60;
+    $end_seconds += $resolution;  // We want the end of the last slot, not the beginning
+  }
+}
+
+// If we're operating on a booking day that stretches past midnight, it's more convenient
+// for the sections past midnight to be shown as being on the day before.  That way the
+// $returl will end up taking us back to the day we started on
+if (day_past_midnight())
+{
+  if ($start_seconds < (((($eveningends * 60) + $eveningends_minutes) *60) + $resolution))
+  {
+    $start_seconds += 24*60*60;
+    $day_before = getdate(mktime(0, 0, 0, $start_month, $start_day-1, $start_year));
+    $start_day = $day_before['mday'];
+    $start_month = $day_before['mon'];
+    $start_year = $day_before['year'];
+  }
+}
+
 
 if (!$ajax || !$commit)
 {
@@ -286,22 +337,6 @@ if ($private_mandatory)
 else
 {
   $isprivate = ($private) ? TRUE : FALSE;
-}
-
-// Check the user is authorised for this page
-checkAuthorised();
-
-// Also need to know whether they have admin rights
-$user = getUserName();
-$is_admin = (authGetUserLevel($user) >= 2);
-
-// If they're not an admin and multi-day bookings are not allowed, then
-// set the end date to the start date
-if (!$is_admin && $auth['only_admin_can_book_multiday'])
-{
-  $end_day = $day;
-  $end_month = $month;
-  $end_year = $year;
 }
 
 // Check to see whether this is a repeat booking and if so, whether the user
@@ -408,30 +443,9 @@ if ($enable_periods)
   $resolution = 60;
 }
 
-// When All Day is checked, $start_seconds and $end_seconds are disabled and so won't
-// get passed through by the form.   We therefore need to set them.
-if (!empty($all_day))
-{
-  if ($enable_periods)
-  {
-    $start_seconds = 12 * 60 * 60;
-    // This is actually the start of the last period, which is what the form would
-    // have returned.   It will get corrected in a moment.
-    $end_seconds = $start_seconds + ((count($periods) - 1) * 60);
-  }
-  else
-  {
-    $start_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-    $end_seconds = (($eveningends * 60) + $eveningends_minutes) *60;
-    $end_seconds += $resolution;  // We want the end of the last slot, not the beginning
-  }
-}
-
 // Now work out the start and times
-$starttime = mktime(intval($start_seconds/3600), intval(($start_seconds%3600)/60), 0,
-                    $start_month, $start_day, $start_year);
-$endtime   = mktime(intval($end_seconds/3600), intval(($end_seconds%3600)/60), 0,
-                    $end_month, $end_day, $end_year);
+$starttime = mktime(0, 0, $start_seconds, $start_month, $start_day, $start_year);
+$endtime   = mktime(0, 0, $end_seconds, $end_month, $end_day, $end_year);
 
 // If we're using periods then the endtime we've been returned by the form is actually
 // the beginning of the last period in the booking (it's more intuitive for users this way)
@@ -443,9 +457,8 @@ if ($enable_periods)
 
 // Round down the starttime and round up the endtime to the nearest slot boundaries
 // (This step is probably unnecesary now that MRBS always returns times aligned
-// on slot boundaries, but is left in for good measure).                  
-$am7 = mktime($morningstarts, $morningstarts_minutes, 0,
-              $month, $day, $year, is_dst($month, $day, $year, $morningstarts));
+// on slot boundaries, but is left in for good measure).
+$am7 = get_start_first_slot($month, $day, $year);                 
 $starttime = round_t_down($starttime, $resolution, $am7);
 $endtime = round_t_up($endtime, $resolution, $am7);
 
@@ -455,10 +468,6 @@ if ($endtime == $starttime)
 {
   $endtime += $resolution;
 }
-
-// Adjust the endtime for DST
-$endtime += cross_dst( $starttime, $endtime );
-
 
 if (isset($rep_type) && ($rep_type != REP_NONE) &&
     isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))

@@ -65,8 +65,10 @@ $default_duration_all_day = FALSE;  // DEFAULT VALUE FOR NEW AREAS
 
 // Start and end of day.
 // NOTE:  The time between the beginning of the last and first
-// slots of the day must be an integral multiple of the resolution,
-// and obviously >=0.
+// slots of the day must be an integral multiple of the resolution.
+// If the last slot is before the first slot, then the booking day is
+// assumed to span midnight and the last slot is on the day after the
+// first slot.
 
 
 // The default settings below (along with the 30 minute resolution above)
@@ -89,6 +91,11 @@ $eveningends_minutes   = 30;   // must be integer in range 0-59
 // Example 2.
 // To get a full 24 hour display with 15-minute steps, set morningstarts=0; eveningends=23;
 // eveningends_minutes=45; and resolution=900.
+//
+// Example 3.
+// To get a booking day running from 6.00 pm to 2.00 am with 30 minute steps, set
+// morningstarts=18, morningstarts_minutes = 0, eveningends = 1, eveningends_minutes = 30
+// and resolution = 1800.
 
 
 

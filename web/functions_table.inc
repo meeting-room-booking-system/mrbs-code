@@ -2,7 +2,7 @@
 
 // $Id$
 
-function map_add_booking ($row, &$column, $am7, $pm7, $format)
+function map_add_booking ($row, &$column, $am7, $pm7)
 {
   // Enters the contents of the booking found in $row into $column, which is
   // a column of the map of the bookings being prepared ready for display.
@@ -11,7 +11,6 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   // $row       a booking from the database
   // $am7       the start of the first slot of the booking day (Unix timestamp)
   // $pm7       the start of the last slot of the booking day (Unix timestamp)
-  // $format    time format used for indexing the $map array
   
   // $row is expected to have the following field names, when present:
   //       room_id
@@ -27,20 +26,23 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
   
   // $column is a column of the map of the screen that will be displayed
   // It looks like:
-  //     $column[Time][n][id]
-  //                     [is_repeat]
-  //                     [is_multiday_start]  a boolean indicating if the booking stretches
-  //                                          beyond the day start
-  //                     [is_multiday_end]    a boolean indicating if the booking stretches
+  //     $column[s][n][id]
+  //                  [is_repeat]
+  //                  [is_multiday_start]  a boolean indicating if the booking stretches
+  //                                       beyond the day start
+  //                  [is_multiday_end]    a boolean indicating if the booking stretches
   //                                          beyond the day end
-  //                     [color]
-  //                     [data]
-  //                     [long_descr]
-  //                     [create_by]
-  //                     [room_id]
-  //                     [start_time]
-  //                     [slots]
-  //                     [status]
+  //                  [color]
+  //                  [data]
+  //                  [long_descr]
+  //                  [create_by]
+  //                  [room_id]
+  //                  [start_time]
+  //                  [slots]
+  //                  [status]
+  
+  // s is the number of nominal seconds (ie ignoring DST changes] since the
+  // start of the calendar day which has the start of the booking day
   
   // slots records the duration of the booking in number of time slots.
   // Used to calculate how high to make the block used for clipping
@@ -97,46 +99,45 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
               
   $start_t = max(round_t_down($row['start_time'], $resolution, $am7), $am7);
   $end_t = min(round_t_up($row['end_time'], $resolution, $am7) - $resolution, $pm7);
-  // calculate the times used for indexing
-  $time_start_t = date($format,$start_t);
-  $time_end_t = date($format,$end_t);
   
-
-  for ($t = $start_t; $t <= $end_t; $t += $resolution)
+  // calculate the times used for indexing - we index by nominal seconds since the start
+  // of the calendar day which has the start of the booking day
+  $start_s = nominal_seconds($start_t);
+  $end_s = nominal_seconds($end_t);
+  
+  for ($s = $start_s; $s <= $end_s; $s += $resolution)
   { 
-    $time_t = date($format,$t);
-    
     // find the first free index (in case there are multiple bookings in a timeslot)
     $n = 0;
-    while (!empty($column[$time_t][$n]["id"]))
+    while (!empty($column[$s][$n]["id"]))
     {
       $n++;
     }
     
     // fill in the id, type and start time
-    $column[$time_t][$n]["id"] = $row['entry_id'];
-    $column[$time_t][$n]["is_repeat"] = !empty($row['repeat_id']);
-    $column[$time_t][$n]["is_multiday_start"] = $is_multiday_start;
-    $column[$time_t][$n]["is_multiday_end"] = $is_multiday_end;
-    $column[$time_t][$n]["status"] = $row['status'];
-    $column[$time_t][$n]["color"] = $row['type'];
-    $column[$time_t][$n]["start_time"] = utf8_strftime(hour_min_format(), $row['start_time']);
-    $column[$time_t][$n]["slots"] = null;  // to avoid undefined index NOTICE errors
+    $column[$s][$n]["id"] = $row['entry_id'];
+    $column[$s][$n]["is_repeat"] = !empty($row['repeat_id']);
+    $column[$s][$n]["is_multiday_start"] = $is_multiday_start;
+    $column[$s][$n]["is_multiday_end"] = $is_multiday_end;
+    $column[$s][$n]["status"] = $row['status'];
+    $column[$s][$n]["color"] = $row['type'];
+    $column[$s][$n]["start_time"] = hour_min($start_s);
+    $column[$s][$n]["slots"] = null;  // to avoid undefined index NOTICE errors
     // if it's a multiple booking also fill in the name and description
     if ($n > 0)
     {
-      $column[$time_t][$n]["data"] = $row['name'];
-      $column[$time_t][$n]["long_descr"] = $row['entry_description'];
-      $column[$time_t][$n]["create_by"] = $row['entry_create_by'];
-      $column[$time_t][$n]["room_id"] = $row['room_id'];
+      $column[$s][$n]["data"] = $row['name'];
+      $column[$s][$n]["long_descr"] = $row['entry_description'];
+      $column[$s][$n]["create_by"] = $row['entry_create_by'];
+      $column[$s][$n]["room_id"] = $row['room_id'];
     }
     // otherwise just leave them blank (we'll fill in the first whole slot later)
     else
     {
-      $column[$time_t][$n]["data"] = "";
-      $column[$time_t][$n]["long_descr"] = "";
-      $column[$time_t][$n]["create_by"] = "";
-      $column[$time_t][$n]["room_id"] = "";
+      $column[$s][$n]["data"] = "";
+      $column[$s][$n]["long_descr"] = "";
+      $column[$s][$n]["create_by"] = "";
+      $column[$s][$n]["room_id"] = "";
     }
   } // end for
   
@@ -147,13 +148,15 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
 
   // Find the number of time slots that the booking occupies, and the index
   // of the first slot that this booking has entirely to itself
-  $n_slots = intval(($end_t - $start_t)/$resolution) + 1;
-  $first_slot = $start_t;
+  // We need to adjust the start and end times for DST transitions as the display
+  // ignores DST
+  $n_slots = intval((($end_t - $start_t) - cross_dst($start_t, $end_t))/$resolution) + 1;
+  $first_slot = $start_s;
   
   // If the last time slot is already occupied, we have a multiple
   // booking in the last slot, so decrement the number of slots that
   // we will display for this booking
-  if (isset($column[$time_end_t][1]["id"]))
+  if (isset($column[$end_s][1]["id"]))
   {
     $n_slots--;
     // If we're only the second booking to land on this time slot
@@ -162,43 +165,43 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
     // doesn't matter as it will now be part of a multiple booking).
     // If we are the third booking or more, then it will have already
     // been adjusted.
-    if (!isset($column[$time_end_t][2]["id"]))
+    if (!isset($column[$end_s][2]["id"]))
     {
-      if ($column[$time_end_t][0]["slots"] > 1)
+      if ($column[$end_s][0]["slots"] > 1)
       {
         // Move the name and description into the new first slot and decrement the number of slots
-        $column[date($format, $end_t + $resolution)][0]["data"] = $column[$time_end_t][0]["data"];
-        $column[date($format, $end_t + $resolution)][0]["long_descr"] = $column[$time_end_t][0]["long_descr"];
-        $column[date($format, $end_t + $resolution)][0]["create_by"] = $column[$time_end_t][0]["create_by"];
-        $column[date($format, $end_t + $resolution)][0]["room_id"] = $column[$time_end_t][0]["room_id"];
-        $column[date($format, $end_t + $resolution)][0]["slots"] = $column[$time_end_t][0]["slots"] - 1;
+        $column[$end_s + $resolution][0]["data"]       = $column[$end_s][0]["data"];
+        $column[$end_s + $resolution][0]["long_descr"] = $column[$end_s][0]["long_descr"];
+        $column[$end_s + $resolution][0]["create_by"]  = $column[$end_s][0]["create_by"];
+        $column[$end_s + $resolution][0]["room_id"]    = $column[$end_s][0]["room_id"];
+        $column[$end_s + $resolution][0]["slots"]      = $column[$end_s][0]["slots"] - 1;
       }
     }
   }
   
   // and if the first time slot is already occupied, decrement
   // again, adjust the first slot for this booking
-  if (isset($column[$time_start_t][1]["id"]))
+  if (isset($column[$start_s][1]["id"]))
   {
     $n_slots--;
     $first_slot += $resolution;
     // If we're only the second booking to land on this time slot
     // then we'll have to adjust the information held for the first booking
-    if (!isset($column[$time_start_t][2]["id"]))
+    if (!isset($column[$start_s][2]["id"]))
     {
       // Find the first slot ($s) of the first booking
-      $first_booking_id = $column[$time_start_t][0]["id"];
-      $s = $start_t;
+      $first_booking_id = $column[$start_s][0]["id"];
+      $r = $start_s;
       // If you've got to the first slot of the day then that must be the
       // first slot of the first booking
-      while ($s > $am7)
+      while ($r > $am7)
       {
         // Otherwise, step back one slot.
-        $s -= $resolution;
+        $r -= $resolution;
         // If that slot contains the first booking, then step back again
-        if (isset($column[date($format,$s)]))
+        if (isset($column[$r]))
         {
-          foreach ($column[date($format,$s)] as $booking)
+          foreach ($column[$r] as $booking)
           {
             if ($booking["id"] == $first_booking_id)
             {
@@ -208,13 +211,13 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
         }
         // If not, then we've stepped back one slot past the start of
         // the first booking, so step forward again and finish
-        $s += $resolution;
+        $r += $resolution;
         break;
       } // end while
       
-      // Now we've found the time ($s) of the first slot of the first booking
+      // Now we've found the time ($r) of the first slot of the first booking
       // we need to find its index ($i)
-      foreach ($column[date($format,$s)] as $i => $booking)
+      foreach ($column[$r] as $i => $booking)
       {
         if ($booking["id"] == $first_booking_id)
         {
@@ -225,31 +228,31 @@ function map_add_booking ($row, &$column, $am7, $pm7, $format)
       // Finally decrement the slot count for the first booking
       // no need to worry about count going < 1: the multiple booking display
       // does not use the slot count.
-      $column[date($format,$s)][$i]["slots"]--;
+      $column[$r][$i]["slots"]--;
       // and put the name and description in the multiply booked slot
-      $column[$time_start_t][0]["data"] = $column[date($format,$s)][$i]["data"];
-      $column[$time_start_t][0]["long_descr"] = $column[date($format,$s)][$i]["long_descr"];
-      $column[$time_start_t][0]["create_by"] = $column[date($format,$s)][$i]["create_by"];
-      $column[$time_start_t][0]["room_id"] = $column[date($format,$s)][$i]["room_id"];
+      $column[$start_s][0]["data"]       = $column[$r][$i]["data"];
+      $column[$start_s][0]["long_descr"] = $column[$r][$i]["long_descr"];
+      $column[$start_s][0]["create_by"]  = $column[$r][$i]["create_by"];
+      $column[$start_s][0]["room_id"]    = $column[$r][$i]["room_id"];
     }
   }
  
   // now we've got all the information we can enter it in the first complete
   // slot for the booking (provided it's not a multiple booking slot)
-  if (!isset($column[date($format,$first_slot)][1]["id"]))
+  if (!isset($column[$first_slot][1]["id"]))
   {
-    $column[date($format,$first_slot)][0]["data"] = $row['name'];
-    $column[date($format,$first_slot)][0]["long_descr"] = $row['entry_description'];
-    $column[date($format,$first_slot)][0]["create_by"] = $row['entry_create_by']; 
-    $column[date($format,$first_slot)][0]["room_id"] = $row['room_id']; 
-    $column[date($format,$first_slot)][0]["slots"] = $n_slots;
+    $column[$first_slot][0]["data"]       = $row['name'];
+    $column[$first_slot][0]["long_descr"] = $row['entry_description'];
+    $column[$first_slot][0]["create_by"]  = $row['entry_create_by']; 
+    $column[$first_slot][0]["room_id"]    = $row['room_id']; 
+    $column[$first_slot][0]["slots"]      = $n_slots;
   }
 
 } // end function map_add_booking()
 
 
 
-function cell_html($cell, $query_strings)
+function cell_html($cell, $query_strings, $is_invalid = FALSE)
 {
   // draws a single cell in the main table of the day and week views
   //
@@ -283,6 +286,9 @@ function cell_html($cell, $query_strings)
   //    ['new_periods']   the string to be used for an empty cell if using periods
   //    ['new_times']     the string to be used for an empty cell if using times
   //    ['booking']       the string to be used for a full cell
+  //
+  // $is_invalid specifies whether the slot actually exists or is one of the non-existent
+  // slots in the transition to DST
     
   global $main_cell_height, $main_table_cell_border_width;
   global $area, $year, $month, $timetohighlight;
@@ -489,7 +495,7 @@ function cell_html($cell, $query_strings)
     }
     else
     {
-      $c = "new";
+      $c = ($is_invalid) ? "invalid" : "new";
     }
     
     // Don't put in a <td> cell if the slot is booked and there's no description.
@@ -504,16 +510,20 @@ function cell_html($cell, $query_strings)
       // If the room isn't booked then allow it to be booked
       if (!isset($id))
       {
-        $html .= "<div class=\"celldiv slots1\">\n";  // a bookable slot is only one unit high
-        $html .= "<a href=\"edit_entry.php?" . 
-                 (($enable_periods) ? $query_strings['new_periods'] : $query_strings['new_times']) . 
-                 "\">\n";
-        if ($show_plus_link)
+        // Don't provide a link if the slot doesn't really exist
+        if (!$is_invalid)
         {
-          $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          $html .= "<div class=\"celldiv slots1\">\n";  // a bookable slot is only one unit high
+          $html .= "<a href=\"edit_entry.php?" . 
+                   (($enable_periods) ? $query_strings['new_periods'] : $query_strings['new_times']) . 
+                   "\">\n";
+          if ($show_plus_link)
+          {
+            $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          }
+          $html .= "</a>\n";
+          $html .= "</div>\n";
         }
-        $html .= "</a>\n";
-        $html .= "</div>\n";
       }
       else                 // if it is booked then show the booking
       {
@@ -534,31 +544,28 @@ function cell_html($cell, $query_strings)
 
 
 // Draw a time cell to be used in the first and last columns of the day and week views
-//    $t                 the timestamp for the start of the slot
-//    $time_t            the time converted to HHMM format without leading zeros
-//    $time_t_stripped   a stripped version of the time for use with periods
-//    $slot_seconds      the number of seconds since the start of the day (nominal - not adjusted for DST)
+//    $s                 the number of seconds since the start of the day (nominal - not adjusted for DST)
 //    $url               the url to form the basis of the link in the time cell
-function time_cell_html($t, $time_t, $time_t_stripped, $slot_seconds, $url)
+function time_cell_html($s, $url)
 {
   global $enable_periods, $periods;
   
   $html = '';
   
-  $html .= tdcell("row_labels", 1, array('name' => 'seconds', 'value' => $slot_seconds));
+  $html .= tdcell("row_labels", 1, array('name' => 'seconds', 'value' => $s));
   $html .= "<div class=\"celldiv slots1\">\n";
   if ( $enable_periods )
   {
     
     $html .= "<a href=\"$url\"  title=\""
              . get_vocab("highlight_line") . "\">"
-             . $periods[$time_t_stripped] . "</a>\n";
+             . period_name($s) . "</a>\n";
   }
   else
   {
     $html .= "<a href=\"$url\" title=\""
              . get_vocab("highlight_line") . "\">"
-             . utf8_strftime(hour_min_format(),$t) . "</a>\n";
+             . hour_min($s) . "</a>\n";
   }
   $html .= "</div></td>\n";
   
@@ -629,6 +636,51 @@ function tdcell($colclass, $slots)
 }
 
 
+// Gets the number of time slots between the beginning and end of the booking
+// day.   (This is the normal number on a non-DST transition day)
+function get_n_time_slots()
+{
+  global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+  global $resolution;
+  
+  $morning = ($morningstarts * 60) + $morningstarts_minutes;   // minutes
+  $evening = ($eveningends * 60) + $eveningends_minutes;  // minutes
+  if (day_past_midnight())
+  {
+    $evening += 24*60;
+  }
+  $difference = ($evening - $morning) * 60;    // seconds
+  $n_slots = ($difference/$resolution) + 1;
+  
+  return $n_slots;
+}
+
+
+// $s is nominal seconds
+function get_query_strings($area, $room, $month, $day, $year, $s)
+{
+  global $morningstarts, $morningstarts_minutes;
+  
+  $query_strings = array();
+  
+  // check to see if the time is really on the next day
+  $date = getdate(mktime(0, 0, $s, $month, $day, $year));
+  if (hm_before($date,
+                array('hours' => $morningstarts, 'minutes' => $morningstarts_minutes)))
+  {
+    $date['hours'] += 24;
+  }
+  $hour = $date['hours'];
+  $minute = $date['minutes'];
+  $period = period_index($s);
+  $query_strings['new_periods'] = "area=$area&amp;room=$room&amp;period=$period&amp;year=$year&amp;month=$month&amp;day=$day";
+  $query_strings['new_times']   = "area=$area&amp;room=$room&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";
+  $query_strings['booking']     = "area=$area&amp;day=$day&amp;month=$month&amp;year=$year";
+ 
+  return $query_strings;
+}
+
+
 function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight=NULL)
 {
   global $tbl_entry, $tbl_room, $tbl_area;
@@ -655,8 +707,6 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
     return "<tbody data-empty=1><tr><td><h1>".get_vocab("no_rooms_for_area")."</h1></td></tr></tbody>";
   }
-
-  $format = ($enable_periods) ? "i" : "Gi";
   
   // form the room parameter for use in query strings.    We want to preserve room information
   // if possible when switching between views
@@ -677,17 +727,15 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     $eveningends_minutes = count($periods) - 1;
   }
 
-  // Define the start and end of each day in a way which is not affected by
-  // daylight saving...
-  // dst_change:
-  // -1 => no change
-  //  0 => entering DST
-  //  1 => leaving DST
-  $dst_change = is_dst($month, $day, $year);
-  $am7=mktime($morningstarts, $morningstarts_minutes, 0,
-              $month, $day, $year, is_dst($month,$day,$year,$morningstarts));
-  $pm7=mktime($eveningends, $eveningends_minutes, 0,
-              $month, $day, $year, is_dst($month,$day,$year,$eveningends));
+  $am7 = get_start_first_slot($month, $day, $year);
+  $pm7 = get_start_last_slot($month, $day, $year);
+  
+  // Work out whether there's a possibility that a time slot is invalid,
+  // in other words whether the booking day includes a transition into DST.
+  // If we know that there's a transition into DST then some of the slots are
+  // going to be invalid.   Knowing whether or not there are possibly invalid slots
+  // saves us bothering to do the detailed calculations of which slots are invalid.
+  $is_possibly_invalid = !$enable_periods && is_possibly_invalid($am7, $pm7);
             
   // We want to build an array containing all the data we want to show
   // and then spit it out. 
@@ -733,7 +781,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     //  row['entry_create_by'] = Creator/owner of entry
     //  row['status'] = Status code of the entry
   
-    map_add_booking($row, $today[$row['room_id']][$day], $am7, $pm7, $format);
+    map_add_booking($row, $today[$row['room_id']][$day], $am7, $pm7);
 
   }
 
@@ -759,49 +807,38 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
 
-  
-  ($dst_change != -1) ? $j = 1 : $j = 0;
+  $n_time_slots = get_n_time_slots();
+  $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+  $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
   
   // TABLE HEADER
   $thead = "<thead>\n";
   $header_inner = "<tr>\n";
   
-  
   // We can display the table in two ways
   if ($times_along_top)
   {
     // with times along the top and rooms down the side
-    $start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
-    $start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
-    $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
-    $n_slots = ($start_difference/$resolution) + 1;
-    $column_width = (int)(95 / $n_slots);
+
+    $column_width = (int)(95 / $n_time_slots);
     $header_inner .= "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
-    for (
-         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year),
-           $slot_seconds = $start_first_slot * 60;
-         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
-         $t += $resolution,
-           $slot_seconds += $resolution
-        )
+    for ($s = $morning_slot_seconds;
+         $s <= $evening_slot_seconds;
+         $s += $resolution)
     {
       // Put the number of seconds since the start of the day (nominal, ignoring DST)
-      // in a data attribure so that JavaScript can pick it up
-      $header_inner .= "<th data-seconds=\"$slot_seconds\" style=\"width: $column_width%\">";
+      // in a data attribute so that JavaScript can pick it up
+      $header_inner .= "<th data-seconds=\"$s\" style=\"width: $column_width%\">";
       // We need the span so that we can apply some padding.   We can't apply it
       // to the <th> because that is used by jQuery.offset() in resizable bookings
       $header_inner .= "<span>";
       if ( $enable_periods )
       {
-        // convert timestamps to HHMM format without leading zeros
-        $time_t = date($format, $t);
-        // and get a stripped version of the time for use with periods
-        $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-        $header_inner .= $periods[$time_t_stripped];
+        $header_inner .= period_name($s);
       }
       else
       {
-        $header_inner .= utf8_strftime(hour_min_format(),$t);
+        $header_inner .= hour_min($s);
       }
       $header_inner .= "</span>";
       $header_inner .= "</th>\n";
@@ -871,32 +908,26 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       $room_id = $row['id']; 
       $room_cell_link = "week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$room_id";
       $tbody .= room_cell_html($row, $room_cell_link);
-      for (
-           $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year);
-           $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
-           $t += $resolution
-          )
+      $is_invalid = array();
+      for ($s = $morning_slot_seconds;
+           $s <= $evening_slot_seconds;
+           $s += $resolution)
       {
-        // convert timestamps to HHMM format without leading zeros
-        $time_t = date($format, $t);
-        // and get a stripped version of the time for use with periods
-        $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-        
-        // calculate hour and minute (needed for links)
-        $hour = date("H", $t);
-        $minute = date("i", $t);
-        
-        // set up the query strings to be used for the link in the cell
-        $query_strings = array();
-        $query_strings['new_periods'] = "area=$area&amp;room=$room_id&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day";
-        $query_strings['new_times']   = "area=$area&amp;room=$room_id&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";
-        $query_strings['booking']     = "area=$area&amp;day=$day&amp;month=$month&amp;year=$year";
-        // and then draw the cell
-        if (!isset($today[$room_id][$day][$time_t]))
+        // Work out whether this timeslot is invalid and save the result, so that we
+        // don't have to repeat the calculation for every room
+        if (!isset($is_invalid[$s]))
         {
-          $today[$room_id][$day][$time_t] = array();  // to avoid an undefined index NOTICE error
-        }   
-        $tbody .= cell_html($today[$room_id][$day][$time_t], $query_strings);
+          $is_invalid[$s] = $is_possibly_invalid && is_invalid_datetime(0, 0, $s, $month, $day, $year);
+        }
+        // set up the query strings to be used for the link in the cell
+        $query_strings = get_query_strings($area, $room_id, $month, $day, $year, $s);
+
+        // and then draw the cell
+        if (!isset($today[$room_id][$day][$s]))
+        {
+          $today[$room_id][$day][$s] = array();  // to avoid an undefined index NOTICE error
+        }
+        $tbody .= cell_html($today[$room_id][$day][$s], $query_strings, $is_invalid[$s]);
       }  // end for (looping through the times)
       if ( FALSE != $row_labels_both_sides )
       {
@@ -909,58 +940,43 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   else
   {
     // the standard view, with rooms along the top and times down the side
-    for (
-         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day+$j, $year),
-           $slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day+$j, $year);
-         $t += $resolution,
-           $slot_seconds += $resolution,
-           $row_class = ($row_class == "even_row") ? "odd_row" : "even_row"
-        )
+    for ($s = $morning_slot_seconds;
+         $s <= $evening_slot_seconds;
+         $s += $resolution,
+           $row_class = ($row_class == "even_row") ? "odd_row" : "even_row")
     {
-      // convert timestamps to HHMM format without leading zeros
-      $time_t = date($format, $t);
-      // and get a stripped version of the time for use with periods
-      $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-      
-      // calculate hour and minute (needed for links)
-      $hour = date("H", $t);
-      $minute = date("i", $t);
-  
       // Show the time linked to the URL for highlighting that time
       $class = $row_class;
-      if (isset($timetohighlight) && ($time_t == $timetohighlight))
+      if (isset($timetohighlight) && ($s == $timetohighlight))
       {
         $class .= " row_highlight";
         $url = $base_url;
       }
       else
       {
-        $url = $base_url . "&amp;timetohighlight=$time_t";
+        $url = $base_url . "&amp;timetohighlight=$s";
       }
       $tbody .= "<tr class=\"$class\">\n";
-      $tbody .= time_cell_html($t, $time_t, $time_t_stripped, $slot_seconds, $url);
-  
+      $tbody .= time_cell_html($s, $url);
+      $is_invalid = $is_possibly_invalid && is_invalid_datetime(0, 0, $s, $month, $day, $year);
       // Loop through the list of rooms we have for this area
       while (list($key, $room_id) = each($rooms))
       {
         // set up the query strings to be used for the link in the cell
-        $query_strings = array();
-        $query_strings['new_periods'] = "area=$area&amp;room=$room_id&amp;period=$time_t_stripped&amp;year=$year&amp;month=$month&amp;day=$day";
-        $query_strings['new_times']   = "area=$area&amp;room=$room_id&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";
-        $query_strings['booking']     = "area=$area&amp;day=$day&amp;month=$month&amp;year=$year";
+        $query_strings = get_query_strings($area, $room_id, $month, $day, $year, $s);
+        
         // and then draw the cell
-        if (!isset($today[$room_id][$day][$time_t]))
+        if (!isset($today[$room_id][$day][$s]))
         {
-          $today[$room_id][$day][$time_t] = array();  // to avoid an undefined index NOTICE error
+          $today[$room_id][$day][$s] = array();  // to avoid an undefined index NOTICE error
         }
-        $tbody .= cell_html($today[$room_id][$day][$time_t], $query_strings);
+        $tbody .= cell_html($today[$room_id][$day][$s], $query_strings, $is_invalid);
       }
       
       // next lines to display times on right side
       if ( FALSE != $row_labels_both_sides )
       {
-        $tbody .= time_cell_html($t, $time_t, $time_t_stripped, $slot_seconds, $url);
+        $tbody .= time_cell_html($s, $url);
       }
   
       $tbody .= "</tr>\n";
@@ -997,8 +1013,6 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   }
   
   $num_of_days=7; // days in a week
-  
-  $format = ($enable_periods) ? "i" : "Gi";
 
   // ensure that $morningstarts_minutes defaults to zero if not set
   if (!isset($morningstarts_minutes))
@@ -1006,7 +1020,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     $morningstarts_minutes = 0;
   }
   
-  if( $enable_periods )
+  if ($enable_periods)
   {
     $resolution = 60;
     $morningstarts = 12;
@@ -1022,28 +1036,21 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   // We will use $day for links and $day_start_week for anything to do with showing the bookings,
   // because we want the booking display to start on the first day of the week (eg Sunday if $weekstarts is 0)
   // but we want to preserve the notion of the current day (or 'sticky day') when switching between pages
-
+  
   // Define the start and end of each day of the week in a way which is not
   // affected by daylight saving...
   for ($j = 0; $j<=($num_of_days-1); $j++)
   {
-    // are we entering or leaving daylight saving
-    // dst_change:
-    // -1 => no change
-    //  0 => entering DST
-    //  1 => leaving DST
-    $dst_change[$j] = is_dst($month, $day_start_week+$j, $year);
-    $am7[$j]=mktime($morningstarts, $morningstarts_minutes, 0,
-                    $month, $day_start_week+$j, $year,is_dst($month,
-                                                  $day_start_week+$j,
-                                                  $year,
-                                                  $morningstarts));
-    $pm7[$j]=mktime($eveningends, $eveningends_minutes, 0,
-                    $month, $day_start_week+$j, $year, is_dst($month,
-                                                  $day_start_week+$j,
-                                                  $year,
-                                                  $eveningends));
+    $am7[$j] = get_start_first_slot($month, $day_start_week+$j, $year);
+    $pm7[$j] = get_start_last_slot($month, $day_start_week+$j, $year);
+    // Work out whether there's a possibility that a time slot is invalid,
+    // in other words whether the booking day includes a transition into DST.
+    // If we know that there's a transition into DST then some of the slots are
+    // going to be invalid.   Knowing whether or not there are possibly invalid slots
+    // saves us bothering to do the detailed calculations of which slots are invalid.
+    $is_possibly_invalid[$j] = !$enable_periods && is_possibly_invalid($am7[$j], $pm7[$j]);
   }
+  unset($j);  // Just so that we pick up any accidental attempt to use it later
 
   // Get all appointments for this week in the room that we care about.
   //
@@ -1089,16 +1096,16 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     {
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
-        map_add_booking($row, $week_map[$room][$j], $am7[$j], $pm7[$j], $format);
+        map_add_booking($row, $week_map[$room][$j], $am7[$j], $pm7[$j]);
       }
     }
-  } 
-
+  }  // for ($j = 0; ...
+  unset($j);  // Just so that we pick up any accidental attempt to use it later
+  
   // START DISPLAYING THE MAIN TABLE
-  // if the first day of the week to be displayed contains a DST change then
-  // move to the next day to get the hours in the day.
-  ( $dst_change[0] != -1 ) ? $j = 1 : $j = 0;
-
+  $n_time_slots = get_n_time_slots();
+  $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+  $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
   // TABLE HEADER
   $thead = "<thead>\n";
@@ -1117,37 +1124,26 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   if ($times_along_top)
   {
     // with times along the top and days of the week down the side
-    $start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
-    $start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
-    $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
-    $n_slots = ($start_difference/$resolution) + 1;
-    $column_width = (int)(95 / $n_slots);
+    $column_width = (int)(95 / $n_time_slots);
     $header_inner .= "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
-    for (
-         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year),
-           $slot_seconds = $start_first_slot * 60;
-         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
-         $t += $resolution,
-           $slot_seconds += $resolution
-        )
+    
+    for ($s = $morning_slot_seconds;
+         $s <= $evening_slot_seconds;
+         $s += $resolution)
     {
       // Put the seconds since the start of the day (nominal, not adjusted for DST)
       // into a data attribute so that it can be picked up by JavaScript
-      $header_inner .= "<th data-seconds=\"$slot_seconds\" style=\"width: $column_width%\">";
+      $header_inner .= "<th data-seconds=\"$s\" style=\"width: $column_width%\">";
       // We need the span so that we can apply some padding.   We can't apply it
       // to the <th> because that is used by jQuery.offset() in resizable bookings
       $header_inner .= "<span>";
       if ( $enable_periods )
       {
-        // convert timestamps to HHMM format without leading zeros
-        $time_t = date($format, $t);
-        // and get a stripped version of the time for use with periods
-        $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-        $header_inner .= $periods[$time_t_stripped];
+        $header_inner .= period_name($s);
       }
       else
       {
-        $header_inner .= utf8_strftime(hour_min_format(),$t);
+        $header_inner .= hour_min($s);
       }
       $header_inner .= "</span>";
       $header_inner .= "</th>\n";
@@ -1165,7 +1161,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
     $header_inner .= "<th class=\"first_last\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
     for ($j = 0; $j<=($num_of_days-1) ; $j++)
     {
-      $t = mktime( 12, 0, 0, $month, $day_start_week+$j, $year);
+      $t = mktime(12, 0, 0, $month, $day_start_week+$j, $year);
       $date = date('Y-n-d', $t);
     
       if (is_hidden_day(($j + $weekstarts) % 7))
@@ -1183,7 +1179,9 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
                          "&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">" .
                          utf8_strftime($dformat, $t) . "</a></th>\n";
       }
-    }
+    }  // for ($j = 0 ...
+    unset($j);  // Just so that we pick up any accidental attempt to use it later
+    
     // next line to display times on right side
     if ( FALSE != $row_labels_both_sides )
     {
@@ -1240,33 +1238,20 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
                          "&amp;area=$area";
                        
         $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
-        for (
-             $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year);
-             $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
-             $t += $resolution
-            )
+        for ($s = $morning_slot_seconds;
+             $s <= $evening_slot_seconds;
+             $s += $resolution)
         {
-          // use hour:minute format
-          $time_t = date($format, $t);
-          // and get a stripped version for use with periods
-          $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-        
-          // calculate hour and minute (needed for links)
-          $hour = date("H",$t);
-          $minute  = date("i",$t);
-        
+          $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
           // set up the query strings to be used for the link in the cell
-          $query_strings = array();
-          $query_strings['new_periods'] = "room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
-          $query_strings['new_times']   = "room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
-          $query_strings['booking']     = "area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear";
-        
+          $query_strings = get_query_strings($area, $room, $wmonth, $wday, $wyear, $s);
+
           // and then draw the cell
-          if (!isset($week_map[$room][$thisday][$time_t]))
+          if (!isset($week_map[$room][$thisday][$s]))
           {
-            $week_map[$room][$thisday][$time_t] = array();  // to avoid an undefined index NOTICE error
+            $week_map[$room][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
           }
-          $tbody .= cell_html($week_map[$room][$thisday][$time_t], $query_strings);
+          $tbody .= cell_html($week_map[$room][$thisday][$s], $query_strings, $is_invalid);
         }  // end looping through the time slots
         if ( FALSE != $row_labels_both_sides )
         {
@@ -1282,37 +1267,24 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   else
   {
     // the standard view, with days of the week along the top and times down the side
-    for (
-         $t = mktime($morningstarts, $morningstarts_minutes, 0, $month, $day_start_week+$j, $year),
-           $slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-         $t <= mktime($eveningends, $eveningends_minutes, 0, $month, $day_start_week+$j, $year);
-         $t += $resolution,
-           $slot_seconds += $resolution,
-           $row_class = ($row_class == "even_row") ? "odd_row" : "even_row"
-    )
+    for ($s = $morning_slot_seconds;
+         $s <= $evening_slot_seconds;
+         $s += $resolution,
+           $row_class = ($row_class == "even_row") ? "odd_row" : "even_row")
     {
-      // use hour:minute format
-      $time_t = date($format, $t);
-      // and get a stripped version for use with periods
-      $time_t_stripped = preg_replace( "/^0/", "", $time_t );
-    
-      // calculate hour and minute (needed for links)
-      $hour = date("H",$t);
-      $minute  = date("i",$t);
-    
       // Show the time linked to the URL for highlighting that time:
       $class = $row_class;
-      if (isset($timetohighlight) && ($time_t == $timetohighlight))
+      if (isset($timetohighlight) && ($s == $timetohighlight))
       {
         $class .= " row_highlight";
         $url = $base_url;
       }
       else
       {
-        $url = $base_url . "&amp;timetohighlight=$time_t";
+        $url = $base_url . "&amp;timetohighlight=$s";
       }
       $tbody.= "<tr class=\"$class\">";
-      $tbody .= time_cell_html($t, $time_t, $time_t_stripped, $slot_seconds, $url);
+      $tbody .= time_cell_html($s, $url);
   
   
       // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
@@ -1326,22 +1298,19 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
         else
         {
           // set up the query strings to be used for the link in the cell
-          $wt = mktime( 12, 0, 0, $month, $day_start_week+$thisday, $year );
+          $wt = mktime(12, 0, 0, $month, $day_start_week+$thisday, $year);
           $wday = date("d", $wt);
           $wmonth = date("m", $wt);
           $wyear = date("Y", $wt);
-        
-          $query_strings = array();
-          $query_strings['new_periods'] = "room=$room&amp;area=$area&amp;period=$time_t_stripped&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
-          $query_strings['new_times']   = "room=$room&amp;area=$area&amp;hour=$hour&amp;minute=$minute&amp;year=$wyear&amp;month=$wmonth&amp;day=$wday";
-          $query_strings['booking']     = "area=$area&amp;day=$wday&amp;month=$wmonth&amp;year=$wyear";
-        
+          $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
+          $query_strings = get_query_strings($area, $room, $wmonth, $wday, $wyear, $s);
+     
           // and then draw the cell
-          if (!isset($week_map[$room][$thisday][$time_t]))
+          if (!isset($week_map[$room][$thisday][$s]))
           {
-            $week_map[$room][$thisday][$time_t] = array();  // to avoid an undefined index NOTICE error
+            $week_map[$room][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
           }
-          $tbody .= cell_html($week_map[$room][$thisday][$time_t], $query_strings);
+          $tbody .= cell_html($week_map[$room][$thisday][$s], $query_strings, $is_invalid);
         }
   
       }    // for loop
@@ -1349,7 +1318,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
       // next lines to display times on right side
       if ( FALSE != $row_labels_both_sides )
         {
-          $tbody .= time_cell_html($t, $time_t, $time_t_stripped, $slot_seconds, $url);
+          $tbody .= time_cell_html($s, $url);
         }
   
       $tbody .= "</tr>\n";

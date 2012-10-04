@@ -94,7 +94,12 @@ function generateLastSlotSelect()
   // Turn the last slot field into a select box that only contains permitted values
   // given the first slot and resolution
   ?>
-  var resMins, firstSlot, lastSlot, morningStarts, eveningEnds, eveningEndsInput;
+  var resMins, tCorrected,
+      firstSlot, lastSlot, 
+      morningStarts, eveningEnds,
+      eveningEndsInput,
+      minsPerDay = 24*60;
+      
   resMins = parseInt($('#area_res_mins').val(), 10);
   if (resMins == 0)
   {
@@ -141,30 +146,32 @@ function generateLastSlotSelect()
     lastSlot = parseInt($('#area_eveningends_t').val(), 10);
   }
 
-  <?php // Construct the <select> element ?>
-  var last_possible = (24 * 60) - resMins;
+  <?php 
+  // Construct the <select> element.
+  // We allow the "day" to go all the way past midnight and up to the start of the
+  // next first slot.
+  ?>
+  var lastPossible = minsPerDay + firstSlot - resMins;
   var id = 'area_eveningends_t';
   var label = $('<label>').attr('for', id)
                           .text('<?php echo get_vocab("area_last_slot_start")?>:');
   var select = $('<select>').attr('id', id)
                             .attr('name', id);
                             
-  for (var t=firstSlot; t <= last_possible; t += resMins)
+  for (var t=firstSlot; t <= lastPossible; t += resMins)
   {
+    tCorrected = t % minsPerDay;  <?php // subtract one day if past midnight?>
+    <?php // Calculate the closest option to the old last slot ?>
+    if (Math.abs(lastSlot - tCorrected) <= resMins/2)
+    {
+      lastSlot = tCorrected;
+    }
     select.append($('<option>')
-                  .val(t)
-                  .text(getTimeString(t, <?php echo ($twentyfourhour_format ? "true" : "false") ?>)));
+                  .val(tCorrected)
+                  .text(getTimeString(tCorrected, <?php echo ($twentyfourhour_format ? "true" : "false") ?>)));
   }
-  var lastOption = Math.max(firstSlot, t-resMins);
   
-  <?php // and make the selected option the last value, rounded up ?>
-  var remainder = (lastSlot - firstSlot) % resMins;
-  if (remainder != 0)
-  {
-    lastSlot += resMins - remainder;
-  }
-  lastSlot = Math.max(lastSlot, firstSlot);
-  lastSlot = Math.min(lastSlot, lastOption);
+  <?php // and make the selected option the new last slot value ?>
   select.val(lastSlot);
   <?php // finally, replace the contents of the <div> with the new <select> ?>
   $('#last_slot').empty()

@@ -16,6 +16,125 @@ $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= $max_level);
 
 
+// Check to see whether any time slots should be removed from the time
+// select on the grounds that they don't exist due to a transition into DST.
+// Don't do this if we're using periods, because it doesn't apply then
+//
+//    date          a jQuery object for the datepicker in question
+//    areaConfig    the config settings for the current area
+?>
+function checkTimeSlots(jqDate, areaConfig)
+{
+  <?php
+  // Only do something if we can return a JSON result
+  if (function_exists('json_encode'))
+  {
+    ?>
+    if (!areaConfig['enable_periods'])
+    {
+      var siblings = jqDate.siblings();
+      var select = jqDate.parent().parent().siblings('select:visible');
+      var slots = [];
+      select.find('option').each(function() {
+          slots.push($(this).val());
+        });
+      <?php
+      // We pass the id of the element as the request id so that we can match
+      // the result to the request
+      ?>
+      var params = {id: select.attr('id'),
+                    day: parseInt(siblings.filter('input[id*="day"]').val(), 10),
+                    month: parseInt(siblings.filter('input[id*="month"]').val(), 10),
+                    year: parseInt(siblings.filter('input[id*="year"]').val(), 10),
+                    tz: areaConfig['timezone'],
+                    slots: slots};
+      $.post('check_slot_ajax.php', params, function(result) {
+          $.each(result.slots, function(key, value) {
+              $('#' + result.id + ':visible').find('option[value="' + value + '"]').remove();
+            });
+          <?php
+          // Now that we've removed some options we need to equalise the widths
+          ?>
+          adjustWidth($('select[name="start_seconds"]:visible'),
+                      $('select[name="end_seconds"]:visible'));
+        }, 'json');
+    } <?php // if (!areaConfig['enable_periods'])
+  } // if (function_exists('json_encode'))
+  ?>
+}
+  
+  
+<?php
+// Executed when the user clicks on the all_day checkbox.
+?>
+function onAllDayClick()
+{
+  var form = $('#main');
+  if (form.length == 0)
+  {
+    return;
+  }
+
+  var startSelect = form.find('select[name="start_seconds"]:visible');
+  var endSelect = form.find('select[name="end_seconds"]:visible');
+  var startDatepicker = form.find('#start_datepicker');
+  var endDatepicker = form.find('#end_datepicker');
+  var allDay = form.find('input[name="all_day"]:visible');
+  var date;
+  if (allDay.is(':checked')) // If checking the box...
+  {
+    <?php
+    // Save the old values, disable the inputs and, to avoid user confusion,
+    // show the start and end times as the beginning and end of the booking
+    ?>
+    var firstSlot = parseInt(startSelect.find('option').first().val(), 10);
+    var lastSlot = parseInt(endSelect.find('option').last().val(), 10);
+    onAllDayClick.oldStart = parseInt(startSelect.val(), 10);
+    onAllDayClick.oldStartDatepicker = startDatepicker.datepicker('getDate');
+    startSelect.val(firstSlot);
+    startSelect.attr('disabled', 'disabled');
+    onAllDayClick.oldEnd = parseInt(endSelect.val(), 10);
+    onAllDayClick.oldEndDatepicker = endDatepicker.datepicker('getDate');
+    endSelect.val(lastSlot);
+    if ((lastSlot < firstSlot) && 
+        (onAllDayClick.oldStartDatepicker == onAllDayClick.oldEndDatepicker))
+    {
+      <?php
+      // If the booking day spans midnight then the first and last slots
+      // are going to be on different days
+      ?>
+      if (onAllDayClick.oldStart < firstSlot)
+      {
+        date = new Date(onAllDayClick.oldStartDatepicker);
+        date.setDate(date.getDate() - 1);
+        startDatepicker.datepicker('setDate', date);
+      }
+      else
+      {
+        date = new Date(onAllDayClick.oldEndDatepicker);
+        date.setDate(date.getDate() + 1);
+        endDatepicker.datepicker('setDate', date);
+      }
+    }
+    endSelect.attr('disabled', 'disabled');
+  }
+  else  <?php // restore the old values and re-enable the inputs ?>
+  {
+    startSelect.val(onAllDayClick.oldStart);
+    startDatepicker.datepicker('setDate', onAllDayClick.oldStartDatepicker);
+    startSelect.removeAttr('disabled');
+    endSelect.val(onAllDayClick.oldEnd);
+    endDatepicker.datepicker('setDate', onAllDayClick.oldEndDatepicker);
+    endSelect.removeAttr('disabled');
+
+    prevStartValue = undefined;  <?php // because we don't want adjustSlotSelectors() to change the end time ?>
+  }
+
+  adjustSlotSelectors(); <?php // need to get the duration right ?>
+
+}
+
+<?php
 // Set the error messages to be used for the various fields.     We do this twice:
 // once to redefine the HTML5 error message and once for JavaScript alerts, for those
 // browsers not supporting HTML5 field validation.
@@ -198,7 +317,7 @@ function validate(form)
   var formEl = form.get(0);
   
   <?php // Check that the start date is not after the end date ?>
-  var dateDiff = getDateDifference(formEl);
+  var dateDiff = getDateDifference();
   if (dateDiff < 0)
   {
     alert("<?php echo escape_js(get_vocab('start_after_end_long'))?>");
@@ -236,69 +355,68 @@ function validate(form)
 
 
 <?php
-// Add Ajax capabilities (but only if we can return the result as a JSON object)
-if (function_exists('json_encode'))
+// function to check whether the proposed booking would (a) conflict with any other bookings
+// and (b) conforms to the booking policies.   Makes an Ajax call to edit_entry_handler but does
+// not actually make the booking.
+//
+// If optional is true then the check is not carried out if there's already an
+// outstanding request in the queue
+?>
+function checkConflicts(optional)
 {
-    
-  // Get the value of the field in the form
-  ?>
-  function getFormValue(formInput)
+  <?php
+  // Only do something if we can the result as a JSON object
+  if (function_exists('json_encode'))
   {
-    var value;
-    <?php 
-    // Scalar parameters (three types - checkboxes, radio buttons and the rest)
+    // Get the value of the field in the form
     ?>
-    if (formInput.attr('name').indexOf('[]') == -1)
+    function getFormValue(formInput)
     {
-      if (formInput.filter(':checkbox').length > 0)
+      var value;
+      <?php 
+      // Scalar parameters (three types - checkboxes, radio buttons and the rest)
+      ?>
+      if (formInput.attr('name').indexOf('[]') == -1)
       {
-        value = formInput.is(':checked') ? '1' : '';
+        if (formInput.filter(':checkbox').length > 0)
+        {
+          value = formInput.is(':checked') ? '1' : '';
+        }
+        else if (formInput.filter(':radio').length > 0)
+        {
+          value = formInput.filter(':checked').val();
+        }
+        else
+        {
+          value = formInput.val();
+        }
       }
-      else if (formInput.filter(':radio').length > 0)
-      {
-        value = formInput.filter(':checked').val();
-      }
+      <?php
+      // Array parameters (two types - checkboxes and the rest, which could be
+      // <select> elements or else multiple ordinary inputs with a *[] name
+      ?>
       else
       {
-        value = formInput.val();
+        value = [];
+        formInput.each(function(index) {
+            if ((formInput.filter(':checkbox').length == 0) || $(this).is(':checked'))
+            {
+              var thisValue = $(this).val();
+              if ($.isArray(thisValue))
+              {
+                $.merge(value, thisValue);
+              }
+              else
+              {
+                value.push($(this).val());
+              }
+            }
+          });
       }
-    }
-    <?php
-    // Array parameters (two types - checkboxes and the rest, which could be
-    // <select> elements or else multiple ordinary inputs with a *[] name
-    ?>
-    else
-    {
-      value = [];
-      formInput.each(function(index) {
-          if ((formInput.filter(':checkbox').length == 0) || $(this).is(':checked'))
-          {
-            var thisValue = $(this).val();
-            if ($.isArray(thisValue))
-            {
-              $.merge(value, thisValue);
-            }
-            else
-            {
-              value.push($(this).val());
-            }
-          }
-        });
-    }
-    return value;
-  }
+      return value;
+    } <?php // function getFormValue()
 
-  <?php
-  // function to check whether the proposed booking would (a) conflict with any other bookings
-  // and (b) conforms to the booking policies.   Makes an Ajax call to edit_entry_handler but does
-  // not actually make the booking.
-  //
-  // If optional is true then the check is not carried out if there's already an
-  // outstanding request in the queue
-  ?>
-  function checkConflicts(optional)
-  {
-    <?php
+
     // Keep track of how many requests are still with the server.   We don't want
     // to keep sending them if they're not coming back
     ?>
@@ -414,10 +532,12 @@ if (function_exists('json_encode'))
           policyDiv.attr('title', titleText);
           policyDetails.html(detailsHTML);
         }, 'json');
-    }, timeout);  <?php // setTimeout() ?>
-  }
-  <?php
-}
+    }, timeout);  <?php // setTimeout()
+  } // if (function_exists('json_encode')) ?>
+  
+} <?php // function checkConflicts()
+
+
 
 // Declare some variables to hold details of the slot selectors for each area.
 // We are going to store the contents of the selectors on page load
@@ -524,7 +644,7 @@ function getDuration(from, to, days)
 <?php
 // Returns the number of days between the start and end dates
 ?>
-function getDateDifference(form)
+function getDateDifference()
 {
   var diff;
 
@@ -538,15 +658,17 @@ function getDateDifference(form)
   else
   {
     ?>
-    var startDay = parseInt(form.start_datepicker_alt_day.value, 10);
-    var startMonth = parseInt(form.start_datepicker_alt_month.value, 10);
-    var startYear = parseInt(form.start_datepicker_alt_year.value, 10);
-    var startDate = new Date(startYear, startMonth - 1, startDay, 12);
-      
-    var endDay = parseInt(form.end_datepicker_alt_day.value, 10);
-    var endMonth = parseInt(form.end_datepicker_alt_month.value, 10);
-    var endYear = parseInt(form.end_datepicker_alt_year.value, 10);
-    var endDate = new Date(endYear, endMonth - 1, endDay, 12);
+    var start = $('#start_datepicker_alt').val().split('-');
+    var startDate = new Date(parseInt(start[0], 10), 
+                             parseInt(start[1], 10) - 1,
+                             parseInt(start[2], 10),
+                             12);
+    
+    var end = $('#end_datepicker_alt').val().split('-'); 
+    var endDate = new Date(parseInt(end[0], 10), 
+                           parseInt(end[1], 10) - 1,
+                           parseInt(end[2], 10),
+                           12);
 
     diff = (endDate - startDate)/(24 * 60 * 60 * 1000);
     diff = Math.round(diff);
@@ -557,7 +679,34 @@ function getDateDifference(form)
   return diff;
 }
   
-function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
+
+<?php
+// Make two jQuery objects the same width.
+?>
+function adjustWidth(a, b)
+{
+  <?php 
+  // Note that we set the widths of both objects, even though it would seem
+  // that just setting the width of the smaller should be sufficient.
+  // But if you don't set both of them then you end up with a few 
+  // pixels difference.  In other words doing a get and then a set 
+  // doesn't leave you where you started - not quite sure why.
+  // The + 2 is a fudge factor to make sure that the option text in select
+  // elements isn't truncated - not quite sure why it is necessary.
+  // The width: auto is necessary to get the elements to resize themselves
+  // according to their new contents.
+  ?>
+  a.css({width: "auto"});
+  b.css({width: "auto"});
+  var aWidth = a.width();
+  var bWidth = b.width();
+  var maxWidth = Math.max(aWidth, bWidth) + 2;
+  a.width(maxWidth);
+  b.width(maxWidth);
+}
+  
+  
+function adjustSlotSelectors(oldArea, oldAreaStartValue, oldAreaEndValue)
 {
   <?php
   // Adjust the start and end time slot select boxes.
@@ -571,12 +720,6 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   //     to have a go at finding a time/period in the new area as close
   //     as possible to the one that was selected in the old area.
   ?>
-    
-  if (!form)
-  {
-    return;
-  }
-
   var area = currentArea;
   var enablePeriods = areas[area]['enable_periods'];
   var maxDurationEnabled = areas[area]['max_duration_enabled'];
@@ -590,25 +733,27 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   var errorText = '<?php echo escape_js(get_vocab("start_after_end"))?>';
   var text = errorText;
     
-  var startId = "start_seconds" + area;
-  var startSelect = form[startId];
-  var startKeepDisabled = ($('#' + startId).attr('class') == 'keep_disabled');
-  var endId = "end_seconds" + area;
-  var endSelect = form[endId];
-  var endKeepDisabled = ($('#' + endId).attr('class') == 'keep_disabled');
-  var allDayId = "all_day" + area;
-  var allDay = form[allDayId];
-  var allDayKeepDisabled = $('#' + allDayId).hasClass('keep_disabled');
+  var startSelect = $('select[name="start_seconds"]:visible');
+  var startKeepDisabled = startSelect.hasClass('keep_disabled');
+  var endSelect = $('select[name="end_seconds"]:visible');
+  var endKeepDisabled = endSelect.hasClass('keep_disabled');
+  var allDay = $('input[name="all_day"]:visible');
+  var allDayKeepDisabled = allDay.hasClass('keep_disabled');
   var startIndex, startValue, endIndex, endValue;
+  
+  if (startSelect.length === 0)
+  {
+    return;
+  }
     
   <?php 
   // If All Day is checked then just set the start and end values to the first
   // and last possible options.
   ?>
-  if (allDay && allDay.checked)
+  if (allDay.is(':checked'))
   {
-    startValue = startOptions[area][0]['value']
-    endValue = endOptions[area][nEndOptions[area] - 1]['value'];
+    startValue = startSelect.find('option').first().val();
+    endValue = endSelect.find('option').last().val();
     <?php
     // If we've come here from another area then we need to make sure that the
     // start and end selectors are disabled.  (We won't change the old_end and old_start
@@ -618,8 +763,8 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
     ?>
     if (oldArea != null)
     {
-      startSelect.disabled = true;
-      endSelect.disabled = true;
+      startSelect.attr('disabled', 'disabled');
+      endSelect.attr('disabled', 'disabled');
     }
   }
   <?php
@@ -675,7 +820,7 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
     ?>
     else
     {
-      startValue = startOptions[area][0]['value'];
+      startValue = startSelect.find('option').first().val();
       if (enablePeriods)
       {
         endValue = startValue;
@@ -701,10 +846,8 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   ?>
   else  
   {
-    startIndex = startSelect.selectedIndex;
-    startValue = parseInt(startSelect.options[startIndex].value, 10);
-    endIndex = endSelect.selectedIndex;
-    endValue = parseInt(endSelect.options[endIndex].value, 10);
+    startValue = parseInt(startSelect.val(), 10);
+    endValue = parseInt(endSelect.val(), 10);
     <?php
     // If the start value has changed then we adjust the endvalue
     // to keep the duration the same.  (If the end value has changed
@@ -719,7 +862,7 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
 
   prevStartValue = startValue; <?php // Update the previous start value ?>
     
-  var dateDifference = getDateDifference(form);
+  var dateDifference = getDateDifference();
     
   <?php
   // If All Day isn't checked then we need to work out whether the start
@@ -727,38 +870,46 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
   // then we disable all the time selectors (start, end and All Day) until
   // the dates are fixed.
   ?>
-  if (!allDay || !allDay.checked)
+  if (!allDay.is(':checked'))
   {
     var newState = (dateDifference < 0);
-    startSelect.disabled = newState || startKeepDisabled;
-    endSelect.disabled = newState || endKeepDisabled;
-    if (allDay)
+    if (newState || startKeepDisabled)
     {
-      allDay.disabled = newState || allDayKeepDisabled;
+      startSelect.attr('disabled', 'disabled');
+    }
+    else
+    {
+      startSelect.removeAttr('disabled');
+    }
+    if (newState || endKeepDisabled)
+    {
+      endSelect.attr('disabled', 'disabled');
+    }
+    else
+    {
+      endSelect.removeAttr('disabled');
+    }
+    if (newState || allDayKeepDisabled)
+    {
+      allDay.attr('disabled', 'disabled');
+    }
+    else
+    {
+      allDay.removeAttr('disabled');
     }
   }
 
   <?php // Destroy and rebuild the start select ?>
-  while (startSelect.options.length > 0)
-  {
-    startSelect.remove(0);
-  }
-
+  startSelect.empty();
   for (i = 0; i < nStartOptions[area]; i++)
   {
-    isSelected = (startOptions[area][i]['value'] == startValue);
-    if (dateDifference >= 0)
-    {
-      text = startOptions[area][i]['text'];
-    }
-    startSelect.options[i] = new Option(text, startOptions[area][i]['value'], false, isSelected);
+    startSelect.append($('<option>').val(startOptions[area][i]['value'])
+                                    .text(startOptions[area][i]['text']));
   }
-    
+  startSelect.val(startValue);
+  
   <?php // Destroy and rebuild the end select ?>
-  while (endSelect.options.length > 0)
-  {
-    endSelect.remove(0);
-  }
+  endSelect.empty();
 
   $('#end_time_error').text('');  <?php  // Clear the error message ?>
   j = 0;
@@ -790,7 +941,8 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
         {
           if (i == 0)
           {
-            endSelect.options[j] = new Option(nbsp, endOptions[area][i]['value'], false, isSelected);
+            endSelect.append($('<option>').val(endOptions[area][i]['value'])
+                                          .text(nbsp));
             var errorMessage = '<?php echo escape_js(get_vocab("max_booking_duration")) ?>' + nbsp;
             if (enablePeriods)
             {
@@ -812,43 +964,24 @@ function adjustSlotSelectors(form, oldArea, oldAreaStartValue, oldAreaEndValue)
       <?php
     }
     ?>
-      
     if ((endOptions[area][i]['value'] > startValue) ||
         ((endOptions[area][i]['value'] == startValue) && enablePeriods) ||
         (dateDifference != 0))
     {
-      isSelected = (endOptions[area][i]['value'] == endValue);
       if (dateDifference >= 0)
       {
         text = endOptions[area][i]['text'] + nbsp + nbsp + '(' +
                getDuration(startValue, endOptions[area][i]['value'], dateDifference) + ')';
-      }      
-      endSelect.options[j] = new Option(text, endOptions[area][i]['value'], false, isSelected);
+      }
+      endSelect.append($('<option>').val(endOptions[area][i]['value'])
+                                    .text(text));
       j++;
     }
   }
-    
-  <?php 
-  // Make the two select boxes the same width.   Note that we set
-  // the widths of both select boxes, even though it would seem
-  // that just setting the width of the smaller should be sufficient.
-  // But if you don't set both of them then you end up with a few 
-  // pixels difference.  In other words doing a get and then a set 
-  // doesn't leave you where you started - not quite sure why.
-  // The + 2 is a fudge factor to make sure that the option text isn't
-  // truncated - not quite sure why it is necessary.
-  // The width: auto is necessary to get the boxes to resize themselves
-  // according to their new contents.
-  ?>
-  var startId = "#start_seconds" + area;
-  var endId = "#end_seconds" + area;
-  $(startId).css({width: "auto"});
-  $(endId).css({width: "auto"});
-  var startWidth = $(startId).width();
-  var endWidth = $(endId).width();
-  var maxWidth = Math.max(startWidth, endWidth) + 2;
-  $(startId).width(maxWidth);
-  $(endId).width(maxWidth);
+  endSelect.val(endValue);
+  
+  adjustWidth(startSelect, endSelect);
+
     
 } <?php // function adjustSlotSelectors()
 
@@ -864,6 +997,10 @@ var oldInitEditEntry = init;
 init = function() {
   oldInitEditEntry.apply(this);
   
+  $('input[name="all_day"]').click(function() {
+      onAllDayClick();
+    });
+    
   <?php
   // (1) put the booking name field in focus (but only for new bookings,
   // ie when the field is empty:  if it's a new booking you have to
@@ -929,25 +1066,26 @@ init = function() {
       }
     }
   
-    adjustSlotSelectors(form);
+    adjustSlotSelectors();
     
     <?php
     // If this is an All Day booking then check the All Day box and disable the 
     // start and end time boxes
     ?>
-    startSelect = form["start_seconds" + currentArea];
-    endSelect = form["end_seconds" + currentArea];
-    allDay = form["all_day" + currentArea];
-    if (allDay &&
-        !allDay.disabled && 
-        (parseInt(startSelect.options[startSelect.selectedIndex].value, 10) == startOptions[currentArea][0]['value']) &&
-        (parseInt(endSelect.options[endSelect.selectedIndex].value, 10) == endOptions[currentArea][nEndOptions[currentArea] - 1]['value']))
+    startSelect = $(form).find('select[name="start_seconds"]:visible');
+    endSelect = $(form).find('select[name="end_seconds"]:visible');
+    allDay = $(form).find('input[name="all_day"]:visible');
+    if ((allDay.is(':disabled') === false) && 
+        (startSelect.val() == startSelect.find('option').first().val()) &&
+        (endSelect.val() == endSelect.find('option').last().val()))
     {
-      allDay.checked = true;
-      startSelect.disabled = true;
-      endSelect.disabled = true;
-      old_start = startSelect.options[startSelect.selectedIndex].value;
-      old_end = endSelect.options[endSelect.selectedIndex].value;
+      allDay.attr('checked', 'checked');
+      startSelect.attr('disabled', 'disabled');
+      endSelect.attr('disabled', 'disabled');
+      onAllDayClick.oldStart = startSelect.val();
+      onAllDayClick.oldEnd = endSelect.val();
+      onAllDayClick.oldStartDatepicker = $(form).find('#start_datepicker').datepicker('getDate');
+      onAllDayClick.oldEndDatepicker = $(form).find('#end_datepicker').datepicker('getDate');
     }
   }
 
@@ -1000,9 +1138,6 @@ init = function() {
     //
     // Use a click event for checkboxes as it seems that in some browsers the event fires
     // before the value is changed.
-    //
-    // Note that we also need to add change event handlers to the start and end
-    // datepicker input fields, but we have to do that in datepicker_close()
     ?>
     var formFields = $('form#main [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
     formFields.filter(':checkbox')
@@ -1072,7 +1207,7 @@ init = function() {
       });
     
     <?php
-    // Finally set a timer so that conflicts are periodically checked for,
+    // Finally, set a timer so that conflicts are periodically checked for,
     // in case someone else books that slot before you press Save.
     // (Note the config variable is in seconds, but the setInterval() function
     // uses milliseconds)
@@ -1085,7 +1220,34 @@ init = function() {
       <?php
     }
 
-
   } // if (function_exists('json_encode'))
+
+  
+  // Actions to take when the start and end datepickers are closed
   ?>
+  $('#start_datepicker, #end_datepicker').bind('datePickerUpdated', function() {
+    <?php
+    // (1) Go and adjust the start and end time/period select options, because
+    //     they are dependent on the start and end dates
+    ?>
+    adjustSlotSelectors();
+    
+    <?php
+    // (2) If we're doing Ajax checking of the form then we have to check
+    //     for conflicts when the datepicker is closed
+    ?>
+    checkConflicts();
+      
+    <?php
+    // (3) Check to see whether any time slots should be removed from the time
+    //     select on the grounds that they don't exist due to a transition into DST.
+    ?>
+    checkTimeSlots($(this), areas[currentArea]);
+
+  });
+  
+  $('#start_datepicker, #end_datepicker').each(function() {
+      checkTimeSlots($(this), areas[currentArea]);
+    });
+    
 };

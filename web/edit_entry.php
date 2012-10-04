@@ -81,6 +81,26 @@ foreach ($fields as $field)
   }
 }
 
+
+// Returns the booking date for a given time.   If the booking day spans midnight and
+// $t is in the interval between midnight and the end of the day then the booking date
+// is really the day before.
+function getbookingdate($t)
+{
+  global $eveningends, $eveningends_minutes;
+  
+  $date = getdate($t);
+  if (day_past_midnight() &&
+      !hm_before(array('hours' => $eveningends, 'minutes' => $eveningends_minutes), $date))
+  {
+    $date = getdate(mktime($date['hours'], $date['minutes'], $date['seconds'],
+                           $date['mon'], $date['mday'] -1, $date['year']));
+    $date['hours'] += 24;
+  }
+  return $date;
+}
+
+
 // Generate a time or period selector starting with $first and ending with $last.
 // $time is a full Unix timestamp and is the current value.  The selector returns
 // the start time in seconds since the beginning of the day for the start of that slot.
@@ -89,13 +109,14 @@ foreach ($fields as $field)
 // it is as that's controlled by the date selector - and we can't assume that we have
 // JavaScript enabled to go and read it)
 //
-// The $display_none parameter sets the display style of the <select> to "none"
-// The $disabled parameter will disable the input and also generate a hidden input, provided
-// that $display_none is FALSE.  (This prevents multiple inputs of the same name)
-function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FALSE, $disabled=FALSE)
+//    $display_none parameter     sets the display style of the <select> to "none"
+//    $disabled parameter         disables the input and also generate a hidden input, provided
+//                                that $display_none is FALSE.  (This prevents multiple inputs
+//                                of the same name)
+function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_none=FALSE, $disabled=FALSE)
 {
-  global $periods;
-  
+  global $periods, $auth, $is_admin;
+
   $html = '';
   // Get the settings for this area.   Note that the variables below are
   // local variables, not globals.
@@ -107,11 +128,6 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
   {
     fatal_error(FALSE, "Internal error - resolution is NULL or <= 0");
   }
-  
-  // Get the current hour and minute and convert it into nominal (ie ignoring any
-  // DST effects) seconds since the start of the day
-  $date = getdate($time);
-  $current_t = (($date['hours'] * 60) + $date['minutes']) * 60;
   
   if ($enable_periods)
   {
@@ -129,23 +145,20 @@ function genSlotSelector($area, $prefix, $first, $last, $time, $display_none=FAL
            // and if $disabled is set, give the element a class so that the JavaScript
            // knows to keep it disabled
            (($disabled) ? " class=\"keep_disabled\"" : "") .
-           " id=\"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors(this.form)\">\n";
-  for ($t = $first; $t <= $last; $t = $t + $resolution)
+           " id=\"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors()\">\n";
+ 
+  for ($s = $first; $s <= $last; $s += $resolution)
   {
-    // The date used below is completely arbitrary.   All that matters is that it
-    // is a day that does not contain a DST boundary.   (We need a real date so that
-    // we can use strftime to get an hour and minute formatted according to the locale)
-    $timestamp = $t + mktime(0, 0, 0, 1, 1, 2000);
-    $slot_string = ($enable_periods) ? $periods[intval(($t-$base)/60)] : utf8_strftime($format, $timestamp);
-    $html .= "<option value=\"$t\"";
-    $html .= ($t == $current_t) ? " selected=\"selected\"" : "";
+    $slot_string = ($enable_periods) ? $periods[intval(($s-$base)/60)] : hour_min($s);
+    $html .= "<option value=\"$s\"";
+    $html .= ($s == $current_s) ? " selected=\"selected\"" : "";
     $html .= ">$slot_string</option>\n";
   }
   $html .= "</select>\n";
   // Add in a hidden input if the select is disabled but displayed
   if ($disabled && !$display_none)
   {
-    $html .= "<input type=\"hidden\" name=\"${prefix}seconds\" value=\"$current_t\">\n";
+    $html .= "<input type=\"hidden\" name=\"${prefix}seconds\" value=\"$current_s\">\n";
   }
   
   echo $html;
@@ -200,10 +213,14 @@ function create_field_entry_start_date($disabled=FALSE)
   global $start_time, $areas, $area_id, $periods, $default_duration_all_day, $id, $drag;
   global $periods, $is_admin;
   
+  $date = getbookingdate($start_time);
+  $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
+
   echo "<div id=\"div_start_date\">\n";
   echo "<label>" . get_vocab("start") . ":</label>\n";
-  $date = getdate($start_time);
+  echo "<div>\n"; // Needed so that the structure is the same as for the end date to help the JavaScript
   gendateselector("start_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
+  echo "</div>\n";
   // If we're using periods the booking model is slightly different:
   // you're allowed to specify the last period as your first period.
   // This is why we don't substract the resolution
@@ -223,9 +240,15 @@ function create_field_entry_start_date($disabled=FALSE)
       $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
       $last = $last + $a['resolution'];
     }
+    // If the last time is the same as or before the start time, then it's really on the next day
+    if ($first >= $last)
+    {
+      $last += 24*60*60;
+    }
     $start_last = ($a['enable_periods']) ? $last : $last - $a['resolution'];
     $display_none = ($a['id'] != $area_id);
-    genSlotSelector($a, "start_", $first, $start_last, $start_time, $display_none, $disabled);
+
+    genSlotSelector($a, "start_", $first, $start_last, $current_s, $display_none, $disabled);
     
     echo "<div class=\"group\">\n";
     echo "<div id=\"ad{$a['id']}\"".($display_none ? " style=\"display: none\" " : "") .">\n";
@@ -239,7 +262,7 @@ function create_field_entry_start_date($disabled=FALSE)
          // If this is an existing booking that we are editing or copying, then we do
          // not want the default duration applied
          (($default_duration_all_day && !isset($id) && !$drag) ? " checked=\"checked\"" : "") .
-         " name=\"all_day\" type=\"checkbox\" value=\"yes\" onclick=\"OnAllDayClick(this)\"".
+         " name=\"all_day\" type=\"checkbox\" value=\"yes\"".
          ($show_all_day? "" : " style=\"display: none;\" ").
          // If $display_none or $disabled are set then we'll also disable the select so
          // that there is only one select passing through the variable to the handler
@@ -263,9 +286,10 @@ function create_field_entry_end_date($disabled=FALSE)
 {
   global $end_time, $areas, $area_id, $periods, $multiday_allowed;
   
+  $date = getbookingdate($end_time);
+  $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
   echo "<div id=\"div_end_date\">\n";
   echo "<label>" . get_vocab("end") . ":</label>\n";
-  $date = getdate($end_time);
   // Don't show the end date selector if multiday is not allowed
   echo "<div" . (($multiday_allowed) ? '' : " style=\"visibility: hidden\"") . ">\n";
   gendateselector("end_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
@@ -288,7 +312,13 @@ function create_field_entry_end_date($disabled=FALSE)
       $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
       $last = $last + $a['resolution'];
     }
-    $end_value = ($a['enable_periods']) ? $end_time - $a['resolution'] : $end_time;
+    // If the last time is the same as or before the start time, then it's really on the next day
+    if ($first >= $last)
+    {
+      $last += 24*60*60;
+    }
+    $end_value = (($date['hours'] * 60) + $date['minutes']) * 60;
+    $end_value = ($a['enable_periods']) ? $end_value - $a['resolution'] : $end_value;
     $display_none = ($a['id'] != $area_id);
     genSlotSelector($a, "end_", $first, $last, $end_value, $display_none, $disabled);
   }
@@ -403,7 +433,7 @@ function create_field_entry_areas($disabled=FALSE)
         var oldArea = currentArea;
         currentArea = area;
         prevStartValue = undefined;
-        adjustSlotSelectors(formObj, oldArea, oldAreaStartValue, oldAreaEndValue);
+        adjustSlotSelectors(oldArea, oldAreaStartValue, oldAreaEndValue);
       }
       
       // Create area selector, only if we have Javascript
@@ -1018,7 +1048,7 @@ else
     $duration    = ($enable_periods ? 60 : $default_duration);
     $end_time = $start_time + $duration;
     // The end time can't be past the end of the booking day
-    $pm7 = mktime($eveningends, $eveningends_minutes, 0, $month, $day, $year);
+    $pm7 = get_start_last_slot($month, $day, $year);
     $end_time = min($end_time, $pm7 + $resolution);
   }
 }
@@ -1079,7 +1109,7 @@ if ($res)
     
 // Get the details of all the enabled areas
 $areas = array();
-$sql = "SELECT id, area_name, resolution, default_duration, enable_periods,
+$sql = "SELECT id, area_name, resolution, default_duration, enable_periods, timezone,
                morningstarts, morningstarts_minutes, eveningends , eveningends_minutes
           FROM $tbl_area
          WHERE disabled=0
@@ -1117,7 +1147,7 @@ foreach ($areas as $area)
   echo "areas[${area['id']}] = [];\n";
   foreach ($area as $key => $value)
   {
-    if (in_array($key, array('area_name', 'max_duration_units')))
+    if (in_array($key, array('area_name', 'max_duration_units', 'timezone')))
     {
       // Enclose strings in quotes
       $value = "'" . escape_js($value) . "'";
@@ -1132,60 +1162,7 @@ foreach ($areas as $area)
 }
 ?>
 
-// set up some global variables for use by OnAllDayClick(). 
-var old_start, old_end;
 
-// Executed when the user clicks on the all_day checkbox.
-function OnAllDayClick(el)
-{
-  var form = document.forms["main"];
-  if (form)
-  {
-    var startSelect = form["start_seconds" + currentArea];
-    var endSelect = form["end_seconds" + currentArea];
-    var allDay = form["all_day" + currentArea];
-    var i;
-    if (allDay.checked) // If checking the box...
-    {
-      <?php
-      // Save the old values, disable the inputs and, to avoid user confusion,
-      // show the start and end times as the beginning and end of the booking
-      // (Note that we save the value rather than the index because the number
-      // of options in the select box will change)
-      ?>
-      old_start = startSelect.options[startSelect.selectedIndex].value;
-      startSelect.selectedIndex = 0;
-      startSelect.disabled = true;
-    
-      old_end = endSelect.options[endSelect.selectedIndex].value;
-      endSelect.selectedIndex = endSelect.options.length - 1;
-      endSelect.disabled = true;
-    }
-    else  <?php // restore the old values and re-enable the inputs ?>
-    {
-      startSelect.disabled = false;
-      for (i=0; i<startSelect.options.length; i++)
-      {
-        if (startSelect.options[i].value == old_start)
-        {
-          startSelect.options.selectedIndex = i;
-          break;
-        }
-      }     
-      endSelect.disabled = false;
-      for (i=0; i<endSelect.options.length; i++)
-      {
-        if (endSelect.options[i].value == old_end)
-        {
-          endSelect.options.selectedIndex = i;
-          break;
-        }
-      } 
-      prevStartValue = undefined;  <?php // because we don't want adjustSlotSelectors() to change the end time ?>
-    }
-    adjustSlotSelectors(form); <?php // need to get the duration right ?>
-  }
-}
 //]]>
 </script>
 

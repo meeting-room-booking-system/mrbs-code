@@ -475,7 +475,7 @@ if ($phase == 2)
         $start_first_slot = ($area_morningstarts*60) + $area_morningstarts_minutes;   // minutes
         $start_last_slot  = ($area_eveningends*60) + $area_eveningends_minutes;       // minutes
         $start_difference = ($start_last_slot - $start_first_slot);         // minutes
-        if (($start_difference < 0) or ($start_difference%$area_res_mins != 0))
+        if ($start_difference%$area_res_mins != 0)
         {
           $valid_resolution = FALSE;
         }

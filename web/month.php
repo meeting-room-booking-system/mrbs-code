@@ -46,10 +46,11 @@ $days_in_month = date("t", $month_start);
 
 $month_end = mktime(23, 59, 59, $month, $days_in_month, $year);
 
-if ( $enable_periods )
+if ($enable_periods)
 {
   $resolution = 60;
   $morningstarts = 12;
+  $morningstarts_minutes = 0;
   $eveningends = 12;
   $eveningends_minutes = count($periods)-1;
 }
@@ -64,17 +65,9 @@ for ($j = 1; $j<=$days_in_month; $j++)
   // -1 => no change
   //  0 => entering DST
   //  1 => leaving DST
-  $dst_change[$j] = is_dst($month,$j,$year);
-  if (empty( $enable_periods ))
-  {
-    $midnight[$j]=mktime(0,0,0,$month,$j,$year, is_dst($month,$j,$year, 0));
-    $midnight_tonight[$j]=mktime(23,59,59,$month,$j,$year, is_dst($month,$j,$year, 23));
-  }
-  else
-  {
-    $midnight[$j]=mktime(12,0,0,$month,$j,$year, is_dst($month,$j,$year, 0));
-    $midnight_tonight[$j]=mktime(12,count($periods),59,$month,$j,$year, is_dst($month,$j,$year, 23));
-  }
+  $dst_change[$j] = is_dst($month, $j, $year);
+  $am7[$j] = get_start_first_slot($month, $j, $year);
+  $pm7[$j] = get_start_last_slot($month, $j, $year);
 }
 
 // Section with areas, rooms, minicals.
@@ -192,7 +185,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
                  repeat_id, status, create_by
             FROM $tbl_entry
            WHERE room_id=$room
-             AND start_time <= $midnight_tonight[$day_num] AND end_time > $midnight[$day_num]
+             AND start_time <= $pm7[$day_num] AND end_time > $am7[$day_num]
         ORDER BY start_time";
 
   // Build an array of information about each day in the month.
@@ -261,7 +254,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
       
       if (empty( $enable_periods ) )
       {
-        switch (cmp3($row['start_time'], $midnight[$day_num]) . cmp3($row['end_time'], $midnight_tonight[$day_num] + 1))
+        switch (cmp3($row['start_time'], $am7[$day_num]) . cmp3($row['end_time'], $pm7[$day_num] + 1))
         {
           case "> < ":         // Starts after midnight, ends before midnight
           case "= < ":         // Starts at midnight, ends before midnight
@@ -294,7 +287,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
       {
         $start_str = period_time_string($row['start_time']);
         $end_str   = period_time_string($row['end_time'], -1);
-        switch (cmp3($row['start_time'], $midnight[$day_num]) . cmp3($row['end_time'], $midnight_tonight[$day_num] + 1))
+        switch (cmp3($row['start_time'], $am7[$day_num]) . cmp3($row['end_time'], $pm7[$day_num] + 1))
         {
           case "> < ":         // Starts after midnight, ends before midnight
           case "= < ":         // Starts at midnight, ends before midnight

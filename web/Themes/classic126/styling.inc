@@ -30,6 +30,7 @@ $main_table_body_h_border_color = $main_table_border_color;    // border colour 
 $main_table_body_v_border_color = $main_table_body_h_border_color; // border colour for day/week/month tables - body, vertical
 $main_table_month_color         = "#ffffff";    // background colour for days in the month view
 $main_table_month_invalid_color = "#d1d9de";    // background colour for invalid days in the month view
+$main_table_slot_invalid_color  = "#d1d9de";    // background colour for invalid slots in the day and week views
 $main_table_labels_back_color   = "#fff0f0";    // background colour for the row labels column
 
 // border colours for the main table when it is printed.     These are used by mrbs-print.css.php

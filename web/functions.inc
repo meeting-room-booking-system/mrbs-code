@@ -363,6 +363,54 @@ function fromPeriodString($start_period, &$units, $dur_units)
 }
 
 
+// Returns TRUE if the time $hm1 is before $hm2
+// $hm1 and $hm2 are associative arrays indexed by 'hours' and 'minutes'.
+// The indices are chosen to allow the result of the PHP getdate() function
+// to be passed as parameters
+function hm_before($hm1, $hm2)
+{
+  return ($hm1['hours'] < $hm2['hours']) ||
+         (($hm1['hours'] == $hm2['hours']) && ($hm1['minutes'] < $hm2['minutes']));
+}
+
+
+// Returns TRUE if $evening_ends is on the day after $morning_starts
+function day_past_midnight()
+{
+  global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+  
+  return hm_before(array('hours' => $eveningends, 'minutes' => $eveningends_minutes),
+                   array('hours' => $morningstarts, 'minutes' => $morningstarts_minutes));
+}
+
+
+// Gets the UNIX timestamp for the start of the first slot on the given day
+function get_start_first_slot($month, $day, $year)
+{
+  global $morningstarts, $morningstarts_minutes;
+  
+  $t = mrbs_mktime($morningstarts, $morningstarts_minutes, 0,
+                   $month, $day, $year);
+  return $t;
+}
+
+
+// Gets the UNIX timestamp for the start of the last slot on the given day
+function get_start_last_slot($month, $day, $year)
+{
+  global $eveningends, $eveningends_minutes;
+  
+  // Work out if $evening_ends is really on the next day
+  if (day_past_midnight())
+  {
+    $day++;
+  }
+  $t = mrbs_mktime($eveningends, $eveningends_minutes, 0,
+                   $month, $day, $year);
+  return $t;
+}
+
+
 // Get the duration of an interval given a start time and end time.  Corrects for
 // DST changes so that the duration is what the user would expect to see.  For
 // example 12 noon to 12 noon crossing a DST boundary is 24 hours.
@@ -983,6 +1031,25 @@ function hour_min_format()
   }
 }
 
+
+// Returms a string representing the hour and minute for the nominal
+// seconds since the start of the day, $s
+function hour_min($s)
+{
+  $seconds_per_day = 24*60*60;
+  $following_day = ($s >= $seconds_per_day);
+  $s = $s % $seconds_per_day;  // in case $s is on the next day
+  // Choose a day that doesn't have any DST transitions in any timezone
+  $t = mktime(0, 0, $s, 1, 1, 2000);
+  $result = utf8_strftime(hour_min_format(), $t);
+  if ($following_day)
+  {
+    $result = "* " . $result;
+  }
+  return $result;
+}
+
+
 function period_date_string($t, $mod_time=0)
 {
   global $periods, $strftime_format;
@@ -1144,6 +1211,7 @@ function round_t_down($t, $resolution, $am7)
                             % $resolution);
 }
 
+
 // Round time up to the nearest resolution
 function round_t_up($t, $resolution, $am7)
 {
@@ -1157,6 +1225,42 @@ function round_t_up($t, $resolution, $am7)
     return $t;
   }
 }
+
+
+// Returns the nominal (ie ignoring DST transitions) seconds since the start of
+// the calendar day on the start of the booking day
+function nominal_seconds($t)
+{
+  global $morningstarts, $morningstarts_minutes;
+  
+  $date = getdate($t);
+  // check to see if the time is really on the next day
+  if (hm_before($date,
+                array('hours' => $morningstarts, 'minutes' => $morningstarts_minutes)))
+  {
+    $date['hours'] += 24;
+  }
+  return (($date['hours'] * 60) + $date['minutes']) * 60;
+}
+
+
+// Returns the index of the period represented by $s nominal seconds
+function period_index($s)
+{
+  // Periods are counted as minutes from noon, ie 1200 is $period[0],
+  // 1201 $period[1], etc.
+  return intval($s/60) - (12*60);
+}
+
+
+// Returns the name of the period represented by nominal seconds $s
+function period_name($s)
+{
+  global $periods;
+  
+  return $periods[period_index($s)];
+}
+
 
 // generates some html that can be used to select which area should be
 // displayed.
@@ -1285,7 +1389,7 @@ function day_of_MRBS_week($time)
 // hour is added so that this function can when necessary only be
 // run if the time is between midnight and 3am (all DST changes
 // occur in this period.
-function is_dst ( $month, $day, $year, $hour="-1" )
+function is_dst($month, $day, $year, $hour="-1")
 {
   if ( $hour != -1  && $hour > 3)
   {
@@ -1311,24 +1415,204 @@ function is_dst ( $month, $day, $year, $hour="-1" )
   }
 }
 
-// if crossing dst determine if you need to make a modification
-// of 3600 seconds (1 hour) in either direction
-function cross_dst ( $start, $end )
-{
-  // entering DST
-  if ( !date( "I", $start) &&  date( "I", $end))
-  {
-    $modification = -3600;
-  }
 
-  // leaving DST
-  else if(  date( "I", $start) && !date( "I", $end))
+// Compares two nominal dates which are indexed by'hours', 'minutes', 'seconds', 
+// 'mon', 'mday' and 'year', ie as in the ouput of getdate().  Returns -1 if the
+// first date is before the second, 0 if they are equal and +1 if the first date
+// is after the second.   NULL if a comparison can't be done.
+//
+// (Note that internally the function uses gmmktime() so the parameters do not
+// have to represent valid values.   For example you could pass '32' for day and
+// that would be interpreted as 4 days after '28'.)
+function nominal_date_compare($d1, $d2)
+{
+  // We compare the dates using gmmktime() because we are trying to compare nominal
+  // dates and so do not want DST transitions
+  $t1 = gmmktime($d1['hours'], $d1['minutes'], $d1['seconds'],
+                 $d1['mon'], $d1['mday'], $d1['year']);
+  $t2 = gmmktime($d2['hours'], $d2['minutes'], $d2['seconds'],
+                 $d2['mon'], $d2['mday'], $d2['year']);
+  if ($t1 < $t2)
   {
-    $modification = 3600;
+    return -1;
+  }
+  elseif ($t1 == $t2)
+  {
+    return 0;
   }
   else
   {
-    $modification = 0;
+    return 1;
+  }
+}
+
+
+// Determines whether there's a possibility that the interval between the two Unix 
+// timestamps could contain nominal times that don't exist, for example from 0100 to
+// 0159 in Europe/London when entering DST.
+function is_possibly_invalid($start, $end)
+{
+  // We err on the side of caution by widening the interval by a day at each end.   This
+  // allows for the possibility that the start or end times have been calculated by using
+  // mktime() on an invalid time!
+  return (cross_dst($start - 86400, $end + 86400) < 0);
+}
+
+
+// Checks whether the nominal time given is an invalid date and time with respect to
+// DST transitions.   When entering DST there is a set of times that don't exist, for
+// example from 0100 to 0159 in Europe/London.
+// Returns NULL if MRBS is unable to determine an answer, otherwise TRUE or FALSE (so
+// a simple equality test will default to a valid time if MRBS can't determine an answer)
+function is_invalid_datetime($hour, $minute, $second, $month, $day, $year, $tz=NULL)
+{
+  global $timezone;
+
+  // Do a quick check to see if there's a possibility of an invalid time by checking
+  // whether there's a transition into DST from the day before to the day after
+  if (!function_exists('date_default_timezone_set'))
+  {
+    return NULL;
+  }
+  
+  if (empty($tz))
+  {
+    $tz = $timezone;  // default to the current timezone
+  }
+  
+  $old_tz = date_default_timezone_get();  // save the current timezone
+  date_default_timezone_set($tz);
+  
+  // If the day before is in DST then the datetime must be valid, because
+  // you only get the gap when entering DST.
+  $dayBefore = mktime($hour, $minute, $second, $month, $day-1, $year);
+  if (date('I', $dayBefore))
+  {
+    $result = FALSE;
+  }
+  else
+  {
+    // The day before is not in DST.   If the day after is also not in DST,
+    // then there can have been no transition, so again the datetime must be valid.
+    $dayAfter = mktime($hour, $minute, $second, $month, $day+1, $year);
+    if (!date('I', $dayAfter))
+    {
+      $result = FALSE;
+    }
+    else
+    {
+      // We are in a transition into DST, so we need to check more carefully.
+      // However we can only do this efficiently in PHP 5.3.0 or greater
+      if (version_compare(PHP_VERSION, '5.3.0') < 0)
+      {
+        $result = NULL;
+      }
+      else
+      {
+        $thisDateTimeZone = new DateTimeZone($tz);
+        // Get the transition data (we assume there is one and only one transition),
+        // in particular the time at which the transition happens and the new offset
+        $transitions = $thisDateTimeZone->getTransitions($dayBefore, $dayAfter);
+        // According to my reading of the PHP manual, getTransitions() should return
+        // all transitions between the start and end date.   However what it seems to do
+        // is return an array consisting of the time data for the start date followed by
+        // the transition data.   So as a precaution we take the last element of the array
+        // (we were only expecting one element, but seem to get two).
+        $transition = array_pop($transitions);
+        // If we failed for some reason to get any transition data, return NULL
+        if (!isset($transition))
+        {
+          $result = NULL;
+        }
+        else
+        {
+          // Get the old offset and work out how many seconds the clocks change by
+          $beforeDateTime = new DateTime(date('c', $dayBefore), $thisDateTimeZone);
+          $change = $transition['offset'] - $beforeDateTime->getOffset();
+  
+          // See if the nominal date falls outside the gap
+          $lastValidSecond = getdate($transition['ts'] - 1);
+          $lastInvalidSecond = $lastValidSecond;
+          $lastInvalidSecond['seconds'] += $change;
+          $thisDate = array('hours' => $hour, 'minutes' => $minute, 'seconds' => $second,
+                            'mon' => $month, 'mday' => $day, 'year' => $year);
+                  
+          $result = ((nominal_date_compare($thisDate, $lastValidSecond) > 0) && 
+                     (nominal_date_compare($thisDate, $lastInvalidSecond) <= 0));
+        }
+      }
+    }
+  }
+  
+  date_default_timezone_set($old_tz);  // restore the old timezone
+  
+  return $result;
+}
+
+
+// Returns TRUE if $t is in that part of daylight saving time that will have
+// the same nominal time as another timestamp shortly after the DST transition.
+// For example, will return TRUE for the $t equivalent to the first occurence
+// of 0230 on Sunday 27th October 2013 in timezone Europe/London
+function is_dst_first_duplicate($t)
+{
+  if (date('I', $t))
+  {
+    $change = cross_dst($t, $t+(24*60*60));
+    return !date('I', $t + $change);
+  }
+  return false;
+}
+
+
+// A PHP version independent version of mktime().   (The $is_dst parameter
+// became deporecated at PHP 5.1.0)
+function mrbs_mktime($hour, $minute, $second, $month, $day, $year)
+{
+  if (version_compare(PHP_VERSION, '5.1.0') >= 0)
+  {
+    return mktime($hour, $minute, $second, $month, $day, $year);
+  }
+  else
+  {
+    return mktime($hour, $minute, $second, $month, $day, $year,
+                  is_dst($month, $day, $year, $hour));
+  }
+}
+
+// returns the modification (in seconds) necessary on account of any DST
+// transitions when going from $start to $end
+function cross_dst($start, $end)
+{
+  global $timezone;
+  
+  // Ideally we calculate the modification using the DateTimeZone information
+  // in PHP, because not all DST transitions are 1 hour.  For example, Lord Howe
+  // Island in Australia has a 30 minute transition
+  if (class_exists('DateTimeZone'))
+  {
+    $thisDateTimeZone = new DateTimeZone($timezone);
+    $startDateTime = new DateTime(date('c', $start), $thisDateTimeZone);
+    $endDateTime = new DateTime(date('c', $end), $thisDateTimeZone);
+    $modification = $startDateTime->getOffset() - $endDateTime->getOffset();
+  }
+  // Otherwise we have to assume that the transition is 1 hour.
+  else
+  {
+    // entering DST
+    if (!date( "I", $start) &&  date( "I", $end))
+    {
+      $modification = -3600;
+    }
+    // leaving DST
+    else if (date( "I", $start) && !date( "I", $end))
+    {
+      $modification = 3600;
+    }
+    else
+    {
+      $modification = 0;
+    }
   }
 
   return $modification;

@@ -210,6 +210,7 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main#day_main th.first_last {width: <?php echo $column_row_labels_width ?>%}
 .dwm_main#week_main th {width: <?php echo $column_week ?>%}
 .dwm_main#week_main th.first_last {width: <?php echo $column_row_labels_width ?>%; vertical-align: bottom}
+.dwm_main td.invalid {background-color: <?php echo $main_table_slot_invalid_color ?>};
 .dwm_main#month_main th {width: <?php echo $column_month ?>%}
 .dwm_main#month_main td {border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>}
 .dwm_main#month_main td.valid   {background-color: <?php echo $main_table_month_color ?>}
