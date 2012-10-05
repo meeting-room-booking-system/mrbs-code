@@ -86,7 +86,6 @@ $vocab["rep_rep_day"]        = "繰り返しの曜日";
 $vocab["rep_for_weekly"]     = "(毎週/n週毎 選択時)";
 $vocab["rep_freq"]           = "頻度";
 $vocab["rep_num_weeks"]      = "繰り返し周期";
-$vocab["rep_for_nweekly"]    = "(n週毎 選択時)";
 $vocab["skip_conflicts"]     = "過去の競合をスキップする";
 $vocab["ctrl_click"]         = "複数の部屋を選択するときは、<br>Controlキーを押しながらクリックしてください。";
 $vocab["entryid"]            = "予約ID ";

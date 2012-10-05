@@ -87,7 +87,6 @@ $vocab["rep_rep_day"]        = "Herhalingsdag";
 $vocab["rep_for_weekly"]     = "(t.b.v. wekelijks)";
 $vocab["rep_freq"]           = "Frequentie";
 $vocab["rep_num_weeks"]      = "Aantal weken";
-$vocab["rep_for_nweekly"]    = "(Voor n-wekelijks)";
 $vocab["ctrl_click"]         = "Gebruik Control-Linker muis klik om meer dan 1 ruimte te reserveren";
 $vocab["entryid"]            = "Boeking-ID ";
 $vocab["repeat_id"]          = "Herhalings-ID "; 

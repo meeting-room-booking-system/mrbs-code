@@ -40,6 +40,8 @@
 
 require "defaultincludes.inc";
 
+define ('USER_LEVEL_PREFIX', 'L');  // Just something to ensure the value is a string
+
 // Get non-standard form variables
 $Action = get_form_var('Action', 'string');
 $Id = get_form_var('Id', 'int');
@@ -109,6 +111,12 @@ function validate_password($password)
 // a field which is a member of the array returned by get_field_info()
 function get_form_var_type($field)
 {
+  // "Level" is an exception because we've forced the value to be a string
+  // so that it can be used in an associative aeeay
+  if ($field['name'] == 'level')
+  {
+    return 'string';
+  }
   switch($field['nature'])
   {
     case 'character':
@@ -325,15 +333,16 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
             $editing_last_admin = FALSE;
           }
           
-          // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
-          // We don't want the user to be able to change the level if (a) it's the first user being created or
-          // (b) it's the last admin left or (c) they don't have admin rights
-          $disable_select = ($initial_user_creation || $editing_last_admin || ($level < $min_user_editing_level));
-          
           foreach ($fields as $field)
           {
             $key = $field['name'];
-            $var_name = VAR_PREFIX . $key;
+            $params = array('label' => get_loc_field_name($tbl_users, $key) . ':',
+                            'name'  => VAR_PREFIX . $key,
+                            'value' => $data[$key]);
+            if (isset($maxlength["users.$key"]))
+            {
+              $params['maxlength'] = $maxlength["users.$key"];
+            }
             // First of all output the input for the field
             // The ID field cannot change; The password field must not be shown.
             switch($key)
@@ -342,22 +351,27 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                 echo "<input type=\"hidden\" name=\"Id\" value=\"$Id\">\n";
                 break;
               case 'password':
-                echo "<input type=\"hidden\" name=\"$var_name\" value=\"". htmlspecialchars($data[$key]) . "\">\n";
+                echo "<input type=\"hidden\" name=\"" . $params['name'] ."\" value=\"". htmlspecialchars($params['value']) . "\">\n";
                 break;
               default:
                 echo "<div>\n";
-                $label_text = get_loc_field_name($tbl_users, $key) . ':';
                 switch($key)
                 {
                   case 'level':
-                    echo "<label for=\"$var_name\">$label_text</label>\n";
-                    echo "<select id=\"$var_name\" name=\"$var_name\"" . ($disable_select ? " disabled=\"disabled\"" : "") . ">\n";
+                    // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
+                    // We don't want the user to be able to change the level if (a) it's the first user being created or
+                    // (b) it's the last admin left or (c) they don't have admin rights
+                    $params['disabled'] = $initial_user_creation || $editing_last_admin || ($level < $min_user_editing_level);
                     // Only display options up to and including one's own level (you can't upgrade yourself).
                     // If you're not some kind of admin then the select will also be disabled.
-                    // (Note - disabling individual options doesn't work in older browsers, eg IE6)     
+                    // (Note - disabling individual options doesn't work in older browsers, eg IE6)
+                    $params['options'] = array();     
                     for ($i=0; $i<=$level; $i++)
                     {
-                      echo "<option value=\"$i\"";
+                      // We add a string prefix to the level to force the array to be
+                      // associative.   We strip it off when we get the form variable
+                      $v = USER_LEVEL_PREFIX . $i;
+                      $params['options'][$v] = get_vocab("level_$i");
                       // Work out which option should be selected by default:
                       //   if we're editing an existing entry, then it should be the current value;
                       //   if we're adding the very first entry, then it should be an admin;
@@ -366,42 +380,20 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                            (($Action == "Add") && $initial_user_creation && ($i == $max_level)) ||
                            (($Action == "Add") && !$initial_user_creation && ($i == 1)) )
                       {
-                        echo " selected=\"selected\"";
+                        $params['value'] = $v;
                       }
-                      echo ">" . get_vocab("level_$i") . "</option>\n";
                     }
-                    echo "</select>\n";
-                    // If the level select input was disabled, we still need to submit a value with 
-                    // the form.   <select> can't be set to 'readonly' so instead we'll use a hidden input
-                    if ($disable_select)
-                    {
-                      if ($initial_user_creation)
-                      {
-                        $v = $max_level;
-                      }
-                      else
-                      {
-                        $v = $data[$key];
-                      }
-                      echo "<input type=\"hidden\" name=\"$var_name\" value=\"$v\">\n";
-                    }
+                    generate_select($params);
                     break;
                   case 'name':
                     // you cannot change a username (even your own) unless you have user editing rights
-                    echo "<label for=\"$var_name\">$label_text</label>\n";
-                    echo "<input id=\"$var_name\" name=\"$var_name\" type=\"text\" required aria-required=\"true\"" .
-                         ((isset($maxlength["users.$key"])) ? " maxlength=\"" . $maxlength["users.$key"] . "\"" : '') .
-                         (($level < $min_user_editing_level) ? " disabled=\"disabled\" " : "") .
-                         (($data[$key] == '') ? '' : " value=\"" . htmlspecialchars($data[$key]) . "\"") .
-                         ">\n";
-                    // if the field was disabled then we still need to pass through the value as a hidden input
-                    if ($level < $min_user_editing_level)
-                    {
-                      echo "<input type=\"hidden\" name=\"$var_name\" value=\"" . $data[$key] . "\">\n";
-                    }
+                    $params['disabled'] = ($level < $min_user_editing_level);
+                    $params['mandatory'] = TRUE;
+                    generate_input($params);
                     break;
                   case 'email':
-                    generate_input($label_text, $var_name, $data[$key], FALSE, isset($maxlength["users.$key"]) ? $maxlength["users.$key"] : NULL, 'type=email multiple');
+                    $params['attributes'] = "type=email multiple";
+                    generate_input($params);
                     break;
                   default:    
                     // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
@@ -409,27 +401,24 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                     if (($field['nature'] == 'boolean') || 
                         (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
                     {
-                      echo "<label for=\"$var_name\">$label_text</label>\n";
-                      echo "<input type=\"checkbox\" class=\"checkbox\" " .
-                            "id=\"$var_name\" name=\"$var_name\" value=\"1\"" .
-                            ((!empty($data[$key])) ? " checked=\"checked\"" : "") .
-                            ">\n";
+                      generate_checkbox($params);
                     }
                     // Output a select box if they want one
                     elseif (!empty($select_options["users.$key"]))
                     {
-                      generate_select($label_text, $var_name, $data[$key], $select_options["users.$key"]);
+                      $params['options'] = $select_options["users.$key"];
+                      generate_select($params);
                     }
                     // Output a textarea if it's a character string longer than the limit for a
                     // text input
                     elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
                     {
-                      generate_textarea($label_text, $var_name, $data[$key]);   
+                      generate_textarea($params);   
                     }
                     // Otherwise output a text input
                     else
                     {
-                      generate_input($label_text, $var_name, $data[$key], FALSE, isset($maxlength["users.$key"]) ? $maxlength["users.$key"] : NULL);
+                      generate_input($params);
                     }
                     break;
                 } // end switch
@@ -600,6 +589,7 @@ if (isset($Action) && ($Action == "Update"))
         case 'level':
           // level:  set a safe default (lowest level of access)
           // if there is no value set
+          $values[$fieldname] = substr($values[$fieldname], strlen(USER_LEVEL_PREFIX));
           $q_string .= "&$fieldname=" . $values[$fieldname];
           if (!isset($values[$fieldname]))
           {

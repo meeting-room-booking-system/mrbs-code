@@ -73,7 +73,6 @@ $vocab["rep_rep_day"]        = "Errepikapenaren eguna";
 $vocab["rep_for_weekly"]     = "(asteko eta n astekoan)";
 $vocab["rep_freq"]           = "Maiztasuna";
 $vocab["rep_num_weeks"]      = "Aste kopurua";
-$vocab["rep_for_nweekly"]    = "(n aste)";
 $vocab["ctrl_click"]         = "Elementu bat gehiago aukeratzeko Kontrol-klik egin";
 $vocab["entryid"]            = "IDa sartu";
 $vocab["repeat_id"]          = "IDa errepikatu"; 

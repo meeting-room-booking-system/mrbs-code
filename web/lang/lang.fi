@@ -76,7 +76,6 @@ $vocab["rep_rep_day"]        = "Toiston viikonpäivä";
 $vocab["rep_for_weekly"]     = "(viikottaiselle toistolle)";
 $vocab["rep_freq"]           = "Tiheys";
 $vocab["rep_num_weeks"]      = "Montako viikkoa";
-$vocab["rep_for_nweekly"]    = "(määräaikaiselle viikottaiselle)";
 $vocab["ctrl_click"]         = "Pidä CTRL-nappi pohjassa valitaksesi useita huoneita.";
 $vocab["entryid"]            = "Varauksen ID ";
 $vocab["repeat_id"]          = "Toiston ID "; 

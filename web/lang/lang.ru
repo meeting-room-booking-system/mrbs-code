@@ -86,7 +86,6 @@ $vocab["rep_rep_day"]        = "Дни повторения";
 $vocab["rep_for_weekly"]     = "(для еженедельно или n-еженедельно)";
 $vocab["rep_freq"]           = "Частота";
 $vocab["rep_num_weeks"]      = "Количество недель";
-$vocab["rep_for_nweekly"]    = "(для n-еженедельно)";
 $vocab["ctrl_click"]         = "Используйте Control-Click чтобы выделить более одного помещения";
 $vocab["entryid"]            = "ID записи";
 $vocab["repeat_id"]          = "ID повторения"; 

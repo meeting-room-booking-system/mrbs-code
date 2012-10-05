@@ -566,7 +566,7 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
     display: block; float: left; margin-left: <?php echo $general_gap ?>em; 
     font-family: <?php echo $standard_font_family ?>; font-size: small
 }
-.edit_entry     .form_general input {width: <?php echo $edit_entry_textarea_width ?>em}
+.edit_entry     .form_general input {width: <?php echo $edit_entry_textarea_width ?>em; margin-right: 1em}
 .report         .form_general input {width: <?php echo $report_input_width ?>em}
 .search         .form_general input {width: <?php echo $search_input_width ?>em}
 .edit_area_room .form_general input {width: <?php echo $edit_area_room_input_width ?>em}

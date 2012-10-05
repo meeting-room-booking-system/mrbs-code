@@ -73,7 +73,6 @@ $vocab["rep_rep_day"]        = "Dia de repetició";
 $vocab["rep_for_weekly"]     = "(setmanal)";
 $vocab["rep_freq"]           = "Freqüència";
 $vocab["rep_num_weeks"]      = "Número de setmanes";
-$vocab["rep_for_nweekly"]    = "(n-setmanes)";
 $vocab["ctrl_click"]         = "Control-Clic per seleccionar més d'un recurs";
 $vocab["entryid"]            = "ID d'entrada";
 $vocab["repeat_id"]          = "ID de repetició";

@@ -73,7 +73,6 @@ $vocab["rep_rep_day"]        = "重覆的星期";
 $vocab["rep_for_weekly"]     = "(每週)";
 $vocab["rep_freq"]           = "頻率";
 $vocab["rep_num_weeks"]      = "重覆幾週";
-$vocab["rep_for_nweekly"]    = "(每週)";
 $vocab["ctrl_click"]         = "用Control+滑鼠右鍵可以重覆選擇";
 $vocab["entryid"]            = "登記序號 ";
 $vocab["repeat_id"]          = "重覆序號 "; 

@@ -72,7 +72,6 @@ $vocab["rep_rep_day"]        = "반복일";
 $vocab["rep_for_weekly"]     = "(몇 주간용)";
 $vocab["rep_freq"]           = "빈도";
 $vocab["rep_num_weeks"]      = "몇 주";
-$vocab["rep_for_nweekly"]    = "(몇 주간용)";
 $vocab["ctrl_click"]         = "2개 이상을 선택하기 위해서는 Control-Click을 사용하세요";
 $vocab["entryid"]            = "엔트리 ID ";
 $vocab["repeat_id"]          = "반복 ID "; 

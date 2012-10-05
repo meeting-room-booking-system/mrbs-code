@@ -170,19 +170,26 @@ function create_field_entry_name($disabled=FALSE)
   global $name, $select_options, $maxlength, $is_mandatory_field;
   
   echo "<div id=\"div_name\">\n";
-  $label_text = get_vocab("namebooker") . ":";
+  
+  $params = array('label'     => get_vocab("namebooker") . ":",
+                  'name'      => 'name',
+                  'value'     => $name,
+                  'disabled'  => $disabled);
+                  
   if (!empty($select_options['entry.name']))
   {
-    generate_select($label_text, 'name', $name, $select_options['entry.name'],
-                    $is_mandatory_field['entry.name'], $disabled);
+    $params['options']   = $select_options['entry.name'];
+    $params['mandatory'] = $is_mandatory_field['entry.name'];
+    generate_select($params);
   }
   else
   {
-    // 'required' is there to prevent null input (pattern doesn't seem to be triggered until
-    // there is sonething there).   [\S]+.* is any non-whitespace character followed by any number
-    // of other characters except a line terminator
-    generate_input($label_text, 'name', $name, $disabled, $maxlength['entry.name'], 'type="text" required pattern="' . REGEX_TEXT_POS . '"');
-    //generate_input($label_text, 'name', $name, $disabled, $maxlength['entry.name'], 'required pattern="[\S]+.*"');
+    // 'mandatory' is there to prevent null input (pattern doesn't seem to be triggered until
+    // there is something there).
+    $params['mandatory'] = TRUE;
+    $params['maxlength'] = $maxlength['entry.name'];
+    $params['attributes'] = 'type="text" pattern="' . REGEX_TEXT_POS . '"';
+    generate_input($params);
   }
   echo "</div>\n";
 }
@@ -193,16 +200,21 @@ function create_field_entry_description($disabled=FALSE)
   global $description, $select_options, $is_mandatory_field;
   
   echo "<div id=\"div_description\">\n";
-  $label_text = get_vocab("fulldescription");
+  
+  $params = array('label' => get_vocab("fulldescription"),
+                  'name' => 'description',
+                  'value' => $description,
+                  'disabled' => $disabled,
+                  'mandatory' => isset($is_mandatory_field['entry.description']) && $is_mandatory_field['entry.description']);
+  
   if (!empty($select_options['entry.description']))
   {
-    generate_select($label_text, 'description', $description, $select_options['entry.description'],
-                    $is_mandatory_field['entry.description'], $disabled);
+    $params['options'] = $select_options['entry.description'];
+    generate_select($params);
   }
   else
   {
-    $attributes = (isset($is_mandatory_field['entry.description']) && $is_mandatory_field['entry.description']) ? "required" : "";
-    generate_textarea($label_text, 'description', $description, $disabled, $attributes);
+    generate_textarea($params);
   }
   echo "</div>\n";
 }
@@ -549,19 +561,20 @@ function create_field_entry_type($disabled=FALSE)
   global $booking_types, $type;
   
   echo "<div id=\"div_type\">\n";
-  echo "<label for=\"type\">" . get_vocab("type") . ":</label>\n";
-  echo "<select id=\"type\" name=\"type\"" .
-       (($disabled) ? " disabled=\"disabled\"" : "") .
-       ">\n";
+  
+  $params = array('label'    => get_vocab("type") . ":",
+                  'name'     => 'type',
+                  'disabled' => $disabled,
+                  'options'  => array(),
+                  'value'    => $type);
+                  
   foreach ($booking_types as $key)
   {
-    echo "<option value=\"$key\"" . (($type == $key) ? " selected=\"selected\"" : "") . ">".get_type_vocab($key)."</option>\n";
+    $params['options'][$key] = get_type_vocab($key);
   }
-  echo "</select>\n";
-  if ($disabled)
-  {
-    echo "<input type=\"hidden\" name=\"type\" value=\"$type\">\n";
-  }
+  
+  generate_select($params);
+  
   echo "</div>\n";
 }
 
@@ -574,23 +587,18 @@ function create_field_entry_confirmation_status($disabled=FALSE)
   if ($confirmation_enabled)
   {
     echo "<div id=\"div_confirmation_status\">\n";
-    echo "<label>" . get_vocab("confirmation_status") . ":</label>\n";
-    echo "<div class=\"group\">\n";
-    echo "<label><input class=\"radio\" name=\"confirmed\" type=\"radio\" value=\"1\"" .
-      (($confirmed) ? " checked=\"checked\"" : "") .
-      (($disabled) ? " disabled=\"disabled\"" : "") .
-      ">" . get_vocab("confirmed") . "</label>\n";
-    echo "<label><input class=\"radio\" name=\"confirmed\" type=\"radio\" value=\"0\"" .
-      (($confirmed) ? "" : " checked=\"checked\"") .
-      (($disabled) ? " disabled=\"disabled\"" : "") .
-      ">" . get_vocab("tentative") . "</label>\n";
-    echo "</div>\n";
-    if ($disabled)
-    {
-      echo "<input type=\"hidden\" name=\"confirmed\" value=\"" .
-           (($confirmed) ? "1" : "0") .
-           "\">\n";
-    }
+    
+    $buttons[0] = get_vocab("tentative");
+    $buttons[1] = get_vocab("confirmed");
+    
+    $params = array('label'    => get_vocab("confirmation_status") . ":",
+                    'name'     => 'confirmed',
+                    'value'    => ($confirmed) ? 1 : 0,
+                    'options'  => $buttons,
+                    'disabled' => $disabled);
+                    
+    generate_radio_group($params);
+
     echo "</div>\n";
   }
 }
@@ -603,25 +611,19 @@ function create_field_entry_privacy_status($disabled=FALSE)
   // Privacy status
   if ($private_enabled)
   {
-    // No need to pass through a hidden variable if disabled because the handler will sort it out
     echo "<div id=\"div_privacy_status\">\n";
-    echo "<label>" . get_vocab("privacy_status") . ":</label>\n";
-    echo "<div class=\"group\">\n";
-    echo "<label><input class=\"radio\" name=\"private\" type=\"radio\" value=\"0\"" .
-      (($private) ? "" : " checked=\"checked\"") .
-      (($private_mandatory || $disabled) ? " disabled=\"disabled\"" : "") .
-      ">" . get_vocab("public") . "</label>\n";
-    echo "<label><input class=\"radio\" name=\"private\" type=\"radio\" value=\"1\"" .
-      (($private) ? " checked=\"checked\"" : "") .
-      (($private_mandatory || $disabled) ? " disabled=\"disabled\"" : "") .
-      ">" . get_vocab("private") . "</label>\n";
-    echo "</div>\n";
-    if ($disabled)
-    {
-      echo "<input type=\"hidden\" name=\"private\" value=\"" .
-           (($private) ? "1" : "0") .
-           "\">\n";
-    }
+    
+    $buttons[0] = get_vocab("public");
+    $buttons[1] = get_vocab("private");
+    
+    $params = array('label'    => get_vocab("privacy_status") . ":",
+                    'name'     => 'private',
+                    'value'    => ($private) ? 1 : 0,
+                    'options'  => $buttons,
+                    'disabled' => $private_mandatory || $disabled);
+                    
+    generate_radio_group($params);
+
     echo "</div>\n";
   }
 }
@@ -631,39 +633,32 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
 {
   global $custom_fields, $tbl_entry, $select_options;
   global $is_mandatory_field, $text_input_max;
-
-  $var_name = VAR_PREFIX . $key;
-  $value = $custom_fields[$key];
-  $label_text = get_loc_field_name($tbl_entry, $key) . ":";
-  $mandatory = (array_key_exists("entry.$key", $is_mandatory_field) &&
-                $is_mandatory_field["entry.$key"]) ? true : false;
+  
   echo "<div>\n";
+  $params = array('label'     => get_loc_field_name($tbl_entry, $key) . ":",
+                  'name'      => VAR_PREFIX . $key,
+                  'value'     => $custom_fields[$key],
+                  'disabled'  => $disabled,
+                  'mandatory' => isset($is_mandatory_field["entry.$key"]) && $is_mandatory_field["entry.$key"]);
   // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
   // assume are intended to be booleans)
   if (($field['nature'] == 'boolean') || 
     (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
   {
-    echo "<label for=\"$var_name\">$label_text</label>\n";
-    echo "<input type=\"checkbox\" class=\"checkbox\" " .
-      "id=\"$var_name\" name=\"$var_name\" value=\"1\" " .
-      ((!empty($value)) ? " checked=\"checked\"" : "") .
-      (($disabled) ? " disabled=\"disabled\"" : "") .
-      (($mandatory) ? " required" : "") .
-      ">\n";
+    generate_checkbox($params);
   }
   // Output a select box if they want one
   elseif (!empty($select_options["entry.$key"]))
   {
-    generate_select($label_text, $var_name, $value,
-      $select_options["entry.$key"], $mandatory, $disabled);
+    $params['options'] = $select_options["entry.$key"];
+    generate_select($params);
   }
   // Output a textarea if it's a character string longer than the limit for a
   // text input
   elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
   {
     // HTML5 does not allow a pattern attribute for the textarea element
-    $attributes = (isset($is_mandatory_field["entry.$key"]) && $is_mandatory_field["entry.$key"]) ? "required" : "";
-    generate_textarea($label_text, $var_name, $value, $disabled, $attributes);   
+    generate_textarea($params);   
   }
   // Otherwise output a text input
   else
@@ -677,18 +672,14 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
     {
       $attributes = 'type="text"';
     }
-    if (isset($is_mandatory_field["entry.$key"]) && $is_mandatory_field["entry.$key"])
+    if ($params['mandatory'])
     {
-      $attributes .= ' required';
       // 'required' is not sufficient for strings, because we also want to make sure
       // that the string contains at least one non-whitespace character
       $attributes .= ($is_integer_field) ? '' : ' pattern="' . REGEX_TEXT_POS . '"';
     }
-    generate_input($label_text, $var_name, $value, $disabled, NULL, $attributes);
-  }
-  if ($disabled)
-  {
-    echo "<input type=\"hidden\" name=\"$var_name\" value=\"$value\">\n";
+    $params['attributes'] = $attributes;
+    generate_input($params);
   }
   echo "</div>\n";
 }
@@ -993,6 +984,7 @@ else
     $rep_end_year  = $year;
   }
   $rep_day       = array(date('w', mktime(12, 0, 0, $month, $day, $year)));
+  $rep_num_weeks = 1;
   $private       = $private_default;
   $confirmed     = $confirmed_default;
   
@@ -1260,30 +1252,26 @@ foreach ($edit_entry_field_order as $key)
       // a new booking) then print the repeat inputs
       echo "<fieldset id=\"rep_info\">\n";
       echo "<legend></legend>\n";
-      ?>
-      <div id="rep_type">
-        <label><?php echo get_vocab("rep_type")?>:</label>
-        <div class="group">
-          <?php
-          for ($i = 0; isset($vocab["rep_type_$i"]); $i++)
-          {
-            echo "      <label><input class=\"radio\" name=\"rep_type\" type=\"radio\" value=\"" . $i . "\"";
-            if ($i == $rep_type)
-            {
-              echo " checked=\"checked\"";
-            }
-            echo ">" . get_vocab("rep_type_$i") . "</label>\n";
-          }
-          ?>
-        </div>
-      </div>
+      
+      // Repeat type
+      echo "<div id=\"rep_type\">\n";
+      $params = array('label'   => get_vocab("rep_type") . ":",
+                      'name'    => 'rep_type',
+                      'value'   => $rep_type,
+                      'options' => array());
+      for ($i = 0; isset($vocab["rep_type_$i"]); $i++)
+      {
+        $params['options'][$i] = get_vocab("rep_type_$i");
+      }
+      generate_radio_group($params);
+      echo "</div>\n";
 
-      <div id="rep_end_date">
-        <?php
-        echo "<label>" . get_vocab("rep_end_date") . ":</label>\n";
-        genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year);
-        ?>
-      </div>
+      // Repeat end date
+      echo "<div id=\"rep_end_date\">\n";
+      echo "<label>" . get_vocab("rep_end_date") . ":</label>\n";
+      genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year);
+      echo "</div>\n";
+      ?>
       
       <div id="rep_day">
         <label><?php echo get_vocab("rep_rep_day")?>:<br><?php echo get_vocab("rep_for_weekly")?></label>
@@ -1306,17 +1294,20 @@ foreach ($edit_entry_field_order as $key)
      
       <?php
       echo "<div>\n";
-      $label_text = get_vocab("rep_num_weeks") . ":<br>" . get_vocab("rep_for_nweekly");
-      $attributes = 'type="number" min="' . REP_NUM_WEEKS_MIN . '" step="1"';
-      generate_input($label_text, 'rep_num_weeks', $rep_num_weeks, FALSE, NULL, $attributes);
+      $params = array('label'      => get_vocab("rep_num_weeks") . ":",
+                      'name'       => 'rep_num_weeks',
+                      'value'      => $rep_num_weeks,
+                      'suffix'     => get_vocab("weeks"),
+                      'attributes' => 'type="number" min="' . REP_NUM_WEEKS_MIN . '" step="1"');
+      generate_input($params);
       echo "</div>\n";
+      
       // Checkbox for skipping past conflicts
       echo "<div>\n";
-      echo "<label for=\"skip\">" . get_vocab("skip_conflicts") . ":</label>\n";
-      echo "<input type=\"checkbox\" class=\"checkbox\" " .
-                "id=\"skip\" name=\"skip\" value=\"1\" " .
-                ((!empty($skip_default)) ? " checked=\"checked\"" : "") .
-                ">\n";
+      $params = array('label' => get_vocab("skip_conflicts") . ":",
+                      'name' => 'skip',
+                      'value' => !empty($skip_default));
+      generate_checkbox($params);
       echo "</div>\n";
 
       echo "</fieldset>\n";
@@ -1365,7 +1356,7 @@ foreach ($edit_entry_field_order as $key)
         if ($rep_type == REP_N_WEEKLY)
         {
           echo "<div>\n";
-          echo "<label for=\"rep_num_weeks\">" . get_vocab("rep_num_weeks") . ":<br>" . get_vocab("rep_for_nweekly") . "</label>\n";
+          echo "<label for=\"rep_num_weeks\">" . get_vocab("rep_num_weeks") . ":</label>\n";
           echo "<input type=\"text\" id=\"rep_num_weeks\" name=\"rep_num_weeks\" value=\"$rep_num_weeks\" disabled=\"disabled\">\n";
           echo "</div>\n";
         }

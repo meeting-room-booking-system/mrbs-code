@@ -75,7 +75,6 @@ $vocab["rep_rep_day"]        = "Ripeti Girno";
 $vocab["rep_for_weekly"]     = "(per (n) settimane)";
 $vocab["rep_freq"]           = "Frequenza";
 $vocab["rep_num_weeks"]      = "Numero di settimane";
-$vocab["rep_for_nweekly"]    = "(per (n) settimane";
 $vocab["ctrl_click"]         = "Usa il tasto Ctrl per selezionare piu' di una stanza";
 $vocab["entryid"]            = "Entry ID ";
 $vocab["repeat_id"]          = "Repeat ID "; 

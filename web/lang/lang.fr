@@ -86,7 +86,6 @@ $vocab["rep_rep_day"]        = "Jour&nbsp;";
 $vocab["rep_for_weekly"]     = "(pour n-semaines)";
 $vocab["rep_freq"]           = "Fréquence&nbsp;";
 $vocab["rep_num_weeks"]      = "Intervalle de semaines";
-$vocab["rep_for_nweekly"]    = "(pour n-semaines)";
 $vocab["skip_conflicts"]     = "Ignorer les conflits";
 $vocab["ctrl_click"]         = "CTRL + clic souris pour sélectionner plusieurs salles";
 $vocab["entryid"]            = "Réservation N°";

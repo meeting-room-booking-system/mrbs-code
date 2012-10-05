@@ -74,7 +74,6 @@ $vocab["rep_rep_day"]        = "Powtórz Datę";
 $vocab["rep_for_weekly"]     = "(dla (n-)tygodniowy)";
 $vocab["rep_freq"]           = "Częstotliwość";
 $vocab["rep_num_weeks"]      = "Liczba Tygodni";
-$vocab["rep_for_nweekly"]    = "(dla n-tygodniowy)";
 $vocab["ctrl_click"]         = "Klikaj myszą przytrzymując klawisz Ctrl aby wybrać więcej niż jeden pokój";
 $vocab["entryid"]            = "ID Wpisu ";
 $vocab["repeat_id"]          = "Powtórz ID ";

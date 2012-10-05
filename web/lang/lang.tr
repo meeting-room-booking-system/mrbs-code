@@ -92,7 +92,6 @@ $vocab["rep_rep_day"]        = "Tekrar Eden Gün";
 $vocab["rep_for_weekly"]     = "((n-)Haftalık için)";
 $vocab["rep_freq"]           = "Sıklık";
 $vocab["rep_num_weeks"]      = "Hafta sayısı";
-$vocab["rep_for_nweekly"]    = "(n-haftalık)";
 $vocab["ctrl_click"]         = "Klavyede Ctrl tuşuna basılı iken fare ile tıklıyarak birden fazla oda seçebilirsiniz.";
 $vocab["entryid"]            = "Kayıt ID ";
 $vocab["repeat_id"]          = "Tekrar ID ";

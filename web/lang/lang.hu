@@ -91,7 +91,6 @@ $vocab["rep_rep_day"]        = "Ismétlődés napja";
 $vocab["rep_for_weekly"]     = "(heti vagy n-heti ütemezéshez)";
 $vocab["rep_freq"]           = "Gyakoriság";
 $vocab["rep_num_weeks"]      = "Hetek száma";
-$vocab["rep_for_nweekly"]    = "(n-heti ütemezéshez)";
 $vocab["skip_conflicts"]     = "Múltbéli ütközések figyelmen kívül hagyása";
 $vocab["ctrl_click"]         = "A Ctrl gomb nyomva tartásával több helyet is kijelölhetsz.";
 $vocab["entryid"]            = "Bejegyzés azonosító ";

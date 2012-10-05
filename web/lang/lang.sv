@@ -78,7 +78,6 @@ $vocab["rep_rep_day"]        = "Repetitionsdag";
 $vocab["rep_for_weekly"]     = "(vid varje vecka)";
 $vocab["rep_freq"]           = "Intervall";
 $vocab["rep_num_weeks"]      = "Antal veckor";
-$vocab["rep_for_nweekly"]    = "(För x-veckor)";
 $vocab["ctrl_click"]         = "Håll ner tangenten <I>Ctrl</I> och klicka för att välja mer än ett rum";
 $vocab["entryid"]            = "Boknings-ID ";
 $vocab["repeat_id"]          = "Repetions-ID "; 

@@ -87,7 +87,6 @@ $vocab["rep_rep_day"]        = "Serientag";
 $vocab["rep_for_weekly"]     = "(für wöchentlich)";
 $vocab["rep_freq"]           = "Häufigkeit";
 $vocab["rep_num_weeks"]      = "Anzahl Wochen";
-$vocab["rep_for_nweekly"]    = "(für n-te Woche)";
 $vocab["skip_conflicts"]     = "Termine überspringen, die mit bestehenden Terminen in Konflikt sind";
 $vocab["ctrl_click"]         = "Strg-Taste plus Mausklick um mehr als einen Raum auszuwählen";
 $vocab["entryid"]            = "Eintrags-ID. ";

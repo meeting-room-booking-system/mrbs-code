@@ -95,7 +95,6 @@ $vocab["rep_rep_day"]        = "ביום";
 $vocab["rep_for_weekly"]     = " ";
 $vocab["rep_freq"]           = "תדירות";
 $vocab["rep_num_weeks"]      = "מספר שבועות";
-$vocab["rep_for_nweekly"]    = " ";
 $vocab["ctrl_click"]         = "לחץ על מקש הקונטרול כדי לבחור יותר מחדר אחד";
 $vocab["entryid"]            = "Entry ID ";
 $vocab["repeat_id"]          = "Repeat ID "; 

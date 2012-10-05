@@ -73,7 +73,6 @@ $vocab["rep_rep_day"]        = "Repetitionsdag";
 $vocab["rep_for_weekly"]     = "(ved hver uge)";
 $vocab["rep_freq"]           = "Frekvens";
 $vocab["rep_num_weeks"]      = "Antal uger";
-$vocab["rep_for_nweekly"]    = "(for n-uger)";
 $vocab["ctrl_click"]         = "Hold kontroltasten nede for at vælge mere end et rum";
 $vocab["entryid"]            = "Entry ID ";
 $vocab["repeat_id"]          = "Repeat ID "; 

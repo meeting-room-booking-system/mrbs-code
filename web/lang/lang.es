@@ -87,7 +87,6 @@ $vocab["rep_rep_day"]        = "Día Repetición";
 $vocab["rep_for_weekly"]     = "(Semanal)";
 $vocab["rep_freq"]           = "Frecuencia";
 $vocab["rep_num_weeks"]      = "Número de Semanas";
-$vocab["rep_for_nweekly"]    = "(n-Semanas)";
 $vocab["ctrl_click"]         = "Usar Control-Click para seleccionar más de una Sala";
 $vocab["entryid"]            = "ID de Entrada ";
 $vocab["repeat_id"]          = "ID de Repetición "; 

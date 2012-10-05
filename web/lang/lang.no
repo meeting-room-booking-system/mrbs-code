@@ -89,7 +89,6 @@ $vocab["rep_rep_day"]        = "Repetisjonsdag";
 $vocab["rep_for_weekly"]     = "(ved ukentlig)";
 $vocab["rep_freq"]           = "Frekvens";
 $vocab["rep_num_weeks"]      = "Antall uker";
-$vocab["rep_for_nweekly"]    = "(for n-uker)";
 $vocab["skip_conflicts"]     = "Hopp over konflikter";
 $vocab["ctrl_click"]         = "Hold inne CTRL-tasten for å velge mer enn ett rom";
 $vocab["entryid"]            = "Reservasjons-ID ";
