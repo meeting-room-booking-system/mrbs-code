@@ -481,7 +481,7 @@ function generate_checkbox($params)
   }
   
   // generate the HTML
-  $html  = "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
+  $html  = "<label for=\"" . $params['name'] . "\">" . htmlspecialchars($params['label']) . "</label>\n";
   $html .= "<input type=\"checkbox\" class=\"checkbox\"";
   $html .= " id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\" value=\"1\"";
   $html .= (empty($params['value'])) ? "" : " checked=\"checked\"";
@@ -537,7 +537,7 @@ function generate_input($params)
   }
   
   // generate the HTML
-  $html  = "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
+  $html  = "<label for=\"" . $params['name'] . "\">" . htmlspecialchars($params['label']) . "</label>\n";
   $html .= "<input " . $params['attributes'];
   $html .= " id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\"";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : '';
@@ -604,7 +604,7 @@ function generate_radio_group($params)
     }
   }
   // generate the HTML
-  $html  = "<label>" . $params['label'] . "</label>\n";
+  $html  = "<label>" . htmlspecialchars($params['label']) . "</label>\n";
   $html .= "<div class=\"group\">\n";
   // Output each radio button
   foreach ($params['options'] as $value => $token)
@@ -613,7 +613,7 @@ function generate_radio_group($params)
     $html .= "<input class=\"radio\" type=\"radio\" name=\"" . $params['name'] . "\" value=\"$value\"";          
     $html .= ($params['value'] == $value) ? " checked=\"checked\"" : "";
     $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
-    $html .= ">" . get_vocab($token);
+    $html .= ">" . htmlspecialchars(get_vocab($token));
     $html .= "</label>\n";
   }
   $html .= "</div>\n";
@@ -671,7 +671,7 @@ function generate_checkbox_group($params)
   }
   
   // generate the HTML
-  $html  = "<label>" . $params['label'] . "</label>\n";
+  $html  = "<label>" . htmlspecialchars($params['label']) . "</label>\n";
   $html .= "<div class=\"group\">\n";
   // Output each checkbox
   foreach ($params['options'] as $value => $token)
@@ -737,7 +737,7 @@ function generate_select($params)
     }
   }
   // generate the HTML
-  $html  = "<label for=\"" .$params['name'] . "\">" . $params['label'] . "</label>\n";
+  $html  = "<label for=\"" .$params['name'] . "\">" . htmlspecialchars($params['label']) . "</label>\n";
   $html .= "<select id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\"";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
@@ -812,7 +812,7 @@ function generate_textarea($params)
     }
   }
   // generate the HTML
-  $html  = "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
+  $html  = "<label for=\"" . $params['name'] . "\">" . htmlspecialchars($params['label']) . "</label>\n";
   // textarea rows and cols are overridden by CSS height and width
   $html .= "<textarea id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\" rows=\"8\" cols=\"40\"";
   $html .= " " . $params['attributes'];
