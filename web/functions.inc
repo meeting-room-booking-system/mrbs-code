@@ -626,6 +626,74 @@ function generate_radio_group($params)
 }
 
 
+// Generate a group of radio buttons with an associated label
+//
+//   $params    an associative array holding the function parameters:
+//      MANDATORY
+//        'label'       The text to be used for the field label.
+//        'name'        The name of the input.
+//      OPTIONAL
+//        'value'       The value of the input.  Can be an array. Default array()
+//        'options'     An associative array where the key is the value of the
+//                      button and the value is the button text
+//        'disabled'    Whether the field should be disabled.  Default FALSE
+//
+function generate_checkbox_group($params)
+{
+  // some sanity checking on params
+  foreach (array('label', 'name', 'options', 'value', 'disabled') as $key)
+  {
+    if (!isset($params[$key]))
+    {
+      switch ($key)
+      {
+        case 'label':
+        case 'name':
+          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
+          break;
+        case 'options':
+          $params[$key] = array();
+          break;
+        case 'value':
+          $params[$key] = array();
+          break;
+        case 'disabled':
+          $params[$key] = FALSE;
+        default:
+          break;
+      }
+    }
+  }
+  
+  if (!is_array($params['value']))
+  {
+    $params['value'] = array($params['value']);
+  }
+  
+  // generate the HTML
+  $html  = "<label>" . $params['label'] . "</label>\n";
+  $html .= "<div class=\"group\">\n";
+  // Output each checkbox
+  foreach ($params['options'] as $value => $token)
+  {
+    $html .= "<label>";
+    $html .= "<input class=\"checkbox\" type=\"checkbox\" name=\"" . $params['name'] . "\" value=\"$value\"";          
+    $html .= (in_array($value, $params['value'])) ? " checked=\"checked\"" : "";
+    $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
+    $html .= ">" . htmlspecialchars($token);
+    $html .= "</label>\n";
+    if ($params['disabled'] && in_array($value, $params['value']))
+    {
+      $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\"";
+      $html .= " value=\"$value\">\n";
+    }
+  }
+  $html .= "</div>\n";
+
+  echo $html;
+}
+
+
 // Generates a select box with an associated label
 //
 //   $params    an associative array holding the function parameters:

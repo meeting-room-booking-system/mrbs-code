@@ -40,8 +40,6 @@
 
 require "defaultincludes.inc";
 
-define ('USER_LEVEL_PREFIX', 'L');  // Just something to ensure the value is a string
-
 // Get non-standard form variables
 $Action = get_form_var('Action', 'string');
 $Id = get_form_var('Id', 'int');
@@ -370,7 +368,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                     {
                       // We add a string prefix to the level to force the array to be
                       // associative.   We strip it off when we get the form variable
-                      $v = USER_LEVEL_PREFIX . $i;
+                      $v = STRING_PREFIX . $i;
                       $params['options'][$v] = get_vocab("level_$i");
                       // Work out which option should be selected by default:
                       //   if we're editing an existing entry, then it should be the current value;
@@ -589,7 +587,7 @@ if (isset($Action) && ($Action == "Update"))
         case 'level':
           // level:  set a safe default (lowest level of access)
           // if there is no value set
-          $values[$fieldname] = substr($values[$fieldname], strlen(USER_LEVEL_PREFIX));
+          $values[$fieldname] = substr($values[$fieldname], strlen(STRING_PREFIX));
           $q_string .= "&$fieldname=" . $values[$fieldname];
           if (!isset($values[$fieldname]))
           {

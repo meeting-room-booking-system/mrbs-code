@@ -51,7 +51,6 @@
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-
 $fields = sql_field_info($tbl_entry);
 $custom_fields = array();
 
@@ -1271,28 +1270,25 @@ foreach ($edit_entry_field_order as $key)
       echo "<label>" . get_vocab("rep_end_date") . ":</label>\n";
       genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year);
       echo "</div>\n";
-      ?>
       
-      <div id="rep_day">
-        <label><?php echo get_vocab("rep_rep_day")?>:<br><?php echo get_vocab("rep_for_weekly")?></label>
-        <div class="group">
-          <?php
-          // Display day name checkboxes according to language and preferred weekday start.
-          for ($i = 0; $i < 7; $i++)
-          {
-            $wday = ($i + $weekstarts) % 7;
-            echo "      <label><input class=\"checkbox\" name=\"rep_day[]\" value=\"$wday\" type=\"checkbox\"";
-            if (in_array($wday, $rep_day))
-            {
-              echo " checked=\"checked\"";
-            }
-            echo ">" . day_name($wday) . "</label>\n";
-          }
-          ?>
-        </div>
-      </div>
-     
-      <?php
+      // Repeat day
+      echo "<div id=\"rep_day\">\n";
+      $params = array('label' => get_vocab("rep_rep_day") . ":<br>" . get_vocab("rep_for_weekly"),
+                      'name' => 'rep_day[]',
+                      'value' => array(),
+                      'options' => array());
+      for ($i = 0; $i < 7; $i++)
+      {
+        // Display day name checkboxes according to language and preferred weekday start.
+        $wday = ($i + $weekstarts) % 7;
+        // We need to ensure the index is a string to force the array to be associative
+        $v = STRING_PREFIX . $wday;
+        $params['options'][$v] = day_name($wday);
+      }
+      generate_checkbox_group($params);
+      echo "</div>\n";
+
+      // Repeat frequency
       echo "<div>\n";
       $params = array('label'      => get_vocab("rep_num_weeks") . ":",
                       'name'       => 'rep_num_weeks',

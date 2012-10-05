@@ -70,6 +70,15 @@ $formvars = array('create_by'         => 'string',
 foreach($formvars as $var => $var_type)
 {
   $$var = get_form_var($var, $var_type);
+  // rep_day is a special case:  we need to strip off the string prefix,
+  // which was pit there to force an associative array
+  if ($var == 'rep_day')
+  {
+    for ($i=0; $i<count($rep_day); $i++)
+    {
+      $rep_day[$i] = substr($rep_day[$i], strlen(STRING_PREFIX));
+    }
+  }
 }
 
 // BACK:  we didn't really want to be here - send them to the returl
