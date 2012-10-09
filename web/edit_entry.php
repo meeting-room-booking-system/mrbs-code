@@ -977,16 +977,6 @@ else
   $description   = $default_description;
   $type          = $default_type;
   $room_id       = $room;
-  $rep_id        = 0;
-  if (!isset($rep_type))  // We might have set it through a drag selection
-  {
-    $rep_type      = REP_NONE;
-    $rep_end_day   = $day;
-    $rep_end_month = $month;
-    $rep_end_year  = $year;
-  }
-  $rep_day       = array(date('w', mktime(12, 0, 0, $month, $day, $year)));
-  $rep_num_weeks = 1;
   $private       = $private_default;
   $confirmed     = $confirmed_default;
 
@@ -1045,6 +1035,17 @@ else
     $pm7 = get_start_last_slot($month, $day, $year);
     $end_time = min($end_time, $pm7 + $resolution);
   }
+  
+  $rep_id        = 0;
+  if (!isset($rep_type))  // We might have set it through a drag selection
+  {
+    $rep_type      = REP_NONE;
+    $rep_end_day   = $day;
+    $rep_end_month = $month;
+    $rep_end_year  = $year;
+  }
+  $rep_day       = array(date('w', $start_time));
+  $rep_num_weeks = 1;
 }
 
 $start_hour  = strftime('%H', $start_time);
