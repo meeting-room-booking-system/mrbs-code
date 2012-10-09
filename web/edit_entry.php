@@ -86,16 +86,19 @@ foreach ($fields as $field)
 // is really the day before.
 function getbookingdate($t)
 {
-  global $eveningends, $eveningends_minutes;
+  global $eveningends, $eveningends_minutes, $resolution;
   
   $date = getdate($t);
-  if (day_past_midnight() &&
-      !hm_before(array('hours' => $eveningends, 'minutes' => $eveningends_minutes), $date))
+  
+  $t_secs = (($date['hours'] * 60) + $date['minutes']) * 60;
+  $e_secs = ((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution;
+  if (day_past_midnight() && ($t_secs <= $e_secs))
   {
     $date = getdate(mktime($date['hours'], $date['minutes'], $date['seconds'],
                            $date['mon'], $date['mday'] -1, $date['year']));
     $date['hours'] += 24;
   }
+  
   return $date;
 }
 
