@@ -817,6 +817,11 @@ if (isset($id))
     $keep_private = FALSE;
   }
   
+  // default settings
+  $rep_day = array();
+  $rep_type = REP_NONE;
+  $rep_num_weeks = 1;
+  
   foreach ($row as $column => $value)
   {
     switch ($column)
@@ -921,8 +926,13 @@ if (isset($id))
    
     $rep_type = $row['rep_type'];
 
+    if (!isset($rep_type))
+    {
+      $rep_type == REP_NONE;
+    }
+    
     // If it's a repeating entry get the repeat details
-    if (isset($rep_type) && ($rep_type != REP_NONE))
+    if ($rep_type != REP_NONE)
     {
       // If we're editing the series we want the start_time and end_time to be the
       // start and of the first entry of the series, not the start of this entry
@@ -938,8 +948,7 @@ if (isset($id))
       // Get the end date in string format as well, for use when
       // the input is disabled
       $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
-
-      $rep_day = array();
+      
       switch ($rep_type)
       {
         case REP_WEEKLY:
@@ -1254,40 +1263,53 @@ for ($i=0; $i<count($rep_day); $i++)
   $rep_day[$i] = STRING_PREFIX . $rep_day[$i];
 }
 
-    // REPEAT BOOKING INPUTS
-    if (($edit_type == "series") && $repeats_allowed)
+// Show the repeat fields if (a) it's a new booking and repeats are allowed,
+// or else if it's an existing booking.  (It's not particularly obvious but
+// if edit_type is "series" then it means that either you're editing an existing
+// series or else you're making a new booking.  This should be tidied up sometime!)
+if ((($edit_type == "series") && $repeats_allowed) || isset($id))
+{
+  // If repeats aren't allowed or this is not a series then disable
+  // the repeat fields - they're for information only
+  // (NOTE: when repeat bookings are restricted to admins, an ordinary user
+  // would not normally be able to get to the stage of trying to edit a series.
+  // But we have to cater for the possibility because it could happen if (a) the
+  // series was created before the policy was introduced or (b) the user has
+  // been demoted since the series was created).
+  $disabled = ($edit_type != "series") || !$repeats_allowed;
+  
+  echo "<fieldset id=\"rep_info\">\n";
+  echo "<legend></legend>\n";
+      
+  // Repeat type
+  echo "<div id=\"rep_type\">\n";
+  $params = array('label'    => get_vocab("rep_type") . ":",
+                  'name'     => 'rep_type',
+                  'value'    => $rep_type,
+                  'disabled' => $disabled,
+                  'options'  => array());
+  for ($i = 0; isset($vocab["rep_type_$i"]); $i++)
+  {
+    $params['options'][$i] = get_vocab("rep_type_$i");
+  }
+  generate_radio_group($params);
+  echo "</div>\n";
+  
+  // No point in showing anything more if the repeat fields are disabled
+  // and the repeat type is None
+  if (!$disabled || ($rep_type != REP_NONE))
+  {
+    // And no point in showing the repeat day and repeat frequency if the repeat
+    // fields are disabled and the repeat type is not a weekly repeat
+    if (!$disabled || (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY)) )
     {
-      // If repeats are allowed and the edit_type is a series (which means
-      // that either you're editing an existing series or else you're making
-      // a new booking) then print the repeat inputs
-      echo "<fieldset id=\"rep_info\">\n";
-      echo "<legend></legend>\n";
-      
-      // Repeat type
-      echo "<div id=\"rep_type\">\n";
-      $params = array('label'   => get_vocab("rep_type") . ":",
-                      'name'    => 'rep_type',
-                      'value'   => $rep_type,
-                      'options' => array());
-      for ($i = 0; isset($vocab["rep_type_$i"]); $i++)
-      {
-        $params['options'][$i] = get_vocab("rep_type_$i");
-      }
-      generate_radio_group($params);
-      echo "</div>\n";
-
-      // Repeat end date
-      echo "<div id=\"rep_end_date\">\n";
-      echo "<label>" . get_vocab("rep_end_date") . ":</label>\n";
-      genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year);
-      echo "</div>\n";
-      
       // Repeat day
       echo "<div id=\"rep_day\">\n";
-      $params = array('label' => get_vocab("rep_rep_day") . ":<br>" . get_vocab("rep_for_weekly"),
-                      'name' => 'rep_day[]',
-                      'value' => $rep_day,
-                      'options' => array());
+      $params = array('label'    => get_vocab("rep_rep_day") . ":<br>" . get_vocab("rep_for_weekly"),
+                      'name'     => 'rep_day[]',
+                      'value'    => $rep_day,
+                      'disabled' => $disabled,
+                      'options'  => array());
       for ($i = 0; $i < 7; $i++)
       {
         // Display day name checkboxes according to language and preferred weekday start.
@@ -1305,71 +1327,33 @@ for ($i=0; $i<count($rep_day); $i++)
                       'name'       => 'rep_num_weeks',
                       'value'      => $rep_num_weeks,
                       'suffix'     => get_vocab("weeks"),
+                      'disabled'   => $disabled,
                       'attributes' => 'type="number" min="' . REP_NUM_WEEKS_MIN . '" step="1"');
       generate_input($params);
+    
       echo "</div>\n";
-      
-      // Checkbox for skipping past conflicts
+    }
+    
+    // Repeat end date
+    echo "<div id=\"rep_end_date\">\n";
+    echo "<label>" . get_vocab("rep_end_date") . ":</label>\n";
+    genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year, '', $disabled);
+    echo "</div>\n";
+    
+    // Checkbox for skipping past conflicts
+    if (!$disabled)
+    {
       echo "<div>\n";
       $params = array('label' => get_vocab("skip_conflicts") . ":",
                       'name' => 'skip',
                       'value' => !empty($skip_default));
       generate_checkbox($params);
       echo "</div>\n";
+    }
+  }
 
-      echo "</fieldset>\n";
-    }
-    elseif (isset($id))
-    {
-      // otherwise, if it's an existing booking, show the repeat information
-      // and pass it through to the handler but do not let the user edit it
-      // (because they're either not allowed to, or else they've chosen to edit
-      // an individual entry rather than a series).
-      // (NOTE: when repeat bookings are restricted to admins, an ordinary user
-      // would not normally be able to get to the stage of trying to edit a series.
-      // But we have to cater for the possibility because it could happen if (a) the
-      // series was created before the policy was introduced or (b) the user has
-      // been demoted since the series was created).
-      $key = "rep_type_" . (isset($rep_type) ? $rep_type : REP_NONE);
-      echo "<fieldset id=\"rep_info\">\n";
-      echo "<legend></legend>\n";
-      echo "<div>\n";
-      echo "<label>" . get_vocab("rep_type") . ":</label>\n";
-      echo "<select disabled=\"disabled\">\n";
-      echo "<option>" . get_vocab($key) . "</option>\n";
-      echo "</select>\n";
-      echo "<input type=\"hidden\" name=\"rep_type\" value=\"" . REP_NONE . "\">\n";
-      echo "</div>\n";
-      if (isset($rep_type) && ($rep_type != REP_NONE))
-      {
-        $opt = "";
-        if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
-        {
-          // Display day names according to language and preferred weekday start.
-          for ($i = 0; $i < 7; $i++)
-          {
-            $wday = ($i + $weekstarts) % 7;
-            if ($rep_opt[$wday])
-            {
-              $opt .= day_name($wday) . " ";
-            }
-          }
-        }
-        if($opt)
-        {
-          echo "  <div><label>".get_vocab("rep_rep_day").":</label><input type=\"text\" value=\"$opt\" disabled=\"disabled\"></div>\n";
-        }
-        echo "  <div><label>".get_vocab("rep_end_date").":</label><input type=\"text\" value=\"$rep_end_date\" disabled=\"disabled\"></div>\n";
-        if ($rep_type == REP_N_WEEKLY)
-        {
-          echo "<div>\n";
-          echo "<label for=\"rep_num_weeks\">" . get_vocab("rep_num_weeks") . ":</label>\n";
-          echo "<input type=\"text\" id=\"rep_num_weeks\" name=\"rep_num_weeks\" value=\"$rep_num_weeks\" disabled=\"disabled\">\n";
-          echo "</div>\n";
-        }
-      }
-      echo "</fieldset>\n";
-    }
+  echo "</fieldset>\n";
+}
     
     ?>
     <input type="hidden" name="returl" value="<?php echo htmlspecialchars($returl) ?>">
