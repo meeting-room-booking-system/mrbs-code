@@ -986,7 +986,7 @@ else
   $rep_num_weeks = 1;
   $private       = $private_default;
   $confirmed     = $confirmed_default;
-  
+
   // now initialise the custom fields
   foreach ($fields as $field)
   {
@@ -1242,7 +1242,14 @@ foreach ($edit_entry_field_order as $key)
     break;
   }
 }
-    
+
+// Apply the string prefix to the rep_day values.  (The string prefix is 
+// necessary because we want the options array to be associative)
+for ($i=0; $i<count($rep_day); $i++)
+{
+  $rep_day[$i] = STRING_PREFIX . $rep_day[$i];
+}
+
     // REPEAT BOOKING INPUTS
     if (($edit_type == "series") && $repeats_allowed)
     {
@@ -1275,7 +1282,7 @@ foreach ($edit_entry_field_order as $key)
       echo "<div id=\"rep_day\">\n";
       $params = array('label' => get_vocab("rep_rep_day") . ":<br>" . get_vocab("rep_for_weekly"),
                       'name' => 'rep_day[]',
-                      'value' => array(),
+                      'value' => $rep_day,
                       'options' => array());
       for ($i = 0; $i < 7; $i++)
       {
