@@ -335,7 +335,7 @@ function validate(form)
   ?>
   if (!("min" in testInput) || !(("step" in testInput)))
   {
-    if ((form.find('input:radio[name=rep_type]:checked').val() == <?php echo REP_N_WEEKLY ?>)
+    if ((form.find('input:radio[name=rep_type]:checked').val() == <?php echo REP_WEEKLY ?>)
         && (form.find('#rep_num_weeks').val() < <?php echo REP_NUM_WEEKS_MIN ?>))
     {
       alert("<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('useful_n-weekly_value')) ?>");

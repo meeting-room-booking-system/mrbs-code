@@ -16,7 +16,7 @@ $tbl_variables = $db_tbl_prefix . "variables";
 $tbl_zoneinfo  = $db_tbl_prefix . "zoneinfo";
 
 
-$db_schema_version = 30;
+$db_schema_version = 31;
 $local_db_schema_version = 1;
 
 

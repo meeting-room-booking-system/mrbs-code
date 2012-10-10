@@ -412,7 +412,7 @@ if (!$ajax)
   }       
 
 
-  if (($rep_type == REP_N_WEEKLY) && ($rep_num_weeks < 2))
+  if (($rep_type == REP_WEEKLY) && ($rep_num_weeks < 1))
   {
     print_header($day, $month, $year, $area, isset($room) ? $room : "");
   ?>
@@ -498,8 +498,8 @@ if (!isset($rep_day))
 
 $rep_opt = "";
 
-// Processing for weekly and n-weekly repeats
-if (isset($rep_type) && (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY)))
+// Processing for weekly repeats
+if (isset($rep_type) && ($rep_type == REP_WEEKLY))
 {
   // If no repeat day has been set, then set a default repeat day
   // as the day of the week of the start of the period

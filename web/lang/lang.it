@@ -69,7 +69,6 @@ $vocab["rep_type_2"]         = "Settimanale";
 $vocab["rep_type_3"]         = "Mensile";
 $vocab["rep_type_4"]         = "Annuale";
 $vocab["rep_type_5"]         = "Mensile, giorno corrispondente";
-$vocab["rep_type_6"]         = "Settimanale";
 $vocab["rep_end_date"]       = "Ripeti fino al";
 $vocab["rep_rep_day"]        = "Ripeti Girno";
 $vocab["rep_num_weeks"]      = "Numero di settimane";

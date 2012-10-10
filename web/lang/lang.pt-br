@@ -81,7 +81,6 @@ $vocab["rep_type_2"]         = "Semanalmente";
 $vocab["rep_type_3"]         = "Mensalmente";
 $vocab["rep_type_4"]         = "Anualmente";
 $vocab["rep_type_5"]         = "Mensalmente, no dia correspondente";
-$vocab["rep_type_6"]         = "n-semanalmente";
 $vocab["rep_end_date"]       = "Repetir Fim";
 $vocab["rep_rep_day"]        = "Repetir Dia";
 $vocab["rep_freq"]           = "Frequência";

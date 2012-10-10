@@ -185,7 +185,6 @@ define('REP_WEEKLY',          2);
 define('REP_MONTHLY',         3);
 define('REP_YEARLY',          4);
 define('REP_MONTHLY_SAMEDAY', 5);
-define('REP_N_WEEKLY',        6);
 
 
 /*************************************************

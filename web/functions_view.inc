@@ -203,13 +203,12 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   // Repeat details
   if($data['rep_type'] != REP_NONE)
   {
-    if (($data['rep_type'] == REP_WEEKLY) || ($data['rep_type'] == REP_N_WEEKLY))
+    if ($data['rep_type'] == REP_WEEKLY)
     {
-      if ($data['rep_type'] == REP_N_WEEKLY)
-      {
-        // Repeat number of weeks
-        $tbody .= create_details_row(get_vocab("rep_num_weeks"), $data['rep_num_weeks'], $as_html);
-      }
+      // Repeat number of weeks
+      $value = $data['rep_num_weeks'] . ' ';
+      $value .= ($data['rep_num_weeks'] == 1) ? get_vocab("week_lc") : get_vocab("weeks");
+      $tbody .= create_details_row(get_vocab("rep_num_weeks"), $value, $as_html);
       // Repeat days
       $tbody .= create_details_row(get_vocab("rep_rep_day"), get_rep_day_list($data['rep_opt']), $as_html);
     }

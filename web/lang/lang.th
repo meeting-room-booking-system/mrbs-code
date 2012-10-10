@@ -80,7 +80,6 @@ $vocab["rep_type_2"]         = "ทุกสัปดาห์";
 $vocab["rep_type_3"]         = "ทุกเดือน";
 $vocab["rep_type_4"]         = "ทุกปี";
 $vocab["rep_type_5"]         = "ทุกเดือน, วันเดียวกัน";
-$vocab["rep_type_6"]         = "n-ทุกสัปดาห์";
 $vocab["rep_end_date"]       = "ทำซ้ำวันสิ้นสุด";
 $vocab["rep_rep_day"]        = "ทำซ้ำวัน";
 $vocab["rep_freq"]           = "สม่ำเสมอ";

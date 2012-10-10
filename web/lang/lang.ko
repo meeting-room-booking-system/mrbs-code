@@ -66,7 +66,6 @@ $vocab["rep_type_2"]         = "주간";
 $vocab["rep_type_3"]         = "월간";
 $vocab["rep_type_4"]         = "연간";
 $vocab["rep_type_5"]         = "월간, 해당일";
-$vocab["rep_type_6"]         = "몇주간";
 $vocab["rep_end_date"]       = "반복 종료일";
 $vocab["rep_rep_day"]        = "반복일";
 $vocab["rep_freq"]           = "빈도";

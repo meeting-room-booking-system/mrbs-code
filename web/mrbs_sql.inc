@@ -685,8 +685,8 @@ function same_day_next_month($time)
  * $time     - The start time
  * $enddate  - When the repeat ends
  * $rep_type - What type of repeat is it
- * $rep_opt  - The repeat entrys (if the repeat type is weekly or n-weekly
- *             then at least one repeat day must be set)
+ * $rep_opt  - The repeat entries (if the repeat type is weekly then at least one 
+ *             repeat day must be set)
  * $max_ittr - After going through this many entrys assume an error has occured
  * $_initial_weeknumber - Save initial week number for use in 'monthly repeat same week number' case
  * 
@@ -728,8 +728,6 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $rep_num_w
         break;
       
       case REP_WEEKLY:
-        $rep_num_weeks = 1;
-      case REP_N_WEEKLY:
         $j = $cur_day = date("w", $entrys[$i]);
         // Skip over days of the week which are not enabled:
         do
@@ -784,12 +782,11 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $rep_num_w
     }
   }
   
-  // For weekly and n-weekly repeats, the first entry that we've
-  // got in the array is not valid if the day of the week of the
-  // start of the period is not one of the repeat days.  (We are
-  // allowed to assume that at least one repeat day is set in this
-  // function)
-  if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
+  // For weekly repeats, the first entry that we've got in the array is not
+  // valid if the day of the week of the start of the period is not one of
+  // the repeat days.  (We are allowed to assume that at least one repeat day
+  // is set in this function)
+  if ($rep_type == REP_WEEKLY)
   {
     if (!$rep_opt[$start_day])
     {

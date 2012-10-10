@@ -80,7 +80,6 @@ $vocab["rep_type_2"]         = "Týdně";
 $vocab["rep_type_3"]         = "Měsíčně";
 $vocab["rep_type_4"]         = "Ročně";
 $vocab["rep_type_5"]         = "Měsíčně, odpovídající den";
-$vocab["rep_type_6"]         = "n-týdně";
 $vocab["rep_end_date"]       = "Datum konce opakování";
 $vocab["rep_rep_day"]        = "Den opakování";
 $vocab["rep_freq"]           = "Frekvence";

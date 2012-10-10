@@ -68,7 +68,6 @@ $vocab["rep_type_2"]         = "Tygodniowy";
 $vocab["rep_type_3"]         = "Miesięczny";
 $vocab["rep_type_4"]         = "Roczny";
 $vocab["rep_type_5"]         = "Miesięczny, odpowiadający dzień";
-$vocab["rep_type_6"]         = "n-Tygodniowy";
 $vocab["rep_end_date"]       = "Powtórz Datę końcową";
 $vocab["rep_rep_day"]        = "Powtórz Datę";
 $vocab["rep_freq"]           = "Częstotliwość";

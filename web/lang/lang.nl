@@ -81,7 +81,6 @@ $vocab["rep_type_2"]         = "Wekelijks";
 $vocab["rep_type_3"]         = "Maandelijks";
 $vocab["rep_type_4"]         = "Jaarlijks";
 $vocab["rep_type_5"]         = "Maandelijks, Overeenkomstige dag";
-$vocab["rep_type_6"]         = "n-wekelijks";
 $vocab["rep_end_date"]       = "Einde herhaling datum";
 $vocab["rep_rep_day"]        = "Herhalingsdag";
 $vocab["rep_freq"]           = "Frequentie";

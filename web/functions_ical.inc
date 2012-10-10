@@ -403,14 +403,14 @@ function get_repeat_details($rrule, $start_time, &$errors)
       $result['rep_type'] = REP_DAILY;
       break;
     case 'WEEKLY':
+      $result['rep_type'] = REP_WEEKLY;
       if (isset($rules['interval']) && ($rules['interval'] > 1))
       {
-        $result['rep_type'] = REP_N_WEEKLY;
         $result['rep_num_weeks'] = $rules['interval'];
       }
       else
       {
-        $result['rep_type'] = REP_WEEKLY;
+        $result['rep_num_weeks'] = 1;
       }
       if (isset($rules['BYDAY']))
       {
@@ -751,10 +751,9 @@ function create_rrule($data)
       $rule .= "FREQ=DAILY";
       break;
     case REP_WEEKLY:
-    case REP_N_WEEKLY;
       $rule .= "FREQ=WEEKLY";
-      // Interval for N_WEEKLY (Interval defaults to 1)
-      if ($data['rep_type'] == REP_N_WEEKLY)
+      // Interval for WEEKLY (Interval defaults to 1)
+      if ($data['rep_num_weeks'] > 1)
       {
         $rule .= ";INTERVAL=" . $data['rep_num_weeks'];
       }

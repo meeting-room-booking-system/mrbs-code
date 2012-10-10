@@ -80,7 +80,6 @@ $vocab["rep_type_2"]         = "毎週";
 $vocab["rep_type_3"]         = "毎月";
 $vocab["rep_type_4"]         = "毎年";
 $vocab["rep_type_5"]         = "毎月同じ日";
-$vocab["rep_type_6"]         = "n週毎";
 $vocab["rep_end_date"]       = "繰り返しの終了日";
 $vocab["rep_rep_day"]        = "繰り返しの曜日";
 $vocab["rep_freq"]           = "頻度";

@@ -81,7 +81,6 @@ $vocab["rep_type_2"]         = "Semanal";
 $vocab["rep_type_3"]         = "Mensual";
 $vocab["rep_type_4"]         = "Anual";
 $vocab["rep_type_5"]         = "Día correspondiente del Mes";
-$vocab["rep_type_6"]         = "n-Semanal";
 $vocab["rep_end_date"]       = "Fecha Tope Repetición";
 $vocab["rep_rep_day"]        = "Día Repetición";
 $vocab["rep_freq"]           = "Frecuencia";

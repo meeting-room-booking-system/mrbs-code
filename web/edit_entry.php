@@ -949,30 +949,16 @@ if (isset($id))
       // the input is disabled
       $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
       
-      switch ($rep_type)
+      if ($rep_type == REP_WEEKLY)
       {
-        case REP_WEEKLY:
-        case REP_N_WEEKLY:
-          for ($i=0; $i<7; $i++)
+        for ($i=0; $i<7; $i++)
+        {
+          if ($row['rep_opt'][$i])
           {
-            if ($row['rep_opt'][$i])
-            {
-              $rep_day[] = $i;
-            }
+            $rep_day[] = $i;
           }
-          // Get the repeat days as an array for use
-          // when the input is disabled
-          $rep_opt = $row['rep_opt'];
-
-          if ($rep_type == REP_N_WEEKLY)
-          {
-            $rep_num_weeks = $row['rep_num_weeks'];
-          }
-
-          break;
-
-        default:
-          break;
+        }
+        $rep_num_weeks = $row['rep_num_weeks'];
       }
     }
   }
@@ -1301,7 +1287,7 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
   {
     // And no point in showing the repeat day and repeat frequency if the repeat
     // fields are disabled and the repeat type is not a weekly repeat
-    if (!$disabled || (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY)) )
+    if (!$disabled || ($rep_type == REP_WEEKLY))
     {
       // Repeat day
       echo "<div id=\"rep_day\">\n";

@@ -67,7 +67,6 @@ $vocab["rep_type_2"]         = "ugentlig";
 $vocab["rep_type_3"]         = "månedlig";
 $vocab["rep_type_4"]         = "årlig";
 $vocab["rep_type_5"]         = "Månedlig, samme dag";
-$vocab["rep_type_6"]         = "n-ugentlig";
 $vocab["rep_end_date"]       = "Repetitionsslutdato";
 $vocab["rep_rep_day"]        = "Repetitionsdag";
 $vocab["rep_freq"]           = "Frekvens";

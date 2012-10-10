@@ -85,7 +85,6 @@ $vocab["rep_type_2"]         = "Hetente";
 $vocab["rep_type_3"]         = "Havonta";
 $vocab["rep_type_4"]         = "Évente";
 $vocab["rep_type_5"]         = "Havonta, a megfelelő napon";
-$vocab["rep_type_6"]         = "n-hetente";
 $vocab["rep_end_date"]       = "Ismétlődés vége";
 $vocab["rep_rep_day"]        = "Ismétlődés napja";
 $vocab["rep_num_weeks"]      = "Hetek száma";

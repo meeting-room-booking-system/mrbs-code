@@ -70,7 +70,6 @@ $vocab["rep_type_2"]         = "Viikoittain";
 $vocab["rep_type_3"]         = "Kuukausittain";
 $vocab["rep_type_4"]         = "Vuosittain";
 $vocab["rep_type_5"]         = "Kuukausittain samana viikonpäivänä";
-$vocab["rep_type_6"]         = "Määräaikainen viikoittainen";
 $vocab["rep_end_date"]       = "Toiston loppupäivämäärä";
 $vocab["rep_rep_day"]        = "Toiston viikonpäivä";
 $vocab["rep_freq"]           = "Tiheys";

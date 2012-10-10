@@ -86,7 +86,6 @@ $vocab["rep_type_2"]         = "Haftalık";
 $vocab["rep_type_3"]         = "Aylık";
 $vocab["rep_type_4"]         = "Yıllık";
 $vocab["rep_type_5"]         = "Aylık, denk gelen gün";
-$vocab["rep_type_6"]         = "n-Haftalık";
 $vocab["rep_end_date"]       = "Tekrarın solanma tarihi";
 $vocab["rep_rep_day"]        = "Tekrar Eden Gün";
 $vocab["rep_freq"]           = "Sıklık";

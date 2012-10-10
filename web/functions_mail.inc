@@ -668,20 +668,19 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
     // Details if a series
     if ($data['rep_type'] != REP_NONE)
     {     
-      // Repeat number of weeks
-      if ($data['rep_type'] == REP_N_WEEKLY)
-      {
       
+      if ($data['rep_type'] == REP_WEEKLY)
+      {
+        // Repeat number of weeks
+        $new = $data['rep_num_weeks'] . ' ' .
+               (($data['rep_num_weeks'] == 1) ? get_vocab("week_lc") : get_vocab("weeks"));
+        $old = $mail_previous['rep_num_weeks'] . ' ' .
+               (($mail_previous['rep_num_weeks'] == 1) ? get_vocab("week_lc") : get_vocab("weeks"));
         $body .= create_body_table_row (get_mail_vocab("rep_num_weeks"),
-                                        $data['rep_num_weeks'],
-                                        $mail_previous["rep_num_weeks"],
+                                        $new,
+                                        $old,
                                         $compare, $as_html);
-      }
-      
-      // Repeat days
-      if (($data['rep_type'] == REP_WEEKLY) || ($data['rep_type'] == REP_N_WEEKLY))
-      {
-      
+        // Repeat days
         // Display day names according to language and preferred weekday start.
         $opt = get_rep_day_list($data['rep_opt']);
         $opt_previous = ($compare) ? get_rep_day_list($mail_previous['rep_opt']) : "";
