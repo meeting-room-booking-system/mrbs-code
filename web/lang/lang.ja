@@ -83,7 +83,6 @@ $vocab["rep_type_5"]         = "毎月同じ日";
 $vocab["rep_type_6"]         = "n週毎";
 $vocab["rep_end_date"]       = "繰り返しの終了日";
 $vocab["rep_rep_day"]        = "繰り返しの曜日";
-$vocab["rep_for_weekly"]     = "(毎週/n週毎 選択時)";
 $vocab["rep_freq"]           = "頻度";
 $vocab["rep_num_weeks"]      = "繰り返し周期";
 $vocab["skip_conflicts"]     = "過去の競合をスキップする";

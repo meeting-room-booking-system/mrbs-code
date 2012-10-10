@@ -84,7 +84,6 @@ $vocab["rep_type_5"]         = "Día correspondiente del Mes";
 $vocab["rep_type_6"]         = "n-Semanal";
 $vocab["rep_end_date"]       = "Fecha Tope Repetición";
 $vocab["rep_rep_day"]        = "Día Repetición";
-$vocab["rep_for_weekly"]     = "(Semanal)";
 $vocab["rep_freq"]           = "Frecuencia";
 $vocab["rep_num_weeks"]      = "Número de Semanas";
 $vocab["ctrl_click"]         = "Usar Control-Click para seleccionar más de una Sala";

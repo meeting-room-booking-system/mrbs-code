@@ -83,7 +83,6 @@ $vocab["rep_type_5"]         = "Měsíčně, odpovídající den";
 $vocab["rep_type_6"]         = "n-týdně";
 $vocab["rep_end_date"]       = "Datum konce opakování";
 $vocab["rep_rep_day"]        = "Den opakování";
-$vocab["rep_for_weekly"]     = "(týdně nebo n-týdně)";
 $vocab["rep_freq"]           = "Frekvence";
 $vocab["rep_num_weeks"]      = "Počet týdnů";
 $vocab["ctrl_click"]         = "Použij Ctrl + kliknutí pro výběr více místností";

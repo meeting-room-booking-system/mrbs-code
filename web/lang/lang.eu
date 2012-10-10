@@ -70,7 +70,6 @@ $vocab["rep_type_5"]         = "Hilekoa, dagokion eguna";
 $vocab["rep_type_6"]         = "n astetan";
 $vocab["rep_end_date"]       = "Errepikapenaren bukaera data";
 $vocab["rep_rep_day"]        = "Errepikapenaren eguna";
-$vocab["rep_for_weekly"]     = "(asteko eta n astekoan)";
 $vocab["rep_freq"]           = "Maiztasuna";
 $vocab["rep_num_weeks"]      = "Aste kopurua";
 $vocab["ctrl_click"]         = "Elementu bat gehiago aukeratzeko Kontrol-klik egin";

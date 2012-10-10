@@ -84,7 +84,6 @@ $vocab["rep_type_5"]         = "monatlich, entsprechender Tag";
 $vocab["rep_type_6"]         = "jede n-te Woche";
 $vocab["rep_end_date"]       = "Serienende";
 $vocab["rep_rep_day"]        = "Serientag";
-$vocab["rep_for_weekly"]     = "(für wöchentlich)";
 $vocab["rep_freq"]           = "Häufigkeit";
 $vocab["rep_num_weeks"]      = "Anzahl Wochen";
 $vocab["skip_conflicts"]     = "Termine überspringen, die mit bestehenden Terminen in Konflikt sind";

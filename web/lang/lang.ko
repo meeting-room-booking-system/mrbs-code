@@ -69,7 +69,6 @@ $vocab["rep_type_5"]         = "월간, 해당일";
 $vocab["rep_type_6"]         = "몇주간";
 $vocab["rep_end_date"]       = "반복 종료일";
 $vocab["rep_rep_day"]        = "반복일";
-$vocab["rep_for_weekly"]     = "(몇 주간용)";
 $vocab["rep_freq"]           = "빈도";
 $vocab["rep_num_weeks"]      = "몇 주";
 $vocab["ctrl_click"]         = "2개 이상을 선택하기 위해서는 Control-Click을 사용하세요";

@@ -86,7 +86,6 @@ $vocab["rep_type_5"]         = "månedlig, samme dag";
 $vocab["rep_type_6"]         = "n-ukentlig";
 $vocab["rep_end_date"]       = "Repetisjon sluttdato";
 $vocab["rep_rep_day"]        = "Repetisjonsdag";
-$vocab["rep_for_weekly"]     = "(ved ukentlig)";
 $vocab["rep_freq"]           = "Frekvens";
 $vocab["rep_num_weeks"]      = "Antall uker";
 $vocab["skip_conflicts"]     = "Hopp over konflikter";

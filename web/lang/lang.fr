@@ -83,7 +83,6 @@ $vocab["rep_type_5"]         = "Mois, même jour semaine";
 $vocab["rep_type_6"]         = "toutes les n semaines";
 $vocab["rep_end_date"]       = "Date de fin de périodicité&nbsp;";
 $vocab["rep_rep_day"]        = "Jour&nbsp;";
-$vocab["rep_for_weekly"]     = "(pour n-semaines)";
 $vocab["rep_freq"]           = "Fréquence&nbsp;";
 $vocab["rep_num_weeks"]      = "Intervalle de semaines";
 $vocab["skip_conflicts"]     = "Ignorer les conflits";

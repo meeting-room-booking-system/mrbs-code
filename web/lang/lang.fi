@@ -73,7 +73,6 @@ $vocab["rep_type_5"]         = "Kuukausittain samana viikonpäivänä";
 $vocab["rep_type_6"]         = "Määräaikainen viikoittainen";
 $vocab["rep_end_date"]       = "Toiston loppupäivämäärä";
 $vocab["rep_rep_day"]        = "Toiston viikonpäivä";
-$vocab["rep_for_weekly"]     = "(viikottaiselle toistolle)";
 $vocab["rep_freq"]           = "Tiheys";
 $vocab["rep_num_weeks"]      = "Montako viikkoa";
 $vocab["ctrl_click"]         = "Pidä CTRL-nappi pohjassa valitaksesi useita huoneita.";

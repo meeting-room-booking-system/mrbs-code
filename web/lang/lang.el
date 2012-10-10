@@ -70,7 +70,6 @@ $vocab["rep_type_5"]         = "Μηνιαία, αντίστοιχη ημέρα"
 $vocab["rep_type_6"]         = "n-Εβδομαδιαία";
 $vocab["rep_end_date"]       = "Ημερομηνία ολοκλήρωσης επανάληψης";
 $vocab["rep_rep_day"]        = "Ημέρα επανάληψης";
-$vocab["rep_for_weekly"]     = "(για (n-)εβδομαδιαία)";
 $vocab["rep_freq"]           = "Συχνότητα";
 $vocab["rep_num_weeks"]      = "Αριθμός εβδομάδων";
 $vocab["ctrl_click"]         = "Χρησιμοποιήστε Control-Click για να επιλέξετε περισσότερες από μία αίθουσες";

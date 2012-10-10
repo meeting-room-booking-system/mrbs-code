@@ -84,7 +84,6 @@ $vocab["rep_type_5"]         = "Mensalmente, no dia correspondente";
 $vocab["rep_type_6"]         = "n-semanalmente";
 $vocab["rep_end_date"]       = "Repetir Termo";
 $vocab["rep_rep_day"]        = "Repetir Dia";
-$vocab["rep_for_weekly"]     = "(durante (n-)semanalmente)";
 $vocab["rep_freq"]           = "Frequência";
 $vocab["rep_num_weeks"]      = "Numero de semanas";
 $vocab["ctrl_click"]         = "Carregue Control-Click para seleccionar mais de uma sala";

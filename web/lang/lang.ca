@@ -70,7 +70,6 @@ $vocab["rep_type_5"]         = "Menusal, en el mateix dia";
 $vocab["rep_type_6"]         = "n-Setmanal";
 $vocab["rep_end_date"]       = "Data màxima Repetició";
 $vocab["rep_rep_day"]        = "Dia de repetició";
-$vocab["rep_for_weekly"]     = "(setmanal)";
 $vocab["rep_freq"]           = "Freqüència";
 $vocab["rep_num_weeks"]      = "Número de setmanes";
 $vocab["ctrl_click"]         = "Control-Clic per seleccionar més d'un recurs";

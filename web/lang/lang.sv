@@ -75,7 +75,6 @@ $vocab["rep_type_5"]         = "Månadsvis, samma dag";
 $vocab["rep_type_6"]         = "Veckovis";
 $vocab["rep_end_date"]       = "Repetition slutdatum";
 $vocab["rep_rep_day"]        = "Repetitionsdag";
-$vocab["rep_for_weekly"]     = "(vid varje vecka)";
 $vocab["rep_freq"]           = "Intervall";
 $vocab["rep_num_weeks"]      = "Antal veckor";
 $vocab["ctrl_click"]         = "Håll ner tangenten <I>Ctrl</I> och klicka för att välja mer än ett rum";

@@ -70,7 +70,6 @@ $vocab["rep_type_5"]         = "每月对应的日期";
 $vocab["rep_type_6"]         = "(每周)";
 $vocab["rep_end_date"]       = "结束重复的日期";
 $vocab["rep_rep_day"]        = "重复的星期";
-$vocab["rep_for_weekly"]     = "(每周)";
 $vocab["rep_freq"]           = "频率";
 $vocab["rep_num_weeks"]      = "重复几周";
 $vocab["ctrl_click"]         = "用Ctrl+鼠标右键可以重复选择";

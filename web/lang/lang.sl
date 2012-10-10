@@ -72,7 +72,6 @@ $vocab["rep_type_5"]         = "Mesečno na pripadajoč dan v tednu";
 $vocab["rep_type_6"]         = "n-tednov";
 $vocab["rep_end_date"]       = "Datum konca ponavljanj";
 $vocab["rep_rep_day"]        = "Ponavljaj dni";
-$vocab["rep_for_weekly"]     = "(ponavljaj (n-tednov)";
 $vocab["rep_freq"]           = "Frequenca";
 $vocab["rep_num_weeks"]      = "Število tednov ";
 $vocab["ctrl_click"]         = "Uporabite Ctrl+klik za izbiro več prostorov";

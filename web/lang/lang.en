@@ -83,7 +83,6 @@ $vocab["rep_type_5"]         = "Monthly, corresponding day";
 $vocab["rep_type_6"]         = "n-Weekly";
 $vocab["rep_end_date"]       = "Repeat end date";
 $vocab["rep_rep_day"]        = "Repeat day";
-$vocab["rep_for_weekly"]     = "(for weekly or n-weekly)";
 $vocab["rep_freq"]           = "Frequency";
 $vocab["rep_num_weeks"]      = "Repeat every";
 $vocab["skip_conflicts"]     = "Skip past conflicts";

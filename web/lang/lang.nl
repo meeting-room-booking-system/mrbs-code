@@ -84,7 +84,6 @@ $vocab["rep_type_5"]         = "Maandelijks, Overeenkomstige dag";
 $vocab["rep_type_6"]         = "n-wekelijks";
 $vocab["rep_end_date"]       = "Einde herhaling datum";
 $vocab["rep_rep_day"]        = "Herhalingsdag";
-$vocab["rep_for_weekly"]     = "(t.b.v. wekelijks)";
 $vocab["rep_freq"]           = "Frequentie";
 $vocab["rep_num_weeks"]      = "Aantal weken";
 $vocab["ctrl_click"]         = "Gebruik Control-Linker muis klik om meer dan 1 ruimte te reserveren";

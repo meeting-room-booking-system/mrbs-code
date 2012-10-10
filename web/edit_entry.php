@@ -1305,7 +1305,7 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
     {
       // Repeat day
       echo "<div id=\"rep_day\">\n";
-      $params = array('label'    => get_vocab("rep_rep_day") . ":<br>" . get_vocab("rep_for_weekly"),
+      $params = array('label'    => get_vocab("rep_rep_day") . ":",
                       'name'     => 'rep_day[]',
                       'value'    => $rep_day,
                       'disabled' => $disabled,

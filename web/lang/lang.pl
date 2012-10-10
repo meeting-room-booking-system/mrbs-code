@@ -71,7 +71,6 @@ $vocab["rep_type_5"]         = "Miesięczny, odpowiadający dzień";
 $vocab["rep_type_6"]         = "n-Tygodniowy";
 $vocab["rep_end_date"]       = "Powtórz Datę końcową";
 $vocab["rep_rep_day"]        = "Powtórz Datę";
-$vocab["rep_for_weekly"]     = "(dla (n-)tygodniowy)";
 $vocab["rep_freq"]           = "Częstotliwość";
 $vocab["rep_num_weeks"]      = "Liczba Tygodni";
 $vocab["ctrl_click"]         = "Klikaj myszą przytrzymując klawisz Ctrl aby wybrać więcej niż jeden pokój";
