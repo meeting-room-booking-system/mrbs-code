@@ -306,7 +306,8 @@ $year_range['ahead'] = 5;
 // Formats used for dates and times.   For formatting options
 // see http://php.net/manual/function.strftime.php
 $strftime_format['date']         = "%A %d %B %Y";  // Used in Day view
-$strftime_format['dayname']      = "%A";           // Used in Month view and edit_entry form
+$strftime_format['dayname']      = "%A";           // Used in Month view
+$strftime_format['dayname_edit'] = "%a";           // Used in edit_entry form
 $strftime_format['dayname_cal']  = "%a";           // Used in mini calendars
 $strftime_format['month_cal']    = "%B";           // Used in mini calendars
 $strftime_format['mon']          = "%b";           // Used in date selectors

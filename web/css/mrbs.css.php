@@ -552,7 +552,11 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
     text-align: right; padding-bottom: 0.8em; font-weight: bold;
 }
 
-.edit_entry     .form_general label {max-width: <?php echo $edit_entry_left_col_max_width ?>em}
+.edit_entry     .form_general label {
+    width: <?php echo $edit_entry_left_col_max_width ?>em;
+    max-width: <?php echo $edit_entry_left_col_max_width ?>em;
+}
+
 .import         .form_general label {max-width: <?php echo $import_left_col_max_width ?>em}
 .report         .form_general label {max-width: <?php echo $report_left_col_max_width ?>em}
 .search         .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
@@ -561,6 +565,15 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 #db_logon                 label {max-width: <?php echo $db_logon_left_col_max_width ?>em}
 
 .form_general .group      label {clear: none; width: auto; max-width: 100%; font-weight: normal; overflow: visible; text-align: left}
+.form_general #rep_type .group label {clear: left}
+div#rep_type {
+    width: auto;
+    border-right: 1px solid <?php echo $site_faq_entry_border_color ?>;
+    margin-right: 1em;
+    padding-right: 1em;
+}
+fieldset.rep_type_details {clear: none; padding-top: 0}
+.rep_type_details label {text-align: left}
 
 .form_general input {
     display: block; float: left; margin-left: <?php echo $general_gap ?>em; 

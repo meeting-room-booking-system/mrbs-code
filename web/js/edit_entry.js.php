@@ -16,6 +16,24 @@ $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= $max_level);
 
 
+// Function to display the secondary repeat type fieldset appropriate
+// to the selected repeat type
+?>
+var changeRepTypeDetails = function changeRepTypeDetails()
+{
+  var repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
+  $('.rep_type_details').hide();
+  switch (repType)
+  {
+    case <?php echo REP_WEEKLY ?>:
+      $('#rep_weekly').show();
+      break;
+    default:
+      break;
+  }
+}
+
+<?php
 // Check to see whether any time slots should be removed from the time
 // select on the grounds that they don't exist due to a transition into DST.
 // Don't do this if we're using periods, because it doesn't apply then
@@ -1255,4 +1273,6 @@ init = function() {
       checkTimeSlots($(this), areas[currentArea]);
     });
     
+  $('input[name="rep_type"]').change(changeRepTypeDetails);
+  changeRepTypeDetails();
 };

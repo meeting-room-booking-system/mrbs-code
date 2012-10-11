@@ -1289,6 +1289,8 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
     // fields are disabled and the repeat type is not a weekly repeat
     if (!$disabled || ($rep_type == REP_WEEKLY))
     {
+      echo "<fieldset class= \"rep_type_details js_none\" id=\"rep_weekly\">\n";
+      echo "<legend></legend>\n";
       // Repeat day
       echo "<div id=\"rep_day\">\n";
       $params = array('label'    => get_vocab("rep_rep_day") . ":",
@@ -1302,7 +1304,7 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
         $wday = ($i + $weekstarts) % 7;
         // We need to ensure the index is a string to force the array to be associative
         $v = STRING_PREFIX . $wday;
-        $params['options'][$v] = day_name($wday);
+        $params['options'][$v] = day_name($wday, $strftime_format['dayname_edit']);
       }
       generate_checkbox_group($params);
       echo "</div>\n";
@@ -1318,6 +1320,7 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
       generate_input($params);
     
       echo "</div>\n";
+      echo "</fieldset>\n";
     }
     
     // Repeat end date

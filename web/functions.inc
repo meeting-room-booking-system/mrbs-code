@@ -1260,12 +1260,16 @@ function some_area($field, $enabled=FALSE)
 }
 
 // Get the local day name based on language. Note 2000-01-02 is a Sunday.
-function day_name($daynumber)
+function day_name($daynumber, $format=NULL)
 {
   global $strftime_format;
   
-  return utf8_strftime($strftime_format['dayname'],
-                       mktime(0,0,0,1,2+$daynumber,2000));
+  if (!isset($format))
+  {
+    $format = $strftime_format['dayname'];
+  }
+  
+  return utf8_strftime($format, mktime(0,0,0,1,2+$daynumber,2000));
 }
 
 // Returns a list of repeat days as a string (eg "Thursday Friday")
