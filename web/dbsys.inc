@@ -155,7 +155,7 @@ function sql_query_array($sql)
 }
 
 
-// Run a SQL query, returns a result object
+// Run a SQL query, returns a result object or FALSE on failure
 function sql_query($sql)
 {
   if (func_num_args() > 1)
