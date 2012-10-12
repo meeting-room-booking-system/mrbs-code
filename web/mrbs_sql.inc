@@ -680,9 +680,25 @@ function same_day_next_month($time)
 }
 
 
+function trimToEndOfMonth(&$month, &$day, &$year)
+{
+  // Make the month valid so that we can use checkdate()
+  while ($month > 12)
+  {
+    $month -= 12;
+    $year++;
+  }
+  // Make the date valid if day is more than number of days in month:
+  while (!checkdate($month, $day, $year) && ($day > 1))
+  {
+    $day--;
+  }
+}
+
+
 /** mrbsGetRepeatEntryList
  * 
- * Returns a list of the repeating entrys
+ * Returns a list of the repeating entries
  * 
  * $time          The start time
  * $enddate       When the repeat ends
@@ -692,7 +708,7 @@ function same_day_next_month($time)
  *                                  repeat day must be set)
  *                  rep_num_weeks   The repeat frequency for weekly repeats
  *                  month_absolute  The repeat day of the month for monthly repeats
- * $max_ittr      After going through this many entrys assume an error has occured
+ * $n             Maximum number of entries to find
  *
  * $_initial_weeknumber - Save initial week number for use in 'monthly repeat same week number' case
  * 
@@ -700,38 +716,47 @@ function same_day_next_month($time)
  *   empty     - The entry does not repeat
  *   an array  - This is a list of start times of each of the repeat entrys
  */
-function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $max_ittr)
+
+function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
 {
-  $sec   = date("s", $time);
-  $min   = date("i", $time);
-  $hour  = date("G", $time);
-  $day   = date("d", $time);
-  $month = date("m", $time);
-  $year  = date("Y", $time);
+  $entries = array();
+  
+  $date = getdate($time);
+  
+  $sec       = $date['seconds'];
+  $min       = $date['minutes'];
+  $hour      = $date['hours'];
+  $day       = $date['mday'];
+  $month     = $date['mon'];
+  $year      = $date['year'];
+  $start_day = $date['wday'];
+  $start_dom = $day;  // the starting day of the month
 
   global $_initial_weeknumber;
   $_initial_weeknumber = (int)(($day - 1) / 7) + 1;
-  $week_num = 0;
-  $start_day = date('w', $time);
-  $start_dom = $day;  // the starting day of the month
-  
-  if ($rep_details['rep_type'] == REP_MONTHLY)
-  {
-    $day = $rep_details['month_absolute'];
-    if ($day < $start_dom)
-    {
-      $month++;#
-      if ($month > 12)
-      {
-        $year++;
-        $month -= 12;
-      }
-    }
-    $start_dom = $day;
-  }
 
-  $entrys = array();
-  for ($i = 0; $i < $max_ittr; $i++)
+  // Make sure that the first date is a member of the series
+  switch($rep_details['rep_type'])
+  {
+    case REP_WEEKLY:
+      for ($j=$start_day; ($j<7+$start_day) && !$rep_details['rep_opt'][$j%7]; $j++)
+      {
+        $day++;
+      }
+      break;
+    case REP_MONTHLY:
+      $day = $rep_details['month_absolute'];
+      if ($day < $start_dom)
+      {
+        $month++;
+      }
+      trimToEndOfMonth($month, $day, $year);
+      break;
+    default:
+      break;
+  }
+  
+  for ($i = 0; $i < $n; $i++)
   {
     $time = mktime($hour, $min, $sec, $month, $day, $year);
 
@@ -740,7 +765,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $max_ittr)
       break;
     }
 
-    $entrys[$i] = $time;
+    $entries[] = $time;
 
     switch($rep_details['rep_type'])
     {
@@ -749,7 +774,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $max_ittr)
         break;
       
       case REP_WEEKLY:
-        $j = $cur_day = date("w", $entrys[$i]);
+        $j = $cur_day = date("w", $time);
         // Skip over days of the week which are not enabled:
         do
         {
@@ -767,30 +792,19 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $max_ittr)
         break;
       
       case REP_MONTHLY:
+        // Get the day of the month back to where it should be (in case we
+        // decremented it to make it a valid date last time round)
+        $day = $rep_details['month_absolute'];
+        $month++;
+        trimToEndOfMonth($month, $day, $year);
+        break;
+        
       case REP_YEARLY:
-        if ($rep_details['rep_type'] == REP_MONTHLY)
-        {
-          $month++;
-        }
-        else
-        {
-          $year++;
-        }
-        // Make sure the month and year are valid, so
-        // that we can check the days with checkdate()
-        if ($month > 12)
-        {
-          $year++;
-          $month -= 12;
-        }
         // Get the day of the month back to where it should be (in case we
         // decremented it to make it a valid date last time round)
         $day = $start_dom;
-        // Make the date valid if day is more than number of days in month:
-        while (!checkdate($month, $day, $year) && ($day > 1))
-        {
-          $day--;
-        }
+        $year++;
+        trimToEndOfMonth($month, $day, $year);
         break;
    
       case REP_MONTHLY_SAMEDAY:
@@ -803,20 +817,9 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $max_ittr)
     }
   }
   
-  // For weekly repeats, the first entry that we've got in the array is not
-  // valid if the day of the week of the start of the period is not one of
-  // the repeat days.  (We are allowed to assume that at least one repeat day
-  // is set in this function)
-  if ($rep_details['rep_type'] == REP_WEEKLY)
-  {
-    if (!$rep_details['rep_opt'][$start_day])
-    {
-      array_shift($entrys);  // remove the first entry
-    }
-  }
-
-  return $entrys;
+  return $entries;
 }
+
 
 /** mrbsCreateRepeatingEntrys()
  * 
