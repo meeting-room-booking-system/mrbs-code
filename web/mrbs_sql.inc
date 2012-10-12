@@ -813,7 +813,8 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
 
       // Unknown repeat option
       default:
-        return;
+        trigger_error("Unknown repeat type, E_USER_NOTICE");
+        break;
     }
   }
   
