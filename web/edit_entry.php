@@ -904,7 +904,8 @@ if (isset($id))
 
   if(($entry_type == ENTRY_RPT_ORIGINAL) || ($entry_type == ENTRY_RPT_CHANGED))
   {
-    $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_num_weeks
+    $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_num_weeks,
+                   month_absolute
               FROM $tbl_repeat 
              WHERE id=$rep_id
              LIMIT 1";
@@ -949,16 +950,26 @@ if (isset($id))
       // the input is disabled
       $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
       
-      if ($rep_type == REP_WEEKLY)
+      switch ($rep_type)
       {
-        for ($i=0; $i<7; $i++)
-        {
-          if ($row['rep_opt'][$i])
+        case REP_WEEKLY:
+          for ($i=0; $i<7; $i++)
           {
-            $rep_day[] = $i;
+            if ($row['rep_opt'][$i])
+            {
+              $rep_day[] = $i;
+            }
           }
-        }
-        $rep_num_weeks = $row['rep_num_weeks'];
+          $rep_num_weeks = $row['rep_num_weeks'];
+          break;
+        case REP_MONTHLY:
+          if (isset($row['month_absolute']))
+          {
+            $month_absolute = $row['month_absolute'];
+          }
+          break;
+        default:
+          break;
       }
     }
   }
@@ -1041,6 +1052,7 @@ else
   }
   $rep_day       = array(date('w', $start_time));
   $rep_num_weeks = 1;
+  $month_absolute = date('j', $start_time);
 }
 
 $start_hour  = strftime('%H', $start_time);
@@ -1285,7 +1297,7 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
   // and the repeat type is None
   if (!$disabled || ($rep_type != REP_NONE))
   {
-    // And no point in showing the repeat day and repeat frequency if the repeat
+    // And no point in showing the weekly repeat details if the repeat
     // fields are disabled and the repeat type is not a weekly repeat
     if (!$disabled || ($rep_type == REP_WEEKLY))
     {
@@ -1320,6 +1332,31 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
       generate_input($params);
     
       echo "</div>\n";
+      echo "</fieldset>\n";
+    }
+    
+    // And no point in showing the monthly repeat details if the repeat
+    // fields are disabled and the repeat type is not a monthly repeat
+    if (!$disabled || ($rep_type == REP_MONTHLY))
+    {
+      echo "<fieldset class= \"rep_type_details js_none\" id=\"rep_monthly\">\n";
+      echo "<legend></legend>\n";
+      
+      $value = STRING_PREFIX . REP_MONTH_ABSOLUTE;
+      $params = array('name'     => 'month_type',
+                      'options'  => array($value => get_vocab("month_absolute")),
+                      'value'    => $value,
+                      'disabled' => $disabled);
+      generate_radio($params);
+      
+      // We could in the future allow -1 to -31, meaning "the nth last day of
+      // the month", but for the moment we'll keep it simple
+      $params = array('name'       => 'month_absolute',
+                      'value'      => $month_absolute,
+                      'disabled'   => $disabled,
+                      'attributes' => 'type="number" min="1" max="31" step="1"');
+      generate_input($params);
+      
       echo "</fieldset>\n";
     }
     

@@ -379,7 +379,7 @@ function get_repeat_details($rrule, $start_time, &$errors)
 {
   global $RFC_5545_days;
   
-  // Set up the result aeeay with safe defaults
+  // Set up the result array with safe defaults
   $result = array('rep_type' => REP_NONE,
                   'rep_opt' => '0000000',
                   'rep_num_weeks' => 0,
@@ -428,6 +428,7 @@ function get_repeat_details($rrule, $start_time, &$errors)
       if (!isset($rules['BYDAY']))
       {
         $result['rep_type'] = REP_MONTHLY;
+        $result['month_absolute'] = $rules['BYMONTHDAY'];
       }
       else
       {
@@ -773,6 +774,7 @@ function create_rrule($data)
       }
       break;
     case REP_MONTHLY_SAMEDAY:
+      $rule .= "FREQ=MONTHLY";
       $dow = date('w', $data['start_time']);  // day of the week
       $dom = date('j', $data['start_time']);  // day of the month
       // Work out the week of the month.    If this is the fifth week of the month
@@ -786,8 +788,10 @@ function create_rrule($data)
       $rule .= ";BYDAY=";
       $rule .= $wom;
       $rule .= $RFC_5545_days[$dow];
+      break;
     case REP_MONTHLY:
       $rule .= "FREQ=MONTHLY";
+      $rule .= ";BYMONTHDAY=" . $data['month_absolute'];
       break;
     case REP_YEARLY:
       $rule .= "FREQ=YEARLY";
@@ -1040,7 +1044,7 @@ function create_icalendar($method, $components)
   $result .= ICAL_EOL;  // Has to end with a CRLF
   
   $result = ical_fold($result);
-
+  
   return $result;
 }
 
@@ -1152,12 +1156,20 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
         // we can check whether any are missing and if so set their status to cancelled.
         // (We use PHP_INT_MAX rather than $max_rep_entrys because $max_rep_entrys may
         // have changed since the series was created.)
+        $rep_details = array();
+        foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute') as $key)
+        {
+          if (isset($start_row[$key]))
+          {
+            $rep_details[$key] = $start_row[$key];
+          }
+        }
+        
         $expected_entries = mrbsGetRepeatEntryList($start_row['start_time'], 
                                                    $start_row['end_date'],
-                                                   $start_row['rep_type'],
-                                                   $start_row['rep_opt'],
-                                                   $start_row['rep_num_weeks'],
+                                                   $rep_details,
                                                    PHP_INT_MAX);
+                                                   
         // And keep an array of all the entries we actually see
         $actual_entries = array();
         // Create the series event

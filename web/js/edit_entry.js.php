@@ -28,6 +28,9 @@ var changeRepTypeDetails = function changeRepTypeDetails()
     case <?php echo REP_WEEKLY ?>:
       $('#rep_weekly').show();
       break;
+    case <?php echo REP_MONTHLY ?>:
+      $('#rep_monthly').show();
+      break;
     default:
       break;
   }

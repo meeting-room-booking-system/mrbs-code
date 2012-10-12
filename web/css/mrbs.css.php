@@ -596,7 +596,8 @@ fieldset.rep_type_details {clear: none; padding-top: 0}
     font-family: <?php echo $standard_font_family ?>; font-size: small
 }
 .form_general select {float: left; margin-left: <?php echo $general_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
-.form_general input.radio {margin-top: 0.1em; margin-right: 2px}
+.form_general label.radio {font-weight: normal; width: auto}
+.form_general input.radio {margin-top: 0.1em; margin-right: 2px; width: auto}
 .form_general input.checkbox {width: auto; margin-top: 0.2em}
 .edit_area_room .form_general input.checkbox {margin-left: <?php echo $general_gap ?>em}
 .edit_area_room .form_general #booking_policies input.text {width: 4em}
@@ -630,7 +631,7 @@ div#edit_entry_submit_save {float: left; clear: none; width: auto}
 .form_general input.all_day, .form_general input#area_def_duration_all_day {width: auto; margin-left: 3.0em; margin-right: 0.5em}
 .form_general #div_rooms select, .form_general #div_typematch select {float: left; margin-right: 2.0em}
 fieldset#rep_info {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.7em}
-.form_general input#rep_num_weeks {width: 4em}
+.form_general input#rep_num_weeks, .form_general input#month_absolute {width: 4em}
 
 .edit_entry span#end_time_error {display: block; float: left; margin-left: 2em; font-weight: normal}
 .edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}

@@ -378,11 +378,18 @@ function create_repeat_list($data, $action, $as_html)
   }
   $result .= ($as_html) ? "</p>\n" : "\n\n";
   
+  $rep_details = array();
+  foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute') as $key)
+  {
+    if (isset($data[$key]))
+    {
+      $rep_details[$key] = $data[$key];
+    }
+  }
+  
   $reps = mrbsGetRepeatEntryList($data['start_time'], 
                                  $data['end_date'],
-                                 $data['rep_type'], 
-                                 $data['rep_opt'],
-                                 $data['rep_num_weeks'],
+                                 $rep_details, 
                                  $max_rep_entrys);
   
   // Remove any dates that could not be booked due to conflicts                               

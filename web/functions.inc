@@ -441,6 +441,7 @@ function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
   return $result;
 }
 
+
 // Generate a checkbox with an associated label
 //
 //   $params    an associative array holding the function parameters:
@@ -497,9 +498,9 @@ function generate_checkbox($params)
 //
 //   $params    an associative array holding the function parameters:
 //      MANDATORY
-//        'label'       The text to be used for the field label.
 //        'name'        The name of the input.
 //      OPTIONAL
+//        'label'       The text to be used for the field label.
 //        'value'       The value of the input.  Default ''
 //        'suffix'      A string that is displayed after the input field
 //        'disabled'    Whether the field should be disabled.  Default FALSE
@@ -519,7 +520,6 @@ function generate_input($params)
     {
       switch ($key)
       {
-        case 'label':
         case 'name':
           trigger_error('Missing mandatory parameters', E_USER_NOTICE);
           break;
@@ -538,8 +538,12 @@ function generate_input($params)
   }
   
   // generate the HTML
-  // no HTML escaping for the label - it is trusted
-  $html  = "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
+  $html = '';
+  if (isset($params['label']))
+  {
+    // no HTML escaping for the label - it is trusted
+    $html .= "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
+  }
   $html .= "<input " . $params['attributes'];
   $html .= " id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\"";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : '';
@@ -563,6 +567,60 @@ function generate_input($params)
     $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
       htmlspecialchars($params['value'])."\">\n";
   }
+  echo $html;
+}
+
+
+// Generate a single radio button (useful when you want to arrange the members
+// of a radio group slightly differently from the standard way)
+//
+//   $params    an associative array holding the function parameters:
+//      MANDATORY
+//        'name'        The name of the input.
+//      OPTIONAL
+//        'value'       The value of the input.  Default ''
+//        'options'     An associative array where the key is the value of the
+//                      button and the value is the button text
+//        'disabled'    Whether the field should be disabled.  Default FALSE
+function generate_radio($params)
+{
+  // some sanity checking on params
+  foreach (array('label', 'name', 'options', 'value', 'disabled') as $key)
+  {
+    if (!isset($params[$key]))
+    {
+      switch ($key)
+      {
+        case 'name':
+          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
+          break;
+        case 'options':
+          $params[$key] = array();
+          break;
+        case 'value':
+          $params[$key] = '';
+          break;
+        case 'disabled':
+          $params[$key] = FALSE;
+        default:
+          break;
+      }
+    }
+  }
+
+  // get the value and the text for the button.   Although there should only
+  // be one element in the options array we use an array for consistency
+  // with the other functions
+  $option = each($params['options']);
+  // generate the HTML
+  // no HTML escaping for the label - it is trusted
+  $html  = "<label class=\"radio\">";
+  $html .= "<input class=\"radio\" type=\"radio\" name=\"" . $params['name'] . "\" value=\"" . $option['key'] . "\"";          
+  $html .= ($params['value'] == $option['key']) ? " checked=\"checked\"" : "";
+  $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
+  $html .= ">" . htmlspecialchars($option['value']);
+  $html .= "</label>\n";
+  
   echo $html;
 }
 
@@ -609,17 +667,18 @@ function generate_radio_group($params)
   // no HTML escaping for the label - it is trusted
   $html  = "<label>" . $params['label'] . "</label>\n";
   $html .= "<div class=\"group\">\n";
+  echo $html;
+  
   // Output each radio button
-  foreach ($params['options'] as $value => $token)
+  while ($option = each($params['options']))
   {
-    $html .= "<label>";
-    $html .= "<input class=\"radio\" type=\"radio\" name=\"" . $params['name'] . "\" value=\"$value\"";          
-    $html .= ($params['value'] == $value) ? " checked=\"checked\"" : "";
-    $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
-    $html .= ">" . htmlspecialchars(get_vocab($token));
-    $html .= "</label>\n";
+    generate_radio(array('name'     => $params['name'],
+                         'options'  => array($option['key'] => $option['value']),
+                         'value'    => $params['value'],
+                         'disabled' => $params['disabled']));
   }
-  $html .= "</div>\n";
+
+  $html = "</div>\n";
   if ($params['disabled'])
   {
     $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\"";
@@ -629,7 +688,7 @@ function generate_radio_group($params)
 }
 
 
-// Generate a group of radio buttons with an associated label
+// Generate a group of checkboxes with an associated label
 //
 //   $params    an associative array holding the function parameters:
 //      MANDATORY
@@ -702,9 +761,9 @@ function generate_checkbox_group($params)
 //
 //   $params    an associative array holding the function parameters:
 //      MANDATORY
-//        'label'       The text to be used for the field label.
 //        'name'        The name of the input.
 //      OPTIONAL
+//        'label'       The text to be used for the field label.
 //        'options'     An array of options for the select element.   Can be a simple
 //                      array or an associative array with value => text members for
 //                      each <option> in the <select> element.   Default is an empty array.
@@ -721,7 +780,6 @@ function generate_select($params)
     {
       switch ($key)
       {
-        case 'label':
         case 'name':
           trigger_error('Missing mandatory parameters', E_USER_NOTICE);
           break;
@@ -742,7 +800,11 @@ function generate_select($params)
   }
   // generate the HTML
   // no HTML escaping for the label - it is trusted
-  $html  = "<label for=\"" .$params['name'] . "\">" . $params['label'] . "</label>\n";
+  $html = '';
+  if (isset($params['label']))
+  {
+    $html .= "<label for=\"" .$params['name'] . "\">" . $params['label'] . "</label>\n";
+  }
   $html .= "<select id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\"";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";

@@ -127,6 +127,7 @@ CREATE TABLE mrbs_repeat
   type           char DEFAULT 'E' NOT NULL,
   description    text,
   rep_num_weeks  smallint DEFAULT 0 NULL,
+  month_absolute smallint,
   status         smallint DEFAULT 0 NOT NULL,
   reminded       int,
   info_time      int,
@@ -163,6 +164,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '31');
+  VALUES ('db_version', '33');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');

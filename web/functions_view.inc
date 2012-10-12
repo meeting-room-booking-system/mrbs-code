@@ -203,15 +203,23 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   // Repeat details
   if($data['rep_type'] != REP_NONE)
   {
-    if ($data['rep_type'] == REP_WEEKLY)
+    switch ($data['rep_type'])
     {
-      // Repeat number of weeks
-      $value = $data['rep_num_weeks'] . ' ';
-      $value .= ($data['rep_num_weeks'] == 1) ? get_vocab("week_lc") : get_vocab("weeks");
-      $tbody .= create_details_row(get_vocab("rep_num_weeks"), $value, $as_html);
-      // Repeat days
-      $tbody .= create_details_row(get_vocab("rep_rep_day"), get_rep_day_list($data['rep_opt']), $as_html);
+      case REP_WEEKLY:
+        // Repeat number of weeks
+        $value = $data['rep_num_weeks'] . ' ';
+        $value .= ($data['rep_num_weeks'] == 1) ? get_vocab("week_lc") : get_vocab("weeks");
+        $tbody .= create_details_row(get_vocab("rep_num_weeks"), $value, $as_html);
+        // Repeat days
+        $tbody .= create_details_row(get_vocab("rep_rep_day"), get_rep_day_list($data['rep_opt']), $as_html);
+        break;
+      case REP_MONTHLY:
+        $value = $data['month_absolute'];
+        $tbody .= create_details_row(get_vocab("repeat_on"), $value, $as_html);
+      default:
+        break;
     }
+
     // Repeat end date
     $tbody .= create_details_row(get_vocab("rep_end_date"),
                                  utf8_strftime($strftime_format['date'],

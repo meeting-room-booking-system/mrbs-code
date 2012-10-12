@@ -486,6 +486,7 @@ function mrbsCreateEntry($table, $data)
         case 'entry_type':
         case 'repeat_id':
         case 'rep_type':
+        case 'month_absolute':
         case 'end_date':
         case 'room_id':
         case 'status':
@@ -682,20 +683,23 @@ function same_day_next_month($time)
  * 
  * Returns a list of the repeating entrys
  * 
- * $time     - The start time
- * $enddate  - When the repeat ends
- * $rep_type - What type of repeat is it
- * $rep_opt  - The repeat entries (if the repeat type is weekly then at least one 
- *             repeat day must be set)
- * $max_ittr - After going through this many entrys assume an error has occured
+ * $time          The start time
+ * $enddate       When the repeat ends
+ * $rep_details   An associative array containing the repeat details, indexed by
+ *                  rep_type        What type of repeat is it
+ *                  rep_opt         The repeat entries (if the repeat type is weekly then at least one 
+ *                                  repeat day must be set)
+ *                  rep_num_weeks   The repeat frequency for weekly repeats
+ *                  month_absolute  The repeat day of the month for monthly repeats
+ * $max_ittr      After going through this many entrys assume an error has occured
+ *
  * $_initial_weeknumber - Save initial week number for use in 'monthly repeat same week number' case
  * 
  * Returns:
  *   empty     - The entry does not repeat
  *   an array  - This is a list of start times of each of the repeat entrys
  */
-function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $rep_num_weeks,
-                                $max_ittr)
+function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $max_ittr)
 {
   $sec   = date("s", $time);
   $min   = date("i", $time);
@@ -709,6 +713,21 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $rep_num_w
   $week_num = 0;
   $start_day = date('w', $time);
   $start_dom = $day;  // the starting day of the month
+  
+  if ($rep_details['rep_type'] == REP_MONTHLY)
+  {
+    $day = $rep_details['month_absolute'];
+    if ($day < $start_dom)
+    {
+      $month++;#
+      if ($month > 12)
+      {
+        $year++;
+        $month -= 12;
+      }
+    }
+    $start_dom = $day;
+  }
 
   $entrys = array();
   for ($i = 0; $i < $max_ittr; $i++)
@@ -721,7 +740,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $rep_num_w
 
     $entrys[$i] = $time;
 
-    switch($rep_type)
+    switch($rep_details['rep_type'])
     {
       case REP_DAILY:
         $day++;
@@ -739,15 +758,15 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $rep_num_w
           // if we're repeating every two weeks)
           if ($j == $start_day)
           {
-            $day += 7 * ($rep_num_weeks - 1);
+            $day += 7 * ($rep_details['rep_num_weeks'] - 1);
           }
         }
-        while (($j != $cur_day) && !$rep_opt[$j]);
+        while (($j != $cur_day) && !$rep_details['rep_opt'][$j]);
         break;
       
       case REP_MONTHLY:
       case REP_YEARLY:
-        if ($rep_type == REP_MONTHLY)
+        if ($rep_details['rep_type'] == REP_MONTHLY)
         {
           $month++;
         }
@@ -786,9 +805,9 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $rep_num_w
   // valid if the day of the week of the start of the period is not one of
   // the repeat days.  (We are allowed to assume that at least one repeat day
   // is set in this function)
-  if ($rep_type == REP_WEEKLY)
+  if ($rep_details['rep_type'] == REP_WEEKLY)
   {
-    if (!$rep_opt[$start_day])
+    if (!$rep_details['rep_opt'][$start_day])
     {
       array_shift($entrys);  // remove the first entry
     }
@@ -822,9 +841,19 @@ function mrbsCreateRepeatingEntrys($data)
     $data['skip_list'] = array();
   }
 
-  $reps = mrbsGetRepeatEntryList($data['start_time'], $data['end_date'],
-                                 $data['rep_type'], $data['rep_opt'],
-                                 $data['rep_num_weeks'], $max_rep_entrys);
+  $rep_details = array();
+  foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute') as $key)
+  {
+    if (isset($data[$key]))
+    {
+      $rep_details[$key] = $data[$key];
+    }
+  }
+                 
+  $reps = mrbsGetRepeatEntryList($data['start_time'],
+                                 $data['end_date'], 
+                                 $rep_details,
+                                 $max_rep_entrys);
 
   // Don't make any bookings if we've been asked to book up
   // more entries than we are allowed in a single repeat.
@@ -1175,7 +1204,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
     }
     else
     {
-      $res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks,
+      $res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks, month_absolute,
                         info_time AS repeat_info_time, info_user AS repeat_info_user, info_text AS repeat_info_text
                         FROM $tbl_repeat WHERE id=${row['repeat_id']} LIMIT 1");
       if (!$res || (!$extra_row = sql_row_keyed($res, 0)))
@@ -1197,6 +1226,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
       $row['end_date']         = $extra_row['end_date'];
       $row['rep_opt']          = $extra_row['rep_opt'];
       $row['rep_num_weeks']    = $extra_row['rep_num_weeks'];
+      $row['month_absolute']   = $extra_row['month_absolute'];
       $row['repeat_info_time'] = $extra_row['repeat_info_time'];
       $row['repeat_info_user'] = $extra_row['repeat_info_user'];
       $row['repeat_info_text'] = $extra_row['repeat_info_text'];
@@ -1358,7 +1388,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
 {
   global $max_rep_entrys, $enable_periods, $resolution, $mail_settings;
   global $tbl_entry, $tbl_room, $tbl_area;
-  
+
   $user = getUserName();
   // All the data, except for the status and room id, will be common
   // across the bookings
@@ -1384,11 +1414,17 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
   // Expand a series into a list of start times:
   if ($bookings[0]['rep_type'] != REP_NONE)
   {
+    $rep_details = array();
+    foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute') as $key)
+    {
+      if (isset($common[$key]))
+      {
+        $rep_details[$key] = $common[$key];
+      }
+    }
     $reps = mrbsGetRepeatEntryList($common['start_time'],
                                    isset($common['end_date']) ? $common['end_date'] : 0,
-                                   $common['rep_type'],
-                                   $common['rep_opt'],
-                                   $common['rep_num_weeks'],
+                                   $rep_details,
                                    $max_rep_entrys);
   }
 

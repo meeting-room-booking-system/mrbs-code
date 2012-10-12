@@ -58,6 +58,8 @@ $formvars = array('create_by'         => 'string',
                   'rep_id'            => 'int',
                   'rep_day'           => 'array',   // array of bools
                   'rep_num_weeks'     => 'int',
+                  'month_type'        => 'int',
+                  'month_absolute'    => 'int',
                   'skip'              => 'string',  // bool, actually
                   'private'           => 'string',  // bool, actually
                   'confirmed'         => 'string',
@@ -552,6 +554,11 @@ foreach ($rooms as $room_id)
   $booking['ical_uid'] = $ical_uid;
   $booking['ical_sequence'] = $ical_sequence;
   $booking['ical_recur_id'] = $ical_recur_id;
+  if ($booking['rep_type'] == REP_MONTHLY)
+  {
+    $booking['month_absolute'] = $month_absolute;
+  }
+
   // Do the custom fields
   foreach ($custom_fields as $key => $value)
   {

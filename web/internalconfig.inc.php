@@ -186,6 +186,9 @@ define('REP_MONTHLY',         3);
 define('REP_YEARLY',          4);
 define('REP_MONTHLY_SAMEDAY', 5);
 
+define('REP_MONTH_ABSOLUTE', 0);
+define('REP_MONTH_RELATIVE', 1);
+
 
 /*************************************************
  * DIRECTORIES - internal use, do not change
@@ -248,6 +251,7 @@ $standard_fields['repeat'] = array('id',
                                    'type',
                                    'description',
                                    'rep_num_weeks',
+                                   'month_absolute',
                                    'status',
                                    'reminded',
                                    'info_time',
