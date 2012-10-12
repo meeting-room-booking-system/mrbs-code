@@ -679,6 +679,7 @@ function same_day_next_month($time)
   return $days_jump;
 }
 
+
 /** mrbsGetRepeatEntryList
  * 
  * Returns a list of the repeating entrys
@@ -733,6 +734,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $max_ittr)
   for ($i = 0; $i < $max_ittr; $i++)
   {
     $time = mktime($hour, $min, $sec, $month, $day, $year);
+
     if ($time > $enddate)
     {
       break;

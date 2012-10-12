@@ -500,40 +500,52 @@ if (!isset($rep_day))
 
 $rep_opt = "";
 
-// Processing for weekly repeats
-if (isset($rep_type) && ($rep_type == REP_WEEKLY))
+
+// Get the repeat details
+if (isset($rep_type) && ($rep_type != REP_NONE))
 {
-  // If no repeat day has been set, then set a default repeat day
-  // as the day of the week of the start of the period
-  if (count($rep_day) == 0)
+  if ($rep_type == REP_WEEKLY)
   {
-    $rep_day[] = date('w', $starttime);
+    // If no repeat day has been set, then set a default repeat day
+    // as the day of the week of the start of the period
+    if (count($rep_day) == 0)
+    {
+      $rep_day[] = date('w', $starttime);
+    }
+    // Build string of weekdays to repeat on:
+    for ($i = 0; $i < 7; $i++)
+    {
+      $rep_opt .= in_array($i, $rep_day) ? "1" : "0";  // $rep_opt is a string
+    }
   }
   
-  // Build string of weekdays to repeat on:
-  for ($i = 0; $i < 7; $i++)
-  {
-    $rep_opt .= in_array($i, $rep_day) ? "1" : "0";  // $rep_opt is a string
-  }
-  
-  // Make sure that the starttime and endtime coincide with a repeat day.  In
-  // other words make sure that the first starttime and endtime define an actual
+  // Make sure that the starttime coincides with a repeat day.  In
+  // other words make sure that the first starttime defines an actual
   // entry.   We need to do this because if we are going to construct an iCalendar
-  // object, RFC 5545 demands that the start and end time are the first events of
+  // object, RFC 5545 demands that the start time is the first event of
   // a series.  ["The "DTSTART" property for a "VEVENT" specifies the inclusive
   // start of the event.  For recurring events, it also specifies the very first
   // instance in the recurrence set."]
-  while (!$rep_opt[date('w', $starttime)])
+  
+  $rep_details = array('rep_type'      => $rep_type,
+                       'rep_opt'       => $rep_opt,
+                       'rep_num_weeks' => $rep_num_weeks);
+  if (isset($month_absolute))
   {
-    $start = getdate($starttime);
-    $end = getdate($endtime);
-    $starttime = mktime($start['hours'], $start['minutes'], $start['seconds'],
-                        $start['mon'], $start['mday'] + 1, $start['year']);
-    $endtime = mktime($end['hours'], $end['minutes'], $end['seconds'],
-                      $end['mon'], $end['mday'] + 1, $end['year']);
+    $rep_details['month_absolute'] = $month_absolute;
+  }
+  
+  // Get the first entry in the series and make that the start time
+  $reps = mrbsGetRepeatEntryList($starttime, $end_date, $rep_details, 1);
+
+  if (count($reps) > 0)
+  {
+    $duration = $endtime - $starttime;
+    $duration -= cross_dst($starttime, $endtime);
+    $starttime = $reps[0];
+    $endtime = $starttime + $duration;
   }
 }
-
 
 // Assemble an array of bookings, one for each room
 $bookings = array();
