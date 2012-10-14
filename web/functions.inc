@@ -363,6 +363,22 @@ function fromPeriodString($start_period, &$units, $dur_units)
 }
 
 
+// Returns the BYDAY value for a given timestamp, eg 4SU for fourth Sunday in
+// the month, or -1MO for the last Monday.
+function date_byday($timestamp)
+{
+  $days_of_week = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
+  $dow = $days_of_week[date('w', $timestamp)];
+  $dom = date('j', $timestamp);
+  $ord = intval(($dom - 1)/7) + 1;
+  if ($ord == 5)
+  {
+    $ord = -1;
+  }
+  return $ord . $dow;
+}
+
+
 // Returns TRUE if the time $hm1 is before $hm2
 // $hm1 and $hm2 are associative arrays indexed by 'hours' and 'minutes'.
 // The indices are chosen to allow the result of the PHP getdate() function
