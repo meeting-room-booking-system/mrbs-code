@@ -79,7 +79,6 @@ $vocab["rep_type_1"]         = "Ежедневно";
 $vocab["rep_type_2"]         = "Еженедельно";
 $vocab["rep_type_3"]         = "Ежемесячно";
 $vocab["rep_type_4"]         = "Ежегодно";
-$vocab["rep_type_5"]         = "Ежемесячно, в соответствующий день";
 $vocab["rep_end_date"]       = "Дата окончания повторения";
 $vocab["rep_rep_day"]        = "Дни повторения";
 $vocab["rep_freq"]           = "Частота";

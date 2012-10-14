@@ -66,7 +66,6 @@ $vocab["rep_type_1"]         = "Ημερήσια";
 $vocab["rep_type_2"]         = "Εβδομαδιαία";
 $vocab["rep_type_3"]         = "Μηνιαία";
 $vocab["rep_type_4"]         = "Χρόνια";
-$vocab["rep_type_5"]         = "Μηνιαία, αντίστοιχη ημέρα";
 $vocab["rep_end_date"]       = "Ημερομηνία ολοκλήρωσης επανάληψης";
 $vocab["rep_rep_day"]        = "Ημέρα επανάληψης";
 $vocab["rep_freq"]           = "Συχνότητα";

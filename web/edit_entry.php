@@ -1286,7 +1286,7 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
                   'value'    => $rep_type,
                   'disabled' => $disabled,
                   'options'  => array());
-  for ($i = 0; isset($vocab["rep_type_$i"]); $i++)
+  foreach (array(REP_NONE, REP_DAILY, REP_WEEKLY, REP_MONTHLY, REP_YEARLY) as $i)
   {
     $params['options'][$i] = get_vocab("rep_type_$i");
   }

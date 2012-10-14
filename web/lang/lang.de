@@ -80,7 +80,6 @@ $vocab["rep_type_1"]         = "täglich";
 $vocab["rep_type_2"]         = "wöchentlich";
 $vocab["rep_type_3"]         = "monatlich";
 $vocab["rep_type_4"]         = "jährlich";
-$vocab["rep_type_5"]         = "monatlich, entsprechender Tag";
 $vocab["rep_end_date"]       = "Serienende";
 $vocab["rep_rep_day"]        = "Serientag";
 $vocab["rep_freq"]           = "Häufigkeit";

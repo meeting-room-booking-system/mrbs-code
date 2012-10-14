@@ -79,7 +79,6 @@ $vocab["rep_type_1"]         = "Jour";
 $vocab["rep_type_2"]         = "Semaine";
 $vocab["rep_type_3"]         = "Mois";
 $vocab["rep_type_4"]         = "Année";
-$vocab["rep_type_5"]         = "Mois, même jour semaine";
 $vocab["rep_end_date"]       = "Date de fin de périodicité&nbsp;";
 $vocab["rep_rep_day"]        = "Jour&nbsp;";
 $vocab["rep_freq"]           = "Fréquence&nbsp;";

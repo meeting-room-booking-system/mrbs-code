@@ -71,7 +71,6 @@ $vocab["rep_type_1"]         = "dagligen";
 $vocab["rep_type_2"]         = "varje vecka";
 $vocab["rep_type_3"]         = "månatligen";
 $vocab["rep_type_4"]         = "årligen";
-$vocab["rep_type_5"]         = "Månadsvis, samma dag";
 $vocab["rep_end_date"]       = "Repetition slutdatum";
 $vocab["rep_rep_day"]        = "Repetitionsdag";
 $vocab["rep_freq"]           = "Intervall";

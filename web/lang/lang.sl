@@ -68,7 +68,6 @@ $vocab["rep_type_1"]         = "Dnevno";
 $vocab["rep_type_2"]         = "Tedensko";
 $vocab["rep_type_3"]         = "Mesečno";
 $vocab["rep_type_4"]         = "Letno";
-$vocab["rep_type_5"]         = "Mesečno na pripadajoč dan v tednu";
 $vocab["rep_end_date"]       = "Datum konca ponavljanj";
 $vocab["rep_rep_day"]        = "Ponavljaj dni";
 $vocab["rep_freq"]           = "Frequenca";

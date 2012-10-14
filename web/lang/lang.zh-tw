@@ -66,7 +66,6 @@ $vocab["rep_type_1"]         = "每天";
 $vocab["rep_type_2"]         = "每週";
 $vocab["rep_type_3"]         = "每月";
 $vocab["rep_type_4"]         = "每年";
-$vocab["rep_type_5"]         = "每月對應的日期";
 $vocab["rep_end_date"]       = "結束重覆的日期";
 $vocab["rep_rep_day"]        = "重覆的星期";
 $vocab["rep_freq"]           = "頻率";

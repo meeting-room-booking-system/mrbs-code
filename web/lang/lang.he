@@ -88,7 +88,6 @@ $vocab["rep_type_1"]         = "יום יומי";
 $vocab["rep_type_2"]         = "שבועי";
 $vocab["rep_type_3"]         = "חודשי";
 $vocab["rep_type_4"]         = "שנתי";
-$vocab["rep_type_5"]         = "חודשי ביום המתאים";
 $vocab["rep_end_date"]       = "סיום הזמנת חדר בתאריך";
 $vocab["rep_rep_day"]        = "ביום";
 $vocab["rep_freq"]           = "תדירות";

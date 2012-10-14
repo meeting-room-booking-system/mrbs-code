@@ -79,7 +79,6 @@ $vocab["rep_type_1"]         = "Daily";
 $vocab["rep_type_2"]         = "Weekly";
 $vocab["rep_type_3"]         = "Monthly";
 $vocab["rep_type_4"]         = "Yearly";
-$vocab["rep_type_5"]         = "Monthly, corresponding day";
 $vocab["rep_end_date"]       = "Repeat end date";
 $vocab["rep_rep_day"]        = "Repeat day";
 $vocab["rep_freq"]           = "Frequency";
