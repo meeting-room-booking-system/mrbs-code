@@ -905,7 +905,7 @@ if (isset($id))
   if(($entry_type == ENTRY_RPT_ORIGINAL) || ($entry_type == ENTRY_RPT_CHANGED))
   {
     $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_num_weeks,
-                   month_absolute
+                   month_absolute, month_relative
               FROM $tbl_repeat 
              WHERE id=$rep_id
              LIMIT 1";
@@ -1063,10 +1063,17 @@ else
   $rep_day       = array(date('w', $start_time));
   $rep_num_weeks = 1;
   $month_type = REP_MONTH_ABSOLUTE;
-  $month_absolute = date('j', $start_time);
-  $month_relative = date_byday($start_time);
-  list($month_relative_ord, $month_relative_day) = byday_split($month_relative);
 }
+
+if (!isset($month_relative))
+{
+  $month_relative = date_byday($start_time);
+}
+if (!isset($month_absolute))
+{
+  $month_absolute = date('j', $start_time);
+}
+list($month_relative_ord, $month_relative_day) = byday_split($month_relative);
 
 $start_hour  = strftime('%H', $start_time);
 $start_min   = strftime('%M', $start_time);
@@ -1355,6 +1362,7 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
       echo "<fieldset class= \"rep_type_details js_none\" id=\"rep_monthly\">\n";
       echo "<legend></legend>\n";
       
+      // MONTH ABSOLUTE (eg Day 15 of every month)
       echo "<fieldset>\n";
       echo "<legend></legend>\n";
       $params = array('name'     => 'month_type',
@@ -1372,6 +1380,7 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
       generate_input($params);
       echo "</fieldset>\n";
       
+      // MONTH RELATIVE (eg the second Thursday of every month)
       echo "<fieldset>\n";
       echo "<legend></legend>\n";
       $params = array('name'     => 'month_type',
@@ -1380,6 +1389,9 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
                       'disabled' => $disabled);
       generate_radio($params);
       
+      // Note: the select box order does not internationalise very well and could
+      // do with revisiting.   It assumes all languages have the same order as English
+      // eg "the second Wednesday" which is probavly not true.
       $options = array();
       foreach (array('1', '2', '3', '4', '-1', '-2', '-3', '-4') as $i)
       {
