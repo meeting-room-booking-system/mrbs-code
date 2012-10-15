@@ -1391,7 +1391,7 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
       
       // Note: the select box order does not internationalise very well and could
       // do with revisiting.   It assumes all languages have the same order as English
-      // eg "the second Wednesday" which is probavly not true.
+      // eg "the second Wednesday" which is probably not true.
       $options = array();
       foreach (array('1', '2', '3', '4', '-1', '-2', '-3', '-4') as $i)
       {

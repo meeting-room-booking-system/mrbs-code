@@ -41,6 +41,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   global $strftime_format;
   global $tbl_entry;
   global $select_options;
+  global $RFC_5545_days;
   
   // Get the duration if we haven't got it already
   if (!isset($data['duration']))
@@ -214,7 +215,24 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
         $tbody .= create_details_row(get_vocab("rep_rep_day"), get_rep_day_list($data['rep_opt']), $as_html);
         break;
       case REP_MONTHLY:
-        $value = $data['month_absolute'];
+        if (isset($data['month_absolute']))
+        {
+          $value = $data['month_absolute'];
+        }
+        elseif (isset($data['month_relative']))
+        {
+          // Note: this does not internationalise very well and could do with revisiting.
+          // It follows the select box order in edit_entry, which is the more difficult one
+          // to sort out.  It assumes all languages have the same order as English
+          // eg "the second Wednesday" which is probably not true.
+          list($ord, $dow) = byday_split($data['month_relative']);
+          $tmp = array_keys($RFC_5545_days, $dow);
+          $value = get_vocab("ord_" . $ord) . " " . day_name($tmp[0]);
+        }
+        else
+        {
+          trigger_error("Unknown monthly repeat type, E_USER_NOTICE");
+        }
         $tbody .= create_details_row(get_vocab("repeat_on"), $value, $as_html);
       default:
         break;
