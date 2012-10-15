@@ -8,10 +8,6 @@ global $timezone;
 // and the calendar
 $vtimezone = get_vtimezone($timezone);
 
-// Create an array which can be used to map day of the week numbers (0..6)
-// onto days of the week as defined in RFC 5545
-$RFC_5545_days = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
-
 // Extracts a VTIMEZONE component from a VCALENDAR.
 function extract_vtimezone($vcalendar)
 {

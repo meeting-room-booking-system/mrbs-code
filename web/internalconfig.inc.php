@@ -198,12 +198,16 @@ define('TZDIR',           'tzurl/zoneinfo');          // Directory containing TZ
 define('TZDIR_OUTLOOK',   'tzurl/zoneinfo-outlook');  // Outlook compatible TZURL definitions
 
 
-/*************************************************
- * ICALENDAR CONSTANTS - internal use, do not change
- *************************************************/
+/*****************************************
+ * ICALENDAR - internal use, do not change
+ *****************************************/
  
 define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
 define ('ICAL_EOL', "\r\n");            // Lines must be terminated by CRLF
+
+// Create an array which can be used to map day of the week numbers (0..6)
+// onto days of the week as defined in RFC 5545
+$RFC_5545_days = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
 
 
 /****************************************************************
@@ -252,6 +256,7 @@ $standard_fields['repeat'] = array('id',
                                    'description',
                                    'rep_num_weeks',
                                    'month_absolute',
+                                   'month_relative',
                                    'status',
                                    'reminded',
                                    'info_time',

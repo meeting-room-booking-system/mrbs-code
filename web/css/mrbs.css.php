@@ -570,9 +570,12 @@ div#rep_type {
     width: auto;
     border-right: 1px solid <?php echo $site_faq_entry_border_color ?>;
     margin-right: 1em;
+    margin-bottom: 0.5em;
     padding-right: 1em;
 }
 fieldset.rep_type_details {clear: none; padding-top: 0}
+fieldset.rep_type_details fieldset {padding-top: 0}
+
 .rep_type_details label {text-align: left}
 
 .form_general input {

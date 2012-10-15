@@ -363,12 +363,25 @@ function fromPeriodString($start_period, &$units, $dur_units)
 }
 
 
+// Splits a BYDAY string into its ordinal and day parts, returned as a simple array.
+// For example "-1SU" is returned as array("-1", "SU");
+function byday_split($byday)
+{
+  $result = array();
+  $split_pos = strlen($byday) -2;
+  $result[] = substr($byday, 0, $split_pos);
+  $result[] = substr($byday, $split_pos, 2);
+  return $result;
+}
+
+
 // Returns the BYDAY value for a given timestamp, eg 4SU for fourth Sunday in
 // the month, or -1MO for the last Monday.
 function date_byday($timestamp)
 {
-  $days_of_week = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
-  $dow = $days_of_week[date('w', $timestamp)];
+  global $RFC_5545_days;
+
+  $dow = $RFC_5545_days[date('w', $timestamp)];
   $dom = date('j', $timestamp);
   $ord = intval(($dom - 1)/7) + 1;
   if ($ord == 5)
@@ -376,6 +389,38 @@ function date_byday($timestamp)
     $ord = -1;
   }
   return $ord . $dow;
+}
+
+
+// Converts a BYDAY (eg "2SU") value for a given year and month into a
+// day of the month
+function byday_to_day($year, $month, $byday)
+{
+  global $RFC_5545_days;
+  
+  // First of all normalise the month and year, as we allow $month > 12
+  while ($month > 12)
+  {
+    $month -= 12;
+    $year++;
+  }
+  // Get the ordinal number and the day of the week
+  list($ord, $dow) = byday_split($byday);
+  // Get the starting day of the month
+  $start_dom = ($ord > 0) ? 1 : date('t', mktime(0, 0, 0, $month, 1, $year));
+  // Get the starting day of the week
+  $start_dow = date('w', mktime(0, 0, 0, $month, $start_dom, $year));
+  // Turn the BYDAY day of the week into an integer
+  $tmp = array_keys($RFC_5545_days, $dow);
+  $byday_dow = $tmp[0];
+  // get the difference in days
+  $diff = $byday_dow - $start_dow;
+  $diff += ($ord > 0) ? 7 : -7;
+  $diff = $diff %7;
+  // add in the weeks
+  $diff += ($ord > 0) ? ($ord - 1) * 7 : ($ord + 1) * 7;
+  
+  return $start_dom + $diff;
 }
 
 

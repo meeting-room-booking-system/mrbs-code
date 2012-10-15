@@ -965,7 +965,17 @@ if (isset($id))
         case REP_MONTHLY:
           if (isset($row['month_absolute']))
           {
+            $month_type = REP_MONTH_ABSOLUTE;
             $month_absolute = $row['month_absolute'];
+          }
+          elseif (isset($row['month_relative']))
+          {
+            $month_type = REP_MONTH_RELATIVE;
+            $month_relative = $row['month_relative'];
+          }
+          else
+          {
+            trigger_error("Invalid monthly repeat", E_USER_WARNING);
           }
           break;
         default:
@@ -1052,7 +1062,10 @@ else
   }
   $rep_day       = array(date('w', $start_time));
   $rep_num_weeks = 1;
+  $month_type = REP_MONTH_ABSOLUTE;
   $month_absolute = date('j', $start_time);
+  $month_relative = date_byday($start_time);
+  list($month_relative_ord, $month_relative_day) = byday_split($month_relative);
 }
 
 $start_hour  = strftime('%H', $start_time);
@@ -1342,10 +1355,11 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
       echo "<fieldset class= \"rep_type_details js_none\" id=\"rep_monthly\">\n";
       echo "<legend></legend>\n";
       
-      $value = STRING_PREFIX . REP_MONTH_ABSOLUTE;
+      echo "<fieldset>\n";
+      echo "<legend></legend>\n";
       $params = array('name'     => 'month_type',
-                      'options'  => array($value => get_vocab("month_absolute")),
-                      'value'    => $value,
+                      'options'  => array(REP_MONTH_ABSOLUTE => get_vocab("month_absolute")),
+                      'value'    => $month_type,
                       'disabled' => $disabled);
       generate_radio($params);
       
@@ -1356,6 +1370,39 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
                       'disabled'   => $disabled,
                       'attributes' => 'type="number" min="1" max="31" step="1"');
       generate_input($params);
+      echo "</fieldset>\n";
+      
+      echo "<fieldset>\n";
+      echo "<legend></legend>\n";
+      $params = array('name'     => 'month_type',
+                      'options'  => array(REP_MONTH_RELATIVE => get_vocab("month_relative")),
+                      'value'    => $month_type,
+                      'disabled' => $disabled);
+      generate_radio($params);
+      
+      $options = array();
+      foreach (array('1', '2', '3', '4', '-1', '-2', '-3', '-4') as $i)
+      {
+        $options[STRING_PREFIX . $i] = get_vocab("ord_" . $i);
+      }
+      $params = array('name'     => 'month_relative_ord',
+                      'value'    => STRING_PREFIX . $month_relative_ord,
+                      'disabled' => $disabled,
+                      'options'  => $options);
+      generate_select($params);
+      
+      $options = array();
+      for ($i=0; $i<7; $i++)
+      {
+        $i_offset = ($i + $weekstarts)%7;
+        $options[$RFC_5545_days[$i_offset]] = day_name($i_offset);
+      }
+      $params = array('name'     => 'month_relative_day',
+                      'value'    => $month_relative_day,
+                      'disabled' => $disabled,
+                      'options'  => $options);
+      generate_select($params);
+      echo "</fieldset>\n";
       
       echo "</fieldset>\n";
     }

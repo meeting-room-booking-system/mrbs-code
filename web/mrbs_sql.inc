@@ -500,6 +500,7 @@ function mrbsCreateEntry($table, $data)
         case 'name':
         case 'type':
         case 'description':
+        case 'month_relative':
         case 'ical_uid':
         case 'ical_recur_id':
           $sql_col[] = $key;
@@ -633,53 +634,6 @@ function mrbsCreateRepeatEntry($data)
 }
 
 
-/** same_day_next_month()
-* Find the same day of the week in next month, same week number.
-*
-* Return the number of days to step forward for a "monthly repeat,
-* corresponding day" serie - same week number and day of week next month.
-* This function always returns either 28 or 35.
-* For dates in the 5th week of a month, the resulting day will be in the 4th
-* week of the next month if no 5th week corresponding day exist.
-* :TODO: thierry_bo 030510: repeat 5th week entries only if 5th week exist.
-* If we want a 5th week repeat type, only 5th weeks have to be booked. We need
-* also a new "monthly repeat, corresponding day, last week of the month" type.
-*
-* @param    integer     $time           timestamp of the day from which we want to find
-*                                       the same day of the week in next month, same
-*                                       week number
-* @return   integer     $days_jump      number of days to step forward to find the next occurence (28 or 35)
-* @var      integer     $days_in_month  number of days in month
-* @var      integer     $day            day of the month (01 to 31)
-* @var      integer     $weeknumber     week number for each occurence ($time)
-* @var      boolean     $temp1          first step to compute $days_jump
-* @var      integer     $next_month     intermediate next month number (1 to 12)
-* @global   integer     $_initial_weeknumber    used only for 5th weeks repeat type
- */
-function same_day_next_month($time)
-{
-  global $_initial_weeknumber;
-
-  $days_in_month = date("t", $time);
-  $day = date("d", $time);
-  $weeknumber = (int)(($day - 1) / 7) + 1;
-  $temp1 = ($day + 7 * (5 - $weeknumber) <= $days_in_month);
-
-  // keep month number > 12 for the test purpose in line beginning with "days_jump = 28 +..."
-  $next_month = date("n", mktime(11, 0 ,0, date("n", $time), $day +35, date("Y", $time))) + (date("n", mktime(11, 0 ,0, date("n", $time), $day +35, date("Y", $time))) < date("n", $time)) * 12;
-
-  // prevent 2 months jumps if $time is in 5th week
-  $days_jump = 28 + (($temp1 && !($next_month - date("n", $time) - 1)) * 7);
-
-  /* if initial week number is 5 and the new occurence month number ($time + $days_jump)
-   * is not changed if we add 7 days, then we can add 7 days to $days_jump to come
-   * back to the 5th week (yuh!) */
-  $days_jump += 7 * (($_initial_weeknumber == 5) && (date("n", mktime(11, 0 ,0, date("n", $time), $day + $days_jump, date("Y", $time))) == date("n", mktime(11, 0 ,0, date("n", $time), $day + $days_jump + 7, date("Y", $time)))));
-
-  return $days_jump;
-}
-
-
 function trimToEndOfMonth(&$month, &$day, &$year)
 {
   // Make the month valid so that we can use checkdate()
@@ -710,8 +664,6 @@ function trimToEndOfMonth(&$month, &$day, &$year)
  *                  month_absolute  The repeat day of the month for monthly repeats
  * $n             Maximum number of entries to find
  *
- * $_initial_weeknumber - Save initial week number for use in 'monthly repeat same week number' case
- * 
  * Returns:
  *   empty     - The entry does not repeat
  *   an array  - This is a list of start times of each of the repeat entrys
@@ -731,10 +683,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
   $year      = $date['year'];
   $start_day = $date['wday'];
   $start_dom = $day;  // the starting day of the month
-
-  global $_initial_weeknumber;
-  $_initial_weeknumber = (int)(($day - 1) / 7) + 1;
-
+  
   // Make sure that the first date is a member of the series
   switch($rep_details['rep_type'])
   {
@@ -745,10 +694,22 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
       }
       break;
     case REP_MONTHLY:
-      $day = $rep_details['month_absolute'];
-      if ($day < $start_dom)
+      if (isset($rep_details['month_absolute']))
       {
-        $month++;
+        $day = $rep_details['month_absolute'];
+        if ($day < $start_dom)
+        {
+          $month++;
+        }
+      }
+      else
+      {
+        $day = byday_to_day($year, $month, $rep_details['month_relative']);
+        if ($day < $start_dom)
+        {
+          $month++;
+          $day = byday_to_day($year, $month, $rep_details['month_relative']);
+        }
       }
       trimToEndOfMonth($month, $day, $year);
       break;
@@ -792,10 +753,17 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
         break;
       
       case REP_MONTHLY:
-        // Get the day of the month back to where it should be (in case we
-        // decremented it to make it a valid date last time round)
-        $day = $rep_details['month_absolute'];
         $month++;
+        if (isset($rep_details['month_absolute']))
+        {
+          // Get the day of the month back to where it should be (in case we
+          // decremented it to make it a valid date last time round)
+          $day = $rep_details['month_absolute'];
+        }
+        else
+        {
+          $day = byday_to_day($year, $month, $rep_details['month_relative']);
+        }
         trimToEndOfMonth($month, $day, $year);
         break;
         
@@ -805,10 +773,6 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
         $day = $start_dom;
         $year++;
         trimToEndOfMonth($month, $day, $year);
-        break;
-   
-      case REP_MONTHLY_SAMEDAY:
-        $day += same_day_next_month($time);
         break;
 
       // Unknown repeat option
@@ -848,7 +812,11 @@ function mrbsCreateRepeatingEntrys($data)
   }
 
   $rep_details = array();
-  foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute') as $key)
+  foreach (array('rep_type',
+                 'rep_opt',
+                 'rep_num_weeks',
+                 'month_absolute',
+                 'month_relative') as $key)
   {
     if (isset($data[$key]))
     {
@@ -1210,7 +1178,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
     }
     else
     {
-      $res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks, month_absolute,
+      $res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks, month_absolute, month_relative,
                         info_time AS repeat_info_time, info_user AS repeat_info_user, info_text AS repeat_info_text
                         FROM $tbl_repeat WHERE id=${row['repeat_id']} LIMIT 1");
       if (!$res || (!$extra_row = sql_row_keyed($res, 0)))
@@ -1233,6 +1201,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
       $row['rep_opt']          = $extra_row['rep_opt'];
       $row['rep_num_weeks']    = $extra_row['rep_num_weeks'];
       $row['month_absolute']   = $extra_row['month_absolute'];
+      $row['month_relative']   = $extra_row['month_relative'];
       $row['repeat_info_time'] = $extra_row['repeat_info_time'];
       $row['repeat_info_user'] = $extra_row['repeat_info_user'];
       $row['repeat_info_text'] = $extra_row['repeat_info_text'];
@@ -1417,11 +1386,16 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
   {
     toTimeString($duration, $dur_units, FALSE);
   }
+
   // Expand a series into a list of start times:
   if ($bookings[0]['rep_type'] != REP_NONE)
   {
     $rep_details = array();
-    foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute') as $key)
+    foreach (array('rep_type',
+                   'rep_opt',
+                   'rep_num_weeks',
+                   'month_absolute',
+                   'month_relative') as $key)
     {
       if (isset($common[$key]))
       {

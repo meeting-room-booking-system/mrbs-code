@@ -379,7 +379,7 @@ function create_repeat_list($data, $action, $as_html)
   $result .= ($as_html) ? "</p>\n" : "\n\n";
   
   $rep_details = array();
-  foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute') as $key)
+  foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute', 'month_relative') as $key)
   {
     if (isset($data[$key]))
     {

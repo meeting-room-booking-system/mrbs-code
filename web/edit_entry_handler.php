@@ -36,57 +36,67 @@ $is_admin = (authGetUserLevel($user) >= 2);
 // the validity of a proposed booking and does not make the booking.
 
 // Get non-standard form variables
-$formvars = array('create_by'         => 'string',
-                  'name'              => 'string',
-                  'description'       => 'string',
-                  'start_seconds'     => 'int',
-                  'start_day'         => 'int',
-                  'start_month'       => 'int',
-                  'start_year'        => 'int',
-                  'end_seconds'       => 'int',
-                  'end_day'           => 'int',
-                  'end_month'         => 'int',
-                  'end_year'          => 'int',
-                  'all_day'           => 'string',  // bool, actually
-                  'type'              => 'string',
-                  'rooms'             => 'array',
-                  'original_room_id'  => 'int',
-                  'ical_uid'          => 'string',
-                  'ical_sequence'     => 'int',
-                  'ical_recur_id'     => 'string',
-                  'returl'            => 'string',
-                  'id'                => 'int',
-                  'rep_id'            => 'int',
-                  'edit_type'         => 'string',
-                  'rep_type'          => 'int',
-                  'rep_end_day'       => 'int',
-                  'rep_end_month'     => 'int',
-                  'rep_end_year'      => 'int',
-                  'rep_id'            => 'int',
-                  'rep_day'           => 'array',   // array of bools
-                  'rep_num_weeks'     => 'int',
-                  'month_type'        => 'int',
-                  'month_absolute'    => 'int',
-                  'skip'              => 'string',  // bool, actually
-                  'private'           => 'string',  // bool, actually
-                  'confirmed'         => 'string',
-                  'back_button'       => 'string',
-                  'timetohighlight'   => 'int',
-                  'page'              => 'string',
-                  'commit'            => 'string',
-                  'ajax'              => 'int');
+$formvars = array('create_by'          => 'string',
+                  'name'               => 'string',
+                  'description'        => 'string',
+                  'start_seconds'      => 'int',
+                  'start_day'          => 'int',
+                  'start_month'        => 'int',
+                  'start_year'         => 'int',
+                  'end_seconds'        => 'int',
+                  'end_day'            => 'int',
+                  'end_month'          => 'int',
+                  'end_year'           => 'int',
+                  'all_day'            => 'string',  // bool, actually
+                  'type'               => 'string',
+                  'rooms'              => 'array',
+                  'original_room_id'   => 'int',
+                  'ical_uid'           => 'string',
+                  'ical_sequence'      => 'int',
+                  'ical_recur_id'      => 'string',
+                  'returl'             => 'string',
+                  'id'                 => 'int',
+                  'rep_id'             => 'int',
+                  'edit_type'          => 'string',
+                  'rep_type'           => 'int',
+                  'rep_end_day'        => 'int',
+                  'rep_end_month'      => 'int',
+                  'rep_end_year'       => 'int',
+                  'rep_id'             => 'int',
+                  'rep_day'            => 'array',   // array of bools
+                  'rep_num_weeks'      => 'int',
+                  'month_type'         => 'int',
+                  'month_absolute'     => 'int',
+                  'month_relative_ord' => 'string',
+                  'month_relative_day' => 'string',
+                  'skip'               => 'string',  // bool, actually
+                  'private'            => 'string',  // bool, actually
+                  'confirmed'          => 'string',
+                  'back_button'        => 'string',
+                  'timetohighlight'    => 'int',
+                  'page'               => 'string',
+                  'commit'             => 'string',
+                  'ajax'               => 'int');
                  
 foreach($formvars as $var => $var_type)
 {
   $$var = get_form_var($var, $var_type);
-  // rep_day is a special case:  we need to strip off the string prefix,
-  // which was pit there to force an associative array
-  if ($var == 'rep_day')
+  // deal with some special cases
+  switch ($var)
   {
-    for ($i=0; $i<count($rep_day); $i++)
-    {
-      $rep_day[$i] = substr($rep_day[$i], strlen(STRING_PREFIX));
-    }
+    // we need to strip off the string prefix, which was put there to
+    // force an associative array
+    case 'rep_day':
+      for ($i=0; $i<count($rep_day); $i++)
+      {
+        $rep_day[$i] = substr($rep_day[$i], strlen(STRING_PREFIX));
+      }
+      break;
+    case 'month_relative_ord':
+      $$var = substr($$var, strlen(STRING_PREFIX));
+      break;
+    default:
+      break;
   }
 }
 
@@ -189,6 +199,12 @@ if (!$ajax)
       }
     }
   }        
+}
+
+
+if (isset($month_relative_ord) && isset($month_relative_day))
+{
+  $month_relative = $month_relative_ord . $month_relative_day;
 }
 
 // Handle private booking
@@ -469,11 +485,18 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
   $rep_details = array('rep_type'      => $rep_type,
                        'rep_opt'       => $rep_opt,
                        'rep_num_weeks' => $rep_num_weeks);
-  if (isset($month_absolute))
+  if (isset($month_type))
   {
-    $rep_details['month_absolute'] = $month_absolute;
+    if ($month_type == REP_MONTH_ABSOLUTE)
+    {
+      $rep_details['month_absolute'] = $month_absolute;
+    }
+    else
+    {
+      $rep_details['month_relative'] = $month_relative;
+    }
   }
-  
+
   // Get the first entry in the series and make that the start time
   $reps = mrbsGetRepeatEntryList($starttime, $end_date, $rep_details, 1);
 
@@ -589,7 +612,14 @@ foreach ($rooms as $room_id)
   $booking['ical_recur_id'] = $ical_recur_id;
   if ($booking['rep_type'] == REP_MONTHLY)
   {
-    $booking['month_absolute'] = $month_absolute;
+    if ($month_type == REP_MONTH_ABSOLUTE)
+    {
+      $booking['month_absolute'] = $month_absolute;
+    }
+    else
+    {
+      $booking['month_relative'] = $month_relative;
+    }
   }
 
   // Do the custom fields
@@ -597,7 +627,7 @@ foreach ($rooms as $room_id)
   {
     $booking[$key] = $value;
   }
-  
+
   // Set the various bits in the status field as appropriate
   // (Note: the status field is the only one that can differ by room)
   $status = 0;
