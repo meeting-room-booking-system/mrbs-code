@@ -478,7 +478,6 @@ $vocab["could_not_import"]            = "Could not import";
 $vocab["no_LOCATION"]                 = "The VEVENT did not include a LOCATION property";
 $vocab["invalid_RRULE"]               = "Invalid RRULE: missing FREQ part";
 $vocab["more_than_one_BYDAY"]         = "MRBS does not support more than one BYDAY value when FREQ=";
-$vocab["negative_BYDAY"]              = "MRBS does not support negative BYDAY values";
 $vocab["BYDAY_equals_5"]              = "MRBS does not support a BYDAY value of 5";
 $vocab["unsupported_FREQ"]            = "MRBS does not support FREQ=";
 $vocab["unsupported_INTERVAL"]        = "MRBS does not support INTERVAL>1 with FREQ=";

@@ -184,7 +184,6 @@ define('REP_DAILY',           1);
 define('REP_WEEKLY',          2);
 define('REP_MONTHLY',         3);
 define('REP_YEARLY',          4);
-define('REP_MONTHLY_SAMEDAY', 5);
 
 define('REP_MONTH_ABSOLUTE', 0);
 define('REP_MONTH_RELATIVE', 1);

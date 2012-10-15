@@ -466,7 +466,6 @@ $vocab["could_not_import"]            = "インポートできませんでした
 $vocab["no_LOCATION"]                 = "VEVENTがLOCATION属性を含んでいませんでした";
 $vocab["invalid_RRULE"]               = "RRULEが不正: FREQパートが見当たりません";
 $vocab["more_than_one_BYDAY"]         = "MRBS does not support more than one BYDAY value when FREQ=";
-$vocab["negative_BYDAY"]              = "MRBSは負の値のBYDAYをサポートしていません";
 $vocab["BYDAY_equals_5"]              = "MRBS値が5のBYDAYをサポートしていません";
 $vocab["unsupported_FREQ"]            = "MRBS does not support FREQ=";
 $vocab["unsupported_INTERVAL"]        = "MRBS does not support INTERVAL>1 with FREQ=";

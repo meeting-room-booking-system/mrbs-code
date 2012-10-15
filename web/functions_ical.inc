@@ -421,14 +421,13 @@ function get_repeat_details($rrule, $start_time, &$errors)
       $result['rep_opt'] = get_rep_opt($byday_days);
       break;
     case 'MONTHLY':
+      $result['rep_type'] = REP_MONTHLY;
       if (!isset($rules['BYDAY']))
       {
-        $result['rep_type'] = REP_MONTHLY;
         $result['month_absolute'] = $rules['BYMONTHDAY'];
       }
       else
       {
-        $result['rep_type'] = REP_MONTHLY_SAMEDAY;
         $byday_days = explode(',', $rules['BYDAY']);
         if (count($byday_days) > 1)
         {
@@ -447,19 +446,13 @@ function get_repeat_details($rrule, $start_time, &$errors)
             $result['rep_type'] = REP_WEEKLY;
             $result['rep_opt'] = get_rep_opt(array($day));
           }
+          elseif (($nth == '5') || ($nth == '-5'))
+          {
+            $errors[] = get_vocab("BYDAY_equals_5") . " $nth$day";
+          }
           else
           {
-            if ((int) $nth < 0)
-            {
-              $errors[] = get_vocab("negative_BYDAY") . " $nth$day";
-            }
-            elseif ($nth == '5')
-            {
-              $errors[] = get_vocab("BYDAY_equals_5") . " $nth$day";
-            }
-            // otherwise we're OK and we don't need to do anything more because we know
-            // we've only got one day and the REP_MONTHLY_SAMEDAY repeat type will work
-            // out the day from the start date
+            $result['relative'] = $byday_day;
           }
         }
       }
@@ -744,9 +737,11 @@ function create_rrule($data)
     case REP_NONE:
       return $rule;
       break;
+      
     case REP_DAILY:
       $rule .= "FREQ=DAILY";
       break;
+      
     case REP_WEEKLY:
       $rule .= "FREQ=WEEKLY";
       // Interval for WEEKLY (Interval defaults to 1)
@@ -769,26 +764,23 @@ function create_rrule($data)
         $rule .= ";BYDAY=$dow_list";
       }
       break;
-    case REP_MONTHLY_SAMEDAY:
-      $rule .= "FREQ=MONTHLY";
-      $dow = date('w', $data['start_time']);  // day of the week
-      $dom = date('j', $data['start_time']);  // day of the month
-      // Work out the week of the month.    If this is the fifth week of the month
-      // then make it -1 (last week of the month in RFC 5545 terms)
-      $wom = intval($dom/7) + 1;
-      if ($wom > 4)
-      {
-        $wom = -1;
-      }
-      $wom = sprintf('%+d', $wom);
-      $rule .= ";BYDAY=";
-      $rule .= $wom;
-      $rule .= $RFC_5545_days[$dow];
-      break;
+      
     case REP_MONTHLY:
       $rule .= "FREQ=MONTHLY";
-      $rule .= ";BYMONTHDAY=" . $data['month_absolute'];
+      if (isset($data['month_absolute']))
+      {
+        $rule .= ";BYMONTHDAY=" . $data['month_absolute'];
+      }
+      elseif (isset($data['month_relative']))
+      {
+        $rule .= ";BYDAY=" . $data['month_relative'];
+      }
+      else
+      {
+        trigger_error("Unknown monthly repeat type, E_USER_NOTICE");
+      }
       break;
+      
     case REP_YEARLY:
       $rule .= "FREQ=YEARLY";
       break;
