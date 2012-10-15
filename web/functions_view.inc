@@ -41,7 +41,6 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   global $strftime_format;
   global $tbl_entry;
   global $select_options;
-  global $RFC_5545_days;
   
   // Get the duration if we haven't got it already
   if (!isset($data['duration']))
@@ -226,8 +225,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
           // to sort out.  It assumes all languages have the same order as English
           // eg "the second Wednesday" which is probably not true.
           list($ord, $dow) = byday_split($data['month_relative']);
-          $tmp = array_keys($RFC_5545_days, $dow);
-          $value = get_vocab("ord_" . $ord) . " " . day_name($tmp[0]);
+          $value = get_vocab("ord_" . $ord) . " " . day_name(RFC_5545_day_to_ord($dow));
         }
         else
         {

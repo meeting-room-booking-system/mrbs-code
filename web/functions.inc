@@ -392,12 +392,21 @@ function date_byday($timestamp)
 }
 
 
+// Convert an RFC 5545 day to an ordinal number representing the day of the week,
+// eg "MO" returns "1"
+function RFC_5545_day_to_ord($day)
+{
+  global $RFC_5545_days;
+  
+  $tmp = array_keys($RFC_5545_days, $day);
+  return $tmp[0];
+}
+
+
 // Converts a BYDAY (eg "2SU") value for a given year and month into a
 // day of the month
 function byday_to_day($year, $month, $byday)
 {
-  global $RFC_5545_days;
-  
   // First of all normalise the month and year, as we allow $month > 12
   while ($month > 12)
   {
@@ -411,8 +420,7 @@ function byday_to_day($year, $month, $byday)
   // Get the starting day of the week
   $start_dow = date('w', mktime(0, 0, 0, $month, $start_dom, $year));
   // Turn the BYDAY day of the week into an integer
-  $tmp = array_keys($RFC_5545_days, $dow);
-  $byday_dow = $tmp[0];
+  $byday_dow = RFC_5545_day_to_ord($dow);
   // get the difference in days
   $diff = $byday_dow - $start_dow;
   $diff += ($ord > 0) ? 7 : -7;
