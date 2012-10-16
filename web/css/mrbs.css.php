@@ -564,7 +564,7 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 #logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em}
 #db_logon                 label {max-width: <?php echo $db_logon_left_col_max_width ?>em}
 
-.form_general .group      label {clear: none; width: auto; max-width: 100%; font-weight: normal; overflow: visible; text-align: left}
+.form_general .group      label {clear: none; width: auto; font-weight: normal; overflow: visible; text-align: left}
 .form_general #rep_type .group label {clear: left}
 div#rep_type {
     width: auto;
