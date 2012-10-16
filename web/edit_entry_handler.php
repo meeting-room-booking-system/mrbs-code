@@ -169,15 +169,14 @@ if (!$ajax)
   if (($rep_type == REP_WEEKLY) && ($rep_num_weeks < 1))
   {
     print_header($day, $month, $year, $area, isset($room) ? $room : "");
-  ?>
-         <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-         <p>
-           <?php echo get_vocab('you_have_not_entered')." ".get_vocab("useful_n-weekly_value"); ?>
-         </p>
-  <?php
+    echo "<h1>" . get_vocab('invalid_booking') . "</h1>\n";
+    echo "<p>\n";
+    echo  get_vocab('you_have_not_entered') . " " . get_vocab("useful_n-weekly_value");
+    echo "</p>\n";
     // Print footer and exit
     print_footer(TRUE);
   }
+  
 
   if (count($is_mandatory_field))
   {

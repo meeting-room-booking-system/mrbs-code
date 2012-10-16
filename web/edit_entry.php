@@ -1373,11 +1373,16 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
       
       // We could in the future allow -1 to -31, meaning "the nth last day of
       // the month", but for the moment we'll keep it simple
+      $options = array();
+      for ($i=1; $i<=31; $i++)
+      {
+        $options[] = $i;
+      }
       $params = array('name'       => 'month_absolute',
                       'value'      => $month_absolute,
-                      'disabled'   => $disabled,
-                      'attributes' => 'type="number" min="1" max="31" step="1"');
-      generate_input($params);
+                      'options'    => $options,
+                      'disabled'   => $disabled);
+      generate_select($params);
       echo "</fieldset>\n";
       
       // MONTH RELATIVE (eg the second Thursday of every month)
