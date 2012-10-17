@@ -11,7 +11,7 @@ global $tbl_repeat, $tbl_area, $tbl_room;
 // Get all the monthly sameday repeats.
 $sql = "SELECT T.id, T.start_time, A.timezone
           FROM $tbl_repeat T, $tbl_area A, $tbl_room M
-         WHERE T.rep_type=" . REP_MONTHLY_SAMEDAY . "
+         WHERE T.rep_type=5
            AND T.room_id=M.id
            AND M.area_id=A.id";
  
