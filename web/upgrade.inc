@@ -51,18 +51,18 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
 
     $sql = str_replace('%DB_TBL_PREFIX%', $db_tbl_prefix, $sql);
 
-    foreach (explode(";", $sql) as $command)
+    foreach (explode(";", $sql) as $query)
     {
-      // Skip any empty command (so that last semi-colon doesn't run
-      // an empty command)
-      if (preg_match("/\S/", $command))
+      // Skip any empty query (so that last semi-colon doesn't run
+      // an empty query)
+      if (preg_match("/\S/", $query))
       {
-        $res = sql_command($command, $upgrade_handle);
-        if ($res == -1)
+        $res = sql_query($query, $upgrade_handle);
+        if ($res === FALSE)
         {
           // No need to localise, should hopefully never happen
           print "<br>Tried:<pre>
-".htmlspecialchars($command)."
+".htmlspecialchars($query)."
 </pre> and got error:<pre>
 ".sql_error($upgrade_handle)."
 </pre>\n";

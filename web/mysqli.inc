@@ -99,7 +99,7 @@ function sql_mysqli_query1 ($sql, $db_conn = null)
 
 // Execute an SQL query. Returns a database-dependent result handle,
 // which should be passed back to sql_row or sql_row_keyed to get the results.
-// Returns 0 on error; use sql_error to get the error message.
+// Returns FALSE on error; use sql_error to get the error message.
 function sql_mysqli_query ($sql, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
