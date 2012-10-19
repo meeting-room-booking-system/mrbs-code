@@ -363,6 +363,75 @@ function fromPeriodString($start_period, &$units, $dur_units)
 }
 
 
+// Splits a BYDAY string into its ordinal and day parts, returned as a simple array.
+// For example "-1SU" is returned as array("-1", "SU");
+function byday_split($byday)
+{
+  $result = array();
+  $split_pos = strlen($byday) -2;
+  $result[] = substr($byday, 0, $split_pos);
+  $result[] = substr($byday, $split_pos, 2);
+  return $result;
+}
+
+
+// Returns the BYDAY value for a given timestamp, eg 4SU for fourth Sunday in
+// the month, or -1MO for the last Monday.
+function date_byday($timestamp)
+{
+  global $RFC_5545_days;
+
+  $dow = $RFC_5545_days[date('w', $timestamp)];
+  $dom = date('j', $timestamp);
+  $ord = intval(($dom - 1)/7) + 1;
+  if ($ord == 5)
+  {
+    $ord = -1;
+  }
+  return $ord . $dow;
+}
+
+
+// Convert an RFC 5545 day to an ordinal number representing the day of the week,
+// eg "MO" returns "1"
+function RFC_5545_day_to_ord($day)
+{
+  global $RFC_5545_days;
+  
+  $tmp = array_keys($RFC_5545_days, $day);
+  return $tmp[0];
+}
+
+
+// Converts a BYDAY (eg "2SU") value for a given year and month into a
+// day of the month
+function byday_to_day($year, $month, $byday)
+{
+  // First of all normalise the month and year, as we allow $month > 12
+  while ($month > 12)
+  {
+    $month -= 12;
+    $year++;
+  }
+  // Get the ordinal number and the day of the week
+  list($ord, $dow) = byday_split($byday);
+  // Get the starting day of the month
+  $start_dom = ($ord > 0) ? 1 : date('t', mktime(0, 0, 0, $month, 1, $year));
+  // Get the starting day of the week
+  $start_dow = date('w', mktime(0, 0, 0, $month, $start_dom, $year));
+  // Turn the BYDAY day of the week into an integer
+  $byday_dow = RFC_5545_day_to_ord($dow);
+  // get the difference in days
+  $diff = $byday_dow - $start_dow;
+  $diff += ($ord > 0) ? 7 : -7;
+  $diff = $diff %7;
+  // add in the weeks
+  $diff += ($ord > 0) ? ($ord - 1) * 7 : ($ord + 1) * 7;
+  
+  return $start_dom + $diff;
+}
+
+
 // Returns TRUE if the time $hm1 is before $hm2
 // $hm1 and $hm2 are associative arrays indexed by 'hours' and 'minutes'.
 // The indices are chosen to allow the result of the PHP getdate() function
@@ -442,122 +511,456 @@ function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
 }
 
 
-// Generate an input field with an associated label
-
-//   $maxlength   the maximum length of input allowed
-
-//   $attributes  additional attributes, allowing HTML5 input types such as number and
-//                email to be used.   Note that additional attributes such as min, etc.
-//                can also be included in the string, eg 'type="number" min="1" step="1"'.
-function generate_input($label_text, $name, $value, $disabled=FALSE, $maxlength=NULL, $attributes=NULL)
+// Generate a checkbox with an associated label
+//
+//   $params    an associative array holding the function parameters:
+//      MANDATORY
+//        'label'       The text to be used for the field label.
+//        'name'        The name of the input.
+//      OPTIONAL
+//        'value'       The value of the input.  Default ''
+//        'disabled'    Whether the field should be disabled.  Default FALSE
+//        'mandatory'   Whether the field is a required field.  Default FALSE
+//        'attributes'  Additional attributes, allowing HTML5 attributes.  Default ''.
+//
+function generate_checkbox($params)
 {
+  // some sanity checking on params
+  foreach (array('label', 'name', 'value', 'disabled', 'mandatory', 'attributes') as $key)
+  {
+    if (!isset($params[$key]))
+    {
+      switch ($key)
+      {
+        case 'label':
+        case 'name':
+          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
+          break;
+        case 'value':
+        case 'attributes':
+          $params[$key] = '';
+          break;
+        case 'disabled':
+        case 'mandatory':
+          $params[$key] = FALSE;
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  
   // generate the HTML
-  $html  = "<label for=\"$name\">$label_text</label>\n";
-  $html .= "<input" . ((isset($attributes)) ? " $attributes" : "") . " id=\"$name\" name=\"$name\"";
-  $html .= ($disabled) ? " disabled=\"disabled\"" : '';
-  $html .= (isset($maxlength)) ? " maxlength=\"$maxlength\"" : '';
+  // no HTML escaping for the label - it is trusted
+  $html  = "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
+  $html .= "<input type=\"checkbox\" class=\"checkbox\"";
+  $html .= " id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\" value=\"1\"";
+  $html .= (empty($params['value'])) ? "" : " checked=\"checked\"";
+  $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
+  $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
+  $html .= " " . $params['attributes'] . ">\n";
+  echo $html;
+}
+
+
+// Generate an input field with an associated label
+//
+//   $params    an associative array holding the function parameters:
+//      MANDATORY
+//        'name'        The name of the input.
+//      OPTIONAL
+//        'label'       The text to be used for the field label.
+//        'value'       The value of the input.  Default ''
+//        'suffix'      A string that is displayed after the input field
+//        'disabled'    Whether the field should be disabled.  Default FALSE
+//        'mandatory'   Whether the field is a required field.  Default FALSE
+//        'maxlength'   The maximum length of input allowed.   Default NULL (no limit)
+//        'attributes'  Additional attributes, allowing HTML5 input types such as number and
+//                      email to be used.   Note that additional attributes such as min, etc.
+//                      can also be included in the string, eg 'type="number" min="1" step="1"'.
+//                      Default ''.
+//
+function generate_input($params)
+{
+  // some sanity checking on params
+  foreach (array('label', 'name', 'value', 'disabled', 'mandatory', 'maxlength', 'attributes', 'suffix') as $key)
+  {
+    if (!isset($params[$key]))
+    {
+      switch ($key)
+      {
+        case 'name':
+          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
+          break;
+        case 'value':
+        case 'attributes':
+          $params[$key] = '';
+          break;
+        case 'disabled':
+        case 'mandatory':
+          $params[$key] = FALSE;
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  
+  // generate the HTML
+  $html = '';
+  if (isset($params['label']))
+  {
+    // no HTML escaping for the label - it is trusted
+    $html .= "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
+  }
+  $html .= "<input " . $params['attributes'];
+  $html .= " id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\"";
+  $html .= ($params['disabled']) ? " disabled=\"disabled\"" : '';
+  $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : '';
+  $html .= (isset($params['maxlength'])) ? " maxlength=\"" . $params['maxlength'] . "\"" : '';
   // Don't give an empty string if it's a number as that's not a valid floating point number
   // and will fail HTML5 validation
-  if (!isset($attributes) || (strpos($attributes, 'type="number"') === FALSE) || ($value != '') )
+  if ((strpos($params['attributes'], 'type="number"') === FALSE) || ($params['value'] != '') )
   {
-    $html .= " value=\"" . htmlspecialchars($value) . "\"";
+    $html .= " value=\"" . htmlspecialchars($params['value']) . "\"";
   }
-  $html .= ">\n";
-  // and a hidden input if the input box is disabled
-  if ($disabled)
+  $html .= ">";
+  if (isset($params['suffix']))
   {
-    $html .= "<input type=\"hidden\" name=\"$name\" value=\"".
-      htmlspecialchars($value)."\">\n";
+    $html .= "<span>" . $params['suffix'] . "</span>";
+  }
+  $html .= "\n";
+  // and a hidden input if the input box is disabled
+  if ($params['disabled'])
+  {
+    $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
+      htmlspecialchars($params['value'])."\">\n";
   }
   echo $html;
 }
 
 
-// Generate a group of radio buttons
-// $buttons is an associative array where the key is the value of the button
-// and the value is the button text
-function generate_radio_group($label_text, $name, $current, $buttons)
+// Generate a single radio button (useful when you want to arrange the members
+// of a radio group slightly differently from the standard way)
+//
+//   $params    an associative array holding the function parameters:
+//      MANDATORY
+//        'name'        The name of the input.
+//      OPTIONAL
+//        'value'       The value of the input.  Default ''
+//        'options'     An associative array where the key is the value of the
+//                      button and the value is the button text
+//        'disabled'    Whether the field should be disabled.  Default FALSE
+function generate_radio($params)
 {
-  echo "<label>$label_text:</label>\n";
-  echo "<div class=\"group\">\n";
-  // Output each radio button
-  foreach ($buttons as $value => $token)
+  // some sanity checking on params
+  foreach (array('label', 'name', 'options', 'value', 'disabled') as $key)
   {
-    echo "<label>";
-    echo "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"$value\"";          
-    if ($current == $value)
+    if (!isset($params[$key]))
     {
-      echo " checked=\"checked\"";
+      switch ($key)
+      {
+        case 'name':
+          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
+          break;
+        case 'options':
+          $params[$key] = array();
+          break;
+        case 'value':
+          $params[$key] = '';
+          break;
+        case 'disabled':
+          $params[$key] = FALSE;
+        default:
+          break;
+      }
     }
-    echo ">" . get_vocab($token);
-    echo "</label>\n";
   }
-  echo "</div>\n";
+
+  // get the value and the text for the button.   Although there should only
+  // be one element in the options array we use an array for consistency
+  // with the other functions
+  $option = each($params['options']);
+  // generate the HTML
+  // no HTML escaping for the label - it is trusted
+  $html  = "<label class=\"radio\">";
+  $html .= "<input class=\"radio\" type=\"radio\" name=\"" . $params['name'] . "\" value=\"" . $option['key'] . "\"";          
+  $html .= ($params['value'] == $option['key']) ? " checked=\"checked\"" : "";
+  $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
+  $html .= ">" . htmlspecialchars($option['value']);
+  $html .= "</label>\n";
+  
+  echo $html;
 }
 
 
-// Generates a select box from $options, an array of options
-// If $disabled is TRUE, then the select box is disabled and a hidden
-// input is generated to pass through $current
-function generate_select($label_text, $name, $current, $options, 
-                         $mandatory = FALSE, $disabled=FALSE)
+// Generate a group of radio buttons with an associated label
+//
+//   $params    an associative array holding the function parameters:
+//      MANDATORY
+//        'label'       The text to be used for the field label.
+//        'name'        The name of the input.
+//      OPTIONAL
+//        'value'       The value of the input.  Default ''
+//        'options'     An associative array where the key is the value of the
+//                      button and the value is the button text
+//        'disabled'    Whether the field should be disabled.  Default FALSE
+//
+function generate_radio_group($params)
 {
+  // some sanity checking on params
+  foreach (array('label', 'name', 'options', 'value', 'disabled') as $key)
+  {
+    if (!isset($params[$key]))
+    {
+      switch ($key)
+      {
+        case 'label':
+        case 'name':
+          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
+          break;
+        case 'options':
+          $params[$key] = array();
+          break;
+        case 'value':
+          $params[$key] = '';
+          break;
+        case 'disabled':
+          $params[$key] = FALSE;
+        default:
+          break;
+      }
+    }
+  }
   // generate the HTML
-  $html  = "<label for=\"$name\">$label_text</label>\n";
-  $html .= "<select id=\"$name\" name=\"$name\"";
-  $html .= ($disabled) ? " disabled=\"disabled\"" : "";
-  $html .= ($mandatory) ? " required" : "";
+  // no HTML escaping for the label - it is trusted
+  $html  = "<label>" . $params['label'] . "</label>\n";
+  $html .= "<div class=\"group\">\n";
+  echo $html;
+  
+  // Output each radio button
+  while ($option = each($params['options']))
+  {
+    generate_radio(array('name'     => $params['name'],
+                         'options'  => array($option['key'] => $option['value']),
+                         'value'    => $params['value'],
+                         'disabled' => $params['disabled']));
+  }
+
+  $html = "</div>\n";
+  if ($params['disabled'])
+  {
+    $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\"";
+    $html .= " value=\"" . $params['value'] . "\">\n";
+  }
+  echo $html;
+}
+
+
+// Generate a group of checkboxes with an associated label
+//
+//   $params    an associative array holding the function parameters:
+//      MANDATORY
+//        'label'       The text to be used for the field label.
+//        'name'        The name of the input.
+//      OPTIONAL
+//        'value'       The value of the input.  Can be an array. Default array()
+//        'options'     An associative array where the key is the value of the
+//                      button and the value is the button text
+//        'disabled'    Whether the field should be disabled.  Default FALSE
+//
+function generate_checkbox_group($params)
+{
+  // some sanity checking on params
+  foreach (array('label', 'name', 'options', 'value', 'disabled') as $key)
+  {
+    if (!isset($params[$key]))
+    {
+      switch ($key)
+      {
+        case 'label':
+        case 'name':
+          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
+          break;
+        case 'options':
+          $params[$key] = array();
+          break;
+        case 'value':
+          $params[$key] = array();
+          break;
+        case 'disabled':
+          $params[$key] = FALSE;
+        default:
+          break;
+      }
+    }
+  }
+  
+  if (!is_array($params['value']))
+  {
+    $params['value'] = array($params['value']);
+  }
+  
+  // generate the HTML
+  // no HTML escaping for the label - it is trusted
+  $html  = "<label>" . $params['label'] . "</label>\n";
+  $html .= "<div class=\"group\">\n";
+  // Output each checkbox
+  foreach ($params['options'] as $value => $token)
+  {
+    $html .= "<label>";
+    $html .= "<input class=\"checkbox\" type=\"checkbox\" name=\"" . $params['name'] . "\" value=\"$value\"";          
+    $html .= (in_array($value, $params['value'])) ? " checked=\"checked\"" : "";
+    $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
+    $html .= ">" . htmlspecialchars($token);
+    $html .= "</label>\n";
+    if ($params['disabled'] && in_array($value, $params['value']))
+    {
+      $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\"";
+      $html .= " value=\"$value\">\n";
+    }
+  }
+  $html .= "</div>\n";
+
+  echo $html;
+}
+
+
+// Generates a select box with an associated label
+//
+//   $params    an associative array holding the function parameters:
+//      MANDATORY
+//        'name'        The name of the input.
+//      OPTIONAL
+//        'label'       The text to be used for the field label.
+//        'options'     An array of options for the select element.   Can be a simple
+//                      array or an associative array with value => text members for
+//                      each <option> in the <select> element.   Default is an empty array.
+//        'value'       The value of the input.  Default ''
+//        'disabled'    Whether the field should be disabled.  Default FALSE
+//        'mandatory'   Whether the field is a required field.  Default FALSE
+//
+function generate_select($params)
+{
+  // some sanity checking on params
+  foreach (array('label', 'name', 'options', 'value', 'disabled', 'mandatory') as $key)
+  {
+    if (!isset($params[$key]))
+    {
+      switch ($key)
+      {
+        case 'name':
+          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
+          break;
+        case 'options':
+          $params[$key] = array();
+          break;
+        case 'value':
+          $params[$key] = '';
+          break;
+        case 'disabled':
+        case 'mandatory':
+          $params[$key] = FALSE;
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  // generate the HTML
+  // no HTML escaping for the label - it is trusted
+  $html = '';
+  if (isset($params['label']))
+  {
+    $html .= "<label for=\"" .$params['name'] . "\">" . $params['label'] . "</label>\n";
+  }
+  $html .= "<select id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\"";
+  $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
+  $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
   $html .= ">\n";
 
   // We can cope with both associative and ordinary arrays
-  if (is_assoc($options))
+  if (is_assoc($params['options']))
   {
-    foreach ($options as $key => $value)
+    foreach ($params['options'] as $value => $text)
     {
-      $html .= "<option value=\"$key\"";
-      $html .= (isset($current) && ($current == $key)) ? " selected=\"selected\"" : '';
-      $html .= ">".htmlspecialchars($value)."</option>\n";
+      $html .= "<option value=\"$value\"";
+      $html .= ($params['value'] == $value) ? " selected=\"selected\"" : '';
+      $html .= ">".htmlspecialchars($text)."</option>\n";
     }
   }
   else
   {
-    foreach ($options as $option)
+    foreach ($params['options'] as $text)
     {
       $html .= "<option";
-      $html .= (isset($current) && ($current == $option)) ? " selected=\"selected\"" : '';
-      $html .= ">".htmlspecialchars($option)."</option>\n";
+      $html .= ($params['value'] == $text) ? " selected=\"selected\"" : '';
+      $html .= ">".htmlspecialchars($text)."</option>\n";
     }
   }
   $html .= "</select>\n";
   // and a hidden input if the select box is disabled
-  if ($disabled)
+  if ($params['disabled'])
   {
-    $html .= "<input type=\"hidden\" name=\"$name\" value=\"".
-      htmlspecialchars($current)."\">\n";
+    $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
+      htmlspecialchars($params['value'])."\">\n";
   }
   
   echo $html;
 }
 
 // Generate a textarea with an associated label
-// If $disabled is TRUE, then the textarea is disabled and a hidden
-// input is generated to pass through $value
 //
-//   $attributes  additional attributes, allowing HTML5 input types such as required
-function generate_textarea($label_text, $name, $value, $disabled=FALSE, $attributes=NULL)
+//   $params    an associative array holding the function parameters:
+//      MANDATORY
+//        'label'       The text to be used for the field label.
+//        'name'        The name of the input.
+//      OPTIONAL
+//        'value'       The value of the input.  Default ''
+//        'disabled'    Whether the field should be disabled.  Default FALSE
+//        'mandatory'   Whether the field is a required field.  Default FALSE
+//        'attributes'  Additional attributes, allowing HTML5 attributes.  Default ''.
+//
+function generate_textarea($params)
 {
-  // generate the HTML
-  $html  = "<label for=\"$name\">$label_text</label>\n";
-  // textarea rows and cols are overridden by CSS height and width
-  $html .= "<textarea id=\"$name\" name=\"$name\" rows=\"8\" cols=\"40\"";
-  $html .= (isset($attributes)) ? " $attributes" : "";
-  $html .= ($disabled) ? " disabled=\"disabled\"" : '';
-  $html .= ">" . htmlspecialchars($value) . "</textarea>\n";
-  // and a hidden input if the textarea is disabled
-  if ($disabled)
+  // some sanity checking on params
+  foreach (array('label', 'name', 'value', 'disabled', 'mandatory', 'attributes') as $key)
   {
-    $html .= "<input type=\"hidden\" name=\"$name\" value=\"".
-      htmlspecialchars($value)."\">\n";
+    if (!isset($params[$key]))
+    {
+      switch ($key)
+      {
+        case 'label':
+        case 'name':
+          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
+          break;
+        case 'value':
+        case 'attributes':
+          $params[$key] = '';
+          break;
+        case 'disabled':
+        case 'mandatory':
+          $params[$key] = FALSE;
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  // generate the HTML
+  // no HTML escaping for the label - it is trusted
+  $html  = "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
+  // textarea rows and cols are overridden by CSS height and width
+  $html .= "<textarea id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\" rows=\"8\" cols=\"40\"";
+  $html .= " " . $params['attributes'];
+  $html .= ($params['disabled']) ? " disabled=\"disabled\"" : '';
+  $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : '';
+  $html .= ">" . htmlspecialchars($params['value']) . "</textarea>\n";
+  // and a hidden input if the textarea is disabled
+  if ($params['disabled'])
+  {
+    $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
+      htmlspecialchars($params['value'])."\">\n";
   }
   echo $html;
 }
@@ -988,12 +1391,16 @@ function some_area($field, $enabled=FALSE)
 }
 
 // Get the local day name based on language. Note 2000-01-02 is a Sunday.
-function day_name($daynumber)
+function day_name($daynumber, $format=NULL)
 {
   global $strftime_format;
   
-  return utf8_strftime($strftime_format['dayname'],
-                       mktime(0,0,0,1,2+$daynumber,2000));
+  if (!isset($format))
+  {
+    $format = $strftime_format['dayname'];
+  }
+  
+  return utf8_strftime($format, mktime(0,0,0,1,2+$daynumber,2000));
 }
 
 // Returns a list of repeat days as a string (eg "Thursday Friday")

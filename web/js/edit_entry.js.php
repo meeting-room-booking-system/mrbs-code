@@ -16,6 +16,27 @@ $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= $max_level);
 
 
+// Function to display the secondary repeat type fieldset appropriate
+// to the selected repeat type
+?>
+var changeRepTypeDetails = function changeRepTypeDetails()
+{
+  var repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
+  $('.rep_type_details').hide();
+  switch (repType)
+  {
+    case <?php echo REP_WEEKLY ?>:
+      $('#rep_weekly').show();
+      break;
+    case <?php echo REP_MONTHLY ?>:
+      $('#rep_monthly').show();
+      break;
+    default:
+      break;
+  }
+}
+
+<?php
 // Check to see whether any time slots should be removed from the time
 // select on the grounds that they don't exist due to a transition into DST.
 // Don't do this if we're using periods, because it doesn't apply then
@@ -141,6 +162,7 @@ function onAllDayClick()
 ?>
 function validationMessages()
 {
+  var field, label;
   <?php
   // First of all create a property in the vocab object for each of the mandatory
   // fields.    These will be the 'name' and 'rooms' fields and any other fields
@@ -166,44 +188,48 @@ function validationMessages()
   ?>
   for (var key in validationMessages.vocab)
   {
-    validationMessages.vocab[key] = $("label[for=" + key + "]").html();
-    validationMessages.vocab[key] = '"' + validationMessages.vocab[key].replace(/:$/, '') + '" ';
-    validationMessages.vocab[key] += '<?php echo escape_js(get_vocab("is_mandatory_field")) ?>';
-    
-    var field = document.getElementById(key);
-    if (field.setCustomValidity && field.willValidate)
+    label = $("label[for=" + key + "]");
+    if (label.length > 0)
     {
-      <?php
-      // We define our own custom event called 'validate' that is triggered on the
-      // 'change' event for checkboxes and select elements, and the 'input' even
-      // for all others.   We cannot use the change event for text input because the
-      // change event is only triggered when the element loses focus and we want the
-      // validation to happen whenever a character is input.   And we cannot use the
-      // 'input' event for checkboxes or select elements because it is not triggered
-      // on them.
-      ?>
-      $(field).bind('validate', function(e) {
+      validationMessages.vocab[key] = label.html();
+      validationMessages.vocab[key] = '"' + validationMessages.vocab[key].replace(/:$/, '') + '" ';
+      validationMessages.vocab[key] += '<?php echo escape_js(get_vocab("is_mandatory_field")) ?>';
+    
+      field = document.getElementById(key);
+      if (field.setCustomValidity && field.willValidate)
+      {
         <?php
-        // need to clear the custom error message otherwise the browser will
-        // assume the field is invalid
+        // We define our own custom event called 'validate' that is triggered on the
+        // 'change' event for checkboxes and select elements, and the 'input' even
+        // for all others.   We cannot use the change event for text input because the
+        // change event is only triggered when the element loses focus and we want the
+        // validation to happen whenever a character is input.   And we cannot use the
+        // 'input' event for checkboxes or select elements because it is not triggered
+        // on them.
         ?>
-        e.target.setCustomValidity("");
-        if (!e.target.validity.valid)
-        {
-          e.target.setCustomValidity(validationMessages.vocab[$(e.target).attr('id')]);
-        }
-      });
-      $(field).filter('select, [type="checkbox"]').bind('change', function(e) {
-        $(this).trigger('validate');
-      });
-      $(field).not('select, [type="checkbox"]').bind('input', function(e) {
-        $(this).trigger('validate');
-      });
-      <?php
-      // Trigger the validate event when the form is first loaded
-      ?>
-      $(field).trigger('validate');
-    }
+        $(field).bind('validate', function(e) {
+          <?php
+          // need to clear the custom error message otherwise the browser will
+          // assume the field is invalid
+          ?>
+          e.target.setCustomValidity("");
+          if (!e.target.validity.valid)
+          {
+            e.target.setCustomValidity(validationMessages.vocab[$(e.target).attr('id')]);
+          }
+        });
+        $(field).filter('select, [type="checkbox"]').bind('change', function(e) {
+          $(this).trigger('validate');
+        });
+        $(field).not('select, [type="checkbox"]').bind('input', function(e) {
+          $(this).trigger('validate');
+        });
+        <?php
+        // Trigger the validate event when the form is first loaded
+        ?>
+        $(field).trigger('validate');
+      }
+    } <?php // if (label.length > 0) ?>
   }
 }
 
@@ -330,7 +356,7 @@ function validate(form)
   ?>
   if (!("min" in testInput) || !(("step" in testInput)))
   {
-    if ((form.find('input:radio[name=rep_type]:checked').val() == <?php echo REP_N_WEEKLY ?>)
+    if ((form.find('input:radio[name=rep_type]:checked').val() == <?php echo REP_WEEKLY ?>)
         && (form.find('#rep_num_weeks').val() < <?php echo REP_NUM_WEEKS_MIN ?>))
     {
       alert("<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('useful_n-weekly_value')) ?>");
@@ -1250,4 +1276,6 @@ init = function() {
       checkTimeSlots($(this), areas[currentArea]);
     });
     
+  $('input[name="rep_type"]').change(changeRepTypeDetails);
+  changeRepTypeDetails();
 };

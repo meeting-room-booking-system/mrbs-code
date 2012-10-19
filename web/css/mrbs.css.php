@@ -552,7 +552,11 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
     text-align: right; padding-bottom: 0.8em; font-weight: bold;
 }
 
-.edit_entry     .form_general label {max-width: <?php echo $edit_entry_left_col_max_width ?>em}
+.edit_entry     .form_general label {
+    width: <?php echo $edit_entry_left_col_max_width ?>em;
+    max-width: <?php echo $edit_entry_left_col_max_width ?>em;
+}
+
 .import         .form_general label {max-width: <?php echo $import_left_col_max_width ?>em}
 .report         .form_general label {max-width: <?php echo $report_left_col_max_width ?>em}
 .search         .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
@@ -560,13 +564,25 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 #logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em}
 #db_logon                 label {max-width: <?php echo $db_logon_left_col_max_width ?>em}
 
-.form_general .group      label {clear: none; width: auto; max-width: 100%; font-weight: normal; overflow: visible; text-align: left}
+.form_general .group      label {clear: none; width: auto; font-weight: normal; overflow: visible; text-align: left}
+.form_general #rep_type .group label {clear: left}
+div#rep_type {
+    width: auto;
+    border-right: 1px solid <?php echo $site_faq_entry_border_color ?>;
+    margin-right: 1em;
+    margin-bottom: 0.5em;
+    padding-right: 1em;
+}
+fieldset.rep_type_details {clear: none; padding-top: 0}
+fieldset.rep_type_details fieldset {padding-top: 0}
+
+.rep_type_details label {text-align: left}
 
 .form_general input {
     display: block; float: left; margin-left: <?php echo $general_gap ?>em; 
     font-family: <?php echo $standard_font_family ?>; font-size: small
 }
-.edit_entry     .form_general input {width: <?php echo $edit_entry_textarea_width ?>em}
+.edit_entry     .form_general input {width: <?php echo $edit_entry_textarea_width ?>em; margin-right: 1em}
 .report         .form_general input {width: <?php echo $report_input_width ?>em}
 .search         .form_general input {width: <?php echo $search_input_width ?>em}
 .edit_area_room .form_general input {width: <?php echo $edit_area_room_input_width ?>em}
@@ -583,7 +599,8 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
     font-family: <?php echo $standard_font_family ?>; font-size: small
 }
 .form_general select {float: left; margin-left: <?php echo $general_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
-.form_general input.radio {margin-top: 0.1em; margin-right: 2px}
+.form_general label.radio {font-weight: normal; width: auto}
+.form_general input.radio {margin-top: 0.1em; margin-right: 2px; width: auto}
 .form_general input.checkbox {width: auto; margin-top: 0.2em}
 .edit_area_room .form_general input.checkbox {margin-left: <?php echo $general_gap ?>em}
 .edit_area_room .form_general #booking_policies input.text {width: 4em}
@@ -617,7 +634,7 @@ div#edit_entry_submit_save {float: left; clear: none; width: auto}
 .form_general input.all_day, .form_general input#area_def_duration_all_day {width: auto; margin-left: 3.0em; margin-right: 0.5em}
 .form_general #div_rooms select, .form_general #div_typematch select {float: left; margin-right: 2.0em}
 fieldset#rep_info {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.7em}
-.form_general input#rep_num_weeks {width: 4em}
+.form_general input#rep_num_weeks, .form_general input#month_absolute {width: 4em}
 
 .edit_entry span#end_time_error {display: block; float: left; margin-left: 2em; font-weight: normal}
 .edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}

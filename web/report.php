@@ -1250,7 +1250,11 @@ if ($output_form)
         echo "<div id=\"div_output\">\n";
         $buttons = array(REPORT  => "report",
                          SUMMARY => "summary");
-        generate_radio_group(get_vocab('output'), 'output', $output, $buttons);                  
+        $params = array('label'   => get_vocab('output') . ":",
+                        'name'    => 'output',
+                        'value'   => $output,
+                        'options' => $buttons);
+        generate_radio_group($params);                  
         echo "</div>\n";
         
         echo "<div id=\"div_format\">\n";
@@ -1261,7 +1265,11 @@ if ($output_form)
         {
           $buttons[OUTPUT_ICAL] = "ical";
         }
-        generate_radio_group(get_vocab("format"), 'output_format', $output_format, $buttons);
+        $params = array('label'   => get_vocab('format') . ":",
+                        'name'    => 'output_format',
+                        'value'   => $output_format,
+                        'options' => $buttons);
+        generate_radio_group($params);
         echo "</div>\n";
         ?>
 

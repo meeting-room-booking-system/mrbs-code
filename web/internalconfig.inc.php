@@ -140,7 +140,7 @@ define('REGEX_TEXT_POS', '\s*\S+.*');        // At least one non-whitespace char
 define('REGEX_TEXT_NEG', '/(^$)|(^\s+$)/');  // Cannot be blank or all whitespaces
 
 // Minimum useful value for rep_num_weeks
-define('REP_NUM_WEEKS_MIN',  2);  // In theory 1 would be OK, but then you'd use Weekly
+define('REP_NUM_WEEKS_MIN',  1);
 
 
  /*************************************************
@@ -184,8 +184,9 @@ define('REP_DAILY',           1);
 define('REP_WEEKLY',          2);
 define('REP_MONTHLY',         3);
 define('REP_YEARLY',          4);
-define('REP_MONTHLY_SAMEDAY', 5);
-define('REP_N_WEEKLY',        6);
+
+define('REP_MONTH_ABSOLUTE', 0);
+define('REP_MONTH_RELATIVE', 1);
 
 
 /*************************************************
@@ -196,12 +197,16 @@ define('TZDIR',           'tzurl/zoneinfo');          // Directory containing TZ
 define('TZDIR_OUTLOOK',   'tzurl/zoneinfo-outlook');  // Outlook compatible TZURL definitions
 
 
-/*************************************************
- * ICALENDAR CONSTANTS - internal use, do not change
- *************************************************/
+/*****************************************
+ * ICALENDAR - internal use, do not change
+ *****************************************/
  
 define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
 define ('ICAL_EOL', "\r\n");            // Lines must be terminated by CRLF
+
+// Create an array which can be used to map day of the week numbers (0..6)
+// onto days of the week as defined in RFC 5545
+$RFC_5545_days = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
 
 
 /****************************************************************
@@ -249,6 +254,8 @@ $standard_fields['repeat'] = array('id',
                                    'type',
                                    'description',
                                    'rep_num_weeks',
+                                   'month_absolute',
+                                   'month_relative',
                                    'status',
                                    'reminded',
                                    'info_time',
@@ -339,6 +346,8 @@ define('DEL_ENTRY_AJAX_BATCH_SIZE', 100);
 
 // Interval types used in booking policies
 $interval_types = array('day', 'week', 'month', 'year', 'future');
+
+define('STRING_PREFIX', 'S');  // Just some string - doesn't matter what it is
 
 
 /********************************************************

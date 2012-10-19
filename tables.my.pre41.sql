@@ -116,7 +116,9 @@ CREATE TABLE mrbs_repeat
   name           varchar(80) DEFAULT '' NOT NULL,
   type           char DEFAULT 'E' NOT NULL,
   description    text,
-  rep_num_weeks  smallint NULL, 
+  rep_num_weeks  smallint NULL,
+  month_absolute smallint DEFAULT NULL,
+  month_relative varchar(4) DEFAULT NULL,
   status         tinyint unsigned NOT NULL DEFAULT 0,
   reminded       int,
   info_time      int,
@@ -161,6 +163,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '30');
+  VALUES ( 'db_version', '35');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

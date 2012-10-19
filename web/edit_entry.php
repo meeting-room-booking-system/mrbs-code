@@ -51,7 +51,6 @@
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-
 $fields = sql_field_info($tbl_entry);
 $custom_fields = array();
 
@@ -87,16 +86,19 @@ foreach ($fields as $field)
 // is really the day before.
 function getbookingdate($t)
 {
-  global $eveningends, $eveningends_minutes;
+  global $eveningends, $eveningends_minutes, $resolution;
   
   $date = getdate($t);
-  if (day_past_midnight() &&
-      !hm_before(array('hours' => $eveningends, 'minutes' => $eveningends_minutes), $date))
+  
+  $t_secs = (($date['hours'] * 60) + $date['minutes']) * 60;
+  $e_secs = ((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution;
+  if (day_past_midnight() && ($t_secs <= $e_secs))
   {
     $date = getdate(mktime($date['hours'], $date['minutes'], $date['seconds'],
                            $date['mon'], $date['mday'] -1, $date['year']));
     $date['hours'] += 24;
   }
+  
   return $date;
 }
 
@@ -170,19 +172,26 @@ function create_field_entry_name($disabled=FALSE)
   global $name, $select_options, $maxlength, $is_mandatory_field;
   
   echo "<div id=\"div_name\">\n";
-  $label_text = get_vocab("namebooker") . ":";
+  
+  $params = array('label'     => get_vocab("namebooker") . ":",
+                  'name'      => 'name',
+                  'value'     => $name,
+                  'disabled'  => $disabled);
+                  
   if (!empty($select_options['entry.name']))
   {
-    generate_select($label_text, 'name', $name, $select_options['entry.name'],
-                    $is_mandatory_field['entry.name'], $disabled);
+    $params['options']   = $select_options['entry.name'];
+    $params['mandatory'] = $is_mandatory_field['entry.name'];
+    generate_select($params);
   }
   else
   {
-    // 'required' is there to prevent null input (pattern doesn't seem to be triggered until
-    // there is sonething there).   [\S]+.* is any non-whitespace character followed by any number
-    // of other characters except a line terminator
-    generate_input($label_text, 'name', $name, $disabled, $maxlength['entry.name'], 'type="text" required pattern="' . REGEX_TEXT_POS . '"');
-    //generate_input($label_text, 'name', $name, $disabled, $maxlength['entry.name'], 'required pattern="[\S]+.*"');
+    // 'mandatory' is there to prevent null input (pattern doesn't seem to be triggered until
+    // there is something there).
+    $params['mandatory'] = TRUE;
+    $params['maxlength'] = $maxlength['entry.name'];
+    $params['attributes'] = 'type="text" pattern="' . REGEX_TEXT_POS . '"';
+    generate_input($params);
   }
   echo "</div>\n";
 }
@@ -193,16 +202,21 @@ function create_field_entry_description($disabled=FALSE)
   global $description, $select_options, $is_mandatory_field;
   
   echo "<div id=\"div_description\">\n";
-  $label_text = get_vocab("fulldescription");
+  
+  $params = array('label' => get_vocab("fulldescription"),
+                  'name' => 'description',
+                  'value' => $description,
+                  'disabled' => $disabled,
+                  'mandatory' => isset($is_mandatory_field['entry.description']) && $is_mandatory_field['entry.description']);
+  
   if (!empty($select_options['entry.description']))
   {
-    generate_select($label_text, 'description', $description, $select_options['entry.description'],
-                    $is_mandatory_field['entry.description'], $disabled);
+    $params['options'] = $select_options['entry.description'];
+    generate_select($params);
   }
   else
   {
-    $attributes = (isset($is_mandatory_field['entry.description']) && $is_mandatory_field['entry.description']) ? "required" : "";
-    generate_textarea($label_text, 'description', $description, $disabled, $attributes);
+    generate_textarea($params);
   }
   echo "</div>\n";
 }
@@ -549,19 +563,20 @@ function create_field_entry_type($disabled=FALSE)
   global $booking_types, $type;
   
   echo "<div id=\"div_type\">\n";
-  echo "<label for=\"type\">" . get_vocab("type") . ":</label>\n";
-  echo "<select id=\"type\" name=\"type\"" .
-       (($disabled) ? " disabled=\"disabled\"" : "") .
-       ">\n";
+  
+  $params = array('label'    => get_vocab("type") . ":",
+                  'name'     => 'type',
+                  'disabled' => $disabled,
+                  'options'  => array(),
+                  'value'    => $type);
+                  
   foreach ($booking_types as $key)
   {
-    echo "<option value=\"$key\"" . (($type == $key) ? " selected=\"selected\"" : "") . ">".get_type_vocab($key)."</option>\n";
+    $params['options'][$key] = get_type_vocab($key);
   }
-  echo "</select>\n";
-  if ($disabled)
-  {
-    echo "<input type=\"hidden\" name=\"type\" value=\"$type\">\n";
-  }
+  
+  generate_select($params);
+  
   echo "</div>\n";
 }
 
@@ -574,23 +589,18 @@ function create_field_entry_confirmation_status($disabled=FALSE)
   if ($confirmation_enabled)
   {
     echo "<div id=\"div_confirmation_status\">\n";
-    echo "<label>" . get_vocab("confirmation_status") . ":</label>\n";
-    echo "<div class=\"group\">\n";
-    echo "<label><input class=\"radio\" name=\"confirmed\" type=\"radio\" value=\"1\"" .
-      (($confirmed) ? " checked=\"checked\"" : "") .
-      (($disabled) ? " disabled=\"disabled\"" : "") .
-      ">" . get_vocab("confirmed") . "</label>\n";
-    echo "<label><input class=\"radio\" name=\"confirmed\" type=\"radio\" value=\"0\"" .
-      (($confirmed) ? "" : " checked=\"checked\"") .
-      (($disabled) ? " disabled=\"disabled\"" : "") .
-      ">" . get_vocab("tentative") . "</label>\n";
-    echo "</div>\n";
-    if ($disabled)
-    {
-      echo "<input type=\"hidden\" name=\"confirmed\" value=\"" .
-           (($confirmed) ? "1" : "0") .
-           "\">\n";
-    }
+    
+    $buttons[0] = get_vocab("tentative");
+    $buttons[1] = get_vocab("confirmed");
+    
+    $params = array('label'    => get_vocab("confirmation_status") . ":",
+                    'name'     => 'confirmed',
+                    'value'    => ($confirmed) ? 1 : 0,
+                    'options'  => $buttons,
+                    'disabled' => $disabled);
+                    
+    generate_radio_group($params);
+
     echo "</div>\n";
   }
 }
@@ -603,25 +613,19 @@ function create_field_entry_privacy_status($disabled=FALSE)
   // Privacy status
   if ($private_enabled)
   {
-    // No need to pass through a hidden variable if disabled because the handler will sort it out
     echo "<div id=\"div_privacy_status\">\n";
-    echo "<label>" . get_vocab("privacy_status") . ":</label>\n";
-    echo "<div class=\"group\">\n";
-    echo "<label><input class=\"radio\" name=\"private\" type=\"radio\" value=\"0\"" .
-      (($private) ? "" : " checked=\"checked\"") .
-      (($private_mandatory || $disabled) ? " disabled=\"disabled\"" : "") .
-      ">" . get_vocab("public") . "</label>\n";
-    echo "<label><input class=\"radio\" name=\"private\" type=\"radio\" value=\"1\"" .
-      (($private) ? " checked=\"checked\"" : "") .
-      (($private_mandatory || $disabled) ? " disabled=\"disabled\"" : "") .
-      ">" . get_vocab("private") . "</label>\n";
-    echo "</div>\n";
-    if ($disabled)
-    {
-      echo "<input type=\"hidden\" name=\"private\" value=\"" .
-           (($private) ? "1" : "0") .
-           "\">\n";
-    }
+    
+    $buttons[0] = get_vocab("public");
+    $buttons[1] = get_vocab("private");
+    
+    $params = array('label'    => get_vocab("privacy_status") . ":",
+                    'name'     => 'private',
+                    'value'    => ($private) ? 1 : 0,
+                    'options'  => $buttons,
+                    'disabled' => $private_mandatory || $disabled);
+                    
+    generate_radio_group($params);
+
     echo "</div>\n";
   }
 }
@@ -631,39 +635,32 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
 {
   global $custom_fields, $tbl_entry, $select_options;
   global $is_mandatory_field, $text_input_max;
-
-  $var_name = VAR_PREFIX . $key;
-  $value = $custom_fields[$key];
-  $label_text = get_loc_field_name($tbl_entry, $key) . ":";
-  $mandatory = (array_key_exists("entry.$key", $is_mandatory_field) &&
-                $is_mandatory_field["entry.$key"]) ? true : false;
+  
   echo "<div>\n";
+  $params = array('label'     => get_loc_field_name($tbl_entry, $key) . ":",
+                  'name'      => VAR_PREFIX . $key,
+                  'value'     => $custom_fields[$key],
+                  'disabled'  => $disabled,
+                  'mandatory' => isset($is_mandatory_field["entry.$key"]) && $is_mandatory_field["entry.$key"]);
   // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
   // assume are intended to be booleans)
   if (($field['nature'] == 'boolean') || 
     (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
   {
-    echo "<label for=\"$var_name\">$label_text</label>\n";
-    echo "<input type=\"checkbox\" class=\"checkbox\" " .
-      "id=\"$var_name\" name=\"$var_name\" value=\"1\" " .
-      ((!empty($value)) ? " checked=\"checked\"" : "") .
-      (($disabled) ? " disabled=\"disabled\"" : "") .
-      (($mandatory) ? " required" : "") .
-      ">\n";
+    generate_checkbox($params);
   }
   // Output a select box if they want one
   elseif (!empty($select_options["entry.$key"]))
   {
-    generate_select($label_text, $var_name, $value,
-      $select_options["entry.$key"], $mandatory, $disabled);
+    $params['options'] = $select_options["entry.$key"];
+    generate_select($params);
   }
   // Output a textarea if it's a character string longer than the limit for a
   // text input
   elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
   {
     // HTML5 does not allow a pattern attribute for the textarea element
-    $attributes = (isset($is_mandatory_field["entry.$key"]) && $is_mandatory_field["entry.$key"]) ? "required" : "";
-    generate_textarea($label_text, $var_name, $value, $disabled, $attributes);   
+    generate_textarea($params);   
   }
   // Otherwise output a text input
   else
@@ -677,18 +674,14 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
     {
       $attributes = 'type="text"';
     }
-    if (isset($is_mandatory_field["entry.$key"]) && $is_mandatory_field["entry.$key"])
+    if ($params['mandatory'])
     {
-      $attributes .= ' required';
       // 'required' is not sufficient for strings, because we also want to make sure
       // that the string contains at least one non-whitespace character
       $attributes .= ($is_integer_field) ? '' : ' pattern="' . REGEX_TEXT_POS . '"';
     }
-    generate_input($label_text, $var_name, $value, $disabled, NULL, $attributes);
-  }
-  if ($disabled)
-  {
-    echo "<input type=\"hidden\" name=\"$var_name\" value=\"$value\">\n";
+    $params['attributes'] = $attributes;
+    generate_input($params);
   }
   echo "</div>\n";
 }
@@ -824,6 +817,11 @@ if (isset($id))
     $keep_private = FALSE;
   }
   
+  // default settings
+  $rep_day = array();
+  $rep_type = REP_NONE;
+  $rep_num_weeks = 1;
+  
   foreach ($row as $column => $value)
   {
     switch ($column)
@@ -906,7 +904,8 @@ if (isset($id))
 
   if(($entry_type == ENTRY_RPT_ORIGINAL) || ($entry_type == ENTRY_RPT_CHANGED))
   {
-    $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_num_weeks
+    $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_num_weeks,
+                   month_absolute, month_relative
               FROM $tbl_repeat 
              WHERE id=$rep_id
              LIMIT 1";
@@ -928,8 +927,13 @@ if (isset($id))
    
     $rep_type = $row['rep_type'];
 
+    if (!isset($rep_type))
+    {
+      $rep_type == REP_NONE;
+    }
+    
     // If it's a repeating entry get the repeat details
-    if (isset($rep_type) && ($rep_type != REP_NONE))
+    if ($rep_type != REP_NONE)
     {
       // If we're editing the series we want the start_time and end_time to be the
       // start and of the first entry of the series, not the start of this entry
@@ -945,12 +949,10 @@ if (isset($id))
       // Get the end date in string format as well, for use when
       // the input is disabled
       $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
-
-      $rep_day = array();
+      
       switch ($rep_type)
       {
         case REP_WEEKLY:
-        case REP_N_WEEKLY:
           for ($i=0; $i<7; $i++)
           {
             if ($row['rep_opt'][$i])
@@ -958,17 +960,24 @@ if (isset($id))
               $rep_day[] = $i;
             }
           }
-          // Get the repeat days as an array for use
-          // when the input is disabled
-          $rep_opt = $row['rep_opt'];
-
-          if ($rep_type == REP_N_WEEKLY)
-          {
-            $rep_num_weeks = $row['rep_num_weeks'];
-          }
-
+          $rep_num_weeks = $row['rep_num_weeks'];
           break;
-
+        case REP_MONTHLY:
+          if (isset($row['month_absolute']))
+          {
+            $month_type = REP_MONTH_ABSOLUTE;
+            $month_absolute = $row['month_absolute'];
+          }
+          elseif (isset($row['month_relative']))
+          {
+            $month_type = REP_MONTH_RELATIVE;
+            $month_relative = $row['month_relative'];
+          }
+          else
+          {
+            trigger_error("Invalid monthly repeat", E_USER_WARNING);
+          }
+          break;
         default:
           break;
       }
@@ -984,18 +993,9 @@ else
   $description   = $default_description;
   $type          = $default_type;
   $room_id       = $room;
-  $rep_id        = 0;
-  if (!isset($rep_type))  // We might have set it through a drag selection
-  {
-    $rep_type      = REP_NONE;
-    $rep_end_day   = $day;
-    $rep_end_month = $month;
-    $rep_end_year  = $year;
-  }
-  $rep_day       = array();
   $private       = $private_default;
   $confirmed     = $confirmed_default;
-  
+
   // now initialise the custom fields
   foreach ($fields as $field)
   {
@@ -1051,7 +1051,29 @@ else
     $pm7 = get_start_last_slot($month, $day, $year);
     $end_time = min($end_time, $pm7 + $resolution);
   }
+  
+  $rep_id        = 0;
+  if (!isset($rep_type))  // We might have set it through a drag selection
+  {
+    $rep_type      = REP_NONE;
+    $rep_end_day   = $day;
+    $rep_end_month = $month;
+    $rep_end_year  = $year;
+  }
+  $rep_day       = array(date('w', $start_time));
+  $rep_num_weeks = 1;
+  $month_type = REP_MONTH_ABSOLUTE;
 }
+
+if (!isset($month_relative))
+{
+  $month_relative = date_byday($start_time);
+}
+if (!isset($month_absolute))
+{
+  $month_absolute = date('j', $start_time);
+}
+list($month_relative_ord, $month_relative_day) = byday_split($month_relative);
 
 $start_hour  = strftime('%H', $start_time);
 $start_min   = strftime('%M', $start_time);
@@ -1251,127 +1273,177 @@ foreach ($edit_entry_field_order as $key)
     break;
   }
 }
-    
-    // REPEAT BOOKING INPUTS
-    if (($edit_type == "series") && $repeats_allowed)
-    {
-      // If repeats are allowed and the edit_type is a series (which means
-      // that either you're editing an existing series or else you're making
-      // a new booking) then print the repeat inputs
-      echo "<fieldset id=\"rep_info\">\n";
-      echo "<legend></legend>\n";
-      ?>
-      <div id="rep_type">
-        <label><?php echo get_vocab("rep_type")?>:</label>
-        <div class="group">
-          <?php
-          for ($i = 0; isset($vocab["rep_type_$i"]); $i++)
-          {
-            echo "      <label><input class=\"radio\" name=\"rep_type\" type=\"radio\" value=\"" . $i . "\"";
-            if ($i == $rep_type)
-            {
-              echo " checked=\"checked\"";
-            }
-            echo ">" . get_vocab("rep_type_$i") . "</label>\n";
-          }
-          ?>
-        </div>
-      </div>
 
-      <div id="rep_end_date">
-        <?php
-        echo "<label>" . get_vocab("rep_end_date") . ":</label>\n";
-        genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year);
-        ?>
-      </div>
+// Apply the string prefix to the rep_day values.  (The string prefix is 
+// necessary because we want the options array to be associative)
+for ($i=0; $i<count($rep_day); $i++)
+{
+  $rep_day[$i] = STRING_PREFIX . $rep_day[$i];
+}
+
+// Show the repeat fields if (a) it's a new booking and repeats are allowed,
+// or else if it's an existing booking.  (It's not particularly obvious but
+// if edit_type is "series" then it means that either you're editing an existing
+// series or else you're making a new booking.  This should be tidied up sometime!)
+if ((($edit_type == "series") && $repeats_allowed) || isset($id))
+{
+  // If repeats aren't allowed or this is not a series then disable
+  // the repeat fields - they're for information only
+  // (NOTE: when repeat bookings are restricted to admins, an ordinary user
+  // would not normally be able to get to the stage of trying to edit a series.
+  // But we have to cater for the possibility because it could happen if (a) the
+  // series was created before the policy was introduced or (b) the user has
+  // been demoted since the series was created).
+  $disabled = ($edit_type != "series") || !$repeats_allowed;
+  
+  echo "<fieldset id=\"rep_info\">\n";
+  echo "<legend></legend>\n";
       
-      <div id="rep_day">
-        <label><?php echo get_vocab("rep_rep_day")?>:<br><?php echo get_vocab("rep_for_weekly")?></label>
-        <div class="group">
-          <?php
-          // Display day name checkboxes according to language and preferred weekday start.
-          for ($i = 0; $i < 7; $i++)
-          {
-            $wday = ($i + $weekstarts) % 7;
-            echo "      <label><input class=\"checkbox\" name=\"rep_day[]\" value=\"$wday\" type=\"checkbox\"";
-            if (in_array($wday, $rep_day))
-            {
-              echo " checked=\"checked\"";
-            }
-            echo ">" . day_name($wday) . "</label>\n";
-          }
-          ?>
-        </div>
-      </div>
-     
-      <?php
-      echo "<div>\n";
-      $label_text = get_vocab("rep_num_weeks") . ":<br>" . get_vocab("rep_for_nweekly");
-      $attributes = 'type="number" min="' . REP_NUM_WEEKS_MIN . '" step="1"';
-      generate_input($label_text, 'rep_num_weeks', $rep_num_weeks, FALSE, NULL, $attributes);
-      echo "</div>\n";
-      // Checkbox for skipping past conflicts
-      echo "<div>\n";
-      echo "<label for=\"skip\">" . get_vocab("skip_conflicts") . ":</label>\n";
-      echo "<input type=\"checkbox\" class=\"checkbox\" " .
-                "id=\"skip\" name=\"skip\" value=\"1\" " .
-                ((!empty($skip_default)) ? " checked=\"checked\"" : "") .
-                ">\n";
+  // Repeat type
+  echo "<div id=\"rep_type\">\n";
+  $params = array('label'    => get_vocab("rep_type") . ":",
+                  'name'     => 'rep_type',
+                  'value'    => $rep_type,
+                  'disabled' => $disabled,
+                  'options'  => array());
+  foreach (array(REP_NONE, REP_DAILY, REP_WEEKLY, REP_MONTHLY, REP_YEARLY) as $i)
+  {
+    $params['options'][$i] = get_vocab("rep_type_$i");
+  }
+  generate_radio_group($params);
+  echo "</div>\n";
+  
+  // No point in showing anything more if the repeat fields are disabled
+  // and the repeat type is None
+  if (!$disabled || ($rep_type != REP_NONE))
+  {
+    // And no point in showing the weekly repeat details if the repeat
+    // fields are disabled and the repeat type is not a weekly repeat
+    if (!$disabled || ($rep_type == REP_WEEKLY))
+    {
+      echo "<fieldset class= \"rep_type_details js_none\" id=\"rep_weekly\">\n";
+      echo "<legend></legend>\n";
+      // Repeat day
+      echo "<div id=\"rep_day\">\n";
+      $params = array('label'    => get_vocab("rep_rep_day") . ":",
+                      'name'     => 'rep_day[]',
+                      'value'    => $rep_day,
+                      'disabled' => $disabled,
+                      'options'  => array());
+      for ($i = 0; $i < 7; $i++)
+      {
+        // Display day name checkboxes according to language and preferred weekday start.
+        $wday = ($i + $weekstarts) % 7;
+        // We need to ensure the index is a string to force the array to be associative
+        $v = STRING_PREFIX . $wday;
+        $params['options'][$v] = day_name($wday, $strftime_format['dayname_edit']);
+      }
+      generate_checkbox_group($params);
       echo "</div>\n";
 
-      echo "</fieldset>\n";
-    }
-    elseif (isset($id))
-    {
-      // otherwise, if it's an existing booking, show the repeat information
-      // and pass it through to the handler but do not let the user edit it
-      // (because they're either not allowed to, or else they've chosen to edit
-      // an individual entry rather than a series).
-      // (NOTE: when repeat bookings are restricted to admins, an ordinary user
-      // would not normally be able to get to the stage of trying to edit a series.
-      // But we have to cater for the possibility because it could happen if (a) the
-      // series was created before the policy was introduced or (b) the user has
-      // been demoted since the series was created).
-      $key = "rep_type_" . (isset($rep_type) ? $rep_type : REP_NONE);
-      echo "<fieldset id=\"rep_info\">\n";
-      echo "<legend></legend>\n";
+      // Repeat frequency
       echo "<div>\n";
-      echo "<label>" . get_vocab("rep_type") . ":</label>\n";
-      echo "<select disabled=\"disabled\">\n";
-      echo "<option>" . get_vocab($key) . "</option>\n";
-      echo "</select>\n";
-      echo "<input type=\"hidden\" name=\"rep_type\" value=\"" . REP_NONE . "\">\n";
+      $params = array('label'      => get_vocab("rep_num_weeks") . ":",
+                      'name'       => 'rep_num_weeks',
+                      'value'      => $rep_num_weeks,
+                      'suffix'     => get_vocab("weeks"),
+                      'disabled'   => $disabled,
+                      'attributes' => 'type="number" min="' . REP_NUM_WEEKS_MIN . '" step="1"');
+      generate_input($params);
+    
       echo "</div>\n";
-      if (isset($rep_type) && ($rep_type != REP_NONE))
-      {
-        $opt = "";
-        if (($rep_type == REP_WEEKLY) || ($rep_type == REP_N_WEEKLY))
-        {
-          // Display day names according to language and preferred weekday start.
-          for ($i = 0; $i < 7; $i++)
-          {
-            $wday = ($i + $weekstarts) % 7;
-            if ($rep_opt[$wday])
-            {
-              $opt .= day_name($wday) . " ";
-            }
-          }
-        }
-        if($opt)
-        {
-          echo "  <div><label>".get_vocab("rep_rep_day").":</label><input type=\"text\" value=\"$opt\" disabled=\"disabled\"></div>\n";
-        }
-        echo "  <div><label>".get_vocab("rep_end_date").":</label><input type=\"text\" value=\"$rep_end_date\" disabled=\"disabled\"></div>\n";
-        if ($rep_type == REP_N_WEEKLY)
-        {
-          echo "<div>\n";
-          echo "<label for=\"rep_num_weeks\">" . get_vocab("rep_num_weeks") . ":<br>" . get_vocab("rep_for_nweekly") . "</label>\n";
-          echo "<input type=\"text\" id=\"rep_num_weeks\" name=\"rep_num_weeks\" value=\"$rep_num_weeks\" disabled=\"disabled\">\n";
-          echo "</div>\n";
-        }
-      }
       echo "</fieldset>\n";
     }
+    
+    // And no point in showing the monthly repeat details if the repeat
+    // fields are disabled and the repeat type is not a monthly repeat
+    if (!$disabled || ($rep_type == REP_MONTHLY))
+    {
+      echo "<fieldset class= \"rep_type_details js_none\" id=\"rep_monthly\">\n";
+      echo "<legend></legend>\n";
+      
+      // MONTH ABSOLUTE (eg Day 15 of every month)
+      echo "<fieldset>\n";
+      echo "<legend></legend>\n";
+      $params = array('name'     => 'month_type',
+                      'options'  => array(REP_MONTH_ABSOLUTE => get_vocab("month_absolute")),
+                      'value'    => $month_type,
+                      'disabled' => $disabled);
+      generate_radio($params);
+      
+      // We could in the future allow -1 to -31, meaning "the nth last day of
+      // the month", but for the moment we'll keep it simple
+      $options = array();
+      for ($i=1; $i<=31; $i++)
+      {
+        $options[] = $i;
+      }
+      $params = array('name'       => 'month_absolute',
+                      'value'      => $month_absolute,
+                      'options'    => $options,
+                      'disabled'   => $disabled);
+      generate_select($params);
+      echo "</fieldset>\n";
+      
+      // MONTH RELATIVE (eg the second Thursday of every month)
+      echo "<fieldset>\n";
+      echo "<legend></legend>\n";
+      $params = array('name'     => 'month_type',
+                      'options'  => array(REP_MONTH_RELATIVE => get_vocab("month_relative")),
+                      'value'    => $month_type,
+                      'disabled' => $disabled);
+      generate_radio($params);
+      
+      // Note: the select box order does not internationalise very well and could
+      // do with revisiting.   It assumes all languages have the same order as English
+      // eg "the second Wednesday" which is probably not true.
+      $options = array();
+      foreach (array('1', '2', '3', '4', '-1', '-2', '-3', '-4') as $i)
+      {
+        $options[STRING_PREFIX . $i] = get_vocab("ord_" . $i);
+      }
+      $params = array('name'     => 'month_relative_ord',
+                      'value'    => STRING_PREFIX . $month_relative_ord,
+                      'disabled' => $disabled,
+                      'options'  => $options);
+      generate_select($params);
+      
+      $options = array();
+      for ($i=0; $i<7; $i++)
+      {
+        $i_offset = ($i + $weekstarts)%7;
+        $options[$RFC_5545_days[$i_offset]] = day_name($i_offset);
+      }
+      $params = array('name'     => 'month_relative_day',
+                      'value'    => $month_relative_day,
+                      'disabled' => $disabled,
+                      'options'  => $options);
+      generate_select($params);
+      echo "</fieldset>\n";
+      
+      echo "</fieldset>\n";
+    }
+    
+    // Repeat end date
+    echo "<div id=\"rep_end_date\">\n";
+    echo "<label>" . get_vocab("rep_end_date") . ":</label>\n";
+    genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year, '', $disabled);
+    echo "</div>\n";
+    
+    // Checkbox for skipping past conflicts
+    if (!$disabled)
+    {
+      echo "<div>\n";
+      $params = array('label' => get_vocab("skip_conflicts") . ":",
+                      'name' => 'skip',
+                      'value' => !empty($skip_default));
+      generate_checkbox($params);
+      echo "</div>\n";
+    }
+  }
+
+  echo "</fieldset>\n";
+}
     
     ?>
     <input type="hidden" name="returl" value="<?php echo htmlspecialchars($returl) ?>">

@@ -378,11 +378,18 @@ function create_repeat_list($data, $action, $as_html)
   }
   $result .= ($as_html) ? "</p>\n" : "\n\n";
   
+  $rep_details = array();
+  foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute', 'month_relative') as $key)
+  {
+    if (isset($data[$key]))
+    {
+      $rep_details[$key] = $data[$key];
+    }
+  }
+  
   $reps = mrbsGetRepeatEntryList($data['start_time'], 
                                  $data['end_date'],
-                                 $data['rep_type'], 
-                                 $data['rep_opt'],
-                                 $data['rep_num_weeks'],
+                                 $rep_details, 
                                  $max_rep_entrys);
   
   // Remove any dates that could not be booked due to conflicts                               
@@ -668,20 +675,19 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
     // Details if a series
     if ($data['rep_type'] != REP_NONE)
     {     
-      // Repeat number of weeks
-      if ($data['rep_type'] == REP_N_WEEKLY)
-      {
       
+      if ($data['rep_type'] == REP_WEEKLY)
+      {
+        // Repeat number of weeks
+        $new = $data['rep_num_weeks'] . ' ' .
+               (($data['rep_num_weeks'] == 1) ? get_vocab("week_lc") : get_vocab("weeks"));
+        $old = $mail_previous['rep_num_weeks'] . ' ' .
+               (($mail_previous['rep_num_weeks'] == 1) ? get_vocab("week_lc") : get_vocab("weeks"));
         $body .= create_body_table_row (get_mail_vocab("rep_num_weeks"),
-                                        $data['rep_num_weeks'],
-                                        $mail_previous["rep_num_weeks"],
+                                        $new,
+                                        $old,
                                         $compare, $as_html);
-      }
-      
-      // Repeat days
-      if (($data['rep_type'] == REP_WEEKLY) || ($data['rep_type'] == REP_N_WEEKLY))
-      {
-      
+        // Repeat days
         // Display day names according to language and preferred weekday start.
         $opt = get_rep_day_list($data['rep_opt']);
         $opt_previous = ($compare) ? get_rep_day_list($mail_previous['rep_opt']) : "";
@@ -689,6 +695,50 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                         $opt,
                                         $opt_previous,
                                         $compare, $as_html);
+      }
+      
+      if ($data['rep_type'] == REP_MONTHLY)
+      {
+      
+        if (isset($data['month_absolute']))
+        {
+          $new = $data['month_absolute'];
+        }
+        elseif (isset($data['month_relative']))
+        {
+          // Note: this does not internationalise very well and could do with revisiting.
+          // It follows the select box order in edit_entry, which is the more difficult one
+          // to sort out.  It assumes all languages have the same order as English
+          // eg "the second Wednesday" which is probably not true.
+          list($ord, $dow) = byday_split($data['month_relative']);
+          $new = get_vocab("ord_" . $ord) . " " . day_name(RFC_5545_day_to_ord($dow));
+        }
+        else
+        {
+          trigger_error("Unknown monthly repeat type, E_USER_NOTICE");
+        }
+        if (isset($mail_previous['month_absolute']))
+        {
+          $old = $mail_previous['month_absolute'];
+        }
+        elseif (isset($mail_previous['month_relative']))
+        {
+          // Note: this does not internationalise very well and could do with revisiting.
+          // It follows the select box order in edit_entry, which is the more difficult one
+          // to sort out.  It assumes all languages have the same order as English
+          // eg "the second Wednesday" which is probably not true.
+          list($ord, $dow) = byday_split($mail_previous['month_relative']);
+          $old = get_vocab("ord_" . $ord) . " " . day_name(RFC_5545_day_to_ord($dow));
+        }
+        else
+        {
+          trigger_error("Unknown monthly repeat type, E_USER_NOTICE");
+        }
+        $body .= create_body_table_row (get_mail_vocab("repeat_on"),
+                                        $new,
+                                        $old,
+                                        $compare, $as_html);
+      
       }
 
       // Repeat end date
