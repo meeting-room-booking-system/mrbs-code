@@ -225,17 +225,6 @@ if (isset($id) && ($id == ''))
   unset($id);
 }
 
-// Trim the name field to get rid of any leading or trailing whitespace
-$name = trim($name);
-// Truncate the name field to the maximum length as a precaution.
-// Although the MAXLENGTH attribute is used in the <input> tag, this can
-// sometimes be ignored by the browser, for example by Firefox when 
-// autocompletion is used.  The user could also edit the HTML and remove
-// the MAXLENGTH attribute.    Passing an oversize string to some
-// databases (eg some versions of PostgreSQL) results in an SQL error,
-// rather than silent truncation of the string.
-$name = substr($name, 0, $maxlength['entry.name']);
-
 // Make sure the area corresponds to the room that is being booked
 if (!empty($rooms[0]))
 {
@@ -332,6 +321,17 @@ if ($ajax && $commit)
     }
   }
 }
+
+// Trim the name field to get rid of any leading or trailing whitespace
+$name = trim($name);
+// Truncate the name field to the maximum length as a precaution.
+// Although the MAXLENGTH attribute is used in the <input> tag, this can
+// sometimes be ignored by the browser, for example by Firefox when 
+// autocompletion is used.  The user could also edit the HTML and remove
+// the MAXLENGTH attribute.    Passing an oversize string to some
+// databases (eg some versions of PostgreSQL) results in an SQL error,
+// rather than silent truncation of the string.
+$name = substr($name, 0, $maxlength['entry.name']);
 
 // When All Day is checked, $start_seconds and $end_seconds are disabled and so won't
 // get passed through by the form.   We therefore need to set them.
