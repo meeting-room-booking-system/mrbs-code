@@ -235,7 +235,7 @@ init = function(args) {
                     var batch = [];
                     for (var i=0; i<nEntries; i++)
                     {
-                      batch.push(aData[i][0]);
+                      batch.push($(aData[i][0]).data('id'));
                       if (batch.length >= batchSize)
                       {
                         batches.push(batch);
