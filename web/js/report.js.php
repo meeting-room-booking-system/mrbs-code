@@ -186,28 +186,9 @@ init = function(args) {
   var table = $('#report_table');
   
   <?php 
-  // Get the sTypes (which are in a data-sType in a <span> in the <th>) and
-  // feed those into dataTables
+  // Get the sTypes and feed those into dataTables
   ?>
-  var sTypes = {};
-  table.find('thead tr:first th').each(function(i) {
-     var type = $(this).find('span').data('stype');
-     if (type)
-     {
-       if (sTypes[type] === undefined)
-       {
-         sTypes[type] = [];
-       }
-       sTypes[type].push(i);
-     }
-    });
-  tableOptions.aoColumnDefs = [];
-  var type;
-  for (type in sTypes)
-  {
-    tableOptions.aoColumnDefs.push({sType: type, 
-                                    aTargets: sTypes[type]});
-  }
+  tableOptions.aoColumnDefs = getSTypes(table);
 
   <?php
   // Fix the left hand column.  This has to be done when initialisation is 
@@ -237,7 +218,7 @@ init = function(args) {
               .click(function() {
                   var aData = reportTable.fnGetFilteredData();
                   var nEntries = aData.length;
-                  if (confirm("<?php echo escape_js(get_vocab('delete_entries_warning')) ?>" +
+                  if (window.confirm("<?php echo escape_js(get_vocab('delete_entries_warning')) ?>" +
                               nEntries.toLocaleString()))
                   {
                     <?php
@@ -288,7 +269,7 @@ init = function(args) {
                                     {
                                       if (!isInt.test(results[i]))
                                       {
-                                        alert("<?php echo escape_js(get_vocab('delete_entries_failed')) ?>");
+                                        window.alert("<?php echo escape_js(get_vocab('delete_entries_failed')) ?>");
                                         break;
                                       }
                                       nDeleted += parseInt(results[i], 10);
@@ -302,7 +283,7 @@ init = function(args) {
                                     var oSettings = reportTable.fnSettings();
                                     if (oSettings.sAjaxSource && 
                                         !oSettings.bServerSide &&
-                                        ($('#div_summary').length == 0))
+                                        ($('#div_summary').length === 0))
                                     {
                                       reportTable.fnReloadAjax();
                                       <?php

@@ -12,6 +12,41 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
+
+// Get the sTypes, which are assumed to be in a data-sType in a <span> in the <th>
+// of the table
+?>
+var getSTypes = function getSTypes(table) {
+    var type,
+        types = {},
+        sTypes = [];
+        
+    table.find('thead tr:first th').each(function(i) {
+       var type = $(this).find('span').data('stype');
+       if (type)
+       {
+         if (types[type] === undefined)
+         {
+           types[type] = [];
+         }
+         types[type].push(i);
+       }
+      });
+
+    for (type in types)
+    {
+      if (types.hasOwnProperty(type))
+      {
+        sTypes.push({sType: type, 
+                     aTargets: types[type]});
+      }
+    }
+    
+    return sTypes;
+  };
+  
+
+<?php
 // Try and get a sensible value for the fixed column width, which is the
 // smaller of the actual column width and either a fixed width or a
 // proportion of the overall table width.
@@ -97,7 +132,7 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
         oTable = table.dataTable(mergedOptions);
       }, 200);
             
-  }
+  };
           
   if (lteIE6)
   {
@@ -107,7 +142,7 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
   else
   {
     var table = $(id);
-    if (table.length == 0)
+    if (table.length === 0)
     {
       return false;
     }
@@ -185,7 +220,7 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
     // from the column visibility list because it is fixed and (b) stop it
     // being reordered
     ?>
-    var colVisExcludeCols = []
+    var colVisExcludeCols = [];
     if ((leftCol !== undefined) && (leftCol !== null))
     { 
       colVisExcludeCols.push(0);
