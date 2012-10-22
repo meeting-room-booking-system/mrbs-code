@@ -271,7 +271,7 @@ $vocab["search_criteria"]       = "Critères de recherche";
 $vocab["presentation_options"]  = "Options de présentation";
 $vocab["delete_entries"]        = "Supprimer des réservations";
 $vocab["delete_entries_warning"] = "ATTENTION!  Cette action va supprimer les réservations " .
-                                   "correspondantes à la recherche.  Cette opération n'est pas REVERSIBLE !!!" .
+                                   "correspondantes à la recherche.  Cette opération n'est pas REVERSIBLE !!! " .
                                    "Etes vous certain de vouloir supprimer les réservations ?\n\n" .
                                    "Nombre de réservations à supprimer définitivement : ";
 $vocab["delete_entries_failed"] = "Les réservations ne peuvent pas être supprimées.";
