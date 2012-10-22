@@ -182,11 +182,32 @@ init = function(args) {
         value: '1'
       }).appendTo('#report_form');
   }
+  
+  var table = $('#report_table');
+  
   <?php 
-  // Define the type of the start time, end time, duration and last updated columns
-  // (they have the Unix timestamp in the title of a span for sorting)
+  // Get the sTypes (which are in a data-sType in a <span> in the <th>) and
+  // feed those into dataTables
   ?>
-  tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [3, 4, 5, -1]}]; 
+  var sTypes = {};
+  table.find('thead tr:first th').each(function(i) {
+     var type = $(this).find('span').data('stype');
+     if (type)
+     {
+       if (sTypes[type] === undefined)
+       {
+         sTypes[type] = [];
+       }
+       sTypes[type].push(i);
+     }
+    });
+  tableOptions.aoColumnDefs = [];
+  var type;
+  for (type in sTypes)
+  {
+    tableOptions.aoColumnDefs.push({sType: type, 
+                                    aTargets: sTypes[type]});
+  }
 
   <?php
   // Fix the left hand column.  This has to be done when initialisation is 
@@ -199,7 +220,6 @@ init = function(args) {
       // width.   (Unfortunately the actual column width is just the width of the
       // column on the first page)
       ?>
-      var table = $('#report_table');
       var leftWidth = getFixedColWidth(table, {sWidth: "relative", iWidth: 33});
       var oFC = new FixedColumns(reportTable, {"iLeftColumns": 1,
                                                "iLeftWidth": leftWidth,

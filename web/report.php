@@ -69,6 +69,7 @@ function report_header()
   
   foreach ($field_order_list as $field)
   {
+    // We give some columns an stype data value so that the JavaScript knows how to sort them
     switch ($field)
     {
       case 'name':
@@ -81,11 +82,11 @@ function report_header()
         $values[] = get_vocab("room");
         break;
       case 'start_time':
-        $values[] = get_vocab("start_date");
+        $values[] = '<span class="normal" data-stype="title-numeric">' . get_vocab("start_date") . '</span>';
         break;
       case 'end_time':
-        $values[] = get_vocab("end_date");
-        $values[] = get_vocab("duration");
+        $values[] = '<span class="normal" data-stype="title-numeric">' . get_vocab("end_date") . '</span>';
+        $values[] = '<span class="normal" data-stype="title-numeric">' . get_vocab("duration") . '</span>';
         break;
       case 'description':
         $values[] = get_vocab("fulldescription_short");
@@ -109,7 +110,7 @@ function report_header()
         }
         break;
       case 'last_updated':
-        $values[] = get_vocab("lastupdate");
+        $values[] = '<span class="normal" data-stype="title-numeric">' . get_vocab("lastupdate") . '</span>';
         break;
       default:
         // the custom fields
