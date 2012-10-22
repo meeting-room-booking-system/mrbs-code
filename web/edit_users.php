@@ -872,7 +872,17 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     
       if (!in_array($fieldname, $ignore_columns))
       {
-        echo "<th>" . get_loc_field_name($tbl_users, $fieldname) . "</th>";
+        $heading = get_loc_field_name($tbl_users, $fieldname);
+        // We give some columns an stype data value so that the JavaScript knows how to sort them
+        switch ($fieldname)
+        {
+          case 'level':
+            $heading = '<span class="normal" data-stype="title-numeric">' . $heading . '</span>';
+            break;
+          default:
+            break;
+        }
+        echo "<th>$heading</th>";
       }
     }
   

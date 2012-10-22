@@ -37,9 +37,10 @@ init = function(args) {
     tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
     <?php
   }
+
+  // Get the sTypes and feed those into dataTables
   ?>
-  <?php // The Rights column has a span with title for sorting ?>
-  tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [1]}]; 
+  tableOptions.aoColumnDefs = getSTypes($('#users_table'));
   var usersTable = makeDataTable('#users_table',
                                  tableOptions,
                                  {sWidth: "relative", iWidth: 33});

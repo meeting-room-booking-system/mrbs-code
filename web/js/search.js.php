@@ -58,7 +58,8 @@ init = function(args) {
     $ajax_url = "search.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1";
     ?>
     tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
-    tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [2]}]; 
+    <?php // Get the sTypes and feed those into dataTables ?>
+    tableOptions.aoColumnDefs = getSTypes($('#search_results'));
       
     var searchTable = makeDataTable('#search_results', 
                                     tableOptions, 

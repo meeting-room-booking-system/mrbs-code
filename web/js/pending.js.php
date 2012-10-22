@@ -67,8 +67,8 @@ init = function(args) {
       });
     maxActionWidth += 16; <?php // to allow for padding in the <td> ?>
     var colDefsMain = [{"sWidth": "1.2em", "aTargets": [0] },
-                       {"sWidth": maxActionWidth + "px", "aTargets": [6] },
-                       {"sType": "title-numeric", "aTargets": [5]} ];
+                       {"sWidth": maxActionWidth + "px", "aTargets": [6] }];
+    colDefsMain = colDefsMain.concat(getSTypes(maintable));
     <?php
     // Set up a click event that "opens" the table row and inserts the subtable
     ?>
