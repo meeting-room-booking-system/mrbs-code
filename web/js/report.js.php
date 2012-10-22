@@ -183,13 +183,10 @@ init = function(args) {
       }).appendTo('#report_form');
   }
   <?php 
-  // Stop the first column ("id") from being searchable.   For some reason
-  // using bVisible here does not work, so we will use CSS instead.
   // Define the type of the start time, end time, duration and last updated columns
   // (they have the Unix timestamp in the title of a span for sorting)
   ?>
-  tableOptions.aoColumnDefs = [{"bSearchable": false, "bVisible": false, "aTargets": [ 0 ]},
-                               {"sType": "title-numeric", "aTargets": [3, 4, 5, -1]}]; 
+  tableOptions.aoColumnDefs = [{"sType": "title-numeric", "aTargets": [3, 4, 5, -1]}]; 
 
   <?php
   // Fix the left hand column.  This has to be done when initialisation is 
