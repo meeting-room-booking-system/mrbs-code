@@ -767,12 +767,17 @@ function generate_radio_group($params)
 //        'value'       The value of the input.  Can be an array. Default array()
 //        'options'     An associative array where the key is the value of the
 //                      button and the value is the button text
+//        'force_assoc' Boolean.  Forces the options array to be treated as an
+//                      associative array.  Default FALSE, ie it is treated as whatever
+//                      it looks like.  (This parameter is necessary because if you
+//                      index an array with strings that look like integers then PHP
+//                      casts the keys to integers and the array becomes a simple array)
 //        'disabled'    Whether the field should be disabled.  Default FALSE
 //
 function generate_checkbox_group($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'name', 'options', 'value', 'disabled') as $key)
+  foreach (array('label', 'name', 'options', 'force_assoc', 'value', 'disabled') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -788,6 +793,7 @@ function generate_checkbox_group($params)
         case 'value':
           $params[$key] = array();
           break;
+        case 'force_assoc':
         case 'disabled':
           $params[$key] = FALSE;
         default:
@@ -808,6 +814,11 @@ function generate_checkbox_group($params)
   // Output each checkbox
   foreach ($params['options'] as $value => $token)
   {
+    // We can cope with both associative and ordinary arrays
+    if (!$params['force_assoc'] && !is_assoc($params['options']))
+    {
+      $value = $token;
+    }
     $html .= "<label>";
     $html .= "<input class=\"checkbox\" type=\"checkbox\" name=\"" . $params['name'] . "\" value=\"$value\"";          
     $html .= (in_array($value, $params['value'])) ? " checked=\"checked\"" : "";
@@ -836,6 +847,11 @@ function generate_checkbox_group($params)
 //        'options'     An array of options for the select element.   Can be a simple
 //                      array or an associative array with value => text members for
 //                      each <option> in the <select> element.   Default is an empty array.
+//        'force_assoc' Boolean.  Forces the options array to be treated as an
+//                      associative array.  Default FALSE, ie it is treated as whatever
+//                      it looks like.  (This parameter is necessary because if you
+//                      index an array with strings that look like integers then PHP
+//                      casts the keys to integers and the array becomes a simple array)
 //        'value'       The value of the input.  Default ''
 //        'disabled'    Whether the field should be disabled.  Default FALSE
 //        'mandatory'   Whether the field is a required field.  Default FALSE
@@ -843,7 +859,7 @@ function generate_checkbox_group($params)
 function generate_select($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'name', 'options', 'value', 'disabled', 'mandatory') as $key)
+  foreach (array('label', 'name', 'options', 'force_assoc', 'value', 'disabled', 'mandatory') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -858,6 +874,7 @@ function generate_select($params)
         case 'value':
           $params[$key] = '';
           break;
+        case 'force_assoc':
         case 'disabled':
         case 'mandatory':
           $params[$key] = FALSE;
@@ -879,26 +896,20 @@ function generate_select($params)
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
   $html .= ">\n";
 
-  // We can cope with both associative and ordinary arrays
-  if (is_assoc($params['options']))
+  foreach ($params['options'] as $value => $text)
   {
-    foreach ($params['options'] as $value => $text)
+    // We can cope with both associative and ordinary arrays
+    if (!$params['force_assoc'] && !is_assoc($params['options']))
     {
-      $html .= "<option value=\"$value\"";
-      $html .= ($params['value'] == $value) ? " selected=\"selected\"" : '';
-      $html .= ">".htmlspecialchars($text)."</option>\n";
+      $value = $text;
     }
+    $html .= "<option value=\"$value\"";
+    $html .= ($params['value'] == $value) ? " selected=\"selected\"" : '';
+    $html .= ">".htmlspecialchars($text)."</option>\n";
   }
-  else
-  {
-    foreach ($params['options'] as $text)
-    {
-      $html .= "<option";
-      $html .= ($params['value'] == $text) ? " selected=\"selected\"" : '';
-      $html .= ">".htmlspecialchars($text)."</option>\n";
-    }
-  }
+
   $html .= "</select>\n";
+  
   // and a hidden input if the select box is disabled
   if ($params['disabled'])
   {

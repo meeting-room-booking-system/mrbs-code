@@ -1274,12 +1274,6 @@ foreach ($edit_entry_field_order as $key)
   }
 }
 
-// Apply the string prefix to the rep_day values.  (The string prefix is 
-// necessary because we want the options array to be associative)
-for ($i=0; $i<count($rep_day); $i++)
-{
-  $rep_day[$i] = STRING_PREFIX . $rep_day[$i];
-}
 
 // Show the repeat fields if (a) it's a new booking and repeats are allowed,
 // or else if it's an existing booking.  (It's not particularly obvious but
@@ -1335,9 +1329,9 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
         // Display day name checkboxes according to language and preferred weekday start.
         $wday = ($i + $weekstarts) % 7;
         // We need to ensure the index is a string to force the array to be associative
-        $v = STRING_PREFIX . $wday;
-        $params['options'][$v] = day_name($wday, $strftime_format['dayname_edit']);
+        $params['options'][$wday] = day_name($wday, $strftime_format['dayname_edit']);
       }
+      $params['force_assoc'] = TRUE;
       generate_checkbox_group($params);
       echo "</div>\n";
 
@@ -1400,12 +1394,13 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
       $options = array();
       foreach (array('1', '2', '3', '4', '-1', '-2', '-3', '-4') as $i)
       {
-        $options[STRING_PREFIX . $i] = get_vocab("ord_" . $i);
+        $options[$i] = get_vocab("ord_" . $i);
       }
-      $params = array('name'     => 'month_relative_ord',
-                      'value'    => STRING_PREFIX . $month_relative_ord,
-                      'disabled' => $disabled,
-                      'options'  => $options);
+      $params = array('name'        => 'month_relative_ord',
+                      'value'       => $month_relative_ord,
+                      'disabled'    => $disabled,
+                      'options'     => $options,
+                      'force_assoc' => TRUE);
       generate_select($params);
       
       $options = array();

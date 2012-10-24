@@ -81,23 +81,6 @@ $formvars = array('create_by'          => 'string',
 foreach($formvars as $var => $var_type)
 {
   $$var = get_form_var($var, $var_type);
-  // deal with some special cases
-  switch ($var)
-  {
-    // we need to strip off the string prefix, which was put there to
-    // force an associative array
-    case 'rep_day':
-      for ($i=0; $i<count($rep_day); $i++)
-      {
-        $rep_day[$i] = substr($rep_day[$i], strlen(STRING_PREFIX));
-      }
-      break;
-    case 'month_relative_ord':
-      $$var = substr($$var, strlen(STRING_PREFIX));
-      break;
-    default:
-      break;
-  }
 }
 
 // BACK:  we didn't really want to be here - send them to the returl

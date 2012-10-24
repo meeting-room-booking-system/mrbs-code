@@ -347,8 +347,6 @@ define('DEL_ENTRY_AJAX_BATCH_SIZE', 100);
 // Interval types used in booking policies
 $interval_types = array('day', 'week', 'month', 'year', 'future');
 
-define('STRING_PREFIX', 'S');  // Just some string - doesn't matter what it is
-
 
 /********************************************************
  * JavaScript - internal use, do not change

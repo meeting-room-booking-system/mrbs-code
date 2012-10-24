@@ -366,10 +366,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                     $params['options'] = array();     
                     for ($i=0; $i<=$level; $i++)
                     {
-                      // We add a string prefix to the level to force the array to be
-                      // associative.   We strip it off when we get the form variable
-                      $v = STRING_PREFIX . $i;
-                      $params['options'][$v] = get_vocab("level_$i");
+                      $params['options'][$i] = get_vocab("level_$i");
                       // Work out which option should be selected by default:
                       //   if we're editing an existing entry, then it should be the current value;
                       //   if we're adding the very first entry, then it should be an admin;
@@ -381,6 +378,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                         $params['value'] = $v;
                       }
                     }
+                    $params['force_assoc'] = TRUE;
                     generate_select($params);
                     break;
                   case 'name':
@@ -587,7 +585,6 @@ if (isset($Action) && ($Action == "Update"))
         case 'level':
           // level:  set a safe default (lowest level of access)
           // if there is no value set
-          $values[$fieldname] = substr($values[$fieldname], strlen(STRING_PREFIX));
           $q_string .= "&$fieldname=" . $values[$fieldname];
           if (!isset($values[$fieldname]))
           {
