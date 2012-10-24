@@ -866,11 +866,13 @@ function generate_checkbox_group($params)
 //                        it looks like.  (This parameter is necessary because if you
 //                        index an array with strings that look like integers then PHP
 //                        casts the keys to integers and the array becomes a simple array)
-//        'value'         The value of the input.  Default ''
+//        'value'         The value of the input.  Default ''.   Can be a single value
+//                        or an array of values.
 //        'disabled'      Whether the field should be disabled.  Default FALSE
 //        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
 //                        Default TRUE
 //        'mandatory'     Whether the field is a required field.  Default FALSE
+//        'multiple'      Whether multiple selections are allowed.  Default FALSE
 //        'attributes'    Can be used for passing other attributes.  Default NULL.
 //                        Can be either a simple string or an array of attributes
 //
@@ -878,7 +880,7 @@ function generate_select($params)
 {
   // some sanity checking on params
   foreach (array('label', 'name', 'id', 'options', 'force_assoc', 'value',
-                 'disabled', 'create_hidden', 'mandatory', 'attributes') as $key)
+                 'disabled', 'create_hidden', 'mandatory', 'multiple', 'attributes') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -894,11 +896,12 @@ function generate_select($params)
           $params[$key] = array();
           break;
         case 'value':
-          $params[$key] = '';
+          $params[$key] = array();
           break;
         case 'force_assoc':
         case 'disabled':
         case 'mandatory':
+        case 'multiple':
           $params[$key] = FALSE;
           break;
         case 'create_hidden':
@@ -908,6 +911,11 @@ function generate_select($params)
           break;
       }
     }
+  }
+  
+  if (!is_array($params['value']))
+  {
+    $params['value'] = array($params['value']);
   }
   
   if (isset($params['attributes']) && is_array($params['attributes']))
@@ -925,6 +933,7 @@ function generate_select($params)
   $html .= "<select id=\"" . $params['id'] . "\" name=\"" . $params['name'] . "\"";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
+  $html .= ($params['multiple']) ? " multiple" : "";
   $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
   $html .= ">\n";
 
@@ -936,17 +945,20 @@ function generate_select($params)
       $value = $text;
     }
     $html .= "<option value=\"$value\"";
-    $html .= ($params['value'] == $value) ? " selected=\"selected\"" : '';
+    $html .= (in_array($value, $params['value'])) ? " selected=\"selected\"" : '';
     $html .= ">".htmlspecialchars($text)."</option>\n";
   }
 
   $html .= "</select>\n";
   
-  // and a hidden input if the select box is disabled
+  // and hidden inputs if the select box is disabled
   if ($params['disabled'] && $params['create_hidden'])
   {
-    $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
-      htmlspecialchars($params['value'])."\">\n";
+    foreach ($params['value'] as $value)
+    {
+      $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
+               htmlspecialchars($value)."\">\n";
+    }
   }
   
   echo $html;
