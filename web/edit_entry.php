@@ -168,7 +168,7 @@ function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_non
                   'id'           => $prefix . 'seconds' . $area['id'],
                   'disabled'     => $disabled || $display_none,
                   'create_hiden' => $disabled && !$display_none,
-                  'attributes'   => implode(' ', $attributes),
+                  'attributes'   => $attributes,
                   'value'        => $current_s,
                   'options'      => $options,
                   'force_assoc'  => TRUE);
@@ -379,7 +379,7 @@ function create_field_entry_areas($disabled=FALSE)
                     'force_assoc' => TRUE,
                     'value'       => $area_id,
                     'disabled'    => $disabled,
-                    'attributes'  => implode(' ', $attributes));
+                    'attributes'  => $attributes);
                       
     generate_select($params);
     echo "</div>\n";

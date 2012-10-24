@@ -522,6 +522,7 @@ function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
 //        'disabled'    Whether the field should be disabled.  Default FALSE
 //        'mandatory'   Whether the field is a required field.  Default FALSE
 //        'attributes'  Additional attributes, allowing HTML5 attributes.  Default NULL.
+//                      Can be either a simple string or an array of attributes.
 //
 function generate_checkbox($params)
 {
@@ -547,6 +548,11 @@ function generate_checkbox($params)
           break;
       }
     }
+  }
+  
+  if (isset($params['attributes']) && is_array($params['attributes']))
+  {
+    $params['attributes'] = implode(' ', $params['attributes']);
   }
   
   // generate the HTML
@@ -578,7 +584,7 @@ function generate_checkbox($params)
 //        'attributes'  Additional attributes, allowing HTML5 input types such as number and
 //                      email to be used.   Note that additional attributes such as min, etc.
 //                      can also be included in the string, eg 'type="number" min="1" step="1"'.
-//                      Default NULL.
+//                      Default NULL.  Can be ither a simple string or an array of attributes.
 //
 function generate_input($params)
 {
@@ -603,6 +609,11 @@ function generate_input($params)
           break;
       }
     }
+  }
+  
+  if (isset($params['attributes']) && is_array($params['attributes']))
+  {
+    $params['attributes'] = implode(' ', $params['attributes']);
   }
   
   // generate the HTML
@@ -860,7 +871,8 @@ function generate_checkbox_group($params)
 //        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
 //                        Default TRUE
 //        'mandatory'     Whether the field is a required field.  Default FALSE
-//        'attributes'    Can be used for passing other attributes.  Default NULL
+//        'attributes'    Can be used for passing other attributes.  Default NULL.
+//                        Can be either a simple string or an array of attributes
 //
 function generate_select($params)
 {
@@ -897,6 +909,12 @@ function generate_select($params)
       }
     }
   }
+  
+  if (isset($params['attributes']) && is_array($params['attributes']))
+  {
+    $params['attributes'] = implode(' ', $params['attributes']);
+  }
+  
   // generate the HTML
   // no HTML escaping for the label - it is trusted
   $html = '';
@@ -945,6 +963,7 @@ function generate_select($params)
 //        'disabled'    Whether the field should be disabled.  Default FALSE
 //        'mandatory'   Whether the field is a required field.  Default FALSE
 //        'attributes'  Additional attributes, allowing HTML5 attributes.  Default NULL.
+//                      Can be either a simple string or an array of attributes.
 //
 function generate_textarea($params)
 {
@@ -971,6 +990,12 @@ function generate_textarea($params)
       }
     }
   }
+  
+  if (isset($params['attributes']) && is_array($params['attributes']))
+  {
+    $params['attributes'] = implode(' ', $params['attributes']);
+  }
+  
   // generate the HTML
   // no HTML escaping for the label - it is trusted
   $html  = "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
