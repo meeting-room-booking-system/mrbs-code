@@ -355,171 +355,139 @@ function create_field_entry_areas($disabled=FALSE)
 {
   global $areas, $area_id, $rooms;
   
-  echo "<div id=\"div_areas\">\n";
-  echo "</div>\n";
   // if there is more than one area then give the option
   // to choose areas.
   if (count($areas) > 1)
-  { 
+  {
+    // We will set the display to none and then turn it on in the JavaScript.  That's
+    // because if there's no JavaScript we don't want to display it because we won't
+    // have any means of changing the rooms if the area is changed.
+    echo "<div id=\"div_areas\" style=\"display: none\">\n";
+    $options = array();
+    // go through the areas and create the options
+    foreach ($areas as $a)
+    {
+      $options[$a['id']] = $a['area_name'];
+    }
+    
+    $attributes = array();
+    $attributes[] = 'onchange="changeRooms(this.form)"';
+    
+    $params = array('label'       => get_vocab("area") . ":",
+                    'name'        => 'area',
+                    'options'     => $options,
+                    'force_assoc' => TRUE,
+                    'value'       => $area_id,
+                    'disabled'    => $disabled,
+                    'attributes'  => implode(' ', $attributes));
+                      
+    generate_select($params);
+    echo "</div>\n";
+    
     ?> 
-      <script type="text/javascript">
-      //<![CDATA[
+    <script type="text/javascript">
+    //<![CDATA[
       
-      var area = <?php echo $area_id ?>;
+    var area = <?php echo $area_id ?>;
       
-      function changeRooms( formObj )
+    function changeRooms( formObj )
+    {
+      areasObj = eval( "formObj.area" );
+
+      area = areasObj[areasObj.selectedIndex].value;
+      roomsObj = eval( "formObj.elements['rooms']" );
+
+      // remove all entries
+      roomsNum = roomsObj.length;
+      for (i=(roomsNum-1); i >= 0; i--)
       {
-        areasObj = eval( "formObj.area" );
-
-        area = areasObj[areasObj.selectedIndex].value;
-        roomsObj = eval( "formObj.elements['rooms']" );
-
-        // remove all entries
-        roomsNum = roomsObj.length;
-        for (i=(roomsNum-1); i >= 0; i--)
+        roomsObj.options[i] = null;
+      }
+      // add entries based on area selected
+      switch (area){
+        <?php
+        foreach ($areas as $a)
         {
-          roomsObj.options[i] = null;
-        }
-        // add entries based on area selected
-        switch (area){
-          <?php
-          foreach ($areas as $a)
+          print "case \"" . $a['id'] . "\":\n";
+          // get rooms for this area
+          $i = 0;
+          foreach ($rooms as $r)
           {
-            print "case \"" . $a['id'] . "\":\n";
-            // get rooms for this area
-            $i = 0;
-            foreach ($rooms as $r)
+            if ($r['area_id'] == $a['id'])
             {
-              if ($r['area_id'] == $a['id'])
-              {
-                print "roomsObj.options[$i] = new Option(\"" . escape_js($r['room_name']) . "\"," . $r['id'] . ");\n";
-                $i++;
-              }
+              print "roomsObj.options[$i] = new Option(\"" . escape_js($r['room_name']) . "\"," . $r['id'] . ");\n";
+              $i++;
             }
-            // select the first entry by default to ensure
-            // that one room is selected to begin with
-            if ($i > 0)  // but only do this if there is a room
-            {
-              print "roomsObj.options[0].selected = true;\n";
-            }
-            print "break;\n";
           }
-          ?>
-        } //switch
-        
-        <?php 
-        // Replace the start and end selectors with those for the new area
-        // (1) We set the display for the old elements to "none" and the new
-        // elements to "block".   (2) We also need to disable the old selectors and
-        // enable the new ones: they all have the same name, so we only want
-        // one passed through with the form.  (3) We take a note of the currently
-        // selected start and end values so that we can have a go at finding a
-        // similar time/period in the new area. (4) We also take a note of the old
-        // area id because we'll need that when trying to match up slots: it only
-        // makes sense to match up slots if both old and new area used the same
-        // mode (periods/times).
-        
-        // For the "all day" checkbox, the process is slightly different.  This
-        // is because the checkboxes themselves are visible or not depending on
-        // the time restrictions for that particular area. (1) We set the display 
-        // for the old *container* element to "none" and the new elements to 
-        // "block".  (2) We disable the old checkboxes and enable the new ones for
-        // the same reasons as above.  (3) We copy the value of the old check box
-        // to the new check box
+          // select the first entry by default to ensure
+          // that one room is selected to begin with
+          if ($i > 0)  // but only do this if there is a room
+          {
+            print "roomsObj.options[0].selected = true;\n";
+          }
+          print "break;\n";
+        }
         ?>
-        var oldStartId = "start_seconds" + currentArea;
-        var oldEndId = "end_seconds" + currentArea;
-        var newStartId = "start_seconds" + area;
-        var newEndId = "end_seconds" + area;
-        var oldAllDayId = "ad" + currentArea;
-        var newAllDayId = "ad" + area;
-        var oldAreaStartValue = formObj[oldStartId].options[formObj[oldStartId].selectedIndex].value;
-        var oldAreaEndValue = formObj[oldEndId].options[formObj[oldEndId].selectedIndex].value;
-        $("#" + oldStartId).hide()
-                           .attr('disabled', 'disabled');
-        $("#" + oldEndId).hide()
+      } //switch
+        
+      <?php 
+      // Replace the start and end selectors with those for the new area
+      // (1) We set the display for the old elements to "none" and the new
+      // elements to "block".   (2) We also need to disable the old selectors and
+      // enable the new ones: they all have the same name, so we only want
+      // one passed through with the form.  (3) We take a note of the currently
+      // selected start and end values so that we can have a go at finding a
+      // similar time/period in the new area. (4) We also take a note of the old
+      // area id because we'll need that when trying to match up slots: it only
+      // makes sense to match up slots if both old and new area used the same
+      // mode (periods/times).
+        
+      // For the "all day" checkbox, the process is slightly different.  This
+      // is because the checkboxes themselves are visible or not depending on
+      // the time restrictions for that particular area. (1) We set the display 
+      // for the old *container* element to "none" and the new elements to 
+      // "block".  (2) We disable the old checkboxes and enable the new ones for
+      // the same reasons as above.  (3) We copy the value of the old check box
+      // to the new check box
+      ?>
+      var oldStartId = "start_seconds" + currentArea;
+      var oldEndId = "end_seconds" + currentArea;
+      var newStartId = "start_seconds" + area;
+      var newEndId = "end_seconds" + area;
+      var oldAllDayId = "ad" + currentArea;
+      var newAllDayId = "ad" + area;
+      var oldAreaStartValue = formObj[oldStartId].options[formObj[oldStartId].selectedIndex].value;
+      var oldAreaEndValue = formObj[oldEndId].options[formObj[oldEndId].selectedIndex].value;
+      $("#" + oldStartId).hide()
                          .attr('disabled', 'disabled');
-        $("#" + newStartId).show()
-                           .removeAttr('disabled');
-        $("#" + newEndId).show()
+      $("#" + oldEndId).hide()
+                       .attr('disabled', 'disabled');
+      $("#" + newStartId).show()
                          .removeAttr('disabled');
-                         +        $("#" + oldAllDayId).hide();
-        $("#" + newAllDayId).show();
-        if($("#all_day" + currentArea).attr('checked') == 'checked')
-        { 
-          $("#all_day" + area).attr('checked', 'checked').removeAttr('disabled');
-        }
-        else
-        {
-          $("#all_day" + area).removeAttr('checked').removeAttr('disabled');
-        }
-        $("#all_day" + currentArea).removeAttr('disabled');
-        var oldArea = currentArea;
-        currentArea = area;
-        prevStartValue = undefined;
-        adjustSlotSelectors(oldArea, oldAreaStartValue, oldAreaEndValue);
+      $("#" + newEndId).show()
+                       .removeAttr('disabled');
+                       +        $("#" + oldAllDayId).hide();
+      $("#" + newAllDayId).show();
+      if($("#all_day" + currentArea).attr('checked') == 'checked')
+      { 
+        $("#all_day" + area).attr('checked', 'checked').removeAttr('disabled');
       }
-      
-      // Create area selector, only if we have Javascript
-      var div_areas = document.getElementById('div_areas');
-      // First of all create a label and insert it into the <div>
-      var area_label = document.createElement('label');
-      var area_label_text = document.createTextNode('<?php echo get_vocab("area") ?>:');
-      area_label.appendChild(area_label_text);
-      area_label.setAttribute('for', 'area');
-      div_areas.appendChild(area_label);
-      // Now give it a select box
-      var area_select = document.createElement('select');
-      area_select.setAttribute('id', 'area');
-      area_select.setAttribute('name', 'area');
-      area_select.onchange = function(){changeRooms(this.form)}; // setAttribute doesn't work for onChange with IE6
-      // populated with options
-      var option;
-      var option_text
-      <?php
-      // go through the areas and create the options
-      foreach ($areas as $a)
+      else
       {
-        ?>
-        option = document.createElement('option');
-        option.value = <?php echo $a['id'] ?>;
-        option_text = document.createTextNode('<?php echo escape_js($a['area_name']) ?>');
-        <?php
-        if ($a['id'] == $area_id)
-        {
-          ?>
-          option.selected = true;
-          <?php
-        }
-        ?>
-        option.appendChild(option_text);
-        area_select.appendChild(option);
-        <?php
+        $("#all_day" + area).removeAttr('checked').removeAttr('disabled');
       }
-      ?>
-      // insert the <select> which we've just assembled into the <div>
-      div_areas.appendChild(area_select);
+      $("#all_day" + currentArea).removeAttr('disabled');
+      var oldArea = currentArea;
+      currentArea = area;
+      prevStartValue = undefined;
+      adjustSlotSelectors(oldArea, oldAreaStartValue, oldAreaEndValue);
+    }
       
-      <?php
-      if ($disabled)
-      {
-        // If the field is disabled we need to disable the select box and
-        // add in a hidden input containing the value
-        ?>
-        $('#area').attr('disabled', 'disabled');
-        $('<input>').attr('type', 'hidden')
-                    .attr('name', 'area')
-                    .val('<?php echo $area_id ?>')
-                    .appendTo('#div_areas');
-        <?php
-      }
-      ?>
-      
-      //]]>
-      </script>
+    //]]>
+    </script>
       
       
-      <?php
+    <?php
     } // if count($areas)
 }
 

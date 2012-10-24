@@ -1023,6 +1023,8 @@ var oldInitEditEntry = init;
 init = function() {
   oldInitEditEntry.apply(this);
   
+  $('#div_areas').show();
+  
   $('input[name="all_day"]').click(function() {
       onAllDayClick();
     });
