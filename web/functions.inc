@@ -516,9 +516,12 @@ function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
 //   $params    an associative array holding the function parameters:
 //      MANDATORY
 //        'label'       The text to be used for the field label.
-//        'name'        The name of the input.
+//        'name'        The name of the element.
 //      OPTIONAL
+//        'label_after' Whether to pit the label before or after the checkbox.  Default FALSE
+//        'id'          The id of the element.  Defaults to be the same as the name.
 //        'value'       The value of the input.  Default ''
+//        'class'       A class (or array of classes) to give the element.  Default NULL
 //        'disabled'    Whether the field should be disabled.  Default FALSE
 //        'mandatory'   Whether the field is a required field.  Default FALSE
 //        'attributes'  Additional attributes, allowing HTML5 attributes.  Default NULL.
@@ -527,7 +530,8 @@ function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
 function generate_checkbox($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'name', 'value', 'disabled', 'mandatory', 'attributes') as $key)
+  foreach (array('label', 'name', 'id', 'label_after', 'value', 'class',
+                 'disabled', 'mandatory', 'attributes') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -537,12 +541,19 @@ function generate_checkbox($params)
         case 'name':
           trigger_error('Missing mandatory parameters', E_USER_NOTICE);
           break;
+        case 'id':
+          $params[$key] = $params['name'];
+          break;
         case 'value':
           $params[$key] = '';
           break;
         case 'disabled':
+        case 'label_after':
         case 'mandatory':
           $params[$key] = FALSE;
+          break;
+        case 'class':
+          $params[$key] = array();
           break;
         default:
           break;
@@ -555,16 +566,32 @@ function generate_checkbox($params)
     $params['attributes'] = implode(' ', $params['attributes']);
   }
   
+  if (!is_array($params['class']))
+  {
+    $params['class'] = array($params['class']);
+  }
+  $params['class'][] = 'checkbox';
+  
   // generate the HTML
   // no HTML escaping for the label - it is trusted
-  $html  = "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
-  $html .= "<input type=\"checkbox\" class=\"checkbox\"";
-  $html .= " id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\" value=\"1\"";
+  $html  = "<label for=\"" . $params['id'] . "\">";
+  if (!$params['label_after'])
+  {
+    $html .= $params['label'] . "</label>";
+  }
+  $html .= "<input type=\"checkbox\"";
+  $html .= (count($params['class']) > 0) ? ' class="' . implode(' ', $params['class']) . '"' : '';
+  $html .= " id=\"" . $params['id'] . "\" name=\"" . $params['name'] . "\" value=\"1\"";
   $html .= (empty($params['value'])) ? "" : " checked=\"checked\"";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
   $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : '';
-  $html .= ">\n";
+  $html .= ">";
+  if ($params['label_after'])
+  {
+    $html .= $params['label'] . "</label>";
+  }
+  $html .= "\n";
   echo $html;
 }
 
