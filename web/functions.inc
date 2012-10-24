@@ -521,7 +521,7 @@ function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
 //        'value'       The value of the input.  Default ''
 //        'disabled'    Whether the field should be disabled.  Default FALSE
 //        'mandatory'   Whether the field is a required field.  Default FALSE
-//        'attributes'  Additional attributes, allowing HTML5 attributes.  Default ''.
+//        'attributes'  Additional attributes, allowing HTML5 attributes.  Default NULL.
 //
 function generate_checkbox($params)
 {
@@ -537,7 +537,6 @@ function generate_checkbox($params)
           trigger_error('Missing mandatory parameters', E_USER_NOTICE);
           break;
         case 'value':
-        case 'attributes':
           $params[$key] = '';
           break;
         case 'disabled':
@@ -558,7 +557,8 @@ function generate_checkbox($params)
   $html .= (empty($params['value'])) ? "" : " checked=\"checked\"";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
-  $html .= " " . $params['attributes'] . ">\n";
+  $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : '';
+  $html .= ">\n";
   echo $html;
 }
 
@@ -578,7 +578,7 @@ function generate_checkbox($params)
 //        'attributes'  Additional attributes, allowing HTML5 input types such as number and
 //                      email to be used.   Note that additional attributes such as min, etc.
 //                      can also be included in the string, eg 'type="number" min="1" step="1"'.
-//                      Default ''.
+//                      Default NULL.
 //
 function generate_input($params)
 {
@@ -593,7 +593,6 @@ function generate_input($params)
           trigger_error('Missing mandatory parameters', E_USER_NOTICE);
           break;
         case 'value':
-        case 'attributes':
           $params[$key] = '';
           break;
         case 'disabled':
@@ -613,14 +612,17 @@ function generate_input($params)
     // no HTML escaping for the label - it is trusted
     $html .= "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
   }
-  $html .= "<input " . $params['attributes'];
+  $html .= "<input";
+  $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
   $html .= " id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\"";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : '';
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : '';
   $html .= (isset($params['maxlength'])) ? " maxlength=\"" . $params['maxlength'] . "\"" : '';
   // Don't give an empty string if it's a number as that's not a valid floating point number
   // and will fail HTML5 validation
-  if ((strpos($params['attributes'], 'type="number"') === FALSE) || ($params['value'] != '') )
+  if (!(isset($params['attributes'])) ||
+      (strpos($params['attributes'], 'type="number"') === FALSE) ||
+      ($params['value'] != '') )
   {
     $html .= " value=\"" . htmlspecialchars($params['value']) . "\"";
   }
@@ -841,25 +843,30 @@ function generate_checkbox_group($params)
 //
 //   $params    an associative array holding the function parameters:
 //      MANDATORY
-//        'name'        The name of the input.
+//        'name'          The name of the element.
 //      OPTIONAL
-//        'label'       The text to be used for the field label.
-//        'options'     An array of options for the select element.   Can be a simple
-//                      array or an associative array with value => text members for
-//                      each <option> in the <select> element.   Default is an empty array.
-//        'force_assoc' Boolean.  Forces the options array to be treated as an
-//                      associative array.  Default FALSE, ie it is treated as whatever
-//                      it looks like.  (This parameter is necessary because if you
-//                      index an array with strings that look like integers then PHP
-//                      casts the keys to integers and the array becomes a simple array)
-//        'value'       The value of the input.  Default ''
-//        'disabled'    Whether the field should be disabled.  Default FALSE
-//        'mandatory'   Whether the field is a required field.  Default FALSE
+//        'id'            The id of the element.  Defaults to the same as the name.
+//        'label'         The text to be used for the field label.
+//        'options'       An array of options for the select element.   Can be a simple
+//                        array or an associative array with value => text members for
+//                        each <option> in the <select> element.   Default is an empty array.
+//        'force_assoc'   Boolean.  Forces the options array to be treated as an
+//                        associative array.  Default FALSE, ie it is treated as whatever
+//                        it looks like.  (This parameter is necessary because if you
+//                        index an array with strings that look like integers then PHP
+//                        casts the keys to integers and the array becomes a simple array)
+//        'value'         The value of the input.  Default ''
+//        'disabled'      Whether the field should be disabled.  Default FALSE
+//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
+//                        Default TRUE
+//        'mandatory'     Whether the field is a required field.  Default FALSE
+//        'attributes'    Can be used for passing other attributes.  Default NULL
 //
 function generate_select($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'name', 'options', 'force_assoc', 'value', 'disabled', 'mandatory') as $key)
+  foreach (array('label', 'name', 'id', 'options', 'force_assoc', 'value',
+                 'disabled', 'create_hidden', 'mandatory', 'attributes') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -867,6 +874,9 @@ function generate_select($params)
       {
         case 'name':
           trigger_error('Missing mandatory parameters', E_USER_NOTICE);
+          break;
+        case 'id':
+          $params[$key] = $params['name'];
           break;
         case 'options':
           $params[$key] = array();
@@ -879,6 +889,9 @@ function generate_select($params)
         case 'mandatory':
           $params[$key] = FALSE;
           break;
+        case 'create_hidden':
+          $params[$key] = TRUE;
+          break;
         default:
           break;
       }
@@ -889,11 +902,12 @@ function generate_select($params)
   $html = '';
   if (isset($params['label']))
   {
-    $html .= "<label for=\"" .$params['name'] . "\">" . $params['label'] . "</label>\n";
+    $html .= "<label for=\"" .$params['id'] . "\">" . $params['label'] . "</label>\n";
   }
-  $html .= "<select id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\"";
+  $html .= "<select id=\"" . $params['id'] . "\" name=\"" . $params['name'] . "\"";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
+  $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
   $html .= ">\n";
 
   foreach ($params['options'] as $value => $text)
@@ -911,7 +925,7 @@ function generate_select($params)
   $html .= "</select>\n";
   
   // and a hidden input if the select box is disabled
-  if ($params['disabled'])
+  if ($params['disabled'] && $params['create_hidden'])
   {
     $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
       htmlspecialchars($params['value'])."\">\n";
@@ -930,7 +944,7 @@ function generate_select($params)
 //        'value'       The value of the input.  Default ''
 //        'disabled'    Whether the field should be disabled.  Default FALSE
 //        'mandatory'   Whether the field is a required field.  Default FALSE
-//        'attributes'  Additional attributes, allowing HTML5 attributes.  Default ''.
+//        'attributes'  Additional attributes, allowing HTML5 attributes.  Default NULL.
 //
 function generate_textarea($params)
 {
@@ -946,7 +960,6 @@ function generate_textarea($params)
           trigger_error('Missing mandatory parameters', E_USER_NOTICE);
           break;
         case 'value':
-        case 'attributes':
           $params[$key] = '';
           break;
         case 'disabled':
@@ -963,7 +976,7 @@ function generate_textarea($params)
   $html  = "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
   // textarea rows and cols are overridden by CSS height and width
   $html .= "<textarea id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\" rows=\"8\" cols=\"40\"";
-  $html .= " " . $params['attributes'];
+  $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : '';
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : '';
   $html .= ">" . htmlspecialchars($params['value']) . "</textarea>\n";

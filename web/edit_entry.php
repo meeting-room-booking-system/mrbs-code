@@ -139,31 +139,41 @@ function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_non
   {
     $format = hour_min_format();
   }
-  $html .= "<select" .
-           (($display_none) ? " style=\"display: none\"" : "") .
-           // If $display_none or $disabled are set then we'll also disable the select so
-           // that there is only one select passing through the variable to the handler
-           (($display_none || $disabled) ? " disabled=\"disabled\"" : "") .
-           // and if $disabled is set, give the element a class so that the JavaScript
-           // knows to keep it disabled
-           (($disabled) ? " class=\"keep_disabled\"" : "") .
-           " id=\"${prefix}seconds${area['id']}\" name=\"${prefix}seconds\" onChange=\"adjustSlotSelectors()\">\n";
- 
+  
+  // Build the attributes
+  $attributes = array();
+  $attributes[] = 'onChange="adjustSlotSelectors()"';
+  if ($disabled)
+  {
+    // If $disabled is set, give the element a class so that the JavaScript
+    // knows to keep it disabled
+    $attributes[] = 'class="keep_disabled"';
+  }
+  if ($display_none)
+  {
+    $attributes[] = 'style="display: none"';
+  }
+  
+  // Build the options
+  $options = array();
   for ($s = $first; $s <= $last; $s += $resolution)
   {
     $slot_string = ($enable_periods) ? $periods[intval(($s-$base)/60)] : hour_min($s);
-    $html .= "<option value=\"$s\"";
-    $html .= ($s == $current_s) ? " selected=\"selected\"" : "";
-    $html .= ">$slot_string</option>\n";
-  }
-  $html .= "</select>\n";
-  // Add in a hidden input if the select is disabled but displayed
-  if ($disabled && !$display_none)
-  {
-    $html .= "<input type=\"hidden\" name=\"${prefix}seconds\" value=\"$current_s\">\n";
+    $options[$s] = $slot_string;
   }
   
-  echo $html;
+  // If $display_none or $disabled are set then we'll also disable the select so
+  // that there is only one select passing through the variable to the handler
+  $params = array('name'         => $prefix . 'seconds',
+                  'id'           => $prefix . 'seconds' . $area['id'],
+                  'disabled'     => $disabled || $display_none,
+                  'create_hiden' => $disabled && !$display_none,
+                  'attributes'   => implode(' ', $attributes),
+                  'value'        => $current_s,
+                  'options'      => $options,
+                  'force_assoc'  => TRUE);
+
+  generate_select($params);
 }
 
 
