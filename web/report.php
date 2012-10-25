@@ -4,6 +4,162 @@
 require "defaultincludes.inc";
 
 
+function generate_search_criteria(&$vars)
+{
+  global $booking_types;
+  global $private_somewhere, $approval_somewhere, $confirmation_somewhere;
+  global $user_level, $tbl_entry;
+  global $field_natures, $field_lengths;
+  
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("search_criteria") . "</legend>\n";
+      
+  echo "<div id=\"div_report_start\">\n";
+  echo "<label>" . get_vocab("report_start") . ":</label>\n";
+  genDateSelector("from_", $vars['from_day'], $vars['from_month'], $vars['from_year']);
+  echo "</div>\n";
+      
+  echo "<div id=\"div_report_end\">\n";
+  echo "<label>" . get_vocab("report_end") . ":</label>\n";
+  genDateSelector("to_", $vars['to_day'], $vars['to_month'], $vars['to_year']);
+  echo "</div>\n";
+      
+  echo "<div id=\"div_areamatch\">\n";
+  $params = array('label' => get_vocab("match_area") . ':',
+                  'name'  => 'areamatch',
+                  'value' => $vars['areamatch']);
+  generate_input($params);
+  echo "</div>\n";
+ 
+  echo "<div id=\"div_roommatch\">\n";
+  $params = array('label' => get_vocab("match_room") . ':',
+                  'name'  => 'roommatch',
+                  'value' => $vars['roommatch']);
+  generate_input($params);
+  echo "</div>\n";
+      
+  echo "<div id=\"div_typematch\">\n";
+  $options = array();
+  foreach ($booking_types as $key)
+  {
+    $options[$key] = get_type_vocab($key);
+  }
+  $params = array('label'        => get_vocab("match_type") . ':',
+                  'name'         => 'typematch[]',
+                  'id'           => 'typematch',
+                  'options'      => $options,
+                  'force_assoc'  => TRUE,  // in case the type keys happen to be digits
+                  'value'        => $vars['typematch'],
+                  'multiple'     => TRUE,
+                  'attributes'   => 'size="5"');
+  generate_select($params);
+  echo "<span>" . get_vocab("ctrl_click_type") . "</span>\n";
+  echo "</div>\n";
+      
+  echo "<div id=\"div_namematch\">\n";
+  $params = array('label' => get_vocab("match_entry") . ':',
+                  'name'  => 'namematch',
+                  'value' => $vars['namematch']);
+  generate_input($params);
+  echo "</div>\n";
+      
+  echo "<div id=\"div_descrmatch\">\n";
+  $params = array('label' => get_vocab("match_descr") . ':',
+                  'name'  => 'descrmatch',
+                  'value' => $vars['descrmatch']);
+  generate_input($params);
+  echo "</div>\n";
+  
+  echo "<div id=\"div_creatormatch\">\n";
+  $params = array('label' => get_vocab("createdby") . ':',
+                  'name'  => 'creatormatch',
+                  'value' => $vars['creatormatch']);
+  generate_input($params);
+  echo "</div>\n";
+        
+
+  // Privacy status
+  // Only show this part of the form if there are areas that allow private bookings
+  if ($private_somewhere)
+  {
+    // If they're not logged in then there's no point in showing this part of the form because
+    // they'll only be able to see public bookings anyway (and we don't want to alert them to
+    // the existence of private bookings)
+    if (empty($user_level))
+    {
+      echo "<input type=\"hidden\" name=\"match_private\" value=\"" . PRIVATE_NO . "\">\n";
+    }
+    // Otherwise give them the radio buttons
+    else
+    {
+      echo "<div id=\"div_privacystatus\">\n";
+      $options = array(PRIVATE_BOTH => 'both', PRIVATE_NO => 'default_public', PRIVATE_YES => 'default_private');
+      $params = array('label'   => get_vocab("privacy_status") . ':',
+                      'name'    => 'match_private',
+                      'options' => $options,
+                      'value'   => $vars['match_private']);
+      generate_radio_group($params);
+      echo "</div>\n";
+    }
+  }
+        
+  // Confirmation status
+  // Only show this part of the form if there are areas that require approval
+  if ($confirmation_somewhere)
+  {
+    echo "<div id=\"div_confirmationstatus\">\n";
+    $options = array(CONFIRMED_BOTH => 'both', CONFIRMED_YES => 'confirmed', CONFIRMED_NO => 'tentative');
+    $params = array('label'   => get_vocab("confirmation_status") . ':',
+                    'name'    => 'match_confirmed',
+                    'options' => $options,
+                    'value'   => $vars['match_confirmed']);
+    generate_radio_group($params);
+    echo "</div>\n";
+  }
+        
+  // Approval status
+  // Only show this part of the form if there are areas that require approval
+  if ($approval_somewhere)
+  {
+    echo "<div id=\"div_approvalstatus\">\n";
+    $options = array(APPROVED_BOTH => 'both', APPROVED_YES => 'approved', APPROVED_NO => 'awaiting_approval');
+    $params = array('label'   => get_vocab("approval_status") . ':',
+                    'name'    => 'match_approved',
+                    'options' => $options,
+                    'value'   => $vars['match_approved']);
+    generate_radio_group($params);
+    echo "</div>\n";
+  }
+        
+
+  // Now do the custom fields
+  foreach ($vars['custom_fields'] as $key => $value)
+  {
+    $var = "match_$key";
+    global $$var;
+    $params = array('label' => get_loc_field_name($tbl_entry, $key) . ':',
+                    'name'  => $var,
+                    'value' => isset($$var) ? $$var : NULL);
+    echo "<div>\n";
+    // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+    // assume are intended to be booleans)
+    if (($field_natures[$key] == 'boolean') || 
+        (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+    {
+      generate_checkbox($params);
+    }
+    // Otherwise output a text input
+    else
+    {
+      generate_input($params);
+    }
+    echo "</div>\n";
+  }
+
+  echo "</fieldset>\n";
+}
+
+
 // Converts a string from the standard MRBS character set to the character set
 // to be used for CSV files
 function csv_conv($string)
@@ -928,7 +1084,9 @@ if ($phase == 2)
     // Associative arrays (we can't just test for the string, because the database
     // contains the keys, not the values.   So we have to go through each key testing
     // for a possible match)
-    if (!empty($$var) && is_assoc($select_options["entry.$key"]))
+    if (!empty($$var) &&
+        isset($select_options["entry.$key"]) &&
+        is_assoc($select_options["entry.$key"]))
     {
       $sql .= " AND ";
       $or_array = array();
@@ -1081,152 +1239,21 @@ if ($output_form)
   echo "<form class=\"form_general\" id=\"report_form\" method=\"get\" action=\"report.php\">\n";
   echo "<fieldset>\n";
   echo "<legend>" . get_vocab("report_on") . "</legend>\n";
-      
-  echo "<fieldset>\n";
-  echo "<legend>" . get_vocab("search_criteria") . "</legend>\n";
-      
-  echo "<div id=\"div_report_start\">\n";
-  echo "<label>" . get_vocab("report_start") . ":</label>\n";
-  genDateSelector("from_", $from_day, $from_month, $from_year);
-  echo "</div>\n";
-      
-  echo "<div id=\"div_report_end\">\n";
-  echo "<label>" . get_vocab("report_end") . ":</label>\n";
-  genDateSelector("to_", $to_day, $to_month, $to_year);
-  echo "</div>\n";
-      
-  echo "<div id=\"div_areamatch\">\n";
-  $params = array('label' => get_vocab("match_area") . ':',
-                  'name'  => 'areamatch',
-                  'value' => $areamatch);
-  generate_input($params);
-  echo "</div>\n";
- 
-  echo "<div id=\"div_roommatch\">\n";
-  $params = array('label' => get_vocab("match_room") . ':',
-                  'name'  => 'roommatch',
-                  'value' => $roommatch);
-  generate_input($params);
-  echo "</div>\n";
-      
-  echo "<div id=\"div_typematch\">\n";
-  $options = array();
-  foreach ($booking_types as $key)
-  {
-    $options[$key] = get_type_vocab($key);
-  }
-  $params = array('label'        => get_vocab("match_type") . ':',
-                  'name'         => 'typematch[]',
-                  'id'           => 'typematch',
-                  'options'      => $options,
-                  'force_assoc'  => TRUE,  // in case the type keys happen to be digits
-                  'value'        => $typematch,
-                  'multiple'     => TRUE,
-                  'attributes'   => 'size="5"');
-  generate_select($params);
-  echo "<span>" . get_vocab("ctrl_click_type") . "</span>\n";
-  echo "</div>\n";
-      
-  echo "<div id=\"div_namematch\">\n";
-  $params = array('label' => get_vocab("match_entry") . ':',
-                  'name'  => 'namematch',
-                  'value' => $namematch);
-  generate_input($params);
-  echo "</div>\n";
-      
-  echo "<div id=\"div_descrmatch\">\n";
-  $params = array('label' => get_vocab("match_descr") . ':',
-                  'name'  => 'descrmatch',
-                  'value' => $descrmatch);
-  generate_input($params);
-  echo "</div>\n";
   
-  echo "<div id=\"div_creatormatch\">\n";
-  $params = array('label' => get_vocab("createdby") . ':',
-                  'name'  => 'creatormatch',
-                  'value' => $creatormatch);
-  generate_input($params);
-  echo "</div>\n";
-        
+  $search_var_keys = array('from_day', 'from_month', 'from_year',
+                           'to_day', 'to_month', 'to_year',
+                           'areamatch', 'roommatch',
+                           'typematch', 'namematch', 'descrmatch', 'creatormatch',
+                           'match_private', 'match_confirmed', 'match_approved',
+                           'custom_fields');
+  $search_vars = array();
+  foreach($search_var_keys as $var)
+  {
+    $search_vars[$var] = $$var;
+  }
+  
+  generate_search_criteria($search_vars);  
 
-  // Privacy status
-  // Only show this part of the form if there are areas that allow private bookings
-  if ($private_somewhere)
-  {
-    // If they're not logged in then there's no point in showing this part of the form because
-    // they'll only be able to see public bookings anyway (and we don't want to alert them to
-    // the existence of private bookings)
-    if (empty($user_level))
-    {
-      echo "<input type=\"hidden\" name=\"match_private\" value=\"" . PRIVATE_NO . "\">\n";
-    }
-    // Otherwise give them the radio buttons
-    else
-    {
-      echo "<div id=\"div_privacystatus\">\n";
-      $options = array(PRIVATE_BOTH => 'both', PRIVATE_NO => 'default_public', PRIVATE_YES => 'default_private');
-      $params = array('label'   => get_vocab("privacy_status") . ':',
-                      'name'    => 'match_private',
-                      'options' => $options,
-                      'value'   => $match_private);
-      generate_radio_group($params);
-      echo "</div>\n";
-    }
-  }
-        
-  // Confirmation status
-  // Only show this part of the form if there are areas that require approval
-  if ($confirmation_somewhere)
-  {
-    echo "<div id=\"div_confirmationstatus\">\n";
-    $options = array(CONFIRMED_BOTH => 'both', CONFIRMED_YES => 'confirmed', CONFIRMED_NO => 'tentative');
-    $params = array('label'   => get_vocab("confirmation_status") . ':',
-                    'name'    => 'match_confirmed',
-                    'options' => $options,
-                    'value'   => $match_confirmed);
-    generate_radio_group($params);
-    echo "</div>\n";
-  }
-        
-  // Approval status
-  // Only show this part of the form if there are areas that require approval
-  if ($approval_somewhere)
-  {
-    echo "<div id=\"div_approvalstatus\">\n";
-    $options = array(APPROVED_BOTH => 'both', APPROVED_YES => 'approved', APPROVED_NO => 'awaiting_approval');
-    $params = array('label'   => get_vocab("approval_status") . ':',
-                    'name'    => 'match_approved',
-                    'options' => $options,
-                    'value'   => $match_approved);
-    generate_radio_group($params);
-    echo "</div>\n";
-  }
-        
-
-  // Now do the custom fields
-  foreach ($custom_fields as $key => $value)
-  {
-    $var = "match_$key";
-    $params = array('label' => get_loc_field_name($tbl_entry, $key) . ':',
-                    'name'  => $var,
-                    'value' => $$var);
-    echo "<div>\n";
-    // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
-    // assume are intended to be booleans)
-    if (($field_natures[$key] == 'boolean') || 
-        (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
-    {
-      generate_checkbox($params);
-    }
-    // Otherwise output a text input
-    else
-    {
-      generate_input($params);
-    }
-    echo "</div>\n";
-  }
-
-  echo "</fieldset>\n";
       
         
   echo "<fieldset>\n";
