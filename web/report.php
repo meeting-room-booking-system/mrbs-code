@@ -1075,264 +1075,220 @@ else
 // Upper part: The form.
 if ($output_form)
 {
-  ?>
-  <div class="screenonly">
+
+  echo "<div class=\"screenonly\">\n";
  
-    <form class="form_general" id="report_form" method="get" action="report.php">
-      <fieldset>
-      <legend><?php echo get_vocab("report_on");?></legend>
+  echo "<form class=\"form_general\" id=\"report_form\" method=\"get\" action=\"report.php\">\n";
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("report_on") . "</legend>\n";
       
-        <fieldset>
-        <legend><?php echo get_vocab("search_criteria");?></legend>
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("search_criteria") . "</legend>\n";
       
-        <div id="div_report_start">
-          <?php
-          echo "<label>" . get_vocab("report_start") . ":</label>\n";
-          genDateSelector("from_", $from_day, $from_month, $from_year);
-          ?>
-        
-        </div>
+  echo "<div id=\"div_report_start\">\n";
+  echo "<label>" . get_vocab("report_start") . ":</label>\n";
+  genDateSelector("from_", $from_day, $from_month, $from_year);
+  echo "</div>\n";
       
-        <div id="div_report_end">
-          <?php
-          echo "<label>" . get_vocab("report_end") . ":</label>\n";
-          genDateSelector("to_", $to_day, $to_month, $to_year);
-          ?>
-        </div>
+  echo "<div id=\"div_report_end\">\n";
+  echo "<label>" . get_vocab("report_end") . ":</label>\n";
+  genDateSelector("to_", $to_day, $to_month, $to_year);
+  echo "</div>\n";
       
-        <div id="div_areamatch">                  
-          <label for="areamatch"><?php echo get_vocab("match_area");?>:</label>
-          <input type="text" id="areamatch" name="areamatch" value="<?php echo htmlspecialchars($areamatch); ?>">
-        </div>   
+  echo "<div id=\"div_areamatch\">\n";
+  $params = array('label' => get_vocab("match_area") . ':',
+                  'name'  => 'areamatch',
+                  'value' => $areamatch);
+  generate_input($params);
+  echo "</div>\n";
+ 
+  echo "<div id=\"div_roommatch\">\n";
+  $params = array('label' => get_vocab("match_room") . ':',
+                  'name'  => 'roommatch',
+                  'value' => $roommatch);
+  generate_input($params);
+  echo "</div>\n";
       
-        <div id="div_roommatch">
-          <label for="roommatch"><?php echo get_vocab("match_room");?>:</label>
-          <input type="text" id="roommatch" name="roommatch" value="<?php echo htmlspecialchars($roommatch); ?>">
-        </div>
+  echo "<div id=\"div_typematch\">\n";
+  $options = array();
+  foreach ($booking_types as $key)
+  {
+    $options[$key] = get_type_vocab($key);
+  }
+  $params = array('label'        => get_vocab("match_type") . ':',
+                  'name'         => 'typematch[]',
+                  'id'           => 'typematch',
+                  'options'      => $options,
+                  'force_assoc'  => TRUE,  // in case the type keys happen to be digits
+                  'value'        => $typematch,
+                  'multiple'     => TRUE,
+                  'attributes'   => 'size="5"');
+  generate_select($params);
+  echo "<span>" . get_vocab("ctrl_click_type") . "</span>\n";
+  echo "</div>\n";
       
-        <div id="div_typematch">
-          <label for="typematch"><?php echo get_vocab("match_type")?>:</label>
-          <select id="typematch" name="typematch[]" multiple="multiple" size="5">
-            <?php
-            foreach ( $booking_types as $key )
-            {
-              $val = get_type_vocab($key);
-              if (!empty($val) )
-              {
-                echo "                  <option value=\"$key\"" .
-                (is_array($typematch) && in_array ($key, $typematch) ? " selected" : "") .
-                ">$val</option>\n";
-              }
-            }
-          ?>
-          </select>
-          <span><?php echo get_vocab("ctrl_click_type") ?></span>
-        </div>
+  echo "<div id=\"div_namematch\">\n";
+  $params = array('label' => get_vocab("match_entry") . ':',
+                  'name'  => 'namematch',
+                  'value' => $namematch);
+  generate_input($params);
+  echo "</div>\n";
       
-        <div id="div_namematch">     
-          <label for="namematch"><?php echo get_vocab("match_entry");?>:</label>
-          <input type="text" id="namematch" name="namematch" value="<?php echo htmlspecialchars($namematch); ?>">
-        </div>   
-      
-        <div id="div_descrmatch">
-          <label for="descrmatch"><?php echo get_vocab("match_descr");?>:</label>
-          <input type="text" id="descrmatch" name="descrmatch" value="<?php echo htmlspecialchars($descrmatch); ?>">
-        </div>
-      
-        <div id="div_creatormatch">
-          <label for="creatormatch"><?php echo get_vocab("createdby");?>:</label>
-          <input type="text" id="creatormatch" name="creatormatch" value="<?php echo htmlspecialchars($creatormatch); ?>">
-        </div>
-        
-        <?php
-        // Privacy status
-        // Only show this part of the form if there are areas that allow private bookings
-        if ($private_somewhere)
-        {
-          // If they're not logged in then there's no point in showing this part of the form because
-          // they'll only be able to see public bookings anyway (and we don't want to alert them to
-          // the existence of porivate bookings)
-          if (empty($user_level))
-          {
-            echo "<input type=\"hidden\" name=\"match_private\" value=\"" . PRIVATE_NO . "\">\n";
-          }
-          // Otherwise give them the radio buttons
-          else
-          {
-            echo "<div id=\"div_privacystatus\">\n";
-            echo "<label>" . get_vocab("privacy_status") . ":</label>\n";
-            echo "<div class=\"group\">\n";   
-            $options = array(PRIVATE_BOTH => 'both', PRIVATE_NO => 'default_public', PRIVATE_YES => 'default_private');
-            foreach ($options as $option => $token)
-            {
-              echo "<label>";
-              echo "<input class=\"radio\" type=\"radio\" name=\"match_private\" value=\"$option\"" .          
-                   (($match_private == $option) ? " checked=\"checked\"" : "") .
-                   ">" . get_vocab($token);
-              echo "</label>\n";
-            }
-            echo "</div>\n";
-            echo "</div>\n";
-          }
-        }
-        
-        // Confirmation status
-        // Only show this part of the form if there are areas that require approval
-        if ($confirmation_somewhere)
-        {
-          echo "<div id=\"div_confirmationstatus\">\n";
-          echo "<label>" . get_vocab("confirmation_status") . ":</label>\n";
-          echo "<div class=\"group\">\n";   
-          $options = array(CONFIRMED_BOTH => 'both', CONFIRMED_YES => 'confirmed', CONFIRMED_NO => 'tentative');
-          foreach ($options as $option => $token)
-          {
-            echo "<label>";
-            echo "<input class=\"radio\" type=\"radio\" name=\"match_confirmed\" value=\"$option\"" .          
-                 (($match_confirmed == $option) ? " checked=\"checked\"" : "") .
-                 ">" . get_vocab($token);
-            echo "</label>\n";
-          }
-          echo "</div>\n";
-          echo "</div>\n";
-        }
-        
-        // Approval status
-        // Only show this part of the form if there are areas that require approval
-        if ($approval_somewhere)
-        {
-          echo "<div id=\"div_approvalstatus\">\n";
-          echo "<label>" . get_vocab("approval_status") . ":</label>\n";
-          echo "<div class=\"group\">\n";   
-          $options = array(APPROVED_BOTH => 'both', APPROVED_YES => 'approved', APPROVED_NO => 'awaiting_approval');
-          foreach ($options as $option => $token)
-          {
-            echo "<label>";
-            echo "<input class=\"radio\" type=\"radio\" name=\"match_approved\" value=\"$option\"" .          
-                 (($match_approved == $option) ? " checked=\"checked\"" : "") .
-                 ">" . get_vocab($token);
-            echo "</label>\n";
-          }
-          echo "</div>\n";
-          echo "</div>\n";
-        }
+  echo "<div id=\"div_descrmatch\">\n";
+  $params = array('label' => get_vocab("match_descr") . ':',
+                  'name'  => 'descrmatch',
+                  'value' => $descrmatch);
+  generate_input($params);
+  echo "</div>\n";
+  
+  echo "<div id=\"div_creatormatch\">\n";
+  $params = array('label' => get_vocab("createdby") . ':',
+                  'name'  => 'creatormatch',
+                  'value' => $creatormatch);
+  generate_input($params);
+  echo "</div>\n";
         
 
-        // Now do the custom fields
-        foreach ($custom_fields as $key => $value)
-        {
-          $var = "match_$key";
-          echo "<div>\n";
-          echo "<label for=\"$var\">" . get_loc_field_name($tbl_entry, $key) . ":</label>\n";
-          // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
-          // assume are intended to be booleans)
-          if (($field_natures[$key] == 'boolean') || 
-              (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
-          {
-            echo "<input type=\"checkbox\" class=\"checkbox\" " .
-                  "id=\"$var\" name=\"$var\" value=\"1\" " .
-                  ((!empty($$var)) ? " checked=\"checked\"" : "") .
-                  ">\n";
-          }
-          // Otherwise output a text input
-          else
-          {
-            echo "<input type=\"text\" " .
-                  "id=\"$var\" name=\"$var\" " .
-                  "value=\"" . htmlspecialchars($$var) . "\"" .
-                  ">\n";
-          }
-          echo "</div>\n";
-        }
-        ?>
-        </fieldset>
-      
-        <fieldset>
-        <legend><?php echo get_vocab("presentation_options");?></legend>
+  // Privacy status
+  // Only show this part of the form if there are areas that allow private bookings
+  if ($private_somewhere)
+  {
+    // If they're not logged in then there's no point in showing this part of the form because
+    // they'll only be able to see public bookings anyway (and we don't want to alert them to
+    // the existence of private bookings)
+    if (empty($user_level))
+    {
+      echo "<input type=\"hidden\" name=\"match_private\" value=\"" . PRIVATE_NO . "\">\n";
+    }
+    // Otherwise give them the radio buttons
+    else
+    {
+      echo "<div id=\"div_privacystatus\">\n";
+      $options = array(PRIVATE_BOTH => 'both', PRIVATE_NO => 'default_public', PRIVATE_YES => 'default_private');
+      $params = array('label'   => get_vocab("privacy_status") . ':',
+                      'name'    => 'match_private',
+                      'options' => $options,
+                      'value'   => $match_private);
+      generate_radio_group($params);
+      echo "</div>\n";
+    }
+  }
         
-        <?php
-        echo "<div id=\"div_output\">\n";
-        $buttons = array(REPORT  => "report",
-                         SUMMARY => "summary");
-        $params = array('label'   => get_vocab('output') . ":",
-                        'name'    => 'output',
-                        'value'   => $output,
-                        'options' => $buttons);
-        generate_radio_group($params);                  
-        echo "</div>\n";
+  // Confirmation status
+  // Only show this part of the form if there are areas that require approval
+  if ($confirmation_somewhere)
+  {
+    echo "<div id=\"div_confirmationstatus\">\n";
+    $options = array(CONFIRMED_BOTH => 'both', CONFIRMED_YES => 'confirmed', CONFIRMED_NO => 'tentative');
+    $params = array('label'   => get_vocab("confirmation_status") . ':',
+                    'name'    => 'match_confirmed',
+                    'options' => $options,
+                    'value'   => $match_confirmed);
+    generate_radio_group($params);
+    echo "</div>\n";
+  }
         
-        echo "<div id=\"div_format\">\n";
-        $buttons = array(OUTPUT_HTML => "html",
-                         OUTPUT_CSV  => "csv");
-        // The iCal output button
-        if ($times_somewhere) // We can't do iCalendars for periods yet
-        {
-          $buttons[OUTPUT_ICAL] = "ical";
-        }
-        $params = array('label'   => get_vocab('format') . ":",
-                        'name'    => 'output_format',
-                        'value'   => $output_format,
-                        'options' => $buttons);
-        generate_radio_group($params);
-        echo "</div>\n";
-        ?>
+  // Approval status
+  // Only show this part of the form if there are areas that require approval
+  if ($approval_somewhere)
+  {
+    echo "<div id=\"div_approvalstatus\">\n";
+    $options = array(APPROVED_BOTH => 'both', APPROVED_YES => 'approved', APPROVED_NO => 'awaiting_approval');
+    $params = array('label'   => get_vocab("approval_status") . ':',
+                    'name'    => 'match_approved',
+                    'options' => $options,
+                    'value'   => $match_approved);
+    generate_radio_group($params);
+    echo "</div>\n";
+  }
+        
 
+  // Now do the custom fields
+  foreach ($custom_fields as $key => $value)
+  {
+    $var = "match_$key";
+    $params = array('label' => get_loc_field_name($tbl_entry, $key) . ':',
+                    'name'  => $var,
+                    'value' => $$var);
+    echo "<div>\n";
+    // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+    // assume are intended to be booleans)
+    if (($field_natures[$key] == 'boolean') || 
+        (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+    {
+      generate_checkbox($params);
+    }
+    // Otherwise output a text input
+    else
+    {
+      generate_input($params);
+    }
+    echo "</div>\n";
+  }
+
+  echo "</fieldset>\n";
       
-        <div id="div_sortby"> 
-          <label><?php echo get_vocab("sort_rep");?>:</label>
-          <div class="group">
-            <label>
-              <input class="radio" type="radio" name="sortby" value="r"
-              <?php 
-              if ($sortby=="r") echo " checked=\"checked\"";
-              echo ">". get_vocab("room");?>
-            </label>
-            <label>
-              <input class="radio" type="radio" name="sortby" value="s"
-              <?php 
-              if ($sortby=="s") echo " checked=\"checked\"";
-              echo ">". get_vocab("sort_rep_time");?>
-            </label>
-          </div>
-        </div>
-      
-        <div id="div_sumby">
-          <label><?php echo get_vocab("summarize_by");?>:</label>
-          <div class="group">
-            <label>
-              <input class="radio" type="radio" name="sumby" value="d"
-              <?php 
-              if ($sumby=="d") echo " checked=\"checked\"";
-              echo ">" . get_vocab("sum_by_descrip");
-              ?>
-            </label>
-            <label>
-              <input class="radio" type="radio" name="sumby" value="c"
-              <?php 
-              if ($sumby=="c") echo " checked=\"checked\"";
-              echo ">" . get_vocab("sum_by_creator");
-              ?>
-            </label>
-            <label>
-              <input class="radio" type="radio" name="sumby" value="t"
-              <?php 
-              if ($sumby=="t") echo " checked=\"checked\"";
-              echo ">" . get_vocab("sum_by_type");
-              ?>
-            </label>
-          </div>
-        </div>
-        </fieldset>
-      
-        <div id="report_submit">
-          <input type="hidden" name="phase" value="2">
-          <input class="submit" type="submit" value="<?php echo get_vocab("submitquery") ?>">
-        </div>
+        
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("presentation_options") . "</legend>\n";
+        
+  echo "<div id=\"div_output\">\n";
+  $buttons = array(REPORT  => "report",
+                   SUMMARY => "summary");
+  $params = array('label'   => get_vocab('output') . ":",
+                  'name'    => 'output',
+                  'value'   => $output,
+                  'options' => $buttons);
+  generate_radio_group($params);                  
+  echo "</div>\n";
+        
+  echo "<div id=\"div_format\">\n";
+  $buttons = array(OUTPUT_HTML => "html",
+                   OUTPUT_CSV  => "csv");
+  // The iCal output button
+  if ($times_somewhere) // We can't do iCalendars for periods yet
+  {
+    $buttons[OUTPUT_ICAL] = "ical";
+  }
+  $params = array('label'   => get_vocab('format') . ":",
+                  'name'    => 'output_format',
+                  'value'   => $output_format,
+                  'options' => $buttons);
+  generate_radio_group($params);
+  echo "</div>\n";
+
+  echo "<div id=\"div_sortby\">\n";
+  $options = array('r' => get_vocab("room"),
+                   's' => get_vocab("sort_rep_time"));
+  $params = array('label'   => get_vocab("sort_rep") . ':',
+                  'name'    => 'sortby',
+                  'options' => $options,
+                  'value'   => $sortby);
+  generate_radio_group($params);
+  echo "</div>\n";
+
+  echo "<div id=\"div_sumby\">\n";
+  $options = array('d' => get_vocab("sum_by_descrip"),
+                   'c' => get_vocab("sum_by_creator"),
+                   't' => get_vocab("sum_by_type"));
+  $params = array('label'   => get_vocab("summarize_by") . ':',
+                  'name'    => 'sumby',
+                  'options' => $options,
+                  'value'   => $sumby);
+  generate_radio_group($params);
+  echo "</div>\n";
+  
+  echo "</fieldset>\n";
+
+  echo "<div id=\"report_submit\">\n";
+  echo "<input type=\"hidden\" name=\"phase\" value=\"2\">\n";
+  echo "<input class=\"submit\" type=\"submit\" value=\"" . get_vocab("submitquery") . "\">\n";
+  echo "</div>\n";
         
       
-      </fieldset>
-    </form>
-  </div>
-  <?php
+  echo "</fieldset>\n";
+  echo "</form>\n";
+  echo "</div>\n";
 }
 
 // PHASE 2:  Output the results, if called with parameters:
