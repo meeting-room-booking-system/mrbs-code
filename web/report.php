@@ -160,6 +160,72 @@ function generate_search_criteria(&$vars)
 }
 
 
+function generate_presentation_options(&$vars)
+{
+  global $times_somewhere;
+  
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("presentation_options") . "</legend>\n";
+        
+  echo "<div id=\"div_output\">\n";
+  $buttons = array(REPORT  => "report",
+                   SUMMARY => "summary");
+  $params = array('label'   => get_vocab('output') . ":",
+                  'name'    => 'output',
+                  'value'   => $vars['output'],
+                  'options' => $buttons);
+  generate_radio_group($params);                  
+  echo "</div>\n";
+        
+  echo "<div id=\"div_format\">\n";
+  $buttons = array(OUTPUT_HTML => "html",
+                   OUTPUT_CSV  => "csv");
+  // The iCal output button
+  if ($times_somewhere) // We can't do iCalendars for periods yet
+  {
+    $buttons[OUTPUT_ICAL] = "ical";
+  }
+  $params = array('label'   => get_vocab('format') . ":",
+                  'name'    => 'output_format',
+                  'value'   => $vars['output_format'],
+                  'options' => $buttons);
+  generate_radio_group($params);
+  echo "</div>\n";
+
+  echo "<div id=\"div_sortby\">\n";
+  $options = array('r' => get_vocab("room"),
+                   's' => get_vocab("sort_rep_time"));
+  $params = array('label'   => get_vocab("sort_rep") . ':',
+                  'name'    => 'sortby',
+                  'options' => $options,
+                  'value'   => $vars['sortby']);
+  generate_radio_group($params);
+  echo "</div>\n";
+
+  echo "<div id=\"div_sumby\">\n";
+  $options = array('d' => get_vocab("sum_by_descrip"),
+                   'c' => get_vocab("sum_by_creator"),
+                   't' => get_vocab("sum_by_type"));
+  $params = array('label'   => get_vocab("summarize_by") . ':',
+                  'name'    => 'sumby',
+                  'options' => $options,
+                  'value'   => $vars['sumby']);
+  generate_radio_group($params);
+  echo "</div>\n";
+  
+  echo "</fieldset>\n";
+}
+
+
+function generate_submit_buttons()
+{
+  echo "<div id=\"report_submit\">\n";
+  echo "<input type=\"hidden\" name=\"phase\" value=\"2\">\n";
+  echo "<input class=\"submit\" type=\"submit\" value=\"" . get_vocab("submitquery") . "\">\n";
+  echo "</div>\n";
+}
+
+
 // Converts a string from the standard MRBS character set to the character set
 // to be used for CSV files
 function csv_conv($string)
@@ -1240,6 +1306,7 @@ if ($output_form)
   echo "<fieldset>\n";
   echo "<legend>" . get_vocab("report_on") . "</legend>\n";
   
+  // Do the search criteria fieldset
   $search_var_keys = array('from_day', 'from_month', 'from_year',
                            'to_day', 'to_month', 'to_year',
                            'areamatch', 'roommatch',
@@ -1251,68 +1318,21 @@ if ($output_form)
   {
     $search_vars[$var] = $$var;
   }
+  generate_search_criteria($search_vars);
   
-  generate_search_criteria($search_vars);  
-
-      
-        
-  echo "<fieldset>\n";
-  echo "<legend>" . get_vocab("presentation_options") . "</legend>\n";
-        
-  echo "<div id=\"div_output\">\n";
-  $buttons = array(REPORT  => "report",
-                   SUMMARY => "summary");
-  $params = array('label'   => get_vocab('output') . ":",
-                  'name'    => 'output',
-                  'value'   => $output,
-                  'options' => $buttons);
-  generate_radio_group($params);                  
-  echo "</div>\n";
-        
-  echo "<div id=\"div_format\">\n";
-  $buttons = array(OUTPUT_HTML => "html",
-                   OUTPUT_CSV  => "csv");
-  // The iCal output button
-  if ($times_somewhere) // We can't do iCalendars for periods yet
+  // Then the presentation options fieldset
+  $presentation_var_keys = array('output', 'output_format',
+                                 'sortby', 'sumby');
+  $presentation_vars = array();
+  foreach($presentation_var_keys as $var)
   {
-    $buttons[OUTPUT_ICAL] = "ical";
+    $presentation_vars[$var] = $$var;
   }
-  $params = array('label'   => get_vocab('format') . ":",
-                  'name'    => 'output_format',
-                  'value'   => $output_format,
-                  'options' => $buttons);
-  generate_radio_group($params);
-  echo "</div>\n";
-
-  echo "<div id=\"div_sortby\">\n";
-  $options = array('r' => get_vocab("room"),
-                   's' => get_vocab("sort_rep_time"));
-  $params = array('label'   => get_vocab("sort_rep") . ':',
-                  'name'    => 'sortby',
-                  'options' => $options,
-                  'value'   => $sortby);
-  generate_radio_group($params);
-  echo "</div>\n";
-
-  echo "<div id=\"div_sumby\">\n";
-  $options = array('d' => get_vocab("sum_by_descrip"),
-                   'c' => get_vocab("sum_by_creator"),
-                   't' => get_vocab("sum_by_type"));
-  $params = array('label'   => get_vocab("summarize_by") . ':',
-                  'name'    => 'sumby',
-                  'options' => $options,
-                  'value'   => $sumby);
-  generate_radio_group($params);
-  echo "</div>\n";
-  
-  echo "</fieldset>\n";
-
-  echo "<div id=\"report_submit\">\n";
-  echo "<input type=\"hidden\" name=\"phase\" value=\"2\">\n";
-  echo "<input class=\"submit\" type=\"submit\" value=\"" . get_vocab("submitquery") . "\">\n";
-  echo "</div>\n";
+  generate_presentation_options($presentation_vars);
         
-      
+  // Then the submit buttons
+  generate_submit_buttons();
+
   echo "</fieldset>\n";
   echo "</form>\n";
   echo "</div>\n";
