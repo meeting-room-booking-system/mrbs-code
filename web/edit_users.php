@@ -375,7 +375,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                            (($Action == "Add") && $initial_user_creation && ($i == $max_level)) ||
                            (($Action == "Add") && !$initial_user_creation && ($i == 1)) )
                       {
-                        $params['value'] = $v;
+                        $params['value'] = $i;
                       }
                     }
                     $params['force_assoc'] = TRUE;
