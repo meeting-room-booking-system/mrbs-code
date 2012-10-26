@@ -201,56 +201,79 @@ function generate_search_criteria(&$vars)
 
 function generate_presentation_options(&$vars)
 {
-  global $times_somewhere;
+  global $times_somewhere, $report_presentation_field_order;
   
   echo "<fieldset>\n";
   echo "<legend>" . get_vocab("presentation_options") . "</legend>\n";
-        
-  echo "<div id=\"div_output\">\n";
-  $buttons = array(REPORT  => "report",
-                   SUMMARY => "summary");
-  $params = array('label'   => get_vocab('output') . ":",
-                  'name'    => 'output',
-                  'value'   => $vars['output'],
-                  'options' => $buttons);
-  generate_radio_group($params);                  
-  echo "</div>\n";
-        
-  echo "<div id=\"div_format\">\n";
-  $buttons = array(OUTPUT_HTML => "html",
-                   OUTPUT_CSV  => "csv");
-  // The iCal output button
-  if ($times_somewhere) // We can't do iCalendars for periods yet
+
+  foreach ($report_presentation_field_order as $key)
   {
-    $buttons[OUTPUT_ICAL] = "ical";
-  }
-  $params = array('label'   => get_vocab('format') . ":",
-                  'name'    => 'output_format',
-                  'value'   => $vars['output_format'],
-                  'options' => $buttons);
-  generate_radio_group($params);
-  echo "</div>\n";
+    switch ($key)
+    {
+      case 'output':
+        echo "<div id=\"div_output\">\n";
+        $buttons = array(REPORT  => "report",
+                         SUMMARY => "summary");
+        $params = array('label'   => get_vocab('output') . ":",
+                        'name'    => 'output',
+                        'value'   => $vars['output'],
+                        'options' => $buttons);
+        generate_radio_group($params);                  
+        echo "</div>\n";
+        break;
+        
+        
+      case 'output_format':
+        echo "<div id=\"div_format\">\n";
+        $buttons = array(OUTPUT_HTML => "html",
+                         OUTPUT_CSV  => "csv");
+        // The iCal output button
+        if ($times_somewhere) // We can't do iCalendars for periods yet
+        {
+          $buttons[OUTPUT_ICAL] = "ical";
+        }
+        $params = array('label'   => get_vocab('format') . ":",
+                        'name'    => 'output_format',
+                        'value'   => $vars['output_format'],
+                        'options' => $buttons);
+        generate_radio_group($params);
+        echo "</div>\n";
+        break;
+        
 
-  echo "<div id=\"div_sortby\">\n";
-  $options = array('r' => get_vocab("room"),
-                   's' => get_vocab("sort_rep_time"));
-  $params = array('label'   => get_vocab("sort_rep") . ':',
-                  'name'    => 'sortby',
-                  'options' => $options,
-                  'value'   => $vars['sortby']);
-  generate_radio_group($params);
-  echo "</div>\n";
+      case 'sortby':
+        echo "<div id=\"div_sortby\">\n";
+        $options = array('r' => get_vocab("room"),
+                         's' => get_vocab("sort_rep_time"));
+        $params = array('label'   => get_vocab("sort_rep") . ':',
+                        'name'    => 'sortby',
+                        'options' => $options,
+                        'value'   => $vars['sortby']);
+        generate_radio_group($params);
+        echo "</div>\n";
+        break;
 
-  echo "<div id=\"div_sumby\">\n";
-  $options = array('d' => get_vocab("sum_by_descrip"),
-                   'c' => get_vocab("sum_by_creator"),
-                   't' => get_vocab("sum_by_type"));
-  $params = array('label'   => get_vocab("summarize_by") . ':',
-                  'name'    => 'sumby',
-                  'options' => $options,
-                  'value'   => $vars['sumby']);
-  generate_radio_group($params);
-  echo "</div>\n";
+        
+      case 'sumby':
+        echo "<div id=\"div_sumby\">\n";
+        $options = array('d' => get_vocab("sum_by_descrip"),
+                         'c' => get_vocab("sum_by_creator"),
+                         't' => get_vocab("sum_by_type"));
+        $params = array('label'   => get_vocab("summarize_by") . ':',
+                        'name'    => 'sumby',
+                        'options' => $options,
+                        'value'   => $vars['sumby']);
+        generate_radio_group($params);
+        echo "</div>\n";
+        break;
+        
+      
+      default:
+        break;  
+      
+    }  // switch
+   
+  }  // foreach   
   
   echo "</fieldset>\n";
 }
@@ -1036,6 +1059,18 @@ $approval_somewhere = some_area('approval_enabled');
 $confirmation_somewhere = some_area('confirmation_enabled');
 $times_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods=0") > 0);
 $periods_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods!=0") > 0);
+
+
+// Build the report search field order
+$report_presentation_fields = array('output', 'output_format', 'sortby', 'sumby');
+
+foreach ($report_presentation_fields as $field)
+{
+  if (!in_array($field, $report_presentation_field_order))
+  {
+    $report_presentation_field_order[] = $field;
+  }
+}
 
 // Build the report search field order
 $report_search_fields = array('report_start', 'report_end',

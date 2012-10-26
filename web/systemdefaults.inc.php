@@ -555,6 +555,11 @@ $edit_entry_field_order = array();
 // 'match_confirmed', 'match_approved', plus any custom fields you may have defined.
 $report_search_field_order = array();
 
+// And the same for the fields in the Presentation Options section of the report form.
+// Valid entries in this array are 'output', 'output_format', 'sortby' and 'sumby'.
+$report_presentation_field_order = array();
+
+
 /***********************************************
  * Authentication settings - read AUTHENTICATION
  ***********************************************/
