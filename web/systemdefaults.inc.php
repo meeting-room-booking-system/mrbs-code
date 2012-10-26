@@ -549,6 +549,12 @@ $skip_default = FALSE;
 // order.
 $edit_entry_field_order = array();
 
+// You can so the same for the fields in the Search Criteria section of the report
+// form.  Valid entries in this array are 'report_start', 'report_end', 'areamatch',
+// 'roommatch', 'typematch', 'namematch', 'descrmatch', 'creatormatch', 'match_private',
+// 'match_confirmed', 'match_approved', plus any custom fields you may have defined.
+$report_search_field_order = array();
+
 /***********************************************
  * Authentication settings - read AUTHENTICATION
  ***********************************************/
