@@ -724,7 +724,7 @@ function generate_radio($params)
   // generate the HTML
   // no HTML escaping for the label - it is trusted
   $html  = "<label class=\"radio\">";
-  $html .= "<input class=\"radio\" type=\"radio\" name=\"" . $params['name'] . "\" value=\"" . $option['key'] . "\"";          
+  $html .= "<input class=\"radio\" type=\"radio\" name=\"" . $params['name'] . "\" value=\"" . htmlspecialchars($option['key']) . "\"";          
   $html .= ($params['value'] == $option['key']) ? " checked=\"checked\"" : "";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
   $html .= ">" . htmlspecialchars($option['value']);
@@ -791,7 +791,7 @@ function generate_radio_group($params)
   if ($params['disabled'])
   {
     $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\"";
-    $html .= " value=\"" . $params['value'] . "\">\n";
+    $html .= " value=\"" . htmlspecialchars($params['value']) . "\">\n";
   }
   echo $html;
 }
@@ -860,7 +860,8 @@ function generate_checkbox_group($params)
       $value = $token;
     }
     $html .= "<label>";
-    $html .= "<input class=\"checkbox\" type=\"checkbox\" name=\"" . $params['name'] . "\" value=\"$value\"";          
+    $html .= "<input class=\"checkbox\" type=\"checkbox\" name=\"" . $params['name'] . "\"";
+    $html .= " value=\"" . htmlspecialchars($value) . "\"";          
     $html .= (in_array($value, $params['value'])) ? " checked=\"checked\"" : "";
     $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
     $html .= ">" . htmlspecialchars($token);
@@ -868,7 +869,7 @@ function generate_checkbox_group($params)
     if ($params['disabled'] && in_array($value, $params['value']))
     {
       $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\"";
-      $html .= " value=\"$value\">\n";
+      $html .= " value=\"" . htmlspecialchars($value) . "\">\n";
     }
   }
   $html .= "</div>\n";
@@ -971,7 +972,7 @@ function generate_select($params)
     {
       $value = $text;
     }
-    $html .= "<option value=\"$value\"";
+    $html .= "<option value=\"" . htmlspecialchars($value) . "\"";
     $html .= (in_array($value, $params['value'])) ? " selected=\"selected\"" : '';
     $html .= ">".htmlspecialchars($text)."</option>\n";
   }
