@@ -592,6 +592,14 @@ function generate_checkbox($params)
     $html .= $params['label'] . "</label>";
   }
   $html .= "\n";
+  
+  // and a hidden input if the input box is disabled and the value is true
+  // (the checkbox isn't posted if not checked)
+  if (($params['disabled']) && !empty($params['value']))
+  {
+    $html .= "<input type=\"hidden\" value=\"1\" name=\"" . $params['name'] . "\">\n";
+  }
+  
   echo $html;
 }
 
@@ -730,6 +738,12 @@ function generate_radio($params)
   $html .= ">" . htmlspecialchars($option['value']);
   $html .= "</label>\n";
   
+  // and a hidden input if the input box is disabled and the value is true
+  // (the checkbox isn't posted if not checked)
+  if (($params['disabled']) && ($params['value'] == $option['key']))
+  {
+    $html .= "<input type=\"hidden\" value=\"" . htmlspecialchars($option['key']) . "\" name=\"" . $params['name'] . "\">\n";
+  }
   echo $html;
 }
 
@@ -873,7 +887,7 @@ function generate_checkbox_group($params)
     }
   }
   $html .= "</div>\n";
-
+  
   echo $html;
 }
 
