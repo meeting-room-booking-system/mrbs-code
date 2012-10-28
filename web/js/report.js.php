@@ -12,70 +12,6 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
-// Generates the JavaScript code to turn the input with id $id
-// into an autocomplete box, with options contained in the
-// array $options.  $options can be a simple or an associative array.
-function generate_autocomplete($id, $options)
-{
-  global $autocomplete_length_breaks;
-
-  $js = '';
-
-  // Turn the array into a simple, numerically indexed, array
-  $options = array_values($options);
-  $n_options = count($options);
-  if ($n_options > 0)
-  {
-    // Work out a suitable value for the autocomplete minLength
-    // option, ie the number of characters that must be typed before
-    // a list of options appears.   We want to avoid presenting a huge 
-    // list of options.
-    
-    $min_length = 0;
-    if (isset($autocomplete_length_breaks) && is_array($autocomplete_length_breaks))
-    {
-      foreach ($autocomplete_length_breaks as $break)
-      {
-        if ($n_options < $break)
-        {
-          break;
-        }
-        $min_length++;
-      }
-    }
-    // Start forming the array literal
-    // Escape the options
-    for ($i=0; $i < $n_options; $i++)
-    {
-      $options[$i] = escape_js($options[$i]);
-    }
-    $options_string = "'" . implode("','", $options) . "'";
-    // Build the JavaScript.   We don't support autocomplete in IE6 and below
-    // because the browser doesn't render the autocomplete box properly - it
-    // gets hidden behind other elements.   Although there are fixes for this,
-    // it's not worth it ...
-    $js .= "if (!lteIE6)\n";
-    $js .= "{\n";
-    $js .= "  $('#$id').autocomplete({\n";
-    $js .= "    source: [$options_string],\n";
-    $js .= "    minLength: $min_length\n";
-    $js .= "  })";
-    // If the minLength is 0, then the autocomplete widget doesn't do
-    // quite what you might expect and you need to force it to display
-    // the available options when it receives focus
-    if ($min_length == 0)
-    {
-      $js .= ".focus(function() {\n";
-      $js .= "    $(this).autocomplete('search', '');\n";
-      $js .= "  })";
-    }
-    $js .= "  ;\n";
-    $js .= "}\n";
-  }
-
-  return $js;
-}
-
 $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= $max_level);
 
@@ -106,32 +42,6 @@ init = function(args) {
   
   
   <?php
-  // Make the area match input on the report page into an auto-complete input
-  $options = sql_query_array("SELECT area_name FROM $tbl_area ORDER BY area_name");
-  if ($options !== FALSE)
-  {
-    echo generate_autocomplete('areamatch', $options);
-  }
-
-  // Make the room match input on the report page into an auto-complete input
-  // (We need DISTINCT because it's possible to have two rooms of the same name
-  // in different areas)
-  $options = sql_query_array("SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name");
-  if ($options !== FALSE)
-  {
-    echo generate_autocomplete('roommatch', $options);
-  }
-    
-  // Make any custom fields for the entry table that have an array of options
-  // into auto-complete inputs
-  foreach ($select_options as $field => $options)
-  {
-    if (strpos($field, 'entry.') == 0)
-    {
-      echo generate_autocomplete('match_' . substr($field, strlen('entry.')), $options);
-    }
-  }
-  
   // We don't support iCal output for the Summary.   So if the Summary button is pressed
   // disable the iCal button and, if iCal output is checked, check another format.  If the
   // Report button is pressed then re-enable the iCal button.

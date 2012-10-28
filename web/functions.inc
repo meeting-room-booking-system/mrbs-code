@@ -1006,6 +1006,126 @@ function generate_select($params)
   echo $html;
 }
 
+
+// Generates a datalist element with an associated label
+//
+//   $params    an associative array holding the function parameters:
+//      MANDATORY
+//        'name'          The name of the element.
+//      OPTIONAL
+//        'id'            The id of the element.  Defaults to the same as the name.
+//        'label'         The text to be used for the field label.
+//        'options'       An array of options for the select element.   Can be a simple
+//                        array or an associative array with value => text members for
+//                        each <option> in the <select> element.   Default is an empty array.
+//        'force_assoc'   Boolean.  Forces the options array to be treated as an
+//                        associative array.  Default FALSE, ie it is treated as whatever
+//                        it looks like.  (This parameter is necessary because if you
+//                        index an array with strings that look like integers then PHP
+//                        casts the keys to integers and the array becomes a simple indexed array)
+//        'force_indexed' Boolean.  Forces the options array to be treated as a simple
+//                        indexed array, ie just the values are used and the keys are
+//                        ignored.   Default FALSE, ie it is treated as whatever it looks
+//                        like.
+//        'value'         The value of the input.  Default ''.
+//        'disabled'      Whether the field should be disabled.  Default FALSE
+//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
+//                        Default TRUE
+//        'mandatory'     Whether the field is a required field.  Default FALSE
+//        'attributes'    Can be used for passing other attributes.  Default NULL.
+//                        Can be either a simple string or an array of attributes
+//
+function generate_datalist($params)
+{
+  // some sanity checking on params
+  foreach (array('label', 'name', 'id', 'options', 'force_assoc', 'force_indexed', 'value',
+                 'disabled', 'create_hidden', 'mandatory', 'attributes') as $key)
+  {
+    if (!isset($params[$key]))
+    {
+      switch ($key)
+      {
+        case 'name':
+          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
+          break;
+        case 'id':
+          $params[$key] = $params['name'];
+          break;
+        case 'options':
+          $params[$key] = array();
+          break;
+        case 'value':
+          $params[$key] = '';
+          break;
+        case 'force_assoc':
+        case 'force_indexed':
+        case 'disabled':
+        case 'mandatory':
+          $params[$key] = FALSE;
+          break;
+        case 'create_hidden':
+          $params[$key] = TRUE;
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  
+  if (isset($params['attributes']) && is_array($params['attributes']))
+  {
+    $params['attributes'] = implode(' ', $params['attributes']);
+  }
+  
+  // generate the HTML
+  // no HTML escaping for the label - it is trusted
+  $html = '';
+  if (isset($params['label']))
+  {
+    $html .= "<label for=\"" .$params['id'] . "\">" . $params['label'] . "</label>\n";
+  }
+  $html .= "<input id=\"" . $params['id'] . "\" name=\"" . $params['name'] . "\"";
+  $html .= " list=\"" . $params['id'] . "_options\"";
+  $html .= " value=\"" . $params['value'] . "\"";
+  $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
+  $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
+  $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
+  $html .= " autocomplete=\"off\">\n";
+  $html .= "<datalist id=\"" . $params['id'] . "_options\">";
+  
+  // Put a <select> wrapper around the options so that browsers that don't
+  // support <datalist> will still have the options in their DOM and then
+  // the JavaScript polyfill can find them and do something with them
+  $html .= "<select style=\"display: none\">\n";
+
+  foreach ($params['options'] as $value => $text)
+  {
+    // We can cope with both associative and ordinary arrays
+    if (!$params['force_assoc'] && !is_assoc($params['options']))
+    {
+      $value = $text;
+    }
+    $html .= "<option";
+    if (!$params['force_indexed'])
+    {
+      $html .= " value=\"" . htmlspecialchars($value) . "\"";
+    }
+    $html .= ">" . htmlspecialchars($text) . "</option>\n";
+  }
+  $html .= "</select>\n";
+  $html .= "</datalist>\n";
+  
+  // and hidden inputs if the input is disabled
+  if ($params['disabled'] && $params['create_hidden'])
+  {
+      $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
+               htmlspecialchars($params['value']) . "\">\n";
+  }
+  
+  echo $html;
+}
+
+
 // Generate a textarea with an associated label
 //
 //   $params    an associative array holding the function parameters:

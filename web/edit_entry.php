@@ -179,26 +179,30 @@ function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_non
 
 function create_field_entry_name($disabled=FALSE)
 {
-  global $name, $select_options, $maxlength, $is_mandatory_field;
+  global $name, $select_options, $datalist_options, $maxlength, $is_mandatory_field;
   
   echo "<div id=\"div_name\">\n";
   
   $params = array('label'     => get_vocab("namebooker") . ":",
                   'name'      => 'name',
                   'value'     => $name,
-                  'disabled'  => $disabled);
+                  'disabled'  => $disabled,
+                  'mandatory' => TRUE);
                   
   if (!empty($select_options['entry.name']))
   {
     $params['options']   = $select_options['entry.name'];
-    $params['mandatory'] = $is_mandatory_field['entry.name'];
     generate_select($params);
+  }
+  elseif (!empty($datalist_options['entry.name']))
+  {
+    $params['options']   = $datalist_options['entry.name'];
+    generate_datalist($params);
   }
   else
   {
     // 'mandatory' is there to prevent null input (pattern doesn't seem to be triggered until
     // there is something there).
-    $params['mandatory'] = TRUE;
     $params['maxlength'] = $maxlength['entry.name'];
     $params['attributes'] = 'type="text" pattern="' . REGEX_TEXT_POS . '"';
     generate_input($params);

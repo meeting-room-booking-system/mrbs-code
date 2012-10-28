@@ -6,9 +6,9 @@ require "defaultincludes.inc";
 
 function generate_search_criteria(&$vars)
 {
-  global $booking_types;
+  global $booking_types, $select_options;
   global $private_somewhere, $approval_somewhere, $confirmation_somewhere;
-  global $user_level, $tbl_entry;
+  global $user_level, $tbl_entry, $tbl_area, $tbl_room;
   global $field_natures, $field_lengths;
   global $report_search_field_order;
   
@@ -35,22 +35,40 @@ function generate_search_criteria(&$vars)
         break;
       
         
-      case 'areamatch':  
+      case 'areamatch':
+        $options = sql_query_array("SELECT area_name FROM $tbl_area ORDER BY area_name");
+        if ($options === FALSE)
+        {
+          trigger_error(sql_error(), E_USER_WARNING);
+          fatal_error(FALSE, get_vocab("fatal_db_error"));
+        }
         echo "<div id=\"div_areamatch\">\n";
-        $params = array('label' => get_vocab("match_area") . ':',
-                        'name'  => 'areamatch',
-                        'value' => $vars['areamatch']);
-        generate_input($params);
+        $params = array('label'         => get_vocab("match_area") . ':',
+                        'name'          => 'areamatch',
+                        'options'       => $options,
+                        'force_indexed' => TRUE,
+                        'value'         => $vars['areamatch']);
+        generate_datalist($params);
         echo "</div>\n";
         break;
         
         
       case 'roommatch':
+        // (We need DISTINCT because it's possible to have two rooms of the same name
+        // in different areas)
+        $options = sql_query_array("SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name");
+        if ($options === FALSE)
+        {
+          trigger_error(sql_error(), E_USER_WARNING);
+          fatal_error(FALSE, get_vocab("fatal_db_error"));
+        }
         echo "<div id=\"div_roommatch\">\n";
-        $params = array('label' => get_vocab("match_room") . ':',
-                        'name'  => 'roommatch',
-                        'value' => $vars['roommatch']);
-        generate_input($params);
+        $params = array('label'         => get_vocab("match_room") . ':',
+                        'name'          => 'roommatch',
+                        'options'       => $options,
+                        'force_indexed' => TRUE,
+                        'value'         => $vars['roommatch']);
+        generate_datalist($params);
         echo "</div>\n";
         break;
       
@@ -186,7 +204,18 @@ function generate_search_criteria(&$vars)
         // Otherwise output a text input
         else
         {
-          generate_input($params);
+          if (isset($select_options["entry.$key"]) && !empty($select_options["entry.$key"]))
+          {
+            $params['options'] = $select_options["entry.$key"];
+            // We force the values to be used and not the keys.   We will convert
+            // back to values when we construct the SQL query.
+            $params['force_indexed'] = TRUE;
+            generate_datalist($params);
+          }
+          else
+          {
+            generate_input($params);
+          }
         }
         echo "</div>\n";
         break;

@@ -94,6 +94,14 @@ $standard_query_string = "area=$area";
   }
   //]]>
 </script>
+
+<?php
+// All pages
+?>
+<script type="text/javascript" src="js/functions.js.php?<?php echo $standard_query_string ?>"></script>
+<script type="text/javascript" src="js/datepicker.js.php?<?php echo $standard_query_string ?>"></script>
+<script type="text/javascript" src="js/general.js.php?<?php echo $standard_query_string ?>"></script>
+
     
 <?php
 // dataTables initialisation
@@ -162,13 +170,7 @@ if (in_array($page, array('day', 'week', 'month')))
   <script type="text/javascript" src="js/cell_click.js.php?<?php echo $standard_query_string ?>"></script>
   <?php
 }
-    
-    
-// All pages
-?>
-<script type="text/javascript" src="js/functions.js.php?<?php echo $standard_query_string ?>"></script>
-<script type="text/javascript" src="js/datepicker.js.php?<?php echo $standard_query_string ?>"></script>
-<script type="text/javascript" src="js/general.js.php?<?php echo $standard_query_string ?>"></script>
+?>  
     
 <script type="text/javascript">
 

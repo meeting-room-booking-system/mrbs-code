@@ -425,6 +425,10 @@ $text_input_max = 70;  // characters
 // receives focus.   If the number of options is less than 250 then they will be displayed
 // when 1 character is input and so on.    The array can be as long as you like.   If it
 // is empty then the options are displayed when 0 characters are input.
+
+// [Note: this variable is only applicable to older browsers that do not support the
+// <datalist> element and instead fall back to a JavaScript emulation.   Browsers that
+// support <datalist> present the options in a scrollable select box]
 $autocomplete_length_breaks = array(25, 250, 2500);
 
 
@@ -513,14 +517,25 @@ $working_days = array(1,2,3,4,5);  // Mon-Fri
 // to 'Coffee, Tea and Biscuits', without having to alter the database.   It can also
 // be useful if the database table is being shared with another application.
 // MRBS will auto-detect whether the array is associative.
+
+
+$datalist_options = array();
+// Instead of restricting the user to a fixed set of options using $select_options,
+// you can provide a list of options which will be used as suggestions, but the
+// user will also be able to type in their own input.   (MRBS presents these using
+// an HTML5 <datalist> element in browsers that support it, falling back to a
+// JavaScript emulation in browsers that don't - except for IE6 and below where
+// an ordinary text input field is presented).
 //
-// If you want to make the select field a mandatory field (see below) then include
-// an empty string as one of the values, eg
+// As with $select_options, the array can be either a simple indexed array or an
+// associative array, eg array('AL' => 'Alabama', 'AK' => 'Alaska', etc.).   However
+// some users might find an associative array confusing as the key is entered in the input
+// field when the corresponding value is selected.
 //
-//$select_options['entry.catering'] = array(''  => 'Please select one option',
-//                                          'c' => 'Coffee', 
-//                                          's' => 'Sandwiches',
-//                                          'h' => 'Hot Lunch');
+// At the moment $select_options is only supported as follows:
+//     - Entry table: name field
+//     - Users table: custom fields
+
 
 $is_mandatory_field = array();
 // You can define custom entry fields to be mandatory by setting

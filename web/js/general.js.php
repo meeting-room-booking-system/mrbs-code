@@ -12,6 +12,24 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
+global $autocomplete_length_breaks;
+
+
+// Function to determine whether the browser supports the HTML5
+// <datalist> element.
+?>
+var supportsDatalist = function supportsDatalist() {
+    <?php
+    // The first two conditions work for most browsers.   The third condition is
+    // necessary for Safari, which, certainly for versions up to 6.0, the latest at
+    // the time of writing, return true for the first two conditions even though
+    // it doesn't support <datalist>.
+    ?>
+    return ('list' in document.createElement('input')) &&
+           ('options' in document.createElement('datalist')) &&
+           (window.HTMLDataListElement !== undefined);
+  };
+<?php
 // =================================================================================
 
 // Extend the init() function 
@@ -75,4 +93,78 @@ init = function(args) {
           }
         });
     });
+    
+   
+  <?php 
+  // Add jQuery UI Autocomplete functionality for those browsers that do not
+  // support the <datalist> element.  (We don't support autocomplete in IE6 and
+  // below because the browser doesn't render the autocomplete box properly - it
+  // gets hidden behind other elements.   Although there are fixes for this,
+  // it's not worth it ...)
+  ?> 
+  if (supportsDatalist() || lteIE6)
+  {
+    <?php
+    // If the browser does support the datalist we have to do a bit of tweaking
+    // if we are running Opera.  We normally have the autocomplete atribute set
+    // to off because in most browsers this stops the browser suggesting previous
+    // input and confines the list to our options.   However in Opera turning off
+    // autocomplete turns off our options as well, so we have to turn it back on.
+    ?>
+    if (navigator.userAgent.toLowerCase().indexOf('opera') >= 0)
+    {
+      $('datalist').prev().attr('autocomplete', 'on');
+    }
+  }
+  else
+  {
+    $('datalist').each(function() {
+        var datalist = $(this);
+        var options = [];
+        datalist.parent().find('option').each(function() {
+            var option = {};
+            option.label = $(this).text();
+            option.value = $(this).val();
+            options.push(option);
+          });
+        var minLength = 0;
+        <?php
+        // Work out a suitable value for the autocomplete minLength
+        // option, ie the number of characters that must be typed before
+        // a list of options appears.   We want to avoid presenting a huge 
+        // list of options.
+        if (isset($autocomplete_length_breaks) && is_array($autocomplete_length_breaks))
+        {
+          ?>
+          var breaks = [<?php echo implode(',', $autocomplete_length_breaks) ?>];
+          var nOptions = options.length;
+          var i=0;
+          while ((i<breaks.length) && (nOptions >= breaks[i]))
+          {
+            i++;
+            minLength++;
+          }
+          <?php
+        }
+        ?>
+        var formInput = datalist.prev();
+        formInput.empty().autocomplete({
+            source: options,
+            minLength: minLength
+          });
+        <?php
+        // If the minLength is 0, then the autocomplete widget doesn't do
+        // quite what you might expect and you need to force it to display
+        // the available options when it receives focus
+        ?>
+        if (minLength === 0)
+        {
+          formInput.focus(function() {
+              $(this).autocomplete('search', '');
+            });
+        }
+      });
+  }
+
+
 };
