@@ -849,7 +849,7 @@ if (isset($id))
       case 'name':
       case 'description':
       case 'type':
-        $$column = ($keep_private && $is_private_field["entry.$column"]) ? '' : $row[$column];
+        $$column = ($keep_private && isset($is_private_field["entry.$column"]) && $is_private_field["entry.$column"]) ? '' : $row[$column];
         break;
         
       case 'status':
@@ -878,7 +878,7 @@ if (isset($id))
         break;
         
       default:
-        $custom_fields[$column] = ($keep_private && $is_private_field["entry.$column"]) ? '' : $row[$column];
+        $custom_fields[$column] = ($keep_private && isset($is_private_field["entry.$column"]) && $is_private_field["entry.$column"]) ? '' : $row[$column];
         break;
     }
   }
