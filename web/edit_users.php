@@ -399,12 +399,6 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                     {
                       generate_checkbox($params);
                     }
-                    // Output a select box if they want one
-                    elseif (!empty($select_options["users.$key"]))
-                    {
-                      $params['options'] = $select_options["users.$key"];
-                      generate_select($params);
-                    }
                     // Output a textarea if it's a character string longer than the limit for a
                     // text input
                     elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
@@ -414,6 +408,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                     // Otherwise output a text input
                     else
                     {
+                      $params['field'] = "users.$key";
                       generate_input($params);
                     }
                     break;

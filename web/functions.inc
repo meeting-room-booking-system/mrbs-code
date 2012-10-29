@@ -604,7 +604,7 @@ function generate_checkbox($params)
 }
 
 
-// Generate an input field with an associated label
+// Generate an ordinary input field, ie an <input>, with an associated label
 //
 //   $params    an associative array holding the function parameters:
 //      MANDATORY
@@ -621,7 +621,7 @@ function generate_checkbox($params)
 //                      can also be included in the string, eg 'type="number" min="1" step="1"'.
 //                      Default NULL.  Can be ither a simple string or an array of attributes.
 //
-function generate_input($params)
+function generate_simple_input($params)
 {
   // some sanity checking on params
   foreach (array('label', 'name', 'value', 'disabled', 'mandatory', 'maxlength', 'attributes', 'suffix') as $key)
@@ -685,6 +685,47 @@ function generate_input($params)
       htmlspecialchars($params['value'])."\">\n";
   }
   echo $html;
+}
+
+
+// Generate an input which will be a <select> element if $select_options is set
+// for the field, otherwise a <datalist> element if $datalist_options is set,
+// otherwise an ordinary <input> field.
+//
+//   $params    an associative array holding the function parameters:
+//      MANDATORY
+//        'name'        The name of the input.
+//      OPTIONAL
+//        'field'       The name of the field, eg 'entry.name' as used by
+//                      $select_options and $datalist_options
+//        'label'       The text to be used for the field label.
+//        'value'       The value of the input.  Default ''
+//        'suffix'      A string that is displayed after the input field
+//        'disabled'    Whether the field should be disabled.  Default FALSE
+//        'mandatory'   Whether the field is a required field.  Default FALSE
+//        'maxlength'   The maximum length of input allowed.   Default NULL (no limit)
+//        'attributes'  Additional attributes, allowing HTML5 input types such as number and
+//                      email to be used.   Note that additional attributes such as min, etc.
+//                      can also be included in the string, eg 'type="number" min="1" step="1"'.
+//                      Default NULL.  Can be ither a simple string or an array of attributes
+function generate_input($params)
+{
+  global $select_options, $datalist_options;
+  
+  if (isset($params['field']) && isset($select_options[$params['field']]))
+  {
+    $params['options']   = $select_options[$params['field']];
+    generate_select($params);
+  }
+  elseif (isset($params['field']) && isset($datalist_options[$params['field']]))
+  {
+    $params['options']   = $datalist_options[$params['field']];
+    generate_datalist($params);
+  }
+  else
+  {
+    generate_simple_input($params);
+  }
 }
 
 

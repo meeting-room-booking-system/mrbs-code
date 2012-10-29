@@ -204,6 +204,10 @@ function generate_search_criteria(&$vars)
         // Otherwise output a text input
         else
         {
+          // We don't use generate_input() here because we want to generate a <datalist>
+          // and not a <select> if $select_options is set.  That's because if we have options
+          // ('tea', 'white coffee', 'black coffee') we want the user to be able to type
+          // 'coffee' which will match both 'white coffee' and 'black coffee'.
           if (isset($select_options["entry.$key"]) && !empty($select_options["entry.$key"]))
           {
             $params['options'] = $select_options["entry.$key"];
@@ -214,7 +218,7 @@ function generate_search_criteria(&$vars)
           }
           else
           {
-            generate_input($params);
+            generate_simple_input($params);
           }
         }
         echo "</div>\n";

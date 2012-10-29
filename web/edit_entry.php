@@ -179,41 +179,30 @@ function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_non
 
 function create_field_entry_name($disabled=FALSE)
 {
-  global $name, $select_options, $datalist_options, $maxlength, $is_mandatory_field;
+  global $name, $maxlength, $is_mandatory_field;
   
   echo "<div id=\"div_name\">\n";
   
-  $params = array('label'     => get_vocab("namebooker") . ":",
-                  'name'      => 'name',
-                  'value'     => $name,
-                  'disabled'  => $disabled,
-                  'mandatory' => TRUE);
+  // 'mandatory' is there to prevent null input (pattern doesn't seem to be triggered until
+  // there is something there).
+  $params = array('label'      => get_vocab("namebooker") . ":",
+                  'name'       => 'name',
+                  'field'      => 'entry.name',
+                  'value'      => $name,
+                  'disabled'   => $disabled,
+                  'mandatory'  => TRUE,
+                  'maxlength'  => $maxlength['entry.name'],
+                  'attributes' => 'type="text" pattern="' . REGEX_TEXT_POS . '"');
                   
-  if (!empty($select_options['entry.name']))
-  {
-    $params['options']   = $select_options['entry.name'];
-    generate_select($params);
-  }
-  elseif (!empty($datalist_options['entry.name']))
-  {
-    $params['options']   = $datalist_options['entry.name'];
-    generate_datalist($params);
-  }
-  else
-  {
-    // 'mandatory' is there to prevent null input (pattern doesn't seem to be triggered until
-    // there is something there).
-    $params['maxlength'] = $maxlength['entry.name'];
-    $params['attributes'] = 'type="text" pattern="' . REGEX_TEXT_POS . '"';
-    generate_input($params);
-  }
+  generate_input($params);
+
   echo "</div>\n";
 }
 
 
 function create_field_entry_description($disabled=FALSE)
 {
-  global $description, $select_options, $is_mandatory_field;
+  global $description, $select_options, $datalist_options, $is_mandatory_field;
   
   echo "<div id=\"div_description\">\n";
   
@@ -223,10 +212,11 @@ function create_field_entry_description($disabled=FALSE)
                   'disabled' => $disabled,
                   'mandatory' => isset($is_mandatory_field['entry.description']) && $is_mandatory_field['entry.description']);
   
-  if (!empty($select_options['entry.description']))
+  if (isset($select_options['entry.description']) ||
+      isset($datalist_options['entry.description']) )
   {
-    $params['options'] = $select_options['entry.description'];
-    generate_select($params);
+    $params['field'] = 'entry.description';
+    generate_input($params);
   }
   else
   {
@@ -615,7 +605,7 @@ function create_field_entry_privacy_status($disabled=FALSE)
 
 function create_field_entry_custom_field($field, $key, $disabled=FALSE)
 {
-  global $custom_fields, $tbl_entry, $select_options;
+  global $custom_fields, $tbl_entry;
   global $is_mandatory_field, $text_input_max;
   
   echo "<div>\n";
@@ -631,12 +621,6 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
   {
     generate_checkbox($params);
   }
-  // Output a select box if they want one
-  elseif (!empty($select_options["entry.$key"]))
-  {
-    $params['options'] = $select_options["entry.$key"];
-    generate_select($params);
-  }
   // Output a textarea if it's a character string longer than the limit for a
   // text input
   elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
@@ -644,7 +628,7 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
     // HTML5 does not allow a pattern attribute for the textarea element
     generate_textarea($params);   
   }
-  // Otherwise output a text input
+  // Otherwise output an input
   else
   {
     $is_integer_field = ($field['nature'] == 'integer') && ($field['length'] > 2);
@@ -663,6 +647,7 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
       $attributes .= ($is_integer_field) ? '' : ' pattern="' . REGEX_TEXT_POS . '"';
     }
     $params['attributes'] = $attributes;
+    $params['field'] = "entry.$key";
     generate_input($params);
   }
   echo "</div>\n";

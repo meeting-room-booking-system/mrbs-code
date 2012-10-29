@@ -532,9 +532,8 @@ $datalist_options = array();
 // some users might find an associative array confusing as the key is entered in the input
 // field when the corresponding value is selected.
 //
-// At the moment $select_options is only supported as follows:
-//     - Entry table: name field
-//     - Users table: custom fields
+// At the moment $datalist_options is only supported for the same fields as
+// $select_options (see above for details)
 
 
 $is_mandatory_field = array();
