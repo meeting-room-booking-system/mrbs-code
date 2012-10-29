@@ -253,6 +253,13 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
 
   $errors = array();
   $secs_in_day = 60*60*24;
+  
+  // The booking policies don't apply to booking admins for this room
+  $user = getUserName();
+  if (auth_book_admin($user, $booking['room_id']))
+  {
+    return $errors;
+  }
    
   // Because MRBS has no notion of where we are in the day if we're using periods,
   // we'll just assume that we're at the beginning of the day.
@@ -397,8 +404,6 @@ function mrbsDelEntry($user, $id, $series, $all)
   $row = sql_row_keyed($res, 0);
   $repeat_id = $row['repeat_id'];
   $room_id = $row['room_id'];
-  
-  $is_book_admin = auth_book_admin($user, $room_id);
 
   $sql = "SELECT start_time, end_time, create_by, id, entry_type FROM $tbl_entry WHERE ";
    
@@ -428,13 +433,10 @@ function mrbsDelEntry($user, $id, $series, $all)
     }
     
     // check that the booking policies allow us to delete this entry
-    if (!$is_book_admin)
+    $tmp = mrbsCheckPolicy($row, 0, 0, TRUE);
+    if (!empty($tmp))
     {
-      $tmp = mrbsCheckPolicy($row, 0, 0, TRUE);
-      if (!empty($tmp))
-      {
-        continue;
-      }
+      continue;
     }
    
     if (sql_command("DELETE FROM $tbl_entry WHERE id=" . $row['id']) > 0)
@@ -1364,7 +1366,6 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
   global $max_rep_entrys, $enable_periods, $resolution, $mail_settings;
   global $tbl_entry, $tbl_room, $tbl_area;
 
-  $user = getUserName();
   // All the data, except for the status and room id, will be common
   // across the bookings
   $common = $bookings[0];
@@ -1479,12 +1480,11 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
             // in the future want to display a list of bookings we've skipped past)
             $conflicts = array_merge($conflicts, $tmp);
           }
-          // If we're not going to skip past this booking and we're not an admin for
-          // this room, check that the booking conforms to the booking policy.
-          // (If we're going to skip past this booking then it doesn't matter whether
-          // it conforms to the policy or not because we're never going to make it)
-          if (!$skip_this_booking &&
-              !auth_book_admin($user, $this_booking['room_id']))
+          // If we're not going to skip past this booking, check that the booking
+          // conforms to the booking policy.  (If we're going to skip past this
+          // booking then it doesn't matter whether or not it conforms to the policy
+          // because we're never going to make it)
+          if (!$skip_this_booking)
           {
             $errors = mrbsCheckPolicy($this_booking, $ignore_id, $repeat_id);
             if (count($errors) > 0)
@@ -1509,16 +1509,12 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
           $valid_booking = FALSE;
           $conflicts = array_merge($conflicts, $tmp);
         }
-        // if we're not an admin for this room, check that the booking
-        // conforms to the booking policy
-        if (!auth_book_admin($user, $booking['room_id']))
+        // check that the booking conforms to the booking policy
+        $errors = mrbsCheckPolicy($booking, $ignore_id, 0);
+        if (count($errors) > 0)
         {
-          $errors = mrbsCheckPolicy($booking, $ignore_id, 0);
-          if (count($errors) > 0)
-          {
-            $valid_booking = FALSE;
-            $rules_broken = array_merge($rules_broken, $errors);
-          }
+          $valid_booking = FALSE;
+          $rules_broken = array_merge($rules_broken, $errors);
         }
     }
 
