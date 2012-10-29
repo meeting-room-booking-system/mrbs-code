@@ -787,7 +787,7 @@ if (isset($id))
   }
   // Need to clear some data if entry is private and user
   // does not have permission to edit/view details
-  if (isset($copy) && ($create_by != $row['create_by'])) 
+  if (isset($copy) && ($user != $row['create_by'])) 
   {
     // Entry being copied by different user
     // If they don't have rights to view details, clear them
