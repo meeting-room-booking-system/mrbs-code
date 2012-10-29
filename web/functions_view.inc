@@ -81,13 +81,13 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
       case 'repeat_info_time':
       case 'repeat_info_user':
       case 'repeat_info_text':
-        $data[$key] = ($keep_private && $is_private_field["entry.$key"]) ? $private_text : $data[$key];
+        $data[$key] = ($keep_private && isset($is_private_field["entry.$key"]) && $is_private_field["entry.$key"]) ? $private_text : $data[$key];
         break;
       
       default:
         if (!in_array($key, $standard_fields['entry']))
         {
-          $data[$key] = ($keep_private && $is_private_field["entry.$key"]) ? $private_text : $data[$key];
+          $data[$key] = ($keep_private && isset($is_private_field["entry.$key"]) && $is_private_field["entry.$key"]) ? $private_text : $data[$key];
         }
         break;
     }
@@ -162,7 +162,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
       if (($field['nature'] == 'boolean') || 
           (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
       {
-        if ($keep_private && $is_private_field["entry.$key"])
+        if ($keep_private && isset($is_private_field["entry.$key"]) && $is_private_field["entry.$key"])
         {
           $value = $data[$key];  // Will have been set previously
         }
@@ -194,7 +194,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
           $value = "";
         }
       }
-      $class = ($keep_private && $is_private_field["entry.$key"]) ? "private" : "";
+      $class = ($keep_private && isset($is_private_field["entry.$key"]) && $is_private_field["entry.$key"]) ? "private" : "";
       $tbody .= create_details_row($label, $value, $as_html, $class);
     }
   }
