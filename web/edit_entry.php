@@ -189,10 +189,11 @@ function create_field_entry_name($disabled=FALSE)
                   'name'       => 'name',
                   'field'      => 'entry.name',
                   'value'      => $name,
+                  'type'       => 'text',
+                  'pattern'    => REGEX_TEXT_POS,
                   'disabled'   => $disabled,
                   'mandatory'  => TRUE,
-                  'maxlength'  => $maxlength['entry.name'],
-                  'attributes' => 'type="text" pattern="' . REGEX_TEXT_POS . '"');
+                  'maxlength'  => $maxlength['entry.name']);
                   
   generate_input($params);
 
@@ -634,19 +635,19 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
     $is_integer_field = ($field['nature'] == 'integer') && ($field['length'] > 2);
     if ($is_integer_field)
     {
-      $attributes = 'type="number" step="1"';
+      $params['type'] = 'number';
+      $params['step'] = '1';
     }
     else
     {
-      $attributes = 'type="text"';
+      $params['type'] = 'text';
+      if ($params['mandatory'])
+      {
+        // 'required' is not sufficient for strings, because we also want to make sure
+        // that the string contains at least one non-whitespace character
+        $params['pattern'] = REGEX_TEXT_POS;
+      }
     }
-    if ($params['mandatory'])
-    {
-      // 'required' is not sufficient for strings, because we also want to make sure
-      // that the string contains at least one non-whitespace character
-      $attributes .= ($is_integer_field) ? '' : ' pattern="' . REGEX_TEXT_POS . '"';
-    }
-    $params['attributes'] = $attributes;
     $params['field'] = "entry.$key";
     generate_input($params);
   }
@@ -1306,10 +1307,12 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
       echo "<div>\n";
       $params = array('label'      => get_vocab("rep_num_weeks") . ":",
                       'name'       => 'rep_num_weeks',
+                      'type'       => 'number',
+                      'step'       => '1',
+                      'min'        => REP_NUM_WEEKS_MIN,
                       'value'      => $rep_num_weeks,
                       'suffix'     => get_vocab("weeks"),
-                      'disabled'   => $disabled,
-                      'attributes' => 'type="number" min="' . REP_NUM_WEEKS_MIN . '" step="1"');
+                      'disabled'   => $disabled);
       generate_input($params);
     
       echo "</div>\n";

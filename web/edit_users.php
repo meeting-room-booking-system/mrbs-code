@@ -388,7 +388,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                     generate_input($params);
                     break;
                   case 'email':
-                    $params['attributes'] = "type=email multiple";
+                    $params['type'] = 'email';
+                    $params['attributes'] = 'multiple';
                     generate_input($params);
                     break;
                   default:    

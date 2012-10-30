@@ -524,7 +524,7 @@ function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
 //        'class'       A class (or array of classes) to give the element.  Default NULL
 //        'disabled'    Whether the field should be disabled.  Default FALSE
 //        'mandatory'   Whether the field is a required field.  Default FALSE
-//        'attributes'  Additional attributes, allowing HTML5 attributes.  Default NULL.
+//        'attributes'  Additional attributes not covered explicitly above.  Default NULL.
 //                      Can be either a simple string or an array of attributes.
 //
 function generate_checkbox($params)
@@ -612,19 +612,22 @@ function generate_checkbox($params)
 //      OPTIONAL
 //        'label'       The text to be used for the field label.
 //        'value'       The value of the input.  Default ''
+//        'type'        The type of input, eg 'text', 'number', etc.  Default NULL
+//        'step'        The value of the 'step' attribute.  Default NULL
+//        'min'         The value of the 'min' attribute.  Default NULL
+//        'max'         The value of the 'max' attribute.  Default NULL
 //        'suffix'      A string that is displayed after the input field
 //        'disabled'    Whether the field should be disabled.  Default FALSE
 //        'mandatory'   Whether the field is a required field.  Default FALSE
 //        'maxlength'   The maximum length of input allowed.   Default NULL (no limit)
-//        'attributes'  Additional attributes, allowing HTML5 input types such as number and
-//                      email to be used.   Note that additional attributes such as min, etc.
-//                      can also be included in the string, eg 'type="number" min="1" step="1"'.
-//                      Default NULL.  Can be ither a simple string or an array of attributes.
+//        'attributes'  Additional attributes not covered explicitly above.  Default NULL.
+//                      Can be either a simple string or an array of attributes.
 //
 function generate_simple_input($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'name', 'value', 'disabled', 'mandatory', 'maxlength', 'attributes', 'suffix') as $key)
+  foreach (array('label', 'name', 'value', 'type', 'step', 'disabled', 'mandatory',
+                 'maxlength', 'attributes', 'suffix') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -659,6 +662,11 @@ function generate_simple_input($params)
     $html .= "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
   }
   $html .= "<input";
+  $html .= (isset($params['type'])) ? " type=\"" . $params['type'] . "\"" : "";
+  $html .= (isset($params['step'])) ? " step=\"" . $params['step'] . "\"" : "";
+  $html .= (isset($params['min'])) ? " min=\"" . $params['min'] . "\"" : "";
+  $html .= (isset($params['max'])) ? " max=\"" . $params['max'] . "\"" : "";
+  $html .= (isset($params['pattern'])) ? " pattern=\"" . htmlspecialchars($params['pattern']) . "\"" : "";
   $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
   $html .= " id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\"";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : '';
@@ -666,9 +674,8 @@ function generate_simple_input($params)
   $html .= (isset($params['maxlength'])) ? " maxlength=\"" . $params['maxlength'] . "\"" : '';
   // Don't give an empty string if it's a number as that's not a valid floating point number
   // and will fail HTML5 validation
-  if (!(isset($params['attributes'])) ||
-      (strpos($params['attributes'], 'type="number"') === FALSE) ||
-      ($params['value'] != '') )
+  if (($params['value'] != '') ||
+      (isset($params['type']) && ($params['type'] != 'number')) )
   {
     $html .= " value=\"" . htmlspecialchars($params['value']) . "\"";
   }
@@ -707,7 +714,7 @@ function generate_simple_input($params)
 //        'attributes'  Additional attributes, allowing HTML5 input types such as number and
 //                      email to be used.   Note that additional attributes such as min, etc.
 //                      can also be included in the string, eg 'type="number" min="1" step="1"'.
-//                      Default NULL.  Can be ither a simple string or an array of attributes
+//                      Default NULL.  Can be either a simple string or an array of attributes
 function generate_input($params)
 {
   global $select_options, $datalist_options;
@@ -956,8 +963,8 @@ function generate_checkbox_group($params)
 //                        Default TRUE
 //        'mandatory'     Whether the field is a required field.  Default FALSE
 //        'multiple'      Whether multiple selections are allowed.  Default FALSE
-//        'attributes'    Can be used for passing other attributes.  Default NULL.
-//                        Can be either a simple string or an array of attributes
+//        'attributes'    Additional attributes not covered explicitly above.  Default NULL.
+//                        Can be either a simple string or an array of attributes.
 //
 function generate_select($params)
 {
@@ -1073,8 +1080,8 @@ function generate_select($params)
 //        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
 //                        Default TRUE
 //        'mandatory'     Whether the field is a required field.  Default FALSE
-//        'attributes'    Can be used for passing other attributes.  Default NULL.
-//                        Can be either a simple string or an array of attributes
+//        'attributes'    Additional attributes not covered explicitly above.  Default NULL.
+//                        Can be either a simple string or an array of attributes.
 //
 function generate_datalist($params)
 {
@@ -1186,7 +1193,7 @@ function generate_datalist($params)
 //        'value'       The value of the input.  Default ''
 //        'disabled'    Whether the field should be disabled.  Default FALSE
 //        'mandatory'   Whether the field is a required field.  Default FALSE
-//        'attributes'  Additional attributes, allowing HTML5 attributes.  Default NULL.
+//        'attributes'  Additional attributes not covered explicitly above.  Default NULL.
 //                      Can be either a simple string or an array of attributes.
 //
 function generate_textarea($params)
