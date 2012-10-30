@@ -199,6 +199,16 @@ else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['HTTP_REFERER']))
   $HTTP_REFERER = $HTTP_SERVER_VARS['HTTP_REFERER'];
 }
 
+// -- HTTP_USER_AGENT --
+if (!empty($_SERVER) && isset($_SERVER['HTTP_USER_AGENT']))
+{
+  $HTTP_USER_AGENT = $_SERVER['HTTP_USER_AGENT'];
+}
+else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS['HTTP_USER_AGENT']))
+{
+  $HTTP_USER_AGENT = $HTTP_SERVER_VARS['HTTP_USER_AGENT'];
+}
+
 // -- HTTP_HOST --
 if (!empty($_SERVER) && isset($_SERVER['HTTP_HOST']))
 {

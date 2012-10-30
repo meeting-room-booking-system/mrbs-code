@@ -1078,6 +1078,8 @@ function generate_select($params)
 //
 function generate_datalist($params)
 {
+  global $HTTP_USER_AGENT;
+  
   // some sanity checking on params
   foreach (array('label', 'name', 'id', 'options', 'force_assoc', 'force_indexed', 'value',
                  'disabled', 'create_hidden', 'mandatory', 'attributes') as $key)
@@ -1131,7 +1133,14 @@ function generate_datalist($params)
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
   $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
-  $html .= " autocomplete=\"off\">\n";
+  // We normally have the autocomplete atribute set to off because in most browsers
+  // this stops the browser suggesting previous input and confines the list to our
+  // options.   However in Opera turning off autocomplete turns off our options as
+  // well, so we have to turn it on.  (We'll also turn it on for Opera in the JavaScript,
+  // for good measure, just in case the server isn't passing through the user agent).
+  $html .= " autocomplete=\"";
+  $html .= (strpos(strtolower($HTTP_USER_AGENT), 'opera') === FALSE) ? 'off' : 'on';
+  $html .= "\">\n";
   $html .= "<datalist id=\"" . $params['id'] . "_options\">";
   
   // Put a <select> wrapper around the options so that browsers that don't
