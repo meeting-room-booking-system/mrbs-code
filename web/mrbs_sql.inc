@@ -405,7 +405,7 @@ function mrbsDelEntry($user, $id, $series, $all)
   $repeat_id = $row['repeat_id'];
   $room_id = $row['room_id'];
 
-  $sql = "SELECT start_time, end_time, create_by, id, entry_type FROM $tbl_entry WHERE ";
+  $sql = "SELECT start_time, end_time, room_id, create_by, id, entry_type FROM $tbl_entry WHERE ";
    
   if ($series)
   {
