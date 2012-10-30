@@ -958,6 +958,7 @@ function generate_checkbox_group($params)
 //                        casts the keys to integers and the array becomes a simple array)
 //        'value'         The value of the input.  Default ''.   Can be a single value
 //                        or an array of values.
+//        'size'          The value of the 'size' attribute.  Default NULL
 //        'disabled'      Whether the field should be disabled.  Default FALSE
 //        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
 //                        Default TRUE
@@ -969,7 +970,7 @@ function generate_checkbox_group($params)
 function generate_select($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'name', 'id', 'options', 'force_assoc', 'value',
+  foreach (array('label', 'name', 'id', 'options', 'force_assoc', 'value', 'size',
                  'disabled', 'create_hidden', 'mandatory', 'multiple', 'attributes') as $key)
   {
     if (!isset($params[$key]))
@@ -999,6 +1000,35 @@ function generate_select($params)
           break;
         default:
           break;
+      }
+    }
+  }
+  
+  // Some checking that we're obeying the HTML5 rules.   A bit pedantic, but
+  // helps with debugging.  Only carry out these checks if we're going to be
+  // able to report them.
+  if (error_reporting() & E_USER_NOTICE)
+  {
+    if ((!isset($params['size']) || ($params['size'] == 1)) &&
+        $params['mandatory'] &&
+        !$params['multiple'])
+    {
+      if (count($params['options']) == 0)
+      {
+        $message =  "A select element with a required attribute and without a multiple " .
+                    "attribute, and whose size is 1, must have a child option element.";
+        trigger_error($message, E_USER_NOTICE);
+      }
+      else
+      {
+        $first_child = each($params['options']);
+        if (($first_child['key'] != '') && ($first_child['value'] != ''))
+        {
+          $message = "The first child option element of a select element with a required " .
+                     "attribute and without a multiple attribute, and whose size is 1, " .
+                     "must have either an empty value attribute, or must have no text content.";
+          trigger_error($message, E_USER_NOTICE);
+        }
       }
     }
   }
