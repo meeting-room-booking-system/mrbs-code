@@ -375,7 +375,7 @@ if (get_magic_quotes_runtime())
 }
 
 // Make sure notice errors are not reported, they can break mrbs code:
-$error_level = E_ALL ^ E_NOTICE;
+$error_level = E_ALL ^ E_NOTICE ^ E_USER_NOTICE;
 if (defined("E_DEPRECATED"))
 {
   $error_level = $error_level ^ E_DEPRECATED;
