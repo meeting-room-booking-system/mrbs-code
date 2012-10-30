@@ -164,14 +164,14 @@ function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_non
   
   // If $display_none or $disabled are set then we'll also disable the select so
   // that there is only one select passing through the variable to the handler
-  $params = array('name'         => $prefix . 'seconds',
-                  'id'           => $prefix . 'seconds' . $area['id'],
-                  'disabled'     => $disabled || $display_none,
-                  'create_hiden' => $disabled && !$display_none,
-                  'attributes'   => $attributes,
-                  'value'        => $current_s,
-                  'options'      => $options,
-                  'force_assoc'  => TRUE);
+  $params = array('name'          => $prefix . 'seconds',
+                  'id'            => $prefix . 'seconds' . $area['id'],
+                  'disabled'      => $disabled || $display_none,
+                  'create_hidden' => $disabled && !$display_none,
+                  'attributes'    => $attributes,
+                  'value'         => $current_s,
+                  'options'       => $options,
+                  'force_assoc'   => TRUE);
 
   generate_select($params);
 }
