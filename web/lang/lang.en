@@ -303,6 +303,7 @@ $vocab["total"]                 = "Total";
 $vocab["submitquery"]           = "Run Report";
 $vocab["sort_rep"]              = "Sort report by";
 $vocab["sort_rep_time"]         = "Start date/time";
+$vocab["sort_room"]             = "Room";
 $vocab["fulldescription_short"] = "Full Description";
 $vocab["both"]                  = "All";
 $vocab["privacy_status"]        = "Privacy status";

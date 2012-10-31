@@ -264,6 +264,7 @@ $vocab["total"]                 = "Total";
 $vocab["submitquery"]           = "Afficher le rapport";
 $vocab["sort_rep"]              = "Trier par&nbsp;";
 $vocab["sort_rep_time"]         = "Date/Heure";
+$vocab["sort_room"]             = "Salle";
 $vocab["fulldescription_short"] = "Description complète";
 $vocab["both"]                  = "Tous";
 $vocab["privacy_status"]        = "Etat caractère privé";

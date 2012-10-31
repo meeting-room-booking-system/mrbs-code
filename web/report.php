@@ -276,7 +276,7 @@ function generate_presentation_options(&$vars)
 
       case 'sortby':
         echo "<div id=\"div_sortby\">\n";
-        $options = array('r' => get_vocab("room"),
+        $options = array('r' => get_vocab("sort_room"),
                          's' => get_vocab("sort_rep_time"));
         $params = array('label'   => get_vocab("sort_rep") . ':',
                         'name'    => 'sortby',
