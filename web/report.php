@@ -368,6 +368,22 @@ function escape($string)
 }
 
 
+// Wraps $string in a span with a data-stype value of $stype - but only for HTML output
+function stype_wrap($string, $stype)
+{
+  global $output_format;
+  
+  if ($output_format == OUTPUT_HTML)
+  {
+    return '<span class="normal" data-stype="title-numeric">' . $string . '</span>';
+  }
+  else
+  {
+    return $string;
+  }
+}
+
+
 // Output the first row (header row) for CSV reports
 function report_header()
 {
@@ -400,11 +416,11 @@ function report_header()
         $values[] = get_vocab("room");
         break;
       case 'start_time':
-        $values[] = '<span class="normal" data-stype="title-numeric">' . get_vocab("start_date") . '</span>';
+        $values[] = stype_wrap(get_vocab("start_date"), 'title-numeric');
         break;
       case 'end_time':
-        $values[] = '<span class="normal" data-stype="title-numeric">' . get_vocab("end_date") . '</span>';
-        $values[] = '<span class="normal" data-stype="title-numeric">' . get_vocab("duration") . '</span>';
+        $values[] = stype_wrap(get_vocab("end_date"), 'title-numeric');
+        $values[] = stype_wrap(get_vocab("duration"), 'title-numeric');
         break;
       case 'description':
         $values[] = get_vocab("fulldescription_short");
@@ -428,7 +444,7 @@ function report_header()
         }
         break;
       case 'last_updated':
-        $values[] = '<span class="normal" data-stype="title-numeric">' . get_vocab("lastupdate") . '</span>';
+        $values[] = stype_wrap(get_vocab("lastupdate"), 'title-numeric');
         break;
       default:
         // the custom fields
