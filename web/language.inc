@@ -11,9 +11,20 @@ require_once "functions.inc";
 $lang_subs = array
 (
   'nb-NO' => 'no',
-  'nn-NO' => 'no'
+  'nn-NO' => 'no',
 );
 
+
+// A map of browser locale aliases, maps to "our" preferred representation.
+// We downcase the key before using this map, so the keys need to be all
+// lower-case.
+$lang_aliases = array
+(
+  'sh' => 'sr-rs-latin',
+  'sr' => 'sr-rs-latin',
+  'sr-latn' => 'sr-rs-latin',
+  'sr-latn-rs' => 'sr-rs-latin',
+);
 
 // A map is needed to convert from the HTTP language specifier to a
 // locale specifier for Windows
@@ -99,8 +110,12 @@ $lang_map_windows = array
   'pt-pt' => 'ptg',
   'ru' => 'rus',
   'ru-ru' => 'rus',
+  'sh' => 'srb',
   'sl' => 'slv',
   'sl-si' => 'slv',
+  'sr' => 'srb',
+  'sr-rs-latin' => 'srb',
+  'sr-hr' => 'srb',
   'sv' => 'sve',
   'sv-fi' => 'svf',
   'sv-sv' => 'sve',
@@ -169,6 +184,9 @@ $winlocale_codepage_map = array
   'plk' => 'CP1250',
   'rus' => 'CP1251',
   'slv' => 'CP1250',
+  'srb' => 'CP1251',
+  'srp' => 'CP1250',
+  'srs' => 'CP1250',
   'sve' => 'CP1252',
   'svf' => 'CP1252',
   'tha' => 'CP874',
@@ -189,9 +207,19 @@ $lang_map_unix = array
   'eu' => 'eu_ES',
   'ja' => 'ja_JP',
   'ko' => 'ko_KR',
+  'sh' => 'sr_RS',
   'sl' => 'sl_SI',
+  'sr-rs-latin' => 'sr_RS',
   'sv' => 'sv_SE',
   'zh' => 'zh_CN',
+);
+
+// A map to add extra locale specifiers onto the end of a locale specifier
+// *after* the UTF-8 specifier is added. Keys must match with $lang_map_unix
+// above
+$lang_map_unix_postfix = array
+(
+  'sr-rs-latin' => '@latin',
 );
 
 // IBM AIX locale to code set table
@@ -440,6 +468,10 @@ if (!$disable_automatic_language_changing || $cli_mode)
       $locale = $lang;
     }
 
+    if (isset($lang_aliases[strtolower($lang)]))
+    {
+      $lang = $locale = $lang_aliases[strtolower($lang)];
+    }
     if (set_vocab($lang))
     {
       $locale = $lang;
@@ -526,7 +558,7 @@ function determine_mrbs_locale()
 {
   global $override_locale;
   global $locale_warning, $locale, $windows_locale, $server_os;
-  global $lang_map_unix, $lang_map_windows;
+  global $lang_map_unix, $lang_map_unix_postfix, $lang_map_windows;
   
   $mrbs_locale = FALSE;
   
@@ -572,9 +604,18 @@ function determine_mrbs_locale()
       }
       else
       {
-        // Convert locale=xx-xX or xx_Xx or xx_XxXx (etc.) to xx_XX[XX]; this is highly
-        // dependent on the machine's installed locales
-        $mrbs_locale = locale_format($locale, '_');
+        // First, if we have a map, use it
+        if (isset($lang_map_unix[strtolower($locale)]))
+        {
+          $locale = strtolower($locale);
+          $mrbs_locale = $lang_map_unix[strtolower($locale)];
+        }
+        else
+        {
+          // Convert locale=xx-xX or xx_Xx or xx_XxXx (etc.) to xx_XX[XX]; this is highly
+          // dependent on the machine's installed locales
+          $mrbs_locale = locale_format($locale, '_');
+        }
       }
       switch ($server_os)
       {
@@ -582,6 +623,10 @@ function determine_mrbs_locale()
         case "linux":
         case "bsd":
           $mrbs_locale .= ".UTF-8";
+          if (isset($lang_map_unix_postfix[$locale]))
+          { 
+            $mrbs_locale .= $lang_map_unix_postfix[$locale];
+          }
           break;
 
         case "macosx":

@@ -1,0 +1,510 @@
+﻿<?php // -*-mode: PHP; coding:utf-8;-*-
+// $Id: lang.sr 2350 2012-07-23 14:15:44Z cimorrison $
+
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.sr, and anything in a locale
+// specific file will overwrite the default. This is a US/UK English file.
+//
+//
+//
+//
+// This file is PHP code. Treat it as such.
+
+// Used in style.inc
+$vocab["mrbs"]               = "Sistem za rezervaciju prostorija";
+
+// Used in functions.inc
+$vocab["report"]             = "Izveštaji";
+$vocab["admin"]              = "Administrator";
+$vocab["help"]               = "Pomoć";
+$vocab["search"]             = "Pretraga";
+$vocab["not_php3"]           = "UPOZORENJE: Ovo verovatno ne radi sa PHP3";
+$vocab["outstanding"]        = "rezervacije na čekanju";
+
+// Used in day.php
+$vocab["bookingsfor"]        = "Rezervacije za";
+$vocab["bookingsforpost"]    = ""; // Ide posle datuma
+$vocab["areas"]              = "Oblasti";
+$vocab["daybefore"]          = "Idi na prethodni dan";
+$vocab["dayafter"]           = "Idi na sledeći dan";
+$vocab["gototoday"]          = "Danas";
+$vocab["goto"]               = "idi na datum";
+$vocab["highlight_line"]     = "Označi ovu liniju";
+$vocab["click_to_reserve"]   = "Kliknite na polje da biste napravili rezervaciju.";
+$vocab["timezone"]           = "Vremenska zona";
+
+// Used in trailer.inc
+$vocab["viewday"]            = "Prikaži dan";
+$vocab["viewweek"]           = "Prikaži nedelju";
+$vocab["viewmonth"]          = "Prikaži mesec";
+$vocab["ppreview"]           = "Predstavi štampu";
+
+// Used in edit_entry.php
+$vocab["addentry"]           = "Dodaj unos";
+$vocab["editentry"]          = "Izmeni unos";
+$vocab["copyentry"]          = "Kopiraj unos";
+$vocab["editseries"]         = "Izmeni seriju";
+$vocab["copyseries"]         = "Kopiraj seriju";
+$vocab["namebooker"]         = "Naziv";
+$vocab["fulldescription"]    = "Pun opis:<br>&nbsp;&nbsp;(Broj ljudi,<br>&nbsp;&nbsp;Interni/Eksterni npr.)";
+$vocab["date"]               = "Datum";
+$vocab["start"]              = "Početak";
+$vocab["end"]                = "Kraj";
+$vocab["start_date"]         = "Vreme početka";
+$vocab["end_date"]           = "Vreme završetka";
+$vocab["time"]               = "Vreme";
+$vocab["period"]             = "Period";
+$vocab["duration"]           = "Trajanje";
+$vocab["second_lc"]          = "sekunda";
+$vocab["seconds"]            = "sekundi";
+$vocab["minute_lc"]          = "minuta";
+$vocab["minutes"]            = "minuta";
+$vocab["hour_lc"]            = "sat";
+$vocab["hours"]              = "sati";
+$vocab["day_lc"]             = "dan";
+$vocab["days"]               = "dana";
+$vocab["week_lc"]            = "nedelja";
+$vocab["weeks"]              = "nedelja";
+$vocab["year_lc"]            = "godina";
+$vocab["years"]              = "godina";
+$vocab["period_lc"]          = "period";
+$vocab["periods"]            = "periodi";
+$vocab["all_day"]            = "Ceo dan";
+$vocab["area"]               = "Oblast";
+$vocab["type"]               = "Tip";
+$vocab["save"]               = "Sačuvaj";
+$vocab["rep_type"]           = "Vreme ponavljanja";
+$vocab["rep_type_0"]         = "Ništa";
+$vocab["rep_type_1"]         = "Dnevno";
+$vocab["rep_type_2"]         = "Nedeljno";
+$vocab["rep_type_3"]         = "Mesečno";
+$vocab["rep_type_4"]         = "Godišnje";
+$vocab["rep_type_5"]         = "Mesečno, odgovarajući dan";
+$vocab["rep_type_6"]         = "n-Nedeljno";
+$vocab["rep_end_date"]       = "Datum prestanka ponavljanja";
+$vocab["rep_rep_day"]        = "Dani ponavljanja";
+$vocab["rep_for_weekly"]     = "(za nedeljno ili n-nedeljno)";
+$vocab["rep_freq"]           = "Učestalost";
+$vocab["rep_num_weeks"]      = "Broj nedelja";
+$vocab["rep_for_nweekly"]    = "(za n-nedeljno)";
+$vocab["skip_conflicts"]     = "Preskoči konflikte koji su prošli";
+$vocab["ctrl_click"]         = "Pritisnite Ctrl da biste označili više prostorija";
+$vocab["entryid"]            = "ID Unosa";
+$vocab["repeat_id"]          = "ID Ponavljanja"; 
+$vocab["you_have_not_entered"] = "Niste uneli";
+$vocab["brief_description"]  = "Kratak opis.";
+$vocab["useful_n-weekly_value"] = "useful n-weekly value.";
+$vocab["status"]             = "Status";
+$vocab["public"]             = "Javno";
+$vocab["private"]            = "Privatno";
+$vocab["unavailable"]        = "Privatno";
+$vocab["is_mandatory_field"] = "je obavezno polje, unesite vrednost.";
+$vocab["missing_mandatory_field"] = "Niste uneli vrednost za obavezno polje";
+$vocab["confirmed"]          = "Potvrđeno";
+$vocab["start_after_end"]    = "Start day after end day";
+$vocab["start_after_end_long"] = "Error: the start day cannot be after the end day.";
+
+// Used in view_entry.php
+$vocab["description"]         = "Opis";
+$vocab["room"]                = "Prostorija";
+$vocab["createdby"]           = "Uneo";
+$vocab["lastupdate"]          = "Poslednje ažuriranje";
+$vocab["deleteentry"]         = "Obriši unos";
+$vocab["deleteseries"]        = "Obriši seriju";
+$vocab["exportentry"]         = "Izvezi unos";
+$vocab["exportseries"]        = "Izvezi seriju";
+$vocab["confirmdel"]          = "Are you sure\\nyou want to\\ndelete this entry?\\n\\n";
+$vocab["returnprev"]          = "Povratak na prethodnu stranu";
+$vocab["invalid_entry_id"]    = "Neispravan id. unosa";
+$vocab["invalid_series_id"]   = "Neispravan id. serije";
+$vocab["confirmation_status"] = "Status potvrde";
+$vocab["tentative"]           = "Privremeni";
+$vocab["approval_status"]     = "Status odobrenja";
+$vocab["approved"]            = "Odobreno";
+$vocab["awaiting_approval"]   = "Čeka odobrenje";
+$vocab["approve"]             = "Odobri";
+$vocab["reject"]              = "Odbi";
+$vocab["more_info"]           = "Više informacija";
+$vocab["remind_admin"]        = "Podseti administratora";
+$vocab["series"]              = "Serije";
+$vocab["request_more_info"]   = "Please list the extra information you require";
+$vocab["reject_reason"]       = "Please give a reason for your rejection of this reservation request";
+$vocab["send"]                = "Pošalji";
+$vocab["approve_failed"]      = "The reservation could not be approved.";
+$vocab["no_request_yet"]      = "No request has been sent yet"; // Used for the title tooltip on More Info button
+$vocab["last_request"]        = "Last request sent at";         // Used for the title tooltip on More Info button
+$vocab["by"]                  = "by";                           // Used for the title tooltip on More Info button
+$vocab["sent_at"]             = "Sent at ";
+$vocab["yes"]                 = "Da";
+$vocab["no"]                  = "Ne";
+
+// Used in edit_entry_handler.php
+$vocab["error"]              = "Greška";
+$vocab["sched_conflict"]     = "Greška u rasporedu";
+$vocab["conflict"]           = "The new booking will conflict with the following entries";
+$vocab["no_conflicts"]       = "No scheduling conflicts";
+$vocab["rules_broken"]       = "The new booking will conflict with the following policies";
+$vocab["no_rules_broken"]    = "No policy conflicts";
+$vocab["schedule"]           = "Schedule";
+$vocab["policy"]             = "Policy";
+$vocab["too_may_entrys"]     = "The selected options will create too many entries.<br>Please use different options!";
+$vocab["returncal"]          = "Return to calendar view";
+$vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access";
+$vocab["invalid_booking"]    = "Invalid booking";
+$vocab["must_set_description"] = "You must set a brief description for the booking. Please go back and enter one.";
+$vocab["mail_subject_approved"]  = "Entry approved for $mrbs_company MRBS";
+$vocab["mail_subject_rejected"]  = "Entry rejected for $mrbs_company MRBS";
+$vocab["mail_subject_more_info"] = "$mrbs_company MRBS: more information requested";
+$vocab["mail_subject_reminder"]  = "Reminder for $mrbs_company MRBS";
+$vocab["mail_body_approved"]     = "An entry has been approved by the administrators; here are the details:";
+$vocab["mail_body_rej_entry"]    = "An entry has been rejected by the administrators, here are the details:";
+$vocab["mail_body_more_info"]    = "The administrators require more information about an entry; here are the details:";
+$vocab["mail_body_reminder"]     = "Reminder - an entry is awaiting approval; here are the details:";
+$vocab["mail_body_repeats_booked"]   = "The following dates were booked:";
+$vocab["mail_body_repeats_deleted"]  = "The following bookings were deleted:";
+$vocab["mail_body_exceptions"]       = "The following dates could not be booked due to conflicts:";
+$vocab["mail_subject_new_entry"]     = "Entry added for $mrbs_company MRBS";
+$vocab["mail_subject_changed_entry"] = "Entry changed for $mrbs_company MRBS";
+$vocab["mail_subject_delete"]        = "Entry deleted for $mrbs_company MRBS";
+$vocab["mail_body_new_entry"]     = "A new entry has been booked, here are the details:";
+$vocab["mail_body_changed_entry"] = "An entry has been modified, here are the details:";
+$vocab["mail_body_del_entry"]     = "An entry has been deleted, here are the details:";
+$vocab["new_value"]               = "Novo";
+$vocab["old_value"]               = "Staro";
+$vocab["deleted_by"]              = "Obrisao";
+$vocab["reason"]                  = "azlog";
+$vocab["info_requested"]          = "Information requested";
+$vocab["min_time_before"]         = "The minimum interval between now and the start of a booking is";
+$vocab["max_time_before"]         = "The maximum interval between now and the end of a booking is";
+$vocab["latest_booking_date"]     = "The latest booking date is";
+$vocab["max_booking_duration"]    = "The maximum duration of a booking is";
+$vocab["max_per_day_global"]      = "The maximum number of bookings per day per user across the whole system is";
+$vocab["max_per_week_global"]     = "The maximum number of bookings per week per user across the whole system is";
+$vocab["max_per_month_global"]    = "The maximum number of bookings per month per user across the whole system is";
+$vocab["max_per_year_global"]     = "The maximum number of bookings per year per user across the whole system is";
+$vocab["max_per_future_global"]   = "The maximum number of outstanding bookings per user across the whole system is";
+$vocab["max_per_day_area"]        = "The maximum number of bookings per day per user in this area is";
+$vocab["max_per_week_area"]       = "The maximum number of bookings per week per user in this area is";
+$vocab["max_per_month_area"]      = "The maximum number of bookings per month per user in this area is";
+$vocab["max_per_year_area"]       = "The maximum number of bookings per year per user in this area is";
+$vocab["max_per_future_area"]     = "The maximum number of outstanding bookings per user in this area is";
+$vocab["skip_and_book"]           = "Preskoči i rezerviši";
+$vocab["skip_and_book_note"]      = "Carry on with the booking, skipping past the conflicting entries";
+$vocab["changes_saved"]           = "Promene sačuvane";
+
+// Used in pending.php
+$vocab["pending"]            = "Rezervacija čeka odobrenje";
+$vocab["none_outstanding"]   = "You have no bookings awaiting approval.";
+
+// Authentication stuff
+$vocab["accessdenied"]       = "Pristup nije odobren";
+$vocab["norights"]           = "Nemate dovoljna prava da biste pregledali stranicu.";
+$vocab["please_login"]       = "Prijavite se";
+$vocab["users.name"]          = "Ime";
+$vocab["users.password"]      = "Lozinka";
+$vocab["users.level"]         = "Prava";
+$vocab["unknown_user"]       = "Gost";
+$vocab["you_are"]            = "";
+$vocab["login"]              = "Prijavi se";
+$vocab["logoff"]             = "Odjavi se";
+
+// Database upgrade code
+$vocab["database_login"]           = "Pristup bazi";
+$vocab["upgrade_required"]         = "The database needs to be upgraded.  Please backup your database before proceeding.";
+$vocab["supply_userpass"]          = "Please supply a database username and password that has admin rights.";
+$vocab["contact_admin"]            = "If you are not the MRBS administrator please contact $mrbs_admin.";
+$vocab["upgrade_to_version"]       = "Upgrading to database version";
+$vocab["upgrade_to_local_version"] = "Upgrading to database local version";
+$vocab["upgrade_completed"]        = "Database upgrade completed.";
+
+// User access levels
+$vocab["level_0"]            = "niko";
+$vocab["level_1"]            = "korisnik";
+$vocab["level_2"]            = "admin";
+$vocab["level_3"]            = "korisnik admin";
+
+// Authentication database
+$vocab["user_list"]          = "Lista korisnika";
+$vocab["edit_user"]          = "Izmeni korisnika";
+$vocab["delete_user"]        = "Obriši ovog korisnika";
+//$vocab["users.name"]         = Use the same as above, for consistency.
+//$vocab["users.password"]     = Use the same as above, for consistency.
+$vocab["users.email"]         = "Imejl adresa";
+$vocab["password_twice"]     = "If you wish to change the password, please type the new password twice";
+$vocab["passwords_not_eq"]   = "The passwords did not match!";
+$vocab["password_invalid"]   = "The password does not conform to the policy.  It must contain at least:";
+$vocab["policy_length"]      = "karakter(a)";
+$vocab["policy_alpha"]       = "slovo(a)";
+$vocab["policy_lower"]       = "malih slova";
+$vocab["policy_upper"]       = "velikih slova";
+$vocab["policy_numeric"]     = "numeric character(s)";
+$vocab["policy_special"]     = "special character(s)";
+$vocab["add_new_user"]       = "Dodaj novog korisnika";
+$vocab["action"]             = "Akcija";
+$vocab["user"]               = "Korisnik";
+$vocab["administrator"]      = "Administrator";
+$vocab["unknown"]            = "Nepoznato";
+$vocab["ok"]                 = "OK";
+$vocab["show_my_entries"]    = "Click to display all my upcoming entries";
+$vocab["no_users_initial"]   = "No users in database, allowing initial user creation";
+$vocab["no_users_create_first_admin"] = "Create a user configured as an administrator and then you can log in and create more users.";
+$vocab["warning_last_admin"] = "Warning!  This is the last admin and so you cannot delete this user or remove admin rights, otherwise you will be locked out of the system.";
+
+// Used in search.php
+$vocab["invalid_search"]     = "Empty or invalid search string.";
+$vocab["search_results"]     = "Search Results for";
+$vocab["nothing_found"]      = "No matching entries found.";
+$vocab["records"]            = "Records ";
+$vocab["through"]            = " through ";
+$vocab["of"]                 = " of ";
+$vocab["previous"]           = "Previous";
+$vocab["next"]               = "Next";
+$vocab["entry"]              = "Entry";
+$vocab["advanced_search"]    = "Advanced search";
+$vocab["search_button"]      = "Search";
+$vocab["search_for"]         = "Search For";
+$vocab["from"]               = "From";
+
+// Used in report.php
+$vocab["report_on"]             = "Report on Meetings";
+$vocab["report_start"]          = "Report start date";
+$vocab["report_end"]            = "Report end date";
+$vocab["match_area"]            = "Match area";
+$vocab["match_room"]            = "Match room";
+$vocab["match_type"]            = "Match type";
+$vocab["ctrl_click_type"]       = "Use Control-Click to select more than one type";
+$vocab["match_entry"]           = "Match brief description";
+$vocab["match_descr"]           = "Match full description";
+$vocab["output"]                = "Output";
+$vocab["summary"]               = "Summary";
+$vocab["format"]                = "Format";
+$vocab["html"]                  = "HTML";
+$vocab["csv"]                   = "CSV";
+$vocab["ical"]                  = "iCalendar (.ics file) - excluding periods";
+$vocab["combination_not_supported"] = "This output is not supported in this format";
+$vocab["summarize_by"]          = "Summarize by";
+$vocab["sum_by_descrip"]        = "Brief description";
+$vocab["sum_by_creator"]        = "Creator";
+$vocab["sum_by_type"]           = "Type";
+$vocab["entry_found"]           = "entry found";
+$vocab["entries_found"]         = "entries found";
+$vocab["summary_header"]        = "Summary of (Entries) Hours";
+$vocab["summary_header_per"]    = "Summary of (Entries) Periods";
+$vocab["summary_header_both"]   = "Summary of (Entries) Hours/Periods";
+$vocab["entries"]               = "entries";
+$vocab["total"]                 = "Total";
+$vocab["submitquery"]           = "Run Report";
+$vocab["sort_rep"]              = "Sort report by";
+$vocab["sort_rep_time"]         = "Start date/time";
+$vocab["fulldescription_short"] = "Full Description";
+$vocab["both"]                  = "All";
+$vocab["privacy_status"]        = "Privacy status";
+$vocab["search_criteria"]       = "Search criteria";
+$vocab["presentation_options"]  = "Output options";
+$vocab["delete_entries"]        = "Delete entries";
+$vocab["delete_entries_warning"] = "WARNING!  This will delete all the entries matching " .
+                                   "the search string.  The operation cannot be undone.  Are " .
+                                   "you sure you want to continue?\n\n" .
+                                   "Total number of entries that will be deleted: ";
+$vocab["delete_entries_failed"] = "The entries could not be deleted.";
+
+// Used in week.php
+$vocab["weekbefore"]         = "Idi na prethodnu nedelju";
+$vocab["weekafter"]          = "Idi na sledeću nedelju";
+$vocab["gotothisweek"]       = "Ova nedelja";
+
+// Used in month.php
+$vocab["monthbefore"]        = "Idi na mesec pre";
+$vocab["monthafter"]         = "Idi na mesec posle";
+$vocab["gotothismonth"]      = "Idi na ovaj mesec";
+
+// Used in {day week month}.php
+$vocab["no_rooms_for_area"]  = "Nema definisanih prostorija za ovu oblast";
+
+// Used in admin.php
+$vocab["edit"]               = "Izmeni";
+$vocab["delete"]             = "Obriši";
+$vocab["rooms"]              = "Prostorije";
+$vocab["in"]                 = "na/u";
+$vocab["noareas"]            = "Nema definisanih oblasti.";
+$vocab["noareas_enabled"]    = "Nema uključenih oblasti.";
+$vocab["addarea"]            = "Dodaj oblast";
+$vocab["name"]               = "Ime";
+$vocab["noarea"]             = "Niste odabrali oblast";
+$vocab["browserlang"]        = "Your browser is set with the following language preference order";
+$vocab["addroom"]            = "Dodaj prostoriju";
+$vocab["capacity"]           = "Kapacitet";
+$vocab["norooms"]            = "Nema definisanih prostorija.";
+$vocab["norooms_enabled"]    = "Nema uključenih prostorija.";
+$vocab["administration"]     = "Detalji prostorije";
+$vocab["invalid_area_name"]  = "Već postoji oblast sa ovim imenom!";
+$vocab["empty_name"]         = "Niste uneli ime!";
+
+// Used in edit_area_room.php
+$vocab["editarea"]                = "Izmeni oblast";
+$vocab["change"]                  = "Promeni";
+$vocab["backadmin"]               = "Povratak na prostorije";
+$vocab["editroomarea"]            = "Izmeni opis oblasti ili prostorije";
+$vocab["editroom"]                = "Izmeni prostoriju";
+$vocab["viewroom"]                = "Pogledaj prostoriju";
+$vocab["update_room_failed"]      = "Ažuriranje prostorije nije uspelo: ";
+$vocab["error_room"]              = "Greška: prostorija ";
+$vocab["not_found"]               = " nije pronađena";
+$vocab["update_area_failed"]      = "Ažuriranje oblasti nije uspelo: ";
+$vocab["error_area"]              = "Greška: oblast ";
+$vocab["room_admin_email"]        = "imejl adresa administratora sobe";
+$vocab["area_admin_email"]        = "Imejl aresa administratora oblasti";
+$vocab["area_first_slot_start"]   = "Početak prvog slota (vremena)";
+$vocab["area_last_slot_start"]    = "Početak poslednjeg slota (vremena)";
+$vocab["area_res_mins"]           = "Resolution (minutes)";
+$vocab["area_def_duration_mins"]  = "Default duration (minutes)";
+$vocab["invalid_area"]            = "Invalid area!";
+$vocab["invalid_room_name"]       = "This room name has already been used in the area!";
+$vocab["invalid_email"]           = "Invalid email address!";
+$vocab["invalid_resolution"]      = "Invalid combination of first slot, last slot and resolution!";
+$vocab["too_many_slots"]          = 'You need to increase the value of $max_slots in the config file!';
+$vocab["general_settings"]        = "General";
+$vocab["time_settings"]           = "Slot times";
+$vocab["confirmation_settings"]   = "Confirmation settings";
+$vocab["allow_confirmation"]      = "Allow tentative bookings";
+$vocab["default_settings_conf"]   = "Default setting";
+$vocab["default_confirmed"]       = "Confirmed";
+$vocab["default_tentative"]       = "Tentative";
+$vocab["approval_settings"]       = "Approval settings";
+$vocab["enable_approval"]         = "Require bookings to be approved";
+$vocab["enable_reminders"]        = "Allow users to remind admins";
+$vocab["private_settings"]        = "Privacy settings";
+$vocab["allow_private"]           = "Allow private bookings";
+$vocab["force_private"]           = "Force private bookings";
+$vocab["default_settings"]        = "Default/forced settings";
+$vocab["default_private"]         = "Private";
+$vocab["default_public"]          = "Public";
+$vocab["private_display"]         = "Privacy settings (display)";
+$vocab["private_display_label"]   = "How should private bookings be displayed?";
+$vocab["private_display_caution"] = "CAUTION: think carefully about the privacy implications before changing these settings!";
+$vocab["treat_respect"]           = "Respect the privacy setting of the booking";
+$vocab["treat_private"]           = "Treat all bookings as private, ignoring their privacy settings";
+$vocab["treat_public"]            = "Treat all bookings as public, ignoring their privacy settings";
+$vocab["sort_key"]                = "Sort key";
+$vocab["sort_key_note"]           = "This is the key used for ordering rooms";
+$vocab["booking_policies"]        = "Booking policies";
+$vocab["min_book_ahead"]          = "Advance booking - minimum";
+$vocab["max_book_ahead"]          = "Advance booking - maximum";
+$vocab["this_area"]               = "This area";
+$vocab["whole_system"]            = "Whole system";
+$vocab["whole_system_note"]       = "The values for the whole system are set in the config file";
+$vocab["max_per_day"]             = "Maximum number per day";
+$vocab["max_per_week"]            = "Maximum number per week";
+$vocab["max_per_month"]           = "Maximum number per month";
+$vocab["max_per_year"]            = "Maximum number per year";
+$vocab["max_per_future"]          = "Maximum number in the future";
+$vocab["custom_html"]             = "Custom HTML";
+$vocab["custom_html_note"]        = "This field can be used for displaying your own HTML, for example an embedded Google map";
+$vocab["email_list_note"]         = "Enter a list of email addresses separated by commas or newlines";
+$vocab["mode"]                    = "Mode";
+$vocab["mode_periods"]            = "Periods";
+$vocab["mode_times"]              = "Times";
+$vocab["times_only"]              = "Times mode only";
+$vocab["enabled"]                 = "Enabled";
+$vocab["disabled"]                = "Disabled";
+$vocab["disabled_area_note"]      = "If this area is disabled, it will not appear in the calendar views " .
+                                    "and it will not be possible to book rooms in it.   However existing bookings " .
+                                    "will be preserved and will be visible in Search and Report results.";
+$vocab["disabled_room_note"]      = "If this room is disabled, it will not appear in the calendar views " .
+                                    "and it will not be possible to book it.   However existing bookings " .
+                                    "will be preserved and will be visible in Search and Report results.";
+$vocab["book_ahead_note_periods"] = "When using periods, book ahead times are rounded down to the nearest whole day.";
+
+// Used in edit_users.php
+$vocab["name_empty"]         = "You must enter a name.";
+$vocab["name_not_unique"]    = "already exists.   Please choose another name.";
+
+// Used in del.php
+$vocab["deletefollowing"]    = "This will delete the following bookings";
+$vocab["sure"]               = "Are you sure?";
+$vocab["YES"]                = "YES";
+$vocab["NO"]                 = "NO";
+$vocab["delarea"]            = "You must delete all rooms in this area before you can delete it<p>";
+
+// Used in help.php
+$vocab["about_mrbs"]         = "About MRBS";
+$vocab["database"]           = "Database";
+$vocab["system"]             = "System";
+$vocab["servertime"]         = "Server time";
+$vocab["please_contact"]     = "Please contact ";
+$vocab["for_any_questions"]  = "for any questions that aren't answered here.";
+
+// Used in import.php
+$vocab["import_icalendar"]            = "Import an iCalendar file";
+$vocab["area_room_settings"]          = "Areas and rooms";
+$vocab["other_settings"]              = "Other settings";
+$vocab["import_intro"]                = "This form allows you to import an RFC 5545 compliant " .
+                                        "iCalendar file into MRBS.   Only those repeating events " .
+                                        "that have a recurrence rule with an equivalent repeat type in " .
+                                        "MRBS will be imported.";
+$vocab["file_name"]                   = "File";
+$vocab["import"]                      = "Import";
+$vocab["upload_failed"]               = "Upload failed";
+$vocab["max_allowed_file_size"]       = "The maximum allowed file size is";
+$vocab["no_file"]                     = "No file was uploaded";
+$vocab["badly_formed_ics"]            = "Badly formed VCALENDAR file";
+$vocab["area_room_order"]             = "Order";
+$vocab["area_room_order_note"]        = "The order of the area and room names in the LOCATION property";
+$vocab["area_room"]                   = "Area-Room";
+$vocab["room_area"]                   = "Room-Area";
+$vocab["area_room_delimiter"]         = "Delimiter";
+$vocab["area_room_delimiter_note"]    = "The string separating the area and room names in the LOCATION property.  " .
+                                        "If no delimiter is found MRBS will look for a unique room with the same " .
+                                        "name as the LOCATION";
+$vocab["area_room_create"]            = "Create rooms if necessary";
+$vocab["default_type"]                = "Default type";
+$vocab["room_does_not_exist_no_area"] = "room does not exist and cannot be added - no area given";
+$vocab["room_not_unique_no_area"]     = "room name is not unique.  Cannot choose which one without an area.";
+$vocab["area_does_not_exist"]         = "Non-existent area:";
+$vocab["room_does_not_exist"]         = "Non-existent room:";
+$vocab["creating_new_area"]           = "Creating new area:";
+$vocab["creating_new_room"]           = "Creating new room:";
+$vocab["could_not_create_area"]       = "Could not create area";
+$vocab["could_not_create_room"]       = "Could not create room";
+$vocab["could_not_find_room"]         = "Could not find room";
+$vocab["could_not_import"]            = "Could not import";
+$vocab["no_LOCATION"]                 = "The VEVENT did not include a LOCATION property";
+$vocab["invalid_RRULE"]               = "Invalid RRULE: missing FREQ part";
+$vocab["more_than_one_BYDAY"]         = "MRBS does not support more than one BYDAY value when FREQ=";
+$vocab["negative_BYDAY"]              = "MRBS does not support negative BYDAY values";
+$vocab["BYDAY_equals_5"]              = "MRBS does not support a BYDAY value of 5";
+$vocab["unsupported_FREQ"]            = "MRBS does not support FREQ=";
+$vocab["unsupported_INTERVAL"]        = "MRBS does not support INTERVAL>1 with FREQ=";
+$vocab["unsupported_COUNT"]           = "COUNT not yet supported by MRBS";
+$vocab["no_indefinite_repeats"]       = "Indefinite repeats not yet supported by MRBS";
+$vocab["events_imported"]             = "events imported";
+$vocab["events_not_imported"]         = "events not imported";
+
+// Used in mysql.inc AND pgsql.inc
+$vocab["failed_connect_db"]  = "Fatal error: failed to connect to database";
+
+// Used in DataTables
+$vocab["show_hide_columns"]  = "Show / hide columns";
+$vocab["restore_original"]   = "Restore original";
+
+// Entry types
+$vocab["type.P"]            = "Predavanje";
+$vocab["type.V"]            = "Vežbe";
+$vocab["type.D"]            = "Događaj";
+$vocab["type.I"]            = "Ispitni rok";
+$vocab["type.N"]            = "Neradni dani";
+$vocab["type.IV"]			= "Izborno veće";
+$vocab["type.NNV"]			= "NN veće";
+$vocab["type.SN"]			= "Studijska nedelja";
+ 
+// General
+$vocab["fatal_db_error"]     = "Fatal error: unfortunately the database is not available at the moment.";
+$vocab["back"]               = "Back";
+
+// Korišćeno u Custom Fields
+$vocab["entry.nastavnik"]	 = "Nastavnik";
+$vocab["entry.odsek"]	  	 = "Odsek";
+$vocab["entry.st_grupa"]	 = "Studijska grupa";
+$vocab["entry.godina"]		 = "Godina studija";
+$vocab["entry.grupa"]  		 = "Grupa";
+?>
