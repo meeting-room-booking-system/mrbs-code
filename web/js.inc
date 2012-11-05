@@ -19,16 +19,18 @@ $standard_query_string = "area=$area";
 //   - Draggable
 //   - Resizable
 //   - Autocomplete
-//   - Dialog
-//   - Tabs
+//   - Button
 //   - Datepicker
+//   - Dialog
+//   - Menu
+//   - Tabs
 //   - Sunny theme
 // If you need any other components you will need to rebuild the custom UI library
 // See http://jqueryui.com/
 ?>
     
 <script type="text/javascript" src="jquery/jquery-1.8.2.min.js"></script>
-<script type="text/javascript" src="jquery/ui/jquery-ui-1.8.22.custom.min.js"></script>
+<script type="text/javascript" src="jquery/ui/jquery-ui-1.9.1.custom.min.js"></script>
 <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
 <?php
 // Extra regional settings for the jQuery UI datepicker

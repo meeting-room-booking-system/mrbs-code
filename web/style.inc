@@ -5,7 +5,7 @@
 global $using_rtl, $refresh_rate, $PHP_SELF;
 
 ?>
-    <link href="jquery/ui/css/sunny/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css">
+    <link href="jquery/ui/css/sunny/jquery-ui-1.9.1.custom.min.css" rel="stylesheet" type="text/css">
     
     <link href="jquery/datatables/css/mrbs-page.css" rel="stylesheet" type="text/css">
     <link href="jquery/datatables/css/mrbs-table.css" rel="stylesheet" type="text/css">
