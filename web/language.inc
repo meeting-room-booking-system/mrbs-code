@@ -35,7 +35,7 @@ $lang_aliases = array
 // corresponding key.
 //
 // These locale TLAs found at:
-// http://www.microsoft.com/globaldev/reference/winxp/langtla.mspx
+// http://msdn.microsoft.com/en-us/goglobal/bb896001.aspx
 $lang_map_windows = array
 (
   'bg' => 'bgr',
@@ -133,7 +133,7 @@ $lang_map_windows = array
 // all Windows code pages
 //
 // The code pages used by these locales found at: 
-// http://www.microsoft.com/globaldev/nlsweb/default.mspx
+// http://msdn.microsoft.com/en-us/goglobal/bb896001.aspx
 $winlocale_codepage_map = array
 (
   'bgr' => 'CP1251',
