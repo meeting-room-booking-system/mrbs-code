@@ -31,19 +31,10 @@ $standard_query_string = "area=$area";
 <script type="text/javascript" src="jquery/ui/jquery-ui-1.8.22.custom.min.js"></script>
 <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
 <?php
-// The English (-en) and English-US (-en-US) files are non-standard additions,
-// which do not exist explicitly.   Although datepicker defaults to US English, it
-// helps when choosing the regional settings to have explicit settings.  A ticket
-// (#6682) has been raised to request their inclusion.    The files have been kept
-// separate to avoid problems with merging new releases of UI.
-//
-// The sr-RS-LATIN file is alsp a non-standard file and is provided to match the
-// MRBS aliases.  It is a copy of the standard sr-SR localisation
+// Extra regional settings for the jQuery UI datepicker
 ?>
-<script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en.js"></script>
-<script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-US.js"></script>
-<script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-sr-RS-LATIN.js"></script>
-     
+<script type="text/javascript" src="jquery/ui/jquery-ui-i18n.MRBS.js"></script>
+
 <?php // Work out if we're using IE6 or below ?>
 <script type="text/javascript">
   //<![CDATA[
