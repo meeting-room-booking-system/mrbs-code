@@ -12,6 +12,8 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
+global $lang_aliases;
+
 // Set the default values for datepicker, including the default regional setting
 ?>
 $(function() {
@@ -41,6 +43,10 @@ $(function() {
   asort($datepicker_langs, SORT_NUMERIC);
   foreach ($datepicker_langs as $lang => $qual)
   {
+    if (isset($lang_aliases[strtolower($lang)]))
+    {
+      $lang = $lang_aliases[strtolower($lang)];
+    }
     // Get the locale in the format that datepicker likes: language lower case
     // and country upper case (xx-XX)
     $datepicker_locale = locale_format($lang, '-');

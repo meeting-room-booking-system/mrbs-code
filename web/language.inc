@@ -758,14 +758,14 @@ function set_vocab($lang)
   }
   
   $lang = strtolower($lang);
-  
+
   if (file_exists('lang'))
   {
     $lang_file = "lang/lang.$lang";
   }
   else
   {
-    // The JavaScript files in the js directory wnd up including language.inc.
+    // The JavaScript files in the js directory end up including language.inc.
     // In this case we need to adjust the path
     $lang_file = "../lang/lang.$lang";
   }

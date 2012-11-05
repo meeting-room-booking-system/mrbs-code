@@ -37,9 +37,12 @@ $standard_query_string = "area=$area";
 // (#6682) has been raised to request their inclusion.    The files have been kept
 // separate to avoid problems with merging new releases of UI.
 //
+// The sr-RS-LATIN file is alsp a non-standard file and is provided to match the
+// MRBS aliases.  It is a copy of the standard sr-SR localisation
 ?>
 <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en.js"></script>
 <script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-en-US.js"></script>
+<script type="text/javascript" src="jquery/ui/jquery-ui-datepicker-sr-RS-LATIN.js"></script>
      
 <?php // Work out if we're using IE6 or below ?>
 <script type="text/javascript">
