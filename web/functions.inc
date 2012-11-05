@@ -674,7 +674,7 @@ function generate_simple_input($params)
   $html .= (isset($params['maxlength'])) ? " maxlength=\"" . $params['maxlength'] . "\"" : '';
   // Don't give an empty string if it's a number as that's not a valid floating point number
   // and will fail HTML5 validation
-  if (($params['value'] != '') ||
+  if (($params['value'] !== '') ||
       (isset($params['type']) && ($params['type'] != 'number')) )
   {
     $html .= " value=\"" . htmlspecialchars($params['value']) . "\"";
@@ -1022,7 +1022,7 @@ function generate_select($params)
       else
       {
         $first_child = each($params['options']);
-        if (($first_child['key'] != '') && ($first_child['value'] != ''))
+        if (($first_child['key'] !== '') && ($first_child['value'] !== ''))
         {
           $message = "The first child option element of a select element with a required " .
                      "attribute and without a multiple attribute, and whose size is 1, " .

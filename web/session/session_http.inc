@@ -80,7 +80,7 @@ function PrintLogonBox()
   global $PHP_SELF, $QUERY_STRING, $user_list_link, $day, $month, $year;
   
   $TargetURL = basename($PHP_SELF);
-  if (isset($url_base) && ($url_base != ""))
+  if (isset($url_base) && ($url_base !== ''))
   {
     $TargetURL = $url_base . '/' . $TargetURL;
   }

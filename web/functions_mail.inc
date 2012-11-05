@@ -177,7 +177,7 @@ function get_address_list($array)
   for ($i=0; $i < count($array); $i++)
   {
     $array[$i] = trim($array[$i]);
-    if ($array[$i] != '')
+    if ($array[$i] !== '')
     {
       $trimmed_array[] = $array[$i];
     }
@@ -504,7 +504,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
     $body .= ($as_html) ? "</p><p>" : "\n\n";
     $body .= ($as_html) ? "<a target=\"_blank\" href=\"" : "";
     // Set the link to view entry page
-    if (isset($url_base) && ($url_base != ""))
+    if (isset($url_base) && ($url_base !== ''))
     {
       $body .= "$url_base/view_entry.php?id=" . $data['id'];
     }

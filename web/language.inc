@@ -561,7 +561,7 @@ function determine_mrbs_locale()
   
   $mrbs_locale = FALSE;
   
-  if ($override_locale != "")
+  if ($override_locale !== '')
   {
     $mrbs_locale = $override_locale;
     $windows_locale = $mrbs_locale;

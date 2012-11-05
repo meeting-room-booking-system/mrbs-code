@@ -733,7 +733,7 @@ function report_row(&$rows, &$data, $sortby)
             if (isset($select_options["entry.$field"]) &&
                 is_assoc($select_options["entry.$field"]) && 
                 array_key_exists($value, $select_options["entry.$field"]) &&
-                ($value != ''))
+                ($value !== ''))
             {
               $value = $select_options["entry.$field"][$value];
             }
@@ -1267,21 +1267,22 @@ if ($phase == 2)
   // an error in PostgreSQL as the expression is of the wrong type.
   
   // Match the privacy status
-  if (($match_private != PRIVATE_BOTH) && ($match_private != ''))
+  if (($match_private != PRIVATE_BOTH) && ($match_private !== ''))
   {
     $sql .= " AND ";
     $sql .= "(E.status&" . STATUS_PRIVATE;
     $sql .= ($match_private) ? "!=0)" : "=0)";  // Note that private works the other way round to the next two
   }
+
   // Match the confirmation status
-  if (($match_confirmed != CONFIRMED_BOTH) && ($match_confirmed != ''))
+  if (($match_confirmed != CONFIRMED_BOTH) && ($match_confirmed !== ''))
   {
     $sql .= " AND ";
     $sql .= "(E.status&" . STATUS_TENTATIVE;
     $sql .= ($match_confirmed) ? "=0)" : "!=0)";
   }
   // Match the approval status
-  if (($match_approved != APPROVED_BOTH) && ($match_approved != ''))
+  if (($match_approved != APPROVED_BOTH) && ($match_approved !== ''))
   {
     $sql .= " AND ";
     $sql .= "(E.status&" . STATUS_AWAITING_APPROVAL;
@@ -1305,7 +1306,7 @@ if ($phase == 2)
       {
         // We have to use strpos() rather than stripos() because we cannot
         // assume PHP5
-        if (($option_key != '') &&
+        if (($option_key !== '') &&
             (strpos(strtolower($option_value), strtolower($$var)) !== FALSE))
         {
           $or_array[] = "E.$key='" . sql_escape($option_key) . "'";
