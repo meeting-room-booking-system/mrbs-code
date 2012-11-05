@@ -59,7 +59,7 @@ if ($res == -1)
   // No need to localise, should never happen
   print "<span class=\"error\">Failed to add saved_ts column in entry table.</
 }
-$sql = "UPDATE $tbl_entry SET saved_ts=timestamp"l
+$sql = "UPDATE $tbl_entry SET saved_ts=timestamp";
 $res = sql_command($sql);
 if ($res == -1)
 {
