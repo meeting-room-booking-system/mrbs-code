@@ -309,7 +309,12 @@ if ($is_admin || ($n_displayable_areas > 0))
             echo "<tr class=\"$row_class\">\n";
 
             $html_name = htmlspecialchars($r['room_name']);
-            echo "<td><div><a title=\"$html_name\" href=\"edit_area_room.php?change_room=1&amp;phase=1&amp;room=" . $r['id'] . "\">$html_name</a></div></td>\n";
+            // We insert an invisible span containing the sort key so that the rooms will
+            // be sorted properly
+            echo "<td><div>" .
+                 "<span>" . htmlspecialchars($r['sort_key']) . "</span>" .
+                 "<a title=\"$html_name\" href=\"edit_area_room.php?change_room=1&amp;phase=1&amp;room=" . $r['id'] . "\">$html_name</a>" .
+                 "</div></td>\n";
             if ($is_admin)
             {
               // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
