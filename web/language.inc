@@ -421,36 +421,14 @@ setlocale(LC_ALL,'C');
 // environment variable.
 $cli_mode = is_cli();
 
-// If we're running from the CLI, use the config setting
-if ($cli_mode && !empty($cli_language))
-{
-  $langs[$cli_language] = 1.0;
-}
-// Otherwise we enumerate the user's language preferences...
-elseif (isset($HTTP_ACCEPT_LANGUAGE)) // Attempt to use $HTTP_ACCEPT_LANGUAGE only when defined.
-{
-  $lang_specifiers = explode(',',$HTTP_ACCEPT_LANGUAGE);
-  foreach ($lang_specifiers as $specifier)
-  {
-    if (preg_match('/([a-zA-Z\-]+);q=([0-9\.]+)/', $specifier, $matches))
-    {
-      $langs[$matches[1]] = (float) $matches[2];
-    }
-    else if (preg_match("/([a-zA-Z\-]+)/", $specifier, $matches))
-    {
-      $langs[$matches[1]] = 1.0;
-    }
-  }
-  langs_arsort($langs);
-}
-else // Else use the value from config.inc.php.
-{
-  $langs[$default_language_tokens] = 1.0;
-}
+// Get the acceptable languages, convert to aliases where applicable and sort
+// them in reverse order so that the most acceptable one is at the start
+$langs = get_language_qualifiers();
+$langs = alias_qualifiers($langs);
+langs_arsort($langs);
 
 // The following attempts to import a language based on what the client
 // is using.
-
 if (!$disable_automatic_language_changing || $cli_mode)
 {
   $doneit = 0;
@@ -467,10 +445,6 @@ if (!$disable_automatic_language_changing || $cli_mode)
       $locale = $lang;
     }
 
-    if (isset($lang_aliases[strtolower($lang)]))
-    {
-      $lang = $locale = $lang_aliases[strtolower($lang)];
-    }
     if (set_vocab($lang))
     {
       $locale = $lang;
@@ -638,7 +612,7 @@ function determine_mrbs_locale()
 }
 
 
-// Sets the locale according to the MRBS config seetings and the user's
+// Sets the locale according to the MRBS config settings and the user's
 // browser preferences
 function set_mrbs_locale()
 {
@@ -668,6 +642,69 @@ function set_mrbs_locale()
       $locale_warning = "Server failed to set locale to '$locale'";
     }
   }
+}
+
+
+// Returns an array of language qualifiers with the language key replaced
+// by its alias, if one exists
+function alias_qualifiers($qualifiers)
+{
+  global $lang_aliases;
+  
+  $result = array();
+  foreach ($qualifiers as $lang => $qualifier)
+  {
+    if (isset($lang_aliases[strtolower($lang)]))
+    {
+      $result[$lang_aliases[strtolower($lang)]] = $qualifier;
+    }
+    else
+    {
+      $result[$lang] = $qualifier;
+    }
+  }
+  return $result;
+}
+
+
+// Returns an unsorted associative array of acceptable language qualifiers, indexed
+// by language.   The language will have been replaced its alias if one exists.
+function get_language_qualifiers()
+{
+  global $cli_mode, $cli_language, $default_language_tokens, $HTTP_ACCEPT_LANGUAGE;
+  
+  static $qualifiers = array();
+  
+  if (count($qualifiers) == 0)
+  {
+    // If we're running from the CLI, use the config setting
+    if ($cli_mode && !empty($cli_language))
+    {
+      $qualifiers[$cli_language] = 1.0;
+    }
+    // Otherwise we enumerate the user's language preferences...
+    elseif (isset($HTTP_ACCEPT_LANGUAGE)) // Attempt to use $HTTP_ACCEPT_LANGUAGE only when defined.
+    {
+      $lang_specifiers = explode(',',$HTTP_ACCEPT_LANGUAGE);
+      foreach ($lang_specifiers as $specifier)
+      {
+        if (preg_match('/([a-zA-Z\-]+);q=([0-9\.]+)/', $specifier, $matches))
+        {
+          $qualifiers[$matches[1]] = (float) $matches[2];
+        }
+        else if (preg_match("/([a-zA-Z\-]+)/", $specifier, $matches))
+        {
+          $qualifiers[$matches[1]] = 1.0;
+        }
+      }
+    }
+    else // Else use the value from config.inc.php.
+    {
+      $qualifiers[$default_language_tokens] = 1.0;
+    }
+  }
+  
+  return $qualifiers;
 }
 
 

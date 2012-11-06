@@ -23,7 +23,7 @@ echo "</table>\n";
 
 echo "<p>\n" . get_vocab("browserlang") .":\n";
 
-echo implode(", ", array_keys($langs));
+echo implode(", ", array_keys(get_language_qualifiers()));
 
 echo "\n</p>\n";
 
