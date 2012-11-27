@@ -1040,7 +1040,6 @@ function mrbsApproveEntry($id, $series)
 function mrbsGetBookingInfo($id, $series, $silent=FALSE)
 {
   global $tbl_entry, $tbl_repeat, $tbl_room, $tbl_area;
-  global $approval_enabled, $enable_periods;
 
   // Check that we've got an id
   if (!isset($id))
@@ -1075,6 +1074,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
                  "A.area_admin_email",
                  "M.disabled AS room_disabled",
                  "A.disabled AS area_disabled",
+                 "A.enable_periods",
                  "(end_time - start_time) AS duration");
                  
   foreach ($table_fields as $field)
@@ -1161,7 +1161,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   
   // Now get the duration.
   // Don't translate the units at this stage.   We'll translate them later.
-  $d = get_duration($row['start_time'], $row['end_time'], $enable_periods, FALSE);
+  $d = get_duration($row['start_time'], $row['end_time'], $row['enable_periods'], FALSE);
   $row['duration'] = $d['duration'];
   $row['dur_units'] = $d['dur_units'];
     
