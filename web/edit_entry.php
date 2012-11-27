@@ -1244,10 +1244,10 @@ foreach ($edit_entry_field_order as $key)
 
 
 // Show the repeat fields if (a) it's a new booking and repeats are allowed,
-// or else if it's an existing booking.  (It's not particularly obvious but
+// or else if it's an existing booking and it's a series.  (It's not particularly obvious but
 // if edit_type is "series" then it means that either you're editing an existing
 // series or else you're making a new booking.  This should be tidied up sometime!)
-if ((($edit_type == "series") && $repeats_allowed) || isset($id))
+if (($edit_type == "series") && $repeats_allowed)
 {
   // If repeats aren't allowed or this is not a series then disable
   // the repeat fields - they're for information only
@@ -1263,11 +1263,11 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
       
   // Repeat type
   echo "<div id=\"rep_type\">\n";
-  $params = array('label'    => get_vocab("rep_type") . ":",
-                  'name'     => 'rep_type',
-                  'value'    => $rep_type,
-                  'disabled' => $disabled,
-                  'options'  => array());
+  $params = array('label'         => get_vocab("rep_type") . ":",
+                  'name'          => 'rep_type',
+                  'value'         => $rep_type,
+                  'disabled'      => $disabled,
+                  'options'       => array());
   foreach (array(REP_NONE, REP_DAILY, REP_WEEKLY, REP_MONTHLY, REP_YEARLY) as $i)
   {
     $params['options'][$i] = get_vocab("rep_type_$i");

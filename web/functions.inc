@@ -751,16 +751,19 @@ function generate_input($params)
 //
 //   $params    an associative array holding the function parameters:
 //      MANDATORY
-//        'name'        The name of the input.
+//        'name'          The name of the input.
 //      OPTIONAL
-//        'value'       The value of the input.  Default ''
-//        'options'     An associative array where the key is the value of the
-//                      button and the value is the button text
-//        'disabled'    Whether the field should be disabled.  Default FALSE
+//        'value'         The value of the input.  Default ''
+//        'options'       An associative array where the key is the value of the
+//                        button and the value is the button text
+//        'disabled'      Whether the field should be disabled.  Default FALSE
+//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
+//                        Default TRUE
+//
 function generate_radio($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'name', 'options', 'value', 'disabled') as $key)
+  foreach (array('label', 'name', 'options', 'value', 'disabled', 'create_hidden') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -777,6 +780,10 @@ function generate_radio($params)
           break;
         case 'disabled':
           $params[$key] = FALSE;
+          break;
+        case 'create_hidden':
+          $params[$key] = TRUE;
+          break;
         default:
           break;
       }
@@ -798,7 +805,7 @@ function generate_radio($params)
   
   // and a hidden input if the input box is disabled and the value is true
   // (the checkbox isn't posted if not checked)
-  if (($params['disabled']) && ($params['value'] == $option['key']))
+  if ($params['disabled'] && $params['create_hidden'] && ($params['value'] == $option['key']))
   {
     $html .= "<input type=\"hidden\" value=\"" . htmlspecialchars($option['key']) . "\" name=\"" . $params['name'] . "\">\n";
   }
@@ -810,18 +817,20 @@ function generate_radio($params)
 //
 //   $params    an associative array holding the function parameters:
 //      MANDATORY
-//        'label'       The text to be used for the field label.
-//        'name'        The name of the input.
+//        'label'         The text to be used for the field label.
+//        'name'          The name of the input.
 //      OPTIONAL
-//        'value'       The value of the input.  Default ''
-//        'options'     An associative array where the key is the value of the
-//                      button and the value is the button text
-//        'disabled'    Whether the field should be disabled.  Default FALSE
+//        'value'         The value of the input.  Default ''
+//        'options'       An associative array where the key is the value of the
+//                        button and the value is the button text
+//        'disabled'      Whether the field should be disabled.  Default FALSE
+//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
+//                        Default TRUE
 //
 function generate_radio_group($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'name', 'options', 'value', 'disabled') as $key)
+  foreach (array('label', 'name', 'options', 'value', 'disabled', 'create_hidden') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -839,6 +848,10 @@ function generate_radio_group($params)
           break;
         case 'disabled':
           $params[$key] = FALSE;
+          break;
+        case 'create_hidden':
+          $params[$key] = TRUE;
+          break;
         default:
           break;
       }
@@ -853,14 +866,15 @@ function generate_radio_group($params)
   // Output each radio button
   while ($option = each($params['options']))
   {
-    generate_radio(array('name'     => $params['name'],
-                         'options'  => array($option['key'] => $option['value']),
-                         'value'    => $params['value'],
-                         'disabled' => $params['disabled']));
+    generate_radio(array('name'          => $params['name'],
+                         'options'       => array($option['key'] => $option['value']),
+                         'value'         => $params['value'],
+                         'disabled'      => $params['disabled'],
+                         'create_hidden' => $params['create_hidden']));
   }
 
   $html = "</div>\n";
-  if ($params['disabled'])
+  if ($params['disabled'] && $params['create_hidden'])
   {
     $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\"";
     $html .= " value=\"" . htmlspecialchars($params['value']) . "\">\n";
@@ -908,6 +922,7 @@ function generate_checkbox_group($params)
         case 'force_assoc':
         case 'disabled':
           $params[$key] = FALSE;
+          break;
         default:
           break;
       }
