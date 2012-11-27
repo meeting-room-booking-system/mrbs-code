@@ -1362,7 +1362,7 @@ if ((($edit_type == "series") && $repeats_allowed) || isset($id))
       // do with revisiting.   It assumes all languages have the same order as English
       // eg "the second Wednesday" which is probably not true.
       $options = array();
-      foreach (array('1', '2', '3', '4', '-1', '-2', '-3', '-4') as $i)
+      foreach (array('1', '2', '3', '4', '5', '-1', '-2', '-3', '-4', '-5') as $i)
       {
         $options[$i] = get_vocab("ord_" . $i);
       }

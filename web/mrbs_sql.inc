@@ -677,14 +677,15 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
   
   $date = getdate($time);
   
-  $sec       = $date['seconds'];
-  $min       = $date['minutes'];
-  $hour      = $date['hours'];
-  $day       = $date['mday'];
-  $month     = $date['mon'];
-  $year      = $date['year'];
-  $start_day = $date['wday'];
-  $start_dom = $day;  // the starting day of the month
+  $sec         = $date['seconds'];
+  $min         = $date['minutes'];
+  $hour        = $date['hours'];
+  $day         = $date['mday'];
+  $month       = $date['mon'];
+  $year        = $date['year'];
+  $start_day   = $date['wday'];
+  $start_dom   = $day;  // the starting day of the month
+  $start_month = $month;
   
   // Make sure that the first date is a member of the series
   switch($rep_details['rep_type'])
@@ -707,7 +708,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
       else
       {
         $day = byday_to_day($year, $month, $rep_details['month_relative']);
-        if ($day < $start_dom)
+        while (($day === FALSE) || (($day < $start_dom) && ($month == $start_month)))
         {
           $month++;
           $day = byday_to_day($year, $month, $rep_details['month_relative']);
@@ -755,17 +756,20 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
         break;
       
       case REP_MONTHLY:
-        $month++;
-        if (isset($rep_details['month_absolute']))
+        do
         {
-          // Get the day of the month back to where it should be (in case we
-          // decremented it to make it a valid date last time round)
-          $day = $rep_details['month_absolute'];
-        }
-        else
-        {
-          $day = byday_to_day($year, $month, $rep_details['month_relative']);
-        }
+          $month++;
+          if (isset($rep_details['month_absolute']))
+          {
+            // Get the day of the month back to where it should be (in case we
+            // decremented it to make it a valid date last time round)
+            $day = $rep_details['month_absolute'];
+          }
+          else
+          {
+            $day = byday_to_day($year, $month, $rep_details['month_relative']);
+          }
+        } while ($day === FALSE);
         trimToEndOfMonth($month, $day, $year);
         break;
         

@@ -404,7 +404,8 @@ function RFC_5545_day_to_ord($day)
 
 
 // Converts a BYDAY (eg "2SU") value for a given year and month into a
-// day of the month
+// day of the month.   Returns FALSE if the day does not exist (eg for "5SU"
+// when there are only four Sundays in the month)
 function byday_to_day($year, $month, $byday)
 {
   // First of all normalise the month and year, as we allow $month > 12
@@ -428,7 +429,16 @@ function byday_to_day($year, $month, $byday)
   // add in the weeks
   $diff += ($ord > 0) ? ($ord - 1) * 7 : ($ord + 1) * 7;
   
-  return $start_dom + $diff;
+  $day = $start_dom + $diff;
+  
+  if (checkdate($month, $day, $year))
+  {
+    return $day;
+  }
+  else
+  {
+    return FALSE;
+  }
 }
 
 
