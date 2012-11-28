@@ -246,8 +246,8 @@ function generate_presentation_options(&$vars)
     {
       case 'output':
         echo "<div id=\"div_output\">\n";
-        $buttons = array(REPORT  => "report",
-                         SUMMARY => "summary");
+        $buttons = array(REPORT  => get_vocab('report'),
+                         SUMMARY => get_vocab('summary'));
         $params = array('label'   => get_vocab('output') . ":",
                         'name'    => 'output',
                         'value'   => $vars['output'],
@@ -259,8 +259,8 @@ function generate_presentation_options(&$vars)
         
       case 'output_format':
         echo "<div id=\"div_format\">\n";
-        $buttons = array(OUTPUT_HTML => "html",
-                         OUTPUT_CSV  => "csv");
+        $buttons = array(OUTPUT_HTML => get_vocab('html'),
+                         OUTPUT_CSV  => get_vocab('csv'));
         // The iCal output button
         if ($times_somewhere) // We can't do iCalendars for periods yet
         {
