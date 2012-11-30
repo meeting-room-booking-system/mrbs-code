@@ -38,7 +38,7 @@ else
   while (!checkdate($month, $day, $year))
   {
     $day--;
-    if ($day == 0)
+    if ($day <= 0)
     {
       $day   = date("d");
       $month = date("m");
