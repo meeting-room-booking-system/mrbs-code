@@ -36,6 +36,7 @@ div.booking_list {overflow-x: hidden}       /* we don't want IE to give us the h
 .form_general div#div_typematch {margin-bottom: 0.5em}
 
 /* alignment of some inputs with labels is different in IE, so adjust */
+.form_general input {margin-top: -0.2em}
 .form_general input.radio {margin-top: -0.2em}
 .form_general input.checkbox {margin-top: -0.2em}
 
