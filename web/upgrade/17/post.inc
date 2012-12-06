@@ -37,7 +37,7 @@ if ($res == -1)
 {
   trigger_error(sql_error(), E_USER_WARNING);
   // No need to localise, should never happen
-  print "<span class=\"error\">Failed to add saved_ts column in entry table.</
+  print "<span class=\"error\">Failed to add saved_ts column in entry table.</span>";
 }
 $sql = "UPDATE $tbl_entry SET saved_ts=timestamp";
 $res = sql_command($sql);
@@ -45,7 +45,7 @@ if ($res == -1)
 {
   trigger_error(sql_error(), E_USER_WARNING);
   // No need to localise, should never happen
-  print "<span class=\"error\">Failed to set saved_ts column in entry table.</
+  print "<span class=\"error\">Failed to set saved_ts column in entry table.</span>";
 }
 
 $sql = "UPDATE $tbl_entry SET status=(((~status)&1)<<1)|(private&1)";
@@ -96,7 +96,7 @@ if ($res == -1)
 {
   trigger_error(sql_error(), E_USER_WARNING);
   // No need to localise, should never happen
-  print "<span class=\"error\">Failed to add saved_ts column in repeat table.</
+  print "<span class=\"error\">Failed to add saved_ts column in repeat table.</span>";
 }
 $sql = "UPDATE $tbl_repeat SET saved_ts=timestamp"l
 $res = sql_command($sql);
@@ -104,7 +104,7 @@ if ($res == -1)
 {
   trigger_error(sql_error(), E_USER_WARNING);
   // No need to localise, should never happen
-  print "<span class=\"error\">Failed to set saved_ts column in repeat table.</
+  print "<span class=\"error\">Failed to set saved_ts column in repeat table.</span>";
 }
 
 $sql = "UPDATE $tbl_repeat SET status=private&1";

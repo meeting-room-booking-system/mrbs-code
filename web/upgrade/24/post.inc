@@ -57,7 +57,7 @@ if ($res == -1)
 {
   trigger_error(sql_error(), E_USER_WARNING);
   // No need to localise, should never happen
-  print "<span class=\"error\">Failed to add saved_ts column in entry table.</
+  print "<span class=\"error\">Failed to add saved_ts column in entry table.</span>";
 }
 $sql = "UPDATE $tbl_entry SET saved_ts=timestamp";
 $res = sql_command($sql);
@@ -65,7 +65,7 @@ if ($res == -1)
 {
   trigger_error(sql_error(), E_USER_WARNING);
   // No need to localise, should never happen
-  print "<span class=\"error\">Failed to set saved_ts column in entry table.</
+  print "<span class=\"error\">Failed to set saved_ts column in entry table.</span>";
 }
 $sql = "ALTER TABLE $tbl_repeat ADD COLUMN saved_ts DATETIME";
 $res = sql_command($sql);
@@ -73,7 +73,7 @@ if ($res == -1)
 {
   trigger_error(sql_error(), E_USER_WARNING);
   // No need to localise, should never happen
-  print "<span class=\"error\">Failed to add saved_ts column in repeat table.</
+  print "<span class=\"error\">Failed to add saved_ts column in repeat table.</span>";
 }
 $sql = "UPDATE $tbl_repeat SET saved_ts=timestamp"l
 $res = sql_command($sql);
@@ -81,7 +81,7 @@ if ($res == -1)
 {
   trigger_error(sql_error(), E_USER_WARNING);
   // No need to localise, should never happen
-  print "<span class=\"error\">Failed to set saved_ts column in repeat table.</
+  print "<span class=\"error\">Failed to set saved_ts column in repeat table.</span>";
 }
 
 // MySQL (mysql and mysqli)
