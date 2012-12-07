@@ -757,7 +757,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
     $body .= "</table>\n";
   }
   
-  // Add in a list of repeat dates.  Although we've given them the repeat charateristics
+  // Add in a list of repeat dates.  Although we've given them the repeat characteristics
   // above, it's often helpful to have this expanded out into a list of actual dates to
   // avoid any confusion.    The repeat list also gives a list of dates that could not
   // be booked due to conflicts.
