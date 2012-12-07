@@ -357,7 +357,11 @@ function create_date_list($dates, $as_html)
 
 
 // Generate a list of repeat dates for a series
-function create_repeat_list($data, $action, $as_html)
+//
+// $reps is an array of start_times that have been created/modified/deleted.
+// If not specified the function works them out for itself from the repeat data
+// [In the future it would be better if everything passed in $reps]
+function create_repeat_list($data, $action, $as_html, $reps=NULL)
 {
   global $max_rep_entrys;
   
@@ -387,15 +391,18 @@ function create_repeat_list($data, $action, $as_html)
     }
   }
   
-  $reps = mrbsGetRepeatEntryList($data['start_time'], 
-                                 $data['end_date'],
-                                 $rep_details, 
-                                 $max_rep_entrys);
-  
-  // Remove any dates that could not be booked due to conflicts                               
-  if (!empty($data['skip_list']))
+  if (!isset($reps))
   {
-    $reps = array_diff($reps, $data['skip_list']);
+    $reps = mrbsGetRepeatEntryList($data['start_time'], 
+                                   $data['end_date'],
+                                   $rep_details, 
+                                   $max_rep_entrys);
+  
+    // Remove any dates that could not be booked due to conflicts                               
+    if (!empty($data['skip_list']))
+    {
+      $reps = array_diff($reps, $data['skip_list']);
+    }
   }
                                                          
   $result .= create_date_list($reps, $as_html);
@@ -415,7 +422,9 @@ function create_repeat_list($data, $action, $as_html)
 }
 
 
-function create_body($data, $mail_previous, $compare, $series, $action, $as_html=FALSE, $note='')
+// $start_times is an array of start_times that have been created/modified/deleted.
+// If not specified the function works them out for itself from the repeat data
+function create_body($data, $mail_previous, $compare, $series, $action, $as_html=FALSE, $note='', $start_times=NULL)
 {
   global $returl, $mrbs_company;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
@@ -763,7 +772,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
   // be booked due to conflicts.
   if ($data['rep_type'] != REP_NONE)
   {
-    $body .= create_repeat_list($data, $action, $as_html);
+    $body .= create_repeat_list($data, $action, $as_html, $start_times);
   }
   
   if ($as_html)
@@ -1005,11 +1014,12 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $actio
  *
  * @param   array   $data      contains deleted entry data for email body
  * @param   bool    $series    whether this is a series or not
+ * @param   array   $start_times an array of start times that have been deleted
  * @param   string  $action    the booking action (eg "delete", "more_info", etc.)
  * @param   string  $note      a note that is used with "reject"
  * @return  bool    TRUE or PEAR error object if fails
  */
-function notifyAdminOnDelete($data, $series=FALSE, $action="delete", $note="")
+function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete", $note="")
 {
   global $mail_settings, $enable_periods;
   
@@ -1055,13 +1065,13 @@ function notifyAdminOnDelete($data, $series=FALSE, $action="delete", $note="")
   
   // Create the text body
   $text_body = array();
-  $text_body['content'] = create_body($data, NULL, FALSE, $series, $action, FALSE, $note);
+  $text_body['content'] = create_body($data, NULL, FALSE, $series, $action, FALSE, $note, $start_times);
   
   // Create the HTML body
   $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['content'] = create_body($data, NULL, FALSE, $series, $action, TRUE, $note);
+    $html_body['content'] = create_body($data, NULL, FALSE, $series, $action, TRUE, $note, $start_times);
     $html_body['cid'] = generate_global_uid("html");
   }
   

@@ -387,19 +387,21 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
  * $series - If set, delete the series, except user modified entries
  * $all    - If set, include user modified entries in the series delete
  *
- * Returns:
- *   0        - An error occured
- *   non-zero - The entry was deleted
+ * Returns FALSE if an error occured, otherwise an array of start_times that
+ * have been deleted
+ *
  */
 function mrbsDelEntry($user, $id, $series, $all)
 {
   global $tbl_entry, $tbl_repeat;
+  
+  $start_times = array();
 
   // Get the repeat_id and room_id for this entry
   $res = sql_query("SELECT repeat_id, room_id FROM $tbl_entry WHERE id=$id LIMIT 1");
   if (($res === FALSE) || (sql_count($res) <= 0))
   {
-    return 0;
+    return FALSE;
   }
   $row = sql_row_keyed($res, 0);
   $repeat_id = $row['repeat_id'];
@@ -417,8 +419,6 @@ function mrbsDelEntry($user, $id, $series, $all)
   }
 
   $res = sql_query($sql);
-
-  $removed = 0;
 
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   {
@@ -441,7 +441,7 @@ function mrbsDelEntry($user, $id, $series, $all)
    
     if (sql_command("DELETE FROM $tbl_entry WHERE id=" . $row['id']) > 0)
     {
-      $removed++;
+      $start_times[] = $row['start_time'];
     }
   }
 
@@ -451,7 +451,8 @@ function mrbsDelEntry($user, $id, $series, $all)
     sql_command("DELETE FROM $tbl_repeat WHERE id=$repeat_id");
   }
 
-  return $removed > 0;
+  asort($start_times);
+  return $start_times;
 }
 
 /** mrbsCreateEntry()

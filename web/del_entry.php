@@ -74,14 +74,14 @@ if ($info = mrbsGetBookingInfo($id, FALSE, TRUE))
       }
     }
     sql_begin();
-    $result = mrbsDelEntry(getUserName(), $id, $series, 1);
+    $start_times = mrbsDelEntry(getUserName(), $id, $series, 1);
     sql_commit();
     // [At the moment MRBS does not inform the user if it was only able to
     // delete some members of a series but not all.    This could happen for
-    // example if a booking policy is in force thgat prevents the deletion of entries
+    // example if a booking policy is in force that prevents the deletion of entries
     // in the past.   It would be better to inform the user that the operation has only
     // been partially successful]
-    if ($result)
+    if ($start_times !== FALSE)
     {
       // Send a mail to the Administrator
       if ($notify_by_email)
@@ -96,11 +96,11 @@ if ($info = mrbsGetBookingInfo($id, FALSE, TRUE))
         }
         if (isset($action) && ($action == "reject"))
         {
-          $result = notifyAdminOnDelete($mail_previous, $series, $action, $note);
+          $result = notifyAdminOnDelete($mail_previous, $series, $start_times, $action, $note);
         }
         else
         {
-          $result = notifyAdminOnDelete($mail_previous, $series);
+          $result = notifyAdminOnDelete($mail_previous, $series, $start_times);
         }
       }
       Header("Location: $returl");
