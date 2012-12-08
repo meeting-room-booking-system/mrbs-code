@@ -404,6 +404,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                     // text input
                     elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
                     {
+                      $params['attributes'] = array('rows="8"', 'cols="40"');
                       generate_textarea($params);   
                     }
                     // Otherwise output a text input

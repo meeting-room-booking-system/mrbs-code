@@ -576,9 +576,7 @@ if ($is_admin)
 }
 
 // Non-admins will only be allowed to view room details, not change them
-// (We would use readonly instead of disabled, but it is not valid for some 
-// elements, eg <select>)
-$disabled = ($is_admin) ? "" : " disabled=\"disabled\"";
+$disabled = !$is_admin;
 
 // THE ROOM FORM
 if (isset($change_room) && !empty($room))
@@ -629,26 +627,31 @@ if (isset($change_room) && !empty($room))
       
       // The area select box
       echo "<div>\n";
-      echo "<label for=\"new_area\">" . get_vocab("area") . ":</label>\n";
-      echo "<select id=\"new_area\" name=\"new_area\"$disabled>\n";
-        for ($i = 0; ($row_area = sql_row_keyed($res, $i)); $i++)
-        {
-          echo "<option value=\"" . $row_area['id'] . "\"";
-          if ($row_area['id'] == $row['area_id'])
-          {
-            echo " selected=\"selected\"";
-          }
-          echo ">" . htmlspecialchars($row_area['area_name']) . "</option>\n";
-        }  
-      echo "</select>\n";
+      $options = array();
+      for ($i = 0; ($row_area = sql_row_keyed($res, $i)); $i++)
+      {
+        $options[$row_area['id']] = $row_area['area_name'];
+      }
+      $params = array('label'         => get_vocab("area") . ":",
+                      'name'          => 'new_area',
+                      'options'       => $options,
+                      'force_assoc'   => TRUE,
+                      'value'         => $row['area_id'],
+                      'disabled'      => $disabled,
+                      'create_hidden' => FALSE);
+      generate_select($params);
       echo "<input type=\"hidden\" name=\"old_area\" value=\"" . $row['area_id'] . "\">\n";
       echo "</div>\n";
       
       // First of all deal with the standard MRBS fields
       // Room name
       echo "<div>\n";
-      echo "<label for=\"room_name\">" . get_vocab("name") . ":</label>\n";
-      echo "<input type=\"text\" id=\"room_name\" name=\"room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\"$disabled>\n";
+      $params = array('label'         => get_vocab("name") . ":",
+                      'name'          => 'room_name',
+                      'value'         => $row['room_name'],
+                      'disabled'      => $disabled,
+                      'create_hidden' => FALSE);
+      generate_input($params);
       echo "<input type=\"hidden\" name=\"old_room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\">\n";
       echo "</div>\n";
       
@@ -656,17 +659,16 @@ if (isset($change_room) && !empty($room))
       if ($is_admin)
       {
         echo "<div>\n";
-        echo "<label title=\"" . get_vocab("disabled_room_note") . "\">" . get_vocab("status") . ":</label>\n";
-        echo "<div class=\"group\">\n";
-        echo "<label>\n";
-        $checked = ($row['disabled']) ? "" : " checked=\"checked\"";
-        echo "<input class=\"radio\" type=\"radio\" name=\"room_disabled\" value=\"0\"${checked}${disabled}>\n";
-        echo get_vocab("enabled") . "</label>\n";
-        echo "<label>\n";
-        $checked = ($row['disabled']) ? " checked=\"checked\"" : "";
-        echo "<input class=\"radio\" type=\"radio\" name=\"room_disabled\" value=\"1\"${checked}${disabled}>\n";
-        echo get_vocab("disabled") . "</label>\n";
-        echo "</div>\n";
+        $options = array('0' => get_vocab("enabled"),
+                         '1' => get_vocab("disabled"));
+        $params = array('label'         => get_vocab("status") . ":",
+                        'label_title'   => get_vocab("disabled_room_note"),
+                        'name'          => 'room_disabled',
+                        'value'         => ($row['disabled']) ? '1' : '0',
+                        'options'       => $options,
+                        'disabled'      => $disabled,
+                        'create_hidden' => FALSE);
+        generate_radio_group($params);
         echo "</div>\n";
       }
 
@@ -674,27 +676,46 @@ if (isset($change_room) && !empty($room))
       if ($is_admin)
       {
         echo "<div>\n";
-        echo "<label for=\"sort_key\" title=\"" . get_vocab("sort_key_note") . "\">" . get_vocab("sort_key") . ":</label>\n";
-        echo "<input type=\"text\" id=\"sort_key\" name=\"sort_key\" value=\"" . htmlspecialchars($row["sort_key"]) . "\"$disabled>\n";
+        $params = array('label'         => get_vocab("sort_key") . ":",
+                        'label_title'   => get_vocab("sort_key_note"),
+                        'name'          => 'sort_key',
+                        'value'         => $row['sort_key'],
+                        'disabled'      => $disabled,
+                        'create_hidden' => FALSE);
+        generate_input($params);
         echo "</div>\n";
       }
 
       // Description
       echo "<div>\n";
-      echo "<label for=\"description\">" . get_vocab("description") . ":</label>\n";
-      echo "<input type=\"text\" id=\"description\" name=\"description\" value=\"" . htmlspecialchars($row["description"]) . "\"$disabled>\n";
+      $params = array('label'         => get_vocab("description") . ":",
+                      'name'          => 'description',
+                      'value'         => $row['description'],
+                      'disabled'      => $disabled,
+                      'create_hidden' => FALSE);
+      generate_input($params);
       echo "</div>\n";
       
       // Capacity
       echo "<div>\n";
-      echo "<label for=\"capacity\">" . get_vocab("capacity") . ":</label>\n";
-      echo "<input type=\"text\" id=\"capacity\" name=\"capacity\" value=\"" . $row["capacity"] . "\"$disabled>\n";
+      $params = array('label'         => get_vocab("capacity") . ":",
+                      'name'          => 'capacity',
+                      'value'         => $row['capacity'],
+                      'disabled'      => $disabled,
+                      'create_hidden' => FALSE);
+      generate_input($params);
       echo "</div>\n";
       
       // Room admin email
       echo "<div>\n";
-      echo "<label for=\"room_admin_email\" title=\"" . get_vocab("email_list_note") . "\">" . get_vocab("room_admin_email") . ":</label>\n";
-      echo "<textarea id=\"room_admin_email\" name=\"room_admin_email\" rows=\"4\" cols=\"40\"$disabled>" . htmlspecialchars($row["room_admin_email"]) . "</textarea>\n";
+      $params = array('label'         => get_vocab("room_admin_email") . ":",
+                      'label_title'   => get_vocab("email_list_note"),
+                      'name'          => 'room_admin_email',
+                      'value'         => $row['room_admin_email'],
+                      'attributes'    => array('rows="4"', 'cols="40"'),
+                      'disabled'      => $disabled,
+                      'create_hidden' => FALSE);
+      generate_textarea($params);
       echo "</div>\n";
       
       // Custom HTML
@@ -702,10 +723,14 @@ if (isset($change_room) && !empty($room))
       {
         // Only show the raw HTML to admins.  Non-admins will see the rendered HTML
         echo "<div>\n";
-        echo "<label for=\"room_custom_html\" title=\"" . get_vocab("custom_html_note") . "\">" . get_vocab("custom_html") . ":</label>\n";
-        echo "<textarea id=\"room_custom_html\" name=\"custom_html\" rows=\"4\" cols=\"40\"$disabled>\n";
-        echo htmlspecialchars($row['custom_html']);
-        echo "</textarea>\n";
+        $params = array('label'         => get_vocab("custom_html") . ":",
+                        'label_title'   => get_vocab("custom_html_note"),
+                        'name'          => 'room_custom_html',
+                        'value'         => $row['custom_html'],
+                        'attributes'    => array('rows="4"', 'cols="40"'),
+                        'disabled'      => $disabled,
+                        'create_hidden' => FALSE);
+        generate_textarea($params);
         echo "</div>\n";
       }
     
@@ -715,40 +740,29 @@ if (isset($change_room) && !empty($room))
         if (!in_array($field['name'], $standard_fields['room']))
         {
           echo "<div>\n";
-          $label_text = get_loc_field_name($tbl_room, $field['name']);
-          $var_name = VAR_PREFIX . $field['name'];
-          echo "<label for=\"$var_name\">$label_text:</label>\n";
+          $params = array('label'         => get_loc_field_name($tbl_room, $field['name']) . ":",
+                          'name'          => VAR_PREFIX . $field['name'],
+                          'value'         => $row[$field['name']],
+                          'disabled'      => $disabled,
+                          'create_hidden' => FALSE);
           // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
           // assume are intended to be booleans)
           if (($field['nature'] == 'boolean') || 
               (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
           {
-            echo "<input type=\"checkbox\" class=\"checkbox\" " .
-                  "id=\"$var_name\" " .
-                  "name=\"$var_name\" " .
-                  "value=\"1\" " .
-                  ((!empty($row[$field['name']])) ? " checked=\"checked\"" : "") .
-                  "$disabled>\n";
+            generate_checkbox($params);
           }
           // Output a textarea if it's a character string longer than the limit for a
           // text input
           elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
           {
-            echo "<textarea rows=\"8\" cols=\"40\" " .
-                  "id=\"$var_name\" " .
-                  "name=\"$var_name\" " .
-                  "$disabled>\n";
-            echo htmlspecialchars($row[$field['name']]);
-            echo "</textarea>\n";
+            $params['attributes'] = array('rows="4"', 'cols="40"');
+            generate_textarea($params);
           }
           // Otherwise output a text input
           else
           {
-            echo "<input type=\"text\" " .
-                  "id=\"$var_name\" " .
-                  "name=\"$var_name\" " .
-                  "value=\"" . htmlspecialchars($row[$field['name']]) . "\"" .
-                  "$disabled>\n";
+            generate_input($params);
           }
           echo "</div>\n";
         }

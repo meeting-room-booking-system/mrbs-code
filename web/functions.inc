@@ -618,26 +618,29 @@ function generate_checkbox($params)
 //
 //   $params    an associative array holding the function parameters:
 //      MANDATORY
-//        'name'        The name of the input.
+//        'name'          The name of the input.
 //      OPTIONAL
-//        'label'       The text to be used for the field label.
-//        'value'       The value of the input.  Default ''
-//        'type'        The type of input, eg 'text', 'number', etc.  Default NULL
-//        'step'        The value of the 'step' attribute.  Default NULL
-//        'min'         The value of the 'min' attribute.  Default NULL
-//        'max'         The value of the 'max' attribute.  Default NULL
-//        'suffix'      A string that is displayed after the input field
-//        'disabled'    Whether the field should be disabled.  Default FALSE
-//        'mandatory'   Whether the field is a required field.  Default FALSE
-//        'maxlength'   The maximum length of input allowed.   Default NULL (no limit)
-//        'attributes'  Additional attributes not covered explicitly above.  Default NULL.
-//                      Can be either a simple string or an array of attributes.
+//        'label'         The text to be used for the field label.
+//        'label_title'   The text to be used for the title attribute for the field label
+//        'value'         The value of the input.  Default ''
+//        'type'          The type of input, eg 'text', 'number', etc.  Default NULL
+//        'step'          The value of the 'step' attribute.  Default NULL
+//        'min'           The value of the 'min' attribute.  Default NULL
+//        'max'           The value of the 'max' attribute.  Default NULL
+//        'suffix'        A string that is displayed after the input field
+//        'disabled'      Whether the field should be disabled.  Default FALSE
+//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
+//                        Default TRUE
+//        'mandatory'     Whether the field is a required field.  Default FALSE
+//        'maxlength'     The maximum length of input allowed.   Default NULL (no limit)
+//        'attributes'    Additional attributes not covered explicitly above.  Default NULL.
+//                        Can be either a simple string or an array of attributes.
 //
 function generate_simple_input($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'name', 'value', 'type', 'step', 'disabled', 'mandatory',
-                 'maxlength', 'attributes', 'suffix') as $key)
+  foreach (array('label', 'label_title', 'name', 'value', 'type', 'step', 'disabled',
+                 'create_hidden', 'mandatory', 'maxlength', 'attributes', 'suffix') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -647,11 +650,15 @@ function generate_simple_input($params)
           trigger_error('Missing mandatory parameters', E_USER_NOTICE);
           break;
         case 'value':
+        case 'label_title':
           $params[$key] = '';
           break;
         case 'disabled':
         case 'mandatory':
           $params[$key] = FALSE;
+          break;
+        case 'create_hidden':
+          $params[$key] = TRUE;
           break;
         default:
           break;
@@ -669,7 +676,9 @@ function generate_simple_input($params)
   if (isset($params['label']))
   {
     // no HTML escaping for the label - it is trusted
-    $html .= "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
+    $html .= "<label for=\"" . $params['name'] . "\"";
+    $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
+    $html .= ">" . $params['label'] . "</label>\n";
   }
   $html .= "<input";
   $html .= (isset($params['type'])) ? " type=\"" . $params['type'] . "\"" : "";
@@ -696,7 +705,7 @@ function generate_simple_input($params)
   }
   $html .= "\n";
   // and a hidden input if the input box is disabled
-  if ($params['disabled'])
+  if ($params['disabled'] && $params['create_hidden'])
   {
     $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
       htmlspecialchars($params['value'])."\">\n";
@@ -711,20 +720,23 @@ function generate_simple_input($params)
 //
 //   $params    an associative array holding the function parameters:
 //      MANDATORY
-//        'name'        The name of the input.
+//        'name'          The name of the input.
 //      OPTIONAL
-//        'field'       The name of the field, eg 'entry.name' as used by
-//                      $select_options and $datalist_options
-//        'label'       The text to be used for the field label.
-//        'value'       The value of the input.  Default ''
-//        'suffix'      A string that is displayed after the input field
-//        'disabled'    Whether the field should be disabled.  Default FALSE
-//        'mandatory'   Whether the field is a required field.  Default FALSE
-//        'maxlength'   The maximum length of input allowed.   Default NULL (no limit)
-//        'attributes'  Additional attributes, allowing HTML5 input types such as number and
-//                      email to be used.   Note that additional attributes such as min, etc.
-//                      can also be included in the string, eg 'type="number" min="1" step="1"'.
-//                      Default NULL.  Can be either a simple string or an array of attributes
+//        'field'         The name of the field, eg 'entry.name' as used by
+//                        $select_options and $datalist_options
+//        'label'         The text to be used for the field label.
+//        'label_title'   The text to be used for the title attribute for the field label
+//        'value'         The value of the input.  Default ''
+//        'suffix'        A string that is displayed after the input field
+//        'disabled'      Whether the field should be disabled.  Default FALSE
+//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
+//                        Default TRUE
+//        'mandatory'     Whether the field is a required field.  Default FALSE
+//        'maxlength'     The maximum length of input allowed.   Default NULL (no limit)
+//        'attributes'    Additional attributes, allowing HTML5 input types such as number and
+//                        email to be used.   Note that additional attributes such as min, etc.
+//                        can also be included in the string, eg 'type="number" min="1" step="1"'.
+//                        Default NULL.  Can be either a simple string or an array of attributes
 function generate_input($params)
 {
   global $select_options, $datalist_options;
@@ -820,6 +832,7 @@ function generate_radio($params)
 //        'label'         The text to be used for the field label.
 //        'name'          The name of the input.
 //      OPTIONAL
+//        'label_title'   The text to be used for the title attribute for the field label
 //        'value'         The value of the input.  Default ''
 //        'options'       An associative array where the key is the value of the
 //                        button and the value is the button text
@@ -830,7 +843,7 @@ function generate_radio($params)
 function generate_radio_group($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'name', 'options', 'value', 'disabled', 'create_hidden') as $key)
+  foreach (array('label', 'label_title', 'name', 'options', 'value', 'disabled', 'create_hidden') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -843,6 +856,7 @@ function generate_radio_group($params)
         case 'options':
           $params[$key] = array();
           break;
+        case 'label_title':
         case 'value':
           $params[$key] = '';
           break;
@@ -859,7 +873,9 @@ function generate_radio_group($params)
   }
   // generate the HTML
   // no HTML escaping for the label - it is trusted
-  $html  = "<label>" . $params['label'] . "</label>\n";
+  $html  = "<label";
+  $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
+  $html .= ">" . $params['label'] . "</label>\n";
   $html .= "<div class=\"group\">\n";
   echo $html;
   
@@ -973,6 +989,7 @@ function generate_checkbox_group($params)
 //      OPTIONAL
 //        'id'            The id of the element.  Defaults to the same as the name.
 //        'label'         The text to be used for the field label.
+//        'label_title'   The text to be used for the title attribute for the field label
 //        'options'       An array of options for the select element.   Can be a simple
 //                        array or an associative array with value => text members for
 //                        each <option> in the <select> element.   Default is an empty array.
@@ -995,8 +1012,9 @@ function generate_checkbox_group($params)
 function generate_select($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'name', 'id', 'options', 'force_assoc', 'value', 'size',
-                 'disabled', 'create_hidden', 'mandatory', 'multiple', 'attributes') as $key)
+  foreach (array('label', 'label_title', 'name', 'id', 'options', 'force_assoc',
+                 'value', 'size', 'disabled', 'create_hidden', 'mandatory',
+                 'multiple', 'attributes') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -1007,6 +1025,9 @@ function generate_select($params)
           break;
         case 'id':
           $params[$key] = $params['name'];
+          break;
+        case 'label_title':
+          $params[$key] = '';
           break;
         case 'options':
           $params[$key] = array();
@@ -1073,7 +1094,9 @@ function generate_select($params)
   $html = '';
   if (isset($params['label']))
   {
-    $html .= "<label for=\"" .$params['id'] . "\">" . $params['label'] . "</label>\n";
+    $html .= "<label for=\"" .$params['id'] . "\"";
+    $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
+    $html .= ">" . $params['label'] . "</label>\n";
   }
   $html .= "<select id=\"" . $params['id'] . "\" name=\"" . $params['name'] . "\"";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
@@ -1118,6 +1141,7 @@ function generate_select($params)
 //      OPTIONAL
 //        'id'            The id of the element.  Defaults to the same as the name.
 //        'label'         The text to be used for the field label.
+//        'label_title'   The text to be used for the title attribute for the field label
 //        'options'       An array of options for the select element.   Can be a simple
 //                        array or an associative array with value => text members for
 //                        each <option> in the <select> element.   Default is an empty array.
@@ -1143,8 +1167,9 @@ function generate_datalist($params)
   global $HTTP_USER_AGENT;
   
   // some sanity checking on params
-  foreach (array('label', 'name', 'id', 'options', 'force_assoc', 'force_indexed', 'value',
-                 'disabled', 'create_hidden', 'mandatory', 'attributes') as $key)
+  foreach (array('label', 'label_title', 'name', 'id', 'options', 'force_assoc',
+                 'force_indexed', 'value', 'disabled', 'create_hidden', 'mandatory',
+                 'attributes') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -1160,6 +1185,7 @@ function generate_datalist($params)
           $params[$key] = array();
           break;
         case 'value':
+        case 'label_title':
           $params[$key] = '';
           break;
         case 'force_assoc':
@@ -1187,7 +1213,9 @@ function generate_datalist($params)
   $html = '';
   if (isset($params['label']))
   {
-    $html .= "<label for=\"" .$params['id'] . "\">" . $params['label'] . "</label>\n";
+    $html .= "<label for=\"" .$params['id'] . "\"";
+    $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
+    $html .= ">" . $params['label'] . "</label>\n";
   }
   $html .= "<input id=\"" . $params['id'] . "\" name=\"" . $params['name'] . "\"";
   $html .= " list=\"" . $params['id'] . "_options\"";
@@ -1242,19 +1270,23 @@ function generate_datalist($params)
 //
 //   $params    an associative array holding the function parameters:
 //      MANDATORY
-//        'label'       The text to be used for the field label.
-//        'name'        The name of the input.
+//        'label'         The text to be used for the field label.
+//        'name'          The name of the input.
 //      OPTIONAL
-//        'value'       The value of the input.  Default ''
-//        'disabled'    Whether the field should be disabled.  Default FALSE
-//        'mandatory'   Whether the field is a required field.  Default FALSE
-//        'attributes'  Additional attributes not covered explicitly above.  Default NULL.
-//                      Can be either a simple string or an array of attributes.
+//        'value'         The value of the input.  Default ''
+//        'label_title'   The text to be used for the title attribute for the field label
+//        'disabled'      Whether the field should be disabled.  Default FALSE
+//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
+//                        Default TRUE
+//        'mandatory'     Whether the field is a required field.  Default FALSE
+//        'attributes'    Additional attributes not covered explicitly above.  Default NULL.
+//                        Can be either a simple string or an array of attributes.
 //
 function generate_textarea($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'name', 'value', 'disabled', 'mandatory', 'attributes') as $key)
+  foreach (array('label', 'label_title', 'name', 'value', 'disabled', 'create_hidden',
+                 'mandatory', 'attributes') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -1265,11 +1297,15 @@ function generate_textarea($params)
           trigger_error('Missing mandatory parameters', E_USER_NOTICE);
           break;
         case 'value':
+        case 'label_title':
           $params[$key] = '';
           break;
         case 'disabled':
         case 'mandatory':
           $params[$key] = FALSE;
+          break;
+        case 'create_hidden':
+          $params[$key] = TRUE;
           break;
         default:
           break;
@@ -1284,15 +1320,17 @@ function generate_textarea($params)
   
   // generate the HTML
   // no HTML escaping for the label - it is trusted
-  $html  = "<label for=\"" . $params['name'] . "\">" . $params['label'] . "</label>\n";
+  $html  = "<label for=\"" . $params['name'] . "\"";
+  $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
+  $html .= ">" . $params['label'] . "</label>\n";
   // textarea rows and cols are overridden by CSS height and width
-  $html .= "<textarea id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\" rows=\"8\" cols=\"40\"";
+  $html .= "<textarea id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\"";
   $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : '';
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : '';
   $html .= ">" . htmlspecialchars($params['value']) . "</textarea>\n";
   // and a hidden input if the textarea is disabled
-  if ($params['disabled'])
+  if ($params['disabled'] && $params['create_hidden'])
   {
     $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
       htmlspecialchars($params['value'])."\">\n";

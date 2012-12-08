@@ -221,6 +221,7 @@ function create_field_entry_description($disabled=FALSE)
   }
   else
   {
+    $params['attributes'] = array('rows="8"', 'cols="40"');
     generate_textarea($params);
   }
   echo "</div>\n";
@@ -627,6 +628,7 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
   elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
   {
     // HTML5 does not allow a pattern attribute for the textarea element
+    $params['attributes'] = array('rows="8"', 'cols="40"');
     generate_textarea($params);   
   }
   // Otherwise output an input
