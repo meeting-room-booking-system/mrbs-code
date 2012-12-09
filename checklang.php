@@ -34,14 +34,14 @@ else if (!empty($HTTP_GET_VARS))
 
 
 // Language file prefix
-$langs = "lang.";
+$langs = "lang/lang.";
 
 // Reference language:
 $ref_lang = "en";
 
 // Make a list of language files to check. This is similar to glob() in
 // PEAR File/Find.
-$dh = opendir($path_to_mrbs);
+$dh = opendir($path_to_mrbs.'/lang');
 while (($filename = readdir($dh)) !== false)
 {
   $files[] = $filename;
