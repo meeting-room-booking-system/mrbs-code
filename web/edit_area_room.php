@@ -938,83 +938,89 @@ if (isset($change_area) &&!empty($area))
                   'attributes' => array('class="time_minute"', 'maxlength="2"'));
   generate_input($params);
         
-        if (!$twentyfourhour_format)
-        {
-          echo "<div class=\"group ampm\">\n";
-          $checked = ($morningstarts < 12) ? "checked=\"checked\"" : "";
-          echo "<label><input name=\"area_morning_ampm\" type=\"radio\" value=\"am\" $checked>" .
-               utf8_strftime($strftime_format['ampm'], mktime(1,0,0,1,1,2000)) .
-               "</label>\n";
-          $checked = ($morningstarts >= 12) ? "checked=\"checked\"" : "";
-          echo "<label><input name=\"area_morning_ampm\" type=\"radio\" value=\"pm\" $checked>" .
-               utf8_strftime($strftime_format['ampm'], mktime(13,0,0,1,1,2000)) .
-               "</label>\n";
-          echo "</div>\n";
-        }
-        ?>
-      </div>
-      
-      <div class="div_dur_mins">
-      <label for="area_res_mins"><?php echo get_vocab("area_res_mins") ?>:</label>
-      <input type="number" min="1" step="1" id="area_res_mins" name="area_res_mins" value="<?php echo $resolution/60 ?>">
-      </div>
-      
-      <div class="div_dur_mins">
-      <label for="area_def_duration_mins"><?php echo get_vocab("area_def_duration_mins") ?>:</label>
-      <input type="number" min="1" step="1" id="area_def_duration_mins" name="area_def_duration_mins" value="<?php echo $default_duration/60 ?>">
-      <?php
-      echo "<input type=\"checkbox\" id=\"area_def_duration_all_day\" name=\"area_def_duration_all_day\"" .
-           (($default_duration_all_day) ? " checked=\"checked\"" : "") .
-           ">\n";
-      ?>
-      <label class="secondary" for="area_def_duration_all_day"><?php echo get_vocab("all_day") ?></label>
-      </div>
-      <?php
-      echo "<div id=\"last_slot\">\n";
-      // The contents of this div will be overwritten by JavaScript if enabled.    The JavaScript version is a drop-down
-      // select input with options limited to those times for the last slot start that are valid.   The options are
-      // dynamically regenerated if the start of the first slot or the resolution change.    The code below is
-      // therefore an alternative for non-JavaScript browsers.
-      echo "<div class=\"div_time\">\n";
-        echo "<label>" . get_vocab("area_last_slot_start") . ":</label>\n";
-        echo "<input class=\"time_hour\" type=\"text\" id=\"area_eveningends\" name=\"area_eveningends\" value=\"";
-        if ($twentyfourhour_format)
-        {
-          printf("%02d", $eveningends);
-        }
-        elseif ($eveningends > 12)
-        {
-          echo ($eveningends - 12);
-        } 
-        elseif ($eveningends == 0)
-        {
-          echo "12";
-        }
-        else
-        {
-          echo $eveningends;
-        } 
-        echo "\" maxlength=\"2\">\n";
+  if (!$twentyfourhour_format)
+  {
+    echo "<div class=\"group ampm\">\n";
+    $checked = ($morningstarts < 12) ? "checked=\"checked\"" : "";
+    echo "<label><input name=\"area_morning_ampm\" type=\"radio\" value=\"am\" $checked>" .
+         utf8_strftime($strftime_format['ampm'], mktime(1,0,0,1,1,2000)) .
+         "</label>\n";
+    $checked = ($morningstarts >= 12) ? "checked=\"checked\"" : "";
+    echo "<label><input name=\"area_morning_ampm\" type=\"radio\" value=\"pm\" $checked>" .
+         utf8_strftime($strftime_format['ampm'], mktime(13,0,0,1,1,2000)) .
+         "</label>\n";
+    echo "</div>\n";
+  }
 
-        echo "<span>:</span>\n";
-        echo "<input class=\"time_minute\" type=\"text\" id=\"area_eveningends_minutes\" name=\"area_eveningends_minutes\" value=\""; 
-        printf("%02d", $eveningends_minutes);
-        echo "\" maxlength=\"2\">\n";
-        if (!$twentyfourhour_format)
-        {
-          echo "<div class=\"group ampm\">\n";
-          $checked = ($eveningends < 12) ? "checked=\"checked\"" : "";
-          echo "<label><input name=\"area_evening_ampm\" type=\"radio\" value=\"am\" $checked>" . 
-               utf8_strftime($strftime_format['ampm'], mktime(1,0,0,1,1,2000)) . 
-               "</label>\n";
-          $checked = ($eveningends >= 12) ? "checked=\"checked\"" : "";
-          echo "<label><input name=\"area_evening_ampm\" type=\"radio\" value=\"pm\" $checked>" .
-               utf8_strftime($strftime_format['ampm'], mktime(13,0,0,1,1,2000)) .
-               "</label>\n";
-          echo "</div>\n";
-        }
-      echo "</div>\n";  
-      echo "</div>\n";  // last_slot
+  echo "</div>\n";
+      
+  echo "<div class=\"div_dur_mins\">\n";
+  $params = array('label'      => get_vocab("area_res_mins") . ":",
+                  'name'       => 'area_res_mins',
+                  'value'      => $resolution/60,
+                  'attributes' => 'type="number" min="1" step="1"');
+  generate_input($params);
+  echo "</div>\n";
+      
+  echo "<div class=\"div_dur_mins\">\n";
+  $params = array('label'      => get_vocab("area_def_duration_mins") . ":",
+                  'name'       => 'area_def_duration_mins',
+                  'value'      => $default_duration/60,
+                  'attributes' => 'type="number" min="1" step="1"');
+  generate_input($params);
+
+  $params = array('label'       => get_vocab("all_day"),
+                  'label_after' => TRUE,
+                  'name'        => 'area_def_duration_all_day',
+                  'value'       => $default_duration_all_day);
+  generate_checkbox($params);
+  echo "</div>\n";
+  
+  echo "<div id=\"last_slot\">\n";
+  // The contents of this div will be overwritten by JavaScript if enabled.    The JavaScript version is a drop-down
+  // select input with options limited to those times for the last slot start that are valid.   The options are
+  // dynamically regenerated if the start of the first slot or the resolution change.    The code below is
+  // therefore an alternative for non-JavaScript browsers.
+  echo "<div class=\"div_time\">\n";
+    echo "<label>" . get_vocab("area_last_slot_start") . ":</label>\n";
+    echo "<input class=\"time_hour\" type=\"text\" id=\"area_eveningends\" name=\"area_eveningends\" value=\"";
+    if ($twentyfourhour_format)
+    {
+      printf("%02d", $eveningends);
+    }
+    elseif ($eveningends > 12)
+    {
+      echo ($eveningends - 12);
+    } 
+    elseif ($eveningends == 0)
+    {
+      echo "12";
+    }
+    else
+    {
+      echo $eveningends;
+    } 
+    echo "\" maxlength=\"2\">\n";
+
+    echo "<span>:</span>\n";
+    echo "<input class=\"time_minute\" type=\"text\" id=\"area_eveningends_minutes\" name=\"area_eveningends_minutes\" value=\""; 
+    printf("%02d", $eveningends_minutes);
+    echo "\" maxlength=\"2\">\n";
+    if (!$twentyfourhour_format)
+    {
+      echo "<div class=\"group ampm\">\n";
+      $checked = ($eveningends < 12) ? "checked=\"checked\"" : "";
+      echo "<label><input name=\"area_evening_ampm\" type=\"radio\" value=\"am\" $checked>" . 
+           utf8_strftime($strftime_format['ampm'], mktime(1,0,0,1,1,2000)) . 
+           "</label>\n";
+      $checked = ($eveningends >= 12) ? "checked=\"checked\"" : "";
+      echo "<label><input name=\"area_evening_ampm\" type=\"radio\" value=\"pm\" $checked>" .
+           utf8_strftime($strftime_format['ampm'], mktime(13,0,0,1,1,2000)) .
+           "</label>\n";
+      echo "</div>\n";
+    }
+  echo "</div>\n";  
+  echo "</div>\n";  // last_slot
       ?>
       
 
@@ -1030,7 +1036,7 @@ if (isset($change_area) &&!empty($area))
       echo "<legend>" . get_vocab("booking_policies") . "</legend>\n";
       // Note when using periods
       echo "<div id=\"book_ahead_periods_note\"" .
-           (($enable_periods) ? '' : 'class="js_none"') .
+           (($enable_periods) ? '' : ' class="js_none"') .
            ">\n";
       echo "<label></label><span>" . get_vocab("book_ahead_note_periods") . "</span>";
       echo "</div>\n";

@@ -528,7 +528,7 @@ function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
 //        'label'       The text to be used for the field label.
 //        'name'        The name of the element.
 //      OPTIONAL
-//        'label_after' Whether to pit the label before or after the checkbox.  Default FALSE
+//        'label_after' Whether to put the label before or after the checkbox.  Default FALSE
 //        'id'          The id of the element.  Defaults to be the same as the name.
 //        'value'       The value of the input.  Default ''
 //        'class'       A class (or array of classes) to give the element.  Default NULL
@@ -584,7 +584,9 @@ function generate_checkbox($params)
   
   // generate the HTML
   // no HTML escaping for the label - it is trusted
-  $html  = "<label for=\"" . $params['id'] . "\">";
+  $html  = "<label for=\"" . $params['id'] . "\"";
+  $html .= ($params['label_after']) ? ' class="secondary"' : '';
+  $html .= ">";
   if (!$params['label_after'])
   {
     $html .= $params['label'] . "</label>";
