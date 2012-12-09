@@ -982,133 +982,151 @@ if (isset($change_area) &&!empty($area))
   // dynamically regenerated if the start of the first slot or the resolution change.    The code below is
   // therefore an alternative for non-JavaScript browsers.
   echo "<div class=\"div_time\">\n";
-    echo "<label>" . get_vocab("area_last_slot_start") . ":</label>\n";
-    echo "<input class=\"time_hour\" type=\"text\" id=\"area_eveningends\" name=\"area_eveningends\" value=\"";
-    if ($twentyfourhour_format)
-    {
-      printf("%02d", $eveningends);
-    }
-    elseif ($eveningends > 12)
-    {
-      echo ($eveningends - 12);
-    } 
-    elseif ($eveningends == 0)
-    {
-      echo "12";
-    }
-    else
-    {
-      echo $eveningends;
-    } 
-    echo "\" maxlength=\"2\">\n";
+  if ($twentyfourhour_format)
+  {
+    $value = sprintf("%02d", $eveningends);
+  }
+  elseif ($eveningends > 12)
+  {
+    $value = $eveningends - 12;
+  } 
+  elseif ($eveningends == 0)
+  {
+    $value = 12;
+  }
+  else
+  {
+    $value = $eveningends;
+  } 
+  $params = array('label' => get_vocab("area_last_slot_start") . ":",
+                  'name'  => 'area_eveningends',
+                  'value' => $value,
+                  'attributes' => array('class="time_hour"', 'maxlength="2"'));
+  generate_input($params);
 
-    echo "<span>:</span>\n";
-    echo "<input class=\"time_minute\" type=\"text\" id=\"area_eveningends_minutes\" name=\"area_eveningends_minutes\" value=\""; 
-    printf("%02d", $eveningends_minutes);
-    echo "\" maxlength=\"2\">\n";
-    if (!$twentyfourhour_format)
-    {
-      echo "<div class=\"group ampm\">\n";
-      $checked = ($eveningends < 12) ? "checked=\"checked\"" : "";
-      echo "<label><input name=\"area_evening_ampm\" type=\"radio\" value=\"am\" $checked>" . 
-           utf8_strftime($strftime_format['ampm'], mktime(1,0,0,1,1,2000)) . 
-           "</label>\n";
-      $checked = ($eveningends >= 12) ? "checked=\"checked\"" : "";
-      echo "<label><input name=\"area_evening_ampm\" type=\"radio\" value=\"pm\" $checked>" .
-           utf8_strftime($strftime_format['ampm'], mktime(13,0,0,1,1,2000)) .
-           "</label>\n";
-      echo "</div>\n";
-    }
+  echo "<span>:</span>\n";
+  
+  $params = array('name'       => 'area_eveningends_minutes',
+                  'value'      => sprintf("%02d", $eveningends_minutes),
+                  'attributes' => array('class="time_minute"', 'maxlength="2"'));
+  generate_input($params);
+
+  if (!$twentyfourhour_format)
+  {
+    echo "<div class=\"group ampm\">\n";
+    $checked = ($eveningends < 12) ? "checked=\"checked\"" : "";
+    echo "<label><input name=\"area_evening_ampm\" type=\"radio\" value=\"am\" $checked>" . 
+         utf8_strftime($strftime_format['ampm'], mktime(1,0,0,1,1,2000)) . 
+         "</label>\n";
+    $checked = ($eveningends >= 12) ? "checked=\"checked\"" : "";
+    echo "<label><input name=\"area_evening_ampm\" type=\"radio\" value=\"pm\" $checked>" .
+         utf8_strftime($strftime_format['ampm'], mktime(13,0,0,1,1,2000)) .
+         "</label>\n";
+    echo "</div>\n";
+  }
   echo "</div>\n";  
   echo "</div>\n";  // last_slot
-      ?>
-      
 
-      </fieldset>
+  echo "</fieldset>\n";
         
-      <?php
-      // Booking policies
-      $min_ba_value = $min_book_ahead_secs;
-      toTimeString($min_ba_value, $min_ba_units);
-      $max_ba_value = $max_book_ahead_secs;
-      toTimeString($max_ba_value, $max_ba_units);
-      echo "<fieldset id=\"booking_policies\">\n";
-      echo "<legend>" . get_vocab("booking_policies") . "</legend>\n";
-      // Note when using periods
-      echo "<div id=\"book_ahead_periods_note\"" .
-           (($enable_periods) ? '' : ' class="js_none"') .
-           ">\n";
-      echo "<label></label><span>" . get_vocab("book_ahead_note_periods") . "</span>";
-      echo "</div>\n";
-      // Minimum book ahead
-      echo "<div>\n";
-      echo "<label>" . get_vocab("min_book_ahead") . ":</label>\n";
-      echo "<input class=\"enabler checkbox\" type=\"checkbox\" id=\"area_min_ba_enabled\" name=\"area_min_ba_enabled\"" .
-           (($min_book_ahead_enabled) ? " checked=\"checked\"" : "") . ">\n";
-      echo "<input class=\"text\" type=\"number\" min=\"0\" step=\"1\" name=\"area_min_ba_value\" value=\"$min_ba_value\">";
-      echo "<select id=\"area_min_ba_units\" name=\"area_min_ba_units\">\n";
-      $units = array("seconds", "minutes", "hours", "days", "weeks");
-      foreach ($units as $unit)
-      {
-        echo "<option value=\"$unit\"" .
-             (($min_ba_units == get_vocab($unit)) ? " selected=\"selected\"" : "") .
-             ">" . get_vocab($unit) . "</option>\n";
-      }
-      echo "</select>\n";
-      echo "</div>\n";
-      // Maximum book ahead
-      echo "<div>\n";
-      echo "<label>" . get_vocab("max_book_ahead") . ":</label>\n";
-      echo "<input class=\"enabler checkbox\" type=\"checkbox\" id=\"area_max_ba_enabled\" name=\"area_max_ba_enabled\"" .
-           (($max_book_ahead_enabled) ? " checked=\"checked\"" : "") . ">\n";
-      echo "<input class=\"text\" type=\"number\" min=\"0\" step=\"1\" name=\"area_max_ba_value\" value=\"$max_ba_value\">";
-      echo "<select id=\"area_max_ba_units\" name=\"area_max_ba_units\">\n";
-      $units = array("seconds", "minutes", "hours", "days", "weeks");
-      foreach ($units as $unit)
-      {
-        echo "<option value=\"$unit\"" .
-             (($max_ba_units == get_vocab($unit)) ? " selected=\"selected\"" : "") .
-             ">" . get_vocab($unit) . "</option>\n";
-      }
-      echo "</select>\n";
-      echo "</div>\n";
+  // Booking policies
+  $min_ba_value = $min_book_ahead_secs;
+  toTimeString($min_ba_value, $min_ba_units);
+  $max_ba_value = $max_book_ahead_secs;
+  toTimeString($max_ba_value, $max_ba_units);
+  echo "<fieldset id=\"booking_policies\">\n";
+  echo "<legend>" . get_vocab("booking_policies") . "</legend>\n";
+  // Note when using periods
+  echo "<div id=\"book_ahead_periods_note\"" .
+       (($enable_periods) ? '' : ' class="js_none"') .
+       ">\n";
+  echo "<label></label><span>" . get_vocab("book_ahead_note_periods") . "</span>";
+  echo "</div>\n";
+  
+  // Minimum book ahead
+  echo "<div>\n";
+  $params = array('label' => get_vocab("min_book_ahead") . ":",
+                  'name'  => 'area_min_ba_enabled',
+                  'value' => $min_book_ahead_enabled,
+                  'class' => 'enabler');
+  generate_checkbox($params);
+  $attributes = array('class="text"',
+                      'type="number"',
+                      'min="0"',
+                      'step="1"');
+  $params = array('name'       => 'area_min_ba_value',
+                  'value'      => $min_ba_value,
+                  'attributes' => $attributes);
+  generate_input($params);
+  $units = array("seconds", "minutes", "hours", "days", "weeks");
+  $options = array();
+  foreach ($units as $unit)
+  {
+    $options[$unit] = get_vocab($unit);
+  }
+  $params = array('name'    => 'area_min_ba_units',
+                  'value'   => array_search($min_ba_units, $options),
+                  'options' => $options);
+  generate_select($params);
+  echo "</div>\n";
+  
+  // Maximum book ahead
+  echo "<div>\n";
+  $params = array('label' => get_vocab("max_book_ahead") . ":",
+                  'name'  => 'area_max_ba_enabled',
+                  'value' => $max_book_ahead_enabled,
+                  'class' => 'enabler');
+  generate_checkbox($params);
+  $attributes = array('class="text"',
+                      'type="number"',
+                      'min="0"',
+                      'step="1"');
+  $params = array('name'       => 'area_max_ba_value',
+                  'value'      => $max_ba_value,
+                  'attributes' => $attributes);
+  generate_input($params);
+  $params = array('name'    => 'area_max_ba_units',
+                  'value'   => array_search($max_ba_units, $options),
+                  'options' => $options);  // options same as before
+  generate_select($params);
+  echo "</div>\n";
       
-      // The max_per booking policies
-      echo "<table>\n";
+  // The max_per booking policies
+  echo "<table>\n";
       
-      echo "<thead>\n";
-      echo "<tr>\n";
-      echo "<th></th>\n";
-      echo "<th>" . get_vocab("this_area") . "</th>\n";
-      echo "<th title=\"" . get_vocab("whole_system_note") . "\">" . get_vocab("whole_system") . "</th>\n";
-      echo "</tr>\n";
-      echo "</thead>\n";
+  echo "<thead>\n";
+  echo "<tr>\n";
+  echo "<th></th>\n";
+  echo "<th>" . get_vocab("this_area") . "</th>\n";
+  echo "<th title=\"" . get_vocab("whole_system_note") . "\">" . get_vocab("whole_system") . "</th>\n";
+  echo "</tr>\n";
+  echo "</thead>\n";
       
-      echo "<tbody>\n";
-      foreach ($interval_types as $interval_type)
-      {
-        echo "<tr>\n";
-        echo "<td><label>" . get_vocab("max_per_${interval_type}") . ":</label></td>\n";
-        $var = "max_per_${interval_type}_enabled";
-        echo "<td><input class=\"enabler checkbox\" type=\"checkbox\" id=\"area_max_per_${interval_type}_enabled\" name=\"area_max_per_${interval_type}_enabled\"" .
-             (($max_per_interval_area_enabled[$interval_type]) ? " checked=\"checked\"" : "") .
-             ">\n";
-        $var = "max_per_${interval_type}";
-        echo "<input class=\"text\" type=\"number\" min=\"0\" step=\"1\" name=\"area_max_per_${interval_type}\" value=\"$max_per_interval_area[$interval_type]\"></td>\n"; 
-        echo "<td>\n";
-        echo "<input class=\"checkbox\" type=\"checkbox\" disabled=\"disabled\"" .
-             (($max_per_interval_global_enabled[$interval_type]) ? " checked=\"checked\"" : "") .
-             ">\n";
-        echo "<input class=\"text\" disabled=\"disabled\" value=\"" . $max_per_interval_global[$interval_type] . "\">\n";
-        echo "</td>\n";
-        echo "</tr>\n";
-      }
-      echo "</tbody>\n";
+  echo "<tbody>\n";
+  foreach ($interval_types as $interval_type)
+  {
+    echo "<tr>\n";
+    echo "<td><label>" . get_vocab("max_per_${interval_type}") . ":</label></td>\n";
+    $var = "max_per_${interval_type}_enabled";
+    echo "<td><input class=\"enabler checkbox\" type=\"checkbox\" id=\"area_max_per_${interval_type}_enabled\" name=\"area_max_per_${interval_type}_enabled\"" .
+         (($max_per_interval_area_enabled[$interval_type]) ? " checked=\"checked\"" : "") .
+         ">\n";
+    $var = "max_per_${interval_type}";
+    echo "<input class=\"text\" type=\"number\" min=\"0\" step=\"1\" name=\"area_max_per_${interval_type}\" value=\"$max_per_interval_area[$interval_type]\"></td>\n"; 
+    echo "<td>\n";
+    echo "<input class=\"checkbox\" type=\"checkbox\" disabled=\"disabled\"" .
+         (($max_per_interval_global_enabled[$interval_type]) ? " checked=\"checked\"" : "") .
+         ">\n";
+    echo "<input class=\"text\" disabled=\"disabled\" value=\"" . $max_per_interval_global[$interval_type] . "\">\n";
+    echo "</td>\n";
+    echo "</tr>\n";
+  }
+  echo "</tbody>\n";
       
-      echo "</table>\n";
+  echo "</table>\n";
       
       
-      echo "</fieldset>\n";
+  echo "</fieldset>\n";
       ?>
       
       <fieldset>
