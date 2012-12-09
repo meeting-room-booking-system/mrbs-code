@@ -1107,11 +1107,9 @@ if (isset($change_area) &&!empty($area))
   {
     echo "<tr>\n";
     echo "<td><label>" . get_vocab("max_per_${interval_type}") . ":</label></td>\n";
-    $var = "max_per_${interval_type}_enabled";
     echo "<td><input class=\"enabler checkbox\" type=\"checkbox\" id=\"area_max_per_${interval_type}_enabled\" name=\"area_max_per_${interval_type}_enabled\"" .
          (($max_per_interval_area_enabled[$interval_type]) ? " checked=\"checked\"" : "") .
          ">\n";
-    $var = "max_per_${interval_type}";
     echo "<input class=\"text\" type=\"number\" min=\"0\" step=\"1\" name=\"area_max_per_${interval_type}\" value=\"$max_per_interval_area[$interval_type]\"></td>\n"; 
     echo "<td>\n";
     echo "<input class=\"checkbox\" type=\"checkbox\" disabled=\"disabled\"" .
