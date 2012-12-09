@@ -158,7 +158,7 @@ function generate_search_criteria(&$vars)
         if ($confirmation_somewhere)
         {
           echo "<div id=\"div_confirmationstatus\">\n";
-          $options = array(CONFIRMED_BOTH => 'both', CONFIRMED_YES => 'confirmed', CONFIRMED_NO => 'tentative');
+          $options = array(CONFIRMED_BOTH => get_vocab("both"), CONFIRMED_YES => get_vocab("confirmed"), CONFIRMED_NO => get_vocab("tentative"));
           $params = array('label'   => get_vocab("confirmation_status") . ':',
                           'name'    => 'match_confirmed',
                           'options' => $options,
@@ -175,7 +175,7 @@ function generate_search_criteria(&$vars)
         if ($approval_somewhere)
         {
           echo "<div id=\"div_approvalstatus\">\n";
-          $options = array(APPROVED_BOTH => 'both', APPROVED_YES => 'approved', APPROVED_NO => 'awaiting_approval');
+          $options = array(APPROVED_BOTH => get_vocab("both"), APPROVED_YES => get_vocab("approved"), APPROVED_NO => get_vocab("awaiting_approval"));
           $params = array('label'   => get_vocab("approval_status") . ':',
                           'name'    => 'match_approved',
                           'options' => $options,
