@@ -1193,6 +1193,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   // Headers part (extra headers - the standard headers will already be there)
   $headers = array();
   $headers['From'] = $addresses['from'];
+  $headers['Auto-Submitted'] = 'auto-generated';
   if ($backend != 'mail')
   {
     $headers['To'] = $addresses['to'];
