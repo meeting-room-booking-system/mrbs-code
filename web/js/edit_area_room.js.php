@@ -11,33 +11,25 @@ if ($use_strict)
 {
   echo "'use strict';\n";
 }
-?>
 
-var enablePeriods;
-  
-function toggleMode(form, speed)
+// Show or Hide the settings for Times and the note about Periods 
+// as appropriate ?>
+function toggleMode(speed)
 {
-  if (speed === undefined)
+  if (typeof speed === 'undefined')
   {
     speed = 'slow';
   }
-  var periodsChecked = form.area_enable_periods[0].checked;
-  if (periodsChecked != enablePeriods)
+  
+  if ($('input:radio[name=area_enable_periods]:checked').val() === '0')
   {
-    enablePeriods = !enablePeriods;
-    $('#time_settings').animate({
-      opacity : 'toggle',
-      height: 'toggle'
-      }, speed);
-  }
-  <?php // Show or Hide the note about periods as appropriate ?>
-  if (periodsChecked)
-  {
-    $('#book_ahead_periods_note').show(speed);
+    $('#book_ahead_periods_note').hide(speed);
+    $('#time_settings').show(speed);
   }
   else
   {
-    $('#book_ahead_periods_note').hide(speed);
+    $('#book_ahead_periods_note').show(speed);
+    $('#time_settings').hide(speed);
   }
 }
 
@@ -199,20 +191,11 @@ init = function() {
   // [This method works if there are no periods-specific settings.
   // When we get those we will have to do something different]
   ?>
-  var form = document.getElementById('edit_area');
-  if (form)
-  {
-    enablePeriods = false;
-    if (form.area_enable_periods[0].checked)
-    {
-      toggleMode(form, 0);
-      $('#book_ahead_periods_note').show();
-    }
-    else
-    {
-      $('#book_ahead_periods_note').hide();
-    }
-  }
+  $('input:radio[name=area_enable_periods]').click(function() {
+      toggleMode('fast');
+    });
+  toggleMode(0);
+
     
   <?php
   // Where we've got enabling checkboxes, apply a change event to them so that

@@ -817,123 +817,127 @@ if (isset($change_area) &&!empty($area))
   // the config file.    A little bit inefficient repeating the SQL query
   // we've just done, but it makes the code simpler and this page is not used very often.
   get_area_settings($area);
-  ?>
 
-  <form class="form_general" id="edit_area" action="edit_area_room.php" method="post">
-    <fieldset class="admin">
-    <legend><?php echo get_vocab("editarea") ?></legend>
+  echo "<form class=\"form_general\" id=\"edit_area\" action=\"edit_area_room.php\" method=\"post\">\n";
+  echo "<fieldset class=\"admin\">\n";
+  echo "<legend>" . get_vocab("editarea") . "</legend>\n";
   
-      <fieldset>
-      <legend></legend>
-        <?php
-        if (FALSE == $valid_email)
-        {
-          echo "<p class=\"error\">" .get_vocab('invalid_email') . "</p>\n";
-        }
-        if (FALSE == $valid_resolution)
-        {
-          echo "<p class=\"error\">" .get_vocab('invalid_resolution') . "</p>\n";
-        }
-        if (FALSE == $enough_slots)
-        {
-          echo "<p class=\"error\">" .get_vocab('too_many_slots') . "</p>\n";
-        }
-        ?>
-      </fieldset>
+  // Any error messages
+  echo "<fieldset>\n";
+  echo "<legend></legend>\n";
+  if (FALSE == $valid_email)
+  {
+    echo "<p class=\"error\">" .get_vocab('invalid_email') . "</p>\n";
+  }
+  if (FALSE == $valid_resolution)
+  {
+    echo "<p class=\"error\">" .get_vocab('invalid_resolution') . "</p>\n";
+  }
+  if (FALSE == $enough_slots)
+  {
+    echo "<p class=\"error\">" .get_vocab('too_many_slots') . "</p>\n";
+  }
+  echo "</fieldset>\n";
   
-      <fieldset>
-      <legend><?php echo get_vocab("general_settings")?></legend>
-        <input type="hidden" name="area" value="<?php echo $row["id"]?>">
-    
-        <div>
-        <label for="area_name"><?php echo get_vocab("name") ?>:</label>
-        <input type="text" id="area_name" name="area_name" value="<?php echo htmlspecialchars($row["area_name"]); ?>">
-        </div>
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("general_settings") . "</legend>\n";
+  echo "<input type=\"hidden\" name=\"area\" value=\"" . $row["id"] . "\">\n";
+  
+  // Area name  
+  echo "<div>\n";
+  $params = array('label' => get_vocab("name") . ":",
+                  'name'  => 'area_name',
+                  'value' => $row['area_name']);
+  generate_input($params);
+  echo "</div>\n";
         
-        <?php
-        // Status - Enabled or Disabled
-        echo "<div id=\"status\">\n";
-        echo "<label title=\"" . get_vocab("disabled_area_note") . "\">" . get_vocab("status") . ":</label>\n";
-        echo "<div class=\"group\">\n";
-        echo "<label>\n";
-        $checked = ($row['disabled']) ? "" : " checked=\"checked\"";
-        echo "<input class=\"radio\" type=\"radio\" name=\"area_disabled\" value=\"0\"$checked>\n";
-        echo get_vocab("enabled") . "</label>\n";
-        echo "<label>\n";
-        $checked = ($row['disabled']) ? " checked=\"checked\"" : "";
-        echo "<input class=\"radio\" type=\"radio\" name=\"area_disabled\" value=\"1\"$checked>\n";
-        echo get_vocab("disabled") . "</label>\n";
-        echo "</div>\n";
-        echo "</div>\n";
+  // Status - Enabled or Disabled
+  echo "<div id=\"status\">\n";
+  $options = array('0' => get_vocab("enabled"),
+                   '1' => get_vocab("disabled"));
+  $params = array('label'       => get_vocab("status") . ":",
+                  'label_title' => get_vocab("disabled_area_note"),
+                  'name'        => 'area_disabled',
+                  'value'       => ($row['disabled']) ? '1' : '0',
+                  'options'     => $options);
+  generate_radio_group($params);
+  echo "</div>\n";
         
-        // Timezone
-        create_field_entry_timezone();
-        ?>
-    
-        <div>
-        <?php
-        echo "<label for=\"area_admin_email\" title=\"" . get_vocab("email_list_note") . "\">" . get_vocab("area_admin_email") . ":</label>\n";
-        ?>
-        <textarea id="area_admin_email" name="area_admin_email" rows="4" cols="40"><?php echo htmlspecialchars($row["area_admin_email"]); ?></textarea>
-        </div>
+  // Timezone
+  create_field_entry_timezone();
+  
+  // Area admin email
+  echo "<div>\n";
+  $params = array('label'       => get_vocab("area_admin_email") . ":",
+                  'label_title' => get_vocab("email_list_note"),
+                  'name'        => 'area_admin_email',
+                  'value'       => $row['area_admin_email'],
+                  'attributes'  => array('rows="4"', 'cols="40"'));
+  generate_textarea($params);
+  echo "</div>\n";
       
-        <?php
-        // The custom HTML
-        echo "<div>\n";
-        echo "<label for=\"area_custom_html\" title=\"" . get_vocab("custom_html_note") . "\">" . get_vocab("custom_html") . ":</label>\n";
-        echo "<textarea id=\"area_custom_html\" name=\"custom_html\" rows=\"4\" cols=\"40\">\n";
-        echo htmlspecialchars($row['custom_html']);
-        echo "</textarea>\n";
-        echo "</div>\n";
+  // The custom HTML
+  echo "<div>\n";
+  $params = array('label'       => get_vocab("custom_html") . ":",
+                  'label_title' => get_vocab("custom_html_note"),
+                  'name'        => 'custom_html',
+                  'value'       => $row['custom_html'],
+                  'attributes'  => array('rows="4"', 'cols="40"'));
+  generate_textarea($params);
+  echo "</div>\n";
         
-        // Mode - Times or Periods
-        echo "<div id=\"mode\">\n";
-        echo "<label>" . get_vocab("mode") . ":</label>\n";
-        echo "<div class=\"group\">\n";
-        echo "<label>\n";
-        $checked = ($enable_periods) ? " checked=\"checked\"" : "";
-        echo "<input class=\"radio\" type=\"radio\" name=\"area_enable_periods\" value=\"1\" onClick=\"toggleMode(this.form)\"$checked>\n";
-        echo get_vocab("mode_periods") . "</label>\n";
-        echo "<label>\n";
-        $checked = ($enable_periods) ? "" : " checked=\"checked\"";
-        echo "<input class=\"radio\" type=\"radio\" name=\"area_enable_periods\" value=\"0\" onClick=\"toggleMode(this.form)\"$checked>\n";
-        echo get_vocab("mode_times") . "</label>\n";
-        echo "</div>\n";
-        echo "</div>\n";
+  // Mode - Times or Periods
+  echo "<div id=\"mode\">\n";
+  $options = array('1' => get_vocab("mode_periods"),
+                   '0' => get_vocab("mode_times"));
+  $params = array('label'   => get_vocab("mode") . ":",
+                  'name'    => 'area_enable_periods',
+                  'value'   => ($enable_periods) ? '1' : '0',
+                  'options' => $options);
+  generate_radio_group($params);
+  echo "</div>\n";
       
-      echo "</fieldset>\n";
-      ?>
+  echo "</fieldset>\n";
 
-      
-      <fieldset  id="time_settings">
-      <legend><?php echo get_vocab("time_settings")?>
-      <span class="js_none">&nbsp;&nbsp;(<?php echo get_vocab("times_only") ?>)</span>
-      </legend>
-      <div class="div_time">
-        <label><?php echo get_vocab("area_first_slot_start")?>:</label>
-        <?php
-        echo "<input class=\"time_hour\" type=\"text\" id=\"area_morningstarts\" name=\"area_morningstarts\" value=\"";
-        if ($twentyfourhour_format)
-        {
-          printf("%02d", $morningstarts);
-        }
-        elseif ($morningstarts > 12)
-        {
-          echo ($morningstarts - 12);
-        } 
-        elseif ($morningstarts == 0)
-        {
-          echo "12";
-        }
-        else
-        {
-          echo $morningstarts;
-        } 
-        echo "\" maxlength=\"2\">\n";
-        ?>
-        <span>:</span>
-        <input class="time_minute" type="text" id="area_morningstarts_minutes" name="area_morningstarts_minutes" value="<?php printf("%02d", $morningstarts_minutes) ?>" maxlength="2">
-        <?php
+  // If we're using JavaScript, don't display the time settings section
+  // if we're using periods (the JavaScript will display it if we change)
+  echo "<fieldset id=\"time_settings\"" .
+       (($enable_periods) ? ' class="js_none"' : '') .
+       ">\n";
+  echo "<legend>" . get_vocab("time_settings");
+  echo "<span class=\"js_none\">&nbsp;&nbsp;(" . get_vocab("times_only") . ")</span>";
+  echo "</legend>\n";
+  
+  echo "<div class=\"div_time\">\n";
+  echo "<label>" . get_vocab("area_first_slot_start") . ":</label>\n";
+  if ($twentyfourhour_format)
+  {
+    $value = sprintf("%02d", $morningstarts);
+  }
+  elseif ($morningstarts > 12)
+  {
+    $value = $morningstarts - 12;
+  } 
+  elseif ($morningstarts == 0)
+  {
+    $value = 12;
+  }
+  else
+  {
+    $value = $morningstarts;
+  } 
+  $params = array('name'       => 'area_morningstarts',
+                  'value'      => $value,
+                  'attributes' => array('class="time_hour"', 'maxlength="2"'));
+  generate_input($params);
+  
+  echo "<span>:</span>\n";
+  
+  $params = array('name'       => 'area_morningstarts_minutes',
+                  'value'      => sprintf("%02d", $morningstarts_minutes),
+                  'attributes' => array('class="time_minute"', 'maxlength="2"'));
+  generate_input($params);
+        
         if (!$twentyfourhour_format)
         {
           echo "<div class=\"group ampm\">\n";
@@ -1025,7 +1029,9 @@ if (isset($change_area) &&!empty($area))
       echo "<fieldset id=\"booking_policies\">\n";
       echo "<legend>" . get_vocab("booking_policies") . "</legend>\n";
       // Note when using periods
-      echo "<div id=\"book_ahead_periods_note\">\n";
+      echo "<div id=\"book_ahead_periods_note\"" .
+           (($enable_periods) ? '' : 'class="js_none"') .
+           ">\n";
       echo "<label></label><span>" . get_vocab("book_ahead_note_periods") . "</span>";
       echo "</div>\n";
       // Minimum book ahead
