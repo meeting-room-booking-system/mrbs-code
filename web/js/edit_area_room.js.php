@@ -168,7 +168,8 @@ function generateLastSlotSelect()
   <?php // finally, replace the contents of the <div> with the new <select> ?>
   $('#last_slot').empty()
                  .append(label)
-                 .append(select);
+                 .append(select)
+                 .css('visibility', 'visible');
 }
 
 <?php

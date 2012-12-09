@@ -976,7 +976,7 @@ if (isset($change_area) &&!empty($area))
   generate_checkbox($params);
   echo "</div>\n";
   
-  echo "<div id=\"last_slot\">\n";
+  echo "<div id=\"last_slot\" class=\"js_hidden\">\n";
   // The contents of this div will be overwritten by JavaScript if enabled.    The JavaScript version is a drop-down
   // select input with options limited to those times for the last slot start that are valid.   The options are
   // dynamically regenerated if the start of the first slot or the resolution change.    The code below is
