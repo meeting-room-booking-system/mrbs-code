@@ -1193,40 +1193,32 @@ if (isset($change_area) &&!empty($area))
                   'value'   => ($private_default) ? '1' : '0');
   generate_radio_group($params);
 
-      ?>
-      </fieldset>
+  echo "</fieldset>\n";
     
-      <fieldset>
-      <legend><?php echo get_vocab("private_display")?></legend>
-        <label>
-          <?php echo get_vocab("private_display_label")?>
-          <span id="private_display_caution">
-            <?php echo get_vocab("private_display_caution")?>
-          </span>
-        </label>
-        <div class="group" id="private_override" >
-          <div>
-            <label>
-              <?php $checked = ($private_override == "none") ? " checked=\"checked\"" : "" ?>
-              <input class="radio" type="radio" name="area_private_override" value="none"<?php echo $checked ?>>
-              <?php echo get_vocab("treat_respect")?>
-            </label>
-          </div>
-          <div>
-            <label>
-              <?php $checked = ($private_override == "private") ? " checked=\"checked\"" : "" ?>
-              <input class="radio" type="radio" name="area_private_override" value="private"<?php echo $checked ?>>
-              <?php echo get_vocab("treat_private")?>
-            </label>
-          </div>
-          <div>
-            <label>
-              <?php $checked = ($private_override == "public") ? " checked=\"checked\"" : "" ?>
-              <input class="radio" type="radio" name="area_private_override" value="public"<?php echo $checked ?>>
-              <?php echo get_vocab("treat_public")?>
-            </label>
-          </div>
-        </div>
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("private_display") . "</legend>\n";
+  echo "<label>" . get_vocab("private_display_label");
+  echo "<span id=\"private_display_caution\">";
+  echo get_vocab("private_display_caution");
+  echo "</span>";
+  echo "</label>\n";
+
+  echo "<div class=\"group\" id=\"private_override\">\n";
+  $options = array('none'    => get_vocab("treat_respect"),
+                   'private' => get_vocab("treat_private"),
+                   'public'  => get_vocab("treat_public"));
+  foreach ($options as $value => $text)
+  {
+    echo "<div>\n";
+    $params = array('name'    => 'area_private_override',
+                    'options' => array($value => $text),
+                    'value'   => $private_override);
+    generate_radio($params);
+    echo "</div>\n";
+  }
+  echo "</div>\n";
+  
+      ?>
       </fieldset>
     
       <fieldset class="submit_buttons">
