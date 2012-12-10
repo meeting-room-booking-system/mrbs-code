@@ -1125,73 +1125,75 @@ if (isset($change_area) &&!empty($area))
       
       
   echo "</fieldset>\n";
+  
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("confirmation_settings") . "</legend>\n";
+  
+  // Confirmation enabled
+  echo "<div>\n";
+  $params = array('label' => get_vocab("allow_confirmation") . ":",
+                  'name'  => 'area_confirmation_enabled',
+                  'value' => $confirmation_enabled);
+  generate_checkbox($params);
+  echo "</div>\n";
+  
+  $options = array('1' => get_vocab("default_confirmed"),
+                   '0' => get_vocab("default_tentative"));
+  $params = array('label'   => get_vocab("default_settings_conf") . ":",
+                  'name'    => 'area_confirmed_default',
+                  'options' => $options,
+                  'value'   => ($confirmed_default) ? '1' : '0');
+  generate_radio_group($params);
+
+  echo "</fieldset>\n";
+      
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("approval_settings") . "</legend>\n";
+  echo "<div>\n";
+  $params = array('label' => get_vocab("enable_approval") . ":",
+                  'name'  => 'area_approval_enabled',
+                  'value' => $approval_enabled);
+  generate_checkbox($params);
+  echo "</div>\n";
+
+  echo "<div>\n";
+  $params = array('label' => get_vocab("enable_reminders") . ":",
+                  'name'  => 'area_reminders_enabled',
+                  'value' => $reminders_enabled);
+  generate_checkbox($params);
+  echo "</div>\n";
+  echo "</fieldset>\n";
+  
+  
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("private_settings") . "</legend>\n";
+  
+  // Private enabled
+  echo "<div>\n";
+  $params = array('label' => get_vocab("allow_private") . ":",
+                  'name'  => 'area_private_enabled',
+                  'value' => $private_enabled);
+  generate_checkbox($params);
+  echo "</div>\n";
+
+  // Private mandatory
+  echo "<div>\n";
+  $params = array('label' => get_vocab("force_private") . ":",
+                  'name'  => 'area_private_mandatory',
+                  'value' => $private_mandatory);
+  generate_checkbox($params);
+  echo "</div>\n";
+
+  // Default privacy settings
+  $options = array('1' => get_vocab("default_private"),
+                   '0' => get_vocab("default_public"));
+  $params = array('label' => get_vocab("default_settings"),
+                  'name'  => 'area_private_default',
+                  'options' => $options,
+                  'value'   => ($private_default) ? '1' : '0');
+  generate_radio_group($params);
+
       ?>
-      
-      <fieldset>
-      <legend><?php echo get_vocab("confirmation_settings")?></legend>
-        <div>
-          <label for="area_confirmation_enabled"><?php echo get_vocab("allow_confirmation")?>:</label>
-          <?php $checked = ($confirmation_enabled) ? " checked=\"checked\"" : "" ?>
-          <input class="checkbox" type="checkbox"<?php echo $checked ?> id="area_confirmation_enabled" name="area_confirmation_enabled">
-        </div>
-        <label>
-          <?php echo get_vocab("default_settings_conf")?>:
-        </label>
-        <div class="group">
-          <label>
-            <?php $checked = ($confirmed_default) ? " checked=\"checked\"" : "" ?>
-            <input class="radio" type="radio" name="area_confirmed_default" value="1"<?php echo $checked ?>>
-            <?php echo get_vocab("default_confirmed")?>
-          </label>
-          <label>
-            <?php $checked = ($confirmed_default) ? "" : " checked=\"checked\"" ?>
-            <input class="radio" type="radio" name="area_confirmed_default" value="0"<?php echo $checked ?>>
-            <?php echo get_vocab("default_tentative")?>
-          </label>
-        </div>
-      </fieldset>
-      
-      <fieldset>
-      <legend><?php echo get_vocab("approval_settings")?></legend>
-        <div>
-          <label for="area_approval_enabled"><?php echo get_vocab("enable_approval")?>:</label>
-          <?php $checked = ($approval_enabled) ? " checked=\"checked\"" : "" ?>
-          <input class="checkbox" type="checkbox"<?php echo $checked ?> id="area_approval_enabled" name="area_approval_enabled">
-        </div>
-        <div>
-          <label for="area_reminders_enabled"><?php echo get_vocab("enable_reminders")?>:</label>
-          <?php $checked = ($reminders_enabled) ? " checked=\"checked\"" : "" ?>
-          <input class="checkbox" type="checkbox"<?php echo $checked ?> id="area_reminders_enabled" name="area_reminders_enabled">
-        </div>
-      </fieldset>
-      
-      <fieldset>
-      <legend><?php echo get_vocab("private_settings")?></legend>
-        <div>
-          <label for="area_private_enabled"><?php echo get_vocab("allow_private")?>:</label>
-          <?php $checked = ($private_enabled) ? " checked=\"checked\"" : "" ?>
-          <input class="checkbox" type="checkbox"<?php echo $checked ?> id="area_private_enabled" name="area_private_enabled">
-        </div>
-        <div>
-          <label for="area_private_mandatory"><?php echo get_vocab("force_private")?>:</label>
-          <?php $checked = ($private_mandatory) ? " checked=\"checked\"" : "" ?>
-          <input class="checkbox" type="checkbox"<?php echo $checked ?> id="area_private_mandatory" name="area_private_mandatory">
-        </div>
-        <label>
-          <?php echo get_vocab("default_settings")?>:
-        </label>
-        <div class="group">
-          <label>
-            <?php $checked = ($private_default) ? " checked=\"checked\"" : "" ?>
-            <input class="radio" type="radio" name="area_private_default" value="1"<?php echo $checked ?>>
-            <?php echo get_vocab("default_private")?>
-          </label>
-          <label>
-            <?php $checked = ($private_default) ? "" : " checked=\"checked\"" ?>
-            <input class="radio" type="radio" name="area_private_default" value="0"<?php echo $checked ?>>
-            <?php echo get_vocab("default_public")?>
-          </label>
-        </div>
       </fieldset>
     
       <fieldset>
