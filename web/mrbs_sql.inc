@@ -991,42 +991,56 @@ function mrbsUpdateMoreInfo($id, $series, $user, $note)
 // We also update the ical_sequence number so that any emails that
 // are generated will be treated by calendar clients as referring 
 // to the same meeting, rather than a new meeting.
-// Returns FALSE on failure, TRUE on success
+//
+// Returns FALSE on failure, otherwise an array of start times that
+// have been approved
 function mrbsApproveEntry($id, $series)
 {
   global $tbl_entry, $tbl_repeat;
   
   if ($series)
   {
-    // First update the repeat table
+    // First update the repeat table if it's a series
     $sql = "UPDATE $tbl_repeat 
                SET status=status&(~" . STATUS_AWAITING_APPROVAL . "),
                    ical_sequence=ical_sequence+1
-             WHERE id=$id";
-    if (sql_command($sql) > 0)  // We expect there to be one row affected
+             WHERE id=$id
+             LIMIT 1";
+    if (sql_command($sql) < 0)
     {
-      // Then update the entry table
-      $sql = "UPDATE $tbl_entry 
-                 SET status=status&(~" . STATUS_AWAITING_APPROVAL . "),
-                     ical_sequence=ical_sequence+1
-               WHERE repeat_id=$id";
-      // It's possible that there will be no rows affected if all the
-      // entries have previously been individually approved
-      return (sql_command($sql) >= 0);
+      trigger_error(sql_error(), E_USER_WARNING);
+      fatal_error(FALSE, get_vocab("fatal_db_error"));
     }
-    else
-    {
-      return FALSE;
-    }
+    $id_column = 'repeat_id';
   }
   else
+  {
+    $id_column = 'id';
+  }
+  // Then update the entry table.  First of all we get a list of the
+  // start times that will be approved, then we do the approval.
+  $condition = "$id_column=$id AND status&" . STATUS_AWAITING_APPROVAL . "!=0";
+  $sql = "SELECT start_time
+            FROM $tbl_entry
+           WHERE $condition";
+  $start_times = sql_query_array($sql);
+  // We know there are only count($start_times) entries to be approved
+  // so we can set a LIMIT to improve performance
+  if (($start_times !== FALSE) && (count($start_times) != 0))
   {
     $sql = "UPDATE $tbl_entry 
                SET status=status&(~" . STATUS_AWAITING_APPROVAL . "),
                    ical_sequence=ical_sequence+1
-             WHERE id=$id";
-    return (sql_command($sql) > 0);  // We expect there to be one row affected
+             WHERE $condition
+             LIMIT " . count($start_times);
+    
+    if (sql_command($sql) < 0)
+    {
+      trigger_error(sql_error(), E_USER_WARNING);
+      fatal_error(FALSE, get_vocab("fatal_db_error"));
+    }
   }
+  return $start_times;
 }
 
 

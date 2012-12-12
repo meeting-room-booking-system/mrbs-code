@@ -56,8 +56,9 @@ if (isset($action))
         // Get the current booking data, before we change anything, for use in emails
         $mail_previous = mrbsGetBookingInfo($id, $series);
       }
-      $result = mrbsApproveEntry($id, $series);
-      if (!$result)
+      $start_times = mrbsApproveEntry($id, $series);
+      $result = ($start_times !== FALSE);
+      if ($result === FALSE)
       {
         $returl .= "&error=approve_failed";
       }
