@@ -359,15 +359,14 @@ function create_date_list($dates, $as_html)
 // Generate a list of repeat dates for a series
 //
 // $reps is an array of start_times that have been created/modified/deleted.
-// If not specified the function works them out for itself from the repeat data
-// [In the future it would be better if everything passed in $reps]
-function create_repeat_list($data, $action, $as_html, $reps=NULL)
+function create_repeat_list($data, $action, $as_html, $reps)
 {
   global $max_rep_entrys;
   
-  if ($data['rep_type'] == REP_NONE)
+  if (($data['rep_type'] == REP_NONE) ||
+       in_array($action, array('more_info', 'remind')))
   {
-    return;
+    return '';
   }
 
   // The introductory text
@@ -391,20 +390,6 @@ function create_repeat_list($data, $action, $as_html, $reps=NULL)
     }
   }
   
-  if (!isset($reps))
-  {
-    $reps = mrbsGetRepeatEntryList($data['start_time'], 
-                                   $data['end_date'],
-                                   $rep_details, 
-                                   $max_rep_entrys);
-  
-    // Remove any dates that could not be booked due to conflicts                               
-    if (!empty($data['skip_list']))
-    {
-      $reps = array_diff($reps, $data['skip_list']);
-    }
-  }
-                                                         
   $result .= create_date_list($reps, $as_html);
   
   // Now add in the list of repeat bookings that could not be booked
@@ -424,7 +409,7 @@ function create_repeat_list($data, $action, $as_html, $reps=NULL)
 
 // $start_times is an array of start_times that have been created/modified/deleted.
 // If not specified the function works them out for itself from the repeat data
-function create_body($data, $mail_previous, $compare, $series, $action, $as_html=FALSE, $note='', $start_times=NULL)
+function create_body($data, $mail_previous, $compare, $series, $action, $as_html=FALSE, $note='', $start_times)
 {
   global $returl, $mrbs_company;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
@@ -905,11 +890,12 @@ function create_addresses($data, $action)
  * @param array   $mail_previous contains the data for the previous entry, or is an empty array
  * @param bool    $new_entry     whether this is a new entry or not
  * @param bool    $series        whether this is a series or not
+ * @param   array $start_times   an array of start times that have been made
  * @param string  $action        the booking action (eg "delete", "more_info", etc.)
  * @param string  $note          a note that is used with "more_info"
  * @return bool                  TRUE or PEAR error object if fails
  */
-function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $action="book", $note='')
+function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start_times, $action="book", $note='')
 {
   global $mail_settings, $enable_periods;
   
@@ -976,13 +962,13 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $actio
   // Create the text body
   $compare = !$new_entry;
   $text_body = array();
-  $text_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, FALSE, $note);
+  $text_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, FALSE, $note, $start_times);
   
   // Create the HTML body
   $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, TRUE, $note);
+    $html_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, TRUE, $note, $start_times);
     $html_body['cid'] = generate_global_uid("html");
   }
   

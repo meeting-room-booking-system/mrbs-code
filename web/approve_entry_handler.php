@@ -22,6 +22,7 @@ $user = getUserName();
 
 // Initialise $mail_previous so that we can use it as a parameter for notifyAdminOnBooking
 $mail_previous = array();
+$start_times = array();
 
 // Give the return URL a query string if it doesn't already have one
 if (strpos($returl, '?') === FALSE)
@@ -100,7 +101,7 @@ if (isset($action))
     // so that we will kniow whether to include iCalendar information in the email)
     get_area_settings($data['area_id']);
     // Send the email
-    $result = notifyAdminOnBooking($data, $mail_previous, $is_new_entry, $series, $action, $note);
+    $result = notifyAdminOnBooking($data, $mail_previous, $is_new_entry, $series, $start_times, $action, $note);
   }
 }
 

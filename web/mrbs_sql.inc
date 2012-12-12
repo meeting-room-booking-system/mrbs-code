@@ -1043,6 +1043,12 @@ function mrbsApproveEntry($id, $series)
       fatal_error(FALSE, get_vocab("fatal_db_error"));
     }
   }
+  
+  if (is_array($start_times))
+  {
+    asort($start_times);
+  }
+  
   return $start_times;
 }
 
@@ -1626,6 +1632,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
       $details = mrbsCreateRepeatingEntrys($booking);
       $new_id = $details['id'];
       $is_repeat_table = $details['series'];
+      asort($details['start_times']);
       $result['start_times'] = $details['start_times'];
     }
     else
@@ -1679,7 +1686,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
           $mail_previous = array();
         }
         // Send the email
-        notifyAdminOnBooking($booking, $mail_previous, !isset($id), $is_repeat_table);
+        notifyAdminOnBooking($booking, $mail_previous, !isset($id), $is_repeat_table, $result['start_times']);
       }
     }   
   } // end foreach $bookings
