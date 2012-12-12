@@ -801,17 +801,18 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
  * 
  * Returns:
  *   an array
- *   ['id']      - 0 if an error occurred or if no bookings could be
- *                 made, otherwise an id
- *   ['series']  - boolean: TRUE if the id refers to the repeat table
- *                          FALSE if the id refers to the entry table
+ *   ['id']          - 0 if an error occurred or if no bookings could be
+ *                     made, otherwise an id
+ *   ['series']      - boolean: TRUE if the id refers to the repeat table
+ *                              FALSE if the id refers to the entry table
+ *   ['start_times'] - an array of start times that have been created
  *
  */
 function mrbsCreateRepeatingEntrys($data)
 {
   global $max_rep_entrys;
   
-  $result = array('id' => 0, 'series' => FALSE);
+  $result = array('id' => 0, 'series' => FALSE, 'start_times' => array());
 
   if (!isset($data['skip_list']))
   {
@@ -853,6 +854,7 @@ function mrbsCreateRepeatingEntrys($data)
     $id = mrbsCreateSingleEntry($data);
     $result['id'] = $id;
     $result['series'] = FALSE;
+    $result['start_times'][] = $data['start_time'];
     return $result;
   }
   
@@ -901,6 +903,7 @@ function mrbsCreateRepeatingEntrys($data)
         $data['end_time'] = $reps[$i] + $diff;
 
         $ent_id = mrbsCreateSingleEntry($data);
+        $result['start_times'][] = $data['start_time'];
       }
     }
   }
@@ -1623,12 +1626,14 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
       $details = mrbsCreateRepeatingEntrys($booking);
       $new_id = $details['id'];
       $is_repeat_table = $details['series'];
+      $result['start_times'] = $details['start_times'];
     }
     else
     {
       // Create the entry:
       $new_id = mrbsCreateSingleEntry($booking);
       $is_repeat_table = FALSE;
+      $result['start_times'] = array($booking['start_time']);
     }
     $new_details[] = array('id' => $new_id, 'room_id' => $booking['room_id']);
     $booking['id'] = $new_id;  // Add in the id now we know it
