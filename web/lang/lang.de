@@ -6,7 +6,7 @@
 // The default strings come from lang.en, and anything in a locale
 // specific file will overwrite the default. This is a German file.
 //
-// Translations provided by: Michael Redinger
+// Translations provided by: Michael Redinger and Thomas Bleher
 //
 //
 // This file is PHP code. Treat it as such.
@@ -80,10 +80,22 @@ $vocab["rep_type_1"]         = "täglich";
 $vocab["rep_type_2"]         = "wöchentlich";
 $vocab["rep_type_3"]         = "monatlich";
 $vocab["rep_type_4"]         = "jährlich";
+$vocab["ord_1"]              = "ersten";
+$vocab["ord_2"]              = "zweiten";
+$vocab["ord_3"]              = "dritten";
+$vocab["ord_4"]              = "vierten";
+$vocab["ord_5"]              = "fünften";
+$vocab["ord_-1"]             = "letzten";
+$vocab["ord_-2"]             = "zweitletzten";
+$vocab["ord_-3"]             = "drittletzten";
+$vocab["ord_-4"]             = "viertletzten";
+$vocab["ord_-5"]             = "fünftletzten";
 $vocab["rep_end_date"]       = "Serienende";
 $vocab["rep_rep_day"]        = "Serientag";
 $vocab["rep_freq"]           = "Häufigkeit";
 $vocab["rep_num_weeks"]      = "Anzahl Wochen";
+$vocab["month_absolute"]     = "Am Tag";
+$vocab["month_relative"]     = "Am";
 $vocab["skip_conflicts"]     = "Termine überspringen, die mit bestehenden Terminen in Konflikt sind";
 $vocab["ctrl_click"]         = "Strg-Taste plus Mausklick um mehr als einen Raum auszuwählen";
 $vocab["entryid"]            = "Eintrags-ID. ";
@@ -106,6 +118,7 @@ $vocab["description"]        = "Beschreibung";
 $vocab["room"]               = "Raum";
 $vocab["createdby"]          = "Erstellt von";
 $vocab["lastupdate"]         = "Letzte Änderung";
+$vocab["repeat_on"]          = "Serientermin-Tag";
 $vocab["deleteentry"]        = "Eintrag löschen";
 $vocab["deleteseries"]       = "Alle Einträge löschen";
 $vocab["exportentry"]        = "Eintrag exportieren";
@@ -173,11 +186,23 @@ $vocab["reason"]              = "Begründung";
 $vocab["info_requested"]      = "Informationen angefordert";
 $vocab["min_time_before"]     = "Die minimale Zeit zwischen jetzt und dem Beginn des Eintrags ist";
 $vocab["max_time_before"]     = "Die maximale Zeit zwischen jetzt und dem Ende des Eintrags ist";
+$vocab["latest_booking_date"]     = "Der spätest mögliche Buchungstermin ist";
 $vocab["max_booking_duration"]    = "Die maximale Dauer einer Buchung beträgt";
+$vocab["max_per_day_global"]      = "Die maximale Anzahl an Buchungen pro Tag und Benutzer im gesamten System beträgt";
+$vocab["max_per_week_global"]     = "Die maximale Anzahl an Buchungen pro Woche und Benutzer im gesamten System beträgt";
+$vocab["max_per_month_global"]    = "Die maximale Anzahl an Buchungen pro Monat und Benutzer im gesamten System beträgt";
+$vocab["max_per_year_global"]     = "Die maximale Anzahl an Buchungen pro Jahr und Benutzer im gesamten System beträgt";
+$vocab["max_per_future_global"]   = "Die maximale Anzahl an ausstehenden Buchungen pro Benutzer im gesamten System beträgt";
+$vocab["max_per_day_area"]        = "Die maximale Anzahl an Buchungen pro Tag und Benutzer in diesem Bereich beträgt";
+$vocab["max_per_week_area"]       = "Die maximale Anzahl an Buchungen pro Woche und Benutzer in diesem Bereich beträgt";
+$vocab["max_per_month_area"]      = "Die maximale Anzahl an Buchungen pro Monat und Benutzer in diesem Bereich beträgt";
+$vocab["max_per_year_area"]       = "Die maximale Anzahl an Buchungen pro Jahr und Benutzer in diesem Bereich beträgt";
+$vocab["max_per_future_area"]     = "Die maximale Anzahl an ausstehenden Buchungen pro Benutzer in diesem Bereich beträgt";
 $vocab["skip_and_book"]           = "Überspringen und buchen";
 $vocab["skip_and_book_note"]      = "Buchung eintragen, dabei Buchungstermine mit Konflikten überspringen";
 
 // Used in pending.php
+$vocab["changes_saved"]           = "Änderungen gespeichert";
 $vocab["pending"]            = "Eintrag erwartet Genehmigung";
 $vocab["none_outstanding"]   = "Sie haben keine Einträge, die genehmigt werden müssen.";
 
@@ -260,7 +285,13 @@ $vocab["match_type"]         = "Nach Kategorie";
 $vocab["ctrl_click_type"]    = "Strg-Taste plus Mausklick um mehr als eine Kategorie auszuwählen";
 $vocab["match_entry"]        = "Suche Kurzbeschreibung";
 $vocab["match_descr"]        = "Suche Beschreibung";
+$vocab["output"]                = "Ausgabe";
+$vocab["summary"]               = "Zusammenfassung";
+$vocab["format"]                = "Format";
+$vocab["html"]                  = "HTML";
+$vocab["csv"]                   = "CSV";
 $vocab["ical"]               = "Bericht als iCalendar (.ics-Datei) - ohne Serien";
+$vocab["combination_not_supported"] = "Diese Ausgabe wird für dieses Format nicht unterstützt";
 $vocab["summarize_by"]       = "Zusammenfassung nach";
 $vocab["sum_by_descrip"]     = "Kurzbeschreibung";
 $vocab["sum_by_creator"]     = "Ersteller";
@@ -275,6 +306,7 @@ $vocab["total"]              = "Gesamt";
 $vocab["submitquery"]        = "Bericht erstellen";
 $vocab["sort_rep"]           = "Sortiere Bericht nach";
 $vocab["sort_rep_time"]      = "Startzeit/Datum ";
+$vocab["sort_room"]             = "Raum";
 $vocab["fulldescription_short"] = "Vollständige Beschreibung";
 $vocab["both"]               = "Alle";
 $vocab["privacy_status"]     = "Privatsphärenstatus";
@@ -369,6 +401,14 @@ $vocab["sort_key_note"]           = "Dieser ist der Schlüssel zum Sortieren der
 $vocab["booking_policies"]        = "Vorgaben für Einträge";
 $vocab["min_book_ahead"]          = "Vorausbuchung mindestens";
 $vocab["max_book_ahead"]          = "Vorausbuchung höchstens";
+$vocab["this_area"]               = "Dieser Bereich";
+$vocab["whole_system"]            = "Gesamtes System";
+$vocab["whole_system_note"]       = "Die Werte für das Gesamtsystem werden in der Config-Datei gesetzt";
+$vocab["max_per_day"]             = "Maximale Anzahl pro Tag";
+$vocab["max_per_week"]            = "Maximale Anzahl pro Woche";
+$vocab["max_per_month"]           = "Maximale Anzahl pro Monat";
+$vocab["max_per_year"]            = "Maximale Anzahl pro Jahr";
+$vocab["max_per_future"]          = "Maximale Anzahl in der Zukunft";
 $vocab["custom_html"]             = "eigener HTML-Code (zusätzlich)";
 $vocab["custom_html_note"]        = "Dieses Feld kann zum Einbauen eigenes HTML-Codes genutzt werden, zum Beispiel zum einbetten einer Google-Karte";
 $vocab["email_list_note"]         = "Geben Sie eine Liste von Email-Adressen zum Empfang von Benachrichtigungen an (eine Adresse pro Zeile oder durch Kommas getrennt)";
