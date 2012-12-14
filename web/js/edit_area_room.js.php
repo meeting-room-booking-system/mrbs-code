@@ -45,12 +45,13 @@ function getTimeString(time, twentyfourhour_format)
    // internationalised format, but is probably sufficient for a 
    // rarely used admin page.
    ?>
-   var minutes = time % 60;
+   var ap,
+       minutes = time % 60;
    time -= minutes;
    var hour = time/60;
    if (!twentyfourhour_format)
    {
-     var ap = "<?php echo utf8_strftime($strftime_format['ampm'], mktime(10, 0, 0)) ?>";
+     ap = "<?php echo utf8_strftime($strftime_format['ampm'], mktime(10, 0, 0)) ?>";
      if (hour > 11) {ap = "<?php echo utf8_strftime($strftime_format['ampm'], mktime(14, 0, 0)) ?>";}
      if (hour > 12) {hour = hour - 12;}
      if (hour == 0) {hour = 12;}
