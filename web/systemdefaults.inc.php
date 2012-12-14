@@ -393,7 +393,7 @@ $default_room = 0;
 
 // Define clipping behaviour for the cells in the day and week views.
 // Set to TRUE if you want the cells in the day and week views to be clipped.   This
-// gives a table where all the rows have the same hight, regardless of content.
+// gives a table where all the rows have the same height, regardless of content.
 // Alternatively set to FALSE if you want the cells to expand to fit the content.
 // (FALSE not supported in IE6 and IE7 due to their incomplete CSS support)
 $clipped = TRUE;                
