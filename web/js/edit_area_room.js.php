@@ -46,19 +46,38 @@ function getTimeString(time, twentyfourhour_format)
    // rarely used admin page.
    ?>
    var ap,
+       timeString,
        minutes = time % 60;
    time -= minutes;
    var hour = time/60;
    if (!twentyfourhour_format)
    {
-     ap = "<?php echo utf8_strftime($strftime_format['ampm'], mktime(10, 0, 0)) ?>";
-     if (hour > 11) {ap = "<?php echo utf8_strftime($strftime_format['ampm'], mktime(14, 0, 0)) ?>";}
-     if (hour > 12) {hour = hour - 12;}
-     if (hour == 0) {hour = 12;}
+     if (hour > 11)
+     {
+       ap = "<?php echo utf8_strftime($strftime_format['ampm'], mktime(14, 0, 0)) ?>";
+     }
+     else
+     {
+       ap = "<?php echo utf8_strftime($strftime_format['ampm'], mktime(10, 0, 0)) ?>";
+     }
+     if (hour > 12)
+     {
+       hour = hour - 12;
+     }
+     if (hour === 0)
+     {
+       hour = 12;
+     }
    }
-   if (hour < 10) {hour   = "0" + hour;}
-   if (minutes < 10) {minutes = "0" + minutes;}
-   var timeString = hour + ':' + minutes;
+   if (hour < 10)
+   {
+     hour   = "0" + hour;
+   }
+   if (minutes < 10)
+   {
+     minutes = "0" + minutes;
+   }
+   timeString = hour + ':' + minutes;
    if (!twentyfourhour_format)
    {
      timeString += ap;
@@ -69,11 +88,11 @@ function getTimeString(time, twentyfourhour_format)
 
 function convertTo24(hour, ampm)
 {
-  if ((ampm == "pm") && (hour < 12))
+  if ((ampm === "pm") && (hour < 12))
   {
     hour += 12;
   }
-  if ((ampm == "am") && (hour > 11))
+  if ((ampm === "am") && (hour > 11))
   {
     hour -= 12;
   }
@@ -94,7 +113,7 @@ function generateLastSlotSelect()
       minsPerDay = 24*60;
       
   resMins = parseInt($('#area_res_mins').val(), 10);
-  if (resMins == 0)
+  if (resMins === 0)
   {
     return;  <?php // avoid endless loops and divide by zero errors ?>
   }
