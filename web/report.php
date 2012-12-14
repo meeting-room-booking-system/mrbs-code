@@ -636,7 +636,7 @@ function output_foot_rows(&$rows, $format)
 }
 
 
-function report_row(&$rows, &$data, $sortby)
+function report_row(&$rows, &$data)
 {
   global $output_format, $ajax, $ajax_capable;
   global $csv_row_sep, $csv_col_sep;
@@ -1529,7 +1529,7 @@ if ($phase == 2)
       $body_rows = array();
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
-        report_row($body_rows, $row, $sortby);
+        report_row($body_rows, $row);
       }
       output_body_rows($body_rows, $output_format);
       close_report();
