@@ -858,11 +858,11 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     $column_width = (int)(95 / sql_count($res));
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
-      // Put the room_id in a data attrribute so that JavaScript can pick it up
+      // Put the room_id in a data attribute so that JavaScript can pick it up
       $header_inner .= "<th data-room=\"" . $row['id'] . "\" style=\"width: $column_width%\">
                         <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\"
                         title=\"" . get_vocab("viewweek") . " &#10;&#10;".$row['description']."\">" .
-                        htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "") . "</a></th>";
+                        htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? " (".$row['capacity'].")" : "") . "</a></th>";
       $rooms[] = $row['id'];
     }
   
