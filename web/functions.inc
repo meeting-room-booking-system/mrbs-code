@@ -2126,7 +2126,7 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
         $selected = ($row['id'] == $current) ? "selected=\"selected\"" : "";
-        $out_html .= "<option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['room_name']) . "</option>\n";
+        $out_html .= "<option $selected value=\"". $row['id']. "\" title=\"". htmlspecialchars($row['description'])."\">" . htmlspecialchars($row['room_name']) . "</option>\n";
       }
       // Note:  the submit button will not be displayed if JavaScript is enabled
       $out_html .= "</select>\n" .
