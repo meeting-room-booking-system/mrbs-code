@@ -398,7 +398,12 @@ $default_room = 0;
 // (FALSE not supported in IE6 and IE7 due to their incomplete CSS support)
 $clipped = TRUE;                
 
-// Define clipping behaviour for the cells in the month view.                           
+// Define clipping behaviour for the cells in the month view.
+// Set to TRUE if you want all entries to have the same height. The
+// short description may be clipped in this case. If set to FALSE,
+// each booking entry will be large enough to display all information.
+$clipped_month = TRUE;
+
 // Set to TRUE if you want the cells in the month view to scroll if there are too
 // many bookings to display; set to FALSE if you want the table cell to expand to
 // accommodate the bookings.   (NOTE: (1) scrolling doesn't work in IE6 and so the table
