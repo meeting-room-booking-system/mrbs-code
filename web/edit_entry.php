@@ -115,23 +115,21 @@ function getbookingdate($t)
 //    $disabled parameter         disables the input and also generate a hidden input, provided
 //                                that $display_none is FALSE.  (This prevents multiple inputs
 //                                of the same name)
-function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_none=FALSE, $disabled=FALSE)
+//    $is_start                   Boolean.  Whether this is the start selector.  Default FALSE
+function genSlotSelector($area, $id, $name, $current_s, $display_none=FALSE, $disabled=FALSE, $is_start=FALSE)
 {
-  global $periods, $auth, $is_admin;
+  global $periods;
 
   $html = '';
-  // Get the settings for this area.   Note that the variables below are
-  // local variables, not globals.
-  $enable_periods = $area['enable_periods'];
-  $resolution = ($enable_periods) ? 60 : $area['resolution'];
+  
   // Check that $resolution is positive to avoid an infinite loop below.
   // (Shouldn't be possible, but just in case ...)
-  if (empty($resolution) || ($resolution < 0))
+  if (empty($area['resolution']) || ($area['resolution'] < 0))
   {
     fatal_error(FALSE, "Internal error - resolution is NULL or <= 0");
   }
   
-  if ($enable_periods)
+  if ($area['enable_periods'])
   {
     $base = 12*60*60;  // The start of the first period of the day
   }
@@ -142,7 +140,6 @@ function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_non
   
   // Build the attributes
   $attributes = array();
-  $attributes[] = 'onChange="adjustSlotSelectors()"';
   if ($disabled)
   {
     // If $disabled is set, give the element a class so that the JavaScript
@@ -156,16 +153,27 @@ function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_non
   
   // Build the options
   $options = array();
-  for ($s = $first; $s <= $last; $s += $resolution)
+  // If we're using periods then the last slot is actually the start of the last period,
+  // or if we're using times and this is the start selector, then we don't show the last
+  // time
+  if ($area['enable_periods'] || $is_start)
   {
-    $slot_string = ($enable_periods) ? $periods[intval(($s-$base)/60)] : hour_min($s);
+    $last = $area['last'] - $area['resolution'];
+  }
+  else
+  {
+    $last = $area['last'];
+  }
+  for ($s = $area['first']; $s <= $last; $s += $area['resolution'])
+  {
+    $slot_string = ($area['enable_periods']) ? $periods[intval(($s-$base)/60)] : hour_min($s);
     $options[$s] = $slot_string;
   }
-  
+
   // If $display_none or $disabled are set then we'll also disable the select so
   // that there is only one select passing through the variable to the handler
-  $params = array('name'          => $prefix . 'seconds',
-                  'id'            => $prefix . 'seconds' . $area['id'],
+  $params = array('name'          => $name,
+                  'id'            => $id,
                   'disabled'      => $disabled || $display_none,
                   'create_hidden' => $disabled && !$display_none,
                   'attributes'    => $attributes,
@@ -174,6 +182,40 @@ function genSlotSelector($area, $prefix, $first, $last, $current_s, $display_non
                   'force_assoc'   => TRUE);
 
   generate_select($params);
+}
+
+
+// Generate the All Day checkbox for an area
+function genAllDay($a, $id, $name, $display_none=FALSE, $disabled=FALSE)
+{
+  global $default_duration_all_day;
+  
+  echo "<div class=\"group\"" . (($display_none || !$a['show_all_day']) ? ' style="display: none"' : '') .">\n";
+  
+  $class = array();
+  $class[] = 'all_day';
+  if ($disabled)
+  {
+    // and if $disabled is set, give the element a class so that the JavaScript
+    // knows to keep it disabled
+    $class[] = 'keep_disabled';
+  }
+  // (1) If $display_none or $disabled are set then we'll also disable the select so
+  //     that there is only one select passing through the variable to the handler.
+  // (2) If this is an existing booking that we are editing or copying, then we do
+  //     not want the default duration applied
+  $params = array('name'        => $name,
+                  'id'          => $id,
+                  'label'       => get_vocab("all_day"),
+                  'label_after' => TRUE,
+                  'attributes'  => 'data-show=' . (($a['show_all_day']) ? '1' : '0'),
+                  'value'       => ($default_duration_all_day && !isset($id) && !$drag),
+                  'disabled'    => $display_none || $disabled,
+                  'class'       => $class);
+                    
+  generate_checkbox($params);
+  
+  echo "</div>\n";
 }
 
 
@@ -207,11 +249,11 @@ function create_field_entry_description($disabled=FALSE)
   
   echo "<div id=\"div_description\">\n";
   
-  $params = array('label' => get_vocab("fulldescription"),
-                  'name' => 'description',
-                  'value' => $description,
-                  'disabled' => $disabled,
-                  'mandatory' => isset($is_mandatory_field['entry.description']) && $is_mandatory_field['entry.description']);
+  $params = array('label'       => get_vocab("fulldescription"),
+                  'name'        => 'description',
+                  'value'       => $description,
+                  'disabled'    => $disabled,
+                  'mandatory'   => isset($is_mandatory_field['entry.description']) && $is_mandatory_field['entry.description']);
   
   if (isset($select_options['entry.description']) ||
       isset($datalist_options['entry.description']) )
@@ -230,8 +272,7 @@ function create_field_entry_description($disabled=FALSE)
 
 function create_field_entry_start_date($disabled=FALSE)
 {
-  global $start_time, $areas, $area_id, $periods, $default_duration_all_day, $id, $drag;
-  global $periods, $is_admin;
+  global $start_time, $areas, $area_id, $periods, $id, $drag;
   
   $date = getbookingdate($start_time);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
@@ -241,62 +282,16 @@ function create_field_entry_start_date($disabled=FALSE)
   echo "<div>\n"; // Needed so that the structure is the same as for the end date to help the JavaScript
   gendateselector("start_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
   echo "</div>\n";
-  // If we're using periods the booking model is slightly different:
-  // you're allowed to specify the last period as your first period.
-  // This is why we don't substract the resolution
 
+  // Generate the live slot selector and all day checkbox
+  genSlotSelector($areas[$area_id], 'start_seconds', 'start_seconds', $current_s, FALSE, $disabled, TRUE);
+  genAllDay($areas[$area_id], 'all_day', 'all_day', FALSE, $disabled);
+  
+  // Generate the templates for each area
   foreach ($areas as $a)
   {
-    if ($a['enable_periods'])
-    {
-      $a['resolution'] = 60;
-      $first = 12*60*60;
-      // If we're using periods we just go to the beginning of the last slot
-      $last = $first + ((count($periods) - 1) * $a['resolution']);
-    }
-    else
-    {
-      $first = (($a['morningstarts'] * 60) + $a['morningstarts_minutes']) * 60;
-      $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
-      $last = $last + $a['resolution'];
-    }
-    // If the last time is the same as or before the start time, then it's really on the next day
-    if ($first >= $last)
-    {
-      $last += 24*60*60;
-    }
-    $start_last = ($a['enable_periods']) ? $last : $last - $a['resolution'];
-    $display_none = ($a['id'] != $area_id);
-
-    genSlotSelector($a, "start_", $first, $start_last, $current_s, $display_none, $disabled);
-    
-    echo "<div class=\"group\">\n";
-    echo "<div id=\"ad{$a['id']}\"".($display_none ? " style=\"display: none\" " : "") .">\n";
-    // We don't show the all day checkbox if it's going to result in bookings that
-    // contravene the policy - ie if max_duration is enabled and an all day booking
-    // would be longer than the maximum duration allowed
-    $show_all_day = $is_admin || !$a['max_duration_enabled'] ||
-                    ( ($a['enable_periods'] && ($a['max_duration_periods'] >= count($periods))) ||
-                        (!$a['enable_periods'] && ($a['max_duration_secs'] >= ($last - $first))) );
-    echo "<input id=\"all_day{$a['id']}\" class=\"all_day checkbox\"" .
-         // If this is an existing booking that we are editing or copying, then we do
-         // not want the default duration applied
-         (($default_duration_all_day && !isset($id) && !$drag) ? " checked=\"checked\"" : "") .
-         " name=\"all_day\" type=\"checkbox\" value=\"yes\"".
-         ($show_all_day? "" : " style=\"display: none;\" ").
-         // If $display_none or $disabled are set then we'll also disable the select so
-         // that there is only one select passing through the variable to the handler
-         (($display_none || $disabled) ? " disabled=\"disabled\"" : "") .
-         // and if $disabled is set, give the element a class so that the JavaScript
-         // knows to keep it disabled
-         (($disabled) ? " class=\"keep_disabled\"" : "") .
-         ">\n";
-    if($show_all_day)
-    {
-      echo "<label for=\"all_day{$a['id']}\">" . get_vocab("all_day") . "</label>\n";
-    }
-    echo "</div>\n";
-    echo "</div>\n";
+    genSlotSelector($a, 'start_seconds' . $a['id'], 'start_seconds', $current_s, TRUE, TRUE, TRUE);
+    genAllDay($a, 'all_day' . $a['id'], 'all_day', TRUE, TRUE);
   }
   echo "</div>\n";
 }
@@ -308,40 +303,29 @@ function create_field_entry_end_date($disabled=FALSE)
   
   $date = getbookingdate($end_time);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
+  
   echo "<div id=\"div_end_date\">\n";
   echo "<label>" . get_vocab("end") . ":</label>\n";
   // Don't show the end date selector if multiday is not allowed
   echo "<div" . (($multiday_allowed) ? '' : " style=\"visibility: hidden\"") . ">\n";
   gendateselector("end_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
   echo "</div>\n";
+  
+  // Generate the live slot selector
   // If we're using periods the booking model is slightly different,
   // so subtract one period because the "end" period is actually the beginning
   // of the last period booked
+  $a = $areas[$area_id];
+  $this_current_s = ($a['enable_periods']) ? $current_s - $a['resolution'] : $current_s;
+  genSlotSelector($areas[$area_id], 'end_seconds', 'end_seconds', $this_current_s, FALSE, $disabled);
+ 
+  // Generate the templates
   foreach ($areas as $a)
   {
-    if ($a['enable_periods'])
-    {
-      $a['resolution'] = 60;
-      $first = 12*60*60;
-      // If we're using periods we just go to the beginning of the last slot
-      $last = $first + ((count($periods) - 1) * $a['resolution']);
-    }
-    else
-    {
-      $first = (($a['morningstarts'] * 60) + $a['morningstarts_minutes']) * 60;
-      $last = (($a['eveningends'] * 60) + $a['eveningends_minutes']) * 60;
-      $last = $last + $a['resolution'];
-    }
-    // If the last time is the same as or before the start time, then it's really on the next day
-    if ($first >= $last)
-    {
-      $last += 24*60*60;
-    }
-    $end_value = (($date['hours'] * 60) + $date['minutes']) * 60;
-    $end_value = ($a['enable_periods']) ? $end_value - $a['resolution'] : $end_value;
-    $display_none = ($a['id'] != $area_id);
-    genSlotSelector($a, "end_", $first, $last, $end_value, $display_none, $disabled);
+    $this_current_s = ($a['enable_periods']) ? $current_s - $a['resolution'] : $current_s;
+    genSlotSelector($a, 'end_seconds' . $a['id'], 'end_seconds', $this_current_s, TRUE, TRUE);
   }
+  
   echo "<span id=\"end_time_error\" class=\"error\"></span>\n";
   echo "</div>\n";
 }
@@ -366,154 +350,88 @@ function create_field_entry_areas($disabled=FALSE)
       $options[$a['id']] = $a['area_name'];
     }
     
-    $attributes = array();
-    $attributes[] = 'onchange="changeRooms(this.form)"';
-    
     $params = array('label'       => get_vocab("area") . ":",
                     'name'        => 'area',
                     'options'     => $options,
                     'force_assoc' => TRUE,
                     'value'       => $area_id,
-                    'disabled'    => $disabled,
-                    'attributes'  => $attributes);
+                    'disabled'    => $disabled);
                       
     generate_select($params);
     echo "</div>\n";
-    
-    ?> 
-    <script type="text/javascript">
-    //<![CDATA[
-      
-    var area = <?php echo $area_id ?>;
-      
-    function changeRooms( formObj )
-    {
-      areasObj = eval( "formObj.area" );
-
-      area = areasObj[areasObj.selectedIndex].value;
-      roomsObj = eval( "formObj.elements['rooms']" );
-
-      // remove all entries
-      roomsNum = roomsObj.length;
-      for (i=(roomsNum-1); i >= 0; i--)
-      {
-        roomsObj.options[i] = null;
-      }
-      // add entries based on area selected
-      switch (area){
-        <?php
-        foreach ($areas as $a)
-        {
-          print "case \"" . $a['id'] . "\":\n";
-          // get rooms for this area
-          $i = 0;
-          foreach ($rooms as $r)
-          {
-            if ($r['area_id'] == $a['id'])
-            {
-              print "roomsObj.options[$i] = new Option(\"" . escape_js($r['room_name']) . "\"," . $r['id'] . ");\n";
-              $i++;
-            }
-          }
-          // select the first entry by default to ensure
-          // that one room is selected to begin with
-          if ($i > 0)  // but only do this if there is a room
-          {
-            print "roomsObj.options[0].selected = true;\n";
-          }
-          print "break;\n";
-        }
-        ?>
-      } //switch
-        
-      <?php 
-      // Replace the start and end selectors with those for the new area
-      // (1) We set the display for the old elements to "none" and the new
-      // elements to "block".   (2) We also need to disable the old selectors and
-      // enable the new ones: they all have the same name, so we only want
-      // one passed through with the form.  (3) We take a note of the currently
-      // selected start and end values so that we can have a go at finding a
-      // similar time/period in the new area. (4) We also take a note of the old
-      // area id because we'll need that when trying to match up slots: it only
-      // makes sense to match up slots if both old and new area used the same
-      // mode (periods/times).
-        
-      // For the "all day" checkbox, the process is slightly different.  This
-      // is because the checkboxes themselves are visible or not depending on
-      // the time restrictions for that particular area. (1) We set the display 
-      // for the old *container* element to "none" and the new elements to 
-      // "block".  (2) We disable the old checkboxes and enable the new ones for
-      // the same reasons as above.  (3) We copy the value of the old check box
-      // to the new check box
-      ?>
-      var oldStartId = "start_seconds" + currentArea;
-      var oldEndId = "end_seconds" + currentArea;
-      var newStartId = "start_seconds" + area;
-      var newEndId = "end_seconds" + area;
-      var oldAllDayId = "ad" + currentArea;
-      var newAllDayId = "ad" + area;
-      var oldAreaStartValue = formObj[oldStartId].options[formObj[oldStartId].selectedIndex].value;
-      var oldAreaEndValue = formObj[oldEndId].options[formObj[oldEndId].selectedIndex].value;
-      $("#" + oldStartId).hide()
-                         .attr('disabled', 'disabled');
-      $("#" + oldEndId).hide()
-                       .attr('disabled', 'disabled');
-      $("#" + newStartId).show()
-                         .removeAttr('disabled');
-      $("#" + newEndId).show()
-                       .removeAttr('disabled');
-                       +        $("#" + oldAllDayId).hide();
-      $("#" + newAllDayId).show();
-      if($("#all_day" + currentArea).attr('checked') == 'checked')
-      { 
-        $("#all_day" + area).attr('checked', 'checked').removeAttr('disabled');
-      }
-      else
-      {
-        $("#all_day" + area).removeAttr('checked').removeAttr('disabled');
-      }
-      $("#all_day" + currentArea).removeAttr('disabled');
-      var oldArea = currentArea;
-      currentArea = area;
-      prevStartValue = undefined;
-      adjustSlotSelectors(oldArea, oldAreaStartValue, oldAreaEndValue);
-    }
-      
-    //]]>
-    </script>
-      
-      
-    <?php
-    } // if count($areas)
+  } // if count($areas)
 }
 
 
 function create_field_entry_rooms($disabled=FALSE)
 {
-  global $rooms, $multiroom_allowed, $room_id, $area_id, $selected_rooms;
-
-  echo "<div id=\"div_rooms\">\n";
-  echo "<label for=\"rooms\">" . get_vocab("rooms") . ":</label>\n";
-  echo "<div class=\"group\">\n";
-  echo "<select id=\"rooms\" name=\"rooms[]\" required" .
-    (($multiroom_allowed) ? " multiple=\"multiple\"" : "") .
-    (($disabled) ? " disabled=\"disabled\"" : "") .
-    " size=\"5\">\n";
+  global $multiroom_allowed, $room_id, $area_id, $selected_rooms, $areas;
+  global $tbl_room, $tbl_area;
+  
   // $selected_rooms will be populated if we've come from a drag selection
   if (empty($selected_rooms))
   {
     $selected_rooms = array($room_id);
   }
-  foreach ($rooms as $r)
+  
+  // Get the details of all the enabled rooms
+  $all_rooms = array();
+  $sql = "SELECT R.id, R.room_name, R.area_id
+            FROM $tbl_room R, $tbl_area A
+           WHERE R.area_id = A.id
+             AND R.disabled=0
+             AND A.disabled=0
+        ORDER BY R.area_id, R.sort_key";
+  $res = sql_query($sql);
+  if ($res === FALSE)
   {
-    if ($r['area_id'] == $area_id)
-    {
-      $is_selected = in_array($r['id'], $selected_rooms);
-      $selected = ($is_selected) ? "selected=\"selected\"" : "";
-      echo "<option $selected value=\"" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</option>\n";
-    }
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
-  echo "</select>\n";
+  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  {
+    $all_rooms[$row['area_id']][$row['id']] = $row['room_name'];
+  }
+
+  echo "<div id=\"div_rooms\">\n";
+  echo "<label for=\"rooms\">" . get_vocab("rooms") . ":</label>\n";
+  echo "<div class=\"group\">\n";
+  
+  // First of all generate the rooms for this area
+  $params = array('name'        => 'rooms[]',
+                  'id'          => 'rooms',
+                  'options'     => $all_rooms[$area_id],
+                  'force_assoc' => TRUE,
+                  'value'       => $selected_rooms,
+                  'multiple'    => $multiroom_allowed,
+                  'disabled'    => $disabled,
+                  'attributes'  => array('size="5"'));
+  generate_select($params);
+  
+  // Then generate templates for all the rooms
+  $params['disabled']      = TRUE;
+  $params['create_hidden'] = FALSE;
+  foreach ($all_rooms as $a => $rooms)
+  {
+    $attributes = array();
+    $attributes[] = 'style="display: none"';
+    // Put in some data about the area for use by the JavaScript
+    $attributes[] = 'data-enable_periods='       . (($areas[$a]['enable_periods']) ? 1 : 0);
+    $attributes[] = 'data-default_duration='     . ((isset($areas[$a]['default_duration']) && ($areas[$a]['default_duration'] != 0)) ? $areas[$a]['default_duration'] : 60*60);
+    $attributes[] = 'data-max_duration_enabled=' . (($areas[$a]['max_duration_enabled']) ? 1 : 0);
+    $attributes[] = 'data-max_duration_secs='    . $areas[$a]['max_duration_secs'];
+    $attributes[] = 'data-max_duration_periods=' . $areas[$a]['max_duration_periods'];
+    $attributes[] = 'data-max_duration_qty='     . $areas[$a]['max_duration_qty'];
+    $attributes[] = 'data-max_duration_units="'  . htmlspecialchars($areas[$a]['max_duration_units']) . '"';
+    $attributes[] = 'data-timezone="'            . htmlspecialchars($areas[$a]['timezone']) . '"';
+    
+    $params['id']         = 'rooms' . $a;
+    $params['options']    = $rooms;
+    $params['attributes'] = $attributes;
+    generate_select($params);
+  }
+  
+
   // No point telling them how to select multiple rooms if the input
   // is disabled
   if ($multiroom_allowed && !$disabled)
@@ -521,13 +439,7 @@ function create_field_entry_rooms($disabled=FALSE)
     echo "<span>" . get_vocab("ctrl_click") . "</span>\n";
   }
   echo "</div>\n";
-  if ($disabled)
-  {
-    foreach ($selected_rooms as $selected_room)
-    {
-      echo "<input type=\"hidden\" name=\"rooms[]\" value=\"$selected_room\">\n";
-    }
-  }
+
   echo "</div>\n";
 }
 
@@ -538,11 +450,12 @@ function create_field_entry_type($disabled=FALSE)
   
   echo "<div id=\"div_type\">\n";
   
-  $params = array('label'    => get_vocab("type") . ":",
-                  'name'     => 'type',
-                  'disabled' => $disabled,
-                  'options'  => array(),
-                  'value'    => $type);
+  $params = array('label'       => get_vocab("type") . ":",
+                  'name'        => 'type',
+                  'disabled'    => $disabled,
+                  'options'     => array(),
+                  'force_assoc' => TRUE,  // in case the type keys happen to be digits
+                  'value'       => $type);
                   
   foreach ($booking_types as $key)
   {
@@ -1111,54 +1024,55 @@ if ($res)
 {
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   {
-    $areas[$row['id']] = $row;
+    // Make sure we've got the correct resolution when using periods (it's
+    // probably OK anyway, but just in case)
+    if ($row['enable_periods'])
+    {
+      $row['resolution'] = 60;
+    }
     // The following config settings aren't yet per-area, but we'll treat them as if
     // they are to make it easier to change them to per-area settings in the future.
-    $areas[$row['id']]['max_duration_enabled'] = $max_duration_enabled;
-    $areas[$row['id']]['max_duration_secs']    = $max_duration_secs;
-    $areas[$row['id']]['max_duration_periods'] = $max_duration_periods;
-    // Clean up the settings, getting rid of any nulls and casting boolean fields into bools
-    $areas[$row['id']] = clean_area_row($areas[$row['id']]);
+    $row['max_duration_enabled'] = $max_duration_enabled;
+    $row['max_duration_secs']    = $max_duration_secs;
+    $row['max_duration_periods'] = $max_duration_periods;
     // Generate some derived settings
-    $areas[$row['id']]['max_duration_qty'] = $areas[$row['id']]['max_duration_secs'];
-    toTimeString($areas[$row['id']]['max_duration_qty'], $areas[$row['id']]['max_duration_units']);
+    $row['max_duration_qty']     = $row['max_duration_secs'];
+    toTimeString($row['max_duration_qty'], $row['max_duration_units']);
+    // Get the start and end of the booking day
+    if ($row['enable_periods'])
+    {
+      $first = 12*60*60;
+      // If we're using periods we just go to the end of the last slot
+      $last = $first + (count($periods) * $row['resolution']);
+    }
+    else
+    {
+      $first = (($row['morningstarts'] * 60) + $row['morningstarts_minutes']) * 60;
+      $last = ((($row['eveningends'] * 60) + $row['eveningends_minutes']) * 60) + $row['resolution'];
+      // If the end of the day is the same as or before the start time, then it's really on the next day
+      if ($first >= $last)
+      {
+        $last += 24*60*60;
+      }
+    }
+    $row['first'] = $first;
+    $row['last'] = $last;
+    // We don't show the all day checkbox if it's going to result in bookings that
+    // contravene the policy - ie if max_duration is enabled and an all day booking
+    // would be longer than the maximum duration allowed.
+    $row['show_all_day'] = $is_admin || 
+                           !$row['max_duration_enabled'] ||
+                           ( ($row['enable_periods'] && ($row['max_duration_periods'] >= count($periods))) ||
+                             (!$row['enable_periods'] && ($row['max_duration_secs'] >= ($last - $first))) );
+    
+    // Clean up the settings, getting rid of any nulls and casting boolean fields into bools
+    $row = clean_area_row($row);
+    
+    // Now assign the row to the area      
+    $areas[$row['id']] = $row;
   }
 }
 
-?>
-
-<script type="text/javascript">
-//<![CDATA[
-
-var currentArea = <?php echo $area_id ?>;
-var areas = [];
-<?php
-// give JavaScript a copy of the PHP array $areas
-foreach ($areas as $area)
-{
-  echo "areas[${area['id']}] = [];\n";
-  foreach ($area as $key => $value)
-  {
-    if (in_array($key, array('area_name', 'max_duration_units', 'timezone')))
-    {
-      // Enclose strings in quotes
-      $value = "'" . escape_js($value) . "'";
-    }
-    elseif (in_array($key, $boolean_fields['area']))
-    {
-      // Convert booleans
-      $value = ($value) ? 'true' : 'false';
-    }
-    echo "areas[${area['id']}]['$key'] = $value;\n";
-  }
-}
-?>
-
-
-//]]>
-</script>
-
-<?php
 
 if (isset($id) && !isset($copy))
 {

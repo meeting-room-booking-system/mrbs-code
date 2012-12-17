@@ -14,6 +14,8 @@ if ($use_strict)
 
 ?>
 
+$.fn.reverse = [].reverse;
+
 function getErrorList(errors)
 {
   var result = {html: '', text: ''};
