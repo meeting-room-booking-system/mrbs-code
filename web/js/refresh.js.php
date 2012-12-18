@@ -47,7 +47,7 @@ init = function(args) {
                    // table HTML and then (3) trigger a window load event so that 
                    // the resizable bookings are re-created
                    ?>
-                   table.empty()
+                   table.empty();
                    table.html(result);
                    $(window).trigger('load');
                  },
