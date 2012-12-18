@@ -120,7 +120,7 @@ function redrawClones(table)
       var clone = $(this);
       var original = clone.prev();
       clone.width(original.outerWidth())
-           .height(original.outerHeight())
+           .height(original.outerHeight());
     });
 }
         
@@ -142,7 +142,7 @@ function getTableData(table, tableData)
   // padding required on the contained element.
   ?>
   var rtl = ((table.css('direction') !== undefined) &&
-             table.css('direction').toLowerCase() == 'rtl');
+             table.css('direction').toLowerCase() === 'rtl');
   var resolution = table.data('resolution');
   tableData.x = {};
   tableData.x.data = [];
@@ -174,7 +174,7 @@ function getTableData(table, tableData)
   {
     columns.filter(':first').each(function() {
         var value = null;
-        if (tableData.x.key == 'seconds')
+        if (tableData.x.key === 'seconds')
         {
           value = tableData.x.data[0].value + resolution;
         }
@@ -185,7 +185,7 @@ function getTableData(table, tableData)
 
   columns.filter(':last').each(function() {
       var value = null;
-      if (tableData.x.key == 'seconds')
+      if (tableData.x.key === 'seconds')
       {
         value = tableData.x.data[tableData.x.data.length - 1].value + resolution;
       }
@@ -208,7 +208,7 @@ function getTableData(table, tableData)
   <?php // and also get the bottom edge ?>
   rows.filter(':last').each(function() {
       var value = null;
-      if (tableData.y.key == 'seconds')
+      if (tableData.y.key === 'seconds')
       {
         value = tableData.y.data[tableData.y.data.length - 1].value + resolution;
       }
@@ -246,7 +246,7 @@ function snapToGrid(tableData, div, side, force)
 {
   var snapGap = (force) ? 100000: 20; <?php // px ?>
   var tolerance = 2; <?php //px ?>
-  var isLR = (side=='left') || (side=='right');
+  var isLR = (side==='left') || (side==='right');
  
   var data = (isLR) ? tableData.x.data : tableData.y.data;
   
@@ -281,8 +281,8 @@ function snapToGrid(tableData, div, side, force)
             
     if (((gapTopLeft>0) && (gapBottomRight>0)) ||
         <?php // containment tests ?>
-        ((i==0) && (gapTopLeft<0)) ||
-        ((i==(data.length-2)) && (gapBottomRight<0)) )
+        ((i===0) && (gapTopLeft<0)) ||
+        ((i===(data.length-2)) && (gapBottomRight<0)) )
     {
       gap = bottomRight - topLeft;
               
@@ -363,73 +363,79 @@ function snapToGrid(tableData, div, side, force)
 ?>
 function getBookingParams(table, tableData, div)
 { 
-  var rtl = (table.css('direction').toLowerCase() == 'rtl');
-  var params = {};
-  var data;
-  var tolerance = 2; <?php //px ?>
-  var cell = {x: {}, y: {}}
+  var rtl = (table.css('direction').toLowerCase() === 'rtl'),
+      params = {},
+      data,
+      tolerance = 2, <?php //px ?>
+      cell = {x: {}, y: {}},
+      i,
+      axis;
+      
   cell.x.start = div.offset().left;
   cell.y.start = div.offset().top;
   cell.x.end = cell.x.start + div.outerWidth();
   cell.y.end = cell.y.start + div.outerHeight();
-  for (var axis in cell)
+  for (axis in cell)
   {
-    data = tableData[axis].data;
-    if (params[tableData[axis].key] === undefined)
+    if (cell.hasOwnProperty(axis))
     {
-      params[tableData[axis].key] = [];
-    }
-    if (rtl && (axis=='x'))
-    {
-      for (var i = data.length - 1; i >= 0; i--)
+      data = tableData[axis].data;
+      if (params[tableData[axis].key] === undefined)
       {
-        if ((data[i].coord + tolerance) < cell[axis].start)
+        params[tableData[axis].key] = [];
+      }
+      if (rtl && (axis==='x'))
+      {
+        for (i = data.length - 1; i >= 0; i--)
         {
-          <?php
-          // 'seconds' behaves slightly differently to the other parameters:
-          // we need to know the end time for the new slot.    Also it's possible
-          // for us to have a zero div, eg when selecting a new booking, and if
-          // so we need to make sure there's something returned
-          ?>
-          if ((tableData[axis].key == 'seconds') ||
-              (params[tableData[axis].key].length == 0))
+          if ((data[i].coord + tolerance) < cell[axis].start)
+          {
+            <?php
+            // 'seconds' behaves slightly differently to the other parameters:
+            // we need to know the end time for the new slot.    Also it's possible
+            // for us to have a zero div, eg when selecting a new booking, and if
+            // so we need to make sure there's something returned
+            ?>
+            if ((tableData[axis].key === 'seconds') ||
+                (params[tableData[axis].key].length === 0))
+            {
+              params[tableData[axis].key].push(data[i].value);
+            }
+            break;
+          }
+          if ((data[i].coord + tolerance) < cell[axis].end)
           {
             params[tableData[axis].key].push(data[i].value);
           }
-          break;
-        }
-        if ((data[i].coord + tolerance) < cell[axis].end)
-        {
-          params[tableData[axis].key].push(data[i].value);
         }
       }
-    }
-    else
-    {
-      for (var i=0; i<data.length; i++)
+      else
       {
-        if ((data[i].coord + tolerance) > cell[axis].end)
+        for (i=0; i<data.length; i++)
         {
-          <?php
-          // 'seconds' behaves slightly differently to the other parameters:
-          // we need to know the end time for the new slot.    Also it's possible
-          // for us to have a zero div, eg when selecting a new booking, and if
-          // so we need to make sure there's something returned
-          ?>
-          if ((tableData[axis].key == 'seconds') ||
-              (params[tableData[axis].key].length == 0))
+          if ((data[i].coord + tolerance) > cell[axis].end)
+          {
+            <?php
+            // 'seconds' behaves slightly differently to the other parameters:
+            // we need to know the end time for the new slot.    Also it's possible
+            // for us to have a zero div, eg when selecting a new booking, and if
+            // so we need to make sure there's something returned
+            ?>
+            if ((tableData[axis].key === 'seconds') ||
+                (params[tableData[axis].key].length === 0))
+            {
+              params[tableData[axis].key].push(data[i].value);
+            }
+            break;
+          }
+          if ((data[i].coord + tolerance) > cell[axis].start)
           {
             params[tableData[axis].key].push(data[i].value);
           }
-          break;
-        }
-        if ((data[i].coord + tolerance) > cell[axis].start)
-        {
-          params[tableData[axis].key].push(data[i].value);
-        }
+        } <?php // for ?>
       }
     }
-  }
+  } <?php // for (axis in cell) ?>
   return params;
 }
         
@@ -475,7 +481,7 @@ var highlightRowLabels = function (table, tableData, div)
       highlightRowLabels.rows[i].removeClass('selected');
     }
   }
-}
+};
       
       
 <?php // Remove any highlighting that has been applied to the row labels ?>
@@ -553,7 +559,7 @@ init = function(args) {
           table.wrap('<div class="resizing"><\/div>');
           var jqTarget = $(e.target);
           <?php // If we've landed on the + symbol we want the parent ?>
-          if (e.target.nodeName.toLowerCase() == "img")
+          if (e.target.nodeName.toLowerCase() === "img")
           {
             jqTarget = jqTarget.parent();
           }
@@ -623,24 +629,23 @@ init = function(args) {
           {
             if (e.pageY < downHandler.origin.top)
             {
-              box.offset({top: e.pageY, left: e.pageX})
+              box.offset({top: e.pageY, left: e.pageX});
             }
             else
             {
-              box.offset({top: downHandler.origin.top, left: e.pageX})
+              box.offset({top: downHandler.origin.top, left: e.pageX});
             }
           }
           else if (e.pageY < downHandler.origin.top)
           {
-            box.offset({top: e.pageY, left: downHandler.origin.left})
+            box.offset({top: e.pageY, left: downHandler.origin.left});
           }
           else
           {
             box.offset(downHandler.origin);
           }
-          box.width(Math.abs(e.pageX - downHandler.origin.left))
+          box.width(Math.abs(e.pageX - downHandler.origin.left));
           box.height(Math.abs(e.pageY - downHandler.origin.top));
-          var boxSides = getSides(box);
           snapToGrid(tableData, box, 'top');
           snapToGrid(tableData, box, 'bottom');
           snapToGrid(tableData, box, 'right');
@@ -728,7 +733,7 @@ init = function(args) {
           queryString += '&area=' + args.area;
           queryString += '&start_seconds=' + params.seconds[0];
           queryString += '&end_seconds=' + params.seconds[params.seconds.length - 1];
-          if (args.page == 'day')
+          if (args.page === 'day')
           {
             for (var i=0; i<params.room.length; i++)
             {
@@ -762,7 +767,7 @@ init = function(args) {
               downHandler(event);
               $(document).bind('mousemove', moveHandler);
               $(document).bind('mouseup', upHandler);
-            })
+            });
         });
             
           
@@ -806,22 +811,22 @@ init = function(args) {
               ?>
               
               <?php // left edge ?>
-              if (divClone.position().left != divResize.lastPosition.left)
+              if (divClone.position().left !== divResize.lastPosition.left)
               {
                 snapToGrid(tableData, divClone, 'left');
               }
               <?php // right edge ?>
-              if ((divClone.position().left + divClone.outerWidth()) != (divResize.lastPosition.left + divResize.lastSize.width))
+              if ((divClone.position().left + divClone.outerWidth()) !== (divResize.lastPosition.left + divResize.lastSize.width))
               {
                 snapToGrid(tableData, divClone, 'right');
               }
               <?php // top edge ?>
-              if (divClone.position().top != divResize.lastPosition.top)
+              if (divClone.position().top !== divResize.lastPosition.top)
               {
                 snapToGrid(tableData, divClone, 'top');
               }
               <?php // bottom edge ?>
-              if ((divClone.position().top + divClone.outerHeight()) != (divResize.lastPosition.top + divResize.lastSize.height))
+              if ((divClone.position().top + divClone.outerHeight()) !== (divResize.lastPosition.top + divResize.lastSize.height))
               {
                 snapToGrid(tableData, divClone, 'bottom');
               }
@@ -831,7 +836,7 @@ init = function(args) {
               divResize.lastPosition = $.extend({}, divClone.position());
               divResize.lastSize = {width: divClone.outerWidth(),
                                     height: divClone.outerHeight()};
-            }  <?php // divResize ?>
+            };  <?php // divResize ?>
             
             
             <?php
@@ -869,7 +874,7 @@ init = function(args) {
                   bookedMap.push(getSides($(this)));
                 });
 
-            }  <?php // divResizeStop ?>
+            };  <?php // divResizeStart ?>
             
             
             <?php
@@ -932,11 +937,11 @@ init = function(args) {
                   // the original booking parameters.    We need to do this so that
                   // we can properly handle multi-day bookings in the week view.
                   ?>
-                  if (newParams.seconds[0] != oldParams.seconds[0])
+                  if (newParams.seconds[0] !== oldParams.seconds[0])
                   {
                     data.start_seconds = newParams.seconds[0];
                   }
-                  if (newParams.seconds[newParams.seconds.length - 1] !=
+                  if (newParams.seconds[newParams.seconds.length - 1] !==
                       oldParams.seconds[oldParams.seconds.length - 1])
                   {
                     data.end_seconds = newParams.seconds[newParams.seconds.length - 1];
@@ -953,7 +958,7 @@ init = function(args) {
                     ?>
                   }
                 }
-                if (args.page == 'day')
+                if (args.page === 'day')
                 {
                   data.page = 'day';
                   data.start_day = args.day;
@@ -1025,7 +1030,7 @@ init = function(args) {
                                     cellAnchor.html('<?php echo get_vocab("changes_saved")?>').fadeIn(duration, function() {
                                         cellAnchor.fadeOut(duration, function() {
                                             cellAnchor.html(oldHTML).fadeIn(duration);
-                                          })
+                                          });
                                       });
                                   });
                               });
@@ -1052,12 +1057,12 @@ init = function(args) {
                               var rulesList = getErrorList(result.rules_broken);
                               alertMessage += rulesList.text;
                             }
-                            alert(alertMessage);
+                            window.alert(alertMessage);
                           }
                         },
                        'json');
               }
-            }  <?php // divResizeStop ?>
+            };  <?php // divResizeStop ?>
             
             <?php
             // Get the set of directions in which we are allowed to drag the
@@ -1168,7 +1173,7 @@ init = function(args) {
                     .css('min-height', '<?php echo $main_cell_height ?>px')
                     .addClass('clone')
                     .width(divBooking.outerWidth())
-                    .height(divBooking.outerHeight())
+                    .height(divBooking.outerHeight());
             if (handles)
             {
               divClone.resizable({handles: handles,
@@ -1182,7 +1187,7 @@ init = function(args) {
           });
 
       $(window).resize(function(event) {
-          if (event.target == this)  <?php // don't want the ui-resizable event bubbling up ?>
+          if (event.target === this)  <?php // don't want the ui-resizable event bubbling up ?>
           {
             <?php
             // The table dimensions have changed, so we need to redraw the clones
