@@ -36,12 +36,12 @@ init = function(args) {
           var cell = $(this).closest('td');
           if (cell.hasClass('maximized'))
           {
-            cell.removeClass('maximized')
+            cell.removeClass('maximized');
             cell.addClass('minimized');
           }
           else
           {
-            cell.removeClass('minimized')
+            cell.removeClass('minimized');
             cell.addClass('maximized');
           }
         });
