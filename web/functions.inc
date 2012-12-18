@@ -1392,40 +1392,42 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='', $disabled=FA
             " data-form-id=\"$form_id\">\n";
             
   // the day selector
-  echo "<select name=\"${prefix}day\"" . 
-       ($disabled ? " disabled=\"disabled\"" : "") .
-       ">\n"; 
+  $options = array();
   for ($i = 1; $i <= 31; $i++)
   {
-    echo "<option" . ($i == $day ? " selected=\"selected\"" : "") . ">$i</option>\n";
+    $options[] = $i;
   }
-  echo "</select>\n";
+  $params = array('name'     => $prefix . 'day',
+                  'options'  => $options,
+                  'value'    => $day,
+                  'disabled' => $disabled);
+  generate_select($params);
+
   // the month selector
-  echo "<select name=\"${prefix}month\"" . 
-       ($disabled ? " disabled=\"disabled\"" : "") .
-       ">\n"; 
+  $options = array();
   for ($i = 1; $i <= 12; $i++)
   {
-    $m = utf8_strftime($strftime_format['mon'], mktime(0, 0, 0, $i, 1, $year));  
-    echo "<option value=\"$i\"" . ($i == $month ? " selected=\"selected\"" : "") . ">$m</option>\n";
+    $options[$i] = utf8_strftime($strftime_format['mon'], mktime(0, 0, 0, $i, 1, $year));
   }
-  echo "</select>\n";
+  $params = array('name'        => $prefix . 'month',
+                  'options'     => $options,
+                  'force_assoc' => TRUE,
+                  'value'       => $month,
+                  'disabled'    => $disabled);
+  generate_select($params);
+
   // the year selector
-  echo "<select name=\"${prefix}year\"" . 
-       ($disabled ? " disabled=\"disabled\"" : "") .
-       ">\n";
+  $options = array();
   for ($i = $min; $i <= $max; $i++)
   {
-    echo "<option value=\"$i\"" . ($i == $year ? " selected=\"selected\"" : "") . ">$i</option>\n";
+    $options[] = $i;
   }
-  echo "</select>\n";
-  // If the select is disabled we'll still pass through the values as hidden inputs
-  if ($disabled)
-  {
-    echo "<input type=\"hidden\" name=\"${prefix}day\" value=\"$day\">\n";
-    echo "<input type=\"hidden\" name=\"${prefix}month\" value=\"$month\">\n";
-    echo "<input type=\"hidden\" name=\"${prefix}year\" value=\"$year\">\n";
-  }
+  $params = array('name'     => $prefix . 'year',
+                  'options'  => $options,
+                  'value'    => $year,
+                  'disabled' => $disabled);
+  generate_select($params);
+
   echo "</span>\n";
 }
 
