@@ -36,6 +36,8 @@ $(function() {
   
   $default_lang = locale_format($default_language_tokens, '-');
   
+  // Note that we use [''] rather than dot notation for the regional settings because
+  // settings such as 'en-US' would break dot notation.
   echo "$.datepicker.setDefaults($.datepicker.regional['$default_lang']);\n";
   $datepicker_langs = get_language_qualifiers();
   $datepicker_langs = alias_qualifiers($datepicker_langs);
@@ -134,3 +136,83 @@ function datepicker_close(dateText, inst, formId)
   
   $('#' + inst.id).trigger('datePickerUpdated');
 }
+
+<?php
+// =================================================================================
+
+// Extend the init() function 
+?>
+
+var oldInitDatepicker = init;
+init = function() {
+  oldInitDatepicker.apply(this);
+
+  <?php
+  // Overwrite the date selectors with a datepicker
+  ?>
+  $('span.dateselector').each(function() {
+      var span = $(this);
+      var prefix  = span.data('prefix'),
+          minYear = span.data('minYear'),
+          maxYear = span.data('maxYear'),
+          formId  = span.data('formId');
+      var dateData = {day:   parseInt(span.data('day'), 10),
+                      month: parseInt(span.data('month'), 10),
+                      year:  parseInt(span.data('year'), 10)};
+      var unit;
+      var initialDate = new Date(dateData.year,
+                                 dateData.month - 1,  <?php // JavaScript months run from 0 to 11 ?>
+                                 dateData.day);
+      var disabled = span.find('select').first().is(':disabled'),
+          baseId = prefix + 'datepicker';
+      
+      span.empty();
+
+      <?php
+      // The next input is disabled because we don't need to pass the value through to
+      // the form and we don't want the value cluttering up the URL (if it's a GET).
+      // It's just used as a holder for the date in a known format so that it can
+      // then be used by datepicker_close() to populate the following three inputs.
+      ?>
+      $('<input>').attr('type', 'hidden')
+                  .attr('id', baseId + '_alt')
+                  .attr('name', prefix + '_alt')
+                  .attr('disabled', 'disabled')
+                  .val(dateData.year + '-' + dateData.month + '-' + dateData.day)
+                  .appendTo(span);
+      <?php
+      // These three inputs (day, week, month) we do want
+      ?>
+      for (unit in dateData)
+      {
+        if (dateData.hasOwnProperty(unit))
+        {
+          $('<input>').attr('type', 'hidden')
+                      .attr('id', baseId + '_alt_' + unit)
+                      .attr('name', prefix + unit)
+                      .val(dateData[unit])
+                      .appendTo(span);
+        }
+      }
+      <?php // Finally the main datepicker field ?>
+      $('<input>').attr('class', 'date')
+                  .attr('type', 'text')
+                  .attr('id', baseId)
+                  .datepicker({altField: '#' + baseId + '_alt',
+                               disabled: disabled,
+                               yearRange: minYear + ':' + maxYear})
+                  .datepicker('setDate', initialDate)
+                  .appendTo(span);
+                  
+      if (formId.length > 0)
+      {
+        $('#' + baseId).datepicker('option', 'onClose', function(dateText, inst) {
+            datepicker_close(dateText, inst, formId);
+          });
+      }
+      
+      $('.ui-datepicker').draggable();
+      
+    });
+};
+
