@@ -50,7 +50,7 @@ init = function(args) {
       var output = $(this).filter(':checked').val();
       var formatButtons = $('input[name="output_format"]');
       var icalButton = formatButtons.filter('[value="' + <?php echo OUTPUT_ICAL ?> + '"]');
-      if (output == <?php echo SUMMARY ?>)
+      if (output === '<?php echo SUMMARY ?>')
       {
         icalButton.attr('disabled', 'disabled');
         if (icalButton.is(':checked'))

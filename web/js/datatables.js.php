@@ -58,7 +58,7 @@ function getFixedColWidth(table, col)
 {
   var tableWidth = table.outerWidth();
   var leftWidth = table.find('th:first-child').outerWidth();
-  var maxWidthPx = (col.sWidth == "relative") ? tableWidth*col.iWidth/100 : col.iWidth;
+  var maxWidthPx = (col.sWidth === "relative") ? tableWidth*col.iWidth/100 : col.iWidth;
   return Math.min(leftWidth, maxWidthPx);
 }
         
@@ -92,7 +92,7 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
     ?>
     var winNewWidth = $(window).width();
     var winNewHeight = $(window).height();
-    if ((winNewWidth == winWidth) && (winNewHeight == winHeight))
+    if ((winNewWidth === winWidth) && (winNewHeight === winHeight))
     {
       return;
     }

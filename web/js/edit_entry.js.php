@@ -48,7 +48,6 @@ var areaConfig = function areaConfig(property, areaId) {
     if (properties.indexOf(property) < 0)
     {
       throw new Error("areaConfig(): invalid property '" + property + "' passed to areaConfig");
-      return;
     }
     
     if (areaId === undefined)
@@ -158,7 +157,7 @@ function onAllDayClick()
     onAllDayClick.oldEndDatepicker = endDatepicker.datepicker('getDate');
     endSelect.val(lastSlot);
     if ((lastSlot < firstSlot) && 
-        (onAllDayClick.oldStartDatepicker == onAllDayClick.oldEndDatepicker))
+        (onAllDayClick.oldStartDatepicker === onAllDayClick.oldEndDatepicker))
     {
       <?php
       // If the booking day spans midnight then the first and last slots
@@ -394,7 +393,7 @@ function validate(form)
   ?>
   if (!("min" in testInput) || !(("step" in testInput)))
   {
-    if ((form.find('input:radio[name=rep_type]:checked').val() == <?php echo REP_WEEKLY ?>) &&
+    if ((form.find('input:radio[name=rep_type]:checked').val() === '<?php echo REP_WEEKLY ?>') &&
         (form.find('#rep_num_weeks').val() < <?php echo REP_NUM_WEEKS_MIN ?>))
     {
       window.alert("<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('useful_n-weekly_value')) ?>");

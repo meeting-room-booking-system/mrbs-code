@@ -42,7 +42,7 @@ init = function(args) {
     ?>
     maintable.find('table.sub th.control')
              .text('-')
-             .live('click', function (event) {
+             .live('click', function () {
                   var nTr = $(this).closest('.table_container').parent().prev();
                   var serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
                   $('#subtable_' + serial + '_wrapper').slideUp( function () {
@@ -74,7 +74,7 @@ init = function(args) {
     ?>
     maintable.find('td.control')
              .text('+')
-             .live('click', function (event) {
+             .live('click', function () {
                   var nTr = $(this).parent();
                   var serial = nTr.attr('id').replace('row_', '');
                   var subtableId = 'subtable_' + serial;
