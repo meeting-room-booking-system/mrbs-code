@@ -37,7 +37,7 @@
  ******************/
 // Which database system: "pgsql"=PostgreSQL, "mysql"=MySQL,
 // "mysqli"=MySQL via the mysqli PHP extension
-$dbsys = "mysql";
+$dbsys = "mysqli";
 // Hostname of database server. For pgsql, can use "" instead of localhost
 // to use Unix Domain Sockets instead of TCP/IP.
 $db_host = "localhost";
