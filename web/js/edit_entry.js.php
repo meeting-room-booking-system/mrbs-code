@@ -682,25 +682,27 @@ function getDuration(from, to, days)
       duration = durFormat(duration/60);
     }
   }
-  
   <?php
-  // duration can be either a number or a string from now on
-  // (durFormat returns a string), so we use == and not ===
+  // As durFormat returns a string, duration can now be either
+  // a number or a string, so convert it to a string so that we
+  // know what we are dealing with
   ?>
+  duration.toString();
+  
   if (days !== 0)
   {
     text += days + ' ';
     text += (days === 1) ? vocab.days.singular : vocab.days.plural;
-    if (duration != 0)
+    if (duration !== '0')
     {
       text +=  ', ';
     }
   }
 
-  if (duration != 0)
+  if (duration !== '0')
   {
     text += duration + ' ';
-    text += (duration == 1) ? vocab[durUnits].singular : vocab[durUnits].plural;
+    text += (duration === '1') ? vocab[durUnits].singular : vocab[durUnits].plural;
   }
   return text;
 }
