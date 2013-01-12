@@ -264,6 +264,14 @@ function validationMessages()
             $(this).trigger('validate');
           });
           <?php
+          // When a form validation fails we need to clear the submit flag because
+          // otherwise checkConflicts() won't do anything (because we don't check
+          // for conflicts on a submit)
+          ?>
+          $(field).bind('invalid', function() {
+            $(this).closest('form').removeData('submit');
+          });
+          <?php
           // Trigger the validate event when the form is first loaded
           ?>
           $(field).trigger('validate');
