@@ -20,9 +20,8 @@
 
 // $Id$
 
-// We use some functions from here
-require_once "functions.inc";
-require_once('Blowfish.php');
+// Bring in Blowfish class
+require_once(dirname(__FILE__).'/../Blowfish.php');
 
 $blowfish = new Crypt_Blowfish($auth['session_cookie']['secret']);
 
