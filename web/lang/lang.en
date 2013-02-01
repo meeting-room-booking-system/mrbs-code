@@ -161,6 +161,7 @@ $vocab["returncal"]          = "Return to calendar view";
 $vocab["failed_to_acquire"]  = "Failed to acquire exclusive database access";
 $vocab["invalid_booking"]    = "Invalid booking";
 $vocab["must_set_description"] = "You must set a brief description for the booking. Please go back and enter one.";
+$vocab["no_rooms_selected"]    = "You must select a room.";
 $vocab["mail_subject_approved"]  = "Entry approved for $mrbs_company MRBS";
 $vocab["mail_subject_rejected"]  = "Entry rejected for $mrbs_company MRBS";
 $vocab["mail_subject_more_info"] = "$mrbs_company MRBS: more information requested";

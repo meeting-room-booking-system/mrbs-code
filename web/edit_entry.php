@@ -404,6 +404,7 @@ function create_field_entry_rooms($disabled=FALSE)
                   'force_assoc' => TRUE,
                   'value'       => $selected_rooms,
                   'multiple'    => $multiroom_allowed,
+                  'mandatory'   => TRUE,
                   'disabled'    => $disabled,
                   'attributes'  => array('size="5"'));
   generate_select($params);

@@ -6,6 +6,18 @@ require_once "mrbs_sql.inc";
 require_once "functions_ical.inc";
 
 
+function invalid_booking($message)
+{
+  global $day, $month, $year, $area, $room;
+  
+  print_header($day, $month, $year, $area, isset($room) ? $room : "");
+  echo "<h1>" . get_vocab('invalid_booking') . "</h1>\n";
+  echo "<p>$message</p>\n";
+  // Print footer and exit
+  print_footer(TRUE);
+}
+
+
 // (1) Check the user is authorised for this page
 //  ---------------------------------------------
 checkAuthorised();
@@ -137,27 +149,17 @@ if (!$ajax)
 {
   if ($name == '')
   {
-    print_header($day, $month, $year, $area, isset($room) ? $room : "");
-  ?>
-         <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-         <p>
-           <?php echo get_vocab('must_set_description'); ?>
-         </p>
-  <?php
-    // Print footer and exit
-    print_footer(TRUE);
+    invalid_booking(get_vocab('must_set_description'));
   }       
 
+  if (empty($rooms))
+  {
+    invalid_booking(get_vocab('no_rooms_selected'));
+  }
 
   if (($rep_type == REP_WEEKLY) && ($rep_num_weeks < 1))
   {
-    print_header($day, $month, $year, $area, isset($room) ? $room : "");
-    echo "<h1>" . get_vocab('invalid_booking') . "</h1>\n";
-    echo "<p>\n";
-    echo  get_vocab('you_have_not_entered') . " " . get_vocab("useful_n-weekly_value");
-    echo "</p>\n";
-    // Print footer and exit
-    print_footer(TRUE);
+    invalid_booking(get_vocab('you_have_not_entered') . " " . get_vocab("useful_n-weekly_value"));
   }
   
 
@@ -168,16 +170,8 @@ if (!$ajax)
       $field = preg_replace('/^entry\./', '', $field);
       if ($value && array_key_exists($field, $custom_fields) && ($custom_fields[$field] === ''))
       {
-        print_header($day, $month, $year, $area, isset($room) ? $room : "");
-        ?>
-        <h1><?php echo get_vocab('invalid_booking'); ?></h1>
-        <p>
-          <?php echo get_vocab('missing_mandatory_field')." \"".
-                     get_loc_field_name($tbl_entry, $field)."\""; ?>
-        </p>
-        <?php
-        // Print footer and exit
-        print_footer(TRUE);
+        invalid_booking(get_vocab('missing_mandatory_field') . ' "' .
+                        get_loc_field_name($tbl_entry, $field) . '"');
       }
     }
   }        
