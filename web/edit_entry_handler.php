@@ -208,9 +208,14 @@ if (isset($id) && ($id == ''))
   unset($id);
 }
 
-// Make sure the area corresponds to the room that is being booked
-if (!empty($rooms[0]))
+
+if (empty($rooms))
 {
+  trigger_error('Internal error: no rooms specified', E_USER_WARNING);
+}
+else
+{
+  // Make sure the area corresponds to the room that is being booked
   $area = get_area($rooms[0]);
   get_area_settings($area);  // Update the area settings
 }
