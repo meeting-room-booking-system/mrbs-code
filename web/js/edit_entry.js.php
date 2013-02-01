@@ -781,13 +781,24 @@ function adjustWidth(a, b)
   
   
 var reloadSlotSelector = function reloadSlotSelector(select, area) {
-    select.data('previous', select.data('current'));
-    select.data('current', select.val());
     select.html($('#' + select.attr('id') + area).html())
           .val(select.data('current'));
   };
   
   
+var updateSelectorData = function updateSelectorData(){
+    var selectors = ['area', 'start_seconds', 'end_seconds'];
+    var i, select;
+    
+    for (i=0; i<selectors.length; i++)
+    {
+      select = $('#' + selectors[i]);
+      select.data('previous', select.data('current'));
+      select.data('current', select.val());
+    }
+  };
+  
+
 function adjustSlotSelectors()
 {
   <?php
@@ -827,7 +838,6 @@ function adjustSlotSelectors()
   {
     return;
   }
-
   <?php 
   // If All Day is checked then just set the start and end values to the first
   // and last possible options.
@@ -969,6 +979,7 @@ function adjustSlotSelectors()
   <?php // Destroy and rebuild the start select ?>
   startSelect.html($('#start_seconds' + currentArea).html());
   startSelect.val(startValue);
+  startSelect.data('current', startValue);
 
   <?php // Destroy and rebuild the end select ?>
   endSelect.empty();
@@ -1054,6 +1065,7 @@ function adjustSlotSelectors()
     });
     
   endSelect.val(endValue);
+  endSelect.data('current', endValue);
   
   adjustWidth(startSelect, endSelect);
     
@@ -1083,9 +1095,10 @@ init = function() {
           $(this).data('current', $(this).val());
           $(this).data('previous', $(this).val());
         })
-      .change(function() { 
+      .change(function() {
+          updateSelectorData();
           reloadSlotSelector($(this), $('#area').val());
-          adjustSlotSelectors(); 
+          adjustSlotSelectors();
         });
     
   
@@ -1094,12 +1107,8 @@ init = function() {
       .data('previous', areaSelect.val())
       .change(function() {
           var newArea = $(this).val();
-          <?php 
-          // Update the current and previous values for
-          // the area selector
-          ?>
-          $(this).data('previous', $(this).data('current'));
-          $(this).data('current', newArea);
+
+          updateSelectorData();
           
           <?php // Switch room selects ?>
           var roomSelect = $('#rooms');
