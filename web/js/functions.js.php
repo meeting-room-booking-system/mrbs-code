@@ -44,7 +44,7 @@ var visibilityPrefix = function visibilityPrefix() {
     
     if (typeof visibilityPrefix.prefix === 'undefined')
     {
-      visibilityPrefix.prefix === null;
+      visibilityPrefix.prefix = null;
       for (var i=0; i<prefixes.length; i++)
       {
         testProperty = prefixes[i];
