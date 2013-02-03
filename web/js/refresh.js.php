@@ -110,7 +110,12 @@ if (!empty($refresh_rate))
       ?>
       refreshTimer();
     }
-    
+
+    <?php
+    // Add an event listener to detect a change in the visibility
+    // state.  We can then suspend Ajax refreshing when the page is
+    // hidden to save on server, client and network load.
+    ?>
     var prefix = visibilityPrefix();
     if (document.addEventListener &&
         (prefix !== null) && 

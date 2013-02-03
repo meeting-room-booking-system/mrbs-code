@@ -1374,6 +1374,11 @@ init = function() {
   $('input[name="rep_type"]').change(changeRepTypeDetails);
   changeRepTypeDetails();
   
+  <?php
+  // Add an event listener to detect a change in the visibility
+  // state.  We can then suspend Ajax checking when the page is
+  // hidden to save on server, client and network load.
+  ?>
   var prefix = visibilityPrefix();
   if (document.addEventListener &&
       (prefix !== null))
