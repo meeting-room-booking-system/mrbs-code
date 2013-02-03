@@ -32,3 +32,52 @@ function getErrorList(errors)
   result.html += "<\/ul>";
   return result;
 }
+
+
+<?php
+// Gets the correct prefix to use (if any) with the page visibility API.
+// Returns null if not supported.
+?>
+var visibilityPrefix = function visibilityPrefix() {
+    var prefixes = ['', 'webkit', 'moz', 'ms', 'o'];
+    var testProperty;
+    
+    if (typeof visibilityPrefix.prefix === 'undefined')
+    {
+      visibilityPrefix.prefix === null;
+      for (var i=0; i<prefixes.length; i++)
+      {
+        testProperty = prefixes[i];
+        testProperty += (prefixes[i] === '') ? 'hidden' : 'Hidden';
+        if (testProperty in document)
+        {
+          visibilityPrefix.prefix = prefixes[i];
+          break;
+        }
+      }
+    }
+
+    return visibilityPrefix.prefix;
+  };
+
+<?php
+// Determine if the page is hidden from the user (eg if it has been minimised
+// or the tab is not visible).    Returns true, false or null (if not known).
+?>
+var isHidden = function isHidden() {
+    var prefix;
+    prefix = visibilityPrefix();
+    switch (prefix)
+    {
+      case null:
+        return null;
+        break;
+      case '':
+        return document.hidden;
+        break;
+      default:
+        return document[prefix + 'Hidden'];
+        break;
+    }
+  };
+

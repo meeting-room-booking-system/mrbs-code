@@ -16,6 +16,43 @@ $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= $max_level);
 
 
+// Set (if set is true) or clear (if set is false) a timer
+// to check for conflicts periodically in case someone else
+// books the slot you are looking at.  If setting the timer
+// it also performs an immediate check.
+?>
+var conflictTimer = function conflictTimer(set) {
+    <?php
+    if (function_exists('json_encode') &&
+        !empty($ajax_refresh_rate))
+    {
+      ?>
+      if (set)
+      {
+        <?php
+        // (Note the config variable is in seconds, but the setInterval() function
+        // uses milliseconds)
+        // Only set the timer if the page is visible
+        ?>
+        if (!isHidden())
+        {
+          checkConflicts(true);
+          conflictTimer.id = window.setInterval(function() {
+              checkConflicts(true);
+            }, <?php echo $ajax_refresh_rate * 1000 ?>);
+        }
+      }
+      else if (typeof conflictTimer.id !== 'undefined')
+      {
+        window.clearInterval(conflictTimer.id);
+      }
+      <?php
+    }
+    ?>
+  };
+
+
+<?php
 // Function to display the secondary repeat type fieldset appropriate
 // to the selected repeat type
 ?>
@@ -1069,11 +1106,20 @@ function adjustSlotSelectors()
   
   adjustWidth(startSelect, endSelect);
     
-} <?php // function adjustSlotSelectors()
+} <?php // function adjustSlotSelectors() ?>
 
 
+var editEntryVisChanged = function editEntryVisChanged() {
+    <?php
+    // Clear the conflict timer and then restart it.   We want
+    // a check to be performed immediately the page becomes
+    // visible again.
+    ?>
+    conflictTimer(false);
+    conflictTimer(true);
+  };
 
-
+<?php
 // =================================================================================
 
 // Extend the init() function 
@@ -1233,8 +1279,6 @@ init = function() {
                   checkConflicts();
                 });
      
-    checkConflicts();
-
     $('#conflict_check, #policy_check').click(function manageTabs() {
         var tabId;
         var checkResults = $('#check_results');
@@ -1293,17 +1337,10 @@ init = function() {
     <?php
     // Finally, set a timer so that conflicts are periodically checked for,
     // in case someone else books that slot before you press Save.
-    // (Note the config variable is in seconds, but the setInterval() function
-    // uses milliseconds)
-    if (!empty($ajax_refresh_rate))
-    {
-      ?>
-      window.setInterval(function() {
-        checkConflicts(true);
-      }, <?php echo $ajax_refresh_rate * 1000 ?>);
-      <?php
-    }
-
+    ?>
+    conflictTimer(true);
+    
+    <?php
   } // if (function_exists('json_encode'))
 
   
@@ -1336,4 +1373,11 @@ init = function() {
     
   $('input[name="rep_type"]').change(changeRepTypeDetails);
   changeRepTypeDetails();
+  
+  var prefix = visibilityPrefix();
+  if (document.addEventListener &&
+      (prefix !== null))
+  {
+    document.addEventListener(prefix + "visibilitychange", editEntryVisChanged);
+  }
 };
