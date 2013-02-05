@@ -380,7 +380,8 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
 
 /** mrbsDelEntry()
  * 
- * Delete an entry, or optionally all entries.
+ * Delete an entry, or optionally all entries.   Will also delete any newly
+ * orphaned rows in the repeat table.
  * 
  * $user   - Who's making the request
  * $id     - The entry to delete
@@ -388,7 +389,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
  * $all    - If set, include user modified entries in the series delete
  *
  * Returns FALSE if an error occured, otherwise an array of start_times that
- * have been deleted
+ * have been deleted.
  *
  */
 function mrbsDelEntry($user, $id, $series, $all)
@@ -445,8 +446,9 @@ function mrbsDelEntry($user, $id, $series, $all)
     }
   }
 
+  // Get rid of any orphaned rows in the repeat table
   if ($repeat_id > 0 &&
-      sql_query1("SELECT count(*) FROM $tbl_entry WHERE repeat_id=$repeat_id") == 0)
+      sql_query1("SELECT COUNT(*) FROM $tbl_entry WHERE repeat_id=$repeat_id") == 0)
   {
     sql_command("DELETE FROM $tbl_repeat WHERE id=$repeat_id");
   }
@@ -454,6 +456,7 @@ function mrbsDelEntry($user, $id, $series, $all)
   asort($start_times);
   return $start_times;
 }
+
 
 /** mrbsCreateEntry()
  * 

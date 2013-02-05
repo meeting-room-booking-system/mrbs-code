@@ -9,7 +9,8 @@
 //
 // If deleting lots of entries you may need to split the Ajax requests into
 // multiple smaller requests in order to avoid exceeding the system limit 
-// for POST requests.
+// for POST requests, and also the limit on the size of the SQL query once
+// the ids are imploded.
 //
 // Note that:
 // (1) the code assumes that you are an admin with powers to delete anything.
@@ -47,9 +48,25 @@ foreach ($ids as $id)
   }
 }
 
+
 // Everything looks OK - go ahead and delete the entries
+
+// Note on performance.   It is much quicker to delete entries using the
+// WHERE id IN method below than looping through mrbsDelEntry().  Testing
+// for 100 entries gave 2.5ms for the IN method against 37.6s for the looping
+// method - ie approx 15 times faster.   For 1,000 rows the IN method was 19
+// times faster.
+//
+// Because we are not using mrbsDelEntry() we have to delete any orphaned
+// rows in the repeat table ourselves - but this does not take long.
+
 $sql = "DELETE FROM $tbl_entry WHERE id IN (" . implode(',', $ids) . ")";
 $result = sql_command($sql);
+
+// And delete any orphaned rows in the repeat table
+$sql = "DELETE FROM $tbl_repeat WHERE id NOT IN (SELECT repeat_id FROM $tbl_entry)";
+$orphan_result = sql_command($sql);
+
 
 echo $result;
 ?>
