@@ -991,10 +991,7 @@ init = function(args) {
                 data.end_day = data.start_day;
                 data.end_month = data.start_month;
                 data.end_year = data.start_year;
-                if (newParams.room !== undefined)
-                {
-                  data.rooms = newParams.room;
-                }
+                data.rooms = (typeof newParams.room === 'undefined') ? args.room : newParams.room;
                 <?php
                 if (isset($timetohighlight))
                 {
