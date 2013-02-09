@@ -96,7 +96,7 @@ $(function() {
     showWeek: <?php echo ($view_week_number) ? 'true' : 'false' ?>,
     firstDay: <?php echo $weekstarts ?>,
     altFormat: 'yy-mm-dd',
-    onClose: function(dateText, inst) {datepicker_close(dateText, inst);}
+    onSelect: function(dateText, inst) {datepickerSelect(dateText, inst);}
   });
 });
 
@@ -110,7 +110,7 @@ $(function() {
 // (datepicker can only have one alternate field, which is why we need to write
 // to the three fields ourselves).
 //
-// Blur the datepicker input field on close, so that the datepicker will reappear
+// Blur the datepicker input field on select, so that the datepicker will reappear
 // if you select it.    (Not quite sure why you need this.  It only seems
 // to be necessary when you are using Firefox and the datepicker is draggable).
 
@@ -119,7 +119,7 @@ $(function() {
 // Finally, trigger a datePickerUpdated event so that it can be dealt with elsewhere
 // by code that relies on having updated values in the alt fields
 ?>
-function datepicker_close(dateText, inst, formId)
+function datepickerSelect(dateText, inst, formId)
 {
   var alt_id = inst.id + '_alt';
   var date = document.getElementById(alt_id).value.split('-');
@@ -172,7 +172,7 @@ init = function() {
       // The next input is disabled because we don't need to pass the value through to
       // the form and we don't want the value cluttering up the URL (if it's a GET).
       // It's just used as a holder for the date in a known format so that it can
-      // then be used by datepicker_close() to populate the following three inputs.
+      // then be used by datepickerSelect() to populate the following three inputs.
       ?>
       $('<input>').attr('type', 'hidden')
                   .attr('id', baseId + '_alt')
@@ -206,8 +206,8 @@ init = function() {
                   
       if (formId.length > 0)
       {
-        $('#' + baseId).datepicker('option', 'onClose', function(dateText, inst) {
-            datepicker_close(dateText, inst, formId);
+        $('#' + baseId).datepicker('option', 'onSelect', function(dateText, inst) {
+            datepickerSelect(dateText, inst, formId);
           });
       }
       
