@@ -60,6 +60,7 @@ if (!empty($refresh_rate))
         if (typeof intervalId !== 'undefined')
         {
           window.clearInterval(intervalId);
+          intervalId = undefined;
         }
         if (!pageHidden)
         {
@@ -77,7 +78,7 @@ if (!empty($refresh_rate))
   var oldInitRefresh = init;
   init = function(args) {
     oldInitRefresh.apply(this, [args]);
-
+    
     refreshPage = function refreshPage() {
         if (!isHidden() && !refreshPage.disabled)
         {
@@ -99,14 +100,15 @@ if (!empty($refresh_rate))
                      // (1) Empty the existing table in order to get rid of events
                      // and data and prevent memory leaks, (2) insert the updated 
                      // table HTML, (3) clear the existing interval timer and then
-                     // (4) trigger a window load event so that the resizable bookings
-                     // are re-created and a new interval timer is started
+                     // (4) trigger a window load event so that the resizable
+                     // bookings are re-created and a new timer started.
                      ?>
                      if (!isHidden() && !refreshPage.disabled)
                      {
                        table.empty();
                        table.html(result);
                        window.clearInterval(intervalId);
+                       intervalId = undefined;
                        $(window).trigger('load');
                      }
                    },
@@ -115,9 +117,12 @@ if (!empty($refresh_rate))
       };
     
     <?php
-    // Set an interval timer to refresh the page.
+    // Set an interval timer to refresh the page, unless there's already one in place
     ?>
-    intervalId = setInterval(refreshPage, <?php echo $refresh_rate * 1000 ?>);
+    if (typeof intervalId === 'undefined')
+    {
+      intervalId = setInterval(refreshPage, <?php echo $refresh_rate * 1000 ?>);
+    }
     
 
     <?php

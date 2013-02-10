@@ -1205,6 +1205,49 @@ init = function(args) {
             getTableData(table, tableData);
           }
         });
+      
+      <?php
+      // We want to disable page refresh if the user is hovering over
+      // the resizable handles.   We trigger a mouseenter event on page
+      // load so we can work out whether the mouse is over the handle
+      // on page load (but we only need to trigger one event)
+      ?>  
+      var mouseDown = false;  
+      $('div.clone .ui-resizable-handle')
+        .mouseenter(function(e) {
+            if (!mouseDown)
+            {
+              if ($(this).is(':hover'))
+              {
+                turnOffPageRefresh();
+              }
+              else
+              {
+                turnOnPageRefresh();
+              }
+            }
+          })
+        .mouseleave(function() {
+            if (!mouseDown)
+            {
+              turnOnPageRefresh();
+            }
+          })
+        .mousedown(function() {
+            mouseDown = true;
+            if ($(this).is(':hover'))
+            {
+              turnOffPageRefresh();
+            }
+          })
+        .mouseup(function() {
+            mouseDown = false;
+            if (!$(this).is(':hover'))
+            {
+              turnOnPageRefresh();
+            }
+          })
+        .first().trigger('mouseenter');
         
       <?php // also need to redraw and recalibrate if the multiple bookings are clicked ?>
       table.find('div.multiple_control')
