@@ -18,11 +18,42 @@ if ($use_strict)
 
 var intervalId;
 
-<?php
-// refreshPage will be defined later as a function, once we know
-// the page data, which won't be until init().
-?>
-var refreshPage = {};
+var refreshPage = function refreshPage() {
+    if (!isHidden() && !refreshPage.disabled)
+    {
+      var data = {ajax: 1, 
+                  day: refreshPage.args.day,
+                  month: refreshPage.args.month,
+                  year: refreshPage.args.year,
+                  room: refreshPage.args.room,
+                  area: refreshPage.args.area};
+      if (refreshPage.args.timetohighlight !== undefined)
+      {
+        data.timetohighlight = refreshPage.args.timetohighlight;
+      }
+      var table = $('table.dwm_main');
+      $.post(refreshPage.args.page + '.php',
+             data,
+             function(result){
+                 <?php
+                 // (1) Empty the existing table in order to get rid of events
+                 // and data and prevent memory leaks, (2) insert the updated 
+                 // table HTML, (3) clear the existing interval timer and then
+                 // (4) trigger a window load event so that the resizable
+                 // bookings are re-created and a new timer started.
+                 ?>
+                 if (!isHidden() && !refreshPage.disabled)
+                 {
+                   table.empty();
+                   table.html(result);
+                   window.clearInterval(intervalId);
+                   intervalId = undefined;
+                   $(window).trigger('load');
+                 }
+               },
+             'html');
+    }  <?php // if (!isHidden() && !refreshPage.disabled) ?>
+  };
 
 <?php
 // Functions to turn off and on page refresh.  We don't want the page to be
@@ -79,43 +110,7 @@ if (!empty($refresh_rate))
   init = function(args) {
     oldInitRefresh.apply(this, [args]);
     
-    refreshPage = function refreshPage() {
-        if (!isHidden() && !refreshPage.disabled)
-        {
-          var data = {ajax: 1, 
-                      day: args.day,
-                      month: args.month,
-                      year: args.year,
-                      room: args.room,
-                      area: args.area};
-          if (args.timetohighlight !== undefined)
-          {
-            data.timetohighlight = args.timetohighlight;
-          }
-          var table = $('table.dwm_main');
-          $.post(args.page + '.php',
-                 data,
-                 function(result){
-                     <?php
-                     // (1) Empty the existing table in order to get rid of events
-                     // and data and prevent memory leaks, (2) insert the updated 
-                     // table HTML, (3) clear the existing interval timer and then
-                     // (4) trigger a window load event so that the resizable
-                     // bookings are re-created and a new timer started.
-                     ?>
-                     if (!isHidden() && !refreshPage.disabled)
-                     {
-                       table.empty();
-                       table.html(result);
-                       window.clearInterval(intervalId);
-                       intervalId = undefined;
-                       $(window).trigger('load');
-                     }
-                   },
-                 'html');
-        }  <?php // if (!isHidden() && !refreshPage.disabled) ?>
-      };
-    
+    refreshPage.args = args;
     <?php
     // Set an interval timer to refresh the page, unless there's already one in place
     ?>
