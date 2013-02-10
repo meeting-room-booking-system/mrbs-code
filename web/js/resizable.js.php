@@ -19,7 +19,7 @@ $is_admin = (authGetUserLevel($user) >= $max_level);
 // function to reverse a collection of jQuery objects
 ?>
 $.fn.reverse = [].reverse;
-      
+
 
 <?php
 // Get the sides of the rectangle represented by the jQuery object jqObject
@@ -551,6 +551,7 @@ init = function(args) {
       var bookedMap = [];
 
       var downHandler = function(e) {
+          turnOffPageRefresh();
           <?php // Build the map of booked cells ?>
           table.find('td').not('td.new, td.row_labels').each(function() {
               bookedMap.push(getSides($(this)));
@@ -705,6 +706,7 @@ init = function(args) {
           if (outsideTable(tableData, {x: e.pageX, y: e.pageY}))
           {
             box.remove();
+            turnOnPageRefresh();
             return;
           }
           <?php
@@ -724,6 +726,7 @@ init = function(args) {
             {
               box.remove();
             }
+            turnOnPageRefresh();
             return;
           }
           <?php
@@ -749,6 +752,7 @@ init = function(args) {
             queryString += '&start_date=' + params.date[0];
             queryString += '&end_date=' + params.date[params.date.length - 1];
           }
+          turnOnPageRefresh();
           window.location = 'edit_entry.php?' + queryString;
           return;
         };
@@ -844,6 +848,7 @@ init = function(args) {
             ?>
             var divResizeStart = function (event, ui)
             {
+              turnOffPageRefresh();
               <?php
               // Add a wrapper so that we can disable the highlighting when we are
               // resizing (the flickering is a bit annoying)
@@ -913,7 +918,11 @@ init = function(args) {
               
               var r1 = getSides(divBooking);
               var r2 = getSides(divClone);
-              if (!rectanglesIdentical(r1, r2))
+              if (rectanglesIdentical(r1, r2))
+              {
+                turnOnPageRefresh();
+              }
+              else
               {
                 <?php 
                 // We've got a change to the booking, so we need to send an Ajax
@@ -1056,9 +1065,11 @@ init = function(args) {
                             }
                             window.alert(alertMessage);
                           }
+                          turnOnPageRefresh();
                         },
                        'json');
-              }
+              }   <?php // if (rectanglesIdentical(r1, r2)) ?>
+              
             };  <?php // divResizeStop ?>
             
             <?php
@@ -1182,7 +1193,7 @@ init = function(args) {
             $(this).css('background-color', 'transparent')
                    .wrapInner('<div style="position: relative"><\/div>');
           });
-
+                                  
       $(window).resize(function(event) {
           if (event.target === this)  <?php // don't want the ui-resizable event bubbling up ?>
           {
