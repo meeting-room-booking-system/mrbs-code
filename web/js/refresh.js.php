@@ -81,7 +81,6 @@ if (!empty($refresh_rate))
     refreshPage = function refreshPage() {
         if (!isHidden() && !refreshPage.disabled)
         {
-          clearInterval(intervalId);
           var data = {ajax: 1, 
                       day: args.day,
                       month: args.month,
@@ -98,14 +97,16 @@ if (!empty($refresh_rate))
                  function(result){
                      <?php
                      // (1) Empty the existing table in order to get rid of events
-                     // and data and prevent memory leaks (2) insert the updated 
-                     // table HTML and then (3) trigger a window load event so that 
-                     // the resizable bookings are re-created
+                     // and data and prevent memory leaks, (2) insert the updated 
+                     // table HTML, (3) clear the existing interval timer and then
+                     // (4) trigger a window load event so that the resizable bookings
+                     // are re-created and a new interval timer is started
                      ?>
                      if (!isHidden() && !refreshPage.disabled)
                      {
                        table.empty();
                        table.html(result);
+                       window.clearInterval(intervalId);
                        $(window).trigger('load');
                      }
                    },
@@ -114,8 +115,8 @@ if (!empty($refresh_rate))
       };
     
     <?php
-    // Set an interval timer to refresh the page
-    ?>  
+    // Set an interval timer to refresh the page.
+    ?>
     var intervalId = setInterval(refreshPage, <?php echo $refresh_rate * 1000 ?>);
     
 

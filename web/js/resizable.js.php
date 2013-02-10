@@ -1205,7 +1205,7 @@ init = function(args) {
             getTableData(table, tableData);
           }
         });
-
+        
       <?php // also need to redraw and recalibrate if the multiple bookings are clicked ?>
       table.find('div.multiple_control')
           .click(function() {
