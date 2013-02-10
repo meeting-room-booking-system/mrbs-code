@@ -14,7 +14,11 @@ if ($use_strict)
 {
   echo "'use strict';\n";
 }
+?>
 
+var intervalId;
+
+<?php
 // refreshPage will be defined later as a function, once we know
 // the page data, which won't be until init().
 ?>
@@ -41,30 +45,26 @@ if (!empty($refresh_rate))
   ?>
   
   var refreshVisChanged = function refreshVisChanged() {
-      var hidden = isHidden();
-    
-      <?php
-      // If the page is hidden stop the timer, if any;  if it is now visible
-      // then refresh the page, which will also start a timer;  if we
-      // don't know the status then don't do anything.    We clear the interval
-      // and refresh the page rather than just disabling/enabling the page
-      // refresh because we want the latest data to be displayed immediately the
-      // page becomes visible again.  (It might have been hidden for a while
-      // with lots of changes in the meantime).
-      ?>
-      switch (hidden)
+      var pageHidden = isHidden();
+
+      if (pageHidden !== null)
       {
-        case true:
-          if (typeof intervalId !== 'undefined')
-          {
-            window.clearInterval(intervalId);
-          }
-          break;
-        case false:
+         <?php
+        // Stop the interval timer.  If the page is now visible then refresh
+        // the page, which will also start a new timer.   We clear the interval
+        // and refresh the page rather than just disabling/enabling the page
+        // refresh because we want the latest data to be displayed immediately the
+        // page becomes visible again.  (It might have been hidden for a while
+        // with lots of changes in the meantime).
+        ?>
+        if (typeof intervalId !== 'undefined')
+        {
+          window.clearInterval(intervalId);
+        }
+        if (!pageHidden)
+        {
           refreshPage();
-          break;
-        default:
-          break;
+        }
       }
     };
   
@@ -117,7 +117,7 @@ if (!empty($refresh_rate))
     <?php
     // Set an interval timer to refresh the page.
     ?>
-    var intervalId = setInterval(refreshPage, <?php echo $refresh_rate * 1000 ?>);
+    intervalId = setInterval(refreshPage, <?php echo $refresh_rate * 1000 ?>);
     
 
     <?php
