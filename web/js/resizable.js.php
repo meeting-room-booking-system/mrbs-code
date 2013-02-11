@@ -244,7 +244,7 @@ function outsideTable(tableData, p)
 ?>
 function snapToGrid(tableData, div, side, force)
 {
-  var snapGap = (force) ? 100000: 20; <?php // px ?>
+  var snapGap = (force) ? 100000: 30; <?php // px ?>
   var tolerance = 2; <?php //px ?>
   var isLR = (side==='left') || (side==='right');
  
@@ -252,30 +252,32 @@ function snapToGrid(tableData, div, side, force)
   
   var topLeft, bottomRight, divTop, divLeft, divWidth, divHeight, thisCoord,
       gap, gapTopLeft, gapBottomRight;
+      
+  divTop = div.offset().top;
+  divLeft = div.offset().left;
+  divWidth = div.outerWidth();
+  divHeight = div.outerHeight();
+  switch (side)
+  {
+    case 'top':
+      thisCoord = divTop;
+      break;
+    case 'bottom':
+      thisCoord = divTop + divHeight;
+      break;
+    case 'left':
+      thisCoord = divLeft;
+      break;
+    case 'right':
+      thisCoord = divLeft + divWidth;
+      break;
+  }
 
   for (var i=0; i<(data.length -1); i++)
   {
     topLeft = data[i].coord + <?php echo $main_table_cell_border_width ?>;
     bottomRight = data[i+1].coord;
-    divTop = div.offset().top;
-    divLeft = div.offset().left;
-    divWidth = div.outerWidth();
-    divHeight = div.outerHeight();
-    switch (side)
-    {
-      case 'top':
-        thisCoord = divTop;
-        break;
-      case 'bottom':
-        thisCoord = divTop + divHeight;
-        break;
-      case 'left':
-        thisCoord = divLeft;
-        break;
-      case 'right':
-        thisCoord = divLeft + divWidth;
-        break;
-    }
+    
     gapTopLeft = thisCoord - topLeft;
     gapBottomRight = bottomRight - thisCoord;
             
