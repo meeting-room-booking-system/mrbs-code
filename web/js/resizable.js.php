@@ -551,8 +551,10 @@ init = function(args) {
       // resized.
       ?>
       var bookedMap = [];
-
+      var mouseDown = false; 
+      
       var downHandler = function(e) {
+          mouseDown = true;
           turnOffPageRefresh();
           <?php // Build the map of booked cells ?>
           table.find('td').not('td.new, td.row_labels').each(function() {
@@ -693,6 +695,7 @@ init = function(args) {
  
                
       var upHandler = function(e) {
+          mouseDown = false;
           e.preventDefault();
           var tolerance = 2; <?php // px ?>
           var box = downHandler.box;
@@ -1212,9 +1215,12 @@ init = function(args) {
       // We want to disable page refresh if the user is hovering over
       // the resizable handles.   We trigger a mouseenter event on page
       // load so we can work out whether the mouse is over the handle
-      // on page load (but we only need to trigger one event)
-      ?>  
-      var mouseDown = false;  
+      // on page load (but we only need to trigger one event).
+      //
+      // mouseDown will also be set by the event handlers for drag selection
+      // of new bookings, so that we don't turn on page refresh while in the
+      // middle of a drag selection when we pass over a resizable handle
+      ?>   
       $('div.clone .ui-resizable-handle')
         .mouseenter(function(e) {
             if (!mouseDown)
