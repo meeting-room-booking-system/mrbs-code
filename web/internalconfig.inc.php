@@ -71,9 +71,9 @@ else
   {
     die('Configuration error: $resolution is not an integral number of minutes.');
   }
-  $start_first_slot = ($morningstarts*60) + $morningstarts_minutes;   // minutes
-  $start_last_slot  = ($eveningends*60) + $eveningends_minutes;       // minutes
-  $start_difference = ($start_last_slot - $start_first_slot) * 60;    // seconds
+  $start_first_slot = get_start_first_slot(1, 1, 2000);  // 1 Jan 2000 free of DST changes
+  $start_last_slot  = get_start_last_slot(1, 1, 2000);
+  $start_difference = $start_last_slot - $start_first_slot;    // seconds
   if ($start_difference%$resolution != 0)
   {
     die('Configuration error: make sure that the length of the booking day is an integral multiple of $resolution.');

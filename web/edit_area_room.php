@@ -472,9 +472,10 @@ if ($phase == 2)
       else
       {
         // Check morningstarts, eveningends, and resolution for consistency
-        $start_first_slot = ($area_morningstarts*60) + $area_morningstarts_minutes;   // minutes
-        $start_last_slot  = ($area_eveningends*60) + $area_eveningends_minutes;       // minutes
-        $start_difference = ($start_last_slot - $start_first_slot);         // minutes
+        // 1 Jan 2000 chosen to be a date free of DST changes
+        $start_first_slot = get_start_first_slot(1, 1, 2000);
+        $start_last_slot  = get_start_last_slot(1, 1, 2000);
+        $start_difference = ($start_last_slot - $start_first_slot)/60;         // minutes
         if ($start_difference%$area_res_mins != 0)
         {
           $valid_resolution = FALSE;
