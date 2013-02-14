@@ -1677,7 +1677,7 @@ function get_area_settings($area)
     $max_per_interval_area[$interval_type] = $$var;
   }
   
-  // If we're using periods then set the rsolution to 60 seconds
+  // If we're using periods then set the resolution to 60 seconds
   if ($enable_periods)
   {
     $resolution = 60;
