@@ -140,7 +140,7 @@ function generate_search_criteria(&$vars)
           else
           {
             echo "<div id=\"div_privacystatus\">\n";
-            $options = array(PRIVATE_BOTH => 'both', PRIVATE_NO => 'default_public', PRIVATE_YES => 'default_private');
+            $options = array(PRIVATE_BOTH => get_vocab("both"), PRIVATE_NO => get_vocab("default_public"), PRIVATE_YES => get_vocab("default_private"));
             $params = array('label'   => get_vocab("privacy_status") . ':',
                             'name'    => 'match_private',
                             'options' => $options,
