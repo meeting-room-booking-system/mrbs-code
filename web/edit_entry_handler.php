@@ -339,7 +339,8 @@ if (!empty($all_day))
 // $returl will end up taking us back to the day we started on
 if (day_past_midnight())
 {
-  if ($start_seconds < (((($eveningends * 60) + $eveningends_minutes) *60) + $resolution))
+  $end_last = (((($eveningends * 60) + $eveningends_minutes) *60) + $resolution) % (24*60*60);
+  if ($start_seconds < $end_last)
   {
     $start_seconds += 24*60*60;
     $day_before = getdate(mktime(0, 0, 0, $start_month, $start_day-1, $start_year));

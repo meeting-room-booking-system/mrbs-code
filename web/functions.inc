@@ -453,13 +453,17 @@ function hm_before($hm1, $hm2)
 }
 
 
-// Returns TRUE if $evening_ends is on the day after $morning_starts
+// Returns TRUE if the end of the last slot is on the day after the beginning
+// of the first slot
 function day_past_midnight()
 {
-  global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+  global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes, $resolution;
   
-  return hm_before(array('hours' => $eveningends, 'minutes' => $eveningends_minutes),
-                   array('hours' => $morningstarts, 'minutes' => $morningstarts_minutes));
+  $start_first_slot = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+  $end_last_slot = ((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution;
+  $end_last_slot = $end_last_slot % (24*60*60);
+  
+  return ($end_last_slot <= $start_first_slot);
 }
 
 
@@ -477,10 +481,11 @@ function get_start_first_slot($month, $day, $year)
 // Gets the UNIX timestamp for the start of the last slot on the given day
 function get_start_last_slot($month, $day, $year)
 {
-  global $eveningends, $eveningends_minutes;
+  global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   
   // Work out if $evening_ends is really on the next day
-  if (day_past_midnight())
+  if (hm_before(array('hours' => $eveningends, 'minutes' => $eveningends_minutes),
+                array('hours' => $morningstarts, 'minutes' => $morningstarts_minutes)))
   {
     $day++;
   }

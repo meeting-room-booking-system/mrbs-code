@@ -84,19 +84,28 @@ foreach ($fields as $field)
 // Returns the booking date for a given time.   If the booking day spans midnight and
 // $t is in the interval between midnight and the end of the day then the booking date
 // is really the day before.
-function getbookingdate($t)
+//
+// If $is_end is set then this is the end time and so if the booking day happens to
+// last exactly 24 hours, when there will be two possible answers, we want the later 
+// one.
+function getbookingdate($t, $is_end=FALSE)
 {
   global $eveningends, $eveningends_minutes, $resolution;
   
   $date = getdate($t);
   
   $t_secs = (($date['hours'] * 60) + $date['minutes']) * 60;
-  $e_secs = ((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution;
-  if (day_past_midnight() && ($t_secs <= $e_secs))
+  $e_secs = (((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution) % (24*60*60);
+
+  if (day_past_midnight())
   {
-    $date = getdate(mktime($date['hours'], $date['minutes'], $date['seconds'],
-                           $date['mon'], $date['mday'] -1, $date['year']));
-    $date['hours'] += 24;
+    if (($t_secs < $e_secs) ||
+        (($t_secs == $e_secs) && $is_end))
+    {
+      $date = getdate(mktime($date['hours'], $date['minutes'], $date['seconds'],
+                             $date['mon'], $date['mday'] -1, $date['year']));
+      $date['hours'] += 24;
+    }
   }
   
   return $date;
@@ -301,7 +310,7 @@ function create_field_entry_end_date($disabled=FALSE)
 {
   global $end_time, $areas, $area_id, $periods, $multiday_allowed;
   
-  $date = getbookingdate($end_time);
+  $date = getbookingdate($end_time, TRUE);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
   
   echo "<div id=\"div_end_date\">\n";

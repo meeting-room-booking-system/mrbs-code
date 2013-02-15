@@ -643,15 +643,16 @@ function get_n_time_slots()
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $resolution;
   
-  $morning = ($morningstarts * 60) + $morningstarts_minutes;   // minutes
-  $evening = ($eveningends * 60) + $eveningends_minutes;  // minutes
+  $seconds_per_day = 24*60*60;
+  $start_first = (($morningstarts * 60) + $morningstarts_minutes) * 60;           // seconds
+  $end_last = ((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution;  // seconds
+  $end_last = $end_last % $seconds_per_day;
   if (day_past_midnight())
   {
-    $evening += 24*60;
+    $end_last += $seconds_per_day;
   }
-  $difference = ($evening - $morning) * 60;    // seconds
-  $n_slots = ($difference/$resolution) + 1;
-  
+  $n_slots = ($end_last - $start_first)/$resolution;
+
   return $n_slots;
 }
 
