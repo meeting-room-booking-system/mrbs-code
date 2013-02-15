@@ -732,7 +732,7 @@ function getDuration(from, to, days)
   // a number or a string, so convert it to a string so that we
   // know what we are dealing with
   ?>
-  duration.toString();
+  duration = duration.toString();
   
   if (days !== 0)
   {
