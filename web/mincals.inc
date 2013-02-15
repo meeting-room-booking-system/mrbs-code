@@ -102,7 +102,7 @@ class Calendar
     $basetime = mktime(12,0,0,6,11+$weekstarts,2000);
     for ($i = 0, $s = ""; $i < 7; $i++)
     {
-      $show = $basetime + ($i * 24 * 60 * 60);
+      $show = $basetime + ($i * SECONDS_PER_DAY);
       $fl = utf8_strftime($strftime_format['dayname_cal'], $show);
       // add a class if it's a hidden day so that we can apply special styling
       if (is_hidden_day(($i + $weekstarts) % 7))
@@ -141,7 +141,7 @@ class Calendar
       // problems when we come to look at the difference ($diff) further down if the two ends of the
       // time period straddle a DST boundary.
       $sticky_time = gmmktime(12, 0, 0, $month, $day, $year);         // Use gm to avoid DST problems
-      $start_highlight_gmtime = $sticky_time - ($skipback * 24 * 60 * 60);
+      $start_highlight_gmtime = $sticky_time - ($skipback * SECONDS_PER_DAY);
     }
       
     $daysInMonth = $this->getDaysInMonth($this->month, $this->year);

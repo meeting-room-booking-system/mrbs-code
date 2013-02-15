@@ -698,21 +698,21 @@ function getDuration(from, to, days)
   var currentArea = $('#area').data('current');
   var enablePeriods = areaConfig('enable_periods');
   var durDays;
+  var minutesPerDay = <?php echo MINUTES_PER_DAY ?>;
 
   durUnits = (enablePeriods) ? '<?php echo "periods" ?>' : '<?php echo "minutes" ?>';
   duration = to - from;
   duration = Math.floor((to - from) / 60);
   
   <?php
-  // Adjust the days and duration so that 0 <= duration < 24*60.    If we're using
-  // periods then if necessary add/subtract multiples of the number of periods in
-  // a day
+  // Adjust the days and duration so that 0 <= duration < minutesPerDay.    If we're using
+  // periods then if necessary add/subtract multiples of the number of periods in a day
   ?>
-  durDays = Math.floor(duration/(24*60));
+  durDays = Math.floor(duration/minutesPerDay);
   if (durDays !== 0)
   {
     days += durDays;
-    duration -= durDays * ((enablePeriods) ? $('#rooms' + currentArea).find('option').length : 24*60);
+    duration -= durDays * ((enablePeriods) ? $('#rooms' + currentArea).find('option').length : minutesPerDay);
   }
   
   if (enablePeriods)
@@ -757,7 +757,8 @@ function getDuration(from, to, days)
 ?>
 function getDateDifference()
 {
-  var diff;
+  var diff,
+      secondsPerDay = <?php echo SECONDS_PER_DAY ?>;
 
   <?php
   if (!$is_admin && $auth['only_admin_can_book_multiday'])
@@ -781,7 +782,7 @@ function getDateDifference()
                            parseInt(end[2], 10),
                            12);
 
-    diff = (endDate - startDate)/(24 * 60 * 60 * 1000);
+    diff = (endDate - startDate)/(secondsPerDay * 1000);
     diff = Math.round(diff);
     <?php
   }
@@ -1031,6 +1032,7 @@ function adjustSlotSelectors()
           maxDurationPeriods = areaConfig('max_duration_periods'),
           maxDurationQty     = areaConfig('max_duration_qty'),
           maxDurationUnits   = areaConfig('max_duration_units'),
+          secondsPerDay      = <?php echo SECONDS_PER_DAY ?>,
           duration,
           maxDuration;
      
@@ -1053,7 +1055,7 @@ function adjustSlotSelectors()
           }
           else
           {
-            duration += dateDifference * 60 * 60 *24;
+            duration += dateDifference * secondsPerDay;
           }
           maxDuration = (enablePeriods) ? maxDurationPeriods : maxDurationSecs;
           if (duration > maxDuration)

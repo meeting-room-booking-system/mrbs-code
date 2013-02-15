@@ -252,7 +252,6 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
   global $interval_types, $strftime_format;
 
   $errors = array();
-  $secs_in_day = 60*60*24;
   
   // The booking policies don't apply to booking admins for this room
   $user = getUserName();
@@ -271,7 +270,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
   {
     if ($enable_periods)
     {
-      $min_book_ahead_secs -=  $min_book_ahead_secs%$secs_in_day;
+      $min_book_ahead_secs -=  $min_book_ahead_secs % SECONDS_PER_DAY;
     }
     $min_book_ahead = $min_book_ahead_secs;
     if (($booking['start_time'] - $now) < $min_book_ahead)
@@ -291,7 +290,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
   {
     if ($enable_periods)
     {
-      $max_book_ahead_secs -=  $max_book_ahead_secs%$secs_in_day;
+      $max_book_ahead_secs -=  $max_book_ahead_secs % SECONDS_PER_DAY;
     }
     $max_book_ahead = $max_book_ahead_secs;
     if (($booking['end_time'] - $now) > $max_book_ahead)

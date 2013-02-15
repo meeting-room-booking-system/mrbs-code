@@ -110,7 +110,7 @@ function generateLastSlotSelect()
       firstSlot, lastSlot, 
       morningStarts, eveningEnds,
       eveningEndsInput,
-      minsPerDay = 24*60;
+      minsPerDay = <?php echo MINUTES_PER_DAY ?>;
       
   resMins = parseInt($('#area_res_mins').val(), 10);
   if (resMins === 0)

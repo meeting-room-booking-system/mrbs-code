@@ -432,14 +432,13 @@ if ($phase == 2)
     // (anything less than a day is meaningless when using periods)
     if ($area_enable_periods)
     {
-      $secs_in_day = 60*60*24;
       if (isset($area_min_ba_value))
       {
-        $area_min_ba_value -= $area_min_ba_value%$secs_in_day;
+        $area_min_ba_value -= $area_min_ba_value % SECONDS_PER_DAY;
       }
       if (isset($area_max_ba_value))
       {
-        $area_max_ba_value -= $area_max_ba_value%$secs_in_day;
+        $area_max_ba_value -= $area_max_ba_value % SECONDS_PER_DAY;
       }
     }
   
@@ -478,7 +477,7 @@ if ($phase == 2)
         if (hm_before(array('hours' => $area_eveningends, 'minutes' => $area_eveningends_minutes),
                       array('hours' => $area_morningstarts, 'minutes' => $area_morningstarts_minutes)))
         {
-          $start_difference += 3600;
+          $start_difference += SECONDS_PER_HOUR;
         }
         if ($start_difference%$area_res_mins != 0)
         {

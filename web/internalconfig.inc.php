@@ -91,6 +91,13 @@ else
  // in calls to nl2br.   TRUE means XHTML, FALSE means HTML.
  define('IS_XHTML', FALSE);
 
+
+/*************************************************
+ * General constants - internal use, do not change
+ *************************************************/
+ define('MINUTES_PER_DAY',  24*60);
+ define('SECONDS_PER_DAY',  MINUTES_PER_DAY * 60);
+ define('SECONDS_PER_HOUR', 3600);
  
 /*************************************************
  * REPORT constants - internal use, do not change

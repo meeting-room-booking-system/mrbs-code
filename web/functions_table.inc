@@ -643,13 +643,12 @@ function get_n_time_slots()
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $resolution;
   
-  $seconds_per_day = 24*60*60;
   $start_first = (($morningstarts * 60) + $morningstarts_minutes) * 60;           // seconds
   $end_last = ((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution;  // seconds
-  $end_last = $end_last % $seconds_per_day;
+  $end_last = $end_last % SECONDS_PER_DAY;
   if (day_past_midnight())
   {
-    $end_last += $seconds_per_day;
+    $end_last += SECONDS_PER_DAY;
   }
   $n_slots = ($end_last - $start_first)/$resolution;
 

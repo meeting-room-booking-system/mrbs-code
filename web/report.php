@@ -829,7 +829,7 @@ function increment_count(&$array, $index1, $index2, $increment)
   $array[$index1][$index2] += $increment;
 }
 
-// Collect summary statistics on one entry. See below for columns in $row[].
+// Collect summary statistics on one entry.
 // This also builds hash tables of all unique names and rooms. When sorted,
 // these will become the column and row headers of the summary table.
 function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
@@ -853,13 +853,13 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
   {
     $dur = (min((int)$row['end_time'], $report_end) - 
             max((int)$row['start_time'], $report_start)) / 60;
-    $increment = ($dur % $max_periods) + floor( $dur/(24*60) ) * $max_periods;
+    $increment = ($dur % $max_periods) + floor($dur/MINUTES_PER_DAY) * $max_periods;
     $room_hash[$room] = MODE_PERIODS;
   }
   else
   {
     $increment = (min((int)$row['end_time'], $report_end) -
-                  max((int)$row['start_time'], $report_start)) / 3600.0;
+                  max((int)$row['start_time'], $report_start)) / SECONDS_PER_HOUR;
     $room_hash[$room] = MODE_TIMES;
   }
   increment_count($hours, $room, $name, $increment);

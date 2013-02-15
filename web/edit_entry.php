@@ -95,7 +95,7 @@ function getbookingdate($t, $is_end=FALSE)
   $date = getdate($t);
   
   $t_secs = (($date['hours'] * 60) + $date['minutes']) * 60;
-  $e_secs = (((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution) % (24*60*60);
+  $e_secs = (((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution) % SECONDS_PER_DAY;
 
   if (day_past_midnight())
   {
@@ -140,7 +140,7 @@ function genSlotSelector($area, $id, $name, $current_s, $display_none=FALSE, $di
   
   if ($area['enable_periods'])
   {
-    $base = 12*60*60;  // The start of the first period of the day
+    $base = 12*SECONDS_PER_HOUR;  // The start of the first period of the day
   }
   else
   {
@@ -427,7 +427,7 @@ function create_field_entry_rooms($disabled=FALSE)
     $attributes[] = 'style="display: none"';
     // Put in some data about the area for use by the JavaScript
     $attributes[] = 'data-enable_periods='       . (($areas[$a]['enable_periods']) ? 1 : 0);
-    $attributes[] = 'data-default_duration='     . ((isset($areas[$a]['default_duration']) && ($areas[$a]['default_duration'] != 0)) ? $areas[$a]['default_duration'] : 60*60);
+    $attributes[] = 'data-default_duration='     . ((isset($areas[$a]['default_duration']) && ($areas[$a]['default_duration'] != 0)) ? $areas[$a]['default_duration'] : SECONDS_PER_HOUR);
     $attributes[] = 'data-max_duration_enabled=' . (($areas[$a]['max_duration_enabled']) ? 1 : 0);
     $attributes[] = 'data-max_duration_secs='    . $areas[$a]['max_duration_secs'];
     $attributes[] = 'data-max_duration_periods=' . $areas[$a]['max_duration_periods'];
@@ -938,7 +938,7 @@ else
   {
     if (!isset($default_duration))
     {
-      $default_duration = (60 * 60);
+      $default_duration = SECONDS_PER_HOUR;
     }
     $duration    = ($enable_periods ? 60 : $default_duration);
     $end_time = $start_time + $duration;
@@ -1053,7 +1053,7 @@ if ($res)
     // Get the start and end of the booking day
     if ($row['enable_periods'])
     {
-      $first = 12*60*60;
+      $first = 12*SECONDS_PER_HOUR;
       // If we're using periods we just go to the end of the last slot
       $last = $first + (count($periods) * $row['resolution']);
     }
@@ -1064,7 +1064,7 @@ if ($res)
       // If the end of the day is the same as or before the start time, then it's really on the next day
       if ($first >= $last)
       {
-        $last += 24*60*60;
+        $last += SECONDS_PER_DAY;
       }
     }
     $row['first'] = $first;
