@@ -697,24 +697,24 @@ function getDuration(from, to, days)
   var text = '';
   var currentArea = $('#area').data('current');
   var enablePeriods = areaConfig('enable_periods');
+  var durDays;
 
   durUnits = (enablePeriods) ? '<?php echo "periods" ?>' : '<?php echo "minutes" ?>';
   duration = to - from;
   duration = Math.floor((to - from) / 60);
-    
-  if (duration < 0)
+  
+  <?php
+  // Adjust the days and duration so that 0 <= duration < 24*60.    If we're using
+  // periods then if necessary add/subtract multiples of the number of periods in
+  // a day
+  ?>
+  durDays = Math.floor(duration/(24*60));
+  if (durDays !== 0)
   {
-    days--;
-    if (enablePeriods)
-    {
-      duration += $('#rooms' + currentArea).find('option').length;  <?php // add a day's worth of periods ?>
-    }
-    else
-    {
-      duration += 24*60;  <?php // add 24 hours (duration is now in minutes)  ?>
-    }
+    days += durDays;
+    duration -= durDays * ((enablePeriods) ? $('#rooms' + currentArea).find('option').length : 24*60);
   }
-      
+  
   if (enablePeriods)
   {
     duration++;  <?php // a period is a period rather than a point ?>
