@@ -1128,14 +1128,24 @@ var editEntryVisChanged = function editEntryVisChanged() {
 ?>
 
 var oldInitEditEntry = init;
-init = function() {
-  oldInitEditEntry.apply(this);
+init = function(args) {
+  oldInitEditEntry.apply(this, [args]);
+  
+  <?php
+  // If there's only one enabled area in the database there won't be an area
+  // select input, so we'll have to create a dummy input because the code
+  // relies on it.
+  ?>
+  if ($('#area').length === 0)
+  {
+    $('#div_rooms').before('<input id="area" type="hidden" value="' + args.area + '">');
+  }
   
   var areaSelect = $('#area'),
       startSelect,
       endSelect,
       allDay;
-      
+
   $('#div_areas').show();
   
   $('#start_seconds, #end_seconds')
@@ -1174,7 +1184,6 @@ init = function() {
           
           adjustSlotSelectors(); 
         });
-        
         
   $('input[name="all_day"]').click(function() {
       onAllDayClick();
