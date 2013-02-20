@@ -151,7 +151,7 @@ if ($series == 1)
   // as per the original series settings
   $sql = "SELECT id
           FROM $tbl_entry
-          WHERE repeat_id=\"$id\" AND entry_type=" . ENTRY_RPT_ORIGINAL . "
+          WHERE repeat_id=$id AND entry_type=" . ENTRY_RPT_ORIGINAL . "
           ORDER BY start_time
           LIMIT 1";
   $id = sql_query1($sql);
@@ -165,7 +165,7 @@ if ($series == 1)
     // but edit_entry.php will display the start time of the entry
     $sql = "SELECT id
             FROM $tbl_entry
-            WHERE repeat_id=\"$id\"
+            WHERE repeat_id=$id
             ORDER BY start_time
             LIMIT 1";
     $id = sql_query1($sql);
