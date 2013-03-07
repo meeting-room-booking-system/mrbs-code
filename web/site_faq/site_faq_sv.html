@@ -1,0 +1,90 @@
+<!-- $Id$ -->
+<!-- -*-mode: HTML; coding:utf-8;-*- -->
+
+<div id="site_faq_contents"> <a id="top"> </a>
+  <h4> Autentisering </h4>
+  <ul>
+    <li> <a href="#authenticate"> Hur loggar jag in? </a> </li>
+    <li> <a href="#meeting_delete"> Varför kan jag inte ta bort/ändra ett möte? </a> </li>
+  </ul>
+  <h4> Skapa/ändra möten </h4>
+  <ul>
+    <li> <a href="#repeating"> Hur skapar jag ett återkommande möte? </a> </li>
+    <li> <a href="#repeating_delete"> Hur tar jag bort en del av ett återkommande möte? </a> </li>
+    <li> <a href="#multiple_sites"> Hur schemalägger jag rum på flera platser? </a> </li>
+    <li> <a href="#too_many"> Min bokning kunde inte skapas på grund av <q> för många poster! </q> </a> </li>
+    <li> <a href="#multiple_users"> Vad händer om flera personer bokar samma möte? </a> </li>
+  </ul>
+  <h4> Övrigt </h4>
+  <ul>
+    <li> <a href="#internal_external"> Vad är skillnaden mellan internt och externt? </a> </li>
+  </ul>
+  <h4> <br>
+    Om mötesrumsbokningssystemet MRBS </h4>
+  <ul>
+    <li> <a href="#how_much"> Hur mycket kostar MRBS? </a> </li>
+    <li> <a href="#about"> Hur fungerar systemet och vad är MRBS? </a> </li>
+  </ul>
+</div>
+<div id="site_faq_body">
+  <div id="authenticate">
+    <h4> Hur loggar jag in? </h4>
+    <p> Systemet kan konfigureras för att använda en av flera metoder för verifiering, inklusive LDAP, Netware och SMB. Kontakta systemadministratören om du har problem med att logga in. Vissa funktioner är begränsade till vissa användare,övriga användare får meddelandet ”Du har inte rättigheter att ändra dessa inställningar”. Kontakta systemadministratören om du behöver hjälp. Om systemet är konfigurerat att använda LDAP-autentisering innebär det att du loggar in med samma användarnamn och lösenord som du använder för din e-post t.ex. <q> Mark Belanger </q> och <q> MyPassword </q> . </p>
+    <a href="#top"> Topp </a> </div>
+  <div id="meeting_delete">
+    <h4> Varför kan jag inte ta bort/ändra ett möte? </h4>
+    <p> För att ta bort eller ändra ett möte måste du vara inloggad som samma person som skapade bokningen. Kontakta en av administratörerna eller handläggaren som skapade bokningen för att ta bort eller ändra något. </p>
+    <a href="#top"> Topp </a> </div>
+  <div id="repeating">
+    <h4> Hur skapar jag ett återkommande möte? </h4>
+    <p> Genom att klicka på önskad tid i kalendervyn kommer du till bokningsformuläret. Välj önskad <dfn> repetitionstyp </dfn> .
+      
+      Rummet kommer att schemaläggas vid samma tid till angivet <dfn> repetitionsslutdatum </dfn> de dagar som markerats som <dfn> repetitionsdag. </dfn> </p>
+    <ul>
+      <li> ett <dfn> dagligen </dfn> schemalagt möte samma tid var dag. </li>
+      <li> en <dfn> veckovis </dfn> upprepning med valda dagar i veckan som du anger under <dfn> repetionsdag </dfn> . Använd repetitionstyp veckovis för att schemalägga rum t.ex. varje måndag, tisdag och torsdag.  Om ingen dag anges under repetionsdag väljs veckodag från startdatum i formuläret. </li>
+      <li> en <dfn> n-veckor </dfn> bokning schemalägger veckor i intervalll.  Bokningar görs endast för valda veckor,
+        
+        n-
+        
+        står för antal veckor mellan bokade veckor. Till exempel, för att göra en bokning för varannan vecka, skriv 2 i fältet för <dfn> veckointervall </dfn> . </li>
+      <li> en <dfn> månatligen </dfn> återkommande bokning samma dag varje månad, till exempel den 15: e. Om du väljer 29:e, 30:e eller 31:a dagen i en månad där den dagen inte finns, kommer den sista dagen i den månaden att användas istället. </li>
+      <li> en <dfn> årligen </dfn> återkommande bokad händelse samma månad och dag i månaden, till exempel varje 15 mars. Om du väljer 29 februari och om denna dag inte existerar, kommer 28 februari att användas istället. </li>
+      <li> slutligen, <dfn> månadsvis, samma dag </dfn> var månad, med samma veckodag och ordningsnummer dvs. position i månaden. Använd det här alternativet för att schemalägga den första måndagen, andra tisdagen eller fjärde fredagen i varje månad. Till exempel, om du har valt den 29:e, 30:e  eller 31:a dagen i månaden, som femte vardagen i slutet av en månad, för de månader då det inte finns någon motsvarande femte dag, kommer den fjärde dagen att användas i stället. (Detta är ett bra sätt att boka sista vardagen i varje månad). </li>
+    </ul>
+    <a href="#top"> Topp </a> </div>
+  <div id="repeating_delete">
+    <h4> Hur tar jag bort en del av ett återkommande möte? </h4>
+    <p> Välj den dag/tid/rum som du vill ta bort och välj <dfn> radera bokningen </dfn> . </p>
+    <a href="#top"> Topp </a> </div>
+  <div id="multiple_sites">
+    <h4> Hur schemalägger jag rum på flera platser? </h4>
+    <p> Det kan du inte. För närvarande kan systemet inte boka  rum  samtidigt om de inte ligger inom samma område. Du måste boka dessa rum separat. Se till att den tid du vill ha finns på valda områden innan du gör en bokning. </p>
+    <a href="#top"> Topp </a> </div>
+  <div id="too_many">
+    <h4> Min bokning kunde inte skapas på grund av för många poster! </h4>
+    <p> Ingen bokning kan skapa mer än 365 poster. Det måste finnas en viss gräns för antalet skapade möten. Detta antal kan ökas vid behov. </p>
+    <a href="#top"> Topp </a> </div>
+  <div id="multiple_users">
+    <h4> Vad händer om flera personer bokar samma möte? </h4>
+    <p> Enkelt svarat: Den första personen som klickar på <dfn> spara </dfn> vinner. Systemet drivs med hjälp av en riktig fleranvändar, multitrådsbaserad, relationsdatabas som kan hantera tusentals användare samtidigt. </p>
+    <a href="#top"> Topp </a> </div>
+  <div id="internal_external">
+    <h4> Vad är skillnaden mellan internt och externt? </h4>
+    <p> Som standard definierar MRBS två bokningstyper. Ett <dfn> internt </dfn> möte innebär att sammankomsten endast kommer att bevistas av anställda. Ett <dfn> externt </dfn> sammanträde kan också skötas av kunder, leverantörer, investerare, etc. Systemet medger upp till 10 olika bokningstyper, beroende på dina behov. Bokningar visas med en färg som motsvarar <dfn> bokningstyp </dfn> och en färgnyckel med tillgängliga bokningstyper visas längst ned i huvudkalendervyn. </p>
+    <a href="#top"> Topp </a> </div>
+  <div id="how_much"> <a> </a>
+    <h4> Hur mycket kostar MRBS? </h4>
+    <p> Inget. Se nästa avsnitt för mer information. </p>
+    <a href="#top"> Topp </a> </div>
+  <div id="about">
+    <h4> Hur fungerar systemet och vad är MRBS? </h4>
+    <p> <a href="http://sourceforge.net/project/?group_id=5113"> Meeting Room Booking System </a> är en webbapplikation, OpenSource-program, som distribueras under GNU Public License (GPL). Detta innebär att programvaran är fri att använda, distribuera och att ändra. </p>
+    <p> Systemet är skrivet mestadels i <a href="http://www.php.net"> PHP </a> , som är ett OpenSource-programmeringsspråk som kan bäddas in i webbsidor ungefär som Microsoft Active Server Pages. PHP är särskilt bra på att hantera databaser. </p>
+    <p> Databaser som används för systemet är antingen <a href="http://www.mysql.com"> MySQL </a> eller <a href="http://www.postgresql.org"> PostgreSQL </a> . MySQL är en mycket snabb, flexibel och pålitlig SQL (Structured Query Language) databasserver, som också är licensierad som GPL. 
+      PostgreSQL är en (Object Relational SQL) databasserver skriven i öppen källkod. </p>
+    <p> Systemet kan köras på flera plattformar, inklusive PC med operativsystemet <a href="http://www.linux.com"> Linux </a> installerat. Linux är ett kostnadsfritt Unix-liknande operativsystem baserat på öppen källkod, </p>
+    <p> Webbservern som används är ännu en bit av fri, öppen källkod. Webbservern <a href="http://www.apache.org"> Apache </a> är världens mest populära webbserver. </p>
+    <p> Sammanfattningsvis: <dfn> Varje del av detta system, från operativsystemet till applikation, är helt gratis - inklusive källkod och allt. </dfn> </p>
+    <a href="#top"> Topp </a> </div>
+</div>
