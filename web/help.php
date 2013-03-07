@@ -34,7 +34,7 @@ echo get_vocab("please_contact") . '<a href="mailto:' . htmlspecialchars($mrbs_a
   . "</a> " . get_vocab("for_any_questions") . "\n";
 echo "</p>\n";
  
-require_once "site_faq" . $faqfilelang . ".html";
+require_once "site_faq/site_faq" . $faqfilelang . ".html";
 
 output_trailer();
 ?>
