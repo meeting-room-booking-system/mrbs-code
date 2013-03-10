@@ -39,8 +39,8 @@ var refreshPage = function refreshPage() {
                  // (1) Empty the existing table in order to get rid of events
                  // and data and prevent memory leaks, (2) insert the updated 
                  // table HTML, (3) clear the existing interval timer and then
-                 // (4) trigger a window load event so that the resizable
-                 // bookings are re-created and a new timer started.
+                 // (4) trigger a load event so that the resizable bookings are
+                 // re-created and a new timer started.
                  ?>
                  if (!isHidden() && !refreshPage.disabled)
                  {
@@ -48,7 +48,7 @@ var refreshPage = function refreshPage() {
                    table.html(result);
                    window.clearInterval(intervalId);
                    intervalId = undefined;
-                   $(window).trigger('load');
+                   table.trigger('load');
                  }
                },
              'html');
@@ -111,28 +111,36 @@ if (!empty($refresh_rate))
     oldInitRefresh.apply(this, [args]);
     
     refreshPage.args = args;
-    <?php
-    // Set an interval timer to refresh the page, unless there's already one in place
-    ?>
-    if (typeof intervalId === 'undefined')
-    {
-      intervalId = setInterval(refreshPage, <?php echo $refresh_rate * 1000 ?>);
-    }
     
-
     <?php
-    // Add an event listener to detect a change in the visibility
-    // state.  We can then suspend Ajax refreshing when the page is
-    // hidden to save on server, client and network load.
+    // Set up the timer on the table load rather than the window load event because
+    // we will only want to reinitialise the table when it is refreshed rather than the
+    // whole window.   For example if we've got the datepicker open we don't want that
+    // to be reset.
     ?>
-    var prefix = visibilityPrefix();
-    if (document.addEventListener &&
-        (prefix !== null) && 
-        !init.refreshListenerAdded)
-    {
-      document.addEventListener(prefix + "visibilitychange", refreshVisChanged);
-      init.refreshListenerAdded = true;
-    }
+    $('table.dwm_main').load(function() {
+        <?php
+        // Set an interval timer to refresh the page, unless there's already one in place
+        ?>
+        if (typeof intervalId === 'undefined')
+        {
+          intervalId = setInterval(refreshPage, <?php echo $refresh_rate * 1000 ?>);
+        }
+    
+        <?php
+        // Add an event listener to detect a change in the visibility
+        // state.  We can then suspend Ajax refreshing when the page is
+        // hidden to save on server, client and network load.
+        ?>
+        var prefix = visibilityPrefix();
+        if (document.addEventListener &&
+            (prefix !== null) && 
+            !init.refreshListenerAdded)
+        {
+          document.addEventListener(prefix + "visibilitychange", refreshVisChanged);
+          init.refreshListenerAdded = true;
+        }
+      }).trigger('load');
   };
   <?php
 }
