@@ -1145,7 +1145,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
         // (We use PHP_INT_MAX rather than $max_rep_entrys because $max_rep_entrys may
         // have changed since the series was created.)
         $rep_details = array();
-        foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute') as $key)
+        foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute', 'month_relative') as $key)
         {
           if (isset($start_row[$key]))
           {
