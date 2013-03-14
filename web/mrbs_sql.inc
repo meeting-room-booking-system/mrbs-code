@@ -1013,8 +1013,7 @@ function mrbsApproveEntry($id, $series)
     $sql = "UPDATE $tbl_repeat 
                SET status=status&(~" . STATUS_AWAITING_APPROVAL . "),
                    ical_sequence=ical_sequence+1
-             WHERE id=$id
-             LIMIT 1";
+             WHERE id=$id";  // PostgreSQL does not support LIMIT with UPDATE
     if (sql_command($sql) < 0)
     {
       trigger_error(sql_error(), E_USER_WARNING);
@@ -1033,15 +1032,13 @@ function mrbsApproveEntry($id, $series)
             FROM $tbl_entry
            WHERE $condition";
   $start_times = sql_query_array($sql);
-  // We know there are only count($start_times) entries to be approved
-  // so we can set a LIMIT to improve performance
+
   if (($start_times !== FALSE) && (count($start_times) != 0))
   {
     $sql = "UPDATE $tbl_entry 
                SET status=status&(~" . STATUS_AWAITING_APPROVAL . "),
                    ical_sequence=ical_sequence+1
-             WHERE $condition
-             LIMIT " . count($start_times);
+             WHERE $condition";  // PostgreSQL does not support LIMIT with UPDATE
     
     if (sql_command($sql) < 0)
     {
