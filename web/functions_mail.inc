@@ -1157,6 +1157,12 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   $recipients .= (!empty($addresses['cc'])) ? "," . $addresses['cc'] : "";
   $recipients .= (!empty($addresses['bcc'])) ? "," . $addresses['bcc'] : "";
   
+  // Don't bother doing anything more if there are no recipients
+  if ($recipients == '')
+  {
+    return FALSE;
+  }
+  
   // Set up configuration settings
   $backend = $mail_settings['admin_backend'];
   
