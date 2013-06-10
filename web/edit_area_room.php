@@ -353,13 +353,12 @@ if ($phase == 2)
                     $$var = "'" . sql_escape($$var) . "'";
                     break;
                 }
-                // Note that we don't have to escape or quote the fieldname
-                // thanks to the restriction on custom field names
-                $assign_array[] = $field['name'] . "=" . $$var;
+                $assign_array[] = sql_quote($field['name']) . "=" . $$var;
                 break;
             }
           }
         }
+        
         $sql .= implode(",", $assign_array) . " WHERE id=$room";
         if (sql_command($sql) < 0)
         {

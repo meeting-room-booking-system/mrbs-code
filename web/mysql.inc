@@ -50,6 +50,12 @@ function sql_mysql_escape($str, $db_conn = null)
 }
 
 
+function sql_mysql_quote($str)
+{
+  return '`' . $str . '`';
+}
+
+
 // Execute a non-SELECT SQL command (insert/update/delete).
 // Returns the number of tuples affected if OK (a number >= 0).
 // Returns -1 on error; use sql_error to get the error message.

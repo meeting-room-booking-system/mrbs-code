@@ -77,6 +77,16 @@ function sql_escape($str)
 }
 
 
+function sql_quote($str)
+{
+  global $dbsys;
+  
+  $db_sys = $dbsys;
+  $f = "sql_${db_sys}_quote";
+  return $f($str);
+}
+
+
 // Run an SQL query that doesn't produce results
 function sql_command($sql)
 {

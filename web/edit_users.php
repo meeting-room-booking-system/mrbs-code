@@ -718,9 +718,7 @@ if (isset($Action) && ($Action == "Update"))
   
       foreach ($sql_fields as $fieldname => $value)
       {
-        // Note that we don't have to escape or quote the fieldname
-        // thanks to the restriction on custom field names
-        array_push($assign_array,"$fieldname=$value");
+        array_push($assign_array, sql_quote($fieldname) . "=$value");
       }
       $operation .= implode(",", $assign_array) . " WHERE id=$Id;";
     }
@@ -736,11 +734,11 @@ if (isset($Action) && ($Action == "Update"))
         array_push($fields_list,$fieldname);
         array_push($values_list,$value);
       }
-      // Note that we don't have to escape or quote the fieldname
-      // thanks to the restriction on custom field names
+
+      $fields_list = array_map('sql_quote', $fields_list);
       $operation = "INSERT INTO $tbl_users " .
-        "(". implode(",",$fields_list) . ")" .
-        " VALUES " . "(" . implode(",",$values_list) . ");";
+        "(". implode(",", $fields_list) . ")" .
+        " VALUES " . "(" . implode(",", $values_list) . ");";
     }
   
     /* DEBUG lines - check the actual sql statement going into the db */
