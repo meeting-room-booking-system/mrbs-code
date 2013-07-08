@@ -1,3 +1,1916 @@
+2013-06-10 16:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2733] web/dbsys.inc, web/edit_area_room.php,
+	  web/edit_users.php, web/mrbs_sql.inc, web/mysql.inc,
+	  web/mysqli.inc, web/pgsql.inc:
+	  
+	  Fixed bug when using an SQL reserved word as a custom field name
+
+2013-05-23 09:07  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2732] web/internalconfig.inc.php:
+	  
+	  Disabled E_STRICT errors (see SF Bugs #272)
+
+2013-05-20 13:27  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2731] web/functions_mail.inc:
+	  
+	  Fixed bug causing error messages when there are no mail
+	  recipients. Thanks to Tuomas. See SF Patches #37
+
+2013-05-20 12:41  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2730] web/lang/lang.fi:
+	  
+	  Updated Finnish translation. Thanks to Tuomas. See SF Patches #38
+
+2013-03-14 09:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2724] web/mrbs_sql.inc:
+	  
+	  Fixed bug when approving bookings and using PostgreSQL (removed
+	  LIMIT clauses from UPDATE statements as they are not supported by
+	  PostgreSQL)
+
+2013-03-12 16:36  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2721] web/functions_ical.inc, web/mrbs_sql.inc,
+	  web/view_entry.php:
+	  
+	  Made Export Series work with monthly repeats (it got broken when
+	  the new monthly repeat types were introduced)
+
+2013-03-11 14:15  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2717] web/systemdefaults.inc.php:
+	  
+	  Fixed typo in comment
+
+2013-03-10 18:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2716] web/js/refresh.js.php, web/js/resizable.js.php:
+	  
+	  Fixed bug causing the "Goto" datepicker to be reset if it was
+	  open at the time the booking table was refreshed.
+
+2013-03-07 16:35  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2713] web/site_faq/site_faq_sv.html[ADD]:
+	  
+	  Added a Swedish site_faq. Thanks to Anders Henhammar.
+
+2013-03-07 16:29  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2712] web/help.php, web/site_faq[ADD], web/site_faq.html[DEL],
+	  web/site_faq/site_faq.html[CPY],
+	  web/site_faq/site_faq_de.html[CPY],
+	  web/site_faq/site_faq_es.html[CPY],
+	  web/site_faq/site_faq_fr.html[CPY],
+	  web/site_faq/site_faq_it.html[CPY],
+	  web/site_faq/site_faq_nl.html[CPY], web/site_faq_de.html[DEL],
+	  web/site_faq_es.html[DEL], web/site_faq_fr.html[DEL],
+	  web/site_faq_it.html[DEL], web/site_faq_nl.html[DEL]:
+	  
+	  Moved the site_faq files into their own directory
+
+2013-03-07 16:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2711] web/lang/lang.sv:
+	  
+	  Updated Swedish translation. Thanks to Anders Henhammar.
+
+2013-02-20 14:55  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2706] web/view_entry.php:
+	  
+	  Fixed incorrect quoting of id column, resulting in error messages
+	  when running under PostgreSQL. See SF bugs #266
+
+2013-02-15 19:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2703] web/js/edit_entry.js.php:
+	  
+	  Fixed bug resulting in no end time options being offered if there
+	  is only one enabled area.
+
+2013-02-15 17:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2702] web/edit_area_room.php, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/functions.inc,
+	  web/functions_table.inc, web/internalconfig.inc.php,
+	  web/js/edit_area_room.js.php, web/js/edit_entry.js.php,
+	  web/mincals.inc, web/mrbs_sql.inc, web/report.php:
+	  
+	  Introduced constants for SECONDS_PER_DAY etc.
+
+2013-02-15 14:41  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2701] web/edit_entry.php, web/edit_entry_handler.php,
+	  web/functions.inc, web/functions_table.inc:
+	  
+	  Fixed various issues with booking days spanning midnight,
+	  including a problem with checking the All Day checkbox (see SF
+	  Bugs #236 part (3))
+
+2013-02-15 13:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2700] web/report.php:
+	  
+	  Fixed some label problems on the report page. See SF Bugs #265
+
+2013-02-15 09:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2699] web/js/edit_entry.js.php:
+	  
+	  Fixed bug causing slots to be described as "n days, 24 hours"
+	  instead of "n+1 days". See SF bugs #236 part (1).
+
+2013-02-15 08:31  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2698] web/js/edit_entry.js.php:
+	  
+	  Fixed bug causing slots to be reported as 'n days, 0 minutes'
+	  instead of 'n days'
+
+2013-02-14 11:28  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2697] web/functions.inc:
+	  
+	  Fixed typo in comment
+
+2013-02-14 11:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2696] web/edit_area_room.php:
+	  
+	  Fixed last change properly
+
+2013-02-14 10:51  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2695] web/edit_area_room.php, web/internalconfig.inc.php:
+	  
+	  Fixed bug causing incorrect checking of resolution and number of
+	  slots when the booking day stretches past midnight.
+
+2013-02-11 08:51  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2694] web/js/resizable.js.php:
+	  
+	  Made sure that page refresh isn't restarted while we are in the
+	  middle of a drag selection when we pass over the handles for
+	  resizable bookings
+
+2013-02-11 07:30  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2693] web/js/resizable.js.php:
+	  
+	  Improved performance of drag selection, especially with large
+	  tables
+
+2013-02-10 19:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2692] web/js/refresh.js.php:
+	  
+	  Restructured code
+
+2013-02-10 18:44  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2691] web/js/refresh.js.php, web/js/resizable.js.php:
+	  
+	  Prevented page refresh when the mouse is hovering over a resize
+	  handler (ie the user is about to start a resize)
+
+2013-02-10 13:30  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2690] web/js/refresh.js.php:
+	  
+	  Fixed a bug causing multiple timers to be fired when the page is
+	  hidden and then unhidden
+
+2013-02-10 12:33  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2689] web/js/refresh.js.php, web/js/resizable.js.php:
+	  
+	  Fixed bug causing interval timer to stop occasionally
+
+2013-02-10 11:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2688] web/js.inc, web/js/refresh.js.php,
+	  web/js/resizable.js.php:
+	  
+	  Disabled page refreshing while resizing is in progress
+
+2013-02-09 07:18  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2687] web/js/datepicker.js.php:
+	  
+	  Fixed bug causing clicking outside the datepicker to result in
+	  date selection, rather than cancelling the datepicker. See SF
+	  Bugs #263
+
+2013-02-08 15:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2686] web/js/resizable.js.php:
+	  
+	  Fixed bug introduced in Rev 2671 preventing resizing of bookings
+	  in the week view. See SF bugs #262
+
+2013-02-05 16:40  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2684] web/lang/lang.it:
+	  
+	  Updated Italian translation. Provided by Diego Zuccato
+
+2013-02-05 16:39  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2683] web/lang/lang.en:
+	  
+	  Tweaked formatting
+
+2013-02-05 15:45  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2682] web/del_entry_ajax.php, web/mrbs_sql.inc:
+	  
+	  Fixed bug whereby the repeat entry row is not deleted if you do a
+	  bulk delete from the Report page of all the entries in a series
+	  (see SF bugs #260)
+
+2013-02-03 22:28  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2680] web/js/edit_entry.js.php, web/js/refresh.js.php:
+	  
+	  Added comments
+
+2013-02-03 14:11  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2678] web/js/functions.js.php:
+	  
+	  Fixed bug in last commit
+
+2013-02-03 13:59  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2677] web/js/edit_entry.js.php, web/js/functions.js.php,
+	  web/js/refresh.js.php:
+	  
+	  Disabled Ajax conflict checking and day/week/month page refresh
+	  when the page is not visible (subject to browser support of page
+	  visibility)
+
+2013-02-01 21:05  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2673] web/edit_entry.php, web/edit_entry_handler.php,
+	  web/lang/lang.en:
+	  
+	  Added client and server side validation to check that at least
+	  one room is selected. (See SF Bugs #259)
+
+2013-02-01 19:10  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2671] web/edit_entry.php, web/edit_entry_handler.php:
+	  
+	  Fixed bug where no room was selected on changing area. See SF
+	  bugs #259
+
+2013-02-01 18:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2670] web/js/edit_entry.js.php:
+	  
+	  Fixed bug causing time selectors not to work properly after the
+	  area has been changed. See SF bugs #258
+
+2013-01-31 20:23  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2669] web/session/session_cookie.inc:
+	  
+	  Fixed warnings/errors from require_once() calls in
+	  session_cookie.inc.
+
+2013-01-23 12:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2655] web/lang/lang.da:
+	  
+	  Fixed typo
+
+2013-01-23 12:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2654] web/lang/lang.da:
+	  
+	  Updated Danish translation. Thanks to Søren O`Neill
+
+2013-01-12 18:05  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2641] web/js/edit_entry.js.php:
+	  
+	  Fixed a bug causing Ajax conflict testing not to work after a
+	  failed HTML5 form validation event
+
+2013-01-08 15:34  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2639] web/js/edit_entry.js.php:
+	  
+	  Slightly cleaner version of the fix in Rev 2637
+
+2013-01-08 15:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2638] web/lang/lang.nl:
+	  
+	  Fixed another typo. Thanks to Dieter Adriaenssens - see SF
+	  Patches #35
+
+2013-01-08 14:55  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2637] web/js/edit_entry.js.php:
+	  
+	  Fixed bug preventing singular form of the duration units being
+	  shown
+
+2013-01-08 14:34  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2636] web/lang/lang.nl:
+	  
+	  Fixed typo. Thanks to Dieter Adriaenssens - see SF Patches #35
+
+2013-01-03 21:41  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2632] web/config.inc.php, web/systemdefaults.inc.php:
+	  
+	  Changed default $dbsys to 'mysqli' from 'mysql', which is now
+	  deprecated in PHP 5.5.0
+
+2012-12-30 17:27  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2627] web/js/datatables.js.php, web/js/edit_entry.js.php,
+	  web/js/pending.js.php, web/js/report.js.php:
+	  
+	  Fixed some JSHint problems
+
+2012-12-19 16:36  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2606] web/tzurl/zoneinfo-outlook/Africa/Abidjan.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Accra.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Addis_Ababa.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Algiers.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Asmara.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Bamako.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Bangui.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Banjul.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Bissau.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Blantyre.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Brazzaville.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Bujumbura.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Cairo.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Casablanca.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Ceuta.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Conakry.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Dakar.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Dar_es_Salaam.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Djibouti.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Douala.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/El_Aaiun.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Freetown.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Gaborone.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Harare.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Johannesburg.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Juba.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Kampala.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Khartoum.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Kigali.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Kinshasa.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Lagos.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Libreville.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Lome.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Luanda.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Lubumbashi.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Lusaka.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Malabo.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Maputo.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Maseru.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Mbabane.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Mogadishu.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Monrovia.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Nairobi.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Ndjamena.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Niamey.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Nouakchott.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Ouagadougou.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Porto-Novo.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Sao_Tome.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Tripoli.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Tunis.ics,
+	  web/tzurl/zoneinfo-outlook/Africa/Windhoek.ics,
+	  web/tzurl/zoneinfo-outlook/America/Adak.ics,
+	  web/tzurl/zoneinfo-outlook/America/Anchorage.ics,
+	  web/tzurl/zoneinfo-outlook/America/Anguilla.ics,
+	  web/tzurl/zoneinfo-outlook/America/Antigua.ics,
+	  web/tzurl/zoneinfo-outlook/America/Araguaina.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Buenos_Aires.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Catamarca.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Cordoba.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Jujuy.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/La_Rioja.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Mendoza.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Rio_Gallegos.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Salta.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/San_Juan.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/San_Luis.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Tucuman.ics,
+	  web/tzurl/zoneinfo-outlook/America/Argentina/Ushuaia.ics,
+	  web/tzurl/zoneinfo-outlook/America/Aruba.ics,
+	  web/tzurl/zoneinfo-outlook/America/Asuncion.ics,
+	  web/tzurl/zoneinfo-outlook/America/Atikokan.ics,
+	  web/tzurl/zoneinfo-outlook/America/Bahia.ics,
+	  web/tzurl/zoneinfo-outlook/America/Bahia_Banderas.ics,
+	  web/tzurl/zoneinfo-outlook/America/Barbados.ics,
+	  web/tzurl/zoneinfo-outlook/America/Belem.ics,
+	  web/tzurl/zoneinfo-outlook/America/Belize.ics,
+	  web/tzurl/zoneinfo-outlook/America/Blanc-Sablon.ics,
+	  web/tzurl/zoneinfo-outlook/America/Boa_Vista.ics,
+	  web/tzurl/zoneinfo-outlook/America/Bogota.ics,
+	  web/tzurl/zoneinfo-outlook/America/Boise.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cambridge_Bay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Campo_Grande.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cancun.ics,
+	  web/tzurl/zoneinfo-outlook/America/Caracas.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cayenne.ics,
+	  web/tzurl/zoneinfo-outlook/America/Cayman.ics,
+	  web/tzurl/zoneinfo-outlook/America/Chicago.ics,
+	  web/tzurl/zoneinfo-outlook/America/Chihuahua.ics,
+	  web/tzurl/zoneinfo-outlook/America/Costa_Rica.ics,
+	  web/tzurl/zoneinfo-outlook/America/Creston.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Cuiaba.ics,
+	  web/tzurl/zoneinfo-outlook/America/Curacao.ics,
+	  web/tzurl/zoneinfo-outlook/America/Danmarkshavn.ics,
+	  web/tzurl/zoneinfo-outlook/America/Dawson.ics,
+	  web/tzurl/zoneinfo-outlook/America/Dawson_Creek.ics,
+	  web/tzurl/zoneinfo-outlook/America/Denver.ics,
+	  web/tzurl/zoneinfo-outlook/America/Detroit.ics,
+	  web/tzurl/zoneinfo-outlook/America/Dominica.ics,
+	  web/tzurl/zoneinfo-outlook/America/Edmonton.ics,
+	  web/tzurl/zoneinfo-outlook/America/Eirunepe.ics,
+	  web/tzurl/zoneinfo-outlook/America/El_Salvador.ics,
+	  web/tzurl/zoneinfo-outlook/America/Fortaleza.ics,
+	  web/tzurl/zoneinfo-outlook/America/Glace_Bay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Godthab.ics,
+	  web/tzurl/zoneinfo-outlook/America/Goose_Bay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Grand_Turk.ics,
+	  web/tzurl/zoneinfo-outlook/America/Grenada.ics,
+	  web/tzurl/zoneinfo-outlook/America/Guadeloupe.ics,
+	  web/tzurl/zoneinfo-outlook/America/Guatemala.ics,
+	  web/tzurl/zoneinfo-outlook/America/Guayaquil.ics,
+	  web/tzurl/zoneinfo-outlook/America/Guyana.ics,
+	  web/tzurl/zoneinfo-outlook/America/Halifax.ics,
+	  web/tzurl/zoneinfo-outlook/America/Havana.ics,
+	  web/tzurl/zoneinfo-outlook/America/Hermosillo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Indianapolis.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Knox.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Marengo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Petersburg.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Tell_City.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Vevay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Vincennes.ics,
+	  web/tzurl/zoneinfo-outlook/America/Indiana/Winamac.ics,
+	  web/tzurl/zoneinfo-outlook/America/Inuvik.ics,
+	  web/tzurl/zoneinfo-outlook/America/Iqaluit.ics,
+	  web/tzurl/zoneinfo-outlook/America/Jamaica.ics,
+	  web/tzurl/zoneinfo-outlook/America/Juneau.ics,
+	  web/tzurl/zoneinfo-outlook/America/Kentucky/Louisville.ics,
+	  web/tzurl/zoneinfo-outlook/America/Kentucky/Monticello.ics,
+	  web/tzurl/zoneinfo-outlook/America/Kralendijk.ics,
+	  web/tzurl/zoneinfo-outlook/America/La_Paz.ics,
+	  web/tzurl/zoneinfo-outlook/America/Lima.ics,
+	  web/tzurl/zoneinfo-outlook/America/Los_Angeles.ics,
+	  web/tzurl/zoneinfo-outlook/America/Lower_Princes.ics,
+	  web/tzurl/zoneinfo-outlook/America/Maceio.ics,
+	  web/tzurl/zoneinfo-outlook/America/Managua.ics,
+	  web/tzurl/zoneinfo-outlook/America/Manaus.ics,
+	  web/tzurl/zoneinfo-outlook/America/Marigot.ics,
+	  web/tzurl/zoneinfo-outlook/America/Martinique.ics,
+	  web/tzurl/zoneinfo-outlook/America/Matamoros.ics,
+	  web/tzurl/zoneinfo-outlook/America/Mazatlan.ics,
+	  web/tzurl/zoneinfo-outlook/America/Menominee.ics,
+	  web/tzurl/zoneinfo-outlook/America/Merida.ics,
+	  web/tzurl/zoneinfo-outlook/America/Metlakatla.ics,
+	  web/tzurl/zoneinfo-outlook/America/Mexico_City.ics,
+	  web/tzurl/zoneinfo-outlook/America/Miquelon.ics,
+	  web/tzurl/zoneinfo-outlook/America/Moncton.ics,
+	  web/tzurl/zoneinfo-outlook/America/Monterrey.ics,
+	  web/tzurl/zoneinfo-outlook/America/Montevideo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Montreal.ics,
+	  web/tzurl/zoneinfo-outlook/America/Montserrat.ics,
+	  web/tzurl/zoneinfo-outlook/America/Nassau.ics,
+	  web/tzurl/zoneinfo-outlook/America/New_York.ics,
+	  web/tzurl/zoneinfo-outlook/America/Nipigon.ics,
+	  web/tzurl/zoneinfo-outlook/America/Nome.ics,
+	  web/tzurl/zoneinfo-outlook/America/Noronha.ics,
+	  web/tzurl/zoneinfo-outlook/America/North_Dakota/Beulah.ics,
+	  web/tzurl/zoneinfo-outlook/America/North_Dakota/Center.ics,
+	  web/tzurl/zoneinfo-outlook/America/North_Dakota/New_Salem.ics,
+	  web/tzurl/zoneinfo-outlook/America/Ojinaga.ics,
+	  web/tzurl/zoneinfo-outlook/America/Panama.ics,
+	  web/tzurl/zoneinfo-outlook/America/Pangnirtung.ics,
+	  web/tzurl/zoneinfo-outlook/America/Paramaribo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Phoenix.ics,
+	  web/tzurl/zoneinfo-outlook/America/Port-au-Prince.ics,
+	  web/tzurl/zoneinfo-outlook/America/Port_of_Spain.ics,
+	  web/tzurl/zoneinfo-outlook/America/Porto_Velho.ics,
+	  web/tzurl/zoneinfo-outlook/America/Puerto_Rico.ics,
+	  web/tzurl/zoneinfo-outlook/America/Rainy_River.ics,
+	  web/tzurl/zoneinfo-outlook/America/Rankin_Inlet.ics,
+	  web/tzurl/zoneinfo-outlook/America/Recife.ics,
+	  web/tzurl/zoneinfo-outlook/America/Regina.ics,
+	  web/tzurl/zoneinfo-outlook/America/Resolute.ics,
+	  web/tzurl/zoneinfo-outlook/America/Rio_Branco.ics,
+	  web/tzurl/zoneinfo-outlook/America/Santa_Isabel.ics,
+	  web/tzurl/zoneinfo-outlook/America/Santarem.ics,
+	  web/tzurl/zoneinfo-outlook/America/Santiago.ics,
+	  web/tzurl/zoneinfo-outlook/America/Santo_Domingo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Sao_Paulo.ics,
+	  web/tzurl/zoneinfo-outlook/America/Scoresbysund.ics,
+	  web/tzurl/zoneinfo-outlook/America/Shiprock.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/America/Sitka.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Barthelemy.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Johns.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Kitts.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Lucia.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Thomas.ics,
+	  web/tzurl/zoneinfo-outlook/America/St_Vincent.ics,
+	  web/tzurl/zoneinfo-outlook/America/Swift_Current.ics,
+	  web/tzurl/zoneinfo-outlook/America/Tegucigalpa.ics,
+	  web/tzurl/zoneinfo-outlook/America/Thule.ics,
+	  web/tzurl/zoneinfo-outlook/America/Thunder_Bay.ics,
+	  web/tzurl/zoneinfo-outlook/America/Tijuana.ics,
+	  web/tzurl/zoneinfo-outlook/America/Toronto.ics,
+	  web/tzurl/zoneinfo-outlook/America/Tortola.ics,
+	  web/tzurl/zoneinfo-outlook/America/Vancouver.ics,
+	  web/tzurl/zoneinfo-outlook/America/Whitehorse.ics,
+	  web/tzurl/zoneinfo-outlook/America/Winnipeg.ics,
+	  web/tzurl/zoneinfo-outlook/America/Yakutat.ics,
+	  web/tzurl/zoneinfo-outlook/America/Yellowknife.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Casey.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Davis.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/DumontDUrville.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Macquarie.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Mawson.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/McMurdo.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Palmer.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Rothera.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/South_Pole.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Syowa.ics,
+	  web/tzurl/zoneinfo-outlook/Antarctica/Vostok.ics,
+	  web/tzurl/zoneinfo-outlook/Arctic/Longyearbyen.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Aden.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Almaty.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Amman.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Anadyr.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Aqtau.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Aqtobe.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Ashgabat.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Baghdad.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Bahrain.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Baku.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Bangkok.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Beirut.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Bishkek.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Brunei.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Choibalsan.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Chongqing.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Colombo.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Damascus.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Dhaka.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Dili.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Dubai.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Dushanbe.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Gaza.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Harbin.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Hebron.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Asia/Ho_Chi_Minh.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Hong_Kong.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Hovd.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Irkutsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Istanbul.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Jakarta.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Jayapura.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Jerusalem.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kabul.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kamchatka.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Karachi.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kashgar.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kathmandu.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kolkata.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Krasnoyarsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kuala_Lumpur.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kuching.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Kuwait.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Macau.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Magadan.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Makassar.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Manila.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Muscat.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Nicosia.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Novokuznetsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Novosibirsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Omsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Oral.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Phnom_Penh.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Pontianak.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Pyongyang.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Qatar.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Qyzylorda.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Rangoon.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Riyadh.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Sakhalin.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Samarkand.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Seoul.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Shanghai.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Singapore.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Taipei.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Tashkent.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Tbilisi.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Tehran.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Thimphu.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Tokyo.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Ulaanbaatar.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Urumqi.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Vientiane.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Vladivostok.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Yakutsk.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Yekaterinburg.ics,
+	  web/tzurl/zoneinfo-outlook/Asia/Yerevan.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Azores.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Bermuda.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Canary.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Cape_Verde.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Faroe.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Madeira.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Reykjavik.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/South_Georgia.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/St_Helena.ics,
+	  web/tzurl/zoneinfo-outlook/Atlantic/Stanley.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Adelaide.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Brisbane.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Broken_Hill.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Australia/Currie.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Darwin.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Eucla.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Hobart.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Lindeman.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Lord_Howe.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Melbourne.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Perth.ics,
+	  web/tzurl/zoneinfo-outlook/Australia/Sydney.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Amsterdam.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Andorra.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Athens.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Belgrade.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Berlin.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Bratislava.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Brussels.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Bucharest.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Budapest.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Chisinau.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Copenhagen.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Dublin.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Gibraltar.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Guernsey.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Helsinki.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Isle_of_Man.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Istanbul.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Jersey.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Kaliningrad.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Kiev.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Lisbon.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Ljubljana.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/London.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Luxembourg.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Madrid.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Malta.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Mariehamn.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Minsk.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Monaco.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Moscow.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Nicosia.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Oslo.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Paris.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Podgorica.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Prague.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Riga.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Rome.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Samara.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/San_Marino.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Sarajevo.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Simferopol.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Skopje.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Sofia.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Stockholm.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Tallinn.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Tirane.ics[ADD],
+	  web/tzurl/zoneinfo-outlook/Europe/Uzhgorod.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Vaduz.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Vatican.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Vienna.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Vilnius.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Volgograd.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Warsaw.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Zagreb.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Zaporozhye.ics,
+	  web/tzurl/zoneinfo-outlook/Europe/Zurich.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Antananarivo.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Chagos.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Christmas.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Cocos.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Comoro.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Kerguelen.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Mahe.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Maldives.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Mauritius.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Mayotte.ics,
+	  web/tzurl/zoneinfo-outlook/Indian/Reunion.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Apia.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Auckland.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Chatham.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Chuuk.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Easter.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Efate.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Enderbury.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Fakaofo.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Fiji.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Funafuti.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Galapagos.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Gambier.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Guadalcanal.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Guam.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Honolulu.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Johnston.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Kiritimati.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Kosrae.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Kwajalein.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Majuro.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Marquesas.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Midway.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Nauru.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Niue.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Norfolk.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Noumea.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Pago_Pago.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Palau.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Pitcairn.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Pohnpei.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Ponape.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Port_Moresby.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Rarotonga.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Saipan.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Tahiti.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Tarawa.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Tongatapu.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Truk.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Wake.ics,
+	  web/tzurl/zoneinfo-outlook/Pacific/Wallis.ics,
+	  web/tzurl/zoneinfo/Africa/Abidjan.ics,
+	  web/tzurl/zoneinfo/Africa/Accra.ics,
+	  web/tzurl/zoneinfo/Africa/Addis_Ababa.ics,
+	  web/tzurl/zoneinfo/Africa/Algiers.ics,
+	  web/tzurl/zoneinfo/Africa/Asmara.ics,
+	  web/tzurl/zoneinfo/Africa/Bamako.ics,
+	  web/tzurl/zoneinfo/Africa/Bangui.ics,
+	  web/tzurl/zoneinfo/Africa/Banjul.ics,
+	  web/tzurl/zoneinfo/Africa/Bissau.ics,
+	  web/tzurl/zoneinfo/Africa/Blantyre.ics,
+	  web/tzurl/zoneinfo/Africa/Brazzaville.ics,
+	  web/tzurl/zoneinfo/Africa/Bujumbura.ics,
+	  web/tzurl/zoneinfo/Africa/Cairo.ics,
+	  web/tzurl/zoneinfo/Africa/Casablanca.ics,
+	  web/tzurl/zoneinfo/Africa/Ceuta.ics,
+	  web/tzurl/zoneinfo/Africa/Conakry.ics,
+	  web/tzurl/zoneinfo/Africa/Dakar.ics,
+	  web/tzurl/zoneinfo/Africa/Dar_es_Salaam.ics,
+	  web/tzurl/zoneinfo/Africa/Djibouti.ics,
+	  web/tzurl/zoneinfo/Africa/Douala.ics,
+	  web/tzurl/zoneinfo/Africa/El_Aaiun.ics,
+	  web/tzurl/zoneinfo/Africa/Freetown.ics,
+	  web/tzurl/zoneinfo/Africa/Gaborone.ics,
+	  web/tzurl/zoneinfo/Africa/Harare.ics,
+	  web/tzurl/zoneinfo/Africa/Johannesburg.ics,
+	  web/tzurl/zoneinfo/Africa/Juba.ics,
+	  web/tzurl/zoneinfo/Africa/Kampala.ics,
+	  web/tzurl/zoneinfo/Africa/Khartoum.ics,
+	  web/tzurl/zoneinfo/Africa/Kigali.ics,
+	  web/tzurl/zoneinfo/Africa/Kinshasa.ics,
+	  web/tzurl/zoneinfo/Africa/Lagos.ics,
+	  web/tzurl/zoneinfo/Africa/Libreville.ics,
+	  web/tzurl/zoneinfo/Africa/Lome.ics,
+	  web/tzurl/zoneinfo/Africa/Luanda.ics,
+	  web/tzurl/zoneinfo/Africa/Lubumbashi.ics,
+	  web/tzurl/zoneinfo/Africa/Lusaka.ics,
+	  web/tzurl/zoneinfo/Africa/Malabo.ics,
+	  web/tzurl/zoneinfo/Africa/Maputo.ics,
+	  web/tzurl/zoneinfo/Africa/Maseru.ics,
+	  web/tzurl/zoneinfo/Africa/Mbabane.ics,
+	  web/tzurl/zoneinfo/Africa/Mogadishu.ics,
+	  web/tzurl/zoneinfo/Africa/Monrovia.ics,
+	  web/tzurl/zoneinfo/Africa/Nairobi.ics,
+	  web/tzurl/zoneinfo/Africa/Ndjamena.ics,
+	  web/tzurl/zoneinfo/Africa/Niamey.ics,
+	  web/tzurl/zoneinfo/Africa/Nouakchott.ics,
+	  web/tzurl/zoneinfo/Africa/Ouagadougou.ics,
+	  web/tzurl/zoneinfo/Africa/Porto-Novo.ics,
+	  web/tzurl/zoneinfo/Africa/Sao_Tome.ics,
+	  web/tzurl/zoneinfo/Africa/Tripoli.ics,
+	  web/tzurl/zoneinfo/Africa/Tunis.ics,
+	  web/tzurl/zoneinfo/Africa/Windhoek.ics,
+	  web/tzurl/zoneinfo/America/Adak.ics,
+	  web/tzurl/zoneinfo/America/Anchorage.ics,
+	  web/tzurl/zoneinfo/America/Anguilla.ics,
+	  web/tzurl/zoneinfo/America/Antigua.ics,
+	  web/tzurl/zoneinfo/America/Araguaina.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Buenos_Aires.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Catamarca.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Cordoba.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Jujuy.ics,
+	  web/tzurl/zoneinfo/America/Argentina/La_Rioja.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Mendoza.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Rio_Gallegos.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Salta.ics,
+	  web/tzurl/zoneinfo/America/Argentina/San_Juan.ics,
+	  web/tzurl/zoneinfo/America/Argentina/San_Luis.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Tucuman.ics,
+	  web/tzurl/zoneinfo/America/Argentina/Ushuaia.ics,
+	  web/tzurl/zoneinfo/America/Aruba.ics,
+	  web/tzurl/zoneinfo/America/Asuncion.ics,
+	  web/tzurl/zoneinfo/America/Atikokan.ics,
+	  web/tzurl/zoneinfo/America/Bahia.ics,
+	  web/tzurl/zoneinfo/America/Bahia_Banderas.ics,
+	  web/tzurl/zoneinfo/America/Barbados.ics,
+	  web/tzurl/zoneinfo/America/Belem.ics,
+	  web/tzurl/zoneinfo/America/Belize.ics,
+	  web/tzurl/zoneinfo/America/Blanc-Sablon.ics,
+	  web/tzurl/zoneinfo/America/Boa_Vista.ics,
+	  web/tzurl/zoneinfo/America/Bogota.ics,
+	  web/tzurl/zoneinfo/America/Boise.ics,
+	  web/tzurl/zoneinfo/America/Cambridge_Bay.ics,
+	  web/tzurl/zoneinfo/America/Campo_Grande.ics,
+	  web/tzurl/zoneinfo/America/Cancun.ics,
+	  web/tzurl/zoneinfo/America/Caracas.ics,
+	  web/tzurl/zoneinfo/America/Cayenne.ics,
+	  web/tzurl/zoneinfo/America/Cayman.ics,
+	  web/tzurl/zoneinfo/America/Chicago.ics,
+	  web/tzurl/zoneinfo/America/Chihuahua.ics,
+	  web/tzurl/zoneinfo/America/Costa_Rica.ics,
+	  web/tzurl/zoneinfo/America/Creston.ics[ADD],
+	  web/tzurl/zoneinfo/America/Cuiaba.ics,
+	  web/tzurl/zoneinfo/America/Curacao.ics,
+	  web/tzurl/zoneinfo/America/Danmarkshavn.ics,
+	  web/tzurl/zoneinfo/America/Dawson.ics,
+	  web/tzurl/zoneinfo/America/Dawson_Creek.ics,
+	  web/tzurl/zoneinfo/America/Denver.ics,
+	  web/tzurl/zoneinfo/America/Detroit.ics,
+	  web/tzurl/zoneinfo/America/Dominica.ics,
+	  web/tzurl/zoneinfo/America/Edmonton.ics,
+	  web/tzurl/zoneinfo/America/Eirunepe.ics,
+	  web/tzurl/zoneinfo/America/El_Salvador.ics,
+	  web/tzurl/zoneinfo/America/Fortaleza.ics,
+	  web/tzurl/zoneinfo/America/Glace_Bay.ics,
+	  web/tzurl/zoneinfo/America/Godthab.ics,
+	  web/tzurl/zoneinfo/America/Goose_Bay.ics,
+	  web/tzurl/zoneinfo/America/Grand_Turk.ics,
+	  web/tzurl/zoneinfo/America/Grenada.ics,
+	  web/tzurl/zoneinfo/America/Guadeloupe.ics,
+	  web/tzurl/zoneinfo/America/Guatemala.ics,
+	  web/tzurl/zoneinfo/America/Guayaquil.ics,
+	  web/tzurl/zoneinfo/America/Guyana.ics,
+	  web/tzurl/zoneinfo/America/Halifax.ics,
+	  web/tzurl/zoneinfo/America/Havana.ics,
+	  web/tzurl/zoneinfo/America/Hermosillo.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Indianapolis.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Knox.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Marengo.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Petersburg.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Tell_City.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Vevay.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Vincennes.ics,
+	  web/tzurl/zoneinfo/America/Indiana/Winamac.ics,
+	  web/tzurl/zoneinfo/America/Inuvik.ics,
+	  web/tzurl/zoneinfo/America/Iqaluit.ics,
+	  web/tzurl/zoneinfo/America/Jamaica.ics,
+	  web/tzurl/zoneinfo/America/Juneau.ics,
+	  web/tzurl/zoneinfo/America/Kentucky/Louisville.ics,
+	  web/tzurl/zoneinfo/America/Kentucky/Monticello.ics,
+	  web/tzurl/zoneinfo/America/Kralendijk.ics,
+	  web/tzurl/zoneinfo/America/La_Paz.ics,
+	  web/tzurl/zoneinfo/America/Lima.ics,
+	  web/tzurl/zoneinfo/America/Los_Angeles.ics,
+	  web/tzurl/zoneinfo/America/Lower_Princes.ics,
+	  web/tzurl/zoneinfo/America/Maceio.ics,
+	  web/tzurl/zoneinfo/America/Managua.ics,
+	  web/tzurl/zoneinfo/America/Manaus.ics,
+	  web/tzurl/zoneinfo/America/Marigot.ics,
+	  web/tzurl/zoneinfo/America/Martinique.ics,
+	  web/tzurl/zoneinfo/America/Matamoros.ics,
+	  web/tzurl/zoneinfo/America/Mazatlan.ics,
+	  web/tzurl/zoneinfo/America/Menominee.ics,
+	  web/tzurl/zoneinfo/America/Merida.ics,
+	  web/tzurl/zoneinfo/America/Metlakatla.ics,
+	  web/tzurl/zoneinfo/America/Mexico_City.ics,
+	  web/tzurl/zoneinfo/America/Miquelon.ics,
+	  web/tzurl/zoneinfo/America/Moncton.ics,
+	  web/tzurl/zoneinfo/America/Monterrey.ics,
+	  web/tzurl/zoneinfo/America/Montevideo.ics,
+	  web/tzurl/zoneinfo/America/Montreal.ics,
+	  web/tzurl/zoneinfo/America/Montserrat.ics,
+	  web/tzurl/zoneinfo/America/Nassau.ics,
+	  web/tzurl/zoneinfo/America/New_York.ics,
+	  web/tzurl/zoneinfo/America/Nipigon.ics,
+	  web/tzurl/zoneinfo/America/Nome.ics,
+	  web/tzurl/zoneinfo/America/Noronha.ics,
+	  web/tzurl/zoneinfo/America/North_Dakota/Beulah.ics,
+	  web/tzurl/zoneinfo/America/North_Dakota/Center.ics,
+	  web/tzurl/zoneinfo/America/North_Dakota/New_Salem.ics,
+	  web/tzurl/zoneinfo/America/Ojinaga.ics,
+	  web/tzurl/zoneinfo/America/Panama.ics,
+	  web/tzurl/zoneinfo/America/Pangnirtung.ics,
+	  web/tzurl/zoneinfo/America/Paramaribo.ics,
+	  web/tzurl/zoneinfo/America/Phoenix.ics,
+	  web/tzurl/zoneinfo/America/Port-au-Prince.ics,
+	  web/tzurl/zoneinfo/America/Port_of_Spain.ics,
+	  web/tzurl/zoneinfo/America/Porto_Velho.ics,
+	  web/tzurl/zoneinfo/America/Puerto_Rico.ics,
+	  web/tzurl/zoneinfo/America/Rainy_River.ics,
+	  web/tzurl/zoneinfo/America/Rankin_Inlet.ics,
+	  web/tzurl/zoneinfo/America/Recife.ics,
+	  web/tzurl/zoneinfo/America/Regina.ics,
+	  web/tzurl/zoneinfo/America/Resolute.ics,
+	  web/tzurl/zoneinfo/America/Rio_Branco.ics,
+	  web/tzurl/zoneinfo/America/Santa_Isabel.ics,
+	  web/tzurl/zoneinfo/America/Santarem.ics,
+	  web/tzurl/zoneinfo/America/Santiago.ics,
+	  web/tzurl/zoneinfo/America/Santo_Domingo.ics,
+	  web/tzurl/zoneinfo/America/Sao_Paulo.ics,
+	  web/tzurl/zoneinfo/America/Scoresbysund.ics,
+	  web/tzurl/zoneinfo/America/Shiprock.ics[ADD],
+	  web/tzurl/zoneinfo/America/Sitka.ics,
+	  web/tzurl/zoneinfo/America/St_Barthelemy.ics,
+	  web/tzurl/zoneinfo/America/St_Johns.ics,
+	  web/tzurl/zoneinfo/America/St_Kitts.ics,
+	  web/tzurl/zoneinfo/America/St_Lucia.ics,
+	  web/tzurl/zoneinfo/America/St_Thomas.ics,
+	  web/tzurl/zoneinfo/America/St_Vincent.ics,
+	  web/tzurl/zoneinfo/America/Swift_Current.ics,
+	  web/tzurl/zoneinfo/America/Tegucigalpa.ics,
+	  web/tzurl/zoneinfo/America/Thule.ics,
+	  web/tzurl/zoneinfo/America/Thunder_Bay.ics,
+	  web/tzurl/zoneinfo/America/Tijuana.ics,
+	  web/tzurl/zoneinfo/America/Toronto.ics,
+	  web/tzurl/zoneinfo/America/Tortola.ics,
+	  web/tzurl/zoneinfo/America/Vancouver.ics,
+	  web/tzurl/zoneinfo/America/Whitehorse.ics,
+	  web/tzurl/zoneinfo/America/Winnipeg.ics,
+	  web/tzurl/zoneinfo/America/Yakutat.ics,
+	  web/tzurl/zoneinfo/America/Yellowknife.ics,
+	  web/tzurl/zoneinfo/Antarctica/Casey.ics,
+	  web/tzurl/zoneinfo/Antarctica/Davis.ics,
+	  web/tzurl/zoneinfo/Antarctica/DumontDUrville.ics,
+	  web/tzurl/zoneinfo/Antarctica/Macquarie.ics,
+	  web/tzurl/zoneinfo/Antarctica/Mawson.ics,
+	  web/tzurl/zoneinfo/Antarctica/McMurdo.ics,
+	  web/tzurl/zoneinfo/Antarctica/Palmer.ics,
+	  web/tzurl/zoneinfo/Antarctica/Rothera.ics,
+	  web/tzurl/zoneinfo/Antarctica/South_Pole.ics,
+	  web/tzurl/zoneinfo/Antarctica/Syowa.ics,
+	  web/tzurl/zoneinfo/Antarctica/Vostok.ics,
+	  web/tzurl/zoneinfo/Arctic/Longyearbyen.ics,
+	  web/tzurl/zoneinfo/Asia/Aden.ics,
+	  web/tzurl/zoneinfo/Asia/Almaty.ics,
+	  web/tzurl/zoneinfo/Asia/Amman.ics,
+	  web/tzurl/zoneinfo/Asia/Anadyr.ics,
+	  web/tzurl/zoneinfo/Asia/Aqtau.ics,
+	  web/tzurl/zoneinfo/Asia/Aqtobe.ics,
+	  web/tzurl/zoneinfo/Asia/Ashgabat.ics,
+	  web/tzurl/zoneinfo/Asia/Baghdad.ics,
+	  web/tzurl/zoneinfo/Asia/Bahrain.ics,
+	  web/tzurl/zoneinfo/Asia/Baku.ics,
+	  web/tzurl/zoneinfo/Asia/Bangkok.ics,
+	  web/tzurl/zoneinfo/Asia/Beirut.ics,
+	  web/tzurl/zoneinfo/Asia/Bishkek.ics,
+	  web/tzurl/zoneinfo/Asia/Brunei.ics,
+	  web/tzurl/zoneinfo/Asia/Choibalsan.ics,
+	  web/tzurl/zoneinfo/Asia/Chongqing.ics,
+	  web/tzurl/zoneinfo/Asia/Colombo.ics,
+	  web/tzurl/zoneinfo/Asia/Damascus.ics,
+	  web/tzurl/zoneinfo/Asia/Dhaka.ics,
+	  web/tzurl/zoneinfo/Asia/Dili.ics,
+	  web/tzurl/zoneinfo/Asia/Dubai.ics,
+	  web/tzurl/zoneinfo/Asia/Dushanbe.ics,
+	  web/tzurl/zoneinfo/Asia/Gaza.ics,
+	  web/tzurl/zoneinfo/Asia/Harbin.ics,
+	  web/tzurl/zoneinfo/Asia/Hebron.ics[ADD],
+	  web/tzurl/zoneinfo/Asia/Ho_Chi_Minh.ics,
+	  web/tzurl/zoneinfo/Asia/Hong_Kong.ics,
+	  web/tzurl/zoneinfo/Asia/Hovd.ics,
+	  web/tzurl/zoneinfo/Asia/Irkutsk.ics,
+	  web/tzurl/zoneinfo/Asia/Istanbul.ics,
+	  web/tzurl/zoneinfo/Asia/Jakarta.ics,
+	  web/tzurl/zoneinfo/Asia/Jayapura.ics,
+	  web/tzurl/zoneinfo/Asia/Jerusalem.ics,
+	  web/tzurl/zoneinfo/Asia/Kabul.ics,
+	  web/tzurl/zoneinfo/Asia/Kamchatka.ics,
+	  web/tzurl/zoneinfo/Asia/Karachi.ics,
+	  web/tzurl/zoneinfo/Asia/Kashgar.ics,
+	  web/tzurl/zoneinfo/Asia/Kathmandu.ics,
+	  web/tzurl/zoneinfo/Asia/Kolkata.ics,
+	  web/tzurl/zoneinfo/Asia/Krasnoyarsk.ics,
+	  web/tzurl/zoneinfo/Asia/Kuala_Lumpur.ics,
+	  web/tzurl/zoneinfo/Asia/Kuching.ics,
+	  web/tzurl/zoneinfo/Asia/Kuwait.ics,
+	  web/tzurl/zoneinfo/Asia/Macau.ics,
+	  web/tzurl/zoneinfo/Asia/Magadan.ics,
+	  web/tzurl/zoneinfo/Asia/Makassar.ics,
+	  web/tzurl/zoneinfo/Asia/Manila.ics,
+	  web/tzurl/zoneinfo/Asia/Muscat.ics,
+	  web/tzurl/zoneinfo/Asia/Nicosia.ics,
+	  web/tzurl/zoneinfo/Asia/Novokuznetsk.ics,
+	  web/tzurl/zoneinfo/Asia/Novosibirsk.ics,
+	  web/tzurl/zoneinfo/Asia/Omsk.ics,
+	  web/tzurl/zoneinfo/Asia/Oral.ics,
+	  web/tzurl/zoneinfo/Asia/Phnom_Penh.ics,
+	  web/tzurl/zoneinfo/Asia/Pontianak.ics,
+	  web/tzurl/zoneinfo/Asia/Pyongyang.ics,
+	  web/tzurl/zoneinfo/Asia/Qatar.ics,
+	  web/tzurl/zoneinfo/Asia/Qyzylorda.ics,
+	  web/tzurl/zoneinfo/Asia/Rangoon.ics,
+	  web/tzurl/zoneinfo/Asia/Riyadh.ics,
+	  web/tzurl/zoneinfo/Asia/Sakhalin.ics,
+	  web/tzurl/zoneinfo/Asia/Samarkand.ics,
+	  web/tzurl/zoneinfo/Asia/Seoul.ics,
+	  web/tzurl/zoneinfo/Asia/Shanghai.ics,
+	  web/tzurl/zoneinfo/Asia/Singapore.ics,
+	  web/tzurl/zoneinfo/Asia/Taipei.ics,
+	  web/tzurl/zoneinfo/Asia/Tashkent.ics,
+	  web/tzurl/zoneinfo/Asia/Tbilisi.ics,
+	  web/tzurl/zoneinfo/Asia/Tehran.ics,
+	  web/tzurl/zoneinfo/Asia/Thimphu.ics,
+	  web/tzurl/zoneinfo/Asia/Tokyo.ics,
+	  web/tzurl/zoneinfo/Asia/Ulaanbaatar.ics,
+	  web/tzurl/zoneinfo/Asia/Urumqi.ics,
+	  web/tzurl/zoneinfo/Asia/Vientiane.ics,
+	  web/tzurl/zoneinfo/Asia/Vladivostok.ics,
+	  web/tzurl/zoneinfo/Asia/Yakutsk.ics,
+	  web/tzurl/zoneinfo/Asia/Yekaterinburg.ics,
+	  web/tzurl/zoneinfo/Asia/Yerevan.ics,
+	  web/tzurl/zoneinfo/Atlantic/Azores.ics,
+	  web/tzurl/zoneinfo/Atlantic/Bermuda.ics,
+	  web/tzurl/zoneinfo/Atlantic/Canary.ics,
+	  web/tzurl/zoneinfo/Atlantic/Cape_Verde.ics,
+	  web/tzurl/zoneinfo/Atlantic/Faroe.ics,
+	  web/tzurl/zoneinfo/Atlantic/Madeira.ics,
+	  web/tzurl/zoneinfo/Atlantic/Reykjavik.ics,
+	  web/tzurl/zoneinfo/Atlantic/South_Georgia.ics,
+	  web/tzurl/zoneinfo/Atlantic/St_Helena.ics,
+	  web/tzurl/zoneinfo/Atlantic/Stanley.ics,
+	  web/tzurl/zoneinfo/Australia/Adelaide.ics,
+	  web/tzurl/zoneinfo/Australia/Brisbane.ics,
+	  web/tzurl/zoneinfo/Australia/Broken_Hill.ics[ADD],
+	  web/tzurl/zoneinfo/Australia/Currie.ics,
+	  web/tzurl/zoneinfo/Australia/Darwin.ics,
+	  web/tzurl/zoneinfo/Australia/Eucla.ics,
+	  web/tzurl/zoneinfo/Australia/Hobart.ics,
+	  web/tzurl/zoneinfo/Australia/Lindeman.ics,
+	  web/tzurl/zoneinfo/Australia/Lord_Howe.ics,
+	  web/tzurl/zoneinfo/Australia/Melbourne.ics,
+	  web/tzurl/zoneinfo/Australia/Perth.ics,
+	  web/tzurl/zoneinfo/Australia/Sydney.ics,
+	  web/tzurl/zoneinfo/Europe/Amsterdam.ics,
+	  web/tzurl/zoneinfo/Europe/Andorra.ics,
+	  web/tzurl/zoneinfo/Europe/Athens.ics,
+	  web/tzurl/zoneinfo/Europe/Belgrade.ics,
+	  web/tzurl/zoneinfo/Europe/Berlin.ics,
+	  web/tzurl/zoneinfo/Europe/Bratislava.ics,
+	  web/tzurl/zoneinfo/Europe/Brussels.ics,
+	  web/tzurl/zoneinfo/Europe/Bucharest.ics,
+	  web/tzurl/zoneinfo/Europe/Budapest.ics,
+	  web/tzurl/zoneinfo/Europe/Chisinau.ics,
+	  web/tzurl/zoneinfo/Europe/Copenhagen.ics,
+	  web/tzurl/zoneinfo/Europe/Dublin.ics,
+	  web/tzurl/zoneinfo/Europe/Gibraltar.ics,
+	  web/tzurl/zoneinfo/Europe/Guernsey.ics,
+	  web/tzurl/zoneinfo/Europe/Helsinki.ics,
+	  web/tzurl/zoneinfo/Europe/Isle_of_Man.ics,
+	  web/tzurl/zoneinfo/Europe/Istanbul.ics,
+	  web/tzurl/zoneinfo/Europe/Jersey.ics,
+	  web/tzurl/zoneinfo/Europe/Kaliningrad.ics,
+	  web/tzurl/zoneinfo/Europe/Kiev.ics,
+	  web/tzurl/zoneinfo/Europe/Lisbon.ics,
+	  web/tzurl/zoneinfo/Europe/Ljubljana.ics,
+	  web/tzurl/zoneinfo/Europe/London.ics,
+	  web/tzurl/zoneinfo/Europe/Luxembourg.ics,
+	  web/tzurl/zoneinfo/Europe/Madrid.ics,
+	  web/tzurl/zoneinfo/Europe/Malta.ics,
+	  web/tzurl/zoneinfo/Europe/Mariehamn.ics,
+	  web/tzurl/zoneinfo/Europe/Minsk.ics,
+	  web/tzurl/zoneinfo/Europe/Monaco.ics,
+	  web/tzurl/zoneinfo/Europe/Moscow.ics,
+	  web/tzurl/zoneinfo/Europe/Nicosia.ics,
+	  web/tzurl/zoneinfo/Europe/Oslo.ics,
+	  web/tzurl/zoneinfo/Europe/Paris.ics,
+	  web/tzurl/zoneinfo/Europe/Podgorica.ics,
+	  web/tzurl/zoneinfo/Europe/Prague.ics,
+	  web/tzurl/zoneinfo/Europe/Riga.ics,
+	  web/tzurl/zoneinfo/Europe/Rome.ics,
+	  web/tzurl/zoneinfo/Europe/Samara.ics,
+	  web/tzurl/zoneinfo/Europe/San_Marino.ics,
+	  web/tzurl/zoneinfo/Europe/Sarajevo.ics,
+	  web/tzurl/zoneinfo/Europe/Simferopol.ics,
+	  web/tzurl/zoneinfo/Europe/Skopje.ics,
+	  web/tzurl/zoneinfo/Europe/Sofia.ics,
+	  web/tzurl/zoneinfo/Europe/Stockholm.ics,
+	  web/tzurl/zoneinfo/Europe/Tallinn.ics,
+	  web/tzurl/zoneinfo/Europe/Tirane.ics[ADD],
+	  web/tzurl/zoneinfo/Europe/Uzhgorod.ics,
+	  web/tzurl/zoneinfo/Europe/Vaduz.ics,
+	  web/tzurl/zoneinfo/Europe/Vatican.ics,
+	  web/tzurl/zoneinfo/Europe/Vienna.ics,
+	  web/tzurl/zoneinfo/Europe/Vilnius.ics,
+	  web/tzurl/zoneinfo/Europe/Volgograd.ics,
+	  web/tzurl/zoneinfo/Europe/Warsaw.ics,
+	  web/tzurl/zoneinfo/Europe/Zagreb.ics,
+	  web/tzurl/zoneinfo/Europe/Zaporozhye.ics,
+	  web/tzurl/zoneinfo/Europe/Zurich.ics,
+	  web/tzurl/zoneinfo/Indian/Antananarivo.ics,
+	  web/tzurl/zoneinfo/Indian/Chagos.ics,
+	  web/tzurl/zoneinfo/Indian/Christmas.ics,
+	  web/tzurl/zoneinfo/Indian/Cocos.ics,
+	  web/tzurl/zoneinfo/Indian/Comoro.ics,
+	  web/tzurl/zoneinfo/Indian/Kerguelen.ics,
+	  web/tzurl/zoneinfo/Indian/Mahe.ics,
+	  web/tzurl/zoneinfo/Indian/Maldives.ics,
+	  web/tzurl/zoneinfo/Indian/Mauritius.ics,
+	  web/tzurl/zoneinfo/Indian/Mayotte.ics,
+	  web/tzurl/zoneinfo/Indian/Reunion.ics,
+	  web/tzurl/zoneinfo/Pacific/Apia.ics,
+	  web/tzurl/zoneinfo/Pacific/Auckland.ics,
+	  web/tzurl/zoneinfo/Pacific/Chatham.ics,
+	  web/tzurl/zoneinfo/Pacific/Chuuk.ics,
+	  web/tzurl/zoneinfo/Pacific/Easter.ics,
+	  web/tzurl/zoneinfo/Pacific/Efate.ics,
+	  web/tzurl/zoneinfo/Pacific/Enderbury.ics,
+	  web/tzurl/zoneinfo/Pacific/Fakaofo.ics,
+	  web/tzurl/zoneinfo/Pacific/Fiji.ics,
+	  web/tzurl/zoneinfo/Pacific/Funafuti.ics,
+	  web/tzurl/zoneinfo/Pacific/Galapagos.ics,
+	  web/tzurl/zoneinfo/Pacific/Gambier.ics,
+	  web/tzurl/zoneinfo/Pacific/Guadalcanal.ics,
+	  web/tzurl/zoneinfo/Pacific/Guam.ics,
+	  web/tzurl/zoneinfo/Pacific/Honolulu.ics,
+	  web/tzurl/zoneinfo/Pacific/Johnston.ics,
+	  web/tzurl/zoneinfo/Pacific/Kiritimati.ics,
+	  web/tzurl/zoneinfo/Pacific/Kosrae.ics,
+	  web/tzurl/zoneinfo/Pacific/Kwajalein.ics,
+	  web/tzurl/zoneinfo/Pacific/Majuro.ics,
+	  web/tzurl/zoneinfo/Pacific/Marquesas.ics,
+	  web/tzurl/zoneinfo/Pacific/Midway.ics,
+	  web/tzurl/zoneinfo/Pacific/Nauru.ics,
+	  web/tzurl/zoneinfo/Pacific/Niue.ics,
+	  web/tzurl/zoneinfo/Pacific/Norfolk.ics,
+	  web/tzurl/zoneinfo/Pacific/Noumea.ics,
+	  web/tzurl/zoneinfo/Pacific/Pago_Pago.ics,
+	  web/tzurl/zoneinfo/Pacific/Palau.ics,
+	  web/tzurl/zoneinfo/Pacific/Pitcairn.ics,
+	  web/tzurl/zoneinfo/Pacific/Pohnpei.ics,
+	  web/tzurl/zoneinfo/Pacific/Ponape.ics,
+	  web/tzurl/zoneinfo/Pacific/Port_Moresby.ics,
+	  web/tzurl/zoneinfo/Pacific/Rarotonga.ics,
+	  web/tzurl/zoneinfo/Pacific/Saipan.ics,
+	  web/tzurl/zoneinfo/Pacific/Tahiti.ics,
+	  web/tzurl/zoneinfo/Pacific/Tarawa.ics,
+	  web/tzurl/zoneinfo/Pacific/Tongatapu.ics,
+	  web/tzurl/zoneinfo/Pacific/Truk.ics,
+	  web/tzurl/zoneinfo/Pacific/Wake.ics,
+	  web/tzurl/zoneinfo/Pacific/Wallis.ics:
+	  
+	  Updated timezone definitions
+
+2012-12-18 21:45  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2605] web/js/refresh.js.php:
+	  
+	  Fixed some JSHint problems
+
+2012-12-18 21:42  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2604] web/js/multiple.js.php:
+	  
+	  Fixed some JSHint problems
+
+2012-12-18 21:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2603] web/js/resizable.js.php:
+	  
+	  Fixed some JSHint problems
+
+2012-12-18 10:55  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2601] web/functions.inc:
+	  
+	  Restructured code
+
+2012-12-18 10:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2600] web/functions.inc, web/js/datepicker.js.php:
+	  
+	  Moved JavaScript out of functions.inc and into datepicker.js.php
+
+2012-12-17 17:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2598] web/css/mrbs.css.php, web/edit_entry.php,
+	  web/js/edit_entry.js.php, web/js/functions.js.php:
+	  
+	  Moved JavaScript out of edit_entry.php
+
+2012-12-16 14:12  Thomas Bleher <tbleher@users.sourceforge.net>
+
+	* [r2597] web/css/mrbs.css.php, web/systemdefaults.inc.php:
+	  
+	  Make clipping of bookings in month view configurable via
+	  $clipped_month.
+
+2012-12-16 14:11  Thomas Bleher <tbleher@users.sourceforge.net>
+
+	* [r2596] web/functions.inc:
+	  
+	  Followup r2590: Add room description as tooltip for room list in
+	  header (also in select mode) Newer browsers seem to support
+	  tooltips for select options - nice :)
+
+2012-12-15 08:52  Thomas Bleher <tbleher@users.sourceforge.net>
+
+	* [r2595] web/functions_table.inc:
+	  
+	  day view: Add space before () when showing capacity for room
+	  names
+
+2012-12-14 22:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2594] web/js/edit_area_room.js.php:
+	  
+	  Tidied up the JavaScript, fixing some JSHint problems.
+
+2012-12-14 21:51  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2593] web/js/edit_area_room.js.php:
+	  
+	  Corrected an out of scope use of a variable
+
+2012-12-14 21:46  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2592] web/systemdefaults.inc.php:
+	  
+	  Corrected typo in comment
+
+2012-12-14 20:49  Thomas Bleher <tbleher@users.sourceforge.net>
+
+	* [r2591] web/lang/lang.de:
+	  
+	  Update german translation
+
+2012-12-14 20:48  Thomas Bleher <tbleher@users.sourceforge.net>
+
+	* [r2590] web/functions.inc:
+	  
+	  Add room description as tooltip for room list in header (only in
+	  list mode for now)
+
+2012-12-14 18:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2589] web/report.php:
+	  
+	  Removed redundant parameter to report_row()
+
+2012-12-12 18:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2588] web/approve_entry_handler.php, web/functions_mail.inc,
+	  web/mrbs_sql.inc:
+	  
+	  Fixed problem with misleading email notifications (see SF Bugs
+	  255)
+
+2012-12-12 13:50  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2587] web/mrbs_sql.inc:
+	  
+	  Made mrbsMakeBookings() return an array of start times booked. No
+	  functional change to MRBS.
+
+2012-12-12 13:18  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2586] web/approve_entry_handler.php, web/mrbs_sql.inc:
+	  
+	  Made mrbsApproveEntry() return an array of start times approved.
+	  No functional change to MRBS.
+
+2012-12-10 19:03  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2585] web/css/mrbs.css.php:
+	  
+	  Fixed a problem with display of labels in forms (caused by a
+	  recent change)
+
+2012-12-10 11:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2584] web/edit_area_room.php:
+	  
+	  Restructured code
+
+2012-12-10 10:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2583] web/edit_area_room.php:
+	  
+	  Restructured code
+
+2012-12-10 10:36  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2582] web/lang/lang.fr:
+	  
+	  Changed capitalisation of one string
+
+2012-12-09 19:27  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2581] web/edit_area_room.php:
+	  
+	  Removed redundant code
+
+2012-12-09 19:19  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2580] web/edit_area_room.php:
+	  
+	  Restructured code
+
+2012-12-09 17:54  Thomas Bleher <tbleher@users.sourceforge.net>
+
+	* [r2579] web/functions_mail.inc:
+	  
+	  Mark emails from mrbs as auto-generated, so that vacation mailers
+	  don't answer mrbs mails
+
+2012-12-09 17:35  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2578] web/edit_area_room.php, web/js/edit_area_room.js.php:
+	  
+	  Improved the way the "start of last slot" field is displayed on
+	  load
+
+2012-12-09 17:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2577] web/edit_area_room.php, web/functions.inc:
+	  
+	  Restructured code
+
+2012-12-09 16:26  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2576] web/css/mrbs.css.php, web/edit_area_room.php,
+	  web/js/edit_area_room.js.php:
+	  
+	  Restructured code
+
+2012-12-09 09:48  Thomas Bleher <tbleher@users.sourceforge.net>
+
+	* [r2575] web/report.php:
+	  
+	  Translate approval status and confirmation status radio buttons
+	  in report.php
+
+2012-12-09 09:24  Thomas Bleher <tbleher@users.sourceforge.net>
+
+	* [r2574] checklang.php:
+	  
+	  Make checklang.php work with lang/ subdirectory
+
+2012-12-08 18:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2573] web/edit_area_room.php, web/edit_entry.php,
+	  web/edit_users.php, web/functions.inc:
+	  
+	  Restructured code
+
+2012-12-07 17:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2572] web/del_entry.php, web/functions_mail.inc,
+	  web/mrbs_sql.inc:
+	  
+	  Fixed bug causing incorrect email notifications to be issued when
+	  members of a series were deleted (see SF Bugs #247)
+
+2012-12-07 16:45  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2571] web/functions_mail.inc:
+	  
+	  Fixed typo in comment
+
+2012-12-06 18:34  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2570] web/upgrade/17/post.inc, web/upgrade/24/post.inc:
+	  
+	  Fixed more syntax errors
+
+2012-12-06 18:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2569] web/upgrade/17/post.inc, web/upgrade/24/post.inc:
+	  
+	  Fixed some syntax errors caused by some lines having been
+	  accidentally truncated
+
+2012-12-01 12:27  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2568] web/css/mrbs-ie.css:
+	  
+	  Tweaked position of <input> elements in IE
+
+2012-11-30 22:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2567] web/standard_vars.inc.php:
+	  
+	  Fixed bug causing an infinite loop if a negative day value is
+	  given in the query string. Thanks to Neil Carter.
+
+2012-11-28 09:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2566] web/report.php:
+	  
+	  Fixed bug resulting in button labels in the report form not being
+	  translated
+
+2012-11-27 18:28  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2565] web/edit_entry.php, web/functions.inc:
+	  
+	  Fixed major bug when editing an individual entry in a series that
+	  caused a new series to be created alongside the original series.
+
+2012-11-27 18:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2564] web/mrbs_sql.inc:
+	  
+	  Fixed bug causing the wrong mode (periods/times) to be used in
+	  certain circumstances for reporting durations
+
+2012-11-27 15:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2563] web/edit_entry.php, web/functions.inc, web/lang/lang.en,
+	  web/mrbs_sql.inc, web/site_faq.html:
+	  
+	  Added the ability to specify the "fifth" and "fifth last"
+	  weekdays of the month when making monthly recurring bookings.
+	  These are strict interpretations and will result in no bookings
+	  for months where there are only four of the specified day of of
+	  the week. (Using "last" or "first" will give you the fourth or
+	  fourth last weekday if there are only four weekdays in the
+	  month).
+
+2012-11-07 07:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2562] web/help.php:
+	  
+	  Added some HTML escaping
+
+2012-11-06 19:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2561] web/Themes/default/header.inc, web/help.php,
+	  web/js/datepicker.js.php, web/language.inc:
+	  
+	  Eliminated need to use $langs as a global
+
+2012-11-05 17:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2559] web/admin.php:
+	  
+	  Ensured that rooms in the room list are sorted by the room sort
+	  key
+
+2012-11-05 16:51  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2558] web/functions.inc, web/functions_mail.inc,
+	  web/language.inc, web/report.php, web/search.php,
+	  web/session/session_cookie.inc, web/session/session_http.inc,
+	  web/session/session_php.inc:
+	  
+	  Fixed occurrences of != '' being used instead of !== ''. Causes
+	  bugs such as Confirmed as well as Tentative reports being shown
+	  in reports when only tentative have been requested.
+
+2012-11-05 15:19  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2557] web/language.inc:
+	  
+	  Updated the Microsoft locale reference URLs in language.inc.
+
+2012-11-05 14:54  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2556]
+	  web/jquery/ui/css/sunny/images/ui-bg_gloss-wave_60_fece2f_500x100.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_gloss-wave_90_fff9e5_500x100.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_3d3d3d_256x240.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_eb990f_256x240.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_ed9f26_256x240.png,
+	  web/jquery/ui/css/sunny/jquery-ui-1.8.16.custom.css[DEL],
+	  web/jquery/ui/css/sunny/jquery-ui-1.9.1.custom.min.css[ADD],
+	  web/jquery/ui/jquery-ui-1.8.22.custom.min.js[DEL],
+	  web/jquery/ui/jquery-ui-1.9.1.custom.min.js[ADD],
+	  web/jquery/ui/jquery-ui-i18n.js, web/js.inc, web/style.inc:
+	  
+	  Upgraded jQuery UI from Release 1.8.22 to 1.9.1
+
+2012-11-05 14:51  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2555] web/language.inc, web/upgrade/17/post.inc,
+	  web/upgrade/24/post.inc:
+	  
+	  Fixed a syntax error in 2 upgrade post.inc files.
+	  
+	  Corrected the Windows locale specifier for "Serbian Latin" so you
+	  get Latin and not Cyrillic dates on a WAMP server.
+
+2012-11-05 14:33  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2554] web/jquery/jquery-1.7.2.min.js[DEL],
+	  web/jquery/jquery-1.8.2.min.js[ADD], web/js.inc:
+	  
+	  Upgraded jQuery from Release 1.7.2 to 1.8.2
+
+2012-11-05 14:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2553] web/jquery/ui/jquery-ui-datepicker-en-US.js[DEL],
+	  web/jquery/ui/jquery-ui-datepicker-en.js[DEL],
+	  web/jquery/ui/jquery-ui-datepicker-sr-RS-LATIN.js[DEL],
+	  web/jquery/ui/jquery-ui-i18n.MRBS.js[ADD], web/js.inc:
+	  
+	  Restructured code to combine the extra MRBS datepicker regional
+	  settings into one file. Also made them refer to the standard
+	  settings where possible.
+
+2012-11-05 14:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2552] web/jquery/ui/jquery-ui-datepicker-sr-RS-LATIN.js:
+	  
+	  Fixed bug in datepicker Serbian-Latin regional settings
+
+2012-11-05 10:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2551] web/jquery/ui/jquery-ui-datepicker-sr-RS-LATIN.js[ADD],
+	  web/js.inc, web/js/datepicker.js.php, web/language.inc:
+	  
+	  Added in datepicker support for Serbian Latin. Also tested the
+	  previous changes on Windows IIS.
+
+2012-11-05 00:05  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2550] web/language.inc:
+	  
+	  Removed incorrect/unnecessary locale map entries. Serbian (Latin)
+	  still not tested on Windows, AIX or MacOS X server platforms.
+
+2012-11-04 23:57  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2549] web/lang/lang.sr-rs-latin[ADD], web/language.inc:
+	  
+	  Added Serbian (Latin) support - translation provided by 'knjigor'
+	  on the Sourceforge tracker. Needed some additional mappings/code
+	  in language.inc to support the unusual locale. Not yet tested on
+	  a Windows server environment.
+
+2012-11-02 11:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2548] web/report.php:
+	  
+	  Fixed bug where <span>s used for sorting the HTML table were
+	  appearing in the CSV and iCalendar reports.
+
+2012-10-31 12:45  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2547] web/report.php:
+	  
+	  Fixed bug causing a datalist not to be presented for custom
+	  fields on the Report page even when $datalist_options is set.
+
+2012-10-31 09:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2546] web/lang/lang.en, web/lang/lang.fr, web/report.php:
+	  
+	  Fixed problem with French translation (a temporary fix - I think
+	  there has to be a more elegant way of dealing with the
+	  requirement in French for a non breaking space before colons
+	  etc.)
+
+2012-10-30 21:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2545] web/edit_entry.php:
+	  
+	  Fixed bug preventing bookings being edited
+
+2012-10-30 16:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2544] web/mrbs_sql.inc:
+	  
+	  Fixed bug introduced in Rev 2538 preventing drag-editing of
+	  bookings
+
+2012-10-30 11:51  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2543] web/functions.inc, web/systemdefaults.inc.php:
+	  
+	  Fixed some HTML5 validation issues
+
+2012-10-30 11:50  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2542] web/internalconfig.inc.php:
+	  
+	  Prevented E_USER_NOTICE errors being reported during normal MRBS
+	  operation (E_NOTICE errors are already ignored)
+
+2012-10-30 10:56  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2541] web/edit_entry.php, web/edit_users.php,
+	  web/functions.inc:
+	  
+	  Fixed some HTML5 validation issues
+
+2012-10-30 09:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2540] web/functions.inc, web/grab_globals.inc.php:
+	  
+	  Added a server side check for Opera so that autocomplete can be
+	  turned on for datalists, in case JavaScript is disabled. (Left
+	  the client side check in just in case the server isn't passing
+	  through the user agent string).
+
+2012-10-29 15:44  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2539] web/edit_entry.php, web/edit_users.php,
+	  web/functions.inc, web/report.php, web/systemdefaults.inc.php:
+	  
+	  Extended support of $datalist_options to the same fields as
+	  $select_options
+
+2012-10-29 12:07  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2538] web/mrbs_sql.inc:
+	  
+	  Restructured code, moving the user check inside mrbsCheckPolicy()
+
+2012-10-29 11:21  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2537] web/edit_entry.php:
+	  
+	  Fixed undefined index problems
+
+2012-10-29 11:16  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2536] web/functions_view.inc:
+	  
+	  Fixed undefined index problems
+
+2012-10-29 11:07  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2535] web/edit_entry.php:
+	  
+	  Fixed undefined variable problem
+
+2012-10-28 09:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2534] web/edit_entry.php, web/functions.inc, web/js.inc,
+	  web/js/general.js.php, web/js/report.js.php, web/report.php,
+	  web/systemdefaults.inc.php:
+	  
+	  Converted autocomplete fields to use HTML5 <datalist> elements if
+	  supported, otherwise to fall back to the jQuery UI Autocomplete
+	  widget. Added ability for users to define $datalist_options in
+	  the config file to force a field to be treated as a datalist
+	  (only supported for entry.name at the moment).
+
+2012-10-27 14:19  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2533] web/functions.inc:
+	  
+	  Added some missing hidden inputs
+
+2012-10-27 14:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2532] web/functions.inc:
+	  
+	  Added some missing HTML escaping
+
+2012-10-26 15:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2531] web/edit_users.php:
+	  
+	  Fixed undefined variable bug introduced during recent
+	  restructuring
+
+2012-10-26 12:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2530] web/report.php, web/systemdefaults.inc.php:
+	  
+	  Added a config variable to allow the order of the fields in the
+	  Presentation Options section of the Report form to be changed.
+
+2012-10-26 08:18  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2529] web/report.php, web/systemdefaults.inc.php:
+	  
+	  Added a config variable to allow the order of the fields in the
+	  Search Criteria section of the Report form to be changed.
+
+2012-10-25 16:33  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2528] web/report.php:
+	  
+	  Restructured code
+
+2012-10-25 16:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2527] web/report.php:
+	  
+	  Restructured code
+
+2012-10-25 15:29  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2526] web/report.php:
+	  
+	  Restructured code
+
+2012-10-24 17:05  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2525] web/functions.inc:
+	  
+	  Extended generate_checkbox()
+
+2012-10-24 12:44  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2524] web/functions.inc:
+	  
+	  Extended generate_select() to allow multiple selection
+
+2012-10-24 12:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2523] web/edit_entry.php, web/functions.inc:
+	  
+	  Restructured code
+
+2012-10-24 11:45  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2522] web/edit_entry.php, web/js/edit_entry.js.php:
+	  
+	  Moved some JavaScript out of edit_entry.php
+
+2012-10-24 10:27  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2521] web/edit_entry.php, web/functions.inc:
+	  
+	  Restructured code
+
+2012-10-24 09:26  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2520] web/edit_entry.php, web/edit_entry_handler.php,
+	  web/edit_users.php, web/functions.inc,
+	  web/internalconfig.inc.php:
+	  
+	  Simplified code
+
+2012-10-22 16:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2519] web/edit_users.php, web/js/edit_users.js.php,
+	  web/js/pending.js.php, web/js/search.js.php, web/pending.php,
+	  web/search.php:
+	  
+	  Restructured code so that the search, users and pending tables
+	  are more resilient to changes in column order
+
+2012-10-22 16:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2518] web/js/datatables.js.php, web/js/report.js.php:
+	  
+	  Restructured code
+
+2012-10-22 15:19  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2517] web/js/report.js.php, web/report.php:
+	  
+	  Restructured code to be more resilient to changes in report
+	  column order
+
+2012-10-22 14:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2516] web/js/report.js.php:
+	  
+	  Fixed problem with filtering and sorting of reports (column
+	  numbers off by one)
+
+2012-10-22 13:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2515] web/js/report.js.php, web/report.php:
+	  
+	  Fixed bug preventing bulk delete working
+
+2012-10-22 13:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2514] web/lang/lang.fr:
+	  
+	  Minor tweak to translation
+
+2012-10-22 12:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2513] web/css/mrbs.css.php:
+	  
+	  Fixed last fix properly
+
+2012-10-22 10:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2512] web/css/mrbs.css.php:
+	  
+	  Fixed formatting problem on Report page in some languages
+
+2012-10-19 15:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2511] ., tables.my.pre41.sql, tables.my.sql,
+	  tables.pg.pre73.sql, tables.pg.sql, web/css/mrbs-ie8.css,
+	  web/css/mrbs.css.php, web/dbsys.inc, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/edit_users.php,
+	  web/functions.inc, web/functions_ical.inc,
+	  web/functions_mail.inc, web/functions_view.inc,
+	  web/internalconfig.inc.php, web/js/edit_entry.js.php,
+	  web/lang/lang.ca, web/lang/lang.cs, web/lang/lang.da,
+	  web/lang/lang.de, web/lang/lang.el, web/lang/lang.en,
+	  web/lang/lang.es, web/lang/lang.eu, web/lang/lang.fi,
+	  web/lang/lang.fr, web/lang/lang.he, web/lang/lang.hu,
+	  web/lang/lang.it, web/lang/lang.ja, web/lang/lang.ko,
+	  web/lang/lang.nl, web/lang/lang.no, web/lang/lang.pl,
+	  web/lang/lang.pt, web/lang/lang.pt-br, web/lang/lang.ru,
+	  web/lang/lang.sl, web/lang/lang.sv, web/lang/lang.th,
+	  web/lang/lang.tr, web/lang/lang.zh-cn, web/lang/lang.zh-tw,
+	  web/mrbs_sql.inc, web/report.php, web/site_faq.html,
+	  web/site_faq_de.html, web/site_faq_es.html, web/site_faq_fr.html,
+	  web/site_faq_it.html, web/site_faq_nl.html,
+	  web/systemdefaults.inc.php, web/upgrade/31[CPY],
+	  web/upgrade/32[CPY], web/upgrade/33[CPY], web/upgrade/34[CPY],
+	  web/upgrade/35[CPY]:
+	  
+	  Reintegrated the improved_repeat_interface back into the trunk.
+	  MRBS now has a simplified interface for making repeat bookings
+	  and the range of monthly repeats has been expanded. It is now
+	  possible to have monthly repeats on the last, second last, third
+	  last and fourth last weekdays of the month. (Last was possible
+	  before, but only if the first member of the series happened to be
+	  on the fifth weekday of a month).
+
+2012-10-17 21:04  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2507] web/upgrade.inc:
+	  
+	  Fixed bug in upgrade procedure causing the upgrade to fail if the
+	  number of rows affected by a query was zero.
+
+2012-10-11 10:55  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2488] web/dbsys.inc, web/mysql.inc, web/mysqli.inc,
+	  web/pgsql.inc:
+	  
+	  Corrected comments
+
+2012-10-09 16:01  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2481] web/css/mrbs.css.php:
+	  
+	  Fixed bug causing fault in formatting of month view
+
+2012-10-04 08:44  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2471] ., web/Themes/classic126/styling.inc,
+	  web/Themes/default/styling.inc, web/areadefaults.inc.php,
+	  web/check_slot_ajax.php[CPY], web/css/mrbs.css.php,
+	  web/edit_area_room.php, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/functions.inc,
+	  web/functions_table.inc, web/import.php,
+	  web/internalconfig.inc.php, web/js/datepicker.js.php,
+	  web/js/edit_area_room.js.php, web/js/edit_entry.js.php,
+	  web/month.php, web/mrbs_auth.inc:
+	  
+	  Reintegrated the flexible_day_end branch back into the trunk.
+	  MRBS now supports booking days that span midnight (if
+	  $eveningends is before $morningstarts then it is assumed to be on
+	  the following day). At the same time a number of problems to do
+	  with DST handling have been fixed, particularly the display of
+	  the transition hours and the operation of MRBS in timezones where
+	  the DST change is not 1 hour. Also the use of the deprecated
+	  $is_dst parameter to mktime() has been eliminated.
+
+2012-10-03 21:01  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2470] web/version.inc:
+	  
+	  Updated version number post-release
+
+2012-10-03 20:05  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2467] ChangeLog, NEWS:
+	  
+	  Updated NEWS and ChangeLog for release
+
 2012-10-03 20:03  John Beranek <jberanek@users.sourceforge.net>
 
 	* [r2466] web/version.inc:
@@ -2300,7 +4213,7 @@
 	  
 	  Fixed some unescaped JavaScript strings
 
-2011-11-23 20:56  tbleher
+2011-11-23 20:56  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r2194] web/functions_view.inc:
 	  
@@ -2320,7 +4233,7 @@
 	  
 	  Fixed undefined variable notice
 
-2011-11-23 06:40  tbleher
+2011-11-23 06:40  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r2191] web/mrbs-print.css.php:
 	  
@@ -2353,14 +4266,14 @@
 	  Restricted the options available in the end time selector to
 	  those permitted if a maximum duration has been specified
 
-2011-11-22 20:49  tbleher
+2011-11-22 20:49  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r2186] web/edit_entry.php, web/systemdefaults.inc.php:
 	  
 	  Make it possible to reorder fields in edit_entry (useful for
 	  custom fields)
 
-2011-11-22 20:46  tbleher
+2011-11-22 20:46  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r2185] web/edit_entry.php:
 	  
@@ -2369,14 +4282,14 @@
 	  
 	  HTML output is the same (except some whitespace)
 
-2011-11-22 19:10  tbleher
+2011-11-22 19:10  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r2184] web/Themes/default/header.inc, web/edit_entry.php,
 	  web/edit_entry_handler.php:
 	  
 	  Spelling fixes
 
-2011-11-22 19:08  tbleher
+2011-11-22 19:08  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r2183] web/lang.de:
 	  
@@ -2426,7 +4339,7 @@
 	  Fixed bug with time format being incorrectly displayed in the
 	  week view
 
-2011-11-12 06:45  tbleher
+2011-11-12 06:45  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r2176] web/Themes/default/header.inc:
 	  
@@ -2488,14 +4401,14 @@
 	  default options object. Set the default display length at 25
 	  rows.
 
-2011-11-02 21:56  tbleher
+2011-11-02 21:56  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r2168] web/Themes/default/header.inc:
 	  
 	  Add default tableOptions object for datatables, so it is easier
 	  to add options to all datatables at once.
 
-2011-11-02 21:54  tbleher
+2011-11-02 21:54  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r2167] web/mrbs_sql.inc:
 	  
@@ -2668,7 +4581,7 @@
 	  Fixed bug. $auth['only_admin_can_book'] does not work as required
 	  if $auth['deny_public_access'] is set.
 
-2011-10-24 21:17  tbleher
+2011-10-24 21:17  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r2147] web/functions_ical.inc:
 	  
@@ -2683,7 +4596,7 @@
 	  the relevant RFC says that NEEDS-ACTION is the default value and
 	  can be omitted.
 
-2011-10-24 21:14  tbleher
+2011-10-24 21:14  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r2146] web/functions_mail.inc:
 	  
@@ -3127,7 +5040,7 @@
 	  Decoded HTML entities in Ajax tooltip messages on the edit_entry
 	  page
 
-2011-09-22 07:32  tbleher
+2011-09-22 07:32  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r1990] web/Themes/default/header.inc:
 	  
@@ -3173,7 +5086,7 @@
 	  
 	  Corrected typo in last change (array_merged)
 
-2011-09-21 06:13  tbleher
+2011-09-21 06:13  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r1968] web/edit_entry_handler.php:
 	  
@@ -3185,19 +5098,19 @@
 	  renumbers numeric arrays. The old behaviour led to some conflicts
 	  not being displayed.
 
-2011-09-20 20:11  tbleher
+2011-09-20 20:11  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r1966] web/site_faq_de.html:
 	  
 	  Clean up umlauts in german faq
 
-2011-09-20 20:09  tbleher
+2011-09-20 20:09  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r1965] web/Themes/default/header.inc:
 	  
 	  Generate shorter JavaScript for the checkValidBooking() function
 
-2011-09-20 20:05  tbleher
+2011-09-20 20:05  Thomas Bleher <tbleher@users.sourceforge.net>
 
 	* [r1964] web/Themes/default/header.inc:
 	  

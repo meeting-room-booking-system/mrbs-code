@@ -7,6 +7,146 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.4.10 (Mon Jul 08 22:00:00 BST 2013):
+
+[+] MRBS now supports booking days that span midnight. At the same time a number of problems to do
+ with DST handling have been fixed, particularly the display of
+ the transition hours and the operation of MRBS in timezones where
+ the DST change is not 1 hour.
+[-] Fixed bug causing fault in formatting of month view.
+[-] Fixed bug in upgrade procedure causing the upgrade to fail if the
+ number of rows affected by a query was zero.
+[+] MRBS now has a simplified interface for making repeat bookings
+ and the range of monthly repeats has been expanded. It is now
+ possible to have monthly repeats on the last, second last, third
+ last and fourth last weekdays of the month.
+[-] Fixed formatting problem on Report page in some languages.
+[-] Fixed bug preventing bulk delete working.
+[-] Fixed problem with filtering and sorting of reports (column
+ numbers off by one)
+[*] Lots of code restructured and simplified for improved
+ maintenance/flexibility.
+[+] Added a config variable to allow the order of the fields in the
+ Search Criteria section of the Report form to be changed.
+[+] Added a config variable to allow the order of the fields in the
+ Presentation Options section of the Report form to be changed.
+[*] Converted autocomplete fields to use HTML5 <datalist> elements if
+ supported, otherwise to fall back to the jQuery UI Autocomplete
+ widget. Added ability for users to define $datalist_options in
+ the config file to force a field to be treated as a datalist.
+[-] Fixed various undefined index/variable problems.
+[-] Fixed some HTML5 validation issues.
+[*] Prevented E_USER_NOTICE errors being reported during normal MRBS
+ operation.
+[-] Fixed problem with French translation.
+[-] Fixed bug where <span>s used for sorting the HTML table were
+ appearing in the CSV and iCalendar reports.
+[+] Added Serbian (Latin) support - translation provided by 'knjigor'
+ on the Sourceforge tracker.
+[*] Upgraded jQuery from Release 1.7.2 to 1.8.2.
+[*] Upgraded jQuery UI from Release 1.8.22 to 1.9.1.
+[-] Fixed syntax errors in a number of upgrade "post.inc" files.
+[-] Fixed occurrences of != '' being used instead of !== ''. Causes
+ bugs such as Confirmed as well as Tentative reports being shown
+ in reports when only tentative have been requested.
+[-] Ensured that rooms in the room list are sorted by the room sort
+ key.
+[+] Added the ability to specify the "fifth" and "fifth last"
+ weekdays of the month when making monthly recurring bookings.
+ These are strict interpretations and will result in no bookings
+ for months where there are only four of the specified day of of
+ the week. (Using "last" or "first" will give you the fourth or
+ fourth last weekday if there are only four weekdays in the
+ month).
+[-] Fixed bug causing the wrong mode (periods/times) to be used in
+ certain circumstances for reporting durations.
+[-] Fixed major bug when editing an individual entry in a series that
+ caused a new series to be created alongside the original series.
+[-] Fixed bug resulting in button labels in the report form not being
+ translated.
+[-] Fixed bug causing an infinite loop if a negative day value is
+ given in the query string. Thanks to Neil Carter.
+[-] Fixed bug causing incorrect email notifications to be issued when
+ members of a series were deleted (see SF Bugs #247).
+[-] Translate approval status and confirmation status radio buttons
+ in report.php.
+[*] Improved the way the "start of last slot" field is displayed on
+ load.
+[*] Mark emails from mrbs as auto-generated, so that vacation mailers
+ don't answer mrbs mails.
+[-] Fixed problem with misleading email notifications (see SF Bugs
+ 255).
+[*] Add room description as tooltip for room list in header (only in
+ list mode for now).
+[*] Updated German translation.
+[*] Add space before () when showing capacity for room
+ names.
+[*] Add room description as tooltip for room list in
+ header (also in select mode) Newer browsers seem to support
+ tooltips for select options - nice :).
+[+] Make clipping of bookings in month view configurable via
+ $clipped_month.
+[*] Updated in-built timezone definitions.
+[*] Changed default $dbsys to 'mysqli' from 'mysql', which is now
+ deprecated in PHP 5.5.0.
+[-] Fixed typo in Dutch translation. Thanks to Dieter Adriaenssens - see SF
+Patches #35.
+[-] Fixed bug preventing singular form of the duration units being
+ shown.
+[-] Fixed a bug causing Ajax conflict testing not to work after a
+ failed HTML5 form validation event.
+[*] Updated Danish translation. Thanks to Søren O`Neill.
+[-] Fixed warnings/errors from require_once() calls in
+ session_cookie.inc.
+[-] Fixed bug causing time selectors not to work properly after the
+ area has been changed. See SF bugs #258.
+[-] Fixed bug where no room was selected on changing area. See SF
+ bugs #259.
+[-] Added client and server side validation to check that at least
+ one room is selected. (See SF Bugs #259).
+[-] Disabled Ajax conflict checking and day/week/month page refresh
+ when the page is not visible (subject to browser support of page
+ visibility).
+[-] Fixed bug whereby the repeat entry row is not deleted if you do a
+ bulk delete from the Report page of all the entries in a series
+ (see SF bugs #260).
+[*] Updated Italian translation. Provided by Diego Zuccato.
+[-] Fixed bug causing clicking outside the datepicker to result in
+ date selection, rather than cancelling the datepicker. See SF
+ Bugs #263.
+[-] Disabled page refreshing while resizing is in progress.
+[-] Fixed bug causing interval timer to stop occasionally.
+[-] Fixed a bug causing multiple timers to be fired when the page is
+ hidden and then unhidden.
+[-] Prevented page refresh when the mouse is hovering over a resize
+ handler (ie the user is about to start a resize).
+[*] Improved performance of drag selection, especially with large
+ tables.
+[-] Made sure that page refresh isn't restarted while we are in the
+ middle of a drag selection when we pass over the handles for
+ resizable bookings.
+[-] Fixed bug causing incorrect checking of resolution and number of
+ slots when the booking day stretches past midnight.
+[-] Fixed some label problems on the report page. See SF Bugs #265.
+[-] Fixed bug resulting in no end time options being offered if there
+ is only one enabled area.
+[-] Fixed incorrect quoting of id column, resulting in error messages
+ when running under PostgreSQL. See SF bugs #266.
+[*] Updated Swedish translation. Thanks to Anders Henhammar.
+[*] Moved the site_faq files into their own directory.
+[+] Added a Swedish site_faq. Thanks to Anders Henhammar.
+[-] Fixed bug causing the "Goto" datepicker to be reset if it was
+ open at the time the booking table was refreshed.
+[-] Fixed bug when approving bookings and using PostgreSQL (removed
+ LIMIT clauses from UPDATE statements as they are not supported by
+ PostgreSQL).
+[*] Updated Finnish translation. Thanks to Tuomas. See SF Patches #38.
+[-] Fixed bug causing error messages when there are no mail
+ recipients. Thanks to Tuomas. See SF Patches #37.
+[*] Disabled E_STRICT errors (see SF Bugs #272).
+[-] Fixed bug when using an SQL reserved word as a custom field name.
+ 
+-------------------------------------------------------------------------------
 Version 1.4.9 (Wed Oct 03 22:00:00 BST 2012):
 
 [-] Fixed bug that caused the '+' button for a booking to not work correctly.
