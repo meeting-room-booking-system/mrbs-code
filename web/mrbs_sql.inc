@@ -19,7 +19,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
 {
   global $tbl_entry;
   global $enable_periods, $periods, $twentyfourhour_format;
-  global $strftime_format;
+  global $strftime_format, $is_private_field;
 
   $room_id = $booking['room_id'];
   $user = getUserName();
