@@ -18,7 +18,7 @@
 
 // $Id$
 
-global $PHP_SELF;
+global $PHP_SELF, $auth;
 
 // Get non-standard form variables
 $Action = get_form_var('Action', 'string');
@@ -38,8 +38,6 @@ else
   $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
 }
 
-global $auth;
-
 if (!isset($auth["session_php"]["session_expire_time"]))
 {
   // Default to the behaviour of previous versions of MRBS, use only
@@ -51,6 +49,25 @@ session_name("MRBS_SESSID");  // call before session_set_cookie_params() - see P
 session_set_cookie_params($auth["session_php"]["session_expire_time"],
                           $cookie_path);
 session_start();
+
+// Check to see if we've been inactive for longer than allowed and if so logout
+// the user
+if (!empty($auth["session_php"]["inactivity_expire_time"]))
+{
+  if (isset($_SESSION) && isset($_SESSION['LastActivity']) &&
+      ((time() - $_SESSION['LastActivity']) > $auth["session_php"]["inactivity_expire_time"]))
+  {
+    unset($_SESSION["UserName"]);
+  }
+  // Ajax requests don't count as activity, unless it's the special Ajax request used
+  // to record client side activity
+  $ajax = get_form_var('ajax', 'int');
+  $activity = get_form_var('activity', 'int');
+  if ($activity || !$ajax || !isset($_SESSION['LastActivity']))
+  {
+    $_SESSION['LastActivity'] = time();
+  }
+}
 
 /*
   Target of the form with sets the URL argument "Action=SetName".

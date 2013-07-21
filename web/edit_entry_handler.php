@@ -17,6 +17,11 @@ function invalid_booking($message)
   print_footer(TRUE);
 }
 
+$ajax = get_form_var('ajax', 'int');
+if ($ajax && !checkAuthorised(TRUE))
+{
+  exit;
+}
 
 // (1) Check the user is authorised for this page
 //  ---------------------------------------------
@@ -87,8 +92,7 @@ $formvars = array('create_by'          => 'string',
                   'back_button'        => 'string',
                   'timetohighlight'    => 'int',
                   'page'               => 'string',
-                  'commit'             => 'string',
-                  'ajax'               => 'int');
+                  'commit'             => 'string');
                  
 foreach($formvars as $var => $var_type)
 {

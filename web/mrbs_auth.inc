@@ -73,6 +73,7 @@ function getAuthorised($level)
   return authGetUserLevel($user) >= $level;
 }
 
+
 /* checkAuthorised()
  *
  * Checks to see that a user is authorised to access the current page.
@@ -82,7 +83,7 @@ function getAuthorised($level)
  * If they are not defined then the function plays safe and requires the
  * highest level of authorisation.
  */
-function checkAuthorised()
+function checkAuthorised($just_check=FALSE)
 {
   global $page_level, $max_level;
   global $day, $month, $year, $area, $room;
@@ -102,6 +103,12 @@ function checkAuthorised()
     $required_level = 2;
   }
   
+  if ($just_check)
+  {
+    $user = getUserName();
+    return (isset($user)) ? (authGetUserLevel($user) >= $required_level): FALSE;
+  }
+  
   // Check that the user has this level
   if (!getAuthorised($required_level))
   {
@@ -119,6 +126,8 @@ function checkAuthorised()
     showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
     exit();
   }
+  
+  return TRUE;
 }
 
 /* getWritable($creator, $user, $room)

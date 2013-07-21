@@ -42,7 +42,7 @@ var refreshPage = function refreshPage() {
                  // (4) trigger a load event so that the resizable bookings are
                  // re-created and a new timer started.
                  ?>
-                 if (!isHidden() && !refreshPage.disabled)
+                 if ((result.length > 0) && !isHidden() && !refreshPage.disabled)
                  {
                    table.empty();
                    table.html(result);

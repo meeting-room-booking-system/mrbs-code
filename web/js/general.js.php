@@ -39,7 +39,37 @@ var oldInitGeneral = init;
 init = function(args) {
   oldInitGeneral.apply(this, [args]);
 
+  <?php
+  // If we're required to log the user out after a period of inactivity then the user filling in
+  // an MRBS form counts as activity and we need to record it.   In fact we'll record any key or
+  // mouse activity for this document as activity.
+  if (($auth["session"] == "php") && !empty($auth["session_php"]["inactivity_expire_time"]))
+  {
+    ?>
+    var recordActivity = function recordActivity() {
+        var d = new Date(),
+            t = d.getTime()/1000;
+        <?php
+        // Only tewll the server that there's been some user activity if we're coming up to
+        // the inactivity timeout
+        ?>
+        if ((typeof recordActivity.lastRecorded === 'undefined') ||
+            ((t - recordActivity.lastRecorded) > (<?php echo $auth["session_php"]["inactivity_expire_time"]?> - 1)))
+        {
+          recordActivity.lastRecorded = t;
+          $.post('record_activity_ajax.php', {ajax: 1, activity: 1}, function() {
+            });
+        }
+      };
+      
+    $(document).bind('keydown mousemove mousedown', function() {
+        recordActivity();
+      });
+    <?php
+  }
+  
   // if there's a logon box, set the username input field in focus
+  ?>
   var logonForm = document.getElementById('logon');
   if (logonForm && logonForm.NewUserName)
   {

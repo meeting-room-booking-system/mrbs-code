@@ -595,50 +595,53 @@ function checkConflicts(optional)
       
       checkConflicts.nOutstanding++; 
       $.post('edit_entry_handler.php', params, function(result) {
-          checkConflicts.nOutstanding--;
-          var conflictDiv = $('#conflict_check');
-          var scheduleDetails = $('#schedule_details');
-          var policyDetails = $('#policy_details');
-          var checkMark = "\u2714";
-          var cross = "\u2718";
-          var titleText, detailsHTML;
-          if (result.conflicts.length === 0)
+          if (result)
           {
-            conflictDiv.text(checkMark).attr('class', 'good');
-            titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("no_conflicts"))) ?>';
-            detailsHTML = titleText;
-          }
-          else
-          {
-            conflictDiv.text(cross).attr('class', 'bad');
-            detailsHTML = "<p>";
-            titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("conflict"))) ?>' + ":  \n\n";
-            detailsHTML += titleText + "<\/p>";
-            var conflictsList = getErrorList(result.conflicts);
-            detailsHTML += conflictsList.html;
-            titleText += conflictsList.text;
-          }
-          conflictDiv.attr('title', titleText);
-          scheduleDetails.html(detailsHTML);
-          var policyDiv = $('#policy_check');
-          if (result.rules_broken.length === 0)
-          {
-            policyDiv.text(checkMark).attr('class', 'good');
-            titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("no_rules_broken"))) ?>';
-            detailsHTML = titleText;
-          }
-          else
-          {
-            policyDiv.text(cross).attr('class', 'bad');
-            detailsHTML = "<p>";
-            titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("rules_broken"))) ?>' + ":  \n\n";
-            detailsHTML += titleText + "<\/p>";
-            var rulesList = getErrorList(result.rules_broken);
-            detailsHTML += rulesList.html;
-            titleText += rulesList.text;
-          }
-          policyDiv.attr('title', titleText);
-          policyDetails.html(detailsHTML);
+            checkConflicts.nOutstanding--;
+            var conflictDiv = $('#conflict_check');
+            var scheduleDetails = $('#schedule_details');
+            var policyDetails = $('#policy_details');
+            var checkMark = "\u2714";
+            var cross = "\u2718";
+            var titleText, detailsHTML;
+            if (result.conflicts.length === 0)
+            {
+              conflictDiv.text(checkMark).attr('class', 'good');
+              titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("no_conflicts"))) ?>';
+              detailsHTML = titleText;
+            }
+            else
+            {
+              conflictDiv.text(cross).attr('class', 'bad');
+              detailsHTML = "<p>";
+              titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("conflict"))) ?>' + ":  \n\n";
+              detailsHTML += titleText + "<\/p>";
+              var conflictsList = getErrorList(result.conflicts);
+              detailsHTML += conflictsList.html;
+              titleText += conflictsList.text;
+            }
+            conflictDiv.attr('title', titleText);
+            scheduleDetails.html(detailsHTML);
+            var policyDiv = $('#policy_check');
+            if (result.rules_broken.length === 0)
+            {
+              policyDiv.text(checkMark).attr('class', 'good');
+              titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("no_rules_broken"))) ?>';
+              detailsHTML = titleText;
+            }
+            else
+            {
+              policyDiv.text(cross).attr('class', 'bad');
+              detailsHTML = "<p>";
+              titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("rules_broken"))) ?>' + ":  \n\n";
+              detailsHTML += titleText + "<\/p>";
+              var rulesList = getErrorList(result.rules_broken);
+              detailsHTML += rulesList.html;
+              titleText += rulesList.text;
+            }
+            policyDiv.attr('title', titleText);
+            policyDetails.html(detailsHTML);
+          }  <?php // if (result) ?>
         }, 'json');
     }, timeout);  <?php // setTimeout()
   } // if (function_exists('json_encode')) ?>
