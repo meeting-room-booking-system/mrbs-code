@@ -581,7 +581,7 @@ init = function(args) {
               // Get the original link in case we need it later.    We can't be sure whether
               // the target was the <a> or the <td> so play safe and get all possibilities
               ?>
-              downHandler.originalLink = jqTarget.find('a').andSelf('a').attr('href');
+              downHandler.originalLink = jqTarget.find('a').addBack('a').attr('href');
               downHandler.box = $('<div class="div_select">');
               <?php
               if (!$is_admin)
