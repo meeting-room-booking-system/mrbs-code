@@ -176,7 +176,7 @@ if (in_array($page, array('day', 'week', 'month')))
 
 
 
-$(window).load(function() {
+$(window).on('load', function() {
 
   var args = {day: '<?php echo $day?>',
               month: '<?php echo $month?>',
