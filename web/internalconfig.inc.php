@@ -382,18 +382,18 @@ if (get_magic_quotes_runtime())
 }
 
 // Make sure notice errors are not reported, they can break mrbs code:
-$error_level = E_ALL ^ E_NOTICE ^ E_USER_NOTICE;
+$error_level = E_ALL & !E_NOTICE & !E_USER_NOTICE;
 
 if (defined("E_DEPRECATED"))
 {
-  $error_level = $error_level ^ E_DEPRECATED;
+  $error_level = $error_level & !E_DEPRECATED;
 }
 
 // The Mail and Net libraries generate E_STRICT errors, so disable E_STRICT (which became
 // part of E_ALL in PHP 5.4)
 if (defined("E_STRICT"))
 {
-  $error_level = $error_level ^ E_STRICT;
+  $error_level = $error_level & !E_STRICT;
 }
 
 error_reporting ($error_level);
