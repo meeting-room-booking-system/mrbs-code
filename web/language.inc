@@ -203,6 +203,7 @@ $lang_map_unix = array
   'da' => 'da_DK',
   'el' => 'el_GR',
   'en' => 'en_GB',
+  'et' => 'et_EE',
   'eu' => 'eu_ES',
   'ja' => 'ja_JP',
   'ko' => 'ko_KR',
