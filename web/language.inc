@@ -548,7 +548,7 @@ function determine_mrbs_locale()
   {
     if ($server_os == "windows")
     {
-      if ($lang_map_windows[strtolower($locale)])
+      if (array_key_exists(strtolower($locale), $lang_map_windows))
       {
         $mrbs_locale = $lang_map_windows[strtolower($locale)];
         $windows_locale = $mrbs_locale;
