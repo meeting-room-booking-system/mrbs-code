@@ -1020,7 +1020,7 @@ function utf8_convert_from_locale($string)
 
   if ($server_os == "windows")
   {
-    if ($winlocale_codepage_map[$windows_locale])
+    if (array_key_exists($windows_locale, $winlocale_codepage_map))
     {
       $string = iconv($winlocale_codepage_map[$windows_locale],"utf-8",
                       $string);
