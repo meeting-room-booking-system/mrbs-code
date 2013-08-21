@@ -82,7 +82,7 @@ var areaConfig = function areaConfig(property, areaId) {
                       'max_duration_units', 'timezone'];
     var i, p, room;
 
-    if (properties.indexOf(property) < 0)
+    if ($.inArray(property, properties) < 0)
     {
       throw new Error("areaConfig(): invalid property '" + property + "' passed to areaConfig");
     }
