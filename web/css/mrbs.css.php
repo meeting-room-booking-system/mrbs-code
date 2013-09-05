@@ -874,7 +874,7 @@ span.ColVis_radio {
 }
 
 span.ColVis_title {
-	display: block;
+  display: block;
   float: left;
   white-space: nowrap;
 }
