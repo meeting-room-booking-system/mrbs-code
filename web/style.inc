@@ -2,7 +2,7 @@
 
 // $Id$
 
-global $using_rtl, $refresh_rate, $PHP_SELF;
+global $using_rtl, $refresh_rate, $custom_css_url, $PHP_SELF;
 
 ?>
     <link href="jquery/ui/css/sunny/jquery-ui-1.9.1.custom.min.css" rel="stylesheet" type="text/css">
@@ -47,7 +47,14 @@ global $using_rtl, $refresh_rate, $PHP_SELF;
     <!--[if lte IE 6]>
     <link rel="stylesheet" href="css/mrbs-ielte6.css" type="text/css">
     <![endif]-->
-    
+    <?php
+    if (isset($custom_css_url) && file_exists($custom_css_url))
+    {
+      ?>
+      <link rel="stylesheet" href="<?php echo $custom_css_url ?>" type="text/css">
+      <?php
+    }
+    ?>
     <meta name="robots" content="noindex">
 <?php
 if (($refresh_rate != 0) && preg_match("/(day|week|month)\.php/", $PHP_SELF))

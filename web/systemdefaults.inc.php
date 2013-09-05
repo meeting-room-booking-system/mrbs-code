@@ -148,6 +148,9 @@ $url_base = "";
 
 $theme = "default";
 
+// Use the $custom_css_url to override the standard MRBS CSS.
+//$custom_css_url = 'css/custom.css';
+
 
 /*******************
  * Calendar settings
