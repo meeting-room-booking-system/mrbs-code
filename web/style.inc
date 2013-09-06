@@ -48,7 +48,7 @@ global $using_rtl, $refresh_rate, $custom_css_url, $PHP_SELF;
     <link rel="stylesheet" href="css/mrbs-ielte6.css" type="text/css">
     <![endif]-->
     <?php
-    if (isset($custom_css_url) && file_exists($custom_css_url))
+    if (isset($custom_css_url))
     {
       ?>
       <link rel="stylesheet" href="<?php echo $custom_css_url ?>" type="text/css">
