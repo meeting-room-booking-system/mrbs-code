@@ -728,7 +728,7 @@ if (isset($change_room) && !empty($room))
         echo "<div>\n";
         $params = array('label'         => get_vocab("custom_html") . ":",
                         'label_title'   => get_vocab("custom_html_note"),
-                        'name'          => 'room_custom_html',
+                        'name'          => 'custom_html',
                         'value'         => $row['custom_html'],
                         'attributes'    => array('rows="4"', 'cols="40"'),
                         'disabled'      => $disabled,
