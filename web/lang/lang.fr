@@ -397,4 +397,6 @@ $vocab["restore_original"]   = "Restaurer l'original";
 $vocab["type.I"]            = "Régulier";
 $vocab["type.E"]            = "Occasionnel";
 
+// General
+$vocab["back"]               = "Retour";
 ?>
