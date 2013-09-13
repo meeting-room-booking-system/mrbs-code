@@ -8,14 +8,11 @@ require_once "functions_view.inc";
 // Generates a single button
 function generateButton($form_action, $id, $series, $action_type, $returl, $submit_value, $title='')
 {
-  global $room_id;
-  
   echo "<form action=\"".htmlspecialchars($form_action).
     "?id=$id&amp;series=$series\" method=\"post\">\n";
   echo "<fieldset>\n";
   echo "<legend></legend>\n";
   echo "<input type=\"hidden\" name=\"action\" value=\"$action_type\">\n";
-  echo "<input type=\"hidden\" name=\"room_id\" value=\"$room_id\">\n";
   echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
   echo "<input type=\"submit\" title=\"" . htmlspecialchars($title) . "\" value=\"$submit_value\">\n";
   echo "</fieldset>\n";
