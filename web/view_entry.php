@@ -122,6 +122,9 @@ $repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
 
 $row = mrbsGetBookingInfo($id, $series);
 
+$room = $row['room_id'];
+$area = $row['area_id'];
+
 // Get the area settings for the entry's area.   In particular we want
 // to know how to display private/public bookings in this area.
 get_area_settings($row['area_id']);
