@@ -1201,7 +1201,7 @@ if ($phase == 2)
   {
     // If we're producing an iCalendar then we'll also need the repeat
     // information in order to construct the recurrence rule
-    $sql .= ", T.rep_type, T.end_date, T.rep_opt, T.rep_num_weeks";
+    $sql .= ", T.rep_type, T.end_date, T.rep_opt, T.rep_num_weeks, T.month_absolute, T.month_relative";
   }
   $sql .= " FROM $tbl_area A, $tbl_room R, $tbl_entry E";
   if ($output_format == OUTPUT_ICAL)
