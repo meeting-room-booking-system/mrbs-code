@@ -1052,7 +1052,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
   
   // We construct an iCalendar by going through the rows from the SQL query.  Because
   // it was sorted by repeat_id and then by ical_recur_id we will
-  //    - get all the individual entries (which will have repeat_id 0)
+  //    - get all the individual entries (which will not have a rep_type)
   //    - then get the series.    For each series we have to:
   //        - identify the series information.   This is the original series information
   //          so we can only get it from an entry that has not been changed, ie has 
@@ -1079,7 +1079,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
     $text_body = array();
     $html_body = array();
     // If this is an individual entry, then construct an event
-    if ($row['repeat_id'] == 0)
+    if (!isset($row['rep_type']) || ($row['rep_type'] == REP_NONE))
     {
       $text_body['content'] = create_details_body($row, FALSE, $keep_private);
       $html_body['content'] = "<table>" . create_details_body($row, TRUE, $keep_private) . " </table>";
