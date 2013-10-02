@@ -476,8 +476,14 @@ function sql_mysql_field_info($table, $db_conn = null)
 
 // Connect to a database server and select a database, optionally using
 // persistent connections
-function sql_mysql_connect($host, $username, $password, $db_name, $persist = 0)
+function sql_mysql_connect($host, $username, $password, $db_name, $persist = 0,
+                           $db_port = 3306)
 {
+  if (empty($db_port))
+  {
+    $db_port = 3306;
+  }
+
   // Establish a database connection.
 
   // On connection error, the message will be output without a proper HTML
@@ -487,11 +493,11 @@ function sql_mysql_connect($host, $username, $password, $db_name, $persist = 0)
 
   if ($persist)
   {
-    $db_conn = mysql_pconnect($host, $username, $password);
+    $db_conn = mysql_pconnect("$host:$db_port", $username, $password);
   }
   else
   {
-    $db_conn = mysql_connect($host, $username, $password);
+    $db_conn = mysql_connect("$host:$db_port", $username, $password);
   }
 
   if (!$db_conn || !mysql_select_db ($db_name, $db_conn))
@@ -515,7 +521,7 @@ function sql_mysql_connect($host, $username, $password, $db_name, $persist = 0)
 function sql_mysql_default_connect()
 {
   global $sql_mysql_conn, $db_nopersist, $db_host, $db_login, $db_password,
-         $db_database;
+         $db_database, $db_port;
 
   /////////////////////////////////////////////
   // Open the standard MRBS database connection
@@ -526,8 +532,15 @@ function sql_mysql_default_connect()
     $persist = 0;
   }
 
+  $port = null;
+  // If a port is specified, cast it to int for safety
+  if (isset($db_port))
+  {
+    $port = (int)$db_port;
+  }
+
   $sql_mysql_conn = sql_mysql_connect($db_host, $db_login, $db_password,
-                                      $db_database, $persist);
+                                      $db_database, $persist, $db_port);
 }
 
 

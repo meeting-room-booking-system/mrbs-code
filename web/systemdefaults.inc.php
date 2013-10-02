@@ -62,6 +62,9 @@ $dbsys = "mysqli";
 // Hostname of database server. For pgsql, can use "" instead of localhost
 // to use Unix Domain Sockets instead of TCP/IP.
 $db_host = "localhost";
+// If you need to specify a non-standard port for the database connection
+// you can define this
+//$db_port = 1234;
 // Database name:
 $db_database = "mrbs";
 // Database login user name:

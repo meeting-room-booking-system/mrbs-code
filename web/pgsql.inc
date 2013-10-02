@@ -487,8 +487,12 @@ function sql_pgsql_field_info($table, $db_conn = null)
 // Connect to a database server and select a database, optionally using
 // persistent connections
 function sql_pgsql_connect($host, $username, $password, $db_name,
-                           $persist = 0)
+                           $persist = 0, $db_port = 5432)
 {
+  if (empty($db_port))
+  {
+    $db_port = 5432;
+  }
   // Establish a database connection.
 
   // On connection error, the message will be output without a proper HTML
@@ -496,7 +500,7 @@ function sql_pgsql_connect($host, $username, $password, $db_name,
   // there seems to be no way to supress the automatic error message output and
   // still be able to access the error text.
 
-  $conninfo = (empty($host) ? "" : "host=$host ") .
+  $conninfo = (empty($host) ? "" : "host=$host port=$db_port ") .
     "dbname=$db_name user=$username password=$password";
 
   if ($persist)
@@ -526,7 +530,7 @@ function sql_pgsql_connect($host, $username, $password, $db_name,
 function sql_pgsql_default_connect()
 {
   global $sql_pgsql_conn, $db_nopersist, $db_host, $db_login, $db_password,
-         $db_database;
+         $db_database, $db_port;
 
   /////////////////////////////////////////////
   // Open the standard MRBS database connection
@@ -538,8 +542,15 @@ function sql_pgsql_default_connect()
   }
   global $sql_pgsql_conn;
 
+  $port = null;
+  // If a port is specified, cast it to int for safety
+  if (isset($db_port))
+  {
+    $port = (int)$db_port;
+  }
+
   $sql_pgsql_conn = sql_pgsql_connect($db_host, $db_login, $db_password,
-                                      $db_database, $persist);
+                                      $db_database, $persist, $port);
 }
 
 
