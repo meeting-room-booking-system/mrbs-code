@@ -529,6 +529,17 @@ $working_days = array(1,2,3,4,5);  // Mon-Fri
 // be useful if the database table is being shared with another application.
 // MRBS will auto-detect whether the array is associative.
 //
+// Note that an array such as
+//
+// $select_options['entry.catering'] = array('2' => 'Coffee', 
+//                                           '4' => 'Sandwiches',
+//                                           '5' => 'Hot Lunch');
+//
+// will be treated as a simple indexed array rather than as an associative array.
+// That's because (a) strictly speaking PHP does not distinguish between indexed
+// and associative arrays and (b) PHP will cast any string key that looks like a
+// valid integer into an integer.
+//
 // If you want to make the select field a mandatory field (see below) then include
 // an empty string as one of the values, eg
 //
