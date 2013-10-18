@@ -316,7 +316,8 @@ $name = trim($name);
 // Although the MAXLENGTH attribute is used in the <input> tag, this can
 // sometimes be ignored by the browser, for example by Firefox when 
 // autocompletion is used.  The user could also edit the HTML and remove
-// the MAXLENGTH attribute.    Passing an oversize string to some
+// the MAXLENGTH attribute.    Another problem is that the <datalist> tag
+// does not accept a maxlength attribute.  Passing an oversize string to some
 // databases (eg some versions of PostgreSQL) results in an SQL error,
 // rather than silent truncation of the string.
 //
