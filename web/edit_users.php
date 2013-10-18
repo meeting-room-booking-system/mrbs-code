@@ -552,7 +552,7 @@ if (isset($Action) && ($Action == "Update"))
       // Truncate the field to the maximum length as a precaution.
       if (isset($maxlength["users.$fieldname"]))
       {
-        $values[$fieldname] = substr($values[$fieldname], 0, $maxlength["users.$fieldname"]);
+        $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength["users.$fieldname"]);
       }
       // we will also put the data into a query string which we will use for passing
       // back to this page if we fail validation.   This will enable us to reload the
