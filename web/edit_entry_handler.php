@@ -310,14 +310,38 @@ if ($ajax && $commit)
 
 // Trim the name field to get rid of any leading or trailing whitespace
 $name = trim($name);
-// Truncate the name field to the maximum length as a precaution.
+
+
+// Truncate any fields that have a maximum length as a precaution.
 // Although the MAXLENGTH attribute is used in the <input> tag, this can
 // sometimes be ignored by the browser, for example by Firefox when 
 // autocompletion is used.  The user could also edit the HTML and remove
 // the MAXLENGTH attribute.    Passing an oversize string to some
 // databases (eg some versions of PostgreSQL) results in an SQL error,
 // rather than silent truncation of the string.
-$name = substr($name, 0, $maxlength['entry.name']);
+//
+// We truncate to a maximum number of UTF8 characters rather than bytes.
+// This is OK in current versions of MySQL and PostgreSQL, though in earler
+// versions of MySQL (I haven't checked PostgreSQL) this could cause problems
+// as a VARCHAR(n) was n bytes long rather than n characters.
+foreach ($maxlength as $key => $length)
+{
+  list($table, $field) = explode('.', $key, 2);
+  if ($table == 'entry')
+  {
+    // Custom fields are held in their own array, so we need to handle them
+    // slightly differently. (Should probably change the way they are handled
+    // sometime to be just like any other variables).
+    if (array_key_exists($field, $custom_fields))
+    {
+      $custom_fields[$field] = utf8_substr($custom_fields[$field], 0, $length);
+    }
+    else
+    {
+      $$field = utf8_substr($$field, 0, $length);
+    }
+  }
+}
 
 // When All Day is checked, $start_seconds and $end_seconds are disabled and so won't
 // get passed through by the form.   We therefore need to set them.

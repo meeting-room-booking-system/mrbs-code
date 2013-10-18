@@ -86,7 +86,8 @@ $maxlength['room.room_name']   = 25;  // characters   (room_name field in room t
 $maxlength['room.description'] = 60;  // characters   (description field in room table)
 $maxlength['users.name']       = 30;  // characters   (name field in users table)
 $maxlength['users.email']      = 75;  // characters   (email field in users table)
-// other values for the users table need to follow the $maxlength['users.fieldname'] pattern
+// other values for the entry or users table need to follow the $maxlength['tablename.fieldname']
+// pattern
 
 
 /*********************************

@@ -533,14 +533,15 @@ function create_field_entry_privacy_status($disabled=FALSE)
 function create_field_entry_custom_field($field, $key, $disabled=FALSE)
 {
   global $custom_fields, $tbl_entry;
-  global $is_mandatory_field, $text_input_max;
+  global $is_mandatory_field, $text_input_max, $maxlength;
   
   echo "<div>\n";
-  $params = array('label'     => get_loc_field_name($tbl_entry, $key) . ":",
-                  'name'      => VAR_PREFIX . $key,
-                  'value'     => $custom_fields[$key],
-                  'disabled'  => $disabled,
-                  'mandatory' => isset($is_mandatory_field["entry.$key"]) && $is_mandatory_field["entry.$key"]);
+  $params = array('label'      => get_loc_field_name($tbl_entry, $key) . ":",
+                  'name'       => VAR_PREFIX . $key,
+                  'value'      => $custom_fields[$key],
+                  'disabled'   => $disabled,
+                  'attributes' => array(),
+                  'mandatory'  => isset($is_mandatory_field["entry.$key"]) && $is_mandatory_field["entry.$key"]);
   // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
   // assume are intended to be booleans)
   if (($field['nature'] == 'boolean') || 
@@ -553,7 +554,8 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
   elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
   {
     // HTML5 does not allow a pattern attribute for the textarea element
-    $params['attributes'] = array('rows="8"', 'cols="40"');
+    $params['attributes'][] = 'rows="8"';
+    $params['attributes'][] = 'cols="40"';
     generate_textarea($params);   
   }
   // Otherwise output an input
@@ -576,6 +578,10 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
       }
     }
     $params['field'] = "entry.$key";
+    if (isset($maxlength[$params['field']]))
+    {
+      $params['maxlength'] = $maxlength[$params['field']];
+    }
     generate_input($params);
   }
   echo "</div>\n";
