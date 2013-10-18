@@ -1285,6 +1285,7 @@ function generate_datalist($params)
 //        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
 //                        Default TRUE
 //        'mandatory'     Whether the field is a required field.  Default FALSE
+//        'maxlength'     The maximum length of input allowed.   Default NULL (no limit)
 //        'attributes'    Additional attributes not covered explicitly above.  Default NULL.
 //                        Can be either a simple string or an array of attributes.
 //
@@ -1292,7 +1293,7 @@ function generate_textarea($params)
 {
   // some sanity checking on params
   foreach (array('label', 'label_title', 'name', 'value', 'disabled', 'create_hidden',
-                 'mandatory', 'attributes') as $key)
+                 'mandatory', 'maxlength', 'attributes') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -1334,6 +1335,7 @@ function generate_textarea($params)
   $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : '';
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : '';
+  $html .= (isset($params['maxlength'])) ? " maxlength=\"" . $params['maxlength'] . "\"" : '';
   $html .= ">" . htmlspecialchars($params['value']) . "</textarea>\n";
   // and a hidden input if the textarea is disabled
   if ($params['disabled'] && $params['create_hidden'])
