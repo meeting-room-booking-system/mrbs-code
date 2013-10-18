@@ -79,9 +79,7 @@ function validate_password($password)
       switch($rule)
       {
         case 'length':
-          // assumes that the site has enabled multi-byte string function
-          // overloading if necessary in php.ini
-          if (strlen($password) < $pwd_policy[$rule])
+          if (utf8_strlen($password) < $pwd_policy[$rule])
           {
             return FALSE;
           }
