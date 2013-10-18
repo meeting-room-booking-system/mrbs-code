@@ -1272,7 +1272,7 @@ function mrbsAddArea($name, &$error)
   }
   
   // Truncate the name field to the maximum length as a precaution.
-  $name = substr($name, 0, $maxlength['area.area_name']);
+  $name = utf8_substr($name, 0, $maxlength['area.area_name']);
   $area_name_q = sql_escape($name);
   // Acquire a mutex to lock out others who might be editing the area
   if (!sql_mutex_lock("$tbl_area"))
@@ -1352,8 +1352,8 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='')
   }
   
   // Truncate the name and description fields to the maximum length as a precaution.
-  $name = substr($name, 0, $maxlength['room.room_name']);
-  $description = substr($description, 0, $maxlength['room.description']);
+  $name = utf8_substr($name, 0, $maxlength['room.room_name']);
+  $description = utf8_substr($description, 0, $maxlength['room.description']);
   // Add SQL escaping
   $room_name_q = sql_escape($name);
   $description_q = sql_escape($description);
