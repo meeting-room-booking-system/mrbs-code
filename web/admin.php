@@ -355,8 +355,8 @@ if ($is_admin || ($n_displayable_areas > 0))
                       $value = $r[$field['name']];
                       $html = "<td title=\"" . htmlspecialchars($value) . "\"><div>";
                       // Truncate before conversion, otherwise you could chop off in the middle of an entity
-                      $html .= htmlspecialchars(substr($value, 0, $max_content_length));
-                      $html .= (strlen($value) > $max_content_length) ? " ..." : "";
+                      $html .= htmlspecialchars(utf8_substr($value, 0, $max_content_length));
+                      $html .= (utf8_strlen($value) > $max_content_length) ? " ..." : "";
                       $html .= "</div></td>\n";
                       echo $html;
                     }
