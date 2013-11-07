@@ -541,7 +541,7 @@ function sql_mysql_default_connect()
   }
 
   $sql_mysql_conn = sql_mysql_connect($db_host, $db_login, $db_password,
-                                      $db_database, $persist, $db_port);
+                                      $db_database, $persist, $port);
 }
 
 
