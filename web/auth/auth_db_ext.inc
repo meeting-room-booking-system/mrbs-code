@@ -42,11 +42,16 @@ function authValidateUser($user, $pass)
     $auth['db_ext']['db_system'] = 'mysqli';
   }
 
+  $persist = 0;
+  $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : NULL;
+  
   $conn = sql_connect($auth['db_ext']['db_system'],
                       $auth['db_ext']['db_host'],
                       $auth['db_ext']['db_username'],
                       $auth['db_ext']['db_password'],
-                      $auth['db_ext']['db_name']);
+                      $auth['db_ext']['db_name'],
+                      $persist,
+                      $port);
 
   // sql_syntax_casesensitive_equals() does the escaping.   We need an exact match -
   // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '

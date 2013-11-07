@@ -713,6 +713,9 @@ $min_user_editing_level = 2;
 // db_ext authentication.
 $auth['db_ext']['db_system'] = 'mysqli';
 $auth['db_ext']['db_host'] = 'localhost';
+// If you need to specify a non-standard port for the database connection
+// you can define this
+//$auth['db_ext']['db_port'] = 1234;
 $auth['db_ext']['db_username'] = 'authuser';
 $auth['db_ext']['db_password'] = 'authpass';
 $auth['db_ext']['db_name'] = 'authdb';
