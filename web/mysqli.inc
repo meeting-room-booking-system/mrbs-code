@@ -572,7 +572,6 @@ function sql_mysqli_default_connect()
   // a string port specifier
   if (isset($db_port))
   {
-    error_log("********** port $db_port");
     $port = (int)$db_port;
   }
   $sql_mysqli_conn = sql_mysqli_connect($db_host, $db_login, $db_password,
