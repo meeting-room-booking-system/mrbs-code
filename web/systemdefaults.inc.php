@@ -711,7 +711,7 @@ $min_user_editing_level = 2;
 // The 'db_system' variable is equivalent to the core MRBS $dbsys variable,
 // and allows you to use any of MRBS's database abstraction layers for
 // db_ext authentication.
-$auth['db_ext']['db_system'] = 'mysql';
+$auth['db_ext']['db_system'] = 'mysqli';
 $auth['db_ext']['db_host'] = 'localhost';
 $auth['db_ext']['db_username'] = 'authuser';
 $auth['db_ext']['db_password'] = 'authpass';

@@ -39,7 +39,7 @@ function authValidateUser($user, $pass)
 
   if (empty($auth['db_ext']['db_system']))
   {
-    $auth['db_ext']['db_system'] = 'mysql';
+    $auth['db_ext']['db_system'] = 'mysqli';
   }
 
   $conn = sql_connect($auth['db_ext']['db_system'],
