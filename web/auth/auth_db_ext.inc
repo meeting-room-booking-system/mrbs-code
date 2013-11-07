@@ -55,8 +55,14 @@ function authValidateUser($user, $pass)
            " WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'], strtolower($user));
 
   $r = sql_query($query, $conn);
+  
+  if ($r === FALSE)
+  {
+    trigger_error(sql_error($conn), E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
+  }
 
-  if ($r && (sql_count($r, $conn) == 1)) // force a unique match
+  if (sql_count($r, $conn) == 1) // force a unique match
   {
     $row = sql_row($r, 0, $conn);
 
