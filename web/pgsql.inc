@@ -58,9 +58,10 @@ function sql_pgsql_escape($str, $db_conn = null)
 }
 
 
-function sql_pgsql_quote($str)
+// Quote a table or column name
+function sql_pgsql_quote($identifier)
 {
-  return '"' . $str . '"';
+  return '"' . $identifier . '"';
 }
 
 
@@ -309,7 +310,7 @@ function sql_pgsql_syntax_casesensitive_equals($fieldname, $s, $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  return " \"$fieldname\"='" . sql_pgsql_escape($s) . "'";
+  return " " . sql_pgsql_quote($fieldname) . "='" . sql_pgsql_escape($s) . "'";
 }
 
 

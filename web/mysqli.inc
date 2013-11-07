@@ -50,9 +50,10 @@ function sql_mysqli_escape($str, $db_conn = null)
 }
 
 
-function sql_mysqli_quote($str)
+// Quote a table or column name
+function sql_mysqli_quote($identifier)
 {
-  return '`' . $str . '`';
+  return '`' . $identifier . '`';
 }
 
 
@@ -301,7 +302,7 @@ function sql_mysqli_syntax_casesensitive_equals($fieldname, $s, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  return " BINARY `$fieldname`='" . sql_mysqli_escape($s) . "'";
+  return " BINARY " . sql_mysqli_quote($fieldname) . "='" . sql_mysqli_escape($s) . "'";
 }
 
 // Generate non-standard SQL to match a string anywhere in a field's value
