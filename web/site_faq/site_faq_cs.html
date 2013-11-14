@@ -1,0 +1,199 @@
+<!-- $Id$ -->
+
+<div id="site_faq_contents">
+  <a id="top"></a><h4>Autentizace</h4>
+  <ul>
+    <li><a href="#authenticate">Jak se přihlásit?</a></li>
+    <li><a href="#meeting_delete">Proč nemohu odstranit/změnit schůzku?</a></li>
+  </ul>
+  
+  <h4>Vytvoření/změna schůzek</h4>
+  <ul>
+    <li><a href="#create">Jak můžu vytvořit schůzku?</a></li>
+    <li><a href="#fifth">Jaký je rozdíl mezi <q>pátým</q> a <q>posledním</q>?</a></li>
+    <li><a href="#repeating_delete">Jak mohu odstranit jeden výskyt opakované schůzky?</a></li>
+    <li><a href="#multiple_sites">Jak mohu jednoduše naplánovat stejné setkání na různých místech?</a></li>
+    <li><a href="#too_many">Moji schůzku se nepodařilo vytvořit, protože existuje <q>příliš mnoho položek</q>!</a></li>
+    <li><a href="#multiple_users">Co se stane, když více lidí naplánuje schůzku na stejný čas?</a></li>
+  </ul>
+  
+  <h4>Různé</h4>
+  <ul>
+    <li><a href="#internal_external">Jaký je rozdíl mezi <q>Interní</q> a <q>Externí</q>?</a></li>
+  </ul>
+  
+  <h4>O rezervačním systému</h4>
+  <ul>
+    <li><a href="#how_much">Kolik tento systém stojí?</a></li>
+    <li><a href="#about">Jak systém pracuje a kdo ho napsal?</a></li>
+  </ul>
+</div>
+
+<div id="site_faq_body">
+
+  <div id="authenticate">
+    <h4>Jak se přihlásit?</h4>
+    <p>
+      Systém může být nakonfigurován tak, aby využíval jednu z několika metod 
+      autentizace včetně LDAPu, Netware a SMB. Požádejte správce systému 
+      o pomoc, pokud máte problém s přihlášením. Některé funkce jsou omezeny 
+      pro vybrané uživatele a ostatní uživatelé uvidí hlášku 
+      <q>nemáte přístupová práva pro změnu této položky</q>. Požádejte správce 
+      systému o pomoc, pokud systém nepracuje podle vašich představ. Pokud je 
+      systém nakonfigurován pro ověřování přes LDAP, tak to znamená, že se 
+      budete přihlašovat pod stejným uživatelským jménem a heslem, které 
+      používáte pro přístup k e-mailům, např. <q>UzivatelskeJmeno</q> 
+      a <q>MojeHeslo</q>.
+    </p>
+    <a href="#top">Nahoru</a>
+  </div>
+  
+  <div id="meeting_delete">
+    <h4>Proč nemohu odstranit/změnit schůzku?</h4>
+    <p>
+      Aby bylo možné odstranit nebo změnit schůzku, musíte být přihlášeni 
+      jako ten samý uživatel, který vytvořil schůzku. Nebo kontaktujte 
+      jednoho ze správců místností nebo osobu, která tuto schůzku vytvořila.
+    </p>
+    <a href="#top">Nahoru</a>
+  </div>
+  
+  <div id="create">
+    <h4>Jak můžu vytvořit schůzku?</h4>
+    <p>
+      Kliknutím na požadovaný čas v rezervační obrazovce, vyplněním 
+      podrobností a kliknutím na tlačítko "Uložit".
+    </p>
+    <p>
+      Místo kliknutí na požadovaný čas, můžete vybrat časový rozsah a také 
+      místnost nebo dny přetažením kurzoru nad skupinou buněk v denním nebo 
+      týdenním pohledu. Po uvolnění tlačítka myši budete přesměrováni 
+      na rezervační obrazovku a časové sloty a místnost nebo dny budou 
+      vyplněny automaticky.
+    </p>
+    <a href="#top">Nahoru</a>
+  </div>
+  
+  <div id="fifth">
+    <h4>Jaký je rozdíl mezi <q>pátým</q> a <q>posledním</q>?</h4>
+    <p>
+      Při měsíčně se opakující rezervaci, <q>pátý</q> den (např. páté pondělí) 
+      v daném měsíci nemusí nastat a rezervace v tomto měsíci nebude provedena. 
+      Pokud místo toho zvolíte <q>poslední</q> den, tak rezervace bude 
+      provedena v daný den ve čtvrtém týdnu měsíce, pokud není tento den 
+      v pátém týdnu měsíce.
+     </p>
+     <p>
+    <p>
+      <q>Pátý od konce</q> funguje podobně, akorát se počítá obráceně od konce 
+      měsíce.
+    </p>
+    <a href="#top">Nahoru</a>
+  </div>
+  
+  <div id="repeating_delete">
+    <h4>Jak mohu odstranit jeden výskyt opakované schůzky?</h4>
+    <p>
+      Vyberte den/místnost/čas, který chcete odstranit a použijte 
+      <dfn>Smaž záznam</dfn>.
+    </p>
+    <a href="#top">Nahoru</a>
+  </div>
+  
+  <div id="multiple_sites">
+    <h4>Jak mohu jednoduše naplánovat stejné setkání na různých místech?</h4>
+    <p>
+      Nelze. V současné době není možné si jednoduše naplánovat stejné 
+      setkání na dvou různých místech. Musíte naplánovat každé z nich 
+      samostatně. Před provedením rezervace se ujistěte, že je k dispozici 
+      místo na obou místech.  
+    </p>
+    <a href="#top">Nahoru</a>
+  </div>
+  
+  <div id="too_many">
+    <h4>Moji schůzku se nepodařilo vytvořit, protože existuje <q>příliš mnoho 
+        položek</q>!</h4>
+    <p>
+      Žádná schůzka nemůže obsahovat více než 365 položek. Bylo potřeba vytvořit 
+      nějaký limit. Toto číslo může být v případě potřeby zvýšeno.
+    </p>
+    <a href="#top">Nahoru</a>
+  </div>
+  
+  <div id="multiple_users">
+    <h4>Co se stane, když více lidí naplánuje schůzku na stejný čas?</h4>
+    <p>
+      Stručná odpověď zní: první osoba, která klikne na tlačítko 
+      <dfn>Uložit</dfn> vyhrává.
+      Ze zákulisí - systém používá správné více-uživatelské a více-vláknové 
+      relační databáze, které mohou zvládnout tisíce současně pracujících 
+      uživatelů.
+    </p>
+    <a href="#top">Nahoru</a>
+  </div>
+  
+  <div id="internal_external">
+    <h4>Jaký je rozdíl mezi <q>Interní</q> a <q>Externí</q>?</h4>
+    <p>
+      Ve výchozím nastavení MRBS definuje dva typy schůzek. 
+      <dfn>Interní</dfn> znamená, že se setkání účastní pouze zaměstnanci.
+      <dfn>Externí</dfn> schůzky se mohou zúčastnit zákazníci, dodavatelé, 
+      investoři, apod. Můžete definovat celkem 10 různých typů schůzek 
+      podle vašich potřeb. Setkání jsou zvýrazněna v hlavním zobrazení 
+      kalendáře barvou odpovídající jejich typu a popisek těchto barev 
+      je uveden v dolní části hlavního zobrazení kalendáře.
+    </p>
+    <a href="#top">Nahoru</a>
+  </div>
+  
+  <div id="how_much">
+    <a></a><h4>Kolik tento systém stojí?</h4>
+    <p>
+      Nic. Více informací naleznete v následující sekci.
+    </p>
+    <a href="#top">Nahoru</a>
+  </div>
+  
+  <div id="about">
+    <h4>Jak systém pracuje a kdo ho napsal?</h4>
+    <p>
+      <a href="http://sourceforge.net/project/?group_id=5113">Rezervační systém</a>
+      je "open source" software, který je distribuován pod Gnu Public 
+      License (GPL). To znamená, že software je zdarma k použití, distribuci 
+      a modifikaci. 
+    </p> 
+    <p>
+      Systém je napsán většinou v <a href="http://www.php.net">PHP</a>, 
+      což je open source programovací jazyk, který lze vložit na web stránky, 
+      podobně jako Microsoft Active Server Pages. PHP má dobrou podporu 
+      databází.
+    </p>
+    <p>  
+      Databáze, která slouží pro systém je buď 
+      <a href="http://www.mysql.com">MySQL</a>
+       nebo <a href="http://www.postgresql.org">PostgreSQL</a>.
+       MySQL je velmi rychlý, více-vláknový, více-uživatelský a robustní
+       SQL (Structured Query Language), databázový server, který je také šířen 
+       pod GPL.
+       PostgreSQL je plně vybavený více-uživatelský, open source databázový 
+       server.
+    </p>
+    <p> 
+      Systém bude fungovat na různých platformách, včetně architektury PC
+      za pomoci <a href="http://www.linux.com">Linuxového</a> operačního 
+      systému. Linux je svobodný, "open source", operační systém.
+    </p>
+    <p>
+      Webový server, který se používá je další kus svobodného, "open source" 
+      software. <a href="http://www.apache.org">Apache</a> je světově 
+      nejpopulárnější webový server.
+    </p>
+    <p>
+      Pointa je, že <strong>každý kus tohoto systému, od operačního systému až 
+      po aplikaci, je zcela zdarma - zdrojový kód a všechno</strong>...
+    </p>
+    <a href="#top">Nahoru</a>
+  </div>
+  
+</div>
