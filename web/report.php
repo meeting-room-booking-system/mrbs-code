@@ -1432,8 +1432,11 @@ else
       $content_type = "application/ics; charset=" . get_charset() . "; name=\"$filename\"";
       break;
   }
-  header("Content-Type: $content_type");
-  header("Content-Disposition: attachment; filename=\"$filename\"");
+  if (!$cli_mode)
+  {
+    header("Content-Type: $content_type");
+    header("Content-Disposition: attachment; filename=\"$filename\"");
+  }
 
   if (($output_format == OUTPUT_CSV) && $csv_bom)
   {
