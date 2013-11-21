@@ -1,4 +1,4 @@
-﻿<?php // -*-mode: PHP; coding:utf-8;-*-
+<?php // -*-mode: PHP; coding:utf-8;-*-
 // $Id: lang.sr 2350 2012-07-23 14:15:44Z cimorrison $
 
 // This file contains PHP code that specifies language specific strings
@@ -507,4 +507,4 @@ $vocab["entry.odsek"]	  	 = "Odsek";
 $vocab["entry.st_grupa"]	 = "Studijska grupa";
 $vocab["entry.godina"]		 = "Godina studija";
 $vocab["entry.grupa"]  		 = "Grupa";
-?>
+

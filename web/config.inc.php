@@ -59,4 +59,3 @@ $db_tbl_prefix = "mrbs_";
    or areadefaults.inc.php.  */
 
 
-?>

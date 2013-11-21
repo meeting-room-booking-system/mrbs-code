@@ -26,4 +26,3 @@ $redirect_str .= "?year=$year&month=$month&day=$day&area=$area&room=$room";
 
 header("Location: $redirect_str");
 
-?>

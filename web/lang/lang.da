@@ -228,4 +228,3 @@ $vocab["failed_connect_db"]  = "Fatal fejl: kunne ikke forbinde til databasen";
 $vocab["type.I"]             = "Internt";
 $vocab["type.E"]             = "Eksternt";
 
-?>

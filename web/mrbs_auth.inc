@@ -231,4 +231,4 @@ function auth_book_admin($user, $room)
 {
   return (authGetUserLevel($user) >= 2);
 }
-?>
+

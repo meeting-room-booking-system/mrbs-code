@@ -32,4 +32,3 @@ function getUserName()
   return $remotehostname;
 }
 
-?>

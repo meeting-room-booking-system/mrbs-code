@@ -95,4 +95,3 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
   return TRUE;
 }
 
-?>

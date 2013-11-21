@@ -492,4 +492,4 @@ $vocab["type.E"]            = "Externt";
 // General
 $vocab["fatal_db_error"]     = "Fatalt fel: Databasen är inte tillgänglig för tillfället!";
 $vocab["back"]               = "Tillbaka";
-?>
+

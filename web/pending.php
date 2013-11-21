@@ -291,4 +291,4 @@ else  // display them in a table
 }
 
 output_trailer();
-?>
+

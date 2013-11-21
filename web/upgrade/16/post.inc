@@ -16,4 +16,3 @@ if (sql_command("UPDATE $tbl_area SET enable_periods=$value WHERE enable_periods
   fatal_error(0, "Error updating table. " . sql_error());
 }
 
-?>

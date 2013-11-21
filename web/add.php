@@ -38,3 +38,4 @@ elseif ($type == "room")
 
 $returl = "admin.php?area=$area" . (!empty($error) ? "&error=$error" : "");
 header("Location: $returl");
+

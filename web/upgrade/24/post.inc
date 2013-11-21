@@ -217,4 +217,3 @@ if ($display_timing)
  echo " processed in $clock_diff seconds<br>\n";
 }
 
-?>

@@ -504,4 +504,4 @@ $vocab["type.E"]             = "Extern";
 // General
 $vocab["fatal_db_error"]     = "Fataler Fehler: Leider steht die Datenbank im Moment nicht zur Verfügung.";
 $vocab["back"]               = "Zurück";
-?>
+

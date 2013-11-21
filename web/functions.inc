@@ -2554,4 +2554,4 @@ function is_cli()
     return FALSE;
   }
 }
-?>
+

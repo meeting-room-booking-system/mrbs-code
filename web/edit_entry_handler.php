@@ -794,4 +794,4 @@ if (empty($result['rules_broken'])  &&
 echo "</div>\n";
 
 output_trailer();
-?>
+

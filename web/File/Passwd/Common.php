@@ -379,4 +379,3 @@ class File_Passwd_Common
         return false;
     }
 }
-?>

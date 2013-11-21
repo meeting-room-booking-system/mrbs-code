@@ -111,4 +111,4 @@ if ($info = mrbsGetBookingInfo($id, FALSE, TRUE))
 
 // If you got this far then we got an access denied.
 showAccessDenied($day, $month, $year, $area, "");
-?>
+

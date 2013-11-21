@@ -1410,4 +1410,3 @@ function langs_arsort(&$langs)
   return TRUE;
 }
 
-?>

@@ -1572,4 +1572,4 @@ if ($output_form)
 {
   output_trailer();
 }
-?>
+

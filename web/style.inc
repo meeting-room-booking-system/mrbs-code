@@ -67,4 +67,4 @@ if (($refresh_rate != 0) && preg_match("/(day|week|month)\.php/", $PHP_SELF))
   echo "<meta http-equiv=\"Refresh\" content=\"$refresh_rate\">\n";
   echo ($ajax_capable) ? "</noscript>\n" : '';
 }
-?>
+

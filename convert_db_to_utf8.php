@@ -408,4 +408,3 @@ function convert_one_db($db)
   } // end of if ($alterdatabasecharset)
 } // end of function convert_one_db()
 
-?>

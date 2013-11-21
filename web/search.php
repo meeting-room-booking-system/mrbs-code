@@ -359,4 +359,4 @@ else
   echo "</div>\n";
   output_trailer();
 }
-?>
+

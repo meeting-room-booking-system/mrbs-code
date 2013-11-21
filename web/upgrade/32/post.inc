@@ -49,4 +49,4 @@ foreach ($mods as $id => $month_absolute)
 
 // Restore the original timezone
 mrbs_default_timezone_set($old_tz);
-?>
+

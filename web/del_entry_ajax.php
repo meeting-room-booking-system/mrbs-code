@@ -69,4 +69,4 @@ $orphan_result = sql_command($sql);
 
 
 echo $result;
-?>
+

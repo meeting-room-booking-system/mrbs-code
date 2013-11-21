@@ -227,4 +227,3 @@ $vocab["failed_connect_db"]  = "Κρίσιμο σφάλμα: Αποτυχία σ
 $vocab["type.I"]             = "Εσωτερικά";
 $vocab["type.E"]             = "Εξωτερικά";
 
-?>

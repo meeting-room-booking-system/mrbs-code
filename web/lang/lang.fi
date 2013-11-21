@@ -492,4 +492,4 @@ $vocab["type.E"]             = "Ulkoinen";
 // General
 $vocab["fatal_db_error"]     = "Virhe: tietokanta ei ole käytettävissä.";
 $vocab["back"]               = "Takaisin";
-?>
+

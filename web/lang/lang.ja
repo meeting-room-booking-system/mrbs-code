@@ -488,4 +488,4 @@ $vocab["type.E"]            = "外部";
 // General
 $vocab["fatal_db_error"]     = "致命的なエラー: 残念ながら、データベースは現在利用可能ではありません。";
 $vocab["back"]               = "戻る";
-?>
+

@@ -423,4 +423,4 @@ class File_Passwd_Smb extends File_Passwd_Common
         return File_Passwd_Smb::generatePasswd($pass, $mode);
     }
 }
-?>
+

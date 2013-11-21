@@ -99,4 +99,3 @@ function authGetUserLevel($user)
   return 1;
 }
 
-?>

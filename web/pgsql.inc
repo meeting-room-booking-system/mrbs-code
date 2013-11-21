@@ -561,4 +561,3 @@ function sql_pgsql_close($connection)
   pg_close($connection);
 }
 
-?>

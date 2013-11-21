@@ -106,4 +106,3 @@ $main_cell_height             = '17'; // (px)  height of the cells in the main d
 // ***** FONTS ************************    
 $standard_font_family  = "Arial, 'Arial Unicode MS', Verdana, sans-serif";
 
-?>

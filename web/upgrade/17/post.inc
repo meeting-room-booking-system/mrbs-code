@@ -168,4 +168,3 @@ if ($res == -1)
 
 sql_mutex_unlock("$tbl_repeat");
 
-?>

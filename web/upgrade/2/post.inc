@@ -24,4 +24,3 @@ if ($res == -1)
   print "<span class=\"error\">Failed to set default values for new columns in area table.</span>";
 }
 
-?>

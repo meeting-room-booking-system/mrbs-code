@@ -359,4 +359,3 @@ class File_Passwd_Authdigest extends File_Passwd_Common
         return File_Passwd_Authdigest::generatePasswd($user, $realm, $pass);
     }
 }
-?>

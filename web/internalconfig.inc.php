@@ -398,4 +398,3 @@ if (defined("E_STRICT"))
 
 error_reporting ($error_level);
 
-?>

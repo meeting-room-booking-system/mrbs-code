@@ -551,4 +551,3 @@ function sql_mysql_close($connection)
   mysql_close($connection);
 }
 
-?>

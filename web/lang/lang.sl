@@ -240,5 +240,3 @@ $vocab["failed_connect_db"]  = "NAPAKA: ni se možno povezati v podatkovno bazo"
 $vocab["type.I"]             = "Interno";
 $vocab["type.E"]             = "Zunanje";
 
-?>
-

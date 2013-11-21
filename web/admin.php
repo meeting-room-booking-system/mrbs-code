@@ -433,4 +433,4 @@ if ($is_admin || ($n_displayable_areas > 0))
 }
 
 output_trailer();
-?>
+

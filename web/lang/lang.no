@@ -424,4 +424,3 @@ $vocab["type.E"]             = "Ekstern";
 // General
 $vocab["fatal_db_error"]     = "Fatal feil: beklageligvis er ikke databasen tilgjengelig for øyeblikket.";
 $vocab["back"]               = "Tilbake";
-?>

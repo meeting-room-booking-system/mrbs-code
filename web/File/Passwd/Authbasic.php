@@ -393,4 +393,3 @@ class File_Passwd_Authbasic extends File_Passwd_Common
         return File_Passwd_Authbasic::generatePasswd($pass, $mode, $salt);
     }
 }
-?>

@@ -399,4 +399,4 @@ $vocab["type.E"]            = "Occasionnel";
 
 // General
 $vocab["back"]               = "Retour";
-?>
+

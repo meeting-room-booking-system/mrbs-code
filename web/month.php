@@ -533,4 +533,4 @@ if ($display_calendar_bottom)
 }
 
 output_trailer();
-?>
+

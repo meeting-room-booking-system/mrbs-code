@@ -1113,4 +1113,3 @@ $default_type = "I";
 // Default description for new bookings
 $default_description = "";
 
-?>

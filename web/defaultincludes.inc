@@ -19,4 +19,3 @@ require_once "dbsys.inc";
 require_once "mrbs_auth.inc";
 require "standard_vars.inc.php";
 
-?>

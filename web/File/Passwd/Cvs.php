@@ -301,4 +301,3 @@ class File_Passwd_Cvs extends File_Passwd_Common
         return File_Passwd_Cvs::generatePasswd($pass, $salt);
     }
 }
-?>

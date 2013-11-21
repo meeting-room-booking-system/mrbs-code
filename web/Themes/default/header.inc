@@ -250,4 +250,4 @@ function print_theme_header($day, $month, $year, $area, $room)
 <?php
 
 } // end of print_theme_header()
-?>
+

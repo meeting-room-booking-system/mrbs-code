@@ -50,4 +50,3 @@ function getUserName()
   return $REMOTE_USER;
 }
 
-?>

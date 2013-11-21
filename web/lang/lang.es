@@ -396,4 +396,4 @@ $vocab["type.E"]             = "Externa";
 
 // General
 $vocab["fatal_db_error"]     = "Error: la base de datos no está disponible en este momento.";
-?>
+

@@ -247,4 +247,3 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   return $tbody;
 }
 
-?>

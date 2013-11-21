@@ -144,4 +144,3 @@ if (!empty($refresh_rate))
   };
   <?php
 }
-?>

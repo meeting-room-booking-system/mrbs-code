@@ -1241,4 +1241,4 @@ if (isset($change_area) &&!empty($area))
 }
 
 output_trailer();
-?>
+

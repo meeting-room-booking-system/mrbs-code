@@ -34,4 +34,3 @@ CREATE TABLE $tbl_users
   }
 }
 
-?>

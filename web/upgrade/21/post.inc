@@ -35,4 +35,3 @@ foreach ($fields as $field)
   }
 }
 
-?>

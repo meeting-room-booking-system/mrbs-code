@@ -109,4 +109,3 @@ if (isset($action))
 header("Location: $returl");
 exit;
 
-?>

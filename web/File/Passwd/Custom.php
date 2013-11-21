@@ -590,4 +590,3 @@ class File_Passwd_Custom extends File_Passwd_Common
         return $return;
     }
 }
-?>

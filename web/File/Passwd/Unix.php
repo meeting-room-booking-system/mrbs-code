@@ -657,4 +657,3 @@ class File_Passwd_Unix extends File_Passwd_Common
     }
     
 }
-?>

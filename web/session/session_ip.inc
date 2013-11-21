@@ -29,4 +29,3 @@ function getUserName()
   return $REMOTE_ADDR;
 }
 
-?>

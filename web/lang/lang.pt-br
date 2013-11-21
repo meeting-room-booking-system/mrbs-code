@@ -374,4 +374,3 @@ $vocab["failed_connect_db"]  = "Erro: Falha ao ligar à base de dados";
 $vocab["type.I"]             = "Interno";
 $vocab["type.E"]             = "Externo";
 
-?>

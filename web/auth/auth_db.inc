@@ -94,4 +94,3 @@ function authGetUserLevel($user)
   return $result;
 }
 
-?>

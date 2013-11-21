@@ -12,4 +12,3 @@ function escapeshellarg($x)
   return "'".preg_replace("/'/", "\\'", $x)."'";
 } 
 
-?>

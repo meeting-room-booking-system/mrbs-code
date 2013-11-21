@@ -5,5 +5,3 @@
 // this will be picked up and used by the appropriate session file).
 
 require "defaultincludes.inc";
-
-?>

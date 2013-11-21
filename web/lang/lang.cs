@@ -504,4 +504,4 @@ $vocab["type.E"]            = "Externí";
 // General
 $vocab["fatal_db_error"]     = "Závažná chyba: databáze bohužel není momentálně dostupná.";
 $vocab["back"]               = "Zpět";
-?>
+

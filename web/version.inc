@@ -13,4 +13,3 @@ function get_mrbs_version()
   return $mrbs_version;
 }
 
-?>

@@ -375,4 +375,3 @@ $vocab["failed_connect_db"]  = "Fatale Fout: Verbinding naar database server mis
 $vocab["type.I"]             = "Intern";
 $vocab["type.E"]             = "Extern";
 
-?>

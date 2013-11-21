@@ -228,4 +228,3 @@ $vocab["failed_connect_db"]  = "Error Fatal: Fallada al conectar a la base de da
 $vocab["type.I"]             = "Intern";
 $vocab["type.E"]             = "Extern";
 
-?>

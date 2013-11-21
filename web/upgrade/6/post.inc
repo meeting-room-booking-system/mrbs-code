@@ -49,4 +49,3 @@ else
   sql_free($r, $admin_handle);
 }
 
-?>

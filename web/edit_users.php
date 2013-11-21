@@ -920,4 +920,3 @@ else
   output_trailer();
 }
 
-?>

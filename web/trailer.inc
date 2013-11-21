@@ -218,4 +218,3 @@ function output_trailer()
   print_footer(FALSE);
 }
 
-?>

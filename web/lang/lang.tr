@@ -425,4 +425,3 @@ $vocab["fatal_db_error"]     = "Ciddi Hata: malesef VeriTabanı şu an ayakta de
 $vocab["type.I"]             = "İç";
 $vocab["type.E"]             = "Dış";
 
-?>

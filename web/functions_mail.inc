@@ -1321,4 +1321,4 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
 }
 
 // }}}
-?>
+

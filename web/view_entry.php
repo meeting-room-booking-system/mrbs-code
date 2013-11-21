@@ -480,4 +480,4 @@ echo create_details_body($row, TRUE, $keep_private, $room_disabled);
 
 <?php
 output_trailer();
-?>
+

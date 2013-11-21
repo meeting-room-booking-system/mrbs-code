@@ -36,4 +36,4 @@ foreach ($slots as $s)
 }
 
 echo json_encode($result);
-?>
+

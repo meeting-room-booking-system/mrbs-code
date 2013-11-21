@@ -1221,5 +1221,3 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
   echo $icalendar;
 }
 
-
-?>

@@ -77,4 +77,3 @@ for ($day = date("d") - 5; $day < date("d")+55; $day++)
   }
 }
 
-?>

@@ -227,4 +227,3 @@ $vocab["failed_connect_db"]  = "Fatal Error: 无法连接数据库";
 $vocab["type.I"]             = "内部使用";
 $vocab["type.E"]             = "外部使用";
 
-?>

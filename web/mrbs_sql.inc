@@ -1701,4 +1701,3 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
   return $result;
 }
 
-?>

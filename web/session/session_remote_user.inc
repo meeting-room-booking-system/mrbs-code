@@ -102,4 +102,3 @@ function PrintLogonBox()
   }
 }
 
-?>

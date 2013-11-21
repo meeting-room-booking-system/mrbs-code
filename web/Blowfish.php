@@ -314,4 +314,3 @@ class Crypt_Blowfish
     
 }
 
-?>

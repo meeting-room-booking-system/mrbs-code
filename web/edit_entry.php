@@ -1412,4 +1412,6 @@ if (($edit_type == "series") && $repeats_allowed)
   </fieldset>
 </form>
 
-<?php output_trailer() ?>
+<?php 
+output_trailer();
+
