@@ -118,9 +118,9 @@ div#room_form {width: 100%}
 div#custom_html {float: left; padding: 0 0 3em 1em}
 #area_form form {float: left; margin-right: 1em}
 #area_form label#area_label {display: block; float: left; font-weight: bold; margin-right: <?php echo $admin_form_gap ?>em}
-#areaChangeForm select {display: block; float: left; margin: -0.1em 1.5em 0 0}
-#areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
-#areaChangeForm input.button {display: block; float: left; margin: 0 0.7em}
+#roomChangeForm select, #areaChangeForm select {display: block; float: left; margin: -0.1em 1.5em 0 0}
+#roomChangeForm input, #areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
+#roomChangeForm input.button, #areaChangeForm input.button {display: block; float: left; margin: 0 0.7em}
 
 div.header_columns, div.body_columns {position: relative; float: left; overflow-x: scroll; overflow-y: hidden}
 div.header_columns {max-width: 20%}
@@ -162,8 +162,7 @@ $column_month = number_format($column_month, 1, '.', '');  // (%) tidy the numbe
 
 ?>
 div#dwm_header {width: 100%; float: left; margin-top: 1.0em; margin-bottom: 0.5em}
-div#dwm_areas  {float: left; margin-right: 2.0em}
-div#dwm_rooms  {float: left; margin-right: 2.0em}
+div#dwm_areas, div#dwm_rooms  {float: left; margin-right: 2.0em}
 #dwm_header h3 {font-size: small; font-weight: normal; text-decoration: underline; 
     margin-top: 0; margin-bottom: 0.5em; padding-bottom: 0}
 #dwm_header ul {list-style-type: none; padding-left: 0; margin-left: 0; margin-top: 0}
