@@ -835,7 +835,7 @@ if ((($current_db_schema_version < $db_schema_version) ||
       // we don't want to see the system error reports if the user
       // supplies an incorrect username and password.
       $old_error_reporting = error_reporting(0);
-      $admin_handle = sql_connect($dbsys, $db_host, $db_admin_username, $db_admin_password, $db_database, 0);
+      $admin_handle = sql_connect($dbsys, $db_host, $db_admin_username, $db_admin_password, $db_database, 0, $db_port);
       error_reporting($old_error_reporting);  // Turn error reporting back on
     }
   }
