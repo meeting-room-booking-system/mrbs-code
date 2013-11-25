@@ -142,7 +142,8 @@ else
     $admin_password = $db_password;
   }
   $db_handle = sql_connect($dbsys, $db_host,
-                           $admin_username, $admin_password, $db_database);
+                           $admin_username, $admin_password, $db_database,
+                           0, $db_port);
   echo '
     <p>
       Starting update, this could take a while...
