@@ -719,13 +719,13 @@ function sql_field_info($table)
 
 // Connect to a database host and select the supplied database
 function sql_connect($system, $host, $username, $password, $db_name,
-                     $persist = 0)
+                     $persist = 0, $db_port = null)
 {
   require_once "$system.inc";
 
   $f = "sql_${system}_connect";
 
-  $db_conn = $f($host, $username, $password, $db_name, $persist);
+  $db_conn = $f($host, $username, $password, $db_name, $persist, $db_port);
 
   $handle = array('system' => $system, 'connection' => $db_conn);
 
