@@ -74,8 +74,6 @@ for ($j = 1; $j<=$days_in_month; $j++)
 echo "<div id=\"dwm_header\" class=\"screenonly\">\n";
 
 // Get the area and room names (we will need them later for the heading)
-$this_area_name = "";
-$this_room_name = "";
 $this_area_name = sql_query1("SELECT area_name FROM $tbl_area WHERE id=$area AND disabled=0 LIMIT 1");
 $this_room_name = sql_query1("SELECT room_name FROM $tbl_room WHERE id=$room AND disabled=0 LIMIT 1");
 // The room is invalid if it doesn't exist, or else it has been disabled, either explicitly
