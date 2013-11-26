@@ -998,20 +998,37 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $weekstarts, $strftime_format;
 
-  // Check that we've gor a valid, enabled room
+  // Check that we've got a valid, enabled room
   $sql = "SELECT COUNT(*)
             FROM $tbl_room R, $tbl_area A
            WHERE R.id=$room
              AND R.area_id=A.id
              AND R.disabled=0
              AND A.disabled = 0";
-             
-  if (sql_query1($sql) != 1)
+  
+  $n_rooms = sql_query1($sql);
+  if (($n_rooms < 0) || ($n_rooms > 1))
   {
+    if ($n_rooms < 0)
+    {
+      // SQL error, probably because the tables haven't been created
+      trigger_error(sql_error(), E_USER_WARNING);
+    }
+    else
+    {
+      // Should never happen
+      trigger_error("Internal error: multiple rooms with same id", E_USER_WARNING);
+    }
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
+  }
+  if ($n_rooms == 0)
+  {
+    // No rooms have been created yet, or else they are all disabled
     // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
     return "<tbody data-empty=1><tr><td><h1>".get_vocab("no_rooms_for_area")."</h1></td></tr></tbody>";
   }
   
+  // We have a valid room
   $num_of_days=7; // days in a week
 
   // ensure that $morningstarts_minutes defaults to zero if not set
