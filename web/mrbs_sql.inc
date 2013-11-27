@@ -246,7 +246,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
   global $periods, $enable_periods;
   global $min_book_ahead_enabled, $min_book_ahead_secs;
   global $max_book_ahead_enabled, $max_book_ahead_secs;
-  global $max_booking_date_enabled, $max_booking_date;
+  global $min_booking_date_enabled, $min_booking_date, $max_booking_date_enabled, $max_booking_date;
   global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
   global $max_per_interval_global_enabled, $max_per_interval_area_enabled;
   global $interval_types, $strftime_format;
@@ -297,6 +297,23 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
     {
       toTimeString($max_book_ahead, $units);
       $errors[] = get_vocab("max_time_before") . " $max_book_ahead $units";
+    }
+  }
+  
+  // Check min_booking_date
+  if ($min_booking_date_enabled && !$delete)
+  {
+    list($y, $m, $d) = explode('-', $min_booking_date);
+    if (isset($y) && isset($m) && isset($d) && checkdate($m, $d, $y))
+    {
+      if ($booking['start_time'] < mktime(0, 0, 0, $m, $d, $y))
+      {
+        $errors[] = get_vocab("earliest_booking_date") . " " . strftime($strftime_format['date'], mktime(0, 0, 0, $m, $d, $y));
+      }
+    }
+    else
+    {
+      trigger_error("Invalid min_book_ahead_date", E_USER_NOTICE);
     }
   }
   
