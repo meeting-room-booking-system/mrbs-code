@@ -60,11 +60,13 @@ $zoneinfo_expiry = 60*60*24*28;    // 28 days
 // "mysqli"=MySQL via the mysqli PHP extension
 $dbsys = "mysqli";
 // Hostname of database server. For pgsql, can use "" instead of localhost
-// to use Unix Domain Sockets instead of TCP/IP.
+// to use Unix Domain Sockets instead of TCP/IP. For mysql/mysqli "localhost"
+// tells the system to use Unix Domain Sockets, and $db_port will be ignored;
+// if you want to force TCP connection you can use "127.0.0.1".
 $db_host = "localhost";
-// If you need to specify a non-standard port for the database connection
-// you can define this
-//$db_port = 1234;
+// If you need to use a non standard port for the database connection you
+// can uncomment the following line and specify the port number
+// $db_port = 1234;
 // Database name:
 $db_database = "mrbs";
 // Database login user name:
@@ -721,9 +723,13 @@ $min_user_editing_level = 2;
 // and allows you to use any of MRBS's database abstraction layers for
 // db_ext authentication.
 $auth['db_ext']['db_system'] = 'mysqli';
+// Hostname of external database server. For pgsql, can use "" instead of localhost
+// to use Unix Domain Sockets instead of TCP/IP. For mysql/mysqli "localhost"
+// tells the system to use Unix Domain Sockets, and $db_port will be ignored;
+// if you want to force TCP connection you can use "127.0.0.1".
 $auth['db_ext']['db_host'] = 'localhost';
-// If you need to specify a non-standard port for the database connection
-// you can define this
+// If you need to use a non standard port for the database connection you
+// can uncomment the following line and specify the port number
 //$auth['db_ext']['db_port'] = 1234;
 $auth['db_ext']['db_username'] = 'authuser';
 $auth['db_ext']['db_password'] = 'authpass';
