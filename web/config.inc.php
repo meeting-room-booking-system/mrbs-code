@@ -5,10 +5,14 @@
 /**************************************************************************
  *   MRBS Configuration File
  *   Configure this file for your site.
- *   You shouldn't have to modify anything outside this file
- *   (except for the lang.* files, eg lang.en for English, if
- *   you want to change text strings such as "Meeting Room
- *   Booking System", "room" and "area").
+ *   You shouldn't have to modify anything outside this file.
+ *
+ *   This file has already been populated with the minimum set of configuration
+ *   variables that you will need to change to get your system up and running.
+ *   If you want to change any of the other settings in systemdefaults.inc.php
+ *   or areadefaults.inc.php, then copy the relevant lines into this file
+ *   and edit them here.   This file will override the default settings and
+ *   when you upgrade to a new version of MRBS the config file is preserved.
  **************************************************************************/
 
 /**********
