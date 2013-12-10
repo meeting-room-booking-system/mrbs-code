@@ -71,8 +71,14 @@ else
   {
     die('Configuration error: $resolution is not an integral number of minutes.');
   }
-  $start_first_slot = get_start_first_slot(1, 1, 2000);  // 1 Jan 2000 free of DST changes
-  $start_last_slot  = get_start_last_slot(1, 1, 2000);
+  // Not safe to call get_start_first_slot() etc. here as the timezone won't necessarily have
+  // been set yet(although quite often it will have been by php.ini using date.timezone)
+  $start_first_slot = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+  $start_last_slot = (($eveningends * 60) + $eveningends_minutes) * 60;
+  if ($start_last_slot < $start_first_slot)
+  {
+    $start_last_slot += 60*60*24;
+  }
   $start_difference = $start_last_slot - $start_first_slot;    // seconds
   if ($start_difference%$resolution != 0)
   {
