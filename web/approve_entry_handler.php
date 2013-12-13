@@ -12,13 +12,16 @@ $action = get_form_var('action', 'string');
 $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'int');
 $returl = get_form_var('returl', 'string');
-$room_id = get_form_var('room_id', 'int');
 $note = get_form_var('note', 'string');
 
 
 // Check the user is authorised for this page
 checkAuthorised();
 $user = getUserName();
+
+// Retrieve the booking details
+$data = mrbsGetBookingInfo($id, $series);
+$room_id = $data['room_id'];
 
 // Initialise $mail_previous so that we can use it as a parameter for notifyAdminOnBooking
 $mail_previous = array();
@@ -95,8 +98,6 @@ if (isset($action))
   // Now send an email if required and the operation was successful
   if ($result && $need_to_send_mail)
   {
-    // Retrieve the booking details which we will need for the email
-    $data = mrbsGetBookingInfo($id, $series);
     // Get the area settings for this area (we will need to know if periods are enabled
     // so that we will kniow whether to include iCalendar information in the email)
     get_area_settings($data['area_id']);
