@@ -13,8 +13,11 @@ foreach ($tables as $table)
 {
   $var = 'tbl_' . $table;
   $$var = $db_tbl_prefix . $table;
-  // Prepend the schema name if set for PostgreSQL and form a qualified name
-  if (($dbsys == 'pgsql') && isset($db_schema))
+  // Prepend the schema name if set and form a qualified name for all databases
+  // other than MySQL, which is one of the few that doesn't support schemas.
+  // (Although in practice this means PostgreSQL at the moment, it's possible that
+  // in the future support for more databases may be added)
+  if ((strpos($dbsys, 'mysql') === FALSE) && isset($db_schema))
   {
     $$var = $db_schema . '.' . $$var;
   }
