@@ -5,15 +5,20 @@
 global $dbsys;
 
 // These variables specify the names of the tables in the database
-global $db_tbl_prefix;
+global $db_tbl_prefix, $db_schema;
 
-$tbl_area      = $db_tbl_prefix . "area";
-$tbl_entry     = $db_tbl_prefix . "entry";
-$tbl_repeat    = $db_tbl_prefix . "repeat";
-$tbl_room      = $db_tbl_prefix . "room";
-$tbl_users     = $db_tbl_prefix . "users";
-$tbl_variables = $db_tbl_prefix . "variables";
-$tbl_zoneinfo  = $db_tbl_prefix . "zoneinfo";
+$tables = array('area', 'entry', 'repeat', 'room', 'users', 'variables', 'zoneinfo');
+
+foreach ($tables as $table)
+{
+  $var = 'tbl_' . $table;
+  $$var = $db_tbl_prefix . $table;
+  // Prepend the schema name if set for PostgreSQL and form a qualified name
+  if (($dbsys == 'pgsql') && isset($db_schema))
+  {
+    $$var = $db_schema . '.' . $$var;
+  }
+}
 
 
 $db_schema_version = 35;

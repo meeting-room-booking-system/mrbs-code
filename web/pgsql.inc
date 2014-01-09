@@ -438,12 +438,29 @@ function sql_pgsql_field_info($table, $db_conn = null)
                       'smallint'          => 'integer',
                       'text'              => 'character');
   
-  $res = sql_pgsql_query("SELECT column_name, data_type, numeric_precision,
-                                 character_maximum_length, character_octet_length,
-                                 is_nullable
-                            FROM information_schema.columns
-                           WHERE table_name ='$table'
-                        ORDER BY ordinal_position");
+  // $table can be a qualified name.  We need to resolve it if necessary into its component
+  // parts, the schema and table names
+  if (strpos($table, '.') === FALSE)
+  {
+    $table_name = $table;
+  }
+  else
+  {
+    list($table_schema, $table_name) = explode('.', $table);
+  }
+  
+  // $table_name and $table_schema should be trusted but escape them anyway for good measure
+  $sql = "SELECT column_name, data_type, numeric_precision, character_maximum_length,
+                 character_octet_length, is_nullable
+            FROM information_schema.columns
+           WHERE table_name ='" . sql_pgsql_escape($table_name) . "'";
+  if (isset($table_schema))
+  {
+    $sql .= " AND table_schema = '" . sql_pgsql_escape($table_schema) . "'";
+  }
+  $sql .= "ORDER BY ordinal_position";
+  
+  $res = sql_pgsql_query($sql);
   if ($res === FALSE)
   {
     trigger_error(pg_result_error($res), E_USER_WARNING);
