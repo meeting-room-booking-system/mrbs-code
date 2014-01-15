@@ -31,6 +31,27 @@ function sql_pgsql_ensure_handle(&$db_conn)
 }
 
 
+// A small utility function (not part of the DB abstraction API) to
+// resolve a qualified table name into its schema and table components.
+// Returns an an array indexed by 'table_schema' and 'table_name'.
+// 'table_schema' can be NULL
+function sql_pgsql_resolve_table($table)
+{
+  if (strpos($table, '.') === FALSE)
+  {
+    $table_schema = NULL;
+    $table_name = $table;
+  }
+  else
+  {
+    list($table_schema, $table_name) = explode('.', $table, 2);
+  }
+  
+  return array('table_schema' => $table_schema,
+               'table_name' => $table_name);
+}
+
+
 // Free a results handle. You need not call this if you call sql_row or
 // sql_row_keyed until the row returns 0, since sql_row frees the results
 // handle when you finish reading the rows.
@@ -398,11 +419,27 @@ function sql_pgsql_num_fields($result, $db_conn = null)
 function sql_pgsql_table_exists($table, $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
+  
+  // $table can be a qualified name.  We need to resolve it if necessary into its component
+  // parts, the schema and table names
+  $table_parts = sql_pgsql_resolve_table($table);
+  
+  $sql = "SELECT COUNT(*)
+            FROM information_schema.tables
+           WHERE table_name ='" . sql_pgsql_escape($table_parts['table_name']) . "'";
+  if (isset($table_parts['table_schema']))
+  {
+    $sql .= " AND table_schema = '" . sql_pgsql_escape($table_parts['table_schema']) . "'";
+  }
 
-  $res = sql_pgsql_query1("SELECT relname FROM pg_class ".
-                          "WHERE relname = '".sql_pgsql_escape($table)."'");
+  $res = sql_pgsql_query1($sql, $db_conn);
+  if ($res < 1)
+  {
+    trigger_error(pg_result_error($res), E_USER_WARNING);
+    fatal_error(TRUE, get_vocab("fatal_db_error"));
+  }
 
-  return ($res == -1) ? FALSE : TRUE;
+  return ($res == 1) ? TRUE : FALSE;
 }
 
 
@@ -440,27 +477,20 @@ function sql_pgsql_field_info($table, $db_conn = null)
   
   // $table can be a qualified name.  We need to resolve it if necessary into its component
   // parts, the schema and table names
-  if (strpos($table, '.') === FALSE)
-  {
-    $table_name = $table;
-  }
-  else
-  {
-    list($table_schema, $table_name) = explode('.', $table);
-  }
+  $table_parts = sql_pgsql_resolve_table($table);
   
   // $table_name and $table_schema should be trusted but escape them anyway for good measure
   $sql = "SELECT column_name, data_type, numeric_precision, character_maximum_length,
                  character_octet_length, is_nullable
             FROM information_schema.columns
-           WHERE table_name ='" . sql_pgsql_escape($table_name) . "'";
-  if (isset($table_schema))
+           WHERE table_name ='" . sql_pgsql_escape($table_parts['table_name']) . "'";
+  if (isset($table_parts['table_schema']))
   {
-    $sql .= " AND table_schema = '" . sql_pgsql_escape($table_schema) . "'";
+    $sql .= " AND table_schema = '" . sql_pgsql_escape($table_parts['table_schema']) . "'";
   }
   $sql .= "ORDER BY ordinal_position";
   
-  $res = sql_pgsql_query($sql);
+  $res = sql_pgsql_query($sql, $db_conn);
   if ($res === FALSE)
   {
     trigger_error(pg_result_error($res), E_USER_WARNING);
