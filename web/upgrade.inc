@@ -13,7 +13,7 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
   // $upgrade_handle is the database handle to use for the upgrade.   It will typically
   // have admin rights (eg CREATE and ALTER)
   global $dbsys;
-  global $db_tbl_prefix;
+  global $db_tbl_prefix, $db_schema;
   global $tbl_variables;
 
   $sql_type = $dbsys;
@@ -49,7 +49,14 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
     $sql = (!empty($file_size)) ? fread($handle, filesize($filename)) : "";
     fclose($handle);
 
-    $sql = str_replace('%DB_TBL_PREFIX%', $db_tbl_prefix, $sql);
+    // PostgreSQL databases can have multiple schemas and so need a qualified
+    // table name
+    $prefix = $db_tbl_prefix;
+    if (($sql_type != 'mysql') && isset($db_schema))
+    {
+      $prefix = $db_schema . '.' . $prefix;
+    }
+    $sql = str_replace('%DB_TBL_PREFIX%', $prefix, $sql);
 
     foreach (explode(";", $sql) as $query)
     {
