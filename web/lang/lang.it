@@ -82,6 +82,7 @@ $vocab["useful_n-weekly_value"] = "utile valore n-settimanale.";
 $vocab["description"]        = "Descrizione";
 $vocab["room"]               = "Sala";
 $vocab["createdby"]          = "Creato da";
+$vocab["modifiedby"]         = "Modificato da";
 $vocab["lastupdate"]         = "Ultima Modifica";
 $vocab["deleteentry"]        = "Cancella";
 $vocab["deleteseries"]       = "Cancella Serie";

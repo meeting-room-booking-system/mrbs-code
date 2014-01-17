@@ -610,6 +610,7 @@ foreach ($rooms as $room_id)
 {
   $booking = array();
   $booking['create_by'] = $create_by;
+  $booking['modified_by'] = (isset($id)) ? $user : '';
   $booking['name'] = $name;
   $booking['type'] = $type;
   $booking['description'] = $description;

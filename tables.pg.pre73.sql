@@ -84,6 +84,7 @@ CREATE TABLE mrbs_entry
   room_id        int DEFAULT 1 NOT NULL,
   timestamp      timestamp DEFAULT current_timestamp,
   create_by      varchar(80) DEFAULT '' NOT NULL,
+  modified_by    varchar(80) DEFAULT '' NOT NULL,
   name           varchar(80) DEFAULT '' NOT NULL,
   type           char DEFAULT 'E' NOT NULL,
   description    text,
@@ -110,6 +111,7 @@ CREATE TABLE mrbs_repeat
   room_id        int DEFAULT 1 NOT NULL,
   timestamp      timestamp DEFAULT current_timestamp,
   create_by      varchar(80) DEFAULT '' NOT NULL,
+  modified_by    varchar(80) DEFAULT '' NOT NULL,
   name           varchar(80) DEFAULT '' NOT NULL,
   type           char DEFAULT 'E' NOT NULL,
   description    text,
@@ -152,6 +154,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '35');
+  VALUES ('db_version', '36');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');

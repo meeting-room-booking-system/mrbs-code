@@ -519,6 +519,7 @@ function mrbsCreateEntry($table, $data)
         
         // strings  
         case 'create_by':
+        case 'modified_by':
         case 'name':
         case 'type':
         case 'description':

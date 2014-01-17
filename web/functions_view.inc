@@ -71,6 +71,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
       case 'name':
       case 'description':
       case 'create_by':
+      case 'modified_by':
       case 'room_name':
       case 'area_name':
       case 'type':
@@ -147,6 +148,9 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   // Created by
   $class = ($keep_private && $is_private_field['entry.create_by']) ? "private" : "";
   $tbody .= create_details_row(get_vocab("createdby"), $data['create_by'], $as_html, $class);
+  // Modified by
+  $class = ($keep_private && $is_private_field['entry.modified_by']) ? "private" : "";
+  $tbody .= create_details_row(get_vocab("modifiedby"), $data['modified_by'], $as_html, $class);
   // Last updated
   $tbody .= create_details_row(get_vocab("lastupdate"), time_date_string($data['last_updated']), $as_html);
   // The custom fields
