@@ -96,9 +96,22 @@ $(function() {
     showWeek: <?php echo ($view_week_number) ? 'true' : 'false' ?>,
     firstDay: <?php echo $weekstarts ?>,
     altFormat: 'yy-mm-dd',
-    onSelect: function(dateText, inst) {datepickerSelect(dateText, inst);}
+    onSelect: function(dateText, inst) {datepickerSelect(inst);}
   });
 });
+
+
+<?php
+// Populate the three sub-fields associated with the alt input altID
+?>
+function populateAltComponents(altId)
+{
+  var date = $('#' + altId).val().split('-');
+
+  $('#' + altId + '_year').val(date[0]);
+  $('#' + altId + '_month').val(date[1]);
+  $('#' + altId + '_day').val(date[2]);
+}
 
 
 <?php
@@ -119,22 +132,20 @@ $(function() {
 // Finally, trigger a datePickerUpdated event so that it can be dealt with elsewhere
 // by code that relies on having updated values in the alt fields
 ?>
-function datepickerSelect(dateText, inst, formId)
+function datepickerSelect(inst, formId)
 {
-  var alt_id = inst.id + '_alt';
-  var date = document.getElementById(alt_id).value.split('-');
-  document.getElementById(alt_id + '_year').value  = date[0];
-  document.getElementById(alt_id + '_month').value = date[1];
-  document.getElementById(alt_id + '_day').value   = date[2];
-  document.getElementById(inst.id).blur();
+  var id = inst.id,
+      datepickerInput = $('#' + id);
+
+  populateAltComponents(id + '_alt');
+  datepickerInput.blur();
   
   if (formId)
   {
-    var form = document.getElementById(formId);
-    form.submit();
+    $('#' + formId).submit();
   }
   
-  $('#' + inst.id).trigger('datePickerUpdated');
+  datepickerInput.trigger('datePickerUpdated');
 }
 
 <?php
@@ -202,12 +213,18 @@ init = function() {
                                disabled: disabled,
                                yearRange: minYear + ':' + maxYear})
                   .datepicker('setDate', initialDate)
+                  .change(function() {
+                      <?php // Allow the input field to be updated manually ?>
+                      $(this).datepicker('setDate', $(this).val());
+                      populateAltComponents(baseId + '_alt');
+                      $(this).trigger('datePickerUpdated');
+                    })
                   .appendTo(span);
                   
       if (formId.length > 0)
       {
         $('#' + baseId).datepicker('option', 'onSelect', function(dateText, inst) {
-            datepickerSelect(dateText, inst, formId);
+            datepickerSelect(inst, formId);
           });
       }
       
