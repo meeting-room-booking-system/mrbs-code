@@ -1,0 +1,506 @@
+<?php // -*-mode: PHP; coding:utf-8;-*-
+// $Id$
+
+// This file contains PHP code that specifies language specific strings
+// The default strings come from lang.en, and anything in a locale
+// specific file will overwrite the default.
+//
+//
+//
+//
+// This file is PHP code. Treat it as such.
+
+// Used in style.inc
+$vocab["mrbs"]               = "Pemesanan Ruang Rapat";
+
+// Used in functions.inc
+$vocab["report"]             = "Laporan";
+$vocab["admin"]              = "Admin";
+$vocab["help"]               = "Bantuan";
+$vocab["search"]             = "Pencarian";
+$vocab["not_php3"]           = "Perhatian: Fitur ini mungkin tidak bisa berjalan di PHP3";
+$vocab["outstanding"]        = "pesanan Tertunda";
+
+// Used in day.php
+$vocab["bookingsfor"]        = "pesanan Untuk";
+$vocab["bookingsforpost"]    = ""; // Goes after the date
+$vocab["areas"]              = "Area";
+$vocab["daybefore"]          = "Kemarin";
+$vocab["dayafter"]           = "Besok";
+$vocab["gototoday"]          = "Hari Ini";
+$vocab["goto"]               = "Pergi Ke";
+$vocab["highlight_line"]     = "Stabilo baris ini";
+$vocab["click_to_reserve"]   = "Klik pada cell untuk reservasi.";
+$vocab["timezone"]           = "Zona Waktu";
+
+// Used in trailer.inc
+$vocab["viewday"]            = "Tampilan Hari";
+$vocab["viewweek"]           = "Tampilan Minggu";
+$vocab["viewmonth"]          = "Tampilan Bulan";
+$vocab["ppreview"]           = "Tampilan Pracetak";
+
+// Used in edit_entry.php
+$vocab["addentry"]                = "Tambahkan Entri";
+$vocab["editentry"]               = "Ubah Entri";
+$vocab["copyentry"]               = "Salin Entri";
+$vocab["editseries"]              = "Salin Rangkaian";
+$vocab["copyseries"]              = "Salin Rangkaian";
+$vocab["namebooker"]              = "Deskripsi Singkat";
+$vocab["fulldescription"]         = "Deskripsi Lengkap:<br>&nbsp;&nbsp;(Jumlah orang,<br>&nbsp;&nbsp;Internal/Eksternal dll.)";
+$vocab["date"]                    = "Tanggal";
+$vocab["start"]                   = "Mulai";
+$vocab["end"]                     = "Akhir";
+$vocab["start_date"]              = "Tanggal Mulai";
+$vocab["end_date"]                = "Tanggal Berakhir";
+$vocab["time"]                    = "Jam";
+$vocab["period"]                  = "Periode";
+$vocab["duration"]                = "Durasi";
+$vocab["second_lc"]               = "Detik";
+$vocab["seconds"]                 = "Detik";
+$vocab["minute_lc"]               = "Menit";
+$vocab["minutes"]                 = "Menit";
+$vocab["hour_lc"]                 = "Jam";
+$vocab["hours"]                   = "Jam";
+$vocab["day_lc"]                  = "Hari";
+$vocab["days"]                    = "Hari";
+$vocab["week_lc"]                 = "Minggu";
+$vocab["weeks"]                   = "Minggu";
+$vocab["year_lc"]                 = "Tahun";
+$vocab["years"]                   = "Tahun";
+$vocab["period_lc"]               = "Periode";
+$vocab["periods"]                 = "Periode";
+$vocab["all_day"]                 = "Sepanjang Hari";
+$vocab["area"]                    = "Area";
+$vocab["type"]                    = "Tipe";
+$vocab["save"]                    = "Simpan";
+$vocab["rep_type"]                = "Tipe pengulangan";
+$vocab["rep_type_0"]              = "Tidak ada";
+$vocab["rep_type_1"]              = "Harian";
+$vocab["rep_type_2"]              = "Mingguan";
+$vocab["rep_type_3"]              = "Bulanan";
+$vocab["rep_type_4"]              = "Tahunan";
+$vocab["ord_1"]                   = "pertama";
+$vocab["ord_2"]                   = "kedua";
+$vocab["ord_3"]                   = "ketiga";
+$vocab["ord_4"]                   = "keempat";
+$vocab["ord_5"]                   = "kelima";
+$vocab["ord_-1"]                  = "terakhir";
+$vocab["ord_-2"]                  = "kedua terakhir";
+$vocab["ord_-3"]                  = "ketiga terakhir";
+$vocab["ord_-4"]                  = "keempat terakhir";
+$vocab["ord_-5"]                  = "kelima terakhir";
+$vocab["rep_end_date"]            = "Ulangi tanggal akhir";
+$vocab["rep_rep_day"]             = "Ulangi hari";
+$vocab["rep_freq"]                = "Frekuensi";
+$vocab["rep_num_weeks"]           = "Ulangi Setiap";
+$vocab["month_absolute"]          = "Pada hari";
+$vocab["month_relative"]          = "Pada";
+$vocab["skip_conflicts"]          = "Abaikan konflik terdahulu";
+$vocab["ctrl_click"]              = "Gunakan ctrl+click untuk memilih lebih dari satu ruangan";
+$vocab["entryid"]                 = "Entri ID";
+$vocab["repeat_id"]               = "Ulangi ID";
+$vocab["you_have_not_entered"]    = "Anda tidak memasukkan sebuah";
+$vocab["brief_description"]       = "Deskripsi singkat ";
+$vocab["useful_n-weekly_value"]   = "Frekuensi pengulangan yg dianggap berguna";
+$vocab["status"]                  = "Status";
+$vocab["public"]                  = "Publik";
+$vocab["private"]                 = "Privat";
+$vocab["unavailable"]             = "Privat";
+$vocab["is_mandatory_field"]      = "Kolom wajib diisi, silahkan lengkapi nilainya.";
+$vocab["missing_mandatory_field"] = "Anda belum memasukkan nilai pada kolom yang wajib diisi.";
+$vocab["confirmed"]               = "Terkonfirmasi";
+$vocab["start_after_end"]         = "Mulai hari pada akhir hari";
+$vocab["start_after_end_long"]    = "Error: Hari mulai harus lebih kecil dari hari berakhir.";
+
+// Used in view_entry.php
+$vocab["description"]         = "Deskripsi";
+$vocab["room"]                = "Ruangan";
+$vocab["createdby"]           = "Dibuat oleh";
+$vocab["lastupdate"]          = "Terakhir diperbarui";
+$vocab["repeat_on"]           = "Ulangi hari";
+$vocab["deleteentry"]         = "Hapus Entri";
+$vocab["deleteseries"]        = "Hapus Rangkaian";
+$vocab["exportentry"]         = "Ekspor Entri";
+$vocab["exportseries"]        = "Ekspor Rangkaian";
+$vocab["confirmdel"]          = "Apakah anda yakin\\nAkan menghapus entri ini ?\\n\\n";
+$vocab["returnprev"]          = "Kembali ke halaman sebelumnya";
+$vocab["invalid_entry_id"]    = "Id entri tidak valid.";
+$vocab["invalid_series_id"]   = "Id rangkaian tidak valid.";
+$vocab["confirmation_status"] = "Status Konfirmasi";
+$vocab["tentative"]           = "Tentatif";
+$vocab["approval_status"]     = "Status Persetujuan";
+$vocab["approved"]            = "Disetujui";
+$vocab["awaiting_approval"]   = "Menunggu Persetujuan";
+$vocab["approve"]             = "Setuju";
+$vocab["reject"]              = "Tolak";
+$vocab["more_info"]           = "Info lebih lengkap";
+$vocab["remind_admin"]        = "Ingkatkan admin";
+$vocab["series"]              = "Rangkaian";
+$vocab["request_more_info"]   = "Harap list informasi tambahkan yang anda butuhkan";
+$vocab["reject_reason"]       = "Silahkan berikan alasan atas penolakan permintaan reservasi ini";
+$vocab["send"]                = "Kirim";
+$vocab["approve_failed"]      = "Reservasi ini tidak dapat disetujui.";
+$vocab["no_request_yet"]      = "Belum ada permintaan yg terkirim"; // Used for the title tooltip on More Info button
+$vocab["last_request"]        = "Permintaan terakhir dikirim pada";         // Used for the title tooltip on More Info button
+$vocab["by"]                  = "oleh";                           // Used for the title tooltip on More Info button
+$vocab["sent_at"]             = "Dikirim pada ";
+$vocab["yes"]                 = "Ya";
+$vocab["no"]                  = "Tidak";
+
+// Used in edit_entry_handler.php
+$vocab["error"]                      = "Error";
+$vocab["sched_conflict"]             = "Terjadi konflik pada penjadwalan";
+$vocab["conflict"]                   = "pesanan baru akan konflik dengan entri berikut";
+$vocab["no_conflicts"]               = "Tidak ada konflik pada penjadwalan";
+$vocab["rules_broken"]               = "pesanan baru akan konflik dengan kebijakan berikut";
+$vocab["no_rules_broken"]            = "Tidak ada konflik pada kebijakan";
+$vocab["schedule"]                   = "Jadwal";
+$vocab["policy"]                     = "Kebijakan";
+$vocab["too_may_entrys"]             = "Opsi terpilih akan membuat terlalu banyak entri.<br>Silahkan gunakan opsi lain!";
+$vocab["returncal"]                  = "Kembali ke tampilan kalender";
+$vocab["failed_to_acquire"]          = "Gagal mengakuisisi akses database eksklusif";
+$vocab["invalid_booking"]            = "pesanan tidak valid";
+$vocab["must_set_description"]       = "Anda harus menset deskripsi singkat untuk pesanan. Silahkan kembali dan lengkapi.";
+$vocab["no_rooms_selected"]          = "Anda harus memilih ruangan.";
+$vocab["mail_subject_approved"]      = "Entri $mrbs_company disetujui oleh Sistem";
+$vocab["mail_subject_rejected"]      = "Entri $mrbs_company ditolak oleh Sistem";
+$vocab["mail_subject_more_info"]     = "$mrbs_company Sistem: Informasi selengkapnya telah diminta";
+$vocab["mail_subject_reminder"]      = "Pengingat untuk $mrbs_company Sistem";
+$vocab["mail_body_approved"]         = "Sebuah entri baru saja disetujui oleh administrator; Berikut ini detailnya:";
+$vocab["mail_body_rej_entry"]        = "Sebuah entri baru saja ditolak oleh administrator, Berikut ini detailnya:";
+$vocab["mail_body_more_info"]        = "Administrator membutuhkan informasi lebih lengkap terkait entri ini; Berikut ini detailnya:";
+$vocab["mail_body_reminder"]         = "Pengingat - Sebuah entri sedang menunggu untuk diproses; Berikut ini detailnya:";
+$vocab["mail_body_repeats_booked"]   = "Tanggal berikut sudah dipesan:";
+$vocab["mail_body_repeats_deleted"]  = "pesanan berikut sudah dihapus:";
+$vocab["mail_body_exceptions"]       = "Tanggal berikut tidak dapat dipesan dikarenakan adanya konflik.:";
+$vocab["mail_subject_new_entry"]     = "Penambahan entri baru untuk $mrbs_company Sistem";
+$vocab["mail_subject_changed_entry"] = "Perubahan entri untuk $mrbs_company Sistem";
+$vocab["mail_subject_delete"]        = "Penghapusan entri untuk $mrbs_company Sistem";
+$vocab["mail_body_new_entry"]        = "Sebuah entri telah dipesan, Berikut ini detailnya:";
+$vocab["mail_body_changed_entry"]    = "Sebuah entri telah diubah, Berikut ini detailnya:";
+$vocab["mail_body_del_entry"]        = "Sebuah entri telah dihapus, Berikut ini detailnya:";
+$vocab["new_value"]                  = "Baru";
+$vocab["old_value"]                  = "Lawas";
+$vocab["deleted_by"]                 = "Dihapus oleh";
+$vocab["reason"]                     = "Alasan";
+$vocab["info_requested"]             = "Informasi telah dipinta";
+$vocab["min_time_before"]            = "Interval minimum antara hari ini dengan waktu pesanan adalah";
+$vocab["max_time_before"]            = "Interval maksimum antara hari ini dengan akhir waktu pesanan adalah";
+$vocab["latest_booking_date"]        = "Tanggal pesanan terakhir adalah";
+$vocab["max_booking_duration"]       = "Durasi maksimum untuk pesanan adalah";
+$vocab["max_per_day_global"]         = "Jumlah pesanan maksimum dalam satu hari per pengguna untuk semua sistem adalah";
+$vocab["max_per_week_global"]        = "Jumlah pesanan maksimum dalam satu minggu per pengguna untuk semua sistem adalah";
+$vocab["max_per_month_global"]       = "Jumlah pesanan maksimum dalam satu bulan per pengguna untuk semua sistem adalah";
+$vocab["max_per_year_global"]        = "Jumlah pesanan maksimum dalam satu tahun per pengguna untuk semua sistem adalah";
+$vocab["max_per_future_global"]      = "Jumlah sisa pesanan per pengguna untuk semua sistem adalah";
+$vocab["max_per_day_area"]           = "Jumlah pesanan maksimum per hari per pengguna  untuk area ini adalah";
+$vocab["max_per_week_area"]          = "Jumlah pesanan maksimum per minggu per pengguna  untuk area ini adalah";
+$vocab["max_per_month_area"]         = "Jumlah pesanan maksimum per bulan per pengguna  untuk area ini adalah";
+$vocab["max_per_year_area"]          = "Jumlah pesanan maksimum per tahun per pengguna  untuk area ini adalah";
+$vocab["max_per_future_area"]        = "Jumlah sisa pesanan per pengguna untuk area ini adalah";
+$vocab["skip_and_book"]              = "Abaikan dan pesan";
+$vocab["skip_and_book_note"]         = "Lanjutkan pesanan, Abaikan konflik yg ada.";
+$vocab["changes_saved"]              = "Perubahan telah disimpan.";
+
+// Used in pending.php
+$vocab["pending"]            = "Pesanan menunggu persetujuan";
+$vocab["none_outstanding"]   = "Tidak ada pesanan untuk disetujui.";
+
+// Authentication stuff
+$vocab["accessdenied"]       = "Akses Gagal";
+$vocab["norights"]           = "Anda tidak punya hak yg cukup untuk melihat halaman ini.";
+$vocab["please_login"]       = "Silahkan Masuk";
+$vocab["users.name"]         = "Nama";
+$vocab["users.password"]     = "Kata sandi";
+$vocab["users.level"]        = "Hak";
+$vocab["unknown_user"]       = "Pengguna Anonim";
+$vocab["you_are"]            = "Anda Adalah";
+$vocab["login"]              = "Masuk";
+$vocab["logoff"]             = "Keluar";
+
+// Database upgrade code
+$vocab["database_login"]           = "Login Database";
+$vocab["upgrade_required"]         = "Database perlu diupgrade. Silahkan backup database anda sebelum melanjutkan proses.";
+$vocab["supply_userpass"]          = "Masukkan username dan password yg memiliki hak akses admin.";
+$vocab["contact_admin"]            = "Jika anda bukan Sistem administrator silahkan hubungi $mrbs_admin.";
+$vocab["upgrade_to_version"]       = "Mengupgrade versi database";
+$vocab["upgrade_to_local_version"] = "Mengupgrarde ke database versi lokal";
+$vocab["upgrade_completed"]        = "Upgrade database selesai.";
+
+// User access levels
+$vocab["level_0"]            = "tidak ada";
+$vocab["level_1"]            = "pengguna biasa";
+$vocab["level_2"]            = "admin";
+$vocab["level_3"]            = "pengguna biasa juga admin";
+
+// Authentication database
+$vocab["user_list"]          = "Daftar pengguna";
+$vocab["edit_user"]          = "Ubah pengguna";
+$vocab["delete_user"]        = "Hapus pengguna ini";
+//$vocab["users.name"]         = Use the same as above, for consistency.
+//$vocab["users.password"]     = Use the same as above, for consistency.
+$vocab["users.email"]        = "Alamat Surel";
+$vocab["password_twice"]     = "Jika ingin mengganti kata sandi, ketik dua kali kata sandi anda";
+$vocab["passwords_not_eq"]   = "Kata sandi tidak cocok!";
+$vocab["password_invalid"]   = "Kata sandi tidak sesuai dengan kebijakan. Setidaknya harus mengandung:";
+$vocab["policy_length"]      = "karakter";
+$vocab["policy_alpha"]       = "huruf";
+$vocab["policy_lower"]       = "huruf kecil";
+$vocab["policy_upper"]       = "huruf besar";
+$vocab["policy_numeric"]     = "karakter angka";
+$vocab["policy_special"]     = "spesial karakter";
+$vocab["add_new_user"]       = "Tambah pengguna baru";
+$vocab["action"]             = "Aksi";
+$vocab["user"]               = "Pengguna";
+$vocab["administrator"]      = "Administrator";
+$vocab["unknown"]            = "Anonim";
+$vocab["ok"]                 = "OK";
+$vocab["show_my_entries"]    = "Klik untuk menampilkan semua entri yg akan datang";
+$vocab["no_users_initial"]   = "Tidak ada pengguna di database, pembuatan perdana diperbolehkan";
+$vocab["no_users_create_first_admin"] = "Buat sebuah pengguna dengan hak akses admin, setelah itu anda dapat masuk dan membuat lebih banyak pengguna.";
+$vocab["warning_last_admin"] = "Perhatian!  Ini adalah pengguna terakhir yg memiliki hak akses admin. Anda tidak dapat menghapus / mencabut hak akses pengguna ini. Jika dilakukan anda tidak akan bisa masuk ke dalam sistem.";
+
+// Used in search.php
+$vocab["invalid_search"]     = "Kata kunci kosong atau tidak valid.";
+$vocab["search_results"]     = "Hasi pencarian untuk";
+$vocab["nothing_found"]      = "Tidak ada hasil yg cocok.";
+$vocab["records"]            = "Data ";
+$vocab["through"]            = " hingga ";
+$vocab["of"]                 = " dari ";
+$vocab["previous"]           = "Sebelumnya";
+$vocab["next"]               = "Berikutnya";
+$vocab["entry"]              = "Entri";
+$vocab["advanced_search"]    = "Pencarian tingkat lanjut";
+$vocab["search_button"]      = "Cari";
+$vocab["search_for"]         = "Cari untuk";
+$vocab["from"]               = "Dari";
+
+// Used in report.php
+$vocab["report_on"]             = "Laporan Rapat";
+$vocab["report_start"]          = "Tanggal awal laporan";
+$vocab["report_end"]            = "Tanggal akhir laporan";
+$vocab["match_area"]            = "Area yg cocok";
+$vocab["match_room"]            = "Ruangan yg cocok";
+$vocab["match_type"]            = "Tipe kecocokkan";
+$vocab["ctrl_click_type"]       = "Gunakan Ctrl + Click untuk memilih lebih dari satu tipe";
+$vocab["match_entry"]           = "Ringkasan deskripsi yang cocok";
+$vocab["match_descr"]           = "Deskripsi lengkap yang cocok";
+$vocab["output"]                = "Keluaran";
+$vocab["summary"]               = "Rangkuman";
+$vocab["format"]                = "Format";
+$vocab["html"]                  = "HTML";
+$vocab["csv"]                   = "CSV";
+$vocab["ical"]                  = "iCalendar (.ics file) - tidak termasuk periode";
+$vocab["combination_not_supported"] = "Keluaran berikut tidak didukung oleh format ini";
+$vocab["summarize_by"]          = "Direkap berdasarkan";
+$vocab["sum_by_descrip"]        = "Deskripsi singkat";
+$vocab["sum_by_creator"]        = "Pembuat";
+$vocab["sum_by_type"]           = "Tipe";
+$vocab["entry_found"]           = "entri ditemukan";
+$vocab["entries_found"]         = "entri ditemukan";
+$vocab["summary_header"]        = "Rangkuman Entri dalam dalam satuan";
+$vocab["summary_header_per"]    = "Rangkuan Entri dalam satuan periode";
+$vocab["summary_header_both"]   = "Rangkuman Entri dalam satuan Jam / Periode";
+$vocab["entries"]               = "Entri";
+$vocab["total"]                 = "Total";
+$vocab["submitquery"]           = "Tampilkan Laporan";
+$vocab["sort_rep"]              = "Urut laporan berdasarkan";
+$vocab["sort_rep_time"]         = "Tanggal/Waktu Mulai";
+$vocab["sort_room"]             = "RUangan";
+$vocab["fulldescription_short"] = "Deskripsi Lengkap";
+$vocab["both"]                  = "Semuanya";
+$vocab["privacy_status"]        = "Status Privasi";
+$vocab["search_criteria"]       = "Kriteria Pencarian";
+$vocab["presentation_options"]  = "Opsi Keluaran";
+$vocab["delete_entries"]        = "Hapus entri";
+$vocab["delete_entries_warning"] = "PERHATIAN!  Aksi berikut akan menghapus entri yg cocok " .
+                                   "sesuai kata kunci yg anda masukkan. Data terhapus tidak dapat dikembalikan lagi. Apakah " .
+                                   "anda yakin melanjutkan?\n\n" .
+                                   "Jumlah entri yang akan dihapus: ";
+$vocab["delete_entries_failed"] = "Entri tidak dapat dihapus.";
+
+// Used in week.php
+$vocab["weekbefore"]         = "Pindah ke satu minggu sebelum";
+$vocab["weekafter"]          = "Pindah ke satu minggu kedepan";
+$vocab["gotothisweek"]       = "Pindah ke minggu ini";
+
+// Used in month.php
+$vocab["monthbefore"]        = "Pindah ke satu bulan sebelum";
+$vocab["monthafter"]         = "Pindah ke satu bulan kedepan";
+$vocab["gotothismonth"]      = "Pindah ke bulan ini";
+
+// Used in {day week month}.php
+$vocab["no_rooms_for_area"]  = "Ruangan pada area ini belum dibuat";
+
+// Used in admin.php
+$vocab["edit"]               = "Ubah";
+$vocab["delete"]             = "Hapus";
+$vocab["rooms"]              = "Ruangan";
+$vocab["in"]                 = "di dalam";
+$vocab["noareas"]            = "Belum ada area yg dibuat.";
+$vocab["noareas_enabled"]    = "Tidak ada area yg diaktifkan.";
+$vocab["addarea"]            = "Tambah Area";
+$vocab["name"]               = "Nama";
+$vocab["noarea"]             = "Tidak ada area terpilih";
+$vocab["browserlang"]        = "Urutan konfigurasi bahasa pada browser anda";
+$vocab["addroom"]            = "Tambah Ruangan";
+$vocab["capacity"]           = "Kapasitas";
+$vocab["norooms"]            = "Belum ada ruangan yg dibuat.";
+$vocab["norooms_enabled"]    = "Belum ada ruangan yg diaktifkan.";
+$vocab["administration"]     = "Detail ruangan";
+$vocab["invalid_area_name"]  = "Nama tersebut sudah pernah digunakan!";
+$vocab["empty_name"]         = "Anda belum memasukkan anam!";
+
+// Used in edit_area_room.php
+$vocab["editarea"]                = "Ubah Area";
+$vocab["change"]                  = "Ubah";
+$vocab["backadmin"]               = "Kembali ke ruangan";
+$vocab["editroomarea"]            = "Ubah Deskripsi Area atau Ruangan";
+$vocab["editroom"]                = "Ubah Ruangan";
+$vocab["viewroom"]                = "Lihat Ruangan";
+$vocab["update_room_failed"]      = "Gagal mengubah ruangan: ";
+$vocab["error_room"]              = "Error: ruangan ";
+$vocab["not_found"]               = " tidak ditemukan";
+$vocab["update_area_failed"]      = "Gagal mengubah area: ";
+$vocab["error_area"]              = "Error: area ";
+$vocab["room_admin_email"]        = "Surel admin ruangan";
+$vocab["area_admin_email"]        = "Surel admin area";
+$vocab["area_first_slot_start"]   = "Dimulai dari slot pertama";
+$vocab["area_last_slot_start"]    = "Dimulai dari slot terakhir";
+$vocab["area_res_mins"]           = "Resolusi (menit)";
+$vocab["area_def_duration_mins"]  = "Durasi default (menit)";
+$vocab["invalid_area"]            = "Area tidak valid!";
+$vocab["invalid_room_name"]       = "Nama ruangan ini sudah pernah digunakan!";
+$vocab["invalid_email"]           = "Alamat surel invalid!";
+$vocab["invalid_resolution"]      = "Kombinasi lost pertama tidak valid, slot terakhir dan resolusi!";
+$vocab["too_many_slots"]          = 'Anda harus menaikkan jumlah $max_slots pada file konfigurasi!';
+$vocab["general_settings"]        = "Umum";
+$vocab["time_settings"]           = "Slot";
+$vocab["confirmation_settings"]   = "Aturan konfirmasi";
+$vocab["allow_confirmation"]      = "Izinkan pesanan tentatif";
+$vocab["default_settings_conf"]   = "Aturan Default";
+$vocab["default_confirmed"]       = "Terkonfirmasi";
+$vocab["default_tentative"]       = "Tentatif";
+$vocab["approval_settings"]       = "Aturan Persetujuan";
+$vocab["enable_approval"]         = "Pesanan harus melalui persetujuan";
+$vocab["enable_reminders"]        = "Izinkan pengguna untuk mengingatkan admin";
+$vocab["private_settings"]        = "Aturan Privasi";
+$vocab["allow_private"]           = "Izinkan pemesanan privat";
+$vocab["force_private"]           = "Paksa untuk pemesanan privat";
+$vocab["default_settings"]        = "Aturan Default/Pemaksaan ";
+$vocab["default_private"]         = "Privat";
+$vocab["default_public"]          = "Publik";
+$vocab["private_display"]         = "Aturan privasi (tampilan)";
+$vocab["private_display_label"]   = "Bagaimana seharusnya tampilan pemesanan privat ?";
+$vocab["private_display_caution"] = "PERINGATAN: pikirkan dahulu dengan seksama dampak terhadap aturan privasi sebelum anda melakukan perubahan ini!";
+$vocab["treat_respect"]           = "Hargai aturan privasi tiap pesanan";
+$vocab["treat_private"]           = "Perlakukan semua pesanan sebagai privat, abaikan aturan privasi";
+$vocab["treat_public"]            = "Perlakukan semua pesanan sebagai publik, abaikan aturan privasi";
+$vocab["sort_key"]                = "Kunci Untuk Pengurutan";
+$vocab["sort_key_note"]           = "Kunci ini digunakan untuk mengurutkan ruangan";
+$vocab["booking_policies"]        = "Kebijakan pemesanan";
+$vocab["min_book_ahead"]          = "Pemesanan Tingkat Lanjut - minimum";
+$vocab["max_book_ahead"]          = "Pemesanan Tingkat Lanjut - maksimum";
+$vocab["this_area"]               = "Area ini";
+$vocab["whole_system"]            = "Keseluruhan sistem";
+$vocab["whole_system_note"]       = "Nilai untuk keseluruhan sistem yg diatur pada file config";
+$vocab["max_per_day"]             = "Jumlah maksimum per hari";
+$vocab["max_per_week"]            = "Jumlah maksimum per minggu";
+$vocab["max_per_month"]           = "Jumlah maksimum per bulan";
+$vocab["max_per_year"]            = "Jumlah maksimum per tahun";
+$vocab["max_per_future"]          = "Jumlah maksimum nantinya";
+$vocab["custom_html"]             = "Kustom HTML";
+$vocab["custom_html_note"]        = "Kolom ini bisa digunakan untuk menampilkan HTML buatan anda, Misalnya: Embedded Google Map";
+$vocab["email_list_note"]         = "Masukkan daftar surel, pisahkan dengan koma atau baris baru";
+$vocab["mode"]                    = "Mode";
+$vocab["mode_periods"]            = "Periode";
+$vocab["mode_times"]              = "Waktu";
+$vocab["times_only"]              = "Hanya Mode Waktu";
+$vocab["enabled"]                 = "Tersedia";
+$vocab["disabled"]                = "Nonaktifkan";
+$vocab["disabled_area_note"]      = "Jika dinonaktifkan, area tidak akan muncul pada tampilan kalender, " .
+                                    "semua ruangan pada area tidak akan bisa dipesan. Pemesanan yg sudah dilakukan " .
+                                    "tetap eksis dan muncul pada halaman pencarian dan laporan.";
+$vocab["disabled_room_note"]      = "Jika dinonaktifkan, ruangan tidak akan muncul pada tampilan kalender, " .
+                                    "ruangan tidak akan bisa dipesan.  Pemesanan yg sudah dilakukan " .
+                                    "tetap eksis dan muncul pada halaman pencarian dan laporan.";
+$vocab["book_ahead_note_periods"] = "Ketika menggunakan periode, pesanan yg melebihi waktu akan dibulatkan kebawah mendekati satu hari penuh.";
+
+// Used in edit_users.php
+$vocab["name_empty"]         = "Anda harus menulis sebuah nama.";
+$vocab["name_not_unique"]    = "Sudah ada.  Silahkan gunakan nama lain.";
+
+// Used in del.php
+$vocab["deletefollowing"]    = "Aksi ini akan menghapus pesanan berikut";
+$vocab["sure"]               = "Apakah anda yakin?";
+$vocab["YES"]                = "Ya";
+$vocab["NO"]                 = "Tidak";
+$vocab["delarea"]            = "Anda harus menghapus semua ruangan agar bisa menghapus area ini<p>";
+
+// Used in help.php
+$vocab["about_mrbs"]         = "Tentang Sistem";
+$vocab["database"]           = "Database";
+$vocab["system"]             = "Sistem";
+$vocab["servertime"]         = "Waktu server";
+$vocab["please_contact"]     = "Silahkan hubungi ";
+$vocab["for_any_questions"]  = "Untuk setiap pertanyaan yg belum terjawab disini.";
+
+// Used in import.php
+$vocab["import_icalendar"]            = "Import berkas kalender iCal";
+$vocab["area_room_settings"]          = "Area dan Ruangan";
+$vocab["other_settings"]              = "Aturan Lain";
+$vocab["import_intro"]                = "Anda bisa mengimpor berkas iCalendar RFC 5545 dengan formulir ini. " .
+                                        "Bila ada event yg berulang lebih dari satu kali pada berkas " . 
+                                        "pastikan event tersebut sesuai dengan aturan yg ada di Sistem " .
+                                        "agar ikut dalam proses peng-imporan".
+$vocab["file_name"]                   = "Berkas";
+$vocab["import"]                      = "Import";
+$vocab["upload_failed"]               = "Proses Upload Gagal";
+$vocab["max_allowed_file_size"]       = "Ukuran maksimum diperbolehkan adalah";
+$vocab["no_file"]                     = "Tidak ada berkas yang diunggal";
+$vocab["badly_formed_ics"]            = "Berkas VCALENDAR tidak terformat dengan baik";
+$vocab["area_room_order"]             = "Urutan";
+$vocab["area_room_order_note"]        = "Urutan atas area dan ruangan pada atribut lokasi.";
+$vocab["area_room"]                   = "Area-Ruangan";
+$vocab["room_area"]                   = "Ruangan-Area";
+$vocab["area_room_delimiter"]         = "Pemisah";
+$vocab["area_room_delimiter_note"]    = "Karakter yg digunakan untuk memisahkan antara nama area dan ruangan pada atribut lokasi. " .
+                                        "Jika tidak ada pemisah, Sistem akan melihat nama ruangan yg unik.";
+$vocab["area_room_create"]            = "Buat ruangan jika diperlukan";
+$vocab["default_type"]                = "Tipe Default";
+$vocab["room_does_not_exist_no_area"] = "tidak ada ruangan dan tidak dapat ditambahkan - belum ada area";
+$vocab["room_not_unique_no_area"]     = "nama ruangan tidak unik.  belum ada area";
+$vocab["area_does_not_exist"]         = "Area tidak tersedia:";
+$vocab["room_does_not_exist"]         = "Ruangan tidak tersedia:";
+$vocab["creating_new_area"]           = "Membuat area baru:";
+$vocab["creating_new_room"]           = "Membuat ruangan baru:";
+$vocab["could_not_create_area"]       = "Tidak dapat membuat area";
+$vocab["could_not_create_room"]       = "Tidak dapat membuat ruangan";
+$vocab["could_not_find_room"]         = "Tidak ada ruangan";
+$vocab["could_not_import"]            = "Tidak dapat mengimpor";
+$vocab["no_LOCATION"]                 = "VEVENT tidak memasukkan atribut LOCATION";
+$vocab["invalid_RRULE"]               = "RRULE Invalid: masih kurang bagian FREQ";
+$vocab["more_than_one_BYDAY"]         = "Sistem tidak mendukung lebih dari BYDAY ketika FREQ=";
+$vocab["BYDAY_equals_5"]              = "Sistem tidak mendukung nilai BYDAY dari 5";
+$vocab["unsupported_FREQ"]            = "Sistem tidak mendukung FREQ=";
+$vocab["unsupported_INTERVAL"]        = "Sistem tidak mendukung INTERVAL>1 dengan FREQ=";
+$vocab["unsupported_COUNT"]           = "COUNT belum didukung oleh Sistem";
+$vocab["no_indefinite_repeats"]       = "Sistem belum mendukung pengulangan yg tidak terdefinisi";
+$vocab["events_imported"]             = "Event telah diimpor";
+$vocab["events_not_imported"]         = "Event tidak diimpor";
+
+// Used in mysql.inc AND pgsql.inc
+$vocab["failed_connect_db"]  = "Kesalahan Fatal: tidak dapat terkoneksi ke database";
+
+// Used in DataTables
+$vocab["show_hide_columns"]  = "Tampilkan / sembunyikan kolom";
+$vocab["restore_original"]   = "Kembalikan ke aturan semula";
+
+// Entry types
+$vocab["type.I"]            = "Internal";
+$vocab["type.E"]            = "Eksternal";
+ 
+// General
+$vocab["fatal_db_error"]     = "Kesalahan Fatal: sayangnya database belum siap untuk saat ini.";
+$vocab["back"]               = "Kembali";
+?>
