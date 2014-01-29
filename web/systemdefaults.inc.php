@@ -1118,10 +1118,8 @@ $csv_bom = TRUE;
 // Below is a basic default array which ensures there are at least some types defined.
 // The proper type definitions should be made in config.inc.php.
 //
-// Each type has a color which is defined in the array $color_types in the Themes
-// directory - just edit whichever include file corresponds to the theme you
-// have chosen in the config settings. (The default is default.inc, unsurprisingly!)
-//
+// Each type has a color which is defined in the array $color_types in the styling.inc
+// file in the Themes directory
 
 $booking_types[] = "E";
 $booking_types[] = "I";
