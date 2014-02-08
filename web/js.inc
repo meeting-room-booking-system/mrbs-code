@@ -28,8 +28,15 @@ $standard_query_string = "area=$area";
 // If you need any other components you will need to rebuild the custom UI library
 // See http://jqueryui.com/
 ?>
-    
-<script type="text/javascript" src="jquery/jquery-1.11.0.min.js"></script>
+
+<!--[if (!IE)|(gt IE 8)]><!-->
+  <script type="text/javascript" src="jquery/jquery-2.1.0.min.js"></script>
+<!--<![endif]-->
+
+<!--[if lte IE 8]>
+  <script type="text/javascript" src="jquery/jquery-1.11.0.min.js"></script>
+<![endif]-->
+
 <?php
 // We need the migration script now that we are running jQuery 1.9+, or at least
 // until we are confident that our JavaScript is not using any features that have
