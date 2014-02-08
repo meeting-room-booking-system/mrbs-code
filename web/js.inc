@@ -55,7 +55,7 @@ else
   <?php
 }
 ?>
-<script type="text/javascript" src="jquery/ui/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="jquery/ui/jquery-ui-1.10.4.custom.min.js"></script>
 <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
 <?php
 // Extra regional settings for the jQuery UI datepicker
