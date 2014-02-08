@@ -29,7 +29,25 @@ $standard_query_string = "area=$area";
 // See http://jqueryui.com/
 ?>
     
-<script type="text/javascript" src="jquery/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="jquery/jquery-1.11.0.min.js"></script>
+<?php
+// We need the migration script now that we are running jQuery 1.9+, or at least
+// until we are confident that our JavaScript is not using any features that have
+// been removed.   The uncompressed version will output warnings about removed and
+// deprecated features to the console
+if (DEBUG)
+{
+  ?>
+  <script type="text/javascript" src="jquery/jquery-migrate-1.2.1.js"></script>
+  <?php
+}
+else
+{
+  ?>
+  <script type="text/javascript" src="jquery/jquery-migrate-1.2.1.min.js"></script>
+  <?php
+}
+?>
 <script type="text/javascript" src="jquery/ui/jquery-ui-1.9.1.custom.min.js"></script>
 <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
 <?php
