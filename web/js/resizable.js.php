@@ -22,17 +22,40 @@ $.fn.reverse = [].reverse;
 
 
 <?php
+// function to return offset coordinates rounded to the nearest integer.
+// Standard jQuery .offset() can return coordinates with decimal parts because
+// it is not returning the rendered position but the calculated position.  If an
+// element or its parents have styling that will lead to non-integer dimensions,
+// for example by having a width of n%, then the offset returned will be non-integer.
+// However in this application we often want the actual rendered position to the
+// nearest pixel, which hopefully will be the rounded position.
+?>
+$.fn.offsetRound = function(coordinates) {
+    if (typeof coordinates === 'undefined')
+    {
+      var result = this.offset();
+      result.top = Math.round(result.top);
+      result.left = Math.round(result.left);
+      return result;
+    }
+    else
+    {
+      this.offset(coordinates);
+    }
+  };
+
+
+
+<?php
 // Get the sides of the rectangle represented by the jQuery object jqObject
-// We round down the size of the rectangle to avoid any spurious overlaps
-// caused by rounding errors
 ?>
 function getSides(jqObject)
 {
   var sides = {};
-  sides.n = Math.ceil(jqObject.offset().top);
-  sides.w = Math.ceil(jqObject.offset().left);
-  sides.s = Math.floor(sides.n + jqObject.outerHeight());
-  sides.e = Math.floor(sides.w + jqObject.outerWidth());
+  sides.n = jqObject.offsetRound().top;
+  sides.w = jqObject.offsetRound().left;
+  sides.s = sides.n + jqObject.outerHeight();
+  sides.e = sides.w + jqObject.outerWidth();
   return sides;
 }
         
@@ -162,7 +185,7 @@ function getTableData(table, tableData)
       {
         tableData.x.key = getDataName($(this));
       }
-      tableData.x.data.push({coord: $(this).offset().left,
+      tableData.x.data.push({coord: $(this).offsetRound().left,
                              value: $(this).data(tableData.x.key)});
     });
   <?php 
@@ -178,7 +201,7 @@ function getTableData(table, tableData)
         {
           value = tableData.x.data[0].value + resolution;
         }
-        var edge = $(this).offset().left;
+        var edge = $(this).offsetRound().left;
         tableData.x.data.unshift({coord: edge, value: value});
       });
   }
@@ -189,7 +212,7 @@ function getTableData(table, tableData)
       {
         value = tableData.x.data[tableData.x.data.length - 1].value + resolution;
       }
-      var edge = $(this).offset().left + $(this).outerWidth();
+      var edge = $(this).offsetRound().left + $(this).outerWidth();
       tableData.x.data.push({coord: edge, value: value});
     });
 
@@ -202,7 +225,7 @@ function getTableData(table, tableData)
       {
         tableData.y.key = getDataName($(this));
       }
-      tableData.y.data.push({coord: $(this).offset().top,
+      tableData.y.data.push({coord: $(this).offsetRound().top,
                              value: $(this).data(tableData.y.key)});
     });
   <?php // and also get the bottom edge ?>
@@ -212,7 +235,7 @@ function getTableData(table, tableData)
       {
         value = tableData.y.data[tableData.y.data.length - 1].value + resolution;
       }
-      tableData.y.data.push({coord: $(this).offset().top + $(this).outerHeight(),
+      tableData.y.data.push({coord: $(this).offsetRound().top + $(this).outerHeight(),
                              value: value});
     });
 }
@@ -253,8 +276,8 @@ function snapToGrid(tableData, div, side, force)
   var topLeft, bottomRight, divTop, divLeft, divWidth, divHeight, thisCoord,
       gap, gapTopLeft, gapBottomRight;
       
-  divTop = div.offset().top;
-  divLeft = div.offset().left;
+  divTop = div.offsetRound().top;
+  divLeft = div.offsetRound().left;
   divWidth = div.outerWidth();
   divHeight = div.outerHeight();
   switch (side)
@@ -373,8 +396,8 @@ function getBookingParams(table, tableData, div)
       i,
       axis;
       
-  cell.x.start = div.offset().left;
-  cell.y.start = div.offset().top;
+  cell.x.start = div.offsetRound().left;
+  cell.y.start = div.offsetRound().top;
   cell.x.end = cell.x.start + div.outerWidth();
   cell.y.end = cell.y.start + div.outerHeight();
   for (axis in cell)
@@ -469,8 +492,8 @@ var highlightRowLabels = function (table, tableData, div)
         highlightRowLabels.rows.push($(this).find('td.row_labels'));
       });
   }
-  var divStartRow = getRowNumber(tableData, div.offset().top);
-  var divEndRow = getRowNumber(tableData, div.offset().top + div.outerHeight());
+  var divStartRow = getRowNumber(tableData, div.offsetRound().top);
+  var divEndRow = getRowNumber(tableData, div.offsetRound().top + div.outerHeight());
   for (var i=0; i<highlightRowLabels.rows.length ; i++)
   {
     if (((divStartRow === null) || (divStartRow <= i)) && 
@@ -575,7 +598,7 @@ init = function(args) {
               {
                 jqTarget = jqTarget.parent();
               }
-              downHandler.origin = jqTarget.offset();
+              downHandler.origin = jqTarget.offsetRound();
               downHandler.firstPosition = {x: e.pageX, y: e.pageY};
               <?php
               // Get the original link in case we need it later.    We can't be sure whether
@@ -623,7 +646,7 @@ init = function(args) {
           
           var moveHandler = function(e) {
               var box = downHandler.box;
-              var oldBoxOffset = box.offset();
+              var oldBoxOffset = box.offsetRound();
               var oldBoxWidth = box.outerWidth();
               var oldBoxHeight = box.outerHeight();
             
@@ -800,7 +823,7 @@ init = function(args) {
                 {
                   if (divResize.origin === undefined)
                   {
-                    divResize.origin = divBooking.offset();
+                    divResize.origin = divBooking.offsetRound();
                     divResize.lastPosition = $.extend({}, divClone.position());
                     divResize.lastSize = {width: divClone.outerWidth(),
                                           height: divClone.outerHeight()};
@@ -881,7 +904,7 @@ init = function(args) {
                   $('<div class="outline"><\/div>')
                       .width(divClone.outerWidth() - 2)
                       .height(divClone.outerHeight() - 2)
-                      .offset(divClone.offset())
+                      .offset(divClone.offsetRound())
                       .appendTo($('div.resizing'));
                   <?php
                   // Build the map of booked cells, excluding this cell (because we're
@@ -908,7 +931,7 @@ init = function(args) {
                     // If the resize was disabled then just restore the original position
                     ?>
                     divClone.resizable('enable')
-                            .offset(divBooking.offset())
+                            .offset(divBooking.offsetRound())
                             .width(divBooking.outerWidth())
                             .height(divBooking.outerHeight());
                   }
@@ -1055,7 +1078,7 @@ init = function(args) {
                               }
                               else
                               {
-                                divClone.offset(divBooking.offset())
+                                divClone.offset(divBooking.offsetRound())
                                         .width(divBooking.outerWidth())
                                         .height(divBooking.outerHeight());
                                 var alertMessage = '';
