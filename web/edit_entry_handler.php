@@ -389,7 +389,7 @@ if (isset($id))
   $target_room = sql_query1("SELECT room_id FROM $tbl_entry WHERE id=$id LIMIT 1");
   if ($target_room < 0)
   {
-    trigger_error(sql_error(), E_USER_WARNING);
+    trigger_error(sql_error(), E_USER_NOTICE);
     fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
 }
