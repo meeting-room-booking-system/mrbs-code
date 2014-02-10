@@ -38,6 +38,26 @@ function get_mail_vocab($token)
   return str_replace('&nbsp;', ' ', $string);
 }
 
+function get_mail_locale()
+{
+  static $mail_locale;
+  global $mail_settings;
+  
+  if (!isset($mail_locale))
+  {
+    if (isset($mail_settings['admin_lang']))
+    {
+      $mail_locale = get_os_locale($mail_settings['admin_lang']);
+    }
+    else
+    {
+      $mail_locale = FALSE;
+    }
+  }
+
+  return $mail_locale;
+}
+
 // Get localized (for email) field name for a user defined table column
 // Looks for a tag of the format tablename.columnname (where tablename is
 // stripped of the table prefix) and if can't find a string for that tag will
@@ -79,7 +99,7 @@ function getMailPeriodDateString($t, $mod_time=0)
   $mailperiod = $periods[$p_num];
   $mailperiod = mrbs_entity_decode($mailperiod, ENT_COMPAT, get_mail_charset());
   $mailperiod = strip_tags($mailperiod);
-  return array($p_num, $mailperiod . strftime(", " . $strftime_format['date'], $t));
+  return array($p_num, $mailperiod . utf8_strftime(", " . $strftime_format['date'], $t, get_mail_locale()));
 }
 
 // }}}
@@ -100,16 +120,16 @@ function getMailTimeDateString($t, $inc_time=TRUE)
   {
     if ($twentyfourhour_format)
     {
-      return utf8_strftime($strftime_format['datetime24'], $t);
+      return utf8_strftime($strftime_format['datetime24'], $t, get_mail_locale());
     }
     else
     {
-      return utf8_strftime($strftime_format['datetime12'], $t);
+      return utf8_strftime($strftime_format['datetime12'], $t, get_mail_locale());
     }
   }
   else
   {
-    return utf8_strftime($strftime_format['date'], $t);
+    return utf8_strftime($strftime_format['date'], $t, get_mail_locale());
   }
 }
 

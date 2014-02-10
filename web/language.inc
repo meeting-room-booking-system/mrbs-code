@@ -531,90 +531,97 @@ $windows_locale = "eng";
 set_mrbs_locale();
 
 
+
+// Returns a locale in the correct format for the server OS given a language
+// Returns FALSE if no locale can be determined
+function get_os_locale($lang)
+{
+  global $lang_map_unix, $lang_map_unix_postfix, $lang_map_windows;
+  global $locale_warning, $server_os;
+  
+  $locale = FALSE;
+  
+  if ($server_os == "windows")
+  {
+    if (array_key_exists(strtolower($lang), $lang_map_windows))
+    {
+      $locale = $lang_map_windows[strtolower($lang)];
+    }
+    else
+    {
+      $locale_warning = "Server failed to map browser language '$lang' to a Windows locale specifier";
+      trigger_error($locale_warning, E_USER_NOTICE);
+    }
+  }
+  /* All of these Unix OSes work in mostly the same way... */
+  else if (in_array($server_os, array('linux', 'sunos', 'bsd', 'aix', 'macosx')))
+  {
+    if (strlen($lang) == 2)
+    {
+      if (isset($lang_map_unix[$lang]) && ($lang_map_unix[$lang]))
+      {
+        $locale = $lang_map_unix[$lang];
+      }
+      else
+      {
+        // Convert locale=xx to xx_XX
+        $locale = strtolower($lang)."_".strtoupper($lang);
+      }
+    }
+    else
+    {
+      // First, if we have a map, use it
+      if (isset($lang_map_unix[strtolower($lang)]))
+      {
+        $locale = $lang_map_unix[strtolower($lang)];
+      }
+      else
+      {
+        // Convert locale=xx-xX or xx_Xx or xx_XxXx (etc.) to xx_XX[XX]; this is highly
+        // dependent on the machine's installed locales
+        $locale = locale_format($lang, '_');
+      }
+    }
+    switch ($server_os)
+    {
+      case "sunos":
+      case "linux":
+      case "bsd":
+        $locale .= ".UTF-8";
+        if (isset($lang_map_unix_postfix[$locale]))
+        { 
+          $locale .= $lang_map_unix_postfix[$locale];
+        }
+        break;
+
+      case "macosx":
+        $locale .= ".utf-8";
+        break;
+      default:
+        break;
+    }
+  }
+  return $locale;
+}
+
 // Works out what locale should be used by MRBS depending on the config settings
 // and the user's browser preferences.
 // Returns the locale, or FALSE if no locale can be determined
 function determine_mrbs_locale()
 {
   global $override_locale;
-  global $locale_warning, $locale, $windows_locale, $server_os;
-  global $lang_map_unix, $lang_map_unix_postfix, $lang_map_windows;
-  
-  $mrbs_locale = FALSE;
-  
-  if ($override_locale !== '')
+  global $locale, $windows_locale;
+
+  if (isset($override_locale) && ($override_locale !== ''))
   {
     $mrbs_locale = $override_locale;
-    $windows_locale = $mrbs_locale;
   }
   else
   {
-    if ($server_os == "windows")
-    {
-      if (array_key_exists(strtolower($locale), $lang_map_windows))
-      {
-        $mrbs_locale = $lang_map_windows[strtolower($locale)];
-        $windows_locale = $mrbs_locale;
-      }
-      else
-      {
-        $locale_warning = "Server failed to map browser language \"" .
-                          $locale .
-                          "\" to a Windows locale specifier";
-      }
-    }
-    /* All of these Unix OSes work in mostly the same way... */
-    else if (($server_os == "linux") ||
-             ($server_os == "sunos") ||
-             ($server_os == "bsd") ||
-             ($server_os == "aix") ||
-             ($server_os == "macosx"))
-    {
-      if (strlen($locale) == 2)
-      {
-        if (isset($lang_map_unix[$locale]) && ($lang_map_unix[$locale]))
-        {
-          $mrbs_locale = $lang_map_unix[$locale];
-        }
-        else
-        {
-          // Convert locale=xx to xx_XX
-          $mrbs_locale = strtolower($locale)."_".strtoupper($locale);
-        }
-      }
-      else
-      {
-        // First, if we have a map, use it
-        if (isset($lang_map_unix[strtolower($locale)]))
-        {
-          $locale = strtolower($locale);
-          $mrbs_locale = $lang_map_unix[strtolower($locale)];
-        }
-        else
-        {
-          // Convert locale=xx-xX or xx_Xx or xx_XxXx (etc.) to xx_XX[XX]; this is highly
-          // dependent on the machine's installed locales
-          $mrbs_locale = locale_format($locale, '_');
-        }
-      }
-      switch ($server_os)
-      {
-        case "sunos":
-        case "linux":
-        case "bsd":
-          $mrbs_locale .= ".UTF-8";
-          if (isset($lang_map_unix_postfix[$locale]))
-          { 
-            $mrbs_locale .= $lang_map_unix_postfix[$locale];
-          }
-          break;
-
-        case "macosx":
-          $mrbs_locale .= ".utf-8";
-          break;
-      }
-    }
+    $mrbs_locale = get_os_locale($locale);
   }
+  $windows_locale = $mrbs_locale;
+  
   return $mrbs_locale;
 }
 
@@ -980,12 +987,15 @@ function get_loc_field_name($table, $name)
 // AIX version of utf8_convert(); needed as locales won't give us UTF-8
 // NOTE: Should ONLY be called with input encoded in the default code set of the current locale!
 // NOTE: Uses the LC_TIME category for determining the current locale setting, so should preferrably be used on date/time input only!
-function utf8_convert_aix($string)
+function utf8_convert_aix($string, $aix_locale = NULL)
 {
   global $aixlocale_codepage_map, $aix_utf8_converters;
 
-  // Retrieve current locale setting
-  $aix_locale = setlocale(LC_TIME, '0');
+  if (!isset($aix_locale))
+  {
+    // Retrieve current locale setting
+    $aix_locale = setlocale(LC_TIME, '0');
+  }
 
   if ($aix_locale === FALSE)
   {
@@ -1017,37 +1027,43 @@ function utf8_convert_aix($string)
 }
 
 
-function utf8_convert_from_locale($string)
+function utf8_convert_from_locale($string, $locale=NULL)
 {
   global $windows_locale, $winlocale_codepage_map, $server_os;
 
   if ($server_os == "windows")
   {
-    if (array_key_exists($windows_locale, $winlocale_codepage_map))
+    if (!isset($locale))
     {
-      $string = iconv($winlocale_codepage_map[$windows_locale],"utf-8",
+      $locale = $windows_locale;
+    }
+    if (array_key_exists($locale, $winlocale_codepage_map))
+    {
+      $string = iconv($winlocale_codepage_map[$locale],"utf-8",
                       $string);
     }
   }
   else if ($server_os == "aix")
   {
-    $string = utf8_convert_aix($string);
+    $string = utf8_convert_aix($string, $locale);
   }
   return $string;
 }
 
 
-//  
-function utf8_strftime($format, $time)
+//  optionally switch to a new locale, switching back at the end
+function utf8_strftime($format, $time, $temp_locale=NULL)
 {
   global $server_os;
 
-  if ($server_os == "windows")
+  // Set the temporary locale
+  if (!empty($temp_locale))
   {
-    // Some formats not supported on Windows.   Replace with suitable alternatives
-    $format = str_replace("%R", "%H:%M", $format);
-    $format = str_replace("%P", "%p", $format);
-    $format = str_replace("%l", "%I", $format);
+    $old_locale = setlocale(LC_TIME, '0');
+    setlocale(LC_TIME, $temp_locale);
+  }
+  elseif ($server_os == "windows")
+  {
     // If we are running Windows we have to set the locale again in case another script
     // running in the same process has changed the locale since we first set it.  See the
     // warning on the PHP manual page for setlocale():
@@ -1059,6 +1075,14 @@ function utf8_strftime($format, $time)
     // running in different threads of the same process at the same time, changing the
     // process-wide locale using setlocale()."
     set_mrbs_locale();
+  }
+  
+  if ($server_os == "windows")
+  {
+    // Some formats not supported on Windows.   Replace with suitable alternatives
+    $format = str_replace("%R", "%H:%M", $format);
+    $format = str_replace("%P", "%p", $format);
+    $format = str_replace("%l", "%I", $format);
   }
   
   // %p doesn't actually work in some locales, we have to patch it up ourselves
@@ -1074,7 +1098,15 @@ function utf8_strftime($format, $time)
   }
 
   $result = strftime($format, $time);
-  return utf8_convert_from_locale($result);
+  $result = utf8_convert_from_locale($result, $temp_locale);
+  
+  // Restore the original locale
+  if (!empty($temp_locale))
+  {
+    setlocale(LC_TIME, $old_locale);
+  }
+  
+  return $result;
 }
 
 
