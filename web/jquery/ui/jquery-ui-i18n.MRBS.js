@@ -30,9 +30,12 @@ jQuery(function($){
     yearSuffix: ''};
 
   $.datepicker.regional['en'] = $.datepicker.regional['en-US'];
-
+  
   // The sr-RS-LATIN file is also a non-standard file and is provided to match the
   // MRBS aliases. 
   $.datepicker.regional['sr-RS-LATIN'] = $.datepicker.regional['sr-SR'];
+  
+  // Some extra language settings
+  $.datepicker.regional['en-IE'] = $.datepicker.regional['en-GB'];  // Ticket #9822 (new feature) 
 
 });
