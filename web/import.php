@@ -424,7 +424,11 @@ if (!empty($import))
     {
       $vevents = array();
       $lines = explode("\r\n", ical_unfold($vcalendar));
-      $first_line = array_shift($lines);
+      // Advance to the first non-blank line.   Strictly speaking the file
+      // must start with a BEGIN:VCALENDAR line, but we'll be tolerant
+      while ('' === ($first_line = array_shift($lines)))
+      {
+      }
       if (isset($first_line))
       {
         // Get rid of empty lines at the end of the file
@@ -449,7 +453,10 @@ if (!empty($import))
       // a VEVENT but we will use the PHP definition of the timezone)
       else
       {
-        while ($line = array_shift($lines))
+        // Strictly speaking RFC5545 does not allow blank lines between events (see Section
+        // 3.1), but it does no harm to be tolerant and accept them so we will test strictly
+        // for NULL rather than just a falsey value.
+        while (NULL !== ($line = array_shift($lines)))
         {
           if ($line == "BEGIN:VEVENT")
           {
