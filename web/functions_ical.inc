@@ -637,13 +637,26 @@ function ical_escape_text($str)
   $str = str_replace("\r\n", "\n", $str);
   // Escape '\n'
   $str = str_replace("\n", "\\n", $str);
+  // Escape '\N'
+  $str = str_replace("\N", "\\N", $str);
   return $str;
 }
 
 
+// Reverses RFC 5545 escaping of text
 function ical_unescape_text($str)
 {
-  return stripcslashes($str);
+  // Unescape '\N'
+  $str = str_replace("\\N", "\N", $str);
+  // Unescape '\n'
+  $str = str_replace("\\n", "\n", $str);
+  // Unescape ','
+  $str = str_replace("\,", ",", $str);
+  // Unescape ';'
+  $str = str_replace("\;", ";", $str);
+  // Unescape '\'
+  $str = str_replace("\\\\", "\\", $str);
+  return $str;
 }
 
 
