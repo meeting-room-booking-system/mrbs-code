@@ -1264,15 +1264,16 @@ function utf8_substr_old($str,$start)
 
 
 // UTF-8 compatible substr function
-function utf8_substr($str, $start)
+function utf8_substr($str, $start, $length=NULL)
 {
-  if (func_num_args() >= 3)
+  if (!isset($length))
   {
-    $length = func_get_arg(2);
-  }
-  else
-  {
-    $length = PHP_INT_MAX;
+    // We cannot set $length to PHP_INT_MAX because there is a bug (#42101)
+    // in mb_substr() when using PHP_INT_MAX on 64 bit Linux systems.  See
+    // https://bugs.php.net/bug.php?id=42101.    Note also that passing NULL
+    // for the length in mb_substr() causes mb_substr to use a length of 0.
+    // See the user contributed notes on the PHP mb_substr() manual page.
+    $length = utf8_strlen($str);
   }
 
   if (function_exists('mb_substr'))
