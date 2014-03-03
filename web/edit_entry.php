@@ -493,11 +493,12 @@ function create_field_entry_confirmation_status($disabled=FALSE)
     $buttons[0] = get_vocab("tentative");
     $buttons[1] = get_vocab("confirmed");
     
-    $params = array('label'    => get_vocab("confirmation_status") . ":",
-                    'name'     => 'confirmed',
-                    'value'    => ($confirmed) ? 1 : 0,
-                    'options'  => $buttons,
-                    'disabled' => $disabled);
+    $params = array('label'       => get_vocab("confirmation_status") . ":",
+                    'name'        => 'confirmed',
+                    'value'       => ($confirmed) ? 1 : 0,
+                    'options'     => $buttons,
+                    'force_assoc' => TRUE,
+                    'disabled'    => $disabled);
                     
     generate_radio_group($params);
 
@@ -518,11 +519,12 @@ function create_field_entry_privacy_status($disabled=FALSE)
     $buttons[0] = get_vocab("public");
     $buttons[1] = get_vocab("private");
     
-    $params = array('label'    => get_vocab("privacy_status") . ":",
-                    'name'     => 'private',
-                    'value'    => ($private) ? 1 : 0,
-                    'options'  => $buttons,
-                    'disabled' => $private_mandatory || $disabled);
+    $params = array('label'       => get_vocab("privacy_status") . ":",
+                    'name'        => 'private',
+                    'value'       => ($private) ? 1 : 0,
+                    'options'     => $buttons,
+                    'force_assoc' => TRUE,
+                    'disabled'    => $private_mandatory || $disabled);
                     
     generate_radio_group($params);
 
@@ -1199,7 +1201,8 @@ if (($edit_type == "series") && $repeats_allowed)
                   'name'          => 'rep_type',
                   'value'         => $rep_type,
                   'disabled'      => $disabled,
-                  'options'       => array());
+                  'options'       => array(),
+                  'force_assoc'   => TRUE);
   foreach (array(REP_NONE, REP_DAILY, REP_WEEKLY, REP_MONTHLY, REP_YEARLY) as $i)
   {
     $params['options'][$i] = get_vocab("rep_type_$i");

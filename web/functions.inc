@@ -840,8 +840,14 @@ function generate_radio($params)
 //      OPTIONAL
 //        'label_title'   The text to be used for the title attribute for the field label
 //        'value'         The value of the input.  Default ''
-//        'options'       An associative array where the key is the value of the
-//                        button and the value is the button text
+//        'options'       An array of options for the radio buttons.   Can be a simple
+//                        array or an associative array with value => label members for
+//                        each button.   Default is an empty array.
+//        'force_assoc'   Boolean.  Forces the options array to be treated as an
+//                        associative array.  Default FALSE, ie it is treated as whatever
+//                        it looks like.  (This parameter is necessary because if you
+//                        index an array with strings that look like integers then PHP
+//                        casts the keys to integers and the array becomes a simple array)
 //        'disabled'      Whether the field should be disabled.  Default FALSE
 //        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
 //                        Default TRUE
@@ -849,7 +855,8 @@ function generate_radio($params)
 function generate_radio_group($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'label_title', 'name', 'options', 'value', 'disabled', 'create_hidden') as $key)
+  foreach (array('label', 'label_title', 'name', 'options', 'value', 'force_assoc', 
+                 'disabled', 'create_hidden') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -867,6 +874,7 @@ function generate_radio_group($params)
           $params[$key] = '';
           break;
         case 'disabled':
+        case 'force_assoc':
           $params[$key] = FALSE;
           break;
         case 'create_hidden':
@@ -888,8 +896,18 @@ function generate_radio_group($params)
   // Output each radio button
   while ($option = each($params['options']))
   {
+    // We can cope with both associative and ordinary arrays
+    $button_label = $option['value'];
+    if (!$params['force_assoc'] && !is_assoc($params['options']))
+    {
+      $button_value = $button_label;
+    }
+    else
+    {
+      $button_value = $option['key'];
+    }
     generate_radio(array('name'          => $params['name'],
-                         'options'       => array($option['key'] => $option['value']),
+                         'options'       => array($button_value => $button_label),
                          'value'         => $params['value'],
                          'disabled'      => $params['disabled'],
                          'create_hidden' => $params['create_hidden']));
@@ -913,8 +931,9 @@ function generate_radio_group($params)
 //        'name'        The name of the input.
 //      OPTIONAL
 //        'value'       The value of the input.  Can be an array. Default array()
-//        'options'     An associative array where the key is the value of the
-//                      button and the value is the button text
+//        'options'     An array of options for the checkboxes.   Can be a simple
+//                      array or an associative array with value => label members for
+//                      each checkbox.   Default is an empty array.
 //        'force_assoc' Boolean.  Forces the options array to be treated as an
 //                      associative array.  Default FALSE, ie it is treated as whatever
 //                      it looks like.  (This parameter is necessary because if you

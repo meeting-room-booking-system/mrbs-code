@@ -669,6 +669,7 @@ if (isset($change_room) && !empty($room))
                         'name'          => 'room_disabled',
                         'value'         => ($row['disabled']) ? '1' : '0',
                         'options'       => $options,
+                        'force_assoc'   => TRUE,
                         'disabled'      => $disabled,
                         'create_hidden' => FALSE);
         generate_radio_group($params);
@@ -862,7 +863,8 @@ if (isset($change_area) &&!empty($area))
                   'label_title' => get_vocab("disabled_area_note"),
                   'name'        => 'area_disabled',
                   'value'       => ($row['disabled']) ? '1' : '0',
-                  'options'     => $options);
+                  'options'     => $options,
+                  'force_assoc' => TRUE);
   generate_radio_group($params);
   echo "</div>\n";
         
@@ -893,10 +895,11 @@ if (isset($change_area) &&!empty($area))
   echo "<div id=\"mode\">\n";
   $options = array('1' => get_vocab("mode_periods"),
                    '0' => get_vocab("mode_times"));
-  $params = array('label'   => get_vocab("mode") . ":",
-                  'name'    => 'area_enable_periods',
-                  'value'   => ($enable_periods) ? '1' : '0',
-                  'options' => $options);
+  $params = array('label'       => get_vocab("mode") . ":",
+                  'name'        => 'area_enable_periods',
+                  'value'       => ($enable_periods) ? '1' : '0',
+                  'options'     => $options,
+                  'force_assoc' => TRUE);
   generate_radio_group($params);
   echo "</div>\n";
       
@@ -1142,10 +1145,11 @@ if (isset($change_area) &&!empty($area))
   
   $options = array('1' => get_vocab("default_confirmed"),
                    '0' => get_vocab("default_tentative"));
-  $params = array('label'   => get_vocab("default_settings_conf") . ":",
-                  'name'    => 'area_confirmed_default',
-                  'options' => $options,
-                  'value'   => ($confirmed_default) ? '1' : '0');
+  $params = array('label'       => get_vocab("default_settings_conf") . ":",
+                  'name'        => 'area_confirmed_default',
+                  'options'     => $options,
+                  'force_assoc' => TRUE,
+                  'value'       => ($confirmed_default) ? '1' : '0');
   generate_radio_group($params);
 
   echo "</fieldset>\n";
@@ -1190,10 +1194,11 @@ if (isset($change_area) &&!empty($area))
   // Default privacy settings
   $options = array('1' => get_vocab("default_private"),
                    '0' => get_vocab("default_public"));
-  $params = array('label' => get_vocab("default_settings"),
-                  'name'  => 'area_private_default',
-                  'options' => $options,
-                  'value'   => ($private_default) ? '1' : '0');
+  $params = array('label'       => get_vocab("default_settings"),
+                  'name'        => 'area_private_default',
+                  'options'     => $options,
+                  'force_assoc' => TRUE,
+                  'value'       => ($private_default) ? '1' : '0');
   generate_radio_group($params);
 
   echo "</fieldset>\n";

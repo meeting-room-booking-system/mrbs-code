@@ -141,10 +141,11 @@ function generate_search_criteria(&$vars)
           {
             echo "<div id=\"div_privacystatus\">\n";
             $options = array(PRIVATE_BOTH => get_vocab("both"), PRIVATE_NO => get_vocab("default_public"), PRIVATE_YES => get_vocab("default_private"));
-            $params = array('label'   => get_vocab("privacy_status") . ':',
-                            'name'    => 'match_private',
-                            'options' => $options,
-                            'value'   => $vars['match_private']);
+            $params = array('label'       => get_vocab("privacy_status") . ':',
+                            'name'        => 'match_private',
+                            'options'     => $options,
+                            'force_assoc' => TRUE,
+                            'value'       => $vars['match_private']);
             generate_radio_group($params);
             echo "</div>\n";
           }
@@ -159,10 +160,11 @@ function generate_search_criteria(&$vars)
         {
           echo "<div id=\"div_confirmationstatus\">\n";
           $options = array(CONFIRMED_BOTH => get_vocab("both"), CONFIRMED_YES => get_vocab("confirmed"), CONFIRMED_NO => get_vocab("tentative"));
-          $params = array('label'   => get_vocab("confirmation_status") . ':',
-                          'name'    => 'match_confirmed',
-                          'options' => $options,
-                          'value'   => $vars['match_confirmed']);
+          $params = array('label'       => get_vocab("confirmation_status") . ':',
+                          'name'        => 'match_confirmed',
+                          'options'     => $options,
+                          'force_assoc' => TRUE,
+                          'value'       => $vars['match_confirmed']);
           generate_radio_group($params);
           echo "</div>\n";
         }
@@ -176,10 +178,11 @@ function generate_search_criteria(&$vars)
         {
           echo "<div id=\"div_approvalstatus\">\n";
           $options = array(APPROVED_BOTH => get_vocab("both"), APPROVED_YES => get_vocab("approved"), APPROVED_NO => get_vocab("awaiting_approval"));
-          $params = array('label'   => get_vocab("approval_status") . ':',
-                          'name'    => 'match_approved',
-                          'options' => $options,
-                          'value'   => $vars['match_approved']);
+          $params = array('label'       => get_vocab("approval_status") . ':',
+                          'name'        => 'match_approved',
+                          'options'     => $options,
+                          'force_assoc' => TRUE,
+                          'value'       => $vars['match_approved']);
           generate_radio_group($params);
           echo "</div>\n";
         }
@@ -248,10 +251,11 @@ function generate_presentation_options(&$vars)
         echo "<div id=\"div_output\">\n";
         $buttons = array(REPORT  => get_vocab('report'),
                          SUMMARY => get_vocab('summary'));
-        $params = array('label'   => get_vocab('output') . ":",
-                        'name'    => 'output',
-                        'value'   => $vars['output'],
-                        'options' => $buttons);
+        $params = array('label'       => get_vocab('output') . ":",
+                        'name'        => 'output',
+                        'value'       => $vars['output'],
+                        'options'     => $buttons,
+                        'force_assoc' => TRUE);
         generate_radio_group($params);                  
         echo "</div>\n";
         break;
@@ -266,10 +270,11 @@ function generate_presentation_options(&$vars)
         {
           $buttons[OUTPUT_ICAL] = "ical";
         }
-        $params = array('label'   => get_vocab('format') . ":",
-                        'name'    => 'output_format',
-                        'value'   => $vars['output_format'],
-                        'options' => $buttons);
+        $params = array('label'       => get_vocab('format') . ":",
+                        'name'        => 'output_format',
+                        'value'       => $vars['output_format'],
+                        'options'     => $buttons,
+                        'force_assoc' => TRUE);
         generate_radio_group($params);
         echo "</div>\n";
         break;
