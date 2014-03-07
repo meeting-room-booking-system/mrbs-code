@@ -66,7 +66,7 @@ function get_mail_field_name($table, $name)
 {
   global $mail_vocab, $db_tbl_prefix;
   
-  $tag = substr($table, strlen($db_tbl_prefix));  // strip the prefix off the table name
+  $tag = utf8_substr($table, utf8_strlen($db_tbl_prefix));  // strip the prefix off the table name
   $tag .= "." . $name;           // add on the fieldname
   // then if there's a string in the vocab array for $tag use that
   // otherwise just use the fieldname

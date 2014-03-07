@@ -2518,7 +2518,7 @@ function generate_global_uid($str)
   }
   elseif (strpos($_SERVER['SERVER_NAME'], 'www.') === 0)
   {
-    $uid .= substr($_SERVER['SERVER_NAME'], 4);
+    $uid .= utf8_substr($_SERVER['SERVER_NAME'], 4);
   }
   else
   {

@@ -491,7 +491,7 @@ function mrbsCreateEntry($table, $data)
   
   $sql_col = array();
   $sql_val = array();
-  $table_no_prefix = substr($table, strlen($db_tbl_prefix));  // strip the prefix off the table name
+  $table_no_prefix = utf8_substr($table, utf8_strlen($db_tbl_prefix));  // strip the prefix off the table name
     
   $fields = sql_field_info($table);
 
