@@ -541,7 +541,7 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
   echo "<div>\n";
   $params = array('label'      => get_loc_field_name($tbl_entry, $key) . ":",
                   'name'       => VAR_PREFIX . $key,
-                  'value'      => $custom_fields[$key],
+                  'value'      => isset($custom_fields[$key]) ? $custom_fields[$key] : NULL,
                   'disabled'   => $disabled,
                   'attributes' => array(),
                   'maxlength'  => isset($maxlength["entry.$key"]) ? $maxlength["entry.$key"] : NULL,
@@ -896,15 +896,6 @@ else
   $room_id       = $room;
   $private       = $private_default;
   $confirmed     = $confirmed_default;
-
-  // now initialise the custom fields
-  foreach ($fields as $field)
-  {
-    if (!in_array($field['name'], $standard_fields['entry']))
-    {
-      $custom_fields[$field['name']] = '';
-    }
-  }
 
   // Get the hour and minute, converting a period to its MRBS time
   // Set some sensible defaults

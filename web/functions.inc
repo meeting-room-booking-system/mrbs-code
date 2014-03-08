@@ -837,12 +837,13 @@ function generate_radio($params)
 //      MANDATORY
 //        'label'         The text to be used for the field label.
 //        'name'          The name of the input.
-//      OPTIONAL
-//        'label_title'   The text to be used for the title attribute for the field label
-//        'value'         The value of the input.  Default ''
 //        'options'       An array of options for the radio buttons.   Can be a simple
 //                        array or an associative array with value => label members for
-//                        each button.   Default is an empty array.
+//                        each button.
+//      OPTIONAL
+//        'label_title'   The text to be used for the title attribute for the field label
+//        'value'         The value of the input.  Defaults to the first element of 'options'
+//                        (mirroring the behaviour of a <select> element)
 //        'force_assoc'   Boolean.  Forces the options array to be treated as an
 //                        associative array.  Default FALSE, ie it is treated as whatever
 //                        it looks like.  (This parameter is necessary because if you
@@ -855,6 +856,7 @@ function generate_radio($params)
 function generate_radio_group($params)
 {
   // some sanity checking on params
+  // 'options' must come before 'value' in the array
   foreach (array('label', 'label_title', 'name', 'options', 'value', 'force_assoc', 
                  'disabled', 'create_hidden') as $key)
   {
@@ -864,6 +866,7 @@ function generate_radio_group($params)
       {
         case 'label':
         case 'name':
+        case 'options':
           trigger_error('Missing mandatory parameters', E_USER_NOTICE);
           break;
         case 'options':
@@ -871,7 +874,18 @@ function generate_radio_group($params)
           break;
         case 'label_title':
         case 'value':
-          $params[$key] = '';
+          if (array_key_exists($params['value'], $params['options']))
+          {
+            $params[$key] = $params['options'][$params['value']];
+          }
+          elseif (isset($params['options'][0]))
+          {
+            $params[$key] = $params['options'][0];
+          }
+          else
+          {
+            trigger_error('Empty options array', E_USER_NOTICE);
+          }
           break;
         case 'disabled':
         case 'force_assoc':
