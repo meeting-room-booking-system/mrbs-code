@@ -856,8 +856,8 @@ function generate_radio($params)
 function generate_radio_group($params)
 {
   // some sanity checking on params
-  // 'options' must come before 'value' in the array
-  foreach (array('label', 'label_title', 'name', 'options', 'value', 'force_assoc', 
+  // 'options' and 'force_assoc' must come before 'value' in the array
+  foreach (array('label', 'label_title', 'name', 'options', 'force_assoc', 'value',
                  'disabled', 'create_hidden') as $key)
   {
     if (!isset($params[$key]))
@@ -873,18 +873,17 @@ function generate_radio_group($params)
           $params[$key] = array();
           break;
         case 'label_title':
+          $params[$key] = '';
+          break;
         case 'value':
-          if (array_key_exists($params['value'], $params['options']))
+          if (is_assoc($params['options']) || $params['force_assoc'])
           {
-            $params[$key] = $params['options'][$params['value']];
-          }
-          elseif (isset($params['options'][0]))
-          {
-            $params[$key] = $params['options'][0];
+            $array_keys = array_keys($params['options']);
+            $params[$key] = $array_keys[0];
           }
           else
           {
-            trigger_error('Empty options array', E_USER_NOTICE);
+            $params[$key] = $params['options'][0];
           }
           break;
         case 'disabled':
@@ -912,13 +911,13 @@ function generate_radio_group($params)
   {
     // We can cope with both associative and ordinary arrays
     $button_label = $option['value'];
-    if (!$params['force_assoc'] && !is_assoc($params['options']))
+    if (is_assoc($params['options']) || $params['force_assoc'])
     {
-      $button_value = $button_label;
+      $button_value = $option['key'];
     }
     else
     {
-      $button_value = $option['key'];
+      $button_value = $button_label;
     }
     generate_radio(array('name'          => $params['name'],
                          'options'       => array($button_value => $button_label),
