@@ -1215,8 +1215,13 @@ init = function(args) {
                         .css('max-height', 'none')
                         .css('min-height', '<?php echo $main_cell_height ?>px')
                         .addClass('clone')
-                        .width(divBooking.outerWidth())
-                        .height(divBooking.outerHeight());
+                        <?php
+                        // We use the inner dimensions of the parent rather than the outer dimensions
+                        // of this element in case this element doesn't fill the whole cell - which
+                        // for some reason it doesn't always when clipping is turned off in MRBS.
+                        ?>
+                        .width(divBooking.parent().innerWidth())
+                        .height(divBooking.parent().innerHeight());
                 if (handles)
                 {
                   divClone.resizable({handles: handles,
