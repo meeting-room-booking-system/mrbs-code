@@ -883,7 +883,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     echo "<tbody>\n";
   }
   
-  // If we're Ajax capable and this is not an Ajax request then don't ouput
+  // If we're Ajax capable and this is not an Ajax request then don't output
   // the table body, because that's going to be sent later in response to
   // an Ajax request
   if (!$ajax_capable || $ajax)
