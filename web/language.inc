@@ -1221,12 +1221,13 @@ function utf8_strftime($format, $time, $temp_locale=NULL)
     $format = str_replace("%R", "%H:%M", $format);
     $format = str_replace("%P", "%p", $format);
     $format = str_replace("%l", "%I", $format);
+    $format = str_replace("%e", "%#d", $format);
   }
   
   // %p doesn't actually work in some locales, we have to patch it up ourselves
   if (preg_match('/%p/', $format))
   {
-    $ampm = strftime('%p', $time);  // Don't relace the %p with the $strftime_format variable!!
+    $ampm = strftime('%p', $time);  // Don't replace the %p with the $strftime_format variable!!
     if ($ampm == '')
     {
       $ampm = date('a', $time);
