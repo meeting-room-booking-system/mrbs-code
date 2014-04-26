@@ -48,7 +48,7 @@
  * @author    Aleksander Machniak <alec@php.net>
  * @copyright 2003-2006 PEAR <pear-group@php.net>
  * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
- * @version   CVS: $Id: mime.php 300942 2010-07-02 12:27:56Z alec $
+ * @version   CVS: $Id$
  * @link      http://pear.php.net/package/Mail_mime
  *
  *            This class is based on HTML Mime Mail class from
@@ -245,7 +245,7 @@ class Mail_mime
             }
         } else {
             $cont = $this->_file2str($data);
-            if (PEAR::isError($cont)) {
+            if ($this->_isError($cont)) {
                 return $cont;
             }
             if (!$append) {
@@ -254,6 +254,7 @@ class Mail_mime
                 $this->_txtbody .= $cont;
             }
         }
+
         return true;
     }
 
@@ -286,7 +287,7 @@ class Mail_mime
             $this->_htmlbody = $data;
         } else {
             $cont = $this->_file2str($data);
-            if (PEAR::isError($cont)) {
+            if ($this->_isError($cont)) {
                 return $cont;
             }
             $this->_htmlbody = $cont;
@@ -336,7 +337,7 @@ class Mail_mime
                 $filedata = null;
                 $bodyfile = $file;
             } else {
-                if (PEAR::isError($filedata = $this->_file2str($file))) {
+                if ($this->_isError($filedata = $this->_file2str($file))) {
                     return $filedata;
                 }
             }
@@ -347,7 +348,7 @@ class Mail_mime
         }
 
         if (!$content_id) {
-            $content_id = md5(uniqid(time()));
+            $content_id = preg_replace('/[^0-9a-zA-Z]/', '', uniqid(time(), true));
         }
 
         $this->_html_images[] = array(
@@ -365,30 +366,30 @@ class Mail_mime
      * Adds a file to the list of attachments.
      *
      * @param string $file        The file name of the file to attach
-     *                            OR the file contents itself
+     *                            or the file contents itself
      * @param string $c_type      The content type
      * @param string $name        The filename of the attachment
      *                            Only use if $file is the contents
-     * @param bool   $isfile      Whether $file is a filename or not
-     *                            Defaults to true
-     * @param string $encoding    The type of encoding to use.
-     *                            Defaults to base64.
-     *                            Possible values: 7bit, 8bit, base64, 
-     *                            or quoted-printable.
+     * @param bool   $isfile      Whether $file is a filename or not. Defaults to true
+     * @param string $encoding    The type of encoding to use. Defaults to base64.
+     *                            Possible values: 7bit, 8bit, base64 or quoted-printable.
      * @param string $disposition The content-disposition of this file
      *                            Defaults to attachment.
      *                            Possible values: attachment, inline.
-     * @param string $charset     The character set used in the filename
-     *                            of this attachment.
+     * @param string $charset     The character set of attachment's content.
      * @param string $language    The language of the attachment
      * @param string $location    The RFC 2557.4 location of the attachment
-     * @param string $n_encoding  Encoding for attachment name (Content-Type)
+     * @param string $n_encoding  Encoding of the attachment's name in Content-Type
      *                            By default filenames are encoded using RFC2231 method
      *                            Here you can set RFC2047 encoding (quoted-printable
      *                            or base64) instead
-     * @param string $f_encoding  Encoding for attachment filename (Content-Disposition)
-     *                            See $n_encoding description
+     * @param string $f_encoding  Encoding of the attachment's filename
+     *                            in Content-Disposition header.
      * @param string $description Content-Description header
+     * @param string $h_charset   The character set of the headers e.g. filename
+     *                            If not specified, $charset will be used
+     * @param array  $add_headers Additional part headers. Array keys can be in form
+     *                            of <header_name>:<parameter_name>
      *
      * @return mixed              True on success or PEAR_Error object
      * @access public
@@ -404,7 +405,9 @@ class Mail_mime
         $location    = '',
         $n_encoding  = null,
         $f_encoding  = null,
-        $description = ''
+        $description = '',
+        $h_charset   = null,
+        $add_headers = array()
     ) {
         $bodyfile = null;
 
@@ -414,12 +417,12 @@ class Mail_mime
                 $filedata = null;
                 $bodyfile = $file;
             } else {
-                if (PEAR::isError($filedata = $this->_file2str($file))) {
+                if ($this->_isError($filedata = $this->_file2str($file))) {
                     return $filedata;
                 }
             }
             // Force the name the user supplied, otherwise use $file
-            $filename = ($name ? $name : $file);
+            $filename = ($name ? $name : $this->_basename($file));
         } else {
             $filedata = $file;
             $filename = $name;
@@ -427,24 +430,24 @@ class Mail_mime
 
         if (!strlen($filename)) {
             $msg = "The supplied filename for the attachment can't be empty";
-            $err = PEAR::raiseError($msg);
-            return $err;
+            return $this->_raiseError($msg);
         }
-        $filename = $this->_basename($filename);
 
         $this->_parts[] = array(
             'body'        => $filedata,
             'body_file'   => $bodyfile,
             'name'        => $filename,
             'c_type'      => $c_type,
-            'encoding'    => $encoding,
             'charset'     => $charset,
+            'encoding'    => $encoding,
             'language'    => $language,
             'location'    => $location,
             'disposition' => $disposition,
             'description' => $description,
+            'add_headers' => $add_headers,
             'name_encoding'     => $n_encoding,
-            'filename_encoding' => $f_encoding
+            'filename_encoding' => $f_encoding,
+            'headers_charset'   => $h_charset,
         );
 
         return true;
@@ -458,20 +461,17 @@ class Mail_mime
      * @return string           Contents of $file_name
      * @access private
      */
-    function &_file2str($file_name)
+    function _file2str($file_name)
     {
         // Check state of file and raise an error properly
         if (!file_exists($file_name)) {
-            $err = PEAR::raiseError('File not found: ' . $file_name);
-            return $err;
+            return $this->_raiseError('File not found: ' . $file_name);
         }
         if (!is_file($file_name)) {
-            $err = PEAR::raiseError('Not a regular file: ' . $file_name);
-            return $err;
+            return $this->_raiseError('Not a regular file: ' . $file_name);
         }
         if (!is_readable($file_name)) {
-            $err = PEAR::raiseError('File is not readable: ' . $file_name);
-            return $err;
+            return $this->_raiseError('File is not readable: ' . $file_name);
         }
 
         // Temporarily reset magic_quotes_runtime and read file contents
@@ -497,7 +497,7 @@ class Mail_mime
      * @return object      The text mimePart object
      * @access private
      */
-    function &_addTextPart(&$obj, $text)
+    function &_addTextPart(&$obj = null, $text = '')
     {
         $params['content_type'] = 'text/plain';
         $params['encoding']     = $this->_build_params['text_encoding'];
@@ -506,11 +506,11 @@ class Mail_mime
 
         if (is_object($obj)) {
             $ret = $obj->addSubpart($text, $params);
-            return $ret;
         } else {
             $ret = new Mail_mimePart($text, $params);
-            return $ret;
         }
+
+        return $ret;
     }
 
     /**
@@ -523,7 +523,7 @@ class Mail_mime
      * @return object     The html mimePart object
      * @access private
      */
-    function &_addHtmlPart(&$obj)
+    function &_addHtmlPart(&$obj = null)
     {
         $params['content_type'] = 'text/html';
         $params['encoding']     = $this->_build_params['html_encoding'];
@@ -532,11 +532,11 @@ class Mail_mime
 
         if (is_object($obj)) {
             $ret = $obj->addSubpart($this->_htmlbody, $params);
-            return $ret;
         } else {
             $ret = new Mail_mimePart($this->_htmlbody, $params);
-            return $ret;
         }
+
+        return $ret;
     }
 
     /**
@@ -549,7 +549,6 @@ class Mail_mime
      */
     function &_addMixedPart()
     {
-        $params                 = array();
         $params['content_type'] = 'multipart/mixed';
         $params['eol']          = $this->_build_params['eol'];
 
@@ -569,17 +568,18 @@ class Mail_mime
      * @return object     The multipart/mixed mimePart object
      * @access private
      */
-    function &_addAlternativePart(&$obj)
+    function &_addAlternativePart(&$obj = null)
     {
         $params['content_type'] = 'multipart/alternative';
         $params['eol']          = $this->_build_params['eol'];
 
         if (is_object($obj)) {
-            return $obj->addSubpart('', $params);
+            $ret = $obj->addSubpart('', $params);
         } else {
             $ret = new Mail_mimePart('', $params);
-            return $ret;
         }
+
+        return $ret;
     }
 
     /**
@@ -593,17 +593,18 @@ class Mail_mime
      * @return object     The multipart/mixed mimePart object
      * @access private
      */
-    function &_addRelatedPart(&$obj)
+    function &_addRelatedPart(&$obj = null)
     {
         $params['content_type'] = 'multipart/related';
         $params['eol']          = $this->_build_params['eol'];
 
         if (is_object($obj)) {
-            return $obj->addSubpart('', $params);
+            $ret = $obj->addSubpart('', $params);
         } else {
             $ret = new Mail_mimePart('', $params);
-            return $ret;
         }
+
+        return $ret;
     }
 
     /**
@@ -621,7 +622,7 @@ class Mail_mime
         $params['content_type'] = $value['c_type'];
         $params['encoding']     = 'base64';
         $params['disposition']  = 'inline';
-        $params['dfilename']    = $value['name'];
+        $params['filename']     = $value['name'];
         $params['cid']          = $value['cid'];
         $params['body_file']    = $value['body_file'];
         $params['eol']          = $this->_build_params['eol'];
@@ -650,19 +651,25 @@ class Mail_mime
     function &_addAttachmentPart(&$obj, $value)
     {
         $params['eol']          = $this->_build_params['eol'];
-        $params['dfilename']    = $value['name'];
+        $params['filename']     = $value['name'];
         $params['encoding']     = $value['encoding'];
         $params['content_type'] = $value['c_type'];
         $params['body_file']    = $value['body_file'];
         $params['disposition']  = isset($value['disposition']) ? 
                                   $value['disposition'] : 'attachment';
-        if ($value['charset']) {
+
+        // content charset
+        if (!empty($value['charset'])) {
             $params['charset'] = $value['charset'];
         }
-        if ($value['language']) {
+        // headers charset (filename, description)
+        if (!empty($value['headers_charset'])) {
+            $params['headers_charset'] = $value['headers_charset'];
+        }
+        if (!empty($value['language'])) {
             $params['language'] = $value['language'];
         }
-        if ($value['location']) {
+        if (!empty($value['location'])) {
             $params['location'] = $value['location'];
         }
         if (!empty($value['name_encoding'])) {
@@ -673,6 +680,9 @@ class Mail_mime
         }
         if (!empty($value['description'])) {
             $params['description'] = $value['description'];
+        }
+        if (is_array($value['add_headers'])) {
+            $params['headers'] = $value['add_headers'];
         }
 
         $ret = $obj->addSubpart($value['body'], $params);
@@ -688,9 +698,9 @@ class Mail_mime
      * 
      * @param string $separation The separation between these two parts.
      * @param array  $params     The Build parameters passed to the
-     *                           &get() function. See &get for more info.
+     *                           get() function. See get() for more info.
      * @param array  $headers    The extra headers that should be passed
-     *                           to the &headers() function.
+     *                           to the headers() method.
      *                           See that function for more info.
      * @param bool   $overwrite  Overwrite the existing headers with new.
      *
@@ -706,13 +716,11 @@ class Mail_mime
 
         $body = $this->get($params);
 
-        if (PEAR::isError($body)) {
+        if ($this->_isError($body)) {
             return $body;
         }
 
-        $head = $this->txtHeaders($headers, $overwrite);
-        $mail = $head . $separation . $body;
-        return $mail;
+        return $this->txtHeaders($headers, $overwrite) . $separation . $body;
     }
 
     /**
@@ -720,7 +728,7 @@ class Mail_mime
      * mail delivery method.
      * 
      * @param array $params The Build parameters passed to the
-     *                      &get() function. See &get for more info.
+     *                      get() method. See get() for more info.
      *
      * @return mixed The e-mail body or PEAR error object
      * @access public
@@ -736,9 +744,9 @@ class Mail_mime
      * 
      * @param string $filename  Output file location
      * @param array  $params    The Build parameters passed to the
-     *                          &get() function. See &get for more info.
+     *                          get() method. See get() for more info.
      * @param array  $headers   The extra headers that should be passed
-     *                          to the &headers() function.
+     *                          to the headers() function.
      *                          See that function for more info.
      * @param bool   $overwrite Overwrite the existing headers with new.
      *
@@ -750,8 +758,7 @@ class Mail_mime
     {
         // Check state of file and raise an error properly
         if (file_exists($filename) && !is_writable($filename)) {
-            $err = PEAR::raiseError('File is not writable: ' . $filename);
-            return $err;
+            return $this->_raiseError('File is not writable: ' . $filename);
         }
 
         // Temporarily reset magic_quotes_runtime and read file contents
@@ -760,15 +767,13 @@ class Mail_mime
         }
 
         if (!($fh = fopen($filename, 'ab'))) {
-            $err = PEAR::raiseError('Unable to open file: ' . $filename);
-            return $err;
+            return $this->_raiseError('Unable to open file: ' . $filename);
         }
 
         // Write message headers into file (skipping Content-* headers)
         $head = $this->txtHeaders($headers, $overwrite, true);
         if (fwrite($fh, $head) === false) {
-            $err = PEAR::raiseError('Error writing to file: ' . $filename);
-            return $err;
+            return $this->_raiseError('Error writing to file: ' . $filename);
         }
 
         fclose($fh);
@@ -785,10 +790,10 @@ class Mail_mime
 
     /**
      * Writes (appends) the complete e-mail body into file.
-     * 
+     *
      * @param string $filename Output file location
      * @param array  $params   The Build parameters passed to the
-     *                         &get() function. See &get for more info.
+     *                         get() method. See get() for more info.
      *
      * @return mixed True or PEAR error object
      * @access public
@@ -798,8 +803,7 @@ class Mail_mime
     {
         // Check state of file and raise an error properly
         if (file_exists($filename) && !is_writable($filename)) {
-            $err = PEAR::raiseError('File is not writable: ' . $filename);
-            return $err;
+            return $this->_raiseError('File is not writable: ' . $filename);
         }
 
         // Temporarily reset magic_quotes_runtime and read file contents
@@ -808,8 +812,7 @@ class Mail_mime
         }
 
         if (!($fh = fopen($filename, 'ab'))) {
-            $err = PEAR::raiseError('Unable to open file: ' . $filename);
-            return $err;
+            return $this->_raiseError('Unable to open file: ' . $filename);
         }
 
         // Write the rest of the message into file
@@ -832,7 +835,7 @@ class Mail_mime
      * @return mixed The MIME message content string, null or PEAR error object
      * @access public
      */
-    function &get($params = null, $filename = null, $skip_head = false)
+    function get($params = null, $filename = null, $skip_head = false)
     {
         if (isset($params)) {
             while (list($key, $value) = each($params)) {
@@ -992,8 +995,7 @@ class Mail_mime
         }
 
         if (!isset($message)) {
-            $ret = null;
-            return $ret;
+            return null;
         }
 
         // Use saved boundary
@@ -1007,20 +1009,18 @@ class Mail_mime
         if ($filename) {
             // Append mimePart message headers and body into file
             $headers = $message->encodeToFile($filename, $boundary, $skip_head);
-            if (PEAR::isError($headers)) {
+            if ($this->_isError($headers)) {
                 return $headers;
             }
             $this->_headers = array_merge($this->_headers, $headers);
-            $ret = null;
-            return $ret;
+            return null;
         } else {
             $output = $message->encode($boundary, $skip_head);
-            if (PEAR::isError($output)) {
+            if ($this->_isError($output)) {
                 return $output;
             }
             $this->_headers = array_merge($this->_headers, $output['headers']);
-            $body = $output['body'];
-            return $body;
+            return $output['body'];
         }
     }
 
@@ -1038,7 +1038,7 @@ class Mail_mime
      * @return array              Assoc array with the mime headers
      * @access public
      */
-    function &headers($xtra_headers = null, $overwrite = false, $skip_content = false)
+    function headers($xtra_headers = null, $overwrite = false, $skip_content = false)
     {
         // Add mime version header
         $headers['MIME-Version'] = '1.0';
@@ -1136,8 +1136,8 @@ class Mail_mime
             ? $this->_build_params['eol'] : "\r\n";
 
         // add parameters
-        $token_regexp = '#([^\x21,\x23-\x27,\x2A,\x2B,\x2D'
-            . ',\x2E,\x30-\x39,\x41-\x5A,\x5E-\x7E])#';
+        $token_regexp = '#([^\x21\x23-\x27\x2A\x2B\x2D'
+            . '\x2E\x30-\x39\x41-\x5A\x5E-\x7E])#';
         if (is_array($params)) {
             foreach ($params as $name => $value) {
                 if ($name == 'boundary') {
@@ -1313,7 +1313,8 @@ class Mail_mime
      */
     function encodeHeader($name, $value, $charset, $encoding)
     {
-        return Mail_mimePart::encodeHeader(
+        $mime_part = new Mail_mimePart;
+        return $mime_part->encodeHeader(
             $name, $value, $charset, $encoding, $this->_build_params['eol']
         );
     }
@@ -1387,18 +1388,23 @@ class Mail_mime
 
         if ($headers['Content-Type'] == 'text/plain') {
             // single-part message: add charset and encoding
+            $charset = 'charset=' . $this->_build_params['text_charset'];
+            // place charset parameter in the same line, if possible
+            // 26 = strlen("Content-Type: text/plain; ")
             $headers['Content-Type']
-                .= ";$eol charset=" . $this->_build_params['text_charset'];
+                .= (strlen($charset) + 26 <= 76) ? "; $charset" : ";$eol $charset";
             $headers['Content-Transfer-Encoding']
                 = $this->_build_params['text_encoding'];
         } else if ($headers['Content-Type'] == 'text/html') {
             // single-part message: add charset and encoding
+            $charset = 'charset=' . $this->_build_params['html_charset'];
+            // place charset parameter in the same line, if possible
             $headers['Content-Type']
-                .= ";$eol charset=" . $this->_build_params['html_charset'];
+                .= (strlen($charset) + 25 <= 76) ? "; $charset" : ";$eol $charset";
             $headers['Content-Transfer-Encoding']
                 = $this->_build_params['html_encoding'];
         } else {
-            // multipart message: add charset and boundary
+            // multipart message: and boundary
             if (!empty($this->_build_params['boundary'])) {
                 $boundary = $this->_build_params['boundary'];
             } else if (!empty($this->_headers['Content-Type'])
@@ -1452,6 +1458,38 @@ class Mail_mime
         ) {
             $this->_build_params['html_encoding'] = 'quoted-printable';
         }
+    }
+
+    /**
+     * PEAR::isError implementation
+     *
+     * @param mixed $data Object
+     *
+     * @return bool True if object is an instance of PEAR_Error
+     * @access private
+     */
+    function _isError($data)
+    {
+        // PEAR::isError() is not PHP 5.4 compatible (see Bug #19473)
+        if (is_object($data) && is_a($data, 'PEAR_Error')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * PEAR::raiseError implementation
+     *
+     * @param $message A text error message
+     *
+     * @return PEAR_Error Instance of PEAR_Error
+     * @access private
+     */
+    function _raiseError($message)
+    {
+        // PEAR::raiseError() is not PHP 5.4 compatible
+        return new PEAR_Error($message);
     }
 
 } // End of class
