@@ -842,10 +842,9 @@ function create_ical_event($method, $data, $text_description, $html_description,
   $results[] = "BEGIN:VEVENT";
   $results[] = "UID:" . $data['ical_uid'];  // compulsory
   $results[] = "DTSTAMP:" . gmdate(RFC5545_FORMAT . '\Z');  // compulsory
-  if (!empty($data['last_updated']))
-  {
-    $results[] = "LAST-MODIFIED:" . gmdate(RFC5545_FORMAT . '\Z', $data['last_updated']);
-  }
+  $last_modified = empty($data['last_updated']) ? time() : $data['last_updated'];
+  $results[] = "LAST-MODIFIED:" . gmdate(RFC5545_FORMAT . '\Z', $last_modified);
+  
 
   // Note: we try and write the event times in the format of a local time with
   // a timezone reference (ie RFC 5545 Form #3).   Only if we can't do that do we
