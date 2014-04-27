@@ -926,28 +926,17 @@ function create_ical_event($method, $data, $text_description, $html_description,
   */
   
   // ORGANIZER
-  // The organizer is the booking creator if we've got an email address for him/her.
-  // Otherwise we'll make the 'from' address the organizer.   In both cases we'll try
-  // and extract the common name from the email address.
-  $organizer_email = get_email_address($data['create_by']);
-  if (empty($organizer_email))
+  // The organizer is MRBS.   We don't make the create_by user the organizer because there
+  // are some mail systems such as IBM Domino that silently discard the email notification
+  // if the organizer's email address is the same as the recipient's - presumably because
+  // they assume that the recipient already knows about the event.
+
+  $organizer = parse_address($mail_settings['organizer']);
+  if (empty($organizer['common_name']))
   {
-    $organizer = parse_address($addresses['from']);
-    if (empty($organizer['common_name']))
-    {
-      $organizer['common_name'] = $organizer['address'];
-    }
+    $organizer['common_name'] = get_mail_vocab('mrbs');
   }
-  else
-  {
-    $organizer = parse_address($organizer_email);
-    if (empty($organizer['common_name']))
-    {
-      // If the email address doesn't have a common name
-      // then we can use the creator's username
-      $organizer['common_name'] = $data['create_by'];
-    }
-  }
+  
   if (!empty($organizer['address']))
   {
     $results[] = "ORGANIZER;CN=\"" . ical_escape_quoted_string($organizer['common_name']) . "\":mailto:" . $organizer['address'];

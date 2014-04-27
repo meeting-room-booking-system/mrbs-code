@@ -998,6 +998,13 @@ $smtp_settings['password'] = '';       // Password (if using authentication)
 // Set the email address of the From field. Default is 'admin_email@your.org'
 $mail_settings['from'] = 'admin_email@your.org';
 
+// The address to be used for the ORGANIZER in an iCalendar event.   Do not make
+// this email address the same as the admin email address or the recipients 
+// email address because on some mail systems, eg IBM Domino, the iCalendar email
+// notification is silently discarded if the organizer's email address is the same 
+// as the recipient's.
+$mail_settings['organizer'] = 'mrbs@your.org';
+
 // Set the recipient email. Default is 'admin_email@your.org'. You can define
 // more than one recipient like this "john@doe.com,scott@tiger.com"
 $mail_settings['recipients'] = 'admin_email@your.org';
