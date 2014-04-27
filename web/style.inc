@@ -55,7 +55,7 @@ global $using_rtl, $refresh_rate, $custom_css_url, $PHP_SELF;
       <?php
     }
     ?>
-    <meta name="robots" content="noindex">
+    <meta name="robots" content="noindex, nofollow">
 <?php
 if (($refresh_rate != 0) && preg_match("/(day|week|month)\.php/", $PHP_SELF))
 {
