@@ -333,8 +333,12 @@ tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /
 .dwm_main .ui-resizable-ne {top: -2px; right: -1px}
 .dwm_main .ui-resizable-nw {top: -2px; left: -1px}
 
+<?php
+// We make the position property !important because otherwise IE seems to give it an inline style
+// of position: relative for some unknown reason
+?>
 div.outline {
-  position: absolute;
+  position: absolute !important;
   border: 1px dotted <?php echo $header_back_color ?>;
   z-index: 700;
 }
