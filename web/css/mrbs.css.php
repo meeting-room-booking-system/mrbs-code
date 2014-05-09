@@ -178,10 +178,17 @@ div.date_before {float: left;  width: 33%; text-align: left}
 div.date_now    {float: left;  width: 33%; text-align: center}
 div.date_after  {float: right; width: 33%; text-align: right}
 
-table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: separate;
-    border-color: <?php echo $main_table_border_color ?>;
-    border-width: <?php echo $main_table_border_width ?>px;
-    border-style: solid}
+table.dwm_main {
+  float: left;
+  clear: both; 
+  width: 100%; 
+  border-spacing: 0;
+  border-collapse: separate;
+  border-color: <?php echo $main_table_border_color ?>;
+  border-width: <?php echo $main_table_border_width ?>px;
+  border-style: solid
+}
+
 .dwm_main td {padding: 0;
     border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>;
     border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
