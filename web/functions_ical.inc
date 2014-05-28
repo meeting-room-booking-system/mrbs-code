@@ -829,7 +829,7 @@ function create_exdate_list($dates)
 
 
 // Create an RFC 5545 iCalendar Event component
-function create_ical_event($method, $data, $text_description, $html_description, $addresses, $series=FALSE)
+function create_ical_event($method, $data, $addresses=NULL, $series=FALSE)
 {
   require_once "functions_mail.inc";
   
@@ -853,7 +853,7 @@ function create_ical_event($method, $data, $text_description, $html_description,
   //
   // The reason for this is that although this is not required by RFC 5545 (see
   // Appendix A.2), its predecessor, RFC 2445, did require it for recurring
-  // wvents and is the standard against which older applications, notably Exchange
+  // events and is the standard against which older applications, notably Exchange
   // 2007, are written.   Note also that when using a local timezone format the
   // VTIMEZONE component must be provided (this is done in create_icalendar() ).  Some
   // applications will work without the VTIMEZONE component, but many follow the
@@ -885,17 +885,7 @@ function create_ical_event($method, $data, $text_description, $html_description,
     }
   }
   $results[] = "SUMMARY:" . ical_escape_text($data['name']);
-  // Put the HTML version in an ALTREP, just in case there are any Calendars out there
-  // that support it (although at the time of writing, Dec 2010, none are known)
-  $results[] = "DESCRIPTION" .
-               ((($use_html && !empty($html_description['cid'])) ? ";ALTREP=\"CID:" . $html_description['cid'] . "\"" : "") . ":" .
-               ical_escape_text($text_description['content']));
-  // This is another way of getting an HTML description, used by Outlook.  However it 
-  // seems to be very limited
-  if ($use_html)
-  {
-    $results[] = "X-ALT-DESC;FMTTYPE=text/html:" . ical_escape_text($html_description['content']);
-  }
+  $results[] = "DESCRIPTION:" . ical_escape_text($data['description']);
   $results[] = "LOCATION:" . ical_escape_text($data['area_name'] . $default_area_room_delimiter . $data['room_name']);
   $results[] = "SEQUENCE:" . $data['ical_sequence'];
   // If this is an individual member of a series then set the recurrence id
@@ -1085,7 +1075,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
     {
       $text_body['content'] = create_details_body($row, FALSE, $keep_private);
       $html_body['content'] = "<table>" . create_details_body($row, TRUE, $keep_private) . " </table>";
-      $ical_events[] = create_ical_event("REQUEST", $row, $text_body, $html_body, NULL, FALSE);
+      $ical_events[] = create_ical_event("REQUEST", $row);
     }
     // Otherwise it's a series
     else
@@ -1111,7 +1101,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
             $start_row['start_time'] = $missing_entry;
             $start_row['end_time'] = $start_row['start_time'] + $duration;
             $start_row['ical_recur_id'] = gmdate(RFC5545_FORMAT . '\Z', $missing_entry);
-            $ical_events[] = create_ical_event("CANCEL", $start_row, NULL, NULL, NULL, FALSE);
+            $ical_events[] = create_ical_event("CANCEL", $start_row);
           }
         }
         // Initialise for the new series
@@ -1165,7 +1155,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
         // Create the series event
         $text_body['content'] = create_details_body($start_row, FALSE, $keep_private);
         $html_body['content'] = "<table>" . create_details_body($start_row, TRUE, $keep_private) . "</table>";
-        $ical_events[] = create_ical_event("REQUEST", $start_row, $text_body, $html_body, NULL, TRUE);
+        $ical_events[] = create_ical_event("REQUEST", $start_row, NULL, TRUE);
       }
       // Add this entry to the array of ones we've seen
       $actual_entries[] = strtotime($row['ical_recur_id']);
@@ -1174,7 +1164,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
       {
         $text_body['content'] = create_details_body($row, FALSE, $keep_private);
         $html_body['content'] = "<table>" . create_details_body($row, TRUE, $keep_private) . "</table>";
-        $ical_events[] = create_ical_event("REQUEST", $row, $text_body, $html_body, NULL, FALSE);
+        $ical_events[] = create_ical_event("REQUEST", $row);
       }
       // Otherwise it must be an original member, in which case check
       // to see if we were looking out for one
@@ -1190,7 +1180,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
         $row['end_date'] = min($export_end, $row['end_date']);
         $text_body['content'] = create_details_body($row, FALSE, $keep_private);
         $html_body['content'] = "<table>" . create_details_body($row, TRUE, $keep_private) . "</table>";
-        $ical_events[$replace_index] = create_ical_event("REQUEST", $row, $text_body, $html_body, NULL, TRUE);
+        $ical_events[$replace_index] = create_ical_event("REQUEST", $row, NULL, TRUE);
         // Clear the $replace_index now that we've found an original entry
         unset ($replace_index);
       }
@@ -1215,7 +1205,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
       $start_row['start_time'] = $missing_entry;
       $start_row['end_time'] = $start_row['start_time'] + $duration;
       $start_row['ical_recur_id'] = gmdate(RFC5545_FORMAT . '\Z', $missing_entry);
-      $ical_events[] = create_ical_event("CANCEL", $start_row, NULL, NULL, NULL, FALSE);
+      $ical_events[] = create_ical_event("CANCEL", $start_row);
     }
   }
   // Build the iCalendar from the array of events and output it

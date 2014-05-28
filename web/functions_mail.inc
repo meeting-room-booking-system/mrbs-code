@@ -998,7 +998,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
   {
     $attachment['method']   = "REQUEST";
     $ical_components = array();
-    $ical_components[] = create_ical_event($attachment['method'], $data, $text_body, $html_body, $addresses, $series);
+    $ical_components[] = create_ical_event($attachment['method'], $data, $addresses, $series);
     $attachment['content']  = create_icalendar($attachment['method'], $ical_components);
     $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
   }
@@ -1087,7 +1087,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
   {
     $attachment['method']   = "CANCEL";
     $ical_components = array();
-    $ical_components[] = create_ical_event($attachment['method'], $data, $text_body, $html_body, $addresses, $series);
+    $ical_components[] = create_ical_event($attachment['method'], $data, $addresses, $series);
     $attachment['content']  = create_icalendar($attachment['method'], $ical_components);
     $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
   }
