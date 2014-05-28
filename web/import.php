@@ -376,7 +376,7 @@ print_header($day, $month, $year, $area, $room);
 
 $import = get_form_var('import', 'string');
 $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
-$area_room_delimiter = get_form_var('area_room_delimiter', 'string', ';');
+$area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_area_room_delimiter);
 $area_room_create = get_form_var('area_room_create', 'string', '0');
 $import_default_type = get_form_var('import_default_type', 'string', $default_type);
 $skip = get_form_var('skip', 'string', ((empty($skip_default)) ? '0' : '1'));

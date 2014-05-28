@@ -833,7 +833,8 @@ function create_ical_event($method, $data, $text_description, $html_description,
 {
   require_once "functions_mail.inc";
   
-  global $confirmation_enabled, $mail_settings, $timezone, $vtimezone;
+  global $confirmation_enabled, $mail_settings, $timezone, $vtimezone,
+         $default_area_room_delimiter;
   
   $use_html = $mail_settings['html'] && !empty($html_description);
   
@@ -895,7 +896,7 @@ function create_ical_event($method, $data, $text_description, $html_description,
   {
     $results[] = "X-ALT-DESC;FMTTYPE=text/html:" . ical_escape_text($html_description['content']);
   }
-  $results[] = "LOCATION:" . ical_escape_text($data['area_name'] . " - " . $data['room_name']);
+  $results[] = "LOCATION:" . ical_escape_text($data['area_name'] . $default_area_room_delimiter . $data['room_name']);
   $results[] = "SEQUENCE:" . $data['ical_sequence'];
   // If this is an individual member of a series then set the recurrence id
   if (!$series && ($data['entry_type'] != ENTRY_SINGLE))

@@ -1107,6 +1107,16 @@ $csv_bom = TRUE;
 
 
 /*************
+ * iCalendar
+ *************/
+
+// The default delimiter for separating the area and room in the LOCATION property
+// of an iCalendar event.   Note that no escaping of the delimiter is provided so
+// it must not occur in room or area names.
+$default_area_room_delimiter = '/';
+ 
+
+/*************
  * Entry Types
  *************/
 
