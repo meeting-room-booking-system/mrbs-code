@@ -7,6 +7,66 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.4.11 (Wed Jun 18 22:00:00 BST 2014):
+
+[+] Implemented an inactivity time out that will log users out after
+ a period of inactivity.
+[-] Fixed problem with Strict error messages being generated when
+ mail messages are sent using PHP versions < 5.4. See SF Support
+ Requests #367.
+[*] Added support for Estonian in Windows and Unix.
+[+] Added ability to use custom CSS files.
+[-] Fixed bug causing the approval buttons not to be displayed on the
+ view_entry page in some circumstances (see SF Support Requests
+ #356).
+[+] Added ability to specify the database port with the config variable
+ $db_port.
+[+] Added the ability to set a maxlength attribute for custom fields
+ on the edit_entry page.
+[*] Changed default database system for 'db_ext' authentication from
+ mysql to mysqli.
+[*] Added quoting of table and column names when using 'db_ext'
+ authentication.
+[*] Updated Czech translation.
+[-] Prevented output of headers when running reports in CLI mode.
+[*] Removed closing PHP tags (?>) at the ends of files as they are
+ unnecessary and can cause problems with unexpected output.
+[-] Fixed problem with alignment of room and area selects in the week
+ and month views. Thanks to William Haller.
+[*] Improved error reporting in the week view when there are no rooms.
+[+] Implemented an earliest booking date using absolute dates,
+ controlled by the new config variables $min_booking_date_enabled
+ and $min_booking_date.
+[*] Added the ability to specify a schema as a database config
+ variable and thus the ability for MRBS to work with databases
+ containing multiple schemas.
+[+] Added 'modified_by' field so you can see who last modified an
+ entry.
+[+] Added Bahasa Indonesian translation.
+[*] Upgraded to jQuery 2.1.0, jQuery UI Release 1.10.4.
+[*] Modified import.php so that it is tolerant of blank lines at the
+ start of the file and also between components.
+[-] Fixed some errors in the Windows language map and expanded the
+ Windows codepage map.
+[-] Fixed a problem in the day and week views with resizable bookings
+ not filling the whole time period when $clipped is set to FALSE.
+[*] Changed the ORGANIZER in an iCalendar event to be a new email
+ address, defined as $mail_settings['organizer'] and not the
+ creator.
+[*] Added nofollow to robots meta tag.
+[-] Fixed problem with colour key and trailer shifting downwards
+ during a booking resize in IE.
+[-] Fixed problem with resizing bookings in IE. See SF Bugs #293 and
+ #300.
+[-] Changed form action link to a relative path name from an absolute
+ path name, which was causing problems on some sites with reverse
+ proxy rules.
+[*] Made the default area and room consistent on import and export of
+ an event.
+[-] Fixed bug in export of an event: the description included the
+ complete booking details instead of just the description.
+
+-------------------------------------------------------------------------------
 Version 1.4.10 (Mon Jul 08 22:00:00 BST 2013):
 
 [+] MRBS now supports booking days that span midnight. At the same time a number of problems to do

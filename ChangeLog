@@ -1,3 +1,767 @@
+2014-05-28 15:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2840] web/functions_ical.inc, web/functions_mail.inc:
+	  
+	  Fixed bug in export of an event: the description included the
+	  complete booking details instead of just the description.
+
+2014-05-28 15:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2839] web/functions_ical.inc, web/import.php,
+	  web/systemdefaults.inc.php:
+	  
+	  Made the default area and room consistent on import and export of
+	  an event. See SF Support Requests #541
+
+2014-05-22 09:54  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2838] web/admin.php:
+	  
+	  Changed form action link to a relative path name from an absolute
+	  path name, which was causing problems on some sites with reverse
+	  proxy rules. See the bug report on the MRBS-general mailing list.
+
+2014-05-09 11:29  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2837] web/css/mrbs.css.php:
+	  
+	  Fixed problem with resizing bookings in IE. See SF Bugs #293 and
+	  #300.
+
+2014-05-09 09:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2836] web/css/mrbs.css.php:
+	  
+	  Fixed problem with colour key and trailer shifting downwards
+	  during a booking resize in IE. See SF Bugs #300
+
+2014-04-27 17:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2832] web/style.inc:
+	  
+	  Added nofollow to robots meta tag. See SF Bugs #298
+
+2014-04-27 17:10  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2831] web/functions_ical.inc, web/systemdefaults.inc.php:
+	  
+	  Changed the ORGANIZER in an iCalendar event to be a new email
+	  address, defined as $mail_settings['organizer'] and not the
+	  creator. This is to avoid a problem in some mail systems, eg IBM
+	  Domino, where an iCalendar event notification email is silently
+	  discarded if the organizer's email address is the same as the
+	  recipient's
+
+2014-04-27 10:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2830] web/functions_ical.inc:
+	  
+	  Added a LAST-MODIFIED property to all VEVENTS
+
+2014-04-26 15:44  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2829] web/Mail/mime.php, web/Mail/mimePart.php:
+	  
+	  Upgraded Mail_Mime package to Version 1.8.8
+
+2014-04-02 17:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2828] web/language.inc:
+	  
+	  Added an alternative for the %e modifier for strftime() when
+	  running on Windows. See also SF Support Requests #521
+
+2014-03-17 15:55  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2827] web/edit_users.php:
+	  
+	  Corrected typo in comment
+
+2014-03-09 10:03  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2826] web/js/resizable.js.php:
+	  
+	  Fixed a problem in the day and week views with resizable bookings
+	  not filling the whole time period when $clipped is set to FALSE.
+	  See SF Support Requests #503.
+
+2014-03-08 10:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2825] web/functions.inc:
+	  
+	  Fixed bug in last change
+
+2014-03-08 09:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2824] web/edit_entry.php, web/functions.inc:
+	  
+	  Made the first option of a radio button group the default value
+	  if no value is given, mirroring the way a <select> element works.
+
+2014-03-07 11:10  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2823] web/functions.inc, web/functions_mail.inc,
+	  web/language.inc, web/mrbs_sql.inc:
+	  
+	  Converted a few substr() and strlen() calls to their utf8_
+	  equivalents for good measure
+
+2014-03-03 17:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2822] web/edit_area_room.php, web/edit_entry.php,
+	  web/functions.inc, web/report.php:
+	  
+	  Changed the operation for generate_radio_group() so that it
+	  operates in the same way as generate_select() and can take either
+	  a simple or an associative array. This enables custom fields to
+	  be presented as radio buttons instead of as <select> elements if
+	  desired. See SF Support Requests #489.
+
+2014-02-25 16:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2821] web/language.inc:
+	  
+	  Fixed bug in utf8_substr() on 64 bit Linux systems caused by an
+	  underlying bug in mb_substr()
+
+2014-02-24 13:44  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2820] web/language.inc:
+	  
+	  Added locale mappings for 'nb' ( => 'nb_NO') and 'nn' (=>
+	  'nn_NO')
+
+2014-02-22 18:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2819] web/functions_ical.inc:
+	  
+	  Added escaping and unescaping of '\N' in property values
+	  (required by RFC 5545 Section 3.3.11)
+
+2014-02-14 10:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2818] web/import.php:
+	  
+	  Modified import.php so that it is tolerant of blank lines at the
+	  start of the file and also between components (eg VEVENTS).
+	  Strictly speaking these are not allowed according to RFC5545, but
+	  it does no harm to tolerate them.
+
+2014-02-13 18:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2817] web/jquery/ui/jquery-ui-i18n.MRBS.js:
+	  
+	  Added an en-IE regional setting for the datepicker
+
+2014-02-13 11:34  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2816] web/language.inc:
+	  
+	  Fixed some errors in the Windows language map and expanded the
+	  Windows codepage map
+
+2014-02-13 10:11  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2815] web/language.inc:
+	  
+	  Fixed problem with es-CO on Windows. See SF Support Requests 477.
+	  Also added support for the remaining Spanish variants.
+
+2014-02-10 18:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2814] web/functions_mail.inc, web/language.inc:
+	  
+	  Fixed bug causing dates in mail messages to be in the wrong
+	  language when the main MRBS language differs from the mail
+	  language. See SF Support Requests #474.
+
+2014-02-09 14:26  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2813] web/edit_entry_handler.php:
+	  
+	  Changed error level for missing id from E_USER_WARNING to
+	  E_USER_NOTICE (see SF Feature Requests 249)
+
+2014-02-09 09:41  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2812] web/js/resizable.js.php:
+	  
+	  Fixed problem with shaded selection sometimes not snapping to the
+	  edge of the slot when selecting a group of empty slots. Bug
+	  caused by the fact that .offset() in some browsers (eg Firefox)
+	  returns decimal values calculated from styling rather than
+	  integer pixel values from rendering.
+
+2014-02-08 11:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2811] web/jquery/ui/css/sunny/images/animated-overlay.gif[ADD],
+	  web/jquery/ui/css/sunny/images/ui-bg_diagonals-medium_20_d34d17_40x40.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_flat_30_cccccc_40x100.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_flat_50_5c5c5c_40x100.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_gloss-wave_45_817865_500x100.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_gloss-wave_60_fece2f_500x100.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_gloss-wave_70_ffdd57_500x100.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_gloss-wave_90_fff9e5_500x100.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_highlight-soft_100_feeebd_1x100.png,
+	  web/jquery/ui/css/sunny/images/ui-bg_inset-soft_30_ffffff_1x100.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_3d3d3d_256x240.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_bd7b00_256x240.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_d19405_256x240.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_eb990f_256x240.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_ed9f26_256x240.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_fadc7a_256x240.png,
+	  web/jquery/ui/css/sunny/images/ui-icons_ffe180_256x240.png,
+	  web/jquery/ui/css/sunny/jquery-ui-1.10.4.custom.min.css[ADD],
+	  web/jquery/ui/css/sunny/jquery-ui-1.9.1.custom.min.css[DEL],
+	  web/jquery/ui/jquery-ui-1.10.4.custom.min.js[ADD],
+	  web/jquery/ui/jquery-ui-1.9.1.custom.min.js[DEL],
+	  web/jquery/ui/jquery-ui-i18n.js, web/js.inc, web/style.inc:
+	  
+	  Upgraded to jQuery UI Release 1.10.4
+
+2014-02-08 10:58  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2810] web/jquery/jquery-2.1.0.min.js[ADD], web/js.inc:
+	  
+	  Upgraded to jQuery 2.1.0, with a fallback to 1.11.0 for IE8 and
+	  below
+
+2014-02-08 10:28  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2809] web/internalconfig.inc.php,
+	  web/jquery/jquery-1.11.0.min.js[ADD],
+	  web/jquery/jquery-1.8.2.min.js[DEL],
+	  web/jquery/jquery-migrate-1.2.1.js[ADD],
+	  web/jquery/jquery-migrate-1.2.1.min.js[ADD], web/js.inc:
+	  
+	  Upgraded to jQuery 1.11.0, fixing SF Bugs #293 in the process
+
+2014-01-29 14:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2808] web/grab_globals.inc.php:
+	  
+	  Simplified code
+
+2014-01-29 09:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2807] web/lang/lang.id[ADD], web/language.inc:
+	  
+	  Added Bahasa Indonesian translation. Thanks to Gibransyah Fakhri.
+	  See SF Patches #44.
+
+2014-01-29 08:49  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2806] web/systemdefaults.inc.php:
+	  
+	  Updated comment on changing type colours
+
+2014-01-24 20:05  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2805] web/internalconfig.inc.php:
+	  
+	  Added missing commas. See SF Bugs #292
+
+2014-01-20 20:59  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2804] web/js/datepicker.js.php:
+	  
+	  Allowed datepickers to be edited manually. See SF Bugs #291
+
+2014-01-17 14:25  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2803] tables.my.pre41.sql, tables.my.sql, tables.pg.pre73.sql,
+	  tables.pg.sql, web/dbsys.inc, web/edit_entry_handler.php,
+	  web/functions_view.inc, web/internalconfig.inc.php,
+	  web/lang/lang.en, web/lang/lang.it, web/mrbs_sql.inc,
+	  web/upgrade/36[ADD], web/upgrade/36/mysql.sql[ADD],
+	  web/upgrade/36/pgsql.sql[ADD]:
+	  
+	  Added 'modified_by' field so you can see who last modified an
+	  entry
+
+2014-01-15 21:29  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2802] web/upgrade.inc:
+	  
+	  Fixed upgrade.inc to work with multiple schemas
+
+2014-01-15 20:50  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2801] web/pgsql.inc:
+	  
+	  Fixed sql_pgsql_table_exists() when used with a database
+	  containing multiple schemas.
+
+2014-01-09 15:24  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2800] web/dbsys.inc:
+	  
+	  Minor improvement on previous change. Qualified table names are
+	  now formed for all databases other than MySQL, rather than just
+	  for PostgreSQL. As most databases other than MySQL seem to
+	  support schemas this will mean that should support for other
+	  databases be added in the future the code is more likely to work.
+
+2014-01-09 12:44  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2799] web/config.inc.php, web/dbsys.inc, web/pgsql.inc,
+	  web/systemdefaults.inc.php:
+	  
+	  Added the ability to specify a schema as a database config
+	  variable and thus the ability for MRBS to work with databases
+	  containing multiple schemas (only applicable to PostgreSQL). See
+	  SF Support Requests #431.
+
+2013-12-13 13:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2798] web/approve_entry_handler.php:
+	  
+	  Fixed a bug whereby the room id wasn't being passed through to
+	  approve_entry_handler.php. The bug doesn't manifest itself in
+	  standard MRBS but does if you're extending auth_book_admin() to
+	  make use of the room parameter.
+
+2013-12-10 10:40  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2797] web/internalconfig.inc.php:
+	  
+	  Fixed problem causing a warning about the timezone not having
+	  been set. The problem only manifests itself if the timezone
+	  hasn't been set by php.ini using date.timezone. Most php.ini
+	  files do this, but some don't.
+
+2013-11-28 09:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2796] web/systemdefaults.inc.php:
+	  
+	  Replicated changes from Rev 2793 and 2794 to the systemdefaults
+	  file and also extended to 'db_ext' settings
+
+2013-11-28 09:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2795] web/config.inc.php:
+	  
+	  Improved comments in the config file. See SF Support Requests
+	  #423
+
+2013-11-27 19:44  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2794] web/config.inc.php:
+	  
+	  Clarified $db_host setting when used with mysql/mysqli.
+
+2013-11-27 19:34  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2793] web/config.inc.php:
+	  
+	  Added an example of setting $db_port into config.inc.php.
+
+2013-11-27 09:46  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2792] web/systemdefaults.inc.php:
+	  
+	  Corrected error in comment
+
+2013-11-27 09:35  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2791] web/lang/lang.en, web/mrbs_sql.inc,
+	  web/systemdefaults.inc.php:
+	  
+	  Implemented an earliest booking date using absolute dates,
+	  controlled by the new config variables $min_booking_date_enabled
+	  and $min_booking_date
+
+2013-11-26 09:25  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2790] web/month.php:
+	  
+	  Removed redundant code
+
+2013-11-26 09:24  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2789] web/functions_table.inc:
+	  
+	  Improved error reporting in the week view when there are no rooms
+
+2013-11-25 20:36  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2788] convert_db_to_utf8.php:
+	  
+	  Added passing of $db_port to sql_connect() call in
+	  convert_db_to_utf8. See [support-requests:#365].
+
+2013-11-25 20:32  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2787] web/dbsys.inc:
+	  
+	  Make sql_connect() take an optional port parameter.
+
+2013-11-25 18:30  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2786] web/dbsys.inc:
+	  
+	  Fixed bug where $db_port was being ignored in the upgrade
+	  process. See SF Support Requests #365
+
+2013-11-21 11:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2785] web/css/mrbs.css.php:
+	  
+	  Fixed problem with alignment of room and area selects in the week
+	  and month views. Thanks to William Haller.
+
+2013-11-21 10:48  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2784] convert_db_to_utf8.php, testdata.php, web/Blowfish.php,
+	  web/Blowfish/DefaultKey.php, web/File/Passwd.php,
+	  web/File/Passwd/Authbasic.php, web/File/Passwd/Authdigest.php,
+	  web/File/Passwd/Common.php, web/File/Passwd/Custom.php,
+	  web/File/Passwd/Cvs.php, web/File/Passwd/Smb.php,
+	  web/File/Passwd/Unix.php, web/PEAR.php,
+	  web/Themes/classic126/styling.inc, web/Themes/default/header.inc,
+	  web/Themes/default/styling.inc, web/add.php, web/admin.php,
+	  web/approve_entry_handler.php, web/auth/auth_auth_basic.inc,
+	  web/auth/auth_config.inc, web/auth/auth_crypt.inc,
+	  web/auth/auth_db.inc, web/auth/auth_db_ext.inc,
+	  web/auth/auth_ext.inc, web/auth/auth_imap.inc,
+	  web/auth/auth_imap_php.inc, web/auth/auth_ldap.inc,
+	  web/auth/auth_nis.inc, web/auth/auth_none.inc,
+	  web/auth/auth_nw.inc, web/auth/auth_pop3.inc,
+	  web/auth/auth_smtp.inc, web/check_slot_ajax.php,
+	  web/config.inc.php, web/day.php, web/defaultincludes.inc,
+	  web/del.php, web/del_entry.php, web/del_entry_ajax.php,
+	  web/edit_area_room.php, web/edit_entry.php,
+	  web/edit_entry_handler.php, web/edit_users.php,
+	  web/escapeshellarg.inc, web/functions.inc,
+	  web/functions_ical.inc, web/functions_mail.inc,
+	  web/functions_view.inc, web/grab_globals.inc.php, web/help.php,
+	  web/import.php, web/index.php, web/internalconfig.inc.php,
+	  web/js/refresh.js.php, web/lang/lang.ca, web/lang/lang.cs,
+	  web/lang/lang.da, web/lang/lang.de, web/lang/lang.el,
+	  web/lang/lang.en, web/lang/lang.es, web/lang/lang.eu,
+	  web/lang/lang.fi, web/lang/lang.fr, web/lang/lang.he,
+	  web/lang/lang.hu, web/lang/lang.it, web/lang/lang.ja,
+	  web/lang/lang.ko, web/lang/lang.nl, web/lang/lang.no,
+	  web/lang/lang.pt, web/lang/lang.pt-br, web/lang/lang.ru,
+	  web/lang/lang.sl, web/lang/lang.sr-rs-latin, web/lang/lang.sv,
+	  web/lang/lang.th, web/lang/lang.tr, web/lang/lang.zh-cn,
+	  web/lang/lang.zh-tw, web/language.inc, web/mincals.inc,
+	  web/month.php, web/mrbs_auth.inc, web/mrbs_sql.inc,
+	  web/mysql.inc, web/mysqli.inc, web/pending.php, web/pgsql.inc,
+	  web/record_activity_ajax.php, web/report.php, web/search.php,
+	  web/session/session_cookie.inc, web/session/session_host.inc,
+	  web/session/session_http.inc, web/session/session_ip.inc,
+	  web/session/session_nt.inc, web/session/session_omni.inc,
+	  web/session/session_php.inc, web/session/session_remote_user.inc,
+	  web/standard_vars.inc.php, web/style.inc,
+	  web/systemdefaults.inc.php, web/theme.inc, web/trailer.inc,
+	  web/upgrade.inc, web/upgrade/13/post.inc,
+	  web/upgrade/15/post.inc, web/upgrade/16/post.inc,
+	  web/upgrade/17/post.inc, web/upgrade/2/post.inc,
+	  web/upgrade/21/post.inc, web/upgrade/24/post.inc,
+	  web/upgrade/32/post.inc, web/upgrade/34/post.inc,
+	  web/upgrade/4/post.inc, web/upgrade/5/post.inc,
+	  web/upgrade/6/post.inc, web/upgrade/7/post.inc,
+	  web/upgrade/8/post.inc, web/version.inc, web/view_entry.php,
+	  web/week.php:
+	  
+	  Removed closing PHP tags (?>) at the ends of files as they are
+	  unnecessary and can cause problems with unexpected output (eg see
+	  SF Bugs #288)
+
+2013-11-20 12:06  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2783] web/report.php:
+	  
+	  Prevented output of headers when running reports in CLI mode.
+	  Thanks to William Haller.
+
+2013-11-14 11:23  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2781] web/site_faq/site_faq_cs.html[ADD]:
+	  
+	  Added Czech help file. Thanks to tachec. See
+	  https://sourceforge.net/p/mrbs/patches/43/.
+
+2013-11-13 10:13  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2780] web/lang/lang.cs:
+	  
+	  Updated Czech translation. See
+	  https://sourceforge.net/p/mrbs/patches/42/
+
+2013-11-07 15:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2779] web/auth/auth_db_ext.inc, web/systemdefaults.inc.php:
+	  
+	  Allowed use of non-standard port numbers when using 'db_ext'
+	  authentication
+
+2013-11-07 15:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2778] web/mysqli.inc:
+	  
+	  Removed debugging info when using $db_port with mysqli
+
+2013-11-07 15:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2777] web/mysql.inc:
+	  
+	  Fixed bug when using $db_port with mysql
+
+2013-11-07 14:46  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2776] web/dbsys.inc, web/mysql.inc, web/mysqli.inc,
+	  web/pgsql.inc:
+	  
+	  Tidied up quoting of identifiers
+
+2013-11-07 14:32  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2775] web/auth/auth_db_ext.inc:
+	  
+	  Added quoting of table and column names when using 'db_ext'
+	  authentication
+
+2013-11-07 14:25  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2774] web/auth/auth_db_ext.inc:
+	  
+	  Improved error reporting when using 'db_ext' authentication
+
+2013-11-07 13:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2773] web/auth/auth_db_ext.inc, web/systemdefaults.inc.php:
+	  
+	  Changed default database system for 'db_ext' authentication from
+	  mysql to mysqli (mysql is deprecated from PHP 5.5)
+
+2013-10-18 15:59  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2772] web/edit_users.php:
+	  
+	  Fixed checking of password length when using multibyte characters
+
+2013-10-18 15:53  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2771] web/mrbs_sql.inc:
+	  
+	  Fixed truncation of room and area names when using multi-byte
+	  characters
+
+2013-10-18 15:49  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2770] web/admin.php:
+	  
+	  Fixed truncation of multi-byte characters on the admin page
+
+2013-10-18 15:38  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2769] web/edit_users.php:
+	  
+	  Fixed truncation of maxlength fields on the Add user form to
+	  cater for multi-byte characters
+
+2013-10-18 15:35  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2768] web/edit_entry.php, web/functions.inc:
+	  
+	  Added the ability to set a maxlength on textareas, including the
+	  Description field on the edit_entry form.
+
+2013-10-18 15:20  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2767] web/edit_entry_handler.php:
+	  
+	  Added comment
+
+2013-10-18 15:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2766] web/edit_entry.php, web/edit_entry_handler.php,
+	  web/systemdefaults.inc.php:
+	  
+	  Added the ability to set a maxlength attribute for custom fields
+	  on the edit_entry page (see SF Feature Requests #230). At the
+	  same time fixed handling of maxlength fields on the edit_entry
+	  page for multi-byte characters.
+
+2013-10-16 21:02  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2765] web/systemdefaults.inc.php:
+	  
+	  Added some comments about the use of associative arrays for
+	  $select_options (see SF Bugs 282)
+
+2013-10-02 20:15  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2764] web/mysql.inc, web/mysqli.inc, web/pgsql.inc,
+	  web/systemdefaults.inc.php:
+	  
+	  Added ability to specify the config variable $db_port, see
+	  [support-requests:#365].
+
+2013-09-30 09:57  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2763] web/functions_ical.inc:
+	  
+	  Fixed bug when exporting an individual entry of a series. Thanks
+	  to Quique. See SF Patches #41
+
+2013-09-21 13:37  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2762] web/report.php:
+	  
+	  Fixed bug when exporting monthly repeats in ical format (see SF
+	  bugs #281)
+
+2013-09-13 13:21  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2761] web/view_entry.php:
+	  
+	  Removed redundant code
+
+2013-09-13 13:12  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2760] web/view_entry.php:
+	  
+	  Fixed bug causing the approval buttons not to be displayed on the
+	  view_entry page in some circumstances (see SF Support Requests
+	  #356)
+
+2013-09-12 14:22  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2759] web/lang/lang.fr:
+	  
+	  Added to French translation (see SF Patches #40)
+
+2013-09-11 19:57  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2758] web/edit_area_room.php:
+	  
+	  Fixed bug whereby custom HTML for a room was not being saved (see
+	  SF Support requests #384)
+
+2013-09-06 08:17  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2757] web/style.inc:
+	  
+	  Fixed last change to allow remote URLs (see SF Support Requests
+	  #381)
+
+2013-09-05 13:41  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2756] web/css/mrbs.css.php:
+	  
+	  Replaced tab with spaces
+
+2013-09-05 13:09  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2755] web/style.inc, web/systemdefaults.inc.php:
+	  
+	  Added ability to use custom CSS files. See SF Support requests
+	  #381.
+
+2013-08-22 15:11  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2754] web/lang/lang.nl:
+	  
+	  Corrected confusing Dutch translation for "Repeat every". See SF
+	  Bugs 279
+
+2013-08-21 08:54  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2753] web/js/edit_entry.js.php:
+	  
+	  Fixed problem with use of indexOf() mdethod on arrays, which is
+	  not supported by IE8 and below. See SF Bugs #280.
+
+2013-08-07 08:07  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2752] web/language.inc:
+	  
+	  Removed another undefined index problem
+
+2013-08-07 08:00  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2751] web/language.inc:
+	  
+	  Removed an undefined index problem
+
+2013-08-06 17:52  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2750] web/language.inc:
+	  
+	  Added support for Estonian in Windows
+
+2013-08-06 17:31  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2749] web/language.inc:
+	  
+	  Added an Estonian locale mapping for Unix. See SF Bugs #277
+
+2013-07-22 12:21  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2746] web/internalconfig.inc.php:
+	  
+	  Fixed problem with Strict error messages being generated when
+	  mail messages are sent using PHP versions < 5.4. See SF Support
+	  Requests #367
+
+2013-07-21 18:55  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2745] web/js.inc:
+	  
+	  Replaced use of deprecated jQuery .load() method
+
+2013-07-21 18:47  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2744] web/js/resizable.js.php:
+	  
+	  Replaced use of deprecated jQuery .andSelf() method
+
+2013-07-21 18:28  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2743] web/js/pending.js.php:
+	  
+	  Replaced use of deprecated jQuery .live() method
+
+2013-07-21 10:58  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2742] web/day.php, web/edit_entry_handler.php,
+	  web/js/edit_entry.js.php, web/js/general.js.php,
+	  web/js/refresh.js.php, web/mrbs_auth.inc,
+	  web/record_activity_ajax.php[ADD], web/session/session_php.inc,
+	  web/systemdefaults.inc.php, web/week.php:
+	  
+	  Implemented an inactivity time out that will log users out after
+	  a period of inactivity, set by the config variable
+	  $auth["session_php"]["inactivity_expire_time"]. Only implemented
+	  for the 'php' session scheme
+
+2013-07-16 09:27  Campbell Morrison <cimorrison@users.sourceforge.net>
+
+	* [r2741] web/mrbs_sql.inc:
+	  
+	  Fixed undefined variable problem
+
+2013-07-08 20:29  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2740] web/version.inc:
+	  
+	  Updated version number post-release.
+
+2013-07-08 20:26  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2737] web/version.inc:
+	  
+	  Updated version number for release.
+
+2013-07-08 20:13  John Beranek <jberanek@users.sourceforge.net>
+
+	* [r2735] ChangeLog, NEWS:
+	  
+	  Updated NEWS and ChangeLog for release
+
 2013-06-10 16:47  Campbell Morrison <cimorrison@users.sourceforge.net>
 
 	* [r2733] web/dbsys.inc, web/edit_area_room.php,
