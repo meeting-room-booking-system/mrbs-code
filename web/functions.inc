@@ -1482,22 +1482,29 @@ function fatal_error($need_header, $message, $show_form_data = true)
   {
     print_header(0, 0, 0, 0, "");
   }
-  error_log("MRBS: ".$message);
-
+  
+  error_log("MRBS: $message");
+  
+  $sql_error = sql_error();
+  if (!empty($sql_error))
+  {
+    error_log("MRBS: $sql_error");
+  }
+  
   if ($show_form_data)
   {
     if (!empty($_GET))
     {
-      error_log("MRBS GET: ".print_r($_GET, true));
+      error_log("MRBS GET: " . print_r($_GET, true));
     }
     if (!empty($_POST))
     {
-      error_log("MRBS POST: ".print_r($_POST, true));
+      error_log("MRBS POST: " . print_r($_POST, true));
     }
   }
   if (!empty($_SESSION))
   {
-    error_log("MRBS SESSION: ".print_r($_SESSION, true));
+    error_log("MRBS SESSION: " . print_r($_SESSION, true));
   }
   echo "<p>$message</p>";
   output_trailer();
