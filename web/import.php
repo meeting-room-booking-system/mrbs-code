@@ -424,58 +424,26 @@ if (!empty($import))
     {
       $vevents = array();
       $lines = explode("\r\n", ical_unfold($vcalendar));
-      // Advance to the first non-blank line.   Strictly speaking the file
-      // must start with a BEGIN:VCALENDAR line, but we'll be tolerant
-      while ('' === ($first_line = array_shift($lines)))
+      unset($vcalendar);  // Save some memory
+      $n_success = 0;
+      $n_failure = 0;
+      
+      if (!empty($lines))
       {
-      }
-      if (isset($first_line))
-      {
-        // Get rid of empty lines at the end of the file
-        // (Strictly speaking there must be a CRLF at the end of the file, but
-        // we will be tolerant and accept files without one)
-        do
-        {
-          $last_line = array_pop($lines);
-        }
-        while (isset($last_line) && ($last_line == ''));
-      }
-      // Check that this bears some resemblance to a VCALENDAR
-      if (!isset($last_line) ||
-          ($first_line != "BEGIN:VCALENDAR") ||
-          ($last_line != "END:VCALENDAR"))
-      {
-        echo "<p>\n" . get_vocab("badly_formed_ics") . "</p>\n";
-      }
-      // Looks OK - find all the VEVENTS which we are going to put in a two dimensional array -
-      // each event will consist of an array of lines making up the event.  (Note - we
-      // are going to ignore any VTIMEZONE definitions.   We will honour TZID data in
-      // a VEVENT but we will use the PHP definition of the timezone)
-      else
-      {
-        // Strictly speaking RFC5545 does not allow blank lines between events (see Section
-        // 3.1), but it does no harm to be tolerant and accept them so we will test strictly
-        // for NULL rather than just a falsey value.
-        while (NULL !== ($line = array_shift($lines)))
+        while (FALSE !== ($line = next($lines)))
         {
           if ($line == "BEGIN:VEVENT")
           {
             $vevent = array();
-            while (($vevent_line = array_shift($lines)) && ($vevent_line != "END:VEVENT"))
+            while ((FALSE !== ($line = next($lines))) && ($line != "END:VEVENT"))
             {
-              $vevent[] = $vevent_line;
+              $vevent[] = $line;
             }
-            $vevents[] = $vevent;
+            (process_event($vevent)) ? $n_success++ : $n_failure++;
           }
         }
       }
-      // Process each event, putting it in the database
-      $n_success = 0;
-      $n_failure = 0;
-      foreach ($vevents as $vevent)
-      {
-        (process_event($vevent)) ? $n_success++ : $n_failure++;
-      }
+      
       echo "<p>\n";
       echo "$n_success " . get_vocab("events_imported");
       if ($n_failure > 0)
