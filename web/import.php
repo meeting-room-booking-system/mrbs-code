@@ -1,6 +1,12 @@
 <?php
 // $Id$
 
+if (version_compare(PHP_VERSION, '5.0.0', '<'))
+{
+  // We use stream_get_line() which is only available in PHP 5
+  exit("Import requires PHP 5.  Your system is running PHP " . PHP_VERSION);
+}
+
 require "defaultincludes.inc";
 require_once "functions_ical.inc";
 require_once "mrbs_sql.inc";
@@ -146,6 +152,80 @@ function get_room_id($location, &$error)
     }
   }
   return $room_id;
+}
+
+
+// Get the next line, after unfolding, from the stream.
+// Returns FALSE when EOF is reached
+function get_unfolded_line($handle)
+{
+  static $buffer_line;
+
+  // If there's something in the buffer line left over
+  // from the last call, then start with that.
+  if (isset($buffer_line))
+  {
+    $unfolded_line = $buffer_line;
+    $buffer_line = NULL;
+  }
+
+  // Theoretically the line should be folded if it's longer than 75 octets
+  // but just in case the file has been created without using folding we
+  // will read a large number (4096) of bytes to make sure that we get as
+  // far as the CRLF.
+  while (FALSE !== ($line = stream_get_line($handle, 4096, "\r\n")))
+  {
+    if (!isset($unfolded_line))
+    {
+      $unfolded_line = $line;
+    }
+    else
+    {  
+      $first_char = utf8_substr($line, 0, 1);
+      // If the first character of the line is a space or tab then it's
+      // part of a fold
+      if (($first_char == " ") || ($first_char == "\t"))
+      {
+        $unfolded_line .= utf8_substr($line, 1);
+      }
+      // Otherwise we've reached the start of the next unfolded line, so
+      // save it for next time and finish
+      else
+      {
+        $buffer_line = $line;
+        break;
+      }
+    }
+  }
+  
+  return (isset($unfolded_line)) ? $unfolded_line : FALSE;
+}
+
+
+// Get the next event from the stream.
+// Returns FALSE if EOF has been reached, or else an array
+// of lines for the event.  The BEGIN:VEVENT and END:VEVENT
+// lines are not included in the array. 
+function get_event($handle)
+{
+  // Advance to the beginning of the event
+  while ((FALSE !== ($ical_line = get_unfolded_line($handle))) && ($ical_line != 'BEGIN:VEVENT'))
+  {
+  }
+
+  // No more events
+  if ($ical_line === FALSE)
+  {
+    return FALSE;
+  }
+  // Get the event
+  $vevent = array();
+  while ((FALSE !== ($ical_line = get_unfolded_line($handle))) && ($ical_line != 'END:VEVENT'))
+  {
+    $vevent[] = $ical_line;
+  }
+
+  return $vevent;
 }
 
 
@@ -419,39 +499,25 @@ if (!empty($import))
   // We've got a file
   else
   {
-    $vcalendar = file_get_contents($_FILES['ics_file']['tmp_name']);
-    if ($vcalendar !== FALSE)
+    $n_success = 0;
+    $n_failure = 0;
+    
+    $handle = fopen($_FILES['ics_file']['tmp_name'], 'rb');
+
+    while (FALSE !== ($vevent = get_event($handle)))
     {
-      $vevents = array();
-      $lines = explode("\r\n", ical_unfold($vcalendar));
-      unset($vcalendar);  // Save some memory
-      $n_success = 0;
-      $n_failure = 0;
-      
-      if (!empty($lines))
-      {
-        while (FALSE !== ($line = next($lines)))
-        {
-          if ($line == "BEGIN:VEVENT")
-          {
-            $vevent = array();
-            while ((FALSE !== ($line = next($lines))) && ($line != "END:VEVENT"))
-            {
-              $vevent[] = $line;
-            }
-            (process_event($vevent)) ? $n_success++ : $n_failure++;
-          }
-        }
-      }
-      
-      echo "<p>\n";
-      echo "$n_success " . get_vocab("events_imported");
-      if ($n_failure > 0)
-      {
-        echo "<br>\n$n_failure " . get_vocab("events_not_imported");
-      }
-      echo "</p>\n";
+      (process_event($vevent)) ? $n_success++ : $n_failure++;
     }
+    
+    fclose($handle);
+    
+    echo "<p>\n";
+    echo "$n_success " . get_vocab("events_imported");
+    if ($n_failure > 0)
+    {
+      echo "<br>\n$n_failure " . get_vocab("events_not_imported");
+    }
+    echo "</p>\n";
   }
 }
 
