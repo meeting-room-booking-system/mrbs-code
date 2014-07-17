@@ -11,6 +11,36 @@ require "defaultincludes.inc";
 require_once "functions_ical.inc";
 require_once "mrbs_sql.inc";
 
+$wrapper_mime_types = array('file'            => 'text/calendar',
+                            'zip'             => 'application/zip',
+                            'compress.zlib'   => 'application/x-gzip',
+                            'compress.bzip2'  => 'application/x-bzip2');
+                            
+$wrapper_descriptions = array('file'            => get_vocab('import_text_file'),
+                              'zip'             => get_vocab('import_zip'),
+                              'compress.zlib'   => get_vocab('import_gzip'),
+                              'compress.bzip2'  => get_vocab('import_bzip2'));
+
+// Get the available compression wrappers that we can use. 
+// Returns an array
+function get_compression_wrappers()
+{
+  $result = array();
+  if (function_exists('stream_get_wrappers'))
+  {
+    $wrappers = stream_get_wrappers();
+    foreach ($wrappers as $wrapper)
+    {
+      if ((($wrapper == 'zip') && class_exists('ZipArchive')) ||
+          (strpos($wrapper, 'compress.') === 0))
+      {
+        $result[] = $wrapper;
+      }
+    }
+  }
+  return $result;
+}
+
 
 // Gets the id of the area/room with the LOCATION property value of $location,
 // creating an area and room if allowed.
@@ -449,6 +479,150 @@ function process_event($vevent)
 }
 
 
+function get_file_details_calendar($file)
+{
+  $files = array();
+  $files[] = array('name'     => $file['name'],
+                   'tmp_name' => $file['tmp_name'],
+                   'size'     => filesize($file['tmp_name']));
+  return $files;
+}
+
+
+function get_file_details_bzip2($file)
+{
+  // It's not possible to get the uncompressed size of a bzip2 file without first
+  // decompressing the whole file
+  $files = array();
+  $files[] = array('name'     => $file['name'],
+                   'tmp_name' => $file['tmp_name'],
+                   'size'     => NULL);
+  return $files;
+}
+
+function get_file_details_gzip($file)
+{
+  // Get the uncompressed size of the gzip file which is stored in the last four 
+  // bytes of the file, little-endian
+  if (FALSE !== ($handle = fopen($file['tmp_name'], 'rb')))
+  {
+    fseek($handle, -4, SEEK_END);
+    $buffer = fread($handle, 4);
+    $size_array = unpack('V', $buffer);
+    $size = end($size_array);
+    fclose($handle);
+  }
+  else
+  {
+    $size = NULL;
+  }
+  $files = array();
+  $files[] = array('name'     => $file['name'],
+                   'tmp_name' => $file['tmp_name'],
+                   'size'     => $size);
+  return $files;
+}
+
+
+function get_file_details_zip($file)
+{
+  $files = array();
+  
+  if (class_exists('ZipArchive'))
+  {
+    $zip = new ZipArchive();
+
+    if (TRUE === ($result = $zip->open($file['tmp_name'])))
+    {
+      for ($i=0; $i<$zip->numFiles; $i++)
+      {
+        $details = array();
+        $stats = $zip->statIndex($i);
+        $details['name']     = $stats['name'];
+        $details['tmp_name'] = $file['tmp_name'] . '#' . $stats['name'];
+        $details['size']     = $stats['size'];
+        $files[] = $details;
+      }
+    }
+    else
+    {
+      // Try and convert the error code into something a bit more
+      // meaningful.
+      //
+      // It's safe to use ReflectionClass (PHP 5) as we already know that
+      // ZipArchive (PHP 5.2.0) exists
+      $reflection = new ReflectionClass('ZipArchive');
+      $constants = $reflection->getConstants();
+      foreach ($constants as $key => $value)
+      {
+        if (($result === $value) && (strpos($key, 'ER_') === 0))
+        {
+          $error_code = $key;
+          break;
+        }
+      }
+      $message = "ZipArchive::open() failed with ";
+      if (isset($error_code))
+      {
+        $message .= "error code $error_code.";
+        // There is a problem on IIS when opening a ZipArchive file that is in
+        // C:\Windows\Temp.   ER_OPEN will be returned unless the user IUSR_XXXX
+        // has 'List Folder' permission.
+        // See the user notes at http://php.net/manual/en/ziparchive.open.php
+        // and also https://bugs.php.net/bug.php?id=54128
+        if ($result == ZipArchive::ER_OPEN)
+        {
+          $message .= " If your server is running Windows, check the permissions on " . 
+                      dirname($file['tmp_name']) . ". 'List Folder' permission is required " .
+                      "for user IUSR_XXXX.";
+        }
+      }
+      else
+      {
+        $message .= "unknown error code '$result'";
+      }
+      trigger_error($message, E_USER_WARNING);
+    }
+  }
+  else
+  {
+    trigger_error("Could not open zip archive - the ZipArchive class does not exist on this system", E_USER_WARNING);
+  }
+  return $files;
+}
+
+
+function get_archive_details($file)
+{
+  $result = array();
+  switch ($file['type'])
+  {
+    case 'text/calendar':
+    case 'text/html':
+    case 'text/plain':
+      $result['wrapper'] = 'file';
+      $result['files'] = get_file_details_calendar($file);
+      break;
+    case 'application/x-bzip2':
+      $result['wrapper'] = 'compress.bzip2';
+      $result['files'] = get_file_details_bzip2($file);
+      break;
+    case 'application/x-gzip':
+      $result['wrapper'] = 'compress.zlib';
+      $result['files'] = get_file_details_gzip($file);
+      break;
+    case 'application/zip':
+      $result['wrapper'] = 'zip';
+      $result['files'] = get_file_details_zip($file);
+      break;
+    default:
+      $result = FALSE;
+      trigger_error("Unknown file type '" . $file['type'] . "'", E_USER_NOTICE);
+      break;
+  }
+  return $result;
+}
+
 // Check the user is authorised for this page
 checkAuthorised();
 
@@ -467,11 +641,11 @@ $skip = get_form_var('skip', 'string', ((empty($skip_default)) ? '0' : '1'));
 
 if (!empty($import))
 {
-  if ($_FILES['ics_file']['error'] !== UPLOAD_ERR_OK)
+  if ($_FILES['upload_file']['error'] !== UPLOAD_ERR_OK)
   {
     echo "<p>\n";
     echo get_vocab("upload_failed");
-    switch($_FILES['ics_file']['error'])
+    switch($_FILES['upload_file']['error'])
     {
       case UPLOAD_ERR_INI_SIZE:
         echo "<br>\n";
@@ -483,12 +657,12 @@ if (!empty($import))
         break;
       default:
         // None of the other possible errors would make much sense to the user, but should be reported
-        trigger_error($_FILES['ics_file']['error'], E_USER_NOTICE);
+        trigger_error($_FILES['upload_file']['error'], E_USER_NOTICE);
         break;
     }
     echo "</p>\n";
   }
-  elseif (!is_uploaded_file($_FILES['ics_file']['tmp_name']))
+  elseif (!is_uploaded_file($_FILES['upload_file']['tmp_name']))
   {
     // This should not happen and if it does may mean that somebody is messing about
     echo "<p>\n";
@@ -499,40 +673,81 @@ if (!empty($import))
   // We've got a file
   else
   {
-    $n_success = 0;
-    $n_failure = 0;
-    
-    $handle = fopen($_FILES['ics_file']['tmp_name'], 'rb');
+    $archive = get_archive_details($_FILES['upload_file']);
 
-    while (FALSE !== ($vevent = get_event($handle)))
+    if ($archive === FALSE)
     {
-      (process_event($vevent)) ? $n_success++ : $n_failure++;
+      echo "<p>" . get_vocab("could_not_process") . "</p>\n";
     }
-    
-    fclose($handle);
-    
-    echo "<p>\n";
-    echo "$n_success " . get_vocab("events_imported");
-    if ($n_failure > 0)
+    else
     {
-      echo "<br>\n$n_failure " . get_vocab("events_not_imported");
+      foreach ($archive['files'] as $file)
+      {
+        echo "<h3>" . $file['name'] . "</h3>";
+        
+        $n_success = 0;
+        $n_failure = 0;
+        
+        $handle = fopen($archive['wrapper'] . '://' . $file['tmp_name'], 'rb');
+        
+        if ($handle === FALSE)
+        {
+          echo "<p>" . get_vocab("could_not_process") . "</p>\n";
+        }
+        else
+        {
+          while (FALSE !== ($vevent = get_event($handle)))
+          {
+            (process_event($vevent)) ? $n_success++ : $n_failure++;
+          }
+          
+          fclose($handle);
+          
+          echo "<p>\n";
+          echo "$n_success " . get_vocab("events_imported");
+          if ($n_failure > 0)
+          {
+            echo "<br>\n$n_failure " . get_vocab("events_not_imported");
+          }
+          echo "</p>\n";
+        }
+      }
     }
-    echo "</p>\n";
   }
 }
 
 // PHASE 1 - Get the user input
 // ----------------------------
+
+$compression_wrappers = get_compression_wrappers();
+
 echo "<form class=\"form_general\" method=\"POST\" enctype=\"multipart/form-data\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
 
 echo "<fieldset class=\"admin\">\n";
 echo "<legend>" . get_vocab("import_icalendar") . "</legend>\n";
 
 echo "<p>\n" . get_vocab("import_intro") . "</p>\n";
+echo "<p>\n" . get_vocab("supported_file_types") . "</p>\n";
+echo "<ul>\n";
+echo "<li>" . $wrapper_descriptions['file'] . "</li>\n";
+foreach ($compression_wrappers as $compression_wrapper)
+{
+  echo "<li>" . $wrapper_descriptions[$compression_wrapper] . "</li>\n";
+}
+echo "</ul>\n";
   
 echo "<div>\n";
-echo "<label for=\"ics_file\">" . get_vocab("file_name") . ":</label>\n";
-echo "<input type=\"file\" accept=\"text/calendar\" name=\"ics_file\" id=\"ics_file\">\n";
+echo "<label for=\"upload_file\">" . get_vocab("file_name") . ":</label>\n";
+
+$accept_mime_types = array();
+foreach ($compression_wrappers as $compression_wrapper)
+{
+  $accept_mime_types[] = $wrapper_mime_types[$compression_wrapper];
+}
+// 'file' will always be available.  Put it at the beginning of the array.
+array_unshift($accept_mime_types, $wrapper_mime_types['file']);
+
+echo "<input type=\"file\" accept=\"" . implode(',', $accept_mime_types). "\" name=\"upload_file\" id=\"upload_file\">\n";
 echo "</div>\n";
 
 echo "<fieldset>\n";

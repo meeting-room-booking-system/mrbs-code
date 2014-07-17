@@ -455,11 +455,18 @@ $vocab["import_intro"]                = "This form allows you to import an RFC 5
                                         "iCalendar file into MRBS.   Only those repeating events " .
                                         "that have a recurrence rule with an equivalent repeat type in " .
                                         "MRBS will be imported.";
+$vocab["supported_file_types"]        = "The following file types are supported:";
+$vocab["import_text_file"]            = "uncompressed iCalendar files";
+$vocab["import_zip"]                  = "zip archives, including multiple files in an archive";
+$vocab["import_gzip"]                 = "gzip files";
+$vocab["import_bzip2"]                = "bzip2 files";
+
 $vocab["file_name"]                   = "File";
 $vocab["import"]                      = "Import";
 $vocab["upload_failed"]               = "Upload failed";
 $vocab["max_allowed_file_size"]       = "The maximum allowed file size is";
 $vocab["no_file"]                     = "No file was uploaded";
+$vocab["could_not_process"]           = "Import failed: could not process file";
 $vocab["badly_formed_ics"]            = "Badly formed VCALENDAR file";
 $vocab["area_room_order"]             = "Order";
 $vocab["area_room_order_note"]        = "The order of the area and room names in the LOCATION property";
