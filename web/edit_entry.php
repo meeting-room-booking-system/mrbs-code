@@ -203,7 +203,10 @@ function genAllDay($a, $id, $name, $display_none=FALSE, $disabled=FALSE)
   
   $class = array();
   $class[] = 'all_day';
-  if ($disabled)
+  
+  $disable_field = $disabled || $display_none || !$a['show_all_day'];
+  
+  if ($disable_field)
   {
     // and if $disabled is set, give the element a class so that the JavaScript
     // knows to keep it disabled
@@ -219,9 +222,9 @@ function genAllDay($a, $id, $name, $display_none=FALSE, $disabled=FALSE)
                   'label_after' => TRUE,
                   'attributes'  => 'data-show=' . (($a['show_all_day']) ? '1' : '0'),
                   'value'       => ($default_duration_all_day && !isset($id) && !$drag),
-                  'disabled'    => $display_none || $disabled,
+                  'disabled'    => $disable_field,
                   'class'       => $class);
-                    
+           
   generate_checkbox($params);
   
   echo "</div>\n";
