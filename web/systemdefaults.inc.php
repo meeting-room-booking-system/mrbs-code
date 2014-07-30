@@ -605,7 +605,7 @@ $skip_default = FALSE;
 // Valid entries in this array are: 'name', 'description', 'start_date', 
 // 'end_date', 'areas', 'rooms', 'type', 'confirmation_status', 
 // 'privacy_status', plus any custom fields you may have defined. Fields that 
-// are not mentionend in the array are appended at the end, in their usual 
+// are not mentioned in the array are appended at the end, in their usual 
 // order.
 $edit_entry_field_order = array();
 
