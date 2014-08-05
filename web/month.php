@@ -289,7 +289,13 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
         {
           case "> < ":         // Starts after midnight, ends before midnight
           case "= < ":         // Starts at midnight, ends before midnight
-            $d[$day_num]["data"][] = $start_str . "~" . $end_str;
+            $d[$day_num]["data"][] = $start_str;
+            // Don't bother showing the end period if it's the same
+            // as the start period
+            if ($end_str !== $start_str)
+            {
+              $d[$day_num]["data"][] .= "~" . $end_str;
+            }
             break;
           case "> = ":         // Starts after midnight, ends at midnight
             $d[$day_num]["data"][] = $start_str . "~24:00";
