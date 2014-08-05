@@ -23,6 +23,102 @@ function cmp3($a, $b)
   return "> ";
 }
 
+
+// Describe the start and end time, accounting for "all day"
+// and for entries starting before/ending after today.
+// There are 9 cases, for start time < = or > midnight this morning,
+// and end time < = or > midnight tonight.
+
+function get_booking_summary($start, $end, $day_start, $day_end)
+{
+  global $enable_periods;
+  
+  // Use $separator (not -) to separate the start and stop times, because MSIE
+  // will incorrectly line break after a -.
+  $separator = '~';
+  $after_today = "====&gt;";
+  $before_today = "&lt;====";
+  $midnight = "24:00";  // need to fix this so it works with AM/PM configurations (and for that matter 24h)
+  // Localized "all day" text but with non-breaking spaces:
+  $all_day = preg_replace("/ /", "&nbsp;", get_vocab("all_day"));
+  
+  if (empty($enable_periods))
+  {
+    switch (cmp3($start, $day_start) . cmp3($end, $day_end + 1))
+    {
+      case "> < ":         // Starts after midnight, ends before midnight
+      case "= < ":         // Starts at midnight, ends before midnight
+        $result = htmlspecialchars(utf8_strftime(hour_min_format(), $start)) . 
+                  $separator . 
+                  htmlspecialchars(utf8_strftime(hour_min_format(), $end));
+        break;
+      case "> = ":         // Starts after midnight, ends at midnight
+        $result = htmlspecialchars(utf8_strftime(hour_min_format(), $start)) . $separator . $midnight;
+        break;
+      case "> > ":         // Starts after midnight, continues tomorrow
+        $result = htmlspecialchars(utf8_strftime(hour_min_format(), $start)) . $separator . $after_today;
+        break;
+      case "= = ":         // Starts at midnight, ends at midnight
+        $result = $all_day;
+        break;
+      case "= > ":         // Starts at midnight, continues tomorrow
+        $result = $all_day . $after_today;
+        break;
+      case "< < ":         // Starts before today, ends before midnight
+        $result = $before_today . $separator . htmlspecialchars(utf8_strftime(hour_min_format(), $end));
+        break;
+      case "< = ":         // Starts before today, ends at midnight
+        $result = $before_today . $all_day;
+        break;
+      case "< > ":         // Starts before today, continues tomorrow
+        $result = $before_today . $all_day . $after_today;
+        break;
+    }
+  }
+  else
+  {
+    $start_str = period_time_string($start);
+    $end_str   = period_time_string($end, -1);
+    switch (cmp3($start, $day_start) . cmp3($end, $day_end + 1))
+    {
+      case "> < ":         // Starts after midnight, ends before midnight
+      case "= < ":         // Starts at midnight, ends before midnight
+        $result = $start_str;
+        // Don't bother showing the end period if it's the same
+        // as the start period
+        if ($end_str !== $start_str)
+        {
+          $result .= $separator . $end_str;
+        }
+        break;
+      case "> = ":         // Starts after midnight, ends at midnight
+        $result = $start_str . $separator . $midnight;
+        break;
+      case "> > ":         // Starts after midnight, continues tomorrow
+        $result = $start_str . $separator . $after_today;
+        break;
+      case "= = ":         // Starts at midnight, ends at midnight
+        $result = $all_day;
+        break;
+      case "= > ":         // Starts at midnight, continues tomorrow
+        $result = $all_day . $after_today;
+        break;
+      case "< < ":         // Starts before today, ends before midnight
+        $result = $before_today . $separator .  $end_str;
+        break;
+      case "< = ":         // Starts before today, ends at midnight
+        $result = $before_today . $all_day;
+        break;
+      case "< > ":         // Starts before today, continues tomorrow
+        $result = $before_today . $all_day . $after_today;
+        break;
+    }
+  }
+  
+  return $result;
+}
+
+
 // Check the user is authorised for this page
 checkAuthorised();
 
@@ -169,9 +265,6 @@ if ($debug_flag)
   echo "<p>DEBUG: month=$month year=$year start=$weekday_start range=$month_start:$month_end</p>\n";
 }
 
-// Used below: localized "all day" text but with non-breaking spaces:
-$all_day = preg_replace("/ /", "&nbsp;", get_vocab("all_day"));
-
 //Get all meetings for this month in the room that we care about
 // row[0] = Start time
 // row[1] = End time
@@ -242,84 +335,10 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
         $d[$day_num]["shortdescrip"][] = htmlspecialchars($row['name']);
       }
       
-
-      // Describe the start and end time, accounting for "all day"
-      // and for entries starting before/ending after today.
-      // There are 9 cases, for start time < = or > midnight this morning,
-      // and end time < = or > midnight tonight.
-      // Use ~ (not -) to separate the start and stop times, because MSIE
-      // will incorrectly line break after a -.
-      
-      if (empty( $enable_periods ) )
-      {
-        switch (cmp3($row['start_time'], $am7[$day_num]) . cmp3($row['end_time'], $pm7[$day_num] + 1))
-        {
-          case "> < ":         // Starts after midnight, ends before midnight
-          case "= < ":         // Starts at midnight, ends before midnight
-            $d[$day_num]["data"][] = htmlspecialchars(utf8_strftime(hour_min_format(), $row['start_time'])) . "~" . htmlspecialchars(utf8_strftime(hour_min_format(), $row['end_time']));
-            break;
-          case "> = ":         // Starts after midnight, ends at midnight
-            $d[$day_num]["data"][] = htmlspecialchars(utf8_strftime(hour_min_format(), $row['start_time'])) . "~24:00";
-            break;
-          case "> > ":         // Starts after midnight, continues tomorrow
-            $d[$day_num]["data"][] = htmlspecialchars(utf8_strftime(hour_min_format(), $row['start_time'])) . "~====&gt;";
-            break;
-          case "= = ":         // Starts at midnight, ends at midnight
-            $d[$day_num]["data"][] = $all_day;
-            break;
-          case "= > ":         // Starts at midnight, continues tomorrow
-            $d[$day_num]["data"][] = $all_day . "====&gt;";
-            break;
-          case "< < ":         // Starts before today, ends before midnight
-            $d[$day_num]["data"][] = "&lt;====~" . htmlspecialchars(utf8_strftime(hour_min_format(), $row['end_time']));
-            break;
-          case "< = ":         // Starts before today, ends at midnight
-            $d[$day_num]["data"][] = "&lt;====" . $all_day;
-            break;
-          case "< > ":         // Starts before today, continues tomorrow
-            $d[$day_num]["data"][] = "&lt;====" . $all_day . "====&gt;";
-            break;
-        }
-      }
-      else
-      {
-        $start_str = period_time_string($row['start_time']);
-        $end_str   = period_time_string($row['end_time'], -1);
-        switch (cmp3($row['start_time'], $am7[$day_num]) . cmp3($row['end_time'], $pm7[$day_num] + 1))
-        {
-          case "> < ":         // Starts after midnight, ends before midnight
-          case "= < ":         // Starts at midnight, ends before midnight
-            $d[$day_num]["data"][] = $start_str;
-            // Don't bother showing the end period if it's the same
-            // as the start period
-            if ($end_str !== $start_str)
-            {
-              $d[$day_num]["data"][] .= "~" . $end_str;
-            }
-            break;
-          case "> = ":         // Starts after midnight, ends at midnight
-            $d[$day_num]["data"][] = $start_str . "~24:00";
-            break;
-          case "> > ":         // Starts after midnight, continues tomorrow
-            $d[$day_num]["data"][] = $start_str . "~====&gt;";
-            break;
-          case "= = ":         // Starts at midnight, ends at midnight
-            $d[$day_num]["data"][] = $all_day;
-            break;
-          case "= > ":         // Starts at midnight, continues tomorrow
-            $d[$day_num]["data"][] = $all_day . "====&gt;";
-            break;
-          case "< < ":         // Starts before today, ends before midnight
-            $d[$day_num]["data"][] = "&lt;====~" . $end_str;
-            break;
-          case "< = ":         // Starts before today, ends at midnight
-            $d[$day_num]["data"][] = "&lt;====" . $all_day;
-            break;
-          case "< > ":         // Starts before today, continues tomorrow
-            $d[$day_num]["data"][] = "&lt;====" . $all_day . "====&gt;";
-            break;
-        }
-      }
+      $d[$day_num]["data"][] = get_booking_summary($row['start_time'],
+                                                   $row['end_time'],
+                                                   $am7[$day_num],
+                                                   $pm7[$day_num]);
     }
   }
 }
