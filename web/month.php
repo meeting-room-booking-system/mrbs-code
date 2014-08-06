@@ -33,7 +33,7 @@ function get_booking_summary($start, $end, $day_start, $day_end)
 {
   global $enable_periods;
   
-  // Use $separator (not -) to separate the start and stop times, because MSIE
+  // Use ~ (not -) to separate the start and stop times, because MSIE
   // will incorrectly line break after a -.
   $separator = '~';
   $after_today = "====&gt;";
