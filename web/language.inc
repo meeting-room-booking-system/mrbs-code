@@ -1013,8 +1013,7 @@ function get_bom($charset)
       return "\xEF\xBB\xBF";
       break;
     case 'utf-16':
-      // Little-endian
-      return "\xFF\xFE";
+      return pack('S', 0xFEFF);
       break;
     default:
       return '';
