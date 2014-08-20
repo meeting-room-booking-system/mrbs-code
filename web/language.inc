@@ -31,7 +31,7 @@ $lang_aliases = array
 //
 // The ordering of this array is important as it is also used to map in the
 // reverse direction, ie to convert a Windows style locale into an xx-yy style
-// locale by finding the first occurence of a value and then using the
+// locale by finding the first occurrence of a value and then using the
 // corresponding key.
 //
 // These locale TLAs found at:
