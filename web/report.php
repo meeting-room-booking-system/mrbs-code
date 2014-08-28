@@ -333,22 +333,33 @@ function csv_conv($string)
 {
   $in_charset = strtoupper(get_charset());
   $out_charset = strtoupper(get_csv_charset());
-  if ($in_charset == $out_charset)
+  
+  // Use iconv() if it exists because it's faster than our own code and also it's
+  // standard (though it has the disadvantage that it adds in BOMs which we have to remove)
+  if (function_exists('iconv'))
+  { 
+    $result = iconv($in_charset, $out_charset, $string);
+    // iconv() will add in a BOM if the output encoding requires one, but as we are only
+    // dealing with parts of a file we don't want any BOMs because we add them separately
+    // at the beginning of the file.  So strip off anything that looks like a BOM.
+    $result = ltrim($result, "\xFE\xFF");
+    $result = ltrim($result, "\xFF\xFE");
+  }
+  elseif ($in_charset == $out_charset)
   {
-    return $string;
+    $result = $string;
+  }
+  elseif (($in_charset == 'UTF-8') && ($out_charset == 'UTF-16'))
+  {
+    $result = utf8_to_utf16($string);
   }
   else
   {
-    if (($in_charset == 'UTF-8') &&
-        ($out_charset == 'UTF-16'))
-    {
-      return utf8_to_utf16($string);
-    }
-    else
-    {
-      return iconv($in_charset, $out_charset, $string);
-    }
+    trigger_error("Cannot convert from $in_charset to $out_charset", E_USER_NOTICE);
+    $result = FALSE;
   }
+  
+  return $result;
 }
 
 
