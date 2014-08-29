@@ -342,8 +342,14 @@ function csv_conv($string)
     // iconv() will add in a BOM if the output encoding requires one, but as we are only
     // dealing with parts of a file we don't want any BOMs because we add them separately
     // at the beginning of the file.  So strip off anything that looks like a BOM.
-    $result = ltrim($result, "\xFE\xFF");
-    $result = ltrim($result, "\xFF\xFE");
+    $boms = array("\xFE\xFF", "\xFF\xFE");
+    foreach ($boms as $bom)
+    {
+      if (strpos($result, $bom) === 0)
+      {
+        $result = substr($result, strlen($bom));
+      }
+    }
   }
   elseif ($in_charset == $out_charset)
   {
