@@ -135,7 +135,6 @@ function output_row(&$row)
   global $ajax, $json_data;
   global $level, $min_user_editing_level, $user;
   global $fields, $ignore_columns, $select_options;
-  global $PHP_SELF;
   
   $values = array();
   
@@ -144,7 +143,7 @@ function output_row(&$row)
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
   if (($level >= $min_user_editing_level) || (strcasecmp($row['name'], $user) == 0))
   {
-    $link = htmlspecialchars(basename($PHP_SELF)) . "?Action=Edit&amp;Id=" . $row['id'];
+    $link = htmlspecialchars(this_page()) . "?Action=Edit&amp;Id=" . $row['id'];
     $values[] = "<a title=\"$html_name\" href=\"$link\">$html_name</a>";
   }
   else
@@ -311,7 +310,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   }
   
   print "<div id=\"form_container\">";
-  print "<form id=\"form_edit_users\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)). "\">\n";
+  print "<form id=\"form_edit_users\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
     ?>
         <fieldset class="admin">
         <legend><?php echo (($Action == "Edit") ? get_vocab("edit_user") : get_vocab("add_new_user"));?></legend>
@@ -485,7 +484,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
       /* Administrators get the right to delete users, but only those at the same level as them or lower */
       if (($Id >= 0) && ($level >= $min_user_editing_level) && ($level >= $data['level'])) 
       {
-        echo "<form id=\"form_delete_users\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+        echo "<form id=\"form_delete_users\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
         echo "<div>\n";
         echo "<input type=\"hidden\" name=\"Action\" value=\"Delete\">\n";
         echo "<input type=\"hidden\" name=\"Id\" value=\"$Id\">\n";
@@ -499,7 +498,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
       // which takes them back to the user list and does nothing
       else
       {
-        echo "<form id=\"form_delete_users\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+        echo "<form id=\"form_delete_users\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
         echo "<div>\n";
         echo "<input class=\"submit\" type=\"submit\" value=\"" . get_vocab("back") . "\">\n";
         echo "</div>\n";
@@ -752,7 +751,7 @@ if (isset($Action) && ($Action == "Update"))
   
       // This is unlikely to happen in normal operation. Do not translate.
        
-      print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+      print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
       print "  <fieldset>\n";
       print "  <legend></legend>\n";
       print "    <p class=\"error\">Error updating the $tbl_users table.</p>\n";
@@ -795,7 +794,7 @@ if (isset($Action) && ($Action == "Delete"))
 
     // This is unlikely to happen in normal  operation. Do not translate.
     
-    print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+    print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
     print "  <fieldset>\n";
     print "  <legend></legend>\n";
     print "    <p class=\"error\">Error deleting entry $Id from the $tbl_users table.</p>\n";
@@ -825,7 +824,7 @@ if (!$ajax)
 
   if ($level >= $min_user_editing_level) /* Administrators get the right to add new users */
   {
-    print "<form id=\"add_new_user\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+    print "<form id=\"add_new_user\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
     print "  <div>\n";
     print "    <input type=\"hidden\" name=\"Action\" value=\"Add\">\n";
     print "    <input type=\"hidden\" name=\"Id\" value=\"-1\">\n";

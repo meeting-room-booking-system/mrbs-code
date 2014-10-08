@@ -754,7 +754,7 @@ echo "</form>\n";
 if (empty($result['rules_broken'])  &&
     isset($rep_type) && ($rep_type != REP_NONE))
 {
-  echo "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+  echo "<form method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
   echo "<fieldset><legend></legend>\n";
   // Put the booking data in as hidden inputs
   $skip = 1;  // Force a skip next time round

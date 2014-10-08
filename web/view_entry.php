@@ -28,7 +28,7 @@ function generateApproveButtons($id, $series)
   $info_time = ($series) ? $repeat_info_time : $entry_info_time;
   $info_user = ($series) ? $repeat_info_user : $entry_info_user;
   
-  $this_page = basename($PHP_SELF);
+  $this_page = this_page();
   if (empty($info_time))
   {
     $info_title = get_vocab("no_request_yet");
@@ -57,7 +57,7 @@ function generateOwnerButtons($id, $series)
   global $user, $create_by, $status, $area;
   global $PHP_SELF, $reminders_enabled, $last_reminded, $reminder_interval;
   
-  $this_page = basename($PHP_SELF);
+  $this_page = this_page();
   
   // Remind button if you're the owner AND there's a booking awaiting
   // approval AND sufficient time has passed since the last reminder

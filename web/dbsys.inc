@@ -753,10 +753,9 @@ function sql_close($handle)
 // Get a database username and password
 function db_get_userpass()
 {
-  global $PHP_SELF;
   print_header(0, 0, 0, 0, "");
   ?>
-  <form class="form_general" id="db_logon" method="post" action="<?php echo htmlspecialchars(basename($PHP_SELF)) ?>">
+  <form class="form_general" id="db_logon" method="post" action="<?php htmlspecialchars(this_page()); ?>">
   <fieldset>
   <legend><?php echo get_vocab("database_login") ?></legend>
     <div>

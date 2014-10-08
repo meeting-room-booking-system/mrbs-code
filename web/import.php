@@ -721,7 +721,7 @@ if (!empty($import))
 
 $compression_wrappers = get_compression_wrappers();
 
-echo "<form class=\"form_general\" method=\"POST\" enctype=\"multipart/form-data\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+echo "<form class=\"form_general\" method=\"POST\" enctype=\"multipart/form-data\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
 
 echo "<fieldset class=\"admin\">\n";
 echo "<legend>" . get_vocab("import_icalendar") . "</legend>\n";

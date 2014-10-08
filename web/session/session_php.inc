@@ -147,7 +147,7 @@ function printLoginForm($TargetURL)
   global $PHP_SELF, $HTTP_REFERER;
   global $returl;
 ?>
-<form class="form_general" id="logon" method="post" action="<?php echo htmlspecialchars(basename($PHP_SELF)) ?>">
+<form class="form_general" id="logon" method="post" action="<?php echo htmlspecialchars(this_page()) ?>">
   <fieldset>
   <legend><?php echo get_vocab("please_login") ?></legend>
     <div>
