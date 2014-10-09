@@ -65,9 +65,8 @@ function mrbs_default_timezone_get()
 
 
 // Returns the current page.    Separated out into a function to make it easier
-// to change for different situations.   For example when reverse proxies are being used
-// then the basename is necessary.   However if subdomains are being used then the
-// full page name is required.
+// to change for different situations.   We use basename() because the full name
+// causes problems when reverse proxies are being used.
 function this_page()
 {
   global $PHP_SELF;
