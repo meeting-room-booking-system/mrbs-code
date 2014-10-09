@@ -45,10 +45,48 @@ if (!isset($auth["session_php"]["session_expire_time"]))
   $auth["session_php"]["session_expire_time"] = 0;
 }
 
+// Check that the session_save_path has the correct permissions.   If not then the
+// resultant errors can be difficult to diagnose.
+$session_save_path = session_save_path();
+
+if (isset($session_save_path))
+{
+  // An empty string means that the session_save_path is the default temp
+  // directory.   However the function sys_get_temp_dir() only exists
+  // on PHP >= 5.2.1
+  if (($session_save_path === '') && function_exists('sys_get_temp_dir'))
+  {
+    $session_save_path = sys_get_temp_dir();
+  }
+  
+  if ($session_save_path !== '')
+  {
+    if (!is_writable($session_save_path))
+    {
+      trigger_error("MRBS: the session_save_path '$session_save_path' is not writable", E_USER_WARNING);
+      fatal_error(TRUE, "MRBS: server configuration error.", FALSE);
+    }
+    if (!is_readable($session_save_path))
+    {
+      trigger_error("MRBS: the session_save_path '$session_save_path' is not readable", E_USER_WARNING);
+      fatal_error(TRUE, "MRBS: server configuration error.", FALSE);
+    }
+  }
+}
+
 session_name("MRBS_SESSID");  // call before session_set_cookie_params() - see PHP manual
 session_set_cookie_params($auth["session_php"]["session_expire_time"],
                           $cookie_path);
-session_start();
+                          
+// Checking the result of session_start() is not very reliable.   Before PHP 5.3.0
+// it always returned TRUE.   Even after 5.3.0 it seems to return TRUE even if the
+// session_save_path is not writable.  A warning is generated, but session_start()
+// still returns TRUE.
+if (FALSE === session_start())
+{
+  trigger_error("MRBS: could not start session", E_USER_WARNING);
+  fatal_error(TRUE, "MRBS: server configuration error.", FALSE);
+}
 
 // Check to see if we've been inactive for longer than allowed and if so logout
 // the user
