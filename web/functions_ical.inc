@@ -1060,6 +1060,8 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
   //          are actually there.   We can then issue cancellations for the missing
   //          events.
   
+  $method = "REQUEST";
+  
   // Initialize an array to hold the events and a variable to keep track
   // of the last repeat id we've seen
   $ical_events = array();
@@ -1071,7 +1073,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
     // If this is an individual entry, then construct an event
     if (!isset($row['rep_type']) || ($row['rep_type'] == REP_NONE))
     {
-      $ical_events[] = create_ical_event("REQUEST", $row);
+      $ical_events[] = create_ical_event($method, $row);
     }
     // Otherwise it's a series
     else
@@ -1149,14 +1151,14 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
         // And keep an array of all the entries we actually see
         $actual_entries = array();
         // Create the series event
-        $ical_events[] = create_ical_event("REQUEST", $start_row, NULL, TRUE);
+        $ical_events[] = create_ical_event($method, $start_row, NULL, TRUE);
       }
       // Add this entry to the array of ones we've seen
       $actual_entries[] = strtotime($row['ical_recur_id']);
       // And if it's a series member that has been altered
       if ($row['entry_type'] == ENTRY_RPT_CHANGED)
       {
-        $ical_events[] = create_ical_event("REQUEST", $row);
+        $ical_events[] = create_ical_event($method, $row);
       }
       // Otherwise it must be an original member, in which case check
       // to see if we were looking out for one
@@ -1170,7 +1172,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
         $row['start_time'] = $start_row['start_time'];
         $row['end_time'] = $row['start_time'] + $duration;
         $row['end_date'] = min($export_end, $row['end_date']);
-        $ical_events[$replace_index] = create_ical_event("REQUEST", $row, NULL, TRUE);
+        $ical_events[$replace_index] = create_ical_event($method, $row, NULL, TRUE);
         // Clear the $replace_index now that we've found an original entry
         unset ($replace_index);
       }
@@ -1199,7 +1201,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
     }
   }
   // Build the iCalendar from the array of events and output it
-  $icalendar = create_icalendar("REQUEST", $ical_events);
+  $icalendar = create_icalendar($method, $ical_events);
   echo $icalendar;
 }
 
