@@ -1068,13 +1068,9 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
   
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   {
-    $text_body = array();
-    $html_body = array();
     // If this is an individual entry, then construct an event
     if (!isset($row['rep_type']) || ($row['rep_type'] == REP_NONE))
     {
-      $text_body['content'] = create_details_body($row, FALSE, $keep_private);
-      $html_body['content'] = "<table>" . create_details_body($row, TRUE, $keep_private) . " </table>";
       $ical_events[] = create_ical_event("REQUEST", $row);
     }
     // Otherwise it's a series
@@ -1153,8 +1149,6 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
         // And keep an array of all the entries we actually see
         $actual_entries = array();
         // Create the series event
-        $text_body['content'] = create_details_body($start_row, FALSE, $keep_private);
-        $html_body['content'] = "<table>" . create_details_body($start_row, TRUE, $keep_private) . "</table>";
         $ical_events[] = create_ical_event("REQUEST", $start_row, NULL, TRUE);
       }
       // Add this entry to the array of ones we've seen
@@ -1162,8 +1156,6 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
       // And if it's a series member that has been altered
       if ($row['entry_type'] == ENTRY_RPT_CHANGED)
       {
-        $text_body['content'] = create_details_body($row, FALSE, $keep_private);
-        $html_body['content'] = "<table>" . create_details_body($row, TRUE, $keep_private) . "</table>";
         $ical_events[] = create_ical_event("REQUEST", $row);
       }
       // Otherwise it must be an original member, in which case check
@@ -1178,8 +1170,6 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
         $row['start_time'] = $start_row['start_time'];
         $row['end_time'] = $row['start_time'] + $duration;
         $row['end_date'] = min($export_end, $row['end_date']);
-        $text_body['content'] = create_details_body($row, FALSE, $keep_private);
-        $html_body['content'] = "<table>" . create_details_body($row, TRUE, $keep_private) . "</table>";
         $ical_events[$replace_index] = create_ical_event("REQUEST", $row, NULL, TRUE);
         // Clear the $replace_index now that we've found an original entry
         unset ($replace_index);
