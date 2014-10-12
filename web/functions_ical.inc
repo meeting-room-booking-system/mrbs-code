@@ -1060,13 +1060,16 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
   //          are actually there.   We can then issue cancellations for the missing
   //          events.
   
-  $method = "REQUEST";
+  // We use PUBLISH rather than REQUEST because we're not inviting people to these meetings,
+  // we're just exporting the calendar.   Furthermore if we don't use PUBLISH then some
+  // calendar apps (eg Outlook, at least 2010 and 2013) won't open the full calendar.
+  $method = "PUBLISH";
   
   // Initialize an array to hold the events and a variable to keep track
   // of the last repeat id we've seen
   $ical_events = array();
-  $last_repeat_id = 0;
   $private_text = "[" . get_vocab("private") . "]";
+  $n_rows = sql_count($res);
   
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   {
@@ -1078,30 +1081,9 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
     // Otherwise it's a series
     else
     {
-      // if it's a series that we haven't seen yet, then construct an event
-      if ($row['repeat_id'] != $last_repeat_id)
+      // If this is the first row in a series
+      if (!isset($actual_entries))
       {
-        // Unless is the very first series, check to see whether we got
-        // all the entries we would have expected in the last series and
-        // issue cancellations for those that are missing
-        if (isset($actual_entries))
-        {
-          $missing_entries = array_diff($expected_entries, $actual_entries);
-          foreach ($missing_entries as $missing_entry)
-          {
-            if ($keep_private)
-            {
-              // We don't want private details appearing in the .ics file
-              $start_row['name'] = $private_text;
-              $start_row['create_by'] = $private_text;
-            }
-            $duration = $start_row['end_time'] - $start_row['start_time'];
-            $start_row['start_time'] = $missing_entry;
-            $start_row['end_time'] = $start_row['start_time'] + $duration;
-            $start_row['ical_recur_id'] = gmdate(RFC5545_FORMAT . '\Z', $missing_entry);
-            $ical_events[] = create_ical_event("CANCEL", $start_row);
-          }
-        }
         // Initialise for the new series
         $last_repeat_id = $row['repeat_id'];
         unset($replace_index);
@@ -1150,56 +1132,57 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
                                                    
         // And keep an array of all the entries we actually see
         $actual_entries = array();
+      }
+      
+      // If this row is a member of the current series
+      if ($row['repeat_id'] == $last_repeat_id)
+      {
+        // Add this entry to the array of ones we've seen
+        $actual_entries[] = strtotime($row['ical_recur_id']);
+        // And if it's a series member that has been altered
+        if ($row['entry_type'] == ENTRY_RPT_CHANGED)
+        {
+          $ical_events[] = create_ical_event($method, $row);
+        }
+        // Otherwise it must be an original member, in which case check
+        // to see if we were looking out for one
+        elseif (isset($replace_index))
+        {
+          // Use this row to define the sequence as it has got all the original
+          // data, except that we need to change the start and end times, keeping
+          // the original duration.   We get the start time from the recurrence
+          // id of the first member of the series, which we saved earlier on.
+          $duration = $row['end_time'] - $row['start_time'];
+          $row['start_time'] = $start_row['start_time'];
+          $row['end_time'] = $row['start_time'] + $duration;
+          $row['end_date'] = min($export_end, $row['end_date']);
+          $ical_events[$replace_index] = create_ical_event($method, $row, NULL, TRUE);
+          // Clear the $replace_index now that we've found an original entry
+          unset ($replace_index);
+        }
+      }
+      
+      
+      // If it's a series that we haven't seen yet, or we've got no more
+      // rows then construct an event
+      if (($row['repeat_id'] != $last_repeat_id) || ($i == $n_rows - 1))
+      {
+        $start_row['skip_list'] = array_diff($expected_entries, $actual_entries);
         // Create the series event
         $ical_events[] = create_ical_event($method, $start_row, NULL, TRUE);
+        
+        // If we're at the start of a new series, then rewind one and
+        // clear the actual entries
+        if ($i < ($n_rows - 1))
+        {
+          $i--;
+          unset ($actual_entries);
+        }
       }
-      // Add this entry to the array of ones we've seen
-      $actual_entries[] = strtotime($row['ical_recur_id']);
-      // And if it's a series member that has been altered
-      if ($row['entry_type'] == ENTRY_RPT_CHANGED)
-      {
-        $ical_events[] = create_ical_event($method, $row);
-      }
-      // Otherwise it must be an original member, in which case check
-      // to see if we were looking out for one
-      elseif (isset($replace_index))
-      {
-        // Use this row to define the sequence as it has got all the original
-        // data, except that we need to change the start and end times, keeping
-        // the original duration.   We get the start time from the recurrence
-        // id of the first member of the series, which we saved earlier on.
-        $duration = $row['end_time'] - $row['start_time'];
-        $row['start_time'] = $start_row['start_time'];
-        $row['end_time'] = $row['start_time'] + $duration;
-        $row['end_date'] = min($export_end, $row['end_date']);
-        $ical_events[$replace_index] = create_ical_event($method, $row, NULL, TRUE);
-        // Clear the $replace_index now that we've found an original entry
-        unset ($replace_index);
-      }
+      
     }
   }
   
-  // We've got to the end of the rows, so check to see whether there were
-  // any entries missing from the very last series, if there was one, and
-  // issue cancellations for the missing entries
-  if (isset($actual_entries))
-  {
-    $missing_entries = array_diff($expected_entries, $actual_entries);
-    foreach ($missing_entries as $missing_entry)
-    {
-      if ($keep_private)
-      {
-        // We don't want private details appearing in the .ics file
-        $start_row['name'] = $private_text;
-        $start_row['create_by'] = $private_text;
-      }
-      $duration = $start_row['end_time'] - $start_row['start_time'];
-      $start_row['start_time'] = $missing_entry;
-      $start_row['end_time'] = $start_row['start_time'] + $duration;
-      $start_row['ical_recur_id'] = gmdate(RFC5545_FORMAT . '\Z', $missing_entry);
-      $ical_events[] = create_ical_event("CANCEL", $start_row);
-    }
-  }
   // Build the iCalendar from the array of events and output it
   $icalendar = create_icalendar($method, $ical_events);
   echo $icalendar;
