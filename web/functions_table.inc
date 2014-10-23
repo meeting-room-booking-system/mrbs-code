@@ -786,7 +786,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   }
 
   // We need to know what all the rooms are called, so we can show them all.
-  // Pull the data from the db and store it. Convienently we can print the room
+  // Pull the data from the db and store it. Conveniently we can print the room
   // headings and capacities at the same time
   $sql = "SELECT R.room_name, R.capacity, R.id, R.description
             FROM $tbl_room R, $tbl_area A
