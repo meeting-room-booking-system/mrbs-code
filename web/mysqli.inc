@@ -537,7 +537,8 @@ function sql_mysqli_connect($host, $username, $password,
   /* check connection */
   if (mysqli_connect_errno())
   {
-    echo "\n<p>\n" . get_vocab("failed_connect_db") . " : " . mysqli_connect_error() . "\n</p>\n";
+    trigger_error(mysqli_connect_error(), E_USER_WARNING);
+    echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n</p>\n";
     exit;
   }
   if (function_exists('mysqli_set_charset'))
