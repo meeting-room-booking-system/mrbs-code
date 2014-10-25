@@ -1,0 +1,9 @@
+# $Id$
+
+# Make sure that the timestamps update automatically, just in case these are not the default settings
+
+ALTER TABLE %DB_TBL_PREFIX%entry
+MODIFY COLUMN timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+ALTER TABLE %DB_TBL_PREFIX%repeat
+MODIFY COLUMN timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
