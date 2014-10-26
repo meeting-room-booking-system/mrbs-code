@@ -601,7 +601,13 @@ fieldset.rep_type_details fieldset {padding-top: 0}
 .edit_area_room .form_general input {width: <?php echo $edit_area_room_input_width ?>em}
 #logon                    input {width: <?php echo $logon_input_width ?>em}
 #db_logon                 input {width: <?php echo $db_logon_input_width ?>em}
-.form_general .group      input {clear: none; width: auto}
+
+.form_general .group input {
+  clear: none;
+  width: auto;
+  margin-right: 0.5em;
+}
+
 .form_general input.date {width: 6em}
 
 /* font family and size needs to be the same for input and textarea as their widths are defined in ems */
