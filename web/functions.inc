@@ -12,7 +12,7 @@ function mrbs_default_timezone_set($timezone)
   if (!isset($timezone))
   {
     // to prevent people running into DST problems
-    $message = 'Configuration error: $timezone has not been set.';
+    $message = 'MRBS configuration error: $timezone has not been set.';
     trigger_error($message, E_USER_WARNING);
     fatal_error(FALSE, $message);
   }
@@ -20,25 +20,11 @@ function mrbs_default_timezone_set($timezone)
   {
     if (function_exists("date_default_timezone_set"))
     {
-      // We try and set the timezone to $timezone, which is the timezone setting
-      // for the area.   If that fails we try the default for new areas.   And if
-      // that fails we try the server timezone.
       if (!date_default_timezone_set($timezone))
       {
-        $fallback_timezone = $area_defaults['timezone'];
-        if (!date_default_timezone_set($fallback_timezone))
-        {
-          // date_default_timezone_get() was introduced at the same time as
-          // date_default_timezone_set(), so it will exist
-          $fallback_timezone = date_default_timezone_get();
-          if (!date_default_timezone_set($fallback_timezone))
-          {
-            $message = "Could not set any timezone";
-            trigger_error($message, E_USER_WARNING);
-            fatal_error(TRUE, $message);
-          }
-        }
-        trigger_error("Could not set timezone to '$timezone'; using '$fallback_timezone' instead", E_USER_WARNING);
+        $message = "MRBS configuration error: invalid timezone '$timezone'";
+        trigger_error($message, E_USER_WARNING);
+        fatal_error(FALSE, $message);
       }
     }
     else
