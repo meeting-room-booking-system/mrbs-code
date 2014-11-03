@@ -35,10 +35,14 @@ CREATE TABLE mrbs_area
   private_default           tinyint(1),
   private_mandatory         tinyint(1),
   private_override          varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci,
-  min_book_ahead_enabled    tinyint(1),
-  min_book_ahead_secs       int,
-  max_book_ahead_enabled    tinyint(1),
-  max_book_ahead_secs       int,
+  min_create_ahead_enabled  tinyint(1),
+  min_create_ahead_secs     int,
+  max_create_ahead_enabled  tinyint(1),
+  max_create_ahead_secs     int,
+  min_delete_ahead_enabled  tinyint(1),
+  min_delete_ahead_secs     int,
+  max_delete_ahead_enabled  tinyint(1),
+  max_delete_ahead_secs     int,
   max_per_day_enabled       tinyint(1) DEFAULT 0 NOT NULL,
   max_per_day               int DEFAULT 0 NOT NULL,
   max_per_week_enabled      tinyint(1) DEFAULT 0 NOT NULL,
@@ -165,6 +169,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '37');
+  VALUES ( 'db_version', '38');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

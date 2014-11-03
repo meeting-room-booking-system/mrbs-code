@@ -297,12 +297,15 @@ $standard_fields['room'] = array('id',
                                  'custom_html');
 
 // Boolean fields.    These are fields which are treated as booleans                                
-$boolean_fields['area'] = array('default_duration_all_day',
+$boolean_fields['area'] = array('area_disabled',
+                                'default_duration_all_day',
                                 'private_enabled',
                                 'private_default',
                                 'private_mandatory',
-                                'min_book_ahead_enabled',
-                                'max_book_ahead_enabled',
+                                'min_create_ahead_enabled',
+                                'max_create_ahead_enabled',
+                                'min_delete_ahead_enabled',
+                                'max_delete_ahead_enabled',
                                 'max_per_day_enabled',
                                 'max_per_week_enabled',
                                 'max_per_month_enabled',
@@ -327,38 +330,50 @@ $private_override_options = array('none', 'public', 'private');
 // get_area_settings().   [This isn't a very elegant way of handling
 // per-area settings and perhaps ought to be revisited at some stage]
 
+$area_defaults_keys = array('timezone',
+                            'resolution',
+                            'default_duration',
+                            'default_duration_all_day',
+                            'morningstarts',
+                            'morningstarts_minutes',
+                            'eveningends',
+                            'eveningends_minutes',
+                            'private_enabled',
+                            'private_default',
+                            'private_mandatory',
+                            'private_override',
+                            'min_create_ahead_enabled',
+                            'max_create_ahead_enabled',
+                            'min_create_ahead_secs',
+                            'max_create_ahead_secs',
+                            'min_delete_ahead_enabled',
+                            'max_delete_ahead_enabled',
+                            'min_delete_ahead_secs',
+                            'max_delete_ahead_secs',
+                            'max_per_day_enabled',
+                            'max_per_day',
+                            'max_per_week_enabled',
+                            'max_per_week',
+                            'max_per_month_enabled',
+                            'max_per_month',
+                            'max_per_year_enabled',
+                            'max_per_year',
+                            'max_per_future_enabled',
+                            'max_per_future',
+                            'approval_enabled',
+                            'reminders_enabled',
+                            'enable_periods',
+                            'confirmation_enabled',
+                            'confirmed_default');
+
 $area_defaults = array();
-$area_defaults['timezone']                 = $timezone;
-$area_defaults['resolution']               = $resolution;
-$area_defaults['default_duration']         = $default_duration;
-$area_defaults['default_duration_all_day'] = $default_duration_all_day;
-$area_defaults['morningstarts']            = $morningstarts;
-$area_defaults['morningstarts_minutes']    = $morningstarts_minutes;
-$area_defaults['eveningends']              = $eveningends;
-$area_defaults['eveningends_minutes']      = $eveningends_minutes;
-$area_defaults['private_enabled']          = $private_enabled;
-$area_defaults['private_default']          = $private_default;
-$area_defaults['private_mandatory']        = $private_mandatory;
-$area_defaults['private_override']         = $private_override;
-$area_defaults['min_book_ahead_enabled']   = $min_book_ahead_enabled;
-$area_defaults['max_book_ahead_enabled']   = $max_book_ahead_enabled;
-$area_defaults['min_book_ahead_secs']      = $min_book_ahead_secs;
-$area_defaults['max_book_ahead_secs']      = $max_book_ahead_secs;
-$area_defaults['max_per_day_enabled']      = $max_per_interval_area_enabled['day'];
-$area_defaults['max_per_day']              = $max_per_interval_area['day'];
-$area_defaults['max_per_week_enabled']     = $max_per_interval_area_enabled['week'];
-$area_defaults['max_per_week']             = $max_per_interval_area['week'];
-$area_defaults['max_per_month_enabled']    = $max_per_interval_area_enabled['month'];
-$area_defaults['max_per_month']            = $max_per_interval_area['month'];
-$area_defaults['max_per_year_enabled']     = $max_per_interval_area_enabled['year'];
-$area_defaults['max_per_year']             = $max_per_interval_area['year'];
-$area_defaults['max_per_future_enabled']   = $max_per_interval_area_enabled['future'];
-$area_defaults['max_per_future']           = $max_per_interval_area['future'];
-$area_defaults['approval_enabled']         = $approval_enabled;
-$area_defaults['reminders_enabled']        = $reminders_enabled;
-$area_defaults['enable_periods']           = $enable_periods;
-$area_defaults['confirmation_enabled']     = $confirmation_enabled;
-$area_defaults['confirmed_default']        = $confirmed_default;
+
+foreach ($area_defaults_keys as $key)
+{
+  $area_defaults[$key] = $$key;
+}
+
+
 
 // We send Ajax requests to del_entry_ajax.php with data as an array of ids.
 // In order to stop the POST request getting too large and triggering a 406

@@ -228,14 +228,12 @@ function checkInterval(&$booking, $ignore, $repignore, $interval_type='day', $on
 
 /** mrbsCheckPolicy()
  * 
- * Check to see if a proposed booking conforms to any booking policies in force.,
- * Can be used both for editing/creating an entry as well as deleting an entry
- * (it's possible that in future some policies might apply to deletion and others
- * to creation)
+ * Check to see if a proposed booking conforms to any booking policies in force.
+ * Can be used both for creating an entry as well as deleting an entry
  * 
  * $booking   - The booking in question - an associative array
  * $delete    - TRUE: We're intending to delete an entry
- *            - FALSE:  We're intending to create or edit an entry (the default)
+ *            - FALSE:  We're intending to create an entry (the default)
  * 
  * Returns:
  *            - An array of human readable errors.   If no errors the array has
@@ -244,8 +242,10 @@ function checkInterval(&$booking, $ignore, $repignore, $interval_type='day', $on
 function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
 {
   global $periods, $enable_periods;
-  global $min_book_ahead_enabled, $min_book_ahead_secs;
-  global $max_book_ahead_enabled, $max_book_ahead_secs;
+  global $min_create_ahead_enabled, $min_create_ahead_secs;
+  global $max_create_ahead_enabled, $max_create_ahead_secs;
+  global $min_delete_ahead_enabled, $min_delete_ahead_secs;
+  global $max_delete_ahead_enabled, $max_delete_ahead_secs;
   global $min_booking_date_enabled, $min_booking_date, $max_booking_date_enabled, $max_booking_date;
   global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
   global $max_per_interval_global_enabled, $max_per_interval_area_enabled;
@@ -263,40 +263,72 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
   // Because MRBS has no notion of where we are in the day if we're using periods,
   // we'll just assume that we're at the beginning of the day.
   $now = ($enable_periods) ? mktime(0, 0, 0) : time();
-  // We'll also round $min_book_ahead_secs and $max_book_ahead_secs down to the nearest whole day
+  // We'll also round $min_*_ahead_secs and $max_*_ahead_secs down to the nearest whole day
   
-  // Check min_book_ahead
-  if ($min_book_ahead_enabled)
+  // Check deletion policies
+  if ($delete)
   {
-    if ($enable_periods)
+    if ($min_delete_ahead_enabled)
     {
-      $min_book_ahead_secs -=  $min_book_ahead_secs % SECONDS_PER_DAY;
+      if ($enable_periods)
+      {
+        $min_delete_ahead_secs -=  $min_delete_ahead_secs % SECONDS_PER_DAY;
+      }
+      $min_delete_ahead = $min_delete_ahead_secs;
+      if (($booking['start_time'] - $now) < $min_delete_ahead)
+      {
+        toTimeString($min_delete_ahead, $units);
+        $errors[] = get_vocab("min_delete_time_before") . " $min_delete_ahead $units";
+      }
     }
-    $min_book_ahead = $min_book_ahead_secs;
-    if (($booking['start_time'] - $now) < $min_book_ahead)
+    
+    if ($max_delete_ahead_enabled)
     {
-      toTimeString($min_book_ahead, $units);
-      $errors[] = get_vocab("min_time_before") . " $min_book_ahead $units";
+      if ($enable_periods)
+      {
+        $max_delete_ahead_secs -=  $max_delete_ahead_secs % SECONDS_PER_DAY;
+      }
+      $max_delete_ahead = $max_delete_ahead_secs;
+      if (($booking['end_time'] - $now) > $max_delete_ahead)
+      {
+        toTimeString($max_delete_ahead, $units);
+        $errors[] = get_vocab("max_delete_time_before") . " $max_delete_ahead $units";
+      }
     }
   }
   
-  // Check max_book_ahead (but not if we're deleting a booking because
-  // nobody's going to mind if a booking beyond the max_book_ahead date is deleted)
-  //
-  // For the max_book_ahead case we check the endtime of the booking rather than the starttime.
-  // This prevents somebody booking the slot they want by nbooking a starttime within the period
-  // and then using a very long duration.
-  if ($max_book_ahead_enabled && !$delete)
+  // Check creation policies
+  else
   {
-    if ($enable_periods)
+    if ($min_create_ahead_enabled)
     {
-      $max_book_ahead_secs -=  $max_book_ahead_secs % SECONDS_PER_DAY;
+      if ($enable_periods)
+      {
+        $min_create_ahead_secs -=  $min_create_ahead_secs % SECONDS_PER_DAY;
+      }
+      $min_create_ahead = $min_create_ahead_secs;
+      if (($booking['start_time'] - $now) < $min_create_ahead)
+      {
+        toTimeString($min_create_ahead, $units);
+        $errors[] = get_vocab("min_create_time_before") . " $min_create_ahead $units";
+      }
     }
-    $max_book_ahead = $max_book_ahead_secs;
-    if (($booking['end_time'] - $now) > $max_book_ahead)
+    
+    // For the max_create_ahead case we check the endtime of the booking rather than the starttime.
+    // This prevents somebody booking the slot they want by booking a starttime within the period
+    // and then using a very long duration.
+    if ($max_create_ahead_enabled)
     {
-      toTimeString($max_book_ahead, $units);
-      $errors[] = get_vocab("max_time_before") . " $max_book_ahead $units";
+      if ($enable_periods)
+      {
+        $max_create_ahead_secs -=  $max_create_ahead_secs % SECONDS_PER_DAY;
+      }
+      $max_create_ahead = $max_create_ahead_secs;
+      if (($booking['end_time'] - $now) > $max_create_ahead)
+      {
+        toTimeString($max_create_ahead, $units);
+        $errors[] = get_vocab("max_create_time_before") . " $max_create_ahead $units";
+      }
     }
   }
   
@@ -1567,6 +1599,33 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
     }
 
   } // end foreach bookings
+  
+  // If we are editing an existing booking then we need to check that we are
+  // allowed to delete it
+  if (isset($id))
+  {
+    
+    if ($edit_type == "series")
+    {
+      $old_bookings = getBookingsInSeries($repeat_id);
+    }
+    else
+    {
+      $old_bookings = array();
+      $old_bookings[] = getBooking($id);
+    }
+    
+    foreach ($old_bookings as $old_booking)
+    {
+      $errors = mrbsCheckPolicy($old_booking, FALSE, FALSE, TRUE);
+      if (count($errors) > 0)
+      {
+        $valid_booking = FALSE;
+        $rules_broken = array_merge($rules_broken, $errors);
+      }
+    }
+    
+  }
 
   // Tidy up the lists of conflicts and rules broken, getting rid of duplicates
   $conflicts = array_values(array_unique($conflicts));
@@ -1717,5 +1776,50 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
   $result['slots'] = intval(($common['end_time'] - $common['start_time'])/$resolution);
 
   return $result;
+}
+
+function getBooking($id)
+{
+  global $tbl_entry;
+  
+  if (!isset($id))
+  {
+    return NULL;
+  }
+  
+  $sql = "SELECT * FROM $tbl_entry WHERE id=$id LIMIT 1";
+  $res = sql_query($sql);
+  
+  if ($res === FALSE)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    return FALSE;
+  }
+  
+  if (sql_count($res) == 0)
+  {
+    return NULL;
+  }
+  
+  return sql_row_keyed($res, 0);
+}
+
+function getBookingsInSeries($repeat_id)
+{
+  global $tbl_entry;
+  
+  $bookings = array();
+  
+  $sql = "SELECT id FROM $tbl_entry WHERE repeat_id = $repeat_id";
+  $res = sql_query_array($sql);
+  if ($res === FALSE)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+  }
+  foreach ($res as $id)
+  {
+    $bookings[] = getBooking($id);
+  }
+  return $bookings;
 }
 
