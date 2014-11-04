@@ -436,7 +436,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
  * $series - If set, delete the series, except user modified entries
  * $all    - If set, include user modified entries in the series delete
  *
- * Returns FALSE if an error occured, otherwise an array of start_times that
+ * Returns FALSE if an error occurred, otherwise an array of start_times that
  * have been deleted.
  *
  */
