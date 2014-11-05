@@ -350,16 +350,6 @@ $area_defaults_keys = array('timezone',
                             'max_delete_ahead_enabled',
                             'min_delete_ahead_secs',
                             'max_delete_ahead_secs',
-                            'max_per_day_enabled',
-                            'max_per_day',
-                            'max_per_week_enabled',
-                            'max_per_week',
-                            'max_per_month_enabled',
-                            'max_per_month',
-                            'max_per_year_enabled',
-                            'max_per_year',
-                            'max_per_future_enabled',
-                            'max_per_future',
                             'approval_enabled',
                             'reminders_enabled',
                             'enable_periods',
@@ -373,6 +363,16 @@ foreach ($area_defaults_keys as $key)
   $area_defaults[$key] = $$key;
 }
 
+$area_defaults['max_per_day_enabled']      = $max_per_interval_area_enabled['day'];
+$area_defaults['max_per_day']              = $max_per_interval_area['day'];
+$area_defaults['max_per_week_enabled']     = $max_per_interval_area_enabled['week'];
+$area_defaults['max_per_week']             = $max_per_interval_area['week'];
+$area_defaults['max_per_month_enabled']    = $max_per_interval_area_enabled['month'];
+$area_defaults['max_per_month']            = $max_per_interval_area['month'];
+$area_defaults['max_per_year_enabled']     = $max_per_interval_area_enabled['year'];
+$area_defaults['max_per_year']             = $max_per_interval_area['year'];
+$area_defaults['max_per_future_enabled']   = $max_per_interval_area_enabled['future'];
+$area_defaults['max_per_future']           = $max_per_interval_area['future'];
 
 
 // We send Ajax requests to del_entry_ajax.php with data as an array of ids.
