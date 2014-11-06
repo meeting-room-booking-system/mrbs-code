@@ -182,10 +182,14 @@ if (!$ajax)
     foreach ($is_mandatory_field as $field => $value)
     {
       $field = preg_replace('/^entry\./', '', $field);
-      if ($value && array_key_exists($field, $custom_fields) && ($custom_fields[$field] === ''))
+      if ($value)
       {
-        invalid_booking(get_vocab('missing_mandatory_field') . ' "' .
-                        get_loc_field_name($tbl_entry, $field) . '"');
+        if ((in_array($field, $standard_fields['entry']) && ($$field === '')) ||
+            (array_key_exists($field, $custom_fields) && ($custom_fields[$field] === '')))
+        {
+          invalid_booking(get_vocab('missing_mandatory_field') . ' "' .
+                          get_loc_field_name($tbl_entry, $field) . '"');
+        }
       }
     }
   }        
