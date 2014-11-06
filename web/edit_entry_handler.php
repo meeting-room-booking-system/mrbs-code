@@ -93,12 +93,12 @@ $formvars = array('create_by'          => 'string',
                   'timetohighlight'    => 'int',
                   'page'               => 'string',
                   'commit'             => 'string');
-                 
+      
 foreach($formvars as $var => $var_type)
 {
   $$var = get_form_var($var, $var_type);
   // Trim the strings
-  if ($var_type == 'string')
+  if (is_string($$var))
   {
     $$var = trim($$var);
   }
@@ -145,7 +145,7 @@ foreach($fields as $field)
       $custom_fields[$field['name']] = NULL;
     }
     // Trim any strings
-    if ($f_type == 'string')
+    if (is_string($custom_fields[$field['name']]))
     {
       $custom_fields[$field['name']] = trim($custom_fields[$field['name']]);
     }
