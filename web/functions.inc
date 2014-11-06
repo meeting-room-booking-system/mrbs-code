@@ -1256,6 +1256,7 @@ function generate_datalist($params)
   $html .= " list=\"" . $params['id'] . "_options\"";
   $html .= " value=\"" . $params['value'] . "\"";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
+  $html .= (isset($params['pattern'])) ? " pattern=\"" . htmlspecialchars($params['pattern']) . "\"" : "";
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
   $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
   // We normally have the autocomplete atribute set to off because in most browsers
