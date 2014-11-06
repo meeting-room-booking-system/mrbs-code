@@ -97,6 +97,11 @@ $formvars = array('create_by'          => 'string',
 foreach($formvars as $var => $var_type)
 {
   $$var = get_form_var($var, $var_type);
+  // Trim the strings
+  if ($var_type == 'string')
+  {
+    $$var = trim($$var);
+  }
 }
 
 // BACK:  we didn't really want to be here - send them to the returl
@@ -139,6 +144,11 @@ foreach($fields as $field)
     {
       $custom_fields[$field['name']] = NULL;
     }
+    // Trim any strings
+    if ($f_type == 'string')
+    {
+      $custom_fields[$field['name']] = trim($custom_fields[$field['name']]);
+    }
   }
 }
 
@@ -151,7 +161,7 @@ foreach($fields as $field)
 // Don't bother with them if this is an Ajax request.
 if (!$ajax)
 {
-  if ($name == '')
+  if ($name === '')
   {
     invalid_booking(get_vocab('must_set_description'));
   }       
@@ -307,9 +317,6 @@ if ($ajax && $commit)
     }
   }
 }
-
-// Trim the name field to get rid of any leading or trailing whitespace
-$name = trim($name);
 
 
 // Truncate any fields that have a maximum length as a precaution.
