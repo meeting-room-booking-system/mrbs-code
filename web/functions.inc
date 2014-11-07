@@ -2592,3 +2592,41 @@ function is_cli()
   }
 }
 
+// Set and restore ignore_user_abort.   The function is designed to be used to
+// ensure a critical piece of code can't be aborted, and used in pairs of set and
+// restore calls.  The function keeps track of outstanding set requests so that
+// the original state isn't restored if there are other requests still outstanding.
+//
+// $set   TRUE    set ignore_user_abort
+//        FALSE   restore to the original state, if no other requests outstanding
+function mrbs_ignore_user_abort($set)
+{
+  static $original_state;
+  static $outstanding_requests = 0;
+  
+  if (!isset($original_state))
+  {
+    $original_state = ignore_user_abort();
+  }
+  
+  // Set ignore_user_abort
+  if ($set)
+  {
+    if ($outstanding_requests == 0)
+    {
+      ignore_user_abort(1);
+    }
+    $outstanding_requests++;
+  }
+  else
+  // Restore the original state, provided no other requests are outstanding
+  {
+    $outstanding_requests--;
+    if ($outstanding_requests == 0)
+    {
+      ignore_user_abort($original_state);
+    }
+  }
+}
+
+
