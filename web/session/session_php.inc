@@ -66,11 +66,6 @@ if (isset($session_save_path))
       trigger_error("MRBS: the session_save_path '$session_save_path' is not writable", E_USER_WARNING);
       fatal_error(TRUE, "MRBS: server configuration error.", FALSE);
     }
-    if (!is_readable($session_save_path))
-    {
-      trigger_error("MRBS: the session_save_path '$session_save_path' is not readable", E_USER_WARNING);
-      fatal_error(TRUE, "MRBS: server configuration error.", FALSE);
-    }
   }
 }
 
