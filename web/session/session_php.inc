@@ -46,7 +46,10 @@ if (!isset($auth["session_php"]["session_expire_time"]))
 }
 
 // Check that the session_save_path has the correct permissions.   If not then the
-// resultant errors can be difficult to diagnose.
+// resultant errors can be difficult to diagnose.   Note that the session_save_path
+// directory needs to be writable, but not necessarily readable.   In fact it is
+// quite likely that it won't be readable for security reasons.  It is sufficient that
+// the owner of the session file that is created in the directory can read it.
 $session_save_path = session_save_path();
 
 if (isset($session_save_path))
