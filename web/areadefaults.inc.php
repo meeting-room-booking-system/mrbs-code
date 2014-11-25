@@ -103,28 +103,46 @@ $eveningends_minutes   = 30;   // must be integer in range 0-59
  * Booking policies
  ******************/
 
+// It is possible to set policies that restrict how far in advance ordinary users can make
+// bookings.   Both minimum and maximum values can be set.  It is also possible to distinguish
+// between creating new bookings and deleting existing bookings.  Editing an existing booking
+// involves deleting the existing booking and creating a new booking at the (possibly) new time.
+// So if for example you want to stop people editing existing bookings, but allow the creation
+// of new bookings, then you will need to prevent deletion but allow creation.
+
 // If the variables below are set to TRUE, MRBS will force a minimum and/or maximum advance
 // booking time on ordinary users (admins can make bookings for whenever they like).   The
 // minimum advance booking time allows you to set a policy saying that users must book
 // at least so far in advance.  The maximum allows you to set a policy saying that they cannot
 // book more than so far in advance.  How the times are determined depends on whether Periods
-// or Times are being used.   The min_book_ahead settings also apply to the deletion of bookings
-// (to prevent users deleting bookings that have taken place and trying to avoid being charged; if
-// it's a booking in the future past the max_book_ahead time then presumably nobody minds if the
-// booking is deleted)
+// or Times are being used.
 
 // DEFAULT VALUES FOR NEW AREAS
-$min_book_ahead_enabled = FALSE;    // set to TRUE to enforce a minimum advance booking time
-$max_book_ahead_enabled = FALSE;    // set to TRUE to enforce a maximum advance booking time
+
+// Creating new bookings
+$min_create_ahead_enabled = FALSE;    // set to TRUE to enforce a minimum advance booking time
+$max_create_ahead_enabled = FALSE;    // set to TRUE to enforce a maximum advance booking time
+
+// Deleting existing bookings
+$min_delete_ahead_enabled = FALSE;    // set to TRUE to enforce a minimum advance booking time
+$max_delete_ahead_enabled = FALSE;    // set to TRUE to enforce a maximum advance booking time
 
 // The advance booking limits are measured in seconds and are set by the two variables below.
 // The relevant time for determining whether a booking is allowed is the start time of the
-// booking.  Values may be negative: for example setting $min_book_ahead_secs = -300 means
-// that users cannot book more than 5 minutes in the past.
+// booking.  Values may be negative: for example setting $min_delete_ahead_secs = -300 means
+// that users cannot delete (and this will include editing) a booking more than 5 minutes in
+// the past.
+
 
 // DEFAULT VALUES FOR NEW AREAS
-$min_book_ahead_secs = 0;           // (seconds) cannot book in the past
-$max_book_ahead_secs = 60*60*24*7;  // (seconds) no more than one week ahead
+
+// Creating new bookings
+$min_create_ahead_secs = 0;           // (seconds) cannot book in the past
+$max_create_ahead_secs = 60*60*24*7;  // (seconds) no more than one week ahead
+
+// Deleting existing bookings
+$min_delete_ahead_secs = 0;           // (seconds) cannot book in the past
+$max_delete_ahead_secs = 60*60*24*7;  // (seconds) no more than one week ahead
 
 // NOTE:  If you are using periods, MRBS has no notion of when the periods occur during the
 // day, and so cannot impose policies of the kind "users must book at least one period
@@ -134,7 +152,7 @@ $max_book_ahead_secs = 60*60*24*7;  // (seconds) no more than one week ahead
 // (one day) and 1 will be rounded down to 0.
 //
 // As MRBS does not know when the periods occur in the day, there is no way of specifying, for example,
-// that bookings must be made at least 24 hours in advance.    Setting $min_book_ahead_secs=86400
+// that bookings must be made at least 24 hours in advance.    Setting $min_create_ahead_secs=86400
 // will allow somebody to make a booking at 11:59 pm for the first period the next day, which
 // which may occur at 8.00 am.
 

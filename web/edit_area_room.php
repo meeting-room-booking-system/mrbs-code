@@ -153,12 +153,18 @@ $area_eveningends = get_form_var('area_eveningends', 'int');
 $area_eveningends_minutes = get_form_var('area_eveningends_minutes', 'int');
 $area_evening_ampm = get_form_var('area_evening_ampm', 'string');
 $area_eveningends_t = get_form_var('area_eveningends_t', 'int');
-$area_min_ba_enabled = get_form_var('area_min_ba_enabled', 'string');
-$area_min_ba_value = get_form_var('area_min_ba_value', 'int');
-$area_min_ba_units = get_form_var('area_min_ba_units', 'string');
-$area_max_ba_enabled = get_form_var('area_max_ba_enabled', 'string');
-$area_max_ba_value = get_form_var('area_max_ba_value', 'int');
-$area_max_ba_units = get_form_var('area_max_ba_units', 'string');
+$area_min_create_ahead_enabled = get_form_var('area_min_create_ahead_enabled', 'string');
+$area_min_create_ahead_value = get_form_var('area_min_create_ahead_value', 'int');
+$area_min_create_ahead_units = get_form_var('area_min_create_ahead_units', 'string');
+$area_max_create_ahead_enabled = get_form_var('area_max_create_ahead_enabled', 'string');
+$area_max_create_ahead_value = get_form_var('area_max_create_ahead_value', 'int');
+$area_max_create_ahead_units = get_form_var('area_max_create_ahead_units', 'string');
+$area_min_delete_ahead_enabled = get_form_var('area_min_delete_ahead_enabled', 'string');
+$area_min_delete_ahead_value = get_form_var('area_min_delete_ahead_value', 'int');
+$area_min_delete_ahead_units = get_form_var('area_min_delete_ahead_units', 'string');
+$area_max_delete_ahead_enabled = get_form_var('area_max_delete_ahead_enabled', 'string');
+$area_max_delete_ahead_value = get_form_var('area_max_delete_ahead_value', 'int');
+$area_max_delete_ahead_units = get_form_var('area_max_delete_ahead_units', 'string');
 $area_private_enabled = get_form_var('area_private_enabled', 'string');
 $area_private_default = get_form_var('area_private_default', 'int');
 $area_private_mandatory = get_form_var('area_private_mandatory', 'string');
@@ -424,41 +430,53 @@ if ($phase == 2)
     }
   
     // Convert the book ahead times into seconds
-    fromTimeString($area_min_ba_value, $area_min_ba_units);
-    fromTimeString($area_max_ba_value, $area_max_ba_units);
+    fromTimeString($area_min_create_ahead_value, $area_min_create_ahead_units);
+    fromTimeString($area_max_create_ahead_value, $area_max_create_ahead_units);
+    fromTimeString($area_min_delete_ahead_value, $area_min_delete_ahead_units);
+    fromTimeString($area_max_delete_ahead_value, $area_max_delete_ahead_units);
     
     // If we are using periods, round these down to the nearest whole day
     // (anything less than a day is meaningless when using periods)
     if ($area_enable_periods)
     {
-      if (isset($area_min_ba_value))
+      $vars = array('area_min_create_ahead_value',
+                    'area_max_create_ahead_value',
+                    'area_min_delete_ahead_value',
+                    'area_max_delete_ahead_value');
+                    
+      foreach ($vars as $var)
       {
-        $area_min_ba_value -= $area_min_ba_value % SECONDS_PER_DAY;
-      }
-      if (isset($area_max_ba_value))
-      {
-        $area_max_ba_value -= $area_max_ba_value % SECONDS_PER_DAY;
+        if (isset($$var))
+        {
+          $$var -= $$var % SECONDS_PER_DAY;
+        }
       }
     }
   
     // Convert booleans into 0/1 (necessary for PostgreSQL)
-    $area_disabled = (!empty($area_disabled)) ? 1 : 0;
-    $area_def_duration_all_day = (!empty($area_def_duration_all_day)) ? 1 : 0;
-    $area_min_ba_enabled = (!empty($area_min_ba_enabled)) ? 1 : 0;
-    $area_max_ba_enabled = (!empty($area_max_ba_enabled)) ? 1 : 0;
-    $area_private_enabled = (!empty($area_private_enabled)) ? 1 : 0;
-    $area_private_default = (!empty($area_private_default)) ? 1 : 0;
-    $area_private_mandatory = (!empty($area_private_mandatory)) ? 1 : 0;
-    $area_approval_enabled = (!empty($area_approval_enabled)) ? 1 : 0;
-    $area_reminders_enabled = (!empty($area_reminders_enabled)) ? 1 : 0;
-    $area_enable_periods = (!empty($area_enable_periods)) ? 1 : 0;
-    $area_confirmation_enabled = (!empty($area_confirmation_enabled)) ? 1 : 0;
-    $area_confirmed_default = (!empty($area_confirmed_default)) ? 1 : 0;
+    $vars = array('area_disabled',
+                  'area_def_duration_all_day',
+                  'area_min_create_ahead_enabled',
+                  'area_max_create_ahead_enabled',
+                  'area_min_delete_ahead_enabled',
+                  'area_max_delete_ahead_enabled',
+                  'area_private_enabled',
+                  'area_private_default',
+                  'area_private_mandatory',
+                  'area_approval_enabled',
+                  'area_reminders_enabled',
+                  'area_enable_periods',
+                  'area_confirmation_enabled',
+                  'area_confirmed_default');
     foreach ($interval_types as $interval_type)
     {
-      $var = "area_max_per_${interval_type}_enabled";
+      $vars[] = "area_max_per_${interval_type}_enabled";
+    }
+    foreach ($vars as $var)
+    {
       $$var = (!empty($$var)) ? 1 : 0;
     }
+
     
     if (!$area_enable_periods)
     { 
@@ -514,17 +532,28 @@ if ($phase == 2)
         $assign_array[] = "eveningends_minutes=" . $area_eveningends_minutes;
       }
       
-      // only update the min and max book_ahead_secs fields if the form values
+      // only update the min and max *_ahead_secs fields if the form values
       // are set;  they might be NULL because they've been disabled by JavaScript
-      $assign_array[] = "min_book_ahead_enabled=" . $area_min_ba_enabled;
-      $assign_array[] = "max_book_ahead_enabled=" . $area_max_ba_enabled;
-      if (isset($area_min_ba_value))
+      $assign_array[] = "min_create_ahead_enabled=" . $area_min_create_ahead_enabled;
+      $assign_array[] = "max_create_ahead_enabled=" . $area_max_create_ahead_enabled;
+      $assign_array[] = "min_delete_ahead_enabled=" . $area_min_delete_ahead_enabled;
+      $assign_array[] = "max_delete_ahead_enabled=" . $area_max_delete_ahead_enabled;
+
+      if (isset($area_min_create_ahead_value))
       {
-        $assign_array[] = "min_book_ahead_secs=" . $area_min_ba_value;
+        $assign_array[] = "min_create_ahead_secs=" . $area_min_create_ahead_value;
       }
-      if (isset($area_max_ba_value))
+      if (isset($area_max_create_ahead_value))
       {
-        $assign_array[] = "max_book_ahead_secs=" . $area_max_ba_value;
+        $assign_array[] = "max_create_ahead_secs=" . $area_max_create_ahead_value;
+      }
+      if (isset($area_min_delete_ahead_value))
+      {
+        $assign_array[] = "min_delete_ahead_secs=" . $area_min_delete_ahead_value;
+      }
+      if (isset($area_max_delete_ahead_value))
+      {
+        $assign_array[] = "max_delete_ahead_secs=" . $area_max_delete_ahead_value;
       }
       
       foreach($interval_types as $interval_type)
@@ -554,8 +583,11 @@ if ($phase == 2)
       $assign_array[] = "confirmed_default=" . $area_confirmed_default;
             
       $sql .= implode(",", $assign_array) . " WHERE id=$area";
+      
       if (sql_command($sql) < 0)
       {
+        echo $sql;
+        echo sql_error();
         echo get_vocab("update_area_failed") . "<br>\n";
         trigger_error(sql_error(), E_USER_WARNING);
         fatal_error(FALSE, get_vocab("fatal_db_error"));
@@ -1036,10 +1068,16 @@ if (isset($change_area) &&!empty($area))
   echo "</fieldset>\n";
         
   // Booking policies
-  $min_ba_value = $min_book_ahead_secs;
-  toTimeString($min_ba_value, $min_ba_units);
-  $max_ba_value = $max_book_ahead_secs;
-  toTimeString($max_ba_value, $max_ba_units);
+  $min_create_ahead_value = $min_create_ahead_secs;
+  toTimeString($min_create_ahead_value, $min_create_ahead_units);
+  $max_create_ahead_value = $max_create_ahead_secs;
+  toTimeString($max_create_ahead_value, $max_create_ahead_units);
+  
+  $min_delete_ahead_value = $min_delete_ahead_secs;
+  toTimeString($min_delete_ahead_value, $min_delete_ahead_units);
+  $max_delete_ahead_value = $max_delete_ahead_secs;
+  toTimeString($max_delete_ahead_value, $max_delete_ahead_units);
+  
   echo "<fieldset id=\"booking_policies\">\n";
   echo "<legend>" . get_vocab("booking_policies") . "</legend>\n";
   // Note when using periods
@@ -1049,29 +1087,77 @@ if (isset($change_area) &&!empty($area))
   echo "<label></label><span>" . get_vocab("book_ahead_note_periods") . "</span>";
   echo "</div>\n";
   
-  // Minimum book ahead
-  echo "<div>\n";
-  $params = array('label' => get_vocab("min_book_ahead") . ":",
-                  'name'  => 'area_min_ba_enabled',
-                  'value' => $min_book_ahead_enabled,
-                  'class' => 'enabler');
-  generate_checkbox($params);
-  $attributes = array('class="text"',
-                      'type="number"',
-                      'min="0"',
-                      'step="1"');
-  $params = array('name'       => 'area_min_ba_value',
-                  'value'      => $min_ba_value,
-                  'attributes' => $attributes);
-  generate_input($params);
   $units = array("seconds", "minutes", "hours", "days", "weeks");
   $options = array();
   foreach ($units as $unit)
   {
     $options[$unit] = get_vocab($unit);
   }
-  $params = array('name'    => 'area_min_ba_units',
-                  'value'   => array_search($min_ba_units, $options),
+  
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("booking_creation") . "</legend>\n";
+  // Minimum book ahead
+  echo "<div>\n";
+  $params = array('label' => get_vocab("min_book_ahead") . ":",
+                  'name'  => 'area_min_create_ahead_enabled',
+                  'value' => $min_create_ahead_enabled,
+                  'class' => 'enabler');
+  generate_checkbox($params);
+  $attributes = array('class="text"',
+                      'type="number"',
+                      'step="1"');
+  $params = array('name'       => 'area_min_create_ahead_value',
+                  'value'      => $min_create_ahead_value,
+                  'attributes' => $attributes);
+  generate_input($params);
+  $params = array('name'    => 'area_min_create_ahead_units',
+                  'value'   => array_search($min_create_ahead_units, $options),
+                  'options' => $options);
+  generate_select($params);
+  echo "</div>\n";
+  
+  
+  // Maximum book ahead
+  echo "<div>\n";
+  $params = array('label' => get_vocab("max_book_ahead") . ":",
+                  'name'  => 'area_max_create_ahead_enabled',
+                  'value' => $max_create_ahead_enabled,
+                  'class' => 'enabler');
+  generate_checkbox($params);
+  $attributes = array('class="text"',
+                      'type="number"',
+                      'step="1"');
+  $params = array('name'       => 'area_max_create_ahead_value',
+                  'value'      => $max_create_ahead_value,
+                  'attributes' => $attributes);
+  generate_input($params);
+  $params = array('name'    => 'area_max_create_ahead_units',
+                  'value'   => array_search($max_create_ahead_units, $options),
+                  'options' => $options);  // options same as before
+  generate_select($params);
+  echo "</div>\n";
+  echo "</fieldset>\n";
+  
+  
+  
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("booking_deletion") . "</legend>\n";
+  // Minimum book ahead
+  echo "<div>\n";
+  $params = array('label' => get_vocab("min_book_ahead") . ":",
+                  'name'  => 'area_min_delete_ahead_enabled',
+                  'value' => $min_delete_ahead_enabled,
+                  'class' => 'enabler');
+  generate_checkbox($params);
+  $attributes = array('class="text"',
+                      'type="number"',
+                      'step="1"');
+  $params = array('name'       => 'area_min_delete_ahead_value',
+                  'value'      => $min_delete_ahead_value,
+                  'attributes' => $attributes);
+  generate_input($params);
+  $params = array('name'    => 'area_min_delete_ahead_units',
+                  'value'   => array_search($min_delete_ahead_units, $options),
                   'options' => $options);
   generate_select($params);
   echo "</div>\n";
@@ -1079,25 +1165,27 @@ if (isset($change_area) &&!empty($area))
   // Maximum book ahead
   echo "<div>\n";
   $params = array('label' => get_vocab("max_book_ahead") . ":",
-                  'name'  => 'area_max_ba_enabled',
-                  'value' => $max_book_ahead_enabled,
+                  'name'  => 'area_max_delete_ahead_enabled',
+                  'value' => $max_delete_ahead_enabled,
                   'class' => 'enabler');
   generate_checkbox($params);
   $attributes = array('class="text"',
                       'type="number"',
-                      'min="0"',
                       'step="1"');
-  $params = array('name'       => 'area_max_ba_value',
-                  'value'      => $max_ba_value,
+  $params = array('name'       => 'area_max_delete_ahead_value',
+                  'value'      => $max_delete_ahead_value,
                   'attributes' => $attributes);
   generate_input($params);
-  $params = array('name'    => 'area_max_ba_units',
-                  'value'   => array_search($max_ba_units, $options),
+  $params = array('name'    => 'area_max_delete_ahead_units',
+                  'value'   => array_search($max_delete_ahead_units, $options),
                   'options' => $options);  // options same as before
   generate_select($params);
   echo "</div>\n";
-      
+  echo "</fieldset>\n";
+   
   // The max_per booking policies
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("booking_limits") . "</legend>\n";
   echo "<table>\n";
       
   echo "<thead>\n";
@@ -1128,6 +1216,7 @@ if (isset($change_area) &&!empty($area))
   echo "</tbody>\n";
       
   echo "</table>\n";
+  echo "</fieldset>\n";
       
       
   echo "</fieldset>\n";

@@ -38,10 +38,14 @@ CREATE TABLE mrbs_area
   private_default           smallint,
   private_mandatory         smallint,
   private_override          varchar(32),
-  min_book_ahead_enabled    smallint,
-  min_book_ahead_secs       int,
-  max_book_ahead_enabled    smallint,
-  max_book_ahead_secs       int,
+  min_create_ahead_enabled  smallint,
+  min_create_ahead_secs     int,
+  max_create_ahead_enabled  smallint,
+  max_create_ahead_secs     int,
+  min_delete_ahead_enabled  smallint,
+  min_delete_ahead_secs     int,
+  max_delete_ahead_enabled  smallint,
+  max_delete_ahead_secs     int,
   max_per_day_enabled       smallint DEFAULT 0 NOT NULL,
   max_per_day               int DEFAULT 0 NOT NULL,
   max_per_week_enabled      smallint DEFAULT 0 NOT NULL,
@@ -154,6 +158,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '37');
+  VALUES ('db_version', '38');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');

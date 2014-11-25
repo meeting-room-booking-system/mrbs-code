@@ -1663,7 +1663,8 @@ function get_area_settings($area)
   global $resolution, $default_duration, $default_duration_all_day;
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $private_enabled, $private_default, $private_mandatory, $private_override;
-  global $min_book_ahead_enabled, $max_book_ahead_enabled, $min_book_ahead_secs, $max_book_ahead_secs;
+  global $min_create_ahead_enabled, $max_create_ahead_enabled, $min_create_ahead_secs, $max_create_ahead_secs;
+  global $min_delete_ahead_enabled, $max_delete_ahead_enabled, $min_delete_ahead_secs, $max_delete_ahead_secs;
   global $approval_enabled, $reminders_enabled, $enable_periods;
   global $confirmation_enabled, $confirmed_default, $timezone;
   global $max_per_interval_area_enabled, $max_per_interval_area;
@@ -1679,8 +1680,10 @@ function get_area_settings($area)
                  morningstarts, morningstarts_minutes,
                  eveningends, eveningends_minutes,
                  private_enabled, private_default, private_mandatory, private_override,
-                 min_book_ahead_enabled, max_book_ahead_enabled,
-                 min_book_ahead_secs, max_book_ahead_secs,
+                 min_create_ahead_enabled, max_create_ahead_enabled,
+                 min_create_ahead_secs, max_create_ahead_secs,
+                 min_delete_ahead_enabled, max_delete_ahead_enabled,
+                 min_delete_ahead_secs, max_delete_ahead_secs,
                  max_per_day_enabled, max_per_day,
                  max_per_week_enabled, max_per_week,
                  max_per_month_enabled, max_per_month,

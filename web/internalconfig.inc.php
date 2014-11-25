@@ -7,43 +7,105 @@
 
 
 /********************************************************
- * Deprecated configuration variables
+ * Disused configuration variables
  ********************************************************/
 
 // If they are still using some of the old configuration variables
-// then replace them with their new equivalents.   (Should maybe warn
-// the site admin somehow if they are being used?   Perhaps when a 
-// database upgrade is performed?)
+// then replace them with their new equivalents and give a warning.
 
-// Variables deprecated in versions of MRBS > 1.4.4.1
+// Variables no longer used in versions of MRBS > 1.4.4.1
 if (isset($provisional_enabled))
 {
+  $message = 'Please check your config file.   The variable $provisional_enabled ' .
+             'is no longer used and has been replaced by $approval_enabled.';
+  trigger_error($message, E_USER_WARNING);
   $approval_enabled = ($provisional_enabled) ? TRUE : FALSE;
 }
 
-// Variables deprecated in versions of MRBS > 1.4.5
-
+// Variables no longer used in versions of MRBS > 1.4.5
 if (isset($mail_settings['admin_all']))
 {
   // We won't set $mail_settings['on_new'] because the default is TRUE
   // which gives the same behaviour as before, and if it's been set to FALSE
   // it means the site admin has deliberately changed it.
+  $message = 'Please check your config file.   The variable $mail_settings["admin_all"] ' .
+             'is no longer used and has been replaced by $mail_settings["on_change"], ' .
+             '$mail_settings["on_change"] and $mail_settings["on_delete"].';
+  trigger_error($message, E_USER_WARNING);
   $mail_settings['on_change'] = ($mail_settings['admin_all']) ? TRUE : FALSE;
 }
 if (isset($mail_settings['admin_on_delete']))
 {
+  $message = 'Please check your config file.   The variable $mail_settings["admin_on_delete"] ' .
+             'is no longer used and has been replaced by $mail_settings["on_delete"].';
+  trigger_error($message, E_USER_WARNING);
   $mail_settings['on_delete'] = ($mail_settings['admin_on_delete']) ? TRUE : FALSE;
 }
 if (!empty($dateformat))
 {
+  $message = 'Please check your config file.   The variable $dateformat ' .
+             'is no longer used and has been replaced by $strftime_format["daymonth"].';
+  trigger_error($message, E_USER_WARNING);
   $strftime_format['daymonth']     = "%d %b";
 }
 
 // Variables no longer used in versions of MRBS > 1.4.7
+if (isset($highlight_method))
+{
+  $message = 'Please check your config file.   The variable $highlight_method ' .
+             'is no longer used and is redundant.';
+  trigger_error($message, E_USER_WARNING);
+}
+if (isset($javascript_cursor))
+{
+  $message = 'Please check your config file.   The variable $javascript_cursor ' .
+             'is no longer used and is redundant.';
+  trigger_error($message, E_USER_WARNING);
+}
+if (isset($mail_charset))
+{
+  $message = 'Please check your config file.   The variable $mail_charset ' .
+             'is no longer used.   All emails are sent as UTF-8.';
+  trigger_error($message, E_USER_WARNING);
+}
 
-// $highlight_method
-// $javascript_cursor
-// $mail_charset
+// Variables no longer used in versions of MRBS > 1.4.11
+if (isset($min_book_ahead_enabled))
+{
+  $message = 'Please check your config file.   The variable $min_book_ahead_enabled ' .
+             'is no longer used and has been replaced by $min_create_ahead_enabled ' .
+             'and $min_delete_ahead_enabled.';
+  trigger_error($message, E_USER_WARNING);
+  $min_create_ahead_enabled = ($min_book_ahead_enabled) ? TRUE : FALSE;
+  $min_delete_ahead_enabled = ($min_book_ahead_enabled) ? TRUE : FALSE;
+}
+if (isset($max_book_ahead_enabled))
+{
+  $message = 'Please check your config file.   The variable $max_book_ahead_enabled ' .
+             'is no longer used and has been replaced by $max_create_ahead_enabled ' .
+             'and $max_delete_ahead_enabled.';
+  trigger_error($message, E_USER_WARNING);
+  $max_create_ahead_enabled = ($max_book_ahead_enabled) ? TRUE : FALSE;
+  // No need to do anything about $max_delete_ahead_enabled as it didn't apply in the old system
+}
+if (isset($min_book_ahead_secs))
+{
+  $message = 'Please check your config file.   The variable $min_book_ahead_secs ' .
+             'is no longer used and has been replaced by $min_create_ahead_secs ' .
+             'and $min_delete_ahead_secs.';
+  trigger_error($message, E_USER_WARNING);
+  $min_create_ahead_secs = $min_book_ahead_secs;
+  $min_delete_ahead_secs = $min_book_ahead_secs;
+}
+if (isset($max_book_ahead_secs))
+{
+  $message = 'Please check your config file.   The variable $max_book_ahead_secs ' .
+             'is no longer used and has been replaced by $max_create_ahead_secs ' .
+             'and $max_delete_ahead_secs.';
+  trigger_error($message, E_USER_WARNING);
+  $max_create_ahead_secs = $max_book_ahead_secs;
+  $max_delete_ahead_secs = $max_book_ahead_secs;
+}
 
 
 /********************************************************
@@ -297,12 +359,15 @@ $standard_fields['room'] = array('id',
                                  'custom_html');
 
 // Boolean fields.    These are fields which are treated as booleans                                
-$boolean_fields['area'] = array('default_duration_all_day',
+$boolean_fields['area'] = array('area_disabled',
+                                'default_duration_all_day',
                                 'private_enabled',
                                 'private_default',
                                 'private_mandatory',
-                                'min_book_ahead_enabled',
-                                'max_book_ahead_enabled',
+                                'min_create_ahead_enabled',
+                                'max_create_ahead_enabled',
+                                'min_delete_ahead_enabled',
+                                'max_delete_ahead_enabled',
                                 'max_per_day_enabled',
                                 'max_per_week_enabled',
                                 'max_per_month_enabled',
@@ -327,23 +392,39 @@ $private_override_options = array('none', 'public', 'private');
 // get_area_settings().   [This isn't a very elegant way of handling
 // per-area settings and perhaps ought to be revisited at some stage]
 
+$area_defaults_keys = array('timezone',
+                            'resolution',
+                            'default_duration',
+                            'default_duration_all_day',
+                            'morningstarts',
+                            'morningstarts_minutes',
+                            'eveningends',
+                            'eveningends_minutes',
+                            'private_enabled',
+                            'private_default',
+                            'private_mandatory',
+                            'private_override',
+                            'min_create_ahead_enabled',
+                            'max_create_ahead_enabled',
+                            'min_create_ahead_secs',
+                            'max_create_ahead_secs',
+                            'min_delete_ahead_enabled',
+                            'max_delete_ahead_enabled',
+                            'min_delete_ahead_secs',
+                            'max_delete_ahead_secs',
+                            'approval_enabled',
+                            'reminders_enabled',
+                            'enable_periods',
+                            'confirmation_enabled',
+                            'confirmed_default');
+
 $area_defaults = array();
-$area_defaults['timezone']                 = $timezone;
-$area_defaults['resolution']               = $resolution;
-$area_defaults['default_duration']         = $default_duration;
-$area_defaults['default_duration_all_day'] = $default_duration_all_day;
-$area_defaults['morningstarts']            = $morningstarts;
-$area_defaults['morningstarts_minutes']    = $morningstarts_minutes;
-$area_defaults['eveningends']              = $eveningends;
-$area_defaults['eveningends_minutes']      = $eveningends_minutes;
-$area_defaults['private_enabled']          = $private_enabled;
-$area_defaults['private_default']          = $private_default;
-$area_defaults['private_mandatory']        = $private_mandatory;
-$area_defaults['private_override']         = $private_override;
-$area_defaults['min_book_ahead_enabled']   = $min_book_ahead_enabled;
-$area_defaults['max_book_ahead_enabled']   = $max_book_ahead_enabled;
-$area_defaults['min_book_ahead_secs']      = $min_book_ahead_secs;
-$area_defaults['max_book_ahead_secs']      = $max_book_ahead_secs;
+
+foreach ($area_defaults_keys as $key)
+{
+  $area_defaults[$key] = $$key;
+}
+
 $area_defaults['max_per_day_enabled']      = $max_per_interval_area_enabled['day'];
 $area_defaults['max_per_day']              = $max_per_interval_area['day'];
 $area_defaults['max_per_week_enabled']     = $max_per_interval_area_enabled['week'];
@@ -354,11 +435,7 @@ $area_defaults['max_per_year_enabled']     = $max_per_interval_area_enabled['yea
 $area_defaults['max_per_year']             = $max_per_interval_area['year'];
 $area_defaults['max_per_future_enabled']   = $max_per_interval_area_enabled['future'];
 $area_defaults['max_per_future']           = $max_per_interval_area['future'];
-$area_defaults['approval_enabled']         = $approval_enabled;
-$area_defaults['reminders_enabled']        = $reminders_enabled;
-$area_defaults['enable_periods']           = $enable_periods;
-$area_defaults['confirmation_enabled']     = $confirmation_enabled;
-$area_defaults['confirmed_default']        = $confirmed_default;
+
 
 // We send Ajax requests to del_entry_ajax.php with data as an array of ids.
 // In order to stop the POST request getting too large and triggering a 406
