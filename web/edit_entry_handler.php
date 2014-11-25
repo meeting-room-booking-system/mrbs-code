@@ -93,10 +93,15 @@ $formvars = array('create_by'          => 'string',
                   'timetohighlight'    => 'int',
                   'page'               => 'string',
                   'commit'             => 'string');
-                 
+      
 foreach($formvars as $var => $var_type)
 {
   $$var = get_form_var($var, $var_type);
+  // Trim the strings
+  if (is_string($$var))
+  {
+    $$var = trim($$var);
+  }
 }
 
 // BACK:  we didn't really want to be here - send them to the returl
@@ -139,6 +144,11 @@ foreach($fields as $field)
     {
       $custom_fields[$field['name']] = NULL;
     }
+    // Trim any strings
+    if (is_string($custom_fields[$field['name']]))
+    {
+      $custom_fields[$field['name']] = trim($custom_fields[$field['name']]);
+    }
   }
 }
 
@@ -151,7 +161,7 @@ foreach($fields as $field)
 // Don't bother with them if this is an Ajax request.
 if (!$ajax)
 {
-  if ($name == '')
+  if ($name === '')
   {
     invalid_booking(get_vocab('must_set_description'));
   }       
@@ -172,10 +182,14 @@ if (!$ajax)
     foreach ($is_mandatory_field as $field => $value)
     {
       $field = preg_replace('/^entry\./', '', $field);
-      if ($value && array_key_exists($field, $custom_fields) && ($custom_fields[$field] === ''))
+      if ($value)
       {
-        invalid_booking(get_vocab('missing_mandatory_field') . ' "' .
-                        get_loc_field_name($tbl_entry, $field) . '"');
+        if ((in_array($field, $standard_fields['entry']) && ($$field === '')) ||
+            (array_key_exists($field, $custom_fields) && ($custom_fields[$field] === '')))
+        {
+          invalid_booking(get_vocab('missing_mandatory_field') . ' "' .
+                          get_loc_field_name($tbl_entry, $field) . '"');
+        }
       }
     }
   }        
@@ -307,9 +321,6 @@ if ($ajax && $commit)
     }
   }
 }
-
-// Trim the name field to get rid of any leading or trailing whitespace
-$name = trim($name);
 
 
 // Truncate any fields that have a maximum length as a precaution.

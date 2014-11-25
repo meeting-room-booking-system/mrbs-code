@@ -122,7 +122,7 @@ function map_add_booking ($row, &$column, $am7, $pm7)
     $column[$s][$n]["status"] = $row['status'];
     $column[$s][$n]["color"] = $row['type'];
     $column[$s][$n]["start_time"] = hour_min($start_s);
-    $column[$s][$n]["slots"] = null;  // to avoid undefined index NOTICE errors
+    $column[$s][$n]["slots"] = NULL;  // to avoid undefined index NOTICE errors
     // if it's a multiple booking also fill in the name and description
     if ($n > 0)
     {
@@ -132,12 +132,13 @@ function map_add_booking ($row, &$column, $am7, $pm7)
       $column[$s][$n]["room_id"] = $row['room_id'];
     }
     // otherwise just leave them blank (we'll fill in the first whole slot later)
+    // use NULL rather than '' just in case the value really is ''
     else
     {
-      $column[$s][$n]["data"] = "";
-      $column[$s][$n]["long_descr"] = "";
-      $column[$s][$n]["create_by"] = "";
-      $column[$s][$n]["room_id"] = "";
+      $column[$s][$n]["data"] = NULL;
+      $column[$s][$n]["long_descr"] = NULL;
+      $column[$s][$n]["create_by"] = NULL;
+      $column[$s][$n]["room_id"] = NULL;
     }
   } // end for
   
@@ -445,7 +446,7 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
       $is_multiday_end   = $cell[0]["is_multiday_end"];
       $status     = $cell[0]["status"];
       $color      = $cell[0]["color"];
-      $descr      = htmlspecialchars($cell[0]["data"]);
+      $descr      = isset($cell[0]["data"]) ? htmlspecialchars($cell[0]["data"]) : NULL;
       $long_descr = htmlspecialchars($cell[0]["long_descr"]);
       $slots      = $cell[0]["slots"];
     }
@@ -503,7 +504,7 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
     // <td> for the first slot would have had a rowspan that extended the cell down for
     // the number of slots of the booking.
 
-    if (!(isset($id) && ($descr == ""))) 
+    if (!isset($id) || isset($descr))
     {
       $html .= tdcell($c, $slots);
 
@@ -784,7 +785,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
     map_add_booking($row, $today[$row['room_id']][$day], $am7, $pm7);
 
   }
-
+  
   // We need to know what all the rooms are called, so we can show them all.
   // Pull the data from the db and store it. Conveniently we can print the room
   // headings and capacities at the same time

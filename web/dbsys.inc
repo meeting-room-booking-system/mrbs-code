@@ -308,6 +308,12 @@ function sql_error()
 // Start a transaction
 function sql_begin()
 {
+  // Turn off ignore_user_abort until the transaction has been committed.  See
+  // the warning at http://php.net/manual/en/features.persistent-connections.php
+  // (Only applies to persistent connections, but we'll do it for all cases to keep
+  // things simple)
+  mrbs_ignore_user_abort(TRUE);
+  
   if (func_num_args() > 0)
   {
     $handle = func_get_arg(0);
@@ -346,12 +352,20 @@ function sql_commit()
 
   $f = "sql_${db_sys}_commit";
   $f($db_conn);
+  
+  mrbs_ignore_user_abort(FALSE);
 }
 
 
 // Get a mutex lock
 function sql_mutex_lock($name)
 {
+  // Turn off ignore_user_abort until the lock has been freed.  See
+  // the warning at http://php.net/manual/en/features.persistent-connections.php
+  // (Only applies to persistent connections, but we'll do it for all cases to keep
+  // things simple)
+  mrbs_ignore_user_abort(TRUE);
+  
   if (func_num_args() > 1)
   {
     $handle = func_get_arg(1);
@@ -390,6 +404,8 @@ function sql_mutex_unlock($name)
 
   $f = "sql_${db_sys}_mutex_unlock";
   $f($name, $db_conn);
+  
+  mrbs_ignore_user_abort(FALSE);
 }
 
 

@@ -600,6 +600,7 @@ function get_archive_details($file)
     case 'text/calendar':
     case 'text/html':
     case 'text/plain':
+    case 'application/x-download':
       $result['wrapper'] = 'file';
       $result['files'] = get_file_details_calendar($file);
       break;
