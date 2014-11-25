@@ -7,43 +7,105 @@
 
 
 /********************************************************
- * Deprecated configuration variables
+ * Disused configuration variables
  ********************************************************/
 
 // If they are still using some of the old configuration variables
-// then replace them with their new equivalents.   (Should maybe warn
-// the site admin somehow if they are being used?   Perhaps when a 
-// database upgrade is performed?)
+// then replace them with their new equivalents and give a warning.
 
-// Variables deprecated in versions of MRBS > 1.4.4.1
+// Variables no longer used in versions of MRBS > 1.4.4.1
 if (isset($provisional_enabled))
 {
+  $message = 'Please check your config file.   The variable $provisional_enabled ' .
+             'is no longer used and has been replaced by $approval_enabled.';
+  trigger_error($message, E_USER_WARNING);
   $approval_enabled = ($provisional_enabled) ? TRUE : FALSE;
 }
 
-// Variables deprecated in versions of MRBS > 1.4.5
-
+// Variables no longer used in versions of MRBS > 1.4.5
 if (isset($mail_settings['admin_all']))
 {
   // We won't set $mail_settings['on_new'] because the default is TRUE
   // which gives the same behaviour as before, and if it's been set to FALSE
   // it means the site admin has deliberately changed it.
+  $message = 'Please check your config file.   The variable $mail_settings["admin_all"] ' .
+             'is no longer used and has been replaced by $mail_settings["on_change"], ' .
+             '$mail_settings["on_change"] and $mail_settings["on_delete"].';
+  trigger_error($message, E_USER_WARNING);
   $mail_settings['on_change'] = ($mail_settings['admin_all']) ? TRUE : FALSE;
 }
 if (isset($mail_settings['admin_on_delete']))
 {
+  $message = 'Please check your config file.   The variable $mail_settings["admin_on_delete"] ' .
+             'is no longer used and has been replaced by $mail_settings["on_delete"].';
+  trigger_error($message, E_USER_WARNING);
   $mail_settings['on_delete'] = ($mail_settings['admin_on_delete']) ? TRUE : FALSE;
 }
 if (!empty($dateformat))
 {
+  $message = 'Please check your config file.   The variable $dateformat ' .
+             'is no longer used and has been replaced by $strftime_format["daymonth"].';
+  trigger_error($message, E_USER_WARNING);
   $strftime_format['daymonth']     = "%d %b";
 }
 
 // Variables no longer used in versions of MRBS > 1.4.7
+if (isset($highlight_method))
+{
+  $message = 'Please check your config file.   The variable $highlight_method ' .
+             'is no longer used and is redundant.';
+  trigger_error($message, E_USER_WARNING);
+}
+if (isset($javascript_cursor))
+{
+  $message = 'Please check your config file.   The variable $javascript_cursor ' .
+             'is no longer used and is redundant.';
+  trigger_error($message, E_USER_WARNING);
+}
+if (isset($mail_charset))
+{
+  $message = 'Please check your config file.   The variable $mail_charset ' .
+             'is no longer used.   All emails are sent as UTF-8.';
+  trigger_error($message, E_USER_WARNING);
+}
 
-// $highlight_method
-// $javascript_cursor
-// $mail_charset
+// Variables no longer used in versions of MRBS > 1.4.11
+if (isset($min_book_ahead_enabled))
+{
+  $message = 'Please check your config file.   The variable $min_book_ahead_enabled ' .
+             'is no longer used and has been replaced by $min_create_ahead_enabled ' .
+             'and $min_delete_ahead_enabled.';
+  trigger_error($message, E_USER_WARNING);
+  $min_create_ahead_enabled = ($min_book_ahead_enabled) ? TRUE : FALSE;
+  $min_delete_ahead_enabled = ($min_book_ahead_enabled) ? TRUE : FALSE;
+}
+if (isset($max_book_ahead_enabled))
+{
+  $message = 'Please check your config file.   The variable $max_book_ahead_enabled ' .
+             'is no longer used and has been replaced by $max_create_ahead_enabled ' .
+             'and $max_delete_ahead_enabled.';
+  trigger_error($message, E_USER_WARNING);
+  $max_create_ahead_enabled = ($max_book_ahead_enabled) ? TRUE : FALSE;
+  // No need to do anything about $max_delete_ahead_enabled as it didn't apply in the old system
+}
+if (isset($min_book_ahead_secs))
+{
+  $message = 'Please check your config file.   The variable $min_book_ahead_secs ' .
+             'is no longer used and has been replaced by $min_create_ahead_secs ' .
+             'and $min_delete_ahead_secs.';
+  trigger_error($message, E_USER_WARNING);
+  $min_create_ahead_secs = $min_book_ahead_secs;
+  $min_delete_ahead_secs = $min_book_ahead_secs;
+}
+if (isset($max_book_ahead_secs))
+{
+  $message = 'Please check your config file.   The variable $max_book_ahead_secs ' .
+             'is no longer used and has been replaced by $max_create_ahead_secs ' .
+             'and $max_delete_ahead_secs.';
+  trigger_error($message, E_USER_WARNING);
+  $max_create_ahead_secs = $max_book_ahead_secs;
+  $max_delete_ahead_secs = $max_book_ahead_secs;
+}
 
 
 /********************************************************

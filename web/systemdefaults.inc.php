@@ -314,9 +314,6 @@ $weekstarts = 0;
 // jumping straight into the day view from the date selector.]
 $hidden_days = array();
 
-// Trailer date format: 0 to show dates as "Jul 10", 1 for "10 Jul"
-$dateformat = 0;
-
 // Time format in pages. 0 to show dates in 12 hour format, 1 to show them
 // in 24 hour format
 $twentyfourhour_format = 1;
