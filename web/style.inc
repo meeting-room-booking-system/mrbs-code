@@ -4,8 +4,21 @@
 
 global $using_rtl, $refresh_rate, $custom_css_url, $PHP_SELF;
 
+if (DEBUG)
+{
+  ?>
+  <link href="jquery/ui/css/jquery-ui.structure.css" rel="stylesheet" type="text/css">
+  <link href="jquery/ui/css/sunny/jquery-ui.theme.css" rel="stylesheet" type="text/css">
+  <?php
+}
+else
+{
+  ?>
+  <link href="jquery/ui/css/jquery-ui.structure.min.css" rel="stylesheet" type="text/css">
+  <link href="jquery/ui/css/sunny/jquery-ui.theme.min.css" rel="stylesheet" type="text/css">
+  <?php
+}
 ?>
-    <link href="jquery/ui/css/sunny/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" type="text/css">
     
     <link href="jquery/datatables/css/mrbs-page.css" rel="stylesheet" type="text/css">
     <link href="jquery/datatables/css/mrbs-table.css" rel="stylesheet" type="text/css">

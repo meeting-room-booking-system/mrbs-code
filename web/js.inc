@@ -54,8 +54,21 @@ else
   <script type="text/javascript" src="jquery/jquery-migrate-1.2.1.min.js"></script>
   <?php
 }
+
+if (DEBUG)
+{
+  ?>
+  <script type="text/javascript" src="jquery/ui/jquery-ui.js"></script>
+  <?php
+}
+else
+{
+  ?>
+  <script type="text/javascript" src="jquery/ui/jquery-ui.min.js"></script>
+  <?php
+}
 ?>
-<script type="text/javascript" src="jquery/ui/jquery-ui-1.10.4.custom.min.js"></script>
+
 <script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
 <?php
 // Extra regional settings for the jQuery UI datepicker
