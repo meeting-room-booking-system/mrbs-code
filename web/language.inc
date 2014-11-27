@@ -862,6 +862,131 @@ function get_language_qualifiers()
 }
 
 
+if (!function_exists('locale_lookup'))
+{
+  // Emulates the PHP locale_lookup() function
+  
+  // Searches the items in the array $langtag for the best match to the language range
+  // specified in $locale according to RFC 4647's lookup algorithm.   The langtags and
+  // locale can have subtags separated by '-' or '_' and the search is case insensitive.
+  // Charsets (eg '.UTF-8') are stripped off $locale
+  //
+  // Returns the best match, or else an empty string if no match
+  function locale_lookup($langtag, $locale)
+  {
+    if (func_num_args() > 2)
+    {
+      throw new Exception("MRBS: optional parameters to Locale::lookup() not yet supported");
+    }
+    
+    // Get the langtags and locale in the same format, ie separated by '-' and
+    // all lower case
+    $standard_langtags = locale_standardise($langtag);
+    // Strip off any charset (eg '.UTF-8');
+    $locale = preg_replace('/\..*$/', '', $locale);
+    $standard_locale = locale_standardise($locale);
+    
+    // Look for a match.   If there isn't one remove the last subtag from the end
+    // of the locale and try again.
+    while (FALSE === ($index = array_search($standard_locale, $standard_langtags)))
+    {
+      if (FALSE === ($pos = strrpos($standard_locale, '-')))
+      {
+        return '';
+      }
+      $standard_locale = substr($standard_locale, 0, $pos);
+    }
+    
+    return $langtag[$index];  // Return the match in its original format
+  }
+  
+  // Converts $langtag, which can be a string or an array, into a standard form with
+  // subtags all in lower case and separated by '-';
+  function locale_standardise($langtag)
+  {
+    $glue = ',';
+    $result = (is_array($langtag)) ? implode($glue, $langtag) : $langtag;
+    $result = strtolower(str_replace('_', '-', $result));
+    return (is_array($langtag)) ? explode($glue, $result) : $result;
+  }
+}
+
+
+function get_datepicker_lang()
+{
+  global $langs, $default_language_tokens,
+         $disable_automatic_language_changing, $override_locale;
+  
+  // Just in case they're running PHP4, degrade gracefully
+  if (!function_exists('scandir'))
+  {
+    return NULL;
+  }
+  
+  // Get the available languages
+  $datepicker_lang_dir = "jquery/ui/i18n";
+  $datepicker_files = scandir($datepicker_lang_dir);
+  $left_length = strlen('datepicker-');
+  $right_length = strlen('.js');
+  // 'en' and 'en-US' are the default settings and are built into the main
+  // datepicker.js code, so are always available.
+  $default_langtags = array('en', 'en-US');  
+  $available_langtags = $default_langtags;
+  foreach ($datepicker_files as $datepicker_file)
+  {
+    // . and .. will be included in the output of scandir(), so 
+    // we need to exclude them
+    if (!is_dir($datepicker_lang_dir . '/' . $datepicker_file))
+    {
+      // Then strip out the language tag from the file name
+      $langtag = substr($datepicker_file, $left_length);
+      $langtag = substr($langtag, 0, -$right_length);
+      $available_langtags[] = $langtag;
+    }
+  }
+  
+  // If automatic language changing is disabled then add the default language to
+  // the top of the list of preferred languages.    Otherwise, unless it's already
+  // in the list, add it to the bottom as a backstop.
+  if (isset($default_language_tokens) && ($default_language_tokens !== ''))
+  {
+    if ($disable_automatic_language_changing)
+    {
+      $langs[$default_language_tokens] = 1.1; // 1.1 will force it to the top
+      langs_arsort($langs);
+    }
+    elseif (!isset($langs[$default_language_tokens]))
+    {
+      $langs[$default_language_tokens] = 0.0;
+    }
+  }
+  // The override_locale, if set, trumps the default language
+  if (isset($override_locale) && ($override_locale !== ''))
+  {
+    $langs[$override_locale] = 1.2; // 1.2 will force it to the top, above the default language
+    langs_arsort($langs);
+  }
+  
+  // Find the best fit.
+  foreach ($langs as $lang => $qual)
+  {
+    $locale = locale_lookup($available_langtags, $lang);
+    if (!empty($locale))
+    {
+      // The default langtags are built into the main datepicker.js code
+      // and don't need any extra files
+      if (in_array($locale, $default_langtags))
+      {
+        return NULL;
+      }
+      return $locale;
+    }
+  }
+
+  return NULL;  // We failed to find anything acceptable
+}
+
+
 // Returns the pathname of the language file to use for the dataTables
 // jQuery plugin.    If no suitable language file exists then returns FALSE
 function get_datatable_lang()

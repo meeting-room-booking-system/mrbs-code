@@ -67,13 +67,13 @@ else
   <script type="text/javascript" src="jquery/ui/jquery-ui.min.js"></script>
   <?php
 }
+
+if (NULL !== ($datepicker_lang = get_datepicker_lang()))
+{
+  echo "<script type=\"text/javascript\" src=\"jquery/ui/i18n/datepicker-${datepicker_lang}.js\"></script>";
+}
 ?>
 
-<script type="text/javascript" src="jquery/ui/jquery-ui-i18n.js"></script>
-<?php
-// Extra regional settings for the jQuery UI datepicker
-?>
-<script type="text/javascript" src="jquery/ui/jquery-ui-i18n.MRBS.js"></script>
 
 <?php // Work out if we're using IE6 or below ?>
 <script type="text/javascript">
