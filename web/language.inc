@@ -912,10 +912,9 @@ if (!function_exists('locale_lookup'))
 }
 
 
-function get_datepicker_lang()
+function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_langtags=NULL)
 {
-  global $langs, $default_language_tokens,
-         $disable_automatic_language_changing, $override_locale;
+  global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   
   // Just in case they're running PHP4, degrade gracefully
   if (!function_exists('scandir'))
@@ -924,23 +923,23 @@ function get_datepicker_lang()
   }
   
   // Get the available languages
-  $datepicker_lang_dir = "jquery/ui/i18n";
-  $datepicker_files = scandir($datepicker_lang_dir);
-  $left_length = strlen('datepicker-');
-  $right_length = strlen('.js');
-  // 'en' and 'en-US' are the default settings and are built into the main
-  // datepicker.js code, so are always available.
-  $default_langtags = array('en', 'en-US');  
+  $files = scandir($dir);
+  $prefix_length = strlen($prefix);
+  $suffix_length = strlen($suffix);
+  if (!isset($default_langtags))
+  {
+    $default_langtags = array(); 
+  } 
   $available_langtags = $default_langtags;
-  foreach ($datepicker_files as $datepicker_file)
+  foreach ($files as $file)
   {
     // . and .. will be included in the output of scandir(), so 
     // we need to exclude them
-    if (!is_dir($datepicker_lang_dir . '/' . $datepicker_file))
+    if (!is_dir($dir . '/' . $file))
     {
       // Then strip out the language tag from the file name
-      $langtag = substr($datepicker_file, $left_length);
-      $langtag = substr($langtag, 0, -$right_length);
+      $langtag = substr($file, $prefix_length);
+      $langtag = substr($langtag, 0, -$suffix_length);
       $available_langtags[] = $langtag;
     }
   }
@@ -952,39 +951,48 @@ function get_datepicker_lang()
   {
     if ($disable_automatic_language_changing)
     {
-      $langs[$default_language_tokens] = 1.1; // 1.1 will force it to the top
-      langs_arsort($langs);
+      $lang_preferences[$default_language_tokens] = 1.1; // 1.1 will force it to the top
+      langs_arsort($lang_preferences);
     }
-    elseif (!isset($langs[$default_language_tokens]))
+    elseif (!isset($lang_preferences[$default_language_tokens]))
     {
-      $langs[$default_language_tokens] = 0.0;
+      $lang_preferences[$default_language_tokens] = 0.0;
     }
   }
   // The override_locale, if set, trumps the default language
   if (isset($override_locale) && ($override_locale !== ''))
   {
-    $langs[$override_locale] = 1.2; // 1.2 will force it to the top, above the default language
-    langs_arsort($langs);
+    $lang_preferences[$override_locale] = 1.2; // 1.2 will force it to the top, above the default language
+    langs_arsort($lang_preferences);
   }
   
   // Find the best fit.
-  foreach ($langs as $lang => $qual)
+  foreach ($lang_preferences as $lang => $qual)
   {
     $locale = locale_lookup($available_langtags, $lang);
     if (!empty($locale))
     {
-      // The default langtags are built into the main datepicker.js code
-      // and don't need any extra files
       if (in_array($locale, $default_langtags))
       {
         return NULL;
       }
-      return $locale;
+      return $prefix . $locale . $suffix;
     }
   }
 
   return NULL;  // We failed to find anything acceptable
 }
+
+
+function get_datepicker_lang_file()
+{
+  global $langs;
+  
+  // 'en' and 'en-US' are the default settings and are built into the main
+  // datepicker.js code, so are always available.
+  return get_best_lang_file($langs, 'jquery/ui/i18n', 'datepicker-', '.js', array('en', 'en-US'));
+}
+  
 
 
 // Returns the pathname of the language file to use for the dataTables

@@ -68,9 +68,9 @@ else
   <?php
 }
 
-if (NULL !== ($datepicker_lang = get_datepicker_lang()))
+if (NULL !== ($datepicker_lang_file = get_datepicker_lang_file()))
 {
-  echo "<script type=\"text/javascript\" src=\"jquery/ui/i18n/datepicker-${datepicker_lang}.js\"></script>";
+  echo "<script type=\"text/javascript\" src=\"jquery/ui/i18n/${datepicker_lang_file}\"></script>";
 }
 ?>
 
