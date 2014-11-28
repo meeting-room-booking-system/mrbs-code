@@ -912,13 +912,25 @@ if (!function_exists('locale_lookup'))
 }
 
 
+// Get the best fit language file from $dir given the set of language preferences
+// $lang_preferences (an associative array language => quality_value).   If set,
+// $default_langtags is an array of languages that are already built into the system
+// and do not need an explicit regional setting.
+// The file names are assumed to be of the form $prefix . $lang . $suffix, eg 
+// 'datepicker-en-GB.js'
 function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_langtags=NULL)
 {
-  global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
+  global $default_language_tokens, $disable_automatic_language_changing;
   
   // Just in case they're running PHP4, degrade gracefully
   if (!function_exists('scandir'))
   {
+    return NULL;
+  }
+  
+  if (!file_exists($dir))
+  {
+    trigger_error("MRBS: directory $dir does not exist", E_USER_NOTICE);
     return NULL;
   }
   
@@ -959,12 +971,6 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
       $lang_preferences[$default_language_tokens] = 0.0;
     }
   }
-  // The override_locale, if set, trumps the default language
-  if (isset($override_locale) && ($override_locale !== ''))
-  {
-    $lang_preferences[$override_locale] = 1.2; // 1.2 will force it to the top, above the default language
-    langs_arsort($lang_preferences);
-  }
   
   // Find the best fit.
   foreach ($lang_preferences as $lang => $qual)
@@ -984,88 +990,46 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
 }
 
 
-function get_datepicker_lang_file()
+// Returns the pathname of the language file to use for the jQuery UI
+// datepicker.    If no suitable language file exists then returns NULL
+// $dir is the directory containing the language files
+function get_datepicker_lang_file($dir)
 {
   global $langs;
   
   // 'en' and 'en-US' are the default settings and are built into the main
   // datepicker.js code, so are always available.
-  return get_best_lang_file($langs, 'jquery/ui/i18n', 'datepicker-', '.js', array('en', 'en-US'));
+  $file = get_best_lang_file($langs, 'jquery/ui/i18n', 'datepicker-', '.js', array('en', 'en-US'));
+  
+  if (isset($file))
+  {
+    return $dir . '/' . $file;
+  }
+  else
+  {
+    return NULL;
+  }
 }
   
 
 
 // Returns the pathname of the language file to use for the dataTables
-// jQuery plugin.    If no suitable language file exists then returns FALSE
-function get_datatable_lang()
+// jQuery plugin.    If no suitable language file exists then returns NULL
+// $dir is the directory containing the language files
+function get_datatable_lang_file($dir)
 {
-  global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
-  global $langs, $lang_map_windows, $server_os;
+  global $langs;
   
-  $found_lang = FALSE;
-  $language_dir = "../jquery/datatables/language";  // location of dataTables language files
+  $file = get_best_lang_file($langs, $dir, '', '.txt');
   
-  // If automatic language changing is disabled, then use the $override_locale
-  // as the first choice of language, and then second the default language tokens
-  if ($disable_automatic_language_changing)
+  if (isset($file))
   {
-    $preferred_langs = array();
-    if (!empty($override_locale))
-    {
-      if ($server_os == 'windows')
-      {
-        // If the server is running on Windows we'll have to try and translate the 
-        // Windows style locale back into an xx-YY locale
-        $locale = array_search($override_locale, $lang_map_windows);
-      }
-      else
-      {
-        $locale = $override_locale;
-      }
-      $preferred_langs[$locale] = 1.0;
-    }
-    $preferred_langs[$default_language_tokens] = 0.5;
+    return $dir . '/' . $file;
   }
-  // Otherwise use the browser preferences
   else
   {
-    $preferred_langs = $langs;
+    return NULL;
   }
-  
-  // Sort the array in reverse order, ie so that the preferred language
-  // is at the start of the array
-  langs_arsort($preferred_langs);
-  // First try for an exact match, so if the user specified en-gb, look
-  // for en-gb.txt
-  foreach ($preferred_langs as $lang => $qual)
-  {
-    $lang_file = strtolower(locale_format($lang, '-'));
-    $lang_file = "$language_dir/$lang_file.txt";
-    if (file_exists($lang_file))
-    {
-      $found_lang = TRUE;
-      break;
-    }
-  }
-  if (!$found_lang)
-  {
-    // None of the user's preferred languages was available, so try to
-    // find a lang file for one of the base languages, e.g. look for
-    // lang.en if "en-ca" was specified.
-    foreach ($preferred_langs as $lang => $qual)
-    {
-      $lang_file = strtolower(substr($lang,0,2));
-      $lang_file = "$language_dir/$lang_file.txt";
-      if (file_exists($lang_file))
-      {
-        $found_lang = TRUE;
-        break;
-      }
-    }
-  }
-  
-  // We need to strip the "../" off the start of the $lang_file, hence 3
-  return ($found_lang) ? substr($lang_file, 3) : FALSE;
 }
 
 

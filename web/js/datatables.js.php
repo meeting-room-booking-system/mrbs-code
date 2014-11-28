@@ -156,8 +156,9 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
     var defaultOptions = {};
     <?php
     // Set the language file to be used
-    if ($lang_file = get_datatable_lang())
+    if ($lang_file = get_datatable_lang_file('../jquery/datatables/language'))
     {
+      $lang_file = substr($lang_file, 3); // strip off the '../'
       ?>
       defaultOptions.oLanguage = {"sUrl": "<?php echo $lang_file ?>"};
       <?php
