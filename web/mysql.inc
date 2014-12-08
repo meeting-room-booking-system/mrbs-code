@@ -182,21 +182,36 @@ function sql_mysql_error($db_conn = null)
 // improve performance for multiple insert/delete/updates.
 function sql_mysql_begin($db_conn = null)
 {
-  sql_mysql_command("START TRANSACTION", $db_conn);
+  $result = sql_mysql_command("START TRANSACTION", $db_conn);
+  
+  if ($result < 0)
+  {
+    trigger_error (sql_mysql_error($db_conn), E_USER_WARNING);
+  }
 }
 
 
 // Commit (end) a transaction. See sql_begin().
 function sql_mysql_commit($db_conn = null)
 {
-  sql_mysql_command("COMMIT", $db_conn);
+  $result = sql_mysql_command("COMMIT", $db_conn);
+  
+  if ($result < 0)
+  {
+    trigger_error (sql_mysql_error($db_conn), E_USER_WARNING);
+  }
 }
 
 
 // Rollback a transaction. See sql_begin().
 function sql_mysql_rollback($db_conn = null)
 {
-  sql_mysql_command("ROLLBACK", $db_conn);
+  $result = sql_mysql_command("ROLLBACK", $db_conn);
+  
+  if ($result < 0)
+  {
+    trigger_error (sql_mysql_error($db_conn), E_USER_WARNING);
+  }
 }
 
 

@@ -221,7 +221,12 @@ function sql_pgsql_begin($db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  sql_pgsql_command("BEGIN", $db_conn);
+  $result = sql_pgsql_command("BEGIN", $db_conn);
+  
+  if ($result < 0)
+  {
+    trigger_error (sql_pgsql_error($db_conn), E_USER_WARNING);
+  }
 }
 
 
@@ -230,7 +235,12 @@ function sql_pgsql_commit($db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  sql_pgsql_command("COMMIT", $db_conn);
+  $result = sql_pgsql_command("COMMIT", $db_conn);
+  
+  if ($result < 0)
+  {
+    trigger_error (sql_pgsql_error($db_conn), E_USER_WARNING);
+  }
 }
 
 
@@ -239,7 +249,12 @@ function sql_pgsql_rollback($db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  sql_pgsql_command("ROLLBACK", $db_conn);
+  $result = sql_pgsql_command("ROLLBACK", $db_conn);
+  
+  if ($result < 0)
+  {
+    trigger_error (sql_pgsql_error($db_conn), E_USER_WARNING);
+  }
 }
 
 
