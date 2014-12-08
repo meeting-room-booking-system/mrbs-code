@@ -209,7 +209,7 @@ function sql_mysql_mutex_lock($name, $db_conn = null)
 {
   sql_mysql_ensure_handle($db_conn);
 
-  global $sql_mysql_mutex_shutdown_registered, $sql_mysql_mutex_unlock_name;
+  global $sql_mysql_mutex_unlock_name;
   
   $r = sql_mysql_query("SELECT GET_LOCK('$name', 20)", $db_conn);
   if (!$r)
@@ -223,11 +223,7 @@ function sql_mysql_mutex_lock($name, $db_conn = null)
     return 0;
   }
   $sql_mysql_mutex_unlock_name = $name;
-  if (empty($sql_mysql_mutex_shutdown_registered))
-  {
-    register_shutdown_function("sql_mysql_mutex_cleanup", $db_conn);
-    $sql_mysql_mutex_shutdown_registered = 1;
-  }
+
   return 1;
 }
 
@@ -239,18 +235,18 @@ function sql_mysql_mutex_unlock($name, $db_conn = null)
 
   global $sql_mysql_mutex_unlock_name;
   sql_mysql_query1("SELECT RELEASE_LOCK('$name')", $db_conn);
-  $sql_mysql_mutex_unlock_name = "";
+  $sql_mysql_mutex_unlock_name = NULL;
 }
 
 
 // Shutdown function to clean up a forgotten lock. For internal use only.
-function sql_mysql_mutex_cleanup($db_conn)
+function sql_mysql_cleanup($db_conn = NULL)
 {
-  global $sql_mysql_mutex_shutdown_registered, $sql_mysql_mutex_unlock_name;
-  if (!empty($sql_mysql_mutex_unlock_name))
+  global $sql_mysql_mutex_unlock_name;
+  
+  if (isset($sql_mysql_mutex_unlock_name))
   {
     sql_mysql_mutex_unlock($sql_mysql_mutex_unlock_name, $db_conn);
-    $sql_mysql_mutex_unlock_name = "";
   }
 }
 
@@ -480,6 +476,14 @@ function sql_mysql_field_info($table, $db_conn = null)
 function sql_mysql_connect($host, $username, $password, $db_name, $persist = 0,
                            $db_port = 3306)
 {
+  static $shutdown_registered = FALSE;
+  
+  if (!$shutdown_registered)
+  {
+    register_shutdown_function('sql_mysql_cleanup');
+    $shutdown_registered = TRUE;
+  }
+  
   if (empty($db_port))
   {
     $db_port = 3306;

@@ -251,18 +251,14 @@ function sql_pgsql_mutex_lock($name, $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  global $sql_pgsql_mutex_shutdown_registered, $sql_pgsql_mutex_unlock_name;
+  global $sql_pgsql_mutex_unlock_name;
   if ((sql_pgsql_command("BEGIN", $db_conn) < 0) ||
       (sql_pgsql_command("LOCK TABLE $name IN EXCLUSIVE MODE", $db_conn) < 0))
   {
     return 0;
   }
   $sql_pgsql_mutex_unlock_name = $name;
-  if (empty($sql_pgsql_mutex_shutdown_registered))
-  {
-    register_shutdown_function("sql_pgsql_mutex_cleanup", $db_conn);
-    $sql_pgsql_mutex_shutdown_registered = 1;
-  }
+
   return 1;
 }
 
@@ -276,18 +272,18 @@ function sql_pgsql_mutex_unlock($name, $db_conn = null)
 
   global $sql_pgsql_mutex_unlock_name;
   sql_pgsql_command("COMMIT", $db_conn);
-  $sql_pgsql_mutex_unlock_name = "";
+  $sql_pgsql_mutex_unlock_name = NULL;
 }
 
 
 // Shutdown function to clean up a forgotten lock. For internal use only.
-function sql_pgsql_mutex_cleanup($db_conn)
+function sql_pgsql_cleanup($db_conn = NULL)
 {
-  global $sql_pgsql_mutex_shutdown_registered, $sql_pgsql_mutex_unlock_name;
+  global $sql_pgsql_mutex_unlock_name;
   if (!empty($sql_pgsql_mutex_unlock_name))
   {
     sql_pgsql_command("ABORT", $db_conn);
-    $sql_pgsql_mutex_unlock_name = "";
+    $sql_pgsql_mutex_unlock_name = NULL;
   }
 }
 
@@ -537,6 +533,14 @@ function sql_pgsql_field_info($table, $db_conn = null)
 function sql_pgsql_connect($host, $username, $password, $db_name,
                            $persist = 0, $db_port = 5432)
 {
+  static $shutdown_registered = FALSE;
+  
+  if (!$shutdown_registered)
+  {
+    register_shutdown_function('sql_pgsql_cleanup');
+    $shutdown_registered = TRUE;
+  }
+  
   if (empty($db_port))
   {
     $db_port = 5432;
