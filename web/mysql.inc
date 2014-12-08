@@ -180,7 +180,6 @@ function sql_mysql_error($db_conn = null)
 
 // Begin a transaction, if the database supports it. This is used to
 // improve performance for multiple insert/delete/updates.
-// There is no rollback support, since MySQL myisam tables don't support it.
 function sql_mysql_begin($db_conn = null)
 {
   sql_mysql_command("START TRANSACTION", $db_conn);
@@ -191,6 +190,13 @@ function sql_mysql_begin($db_conn = null)
 function sql_mysql_commit($db_conn = null)
 {
   sql_mysql_command("COMMIT", $db_conn);
+}
+
+
+// Rollback a transaction. See sql_begin().
+function sql_mysql_rollback($db_conn = null)
+{
+  sql_mysql_command("ROLLBACK", $db_conn);
 }
 
 
@@ -239,15 +245,19 @@ function sql_mysql_mutex_unlock($name, $db_conn = null)
 }
 
 
-// Shutdown function to clean up a forgotten lock. For internal use only.
-function sql_mysql_cleanup($db_conn = NULL)
+// Shutdown function to clean up the connection. For internal use only.
+function sql_mysql_cleanup($db_conn = null)
 {
   global $sql_mysql_mutex_unlock_name;
   
+  // Release any forgotten locks
   if (isset($sql_mysql_mutex_unlock_name))
   {
     sql_mysql_mutex_unlock($sql_mysql_mutex_unlock_name, $db_conn);
   }
+  
+  // Rollback any outstanding transactions
+  sql_mysql_rollback($db_conn);
 }
 
 

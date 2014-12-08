@@ -217,7 +217,6 @@ function sql_pgsql_error($db_conn = null)
 
 // Begin a transaction, if the database supports it. This is used to
 // improve performance for multiple insert/delete/updates.
-// There is no rollback support, since MySQL myisam tables don't support it.
 function sql_pgsql_begin($db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
@@ -232,6 +231,15 @@ function sql_pgsql_commit($db_conn = null)
   sql_pgsql_ensure_handle($db_conn);
 
   sql_pgsql_command("COMMIT", $db_conn);
+}
+
+
+// Commit (end) a transaction. See sql_begin().
+function sql_pgsql_rollback($db_conn = null)
+{
+  sql_pgsql_ensure_handle($db_conn);
+
+  sql_pgsql_command("ROLLBACK", $db_conn);
 }
 
 
@@ -276,15 +284,20 @@ function sql_pgsql_mutex_unlock($name, $db_conn = null)
 }
 
 
-// Shutdown function to clean up a forgotten lock. For internal use only.
+// Shutdown function to clean up the connection. For internal use only.
 function sql_pgsql_cleanup($db_conn = NULL)
 {
   global $sql_pgsql_mutex_unlock_name;
+  
+  // Release any forgotten locks
   if (!empty($sql_pgsql_mutex_unlock_name))
   {
     sql_pgsql_command("ABORT", $db_conn);
     $sql_pgsql_mutex_unlock_name = NULL;
   }
+  
+  // Rollback any outstanding transactions
+  sql_pgsql_rollback($db_conn);
 }
 
 
