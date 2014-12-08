@@ -235,24 +235,38 @@ function sql_mysqli_rollback($db_conn = null)
 // In MySQL, we avoid table locks, and use low-level locks instead.
 function sql_mysqli_mutex_lock($name, $db_conn = null)
 {
-  sql_mysqli_ensure_handle($db_conn);
-
   global $sql_mutex_unlock_name;
   
-  $r = sql_mysqli_query("SELECT GET_LOCK('$name', 20)", $db_conn);
-  if (!$r)
-  {
-    // Distinguish between a timeout (GET_LOCK returns 0)
-    // and an error (GET_LOCK returns NULL)
-    if (!isset($r))
-    {
-      trigger_error(sql_mysqli_error($db_conn), E_USER_WARNING);
-    }
-    return 0;
-  }
-  $sql_mysqli_mutex_unlock_name = $name;
+  sql_mysqli_ensure_handle($db_conn);
 
-  return 1;
+  // GET_LOCK returns 1 if the lock was obtained successfully, 0 if the attempt
+  // timed out (for example, because another client has previously locked the name),
+  // or NULL if an error occurred (such as running out of memory or the thread was
+  // killed with mysqladmin kill)
+  $r = $db_conn->query("SELECT GET_LOCK('$name', 20)");
+  if ($r === FALSE)
+  {
+    trigger_error($db_conn->error, E_USER_WARNING);
+    return FALSE;
+  }
+
+  if (($r->num_rows != 1) || 
+      ($r->field_count != 1) ||
+      (($row = $r->fetch_row()) === NULL))
+  {
+    return FALSE;
+  }
+  else
+  {
+    $result = $row[0];
+  }
+  
+  if ($result == 1)
+  {
+    $sql_mysqli_mutex_unlock_name = $name;
+  }
+  $r->free();
+  return $result;
 }
 
 
