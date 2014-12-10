@@ -4,16 +4,6 @@
 
 require_once "functions.inc";
 
-// An array of substitute languages.
-// This can be useful when a translation for the default accept-language sent by
-// a browser does not exist, but an adequate substitute does.   For example, IE9 in
-// a default Norwegian Windows installation sends 'nb-NO'.
-$lang_subs = array
-(
-  'nb-NO' => 'no',
-  'nn-NO' => 'no',
-);
-
 
 // A map of browser locale aliases, maps to "our" preferred representation.
 // We downcase the key before using this map, so the keys need to be all
@@ -1036,15 +1026,9 @@ function get_datatable_lang_file($dir)
 // Set $vocab.   Returns TRUE if a lang file is found, otherwise FALSE
 function set_vocab($lang)
 {
-  global $vocab_override, $cli_mode, $lang_subs;
+  global $vocab_override, $cli_mode;
   global $PHP_SELF;
   global $vocab, $mrbs_admin, $mrbs_company;  // Used in lang files
-  
-  // Use a substitute language if there is one
-  if (isset($lang_subs[$lang]))
-  {
-    $lang = $lang_subs[$lang];
-  }
   
   $lang = strtolower($lang);
 
