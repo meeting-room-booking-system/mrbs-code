@@ -562,7 +562,7 @@ $cli_mode = is_cli();
 // them in reverse order so that the most acceptable one is at the start
 $langs = get_language_qualifiers();
 $langs = alias_qualifiers($langs);
-langs_arsort($langs);
+arsort($langs, SORT_NUMERIC);
 
 // The following attempts to import a language based on what the client
 // is using.
@@ -954,7 +954,7 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
     if ($disable_automatic_language_changing)
     {
       $lang_preferences[$default_language_tokens] = 1.1; // 1.1 will force it to the top
-      langs_arsort($lang_preferences);
+      arsort($lang_preferences, SORT_NUMERIC);
     }
     elseif (!isset($lang_preferences[$default_language_tokens]))
     {
@@ -1629,41 +1629,3 @@ function locale_format($locale, $separator)
   }
   return $locale;
 }
-
-
-// Sort an associative array of the form language => qualifier, where qualifier
-// is a float, eg "en" => 0.6 in reverse order, ie in decreasing order of
-// preference.   The key feature of this function is that if two languages have the
-// same qualifier it preserves the browser's original preference order.
-//
-// Returns TRUE on success, FALSE on failure
-function langs_arsort(&$langs)
-{
-  // First of all build an array indexed by qualifier.    Each element will
-  // contain an array of languages with that qualifier (in the order presented
-  // by the browser, ie descending order of preference)
-  $qualifiers = array();
-  foreach ($langs as $lang => $qual)
-  {
-    $qual = (string) $qual; // We need a string for the array index
-    $qualifiers[$qual][] = $lang;
-  }
-  // Sort the $qualifiers array so that it is in descending order (but we're
-  // not sorting the language arays, so they'll still be in descending order)
-  if (krsort($qualifiers, SORT_NUMERIC) === FALSE)
-  {
-    return FALSE;
-  }
-  // Then reconstruct $langs
-  $langs = array();
-  foreach ($qualifiers as $qual => $languages)
-  {
-    foreach ($languages as $language)
-    {
-      $langs[$language] = (float) $qual;  // Turn the qualifier back to a float
-    }
-  }
-
-  return TRUE;
-}
-
