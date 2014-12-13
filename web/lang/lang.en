@@ -220,7 +220,7 @@ $vocab["users.level"]        = "Rights";
 $vocab["unknown_user"]       = "Unknown user";
 $vocab["you_are"]            = "You are";
 $vocab["login"]              = "Log in";
-$vocab["logoff"]             = "Log Off";
+$vocab["logoff"]             = "Log off";
 
 // Database upgrade code
 $vocab["database_login"]           = "Database login";
