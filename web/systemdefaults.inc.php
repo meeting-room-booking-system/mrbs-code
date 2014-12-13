@@ -1073,8 +1073,8 @@ $cli_language = "en";
 // $vocab_override['en']['mrbs'] = "My Resource Booking System";
 //
 // Applying vocab overrides in the config file rather than editing the lang files
-// mean that your changes will be preserved whenb you upgrade to the next version of
-// and you won't have to re-edit the lang file.
+// mean that your changes will be preserved when you upgrade to the next version of
+// MRBS and you won't have to re-edit the lang file.
 
 /*************
  * Reports
