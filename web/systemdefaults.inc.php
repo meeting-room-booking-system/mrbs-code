@@ -484,6 +484,7 @@ $show_plus_link = FALSE;   // Change to TRUE to always show the (+) link as in
 $is_private_field['entry.name'] = TRUE;
 $is_private_field['entry.description'] = TRUE;
 $is_private_field['entry.create_by'] = TRUE;
+$is_private_field['entry.modified_by'] = TRUE;
 
                   
 // SETTINGS FOR APPROVING BOOKINGS - PER-AREA
