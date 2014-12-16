@@ -100,24 +100,18 @@ function convertTo24(hour, ampm)
 }
 
 
-function generateLastSlotSelect()
+<?php // Get the resolution in minutes ?>
+function getResolutionMinutes()
 {
-  <?php
-  // Turn the last slot field into a select box that only contains permitted values
-  // given the first slot and resolution
-  ?>
-  var resMins, tCorrected,
-      firstSlot, lastSlot, 
-      morningStarts, eveningEnds,
-      eveningEndsInput,
-      minsPerDay = <?php echo MINUTES_PER_DAY ?>;
-      
-  resMins = parseInt($('#area_res_mins').val(), 10);
-  if (resMins === 0)
-  {
-    return;  <?php // avoid endless loops and divide by zero errors ?>
-  }
- 
+  return parseInt($('#area_res_mins').val(), 10);
+}
+
+
+<?php // Gets the start of the first slot in minutes past midnight  ?>
+function getStartFirstSlot()
+{
+  var morningStarts, result;
+  
   <?php // Get the first slot time, adjusting for a 12 hour clock if necessary ?> 
   morningStarts = parseInt($('#area_morningstarts').val(), 10);
   <?php
@@ -129,9 +123,17 @@ function generateLastSlotSelect()
     <?php
   }
   ?>
-  firstSlot = (morningStarts * 60) +
-               parseInt($('#area_morningstarts_minutes').val(), 10);
-               
+  result = (morningStarts * 60) +
+           parseInt($('#area_morningstarts_minutes').val(), 10);
+           
+  return result;
+}
+
+
+<?php // Gets the start of the last slot in minutes past midnight  ?>
+function getStartLastSlot()
+{
+  var eveningEnds, eveningEndsInput, result;
   <?php 
   // Get the last slot time, adjusting for a 12 hour clock if necessary.
   // We need to check whether the non-JavaScript input is still there, or 
@@ -150,14 +152,36 @@ function generateLastSlotSelect()
       <?php
     }
     ?>
-    lastSlot = (eveningEnds * 60) +
-                parseInt($('#area_eveningends_minutes').val(), 10);
+    result = (eveningEnds * 60) +
+             parseInt($('#area_eveningends_minutes').val(), 10);
   }
   else
   {
-    lastSlot = parseInt($('#area_eveningends_t').val(), 10);
+    result = parseInt($('#area_eveningends_t').val(), 10);
   }
+  
+  return result;
+}
 
+
+function generateLastSlotSelect()
+{
+  <?php
+  // Turn the last slot field into a select box that only contains permitted values
+  // given the first slot and resolution
+  ?>
+  var resMins, tCorrected,
+      firstSlot, lastSlot, 
+      minsPerDay = <?php echo MINUTES_PER_DAY ?>;
+      
+  resMins = getResolutionMinutes();
+  if (resMins === 0)
+  {
+    return;  <?php // avoid endless loops and divide by zero errors ?>
+  }
+  firstSlot = getStartFirstSlot();
+  lastSlot = getStartLastSlot();
+               
   <?php 
   // Construct the <select> element.
   // We allow the "day" to go all the way past midnight and up to the start of the
