@@ -490,12 +490,16 @@ if ($phase == 2)
         // Check morningstarts, eveningends, and resolution for consistency
         $start_first_slot = ($area_morningstarts*60) + $area_morningstarts_minutes;   // minutes
         $start_last_slot  = ($area_eveningends*60) + $area_eveningends_minutes;       // minutes
-        $start_difference = ($start_last_slot - $start_first_slot);         // minutes
+        
+        // If eveningends is before morningstarts then it's really on the next day
         if (hm_before(array('hours' => $area_eveningends, 'minutes' => $area_eveningends_minutes),
                       array('hours' => $area_morningstarts, 'minutes' => $area_morningstarts_minutes)))
         {
-          $start_difference += SECONDS_PER_HOUR;
+          $start_last_slot += MINUTES_PER_DAY;
         }
+        
+        $start_difference = ($start_last_slot - $start_first_slot);         // minutes
+        
         if ($start_difference%$area_res_mins != 0)
         {
           $valid_resolution = FALSE;
