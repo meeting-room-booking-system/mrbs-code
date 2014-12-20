@@ -13,7 +13,7 @@ $r = sql_query("SELECT level FROM $tbl_users ".
 
 // If the 'level' field does not exist (as it won't if it was created pre-MRBS 1.4.2),
 // then create it and populate it with existing admins defined in the config file
-if ($r == 0)
+if ($r === FALSE)
 {
   // Default is '0' because we want to play safe and give no rights.
   // In a moment we will go through the table and add users and admins.
