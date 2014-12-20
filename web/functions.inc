@@ -1675,25 +1675,28 @@ function get_area_settings($area)
     $area = get_default_area();
   }
   
-  // Get all the "per area" config settings                  
-  $sql = "SELECT timezone, resolution, default_duration, default_duration_all_day,
-                 morningstarts, morningstarts_minutes,
-                 eveningends, eveningends_minutes,
-                 private_enabled, private_default, private_mandatory, private_override,
-                 min_create_ahead_enabled, max_create_ahead_enabled,
-                 min_create_ahead_secs, max_create_ahead_secs,
-                 min_delete_ahead_enabled, max_delete_ahead_enabled,
-                 min_delete_ahead_secs, max_delete_ahead_secs,
-                 max_per_day_enabled, max_per_day,
-                 max_per_week_enabled, max_per_week,
-                 max_per_month_enabled, max_per_month,
-                 max_per_year_enabled, max_per_year,
-                 max_per_future_enabled, max_per_future,
-                 approval_enabled, reminders_enabled, enable_periods,
-                 confirmation_enabled, confirmed_default
-          FROM $tbl_area 
-          WHERE id=$area 
-          LIMIT 1";
+  // Get all the "per area" config settings
+  $columns = array('timezone', 'resolution', 'default_duration', 'default_duration_all_day',
+                   'morningstarts', 'morningstarts_minutes',
+                   'eveningends', 'eveningends_minutes',
+                   'private_enabled', 'private_default', 'private_mandatory', 'private_override',
+                   'min_create_ahead_enabled', 'max_create_ahead_enabled',
+                   'min_create_ahead_secs', 'max_create_ahead_secs',
+                   'min_delete_ahead_enabled', 'max_delete_ahead_enabled',
+                   'min_delete_ahead_secs', 'max_delete_ahead_secs',
+                   'max_per_day_enabled', 'max_per_day',
+                   'max_per_week_enabled', 'max_per_week',
+                   'max_per_month_enabled', 'max_per_month',
+                   'max_per_year_enabled', 'max_per_year',
+                   'max_per_future_enabled', 'max_per_future',
+                   'approval_enabled', 'reminders_enabled, enable_periods',
+                   'confirmation_enabled', 'confirmed_default');
+                   
+  $sql = "SELECT " . implode(',', $columns) . "
+            FROM $tbl_area 
+           WHERE id=$area 
+           LIMIT 1";
+           
   $res = sql_query($sql);
   if (!$res || (sql_count($res) == 0))
   {
