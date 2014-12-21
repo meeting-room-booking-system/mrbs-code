@@ -158,8 +158,9 @@ init = function() {
           });
       }
       
-      $('.ui-datepicker').draggable();
+      span.css('visibility', 'visible');
       
+      $('.ui-datepicker').draggable();
     });
 };
 

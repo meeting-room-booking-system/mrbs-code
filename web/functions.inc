@@ -1418,7 +1418,7 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='', $disabled=FA
   // day, month and year selectors.   These will be used if JavaScript is
   // disabled.    If JavaScript is enabled it will overwrite these with a
   // datepicker calendar.
-  echo "<span class=\"dateselector\"" .
+  echo "<span class=\"dateselector js_hidden\"" .
             " data-prefix=\"$prefix\"" .
             " data-day=\"$day\"" .
             " data-month=\"$month\"" .
@@ -1471,7 +1471,7 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='', $disabled=FA
 // errors without sending incomplete HTML pages. This is only used for
 // errors which "should never happen", not those caused by bad inputs.
 // If $need_header!=0 output the top of the page too, else assume the
-// caller did that. Alway outputs the bottom of the page and exits.
+// caller did that. Always outputs the bottom of the page and exits.
 function fatal_error($need_header, $message, $show_form_data = true)
 {
   global $simple_trailer, $weekstarts, $view_week_number, $strftime_format;
