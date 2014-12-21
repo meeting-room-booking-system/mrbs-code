@@ -195,6 +195,7 @@ init = function(args) {
         }
       });
   }
-
+  
+  $('#Form1 input[type="submit"]').css('visibility', 'visible');
 
 };

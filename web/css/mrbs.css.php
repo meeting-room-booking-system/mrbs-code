@@ -764,6 +764,24 @@ table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
 #banner a:hover   {color: <?php echo $anchor_hover_color_banner ?>;   text-decoration:underline; font-weight: normal}
 #banner input.date {width: 6.5em; text-align: center}
 
+<?php
+// The rules below are concerned with keeping the date selector in the header a constant width, so
+// that the header doesn't jump around when the page is loaded
+?>
+
+.js #banner #Form1 select {
+  display: none;
+}
+
+.js #banner #Form1 span {
+  display: inline-block;
+  min-width: 7.5em;
+}
+
+.js #banner #Form1 input[type=submit] {
+  visibility: hidden;
+}
+
 table#colour_key {clear: both; float: left; border-spacing: 0; border-collapse: collapse; margin-bottom: 0.5em}
 #colour_key td {width: 7.0em; padding: 2px; font-weight: bold;
     color: <?php echo $colour_key_font_color ?>;
