@@ -274,6 +274,14 @@ foreach ($color_types as $type => $col)
 
 ?>
 
+/* For floating header in the day and week views */
+
+.floatingHeader {
+  position: fixed;
+  top: 0;
+  visibility: hidden;
+}
+
 .dwm_main#week_main th.hidden_day, .dwm_main#month_main th.hidden_day     
     {width: <?php echo $column_hidden_width ?>%; 
     <?php 

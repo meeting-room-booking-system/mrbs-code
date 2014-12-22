@@ -211,10 +211,44 @@ if (in_array($page, array('day', 'week', 'month')))
 //<![CDATA[
 
 
+function UpdateTableHeaders() {
+   $("table#day_main,table#week_main").each(function() {
+
+       var el             = $(this),
+           offset         = el.offset(),
+           scrollTop      = $(window).scrollTop(),
+           floatingHeader = $(".floatingHeader", this)
+
+       if ((scrollTop > offset.top) && (scrollTop < offset.top + el.height())) {
+           floatingHeader.css({
+            "visibility": "visible"
+           });
+       } else {
+           floatingHeader.css({
+            "visibility": "hidden"
+           });
+       };
+   });
+}
 
 
 
 $(window).on('load', function() {
+
+   var clonedHeaderRow;
+
+   $("table#day_main,table#week_main").each(function() {
+       clonedHeaderRow = $("thead", this);
+       clonedHeaderRow
+         .before(clonedHeaderRow.clone())
+         .css("width", clonedHeaderRow.width())
+         .addClass("floatingHeader");
+
+   });
+
+   $(window)
+    .scroll(UpdateTableHeaders)
+    .trigger("scroll");
 
   var args = {day: '<?php echo $day?>',
               month: '<?php echo $month?>',
