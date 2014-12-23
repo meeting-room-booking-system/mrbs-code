@@ -47,6 +47,7 @@ var refreshPage = function refreshPage() {
                    table.empty();
                    table.html(result);
                    createFloatingHeaders(table);
+                   updateTableHeaders(table);
                    window.clearInterval(intervalId);
                    intervalId = undefined;
                    table.trigger('load');
