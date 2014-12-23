@@ -563,6 +563,9 @@ init = function(args) {
       $('table.dwm_main').load(function() {
           var table = $(this);
           
+          createFloatingHeaders(table);
+          updateTableHeaders(table);
+          
           <?php // Don't do anything if this is an empty table ?>
           if (table.find('tbody').data('empty'))
           {
