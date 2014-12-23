@@ -252,6 +252,7 @@ init = function(args) {
   $(window)
     .resize(function() {
         createFloatingHeaders(floatingTables);
+        updateTableHeaders(floatingTables);
       })
     .scroll(function() {
         updateTableHeaders(floatingTables);
