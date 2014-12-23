@@ -211,46 +211,7 @@ if (in_array($page, array('day', 'week', 'month')))
 //<![CDATA[
 
 
-function UpdateTableHeaders() {
-   $("table#day_main,table#week_main").each(function() {
-
-       var el             = $(this),
-           offset         = el.offset(),
-           scrollTop      = $(window).scrollTop(),
-           floatingHeader = $(".floatingHeader", this)
-
-       if ((scrollTop > offset.top) && (scrollTop < offset.top + el.height())) {
-           floatingHeader.css({
-            "visibility": "visible"
-           });
-       } else {
-           floatingHeader.css({
-            "visibility": "hidden"
-           });
-       };
-   });
-}
-
-
-
 $(window).on('load', function() {
-
-    $("table#day_main,table#week_main").each(function() {
-      var originalHeader = $("thead", this);
-      var clonedHeader = originalHeader.clone();
-      clonedHeader.find('th').width(function (i, val) {
-          return originalHeader.find('th').eq(i).width();    
-        });
-      clonedHeader
-          .insertAfter(originalHeader)
-          .css("width", originalHeader.width())
-          .addClass("floatingHeader");
-
-   });
-
-   $(window)
-    .scroll(UpdateTableHeaders)
-    .trigger("scroll");
 
   var args = {day: '<?php echo $day?>',
               month: '<?php echo $month?>',

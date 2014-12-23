@@ -29,6 +29,43 @@ var supportsDatalist = function supportsDatalist() {
            ('options' in document.createElement('datalist')) &&
            (window.HTMLDataListElement !== undefined);
   };
+  
+<?php
+?>
+var createFloatingHeaders = function createFloatingHeaders(tables) {
+    tables.each(function() {
+      var originalHeader = $('thead', this);
+      var clonedHeader = originalHeader.clone();
+      clonedHeader.find('th').width(function (i, val) {
+          return originalHeader.find('th').eq(i).width();    
+        });
+      clonedHeader
+          .insertAfter(originalHeader)
+          .css('width', originalHeader.width())
+          .addClass('floatingHeader');
+
+    });
+  };
+  
+  
+var updateTableHeaders = function updateTableHeaders(tables) {
+    tables.each(function() {
+
+        var el             = $(this),
+            offset         = el.offset(),
+            scrollTop      = $(window).scrollTop(),
+            floatingHeader = $(".floatingHeader", this)
+        if ((scrollTop > offset.top) && (scrollTop < offset.top + el.height()))
+        {
+          floatingHeader.css('visibility', 'visible');
+        } 
+        else
+        {
+          floatingHeader.css('visibility', 'hidden');
+        }
+    });
+  };
+  
 <?php
 // =================================================================================
 
@@ -198,4 +235,13 @@ init = function(args) {
   
   $('#Form1 input[type="submit"]').css('visibility', 'visible');
 
+  var floatingTables = $('table#day_main, table#week_main');
+  createFloatingHeaders(floatingTables);
+  
+  $(window)
+    .scroll(function() {
+        updateTableHeaders(floatingTables);
+      })
+    .trigger('scroll');
+    
 };
