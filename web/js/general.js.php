@@ -74,6 +74,11 @@ var updateTableHeaders = function updateTableHeaders(tables) {
         {
           floatingHeader.css('visibility', 'hidden');
         }
+        <?php 
+        // Also need to adjust the horizontal position as the element
+        // has a fixed position
+        ?>
+        floatingHeader.css('left', offset.left - $(window).scrollLeft());
     });
   };
   
