@@ -279,6 +279,7 @@ foreach ($color_types as $type => $col)
 .floatingHeader {
   position: fixed;
   top: 0;
+  z-index: 2000;
   visibility: hidden;
 }
 
