@@ -37,8 +37,7 @@ var createFloatingHeaders = function createFloatingHeaders(tables) {
     tables.each(function() {
       var originalHeader = $('thead', this),
           existingClone = $('.floatingHeader', this).first(),
-          clonedHeader,
-          nCols = originalHeader.find('th').length; <?php // assumes just one row in the header ?>
+          clonedHeader;
       <?php
       // We need to know if there's already a clone, because we only need to create one
       // if there isn't one already (otherwise we'll end up with millions of them).  If
@@ -72,7 +71,7 @@ var createFloatingHeaders = function createFloatingHeaders(tables) {
           .css('width', originalHeader.width())
           .find('th')
               .css('box-sizing', 'border-box')
-              .css('width', function (i, val) {
+              .css('width', function (i) {
                   return originalHeader.find('th').get(i).getBoundingClientRect().width;
                 });
       if (!existingClone.length)
@@ -93,7 +92,8 @@ var updateTableHeaders = function updateTableHeaders(tables) {
         var el             = $(this),
             offset         = el.offset(),
             scrollTop      = $(window).scrollTop(),
-            floatingHeader = $(".floatingHeader", this)
+            floatingHeader = $(".floatingHeader", this);
+            
         if ((scrollTop > offset.top) && (scrollTop < offset.top + el.height()))
         {
           floatingHeader.css('visibility', 'visible');
