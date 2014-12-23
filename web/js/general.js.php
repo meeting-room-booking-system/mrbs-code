@@ -34,16 +34,27 @@ var supportsDatalist = function supportsDatalist() {
 ?>
 var createFloatingHeaders = function createFloatingHeaders(tables) {
     tables.each(function() {
-      var originalHeader = $('thead', this);
-      var clonedHeader = originalHeader.clone();
-      clonedHeader.find('th').width(function (i, val) {
-          return originalHeader.find('th').eq(i).width();    
-        });
+      var originalHeader = $('thead', this),
+          existingClone = $('.floatingHeader', this).first(),
+          clonedHeader;
+      if (existingClone.length)
+      {
+        clonedHeader = existingClone;
+      }
+      else
+      {
+        clonedHeader = originalHeader.clone();
+        clonedHeader.addClass('floatingHeader');
+      }
       clonedHeader
-          .insertAfter(originalHeader)
           .css('width', originalHeader.width())
-          .addClass('floatingHeader');
-
+          .find('th').width(function (i, val) {
+              return originalHeader.find('th').eq(i).width();    
+            });
+      if (!existingClone.length)
+      {
+        clonedHeader.insertAfter(originalHeader);
+      }
     });
   };
   
@@ -239,6 +250,9 @@ init = function(args) {
   createFloatingHeaders(floatingTables);
   
   $(window)
+    .resize(function() {
+        createFloatingHeaders(floatingTables);
+      })
     .scroll(function() {
         updateTableHeaders(floatingTables);
       })
