@@ -235,14 +235,16 @@ function UpdateTableHeaders() {
 
 $(window).on('load', function() {
 
-   var clonedHeaderRow;
-
-   $("table#day_main,table#week_main").each(function() {
-       clonedHeaderRow = $("thead", this);
-       clonedHeaderRow
-         .before(clonedHeaderRow.clone())
-         .css("width", clonedHeaderRow.width())
-         .addClass("floatingHeader");
+    $("table#day_main,table#week_main").each(function() {
+      var originalHeader = $("thead", this);
+      var clonedHeader = originalHeader.clone();
+      clonedHeader.find('th').width(function (i, val) {
+          return originalHeader.find('th').eq(i).width();    
+        });
+      clonedHeader
+          .insertAfter(originalHeader)
+          .css("width", originalHeader.width())
+          .addClass("floatingHeader");
 
    });
 
