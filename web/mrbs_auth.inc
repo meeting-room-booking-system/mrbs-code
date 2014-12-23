@@ -105,6 +105,10 @@ function checkAuthorised($just_check=FALSE)
   
   if ($just_check)
   {
+    if ($required_level == 0)
+    {
+      return TRUE;
+    }
     $user = getUserName();
     return (isset($user)) ? (authGetUserLevel($user) >= $required_level): FALSE;
   }
