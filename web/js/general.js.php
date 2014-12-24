@@ -285,8 +285,14 @@ init = function(args) {
   
   $(window)
     .resize(function() {
-        createFloatingHeaders(floatingTables);
-        updateTableHeaders(floatingTables);
+        <?php
+        // Make the resizing smoother by not updating the headers on
+        // every resize event
+        ?>
+        $.throttle(250, function() {
+            createFloatingHeaders(floatingTables);
+            updateTableHeaders(floatingTables);
+          });
       })
     .scroll(function() {
         updateTableHeaders(floatingTables);

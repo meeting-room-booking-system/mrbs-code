@@ -1241,11 +1241,17 @@ init = function(args) {
               if (event.target === this)  <?php // don't want the ui-resizable event bubbling up ?>
               {
                 <?php
-                // The table dimensions have changed, so we need to redraw the clones
-                // and re map the table
+                // Make the resizing smoother by not updating the clones on
+                // every resize event
                 ?>
-                redrawClones(table);
-                getTableData(table, tableData);
+                $.throttle(300, function() {
+                    <?php
+                    // The table dimensions have changed, so we need to redraw the clones
+                    // and re map the table
+                    ?>
+                    redrawClones(table);
+                    getTableData(table, tableData);
+                  });
               }
             });
       
