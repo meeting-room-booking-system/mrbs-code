@@ -246,6 +246,22 @@ function getTableData(table, tableData)
 ?>
 function outsideTable(tableData, p)
 {
+  var headBottoms = $('table.dwm_main thead').map(function() {
+          return $(this).offset().top + $(this).outerHeight();
+        }).get();
+  
+  <?php
+  // We might have floating headers in operation, in which case
+  // it doesn't make sense to drag in the part of the table behind
+  // the floating header because you can't see what's happening.
+  // So test to see if the cursor is above the bottom of the lowest
+  // table header.
+  ?>  
+  if (p.y < (Math.max.apply(null, headBottoms)))
+  {
+    return true;
+  }
+
   return ((p.x < tableData.x.data[0].coord) ||
           (p.y < tableData.y.data[0].coord) ||
           (p.x > tableData.x.data[tableData.x.data.length - 1].coord) ||
