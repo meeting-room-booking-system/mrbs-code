@@ -280,7 +280,7 @@ foreach ($color_types as $type => $col)
   position: fixed;
   top: 0;
   z-index: 2000;
-  visibility: hidden;
+  display: none;
 }
 
 .dwm_main#week_main th.hidden_day, .dwm_main#month_main th.hidden_day     

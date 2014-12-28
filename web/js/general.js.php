@@ -96,11 +96,11 @@ var updateTableHeaders = function updateTableHeaders(tables) {
             
         if ((scrollTop > offset.top) && (scrollTop < offset.top + el.height()))
         {
-          floatingHeader.css('visibility', 'visible');
+          floatingHeader.show();
         } 
         else
         {
-          floatingHeader.css('visibility', 'hidden');
+          floatingHeader.hide();
         }
         <?php 
         // Also need to adjust the horizontal position as the element

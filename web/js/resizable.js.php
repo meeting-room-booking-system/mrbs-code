@@ -169,8 +169,12 @@ function getTableData(table, tableData)
   var resolution = table.data('resolution');
   tableData.x = {};
   tableData.x.data = [];
-  <?php // We need :visible because there might be hidden days // ?>
-  var columns = table.find('thead tr:first-child th:visible').not('.first_last');
+  <?php 
+  // We need :visible because there might be hidden days 
+  // We need thead:first-child in case there are floating headers
+  ?>
+  var columns = table.find('thead:first-child tr:first-child th:visible').not('.first_last');
+
   <?php
   // If the table has direction rtl, as it may do if you're using a RTL language
   // such as Hebrew, then the columns will have been presented in the order right
