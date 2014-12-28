@@ -281,19 +281,15 @@ init = function(args) {
 
   
   var floatingTables = $('table#day_main, table#week_main');
+
   createFloatingHeaders(floatingTables);
   
   $(window)
-    .resize(function() {
-        <?php
-        // Make the resizing smoother by not updating the headers on
-        // every resize event
-        ?>
-        $.throttle(250, function() {
-            createFloatingHeaders(floatingTables);
-            updateTableHeaders(floatingTables);
-          });
-      })
+    <?php // Make resizing smoother by not redoing headers on every resize event ?>
+    .resize(throttle(function() {
+        createFloatingHeaders(floatingTables);
+        updateTableHeaders(floatingTables);
+      }, 100))
     .scroll(function() {
         updateTableHeaders(floatingTables);
       })

@@ -1253,23 +1253,17 @@ init = function(args) {
                        .wrapInner('<div style="position: relative"><\/div>');
               });
                                   
-          $(window).resize(function(event) {
+          $(window).resize(throttle(function(event) {
               if (event.target === this)  <?php // don't want the ui-resizable event bubbling up ?>
               {
                 <?php
-                // Make the resizing smoother by not updating the clones on
-                // every resize event
+                // The table dimensions have changed, so we need to redraw the clones
+                // and re map the table
                 ?>
-                $.throttle(300, function() {
-                    <?php
-                    // The table dimensions have changed, so we need to redraw the clones
-                    // and re map the table
-                    ?>
-                    redrawClones(table);
-                    getTableData(table, tableData);
-                  });
+                redrawClones(table);
+                getTableData(table, tableData);
               }
-            });
+            }, 50));
       
           <?php
           // We want to disable page refresh if the user is hovering over
