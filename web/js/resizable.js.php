@@ -550,6 +550,9 @@ function clearRowLabels()
 
 var oldInitResizable = init;
 init = function(args) {
+
+  var tableData = {};
+  
   oldInitResizable.apply(this, [args]);
 
   <?php
@@ -565,7 +568,6 @@ init = function(args) {
   // HTML if successful or the reasons for failure if not.
   if (function_exists('json_encode'))
   {
-    // 
     // We don't allow resizable bookings for IE8 and below.   In theory they should
     // be OK, but there seems to be a problem getting the resizing working properly.
     // (It looks as though it's probably something to do with the way .offset()
@@ -592,7 +594,6 @@ init = function(args) {
             return;
           }
          
-          var tableData = {};
           getTableData(table, tableData);
       
           <?php
@@ -1257,18 +1258,6 @@ init = function(args) {
                        .wrapInner('<div style="position: relative"><\/div>');
               });
                                   
-          $(window).resize(throttle(function(event) {
-              if (event.target === this)  <?php // don't want the ui-resizable event bubbling up ?>
-              {
-                <?php
-                // The table dimensions have changed, so we need to redraw the clones
-                // and re map the table
-                ?>
-                redrawClones(table);
-                getTableData(table, tableData);
-              }
-            }, 50));
-      
           <?php
           // We want to disable page refresh if the user is hovering over
           // the resizable handles.   We trigger a mouseenter event on page
@@ -1322,6 +1311,20 @@ init = function(args) {
                   getTableData(table, tableData);
                 });
         }).trigger('load');
+        
+      $(window).resize(throttle(function(event) {
+          var table;
+          if (event.target === this)  <?php // don't want the ui-resizable event bubbling up ?>
+          {
+            <?php
+            // The table dimensions have changed, so we need to redraw the clones
+            // and re map the table
+            ?>
+            table = $('table.dwm_main');
+            redrawClones(table);
+            getTableData(table, tableData);
+          }
+        }, 50));
 
     }  <?php // if (!lteIE8) ?>
       
