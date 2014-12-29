@@ -31,10 +31,11 @@ var refreshPage = function refreshPage() {
       {
         data.timetohighlight = refreshPage.args.timetohighlight;
       }
-      var table = $('table.dwm_main');
+      
       $.post(refreshPage.args.page + '.php',
              data,
              function(result){
+                 var table;
                  <?php
                  // (1) Empty the existing table in order to get rid of events
                  // and data and prevent memory leaks, (2) insert the updated 
@@ -44,6 +45,7 @@ var refreshPage = function refreshPage() {
                  ?>
                  if ((result.length > 0) && !isHidden() && !refreshPage.disabled)
                  {
+                   table = $('table.dwm_main');
                    table.empty();
                    table.html(result);
                    createFloatingHeaders(table);
