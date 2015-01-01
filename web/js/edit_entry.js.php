@@ -1202,36 +1202,36 @@ init = function(args) {
   //  a booking parameter is changed MRBS checks to see whether there would
   //  be any conflicts
   ?>
-  var form = document.getElementById('main');
-  if (form)
-  { 
-    if (form.name && (form.name.value.length === 0))
-    {
-      form.name.focus();
-    }
-    
-    adjustSlotSelectors();
-    
-    <?php
-    // If this is an All Day booking then check the All Day box and disable the 
-    // start and end time boxes
-    ?>
-    startSelect = $(form).find('#start_seconds');
-    endSelect = $(form).find('#end_seconds');
-    allDay = $(form).find('#all_day');
-    if ((allDay.is(':disabled') === false) && 
-        (startSelect.val() === startSelect.find('option').first().val()) &&
-        (endSelect.val() === endSelect.find('option').last().val()))
-    {
-      allDay.attr('checked', 'checked');
-      startSelect.attr('disabled', 'disabled');
-      endSelect.attr('disabled', 'disabled');
-      onAllDayClick.oldStart = startSelect.val();
-      onAllDayClick.oldEnd = endSelect.val();
-      onAllDayClick.oldStartDatepicker = $(form).find('#start_datepicker').datepicker('getDate');
-      onAllDayClick.oldEndDatepicker = $(form).find('#end_datepicker').datepicker('getDate');
-    }
+  var form = $('#main'),
+      nameInput = form.find('#name');
+
+  if (!(nameInput.prop('disabled') || nameInput.val().length))
+  {
+    nameInput.focus();
   }
+  
+  adjustSlotSelectors();
+  
+  <?php
+  // If this is an All Day booking then check the All Day box and disable the 
+  // start and end time boxes
+  ?>
+  startSelect = form.find('#start_seconds');
+  endSelect = form.find('#end_seconds');
+  allDay = form.find('#all_day');
+  if ((allDay.is(':disabled') === false) && 
+      (startSelect.val() === startSelect.find('option').first().val()) &&
+      (endSelect.val() === endSelect.find('option').last().val()))
+  {
+    allDay.attr('checked', 'checked');
+    startSelect.attr('disabled', 'disabled');
+    endSelect.attr('disabled', 'disabled');
+    onAllDayClick.oldStart = startSelect.val();
+    onAllDayClick.oldEnd = endSelect.val();
+    onAllDayClick.oldStartDatepicker = form.find('#start_datepicker').datepicker('getDate');
+    onAllDayClick.oldEndDatepicker = form.find('#end_datepicker').datepicker('getDate');
+  }
+
 
 
   <?php
@@ -1248,12 +1248,12 @@ init = function(args) {
   // that the function that checks for a valid booking can see if the change was
   // triggered by a Submit button being pressed, and if so, not to send an Ajax request.
   ?>
-  $('form#main').find('[type="submit"], [type="button"], [type="image"]').click(function() {
+  form.find('[type="submit"], [type="button"], [type="image"]').click(function() {
     var trigger = $(this).attr('name');
     $(this).closest('form').data('submit', trigger);
   });
 
-  $('form#main').bind('submit', function() {
+  form.bind('submit', function() {
       if ($(this).data('submit') === 'save_button')
       {
         <?php // Only validate the form if the Save button was pressed ?>
