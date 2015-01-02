@@ -1204,8 +1204,8 @@ init = function(args) {
   ?>
   var form = $('#main'),
       nameInput = form.find('#name');
-
-  if (!(nameInput.prop('disabled') || nameInput.val().length))
+  
+  if (nameInput.length && !(nameInput.prop('disabled') || nameInput.val().length))
   {
     nameInput.focus();
   }
