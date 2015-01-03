@@ -4,7 +4,7 @@
 
 REQUIREMENTS
 ---------------------------------------------------------------------------
-MRBS works with both MySQL (Version 4 and above) and PostgreSQL (Version 7 
+MRBS works with both MySQL (Version 5 and above) and PostgreSQL (Version 7.3 
 and above) systems. You must have PHP with support for your chosen database
 system installed and working for this application. See the PHP (www.php.net),
 MySQL (www.mysql.com), and PostgreSQL (www.postgresql.org) sites for more 
@@ -95,9 +95,7 @@ procedure might be:
 Create the MRBS tables using the supplied tables.*.sql file:
 
 [MySQL]             $ mysql mrbs < tables.my.sql
-[MySQL < 4.1]       $ mysql mrbs < tables.my.pre41.sql
 [PostgreSQL]        $ psql -a -f tables.pg.sql mrbs
-[PostgreSQL < 7.3]  $ psql -a -f tables.pg.pre73.sql mrbs
 
 where "mrbs" is the name of your database (mentioned above).
 This will create all the needed tables.
