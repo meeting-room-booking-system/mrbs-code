@@ -2,6 +2,7 @@
 
 // $Id$
 
+require_once "mrbs_sql.inc";
 
 // Set the default timezone.   Caters for PHP servers that don't
 // have date_default_timezone_set()
@@ -2047,17 +2048,15 @@ function period_name($s)
 // displayed.
 function make_area_select_html($link, $current, $year, $month, $day)
 {
-  global $tbl_area, $area_list_format;
+  global $area_list_format;
   
   $out_html = '';
-  $sql = "SELECT id, area_name 
-            FROM $tbl_area
-           WHERE disabled=0
-        ORDER BY area_name";
-  $res = sql_query($sql);
-  // Only show the areas if there's more than one of them, otherwise
+  
+  $areas = get_areas();
+
+  // Only show the areas if there are more than one of them, otherwise
   // there's no point
-  if ($res  && (sql_count($res) > 1))
+  if (count($areas) > 1)
   {
     $out_html .= "<div id=\"dwm_areas\">\n";
     $out_html .= "<h3>" . get_vocab("areas") . "</h3>\n";
@@ -2066,10 +2065,10 @@ function make_area_select_html($link, $current, $year, $month, $day)
       $out_html .= "<form id=\"areaChangeForm\" method=\"get\" action=\"$link\">\n" .
                    "<div>\n" .
                    "<select class=\"room_area_select\" id=\"area_select\" name=\"area\" onchange=\"this.form.submit()\">";
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      foreach ($areas as $area_id => $area_name)
       {
-        $selected = ($row['id'] == $current) ? "selected=\"selected\"" : "";
-        $out_html .= "<option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['area_name']) . "</option>\n";
+        $selected = ($area_id == $current) ? "selected=\"selected\"" : "";
+        $out_html .= "<option $selected value=\"". $area_id . "\">" . htmlspecialchars($area_name) . "</option>\n";
       }
       // Note:  the submit button will not be displayed if JavaScript is enabled
       $out_html .= "</select>\n" .
@@ -2083,11 +2082,11 @@ function make_area_select_html($link, $current, $year, $month, $day)
     else // list format
     {
       $out_html .= "<ul>\n";
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      foreach ($areas as $area_id => $area_name)
       {
-        $out_html .= "<li><a href=\"$link?year=$year&amp;month=$month&amp;day=$day&amp;area=${row['id']}\">";
-        $out_html .= "<span" . (($row['id'] == $current) ? ' class="current"' : '') . ">";
-        $out_html .= htmlspecialchars($row['area_name']) . "</span></a></li>\n";
+        $out_html .= "<li><a href=\"$link?year=$year&amp;month=$month&amp;day=$day&amp;area=${area_id}\">";
+        $out_html .= "<span" . (($area_id == $current) ? ' class="current"' : '') . ">";
+        $out_html .= htmlspecialchars($area_name) . "</span></a></li>\n";
       }
       $out_html .= "</ul>\n";
     }
