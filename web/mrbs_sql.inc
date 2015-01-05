@@ -1295,6 +1295,79 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
 }
 
 
+
+// Get the name of the area with id $id.   If $all is set to TRUE then all areas
+// are searched, otherwise just those which have not been disabled
+// Returns FALSE if there is an error, NULL if the id does not exist
+function get_area_name($id, $all=FALSE)
+{
+  global $tbl_area;
+  
+  $id = (int)$id;
+  
+  $sql = "SELECT area_name
+            FROM $tbl_area
+           WHERE id=$id";
+  if (empty($all))
+  {
+    $sql .= " AND disabled=0";
+  }
+  $sql .= " LIMIT 1";
+  
+  $res = sql_query($sql);
+  
+  if ($res === FALSE)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    return FALSE;
+  }
+  
+  if (sql_count($res) == 0)
+  {
+    return NULL;
+  }
+  
+  $row = sql_row($res, 0);
+  return $row[0];
+}
+
+
+// Get the name of the room with id $id.   If $all is set to TRUE then all rooms
+// are searched, otherwise just those which have not been disabled
+// Returns FALSE if there is an error, NULL if the id does not exist
+function get_room_name($id, $all=FALSE)
+{
+  global $tbl_room;
+  
+  $id = (int)$id;
+  
+  $sql = "SELECT room_name
+            FROM $tbl_room
+           WHERE id=$id";
+  if (empty($all))
+  {
+    $sql .= " AND disabled=0";
+  }
+  $sql .= " LIMIT 1";
+  
+  $res = sql_query($sql);
+  
+  if ($res === FALSE)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    return FALSE;
+  }
+  
+  if (sql_count($res) == 0)
+  {
+    return NULL;
+  }
+  
+  $row = sql_row($res, 0);
+  return $row[0];
+}
+
+
 // Gets an array of area names indexed by area id.
 // If $all=TRUE then all areas are returned, otherwise just the ones that
 // are not disabled
