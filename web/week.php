@@ -47,15 +47,15 @@ echo "</div>\n";
 
 // Show area and room:
 // Get the area and room names
-$this_area_name = sql_query1("SELECT area_name FROM $tbl_area WHERE id=$area AND disabled=0 LIMIT 1");
-$this_room_name = sql_query1("SELECT room_name FROM $tbl_room WHERE id=$room AND disabled=0 LIMIT 1");
+$this_area_name = get_area_name($area);
+$this_room_name = get_room_name($room);
 // The room is invalid if it doesn't exist, or else it has been disabled, either explicitly
 // or implicitly because the area has been disabled
-if ($this_area_name === -1)
+if (!isset($this_area_name) || ($this_area_name === FALSE))
 {
   $this_area_name = '';
 }
-if ($this_room_name === -1)
+if (!isset($this_room_name) || ($this_room_name === FALSE))
 {
   $this_room_name = '';
 }
