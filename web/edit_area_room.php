@@ -653,27 +653,17 @@ if (isset($change_room) && !empty($room))
       <input type="hidden" name="room" value="<?php echo $row["id"]?>">
     
       <?php
-      $res = sql_query("SELECT id, area_name FROM $tbl_area");
-      if (!$res)
-      {
-        trigger_error(sql_error(), E_USER_WARNING);
-        fatal_error(FALSE, get_vocab("fatal_db_error"));
-      }
-      if (sql_count($res) == 0)
+      $areas = get_areas($all=TRUE);
+      if (empty($areas))
       {
         fatal_error(FALSE, get_vocab('noareas'));  // should not happen
       }
       
       // The area select box
       echo "<div>\n";
-      $options = array();
-      for ($i = 0; ($row_area = sql_row_keyed($res, $i)); $i++)
-      {
-        $options[$row_area['id']] = $row_area['area_name'];
-      }
       $params = array('label'         => get_vocab("area") . ":",
                       'name'          => 'new_area',
-                      'options'       => $options,
+                      'options'       => $areas,
                       'force_assoc'   => TRUE,
                       'value'         => $row['area_id'],
                       'disabled'      => $disabled,
