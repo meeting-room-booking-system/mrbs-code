@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-// include the authentification wrappers
+// include the authentication wrappers
 require_once "auth/auth_$auth[type].inc";
 
 if (isset($auth['session']))
