@@ -219,34 +219,6 @@ function clean_address_list($string)
   return $string;
 }
 
-// get the email address of a user
-// returns an empty string in the event of an error
-function get_email_address($user)
-{
-  global $mail_settings, $auth, $tbl_users, $ldap_get_user_email;
-  
-  if ('db' == $auth['type'])
-  {
-    $email = sql_query1("SELECT email 
-                         FROM $tbl_users 
-                         WHERE name='" . sql_escape($user) . "'
-                         LIMIT 1");
-    if ($email == -1)
-    {
-      $email = "";
-    }
-  }
-  else if (('ldap' == $auth['type']) && $ldap_get_user_email)
-  {
-    $email = authLdapGetEmail($user);
-  }
-  else
-  {
-    $email = str_replace($mail_settings['username_suffix'], '', $user);
-    $email .= $mail_settings['domain'];
-  }
-  return $email;
-}
 
 // get the list of email addresses that are allowed to approve bookings
 // for the room with id $room_id
@@ -813,7 +785,7 @@ function create_addresses($data, $action)
   $user = getUserName();
   if (isset($user) && in_array($action, array("more_info", "reject", "remind")))
   {
-    $from = get_email_address($user);
+    $from = authGetUserEmail($user);
     if (empty($from))
     {
       // there was an error:  use a sensible default
@@ -880,7 +852,7 @@ function create_addresses($data, $action)
       $to = array();
     }
     $booker = $data['create_by'];
-    $booker_email = get_email_address($booker);
+    $booker_email = authGetUserEmail($booker);
     if (!empty($booker_email))
     {
       $to[] = $booker_email;

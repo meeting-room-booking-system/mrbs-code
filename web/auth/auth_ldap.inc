@@ -225,6 +225,30 @@ function authLdapAction($callback, $user, &$object)
 }
 
 
+// Gets the user's email address.   Returns an empty
+// string if one can't be found
+function authGetUserEmail($user)
+{
+  global $ldap_get_user_email;
+  
+  if (!isset($user) || $user === '')
+  {
+    return '';
+  }
+  
+  if ($ldap_get_user_email)
+  {
+    $email = authLdapGetEmail($user);
+  }
+  else
+  {
+    $email = get_default_email($user);
+  }
+  
+  return $email;
+}
+
+
 /* authLdapGetEmail($user)
  * 
  * Gets the email address of the user from LDAP

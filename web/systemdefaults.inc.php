@@ -739,6 +739,7 @@ $auth['db_ext']['db_name'] = 'authdb';
 $auth['db_ext']['db_table'] = 'users';
 $auth['db_ext']['column_name_username'] = 'name';
 $auth['db_ext']['column_name_password'] = 'password';
+$auth['db_ext']['column_name_email'] = 'email';
 // Either 'md5', 'sha1', 'crypt' or 'plaintext'
 $auth['db_ext']['password_format'] = 'md5';
 

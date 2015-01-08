@@ -101,3 +101,16 @@ function authGetUserLevel($user)
   return 1;
 }
 
+
+// Gets the user's email address.   Returns an empty
+// string if one can't be found
+function authGetUserEmail($user)
+{
+  if (!isset($user) || $user === '')
+  {
+    return '';
+  }
+  
+  return get_default_email($user);
+}
+

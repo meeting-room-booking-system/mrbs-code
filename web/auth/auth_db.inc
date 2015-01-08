@@ -94,3 +94,37 @@ function authGetUserLevel($user)
   return $result;
 }
 
+
+// Gets the user's email address.   Returns an empty
+// string if one can't be found
+function authGetUserEmail($user)
+{
+  global $tbl_users;
+  
+  if (!isset($user) || $user === '')
+  {
+    return '';
+  }
+  
+  $sql = "SELECT email 
+            FROM $tbl_users 
+           WHERE name='" . sql_escape($user) . "'
+           LIMIT 1";
+           
+  $email = sql_query1($sql);
+  
+  if ($email == -1)
+  {
+    $sql_error = sql_error();
+    if (!empty($sql_error))
+    {
+      // It's possible that sql_query1 returned -1 because there were no matching rows,
+      // so we only trigger an error if there was a genuine SQL error.
+      trigger_error($sql_error, E_USER_WARNING);
+    }
+    $email = '';
+  }
+  
+  return $email;
+}
+

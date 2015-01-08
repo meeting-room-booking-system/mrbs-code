@@ -50,6 +50,23 @@ function mrbs_default_timezone_get()
   }
 }
 
+// Gets the default email address for $user.   Returns an empty
+// string if one can't be found
+function get_default_email($user)
+{
+  global $mail_settings;
+  
+  if (!isset($user) || $user === '')
+  {
+    return '';
+  }
+  
+  $email = str_replace($mail_settings['username_suffix'], '', $user);
+  $email .= $mail_settings['domain'];
+  
+  return $email;
+}
+
 
 // Returns the current page.    Separated out into a function to make it easier
 // to change for different situations.   We use basename() because the full name
