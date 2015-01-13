@@ -128,6 +128,173 @@ function create_field_entry_timezone()
   echo "</div>\n";
 }
 
+
+function create_field_entry_advance_booking()
+{
+  global $min_create_ahead_secs, $max_create_ahead_secs,
+         $min_delete_ahead_secs, $max_delete_ahead_secs,
+         $min_create_ahead_enabled, $max_create_ahead_enabled,
+         $min_delete_ahead_enabled, $max_delete_ahead_enabled,
+         $enable_periods;
+         
+  $min_create_ahead_value = $min_create_ahead_secs;
+  toTimeString($min_create_ahead_value, $min_create_ahead_units);
+  $max_create_ahead_value = $max_create_ahead_secs;
+  toTimeString($max_create_ahead_value, $max_create_ahead_units);
+  
+  $min_delete_ahead_value = $min_delete_ahead_secs;
+  toTimeString($min_delete_ahead_value, $min_delete_ahead_units);
+  $max_delete_ahead_value = $max_delete_ahead_secs;
+  toTimeString($max_delete_ahead_value, $max_delete_ahead_units);
+  
+  // Note when using periods
+  echo "<div id=\"book_ahead_periods_note\"" .
+       (($enable_periods) ? '' : ' class="js_none"') .
+       ">\n";
+  echo "<label></label><span>" . get_vocab("book_ahead_note_periods") . "</span>";
+  echo "</div>\n";
+  
+  $units = array("seconds", "minutes", "hours", "days", "weeks");
+  $options = array();
+  foreach ($units as $unit)
+  {
+    $options[$unit] = get_vocab($unit);
+  }
+  
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("booking_creation") . "</legend>\n";
+  // Minimum book ahead
+  echo "<div>\n";
+  $params = array('label' => get_vocab("min_book_ahead") . ":",
+                  'name'  => 'area_min_create_ahead_enabled',
+                  'value' => $min_create_ahead_enabled,
+                  'class' => 'enabler');
+  generate_checkbox($params);
+  $attributes = array('class="text"',
+                      'type="number"',
+                      'step="1"');
+  $params = array('name'       => 'area_min_create_ahead_value',
+                  'value'      => $min_create_ahead_value,
+                  'attributes' => $attributes);
+  generate_input($params);
+  $params = array('name'    => 'area_min_create_ahead_units',
+                  'value'   => array_search($min_create_ahead_units, $options),
+                  'options' => $options);
+  generate_select($params);
+  echo "</div>\n";
+  
+  
+  // Maximum book ahead
+  echo "<div>\n";
+  $params = array('label' => get_vocab("max_book_ahead") . ":",
+                  'name'  => 'area_max_create_ahead_enabled',
+                  'value' => $max_create_ahead_enabled,
+                  'class' => 'enabler');
+  generate_checkbox($params);
+  $attributes = array('class="text"',
+                      'type="number"',
+                      'step="1"');
+  $params = array('name'       => 'area_max_create_ahead_value',
+                  'value'      => $max_create_ahead_value,
+                  'attributes' => $attributes);
+  generate_input($params);
+  $params = array('name'    => 'area_max_create_ahead_units',
+                  'value'   => array_search($max_create_ahead_units, $options),
+                  'options' => $options);  // options same as before
+  generate_select($params);
+  echo "</div>\n";
+  echo "</fieldset>\n";
+  
+  
+  
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("booking_deletion") . "</legend>\n";
+  // Minimum book ahead
+  echo "<div>\n";
+  $params = array('label' => get_vocab("min_book_ahead") . ":",
+                  'name'  => 'area_min_delete_ahead_enabled',
+                  'value' => $min_delete_ahead_enabled,
+                  'class' => 'enabler');
+  generate_checkbox($params);
+  $attributes = array('class="text"',
+                      'type="number"',
+                      'step="1"');
+  $params = array('name'       => 'area_min_delete_ahead_value',
+                  'value'      => $min_delete_ahead_value,
+                  'attributes' => $attributes);
+  generate_input($params);
+  $params = array('name'    => 'area_min_delete_ahead_units',
+                  'value'   => array_search($min_delete_ahead_units, $options),
+                  'options' => $options);
+  generate_select($params);
+  echo "</div>\n";
+  
+  // Maximum book ahead
+  echo "<div>\n";
+  $params = array('label' => get_vocab("max_book_ahead") . ":",
+                  'name'  => 'area_max_delete_ahead_enabled',
+                  'value' => $max_delete_ahead_enabled,
+                  'class' => 'enabler');
+  generate_checkbox($params);
+  $attributes = array('class="text"',
+                      'type="number"',
+                      'step="1"');
+  $params = array('name'       => 'area_max_delete_ahead_value',
+                  'value'      => $max_delete_ahead_value,
+                  'attributes' => $attributes);
+  generate_input($params);
+  $params = array('name'    => 'area_max_delete_ahead_units',
+                  'value'   => array_search($max_delete_ahead_units, $options),
+                  'options' => $options);  // options same as before
+  generate_select($params);
+  echo "</div>\n";
+  echo "</fieldset>\n";
+}
+
+
+function create_field_entry_limits()
+{
+  global $interval_types,
+         $max_per_interval_area_enabled, $max_per_interval_global_enabled,
+         $max_per_interval_area, $max_per_interval_global;
+         
+  // The max_per booking policies
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("booking_limits") . "</legend>\n";
+  echo "<table>\n";
+      
+  echo "<thead>\n";
+  echo "<tr>\n";
+  echo "<th></th>\n";
+  echo "<th>" . get_vocab("this_area") . "</th>\n";
+  echo "<th title=\"" . get_vocab("whole_system_note") . "\">" . get_vocab("whole_system") . "</th>\n";
+  echo "</tr>\n";
+  echo "</thead>\n";
+      
+  echo "<tbody>\n";
+  foreach ($interval_types as $interval_type)
+  {
+    echo "<tr>\n";
+    echo "<td><label>" . get_vocab("max_per_${interval_type}") . ":</label></td>\n";
+    echo "<td><input class=\"enabler checkbox\" type=\"checkbox\" id=\"area_max_per_${interval_type}_enabled\" name=\"area_max_per_${interval_type}_enabled\"" .
+         (($max_per_interval_area_enabled[$interval_type]) ? " checked=\"checked\"" : "") .
+         ">\n";
+    echo "<input class=\"text\" type=\"number\" min=\"0\" step=\"1\" name=\"area_max_per_${interval_type}\" value=\"$max_per_interval_area[$interval_type]\"></td>\n"; 
+    echo "<td>\n";
+    echo "<input class=\"checkbox\" type=\"checkbox\" disabled=\"disabled\"" .
+         (($max_per_interval_global_enabled[$interval_type]) ? " checked=\"checked\"" : "") .
+         ">\n";
+    echo "<input class=\"text\" disabled=\"disabled\" value=\"" . $max_per_interval_global[$interval_type] . "\">\n";
+    echo "</td>\n";
+    echo "</tr>\n";
+  }
+  echo "</tbody>\n";
+      
+  echo "</table>\n";
+  echo "</fieldset>\n";
+}
+
+
 // Get non-standard form variables
 $phase = get_form_var('phase', 'int');
 $new_area = get_form_var('new_area', 'int');
@@ -1060,161 +1227,17 @@ if (isset($change_area) &&!empty($area))
   echo "</div>\n";  // last_slot
 
   echo "</fieldset>\n";
-        
+  
+  
   // Booking policies
-  $min_create_ahead_value = $min_create_ahead_secs;
-  toTimeString($min_create_ahead_value, $min_create_ahead_units);
-  $max_create_ahead_value = $max_create_ahead_secs;
-  toTimeString($max_create_ahead_value, $max_create_ahead_units);
-  
-  $min_delete_ahead_value = $min_delete_ahead_secs;
-  toTimeString($min_delete_ahead_value, $min_delete_ahead_units);
-  $max_delete_ahead_value = $max_delete_ahead_secs;
-  toTimeString($max_delete_ahead_value, $max_delete_ahead_units);
-  
   echo "<fieldset id=\"booking_policies\">\n";
   echo "<legend>" . get_vocab("booking_policies") . "</legend>\n";
-  // Note when using periods
-  echo "<div id=\"book_ahead_periods_note\"" .
-       (($enable_periods) ? '' : ' class="js_none"') .
-       ">\n";
-  echo "<label></label><span>" . get_vocab("book_ahead_note_periods") . "</span>";
-  echo "</div>\n";
-  
-  $units = array("seconds", "minutes", "hours", "days", "weeks");
-  $options = array();
-  foreach ($units as $unit)
-  {
-    $options[$unit] = get_vocab($unit);
-  }
-  
-  echo "<fieldset>\n";
-  echo "<legend>" . get_vocab("booking_creation") . "</legend>\n";
-  // Minimum book ahead
-  echo "<div>\n";
-  $params = array('label' => get_vocab("min_book_ahead") . ":",
-                  'name'  => 'area_min_create_ahead_enabled',
-                  'value' => $min_create_ahead_enabled,
-                  'class' => 'enabler');
-  generate_checkbox($params);
-  $attributes = array('class="text"',
-                      'type="number"',
-                      'step="1"');
-  $params = array('name'       => 'area_min_create_ahead_value',
-                  'value'      => $min_create_ahead_value,
-                  'attributes' => $attributes);
-  generate_input($params);
-  $params = array('name'    => 'area_min_create_ahead_units',
-                  'value'   => array_search($min_create_ahead_units, $options),
-                  'options' => $options);
-  generate_select($params);
-  echo "</div>\n";
-  
-  
-  // Maximum book ahead
-  echo "<div>\n";
-  $params = array('label' => get_vocab("max_book_ahead") . ":",
-                  'name'  => 'area_max_create_ahead_enabled',
-                  'value' => $max_create_ahead_enabled,
-                  'class' => 'enabler');
-  generate_checkbox($params);
-  $attributes = array('class="text"',
-                      'type="number"',
-                      'step="1"');
-  $params = array('name'       => 'area_max_create_ahead_value',
-                  'value'      => $max_create_ahead_value,
-                  'attributes' => $attributes);
-  generate_input($params);
-  $params = array('name'    => 'area_max_create_ahead_units',
-                  'value'   => array_search($max_create_ahead_units, $options),
-                  'options' => $options);  // options same as before
-  generate_select($params);
-  echo "</div>\n";
+  create_field_entry_advance_booking();
+  create_field_entry_limits();
   echo "</fieldset>\n";
   
   
-  
-  echo "<fieldset>\n";
-  echo "<legend>" . get_vocab("booking_deletion") . "</legend>\n";
-  // Minimum book ahead
-  echo "<div>\n";
-  $params = array('label' => get_vocab("min_book_ahead") . ":",
-                  'name'  => 'area_min_delete_ahead_enabled',
-                  'value' => $min_delete_ahead_enabled,
-                  'class' => 'enabler');
-  generate_checkbox($params);
-  $attributes = array('class="text"',
-                      'type="number"',
-                      'step="1"');
-  $params = array('name'       => 'area_min_delete_ahead_value',
-                  'value'      => $min_delete_ahead_value,
-                  'attributes' => $attributes);
-  generate_input($params);
-  $params = array('name'    => 'area_min_delete_ahead_units',
-                  'value'   => array_search($min_delete_ahead_units, $options),
-                  'options' => $options);
-  generate_select($params);
-  echo "</div>\n";
-  
-  // Maximum book ahead
-  echo "<div>\n";
-  $params = array('label' => get_vocab("max_book_ahead") . ":",
-                  'name'  => 'area_max_delete_ahead_enabled',
-                  'value' => $max_delete_ahead_enabled,
-                  'class' => 'enabler');
-  generate_checkbox($params);
-  $attributes = array('class="text"',
-                      'type="number"',
-                      'step="1"');
-  $params = array('name'       => 'area_max_delete_ahead_value',
-                  'value'      => $max_delete_ahead_value,
-                  'attributes' => $attributes);
-  generate_input($params);
-  $params = array('name'    => 'area_max_delete_ahead_units',
-                  'value'   => array_search($max_delete_ahead_units, $options),
-                  'options' => $options);  // options same as before
-  generate_select($params);
-  echo "</div>\n";
-  echo "</fieldset>\n";
-   
-  // The max_per booking policies
-  echo "<fieldset>\n";
-  echo "<legend>" . get_vocab("booking_limits") . "</legend>\n";
-  echo "<table>\n";
-      
-  echo "<thead>\n";
-  echo "<tr>\n";
-  echo "<th></th>\n";
-  echo "<th>" . get_vocab("this_area") . "</th>\n";
-  echo "<th title=\"" . get_vocab("whole_system_note") . "\">" . get_vocab("whole_system") . "</th>\n";
-  echo "</tr>\n";
-  echo "</thead>\n";
-      
-  echo "<tbody>\n";
-  foreach ($interval_types as $interval_type)
-  {
-    echo "<tr>\n";
-    echo "<td><label>" . get_vocab("max_per_${interval_type}") . ":</label></td>\n";
-    echo "<td><input class=\"enabler checkbox\" type=\"checkbox\" id=\"area_max_per_${interval_type}_enabled\" name=\"area_max_per_${interval_type}_enabled\"" .
-         (($max_per_interval_area_enabled[$interval_type]) ? " checked=\"checked\"" : "") .
-         ">\n";
-    echo "<input class=\"text\" type=\"number\" min=\"0\" step=\"1\" name=\"area_max_per_${interval_type}\" value=\"$max_per_interval_area[$interval_type]\"></td>\n"; 
-    echo "<td>\n";
-    echo "<input class=\"checkbox\" type=\"checkbox\" disabled=\"disabled\"" .
-         (($max_per_interval_global_enabled[$interval_type]) ? " checked=\"checked\"" : "") .
-         ">\n";
-    echo "<input class=\"text\" disabled=\"disabled\" value=\"" . $max_per_interval_global[$interval_type] . "\">\n";
-    echo "</td>\n";
-    echo "</tr>\n";
-  }
-  echo "</tbody>\n";
-      
-  echo "</table>\n";
-  echo "</fieldset>\n";
-      
-      
-  echo "</fieldset>\n";
-  
+  // Confirmation settings
   echo "<fieldset>\n";
   echo "<legend>" . get_vocab("confirmation_settings") . "</legend>\n";
   
