@@ -278,7 +278,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
       if (($booking['start_time'] - $now) < $min_delete_ahead)
       {
         toTimeString($min_delete_ahead, $units);
-        $errors[] = get_vocab("min_delete_time_before") . " $min_delete_ahead $units";
+        $errors[] = get_vocab('min_delete_time_before', $min_delete_ahead, $units);
       }
     }
     
@@ -292,7 +292,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
       if (($booking['end_time'] - $now) > $max_delete_ahead)
       {
         toTimeString($max_delete_ahead, $units);
-        $errors[] = get_vocab("max_delete_time_before") . " $max_delete_ahead $units";
+        $errors[] = get_vocab('max_delete_time_before', $max_delete_ahead, $units);
       }
     }
   }
@@ -310,7 +310,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
       if (($booking['start_time'] - $now) < $min_create_ahead)
       {
         toTimeString($min_create_ahead, $units);
-        $errors[] = get_vocab("min_create_time_before") . " $min_create_ahead $units";
+        $errors[] = get_vocab('min_create_time_before', $min_create_ahead, $units);
       }
     }
     
@@ -327,7 +327,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
       if (($booking['end_time'] - $now) > $max_create_ahead)
       {
         toTimeString($max_create_ahead, $units);
-        $errors[] = get_vocab("max_create_time_before") . " $max_create_ahead $units";
+        $errors[] = get_vocab('max_create_time_before', $max_create_ahead, $units);
       }
     }
   }
