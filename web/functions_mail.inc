@@ -29,14 +29,6 @@ function get_mail_charset()
   return 'utf-8';
 }
 
-function get_mail_vocab($token)
-{
-  global $mail_vocab;
-
-  $string = get_vocab($token, $mail_vocab);
-
-  return str_replace('&nbsp;', ' ', $string);
-}
 
 function get_mail_locale()
 {

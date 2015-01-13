@@ -1163,21 +1163,43 @@ function get_aix_character_encoding($character_encoding)
 
 
 // Get a vocab item, in UTF-8
+// Takes additional parameters as for sprintf()
+//
+// [Maybe in the future we should switch to using the MessageFormatter
+//  class as it is more powerful.   However the Intl extension isn't present
+//  in all PHP installations and so the class would have to be emulated]
 function get_vocab($tag)
 {
   global $vocab;
-
-  if (func_num_args() > 1)
-  {
-    $vocab_array = func_get_arg(1);
-  }
-  else
-  {
-    $vocab_array = $vocab;
-  }
   
   // Return the tag itself if we can't find a vocab string
-  return (isset($vocab_array[$tag])) ? $vocab_array[$tag] : $tag;
+  if (!isset($vocab[$tag]))
+  {
+    return $tag;
+  }
+  
+  $args = func_get_args();
+  $args[0] = $vocab[$tag];
+  return call_user_func_array('sprintf', $args);
+}
+
+
+// Same as get_vocab(), but uses the mailing language
+function get_mail_vocab($tag)
+{
+  global $mail_vocab;
+
+  // Return the tag itself if we can't find a vocab string
+  if (!isset($mail_vocab[$tag]))
+  {
+    return $tag;
+  }
+  
+  $args = func_get_args();
+  $args[0] = $mail_vocab[$tag];
+  $result = call_user_func_array('sprintf', $args);
+
+  return str_replace('&nbsp;', ' ', $result);
 }
 
 
