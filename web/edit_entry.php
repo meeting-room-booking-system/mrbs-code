@@ -416,8 +416,8 @@ function create_field_entry_rooms($disabled=FALSE)
                   'options'     => $all_rooms[$area_id],
                   'force_assoc' => TRUE,
                   'value'       => $selected_rooms,
-                  'multiple'    => $multiroom_allowed,
-                  'mandatory'   => TRUE,
+                  'multiple'    => $multiroom_allowed,  // If multiple is not set then mandatory (HTML "required")
+                  'mandatory'   => $multiroom_allowed,  // is unnecessary and also causes an HTML5 validation error
                   'disabled'    => $disabled,
                   'attributes'  => array('size="5"'));
   generate_select($params);
