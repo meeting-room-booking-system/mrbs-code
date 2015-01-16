@@ -81,7 +81,10 @@ CREATE TABLE mrbs_room
 (
   id                serial primary key,
   disabled          smallint DEFAULT 0 NOT NULL,
-  area_id           int DEFAULT 0 NOT NULL,
+  area_id           int DEFAULT 0 NOT NULL
+                      REFERENCES mrbs_area(id)
+                      ON UPDATE CASCADE
+                      ON DELETE RESTRICT,
   room_name         varchar(25) NOT NULL,
   sort_key          varchar(25) NOT NULL,
   description       varchar(60),
@@ -91,32 +94,6 @@ CREATE TABLE mrbs_room
 );
 create index mrbs_idxSortKey on mrbs_room(sort_key);
 
-CREATE TABLE mrbs_entry
-(
-  id             serial primary key,
-  start_time     int DEFAULT 0 NOT NULL,
-  end_time       int DEFAULT 0 NOT NULL,
-  entry_type     int DEFAULT 0 NOT NULL,
-  repeat_id      int DEFAULT 0 NOT NULL,
-  room_id        int DEFAULT 1 NOT NULL,
-  timestamp      timestamp DEFAULT current_timestamp,
-  create_by      varchar(80) NOT NULL,
-  modified_by    varchar(80) NOT NULL,
-  name           varchar(80) NOT NULL,
-  type           char DEFAULT 'E' NOT NULL,
-  description    text,
-  status         smallint DEFAULT 0 NOT NULL,
-  reminded       int,
-  info_time      int,
-  info_user      varchar(80),
-  info_text      text,
-  ical_uid       varchar(255) DEFAULT '' NOT NULL,
-  ical_sequence  smallint DEFAULT 0 NOT NULL,
-  ical_recur_id  varchar(16) DEFAULT '' NOT NULL
-);
-create index mrbs_idxStartTime on mrbs_entry(start_time);
-create index mrbs_idxEndTime on mrbs_entry(end_time);
-
 CREATE TABLE mrbs_repeat
 (
   id             serial primary key,
@@ -125,7 +102,10 @@ CREATE TABLE mrbs_repeat
   rep_type       int DEFAULT 0 NOT NULL,
   end_date       int DEFAULT 0 NOT NULL,
   rep_opt        varchar(32) NOT NULL,
-  room_id        int DEFAULT 1 NOT NULL,
+  room_id        int DEFAULT 1 NOT NULL
+                   REFERENCES mrbs_room(id)
+                   ON UPDATE CASCADE
+                   ON DELETE RESTRICT,
   timestamp      timestamp DEFAULT current_timestamp,
   create_by      varchar(80) NOT NULL,
   modified_by    varchar(80) NOT NULL,
@@ -143,6 +123,35 @@ CREATE TABLE mrbs_repeat
   ical_uid       varchar(255) DEFAULT '' NOT NULL,
   ical_sequence  smallint DEFAULT 0 NOT NULL
 );
+
+CREATE TABLE mrbs_entry
+(
+  id             serial primary key,
+  start_time     int DEFAULT 0 NOT NULL,
+  end_time       int DEFAULT 0 NOT NULL,
+  entry_type     int DEFAULT 0 NOT NULL,
+  repeat_id      int DEFAULT 0 NOT NULL,
+  room_id        int DEFAULT 1 NOT NULL
+                   REFERENCES mrbs_room(id)
+                   ON UPDATE CASCADE
+                   ON DELETE RESTRICT,
+  timestamp      timestamp DEFAULT current_timestamp,
+  create_by      varchar(80) NOT NULL,
+  modified_by    varchar(80) NOT NULL,
+  name           varchar(80) NOT NULL,
+  type           char DEFAULT 'E' NOT NULL,
+  description    text,
+  status         smallint DEFAULT 0 NOT NULL,
+  reminded       int,
+  info_time      int,
+  info_user      varchar(80),
+  info_text      text,
+  ical_uid       varchar(255) DEFAULT '' NOT NULL,
+  ical_sequence  smallint DEFAULT 0 NOT NULL,
+  ical_recur_id  varchar(16) DEFAULT '' NOT NULL
+);
+create index mrbs_idxStartTime on mrbs_entry(start_time);
+create index mrbs_idxEndTime on mrbs_entry(end_time);
 
 CREATE TABLE mrbs_variables
 (

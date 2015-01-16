@@ -76,35 +76,11 @@ CREATE TABLE mrbs_room
   custom_html      text CHARACTER SET utf8 COLLATE utf8_general_ci,
 
   PRIMARY KEY (id),
+  FOREIGN KEY (area_id) 
+    REFERENCES mrbs_area(id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
   KEY idxSortKey (sort_key)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE mrbs_entry
-(
-  id             int NOT NULL auto_increment,
-  start_time     int DEFAULT '0' NOT NULL,
-  end_time       int DEFAULT '0' NOT NULL,
-  entry_type     int DEFAULT '0' NOT NULL,
-  repeat_id      int DEFAULT '0' NOT NULL,
-  room_id        int DEFAULT '1' NOT NULL,
-  timestamp      timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  create_by      varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
-  modified_by    varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
-  name           varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
-  type           char DEFAULT 'E' NOT NULL,
-  description    text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  status         tinyint unsigned NOT NULL DEFAULT 0,
-  reminded       int,
-  info_time      int,
-  info_user      varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci,
-  info_text      text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  ical_uid       varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
-  ical_sequence  smallint DEFAULT 0 NOT NULL,
-  ical_recur_id  varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
-
-  PRIMARY KEY (id),
-  KEY idxStartTime (start_time),
-  KEY idxEndTime   (end_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE mrbs_repeat
@@ -133,7 +109,43 @@ CREATE TABLE mrbs_repeat
   ical_uid       varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
   ical_sequence  smallint DEFAULT 0 NOT NULL,
   
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  FOREIGN KEY (room_id) 
+    REFERENCES mrbs_room(id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE mrbs_entry
+(
+  id             int NOT NULL auto_increment,
+  start_time     int DEFAULT '0' NOT NULL,
+  end_time       int DEFAULT '0' NOT NULL,
+  entry_type     int DEFAULT '0' NOT NULL,
+  repeat_id      int DEFAULT '0' NOT NULL,
+  room_id        int DEFAULT '1' NOT NULL,
+  timestamp      timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  create_by      varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
+  modified_by    varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
+  name           varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
+  type           char DEFAULT 'E' NOT NULL,
+  description    text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  status         tinyint unsigned NOT NULL DEFAULT 0,
+  reminded       int,
+  info_time      int,
+  info_user      varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci,
+  info_text      text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  ical_uid       varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
+  ical_sequence  smallint DEFAULT 0 NOT NULL,
+  ical_recur_id  varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
+
+  PRIMARY KEY (id),
+  FOREIGN KEY (room_id) 
+    REFERENCES mrbs_room(id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
+  KEY idxStartTime (start_time),
+  KEY idxEndTime   (end_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE mrbs_variables
