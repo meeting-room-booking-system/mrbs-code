@@ -548,6 +548,7 @@ function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
 //        'name'        The name of the element.
 //      OPTIONAL
 //        'label_after' Whether to put the label before or after the checkbox.  Default FALSE
+//        'label_title' The text to be used for the title attribute for the field label
 //        'id'          The id of the element.  Defaults to be the same as the name.
 //        'value'       The value of the input.  Default ''
 //        'class'       A class (or array of classes) to give the element.  Default NULL
@@ -559,7 +560,7 @@ function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
 function generate_checkbox($params)
 {
   // some sanity checking on params
-  foreach (array('label', 'name', 'id', 'label_after', 'value', 'class',
+  foreach (array('label', 'label_title', 'name', 'id', 'label_after', 'value', 'class',
                  'disabled', 'mandatory', 'attributes') as $key)
   {
     if (!isset($params[$key]))
@@ -574,6 +575,7 @@ function generate_checkbox($params)
           $params[$key] = $params['name'];
           break;
         case 'value':
+        case 'label_title':
           $params[$key] = '';
           break;
         case 'disabled':
@@ -604,6 +606,7 @@ function generate_checkbox($params)
   // generate the HTML
   // no HTML escaping for the label - it is trusted
   $html  = "<label for=\"" . $params['id'] . "\"";
+  $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
   $html .= ($params['label_after']) ? ' class="secondary"' : '';
   $html .= ">";
   if (!$params['label_after'])
