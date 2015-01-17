@@ -122,7 +122,7 @@ CREATE TABLE mrbs_entry
   start_time     int DEFAULT '0' NOT NULL,
   end_time       int DEFAULT '0' NOT NULL,
   entry_type     int DEFAULT '0' NOT NULL,
-  repeat_id      int DEFAULT '0' NOT NULL,
+  repeat_id      int DEFAULT NULL,
   room_id        int DEFAULT '1' NOT NULL,
   timestamp      timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   create_by      varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
@@ -144,6 +144,10 @@ CREATE TABLE mrbs_entry
     REFERENCES mrbs_room(id)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
+  FOREIGN KEY (repeat_id) 
+    REFERENCES mrbs_repeat(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
   KEY idxStartTime (start_time),
   KEY idxEndTime   (end_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
