@@ -148,7 +148,7 @@ CREATE TABLE mrbs_entry
   info_text      text,
   ical_uid       varchar(255) DEFAULT '' NOT NULL,
   ical_sequence  smallint DEFAULT 0 NOT NULL,
-  ical_recur_id  varchar(16) DEFAULT '' NOT NULL
+  ical_recur_id  varchar(16) DEFAULT NULL
 );
 create index mrbs_idxStartTime on mrbs_entry(start_time);
 create index mrbs_idxEndTime on mrbs_entry(end_time);
