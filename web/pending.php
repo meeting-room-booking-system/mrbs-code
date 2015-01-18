@@ -248,7 +248,7 @@ else  // display them in a table
   display_table_head();
   
   echo "<tbody>\n";
-  $last_repeat_id = 0;
+  $last_repeat_id = NULL;
   $is_series = FALSE;
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   { 
