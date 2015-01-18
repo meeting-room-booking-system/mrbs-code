@@ -457,7 +457,8 @@ function sql_pgsql_table_exists($table, $db_conn = null)
   }
 
   $res = sql_pgsql_query1($sql, $db_conn);
-  if ($res < 1)
+  
+  if ($res < 0)
   {
     trigger_error(pg_result_error($res), E_USER_WARNING);
     fatal_error(TRUE, get_vocab("fatal_db_error"));
