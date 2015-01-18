@@ -278,7 +278,7 @@ for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
       }
       $d[$day_num]["id"][] = $row['id'];
       $d[$day_num]["color"][] = $row['type'];
-      $d[$day_num]["is_repeat"][] = !empty($row['repeat_id']);
+      $d[$day_num]["is_repeat"][] = isset($row['repeat_id']);
       
       // Handle private events
       if (is_private_event($row['status'] & STATUS_PRIVATE)) 

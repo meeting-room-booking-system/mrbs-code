@@ -116,7 +116,7 @@ function map_add_booking ($row, &$column, $am7, $pm7)
     
     // fill in the id, type and start time
     $column[$s][$n]["id"] = $row['entry_id'];
-    $column[$s][$n]["is_repeat"] = !empty($row['repeat_id']);
+    $column[$s][$n]["is_repeat"] = isset($row['repeat_id']);
     $column[$s][$n]["is_multiday_start"] = $is_multiday_start;
     $column[$s][$n]["is_multiday_end"] = $is_multiday_end;
     $column[$s][$n]["status"] = $row['status'];

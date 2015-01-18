@@ -1221,7 +1221,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
         if (!$series && !array_key_exists($field['name'], $rep_fields))
         {
           // If this is the entry table then check that the custom field also
-          // exists in the rpeat table
+          // exists in the repeat table
           fatal_error(0, "Custom fields problem, '".$field['name']."' exists in entry table but not in repeat table");
         }
         
@@ -1284,7 +1284,7 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   else
   {
     // Get the repeat information
-    if (empty($row['repeat_id']))
+    if (!isset($row['repeat_id']))
     {
       $row['rep_type'] = REP_NONE;   // just as a precaution
       $row['repeat_info_time'] = '';
