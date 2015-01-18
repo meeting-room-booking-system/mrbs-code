@@ -405,7 +405,7 @@ function sql_mysql_table_exists($table, $db_conn = null)
 {
   sql_mysql_ensure_handle($db_conn);
 
-  $res = sql_mysql_query1("SHOW TABLES LIKE '".sql_mysql_escape($table)."'");
+  $res = sql_mysql_query1("SHOW TABLES LIKE '" . sql_mysql_escape($table) . "'", $db_conn);
 
   return ($res == -1) ? FALSE : TRUE;
 }

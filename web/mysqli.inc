@@ -439,7 +439,7 @@ function sql_mysqli_table_exists($table, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  $res = sql_mysqli_query1("SHOW TABLES LIKE '".sql_mysqli_escape($table)."'");
+  $res = sql_mysqli_query1("SHOW TABLES LIKE '" . sql_mysqli_escape($table) . "'", $db_conn);
 
   return ($res == -1) ? FALSE : TRUE;
 }
