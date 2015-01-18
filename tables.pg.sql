@@ -130,7 +130,10 @@ CREATE TABLE mrbs_entry
   start_time     int DEFAULT 0 NOT NULL,
   end_time       int DEFAULT 0 NOT NULL,
   entry_type     int DEFAULT 0 NOT NULL,
-  repeat_id      int DEFAULT NULL,
+  repeat_id      int DEFAULT NULL
+                   REFERENCES mrbs_repeat(id)
+                   ON UPDATE CASCADE
+                   ON DELETE CASCADE,
   room_id        int DEFAULT 1 NOT NULL
                    REFERENCES mrbs_room(id)
                    ON UPDATE CASCADE
