@@ -495,7 +495,7 @@ function mrbsDelEntry($user, $id, $series, $all)
   }
 
   // Get rid of any orphaned rows in the repeat table
-  if ($repeat_id > 0 &&
+  if (!empty($repeat_id) &&
       sql_query1("SELECT COUNT(*) FROM $tbl_entry WHERE repeat_id=$repeat_id") == 0)
   {
     sql_command("DELETE FROM $tbl_repeat WHERE id=$repeat_id");
@@ -526,10 +526,13 @@ function mrbsCreateEntry($table, $data)
   $table_no_prefix = utf8_substr($table, utf8_strlen($db_tbl_prefix));  // strip the prefix off the table name
     
   $fields = sql_field_info($table);
-
+  
   foreach ($fields as $field)
   {
     $key = $field['name'];
+    // If the key doesn't exist in the $data array then the database will just use its
+    // default value for the column.    If it does exist and is set to NULL then we'll
+    // write NULL to the database (which may not necessarily be the default value).
     if (array_key_exists($key, $data))
     {
       switch ($key)
@@ -546,7 +549,7 @@ function mrbsCreateEntry($table, $data)
         case 'status':
         case 'ical_sequence':
           $sql_col[] = $key;
-          $sql_val[] = $data[$key];
+          $sql_val[] = (isset($data[$key])) ? (int)$data[$key] : 'NULL';
           break;
         
         // strings  
@@ -559,7 +562,7 @@ function mrbsCreateEntry($table, $data)
         case 'ical_uid':
         case 'ical_recur_id':
           $sql_col[] = $key;
-          $sql_val[] = "'" . sql_escape($data[$key]) . "'";
+          $sql_val[] = (isset($data[$key])) ? "'" . sql_escape($data[$key]) . "'" : 'NULL';
           break;
       
         // special case - rep_opt
@@ -597,13 +600,13 @@ function mrbsCreateEntry($table, $data)
                 }
                 else
                 {
-                  $value = $data[$key];
+                  $value = (int)$data[$key];
                 }
                 break;
               default:
                 if (!isset($data[$key]))
                 {
-                  $value = '';
+                  $value = ($field['is_nullable']) ? 'NULL' : '';
                 }
                 else
                 {
@@ -623,7 +626,7 @@ function mrbsCreateEntry($table, $data)
   
   $sql_col = array_map('sql_quote', $sql_col);
   $sql = "INSERT INTO $table (" . implode(', ', $sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
-
+  
   if (sql_command($sql) < 0)
   {
     // probably because the table hasn't been created properly
@@ -641,7 +644,7 @@ function mrbsCreateEntry($table, $data)
  * $data      - An array containing the entry details
  * 
  * Returns:
- *   0        - An error occured while inserting the entry
+ *   0        - An error occurred while inserting the entry
  *   non-zero - The entry's ID
  */
 function mrbsCreateSingleEntry($data)
@@ -676,7 +679,7 @@ function mrbsCreateSingleEntry($data)
  * $data      - An array containing the entry details
  *
  * Returns:
- *   0        - An error occured while inserting the entry
+ *   0        - An error occurred while inserting the entry
  *   non-zero - The entry's ID
  */
 function mrbsCreateRepeatEntry($data)
@@ -905,7 +908,7 @@ function mrbsCreateRepeatingEntrys($data)
   if (empty($reps))
   {
     $data['entry_type'] = ENTRY_SINGLE;
-    $data['repeat_id'] = 0;
+    $data['repeat_id'] = NULL;
     $id = mrbsCreateSingleEntry($data);
     $result['id'] = $id;
     $result['series'] = FALSE;
@@ -967,6 +970,36 @@ function mrbsCreateRepeatingEntrys($data)
   return $result;
 }
 
+
+// Gets the repeat_id for an entry in the entry table with id $entry_id
+// Returns the repeat_id or NULL
+function get_repeat_id($entry_id)
+{
+  global $tbl_entry;
+  
+  $sql = "SELECT repeat_id
+            FROM $tbl_entry
+           WHERE id=$entry_id
+           LIMIT 1";
+           
+  $res = sql_query($sql);
+  
+  if ($res === FALSE)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
+  }
+  if (sql_count($res) == 0)
+  {
+    // This should not happen
+    trigger_error('$entry_id=' . "$entry_id does not exist.", E_USER_NOTICE);
+    return NULL;
+  }
+  $row = sql_row_keyed($res, 0);
+  return $row['repeat_id'];
+}
+
+
 // Update the time of last reminding.
 // If the entry is part of a repeating series, then also increment
 // the last reminder time in the repeat table and all the individual 
@@ -1004,8 +1037,8 @@ function mrbsUpdateLastReminded($id, $series)
              WHERE id=$id";
     if (sql_command($sql) > 0)
     {
-      $repeat_id = sql_query1("SELECT repeat_id FROM $tbl_entry WHERE id=$id LIMIT 1");
-      if ($repeat_id >= 0)
+      $repeat_id = get_repeat_id($entry_id);
+      if (isset($repeat_id))
       {
         $sql = "UPDATE $tbl_repeat
                    SET reminded=$now,
@@ -1597,19 +1630,15 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
   }
 
   // When checking for overlaps, for Edit (not New), ignore this entry and series:
-  $repeat_id = 0;
   if (isset($id))
   {
     $ignore_id = $id;
-    $repeat_id = sql_query1("SELECT repeat_id FROM $tbl_entry WHERE id=$id LIMIT 1");
-    if ($repeat_id < 0)
-    {
-      $repeat_id = 0;
-    }
+    $repeat_id = get_repeat_id($id);
   }
   else
   {
     $ignore_id = 0;
+    $repeat_id = NULL;
   }
 
   // Acquire mutex to lock out others trying to book the same slot(s).
@@ -1801,7 +1830,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
 
     if ($booking['rep_type'] == REP_NONE)
     {
-      $booking['entry_type'] = ($repeat_id > 0) ? ENTRY_RPT_CHANGED : ENTRY_SINGLE;
+      $booking['entry_type'] = (isset($repeat_id)) ? ENTRY_RPT_CHANGED : ENTRY_SINGLE;
       $booking['repeat_id'] = $repeat_id;
     }
     // Add in the list of bookings to skip
