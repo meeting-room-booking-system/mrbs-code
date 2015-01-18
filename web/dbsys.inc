@@ -799,6 +799,13 @@ function db_get_userpass()
 $f = "sql_${dbsys}_default_connect";
 $f();
 
+// Sanity check:  check that we can access the MRBS tables.  If we can't, it's
+// either because they don't exist or we don't have permission.
+if (!sql_table_exists($tbl_entry))
+{
+  fatal_error(FALSE, get_vocab('fatal_no_tables'), FALSE);
+}
+
 // Default version is 0, before we had schema versions
 $current_db_schema_version = 0;
 $current_local_db_schema_version = 0;
@@ -819,11 +826,8 @@ if (sql_table_exists($tbl_variables))
 
 // If either of the database schema version numbers are out of date, then 
 // upgrade the database - provided of course that the entry table exists.
-// (We check that the entry table exists just in case this is a new installation
-// and they've forgotten to create the database tables)
-if ((($current_db_schema_version < $db_schema_version) || 
-     ($current_local_db_schema_version < $local_db_schema_version)) &&
-    sql_table_exists($tbl_entry))
+if (($current_db_schema_version < $db_schema_version) || 
+    ($current_local_db_schema_version < $local_db_schema_version))
 {
   // Upgrade needed
 
