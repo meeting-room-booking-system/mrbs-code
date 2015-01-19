@@ -12,6 +12,22 @@ ALTER TABLE %DB_TBL_PREFIX%entry
   
 UPDATE %DB_TBL_PREFIX%entry
   SET repeat_id=NULL WHERE repeat_id=0;
+  
+-- Tidy up the database getting rid of any zombie rows which would prevent
+-- the foreign key being created.   Note that these rows will not be visible to users 
+-- and admins through MRBS.   They have most likely been created when a row has been
+-- deleted from a table using a database admin tool, rather than through MRBS.  Of course,
+-- foreign keys will stop this happening in the future.
+
+DELETE FROM %DB_TBL_PREFIX%entry
+  WHERE repeat_id IS NOT NULL
+  AND repeat_id NOT IN (SELECT id FROM %DB_TBL_PREFIX%repeat);
+
+-- Also, while we're at it, get rid of any redundant entries in the repeat table, ie rows
+-- that are not referenced by a row in the entry table.
+DELETE FROM %DB_TBL_PREFIX%repeat
+  WHERE id NOT IN (SELECT repeat_id FROM %DB_TBL_PREFIX%entry WHERE repeat_id IS NOT NULL);
+  
 
 ALTER TABLE %DB_TBL_PREFIX%entry
   ADD FOREIGN KEY (repeat_id) 
