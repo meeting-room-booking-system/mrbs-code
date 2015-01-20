@@ -873,9 +873,8 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
   // Accumulate hours/periods used, clipped to report range dates:
   if ($row['enable_periods'])
   {
-    $dur = (min((int)$row['end_time'], $report_end) - 
-            max((int)$row['start_time'], $report_start)) / 60;
-    $increment = ($dur % $max_periods) + floor($dur/MINUTES_PER_DAY) * $max_periods;
+    $increment = getPeriodInterval(max($row['start_time'], $report_start),
+                                   min($row['end_time'], $report_end));
     $room_hash[$room] = MODE_PERIODS;
   }
   else

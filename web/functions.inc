@@ -305,6 +305,50 @@ function fromTimeString(&$units, $dur_units)
 }
 
 
+// Gets the interval in periods for a booking with $start_time and $end_time
+// Takes account of DST
+function getPeriodInterval($start_time, $end_time)
+{
+  global $periods;
+  
+  $periods_per_day = count($periods);
+  
+  $startDate = new DateTime();
+  $startDate->setTimestamp($start_time);
+  $endDate = new DateTime();
+  $endDate->setTimestamp($end_time);
+  
+  // Set both dates to midnight so that we can compare them and get an integral
+  // number of days difference
+  $startDate->modify('00:00');
+  $endDate->modify('00:00');
+  
+  // Calculate the difference in days
+  $interval = $startDate->diff($endDate);
+  $interval_days = $interval->format('%a');
+  
+  if ($interval_days == 0)
+  {
+    // If the interval starts and ends on the same day, the we just calculate the number
+    // of periods by calculating the number of minutes between the start and end times.
+    $result = ($end_time - $start_time)/60;
+  }
+  else
+  {
+    // Otherwise we calculate the number of periods on the first day
+    $startDate->modify('12:00');
+    $startDate->add(new DateInterval('PT' . $periods_per_day . 'M'));
+    $result = getPeriodInterval($start_time, $startDate->getTimestamp());
+    // Add in the number of whole days worth of periods in between
+    $result += ($interval_days - 1) * $periods_per_day;
+    // And add in the number of periods on the last day
+    $result += getPeriodInterval($endDate->modify('12:00')->getTimestamp(), $end_time);
+  }
+  
+  return (int)$result;
+}
+
+
 function toPeriodString($start_period, &$dur, &$units, $translate=TRUE)
 {
   global $periods;
