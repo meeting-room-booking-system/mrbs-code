@@ -248,11 +248,6 @@ $periods[] = "Period&nbsp;2";
 
 // The settings below are global policy settings
 
-// Set a maximum duration for bookings
-$max_duration_enabled = FALSE; // Set to TRUE if you want to enforce a maximum duration
-$max_duration_secs = 60*60*2;  // (seconds) - when using "times"
-$max_duration_periods = 2;     // (periods) - when using "periods"
-
 // Set the maximum number of bookings that can be made by any one user, in an interval,
 // which can be a day, week, month or year, or else in the future.  (A week is defined
 // by the $weekstarts setting).   These are global settings, but you can additionally

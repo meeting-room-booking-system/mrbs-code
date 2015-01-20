@@ -252,7 +252,7 @@ function create_field_entry_advance_booking()
 }
 
 
-function create_field_entry_limits()
+function create_field_entry_max_number()
 {
   global $interval_types,
          $max_per_interval_area_enabled, $max_per_interval_global_enabled,
@@ -295,6 +295,63 @@ function create_field_entry_limits()
 }
 
 
+function create_field_entry_max_duration()
+{
+  global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
+  
+  // The max duration policies
+  echo "<fieldset>\n";
+  echo "<legend>" . get_vocab("booking_durations") . "</legend>\n";
+
+  echo "<div>\n";
+  $params = array('label' => get_vocab("max_duration") . ":",
+                  'name'  => 'area_max_duration_enabled',
+                  'value' => $max_duration_enabled,
+                  'class' => 'enabler');
+  generate_checkbox($params);
+  echo "</div>\n";
+  
+  echo "<div>\n";
+  $attributes = array('class="text"',
+                      'type="number"',
+                      'min="0"',
+                      'step="1"');
+  $params = array('name'       => 'area_max_duration_periods',
+                  'label'      => get_vocab("mode_periods") . ':',
+                  'value'      => $max_duration_periods,
+                  'attributes' => $attributes);
+  generate_input($params);
+  echo "</div>\n";
+  
+  echo "<div>\n";
+  $max_duration_value = $max_duration_secs;
+  toTimeString($max_duration_value, $max_duration_units);
+  $attributes = array('class="text"',
+                      'type="number"',
+                      'min="0"',
+                      'step="1"');
+  $params = array('name'       => 'area_max_duration_value',
+                  'label'      => get_vocab("mode_times") . ':',
+                  'value'      => $max_duration_value,
+                  'attributes' => $attributes);
+  generate_input($params);
+  
+  $units = array("seconds", "minutes", "hours", "days", "weeks");
+  $options = array();
+  foreach ($units as $unit)
+  {
+    $options[$unit] = get_vocab($unit);
+  }
+  $params = array('name'    => 'area_max_duration_units',
+                  'value'   => array_search($max_duration_units, $options),
+                  'options' => $options);
+  generate_select($params);
+  echo "</div>\n";
+  
+  echo "</fieldset>\n";
+}
+
+
 // Get non-standard form variables
 $phase = get_form_var('phase', 'int');
 $new_area = get_form_var('new_area', 'int');
@@ -332,6 +389,10 @@ $area_min_delete_ahead_units = get_form_var('area_min_delete_ahead_units', 'stri
 $area_max_delete_ahead_enabled = get_form_var('area_max_delete_ahead_enabled', 'string');
 $area_max_delete_ahead_value = get_form_var('area_max_delete_ahead_value', 'int');
 $area_max_delete_ahead_units = get_form_var('area_max_delete_ahead_units', 'string');
+$area_max_duration_enabled = get_form_var('area_max_duration_enabled', 'string');
+$area_max_duration_periods = get_form_var('area_max_duration_periods', 'int');
+$area_max_duration_value = get_form_var('area_max_duration_value', 'int');
+$area_max_duration_units = get_form_var('area_max_duration_units', 'string');
 $area_private_enabled = get_form_var('area_private_enabled', 'string');
 $area_private_default = get_form_var('area_private_default', 'int');
 $area_private_mandatory = get_form_var('area_private_mandatory', 'string');
@@ -602,6 +663,8 @@ if ($phase == 2)
     fromTimeString($area_min_delete_ahead_value, $area_min_delete_ahead_units);
     fromTimeString($area_max_delete_ahead_value, $area_max_delete_ahead_units);
     
+    fromTimeString($area_max_duration_value, $area_max_duration_units);
+    
     // If we are using periods, round these down to the nearest whole day
     // (anything less than a day is meaningless when using periods)
     if ($area_enable_periods)
@@ -627,6 +690,7 @@ if ($phase == 2)
                   'area_max_create_ahead_enabled',
                   'area_min_delete_ahead_enabled',
                   'area_max_delete_ahead_enabled',
+                  'area_max_duration_enabled',
                   'area_private_enabled',
                   'area_private_default',
                   'area_private_mandatory',
@@ -709,6 +773,7 @@ if ($phase == 2)
       $assign_array[] = "max_create_ahead_enabled=" . $area_max_create_ahead_enabled;
       $assign_array[] = "min_delete_ahead_enabled=" . $area_min_delete_ahead_enabled;
       $assign_array[] = "max_delete_ahead_enabled=" . $area_max_delete_ahead_enabled;
+      $assign_array[] = "max_duration_enabled=" . $area_max_duration_enabled;
 
       if (isset($area_min_create_ahead_value))
       {
@@ -725,6 +790,11 @@ if ($phase == 2)
       if (isset($area_max_delete_ahead_value))
       {
         $assign_array[] = "max_delete_ahead_secs=" . $area_max_delete_ahead_value;
+      }
+      if (isset($area_max_duration_value))
+      {
+        $assign_array[] = "max_duration_secs=" . $area_max_duration_value;
+        $assign_array[] = "max_duration_periods=" . $area_max_duration_periods;
       }
       
       foreach($interval_types as $interval_type)
@@ -1233,7 +1303,8 @@ if (isset($change_area) &&!empty($area))
   echo "<fieldset id=\"booking_policies\">\n";
   echo "<legend>" . get_vocab("booking_policies") . "</legend>\n";
   create_field_entry_advance_booking();
-  create_field_entry_limits();
+  create_field_entry_max_number();
+  create_field_entry_max_duration();
   echo "</fieldset>\n";
   
   

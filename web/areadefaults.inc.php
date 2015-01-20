@@ -156,6 +156,14 @@ $max_delete_ahead_secs = 60*60*24*7;  // (seconds) no more than one week ahead
 // will allow somebody to make a booking at 11:59 pm for the first period the next day, which
 // which may occur at 8.00 am.
 
+
+// Set a maximum duration for bookings
+$max_duration_enabled = FALSE; // Set to TRUE if you want to enforce a maximum duration
+$max_duration_secs = 60*60*2;  // (seconds) - when using "times"
+$max_duration_periods = 2;     // (periods) - when using "periods"
+
+
+
 // DEFAULT VALUES FOR NEW AREAS
 // Set the maximum number of bookings that can be made in an area by any one user, in an
 // interval, which can be a day, week, month or year, or else in the future.  (A week is

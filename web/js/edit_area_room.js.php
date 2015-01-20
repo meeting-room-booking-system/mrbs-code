@@ -249,7 +249,16 @@ init = function() {
   // so that the inputs are enabled/disabled correctly initially.
   ?>
   $('.enabler').change(function(){
-      $(this).nextAll('input, select').attr('disabled', !$(this).is(':checked'));
+      var enablerChecked = $(this).is(':checked');
+      if ($(this).attr('id') === 'area_max_duration_enabled')
+      {
+        <?php // This is structured slightly differently ?>
+        $('#area_max_duration_periods, #area_max_duration_value, #area_max_duration_units').prop('disabled', !enablerChecked);
+      }
+      else
+      {
+        $(this).nextAll('input, select').prop('disabled', !enablerChecked);
+      }
     })
     .change();
     

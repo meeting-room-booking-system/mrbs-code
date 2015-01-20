@@ -53,6 +53,9 @@ CREATE TABLE mrbs_area
   max_per_year              int DEFAULT 0 NOT NULL,
   max_per_future_enabled    tinyint(1) DEFAULT 0 NOT NULL,
   max_per_future            int DEFAULT 0 NOT NULL,
+  max_duration_enabled      tinyint(1) DEFAULT 0 NOT NULL,
+  max_duration_secs         int DEFAULT 0 NOT NULL,
+  max_duration_periods      int DEFAULT 0 NOT NULL,
   custom_html               text CHARACTER SET utf8 COLLATE utf8_general_ci,
   approval_enabled          tinyint(1),
   reminders_enabled         tinyint(1),
@@ -185,6 +188,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '42');
+  VALUES ( 'db_version', '43');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

@@ -1686,6 +1686,7 @@ function get_area_settings($area)
   global $private_enabled, $private_default, $private_mandatory, $private_override;
   global $min_create_ahead_enabled, $max_create_ahead_enabled, $min_create_ahead_secs, $max_create_ahead_secs;
   global $min_delete_ahead_enabled, $max_delete_ahead_enabled, $min_delete_ahead_secs, $max_delete_ahead_secs;
+  global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
   global $approval_enabled, $reminders_enabled, $enable_periods;
   global $confirmation_enabled, $confirmed_default, $timezone;
   global $max_per_interval_area_enabled, $max_per_interval_area;
@@ -1705,6 +1706,7 @@ function get_area_settings($area)
                    'min_create_ahead_secs', 'max_create_ahead_secs',
                    'min_delete_ahead_enabled', 'max_delete_ahead_enabled',
                    'min_delete_ahead_secs', 'max_delete_ahead_secs',
+                   'max_duration_enabled', 'max_duration_secs', 'max_duration_periods',
                    'max_per_day_enabled', 'max_per_day',
                    'max_per_week_enabled', 'max_per_week',
                    'max_per_month_enabled', 'max_per_month',
