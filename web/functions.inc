@@ -565,19 +565,31 @@ function get_start_last_slot($month, $day, $year)
 //    $translate      boolean whether to translate into the browser language
 function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
 {
+  global $periods;
+  
   $result = array();
-  $result['duration'] = $end_time - $start_time;
-  // Need to make DST correct in opposite direction to entry creation
-  // so that user see what he expects to see
-  $result['duration'] -= cross_dst($start_time, $end_time);
+
   if ($enable_periods)
   {
-    $time = getdate($start_time);
-    $start_period = $time['minutes'];
-    toPeriodString($start_period, $result['duration'], $result['dur_units'], $translate);
+    $periods_per_day = count($periods);
+    $n_periods = getPeriodInterval($start_time, $end_time);  // this handles DST
+    if (($n_periods % $periods_per_day) == 0)
+    {
+      $result['duration'] =  intval($n_periods/$periods_per_day);
+      $result['dur_units'] = ($translate) ? get_vocab('days') : 'days';
+    }
+    else
+    {
+      $result['duration'] = $n_periods;
+      $result['dur_units'] = ($translate) ? get_vocab('periods') : 'periods';
+    }
   }
   else
   {
+    $result['duration'] = $end_time - $start_time;
+    // Need to make DST correct in opposite direction to entry creation
+    // so that user see what he expects to see
+    $result['duration'] -= cross_dst($start_time, $end_time);
     toTimeString($result['duration'], $result['dur_units'], $translate);
   }
   return $result;
