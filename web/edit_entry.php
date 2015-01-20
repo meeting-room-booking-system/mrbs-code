@@ -1027,7 +1027,8 @@ if ($res)
 // Get the details of all the enabled areas
 $areas = array();
 $sql = "SELECT id, area_name, resolution, default_duration, enable_periods, timezone,
-               morningstarts, morningstarts_minutes, eveningends , eveningends_minutes
+               morningstarts, morningstarts_minutes, eveningends , eveningends_minutes,
+               max_duration_enabled, max_duration_secs, max_duration_periods
           FROM $tbl_area
          WHERE disabled=0
       ORDER BY area_name";
@@ -1042,11 +1043,6 @@ if ($res)
     {
       $row['resolution'] = 60;
     }
-    // The following config settings aren't yet per-area, but we'll treat them as if
-    // they are to make it easier to change them to per-area settings in the future.
-    $row['max_duration_enabled'] = $max_duration_enabled;
-    $row['max_duration_secs']    = $max_duration_secs;
-    $row['max_duration_periods'] = $max_duration_periods;
     // Generate some derived settings
     $row['max_duration_qty']     = $row['max_duration_secs'];
     toTimeString($row['max_duration_qty'], $row['max_duration_units']);
