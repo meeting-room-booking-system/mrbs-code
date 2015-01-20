@@ -703,9 +703,15 @@ function getDuration(from, to, days)
   var durDays;
   var minutesPerDay = <?php echo MINUTES_PER_DAY ?>;
 
+  
   durUnits = (enablePeriods) ? '<?php echo "periods" ?>' : '<?php echo "minutes" ?>';
   duration = to - from;
   duration = Math.floor((to - from) / 60);
+  
+  if (enablePeriods)
+  {
+    duration++;  <?php // a period is a period rather than a point ?>
+  }
   
   <?php
   // Adjust the days and duration so that 0 <= duration < minutesPerDay.    If we're using
@@ -715,21 +721,15 @@ function getDuration(from, to, days)
   if (durDays !== 0)
   {
     days += durDays;
-    duration -= durDays * ((enablePeriods) ? $('#rooms' + currentArea).find('option').length : minutesPerDay);
+    duration -= durDays * ((enablePeriods) ? $('#start_seconds' + currentArea).find('option').length : minutesPerDay);
   }
   
-  if (enablePeriods)
+  if (!enablePeriods && (duration >= 60))
   {
-    duration++;  <?php // a period is a period rather than a point ?>
+    durUnits = "hours";
+    duration = durFormat(duration/60);
   }
-  else
-  {
-    if (duration >= 60)
-    {
-      durUnits = "hours";
-      duration = durFormat(duration/60);
-    }
-  }
+
   <?php
   // As durFormat returns a string, duration can now be either
   // a number or a string, so convert it to a string so that we
@@ -752,6 +752,7 @@ function getDuration(from, to, days)
     text += duration + ' ';
     text += (duration === '1') ? vocab[durUnits].singular : vocab[durUnits].plural;
   }
+
   return text;
 }
   
