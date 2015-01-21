@@ -857,9 +857,7 @@ function increment_count(&$array, $index1, $index2, $increment)
 function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
                     &$room_hash, &$name_hash)
 {
-  global $periods, $output_format;
-  
-  $max_periods = count($periods);
+  global $output_format;
   
   $row['enable_periods']; ////////////////////////
   // Use brief description, created by or type as the name:
