@@ -3,7 +3,7 @@ namespace MRBS;
 
 class DateTime extends \DateTime
 {
-  // Workaround for a bug that was fixed in PHP 5.3.6
+  // Workaround for a bug that was fixed in PHP 5.3.6 [modify('12:00') doesn't do anything]
   // Only supports a limited range of $modify strings for PHP < 5.3.6.   Throws
   // an exception if passed a string that it can't handle (maybe it should just
   // generate a warning? - that's what the global DateTime does)
