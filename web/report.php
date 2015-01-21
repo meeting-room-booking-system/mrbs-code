@@ -877,10 +877,13 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
     // on those days.   Otherwise if the report starts or ends in the middle of a multi-day
     // booking we'll get all those spurious minutes before noon or between the end of
     // the last period and midnight
-    $startDate = new DateTime();
+    
+    // Need to use the MRBS version of DateTime to get round a bug in modify()
+    // in PHP before 5.3.6
+    $startDate = new MRBS\DateTime();
     $startDate->setTimestamp($report_start)->modify('12:00');
     
-    $endDate = new DateTime();
+    $endDate = new MRBS\DateTime();
     $endDate->setTimestamp($report_end)->modify('12:00');
     $endDate->sub(new DateInterval('P1D'));  // Go back one day because the $report_end is at 00:00 the day after
     $endDate->add(new DateInterval('PT' . $periods_per_day . 'M'));

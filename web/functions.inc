@@ -313,15 +313,17 @@ function getPeriodInterval($start_time, $end_time)
   
   $periods_per_day = count($periods);
   
-  $startDate = new DateTime();
+  // Need to use the MRBS version of DateTime to get round a bug in modify()
+  // in PHP before 5.3.6
+  $startDate = new MRBS\DateTime();
   $startDate->setTimestamp($start_time);
-  $endDate = new DateTime();
+  $endDate = new MRBS\DateTime();
   $endDate->setTimestamp($end_time);
   
   // Set both dates to noon so that we can compare them and get an integral
   // number of days difference.  Noon also happens to be when periods start,
   // so will be useful in a moment.
-  $startDate->modify('12:00');  // This won't work in PHP < 5.3.6 (bug)
+  $startDate->modify('12:00');
   $endDate->modify('12:00');
   
   // Calculate the difference in days

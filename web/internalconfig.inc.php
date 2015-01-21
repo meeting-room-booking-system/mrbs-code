@@ -113,8 +113,7 @@ if (isset($max_book_ahead_secs))
  ********************************************************/
 
 // Check PHP version
-// We need 5.3.6 because it fixes a bug that causes DateTime::modify('noon') not to work
-$min_PHP_version = '5.3.6';
+$min_PHP_version = '5.3.0';
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, $min_PHP_version) < 0)
 {
   die("MRBS requires PHP $min_PHP_version or above.   This server is running version " . PHP_VERSION . ".");

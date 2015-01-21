@@ -6,6 +6,7 @@
 // are assigned to variables will change depending on the context in which the file
 // is called.
 
+require_once "lib/autoload.inc";
 require "grab_globals.inc.php";
 require_once "systemdefaults.inc.php";
 require_once "areadefaults.inc.php";
