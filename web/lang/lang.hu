@@ -22,7 +22,6 @@ $vocab["report"]             = "Riport";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Segítség";
 $vocab["search"]             = "Keresés";
-$vocab["not_php3"]           = "FIGYELEM: Ez valószínűleg nem működik PHP3-mal.";
 $vocab["outstanding"]        = "függőben lévő foglalások";
 
 // Used in day.php

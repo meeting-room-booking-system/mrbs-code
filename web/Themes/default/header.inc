@@ -77,11 +77,7 @@ function print_theme_header($day, $month, $year, $area, $room)
 
     <div class="screenonly">
 
-<?php // show a warning if this is using a low version of php
-  if (substr(phpversion(), 0, 1) == 3)
-  {
-    echo "<h1>" . get_vocab("not_php3") . "</h1>\n";
-  }
+<?php
   if (!empty($locale_warning))
   {
     echo "[Warning: ".$locale_warning."]";

@@ -22,7 +22,6 @@ $vocab["report"]             = "דוחות";
 $vocab["admin"]              = "מנהל מערכת";
 $vocab["help"]               = "עזרה";
 $vocab["search"]             = "חיפוש";
-$vocab["not_php3"]           = "אזהרה: נראה כי יש חוסר תאימות עם PHP3";
 $vocab["outstanding"]        = "הזמנות לאישור";
 
 // Used in day.php

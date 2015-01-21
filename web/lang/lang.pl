@@ -18,7 +18,6 @@ $vocab["report"]             = "Raport";
 $vocab["admin"]              = "Administrator";
 $vocab["help"]               = "Pomoc";
 $vocab["search"]             = "Szukaj";
-$vocab["not_php3"]           = "UWAGA: To najprawdopodobniej nie dziala z PHP3";
 
 // Uzyte w day.php
 $vocab["bookingsfor"]        = "Rezerwacja dla";

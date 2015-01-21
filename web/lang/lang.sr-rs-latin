@@ -18,7 +18,6 @@ $vocab["report"]             = "Izveštaji";
 $vocab["admin"]              = "Administrator";
 $vocab["help"]               = "Pomoć";
 $vocab["search"]             = "Pretraga";
-$vocab["not_php3"]           = "UPOZORENJE: Ovo verovatno ne radi sa PHP3";
 $vocab["outstanding"]        = "rezervacije na čekanju";
 
 // Used in day.php

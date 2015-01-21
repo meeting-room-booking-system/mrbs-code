@@ -18,7 +18,6 @@ $vocab["report"]             = "Rapport";
 $vocab["admin"]              = "Gestion";
 $vocab["help"]               = "Aide";
 $vocab["search"]             = "Recherche&nbsp;";
-$vocab["not_php3"]           = "ATTENTION&nbsp;: Cette application peut ne pas fonctionner correctement avec PHP3";
 $vocab["outstanding"]        = "en attendant les réservations";
 
 // Used in day.php

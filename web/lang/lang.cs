@@ -18,7 +18,6 @@ $vocab["report"]             = "Výpis";
 $vocab["admin"]              = "Administrátor";
 $vocab["help"]               = "Nápověda";
 $vocab["search"]             = "Hledat";
-$vocab["not_php3"]           = "UPOZORNĚNÍ: Toto zřejmě není funkční s PHP3";
 $vocab["outstanding"]        = "čekající na schválení";
 
 // Used in day.php

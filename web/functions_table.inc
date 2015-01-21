@@ -68,7 +68,6 @@ function map_add_booking ($row, &$column, $am7, $pm7)
   // 1100  A  B
   // 1200  B
   //
-  // Note: int casts on database rows for max may be needed for PHP3.
   // Adjust the starting and ending times so that bookings which don't
   // start or end at a recognized time still appear.
   

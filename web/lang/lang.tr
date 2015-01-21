@@ -20,8 +20,6 @@ $vocab["report"]             = "Rapor";
 $vocab["admin"]              = "Yönetici";
 $vocab["help"]               = "Yardım";
 $vocab["search"]             = "Arama";
-
-$vocab["not_php3"]           = "UYARI: Yüksek ihtimalle PHP3 ile çalışmaz";
 $vocab["outstanding"]        = "askıdaki yer ayırtma";
 
 // Used in day.php

@@ -18,7 +18,6 @@ $vocab["report"]             = "Rapport";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Hjälp";
 $vocab["search"]             = "Sök";
-$vocab["not_php3"]           = "VARNING: Detta fungerar förmodligen inte med PHP3";
 $vocab["outstanding"]        = "väntande bokningar";
 
 // Used in day.php
