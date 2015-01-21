@@ -862,11 +862,16 @@ if (!function_exists('locale_lookup'))
   // Charsets (eg '.UTF-8') are stripped off $locale
   //
   // Returns the best match, or else an empty string if no match
-  function locale_lookup($langtag, $locale)
+  function locale_lookup($langtag, $locale, $canonicalize = FALSE)
   {
-    if (func_num_args() > 2)
+    if (!empty($canonicalize))
     {
-      throw new Exception("MRBS: optional parameters to Locale::lookup() not yet supported");
+      throw new Exception('MRBS: the MRBS version of Locale::lookup() does not yet support $canonicalize = TRUE');
+    }
+    
+    if (func_num_args() > 3)
+    {
+      throw new Exception('MRBS: optional fourth parameter to Locale::lookup() not yet supported');
     }
     
     // Get the langtags and locale in the same format, ie separated by '-' and
@@ -965,7 +970,10 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
   // Find the best fit.
   foreach ($lang_preferences as $lang => $qual)
   {
-    $locale = locale_lookup($available_langtags, $lang);
+    // For some reason the third parameter to locale_lookup() is mandatory in 5.3.0.
+    // Can't see anything about it in the manual - must be a bug that was fixed in
+    // later versions.
+    $locale = locale_lookup($available_langtags, $lang, $canonicalize = FALSE);
     if (!empty($locale))
     {
       if (in_array($locale, $default_langtags))
