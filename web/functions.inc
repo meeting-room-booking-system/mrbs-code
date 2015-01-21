@@ -318,10 +318,11 @@ function getPeriodInterval($start_time, $end_time)
   $endDate = new DateTime();
   $endDate->setTimestamp($end_time);
   
-  // Set both dates to midnight so that we can compare them and get an integral
-  // number of days difference
-  $startDate->modify('00:00');
-  $endDate->modify('00:00');
+  // Set both dates to noon so that we can compare them and get an integral
+  // number of days difference.  Noon also happens to be when periods start,
+  // so will be useful in a moment.
+  $startDate->modify('12:00');  // This won't work in PHP < 5.3.6 (bug)
+  $endDate->modify('12:00');
   
   // Calculate the difference in days
   $interval = $startDate->diff($endDate);
@@ -336,13 +337,12 @@ function getPeriodInterval($start_time, $end_time)
   else
   {
     // Otherwise we calculate the number of periods on the first day
-    $startDate->modify('12:00');
     $startDate->add(new DateInterval('PT' . $periods_per_day . 'M'));
     $result = getPeriodInterval($start_time, $startDate->getTimestamp());
     // Add in the number of whole days worth of periods in between
     $result += ($interval_days - 1) * $periods_per_day;
     // And add in the number of periods on the last day
-    $result += getPeriodInterval($endDate->modify('12:00')->getTimestamp(), $end_time);
+    $result += getPeriodInterval($endDate->getTimestamp(), $end_time);
   }
   
   return (int)$result;
