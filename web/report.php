@@ -857,7 +857,9 @@ function increment_count(&$array, $index1, $index2, $increment)
 function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
                     &$room_hash, &$name_hash)
 {
-  global $output_format;
+  global $output_format, $periods;
+  
+  $periods_per_day = count($periods);
   
   $row['enable_periods']; ////////////////////////
   // Use brief description, created by or type as the name:
@@ -871,8 +873,20 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
   // Accumulate hours/periods used, clipped to report range dates:
   if ($row['enable_periods'])
   {
-    $increment = getPeriodInterval(max($row['start_time'], $report_start),
-                                   min($row['end_time'], $report_end));
+    // We need to set the start and end of the report to the start and end of periods
+    // on those days.   Otherwise if the report starts or ends in the middle of a multi-day
+    // booking we'll get all those spurious minutes before noon or between the end of
+    // the last period and midnight
+    $startDate = new DateTime();
+    $startDate->setTimestamp($report_start)->modify('12:00');
+    
+    $endDate = new DateTime();
+    $endDate->setTimestamp($report_end)->modify('12:00');
+    $endDate->sub(new DateInterval('P1D'));  // Go back one day because the $report_end is at 00:00 the day after
+    $endDate->add(new DateInterval('PT' . $periods_per_day . 'M'));
+    
+    $increment = getPeriodInterval(max($row['start_time'], $startDate->getTimestamp()),
+                                   min($row['end_time'], $endDate->getTimestamp()));
     $room_hash[$room] = MODE_PERIODS;
   }
   else
