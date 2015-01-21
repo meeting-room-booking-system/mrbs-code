@@ -12,7 +12,7 @@ info on setting these up.   You need to know how to install, secure, run,
 maintain, and back up your chosen database system.
 
 No optional PHP packages (other than the database system) are required for
-this application.  PHP Version 4 or later is required.
+this application.  PHP Version 5.3.6 or later is required.
 
 You can run PHP either as a CGI or with a direct module interface (also called 
 SAPI). These servers include Apache, Microsoft Internet Information Server, 
