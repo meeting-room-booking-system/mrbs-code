@@ -53,10 +53,13 @@ class DateTime extends \DateTime
    $pattern = '/([01][0-9]|[2][0-3])[.:]?([0-5][0-9])/';
    if (preg_match($pattern, $modify, $matches))
    {
-     return array('hours'   => array('mode'     => 'absolute',
-                                     'quantity' => $matches[1]),
-                  'minutes' => array('mode'     => 'absolute',
-                                     'quantity' => $matches[2]));
+       // The seconds are assumed to be 0 in an hh:mm pattern
+       return array('hours'   => array('mode'     => 'absolute',
+                                       'quantity' => $matches[1]),
+                    'minutes' => array('mode'     => 'absolute',
+                                       'quantity' => $matches[2]),
+                    'seconds' => array('mode'     => 'absolute',
+                                       'quantity' => 0));
    }
    
    // Could add more tests later if need be.
