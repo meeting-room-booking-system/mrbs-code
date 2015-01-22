@@ -852,61 +852,6 @@ function get_language_qualifiers()
 }
 
 
-if (!function_exists('locale_lookup'))
-{
-  // Emulates the PHP locale_lookup() function
-  
-  // Searches the items in the array $langtag for the best match to the language range
-  // specified in $locale according to RFC 4647's lookup algorithm.   The langtags and
-  // locale can have subtags separated by '-' or '_' and the search is case insensitive.
-  // Charsets (eg '.UTF-8') are stripped off $locale
-  //
-  // Returns the best match, or else an empty string if no match
-  function locale_lookup($langtag, $locale, $canonicalize = FALSE)
-  {
-    if (!empty($canonicalize))
-    {
-      throw new Exception('MRBS: the MRBS version of Locale::lookup() does not yet support $canonicalize = TRUE');
-    }
-    
-    if (func_num_args() > 3)
-    {
-      throw new Exception('MRBS: optional fourth parameter to Locale::lookup() not yet supported');
-    }
-    
-    // Get the langtags and locale in the same format, ie separated by '-' and
-    // all lower case
-    $standard_langtags = locale_standardise($langtag);
-    // Strip off any charset (eg '.UTF-8');
-    $locale = preg_replace('/\..*$/', '', $locale);
-    $standard_locale = locale_standardise($locale);
-    
-    // Look for a match.   If there isn't one remove the last subtag from the end
-    // of the locale and try again.
-    while (FALSE === ($index = array_search($standard_locale, $standard_langtags)))
-    {
-      if (FALSE === ($pos = strrpos($standard_locale, '-')))
-      {
-        return '';
-      }
-      $standard_locale = substr($standard_locale, 0, $pos);
-    }
-    
-    return $langtag[$index];  // Return the match in its original format
-  }
-  
-  // Converts $langtag, which can be a string or an array, into a standard form with
-  // subtags all in lower case and separated by '-';
-  function locale_standardise($langtag)
-  {
-    $glue = ',';
-    $result = (is_array($langtag)) ? implode($glue, $langtag) : $langtag;
-    $result = strtolower(str_replace('_', '-', $result));
-    return (is_array($langtag)) ? explode($glue, $result) : $result;
-  }
-}
-
-
 // Get the best fit language file from $dir given the set of language preferences
 // $lang_preferences (an associative array language => quality_value).   If set,
 // $default_langtags is an array of languages that are already built into the system
@@ -970,10 +915,10 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
   // Find the best fit.
   foreach ($lang_preferences as $lang => $qual)
   {
-    // For some reason the third parameter to locale_lookup() is mandatory in 5.3.0.
+    // For some reason the third parameter to Locale::lookup() is mandatory in 5.3.0.
     // Can't see anything about it in the manual - must be a bug that was fixed in
     // later versions.
-    $locale = locale_lookup($available_langtags, $lang, $canonicalize = FALSE);
+    $locale = Locale::lookup($available_langtags, $lang, $canonicalize = FALSE);
     if (!empty($locale))
     {
       if (in_array($locale, $default_langtags))
