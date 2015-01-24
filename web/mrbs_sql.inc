@@ -1253,8 +1253,8 @@ function mrbsGetBookingInfo($id, $series, $silent=FALSE)
   if (sql_count($res) < 1)
   {
     // It's quite possible that the id will have disappeared, eg if somebody
-    // else has deleted or edited the entry
-    trigger_error("No rows found matching id=$id", E_USER_NOTICE);
+    // else has deleted or edited the entry, or if the back button is pressed
+    // after deleting an entry.
     if ($silent)
     {
       return FALSE;
