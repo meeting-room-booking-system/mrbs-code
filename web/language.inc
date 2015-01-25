@@ -1025,6 +1025,12 @@ function get_charset()
 }
 
 
+function get_mail_charset()
+{
+  return 'utf-8';
+}
+
+
 function get_csv_charset()
 {
   global $csv_charset;

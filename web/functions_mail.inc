@@ -24,12 +24,6 @@ if ($mail_settings['icalendar'])
 }
 
 
-function get_mail_charset()
-{
-  return 'utf-8';
-}
-
-
 function get_mail_locale()
 {
   static $mail_locale;
