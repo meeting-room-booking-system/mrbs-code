@@ -1361,20 +1361,34 @@ init = function(args) {
   // Actions to take when the start and end datepickers are closed
   ?>
   $('#start_datepicker, #end_datepicker').bind('datePickerUpdated', function() {
+    
     <?php
-    // (1) Go and adjust the start and end time/period select options, because
+    // (1) If the end_datepicker isn't visible and we change the start_datepicker,
+    //     then set the end date to be the same as the start date.  (This will be
+    //     the case if multiday bookings are not allowed)
+    ?>
+    if ($(this).attr('id') === 'start_datepicker')
+    {
+      if ($('#end_datepicker').css('visibility') === 'hidden')
+      {
+        $('#end_datepicker_alt').val($('#start_datepicker_alt').val())
+      }
+    }
+    
+    <?php
+    // (2) Go and adjust the start and end time/period select options, because
     //     they are dependent on the start and end dates
     ?>
     adjustSlotSelectors();
     
     <?php
-    // (2) If we're doing Ajax checking of the form then we have to check
+    // (3) If we're doing Ajax checking of the form then we have to check
     //     for conflicts when the datepicker is closed
     ?>
     checkConflicts();
       
     <?php
-    // (3) Check to see whether any time slots should be removed from the time
+    // (4) Check to see whether any time slots should be removed from the time
     //     select on the grounds that they don't exist due to a transition into DST.
     ?>
     checkTimeSlots($(this));
