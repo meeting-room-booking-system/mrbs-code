@@ -762,35 +762,35 @@ function getDuration(from, to, days)
 function getDateDifference()
 {
   var diff,
-      secondsPerDay = <?php echo SECONDS_PER_DAY ?>;
-
-  <?php
-  if (!$is_admin && $auth['only_admin_can_book_multiday'])
+      secondsPerDay = <?php echo SECONDS_PER_DAY ?>,
+      start = $('#start_datepicker_alt').val().split('-'),
+      startDate = new Date(parseInt(start[0], 10), 
+                           parseInt(start[1], 10) - 1,
+                           parseInt(start[2], 10),
+                           12),
+      endDatepickerAlt = $('#end_datepicker_alt'),
+      end,
+      endDate;
+      
+  if (endDatepickerAlt.length == 0)
   {
+    <?php
+    // No end date selector, so assume the end date is
+    // the same as the start date
     ?>
     diff = 0;
-    <?php
   }
   else
   {
-    ?>
-    var start = $('#start_datepicker_alt').val().split('-');
-    var startDate = new Date(parseInt(start[0], 10), 
-                             parseInt(start[1], 10) - 1,
-                             parseInt(start[2], 10),
-                             12);
-    
-    var end = $('#end_datepicker_alt').val().split('-'); 
-    var endDate = new Date(parseInt(end[0], 10), 
-                           parseInt(end[1], 10) - 1,
-                           parseInt(end[2], 10),
-                           12);
+    end = $('#end_datepicker_alt').val().split('-'); 
+    endDate = new Date(parseInt(end[0], 10), 
+                       parseInt(end[1], 10) - 1,
+                       parseInt(end[2], 10),
+                       12);
 
     diff = (endDate - startDate)/(secondsPerDay * 1000);
     diff = Math.round(diff);
-    <?php
   }
-  ?>
     
   return diff;
 }
