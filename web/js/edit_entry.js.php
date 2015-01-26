@@ -957,7 +957,6 @@ function adjustSlotSelectors()
       else
       {
         endValue = startValue + defaultDuration;
-        endValue = Math.min(endValue, parseInt(endSelect.find('option').last().val(), 10));
       }
     }
   }
@@ -977,7 +976,6 @@ function adjustSlotSelectors()
     if (startValue !== oldStartValue)
     {
       endValue = endValue + (startValue - oldStartValue);
-      endValue = Math.min(endValue, parseInt($('#end_seconds' + currentArea).find('option').last().val(), 10));
     }
   }
     
@@ -1106,7 +1104,8 @@ function adjustSlotSelectors()
         endSelect.append(optionClone);
       }
     });
-    
+  
+  endValue = Math.min(endValue, parseInt(endSelect.find('option').last().val(), 10));
   endSelect.val(endValue);
   endSelect.data('current', endValue);
   
