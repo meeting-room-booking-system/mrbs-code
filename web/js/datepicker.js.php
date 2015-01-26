@@ -158,7 +158,11 @@ init = function() {
           });
       }
       
-      span.css('visibility', 'visible');
+      <?php
+      // Set the visibility to 'inherit' rather than 'visible' because the parent
+      // element may itself be hidden, eg if multiday booking is not allowed.
+      ?>
+      span.css('visibility', 'inherit');
       
       $('.ui-datepicker').draggable();
     });
