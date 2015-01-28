@@ -20,15 +20,15 @@ function minicals($year, $month, $day, $area, $room, $dmy) {
 
 class Calendar
 {
-  var $month;
-  var $year;
-  var $day;
-  var $h;
-  var $area;
-  var $room;
-  var $dmy;
+  private $month;
+  private $year;
+  private $day;
+  private $h;
+  private $area;
+  private $room;
+  private $dmy;
     
-  function Calendar($day, $month, $year, $h, $area, $room, $dmy)
+  public function __construct($day, $month, $year, $h, $area, $room, $dmy)
   {
       $this->day   = $day;
       $this->month = $month;
@@ -39,85 +39,7 @@ class Calendar
       $this->dmy   = $dmy;
   }
    
-    
-  function getCalendarLink($month, $year)
-  {
-      return "";
-  }
-  
-  // Takes an optional fourth argument $page (which can be 'day', 'week' or 'month')
-  function getDateLink($day, $month, $year)
-  {
-    $page = (func_num_args() > 3) ? func_get_arg(3) : $this->dmy;
-    if (empty($this->room))
-    {
-      return $page.".php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$this->area;
-    }
-    else
-    {
-      return $page.".php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$this->area."&amp;room=".$this->room;
-    }
-  }
-    
-
-  function getDaysInMonth($month, $year)
-  {
-      if ($month < 1 || $month > 12)
-      {
-          return 0;
-      }
-    
-      $days = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-   
-      $d = $days[$month - 1];
-   
-      if ($month == 2)
-      {
-          // Check for leap year
-          // Forget the 4000 rule, I doubt I'll be around then...
-        
-          if ($year%4 == 0)
-          {
-              if ($year%100 == 0)
-              {
-                  if ($year%400 == 0)
-                  {
-                      $d = 29;
-                  }
-              }
-              else
-              {
-                  $d = 29;
-              }
-          }
-      }
-    
-      return $d;
-  }
-
-  function getFirstDays()
-  {
-    global $weekstarts, $strftime_format;
-
-    $basetime = mktime(12,0,0,6,11+$weekstarts,2000);
-    for ($i = 0, $s = ""; $i < 7; $i++)
-    {
-      $show = $basetime + ($i * SECONDS_PER_DAY);
-      $fl = utf8_strftime($strftime_format['dayname_cal'], $show);
-      // add a class if it's a hidden day so that we can apply special styling
-      if (is_hidden_day(($i + $weekstarts) % 7))
-      {
-        $s .= "<th class=\"hidden\">$fl</th>\n";
-      }
-      else
-      {
-        $s .= "<th>$fl</th>\n";
-      }
-    }
-    return $s;
-  }
-
-  function getHTML()
+  public function getHTML()
   {
     global $weekstarts;
     global $PHP_SELF;
@@ -144,7 +66,7 @@ class Calendar
       $start_highlight_gmtime = $sticky_time - ($skipback * SECONDS_PER_DAY);
     }
       
-    $daysInMonth = $this->getDaysInMonth($this->month, $this->year);
+    $daysInMonth = $this->getMonthDays($this->month, $this->year);
     // $prevYear is the current year unless the previous month is
     // December then you need to decrement the year
     if( $this->month - 1 > 0 )
@@ -157,14 +79,11 @@ class Calendar
       $prevMonth = 12;
       $prevYear = $this->year -1;
     }
-    $daysInPrevMonth = $this->getDaysInMonth($prevMonth, $prevYear);
+    $daysInPrevMonth = $this->getMonthDays($prevMonth, $prevYear);
     $date = mktime(12, 0, 0, $this->month, 1, $this->year);
       
     $first = (strftime("%w",$date) + 7 - $weekstarts) % 7;  // day number of the first day of the month
     $monthName = utf8_strftime($strftime_format['month_cal'], $date);
-      
-    //$prevMonth = $this->getCalendarLink($this->month - 1 >   0 ? $this->month - 1 : 12, $this->month - 1 >   0 ? $this->year : $this->year - 1);
-    //$nextMonth = $this->getCalendarLink($this->month + 1 <= 12 ? $this->month + 1 :  1, $this->month + 1 <= 12 ? $this->year : $this->year + 1);
       
     $s .= "<table class=\"calendar\">\n";
     $s .= "<thead>\n";
@@ -317,8 +236,83 @@ class Calendar
       
     return $s;
   }
-}
+  
+  
+  // Takes an optional fourth argument $page (which can be 'day', 'week' or 'month')
+  private function getDateLink($day, $month, $year)
+  {
+    $page = (func_num_args() > 3) ? func_get_arg(3) : $this->dmy;
+    if (empty($this->room))
+    {
+      return $page.".php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$this->area;
+    }
+    else
+    {
+      return $page.".php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$this->area."&amp;room=".$this->room;
+    }
+  }
+    
+
+  private function getMonthDays($month, $year)
+  {
+      if ($month < 1 || $month > 12)
+      {
+          return 0;
+      }
+    
+      $days = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+   
+      $d = $days[$month - 1];
+   
+      if ($month == 2)
+      {
+          // Check for leap year
+          // Forget the 4000 rule, I doubt I'll be around then...
         
+          if ($year%4 == 0)
+          {
+              if ($year%100 == 0)
+              {
+                  if ($year%400 == 0)
+                  {
+                      $d = 29;
+                  }
+              }
+              else
+              {
+                  $d = 29;
+              }
+          }
+      }
+    
+      return $d;
+  }
+
+  private function getFirstDays()
+  {
+    global $weekstarts, $strftime_format;
+
+    $basetime = mktime(12,0,0,6,11+$weekstarts,2000);
+    for ($i = 0, $s = ""; $i < 7; $i++)
+    {
+      $show = $basetime + ($i * SECONDS_PER_DAY);
+      $fl = utf8_strftime($strftime_format['dayname_cal'], $show);
+      // add a class if it's a hidden day so that we can apply special styling
+      if (is_hidden_day(($i + $weekstarts) % 7))
+      {
+        $s .= "<th class=\"hidden\">$fl</th>\n";
+      }
+      else
+      {
+        $s .= "<th>$fl</th>\n";
+      }
+    }
+    return $s;
+  }
+  
+}
+
+
 $lastmonth = mktime(12, 0, 0, $month-1, 1, $year);
 $thismonth = mktime(12, 0, 0, $month,   $day, $year);
 $nextmonth = mktime(12, 0, 0, $month+1, 1, $year);
