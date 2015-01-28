@@ -307,7 +307,7 @@ function fromTimeString(&$units, $dur_units)
 
 // Gets the interval in periods for a booking with $start_time and $end_time
 // Takes account of DST
-function getPeriodInterval($start_time, $end_time)
+function get_period_interval($start_time, $end_time)
 {
   global $periods;
   
@@ -340,11 +340,11 @@ function getPeriodInterval($start_time, $end_time)
   {
     // Otherwise we calculate the number of periods on the first day
     $startDate->add(new DateInterval('PT' . $periods_per_day . 'M'));
-    $result = getPeriodInterval($start_time, $startDate->getTimestamp());
+    $result = get_period_interval($start_time, $startDate->getTimestamp());
     // Add in the number of whole days worth of periods in between
     $result += ($interval_days - 1) * $periods_per_day;
     // And add in the number of periods on the last day
-    $result += getPeriodInterval($endDate->getTimestamp(), $end_time);
+    $result += get_period_interval($endDate->getTimestamp(), $end_time);
   }
   
   return (int)$result;
@@ -574,7 +574,7 @@ function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
   if ($enable_periods)
   {
     $periods_per_day = count($periods);
-    $n_periods = getPeriodInterval($start_time, $end_time);  // this handles DST
+    $n_periods = get_period_interval($start_time, $end_time);  // this handles DST
     if (($n_periods % $periods_per_day) == 0)
     {
       $result['duration'] =  intval($n_periods/$periods_per_day);
