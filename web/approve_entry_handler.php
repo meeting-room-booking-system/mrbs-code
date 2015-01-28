@@ -73,7 +73,7 @@ if (isset($action))
     case 'more_info':
       // update the last reminded time (the ball is back in the 
       // originator's court, so the clock gets reset)
-      mrbsUpdateLastReminded($id, $series);
+      update_last_reminded($id, $series);
       // update the more info fields
       update_more_info($id, $series, $user, $note);
       $result = TRUE;  // We'll assume success and end an email anyway
@@ -83,7 +83,7 @@ if (isset($action))
     // ACTION = "REMIND"
     case 'remind':
       // update the last reminded time
-      mrbsUpdateLastReminded($id, $series);
+      update_last_reminded($id, $series);
       $result = TRUE;  // We'll assume success and end an email anyway
       break;
       

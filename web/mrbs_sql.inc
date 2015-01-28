@@ -1009,7 +1009,7 @@ function get_repeat_id($entry_id)
 //
 // Returns the number of tuples affected if OK (a number >= 0).
 // Returns -1 on error; use sql_error to get the error message.
-function mrbsUpdateLastReminded($id, $series)
+function update_last_reminded($id, $series)
 {
   global $tbl_entry, $tbl_repeat;
   
