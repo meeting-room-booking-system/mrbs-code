@@ -117,7 +117,7 @@ $is_admin = (authGetUserLevel($user) >= 2);
 // or else if $auth['only_admin_can_book_repeat'] is not set
 $repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
 
-$row = mrbsGetBookingInfo($id, $series);
+$row = get_booking_info($id, $series);
 
 $room = $row['room_id'];
 $area = $row['area_id'];

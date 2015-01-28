@@ -20,7 +20,7 @@ checkAuthorised();
 $user = getUserName();
 
 // Retrieve the booking details
-$data = mrbsGetBookingInfo($id, $series);
+$data = get_booking_info($id, $series);
 $room_id = $data['room_id'];
 
 // Initialise $mail_previous so that we can use it as a parameter for notifyAdminOnBooking
@@ -58,7 +58,7 @@ if (isset($action))
       {
         $is_new_entry = FALSE;
         // Get the current booking data, before we change anything, for use in emails
-        $mail_previous = mrbsGetBookingInfo($id, $series);
+        $mail_previous = get_booking_info($id, $series);
       }
       $start_times = mrbsApproveEntry($id, $series);
       $result = ($start_times !== FALSE);

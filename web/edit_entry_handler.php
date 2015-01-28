@@ -254,7 +254,7 @@ if (!$is_admin && $auth['only_admin_can_book_multiday'])
 // (2) we always get passed start_seconds and end_seconds in the Ajax data
 if ($ajax && $commit)
 {
-  $old_booking = mrbsGetBookingInfo($id, FALSE);
+  $old_booking = get_booking_info($id, FALSE);
   foreach ($formvars as $var => $var_type)
   {
     if (!isset($$var) || (($var_type == 'array') && empty($$var)))

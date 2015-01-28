@@ -37,7 +37,7 @@ if (empty($returl))
   $returl .= "?year=$year&month=$month&day=$day&area=$area";
 }
 
-if ($info = mrbsGetBookingInfo($id, FALSE, TRUE))
+if ($info = get_booking_info($id, FALSE, TRUE))
 {
   $user = getUserName();
   // check that the user is allowed to delete this entry
@@ -64,7 +64,7 @@ if ($info = mrbsGetBookingInfo($id, FALSE, TRUE))
     {
       require_once "functions_mail.inc";
       // Gather all fields values for use in emails.
-      $mail_previous = mrbsGetBookingInfo($id, FALSE);
+      $mail_previous = get_booking_info($id, FALSE);
       // If this is an individual entry of a series then force the entry_type
       // to be a changed entry, so that when we create the iCalendar object we know that
       // we only want to delete the individual entry

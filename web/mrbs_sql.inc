@@ -1138,7 +1138,7 @@ function mrbsApproveEntry($id, $series)
 }
 
 
-// mrbsGetBookingInfo($id, $series)
+// get_booking_info($id, $series)
 //
 // Gets all the details for a booking with $id, which is in the
 // repeat table if $series is set, otherwise in the entry table.
@@ -1146,7 +1146,7 @@ function mrbsApproveEntry($id, $series)
 // Returns the results in an array with keys the same as the table
 // field names.  In the event of an error stops with a fatal error,
 // unless $silent is TRUE, when it returns FALSE.
-function mrbsGetBookingInfo($id, $series, $silent=FALSE)
+function get_booking_info($id, $series, $silent=FALSE)
 {
   global $tbl_entry, $tbl_repeat, $tbl_room, $tbl_area;
 
@@ -1889,11 +1889,11 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
         {
           if ($edit_type == "series")
           {
-            $mail_previous = mrbsGetBookingInfo($repeat_id, TRUE);
+            $mail_previous = get_booking_info($repeat_id, TRUE);
           }
           else
           {
-            $mail_previous = mrbsGetBookingInfo($id, FALSE);
+            $mail_previous = get_booking_info($id, FALSE);
           }
         }
         else
