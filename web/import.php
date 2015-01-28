@@ -320,6 +320,7 @@ function process_event($vevent)
     {
       case 'ORGANIZER':
         $booking['create_by'] = get_create_by($details['value']);
+        $booking['modified_by'] = '';
         break;
       case 'SUMMARY':
         $booking['name'] = $details['value'];
