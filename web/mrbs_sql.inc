@@ -1060,7 +1060,7 @@ function mrbsUpdateLastReminded($id, $series)
 //
 // Returns the number of tuples affected if OK (a number >= 0).
 // Returns -1 on error; use sql_error to get the error message.
-function mrbsUpdateMoreInfo($id, $series, $user, $note)
+function update_more_info($id, $series, $user, $note)
 {
   global $tbl_entry, $tbl_repeat;
   

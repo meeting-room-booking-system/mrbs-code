@@ -75,7 +75,7 @@ if (isset($action))
       // originator's court, so the clock gets reset)
       mrbsUpdateLastReminded($id, $series);
       // update the more info fields
-      mrbsUpdateMoreInfo($id, $series, $user, $note);
+      update_more_info($id, $series, $user, $note);
       $result = TRUE;  // We'll assume success and end an email anyway
       break;
     
