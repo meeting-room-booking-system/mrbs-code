@@ -2006,17 +2006,15 @@ function mrbs_entity_decode($string, $quote_style=ENT_COMPAT, $charset = 'UTF-8'
 // returns FALSE if any one of them is invalid, otherwise TRUE
 function validate_email_list($list)
 {
-  if (!isset($list) || ($list === ''))
+  if (isset($list) && ($list !== ''))
   {
-    return TRUE;
-  }
-  
-  $emails = explode(',', $list);
-  foreach ($emails as $email)
-  {
-    if (FALSE === filter_var(trim($email), FILTER_VALIDATE_EMAIL))
+    $emails = explode(',', $list);
+    foreach ($emails as $email)
     {
-      return FALSE;
+      if (FALSE === filter_var(trim($email), FILTER_VALIDATE_EMAIL))
+      {
+        return FALSE;
+      }
     }
   }
   
