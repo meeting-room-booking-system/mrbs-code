@@ -2006,20 +2006,20 @@ function mrbs_entity_decode($string, $quote_style=ENT_COMPAT, $charset = 'UTF-8'
 // returns FALSE if any one of them is invalid, otherwise TRUE
 function validate_email_list($list)
 {
-  require_once 'Mail/RFC822.php';
-  (!isset($list)) ? $list = '': '';
+  if (!isset($list) || ($list === ''))
+  {
+    return TRUE;
+  }
+  
   $emails = explode(',', $list);
-  $email_validator = new Mail_RFC822();
   foreach ($emails as $email)
   {
-    // if no email address is entered, this is OK, even if isValidInetAddress
-    // does not return TRUE
-    if ( !$email_validator->isValidInetAddress($email, $strict = FALSE)
-         && ('' != $list) )
+    if (FALSE === filter_var(trim($email), FILTER_VALIDATE_EMAIL))
     {
       return FALSE;
     }
   }
+  
   return TRUE;
 }
 
