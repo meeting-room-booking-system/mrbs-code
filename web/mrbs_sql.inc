@@ -1743,7 +1743,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
     
     if ($edit_type == "series")
     {
-      $old_bookings = getBookingsInSeries($repeat_id);
+      $old_bookings = get_bookings_in_series($repeat_id);
     }
     else
     {
@@ -1940,7 +1940,7 @@ function getBooking($id)
   return sql_row_keyed($res, 0);
 }
 
-function getBookingsInSeries($repeat_id)
+function get_bookings_in_series($repeat_id)
 {
   global $tbl_entry;
   
