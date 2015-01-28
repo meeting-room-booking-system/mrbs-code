@@ -23,7 +23,7 @@ if (!isset($auth['session']))
   $auth['session']='http';
 }
 
-/* quoteIMAP($str)
+/* quote_imap($str)
  *
  * quote char's into valid IMAP string
  *
@@ -32,7 +32,7 @@ if (!isset($auth['session']))
  * Returns:
  *   quoted string
  */
-function quoteIMAP($str)
+function quote_imap($str)
 {
   return preg_replace('/(["\\\\])/', '\\$1', $str);
 }
@@ -109,7 +109,7 @@ function authValidateUser($user, $pass)
     if ( $stream )
     {
       $response = fgets( $stream, 1024 );
-      $logon_str = "a001 LOGIN \"" . quoteIMAP( $user ) . "\" \"" . quoteIMAP( $pass ) . "\"\r\n";
+      $logon_str = "a001 LOGIN \"" . quote_imap( $user ) . "\" \"" . quote_imap( $pass ) . "\"\r\n";
       fputs( $stream, $logon_str );
       $response = fgets( $stream, 1024 );
       if ( substr( $response, 5, 2 ) == 'OK' )
