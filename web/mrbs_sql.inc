@@ -100,7 +100,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
 // bookings in the interval of type $interval_type (can be 'day', 'week', 'month' or
 // 'year').   If $only_area is set then only the bookings in the same are considered.
 // Returns NULL if OK, otherwise an error string.
-function checkInterval(&$booking, $ignore, $repignore, $interval_type='day', $only_area=FALSE)
+function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $only_area=FALSE)
 {
   global $max_per_interval_global, $max_per_interval_area;
   global $tbl_entry, $tbl_room;
@@ -406,7 +406,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
     // globally
     if (!empty($max_per_interval_global_enabled[$interval_type]) && !$delete)
     {
-      $tmp = checkInterval($booking, $ignore, $repignore, $interval_type, FALSE);
+      $tmp = check_interval($booking, $ignore, $repignore, $interval_type, FALSE);
       if (isset($tmp))
       {
         $errors[] = $tmp;
@@ -415,7 +415,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
     // for the area
     if (!empty($max_per_interval_area_enabled[$interval_type]) && !$delete)
     {
-      $tmp = checkInterval($booking, $ignore, $repignore, $interval_type, TRUE);
+      $tmp = check_interval($booking, $ignore, $repignore, $interval_type, TRUE);
       if (isset($tmp))
       {
         $errors[] = $tmp;
