@@ -650,7 +650,7 @@ if (isset($Action) && ($Action == "Update"))
           break;
         case 'email':
           // check that the email address is valid
-          if (!empty($value) && !validate_email_list($value))
+          if (isset($value) && ($value !== '') && !validate_email_list($value))
           {
             $valid_data = FALSE;
             $q_string .= "&invalid_email=1";
