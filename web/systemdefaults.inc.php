@@ -996,7 +996,7 @@ $mail_settings['from'] = 'admin_email@your.org';
 // this email address the same as the admin email address or the recipients 
 // email address because on some mail systems, eg IBM Domino, the iCalendar email
 // notification is silently discarded if the organizer's email address is the same 
-// as the recipient's.
+// as the recipient's.  On other systems you may get a "Meeting not found" message.
 $mail_settings['organizer'] = 'mrbs@your.org';
 
 // Set the recipient email. Default is 'admin_email@your.org'. You can define
