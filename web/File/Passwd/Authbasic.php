@@ -103,7 +103,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     */
     function __construct($file = '.htpasswd')
     {
-        if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+        if (utf8_strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
             unset($this->_modes['des']);
         }
         $this->setFile($file);
@@ -295,7 +295,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     */
     function setMode($mode)
     {
-        $mode = strToLower($mode);
+        $mode = utf8_strtolower($mode);
         if (!isset($this->_modes[$mode])) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $this->_mode),
@@ -318,7 +318,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     */
     function _genPass($pass, $salt = null, $mode = null)
     {
-        $mode = is_null($mode) ? strToLower($this->_mode) : strToLower($mode);
+        $mode = is_null($mode) ? utf8_strtolower($this->_mode) : utf8_strtolower($mode);
 
         if ($mode == 'md5') {
             return File_Passwd::crypt_apr_md5($pass, $salt);
@@ -375,7 +375,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     */
     function generatePasswd($pass, $mode = FILE_PASSWD_DES, $salt = null)
     {
-        if (!in_array(strToLower($mode), array('des', 'md5', 'sha'))) {
+        if (!in_array(utf8_strtolower($mode), array('des', 'md5', 'sha'))) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
                 FILE_PASSWD_E_INVALID_ENC_MODE                

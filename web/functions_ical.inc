@@ -274,7 +274,7 @@ function get_time($value)
 
   if (isset($this_timezone))
   {
-    if (strtoupper($this_timezone) == 'UTC')
+    if (utf8_strtoupper($this_timezone) == 'UTC')
     {
       $result = gmmktime($hour, $minute, $second, $month, $day, $year);
     }

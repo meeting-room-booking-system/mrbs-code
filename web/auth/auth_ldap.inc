@@ -303,13 +303,13 @@ function authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
                       $ldap,
                       $dn,
                       "(objectclass=*)",
-                      array(strtolower($email_attrib))
+                      array(utf8_strtolower($email_attrib))
                      );
     if (@ldap_count_entries($ldap, $res) > 0)
     {
       authLdapDebug("authLdapGetEmailCallback: search successful");
       $entries = ldap_get_entries($ldap, $res);
-      $object['email'] = $entries[0][strtolower($email_attrib)][0];
+      $object['email'] = $entries[0][utf8_strtolower($email_attrib)][0];
 
       authLdapDebug("authLdapGetEmailCallback: email is '".
                     $object['email']."'");
@@ -452,14 +452,14 @@ function authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
                     $ldap,
                     $dn,
                     "(objectclass=*)",
-                    array(strtolower($group_member_attrib))
+                    array(utf8_strtolower($group_member_attrib))
                    );
     if (@ldap_count_entries($ldap, $res) > 0)
     {
       authLdapDebug("authCheckAdminGroupCallback: search successful".
                     " $group_member_attrib");
       $entries = ldap_get_entries($ldap, $res);
-      foreach ($entries[0][strtolower($group_member_attrib)] as $group)
+      foreach ($entries[0][utf8_strtolower($group_member_attrib)] as $group)
       {
         if (strcasecmp($group, $admin_group_dn) == 0)
         {

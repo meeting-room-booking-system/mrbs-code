@@ -46,7 +46,7 @@ function authValidateUser($user, $pass)
   // messy.  WE could use STRCMP, but that's MySQL only.
   $sql = "SELECT COUNT(*)
             FROM $tbl_users
-           WHERE " . sql_syntax_casesensitive_equals('name', strtolower($user)) . "
+           WHERE " . sql_syntax_casesensitive_equals('name', utf8_strtolower($user)) . "
              AND password='$pass'
            LIMIT 1";
 
@@ -78,7 +78,7 @@ function authGetUserLevel($user)
     return 0;
   }
   
-  $result = sql_query1("SELECT level FROM $tbl_users WHERE name='" . strtolower(sql_escape($user)) . "' LIMIT 1");
+  $result = sql_query1("SELECT level FROM $tbl_users WHERE name='" . sql_escape(utf8_strtolower($user)) . "' LIMIT 1");
   if ($result == -1)
   {
     $sql_error = sql_error();

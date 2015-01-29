@@ -527,7 +527,7 @@ function sql_mysqli_field_info($table, $db_conn = null)
         $length = NULL;
       }
       // Convert the is_nullable field to a boolean
-      $is_nullable = (strtolower($row['Null']) == 'yes') ? TRUE : FALSE;
+      $is_nullable = (utf8_strtolower($row['Null']) == 'yes') ? TRUE : FALSE;
       
       $fields[$i]['name'] = $name;
       $fields[$i]['type'] = $type;

@@ -563,7 +563,7 @@ if (isset($Action) && ($Action == "Update"))
         case 'name':
           // name: convert it to lower case
           $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
-          $values[$fieldname] = strtolower($values[$fieldname]);
+          $values[$fieldname] = utf8_strtolower($values[$fieldname]);
           break;
         case 'password':
           // password: if the password field is blank it means

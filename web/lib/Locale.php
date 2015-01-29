@@ -51,7 +51,7 @@ class Locale
   {
     $glue = ',';
     $result = (is_array($langtag)) ? implode($glue, $langtag) : $langtag;
-    $result = strtolower(str_replace('_', '-', $result));
+    $result = utf8_strtolower(str_replace('_', '-', $result));
     return (is_array($langtag)) ? explode($glue, $result) : $result;
   }
 }

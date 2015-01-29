@@ -521,6 +521,14 @@ $aix_utf8_converters = array
 // A list of languages that use Right to Left text
 $rtl_languages = array('he');
 
+
+// Set up mb_string internal encoding
+if (function_exists('mb_internal_encoding'))
+{
+  mb_internal_encoding('UTF-8');
+}
+
+
 ////////////////////////////////////////////////////////////////////////
 // Language token handling
 
@@ -587,7 +595,7 @@ if (!$disable_automatic_language_changing || $cli_mode)
       $locale = $lang;
       // Work out if we're using a RTL language.   This variable is used
       // globally so that we can include the correct stylesheet
-      $using_rtl = in_array(strtolower($lang), $rtl_languages);
+      $using_rtl = in_array(utf8_strtolower($lang), $rtl_languages);
       $doneit = 1;
       break;
     }
@@ -673,9 +681,9 @@ function get_os_locale($lang)
   
   if ($server_os == "windows")
   {
-    if (array_key_exists(strtolower($lang), $lang_map_windows))
+    if (array_key_exists(utf8_strtolower($lang), $lang_map_windows))
     {
-      $locale = $lang_map_windows[strtolower($lang)];
+      $locale = $lang_map_windows[utf8_strtolower($lang)];
     }
     else
     {
@@ -695,15 +703,15 @@ function get_os_locale($lang)
       else
       {
         // Convert locale=xx to xx_XX
-        $locale = strtolower($lang)."_".strtoupper($lang);
+        $locale = utf8_strtolower($lang) . "_" . utf8_strtoupper($lang);
       }
     }
     else
     {
       // First, if we have a map, use it
-      if (isset($lang_map_unix[strtolower($lang)]))
+      if (isset($lang_map_unix[utf8_strtolower($lang)]))
       {
-        $locale = $lang_map_unix[strtolower($lang)];
+        $locale = $lang_map_unix[utf8_strtolower($lang)];
       }
       else
       {
@@ -798,9 +806,9 @@ function alias_qualifiers($qualifiers)
   $result = array();
   foreach ($qualifiers as $lang => $qualifier)
   {
-    if (isset($lang_aliases[strtolower($lang)]))
+    if (isset($lang_aliases[utf8_strtolower($lang)]))
     {
-      $result[$lang_aliases[strtolower($lang)]] = $qualifier;
+      $result[$lang_aliases[utf8_strtolower($lang)]] = $qualifier;
     }
     else
     {
@@ -983,7 +991,7 @@ function set_vocab($lang)
   global $PHP_SELF;
   global $vocab, $mrbs_admin, $mrbs_company;  // Used in lang files
   
-  $lang = strtolower($lang);
+  $lang = utf8_strtolower($lang);
 
   if (file_exists('lang'))
   {
@@ -1047,7 +1055,7 @@ function get_csv_charset()
 
 function get_bom($charset)
 {
-  switch(strtolower($charset))
+  switch(utf8_strtolower($charset))
   {
     case 'utf-8':
       return "\xEF\xBB\xBF";
@@ -1109,7 +1117,7 @@ function get_aix_character_encoding($character_encoding)
   }
 
   // Convert character encoding name to lowercase
-  $character_encoding = strtolower($character_encoding);
+  $character_encoding = utf8_strtolower($character_encoding);
 
   // Check that we know of an IBM AIX libiconv character encoding name equivalent for this character encoding name
   if (!array_key_exists($character_encoding, $gnu_iconv_to_aix_iconv_codepage_map))
@@ -1594,6 +1602,34 @@ function utf8_strlen($str)
 }
 
 
+// Wrapper round mb_strtolower() to make sure it's used if present and mb_sting
+// function overloading is not enabled.
+// The ordinary strtolower() will give unexpected results when the locale is set to
+// Turkish and will not convert the letter 'I'.
+function utf8_strtolower($str)
+{
+  if (function_exists('mb_strtolower'))
+  {
+    return mb_strtolower($str);
+  }
+  return strtolower($str);
+}
+
+
+// Wrapper round mb_strtoupper() to make sure it's used if present and mb_sting
+// function overloading is not enabled.
+// The ordinary strtoupper() will give unexpected results when the locale is set to
+// Turkish and will not convert the letter 'i'.
+function utf8_strtoupper($str)
+{
+  if (function_exists('mb_strtoupper'))
+  {
+    return mb_strtoupper($str);
+  }
+  return strtoupper($str);
+}
+
+
 // Format a locale which could be xx-xX or xx_Xx or xx_XxXx (etc.) into a
 // standardised format consiting of a lower case language followed, if applicable,
 // by an upper case country, separated by $separator.    Typically the separator
@@ -1602,11 +1638,11 @@ function locale_format($locale, $separator)
 {
   if (strlen($locale) == 2)
   {
-    $locale = strtolower($locale);
+    $locale = utf8_strtolower($locale);
   }
   else
   {
-    $locale = strtolower(substr($locale,0,2)) . $separator . strtoupper(substr($locale,3));
+    $locale = utf8_strtolower(substr($locale,0,2)) . $separator . utf8_strtoupper(substr($locale,3));
   }
   return $locale;
 }

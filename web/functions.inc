@@ -1344,7 +1344,7 @@ function generate_datalist($params)
   // well, so we have to turn it on.  (We'll also turn it on for Opera in the JavaScript,
   // for good measure, just in case the server isn't passing through the user agent).
   $html .= " autocomplete=\"";
-  $html .= (strpos(strtolower($HTTP_USER_AGENT), 'opera') === FALSE) ? 'off' : 'on';
+  $html .= (strpos(utf8_strtolower($HTTP_USER_AGENT), 'opera') === FALSE) ? 'off' : 'on';
   $html .= "\">\n";
   $html .= "<datalist id=\"" . $params['id'] . "_options\">";
   

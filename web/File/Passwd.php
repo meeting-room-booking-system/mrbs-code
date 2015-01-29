@@ -348,7 +348,7 @@ class File_Passwd
     */
     function &factory($class)
     {
-        $class = ucFirst(strToLower($class));
+        $class = ucFirst(utf8_strtolower($class));
         if (!@include_once "File/Passwd/$class.php") {
             return PEAR::raiseError("Couldn't load file Passwd/$class.php", 0);
         }
@@ -405,7 +405,7 @@ class File_Passwd
     */
     function staticAuth($type, $file, $user, $pass, $opt = '')
     {
-        $type = ucFirst(strToLower($type));
+        $type = ucFirst(utf8_strtolower($type));
         if (!@include_once "File/Passwd/$type.php") {
             return PEAR::raiseError("Couldn't load file Passwd/$type.php", 0);
         }

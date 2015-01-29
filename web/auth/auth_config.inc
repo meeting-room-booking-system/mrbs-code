@@ -43,8 +43,8 @@ function authValidateUser($user, $pass)
   if ((isset($auth["user"][$user]) &&
        ($auth["user"][$user] == $pass)
         ) ||
-      (isset($auth["user"][strtolower($user)]) &&
-       ($auth["user"][strtolower($user)] == $pass)
+      (isset($auth["user"][utf8_strtolower($user)]) &&
+       ($auth["user"][utf8_strtolower($user)] == $pass)
         ))
   {
     return 1; // User validated

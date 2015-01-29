@@ -242,7 +242,7 @@ class File_Passwd_Unix extends File_Passwd_Common
     */
     function setMode($mode)
     {
-        $mode = strToLower($mode);
+        $mode = utf8_strtolower($mode);
         if (!isset($this->_modes[$mode])) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
@@ -609,7 +609,7 @@ class File_Passwd_Unix extends File_Passwd_Common
             $crypters = get_class_methods('File_Passwd');
         }
         
-        $mode = !isset($mode) ? strToLower($this->_mode) : strToLower($mode);
+        $mode = !isset($mode) ? utf8_strtolower($this->_mode) : utf8_strtolower($mode);
         $func = 'crypt_' . $mode;
         
         if (!in_array($func, $crypters)) {

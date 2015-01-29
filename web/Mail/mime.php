@@ -1433,9 +1433,9 @@ class Mail_mime
         $encodings = array('7bit', '8bit', 'base64', 'quoted-printable');
 
         $this->_build_params['text_encoding']
-            = strtolower($this->_build_params['text_encoding']);
+            = utf8_strtolower($this->_build_params['text_encoding']);
         $this->_build_params['html_encoding']
-            = strtolower($this->_build_params['html_encoding']);
+            = utf8_strtolower($this->_build_params['html_encoding']);
 
         if (!in_array($this->_build_params['text_encoding'], $encodings)) {
             $this->_build_params['text_encoding'] = '7bit';

@@ -544,7 +544,7 @@ function sql_pgsql_field_info($table, $db_conn = null)
         $length = $row['character_octet_length'];
       }
       // Convert the is_nullable field to a boolean
-      $is_nullable = (strtolower($row['is_nullable']) == 'yes') ? TRUE : FALSE;
+      $is_nullable = (utf8_strtolower($row['is_nullable']) == 'yes') ? TRUE : FALSE;
       
       $fields[$i]['name'] = $name;
       $fields[$i]['type'] = $type;

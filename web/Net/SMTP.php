@@ -552,7 +552,7 @@ class Net_SMTP
                 return $method;
             }
         } else {
-            $method = strtoupper($method);
+            $method = utf8_strtoupper($method);
             if (!in_array($method, $this->auth_methods)) {
                 return PEAR::raiseError("$method is not a supported authentication method");
             }

@@ -331,8 +331,8 @@ function generate_submit_buttons()
 // to be used for CSV files
 function csv_conv($string)
 {
-  $in_charset = strtoupper(get_charset());
-  $out_charset = strtoupper(get_csv_charset());
+  $in_charset = utf8_strtoupper(get_charset());
+  $out_charset = utf8_strtoupper(get_csv_charset());
   
   // Use iconv() if it exists because it's faster than our own code and also it's
   // standard (though it has the disadvantage that it adds in BOMs which we have to remove)
@@ -1343,7 +1343,7 @@ if ($phase == 2)
         // We have to use strpos() rather than stripos() because we cannot
         // assume PHP5
         if (($option_key !== '') &&
-            (strpos(strtolower($option_value), strtolower($$var)) !== FALSE))
+            (strpos(utf8_strtolower($option_value), utf8_strtolower($$var)) !== FALSE))
         {
           $or_array[] = "E.$key='" . sql_escape($option_key) . "'";
         }

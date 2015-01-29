@@ -57,7 +57,7 @@ function authValidateUser($user, $pass)
   // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
   $query = "SELECT " . sql_quote($auth['db_ext']['column_name_password']) .
             " FROM " . sql_quote($auth['db_ext']['db_table']) .
-           " WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'], strtolower($user));
+           " WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'], utf8_strtolower($user));
 
   $r = sql_query($query, $conn);
   
@@ -184,7 +184,7 @@ function authGetUserEmail($user)
   // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
   $query = "SELECT " . sql_quote($auth['db_ext']['column_name_email']) . "
               FROM " . sql_quote($auth['db_ext']['db_table']) . "
-             WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'], strtolower($user)) . "
+             WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'], utf8_strtolower($user)) . "
              LIMIT 1";
 
   $r = sql_query($query, $conn);

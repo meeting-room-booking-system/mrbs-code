@@ -822,7 +822,7 @@ class Mail_mimePart
             'references', 'in-reply-to', 'message-id', 'resent-message-id',
         );
 
-        $name = strtolower($name);
+        $name = utf8_strtolower($name);
 
         if (in_array($name, $comma_headers)) {
             $separator = ',';
