@@ -63,7 +63,8 @@ CREATE TABLE mrbs_area
   confirmation_enabled      tinyint(1),
   confirmed_default         tinyint(1),
 
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_area_name (area_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE mrbs_room
@@ -83,6 +84,7 @@ CREATE TABLE mrbs_room
     REFERENCES mrbs_area(id)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
+  UNIQUE KEY uq_room_name (area_id, room_name),
   KEY idxSortKey (sort_key)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -161,7 +163,8 @@ CREATE TABLE mrbs_variables
   variable_name    varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci,
   variable_content text CHARACTER SET utf8 COLLATE utf8_general_ci,
       
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_variable_name (variable_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE mrbs_zoneinfo
@@ -172,7 +175,8 @@ CREATE TABLE mrbs_zoneinfo
   vtimezone          text CHARACTER SET utf8 COLLATE utf8_general_ci,
   last_updated       int NOT NULL DEFAULT 0,
       
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_timezone (timezone, outlook_compatible)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE mrbs_users
@@ -184,10 +188,11 @@ CREATE TABLE mrbs_users
   password  varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci,
   email     varchar(75) CHARACTER SET utf8 COLLATE utf8_general_ci,
 
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '43');
+  VALUES ( 'db_version', '44');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

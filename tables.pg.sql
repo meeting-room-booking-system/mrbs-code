@@ -65,7 +65,9 @@ CREATE TABLE mrbs_area
   reminders_enabled         smallint,
   enable_periods            smallint,
   confirmation_enabled      smallint,
-  confirmed_default         smallint
+  confirmed_default         smallint,
+  
+  CONSTRAINT mrbs_uq_area_name UNIQUE (area_name)
 );
 
 CREATE TABLE mrbs_room
@@ -81,7 +83,9 @@ CREATE TABLE mrbs_room
   description       varchar(60),
   capacity          int DEFAULT 0 NOT NULL,
   room_admin_email  text,
-  custom_html       text
+  custom_html       text,
+  
+  CONSTRAINT mrbs_uq_room_name UNIQUE (area_id, room_name)
 );
 create index mrbs_idxSortKey on mrbs_room(sort_key);
 
@@ -151,7 +155,9 @@ CREATE TABLE mrbs_variables
 (
   id               serial primary key,
   variable_name    varchar(80),
-  variable_content text
+  variable_content text,
+  
+  CONSTRAINT mrbs_uq_variable_name UNIQUE (variable_name)
 );
 
 CREATE TABLE mrbs_zoneinfo
@@ -160,7 +166,9 @@ CREATE TABLE mrbs_zoneinfo
   timezone           varchar(255) DEFAULT '' NOT NULL,
   outlook_compatible smallint NOT NULL DEFAULT 0,
   vtimezone          text,
-  last_updated       int NOT NULL DEFAULT 0
+  last_updated       int NOT NULL DEFAULT 0,
+  
+  CONSTRAINT mrbs_uq_timezone UNIQUE (timezone, outlook_compatible)
 );
 
 CREATE TABLE mrbs_users
@@ -170,10 +178,12 @@ CREATE TABLE mrbs_users
   level     smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
   name      varchar(30),
   password  varchar(40),
-  email     varchar(75)
+  email     varchar(75),
+  
+  CONSTRAINT mrbs_uq_name UNIQUE (name)
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '42');
+  VALUES ('db_version', '44');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
