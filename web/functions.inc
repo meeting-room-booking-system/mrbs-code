@@ -1568,6 +1568,9 @@ function fatal_error($need_header, $message, $show_form_data = true)
     error_log("MRBS: $sql_error");
   }
   
+  $e = new Exception();
+  error_log($e->getTraceAsString());
+  
   if ($show_form_data)
   {
     if (!empty($_GET))
