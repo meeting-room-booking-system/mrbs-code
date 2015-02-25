@@ -870,12 +870,6 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
 {
   global $default_language_tokens, $disable_automatic_language_changing;
   
-  // Just in case they're running PHP4, degrade gracefully
-  if (!function_exists('scandir'))
-  {
-    return NULL;
-  }
-  
   if (!file_exists($dir))
   {
     trigger_error("MRBS: directory $dir does not exist", E_USER_NOTICE);
