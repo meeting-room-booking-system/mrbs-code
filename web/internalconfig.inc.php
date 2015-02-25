@@ -34,6 +34,7 @@ if (isset($mail_settings['admin_all']))
   trigger_error($message, E_USER_WARNING);
   $mail_settings['on_change'] = ($mail_settings['admin_all']) ? TRUE : FALSE;
 }
+
 if (isset($mail_settings['admin_on_delete']))
 {
   $message = 'Please check your config file.   The variable $mail_settings["admin_on_delete"] ' .
@@ -41,6 +42,7 @@ if (isset($mail_settings['admin_on_delete']))
   trigger_error($message, E_USER_WARNING);
   $mail_settings['on_delete'] = ($mail_settings['admin_on_delete']) ? TRUE : FALSE;
 }
+
 if (!empty($dateformat))
 {
   $message = 'Please check your config file.   The variable $dateformat ' .
@@ -56,12 +58,14 @@ if (isset($highlight_method))
              'is no longer used and is redundant.';
   trigger_error($message, E_USER_WARNING);
 }
+
 if (isset($javascript_cursor))
 {
   $message = 'Please check your config file.   The variable $javascript_cursor ' .
              'is no longer used and is redundant.';
   trigger_error($message, E_USER_WARNING);
 }
+
 if (isset($mail_charset))
 {
   $message = 'Please check your config file.   The variable $mail_charset ' .
@@ -79,6 +83,7 @@ if (isset($min_book_ahead_enabled))
   $min_create_ahead_enabled = ($min_book_ahead_enabled) ? TRUE : FALSE;
   $min_delete_ahead_enabled = ($min_book_ahead_enabled) ? TRUE : FALSE;
 }
+
 if (isset($max_book_ahead_enabled))
 {
   $message = 'Please check your config file.   The variable $max_book_ahead_enabled ' .
@@ -88,6 +93,7 @@ if (isset($max_book_ahead_enabled))
   $max_create_ahead_enabled = ($max_book_ahead_enabled) ? TRUE : FALSE;
   // No need to do anything about $max_delete_ahead_enabled as it didn't apply in the old system
 }
+
 if (isset($min_book_ahead_secs))
 {
   $message = 'Please check your config file.   The variable $min_book_ahead_secs ' .
@@ -97,6 +103,7 @@ if (isset($min_book_ahead_secs))
   $min_create_ahead_secs = $min_book_ahead_secs;
   $min_delete_ahead_secs = $min_book_ahead_secs;
 }
+
 if (isset($max_book_ahead_secs))
 {
   $message = 'Please check your config file.   The variable $max_book_ahead_secs ' .
@@ -105,6 +112,13 @@ if (isset($max_book_ahead_secs))
   trigger_error($message, E_USER_WARNING);
   $max_create_ahead_secs = $max_book_ahead_secs;
   $max_delete_ahead_secs = $max_book_ahead_secs;
+}
+
+if (isset($max_length))
+{
+  $message = 'Please check your config file.   The variable $maxlength ' .
+             'is no longer used and maximum field lengths are now calculated automatically.';
+  trigger_error($message, E_USER_WARNING);
 }
 
 
@@ -457,7 +471,16 @@ define('DEL_ENTRY_AJAX_BATCH_SIZE', 100);
 // Interval types used in booking policies
 $interval_types = array('day', 'week', 'month', 'year', 'future');
 
+/********************************************************
+ * Globals
+ ********************************************************/
 
+// These global declarations are not necessary, but are just used as a reminder
+// of the rather ugly use of these variables as globals, so that they are not
+// forgotten when MRBS is rewritten.
+
+global $maxlength;
+ 
 /********************************************************
  * JavaScript - internal use, do not change
  ********************************************************/

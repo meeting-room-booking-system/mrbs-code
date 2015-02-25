@@ -2,12 +2,10 @@
 
 // $Id$
 
-global $dbsys;
-
-// These variables specify the names of the tables in the database
-global $db_tbl_prefix, $db_schema;
+global $dbsys, $db_tbl_prefix, $db_schema, $maxlength;
 
 $tables = array('area', 'entry', 'repeat', 'room', 'users', 'variables', 'zoneinfo');
+$table_vars = array();
 
 foreach ($tables as $table)
 {
@@ -21,6 +19,7 @@ foreach ($tables as $table)
   {
     $$var = $db_schema . '.' . $$var;
   }
+  $table_vars[$table] = $var;
 }
 
 
@@ -889,4 +888,23 @@ if (($current_db_schema_version < $db_schema_version) ||
   echo "<a href=\"./\">" . get_vocab("returncal") . "</a>.";
 
   print_footer(TRUE);
+}
+
+
+// Populate the $maxlength global.   (We need to do this after any upgrade in case the
+// upgrade as altered the table structures).
+foreach ($table_vars as $table => $var)
+{
+  // Find the maximum length of the CHAR and VARCHAR fields (we won't
+  // worry about TEXT fields) 
+  $field_info = sql_field_info($$var);
+  foreach ($field_info as $field)
+  {
+    if (($field['nature'] == 'character') && 
+        isset($field['length']) &&
+        ($field['length'] < 256))
+    {
+      $maxlength[$table . '.' . $field['name']] = (int) $field['length'];
+    }
+  }
 }

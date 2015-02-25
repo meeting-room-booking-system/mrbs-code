@@ -9,11 +9,7 @@
 #     'CREATE TABLE' and 'INSERT INTO' line below to replace 'mrbs_' with
 #     your new table prefix.
 #
-# (2) If you change the varchar lengths here, then you should check
-#     to see whether a corresponding length has been defined in the config file
-#     in the array $maxlength.
-#
-# (3) If you add new fields then you should also change the global variable
+# (2) If you add new fields then you should also change the global variable
 #     $standard_fields.   Note that if you are just adding custom fields for
 #     a single site then this is not necessary.
 

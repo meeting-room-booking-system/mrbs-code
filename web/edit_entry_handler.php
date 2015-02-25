@@ -348,7 +348,7 @@ foreach ($maxlength as $key => $length)
     {
       $custom_fields[$field] = utf8_substr($custom_fields[$field], 0, $length);
     }
-    else
+    elseif (isset($$field))
     {
       $$field = utf8_substr($$field, 0, $length);
     }
