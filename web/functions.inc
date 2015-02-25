@@ -530,7 +530,12 @@ function day_past_midnight()
 // Gets the UNIX timestamp for the start of the first slot on the given day
 function get_start_first_slot($month, $day, $year)
 {
-  global $morningstarts, $morningstarts_minutes;
+  global $morningstarts, $morningstarts_minutes, $enable_periods;
+  
+  if ($enable_periods)
+  {
+    return mrbs_mktime(12, 0, 0, $month, $day, $year);
+  }
   
   $t = mrbs_mktime($morningstarts, $morningstarts_minutes, 0,
                    $month, $day, $year);
@@ -541,7 +546,12 @@ function get_start_first_slot($month, $day, $year)
 // Gets the UNIX timestamp for the start of the last slot on the given day
 function get_start_last_slot($month, $day, $year)
 {
-  global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+  global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes, $enable_periods, $periods;
+  
+  if ($enable_periods)
+  {
+    return mrbs_mktime(12, count($periods) -1, 0, $month, $day, $year);
+  }
   
   // Work out if $evening_ends is really on the next day
   if (hm_before(array('hours' => $eveningends, 'minutes' => $eveningends_minutes),
