@@ -1160,6 +1160,7 @@ init = function(args) {
           updateSelectorData();
           reloadSlotSelector($(this), $('#area').val());
           adjustSlotSelectors();
+          updateSelectorData();
         });
     
   
