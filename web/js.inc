@@ -142,29 +142,26 @@ if (NULL !== ($datepicker_lang_file = get_datepicker_lang_file('jquery/ui/i18n')
 if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search')))
 {
   // Include the JavaScript for those pages that use dataTables
+  if (DEBUG)
+  {
+    ?>
+    <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="jquery/datatables/js/dataTables.fixedColumns.js"></script>
+    <script type="text/javascript" src="jquery/datatables/js/dataTables.colVis.js"></script>
+    <script type="text/javascript" src="jquery/datatables/js/dataTables.colReorder.js"></script>
+    <?php
+  }
+  else
+  {
+    ?>
+    <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="jquery/datatables/js/dataTables.fixedColumns.min.js"></script>
+    <script type="text/javascript" src="jquery/datatables/js/dataTables.colVis.min.js"></script>
+    <script type="text/javascript" src="jquery/datatables/js/dataTables.colReorder.min.js"></script>
+    <?php
+  }
   ?>
-  <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.min.js"></script>
-  <script type="text/javascript" src="jquery/datatables/js/ColReorder.min.js"></script>
-  <?php
-  // We use a customised version of ColVis which fixes a problem to do with the width of the
-  // ColVis collection div meaning that when you have long column names the collection
-  // buttons spill over onto multiple lines.   This problem has been reported in the
-  // DataTables forum and hopefully the fix will appear in a future release (or else an
-  // alternative solution suggested).  In the meantime we use the mrbs version of ColVis,
-  // which is kept separate so that we can identify the differences.
-  /*
-  <script type="text/javascript" src="jquery/datatables/js/ColVis.min.js"></script>
-  */
-  ?>
-  <script type="text/javascript" src="jquery/datatables/js/ColVis.mrbs.min.js"></script>
-  <?php
-  // We also have a customised version of FixedColumns which fixes a problem to do with the
-  // resizing of windows in IE7/8.   The problem has been reported.
-  /*
-  <script type="text/javascript" src="jquery/datatables/js/FixedColumns.min.js"></script>
-  */
-  ?>
-  <script type="text/javascript" src="jquery/datatables/js/FixedColumns.mrbs.js"></script>
+  
   <script type="text/javascript" src="jquery/datatables/js/plugins.js"></script>
       
   <script type="text/javascript" src="js/datatables.js.php?<?php echo $standard_query_string ?>"></script>

@@ -9,6 +9,10 @@ if (DEBUG)
   ?>
   <link href="jquery/ui/css/jquery-ui.structure.css" rel="stylesheet" type="text/css">
   <link href="jquery/ui/css/sunny/jquery-ui.theme.css" rel="stylesheet" type="text/css">
+  <link href="jquery/datatables/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+  <link href="jquery/datatables/css/dataTables.fixedColumns.css" rel="stylesheet" type="text/css">
+  <link href="jquery/datatables/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+  <link href="jquery/datatables/css/dataTables.colReorder.css" rel="stylesheet" type="text/css">
   <?php
 }
 else
@@ -16,14 +20,16 @@ else
   ?>
   <link href="jquery/ui/css/jquery-ui.structure.min.css" rel="stylesheet" type="text/css">
   <link href="jquery/ui/css/sunny/jquery-ui.theme.min.css" rel="stylesheet" type="text/css">
+  <link href="jquery/datatables/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+  <link href="jquery/datatables/css/dataTables.fixedColumns.min.css" rel="stylesheet" type="text/css">
+  <link href="jquery/datatables/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+  <link href="jquery/datatables/css/dataTables.colReorder.css" rel="stylesheet" type="text/css">
   <?php
 }
 ?>
     
     <link href="jquery/datatables/css/mrbs-page.css" rel="stylesheet" type="text/css">
     <link href="jquery/datatables/css/mrbs-table.css" rel="stylesheet" type="text/css">
-    <link href="jquery/datatables/css/ColReorder.css" rel="stylesheet" type="text/css">
-    <link href="jquery/datatables/css/ColVis.css" rel="stylesheet" type="text/css">
     
     <link rel="stylesheet" href="css/mrbs.css.php" type="text/css">
     <?php

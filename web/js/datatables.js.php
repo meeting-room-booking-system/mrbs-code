@@ -203,7 +203,7 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
             options.iRightWidth = getFixedColWidth(table, rightCol);
           }
 
-          var oFC = new FixedColumns(this, options);
+          new $.fn.dataTable.FixedColumns(this, options);
           <?php
           // Not quite sure why we have to adjust the column sizing here,
           // but if we don't then the table isn't quite the right width 
