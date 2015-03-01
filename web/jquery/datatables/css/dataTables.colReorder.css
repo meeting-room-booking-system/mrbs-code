@@ -3,7 +3,7 @@
  */
 
 table.DTCR_clonedTable {
-	background-color: white;
+	background-color: rgba(255, 255, 255, 0.7);
 	z-index: 202;
 }
 
@@ -11,11 +11,4 @@ div.DTCR_pointer {
 	width: 1px;
 	background-color: #0259C4;
 	z-index: 201;
-}
-
-body.alt div.DTCR_pointer {
-	margin-top: -15px;
-	margin-left: -9px;
-	width: 18px;
-	background: url('../images/insert.png') no-repeat top left;
 }
