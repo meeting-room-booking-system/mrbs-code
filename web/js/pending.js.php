@@ -107,8 +107,8 @@ init = function(args) {
         pendingTable.fnOpen(nTr.get(0), subtable.get(0), 'table_container');
 
         $('#' + subtableId).dataTable({"bAutoWidth": false,
-                                       "bPaginate": false,
-                                       "sDom": 't',
+                                       "paging": false,
+                                       "dom": 't',
                                        "aoColumns": columns});
 
         $('#subtable_' + serial + '_wrapper').hide().slideDown();
@@ -123,7 +123,7 @@ init = function(args) {
     // using FixedColumns.   We also have to turn off bStateSave.  I have raised
     // this on the dataTables forum.  In the meantime we comment out the FixedColumns.
     ?>
-    tableOptions.bStateSave = false;
+    tableOptions.stateSave = false;
     <?php
     // Fix the left hand column.  This has to be done when 
     // initialisation is complete as the language files are loaded

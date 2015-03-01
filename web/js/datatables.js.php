@@ -164,15 +164,16 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
       <?php
     }
     ?>
-    defaultOptions.bDeferRender = true;
-    defaultOptions.bPaginate = true;
-    defaultOptions.bProcessing = true;
-    defaultOptions.bScrollCollapse = true;
-    defaultOptions.bStateSave = true;
-    defaultOptions.iDisplayLength = 25;
-    defaultOptions.sDom = 'C<"clear">lfrtip';
-    defaultOptions.sScrollX = "100%";
-    defaultOptions.sPaginationType = "full_numbers";
+    defaultOptions.deferRender = true;
+    defaultOptions.paging = true;
+    defaultOptions.pageLength = 25;
+    defaultOptions.pagingType = "full_numbers";
+    defaultOptions.processing = true;
+    defaultOptions.scrollCollapse = true;
+    defaultOptions.stateSave = true;
+    defaultOptions.pageLength = 25;
+    defaultOptions.dom = 'C<"clear">lfrtip';
+    defaultOptions.scrollX = "100%";
     defaultOptions.oColReorder = {};
     defaultOptions.oColVis = {sSize: "auto",
                               buttonText: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>',
