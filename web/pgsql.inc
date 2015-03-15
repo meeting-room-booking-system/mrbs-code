@@ -460,8 +460,8 @@ function sql_pgsql_table_exists($table, $db_conn = null)
   
   if ($res < 0)
   {
-    trigger_error(pg_result_error($res), E_USER_WARNING);
-    fatal_error(TRUE, get_vocab("fatal_db_error"));
+    trigger_error(pg_last_error($db_conn), E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
 
   return ($res == 1) ? TRUE : FALSE;
