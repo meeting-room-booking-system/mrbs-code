@@ -441,6 +441,12 @@ function sql_mysqli_table_exists($table, $db_conn = null)
 
   $res = sql_mysqli_query1("SHOW TABLES LIKE '" . sql_mysqli_escape($table) . "'", $db_conn);
 
+  if ($res < 0)
+  {
+    trigger_error($db_conn->error, E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
+  }
+  
   return ($res == -1) ? FALSE : TRUE;
 }
 
