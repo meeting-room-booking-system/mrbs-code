@@ -6,6 +6,11 @@
 # However this breaks our foreign key constraint so we have to modify
 # the repeat_id column before we can create the foreign key.
 
+/* Temporary copy of timestamp column */
+ALTER TABLE %DB_TBL_PREFIX%entry
+  ADD COLUMN saved_ts DATETIME;
+UPDATE %DB_TBL_PREFIX%entry SET saved_ts=timestamp;
+
 ALTER TABLE %DB_TBL_PREFIX%entry
   MODIFY COLUMN repeat_id int DEFAULT NULL;
   
@@ -31,4 +36,8 @@ ALTER TABLE %DB_TBL_PREFIX%entry
     REFERENCES %DB_TBL_PREFIX%repeat(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE;
-    
+
+/* Put the table back to how it was */
+UPDATE %DB_TBL_PREFIX%entry SET timestamp=saved_ts;
+ALTER TABLE %DB_TBL_PREFIX%entry
+  DROP COLUMN saved_ts;
