@@ -949,8 +949,14 @@ div#simple_trailer {clear: both; text-align: center; padding-top: 1.0em; padding
 #approve_buttons td#note form {width: 100%}
 #approve_buttons td#note textarea {width: 100%; height: 6em}
 
+
 /*-------------DataTables-------------------------*/
-div.datatable_container {float: left; width: 100%; padding: 2em 0}
+
+div.datatable_container {
+  float: left;
+  width: 100%;
+  padding: 2em 0;
+}
 
 div.ColVis_collection {
   float: left;
@@ -973,6 +979,7 @@ span.ColVis_title {
   float: left;
   white-space: nowrap;
 }
+
 
 /* ------------ jQuery UI additions -------------*/
 
