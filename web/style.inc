@@ -28,9 +28,6 @@ else
 }
 ?>
     
-    <link href="jquery/datatables/css/mrbs-page.css" rel="stylesheet" type="text/css">
-    <link href="jquery/datatables/css/mrbs-table.css" rel="stylesheet" type="text/css">
-    
     <link rel="stylesheet" href="css/mrbs.css.php" type="text/css">
     <?php
     if ($using_rtl)
