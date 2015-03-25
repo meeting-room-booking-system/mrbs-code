@@ -64,6 +64,8 @@ fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; bor
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
   
 table.admin_table {
+  float: left;
+  clear: left;
   border-collapse: collapse; 
   border-spacing: 0px;
   border-color: <?php echo $admin_table_border_color ?>;
@@ -76,7 +78,7 @@ table.admin_table {
   text-align: left;
   padding: 0.1em 8px 0.1em 8px;
   border-style: solid;
-  border-width: 1px;
+  border-width: 0 1px;
 }
 
 .admin_table th {color: <?php echo $admin_table_header_font_color ?>; 
@@ -85,7 +87,29 @@ table.admin_table {
 .admin_table th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}
 .admin_table td.action {text-align: center}
 .admin_table td.action div {display: inline-block}
-.admin_table td.action div div {display: table-cell} 
+.admin_table td.action div div {display: table-cell}
+
+table.display {
+  width: 100%;
+}
+
+table.display tbody tr:nth-child(2n) {
+  background-color: white;
+}
+
+table.display tbody tr:nth-child(2n+1) {
+  background-color: #E2E4FF;
+}
+
+table.display th, table.display td {
+  height: 2em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+table.display th {
+  padding: 3px 24px 3px 8px;
+}
 
 select.room_area_select {margin-right: 0.5em}
 
