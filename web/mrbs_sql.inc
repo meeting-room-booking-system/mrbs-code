@@ -1591,7 +1591,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
   $common = $bookings[0];
   // Work out the duration in seconds, but adjust it for DST changes so that
   // the user will still see, for example, "24 hours" when a booking goes from
-  // 1200 one day to 1200 the next, crosing a DST boundary.
+  // 1200 one day to 1200 the next, crossing a DST boundary.
   $duration_seconds = $common['end_time'] - $common['start_time'];
   $duration_seconds -= cross_dst($common['start_time'], $common['end_time']);
   // Now get the duration, which will be needed for email notifications
