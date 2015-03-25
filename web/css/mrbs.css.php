@@ -63,11 +63,22 @@ fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
   
-table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_border_color ?>; border-style: solid;
-    border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
-.admin_table th, .admin_table td {vertical-align: middle; text-align: left;
-    padding: 0.1em 8px 0.1em 8px;
-    border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;}
+table.admin_table {
+  border-collapse: collapse; 
+  border-spacing: 0px;
+  border-color: <?php echo $admin_table_border_color ?>;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.admin_table th, .admin_table td {
+  vertical-align: middle;
+  text-align: left;
+  padding: 0.1em 8px 0.1em 8px;
+  border-style: solid;
+  border-width: 1px;
+}
+
 .admin_table th {color: <?php echo $admin_table_header_font_color ?>; 
     background-color: <?php echo $admin_table_header_back_color ?>}
 .admin_table td, .admin_table th {border-color: <?php echo $admin_table_border_color ?>}
