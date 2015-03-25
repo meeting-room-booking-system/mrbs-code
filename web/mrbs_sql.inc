@@ -514,7 +514,7 @@ function mrbsDelEntry($user, $id, $series, $all)
  * $data          - An array containing the row data for the entry
  * 
  * Returns:
- *   0        - An error occured while inserting the entry
+ *   0        - An error occurred while inserting the entry
  *   non-zero - The entry's ID
  */
 function mrbsCreateEntry($table, $data)
