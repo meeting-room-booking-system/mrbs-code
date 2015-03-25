@@ -1528,7 +1528,7 @@ function mrbsAddArea($name, &$error)
 }
 
 
-// Adds a room, returning the new id, or FALSE on failute with the
+// Adds a room, returning the new id, or FALSE on failure with the
 // error in $error
 function mrbsAddRoom($name, $area, &$error, $description='', $capacity='')
 {
