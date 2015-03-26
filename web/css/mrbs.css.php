@@ -1071,6 +1071,10 @@ table.dataTable.order-column.stripe tbody tr.even > .sorting_3 {
   background-color: #F9F9FF;
 }
 
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+  border-bottom-width: 0;
+}
+
 
 /* ------------ jQuery UI additions -------------*/
 
