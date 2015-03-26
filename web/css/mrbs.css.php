@@ -1021,6 +1021,15 @@ div.ColVis_collection button.ColVis_Button {
   clear: left;
 }
 
+.dataTables_wrapper .dataTables_length {
+  clear: both;
+}
+
+.dataTables_wrapper .dataTables_filter {
+  clear: right;
+  margin-bottom: 1em;
+}
+
 span.ColVis_radio {
   display: block;
   float: left;
