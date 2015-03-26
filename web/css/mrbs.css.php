@@ -86,23 +86,32 @@ table.admin_table {
   border-width: 1px 0;
 }
 
-.admin_table th, .admin_table td {
+.admin_table th, .admin_table td,
+table.dataTable thead th, table.dataTable thead td {
   vertical-align: middle;
   text-align: left;
-  padding: 0.1em 0.6em;
   border-style: solid;
   border-width: 0 1px 0 0;
 }
 
-.admin_table th:first-child, .admin_table td:first-child {
+.admin_table th, .admin_table td,
+table.dataTable thead th, table.dataTable thead td, 
+table.dataTable tbody th, table.dataTable tbody td {
+    padding: 0.1em 0.6em;
+}
+
+.admin_table th:first-child, .admin_table td:first-child,
+table.dataTable thead th:first-child, table.dataTable thead td:first-child {
   border-left-width: 1px;
 }
 
-.admin_table td, .admin_table th {
+.admin_table td, .admin_table th,
+table.dataTable thead th, table.dataTable thead td {
   border-color: <?php echo $admin_table_border_color ?>;
 }
 
-.admin_table th:first-child {
+.admin_table th:first-child,
+table.dataTable thead th:first-child, table.dataTable thead td:first-child {
   border-left-color: <?php echo $admin_table_header_back_color ?>
 }
 
@@ -110,7 +119,14 @@ table.admin_table {
   border-right-color: <?php echo $admin_table_header_back_color ?>
 }
 
-.admin_table th {
+.admin_table.DTFC_Cloned th:last-child {
+  border-right-color: <?php echo $admin_table_border_color ?>
+}
+
+.admin_table th,
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc {
   color: <?php echo $admin_table_header_font_color ?>; 
   background-color: <?php echo $admin_table_header_back_color ?>
 }
@@ -1015,6 +1031,44 @@ span.ColVis_title {
   display: block;
   float: left;
   white-space: nowrap;
+}
+
+table.dataTable.display tbody tr.odd {
+  background-color: #E2E4FF;
+}
+
+table.dataTable.display tbody tr.even {
+  background-color: white;
+}
+
+table.dataTable.display tbody tr.odd > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
+  background-color: #D3D6FF;
+}
+
+table.dataTable.display tbody tr.odd > .sorting_2,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_2 {
+  background-color: #DADCFF;
+}
+
+table.dataTable.display tbody tr.odd > .sorting_3,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_3 {
+  background-color: #E0E2FF;
+}
+
+table.dataTable.display tbody tr.even > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_1  {
+  background-color: #EAEBFF;
+}
+
+table.dataTable.display tbody tr.even > .sorting_2,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_2 {
+  background-color: #F2F3FF;
+}
+
+table.dataTable.display tbody tr.even > .sorting_3,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_3 {
+  background-color: #F9F9FF;
 }
 
 
