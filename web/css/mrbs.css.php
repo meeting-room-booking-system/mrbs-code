@@ -21,19 +21,26 @@ expires_header(60*30); // 30 minute expiry
 
 /* ------------ GENERAL -----------------------------*/
 
-body {font-size: small;
-    margin: 0;
-    padding: 0;
-    color:            <?php echo $standard_font_color ?>;
-    font-family:      <?php echo $standard_font_family ?>;
-    background-color: <?php echo $body_background_color ?>}
+body {
+  font-size: small;
+  margin: 0;
+  padding: 0;
+  color:            <?php echo $standard_font_color ?>;
+  font-family:      <?php echo $standard_font_family ?>;
+  background-color: <?php echo $body_background_color ?>;
+}
 
 .current {color: <?php echo $highlight_font_color ?>}                        /* used to highlight the current item */
 .error   {color: <?php echo $highlight_font_color ?>; font-weight: bold}     /* for error messages */
 .warning {color: <?php echo $highlight_font_color ?>}                        /* for warning messages */
 .note    {font-style: italic}
 
-div#contents, div.trailer {padding: 0 2em}
+div#contents, div.trailer {
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 2em;
+}
 
 h1 {font-size: x-large; clear: both}
 h2 {font-size: large; clear: both}
@@ -62,32 +69,63 @@ fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
     border: 1px solid <?php echo $admin_table_border_color ?>}
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
-  
+
+<?php
+// DataTables don't work well with border-collapse: collapse and scrollX: 100%.   In fact they
+// don't work well either with a border round the table.   So we put the left and right borders
+// on the table cells.
+?>
+
 table.admin_table {
   float: left;
   clear: left;
-  border-collapse: collapse; 
-  border-spacing: 0px;
+  border-collapse: separate;
+  border-spacing: 0;
   border-color: <?php echo $admin_table_border_color ?>;
   border-style: solid;
-  border-width: 1px;
+  border-width: 1px 0;
 }
 
 .admin_table th, .admin_table td {
   vertical-align: middle;
   text-align: left;
-  padding: 0.1em 8px 0.1em 8px;
+  padding: 0.1em 0.6em;
   border-style: solid;
-  border-width: 0 1px;
+  border-width: 0 1px 0 0;
 }
 
-.admin_table th {color: <?php echo $admin_table_header_font_color ?>; 
-    background-color: <?php echo $admin_table_header_back_color ?>}
-.admin_table td, .admin_table th {border-color: <?php echo $admin_table_border_color ?>}
-.admin_table th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}
-.admin_table td.action {text-align: center}
-.admin_table td.action div {display: inline-block}
-.admin_table td.action div div {display: table-cell}
+.admin_table th:first-child, .admin_table td:first-child {
+  border-left-width: 1px;
+}
+
+.admin_table td, .admin_table th {
+  border-color: <?php echo $admin_table_border_color ?>;
+}
+
+.admin_table th:first-child {
+  border-left-color: <?php echo $admin_table_header_back_color ?>
+}
+
+.admin_table th:last-child {
+  border-right-color: <?php echo $admin_table_header_back_color ?>
+}
+
+.admin_table th {
+  color: <?php echo $admin_table_header_font_color ?>; 
+  background-color: <?php echo $admin_table_header_back_color ?>
+}
+
+.admin_table td.action {
+  text-align: center
+}
+
+.admin_table td.action div {
+  display: inline-block
+}
+
+.admin_table td.action div div {
+  display: table-cell
+}
 
 table.display {
   width: 100%;
@@ -955,7 +993,6 @@ div#simple_trailer {clear: both; text-align: center; padding-top: 1.0em; padding
 div.datatable_container {
   float: left;
   width: 100%;
-  padding: 2em 0;
 }
 
 div.ColVis_collection {
