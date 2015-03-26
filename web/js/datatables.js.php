@@ -175,10 +175,9 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
     defaultOptions.dom = 'C<"clear">lfrtip';
     defaultOptions.scrollX = "100%";
     defaultOptions.oColReorder = {};
-    defaultOptions.oColVis = {sSize: "auto",
-                              buttonText: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>',
-                              bRestore: true,
-                              sRestore: '<?php echo escape_js(get_vocab("restore_original")) ?>'};
+    defaultOptions.colVis = {sSize: "auto",
+                             buttonText: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>',
+                             restore: '<?php echo escape_js(get_vocab("restore_original")) ?>'};
 
     defaultOptions.fnInitComplete = function(){
     
@@ -239,7 +238,7 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
       ?>
       defaultOptions.oColReorder = {iFixedColumns: nCols};
     }
-    defaultOptions.oColVis.aiExclude = colVisExcludeCols;
+    defaultOptions.colVis.exclude = colVisExcludeCols;
     <?php
     // Merge the specific options with the default options.  We do a deep
     // merge.
