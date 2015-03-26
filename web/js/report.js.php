@@ -76,7 +76,7 @@ init = function(args) {
     list( ,$query_string) = explode('?', $HTTP_REFERER, 2);
     $ajax_url = "report.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1&phase=2";
     ?>
-    tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
+    tableOptions.ajax = "<?php echo $ajax_url ?>";
     <?php
   }
   // Add in a hidden input to the form so that we can tell if we are using DataTables
@@ -191,7 +191,7 @@ init = function(args) {
                                     // slightly more elegant and just reload the Ajax data source.
                                     ?>
                                     var oSettings = reportTable.fnSettings();
-                                    if (oSettings.sAjaxSource && 
+                                    if (oSettings.ajax && 
                                         !oSettings.bServerSide &&
                                         ($('#div_summary').length === 0))
                                     {

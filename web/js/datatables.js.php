@@ -117,10 +117,10 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
         // an Ajax call and wait for the data every time we resize.   So retrieve
         // the data from the table and pass it directly to the new table.
         ?>
-        if (mergedOptions.sAjaxSource)
+        if (mergedOptions.ajax)
         {
           mergedOptions.aaData = oTable.fnGetData();
-          mergedOptions.sAjaxSource = null;
+          mergedOptions.ajax = null;
         }
         <?php
         // Save the language strings, because we don't need to make another Ajax
@@ -252,7 +252,7 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
     // DataTables doesn't know that the Ajax data is still in the original order.
     // May be fixed in a future release of DataTables
     ?>
-    if (!specificOptions.sAjaxSource)
+    if (!specificOptions.ajax)
     {
       <?php
       /*

@@ -57,7 +57,7 @@ init = function(args) {
     list( ,$query_string) = explode('?', $HTTP_REFERER, 2);
     $ajax_url = "search.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1";
     ?>
-    tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
+    tableOptions.ajax = "<?php echo $ajax_url ?>";
     <?php // Get the sTypes and feed those into dataTables ?>
     tableOptions.aoColumnDefs = getSTypes($('#search_results'));
       
