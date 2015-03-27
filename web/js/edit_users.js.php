@@ -43,6 +43,6 @@ init = function(args) {
   tableOptions.aoColumnDefs = getSTypes($('#users_table'));
   var usersTable = makeDataTable('#users_table',
                                  tableOptions,
-                                 {sWidth: "relative", iWidth: 33});
+                                 {leftColumns: 1});
 };
 

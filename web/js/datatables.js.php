@@ -45,42 +45,28 @@ var getSTypes = function getSTypes(table) {
     return sTypes;
   };
   
-
-<?php
-// Try and get a sensible value for the fixed column width, which is the
-// smaller of the actual column width and either a fixed width or a
-// proportion of the overall table width.
-// 
-// col is an object with two properties:  'iWidth' and 'sWidth', which work in
-// the same way as the DataTables properties
-?>
-function getFixedColWidth(table, col)
-{
-  var tableWidth = table.outerWidth();
-  var leftWidth = table.find('th:first-child').outerWidth();
-  var maxWidthPx = (col.sWidth === "relative") ? tableWidth*col.iWidth/100 : col.iWidth;
-  return Math.min(leftWidth, maxWidthPx);
-}
         
 <?php
 // Turn the table with id 'id' into a DataTable, using specificOptions
 // which are merged with the default options.   If the browser is IE6 or less
 // we don't bother making a dataTable:  it can be done, but it's not worth it.
 //
-// leftCol and rightCol are two objects which if defined or not null will fix the left and/or
-// right most columns.  They have properties 'iWidth' and 'sWidth' defining the
-// maximum width of the fixed column.   If sWidth = "fixed" then the iWidth is
-// a pixel value.  If it is "relative" then a percentage.
+// fixedColumnsOptions is an optional object that gets passed directly to the
+// DataTables FixedColumns constructor
 //
 // If you want to do anything else as part of fnInitComplete then you'll need
 // to define fnInitComplete in specificOptions
 ?>
 var windowResizeHandler;
         
-function makeDataTable(id, specificOptions, leftCol, rightCol)
+function makeDataTable(id, specificOptions, fixedColumnsOptions)
 {
-  var winWidth = $(window).width();
-  var winHeight = $(window).height();
+  var winWidth  = $(window).width(),
+      winHeight = $(window).height(),
+      i,
+      defaultOptions, mergedOptions,
+      nCols,
+      table;
           
   windowResizeHandler = function()
   {
@@ -141,7 +127,7 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
   }
   else
   {
-    var table = $(id);
+    table = $(id);
     if (table.length === 0)
     {
       return false;
@@ -153,7 +139,7 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
     ?>
     table.find('colgroup').remove();
     <?php // Set up the default options ?>
-    var defaultOptions = {};
+    defaultOptions = {};
     <?php
     // Set the language file to be used
     if ($lang_file = get_datatable_lang_file('../jquery/datatables/language'))
@@ -174,41 +160,22 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
     defaultOptions.pageLength = 25;
     defaultOptions.dom = 'C<"clear">lfrtip';
     defaultOptions.scrollX = "100%";
-    defaultOptions.oColReorder = {};
+    defaultOptions.colReorder = {};
     defaultOptions.colVis = {buttonText: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>',
                              restore: '<?php echo escape_js(get_vocab("restore_original")) ?>'};
 
     defaultOptions.fnInitComplete = function(){
-    
-        if (((leftCol !== undefined) && (leftCol !== null)) ||
-            ((rightCol !== undefined) && (rightCol !== null)) )
+        if (fixedColumnsOptions)
         {
           <?php 
           // Fix the left and/or right columns.  This has to be done when 
           // initialisation is complete as the language files are loaded
           // asynchronously
           ?>
-          var options = {};
-          if ((leftCol !== undefined) && (leftCol !== null))
-          {
-            options.iLeftColumns = 1;
-            options.sLeftWidth = "fixed";
-            options.iLeftWidth = getFixedColWidth(table, leftCol);
-          }
-          if ((rightCol !== undefined) && (rightCol !== null))
-          {
-            options.iRightColumns = 1;
-            options.sRightWidth = "fixed";
-            options.iRightWidth = getFixedColWidth(table, rightCol);
-          }
-
-          new $.fn.dataTable.FixedColumns(this, options);
-          <?php
-          // Not quite sure why we have to adjust the column sizing here,
-          // but if we don't then the table isn't quite the right width 
-          // when first drawn
-          ?>
-          this.fnAdjustColumnSizing();
+          console.dir(fixedColumnsOptions);
+          console.log("About to create FixedColumns");
+          new $.fn.dataTable.FixedColumns(this, fixedColumnsOptions);
+          console.dir(fixedColumnsOptions);
         }
         $('.js div.datatable_container').css('visibility', 'visible');
         <?php // Rebind the handler ?>
@@ -216,33 +183,34 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
       };
               
     <?php
-    // If we've fixed the left or right hand columns, then (a) remove it
-    // from the column visibility list because it is fixed and (b) stop it
-    // being reordered
+    // If we've fixed the left or right hand columns, then (a) remove them
+    // from the column visibility list because they are fixed and (b) stop them
+    // from being reordered
     ?>
     var colVisExcludeCols = [];
-    if ((leftCol !== undefined) && (leftCol !== null))
+    if (fixedColumnsOptions.leftColumns)
     { 
-      colVisExcludeCols.push(0);
-      defaultOptions.oColReorder = {iFixedColumns: 1};
+      for (i=0; i<fixedColumnsOptions.leftColumns; i++)
+      {
+        colVisExcludeCols.push(i);
+      }
+      defaultOptions.colReorder.fixedColumnsLeft = fixedColumnsOptions.leftColumns;
     }
-    if ((rightCol !== undefined) && (rightCol !== null))
+    if (fixedColumnsOptions.rightColumns)
     { 
-      var nCols = table.find('tr:first-child th').length;
-      colVisExcludeCols.push(nCols - 1);
-      <?php
-      // Actually we stop them all from being reordered because at the moment
-      // dataTables only has a way of stopping the leftmost n columns from
-      // being reordered.  May be fixed in a future release
-      ?>
-      defaultOptions.oColReorder = {iFixedColumns: nCols};
+      nCols = table.find('tr:first-child th').length;
+      for (i=0; i<fixedColumnsOptions.rightColumns; i++)
+      {
+        colVisExcludeCols.push(nCols - (i+1));
+      }
+      defaultOptions.colReorder.fixedColumnsRight = fixedColumnsOptions.rightColumns;
     }
     defaultOptions.colVis.exclude = colVisExcludeCols;
     <?php
     // Merge the specific options with the default options.  We do a deep
     // merge.
     ?>
-    var mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
+    mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
 
     var oTable = table.dataTable(mergedOptions);
 
