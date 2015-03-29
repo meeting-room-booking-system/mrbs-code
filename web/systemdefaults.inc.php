@@ -1129,3 +1129,9 @@ $default_type = "I";
 // Default description for new bookings
 $default_description = "";
 
+// Only required if your MRBS installation runs from a Mercurial repository
+// and you want the "Help" page to show the Mercurial changeset ID you
+// are on. Default should work if "hg" is in your search path, on Windows
+// you may need to specify the full path to your "hg" executable, e.g.:
+// "c:/Program Files/TortoiseHg/hg.exe"
+$hg_command = "hg";
