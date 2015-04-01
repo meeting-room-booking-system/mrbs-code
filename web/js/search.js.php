@@ -63,7 +63,7 @@ init = function(args) {
       
     var searchTable = makeDataTable('#search_results', 
                                     tableOptions, 
-                                    {sWidth: "relative", iWidth: 33} );
+                                    {"iLeftColumns": 1});
 
     <?php
   }  //  if (function_exists('json_encode')) ?>
