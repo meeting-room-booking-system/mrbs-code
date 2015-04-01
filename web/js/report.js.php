@@ -105,12 +105,7 @@ init = function(args) {
   // complete as the language files are loaded asynchronously
   ?>
   tableOptions.fnInitComplete = function(){
-      <?php
-      // Try and get a sensible value for the fixed column width, which is the
-      // smaller of the actual column width and a proportion of the overall table
-      // width.   (Unfortunately the actual column width is just the width of the
-      // column on the first page)
-      ?>
+    
       new $.fn.dataTable.FixedColumns(this, {"iLeftColumns": 1});
       $('.js div.datatable_container').css('visibility', 'visible');
       <?php // Rebind the handler ?>
