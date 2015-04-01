@@ -187,22 +187,25 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     // from being reordered
     ?>
     var colVisExcludeCols = [];
-    if (fixedColumnsOptions.leftColumns)
-    { 
-      for (i=0; i<fixedColumnsOptions.leftColumns; i++)
-      {
-        colVisExcludeCols.push(i);
+    if (fixedColumnsOptions)
+    {
+      if (fixedColumnsOptions.leftColumns)
+      { 
+        for (i=0; i<fixedColumnsOptions.leftColumns; i++)
+        {
+          colVisExcludeCols.push(i);
+        }
+        defaultOptions.colReorder.fixedColumnsLeft = fixedColumnsOptions.leftColumns;
       }
-      defaultOptions.colReorder.fixedColumnsLeft = fixedColumnsOptions.leftColumns;
-    }
-    if (fixedColumnsOptions.rightColumns)
-    { 
-      nCols = table.find('tr:first-child th').length;
-      for (i=0; i<fixedColumnsOptions.rightColumns; i++)
-      {
-        colVisExcludeCols.push(nCols - (i+1));
+      if (fixedColumnsOptions.rightColumns)
+      { 
+        nCols = table.find('tr:first-child th').length;
+        for (i=0; i<fixedColumnsOptions.rightColumns; i++)
+        {
+          colVisExcludeCols.push(nCols - (i+1));
+        }
+        defaultOptions.colReorder.fixedColumnsRight = fixedColumnsOptions.rightColumns;
       }
-      defaultOptions.colReorder.fixedColumnsRight = fixedColumnsOptions.rightColumns;
     }
     defaultOptions.colVis.exclude = colVisExcludeCols;
     <?php

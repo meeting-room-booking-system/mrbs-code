@@ -131,9 +131,7 @@ init = function(args) {
     ?>
     tableOptions.fnInitComplete = function(){
         /*
-        new FixedColumns(pendingTable, {"iLeftColumns": 1,
-                                        "iLeftWidth": 30,
-                                        "sLeftWidth": "fixed"});
+        new FixedColumns(pendingTable, {leftColumns: 1});
         */
         $('.js div.datatable_container').css('visibility', 'visible');
         <?php // Rebind the handler ?>
