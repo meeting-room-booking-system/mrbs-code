@@ -111,10 +111,7 @@ init = function(args) {
       // width.   (Unfortunately the actual column width is just the width of the
       // column on the first page)
       ?>
-      var leftWidth = getFixedColWidth(table, {sWidth: "relative", iWidth: 33});
-      var oFC = new FixedColumns(reportTable, {"iLeftColumns": 1,
-                                               "iLeftWidth": leftWidth,
-                                               "sLeftWidth": "fixed"});
+      new $.fn.dataTable.FixedColumns(this, {"iLeftColumns": 1});
       $('.js div.datatable_container').css('visibility', 'visible');
       <?php // Rebind the handler ?>
       $(window).bind('resize', windowResizeHandler);
