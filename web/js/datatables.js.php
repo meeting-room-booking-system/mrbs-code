@@ -172,10 +172,13 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
           // initialisation is complete as the language files are loaded
           // asynchronously
           ?>
-          console.dir(fixedColumnsOptions);
-          console.log("About to create FixedColumns");
           new $.fn.dataTable.FixedColumns(this, fixedColumnsOptions);
-          console.dir(fixedColumnsOptions);
+          <?php
+          // Not quite sure why we have to adjust the column sizing here,
+          // but if we don't then the table isn't quite right in some browsers
+          // (eg bottom row not right when scrolled horizontally in Firefox)
+          ?>
+          this.fnAdjustColumnSizing();
         }
         $('.js div.datatable_container').css('visibility', 'visible');
         <?php // Rebind the handler ?>
