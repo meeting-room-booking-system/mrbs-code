@@ -76,28 +76,21 @@ fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no le
 // on the table cells.
 ?>
 
+
 table.admin_table {
-  float: left;
-  clear: left;
   border-collapse: separate;
   border-spacing: 0;
   border-color: <?php echo $admin_table_border_color ?>;
-  border-style: solid;
-  border-width: 1px 0;
 }
 
 .admin_table th, .admin_table td,
-table.dataTable thead th, table.dataTable thead td {
+table.dataTable thead th, table.dataTable thead td,
+table.dataTable tbody th, table.dataTable tbody td {
   vertical-align: middle;
   text-align: left;
+  padding: 0.1em 0.6em;
   border-style: solid;
   border-width: 0 1px 0 0;
-}
-
-.admin_table th, .admin_table td,
-table.dataTable thead th, table.dataTable thead td, 
-table.dataTable tbody th, table.dataTable tbody td {
-    padding: 0.1em 0.6em;
 }
 
 .admin_table th:first-child, .admin_table td:first-child,
@@ -164,6 +157,11 @@ table.display th, table.display td {
 table.display th {
   padding: 3px 24px 3px 8px;
 }
+
+table.display span {
+  display: none;
+}
+
 
 select.room_area_select {margin-right: 0.5em}
 
