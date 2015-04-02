@@ -108,8 +108,6 @@ init = function(args) {
     
       new $.fn.dataTable.FixedColumns(this, {"iLeftColumns": 1});
       $('.js div.datatable_container').css('visibility', 'visible');
-      <?php // Rebind the handler ?>
-      $(window).bind('resize', windowResizeHandler);
       <?php 
       // Also add a "Delete entries button", provided that (a) the user is an
       // admin and (b) the configuration allows it

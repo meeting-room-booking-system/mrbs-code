@@ -41,8 +41,6 @@ init = function(args) {
   // Get the sTypes and feed those into dataTables
   ?>
   tableOptions.aoColumnDefs = getSTypes($('#users_table'));
-  var usersTable = makeDataTable('#users_table',
-                                 tableOptions,
-                                 {leftColumns: 1});
+  makeDataTable('#users_table', tableOptions, {leftColumns: 1});
 };
 

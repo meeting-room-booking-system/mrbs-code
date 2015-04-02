@@ -134,8 +134,6 @@ init = function(args) {
         new FixedColumns(pendingTable, {leftColumns: 1});
         */
         $('.js div.datatable_container').css('visibility', 'visible');
-        <?php // Rebind the handler ?>
-        $(window).bind('resize', windowResizeHandler);
       };
     <?php
     // Remove the first column from the column visibility

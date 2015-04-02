@@ -57,7 +57,6 @@ var getSTypes = function getSTypes(table) {
 // If you want to do anything else as part of fnInitComplete then you'll need
 // to define fnInitComplete in specificOptions
 ?>
-var windowResizeHandler;
         
 function makeDataTable(id, specificOptions, fixedColumnsOptions)
 {
@@ -67,59 +66,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       defaultOptions, mergedOptions,
       nCols,
       table;
-          
-  windowResizeHandler = function()
-  {
-    <?php
-    // IE8 and below will trigger $(window).resize not just when the window
-    // is resized but also when an element in the window is resized.   We 
-    // therefore need to check that this is a genuine window resize event
-    // otherwise we end up in an infinite loop
-    ?>
-    var winNewWidth = $(window).width();
-    var winNewHeight = $(window).height();
-    if ((winNewWidth === winWidth) && (winNewHeight === winHeight))
-    {
-      return;
-    }
-    winWidth = winNewWidth;
-    winHeight = winNewHeight;
-    <?php
-    // This is a genuine resize event.   Unbind the handler to stop any
-    // more resize events while we are dealing with this one
-    ?>
-    $(window).unbind('resize', windowResizeHandler);
-    <?php
-    // Need to re-create the datatable when the browser window is resized.  We
-    // can't just do a fnDraw() because that does not redraw the Fixed Columns
-    // properly.
-            
-    // We set a timeout to make the resizing a bit smoother, as otherwise it's
-    // fairly CPU intensive
-    ?>
-    window.setTimeout(function() {
-        <?php
-        // If we're using an Ajax data source then we don't want to have to make
-        // an Ajax call and wait for the data every time we resize.   So retrieve
-        // the data from the table and pass it directly to the new table.
-        ?>
-        if (mergedOptions.ajax)
-        {
-          mergedOptions.aaData = oTable.fnGetData();
-          mergedOptions.ajax = null;
-        }
-        <?php
-        // Save the language strings, because we don't need to make another Ajax
-        // to fetch the language strings again when we resize
-        ?>
-        $.extend(true, mergedOptions.oLanguage, oTable.fnSettings().oLanguage);
-                
-        oTable.fnDestroy();
-        oTable = table.dataTable(mergedOptions);
-      }, 200);
-            
-  };
-          
+  
   if (lteIE6)
   {
     $('.js div.datatable_container').css('visibility', 'visible');
@@ -169,23 +116,6 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     defaultOptions.colReorder = {};
     defaultOptions.colVis = {buttonText: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>',
                              restore: '<?php echo escape_js(get_vocab("restore_original")) ?>'};
-
-    defaultOptions.fnInitComplete = function(){
-        if (fixedColumnsOptions)
-        {
-          <?php 
-          // Fix the left and/or right columns.  This has to be done when 
-          // initialisation is complete as the language files are loaded
-          // asynchronously (actually they aren't but just in case they ever are)
-          ?>
-          new $.fn.dataTable.FixedColumns(this, fixedColumnsOptions);
-        }
-        $('.js div.datatable_container').css('visibility', 'visible');
-        <?php // Need to adjust column sizing after the table is made visible ?>
-        this.fnAdjustColumnSizing();
-        <?php // Rebind the handler ?>
-        $(window).bind('resize', windowResizeHandler);
-      };
               
     <?php
     // If we've fixed the left or right hand columns, then (a) remove them
@@ -220,7 +150,12 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     ?>
     mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
 
-    var oTable = table.dataTable(mergedOptions);
+    var datatable = table.DataTable(mergedOptions);
+    
+    if (fixedColumnsOptions)
+    {
+      new $.fn.dataTable.FixedColumns(datatable, fixedColumnsOptions);
+    }
 
     <?php
     // If we're using an Ajax data source then don't offer column reordering.
@@ -246,7 +181,22 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       ?>
     }
 
-    $(window).bind('resize', windowResizeHandler);
-    return oTable;
+    $('.js div.datatable_container').css('visibility', 'visible');
+    <?php // Need to adjust column sizing after the table is made visible ?>
+    datatable.columns.adjust();
+    
+    <?php
+    // Adjust the column sizing on a window resize.   We shouldn't have to do this because
+    // columns.adjust() is called automatically by DataTables on a window resize, but if we
+    // don't then a right hand fixed column appears twice when a window's width is increased.
+    // I have tried to create a simple test case, but everything works OK in the test case, so
+    // it's something to do with the way MRBS uses DataTables - maybe the CSS, or maybe the
+    // JavaScript.
+    ?>
+    $(window).resize(function () {
+      datatable.columns.adjust();
+    });
+    
+    return datatable;
   }
 }
