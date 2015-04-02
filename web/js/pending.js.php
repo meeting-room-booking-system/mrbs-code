@@ -44,8 +44,9 @@ init = function(args) {
              .text('-');
              
     $(document).on('click', 'table.sub th.control', function () {
-        var nTr = $(this).closest('.table_container').parent().prev();
-        var serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
+        var nTr = $(this).closest('.table_container').parent().prev(),
+            serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
+            
         $('#subtable_' + serial + '_wrapper').slideUp( function () {
             pendingTable.fnClose(nTr.get(0));
             nTr.show();
@@ -71,17 +72,21 @@ init = function(args) {
     var colDefsMain = [{"sWidth": "1.2em", "aTargets": [0] },
                        {"sWidth": maxActionWidth + "px", "aTargets": [6] }];
     colDefsMain = colDefsMain.concat(getSTypes(maintable));
+    
     <?php
     // Set up a click event that "opens" the table row and inserts the subtable
     ?>
     maintable.find('td.control')
              .text('+');
+             
     $(document).on('click', 'td.control', function () {
-        var nTr = $(this).parent();
-        var serial = nTr.attr('id').replace('row_', '');
-        var subtableId = 'subtable_' + serial;
-        var subtable = subtables.find('#' + subtableId).parent().clone();                                
-        var columns = [];          
+        
+        var nTr = $(this).parent(),
+            serial = nTr.attr('id').replace('row_', ''),
+            subtableId = 'subtable_' + serial,
+            subtable = subtables.find('#' + subtableId).parent().clone(),
+            columns = []; 
+            
         <?php
         // We want the columns in the main and sub tables to align.  So
         // find the widths of the main table columns and use those values
@@ -104,7 +109,8 @@ init = function(args) {
           });
 
         nTr.hide();
-        pendingTable.fnOpen(nTr.get(0), subtable.get(0), 'table_container');
+        //pendingTable.fnOpen(nTr.get(0), subtable.get(0), 'table_container');
+        pendingTable.row(nTr).add(subtable.get(0));
 
         $('#' + subtableId).dataTable({"bAutoWidth": false,
                                        "paging": false,
@@ -124,17 +130,7 @@ init = function(args) {
     // this on the dataTables forum.  In the meantime we comment out the FixedColumns.
     ?>
     tableOptions.stateSave = false;
-    <?php
-    // Fix the left hand column.  This has to be done when 
-    // initialisation is complete as the language files are loaded
-    // asynchronously
-    ?>
-    tableOptions.fnInitComplete = function(){
-        /*
-        new FixedColumns(pendingTable, {leftColumns: 1});
-        */
-        $('.js div.datatable_container').css('visibility', 'visible');
-      };
+
     <?php
     // Remove the first column from the column visibility
     // list because it is the control column
