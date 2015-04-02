@@ -42,7 +42,7 @@ init = function(args) {
     ?>
     maintable.find('table.sub th.control')
              .text('-');
-             
+                 
     $(document).on('click', 'table.sub th.control', function () {
         var nTr = $(this).closest('.table_container').parent().prev(),
             serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
@@ -110,7 +110,8 @@ init = function(args) {
 
         nTr.hide();
         //pendingTable.fnOpen(nTr.get(0), subtable.get(0), 'table_container');
-        pendingTable.row(nTr).add(subtable.get(0));
+        pendingTable.row(nTr).child(subtable.get(0)).show();
+        subtable.closest('td').addClass('table_container');
 
         $('#' + subtableId).dataTable({"bAutoWidth": false,
                                        "paging": false,
