@@ -48,7 +48,7 @@ init = function(args) {
             serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
             
         $('#subtable_' + serial + '_wrapper').slideUp( function () {
-            pendingTable.fnClose(nTr.get(0));
+            pendingTable.row(nTr).child.hide();
             nTr.show();
           });
       });
@@ -109,7 +109,6 @@ init = function(args) {
           });
 
         nTr.hide();
-        //pendingTable.fnOpen(nTr.get(0), subtable.get(0), 'table_container');
         pendingTable.row(nTr).child(subtable.get(0)).show();
         subtable.closest('td').addClass('table_container');
 
