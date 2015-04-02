@@ -90,7 +90,7 @@ init = function(args) {
         <?php
         // We want the columns in the main and sub tables to align.  So
         // find the widths of the main table columns and use those values
-        // to set the widths of the subable columns.   [This doesn't work
+        // to set the widths of the subtable columns.   [This doesn't work
         // 100% - I'm not sure why - but I have left the code in]
         ?>
         maintable.find('tr').eq(0).find('th').each(function(i){
