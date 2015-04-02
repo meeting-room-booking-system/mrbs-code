@@ -144,9 +144,15 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     // Set the language file to be used
     if ($lang_file = get_datatable_lang_file('../jquery/datatables/language'))
     {
-      $lang_file = substr($lang_file, 3); // strip off the '../'
+      // If using the language.url way of loading a DataTables language file,
+      // then the file must be valid JSON.   The .lang files that can be 
+      // downloaded from GitHub are not valid JSON as they contain comments.  They
+      // therefore cannot be used with language.url, but instead have to be
+      // included directly.   Note that if ever we go back to using the url
+      // method then the '../' would need to be stripped off the pathname, as in
+      //    $lang_file = substr($lang_file, 3); // strip off the '../'
       ?>
-      defaultOptions.oLanguage = {"sUrl": "<?php echo $lang_file ?>"};
+      defaultOptions.oLanguage = <?php include $lang_file ?>;
       <?php
     }
     ?>
@@ -170,7 +176,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
           <?php 
           // Fix the left and/or right columns.  This has to be done when 
           // initialisation is complete as the language files are loaded
-          // asynchronously
+          // asynchronously (actually they aren't but just in case they ever are)
           ?>
           new $.fn.dataTable.FixedColumns(this, fixedColumnsOptions);
         }
