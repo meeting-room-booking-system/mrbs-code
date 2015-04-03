@@ -42,7 +42,8 @@ init = function(args) {
     ?>
     maintable.find('table.sub th.control')
              .text('-');
-                 
+   
+    
     $(document).on('click', 'table.sub th.control', function () {
         var nTr = $(this).closest('.table_container').parent().prev(),
             serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
@@ -122,7 +123,6 @@ init = function(args) {
                   
     <?php // Turn the table into a datatable ?>
     var tableOptions = {};
-    tableOptions.sScrollXInner = "100%";
     tableOptions.aoColumnDefs = colDefsMain;
     <?php
     // For some reason I don't understand, fnOpen() doesn't seem to work when
