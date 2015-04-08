@@ -59,20 +59,8 @@ init = function(args) {
     // don't appear, but so that we've got the data when we want to "open" a row
     ?>
     var subtables = maintable.find('tr.sub_table').detach();
-    <?php
-    // Set up the column definitions, fixing the widths of the first and last columns
-    // Get the width of the last column by finding the width of the largest content
-    // (assuming all the content is wrapped in the first child)
-    ?>
-    var maxActionWidth = 0;
-    $('th:last-child, td:last-child').each(function() {
-        var actionWidth = $(this).children().eq(0).outerWidth(true);
-        maxActionWidth = Math.max(maxActionWidth, actionWidth);
-      });
-    maxActionWidth += 16; <?php // to allow for padding in the <td> ?>
-    var colDefsMain = [{"sWidth": "1.2em", "aTargets": [0] },
-                       {"sWidth": maxActionWidth + "px", "aTargets": [6] }];
-    colDefsMain = colDefsMain.concat(getSTypes(maintable));
+    
+    var colDefsMain = getSTypes(maintable);
     
     <?php
     // Set up a click event that "opens" the table row and inserts the subtable
@@ -108,7 +96,7 @@ init = function(args) {
             def.sWidth = ($(this).innerWidth()) + "px";
             columns.push(def);
           });
-
+        
         nTr.hide();
         pendingTable.row(nTr).child(subtable.get(0)).show();
         subtable.closest('td').addClass('table_container');
