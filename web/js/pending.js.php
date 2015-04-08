@@ -36,7 +36,9 @@ init = function(args) {
   }
   else
   {
-    var maintable = $('#pending_table');
+    var maintable = $('#pending_table'),
+        subtables;
+        
     <?php
     // Add a '-' control to the subtables and make them close on clicking it
     ?>
@@ -58,7 +60,7 @@ init = function(args) {
     // Detach all the subtables from the DOM (detach keeps a copy) so that they
     // don't appear, but so that we've got the data when we want to "open" a row
     ?>
-    var subtables = maintable.find('tr.sub_table').detach();
+    subtables = maintable.find('tr.sub_table').detach();
     
     <?php
     // Set up a click event that "opens" the table row and inserts the subtable
@@ -99,17 +101,17 @@ init = function(args) {
         pendingTable.row(nTr).child(subtable.get(0)).show();
         subtable.closest('td').addClass('table_container');
 
-        $('#' + subtableId).dataTable({"bAutoWidth": false,
+        $('#' + subtableId).dataTable({"autoWidth": false,
                                        "paging": false,
                                        "dom": 't',
-                                       "aoColumns": columns});
+                                       "columns": columns});
 
         $('#subtable_' + serial + '_wrapper').hide().slideDown();
       });
                   
     <?php // Turn the table into a datatable ?>
     var tableOptions = {};
-    tableOptions.aoColumnDefs = getSTypes(maintable);
+    tableOptions.columnDefs = getSTypes(maintable);
     <?php
     // For some reason I don't understand, fnOpen() doesn't seem to work when
     // using FixedColumns.   We also have to turn off bStateSave.  I have raised
