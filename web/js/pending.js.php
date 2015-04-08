@@ -60,8 +60,6 @@ init = function(args) {
     ?>
     var subtables = maintable.find('tr.sub_table').detach();
     
-    var colDefsMain = getSTypes(maintable);
-    
     <?php
     // Set up a click event that "opens" the table row and inserts the subtable
     ?>
@@ -111,7 +109,7 @@ init = function(args) {
                   
     <?php // Turn the table into a datatable ?>
     var tableOptions = {};
-    tableOptions.aoColumnDefs = colDefsMain;
+    tableOptions.aoColumnDefs = getSTypes(maintable);
     <?php
     // For some reason I don't understand, fnOpen() doesn't seem to work when
     // using FixedColumns.   We also have to turn off bStateSave.  I have raised
