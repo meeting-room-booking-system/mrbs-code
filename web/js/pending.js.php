@@ -102,18 +102,19 @@ init = function(args) {
         pendingTable.row(nTr).child(subtable.get(0)).show();
         subtable.closest('td').addClass('table_container');
 
-        console.dir(columns);
-        subDataTable = $('#' + subtableId).DataTable({"autoWidth": false,
-                                                      "paging": false,
-                                                      "dom": 't',
-                                                      "columns": columns});
+        subDataTable = $('#' + subtableId).DataTable({autoWidth: false,
+                                                      paging: false,
+                                                      dom: 't',
+                                                      order: [[5, 'asc']],
+                                                      columns: columns});
 
         $('#subtable_' + serial + '_wrapper').hide().slideDown();
       });
                   
     <?php // Turn the table into a datatable ?>
-    var tableOptions = {};
-    tableOptions.columnDefs = getSTypes(maintable);
+    var tableOptions = {order: [[5, 'asc']]};
+    tableOptions.columnDefs = [{targets: 0, orderable: false}];
+    tableOptions.columnDefs.push(getSTypes(maintable));
     <?php
     // For some reason I don't understand, fnOpen() doesn't seem to work when
     // using FixedColumns.   We also have to turn off bStateSave.  I have raised
