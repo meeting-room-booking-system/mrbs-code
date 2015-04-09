@@ -86,6 +86,7 @@ table.admin_table {
 .admin_table th, .admin_table td,
 table.dataTable thead th, table.dataTable thead td,
 table.dataTable tbody th, table.dataTable tbody td {
+  box-sizing: border-box;
   vertical-align: middle;
   text-align: left;
   padding: 0.1em 0.6em;
@@ -916,11 +917,27 @@ td#sticky_day {border: 1px dotted <?php echo $highlight_font_color ?>}
 td.mincals_week_number { opacity: 0.5; font-size: 60%; }
 
 /* ------------ PENDING.PHP ------------------*/
-#pending_list form {display: inline-block}
-#pending_list td.table_container, #pending_list td.sub_table {padding: 0; border: 0; margin: 0}
-#pending_list .control {padding-left: 0; padding-right: 0; text-align: center;
-                        color: <?php echo $standard_font_color ?>}
-.js #pending_list td.control {background-color: <?php echo $pending_control_color ?>}
+#pending_list form {
+  display: inline-block;
+}
+
+#pending_list td.table_container, #pending_list td.sub_table {
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+#pending_list .control {
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
+  color: <?php echo $standard_font_color ?>;
+}
+
+.js #pending_list td.control {
+  background-color: <?php echo $pending_control_color ?>;
+}
+
 #pending_list td:first-child {width: 1.2em}
 #pending_list #pending_table td.sub_table {width: auto}
 table.admin_table.sub {border-right-width: 0}

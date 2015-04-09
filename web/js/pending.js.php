@@ -74,7 +74,8 @@ init = function(args) {
             serial = nTr.attr('id').replace('row_', ''),
             subtableId = 'subtable_' + serial,
             subtable = subtables.find('#' + subtableId).parent().clone(),
-            columns = []; 
+            columns = [],
+            subDataTable;
             
         <?php
         // We want the columns in the main and sub tables to align.  So
@@ -87,13 +88,13 @@ init = function(args) {
             switch (i)
             {
               case 0: <?php // expand control ?>
-                def.bSortable = false;
+                def.orderable = false;
                 break;
               case 5: <?php // start-time ?>
                 def.sType = "title-numeric";
                 break;
             }
-            def.sWidth = ($(this).innerWidth()) + "px";
+            def.width = ($(this).outerWidth()) + "px";
             columns.push(def);
           });
         
@@ -101,10 +102,11 @@ init = function(args) {
         pendingTable.row(nTr).child(subtable.get(0)).show();
         subtable.closest('td').addClass('table_container');
 
-        $('#' + subtableId).dataTable({"autoWidth": false,
-                                       "paging": false,
-                                       "dom": 't',
-                                       "columns": columns});
+        console.dir(columns);
+        subDataTable = $('#' + subtableId).DataTable({"autoWidth": false,
+                                                      "paging": false,
+                                                      "dom": 't',
+                                                      "columns": columns});
 
         $('#subtable_' + serial + '_wrapper').hide().slideDown();
       });
