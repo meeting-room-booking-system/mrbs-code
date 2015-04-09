@@ -74,32 +74,23 @@ init = function(args) {
             serial = nTr.attr('id').replace('row_', ''),
             subtableId = 'subtable_' + serial,
             subtable = subtables.find('#' + subtableId).parent().clone(),
-            columns = [],
+            columnDefs = [],
+            types,
             subDataTable;
             
         <?php
         // We want the columns in the main and sub tables to align.  So
         // find the widths of the main table columns and use those values
-        // to set the widths of the subtable columns.   [This doesn't work
-        // 100% - I'm not sure why - but I have left the code in]
+        // to set the widths of the subtable columns. 
         ?>
         maintable.find('tr').eq(0).find('th').each(function(i){
-            var def = {};
-            
-            switch (i)
-            {
-              case 0: <?php // expand control ?>
-                def.orderable = false;
-                break;
-              case 5: <?php // start-time ?>
-                def.type = "title-numeric";
-                break;
-            }
-            
-            def.width = ($(this).outerWidth()) + "px";
-            columns.push(def);
+            columnDefs.push({width: ($(this).outerWidth()) + "px",
+                             targets: i});
           });
         
+        columnDefs.push({orderable: false, targets: 0});
+        columnDefs = columnDefs.concat(getTypes(subtable));
+
         nTr.hide();
         pendingTable.row(nTr).child(subtable.get(0)).show();
         subtable.closest('td').addClass('table_container');
@@ -108,15 +99,15 @@ init = function(args) {
                                                       paging: false,
                                                       dom: 't',
                                                       order: [[5, 'asc']],
-                                                      columns: columns});
+                                                      columnDefs: columnDefs});
 
         $('#subtable_' + serial + '_wrapper').hide().slideDown();
       });
                   
     <?php // Turn the table into a datatable ?>
     var tableOptions = {order: [[5, 'asc']]};
-    tableOptions.columnDefs = [{targets: 0, orderable: false}];
-    tableOptions.columnDefs.push(getTypes(maintable));
+    tableOptions.columnDefs = [{orderable: false, targets: 0}];
+    tableOptions.columnDefs = tableOptions.columnDefs.concat(getTypes(maintable));
     <?php
     // For some reason I don't understand, fnOpen() doesn't seem to work when
     // using FixedColumns.   We also have to turn off bStateSave.  I have raised

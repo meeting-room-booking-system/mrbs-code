@@ -23,6 +23,7 @@ var getTypes = function getTypes(table) {
         
     table.find('thead tr:first th').each(function(i) {
        var type = $(this).find('span').data('type');
+       
        if (type)
        {
          if (types[type] === undefined)
