@@ -327,10 +327,10 @@ if (!$ajax)
   echo "<table id=\"search_results\" class=\"admin_table display\">\n";
   echo "<thead>\n";
   echo "<tr>\n";
-  // We give some columns an stype data value so that the JavaScript knows how to sort them
+  // We give some columns a type data value so that the JavaScript knows how to sort them
   echo "<th>" . get_vocab("namebooker") . "</th>\n";
   echo "<th>" . get_vocab("createdby") . "</th>\n";
-  echo "<th><span class=\"normal\" data-stype=\"title-numeric\">" . get_vocab("start_date") . "</span></th>\n";
+  echo "<th><span class=\"normal\" data-type=\"title-numeric\">" . get_vocab("start_date") . "</span></th>\n";
   echo "<th>" . get_vocab("description") . "</th>\n";
   echo "</tr>\n";
   echo "</thead>\n";

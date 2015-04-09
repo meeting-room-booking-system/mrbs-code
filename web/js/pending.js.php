@@ -85,15 +85,17 @@ init = function(args) {
         ?>
         maintable.find('tr').eq(0).find('th').each(function(i){
             var def = {};
+            
             switch (i)
             {
               case 0: <?php // expand control ?>
                 def.orderable = false;
                 break;
               case 5: <?php // start-time ?>
-                def.sType = "title-numeric";
+                def.type = "title-numeric";
                 break;
             }
+            
             def.width = ($(this).outerWidth()) + "px";
             columns.push(def);
           });
@@ -114,7 +116,7 @@ init = function(args) {
     <?php // Turn the table into a datatable ?>
     var tableOptions = {order: [[5, 'asc']]};
     tableOptions.columnDefs = [{targets: 0, orderable: false}];
-    tableOptions.columnDefs.push(getSTypes(maintable));
+    tableOptions.columnDefs.push(getTypes(maintable));
     <?php
     // For some reason I don't understand, fnOpen() doesn't seem to work when
     // using FixedColumns.   We also have to turn off bStateSave.  I have raised

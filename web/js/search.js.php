@@ -58,8 +58,8 @@ init = function(args) {
     $ajax_url = "search.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1";
     ?>
     tableOptions.ajax = "<?php echo $ajax_url ?>";
-    <?php // Get the sTypes and feed those into dataTables ?>
-    tableOptions.aoColumnDefs = getSTypes($('#search_results'));
+    <?php // Get the types and feed those into dataTables ?>
+    tableOptions.aoColumnDefs = getTypes($('#search_results'));
       
     makeDataTable('#search_results', tableOptions, {"iLeftColumns": 1});
 

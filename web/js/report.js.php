@@ -96,9 +96,9 @@ init = function(args) {
   var table = $('#report_table');
   
   <?php 
-  // Get the sTypes and feed those into dataTables
+  // Get the types and feed those into dataTables
   ?>
-  tableOptions.aoColumnDefs = getSTypes(table);
+  tableOptions.aoColumnDefs = getTypes(table);
 
   <?php
   // Fix the left hand column.  This has to be done when initialisation is 

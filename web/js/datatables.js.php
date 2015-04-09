@@ -13,16 +13,16 @@ if ($use_strict)
 }
 
 
-// Get the sTypes, which are assumed to be in a data-sType in a <span> in the <th>
+// Get the types, which are assumed to be in a data-type in a <span> in the <th>
 // of the table
 ?>
-var getSTypes = function getSTypes(table) {
+var getTypes = function getTypes(table) {
     var type,
         types = {},
-        sTypes = [];
+        result = [];
         
     table.find('thead tr:first th').each(function(i) {
-       var type = $(this).find('span').data('stype');
+       var type = $(this).find('span').data('type');
        if (type)
        {
          if (types[type] === undefined)
@@ -37,12 +37,12 @@ var getSTypes = function getSTypes(table) {
     {
       if (types.hasOwnProperty(type))
       {
-        sTypes.push({sType: type, 
-                     aTargets: types[type]});
+        result.push({type: type, 
+                     targets: types[type]});
       }
     }
-    
-    return sTypes;
+
+    return result;
   };
   
         

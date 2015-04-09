@@ -38,9 +38,9 @@ init = function(args) {
     <?php
   }
 
-  // Get the sTypes and feed those into dataTables
+  // Get the types and feed those into dataTables
   ?>
-  tableOptions.aoColumnDefs = getSTypes($('#users_table'));
+  tableOptions.aoColumnDefs = getTypes($('#users_table'));
   makeDataTable('#users_table', tableOptions, {leftColumns: 1});
 };
 

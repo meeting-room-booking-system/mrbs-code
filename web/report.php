@@ -390,14 +390,14 @@ function escape($string)
 }
 
 
-// Wraps $string in a span with a data-stype value of $stype - but only for HTML output
-function stype_wrap($string, $stype)
+// Wraps $string in a span with a data-type value of $data_type - but only for HTML output
+function type_wrap($string, $data_type)
 {
   global $output_format;
   
   if ($output_format == OUTPUT_HTML)
   {
-    return '<span class="normal" data-stype="title-numeric">' . $string . '</span>';
+    return '<span class="normal" data-type="' . $data_type . '">' . $string . '</span>';
   }
   else
   {
@@ -425,7 +425,7 @@ function report_header()
   
   foreach ($field_order_list as $field)
   {
-    // We give some columns an stype data value so that the JavaScript knows how to sort them
+    // We give some columns a type data value so that the JavaScript knows how to sort them
     switch ($field)
     {
       case 'name':
@@ -438,11 +438,11 @@ function report_header()
         $values[] = get_vocab("room");
         break;
       case 'start_time':
-        $values[] = stype_wrap(get_vocab("start_date"), 'title-numeric');
+        $values[] = type_wrap(get_vocab("start_date"), 'title-numeric');
         break;
       case 'end_time':
-        $values[] = stype_wrap(get_vocab("end_date"), 'title-numeric');
-        $values[] = stype_wrap(get_vocab("duration"), 'title-numeric');
+        $values[] = type_wrap(get_vocab("end_date"), 'title-numeric');
+        $values[] = type_wrap(get_vocab("duration"), 'title-numeric');
         break;
       case 'description':
         $values[] = get_vocab("fulldescription_short");
@@ -466,7 +466,7 @@ function report_header()
         }
         break;
       case 'last_updated':
-        $values[] = stype_wrap(get_vocab("lastupdate"), 'title-numeric');
+        $values[] = type_wrap(get_vocab("lastupdate"), 'title-numeric');
         break;
       default:
         // the custom fields
