@@ -163,6 +163,9 @@ table.display span {
   display: none;
 }
 
+table.display span.normal {
+  display: inline;
+}
 
 select.room_area_select {margin-right: 0.5em}
 
