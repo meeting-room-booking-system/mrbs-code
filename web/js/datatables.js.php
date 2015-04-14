@@ -89,8 +89,23 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     // the datatable sorts out its own formatting.
     ?>
     table.find('colgroup').remove();
+    
     <?php // Set up the default options ?>
-    defaultOptions = {};
+    defaultOptions = {
+      deferRender: true,
+      paging: true,
+      pageLength: 25,
+      pagingType: 'full_numbers',
+      processing: true,
+      scrollCollapse: true,
+      stateSave: true,
+      dom: 'C<"clear">lfrtip',
+      scrollX: '100%',
+      colReorder: {},
+      colVis: {buttonText: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>',
+               restore: '<?php echo escape_js(get_vocab("restore_original")) ?>'}
+    };
+    
     <?php
     // Set the language file to be used
     if ($lang_file = get_datatable_lang_file('../jquery/datatables/language'))
@@ -107,19 +122,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       <?php
     }
     ?>
-    defaultOptions.deferRender = true;
-    defaultOptions.paging = true;
-    defaultOptions.pageLength = 25;
-    defaultOptions.pagingType = "full_numbers";
-    defaultOptions.processing = true;
-    defaultOptions.scrollCollapse = true;
-    defaultOptions.stateSave = true;
-    defaultOptions.pageLength = 25;
-    defaultOptions.dom = 'C<"clear">lfrtip';
-    defaultOptions.scrollX = "100%";
-    defaultOptions.colReorder = {};
-    defaultOptions.colVis = {buttonText: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>',
-                             restore: '<?php echo escape_js(get_vocab("restore_original")) ?>'};
+
               
     <?php
     // If we've fixed the left or right hand columns, then (a) remove them
