@@ -96,7 +96,8 @@ init = function(args) {
       }).appendTo('#report_form');
   }
   
-  var table = $('#report_table');
+  var table = $('#report_table'),
+      reportTable;
   
   <?php 
   // Get the types and feed those into dataTables
@@ -113,8 +114,9 @@ init = function(args) {
       
           $('<button id="delete_button"><?php echo escape_js(get_vocab("delete_entries")) ?><\/button>')
                 .click(function() {
-                    var aData = reportTable.fnGetFilteredData();
-                    var nEntries = aData.length;
+                    var data = reportTable.fnGetFilteredData(),
+                        nEntries = data.length;
+                        
                     if (window.confirm("<?php echo escape_js(get_vocab('delete_entries_warning')) ?>" +
                                 nEntries.toLocaleString()))
                     {
@@ -125,12 +127,17 @@ init = function(args) {
                       // so we need to count them all back before we know that we've
                       // finished.  The results will be held in the results array.
                       ?>
-                      var batchSize = <?php echo DEL_ENTRY_AJAX_BATCH_SIZE ?>;
-                      var batches = [];
-                      var batch = [];
-                      for (var i=0; i<nEntries; i++)
+                      var batchSize = <?php echo DEL_ENTRY_AJAX_BATCH_SIZE ?>,
+                          batches = [],
+                          batch = [],
+                          nBatches,
+                          results,
+                          i,
+                          j;
+                          
+                      for (i=0; i<nEntries; i++)
                       {
-                        batch.push($(aData[i][0]).data('id'));
+                        batch.push($(data[i][0]).data('id'));
                         if (batch.length >= batchSize)
                         {
                           batches.push(batch);
@@ -142,16 +149,22 @@ init = function(args) {
                         batches.push(batch);
                       }
                       <?php // Dispatch the batches (if any) ?>
-                      var nBatches = batches.length;
+                      nBatches = batches.length;
                       if (nBatches > 0)
                       {
-                        var results = [];
+                        results = [];
                         $('#report_table_processing').css('visibility', 'visible');
-                        for (var j=0; j<nBatches; j++)
+                        for (j=0; j<nBatches; j++)
                         {
                           $.post('del_entry_ajax.php',
                                  {ids: batches[j]},
                                  function(result) {
+                                    var nDeleted,
+                                        isInt,
+                                        i,
+                                        oSettings,
+                                        span;
+                                        
                                     results.push(result);
                                     <?php // Check whether everything has finished ?>
                                     if (results.length >= nBatches)
@@ -160,9 +173,9 @@ init = function(args) {
                                       <?php
                                       // If all's gone well the result will contain the number of entries deleted
                                       ?>
-                                      var nDeleted = 0;
-                                      var isInt = /^\s*\d+\s*$/;
-                                      for (var i=0; i<results.length; i++)
+                                      nDeleted = 0;
+                                      isInt = /^\s*\d+\s*$/;
+                                      for (i=0; i<results.length; i++)
                                       {
                                         if (!isInt.test(results[i]))
                                         {
@@ -177,7 +190,7 @@ init = function(args) {
                                       // side processing) and there's no summary table we can be
                                       // slightly more elegant and just reload the Ajax data source.
                                       ?>
-                                      var oSettings = reportTable.fnSettings();
+                                      oSettings = reportTable.fnSettings();
                                       if (oSettings.ajax && 
                                           !oSettings.bServerSide &&
                                           ($('#div_summary').length === 0))
@@ -189,7 +202,7 @@ init = function(args) {
                                         // loaded asynchronously and won't be there yet.  So we calculate it
                                         // by subtracting the number of entries deleted from theee previous count.
                                         ?>
-                                        var span = $('#n_entries');
+                                        span = $('#n_entries');
                                         span.text(parseInt(span.text(), 10) - nDeleted);
                                       }
                                       else
@@ -210,6 +223,6 @@ init = function(args) {
     ?>
 
 
-  var reportTable = makeDataTable('#report_table', tableOptions, {leftColumns: 1});
+  reportTable = makeDataTable('#report_table', tableOptions, {leftColumns: 1});
   
 };
