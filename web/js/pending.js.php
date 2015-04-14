@@ -79,7 +79,6 @@ init = function(args) {
             subtableId = 'subtable_' + serial,
             subtable = subtables.find('#' + subtableId).parent().clone(),
             columnDefs = [],
-            types,
             subDataTable;
 
         <?php
