@@ -123,7 +123,7 @@ init = function(args) {
     // Remove the first column from the column visibility
     // list because it is the control column
     ?>
-    tableOptions.oColVis = {aiExclude: [0]};
+    tableOptions.colVis = {exclude: [0]};
     <?php
     // and stop the first column being reordered
     ?>
