@@ -109,8 +109,6 @@ init = function(args) {
   ?>
   tableOptions.initComplete = function(){
     
-      new $.fn.dataTable.FixedColumns(this, {"iLeftColumns": 1});
-      $('.js div.datatable_container').css('visibility', 'visible');
       <?php 
       // Also add a "Delete entries button", provided that (a) the user is an
       // admin and (b) the configuration allows it
@@ -224,6 +222,6 @@ init = function(args) {
   ?>
   tableOptions.oColReorder = {iFixedColumns: 1};
 
-  var reportTable = makeDataTable('#report_table', tableOptions);
+  var reportTable = makeDataTable('#report_table', tableOptions, {leftColumns: 1});
   
 };
