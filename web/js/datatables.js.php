@@ -64,7 +64,9 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   var winWidth  = $(window).width(),
       winHeight = $(window).height(),
       i,
-      defaultOptions, mergedOptions,
+      defaultOptions,
+      mergedOptions,
+      colVisExcludeCols,
       nCols,
       table,
       dataTable;
@@ -124,7 +126,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     // from the column visibility list because they are fixed and (b) stop them
     // from being reordered
     ?>
-    var colVisExcludeCols = [];
+    colVisExcludeCols = [];
     if (fixedColumnsOptions)
     {
       if (fixedColumnsOptions.leftColumns)
