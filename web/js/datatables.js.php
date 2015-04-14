@@ -100,7 +100,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       // method then the '../' would need to be stripped off the pathname, as in
       //    $lang_file = substr($lang_file, 3); // strip off the '../'
       ?>
-      defaultOptions.oLanguage = <?php include $lang_file ?>;
+      defaultOptions.language = <?php include $lang_file ?>;
       <?php
     }
     ?>
