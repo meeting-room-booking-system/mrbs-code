@@ -127,7 +127,7 @@ init = function(args) {
     <?php
     // and stop the first column being reordered
     ?>
-    tableOptions.oColReorder = {"iFixedColumns": 1};
+    tableOptions.colReorder = {"fixedColumnsLeft": 1};
     pendingDataTable = makeDataTable('#pending_table', tableOptions);
   }  // if (!lteie6)
 };
