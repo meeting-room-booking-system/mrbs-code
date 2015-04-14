@@ -161,7 +161,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     
     if (fixedColumnsOptions)
     {
-      new $.fn.dataTable.FixedColumns(datatable, fixedColumnsOptions);
+      new $.fn.dataTable.FixedColumns(dataTable, fixedColumnsOptions);
     }
 
     <?php

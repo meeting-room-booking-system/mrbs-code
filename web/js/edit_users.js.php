@@ -40,7 +40,7 @@ init = function(args) {
 
   // Get the types and feed those into dataTables
   ?>
-  tableOptions.aoColumnDefs = getTypes($('#users_table'));
+  tableOptions.columnDefs = getTypes($('#users_table'));
   makeDataTable('#users_table', tableOptions, {leftColumns: 1});
 };
 
