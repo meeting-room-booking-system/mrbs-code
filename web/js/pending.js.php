@@ -17,6 +17,7 @@ if ($use_strict)
 // Extend the init() function 
 ?>
 var oldInitPending = init;
+
 init = function(args) {
   oldInitPending.apply(this, [args]);
 
@@ -37,8 +38,9 @@ init = function(args) {
   else
   {
     var maintable = $('#pending_table'),
-        subtables;
-        
+        subtables,
+        startTimeCol = maintable.find('thead tr:first th.header_start_time').index();
+    
     <?php
     // Add a '-' control to the subtables and make them close on clicking it
     ?>
@@ -77,7 +79,7 @@ init = function(args) {
             columnDefs = [],
             types,
             subDataTable;
-            
+
         <?php
         // We want the columns in the main and sub tables to align.  So
         // find the widths of the main table columns and use those values
@@ -98,14 +100,14 @@ init = function(args) {
         subDataTable = $('#' + subtableId).DataTable({autoWidth: false,
                                                       paging: false,
                                                       dom: 't',
-                                                      order: [[5, 'asc']],
+                                                      order: [[startTimeCol, 'asc']],
                                                       columnDefs: columnDefs});
 
         $('#subtable_' + serial + '_wrapper').hide().slideDown();
       });
                   
     <?php // Turn the table into a datatable ?>
-    var tableOptions = {order: [[5, 'asc']]};
+    var tableOptions = {order: [[startTimeCol, 'asc']]};
     tableOptions.columnDefs = [{orderable: false, targets: 0}];
     tableOptions.columnDefs = tableOptions.columnDefs.concat(getTypes(maintable));
     <?php
