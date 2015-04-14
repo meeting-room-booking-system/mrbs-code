@@ -66,7 +66,8 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       i,
       defaultOptions, mergedOptions,
       nCols,
-      table;
+      table,
+      dataTable;
   
   if (lteIE6)
   {
@@ -151,7 +152,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     ?>
     mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
 
-    var datatable = table.DataTable(mergedOptions);
+    dataTable = table.DataTable(mergedOptions);
     
     if (fixedColumnsOptions)
     {
@@ -184,7 +185,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
 
     $('.js div.datatable_container').css('visibility', 'visible');
     <?php // Need to adjust column sizing after the table is made visible ?>
-    datatable.columns.adjust();
+    dataTable.columns.adjust();
     
     <?php
     // Adjust the column sizing on a window resize.   We shouldn't have to do this because
@@ -195,9 +196,9 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     // JavaScript.
     ?>
     $(window).resize(function () {
-      datatable.columns.adjust();
+      dataTable.columns.adjust();
     });
     
-    return datatable;
+    return dataTable;
   }
 }
