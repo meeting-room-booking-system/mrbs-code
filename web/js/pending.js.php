@@ -39,7 +39,9 @@ init = function(args) {
   {
     var maintable = $('#pending_table'),
         subtables,
-        startTimeCol = maintable.find('thead tr:first th.header_start_time').index();
+        startTimeCol = maintable.find('thead tr:first th.header_start_time').index(),
+        tableOptions,
+        pendingDataTable;
     
     <?php
     // Add a '-' control to the subtables and make them close on clicking it
@@ -53,7 +55,7 @@ init = function(args) {
             serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
             
         $('#subtable_' + serial + '_wrapper').slideUp( function () {
-            pendingTable.row(nTr).child.hide();
+            pendingDataTable.row(nTr).child.hide();
             nTr.show();
           });
       });
@@ -94,7 +96,7 @@ init = function(args) {
         columnDefs = columnDefs.concat(getTypes(subtable));
 
         nTr.hide();
-        pendingTable.row(nTr).child(subtable.get(0)).show();
+        pendingDataTable.row(nTr).child(subtable.get(0)).show();
         subtable.closest('td').addClass('table_container');
 
         subDataTable = $('#' + subtableId).DataTable({autoWidth: false,
@@ -107,7 +109,7 @@ init = function(args) {
       });
                   
     <?php // Turn the table into a datatable ?>
-    var tableOptions = {order: [[startTimeCol, 'asc']]};
+    tableOptions = {order: [[startTimeCol, 'asc']]};
     tableOptions.columnDefs = [{orderable: false, targets: 0}];
     tableOptions.columnDefs = tableOptions.columnDefs.concat(getTypes(maintable));
     <?php
@@ -126,6 +128,6 @@ init = function(args) {
     // and stop the first column being reordered
     ?>
     tableOptions.oColReorder = {"iFixedColumns": 1};
-    var pendingTable = makeDataTable('#pending_table', tableOptions);
+    pendingDataTable = makeDataTable('#pending_table', tableOptions);
   }  // if (!lteie6)
 };
