@@ -32,8 +32,10 @@ init = function(args) {
   // The div is hidden while we are manipulating it so that it doesn't flicker;
   // we have to make it visible when we have finished
   ?>
-  var summaryDiv = $('#div_summary');
-  var summaryHead = summaryDiv.find('thead');
+  var summaryDiv = $('#div_summary'),
+      summaryHead = summaryDiv.find('thead'),
+      tableOptions;
+      
   summaryHead.find('tr:first th:odd').attr('colspan', '2');
   summaryHead.find('tr:first th:even').not(':first').remove();
   summaryHead.find('tr:first th:first').attr('rowspan', '2');
@@ -47,9 +49,10 @@ init = function(args) {
   // Report button is pressed then re-enable the iCal button.
   ?>
   $('input[name="output"]').change(function() {
-      var output = $(this).filter(':checked').val();
-      var formatButtons = $('input[name="output_format"]');
-      var icalButton = formatButtons.filter('[value="' + <?php echo OUTPUT_ICAL ?> + '"]');
+      var output = $(this).filter(':checked').val(),
+          formatButtons = $('input[name="output_format"]'),
+          icalButton = formatButtons.filter('[value="' + <?php echo OUTPUT_ICAL ?> + '"]');
+          
       if (output === '<?php echo SUMMARY ?>')
       {
         icalButton.attr('disabled', 'disabled');
@@ -67,7 +70,7 @@ init = function(args) {
   <?php
   // Turn the list of users into a dataTable
   ?>
-  var tableOptions = {};
+  tableOptions = {};
   <?php
   // Use an Ajax source if we're able to - gives much better
   // performance for large tables
@@ -98,13 +101,13 @@ init = function(args) {
   <?php 
   // Get the types and feed those into dataTables
   ?>
-  tableOptions.aoColumnDefs = getTypes(table);
+  tableOptions.columnDefs = getTypes(table);
 
   <?php
   // Fix the left hand column.  This has to be done when initialisation is 
   // complete as the language files are loaded asynchronously
   ?>
-  tableOptions.fnInitComplete = function(){
+  tableOptions.initComplete = function(){
     
       new $.fn.dataTable.FixedColumns(this, {"iLeftColumns": 1});
       $('.js div.datatable_container').css('visibility', 'visible');
