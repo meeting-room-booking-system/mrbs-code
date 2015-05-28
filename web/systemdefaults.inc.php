@@ -668,6 +668,7 @@ $auth["admin"][] = "administrator"; // A user name from the user list. Useful
 
 // 'auth_config' user database
 // Format: $auth["user"]["name"] = "password";
+unset($auth["user"]);              // Include this when copying to config.inc.php
 $auth["user"]["administrator"] = "secret";
 $auth["user"]["alice"] = "a";
 $auth["user"]["bob"] = "b";
