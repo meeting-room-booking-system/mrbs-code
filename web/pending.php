@@ -5,11 +5,10 @@ require "defaultincludes.inc";
 
 function display_buttons($row, $is_series)
 {
-  global $PHP_SELF;
   global $user, $reminders_enabled, $reminder_interval;
   
   $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
-  $returl = $PHP_SELF;
+  $returl = this_page();
                                     
   $target_id = ($is_series) ? $row['repeat_id'] : $row['id'];
 
