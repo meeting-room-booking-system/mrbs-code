@@ -195,9 +195,9 @@ function genSlotSelector($area, $id, $name, $current_s, $display_none=FALSE, $di
 
 
 // Generate the All Day checkbox for an area
-function genAllDay($a, $id, $name, $display_none=FALSE, $disabled=FALSE)
+function genAllDay($a, $input_id, $input_name, $display_none=FALSE, $disabled=FALSE)
 {
-  global $default_duration_all_day;
+  global $drag, $id;
   
   echo "<div class=\"group\"" . (($display_none || !$a['show_all_day']) ? ' style="display: none"' : '') .">\n";
   
@@ -216,15 +216,15 @@ function genAllDay($a, $id, $name, $display_none=FALSE, $disabled=FALSE)
   //     that there is only one select passing through the variable to the handler.
   // (2) If this is an existing booking that we are editing or copying, then we do
   //     not want the default duration applied
-  $params = array('name'        => $name,
-                  'id'          => $id,
+  $params = array('name'        => $input_name,
+                  'id'          => $input_id,
                   'label'       => get_vocab("all_day"),
                   'label_after' => TRUE,
                   'attributes'  => 'data-show=' . (($a['show_all_day']) ? '1' : '0'),
-                  'value'       => ($default_duration_all_day && !isset($id) && !$drag),
+                  'value'       => ($a['default_duration_all_day'] && !isset($id) && !$drag),
                   'disabled'    => $disable_field,
                   'class'       => $class);
-           
+  
   generate_checkbox($params);
   
   echo "</div>\n";
@@ -285,7 +285,7 @@ function create_field_entry_description($disabled=FALSE)
 
 function create_field_entry_start_date($disabled=FALSE)
 {
-  global $start_time, $areas, $area_id, $periods, $id, $drag;
+  global $start_time, $areas, $area_id, $periods, $id;
   
   $date = getbookingdate($start_time);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
@@ -430,14 +430,15 @@ function create_field_entry_rooms($disabled=FALSE)
     $attributes = array();
     $attributes[] = 'style="display: none"';
     // Put in some data about the area for use by the JavaScript
-    $attributes[] = 'data-enable_periods='       . (($areas[$a]['enable_periods']) ? 1 : 0);
-    $attributes[] = 'data-default_duration='     . ((isset($areas[$a]['default_duration']) && ($areas[$a]['default_duration'] != 0)) ? $areas[$a]['default_duration'] : SECONDS_PER_HOUR);
-    $attributes[] = 'data-max_duration_enabled=' . (($areas[$a]['max_duration_enabled']) ? 1 : 0);
-    $attributes[] = 'data-max_duration_secs='    . $areas[$a]['max_duration_secs'];
-    $attributes[] = 'data-max_duration_periods=' . $areas[$a]['max_duration_periods'];
-    $attributes[] = 'data-max_duration_qty='     . $areas[$a]['max_duration_qty'];
-    $attributes[] = 'data-max_duration_units="'  . htmlspecialchars($areas[$a]['max_duration_units']) . '"';
-    $attributes[] = 'data-timezone="'            . htmlspecialchars($areas[$a]['timezone']) . '"';
+    $attributes[] = 'data-enable_periods='           . (($areas[$a]['enable_periods']) ? 1 : 0);
+    $attributes[] = 'data-default_duration='         . ((isset($areas[$a]['default_duration']) && ($areas[$a]['default_duration'] != 0)) ? $areas[$a]['default_duration'] : SECONDS_PER_HOUR);
+    $attributes[] = 'data-default_duration_all_day=' . (($areas[$a]['default_duration_all_day']) ? 1 : 0);
+    $attributes[] = 'data-max_duration_enabled='     . (($areas[$a]['max_duration_enabled']) ? 1 : 0);
+    $attributes[] = 'data-max_duration_secs='        . $areas[$a]['max_duration_secs'];
+    $attributes[] = 'data-max_duration_periods='     . $areas[$a]['max_duration_periods'];
+    $attributes[] = 'data-max_duration_qty='         . $areas[$a]['max_duration_qty'];
+    $attributes[] = 'data-max_duration_units="'      . htmlspecialchars($areas[$a]['max_duration_units']) . '"';
+    $attributes[] = 'data-timezone="'                . htmlspecialchars($areas[$a]['timezone']) . '"';
     
     $room_ids = array_keys($rooms);
     $params['id']         = 'rooms' . $a;
@@ -1026,7 +1027,8 @@ if ($res)
     
 // Get the details of all the enabled areas
 $areas = array();
-$sql = "SELECT id, area_name, resolution, default_duration, enable_periods, timezone,
+$sql = "SELECT id, area_name, resolution, default_duration, default_duration_all_day,
+               enable_periods, timezone,
                morningstarts, morningstarts_minutes, eveningends , eveningends_minutes,
                max_duration_enabled, max_duration_secs, max_duration_periods
           FROM $tbl_area
