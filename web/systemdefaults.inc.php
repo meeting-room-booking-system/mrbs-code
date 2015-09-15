@@ -786,6 +786,14 @@ $ldap_tls = false;
 // Note: Active Directory for Windows 2003 forward requires this.
 // $ldap_disable_referrals = TRUE;
 
+// LDAP option for dereferencing aliases
+// LDAP_DEREF_NEVER = 0 - (default) aliases are never dereferenced.
+// LDAP_DEREF_SEARCHING = 1 - aliases should be dereferenced during the search
+//      but not when locating the base object of the search.
+// LDAP_DEREF_FINDING = 2 - aliases should be dereferenced when locating the base object but not during the search.
+// LDAP_DEREF_ALWAYS = 3 - aliases should be dereferenced always.
+//$ldap_deref = LDAP_DEREF_ALWAYS;
+
 // Set to TRUE to tell MRBS to look up a user's email address in LDAP.
 // Utilises $ldap_email_attrib below
 $ldap_get_user_email = FALSE;
