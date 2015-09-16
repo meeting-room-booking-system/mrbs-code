@@ -35,26 +35,46 @@ $user_list_link = "edit_users.php";
 function authValidateUser($user, $pass)
 {
   global $tbl_users;
+  $result = 0;
 
-  // No sql_escape() required on $pass because it's put in the database as an MD5,
-  // which is safe.  The escaping for $user is done by sql_syntax_casesensitive_equals()
-  $pass = md5($pass);
-  
   // We use sql_syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
   // permits trailing spacings, eg 'john' = 'john '.   We could use LIKE, but that then
   // permits wildcards, so we could use a comnination of LIKE and '=' but that's a bit
   // messy.  WE could use STRCMP, but that's MySQL only.
-  $sql = "SELECT COUNT(*)
+  $sql = "SELECT password, hash_format
             FROM $tbl_users
-           WHERE " . sql_syntax_casesensitive_equals('name', utf8_strtolower($user)) . "
-             AND password='$pass'
+           WHERE " .
+         sql_syntax_casesensitive_equals('name', utf8_strtolower($user)) .
+         "
            LIMIT 1";
 
-  $result = sql_query1($sql);
-  if ($result == -1)
+  $res = sql_query($sql);
+  if ($res == FALSE)
   {
     trigger_error(sql_error(), E_USER_WARNING);
     return 0;
+  }
+
+  $row = sql_row_keyed($res, 0);
+
+  switch ($row['hash_format'])
+  {
+    case 'md5':
+      if (md5($pass) == $row['password'])
+      {
+        $result = 1;
+      }
+      break;
+
+      case 'php_hash':
+        if (password_verify($pass, $row['password']))
+        {
+          $result = 1;
+        }
+        break;
+
+      default:
+        trigger_error("Invalid hash format in DB!", E_USER_WARNING);
   }
 
   return $result;

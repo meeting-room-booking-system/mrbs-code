@@ -181,7 +181,8 @@ CREATE TABLE mrbs_users
   id        int NOT NULL auto_increment,
   level     smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
   name      varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci,
-  password  varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci,
+  password  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci,
+  hash_format varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci,
   email     varchar(75) CHARACTER SET utf8 COLLATE utf8_general_ci,
 
   PRIMARY KEY (id),
@@ -189,6 +190,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '44');
+  VALUES ( 'db_version', '45');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

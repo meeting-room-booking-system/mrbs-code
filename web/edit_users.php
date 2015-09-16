@@ -348,6 +348,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
               case 'password':
                 echo "<input type=\"hidden\" name=\"" . $params['name'] ."\" value=\"". htmlspecialchars($params['value']) . "\">\n";
                 break;
+              case 'hash_format':
+                break;
               default:
                 echo "<div>\n";
                 switch($key)
@@ -543,13 +545,19 @@ if (isset($Action) && ($Action == "Update"))
         $q_string .= "&Id=$Id";
         continue; 
       }
-      // first, get all the other form variables and put them into an array, $values, which 
-      // we will use for entering into the database assuming we pass validation
-      $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
-      // Truncate the field to the maximum length as a precaution.
-      if (isset($maxlength["users.$fieldname"]))
+
+      // The value of 'hash_format' is determined below, in the special
+      // case code for 'password', so we don't set it here
+      if ($fieldname != 'hash_format')
       {
-        $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength["users.$fieldname"]);
+        // first, get all the other form variables and put them into an array, $values, which 
+        // we will use for entering into the database assuming we pass validation
+        $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
+        // Truncate the field to the maximum length as a precaution.
+        if (isset($maxlength["users.$fieldname"]))
+        {
+          $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength["users.$fieldname"]);
+        }
       }
       // we will also put the data into a query string which we will use for passing
       // back to this page if we fail validation.   This will enable us to reload the
@@ -568,13 +576,27 @@ if (isset($Action) && ($Action == "Update"))
         case 'password':
           // password: if the password field is blank it means
           // that the user doesn't want to change the password
-          // so don't do anything; otherwise get the MD5 hash.
+          // so don't do anything; otherwise calculate the hash.
           // Note: we don't put the password in the query string
           // for security reasons.
           if (!empty($password0))
           {
-            $values[$fieldname]=md5($password0);
+            if (PasswordCompat\binary\check())
+            {
+              $hash = password_hash($password0, PASSWORD_DEFAULT);
+              $hash_format = 'php_hash';
+            }
+            else
+            {
+              $hash = md5($password0);
+              $hash_format = 'md5';
+            }
+            $values[$fieldname] = $hash;
+            $values['hash_format'] = $hash_format;
           }
+          break;
+        case 'hash_format':
+          // We override hash_format, above
           break;
         case 'level':
           // level:  set a safe default (lowest level of access)
