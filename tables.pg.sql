@@ -173,8 +173,7 @@ CREATE TABLE mrbs_users
   id        serial primary key,
   level     smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
   name      varchar(30),
-  password  varchar(255),
-  hash_format varchar(16),
+  password_hash  varchar(255),
   email     varchar(75),
   
   CONSTRAINT mrbs_uq_name UNIQUE (name)

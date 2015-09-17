@@ -41,7 +41,7 @@ function authValidateUser($user, $pass)
   // permits trailing spacings, eg 'john' = 'john '.   We could use LIKE, but that then
   // permits wildcards, so we could use a comnination of LIKE and '=' but that's a bit
   // messy.  WE could use STRCMP, but that's MySQL only.
-  $sql = "SELECT password, hash_format
+  $sql = "SELECT password_hash
             FROM $tbl_users
            WHERE " .
          sql_syntax_casesensitive_equals('name', utf8_strtolower($user)) .
@@ -57,24 +57,42 @@ function authValidateUser($user, $pass)
 
   $row = sql_row_keyed($res, 0);
 
-  switch ($row['hash_format'])
+  $do_rehash = false;
+
+  /* If the hash starts '$' it's a PHP password hash */
+  if (substr($row['password_hash'], 0, 1) == '$')
   {
-    case 'md5':
-      if (md5($pass) == $row['password'])
+    if (password_verify($pass, $row['password_hash']))
+    {
+      $result = 1;
+      if (password_needs_rehash($row['password_hash'], PASSWORD_DEFAULT))
       {
-        $result = 1;
+        $do_rehash = true;
       }
-      break;
+    }
+  }
+  /* Otherwise it's a legacy MD5 hash */
+  else
+  {
+    if (md5($pass) == $row['password_hash'])
+    {
+      $result = 1;
 
-      case 'php_hash':
-        if (password_verify($pass, $row['password']))
-        {
-          $result = 1;
-        }
-        break;
+      if (PasswordCompat\binary\check())
+      {
+        $do_rehash = true;
+      }
+    }
+  }
 
-      default:
-        trigger_error("Invalid hash format in DB!", E_USER_WARNING);
+  if ($do_rehash)
+  {
+    $sql = "UPDATE $tbl_users
+           SET password_hash='".
+      sql_escape(password_hash($pass, PASSWORD_DEFAULT)) ."'
+           WHERE " .
+      sql_syntax_casesensitive_equals('name', utf8_strtolower($user));
+    sql_command($sql);
   }
 
   return $result;

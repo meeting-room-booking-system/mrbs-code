@@ -345,10 +345,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
               case 'id':
                 echo "<input type=\"hidden\" name=\"Id\" value=\"$Id\">\n";
                 break;
-              case 'password':
+              case 'password_hash':
                 echo "<input type=\"hidden\" name=\"" . $params['name'] ."\" value=\"". htmlspecialchars($params['value']) . "\">\n";
-                break;
-              case 'hash_format':
                 break;
               default:
                 echo "<div>\n";
@@ -546,18 +544,13 @@ if (isset($Action) && ($Action == "Update"))
         continue; 
       }
 
-      // The value of 'hash_format' is determined below, in the special
-      // case code for 'password', so we don't set it here
-      if ($fieldname != 'hash_format')
+      // first, get all the other form variables and put them into an array, $values, which 
+      // we will use for entering into the database assuming we pass validation
+      $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
+      // Truncate the field to the maximum length as a precaution.
+      if (isset($maxlength["users.$fieldname"]))
       {
-        // first, get all the other form variables and put them into an array, $values, which 
-        // we will use for entering into the database assuming we pass validation
-        $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
-        // Truncate the field to the maximum length as a precaution.
-        if (isset($maxlength["users.$fieldname"]))
-        {
-          $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength["users.$fieldname"]);
-        }
+        $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength["users.$fieldname"]);
       }
       // we will also put the data into a query string which we will use for passing
       // back to this page if we fail validation.   This will enable us to reload the
@@ -573,7 +566,7 @@ if (isset($Action) && ($Action == "Update"))
           $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
           $values[$fieldname] = utf8_strtolower($values[$fieldname]);
           break;
-        case 'password':
+        case 'password_hash':
           // password: if the password field is blank it means
           // that the user doesn't want to change the password
           // so don't do anything; otherwise calculate the hash.
@@ -584,19 +577,13 @@ if (isset($Action) && ($Action == "Update"))
             if (PasswordCompat\binary\check())
             {
               $hash = password_hash($password0, PASSWORD_DEFAULT);
-              $hash_format = 'php_hash';
             }
             else
             {
               $hash = md5($password0);
-              $hash_format = 'md5';
             }
             $values[$fieldname] = $hash;
-            $values['hash_format'] = $hash_format;
           }
-          break;
-        case 'hash_format':
-          // We override hash_format, above
           break;
         case 'level':
           // level:  set a safe default (lowest level of access)
@@ -862,7 +849,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   $res = sql_query("SELECT * FROM $tbl_users ORDER BY level DESC, name");
   
   // Display the data in a table
-  $ignore_columns = array('id', 'password', 'name'); // We don't display these columns or they get special treatment
+  $ignore_columns = array('id', 'password_hash', 'name'); // We don't display these columns or they get special treatment
   
   if (!$ajax)
   {

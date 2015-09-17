@@ -181,8 +181,7 @@ CREATE TABLE mrbs_users
   id        int NOT NULL auto_increment,
   level     smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
   name      varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci,
-  password  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci,
-  hash_format varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci,
+  password_hash  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci,
   email     varchar(75) CHARACTER SET utf8 COLLATE utf8_general_ci,
 
   PRIMARY KEY (id),
