@@ -127,7 +127,7 @@ if (isset($max_length))
  ********************************************************/
 
 // Check PHP version
-$min_PHP_version = '5.3.3';
+$min_PHP_version = '5.3.0';
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, $min_PHP_version) < 0)
 {
   die("MRBS requires PHP $min_PHP_version or above.   This server is running version " . PHP_VERSION . ".");

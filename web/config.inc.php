@@ -33,7 +33,7 @@
 //
 // A list of valid timezones can be found at http://php.net/manual/timezones.php
 // The following line must be uncommented by removing the '//' at the beginning
-$timezone = "Europe/London";
+//$timezone = "Europe/London";
 
 
 /*******************
@@ -42,8 +42,6 @@ $timezone = "Europe/London";
 // Which database system: "pgsql"=PostgreSQL, "mysql"=MySQL,
 // "mysqli"=MySQL via the mysqli PHP extension
 $dbsys = "mysqli";
-#$dbsys = "pgsql";
-
 // Hostname of database server. For pgsql, can use "" instead of localhost
 // to use Unix Domain Sockets instead of TCP/IP. For mysql/mysqli "localhost"
 // tells the system to use Unix Domain Sockets, and $db_port will be ignored;
@@ -73,9 +71,4 @@ $db_tbl_prefix = "mrbs_";
    to change the default configuration. Do _NOT_ modify systemdefaults.inc.php
    or areadefaults.inc.php.  */
 
-$auth['type'] = 'db';
-#$auth['type'] = 'ldap';
-$ldap_host = "localhost";
-$ldap_user_attrib = "cn";
-$ldap_debug = true;
-$ldap_base_dn = 'dc=theberaneks,dc=org,dc=uk';
+
