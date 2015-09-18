@@ -5,6 +5,7 @@
 // This should probably be a class, but you can only have protected
 // class members in PHP 5, so we won't bother
 
+// Read the actual version number from a much simpler file
 require_once('version_num.inc');
 
 function get_mrbs_version()
@@ -12,7 +13,6 @@ function get_mrbs_version()
   global $hg_command;
   global $mrbs_version_number;
 
-  // MRBS developers, make sure to update this string before each release
   $mrbs_version = "MRBS $mrbs_version_number";
 
   if (function_exists('exec') && !function_disabled('exec'))
