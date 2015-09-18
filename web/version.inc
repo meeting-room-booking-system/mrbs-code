@@ -10,7 +10,7 @@ require_once('version_num.inc');
 function get_mrbs_version()
 {
   global $hg_command;
-  global $mrbs_version_number, $mrbs_hg_id, $mrbs_hg_branch;
+  global $mrbs_version_number;
 
   // MRBS developers, make sure to update this string before each release
   $mrbs_version = "MRBS $mrbs_version_number";
