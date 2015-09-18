@@ -15,11 +15,14 @@ function get_mrbs_version()
   // MRBS developers, make sure to update this string before each release
   $mrbs_version = "MRBS $mrbs_version_number";
 
-  $hg_id_out = exec("$hg_command id --id --branch", $output, $retval);
-
-  if (($retval == 0) && (strlen($hg_id_out)))
+  if (function_exists('exec') && !function_disabled('exec'))
   {
-    $mrbs_version .= "+hg ($hg_id_out)";
+    $hg_id_out = exec("$hg_command id --id --branch", $output, $retval);
+
+    if (($retval == 0) && (strlen($hg_id_out)))
+    {
+      $mrbs_version .= "+hg ($hg_id_out)";
+    }
   }
 
   return $mrbs_version;
