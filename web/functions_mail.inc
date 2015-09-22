@@ -1203,45 +1203,6 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   
   $mail->Subject = $subject;
   
-
-  
-  // Set up configuration settings
-  $backend = $mail_settings['admin_backend'];
-  
-  // Parameters part
-  $params = array();  // to avoid an undefined variable message
-  if ($backend == 'sendmail')
-  {
-    $params['sendmail_path'] = $sendmail_settings['path'];
-    $params['sendmail_args'] = $sendmail_settings['args'];
-  }
-  if ($backend == 'smtp')
-  {
-    $params['host']     = $smtp_settings['host'];
-    $params['port']     = $smtp_settings['port'];
-    $params['auth']     = $smtp_settings['auth'];
-    $params['username'] = $smtp_settings['username'];
-    $params['password'] = $smtp_settings['password'];
-  }
-  
-  // Headers part (extra headers - the standard headers will already be there)
-  $headers = array();
-  $headers['From'] = $addresses['from'];
-  $headers['Auto-Submitted'] = 'auto-generated';
-  if ($backend != 'mail')
-  {
-    $headers['To'] = $addresses['to'];
-  }
-  (!empty($addresses['cc'])) ? $headers['Cc'] = $addresses['cc'] : '';
-  (!empty($addresses['bcc'])) ? $headers['Bcc'] = $addresses['bcc'] : '';
-  // If the subject contains any non-ASCII characters...
-  if (!preg_match('/^[[:ascii:]]*$/', $subject))
-  {
-    // ...communicate the charset and encode it correctly
-    $subject = "=?".get_mail_charset()."?B?".base64_encode($subject)."?=";
-  }
-  $headers['Subject'] = $subject . ' [PEAR]';
-  $headers['Mime-Version'] = '1.0';
   
   // Build the email.   We're going to use the "alternative" subtype which means
   // that we order the sub parts according to how faithful they are to the original,
@@ -1343,14 +1304,8 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   $mail->set('MIMEHeader', $mime_header);
 
   $mail->preSend();
-
-  
-    // Add in the extra headers
-  $mime['headers'] = array_merge($headers, $mime['headers']);
-  
   
   $mail->set('MIMEBody', $mime['body']);
-
 
   // Debug info if required
   if ($mail_settings['debug'])
