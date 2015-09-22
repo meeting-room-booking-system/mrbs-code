@@ -1083,7 +1083,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
  * @param array   $text_body        text part of body, an array consisting of
  *                                    'content'  the content itself
  *                                    'cid'      the content id
- * @param array   $text_html        HTML part of body, an array consisting of
+ * @param array   $html_body        HTML part of body, an array consisting of
  *                                    'content'  the content itself
  *                                    'cid'      the content id
  * @param array   $attachment       file to attach.   An array consisting of
@@ -1098,6 +1098,8 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   require_once "Mail.php";
   require_once "Mail/mime.php";
   require_once "Mail/mimePart.php";
+  
+  require_once 'lib/PHPMailer/PHPMailerAutoload.php';
 
   global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
   
@@ -1107,6 +1109,8 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   {
     return;
   }
+  
+  $mail = new PHPMailer;
   
   if ($mail_settings['debug'])
   {
@@ -1139,6 +1143,83 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   if ($recipients == '')
   {
     return FALSE;
+  }
+  
+  switch ($mail_settings['admin_backend'])
+  {
+    case 'mail':
+      $mail->isMail();
+      break;
+    case 'smtp':
+      $mail->isSMTP();
+      $mail->Host = $smtp_settings['host'];
+      $mail->Port = $smtp_settings['port'];
+      $mail->SMTPAuth = $smtp_settings['auth'];
+      $mail->SMTPSecure = $smtp_settings['secure'];
+      $mail->Username = $smtp_settings['username'];
+      $mail->Password = $smtp_settings['password'];
+      break;
+    case 'sendmail':
+      $mail->isSendmail();
+      $mail->Sendmail = $sendmail_settings['path'];
+      if (isset($sendmail_settings['args']) && ($sendmail_settings['args'] !== ''))
+      {
+        $mail->Sendmail .= ' ' . $sendmail_settings['args'];
+      }
+      break;
+    default:
+      trigger_error("Unknown mail backend '" . $mail_settings['admin_backend'] . "'", E_USER_WARNING);
+      break;
+  }
+  
+  $mail->CharSet = get_mail_charset();  // PHPMailer defaults to 'iso-8859-1'
+  $mail->AllowEmpty = true;  // remove this for production
+  $mail->addCustomHeader('Auto-Submitted', 'auto-generated');
+  
+  $from_addresses = $mail->parseAddresses($addresses['from']);
+  $mail->setFrom($from_addresses[0]['address'], $from_addresses[0]['name']);
+  
+  $to_addresses = $mail->parseAddresses($addresses['to']);
+  foreach ($to_addresses as $to_address)
+  {
+    $mail->addAddress($to_address['address'], $to_address['name']);
+  }
+  
+  if (isset($addresses['cc']))
+  {
+    $cc_addresses = $mail->parseAddresses($addresses['cc']);
+    foreach ($cc_addresses as $cc_address)
+    {
+      $mail->addCC($cc_address['address'], $cc_address['name']);
+    }
+  }
+  
+  if (isset($addresses['bcc']))
+  {
+    $bcc_addresses = $mail->parseAddresses($addresses['bcc']);
+    foreach ($bcc_addresses as $bcc_address)
+    {
+      $mail->addBCC($bcc_address['address'], $bcc_address['name']);
+    }
+  }
+  
+  $mail->Subject = $subject;
+  
+  if (empty($html_body))
+  {
+    $mail->isHTML(false);
+    $mail->Body = $text_body['content'];;
+  }
+  else
+  {
+    $mail->isHTML(true);
+    $mail->Body = $html_body['content'];
+    $mail->AltBody = $text_body['content'];
+  }
+  
+  if ($mail_settings['icalendar'] && !$enable_periods)
+  {
+    $mail->Ical = $attachment['content'];
   }
   
   // Set up configuration settings
@@ -1176,7 +1257,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     // ...communicate the charset and encode it correctly
     $subject = "=?".get_mail_charset()."?B?".base64_encode($subject)."?=";
   }
-  $headers['Subject'] = $subject;
+  $headers['Subject'] = $subject . ' [PEAR]';
   $headers['Mime-Version'] = '1.0';
   
   // Build the email.   We're going to use the "alternative" subtype which means
@@ -1273,6 +1354,12 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     echo "[DEBUG] Recipients: '" . htmlspecialchars($recipients) . "'<br>";
   }
   
+  if (!$mail->send())
+  {
+    trigger_error("Error sending email: " . $mail->ErrorInfo, E_USER_WARNING);
+    return false;
+  }
+  
   // Call to the PEAR::Mail class
   $mail_object =& Mail::factory($backend, $params);
   $result = $mail_object->send($recipients, $mime['headers'], $mime['body']);
@@ -1295,7 +1382,8 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     }
   }
   
-  return $result;
+  return $result;  // PEAR
+  return true;
 }
 
 // }}}

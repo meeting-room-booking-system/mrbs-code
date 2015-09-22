@@ -979,6 +979,7 @@ $sendmail_settings['args'] = '';
 $smtp_settings['host'] = 'localhost';  // SMTP server
 $smtp_settings['port'] = 25;           // SMTP port number
 $smtp_settings['auth'] = FALSE;        // Whether to use SMTP authentication
+$smtp_settings['secure'] = 'tls';      // Encryption method: 'tls' or 'ssl'
 $smtp_settings['username'] = '';       // Username (if using authentication)
 $smtp_settings['password'] = '';       // Password (if using authentication)
 
