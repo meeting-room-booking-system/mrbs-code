@@ -1095,12 +1095,9 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
  */
 function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $charset = 'us-ascii')
 {
-  require_once "Mail.php";
-  require_once "Mail/mime.php";
-  require_once "Mail/mimePart.php";
-  
+  require_once 'Mail/mimePart.php';
   require_once 'lib/PHPMailer/PHPMailerAutoload.php';
-
+  
   global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
   
   // Don't do aything if mail has been disabled.   Useful for testing MRBS without
@@ -1115,6 +1112,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   if ($mail_settings['debug'])
   {
     echo "[DEBUG] Preparing to send email ... <br>";
+    $mail->SMTPDebug = 2;
   }
   
   $eol = "\n";  // EOL sequence to use in mail headers.  Need "\n" for mail backend
@@ -1205,22 +1203,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   
   $mail->Subject = $subject;
   
-  if (empty($html_body))
-  {
-    $mail->isHTML(false);
-    $mail->Body = $text_body['content'];;
-  }
-  else
-  {
-    $mail->isHTML(true);
-    $mail->Body = $html_body['content'];
-    $mail->AltBody = $text_body['content'];
-  }
-  
-  if ($mail_settings['icalendar'] && !$enable_periods)
-  {
-    $mail->Ical = $attachment['content'];
-  }
+
   
   // Set up configuration settings
   $backend = $mail_settings['admin_backend'];
@@ -1344,8 +1327,30 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
 
   // Encode the result
   $mime = $mime->encode();
-  // Add in the extra headers
+
+  // Construct the MIMEHeader and then call preSend() which sets up the
+  // headers.   However it also sets up the body, which we don't want,
+  // so we have to set the MIMEBody after calling preSend()
+  $mime_header = '';
+  foreach ($mime['headers'] as $name => $value)
+  {
+    if ($name == 'Content-Type')
+    {
+      $mail->ContentType = $value;
+    }
+    $mime_header .= $mail->headerLine($name, $value);
+  }
+  $mail->set('MIMEHeader', $mime_header);
+
+  $mail->preSend();
+
+  
+    // Add in the extra headers
   $mime['headers'] = array_merge($headers, $mime['headers']);
+  
+  
+  $mail->set('MIMEBody', $mime['body']);
+
 
   // Debug info if required
   if ($mail_settings['debug'])
@@ -1354,35 +1359,21 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     echo "[DEBUG] Recipients: '" . htmlspecialchars($recipients) . "'<br>";
   }
   
-  if (!$mail->send())
+  if (!$mail->postSend())
   {
     trigger_error("Error sending email: " . $mail->ErrorInfo, E_USER_WARNING);
+    if ($mail_settings['debug'])
+    {
+      echo "[DEBUG] Failed to send email: " . htmlspecialchars($mail->ErrorInfo) . "<br>";
+    }
     return false;
   }
-  
-  // Call to the PEAR::Mail class
-  $mail_object =& Mail::factory($backend, $params);
-  $result = $mail_object->send($recipients, $mime['headers'], $mime['body']);
 
-  if (is_object($result))
-  {
-    error_log("Error sending email: ".$result->getMessage());
-  }
-  
-  // Debug info if required
   if ($mail_settings['debug'])
   {
-    if (is_object($result))
-    {
-      echo "[DEBUG] Failed to send email: " . htmlspecialchars($result->getMessage()) . "<br>";
-    }
-    else
-    {
-      echo "[DEBUG] Email sent successfully<br>";
-    }
+    echo "[DEBUG] Email sent successfully<br>";
   }
   
-  return $result;  // PEAR
   return true;
 }
 
