@@ -1320,8 +1320,8 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   // Debug info if required
   if ($mail_settings['debug'])
   {
-    echo "[DEBUG] Using backend '$backend'<br>";
-    echo "[DEBUG] Recipients: '" . htmlspecialchars($recipients) . "'<br>";
+    echo "[DEBUG] Using backend '" . htmlspecialchars($mail_settings['admin_backend']) . "'<br>\n";
+    echo "[DEBUG] Recipients: '" . htmlspecialchars($recipients) . "'<br>\n";
   }
   
   if (!$mail->postSend())
