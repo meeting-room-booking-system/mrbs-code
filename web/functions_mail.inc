@@ -1098,6 +1098,11 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   require_once 'Mail/mimePart.php';
   require_once 'lib/PHPMailer/PHPMailerAutoload.php';
   
+  // We use the PHPMailer class to handle the sending of mail.   However PHPMailer does not
+  // provide the versatility we need to be able to construct the MIME parts necessary for
+  // iCalendar applications, so we use the PEAR Mail_Mime package to do that.   See the
+  // discussion at https://github.com/PHPMailer/PHPMailer/issues/175
+  
   global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
   
   // Don't do aything if mail has been disabled.   Useful for testing MRBS without
@@ -1291,7 +1296,12 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
 
   // Construct the MIMEHeader and then call preSend() which sets up the
   // headers.   However it also sets up the body, which we don't want,
-  // so we have to set the MIMEBody after calling preSend()
+  // so we have to set the MIMEBody after calling preSend().
+  //
+  // This is not ideal since $MIMEHeader and $MIMEBody are protected
+  // properties of the PHPMailer class.  In the future we may have to extend
+  // the class to do what we want, unless the features we need are added.
+  
   $mime_header = '';
   foreach ($mime['headers'] as $name => $value)
   {
