@@ -877,10 +877,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
 {
   global $mail_settings, $enable_periods;
   
-  if ($mail_settings['debug'])
-  {
-    echo "[DEBUG] Preparing email for new or changed booking ... <br>";
-  }
+  mail_debug('Preparing email for new or changed booking ...');
 
   // Add some values to the $data array before we go and create the addresses
   if (!$new_entry)
@@ -893,10 +890,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
   $addresses = create_addresses($data, $action);
   if ($addresses === FALSE)
   {
-    if ($mail_settings['debug'])
-    {
-      echo "[DEBUG] Email abandoned:  no addresses.<br>";
-    }
+    mail_debug('Email abandoned: no addresses.');
     return;
   }
   
@@ -989,7 +983,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
   
   if ($mail_settings['debug'])
   {
-    echo "[DEBUG] Preparing email for deleted booking ... <br>";
+    mail_debug('Preparing email for deleted booking');
   }
   
   // As we are going to cancel this booking we need to increment the iCalendar
@@ -1000,10 +994,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
   $addresses = create_addresses($data, $action);
   if ($addresses === FALSE)
   {
-    if ($mail_settings['debug'])
-    {
-      echo "[DEBUG] Email abandoned:  no addresses.<br>";
-    }
+    mail_debug('Email abandoned: no addresses.');
     return;
   }
   
@@ -1083,7 +1074,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
  * @param array   $text_body        text part of body, an array consisting of
  *                                    'content'  the content itself
  *                                    'cid'      the content id
- * @param array   $text_html        HTML part of body, an array consisting of
+ * @param array   $html_body        HTML part of body, an array consisting of
  *                                    'content'  the content itself
  *                                    'cid'      the content id
  * @param array   $attachment       file to attach.   An array consisting of
@@ -1093,12 +1084,40 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
  * @param string  $charset          character set used in body
  * @return bool                     TRUE or PEAR error object if fails
  */
+
+
+function mail_debug($message)
+{
+  global $mail_settings;
+  
+  if (!$mail_settings['debug'])
+  {
+    return;
+  }
+  
+  $full_message = '[DEBUG] ' . $message;
+  
+  if ($mail_settings['debug_output'] == 'log')
+  {
+    error_log($full_message);
+  }
+  else  // anything else goes to the browser
+  {
+    echo htmlspecialchars($full_message) . "<br>\n";
+  }
+}
+
+
 function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $charset = 'us-ascii')
 {
-  require_once "Mail.php";
-  require_once "Mail/mime.php";
-  require_once "Mail/mimePart.php";
-
+  require_once 'Mail/mimePart.php';
+  require_once 'lib/PHPMailer/PHPMailerAutoload.php';
+  
+  // We use the PHPMailer class to handle the sending of mail.   However PHPMailer does not
+  // provide the versatility we need to be able to construct the MIME parts necessary for
+  // iCalendar applications, so we use the PEAR Mail_Mime package to do that.   See the
+  // discussion at https://github.com/PHPMailer/PHPMailer/issues/175
+  
   global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
   
   // Don't do aything if mail has been disabled.   Useful for testing MRBS without
@@ -1108,9 +1127,13 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     return;
   }
   
+  $mail = new PHPMailer;
+  
+  mail_debug("Preparing to send email ...");
   if ($mail_settings['debug'])
   {
-    echo "[DEBUG] Preparing to send email ... <br>";
+    $mail->Debugoutput = ($mail_settings['debug_output'] == 'log') ? 'error_log' : 'html';
+    $mail->SMTPDebug = SMTP::DEBUG_CONNECTION; // show connection status, client -> server and server -> client messages
   }
   
   $eol = "\n";  // EOL sequence to use in mail headers.  Need "\n" for mail backend
@@ -1141,43 +1164,72 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     return FALSE;
   }
   
-  // Set up configuration settings
-  $backend = $mail_settings['admin_backend'];
+  switch ($mail_settings['admin_backend'])
+  {
+    case 'mail':
+      $mail->isMail();
+      break;
+    case 'qmail':
+      $mail->isQmail();
+      break;
+    case 'sendmail':
+      $mail->isSendmail();
+      $mail->Sendmail = $sendmail_settings['path'];
+      if (isset($sendmail_settings['args']) && ($sendmail_settings['args'] !== ''))
+      {
+        $mail->Sendmail .= ' ' . $sendmail_settings['args'];
+      }
+      break;
+    case 'smtp':
+      $mail->isSMTP();
+      $mail->Host = $smtp_settings['host'];
+      $mail->Port = $smtp_settings['port'];
+      $mail->SMTPAuth = $smtp_settings['auth'];
+      $mail->SMTPSecure = $smtp_settings['secure'];
+      $mail->Username = $smtp_settings['username'];
+      $mail->Password = $smtp_settings['password'];
+      break;
+    default:
+      $mail->isMail();
+      trigger_error("Unknown mail backend '" . $mail_settings['admin_backend'] . "'." .
+                    " Defaulting to 'mail'.",
+                    E_USER_WARNING);
+      break;
+  }
   
-  // Parameters part
-  $params = array();  // to avoid an undefined variable message
-  if ($backend == 'sendmail')
+  $mail->CharSet = get_mail_charset();  // PHPMailer defaults to 'iso-8859-1'
+  $mail->AllowEmpty = true;  // remove this for production
+  $mail->addCustomHeader('Auto-Submitted', 'auto-generated');
+  
+  $from_addresses = $mail->parseAddresses($addresses['from']);
+  $mail->setFrom($from_addresses[0]['address'], $from_addresses[0]['name']);
+  
+  $to_addresses = $mail->parseAddresses($addresses['to']);
+  foreach ($to_addresses as $to_address)
   {
-    $params['sendmail_path'] = $sendmail_settings['path'];
-    $params['sendmail_args'] = $sendmail_settings['args'];
-  }
-  if ($backend == 'smtp')
-  {
-    $params['host']     = $smtp_settings['host'];
-    $params['port']     = $smtp_settings['port'];
-    $params['auth']     = $smtp_settings['auth'];
-    $params['username'] = $smtp_settings['username'];
-    $params['password'] = $smtp_settings['password'];
+    $mail->addAddress($to_address['address'], $to_address['name']);
   }
   
-  // Headers part (extra headers - the standard headers will already be there)
-  $headers = array();
-  $headers['From'] = $addresses['from'];
-  $headers['Auto-Submitted'] = 'auto-generated';
-  if ($backend != 'mail')
+  if (isset($addresses['cc']))
   {
-    $headers['To'] = $addresses['to'];
+    $cc_addresses = $mail->parseAddresses($addresses['cc']);
+    foreach ($cc_addresses as $cc_address)
+    {
+      $mail->addCC($cc_address['address'], $cc_address['name']);
+    }
   }
-  (!empty($addresses['cc'])) ? $headers['Cc'] = $addresses['cc'] : '';
-  (!empty($addresses['bcc'])) ? $headers['Bcc'] = $addresses['bcc'] : '';
-  // If the subject contains any non-ASCII characters...
-  if (!preg_match('/^[[:ascii:]]*$/', $subject))
+  
+  if (isset($addresses['bcc']))
   {
-    // ...communicate the charset and encode it correctly
-    $subject = "=?".get_mail_charset()."?B?".base64_encode($subject)."?=";
+    $bcc_addresses = $mail->parseAddresses($addresses['bcc']);
+    foreach ($bcc_addresses as $bcc_address)
+    {
+      $mail->addBCC($bcc_address['address'], $bcc_address['name']);
+    }
   }
-  $headers['Subject'] = $subject;
-  $headers['Mime-Version'] = '1.0';
+  
+  $mail->Subject = $subject;
+  
   
   // Build the email.   We're going to use the "alternative" subtype which means
   // that we order the sub parts according to how faithful they are to the original,
@@ -1263,39 +1315,43 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
 
   // Encode the result
   $mime = $mime->encode();
-  // Add in the extra headers
-  $mime['headers'] = array_merge($headers, $mime['headers']);
 
-  // Debug info if required
-  if ($mail_settings['debug'])
-  {
-    echo "[DEBUG] Using backend '$backend'<br>";
-    echo "[DEBUG] Recipients: '" . htmlspecialchars($recipients) . "'<br>";
-  }
+  // Construct the MIMEHeader and then call preSend() which sets up the
+  // headers.   However it also sets up the body, which we don't want,
+  // so we have to set the MIMEBody after calling preSend().
+  //
+  // This is not ideal since $MIMEHeader and $MIMEBody are protected
+  // properties of the PHPMailer class.  In the future we may have to extend
+  // the class to do what we want, unless the features we need are added.
   
-  // Call to the PEAR::Mail class
-  $mail_object =& Mail::factory($backend, $params);
-  $result = $mail_object->send($recipients, $mime['headers'], $mime['body']);
+  $mime_header = '';
+  foreach ($mime['headers'] as $name => $value)
+  {
+    if ($name == 'Content-Type')
+    {
+      $mail->ContentType = $value;
+    }
+    $mime_header .= $mail->headerLine($name, $value);
+  }
+  $mail->set('MIMEHeader', $mime_header);
 
-  if (is_object($result))
-  {
-    error_log("Error sending email: ".$result->getMessage());
-  }
+  $mail->preSend();
   
-  // Debug info if required
-  if ($mail_settings['debug'])
-  {
-    if (is_object($result))
-    {
-      echo "[DEBUG] Failed to send email: " . htmlspecialchars($result->getMessage()) . "<br>";
-    }
-    else
-    {
-      echo "[DEBUG] Email sent successfully<br>";
-    }
-  }
+  $mail->set('MIMEBody', $mime['body']);
+
+  mail_debug("Using backend '" . $mail_settings['admin_backend'] . "'");
+  mail_debug("Recipients: '$recipients'");
   
-  return $result;
+  if (!$mail->postSend())
+  {
+    error_log('Error sending email: ' . $mail->ErrorInfo);
+    mail_debug('Failed to send email: ' . $mail->ErrorInfo);
+    return false;
+  }
+
+  mail_debug('Email sent successfully');
+  
+  return true;
 }
 
 // }}}

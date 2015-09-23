@@ -957,7 +957,7 @@ $mail_settings['username_suffix'] = '';
 // HOW TO EMAIL - BACKEND
 // ----------------------
 // Set the name of the backend used to transport your mails. Either 'mail',
-// 'smtp' or 'sendmail'. Default is 'mail'.
+// 'smtp', 'sendmail' or 'qmail'. Default is 'mail'.
 $mail_settings['admin_backend'] = 'mail';
 
 /*******************
@@ -979,6 +979,7 @@ $sendmail_settings['args'] = '';
 $smtp_settings['host'] = 'localhost';  // SMTP server
 $smtp_settings['port'] = 25;           // SMTP port number
 $smtp_settings['auth'] = FALSE;        // Whether to use SMTP authentication
+$smtp_settings['secure'] = 'tls';      // Encryption method: 'tls' or 'ssl'
 $smtp_settings['username'] = '';       // Username (if using authentication)
 $smtp_settings['password'] = '';       // Password (if using authentication)
 
@@ -1013,12 +1014,14 @@ $mail_settings['treat_cc_as_to'] = FALSE;
 // extension '.ics'
 $mail_settings['ics_filename'] = "booking";
 
-// Set this to TRUE if you want MRBS to output debug information to the browser
-// when you are sending email.   If you are not getting emails it can be helpful
-// by telling you (a) whether the mail functions are being called in the first place
-//(b) whether there are addresses to send email to and (c) the result of the mail
-// sending operation.
+// Set this to TRUE if you want MRBS to output debug information when you are sending email.
+// If you are not getting emails it can be helpful by telling you (a) whether the mail functions
+// are being called in the first place (b) whether there are addresses to send email to and (c)
+// the result of the mail sending operation.
 $mail_settings['debug'] = FALSE;
+// Where to send the debug output to.  Can be 'browser' or 'log' (for the error_log)
+$mail_settings['debug_output'] = 'browser';
+
 // Set this to TRUE if you do not want any email sent, whatever the rest of the settings.
 // This is a global setting that will override anything else.   Useful when testing MRBS.
 $mail_settings['disabled'] = FALSE;
