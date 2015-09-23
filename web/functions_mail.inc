@@ -877,10 +877,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
 {
   global $mail_settings, $enable_periods;
   
-  if ($mail_settings['debug'])
-  {
-    echo "[DEBUG] Preparing email for new or changed booking ... <br>";
-  }
+  mail_debug('Preparing email for new or changed booking ...');
 
   // Add some values to the $data array before we go and create the addresses
   if (!$new_entry)
@@ -893,10 +890,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
   $addresses = create_addresses($data, $action);
   if ($addresses === FALSE)
   {
-    if ($mail_settings['debug'])
-    {
-      echo "[DEBUG] Email abandoned:  no addresses.<br>";
-    }
+    mail_debug('Email abandoned: no addresses.');
     return;
   }
   
@@ -989,7 +983,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
   
   if ($mail_settings['debug'])
   {
-    echo "[DEBUG] Preparing email for deleted booking ... <br>";
+    mail_debug('Preparing email for deleted booking');
   }
   
   // As we are going to cancel this booking we need to increment the iCalendar
@@ -1000,10 +994,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
   $addresses = create_addresses($data, $action);
   if ($addresses === FALSE)
   {
-    if ($mail_settings['debug'])
-    {
-      echo "[DEBUG] Email abandoned:  no addresses.<br>";
-    }
+    mail_debug('Email abandoned: no addresses.');
     return;
   }
   
@@ -1093,6 +1084,30 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
  * @param string  $charset          character set used in body
  * @return bool                     TRUE or PEAR error object if fails
  */
+
+
+function mail_debug($message)
+{
+  global $mail_settings;
+  
+  if (!$mail_settings['debug'])
+  {
+    return;
+  }
+  
+  $full_message = '[DEBUG] ' . $message;
+  
+  if ($mail_settings['debug_output'] == 'log')
+  {
+    error_log($full_message);
+  }
+  else  // anything else goes to the browser
+  {
+    echo htmlspecialchars($full_message) . "<br>\n";
+  }
+}
+
+
 function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $charset = 'us-ascii')
 {
   require_once 'Mail/mimePart.php';
@@ -1114,9 +1129,10 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   
   $mail = new PHPMailer;
   
+  mail_debug("Preparing to send email ...");
   if ($mail_settings['debug'])
   {
-    echo "[DEBUG] Preparing to send email ... <br>";
+    $mail->Debugoutput = ($mail_settings['debug_output'] == 'log') ? 'error_log' : 'html';
     $mail->SMTPDebug = SMTP::DEBUG_CONNECTION; // show connection status, client -> server and server -> client messages
   }
   
@@ -1323,27 +1339,17 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   
   $mail->set('MIMEBody', $mime['body']);
 
-  // Debug info if required
-  if ($mail_settings['debug'])
-  {
-    echo "[DEBUG] Using backend '" . htmlspecialchars($mail_settings['admin_backend']) . "'<br>\n";
-    echo "[DEBUG] Recipients: '" . htmlspecialchars($recipients) . "'<br>\n";
-  }
+  mail_debug("Using backend '" . $mail_settings['admin_backend'] . "'");
+  mail_debug("Recipients: '$recipients'");
   
   if (!$mail->postSend())
   {
-    trigger_error("Error sending email: " . $mail->ErrorInfo, E_USER_WARNING);
-    if ($mail_settings['debug'])
-    {
-      echo "[DEBUG] Failed to send email: " . htmlspecialchars($mail->ErrorInfo) . "<br>";
-    }
+    error_log('Error sending email: ' . $mail->ErrorInfo);
+    mail_debug('Failed to send email: ' . $mail->ErrorInfo);
     return false;
   }
 
-  if ($mail_settings['debug'])
-  {
-    echo "[DEBUG] Email sent successfully<br>";
-  }
+  mail_debug('Email sent successfully');
   
   return true;
 }
