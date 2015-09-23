@@ -1153,14 +1153,8 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     case 'mail':
       $mail->isMail();
       break;
-    case 'smtp':
-      $mail->isSMTP();
-      $mail->Host = $smtp_settings['host'];
-      $mail->Port = $smtp_settings['port'];
-      $mail->SMTPAuth = $smtp_settings['auth'];
-      $mail->SMTPSecure = $smtp_settings['secure'];
-      $mail->Username = $smtp_settings['username'];
-      $mail->Password = $smtp_settings['password'];
+    case 'qmail':
+      $mail->isQmail();
       break;
     case 'sendmail':
       $mail->isSendmail();
@@ -1170,8 +1164,20 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
         $mail->Sendmail .= ' ' . $sendmail_settings['args'];
       }
       break;
+    case 'smtp':
+      $mail->isSMTP();
+      $mail->Host = $smtp_settings['host'];
+      $mail->Port = $smtp_settings['port'];
+      $mail->SMTPAuth = $smtp_settings['auth'];
+      $mail->SMTPSecure = $smtp_settings['secure'];
+      $mail->Username = $smtp_settings['username'];
+      $mail->Password = $smtp_settings['password'];
+      break;
     default:
-      trigger_error("Unknown mail backend '" . $mail_settings['admin_backend'] . "'", E_USER_WARNING);
+      $mail->isMail();
+      trigger_error("Unknown mail backend '" . $mail_settings['admin_backend'] . "'." .
+                    " Defaulting to 'mail'.",
+                    E_USER_WARNING);
       break;
   }
   
