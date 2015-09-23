@@ -1117,7 +1117,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   if ($mail_settings['debug'])
   {
     echo "[DEBUG] Preparing to send email ... <br>";
-    $mail->SMTPDebug = 2;
+    $mail->SMTPDebug = SMTP::DEBUG_CONNECTION; // show connection status, client -> server and server -> client messages
   }
   
   $eol = "\n";  // EOL sequence to use in mail headers.  Need "\n" for mail backend
