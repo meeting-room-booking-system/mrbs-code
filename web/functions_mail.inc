@@ -1335,24 +1335,21 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   }
   $mail->set('MIMEHeader', $mime_header);
 
-  $mail->preSend();
-  
-  $mail->set('MIMEBody', $mime['body']);
-
-  mail_debug("Using backend '" . $mail_settings['admin_backend'] . "'");
-  mail_debug("Recipients: '$recipients'");
-  
-  if (!$mail->postSend())
+  if ($mail->preSend())
   {
-    error_log('Error sending email: ' . $mail->ErrorInfo);
-    mail_debug('Failed to send email: ' . $mail->ErrorInfo);
-    return false;
+    $mail->set('MIMEBody', $mime['body']);
+    mail_debug("Using backend '" . $mail_settings['admin_backend'] . "'");
+    mail_debug("Recipients: '$recipients'");
+    if ($mail->postSend())
+    {
+      mail_debug('Email sent successfully');
+      return true;
+    }
   }
-
-  mail_debug('Email sent successfully');
   
-  return true;
+  error_log('Error sending email: ' . $mail->ErrorInfo);
+  mail_debug('Failed to send email: ' . $mail->ErrorInfo);
+  return false;
+  
 }
-
-// }}}
 
