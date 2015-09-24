@@ -972,6 +972,13 @@ $sendmail_settings['path'] = '/usr/bin/sendmail';
 $sendmail_settings['args'] = '';
 
 /*******************
+ * Qmail settings
+ */
+
+/* Configures the path to 'qmail-inject', if unset defaults to '/var/qmail/bin/qmail-inject' */
+$mail_settings['qmail']['qmail-inject-path'] = '/usr/bin/qmail-inject';
+
+/*******************
  * SMTP settings
  */
 

@@ -1171,6 +1171,10 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
       break;
     case 'qmail':
       $mail->isQmail();
+      if (isset($mail_settings['qmail']['qmail-inject-path']))
+      {
+        $mail->Sendmail = $mail_settings['qmail']['qmail-inject-path'];
+      }
       break;
     case 'sendmail':
       $mail->isSendmail();
