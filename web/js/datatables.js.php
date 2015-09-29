@@ -61,9 +61,7 @@ var getTypes = function getTypes(table) {
         
 function makeDataTable(id, specificOptions, fixedColumnsOptions)
 {
-  var winWidth  = $(window).width(),
-      winHeight = $(window).height(),
-      i,
+  var i,
       defaultOptions,
       mergedOptions,
       colVisExcludeCols,
