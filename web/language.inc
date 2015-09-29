@@ -585,7 +585,8 @@ $datatable_lang_map = array(
   'Ukranian'            => 'uk',
   'Urdu'                => 'ur',
   'Uzbek'               => 'uz',
-  'Vietnamese'          => 'vi'
+  'Vietnamese'          => 'vi',
+  'Welsh'               => 'cy'
 );
 
 
