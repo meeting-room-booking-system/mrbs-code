@@ -35,26 +35,64 @@ $user_list_link = "edit_users.php";
 function authValidateUser($user, $pass)
 {
   global $tbl_users;
+  $result = 0;
 
-  // No sql_escape() required on $pass because it's put in the database as an MD5,
-  // which is safe.  The escaping for $user is done by sql_syntax_casesensitive_equals()
-  $pass = md5($pass);
-  
   // We use sql_syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
   // permits trailing spacings, eg 'john' = 'john '.   We could use LIKE, but that then
   // permits wildcards, so we could use a comnination of LIKE and '=' but that's a bit
   // messy.  WE could use STRCMP, but that's MySQL only.
-  $sql = "SELECT COUNT(*)
+  $sql = "SELECT password_hash
             FROM $tbl_users
-           WHERE " . sql_syntax_casesensitive_equals('name', utf8_strtolower($user)) . "
-             AND password='$pass'
+           WHERE " .
+         sql_syntax_casesensitive_equals('name', utf8_strtolower($user)) .
+         "
            LIMIT 1";
 
-  $result = sql_query1($sql);
-  if ($result == -1)
+  $res = sql_query($sql);
+  if ($res == FALSE)
   {
     trigger_error(sql_error(), E_USER_WARNING);
     return 0;
+  }
+
+  $row = sql_row_keyed($res, 0);
+
+  $do_rehash = false;
+
+  /* If the hash starts '$' it's a PHP password hash */
+  if (substr($row['password_hash'], 0, 1) == '$')
+  {
+    if (password_verify($pass, $row['password_hash']))
+    {
+      $result = 1;
+      if (password_needs_rehash($row['password_hash'], PASSWORD_DEFAULT))
+      {
+        $do_rehash = true;
+      }
+    }
+  }
+  /* Otherwise it's a legacy MD5 hash */
+  else
+  {
+    if (md5($pass) == $row['password_hash'])
+    {
+      $result = 1;
+
+      if (PasswordCompat\binary\check())
+      {
+        $do_rehash = true;
+      }
+    }
+  }
+
+  if ($do_rehash)
+  {
+    $sql = "UPDATE $tbl_users
+           SET password_hash='".
+      sql_escape(password_hash($pass, PASSWORD_DEFAULT)) ."'
+           WHERE " .
+      sql_syntax_casesensitive_equals('name', utf8_strtolower($user));
+    sql_command($sql);
   }
 
   return $result;

@@ -173,13 +173,13 @@ CREATE TABLE mrbs_users
   id        serial primary key,
   level     smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
   name      varchar(30),
-  password  varchar(40),
+  password_hash  varchar(255),
   email     varchar(75),
   
   CONSTRAINT mrbs_uq_name UNIQUE (name)
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '44');
+  VALUES ('db_version', '45');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');

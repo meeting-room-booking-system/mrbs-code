@@ -17,6 +17,6 @@ require_once "trailer.inc";
 require_once "theme.inc";
 require_once "functions.inc";
 require_once "dbsys.inc";
+require_once("password_compat/password.php");
 require_once "mrbs_auth.inc";
 require "standard_vars.inc.php";
-

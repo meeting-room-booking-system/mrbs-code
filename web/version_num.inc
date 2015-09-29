@@ -1,0 +1,5 @@
+<?php
+
+// MRBS developers, make sure to update this string before each release
+
+$mrbs_version_number = '1.4.11';

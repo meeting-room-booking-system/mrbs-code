@@ -1672,7 +1672,7 @@ function utf8_strlen($str)
 }
 
 
-// Wrapper round mb_strtolower() to make sure it's used if present and mb_sting
+// Wrapper round mb_strtolower() to make sure it's used if present and mb_string
 // function overloading is not enabled.
 // The ordinary strtolower() will give unexpected results when the locale is set to
 // Turkish and will not convert the letter 'I'.
@@ -1686,7 +1686,7 @@ function utf8_strtolower($str)
 }
 
 
-// Wrapper round mb_strtoupper() to make sure it's used if present and mb_sting
+// Wrapper round mb_strtoupper() to make sure it's used if present and mb_string
 // function overloading is not enabled.
 // The ordinary strtoupper() will give unexpected results when the locale is set to
 // Turkish and will not convert the letter 'i'.

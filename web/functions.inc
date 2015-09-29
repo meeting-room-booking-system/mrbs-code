@@ -4,6 +4,14 @@
 
 require_once "mrbs_sql.inc";
 
+
+function function_disabled($name)
+{
+  $disabled = explode(', ', ini_get('disable_functions'));
+  return in_array($name, $disabled);
+}
+
+
 // Set the default timezone.   Caters for PHP servers that don't
 // have date_default_timezone_set()
 function mrbs_default_timezone_set($timezone)

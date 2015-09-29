@@ -268,7 +268,7 @@ function generate_presentation_options(&$vars)
         // The iCal output button
         if ($times_somewhere) // We can't do iCalendars for periods yet
         {
-          $buttons[OUTPUT_ICAL] = "ical";
+          $buttons[OUTPUT_ICAL] = get_vocab('ical');
         }
         $params = array('label'       => get_vocab('format') . ":",
                         'name'        => 'output_format',

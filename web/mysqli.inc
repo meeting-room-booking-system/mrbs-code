@@ -193,7 +193,7 @@ function sql_mysqli_begin($db_conn = null)
   
   if ($result < 0)
   {
-    trigger_error (sql_mysqli_error($db_conn), E_USER_WARNING);
+    trigger_error ($db_conn->error, E_USER_WARNING);
   }
 }
 
@@ -205,7 +205,7 @@ function sql_mysqli_commit($db_conn = null)
   
   if ($result < 0)
   {
-    trigger_error (sql_mysqli_error($db_conn), E_USER_WARNING);
+    trigger_error ($db_conn->error, E_USER_WARNING);
   }
 }
 
@@ -217,7 +217,7 @@ function sql_mysqli_rollback($db_conn = null)
   
   if ($result < 0)
   {
-    trigger_error (sql_mysqli_error($db_conn), E_USER_WARNING);
+    trigger_error ($db_conn->error, E_USER_WARNING);
   }
 }
 
@@ -441,6 +441,12 @@ function sql_mysqli_table_exists($table, $db_conn = null)
 
   $res = sql_mysqli_query1("SHOW TABLES LIKE '" . sql_mysqli_escape($table) . "'", $db_conn);
 
+  if ($res < 0)
+  {
+    trigger_error($db_conn->error, E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
+  }
+  
   return ($res == -1) ? FALSE : TRUE;
 }
 
@@ -488,7 +494,7 @@ function sql_mysqli_field_info($table, $db_conn = null)
   $res = sql_mysqli_query("SHOW COLUMNS FROM $table");
   if ($res === FALSE)
   {
-    trigger_error(mysqli_error($db_conn), E_USER_WARNING);
+    trigger_error($db_conn->error, E_USER_WARNING);
     fatal_error(TRUE, get_vocab("fatal_db_error"));
   }
   else

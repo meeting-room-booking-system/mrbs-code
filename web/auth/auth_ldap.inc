@@ -40,6 +40,7 @@ function authLdapAction($callback, $user, &$object)
   global $ldap_admin_group_dn;
   global $ldap_email_attrib;
   global $ldap_disable_referrals;
+  global $ldap_deref;
 
   if (!function_exists("ldap_connect"))
   {
@@ -64,7 +65,8 @@ function authLdapAction($callback, $user, &$object)
                         'ldap_v3',
                         'ldap_tls',
                         'ldap_email_attrib',
-                        'ldap_disable_referrals'
+                        'ldap_disable_referrals',
+                        'ldap_deref'
                        );
 
   $all_ldap_opts = array();
@@ -136,6 +138,10 @@ function authLdapAction($callback, $user, &$object)
     {
       authLdapDebug("authLdapAction: Got LDAP connection");
 
+      if (isset($all_ldap_opts['ldap_deref'][$idx]))
+      {
+        ldap_set_option($ldap, LDAP_OPT_DEREF, $all_ldap_opts['ldap_deref'][$idx]);
+      }
       if (isset($all_ldap_opts['ldap_v3'][$idx]) &&
           $all_ldap_opts['ldap_v3'][$idx])
       {

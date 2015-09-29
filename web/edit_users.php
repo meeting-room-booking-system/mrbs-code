@@ -345,7 +345,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
               case 'id':
                 echo "<input type=\"hidden\" name=\"Id\" value=\"$Id\">\n";
                 break;
-              case 'password':
+              case 'password_hash':
                 echo "<input type=\"hidden\" name=\"" . $params['name'] ."\" value=\"". htmlspecialchars($params['value']) . "\">\n";
                 break;
               default:
@@ -543,6 +543,7 @@ if (isset($Action) && ($Action == "Update"))
         $q_string .= "&Id=$Id";
         continue; 
       }
+
       // first, get all the other form variables and put them into an array, $values, which 
       // we will use for entering into the database assuming we pass validation
       $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
@@ -565,15 +566,23 @@ if (isset($Action) && ($Action == "Update"))
           $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
           $values[$fieldname] = utf8_strtolower($values[$fieldname]);
           break;
-        case 'password':
+        case 'password_hash':
           // password: if the password field is blank it means
           // that the user doesn't want to change the password
-          // so don't do anything; otherwise get the MD5 hash.
+          // so don't do anything; otherwise calculate the hash.
           // Note: we don't put the password in the query string
           // for security reasons.
           if (!empty($password0))
           {
-            $values[$fieldname]=md5($password0);
+            if (PasswordCompat\binary\check())
+            {
+              $hash = password_hash($password0, PASSWORD_DEFAULT);
+            }
+            else
+            {
+              $hash = md5($password0);
+            }
+            $values[$fieldname] = $hash;
           }
           break;
         case 'level':
@@ -840,7 +849,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   $res = sql_query("SELECT * FROM $tbl_users ORDER BY level DESC, name");
   
   // Display the data in a table
-  $ignore_columns = array('id', 'password', 'name'); // We don't display these columns or they get special treatment
+  $ignore_columns = array('id', 'password_hash', 'name'); // We don't display these columns or they get special treatment
   
   if (!$ajax)
   {

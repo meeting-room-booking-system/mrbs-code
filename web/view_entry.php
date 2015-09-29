@@ -255,7 +255,7 @@ if (!isset($returl))
 {
   if (isset($HTTP_REFERER))
   {
-    $returl = $HTTP_REFERER;
+    $returl = basename($HTTP_REFERER);
   }
   // If we haven't got a referer (eg we've come here from an email) then construct
   // a sensible place to go to afterwards
