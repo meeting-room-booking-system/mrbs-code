@@ -12,7 +12,7 @@ if (DEBUG)
   <link href="jquery/datatables/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
   <link href="jquery/datatables/css/dataTables.fixedColumns.css" rel="stylesheet" type="text/css">
   <link href="jquery/datatables/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
-  <link href="jquery/datatables/css/dataTables.colReorder.css" rel="stylesheet" type="text/css">
+  <link href="jquery/datatables/css/colReorder.dataTables.css" rel="stylesheet" type="text/css">
   <?php
 }
 else
@@ -23,7 +23,7 @@ else
   <link href="jquery/datatables/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
   <link href="jquery/datatables/css/dataTables.fixedColumns.min.css" rel="stylesheet" type="text/css">
   <link href="jquery/datatables/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
-  <link href="jquery/datatables/css/dataTables.colReorder.css" rel="stylesheet" type="text/css">
+  <link href="jquery/datatables/css/colReorder.dataTables.css" rel="stylesheet" type="text/css">
   <?php
 }
 ?>
