@@ -69,7 +69,7 @@ class Crypt_Blowfish_MCrypt extends Crypt_Blowfish
      * @param string $iv initialization vector
      * @access public
      */
-    function Crypt_Blowfish_MCrypt($key = null, $mode = 'ecb', $iv = null)
+    function __construct($key = null, $mode = 'ecb', $iv = null)
     {
         $this->_iv = $iv . ((strlen($iv) < 8)
                             ? str_repeat(chr(0), 8 - strlen($iv)) : '');

@@ -59,7 +59,7 @@ class Crypt_Blowfish_CBC extends Crypt_Blowfish_PHP
      * @param string $iv initialization vector
      * @access public
      */
-    function Crypt_Blowfish_CBC($key = null, $iv = null)
+    function __construct($key = null, $iv = null)
     {
         $this->__construct($key, $iv);
     }
