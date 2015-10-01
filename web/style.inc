@@ -10,8 +10,8 @@ if (DEBUG)
   <link href="jquery/ui/css/jquery-ui.structure.css" rel="stylesheet" type="text/css">
   <link href="jquery/ui/css/sunny/jquery-ui.theme.css" rel="stylesheet" type="text/css">
   <link href="jquery/datatables/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+  <link href="jquery/datatables/css/buttons.dataTables.css" rel="stylesheet" type="text/css">
   <link href="jquery/datatables/css/fixedColumns.dataTables.css" rel="stylesheet" type="text/css">
-  <link href="jquery/datatables/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
   <link href="jquery/datatables/css/colReorder.dataTables.css" rel="stylesheet" type="text/css">
   <?php
 }
@@ -21,8 +21,8 @@ else
   <link href="jquery/ui/css/jquery-ui.structure.min.css" rel="stylesheet" type="text/css">
   <link href="jquery/ui/css/sunny/jquery-ui.theme.min.css" rel="stylesheet" type="text/css">
   <link href="jquery/datatables/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+  <link href="jquery/datatables/css/buttons.dataTables.css" rel="stylesheet" type="text/css">
   <link href="jquery/datatables/css/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css">
-  <link href="jquery/datatables/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
   <link href="jquery/datatables/css/colReorder.dataTables.css" rel="stylesheet" type="text/css">
   <?php
 }

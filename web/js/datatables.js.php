@@ -64,7 +64,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   var i,
       defaultOptions,
       mergedOptions,
-      colVisExcludeCols,
+      colVisIncludeCols,
       nCols,
       table,
       dataTable;
@@ -90,6 +90,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     
     <?php // Set up the default options ?>
     defaultOptions = {
+      buttons: [{extend: 'colvis'}],
       deferRender: true,
       paging: true,
       pageLength: 25,
@@ -97,7 +98,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       processing: true,
       scrollCollapse: true,
       stateSave: true,
-      dom: 'C<"clear">lfrtip',
+      dom: 'B<"clear">lfrtip',
       scrollX: '100%',
       colReorder: {},
       colVis: {buttonText: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>',
@@ -123,38 +124,33 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
 
               
     <?php
-    // If we've fixed the left or right hand columns, then (a) remove them
-    // from the column visibility list because they are fixed and (b) stop them
-    // from being reordered
+    // Construct the set of columns to be included in the column visibility
+    // button.  Exclude any fixed columns.
     ?>
-    colVisExcludeCols = [];
-    if (fixedColumnsOptions)
+    colVisIncludeCols = [];
+    nCols = table.find('tr:first-child th').length;
+    for (i=0; i<nCols; i++)
     {
-      if (fixedColumnsOptions.leftColumns)
-      { 
-        for (i=0; i<fixedColumnsOptions.leftColumns; i++)
+      if (fixedColumnsOptions)
+      {
+        if (fixedColumnsOptions.leftColumns && (i < fixedColumnsOptions.leftColumns))
         {
-          colVisExcludeCols.push(i);
+          continue;
         }
-        defaultOptions.colReorder.fixedColumnsLeft = fixedColumnsOptions.leftColumns;
-      }
-      if (fixedColumnsOptions.rightColumns)
-      { 
-        nCols = table.find('tr:first-child th').length;
-        for (i=0; i<fixedColumnsOptions.rightColumns; i++)
+        if (fixedColumnsOptions.rightColumns && (i >= nCols-fixedColumnsOptions.rightColumns))
         {
-          colVisExcludeCols.push(nCols - (i+1));
+          continue;
         }
-        defaultOptions.colReorder.fixedColumnsRight = fixedColumnsOptions.rightColumns;
       }
+      colVisIncludeCols.push(i);
     }
-    defaultOptions.colVis.exclude = colVisExcludeCols;
+    defaultOptions.buttons[0].columns = colVisIncludeCols;
     <?php
     // Merge the specific options with the default options.  We do a deep
     // merge.
     ?>
     mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
-
+    
     dataTable = table.DataTable(mergedOptions);
     
     if (fixedColumnsOptions)

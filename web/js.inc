@@ -146,8 +146,9 @@ if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search'))
   {
     ?>
     <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="jquery/datatables/js/dataTables.buttons.js"></script>
+    <script type="text/javascript" src="jquery/datatables/js/buttons.colVis.js"></script>
     <script type="text/javascript" src="jquery/datatables/js/dataTables.fixedColumns.js"></script>
-    <script type="text/javascript" src="jquery/datatables/js/dataTables.colVis.js"></script>
     <script type="text/javascript" src="jquery/datatables/js/dataTables.colReorder.js"></script>
     <?php
   }
@@ -155,8 +156,9 @@ if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search'))
   {
     ?>
     <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="jquery/datatables/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="jquery/datatables/js/buttons.colVis.min.js"></script>
     <script type="text/javascript" src="jquery/datatables/js/dataTables.fixedColumns.min.js"></script>
-    <script type="text/javascript" src="jquery/datatables/js/dataTables.colVis.min.js"></script>
     <script type="text/javascript" src="jquery/datatables/js/dataTables.colReorder.min.js"></script>
     <?php
   }

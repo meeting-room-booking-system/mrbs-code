@@ -117,7 +117,7 @@ init = function(args) {
     // this on the dataTables forum.  In the meantime we comment out the FixedColumns.
     ?>
     tableOptions.stateSave = false;
-
+    
     <?php
     // Remove the first column from the column visibility
     // list because it is the control column
