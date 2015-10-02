@@ -61,7 +61,7 @@ init = function(args) {
     <?php // Get the types and feed those into dataTables ?>
     tableOptions.aoColumnDefs = getTypes($('#search_results'));
       
-    makeDataTable('#search_results', tableOptions, {"iLeftColumns": 1});
+    makeDataTable('#search_results', tableOptions, {"leftColumns": 1});
 
     <?php
   }  //  if (function_exists('json_encode')) ?>
