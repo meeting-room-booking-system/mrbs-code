@@ -90,7 +90,8 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     
     <?php // Set up the default options ?>
     defaultOptions = {
-      buttons: [{extend: 'colvis'}],
+      buttons: [{extend: 'colvis', 
+                 text: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>'}],
       deferRender: true,
       paging: true,
       pageLength: 25,
@@ -100,9 +101,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       stateSave: true,
       dom: 'B<"clear">lfrtip',
       scrollX: '100%',
-      colReorder: {},
-      colVis: {buttonText: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>',
-               restore: '<?php echo escape_js(get_vocab("restore_original")) ?>'}
+      colReorder: {}
     };
     
     <?php
@@ -129,9 +128,11 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     // all columns except any fixed columns.
     ?>
     if (specificOptions && 
-        specificOptions.buttons)
+        specificOptions.buttons &&
+        specificOptions.buttons[0] &&
+        specificOptions.buttons[0].columns)
     {
-      defaultOptions.buttons = specificOptions.buttons;
+      defaultOptions.buttons[0].columns = specificOptions.buttons;
     }
     else
     {
