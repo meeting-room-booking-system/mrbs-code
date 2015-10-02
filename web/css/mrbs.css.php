@@ -1102,6 +1102,15 @@ table.dataTable.order-column.stripe tbody tr.even > .sorting_3 {
   border-bottom-width: 0;
 }
 
+div.dt-buttons {
+  float: right;
+  margin-bottom: 0.4em;
+}
+
+a.dt-button {
+  margin-right: 0;
+}
+
 
 /* ------------ jQuery UI additions -------------*/
 
