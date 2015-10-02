@@ -57,13 +57,11 @@ init = function(args) {
     list( ,$query_string) = explode('?', $HTTP_REFERER, 2);
     $ajax_url = "search.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1";
     ?>
-    tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
-    <?php // Get the sTypes and feed those into dataTables ?>
-    tableOptions.aoColumnDefs = getSTypes($('#search_results'));
+    tableOptions.ajax = "<?php echo $ajax_url ?>";
+    <?php // Get the types and feed those into dataTables ?>
+    tableOptions.columnDefs = getTypes($('#search_results'));
       
-    var searchTable = makeDataTable('#search_results', 
-                                    tableOptions, 
-                                    {sWidth: "relative", iWidth: 33} );
+    makeDataTable('#search_results', tableOptions, {"leftColumns": 1});
 
     <?php
   }  //  if (function_exists('json_encode')) ?>

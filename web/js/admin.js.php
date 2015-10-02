@@ -22,6 +22,9 @@ $is_admin = (authGetUserLevel($user) >= $max_level);
 
 var oldInitAdmin = init;
 init = function(args) {
+  
+  var fixedColumnsOptions = {leftColumns: 1};
+  
   oldInitAdmin.apply(this, [args]);
   
   <?php
@@ -30,22 +33,18 @@ init = function(args) {
   // (but not if we're running IE8 or below because for some reason I can't
   // get a fixed right hand column to work there.  It should do though, as it
   // works on the DataTables examples page)
+  
   if ($is_admin)
   {
     ?>
-    var rightCol = (lteIE8) ? null: {sWidth: "fixed", iWidth: 40};
-    <?php
-  }
-  else
-  {
-    ?>
-    var rightCol = null;
+    if (!lteIE8)
+    {
+      fixedColumnsOptions.rightColumns = 1;
+    }
     <?php
   }
   ?>
-  var roomsTable = makeDataTable('#rooms_table',
-                                 {},
-                                 {sWidth: "relative", iWidth: 33},
-                                 rightCol);
+  
+  makeDataTable('#rooms_table', {}, fixedColumnsOptions);
 };
 

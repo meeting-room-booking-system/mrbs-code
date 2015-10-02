@@ -17,6 +17,7 @@ if ($use_strict)
 // Extend the init() function 
 ?>
 var oldInitPending = init;
+
 init = function(args) {
   oldInitPending.apply(this, [args]);
 
@@ -36,18 +37,27 @@ init = function(args) {
   }
   else
   {
-    var maintable = $('#pending_table');
+    var maintable = $('#pending_table'),
+        subtables,
+        startTimeCol = maintable.find('thead tr:first th.header_start_time').index(),
+        tableOptions,
+        pendingDataTable,
+        i,
+        colVisIncludeCols;
+    
     <?php
     // Add a '-' control to the subtables and make them close on clicking it
     ?>
     maintable.find('table.sub th.control')
              .text('-');
-             
+   
+    
     $(document).on('click', 'table.sub th.control', function () {
-        var nTr = $(this).closest('.table_container').parent().prev();
-        var serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
+        var nTr = $(this).closest('.table_container').parent().prev(),
+            serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
+            
         $('#subtable_' + serial + '_wrapper').slideUp( function () {
-            pendingTable.fnClose(nTr.get(0));
+            pendingDataTable.row(nTr).child.hide();
             nTr.show();
           });
       });
@@ -56,98 +66,75 @@ init = function(args) {
     // Detach all the subtables from the DOM (detach keeps a copy) so that they
     // don't appear, but so that we've got the data when we want to "open" a row
     ?>
-    var subtables = maintable.find('tr.sub_table').detach();
-    <?php
-    // Set up the column definitions, fixing the widths of the first and last columns
-    // Get the width of the last column by finding the width of the largest content
-    // (assuming all the content is wrapped in the first child)
-    ?>
-    var maxActionWidth = 0;
-    $('th:last-child, td:last-child').each(function() {
-        var actionWidth = $(this).children().eq(0).outerWidth(true);
-        maxActionWidth = Math.max(maxActionWidth, actionWidth);
-      });
-    maxActionWidth += 16; <?php // to allow for padding in the <td> ?>
-    var colDefsMain = [{"sWidth": "1.2em", "aTargets": [0] },
-                       {"sWidth": maxActionWidth + "px", "aTargets": [6] }];
-    colDefsMain = colDefsMain.concat(getSTypes(maintable));
+    subtables = maintable.find('tr.sub_table').detach();
+    
     <?php
     // Set up a click event that "opens" the table row and inserts the subtable
     ?>
     maintable.find('td.control')
              .text('+');
+             
     $(document).on('click', 'td.control', function () {
-        var nTr = $(this).parent();
-        var serial = nTr.attr('id').replace('row_', '');
-        var subtableId = 'subtable_' + serial;
-        var subtable = subtables.find('#' + subtableId).parent().clone();                                
-        var columns = [];          
+        
+        var nTr = $(this).parent(),
+            serial = nTr.attr('id').replace('row_', ''),
+            subtableId = 'subtable_' + serial,
+            subtable = subtables.find('#' + subtableId).parent().clone(),
+            columnDefs = [],
+            subDataTable;
+
         <?php
         // We want the columns in the main and sub tables to align.  So
         // find the widths of the main table columns and use those values
-        // to set the widths of the subable columns.   [This doesn't work
-        // 100% - I'm not sure why - but I have left the code in]
+        // to set the widths of the subtable columns. 
         ?>
         maintable.find('tr').eq(0).find('th').each(function(i){
-            var def = {};
-            switch (i)
-            {
-              case 0: <?php // expand control ?>
-                def.bSortable = false;
-                break;
-              case 5: <?php // start-time ?>
-                def.sType = "title-numeric";
-                break;
-            }
-            def.sWidth = ($(this).innerWidth()) + "px";
-            columns.push(def);
+            columnDefs.push({width: ($(this).outerWidth()) + "px",
+                             targets: i});
           });
+        
+        columnDefs.push({orderable: false, targets: 0});
+        columnDefs = columnDefs.concat(getTypes(subtable));
 
         nTr.hide();
-        pendingTable.fnOpen(nTr.get(0), subtable.get(0), 'table_container');
+        pendingDataTable.row(nTr).child(subtable.get(0)).show();
+        subtable.closest('td').addClass('table_container');
 
-        $('#' + subtableId).dataTable({"bAutoWidth": false,
-                                       "bPaginate": false,
-                                       "sDom": 't',
-                                       "aoColumns": columns});
+        subDataTable = $('#' + subtableId).DataTable({autoWidth: false,
+                                                      paging: false,
+                                                      dom: 't',
+                                                      order: [[startTimeCol, 'asc']],
+                                                      columnDefs: columnDefs});
 
         $('#subtable_' + serial + '_wrapper').hide().slideDown();
       });
                   
     <?php // Turn the table into a datatable ?>
-    var tableOptions = {};
-    tableOptions.sScrollXInner = "100%";
-    tableOptions.aoColumnDefs = colDefsMain;
+    tableOptions = {order: [[startTimeCol, 'asc']]};
+    tableOptions.columnDefs = [{orderable: false, targets: 0}];
+    tableOptions.columnDefs = tableOptions.columnDefs.concat(getTypes(maintable));
     <?php
     // For some reason I don't understand, fnOpen() doesn't seem to work when
     // using FixedColumns.   We also have to turn off bStateSave.  I have raised
     // this on the dataTables forum.  In the meantime we comment out the FixedColumns.
     ?>
-    tableOptions.bStateSave = false;
-    <?php
-    // Fix the left hand column.  This has to be done when 
-    // initialisation is complete as the language files are loaded
-    // asynchronously
-    ?>
-    tableOptions.fnInitComplete = function(){
-        /*
-        new FixedColumns(pendingTable, {"iLeftColumns": 1,
-                                        "iLeftWidth": 30,
-                                        "sLeftWidth": "fixed"});
-        */
-        $('.js div.datatable_container').css('visibility', 'visible');
-        <?php // Rebind the handler ?>
-        $(window).bind('resize', windowResizeHandler);
-      };
+    tableOptions.stateSave = false;
+    
     <?php
     // Remove the first column from the column visibility
     // list because it is the control column
     ?>
-    tableOptions.oColVis = {aiExclude: [0]};
+    colVisIncludeCols = [];
+    for (i=1; i<maintable.find('thead tr:first th').length; i++)
+    {
+      colVisIncludeCols.push(i);
+    }
+    tableOptions.buttons = [{extend: 'colvis',
+                             columns: colVisIncludeCols}];
     <?php
     // and stop the first column being reordered
     ?>
-    tableOptions.oColReorder = {"iFixedColumns": 1};
-    var pendingTable = makeDataTable('#pending_table', tableOptions);
+    tableOptions.colReorder = {"fixedColumnsLeft": 1};
+    pendingDataTable = makeDataTable('#pending_table', tableOptions);
   }  // if (!lteie6)
 };

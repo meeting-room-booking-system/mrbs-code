@@ -21,19 +21,26 @@ expires_header(60*30); // 30 minute expiry
 
 /* ------------ GENERAL -----------------------------*/
 
-body {font-size: small;
-    margin: 0;
-    padding: 0;
-    color:            <?php echo $standard_font_color ?>;
-    font-family:      <?php echo $standard_font_family ?>;
-    background-color: <?php echo $body_background_color ?>}
+body {
+  font-size: small;
+  margin: 0;
+  padding: 0;
+  color:            <?php echo $standard_font_color ?>;
+  font-family:      <?php echo $standard_font_family ?>;
+  background-color: <?php echo $body_background_color ?>;
+}
 
 .current {color: <?php echo $highlight_font_color ?>}                        /* used to highlight the current item */
 .error   {color: <?php echo $highlight_font_color ?>; font-weight: bold}     /* for error messages */
 .warning {color: <?php echo $highlight_font_color ?>}                        /* for warning messages */
 .note    {font-style: italic}
 
-div#contents, div.trailer {padding: 0 2em}
+div#contents, div.trailer {
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 2em;
+}
 
 h1 {font-size: x-large; clear: both}
 h2 {font-size: large; clear: both}
@@ -62,19 +69,103 @@ fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
     border: 1px solid <?php echo $admin_table_border_color ?>}
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
-  
-table.admin_table {border-spacing: 0px; border-collapse: collapse; border-color: <?php echo $admin_table_border_color ?>; border-style: solid;
-    border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
-.admin_table th, .admin_table td {vertical-align: middle; text-align: left;
-    padding: 0.1em 8px 0.1em 8px;
-    border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; border-style: solid;}
-.admin_table th {color: <?php echo $admin_table_header_font_color ?>; 
-    background-color: <?php echo $admin_table_header_back_color ?>}
-.admin_table td, .admin_table th {border-color: <?php echo $admin_table_border_color ?>}
-.admin_table th:first-child {border-left-color: <?php echo $admin_table_header_back_color ?>}
-.admin_table td.action {text-align: center}
-.admin_table td.action div {display: inline-block}
-.admin_table td.action div div {display: table-cell} 
+
+<?php
+// DataTables don't work well with border-collapse: collapse and scrollX: 100%.   In fact they
+// don't work well either with a border round the table.   So we put the left and right borders
+// on the table cells.
+?>
+
+
+table.admin_table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-color: <?php echo $admin_table_border_color ?>;
+}
+
+.admin_table th, .admin_table td,
+table.dataTable thead th, table.dataTable thead td,
+table.dataTable tbody th, table.dataTable tbody td {
+  box-sizing: border-box;
+  vertical-align: middle;
+  text-align: left;
+  padding: 0.1em 0.6em;
+  border-style: solid;
+  border-width: 0 1px 0 0;
+}
+
+.admin_table th:first-child, .admin_table td:first-child,
+table.dataTable thead th:first-child, table.dataTable thead td:first-child {
+  border-left-width: 1px;
+}
+
+.admin_table td, .admin_table th,
+table.dataTable thead th, table.dataTable thead td {
+  border-color: <?php echo $admin_table_border_color ?>;
+}
+
+.admin_table th:first-child,
+table.dataTable thead th:first-child, table.dataTable thead td:first-child {
+  border-left-color: <?php echo $admin_table_header_back_color ?>
+}
+
+.admin_table th:last-child {
+  border-right-color: <?php echo $admin_table_header_back_color ?>
+}
+
+.admin_table.DTFC_Cloned th:last-child {
+  border-right-color: <?php echo $admin_table_border_color ?>
+}
+
+.admin_table th,
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc {
+  color: <?php echo $admin_table_header_font_color ?>; 
+  background-color: <?php echo $admin_table_header_back_color ?>
+}
+
+.admin_table td.action {
+  text-align: center
+}
+
+.admin_table td.action div {
+  display: inline-block
+}
+
+.admin_table td.action div div {
+  display: table-cell
+}
+
+table.display {
+  width: 100%;
+}
+
+table.display tbody tr:nth-child(2n) {
+  background-color: white;
+}
+
+table.display tbody tr:nth-child(2n+1) {
+  background-color: #E2E4FF;
+}
+
+table.display th, table.display td {
+  height: 2em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+table.display th {
+  padding: 3px 24px 3px 8px;
+}
+
+table.display span {
+  display: none;
+}
+
+table.display span.normal {
+  display: inline;
+}
 
 select.room_area_select {margin-right: 0.5em}
 
@@ -829,11 +920,27 @@ td#sticky_day {border: 1px dotted <?php echo $highlight_font_color ?>}
 td.mincals_week_number { opacity: 0.5; font-size: 60%; }
 
 /* ------------ PENDING.PHP ------------------*/
-#pending_list form {display: inline-block}
-#pending_list td.table_container, #pending_list td.sub_table {padding: 0; border: 0; margin: 0}
-#pending_list .control {padding-left: 0; padding-right: 0; text-align: center;
-                        color: <?php echo $standard_font_color ?>}
-.js #pending_list td.control {background-color: <?php echo $pending_control_color ?>}
+#pending_list form {
+  display: inline-block;
+}
+
+#pending_list td.table_container, #pending_list td.sub_table {
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+#pending_list .control {
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
+  color: <?php echo $standard_font_color ?>;
+}
+
+.js #pending_list td.control {
+  background-color: <?php echo $pending_control_color ?>;
+}
+
 #pending_list td:first-child {width: 1.2em}
 #pending_list #pending_table td.sub_table {width: auto}
 table.admin_table.sub {border-right-width: 0}
@@ -914,8 +1021,13 @@ div#simple_trailer {clear: both; text-align: center; padding-top: 1.0em; padding
 #approve_buttons td#note form {width: 100%}
 #approve_buttons td#note textarea {width: 100%; height: 6em}
 
+
 /*-------------DataTables-------------------------*/
-div.datatable_container {float: left; width: 100%; padding: 2em 0}
+
+div.datatable_container {
+  float: left;
+  width: 100%;
+}
 
 div.ColVis_collection {
   float: left;
@@ -925,6 +1037,15 @@ div.ColVis_collection {
 div.ColVis_collection button.ColVis_Button {
   float: left;
   clear: left;
+}
+
+.dataTables_wrapper .dataTables_length {
+  clear: both;
+}
+
+.dataTables_wrapper .dataTables_filter {
+  clear: right;
+  margin-bottom: 1em;
 }
 
 span.ColVis_radio {
@@ -938,6 +1059,58 @@ span.ColVis_title {
   float: left;
   white-space: nowrap;
 }
+
+table.dataTable.display tbody tr.odd {
+  background-color: #E2E4FF;
+}
+
+table.dataTable.display tbody tr.even {
+  background-color: white;
+}
+
+table.dataTable.display tbody tr.odd > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
+  background-color: #D3D6FF;
+}
+
+table.dataTable.display tbody tr.odd > .sorting_2,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_2 {
+  background-color: #DADCFF;
+}
+
+table.dataTable.display tbody tr.odd > .sorting_3,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_3 {
+  background-color: #E0E2FF;
+}
+
+table.dataTable.display tbody tr.even > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_1  {
+  background-color: #EAEBFF;
+}
+
+table.dataTable.display tbody tr.even > .sorting_2,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_2 {
+  background-color: #F2F3FF;
+}
+
+table.dataTable.display tbody tr.even > .sorting_3,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_3 {
+  background-color: #F9F9FF;
+}
+
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+  border-bottom-width: 0;
+}
+
+div.dt-buttons {
+  float: right;
+  margin-bottom: 0.4em;
+}
+
+a.dt-button {
+  margin-right: 0;
+}
+
 
 /* ------------ jQuery UI additions -------------*/
 

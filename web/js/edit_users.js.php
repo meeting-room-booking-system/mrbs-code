@@ -34,15 +34,13 @@ init = function(args) {
     }
     $ajax_url = "edit_users.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1";
     ?>
-    tableOptions.sAjaxSource = "<?php echo $ajax_url ?>";
+    tableOptions.ajax = "<?php echo $ajax_url ?>";
     <?php
   }
 
-  // Get the sTypes and feed those into dataTables
+  // Get the types and feed those into dataTables
   ?>
-  tableOptions.aoColumnDefs = getSTypes($('#users_table'));
-  var usersTable = makeDataTable('#users_table',
-                                 tableOptions,
-                                 {sWidth: "relative", iWidth: 33});
+  tableOptions.columnDefs = getTypes($('#users_table'));
+  makeDataTable('#users_table', tableOptions, {leftColumns: 1});
 };
 

@@ -13,16 +13,17 @@ if ($use_strict)
 }
 
 
-// Get the sTypes, which are assumed to be in a data-sType in a <span> in the <th>
+// Get the types, which are assumed to be in a data-type in a <span> in the <th>
 // of the table
 ?>
-var getSTypes = function getSTypes(table) {
+var getTypes = function getTypes(table) {
     var type,
         types = {},
-        sTypes = [];
+        result = [];
         
     table.find('thead tr:first th').each(function(i) {
-       var type = $(this).find('span').data('stype');
+       var type = $(this).find('span').data('type');
+       
        if (type)
        {
          if (types[type] === undefined)
@@ -37,103 +38,38 @@ var getSTypes = function getSTypes(table) {
     {
       if (types.hasOwnProperty(type))
       {
-        sTypes.push({sType: type, 
-                     aTargets: types[type]});
+        result.push({type: type, 
+                     targets: types[type]});
       }
     }
-    
-    return sTypes;
+
+    return result;
   };
   
-
-<?php
-// Try and get a sensible value for the fixed column width, which is the
-// smaller of the actual column width and either a fixed width or a
-// proportion of the overall table width.
-// 
-// col is an object with two properties:  'iWidth' and 'sWidth', which work in
-// the same way as the DataTables properties
-?>
-function getFixedColWidth(table, col)
-{
-  var tableWidth = table.outerWidth();
-  var leftWidth = table.find('th:first-child').outerWidth();
-  var maxWidthPx = (col.sWidth === "relative") ? tableWidth*col.iWidth/100 : col.iWidth;
-  return Math.min(leftWidth, maxWidthPx);
-}
         
 <?php
 // Turn the table with id 'id' into a DataTable, using specificOptions
 // which are merged with the default options.   If the browser is IE6 or less
 // we don't bother making a dataTable:  it can be done, but it's not worth it.
 //
-// leftCol and rightCol are two objects which if defined or not null will fix the left and/or
-// right most columns.  They have properties 'iWidth' and 'sWidth' defining the
-// maximum width of the fixed column.   If sWidth = "fixed" then the iWidth is
-// a pixel value.  If it is "relative" then a percentage.
+// fixedColumnsOptions is an optional object that gets passed directly to the
+// DataTables FixedColumns constructor
 //
 // If you want to do anything else as part of fnInitComplete then you'll need
 // to define fnInitComplete in specificOptions
 ?>
-var windowResizeHandler;
         
-function makeDataTable(id, specificOptions, leftCol, rightCol)
+function makeDataTable(id, specificOptions, fixedColumnsOptions)
 {
-  var winWidth = $(window).width();
-  var winHeight = $(window).height();
-          
-  windowResizeHandler = function()
-  {
-    <?php
-    // IE8 and below will trigger $(window).resize not just when the window
-    // is resized but also when an element in the window is resized.   We 
-    // therefore need to check that this is a genuine window resize event
-    // otherwise we end up in an infinite loop
-    ?>
-    var winNewWidth = $(window).width();
-    var winNewHeight = $(window).height();
-    if ((winNewWidth === winWidth) && (winNewHeight === winHeight))
-    {
-      return;
-    }
-    winWidth = winNewWidth;
-    winHeight = winNewHeight;
-    <?php
-    // This is a genuine resize event.   Unbind the handler to stop any
-    // more resize events while we are dealing with this one
-    ?>
-    $(window).unbind('resize', windowResizeHandler);
-    <?php
-    // Need to re-create the datatable when the browser window is resized.  We
-    // can't just do a fnDraw() because that does not redraw the Fixed Columns
-    // properly.
-            
-    // We set a timeout to make the resizing a bit smoother, as otherwise it's
-    // fairly CPU intensive
-    ?>
-    window.setTimeout(function() {
-        <?php
-        // If we're using an Ajax data source then we don't want to have to make
-        // an Ajax call and wait for the data every time we resize.   So retrieve
-        // the data from the table and pass it directly to the new table.
-        ?>
-        if (mergedOptions.sAjaxSource)
-        {
-          mergedOptions.aaData = oTable.fnGetData();
-          mergedOptions.sAjaxSource = null;
-        }
-        <?php
-        // Save the language strings, because we don't need to make another Ajax
-        // to fetch the language strings again when we resize
-        ?>
-        $.extend(true, mergedOptions.oLanguage, oTable.fnSettings().oLanguage);
-                
-        oTable.fnDestroy();
-        oTable = table.dataTable(mergedOptions);
-      }, 200);
-            
-  };
-          
+  var i,
+      defaultOptions,
+      mergedOptions,
+      colVisIncludeCols,
+      nCols,
+      table,
+      dataTable,
+      fixedColumns;
+  
   if (lteIE6)
   {
     $('.js div.datatable_container').css('visibility', 'visible');
@@ -141,7 +77,7 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
   }
   else
   {
-    var table = $(id);
+    table = $(id);
     if (table.length === 0)
     {
       return false;
@@ -152,100 +88,85 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
     // the datatable sorts out its own formatting.
     ?>
     table.find('colgroup').remove();
+    
     <?php // Set up the default options ?>
-    var defaultOptions = {};
+    defaultOptions = {
+      buttons: [{extend: 'colvis', 
+                 text: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>'}],
+      deferRender: true,
+      paging: true,
+      pageLength: 25,
+      pagingType: 'full_numbers',
+      processing: true,
+      scrollCollapse: true,
+      stateSave: true,
+      dom: 'B<"clear">lfrtip',
+      scrollX: '100%',
+      colReorder: {}
+    };
+    
     <?php
     // Set the language file to be used
     if ($lang_file = get_datatable_lang_file('../jquery/datatables/language'))
     {
-      $lang_file = substr($lang_file, 3); // strip off the '../'
+      // If using the language.url way of loading a DataTables language file,
+      // then the file must be valid JSON.   The .lang files that can be 
+      // downloaded from GitHub are not valid JSON as they contain comments.  They
+      // therefore cannot be used with language.url, but instead have to be
+      // included directly.   Note that if ever we go back to using the url
+      // method then the '../' would need to be stripped off the pathname, as in
+      //    $lang_file = substr($lang_file, 3); // strip off the '../'
       ?>
-      defaultOptions.oLanguage = {"sUrl": "<?php echo $lang_file ?>"};
+      defaultOptions.language = <?php include $lang_file ?>;
       <?php
     }
     ?>
-    defaultOptions.bDeferRender = true;
-    defaultOptions.bPaginate = true;
-    defaultOptions.bProcessing = true;
-    defaultOptions.bScrollCollapse = true;
-    defaultOptions.bStateSave = true;
-    defaultOptions.iDisplayLength = 25;
-    defaultOptions.sDom = 'C<"clear">lfrtip';
-    defaultOptions.sScrollX = "100%";
-    defaultOptions.sPaginationType = "full_numbers";
-    defaultOptions.oColReorder = {};
-    defaultOptions.oColVis = {sSize: "auto",
-                              buttonText: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>',
-                              bRestore: true,
-                              sRestore: '<?php echo escape_js(get_vocab("restore_original")) ?>'};
 
-    defaultOptions.fnInitComplete = function(){
-    
-        if (((leftCol !== undefined) && (leftCol !== null)) ||
-            ((rightCol !== undefined) && (rightCol !== null)) )
-        {
-          <?php 
-          // Fix the left and/or right columns.  This has to be done when 
-          // initialisation is complete as the language files are loaded
-          // asynchronously
-          ?>
-          var options = {};
-          if ((leftCol !== undefined) && (leftCol !== null))
-          {
-            options.iLeftColumns = 1;
-            options.sLeftWidth = "fixed";
-            options.iLeftWidth = getFixedColWidth(table, leftCol);
-          }
-          if ((rightCol !== undefined) && (rightCol !== null))
-          {
-            options.iRightColumns = 1;
-            options.sRightWidth = "fixed";
-            options.iRightWidth = getFixedColWidth(table, rightCol);
-          }
-
-          var oFC = new FixedColumns(this, options);
-          <?php
-          // Not quite sure why we have to adjust the column sizing here,
-          // but if we don't then the table isn't quite the right width 
-          // when first drawn
-          ?>
-          this.fnAdjustColumnSizing();
-        }
-        $('.js div.datatable_container').css('visibility', 'visible');
-        <?php // Rebind the handler ?>
-        $(window).bind('resize', windowResizeHandler);
-      };
               
     <?php
-    // If we've fixed the left or right hand columns, then (a) remove it
-    // from the column visibility list because it is fixed and (b) stop it
-    // being reordered
+    // Construct the set of columns to be included in the column visibility
+    // button.  If specificOptions is set then use that.  Otherwise include
+    // all columns except any fixed columns.
     ?>
-    var colVisExcludeCols = [];
-    if ((leftCol !== undefined) && (leftCol !== null))
-    { 
-      colVisExcludeCols.push(0);
-      defaultOptions.oColReorder = {iFixedColumns: 1};
+    if (specificOptions && 
+        specificOptions.buttons &&
+        specificOptions.buttons[0] &&
+        specificOptions.buttons[0].columns)
+    {
+      defaultOptions.buttons[0].columns = specificOptions.buttons;
     }
-    if ((rightCol !== undefined) && (rightCol !== null))
-    { 
-      var nCols = table.find('tr:first-child th').length;
-      colVisExcludeCols.push(nCols - 1);
-      <?php
-      // Actually we stop them all from being reordered because at the moment
-      // dataTables only has a way of stopping the leftmost n columns from
-      // being reordered.  May be fixed in a future release
-      ?>
-      defaultOptions.oColReorder = {iFixedColumns: nCols};
+    else
+    {
+      colVisIncludeCols = [];
+      nCols = table.find('tr:first-child th').length;
+      for (i=0; i<nCols; i++)
+      {
+        if (fixedColumnsOptions)
+        {
+          if (fixedColumnsOptions.leftColumns && (i < fixedColumnsOptions.leftColumns))
+          {
+            continue;
+          }
+          if (fixedColumnsOptions.rightColumns && (i >= nCols-fixedColumnsOptions.rightColumns))
+          {
+            continue;
+          }
+        }
+        colVisIncludeCols.push(i);
+      }
+      defaultOptions.buttons[0].columns = colVisIncludeCols;
     }
-    defaultOptions.oColVis.aiExclude = colVisExcludeCols;
     <?php
     // Merge the specific options with the default options.  We do a deep
     // merge.
     ?>
-    var mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
-
-    var oTable = table.dataTable(mergedOptions);
+    mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
+    dataTable = table.DataTable(mergedOptions);
+    
+    if (fixedColumnsOptions)
+    {
+      fixedColumns = new $.fn.dataTable.FixedColumns(dataTable, fixedColumnsOptions);
+    }
 
     <?php
     // If we're using an Ajax data source then don't offer column reordering.
@@ -253,7 +174,7 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
     // DataTables doesn't know that the Ajax data is still in the original order.
     // May be fixed in a future release of DataTables
     ?>
-    if (!specificOptions.sAjaxSource)
+    if (!specificOptions.ajax)
     {
       <?php
       /*
@@ -271,7 +192,22 @@ function makeDataTable(id, specificOptions, leftCol, rightCol)
       ?>
     }
 
-    $(window).bind('resize', windowResizeHandler);
-    return oTable;
+    $('.js div.datatable_container').css('visibility', 'visible');
+    <?php // Need to adjust column sizing after the table is made visible ?>
+    dataTable.columns.adjust();
+    
+    <?php
+    // Adjust the column sizing on a window resize.   We shouldn't have to do this because
+    // columns.adjust() is called automatically by DataTables on a window resize, but if we
+    // don't then a right hand fixed column appears twice when a window's width is increased.
+    // I have tried to create a simple test case, but everything works OK in the test case, so
+    // it's something to do with the way MRBS uses DataTables - maybe the CSS, or maybe the
+    // JavaScript.
+    ?>
+    $(window).resize(function () {
+      dataTable.columns.adjust();
+    });
+    
+    return dataTable;
   }
 }

@@ -518,6 +518,78 @@ $aix_utf8_converters = array
   'TIS-620'
 );
 
+// The DataTables language files are for the moment given descriptive names.   I have
+// asked the DataTables team to use standard tags instead, but until that happens we have
+// to map the descriptions onto tags.  (The other method would be to rename all the files,
+// but then it would be less easy to take new releases of DataTables).
+$datatable_lang_map = array(
+  'Afrikaans'           => 'af',
+  'Albanian'            => 'sq',
+  'Arabic'              => 'ar',
+  'Armenian'            => 'hy',
+  'Azerbaijan'          => 'az',
+  'Bangla'              => 'bn',
+  'Basque'              => 'eu',
+  'Belarusian'          => 'be',
+  'Bulgarian'           => 'bg',
+  'Catalan'             => 'ca',
+  'Chinese-traditional' => 'zh-tw',
+  'Chinese'             => 'zh',
+  'Croatian'            => 'hr',
+  'Czech'               => 'cs',
+  'Danish'              => 'da',
+  'Dutch'               => 'nl',
+  'English'             => 'en',
+  'Estonian'            => 'et',
+  'Filipino'            => 'fil',
+  'Finnish'             => 'fi',
+  'French'              => 'fr',
+  'Galician'            => 'gl',
+  'Georgian'            => 'ka',
+  'German'              => 'de',
+  'Greek'               => 'el',
+  'Gujarati'            => 'gu',
+  'Hebrew'              => 'he',
+  'Hindi'               => 'hi',
+  'Hungarian'           => 'hu',
+  'Icelandic'           => 'is',
+  'Indonesian'          => 'id',
+  'Irish'               => 'ga',
+  'Italian'             => 'it',
+  'Japanese'            => 'ja',
+  'Korean'              => 'ko',
+  'Kyrgyz'              => 'ky',
+  'Latvian'             => 'lv',
+  'Lithuanian'          => 'lt',
+  'Macedonian'          => 'mk',
+  'Malay'               => 'ms',
+  'Mongolian'           => 'mn',
+  'Nepali'              => 'ne',
+  'Norwegian'           => 'no',
+  'Persian'             => 'fa',
+  'Polish'              => 'pl',
+  'Portuguese-Brasil'   => 'pt-br',
+  'Portuguese'          => 'pt',
+  'Romanian'            => 'ro',
+  'Russian'             => 'ru',
+  'Serbian'             => 'sr',
+  'Sinhala'             => 'si',
+  'Slovak'              => 'sk',
+  'Slovenian'           => 'sl',
+  'Spanish'             => 'es',
+  'Swahili'             => 'sw',
+  'Swedish'             => 'sv',
+  'Tamil'               => 'ta',
+  'Thai'                => 'th',
+  'Turkish'             => 'tr',
+  'Ukranian'            => 'uk',
+  'Urdu'                => 'ur',
+  'Uzbek'               => 'uz',
+  'Vietnamese'          => 'vi',
+  'Welsh'               => 'cy'
+);
+
+
 // A list of languages that use Right to Left text
 $rtl_languages = array('he');
 
@@ -861,12 +933,16 @@ function get_language_qualifiers()
 
 
 // Get the best fit language file from $dir given the set of language preferences
-// $lang_preferences (an associative array language => quality_value).   If set,
-// $default_langtags is an array of languages that are already built into the system
-// and do not need an explicit regional setting.
+//   $lang_preferences (an associative array language => quality_value).
+//   $default_langtags is an array of languages that are already built into the system
+//     and do not need an explicit regional setting.
+//   $lang_map is an associative array that maps a filename (less prefix and suffix)
+//     onto a language tag, for example array('English' => 'en').  Useful when the localisation
+//     files do not follow a language tag naming scheme.
+//
 // The file names are assumed to be of the form $prefix . $lang . $suffix, eg 
 // 'datepicker-en-GB.js'
-function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_langtags=NULL)
+function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_langtags=NULL, $lang_map=NULL)
 {
   global $default_language_tokens, $disable_automatic_language_changing;
   
@@ -894,7 +970,7 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
       // Then strip out the language tag from the file name
       $langtag = substr($file, $prefix_length);
       $langtag = substr($langtag, 0, -$suffix_length);
-      $available_langtags[] = $langtag;
+      $available_langtags[] = (isset($lang_map)) ? $lang_map[$langtag] : $langtag;
     }
   }
   
@@ -927,7 +1003,8 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
       {
         return NULL;
       }
-      return $prefix . $locale . $suffix;
+      $filename_body = isset($lang_map) ? array_search($locale, $lang_map) : $locale;
+      return $prefix . $filename_body . $suffix;
     }
   }
 
@@ -963,9 +1040,9 @@ function get_datepicker_lang_file($dir)
 // $dir is the directory containing the language files
 function get_datatable_lang_file($dir)
 {
-  global $langs;
+  global $langs, $datatable_lang_map;
   
-  $file = get_best_lang_file($langs, $dir, '', '.txt');
+  $file = get_best_lang_file($langs, $dir, '', '.lang', NULL, $datatable_lang_map);
   
   if (isset($file))
   {
