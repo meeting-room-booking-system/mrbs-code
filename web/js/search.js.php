@@ -59,7 +59,7 @@ init = function(args) {
     ?>
     tableOptions.ajax = "<?php echo $ajax_url ?>";
     <?php // Get the types and feed those into dataTables ?>
-    tableOptions.aoColumnDefs = getTypes($('#search_results'));
+    tableOptions.columnDefs = getTypes($('#search_results'));
       
     makeDataTable('#search_results', tableOptions, {"leftColumns": 1});
 
