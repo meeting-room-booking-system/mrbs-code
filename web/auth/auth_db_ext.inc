@@ -18,6 +18,13 @@
 
 // $Id$
 
+// We no longer have a 'mysql' abstraction, but to support people who upgrade MRBS and used to
+// use the 'mysql' abstraction, we change the abstraction to the supported 'mysqli'.
+if ($auth['db_ext']['db_system'] == 'mysql')
+{
+  $auth['db_ext']['db_system'] = 'mysqli';
+}
+
 
 /* authValidateUser($user, $pass)
  * 

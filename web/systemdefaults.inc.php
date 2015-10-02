@@ -56,11 +56,10 @@ $zoneinfo_expiry = 60*60*24*28;    // 28 days
 /*******************
  * Database settings
  ******************/
-// Which database system: "pgsql"=PostgreSQL, "mysql"=MySQL,
-// "mysqli"=MySQL via the mysqli PHP extension
+// Which database system: "pgsql"=PostgreSQL, "mysqli"=MySQL
 $dbsys = "mysqli";
 // Hostname of database server. For pgsql, can use "" instead of localhost
-// to use Unix Domain Sockets instead of TCP/IP. For mysql/mysqli "localhost"
+// to use Unix Domain Sockets instead of TCP/IP. For mysqli "localhost"
 // tells the system to use Unix Domain Sockets, and $db_port will be ignored;
 // if you want to force TCP connection you can use "127.0.0.1".
 $db_host = "localhost";
@@ -710,7 +709,7 @@ $min_user_editing_level = 2;
 // db_ext authentication.
 $auth['db_ext']['db_system'] = 'mysqli';
 // Hostname of external database server. For pgsql, can use "" instead of localhost
-// to use Unix Domain Sockets instead of TCP/IP. For mysql/mysqli "localhost"
+// to use Unix Domain Sockets instead of TCP/IP. For mysqli "localhost"
 // tells the system to use Unix Domain Sockets, and $db_port will be ignored;
 // if you want to force TCP connection you can use "127.0.0.1".
 $auth['db_ext']['db_host'] = 'localhost';
@@ -970,6 +969,13 @@ $sendmail_settings['path'] = '/usr/bin/sendmail';
 // Set additional Sendmail parameters (only used with "sendmail" backend).
 // (example "-t -i"). Default is ''
 $sendmail_settings['args'] = '';
+
+/*******************
+ * Qmail settings
+ */
+
+/* Configures the path to 'qmail-inject', if unset defaults to '/var/qmail/bin/qmail-inject' */
+$mail_settings['qmail']['qmail-inject-path'] = '/usr/bin/qmail-inject';
 
 /*******************
  * SMTP settings
