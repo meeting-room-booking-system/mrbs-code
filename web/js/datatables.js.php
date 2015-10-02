@@ -125,32 +125,40 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
               
     <?php
     // Construct the set of columns to be included in the column visibility
-    // button.  Exclude any fixed columns.
+    // button.  If specificOptions is set then use that.  Otherwise include
+    // all columns except any fixed columns.
     ?>
-    colVisIncludeCols = [];
-    nCols = table.find('tr:first-child th').length;
-    for (i=0; i<nCols; i++)
+    if (specificOptions && 
+        specificOptions.buttons)
     {
-      if (fixedColumnsOptions)
-      {
-        if (fixedColumnsOptions.leftColumns && (i < fixedColumnsOptions.leftColumns))
-        {
-          continue;
-        }
-        if (fixedColumnsOptions.rightColumns && (i >= nCols-fixedColumnsOptions.rightColumns))
-        {
-          continue;
-        }
-      }
-      colVisIncludeCols.push(i);
+      defaultOptions.buttons = specificOptions.buttons;
     }
-    defaultOptions.buttons[0].columns = colVisIncludeCols;
+    else
+    {
+      colVisIncludeCols = [];
+      nCols = table.find('tr:first-child th').length;
+      for (i=0; i<nCols; i++)
+      {
+        if (fixedColumnsOptions)
+        {
+          if (fixedColumnsOptions.leftColumns && (i < fixedColumnsOptions.leftColumns))
+          {
+            continue;
+          }
+          if (fixedColumnsOptions.rightColumns && (i >= nCols-fixedColumnsOptions.rightColumns))
+          {
+            continue;
+          }
+        }
+        colVisIncludeCols.push(i);
+      }
+      defaultOptions.buttons[0].columns = colVisIncludeCols;
+    }
     <?php
     // Merge the specific options with the default options.  We do a deep
     // merge.
     ?>
     mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
-    
     dataTable = table.DataTable(mergedOptions);
     
     if (fixedColumnsOptions)

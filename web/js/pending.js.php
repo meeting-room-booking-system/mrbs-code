@@ -41,7 +41,9 @@ init = function(args) {
         subtables,
         startTimeCol = maintable.find('thead tr:first th.header_start_time').index(),
         tableOptions,
-        pendingDataTable;
+        pendingDataTable,
+        i,
+        colVisIncludeCols;
     
     <?php
     // Add a '-' control to the subtables and make them close on clicking it
@@ -122,7 +124,13 @@ init = function(args) {
     // Remove the first column from the column visibility
     // list because it is the control column
     ?>
-    tableOptions.colVis = {exclude: [0]};
+    colVisIncludeCols = [];
+    for (i=1; i<maintable.find('thead tr:first th').length; i++)
+    {
+      colVisIncludeCols.push(i);
+    }
+    tableOptions.buttons = [{extend: 'colvis',
+                             columns: colVisIncludeCols}];
     <?php
     // and stop the first column being reordered
     ?>
