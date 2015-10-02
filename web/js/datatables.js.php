@@ -67,7 +67,8 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       colVisIncludeCols,
       nCols,
       table,
-      dataTable;
+      dataTable,
+      fixedColumns;
   
   if (lteIE6)
   {
@@ -164,7 +165,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     
     if (fixedColumnsOptions)
     {
-      new $.fn.dataTable.FixedColumns(dataTable, fixedColumnsOptions);
+      fixedColumns = new $.fn.dataTable.FixedColumns(dataTable, fixedColumnsOptions);
     }
 
     <?php
