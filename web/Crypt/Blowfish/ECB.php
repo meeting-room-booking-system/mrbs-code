@@ -20,7 +20,7 @@
 /**
  * Required parent class
  */
-require_once 'Crypt/Blowfish/PHP.php';
+require_once __DIR__ . '/PHP.php';
 
 /**
  * Example

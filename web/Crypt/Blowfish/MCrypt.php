@@ -20,7 +20,7 @@
 /**
  * Include base class
  */
-require_once 'Crypt/Blowfish.php';
+require_once __DIR__ . '/../Blowfish.php';
 
 /**
  * Example using the factory method in CBC mode and forcing using

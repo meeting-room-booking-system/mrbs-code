@@ -21,7 +21,7 @@
 // $Id$
 
 // Bring in Blowfish class
-require_once(dirname(__FILE__).'/../Crypt/Blowfish.php');
+require_once dirname(__FILE__) . '/../Crypt/Blowfish.php';
 
 $blowfish = new Crypt_Blowfish($auth['session_cookie']['secret']);
 

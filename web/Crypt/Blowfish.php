@@ -21,7 +21,8 @@
 /**
  * Required PEAR package(s)
  */
-require_once 'PEAR.php';
+  
+require_once dirname(__FILE__) . '/../PEAR.php';
 
 /**
  * Engine choice constants
@@ -184,12 +185,12 @@ class Crypt_Blowfish
             case CRYPT_BLOWFISH_PHP:
                 $mode = strtoupper($mode);
                 $class = 'Crypt_Blowfish_' . $mode;
-                include_once 'Crypt/Blowfish/' . $mode . '.php';
+                include_once 'Blowfish/' . $mode . '.php';
                 $crypt = new $class(null);
                 break;
 
             case CRYPT_BLOWFISH_MCRYPT:
-                include_once 'Crypt/Blowfish/MCrypt.php';
+                include_once 'Blowfish/MCrypt.php';
                 $crypt = new Crypt_Blowfish_MCrypt(null, $mode);
                 break;
         }

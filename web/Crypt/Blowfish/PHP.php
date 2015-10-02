@@ -24,7 +24,7 @@
 /**
  * Include base class
  */
-require_once 'Crypt/Blowfish.php';
+require_once __DIR__ . '/../Blowfish.php';
 
 /**
  * Common class for PHP-only implementations
@@ -100,7 +100,7 @@ class Crypt_Blowfish_PHP extends Crypt_Blowfish
      */
     function _init()
     {
-        require_once 'Crypt/Blowfish/DefaultKey.php';
+        require_once __DIR__ . '/DefaultKey.php';
         $defaults = new Crypt_Blowfish_DefaultKey();
         $this->_P = $defaults->P;
         $this->_S = $defaults->S;
