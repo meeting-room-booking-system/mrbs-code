@@ -121,6 +121,14 @@ if (isset($max_length))
   trigger_error($message, E_USER_WARNING);
 }
 
+if ($dbsys == 'mysql')
+{
+  $dbsys = 'mysqli';
+  $message = "Please check your config file.   The  'mysql' option for " .
+             '$dbsys has been removed and you should now use ' . "'mysqli'";
+  trigger_error($message, E_USER_WARNING);
+}
+
 
 /********************************************************
  * Checking

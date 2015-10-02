@@ -56,8 +56,7 @@ $zoneinfo_expiry = 60*60*24*28;    // 28 days
 /*******************
  * Database settings
  ******************/
-// Which database system: "pgsql"=PostgreSQL, "mysql"=MySQL,
-// "mysqli"=MySQL via the mysqli PHP extension
+// Which database system: "pgsql"=PostgreSQL, "mysqli"=MySQL
 $dbsys = "mysqli";
 // Hostname of database server. For pgsql, can use "" instead of localhost
 // to use Unix Domain Sockets instead of TCP/IP. For mysql/mysqli "localhost"
