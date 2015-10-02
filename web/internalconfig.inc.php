@@ -18,7 +18,7 @@ if (isset($provisional_enabled))
 {
   $message = 'Please check your config file.   The variable $provisional_enabled ' .
              'is no longer used and has been replaced by $approval_enabled.';
-  trigger_error($message, E_USER_WARNING);
+  trigger_error($message, E_USER_NOTICE);
   $approval_enabled = ($provisional_enabled) ? TRUE : FALSE;
 }
 
@@ -31,7 +31,7 @@ if (isset($mail_settings['admin_all']))
   $message = 'Please check your config file.   The variable $mail_settings["admin_all"] ' .
              'is no longer used and has been replaced by $mail_settings["on_change"], ' .
              '$mail_settings["on_change"] and $mail_settings["on_delete"].';
-  trigger_error($message, E_USER_WARNING);
+  trigger_error($message, E_USER_NOTICE);
   $mail_settings['on_change'] = ($mail_settings['admin_all']) ? TRUE : FALSE;
 }
 
@@ -39,7 +39,7 @@ if (isset($mail_settings['admin_on_delete']))
 {
   $message = 'Please check your config file.   The variable $mail_settings["admin_on_delete"] ' .
              'is no longer used and has been replaced by $mail_settings["on_delete"].';
-  trigger_error($message, E_USER_WARNING);
+  trigger_error($message, E_USER_NOTICE);
   $mail_settings['on_delete'] = ($mail_settings['admin_on_delete']) ? TRUE : FALSE;
 }
 
@@ -56,21 +56,21 @@ if (isset($highlight_method))
 {
   $message = 'Please check your config file.   The variable $highlight_method ' .
              'is no longer used and is redundant.';
-  trigger_error($message, E_USER_WARNING);
+  trigger_error($message, E_USER_NOTICE);
 }
 
 if (isset($javascript_cursor))
 {
   $message = 'Please check your config file.   The variable $javascript_cursor ' .
              'is no longer used and is redundant.';
-  trigger_error($message, E_USER_WARNING);
+  trigger_error($message, E_USER_NOTICE);
 }
 
 if (isset($mail_charset))
 {
   $message = 'Please check your config file.   The variable $mail_charset ' .
              'is no longer used.   All emails are sent as UTF-8.';
-  trigger_error($message, E_USER_WARNING);
+  trigger_error($message, E_USER_NOTICE);
 }
 
 // Variables no longer used in versions of MRBS > 1.4.11
@@ -118,7 +118,7 @@ if (isset($max_length))
 {
   $message = 'Please check your config file.   The variable $maxlength ' .
              'is no longer used and maximum field lengths are now calculated automatically.';
-  trigger_error($message, E_USER_WARNING);
+  trigger_error($message, E_USER_NOTICE);
 }
 
 if ($dbsys == 'mysql')
@@ -126,7 +126,7 @@ if ($dbsys == 'mysql')
   $dbsys = 'mysqli';
   $message = "Please check your config file.   The  'mysql' option for " .
              '$dbsys has been removed and you should now use ' . "'mysqli'";
-  trigger_error($message, E_USER_WARNING);
+  trigger_error($message, E_USER_NOTICE);
 }
 
 
