@@ -22,7 +22,7 @@
  * Required PEAR package(s)
  */
   
-require_once dirname(__FILE__) . '/../PEAR.php';
+require_once __DIR__ . '/../PEAR.php';
 
 /**
  * Engine choice constants
