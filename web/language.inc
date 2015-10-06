@@ -954,8 +954,6 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
   
   // Get the available languages
   $files = scandir($dir);
-  $prefix_length = strlen($prefix);
-  $suffix_length = strlen($suffix);
   if (!isset($default_langtags))
   {
     $default_langtags = array(); 
@@ -969,9 +967,15 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
     if (!is_dir($dir . '/' . $file))
     {
       // Then strip out the language tag from the file name
-      $langtag = substr($file, $prefix_length);
-      $langtag = substr($langtag, 0, -$suffix_length);
-      $available_langtags[] = (isset($lang_map) && isset($lang_map[$langtag])) ? $lang_map[$langtag] : $langtag;
+      $pattern = sprintf('/%s(.+)%s/i', $prefix, $suffix);
+      if (preg_match($pattern, $file, $matches))
+      {
+        if (isset($matches[1]))
+        {
+          $langtag = $matches[1];
+          $available_langtags[] = (isset($lang_map) && isset($lang_map[$langtag])) ? $lang_map[$langtag] : $langtag;
+        }
+      }
     }
   }
   
