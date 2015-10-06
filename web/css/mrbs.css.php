@@ -89,7 +89,7 @@ table.dataTable tbody th, table.dataTable tbody td {
   box-sizing: border-box;
   vertical-align: middle;
   text-align: left;
-  padding: 0.1em 0.6em;
+  padding: 0.1em 24px 0.1em 0.6em;
   border-style: solid;
   border-width: 0 1px 0 0;
 }
