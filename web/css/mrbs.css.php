@@ -227,21 +227,6 @@ $column_hidden_width  = 0;       // (%) width of the column for hidden days (set
                                  //     when $times_along_top is TRUE, hidden days (rows) are not shown at all
 $column_row_labels_width   = 1;  // (%) width of the row label columns (will expand if necessary)
 
-// week view:  work out what percentage of the width is available to
-// normal columns (ie columns that are not hidden)
-$n_hidden_days = count($hidden_days);
-$column_week = 100 - $column_row_labels_width;                // subtract the width of the left hand column
-if ($row_labels_both_sides)
-{
-  $column_week -= $column_row_labels_width;                   // and the right hand column if present
-}
-$column_week -= ($column_hidden_width * $n_hidden_days); // subtract the width of the hidden columns
-if ($n_hidden_days < 7)                                  // (avoid the div by zero)
-{
-  $column_week = $column_week/(7 - $n_hidden_days);      // divide what's left between the number of days to display
-}
-$column_week = number_format($column_week, 1, '.', '');  // (%) tidy the number up and make sure it's valid for CSS (no commas)
-
 // month view:  work out what percentage of the width is available to
 // normal columns (ie columns that are not hidden)
 $column_month = 100 - ($column_hidden_width *  $n_hidden_days);
@@ -304,9 +289,7 @@ table.dwm_main {
 .dwm_main th a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
 .dwm_main th a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
 
-.dwm_main#day_main th.first_last {width: <?php echo $column_row_labels_width ?>%}
-.dwm_main#week_main th {width: <?php echo $column_week ?>%}
-.dwm_main#week_main th.first_last {width: <?php echo $column_row_labels_width ?>%; vertical-align: bottom}
+.dwm_main#week_main th.first_last {vertical-align: bottom}
 .dwm_main td.invalid {background-color: <?php echo $main_table_slot_invalid_color ?>}
 .dwm_main#month_main th {width: <?php echo $column_month ?>%}
 .dwm_main#month_main td {border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>}
@@ -374,7 +357,7 @@ foreach ($color_types as $type => $col)
   display: none;
 }
 
-.dwm_main#week_main th.hidden_day, .dwm_main#month_main th.hidden_day     
+.dwm_main#month_main th.hidden_day     
     {width: <?php echo $column_hidden_width ?>%; 
     <?php 
       echo (empty($column_hidden_width) ? " display: none" : ""); // if the width is set to zero, then don't display anything at all

@@ -1088,7 +1088,7 @@ init = function(args) {
                                 <?php // Now for the visual feedback ?>
                                 $.each(result.new_details, function(i, value) {
                                     var cell = $('[data-id="' + value.id + '"]');
-                                    var cellAnchor = cell.find('a');
+                                    var cellAnchor = cell.find('a').last();
                                     var oldHTML = cellAnchor.html();
                                     var duration = 1000; <?php // ms ?>
                                     cellAnchor.fadeOut(duration, function(){

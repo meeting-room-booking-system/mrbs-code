@@ -2,6 +2,11 @@
 
 // $Id$
 
+// width of the row label columns in the day and week views
+$first_last_width = 1;  // (%)
+$column_hidden_width  = 0;  // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column);
+                            //     when $times_along_top is TRUE, hidden days (rows) are not shown at all
+
 function map_add_booking ($row, &$column, $am7, $pm7)
 {
   // Enters the contents of the booking found in $row into $column, which is
@@ -680,6 +685,31 @@ function get_query_strings($area, $room, $month, $day, $year, $s)
   return $query_strings;
 }
 
+// Gets the width in % of the main data columns in the day and week views
+// given the number of columns, taking into account the row label columns
+// and hidden columns
+function get_main_column_width($n_columns, $n_hidden=0)
+{
+  global $row_labels_both_sides, $first_last_width, $column_hidden_width;
+  
+  // Calculate the percentage width of each of the main columns.   We use number_format
+  // because in some locales you would get a comma for the decimal point which
+  // would break the CSS
+  $column_width = 100 - $first_last_width;
+  if (!empty($row_labels_both_sides))
+  {
+    $column_width = $column_width - $first_last_width;
+  }
+  // Subtract the hidden columns (unless they are all hidden)
+  if ($n_hidden < $n_columns)
+  {
+    $column_width = $column_width - ($n_hidden * $column_hidden_width);
+    $column_width = number_format($column_width/($n_columns - $n_hidden), 6);
+  }
+  
+  return $column_width;
+}
+
 
 function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight=NULL)
 {
@@ -687,6 +717,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   global $enable_periods, $periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+  global $first_last_width;
   
   $sql = "SELECT COUNT(*)
             FROM $tbl_room R, $tbl_area A
@@ -819,9 +850,12 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   if ($times_along_top)
   {
     // with times along the top and rooms down the side
-
-    $column_width = (int)(95 / $n_time_slots);
-    $header_inner .= "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
+    $first_last_html = '<th class="first_last" style="width: ' . $first_last_width . '%">' . 
+                       get_vocab('room') . ":</th>\n";
+    $header_inner .= $first_last_html;
+    
+    $column_width = get_main_column_width($n_time_slots);
+    
     for ($s = $morning_slot_seconds;
          $s <= $evening_slot_seconds;
          $s += $resolution)
@@ -843,33 +877,37 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       $header_inner .= "</span>";
       $header_inner .= "</th>\n";
     }
+    
     // next: line to display times on right side
-    if ( FALSE != $row_labels_both_sides )
+    if (!empty($row_labels_both_sides))
     {
-      $header_inner .= "<th class=\"first_last\">" . get_vocab("room") . ":</th>";
+      $header_inner .= $first_last_html;
     }
   } // end "times_along_top" view (for the header)
   
   else
   {
     // the standard view, with rooms along the top and times down the side
-    $header_inner .= "<th class=\"first_last\">" . ($enable_periods ? get_vocab("period") : get_vocab("time")) . ":</th>";
+    $first_last_html = '<th class="first_last" style="width: ' . $first_last_width . '%">' . 
+                       ($enable_periods ? get_vocab('period') : get_vocab('time')) . ":</th>\n";
+    $header_inner .= $first_last_html;
   
-    $column_width = (int)(95 / sql_count($res));
+    $column_width = get_main_column_width(sql_count($res));
+    
     for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     {
       // Put the room_id in a data attribute so that JavaScript can pick it up
       $header_inner .= "<th data-room=\"" . $row['id'] . "\" style=\"width: $column_width%\">
                         <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\"
                         title=\"" . get_vocab("viewweek") . " &#10;&#10;".$row['description']."\">" .
-                        htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? " (".$row['capacity'].")" : "") . "</a></th>";
+                        htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? " (".$row['capacity'].")" : "") . "</a></th>\n";
       $rooms[] = $row['id'];
     }
   
     // next line to display times on right side
-    if ( FALSE != $row_labels_both_sides )
+    if (!empty($row_labels_both_sides))
     {
-      $header_inner .= "<th class=\"first_last\">" . ( $enable_periods  ? get_vocab("period") : get_vocab("time") ) . ":</th>";
+      $header_inner .= $first_last_html;
     }
   }  // end standard view (for the header)
   
@@ -997,6 +1035,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $weekstarts, $strftime_format;
+  global $first_last_width, $column_hidden_width, $hidden_days;
 
   // Check that we've got a valid, enabled room
   $sql = "SELECT COUNT(*)
@@ -1141,8 +1180,11 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   if ($times_along_top)
   {
     // with times along the top and days of the week down the side
-    $column_width = (int)(95 / $n_time_slots);
-    $header_inner .= "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
+    $first_last_html = '<th class="first_last" style="width: ' . $first_last_width . '%">' . 
+                       get_vocab('date') . ":</th>\n";
+    $header_inner .= $first_last_html;
+    
+    $column_width = get_main_column_width($n_time_slots);
     
     for ($s = $morning_slot_seconds;
          $s <= $evening_slot_seconds;
@@ -1166,16 +1208,21 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
       $header_inner .= "</th>\n";
     }
     // next: line to display times on right side
-    if ( FALSE != $row_labels_both_sides )
+    if (!empty($row_labels_both_sides))
     {
-      $header_inner .= "<th class=\"first_last\">" . get_vocab("date") . ":</th>";
-    } 
+      $header_inner .= $first_last_html;
+    }
   } // end "times_along_top" view (for the header)
 
   else
   {
     // the standard view, with days along the top and times down the side
-    $header_inner .= "<th class=\"first_last\">".($enable_periods ? get_vocab("period") : get_vocab("time")).":</th>";
+    $first_last_html = '<th class="first_last" style="width: ' . $first_last_width . '%">' . 
+                       ($enable_periods ? get_vocab('period') : get_vocab('time')) . ':</th>';
+    $header_inner .= $first_last_html;
+    
+    $column_width = get_main_column_width($num_of_days, count($hidden_days));
+    
     for ($j = 0; $j<=($num_of_days-1) ; $j++)
     {
       $t = mktime(12, 0, 0, $month, $day_start_week+$j, $year);
@@ -1184,27 +1231,28 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
       if (is_hidden_day(($j + $weekstarts) % 7))
       {
         // These days are to be hidden in the display (as they are hidden, just give the
-        // day of the week in the header row 
-        $header_inner .= "<th class=\"hidden_day\">" . utf8_strftime($strftime_format['dayname_cal'], $t) . "</th>\n";
+        // day of the week in the header row
+        $style = ($column_hidden_width == 0) ? 'display: none' : 'width: ' . $column_hidden_width . '%';
+        $header_inner .= '<th class="hidden_day" style="' . $style . '">' .
+                         utf8_strftime($strftime_format['dayname_cal'], $t) . 
+                         "</th>\n";
       }
-  
       else  
       {
         // Put the date into a data attribute so that it can be picked up by JavaScript
-        $header_inner .= "<th data-date=\"$date\"><a href=\"day.php?year=" . strftime("%Y", $t) . 
-                         "&amp;month=" . strftime("%m", $t) . "&amp;day=" . strftime("%d", $t) . 
-                         "&amp;area=$area\" title=\"" . get_vocab("viewday") . "\">" .
+        $header_inner .= '<th data-date="' . $date . '" style="width: ' . $column_width . '%>' .
+                         '<a href="day.php?year=' . strftime("%Y", $t) . 
+                         '&amp;month=' . strftime("%m", $t) . '&amp;day=' . strftime('%d', $t) . 
+                         '&amp;area=' . $area . ' title="' . get_vocab('viewday') . '">' .
                          utf8_strftime($dformat, $t) . "</a></th>\n";
       }
     }  // for ($j = 0 ...
     unset($j);  // Just so that we pick up any accidental attempt to use it later
     
     // next line to display times on right side
-    if ( FALSE != $row_labels_both_sides )
+    if (!empty($row_labels_both_sides))
     {
-      $header_inner .= "<th class=\"first_last\">" .
-                       ( $enable_periods  ? get_vocab("period") : get_vocab("time") ) .
-                       ":</th>";
+      $header_inner .= $first_last_html;
     }
   }  // end standard view (for the header)
 
