@@ -608,9 +608,9 @@ $auth["session"] = "php"; // How to get and keep the user ID. One of
            // "http" "php" "cookie" "ip" "host" "nt" "omni"
            // "remote_user"
 
-$auth["type"] = "config"; // How to validate the user/password. One of "none"
-                          // "config" "db" "db_ext" "pop3" "imap" "ldap" "nis"
-                          // "nw" "ext".
+$auth["type"] = "db"; // How to validate the user/password. One of "none"
+                      // "config" "db" "db_ext" "pop3" "imap" "ldap" "nis"
+                      // "nw" "ext".
 
 // Configuration parameters for 'cookie' session scheme
 
