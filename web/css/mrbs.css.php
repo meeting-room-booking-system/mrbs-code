@@ -226,6 +226,7 @@ div.body_columns {max-width: 80%}
 $column_hidden_width  = 0;       // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column);
                                  //     when $times_along_top is TRUE, hidden days (rows) are not shown at all
 $column_row_labels_width   = 1;  // (%) width of the row label columns (will expand if necessary)
+$n_hidden_days = count($hidden_days);
 
 // month view:  work out what percentage of the width is available to
 // normal columns (ie columns that are not hidden)
