@@ -20,11 +20,6 @@
 
 // $Id$
 
-// Bring in Blowfish class
-require_once __DIR__ . '/../Crypt/Blowfish.php';
-
-$blowfish = new Crypt_Blowfish($auth['session_cookie']['secret']);
-
 // Get non-standard form variables
 $Action = get_form_var('Action', 'string');
 $NewUserName = get_form_var('NewUserName', 'string');
@@ -89,12 +84,25 @@ if (isset($Action) && ($Action == "SetName"))
     {
       $expiry_time = time()+$auth['session_cookie']['session_expire_time'];
     }
-    $token = "AUTH".$UserName."|".$expiry_time;
+
+    $session_data = array();
+    $session_data['user'] = $UserName;
+    $session_data['expiry'] = $expiry_time;
     if ($auth['session_cookie']['include_ip'])
     {
-      $token .= "|".$REMOTE_ADDR;
+      $session_data['ip'] = $REMOTE_ADDR;
     }
-    setcookie("SessionToken", $blowfish->encrypt($token), $expiry_time, $cookie_path);
+    $json_data = json_encode($session_data);
+    $hash = hash_hmac(
+                      'ripemd160',
+                      $json_data,
+                      $auth['session_cookie']['secret']
+                     );
+
+    setcookie("SessionToken",
+              "${hash}_".base64_encode($json_data),
+              $expiry_time,
+              $cookie_path);
     }
     // preserve the original $HTTP_REFERER by sending it as a GET parameter
     if (!empty($returl))
@@ -203,57 +211,82 @@ function authGet()
 
 function getUserName()
 {
-  global $blowfish, $REMOTE_ADDR, $auth;
+  global $REMOTE_ADDR, $auth;
+  
+  static $cached_username = null;
 
-  $encrypted_token = NULL;
-  $username = NULL;
+  //error_log("Called getUserName()");
+
+  if (isset($cached_username))
+  {
+    //error_log("cached");
+    return $cached_username;
+  }
+  
+  // If the cached username isn't set, we have to decode the cookie, but
+  // first set the cached username to an empty string, so we will only do
+  // this once
+  $cached_username = "";
 
   if (!empty($_COOKIE) && isset($_COOKIE["SessionToken"]))
   {
-    $encrypted_token = unslashes($_COOKIE["SessionToken"]);
+    $token = unslashes($_COOKIE["SessionToken"]);
   }
   else
   {
     global $HTTP_COOKIE_VARS;
     if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["SessionToken"]))
     {
-      $encrypted_token = unslashes($HTTP_COOKIE_VARS["SessionToken"]);
+      $token = unslashes($HTTP_COOKIE_VARS["SessionToken"]);
     }
   }
 
-  if (isset($encrypted_token))
+  if (isset($token))
   {
-    $token = $blowfish->decrypt($encrypted_token);
+    list($hash, $base64_data) = explode("_", $token);
+    
+    $json_data = base64_decode($base64_data);
 
-    /* Remove the NULs off the end of the decrypted string */
-    $token = preg_replace('/\0+$/', "", $token);
-
-    if (substr($token, 0, 4) == "AUTH")
+    if (hash_hmac(
+                  'ripemd160',
+                  $json_data,
+                  $auth['session_cookie']['secret']
+                 ) == $hash)
     {
-      $parts = explode("|",substr($token,4));
-
-      /* Check for a valid token */
-      if (isset($parts[0]) &&
-          isset($parts[1]) &&
-          ((($auth["session_cookie"]["session_expire_time"] == 0) &&
-            ($parts[1] == 0)) || ($parts[1] > time())) &&
-          (!isset($parts[2]) ||
-           (isset($parts[2]) && ($parts[2] == $REMOTE_ADDR))))
+      $session_data = json_decode($json_data, true);
+          
+      /* Check for valid session data */
+      if (isset($session_data['user']) &&
+          isset($session_data['expiry']))
       {
-        $username = $parts[0];
+        // Have basic data
+
+        if ((($auth["session_cookie"]["session_expire_time"] == 0) &&
+             ($session_data['expiry'] == 0)) ||
+            ($session_data['expiry'] > time()))
+        {
+          // Expiry is OK
+          
+          if (!isset($session_data['ip']) ||
+              ($session_data['ip'] == $REMOTE_ADDR))
+          {
+            // IP is OK
+            $cached_username = $session_data['user'];
+          }
+        }
       }
       else
       {
-        // We can't delete the cookie, as it's too late - we'll just ignore it
+        // Basic data checks failed
       }
     }
     else
     {
-      error_log("Token is invalid, secret may have changed");
+      error_log("Token is invalid, cookie has been tampered with or secret may have changed");
     }
   }
 
-  return $username;
+  return $cached_username;
 }
 
 // Print the logon entry on the top banner.
