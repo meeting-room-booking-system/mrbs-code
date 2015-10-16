@@ -1104,6 +1104,8 @@ function mail_debug($message)
   else  // anything else goes to the browser
   {
     echo htmlspecialchars($full_message) . "<br>\n";
+    ob_flush();
+    flush();
   }
 }
 
@@ -1119,13 +1121,6 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   // discussion at https://github.com/PHPMailer/PHPMailer/issues/175
   
   global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
-  
-  // Don't do aything if mail has been disabled.   Useful for testing MRBS without
-  // sending emails to those who don't want them
-  if ($mail_settings['disabled'])
-  {
-    return;
-  }
   
   $mail = new PHPMailer;
   
@@ -1344,6 +1339,14 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     $mail->set('MIMEBody', $mime['body']);
     mail_debug("Using backend '" . $mail_settings['admin_backend'] . "'");
     mail_debug("Recipients: '$recipients'");
+    
+    // Don't do aything if mail has been disabled.   Useful for testing MRBS without
+    // sending emails to those who don't want them
+    if ($mail_settings['disabled'])
+    {
+      return true;
+    }
+    
     if ($mail->postSend())
     {
       mail_debug('Email sent successfully');
