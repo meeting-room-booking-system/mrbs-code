@@ -94,7 +94,7 @@ if (isset($Action) && ($Action == "SetName"))
     }
     $json_data = json_encode($session_data);
     $hash = hash_hmac(
-                      'ripemd160',
+                      $auth["session_cookie"]["hash_algorith"],
                       $json_data,
                       $auth['session_cookie']['secret']
                      );
@@ -217,7 +217,7 @@ function getUserName()
 
   //error_log("Called getUserName()");
 
-  if (isset($cached_username))
+  if (!is_null($cached_username))
   {
     //error_log("cached");
     return $cached_username;
@@ -241,14 +241,14 @@ function getUserName()
     }
   }
 
-  if (isset($token))
+  if ($token != "")
   {
     list($hash, $base64_data) = explode("_", $token);
     
     $json_data = base64_decode($base64_data);
 
     if (hash_hmac(
-                  'ripemd160',
+                  $auth["session_cookie"]["hash_algorith"],
                   $json_data,
                   $auth['session_cookie']['secret']
                  ) == $hash)
@@ -304,7 +304,7 @@ function PrintLogonBox()
     $TargetURL = $TargetURL . "?" . $QUERY_STRING;
   }
   $user=getUserName();
-  if (isset($user))
+  if ($user != "")
   {
     // words 'you are xxxx' becomes a link to the
     // report page with only entries created by xxx. Past entries are not
