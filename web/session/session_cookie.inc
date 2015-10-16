@@ -241,7 +241,7 @@ function getUserName()
     }
   }
 
-  if ($token != "")
+  if (isset($token) && ($token != ""))
   {
     list($hash, $base64_data) = explode("_", $token);
     
