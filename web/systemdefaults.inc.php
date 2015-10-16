@@ -781,11 +781,14 @@ $ldap_tls = false;
 // An example for Microsoft AD:
 //$ldap_filter = "memberof=cn=whater,ou=whatver,dc=example,dc=com";
 
-// If you need to filter a user by the group a user is in with OpenLDAP
-// you need to search for the groups they are in. If you want to do
-// this, define the following two variables, e.g.:
+// If you need to filter a user by the group a user is in with an LDAP
+// directory which stores group membership in the group object
+// (like OpenLDAP) then you need to search for the groups they are
+// in. If you want to do this, define the following two variables, an
+// an appropriate $ldap_filter. e.g.:
 // $ldap_filter_base_dn = "ou=Groups,dc=example,dc=com";
-$ldap_filter_user_attr = "cn";
+$ldap_filter_user_attr = "memberuid";
+// $ldap_filter = "cn=MRBS Users";
 
 // If you need to disable client referrals, this should be set to TRUE.
 // Note: Active Directory for Windows 2003 forward requires this.
