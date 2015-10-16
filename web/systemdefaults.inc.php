@@ -755,7 +755,7 @@ $ldap_tls = false;
 
 // LDAP base distinguish name.
 // This can be an array.
-//$ldap_base_dn = "ou=organizationalunit,dc=my-domain,dc=com";
+//$ldap_base_dn = "ou=organizationalunit,dc=example,dc=com";
 
 // Attribute within the base dn that contains the username
 // This can be an array.
@@ -770,7 +770,7 @@ $ldap_tls = false;
 // If you need to bind as a particular user to do the search described
 // above, specify the DN and password in the variables below
 // These two parameters can be arrays.
-// $ldap_dn_search_dn = "cn=Search User,ou=Users,dc=some,dc=company";
+// $ldap_dn_search_dn = "cn=Search User,ou=Users,dc=example,dc=com";
 // $ldap_dn_search_password = "some-password";
 
 // 'auth_ldap' extra configuration for ldap configuration of who can use
@@ -780,6 +780,12 @@ $ldap_tls = false;
 // This can be an array.
 // An example for Microsoft AD:
 //$ldap_filter = "memberof=cn=whater,ou=whatver,dc=example,dc=com";
+
+// If you need to filter a user by the group a user is in with OpenLDAP
+// you need to search for the groups they are in. If you want to do
+// this, define the following two variables, e.g.:
+// $ldap_filter_base_dn = "ou=Groups,dc=example,dc=com";
+$ldap_filter_user_attr = "cn";
 
 // If you need to disable client referrals, this should be set to TRUE.
 // Note: Active Directory for Windows 2003 forward requires this.

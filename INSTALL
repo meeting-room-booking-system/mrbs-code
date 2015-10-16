@@ -4,15 +4,15 @@
 
 REQUIREMENTS
 ---------------------------------------------------------------------------
-MRBS works with both MySQL (Version 5 and above) and PostgreSQL (Version 7.3 
-and above) systems. You must have PHP with support for your chosen database
-system installed and working for this application. See the PHP (www.php.net),
-MySQL (www.mysql.com), and PostgreSQL (www.postgresql.org) sites for more 
-info on setting these up.   You need to know how to install, secure, run, 
-maintain, and back up your chosen database system.
+MRBS works with both MySQL (Version 5.1 and above) and PostgreSQL
+(Version 8.2 and above) systems. You must have at least PHP 5.3.3, with support
+for your chosen database system installed and working for this application.
+See the PHP (www.php.net), MySQL (www.mysql.com), and PostgreSQL
+(www.postgresql.org) sites for more info on setting these up.   You need
+to know how to install, secure, run, maintain, and back up your chosen database system.
 
-No optional PHP packages (other than the database system) are required for
-this application.  PHP Version 5.3.0 or later is required.
+MRBS also requires that 'iconv' PHP extension, to provide
+internationalisation.
 
 You can run PHP either as a CGI or with a direct module interface (also called 
 SAPI). These servers include Apache, Microsoft Internet Information Server, 
@@ -102,16 +102,7 @@ This will create all the needed tables.
 You may need to set rights on the tables; for PostgreSQL see "grant.pg.sql".
 If you need to delete the tables, for PostgreSQL see "destroy.pg.sql".
 
-The tables are now empty and ready for use. If you want to add a few sample
-areas and rooms without going through the Admin function, use this script:
-
-[MySQL]         $ mysql mrbs < sample-data.sql
-[PostgreSQL]    $ psql -a -f sample-data.sql mrbs
-
-Substitute the database name you used for "mrbs".
-This script is only for use in a newly initialized database! (It will not
-work properly in a database where the ID counters are greater than 0.)
-Also see the description of testdata.php in the README file.
+The tables are now empty and ready for use.
 
 For an upgrade:
 
@@ -363,7 +354,6 @@ as there is usually a week when Europe has changed but the USA has not.
 
 First, select your database system. Define one of the following:
 
-    $dbsys = "mysql";
     $dbsys = "mysqli";
     $dbsys = "pgsql";
 
@@ -451,20 +441,9 @@ From MRBS 1.4.6, MRBS is internationalised and uses UTF-8 throughout.
 MRBS will serve all of its pages in UTF-8 and stores everything in the
 database in UTF-8. This means that all languages work together.
 
-To use Unicode, PHP should be built with 'iconv' support ('--with-iconv'
-directive), or have the iconv extension installed and enabled. On Windows,
-if you are using PHP 5, iconv support is built-in.
-
-For PHP 4 on Windows, three things are needed :
-
-- iconv.dll file in in the system path. Either copy it from your
-  \%phpdir%\dlls\ directory into \%windir%\system32\ directory,
-  or add your \%phpdir%\dlls\ directory to your PATH environment variable.
-  (Note: for Microsoft IIS, you HAVE to copy iconv.dll into \%windir%\system32\)
-- uncomment php_iconv.dll in php.ini.
-- extension directory in php.ini have to be properly set to your actual
-  \%phpdir%\extensions\
-
+For MRBS to use Unicode, PHP must be built with 'iconv' support
+('--with-iconv' directive), or have the iconv extension installed
+and enabled. On Windows, if you are using PHP 5, iconv support is built-in.
 
 Note: Upgrading MySQL database from previous charsets to Unicode :
 
@@ -518,5 +497,3 @@ The script "testdata.php" is for testing only.  Do not leave it in a
 directory accessible to your web server. Anyone running this will add a
 large number of test entries to your database, regardless of
 authentication, and book all your rooms to people you've never heard of.
-
-$Id$

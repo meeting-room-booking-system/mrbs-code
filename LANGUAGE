@@ -1,9 +1,9 @@
         MRBS Language Support
 
-Each "lang.*" file (in the web/ directory) contains the text strings for
-a language.  Not all of these files are complete.  Note that MRBS always
-reads the reference file "lang.en" first, before reading another language
-file.
+Each "lang.*" file (in the web/lang/ directory) contains the text strings
+for a language.  Not all of these files are complete.  Note that MRBS always
+reads a reference file (which defaults to "lang.en") first, before reading
+another language file.
 
 Porting MRBS to another language is relatively easy. From the Admin page,
 you will see "Your browser is set to use "xx" language". If no "lang.xx"
@@ -32,9 +32,5 @@ If you do create or improve a language file, please post a message about
 it on the mailing list, so it can be included in future releases. Thanks!
 
 Important note: You should not use any HTML entities in the translation
-other than &nbsp;. If you need to use any other characters that don't fit
-in your single-byte encoding (e.g. iso-8859-1) you should change your
-language's encoding to utf-8, and then you can use whatever characters you
-would like, encoded in utf-8.
-
-$Id$
+other than &nbsp;. If you need to use any other characters you should
+just encode those characters in utf-8.

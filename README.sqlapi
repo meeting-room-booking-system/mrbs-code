@@ -1,9 +1,8 @@
 README.sqlapi     - Database wrappers for MRBS
 -----------------------------------------------------------------------------
 This is a simple set of PHP database call wrapper routines, currently
-implemented for MySQL (>= 3.22) (for both the 'mysql' and 'mysqli' extensions
-and PostgreSQL (>= 7.0). It was written for MRBS but may be useful in
-other applications.
+implemented for MySQL (>= 5.1) and PostgreSQL (>= 8.2). It was written
+for MRBS but may be useful in other applications.
 
 This package supports multiple connections to arbitrary databases,
 but also handles the default MRBS database connection without the user
@@ -27,7 +26,7 @@ connections, set $db_nopersist as described below.
 
 To use this package, include "dbsys.inc" after defining the following
 variables:
-     $dbsys = The database abstraction to use, 'mysql', 'mysqli' or 'pgsql'
+     $dbsys = The database abstraction to use, 'mysqli' or 'pgsql'
      $db_host = The hostname of the database server, or "localhost"
      $db_login = The username to use when connecting to the database
      $db_password = The database account password
@@ -51,7 +50,7 @@ reason the functions defined here will output an error message and exit.)
 
 The way MRBS uses this is to define a configuration file config.inc.php with
 the above variables plus:
-     $dbsys = "pgsql";  //  or:  $dbsys = "mysql"; or: $dbsys = "mysqli";
+     $dbsys = "pgsql";  //  or: $dbsys = "mysqli";
 Then, each PHP script which wants to connect to the database starts with:
      include "config.inc.php";
      include "dbsys.inc";
@@ -265,5 +264,3 @@ With MySQL this gives you:
   $sql = "SELECT * FROM mytable ORDER BY id LIMIT 20,100";
 
 -----------------------------------------------------------------------------
-
-$Id$

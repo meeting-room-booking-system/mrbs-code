@@ -41,6 +41,8 @@ function authLdapAction($callback, $user, &$object)
   global $ldap_email_attrib;
   global $ldap_disable_referrals;
   global $ldap_deref;
+  global $ldap_filter_base_dn;
+  global $ldap_filter_user_attr;
 
   if (!function_exists("ldap_connect"))
   {
@@ -66,7 +68,9 @@ function authLdapAction($callback, $user, &$object)
                         'ldap_tls',
                         'ldap_email_attrib',
                         'ldap_disable_referrals',
-                        'ldap_deref'
+                        'ldap_deref',
+                        'ldap_filter_base_dn',
+                        'ldap_filter_user_attr'
                        );
 
   $all_ldap_opts = array();
@@ -399,11 +403,33 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
       authLdapDebug("authValidateUserCallback: Successful authenticated ".
                     "bind checking '$filter'");
 
-      $res = @ldap_read($ldap,
-                        $dn,
-                        "($filter)",
-                        array()
-                       );
+      // If ldap_filter_base_dn is set, set the filter to search for the user
+      // in the given base_dn (OpenLDAP).  If not, read from the user
+      // attribute (AD)
+      if (isset($object['config']['ldap_filter_base_dn']))
+      {
+        $f = "(&(".
+          $object['config']['ldap_filter_user_attr'].
+          "=$user)($filter))";
+        $filter_dn = $object['config']['ldap_filter_base_dn'];
+        $call = 'ldap_search';
+      }
+      else
+      {
+        $f = "($filter)";
+        $filter_dn = $dn;
+        $call = 'ldap_read';
+      }
+
+      authLdapDebug("authValidateUserCallback: Trying filter: $f: ".
+                    "dn: $filter_dn: method: $call");
+
+      $res = $call(
+                   $ldap,
+                   $filter_dn,
+                   $f,
+                   array()
+                  );
       if (@ldap_count_entries($ldap, $res) > 0)
       {
         authLdapDebug("authValidateUserCallback: Found entry with filter");

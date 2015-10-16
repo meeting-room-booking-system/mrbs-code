@@ -14,10 +14,12 @@
 --
 -- Copy and edit this file as needed- Change the user name, then run it.
 
-
-grant all on
+GRANT ALL ON
    mrbs_area,mrbs_area_id_seq,
    mrbs_entry,mrbs_entry_id_seq,
    mrbs_repeat,mrbs_repeat_id_seq,
-   mrbs_room,mrbs_room_id_seq
-to mrbs;
+   mrbs_room,mrbs_room_id_seq,
+   mrbs_users,mrbs_users_id_seq,
+   mrbs_variables,mrbs_variables_id_seq,
+   mrbs_zoneinfo,mrbs_zoneinfo_id_seq
+TO mrbs;
