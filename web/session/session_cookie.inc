@@ -93,6 +93,12 @@ if (isset($Action) && ($Action == "SetName"))
       $session_data['ip'] = $REMOTE_ADDR;
     }
     $json_data = json_encode($session_data);
+    if (!function_exists('hash_hmac'))
+    {
+      fatal_error(FALSE, "It appears that your PHP has the hash functions ".
+                          "disabled, which are required for the 'cookie' ".
+                          "session scheme.");
+    }
     $hash = hash_hmac(
                       $auth["session_cookie"]["hash_algorithm"],
                       $json_data,
@@ -247,6 +253,12 @@ function getUserName()
     
     $json_data = base64_decode($base64_data);
 
+    if (!function_exists('hash_hmac'))
+    {
+      fatal_error(FALSE, "It appears that your PHP has the hash functions ".
+                          "disabled, which are required for the 'cookie' ".
+                          "session scheme.");
+    }
     if (hash_hmac(
                   $auth["session_cookie"]["hash_algorithm"],
                   $json_data,
