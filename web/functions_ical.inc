@@ -1068,7 +1068,6 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
   // Initialize an array to hold the events and a variable to keep track
   // of the last repeat id we've seen
   $ical_events = array();
-  $private_text = "[" . get_vocab("private") . "]";
   $n_rows = sql_count($res);
   
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)

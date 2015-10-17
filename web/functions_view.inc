@@ -59,7 +59,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   
   // Go throuh each of the columns and for each of them that can be made private
   // substitute the private text if the user is not allowed to see the data
-  $private_text = "[" . get_vocab("private") . "]";
+  $private_text = "[" . get_vocab("unavailable") . "]";
   
   foreach ($data as $key => $value)
   {

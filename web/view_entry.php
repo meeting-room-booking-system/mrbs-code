@@ -290,10 +290,10 @@ else
 // Now that we know all the data we start drawing it
 
 echo "<h3" . (($keep_private && $is_private_field['entry.name']) ? " class=\"private\"" : "") . ">\n";
-echo ($keep_private && $is_private_field['entry.name']) ? "[" . get_vocab("private") . "]" : htmlspecialchars($row['name']);
+echo ($keep_private && $is_private_field['entry.name']) ? "[" . get_vocab("unavailable") . "]" : htmlspecialchars($row['name']);
 if (is_private_event($private) && $writeable) 
 {
-  echo ' ('.get_vocab("private").')';
+  echo ' ('.get_vocab("unavailable").')';
 }
 echo "</h3>\n";
 

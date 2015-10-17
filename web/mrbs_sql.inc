@@ -81,7 +81,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
     if (is_private_event($row['status'] & STATUS_PRIVATE) && $is_private_field['entry.name'] &&
          !getWritable($row['create_by'], $user, $room_id))
     {
-       $row['name'] = get_vocab("private");
+       $row['name'] = get_vocab("unavailable");
     }
 
     // enclose  the viewday etc. links in a span to make it easier for JavaScript to strip them out
