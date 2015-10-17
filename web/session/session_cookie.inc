@@ -94,7 +94,7 @@ if (isset($Action) && ($Action == "SetName"))
     }
     $json_data = json_encode($session_data);
     $hash = hash_hmac(
-                      $auth["session_cookie"]["hash_algorith"],
+                      $auth["session_cookie"]["hash_algorithm"],
                       $json_data,
                       $auth['session_cookie']['secret']
                      );
@@ -248,7 +248,7 @@ function getUserName()
     $json_data = base64_decode($base64_data);
 
     if (hash_hmac(
-                  $auth["session_cookie"]["hash_algorith"],
+                  $auth["session_cookie"]["hash_algorithm"],
                   $json_data,
                   $auth['session_cookie']['secret']
                  ) == $hash)

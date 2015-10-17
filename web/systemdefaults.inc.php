@@ -625,7 +625,7 @@ $auth["session_cookie"]["session_expire_time"] = (60*60*24*30); // 30 days
 $auth["session_cookie"]["include_ip"] = TRUE;
 // The hash algorithm to use, must be supported by your version of PHP,
 // see http://php.net/manual/en/function.hash-algos.php
-$auth["session_cookie"]["hash_algorith"] = 'sha512';
+$auth["session_cookie"]["hash_algorithm"] = 'sha512';
 
 // Configuration parameters for 'php' session scheme
 
