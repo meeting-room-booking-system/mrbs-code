@@ -1036,8 +1036,8 @@ $mail_settings['ics_filename'] = "booking";
 // are being called in the first place (b) whether there are addresses to send email to and (c)
 // the result of the mail sending operation.
 $mail_settings['debug'] = FALSE;
-// Where to send the debug output to.  Can be 'browser' or 'log' (for the error_log)
-$mail_settings['debug_output'] = 'browser';
+// Where to send the debug output.  Can be 'browser' or 'log' (for the error_log)
+$mail_settings['debug_output'] = 'log';
 
 // Set this to TRUE if you do not want any email sent, whatever the rest of the settings.
 // This is a global setting that will override anything else.   Useful when testing MRBS.

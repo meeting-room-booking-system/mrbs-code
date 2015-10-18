@@ -1085,27 +1085,31 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
  * @return bool                     TRUE or PEAR error object if fails
  */
 
+function debug_output($message)
+{
+  global $mail_settings;
+  
+  if (isset($mail_settings['debug_output']) &&
+      ($mail_settings['debug_output'] == 'browser'))
+  {
+    echo htmlspecialchars($message) . "<br>\n";
+    // flush in case they have output_buffering configured on
+    ob_flush();
+    flush();
+  }
+  else  // anything else goes to the error log
+  {
+    error_log($message);
+  }
+}
 
 function mail_debug($message)
 {
   global $mail_settings;
   
-  if (!$mail_settings['debug'])
+  if ($mail_settings['debug'])
   {
-    return;
-  }
-  
-  $full_message = '[DEBUG] ' . $message;
-  
-  if ($mail_settings['debug_output'] == 'log')
-  {
-    error_log($full_message);
-  }
-  else  // anything else goes to the browser
-  {
-    echo htmlspecialchars($full_message) . "<br>\n";
-    ob_flush();
-    flush();
+    debug_output('[DEBUG] ' . $message);
   }
 }
 
