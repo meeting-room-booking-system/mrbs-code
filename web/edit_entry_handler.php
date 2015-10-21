@@ -777,10 +777,13 @@ if (empty($result['rules_broken'])  &&
       // See the comment at the top of the page about array formats
       foreach ($$var as $value)
       {
-        echo "<input type=\"hidden\" name=\"${var}[]\" value=\"" . htmlspecialchars($value) . "\">\n";
+        if (isset($value))
+        {
+          echo "<input type=\"hidden\" name=\"${var}[]\" value=\"" . htmlspecialchars($value) . "\">\n";
+        }
       }
     }
-    else
+    elseif (isset($$var))
     {
       echo "<input type=\"hidden\" name=\"$var\" value=\"" . htmlspecialchars($$var) . "\">\n";
     }
@@ -788,7 +791,7 @@ if (empty($result['rules_broken'])  &&
   // Then the custom fields
   foreach($fields as $field)
   {
-    if (array_key_exists($field['name'], $custom_fields))
+    if (array_key_exists($field['name'], $custom_fields) && isset($custom_fields[$field['name']]))
     {
       echo "<input type=\"hidden\"" .
                   " name=\"" . VAR_PREFIX . $field['name'] . "\"" .
