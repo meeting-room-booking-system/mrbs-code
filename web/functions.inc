@@ -620,24 +620,26 @@ function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
 //
 //   $params    an associative array holding the function parameters:
 //      MANDATORY
-//        'label'       The text to be used for the field label.
-//        'name'        The name of the element.
+//        'label'         The text to be used for the field label.
+//        'name'          The name of the element.
 //      OPTIONAL
-//        'label_after' Whether to put the label before or after the checkbox.  Default FALSE
-//        'label_title' The text to be used for the title attribute for the field label
-//        'id'          The id of the element.  Defaults to be the same as the name.
-//        'value'       The value of the input.  Default ''
-//        'class'       A class (or array of classes) to give the element.  Default NULL
-//        'disabled'    Whether the field should be disabled.  Default FALSE
-//        'mandatory'   Whether the field is a required field.  Default FALSE
-//        'attributes'  Additional attributes not covered explicitly above.  Default NULL.
-//                      Can be either a simple string or an array of attributes.
+//        'label_after'   Whether to put the label before or after the checkbox.  Default FALSE
+//        'label_title'   The text to be used for the title attribute for the field label
+//        'id'            The id of the element.  Defaults to be the same as the name.
+//        'value'         The value of the input.  Default ''
+//        'class'         A class (or array of classes) to give the element.  Default NULL
+//        'disabled'      Whether the field should be disabled.  Default FALSE
+//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
+//                        Default TRUE
+//        'mandatory'     Whether the field is a required field.  Default FALSE
+//        'attributes'    Additional attributes not covered explicitly above.  Default NULL.
+//                        Can be either a simple string or an array of attributes.
 //
 function generate_checkbox($params)
 {
   // some sanity checking on params
   foreach (array('label', 'label_title', 'name', 'id', 'label_after', 'value', 'class',
-                 'disabled', 'mandatory', 'attributes') as $key)
+                 'disabled', 'create_hidden', 'mandatory', 'attributes') as $key)
   {
     if (!isset($params[$key]))
     {
@@ -658,6 +660,9 @@ function generate_checkbox($params)
         case 'label_after':
         case 'mandatory':
           $params[$key] = FALSE;
+          break;
+        case 'create_hidden':
+          $params[$key] = TRUE;
           break;
         case 'class':
           $params[$key] = array();
@@ -705,7 +710,7 @@ function generate_checkbox($params)
   
   // and a hidden input if the input box is disabled and the value is true
   // (the checkbox isn't posted if not checked)
-  if (($params['disabled']) && !empty($params['value']))
+  if (($params['disabled']) && $params['create_hidden'] && !empty($params['value']))
   {
     $html .= "<input type=\"hidden\" value=\"1\" name=\"" . $params['name'] . "\">\n";
   }

@@ -216,14 +216,15 @@ function genAllDay($a, $input_id, $input_name, $display_none=FALSE, $disabled=FA
   //     that there is only one select passing through the variable to the handler.
   // (2) If this is an existing booking that we are editing or copying, then we do
   //     not want the default duration applied
-  $params = array('name'        => $input_name,
-                  'id'          => $input_id,
-                  'label'       => get_vocab("all_day"),
-                  'label_after' => TRUE,
-                  'attributes'  => 'data-show=' . (($a['show_all_day']) ? '1' : '0'),
-                  'value'       => ($a['default_duration_all_day'] && !isset($id) && !$drag),
-                  'disabled'    => $disable_field,
-                  'class'       => $class);
+  $params = array('name'          => $input_name,
+                  'id'            => $input_id,
+                  'label'         => get_vocab("all_day"),
+                  'label_after'   => TRUE,
+                  'attributes'    => 'data-show=' . (($a['show_all_day']) ? '1' : '0'),
+                  'value'         => ($a['default_duration_all_day'] && !isset($id) && !$drag),
+                  'disabled'      => $disable_field,
+                  'create_hidden' => FALSE,
+                  'class'         => $class);
   
   generate_checkbox($params);
   
