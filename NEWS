@@ -7,6 +7,131 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.5.0 (Fri Oct 23rd 2015):
+
+[*] Updated Simplified Chinese translation, provided by 'Tide'.
+[*] Added logging of SQL errors to PHP log, see SF Support
+ Requests #560
+[*] Improvememnts to import system, including performance and support
+ for compressed files.
+[+] Added Slovakian language support.
+[-] Fixed bug causing triggering spurious policy violations when using
+ periods and $max_duration is set. See SF Bugs #306
+[*] Simplified the display of periods in the month view when a booking
+ is just one period long. See SF Support Requests #575
+[-] Fixed problems with CSV reports, see SF Support Requests #585
+[-] Fixed bug which prevented exported reports being imported by some
+ calendar apps, eg Outlook. See SF bugs #313
+[*] Made MySQL database schema definition more explicit, in case of
+ MySQL servers with changed defaults. See SF Support
+ Requests #605
+[*] Ensured that the $timezone configuration variable is valid. See SF
+ bugs #312
+[*] Added server-side validation to check that mandatory standard fields
+ (eg the full description) are present
+[-] Fixed false warning given on session_save_path readable check. See
+ SF bugs #316
+[+] It is now possible to set booking policies which distinguish between
+ creating new bookings and editing or deleting existing bookings. (An
+ edit requires a new booking to be created and the old one to be deleted).
+[*] jQueryUI 1.11.12
+[*] Added rollback of outstanding transactions to the shutdown function
+ in an attempt to prevent duplicate bookings when using persistent
+ database connections. See SF bugs #314
+[*] Changed the handling of nb and nn languages so that explicit
+ language files are provided for nn and nn rather than being mapped
+ onto no. See also SF Support Requests #649.
+[-] Fixed language auto-selection for locales which use comma as the
+ decimal separator. See also SF Support Requests #649.
+[*] Made the 'modified_by' field private by default, to match
+ 'create_by'.
+[-] Fixed bug in checking number of slots when the booking day goes past
+ midnight
+[*] Datepicker visual improvements.
+[+] Added floating headers to day and week view, as discussed in
+ [support-requests:#559].
+[-] Fixed bug causing page refresh not to work if the user wasn't logged
+ in
+[-] Fixed empty cell selection so that if you drag over a floating
+ header the selection is cancelled.
+[*] Updated cached copy of 'tzurl' files.
+[-] Fixed bug causing resizing performance to get worse and worse the
+ longer the browser has been open
+[*] Converted all MySQL tables to use the InnoDB engine.
+[*] Removed support for early versions of MySQL and PostgreSQL.
+[*] Enhanced get_vocab() to allow sprintf() style formatting to give
+ more flexibility on inserting parameters into language tags.
+[-] Fixed bug causing an HTML5 validation error when
+ $auth['only_admin_can_select_multiroom'] = TRUE;
+[*] Added foreign keys to the MySQL and PostgreSQL database schemas,
+ to improve database consistency.
+[*] Added better error handling for the case when the MRBS tables have
+ not been installed or cannot be accessed
+[+] Made max_duration a per-area setting.
+[-] Fixed bug in calculation of periods in report summaries. See SF
+ Support Requests #667
+[-] Fixed bugs in calculation of periods in time slot selectors in
+ edit_entry form
+[*] Changed minimum PHP version to 5.3.3
+[-] Fixed bug that caused the number of periods in the Report Summary to
+ be incorrectly calculated if the report start or end date happened
+ to fall in the middle of a multi-day booking.
+[-] Fixed bug causing invalid .ics files to be created when exporting
+ bookings from view_entry or report.
+[-] Fixed bug preventing the booking date being changed when multi-day
+ bookings are not allowed
+[-] Fixed "undefined method isValidInetAddress()" message when saving
+ the edit_area form and using a Turkish locale [caused by the capital
+ 'I' in the method name]. Also other changes to support the behaviour
+ of I/i in the Turkish locale.
+[-] Fixed bug that allowed '0' to be entered as a valid email address
+ for a user
+[*] Added a stack trace to the fatal_error error log
+[-] Fixed bug that caused the end time selector on the edit_entry form
+ to be wrong when using periods and trying to make a new booking for
+ a slot that wasn't the first of the day.
+[*] Got rid of the $maxlength config variable and calculated it
+ automatically
+[*] Fixes to Indonesian language file. See SF Patches #44
+[-] Fixed bug - 'ical' text string was not being passed through
+ get_vocab()
+[-] Fixed a bug with default_duration_all_day. See SF Support Requests
+ #782
+[*] Updated/added instructions on upgrading into UPGRADE. See SF Support
+ Requests #609
+[+] Added support for LDAP dereferencing behaviour, based on
+ [patches:#56]
+[*] Updated the 'db' auth scheme to default to storing password hashs in
+ PHP's 'password_hash' format, if the password_hash() function is
+ functional.
+[-] Fixed bug causing problem upgrading when using PostgreSQL with
+ $db_schema defined
+[*] Changed email code to utilise PHPMailer instead of the previous
+ PEAR class
+[*] Removed 'mysql' $dbsys config option, now that it has been replaced
+ by 'mysqli'
+[*] Updated to DataTables version 1.10.9
+[*] Changed default authentication scheme to 'db'.
+[*] Removed sample/test data, and any mention of them in the
+ documentation.
+[+] Added more flexible LDAP filtering support, as supplied by Steve
+ Cleveland. Adds configuration variables $ldap_filter_base_dn and
+ $ldap_filter_user_attr.
+[-] Corrected the distinction between the translation tokens 'private'
+ and 'unavailable'.
+[*] Italian translation updates, courtesy of Germano Massulo.
+[*] Changed the 'cookie' session scheme to use HMAC hashing instead
+ of Blowfish encryption.
+[*] Restructured mail debug code and made default output destination the
+ error_log
+[-] Fixed bug which caused bookings to be made for all day if any of the
+ areas had a default duration of all day
+[-] Fixed bug causing ical_uid not to be generated for a series when
+ conflicts are skipped (see SF Bugs #334). Added upgrade code to fix
+ existing database entries with no ical_uid.
+[-] Fixed problems with database schema version upgrades 17, 24 and 25.
+ 
+-------------------------------------------------------------------------------
 Version 1.4.11 (Wed Jun 18 22:00:00 BST 2014):
 
 [+] Implemented an inactivity time out that will log users out after
