@@ -1,5 +1,7 @@
 <?php
 
+namespace MRBS\upgrade47;
+
 // $Id$
 
 // Assigns a UID to all existing bookings that don't already have one.   They should
