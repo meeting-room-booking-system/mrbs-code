@@ -6,7 +6,7 @@
 // do in theory, but a bug (https://sourceforge.net/p/mrbs/bugs/334/) resulted in some
 // not doing so.   The code is based on Upgrade 24.
 
-// This upgrade assings a UID to all existing bookings and a RECURRENCE-ID to all
+// This upgrade assigns a UID to all existing bookings and a RECURRENCE-ID to all
 // existing members of a series.   However the RECURRENCE-ID is not necessarily going
 // to be correct if the entry is a modified entry (ie entry_type=ENTRY_RPT_CHANGED).
 // That's because the RECURRENCE_ID is supposed to be the *original* start date and
