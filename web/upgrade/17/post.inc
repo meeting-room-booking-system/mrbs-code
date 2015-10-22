@@ -19,6 +19,9 @@ global $tbl_entry, $tbl_repeat;
 // This means that the existing status field has to be inverted (previously 1 or TRUE
 // meant confirmed) and shifted one place to the left.
 
+// In these queries we set timestamp=timestamp to prevent it being automatically set
+// to the current time (only applies to MySQL - PostgreSQL timestamps don't update,
+// but we'll do it anyway)
 
 
 // First of all update the entry table
@@ -31,47 +34,15 @@ if (!sql_mutex_lock("$tbl_entry"))
   fatal_error(1, get_vocab("failed_to_acquire"));
 }
 
-$sql = "ALTER TABLE $tbl_entry ADD COLUMN saved_ts DATETIME";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to add saved_ts column in entry table.</span>";
-}
-$sql = "UPDATE $tbl_entry SET saved_ts=timestamp";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to set saved_ts column in entry table.</span>";
-}
-
-$sql = "UPDATE $tbl_entry SET status=(((~status)&1)<<1)|(private&1)";
+$sql = "UPDATE $tbl_entry
+           SET status=(((~status)&1)<<1)|(private&1),
+               timestamp=timestamp";
 $res = sql_command($sql);
 if ($res == -1)
 {
   trigger_error(sql_error(), E_USER_WARNING);
   // No need to localise, should never happen
   print "<span class=\"error\">Failed to update status column in entry table.</span>";
-}
-
-$sql = "UPDATE $tbl_entry SET timestamp=saved_ts";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to update timestamp column in entry table.</span>";
-}
-$sql = "ALTER TABLE $tbl_entry DROP COLUMN saved_ts";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to delete saved_ts column in entry table.</span>";
 }
 
 sql_mutex_unlock("$tbl_entry");
@@ -90,24 +61,9 @@ if (!sql_mutex_lock("$tbl_repeat"))
   fatal_error(1, get_vocab("failed_to_acquire"));
 }
 
-$sql = "ALTER TABLE $tbl_repeat ADD COLUMN saved_ts DATETIME";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to add saved_ts column in repeat table.</span>";
-}
-$sql = "UPDATE $tbl_repeat SET saved_ts=timestamp";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to set saved_ts column in repeat table.</span>";
-}
-
-$sql = "UPDATE $tbl_repeat SET status=private&1";
+$sql = "UPDATE $tbl_repeat
+           SET status=private&1,
+               timestamp=timestamp";
 $res = sql_command($sql);
 
 if ($res == -1)
@@ -121,7 +77,10 @@ if ($res == -1)
 // awaiting approval if any one of its individual members is awaiting approval.
 
 // Find all the rows in the entry table that are members of a series and are awaiting approval
-$sql = "SELECT DISTINCT repeat_id FROM $tbl_entry WHERE repeat_id!=0 AND (status&" . STATUS_AWAITING_APPROVAL . " != 0)";
+$sql = "SELECT DISTINCT repeat_id
+          FROM $tbl_entry
+         WHERE repeat_id!=0
+           AND (status&" . STATUS_AWAITING_APPROVAL . " != 0)";
 $res = sql_query($sql);
 if ($res === FALSE)
 {
@@ -133,7 +92,8 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 {
   // Set the approval status for each one
   $sql = "UPDATE $tbl_repeat
-             SET status=status|" . STATUS_AWAITING_APPROVAL . "
+             SET status=status|" . STATUS_AWAITING_APPROVAL . ",
+                 timestamp=timestamp
            WHERE id=" . $row['repeat_id'];
   $result = sql_command($sql);
   if ($result == -1)
@@ -148,23 +108,6 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
     fatal_error(FALSE, "Failed to update status column in repeat table with approval status.");
   }
 }  
-
-$sql = "UPDATE $tbl_repeat SET timestamp=saved_ts";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to update timestamp column in repeat table.</span>";
-}
-$sql = "ALTER TABLE $tbl_repeat DROP COLUMN saved_ts";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to delete saved_ts column in repeat table.</span>";
-}
 
 sql_mutex_unlock("$tbl_repeat");
 
