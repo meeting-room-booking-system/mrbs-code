@@ -6,6 +6,19 @@
 // Upgrade between database schema versions.
 //
 // Returns FALSE on error, TRUE is successful
+
+function upgrade_echo($message)
+{
+  echo $message;
+  // Flush the message, so that there's some progress information
+  // output to the browser even when the upgrade is taking a while
+  if (ob_get_length() !== FALSE)
+  {
+    ob_flush();
+  }
+  flush();
+}
+
 function upgrade_database($local, $from, $to, $upgrade_handle)
 {
   // $local is a boolean specifying whether the upgrades are global MRBS ones ($local == FALSE)
@@ -24,9 +37,9 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
     
   for ($ver = ($from+1); $ver <= $to; $ver++)
   {
-    print "<p>" .
-          (($local) ? get_vocab("upgrade_to_local_version") : get_vocab("upgrade_to_version")) .
-          ": $ver";
+    upgrade_echo("<p>" .
+                 (($local) ? get_vocab("upgrade_to_local_version") : get_vocab("upgrade_to_version")) .
+                 ": $ver");
 
     if ($local)
     {
@@ -42,7 +55,7 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
     if (!$handle)
     {
       // No need to localise, should never happen!
-      print "Fatal error: Failed to open '$filename' for reading.\n";
+      upgrade_echo("Fatal error: Failed to open '$filename' for reading.\n");
       return FALSE;
     }
     $file_size = filesize($filename);
@@ -68,17 +81,14 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
         if ($res === FALSE)
         {
           // No need to localise, should hopefully never happen
-          print "<br>Tried:<pre>
-".htmlspecialchars($query)."
-</pre> and got error:<pre>
-".sql_error($upgrade_handle)."
-</pre>\n";
+          upgrade_echo("<br>Tried:<pre>" . htmlspecialchars($query) . "</pre> and got error:" .
+                       "<pre>" . sql_error($upgrade_handle) . "</pre>\n");
           return FALSE;
         }
       }
     }
 
-    print "<br>".get_vocab("ok");
+    upgrade_echo("<br>" . get_vocab("ok"));
     if ($ver > 1)
     {
       $variable_name = ($local) ? "local_db_version" : "db_version";
@@ -87,11 +97,11 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
       if ($res == -1)
       {
         // No need to localise, should never happen
-        print "<span class=\"error\">Failed to update database version variable.</span>";
+        upgrade_echo("<span class=\"error\">Failed to update database version variable.</span>");
         return FALSE;
       }
     }
-    print "</p>\n";
+    upgrade_echo("</p>\n");
     
     // Now execute the PHP file if there is one
     if (file_exists($php_filename))
