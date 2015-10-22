@@ -1094,7 +1094,10 @@ function debug_output($message)
   {
     echo htmlspecialchars($message) . "<br>\n";
     // flush in case they have output_buffering configured on
-    ob_flush();
+    if (ob_get_length() !== FALSE)
+    {
+      ob_flush();
+    }
     flush();
   }
   else  // anything else goes to the error log
