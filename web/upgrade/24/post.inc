@@ -2,7 +2,7 @@
 
 // $Id$
 
-// This upgrade assings a UID to all existing bookings and a RECURRENCE-ID to all
+// This upgrade assigns a UID to all existing bookings and a RECURRENCE-ID to all
 // existing members of a series.   However the RECURRENCE-ID is not necessarily going
 // to be correct if the entry is a modified entry (ie entry_type=ENTRY_RPT_CHANGED).
 // That's because the RECURRENCE_ID is supposed to be the *original* start date and
@@ -25,8 +25,12 @@ function get_microtime()
   }
 }
 
-function do_sql_command($sql, $step)
+function do_sql_command($sql)
 {
+  static $step = 0;
+  
+  $step++;
+  
   if (sql_command($sql) < 0)
   {
     // echo "$sql<br>\n";  // Debug line
@@ -51,67 +55,46 @@ if ($display_timing)
 
 $start_clock = get_microtime();
 
-$sql = "ALTER TABLE $tbl_entry ADD COLUMN saved_ts DATETIME";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to add saved_ts column in entry table.</span>";
-}
-$sql = "UPDATE $tbl_entry SET saved_ts=timestamp";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to set saved_ts column in entry table.</span>";
-}
-$sql = "ALTER TABLE $tbl_repeat ADD COLUMN saved_ts DATETIME";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to add saved_ts column in repeat table.</span>";
-}
-$sql = "UPDATE $tbl_repeat SET saved_ts=timestamp";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to set saved_ts column in repeat table.</span>";
-}
+// In these queries we set timestamp=timestamp to prevent it being automatically set
+// to the current time (only applies to MySQL - PostgreSQL timestamps don't update)
 
 // MySQL (mysql and mysqli)
 // ------------------------
 if ($dbsys != "pgsql")
 {
   // Give all the individual entries, that haven't already got one, an ical uid
-  $sql = "UPDATE $tbl_entry SET ical_uid=CONCAT(CAST(id AS char), '-', UUID()) WHERE ical_uid='' AND repeat_id=0";
-  do_sql_command($sql, 1);
+  $sql = "UPDATE $tbl_entry
+             SET ical_uid=CONCAT(CAST(id AS char), '-', UUID()),
+                 timestamp=timestamp
+           WHERE ical_uid='' AND repeat_id=0";
+  do_sql_command($sql);
 
   // Give everything in the repeat table, that doesn't already have one, an ical uid
-  $sql = "UPDATE $tbl_repeat SET ical_uid=CONCAT(CAST(id AS char), '-', UUID()) WHERE ical_uid=''";
-  do_sql_command($sql, 2);
+  $sql = "UPDATE $tbl_repeat
+             SET ical_uid=CONCAT(CAST(id AS char), '-', UUID()),
+                 timestamp=timestamp
+           WHERE ical_uid=''";
+  do_sql_command($sql);
 
   // Now go through the entry table and give all entries, that don't have an ical uid
   // and are members of a series, the ical_uid from the corresponding uid from the
   // repeat table
   $sql = "UPDATE $tbl_entry E, $tbl_repeat R
-             SET E.ical_uid=R.ical_uid
+             SET E.ical_uid=R.ical_uid,
+                 E.timestamp=E.timestamp,
+                 R.timestamp=R.timestamp
            WHERE E.ical_uid=''
              AND E.repeat_id=R.id";
-  do_sql_command($sql, 3);
+  do_sql_command($sql);
   
   // Finally give a recurrence id to any entry in the entry table that hasn't got one
   // and should have one - ie if it is a member of a series                      
   $sql = "UPDATE $tbl_entry
-             SET ical_recur_id=DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(start_time), @@session.time_zone, '+0:00'), '%Y%m%dT%H%i%sZ')
+             SET ical_recur_id=DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(start_time), @@session.time_zone, '+0:00'), '%Y%m%dT%H%i%sZ'),
+                 timestamp=timestamp
            WHERE repeat_id!=0
              AND ical_recur_id=''";
-  do_sql_command($sql, 4);
+  do_sql_command($sql);
 }
 
 // PostgreSQL
@@ -129,15 +112,15 @@ else
   
   if (empty($_SERVER['SERVER_NAME']))
   {
-    $domain_name .= 'MRBS';
+    $domain_name = 'MRBS';
   }
   elseif (strpos($_SERVER['SERVER_NAME'], 'www.') === 0)
   {
-    $domain_name .= substr($_SERVER['SERVER_NAME'], 4);
+    $domain_name = substr($_SERVER['SERVER_NAME'], 4);
   }
   else
   {
-    $domain_name .= $_SERVER['SERVER_NAME'];
+    $domain_name = $_SERVER['SERVER_NAME'];
   }
 
   // Give all the individual entries, that haven't already got one, an ical uid
@@ -145,13 +128,13 @@ else
              SET ical_uid='MRBS-' || CAST(id AS varchar(255)) || '-' || CURRENT_DATE || CURRENT_TIME || '-' || SUBSTRING((MD5(name || CAST(RANDOM() AS varchar(255)))) from 1 for 8) || '@$domain_name'
            WHERE ical_uid=''
              AND repeat_id=0";
-  do_sql_command($sql, 1);
+  do_sql_command($sql);
              
   // Give everything in the repeat table, that doesn't already have one, an ical uid
   $sql = "UPDATE $tbl_repeat
              SET ical_uid='MRBS-' || CAST(id AS varchar(255)) || '-' || CURRENT_DATE || CURRENT_TIME || '-' || SUBSTRING((MD5(name || CAST(RANDOM() AS varchar(255)))) from 1 for 8) || '@$domain_name'
            WHERE ical_uid=''";
-  do_sql_command($sql, 2);
+  do_sql_command($sql);
 
   // Now go through the entry table and give all entries, that don't have an ical uid
   // and are members of a series, the ical_uid from the corresponding uid from the
@@ -161,7 +144,7 @@ else
             FROM $tbl_repeat AS R
            WHERE $tbl_entry.ical_uid=''
              AND $tbl_entry.repeat_id=R.id";
-  do_sql_command($sql, 3);
+  do_sql_command($sql);
              
   // Finally give a recurrence id to any entry in the entry table that hasn't got one
   // and should have one - ie if it is a member of a series (The SQL is slightly
@@ -170,40 +153,7 @@ else
              SET ical_recur_id=TO_CHAR(TIMESTAMP 'epoch' + start_time * INTERVAL '1 second', 'YYYYMMDD\"T\"HH24MISS\"Z\"')
            WHERE repeat_id!=0
              AND ical_recur_id=''";
-  do_sql_command($sql, 4);
-}
-
-$sql = "UPDATE $tbl_entry SET timestamp=saved_ts";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to update timestamp column in entry table.</span>";
-}
-$sql = "ALTER TABLE $tbl_entry DROP COLUMN saved_ts";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to delete saved_ts column in entry table.</span>";
-}
-$sql = "UPDATE $tbl_repeat SET timestamp=saved_ts";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to update timestamp column in repeat table.</span>";
-}
-$sql = "ALTER TABLE $tbl_repeat DROP COLUMN saved_ts";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to delete saved_ts column in repeat table.</span>";
+  do_sql_command($sql);
 }
 
 $stop_clock = get_microtime();
