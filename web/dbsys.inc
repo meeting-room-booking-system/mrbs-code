@@ -23,7 +23,7 @@ foreach ($tables as $table)
 }
 
 
-$db_schema_version = 46;
+$db_schema_version = 47;
 $local_db_schema_version = 1;
 
 // Include the abstraction configured to be used for the default MRBS
