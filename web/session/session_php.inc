@@ -227,18 +227,18 @@ function authGet()
 
 function getUserName()
 {
+  global $HTTP_SESSION_VARS;
+  
   if (isset($_SESSION) && isset($_SESSION["UserName"]) && ($_SESSION["UserName"] !== ''))
   {
     return $_SESSION["UserName"];
   }
-  else
+  elseif (isset($HTTP_SESSION_VARS["UserName"]) && ($HTTP_SESSION_VARS["UserName"] !== ''))
   {
-    global $HTTP_SESSION_VARS;
-    if (isset($HTTP_SESSION_VARS["UserName"]) && ($HTTP_SESSION_VARS["UserName"] !== ''))
-    {
-      return $HTTP_SESSION_VARS["UserName"];
-    }
+    return $HTTP_SESSION_VARS["UserName"];
   }
+
+  return NULL;
 }
 
 // Print the logon entry on the top banner.
