@@ -515,14 +515,20 @@ function authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
  */
 function authGetUserLevel($user)
 {
-  global $auth;
   global $ldap_admin_group_dn;
-
-  $admins = $auth['admin'];
+  
+  // cache the user levels for performance
+  static $user_levels = array();
+  
   // User not logged in, user level '0'
   if (!isset($user))
   {
     return 0;
+  }
+  
+  if (isset($user_levels[$user]))
+  {
+    return $user_levels[$user];
   }
   
   if ($ldap_admin_group_dn)
@@ -530,28 +536,49 @@ function authGetUserLevel($user)
     $res = authLdapAction("authLdapCheckAdminGroupCallback", $user, $object);
     if ($res)
     {
-      return 2;
+      $level = 2;
     }
     else
     {
-      return 1;
+      $level = 1;
     }
   }
-    
-  // Check if the user is an admin
-  foreach ($admins as $admin)
+  elseif (authLdapIsAdmin($user))
   {
-    if (strcasecmp($user, $admin) == 0)
-    {
-      return 2;
-    }
+    $level = 2;
   }
-    
-  // Everybody else is access level '1'
-  return 1;
+  else  // Everybody else is access level '1'
+  {
+    $level = 1;
+  }
+  
+  $user_levels[$user] = $level;
+  
+  return $user_levels[$user];
 }
 
 
+// Check if the user is an admin
+function authLdapIsAdmin($user)
+{
+  global $auth;
+  
+  if (isset($user) && ($user !== ''))
+  {
+    $admins = $auth['admin'];
+    foreach ($admins as $admin)
+    {
+      if (strcasecmp($user, $admin) == 0)
+      {
+        return TRUE;
+      }
+    }
+  }
+  
+  return FALSE;
+}
+  
+  
 /* authLdapDebug($message)
  *
  * Output LDAP debugging, if the configuration variable
