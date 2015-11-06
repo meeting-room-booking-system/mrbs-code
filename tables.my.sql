@@ -6,8 +6,9 @@
 # Notes:
 # (1) If you have decided to change the prefix of your tables from 'mrbs_'
 #     to something else using $db_tbl_prefix then you must edit each
-#     'CREATE TABLE' and 'INSERT INTO' line below to replace 'mrbs_' with
-#     your new table prefix.
+#     'CREATE TABLE', 'INSERT INTO' and 'REFERENCES' line below to replace
+#     'mrbs_' with your new table prefix.  A global replace of 'mrbs_' is
+#     sufficient.
 #
 # (2) If you add new fields then you should also change the global variable
 #     $standard_fields.   Note that if you are just adding custom fields for
