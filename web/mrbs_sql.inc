@@ -530,6 +530,16 @@ function mrbsCreateEntry($table, $data)
   foreach ($fields as $field)
   {
     $key = $field['name'];
+    
+    // Check to see whether custom field names obey the MRBS rules.   If we don't check
+    // other parts of the code will run without producing PHP or SQL errors but will give
+    // the wrong results.   A bit of a crude check, and in due course we probably ought to
+    // allow custom fields with spaces in them (or else have custom fields created by MRBS).
+    if (strpos($key, ' ') !== FALSE)
+    {
+      fatal_error(FALSE, "Custom field names cannot contain spaces.", FALSE);
+    }
+    
     // If the key doesn't exist in the $data array then the database will just use its
     // default value for the column.    If it does exist and is set to NULL then we'll
     // write NULL to the database (which may not necessarily be the default value).
