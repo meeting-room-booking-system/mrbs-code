@@ -1225,7 +1225,7 @@ function get_booking_info($id, $series, $silent=FALSE)
           fatal_error(0, "Custom fields problem, '".$field['name']."' exists in entry table but not in repeat table");
         }
         
-        array_push($terms, "T." . $field['name']);
+        array_push($terms, "T." . sql_quote($field['name']));
         break;
     }
   }
