@@ -216,13 +216,13 @@ foreach ($fields as $field)
         // assume PHP5
         if (($key !== '') && (strpos(utf8_strtolower($value), utf8_strtolower($search_str)) !== FALSE))
         {
-          $sql_pred .= " OR E." . $field['name'] . "='" . sql_escape($key) . "'";
+          $sql_pred .= " OR E." . sql_quote($field['name']) . "='" . sql_escape($key) . "'";
         }
       }
     }
     elseif ($field['nature'] == 'character')
     {
-      $sql_pred .= " OR " . sql_syntax_caseless_contains("E." . $field['name'], $search_str);
+      $sql_pred .= " OR " . sql_syntax_caseless_contains("E." . sql_quote($field['name']), $search_str);
     }
   }
 }
