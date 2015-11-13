@@ -176,10 +176,15 @@ function authLdapAction($callback, $user, &$object)
           // Anonymous bind
           $res = @ldap_bind($ldap);
         }
-        authLdapDebug("authLdapAction: Result of initial bind is $res");
 
-        if ($res)
+        if (!$res)
         {
+          authLdapDebug("authLdapAction: Initial bind failed: ".ldap_error($ldap));
+        }
+        else
+        {
+          authLdapDebug("authLdapAction: Initial bind was successful");
+
           $res = @ldap_search($ldap,
                               $all_ldap_opts['ldap_base_dn'][$idx],
                               "(". $all_ldap_opts['ldap_dn_search_attrib'][$idx] ."=$user)");
@@ -221,11 +226,18 @@ function authLdapAction($callback, $user, &$object)
         }
       }
 
-      $res = $callback($ldap, $all_ldap_opts['ldap_base_dn'][$idx], $dn,
-                       $user_search, $user, $object);
-      if ($res)
+      if (!$dn)
       {
-        return $res;
+        authLdapDebug("authLdapAction: No DN determined, not calling callback");
+      }
+      else
+      {
+        $res = $callback($ldap, $all_ldap_opts['ldap_base_dn'][$idx], $dn,
+                         $user_search, $user, $object);
+        if ($res)
+        {
+          return $res;
+        }
       }
 
     } // if ($ldap)
@@ -440,7 +452,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
   }
   else
   {
-    authLdapDebug("authValidateUserCallback: Bind to '$dn' failed");
+    authLdapDebug("authValidateUserCallback: Bind to '$dn' failed: ".ldap_error($ldap));
   }
 
   if ($ldap_unbind_between_attempts)
