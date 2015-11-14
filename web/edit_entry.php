@@ -943,6 +943,16 @@ else
       $default_duration = SECONDS_PER_HOUR;
     }
     $duration    = ($enable_periods ? 60 : $default_duration);
+    
+    // If the duration is not an integral number of slots, then make
+    // it so.   And make the duration at least one slot long.
+    if ($duration%$resolution != 0)
+    {
+      $duration = intval(round($duration/$resolution));
+      $duration = max(1, $duration);
+      $duration = $duration * $resolution;
+    }
+    
     $end_time = $start_time + $duration;
     // The end time can't be past the end of the booking day
     $pm7 = get_start_last_slot($month, $day, $year);
