@@ -3,6 +3,8 @@
 // $Id$
 
 // Check PHP version
+// Do it now before we start including code that might fail with a syntax error,
+// for example if anonymous functions are being used.
 $min_PHP_version = '5.3.3';
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, $min_PHP_version) < 0)
 {
