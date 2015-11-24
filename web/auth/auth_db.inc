@@ -128,19 +128,8 @@ function authGetUserLevel($user)
   }
   
   $result = sql_query1("SELECT level FROM $tbl_users WHERE name='" . sql_escape(utf8_strtolower($user)) . "' LIMIT 1");
-  if ($result == -1)
-  {
-    $sql_error = sql_error();
-    if (!empty($sql_error))
-    {
-      // It's possible that sql_query1 returned -1 because there were no matching rows,
-      // so we only trigger an error if there was a genuine SQL error.
-      trigger_error($sql_error, E_USER_WARNING);
-    }
-    return 0;
-  }
 
-  return $result;
+  return ($result == -1) ? 0 : $result;
 }
 
 
@@ -162,18 +151,6 @@ function authGetUserEmail($user)
            
   $email = sql_query1($sql);
   
-  if ($email == -1)
-  {
-    $sql_error = sql_error();
-    if (!empty($sql_error))
-    {
-      // It's possible that sql_query1 returned -1 because there were no matching rows,
-      // so we only trigger an error if there was a genuine SQL error.
-      trigger_error($sql_error, E_USER_WARNING);
-    }
-    $email = '';
-  }
-  
-  return $email;
+  return ($email == -1) ? '' : $email;
 }
 

@@ -240,11 +240,8 @@ function get_area_admin_email($id, $series=FALSE)
              AND a.id=r.area_id
            LIMIT 1";
   $email = sql_query1($sql);
-  if ($email == -1)
-  {
-    $email = "";
-  }
-  return $email;
+
+  return ($email == -1) ? '' : $email;
 }
 
 
@@ -269,11 +266,8 @@ function get_room_admin_email($id, $series=FALSE)
              AND r.id=${id_table}.room_id
            LIMIT 1";
   $email = sql_query1($sql);
-  if ($email == -1)
-  {
-    $email = "";
-  }
-  return $email;
+
+  return ($email == -1) ? '' : $email;
 }
 
 

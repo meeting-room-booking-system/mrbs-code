@@ -80,7 +80,6 @@ function get_room_id($location, &$error)
     $count = sql_query1($sql);
     if ($count < 0)
     {
-      trigger_error(sql_error(), E_USER_WARNING);
       fatal_error(FALSE, get_vocab("fatal_db_error"));
     }
     elseif ($count == 0)
@@ -99,7 +98,6 @@ function get_room_id($location, &$error)
       $id = sql_query1($sql);
       if ($id < 0)
       {
-        trigger_error(sql_error(), E_USER_WARNING);
         fatal_error(FALSE, get_vocab("fatal_db_error"));
       }
       return $id;
@@ -117,30 +115,21 @@ function get_room_id($location, &$error)
     $area_id = sql_query1($sql);
     if ($area_id < 0)
     {
-      $sql_error = sql_error();
-      if (!empty($sql_error))
+      // The area does not exist - create it if we are allowed to
+      if (!$area_room_create)
       {
-        trigger_error(sql_error(), E_USER_WARNING);
-        fatal_error(FALSE, get_vocab("fatal_db_error"));
+        $error = get_vocab("area_does_not_exist") . " '$location_area'";
+        return FALSE;
       }
       else
       {
-        // The area does not exist - create it if we are allowed to
-        if (!$area_room_create)
+        echo get_vocab("creating_new_area") . " '$location_area'<br>\n";
+        $error_add_area = '';
+        $area_id = mrbsAddArea($location_area, $error_add_area);
+        if ($area_id === FALSE)
         {
-          $error = get_vocab("area_does_not_exist") . " '$location_area'";
+          $error = get_vocab("could_not_create_area") . " '$location_area'";
           return FALSE;
-        }
-        else
-        {
-          echo get_vocab("creating_new_area") . " '$location_area'<br>\n";
-          $error_add_area = '';
-          $area_id = mrbsAddArea($location_area, $error_add_area);
-          if ($area_id === FALSE)
-          {
-            $error = get_vocab("could_not_create_area") . " '$location_area'";
-            return FALSE;
-          }
         }
       }
     }
@@ -154,30 +143,21 @@ function get_room_id($location, &$error)
   $room_id = sql_query1($sql);
   if ($room_id < 0)
   {
-    $sql_error = sql_error();
-    if (!empty($sql_error))
+    // The room does not exist - create it if we are allowed to
+    if (!$area_room_create)
     {
-      trigger_error(sql_error(), E_USER_WARNING);
-      fatal_error(FALSE, get_vocab("fatal_db_error"));
+      $error = get_vocab("room_does_not_exist") . " '$location_room'";
+      return FALSE;
     }
     else
     {
-      // The room does not exist - create it if we are allowed to
-      if (!$area_room_create)
+      echo get_vocab("creating_new_room") . " '$location_room'<br>\n";
+      $error_add_room = '';
+      $room_id = mrbsAddRoom($location_room, $area_id, $error_add_room);
+      if ($room_id === FALSE)
       {
-        $error = get_vocab("room_does_not_exist") . " '$location_room'";
+        $error = get_vocab("could_not_create_room") . " '$location_room'";
         return FALSE;
-      }
-      else
-      {
-        echo get_vocab("creating_new_room") . " '$location_room'<br>\n";
-        $error_add_room = '';
-        $room_id = mrbsAddRoom($location_room, $area_id, $error_add_room);
-        if ($room_id === FALSE)
-        {
-          $error = get_vocab("could_not_create_room") . " '$location_room'";
-          return FALSE;
-        }
       }
     }
   }

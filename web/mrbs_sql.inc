@@ -194,7 +194,6 @@ function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $o
       $existing[$location][$interval_type][$interval_start] = sql_query1($sql);
       if ($existing[$location][$interval_type][$interval_start] < 0)
       {
-        trigger_error(sql_error(), E_USER_WARNING);
         fatal_error(FALSE, get_vocab("fatal_db_error"));
       }
       $proposed[$location][$interval_type][$interval_start] = 1;
@@ -1449,12 +1448,8 @@ function mrbsGetRoomArea($id)
   global $tbl_room;
 
   $id = sql_query1("SELECT area_id FROM $tbl_room WHERE id=$id LIMIT 1");
-  if ($id <= 0)
-  {
-    $id = 0;
-  }
 
-  return $id;
+  return ($id <= 0) ? 0 : $id;
 }
 
 

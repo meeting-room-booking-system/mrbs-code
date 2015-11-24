@@ -268,7 +268,6 @@ if (!isset($total))
 }
 if ($total < 0)
 {
-  trigger_error(sql_error(), E_USER_WARNING);
   fatal_error(FALSE, get_vocab("fatal_db_error"));
 }
 if (($total <= 0) && !$ajax)

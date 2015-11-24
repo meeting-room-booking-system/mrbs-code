@@ -119,10 +119,13 @@ function sql_pgsql_query1 ($sql, $db_conn = null)
   $e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
   $r = pg_query($db_conn, $sql);
   error_reporting($e);
-  if (! $r)
+  
+  if (!$r)
   {
+    trigger_error (sql_pgsql_error($db_conn), E_USER_WARNING);
     return -1;
   }
+  
   if (pg_num_rows($r) != 1 || pg_num_fields($r) != 1
       || ($result = pg_fetch_result($r, 0, 0)) == "")
   {
@@ -457,12 +460,6 @@ function sql_pgsql_table_exists($table, $db_conn = null)
   }
 
   $res = sql_pgsql_query1($sql, $db_conn);
-  
-  if ($res < 0)
-  {
-    trigger_error(pg_last_error($db_conn), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
 
   return ($res == 1) ? TRUE : FALSE;
 }

@@ -730,7 +730,6 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
 
   if ($n_rooms < 0)
   {
-    trigger_error(sql_error(), E_USER_WARNING);
     fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
   elseif ($n_rooms == 0)
@@ -1048,12 +1047,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   $n_rooms = sql_query1($sql);
   if (($n_rooms < 0) || ($n_rooms > 1))
   {
-    if ($n_rooms < 0)
-    {
-      // SQL error, probably because the tables haven't been created
-      trigger_error(sql_error(), E_USER_WARNING);
-    }
-    else
+    if ($n_rooms > 1)
     {
       // Should never happen
       trigger_error("Internal error: multiple rooms with same id", E_USER_WARNING);
