@@ -82,7 +82,23 @@ function sql_pgsql_escape($str, $db_conn = null)
 // Quote a table or column name
 function sql_pgsql_quote($identifier)
 {
-  return '"' . $identifier . '"';
+  // Don't quote the alias, if there is one
+  if (strpos($identifier, '.') === FALSE)
+  {
+    $column = $identifier;
+  }
+  else
+  {
+    list($alias, $column) = explode('.', $identifier, 2);
+  }
+  
+  $result = '"' . $column . '"';
+  if (isset($alias))
+  {
+    $result = $alias . '.' . $result;
+  }
+  
+  return $result;
 }
 
 

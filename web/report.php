@@ -1267,19 +1267,13 @@ if ($phase == 2)
   if (!empty($typematch))
   {
     $sql .= " AND ";
-    if ( count( $typematch ) > 1 )
+    $or_array = array();
+    foreach ( $typematch as $type )
     {
-      $or_array = array();
-      foreach ( $typematch as $type )
-      {
-        $or_array[] = "E.type = '".sql_escape($type)."'";
-      }
-      $sql .= "(". implode( " OR ", $or_array ) .")";
+      // sql_syntax_casesensitive_equals() does the SQL escaping
+      $or_array[] = sql_syntax_casesensitive_equals('E.type', $type);
     }
-    else
-    {
-      $sql .= "E.type = '".sql_escape($typematch[0])."'";
-    }
+    $sql .= "(". implode(" OR ", $or_array ) .")";
   }
   if (!empty($namematch))
   {
