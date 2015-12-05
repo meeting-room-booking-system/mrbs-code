@@ -79,26 +79,24 @@ function sql_pgsql_escape($str, $db_conn = null)
 }
 
 
-// Quote a table or column name
+// Quote a table or column name (which could be a qualified identifier, eg 'table.column')
+
+// NOTE:  We fold the identifier to lower case here even though it is quoted.   Unlike MySQL,
+// PostgreSQL folds identifiers to lower case, unless they are quoted.  However in MRBS we
+// normally want to quote an identifier in case it has characters such as spaces in it, as
+// could be the case with user generated column names for custom fields.  But if we were also
+// to quote the table name, then queries such as 'SELECT * FROM mrbs_entry E WHERE "E"."id"=2'
+// would fail because the alias 'E' is folded to 'e', but the WHERE clause gives 'E.id'.
+// This means that we won't be able to distiguish in PostgreSQL between column names that just
+// differ in case.  But having column names differing in case would be confusing anyway and so
+// should be discouraged.   And a PostgreSQL user generating custom fields would expect them to
+// be folded to lower case anyway, so presumably wouldn't try and create column names differing
+// only in case.
 function sql_pgsql_quote($identifier)
 {
-  // Don't quote the alias, if there is one
-  if (strpos($identifier, '.') === FALSE)
-  {
-    $column = $identifier;
-  }
-  else
-  {
-    list($alias, $column) = explode('.', $identifier, 2);
-  }
-  
-  $result = '"' . $column . '"';
-  if (isset($alias))
-  {
-    $result = $alias . '.' . $result;
-  }
-  
-  return $result;
+  $quote_char = '"';
+  $parts = explode('.', strtolower($identifier));
+  return $quote_char . implode($quote_char . '.' . $quote_char, $parts) . $quote_char;
 }
 
 

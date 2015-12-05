@@ -84,6 +84,8 @@ function sql_escape($str)
 
 
 // Quote a table or column name
+// NOTE:  In PostgreSQL the identifier is also converted to lower case.  See
+// the comments in pgsql.inc for an explanation.
 function sql_quote($identifier)
 {
   global $dbsys;

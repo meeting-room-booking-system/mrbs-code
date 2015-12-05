@@ -50,26 +50,12 @@ function sql_mysqli_escape($str, $db_conn = null)
 }
 
 
-// Quote a table or column name
+// Quote a table or column name (which could be a qualified identifier, eg 'table.column')
 function sql_mysqli_quote($identifier)
 {
-  // Don't quote the alias, if there is one
-  if (strpos($identifier, '.') === FALSE)
-  {
-    $column = $identifier;
-  }
-  else
-  {
-    list($alias, $column) = explode('.', $identifier, 2);
-  }
-  
-  $result = '`' . $column . '`';
-  if (isset($alias))
-  {
-    $result = $alias . '.' . $result;
-  }
-  
-  return $result;
+  $quote_char = '`';
+  $parts = explode('.', $identifier);
+  return $quote_char . implode($quote_char . '.' . $quote_char, $parts) . $quote_char;
 }
 
 
