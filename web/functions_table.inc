@@ -711,7 +711,7 @@ function get_main_column_width($n_columns, $n_hidden=0)
 }
 
 
-function day_table_innerhtml($day, $month, $year, $room_id, $area, $timetohighlight=NULL)
+function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohighlight=NULL)
 {
   global $tbl_entry, $tbl_room, $tbl_area;
   global $enable_periods, $periods;
@@ -721,7 +721,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area, $timetohighli
   
   $sql = "SELECT COUNT(*)
             FROM $tbl_room R, $tbl_area A
-           WHERE R.area_id=$area
+           WHERE R.area_id=$area_id
              AND R.area_id = A.id
              AND R.disabled = 0
              AND A.disabled = 0";
@@ -783,7 +783,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area, $timetohighli
                  E.create_by AS entry_create_by
             FROM $tbl_entry E, $tbl_room R
            WHERE E.room_id = R.id
-             AND R.area_id = $area
+             AND R.area_id = $area_id
              AND R.disabled = 0
              AND start_time <= $pm7 AND end_time > $am7
         ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
@@ -815,7 +815,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area, $timetohighli
 
   }
   
-  $rooms = get_rooms($area);
+  $rooms = get_rooms($area_id);
 
   $n_time_slots = get_n_time_slots();
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
@@ -877,7 +877,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area, $timetohighli
     {
       // Put the room_id in a data attribute so that JavaScript can pick it up
       $header_inner .= "<th data-room=\"" . $room['id'] . "\" style=\"width: $column_width%\">
-                        <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=" . $room['id'] . "\"
+                        <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area_id&amp;room=" . $room['id'] . "\"
                         title=\"" . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . "\">" .
                         htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? " (" . $room['capacity'] . ")" : "") . "</a></th>\n";
     }
@@ -908,7 +908,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area, $timetohighli
   
   // URL for highlighting a time. Don't use REQUEST_URI or you will get
   // the timetohighlight parameter duplicated each time you click.
-  $base_url="day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area$room_param";
+  $base_url="day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area_id$room_param";
   
   
    
@@ -921,7 +921,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area, $timetohighli
     foreach ($rooms as $room)
     {
       $tbody .= "<tr class=\"$row_class\">\n";
-      $room_cell_link = "week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=" . $room['id'];
+      $room_cell_link = "week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area_id&amp;room=" . $room['id'];
       $tbody .= room_cell_html($room, $room_cell_link);
       $is_invalid = array();
       for ($s = $morning_slot_seconds;
@@ -935,7 +935,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area, $timetohighli
           $is_invalid[$s] = $is_possibly_invalid && is_invalid_datetime(0, 0, $s, $month, $day, $year);
         }
         // set up the query strings to be used for the link in the cell
-        $query_strings = get_query_strings($area, $room['id'], $month, $day, $year, $s);
+        $query_strings = get_query_strings($area_id, $room['id'], $month, $day, $year, $s);
 
         // and then draw the cell
         if (!isset($today[$room['id']][$day][$s]))
@@ -979,7 +979,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area, $timetohighli
       foreach ($rooms as $room)
       {
         // set up the query strings to be used for the link in the cell
-        $query_strings = get_query_strings($area, $room['id'], $month, $day, $year, $s);
+        $query_strings = get_query_strings($area_id, $room['id'], $month, $day, $year, $s);
         
         // and then draw the cell
         if (!isset($today[$room['id']][$day][$s]))
