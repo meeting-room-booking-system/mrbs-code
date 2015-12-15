@@ -240,6 +240,33 @@ function sql_row_keyed($r, $i)
 }
 
 
+// Return all the rows from a result object, as an array of arrays
+// keyed on the column name
+function sql_all_rows_keyed($r)
+{
+  global $dbsys;
+  
+  if (func_num_args() > 1)
+  {
+    $handle = func_get_arg(1);
+  }
+  else
+  {
+    $handle = array('system'     => $dbsys,
+                    'connection' => null);
+  }
+  
+  $result = array();
+  
+  for ($i=0; $row = sql_row_keyed($r, $i, $handle); $i++)
+  {
+    $result[] = $row;
+  }
+  
+  return $result;
+}
+
+
 // Return the number of rows in a result object
 function sql_count($r)
 {

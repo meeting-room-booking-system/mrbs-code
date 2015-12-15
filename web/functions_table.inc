@@ -711,7 +711,7 @@ function get_main_column_width($n_columns, $n_hidden=0)
 }
 
 
-function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight=NULL)
+function day_table_innerhtml($day, $month, $year, $room_id, $area, $timetohighlight=NULL)
 {
   global $tbl_entry, $tbl_room, $tbl_area;
   global $enable_periods, $periods;
@@ -740,7 +740,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   
   // form the room parameter for use in query strings.    We want to preserve room information
   // if possible when switching between views
-  $room_param = (empty($room)) ? "" : "&amp;room=$room";
+  $room_param = (empty($room_id)) ? "" : "&amp;room=$room_id";
   
   // ensure that $morningstarts_minutes defaults to zero if not set
   if (!isset($morningstarts_minutes))
@@ -815,27 +815,7 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
 
   }
   
-  // We need to know what all the rooms are called, so we can show them all.
-  // Pull the data from the db and store it. Conveniently we can print the room
-  // headings and capacities at the same time
-  $sql = "SELECT R.room_name, R.capacity, R.id, R.description
-            FROM $tbl_room R, $tbl_area A
-           WHERE R.area_id=$area
-             AND R.area_id = A.id
-             AND R.disabled = 0
-             AND A.disabled = 0
-           ORDER BY sort_key";
-
-  $res = sql_query($sql);
-
-  // It might be that there are no rooms defined for this area.
-  // If there are none then show an error and don't bother doing anything
-  // else
-  if (! $res)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
+  $rooms = get_rooms($area);
 
   $n_time_slots = get_n_time_slots();
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
@@ -891,16 +871,15 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
                        ($enable_periods ? get_vocab('period') : get_vocab('time')) . ":</th>\n";
     $header_inner .= $first_last_html;
   
-    $column_width = get_main_column_width(sql_count($res));
+    $column_width = get_main_column_width(count($rooms));
     
-    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+    foreach($rooms as $room)
     {
       // Put the room_id in a data attribute so that JavaScript can pick it up
-      $header_inner .= "<th data-room=\"" . $row['id'] . "\" style=\"width: $column_width%\">
-                        <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\"
-                        title=\"" . get_vocab("viewweek") . " &#10;&#10;".$row['description']."\">" .
-                        htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? " (".$row['capacity'].")" : "") . "</a></th>\n";
-      $rooms[] = $row['id'];
+      $header_inner .= "<th data-room=\"" . $room['id'] . "\" style=\"width: $column_width%\">
+                        <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=" . $room['id'] . "\"
+                        title=\"" . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . "\">" .
+                        htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? " (" . $room['capacity'] . ")" : "") . "</a></th>\n";
     }
   
     // next line to display times on right side
@@ -933,18 +912,17 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
   
   
    
-  $row_class = "even_row";
+  $row_class = 'even_row';
   
   // We can display the table in two ways
   if ($times_along_top)
   {
     // with times along the top and rooms down the side
-    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++, $row_class = ($row_class == "even_row")?"odd_row":"even_row")
+    foreach ($rooms as $room)
     {
       $tbody .= "<tr class=\"$row_class\">\n";
-      $room_id = $row['id']; 
-      $room_cell_link = "week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$room_id";
-      $tbody .= room_cell_html($row, $room_cell_link);
+      $room_cell_link = "week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=" . $room['id'];
+      $tbody .= room_cell_html($room, $room_cell_link);
       $is_invalid = array();
       for ($s = $morning_slot_seconds;
            $s <= $evening_slot_seconds;
@@ -957,20 +935,21 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
           $is_invalid[$s] = $is_possibly_invalid && is_invalid_datetime(0, 0, $s, $month, $day, $year);
         }
         // set up the query strings to be used for the link in the cell
-        $query_strings = get_query_strings($area, $room_id, $month, $day, $year, $s);
+        $query_strings = get_query_strings($area, $room['id'], $month, $day, $year, $s);
 
         // and then draw the cell
-        if (!isset($today[$room_id][$day][$s]))
+        if (!isset($today[$room['id']][$day][$s]))
         {
-          $today[$room_id][$day][$s] = array();  // to avoid an undefined index NOTICE error
+          $today[$room['id']][$day][$s] = array();
         }
-        $tbody .= cell_html($today[$room_id][$day][$s], $query_strings, $is_invalid[$s]);
+        $tbody .= cell_html($today[$room['id']][$day][$s], $query_strings, $is_invalid[$s]);
       }  // end for (looping through the times)
       if ( FALSE != $row_labels_both_sides )
       {
-        $tbody .= room_cell_html($row, $room_cell_link);
+        $tbody .= room_cell_html($room, $room_cell_link);
       }
       $tbody .= "</tr>\n";
+      $row_class = ($row_class == 'even_row') ? 'odd_row' : 'even_row';
     }  // end for (looping through the rooms)
   }  // end "times_along_top" view (for the body)
   
@@ -997,17 +976,17 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       $tbody .= time_cell_html($s, $url);
       $is_invalid = $is_possibly_invalid && is_invalid_datetime(0, 0, $s, $month, $day, $year);
       // Loop through the list of rooms we have for this area
-      while (list($key, $room_id) = each($rooms))
+      foreach ($rooms as $room)
       {
         // set up the query strings to be used for the link in the cell
-        $query_strings = get_query_strings($area, $room_id, $month, $day, $year, $s);
+        $query_strings = get_query_strings($area, $room['id'], $month, $day, $year, $s);
         
         // and then draw the cell
-        if (!isset($today[$room_id][$day][$s]))
+        if (!isset($today[$room['id']][$day][$s]))
         {
-          $today[$room_id][$day][$s] = array();  // to avoid an undefined index NOTICE error
+          $today[$room['id']][$day][$s] = array();  // to avoid an undefined index NOTICE error
         }
-        $tbody .= cell_html($today[$room_id][$day][$s], $query_strings, $is_invalid);
+        $tbody .= cell_html($today[$room['id']][$day][$s], $query_strings, $is_invalid);
       }
       
       // next lines to display times on right side
@@ -1017,7 +996,6 @@ function day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight
       }
   
       $tbody .= "</tr>\n";
-      reset($rooms);
     }
   }  // end standard view (for the body)
   

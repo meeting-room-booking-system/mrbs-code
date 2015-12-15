@@ -1410,6 +1410,35 @@ function get_room_name($id, $all=FALSE)
 }
 
 
+// If $all=TRUE then all rooms are returned, otherwise just the ones that
+// are not disabled
+function get_rooms($area, $all=FALSE)
+{
+  global $tbl_room, $tbl_area;
+  
+  $sql = "SELECT R.room_name, R.capacity, R.id, R.description
+            FROM $tbl_room R, $tbl_area A
+           WHERE R.area_id=$area
+             AND R.area_id = A.id";
+  if (empty($all))
+  {
+    $sql .= " AND R.disabled = 0" .
+            " AND A.disabled = 0";
+  }
+  $sql .= " ORDER BY sort_key";
+
+  $res = sql_query($sql);
+
+  if ($res === FALSE)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
+  }
+  
+  return sql_all_rows_keyed($res);
+}
+
+
 // Gets an array of area names indexed by area id.
 // If $all=TRUE then all areas are returned, otherwise just the ones that
 // are not disabled
