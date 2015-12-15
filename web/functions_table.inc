@@ -719,20 +719,10 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $first_last_width;
   
-  $sql = "SELECT COUNT(*)
-            FROM $tbl_room R, $tbl_area A
-           WHERE R.area_id=$area_id
-             AND R.area_id = A.id
-             AND R.disabled = 0
-             AND A.disabled = 0";
-           
-  $n_rooms = sql_query1($sql);
+  $rooms = get_rooms($area_id);
+  $n_rooms = count($rooms);
 
-  if ($n_rooms < 0)
-  {
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
-  elseif ($n_rooms == 0)
+  if ($n_rooms == 0)
   {
     // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
     return "<tbody data-empty=1><tr><td><h1>".get_vocab("no_rooms_for_area")."</h1></td></tr></tbody>";
@@ -814,8 +804,6 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
     map_add_booking($row, $today[$row['room_id']][$day], $am7, $pm7);
 
   }
-  
-  $rooms = get_rooms($area_id);
 
   $n_time_slots = get_n_time_slots();
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
