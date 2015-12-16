@@ -425,6 +425,59 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
   return $errors;
 }
 
+
+// Get all the entries for the area with $area_id in the interval that starts at $interval_start
+// and ends at $interval_start (both Unix timestamps).   Only gets entries for enabled rooms.
+// Returns an array of entries.   Each element of the array is itself an array with keys
+// corresponding to the entry table columns
+function get_entries_by_area($area_id, $interval_start, $interval_end)
+{
+  global $tbl_entry, $tbl_room;
+  
+  $sql = "SELECT E.*
+            FROM $tbl_entry E, $tbl_room R
+           WHERE E.room_id = R.id
+             AND R.area_id = $area_id
+             AND R.disabled = 0
+             AND start_time <= $interval_end AND end_time > $interval_start
+        ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
+
+  $res = sql_query($sql);
+  if ($res === FALSE)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(FALSE, get_vocab("fatal_db_error"));
+  }
+  
+  return sql_all_rows_keyed($res);
+}
+
+
+// Get all the entries for the room with $room_id in the interval that starts at $interval_start
+// and ends at $interval_start (both Unix timestamps).
+// Returns an array of entries.   Each element of the array is itself an array with keys
+// corresponding to the entry table columns
+function get_entries_by_room($room_id, $interval_start, $interval_end)
+{
+  global $tbl_entry;
+  
+  $sql = "SELECT *
+            FROM $tbl_entry
+           WHERE room_id = $room_id
+             AND start_time <= $interval_end AND end_time > $interval_start
+        ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
+    $res = sql_query($sql);
+    
+  if ($res === FALSE)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(TRUE, get_vocab("fatal_db_error"));
+  }
+  
+  return sql_all_rows_keyed($res);
+}
+
+
 /** mrbsDelEntry()
  * 
  * Delete an entry, or optionally all entries.   Will also delete any newly

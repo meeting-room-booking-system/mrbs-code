@@ -1030,52 +1030,17 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   }
   unset($j);  // Just so that we pick up any accidental attempt to use it later
 
-  // Get all appointments for this week in the room that we care about.
-  //
-  // row['room_id'] = Room ID
-  // row['start_time'] = Start time
-  // row['end_time'] = End time
-  // row['type'] = Entry type
-  // row['name'] = Entry name (brief description)
-  // row['id'] = Entry ID
-  // row['description'] = Complete description
-  // row['status'] = status code
-  // row['create_by'] = User who created entry
-  // This data will be retrieved day-by-day
 
   $week_map = array();
 
   for ($j = 0; $j<=($num_of_days-1) ; $j++)
   {
-    $sql = "SELECT *
-              FROM $tbl_entry
-             WHERE room_id = $room
-               AND start_time <= $pm7[$j] AND end_time > $am7[$j]
-          ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
-
-    // Each row returned from the query is a meeting. Build an array of the
-    // form:  $week_map[room][weekday][slot][x], where x = id, color, data, long_desc.
-    // [slot] is based at 000 (HHMM) for midnight, but only slots within
-    // the hours of interest (morningstarts : eveningends) are filled in.
-    // [id], [data] and [long_desc] are only filled in when the meeting
-    // should be labeled,  which is once for each meeting on each weekday.
-    // Note: weekday here is relative to the $weekstarts configuration variable.
-    // If 0, then weekday=0 means Sunday. If 1, weekday=0 means Monday.
-  
-    $res = sql_query($sql);
-    if (! $res)
+    $entries = get_entries_by_room($room, $am7[$j], $pm7[$j]);
+    foreach ($entries as $entry)
     {
-      trigger_error(sql_error(), E_USER_WARNING);
-      fatal_error(TRUE, get_vocab("fatal_db_error"));
+      map_add_booking($entry, $week_map[$room][$j], $am7[$j], $pm7[$j]);
     }
-    else
-    {
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-      {
-        map_add_booking($row, $week_map[$room][$j], $am7[$j], $pm7[$j]);
-      }
-    }
-  }  // for ($j = 0; ...
+  }
   unset($j);  // Just so that we pick up any accidental attempt to use it later
   
   // START DISPLAYING THE MAIN TABLE
