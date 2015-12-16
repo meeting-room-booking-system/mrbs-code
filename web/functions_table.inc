@@ -767,10 +767,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
   // Note: The predicate clause 'start_time <= ...' is an equivalent but simpler
   // form of the original which had 3 BETWEEN parts. It selects all entries which
   // occur on or cross the current day.
-  $sql = "SELECT room_id, start_time, end_time, name, repeat_id,
-                 E.id, type,
-                 E.description, status,
-                 create_by
+  $sql = "SELECT E.*
             FROM $tbl_entry E, $tbl_room R
            WHERE E.room_id = R.id
              AND R.area_id = $area_id
@@ -1085,9 +1082,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
 
   for ($j = 0; $j<=($num_of_days-1) ; $j++)
   {
-    $sql = "SELECT room_id, start_time, end_time, type, name, status, repeat_id,
-                   id, description,
-                   create_by
+    $sql = "SELECT *
               FROM $tbl_entry
              WHERE room_id = $room
                AND start_time <= $pm7[$j] AND end_time > $am7[$j]
