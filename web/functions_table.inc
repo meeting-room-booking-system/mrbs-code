@@ -955,7 +955,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
 }
 
 
-function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight=NULL)
+function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohighlight=NULL)
 {
   global $tbl_room, $tbl_area;
   global $enable_periods, $periods;
@@ -967,7 +967,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   // Check that we've got a valid, enabled room
   $sql = "SELECT COUNT(*)
             FROM $tbl_room R, $tbl_area A
-           WHERE R.id=$room
+           WHERE R.id=$room_id
              AND R.area_id=A.id
              AND R.disabled=0
              AND A.disabled = 0";
@@ -1035,10 +1035,10 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
 
   for ($j = 0; $j<=($num_of_days-1) ; $j++)
   {
-    $entries = get_entries_by_room($room, $am7[$j], $pm7[$j]);
+    $entries = get_entries_by_room($room_id, $am7[$j], $pm7[$j]);
     foreach ($entries as $entry)
     {
-      map_add_booking($entry, $week_map[$room][$j], $am7[$j], $pm7[$j]);
+      map_add_booking($entry, $week_map[$room_id][$j], $am7[$j], $pm7[$j]);
     }
   }
   unset($j);  // Just so that we pick up any accidental attempt to use it later
@@ -1128,7 +1128,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
         $header_inner .= '<th data-date="' . $date . '" style="width: ' . $column_width . '%>' .
                          '<a href="day.php?year=' . strftime("%Y", $t) . 
                          '&amp;month=' . strftime("%m", $t) . '&amp;day=' . strftime('%d', $t) . 
-                         '&amp;area=' . $area . ' title="' . get_vocab('viewday') . '">' .
+                         '&amp;area=' . $area_id . ' title="' . get_vocab('viewday') . '">' .
                          utf8_strftime($dformat, $t) . "</a></th>\n";
       }
     }  // for ($j = 0 ...
@@ -1153,7 +1153,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
 
   // URL for highlighting a time. Don't use REQUEST_URI or you will get
   // the timetohighlight parameter duplicated each time you click.
-  $base_url="week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=$room";
+  $base_url="week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area_id&amp;room=$room_id";
   $row_class = "even_row";
 
   // We can display the table in two ways
@@ -1185,7 +1185,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
         $day_cell_link = "day.php?year=" . strftime("%Y", $wt) . 
                          "&amp;month=" . strftime("%m", $wt) . 
                          "&amp;day=" . strftime("%d", $wt) . 
-                         "&amp;area=$area";
+                         "&amp;area=$area_id";
                        
         $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
         for ($s = $morning_slot_seconds;
@@ -1194,14 +1194,14 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
         {
           $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
           // set up the query strings to be used for the link in the cell
-          $query_strings = get_query_strings($area, $room, $wmonth, $wday, $wyear, $s);
+          $query_strings = get_query_strings($area_id, $room_id, $wmonth, $wday, $wyear, $s);
 
           // and then draw the cell
-          if (!isset($week_map[$room][$thisday][$s]))
+          if (!isset($week_map[$room_id][$thisday][$s]))
           {
-            $week_map[$room][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
+            $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
           }
-          $tbody .= cell_html($week_map[$room][$thisday][$s], $query_strings, $is_invalid);
+          $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_strings, $is_invalid);
         }  // end looping through the time slots
         if ( FALSE != $row_labels_both_sides )
         {
@@ -1253,14 +1253,14 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
           $wmonth = date("m", $wt);
           $wyear = date("Y", $wt);
           $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
-          $query_strings = get_query_strings($area, $room, $wmonth, $wday, $wyear, $s);
+          $query_strings = get_query_strings($area_id, $room_id, $wmonth, $wday, $wyear, $s);
      
           // and then draw the cell
-          if (!isset($week_map[$room][$thisday][$s]))
+          if (!isset($week_map[$room_id][$thisday][$s]))
           {
-            $week_map[$room][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
+            $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
           }
-          $tbody .= cell_html($week_map[$room][$thisday][$s], $query_strings, $is_invalid);
+          $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_strings, $is_invalid);
         }
   
       }    // for loop
