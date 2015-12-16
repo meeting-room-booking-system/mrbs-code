@@ -26,7 +26,7 @@ function map_add_booking ($row, &$column, $am7, $pm7)
   //       id
   //       type
   //       description
-  //       entry_create_by
+  //       create_by
   //       status
   
   // $column is a column of the map of the screen that will be displayed
@@ -81,7 +81,7 @@ function map_add_booking ($row, &$column, $am7, $pm7)
   
   $user = getUserName();
   if (is_private_event($row['status'] & STATUS_PRIVATE) &&
-         !getWritable($row['entry_create_by'], $user, $row['room_id']))
+         !getWritable($row['create_by'], $user, $row['room_id']))
   {
     $row['status'] |= STATUS_PRIVATE;   // Set the private bit
     if ($is_private_field['entry.name'])
@@ -132,7 +132,7 @@ function map_add_booking ($row, &$column, $am7, $pm7)
     {
       $column[$s][$n]["data"] = $row['name'];
       $column[$s][$n]["long_descr"] = $row['description'];
-      $column[$s][$n]["create_by"] = $row['entry_create_by'];
+      $column[$s][$n]["create_by"] = $row['create_by'];
       $column[$s][$n]["room_id"] = $row['room_id'];
     }
     // otherwise just leave them blank (we'll fill in the first whole slot later)
@@ -248,7 +248,7 @@ function map_add_booking ($row, &$column, $am7, $pm7)
   {
     $column[$first_slot][0]["data"]       = $row['name'];
     $column[$first_slot][0]["long_descr"] = $row['description'];
-    $column[$first_slot][0]["create_by"]  = $row['entry_create_by']; 
+    $column[$first_slot][0]["create_by"]  = $row['create_by']; 
     $column[$first_slot][0]["room_id"]    = $row['room_id']; 
     $column[$first_slot][0]["slots"]      = $n_slots;
   }
@@ -770,7 +770,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
   $sql = "SELECT room_id, start_time, end_time, name, repeat_id,
                  E.id, type,
                  E.description, status,
-                 E.create_by AS entry_create_by
+                 create_by
             FROM $tbl_entry E, $tbl_room R
            WHERE E.room_id = R.id
              AND R.area_id = $area_id
@@ -798,7 +798,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
     //  row['id'] = id of this booking
     //  row['type'] = type (internal/external)
     //  row['description'] = description
-    //  row['entry_create_by'] = Creator/owner of entry
+    //  row['create_by'] = Creator/owner of entry
     //  row['status'] = Status code of the entry
   
     map_add_booking($row, $today[$row['room_id']][$day], $am7, $pm7);
@@ -1078,7 +1078,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   // row['id'] = Entry ID
   // row['description'] = Complete description
   // row['status'] = status code
-  // row['entry_create_by'] = User who created entry
+  // row['create_by'] = User who created entry
   // This data will be retrieved day-by-day
 
   $week_map = array();
@@ -1087,7 +1087,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   {
     $sql = "SELECT room_id, start_time, end_time, type, name, status, repeat_id,
                    id, description,
-                   create_by AS entry_create_by
+                   create_by
               FROM $tbl_entry
              WHERE room_id = $room
                AND start_time <= $pm7[$j] AND end_time > $am7[$j]
