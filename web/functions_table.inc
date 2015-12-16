@@ -957,7 +957,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
 
 function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight=NULL)
 {
-  global $tbl_entry, $tbl_room, $tbl_area;
+  global $tbl_room, $tbl_area;
   global $enable_periods, $periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
