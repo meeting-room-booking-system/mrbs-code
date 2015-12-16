@@ -23,7 +23,7 @@ function map_add_booking ($row, &$column, $am7, $pm7)
   //       end_time
   //       name
   //       repeat_id
-  //       entry_id
+  //       id
   //       type
   //       entry_description
   //       entry_create_by
@@ -119,7 +119,7 @@ function map_add_booking ($row, &$column, $am7, $pm7)
     }
     
     // fill in the id, type and start time
-    $column[$s][$n]["id"] = $row['entry_id'];
+    $column[$s][$n]["id"] = $row['id'];
     $column[$s][$n]["is_repeat"] = isset($row['repeat_id']);
     $column[$s][$n]["is_multiday_start"] = $is_multiday_start;
     $column[$s][$n]["is_multiday_end"] = $is_multiday_end;
@@ -768,7 +768,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
   // form of the original which had 3 BETWEEN parts. It selects all entries which
   // occur on or cross the current day.
   $sql = "SELECT room_id, start_time, end_time, name, repeat_id,
-                 E.id AS entry_id, type,
+                 E.id, type,
                  E.description AS entry_description, status,
                  E.create_by AS entry_create_by
             FROM $tbl_entry E, $tbl_room R
@@ -795,7 +795,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
     //  row['end_time'] = end time
     //  row['name'] = short description
     //  row['repeat_id'] = repeat type
-    //  row['entry_id'] = id of this booking
+    //  row['id'] = id of this booking
     //  row['type'] = type (internal/external)
     //  row['entry_description'] = description
     //  row['entry_create_by'] = Creator/owner of entry
@@ -1075,7 +1075,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   // row['end_time'] = End time
   // row['type'] = Entry type
   // row['name'] = Entry name (brief description)
-  // row['entry_id'] = Entry ID
+  // row['id'] = Entry ID
   // row['entry_description'] = Complete description
   // row['status'] = status code
   // row['entry_create_by'] = User who created entry
@@ -1086,7 +1086,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   for ($j = 0; $j<=($num_of_days-1) ; $j++)
   {
     $sql = "SELECT room_id, start_time, end_time, type, name, status, repeat_id,
-                   id AS entry_id, description AS entry_description,
+                   id, description AS entry_description,
                    create_by AS entry_create_by
               FROM $tbl_entry
              WHERE room_id = $room
