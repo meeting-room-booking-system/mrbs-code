@@ -767,7 +767,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
   // Note: The predicate clause 'start_time <= ...' is an equivalent but simpler
   // form of the original which had 3 BETWEEN parts. It selects all entries which
   // occur on or cross the current day.
-  $sql = "SELECT R.id AS room_id, start_time, end_time, name, repeat_id,
+  $sql = "SELECT room_id, start_time, end_time, name, repeat_id,
                  E.id AS entry_id, type,
                  E.description AS entry_description, status,
                  E.create_by AS entry_create_by
