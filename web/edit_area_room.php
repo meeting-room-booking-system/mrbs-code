@@ -890,7 +890,7 @@ if (isset($change_room) && !empty($room))
       <input type="hidden" name="room" value="<?php echo $row["id"]?>">
     
       <?php
-      $areas = get_areas($all=TRUE);
+      $areas = get_area_names($all=TRUE);
       if (empty($areas))
       {
         fatal_error(FALSE, get_vocab('noareas'));  // should not happen

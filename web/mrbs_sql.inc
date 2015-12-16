@@ -1374,6 +1374,40 @@ function get_area_name($id, $all=FALSE)
 }
 
 
+// Gets an array of area names indexed by area id.
+// If $all=TRUE then all areas are returned, otherwise just the ones that
+// are not disabled
+function get_area_names($all=FALSE)
+{
+  global $tbl_area;
+  
+  $areas = array();
+  
+  $sql = "SELECT id, area_name FROM $tbl_area";
+  if (empty($all))
+  {
+    $sql .= " WHERE disabled=0";
+  }
+  $sql .= " ORDER BY area_name";
+  
+  $res = sql_query($sql);
+  
+  if ($res === FALSE)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+  }
+  else
+  {
+    for ($i=0; $row = sql_row_keyed($res, $i); $i++)
+    {
+      $areas[$row['id']] = $row['area_name'];
+    }
+  }
+  
+  return $areas;
+}
+
+
 // Get the name of the room with id $id.   If $all is set to TRUE then all rooms
 // are searched, otherwise just those which have not been disabled
 // Returns FALSE if there is an error, NULL if the id does not exist
@@ -1438,39 +1472,6 @@ function get_rooms($area, $all=FALSE)
   return sql_all_rows_keyed($res);
 }
 
-
-// Gets an array of area names indexed by area id.
-// If $all=TRUE then all areas are returned, otherwise just the ones that
-// are not disabled
-function get_areas($all=FALSE)
-{
-  global $tbl_area;
-  
-  $areas = array();
-  
-  $sql = "SELECT id, area_name FROM $tbl_area";
-  if (empty($all))
-  {
-    $sql .= " WHERE disabled=0";
-  }
-  $sql .= " ORDER BY area_name";
-  
-  $res = sql_query($sql);
-  
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-  }
-  else
-  {
-    for ($i=0; $row = sql_row_keyed($res, $i); $i++)
-    {
-      $areas[$row['id']] = $row['area_name'];
-    }
-  }
-  
-  return $areas;
-}
 
 function mrbsGetRoomArea($id)
 {

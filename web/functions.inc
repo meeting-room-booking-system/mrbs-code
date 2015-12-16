@@ -2156,7 +2156,7 @@ function make_area_select_html($link, $current, $year, $month, $day)
   
   $out_html = '';
   
-  $areas = get_areas();
+  $areas = get_area_names();
 
   // Only show the areas if there are more than one of them, otherwise
   // there's no point
