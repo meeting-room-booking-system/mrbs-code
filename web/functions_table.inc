@@ -7,17 +7,17 @@ $first_last_width = 1;  // (%)
 $column_hidden_width  = 0;  // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column);
                             //     when $times_along_top is TRUE, hidden days (rows) are not shown at all
 
-function map_add_booking ($row, &$column, $am7, $pm7)
+function map_add_booking ($entry, &$column, $am7, $pm7)
 {
-  // Enters the contents of the booking found in $row into $column, which is
+  // Enters the contents of the booking found in $entry into $column, which is
   // a column of the map of the bookings being prepared ready for display.
   //
   // $column    the column of the map that is being prepared (see below)
-  // $row       a booking from the database
+  // $entry     a booking from the database
   // $am7       the start of the first slot of the booking day (Unix timestamp)
   // $pm7       the start of the last slot of the booking day (Unix timestamp)
   
-  // $row is expected to have the following field names, when present:
+  // $entry is expected to have the following keys, when present:
   //       room_id
   //       start_time
   //       end_time
@@ -80,29 +80,29 @@ function map_add_booking ($row, &$column, $am7, $pm7)
   global $is_private_field;
   
   $user = getUserName();
-  if (is_private_event($row['status'] & STATUS_PRIVATE) &&
-         !getWritable($row['create_by'], $user, $row['room_id']))
+  if (is_private_event($entry['status'] & STATUS_PRIVATE) &&
+         !getWritable($entry['create_by'], $user, $entry['room_id']))
   {
-    $row['status'] |= STATUS_PRIVATE;   // Set the private bit
+    $entry['status'] |= STATUS_PRIVATE;   // Set the private bit
     if ($is_private_field['entry.name'])
     {
-      $row['name']= "[".get_vocab('unavailable')."]";
+      $entry['name']= "[".get_vocab('unavailable')."]";
     }
     if ($is_private_field['entry.description'])
     {
-      $row['description']= "[".get_vocab('unavailable')."]";
+      $entry['description']= "[".get_vocab('unavailable')."]";
     }
   }
   else
   {
-    $row['status'] &= ~STATUS_PRIVATE;  // Clear the private bit
+    $entry['status'] &= ~STATUS_PRIVATE;  // Clear the private bit
   }
 
-  $is_multiday_start = ($row['start_time'] < $am7);
-  $is_multiday_end = ($row['end_time'] > ($pm7 + $resolution));
+  $is_multiday_start = ($entry['start_time'] < $am7);
+  $is_multiday_end = ($entry['end_time'] > ($pm7 + $resolution));
               
-  $start_t = max(round_t_down($row['start_time'], $resolution, $am7), $am7);
-  $end_t = min(round_t_up($row['end_time'], $resolution, $am7) - $resolution, $pm7);
+  $start_t = max(round_t_down($entry['start_time'], $resolution, $am7), $am7);
+  $end_t = min(round_t_up($entry['end_time'], $resolution, $am7) - $resolution, $pm7);
   
   // calculate the times used for indexing - we index by nominal seconds since the start
   // of the calendar day which has the start of the booking day
@@ -119,21 +119,21 @@ function map_add_booking ($row, &$column, $am7, $pm7)
     }
     
     // fill in the id, type and start time
-    $column[$s][$n]["id"] = $row['id'];
-    $column[$s][$n]["is_repeat"] = isset($row['repeat_id']);
+    $column[$s][$n]["id"] = $entry['id'];
+    $column[$s][$n]["is_repeat"] = isset($entry['repeat_id']);
     $column[$s][$n]["is_multiday_start"] = $is_multiday_start;
     $column[$s][$n]["is_multiday_end"] = $is_multiday_end;
-    $column[$s][$n]["status"] = $row['status'];
-    $column[$s][$n]["color"] = $row['type'];
+    $column[$s][$n]["status"] = $entry['status'];
+    $column[$s][$n]["color"] = $entry['type'];
     $column[$s][$n]["start_time"] = hour_min($start_s);
     $column[$s][$n]["slots"] = NULL;  // to avoid undefined index NOTICE errors
     // if it's a multiple booking also fill in the name and description
     if ($n > 0)
     {
-      $column[$s][$n]["data"] = $row['name'];
-      $column[$s][$n]["long_descr"] = $row['description'];
-      $column[$s][$n]["create_by"] = $row['create_by'];
-      $column[$s][$n]["room_id"] = $row['room_id'];
+      $column[$s][$n]["data"] = $entry['name'];
+      $column[$s][$n]["long_descr"] = $entry['description'];
+      $column[$s][$n]["create_by"] = $entry['create_by'];
+      $column[$s][$n]["room_id"] = $entry['room_id'];
     }
     // otherwise just leave them blank (we'll fill in the first whole slot later)
     // use NULL rather than '' just in case the value really is ''
@@ -246,10 +246,10 @@ function map_add_booking ($row, &$column, $am7, $pm7)
   // slot for the booking (provided it's not a multiple booking slot)
   if (!isset($column[$first_slot][1]["id"]))
   {
-    $column[$first_slot][0]["data"]       = $row['name'];
-    $column[$first_slot][0]["long_descr"] = $row['description'];
-    $column[$first_slot][0]["create_by"]  = $row['create_by']; 
-    $column[$first_slot][0]["room_id"]    = $row['room_id']; 
+    $column[$first_slot][0]["data"]       = $entry['name'];
+    $column[$first_slot][0]["long_descr"] = $entry['description'];
+    $column[$first_slot][0]["create_by"]  = $entry['create_by']; 
+    $column[$first_slot][0]["room_id"]    = $entry['room_id']; 
     $column[$first_slot][0]["slots"]      = $n_slots;
   }
 
