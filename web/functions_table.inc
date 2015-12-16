@@ -756,50 +756,16 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
   // going to be invalid.   Knowing whether or not there are possibly invalid slots
   // saves us bothering to do the detailed calculations of which slots are invalid.
   $is_possibly_invalid = !$enable_periods && is_possibly_invalid($am7, $pm7);
-            
+  
+  $entries = get_entries_by_area($area_id, $am7, $pm7);
+  
   // We want to build an array containing all the data we want to show
   // and then spit it out. 
-
-  // Get all appointments for today in the area that we care about.  We
-  // only get the data for enabled rooms.  (If the whole area is disabled
-  // then the main table won't get displayed anyway).
-
-  // Note: The predicate clause 'start_time <= ...' is an equivalent but simpler
-  // form of the original which had 3 BETWEEN parts. It selects all entries which
-  // occur on or cross the current day.
-  $sql = "SELECT E.*
-            FROM $tbl_entry E, $tbl_room R
-           WHERE E.room_id = R.id
-             AND R.area_id = $area_id
-             AND R.disabled = 0
-             AND start_time <= $pm7 AND end_time > $am7
-        ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
-
-  $res = sql_query($sql);
-  if (! $res)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
-
   $today = array();
 
-  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  foreach ($entries as $entry)
   {
-    // Each row we've got here is an appointment.
-    //  row['room_id'] = Room ID
-    //  row['start_time'] = start time
-    //  row['end_time'] = end time
-    //  row['name'] = short description
-    //  row['repeat_id'] = repeat type
-    //  row['id'] = id of this booking
-    //  row['type'] = type (internal/external)
-    //  row['description'] = description
-    //  row['create_by'] = Creator/owner of entry
-    //  row['status'] = Status code of the entry
-  
-    map_add_booking($row, $today[$row['room_id']][$day], $am7, $pm7);
-
+    map_add_booking($entry, $today[$entry['room_id']][$day], $am7, $pm7);
   }
 
   $n_time_slots = get_n_time_slots();
