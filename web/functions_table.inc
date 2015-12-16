@@ -25,7 +25,7 @@ function map_add_booking ($row, &$column, $am7, $pm7)
   //       repeat_id
   //       id
   //       type
-  //       entry_description
+  //       description
   //       entry_create_by
   //       status
   
@@ -90,7 +90,7 @@ function map_add_booking ($row, &$column, $am7, $pm7)
     }
     if ($is_private_field['entry.description'])
     {
-      $row['entry_description']= "[".get_vocab('unavailable')."]";
+      $row['description']= "[".get_vocab('unavailable')."]";
     }
   }
   else
@@ -131,7 +131,7 @@ function map_add_booking ($row, &$column, $am7, $pm7)
     if ($n > 0)
     {
       $column[$s][$n]["data"] = $row['name'];
-      $column[$s][$n]["long_descr"] = $row['entry_description'];
+      $column[$s][$n]["long_descr"] = $row['description'];
       $column[$s][$n]["create_by"] = $row['entry_create_by'];
       $column[$s][$n]["room_id"] = $row['room_id'];
     }
@@ -247,7 +247,7 @@ function map_add_booking ($row, &$column, $am7, $pm7)
   if (!isset($column[$first_slot][1]["id"]))
   {
     $column[$first_slot][0]["data"]       = $row['name'];
-    $column[$first_slot][0]["long_descr"] = $row['entry_description'];
+    $column[$first_slot][0]["long_descr"] = $row['description'];
     $column[$first_slot][0]["create_by"]  = $row['entry_create_by']; 
     $column[$first_slot][0]["room_id"]    = $row['room_id']; 
     $column[$first_slot][0]["slots"]      = $n_slots;
@@ -769,7 +769,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
   // occur on or cross the current day.
   $sql = "SELECT room_id, start_time, end_time, name, repeat_id,
                  E.id, type,
-                 E.description AS entry_description, status,
+                 E.description, status,
                  E.create_by AS entry_create_by
             FROM $tbl_entry E, $tbl_room R
            WHERE E.room_id = R.id
@@ -797,7 +797,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
     //  row['repeat_id'] = repeat type
     //  row['id'] = id of this booking
     //  row['type'] = type (internal/external)
-    //  row['entry_description'] = description
+    //  row['description'] = description
     //  row['entry_create_by'] = Creator/owner of entry
     //  row['status'] = Status code of the entry
   
@@ -1076,7 +1076,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   // row['type'] = Entry type
   // row['name'] = Entry name (brief description)
   // row['id'] = Entry ID
-  // row['entry_description'] = Complete description
+  // row['description'] = Complete description
   // row['status'] = status code
   // row['entry_create_by'] = User who created entry
   // This data will be retrieved day-by-day
@@ -1086,7 +1086,7 @@ function week_table_innerhtml($day, $month, $year, $room, $area, $timetohighligh
   for ($j = 0; $j<=($num_of_days-1) ; $j++)
   {
     $sql = "SELECT room_id, start_time, end_time, type, name, status, repeat_id,
-                   id, description AS entry_description,
+                   id, description,
                    create_by AS entry_create_by
               FROM $tbl_entry
              WHERE room_id = $room
