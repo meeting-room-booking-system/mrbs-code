@@ -957,7 +957,6 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
 
 function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohighlight=NULL)
 {
-  global $tbl_room, $tbl_area;
   global $enable_periods, $periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
@@ -965,24 +964,14 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
   global $first_last_width, $column_hidden_width, $hidden_days;
 
   // Check that we've got a valid, enabled room
-  $sql = "SELECT COUNT(*)
-            FROM $tbl_room R, $tbl_area A
-           WHERE R.id=$room_id
-             AND R.area_id=A.id
-             AND R.disabled=0
-             AND A.disabled = 0";
+  $room_name = get_room_name($room_id);
   
-  $n_rooms = sql_query1($sql);
-  if (($n_rooms < 0) || ($n_rooms > 1))
+  if ($room_name === FALSE)
   {
-    if ($n_rooms > 1)
-    {
-      // Should never happen
-      trigger_error("Internal error: multiple rooms with same id", E_USER_WARNING);
-    }
+    // Should never happen
     fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
-  if ($n_rooms == 0)
+  if (is_null($room_name))
   {
     // No rooms have been created yet, or else they are all disabled
     // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not

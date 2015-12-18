@@ -1461,21 +1461,23 @@ function get_area_names($all=FALSE)
 }
 
 
-// Get the name of the room with id $id.   If $all is set to TRUE then all rooms
+// Get the name of the room with id $room_id.   If $all is set to TRUE then all rooms
 // are searched, otherwise just those which have not been disabled
 // Returns FALSE if there is an error, NULL if the id does not exist
-function get_room_name($id, $all=FALSE)
+function get_room_name($room_id, $all=FALSE)
 {
-  global $tbl_room;
+  global $tbl_room, $tbl_area;
   
-  $id = (int)$id;
+  $room_id = (int)$room_id;
   
   $sql = "SELECT room_name
-            FROM $tbl_room
-           WHERE id=$id";
+            FROM $tbl_room R, $tbl_area A
+           WHERE R.id=$room_id
+             AND R.area_id=A.id";
+             
   if (empty($all))
   {
-    $sql .= " AND disabled=0";
+    $sql .= " AND R.disabled=0 AND A.disabled=0";
   }
   $sql .= " LIMIT 1";
   
