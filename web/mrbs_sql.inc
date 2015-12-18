@@ -39,7 +39,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
   }
   if ($repignore > 0)
   {
-    $sql .= " AND repeat_id <> $repignore";
+    $sql .= " AND (repeat_id IS NULL OR repeat_id <> $repignore)";
   }
   $sql .= " ORDER BY start_time";
 
