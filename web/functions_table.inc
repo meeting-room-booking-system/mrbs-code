@@ -1125,10 +1125,10 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
       else  
       {
         // Put the date into a data attribute so that it can be picked up by JavaScript
-        $header_inner .= '<th data-date="' . $date . '" style="width: ' . $column_width . '%>' .
+        $header_inner .= '<th data-date="' . $date . '" style="width: ' . $column_width . '%">' .
                          '<a href="day.php?year=' . strftime("%Y", $t) . 
                          '&amp;month=' . strftime("%m", $t) . '&amp;day=' . strftime('%d', $t) . 
-                         '&amp;area=' . $area_id . ' title="' . get_vocab('viewday') . '">' .
+                         '&amp;area=' . $area_id . '" title="' . get_vocab('viewday') . '">' .
                          utf8_strftime($dformat, $t) . "</a></th>\n";
       }
     }  // for ($j = 0 ...
