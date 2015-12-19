@@ -1290,7 +1290,7 @@ init = function(args) {
                   checkConflicts();
                 });
     formFields.not(':checkbox')
-              .change(function() { 
+              .change(function() {
                   checkConflicts();
                 });
      
@@ -1358,7 +1358,15 @@ init = function(args) {
     <?php
   } // if (function_exists('json_encode'))
 
+  // Actions to take when the repeat end datepicker is updated (it doesn't fire
+  // a change event so won't be caught by the general handler above)
+  ?>
+  $('#rep_end_datepicker').bind('datePickerUpdated', function() {
+    checkConflicts();
+  });
   
+  
+  <?php
   // Actions to take when the start and end datepickers are closed
   ?>
   $('#start_datepicker, #end_datepicker').bind('datePickerUpdated', function() {
