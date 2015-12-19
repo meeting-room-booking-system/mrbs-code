@@ -472,7 +472,9 @@ function get_entries_by_area($area_id, $interval_start, $interval_end)
     fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
   
-  return sql_all_rows_keyed($res);
+  $result = sql_all_rows_keyed($res);
+  sql_free($res);
+  return $result;
 }
 
 
@@ -497,7 +499,9 @@ function get_entries_by_room($room_id, $interval_start, $interval_end)
     fatal_error(TRUE, get_vocab("fatal_db_error"));
   }
   
-  return sql_all_rows_keyed($res);
+  $result = sql_all_rows_keyed($res);
+  sql_free($res);
+  return $result;
 }
 
 

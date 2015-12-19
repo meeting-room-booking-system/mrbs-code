@@ -41,7 +41,14 @@ require_once "${dbsys}.inc";
 function sql_free($r)
 {
   global $dbsys;
-
+  
+  if (!is_resource($r))
+  {
+    // No need to do anything - resource has probably been
+    // freed automatically by reading to its end
+    return;
+  }
+  
   if (func_num_args() > 1)
   {
     $handle = func_get_arg(1);
