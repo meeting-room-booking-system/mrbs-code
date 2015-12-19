@@ -1261,6 +1261,14 @@ if (($edit_type == "series") && $repeats_allowed)
     // fields are disabled and the repeat type is not a monthly repeat
     if (!$disabled || ($rep_type == REP_MONTHLY))
     {
+      // If the existing repeat type is other than a monthly repeat, we'll
+      // need to define a default month type in case the user decides to change
+      // to a monthly repeat
+      if (!isset($month_type))
+      {
+        $month_type = REP_MONTH_ABSOLUTE;
+      }
+      
       echo "<fieldset class= \"rep_type_details js_none\" id=\"rep_monthly\">\n";
       echo "<legend></legend>\n";
       
