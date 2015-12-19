@@ -680,42 +680,30 @@ if (!isset($returl))
 
 if (isset($id))
 {
-  $sql = "SELECT *
-            FROM $tbl_entry
-           WHERE id=$id
-           LIMIT 1";
-   
-  $res = sql_query($sql);
-  if (! $res)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(TRUE, get_vocab("fatal_db_error"));
-  }
-  if (sql_count($res) != 1)
+  $entry = get_entry_by_id($id);
+  
+  if (is_null($entry))
   {
     fatal_error(1, get_vocab("entryid") . $id . get_vocab("not_found"));
   }
-
-  $row = sql_row_keyed($res, 0);
-  sql_free($res);
   
   // We've possibly got a new room and area, so we need to update the settings
   // for this area.
-  $area = get_area($row['room_id']);
+  $area = get_area($entry['room_id']);
   get_area_settings($area);
   
-  $private = $row['status'] & STATUS_PRIVATE;
+  $private = $entry['status'] & STATUS_PRIVATE;
   if ($private_mandatory) 
   {
     $private = $private_default;
   }
   // Need to clear some data if entry is private and user
   // does not have permission to edit/view details
-  if (isset($copy) && ($user != $row['create_by'])) 
+  if (isset($copy) && ($user != $entry['create_by'])) 
   {
     // Entry being copied by different user
     // If they don't have rights to view details, clear them
-    $privatewriteable = getWritable($row['create_by'], $user, $row['room_id']);
+    $privatewriteable = getWritable($entry['create_by'], $user, $entry['room_id']);
     $keep_private = (is_private_event($private) && !$privatewriteable);
   }
   else
@@ -728,7 +716,7 @@ if (isset($id))
   $rep_type = REP_NONE;
   $rep_num_weeks = 1;
   
-  foreach ($row as $column => $value)
+  foreach ($entry as $column => $value)
   {
     switch ($column)
     {
@@ -759,13 +747,13 @@ if (isset($id))
         // so we want edit_entry_handler to assign a new UID, etc.
         if (!$copy)
         {
-          $original_room_id = $row['room_id'];
+          $original_room_id = $entry['room_id'];
         }
       case 'ical_uid':
       case 'ical_sequence':
       case 'ical_recur_id':
       case 'entry_type':
-        $$column = $row[$column];
+        $$column = $entry[$column];
         break;
       
       // These columns can be made private [not sure about 'type' though - haven't
@@ -773,36 +761,36 @@ if (isset($id))
       case 'name':
       case 'description':
       case 'type':
-        $$column = ($keep_private && isset($is_private_field["entry.$column"]) && $is_private_field["entry.$column"]) ? '' : $row[$column];
+        $$column = ($keep_private && isset($is_private_field["entry.$column"]) && $is_private_field["entry.$column"]) ? '' : $entry[$column];
         break;
         
       case 'status':
         // No need to do the privacy status as we've already done that.
         // Just do the confirmation status
-        $confirmed = !($row['status'] & STATUS_TENTATIVE);
+        $confirmed = !($entry['status'] & STATUS_TENTATIVE);
         break;
       
       case 'repeat_id':
-        $rep_id      = $row['repeat_id'];
+        $rep_id      = $entry['repeat_id'];
         break;
         
       case 'create_by':
         // If we're copying an existing entry then we need to change the create_by (they could be
         // different if it's an admin doing the copying)
-        $create_by   = (isset($copy)) ? $user : $row['create_by'];
+        $create_by   = (isset($copy)) ? $user : $entry['create_by'];
         break;
         
       case 'start_time':
-        $start_time = $row['start_time'];
+        $start_time = $entry['start_time'];
         break;
         
       case 'end_time':
-        $end_time = $row['end_time'];
-        $duration = $row['end_time'] - $row['start_time'] - cross_dst($row['start_time'], $row['end_time']);
+        $end_time = $entry['end_time'];
+        $duration = $entry['end_time'] - $entry['start_time'] - cross_dst($entry['start_time'], $entry['end_time']);
         break;
         
       default:
-        $custom_fields[$column] = ($keep_private && isset($is_private_field["entry.$column"]) && $is_private_field["entry.$column"]) ? '' : $row[$column];
+        $custom_fields[$column] = ($keep_private && isset($is_private_field["entry.$column"]) && $is_private_field["entry.$column"]) ? '' : $entry[$column];
         break;
     }
   }

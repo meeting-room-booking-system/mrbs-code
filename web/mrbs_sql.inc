@@ -426,6 +426,29 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
 }
 
 
+function get_entry_by_id($id)
+{
+  global $tbl_entry;
+  
+  $sql = "SELECT *
+            FROM $tbl_entry
+           WHERE id=$id
+           LIMIT 1";
+   
+  $res = sql_query($sql);
+  
+  if ($res === FALSE)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    fatal_error(TRUE, get_vocab("fatal_db_error"));
+  }
+  
+  $result = (sql_count($res) == 0) ? NULL : sql_row_keyed($res, 0);
+  sql_free($res);
+  return $result;
+}
+
+
 // Get all the entries for the area with $area_id in the interval that starts at $interval_start
 // and ends at $interval_start (both Unix timestamps).   Only gets entries for enabled rooms.
 // Returns an array of entries.   Each element of the array is itself an array with keys
