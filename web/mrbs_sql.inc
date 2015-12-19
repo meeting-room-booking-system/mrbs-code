@@ -188,7 +188,7 @@ function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $o
       }
       if ($repignore > 0)
       {
-        $sql .= " AND E.repeat_id <> $repignore";
+        $sql .= " AND (E.repeat_id IS NULL OR E.repeat_id <> $repignore)";
       }
       
       $existing[$location][$interval_type][$interval_start] = sql_query1($sql);
