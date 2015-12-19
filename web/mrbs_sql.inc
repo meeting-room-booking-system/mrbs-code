@@ -430,6 +430,11 @@ function get_entry_by_id($id)
 {
   global $tbl_entry;
   
+  if (!isset($id))
+  {
+    return NULL;
+  }
+  
   $sql = "SELECT *
             FROM $tbl_entry
            WHERE id=$id
@@ -1865,7 +1870,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
     else
     {
       $old_bookings = array();
-      $old_bookings[] = getBooking($id);
+      $old_bookings[] = get_entry_by_id($id);
     }
     
     foreach ($old_bookings as $old_booking)
@@ -2031,31 +2036,6 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
   return $result;
 }
 
-function getBooking($id)
-{
-  global $tbl_entry;
-  
-  if (!isset($id))
-  {
-    return NULL;
-  }
-  
-  $sql = "SELECT * FROM $tbl_entry WHERE id=$id LIMIT 1";
-  $res = sql_query($sql);
-  
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    return FALSE;
-  }
-  
-  if (sql_count($res) == 0)
-  {
-    return NULL;
-  }
-  
-  return sql_row_keyed($res, 0);
-}
 
 function get_bookings_in_series($repeat_id)
 {
@@ -2071,7 +2051,7 @@ function get_bookings_in_series($repeat_id)
   }
   foreach ($res as $id)
   {
-    $bookings[] = getBooking($id);
+    $bookings[] = get_entry_by_id($id);
   }
   return $bookings;
 }
