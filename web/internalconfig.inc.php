@@ -129,6 +129,15 @@ if ($dbsys == 'mysql')
   trigger_error($message, E_USER_NOTICE);
 }
 
+// Variables no longer used in versions of MRBS > 1.5.0
+if (isset($db_nopersist))
+{
+  $db_persist = !$db_nopersist;
+  $message = 'Please check your config file.  The $db_nopersist config variable ' .
+             'has been replaced by $db_persist';
+  trigger_error($message, E_USER_NOTICE);
+}
+
 
 /********************************************************
  * Checking

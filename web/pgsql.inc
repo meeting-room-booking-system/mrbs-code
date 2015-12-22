@@ -621,18 +621,13 @@ function sql_pgsql_connect($host, $username, $password, $db_name,
 //
 function sql_pgsql_default_connect()
 {
-  global $sql_pgsql_conn, $db_nopersist, $db_host, $db_login, $db_password,
+  global $sql_pgsql_conn, $db_persist, $db_host, $db_login, $db_password,
          $db_database, $db_port;
 
   /////////////////////////////////////////////
   // Open the standard MRBS database connection
 
-  $persist = 1;
-  if (!empty($db_nopersist) && $db_nopersist)
-  {
-    $persist = 0;
-  }
-  global $sql_pgsql_conn;
+  $persist = !empty($db_persist);
 
   $port = null;
   // If a port is specified, cast it to int for safety

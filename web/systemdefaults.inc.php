@@ -79,8 +79,13 @@ $db_password = 'mrbs-password';
 // Prefix for table names.  This will allow multiple installations where only
 // one database is available
 $db_tbl_prefix = "mrbs_";
-// Uncomment this to NOT use PHP persistent (pooled) database connections:
-// $db_nopersist = 1;
+// Set $db_persist to TRUE to use PHP persistent (pooled) database connections.  Note
+// that persistent connections are not recommended unless your system suffers significant
+// performance problems without them.   They can cause problems with transactions and
+// locks (see http://php.net/manual/en/features.persistent-connections.php) and although
+// MRBS tries to avoid those problems, it is generally better not to use persistent
+// connections if you can.
+$db_persist = FALSE;
 
 
 /*********************************

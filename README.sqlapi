@@ -19,8 +19,8 @@ concurrent connections as your Apache "MaxClients" setting times the number
 of unique persistent connection strings (PostgreSQL conninfo's, unique
 combinations of user/password/database) implemented on your site. Note that
 the default for PostgreSQL is a maximum of 32 connections, and the default
-for Apache MaxClients is 150. If you do not want to use persistent
-connections, set $db_nopersist as described below.
+for Apache MaxClients is 150. If you want to use persistent connections,
+see the $persist parameter to sql_connect() below.
 
 -----------------------------------------------------------------------------
 
@@ -227,11 +227,11 @@ sql_mutex_unlock($name)
 sql_version()
   Return a string identifying the database system and version.
 
-sql_connect($host, $username, $password, $db_name, $persist)
+sql_connect($host, $username, $password, $db_name, $persist, $db_port)
   Connects to the specified database using the specified credentials,
-  optionally using persistent database connections. Returns an MRBS
-  specific database handle, which can be passed as the last argument of
-  all the other sql_*() functions.
+  optionally using persistent database connections and a port number.
+  Returns an MRBS specific database handle, which can be passed as the
+  last argument of all the other sql_*() functions.
 
 -----------------------------------------------------------------------------
 

@@ -368,14 +368,15 @@ If the database server and web server are the same machine, use
 $db_host="localhost". Or, with PostgreSQL only, you can use $db_host="" to
 use Unix Domain Sockets to connect to the database server on the same machine.
 
-By default, MRBS will use PHP persistent (pooled) database connections,
-for better performance. Depending on your web server and database server
-configuration, it is possible that this will cause MRBS to reach the maximum
-number of connections allowed to your database, since each Apache child
-process may keep a connection open. Then, users will randomly get errors
-when trying connecting to MRBS.  If you would rather use non-persistent
-database connections, uncomment the line in "config.inc.php" which sets the
-$db_nopersist variable.
+By default, MRBS will not use PHP persistent (pooled) database connections.
+Persistent connections can sometimes give better performance, but they can
+also cause problems with transactions and locks.  For more details see
+http://php.net/manual/en/features.persistent-connections.php   Although
+MRBS is designed to work with persistent connections we recommend that you
+don't use them unless they give a significant performance boost.  To use
+persistent connections set
+
+    $db_persist = TRUE;
 
 If you want to install multiple sets of mrbs tables when only one
 SQL database is available, or resolve table name conflicts, you have

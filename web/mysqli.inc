@@ -602,17 +602,13 @@ function sql_mysqli_connect($host, $username, $password,
 //
 function sql_mysqli_default_connect()
 {
-  global $sql_mysqli_conn, $db_nopersist, $db_host, $db_login, $db_password,
+  global $sql_mysqli_conn, $db_persist, $db_host, $db_login, $db_password,
          $db_database, $db_port;
 
   /////////////////////////////////////////////
   // Open the standard MRBS database connection
 
-  $persist = 1;
-  if (!empty($db_nopersist) && $db_nopersist)
-  {
-    $persist = 0;
-  }
+  $persist = !empty($db_persist);
 
   $port = NULL;
   // If a port is specified, cast it to int as mysqli doesn't accept
