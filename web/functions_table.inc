@@ -463,8 +463,8 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
     // $c is the colour of the cell that the browser sees. Zebra stripes normally,
     // row_highlight if we're highlighting that line and the appropriate colour if
     // it is booked (determined by the type).
-    // We tell if its booked by $id having something in it
-    if (isset($id))
+    // We tell if its booked by $id and $descr having something in them
+    if (isset($id) && isset($descr))
     {
       $c = $color;
       if ($status & STATUS_PRIVATE)
