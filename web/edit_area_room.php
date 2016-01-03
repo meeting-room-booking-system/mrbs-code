@@ -1072,14 +1072,14 @@ if (isset($change_area) &&!empty($area))
     showAccessDenied($day, $month, $year, $area, "");
     exit();
   }
+  
   // Get the details for this area
-  $res = sql_query("SELECT * FROM $tbl_area WHERE id=$area LIMIT 1");
-  if (! $res)
+  $area_data = get_area_details($area);
+  if (empty($area_data))
   {
     fatal_error(0, get_vocab("error_area") . $area . get_vocab("not_found"));
   }
-  $row = sql_row_keyed($res, 0);
-  sql_free($res);
+
   // Get the settings for this area, from the database if they are there, otherwise from
   // the config file.    A little bit inefficient repeating the SQL query
   // we've just done, but it makes the code simpler and this page is not used very often.
@@ -1108,13 +1108,13 @@ if (isset($change_area) &&!empty($area))
   
   echo "<fieldset>\n";
   echo "<legend>" . get_vocab("general_settings") . "</legend>\n";
-  echo "<input type=\"hidden\" name=\"area\" value=\"" . $row["id"] . "\">\n";
+  echo "<input type=\"hidden\" name=\"area\" value=\"" . $area_data["id"] . "\">\n";
   
   // Area name  
   echo "<div>\n";
   $params = array('label' => get_vocab("name") . ":",
                   'name'  => 'area_name',
-                  'value' => $row['area_name']);
+                  'value' => $area_data['area_name']);
   generate_input($params);
   echo "</div>\n";
         
@@ -1125,7 +1125,7 @@ if (isset($change_area) &&!empty($area))
   $params = array('label'       => get_vocab("status") . ":",
                   'label_title' => get_vocab("disabled_area_note"),
                   'name'        => 'area_disabled',
-                  'value'       => ($row['disabled']) ? '1' : '0',
+                  'value'       => ($area_data['disabled']) ? '1' : '0',
                   'options'     => $options,
                   'force_assoc' => TRUE);
   generate_radio_group($params);
@@ -1139,7 +1139,7 @@ if (isset($change_area) &&!empty($area))
   $params = array('label'       => get_vocab("area_admin_email") . ":",
                   'label_title' => get_vocab("email_list_note"),
                   'name'        => 'area_admin_email',
-                  'value'       => $row['area_admin_email'],
+                  'value'       => $area_data['area_admin_email'],
                   'attributes'  => array('rows="4"', 'cols="40"'));
   generate_textarea($params);
   echo "</div>\n";
@@ -1149,7 +1149,7 @@ if (isset($change_area) &&!empty($area))
   $params = array('label'       => get_vocab("custom_html") . ":",
                   'label_title' => get_vocab("custom_html_note"),
                   'name'        => 'custom_html',
-                  'value'       => $row['custom_html'],
+                  'value'       => $area_data['custom_html'],
                   'attributes'  => array('rows="4"', 'cols="40"'));
   generate_textarea($params);
   echo "</div>\n";

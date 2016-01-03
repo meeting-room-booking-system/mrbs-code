@@ -1493,6 +1493,37 @@ function get_area_names($all=FALSE)
 }
 
 
+// Get all the area details for $area_id.
+// Returns FALSE on error, NULL if $area_id does not exist.
+function get_area_details($area_id)
+{
+  global $tbl_area;
+  
+  $sql = "SELECT *
+            FROM $tbl_area
+           WHERE id=$area_id
+           LIMIT 1";
+  
+  $res = sql_query($sql);
+  
+  if ($res === FALSE)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    return FALSE;
+  }
+  
+  if (sql_count($res) == 0)
+  {
+    return NULL;
+  }
+  
+  $result = sql_row_keyed($res, 0);
+  sql_free($res);
+  
+  return $result;
+}
+
+
 // Get the name of the room with id $room_id.   If $all is set to TRUE then all rooms
 // are searched, otherwise just those which have not been disabled
 // Returns FALSE if there is an error, NULL if the id does not exist
@@ -1554,7 +1585,10 @@ function get_room_details($room_id)
     return NULL;
   }
   
-  return sql_row_keyed($res, 0);
+  $result = sql_row_keyed($res, 0);
+  sql_free($res);
+  
+  return $result;
 }
 
 
