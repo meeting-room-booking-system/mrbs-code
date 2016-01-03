@@ -1531,6 +1531,32 @@ function get_room_name($room_id, $all=FALSE)
 }
 
 
+function get_room_details($room_id)
+{
+  global $tbl_room;
+  
+  $sql = "SELECT *
+            FROM $tbl_room
+           WHERE id=$room_id
+           LIMIT 1";
+  
+  $res = sql_query($sql);
+  
+  if ($res === FALSE)
+  {
+    trigger_error(sql_error(), E_USER_WARNING);
+    return FALSE;
+  }
+  
+  if (sql_count($res) == 0)
+  {
+    return NULL;
+  }
+  
+  return sql_row_keyed($res, 0);
+}
+
+
 // If $all=TRUE then all rooms are returned, otherwise just the ones that
 // are not disabled
 function get_rooms($area, $all=FALSE)

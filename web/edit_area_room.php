@@ -857,12 +857,12 @@ $disabled = !$is_admin;
 // THE ROOM FORM
 if (isset($change_room) && !empty($room))
 {
-  $res = sql_query("SELECT * FROM $tbl_room WHERE id=$room LIMIT 1");
-  if (! $res)
+  $room_data = get_room_details($room);
+
+  if (empty($room_data))
   {
     fatal_error(0, get_vocab("error_room") . $room . get_vocab("not_found"));
   }
-  $row = sql_row_keyed($res, 0);
   
   echo "<h2>\n";
   echo ($is_admin) ? get_vocab("editroom") : get_vocab("viewroom");
@@ -887,7 +887,7 @@ if (isset($change_room) && !empty($room))
     
       <fieldset>
       <legend></legend>
-      <input type="hidden" name="room" value="<?php echo $row["id"]?>">
+      <input type="hidden" name="room" value="<?php echo $room_data["id"]?>">
     
       <?php
       $areas = get_area_names($all=TRUE);
@@ -902,11 +902,11 @@ if (isset($change_room) && !empty($room))
                       'name'          => 'new_area',
                       'options'       => $areas,
                       'force_assoc'   => TRUE,
-                      'value'         => $row['area_id'],
+                      'value'         => $room_data['area_id'],
                       'disabled'      => $disabled,
                       'create_hidden' => FALSE);
       generate_select($params);
-      echo "<input type=\"hidden\" name=\"old_area\" value=\"" . $row['area_id'] . "\">\n";
+      echo "<input type=\"hidden\" name=\"old_area\" value=\"" . $room_data['area_id'] . "\">\n";
       echo "</div>\n";
       
       // First of all deal with the standard MRBS fields
@@ -914,11 +914,11 @@ if (isset($change_room) && !empty($room))
       echo "<div>\n";
       $params = array('label'         => get_vocab("name") . ":",
                       'name'          => 'room_name',
-                      'value'         => $row['room_name'],
+                      'value'         => $room_data['room_name'],
                       'disabled'      => $disabled,
                       'create_hidden' => FALSE);
       generate_input($params);
-      echo "<input type=\"hidden\" name=\"old_room_name\" value=\"" . htmlspecialchars($row["room_name"]) . "\">\n";
+      echo "<input type=\"hidden\" name=\"old_room_name\" value=\"" . htmlspecialchars($room_data["room_name"]) . "\">\n";
       echo "</div>\n";
       
       // Status (Enabled or Disabled)
@@ -930,7 +930,7 @@ if (isset($change_room) && !empty($room))
         $params = array('label'         => get_vocab("status") . ":",
                         'label_title'   => get_vocab("disabled_room_note"),
                         'name'          => 'room_disabled',
-                        'value'         => ($row['disabled']) ? '1' : '0',
+                        'value'         => ($room_data['disabled']) ? '1' : '0',
                         'options'       => $options,
                         'force_assoc'   => TRUE,
                         'disabled'      => $disabled,
@@ -946,7 +946,7 @@ if (isset($change_room) && !empty($room))
         $params = array('label'         => get_vocab("sort_key") . ":",
                         'label_title'   => get_vocab("sort_key_note"),
                         'name'          => 'sort_key',
-                        'value'         => $row['sort_key'],
+                        'value'         => $room_data['sort_key'],
                         'disabled'      => $disabled,
                         'create_hidden' => FALSE);
         generate_input($params);
@@ -957,7 +957,7 @@ if (isset($change_room) && !empty($room))
       echo "<div>\n";
       $params = array('label'         => get_vocab("description") . ":",
                       'name'          => 'description',
-                      'value'         => $row['description'],
+                      'value'         => $room_data['description'],
                       'disabled'      => $disabled,
                       'create_hidden' => FALSE);
       generate_input($params);
@@ -967,7 +967,7 @@ if (isset($change_room) && !empty($room))
       echo "<div>\n";
       $params = array('label'         => get_vocab("capacity") . ":",
                       'name'          => 'capacity',
-                      'value'         => $row['capacity'],
+                      'value'         => $room_data['capacity'],
                       'disabled'      => $disabled,
                       'create_hidden' => FALSE);
       generate_input($params);
@@ -978,7 +978,7 @@ if (isset($change_room) && !empty($room))
       $params = array('label'         => get_vocab("room_admin_email") . ":",
                       'label_title'   => get_vocab("email_list_note"),
                       'name'          => 'room_admin_email',
-                      'value'         => $row['room_admin_email'],
+                      'value'         => $room_data['room_admin_email'],
                       'attributes'    => array('rows="4"', 'cols="40"'),
                       'disabled'      => $disabled,
                       'create_hidden' => FALSE);
@@ -993,7 +993,7 @@ if (isset($change_room) && !empty($room))
         $params = array('label'         => get_vocab("custom_html") . ":",
                         'label_title'   => get_vocab("custom_html_note"),
                         'name'          => 'custom_html',
-                        'value'         => $row['custom_html'],
+                        'value'         => $room_data['custom_html'],
                         'attributes'    => array('rows="4"', 'cols="40"'),
                         'disabled'      => $disabled,
                         'create_hidden' => FALSE);
@@ -1009,7 +1009,7 @@ if (isset($change_room) && !empty($room))
           echo "<div>\n";
           $params = array('label'         => get_loc_field_name($tbl_room, $field['name']) . ":",
                           'name'          => VAR_PREFIX . $field['name'],
-                          'value'         => $row[$field['name']],
+                          'value'         => $room_data[$field['name']],
                           'disabled'      => $disabled,
                           'create_hidden' => FALSE);
           // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
@@ -1059,7 +1059,7 @@ if (isset($change_room) && !empty($room))
   // Now the custom HTML
   echo "<div id=\"custom_html\">\n";
   // no htmlspecialchars() because we want the HTML!
-  echo (!empty($row['custom_html'])) ? $row['custom_html'] . "\n" : "";
+  echo (!empty($room_data['custom_html'])) ? $room_data['custom_html'] . "\n" : "";
   echo "</div>\n";
 }
 
