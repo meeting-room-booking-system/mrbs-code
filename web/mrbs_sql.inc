@@ -1530,7 +1530,8 @@ function get_room_name($room_id, $all=FALSE)
   return $row[0];
 }
 
-
+// Get all the room details for $room_id.
+// Returns FALSE on error, NULL if $room_id does not exist.
 function get_room_details($room_id)
 {
   global $tbl_room;
