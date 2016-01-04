@@ -94,6 +94,13 @@ function authValidateUser($user, $pass)
         }
         break;
 
+      case 'sha256':
+        if (hash('sha256', $pass) == $row[0])
+        {
+          $retval = 1;
+        }
+        break;
+
       case 'crypt':
         $recrypt = crypt($pass,$row[0]);
         if ($row[0] == $recrypt)
