@@ -157,6 +157,45 @@ function authGetUserLevel($user)
     }
   }
 
+  // Get user level from external database
+  if (isset($auth['db_ext']['column_name_level']) && ($auth['db_ext']['column_name_level'] != ''))
+  {
+     $persist = 0;
+     $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : NULL;
+     
+     $conn = sql_connect($auth['db_ext']['db_system'],
+                         $auth['db_ext']['db_host'],
+                         $auth['db_ext']['db_username'],
+                         $auth['db_ext']['db_password'],
+                         $auth['db_ext']['db_name'],
+                         $persist,
+                         $port);
+
+     // sql_syntax_casesensitive_equals() does the escaping.   We need an exact match -
+     // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
+     $query = "SELECT " . sql_quote($auth['db_ext']['column_name_level']) . "
+                 FROM " . sql_quote($auth['db_ext']['db_table']) . "
+                WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'], utf8_strtolower($user)) . "
+                LIMIT 1";
+
+     $r = sql_query($query, $conn);
+     
+     if ($r === FALSE)
+     {
+       trigger_error(sql_error($conn), E_USER_WARNING);
+       fatal_error(FALSE, get_vocab("fatal_db_error"));
+     }
+     
+     if (sql_count($r) == 0)
+     {
+       return 0;
+     }
+     
+     $row = sql_row($r, 0, $conn);
+     
+     return $row[0];
+  }
+
   // Everybody else is access level '1'
   return 1;
 }
