@@ -29,7 +29,7 @@ echo "\n</p>\n";
 
 echo "<h3>" . get_vocab("help") . "</h3>\n";
 echo "<p>\n";
-echo get_vocab("please_contact") . '<a href="mailto:' . htmlspecialchars($mrbs_admin_email)
+echo get_vocab("please_contact") . '<a href="mailto:' . rawurlencode($mrbs_admin_email)
   . '">' . htmlspecialchars($mrbs_admin)
   . "</a> " . get_vocab("for_any_questions") . "\n";
 echo "</p>\n";
