@@ -327,6 +327,22 @@ function generate_submit_buttons()
 }
 
 
+// Works out whether the machine architecture is little-endian
+function is_little_endian()
+{
+  static $result;
+  
+  if (!isset($result))
+  {
+    $testint = 0x00FF;
+    $p = pack('S', $testint);
+    $result = ($testint===current(unpack('v', $p)));
+  }
+  
+  return $result;
+}
+
+
 // Converts a string from the standard MRBS character set to the character set
 // to be used for CSV files
 function csv_conv($string)
@@ -338,6 +354,13 @@ function csv_conv($string)
   // standard (though it has the disadvantage that it adds in BOMs which we have to remove)
   if (function_exists('iconv'))
   { 
+    if ($out_charset == 'UTF-16')
+    {
+      // If the endian-ness hasn't been specified, then state it explicitly, because
+      // Windows and Unix will use different defaults on the same architecture.
+      $out_charset .= (is_little_endian()) ? 'LE' : 'BE';
+    }
+    
     $result = iconv($in_charset, $out_charset, $string);
     // iconv() will add in a BOM if the output encoding requires one, but as we are only
     // dealing with parts of a file we don't want any BOMs because we add them separately

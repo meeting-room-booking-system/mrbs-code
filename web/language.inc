@@ -1134,7 +1134,7 @@ function get_bom($charset)
   switch(utf8_strtolower($charset))
   {
     case 'utf-8':
-      return "\xEF\xBB\xBF";
+      return pack('CCC', 0xEF, 0xBB, 0xBF);
       break;
     case 'utf-16':
       return pack('S', 0xFEFF);
