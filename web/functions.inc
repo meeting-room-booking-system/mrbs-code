@@ -1893,16 +1893,18 @@ function get_rep_day_list($rep_opt)
 {
   global $weekstarts;
   
-  $rep_day_list = "";
-  for ($i = 0; $i < 7; $i++)
+  $rep_days = array();
+  
+  for ($i=0; $i<7; $i++)
   {
     $daynum = ($i + $weekstarts) % 7;
     if ($rep_opt[$daynum])
     {
-      $rep_day_list .= day_name($daynum) . " ";
+      $rep_days[] = day_name($daynum);
     }
   }
-  return $rep_day_list;
+  
+  return implode(' ', $rep_days);
 }
 
 
