@@ -989,17 +989,21 @@ function mrbsCreateRepeatingEntrys($data)
                                  $rep_details,
                                  $max_rep_entrys);
 
-  // Don't make any bookings if we've been asked to book up
-  // more entries than we are allowed in a single repeat.
-  if (count($reps) > $max_rep_entrys)
+  // Don't make any bookings if 
+  // (a) we've been asked to book up more entries than we are
+  //     allowed in a single repeat, or
+  // (b) the repeat results in an empty set, or
+  // (c) we've got to skip past all the entries
+  if ((count($reps) > $max_rep_entrys) ||
+      (count($reps) == 0) ||
+      (count($reps) == count($data['skip_list'])))
   {
     $result['id'] = 0;
     return $result;;
   }
   
-  // If $reps is empty, then this is a single booking, so treat
-  // it differently
-  if (empty($reps))
+  // If this is just a single booking, treat it differently
+  if (count($reps) == 1)
   {
     $data['entry_type'] = ENTRY_SINGLE;
     $data['repeat_id'] = NULL;
@@ -1008,14 +1012,6 @@ function mrbsCreateRepeatingEntrys($data)
     $result['series'] = FALSE;
     $result['start_times'][] = $data['start_time'];
     return $result;
-  }
-  
-  // This is a repeat booking.   If we've got to skip past all
-  // the entries, then don't make a booking!
-  if (count($reps) == count($data['skip_list']))
-  {
-    $result['id'] = 0;
-    return $result;;
   }
   
   // Maybe one should also consider adjusting the start_time for
