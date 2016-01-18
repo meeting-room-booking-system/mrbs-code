@@ -1002,18 +1002,6 @@ function mrbsCreateRepeatingEntrys($data)
     return $result;;
   }
   
-  // If this is just a single booking, treat it differently
-  if (count($reps) == 1)
-  {
-    $data['entry_type'] = ENTRY_SINGLE;
-    $data['repeat_id'] = NULL;
-    $id = mrbsCreateSingleEntry($data);
-    $result['id'] = $id;
-    $result['series'] = FALSE;
-    $result['start_times'][] = $data['start_time'];
-    return $result;
-  }
-  
   // Maybe one should also consider adjusting the start_time for
   // the repeat if the first (or more) entries of the series are
   // to be skipped.    However I haven't done so here and it gives the
@@ -1037,6 +1025,9 @@ function mrbsCreateRepeatingEntrys($data)
     $data['repeat_id'] = $id;
     $starttime = $data['start_time'];
     $endtime = $data['end_time'];
+    // Even if there is only one entry in the series we treat the booking
+    // as a series rather than a single booking.   It allows the series to
+    // be extended later.
     for ($i = 0; $i < count($reps); $i++)
     {
       // Provided this isn't one of the entries to skip, go ahead
