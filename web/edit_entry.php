@@ -464,17 +464,23 @@ function create_field_entry_rooms($disabled=FALSE)
 
 function create_field_entry_type($disabled=FALSE)
 {
-  global $booking_types, $type;
+  global $booking_types, $type, $is_mandatory_field;
   
   echo "<div id=\"div_type\">\n";
   
   $params = array('label'       => get_vocab("type") . ":",
                   'name'        => 'type',
                   'disabled'    => $disabled,
+                  'mandatory'   => !empty($is_mandatory_field['entry.type']),
                   'options'     => array(),
                   'force_assoc' => TRUE,  // in case the type keys happen to be digits
                   'value'       => $type);
-                  
+  
+  if (!empty($is_mandatory_field['entry.type']))
+  {
+    $params['options'][''] = get_type_vocab('');
+  }
+  
   foreach ($booking_types as $key)
   {
     $params['options'][$key] = get_type_vocab($key);
@@ -885,7 +891,7 @@ else
   $name          = "";
   $create_by     = $user;
   $description   = $default_description;
-  $type          = $default_type;
+  $type          = (empty($is_mandatory_field['entry.type'])) ? $default_type : '';
   $room_id       = $room;
   $private       = $private_default;
   $confirmed     = $confirmed_default;

@@ -239,12 +239,14 @@ function validationMessages()
   var field, label;
   <?php
   // First of all create a property in the vocab object for each of the mandatory
-  // fields.    These will be the 'name' and 'rooms' fields and any other fields
+  // fields.    These will be, potentially, some of the standard fields and any other fields
   // defined by the config variable $is_mandatory_field
   ?>
   validationMessages.vocab = {};
   validationMessages.vocab['name'] = '';
+  validationMessages.vocab['description'] = '';
   validationMessages.vocab['rooms'] = '';
+  validationMessages.vocab['type'] = '';
   <?php
   foreach ($is_mandatory_field as $key => $value)
   {

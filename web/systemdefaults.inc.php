@@ -568,10 +568,12 @@ $datalist_options = array();
 
 
 $is_mandatory_field = array();
-// You can define custom entry fields to be mandatory by setting
-// items in the array $is_mandatory_field.   (Note that making a checkbox
-// field mandatory means that the box must be checked.)   For example:
+// You can define custom entry fields and some of the standard fields (description
+// and type) to be mandatory by setting items in the array $is_mandatory_field.
+// (Note that making a checkbox field mandatory means that the box must be checked.)
+// For example:
 
+// $is_mandatory_field['entry.type'] = true;
 // $is_mandatory_field['entry.terms_and_conditions'] = true;
 
 // Set $skip_default to TRUE if you want the "Skip past conflicts" box
@@ -1159,6 +1161,7 @@ $booking_types[] = "E";
 $booking_types[] = "I";
 
 // Default type for new bookings
+// (Note that the default type does not apply if the type field is mandatory)
 $default_type = "I";
 
 // Default description for new bookings
