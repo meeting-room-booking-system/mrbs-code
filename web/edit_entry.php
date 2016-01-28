@@ -478,6 +478,7 @@ function create_field_entry_type($disabled=FALSE)
   
   if (!empty($is_mandatory_field['entry.type']))
   {
+    // Add a blank option to force a selection
     $params['options'][''] = get_type_vocab('');
   }
   
