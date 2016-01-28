@@ -267,7 +267,7 @@ function create_field_entry_description($disabled=FALSE)
                   'value'       => $description,
                   'disabled'    => $disabled,
                   'maxlength'   => isset($maxlength['entry.description']) ? $maxlength['entry.description'] : NULL,
-                  'mandatory'   => isset($is_mandatory_field['entry.description']) && $is_mandatory_field['entry.description']);
+                  'mandatory'   => !empty($is_mandatory_field['entry.description']));
   
   if (isset($select_options['entry.description']) ||
       isset($datalist_options['entry.description']) )
@@ -557,7 +557,7 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
                   'disabled'   => $disabled,
                   'attributes' => array(),
                   'maxlength'  => isset($maxlength["entry.$key"]) ? $maxlength["entry.$key"] : NULL,
-                  'mandatory'  => isset($is_mandatory_field["entry.$key"]) && $is_mandatory_field["entry.$key"]);
+                  'mandatory'  => !empty($is_mandatory_field["entry.$key"]));
   // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
   // assume are intended to be booleans)
   if (($field['nature'] == 'boolean') || 
