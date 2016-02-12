@@ -12,7 +12,6 @@ function print_theme_header($day, $month, $year, $area, $room)
   global $PHP_SELF, $HTTP_HOST, $QUERY_STRING;
   global $view_week_number, $weekstarts, $times_along_top, $periods, $enable_periods;
   global $auth, $max_level;
-  global $default_language_tokens, $disable_automatic_language_changing, $override_locale;
   global $select_options;
   global $ajax_refresh_rate;
   global $main_table_cell_border_width, $main_cell_height;
