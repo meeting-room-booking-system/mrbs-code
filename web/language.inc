@@ -646,45 +646,43 @@ arsort($langs, SORT_NUMERIC);
 
 // The following attempts to import a language based on what the client
 // is using.
-if (!$disable_automatic_language_changing || $cli_mode)
+$doneit = 0;
+
+// First try for an exact match, so if the user specified en-gb, look
+// for lang.en-gb
+
+foreach ($langs as $lang => $qual)
 {
-  $doneit = 0;
+  // Set the locale even if MRBS hasn't got a translation, at least
+  // we'll get time formats right
+  if (!isset($locale))
+  {
+    $locale = $lang;
+  }
 
-  // First try for an exact match, so if the user specified en-gb, look
-  // for lang.en-gb
+  if (set_vocab($lang))
+  {
+    $locale = $lang;
+    // Work out if we're using a RTL language.   This variable is used
+    // globally so that we can include the correct stylesheet
+    $using_rtl = in_array(utf8_strtolower($lang), $rtl_languages);
+    $doneit = 1;
+    break;
+  }
+}
 
+if ($doneit == 0)
+{
+  // None of the user's preferred languages was available, so try to
+  // find a lang file for one of the base languages, e.g. look for
+  // lang.en if "en-ca" was specified.
   foreach ($langs as $lang => $qual)
   {
-    // Set the locale even if MRBS hasn't got a translation, at least
-    // we'll get time formats right
-    if (!isset($locale))
+    if (set_vocab(substr($lang,0,2)))
     {
+      // If we have found a translation, update the locale to match
       $locale = $lang;
-    }
-
-    if (set_vocab($lang))
-    {
-      $locale = $lang;
-      // Work out if we're using a RTL language.   This variable is used
-      // globally so that we can include the correct stylesheet
-      $using_rtl = in_array(utf8_strtolower($lang), $rtl_languages);
-      $doneit = 1;
       break;
-    }
-  }
-  if ($doneit == 0)
-  {
-    // None of the user's preferred languages was available, so try to
-    // find a lang file for one of the base languages, e.g. look for
-    // lang.en if "en-ca" was specified.
-    foreach ($langs as $lang => $qual)
-    {
-      if (set_vocab(substr($lang,0,2)))
-      {
-        // If we have found a translation, update the locale to match
-        $locale = $lang;
-        break;
-      }
     }
   }
 }
@@ -895,37 +893,49 @@ function alias_qualifiers($qualifiers)
 // by language.   The language will have been replaced its alias if one exists.
 function get_language_qualifiers()
 {
-  global $cli_mode, $cli_language, $default_language_tokens, $HTTP_ACCEPT_LANGUAGE;
+  global $cli_mode, $cli_language,
+         $default_language_tokens, $disable_automatic_language_changing,
+         $HTTP_ACCEPT_LANGUAGE;
   
-  static $qualifiers = array();
+  static $qualifiers;
   
-  if (count($qualifiers) == 0)
+  if (isset($qualifiers))
   {
-    // If we're running from the CLI, use the config setting
-    if ($cli_mode && !empty($cli_language))
+    return $qualifiers;
+  }
+  
+  $qualifiers = array();
+  
+  // If we're running from the CLI, use the config setting
+  if ($cli_mode && !empty($cli_language))
+  {
+    $qualifiers[$cli_language] = 1.0;
+  }
+  // Otherwise, if we've disabled automatic language changing use the default
+  elseif ($disable_automatic_language_changing)
+  {
+    $qualifiers[$default_language_tokens] = 1.0;
+  }
+  // Otherwise, we enumerate the user's language preferences...
+  elseif (isset($HTTP_ACCEPT_LANGUAGE)) // Attempt to use $HTTP_ACCEPT_LANGUAGE only when defined.
+  {
+    $lang_specifiers = explode(',',$HTTP_ACCEPT_LANGUAGE);
+    foreach ($lang_specifiers as $specifier)
     {
-      $qualifiers[$cli_language] = 1.0;
-    }
-    // Otherwise we enumerate the user's language preferences...
-    elseif (isset($HTTP_ACCEPT_LANGUAGE)) // Attempt to use $HTTP_ACCEPT_LANGUAGE only when defined.
-    {
-      $lang_specifiers = explode(',',$HTTP_ACCEPT_LANGUAGE);
-      foreach ($lang_specifiers as $specifier)
+      if (preg_match('/([a-zA-Z\-]+);q=([0-9\.]+)/', $specifier, $matches))
       {
-        if (preg_match('/([a-zA-Z\-]+);q=([0-9\.]+)/', $specifier, $matches))
-        {
-          $qualifiers[$matches[1]] = (float) $matches[2];
-        }
-        else if (preg_match("/([a-zA-Z\-]+)/", $specifier, $matches))
-        {
-          $qualifiers[$matches[1]] = 1.0;
-        }
+        $qualifiers[$matches[1]] = (float) $matches[2];
+      }
+      else if (preg_match("/([a-zA-Z\-]+)/", $specifier, $matches))
+      {
+        $qualifiers[$matches[1]] = 1.0;
       }
     }
-    else // Else use the value from config.inc.php.
-    {
-      $qualifiers[$default_language_tokens] = 1.0;
-    }
+  }
+  // Else use the value from config.inc.php
+  else 
+  {
+    $qualifiers[$default_language_tokens] = 1.0;
   }
   
   return $qualifiers;
@@ -944,7 +954,7 @@ function get_language_qualifiers()
 // 'datepicker-en-GB.js'
 function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_langtags=NULL, $lang_map=NULL)
 {
-  global $default_language_tokens, $disable_automatic_language_changing;
+  global $default_language_tokens;
   
   if (!file_exists($dir))
   {
@@ -979,17 +989,11 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
     }
   }
   
-  // If automatic language changing is disabled then add the default language to
-  // the top of the list of preferred languages.    Otherwise, unless it's already
-  // in the list, add it to the bottom as a backstop.
+  // Add the default language to the bottom of the list as a backstop (unless
+  // it's in the list already
   if (isset($default_language_tokens) && ($default_language_tokens !== ''))
   {
-    if ($disable_automatic_language_changing)
-    {
-      $lang_preferences[$default_language_tokens] = 1.1; // 1.1 will force it to the top
-      arsort($lang_preferences, SORT_NUMERIC);
-    }
-    elseif (!isset($lang_preferences[$default_language_tokens]))
+    if (!isset($lang_preferences[$default_language_tokens]))
     {
       $lang_preferences[$default_language_tokens] = 0.0;
     }
