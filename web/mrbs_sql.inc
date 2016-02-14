@@ -1118,7 +1118,7 @@ function update_last_reminded($id, $series)
              WHERE id=$id";
     if (sql_command($sql) > 0)
     {
-      $repeat_id = get_repeat_id($entry_id);
+      $repeat_id = get_repeat_id($id);
       if (isset($repeat_id))
       {
         $sql = "UPDATE $tbl_repeat
