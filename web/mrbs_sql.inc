@@ -17,7 +17,7 @@ define('INTERVAL_DAY', 0);
  */
 function mrbsCheckFree(&$booking, $ignore, $repignore)
 {
-  global $tbl_entry;
+  global $tbl_entry, $tbl_room;
   global $enable_periods, $periods, $twentyfourhour_format;
   global $strftime_format, $is_private_field;
 
@@ -27,11 +27,12 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
   get_area_settings(get_area($room_id));
 
   // Select any meetings which overlap for this room:
-  $sql = "SELECT id, name, start_time, create_by, status
-            FROM $tbl_entry
-           WHERE start_time < ${booking['end_time']}
+  $sql = "SELECT E.id, name, start_time, create_by, status, room_name
+            FROM $tbl_entry E, $tbl_room R
+           WHERE E.room_id=R.id
+             AND start_time < ${booking['end_time']}
              AND end_time > ${booking['start_time']}
-             AND room_id = $room_id";
+             AND E.room_id = $room_id";
 
   if ($ignore > 0)
   {
@@ -86,7 +87,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
 
     // enclose  the viewday etc. links in a span to make it easier for JavaScript to strip them out
     $err[] = "<a href=\"view_entry.php?id=".$row['id']."\">".$row['name']."</a>"
-      . " (" . $startstr . ") "
+      . " (" . $startstr . ', ' . $row['room_name'] .") "
       . "<span>(<a href=\"day.php?$param_ymd\">".get_vocab("viewday")."</a>"
       . " | <a href=\"week.php?room=$room_id&amp;$param_ymd\">".get_vocab("viewweek")."</a>"
       . " | <a href=\"month.php?room=$room_id&amp;$param_ym\">".get_vocab("viewmonth")."</a>)</span>";
