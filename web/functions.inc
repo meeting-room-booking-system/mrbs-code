@@ -2030,6 +2030,13 @@ function mrbs_entity_decode($string, $quote_style=ENT_COMPAT, $charset = 'UTF-8'
   return $string;
 }
 
+
+function validate_email($email)
+{
+  return (FALSE !== filter_var(trim($email), FILTER_VALIDATE_EMAIL));
+}
+
+
 // validates a comma separated list of email addresses
 // returns FALSE if any one of them is invalid, otherwise TRUE
 function validate_email_list($list)
@@ -2039,7 +2046,7 @@ function validate_email_list($list)
     $emails = explode(',', $list);
     foreach ($emails as $email)
     {
-      if (FALSE === filter_var(trim($email), FILTER_VALIDATE_EMAIL))
+      if (!validate_email)
       {
         return FALSE;
       }

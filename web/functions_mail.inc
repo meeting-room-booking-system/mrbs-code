@@ -185,7 +185,7 @@ function get_address_list($array)
     $array[$i] = trim($array[$i]);
     if ($array[$i] !== '')
     {
-      if (!validate_email_list($array[$i]))
+      if (!validate_email($array[$i]))
       {
         $message = 'Invalid email address "' . $array[$i] . '"';
         mail_debug($message);
