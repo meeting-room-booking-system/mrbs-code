@@ -201,14 +201,15 @@ function get_address_list($array)
   return $string;
 }
 
+
 // Take a string of email addresses separated by commas or newlines
 // and return a comma separated list with duplicates removed.
 function clean_address_list($string)
 {
   $string = str_replace(array("\r\n", "\n", "\r"), ',', $string);
   $array = explode(',', $string);
-  $string = get_address_list($array);
-  return $string;
+  array_walk($array, 'trim');
+  return implode(',', array_unique($array));
 }
 
 
@@ -1120,7 +1121,6 @@ function mail_debug($message)
 function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $charset = 'us-ascii')
 {
   require_once 'Mail/mimePart.php';
-  require_once 'lib/PHPMailer/PHPMailerAutoload.php';
   
   // We use the PHPMailer class to handle the sending of mail.   However PHPMailer does not
   // provide the versatility we need to be able to construct the MIME parts necessary for

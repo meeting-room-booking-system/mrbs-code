@@ -16,6 +16,7 @@ if (!function_exists('version_compare') || version_compare(PHP_VERSION, $min_PHP
 // is called.
 
 require_once "lib/autoload.inc";
+require_once 'lib/PHPMailer/PHPMailerAutoload.php';
 require "grab_globals.inc.php";
 require_once "systemdefaults.inc.php";
 require_once "areadefaults.inc.php";
