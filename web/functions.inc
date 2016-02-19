@@ -2033,7 +2033,9 @@ function mrbs_entity_decode($string, $quote_style=ENT_COMPAT, $charset = 'UTF-8'
 
 function validate_email($email)
 {
-  return (FALSE !== filter_var(trim($email), FILTER_VALIDATE_EMAIL));
+  require_once 'lib/PHPMailer/PHPMailerAutoload.php';
+  
+  return PHPMailer::validateAddress($email);
 }
 
 
