@@ -2048,7 +2048,7 @@ function validate_email_list($list)
     $emails = explode(',', $list);
     foreach ($emails as $email)
     {
-      if (!validate_email)
+      if (!validate_email($email))
       {
         return FALSE;
       }
