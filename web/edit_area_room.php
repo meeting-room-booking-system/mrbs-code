@@ -48,6 +48,17 @@ require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
 
+// Take a string of email addresses separated by commas or newlines
+// and return a comma separated list with duplicates removed.
+function clean_address_list($string)
+{
+  $string = str_replace(array("\r\n", "\n", "\r"), ',', $string);
+  $array = explode(',', $string);
+  array_walk($array, 'trim');
+  return implode(',', array_unique($array));
+}
+
+
 function create_field_entry_timezone()
 {
   global $timezone, $zoneinfo_outlook_compatible;
@@ -485,8 +496,6 @@ if ($phase == 2)
       exit();
     }
   }
-  
-  require_once "functions_mail.inc";
 
   // PHASE 2 (ROOM) - UPDATE THE DATABASE
   // ------------------------------------

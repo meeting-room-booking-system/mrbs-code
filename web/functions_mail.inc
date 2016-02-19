@@ -202,17 +202,6 @@ function get_address_list($array)
 }
 
 
-// Take a string of email addresses separated by commas or newlines
-// and return a comma separated list with duplicates removed.
-function clean_address_list($string)
-{
-  $string = str_replace(array("\r\n", "\n", "\r"), ',', $string);
-  $array = explode(',', $string);
-  array_walk($array, 'trim');
-  return implode(',', array_unique($array));
-}
-
-
 // get the list of email addresses that are allowed to approve bookings
 // for the room with id $room_id
 // (At the moment this is just the admin email address, but this could
