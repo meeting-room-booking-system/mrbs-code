@@ -36,7 +36,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
 
   if ($ignore > 0)
   {
-    $sql .= " AND id <> $ignore";
+    $sql .= " AND E.id <> $ignore";
   }
   if ($repignore > 0)
   {
