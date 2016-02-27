@@ -1436,12 +1436,12 @@ if ($phase == 2)
   elseif ($sortby == "r")
   {
     // Order by Area, Room, Start date/time
-    $sql .= " ORDER BY area_name, sort_key, start_time";
+    $sql .= " ORDER BY area_name, R.sort_key, start_time";
   }
   else
   {
     // Order by Start date/time, Area, Room
-    $sql .= " ORDER BY start_time, area_name, sort_key";
+    $sql .= " ORDER BY start_time, area_name, R.sort_key";
   }
 
   // echo "<p>DEBUG: SQL: <tt> $sql </tt></p>\n";

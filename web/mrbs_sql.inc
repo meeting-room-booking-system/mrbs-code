@@ -1595,7 +1595,7 @@ function get_rooms($area, $all=FALSE)
     $sql .= " AND R.disabled = 0" .
             " AND A.disabled = 0";
   }
-  $sql .= " ORDER BY sort_key";
+  $sql .= " ORDER BY R.sort_key";
 
   $res = sql_query($sql);
 
@@ -1662,6 +1662,7 @@ function mrbsAddArea($name, &$error)
     switch ($key)
     {
     case 'area_name':
+    case 'sort_key':
       $sql_col[] = $key;
       $sql_val[] = "'$area_name_q'";
       break;

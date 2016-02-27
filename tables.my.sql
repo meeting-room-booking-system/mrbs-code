@@ -19,6 +19,7 @@ CREATE TABLE mrbs_area
   id                        int NOT NULL auto_increment,
   disabled                  tinyint(1) DEFAULT 0 NOT NULL,
   area_name                 varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci,
+  sort_key                  varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' NOT NULL,
   timezone                  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci,
   area_admin_email          text CHARACTER SET utf8 COLLATE utf8_general_ci,
   resolution                int,
@@ -190,6 +191,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '48');
+  VALUES ( 'db_version', '49');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
