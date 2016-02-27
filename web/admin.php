@@ -68,7 +68,7 @@ if (!empty($error))
 echo "<div id=\"area_form\">\n";
 $sql = "SELECT id, area_name, disabled
           FROM $tbl_area
-      ORDER BY disabled, area_name";
+      ORDER BY disabled, sort_key";
 $res = sql_query($sql);
 $areas_defined = $res && (sql_count($res) > 0);
 if (!$areas_defined)

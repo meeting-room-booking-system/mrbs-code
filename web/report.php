@@ -36,12 +36,7 @@ function generate_search_criteria(&$vars)
       
         
       case 'areamatch':
-        $options = sql_query_array("SELECT area_name FROM $tbl_area ORDER BY area_name");
-        if ($options === FALSE)
-        {
-          trigger_error(sql_error(), E_USER_WARNING);
-          fatal_error(FALSE, get_vocab("fatal_db_error"));
-        }
+        $options = get_area_names($all=TRUE);
         echo "<div id=\"div_areamatch\">\n";
         $params = array('label'         => get_vocab("match_area") . ':',
                         'name'          => 'areamatch',
@@ -1436,12 +1431,12 @@ if ($phase == 2)
   elseif ($sortby == "r")
   {
     // Order by Area, Room, Start date/time
-    $sql .= " ORDER BY area_name, R.sort_key, start_time";
+    $sql .= " ORDER BY A.sort_key, R.sort_key, start_time";
   }
   else
   {
     // Order by Start date/time, Area, Room
-    $sql .= " ORDER BY start_time, area_name, R.sort_key";
+    $sql .= " ORDER BY start_time, A.sort_key, R.sort_key";
   }
 
   // echo "<p>DEBUG: SQL: <tt> $sql </tt></p>\n";

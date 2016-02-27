@@ -1039,7 +1039,7 @@ $sql = "SELECT id, area_name, resolution, default_duration, default_duration_all
                max_duration_enabled, max_duration_secs, max_duration_periods
           FROM $tbl_area
          WHERE disabled=0
-      ORDER BY area_name";
+      ORDER BY sort_key";
 $res = sql_query($sql);
 if ($res)
 {

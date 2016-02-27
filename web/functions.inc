@@ -1666,11 +1666,11 @@ function get_default_area()
       return $area;
     }
   }
-  // Otherwise return the first enabled area in alphabetical order in the database
+  // Otherwise return the first enabled area in sort key order in the database
   $area = sql_query1("SELECT id
                         FROM $tbl_area
                        WHERE disabled=0
-                    ORDER BY area_name
+                    ORDER BY sort_key
                        LIMIT 1");
   return ((!isset($area) || ($area < 0)) ? 0 : $area);
 }
