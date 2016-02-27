@@ -1461,7 +1461,7 @@ function get_area_names($all=FALSE)
   {
     $sql .= " WHERE disabled=0";
   }
-  $sql .= " ORDER BY area_name";
+  $sql .= " ORDER BY sort_key";
   
   $res = sql_query($sql);
   
