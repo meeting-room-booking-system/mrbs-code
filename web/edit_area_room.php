@@ -930,6 +930,20 @@ if (isset($change_room) && !empty($room))
       echo "<input type=\"hidden\" name=\"old_room_name\" value=\"" . htmlspecialchars($room_data["room_name"]) . "\">\n";
       echo "</div>\n";
       
+      // Sort key
+      if ($is_admin)
+      {
+        echo "<div>\n";
+        $params = array('label'         => get_vocab("sort_key") . ":",
+                        'label_title'   => get_vocab("sort_key_note"),
+                        'name'          => 'sort_key',
+                        'value'         => $room_data['sort_key'],
+                        'disabled'      => $disabled,
+                        'create_hidden' => FALSE);
+        generate_input($params);
+        echo "</div>\n";
+      }
+      
       // Status (Enabled or Disabled)
       if ($is_admin)
       {
@@ -945,20 +959,6 @@ if (isset($change_room) && !empty($room))
                         'disabled'      => $disabled,
                         'create_hidden' => FALSE);
         generate_radio_group($params);
-        echo "</div>\n";
-      }
-
-      // Sort key
-      if ($is_admin)
-      {
-        echo "<div>\n";
-        $params = array('label'         => get_vocab("sort_key") . ":",
-                        'label_title'   => get_vocab("sort_key_note"),
-                        'name'          => 'sort_key',
-                        'value'         => $room_data['sort_key'],
-                        'disabled'      => $disabled,
-                        'create_hidden' => FALSE);
-        generate_input($params);
         echo "</div>\n";
       }
 
