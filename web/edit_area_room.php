@@ -761,6 +761,7 @@ if ($phase == 2)
       $sql = "UPDATE $tbl_area SET ";
       $assign_array = array();
       $assign_array[] = "area_name='" . sql_escape($area_name) . "'";
+      $assign_array[] = "sort_key='" . sql_escape($sort_key) . "'";
       $assign_array[] = "disabled=" . $area_disabled;
       $assign_array[] = "timezone='" . sql_escape($area_timezone) . "'";
       $assign_array[] = "area_admin_email='" . sql_escape($area_admin_email) . "'";
@@ -1124,6 +1125,15 @@ if (isset($change_area) &&!empty($area))
   $params = array('label' => get_vocab("name") . ":",
                   'name'  => 'area_name',
                   'value' => $area_data['area_name']);
+  generate_input($params);
+  echo "</div>\n";
+  
+  // Sort key
+  echo "<div>\n";
+  $params = array('label'       => get_vocab("sort_key") . ":",
+                  'label_title' => get_vocab("sort_key_note"),
+                  'name'        => 'sort_key',
+                  'value'       => $area_data['sort_key']);
   generate_input($params);
   echo "</div>\n";
         
