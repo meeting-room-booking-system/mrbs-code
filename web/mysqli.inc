@@ -569,7 +569,7 @@ function sql_mysqli_connect($host, $username, $password,
   // still be able to access the error text.
 
   // PHP 5.3.0 and above support persistent connections in mysqli
-  if ($persist && (version_compare(PHP_VERSION, '5.3.0') === 1))
+  if ($persist && (version_compare(PHP_VERSION, '5.3.0') >= 0))
   {
     $full_host = "p:$host";
   }
