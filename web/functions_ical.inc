@@ -187,7 +187,7 @@ function get_vtimezone($tz)
   }
   // There's nothing in the database, so try and get a VTIMEZONE component
   // from the filesystem.
-  elseif (file_exists($tz_file))
+  elseif (is_readable($tz_file))
   {
     $vcalendar = file_get_contents($tz_file);
     
@@ -961,7 +961,7 @@ function create_ical_event($method, $data, $addresses=NULL, $series=FALSE)
           switch ($key)
           {
             case 'to':
-              $role = "REQ-PARTICIPANT";
+              $role = "REQ-PARTICIPANT;RSVP=TRUE";
               break;
             default:
               if (in_array($attendee, $attendees['to']))

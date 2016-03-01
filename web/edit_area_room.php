@@ -98,7 +98,7 @@ function create_field_entry_timezone()
       $tz_dir = ($zoneinfo_outlook_compatible) ? TZDIR_OUTLOOK : TZDIR;  
       $tz_file = "$tz_dir/$value.ics";
       // UTC is a special case because we can always produce UTC times in iCalendar
-      if (($city=='UTC') || file_exists($tz_file))
+      if (($city=='UTC') || is_readable($tz_file))
       {
         $timezones[$continent][] = $city;
       }

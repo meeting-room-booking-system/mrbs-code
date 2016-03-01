@@ -173,13 +173,13 @@ if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search'))
     
     
 // Get any page specific JavaScript
-if (file_exists("js/$page.js"))
+if (is_readable("js/$page.js"))
 {
   ?>
   <script type="text/javascript" src="js/<?php echo $page?>.js"></script>
   <?php
 }
-if (file_exists("js/$page.js.php"))
+if (is_readable("js/$page.js.php"))
 {
   ?>
   <script type="text/javascript" src="js/<?php echo $page?>.js.php?<?php echo $standard_query_string ?>"></script>

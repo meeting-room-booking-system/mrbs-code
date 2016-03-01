@@ -403,7 +403,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
     $body .= "<title></title>\n";
     $body .= "<style type=\"text/css\">\n";
     $css_file = 'css/mrbs-mail.css';
-    if (file_exists($css_file))
+    if (is_readable($css_file))
     {
       $fh = fopen($css_file, 'r');
       $css = fread($fh, filesize($css_file));

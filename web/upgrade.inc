@@ -104,7 +104,7 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
     upgrade_echo("</p>\n");
     
     // Now execute the PHP file if there is one
-    if (file_exists($php_filename))
+    if (is_readable($php_filename))
     {
       include($php_filename);
     }

@@ -157,7 +157,7 @@ function print_header($day, $month, $year, $area, $room)
   
   // Load the print_theme_header function appropriate to the theme.    If there
   // isn't one then fall back to the default header.
-  if (file_exists("Themes/$theme/header.inc"))
+  if (is_readable("Themes/$theme/header.inc"))
   {
     include_once "Themes/$theme/header.inc";
   }
@@ -177,7 +177,7 @@ function print_header($day, $month, $year, $area, $room)
 function print_footer($and_exit)
 {
   global $theme;
-  if (file_exists("Themes/$theme/footer.inc"))
+  if (is_readable("Themes/$theme/footer.inc"))
   {
     include_once "Themes/$theme/footer.inc";
   }

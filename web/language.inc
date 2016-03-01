@@ -956,7 +956,7 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
 {
   global $default_language_tokens;
   
-  if (!file_exists($dir))
+  if (!is_dir($dir))
   {
     trigger_error("MRBS: directory $dir does not exist", E_USER_NOTICE);
     return NULL;
@@ -1073,7 +1073,7 @@ function set_vocab($lang)
   
   $lang = utf8_strtolower($lang);
 
-  if (file_exists('lang'))
+  if (is_readable('lang'))
   {
     $lang_file = "lang/lang.$lang";
   }
@@ -1084,12 +1084,12 @@ function set_vocab($lang)
     $lang_file = "../lang/lang.$lang";
   }
   // When in CLI mode, we need to add the full path name as
-  // file_exists() ignores the include path
+  // is_readable() ignores the include path
   if ($cli_mode)
   {
     $lang_file = dirname($PHP_SELF) . "/" . $lang_file;
   }
-  if (file_exists($lang_file))
+  if (is_readable($lang_file))
   {
     // Get the standard language tokens
     include "$lang_file";
