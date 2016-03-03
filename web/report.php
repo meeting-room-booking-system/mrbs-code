@@ -4,9 +4,44 @@
 require "defaultincludes.inc";
 
 
+// Generates a text input field of some kind.   If $select_options or $datalist_options
+// is set then it will be a datalist, otherwise it will be a simple input field
+function generate_report_input($params)
+{
+  global $select_options, $datalist_options;
+  
+  unset ($params['options']);  // just in case
+  
+  // If $select_options is defined we want to force a <datalist> and not a
+  // <select>.  That's because if we have options such as
+  // ('tea', 'white coffee', 'black coffee') we want the user to be able to type
+  // 'coffee' which will match both 'white coffee' and 'black coffee'.
+  if (!empty($select_options[$params['field']]))
+  {
+    $params['options'] = $select_options[$params['field']];
+  }
+  elseif (!empty($datalist_options[$params['field']]))
+  {
+    $params['options'] = $datalist_options[$params['field']];
+  }
+  
+  if (isset($params['options']))
+  {
+    // We force the values to be used and not the keys.   We will convert
+    // back to values when we construct the SQL query.
+    $params['force_indexed'] = TRUE;
+    generate_datalist($params);
+  }
+  else
+  {
+    generate_simple_input($params);
+  }
+}
+
+
 function generate_search_criteria(&$vars)
 {
-  global $booking_types, $select_options;
+  global $booking_types;
   global $private_somewhere, $approval_somewhere, $confirmation_somewhere;
   global $user_level, $tbl_entry, $tbl_area, $tbl_room;
   global $field_natures, $field_lengths;
@@ -199,26 +234,11 @@ function generate_search_criteria(&$vars)
         {
           generate_checkbox($params);
         }
-        // Otherwise output a text input
+        // Otherwise output a text input of some kind
         else
         {
-          // If $select_options is defined we want to force a <datalist> and not a
-          // <select>.  That's because if we have options such as
-          // ('tea', 'white coffee', 'black coffee') we want the user to be able to type
-          // 'coffee' which will match both 'white coffee' and 'black coffee'.
-          if (isset($select_options["entry.$key"]) && !empty($select_options["entry.$key"]))
-          {
-            $params['options'] = $select_options["entry.$key"];
-            // We force the values to be used and not the keys.   We will convert
-            // back to values when we construct the SQL query.
-            $params['force_indexed'] = TRUE;
-            generate_datalist($params);
-          }
-          else
-          {
-            $params['field'] = "entry.$key";
-            generate_input($params);
-          }
+          $params['field'] = "entry.$key";
+          generate_report_input($params);
         }
         echo "</div>\n";
         break;
