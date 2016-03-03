@@ -16,13 +16,16 @@ function generate_report_input($params)
   // <select>.  That's because if we have options such as
   // ('tea', 'white coffee', 'black coffee') we want the user to be able to type
   // 'coffee' which will match both 'white coffee' and 'black coffee'.
-  if (!empty($select_options[$params['field']]))
+  if (isset($params['field']))
   {
-    $params['options'] = $select_options[$params['field']];
-  }
-  elseif (!empty($datalist_options[$params['field']]))
-  {
-    $params['options'] = $datalist_options[$params['field']];
+    if (!empty($select_options[$params['field']]))
+    {
+      $params['options'] = $select_options[$params['field']];
+    }
+    elseif (!empty($datalist_options[$params['field']]))
+    {
+      $params['options'] = $datalist_options[$params['field']];
+    }
   }
   
   if (isset($params['options']))
@@ -128,8 +131,9 @@ function generate_search_criteria(&$vars)
         echo "<div id=\"div_namematch\">\n";
         $params = array('label' => get_vocab("match_entry") . ':',
                         'name'  => 'namematch',
-                        'value' => $vars['namematch']);
-        generate_input($params);
+                        'value' => $vars['namematch'],
+                        'field' => 'entry.name');
+        generate_report_input($params);
         echo "</div>\n";
         break;
       
@@ -138,8 +142,9 @@ function generate_search_criteria(&$vars)
         echo "<div id=\"div_descrmatch\">\n";
         $params = array('label' => get_vocab("match_descr") . ':',
                         'name'  => 'descrmatch',
-                        'value' => $vars['descrmatch']);
-        generate_input($params);
+                        'value' => $vars['descrmatch'],
+                        'field' => 'entry.description');
+        generate_report_input($params);
         echo "</div>\n";
         break;
   
@@ -148,8 +153,9 @@ function generate_search_criteria(&$vars)
         echo "<div id=\"div_creatormatch\">\n";
         $params = array('label' => get_vocab("createdby") . ':',
                         'name'  => 'creatormatch',
-                        'value' => $vars['creatormatch']);
-        generate_input($params);
+                        'value' => $vars['creatormatch'],
+                        'field' => 'entry.create_by');
+        generate_report_input($params);
         echo "</div>\n";
         break;
         
