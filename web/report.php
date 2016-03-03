@@ -1090,29 +1090,53 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 }
 
 
-function get_match_condition($column, $match)
+function get_match_condition($full_column_name, $match)
 {
   global $select_options, $field_natures, $field_lengths;
   
   $sql = '';
   
-  // Associative arrays (we can't just test for the string, because the database
+  // First simple case: no match required
+  if (!isset($match) || $match === '')
+  {
+    return $sql;
+  }
+  
+  // Get the table name and alias
+  $aliases = array('area'  => 'A',
+                   'entry' => 'E',
+                   'room'  => 'R');
+                   
+  list($table_alias, $column) = explode('.', $full_column_name, 2);
+  $table = array_search($table_alias, $aliases);
+  
+  // Next simple case: for tables other than the entry table we are not going to
+  // bother with complicated things such as custom fields or select_options
+  if ($table != 'entry')
+  { 
+    // sql_syntax_caseless_contains() does the SQL escaping
+    $sql .= " AND" . sql_syntax_caseless_contains("$full_column_name", $match);
+    return $sql;
+  }
+  
+  // More complicated cases:
+  
+  // (1) Associative arrays (we can't just test for the string, because the database
   // contains the keys, not the values.   So we have to go through each key testing
   // for a possible match)
-  if (!empty($match) &&
-      isset($select_options["entry.$column"]) &&
-      is_assoc($select_options["entry.$column"]))
+  if (isset($select_options["$table.$column"]) &&
+      is_assoc($select_options["$table.$column"]))
   {
     $sql .= " AND ";
     $or_array = array();
-    foreach($select_options["entry.$column"] as $option_key => $option_value)
+    foreach($select_options["$table.$column"] as $option_key => $option_value)
     {
       // We have to use strpos() rather than stripos() because we cannot
       // assume PHP5
       if (($option_key !== '') &&
           (strpos(utf8_strtolower($option_value), utf8_strtolower($match)) !== FALSE))
       {
-        $or_array[] = "E.$column='" . sql_escape($option_key) . "'";
+        $or_array[] = "$full_column_name='" . sql_escape($option_key) . "'";
       }
     }
     if (count($or_array) > 0)
@@ -1124,30 +1148,27 @@ function get_match_condition($column, $match)
       $sql .= "FALSE";
     }
   }
-  // Booleans (or integers <= 2 bytes which we assume are intended to be booleans)
+  // (2) Booleans (or integers <= 2 bytes which we assume are intended to be booleans)
   elseif (($field_natures[$column] == 'boolean') || 
-     (($field_natures[$column] == 'integer') && isset($field_lengths[$column]) && ($field_lengths[$column] <= 2)) )
+          (($field_natures[$column] == 'integer') && isset($field_lengths[$column]) && ($field_lengths[$column] <= 2)) )
   {
-    if (!empty($match))
+    if ($match)
     {
-      $sql .= " AND E.$column!=0";
+      $sql .= " AND $full_column_name!=0";
     }
   }
-  // Integers
-  elseif (($field_natures[$column] == 'integer') && isset($field_lengths[$column]) && ($field_lengths[$column] > 2))
+  // (3) Integers
+  elseif (($field_natures[$column] == 'integer') &&
+           isset($field_lengths[$column]) &&
+           ($field_lengths[$column] > 2))
   {
-    if (isset($match) && $match !== '')  // get_form_var() returns an empty string if no input
-    {
-      $sql .= " AND E.$column=" . $match;
-    }
+    $sql .= " AND $full_column_name=" . $match;
   }
-  // Strings
+  // (4) Strings
   else
   {
-    if (!empty($match))
-    {
-      $sql .= " AND" . sql_syntax_caseless_contains("E.$column", $match);
-    }
+    // sql_syntax_caseless_contains() does the SQL escaping
+    $sql .= " AND" . sql_syntax_caseless_contains("$full_column_name", $match);
   }
   
   return $sql;
@@ -1335,16 +1356,19 @@ if ($phase == 2)
     $sql .= " AND A.enable_periods=0";
   }
   
-  if (!empty($areamatch))
+  // Get the match conditions for the simple cases
+  $match_columns = array('A.area_name'    => $areamatch,
+                         'R.room_name'    => $roommatch,
+                         'E.name'         => $namematch,
+                         'E.description'  => $descrmatch,
+                         'E.create_by'    => $creatormatch);
+                        
+  foreach ($match_columns as $column => $match)
   {
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("A.area_name", $areamatch);
+    $sql .= get_match_condition($column, $match);
   }
-  if (!empty($roommatch))
-  {
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("R.room_name", $roommatch);
-  }
+  
+  // Then do the special cases
   if (!empty($typematch))
   {
     $sql .= " AND ";
@@ -1355,21 +1379,6 @@ if ($phase == 2)
       $or_array[] = sql_syntax_casesensitive_equals('E.type', $type);
     }
     $sql .= "(". implode(" OR ", $or_array ) .")";
-  }
-  if (!empty($namematch))
-  {
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("E.name", $namematch);
-  }
-  if (!empty($descrmatch))
-  {
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("E.description", $descrmatch);
-  }
-  if (!empty($creatormatch))
-  {
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" .  sql_syntax_caseless_contains("E.create_by", $creatormatch);
   }
   
   // (In the next three cases, you will get the empty string if that part
@@ -1400,11 +1409,11 @@ if ($phase == 2)
     $sql .= ($match_approved) ? "=0)" : "!=0)";
   }
   
-  // Now do the custom fields
+  // Then do the custom fields
   foreach ($custom_fields as $key => $value)
   {
     $var = "match_$key";
-    $sql .= get_match_condition($key, $$var);
+    $sql .= get_match_condition("E.$key", $$var);
   }
 
   // If we're not an admin (they are allowed to see everything), then we need
