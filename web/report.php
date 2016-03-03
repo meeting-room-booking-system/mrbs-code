@@ -1090,6 +1090,69 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 }
 
 
+function get_match_condition($column, $match)
+{
+  global $select_options, $field_natures, $field_lengths;
+  
+  $sql = '';
+  
+  // Associative arrays (we can't just test for the string, because the database
+  // contains the keys, not the values.   So we have to go through each key testing
+  // for a possible match)
+  if (!empty($match) &&
+      isset($select_options["entry.$column"]) &&
+      is_assoc($select_options["entry.$column"]))
+  {
+    $sql .= " AND ";
+    $or_array = array();
+    foreach($select_options["entry.$column"] as $option_key => $option_value)
+    {
+      // We have to use strpos() rather than stripos() because we cannot
+      // assume PHP5
+      if (($option_key !== '') &&
+          (strpos(utf8_strtolower($option_value), utf8_strtolower($match)) !== FALSE))
+      {
+        $or_array[] = "E.$column='" . sql_escape($option_key) . "'";
+      }
+    }
+    if (count($or_array) > 0)
+    {
+      $sql .= "(". implode( " OR ", $or_array ) .")";
+    }
+    else
+    {
+      $sql .= "FALSE";
+    }
+  }
+  // Booleans (or integers <= 2 bytes which we assume are intended to be booleans)
+  elseif (($field_natures[$column] == 'boolean') || 
+     (($field_natures[$column] == 'integer') && isset($field_lengths[$column]) && ($field_lengths[$column] <= 2)) )
+  {
+    if (!empty($match))
+    {
+      $sql .= " AND E.$column!=0";
+    }
+  }
+  // Integers
+  elseif (($field_natures[$column] == 'integer') && isset($field_lengths[$column]) && ($field_lengths[$column] > 2))
+  {
+    if (isset($match) && $match !== '')  // get_form_var() returns an empty string if no input
+    {
+      $sql .= " AND E.$column=" . $match;
+    }
+  }
+  // Strings
+  else
+  {
+    if (!empty($match))
+    {
+      $sql .= " AND" . sql_syntax_caseless_contains("E.$column", $match);
+    }
+  }
+  
+  return $sql;
+}
+
 // Work out whether we are running from the command line
 $cli_mode = is_cli();
 
@@ -1341,59 +1404,7 @@ if ($phase == 2)
   foreach ($custom_fields as $key => $value)
   {
     $var = "match_$key";
-    // Associative arrays (we can't just test for the string, because the database
-    // contains the keys, not the values.   So we have to go through each key testing
-    // for a possible match)
-    if (!empty($$var) &&
-        isset($select_options["entry.$key"]) &&
-        is_assoc($select_options["entry.$key"]))
-    {
-      $sql .= " AND ";
-      $or_array = array();
-      foreach($select_options["entry.$key"] as $option_key => $option_value)
-      {
-        // We have to use strpos() rather than stripos() because we cannot
-        // assume PHP5
-        if (($option_key !== '') &&
-            (strpos(utf8_strtolower($option_value), utf8_strtolower($$var)) !== FALSE))
-        {
-          $or_array[] = "E.$key='" . sql_escape($option_key) . "'";
-        }
-      }
-      if (count($or_array) > 0)
-      {
-        $sql .= "(". implode( " OR ", $or_array ) .")";
-      }
-      else
-      {
-        $sql .= "FALSE";
-      }
-    }
-    // Booleans (or integers <= 2 bytes which we assume are intended to be booleans)
-    elseif (($field_natures[$key] == 'boolean') || 
-       (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
-    {
-      if (!empty($$var))
-      {
-        $sql .= " AND E.$key!=0";
-      }
-    }
-    // Integers
-    elseif (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] > 2))
-    {
-      if (isset($$var) && $$var !== '')  // get_form_var() returns an empty string if no input
-      {
-        $sql .= " AND E.$key=" . $$var;
-      }
-    }
-    // Strings
-    else
-    {
-      if (!empty($$var))
-      {
-        $sql .= " AND" . sql_syntax_caseless_contains("E.$key", $$var);
-      }
-    }
+    $sql .= get_match_condition($key, $$var);
   }
 
   // If we're not an admin (they are allowed to see everything), then we need
