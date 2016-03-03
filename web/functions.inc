@@ -1378,17 +1378,20 @@ function generate_datalist($params)
 
   foreach ($params['options'] as $value => $text)
   {
-    // We can cope with both associative and ordinary arrays
-    if (!$params['force_assoc'] && !is_assoc($params['options']))
+    if ($text !== '')
     {
-      $value = $text;
+      // We can cope with both associative and ordinary arrays
+      if (!$params['force_assoc'] && !is_assoc($params['options']))
+      {
+        $value = $text;
+      }
+      $html .= "<option";
+      if (!$params['force_indexed'])
+      {
+        $html .= " value=\"" . htmlspecialchars($value) . "\"";
+      }
+      $html .= ">" . htmlspecialchars($text) . "</option>\n";
     }
-    $html .= "<option";
-    if (!$params['force_indexed'])
-    {
-      $html .= " value=\"" . htmlspecialchars($value) . "\"";
-    }
-    $html .= ">" . htmlspecialchars($text) . "</option>\n";
   }
   $html .= "</select>\n";
   $html .= "</datalist>\n";
