@@ -30,6 +30,11 @@ function generate_report_input($params)
   
   if (isset($params['options']))
   {
+    // Remove any element with an empty key.  This will just be associated with a
+    // required select element and the value will be meaningless for a search.
+    unset($params['options']['']);
+    // Remove any elements with an empty value.   These will be meaningless for a search.
+    $params['options'] = array_diff($params['options'], array(''));
     // We force the values to be used and not the keys.   We will convert
     // back to values when we construct the SQL query.
     $params['force_indexed'] = TRUE;
