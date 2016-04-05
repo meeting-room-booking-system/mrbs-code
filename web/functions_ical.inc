@@ -833,13 +833,6 @@ function create_ical_event($method, $data, $addresses=NULL, $series=FALSE)
 {
   require_once "functions_mail.inc";
   
-  if (!$series && !isset($data['entry_type']))
-  {
-    var_dump($data);
-    debug_print_backtrace();
-    exit;
-  }
-  
   global $confirmation_enabled, $mail_settings, $timezone, $vtimezone,
          $default_area_room_delimiter;
   
@@ -961,7 +954,7 @@ function create_ical_event($method, $data, $addresses=NULL, $series=FALSE)
           switch ($key)
           {
             case 'to':
-              $role = "REQ-PARTICIPANT;RSVP=TRUE";
+              $role = "REQ-PARTICIPANT";
               break;
             default:
               if (in_array($attendee, $attendees['to']))
