@@ -507,9 +507,11 @@ function authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
       {
         if (strcasecmp($group, $admin_group_dn) == 0)
         {
+          authLdapDebug("authCheckAdminGroupCallback: Admin group successfully found in user object");
           return 1;
         }
       }
+      authLdapDebug("authCheckAdminGroupCallback: Admin group not found in user object");
     }
   }
   return 0;
